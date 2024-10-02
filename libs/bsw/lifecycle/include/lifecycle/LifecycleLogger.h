@@ -1,0 +1,13 @@
+// Copyright 2024 Accenture.
+
+/**
+ * \ingroup lifecycle
+ */
+#ifndef GUARD_5F42300D_0612_4D59_9E9A_4748D79663DF
+#define GUARD_5F42300D_0612_4D59_9E9A_4748D79663DF
+
+#include <util/logger/Logger.h>
+
+DECLARE_LOGGER_COMPONENT(LIFECYCLE)
+
+#endif // GUARD_5F42300D_0612_4D59_9E9A_4748D79663DF

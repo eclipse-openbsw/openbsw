@@ -1,0 +1,3 @@
+add_library(utbspInterruptsImpl INTERFACE)
+
+target_include_directories(utbspInterruptsImpl INTERFACE include)

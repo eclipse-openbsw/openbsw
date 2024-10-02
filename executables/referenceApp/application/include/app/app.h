@@ -1,0 +1,11 @@
+// Copyright 2024 Accenture.
+
+#ifndef GUARD_4B9F30C2_41CE_4C83_A80D_52CE59DB7363
+#define GUARD_4B9F30C2_41CE_4C83_A80D_52CE59DB7363
+
+namespace app
+{
+void run();
+}
+
+#endif /* GUARD_4B9F30C2_41CE_4C83_A80D_52CE59DB7363 */

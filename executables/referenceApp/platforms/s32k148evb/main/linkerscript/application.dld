@@ -1,0 +1,277 @@
+/* Linker file for GNU C Compiler */
+
+/* Entry Point */
+ENTRY(Reset_Handler)
+
+HEAP_SIZE = DEFINED(__heap_size__) ? __heap_size__ : 0x00000200;
+STACK_SIZE = DEFINED(__stack_size__) ? __stack_size__ : 0x00000400;
+
+/* Memory boundaries of S32K148 */
+FLASH_START =  0x00000000;
+FLASH_END =    0x0017FFFF;
+SRAM_L_START = 0x1FFE0000;
+SRAM_L_END =   0x1FFFFFFF;
+SRAM_U_START = 0x20000000;
+SRAM_U_END =   0x2001EFFF;
+
+/* Memory areas */
+MEMORY
+{
+  /* Flash */
+  Isr (RX) : ORIGIN = FLASH_START, LENGTH = 0x00000400
+  FlashConfigField (RX) : ORIGIN = FLASH_START + 0x00000400, LENGTH = 0x00000010
+  ApplicationStartUpCode (RX) : ORIGIN = FLASH_START + 0x410, LENGTH = 0x20
+  Application (RX) : ORIGIN = FLASH_START + 0x430, LENGTH = FLASH_END + 1 - FLASH_START - 0x430
+  /* SRAM_L */
+  Data (RW) : ORIGIN = SRAM_L_START, LENGTH = SRAM_L_END + 1 - SRAM_L_START
+  /* SRAM_U */
+  NoInit (RW) : ORIGIN = SRAM_U_END + 1 - 0x400, LENGTH = 0x400
+}
+
+/* Output sections */
+SECTIONS
+{
+  .interrupts :
+  {
+    __VECTOR_TABLE = .;
+    . = ALIGN(4);
+    KEEP(*(.isr_vector))
+  } > Isr
+
+  .first :
+  {
+    *(.glue_7)
+    *(.glue_7t)
+    *(.eh_frame)
+    KEEP (*(.init))
+    KEEP (*(.fini))
+    . = ALIGN(0x4);
+    KEEP (*ecrti.o(.ctors))
+    KEEP (*crtbegin.o(.ctors))
+    KEEP (*(EXCLUDE_FILE (*crtend.o *ecrtn.o) .ctors))
+    KEEP (*(SORT(.ctors.*)))
+    KEEP (*crtend.o(.ctors))
+    KEEP (*ecrtn.o(.ctors))
+    . = ALIGN(0x4);
+    KEEP (*ecrti.o(.dtors))
+    KEEP (*crtbegin.o(.dtors))
+    KEEP (*(EXCLUDE_FILE (*crtend.o *ecrtn.o) .dtors))
+    KEEP (*(SORT(.dtors.*)))
+    KEEP (*crtend.o(.dtors))
+    KEEP (*ecrtn.o(.dtors))
+    *(.rodata)
+    *(.text.__assert_func)
+    *(.text.__exec_ctors)
+    *(.text.SystemInit)
+    *(.text.__aeabi_atexit)
+    *(.text.__cxa_pure_virtual)
+    *(.text._ZSt9terminatev)
+    *(.text.__cxa_atexit)
+    *(.text.__libc_init_array)
+    *(.text._raise_r)
+    *(.text._getpid_r)
+    *(.text.abort*)
+    *(.text.memcpy)
+    *(.text.memset)
+    *(.text.raise)
+    . = ALIGN(32);
+  }
+  > Application = 0xffffffff
+
+  .FlashConfigField :
+  {
+    . = ALIGN(4);
+    KEEP(*(.FlashConfig)) /* Flash Configuration Field (FCF) */
+    . = ALIGN(4);
+  } > FlashConfigField
+
+  .__startUpSection :
+  {
+    KEEP(*(.__startUpSection))
+  }
+  > ApplicationStartUpCode
+
+  /* Program code */
+
+  .text :
+  {
+    *(.text._kill_r)
+    *(.text._getpid)
+    *(.text._kill)
+    *(.text._exit)
+    . = ALIGN(4);
+    *(.text)
+    *(.text*)
+    *(.rodata)
+    *(.rodata*)
+    . = ALIGN(4);
+  }
+  > Application = 0xffffffff
+
+  .ARM.extab :
+  {
+    *(.ARM.extab* .gnu.linkonce.armextab.*)
+  }
+  > Application = 0xffffffff
+
+  .ARM :
+  {
+    __exidx_start = .;
+    *(.ARM.exidx*)
+    __exidx_end = .;
+  }
+  > Application = 0xffffffff
+
+  /* Constructors and destructors */
+
+ .ctors :
+  {
+    __CTOR_LIST__ = .;
+    KEEP (*crtbegin.o(.ctors))
+    KEEP (*crtbegin?.o(.ctors))
+    KEEP (*(EXCLUDE_FILE(*crtend?.o *crtend.o) .ctors))
+    KEEP (*(SORT(.ctors.*)))
+    KEEP (*(.ctors))
+    __CTOR_END__ = .;
+  }
+  > Application = 0xffffffff
+
+  .dtors :
+  {
+    __DTOR_LIST__ = .;
+    KEEP (*crtbegin.o(.dtors))
+    KEEP (*crtbegin?.o(.dtors))
+    KEEP (*(EXCLUDE_FILE(*crtend?.o *crtend.o) .dtors))
+    KEEP (*(SORT(.dtors.*)))
+    KEEP (*(.dtors))
+    __DTOR_END__ = .;
+  }
+  > Application = 0xffffffff
+
+  .preinit_array :
+  {
+    PROVIDE_HIDDEN (__preinit_array_start = .);
+    KEEP (*(.preinit_array*))
+    PROVIDE_HIDDEN (__preinit_array_end = .);
+  }
+  > Application = 0xffffffff
+
+  .init_array :
+  {
+    PROVIDE_HIDDEN (__init_array_start = .);
+    KEEP (*(SORT(.init_array.*)))
+    KEEP (*(.init_array*))
+    PROVIDE_HIDDEN (__init_array_end = .);
+  }
+  > Application = 0xffffffff
+
+  .fini_array :
+  {
+    PROVIDE_HIDDEN (__fini_array_start = .);
+    KEEP (*(SORT(.fini_array.*)))
+    KEEP (*(.fini_array*))
+    PROVIDE_HIDDEN (__fini_array_end = .);
+    . = ALIGN(4);
+     __ROM_CRC_END = .;
+  }
+  > Application = 0xffffffff
+
+  /* Initialized data */
+
+  __etext = .;    /* end of code */
+  __DATA_ROM = .; /* start of initialized data */
+  
+  .data : AT(__DATA_ROM)
+  {
+    . = ALIGN(4);
+    __DATA_RAM = .;
+    __data_start__ = .;
+    _sdata = .;
+    *(.data)
+    *(.data*)
+    KEEP(*(.jcr*))
+    . = ALIGN(4);
+    __data_end__ = .;
+    _edata = .;
+  } > Data
+
+  __DATA_END = __DATA_ROM + (__data_end__ - __data_start__);
+   ___data_size = _edata - _sdata;
+  .data_rom : AT(__DATA_ROM)
+  {
+    __DATA_ROM_START = .;
+    . += ___data_size;
+    . = ALIGN(4);
+    __USED_FLASH_END = .;
+  }
+  > Application = 0xffffffff
+
+  /* Uninitialized data */
+
+  .bss :
+  {
+    . = ALIGN(4);
+    __START_BSS = .;
+    __bss_start__ = .;
+    *(.bss)
+    *(.bss*)
+    *(COMMON)
+    . = ALIGN(4);
+    __bss_end__ = .;
+    __END_BSS = .;
+  } > Data
+
+  _romp_at = __DATA_ROM + SIZEOF(.data);
+  .romp : AT(_romp_at)
+  {
+    __S_romp = _romp_at;
+    LONG(__DATA_ROM);
+    LONG(_sdata);
+    LONG(___data_size);
+    LONG(0);
+    LONG(0);
+    LONG(0);
+  } > Data
+  
+  /* Heap */
+
+  .heap :
+  {
+    . = ALIGN(8);
+    __end__ = .;
+    _end = .;
+    PROVIDE(end = .);
+    __HeapBase = .;
+    . += HEAP_SIZE;
+    __HeapLimit = .;
+  } > Data
+
+  /* Stack */
+
+  .stack :
+  {
+    . = ALIGN(8);
+    . += STACK_SIZE;
+    __StackTop = .;
+  } > Data
+
+  /* No-init RAM */
+
+  .NoInit (NOLOAD):
+  {
+    __DATA_RAM_END = .;   /* RAM initialization is done until __DATA_RAM_END */
+    __NOINIT_DATA = .;
+  } > NoInit
+
+  __StackLimit = __StackTop - STACK_SIZE;
+  PROVIDE(__stack = __StackTop);
+  .ARM.attributes 0 : { *(.ARM.attributes) }
+}
+
+/* Informational symbols */
+
+__FLASH_START = FLASH_START;
+__FLASH_END = FLASH_END;
+__USED_FLASH_SIZE = __USED_FLASH_END - __FLASH_START;
+__FREE_FLASH_SIZE = __FLASH_END - __USED_FLASH_END;
+__FLASH_OVERFLOW_SIZE = __USED_FLASH_END - __FLASH_END;

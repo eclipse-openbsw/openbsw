@@ -1,0 +1,13 @@
+// Copyright 2024 Accenture.
+
+/**
+ * \ingroup transport
+ */
+#ifndef GUARD_0E206384_81C4_4858_B63D_903A1FF3903D
+#define GUARD_0E206384_81C4_4858_B63D_903A1FF3903D
+
+#include "util/logger/Logger.h"
+
+DECLARE_LOGGER_COMPONENT(TRANSPORT)
+
+#endif /* GUARD_0E206384_81C4_4858_B63D_903A1FF3903D */

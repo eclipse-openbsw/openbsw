@@ -1,0 +1,51 @@
+// Copyright 2024 Accenture.
+
+#ifndef GUARD_56DEDF59_CC8B_42DF_B9C9_5972C2D46498
+#define GUARD_56DEDF59_CC8B_42DF_B9C9_5972C2D46498
+
+#include "uds/DiagReturnCode.h"
+#include "uds/authentication/IDiagAuthenticator.h"
+#include "uds/base/AbstractDiagJob.h"
+#include "uds/jobs/ReadIdentifierFromMemory.h"
+#include "uds/session/DiagSession.h"
+
+#include <estd/slice.h>
+#include <estd/uncopyable.h>
+
+namespace uds
+{
+/**
+ * Generic implementation of a ReadDataByIdentifier which can respond with a fixed
+ * value given by a pointer to a memory location.
+ */
+class ReadIdentifierFromMemoryWithAuthentication : public ReadIdentifierFromMemory
+{
+    UNCOPYABLE(ReadIdentifierFromMemoryWithAuthentication);
+
+public:
+    ReadIdentifierFromMemoryWithAuthentication(
+        IDiagAuthenticator const& authenticator,
+        uint16_t identifier,
+        uint8_t const* responseData,
+        uint16_t responseLength,
+        DiagSessionMask sessionMask = DiagSession::ALL_SESSIONS());
+
+    ReadIdentifierFromMemoryWithAuthentication(
+        IDiagAuthenticator const& authenticator,
+        uint16_t identifier,
+        ::estd::slice<uint8_t const> const& responseData,
+        DiagSessionMask sessionMask = DiagSession::ALL_SESSIONS());
+
+protected:
+    /**
+     * \see AbstractDiagJob::getDiagAuthenticator();
+     */
+    IDiagAuthenticator const& getDiagAuthenticator() const override;
+
+private:
+    IDiagAuthenticator const& _authenticator;
+};
+
+} // namespace uds
+
+#endif // GUARD_56DEDF59_CC8B_42DF_B9C9_5972C2D46498

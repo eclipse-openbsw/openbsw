@@ -1,0 +1,122 @@
+// Copyright 2024 Accenture.
+
+#ifndef GUARD_D8D525E4_5798_498A_A3F7_8A8BD60D31B4
+#define GUARD_D8D525E4_5798_498A_A3F7_8A8BD60D31B4
+
+#include "io/IReader.h"
+
+#include <estd/array.h>
+
+namespace io
+{
+/**
+ * Class which wraps (joins) N readers into one single reader interface.
+ *
+ * The reader will return from each of the readers in sequence.
+ *
+ * [TPARAMS_BEGIN]
+ * \tparam N Number of IReaders this JoinReader wraps.
+ * [TPARAMS_END]
+ */
+template<size_t N>
+class JoinReader : public IReader
+{
+public:
+    // [PUBLIC_API_BEGIN]
+    /**
+     * Constructs a JoinReader from an array of IReader sources.
+     *
+     * \param sources   Slice of pointers (must not be nullptr) to IReader.
+     *
+     * \assert sources[0..N-1] != nullptr
+     * \assert sources[0]->maxSize() == sources[1]->maxSize() ... == sources[N-1]->maxSize()
+     */
+    explicit JoinReader(::estd::slice<IReader*, N> const& sources);
+
+    /**
+     * \see ::io::IReader::maxSize()
+     */
+    size_t maxSize() const override;
+
+    /**
+     * Returns a slice to the next piece of available data.
+     *
+     * The strategy used is a form of round-robin, where one element is returned from each queue
+     * in turn.
+     * Note that the same element will keep getting returned until release() is called.
+     *
+     * \return - Slice of bytes if one of the underlying queues was not empty
+     *         - Empty slice otherwise
+     */
+    ::estd::slice<uint8_t> peek() const override;
+
+    /**
+     * \see ::io::IReader::release()
+     */
+    void release() override;
+    // [PUBLIC_API_END]
+
+    /**
+     * The number of peeked messages released from each IReader.
+     */
+    ::estd::array<size_t, N> stats;
+
+private:
+    ::estd::slice<IReader*, N> _sources;
+    mutable size_t _current;
+    mutable bool _hasPeeked = false;
+};
+
+template<size_t N>
+JoinReader<N>::JoinReader(::estd::slice<IReader*, N> const& sources)
+: stats(), _sources(sources), _current(0)
+{
+    estd_assert(_sources[0] != nullptr);
+    auto const max = _sources[0]->maxSize();
+    for (size_t i = 1; i < N; i++)
+    {
+        estd_assert(_sources[i] != nullptr);
+        auto const maxi = _sources[i]->maxSize();
+        estd_assert(maxi == max);
+    }
+}
+
+template<size_t N>
+inline size_t JoinReader<N>::maxSize() const
+{
+    return _sources[0]->maxSize();
+}
+
+template<size_t N>
+::estd::slice<uint8_t> JoinReader<N>::peek() const
+{
+    for (size_t i = _current; i < (N + _current); i++)
+    {
+        size_t const real_i = i % N;
+        auto const b        = _sources[real_i]->peek();
+        if (b.size() > 0)
+        {
+            _current   = real_i;
+            _hasPeeked = true;
+            return b;
+        }
+    }
+    return {};
+}
+
+template<size_t N>
+void JoinReader<N>::release()
+{
+    if (_hasPeeked)
+    {
+        stats[_current] += 1;
+    }
+    _sources[_current]->release();
+    _current++;
+    _current %= N;
+    _hasPeeked = false;
+}
+
+} // namespace io
+
+#endif // GUARD_D8D525E4_5798_498A_A3F7_8A8BD60D31B4

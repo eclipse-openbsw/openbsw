@@ -1,0 +1,7 @@
+add_library(bspInterruptsImpl src/interrupts/suspendResumeAllInterrupts.cpp)
+
+target_include_directories(bspInterruptsImpl PUBLIC include)
+
+target_link_libraries(bspInterruptsImpl PUBLIC platform)
+
+target_link_libraries(bspInterruptsImpl PRIVATE freeRtos)

@@ -1,0 +1,12 @@
+
+enum DigitalInputId
+{
+    InternalInput1,
+    InternalInput2,
+    NUMBER_OF_INTERNAL_DIGITAL_INPUTS,
+    ExternalInput1,
+    ExternalInput2,
+    NUMBER_OF_EXTERNAL_DIGITAL_INPUTS,
+    TOTAL_NUMBER_OF_DIGITAL_INPUTS = NUMBER_OF_EXTERNAL_DIGITAL_INPUTS,
+    PORT_UNAVAILABLE               = TOTAL_NUMBER_OF_DIGITAL_INPUTS
+};

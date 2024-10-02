@@ -1,0 +1,8 @@
+// Copyright 2024 Accenture.
+
+#ifndef GUARD_59FA1C19_23AF_4876_AA20_2FE2F25A7E1C
+#define GUARD_59FA1C19_23AF_4876_AA20_2FE2F25A7E1C
+
+#define PRINTF(...)
+
+#endif

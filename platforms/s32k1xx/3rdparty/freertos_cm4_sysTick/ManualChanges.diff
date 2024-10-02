@@ -1,0 +1,22 @@
+diff --git a/workspaces/referenceApp/platforms/s32k1xx/3rdparty/freertos_cm4_sysTick/src/port.c b/workspaces/referenceApp/platforms/s32k1xx/3rdparty/freertos_cm4_sysTick/src/port.c
+index 73430b5bfd..4d0ee8bbdc 100644
+--- a/workspaces/referenceApp/platforms/s32k1xx/3rdparty/freertos_cm4_sysTick/src/port.c
++++ b/workspaces/referenceApp/platforms/s32k1xx/3rdparty/freertos_cm4_sysTick/src/port.c
+@@ -755,6 +755,8 @@ void xPortSysTickHandler( void )
+ #endif /* #if configUSE_TICKLESS_IDLE */
+ /*-----------------------------------------------------------*/
+
++void setupApplicationsIsr();
++
+ /*
+  * Setup the systick timer to generate the tick interrupts at the required
+  * frequency.
+@@ -777,6 +779,8 @@ __attribute__( ( weak ) ) void vPortSetupTimerInterrupt( void )
+     /* Configure SysTick to interrupt at the requested rate. */
+     portNVIC_SYSTICK_LOAD_REG = ( configSYSTICK_CLOCK_HZ / configTICK_RATE_HZ ) - 1UL;
+     portNVIC_SYSTICK_CTRL_REG = ( portNVIC_SYSTICK_CLK_BIT_CONFIG | portNVIC_SYSTICK_INT_BIT | portNVIC_SYSTICK_ENABLE_BIT );
++
++    setupApplicationsIsr();
+ }
+ /*-----------------------------------------------------------*/
+

@@ -1,0 +1,3 @@
+add_library(utbspConfiguration INTERFACE)
+
+target_include_directories(utbspConfiguration INTERFACE include)
