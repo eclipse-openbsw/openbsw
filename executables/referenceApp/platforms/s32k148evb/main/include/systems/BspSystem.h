@@ -18,7 +18,7 @@ class BspSystem
 , private ::async::RunnableType
 {
 public:
-    BspSystem(::async::ContextType const context, StaticBsp& staticBsp);
+    BspSystem(::async::ContextType context, StaticBsp& staticBsp);
 
     void init() override;
     void run() override;

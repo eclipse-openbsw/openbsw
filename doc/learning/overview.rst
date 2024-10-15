@@ -16,6 +16,7 @@ Some simple lessons to get new users up and running.
     logging/index
     commands/index
     can/index
+    ethernet/index
     uds/index
     hwio/index
     tracing/index

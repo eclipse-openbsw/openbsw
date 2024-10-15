@@ -13,3 +13,10 @@ if (PLATFORM_SUPPORT_CAN)
 
     target_link_libraries(main PRIVATE configuration socketCanTransceiver)
 endif ()
+
+if (PLATFORM_SUPPORT_ETHERNET)
+    target_sources(main PRIVATE src/systems/TapEthernetSystem.cpp)
+    target_link_libraries(main PRIVATE lwipSocket tapEthernetDriver
+                                       ethConfiguration)
+
+endif ()

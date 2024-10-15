@@ -99,12 +99,12 @@ __isr_vector:
     .long   DefaultISR                                      /* FLEXIO_IRQHandler                                  FlexIO Interrupt */
     .long   DefaultISR                                      /* Reserved86_IRQHandler                              Reserved Interrupt 86 */
     .long   DefaultISR                                      /* Reserved87_IRQHandler                              Reserved Interrupt 87 */
-    .long   DefaultISR                                      /* Reserved88_IRQHandler                              Reserved Interrupt 88 */
-    .long   DefaultISR                                      /* Reserved89_IRQHandler                              Reserved Interrupt 89 */
-    .long   DefaultISR                                      /* Reserved90_IRQHandler                              Reserved Interrupt 90 */
-    .long   DefaultISR                                      /* Reserved91_IRQHandler                              Reserved Interrupt 91 */
-    .long   DefaultISR                                      /* Reserved92_IRQHandler                              Reserved Interrupt 92 */
-    .long   DefaultISR                                      /* Reserved93_IRQHandler                              Reserved Interrupt 93 */
+    .long   DefaultISR                                      /* Enet_1588_Timer_IRQHandler                         Reserved Interrupt 88 */
+    .long   ENET_TX_Buffer_IRQHandler                       /* Enet_TX_Buffer_IRQHandler                       /* Reserved Interrupt 89*/
+    .long   ENET_RX_Buffer_IRQHandler                       /* Enet_RX_Buffer_IRQHandler                       /* Reserved Interrupt 90*/
+    .long   ENET_PRE_IRQHandler                             /* Enet_PayloadReceiveError_IRQHandler             /* Reserved Interrupt 91*/
+    .long   DefaultISR                                      /* Enet_GracefulStop_IRQHandler                       Reserved Interrupt 92 */
+    .long   DefaultISR                                      /* Enet_WakeFromSleep_IRQHandler                      Reserved Interrupt 93 */
     .long   DefaultISR                                      /* CAN0_ORed_IRQHandler                               CAN0 OR'ed [Bus Off OR Transmit Warning OR Receive Warning] */
     .long   DefaultISR                                      /* CAN0_Error_IRQHandler                              CAN0 Interrupt indicating that errors were detected on the CAN bus */
     .long   DefaultISR                                      /* CAN0_Wake_Up_IRQHandler                            CAN0 Interrupt asserted when Pretended Networking operation is enabled, and a valid message matches the selected filter criteria during Low Power mode */

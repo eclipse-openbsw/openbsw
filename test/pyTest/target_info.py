@@ -37,6 +37,7 @@ class TargetInfo():
         target_info = tomli.load(fp)
         self._socketcan = target_info.get("socketcan", {})
         self._serial = target_info.get("serial", {})
+        self._eth = target_info.get("eth", {})
         self._pty_forwarder = target_info.get("pty_forwarder", {})
         self._per_run_process = target_info.get("per_run_process", {})
         self._target_process = target_info.get("target_process", {})
@@ -78,6 +79,13 @@ class TargetInfo():
         return self._serial.copy()
 
     @property
+    def eth(self):
+        """A copy of the dictionary read from under the "ip" heading
+        in the target's TOML file.
+        """
+        return self._eth.copy()
+
+    @property
     def pty_forwarder(self):
         """A copy of the dictionary read from under the "pty_forwarder" heading
         in the target's TOML file.
@@ -117,6 +125,7 @@ class TargetInfo():
         desc = f"name={self.name}\n"
         desc = desc + f"socketcan={self.socketcan}\n"
         desc = desc + f"serial={self.serial}\n"
+        desc = desc + f"ip_addr={self.ip_addr}\n"
         desc = desc + f"pty_forwarder={self.pty_forwarder}\n"
         desc = desc + f"per_run_process={self.per_run_process}\n"
         desc = desc + f"target_process={self.target_process}\n"

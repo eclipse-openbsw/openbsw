@@ -1,4 +1,5 @@
 add_subdirectory(bspConfiguration)
+add_subdirectory(ethConfiguration)
 add_subdirectory(freeRtosCoreConfiguration)
 add_subdirectory(main)
 

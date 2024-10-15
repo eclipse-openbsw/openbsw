@@ -4,6 +4,14 @@ set(OPENBSW_DIR
     ${CMAKE_CURRENT_SOURCE_DIR}/../..
     CACHE PATH "Path to Eclipse OpenBSW")
 
+set(OPENBSW_APP_DIR
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    CACHE PATH "Path to Eclipse OpenBSW Application")
+
+set(OPENBSW_PLATFORM_DIR
+    ${OPENBSW_DIR}/platforms/posix
+    CACHE PATH "Path to Eclipse OpenBSW Platform")
+
 project(
     "Eclipse OpenBSW Unit Tests"
     DESCRIPTION

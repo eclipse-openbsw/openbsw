@@ -29,6 +29,10 @@ jobs:
         - name: Checkout repository
           uses: actions/checkout@v4
 
+        - name: Set up virtual ethernet interface
+          run: |
+            sudo tools/enet/bring-up-ethernet.sh
+
         - name: Build the docker image
           run: |
            docker build -f docker/Dockerfile.dev -t dev .

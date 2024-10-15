@@ -1,3 +1,5 @@
+.. _setup_s32k148_ubuntu_build:
+
 Set up build for S32K148 platform on Ubuntu :prop:`tool:ubuntu_version`
 =======================================================================
 
