@@ -1,0 +1,31 @@
+name: CMake on a single platform
+
+on: [push, pull_request]
+
+env:
+  # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
+  BUILD_TYPE: Release
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup cmake
+      uses: jwlawson/actions-setup-cmake@v2
+      with:
+        cmake-version: '3.22.x'
+    - name: Configure CMake
+      run: cmake -B cmake-build-posix -S executables/referenceApp -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+
+    - name: Build
+      run: cmake --build cmake-build-posix --target app.referenceApp -j --config ${{env.BUILD_TYPE}}
+
+    - name: Test
+      # Execute tests defined by the CMake configuration.
+      run: |
+          cmake -B cmake-build-unit-tests -S executables/unitTest -DBUILD_UNIT_TESTS=ON
+          cmake --build cmake-build-unit-tests -j4
+          ctest --test-dir cmake-build-unit-tests -j4
+
