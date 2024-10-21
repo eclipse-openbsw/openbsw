@@ -51,7 +51,7 @@ allowing developers to get up and running quickly.
 
 ## Documentation
 
-The [documentation](https://eclipse-openbsw.github.io/open-bsw)
+The [documentation](https://eclipse-openbsw.github.io/openbsw)
 describes Eclipse OpenBSW in detail and provides simple setup guides to build and use it.
 
 ## Contributing
