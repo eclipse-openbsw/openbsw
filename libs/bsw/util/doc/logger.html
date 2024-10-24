@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>logger - logger API &mdash; Eclipse OpenBSW Documentation  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/rtd_theme_overrides.css?v=6fd0d55b" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=eafc0fe6" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/colors.css?v=1e44671c" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/colored_table.css?v=b1b74c58" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/header.css?v=4b84dd64" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../../../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="string - String Handling" href="string.html" />
+    <link rel="prev" title="format - Printf-like String Formatting" href="format.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../doc/index.html" class="icon icon-home">
+            Eclipse OpenBSW Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Learning</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/learning/overview.html">Lessons for beginners</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/learning/SysTest/Testing%20Guide.html">Testing Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tools/UdsTool/doc/index.html">UdsTool</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/codingGuidelines/index.html">Coding Guidelines</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Platforms</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/platforms/posix/index.html">POSIX</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/platforms/s32k148evb/index.html">S32K148 Evaluation Board</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Application</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../executables/referenceApp/application/doc/index.html">application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../executables/referenceApp/asyncBinding/doc/index.html">asyncBinding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../executables/referenceApp/asyncCoreConfiguration/doc/index.html">asyncCoreConfiguration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../executables/referenceApp/configuration/doc/index.html">configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../executables/referenceApp/consoleCommands/doc/index.html">consoleCommands - Command utility</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../executables/referenceApp/platforms/posix/freeRtosCoreConfiguration/doc/index.html">freeRtosCoreConfiguration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../executables/referenceApp/platforms/posix/main/doc/index.html">main</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../executables/referenceApp/platforms/s32k148evb/bspConfiguration/doc/index.html">bspConfiguration - S32k148EVB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../executables/referenceApp/platforms/s32k148evb/freeRtosCoreConfiguration/doc/index.html">freeRtosCoreConfiguration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../executables/referenceApp/platforms/s32k148evb/main/doc/index.html">main</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../executables/referenceApp/transportConfiguration/doc/index.html">transportConfiguration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../executables/referenceApp/udsConfiguration/doc/index.html">udsConfiguration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">BSW Modules</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../async/doc/index.html">async - Asynchronous Execution Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../asyncConsole/doc/index.html">asyncConsole - Asynchronous Console</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../asyncFreeRtos/doc/index.html">asyncFreeRtos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../asyncImpl/doc/index.html">asyncImpl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../bsp/doc/index.html">bsp</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../common/doc/index.html">common</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../commonTimeout/doc/index.html">commonTimeout</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cpp2can/doc/index.html">cpp2can - CAN Abstraction Layer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docan/doc/index.html">docan - Diagnostics over CAN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../estd/doc/index.html">estd - Embedded Standard Library</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../io/doc/index.html">io - IO Library</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../lifecycle/doc/index.html">lifecycle - App Lifecycle Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../logger/doc/index.html">logger - Logger module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../loggerIntegration/doc/index.html">loggerIntegration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../platform/doc/index.html">platform - Platform Library</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../runtime/doc/index.html">runtime</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../stdioConsoleInput/doc/index.html">stdioConsoleInput</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../timer/doc/index.html">timer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../transport/doc/index.html">transport - Transport Library</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../transportRouterSimple/doc/index.html">transportRouterSimple</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../uds/doc/index.html">uds - Unified Diagnostic Services</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">util - common utilities</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="command.html">command - Command Framework</a></li>
+<li class="toctree-l2"><a class="reference internal" href="crc.html">crc - Cyclic Redundancy Check</a></li>
+<li class="toctree-l2"><a class="reference internal" href="format.html">format - Printf-like String Formatting</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">logger - logger API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#levels">Levels</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#logger-components">Logger Components</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#defining-a-logger-component">Defining a logger component</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#using-a-logger-component">Using a logger component</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#macro-based-api">Macro-based API</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#value-based-log-macros">Value based log macros</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#formatted-message-log-macros">Formatted message log macros</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#atomic-value-macros">Atomic value macros</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#array-value-macros">Array value macros</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#other-macros">Other macros</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#examples">Examples</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#attaching-a-logging-framework">Attaching a logging framework</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#method-based-api">Method-based API</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#class-diagram">Class diagram</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#usage">Usage</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#providing-a-logger-framework">Providing a logger framework</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#synchronous-asynchronous-logging">Synchronous/Asynchronous logging</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#timestamps">Timestamps</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="string.html">string - String Handling</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">BSP Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../bsp/bspCharInputOutput/doc/index.html">bspCharInputOutput</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../bsp/bspCommandInterpreterSimple/doc/index.html">bspCommandInterpreterSimple</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../bsp/bspDynamicClient/doc/index.html">bspDynamicClient - Dynamic Client</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../bsp/bspError/doc/index.html">bspError</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../bsp/bspInputManager/doc/index.html">bspInputManager</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../bsp/bspInterrupts/doc/index.html">bspInterrupts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../bsp/bspOutputManager/doc/index.html">bspOutputManager</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../bsp/bspOutputPwm/doc/index.html">bspOutputPwm - Output PWM driver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../bsp/bspTestConsoleWithCommandInterpreter/doc/index.html">bspTestConsoleWithCommandInterpreter</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">BSP Modules posix</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../platforms/posix/bsp/bspInterruptsImpl/doc/index.html">bspInterruptsImpl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../platforms/posix/bsp/bspMcu/doc/index.html">bspMcu</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../platforms/posix/bsp/bspStdio/doc/index.html">bspStdio</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../platforms/posix/bsp/bspSystemTime/doc/index.html">bspSystemTime</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../platforms/posix/bsp/socketCanTransceiver/doc/index.html">socketCanTransceiver</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">BSP Modules s32k1xx</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../platforms/s32k1xx/bsp/bspAdc/doc/index.html">bspAdc - ADC driver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../platforms/s32k1xx/bsp/bspClock/doc/index.html">bspClock</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../platforms/s32k1xx/bsp/bspCore/doc/index.html">bspCore</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../platforms/s32k1xx/bsp/bspFlexCan/doc/index.html">bspFlexCan</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../platforms/s32k1xx/bsp/bspFtm/doc/index.html">bspFtm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../platforms/s32k1xx/bsp/bspFtmPwm/doc/index.html">bspFtmPwm - FTM driver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../platforms/s32k1xx/bsp/bspInterruptsImpl/doc/index.html">bspInterruptsImpl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../platforms/s32k1xx/bsp/bspIo/doc/index.html">bspIo - IO driver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../platforms/s32k1xx/bsp/bspMcu/doc/index.html">bspMcu</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../platforms/s32k1xx/bsp/bspMcuWatchdog/doc/index.html">bspMcuWatchdog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../platforms/s32k1xx/bsp/bspSci/doc/index.html">bspSci</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../platforms/s32k1xx/bsp/canflex2Transceiver/doc/index.html">canflex2Transceiver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../platforms/s32k1xx/hardFaultHandler/doc/index.html">hardFaultHandler</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">BSP Configuration for s32k148evb</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../executables/referenceApp/platforms/s32k148evb/bspConfiguration/doc/index.html">bspConfiguration - S32k148EVB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../executables/referenceApp/platforms/s32k148evb/freeRtosCoreConfiguration/doc/index.html">freeRtosCoreConfiguration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../executables/referenceApp/platforms/s32k148evb/main/doc/index.html">main</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">UT Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../executables/unitTest/bsp/bspConfiguration/doc/index.html">bspConfiguration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../executables/unitTest/bsp/bspInterruptsImpl/doc/index.html">bspInterruptsImpl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../executables/unitTest/bsp/bspIo/doc/index.html">bspIo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../executables/unitTest/bsp/bspMcu/doc/index.html">bspMcu</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../executables/unitTest/bsp/bspSci/doc/index.html">bspSci</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../executables/unitTest/common/doc/index.html">common</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../doc/index.html">Eclipse OpenBSW Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../doc/index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="index.html">util - common utilities</a> &raquo;</li>
+        
+        <li>logger - logger API</li>
+    
+
+    
+
+      <li class="wy-breadcrumbs-aside">
+
+        <!-- DOCUMENT STATUS -->
+
+        
+
+        <!-- DATA CLASSIFICATION -->
+
+        
+
+      </li>
+
+    
+  </ul>
+
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="logger-logger-api">
+<span id="util-logger"></span><h1>logger - logger API<a class="headerlink" href="#logger-logger-api" title="Link to this heading"></a></h1>
+<p>The logger API submodule contains a simple API that allows submodules to emit log messages. It does
+not provide any implementation (a logger framework) for handling of the log messages. It is up to an
+application to decide about how to filter and output received messages. By default (without any
+framework) log message calls are simply ignored.</p>
+<section id="levels">
+<h2>Levels<a class="headerlink" href="#levels" title="Link to this heading"></a></h2>
+<p>A log message first has a given severity (level) that indicates the importance of the message.
+There’s a fixed set of levels defined (with descending importance):</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Level</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>fatal/critical</p></td>
+<td><p>Any error that is hard to recover from or that indicates severe data loss</p></td>
+</tr>
+<tr class="row-odd"><td><p>error</p></td>
+<td><p>Any error of a service that can cause data loss and which cannot be handled
+automatically</p></td>
+</tr>
+<tr class="row-even"><td><p>warn</p></td>
+<td><p>Events or unexpected behaviour that can be handled automatically</p></td>
+</tr>
+<tr class="row-odd"><td><p>info</p></td>
+<td><p>General useful information to log, such as normally handled user events or
+state changes.</p></td>
+</tr>
+<tr class="row-even"><td><p>debug</p></td>
+<td><p>Information that is diagnostically helpful</p></td>
+</tr>
+</tbody>
+</table>
+<p>It is up to the developer to decide about assignment of severities to a message. But as a thumb rule
+info should be selectable as default log level without obtaining tons of logs. It is always good
+practice to avoid repetitive logging of the same state but focussing on logging of state changes.</p>
+</section>
+<section id="logger-components">
+<h2>Logger Components<a class="headerlink" href="#logger-components" title="Link to this heading"></a></h2>
+<p>While there are a lot of modules which cover very different functionality it is crucial to have an
+identifier that defines about the origin of a log message. Therefore to each message a logger
+component has to be assigned to indicate that origin. Typically a logging framework allows filtering
+messages by components.</p>
+<section id="defining-a-logger-component">
+<h3>Defining a logger component<a class="headerlink" href="#defining-a-logger-component" title="Link to this heading"></a></h3>
+<p>When logs should be emitted by some module the most important decision is about the logger component
+assigned to the message. Typically a module will define a uniquely named logger component. This
+definition has to be placed into a source file because the logger component definition will be
+mapped to a global <code class="docutils literal notranslate"><span class="pre">uint8_t</span></code> variable. The definition of a <code class="docutils literal notranslate"><span class="pre">TEST_COMPONENT</span></code> logger component
+could be placed in a <code class="docutils literal notranslate"><span class="pre">TestComponentLogger.cpp</span></code> file like:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;util/logger/Logger.h&quot;</span>
+
+<span class="n">DEFINE_LOGGER_COMPONENT</span><span class="p">(</span><span class="n">TEST_COMPONENT</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The logger component declaration and definition macros create the components in the namespace
+<code class="docutils literal notranslate"><span class="pre">::util::logger</span></code>. It is crucial to not use the define or declare macros from within
+a namespace but only outside of any namespace!</p>
+</div>
+<p>To allow users to access the logger component (typically when configuring a logger in an application
+main file) it is good style to also add a header file that contains the declaration of the logger as
+follows:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#ifndef TEST_COMPONENT_LOGGER_H</span>
+<span class="cp">#define TEST_COMPONENT_LOGGER_H</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;util/logger/Logger.h&quot;</span>
+
+<span class="n">DECLARE_LOGGER_COMPONENT</span><span class="p">(</span><span class="n">TEST_COMPONENT</span><span class="p">)</span>
+
+<span class="cp">#endif </span><span class="c1">// TEST_COMPONENT_LOGGER_H</span>
+</pre></div>
+</div>
+</section>
+<section id="using-a-logger-component">
+<h3>Using a logger component<a class="headerlink" href="#using-a-logger-component" title="Link to this heading"></a></h3>
+<p>If there’s no include file that holds a logger component’s declaration, the declaration using
+<code class="docutils literal notranslate"><span class="pre">DECLARE_LOGGER_COMPONENT</span></code> can also be placed in any other source or header file where the component
+is to be used, as long as the declaration is done outside of any namespace.</p>
+<p>If a log is used from within a source file it might make sense to place a <code class="docutils literal notranslate"><span class="pre">using</span></code> statement to the
+top of the file that allows unqualified usage of the component for logging:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">using</span><span class="w"> </span><span class="o">::</span><span class="n">util</span><span class="o">::</span><span class="n">logger</span><span class="o">::</span><span class="n">TEST_COMPONENT</span><span class="p">;</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="macro-based-api">
+<h2>Macro-based API<a class="headerlink" href="#macro-based-api" title="Link to this heading"></a></h2>
+<p>There’s a macro based API that allows specifying logs using macros which can arbitrarily be defined
+by a logging framework.</p>
+<section id="value-based-log-macros">
+<h3>Value based log macros<a class="headerlink" href="#value-based-log-macros" title="Link to this heading"></a></h3>
+<p>A value based log consists of two or more values. The first value is the component identifier and the
+second is the message (a zero-terminated string value). All additional data can simply be added by
+appending values which can be named and also equipped with a unit.</p>
+<p>This might look complicated but has the advantage that message and data are strictly separated and
+can be interpreted by value.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Macro</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">LOG_F(component,</span> <span class="pre">message,</span> <span class="pre">...)</span></code></p></td>
+<td><p>Log with severity fatal</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">LOG_E(component,</span> <span class="pre">message,</span> <span class="pre">...)</span></code></p></td>
+<td><p>Log with severity error</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">LOG_W(component,</span> <span class="pre">message,</span> <span class="pre">...)</span></code></p></td>
+<td><p>Log with severity warn</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">LOG_I(component,</span> <span class="pre">message,</span> <span class="pre">...)</span></code></p></td>
+<td><p>Log with severity info</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">LOG_D(component,</span> <span class="pre">message,</span> <span class="pre">...)</span></code></p></td>
+<td><p>Log with severity debug</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="formatted-message-log-macros">
+<h3>Formatted message log macros<a class="headerlink" href="#formatted-message-log-macros" title="Link to this heading"></a></h3>
+<p>A formatted message consists of a message (a zero-terminated string value) that contains
+<code class="docutils literal notranslate"><span class="pre">printf</span></code>-like format specifiers for embedding additional values.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Macro</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">LOG_FMT_F(component,</span> <span class="pre">format,</span> <span class="pre">...)</span></code></p></td>
+<td><p>Log formatted message with severity fatal</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">LOG_FMT_E(component,</span> <span class="pre">format,</span> <span class="pre">...)</span></code></p></td>
+<td><p>Log formatted message with severity error</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">LOG_FMT_W(component,</span> <span class="pre">format,</span> <span class="pre">...)</span></code></p></td>
+<td><p>Log formatted message with severity warn</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">LOG_FMT_I(component,</span> <span class="pre">format,</span> <span class="pre">...)</span></code></p></td>
+<td><p>Log formatted message with severity info</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">LOG_FMT_D(component,</span> <span class="pre">format,</span> <span class="pre">...)</span></code></p></td>
+<td><p>Log formatted message with severity debug</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="atomic-value-macros">
+<h3>Atomic value macros<a class="headerlink" href="#atomic-value-macros" title="Link to this heading"></a></h3>
+<p>Atomic value macros add type information to atomic values.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Macro</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Comment</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">L_BOOL(val)</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">bool</span></code></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">L_I8(val)</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int8_t</span></code></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">L_U8(val)</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">uint8_t</span></code></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">L_H8(val)</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">uint8_t</span></code></p></td>
+<td><p>output as hex</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">L_I16(val)</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int16_t</span></code></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">L_U16(val)</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">uint16_t</span></code></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">L_H16(val)</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">uint16_t</span></code></p></td>
+<td><p>output as hex</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">L_I32(val)</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int32_t</span></code></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">L_U32(val)</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">uint32_t</span></code></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">L_H32(val)</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">uint32_t</span></code></p></td>
+<td><p>output as hex</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">L_I64(val)</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int64_t</span></code></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">L_U64(val)</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">uint64_t</span></code></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">L_H64(val)</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">uint64_t</span></code></p></td>
+<td><p>output as hex</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">L_STR(val)</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">char*</span></code></p></td>
+<td><p>zero-terminated string</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">L_SIZED_STR(val)</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">::util::string::ConstString</span></code></p></td>
+<td><p>sized string</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">L_PTR(val)</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">void*</span></code></p></td>
+<td><p>pointer</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="array-value-macros">
+<h3>Array value macros<a class="headerlink" href="#array-value-macros" title="Link to this heading"></a></h3>
+<p>Array value macros add type information to array values.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Macro</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Comment</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">L_ARRAY_BOOL(val)</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">::estd::slice&lt;const</span> <span class="pre">bool&gt;</span></code></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">L_ARRAY_I8(val)</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">::estd::slice&lt;const</span> <span class="pre">int8_t&gt;</span></code></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">L_ARRAY_U8(val)</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">::estd::slice&lt;uint8_t</span> <span class="pre">const&gt;</span></code></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">L_ARRAY_H8(val)</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">::estd::slice&lt;uint8_t</span> <span class="pre">const&gt;</span></code></p></td>
+<td><p>output as hex</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">L_ARRAY_I16(val)</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">::estd::slice&lt;const</span> <span class="pre">int16_t&gt;</span></code></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">L_ARRAY_U16(val)</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">::estd::slice&lt;const</span> <span class="pre">uint16_t&gt;</span></code></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">L_ARRAY_H16(val)</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">::estd::slice&lt;const</span> <span class="pre">uint16_t&gt;</span></code></p></td>
+<td><p>output as hex</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">L_ARRAY_I32(val)</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">::estd::slice&lt;const</span> <span class="pre">int32_t&gt;</span></code></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">L_ARRAY_U32(val)</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">::estd::slice&lt;const</span> <span class="pre">uint32_t&gt;</span></code></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">L_ARRAY_H32(val)</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">::estd::slice&lt;const</span> <span class="pre">uint32_t&gt;</span></code></p></td>
+<td><p>output as hex</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">L_ARRAY_I64(val)</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">::estd::slice&lt;const</span> <span class="pre">int64_t&gt;</span></code></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">L_ARRAY_U64(val)</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">::estd::slice&lt;const</span> <span class="pre">uint64_t&gt;</span></code></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">L_ARRAY_H64(val)</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">::estd::slice&lt;const</span> <span class="pre">uint64_t&gt;</span></code></p></td>
+<td><p>output as hex</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="other-macros">
+<h3>Other macros<a class="headerlink" href="#other-macros" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Macro</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">L_NAME(name,</span> <span class="pre">value)</span></code></p></td>
+<td><p>names the value (zero-terminated string). <code class="docutils literal notranslate"><span class="pre">value</span></code> is another value
+macro</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">L_UNIT(unit,</span> <span class="pre">value)</span></code></p></td>
+<td><p>provide a unit (zero-terminated string). <code class="docutils literal notranslate"><span class="pre">value</span></code> is another value
+macro</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">L_FMT(format,</span> <span class="pre">...)</span></code></p></td>
+<td><p>string value specified as a printf-like call where <code class="docutils literal notranslate"><span class="pre">format</span></code> is the
+string that can contain format specifiers for additional parameters</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="examples">
+<h3>Examples<a class="headerlink" href="#examples" title="Link to this heading"></a></h3>
+<p>Value based error with named string value and named integer value:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">LOG_E</span><span class="p">(</span><span class="n">FLEXRAY</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;A voltage error has occurred&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="n">L_NAME</span><span class="p">(</span><span class="s">&quot;reason&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">L_STR</span><span class="p">(</span><span class="s">&quot;unknown&quot;</span><span class="p">)),</span>
+<span class="w">            </span><span class="n">L_NAME</span><span class="p">(</span><span class="s">&quot;voltage, L_UNIT(&quot;</span><span class="n">mV</span><span class="s">&quot;, L_U32(voltage))));</span>
+</pre></div>
+</div>
+<p>Value based info with named hex parameters:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">LOG_I</span><span class="p">(</span><span class="n">TRANSPORT</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Transport message received&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="n">L_NAME</span><span class="p">(</span><span class="s">&quot;src&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">L_H16</span><span class="p">(</span><span class="n">src</span><span class="p">)),</span>
+<span class="w">            </span><span class="n">L_NAME</span><span class="p">(</span><span class="s">&quot;dst&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">L_H16</span><span class="p">(</span><span class="n">dst</span><span class="p">)));</span>
+</pre></div>
+</div>
+<p>Debug log with additional formatted parameter:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">LOG_D</span><span class="p">(</span><span class="n">TEST_COMPONENT</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;IPv4 address received&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="n">L_FMT</span><span class="p">(</span><span class="s">&quot;%d.%d.%d.%d&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">L_U8</span><span class="p">(</span><span class="n">addr</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span><span class="w"> </span><span class="n">L_U8</span><span class="p">(</span><span class="n">addr</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span><span class="w"> </span><span class="n">L_U8</span><span class="p">(</span><span class="n">addr</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span><span class="w"> </span><span class="n">L_U8</span><span class="p">(</span><span class="n">addr</span><span class="p">[</span><span class="mi">3</span><span class="p">])));</span>
+</pre></div>
+</div>
+<p>Printf-like message with formatted string and integer:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">LOG_FMT_E</span><span class="p">(</span><span class="n">FLEXRAY</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;A voltage error has occurred with reason=%s and voltage=%d mV&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="n">L_STR</span><span class="p">(</span><span class="s">&quot;unknown&quot;</span><span class="p">),</span><span class="n">L_U32</span><span class="p">(</span><span class="n">voltage</span><span class="p">));</span>
+</pre></div>
+</div>
+<p>Printf-like message with formatted hex parameters:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">LOG_FMT_I</span><span class="p">(</span><span class="n">TRANSPORT</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Transport message received with src=%02x and dst=%02x&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="n">L_U16</span><span class="p">(</span><span class="n">src</span><span class="p">),</span><span class="w"> </span><span class="n">L_U16</span><span class="p">(</span><span class="n">dst</span><span class="p">));</span>
+</pre></div>
+</div>
+</section>
+<section id="attaching-a-logging-framework">
+<h3>Attaching a logging framework<a class="headerlink" href="#attaching-a-logging-framework" title="Link to this heading"></a></h3>
+<p>To attach a logging framework (which can define the macros) it is sufficient to provide a file
+<code class="docutils literal notranslate"><span class="pre">util/logger/LoggerBinding.h</span></code> on an include path that precedes the include path of module
+<code class="docutils literal notranslate"><span class="pre">util</span></code>.  Here all API macros can be defined (overwritten). Macros which aren’t defined here will
+be defined void by the logging API.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The macro-based API is recommended for new modules because it allows better optimizations (e.g.
+for suppressing certain log messages). There is currently only the <code class="docutils literal notranslate"><span class="pre">dlt</span></code> module that supports a
+complete implementation for value based logging.</p>
+</div>
+</section>
+</section>
+<section id="method-based-api">
+<h2>Method-based API<a class="headerlink" href="#method-based-api" title="Link to this heading"></a></h2>
+<p>The method-based API is mainly based on the class <code class="docutils literal notranslate"><span class="pre">::util::logger::Logger</span></code> that is a
+simple facade that can propagate calls to a logging framework.</p>
+<section id="class-diagram">
+<h3>Class diagram<a class="headerlink" href="#class-diagram" title="Link to this heading"></a></h3>
+<p class="plantuml">
+<a href="../../../../_images/plantuml-9b29c8a724f52255411af910b0684b1fb0f69c8a.png"><img src="../../../../_images/plantuml-9b29c8a724f52255411af910b0684b1fb0f69c8a.png" alt="Logger : log()
+Logger : critical()
+Logger : error()
+Logger : warn()
+Logger : info()
+Logger : debug()
+Logger : isEnabled()
+Logger : getLevel()
+
+Module1 ..&gt; Logger
+Module2 ..&gt; Logger
+
+class IComponentMapping
+class ILoggerOutput
+
+package &quot;Logger framework 1&quot; {
+    ComponentMapping1 &lt;|-- IComponentMapping
+    LoggerOutput1 &lt;|-- ILoggerOutput
+}
+
+package &quot;Logger framework 2&quot; {
+    ComponentMapping2 &lt;|-- IComponentMapping
+    LoggerOutput2 &lt;|-- ILoggerOutput
+}
+
+Logger ..&gt; ComponentMapping1
+Logger ..&gt; LoggerOutput1
+
+Logger ..&gt; ComponentMapping2
+Logger ..&gt; LoggerOutput2" style="width: 785.0px; height: 492.0px"/></a>
+</p>
+</section>
+<section id="usage">
+<h3>Usage<a class="headerlink" href="#usage" title="Link to this heading"></a></h3>
+<p>When logs are emitted from within a source file it is advisable to place a <code class="docutils literal notranslate"><span class="pre">using</span></code> statement to
+the top of the file that allows unqualified usage of both class <code class="docutils literal notranslate"><span class="pre">::util::logger::Logger</span></code>
+and logger component:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">using</span><span class="w"> </span><span class="o">::</span><span class="n">util</span><span class="o">::</span><span class="n">logger</span><span class="o">::</span><span class="n">Logger</span><span class="p">;</span>
+<span class="k">using</span><span class="w"> </span><span class="o">::</span><span class="n">util</span><span class="o">::</span><span class="n">logger</span><span class="o">::</span><span class="n">TEST_COMPONENT</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Emitting a log message is then simply calling a log method with the component and a printf-style
+text like:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">Logger</span><span class="o">::</span><span class="n">info</span><span class="p">(</span><span class="n">TEST_COMPONENT</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Using version %d.%02d&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">major</span><span class="p">,</span><span class="w"> </span><span class="n">minor</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>In the above example the severity is expressed by usage of the static method
+<code class="docutils literal notranslate"><span class="pre">::util::logger::Logger::info</span></code> and the logger component is called
+<code class="docutils literal notranslate"><span class="pre">::util::logger::TEST_COMPONENT</span></code>. The additional arguments is like a simple <code class="docutils literal notranslate"><span class="pre">printf</span></code>.</p>
+<p>In rare cases the severity will not be fixed and for this the more generic method
+<code class="docutils literal notranslate"><span class="pre">::util::logger::Logger::log</span></code> can be used:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">Logger</span><span class="o">::</span><span class="n">log</span><span class="p">(</span><span class="n">TEST_COMPONENT</span><span class="p">,</span><span class="w"> </span><span class="n">getLevel</span><span class="p">(),</span><span class="w"> </span><span class="s">&quot;Using version %d.%02d&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">major</span><span class="p">,</span><span class="w"> </span><span class="n">minor</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>In case the preparation of arguments for emitting a log would be time consuming it can make sense to
+first check whether logging is enabled for the given component and the desired log level. So a log
+would be emitted like follows:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">Logger</span><span class="o">::</span><span class="n">isEnabled</span><span class="p">(</span><span class="o">::</span><span class="n">util</span><span class="o">::</span><span class="n">logger</span><span class="o">::</span><span class="n">LEVEL_INFO</span><span class="p">))</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">Logger</span><span class="o">::</span><span class="n">info</span><span class="p">(</span><span class="n">TEST_COMPONENT</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Time consuming log of value %d&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">getComputedValue</span><span class="p">());</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="providing-a-logger-framework">
+<h3>Providing a logger framework<a class="headerlink" href="#providing-a-logger-framework" title="Link to this heading"></a></h3>
+<p>The method-based logger API is just a facade that can propagate log messages to a logger
+implementation – if provided. For collecting log messages two interfaces have to be provided:</p>
+<ul class="simple">
+<li><p>A so called component mapping interface (implementation of
+<code class="docutils literal notranslate"><span class="pre">::util::logger::IComponentMapping</span></code>) that filters logs and holds readable names for the
+components and levels</p></li>
+<li><p>A logger output interface (implementation of <code class="docutils literal notranslate"><span class="pre">::util::logger::ILoggerOutput</span></code>) that
+receives already filtered log  messages and information about the component and the level</p></li>
+</ul>
+<p>Having decided and instantiated all necessary interfaces the logger than has to be initialized with
+a call to:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">Logger</span><span class="o">::</span><span class="n">init</span><span class="p">(</span><span class="n">componentMapping</span><span class="p">,</span><span class="w"> </span><span class="n">loggerOutput</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>In case there’s a regular shutdown scenario the logger implementation can be disconnected by a call
+to the shutdown method like:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">Logger</span><span class="o">::</span><span class="n">shutdown</span><span class="p">();</span>
+</pre></div>
+</div>
+</section>
+<section id="synchronous-asynchronous-logging">
+<h3>Synchronous/Asynchronous logging<a class="headerlink" href="#synchronous-asynchronous-logging" title="Link to this heading"></a></h3>
+<p>The logger output by design is synchronously i.e. the logOutput method of the interface
+<code class="docutils literal notranslate"><span class="pre">::util::logger::ILoggerOutput</span></code> will be called immediately if the filtering was
+successful. Thus it is up to the implementation to decide whether to emit the message in a
+synchronous or asynchronous way.</p>
+</section>
+<section id="timestamps">
+<h3>Timestamps<a class="headerlink" href="#timestamps" title="Link to this heading"></a></h3>
+<p>Provision and handling of timestamps is not addressed in the logger interface. Typically appropriate
+timestamp information will be added in the implementation of the <code class="docutils literal notranslate"><span class="pre">logOutput</span></code> method of interface
+<code class="docutils literal notranslate"><span class="pre">::util::logger::ILoggerOutput</span></code>.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+  <div role="footer_string">
+    <p>
+      Copyright (c) 2024 Accenture
+    </p>
+    <p>
+      Eclipse OpenBSW is a trademark of the Eclipse Foundation.
+    </p>
+    <p>Documentation from 2024-10-24 07:58:30, official build.</p>
+
+    
+      <a href="../../../../_sources/libs/bsw/util/doc/logger.rst.txt" rel="nofollow"> View page source</a>
+    
+
+  </div>
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(false);
+      });
+  </script> 
+
+</body>
+</html>
