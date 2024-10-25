@@ -1,0 +1,27 @@
+name: Publish Release
+
+on:
+  push:
+    tags:
+      - "v*.*"
+
+jobs:
+  build-docs:
+    uses: ./.github/workflows/doc-build.yml
+
+  create-release:
+    runs-on: ubuntu-latest
+    needs: build-docs
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download build documentation
+        uses: actions/download-artifact@v4
+        with:
+          name: docs
+
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: docs.zip
