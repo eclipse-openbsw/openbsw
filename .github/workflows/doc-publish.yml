@@ -1,0 +1,27 @@
+name: Publish Documentation
+
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build-docs:
+    uses: ./.github/workflows/doc-build.yml
+  publis-docs:
+    runs-on: ubuntu-latest
+    needs: build-docs
+    steps:
+      - name: Download build documentation
+        uses: actions/download-artifact@v4
+        with:
+          name: docs
+
+      - name: Unzip
+        run: unzip docs.zip
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: docs
+          force_orphan: true
