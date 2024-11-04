@@ -1,31 +1,39 @@
-name: CMake on a single platform
+name: Build S32k and posix platform
 
-on: [push, pull_request]
-
-env:
-  # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
-  BUILD_TYPE: Release
+on: [push,pull_request]
 
 jobs:
-  build:
+  run-command:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        platform: [posix, s32k148]
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Setup cmake
-      uses: jwlawson/actions-setup-cmake@v2
-      with:
-        cmake-version: '3.22.x'
-    - name: Configure CMake
-      run: cmake -B cmake-build-posix -S executables/referenceApp -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - name: Build
-      run: cmake --build cmake-build-posix --target app.referenceApp -j --config ${{env.BUILD_TYPE}}
+      - name: Set up CMake
+        uses: jwlawson/actions-setup-cmake@v2
+        with:
+          cmake-version: '3.22.x'
 
-    - name: Test
-      # Execute tests defined by the CMake configuration.
-      run: |
-          cmake -B cmake-build-unit-tests -S executables/unitTest -DBUILD_UNIT_TESTS=ON
-          cmake --build cmake-build-unit-tests -j4
-          ctest --test-dir cmake-build-unit-tests -j4
+      - name: Set up ARM GCC
+        if: ${{ matrix.platform == 's32k148' }}
+        uses: carlosperate/arm-none-eabi-gcc-action@v1
+        with:
+          release: '10.3-2021.10'
+
+      - name: Configure CMake for POSIX
+        if: ${{ matrix.platform == 'posix' }}
+        run: cmake -B cmake-build-posix -S executables/referenceApp
+
+      - name: Configure CMake for S32K148
+        if: ${{ matrix.platform == 's32k148' }}
+        run: cmake -B cmake-build-s32k148 -S executables/referenceApp -DBUILD_TARGET_PLATFORM="S32K148EVB" --toolchain ../../admin/cmake/ArmNoneEabi.cmake
+
+      - name: Build for ${{ matrix.platform }}
+        run: cmake --build cmake-build-${{ matrix.platform }} --target app.referenceApp -j
+
+
 
