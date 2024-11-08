@@ -12,9 +12,12 @@ jobs:
   build-sphinx-docs:
     uses: ./.github/workflows/sphinx-doc-build.yml
 
+  build-doxygen-docs:
+    uses: ./.github/workflows/doxygen-build.yml
+
   publish-docs:
     runs-on: ubuntu-latest
-    needs: build-sphinx-docs
+    needs: [build-sphinx-docs, build-doxygen-docs]
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -30,6 +33,18 @@ jobs:
         run: |
           unzip sphinx_docs.zip
           rm sphinx_docs.zip
+
+      - name: Download doxygen documentation
+        uses: actions/download-artifact@v4
+        with:
+          name: doxygen_docs
+          path: ./doc/github_pages
+
+      - name: Unzip doxygen documentation
+        working-directory: ./doc/github_pages
+        run: |
+          unzip doxygen_docs.zip
+          rm doxygen_docs.zip
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4

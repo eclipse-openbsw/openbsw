@@ -1,0 +1,53 @@
+name: Build and Deploy Doxygen Documentation
+
+on: [workflow_call, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    defaults:
+      run:
+        working-directory: ./doc
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install python dependencies
+        run: |
+          python -m pip install --upgrade pip
+
+      - name: Install doxygen
+        run: |
+          sudo apt-get update
+          sudo apt-get install doxygen
+          pip install coverxygen
+
+      - name: Run doxygen
+        run: doxygen Doxyfile
+
+      - name: Print Doxygen Warning Log
+        run: cat DoxygenWarningLog.txt
+
+      - name: Run coverxygen
+        run: python3 -m coverxygen --format summary --xml-dir doxygenOut/xml/ --src-dir .. --output doc-coverage.info
+
+      - name: Print doc coverage
+        run: cat doc-coverage.info
+
+      - name: Zip doxygen documentation
+        run: |
+          mv doxygenOut/html doxygen_docs
+          zip -r doxygen_docs.zip doxygen_docs
+
+      - name: Upload doxygen_docs
+        uses: actions/upload-artifact@v4
+        with:
+          name: doxygen_docs
+          path: ./doc/doxygen_docs.zip

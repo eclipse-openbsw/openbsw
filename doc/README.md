@@ -35,3 +35,25 @@ doxygen Doxyfile
 ```
 
 The entry point html file is found at `doc/doxygenOut/html/index.html`
+
+XML output is also generated in  `doc/doxygenOut/xml/` from which coverage information can be extracted using [`coverxygen`](https://github.com/psycofdj/coverxygen). For example...
+
+```bash
+$ python3 -m coverxygen --format summary --xml-dir doxygenOut/xml/ --src-dir .. --output -
+Classes    :  50.2% (231/460)
+Defines    :   2.4% (4/169)
+Enum Values:  35.9% (185/515)
+Enums      :  41.7% (45/108)
+Files      :   7.5% (47/630)
+Friends    :   9.8% (5/51)
+Functions  :  41.9% (1826/4354)
+Namespaces :   4.3% (5/116)
+Pages      : 100.0% (3/3)
+Structs    :  20.8% (55/264)
+Typedefs   :  29.0% (226/780)
+Unions     : 100.0% (1/1)
+Variables  :   7.7% (110/1435)
+-----------------------------------
+Total      :  30.9% (2743/8886)
+
+```
