@@ -40,12 +40,15 @@ jobs:
     - name: Build Sphinx documentation
       run: make html OFFICIAL_BUILD=1
 
-    - name: Copy redirection index.html
-      run: cp github_pages/redirect_index.html build/html/index.html
+    - name: Create base dir for all documentation
+      run: mkdir docs
+
+    - name: Copy root index.html
+      run: cp github_pages/index.html docs/index.html
 
     - name: Zip documentation
       run: |
-        mv build/html docs
+        mv build/html docs/sphinx_docs
         zip -r docs.zip docs
 
     - name: Upload docs
