@@ -1,4 +1,4 @@
-name: Build Documentation
+name: Build Sphinx Documentation
 
 on: [workflow_call, pull_request]
 
@@ -40,19 +40,13 @@ jobs:
     - name: Build Sphinx documentation
       run: make html OFFICIAL_BUILD=1
 
-    - name: Create base dir for all documentation
-      run: mkdir docs
-
-    - name: Copy root index.html
-      run: cp github_pages/index.html docs/index.html
-
-    - name: Zip documentation
+    - name: Zip Sphinx documentation
       run: |
-        mv build/html docs/sphinx_docs
-        zip -r docs.zip docs
+        mv build/html sphinx_docs
+        zip -r sphinx_docs.zip sphinx_docs
 
-    - name: Upload docs
+    - name: Upload sphinx_docs
       uses: actions/upload-artifact@v4
       with:
-        name: docs
-        path: ./doc/docs.zip
+        name: sphinx_docs
+        path: ./doc/sphinx_docs.zip

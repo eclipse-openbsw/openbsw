@@ -9,24 +9,31 @@ permissions:
   contents: write
 
 jobs:
-  build-docs:
-    uses: ./.github/workflows/doc-build.yml
+  build-sphinx-docs:
+    uses: ./.github/workflows/sphinx-doc-build.yml
 
   publish-docs:
     runs-on: ubuntu-latest
-    needs: build-docs
+    needs: build-sphinx-docs
     steps:
-      - name: Download build documentation
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download Sphinx documentation
         uses: actions/download-artifact@v4
         with:
-          name: docs
+          name: sphinx_docs
+          path: ./doc/github_pages
 
-      - name: Unzip
-        run: unzip docs.zip
+      - name: Unzip Sphinx documentation
+        working-directory: ./doc/github_pages
+        run: |
+          unzip sphinx_docs.zip
+          rm sphinx_docs.zip
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: docs
+          publish_dir: doc/github_pages
           force_orphan: true
