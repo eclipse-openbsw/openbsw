@@ -1,0 +1,67 @@
+name: Code Coverage Report
+
+on: [workflow_call, push, pull_request]
+
+env:
+  # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
+  BUILD_TYPE: Debug
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup cmake
+      uses: jwlawson/actions-setup-cmake@v2
+      with:
+        cmake-version: '3.22.x'
+  
+    - name: Test
+      # Execute tests defined by the CMake configuration.
+      run: |
+          cmake -B cmake-build-unit-tests -S executables/unitTest -DBUILD_UNIT_TESTS=ON -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+          cmake --build cmake-build-unit-tests -j4
+          ctest --test-dir cmake-build-unit-tests -j4
+    
+    - name: Install lcov
+      run: sudo apt install lcov
+    
+    # no-external command excludes the system libraries in the root directory 
+    - name: Capture code coverage
+      run: |
+        echo "Capturing code coverage..."
+        lcov --no-external --capture --directory . \
+             --output-file cmake-build-unit-tests/coverage_unfiltered.info
+
+    - name: Filter out 3rd party and mock files
+      run: |
+        echo "Filtering out 3rd party and mock files from coverage data..."
+        lcov --remove cmake-build-unit-tests/coverage_unfiltered.info \
+             '*libs/3rdparty/googletest/*' \
+             '*/mock/*' \
+             '*/gmock/*' \
+             '*/gtest/*' \
+             '*/test/*' \
+             --output-file cmake-build-unit-tests/coverage.info
+
+    - name: Generate HTML coverage report
+      run: |
+        echo "Generating HTML coverage report..."
+        genhtml cmake-build-unit-tests/coverage.info \
+                 --output-directory cmake-build-unit-tests/coverage
+    
+    
+    - name: Zip the coverage report
+      run: |
+        mv  cmake-build-unit-tests/coverage code_coverage
+        zip -r code_coverage.zip code_coverage
+
+    - name: Upload code coverage artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: code_coverage
+        path: code_coverage.zip
