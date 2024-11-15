@@ -6,9 +6,8 @@
 #include "can/transceiver/canflex2/CanFlex2Transceiver.h"
 #include "lifecycle/SingleContextLifecycleComponent.h"
 
+#include <etl/singleton_base.h>
 #include <systems/ICanSystem.h>
-
-#include <estd/singleton.h>
 
 namespace bios
 {
@@ -45,7 +44,7 @@ namespace systems
 class CanSystem
 : public ::can::ICanSystem
 , public ::lifecycle::SingleContextLifecycleComponent
-, public ::estd::singleton<CanSystem>
+, public ::etl::singleton_base<CanSystem>
 {
 public:
     /**

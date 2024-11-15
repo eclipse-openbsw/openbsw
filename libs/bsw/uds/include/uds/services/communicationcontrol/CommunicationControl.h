@@ -7,6 +7,8 @@
 #include "uds/services/communicationcontrol/ICommunicationStateManager.h"
 #include "uds/session/DiagSession.h"
 
+#include <etl/intrusive_list.h>
+
 namespace uds
 {
 /**
@@ -92,10 +94,12 @@ protected:
     uint16_t fSubNodeIdDisabledTx;
     bool fNeverNotified;
 
-    using ListenerList = ::estd::forward_list<ICommunicationStateListener>;
+    using ListenerList
+        = ::etl::intrusive_list<ICommunicationStateListener, ::etl::bidirectional_link<0>>;
     ListenerList fListeners;
 
-    using SubListenerList = ::estd::forward_list<ICommunicationSubStateListener>;
+    using SubListenerList
+        = ::etl::intrusive_list<ICommunicationSubStateListener, ::etl::bidirectional_link<0>>;
     SubListenerList fSubListeners;
 };
 

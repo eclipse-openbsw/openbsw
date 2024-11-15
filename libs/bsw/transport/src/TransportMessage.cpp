@@ -5,8 +5,7 @@
 #include "transport/IDataProgressListener.h"
 #include "transport/TransportLogger.h"
 
-#include <estd/assert.h>
-#include <estd/memory.h>
+#include <util/estd/assert.h>
 
 #include <cstring>
 
@@ -27,7 +26,7 @@ TransportMessage::TransportMessage()
 
 TransportMessage::TransportMessage(uint8_t* const buffer, uint32_t const bufferLength)
 : fpDataProgressListener(nullptr)
-, fBuffer(::estd::slice<uint8_t>::from_pointer(buffer, bufferLength))
+, fBuffer(::etl::span<uint8_t>(buffer, bufferLength))
 , fSourceId(INVALID_ADDRESS)
 , fTargetId(INVALID_ADDRESS)
 , fPayloadLength(0U)
@@ -45,7 +44,7 @@ void TransportMessage::init(uint8_t* const buffer, uint32_t const bufferLength)
         estd_assert(false);
     }
     fpDataProgressListener = nullptr;
-    fBuffer                = ::estd::slice<uint8_t>::from_pointer(buffer, bufferLength);
+    fBuffer                = ::etl::span<uint8_t>(buffer, bufferLength);
     fValidBytes            = 0U;
     if (fBuffer.size() != 0U)
     {
@@ -91,8 +90,8 @@ TransportMessage::append(uint8_t const* const data, uint16_t const length)
         return ErrorCode::TP_MSG_LENGTH_EXCEEDED;
     }
 
-    (void)::estd::memory::copy(
-        fBuffer.offset(fValidBytes), ::estd::slice<uint8_t const>::from_pointer(data, length));
+    ::etl::span<uint8_t const> source(data, length);
+    (void)::etl::copy(source, fBuffer.subspan(fValidBytes));
     (void)increaseValidBytes(length);
     return ErrorCode::TP_MSG_OK;
 }

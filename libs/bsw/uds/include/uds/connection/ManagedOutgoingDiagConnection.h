@@ -3,10 +3,11 @@
 #ifndef GUARD_DD21C731_100D_4FB8_9CC2_5776381A16EB
 #define GUARD_DD21C731_100D_4FB8_9CC2_5776381A16EB
 
-#include "estd/forward_list.h"
-#include "estd/queue.h"
 #include "transport/TransportJob.h"
 #include "uds/connection/OutgoingDiagConnection.h"
+
+#include <etl/intrusive_list.h>
+#include <etl/queue.h>
 
 namespace transport
 {
@@ -33,7 +34,7 @@ class AbstractDiagnosisConfiguration;
  * \see AbstractDiagApplication
  */
 class ManagedOutgoingDiagConnection
-: public ::estd::forward_list_node<ManagedOutgoingDiagConnection>
+: public ::etl::bidirectional_link<0>
 , public OutgoingDiagConnection
 {
 public:
@@ -85,7 +86,7 @@ public:
     void timeoutOccured() override;
 
 private:
-    using TransportJobQueue = ::estd::queue<transport::TransportJob>;
+    using TransportJobQueue = ::etl::iqueue<transport::TransportJob>;
     friend class AbstractDiagnosisConfiguration;
 
     void setResponseQueue(TransportJobQueue& responseQueue) { fpPendingResponses = &responseQueue; }

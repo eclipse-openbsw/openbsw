@@ -3,8 +3,8 @@
 #ifndef GUARD_23ECC63C_F7E9_48D3_950F_6DEAEFE5B6AA
 #define GUARD_23ECC63C_F7E9_48D3_950F_6DEAEFE5B6AA
 
-#include <estd/slice.h>
-#include <estd/uncopyable.h>
+#include <etl/span.h>
+#include <etl/uncopyable.h>
 
 #include <cstddef>
 #include <cstdint>
@@ -146,10 +146,8 @@ class BuddyMemoryManagerStatsHelper;
  * The runtime complexity of allocate and free is log2(n), where n is the
  * number of nodes in the tree, i.e. it is based on the depth of the tree.
  */
-class BuddyMemoryManager
+class BuddyMemoryManager : public ::etl::uncopyable
 {
-    UNCOPYABLE(BuddyMemoryManager);
-
 public:
     static constexpr uint8_t TAG_NODE_FREE = 0x02U;
     static constexpr uint8_t TAG_NODE_LINK = 0x01U;
@@ -178,7 +176,7 @@ public:
      * Constructs an instance of BuddyMemoryManager.
      * \param nodeTree Slice of internal binary tree.
      */
-    BuddyMemoryManager(::estd::slice<uint8_t> nodeTree);
+    BuddyMemoryManager(::etl::span<uint8_t> nodeTree);
 
     size_t numBuckets() const;
 
@@ -319,8 +317,6 @@ namespace declare
 template<size_t MIN_NUM_BUCKETS>
 class BuddyMemoryManager : public ::util::memory::BuddyMemoryManager
 {
-    UNCOPYABLE(BuddyMemoryManager);
-
 public:
     /** Number of buckets */
     static size_t const NUM_BUCKETS
@@ -338,7 +334,7 @@ private:
 
 template<size_t MIN_NUM_BUCKETS>
 BuddyMemoryManager<MIN_NUM_BUCKETS>::BuddyMemoryManager()
-: ::util::memory::BuddyMemoryManager(::estd::make_slice(_nodeTreeArray))
+: ::util::memory::BuddyMemoryManager(::etl::span<uint8_t>(_nodeTreeArray))
 {
     clear();
 }

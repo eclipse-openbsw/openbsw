@@ -3,7 +3,6 @@
 #ifndef GUARD_A3316EC5_4B46_48EC_B023_A8F3BC468B1D
 #define GUARD_A3316EC5_4B46_48EC_B023_A8F3BC468B1D
 
-#include "estd/uncopyable.h"
 #include "uds/base/Service.h"
 
 namespace uds
@@ -14,8 +13,6 @@ namespace uds
  */
 class RoutineControl : public Service
 {
-    UNCOPYABLE(RoutineControl);
-
 public:
     RoutineControl();
 

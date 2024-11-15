@@ -3,7 +3,6 @@
 #ifndef GUARD_6FEF4514_074C_498E_B99E_514B4590EFB3
 #define GUARD_6FEF4514_074C_498E_B99E_514B4590EFB3
 
-#include "estd/uncopyable.h"
 #include "uds/UdsConstants.h"
 #include "uds/base/AbstractDiagJob.h"
 
@@ -19,8 +18,6 @@ class IDiagSessionManager;
  */
 class DiagJobRoot : public AbstractDiagJob
 {
-    UNCOPYABLE(DiagJobRoot);
-
 public:
     DiagJobRoot();
 

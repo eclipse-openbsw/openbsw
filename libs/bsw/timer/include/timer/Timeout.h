@@ -3,7 +3,7 @@
 #ifndef GUARD_C2A4CB49_29FE_4F33_B998_55F6D425BB00
 #define GUARD_C2A4CB49_29FE_4F33_B998_55F6D425BB00
 
-#include <estd/forward_list.h>
+#include <etl/intrusive_forward_list.h>
 
 #include <cstdint>
 
@@ -16,7 +16,7 @@ class Timer;
  * A class providing interface for Timeout objects.
  *
  */
-struct Timeout : public ::estd::forward_list_node<Timeout>
+struct Timeout : public ::etl::forward_link<0>
 {
     Timeout() = default;
 

@@ -4,8 +4,6 @@
 
 #include "uds/connection/IncomingDiagConnection.h"
 
-using ::estd::slice;
-
 namespace uds
 {
 ReadIdentifierFromMemory::ReadIdentifierFromMemory(
@@ -14,12 +12,12 @@ ReadIdentifierFromMemory::ReadIdentifierFromMemory(
     uint16_t const responseLength,
     DiagSessionMask const sessionMask)
 : ReadIdentifierFromMemory(
-    identifier, slice<uint8_t const>::from_pointer(responseData, responseLength), sessionMask)
+    identifier, ::etl::span<uint8_t const>(responseData, responseLength), sessionMask)
 {}
 
 ReadIdentifierFromMemory::ReadIdentifierFromMemory(
     uint16_t const identifier,
-    slice<uint8_t const> const& responseData,
+    ::etl::span<uint8_t const> const& responseData,
     DiagSessionMask const sessionMask)
 : DataIdentifierJob(_implementedRequest, sessionMask), _responseSlice(responseData)
 {
