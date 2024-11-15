@@ -2,7 +2,7 @@
 
 #include "util/stream/TaggedOutputStream.h"
 
-#include <estd/memory.h>
+#include <etl/span.h>
 
 namespace util
 {
@@ -19,10 +19,10 @@ bool TaggedOutputStream::isEof() const { return _stream.isEof(); }
 
 void TaggedOutputStream::write(uint8_t const data)
 {
-    writeBytes(_stream, ::estd::memory::as_slice(&data));
+    writeBytes(_stream, ::etl::span<uint8_t const>(&data, 1));
 }
 
-void TaggedOutputStream::write(::estd::slice<uint8_t const> const& buffer)
+void TaggedOutputStream::write(::etl::span<uint8_t const> const& buffer)
 {
     writeBytes(_stream, buffer);
 }

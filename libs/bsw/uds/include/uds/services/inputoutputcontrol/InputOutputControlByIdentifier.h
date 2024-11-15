@@ -2,15 +2,12 @@
 
 #pragma once
 
-#include "estd/uncopyable.h"
 #include "uds/base/Service.h"
 
 namespace uds
 {
 class InputOutputControlByIdentifier : public Service
 {
-    UNCOPYABLE(InputOutputControlByIdentifier);
-
 public:
     struct IOControlParameter
     {

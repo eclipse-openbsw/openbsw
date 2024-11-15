@@ -2,7 +2,7 @@
 #include "event_groups.h"
 #include "timers.h"
 
-#include <estd/singleton.h>
+#include <etl/singleton_base.h>
 
 #include <gmock/gmock.h>
 
@@ -10,11 +10,11 @@ namespace os
 {
 
     class FreeRtosMock:
-            public ::estd::singleton<FreeRtosMock>
+            public ::etl::singleton_base<FreeRtosMock>
     {
     public:
         FreeRtosMock():
-            ::estd::singleton<FreeRtosMock>(*this)
+            ::etl::singleton_base<FreeRtosMock>(*this)
         {}
 
         MOCK_METHOD7(xTaskCreateStatic, TaskHandle_t(TaskFunction_t pxTaskCode, const char* pcName, const uint32_t ulStackDepth,

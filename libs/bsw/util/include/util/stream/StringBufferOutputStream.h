@@ -4,7 +4,7 @@
 
 #include "util/stream/IOutputStream.h"
 
-#include <estd/slice.h>
+#include <etl/span.h>
 
 namespace util
 {
@@ -19,20 +19,20 @@ class StringBufferOutputStream : public IOutputStream
 {
 public:
     explicit StringBufferOutputStream(
-        ::estd::slice<char> buf, char const* endOfString = nullptr, char const* ellipsis = nullptr);
+        ::etl::span<char> buf, char const* endOfString = nullptr, char const* ellipsis = nullptr);
     ~StringBufferOutputStream();
 
     bool isEof() const override;
     void write(uint8_t data) override;
-    void write(::estd::slice<uint8_t const> const& buffer) override;
+    void write(::etl::span<uint8_t const> const& buffer) override;
 
     void reset();
 
-    ::estd::slice<char> getBuffer();
+    ::etl::span<char> getBuffer();
     char const* getString();
 
 private:
-    ::estd::slice<char> _buffer;
+    ::etl::span<char> _buffer;
     char const* _endOfString;
     char const* _ellipsis;
     size_t _currentIndex;

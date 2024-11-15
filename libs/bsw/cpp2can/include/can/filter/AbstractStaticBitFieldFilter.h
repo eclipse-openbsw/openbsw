@@ -11,7 +11,8 @@
 #include "can/filter/IFilter.h"
 #include "can/filter/IMerger.h"
 
-#include <estd/assert.h>
+#include <util/estd/assert.h>
+
 #include <platform/estdint.h>
 
 #include <cstring>

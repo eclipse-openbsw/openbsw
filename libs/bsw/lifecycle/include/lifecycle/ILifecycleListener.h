@@ -8,11 +8,11 @@
 
 #include "lifecycle/ILifecycleComponent.h"
 
-#include <estd/forward_list.h>
+#include <etl/intrusive_forward_list.h>
 
 namespace lifecycle
 {
-class ILifecycleListener : public ::estd::forward_list_node<ILifecycleListener>
+class ILifecycleListener : public ::etl::forward_link<0>
 {
 public:
     virtual void
