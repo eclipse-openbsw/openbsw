@@ -3,12 +3,14 @@
 #ifndef GUARD_C512CEED_E256_4221_B8CB_BB6E8451A7C7
 #define GUARD_C512CEED_E256_4221_B8CB_BB6E8451A7C7
 
+#include <etl/byte_stream.h>
+#include <etl/largest.h>
+#include <etl/memory.h>
+#include <etl/parameter_pack.h>
+#include <etl/span.h>
+#include <etl/type_traits.h>
+#include <etl/variant.h>
 #include <io/MemoryQueue.h>
-
-#include <estd/memory.h>
-#include <estd/type_list.h>
-#include <estd/type_traits.h>
-#include <estd/variant.h>
 
 #include <cassert>
 #include <type_traits>
@@ -41,46 +43,37 @@ struct VariantQueueType
 
 namespace internal
 {
-template<typename T>
-class element_size
-{
-    template<typename C>
-    static constexpr size_t size(decltype(&C::max_payload_size))
-    {
-        return sizeof(typename C::type) + C::max_payload_size;
-    }
-
-    template<typename C>
-    static constexpr size_t size(...)
-    {
-        return sizeof(typename C::type);
-    }
-
-public:
-    static constexpr size_t value = size<T>(nullptr);
-};
-
-template<typename TL>
+template<typename T, typename... TRest>
 struct max_element_size
 {
-    static constexpr size_t value = ::estd::max<size_t>(
-        element_size<typename TL::type>::value, max_element_size<typename TL::tail>::value);
+    static constexpr size_t value = ::etl::max<size_t>(
+        sizeof(typename T::type) + T::max_payload_size, max_element_size<TRest...>::value);
 };
 
-template<>
-struct max_element_size<::estd::type_list_end>
+template<typename T>
+struct max_element_size<T>
 {
-    static constexpr size_t value = 0;
+    static constexpr size_t value = sizeof(typename T::type) + T::max_payload_size;
 };
 } // namespace internal
 
+// type list
 template<typename... ElementTypes>
 struct make_variant_queue
 {
-    using type_list = typename ::estd::make_type_list<typename ElementTypes::type...>::type;
+    using type_list = typename ::etl::parameter_pack<typename ElementTypes::type...>;
 
     static constexpr size_t queue_max_element_type
-        = internal::max_element_size<typename ::estd::make_type_list<ElementTypes...>::type>::value;
+        = internal::max_element_size<ElementTypes...>::value;
+
+    template<typename T>
+    using contains = ::etl::is_one_of<T, typename ElementTypes::type...>;
+
+    enum
+    {
+        max_align = ::etl::largest<typename ElementTypes::type...>::alignment,
+        size      = type_list::size
+    };
 };
 
 template<typename QueueTypeList, size_t CAPACITY>
@@ -91,67 +84,79 @@ template<typename TypeList>
 struct variant_q
 {
     static_assert(
-        ::estd::max_align<TypeList>::value == 1,
+        TypeList::max_align == 1,
         "structs are directly serialized into the queue, alignment other than 1-byte cannot be "
         "guaranteed");
 
     using types = TypeList;
 
 private:
-    template<typename TL, size_t ID = 0>
+    template<size_t ID = 0>
     struct variant_do
     {
-        using T       = typename TL::type;
-        using recurse = variant_do<typename TL::tail, ID + 1>;
+        using T       = typename TypeList::type_list::type_from_index<ID>::type;
+        using recurse = variant_do<ID + 1 == TypeList::size ? ID : ID + 1>;
 
         template<typename Visitor, typename R>
-        static void call(size_t const t, ::estd::slice<uint8_t const> const mem, Visitor& visitor)
+        static void call(size_t const t, ::etl::span<uint8_t const> const mem, Visitor& visitor)
         {
-            if (t == ID)
+            if (t < TypeList::size)
             {
-                visitor(*reinterpret_cast<T const*>(mem.data()), mem.offset(sizeof(T)));
+                if (t == ID)
+                {
+                    visitor(*reinterpret_cast<T const*>(mem.data()));
+                }
+                else
+                {
+                    recurse::template call<Visitor, R>(t, mem, visitor);
+                }
             }
-            else
+        }
+
+        template<typename Visitor, typename R>
+        static void
+        call_with_payload(size_t const t, ::etl::span<uint8_t const> const mem, Visitor& visitor)
+        {
+            if (t < TypeList::size)
             {
-                recurse::template call<Visitor, R>(t, mem, visitor);
+                if (t == ID)
+                {
+                    visitor(*reinterpret_cast<T const*>(mem.data()), mem.subspan(sizeof(T)));
+                }
+                else
+                {
+                    recurse::template call_with_payload<Visitor, R>(t, mem, visitor);
+                }
             }
         }
     };
 
-    template<size_t ID>
-    struct variant_do<::estd::type_list_end, ID>
-    {
-        template<typename Visitor, typename R>
-        static void call(size_t const, ::estd::slice<uint8_t const> const, Visitor const&)
-        {}
-    };
-
     template<typename T>
-    static void write_header(T const& t, ::estd::slice<uint8_t>& buffer)
+    static void write_header(T const& t, ::etl::span<uint8_t>& buffer)
     {
         static_assert(
-            ::estd::contains<TypeList, T>::value, "type must be a part of the variant type list");
-        static_assert(std::is_trivial<T>::value, "type must be trivial");
+            TypeList::template contains<T>::value, "type must be a part of the variant type list");
 
-        ::estd::memory::take<uint8_t>(buffer)
-            = static_cast<uint8_t>(::estd::index_of<TypeList, T>::value);
-        ::estd::memory::take<T>(buffer) = t;
+        buffer[0] = static_cast<uint8_t>(TypeList::type_list::template index_of_type<T>::value);
+        *(reinterpret_cast<T*>(&buffer[1])) = t;
+        buffer                              = buffer.subspan(1 + sizeof(t));
     }
 
 public:
     template<typename Visitor>
-    static void read(Visitor& visitor, ::estd::slice<uint8_t const> const data)
+    static void read(Visitor& visitor, ::etl::span<uint8_t const> const data)
     {
         assert(data.size() != 0);
-        return ::estd::variant_T_do<TypeList>::template call<Visitor, void>(
-            data[0], data.offset(1).data(), visitor);
+
+        return variant_do<>::template call<Visitor, void>(data[0], data.subspan(1), visitor);
     }
 
     template<typename Visitor>
-    static void read_with_payload(Visitor& visitor, ::estd::slice<uint8_t const> const data)
+    static void read_with_payload(Visitor& visitor, ::etl::span<uint8_t const> const data)
     {
         assert(data.size() != 0);
-        return variant_do<TypeList>::template call<Visitor, void>(data[0], data.offset(1), visitor);
+        return variant_do<>::template call_with_payload<Visitor, void>(
+            data[0], data.subspan(1), visitor);
     }
 
     template<typename T, typename Writer>
@@ -183,7 +188,7 @@ public:
     }
 
     template<typename T, typename Writer>
-    static bool write(Writer& w, T const& t, ::estd::slice<uint8_t const> const payload)
+    static bool write(Writer& w, T const& t, ::etl::span<uint8_t const> const payload)
     {
         auto buffer = w.allocate(sizeof(T) + 1 + payload.size());
         if (buffer.size() == 0)
@@ -192,14 +197,14 @@ public:
         }
 
         write_header(t, buffer);
-        (void)::estd::memory::copy(buffer, payload);
+        (void)::etl::mem_copy(payload.begin(), payload.size(), buffer.begin());
 
         w.commit();
         return true;
     }
 
     template<typename T, typename Writer>
-    static ::estd::slice<uint8_t> alloc_payload(Writer& w, T const& t, size_t const payloadSize)
+    static ::etl::span<uint8_t> alloc_payload(Writer& w, T const& t, size_t const payloadSize)
     {
         auto buffer = w.allocate(sizeof(T) + 1 + payloadSize);
         if (buffer.size() != 0)
@@ -213,15 +218,14 @@ public:
     static T* alloc_header(Writer& w)
     {
         static_assert(
-            ::estd::contains<TypeList, T>::value, "type must be a part of the variant type list");
-        static_assert(std::is_trivial<T>::value, "type must be trivial");
+            TypeList::template contains<T>::value, "type must be a part of the variant type list");
 
         auto const buffer = w.allocate(sizeof(T) + 1);
         if (buffer.size() == 0)
         {
             return nullptr;
         }
-        buffer[0] = static_cast<uint8_t>(::estd::index_of<TypeList, T>::value);
+        buffer[0] = static_cast<uint8_t>(TypeList::type_list::template index_of_type<T>::value);
         return reinterpret_cast<T*>(&buffer[1]);
     }
 };

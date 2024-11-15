@@ -44,7 +44,7 @@ target_link_libraries(
             asyncConsole
             bspMcu
             configuration
-            estd
+            etl
             lifecycle
             consoleCommands
             logger

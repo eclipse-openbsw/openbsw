@@ -3,7 +3,7 @@
 #ifndef GUARD_CD4D716E_A170_4650_84C7_E9C4239BD9C3
 #define GUARD_CD4D716E_A170_4650_84C7_E9C4239BD9C3
 
-#include <estd/forward_list.h>
+#include <etl/intrusive_forward_list.h>
 
 namespace uds
 {
@@ -16,7 +16,7 @@ class IncomingDiagConnection;
 class IAsyncDiagHelper
 {
 public:
-    class StoredRequest : public ::estd::forward_list_node<StoredRequest>
+    class StoredRequest : public ::etl::forward_link<0>
     {
     public:
         StoredRequest(

@@ -8,8 +8,8 @@
 
 #include "transport/ITransportMessageProvidingListener.h"
 
-#include <estd/forward_list.h>
-#include <estd/functional.h>
+#include <etl/delegate.h>
+#include <etl/intrusive_forward_list.h>
 
 namespace transport
 {
@@ -18,11 +18,11 @@ namespace transport
  *
  * \par Usage
  */
-class AbstractTransportLayer : public ::estd::forward_list_node<AbstractTransportLayer>
+class AbstractTransportLayer : public ::etl::forward_link<0>
 {
 public:
     /** Delegate for asynchronous notification when shutdown is done. */
-    using ShutdownDelegate = ::estd::function<void(AbstractTransportLayer&)>;
+    using ShutdownDelegate = ::etl::delegate<void(AbstractTransportLayer&)>;
 
     /** Return value of function shutdown in case shutdown was performed synchronously. */
     static bool const SYNC_SHUTDOWN_COMPLETE = true;
@@ -152,7 +152,7 @@ private:
             uint16_t sourceId,
             uint16_t targetId,
             uint16_t size,
-            ::estd::slice<uint8_t const> const& peek,
+            ::etl::span<uint8_t const> const& peek,
             TransportMessage*& pTransportMessage) override;
 
         /**

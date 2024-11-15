@@ -17,7 +17,7 @@ namespace systems
 
 ::systems::CanSystem::CanSystem(::async::ContextType context, StaticBsp& staticBsp)
 : ::lifecycle::SingleContextLifecycleComponent(context)
-, ::estd::singleton<CanSystem>(*this)
+, ::etl::singleton_base<CanSystem>(*this)
 , _context(context)
 , _transceiver0(
       context,

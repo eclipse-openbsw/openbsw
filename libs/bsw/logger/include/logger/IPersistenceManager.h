@@ -3,17 +3,18 @@
 #ifndef GUARD_74944026_98DF_43E9_8445_8984DCF45DAA
 #define GUARD_74944026_98DF_43E9_8445_8984DCF45DAA
 
-#include <estd/slice.h>
-#include <estd/uncopyable.h>
+#include <etl/span.h>
+#include <etl/uncopyable.h>
+
 #include <platform/estdint.h>
 
 namespace logger
 {
-class IPersistenceManager : public ::estd::uncopyable
+class IPersistenceManager : public ::etl::uncopyable
 {
 public:
-    virtual bool writeMapping(::estd::slice<uint8_t const> const& src) const            = 0;
-    virtual ::estd::slice<uint8_t const> readMapping(::estd::slice<uint8_t> dest) const = 0;
+    virtual bool writeMapping(::etl::span<uint8_t const> const& src) const          = 0;
+    virtual ::etl::span<uint8_t const> readMapping(::etl::span<uint8_t> dest) const = 0;
 
 protected:
     IPersistenceManager() {}

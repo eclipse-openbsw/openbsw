@@ -11,9 +11,8 @@
 #include "transport/TransportMessage.h"
 #include "transport/TransportMessageSendJob.h"
 
-#include <estd/forward_list.h>
-#include <estd/object_pool.h>
-#include <estd/uncopyable.h>
+#include <etl/intrusive_forward_list.h>
+#include <etl/pool.h>
 
 #include <cstddef>
 
@@ -30,7 +29,7 @@ class QueuedTransportLayer
 : public AbstractTransportLayer
 , public ITransportMessageProcessedListener
 {
-    using SendJobPool = ::estd::object_pool<TransportMessageSendJob>;
+    using SendJobPool = ::etl::ipool;
 
 public:
     /**
@@ -79,7 +78,8 @@ public:
     static void initializeJobPool();
 
 private:
-    using TransportMessageSendJobList = ::estd::forward_list<TransportMessageSendJob>;
+    using TransportMessageSendJobList
+        = ::etl::intrusive_forward_list<TransportMessageSendJob, etl::forward_link<0>>;
 
     static SendJobPool* sfpSendJobPool;
 
@@ -121,7 +121,7 @@ inline size_t QueuedTransportLayer::numberOfAvailableSendJobs()
 {
     if (sfpSendJobPool != nullptr)
     {
-        return sfpSendJobPool->size();
+        return sfpSendJobPool->available();
     }
 
     return 0U;

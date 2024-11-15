@@ -6,8 +6,12 @@
 #ifndef GUARD_388D33C0_7224_4D1F_B182_87A067C31A86
 #define GUARD_388D33C0_7224_4D1F_B182_87A067C31A86
 
-#include "estd/array.h"
 #include "runtime/StatisticsIterator.h"
+
+#include <etl/array.h>
+#include <etl/delegate.h>
+#include <etl/span.h>
+#include <util/estd/assert.h>
 
 namespace runtime
 {
@@ -18,9 +22,9 @@ public:
     using StatisticsType = Statistics;
     using EntryType      = Entry;
 
-    using GetNameType         = ::estd::function<char const*(size_t)>;
-    using EntrySliceType      = ::estd::slice<Entry>;
-    using ConstEntrySliceType = ::estd::slice<Entry const>;
+    using GetNameType         = ::etl::delegate<char const*(size_t)>;
+    using EntrySliceType      = ::etl::span<Entry>;
+    using ConstEntrySliceType = ::etl::span<Entry const>;
 
     class Iterator : public StatisticsIterator<Statistics>
     {
@@ -106,7 +110,7 @@ public:
     {}
 
 private:
-    ::estd::array<Entry, N> _entries;
+    ::etl::array<Entry, N> _entries;
 };
 
 } // namespace declare

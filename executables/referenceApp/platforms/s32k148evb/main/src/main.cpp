@@ -1,7 +1,9 @@
 // Copyright 2024 Accenture.
 
-#include "estd/typed_mem.h"
 #include "systems/BspSystem.h"
+
+#include <etl/alignment.h>
+#include <etl/singleton.h>
 #ifdef PLATFORM_SUPPORT_CAN
 #include "systems/CanSystem.h"
 #endif
@@ -14,9 +16,6 @@
 #include <lifecycle/LifecycleManager.h>
 #include <safeLifecycle/SafeSupervisor.h>
 #include <watchdogManager/watchdogManager.h>
-
-#include <estd/indestructible.h>
-#include <estd/optional.h>
 
 extern void app_main();
 
@@ -53,15 +52,15 @@ namespace platform
 {
 StaticBsp staticBsp;
 
-::estd::typed_mem<::systems::BspSystem> bspSystem;
+::etl::typed_storage<::systems::BspSystem> bspSystem;
 
 #ifdef PLATFORM_SUPPORT_CAN
-::estd::typed_mem<::systems::CanSystem> canSystem;
+::etl::typed_storage<::systems::CanSystem> canSystem;
 #endif // PLATFORM_SUPPORT_CAN
 
 /**
  * Callout from main application to give platform the chance to add a
- * ::lifecycle::ILifecycleComponent to the \p lifecycleManager at  a given \p level.
+ * ::lifecycle::ILifecycleComponent to the \p lifecycleManager at a given \p level.
  */
 void platformLifecycleAdd(::lifecycle::LifecycleManager& lifecycleManager, uint8_t const level)
 {

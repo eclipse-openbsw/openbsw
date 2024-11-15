@@ -10,7 +10,7 @@ add_library(
 
 target_include_directories(transport PUBLIC include)
 
-target_link_libraries(transport PUBLIC common estd util async)
+target_link_libraries(transport PUBLIC common etl util async)
 
 if (BUILD_UNIT_TESTS)
     add_library(
@@ -19,6 +19,6 @@ if (BUILD_UNIT_TESTS)
 
     target_include_directories(transportMock PUBLIC mock/gmock/include)
 
-    target_link_libraries(transportMock PRIVATE gmock transport)
+    target_link_libraries(transportMock PRIVATE gmock transport etl)
 
 endif ()

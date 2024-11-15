@@ -3,13 +3,14 @@
 #ifndef GUARD_E64F79D2_A6AC_4231_84EA_38C98BD19D0B
 #define GUARD_E64F79D2_A6AC_4231_84EA_38C98BD19D0B
 
-#include "estd/forward_list.h"
-#include "estd/functional.h"
-#include "estd/uncopyable.h"
 #include "platform/estdint.h"
 #include "uds/connection/IOutgoingDiagConnectionProvider.h"
 #include "uds/connection/IncomingDiagConnection.h"
 #include "uds/connection/ManagedOutgoingDiagConnection.h"
+
+#include <etl/delegate.h>
+#include <etl/intrusive_forward_list.h>
+#include <etl/uncopyable.h>
 
 namespace transport
 {
@@ -24,10 +25,8 @@ class AbstractDiagnosisConfiguration;
 class OutgoingDiagConnection;
 class DiagDispatcher2;
 
-class DiagConnectionManager
+class DiagConnectionManager : public etl::uncopyable
 {
-    UNCOPYABLE(DiagConnectionManager);
-
 public:
     static uint32_t const INCOMING_REQUEST_TIMEOUT    = 60000U;
     static uint32_t const PENDING_INTERVAL            = 4000U;
@@ -75,12 +74,13 @@ public:
 
     void init() { fShutdownRequested = false; }
 
-    void shutdown(::estd::function<void()> delegate);
+    void shutdown(::etl::delegate<void()> delegate);
 
 private:
     friend class DiagDispatcher2;
 
-    using ManagedOutgoingDiagConnectionList = ::estd::forward_list<ManagedOutgoingDiagConnection>;
+    using ManagedOutgoingDiagConnectionList
+        = ::etl::intrusive_forward_list<ManagedOutgoingDiagConnection, etl::forward_link<0>>;
 
     void checkShutdownProgress();
 
@@ -89,14 +89,16 @@ private:
         return fReleasedOutgoingDiagConnections;
     }
 
-    ::estd::function<void()> fShutdownDelegate;
+    ::etl::delegate<void()> fShutdownDelegate;
     AbstractDiagnosisConfiguration& fConfiguration;
     transport::AbstractTransportLayer& fOutgoingTransportMessageSender;
     transport::ITransportMessageProvider& fOutgoingTransportMessageProvider;
     ::async::ContextType fContext;
     DiagDispatcher2& fDiagDispatcher;
-    ::estd::forward_list<ManagedOutgoingDiagConnection>& fOutgoingDiagConnections;
-    ::estd::forward_list<ManagedOutgoingDiagConnection> fReleasedOutgoingDiagConnections;
+    ::etl::intrusive_forward_list<ManagedOutgoingDiagConnection, ::etl::forward_link<0>>&
+        fOutgoingDiagConnections;
+    ::etl::intrusive_forward_list<ManagedOutgoingDiagConnection, ::etl::forward_link<0>>
+        fReleasedOutgoingDiagConnections;
     bool fShutdownRequested;
 };
 

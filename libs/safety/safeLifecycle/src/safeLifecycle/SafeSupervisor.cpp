@@ -6,8 +6,6 @@
 
 #include <safeLifecycle/interrupts/IsrLock.h>
 
-#include <estd/type_utils.h>
-
 #include <commonDebug.h>
 
 namespace safety
@@ -102,7 +100,7 @@ void SafeSupervisor::handle(Event const& event)
             Logger::warn(
                 SAFETY,
                 "SafeSupervisor: Received unknown event with ID %s",
-                ::estd::to_underlying(event));
+                static_cast<uint8_t>(event));
             // TODO: write event id (int) to no-init ram as unknown error
             break;
         }

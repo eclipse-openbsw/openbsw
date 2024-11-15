@@ -5,7 +5,7 @@
 
 #include "docan/common/DoCanTransportAddressPair.h"
 
-#include <estd/slice.h>
+#include <etl/span.h>
 
 namespace docan
 {
@@ -67,7 +67,7 @@ public:
      * \return zero terminated string
      */
     virtual char const*
-    formatDataLinkAddress(DataLinkAddressType address, ::estd::slice<char> const& buffer) const
+    formatDataLinkAddress(DataLinkAddressType address, ::etl::span<char> const& buffer) const
         = 0;
 
 private:

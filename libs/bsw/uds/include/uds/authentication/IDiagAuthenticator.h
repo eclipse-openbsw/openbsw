@@ -5,15 +5,14 @@
 
 #include "uds/DiagReturnCode.h"
 
-#include <estd/uncopyable.h>
+#include <etl/uncopyable.h>
+
 #include <platform/estdint.h>
 
 namespace uds
 {
-class IDiagAuthenticator
+class IDiagAuthenticator : public ::etl::uncopyable
 {
-    UNCOPYABLE(IDiagAuthenticator);
-
 protected:
     IDiagAuthenticator() {}
 

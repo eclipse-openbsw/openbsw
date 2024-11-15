@@ -4,12 +4,10 @@
 
 #include "logger/PersistenceManagerMock.h"
 
+#include <etl/memory.h>
 #include <util/crc/Crc8.h>
 #include <util/logger/ILoggerOutput.h>
 #include <util/logger/Logger.h>
-
-#include <estd/memory.h>
-#include <estd/none.h>
 
 namespace util
 {
@@ -23,7 +21,10 @@ static uint8_t CONF3 = COMPONENT_NONE;
 
 namespace
 {
-ACTION_P(CopyBuffer, destBuffer) { ::estd::memory::copy(destBuffer, arg0); }
+ACTION_P(CopyBuffer, destBuffer)
+{
+    ::etl::mem_copy(arg0.begin(), destBuffer.size(), destBuffer.begin());
+}
 
 using namespace ::testing;
 using namespace ::util::logger;
@@ -96,7 +97,8 @@ TEST_F(PersistentComponentConfigTest, testNoLevelIsSetOnInitialization)
 {
     PersistentComponentConfig<::mapping1::TestMappingType::MappingSize, ::util::crc::Crc8::Ccitt>
         cut(mapping1::testMapping, _persistenceManagerMock);
-    EXPECT_CALL(_persistenceManagerMock, readMapping(_)).WillOnce(Return(::estd::none));
+    EXPECT_CALL(_persistenceManagerMock, readMapping(_))
+        .WillOnce(Return(::etl::span<uint8_t const>{}));
     cut.start(*this);
     EXPECT_EQ(LEVEL_NONE, cut.getLevel(CONF1));
     EXPECT_EQ(LEVEL_NONE, cut.getLevel(CONF2));
@@ -105,14 +107,14 @@ TEST_F(PersistentComponentConfigTest, testNoLevelIsSetOnInitialization)
 TEST_F(PersistentComponentConfigTest, testWrittenLevelsAreReadSuccessfullyIfComponentsInSameOrder)
 {
     uint8_t storageBuffer[3];
-    ::estd::slice<uint8_t> storage(storageBuffer);
+    ::etl::span<uint8_t> storage(storageBuffer);
     {
         PersistentComponentConfig<
             ::mapping1::TestMappingType::MappingSize,
             ::util::crc::Crc8::Ccitt>
             cut(mapping1::testMapping, _persistenceManagerMock);
         EXPECT_CALL(_persistenceManagerMock, readMapping(_))
-            .WillOnce(Return(::estd::slice<uint8_t const>()));
+            .WillOnce(Return(::etl::span<uint8_t const>()));
         cut.start(*this);
         Mock::VerifyAndClearExpectations(&_persistenceManagerMock);
 

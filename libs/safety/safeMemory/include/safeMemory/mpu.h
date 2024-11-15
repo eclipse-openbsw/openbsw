@@ -7,7 +7,8 @@
 #include <mcu/mcu.h>
 #endif
 
-#include <estd/assert.h>
+#include <util/estd/assert.h>
+
 #include <platform/estdint.h>
 
 namespace safety

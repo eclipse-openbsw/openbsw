@@ -2,9 +2,12 @@
 
 #include "io/VariantQueue.h"
 
-#include <estd/big_endian.h>
-#include <estd/memory.h>
-#include <estd/slice.h>
+#include <etl/memory.h>
+#include <etl/parameter_pack.h>
+#include <etl/span.h>
+#include <etl/type_traits.h>
+#include <etl/unaligned_type.h>
+#include <etl/variant.h>
 
 #include <gmock/gmock.h>
 
@@ -19,8 +22,8 @@ struct A
 
 struct __attribute__((packed)) B
 {
-    ::estd::be_uint16_t x;
-    ::estd::be_uint32_t y;
+    ::etl::be_uint16_t x;
+    ::etl::be_uint32_t y;
 };
 
 struct C
@@ -36,18 +39,18 @@ using abc_variant_q_type_list = ::io::make_variant_queue<
     ::io::VariantQueueType<C, 15>>;
 
 static_assert(
-    std::is_same<abc_variant_q_type_list::type_list, ::estd::make_type_list<A, B, C>::type>::value,
+    ::etl::is_same<abc_variant_q_type_list::type_list, ::etl::parameter_pack<A, B, C>>::value,
     "type list from the typedef should be A, B, C");
 
 static_assert(abc_variant_q_type_list::queue_max_element_type == 16, "");
 
-using abc_queue = ::io::variant_q<abc_variant_q_type_list::type_list>;
+using abc_queue = ::io::variant_q<abc_variant_q_type_list>;
 
 using Queue = ::io::VariantQueue<abc_variant_q_type_list, QUEUE_CAPACITY>;
 
 struct Visit
 {
-    ::estd::variant<A, B, C> value = C();
+    ::etl::variant<A, B, C> value = C();
 
     template<typename T>
     void operator()(T const& v)
@@ -58,11 +61,11 @@ struct Visit
 
 struct VisitWithPayload
 {
-    ::estd::variant<A, B, C> value = C();
-    ::estd::slice<uint8_t const> payload;
+    ::etl::variant<A, B, C> value = C();
+    ::etl::span<uint8_t const> payload;
 
     template<typename T>
-    void operator()(T const& v, ::estd::slice<uint8_t const> p)
+    void operator()(T const& v, ::etl::span<uint8_t const> p)
     {
         value   = v;
         payload = p;
@@ -78,8 +81,7 @@ TEST(VariantQueue, read_write_no_payload)
     Visit visitor;
 
     ASSERT_TRUE(abc_queue::write(writer, A{{0, 1, 2, 3, 4}}));
-    ASSERT_TRUE(abc_queue::write(
-        writer, B{::estd::be_uint16_t ::make(3), ::estd::be_uint32_t::make(0xFAAF1253)}));
+    ASSERT_TRUE(abc_queue::write(writer, B{::etl::be_uint16_t{3}, ::etl::be_uint32_t{0xFAAF1253}}));
     ASSERT_TRUE(abc_queue::write(writer, C{}));
     ASSERT_TRUE(abc_queue::write(writer, C{}));
     ASSERT_FALSE(abc_queue::write(writer, C{})); // out of space
@@ -97,7 +99,7 @@ TEST(VariantQueue, read_write_no_payload)
 
     ASSERT_NE(0U, reader.peek().size());
     abc_queue::read(visitor, reader.peek());
-    EXPECT_TRUE(visitor.value.is<C>());
+    EXPECT_TRUE(visitor.value.is_type<C>());
     reader.release();
     reader.release(); // one more C element in the queue
 
@@ -116,10 +118,13 @@ TEST(VariantQueue, read_write_with_payload)
     ASSERT_TRUE(abc_queue::write(writer, A{{9, 8, 7, 6, 5}}, payload));
 
     ASSERT_TRUE(abc_queue::write(
-        writer, C{}, 15, [](::estd::slice<uint8_t> buffer) { ::estd::memory::set(buffer, 0xAB); }));
+        writer,
+        C{},
+        15,
+        [](::etl::span<uint8_t> buffer) { ::etl::mem_set(buffer.begin(), buffer.size(), 0xAB); }));
 
     ASSERT_FALSE(
-        abc_queue::write(writer, C{}, 10, [](::estd::slice<uint8_t> buffer) {})); // out of space
+        abc_queue::write(writer, C{}, 10, [](::etl::span<uint8_t> buffer) {})); // out of space
 
     ASSERT_NE(0U, reader.peek().size());
     abc_queue::read_with_payload(visitor, reader.peek());
@@ -129,7 +134,7 @@ TEST(VariantQueue, read_write_with_payload)
 
     ASSERT_NE(0U, reader.peek().size());
     abc_queue::read_with_payload(visitor, reader.peek());
-    EXPECT_TRUE(visitor.value.is<C>());
+    EXPECT_TRUE(visitor.value.is_type<C>());
     EXPECT_THAT(visitor.payload, AllOf(SizeIs(15), Each(Eq(0xAB))));
     reader.release();
 
@@ -174,7 +179,7 @@ TEST(VariantQueue, manually_allocate_payload)
 
     auto a_payload = abc_queue::alloc_payload(writer, A{{9, 8, 7, 6, 5}}, sizeof(payload));
     ASSERT_NE(0, a_payload.size());
-    ::estd::memory::copy(a_payload, payload);
+    ::etl::mem_copy(payload, sizeof(payload), a_payload.begin());
     writer.commit();
 
     ASSERT_EQ(15U, abc_queue::alloc_payload(writer, C{}, 15).size());

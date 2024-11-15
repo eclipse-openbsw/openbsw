@@ -9,10 +9,10 @@
 #include "docan/datalink/IDoCanFrameReceiver.h"
 #include "docan/datalink/IDoCanFrameSizeMapper.h"
 
-#include <estd/algorithm.h>
-#include <estd/big_endian.h>
-#include <estd/memory.h>
-#include <estd/slice.h>
+#include <etl/algorithm.h>
+#include <etl/limits.h>
+#include <etl/unaligned_type.h>
+#include <util/estd/assert.h>
 
 #include <limits>
 
@@ -55,10 +55,10 @@ public:
 
     // Standard define max Escaped seq message size to be uint32_t max.
     static_assert(
-        ::std::numeric_limits<MessageSizeType>::max() <= ::std::numeric_limits<uint32_t>::max(),
+        ::etl::numeric_limits<MessageSizeType>::max() <= ::etl::numeric_limits<uint32_t>::max(),
         "MessageSizeType must be a uint32_t");
     static_assert(
-        ::std::numeric_limits<MessageSizeType>::min() >= ::std::numeric_limits<uint32_t>::min(),
+        ::etl::numeric_limits<MessageSizeType>::min() >= ::etl::numeric_limits<uint32_t>::min(),
         "MessageSizeType must be a uint32_t");
 
     /**
@@ -75,7 +75,7 @@ public:
      * \return OK in case of successful extraction
      */
     CodecResult
-    decodeFrameType(::estd::slice<uint8_t const> const& payload, FrameType& frameType) const;
+    decodeFrameType(::etl::span<uint8_t const> const& payload, FrameType& frameType) const;
 
     /**
      * Extract the data of a single frame.
@@ -85,9 +85,9 @@ public:
      * \return OK in case of successful extraction
      */
     CodecResult decodeSingleFrame(
-        ::estd::slice<uint8_t const> const& payload,
+        ::etl::span<uint8_t const> const& payload,
         MessageSizeType& messageSize,
-        ::estd::slice<uint8_t const>& data) const;
+        ::etl::span<uint8_t const>& data) const;
 
     /**
      * Extract the data of a first frame.
@@ -100,11 +100,11 @@ public:
      * \return OK in case of successful extraction
      */
     CodecResult decodeFirstFrame(
-        ::estd::slice<uint8_t const> const& payload,
+        ::etl::span<uint8_t const> const& payload,
         MessageSizeType& messageSize,
         FrameIndexType& frameCount,
         FrameSizeType& consecutiveFrameDataSize,
-        ::estd::slice<uint8_t const>& data) const;
+        ::etl::span<uint8_t const>& data) const;
 
     /**
      * Extract the data of a consecutive frame.
@@ -114,9 +114,9 @@ public:
      * \return OK in case of successful extraction
      */
     CodecResult decodeConsecutiveFrame(
-        ::estd::slice<uint8_t const> const& payload,
+        ::etl::span<uint8_t const> const& payload,
         uint8_t& sequenceNumber,
-        ::estd::slice<uint8_t const>& data) const;
+        ::etl::span<uint8_t const>& data) const;
 
     /**
      * Extract the data of a flow control frame.
@@ -128,7 +128,7 @@ public:
      * \return OK in case of successful extraction
      */
     CodecResult decodeFlowControlFrame(
-        ::estd::slice<uint8_t const> const& payload,
+        ::etl::span<uint8_t const> const& payload,
         FlowStatus& flowStatus,
         uint8_t& blockSize,
         uint8_t& encodedMinSeparationTime) const;
@@ -158,8 +158,8 @@ public:
      * \return OK in case the frame has been set successfully
      */
     CodecResult encodeDataFrame(
-        ::estd::slice<uint8_t>& payload,
-        ::estd::slice<uint8_t const> const& data,
+        ::etl::span<uint8_t>& payload,
+        ::etl::span<uint8_t const> const& data,
         FrameIndexType frameIndex,
         FrameSizeType consecutiveFrameDataSize,
         FrameSizeType& consumedDataSize) const;
@@ -174,19 +174,17 @@ public:
      * \return OK in case the frame has been set successfully
      */
     CodecResult encodeFlowControlFrame(
-        ::estd::slice<uint8_t>& payload,
+        ::etl::span<uint8_t>& payload,
         FlowStatus flowStatus,
         uint8_t blockSize,
         uint8_t encodedMinSeparationTime) const;
 
 private:
     CodecResult adjustFrame(
-        ::estd::slice<uint8_t>& payload,
-        FrameSizeType payloadSize,
-        FrameSizeType minFrameSize) const;
+        ::etl::span<uint8_t>& payload, FrameSizeType payloadSize, FrameSizeType minFrameSize) const;
 
     bool checkFrameSize(
-        ::estd::slice<uint8_t const> const& payload,
+        ::etl::span<uint8_t const> const& payload,
         FrameSizeType minPayloadSize,
         typename DoCanFrameCodecConfig<FrameSizeType>::SizeConfig frameSize) const;
 
@@ -209,7 +207,7 @@ DoCanFrameCodec<DataLinkLayer>::DoCanFrameCodec(
 
 template<class DataLinkLayer>
 CodecResult DoCanFrameCodec<DataLinkLayer>::decodeFrameType(
-    ::estd::slice<uint8_t const> const& payload, FrameType& frameType) const
+    ::etl::span<uint8_t const> const& payload, FrameType& frameType) const
 {
     uint8_t const offset = _config._offset;
     if (payload.size() <= offset)
@@ -223,9 +221,9 @@ CodecResult DoCanFrameCodec<DataLinkLayer>::decodeFrameType(
 
 template<class DataLinkLayer>
 CodecResult DoCanFrameCodec<DataLinkLayer>::decodeSingleFrame(
-    ::estd::slice<uint8_t const> const& payload,
+    ::etl::span<uint8_t const> const& payload,
     MessageSizeType& messageSize,
-    ::estd::slice<uint8_t const>& data) const
+    ::etl::span<uint8_t const>& data) const
 {
     size_t const offset = _config._offset;
     if (checkFrameSize(payload, 2U, _config._singleFrameSize))
@@ -241,7 +239,7 @@ CodecResult DoCanFrameCodec<DataLinkLayer>::decodeSingleFrame(
             if ((checkPayloadSize <= static_cast<MessageSizeType>(_config._singleFrameSize._max))
                 && (static_cast<size_t>(checkPayloadSize) <= payload.size()))
             {
-                data = ::estd::slice<uint8_t const>::from_pointer(
+                data = ::etl::span<uint8_t const>(
                     &payload[offset + 2U], static_cast<size_t>(messageSize));
                 return CodecResult::OK;
             }
@@ -252,7 +250,7 @@ CodecResult DoCanFrameCodec<DataLinkLayer>::decodeSingleFrame(
                 = messageSize + static_cast<MessageSizeType>(offset) + 1U;
             if (checkPayloadSize <= payload.size())
             {
-                data = ::estd::slice<uint8_t const>::from_pointer(
+                data = ::etl::span<uint8_t const>(
                     &payload[offset + 1U], static_cast<size_t>(messageSize));
                 return CodecResult::OK;
             }
@@ -268,17 +266,17 @@ CodecResult DoCanFrameCodec<DataLinkLayer>::decodeSingleFrame(
 
 template<class DataLinkLayer>
 CodecResult DoCanFrameCodec<DataLinkLayer>::decodeFirstFrame(
-    ::estd::slice<uint8_t const> const& payload,
+    ::etl::span<uint8_t const> const& payload,
     MessageSizeType& messageSize,
     FrameIndexType& frameCount,
     FrameSizeType& consecutiveFrameDataSize,
-    ::estd::slice<uint8_t const>& data) const
+    ::etl::span<uint8_t const>& data) const
 {
     if (checkFrameSize(payload, 3U, _config._firstFrameSize))
     {
         size_t const offset = _config._offset;
         messageSize
-            = static_cast<MessageSizeType>(::estd::read_be<uint16_t>(&payload[offset]) & 0xFFFU);
+            = static_cast<MessageSizeType>(etl::be_uint16_t::at_address(&payload[offset]) & 0xFFFU);
         uint8_t dataStart        = 2U;
         consecutiveFrameDataSize = static_cast<FrameSizeType>(payload.size())
                                    - (static_cast<FrameSizeType>(offset) + 1U);
@@ -289,10 +287,10 @@ CodecResult DoCanFrameCodec<DataLinkLayer>::decodeFirstFrame(
                 return CodecResult::INVALID_FRAME_SIZE;
             }
             // Escape sequence, aka message size > 4095 up to uint32_t
-            uint32_t const escapedMessageSize = ::estd::read_be<uint32_t>(&payload[offset + 2U]);
+            uint32_t const escapedMessageSize = etl::be_uint32_t::at_address(&payload[offset + 2U]);
 
             if ((escapedMessageSize <= ESCAPED_SEQ_MESSAGE_SIZE)
-                || (escapedMessageSize > ::std::numeric_limits<MessageSizeType>::max()))
+                || (escapedMessageSize > ::etl::numeric_limits<MessageSizeType>::max()))
             {
                 return CodecResult::INVALID_MESSAGE_SIZE;
             }
@@ -301,7 +299,7 @@ CodecResult DoCanFrameCodec<DataLinkLayer>::decodeFirstFrame(
         }
 
         MessageSizeType const count = (messageSize / consecutiveFrameDataSize);
-        if (count >= std::numeric_limits<FrameIndexType>::max())
+        if (count >= etl::numeric_limits<FrameIndexType>::max())
         {
             return CodecResult::INVALID_MESSAGE_SIZE;
         }
@@ -310,7 +308,7 @@ CodecResult DoCanFrameCodec<DataLinkLayer>::decodeFirstFrame(
         bool const msgFitsIntoShortSingleFrame = fitsIntoShortSingleFrame(messageSize);
         if ((frameCount > 1U) && (!msgFitsIntoShortSingleFrame) && (!msgFitsIntoLongSingleFrame))
         {
-            data = ::estd::slice<uint8_t const>::from_pointer(
+            data = ::etl::span<uint8_t const>(
                 &payload[offset + dataStart],
                 static_cast<size_t>(consecutiveFrameDataSize) - dataStart + 1U);
             return CodecResult::OK;
@@ -322,16 +320,15 @@ CodecResult DoCanFrameCodec<DataLinkLayer>::decodeFirstFrame(
 
 template<class DataLinkLayer>
 CodecResult DoCanFrameCodec<DataLinkLayer>::decodeConsecutiveFrame(
-    ::estd::slice<uint8_t const> const& payload,
+    ::etl::span<uint8_t const> const& payload,
     uint8_t& sequenceNumber,
-    ::estd::slice<uint8_t const>& data) const
+    ::etl::span<uint8_t const>& data) const
 {
     if (checkFrameSize(payload, 2U, _config._consecutiveFrameSize))
     {
         size_t const offset = _config._offset;
         sequenceNumber      = (payload[offset] & 0x0fU);
-        data                = ::estd::slice<uint8_t const>::from_pointer(
-            &payload[offset + 1U], payload.size() - (offset + 1U));
+        data = ::etl::span<uint8_t const>(&payload[offset + 1U], payload.size() - (offset + 1U));
         return CodecResult::OK;
     }
     return CodecResult::INVALID_FRAME_SIZE;
@@ -339,7 +336,7 @@ CodecResult DoCanFrameCodec<DataLinkLayer>::decodeConsecutiveFrame(
 
 template<class DataLinkLayer>
 CodecResult DoCanFrameCodec<DataLinkLayer>::decodeFlowControlFrame(
-    ::estd::slice<uint8_t const> const& payload,
+    ::etl::span<uint8_t const> const& payload,
     FlowStatus& flowStatus,
     uint8_t& blockSize,
     uint8_t& encodedMinSeparationTime) const
@@ -359,7 +356,7 @@ template<class DataLinkLayer>
 bool DoCanFrameCodec<DataLinkLayer>::fitsIntoShortSingleFrame(
     MessageSizeType const messageSize) const
 {
-    FrameSizeType const edge = ::estd::min(EXTENDED_SF_DL_EDGE_SIZE, _config._singleFrameSize._max);
+    FrameSizeType const edge = ::etl::min(EXTENDED_SF_DL_EDGE_SIZE, _config._singleFrameSize._max);
     uint8_t const offset     = _config._offset + 1U;
     return messageSize <= static_cast<MessageSizeType>(edge) - offset;
 }
@@ -400,7 +397,7 @@ CodecResult DoCanFrameCodec<DataLinkLayer>::getEncodedFrameCount(
     {
         consecutiveFrameDataSize    = _config._consecutiveFrameSize._max - (_config._offset + 1U);
         MessageSizeType const count = (messageSize / consecutiveFrameDataSize);
-        if (count >= std::numeric_limits<FrameIndexType>::max())
+        if (count >= etl::numeric_limits<FrameIndexType>::max())
         {
             return CodecResult::INVALID_MESSAGE_SIZE;
         }
@@ -411,13 +408,13 @@ CodecResult DoCanFrameCodec<DataLinkLayer>::getEncodedFrameCount(
 
 template<class DataLinkLayer>
 CodecResult DoCanFrameCodec<DataLinkLayer>::encodeDataFrame(
-    ::estd::slice<uint8_t>& payload,
-    ::estd::slice<uint8_t const> const& data,
+    ::etl::span<uint8_t>& payload,
+    ::etl::span<uint8_t const> const& data,
     FrameIndexType const frameIndex,
     FrameSizeType const consecutiveFrameDataSize,
     FrameSizeType& consumedDataSize) const
 {
-    if ((data.size() == 0U) || (data.size() > ::std::numeric_limits<MessageSizeType>::max()))
+    if ((data.size() == 0U) || (data.size() > ::etl::numeric_limits<MessageSizeType>::max()))
     {
         return CodecResult::INVALID_FRAME_INDEX;
     }
@@ -452,13 +449,13 @@ CodecResult DoCanFrameCodec<DataLinkLayer>::encodeDataFrame(
 
             if (pendingMessageSize <= ESCAPED_SEQ_MESSAGE_SIZE)
             {
-                ::estd::write_be<uint16_t>(&payload[offset], pendingMessageSize & 0xFFFU);
+                etl::be_uint16_t::at_address(&payload[offset]) = pendingMessageSize & 0xFFFU;
             }
             else
             {
-                payload[offset]      = 0U;
-                payload[offset + 1U] = 0U;
-                ::estd::write_be<uint32_t>(&payload[offset + 2U], pendingMessageSize);
+                payload[offset]                                     = 0U;
+                payload[offset + 1U]                                = 0U;
+                etl::be_uint32_t::at_address(&payload[offset + 2U]) = pendingMessageSize;
 
                 destOffset += 4U;
                 consumedDataSize -= 4U;
@@ -479,9 +476,9 @@ CodecResult DoCanFrameCodec<DataLinkLayer>::encodeDataFrame(
         payload[offset] |= static_cast<uint8_t>(frameIndex) & 0x0FU;
 
         destOffset       = offset + 1U;
-        consumedDataSize = static_cast<FrameSizeType>(::estd::min(
-            static_cast<MessageSizeType>(consecutiveFrameDataSize), pendingMessageSize));
-        minFrameSize     = ::estd::max(consumedDataSize, _config._consecutiveFrameSize._min);
+        consumedDataSize = static_cast<FrameSizeType>(
+            ::etl::min(static_cast<MessageSizeType>(consecutiveFrameDataSize), pendingMessageSize));
+        minFrameSize = ::etl::max(consumedDataSize, _config._consecutiveFrameSize._min);
     }
     else
     {
@@ -494,17 +491,16 @@ CodecResult DoCanFrameCodec<DataLinkLayer>::encodeDataFrame(
         return CodecResult::INVALID_FRAME_SIZE;
     }
 
-    (void)::estd::memory::copy(
-        ::estd::slice<uint8_t>::from_pointer(
-            &payload[static_cast<size_t>(destOffset)], static_cast<size_t>(consumedDataSize)),
-        ::estd::slice<uint8_t const>::from_pointer(
-            &data[0U], static_cast<size_t>(consumedDataSize)));
+    (void)::etl::mem_copy(
+        &data[0U],
+        static_cast<size_t>(consumedDataSize),
+        &payload[static_cast<size_t>(destOffset)]);
     return adjustFrame(payload, payloadSize, minFrameSize);
 }
 
 template<class DataLinkLayer>
 CodecResult DoCanFrameCodec<DataLinkLayer>::encodeFlowControlFrame(
-    ::estd::slice<uint8_t>& payload,
+    ::etl::span<uint8_t>& payload,
     FlowStatus const flowStatus,
     uint8_t const blockSize,
     uint8_t const encodedMinSeparationTime) const
@@ -526,11 +522,11 @@ CodecResult DoCanFrameCodec<DataLinkLayer>::encodeFlowControlFrame(
 
 template<class DataLinkLayer>
 CodecResult DoCanFrameCodec<DataLinkLayer>::adjustFrame(
-    ::estd::slice<uint8_t>& payload,
+    ::etl::span<uint8_t>& payload,
     FrameSizeType const payloadSize,
     FrameSizeType const minFrameSize) const
 {
-    FrameSizeType paddedFrameSize = ::estd::max(payloadSize, minFrameSize);
+    FrameSizeType paddedFrameSize = ::etl::max(payloadSize, minFrameSize);
     if (!_mapper.mapFrameSize(paddedFrameSize))
     {
         return CodecResult::INVALID_FRAME_SIZE;
@@ -543,19 +539,18 @@ CodecResult DoCanFrameCodec<DataLinkLayer>::adjustFrame(
             return CodecResult::INVALID_FRAME_SIZE;
         }
 
-        ::estd::memory::set(
-            ::estd::slice<uint8_t>::from_pointer(
-                &payload[static_cast<size_t>(payloadSize)],
-                static_cast<size_t>(paddedFrameSize) - payloadSize),
+        ::etl::mem_set(
+            &payload[static_cast<size_t>(payloadSize)],
+            static_cast<size_t>(paddedFrameSize) - payloadSize,
             _config._filler);
     }
-    payload = payload.subslice(static_cast<size_t>(paddedFrameSize));
+    payload = payload.first(static_cast<size_t>(paddedFrameSize));
     return CodecResult::OK;
 }
 
 template<class DataLinkLayer>
 bool DoCanFrameCodec<DataLinkLayer>::checkFrameSize(
-    ::estd::slice<uint8_t const> const& payload,
+    ::etl::span<uint8_t const> const& payload,
     FrameSizeType const minPayloadSize,
     typename DoCanFrameCodecConfig<FrameSizeType>::SizeConfig const frameSize) const
 {
