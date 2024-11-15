@@ -18,6 +18,7 @@
 
 #include <async/AsyncMock.h>
 #include <async/TestContext.h>
+#include <etl/span.h>
 
 #include <gmock/gmock.h>
 
@@ -261,7 +262,7 @@ TEST_F(ManagedIncomingDiagConnectionTest, isNestedRequest)
 
     uint8_t const buffer[] = {1};
     EXPECT_CALL(nestedRequestMock, prepareNestedRequest(_))
-        .WillOnce(Return(::estd::slice<uint8_t const>(buffer)));
+        .WillOnce(Return(::etl::span<uint8_t const>(buffer)));
     EXPECT_CALL(nestedRequestMock, processNestedRequest(_, _, _))
         .WillOnce(Return(DiagReturnCode::OK));
     fpIncomingDiagConnection->startNestedRequest(diagJobMock, nestedRequestMock, nullptr, 0U);

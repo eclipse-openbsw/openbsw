@@ -6,14 +6,10 @@
 #include "uds/base/Subfunction.h"
 #include "uds/lifecycle/IUdsLifecycleConnector.h"
 
-#include <estd/uncopyable.h>
-
 namespace uds
 {
 class EnableRapidPowerShutdown : public Subfunction
 {
-    UNCOPYABLE(EnableRapidPowerShutdown);
-
 public:
     explicit EnableRapidPowerShutdown(IUdsLifecycleConnector& udsLifecycleConnector);
 

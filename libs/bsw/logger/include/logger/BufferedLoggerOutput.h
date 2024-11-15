@@ -8,11 +8,10 @@
 #include "logger/ILoggerListener.h"
 #include "logger/ILoggerTime.h"
 
+#include <etl/intrusive_list.h>
+#include <etl/span.h>
 #include <util/logger/IComponentMapping.h>
 #include <util/logger/ILoggerOutput.h>
-
-#include <estd/forward_list.h>
-#include <estd/slice.h>
 
 namespace logger
 {
@@ -33,11 +32,11 @@ public:
     BufferedLoggerOutput(
         ::util::logger::IComponentMapping& componentMapping,
         ILoggerTime<Timestamp>& timestamp,
-        ::estd::slice<uint8_t> outputBuffer);
+        ::etl::span<uint8_t> outputBuffer);
     BufferedLoggerOutput(
         ::util::logger::IComponentMapping& componentMapping,
         ILoggerTime<Timestamp>& timestamp,
-        ::estd::slice<uint8_t> outputBuffer,
+        ::etl::span<uint8_t> outputBuffer,
         ReadOnlyPredicate const& readOnlyPredicate);
 
     void addListener(ILoggerListener& listener);
@@ -77,7 +76,7 @@ private:
     ILoggerTime<Timestamp>& _timestamp;
     EntryBuffer<MaxEntrySize, E> _entryBuffer;
     EntrySerializer<T, Timestamp, ReadOnlyPredicate> _entrySerializer;
-    ::estd::forward_list<ILoggerListener> _listeners;
+    ::etl::intrusive_list<ILoggerListener, ::etl::bidirectional_link<0>> _listeners;
 };
 
 namespace declare
@@ -152,7 +151,7 @@ template<
 BufferedLoggerOutput<Lock, MaxEntrySize, T, E, Timestamp, ReadOnlyPredicate>::BufferedLoggerOutput(
     ::util::logger::IComponentMapping& componentMapping,
     ILoggerTime<Timestamp>& timestamp,
-    ::estd::slice<uint8_t> const outputBuffer)
+    ::etl::span<uint8_t> const outputBuffer)
 : ::util::logger::ILoggerOutput()
 , _componentMapping(componentMapping)
 , _timestamp(timestamp)
@@ -171,7 +170,7 @@ template<
 BufferedLoggerOutput<Lock, MaxEntrySize, T, E, Timestamp, ReadOnlyPredicate>::BufferedLoggerOutput(
     ::util::logger::IComponentMapping& componentMapping,
     ILoggerTime<Timestamp>& timestamp,
-    ::estd::slice<uint8_t> const outputBuffer,
+    ::etl::span<uint8_t> const outputBuffer,
     ReadOnlyPredicate const& readOnlyPredicate)
 : ::util::logger::ILoggerOutput()
 , _componentMapping(componentMapping)
@@ -204,7 +203,7 @@ template<
 void BufferedLoggerOutput<Lock, MaxEntrySize, T, E, Timestamp, ReadOnlyPredicate>::removeListener(
     ILoggerListener& listener)
 {
-    _listeners.remove(listener);
+    _listeners.erase(listener);
 }
 
 template<
@@ -227,7 +226,7 @@ bool BufferedLoggerOutput<Lock, MaxEntrySize, T, E, Timestamp, ReadOnlyPredicate
     {
         EntryOutputAdapter outputAdapter(_componentMapping, entryRef.getIndex(), output);
 
-        _entrySerializer.deserialize(::estd::make_slice(entryBuffer).subslice(size), outputAdapter);
+        _entrySerializer.deserialize(::etl::span<uint8_t>(entryBuffer).first(size), outputAdapter);
     }
     return size > 0U;
 }
@@ -251,10 +250,9 @@ void BufferedLoggerOutput<Lock, MaxEntrySize, T, E, Timestamp, ReadOnlyPredicate
         entryBuffer, timestamp, componentInfo.getIndex(), levelInfo.getLevel(), str, ap);
     {
         Lock const lock;
-        _entryBuffer.addEntry(::estd::make_slice(entryBuffer).subslice(size));
+        _entryBuffer.addEntry(::etl::span<uint8_t>(entryBuffer).first(size));
     }
-    for (::estd::forward_list<ILoggerListener>::iterator it = _listeners.begin();
-         it != _listeners.end();
+    for (typename decltype(_listeners)::iterator it = _listeners.begin(); it != _listeners.end();
          ++it)
     {
         (*it).logAvailable();

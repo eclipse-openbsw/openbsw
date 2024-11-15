@@ -4,7 +4,7 @@
 
 #include "docan/datalink/IDoCanDataFrameTransmitterCallback.h"
 
-#include <estd/slice.h>
+#include <etl/span.h>
 
 namespace docan
 {
@@ -63,7 +63,7 @@ public:
         FrameIndexType firstFrameIndex,
         FrameIndexType lastFrameIndex,
         FrameSizeType consecutiveFrameDataSize,
-        ::estd::slice<uint8_t const> const& data)
+        ::etl::span<uint8_t const> const& data)
         = 0;
 
     /**

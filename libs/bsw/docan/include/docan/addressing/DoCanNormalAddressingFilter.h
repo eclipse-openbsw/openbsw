@@ -5,10 +5,10 @@
 #include "docan/addressing/IDoCanAddressConverter.h"
 
 #include <can/filter/BitFieldFilter.h>
+#include <etl/span.h>
 #include <util/format/StringWriter.h>
 #include <util/stream/StringBufferOutputStream.h>
 
-#include <estd/slice.h>
 #include <platform/estdint.h>
 
 #include <algorithm>
@@ -61,8 +61,8 @@ public:
     using CodecIdxType            = typename AddressEntry::CodecIdxType;
 
     using AddressEntryType      = AddressEntry;
-    using AddressEntrySliceType = ::estd::slice<AddressEntryType const>;
-    using CodecsSliceType       = ::estd::slice<FrameCodecType const*>;
+    using AddressEntrySliceType = ::etl::span<AddressEntryType const>;
+    using CodecsSliceType       = ::etl::span<FrameCodecType const*>;
 
     /**
      * Default constructor. Call init() to later initialize the filter.
@@ -96,7 +96,7 @@ public:
         DataLinkAddressType& transmissionAddress) const override;
 
     char const* formatDataLinkAddress(
-        DataLinkAddressType address, ::estd::slice<char> const& buffer) const override;
+        DataLinkAddressType address, ::etl::span<char> const& buffer) const override;
 
     bool match(uint32_t filterId) const override;
 
@@ -172,8 +172,8 @@ void DoCanNormalAddressingFilter<DataLinkLayer, AddressEntry>::init(
         }
     }
 
-    _extendedEntries = AddressEntrySliceType::from_pointer(
-        firstExtendedEntryTypeIt, static_cast<size_t>(it - firstExtendedEntryTypeIt));
+    _extendedEntries = AddressEntrySliceType{
+        firstExtendedEntryTypeIt, static_cast<size_t>(it - firstExtendedEntryTypeIt)};
 
     for (; it != _entries.end(); ++it)
     {
@@ -224,7 +224,7 @@ DoCanNormalAddressingFilter<DataLinkLayer, AddressEntry>::getReceptionParameters
 
 template<class DataLinkLayer, class AddressEntry>
 char const* DoCanNormalAddressingFilter<DataLinkLayer, AddressEntry>::formatDataLinkAddress(
-    DataLinkAddressType const address, ::estd::slice<char> const& buffer) const
+    DataLinkAddressType const address, ::etl::span<char> const& buffer) const
 {
     ::util::stream::StringBufferOutputStream stream(buffer);
     ::util::format::StringWriter writer(stream);
