@@ -6,13 +6,13 @@
  */
 #pragma once
 
-#include "estd/singleton.h"
+#include <etl/singleton_base.h>
 
 #include <gmock/gmock.h>
 
 namespace async
 {
-class TickHookMock : public ::estd::singleton<TickHookMock>
+class TickHookMock : public ::etl::singleton_base<TickHookMock>
 {
 public:
     TickHookMock();

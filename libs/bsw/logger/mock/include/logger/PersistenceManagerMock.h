@@ -11,8 +11,8 @@ namespace logger
 class PersistenceManagerMock : public IPersistenceManager
 {
 public:
-    MOCK_CONST_METHOD1(writeMapping, bool(::estd::slice<uint8_t const> const&));
-    MOCK_CONST_METHOD1(readMapping, ::estd::slice<uint8_t const>(::estd::slice<uint8_t>));
+    MOCK_CONST_METHOD1(writeMapping, bool(::etl::span<uint8_t const> const&));
+    MOCK_CONST_METHOD1(readMapping, ::etl::span<uint8_t const>(::etl::span<uint8_t>));
 };
 
 } // namespace logger

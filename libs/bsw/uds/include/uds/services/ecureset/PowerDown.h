@@ -2,7 +2,6 @@
 
 #pragma once
 
-#include "estd/uncopyable.h"
 #include "uds/base/Subfunction.h"
 #include "uds/lifecycle/IUdsLifecycleConnector.h"
 
@@ -10,8 +9,6 @@ namespace uds
 {
 class PowerDown : public Subfunction
 {
-    UNCOPYABLE(PowerDown);
-
 public:
     explicit PowerDown(IUdsLifecycleConnector& udsLifecycleConnector);
 
