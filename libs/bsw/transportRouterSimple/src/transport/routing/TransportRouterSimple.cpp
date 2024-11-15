@@ -38,7 +38,7 @@ ITransportMessageProvidingListener::ErrorCode TransportRouterSimple::getTranspor
     uint16_t const sourceId,
     uint16_t const targetId,
     uint16_t const size,
-    ::estd::slice<uint8_t const> const& /* peek */,
+    ::etl::span<uint8_t const> const& /* peek */,
     TransportMessage*& pTransportMessage)
 {
     Logger::debug(
@@ -166,7 +166,7 @@ void TransportRouterSimple::removeTransportLayer(AbstractTransportLayer& transpo
     }
     transportLayer.setTransportMessageListener(0L);
     transportLayer.setTransportMessageProvider(0L);
-    _transportLayers.remove(transportLayer);
+    _transportLayers.erase(transportLayer);
 }
 
 void TransportRouterSimple::forwardMessageToTransportLayer(

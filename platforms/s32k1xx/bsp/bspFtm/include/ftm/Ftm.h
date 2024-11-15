@@ -3,10 +3,10 @@
 #pragma once
 
 #include "bsp/Bsp.h"
-#include "estd/assert.h"
-#include "estd/uncopyable.h"
 #include "mcu/mcu.h"
 #include "platform/estdint.h"
+
+#include <util/estd/assert.h>
 
 namespace bios
 {

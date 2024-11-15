@@ -2,7 +2,6 @@
 
 #pragma once
 
-#include "estd/uncopyable.h"
 #include "uds/base/Subfunction.h"
 
 namespace uds
@@ -13,8 +12,6 @@ namespace uds
  */
 class StopRoutine : public Subfunction
 {
-    UNCOPYABLE(StopRoutine);
-
 public:
     StopRoutine();
 

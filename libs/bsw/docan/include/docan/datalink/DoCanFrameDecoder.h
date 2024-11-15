@@ -8,9 +8,7 @@
 #include "docan/datalink/DoCanFrameCodec.h"
 #include "docan/datalink/IDoCanFrameReceiver.h"
 
-#include <estd/algorithm.h>
-#include <estd/memory.h>
-#include <estd/slice.h>
+#include <etl/span.h>
 
 namespace docan
 {
@@ -38,14 +36,14 @@ public:
      */
     static ::docan::CodecResult decodeFrame(
         DoCanConnection<DataLinkLayerType> const& connection,
-        ::estd::slice<uint8_t const> const& payload,
+        ::etl::span<uint8_t const> const& payload,
         IDoCanFrameReceiver<DataLinkLayerType>& receiver);
 };
 
 template<class Codec>
 CodecResult DoCanFrameDecoder<Codec>::decodeFrame(
     DoCanConnection<DataLinkLayerType> const& connection,
-    ::estd::slice<uint8_t const> const& payload,
+    ::etl::span<uint8_t const> const& payload,
     IDoCanFrameReceiver<DataLinkLayerType>& receiver)
 {
     CodecType const& codec = connection.getFrameCodec();
@@ -57,7 +55,7 @@ CodecResult DoCanFrameDecoder<Codec>::decodeFrame(
         {
             case FrameType::SINGLE:
             {
-                ::estd::slice<uint8_t const> data;
+                ::etl::span<uint8_t const> data;
                 MessageSizeType messageSize;
                 result = codec.decodeSingleFrame(payload, messageSize, data);
                 if (result == CodecResult::OK)
@@ -68,7 +66,7 @@ CodecResult DoCanFrameDecoder<Codec>::decodeFrame(
             }
             case FrameType::FIRST:
             {
-                ::estd::slice<uint8_t const> data;
+                ::etl::span<uint8_t const> data;
                 MessageSizeType messageSize;
                 FrameIndexType frameCount;
                 FrameSizeType consecutiveDataFrameSize;
@@ -83,7 +81,7 @@ CodecResult DoCanFrameDecoder<Codec>::decodeFrame(
             }
             case FrameType::CONSECUTIVE:
             {
-                ::estd::slice<uint8_t const> data;
+                ::etl::span<uint8_t const> data;
                 uint8_t sequenceNumber;
                 result = codec.decodeConsecutiveFrame(payload, sequenceNumber, data);
                 if (result == CodecResult::OK)

@@ -322,24 +322,24 @@ also disable move construction:
 
 
 Before the adoption of the C++11 standard, ``UNCOPYABLE`` macro from ``estd`` library was used.
-Now that functions can be marked as deleted, ``estd/uncopyable.h`` is considered obsolete and should
-be avoided.
 
 
 Indestructible
 --------------
 
-To avoid destructions of objects, use the ``estd::indestructible`` wrapper. The type will
+To avoid destructions of objects, use the ``etl::typed_storage`` wrapper. The type will
 become `trivially destructible
 <http://www.cplusplus.com/reference/type_traits/is_trivially_destructible/>`_.
 
 In the following example the object of type `YourType` will be constructed with placement-new,
 but never destructed even when `wrapper` gets destructed. The destructor of `YourType` will never be
-called:
+called, except if you call destroy() explicitly:
 
 .. code-block:: cpp
 
-    estd::indestructible<YourType> wrapper;
+    etl::typed_storage<YourType> wrapper;
+    wrapper.create();
+
 
 Avoid Protected Data
 --------------------

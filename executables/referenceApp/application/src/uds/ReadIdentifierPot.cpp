@@ -2,7 +2,7 @@
 
 #include "uds/ReadIdentifierPot.h"
 
-#include "estd/big_endian.h"
+#include <etl/unaligned_type.h>
 #ifdef PLATFORM_SUPPORT_IO
 #include "bsp/adc/AnalogInputScale.h"
 #include "outputPwm/OutputPwm.h"
@@ -10,9 +10,6 @@
 
 #include "uds/UdsLogger.h"
 #include "uds/connection/IncomingDiagConnection.h"
-
-using ::estd::array;
-using ::estd::slice;
 
 namespace uds
 {
@@ -24,8 +21,6 @@ using bios::AnalogInput;
 using bios::AnalogInputScale;
 using bios::OutputPwm;
 #endif
-
-using ::estd::slice;
 
 ReadIdentifierPot::ReadIdentifierPot(DiagSessionMask const sessionMask)
 : DataIdentifierJob(_implementedRequest, sessionMask)
@@ -44,17 +39,14 @@ DiagReturnCode::Type ReadIdentifierPot::process(
     PositiveResponse& response = connection.releaseRequestGetResponse();
 
     uint32_t adcValue = 0x00000002;
-    uint8_t responseData22Cf02[4];
 
 #ifdef PLATFORM_SUPPORT_IO
     (void)AnalogInputScale::get(AnalogInput::AiEVAL_POTI_ADC, adcValue);
 #endif
 
-    ::estd::write_be(&responseData22Cf02[0], adcValue);
-
-    ::estd::slice<uint8_t> _responseSlice(responseData22Cf02);
-
-    (void)response.appendData(_responseSlice.data(), static_cast<uint16_t>(_responseSlice.size()));
+    ::etl::be_int32_t responseData22Cf02(adcValue);
+    (void)response.appendData(
+        static_cast<uint8_t*>(responseData22Cf02.data()), responseData22Cf02.size());
     (void)connection.sendPositiveResponseInternal(response.getLength(), *this);
 
     return DiagReturnCode::OK;

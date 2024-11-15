@@ -7,7 +7,7 @@
 #include "util/stream/NullOutputStream.h"
 #include "util/string/ConstString.h"
 
-#include <estd/slice.h>
+#include <etl/span.h>
 
 #include <cstdint>
 
@@ -42,7 +42,7 @@ public:
 
     ::util::string::ConstString scanToken();
     ::util::string::ConstString scanIdentifierToken();
-    ::estd::slice<uint8_t> scanByteBufferToken(::estd::slice<uint8_t> const& buf);
+    ::etl::span<uint8_t> scanByteBufferToken(::etl::span<uint8_t> const& buf);
     template<class T>
     IdentifierChecker<T> scanEnumToken();
     template<class T>

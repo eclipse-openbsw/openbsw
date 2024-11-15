@@ -24,6 +24,7 @@ target_link_libraries(
             bspMcuWatchdog
             canflex2Transceiver
             configuration
+            etl
             freeRtosCm4SysTick
             lifecycle
             startUp

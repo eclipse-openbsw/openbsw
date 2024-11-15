@@ -2,11 +2,10 @@
 
 #pragma once
 
-#include "estd/uncopyable.h"
 #include "platform/estdint.h"
 #include "uds/jobs/DataIdentifierJob.h"
 
-#include <estd/slice.h>
+#include <etl/span.h>
 
 #include <cstdint>
 
@@ -18,12 +17,10 @@ namespace uds
  */
 class WriteIdentifierToMemory : public DataIdentifierJob
 {
-    UNCOPYABLE(WriteIdentifierToMemory);
-
 public:
     WriteIdentifierToMemory(
         uint16_t const identifier,
-        ::estd::slice<uint8_t> const& memory,
+        ::etl::span<uint8_t> const& memory,
         DiagSessionMask const sessionMask = DiagSession::ALL_SESSIONS());
 
 private:
@@ -35,7 +32,7 @@ private:
         uint16_t requestLength) override;
 
     uint8_t _implementedRequest[3];
-    ::estd::slice<uint8_t> const _memory;
+    ::etl::span<uint8_t> const _memory;
 };
 
 } // namespace uds

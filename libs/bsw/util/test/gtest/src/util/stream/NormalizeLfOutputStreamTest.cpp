@@ -4,6 +4,8 @@
 
 #include "util/stream/StringBufferOutputStream.h"
 
+#include <etl/string_view.h>
+
 #include <gtest/gtest.h>
 
 using namespace ::util::stream;
@@ -14,8 +16,8 @@ TEST(NormalizeLfOutputStream, testLfIsReplacedWithCustomString)
     NormalizeLfOutputStream cut(stream, "[CRLF]");
     cut.write('a');
     cut.write('\n');
-    cut.write(::estd::make_str("abc\ndef"));
-    cut.write(::estd::make_str("AB\nDEF"));
+    cut.write_string_view(::etl::string_view("abc\ndef"));
+    cut.write_string_view(::etl::string_view("AB\nDEF"));
     ASSERT_EQ("a[CRLF]abc[CRLF]defAB[CRLF]DEF", std::string(stream.getString()));
 }
 
@@ -25,8 +27,8 @@ TEST(NormalizeLfOutputStream, testLfIsReplacedWithDefaultString)
     NormalizeLfOutputStream cut(stream);
     cut.write('a');
     cut.write('\n');
-    cut.write(::estd::make_str("abc\ndef"));
-    cut.write(::estd::make_str("AB\nDEF"));
+    cut.write_string_view(::etl::string_view("abc\ndef"));
+    cut.write_string_view(::etl::string_view("AB\nDEF"));
     ASSERT_EQ("a\r\nabc\r\ndefAB\r\nDEF", std::string(stream.getString()));
 }
 

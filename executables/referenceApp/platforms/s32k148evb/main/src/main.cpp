@@ -1,7 +1,8 @@
 // Copyright 2024 Accenture.
 
-#include "estd/typed_mem.h"
 #include "systems/BspSystem.h"
+
+#include <etl/alignment.h>
 
 #include <cinttypes>
 #ifdef PLATFORM_SUPPORT_CAN
@@ -18,9 +19,6 @@
 #include <safeWatchdog/SafeWatchdog.h>
 #include <watchdog/Watchdog.h>
 #include <watchdogManager/watchdogManager.h>
-
-#include <estd/indestructible.h>
-#include <estd/optional.h>
 
 extern void app_main();
 
@@ -62,26 +60,26 @@ namespace platform
 {
 StaticBsp staticBsp;
 
-::estd::typed_mem<::systems::BspSystem> bspSystem;
+::etl::typed_storage<::systems::BspSystem> bspSystem;
 
 #ifdef PLATFORM_SUPPORT_CAN
-::estd::typed_mem<::systems::CanSystem> canSystem;
+::etl::typed_storage<::systems::CanSystem> canSystem;
 #endif // PLATFORM_SUPPORT_CAN
 
 /**
  * Callout from main application to give platform the chance to add a
- * ::lifecycle::ILifecycleComponent to the \p lifecycleManager at  a given \p level.
+ * ::lifecycle::ILifecycleComponent to the \p lifecycleManager at a given \p level.
  */
 void platformLifecycleAdd(::lifecycle::LifecycleManager& lifecycleManager, uint8_t const level)
 {
     if (level == 1U)
     {
-        lifecycleManager.addComponent("bsp", bspSystem.emplace(TASK_BSP, staticBsp), level);
+        lifecycleManager.addComponent("bsp", bspSystem.create(TASK_BSP, staticBsp), level);
     }
     if (level == 2U)
     {
 #ifdef PLATFORM_SUPPORT_CAN
-        lifecycleManager.addComponent("can", canSystem.emplace(TASK_CAN, staticBsp), level);
+        lifecycleManager.addComponent("can", canSystem.create(TASK_CAN, staticBsp), level);
 #endif // PLATFORM_SUPPORT_CAN
     }
 }

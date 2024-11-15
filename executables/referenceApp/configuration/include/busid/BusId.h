@@ -4,8 +4,6 @@
 
 #include "common/busid/BusId.h"
 
-#include <estd/optional.h>
-
 #include <cstdint>
 
 namespace busid

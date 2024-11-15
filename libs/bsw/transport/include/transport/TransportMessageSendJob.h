@@ -5,14 +5,14 @@
  */
 #pragma once
 
-#include <estd/forward_list.h>
+#include <etl/intrusive_list.h>
 
 namespace transport
 {
 class TransportMessage;
 class ITransportMessageProcessedListener;
 
-class TransportMessageSendJob : public ::estd::forward_list_node<TransportMessageSendJob>
+class TransportMessageSendJob : public ::etl::bidirectional_link<0>
 {
 public:
     TransportMessageSendJob();
@@ -43,16 +43,12 @@ private:
  */
 
 inline TransportMessageSendJob::TransportMessageSendJob()
-: ::estd::forward_list_node<TransportMessageSendJob>()
-, fpTransportMessage(nullptr)
-, fpListener(nullptr)
+: ::etl::bidirectional_link<0>(), fpTransportMessage(nullptr), fpListener(nullptr)
 {}
 
 inline TransportMessageSendJob::TransportMessageSendJob(
     TransportMessage* const pTransportMessage, ITransportMessageProcessedListener* const pListener)
-: ::estd::forward_list_node<TransportMessageSendJob>()
-, fpTransportMessage(pTransportMessage)
-, fpListener(pListener)
+: ::etl::bidirectional_link<0>(), fpTransportMessage(pTransportMessage), fpListener(pListener)
 {}
 
 inline void TransportMessageSendJob::setTransportMessage(TransportMessage* const pTransportMessage)

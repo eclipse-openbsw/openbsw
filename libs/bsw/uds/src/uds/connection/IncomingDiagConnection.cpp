@@ -2,7 +2,6 @@
 
 #include "uds/connection/IncomingDiagConnection.h"
 
-#include "estd/assert.h"
 #include "platform/config.h"
 #include "transport/AbstractTransportLayer.h"
 #include "transport/ITransportMessageProvider.h"
@@ -14,8 +13,10 @@
 #include "uds/connection/NestedDiagRequest.h"
 #include "uds/connection/PositiveResponse.h"
 #include "uds/session/IDiagSessionManager.h"
+#include "util/estd/assert.h"
 
 #include <async/Async.h>
+#include <etl/span.h>
 
 using ::transport::AbstractTransportLayer;
 using ::transport::TransportConfiguration;
@@ -33,7 +34,7 @@ void IncomingDiagConnection::addIdentifier()
     {
         fNestedRequest->addIdentifier();
     }
-    else if ((nullptr != fpRequestMessage) && (fIdentifiers.size() < fIdentifiers.max_size))
+    else if ((nullptr != fpRequestMessage) && (fIdentifiers.size() < fIdentifiers.max_size()))
     {
         fIdentifiers.push_back(fpRequestMessage->getPayload()[fIdentifiers.size()]);
     }
@@ -90,11 +91,7 @@ IncomingDiagConnection::sendPositiveResponseInternal(uint16_t const length, Abst
         ++fNumPendingMessageProcessedCallbacks;
 
         fSendPositiveResponseClosure = SendPositiveResponseClosure::CallType(
-            SendPositiveResponseClosure::CallType::fct::
-                create<IncomingDiagConnection, &IncomingDiagConnection::asyncSendPositiveResponse>(
-                    *this),
-            length,
-            &sender);
+            [this, length, &sender]() { asyncSendPositiveResponse(length, &sender); });
         ::async::execute(fContext, fSendPositiveResponseClosure);
         return ::uds::ErrorCode::OK;
     }
@@ -188,10 +185,10 @@ DiagReturnCode::Type IncomingDiagConnection::startNestedRequest(
     fIdentifiers.resize(nestedRequest.getPrefixLength());
     nestedRequest.init(
         sender,
-        ::estd::slice<uint8_t>::from_pointer(
+        ::etl::span<uint8_t>(
             fpResponseMessage->getBuffer() + fIdentifiers.size(),
             fpResponseMessage->getBufferLength() - fIdentifiers.size()),
-        ::estd::slice<uint8_t const>::from_pointer(request, static_cast<size_t>(requestLength)));
+        ::etl::span<uint8_t const>(request, static_cast<size_t>(requestLength)));
     fNestedRequest = &nestedRequest;
     triggerNextNestedRequest();
     return DiagReturnCode::OK;
@@ -228,7 +225,7 @@ bool IncomingDiagConnection::terminateNestedRequest()
     {
         if (fNestedRequest->getResponseCode() == DiagReturnCode::OK)
         {
-            ::async::execute(fContext, fTriggerNextNestedRequestDelegate);
+            ::async::execute(fContext, fTriggerNextNestedRequestClosure);
         }
         else
         {
@@ -267,11 +264,7 @@ IncomingDiagConnection::sendNegativeResponse(uint8_t const responseCode, Abstrac
         ++fNumPendingMessageProcessedCallbacks;
 
         fSendNegativeResponseClosure = SendNegativeResponseClosure::CallType(
-            SendNegativeResponseClosure::CallType::fct::
-                create<IncomingDiagConnection, &IncomingDiagConnection::asyncSendNegativeResponse>(
-                    *this),
-            responseCode,
-            &sender);
+            [this, responseCode, &sender]() { asyncSendNegativeResponse(responseCode, &sender); });
         ::async::execute(fContext, fSendNegativeResponseClosure);
         return ::uds::ErrorCode::OK;
     }
@@ -413,12 +406,9 @@ void IncomingDiagConnection::endNestedRequest()
 void IncomingDiagConnection::transportMessageProcessed(
     transport::TransportMessage& transportMessage, ProcessingResult const result)
 {
-    fTransportMessageProcessedClosure = TransportMessageClosure::CallType(
-        TransportMessageClosure::CallType::fct::
-            create<IncomingDiagConnection, &IncomingDiagConnection::asyncTransportMessageProcessed>(
-                *this),
-        &transportMessage,
-        result);
+    fTransportMessageProcessedClosure = TransportMessageProcessedClosure::CallType(
+        [this, &transportMessage, result]()
+        { asyncTransportMessageProcessed(&transportMessage, result); });
     ::async::execute(fContext, fTransportMessageProcessedClosure);
 }
 
@@ -510,9 +500,9 @@ PositiveResponse& IncomingDiagConnection::releaseRequestGetResponse()
 {
     if (fNestedRequest != nullptr)
     {
-        fIsResponseActive                           = true;
-        ::estd::slice<uint8_t> const responseBuffer = fNestedRequest->getResponseBuffer();
-        uint8_t* const data                         = responseBuffer.data();
+        fIsResponseActive                         = true;
+        ::etl::span<uint8_t> const responseBuffer = fNestedRequest->getResponseBuffer();
+        uint8_t* const data                       = responseBuffer.data();
         fPositiveResponse.init(data, static_cast<uint16_t>(responseBuffer.size()));
     }
     else

@@ -2,7 +2,7 @@
 
 #include "util/logger/ComponentInfo.h"
 
-#include <estd/assert.h>
+#include <util/estd/assert.h>
 
 #include <gtest/gtest.h>
 

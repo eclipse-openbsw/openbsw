@@ -8,6 +8,6 @@ add_executable(
 
 target_include_directories(asyncImplTest PRIVATE ../include)
 
-target_link_libraries(asyncImplTest PRIVATE asyncImpl asyncImplMock gmock_main)
+target_link_libraries(asyncImplTest PRIVATE asyncImpl asyncImplMock gmock_main etl)
 
 gtest_discover_tests(asyncImplTest PROPERTIES LABELS "asyncImplTest")

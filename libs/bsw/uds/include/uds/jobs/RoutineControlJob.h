@@ -2,15 +2,12 @@
 
 #pragma once
 
-#include "estd/uncopyable.h"
 #include "uds/base/AbstractDiagJob.h"
 
 namespace uds
 {
 class RoutineControlJob : public AbstractDiagJob
 {
-    UNCOPYABLE(RoutineControlJob);
-
 protected:
     class RoutineControlJobNode;
 

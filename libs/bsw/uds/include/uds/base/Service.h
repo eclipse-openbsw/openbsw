@@ -2,7 +2,6 @@
 
 #pragma once
 
-#include "estd/uncopyable.h"
 #include "uds/base/AbstractDiagJob.h"
 
 namespace uds
@@ -15,8 +14,6 @@ namespace uds
  */
 class Service : public AbstractDiagJob
 {
-    UNCOPYABLE(Service);
-
 public:
     Service(uint8_t const service, DiagSession::DiagSessionMask sessionMask);
 

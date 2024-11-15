@@ -13,7 +13,8 @@
 
 #define CONTEXT_EXECUTE fContext.execute()
 
-#include <estd/memory.h>
+#include <etl/memory.h>
+#include <etl/span.h>
 
 namespace
 {
@@ -34,10 +35,7 @@ public:
         fParams[4] = static_cast<uint8_t>(p5);
     }
 
-    ::estd::slice<uint8_t const> getParams()
-    {
-        return ::estd::slice<uint8_t const>::from_pointer(fParams, 5);
-    }
+    ::etl::span<uint8_t const> getParams() { return ::etl::span<uint8_t const>(fParams, 5); }
 
     MOCK_METHOD2(verify, DiagReturnCode::Type(uint8_t const request[], uint16_t requestLength));
 
@@ -90,37 +88,37 @@ TEST_F(AsyncDiagJobTest, Constructors)
         // Default constructor
         AsyncDiagJob<DiagJobMock> cut(fAsyncDiagHelperMock, ctype);
         uint8_t const expectedParams[] = {0U, 0U, 0U, 0U, 0U};
-        EXPECT_TRUE(::estd::memory::is_equal(expectedParams, cut.getParams()));
+        EXPECT_TRUE(::etl::equal(::etl::span<uint8_t const>(expectedParams), cut.getParams()));
     }
     {
         // constructor with 1 parameter
         AsyncDiagJob<DiagJobMock> cut(fAsyncDiagHelperMock, ctype, 1U);
         uint8_t const expectedParams[] = {1U, 0U, 0U, 0U, 0U};
-        EXPECT_TRUE(::estd::memory::is_equal(expectedParams, cut.getParams()));
+        EXPECT_TRUE(::etl::equal(::etl::span<uint8_t const>(expectedParams), cut.getParams()));
     }
     {
         // constructor with 2 parameters
         AsyncDiagJob<DiagJobMock> cut(fAsyncDiagHelperMock, ctype, 1U, 2U);
         uint8_t const expectedParams[] = {1U, 2U, 0U, 0U, 0U};
-        EXPECT_TRUE(::estd::memory::is_equal(expectedParams, cut.getParams()));
+        EXPECT_TRUE(::etl::equal(::etl::span<uint8_t const>(expectedParams), cut.getParams()));
     }
     {
         // constructor with 3 parameters
         AsyncDiagJob<DiagJobMock> cut(fAsyncDiagHelperMock, ctype, 1U, 2U, 3U);
         uint8_t const expectedParams[] = {1U, 2U, 3U, 0U, 0U};
-        EXPECT_TRUE(::estd::memory::is_equal(expectedParams, cut.getParams()));
+        EXPECT_TRUE(::etl::equal(::etl::span<uint8_t const>(expectedParams), cut.getParams()));
     }
     {
         // constructor with 4 parameters
         AsyncDiagJob<DiagJobMock> cut(fAsyncDiagHelperMock, ctype, 1U, 2U, 3U, 4U);
         uint8_t const expectedParams[] = {1U, 2U, 3U, 4U, 0U};
-        EXPECT_TRUE(::estd::memory::is_equal(expectedParams, cut.getParams()));
+        EXPECT_TRUE(::etl::equal(::etl::span<uint8_t const>(expectedParams), cut.getParams()));
     }
     {
         // constructor with 5 parameters
         AsyncDiagJob<DiagJobMock> cut(fAsyncDiagHelperMock, ctype, 1U, 2U, 3U, 4U, 5U);
         uint8_t const expectedParams[] = {1U, 2U, 3U, 4U, 5U};
-        EXPECT_TRUE(::estd::memory::is_equal(expectedParams, cut.getParams()));
+        EXPECT_TRUE(::etl::equal(::etl::span<uint8_t const>(expectedParams), cut.getParams()));
     }
 }
 

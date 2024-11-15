@@ -2,9 +2,6 @@
 
 #pragma once
 
-#include "estd/array.h"
-#include "estd/slice.h"
-#include "estd/uncopyable.h"
 #include "platform/estdint.h"
 #include "uds/jobs/DataIdentifierJob.h"
 
@@ -12,8 +9,6 @@ namespace uds
 {
 class ReadIdentifierPot : public DataIdentifierJob
 {
-    UNCOPYABLE(ReadIdentifierPot);
-
 public:
     ReadIdentifierPot(DiagSessionMask const sessionMask = DiagSession::ALL_SESSIONS());
 

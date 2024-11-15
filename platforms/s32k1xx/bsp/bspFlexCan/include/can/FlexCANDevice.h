@@ -10,17 +10,17 @@
 #include "io/Io.h"
 #include "mcu/mcu.h"
 
-#include <estd/queue.h>
-#include <estd/uncopyable.h>
+#include <etl/delegate.h>
+#include <etl/queue.h>
+#include <etl/uncopyable.h>
+
 #include <platform/estdint.h>
 
 namespace bios
 {
 
-class FlexCANDevice
+class FlexCANDevice : public etl::uncopyable
 {
-    UNCOPYABLE(FlexCANDevice);
-
 public:
     enum CTRLTimingValues
     {
@@ -77,7 +77,7 @@ public:
     FlexCANDevice(
         Config const& config,
         CanPhy& CanPhy,
-        ::estd::function<void()> frameSentCallback,
+        ::etl::delegate<void()> frameSentCallback,
         IEcuPowerStateController& powerManager);
     FlexCANDevice(Config const& config, CanPhy& CanPhy, IEcuPowerStateController& powerManager);
 
@@ -326,11 +326,11 @@ private:
     uint32_t fLastMessageBuffer;
     uint32_t fTxInterruptMask0;
     uint32_t fRxInterruptMask;
-    ::estd::declare::queue<can::CANFrame, RX_QUEUE_SIZE> fRxQueue;
+    ::etl::queue<can::CANFrame, RX_QUEUE_SIZE> fRxQueue;
     uint32_t fFirstRxId;
     uint32_t fFramesReceived;
     uint32_t fFramesReceivedTotal;
-    ::estd::function<void()> fFrameSentCallback;
+    ::etl::delegate<void()> fFrameSentCallback;
     IEcuPowerStateController& fPowerManager;
     uint8_t fIndex;
     bool fBusOff;

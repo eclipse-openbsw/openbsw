@@ -6,6 +6,8 @@
 #include "async/QueueNode.h"
 #include "async/RunnableMock.h"
 
+#include <etl/delegate.h>
+
 #include <gmock/gmock.h>
 
 namespace
@@ -16,7 +18,7 @@ using namespace ::testing;
 class RunnableExecutorTest : public Test
 {
 public:
-    using HandlerFunctionType = ::estd::function<void()>;
+    using HandlerFunctionType = ::etl::delegate<void()>;
 
     MOCK_METHOD2(setEventHandler, void(size_t event, HandlerFunctionType handlerFunction));
     MOCK_METHOD1(removeEventHandler, void(size_t event));
@@ -43,7 +45,7 @@ TEST_F(RunnableExecutorTest, testAll)
         // expect event handler to be set on init
         EXPECT_CALL(*this, setEventHandler(2U, _)).WillOnce(SaveArg<1>(&eventHandler));
         cut.init();
-        EXPECT_TRUE(eventHandler.has_value());
+        EXPECT_TRUE(eventHandler.is_valid());
         Mock::VerifyAndClearExpectations(this);
     }
     {

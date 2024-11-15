@@ -33,7 +33,7 @@ public:
             FrameIndexType firstFrameIndex,
             FrameIndexType lastFrameIndex,
             FrameSizeType consecutiveFrameDataSize,
-            ::estd::slice<uint8_t const> const& data));
+            ::etl::span<uint8_t const> const& data));
     MOCK_METHOD2_T(
         cancelSendDataFrames,
         void(IDoCanDataFrameTransmitterCallback<DataLinkLayer>& callback, JobHandleType jobHandle));

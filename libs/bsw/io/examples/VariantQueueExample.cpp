@@ -1,8 +1,7 @@
 // Copyright 2024 Accenture.
 
+#include <etl/unaligned_type.h>
 #include <io/VariantQueue.h>
-
-#include <estd/big_endian.h>
 
 #include <gtest/gtest.h>
 
@@ -19,8 +18,8 @@ struct A
 
 struct __attribute__((packed)) B
 {
-    ::estd::be_uint16_t x;
-    ::estd::be_uint32_t y;
+    ::etl::be_uint16_t x;
+    ::etl::be_uint32_t y;
 };
 
 constexpr size_t MAX_B_PAYLOAD_SIZE = 20;
@@ -48,7 +47,7 @@ void write()
     ::io::variant_q<MyTypes>::write(writer, a);
 
     // write struct B with payload:
-    B const b{::estd::be_uint16_t::make(42), ::estd::be_uint32_t::make(123456)};
+    B const b{42, 123456};
     uint8_t const payload[] = {0xAA, 0xBB, 0xCC};
     ::io::variant_q<MyTypes>::write(writer, b, payload);
 
@@ -59,7 +58,7 @@ void write()
         writer,
         b,
         big_payload_size,
-        [](::estd::slice<uint8_t> const& buffer) { std::fill(buffer.begin(), buffer.end(), 42); });
+        [](::etl::span<uint8_t> const& buffer) { std::fill(buffer.begin(), buffer.end(), 42); });
     // EXAMPLE_END write
 }
 
@@ -90,12 +89,12 @@ void read_with_payload()
     // EXAMPLE_START read_with_payload
     struct VisitWithPayload
     {
-        void operator()(A const& /* a */, ::estd::slice<uint8_t const> /* payload */)
+        void operator()(A const& /* a */, ::etl::span<uint8_t const> /* payload */)
         {
             printf("received A");
         }
 
-        void operator()(B const& /* b */, ::estd::slice<uint8_t const> /* payload */)
+        void operator()(B const& /* b */, ::etl::span<uint8_t const> /* payload */)
         {
             printf("received B");
         }

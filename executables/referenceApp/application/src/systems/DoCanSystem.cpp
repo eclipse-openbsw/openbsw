@@ -9,6 +9,8 @@
 #include <bsp/timer/SystemTimer.h>
 #include <docan/common/DoCanLogger.h>
 #include <docan/datalink/DoCanFrameCodecConfigPresets.h>
+#include <etl/delegate.h>
+#include <etl/span.h>
 
 namespace
 {
@@ -46,7 +48,7 @@ DoCanSystem::DoCanSystem(
 , _classicCodec(::docan::DoCanFrameCodecConfigPresets::PADDED_CLASSIC, _frameSizeMapper)
 , _classicAddressingFilter()
 , _parameters(
-      ::estd::function<decltype(systemUs)>::create<&systemUs>(),
+      ::etl::delegate<decltype(systemUs)>::create<&systemUs>(),
       ALLOCATE_TIMEOUT,
       RX_TIMEOUT,
       TX_CALLBACK_TIMEOUT,
@@ -72,25 +74,25 @@ void DoCanSystem::initLayer()
     auto& transceiver = *_canSystem.getCanTransceiver(::busid::CAN_0);
 
     ::docan::DoCanPhysicalCanTransceiver<AddressingType>& doCanTransceiver
-        = _physicalTransceivers.emplace_back().construct(
-            ::estd::by_ref(transceiver),
-            ::estd::by_ref(_classicAddressingFilter),
-            ::estd::by_ref(_classicAddressingFilter),
-            ::estd::by_ref(_addressing));
+        = _physicalTransceivers.emplace_back(
+            ::etl::ref(transceiver),
+            ::etl::ref(_classicAddressingFilter),
+            ::etl::ref(_classicAddressingFilter),
+            ::etl::ref(_addressing));
 
-    _transportLayers.createTransportLayer().construct(
+    _transportLayers.emplace_back(
         ::busid::CAN_0,
-        ::estd::by_ref(_context),
-        ::estd::by_ref(_classicAddressingFilter),
-        ::estd::by_ref(doCanTransceiver),
-        ::estd::by_ref(_tickGenerator),
-        ::estd::by_ref(_transportLayerConfig),
+        ::etl::ref(_context),
+        ::etl::ref(_classicAddressingFilter),
+        ::etl::ref(doCanTransceiver),
+        ::etl::ref(_tickGenerator),
+        ::etl::ref(_transportLayerConfig),
         ::util::logger::DOCAN);
 }
 
 void DoCanSystem::init()
 {
-    _classicAddressingFilter.init(::estd::make_slice(_addresses), ::estd::make_slice(_codecs));
+    _classicAddressingFilter.init(::etl::make_span(_addresses), ::etl::make_span(_codecs));
 
     initLayer();
 

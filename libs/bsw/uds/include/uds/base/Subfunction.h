@@ -2,7 +2,6 @@
 
 #pragma once
 
-#include "estd/uncopyable.h"
 #include "uds/base/AbstractDiagJob.h"
 
 namespace uds
@@ -13,8 +12,6 @@ namespace uds
  */
 class Subfunction : public AbstractDiagJob
 {
-    UNCOPYABLE(Subfunction);
-
 public:
     Subfunction(uint8_t const implementedRequest[], DiagSession::DiagSessionMask sessionMask);
 

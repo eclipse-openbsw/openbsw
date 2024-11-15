@@ -5,8 +5,6 @@
  */
 #pragma once
 
-#include <estd/functional.h>
-
 namespace async
 {
 template<typename T>

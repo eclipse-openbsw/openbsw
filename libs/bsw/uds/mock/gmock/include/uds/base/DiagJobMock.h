@@ -5,8 +5,6 @@
 #include "uds/base/AbstractDiagJob.h"
 #include "uds/connection/IncomingDiagConnection.h"
 
-#include <estd/static_assert.h>
-
 #include <gmock/gmock.h>
 
 namespace uds
@@ -44,9 +42,11 @@ public:
     MOCK_METHOD3(process, DiagReturnCode::Type(IncomingDiagConnection&, uint8_t const[], uint16_t));
 };
 
-#define DIAG_JOB(NAME, REQ, PRE)                        \
-    uint8_t ESTD_STATIC_CONCAT2(req, __LINE__)[] = REQ; \
-    DiagJobMock NAME(                                   \
-        ESTD_STATIC_CONCAT2(req, __LINE__), sizeof(ESTD_STATIC_CONCAT2(req, __LINE__)), PRE);
+#define STATIC_CONCAT(X, Y)  X##Y
+#define STATIC_CONCAT2(X, Y) STATIC_CONCAT(X, Y)
+
+#define DIAG_JOB(NAME, REQ, PRE)                   \
+    uint8_t STATIC_CONCAT2(req, __LINE__)[] = REQ; \
+    DiagJobMock NAME(STATIC_CONCAT2(req, __LINE__), sizeof(STATIC_CONCAT2(req, __LINE__)), PRE);
 
 } // namespace uds

@@ -6,9 +6,8 @@
 #include "uds/connection/IncomingDiagConnection.h"
 #include "uds/session/DiagSession.h"
 
+#include <etl/memory.h>
 #include <transport/TransportMessage.h>
-
-#include <estd/memory.h>
 
 namespace uds
 {
@@ -56,7 +55,7 @@ void MultipleReadDataByIdentifier::setGetDidLimit(GetDidLimitType const getDidLi
 
 void MultipleReadDataByIdentifier::setCheckResponse(CheckResponseType const checkResponse)
 {
-    if (checkResponse.has_value())
+    if (checkResponse.is_valid())
     {
         fCheckResponse = checkResponse;
     }
@@ -95,7 +94,7 @@ DiagReturnCode::Type MultipleReadDataByIdentifier::process(
     {
         return AbstractDiagJob::process(connection, request, requestLength);
     }
-    else if (fGetDidLimit.has_value())
+    else if (fGetDidLimit.is_valid())
     {
         uint8_t const didLimit = fGetDidLimit(*connection.fpRequestMessage);
         if ((didLimit > 0U) && ((requestLength / 2U) > didLimit))
@@ -123,19 +122,19 @@ void MultipleReadDataByIdentifier::responseSent(
     fAsyncJobHelper.endAsyncRequest();
 }
 
-::estd::slice<uint8_t const> MultipleReadDataByIdentifier::prepareNestedRequest(
-    ::estd::slice<uint8_t const> const& storedRequest)
+::etl::span<uint8_t const>
+MultipleReadDataByIdentifier::prepareNestedRequest(::etl::span<uint8_t const> const& storedRequest)
 {
     if (storedRequest.size() >= 2U)
     {
-        (void)::estd::memory::copy(
-            ::estd::slice<uint8_t>(fBuffer).offset(1), consumeStoredRequest(2U));
+        ::etl::span<uint8_t const> src{consumeStoredRequest(2U)};
+        (void)::etl::mem_copy<uint8_t>(src.cbegin(), src.size(), fBuffer.begin() + 1);
         return fBuffer;
     }
     else
     {
         setResponseCode(fCombinedResponseCode);
-        return ::estd::slice<uint8_t const>();
+        return {};
     }
 }
 

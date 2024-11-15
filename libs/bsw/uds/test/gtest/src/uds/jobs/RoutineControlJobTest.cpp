@@ -2,11 +2,12 @@
 
 #include "uds/jobs/RoutineControlJob.h"
 
-#include "estd/array.h"
 #include "transport/TransportMessage.h"
 #include "uds/connection/IncomingDiagConnection.h"
 #include "uds/session/ApplicationDefaultSession.h"
 #include "uds/session/DiagSessionManagerMock.h"
+
+#include <etl/array.h>
 
 #include <gtest/gtest.h>
 
@@ -124,7 +125,7 @@ struct RoutineControlJobTest : ::testing::Test
     }
 
     transport::TransportMessage fMessage;
-    ::estd::array<uint8_t, 6> fRequestBuffer;
+    ::etl::array<uint8_t, 6> fRequestBuffer;
 
     static uint8_t const DUMMY_VALUE = 0xFFU;
 

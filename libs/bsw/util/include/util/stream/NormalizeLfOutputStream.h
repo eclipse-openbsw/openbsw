@@ -4,7 +4,8 @@
 
 #include "util/stream/IOutputStream.h"
 
-#include <estd/slice.h>
+#include <etl/span.h>
+#include <etl/string_view.h>
 
 #include <cstdint>
 
@@ -29,7 +30,7 @@ public:
     bool isEof() const override;
 
     void write(uint8_t data) override;
-    void write(::estd::slice<uint8_t const> const& buffer) override;
+    void write(::etl::span<uint8_t const> const& buffer) override;
 
 private:
     IOutputStream& _stream;

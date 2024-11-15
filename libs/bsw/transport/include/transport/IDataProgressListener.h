@@ -5,7 +5,8 @@
  */
 #pragma once
 
-#include <estd/uncopyable.h>
+#include <etl/uncopyable.h>
+
 #include <platform/estdint.h>
 
 namespace transport
@@ -23,10 +24,8 @@ class TransportMessage;
  * \see TransportMessage
  * \see TransportMessage::isComplete()
  */
-class IDataProgressListener
+class IDataProgressListener : public etl::uncopyable
 {
-    UNCOPYABLE(IDataProgressListener);
-
 protected:
     IDataProgressListener() = default;
 

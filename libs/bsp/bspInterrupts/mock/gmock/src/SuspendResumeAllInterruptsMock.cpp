@@ -15,7 +15,7 @@ extern "C"
 {
 OldIntEnabledStatusValueType getOldIntEnabledStatusValueAndSuspendAllInterrupts()
 {
-    if (::interrupts::SuspendResumeAllInterruptsMock::instantiated())
+    if (::interrupts::SuspendResumeAllInterruptsMock::is_valid())
     {
         return ::interrupts::SuspendResumeAllInterruptsMock::instance()
             .getOldIntEnabledStatusValueAndSuspendAllInterrupts();
@@ -26,7 +26,7 @@ OldIntEnabledStatusValueType getOldIntEnabledStatusValueAndSuspendAllInterrupts(
 
 uint32_t getMachineStateRegisterValueAndSuspendAllInterrupts(void)
 {
-    if (::interrupts::SuspendResumeAllInterruptsMock::instantiated())
+    if (::interrupts::SuspendResumeAllInterruptsMock::is_valid())
     {
         return ::interrupts::SuspendResumeAllInterruptsMock::instance()
             .getMachineStateRegisterValueAndSuspendAllInterrupts();
@@ -37,7 +37,7 @@ uint32_t getMachineStateRegisterValueAndSuspendAllInterrupts(void)
 
 void resumeAllInterrupts(OldIntEnabledStatusValueType oldIntEnabledStatusValue)
 {
-    if (::interrupts::SuspendResumeAllInterruptsMock::instantiated())
+    if (::interrupts::SuspendResumeAllInterruptsMock::is_valid())
     {
         ::interrupts::SuspendResumeAllInterruptsMock::instance().resumeAllInterrupts(
             oldIntEnabledStatusValue);

@@ -4,8 +4,6 @@
 
 #include "timer/Timeout.h"
 
-#include <estd/limits.h>
-
 #include <cstdint>
 
 namespace timer
@@ -23,7 +21,7 @@ template<class LockGuard>
 class Timer
 {
 public:
-    using TimeoutList = ::estd::forward_list<Timeout>;
+    using TimeoutList = ::etl::intrusive_forward_list<Timeout, ::etl::forward_link<0>>;
 
     /**
      * Called by the system to process the next elapsed timeout.
@@ -153,7 +151,7 @@ bool
 
 Timer<LockGuard>::isActive( Timeout const & timeout) const
 {
-    return ::estd::is_in_use<Timeout>(timeout);
+    return timeout.is_linked();
 }
 
 template<class LockGuard>
@@ -171,10 +169,10 @@ bool Timer<LockGuard>::setCyclic(Timeout& timeout, uint32_t const period, uint32
 template<class LockGuard>
 void Timer<LockGuard>::cancel(Timeout& timeout)
 {
-    if (::estd::is_in_use<Timeout>(timeout))
+    if (timeout.is_linked())
     {
         LockGuard const scopedLock;
-        _timeoutList.remove(timeout);
+        _timeoutList.erase(timeout);
     }
 }
 

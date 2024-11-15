@@ -10,6 +10,8 @@
 #include "uds/UdsLogger.h"
 #include "uds/session/IDiagSessionManager.h"
 
+#include <etl/delegate.h>
+
 DECLARE_LOGGER_COMPONENT(GLOBAL)
 
 namespace uds
@@ -38,8 +40,7 @@ DiagDispatcher2::DiagDispatcher2(
 , fDefaultTransportMessageProcessedListener()
 , fBusyMessage()
 , fBusyMessageBuffer()
-, fAsyncProcessQueue(
-      ::async::Function::CallType::create<DiagDispatcher2, &DiagDispatcher2::processQueue>(*this))
+, fAsyncProcessQueue([this]() { processQueue(); })
 {
     fBusyMessage.init(
         &fBusyMessageBuffer[0], BUSY_MESSAGE_LENGTH + UdsVmsConstants::BUSY_MESSAGE_EXTRA_BYTES);
@@ -76,8 +77,8 @@ ESR_NO_INLINE AbstractTransportLayer::ErrorCode DiagDispatcher2::send_local(
         }
     }
     auto connection = fConfiguration.findIncomingDiagConnection(
-        [pNotificationListener](IncomingDiagConnection const& conn) -> bool
-        { return pNotificationListener == &conn; });
+        [pNotificationListener](void* const conn) -> bool
+        { return reinterpret_cast<void*>(pNotificationListener) == conn; });
     if (connection != nullptr)
     {
         ITransportMessageListener::ReceiveResult const status
@@ -180,7 +181,8 @@ AbstractTransportLayer::ErrorCode DiagDispatcher2::enqueueMessage(
     ::async::ModifiableLockType lock;
     if (!fConfiguration.SendJobQueue.full())
     {
-        TransportJob& sendJob = fConfiguration.SendJobQueue.push();
+        fConfiguration.SendJobQueue.emplace();
+        TransportJob& sendJob = fConfiguration.SendJobQueue.back();
         lock.unlock();
         sendJob.setTransportMessage(transportMessage);
         if (pNotificationListener != nullptr)
@@ -437,7 +439,7 @@ ESR_NO_INLINE bool DiagDispatcher2::shutdown_local(ShutdownDelegate const delega
     disable();
     fShutdownDelegate = delegate;
     fConnectionManager.shutdown(
-        ::estd::function<void()>::
+        ::etl::delegate<void()>::
             create<DiagDispatcher2, &DiagDispatcher2::connectionManagerShutdownComplete>(*this));
     return false;
 }

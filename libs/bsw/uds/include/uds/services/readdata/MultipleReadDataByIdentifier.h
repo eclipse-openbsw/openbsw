@@ -6,11 +6,10 @@
 #include "uds/base/AbstractDiagJob.h"
 #include "uds/connection/NestedDiagRequest.h"
 
+#include <etl/array.h>
+#include <etl/delegate.h>
+#include <etl/span.h>
 #include <transport/TransportMessage.h>
-
-#include <estd/array.h>
-#include <estd/functional.h>
-#include <estd/slice.h>
 
 #include <cstdint>
 
@@ -28,14 +27,14 @@ public:
     /**
      * Callback function for getting limit for multiple DID request.
      */
-    using GetDidLimitType   = ::estd::function<uint8_t(::transport::TransportMessage const&)>;
+    using GetDidLimitType   = ::etl::delegate<uint8_t(::transport::TransportMessage const&)>;
     /**
      * Function that allows checking the response code from a single DID request and combining with
      * the complete result. The function returns true if the response is not an error and thus
      * further DIDs will be processed. In this case the combinedResponse can be adjusted. This
      * combined response will be sent if none of the DIDs is valid
      */
-    using CheckResponseType = ::estd::function<bool(DiagReturnCode::Type, DiagReturnCode::Type&)>;
+    using CheckResponseType = ::etl::delegate<bool(DiagReturnCode::Type, DiagReturnCode::Type&)>;
 
     /**
      * constructor.
@@ -90,8 +89,8 @@ private:
     /**
      * \see NestedDiagRequest::prepareNestedRequest()
      */
-    ::estd::slice<uint8_t const>
-    prepareNestedRequest(::estd::slice<uint8_t const> const& storedRequest) override;
+    ::etl::span<uint8_t const>
+    prepareNestedRequest(::etl::span<uint8_t const> const& storedRequest) override;
     /**
      * \see NestedDiagRequest::processNestedRequest()
      */
@@ -115,7 +114,7 @@ private:
     AbstractDiagJob& fFirstJob;
     GetDidLimitType fGetDidLimit;
     CheckResponseType fCheckResponse;
-    ::estd::array<uint8_t, 3U> fBuffer;
+    ::etl::array<uint8_t, 3U> fBuffer;
     DiagReturnCode::Type fCombinedResponseCode;
 };
 

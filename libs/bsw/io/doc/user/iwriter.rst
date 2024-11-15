@@ -18,7 +18,7 @@ Usage of API
 ------------
 
 The interface ``IWriter`` provides a two step API. The user first needs to ``allocate`` a
-:ref:`estd_slice` of bytes. After a successful allocation, the slice can be filled with the
+etl::span of bytes. After a successful allocation, the slice can be filled with the
 data to be transferred to the reader side of the stream. Calling ``commit`` makes the data available
 to the :ref:`io_IReader` connected to the same channel. It also makes the allocated data invalid
 - **it must not be modified after committing!**

@@ -7,7 +7,8 @@
 #include "uds/session/ApplicationExtendedSession.h"
 #include "uds/session/IDiagSessionManager.h"
 
-#include <estd/big_endian.h>
+#include <etl/unaligned_type.h>
+
 #include <platform/config.h>
 
 namespace uds
@@ -39,7 +40,7 @@ CommunicationControl::addCommunicationStateListener_local(ICommunicationStateLis
 ESR_NO_INLINE void
 CommunicationControl::removeCommunicationStateListener_local(ICommunicationStateListener& listener)
 {
-    fListeners.remove(listener);
+    fListeners.erase(listener);
 }
 
 ESR_NO_INLINE void CommunicationControl::addCommunicationSubStateListener_local(
@@ -51,7 +52,7 @@ ESR_NO_INLINE void CommunicationControl::addCommunicationSubStateListener_local(
 ESR_NO_INLINE void CommunicationControl::removeCommunicationSubStateListener_local(
     ICommunicationSubStateListener& listener)
 {
-    fSubListeners.remove(listener);
+    fSubListeners.erase(listener);
 }
 
 void CommunicationControl::addCommunicationStateListener(ICommunicationStateListener& listener)
@@ -230,7 +231,7 @@ DiagReturnCode::Type CommunicationControl::process(
         {
             if (static_cast<uint8_t>(NORMAL_COMMUNICATION_MESSAGES) == communicationTypeLo)
             {
-                rcvNode = ::estd::read_be<uint16_t>(&request[2]);
+                rcvNode = ::etl::be_uint16_t(&request[2]);
                 if (0U == fSubNodeIdDisabledTx)
                 {
                     if (notifySubListeners(
@@ -266,7 +267,7 @@ DiagReturnCode::Type CommunicationControl::process(
         {
             if (static_cast<uint8_t>(NORMAL_COMMUNICATION_MESSAGES) == communicationTypeLo)
             {
-                rcvNode = ::estd::read_be<uint16_t>(&request[2]);
+                rcvNode = ::etl::be_uint16_t(&request[2]);
                 if (rcvNode == fSubNodeIdDisabledTx)
                 {
                     if (notifySubListeners(

@@ -34,6 +34,7 @@ We recommend to read their licenses, as their terms may differ from the terms de
 
 | Project                   | Version | License   | Path                                                                 |
 |---------------------------|---------|-----------|----------------------------------------------------------------------|
+| ETL                       | 20.41.6 | MIT       | ``libs/bsw/3rdparty/etl/LICENSE``                                    |
 | googletest                | 1.12.1  | BSD-3     | ``libs/bsw/3rdparty/googletest/LICENSE``                             |
 | printf                    | 5.2.0   | MIT       | ``libs/bsw/3rdparty/printf/LICENSE``                                 |
 | FreeRTOS Real Time Kernel | 10.6.2  | MIT       | ``platforms/posix/3rdparty/freeRtosPosix/LICENSE.md``                |

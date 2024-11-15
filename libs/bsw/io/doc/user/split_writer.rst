@@ -10,7 +10,7 @@ This is useful for connection e.g. one input channel to multiple output channels
 Properties
 ----------
 
-* **Memory consumption**: ``sizeof(::estd::slice<::io::IWriter*, N>) + sizeof(::estd::slice<uint8_t>) + sizeof(size_t)``
+* **Memory consumption**: ``sizeof(::etl::span<::io::IWriter*, N>) + sizeof(::etl::span<uint8_t>) + sizeof(size_t)``
 
 Template Parameters
 -------------------

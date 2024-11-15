@@ -4,7 +4,7 @@
 
 #include "util/string/ConstString.h"
 
-#include <estd/forward_list.h>
+#include <etl/intrusive_forward_list.h>
 
 namespace util
 {
@@ -15,7 +15,7 @@ class ISharedOutputStream;
 
 namespace command
 {
-class ICommand : public ::estd::forward_list_node<ICommand>
+class ICommand : public ::etl::forward_link<0>
 {
 public:
     ICommand& operator=(ICommand const&) = delete;

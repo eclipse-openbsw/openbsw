@@ -4,10 +4,7 @@
 
 #include "uds/connection/IncomingDiagConnection.h"
 
-#include <estd/big_endian.h>
-#include <estd/memory.h>
-
-using ::estd::write_be;
+#include <etl/unaligned_type.h>
 
 namespace uds
 {
@@ -125,9 +122,9 @@ DiagReturnCode::Type WriteIdentifierToNvStorage::process(
 
     if (_variableLength)
     {
-        _length       = requestLength;
-        _pRequestData = request;
-        write_be<uint32_t>(&_lengthBuff[0U], requestLength);
+        _length                             = requestLength;
+        _pRequestData                       = request;
+        ::etl::be_uint32_ext_t{_lengthBuff} = requestLength;
         if (!_ieepromHelper.write(
                 _nvLengthItem, &_lengthBuff[0U], sizeof(_lengthBuff), _nvLengthWriteJobfinished))
         {

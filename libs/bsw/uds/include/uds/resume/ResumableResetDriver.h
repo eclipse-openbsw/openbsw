@@ -2,13 +2,13 @@
 
 #pragma once
 
-#include "estd/uncopyable.h"
 #include "platform/estdint.h"
 #include "transport/BufferedTransportMessage.h"
 #include "uds/lifecycle/IUdsLifecycleConnector.h"
 #include "uds/resume/IResumableDiagDispatcher.h"
 
 #include <async/Async.h>
+#include <etl/uncopyable.h>
 
 namespace uds
 {
@@ -16,10 +16,10 @@ class DiagDispatcher2;
 class IResumableResetDriverPersistence;
 
 // Note: you have to call lifecycleComplete() when lifecycle enters RUN state
-class ResumableResetDriver : private ::async::RunnableType
+class ResumableResetDriver
+: private ::async::RunnableType
+, public ::etl::uncopyable
 {
-    UNCOPYABLE(ResumableResetDriver);
-
 public:
     /**
      * Constructor.

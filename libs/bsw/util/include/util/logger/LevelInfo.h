@@ -8,7 +8,7 @@
 
 #include "util/format/AttributedString.h"
 
-#include <estd/assert.h>
+#include <util/estd/assert.h>
 // Currently we still define the enum value _DEBUG to make the levels compliant to the former Logger
 // levels. Unfortunately on Visual Studio this is a predefined macro which we will undefine here
 // until we can remove support of the deprecated Logger levels starting with underscore.

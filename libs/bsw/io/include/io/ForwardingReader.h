@@ -5,7 +5,8 @@
 #include "io/IReader.h"
 #include "io/IWriter.h"
 
-#include <estd/memory.h>
+#include <etl/memory.h>
+#include <etl/span.h>
 
 namespace io
 {
@@ -37,7 +38,7 @@ public:
      * Calling peek() will call peek() on the source reader and if data is available allocate
      * the data on the destination writer.
      */
-    ::estd::slice<uint8_t> peek() const override;
+    ::etl::span<uint8_t> peek() const override;
 
     /**
      * Calling release() will copy the data to the destination and commit it. After that,
@@ -54,8 +55,8 @@ public:
 private:
     IReader& _source;
     IWriter& _destination;
-    ::estd::slice<uint8_t> mutable _sourceData{};
-    ::estd::slice<uint8_t> mutable _destinationData{};
+    ::etl::span<uint8_t> mutable _sourceData{};
+    ::etl::span<uint8_t> mutable _destinationData{};
 };
 
 inline ForwardingReader::ForwardingReader(IReader& source, IWriter& destination)
@@ -64,7 +65,7 @@ inline ForwardingReader::ForwardingReader(IReader& source, IWriter& destination)
 
 inline size_t ForwardingReader::maxSize() const { return _source.maxSize(); }
 
-inline ::estd::slice<uint8_t> ForwardingReader::peek() const
+inline ::etl::span<uint8_t> ForwardingReader::peek() const
 {
     _sourceData = _source.peek();
 
@@ -83,7 +84,7 @@ inline ::estd::slice<uint8_t> ForwardingReader::peek() const
 inline void ForwardingReader::release()
 {
     // If _destinationData is an empty slice, copy will not copy any data.
-    (void)::estd::memory::copy(_destinationData, _sourceData);
+    (void)::etl::copy(_sourceData, _destinationData);
     // Calling commit() will only have an effect if allocate was called before, this is why
     // we don't need more checks here and can just call commit().
     _destination.commit();

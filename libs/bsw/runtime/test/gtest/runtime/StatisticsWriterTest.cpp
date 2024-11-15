@@ -7,6 +7,9 @@
 #include "runtime/StatisticsIterator.h"
 #include "util/stream/StringBufferOutputStream.h"
 
+#include <etl/delegate.h>
+#include <etl/span.h>
+
 #include <gtest/gtest.h>
 
 namespace
@@ -49,12 +52,12 @@ protected:
 struct TestNames
 {
 public:
-    explicit TestNames(::estd::slice<char const* const> const& names) : _names(names) {}
+    explicit TestNames(::etl::span<char const* const> const& names) : _names(names) {}
 
     char const* getName(size_t idx) const { return _names[idx]; }
 
 private:
-    ::estd::slice<char const* const> _names;
+    ::etl::span<char const* const> _names;
 };
 
 class TestIterator : public StatisticsIterator<RuntimeStatistics>
@@ -62,7 +65,7 @@ class TestIterator : public StatisticsIterator<RuntimeStatistics>
 public:
     TestIterator(
         StatisticsIterator<RuntimeStatistics>::GetNameType getName,
-        ::estd::slice<RuntimeStatistics const> const& values)
+        ::etl::span<RuntimeStatistics const> const& values)
     : StatisticsIterator<RuntimeStatistics>(getName, values.size()), _values(values)
     {}
 
@@ -70,7 +73,7 @@ protected:
     RuntimeStatistics const& getValue(size_t const idx) override { return _values[idx]; }
 
 private:
-    ::estd::slice<RuntimeStatistics const> _values;
+    ::etl::span<RuntimeStatistics const> _values;
 };
 
 TEST_F(StatisticsWriterTest, testHeader)
@@ -148,7 +151,7 @@ TEST_F(StatisticsWriterTest, testFormatGroup)
         statistics);
     TestRuntimeStatisticsFormatter formatter;
     cut.formatStatisticsGroup(
-        ::estd::function<void(StatisticsWriter&, RuntimeStatistics const&)>::
+        ::etl::delegate<void(StatisticsWriter&, RuntimeStatistics const&)>::
             create<TestRuntimeStatisticsFormatter, &TestRuntimeStatisticsFormatter::format>(
                 formatter),
         "task",

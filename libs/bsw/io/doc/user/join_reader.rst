@@ -10,7 +10,7 @@ channels with one output channel.
 Properties
 ----------
 
-* **Memory consumption**: ``sizeof(::estd::slice<::io::IReader*, N>) + sizeof(size_t) + 1``
+* **Memory consumption**: ``sizeof(::etl::span<::io::IReader*, N>) + sizeof(size_t) + 1``
 
 Template Parameters
 -------------------

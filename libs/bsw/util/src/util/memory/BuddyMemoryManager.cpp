@@ -2,7 +2,7 @@
 
 #include "util/memory/BuddyMemoryManager.h"
 
-#include <estd/memory.h>
+#include <etl/memory.h>
 
 #include <cstring>
 
@@ -55,7 +55,7 @@ inline ClzllType BuddyMemoryManager::fastLog2<>(ClzllType const value)
 
 #endif
 
-BuddyMemoryManager::BuddyMemoryManager(::estd::slice<uint8_t> const nodeTree)
+BuddyMemoryManager::BuddyMemoryManager(::etl::span<uint8_t> const nodeTree)
 : _nodeTree(nodeTree.data())
 , _nodeTreeDepth(fastLog2<size_t>(nodeTree.size() + 1U))
 , _numBuckets(static_cast<size_t>(1U) << (_nodeTreeDepth - 1U))
@@ -256,8 +256,7 @@ void BuddyMemoryManager::splitNodeUntilLevelReached(
 
 void BuddyMemoryManager::clearNodeTree()
 {
-    ::estd::memory::set(
-        ::estd::slice<uint8_t>::from_pointer(_nodeTree, _nodeTreeSize), TAG_NODE_LINK);
+    ::etl::mem_set(_nodeTree, _nodeTreeSize, TAG_NODE_LINK);
 
     _nodeTree[0U] = TAG_NODE_FREE;
 }

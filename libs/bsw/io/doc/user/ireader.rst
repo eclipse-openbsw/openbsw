@@ -18,7 +18,7 @@ Usage of API
 ------------
 
 The next sequence diagram visualizes the two step ``peek()`` and ``release()`` API. After a call to ``peek()``
-returns a :ref:`estd_slice` of data with size greater than zero, the user can consume this data. A call
+returns a etl::span of data with size greater than zero, the user can consume this data. A call
 to ``release()`` frees the data again, also invalidating it for the user.
 **It must not be used** anymore after calling ``release()``.
 

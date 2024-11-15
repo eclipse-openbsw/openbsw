@@ -5,7 +5,8 @@
  */
 #pragma once
 
-#include <estd/slice.h>
+#include <etl/span.h>
+
 #include <platform/estdint.h>
 
 namespace transport
@@ -66,7 +67,7 @@ public:
         uint16_t sourceId,
         uint16_t targetId,
         uint16_t size,
-        ::estd::slice<uint8_t const> const& peek,
+        ::etl::span<uint8_t const> const& peek,
         TransportMessage*& pTransportMessage)
         = 0;
 

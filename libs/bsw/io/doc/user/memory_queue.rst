@@ -40,7 +40,7 @@ If we compare this to a ``MemoryQueue<6800, 68>`` this queue can hold at most
 ``6800 / (68 + 2) == 97`` full frames but in the average case it can hold ``6800 / (16 + 2) == 377``
 frames with 12 bytes of payload and not waste any memory.
 
-The ``MemoryQueue`` provides chunks of bytes represented as ``::estd::slice<uint8_t>`` and the user
+The ``MemoryQueue`` provides chunks of bytes represented as ``::etl::span<uint8_t>`` and the user
 has to take care about serializing and deserializing the transferred data.
 
 Memory Placement / Cache

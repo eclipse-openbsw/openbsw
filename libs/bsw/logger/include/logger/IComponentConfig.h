@@ -2,15 +2,14 @@
 
 #pragma once
 
+#include <etl/uncopyable.h>
 #include <util/logger/ComponentInfo.h>
 #include <util/logger/LevelInfo.h>
 #include <util/string/ConstString.h>
 
-#include <estd/uncopyable.h>
-
 namespace logger
 {
-class IComponentConfig : private ::estd::uncopyable
+class IComponentConfig : private ::etl::uncopyable
 {
 public:
     IComponentConfig();
@@ -30,6 +29,6 @@ public:
     virtual void writeLevels() = 0;
 };
 
-inline IComponentConfig::IComponentConfig() : ::estd::uncopyable() {}
+inline IComponentConfig::IComponentConfig() : ::etl::uncopyable() {}
 
 } // namespace logger

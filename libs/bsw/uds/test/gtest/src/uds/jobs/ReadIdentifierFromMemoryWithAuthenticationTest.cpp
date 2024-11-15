@@ -5,6 +5,8 @@
 #include "uds/authentication/DefaultDiagAuthenticator.h"
 #include "uds/session/ApplicationDefaultSession.h"
 
+#include <etl/span.h>
+
 #include <gtest/gtest.h>
 
 namespace
@@ -29,7 +31,7 @@ public:
     TestableReadIdentifierFromMemoryWithAuthentication(
         IDiagAuthenticator const& authenticator,
         uint16_t const id,
-        ::estd::slice<uint8_t const> const& responseData,
+        ::etl::span<uint8_t const> const& responseData,
         DiagSessionMask const sessionMask)
     : ReadIdentifierFromMemoryWithAuthentication(authenticator, id, responseData, sessionMask)
     {}

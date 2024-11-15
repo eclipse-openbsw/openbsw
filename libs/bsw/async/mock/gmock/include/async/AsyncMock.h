@@ -7,16 +7,16 @@
 
 #include "async/Async.h"
 
-#include <estd/singleton.h>
+#include <etl/singleton_base.h>
 
 #include <gmock/gmock.h>
 
 namespace async
 {
-class AsyncMock : public ::estd::singleton<AsyncMock>
+class AsyncMock : public ::etl::singleton_base<AsyncMock>
 {
 public:
-    AsyncMock() : ::estd::singleton<AsyncMock>(*this) {}
+    AsyncMock() : ::etl::singleton_base<AsyncMock>(*this) {}
 
     MOCK_METHOD2(execute, void(ContextType contextType, RunnableType& runnableType));
     MOCK_METHOD5(

@@ -10,7 +10,7 @@ namespace stream
 {
 bool StdinStream::isEof() const { return false; }
 
-uint32_t StdinStream::readBuffer(::estd::slice<uint8_t> const& buffer)
+uint32_t StdinStream::readBuffer(::etl::span<uint8_t> const& buffer)
 {
     uint32_t count = 0U;
     while (count < buffer.size())

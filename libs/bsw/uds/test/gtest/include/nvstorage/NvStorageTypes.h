@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include <estd/functional.h>
+#include <etl/delegate.h>
 
 #include <cstdint>
 
@@ -66,7 +66,7 @@ enum NvStorageReturnCode
     NVSTORAGE_REQ_NV_BUSY
 };
 
-using applJobFinishedCallback = ::estd::function<void(
+using applJobFinishedCallback = ::etl::delegate<void(
     NvStorageOperation const, NvStorageReturnCode const, NvBlockIdType const)>;
-using applInitBlockCallback = ::estd::function<void(NvStorageOperation const, NvBlockIdType const)>;
+using applInitBlockCallback = ::etl::delegate<void(NvStorageOperation const, NvBlockIdType const)>;
 } /* namespace nvstorage */

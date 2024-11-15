@@ -7,7 +7,7 @@
  */
 #pragma once
 
-#include <estd/forward_list.h>
+#include <etl/intrusive_list.h>
 
 namespace can
 {
@@ -21,7 +21,7 @@ class IFilter;
  * An ICANFrameListener subclass is a class interested in the reception
  * of CANFrames. Therefore it needs to register at an ICanTransceiver.
  */
-class ICANFrameListener : public ::estd::forward_list_node<ICANFrameListener>
+class ICANFrameListener : public ::etl::bidirectional_link<0>
 {
 public:
     ICANFrameListener();
@@ -42,6 +42,6 @@ public:
 /*
  * inline implementation
  */
-inline ICANFrameListener::ICANFrameListener() : ::estd::forward_list_node<ICANFrameListener>() {}
+inline ICANFrameListener::ICANFrameListener() : ::etl::bidirectional_link<0>() {}
 
 } // namespace can

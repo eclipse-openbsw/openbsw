@@ -4,13 +4,9 @@
 
 #include "uds/connection/IncomingDiagConnection.h"
 
-#include <estd/big_endian.h>
-#include <estd/memory.h>
-#include <estd/slice.h>
-
-using ::estd::read_be;
-using ::estd::slice;
-using ::estd::memory::set;
+#include <etl/memory.h>
+#include <etl/span.h>
+#include <etl/unaligned_type.h>
 
 namespace uds
 {
@@ -135,7 +131,7 @@ void ReadIdentifierFromNvStorage::onLengthNvReadJobFinished(
         return;
     }
 
-    _length = read_be<uint32_t>(_lengthBuffer);
+    _length = ::etl::be_uint32_t(_lengthBuffer);
 
     if (_posResponse->getMaximumLength() < _length)
     {
@@ -177,7 +173,7 @@ void ReadIdentifierFromNvStorage::onNvReadJobFinished(
     {
         if (rc == ::nvstorage::NVSTORAGE_REQ_INTEGRITY_FAILED)
         {
-            set(slice<uint8_t>::from_pointer(_posResponse->getData(), _length), 0U);
+            ::etl::mem_set(_posResponse->getData(), _length, 0U);
         }
         PositiveResponse* const response = _posResponse;
         auto const connection            = _pDiagConnection;

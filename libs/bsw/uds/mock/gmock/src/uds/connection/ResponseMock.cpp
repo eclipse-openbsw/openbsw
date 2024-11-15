@@ -4,7 +4,7 @@
 
 #include "uds/connection/IncomingDiagConnectionMock.h"
 
-#include <estd/big_endian.h>
+#include <etl/unaligned_type.h>
 
 namespace uds
 {
@@ -23,20 +23,20 @@ bool PositiveResponse::appendUint8(uint8_t const data) { return appendData(&data
 
 bool PositiveResponse::appendUint16(uint16_t const data)
 {
-    auto const v = ::estd::be_uint16_t::make(data);
-    return appendData(v.bytes, 2) == 2;
+    auto const v = ::etl::be_uint16_t(data);
+    return appendData(v.data(), 2) == 2;
 }
 
 bool PositiveResponse::appendUint24(uint32_t const data)
 {
-    auto const v = ::estd::be_uint24_t::make(data);
-    return appendData(v.bytes, 3) == 3;
+    auto const v = ::etl::be_uint32_t(data);
+    return appendData(v.data() + 1, 3) == 3;
 }
 
 bool PositiveResponse::appendUint32(uint32_t const data)
 {
-    auto const v = ::estd::be_uint32_t::make(data);
-    return appendData(v.bytes, 4) == 4;
+    auto const v = ::etl::be_uint32_t(data);
+    return appendData(v.data(), 4) == 4;
 }
 
 uint8_t* PositiveResponse::getData()

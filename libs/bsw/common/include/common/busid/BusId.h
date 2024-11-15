@@ -7,7 +7,6 @@
  */
 #pragma once
 
-#include <estd/bitset.h>
 #include <platform/estdint.h>
 
 #include <type_traits>

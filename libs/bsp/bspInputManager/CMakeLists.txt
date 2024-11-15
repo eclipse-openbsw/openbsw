@@ -10,6 +10,6 @@ target_link_libraries(
     PUBLIC bsp
            bspDynamicClient
            bspIo
-           estd
+           etl
            platform
            util)

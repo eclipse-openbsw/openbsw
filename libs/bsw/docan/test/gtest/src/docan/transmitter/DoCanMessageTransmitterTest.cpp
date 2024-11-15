@@ -11,8 +11,6 @@
 
 #include <transport/TransportMessageProcessedListenerMock.h>
 
-#include <estd/memory.h>
-
 namespace
 {
 using namespace docan;
@@ -64,7 +62,7 @@ TEST(DoCanMessageTransmitterTest, testConstructedTransmitter)
     EXPECT_EQ(1U, cut.getBlockEnd());
     EXPECT_EQ(3U, cut.getFrameCount());
     EXPECT_EQ(15U, cut.getConsecutiveFrameDataSize());
-    EXPECT_EQ(0, ::estd::memory::compare(data, cut.getSendData()));
+    EXPECT_TRUE(::etl::equal(::etl::span<uint8_t const>(data), cut.getSendData()));
 
     EXPECT_FALSE(cut.updateTimer(100U));
     cut.setTimer(200U);
@@ -119,7 +117,7 @@ TEST(DoCanMessageTransmitterTest, testSingleFrameIsEmitted)
     EXPECT_EQ(TransmitResult(true), cut.start());
     EXPECT_EQ(TransmitState::SEND, cut.getState());
     EXPECT_EQ(TransmitTimeout::TX_CALLBACK, cut.getTimeout());
-    EXPECT_EQ(0, ::estd::memory::compare(data, cut.getSendData()));
+    EXPECT_TRUE(::etl::equal(::etl::span<uint8_t const>(data), cut.getSendData()));
     EXPECT_EQ(TransmitResult(true), cut.frameSending());
     EXPECT_EQ(TransmitState::WAIT, cut.getState());
     EXPECT_EQ(TransmitTimeout::TX_CALLBACK, cut.getTimeout());
@@ -167,7 +165,7 @@ TEST(DoCanMessageTransmitterTest, testMultipleFramesAreEmitted)
     EXPECT_EQ(TransmitResult(true), cut.start());
     EXPECT_EQ(TransmitState::SEND, cut.getState());
     EXPECT_EQ(TransmitTimeout::TX_CALLBACK, cut.getTimeout());
-    EXPECT_EQ(0, ::estd::memory::compare(data, cut.getSendData()));
+    EXPECT_TRUE(::etl::equal(::etl::span<uint8_t const>(data), cut.getSendData()));
     EXPECT_EQ(TransmitResult(true), cut.frameSending());
     EXPECT_EQ(TransmitState::WAIT, cut.getState());
     EXPECT_EQ(TransmitTimeout::TX_CALLBACK, cut.getTimeout());
@@ -178,10 +176,8 @@ TEST(DoCanMessageTransmitterTest, testMultipleFramesAreEmitted)
         TransmitResult(true).setActionSet(storeSeparationTime),
         cut.handleFlowControl(FlowStatus::CTS, 0, 0, 2));
     EXPECT_EQ(
-        0,
-        ::estd::memory::compare(
-            ::estd::slice<uint8_t const>::from_pointer(data + 6U, sizeof(data) - 6U),
-            cut.getSendData()));
+        true,
+        ::etl::equal(::etl::span<uint8_t const>(data + 6U, sizeof(data) - 6U), cut.getSendData()));
     EXPECT_EQ(TransmitState::SEND, cut.getState());
     EXPECT_EQ(TransmitTimeout::TX_CALLBACK, cut.getTimeout());
     EXPECT_EQ(TransmitResult(true), cut.frameSending());
@@ -191,10 +187,9 @@ TEST(DoCanMessageTransmitterTest, testMultipleFramesAreEmitted)
     EXPECT_EQ(TransmitState::SEND, cut.getState());
     EXPECT_EQ(TransmitTimeout::TX_CALLBACK, cut.getTimeout());
     EXPECT_EQ(
-        0,
-        ::estd::memory::compare(
-            ::estd::slice<uint8_t const>::from_pointer(data + 13U, sizeof(data) - 13U),
-            cut.getSendData()));
+        true,
+        ::etl::equal(
+            ::etl::span<uint8_t const>(data + 13U, sizeof(data) - 13U), cut.getSendData()));
     // ignore unexpected flow control
     EXPECT_EQ(TransmitResult(false), cut.handleFlowControl(FlowStatus::CTS, 0, 0, 2));
     // send on
@@ -220,12 +215,12 @@ TEST(DoCanMessageTransmitterTest, testMultipleFramesAreEmittedWithEscapeSequence
     {
         data[i] = i & 0xFF;
     }
-    auto slice = ::estd::make_slice(data);
+    auto span = ::etl::span<uint8_t const>(data);
 
     DoCanDefaultFrameSizeMapper<uint8_t> const mapper;
     CodecType codec(DoCanFrameCodecConfigPresets::OPTIMIZED_CLASSIC, mapper);
-    TransportMessage message(data, slice.size());
-    message.setPayloadLength(slice.size());
+    TransportMessage message(data, span.size());
+    message.setPayloadLength(span.size());
     JobHandle jobHandle(66, 77);
     DoCanMessageTransmitter<DataLinkLayer> cut(
         jobHandle, codec, DataLinkLayer::AddressPairType(0x123, 0x456), message, nullptr, 625U, 7U);
@@ -234,35 +229,35 @@ TEST(DoCanMessageTransmitterTest, testMultipleFramesAreEmittedWithEscapeSequence
     EXPECT_EQ(TransmitResult(true), cut.start());
     EXPECT_EQ(TransmitState::SEND, cut.getState());
     EXPECT_EQ(TransmitTimeout::TX_CALLBACK, cut.getTimeout());
-    EXPECT_EQ(0, ::estd::memory::compare(slice, cut.getSendData()));
+    EXPECT_TRUE(::etl::equal(span, cut.getSendData()));
     EXPECT_EQ(TransmitResult(true), cut.frameSending());
     EXPECT_EQ(TransmitState::WAIT, cut.getState());
     EXPECT_EQ(TransmitTimeout::TX_CALLBACK, cut.getTimeout());
     EXPECT_EQ(TransmitResult(true), cut.framesSent(1U, 2U));
-    slice.advance(2);
+    span.advance(2);
     EXPECT_EQ(TransmitState::WAIT, cut.getState());
     EXPECT_EQ(TransmitTimeout::FLOW_CONTROL, cut.getTimeout());
     EXPECT_EQ(
         TransmitResult(true).setActionSet(storeSeparationTime),
         cut.handleFlowControl(FlowStatus::CTS, 0, 0, 2));
-    EXPECT_EQ(0, ::estd::memory::compare(slice, cut.getSendData()));
+    EXPECT_TRUE(::etl::equal(span, cut.getSendData()));
     EXPECT_EQ(TransmitState::SEND, cut.getState());
     EXPECT_EQ(TransmitTimeout::TX_CALLBACK, cut.getTimeout());
     EXPECT_EQ(TransmitResult(true), cut.frameSending());
     EXPECT_EQ(TransmitState::WAIT, cut.getState());
     EXPECT_EQ(TransmitTimeout::TX_CALLBACK, cut.getTimeout());
     EXPECT_EQ(TransmitResult(true), cut.framesSent(51U, 51 * 7U));
-    slice.advance(51 * 7);
+    span.advance(51 * 7);
     EXPECT_EQ(TransmitState::SEND, cut.getState());
     EXPECT_EQ(TransmitTimeout::TX_CALLBACK, cut.getTimeout());
-    EXPECT_EQ(0, ::estd::memory::compare(slice, cut.getSendData()));
+    EXPECT_TRUE(::etl::equal(span, cut.getSendData()));
     // ignore unexpected flow control
     EXPECT_EQ(TransmitResult(false), cut.handleFlowControl(FlowStatus::CTS, 0, 0, 2));
     // send on
     EXPECT_EQ(TransmitResult(true), cut.frameSending());
     EXPECT_EQ(TransmitState::WAIT, cut.getState());
     EXPECT_EQ(TransmitTimeout::TX_CALLBACK, cut.getTimeout());
-    EXPECT_EQ(TransmitResult(true), cut.framesSent(625 - 1 - 51, slice.size()));
+    EXPECT_EQ(TransmitResult(true), cut.framesSent(625 - 1 - 51, span.size()));
     EXPECT_TRUE(cut.isDone());
     EXPECT_EQ(TransmitTimeout::NONE, cut.getTimeout());
     EXPECT_EQ(TransmitState::SUCCESS, cut.getState());
@@ -278,11 +273,11 @@ TEST(DoCanMessageTransmitterTest, testTimers)
     {
         data[i] = i & 0xFF;
     }
-    auto slice = ::estd::make_slice(data);
+    auto span = ::etl::span<uint8_t const>(data);
     DoCanDefaultFrameSizeMapper<uint8_t> const mapper;
     CodecType codec(DoCanFrameCodecConfigPresets::OPTIMIZED_CLASSIC, mapper);
-    TransportMessage message(data, slice.size());
-    message.setPayloadLength(slice.size());
+    TransportMessage message(data, span.size());
+    message.setPayloadLength(span.size());
     JobHandle jobHandle(66, 77);
     DoCanMessageTransmitter<DataLinkLayer> cut1(
         jobHandle, codec, DataLinkLayer::AddressPairType(0x123, 0x456), message, nullptr, 2U, 7U);

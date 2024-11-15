@@ -8,8 +8,7 @@
 #include "docan/datalink/DoCanFrameCodecConfigPresets.h"
 
 #include <can/canframes/CanId.h>
-
-#include <estd/assert.h>
+#include <util/estd/assert.h>
 
 #include <gmock/gmock.h>
 
@@ -353,7 +352,7 @@ TEST(DoCanNormalAddressingFilterTypeTest, testFormatTableWithInvalidEntriesOnlyI
         char output[7];
         output[6] = 0x7f;
         EXPECT_EQ(
-            output, cut.formatDataLinkAddress(0x13f485U, ::estd::slice<char>(output).subslice(6U)));
+            output, cut.formatDataLinkAddress(0x13f485U, ::etl::span<char>(output).first(6U)));
         EXPECT_EQ(0, ::strcmp(output, "0x001"));
         EXPECT_EQ(0x7f, output[6]);
     }
