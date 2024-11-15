@@ -5,7 +5,8 @@
 
 #include "docan/common/DoCanConstants.h"
 
-#include <estd/bitset.h>
+#include <etl/bitset.h>
+
 #include <platform/estdint.h>
 
 namespace docan
@@ -77,7 +78,7 @@ struct TransmitAction
     static uint8_t const COUNT                 = 2U;
 };
 
-using TransmitActionSetType = ::estd::bitset<TransmitAction::COUNT>;
+using TransmitActionSetType = ::etl::bitset<TransmitAction::COUNT>;
 
 /**
  * Helper class that holds the result of event handling. Most important

@@ -6,14 +6,14 @@
 #ifndef GUARD_1D3052EC_A91A_45FE_89F7_9767C8B0EC00
 #define GUARD_1D3052EC_A91A_45FE_89F7_9767C8B0EC00
 
-#include <estd/forward_list.h>
+#include <etl/intrusive_list.h>
 
 namespace transport
 {
 class TransportMessage;
 class ITransportMessageProcessedListener;
 
-class TransportMessageSendJob : public ::estd::forward_list_node<TransportMessageSendJob>
+class TransportMessageSendJob : public ::etl::bidirectional_link<0>
 {
 public:
     TransportMessageSendJob();
@@ -44,16 +44,12 @@ private:
  */
 
 inline TransportMessageSendJob::TransportMessageSendJob()
-: ::estd::forward_list_node<TransportMessageSendJob>()
-, fpTransportMessage(nullptr)
-, fpListener(nullptr)
+: ::etl::bidirectional_link<0>(), fpTransportMessage(nullptr), fpListener(nullptr)
 {}
 
 inline TransportMessageSendJob::TransportMessageSendJob(
     TransportMessage* const pTransportMessage, ITransportMessageProcessedListener* const pListener)
-: ::estd::forward_list_node<TransportMessageSendJob>()
-, fpTransportMessage(pTransportMessage)
-, fpListener(pListener)
+: ::etl::bidirectional_link<0>(), fpTransportMessage(pTransportMessage), fpListener(pListener)
 {}
 
 inline void TransportMessageSendJob::setTransportMessage(TransportMessage* const pTransportMessage)

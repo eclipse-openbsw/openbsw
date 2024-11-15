@@ -3,7 +3,6 @@
 #ifndef GUARD_0F8AE83F_84A7_47F2_9ED8_6B609FFA7166
 #define GUARD_0F8AE83F_84A7_47F2_9ED8_6B609FFA7166
 
-#include "estd/uncopyable.h"
 #include "uds/base/Service.h"
 
 namespace uds
@@ -14,8 +13,6 @@ namespace uds
  */
 class WriteDataByIdentifier : public Service
 {
-    UNCOPYABLE(WriteDataByIdentifier);
-
 public:
     WriteDataByIdentifier();
 

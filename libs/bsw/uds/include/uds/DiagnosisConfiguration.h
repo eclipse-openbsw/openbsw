@@ -3,14 +3,17 @@
 #ifndef GUARD_CE835A95_C3C0_44D8_8289_B302E332AC75
 #define GUARD_CE835A95_C3C0_44D8_8289_B302E332AC75
 
-#include "estd/forward_list.h"
-#include "estd/object_pool.h"
-#include "estd/queue.h"
 #include "platform/estdint.h"
 #include "transport/TransportJob.h"
 #include "uds/UdsConfig.h"
 #include "uds/connection/IncomingDiagConnection.h"
 #include "uds/connection/ManagedOutgoingDiagConnection.h"
+
+#include <etl/algorithm.h>
+#include <etl/intrusive_list.h>
+#include <etl/pool.h>
+#include <etl/queue.h>
+#include <etl/utility.h>
 
 namespace uds
 {
@@ -24,9 +27,10 @@ namespace uds
 class AbstractDiagnosisConfiguration
 {
 public:
-    using ManagedIncomingDiagConnectionPool = ::estd::object_pool<IncomingDiagConnection>;
-    using ManagedOutgoingDiagConnectionList = ::estd::forward_list<ManagedOutgoingDiagConnection>;
-    using TransportJobQueue                 = ::estd::queue<transport::TransportJob>;
+    using ManagedIncomingDiagConnectionPool = ::etl::ipool;
+    using ManagedOutgoingDiagConnectionList
+        = ::etl::intrusive_list<ManagedOutgoingDiagConnection, ::etl::bidirectional_link<0>>;
+    using TransportJobQueue = ::etl::iqueue<transport::TransportJob>;
 
     /**
      * Constructor
@@ -104,11 +108,13 @@ public:
      */
     IncomingDiagConnection* acquireIncomingDiagConnection()
     {
-        if (IncomingDiagConnectionPool.empty())
+        if (IncomingDiagConnectionPool.full())
         {
             return nullptr;
         }
-        return &IncomingDiagConnectionPool.allocate().construct(Context);
+        return IncomingDiagConnectionPool
+            .template create<IncomingDiagConnection, ::async::ContextType const>(
+                etl::move(Context));
     }
 
     /**
@@ -116,15 +122,21 @@ public:
      */
     void releaseIncomingDiagConnection(IncomingDiagConnection const& connection)
     {
-        IncomingDiagConnectionPool.release(connection);
+        IncomingDiagConnectionPool.release(&connection);
     }
 
     template<class Pred>
     IncomingDiagConnection* findIncomingDiagConnection(Pred const condition)
     {
-        auto result = std::find_if(
+        auto result = etl::find_if(
             IncomingDiagConnectionPool.begin(), IncomingDiagConnectionPool.end(), condition);
-        return result.operator->();
+
+        if (result == IncomingDiagConnectionPool.end())
+        {
+            return nullptr;
+        }
+
+        return reinterpret_cast<IncomingDiagConnection*>(result.operator*());
     }
 
     /**
@@ -133,7 +145,7 @@ public:
      * effects because some user code might still hold a reference to an elements which
      * gets destroyed when this function is called.
      */
-    void clearIncomingDiagConnections() { IncomingDiagConnectionPool.clear(); }
+    void clearIncomingDiagConnections() { IncomingDiagConnectionPool.release_all(); }
 
 protected:
     void init(
@@ -197,9 +209,9 @@ public:
     , fResponseQueues()
     {
         // Because we must not use fResponseQueues polymorphical, i.e. passing
-        // it as an array of ::estd::queue to AbstractDiagnosisConfiguration
+        // it as an array of ::etl::iqueue to AbstractDiagnosisConfiguration
         // we need to convert it first
-        ::estd::queue<transport::TransportJob>* baseQueues[NUM_OUTGOING_CONNECTIONS];
+        ::etl::iqueue<transport::TransportJob>* baseQueues[NUM_OUTGOING_CONNECTIONS];
         for (uint8_t i = 0U; i < NUM_OUTGOING_CONNECTIONS; ++i)
         {
             baseQueues[i] = &fResponseQueues[i];
@@ -209,11 +221,10 @@ public:
     }
 
 private:
-    ::estd::declare::object_pool<IncomingDiagConnection, NUM_INCOMING_CONNECTIONS>
-        fIncomingDiagConnectionPool;
+    ::etl::pool<IncomingDiagConnection, NUM_INCOMING_CONNECTIONS> fIncomingDiagConnectionPool;
     ManagedOutgoingDiagConnection fOutgoingDiagConnections[NUM_OUTGOING_CONNECTIONS];
-    ::estd::declare::queue<transport::TransportJob, MAX_NUM_INCOMING_MESSAGES> fSendJobQueue;
-    ::estd::declare::queue<transport::TransportJob, MAX_NUM_INCOMING_MESSAGES>
+    ::etl::queue<transport::TransportJob, MAX_NUM_INCOMING_MESSAGES> fSendJobQueue;
+    ::etl::queue<transport::TransportJob, MAX_NUM_INCOMING_MESSAGES>
         fResponseQueues[NUM_OUTGOING_CONNECTIONS];
 };
 

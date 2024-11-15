@@ -3,12 +3,11 @@
 #ifndef GUARD_5E5D97C6_78AD_4943_B76D_F51AEA0FE906
 #define GUARD_5E5D97C6_78AD_4943_B76D_F51AEA0FE906
 
+#include <etl/delegate.h>
+#include <etl/string.h>
 #include <util/stream/SharedOutputStream.h>
 #include <util/stream/StdoutStream.h>
 #include <util/stream/TaggedSharedOutputStream.h>
-
-#include <estd/functional.h>
-#include <estd/string.h>
 
 namespace console
 {
@@ -18,14 +17,14 @@ namespace console
 class StdioConsoleInput
 {
 public:
-    using OnLineProcessed = ::estd::function<void(void)>;
+    using OnLineProcessed = ::etl::delegate<void(void)>;
 
     /**
      * OnLineReceived is a user callback type.
      */
-    using OnLineReceived = ::estd::function<void(
+    using OnLineReceived = ::etl::delegate<void(
         ::util::stream::ISharedOutputStream& outputStream,
-        ::estd::string const& line,
+        ::etl::istring const& line,
         OnLineProcessed const& onLineProcessed)>;
 
 public:
@@ -63,7 +62,7 @@ public:
 private:
     void onLineReceived(
         ::util::stream::ISharedOutputStream& outputStream,
-        ::estd::string const&,
+        ::etl::istring const&,
         OnLineProcessed const& callback);
     void onLineProcessed();
 
@@ -72,7 +71,7 @@ private:
     ::util::stream::SharedOutputStream _sharedOutputStream;
     ::util::stream::TaggedSharedOutputStream _taggedSharedOutputStream;
 
-    ::estd::declare::string<128> _line;
+    ::etl::string<128> _line;
     OnLineReceived _onLineReceived;
     bool _isSuspended;
 };

@@ -3,7 +3,6 @@
 #include "app/app.h"
 
 #include "console/console.h"
-#include "estd/typed_mem.h"
 #include "logger/logger.h"
 #include "reset/softwareSystemReset.h"
 #include "systems/DemoSystem.h"
@@ -12,6 +11,8 @@
 #include "systems/SysAdminSystem.h"
 
 #include <app/appConfig.h>
+#include <etl/alignment.h>
+#include <etl/singleton.h>
 
 #ifdef PLATFORM_SUPPORT_UDS
 #include "busid/BusId.h"
@@ -29,6 +30,8 @@
 
 #ifdef PLATFORM_SUPPORT_CAN
 #include <systems/ICanSystem.h>
+
+#include <cstdio>
 
 namespace systems
 {
@@ -70,21 +73,21 @@ LifecycleManager lifecycleManager{
     TASK_SYSADMIN,
     ::lifecycle::LifecycleManager::GetTimestampType::create<&getSystemTimeUs32Bit>()};
 
-::estd::typed_mem<::systems::RuntimeSystem> runtimeSystem;
-::estd::typed_mem<::systems::SysAdminSystem> sysAdminSystem;
-::estd::typed_mem<::systems::DemoSystem> demoSystem;
-::estd::typed_mem<::systems::SafetySystem> safetySystem;
+::etl::typed_storage<::systems::RuntimeSystem> runtimeSystem;
+::etl::typed_storage<::systems::SysAdminSystem> sysAdminSystem;
+::etl::typed_storage<::systems::DemoSystem> demoSystem;
+::etl::typed_storage<::systems::SafetySystem> safetySystem;
 
 #ifdef PLATFORM_SUPPORT_UDS
-::estd::typed_mem<::transport::TransportSystem> transportSystem;
+::etl::typed_storage<::transport::TransportSystem> transportSystem;
 #endif
 
 #ifdef PLATFORM_SUPPORT_CAN
-::estd::typed_mem<::docan::DoCanSystem> doCanSystem;
+::etl::typed_storage<::docan::DoCanSystem> doCanSystem;
 #endif
 
 #ifdef PLATFORM_SUPPORT_UDS
-::estd::typed_mem<::uds::UdsSystem> udsSystem;
+::etl::typed_storage<::uds::UdsSystem> udsSystem;
 #endif
 
 class LifecycleMonitor : private ::lifecycle::ILifecycleListener
@@ -136,39 +139,37 @@ void run()
     /* runlevel 1 */
     ::platform::platformLifecycleAdd(lifecycleManager, 1U);
     lifecycleManager.addComponent(
-        "runtime", runtimeSystem.emplace(TASK_BACKGROUND, runtimeMonitor), 1U);
+        "runtime", runtimeSystem.create(TASK_BACKGROUND, runtimeMonitor), 1U);
     /* runlevel 2 */
     ::platform::platformLifecycleAdd(lifecycleManager, 2U);
     /* runlevel 3 */
     ::platform::platformLifecycleAdd(lifecycleManager, 3U);
     /* runlevel 4 */
 #ifdef PLATFORM_SUPPORT_UDS
-    lifecycleManager.addComponent("transport", transportSystem.emplace(TASK_UDS), 4U);
+    lifecycleManager.addComponent("transport", transportSystem.create(TASK_UDS), 4U);
 #endif
 
     /* runlevel 5 */
 #ifdef PLATFORM_SUPPORT_CAN
     lifecycleManager.addComponent(
-        "docan", doCanSystem.emplace(*transportSystem, ::systems::getCanSystem(), TASK_CAN), 5U);
+        "docan", doCanSystem.create(*transportSystem, ::systems::getCanSystem(), TASK_CAN), 5U);
 #endif
 
     /* runlevel 6 */
 #ifdef PLATFORM_SUPPORT_UDS
     lifecycleManager.addComponent(
-        "uds",
-        udsSystem.emplace(lifecycleManager, *transportSystem, TASK_UDS, LOGICAL_ADDRESS),
-        6U);
+        "uds", udsSystem.create(lifecycleManager, *transportSystem, TASK_UDS, LOGICAL_ADDRESS), 6U);
 #endif
 
     /* runlevel 7 */
     lifecycleManager.addComponent(
-        "sysadmin", sysAdminSystem.emplace(TASK_SYSADMIN, lifecycleManager), 7U);
+        "sysadmin", sysAdminSystem.create(TASK_SYSADMIN, lifecycleManager), 7U);
 
     /* runlevel 8 */
     ::platform::platformLifecycleAdd(lifecycleManager, 8U);
     lifecycleManager.addComponent(
         "demo",
-        demoSystem.emplace(
+        demoSystem.create(
             TASK_DEMO,
             lifecycleManager
 #ifdef PLATFORM_SUPPORT_CAN
@@ -178,8 +179,7 @@ void run()
                 ),
         8U);
 
-    lifecycleManager.addComponent(
-        "safety", safetySystem.emplace(TASK_SAFETY, lifecycleManager), 8U);
+    lifecycleManager.addComponent("safety", safetySystem.create(TASK_SAFETY, lifecycleManager), 8U);
 
     lifecycleManager.transitionToLevel(MaxNumLevels);
 

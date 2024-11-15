@@ -6,7 +6,7 @@
 #ifndef GUARD_B00373CC_CBF3_46CD_86E8_6AB0FBC2BDB9
 #define GUARD_B00373CC_CBF3_46CD_86E8_6AB0FBC2BDB9
 
-#include "estd/singleton.h"
+#include <etl/singleton_base.h>
 
 namespace async
 {
@@ -18,7 +18,7 @@ namespace async
  * \tparam T The underlying type with method implementations.
  */
 template<class T>
-class StaticContextHook : public ::estd::singleton<T>
+class StaticContextHook : public ::etl::singleton_base<T>
 {
 public:
     using InstanceType = T;
@@ -36,31 +36,31 @@ public:
  * Inline implementation.
  */
 template<class T>
-StaticContextHook<T>::StaticContextHook(T& instance) : ::estd::singleton<T>(instance)
+StaticContextHook<T>::StaticContextHook(T& instance) : ::etl::singleton_base<T>(instance)
 {}
 
 template<class T>
 inline void StaticContextHook<T>::enterTask(size_t const taskIdx)
 {
-    ::estd::singleton<T>::instance().enterTask(taskIdx);
+    ::etl::singleton_base<T>::instance().enterTask(taskIdx);
 }
 
 template<class T>
 inline void StaticContextHook<T>::leaveTask(size_t const taskIdx)
 {
-    ::estd::singleton<T>::instance().leaveTask(taskIdx);
+    ::etl::singleton_base<T>::instance().leaveTask(taskIdx);
 }
 
 template<class T>
 inline void StaticContextHook<T>::enterIsrGroup(size_t const isrGroupIdx)
 {
-    ::estd::singleton<T>::instance().enterIsrGroup(isrGroupIdx);
+    ::etl::singleton_base<T>::instance().enterIsrGroup(isrGroupIdx);
 }
 
 template<class T>
 inline void StaticContextHook<T>::leaveIsrGroup(size_t const isrGroupIdx)
 {
-    ::estd::singleton<T>::instance().leaveIsrGroup(isrGroupIdx);
+    ::etl::singleton_base<T>::instance().leaveIsrGroup(isrGroupIdx);
 }
 
 } // namespace async

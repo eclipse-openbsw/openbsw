@@ -3,11 +3,10 @@
 #ifndef GUARD_33F9C8F7_79C8_4F96_9C2A_F9F0E90A0693
 #define GUARD_33F9C8F7_79C8_4F96_9C2A_F9F0E90A0693
 
-#include "estd/uncopyable.h"
 #include "platform/estdint.h"
 #include "uds/jobs/DataIdentifierJob.h"
 
-#include <estd/slice.h>
+#include <etl/span.h>
 
 #include <cstdint>
 
@@ -19,12 +18,10 @@ namespace uds
  */
 class WriteIdentifierToMemory : public DataIdentifierJob
 {
-    UNCOPYABLE(WriteIdentifierToMemory);
-
 public:
     WriteIdentifierToMemory(
         uint16_t const identifier,
-        ::estd::slice<uint8_t> const& memory,
+        ::etl::span<uint8_t> const& memory,
         DiagSessionMask const sessionMask = DiagSession::ALL_SESSIONS());
 
 private:
@@ -36,7 +33,7 @@ private:
         uint16_t requestLength) override;
 
     uint8_t _implementedRequest[3];
-    ::estd::slice<uint8_t> const _memory;
+    ::etl::span<uint8_t> const _memory;
 };
 
 } // namespace uds

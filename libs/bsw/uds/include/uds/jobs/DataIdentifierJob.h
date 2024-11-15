@@ -3,7 +3,6 @@
 #ifndef GUARD_85AC65F2_2879_44D0_95FB_D57230E57612
 #define GUARD_85AC65F2_2879_44D0_95FB_D57230E57612
 
-#include "estd/uncopyable.h"
 #include "uds/base/AbstractDiagJob.h"
 
 namespace uds
@@ -20,8 +19,6 @@ namespace uds
  */
 class DataIdentifierJob : public AbstractDiagJob
 {
-    UNCOPYABLE(DataIdentifierJob);
-
 public:
     DataIdentifierJob(
         uint8_t const* const implementedRequest,

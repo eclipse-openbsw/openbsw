@@ -8,9 +8,10 @@
 #include "assert.h"
 #include "bsp/Bsp.h"
 #include "bsp/SystemTime.h"
-#include "estd/uncopyable.h"
 #include "mcu/mcu.h"
 #include "platform/estdint.h"
+
+#include <etl/uncopyable.h>
 
 namespace bios
 {
@@ -22,10 +23,10 @@ time adder (5 ADC cycles + 5 bus clock cycles)
 */
 
 template<typename AdcResolution, typename AdcConfiguration, uint8_t maxChannels = 16>
-class Adc : private AdcConfiguration
+class Adc
+: private AdcConfiguration
+, public ::etl::uncopyable
 {
-    UNCOPYABLE(Adc);
-
 public:
     Adc(ADC_Type& ADC) : fAdcInResolution(), fAdc(ADC), fIsStarted(false), fIsInitialized(false) {}
 
