@@ -2,9 +2,9 @@
 
 #include "io/MemoryQueue.h"
 
-#include <estd/big_endian.h>
-#include <estd/memory.h>
-#include <estd/slice.h>
+#include <etl/memory.h>
+#include <etl/span.h>
+#include <etl/unaligned_type.h>
 
 #include <gmock/gmock.h>
 
@@ -59,22 +59,23 @@ size_t const MemoryQueueTypedTest<Q>::NUM_POSSIBLE_MAX_ELEMENT_SIZE_ALLOCATIONS;
 
 struct Pdu
 {
-    Pdu(uint8_t b, uint32_t i, ::estd::slice<uint8_t> pld) : bus(b), id(i), payload(pld) {}
+    Pdu(uint8_t b, uint32_t i, ::etl::span<uint8_t> pld) : bus(b), id(i), payload(pld) {}
 
     uint8_t bus;
     uint32_t id;
-    ::estd::slice<uint8_t> payload;
+    ::etl::span<uint8_t> payload;
 };
 
 template<class Queue>
-::estd::slice<uint8_t>
+::etl::span<uint8_t>
 allocate(typename Queue::Writer& s, uint8_t const bus, uint32_t const id, size_t const size)
 {
-    ::estd::slice<uint8_t> memory = s.allocate(sizeof(uint8_t) + sizeof(uint32_t) + size);
-    if (memory.size() != 0)
+    ::etl::span<uint8_t> memory = s.allocate(sizeof(uint8_t) + sizeof(uint32_t) + size);
+    if (memory.size() >= 5)
     {
-        ::estd::memory::take<uint8_t>(memory)             = bus;
-        ::estd::memory::take<::estd::be_uint32_t>(memory) = id;
+        memory[0]                        = bus;
+        etl::be_uint32_ext_t{&memory[1]} = id;
+        memory.advance(sizeof(bus) + sizeof(id));
     }
     return memory;
 }
@@ -82,12 +83,12 @@ allocate(typename Queue::Writer& s, uint8_t const bus, uint32_t const id, size_t
 template<class Queue>
 Pdu poll(typename Queue::Reader& r)
 {
-    ::estd::slice<uint8_t> s = r.peek();
-    if (s.size() != 0)
+    ::etl::span<uint8_t> s = r.peek();
+    if (s.size() >= 5)
     {
-        uint8_t const bus = ::estd::memory::take<uint8_t>(s);
-        uint32_t const id = ::estd::memory::take<::estd::be_uint32_t>(s);
-        return Pdu(bus, id, s);
+        uint8_t const bus = s[0];
+        uint32_t const id = ::etl::be_uint32_t(&s[1]);
+        return Pdu(bus, id, s.subspan(sizeof(bus) + sizeof(id)));
     }
     return Pdu(0xFFU, 0xFFFFFFFFU, {});
 }
@@ -158,7 +159,7 @@ TYPED_TEST(MemoryQueueTypedTest, can_be_default_constructed)
  */
 TYPED_TEST(MemoryQueueTypedTest, allocate_returns_empty_slice_if_requested_size_is_too_big)
 {
-    ::estd::slice<uint8_t> s = this->_w.allocate(TypeParam::maxElementSize() + 1);
+    ::etl::span<uint8_t> s = this->_w.allocate(TypeParam::maxElementSize() + 1);
     EXPECT_EQ(0, s.size());
 }
 
@@ -173,21 +174,21 @@ TYPED_TEST(MemoryQueueTypedTest, allocate_returns_empty_slice_if_available_is_ze
     EXPECT_NE(0, this->_r.available());
     for (size_t a = 0; a < this->NUM_POSSIBLE_MAX_ELEMENT_SIZE_ALLOCATIONS; ++a)
     {
-        ::estd::slice<uint8_t> s = this->_w.allocate(TypeParam::maxElementSize());
+        ::etl::span<uint8_t> s = this->_w.allocate(TypeParam::maxElementSize());
         EXPECT_EQ(TypeParam::maxElementSize(), s.size());
         this->_w.commit();
     }
     size_t const available = this->_w.available();
     if (available > 0)
     {
-        size_t const allocate    = available - sizeof(typename TypeParam::size_type);
-        ::estd::slice<uint8_t> s = this->_w.allocate(allocate);
+        size_t const allocate  = available - sizeof(typename TypeParam::size_type);
+        ::etl::span<uint8_t> s = this->_w.allocate(allocate);
         this->_w.commit();
         EXPECT_EQ(allocate, s.size());
     }
     EXPECT_EQ(0, this->_w.available());
     EXPECT_EQ(0, this->_r.available());
-    ::estd::slice<uint8_t> s = this->_w.allocate(TypeParam::maxElementSize());
+    ::etl::span<uint8_t> s = this->_w.allocate(TypeParam::maxElementSize());
     EXPECT_EQ(0, s.size());
 }
 
@@ -249,7 +250,7 @@ TYPED_TEST(
     {
         for (size_t a = 0; a < this->NUM_POSSIBLE_MAX_ELEMENT_SIZE_ALLOCATIONS - 1; ++a)
         {
-            ::estd::slice<uint8_t> const s = this->_w.allocate(TypeParam::maxElementSize());
+            ::etl::span<uint8_t> const s = this->_w.allocate(TypeParam::maxElementSize());
             EXPECT_EQ(TypeParam::maxElementSize(), s.size());
             this->_w.commit();
         }
@@ -664,7 +665,7 @@ TEST_F(MemoryQueueTest, stress_test_with_different_sizes)
             ASSERT_FALSE(w.full()) << "at: " << i;
             {
                 auto const b = w.allocate(s);
-                ::estd::memory::set(b, i);
+                ::etl::mem_set(b.begin(), b.size(), i);
                 w.commit();
             }
             ASSERT_FALSE(r.empty());
@@ -793,10 +794,10 @@ TEST_F(MemoryQueueTest, PduType)
     MQ::Reader r(q);
 
     // 1) allocate() allocates a slice of payload data and writes bus and PDU Id to the queue
-    ::estd::slice<uint8_t> pld = allocate<MQ>(w, 1, 0x1234U, 10);
-    pld[0]                     = 0x11U;
-    pld[1]                     = 0x22U;
-    pld[2]                     = 0x33U;
+    ::etl::span<uint8_t> pld = allocate<MQ>(w, 1, 0x1234U, 10);
+    pld[0]                   = 0x11U;
+    pld[1]                   = 0x22U;
+    pld[2]                   = 0x33U;
     w.commit();
 
     // 2) poll() retrieves an elements of type Pdu

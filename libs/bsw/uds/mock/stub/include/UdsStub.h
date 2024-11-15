@@ -9,6 +9,8 @@
 #include "uds/session/IDiagSessionChangedListener.h"
 #include "uds/session/IDiagSessionManager.h"
 
+#include <etl/intrusive_forward_list.h>
+
 #ifndef DCM_E_POSITIVERESPONSE
 #define DCM_E_POSITIVERESPONSE 0U
 #endif /* DCM_E_POSITIVERESPONSE */
@@ -43,7 +45,9 @@ public:
     virtual void resetToDefaultSession()
     {
         this->testSwitchSession(DiagSession::DEFAULT);
-        for (::estd::forward_list<IDiagSessionChangedListener>::iterator itr = fListeners.begin();
+        for (::etl::intrusive_forward_list<IDiagSessionChangedListener, ::etl::forward_link<0>>::
+                 iterator itr
+             = fListeners.begin();
              itr != fListeners.end();
              ++itr)
         {
@@ -72,7 +76,7 @@ public:
 
 private:
     DiagSession* fpCurrentSession;
-    ::estd::forward_list<IDiagSessionChangedListener> fListeners;
+    ::etl::intrusive_forward_list<IDiagSessionChangedListener, ::etl::forward_link<0>> fListeners;
 };
 
 class DiagDispatcher : public IDiagDispatcher

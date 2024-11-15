@@ -4,7 +4,7 @@
 
 #include "uds/DiagReturnCode.h"
 
-#include <estd/slice.h>
+#include <etl/span.h>
 
 #include <cstdint>
 
@@ -43,8 +43,8 @@ public:
      */
     void init(
         AbstractDiagJob& sender,
-        ::estd::slice<uint8_t> const& messageBuffer,
-        ::estd::slice<uint8_t const> const& request);
+        ::etl::span<uint8_t> const& messageBuffer,
+        ::etl::span<uint8_t const> const& request);
 
     /**
      * Get the sender for the response.
@@ -69,13 +69,13 @@ public:
      * Get next nested request
      * \return Buffer holding the next nested request
      */
-    ::estd::slice<uint8_t const> getNextRequest() const;
+    ::etl::span<uint8_t const> getNextRequest() const;
 
     /**
      * Get buffer for response
      * \return Response buffer
      */
-    ::estd::slice<uint8_t> getResponseBuffer();
+    ::etl::span<uint8_t> getResponseBuffer();
 
     /**
      * Get length of response
@@ -156,7 +156,7 @@ protected:
      *       response it is crucial to think about memory consumption of the stored request
      * \param request Request to store
      */
-    virtual uint16_t getStoredRequestLength(::estd::slice<uint8_t const> const& request) const;
+    virtual uint16_t getStoredRequestLength(::etl::span<uint8_t const> const& request) const;
 
     /**
      * Store the request. This will be called only if the return value of startRequest() is greater
@@ -166,15 +166,15 @@ protected:
      * \param dest Reference to buffer that may be used for storing
      */
     virtual void
-    storeRequest(::estd::slice<uint8_t const> const& request, ::estd::slice<uint8_t> dest) const;
+    storeRequest(::etl::span<uint8_t const> const& request, ::etl::span<uint8_t> dest) const;
 
     /**
      * Prepare a nested request
      * \param storedRequest Reference to buffer holding
      * \return Buffer holding request if available, empty buffer otherwise
      */
-    virtual ::estd::slice<uint8_t const>
-    prepareNestedRequest(::estd::slice<uint8_t const> const& storedRequest) = 0;
+    virtual ::etl::span<uint8_t const>
+    prepareNestedRequest(::etl::span<uint8_t const> const& storedRequest) = 0;
     /**
      * Process next nested request
      * \param connection Connection
@@ -202,7 +202,7 @@ protected:
      * \param consumedLength Number of consumed bytes
      * \return Buffer holding consumed data, only the available bytes are returned
      */
-    ::estd::slice<uint8_t const> consumeStoredRequest(uint16_t consumedLength);
+    ::etl::span<uint8_t const> consumeStoredRequest(uint16_t consumedLength);
 
     /**
      * Set the response code for the complete request
@@ -212,8 +212,8 @@ protected:
 private:
     AbstractDiagJob* fSender;
     AbstractDiagJob* fPendingResponseSender;
-    ::estd::slice<uint8_t> fMessageBuffer;
-    ::estd::slice<uint8_t const> fNestedRequest;
+    ::etl::span<uint8_t> fMessageBuffer;
+    ::etl::span<uint8_t const> fNestedRequest;
     uint16_t fStoredRequestLength;
     uint16_t fResponseLength;
     uint8_t fPrefixLength;
@@ -230,7 +230,7 @@ inline uint8_t NestedDiagRequest::getPrefixLength() const { return fPrefixLength
 
 inline AbstractDiagJob* NestedDiagRequest::getSender() const { return fSender; }
 
-inline ::estd::slice<uint8_t const> NestedDiagRequest::getNextRequest() const
+inline ::etl::span<uint8_t const> NestedDiagRequest::getNextRequest() const
 {
     return fNestedRequest;
 }

@@ -4,7 +4,7 @@
 
 #include "transport/TransportMessage.h"
 
-#include <estd/slice.h>
+#include <etl/span.h>
 
 #include <cstdint>
 #include <vector>
@@ -17,10 +17,7 @@ struct TransportMessageWithBuffer
 {
     explicit TransportMessageWithBuffer(uint32_t size);
     TransportMessageWithBuffer(
-        uint8_t sourceId,
-        uint8_t targetId,
-        ::estd::slice<uint8_t const> data,
-        uint32_t maxSize = 0);
+        uint8_t sourceId, uint8_t targetId, ::etl::span<uint8_t const> data, uint32_t maxSize = 0);
 
     TransportMessageWithBuffer(TransportMessageWithBuffer const&)            = delete;
     TransportMessageWithBuffer& operator=(TransportMessageWithBuffer const&) = delete;

@@ -2,7 +2,6 @@
 
 #pragma once
 
-#include "estd/uncopyable.h"
 #include "uds/base/DiagJobWithAuthentication.h"
 
 namespace uds
@@ -11,8 +10,6 @@ class IDiagSessionManager;
 
 class DiagJobWithAuthenticationAndSessionControl : public DiagJobWithAuthentication
 {
-    UNCOPYABLE(DiagJobWithAuthenticationAndSessionControl);
-
 public:
     explicit DiagJobWithAuthenticationAndSessionControl(
         IDiagAuthenticator const& authenticator,

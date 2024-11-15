@@ -13,15 +13,12 @@
 #include <async/Types.h>
 #include <async/util/MemberCall.h>
 #include <common/busid/BusId.h>
+#include <etl/intrusive_list.h>
+#include <etl/ipool.h>
+#include <etl/span.h>
 #include <interrupts/SuspendResumeAllInterruptsScopedLock.h>
 #include <transport/ITransportMessageProvidingListener.h>
-#include <util/estd/derived_object_pool.h>
 #include <util/logger/Logger.h>
-
-#include <estd/forward_list.h>
-#include <estd/functional.h>
-#include <estd/memory.h>
-#include <estd/slice.h>
 
 #include <limits>
 
@@ -44,7 +41,8 @@ public:
     using ConnectionType                  = DoCanConnection<DataLinkLayerType>;
     using FlowControlFrameTransmitterType = IDoCanFlowControlFrameTransmitter<DataLinkLayerType>;
     using MessageReceiverType             = DoCanMessageReceiver<DataLinkLayerType>;
-    using MessageReceiverListType         = ::estd::forward_list<MessageReceiverType>;
+    using MessageReceiverListType
+        = ::etl::intrusive_list<MessageReceiverType, etl::bidirectional_link<0>>;
 
     /** Constructor.
      *
@@ -64,7 +62,7 @@ public:
         ::async::ContextType context,
         ::transport::ITransportMessageProvidingListener& messageProvidingListener,
         FlowControlFrameTransmitterType& flowControlFrameTransmitter,
-        ::util::estd::block_pool& messageReceiverBlockPool,
+        ::etl::ipool& messageReceiverBlockPool,
         IDoCanAddressConverter<DataLinkLayerType>& addressConverter,
         DoCanParameters const& parameters,
         uint8_t loggerComponent);
@@ -92,7 +90,7 @@ public:
         MessageSizeType messageSize,
         FrameIndexType frameCount,
         FrameSizeType consecutiveFrameDataSize,
-        ::estd::slice<uint8_t const> const& data);
+        ::etl::span<uint8_t const> const& data);
 
     /**
      * called on reception of a consecutive data frame.
@@ -103,7 +101,7 @@ public:
     void consecutiveDataFrameReceived(
         DataLinkAddressType receptionAddress,
         uint8_t sequenceNumber,
-        ::estd::slice<uint8_t const> const& data);
+        ::etl::span<uint8_t const> const& data);
 
     /**
      * Check if any message has been received, or if a timeout has occurred
@@ -149,13 +147,13 @@ private:
 
     char const* getName() const;
 
-    static ::estd::slice<uint8_t const> copyFirstFrameData(
-        uint8_t* receiverAddress, ::estd::slice<uint8_t const> const& firstFrameData);
+    static ::etl::span<uint8_t const>
+    copyFirstFrameData(uint8_t* receiverAddress, ::etl::span<uint8_t const> const& firstFrameData);
 
     IDoCanAddressConverter<DataLinkLayerType>& _addressConverter;
     ::transport::ITransportMessageProvidingListener& _messageProvidingListener;
     FlowControlFrameTransmitterType& _flowControlFrameTransmitter;
-    ::util::estd::derived_object_pool<MessageReceiverType> _messageReceiverPool;
+    ::etl::ipool& _messageReceiverPool;
     ::async::MemberCall<DoCanReceiver, &DoCanReceiver::processMessageReceivers>
         _processMessageReceivers;
     MessageReceiverListType _messageReceivers;
@@ -178,7 +176,7 @@ DoCanReceiver<DataLinkLayer>::DoCanReceiver(
     ::async::ContextType const context,
     ::transport::ITransportMessageProvidingListener& messageProvidingListener,
     FlowControlFrameTransmitterType& flowControlFrameTransmitter,
-    ::util::estd::block_pool& messageReceiverBlockPool,
+    ::etl::ipool& messageReceiverBlockPool,
     IDoCanAddressConverter<DataLinkLayerType>& addressConverter,
     DoCanParameters const& parameters,
     uint8_t const loggerComponent)
@@ -190,7 +188,7 @@ DoCanReceiver<DataLinkLayer>::DoCanReceiver(
 , _messageReceivers()
 , _parameters(parameters)
 , _maxFirstFrameDataSize(static_cast<FrameSizeType>(
-      static_cast<size_t>(messageReceiverBlockPool.block_size()) - sizeof(MessageReceiverType)))
+      static_cast<size_t>(messageReceiverBlockPool.max_item_size()) - sizeof(MessageReceiverType)))
 , _context(context)
 , _busId(busId)
 , _loggerComponent(loggerComponent)
@@ -206,11 +204,11 @@ void DoCanReceiver<DataLinkLayer>::init()
     // cause serious problems for some of our projects (HW getting locked due to cyclic resets)
     // Ensure the block pool block size >= MessageReceiverType size, otherwise
     // _maxFirstFrameDataSize will be an invalid garbage value
-    estd_assert(_messageReceiverPool.get_block_pool().block_size() >= sizeof(MessageReceiverType));
+    estd_assert(_messageReceiverPool.max_item_size() >= sizeof(MessageReceiverType));
     // Ensure the following subtraction is less than FrameSizeType's max value, otherwise
     // _maxFirstFrameDataSize will be an invalid garbage value
     estd_assert(
-        _messageReceiverPool.get_block_pool().block_size() - sizeof(MessageReceiverType)
+        _messageReceiverPool.max_item_size() - sizeof(MessageReceiverType)
         < std::numeric_limits<FrameSizeType>::max());
 }
 
@@ -233,7 +231,7 @@ void DoCanReceiver<DataLinkLayer>::firstDataFrameReceived(
     MessageSizeType const messageSize,
     FrameIndexType const frameCount,
     FrameSizeType const consecutiveFrameDataSize,
-    ::estd::slice<uint8_t const> const& data)
+    ::etl::span<uint8_t const> const& data)
 {
     DataLinkAddressPairType const& dataLinkAddressPair = connection.getDataLinkAddressPair();
     // functional routing entries are defined with dest TA as INVALID
@@ -251,7 +249,7 @@ void DoCanReceiver<DataLinkLayer>::firstDataFrameReceived(
                 connection.getDataLinkAddressPair().getReceptionAddress(), formatBuffer),
             dataLinkAddressPair.getReceptionAddress());
     }
-    else if (!_messageReceiverPool.empty())
+    else if (!_messageReceiverPool.full())
     {
         RemoveGuard const guard(this);
         // Check data size to avoid memory corruption
@@ -260,13 +258,13 @@ void DoCanReceiver<DataLinkLayer>::firstDataFrameReceived(
             MessageReceiverType* messageReceiver;
             {
                 ::interrupts::SuspendResumeAllInterruptsScopedLock const lock;
-                ::estd::constructor<MessageReceiverType> constructor
-                    = _messageReceiverPool.template allocate<MessageReceiverType>();
+                uint8_t* receiver = reinterpret_cast<uint8_t*>(
+                    _messageReceiverPool.template allocate<MessageReceiverType>());
 
-                auto const firstFrameCopy = copyFirstFrameData(constructor, data);
+                auto const firstFrameCopy = copyFirstFrameData(receiver, data);
                 bool const blocked
                     = handlePendingMessageReceivers(dataLinkAddressPair.getReceptionAddress());
-                messageReceiver = &constructor.construct(
+                messageReceiver = ::new (receiver) MessageReceiverType(
                     connection,
                     messageSize,
                     frameCount,
@@ -311,7 +309,7 @@ template<class DataLinkLayer>
 void DoCanReceiver<DataLinkLayer>::consecutiveDataFrameReceived(
     DataLinkAddressType const receptionAddress,
     uint8_t const sequenceNumber,
-    ::estd::slice<uint8_t const> const& data)
+    ::etl::span<uint8_t const> const& data)
 {
     MessageReceiverType* const messageReceiver = findMessageReceiver(receptionAddress);
     if ((messageReceiver == nullptr) || (!messageReceiver->isConsecutiveFrameExpected()))
@@ -769,20 +767,18 @@ void DoCanReceiver<DataLinkLayer>::releaseRemoveLock()
     --_removeLockCount;
     if ((_removeLockCount == 0U) && (_releasedReceiverCount > 0U))
     {
-        typename MessageReceiverListType::iterator prevIt = _messageReceivers.before_begin();
-        typename MessageReceiverListType::iterator it     = _messageReceivers.begin();
+        typename MessageReceiverListType::iterator it = _messageReceivers.begin();
         while (_releasedReceiverCount > 0U)
         {
             if (it->getState() == ReceiveState::DONE)
             {
                 MessageReceiverType& messageReceiver = *it;
-                it                                   = _messageReceivers.erase_after(prevIt);
-                _messageReceiverPool.release(messageReceiver);
+                it                                   = _messageReceivers.erase(it);
+                _messageReceiverPool.release(reinterpret_cast<void const*>(&messageReceiver));
                 --_releasedReceiverCount;
             }
             else
             {
-                prevIt = it;
                 ++it;
             }
         }
@@ -796,12 +792,12 @@ inline char const* DoCanReceiver<DataLinkLayer>::getName() const
 }
 
 template<class DataLinkLayer>
-inline ::estd::slice<uint8_t const> DoCanReceiver<DataLinkLayer>::copyFirstFrameData(
-    uint8_t* const receiverAddress, ::estd::slice<uint8_t const> const& firstFrameData)
+inline ::etl::span<uint8_t const> DoCanReceiver<DataLinkLayer>::copyFirstFrameData(
+    uint8_t* const receiverAddress, ::etl::span<uint8_t const> const& firstFrameData)
 {
-    ::estd::slice<uint8_t> firstFrameDataCopy = ::estd::slice<uint8_t>::from_pointer(
+    ::etl::span<uint8_t> firstFrameDataCopy = ::etl::span<uint8_t>(
         receiverAddress + sizeof(MessageReceiverType), firstFrameData.size());
-    (void)::estd::memory::copy(firstFrameDataCopy, firstFrameData);
+    (void)::etl::copy(firstFrameData, firstFrameDataCopy);
     return firstFrameDataCopy;
 }
 

@@ -4,6 +4,9 @@
 
 #include "transport/DataProgressListenerMock.h"
 
+#include <etl/span.h>
+#include <util/estd/assert.h>
+
 #include <gmock/gmock.h>
 
 #include <cstdlib>
@@ -194,8 +197,8 @@ TEST_F(TransportMessageTest, TransportMessageAppend)
     EXPECT_EQ(TransportMessage::ErrorCode::TP_MSG_OK, m.append(data, 8));
     EXPECT_EQ(16U, m.getValidBytes());
 
-    EXPECT_THAT(::estd::make_slice(buffer).subslice(8), ElementsAreArray(data));
-    EXPECT_THAT(::estd::make_slice(buffer).offset(8), ElementsAreArray(data));
+    EXPECT_THAT(::etl::span<uint8_t>(buffer).first(8), ElementsAreArray(data));
+    EXPECT_THAT(::etl::span<uint8_t>(buffer).subspan(8), ElementsAreArray(data));
 
     EXPECT_EQ(0x1U, m.getTargetId());
     EXPECT_EQ(0x2U, m.getSourceId());

@@ -35,3 +35,7 @@ set(SUPPORT_EXPONENTIAL_SPECIFIERS
 add_subdirectory(printf EXCLUDE_FROM_ALL)
 
 add_subdirectory(freeRtos EXCLUDE_FROM_ALL)
+
+add_library(etl INTERFACE)
+
+target_include_directories(etl INTERFACE etl/include)

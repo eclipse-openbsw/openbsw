@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include <estd/slice.h>
+#include <etl/span.h>
 
 namespace io
 {
@@ -27,7 +27,7 @@ public:
      * \return - Slice of bytes if underlying queue was not empty
      *         - Empty slice otherwise
      */
-    virtual ::estd::slice<uint8_t> peek() const = 0;
+    virtual ::etl::span<uint8_t> peek() const = 0;
 
     /**
      * Releases the memory that the last peek() call returned.
@@ -64,7 +64,7 @@ public:
     /**
      * Alias forwarding peek() to underlying reader.
      */
-    ::estd::slice<uint8_t> peek() const { return _reader.peek(); }
+    ::etl::span<uint8_t> peek() const { return _reader.peek(); }
 };
 
 } // namespace io

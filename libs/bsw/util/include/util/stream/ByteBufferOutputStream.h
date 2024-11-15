@@ -4,8 +4,8 @@
 
 #include "util/stream/IOutputStream.h"
 
-#include <estd/algorithm.h>
-#include <estd/slice.h>
+#include <etl/algorithm.h>
+#include <etl/span.h>
 
 #include <cstddef>
 #include <cstdint>
@@ -22,7 +22,7 @@ public:
      *
      * \param buffer for which a associated ByteBufferOutputStream shall be created.
      */
-    explicit ByteBufferOutputStream(::estd::slice<uint8_t> const& buf) : _buffer(buf) {}
+    explicit ByteBufferOutputStream(::etl::span<uint8_t> const& buf) : _buffer(buf) {}
 
     /**
      * Indicates whether or not the the underlying data buffer is full.
@@ -49,7 +49,7 @@ public:
      *
      * \param buffer data to write to the buffer
      */
-    void write(::estd::slice<uint8_t const> const& buffer) override;
+    void write(::etl::span<uint8_t const> const& buffer) override;
 
     /**
      * Moves the current position ahead 'blocksToSkip' if possible.
@@ -84,13 +84,13 @@ public:
      * \return Buffer that contains the bytes written to this stream. If an overflow has
      * occurred the buffer contains the amount of bytes that fit into the underlying buffer
      */
-    ::estd::slice<uint8_t> getBuffer() const
+    ::etl::span<uint8_t> getBuffer() const
     {
-        return _buffer.subslice(::estd::min(_position, _buffer.size()));
+        return _buffer.first(::etl::min(_position, _buffer.size()));
     }
 
 private:
-    ::estd::slice<uint8_t> _buffer;
+    ::etl::span<uint8_t> _buffer;
     /* position of the next free byte */
     size_t _position = 0;
 };

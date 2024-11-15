@@ -12,7 +12,7 @@
 #include "runtime/SimpleRuntimeEntry.h"
 #include "runtime/StatisticsContainer.h"
 
-#include <estd/slice.h>
+#include <etl/span.h>
 
 #include <cstdint>
 
@@ -82,7 +82,7 @@ public:
         return lastRuntime;
     }
 
-    static void resetContextEntries(::estd::slice<ContextEntryType> contextEntries);
+    static void resetContextEntries(::etl::span<ContextEntryType> contextEntries);
 
     void enterTask(size_t const taskIdx)
     {
@@ -158,7 +158,7 @@ public:
 
     RuntimeMonitor(
         GetNameType const getTaskName,
-        ::estd::slice<char const* const, ISR_GROUP_COUNT> const& isrGroupNames)
+        ::etl::span<char const* const, ISR_GROUP_COUNT> const& isrGroupNames)
     : ::runtime::RuntimeMonitor<ContextStatistics, FunctionStatistics>(
         _taskStatistics, _isrGroupStatistics)
     , _taskStatistics(getTaskName)
@@ -177,7 +177,7 @@ private:
         _taskStatistics;
     ::runtime::declare::StatisticsContainer<ContextStatistics, ISR_GROUP_COUNT, ContextEntryType>
         _isrGroupStatistics;
-    ::estd::slice<char const* const> _isrGroupNames;
+    ::etl::span<char const* const> _isrGroupNames;
 };
 
 } // namespace declare
