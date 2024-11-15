@@ -4,13 +4,13 @@
 
 #include "uds/connection/IncomingDiagConnection.h"
 
-#include <estd/memory.h>
+#include <etl/memory.h>
 
 namespace uds
 {
 WriteIdentifierToMemory::WriteIdentifierToMemory(
     uint16_t const identifier,
-    ::estd::slice<uint8_t> const& memory,
+    ::etl::span<uint8_t> const& memory,
     DiagSessionMask const sessionMask)
 : DataIdentifierJob(_implementedRequest, sessionMask), _memory(memory)
 {
@@ -39,8 +39,8 @@ DiagReturnCode::Type WriteIdentifierToMemory::process(
     IncomingDiagConnection& connection, uint8_t const* const request, uint16_t const requestLength)
 {
     (void)connection.releaseRequestGetResponse();
-    (void)::estd::memory::copy(
-        _memory, ::estd::slice<uint8_t const>::from_pointer(request, requestLength));
+    (void)::etl::copy(
+        etl::span<uint8_t const>(request, static_cast<size_t>(requestLength)), _memory);
 
     (void)connection.sendPositiveResponse(*this);
 

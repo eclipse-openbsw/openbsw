@@ -8,8 +8,8 @@ namespace transport
 {
 namespace addressfinder
 {
-::estd::optional<LogicalAddress>
-findDoipAddressInSlice(uint16_t const address, ::estd::slice<LogicalAddress const> const& list)
+::etl::optional<LogicalAddress>
+findDoipAddressInSlice(uint16_t const address, ::etl::span<LogicalAddress const> const& list)
 {
     auto const iter = std::find_if(
         list.begin(),
@@ -22,8 +22,8 @@ findDoipAddressInSlice(uint16_t const address, ::estd::slice<LogicalAddress cons
     return {};
 }
 
-::estd::optional<LogicalAddress>
-find8BitAddressInSlice(uint16_t const address, ::estd::slice<LogicalAddress const> const& list)
+::etl::optional<LogicalAddress>
+find8BitAddressInSlice(uint16_t const address, ::etl::span<LogicalAddress const> const& list)
 {
     auto const iter = std::find_if(
         list.begin(),

@@ -18,7 +18,7 @@ target_link_libraries(
     PRIVATE runtime
             asyncMockImpl
             bspMock
-            estdMock
+            utilMock
             gtest_main)
 
 gtest_discover_tests(runtimeTest PROPERTIES LABELS "runtimeTest")

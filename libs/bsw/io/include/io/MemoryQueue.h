@@ -5,11 +5,10 @@
 #include "io/IReader.h"
 #include "io/IWriter.h"
 
-#include <estd/algorithm.h>
-#include <estd/array.h>
-#include <estd/big_endian.h>
-#include <estd/memory.h>
-#include <estd/slice.h>
+#include <etl/algorithm.h>
+#include <etl/array.h>
+#include <etl/span.h>
+#include <etl/unaligned_type.h>
 
 #include <atomic>
 #include <cstddef>
@@ -32,7 +31,7 @@ namespace io
  *
  * \section Alignment
  * The current implementation makes no assumptions about alignment. This is why the size of an
- * allocation is serialized using ::estd::write_be<>.
+ * allocation is serialized using ::etl::unaligned_type<>.
  *
  * \section Concurrency
  * This MemoryQueue is designed as a lock free single producer single consumer queue.
@@ -53,7 +52,7 @@ class MemoryQueue
     struct TxData
     {
         std::atomic<size_t> sent{0U};
-        ::estd::array<uint8_t, CAPACITY> data;
+        ::etl::array<uint8_t, CAPACITY> data;
         size_t allocated{0U};
         size_t minAvailable{CAPACITY};
 
@@ -123,7 +122,7 @@ public:
          *            is available
          *          - Slice of size bytes otherwise.
          */
-        ::estd::slice<uint8_t> allocate(size_t size) const;
+        ::etl::span<uint8_t> allocate(size_t size) const;
 
         /**
          * Makes the previously allocated data available for the Reader.
@@ -190,7 +189,7 @@ public:
          * Returns a slice of bytes pointing to the next memory chunk of the MemoryQueue, if
          * available. Calling peek on an empty MemoryQueue will return an empty slice.
          */
-        ::estd::slice<uint8_t> peek() const;
+        ::etl::span<uint8_t> peek() const;
 
         /**
          * Releases the first allocated chunk of memory. If the Reader is empty, calling this
@@ -230,7 +229,7 @@ inline MemoryQueue<CAPACITY, MAX_ELEMENT_SIZE, SIZE_TYPE>::Writer::Writer(Memory
 {}
 
 template<size_t CAPACITY, size_t MAX_ELEMENT_SIZE, typename SIZE_TYPE>
-::estd::slice<uint8_t>
+::etl::span<uint8_t>
 MemoryQueue<CAPACITY, MAX_ELEMENT_SIZE, SIZE_TYPE>::Writer::allocate(size_t const size) const
 {
     // Set allocated zero prevent a subsequent call to commit() to have
@@ -242,14 +241,14 @@ MemoryQueue<CAPACITY, MAX_ELEMENT_SIZE, SIZE_TYPE>::Writer::allocate(size_t cons
         return {};
     }
     auto const freeBytes = available();
-    _txData.minAvailable = ::estd::min(freeBytes, _txData.minAvailable);
+    _txData.minAvailable = ::etl::min(freeBytes, _txData.minAvailable);
     if (freeBytes == 0)
     {
         return {};
     }
     size_t const index = _txData.sent.load() % CAPACITY;
     _txData.allocated  = size;
-    return ::estd::memory::as_bytes(&_txData.data[index + sizeof(SIZE_TYPE)], size);
+    return ::etl::span<uint8_t>(&_txData.data[index + sizeof(SIZE_TYPE)], size);
 }
 
 template<size_t CAPACITY, size_t MAX_ELEMENT_SIZE, typename SIZE_TYPE>
@@ -264,7 +263,8 @@ void MemoryQueue<CAPACITY, MAX_ELEMENT_SIZE, SIZE_TYPE>::Writer::commit()
     size_t writeIndex    = _txData.sent.load();
     size_t const index   = writeIndex % CAPACITY;
     SIZE_TYPE const size = static_cast<SIZE_TYPE>(_txData.allocated);
-    ::estd::write_be<SIZE_TYPE>(&_txData.data[index], static_cast<SIZE_TYPE>(size));
+    ::etl::unaligned_type_ext<SIZE_TYPE, etl::endian::big>{&_txData.data[index]}
+    = static_cast<SIZE_TYPE>(size);
 
     writeIndex        = advanceIndex(writeIndex, size);
     _txData.allocated = 0U;
@@ -316,16 +316,16 @@ inline bool MemoryQueue<CAPACITY, MAX_ELEMENT_SIZE, SIZE_TYPE>::Reader::empty() 
 }
 
 template<size_t CAPACITY, size_t MAX_ELEMENT_SIZE, typename SIZE_TYPE>
-inline ::estd::slice<uint8_t>
-MemoryQueue<CAPACITY, MAX_ELEMENT_SIZE, SIZE_TYPE>::Reader::peek() const
+inline ::etl::span<uint8_t> MemoryQueue<CAPACITY, MAX_ELEMENT_SIZE, SIZE_TYPE>::Reader::peek() const
 {
     if (empty())
     {
         return {};
     }
-    size_t const index   = _rxData.received.load() % CAPACITY;
-    SIZE_TYPE const size = ::estd::read_be<SIZE_TYPE>(&_txData.data[index]);
-    return ::estd::memory::as_bytes(&_txData.data[index + sizeof(SIZE_TYPE)], size);
+    size_t const index = _rxData.received.load() % CAPACITY;
+    SIZE_TYPE const size
+        = ::etl::unaligned_type<SIZE_TYPE, ::etl::endian::big>(&_txData.data[index]);
+    return ::etl::span<uint8_t>(&_txData.data[index + sizeof(SIZE_TYPE)], size);
 }
 
 template<size_t CAPACITY, size_t MAX_ELEMENT_SIZE, typename SIZE_TYPE>
@@ -335,10 +335,11 @@ void MemoryQueue<CAPACITY, MAX_ELEMENT_SIZE, SIZE_TYPE>::Reader::release() const
     {
         return;
     }
-    size_t readIndex     = _rxData.received.load();
-    size_t const index   = readIndex % CAPACITY;
-    SIZE_TYPE const size = ::estd::read_be<SIZE_TYPE>(&_txData.data[index]);
-    readIndex            = advanceIndex(readIndex, size);
+    size_t readIndex   = _rxData.received.load();
+    size_t const index = readIndex % CAPACITY;
+    SIZE_TYPE const size
+        = ::etl::unaligned_type<SIZE_TYPE, ::etl::endian::big>(&_txData.data[index]);
+    readIndex = advanceIndex(readIndex, size);
     // Store readIndex last to ensure data consistency.
     _rxData.received.store(readIndex);
 }
@@ -409,7 +410,7 @@ public:
     size_t maxSize() const override;
 
     /** \see IWriter::allocate() */
-    ::estd::slice<uint8_t> allocate(size_t size) override;
+    ::etl::span<uint8_t> allocate(size_t size) override;
 
     /** \see IWriter::commit() */
     void commit() override;
@@ -441,7 +442,7 @@ inline size_t MemoryQueueWriter<Queue>::maxSize() const
 }
 
 template<class Queue>
-inline ::estd::slice<uint8_t> MemoryQueueWriter<Queue>::allocate(size_t const size)
+inline ::etl::span<uint8_t> MemoryQueueWriter<Queue>::allocate(size_t const size)
 {
     return _writer.allocate(size);
 }
@@ -494,7 +495,7 @@ public:
     size_t maxSize() const override;
 
     /** \see MemoryQueueReader::peek() */
-    ::estd::slice<uint8_t> peek() const override;
+    ::etl::span<uint8_t> peek() const override;
 
     /** \see MemoryQueueReader::release() */
     void release() override;
@@ -517,7 +518,7 @@ inline size_t MemoryQueueReader<Queue>::maxSize() const
 }
 
 template<class Queue>
-inline ::estd::slice<uint8_t> MemoryQueueReader<Queue>::peek() const
+inline ::etl::span<uint8_t> MemoryQueueReader<Queue>::peek() const
 {
     return _reader.peek();
 }
