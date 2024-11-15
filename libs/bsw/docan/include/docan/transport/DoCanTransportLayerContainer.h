@@ -6,9 +6,10 @@
 #include "docan/transport/DoCanTransportLayer.h"
 
 #include <async/Types.h>
-
-#include <estd/functional.h>
-#include <estd/vector.h>
+#include <etl/delegate.h>
+#include <etl/functional.h>
+#include <etl/span.h>
+#include <etl/vector.h>
 
 #include <limits>
 
@@ -24,10 +25,10 @@ class DoCanTransportLayerContainer
 public:
     using DataLinkLayerType        = DataLinkLayer;
     using TransportLayerType       = DoCanTransportLayer<DataLinkLayerType>;
-    using TransportLayerSliceType  = ::estd::slice<TransportLayerType>;
-    using TransportLayerVectorType = ::estd::vector<TransportLayerType>;
+    using TransportLayerSliceType  = ::etl::span<TransportLayerType>;
+    using TransportLayerVectorType = ::etl::ivector<TransportLayerType>;
 
-    using ShutdownCallbackType = ::estd::function<void()>;
+    using ShutdownCallbackType = ::etl::delegate<void()>;
 
     /**
      * Constructor.
@@ -36,10 +37,10 @@ public:
     explicit DoCanTransportLayerContainer(TransportLayerVectorType& layers);
 
     /**
-     * Alocate a transport layer
-     * \return constructor for the transport layer
+     * Allocate a transport layer
      */
-    ::estd::constructor<TransportLayerType> createTransportLayer();
+    template<typename... Args>
+    TransportLayerType& emplace_back(Args&&... args);
 
     /**
      * Get access to slice of containers.
@@ -97,7 +98,7 @@ public:
     DoCanTransportLayerContainer();
 
 private:
-    ::estd::declare::vector<TransportLayerType, N> _layers;
+    ::etl::vector<TransportLayerType, N> _layers;
 };
 
 /**
@@ -154,10 +155,11 @@ DoCanTransportLayerContainer<DataLinkLayer>::DoCanTransportLayerContainer(
 {}
 
 template<class DataLinkLayer>
-inline ::estd::constructor<typename DoCanTransportLayerContainer<DataLinkLayer>::TransportLayerType>
-DoCanTransportLayerContainer<DataLinkLayer>::createTransportLayer()
+template<typename... Args>
+typename DoCanTransportLayerContainer<DataLinkLayer>::TransportLayerType&
+DoCanTransportLayerContainer<DataLinkLayer>::emplace_back(Args&&... args)
 {
-    return _layers.emplace_back();
+    return _layers.emplace_back(etl::forward<Args>(args)...);
 }
 
 template<class DataLinkLayer>
@@ -274,17 +276,16 @@ DoCanTransportLayerContainerBuilder<DataLinkLayer>::DoCanTransportLayerContainer
 
 template<class DataLinkLayer>
 DoCanTransportLayer<DataLinkLayer>&
-
 DoCanTransportLayerContainerBuilder<DataLinkLayer>::addTransportLayer(
     uint8_t const busId, ::docan::IDoCanPhysicalTransceiver<DataLinkLayerType>& transceiver)
 {
-    return _container.createTransportLayer().construct(
+    return _container.emplace_back(
         busId,
-        ::estd::by_ref(_context),
-        ::estd::by_ref(_addressConverter),
-        ::estd::by_ref(transceiver),
-        ::estd::by_ref(_tickGenerator),
-        ::estd::by_ref(_config),
+        ::etl::ref(_context),
+        ::etl::ref(_addressConverter),
+        ::etl::ref(transceiver),
+        ::etl::ref(_tickGenerator),
+        ::etl::ref(_config),
         _loggerComponent);
 }
 

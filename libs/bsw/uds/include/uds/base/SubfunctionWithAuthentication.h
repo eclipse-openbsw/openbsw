@@ -3,7 +3,6 @@
 #ifndef GUARD_652899B0_2847_4F8C_A1B9_6B22C97D458B
 #define GUARD_652899B0_2847_4F8C_A1B9_6B22C97D458B
 
-#include "estd/uncopyable.h"
 #include "uds/base/Subfunction.h"
 
 namespace uds
@@ -16,8 +15,6 @@ class IDiagAuthenticator;
  */
 class SubfunctionWithAuthentication : public Subfunction
 {
-    UNCOPYABLE(SubfunctionWithAuthentication);
-
 public:
     SubfunctionWithAuthentication(
         IDiagAuthenticator const& authenticator,

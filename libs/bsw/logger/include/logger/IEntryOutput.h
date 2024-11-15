@@ -3,7 +3,8 @@
 #ifndef GUARD_04F47241_D02E_4D56_91EF_C1A629858864
 #define GUARD_04F47241_D02E_4D56_91EF_C1A629858864
 
-#include <estd/uncopyable.h>
+#include <etl/uncopyable.h>
+
 #include <platform/estdint.h>
 
 namespace util
@@ -23,7 +24,7 @@ class IPrintfArgumentReader;
 namespace logger
 {
 template<class E = uint32_t, class Timestamp = uint32_t>
-class IEntryOutput : private ::estd::uncopyable
+class IEntryOutput : private ::etl::uncopyable
 {
 public:
     IEntryOutput();
@@ -39,7 +40,7 @@ public:
 };
 
 template<class E, class Timestamp>
-inline IEntryOutput<E, Timestamp>::IEntryOutput() : ::estd::uncopyable()
+inline IEntryOutput<E, Timestamp>::IEntryOutput() : ::etl::uncopyable()
 {}
 
 } // namespace logger

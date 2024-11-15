@@ -5,8 +5,8 @@
 
 #include "util/stream/BspStubs.h"
 
-#include <estd/singleton.h>
-#include <estd/slice.h>
+#include <etl/singleton_base.h>
+#include <etl/span.h>
 
 #include <vector>
 
@@ -14,12 +14,12 @@ namespace util
 {
 namespace test
 {
-struct StdIoMock : ::estd::singleton<StdIoMock>
+struct StdIoMock : ::etl::singleton_base<StdIoMock>
 {
-    StdIoMock() : ::estd::singleton<StdIoMock>(*this) {}
+    StdIoMock() : ::etl::singleton_base<StdIoMock>(*this) {}
 
     std::vector<uint8_t> out;
-    ::estd::slice<uint8_t const> in;
+    ::etl::span<uint8_t const> in;
 };
 
 } // namespace test

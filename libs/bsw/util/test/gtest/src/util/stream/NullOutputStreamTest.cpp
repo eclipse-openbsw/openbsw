@@ -11,5 +11,5 @@ TEST(NullOutputStream, testNothingIsDone)
     NullOutputStream cut;
     ASSERT_TRUE(cut.isEof());
     cut.write('a');
-    cut.write(::estd::make_str("abc\ndef"));
+    cut.write_string_view(::etl::string_view("abc\ndef"));
 }

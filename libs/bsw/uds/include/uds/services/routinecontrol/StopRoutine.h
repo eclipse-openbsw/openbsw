@@ -3,7 +3,6 @@
 #ifndef GUARD_31C86452_2A79_41BF_B08C_C7F55A3924C2
 #define GUARD_31C86452_2A79_41BF_B08C_C7F55A3924C2
 
-#include "estd/uncopyable.h"
 #include "uds/base/Subfunction.h"
 
 namespace uds
@@ -14,8 +13,6 @@ namespace uds
  */
 class StopRoutine : public Subfunction
 {
-    UNCOPYABLE(StopRoutine);
-
 public:
     StopRoutine();
 

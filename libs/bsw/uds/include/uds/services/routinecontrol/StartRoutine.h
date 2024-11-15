@@ -3,7 +3,6 @@
 #ifndef GUARD_1689F763_6338_4AC5_ADC7_1243E903D7CF
 #define GUARD_1689F763_6338_4AC5_ADC7_1243E903D7CF
 
-#include "estd/uncopyable.h"
 #include "uds/base/Subfunction.h"
 
 namespace uds
@@ -14,8 +13,6 @@ namespace uds
  */
 class StartRoutine : public Subfunction
 {
-    UNCOPYABLE(StartRoutine);
-
 public:
     StartRoutine();
 

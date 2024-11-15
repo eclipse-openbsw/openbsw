@@ -1,6 +1,5 @@
 // Copyright 2024 Accenture.
 
-#include "estd/array.h"
 #include "nvstorage/NvStorageMock.h"
 #include "nvstorage/NvStorageTypes.h"
 #include "transport/TransportConfiguration.h"
@@ -16,6 +15,7 @@
 #include <async/AsyncMock.h>
 #include <async/RunnableMock.h>
 #include <async/TestContext.h>
+#include <etl/span.h>
 
 #include <gtest/gtest.h>
 
@@ -69,7 +69,7 @@ protected:
 
     NvStorageReturnCode blockRead(
         NvBlockIdType const id,
-        ::estd::slice<uint8_t>,
+        ::etl::span<uint8_t>,
         applJobFinishedCallback const cbk,
         applInitBlockCallback const)
     {
@@ -90,7 +90,7 @@ protected:
 
     NvStorageReturnCode blockWrite(
         NvBlockIdType const id,
-        ::estd::slice<uint8_t>,
+        ::etl::span<uint8_t>,
         NvPriority const,
         applJobFinishedCallback const cbk)
     {
@@ -124,7 +124,7 @@ protected:
     NvStorageOperation _op;
     NvStorageReturnCode _result;
     NvBlockIdType _id;
-    ::estd::slice<uint8_t> _readData;
+    ::etl::span<uint8_t> _readData;
     bool fEepromOk;
 };
 

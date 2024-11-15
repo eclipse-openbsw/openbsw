@@ -73,6 +73,8 @@ uint32_t getSystemTicks32Bit(void) { return static_cast<uint32_t>(updateTicks())
 
 uint64_t getSystemTimeNs(void) { return updateTicks() * 1000U / TICK_FREQ_MHZ; }
 
+extern "C" uint64_t etl_get_system_time_nanosec() { return getSystemTimeNs(); }
+
 uint64_t getSystemTimeUs(void) { return updateTicks() / TICK_FREQ_MHZ; }
 
 uint32_t getSystemTimeUs32Bit(void) { return static_cast<uint32_t>(updateTicks() / TICK_FREQ_MHZ); }
