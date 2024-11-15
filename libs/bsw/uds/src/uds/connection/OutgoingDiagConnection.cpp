@@ -2,7 +2,6 @@
 
 #include "uds/connection/OutgoingDiagConnection.h"
 
-#include "estd/assert.h"
 #include "platform/config.h"
 #include "transport/AbstractTransportLayer.h"
 #include "transport/TransportConfiguration.h"
@@ -11,6 +10,7 @@
 #include "uds/DiagReturnCode.h"
 #include "uds/UdsLogger.h"
 #include "uds/connection/DiagConnectionManager.h"
+#include "util/estd/assert.h"
 
 namespace uds
 {

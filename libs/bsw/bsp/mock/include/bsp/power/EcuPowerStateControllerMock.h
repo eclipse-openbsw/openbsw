@@ -4,8 +4,6 @@
 
 #include "bsp/power/IEcuPowerStateController.h"
 
-#include <estd/functional.h>
-
 #include <gmock/gmock.h>
 
 using namespace ::bios;

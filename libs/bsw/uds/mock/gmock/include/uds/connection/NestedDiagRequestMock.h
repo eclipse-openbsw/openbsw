@@ -4,6 +4,8 @@
 
 #include "uds/connection/NestedDiagRequest.h"
 
+#include <etl/span.h>
+
 #include <gmock/gmock.h>
 
 namespace uds
@@ -13,14 +15,12 @@ class NestedDiagRequestMock : public NestedDiagRequest
 public:
     NestedDiagRequestMock(uint8_t prefixLength) : NestedDiagRequest(prefixLength) {}
 
-    MOCK_CONST_METHOD1(
-        getStoredRequestLength, uint16_t(::estd::slice<uint8_t const> const& request));
+    MOCK_CONST_METHOD1(getStoredRequestLength, uint16_t(::etl::span<uint8_t const> const& request));
     MOCK_CONST_METHOD2(
-        storeRequest,
-        void(::estd::slice<uint8_t const> const& request, ::estd::slice<uint8_t> dest));
+        storeRequest, void(::etl::span<uint8_t const> const& request, ::etl::span<uint8_t> dest));
     MOCK_METHOD1(
         prepareNestedRequest,
-        ::estd::slice<uint8_t const>(::estd::slice<uint8_t const> const& storedRequest));
+        ::etl::span<uint8_t const>(::etl::span<uint8_t const> const& storedRequest));
     MOCK_METHOD3(
         processNestedRequest,
         DiagReturnCode::Type(

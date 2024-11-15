@@ -2,10 +2,11 @@
 
 #pragma once
 
-#include "estd/forward_list.h"
-#include "estd/queue.h"
 #include "transport/TransportJob.h"
 #include "uds/connection/OutgoingDiagConnection.h"
+
+#include <etl/intrusive_list.h>
+#include <etl/queue.h>
 
 namespace transport
 {
@@ -32,7 +33,7 @@ class AbstractDiagnosisConfiguration;
  * \see AbstractDiagApplication
  */
 class ManagedOutgoingDiagConnection
-: public ::estd::forward_list_node<ManagedOutgoingDiagConnection>
+: public ::etl::bidirectional_link<0>
 , public OutgoingDiagConnection
 {
 public:
@@ -84,7 +85,7 @@ public:
     void timeoutOccurred() override;
 
 private:
-    using TransportJobQueue = ::estd::queue<transport::TransportJob>;
+    using TransportJobQueue = ::etl::iqueue<transport::TransportJob>;
     friend class AbstractDiagnosisConfiguration;
 
     void setResponseQueue(TransportJobQueue& responseQueue) { fpPendingResponses = &responseQueue; }

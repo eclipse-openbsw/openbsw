@@ -2,7 +2,6 @@
 
 #pragma once
 
-#include "estd/uncopyable.h"
 #include "uds/UdsConstants.h"
 #include "uds/base/AbstractDiagJob.h"
 
@@ -18,8 +17,6 @@ class IDiagSessionManager;
  */
 class DiagJobRoot : public AbstractDiagJob
 {
-    UNCOPYABLE(DiagJobRoot);
-
 public:
     DiagJobRoot();
 

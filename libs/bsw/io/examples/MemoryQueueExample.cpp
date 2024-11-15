@@ -2,9 +2,11 @@
 
 #include "io/MemoryQueue.h"
 
-#include <estd/big_endian.h>
-#include <estd/memory.h>
-#include <estd/slice.h>
+#include <etl/array.h>
+#include <etl/memory.h>
+#include <etl/span.h>
+#include <etl/unaligned_type.h>
+
 #include <platform/estdint.h>
 
 #include <gmock/gmock.h>
@@ -15,7 +17,7 @@ namespace memoryQueueExample
 struct CanFrame
 {
     uint32_t id{};
-    ::estd::slice<uint8_t> data{};
+    ::etl::span<uint8_t> data{};
 };
 
 namespace spsc
@@ -50,14 +52,15 @@ bool forwardCanFrame(::io::IWriter& writer)
         return false;
     }
     // Allocate data from channel. We need room for a uint32_t id + data.
-    auto data = writer.allocate(sizeof(::estd::be_uint32_t) + size);
+    auto data = writer.allocate(sizeof(::etl::be_uint32_t) + size);
     if (data.size() == 0)
     {
         // Couldn't allocate data.
         return false;
     }
     // The big endian 32bit id comes first in the serialization.
-    auto& id = ::estd::memory::take<estd::be_uint32_t>(data);
+    etl::be_uint32_ext_t id{data.data()};
+    data.advance(id.size());
     // We pass the slice data to the frame so that readCanFrame can read the data directly from
     // the hardware to the allocated memory.
     CanFrame frame;
@@ -111,16 +114,17 @@ bool forwardCanFrame(::io::IWriter& writer)
     Lock lock;
     (void)lock;
     // Allocate data from channel. We need room for a uint32_t id + data.
-    auto data = writer.allocate(sizeof(::estd::be_uint32_t) + size);
+    auto data = writer.allocate(sizeof(::etl::be_uint32_t) + size);
     if (data.size() == 0)
     {
         // Couldn't allocate data.
         return false;
     }
     // The big endian 32bit id comes first in the serialization.
-    ::estd::memory::take<estd::be_uint32_t>(data) = rxFrame.id;
+    etl::be_uint32_ext_t{data.data()} = rxFrame.id;
+    data.advance(sizeof(etl::be_uint32_t));
     // Copy payload to allocated data.
-    ::estd::memory::copy(data, rxFrame.data);
+    ::etl::copy(rxFrame.data, data);
     // Commit data to channel.
     writer.commit();
     return true;
@@ -145,9 +149,10 @@ bool receiveCanFrame(CanFrame& frame, ::io::IReader& reader)
         return false;
     }
     // Copy data to frame. We expect a big endian 32bit id followed by the actual data.
-    frame.id = ::estd::memory::take<::estd::be_uint32_t>(data);
-    ::estd::memory::copy(frame.data, data);
-    frame.data.trim(data.size());
+    frame.id = etl::be_uint32_t(data.data());
+    data.advance(sizeof(etl::be_uint32_t));
+    ::etl::copy(data, frame.data);
+    frame.data = frame.data.first(data.size());
     // Release data to channel.
     reader.release();
     return true;
@@ -232,7 +237,7 @@ bool forwardData(typename Queue::Reader& source, typename Queue::Writer& destina
         // Destination is full.
         return false;
     }
-    (void)::estd::memory::copy(dstData, srcData);
+    (void)::etl::mem_copy(srcData.begin(), srcData.end(), dstData.begin());
     destination.commit();
     source.release();
     return true;
@@ -258,7 +263,7 @@ TEST(MemoryQueueExample, non_virtual_interface)
     {
         auto d = srcWriter.allocate(4);
         ASSERT_EQ(4, d.size());
-        ::estd::memory::take<::estd::be_uint32_t>(d) = 0x1234;
+        ::etl::be_uint32_ext_t{d.data()} = 0x1234;
         srcWriter.commit();
     }
 
@@ -267,7 +272,7 @@ TEST(MemoryQueueExample, non_virtual_interface)
     {
         auto d = dstReader.peek();
         ASSERT_EQ(4, d.size());
-        ASSERT_EQ(0x1234, ::estd::memory::take<::estd::be_uint32_t>(d));
+        ASSERT_EQ(0x1234, ::etl::be_uint32_t(d.data()));
     }
     // EXAMPLE_END WriterReader2
 }
@@ -296,7 +301,7 @@ bool forwardData(::io::IReader& source, ::io::IWriter& destination)
         // Destination is full.
         return false;
     }
-    (void)::estd::memory::copy(dstData, srcData);
+    (void)::etl::copy(srcData, dstData);
     destination.commit();
     source.release();
     return true;
@@ -322,7 +327,7 @@ TEST(MemoryQueueExample, virtual_interface)
     {
         auto d = srcWriter.allocate(4);
         ASSERT_EQ(4, d.size());
-        ::estd::memory::take<::estd::be_uint32_t>(d) = 0x1234;
+        ::etl::be_uint32_ext_t{d.data()} = 0x1234;
         srcWriter.commit();
     }
 
@@ -331,7 +336,7 @@ TEST(MemoryQueueExample, virtual_interface)
     {
         auto d = dstReader.peek();
         ASSERT_EQ(4, d.size());
-        ASSERT_EQ(0x1234, ::estd::memory::take<::estd::be_uint32_t>(d));
+        ASSERT_EQ(0x1234, ::etl::be_uint32_t(d.data()));
     }
     // EXAMPLE_END IWriterIReader2
 }
@@ -345,10 +350,10 @@ size_t getCanRxSize() { return 4; }
 
 bool readCanFrame(CanFrame& frame)
 {
-    uint8_t const txData[]{1, 2, 3, 4};
+    etl::array<uint8_t, 4> txData{1, 2, 3, 4};
     frame.id = 123;
-    ::estd::memory::copy(frame.data, txData);
-    frame.data.trim(sizeof(txData));
+    ::etl::copy(::etl::make_span(txData), frame.data);
+    frame.data = frame.data.first(sizeof(txData));
     return true;
 }
 } // namespace spsc

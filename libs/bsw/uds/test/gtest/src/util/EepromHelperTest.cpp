@@ -7,6 +7,7 @@
 
 #include <async/AsyncMock.h>
 #include <async/TestContext.h>
+#include <etl/delegate.h>
 
 #include <gmock/gmock.h>
 
@@ -36,7 +37,7 @@ TEST_F(EepromHelperTest, EepromHelperRead)
             ? ++reqOk
             : ((returnCode == NVSTORAGE_REQ_NOT_OK) ? ++reqNotOk : ++reqPending);
     };
-    EepromJobFinishedNotification cbk = ::estd::make_function(callback);
+    EepromJobFinishedNotification cbk = ::etl::delegate::create(callback);
 
     udsContext.handleExecute();
     EXPECT_CALL(nvStorageMock, blockRead(_, _, _, _))
@@ -74,7 +75,7 @@ TEST_F(EepromHelperTest, EepromHelperWrite)
             ? ++reqOk
             : ((returnCode == NVSTORAGE_REQ_NOT_OK) ? ++reqNotOk : ++reqPending);
     };
-    EepromJobFinishedNotification cbk = ::estd::make_function(callback);
+    EepromJobFinishedNotification cbk = ::etl::delegate::create(callback);
 
     udsContext.handleExecute();
     EXPECT_CALL(nvStorageMock, blockWrite(_, _, _, _))

@@ -7,7 +7,7 @@
  */
 #pragma once
 
-#include <estd/forward_list.h>
+#include <etl/intrusive_forward_list.h>
 
 namespace can
 {
@@ -18,8 +18,7 @@ class IFilter;
  * Interface for a filtered listener for sent CANFrames.
  *
  */
-class IFilteredCANFrameSentListener
-: public ::estd::forward_list_node<IFilteredCANFrameSentListener>
+class IFilteredCANFrameSentListener : public ::etl::forward_link<0>
 {
 protected:
     IFilteredCANFrameSentListener();
@@ -39,8 +38,6 @@ public:
     virtual IFilter& getFilter() = 0;
 };
 
-inline IFilteredCANFrameSentListener::IFilteredCANFrameSentListener()
-: ::estd::forward_list_node<IFilteredCANFrameSentListener>()
-{}
+inline IFilteredCANFrameSentListener::IFilteredCANFrameSentListener() : ::etl::forward_link<0>() {}
 
 } // namespace can

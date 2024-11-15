@@ -233,7 +233,7 @@ ESR_NO_INLINE void
 DiagnosticSessionControl::removeDiagSessionListener_local(IDiagSessionChangedListener& listener)
 {
     ::async::LockType const lock;
-    fListeners.remove(listener);
+    fListeners.erase(listener);
 }
 
 void DiagnosticSessionControl::removeDiagSessionListener(IDiagSessionChangedListener& listener)
@@ -335,7 +335,7 @@ void DiagnosticSessionControl::sessionRead(uint8_t const)
     Logger::debug(UDS, "Starting up with Session = 0x%x", fpCurrentSession->getSessionByte());
 
     switchSession(DiagSession::APPLICATION_DEFAULT_SESSION());
-    if (fInitCompleteDelegate.has_value())
+    if (fInitCompleteDelegate.is_valid())
     {
         fInitCompleteDelegate();
     }

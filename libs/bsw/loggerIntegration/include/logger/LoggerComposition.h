@@ -6,19 +6,18 @@
 #include "logger/ConsoleEntryFormatter.h"
 #include "logger/DefaultLoggerTime.h"
 
+#include <etl/delegate.h>
 #include <logger/ConsoleEntryOutput.h>
 #include <util/logger/IComponentMapping.h>
 #include <util/logger/ILoggerOutput.h>
-
-#include <estd/functional.h>
 
 namespace logger
 {
 class LoggerComposition
 {
 public:
-    using ConfigStart = ::estd::function<void(::util::logger::ILoggerOutput&)>;
-    using ConfigStop  = ::estd::function<void()>;
+    using ConfigStart = ::etl::delegate<void(::util::logger::ILoggerOutput&)>;
+    using ConfigStop  = ::etl::delegate<void()>;
 
     explicit LoggerComposition(
         ::util::logger::IComponentMapping& componentMapping, char const* name);

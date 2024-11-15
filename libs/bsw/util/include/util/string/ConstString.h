@@ -3,7 +3,7 @@
 #pragma once
 
 #ifndef ESR_NO_BUFFER_ASSERT
-#include <estd/assert.h>
+#include <util/estd/assert.h>
 #endif
 
 #include <cstdint>

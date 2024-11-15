@@ -4,7 +4,8 @@
 
 #include "io/IWriter.h"
 
-#include <estd/slice.h>
+#include <etl/span.h>
+
 #include <platform/estdint.h>
 
 namespace io
@@ -46,7 +47,7 @@ public:
      *            is available
      *          - Slice of bytes otherwise.
      */
-    ::estd::slice<uint8_t> allocate(size_t size) override;
+    ::etl::span<uint8_t> allocate(size_t size) override;
 
     /**
      * Commits the previously allocated data. It is not guaranteed that this data is immediately
@@ -62,7 +63,7 @@ public:
     // [PUBLIC_API_END]
 private:
     IWriter& _destination;
-    ::estd::slice<uint8_t> _current;
+    ::etl::span<uint8_t> _current;
     size_t _size;
 };
 

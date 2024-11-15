@@ -6,8 +6,9 @@
 #include <can/CanLogger.h>
 #include <can/framemgmt/IFilteredCANFrameSentListener.h>
 #include <common/busid/BusId.h>
+#include <etl/delegate.h>
+#include <util/estd/assert.h>
 
-#include <estd/assert.h>
 #include <platform/config.h>
 #include <platform/estdint.h>
 
@@ -28,7 +29,7 @@ CanFlex2Transceiver::CanFlex2Transceiver(
 , fFlexCANDevice(
       devConfig,
       Phy,
-      ::estd::function<
+      ::etl::delegate<
           void()>::create<CanFlex2Transceiver, &CanFlex2Transceiver::canFrameSentCallback>(*this),
       powerStateController)
 , fIsPhyErrorPresent(false)
@@ -131,7 +132,7 @@ CanFlex2Transceiver::write(::can::CANFrame const& frame, ::can::ICANFrameSentLis
         return ErrorCode::CAN_ERR_TX_HW_QUEUE_FULL;
     }
     bool const wasEmpty = fTxQueue.empty();
-    new (fTxQueue.emplace_back()) TxJobWithCallback(*pListener, frame);
+    fTxQueue.emplace_back(*pListener, frame);
     if (!wasEmpty)
     {
         // nothing to do next frame will be sent from tx isr

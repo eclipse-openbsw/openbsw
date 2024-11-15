@@ -9,7 +9,7 @@ target_link_libraries(
            bspInterrupts
            common
            cpp2can
-           estd
+           etl
            platform
            transport
            util)

@@ -383,10 +383,10 @@ Spaces
 .. code-block:: C++
 
     // good
-    estd::example<uint8_t> numbers{1, 2, 3, 4};
+    etl::example<uint8_t> numbers{1, 2, 3, 4};
 
     // bad
-    estd::example<uint8_t> numbers{ 1, 2, 3, 4 };
+    etl::example<uint8_t> numbers{ 1, 2, 3, 4 };
 
 .. code-block::
     :caption: clang-format settings

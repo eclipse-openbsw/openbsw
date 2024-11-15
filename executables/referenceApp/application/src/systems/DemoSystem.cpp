@@ -15,7 +15,7 @@
 #include "runtime/Tracer.h"
 #endif
 
-#include <estd/big_endian.h>
+#include <etl/unaligned_type.h>
 #ifdef PLATFORM_SUPPORT_CAN
 #include <can/transceiver/AbstractCANTransceiver.h>
 #endif
@@ -121,9 +121,8 @@ void DemoSystem::cyclic()
         if (canTransceiver != nullptr)
         {
             // Logger::debug(DEMO, "Sending frame %d", canSentCount);
-            uint8_t canData[4] = {0};
-            ::estd::write_be(canData, canSentCount);
-            ::can::CANFrame frame(0x558, canData, 4);
+            etl::be_uint32_t canData{canSentCount};
+            ::can::CANFrame frame(0x558, static_cast<uint8_t*>(canData.data()), 4);
             canTransceiver->write(frame);
             ++canSentCount;
         }

@@ -16,7 +16,7 @@ in turn are architecture-dependent, i.e. their implementation is found in corres
 .. code-block:: cpp
 
     StdoutStream cut;
-    cut.write(::estd::make_str("Test"));
+    cut.write_string_view(::etl::string_view("Test"));
 
 util::stream::NormalizeLfOutputStream
 -------------------------------------
@@ -78,9 +78,9 @@ buffer instead of printing it to the terminal. This class inherits from
 
     char buffer[10];
     memset(buffer, 0x17, 10);
-    stream::StringBufferOutputStream cut(::estd::make_slice(buffer).subslice(9));
-    cut.write(::estd::make_str("abc"));
-    cut.write(::estd::make_str("def"));
+    stream::StringBufferOutputStream cut(::etl::span<char>(buffer).subslice(9));
+    cut.write_string_view(::etl::string_view("abc"));
+    cut.write_string_view(::etl::string_view("def"));
     assert("abcdef" == cut.getString());
 
 util::stream::TaggedSharedOutputStream
@@ -97,7 +97,7 @@ adding specific starting (prefix) and ending (suffix) textual information when o
     ::util::stream::TaggedSharedOutputStream cut(bufferStream, "[START]", "[CRLF]");
     bufferStream.write('a');
     bufferStream.write('\n');
-    bufferStream.write(::estd::make_str("abc\ndef"));
-    bufferStream.write(::estd::make_str("AB\nDEF"));
+    bufferStream.write_string_view(::etl::string_view("abc\ndef"));
+    bufferStream.write_string_view(::etl::string_view("AB\nDEF"));
     cut.endOutput(nullptr);
     assert("[START]a[CRLF][START]abc[CRLF]" == bufferStream.getString());

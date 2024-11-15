@@ -2,9 +2,11 @@
 
 #include "async/TickHookMock.h"
 
+#include <etl/singleton_base.h>
+
 namespace async
 {
-TickHookMock::TickHookMock() : ::estd::singleton<TickHookMock>(*this) {}
+TickHookMock::TickHookMock() : ::etl::singleton_base<TickHookMock>(*this) {}
 
 void TickHookMock::handleTick() { TickHookMock::instance().doHandleTick(); }
 

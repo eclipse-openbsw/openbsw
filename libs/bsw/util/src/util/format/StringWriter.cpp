@@ -5,7 +5,7 @@
 #include "util/format/PrintfArgumentReader.h"
 #include "util/format/PrintfFormatter.h"
 
-#include <estd/va_list_ref.h>
+#include <util/estd/va_list_ref.h>
 
 namespace util
 {
@@ -36,8 +36,7 @@ StringWriter& StringWriter::write(char const* const str)
 
 StringWriter& StringWriter::write(char const* const chars, size_t const length)
 {
-    _stream.write(::estd::slice<uint8_t const>::from_pointer(
-        reinterpret_cast<uint8_t const*>(chars), length));
+    _stream.write_string_view(::etl::string_view(chars, length));
     return *this;
 }
 

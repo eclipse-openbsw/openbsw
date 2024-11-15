@@ -12,12 +12,11 @@
 #include "lifecycle/ILifecycleManager.h"
 
 #include <async/Async.h>
-
-#include <estd/array.h>
-#include <estd/forward_list.h>
-#include <estd/functional.h>
-#include <estd/slice.h>
-#include <estd/vector.h>
+#include <etl/array.h>
+#include <etl/delegate.h>
+#include <etl/intrusive_forward_list.h>
+#include <etl/span.h>
+#include <etl/vector.h>
 
 namespace lifecycle
 {
@@ -49,7 +48,7 @@ public:
     };
 
     /// System time callback.
-    using GetTimestampType = ::estd::function<uint32_t()>;
+    using GetTimestampType = ::etl::delegate<uint32_t()>;
 
     /// Adds a lifecycle `component` to be managed by this LifecycleManager. It is registered at the
     /// given `level`. Additionally `name` is used during logging to identify this component.
@@ -105,9 +104,9 @@ protected:
         bool _isPending = true;
     };
 
-    using ComponentInfoSliceType                = ::estd::slice<ComponentInfo>;
-    using ComponentTransitionExecutorVectorType = ::estd::vector<ComponentTransitionExecutor>;
-    using LevelIndexSliceType                   = ::estd::slice<uint8_t>;
+    using ComponentInfoSliceType                = ::etl::span<ComponentInfo>;
+    using ComponentTransitionExecutorVectorType = ::etl::ivector<ComponentTransitionExecutor>;
+    using LevelIndexSliceType                   = ::etl::span<uint8_t>;
 
     LifecycleManager(
         ::async::ContextType transitionContext,
@@ -119,7 +118,8 @@ protected:
     ~LifecycleManager() override = default;
 
 private:
-    using LifecycleListenerListType = ::estd::forward_list<ILifecycleListener>;
+    using LifecycleListenerListType
+        = ::etl::intrusive_forward_list<ILifecycleListener, ::etl::forward_link<0>>;
 
     void transitionDone(ILifecycleComponent& component) override;
 
@@ -169,10 +169,10 @@ public:
     {}
 
 private:
-    ::estd::array<ComponentInfo, MAX_NUM_COMPONENTS> _componentInfoArray{};
-    ::estd::declare::vector<ComponentTransitionExecutor, MAX_NUM_COMPONENTS_PER_LEVEL>
+    ::etl::array<ComponentInfo, MAX_NUM_COMPONENTS> _componentInfoArray{};
+    ::etl::vector<ComponentTransitionExecutor, MAX_NUM_COMPONENTS_PER_LEVEL>
         _componentTransitionExecutorVector{};
-    ::estd::array<uint8_t, MAX_NUM_LEVELS + 1> _levelIndexArray{};
+    ::etl::array<uint8_t, MAX_NUM_LEVELS + 1> _levelIndexArray{};
 };
 
 } // namespace declare

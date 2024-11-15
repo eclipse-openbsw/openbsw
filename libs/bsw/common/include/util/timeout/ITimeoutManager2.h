@@ -6,7 +6,8 @@
  */
 #pragma once
 
-#include <estd/uncopyable.h>
+#include <etl/uncopyable.h>
+
 #include <platform/estdint.h>
 
 namespace common
@@ -14,11 +15,11 @@ namespace common
 class AbstractTimeout;
 
 /**
- * Interface of timeoumanager class.
+ * Interface of timeoutmanager class.
  *
  *
  */
-class ITimeoutManager2
+class ITimeoutManager2 : public ::etl::uncopyable
 {
 public:
     ITimeoutManager2() = default;
@@ -72,9 +73,6 @@ public:
      * with a critical section.
      */
     virtual void cancel(AbstractTimeout& timeout) = 0;
-
-private:
-    UNCOPYABLE(ITimeoutManager2);
 };
 
 } // namespace common

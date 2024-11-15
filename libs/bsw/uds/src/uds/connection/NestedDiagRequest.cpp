@@ -2,7 +2,8 @@
 
 #include "uds/connection/NestedDiagRequest.h"
 
-#include <estd/memory.h>
+#include <etl/memory.h>
+#include <etl/span.h>
 
 namespace uds
 {
@@ -23,8 +24,8 @@ NestedDiagRequest::NestedDiagRequest(uint8_t const prefixLength)
 
 void NestedDiagRequest::init(
     AbstractDiagJob& sender,
-    ::estd::slice<uint8_t> const& messageBuffer,
-    ::estd::slice<uint8_t const> const& request)
+    ::etl::span<uint8_t> const& messageBuffer,
+    ::etl::span<uint8_t const> const& request)
 {
     fSender                = &sender;
     fPendingResponseSender = nullptr;
@@ -39,7 +40,7 @@ void NestedDiagRequest::init(
     {
         storeRequest(
             request,
-            fMessageBuffer.offset(
+            fMessageBuffer.subspan(
                 static_cast<size_t>(fMessageBuffer.size() - fStoredRequestLength)));
     }
 }
@@ -48,7 +49,7 @@ bool NestedDiagRequest::prepareNextRequest()
 {
     if (fResponseCode == DiagReturnCode::OK)
     {
-        fNestedRequest = prepareNestedRequest(fMessageBuffer.offset(
+        fNestedRequest = prepareNestedRequest(fMessageBuffer.subspan(
             static_cast<size_t>(fMessageBuffer.size() - fStoredRequestLength)));
     }
     return (fResponseCode == DiagReturnCode::OK) && (fNestedRequest.size() > 0U);
@@ -69,19 +70,18 @@ void NestedDiagRequest::handleNegativeResponseCode(DiagReturnCode::Type const re
 
 void NestedDiagRequest::handleResponseOverflow() { handleOverflow(); }
 
-::estd::slice<uint8_t> NestedDiagRequest::getResponseBuffer()
+::etl::span<uint8_t> NestedDiagRequest::getResponseBuffer()
 {
     if (fNumIdentifiers >= fPrefixLength)
     {
         fNumPrefixIdentifiers = fNumIdentifiers - fPrefixLength;
-        (void)::estd::memory::copy(
-            fMessageBuffer,
-            fNestedRequest.offset(static_cast<size_t>(fPrefixLength))
-                .subslice(static_cast<size_t>(fNumPrefixIdentifiers)));
+        (void)::etl::copy(
+            fNestedRequest.subspan(fPrefixLength, static_cast<size_t>(fNumPrefixIdentifiers)),
+            fMessageBuffer);
     }
-    return fMessageBuffer.offset(static_cast<size_t>(fNumPrefixIdentifiers))
-        .subslice(static_cast<size_t>(
-            fMessageBuffer.size() - fStoredRequestLength - fNumPrefixIdentifiers));
+    return fMessageBuffer.subspan(
+        static_cast<size_t>(fNumPrefixIdentifiers),
+        static_cast<size_t>(fMessageBuffer.size() - fStoredRequestLength - fNumPrefixIdentifiers));
 }
 
 uint16_t NestedDiagRequest::getMaxNestedResponseLength() const
@@ -93,7 +93,7 @@ uint16_t NestedDiagRequest::getMaxNestedResponseLength() const
 void NestedDiagRequest::setNestedResponseLength(uint16_t responseLength)
 {
     responseLength += fNumPrefixIdentifiers;
-    fMessageBuffer = fMessageBuffer.offset(static_cast<size_t>(responseLength));
+    fMessageBuffer = fMessageBuffer.subspan(static_cast<size_t>(responseLength));
     fResponseLength += responseLength;
     handleNestedResponseCode(DiagReturnCode::OK);
 }
@@ -112,16 +112,15 @@ uint8_t NestedDiagRequest::getIdentifier(uint16_t const idx) const
     }
 }
 
-uint16_t
-NestedDiagRequest::getStoredRequestLength(::estd::slice<uint8_t const> const& request) const
+uint16_t NestedDiagRequest::getStoredRequestLength(::etl::span<uint8_t const> const& request) const
 {
     return static_cast<uint16_t>(request.size());
 }
 
 void NestedDiagRequest::storeRequest(
-    ::estd::slice<uint8_t const> const& request, ::estd::slice<uint8_t> dest) const
+    ::etl::span<uint8_t const> const& request, ::etl::span<uint8_t> dest) const
 {
-    (void)::estd::memory::copy(dest, request);
+    (void)::etl::copy(request, dest);
 }
 
 void NestedDiagRequest::handleOverflow() { setResponseCode(DiagReturnCode::ISO_RESPONSE_TOO_LONG); }
@@ -131,19 +130,17 @@ void NestedDiagRequest::handleNestedResponseCode(DiagReturnCode::Type const resp
     setResponseCode(responseCode);
 }
 
-::estd::slice<uint8_t const> NestedDiagRequest::consumeStoredRequest(uint16_t const consumedLength)
+::etl::span<uint8_t const> NestedDiagRequest::consumeStoredRequest(uint16_t const consumedLength)
 {
     if (fStoredRequestLength < consumedLength)
     {
-        return ::estd::slice<uint8_t const>();
+        return ::etl::span<uint8_t const>();
     }
     fStoredRequestLength -= consumedLength;
-    return ::estd::slice<uint8_t const>(
-        fMessageBuffer
-            .offset(
-                fMessageBuffer.size()
-                - (static_cast<size_t>(fStoredRequestLength) + static_cast<size_t>(consumedLength)))
-            .subslice(static_cast<size_t>(consumedLength)));
+    return ::etl::span<uint8_t const>(fMessageBuffer.subspan(
+        fMessageBuffer.size()
+            - (static_cast<size_t>(fStoredRequestLength) + static_cast<size_t>(consumedLength)),
+        static_cast<size_t>(consumedLength)));
 }
 
 } // namespace uds

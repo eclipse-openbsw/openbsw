@@ -21,7 +21,7 @@ add_library(
 target_include_directories(asyncFreeRtosImpl PRIVATE include)
 
 target_link_libraries(asyncFreeRtosImpl PRIVATE asyncFreeRtos asyncBinding
-                                                asyncCoreConfiguration estd)
+                                                asyncCoreConfiguration etl util)
 
 # For FreeRTOSConfig.h, freertos_task_c_additions.h, Hook.h
 

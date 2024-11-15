@@ -4,10 +4,11 @@
 
 #include "async/StaticRunnable.h"
 #include "async/Types.h"
-#include "estd/array.h"
-#include "estd/assert.h"
-#include "estd/memory.h"
-#include "estd/slice.h"
+
+#include <etl/array.h>
+#include <etl/memory.h>
+#include <etl/span.h>
+#include <util/estd/assert.h>
 
 #include <FreeRTOS.h>
 #include <task.h>
@@ -27,8 +28,17 @@ constexpr size_t adjustStackSize(size_t const stackSize)
 #endif // (defined(MINIMUM_STACK_SIZE)) && (MINIMUM_STACK_SIZE != 0)
 }
 
+inline void align(size_t const alignment, ::etl::span<uint8_t>& s)
+{
+    auto const mod = reinterpret_cast<size_t>(s.data()) % alignment;
+    if (mod != 0)
+    {
+        s = s.subspan(alignment - mod);
+    }
+}
+
 template<size_t StackSize>
-using Stack = ::estd::array<
+using Stack = ::etl::array<
     StackType_t,
     (adjustStackSize(StackSize) + sizeof(StackType_t) - 1) / sizeof(StackType_t)>;
 
@@ -45,7 +55,7 @@ template<typename Adapter>
 struct TaskInitializer : public StaticRunnable<TaskInitializer<Adapter>>
 {
     using AdapterType      = Adapter;
-    using StackSliceType   = ::estd::slice<StackType_t>;
+    using StackSliceType   = ::etl::span<StackType_t>;
     using TaskConfigType   = typename AdapterType::TaskConfigType;
     using TaskFunctionType = typename AdapterType::TaskFunctionType;
     using TaskObjectType   = StaticTask_t;
@@ -124,7 +134,7 @@ class TaskImpl
 {
 public:
     using AdapterType      = Adapter;
-    using StackSliceType   = ::estd::slice<StackType_t>;
+    using StackSliceType   = ::etl::span<StackType_t>;
     using TaskConfigType   = typename AdapterType::TaskConfigType;
     using TaskFunctionType = typename AdapterType::TaskFunctionType;
     using TaskObjectType   = StaticTask_t;
@@ -144,7 +154,7 @@ class TaskImpl<Adapter, Context, 0U>
 {
 public:
     using AdapterType      = Adapter;
-    using StackSliceType   = ::estd::slice<StackType_t>;
+    using StackSliceType   = ::etl::span<StackType_t>;
     using TaskConfigType   = typename AdapterType::TaskConfigType;
     using TaskFunctionType = typename AdapterType::TaskFunctionType;
     using TaskObjectType   = StaticTask_t;
@@ -247,8 +257,8 @@ void TaskInitializer<Adapter>::create(
     TaskFunctionType const taskFunction,
     TaskConfigType const& config)
 {
-    ::estd::slice<uint8_t> bytes = ::estd::make_slice(stack).template reinterpret_as<uint8_t>();
-    ::estd::memory::align(alignof(StackType_t), bytes);
+    ::etl::span<uint8_t> bytes = ::etl::make_span(stack).template reinterpret_as<uint8_t>();
+    align(alignof(StackType_t), bytes);
     StackSliceType const stackSlice = bytes.template reinterpret_as<StackType_t>();
     estd_assert((stackSlice.size() * sizeof(StackType_t)) >= sizeof(TaskInitializer));
     new (stackSlice.data()) TaskInitializer(context, name, task, stackSlice, taskFunction, config);

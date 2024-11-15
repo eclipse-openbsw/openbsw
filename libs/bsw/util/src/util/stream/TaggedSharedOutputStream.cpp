@@ -2,7 +2,7 @@
 
 #include "util/stream/TaggedSharedOutputStream.h"
 
-#include <estd/memory.h>
+#include <etl/span.h>
 
 namespace util
 {
@@ -74,11 +74,11 @@ void TaggedSharedOutputStream::write(uint8_t const data)
 {
     if (_stream != nullptr)
     {
-        writeBytes(*_stream, ::estd::memory::as_slice(&data));
+        writeBytes(*_stream, ::etl::span<uint8_t const>(&data, 1));
     }
 }
 
-void TaggedSharedOutputStream::write(::estd::slice<uint8_t const> const& buffer)
+void TaggedSharedOutputStream::write(::etl::span<uint8_t const> const& buffer)
 {
     if (_stream != nullptr)
     {

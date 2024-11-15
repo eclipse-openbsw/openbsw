@@ -2,7 +2,7 @@
 
 #include "docan/common/DoCanParameters.h"
 
-#include <estd/functional.h>
+#include <etl/delegate.h>
 
 #include <gmock/gmock.h>
 
@@ -16,7 +16,7 @@ uint32_t systemUs() { return 0; }
 TEST(DoCanParametersTest, testConstructedParametersAndSetter)
 {
     DoCanParameters cut(
-        ::estd::function<decltype(systemUs)>::create<&systemUs>(),
+        ::etl::delegate<decltype(systemUs)>::create<&systemUs>(),
         23425,
         3543,
         1232,

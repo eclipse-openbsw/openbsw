@@ -4,8 +4,9 @@
 
 #include "runtime/StatisticsContainer.h"
 
-#include <estd/gtest_extensions.h>
-#include <estd/string.h>
+#include <etl/span.h>
+#include <etl/string.h>
+#include <util/estd/gtest_extensions.h>
 
 #include <gmock/gmock.h>
 
@@ -32,12 +33,12 @@ struct TestEntry : public TestStatistics
 class TestNames
 {
 public:
-    explicit TestNames(::estd::slice<char const* const> const& names) : _names(names) {}
+    explicit TestNames(::etl::span<char const* const> const& names) : _names(names) {}
 
     char const* getName(size_t idx) const { return _names[idx]; }
 
 private:
-    ::estd::slice<char const* const> _names;
+    ::etl::span<char const* const> _names;
 };
 
 TEST(SharedStatisticsContainerTest, testCachesNames)
@@ -66,8 +67,8 @@ TEST(SharedStatisticsContainerTest, testCachesNames)
         {
             // expect entry 1 as initial entry
             EXPECT_TRUE(it.hasValue());
-            ::estd::declare::string<8> originalName = statisticsNames[1U];
-            ::estd::declare::string<8> cachedName   = it.getName();
+            ::etl::string<8> originalName = statisticsNames[1U];
+            ::etl::string<8> cachedName   = it.getName();
             EXPECT_EQ(originalName, cachedName);
             EXPECT_EQ(&entries[1U], it.getStatistics()._assignedFrom);
         }
@@ -75,8 +76,8 @@ TEST(SharedStatisticsContainerTest, testCachesNames)
             // expect entry 3 as next value
             it.next();
             EXPECT_TRUE(it.hasValue());
-            ::estd::declare::string<8> originalName = statisticsNames[3U];
-            ::estd::declare::string<8> cachedName   = it.getName();
+            ::etl::string<8> originalName = statisticsNames[3U];
+            ::etl::string<8> cachedName   = it.getName();
             EXPECT_EQ(originalName, cachedName);
             EXPECT_EQ(&entries[3U], it.getStatistics()._assignedFrom);
         }
@@ -108,8 +109,8 @@ TEST(SharedStatisticsContainerTest, testCachesNames)
         {
             // expect entry 1 as initial entry
             EXPECT_TRUE(it.hasValue());
-            ::estd::declare::string<8> originalName = statisticsNames[1U];
-            ::estd::declare::string<8> cachedName   = it.getName();
+            ::etl::string<8> originalName = statisticsNames[1U];
+            ::etl::string<8> cachedName   = it.getName();
             EXPECT_EQ(originalName, cachedName);
             EXPECT_EQ(&changedEntries[1U], it.getStatistics()._assignedFrom);
         }
@@ -117,8 +118,8 @@ TEST(SharedStatisticsContainerTest, testCachesNames)
             // expect entry 3 as next value
             it.next();
             EXPECT_TRUE(it.hasValue());
-            ::estd::declare::string<8> originalName = statisticsNames[3U];
-            ::estd::declare::string<8> cachedName   = it.getName();
+            ::etl::string<8> originalName = statisticsNames[3U];
+            ::etl::string<8> cachedName   = it.getName();
             EXPECT_EQ(originalName, cachedName);
             EXPECT_EQ(&changedEntries[3U], it.getStatistics()._assignedFrom);
         }

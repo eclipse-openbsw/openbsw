@@ -48,7 +48,7 @@ Type Names
     using TcpipEventManager = ::os::EventManager<task_tcpip>;
 
 Any exceptions to this rule need to have a reasonable justification and in that
-case should be applied consistently within a module (e.g. ``estd`` types use
+case should be applied consistently within a module (e.g. ``etl`` types use
 *snake_case* notation in order to match with their STL counterpart). In general
 those exceptions should be rare!
 
@@ -184,7 +184,7 @@ does not provide any functions, you can omit the prefix.
 
     class CanTransceiver    // good
     {
-        ::estd::forward_list<ICanFrameListener> _listeners;
+        ::etl::intrusive_forward_list<ICanFrameListener, ::etl::forward_link<0>> _listeners;
     };
 
     struct Result           // good
@@ -196,7 +196,7 @@ does not provide any functions, you can omit the prefix.
 
     class CanTransceiver    // bad, no member prefix
     {
-        ::estd::forward_list<ICanFrameListener> listeners;
+        ::etl::intrusive_forward_list<ICanFrameListener, ::etl::forward_link<0>> listeners;
     };
 
     struct Result           // bad, suffix and mixed style
@@ -316,7 +316,7 @@ Boolean Variables and Functions
   - might need conversion if propagated to higher levels
 
   Other rarely used types are `bitfields` and `ranges`. For return values of functions it is
-  worth to look at ``::estd::result`` class which combines data and error status in one object.
+  worth to look at ``::etl::expected`` class which combines data and error status in one object.
 
   In most cases using a boolean is the best choice to keep it simple.
 
@@ -328,7 +328,7 @@ type of the variable and the operations that can be performed on its elements.
 
 .. code-block:: cpp
 
-    using ReceiverList = ::estd::forward_list<Receiver>;
+    using ReceiverList = ::etl::intrusive_forward_list<Receiver, ::etl::forward_link<0>>;
 
     vector<Point>  points;
     int            values[];

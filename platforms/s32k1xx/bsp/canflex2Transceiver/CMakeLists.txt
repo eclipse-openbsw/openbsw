@@ -10,6 +10,7 @@ if (BUILD_UNIT_TESTS)
         PUBLIC asyncMockImpl
                bsp
                cpp2can
+               etl
                utbspIo
                canflex2TransceiverMock
                lifecycle

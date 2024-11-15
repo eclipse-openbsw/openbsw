@@ -9,7 +9,7 @@
 namespace transport
 {
 TransportSystem::TransportSystem(::async::ContextType transitionContext)
-: ::estd::singleton<TransportSystem>(*this)
+: ::etl::singleton_base<TransportSystem>(*this)
 {
     // Tell the lifecycle manager in which context to execute init/run/shutdown
     setTransitionContext(transitionContext);

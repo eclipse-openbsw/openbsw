@@ -4,9 +4,8 @@
 
 #include "safeLifecycle/SafetyLogger.h"
 
+#include <etl/utility.h>
 #include <safeLifecycle/interrupts/IsrLock.h>
-
-#include <estd/type_utils.h>
 
 #include <commonDebug.h>
 
@@ -102,7 +101,7 @@ void SafeSupervisor::handle(Event const& event)
             Logger::warn(
                 SAFETY,
                 "SafeSupervisor: Received unknown event with ID %d",
-                static_cast<int>(::estd::to_underlying(event)));
+                ::etl::to_underlying(event));
             // TODO: write event id (int) to no-init ram as unknown error
             break;
         }

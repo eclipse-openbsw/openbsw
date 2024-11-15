@@ -2,13 +2,12 @@
 
 #pragma once
 
+#include <etl/span.h>
+#include <etl/uncopyable.h>
 #include <util/format/IPrintfArgumentReader.h>
 #include <util/format/PrintfArgumentReader.h>
 #include <util/format/PrintfFormatScanner.h>
 #include <util/logger/Logger.h>
-
-#include <estd/slice.h>
-#include <estd/uncopyable.h>
 
 #include <cstring>
 
@@ -17,7 +16,7 @@ namespace logger
 class SectionPredicate;
 
 template<class Timestamp = uint32_t>
-class IEntrySerializerCallback : private ::estd::uncopyable
+class IEntrySerializerCallback : private ::etl::uncopyable
 {
 public:
     IEntrySerializerCallback();
@@ -38,15 +37,14 @@ public:
     explicit EntrySerializer(ReadOnlyPredicate readOnlyPredicate = ReadOnlyPredicate());
 
     T serialize(
-        ::estd::slice<uint8_t> const& destBuffer,
+        ::etl::span<uint8_t> const& destBuffer,
         Timestamp timestamp,
         uint8_t componentIndex,
         ::util::logger::Level level,
         char const* formatString,
         va_list ap) const;
     static void deserialize(
-        ::estd::slice<uint8_t const> const& srcBuffer,
-        IEntrySerializerCallback<Timestamp>& callback);
+        ::etl::span<uint8_t const> const& srcBuffer, IEntrySerializerCallback<Timestamp>& callback);
 
 private:
     enum
@@ -133,7 +131,7 @@ EntrySerializer<T, Timestamp, ReadOnlyPredicate>::EntrySerializer(
 
 template<class T, class Timestamp, class ReadOnlyPredicate>
 T EntrySerializer<T, Timestamp, ReadOnlyPredicate>::serialize(
-    ::estd::slice<uint8_t> const& destBuffer,
+    ::etl::span<uint8_t> const& destBuffer,
     Timestamp const timestamp,
     uint8_t const componentIndex,
     ::util::logger::Level const level,
@@ -173,7 +171,7 @@ T EntrySerializer<T, Timestamp, ReadOnlyPredicate>::serialize(
 
 template<class T, class Timestamp, class ReadOnlyPredicate>
 void EntrySerializer<T, Timestamp, ReadOnlyPredicate>::deserialize(
-    ::estd::slice<uint8_t const> const& srcBuffer, IEntrySerializerCallback<Timestamp>& callback)
+    ::etl::span<uint8_t const> const& srcBuffer, IEntrySerializerCallback<Timestamp>& callback)
 {
     EntryReader reader(srcBuffer.data(), srcBuffer.data() + srcBuffer.size());
     Timestamp timestamp;
@@ -465,7 +463,7 @@ char const* EntrySerializer<T, Timestamp, ReadOnlyPredicate>::EntryReader::readC
 }
 
 template<class Timestamp>
-IEntrySerializerCallback<Timestamp>::IEntrySerializerCallback() : ::estd::uncopyable()
+IEntrySerializerCallback<Timestamp>::IEntrySerializerCallback() : ::etl::uncopyable()
 {}
 
 inline bool SectionPredicate::operator()(void const* const p) const

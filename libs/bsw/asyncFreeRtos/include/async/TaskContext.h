@@ -11,10 +11,9 @@
 #include "async/Types.h"
 
 #include <bsp/timer/SystemTimer.h>
+#include <etl/delegate.h>
+#include <etl/span.h>
 #include <timer/Timer.h>
-
-#include <estd/functional.h>
-#include <estd/slice.h>
 
 #include <FreeRTOS.h>
 #include <task.h>
@@ -35,9 +34,8 @@ template<class Binding>
 class TaskContext : public EventDispatcher<2U, LockType>
 {
 public:
-    using TaskFunctionType = ::estd::function<void(TaskContext<Binding>&)>;
-
-    using StackType = ::estd::slice<StackType_t>;
+    using TaskFunctionType = ::etl::delegate<void(TaskContext<Binding>&)>;
+    using StackType        = ::etl::span<StackType_t>;
 
     TaskContext();
 
@@ -206,7 +204,7 @@ void TaskContext<Binding>::createTask(
 {
     _context      = context;
     _name         = name;
-    _taskFunction = taskFunction.has_value()
+    _taskFunction = taskFunction.is_valid()
                         ? taskFunction
                         : TaskFunctionType::template create<&TaskContext::defaultTaskFunction>();
     _taskHandle   = xTaskCreateStatic(

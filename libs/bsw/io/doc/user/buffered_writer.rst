@@ -16,7 +16,7 @@ Properties
 * Internally the ``BufferedWriter`` manages slices of ``destination.maxSize()`` bytes and
   provides subslices of it to the user.
 * Call to ``flush()`` required to commit currently buffered data.
-* **Memory consumption**: ``sizeof(::io::IWriter&) + sizeof(::estd::slice<uint8_t>) + sizeof(size_t)``
+* **Memory consumption**: ``sizeof(::io::IWriter&) + sizeof(::etl::span<uint8_t>) + sizeof(size_t)``
 
 Public API
 ----------

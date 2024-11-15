@@ -2,17 +2,18 @@
 
 #pragma once
 
-#include "estd/singleton.h"
 #include "interrupts/disableEnableAllInterrupts.h"
+
+#include <etl/singleton_base.h>
 
 #include <gmock/gmock.h>
 
 namespace interrupts
 {
-class DisableEnableAllInterruptsMock : public ::estd::singleton<DisableEnableAllInterruptsMock>
+class DisableEnableAllInterruptsMock : public ::etl::singleton_base<DisableEnableAllInterruptsMock>
 {
 public:
-    DisableEnableAllInterruptsMock() : ::estd::singleton<DisableEnableAllInterruptsMock>(*this)
+    DisableEnableAllInterruptsMock() : ::etl::singleton_base<DisableEnableAllInterruptsMock>(*this)
     {
         EXPECT_EQ(disableAllInterruptsCount, enableAllInterruptsCount);
         disableAllInterruptsCount = 0U;

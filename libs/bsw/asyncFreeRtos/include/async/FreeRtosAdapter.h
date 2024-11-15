@@ -8,8 +8,7 @@
 #include "async/TaskContext.h"
 #include "async/TaskInitializer.h"
 
-#include <estd/array.h>
-#include <estd/singleton.h>
+#include <etl/array.h>
 
 namespace async
 {
@@ -34,7 +33,7 @@ public:
     static TaskConfigType const* getTaskConfig(size_t taskIdx);
 
 private:
-    static ::estd::array<TaskConfigType, N> _taskConfigs;
+    static ::etl::array<TaskConfigType, N> _taskConfigs;
 };
 
 template<size_t N>
@@ -211,8 +210,8 @@ private:
 
     static TaskInitializer* _idleTaskInitializer;
     static TaskInitializer* _timerTaskInitializer;
-    static ::estd::array<TaskContextType, TASK_COUNT> _taskContexts;
-    static ::estd::array<uint32_t, FREERTOS_TASK_COUNT> _stackSizes;
+    static ::etl::array<TaskContextType, TASK_COUNT> _taskContexts;
+    static ::etl::array<uint32_t, FREERTOS_TASK_COUNT> _stackSizes;
     static char const* _timerTaskName;
     static BaseType_t _higherPriorityTaskWokenFlag;
     static BaseType_t* _higherPriorityTaskWoken;
@@ -229,11 +228,11 @@ template<class Binding>
 typename FreeRtosAdapter<Binding>::TaskInitializer* FreeRtosAdapter<Binding>::_timerTaskInitializer
     = nullptr;
 template<class Binding>
-::estd::
+::etl::
     array<typename FreeRtosAdapter<Binding>::TaskContextType, FreeRtosAdapter<Binding>::TASK_COUNT>
         FreeRtosAdapter<Binding>::_taskContexts;
 template<class Binding>
-::estd::array<uint32_t, FreeRtosAdapter<Binding>::FREERTOS_TASK_COUNT>
+::etl::array<uint32_t, FreeRtosAdapter<Binding>::FREERTOS_TASK_COUNT>
     FreeRtosAdapter<Binding>::_stackSizes;
 template<class Binding>
 char const* FreeRtosAdapter<Binding>::_timerTaskName;
@@ -458,7 +457,7 @@ FreeRtosAdapter<Binding>::StackUsage::StackUsage() : _stackSize(0U), _usedSize(0
 namespace internal
 {
 template<size_t N, typename TaskConfig>
-::estd::array<TaskConfig, N> TaskConfigHolder<N, TaskConfig>::_taskConfigs;
+::etl::array<TaskConfig, N> TaskConfigHolder<N, TaskConfig>::_taskConfigs;
 
 template<size_t N, typename TaskConfig>
 void TaskConfigHolder<N, TaskConfig>::setTaskConfig(

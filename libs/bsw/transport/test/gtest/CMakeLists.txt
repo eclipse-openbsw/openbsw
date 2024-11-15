@@ -16,6 +16,7 @@ target_link_libraries(
             asyncMockImpl
             gmock_main
             transportMock
-            utilMock)
+            utilMock
+            etl)
 
 gtest_discover_tests(transportTest PROPERTIES LABELS "transportTest")

@@ -13,6 +13,7 @@
 #include <docan/datalink/DoCanFrameCodec.h>
 #include <docan/transmitter/IDoCanTickGenerator.h>
 #include <docan/transport/DoCanTransportLayerContainer.h>
+#include <etl/vector.h>
 #include <lifecycle/AsyncLifecycleComponent.h>
 
 namespace can
@@ -100,7 +101,7 @@ private:
     ::docan::DoCanParameters _parameters;
     ::docan::declare::DoCanTransportLayerConfig<DataLinkLayerType, 80U, 15U, 64U>
         _transportLayerConfig;
-    ::estd::declare::vector<DoCanPhysicalCanTransceiver<AddressingType>, NUM_CAN_TRANSPORT_LAYERS>
+    ::etl::vector<DoCanPhysicalCanTransceiver<AddressingType>, NUM_CAN_TRANSPORT_LAYERS>
         _physicalTransceivers;
     TransportLayers _transportLayers;
     TickGeneratorRunnableAdapter _tickGenerator;

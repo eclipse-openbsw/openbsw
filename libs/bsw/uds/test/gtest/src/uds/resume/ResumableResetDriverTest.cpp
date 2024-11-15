@@ -9,8 +9,6 @@
 #include <async/AsyncMock.h>
 #include <async/TestContext.h>
 
-#include <estd/assert.h>
-
 #include <gtest/esr_extensions.h>
 #include <gtest/gtest.h>
 

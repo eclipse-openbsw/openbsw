@@ -4,7 +4,7 @@
 
 #include "docan/datalink/DoCanDataLinkLayer.h"
 
-#include <estd/functional.h>
+#include <etl/delegate.h>
 
 #include <gmock/gmock.h>
 
@@ -19,7 +19,7 @@ uint32_t systemUs() { return 0; }
 TEST(DoCanTransportLayerConfigTest, testConstructedParametersAndSetter)
 {
     DoCanParameters parameters(
-        ::estd::function<decltype(systemUs)>::create<&systemUs>(),
+        ::etl::delegate<decltype(systemUs)>::create<&systemUs>(),
         23425,
         3543,
         1232,
@@ -29,11 +29,11 @@ TEST(DoCanTransportLayerConfigTest, testConstructedParametersAndSetter)
         750,
         122);
     ::docan::declare::DoCanTransportLayerConfig<DataLinkLayerType, 2U, 3U, 64U> cut(parameters);
-    EXPECT_EQ(2U, cut.getMessageReceiverPool().size());
-    EXPECT_EQ(3U, cut.getMessageTransmitterPool().size());
+    EXPECT_EQ(2U, cut.getMessageReceiverPool().max_size());
+    EXPECT_EQ(3U, cut.getMessageTransmitterPool().max_size());
     EXPECT_EQ(
         sizeof(::docan::declare::DoCanMessageReceiver<DataLinkLayerType, 64U>),
-        cut.getMessageReceiverPool().block_size());
+        cut.getMessageReceiverPool().max_item_size());
     EXPECT_EQ(&parameters, &cut.getParameters());
 }
 

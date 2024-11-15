@@ -6,7 +6,7 @@
 #include "docan/receiver/DoCanMessageReceiver.h"
 #include "docan/transmitter/DoCanMessageTransmitter.h"
 
-#include <util/estd/block_pool.h>
+#include <etl/generic_pool.h>
 
 namespace docan
 {
@@ -25,20 +25,20 @@ public:
      * \param parameters reference to parameters
      */
     DoCanTransportLayerConfig(
-        ::util::estd::block_pool& messageReceiverPool,
-        ::util::estd::block_pool& messageTransmitterPool,
+        ::etl::ipool& messageReceiverPool,
+        ::etl::ipool& messageTransmitterPool,
         DoCanParameters const& parameters);
 
     /**
      * Get message receiver pool.
      * \return reference to receiver pool
      */
-    ::util::estd::block_pool& getMessageReceiverPool() const;
+    ::etl::ipool& getMessageReceiverPool() const;
     /**
      * Get message transmitter pool.
      * \return reference to transmitter pool
      */
-    ::util::estd::block_pool& getMessageTransmitterPool() const;
+    ::etl::ipool& getMessageTransmitterPool() const;
     /**
      * Get access to parameters.
      * \return reference to parameters
@@ -46,8 +46,8 @@ public:
     DoCanParameters const& getParameters() const;
 
 private:
-    ::util::estd::block_pool& _messageReceiverPool;
-    ::util::estd::block_pool& _messageTransmitterPool;
+    ::etl::ipool& _messageReceiverPool;
+    ::etl::ipool& _messageTransmitterPool;
     DoCanParameters const& _parameters;
 };
 
@@ -65,12 +65,10 @@ public:
     explicit DoCanTransportLayerConfig(DoCanParameters const& parameters);
 
 private:
-    ::util::estd::declare::block_pool<
-        RxCount,
-        sizeof(::docan::declare::DoCanMessageReceiver<DataLinkLayer, MaxFrameSize>)>
-        _messageReceiverPool;
-    ::util::estd::declare::block_pool<TxCount, sizeof(DoCanMessageTransmitter<DataLinkLayer>)>
-        _messageTransmitterPool;
+    using RxType = ::docan::declare::DoCanMessageReceiver<DataLinkLayer, MaxFrameSize>;
+    using TxType = DoCanMessageTransmitter<DataLinkLayer>;
+    ::etl::generic_pool<sizeof(RxType), alignof(RxType), RxCount> _messageReceiverPool;
+    ::etl::generic_pool<sizeof(TxType), alignof(TxType), TxCount> _messageTransmitterPool;
 };
 } // namespace declare
 
@@ -79,8 +77,8 @@ private:
  */
 template<class DataLinkLayer>
 inline DoCanTransportLayerConfig<DataLinkLayer>::DoCanTransportLayerConfig(
-    ::util::estd::block_pool& messageReceiverPool,
-    ::util::estd::block_pool& messageTransmitterPool,
+    ::etl::ipool& messageReceiverPool,
+    ::etl::ipool& messageTransmitterPool,
     DoCanParameters const& parameters)
 : _messageReceiverPool(messageReceiverPool)
 , _messageTransmitterPool(messageTransmitterPool)
@@ -88,15 +86,13 @@ inline DoCanTransportLayerConfig<DataLinkLayer>::DoCanTransportLayerConfig(
 {}
 
 template<class DataLinkLayer>
-inline ::util::estd::block_pool&
-DoCanTransportLayerConfig<DataLinkLayer>::getMessageReceiverPool() const
+inline ::etl::ipool& DoCanTransportLayerConfig<DataLinkLayer>::getMessageReceiverPool() const
 {
     return _messageReceiverPool;
 }
 
 template<class DataLinkLayer>
-inline ::util::estd::block_pool&
-DoCanTransportLayerConfig<DataLinkLayer>::getMessageTransmitterPool() const
+inline ::etl::ipool& DoCanTransportLayerConfig<DataLinkLayer>::getMessageTransmitterPool() const
 {
     return _messageTransmitterPool;
 }

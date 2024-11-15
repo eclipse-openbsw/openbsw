@@ -4,8 +4,6 @@
  * Contains a UDS integration test.
  */
 #include "common/busid/BusId.h"
-#include "estd/array.h"
-#include "estd/function_mock.h"
 #include "transport/AbstractTransportLayerMock.h"
 #include "transport/TransportConfiguration.h"
 #include "transport/TransportMessage.h"
@@ -30,12 +28,14 @@
 #include "uds/session/ApplicationDefaultSession.h"
 #include "uds/session/ApplicationExtendedSession.h"
 #include "uds/session/DiagSessionManagerMock.h"
+#include "util/estd/function_mock.h"
 #include "util/logger/ComponentMappingMock.h"
 #include "util/logger/Logger.h"
 #include "util/logger/LoggerOutputMock.h"
 
 #include <async/AsyncMock.h>
 #include <async/TestContext.h>
+#include <etl/array.h>
 
 #include <gmock/gmock.h>
 #include <gtest/esr_extensions.h>
@@ -362,6 +362,8 @@ TEST_F(UdsIntegration, positive_response)
 
     EXPECT_CALL(_messageProvider, releaseTransportMessage(SameAddress(pMessage)));
 
+    ASSERT_NE(pMessage, nullptr);
+
     pProcessedListener->transportMessageProcessed(
         *pMessage,
         transport::ITransportMessageProcessedListener::ProcessingResult::PROCESSED_NO_ERROR);
@@ -439,7 +441,7 @@ TEST_F(UdsIntegration, no_response_for_7f)
         .WillRepeatedly(
             Return(transport::ITransportMessageProvider::ErrorCode::TPMSG_NOT_RESPONSIBLE));
 
-    transport::TransportJob& response1 = _udsConfiguration.SendJobQueue.push();
+    transport::TransportJob& response1 = _udsConfiguration.SendJobQueue.emplace();
 
     response1.setTransportMessage(transportMessage);
     response1.setProcessedListener(&_udsDispatcher);
@@ -517,7 +519,7 @@ TEST_F(UdsIntegration, negative_response_request_out_of_range_in_wrong_session)
 TEST_F(UdsIntegration, OutgoingDiagConnection_sendEcuReset_expect_OK_status)
 {
     transport::TransportMessage message;
-    ::estd::array<uint8_t, 9> requestBuffer;
+    ::etl::array<uint8_t, 9> requestBuffer;
     message.init(requestBuffer.data(), requestBuffer.size());
     transport::TransportMessage* pMessage = &message;
 
@@ -542,12 +544,12 @@ TEST_F(
 expect_OK_status)
 {
     transport::TransportMessage message;
-    ::estd::array<uint8_t, 9> requestBuffer;
+    ::etl::array<uint8_t, 9> requestBuffer;
     message.init(requestBuffer.data(), requestBuffer.size());
     transport::TransportMessage* pMessage = &message;
 
     transport::TransportMessage message2;
-    ::estd::array<uint8_t, 9> requestBuffer2;
+    ::etl::array<uint8_t, 9> requestBuffer2;
     message2.init(requestBuffer2.data(), requestBuffer2.size());
     transport::TransportMessage* pMessage2 = &message2;
 
@@ -592,7 +594,7 @@ TEST_F(
     create_OutgoingDiagConnection_sendEcuReset_check_if_message_is_received_expect_TP_SEND_FAIL)
 {
     transport::TransportMessage message;
-    ::estd::array<uint8_t, 9> requestBuffer;
+    ::etl::array<uint8_t, 9> requestBuffer;
     message.init(requestBuffer.data(), requestBuffer.size());
     transport::TransportMessage* pMessage = &message;
 
@@ -717,7 +719,7 @@ TEST_F(
 
     TransportMessageWithBuffer pRequest(0xF1U, 0xDFU, buffer, sizeof(expectedResponse));
 
-    _udsConfiguration.SendJobQueue.push();
+    _udsConfiguration.SendJobQueue.emplace();
 
     EXPECT_EQ(
         transport::AbstractTransportLayer::ErrorCode::TP_QUEUE_FULL,
@@ -766,7 +768,7 @@ TEST_F(UdsIntegration, dispatchTriggerEventRequest_returns_1_if_jobQueue_is_full
 
     TransportMessageWithBuffer transportMessage(0xF1U, 0x10U, buffer, sizeof(expectedResponse));
 
-    _udsConfiguration.SendJobQueue.push();
+    _udsConfiguration.SendJobQueue.emplace();
 
     EXPECT_EQ(1, _udsDispatcher.dispatchTriggerEventRequest(*transportMessage));
 }
@@ -799,7 +801,7 @@ TEST_F(
     TransportMessageWithBuffer transportMessage(0xF1U, 0x10U, buffer, sizeof(expectedResponse));
 
     transport::TransportMessage message;
-    ::estd::array<uint8_t, 9> requestBuffer;
+    ::etl::array<uint8_t, 9> requestBuffer;
     message.init(requestBuffer.data(), requestBuffer.size());
     transport::TransportMessage* pMessage = &message;
 
@@ -836,7 +838,7 @@ TEST_F(
     TransportMessageWithBuffer transportMessage(0xF1U, 0x10U, buffer, sizeof(expectedResponse));
 
     transport::TransportMessage message;
-    ::estd::array<uint8_t, 9> requestBuffer;
+    ::etl::array<uint8_t, 9> requestBuffer;
     message.init(requestBuffer.data(), requestBuffer.size());
     transport::TransportMessage* pMessage = &message;
 
@@ -915,7 +917,7 @@ TEST_F(UdsIntegration, dispatchIncomingRequest_returns_earlier_if_request_comes_
     transportMessage.setTargetId(transport::TransportMessage::INVALID_ADDRESS);
 
     transport::TransportMessage message;
-    ::estd::array<uint8_t, 9> requestBuffer;
+    ::etl::array<uint8_t, 9> requestBuffer;
     message.init(requestBuffer.data(), requestBuffer.size());
     transport::TransportMessage* pMessage = &message;
 
@@ -924,7 +926,7 @@ TEST_F(UdsIntegration, dispatchIncomingRequest_returns_earlier_if_request_comes_
             SetArgReferee<5>(pMessage),
             Return(transport::ITransportMessageProvider::ErrorCode::TPMSG_OK)));
 
-    transport::TransportJob& response1 = _udsConfiguration.SendJobQueue.push();
+    transport::TransportJob& response1 = _udsConfiguration.SendJobQueue.emplace();
     response1.setTransportMessage(transportMessage);
     response1.setProcessedListener(&_udsDispatcher);
 
@@ -947,7 +949,7 @@ TEST_F(
     EXPECT_CALL(_messageProvider, getTransportMessage(_, _, _, _, _, _))
         .WillRepeatedly(Return(transport::ITransportMessageProvider::ErrorCode::TPMSG_OK));
 
-    transport::TransportJob& response1 = _udsConfiguration.SendJobQueue.push();
+    transport::TransportJob& response1 = _udsConfiguration.SendJobQueue.emplace();
 
     response1.setTransportMessage(transportMessage);
     response1.setProcessedListener(&_udsDispatcher);
@@ -978,7 +980,7 @@ TEST_F(
         .WillRepeatedly(
             Return(transport::ITransportMessageProvider::ErrorCode::TPMSG_NOT_RESPONSIBLE));
 
-    transport::TransportJob& response1 = _udsConfiguration.SendJobQueue.push();
+    transport::TransportJob& response1 = _udsConfiguration.SendJobQueue.emplace();
 
     response1.setTransportMessage(transportMessage);
     response1.setProcessedListener(&_udsDispatcher);
@@ -1003,7 +1005,7 @@ TEST_F(UdsIntegration, dispatchIncomingRequest_setProcessedListener_if_no_one_wa
     transportMessage.setTargetId(0xDFU);
 
     transport::TransportMessage message;
-    ::estd::array<uint8_t, 9> requestBuffer;
+    ::etl::array<uint8_t, 9> requestBuffer;
     message.init(requestBuffer.data(), requestBuffer.size());
     transport::TransportMessage* pMessage = &message;
 
@@ -1012,7 +1014,7 @@ TEST_F(UdsIntegration, dispatchIncomingRequest_setProcessedListener_if_no_one_wa
             SetArgReferee<5>(pMessage),
             Return(transport::ITransportMessageProvider::ErrorCode::TPMSG_OK)));
 
-    transport::TransportJob& response1 = _udsConfiguration.SendJobQueue.push();
+    transport::TransportJob& response1 = _udsConfiguration.SendJobQueue.emplace();
 
     response1.setTransportMessage(transportMessage);
 
@@ -1040,7 +1042,7 @@ TEST_F(
     transportMessage.setTargetId(0xDFU);
 
     transport::TransportMessage message;
-    ::estd::array<uint8_t, 9> requestBuffer;
+    ::etl::array<uint8_t, 9> requestBuffer;
     message.init(requestBuffer.data(), requestBuffer.size());
     transport::TransportMessage* pMessage = &message;
 
@@ -1049,7 +1051,7 @@ TEST_F(
             SetArgReferee<5>(pMessage),
             Return(transport::ITransportMessageProvider::ErrorCode::TPMSG_OK)));
 
-    transport::TransportJob& response1 = _udsConfiguration.SendJobQueue.push();
+    transport::TransportJob& response1 = _udsConfiguration.SendJobQueue.emplace();
 
     response1.setProcessedListener(&_udsDispatcher);
     response1.setTransportMessage(transportMessage);
@@ -1081,7 +1083,7 @@ TEST_F(
         .WillRepeatedly(
             Return(transport::ITransportMessageProvider::ErrorCode::TPMSG_NOT_RESPONSIBLE));
 
-    transport::TransportJob& response1 = _udsConfiguration.SendJobQueue.push();
+    transport::TransportJob& response1 = _udsConfiguration.SendJobQueue.emplace();
 
     response1.setTransportMessage(transportMessage);
     response1.setProcessedListener(&_udsDispatcher);

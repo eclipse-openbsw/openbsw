@@ -4,7 +4,7 @@ target_include_directories(bspOutputPwmTest PRIVATE ../../include)
 
 target_link_libraries(
     bspOutputPwmTest
-    PRIVATE estd
+    PRIVATE etl
             bspDynamicClient
             utbspConfiguration
             utbspIo

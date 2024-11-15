@@ -11,7 +11,7 @@ target_include_directories(cpp2can PUBLIC include)
 
 target_link_libraries(
     cpp2can
-    PUBLIC common estd util
+    PUBLIC common etl util
     PRIVATE bsp bspInterrupts)
 
 if (BUILD_UNIT_TESTS)

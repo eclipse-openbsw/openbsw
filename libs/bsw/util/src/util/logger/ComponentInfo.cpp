@@ -4,7 +4,7 @@
 
 #ifndef LOGGER_NO_LEGACY_API
 
-#include <estd/assert.h>
+#include <util/estd/assert.h>
 
 namespace util
 {

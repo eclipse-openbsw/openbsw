@@ -2,7 +2,7 @@
 
 #include "util/crc/Crc.h"
 
-#include <estd/slice.h>
+#include <etl/span.h>
 
 #include <gmock/gmock.h>
 
@@ -16,7 +16,7 @@ TEST(CrcRegister, update_using_slice)
 
     // run test scenario
     Crc8 crcRegister;
-    crcRegister.update(::estd::make_slice(data));
+    crcRegister.update(::etl::span<uint8_t>(data));
 
     // assert expectations
     ASSERT_EQ(crcRegister.digest(), 0xF4U);

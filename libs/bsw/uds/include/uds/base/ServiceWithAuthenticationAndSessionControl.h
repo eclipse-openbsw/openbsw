@@ -2,7 +2,6 @@
 
 #pragma once
 
-#include "estd/uncopyable.h"
 #include "uds/base/ServiceWithAuthentication.h"
 
 namespace uds
@@ -17,8 +16,6 @@ class IDiagSessionManager;
  */
 class ServiceWithAuthenticationAndSessionControl : public ServiceWithAuthentication
 {
-    UNCOPYABLE(ServiceWithAuthenticationAndSessionControl);
-
 public:
     explicit ServiceWithAuthenticationAndSessionControl(
         IDiagAuthenticator const& authenticator,

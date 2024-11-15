@@ -6,17 +6,17 @@
 #pragma once
 
 #include "async/Async.h"
-#include "estd/functional.h"
-#include "estd/singleton.h"
+
+#include <etl/singleton_base.h>
 
 #include <gmock/gmock.h>
 
 namespace async
 {
-class TimeoutMock : public ::estd::singleton<TimeoutMock>
+class TimeoutMock : public ::etl::singleton_base<TimeoutMock>
 {
 public:
-    TimeoutMock() : ::estd::singleton<TimeoutMock>(*this) {}
+    TimeoutMock() : ::etl::singleton_base<TimeoutMock>(*this) {}
 
     MOCK_METHOD1(cancel, void(TimeoutType& timeout));
 };

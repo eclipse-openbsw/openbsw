@@ -5,6 +5,10 @@
 #include "async/Types.h"
 #include "async/util/Call.h"
 
+#include <etl/delegate.h>
+
+#include <cstdio>
+
 namespace asyncNewPlatform
 {
 // EXAMPLE_BEGIN AsyncImplExample
@@ -92,8 +96,8 @@ void exampleRunnableB() { printf("exampleRunnableB is called.\n"); }
 int main()
 {
     auto eventManager = asyncNewPlatform::AsyncImplExample();
-    async::Function runnableA(::estd::function<void()>::create<&exampleRunnableA>());
-    async::Function runnableB(::estd::function<void()>::create<&exampleRunnableB>());
+    async::Function runnableA(::etl::delegate<void()>::create<&exampleRunnableA>());
+    async::Function runnableB(::etl::delegate<void()>::create<&exampleRunnableB>());
     eventManager.setEventA();
     eventManager.setEventB();
     eventManager.execute(runnableA);

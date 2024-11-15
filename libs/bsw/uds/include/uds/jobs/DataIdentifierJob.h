@@ -2,7 +2,6 @@
 
 #pragma once
 
-#include "estd/uncopyable.h"
 #include "uds/base/AbstractDiagJob.h"
 
 namespace uds
@@ -19,8 +18,6 @@ namespace uds
  */
 class DataIdentifierJob : public AbstractDiagJob
 {
-    UNCOPYABLE(DataIdentifierJob);
-
 public:
     DataIdentifierJob(
         uint8_t const* const implementedRequest,

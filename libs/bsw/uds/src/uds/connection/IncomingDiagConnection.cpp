@@ -2,7 +2,6 @@
 
 #include "uds/connection/IncomingDiagConnection.h"
 
-#include "estd/assert.h"
 #include "platform/config.h"
 #include "transport/AbstractTransportLayer.h"
 #include "transport/ITransportMessageProvider.h"
@@ -14,8 +13,10 @@
 #include "uds/connection/NestedDiagRequest.h"
 #include "uds/connection/PositiveResponse.h"
 #include "uds/session/IDiagSessionManager.h"
+#include "util/estd/assert.h"
 
 #include <async/Async.h>
+#include <etl/span.h>
 
 using ::transport::AbstractTransportLayer;
 using ::transport::TransportConfiguration;
@@ -33,7 +34,7 @@ void IncomingDiagConnection::addIdentifier()
     {
         fNestedRequest->addIdentifier();
     }
-    else if ((nullptr != fpRequestMessage) && (fIdentifiers.size() < fIdentifiers.max_size))
+    else if ((nullptr != fpRequestMessage) && (fIdentifiers.size() < fIdentifiers.max_size()))
     {
         fIdentifiers.push_back(fpRequestMessage->getPayload()[fIdentifiers.size()]);
     }
@@ -188,10 +189,10 @@ DiagReturnCode::Type IncomingDiagConnection::startNestedRequest(
     fIdentifiers.resize(nestedRequest.getPrefixLength());
     nestedRequest.init(
         sender,
-        ::estd::slice<uint8_t>::from_pointer(
+        ::etl::span<uint8_t>(
             fpResponseMessage->getBuffer() + fIdentifiers.size(),
             fpResponseMessage->getBufferLength() - fIdentifiers.size()),
-        ::estd::slice<uint8_t const>::from_pointer(request, static_cast<size_t>(requestLength)));
+        ::etl::span<uint8_t const>(request, static_cast<size_t>(requestLength)));
     fNestedRequest = &nestedRequest;
     triggerNextNestedRequest();
     return DiagReturnCode::OK;
@@ -510,9 +511,9 @@ PositiveResponse& IncomingDiagConnection::releaseRequestGetResponse()
 {
     if (fNestedRequest != nullptr)
     {
-        fIsResponseActive                           = true;
-        ::estd::slice<uint8_t> const responseBuffer = fNestedRequest->getResponseBuffer();
-        uint8_t* const data                         = responseBuffer.data();
+        fIsResponseActive                         = true;
+        ::etl::span<uint8_t> const responseBuffer = fNestedRequest->getResponseBuffer();
+        uint8_t* const data                       = responseBuffer.data();
         fPositiveResponse.init(data, static_cast<uint16_t>(responseBuffer.size()));
     }
     else

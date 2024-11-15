@@ -2,11 +2,13 @@
 
 #include "async/AsyncMock.h"
 
+#include <etl/singleton_base.h>
+
 namespace async
 {
 void execute(ContextType const context, RunnableType& runnable)
 {
-    ::estd::singleton<AsyncMock>::instance().execute(context, runnable);
+    ::etl::singleton_base<AsyncMock>::instance().execute(context, runnable);
 }
 
 void schedule(
@@ -16,7 +18,7 @@ void schedule(
     uint32_t const delay,
     ::async::TimeUnitType const unit)
 {
-    ::estd::singleton<AsyncMock>::instance().schedule(context, runnable, timeout, delay, unit);
+    ::etl::singleton_base<AsyncMock>::instance().schedule(context, runnable, timeout, delay, unit);
 }
 
 void scheduleAtFixedRate(
@@ -26,7 +28,7 @@ void scheduleAtFixedRate(
     uint32_t const period,
     ::async::TimeUnitType const unit)
 {
-    ::estd::singleton<AsyncMock>::instance().scheduleAtFixedRate(
+    ::etl::singleton_base<AsyncMock>::instance().scheduleAtFixedRate(
         context, runnable, timeout, period, unit);
 }
 

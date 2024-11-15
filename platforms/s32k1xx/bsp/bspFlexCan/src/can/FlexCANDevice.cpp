@@ -8,8 +8,9 @@
 
 #include <bsp/timer/SystemTimer.h>
 #include <bsp/timer/isEqualAfterTimeout.h>
-
-#include <estd/big_endian.h>
+#include <etl/byte_stream.h>
+#include <etl/span.h>
+#include <etl/unaligned_type.h>
 
 #include <cassert>
 
@@ -17,19 +18,11 @@ using namespace can;
 
 namespace bios
 {
-namespace
-{
-inline uint32_t readMem32swap(uint32_t const buf)
-{
-    return ((buf & 0x000000ffUL) << 24) | ((buf & 0x0000ff00UL) << 8) | ((buf & 0x00ff0000UL) >> 8)
-           | ((buf & 0xff000000UL) >> 24);
-}
-} // namespace
 
 FlexCANDevice::FlexCANDevice(
     Config const& config,
     CanPhy& canPhy,
-    ::estd::function<void()> frameSentCallback,
+    ::etl::delegate<void()> frameSentCallback,
     IEcuPowerStateController& powerManager)
 : fConfig(config)
 , fPhy(canPhy)
@@ -287,13 +280,11 @@ uint8_t FlexCANDevice::enqueueRxFrame(
         }
         if (acceptRxFrame)
         {
-            can::CANFrame& frame = fRxQueue.push();
+            can::CANFrame& frame{fRxQueue.emplace(CanId::id(id, extended))};
             frame.setTimestamp(getSystemTimeUs32Bit());
-            frame.setId(CanId::id(id, extended));
             frame.setPayloadLength(length);
-            uint32_t* pData = reinterpret_cast<uint32_t*>(frame.getPayload());
-            pData[0]        = readMem32swap(payload[0]);
-            pData[1]        = readMem32swap(payload[1]);
+            etl::be_uint32_ext_t{frame.getPayload()}                            = payload[0];
+            etl::be_uint32_ext_t{frame.getPayload() + sizeof(etl::be_uint32_t)} = payload[1];
             return 1;
         }
     }
@@ -389,16 +380,23 @@ FlexCANDevice::transmit(CANFrame const& frame, uint8_t bufIdx, bool txInterruptN
                 messageBuffer(bufIdx).ID.B.ID_STD = CanId::rawId(frame.getId());
                 messageBuffer(bufIdx).FLAGS.B.IDE = 0;
             }
-            uint8_t const* pSrcData           = frame.getPayload();
-            messageBuffer(bufIdx).DATA.W[0]   = ::estd::read_be<uint32_t>(&pSrcData[0]);
-            messageBuffer(bufIdx).DATA.W[1]   = ::estd::read_be<uint32_t>(&pSrcData[4]);
-            messageBuffer(bufIdx).FLAGS.B.DLC = frame.getPayloadLength();
-            if (txInterruptNeeded)
+            if (frame.getPayloadLength() >= 8)
             {
-                enableTransmitInterrupt();
+                ::etl::byte_stream_reader byte_stream{frame.getPayload(), 8, etl::endian::big};
+                messageBuffer(bufIdx).DATA.W[0]   = byte_stream.read_unchecked<uint32_t>();
+                messageBuffer(bufIdx).DATA.W[1]   = byte_stream.read_unchecked<uint32_t>();
+                messageBuffer(bufIdx).FLAGS.B.DLC = frame.getPayloadLength();
+                if (txInterruptNeeded)
+                {
+                    enableTransmitInterrupt();
+                }
+                messageBuffer(bufIdx).FLAGS.B.CODE = CANTxBuffer::CODE_TRANSMIT;
+                return ICanTransceiver::ErrorCode::CAN_ERR_OK;
             }
-            messageBuffer(bufIdx).FLAGS.B.CODE = CANTxBuffer::CODE_TRANSMIT;
-            return ICanTransceiver::ErrorCode::CAN_ERR_OK;
+            else
+            {
+                return ICanTransceiver::ErrorCode::CAN_ERR_TX_FAIL;
+            }
         }
         else
         {

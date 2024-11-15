@@ -1,5 +1,7 @@
 #include "demo/DemoCommand.h"
 
+#include <cstdio>
+
 namespace demo
 {
 

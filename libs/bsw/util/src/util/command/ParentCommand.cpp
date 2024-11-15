@@ -20,12 +20,17 @@ ParentCommand::ParentCommand(char const* const id, char const* const description
 
 char const* ParentCommand::getDescription() const { return _description; }
 
-::estd::forward_list<ICommand> const& ParentCommand::getCommands() const { return _commands; }
+::etl::intrusive_forward_list<ICommand, ::etl::forward_link<0>> const&
+ParentCommand::getCommands() const
+{
+    return _commands;
+}
 
 ESR_NO_INLINE void ParentCommand::addCommand_local(ICommand& cmd)
 {
-    ::estd::forward_list<ICommand>::iterator prevIt;
-    ::estd::forward_list<ICommand>::iterator it = _commands.begin();
+    ::etl::intrusive_forward_list<ICommand, ::etl::forward_link<0>>::iterator prevIt;
+    ::etl::intrusive_forward_list<ICommand, ::etl::forward_link<0>>::iterator it
+        = _commands.begin();
     ConstString const id(cmd.getId());
     for (; (it != _commands.end()) && (id.compareIgnoreCase(ConstString(it->getId())) > 0); ++it)
     {

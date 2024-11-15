@@ -12,7 +12,7 @@ extern "C"
 {
 void disableAllInterrupts(void)
 {
-    if (::interrupts::DisableEnableAllInterruptsMock::instantiated())
+    if (::interrupts::DisableEnableAllInterruptsMock::is_valid())
     {
         ::interrupts::DisableEnableAllInterruptsMock::instance().disableAllInterrupts();
     }
@@ -24,7 +24,7 @@ void disableAllInterrupts(void)
 
 void enableAllInterrupts(void)
 {
-    if (::interrupts::DisableEnableAllInterruptsMock::instantiated())
+    if (::interrupts::DisableEnableAllInterruptsMock::is_valid())
     {
         ::interrupts::DisableEnableAllInterruptsMock::instance().enableAllInterrupts();
     }
@@ -36,7 +36,7 @@ void enableAllInterrupts(void)
 
 bool areInterruptsDisabled(void)
 {
-    if (::interrupts::DisableEnableAllInterruptsMock::instantiated())
+    if (::interrupts::DisableEnableAllInterruptsMock::is_valid())
     {
         return ::interrupts::DisableEnableAllInterruptsMock::instance().areInterruptsDisabled();
     }
@@ -47,7 +47,7 @@ bool areInterruptsDisabled(void)
 
 bool areInterruptsEnabled(void)
 {
-    if (::interrupts::DisableEnableAllInterruptsMock::instantiated())
+    if (::interrupts::DisableEnableAllInterruptsMock::is_valid())
     {
         return ::interrupts::DisableEnableAllInterruptsMock::instance().areInterruptsEnabled();
     }

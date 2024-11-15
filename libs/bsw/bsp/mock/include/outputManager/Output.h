@@ -3,15 +3,15 @@
 #pragma once
 
 #include <bsp/Bsp.h>
+#include <etl/singleton_base.h>
 
-#include <estd/singleton.h>
 #include <platform/estdint.h>
 
 #include <gmock/gmock.h>
 
 namespace bios
 {
-class Output : public ::estd::singleton<Output>
+class Output : public ::etl::singleton_base<Output>
 {
 public:
     // Api for all DynamicClients
@@ -31,7 +31,7 @@ public:
         MOCK_METHOD2(get, ::bsp::BspReturnCode(Output::OutputId, uint8_t));
     };
 
-    Output() : ::estd::singleton<Output>(*this) {}
+    Output() : ::etl::singleton_base<Output>(*this) {}
 
     static ::bsp::BspReturnCode set(OutputId a, uint8_t b)
     {

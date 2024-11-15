@@ -3,6 +3,8 @@
 #include "io/BufferedWriter.h"
 #include "io/MemoryQueue.h"
 
+#include <etl/memory.h>
+
 #include <gmock/gmock.h>
 
 namespace bufferedWriterExample
@@ -23,18 +25,18 @@ public:
     void operator()()
     {
         // Input format is: uint32_t id, payload.
-        ::estd::slice<uint8_t const> frame = _canFrameInput.peek();
+        ::etl::span<uint8_t const> frame = _canFrameInput.peek();
         while (frame.size() > 0)
         {
             // Output format is uint8_t size, uint32_t id, payload
-            ::estd::slice<uint8_t> dst = _udpOutput.allocate(frame.size() + 1);
+            ::etl::span<uint8_t> dst = _udpOutput.allocate(frame.size() + 1);
             if (dst.size() == 0)
             {
                 break;
             }
             // Format: uint8_t payload length, uint32_t id, payload
-            ::estd::memory::take<uint8_t>(dst) = frame.size();
-            ::estd::memory::copy(dst, frame);
+            dst[0] = frame.size();
+            ::etl::copy(frame, dst.subspan(1));
             _udpOutput.commit();
             _canFrameInput.release();
             frame = _canFrameInput.peek();

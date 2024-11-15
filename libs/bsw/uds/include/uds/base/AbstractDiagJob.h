@@ -6,8 +6,9 @@
 #include "uds/UdsConstants.h"
 #include "uds/session/DiagSession.h"
 
-#include <estd/assert.h>
-#include <estd/uncopyable.h>
+#include <etl/uncopyable.h>
+#include <util/estd/assert.h>
+
 #include <platform/estdint.h>
 
 namespace http
@@ -42,10 +43,8 @@ class DiagJobRoot;
  * A class ReadVIN would implement the request 0x22,0xF1,0x90 requiring 1 prefix
  * byte, i.e. 0x22. This byte could be provided by a ReadDataByIdentifier class.
  */
-class AbstractDiagJob
+class AbstractDiagJob : public ::etl::uncopyable
 {
-    UNCOPYABLE(AbstractDiagJob);
-
 public:
     using DiagSessionMask = DiagSession::DiagSessionMask;
 

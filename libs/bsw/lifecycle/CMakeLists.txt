@@ -10,7 +10,7 @@ add_library(
 
 target_include_directories(lifecycle PUBLIC include)
 
-target_link_libraries(lifecycle PUBLIC async util)
+target_link_libraries(lifecycle PUBLIC async util etl)
 
 if (BUILD_UNIT_TESTS)
 

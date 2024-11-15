@@ -6,23 +6,25 @@
 #include "async/TestContext.h"
 #include "async/TimeoutMock.h"
 
+#include <etl/singleton_base.h>
+
 namespace async
 {
-using ::estd::singleton;
+using ::etl::singleton_base;
 
 LockType::LockType()
 {
-    if (singleton<LockMock>::instantiated())
+    if (singleton_base<LockMock>::is_valid())
     {
-        singleton<LockMock>::instance().lock();
+        singleton_base<LockMock>::instance().lock();
     }
 }
 
 LockType::~LockType()
 {
-    if (singleton<LockMock>::instantiated())
+    if (singleton_base<LockMock>::is_valid())
     {
-        singleton<LockMock>::instance().unlock();
+        singleton_base<LockMock>::instance().unlock();
     }
 }
 
@@ -35,9 +37,9 @@ void ModifiableLockType::unlock()
     if (_isLocked)
     {
         _isLocked = false;
-        if (singleton<LockMock>::instantiated())
+        if (singleton_base<LockMock>::is_valid())
         {
-            singleton<LockMock>::instance().unlock();
+            singleton_base<LockMock>::instance().unlock();
         }
     }
 }
@@ -47,18 +49,18 @@ void ModifiableLockType::lock()
     if (!_isLocked)
     {
         _isLocked = true;
-        if (singleton<LockMock>::instantiated())
+        if (singleton_base<LockMock>::is_valid())
         {
-            singleton<LockMock>::instance().lock();
+            singleton_base<LockMock>::instance().lock();
         }
     }
 }
 
 void TimeoutType::cancel()
 {
-    if ((!TestContext::cancelTimeout(*this)) && singleton<TimeoutMock>::instantiated())
+    if ((!TestContext::cancelTimeout(*this)) && singleton_base<TimeoutMock>::is_valid())
     {
-        singleton<TimeoutMock>::instance().cancel(*this);
+        singleton_base<TimeoutMock>::instance().cancel(*this);
     }
 }
 

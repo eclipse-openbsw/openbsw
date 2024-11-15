@@ -2,7 +2,9 @@
 
 #include "util/stream/ByteBufferOutputStream.h"
 
-#include <estd/memory.h>
+#include <etl/memory.h>
+#include <etl/span.h>
+#include <etl/string_view.h>
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
@@ -14,7 +16,7 @@ using namespace ::util::stream;
 
 TEST(ByteBufferOutputStreamTest, isEofReportsTrueForByteBufferSinkWhichIsBasedOnABufferWithSizeZero)
 {
-    ::estd::slice<uint8_t> emptyBuffer;
+    ::etl::span<uint8_t> emptyBuffer;
     ByteBufferOutputStream stream(emptyBuffer);
 
     EXPECT_THAT(stream.isEof(), Eq(true));
@@ -39,7 +41,7 @@ TEST(ByteBufferOutputStreamTest, testGetBufferAndPosition)
     ASSERT_EQ(2U, stream.getPosition());
     stream.write(3);
     ASSERT_EQ(3U, stream.getPosition());
-    ::estd::slice<uint8_t const> readBuffer = stream.getBuffer();
+    ::etl::span<uint8_t const> readBuffer = stream.getBuffer();
     ASSERT_EQ(3U, readBuffer.size());
     for (size_t idx = 0; idx < readBuffer.size(); ++idx)
     {
@@ -123,13 +125,13 @@ TEST(ByteBufferOutputStreamTest, overflowIsReportedIfWriteAfterEof)
 TEST(ByteBufferOutputStreamTest, writeBufferWorksCorrectly)
 {
     uint8_t array[10];
-    ::estd::memory::set(array, 0xAF);
-    ByteBufferOutputStream stream(::estd::make_slice(array).subslice(6));
+    ::etl::mem_set(array, sizeof(array), static_cast<uint8_t>(0xAF));
+    ByteBufferOutputStream stream(::etl::span<uint8_t>(array).first(6));
 
     stream.write('T');
-    stream.write(::estd::make_str("abc"));
-    stream.write(::estd::make_str("bcd"));
-    stream.write(::estd::make_str("abc"));
+    stream.write_string_view(::etl::string_view("abc"));
+    stream.write_string_view(::etl::string_view("bcd"));
+    stream.write_string_view(::etl::string_view("abc"));
     ASSERT_EQ(10U, stream.getPosition());
 
     ASSERT_TRUE(stream.isEof());
@@ -141,7 +143,7 @@ TEST(ByteBufferOutputStreamTest, skipWorksSkippingAByte)
 {
     uint8_t const ARRAY_SIZE = 3U;
     uint8_t buffer[ARRAY_SIZE];
-    ::estd::memory::set(buffer, 3);
+    ::etl::mem_set(buffer, sizeof(buffer), static_cast<uint8_t>(3));
     ByteBufferOutputStream stream(buffer);
 
     stream.skip(1);
@@ -156,7 +158,7 @@ TEST(ByteBufferOutputStreamTest, skipWorksSkippingExactEofBytes)
 {
     uint8_t const ARRAY_SIZE = 3U;
     uint8_t buffer[ARRAY_SIZE];
-    ::estd::memory::set(buffer, 3);
+    ::etl::mem_set(buffer, sizeof(buffer), static_cast<uint8_t>(3));
     ByteBufferOutputStream stream(buffer);
 
     stream.write(1);
@@ -170,7 +172,7 @@ TEST(ByteBufferOutputStreamTest, skipWorksSkippingTooManyBytes)
 {
     uint8_t const ARRAY_SIZE = 3U;
     uint8_t buffer[ARRAY_SIZE];
-    ::estd::memory::set(buffer, 3);
+    ::etl::mem_set(buffer, sizeof(buffer), static_cast<uint8_t>(3));
     ByteBufferOutputStream stream(buffer);
 
     stream.write(1);

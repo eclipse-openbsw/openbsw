@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include <estd/forward_list.h>
+#include <etl/intrusive_list.h>
 
 namespace uds
 {
@@ -15,7 +15,7 @@ class IncomingDiagConnection;
 class IAsyncDiagHelper
 {
 public:
-    class StoredRequest : public ::estd::forward_list_node<StoredRequest>
+    class StoredRequest : public ::etl::bidirectional_link<0>
     {
     public:
         StoredRequest(

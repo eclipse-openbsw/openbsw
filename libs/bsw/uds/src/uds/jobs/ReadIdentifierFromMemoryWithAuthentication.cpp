@@ -17,14 +17,14 @@ ReadIdentifierFromMemoryWithAuthentication::ReadIdentifierFromMemoryWithAuthenti
 : ReadIdentifierFromMemoryWithAuthentication(
     authenticator,
     identifier,
-    ::estd::slice<uint8_t const>::from_pointer(responseData, responseLength),
+    ::etl::span<uint8_t const>(responseData, responseLength),
     sessionMask)
 {}
 
 ReadIdentifierFromMemoryWithAuthentication::ReadIdentifierFromMemoryWithAuthentication(
     IDiagAuthenticator const& authenticator,
     uint16_t const identifier,
-    ::estd::slice<uint8_t const> const& responseData,
+    ::etl::span<uint8_t const> const& responseData,
     DiagSessionMask const sessionMask)
 : ReadIdentifierFromMemory(identifier, responseData, sessionMask), _authenticator{authenticator}
 {}
