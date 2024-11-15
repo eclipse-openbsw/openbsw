@@ -66,7 +66,7 @@ ConstString CommandContext::scanIdentifierToken()
     return ConstString();
 }
 
-::estd::slice<uint8_t> CommandContext::scanByteBufferToken(::estd::slice<uint8_t> const& buf)
+::etl::span<uint8_t> CommandContext::scanByteBufferToken(::etl::span<uint8_t> const& buf)
 {
     char const* const start = _current;
     uint32_t pos            = 0U;
@@ -97,10 +97,10 @@ ConstString CommandContext::scanIdentifierToken()
     }
     if (check((_current != start) && ignoreWhitespace(), ICommand::Result::BAD_TOKEN))
     {
-        return buf.subslice(pos);
+        return buf.first(pos);
     }
 
-    return ::estd::slice<uint8_t>();
+    return ::etl::span<uint8_t>();
 }
 
 bool CommandContext::checkEol()

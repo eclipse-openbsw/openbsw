@@ -7,8 +7,6 @@
 
 #include "async/Async.h"
 
-#include <estd/forward_list.h>
-
 namespace async
 {
 class TestContext

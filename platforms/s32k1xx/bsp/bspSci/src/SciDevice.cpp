@@ -4,7 +4,6 @@
 
 #include "bsp/clock/boardClock.h"
 #include "bsp/sci/sciConfiguration.h"
-#include "estd/assert.h"
 #include "mcu/mcu.h"
 
 extern "C"

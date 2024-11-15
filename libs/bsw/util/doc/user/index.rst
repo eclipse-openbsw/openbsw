@@ -17,11 +17,12 @@ application code and is subject to update and expansion.
 Submodules
 ----------
 
+-  :ref:`util::assert <util_assert>`- assert
 -  :ref:`util::command <util_command>` - command framework
 -  :ref:`util::crc <util_crc>` - cyclic redundancy check
+-  :ref:`util::estd <util_estd>` - extensions for ETL
 -  :ref:`util::format <util_format>` - `printf`-like string formatting
 -  :ref:`util::defere <util_defer>` - deferred function execution
--  :ref:`util::estd <util_estd>` - :ref:`estd <estd>` extensions
 -  :ref:`util::logger <util_logger>` - logging functionality
 -  :ref:`util::memory <util_memory>` - memory management
 -  :ref:`util::meta <util_meta>` - miscellaneous
@@ -31,11 +32,12 @@ Submodules
 .. toctree::
    :hidden:
 
+   assert <assert>
    command <command>
    crc <crc>
+   estd <estd>
    format <format>
    defer <defer>
-   estd <estd>
    logger <logger>
    memory <memory>
    meta <meta>

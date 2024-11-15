@@ -7,8 +7,8 @@
 #include <bsp/can/canTransceiver/CanPhy.h>
 #include <bsp/power/IEcuPowerStateController.h>
 #include <can/transceiver/AbstractCANTransceiver.h>
-
-#include <estd/uncopyable.h>
+#include <etl/delegate.h>
+#include <etl/uncopyable.h>
 
 #include <gmock/gmock.h>
 
@@ -16,10 +16,8 @@ namespace bios
 {
 class CanPhyMock;
 
-class FlexCANDevice
+class FlexCANDevice : public ::etl::uncopyable
 {
-    UNCOPYABLE(FlexCANDevice);
-
 public:
     struct Config
     {
@@ -46,7 +44,7 @@ public:
     FlexCANDevice(
         Config const& config,
         CanPhy& canPhy,
-        ::estd::function<void()> frameSentCallback,
+        ::etl::delegate<void()> frameSentCallback,
         IEcuPowerStateController& powerManager)
     :
 
@@ -109,7 +107,7 @@ public:
     IEcuPowerStateController& fPowerManager;
     Config const& fConfig;
     CanPhy& fPhy;
-    ::estd::function<void()> fFrameSentCallback;
+    ::etl::delegate<void()> fFrameSentCallback;
 };
 
 } // namespace bios

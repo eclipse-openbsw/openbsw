@@ -2,9 +2,9 @@
 
 #include "uds/connection/PositiveResponse.h"
 
-#include <estd/assert.h>
-#include <estd/big_endian.h>
-#include <estd/memory.h>
+#include <etl/memory.h>
+#include <etl/unaligned_type.h>
+#include <util/estd/assert.h>
 
 #include <cstring>
 
@@ -14,7 +14,7 @@ void PositiveResponse::init(uint8_t* const buffer, size_t const maximumLength)
 {
     fIsOverflow     = false;
     // Store the original pointer and length in fOriginalBuffer
-    fOriginalBuffer = ::estd::slice<uint8_t>::from_pointer(buffer, maximumLength);
+    fOriginalBuffer = ::etl::span<uint8_t>(buffer, maximumLength);
     reset();
 }
 
@@ -29,33 +29,34 @@ bool PositiveResponse::appendUint8(uint8_t const data) { return appendData(&data
 
 bool PositiveResponse::appendUint16(uint16_t const data)
 {
-    auto const v = ::estd::be_uint16_t::make(data);
-    return appendData(v.bytes, 2) == 2;
+    auto const v = ::etl::be_uint16_t(data);
+    return appendData(v.data(), 2) == 2;
 }
 
 bool PositiveResponse::appendUint24(uint32_t const data)
 {
-    auto const v = ::estd::be_uint24_t::make(data);
-    return appendData(v.bytes, 3) == 3;
+    auto const v = ::etl::be_uint32_t(data);
+    return appendData(v.data() + 1, 3) == 3;
 }
 
 bool PositiveResponse::appendUint32(uint32_t const data)
 {
-    auto const v = ::estd::be_uint32_t::make(data);
-    return appendData(v.bytes, 4) == 4;
+    auto const v = ::etl::be_uint32_t(data);
+    return appendData(v.data(), 4) == 4;
 }
 
 size_t PositiveResponse::appendData(uint8_t const* const data, size_t const length)
 {
-    auto const sourceData = ::estd::slice<uint8_t const>::from_pointer(data, length);
+    auto const sourceData = ::etl::span<uint8_t const>(data, length);
     if (fBuffer.size() < sourceData.size())
     {
         fIsOverflow = true;
         return 0;
     }
-    auto const result = ::estd::memory::copy(fBuffer, sourceData);
-    fBuffer.advance(result.size());
-    return static_cast<uint16_t>(result.size());
+    // failing case of ::etl::copy already handled above
+    (void)::etl::copy(sourceData, fBuffer);
+    fBuffer.advance(sourceData.size());
+    return sourceData.size();
 }
 
 size_t PositiveResponse::getMaximumLength() const { return fOriginalBuffer.size(); }

@@ -6,7 +6,7 @@
 
 #include <gtest/gtest.h>
 
-using namespace ::estd;
+using namespace ::etl;
 using namespace ::util;
 using namespace ::logger;
 
