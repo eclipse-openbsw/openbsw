@@ -9,8 +9,6 @@
 
 #include <uds/UdsLogger.h>
 
-#include <estd/type_traits.h>
-
 namespace uds
 {
 using ::util::logger::Logger;
@@ -26,7 +24,7 @@ UdsSystem::UdsSystem(
     ::async::ContextType context,
     uint16_t udsAddress)
 : AsyncLifecycleComponent()
-, ::estd::singleton<UdsSystem>(*this)
+, ::etl::singleton_base<UdsSystem>(*this)
 , _udsLifecycleConnector(lManager)
 , _transportSystem(transportSystem)
 , _jobRoot()
