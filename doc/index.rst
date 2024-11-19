@@ -63,11 +63,48 @@ This is how to build and run the unit tests from the root of the workspace:
 
 .. code-block:: bash
 
-   cmake -B cmake-build-unit-tests -S executables/unitTest -DBUILD_UNIT_TESTS=ON
+   cmake -B cmake-build-unit-tests -S executables/unitTest -DBUILD_UNIT_TESTS=ON -DCMAKE_BUILD_TYPE=Debug
    cmake --build cmake-build-unit-tests -j
    ctest --test-dir cmake-build-unit-tests -j
    # if you modified some CMakeLists.txt files in the project don't forget to run:
    cmake-format -i $(find . -name CMakeLists.txt | sed '/3rdparty\/.*\/CMakeLists\.txt/d')
+
+Code coverage
++++++++++++++
+
+Code coverage is a metric that measures the percentage of code executed during testing, helping
+assess the effectiveness of tests and identify untested areas.
+This helps developers identify untested areas of the code, optimize test cases, and improve overall
+software quality.
+
+**GCOV** is a coverage testing tool that comes with GCC and is used to collect and analyze code
+coverage data during the execution of test cases. It generates reports showing which parts of the
+code have been executed, including line, branch, and function coverage.
+
+**LCOV** is an extension of GCOV that enhances its functionality by providing more user-friendly
+reports, typically in HTML format. While GCOV generates raw coverage data, LCOV collects and
+processes this data to produce graphical, easy-to-read coverage summaries, helping developers
+visualize and analyze the results more effectively.
+
+.. code-block:: bash
+
+   # capture the coverage
+   lcov --capture --directory . \
+    --output-file cmake-build-unit-tests/coverage_unfiltered.info
+   # filter out the coverage of 3rd party googletest module as it is not used on target and
+   # also coverage for mocks
+   lcov --remove cmake-build-unit-tests/coverage_unfiltered.info \
+    '*libs/3rdparty/googletest/*' \
+    '*/mock/*' \
+    '*/gmock/*' \
+    --output-file cmake-build-unit-tests/coverage.info
+   # create a HTML report
+   genhtml cmake-build-unit-tests/coverage.info \
+    --output-directory cmake-build-unit-tests/coverage
+
+.. note::
+
+    lcov can be installed with ``sudo apt install lcov``
 
 Explore the code
 ----------------
@@ -88,6 +125,8 @@ Also refer to the beginners guide pages below:
 * :ref:`learning_console`
 * :ref:`learning_lifecycle`
 
+Eclipse OpenBSW is a trademark of the Eclipse Foundation.
+
 .. toctree::
     :maxdepth: 1
     :caption: Learning
@@ -95,7 +134,7 @@ Also refer to the beginners guide pages below:
     :hidden:
 
     learning/overview
-    learning/SysTest/Testing Guide
+    learning/SysTest/HW_Testing_Guide
     ../tools/UdsTool/doc/index
     codingGuidelines/index
 

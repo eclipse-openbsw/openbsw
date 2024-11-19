@@ -57,7 +57,7 @@ Third party code shall be taken with the same care as self-written code. This me
 warnings must also be fixed in third party code if possible or handled otherwise.
 
 Code Analysis Tools
---------------------
+-------------------
 
 Use static and dynamic analysis tools to detect and eliminate additional security flaws.
 

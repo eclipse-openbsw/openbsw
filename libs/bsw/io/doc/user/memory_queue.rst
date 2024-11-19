@@ -180,7 +180,7 @@ The public API of ``MemoryQueueWriter`` is the same as for :ref:`io_IWriter`:
     :dedent: 4
 
 Statistics
-**********
+~~~~~~~~~~
 
 ``MemoryQueueWriter``` provides an `minAvailable()` and `resetMinAvailable()` as a way to gather
 statistics about the queue's usage.
@@ -217,7 +217,7 @@ Usage Example
 
 The above example using ``MemoryQueueWriter`` and ``MemoryQueueReader`` would look like this:
 
-.. sourceinclude:: examples/memory_queue.cpp
+.. sourceinclude:: examples/MemoryQueueExample.cpp
     :start-after: EXAMPLE_BEGIN IWriterIReader
     :end-before: EXAMPLE_END IWriterIReader
     :emphasize-lines: 7
@@ -225,7 +225,7 @@ The above example using ``MemoryQueueWriter`` and ``MemoryQueueReader`` would lo
 
 And the setup code could look like this:
 
-.. sourceinclude:: examples/memory_queue.cpp
+.. sourceinclude:: examples/MemoryQueueExample.cpp
     :start-after: EXAMPLE_BEGIN IWriterIReader2
     :end-before: EXAMPLE_END IWriterIReader2
     :emphasize-lines: 2,3,6,7,8,9,18
@@ -310,7 +310,7 @@ Usage Example
 As ``MemoryQueue`` is a class template, user code might also become templated code as shown in the
 following example:
 
-.. sourceinclude:: examples/memory_queue.cpp
+.. sourceinclude:: examples/MemoryQueueExample.cpp
     :start-after: EXAMPLE_BEGIN WriterReader
     :end-before: EXAMPLE_END WriterReader
     :emphasize-lines: 7,8
@@ -318,7 +318,7 @@ following example:
 
 The code instantiating reader and writer could look like this:
 
-.. sourceinclude:: examples/memory_queue.cpp
+.. sourceinclude:: examples/MemoryQueueExample.cpp
     :start-after: EXAMPLE_BEGIN WriterReader2
     :end-before: EXAMPLE_END WriterReader2
     :emphasize-lines: 2,3,6,7,8,9,18

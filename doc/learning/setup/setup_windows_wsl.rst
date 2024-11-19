@@ -1,10 +1,10 @@
 .. _setup_windows_01_wsl:
 
-Set up Ubuntu 22.04 in WSL
-==========================
+Set up Ubuntu :prop:`tool:ubuntu_version` in WSL
+================================================
 
 If you have not yet installed WSL (Windows Subsystem for Linux) on your Windows laptop,
-both WSL and Ubuntu 22.04 can be installed with one command
+both WSL and Ubuntu :prop:`tool:ubuntu_version` can be installed with one command
 (this assumes you have Windows 10 version 2004 and higher (Build 19041 and higher) or Windows 11).
 But first, you must check that some Windows features are enabled.
 From the **Windows Start** menu, find the app named **Turn Windows Features on or off**
@@ -24,11 +24,11 @@ Confirm WSL2 as default version...
 
     wsl --set-default-version 2
 
-Install Ubuntu 22.04...
+Install Ubuntu :prop:`tool:ubuntu_version`...
 
 .. code-block:: bash
 
-    wsl --install -d Ubuntu-22.04 --web-download
+    wsl --install -d Ubuntu-x.x --web-download
 
 During setup of Ubuntu, when prompted to enter a username and password in a Ubuntu terminal,
 enter a new username and password of your choice and make a note of it - you may be prompted

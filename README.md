@@ -27,16 +27,6 @@ allowing developers to get up and running quickly.
   learning about automotive technologies, conducting research, and exploring innovative solutions
   in automotive areas.
 
-## Media
-
-Talks:
-
-[Eclipse OpenBSW - A fresh view on Automotive Microcontroller Software - OCX 2024](https://www.youtube.com/watch?v=9zlya-cdrgo)
-
-Articles:
-
-[OpenBSW: A Code-first Software Platform for Automotive Microcontrollers](https://medium.com/@ESRLabs/openbsw-a-code-first-software-platform-for-automotive-microcontrollers-609d3406cf0d)
-
 ## Feature Overview
 
 ### Implemented Features
@@ -61,7 +51,7 @@ Articles:
 
 ## Documentation
 
-The [documentation](https://eclipse-openbsw.github.io/openbsw)
+The [documentation](https://eclipse-openbsw.github.io/open-bsw)
 describes Eclipse OpenBSW in detail and provides simple setup guides to build and use it.
 
 ## Contributing

@@ -10,6 +10,13 @@
 
 namespace async
 {
+/**
+ * A template class that encapsulates specific event behavior, allowing setEvent to be used without
+ * explicitly specifying the eventMask.
+ *
+ * \tparam EventDispatcher EventDispatcher class, from which the Event is encapsulated.
+ * \tparam Event Event number to encapsulate.
+ */
 template<typename EventDispatcher, size_t Event>
 class EventPolicy
 {

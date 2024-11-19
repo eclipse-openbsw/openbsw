@@ -12,6 +12,18 @@
 #include <exception> // IWYU pragma: export
 #endif
 
+#ifndef ESTD_UNREACHABLE
+#if defined(__GNUC__)
+#define ESTD_UNREACHABLE (__builtin_unreachable())
+#else
+#ifdef __cplusplus
+#define ESTD_UNREACHABLE (static_cast<void>(0))
+#else
+#define ESTD_UNREACHABLE ((void)0)
+#endif // __cplusplus
+#endif
+#endif // ESTD_UNREACHABLE
+
 #if defined(ESTL_HARD_ASSERT_FUNC)
 #if defined(ESTL_HARD_ASSERT_HEADER)
 #include ESTL_HARD_ASSERT_HEADER
@@ -23,8 +35,9 @@
 #endif
 
 #elif defined(ESTL_ASSERT_MESSAGE_ALL)
-#define estd_assert(E__) \
-    ((E__) ? static_cast<void>(0) : ::estd::assert_func(__FILE__, __LINE__, #E__))
+#define estd_assert(E__)          \
+    ((E__) ? static_cast<void>(0) \
+           : (::estd::assert_func(__FILE__, __LINE__, #E__), ESTD_UNREACHABLE))
 
 #elif defined(ESTL_ASSERT_FUNCTION)
 #define estd_assert(E__) ::estd::estd_assert_no_macro((E__), __FILE__, __LINE__, #E__)
@@ -39,9 +52,10 @@
 
 // if no assert style is picked then we will use the "default" one.
 #ifndef estd_assert
-#define estd_assert(E__)          \
-    ((E__) ? static_cast<void>(0) \
-           : ::estd::assert_func(static_cast<char const*>(0L), __LINE__, #E__))
+#define estd_assert(E__)        \
+    ((E__)                      \
+         ? static_cast<void>(0) \
+         : (::estd::assert_func(static_cast<char const*>(0L), __LINE__, #E__), ESTD_UNREACHABLE))
 #endif
 
 // estd_expect behaves the same as estd_assert, but it shall not be used in

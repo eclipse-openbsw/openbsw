@@ -112,3 +112,5 @@ Read more about individual commands from below:
     :ref:`adc_console`, "The ``adc`` command reads the ADC channel value."
     :ref:`pwm_console`, "The ``pwm`` command sets the duty cycle for a PWM channel."
     :ref:`lifecycle_console`, "The ``lc`` command provides lifecycle commands like reboot, poweroff, etc."
+
+Next: :ref:`learning_unit_tests`

@@ -37,7 +37,7 @@ Usage Example
 
 The following example shows a simplified usage of ``SplitWriter``:
 
-.. sourceinclude:: examples/split_writer.cpp
+.. sourceinclude:: examples/SplitWriterExample.cpp
     :start-after: EXAMPLE_BEGIN SplitWriter
     :end-before: EXAMPLE_END SplitWriter
     :linenos:

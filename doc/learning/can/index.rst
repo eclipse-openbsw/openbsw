@@ -28,7 +28,7 @@ or
     1617576: RefApp: CAN: ERROR: [SocketCanTransceiver] Failed to ioctl socket (node=vcan0, error=-1)
 
 which indicate that a socket could not be opened using the Virtual CAN interface ``vcan0`` -
-you need to set it up. On Ubuntu 22.04, the following commands will set it up...
+you need to set it up. On Ubuntu :prop:`tool:ubuntu_version`, the following commands will set it up...
 
 .. code-block:: bash
 
@@ -44,8 +44,8 @@ and support for device type ``vcan`` on your platform.
 
 .. note::
 
-    Please note while the standard Ubuntu 22.04 release includes ``SocketCan`` support,
-    the version of Ubuntu 22.04 available for WSL does not
+    Please note while the standard Ubuntu :prop:`tool:ubuntu_version` release includes ``SocketCan`` support,
+    the version of Ubuntu :prop:`tool:ubuntu_version` available for WSL does not
     - to perform the steps in this exercise on WSL, a custom kernel would need to be created with ``SocketCan`` support.
     See :ref:`setup_wsl_socketcan`.
 
@@ -61,7 +61,7 @@ you should see a log message every second indicating a CAN frame was sent...
     2477109: RefApp: CAN: INFO: [CanDemoListener] CAN frame sent, id=0x558, length=4
 
 You can check that this is sent to ``vcan0`` using the utility ``candump``
-which can be installed on Ubuntu 22.04 as follows...
+which can be installed on Ubuntu :prop:`tool:ubuntu_version` as follows...
 
 .. code-block:: bash
 

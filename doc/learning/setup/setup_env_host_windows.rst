@@ -1,10 +1,10 @@
 .. _setup_env_host_windows:
 
-Set up environment on a Windows host machine
-============================================
+Set up environment on Windows with WSL (Windows Subsystem for Linux)
+====================================================================
 
 The build environment described here for a Windows host machine is entirely dependent on
-first having Ubuntu 22.04 running in WSL (Windows Subsystem for Linux).
+first having Ubuntu :prop:`tool:ubuntu_version` running in WSL (Windows Subsystem for Linux).
 
 .. toctree::
    :maxdepth: 1
@@ -36,6 +36,7 @@ then you can build the image for that target, flash it onto your board and test 
    :glob:
 
    setup_s32k148_win_*
+   setup_s32k148_gdbserver
 
 WSL Enhancements
 ----------------

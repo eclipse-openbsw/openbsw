@@ -14,18 +14,18 @@ using tCharIOApi = struct
     void (*init)(void);
     void (*setAsynchron)(void);
     void (*setSynchron)(void);
-    int  (*putc)(int c);
-    int  (*getc)(void);
+    int (*putc)(int c);
+    int (*getc)(void);
     void (*Idle)(void);
     /* functions to be provided by the standard library */
-    int  (*__outchar)(int c, int last);
-    int  (*__inchar)(void);
+    int (*__outchar)(int c, int last);
+    int (*__inchar)(void);
 };
 
 /**
  * Function for setting the CharIO API (default = serial CharIO)
  */
-void setCharIOApi(const tCharIOApi* api);
+void setCharIOApi(tCharIOApi const* api);
 
 /**
  * Reset to the default CharIO (serial)
@@ -62,7 +62,7 @@ int charIoPutc(int c);
 
 // functions below are forwarded to the standard library
 int charIO__inchar(void);
-int charIO__outchar(int c,int last);
+int charIO__outchar(int c, int last);
 
 #ifdef __cplusplus
 }

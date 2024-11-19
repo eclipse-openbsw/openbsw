@@ -2,10 +2,10 @@
 
 #include "systems/DemoSystem.h"
 #ifdef PLATFORM_SUPPORT_IO
-#include "bsp/adc/AnalogInputScale.h"
-#include "inputManager/DigitalInput.h"
-#include "outputManager/Output.h"
-#include "outputPwm/OutputPwm.h"
+#include <bsp/adc/AnalogInputScale.h>
+#include <inputManager/DigitalInput.h>
+#include <outputManager/Output.h>
+#include <outputPwm/OutputPwm.h>
 #endif
 #include "app/CanDemoListener.h"
 #include "app/DemoLogger.h"

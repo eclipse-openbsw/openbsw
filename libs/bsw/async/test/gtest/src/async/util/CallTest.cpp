@@ -2,6 +2,8 @@
 
 #include "async/util/Call.h"
 
+#include "async/AsyncMock.h"
+
 #include <gmock/gmock.h>
 
 namespace
@@ -14,20 +16,18 @@ class AsyncCallTest : public Test
 public:
     MOCK_METHOD0(functionCall, void());
     MOCK_METHOD2(closureCall, void(uint16_t, uint32_t));
+    async::AsyncMock _asyncMock;
 };
 
 TEST_F(AsyncCallTest, testFunction)
 {
-    {
-        Function cut;
-        cut.execute();
-    }
-    {
-        Function cut(
-            Function::CallType::create<AsyncCallTest, &AsyncCallTest::functionCall>(*this));
-        EXPECT_CALL(*this, functionCall());
-        cut.execute();
-    }
+    Function cut(Function::CallType::create<AsyncCallTest, &AsyncCallTest::functionCall>(*this));
+    EXPECT_CALL(*this, functionCall());
+    EXPECT_CALL(_asyncMock, execute(0, _))
+        .Times(1)
+        .WillOnce([this](ContextType const context, RunnableType& runnable)
+                  { runnable.execute(); });
+    execute(0, cut);
 }
 
 TEST_F(AsyncCallTest, testClosure)
@@ -38,6 +38,10 @@ TEST_F(AsyncCallTest, testClosure)
         1234U,
         3247834U));
     EXPECT_CALL(*this, closureCall(1234U, 3247834U));
-    cut.execute();
+    EXPECT_CALL(_asyncMock, execute(0, _))
+        .Times(1)
+        .WillOnce([this](ContextType const context, RunnableType& runnable)
+                  { runnable.execute(); });
+    execute(0, cut);
 }
 } // namespace

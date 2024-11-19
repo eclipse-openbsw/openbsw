@@ -26,11 +26,11 @@ Data Structures
 .. toctree::
    :hidden:
 
-   buffered_writer
-   forwarding_reader
    join_reader
-   memory_queue
+   forwarding_reader
+   buffered_writer
    split_writer
+   memory_queue
    variant_queue
 
 .. csv-table::

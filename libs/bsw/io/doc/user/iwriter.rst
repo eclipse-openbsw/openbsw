@@ -39,7 +39,7 @@ Example
 The following example shows, how the allocated memory can be used to directly emplace the data
 which shall be transferred into it.
 
-.. sourceinclude:: examples/memory_queue.cpp
+.. sourceinclude:: examples/MemoryQueueExample.cpp
    :start-after: EXAMPLE_BEGIN IWriter
    :end-before: EXAMPLE_END IWriter
 
@@ -59,6 +59,6 @@ Example
 The following example shows, how with the help of a locking mechanism, the ``IWriter`` interface
 can be used to work with multiple producers.
 
-.. sourceinclude:: examples/memory_queue.cpp
+.. sourceinclude:: examples/MemoryQueueExample.cpp
    :start-after: EXAMPLE_BEGIN IWriter_MPSC
    :end-before: EXAMPLE_END IWriter_MPSC

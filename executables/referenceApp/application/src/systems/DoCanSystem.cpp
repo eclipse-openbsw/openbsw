@@ -88,7 +88,7 @@ void DoCanSystem::initLayer()
 
 void DoCanSystem::init()
 {
-    _classicAddressingFilter.init(estd::make_slice(_addresses), estd::make_slice(_codecs));
+    _classicAddressingFilter.init(::estd::make_slice(_addresses), ::estd::make_slice(_codecs));
 
     initLayer();
 

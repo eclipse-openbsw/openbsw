@@ -90,7 +90,7 @@ public:
         (void)setup;
 
         _cfg = cfg;
-        _ftm.MODE          = _ftm.MODE | FTM_MODE_WPDIS_MASK;
+        _ftm.MODE |= FTM_MODE_WPDIS_MASK;
         _ftm.CNTIN         = _cfg->cntin;
         _ftm.MOD           = _cfg->mod;
         _ftm.MODE          = _cfg->mode | FTM_MODE_WPDIS_MASK;
@@ -119,13 +119,13 @@ public:
 
     inline void stop()
     {
-        _ftm.MODE = _ftm.MODE | FTM_MODE_WPDIS_MASK;
+        _ftm.MODE |= FTM_MODE_WPDIS_MASK;
         _ftm.SC = 0;
     }
 
     inline void start()
     {
-        _ftm.MODE = _ftm.MODE | FTM_MODE_WPDIS_MASK;
+        _ftm.MODE |= FTM_MODE_WPDIS_MASK;
         clrOverflowEvent();
         clrReloadEvent();
         _ftm.SC = _cfg->sc;
@@ -148,7 +148,7 @@ public:
 
     inline uint32_t getFaultStatus() { return _ftm.FMS; }
 
-    inline void trgSwTrigger() { _ftm.SYNC = _ftm.SYNC | FTM_SYNC_SWSYNC_MASK; }
+    inline void trgSwTrigger() { _ftm.SYNC |= FTM_SYNC_SWSYNC_MASK; }
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wstrict-aliasing"
@@ -168,11 +168,11 @@ public:
     {
         if (v)
         {
-            _ftm.MODE = _ftm.MODE | FTM_MODE_WPDIS_MASK;
+            _ftm.MODE |= FTM_MODE_WPDIS_MASK;
         }
         else
         {
-            _ftm.MODE = _ftm.MODE & ~FTM_MODE_WPDIS_MASK;
+            _ftm.MODE &= ~FTM_MODE_WPDIS_MASK;
         }
     }
 
@@ -234,11 +234,11 @@ public:
     {
         if (v)
         {
-            _ftm.SC = _ftm.SC | (static_cast<uint32_t>(1U) << 5U);
+            _ftm.SC |= static_cast<uint32_t>(1U) << 5U;
         }
         else
         {
-            _ftm.SC = _ftm.SC & ~(static_cast<uint32_t>(1U) << 5U);
+            _ftm.SC &= ~(static_cast<uint32_t>(1U) << 5U);
         }
     }
 
@@ -248,22 +248,22 @@ public:
         {
             if (v)
             {
-                _ftm.SC = _ftm.SC | (static_cast<uint32_t>(1U) << (16U + channel));
+                _ftm.SC |= static_cast<uint32_t>(1U) << (16U + channel);
             }
             else
             {
-                _ftm.SC = _ftm.SC & ~(static_cast<uint32_t>(1U) << (16U + channel));
+                _ftm.SC &= ~(static_cast<uint32_t>(1U) << (16U + channel));
             }
         }
     }
 
     inline bool getOverflowEvent() { return (_ftm.SC & FTM_SC_TOF_MASK) != 0; }
 
-    inline void clrOverflowEvent() { _ftm.SC = _ftm.SC & ~FTM_SC_TOF_MASK; }
+    inline void clrOverflowEvent() { _ftm.SC &= ~FTM_SC_TOF_MASK; }
 
     inline bool getReloadEvent() { return (_ftm.SC & FTM_SC_RF_MASK) != 0; }
 
-    inline void clrReloadEvent() { _ftm.SC = _ftm.SC & ~FTM_SC_RF_MASK; }
+    inline void clrReloadEvent() { _ftm.SC &= ~FTM_SC_RF_MASK; }
 
     inline uint16_t getMOD() { return static_cast<uint16_t>(_ftm.MOD); }
 
@@ -273,13 +273,13 @@ public:
 
     inline uint16_t forceReload()
     {
-        _ftm.PWMLOAD = _ftm.PWMLOAD | FTM_PWMLOAD_LDOK_MASK;
+        _ftm.PWMLOAD |= FTM_PWMLOAD_LDOK_MASK;
         return static_cast<uint16_t>(_ftm.PWMLOAD);
     }
 
     inline uint16_t forceGlobalReload()
     {
-        _ftm.PWMLOAD = _ftm.PWMLOAD | FTM_PWMLOAD_GLDOK_MASK;
+        _ftm.PWMLOAD |= FTM_PWMLOAD_GLDOK_MASK;
         return static_cast<uint16_t>(_ftm.PWMLOAD);
     }
 

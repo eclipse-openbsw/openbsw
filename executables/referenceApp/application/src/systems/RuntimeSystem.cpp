@@ -22,7 +22,7 @@ RuntimeSystem::RuntimeSystem(
 
 void RuntimeSystem::init()
 {
-    _statisticsCommand.setTicksPerUs(1);
+    _statisticsCommand.setTicksPerUs(0); // use hardware ticks rate
 
     transitionDone();
 }

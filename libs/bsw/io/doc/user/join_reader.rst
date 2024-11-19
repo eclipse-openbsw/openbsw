@@ -37,7 +37,7 @@ Usage Example
 
 The following example shows a simplified usage of ``JoinReader``:
 
-.. sourceinclude:: examples/join_reader.cpp
+.. sourceinclude:: examples/JoinReaderExample.cpp
     :start-after: EXAMPLE_BEGIN JoinReader
     :end-before: EXAMPLE_END JoinReader
     :linenos:

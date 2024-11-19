@@ -47,10 +47,10 @@ public:
         _HwChannel0.sc = 0;
         _HwChannel1.sc = 0;
 
-        _HwChannel0.sc = _HwChannel0.sc | ((_configuration->ctrl0 & tFtm::CTRL_ELSx_MASK) << 2);
-        _HwChannel0.sc = _HwChannel0.sc | ((_configuration->ctrl0 & tFtm::CTRL_MSx_MASK) << 2);
-        _HwChannel1.sc = _HwChannel1.sc | ((_configuration->ctrl1 & tFtm::CTRL_ELSx_MASK) << 2);
-        _HwChannel1.sc = _HwChannel1.sc | ((_configuration->ctrl1 & tFtm::CTRL_MSx_MASK) << 2);
+        _HwChannel0.sc |= (_configuration->ctrl0 & tFtm::CTRL_ELSx_MASK) << 2;
+        _HwChannel0.sc |= (_configuration->ctrl0 & tFtm::CTRL_MSx_MASK) << 2;
+        _HwChannel1.sc |= (_configuration->ctrl1 & tFtm::CTRL_ELSx_MASK) << 2;
+        _HwChannel1.sc |= (_configuration->ctrl1 & tFtm::CTRL_MSx_MASK) << 2;
         clrEvent();
 
         // combine link settings
@@ -90,35 +90,35 @@ public:
         _ftm.setPWMen((hwChannel / 2) * 2 + 1, true);
         if (_configuration->interruptActive0)
         {
-            _HwChannel0.sc = _HwChannel0.sc | FTM_CnSC_CHIE_MASK;
+            _HwChannel0.sc |= FTM_CnSC_CHIE_MASK;
         }
         else
         {
-            _HwChannel0.sc = _HwChannel0.sc & ~FTM_CnSC_CHIE_MASK;
+            _HwChannel0.sc &= ~FTM_CnSC_CHIE_MASK;
         }
         if (_configuration->interruptActive1)
         {
-            _HwChannel1.sc = _HwChannel1.sc | FTM_CnSC_CHIE_MASK;
+            _HwChannel1.sc |= FTM_CnSC_CHIE_MASK;
         }
         else
         {
-            _HwChannel1.sc = _HwChannel1.sc & ~FTM_CnSC_CHIE_MASK;
+            _HwChannel1.sc &= ~FTM_CnSC_CHIE_MASK;
         }
         if (_configuration->dmaActive0)
         {
-            _HwChannel0.sc = _HwChannel0.sc | FTM_CnSC_DMA_MASK;
+            _HwChannel0.sc |= FTM_CnSC_DMA_MASK;
         }
         else
         {
-            _HwChannel0.sc = _HwChannel0.sc & ~FTM_CnSC_DMA_MASK;
+            _HwChannel0.sc &= ~FTM_CnSC_DMA_MASK;
         }
         if (_configuration->dmaActive1)
         {
-            _HwChannel1.sc = _HwChannel1.sc | FTM_CnSC_DMA_MASK;
+            _HwChannel1.sc |= FTM_CnSC_DMA_MASK;
         }
         else
         {
-            _HwChannel1.sc = _HwChannel1.sc & ~FTM_CnSC_DMA_MASK;
+            _HwChannel1.sc &= ~FTM_CnSC_DMA_MASK;
         }
         setDuty(0);
         return bsp::BSP_OK;
@@ -133,10 +133,10 @@ public:
         _ftm.setPWMen((hwChannel / 2) * 2, false);
         _ftm.setPWMen((hwChannel / 2) * 2 + 1, false);
         setDuty(0);
-        _HwChannel0.sc = _HwChannel0.sc & ~FTM_CnSC_CHIE_MASK;
-        _HwChannel0.sc = _HwChannel0.sc & ~FTM_CnSC_DMA_MASK;
-        _HwChannel1.sc = _HwChannel1.sc & ~FTM_CnSC_CHIE_MASK;
-        _HwChannel1.sc = _HwChannel1.sc & ~FTM_CnSC_DMA_MASK;
+        _HwChannel0.sc &= ~FTM_CnSC_CHIE_MASK;
+        _HwChannel0.sc &= ~FTM_CnSC_DMA_MASK;
+        _HwChannel1.sc &= ~FTM_CnSC_CHIE_MASK;
+        _HwChannel1.sc &= ~FTM_CnSC_DMA_MASK;
         clrEvent();
 
         return bsp::BSP_OK;
@@ -264,8 +264,8 @@ public:
 
     inline void clrEvent()
     {
-        _HwChannel0.sc = _HwChannel0.sc & ~FTM_CnSC_CHF_MASK;
-        _HwChannel1.sc = _HwChannel1.sc & ~FTM_CnSC_CHF_MASK;
+        _HwChannel0.sc &= ~FTM_CnSC_CHF_MASK;
+        _HwChannel1.sc &= ~FTM_CnSC_CHF_MASK;
     }
 
     inline bool getEvent0() { return (_HwChannel0.sc & FTM_CnSC_CHF_MASK) != 0; }

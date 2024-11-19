@@ -14,6 +14,14 @@
 
 namespace async
 {
+/**
+ * A template class that allows a handler function to be registered or deregistered, and then
+ * executed based on the provided eventMask. Each event corresponds to a bit in the eventMask. The
+ * handler function is executed when the specified bit in the eventMask is set.
+ *
+ * \tparam EventCount Number of events to be handled.
+ * \tparam Lock RAII lock to support concurrent execution.
+ */
 template<size_t EventCount, typename Lock>
 class EventDispatcher
 {

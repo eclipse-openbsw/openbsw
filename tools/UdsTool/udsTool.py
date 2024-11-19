@@ -9,6 +9,7 @@ def start():
 
 @start.command(help="UDS service Read Data By Identifier (0x22)")
 @click.option("--can", is_flag=True, help="Use CAN connection")
+@click.option("--canif", default="socketcan", help="python-can interface name. eg. \"pcan\". Default = \"socketcan\"")
 @click.option("--eth", is_flag=True, help="Use Ethernet connection")
 @click.option("--host", help="Host IP address for Ethernet connection")
 @click.option("--ecu", help="ECU Logical address [hex] for Ethernet connection")
@@ -18,11 +19,11 @@ def start():
 @click.option("--txid", help="CAN Tx ID")
 @click.option("--rxid", help="CAN Rx ID")
 @click.option("--config", help="Path to configuration file for CAN connection")
-def read(host, ecu, source, did, can, eth, channel, txid, rxid, config):
+def read(host, ecu, source, did, can, canif, eth, channel, txid, rxid, config):
     if can:
         # Handle CAN connection
         client = application.createCanConnection(
-            channel, int(txid, 16), int(rxid, 16), config
+            canif, channel, int(txid, 16), int(rxid, 16), config
         )
         application.read(client, did)
     elif eth:

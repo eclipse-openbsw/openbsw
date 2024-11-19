@@ -30,7 +30,7 @@ Usage Example
 
 The following example shows a simplified usage of ``ForwardingReader``:
 
-.. sourceinclude:: examples/forwarding_reader.cpp
+.. sourceinclude:: examples/ForwardingReaderExample.cpp
     :start-after: EXAMPLE_BEGIN ForwardingReader
     :end-before: EXAMPLE_END ForwardingReader
     :emphasize-lines: 20

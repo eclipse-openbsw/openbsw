@@ -33,7 +33,7 @@ Usage example
 
 Here is an example:
 
-.. sourceinclude:: examples/buffered_writer.cpp
+.. sourceinclude:: examples/BufferedWriterExample.cpp
     :start-after: EXAMPLE_BEGIN BufferedWriter
     :end-before: EXAMPLE_END BufferedWriter
     :emphasize-lines: 45

@@ -3,7 +3,8 @@
 #ifndef GUARD_B7AFD60E_D676_4056_BE5F_EDB78DF1C357
 #define GUARD_B7AFD60E_D676_4056_BE5F_EDB78DF1C357
 
-#include <console/AsyncCommandWrapper.h>
+#include <async/Async.h>
+#include <async/IRunnable.h>
 #include <lifecycle/AsyncLifecycleComponent.h>
 #include <lifecycle/console/LifecycleControlCommand.h>
 #ifdef PLATFORM_SUPPORT_CAN

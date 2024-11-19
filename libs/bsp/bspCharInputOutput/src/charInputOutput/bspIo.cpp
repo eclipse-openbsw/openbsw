@@ -10,7 +10,8 @@
 #include <limits>
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 /**
@@ -22,8 +23,11 @@ extern "C" {
  *
  */
 int __inchar(void) { return (charIO__inchar()); }
+
 int __inedit(void) { return __inchar(); }
+
 int __outchar(int const c, int const last) { return charIO__outchar(c, last); }
+
 int __outedit(int const c, int const last)
 {
     if (c == 0xA)
@@ -33,14 +37,14 @@ int __outedit(int const c, int const last)
     return __outchar(c, last);
 }
 
-int vsnprintf(char* buf, const size_t maxsize, const char* fmt, va_list args)
+int vsnprintf(char* buf, size_t const maxsize, char const* fmt, va_list args)
 {
     return vsnprintf_(buf, maxsize, fmt, args);
 }
 
-int vsprintf(char* buf, const char* fmt, va_list args) { return vsprintf_(buf, fmt, args); }
+int vsprintf(char* buf, char const* fmt, va_list args) { return vsprintf_(buf, fmt, args); }
 
-int snprintf(char* buf, size_t maxsize, const char* fmt, ...)
+int snprintf(char* buf, size_t maxsize, char const* fmt, ...)
 {
     va_list args;
     va_start(args, fmt);
@@ -49,7 +53,7 @@ int snprintf(char* buf, size_t maxsize, const char* fmt, ...)
     return ret;
 }
 
-int sprintf(char* buf, const char* fmt, ...)
+int sprintf(char* buf, char const* fmt, ...)
 {
     va_list args;
     va_start(args, fmt);
@@ -72,7 +76,7 @@ void fctprintf_helper(char c, void* /* satisfy fctprintf outFunc reqs */)
     (void)__outedit(static_cast<int>(u_char), 0);
 }
 
-uint8_t debug_printf(const char* format, ...)
+uint8_t debug_printf(char const* format, ...)
 {
     va_list args;
     va_start(args, format);

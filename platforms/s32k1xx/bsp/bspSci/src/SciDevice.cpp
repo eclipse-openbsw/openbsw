@@ -34,7 +34,7 @@ uint8_t sciGetRxReady()
 {
     if ((sciConfiguration.sci->STAT & LPUART_STAT_OR_MASK) != 0)
     {
-        sciConfiguration.sci->STAT = sciConfiguration.sci->STAT | LPUART_STAT_OR_MASK;
+        sciConfiguration.sci->STAT |= LPUART_STAT_OR_MASK;
     }
     if ((sciConfiguration.sci->STAT & LPUART_STAT_RDRF_MASK) != 0)
     {

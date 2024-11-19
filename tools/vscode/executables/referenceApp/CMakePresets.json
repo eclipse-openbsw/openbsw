@@ -1,0 +1,37 @@
+{
+    "version": 3,
+    "configurePresets": [
+    {
+        "name": "default",
+        "displayName": "CMake posix",
+        "generator": "Unix Makefiles",
+        "binaryDir": "${workspaceFolder}/cmake-build-posix",
+        "cacheVariables": {
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "YES"
+        }
+    },
+    {
+        "name": "CMake s32k148",
+        "displayName": "CMake s32k148",
+        "generator": "Unix Makefiles",
+        "binaryDir": "${workspaceFolder}/cmake-build-s32k148",
+        "toolchainFile": "../../admin/cmake/ArmNoneEabi.cmake",
+        "cacheVariables": {
+        "BUILD_TARGET_PLATFORM": "S32K148EVB",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "YES"
+        }
+    }
+    ],
+    "buildPresets": [
+    {
+        "name": "default",
+        "configurePreset": "default",
+        "targets": "app.referenceApp"
+    },
+    {
+        "name": "CMake s32k148",
+        "configurePreset": "CMake s32k148",
+        "targets": "app.referenceApp"
+    }
+    ]
+}

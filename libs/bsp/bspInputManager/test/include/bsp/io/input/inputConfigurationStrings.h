@@ -1,4 +1,3 @@
-const char* const inputConfigurationStrings[] =
-    {
-        /* 00 */"PIN_00",
-    };
+char const* const inputConfigurationStrings[] = {
+    /* 00 */ "PIN_00",
+};

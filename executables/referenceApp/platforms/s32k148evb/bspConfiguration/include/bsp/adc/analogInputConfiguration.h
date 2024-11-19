@@ -12,6 +12,7 @@
  */
 AnalogInput::tAnalogConfiguration const ADChannelCfg[AnalogInput::_AdcChannelMax] = {
     {ADC_0_CH, _ADCCHANNEL28, Io::EVAL_POTI_ADC, _ADCCHANNEL0},
+    {ADC_0_CH, _ADCCHANNEL29, Io::EVAL_ADC, _ADCCHANNEL0},
 };
 
 #else
@@ -21,6 +22,7 @@ AnalogInput::tAnalogConfiguration const ADChannelCfg[AnalogInput::_AdcChannelMax
 enum AnalogInputId
 {
     AiEVAL_POTI_ADC,
+    AiEval_ADC,
 
     // end marker
     _AdcChannelMax

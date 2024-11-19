@@ -2,6 +2,8 @@
 
 // Include class we are testing first to check for include dependencies
 // #define ESTL_NO_ASSERT_FILE
+#define ESTD_UNREACHABLE \
+    (static_cast<void>(0)) // disable "unreachable" hint for NoAssertHandler test
 #include "estd/assert.h"
 
 #include <gmock/gmock.h>

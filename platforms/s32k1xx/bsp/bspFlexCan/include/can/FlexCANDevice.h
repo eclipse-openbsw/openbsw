@@ -133,12 +133,12 @@ public:
     void enableTransmitInterrupt()
     {
         fpDevice->IFLAG1 = fTxInterruptMask0;
-        fpDevice->IMASK1 = fpDevice->IMASK1 | fTxInterruptMask0;
+        fpDevice->IMASK1 |= fTxInterruptMask0;
     }
 
     void disableTransmitInterrupt()
     {
-        fpDevice->IMASK1 = fpDevice->IMASK1 & ~fTxInterruptMask0;
+        fpDevice->IMASK1 &= ~fTxInterruptMask0;
         fpDevice->IFLAG1 = fTxInterruptMask0;
     }
 

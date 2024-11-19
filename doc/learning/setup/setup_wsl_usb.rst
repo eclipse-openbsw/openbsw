@@ -8,7 +8,7 @@ you can make USB devices that are connected to your Windows PC/laptop available 
 
 As an example, the steps below were used to make a Peak USB-CAN adaptor accessible as a network interface in Ubuntu using ``SocketCAN``.
 This assumes you have already successfully followed the steps in :ref:`setup_wsl_socketcan` and your WSL kernel supports USB.
-Recent versions of Windows running WSL kernel 5.10.60.1 or later already include support for many USB scenarios.
+Recent versions of Windows running WSL kernel :prop:`tool:wsl_kernel_version` or later already include support for many USB scenarios.
 
 The steps below were performed with WSL up and running - with the CAN kernel modules loaded
 and ``vcan0`` successfully created as described in :ref:`setup_wsl_socketcan`.
@@ -56,7 +56,7 @@ Once it is "Shared", a device can be "Attached" to WSL in a normal Windows comma
 .. code-block:: bash
 
     C:\>usbipd attach --wsl --busid 3-2
-    usbipd: info: Using WSL distribution 'Ubuntu-22.04' to attach; the device will be available in all WSL 2 distributions.
+    usbipd: info: Using WSL distribution 'Ubuntu-x.x' to attach; the device will be available in all WSL 2 distributions.
     usbipd: info: Using IP address 127.0.0.1 to reach the host.
 
 The "Attached" status does not persist, you will need to reattach after every time WSL is restarted.

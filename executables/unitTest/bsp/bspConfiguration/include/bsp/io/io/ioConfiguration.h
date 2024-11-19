@@ -103,6 +103,8 @@ Io::PinConfiguration const Io::fPinConfiguration[Io::NUMBER_OF_IOS] = {
     /* 91  */ {_PORTE_, PE21, _OUT, FILTER_ACTIVE | FILTER_TICK1, ALT2 | STRENGTH_ON},
     /* 92  */ {_PORTE_, PE22, _OUT, FILTER_ACTIVE | FILTER_TICK1, ALT2 | STRENGTH_ON},
     /* 93  */ {_PORTE_, PE23, _OUT, FILTER_ACTIVE | FILTER_TICK1, ALT2 | STRENGTH_ON},
+
+    /* 94  */ {_PORTC_, PC29, _IN, FILTER_ACTIVE | FILTER_TICK1, PINDISABLE},
 };
 
 #else
@@ -206,6 +208,7 @@ enum PinId
     /* 91 */ EVAL_LED_RED,
     /* 92 */ EVAL_LED_GREEN,
     /* 93 */ EVAL_LED_BLUE,
+    /* 94 */ EVAL_ADC,
 
     /* xx */ NUMBER_OF_INPUTS_AND_OUTPUTS,
     /* xx */ PORT_UNAVAILABLE = NUMBER_OF_INPUTS_AND_OUTPUTS,

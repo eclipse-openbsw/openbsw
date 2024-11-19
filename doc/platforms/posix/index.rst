@@ -17,4 +17,4 @@ Overview
 
 Build environment
 -----------------
-For instructions on building for this platform see :ref:`learning_setup`
+For instructions on building for this platform see :ref:`setup_posix_ubuntu_build`.

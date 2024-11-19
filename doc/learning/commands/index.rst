@@ -13,60 +13,15 @@ If you search the code for ``GroupCommand`` you will find many example console c
 One such example is ``StatisticsCommand``. You could add your own ``DemoCommand`` following this example.
 Add a new file ``executables/referenceApp/consoleCommands/include/demo/DemoCommand.h`` containing...
 
-.. code-block:: cpp
-
-    #ifndef GUARD_988E20A7_FCA4_4055_A82E_826FCE85E1C6
-    #define GUARD_988E20A7_FCA4_4055_A82E_826FCE85E1C6
-
-    #include "util/command/GroupCommand.h"
-
-    namespace demo
-    {
-
-    class DemoCommand : public util::command::GroupCommand
-    {
-    public:
-        DemoCommand() {}
-
-    protected:
-        DECLARE_COMMAND_GROUP_GET_INFO
-        virtual void executeCommand(util::command::CommandContext& context, uint8_t idx);
-    };
-
-    } // namespace demo
-
-    #endif /*GUARD_988E20A7_FCA4_4055_A82E_826FCE85E1C6*/
+.. sourceinclude:: ../../../libs/bsw/asyncConsole/test/gtest/include/demo/DemoCommand.h
+    :language: c++
+    :start-after: BEGIN DEMOCOMMAND
+    :end-before: END DEMOCOMMAND
 
 and add a new file ``executables/referenceApp/consoleCommands/src/demo/DemoCommand.cpp`` containing...
 
-.. code-block:: cpp
-
-    #include "demo/DemoCommand.h"
-
-    namespace demo
-    {
-
-    DEFINE_COMMAND_GROUP_GET_INFO_BEGIN(DemoCommand, "demo", "Demo Commands")
-    COMMAND_GROUP_COMMAND(1U, "hello", "Print hello")
-    DEFINE_COMMAND_GROUP_GET_INFO_END;
-
-    void DemoCommand::executeCommand(util::command::CommandContext& context, const uint8_t idx)
-    {
-        switch (idx)
-        {
-            case 1:
-            {
-                printf("Hello World");
-                break;
-            }
-            default:
-            {
-                break;
-            }
-        }
-    }
-
-    } // namespace demo
+.. sourceinclude:: ../../../libs/bsw/asyncConsole/test/gtest/src/demo/DemoCommand.cpp
+    :language: c++
 
 Look at how ``StatisticsCommand`` is added to ``RuntimeSystem``
 and to ``executables/referenceApp/consoleCommands/CMakeLists.txt``

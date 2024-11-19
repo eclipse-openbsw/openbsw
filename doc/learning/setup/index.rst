@@ -13,6 +13,14 @@ Example setups are described for the following types of host machine...
 
    setup_env_*
 
+If your preferred IDE is Visual Studio Code then see...
+
+.. toctree::
+   :maxdepth: 1
+   :glob:
+
+   setup_vscode
+
 Using the S32K148 Development Board
 -----------------------------------
 
@@ -39,11 +47,11 @@ Known Issues with the S32K148 board
         it has been reported that CAN and Ethernet do not work
         unless an external power supply (12-volt, 5.5 mm barrel connector) is used.
     * - 3
-      - While NXP provide a linux installer for S32 Design Studio for ARM, according to the installation manual
-        the most recent version of Ubuntu listed as supported is Ubuntu 16 (which is quite old).
-        S32 Design Studio for ARM has been successfully installed in Ubuntu 22.04 as documented in :doc:`setup_s32k148_ubuntu_nxpide`
+      - While NXP provide a linux installer for S32 Design Studio for S32 Platform, according to the installation manual
+        the most recent version of Ubuntu listed as supported is Ubuntu :prop:`tool:ubuntu_version`.
+        S32 Design Studio for S32 Platform has been successfully installed in Ubuntu :prop:`tool:ubuntu_version` as documented in :doc:`setup_s32k148_ubuntu_nxpide`
         but please note that many people have encountered difficulties with this, especially at the step to enable it
-        using an activation code. If you have difficulties you may prefer to set up ``gdbserver`` as described in :doc:`setup_s32k148_ubuntu_gdbserver`
+        using an activation code. If you have difficulties you may prefer to set up ``gdbserver`` as described in :doc:`setup_s32k148_gdbserver`
         with an IDE of your choice.
 
 Jumper setup on the S32K148 board

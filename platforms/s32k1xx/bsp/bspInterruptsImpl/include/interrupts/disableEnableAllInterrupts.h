@@ -2,9 +2,10 @@
 
 #ifndef DISABLEENABLEALLINTERRUPTS_H_
 #define DISABLEENABLEALLINTERRUPTS_H_
+
 // clang-format off
 static inline __attribute__((always_inline))
-void disableAllInterrupts(void)
+volatile void disableAllInterrupts(void)
 {
 asm(
 "cpsid   i;"
@@ -14,7 +15,7 @@ asm(
 );
 }
 static inline __attribute__((always_inline))
-void enableAllInterrupts(void)
+ volatile void enableAllInterrupts(void)
 {
 asm (
 "ISB;"
@@ -23,6 +24,7 @@ asm (
 "cpsie   i;"
 );
 }
+
 // clang-format on
 
 #endif /* DISABLEENABLEALLINTERRUPTS_H_ */

@@ -1,15 +1,15 @@
-:orphan:
+.. _common:
+
 common
 ======
-
 
 Overview
 --------
 
-The module common is deprecated. This is why this is just an empty placeholder project.
+The ``common`` module provides utilities and interfaces used across the **BSW** modules.
 
-It only contains `util/concurrent/IFutureSupport.h` as this is required by `async`.
+.. toctree::
+    :maxdepth: 1
+    :glob:
 
-Everything else shall be removed over time! That includes:
-
-- `util/Delegate.h` which is required by `bsp/commandInterpreter`
+    */index

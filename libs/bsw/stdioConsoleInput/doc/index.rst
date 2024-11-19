@@ -1,10 +1,16 @@
+.. _stdio_console_input:
+
 stdioConsoleInput
 =================
 
 Overview
 --------
 
-The ``StdioConsoleInput`` class is a console input handler that reads input from
-the standard input (stdin) and processes it line by line. The class uses two
-callback functions: ``OnLineProcessed`` and ``OnLineReceived``. The
-``StdioConsoleInput`` provides several methods for handling console input.
+The module ``stdioConsoleInput`` consists of only one class.
+The purpose of the module is to allow the user to handle standard input
+(stdin) using a function callback provided by the user.
+
+.. toctree::
+   :glob:
+
+   */index

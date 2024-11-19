@@ -35,6 +35,6 @@ to ``release()`` frees the data again, also invalidating it for the user.
 Example
 +++++++
 
-.. sourceinclude:: examples/memory_queue.cpp
+.. sourceinclude:: examples/MemoryQueueExample.cpp
    :start-after: EXAMPLE_BEGIN IReader
    :end-before: EXAMPLE_END IReader

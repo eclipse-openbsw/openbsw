@@ -1,0 +1,47 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "shell",
+            "label": "Clean s32k148 build",
+            "command": "rm -rf cmake-build-s32k148",
+            "group": "build"
+        },
+        {
+            "type": "shell",
+            "label": "Generate build system for s32k148",
+            "command": "cmake -B cmake-build-s32k148 -S executables/referenceApp -DBUILD_TARGET_PLATFORM=\"S32K148EVB\" -DCMAKE_EXPORT_COMPILE_COMMANDS=ON --toolchain ../../admin/cmake/ArmNoneEabi.cmake",
+            "group": "build"
+        },
+        {
+            "type": "shell",
+            "label": "Build s32k148 elf file",
+            "command": "cmake --build cmake-build-s32k148 --target app.referenceApp -j",
+            "group": "build"
+        },
+        {
+            "type": "shell",
+            "label": "Flash s32k148 elf file",
+            "command": "arm-none-eabi-gdb -batch -x test/pyTest/flash.gdb cmake-build-s32k148/application/app.referenceApp.elf",
+            "group": "build"
+        },
+        {
+            "type": "shell",
+            "label": "Clean posix build",
+            "command": "rm -rf cmake-build-posix",
+            "group": "build"
+        },
+        {
+            "type": "shell",
+            "label": "Generate build system for posix",
+            "command": "cmake -B cmake-build-posix -S executables/referenceApp -DCMAKE_EXPORT_COMPILE_COMMANDS=ON",
+            "group": "build"
+        },
+        {
+            "type": "shell",
+            "label": "Build posix elf file",
+            "command": "cmake --build cmake-build-posix --target app.referenceApp -j",
+            "group": "build"
+        }
+    ]
+}

@@ -3,19 +3,12 @@
 #ifndef GUARD_FACE7DDD_046B_4B7B_B83F_6212136CBA2E
 #define GUARD_FACE7DDD_046B_4B7B_B83F_6212136CBA2E
 
-#include "transport/ITransportSystem.h"
-#include "transport/routing/TransportRouterSimple.h"
-
 #include <lifecycle/AsyncLifecycleComponent.h>
-#include <transport/ITransportMessageListener.h>
 #include <transport/ITransportMessageProvider.h>
+#include <transport/ITransportSystem.h>
+#include <transport/routing/TransportRouterSimple.h>
 
 #include <estd/singleton.h>
-
-namespace lifecycle
-{
-class ILifecycleManager;
-}
 
 namespace transport
 {

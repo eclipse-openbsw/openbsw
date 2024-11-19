@@ -18,10 +18,10 @@
 
 namespace
 {
-    TEST(bspCharInputOutput, IncludeTest)
-    {
-        SUCCEED();
-        //This test currently only checks if the includes are working.
-    }
+TEST(bspCharInputOutput, IncludeTest)
+{
+    SUCCEED();
+    // This test currently only checks if the includes are working.
+}
 
 } // anonymous namespace

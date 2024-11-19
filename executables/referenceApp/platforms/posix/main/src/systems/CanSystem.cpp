@@ -26,15 +26,12 @@ CanSystem::CanSystem(::async::ContextType context)
     setTransitionContext(context);
 }
 
-void CanSystem::init()
-{
-    _canTransceiver.init();
-    _canTransceiver.open();
-    transitionDone();
-}
+void CanSystem::init() { transitionDone(); }
 
 void CanSystem::run()
 {
+    _canTransceiver.init();
+    _canTransceiver.open();
     ::async::scheduleAtFixedRate(
         _context, *this, _timeout, TIMEOUT_CAN_SYSTEM_IN_MS, ::async::TimeUnit::MILLISECONDS);
     transitionDone();

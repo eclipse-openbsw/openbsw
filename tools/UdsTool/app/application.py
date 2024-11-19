@@ -1,5 +1,4 @@
-from can.interfaces import pcan
-from can.interfaces import socketcan
+from can import Bus
 from doipclient import DoIPClient
 from doipclient.connectors import DoIPClientUDSConnector
 from udsoncan.client import Client
@@ -41,16 +40,13 @@ def createEthConnection(host, ecu, source):
         print(f"Error during UDS operation: {e}")
 
 
-def createCanConnection(channel, txid, rxid, config):
+def createCanConnection(canif, channel, txid, rxid, config):
     try:
         # Load IsoTP parameters
         with open(config, "r") as f:
             isotpParams = json.load(f)
 
-        if channel == "vcan0":
-            bus = socketcan.SocketcanBus(channel)
-        else:
-            bus = pcan.PcanBus()
+        bus = Bus(interface=canif, channel=channel)
 
         tp_addr = isotp.Address(
             isotp.AddressingMode.Normal_11bits, txid=txid, rxid=rxid

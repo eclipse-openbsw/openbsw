@@ -18,6 +18,6 @@ This module does not have any dependencies to other modules except the used comp
    platform -left- estdint.h
 
 .. toctree::
-   :hidden:
+   :glob:
 
-   user/index
+   */index

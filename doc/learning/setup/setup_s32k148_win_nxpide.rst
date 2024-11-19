@@ -7,9 +7,9 @@ NXP's `S32 Design Studio for ARM <https://www.nxp.com/design/design-center/softw
 can be used to flash and debug your image while it is running on the
 `S32K148 development board <https://www.nxp.com/design/design-center/development-boards/automotive-development-platforms/s32k-mcu-platforms/s32k148-q176-evaluation-board-for-automotive-general-purpose:S32K148EVB>`_.
 
-While the Ubuntu filesystem appears in Windows Explorer at `\\\\wsl.localhost\\Ubuntu-22.04`,
+While the Ubuntu filesystem appears in Windows Explorer at `\\\\wsl.localhost\\Ubuntu-` :prop:`tool:ubuntu_version`,
 in order for the Windows version of NXP's IDE to access the build files,
-it is necessary to map a network drive to **\\\\wsl$\\Ubuntu-22.04**,
+it is necessary to map a network drive to **\\\\wsl$\\Ubuntu-**:prop:`tool:ubuntu_version`,
 like this...
 
 .. image:: map_network_drive.png
@@ -22,11 +22,11 @@ To download and install this you will first need to register for a free account 
 Note that free activation codes for software you download will be sent to the email account you register with.
 Once registered, you can `download S32 Design Studio for ARM from here <https://www.nxp.com/webapp/swlicensing/sso/downloadSoftware.sp?catid=S32DS-IDE-ARM-V2-X>`_.
 
-Download and run the installer **S32DS_ARM_Win32_v2.2.exe** (this assumes you administrator rights on your PC).
+Download and run the installer S32DS_ARM_Win32_v :prop:`tool:s32ds_arm_version` .exe (this assumes you administrator rights on your PC).
 Enter the activation code received by email when prompted and chose **Activate Online**.
 During the installation it will also prompt you to allow drivers from **PEMicro** to be installed - accept this.
 
-Once complete, from **Windows Start** run **S32 Design Studio for ARM 2.2**.
+Once complete, from **Windows Start** run **S32 Design Studio for ARM** :prop:`tool:s32ds_arm_version`.
 An **S32DS Extensions and Updates** window should appear indicating if there are updates available - if so, install these.
 
 Flash and debug in S32 Design Studio for ARM
@@ -60,7 +60,7 @@ and then change it to point to the external code and the image created as descri
    This assumes you have already built the image for the S32K148 platform in WSL
    and have mapped the Ubuntu filesystem to the **Z:** drive,
    as described in :doc:`setup_s32k148_win_build`.
-   In the above picture, **\\\\wsl$\\Ubuntu-22.04** is mapped to the **Z:** drive.
+   In the above picture, **\\\\wsl$\\Ubuntu-** :prop:`tool:ubuntu_version` is mapped to the **Z:** drive.
 
 3. In the **Debugger tab**, in the **Interface:** field select ``OpenSDA Embedded Debug - USB Port``.
    The **Port:** field should then be populated with an instance representing the target board connected to your PC via USB.
@@ -81,7 +81,7 @@ and then change it to point to the external code and the image created as descri
       :width: 80%
       :align: center
 
-   In the above picture, **\\\\wsl$\\Ubuntu-22.04** is mapped to the **Z:** drive
+   In the above picture, **\\\\wsl$\\Ubuntu-** :prop:`tool:ubuntu_version` is mapped to the **Z:** drive
    and the code has been built in Ubuntu in the directory specified by **Compilation path**.
 
 5. If the above steps are successful then press the **Debug** button,

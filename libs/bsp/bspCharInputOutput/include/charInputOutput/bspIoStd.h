@@ -1,24 +1,26 @@
 #ifndef BSPIOSTD_H_
 #define BSPIOSTD_H_
 
+#include "platform/config.h"
+#include "platform/estdint.h"
+
 #include <cstddef>
 #include <stdarg.h>
-#include "platform/estdint.h"
-#include "platform/config.h"
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 #define is_digit(c) (((c) >= '0') && ((c) <= '9'))
 
-#define ZEROPAD 1   /* pad with zero */
-#define SIGN    2   /* unsigned/signed long */
-#define PLUS    4   /* show plus */
-#define SPACE   8   /* space if plus */
-#define LEFT    16  /* left justified */
-#define SPECIAL 32  /* 0x */
-#define LARGE   64  /* use 'ABCDEF' instead of 'abcdef' */
+#define ZEROPAD 1  /* pad with zero */
+#define SIGN    2  /* unsigned/signed long */
+#define PLUS    4  /* show plus */
+#define SPACE   8  /* space if plus */
+#define LEFT    16 /* left justified */
+#define SPECIAL 32 /* 0x */
+#define LARGE   64 /* use 'ABCDEF' instead of 'abcdef' */
 
 #define do_div(n, base) do_div_hlp(&(n), (base))
 
@@ -27,9 +29,9 @@ extern "C" {
 #pragma inline do_div_hlp
 // clang-format on
 #endif
-ESR_UNUSED static int do_div_hlp(unsigned long* const n, const int base)
+ESR_UNUSED static int do_div_hlp(unsigned long* const n, int const base)
 {
-    const int res = (int)(*n % (unsigned long)base);
+    int const res = (int)(*n % (unsigned long)base);
 
     *n = *n / (unsigned long)base;
 
@@ -50,10 +52,7 @@ ESR_UNUSED static int do_div_hlp(unsigned long* const n, const int base)
  * \return Length of the resulting string.
  *
  */
-extern int sprintf(
-    char *buf,
-    const char *fmt,
-    ...);
+extern int sprintf(char* buf, char const* fmt, ...);
 
 /**
  *
@@ -70,11 +69,7 @@ extern int sprintf(
  * \return Length of the resulting string.
  *
  */
-extern int snprintf(
-    char *buf,
-    const size_t maxsize,
-    const char *fmt,
-    ...);
+extern int snprintf(char* buf, size_t const maxsize, char const* fmt, ...);
 
 /**
  *
@@ -91,10 +86,7 @@ extern int snprintf(
  * \return Length of the resulting string.
  *
  */
-extern int vsprintf(
-    char *buf,
-    const char *fmt,
-    va_list args);
+extern int vsprintf(char* buf, char const* fmt, va_list args);
 
 /**
  *
@@ -112,10 +104,7 @@ extern int vsprintf(
  * \return Length of the resulting string.
  *
  */
-extern int vsnprintf(char *buf,
-                     const size_t maxsize,
-                     const char *fmt,
-                     va_list args);
+extern int vsnprintf(char* buf, size_t const maxsize, char const* fmt, va_list args);
 
 #ifdef __cplusplus
 }

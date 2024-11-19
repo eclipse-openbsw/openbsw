@@ -36,7 +36,7 @@ Example
 
 This is how you declare a ``VariantQueue`` which can encode types ``A`` and ``B``:
 
-.. sourceinclude:: examples/variant_queue.cpp
+.. sourceinclude:: examples/VariantQueueExample.cpp
    :start-after: EXAMPLE_START declare
    :end-before: EXAMPLE_END declare
 
@@ -46,7 +46,7 @@ of the ``::io::variant_q::write()`` function.
 
 When the queue is full and an element cannot be written, ``write()`` will return false.
 
-.. sourceinclude:: examples/variant_queue.cpp
+.. sourceinclude:: examples/VariantQueueExample.cpp
    :start-after: EXAMPLE_START write
    :end-before: EXAMPLE_END write
    :dedent: 4
@@ -56,14 +56,14 @@ similar to when you use :ref:`estd::variant <estd_variant>`. You can choose to r
 only:
 
 
-.. sourceinclude:: examples/variant_queue.cpp
+.. sourceinclude:: examples/VariantQueueExample.cpp
    :start-after: EXAMPLE_START read_no_payload
    :end-before: EXAMPLE_END read_no_payload
    :dedent: 4
 
 Or read them with payload:
 
-.. sourceinclude:: examples/variant_queue.cpp
+.. sourceinclude:: examples/VariantQueueExample.cpp
    :start-after: EXAMPLE_START read_with_payload
    :end-before: EXAMPLE_END read_with_payload
    :dedent: 4

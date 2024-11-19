@@ -3,28 +3,28 @@
 Set up build environment for POSIX platform on Windows
 ======================================================
 
-Open a Ubuntu 22.04 shell running in WSL.
+Open a Ubuntu :prop:`tool:ubuntu_version` shell running in WSL.
 
 Required tools...
 
-* ``gcc 11.x or later``
-* ``cmake >= 3.22``
-* ``make``
+* gcc :prop:`tool:gcc_version` or later
+* cmake >= :prop:`tool:cmake_version`
+* make
 
-For Ubuntu 22.04, the ``apt`` package ``build-essential`` includes ``gcc`` and ``make``. You can install it as follows...
+For Ubuntu :prop:`tool:ubuntu_version`, the ``apt`` package ``build-essential`` includes ``gcc`` and ``make``. You can install it as follows...
 
 .. code-block:: bash
 
     sudo apt install build-essential
 
-You will also need ``cmake`` version >= 3.22. To install it, simply run:
+You will also need ``cmake`` version >= :prop:`tool:cmake_version` . To install it, simply run:
 
 .. code-block:: bash
 
     sudo apt install cmake
 
 which (at time of writing) installs ``cmake`` version 3.22.1
-Once installed, check ``cmake`` is found and is version 3.22 or higher...
+Once installed, check ``cmake`` is found and is version :prop:`tool:cmake_version` or higher...
 
 .. code-block:: bash
 

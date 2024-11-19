@@ -2,6 +2,7 @@
 
 #include "runtime/StatisticsWriter.h"
 
+#include "bsp/timer/SystemTimerMock.h"
 #include "runtime/RuntimeStatistics.h"
 #include "runtime/StatisticsIterator.h"
 #include "util/stream/StringBufferOutputStream.h"
@@ -18,9 +19,9 @@ struct TestRuntimeStatisticsFormatter
     void format(StatisticsWriter& writer, RuntimeStatistics const& statistics) const
     {
         writer.writeRuntimePercentage("%", statistics.getTotalRuntime());
-        writer.writeRuntime("min", 6U, statistics.getMinRuntime());
-        writer.writeRuntime("max", 6U, statistics.getMaxRuntime());
-        writer.writeRuntime("avg", 6U, statistics.getAverageRuntime());
+        writer.writeRuntimeMS("min", 6U, statistics.getMinRuntime());
+        writer.writeRuntimeMS("max", 6U, statistics.getMaxRuntime());
+        writer.writeRuntimeMS("avg", 6U, statistics.getAverageRuntime());
     }
 };
 
@@ -41,6 +42,8 @@ protected:
         writer.writePercentage("Pct", 720U, 10000U);         // "        Pct" "7.20 %"
         writer.writeEol();                                   // "         \n" "\n"
     }
+
+    StrictMock<SystemTimerMock> _systemTimerMock;
 };
 
 struct TestNames
@@ -131,12 +134,12 @@ TEST_F(StatisticsWriterTest, testFormatGroup)
     ::util::stream::declare::StringBufferOutputStream<300U> stream;
     ::util::format::StringWriter writer(stream);
     RuntimeStatistics statistics[4];
-    statistics[0].addRun(300U);
-    statistics[1].addRun(250U);
-    statistics[1].addRun(420U);
-    statistics[3].addRun(10U);
-    statistics[3].addRun(1010U);
-    StatisticsWriter cut(writer, 10000U, 50U);
+    statistics[0].addRun(300000U);
+    statistics[1].addRun(250000U);
+    statistics[1].addRun(420000U);
+    statistics[3].addRun(10000U);
+    statistics[3].addRun(1010000U);
+    StatisticsWriter cut(writer, 10000000U, 50U);
     char const* const nameArray[4] = {"first", "middle", nullptr, "last"};
     TestNames const names(nameArray);
     TestIterator it(
@@ -153,10 +156,32 @@ TEST_F(StatisticsWriterTest, testFormatGroup)
         it);
     char const* expected = "task              %       min       max       avg\n"
                            "-------------------------------------------------\n"
-                           "first        3.00 %      6 us      6 us      6 us\n"
-                           "middle       6.70 %      5 us      8 us      6 us\n"
-                           "last        10.20 %      0 us     20 us     10 us\n";
+                           "first        3.00 %      6 ms      6 ms      6 ms\n"
+                           "middle       6.70 %      5 ms      8 ms      6 ms\n"
+                           "last        10.20 %      0 ms     20 ms     10 ms\n";
     EXPECT_STREQ(expected, stream.getString());
+}
+
+TEST_F(StatisticsWriterTest, testBuiltinTicksConverter)
+{
+    {
+        // assume system ticks in nanoseconds
+        EXPECT_CALL(_systemTimerMock, systemTicksToTimeUs(5000UL)).WillOnce(Return(5UL));
+        ::util::stream::declare::StringBufferOutputStream<300U> stream;
+        ::util::format::StringWriter writer(stream);
+        StatisticsWriter cut(writer, 0U, 0U);
+        cut.writeRuntime("test", 4UL, 5000U);
+        EXPECT_STREQ("   5 us", stream.getString());
+    }
+    {
+        // assume system ticks in nanoseconds
+        EXPECT_CALL(_systemTimerMock, systemTicksToTimeUs(6000000UL)).WillOnce(Return(6000UL));
+        ::util::stream::declare::StringBufferOutputStream<300U> stream;
+        ::util::format::StringWriter writer(stream);
+        StatisticsWriter cut(writer, 0U, 0U);
+        cut.writeRuntimeMS("test", 4UL, 6000000UL);
+        EXPECT_STREQ("   6 ms", stream.getString());
+    }
 }
 
 } // namespace

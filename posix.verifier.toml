@@ -1,0 +1,14 @@
+dockerfile.filename = "bsw-ut"
+
+script = """
+    treefmt
+    git diff --exit-code
+
+    cmake -B cmake-build-unit-tests -S executables/unitTest -DBUILD_UNIT_TESTS=ON
+    cmake --build cmake-build-unit-tests -j
+    ctest --test-dir cmake-build-unit-tests -j
+    cmake -B cmake-build-posix -S executables/referenceApp
+    cmake --build cmake-build-posix --target app.referenceApp -j
+"""
+
+codeFormat = false

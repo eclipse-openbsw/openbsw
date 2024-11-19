@@ -10,7 +10,6 @@ different cores of the same micro controller. Of course they can also be used to
 between software components on the same core and just be a tool to model asynchronous programming.
 
 .. uml::
-    :scale: 100%
 
     interface IReader
     interface IWriter
@@ -26,7 +25,6 @@ It might contain "old" data and be used for side channel attacks. If in doubt,
 the implementation of the interface needs to be checked if it fulfills the security requirements.
 
 .. toctree::
-   :hidden:
    :glob:
 
    */index

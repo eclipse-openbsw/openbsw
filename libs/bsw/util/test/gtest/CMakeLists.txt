@@ -14,7 +14,7 @@ add_executable(
     src/util/string/ConstStringTest.cpp
     src/util/meta/BitmaskTest.cpp
     src/util/meta/BinaryValueTest.cpp
-    src/util/include_test.cpp
+    src/util/IncludeTest.cpp
     src/util/command/GroupCommandTest.cpp
     src/util/command/ParentCommandTest.cpp
     src/util/command/HelpCommandTest.cpp

@@ -1,10 +1,10 @@
 .. _setup_env_host_ubuntu:
 
-Set up environment on a Ubuntu host machine
-===========================================
+Set up environment on Ubuntu :prop:`tool:ubuntu_version`
+========================================================
 
 As it would be impossible to provide setup instructions for each and every flavour of linux available,
-instead an example setup on just one popular platform - Ubuntu 22.04 - is described.
+instead an example setup on just one popular platform - Ubuntu :prop:`tool:ubuntu_version`- is described.
 The set up will allow you to build images for two target platforms, POSIX and S32K148.
 
 POSIX platform
@@ -31,3 +31,4 @@ then you can build the image for that target, flash it onto your board and test 
    :glob:
 
    setup_s32k148_ubuntu_*
+   setup_s32k148_gdbserver

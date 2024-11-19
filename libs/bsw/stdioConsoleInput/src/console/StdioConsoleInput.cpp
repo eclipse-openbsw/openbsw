@@ -8,18 +8,35 @@
 
 namespace
 {
-static char const BACK_SPACE      = 0x08U;
-static char const BACK_SPACE_7F   = 0x7FU;
-static char const LINE_FEED       = 0x0AU;
-static char const CARRIAGE_RETURN = 0x0DU;
-static char const ESCAPE          = 0x1BU;
+static constexpr char BACK_SPACE      = 0x08U;
+static constexpr char BACK_SPACE_7F   = 0x7FU;
+static constexpr char LINE_FEED       = 0x0AU;
+static constexpr char CARRIAGE_RETURN = 0x0DU;
+static constexpr char ESCAPE          = 0x1BU;
 
-static char const MIN_VALID_CHR = 0x20U; // space
-static char const MAX_VALID_CHR = 0x7EU; // tilde
+static constexpr char MIN_VALID_CHR = 0x20U; // space
+static constexpr char MAX_VALID_CHR = 0x7EU; // tilde
 
+/*
+ * Reads a single character from standard input and appends it to the given string.
+ *
+ * \param line the string to which the character will be appended
+ * \return true if the character read is a special character that indicates the end of input, false
+ * otherwise.
+ *
+ * Special characters:
+ * - ESCAPE: Clears the line and returns true
+ * - BACK_SPACE or BACK_SPACE_7F: Removes the last character from the line if it is not empty
+ * - CARRIAGE_RETURN or LINE_FEED: Indicates the end of input and returns true
+ *
+ * Valid characters are in the range [MIN_VALID_CHR, MAX_VALID_CHR]
+ *
+ * If the character read is less than or equal to 0, returns false
+ */
 bool getline(::estd::string& line)
 {
     char const chr = getByteFromStdin();
+
     if (chr <= 0)
     {
         return false;
@@ -47,7 +64,9 @@ bool getline(::estd::string& line)
     {
         if (!line.empty())
         {
-            putByteToStdout(chr);
+            putByteToStdout(BACK_SPACE);
+            putByteToStdout(' ');
+            putByteToStdout(BACK_SPACE);
             line.resize(line.length() - 1);
         }
         return false;
@@ -79,58 +98,51 @@ void printPrompt()
 namespace console
 {
 StdioConsoleInput::StdioConsoleInput(char const* const prefix, char const* const suffix)
-: fStdoutStream()
-, fSharedOutputStream(fStdoutStream)
-, fTaggedSharedOutputStream(fSharedOutputStream, prefix, suffix)
-, fLine()
-, fOnLineReceived(
+: _stdoutStream()
+, _sharedOutputStream(_stdoutStream)
+, _taggedSharedOutputStream(_sharedOutputStream, prefix, suffix)
+, _line()
+, _onLineReceived(
       OnLineReceived::create<StdioConsoleInput, &StdioConsoleInput::onLineReceived>(*this))
-, fIsSuspended(false)
+, _isSuspended(false)
 {}
 
 void StdioConsoleInput::init(OnLineReceived const& onLineReceived)
 {
-    fOnLineReceived = onLineReceived;
+    _onLineReceived = onLineReceived;
 }
 
 void StdioConsoleInput::shutdown()
 {
-    fOnLineReceived
+    _onLineReceived
         = OnLineReceived::create<StdioConsoleInput, &StdioConsoleInput::onLineReceived>(*this);
 }
 
 void StdioConsoleInput::run()
 {
-    if (fIsSuspended)
+    if (_isSuspended || !getline(_line))
     {
         return;
     }
 
-    if (!getline(fLine))
+    if (!_line.empty())
     {
-        return;
-    }
-
-    if (fLine.empty())
-    {
-        printPrompt();
-        return;
+        printNewline();
+        _isSuspended = true;
+        _onLineReceived(
+            _taggedSharedOutputStream,
+            _line,
+            OnLineProcessed::create<StdioConsoleInput, &StdioConsoleInput::onLineProcessed>(*this));
     }
     else
     {
-        printNewline();
+        printPrompt();
     }
-
-    fIsSuspended = true;
-    fOnLineReceived(
-        fTaggedSharedOutputStream,
-        fLine,
-        OnLineProcessed::create<StdioConsoleInput, &StdioConsoleInput::onLineProcessed>(*this));
 }
 
 void StdioConsoleInput::onLineReceived(
     ::util::stream::ISharedOutputStream& /*outputStream*/,
-    ::estd::string const& /*l*/,
+    ::estd::string const& /*line*/,
     OnLineProcessed const& callback)
 {
     callback();
@@ -138,8 +150,8 @@ void StdioConsoleInput::onLineReceived(
 
 void StdioConsoleInput::onLineProcessed()
 {
-    fLine.clear();
-    fIsSuspended = false;
+    _line.clear();
+    _isSuspended = false;
     printPrompt();
 }
 

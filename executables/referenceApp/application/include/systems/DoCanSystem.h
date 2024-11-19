@@ -3,6 +3,8 @@
 #ifndef GUARD_EB6712AB_E148_4A24_B106_2B72D43439AC
 #define GUARD_EB6712AB_E148_4A24_B106_2B72D43439AC
 
+#include <async/Async.h>
+#include <async/IRunnable.h>
 #include <busid/BusId.h>
 #include <docan/addressing/DoCanNormalAddressing.h>
 #include <docan/addressing/DoCanNormalAddressingFilter.h>

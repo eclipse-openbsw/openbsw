@@ -12,6 +12,14 @@
 
 namespace async
 {
+/**
+ * A template class that enables the enqueuing and execution of Runnables. It leverages an
+ * EventPolicy, making it suitable for event-driven applications.
+ *
+ * \tparam Runnable Type of functions, that will be executed.
+ * \tparam EventPolicy EventPolicy is derived from EventDispatcher. Method enqueue will set Event,
+ * specified in EventPolicy.
+ */
 template<typename Runnable, typename EventPolicy, typename Lock>
 class RunnableExecutor
 {
@@ -21,6 +29,12 @@ public:
     void init();
     void shutdown();
 
+    /**
+     * Places a Runnable in the internal queue and sets the event in the EventDispatcher. When
+     * handleEvents is called on the EventDispatcher, all Runnables in the queue are executed
+     * sequentially, and the queue is emptied.
+     * \param runnable Runnable to be executed
+     */
     void enqueue(Runnable& runnable);
 
 private:

@@ -567,7 +567,7 @@ This makes it easier to comment out/in individual lines.
 If a complex expression does not fit into one line, it shall be wrapped into several lines.
 There are many possibilities where to break. clang-format uses a heuristic algorithm
 which can be configured. It usually works pretty well, but in case the code
-looks ugly afterwards, feel free to disable :ref:`formatting_script`.
+looks ugly afterwards, feel free to :ref:`disable_clang_format_code`.
 See below how clang-format is configured (the penalty options).
 
 .. code-block::

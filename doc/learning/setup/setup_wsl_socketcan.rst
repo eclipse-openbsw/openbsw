@@ -22,7 +22,7 @@ confirm WSL2 as default version...
 
     wsl --set-default-version 2
 
-The steps below assume you have WSL2 and Ubuntu-22 set up as described in :ref:`setup_windows_01_wsl`.
+The steps below assume you have WSL2 and Ubuntu :prop:`tool:ubuntu_version` set up as described in :ref:`setup_windows_01_wsl`.
 
 Update your existing Ubuntu distribution and install the tools needed to configure and build the kernel...
 
@@ -32,9 +32,9 @@ Update your existing Ubuntu distribution and install the tools needed to configu
     sudo apt install build-essential flex bison libssl-dev libelf-dev libncurses-dev pkg-config bc dwarves
 
 Just for background information, note that WSL uses a single linux kernel
-and if you have multiple distributions (eg. Ubuntu-18.04, Ubuntu-22.04, Debian, etc.)
+and if you have multiple distributions (eg. Ubuntu-18.04, Ubuntu- :prop:`tool:ubuntu_version`, Debian, etc.)
 they will all use the same kernel provided by WSL.
-In the instructions below you will not be replacing your existing Ubuntu-22.04 distribution,
+In the instructions below you will not be replacing your existing Ubuntu- :prop:`tool:ubuntu_version` distribution,
 you will be replacing the kernel it is using with a custom kernel that you will build.
 The distribution and the kernel need to be compatible,
 so the first thing you need to do is check what version of linux kernel is currently running by executing ``uname -r``...

@@ -1,0 +1,22 @@
+
+[socketcan]
+channel = "vcan0"
+
+[serial]
+port = "PTY_FORWARDER"
+send_command_expected = "Console command succeeded"
+send_command_timeout = 0.1
+send_command_max_retries = 2
+
+[pty_forwarder]
+ext_link = "/tmp/pty_forwarder"
+
+[target_process]
+command_line = "../../cmake-build-posix/application/app.referenceApp.elf < /tmp/pty_forwarder > /tmp/pty_forwarder"
+restart_if_exited = true
+kill_at_end = true
+
+[boot]
+started_str = "INFO: Run level 1"
+complete_str = "DEBUG: Run level 8 done"
+max_time = 0.5

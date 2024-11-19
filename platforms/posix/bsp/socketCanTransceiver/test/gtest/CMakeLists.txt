@@ -1,6 +1,6 @@
 add_executable(
     socketCanTransceiverTest
-    socketCanTransceiver/src/can/include_test.cpp
+    socketCanTransceiver/src/can/IncludeTest.cpp
     socketCanTransceiver/src/can/SocketCanTransceiverTest.cpp)
 
 target_link_libraries(

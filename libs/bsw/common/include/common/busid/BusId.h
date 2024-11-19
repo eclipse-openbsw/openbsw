@@ -18,11 +18,22 @@ namespace common
 namespace busid
 {
 
+/**
+ * Traits class for bus identification.
+ *
+ *
+ */
 class BusIdTraits
 {
     BusIdTraits() = delete;
 
 public:
+    /**
+     * Gets name of Bus.
+     * \param index ID of Bus
+     *
+     * \return Name of Bus
+     */
     static char const* getName(uint8_t index);
 };
 

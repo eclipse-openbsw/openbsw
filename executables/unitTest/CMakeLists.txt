@@ -18,7 +18,7 @@ add_compile_definitions(PLATFORM_SUPPORT_CAN=1)
 add_compile_definitions(PLATFORM_SUPPORT_UDS=1)
 add_compile_definitions(PLATFORM_SUPPORT_IO=1)
 
-include(${OPENBSW_DIR}/CMakeLists.txt)
+include(${OPENBSW_DIR}/Filelists.cmake)
 
 add_library(asyncPlatform ALIAS asyncMock)
 add_library(os::freeRtos ALIAS freeRtosMock)

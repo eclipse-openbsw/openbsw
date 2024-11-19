@@ -1,8 +1,10 @@
-add_executable(asyncConsoleTest src/console/include_test.cpp)
+add_executable(
+    asyncConsoleTest src/console/IncludeTest.cpp src/console/DemoTest.cpp
+                     src/demo/DemoCommand.cpp)
 
-target_include_directories(asyncConsoleTest PRIVATE)
+target_include_directories(asyncConsoleTest PRIVATE include)
 
-target_link_libraries(asyncConsoleTest PRIVATE asyncConsole asyncMock
-                                               gmock_main)
+target_link_libraries(asyncConsoleTest PRIVATE asyncFreeRtos asyncConsole
+                                               asyncMockImpl gmock_main)
 
 gtest_discover_tests(asyncConsoleTest PROPERTIES LABELS "asyncConsoleTest")

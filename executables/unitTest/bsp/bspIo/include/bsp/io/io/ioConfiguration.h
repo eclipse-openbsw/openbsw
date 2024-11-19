@@ -2,9 +2,9 @@
 
 #define MODULE_P22 /*lint --e(923, 9078)*/ ((*(Ifx_P*)0xF003B600u))
 
-const Io::PinConfiguration Io::fPinConfiguration[Io::NUMBER_OF_IOS] = {
+Io::PinConfiguration const Io::fPinConfiguration[Io::NUMBER_OF_IOS] = {
 
-    /* 00 */ { 0UL },
+    /* 00 */ {0UL},
 
 };
 

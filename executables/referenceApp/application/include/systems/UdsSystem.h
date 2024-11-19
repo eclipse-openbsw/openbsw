@@ -3,24 +3,27 @@
 #ifndef GUARD_D1CD7B44_9E37_4B79_8C66_9070E6D3061C
 #define GUARD_D1CD7B44_9E37_4B79_8C66_9070E6D3061C
 
-#include "estd/singleton.h"
-#include "lifecycle/AsyncLifecycleComponent.h"
-#include "uds/DiagDispatcher.h"
-#include "uds/DummySessionPersistence.h"
-#include "uds/ReadIdentifierPot.h"
-#include "uds/UdsLifecycleConnector.h"
-#include "uds/async/AsyncDiagHelper.h"
-#include "uds/async/AsyncDiagJob.h"
-#include "uds/jobs/ReadIdentifierFromMemory.h"
-#include "uds/services/communicationcontrol/CommunicationControl.h"
-#include "uds/services/readdata/ReadDataByIdentifier.h"
-#include "uds/services/routinecontrol/RequestRoutineResults.h"
-#include "uds/services/routinecontrol/RoutineControl.h"
-#include "uds/services/routinecontrol/StartRoutine.h"
-#include "uds/services/routinecontrol/StopRoutine.h"
-#include "uds/services/sessioncontrol/DiagnosticSessionControl.h"
-#include "uds/services/testerpresent/TesterPresent.h"
-#include "uds/services/writedata/WriteDataByIdentifier.h"
+#include <async/Async.h>
+#include <async/IRunnable.h>
+#include <lifecycle/AsyncLifecycleComponent.h>
+#include <uds/DiagDispatcher.h>
+#include <uds/DummySessionPersistence.h>
+#include <uds/ReadIdentifierPot.h>
+#include <uds/UdsLifecycleConnector.h>
+#include <uds/async/AsyncDiagHelper.h>
+#include <uds/async/AsyncDiagJob.h>
+#include <uds/jobs/ReadIdentifierFromMemory.h>
+#include <uds/services/communicationcontrol/CommunicationControl.h>
+#include <uds/services/readdata/ReadDataByIdentifier.h>
+#include <uds/services/routinecontrol/RequestRoutineResults.h>
+#include <uds/services/routinecontrol/RoutineControl.h>
+#include <uds/services/routinecontrol/StartRoutine.h>
+#include <uds/services/routinecontrol/StopRoutine.h>
+#include <uds/services/sessioncontrol/DiagnosticSessionControl.h>
+#include <uds/services/testerpresent/TesterPresent.h>
+#include <uds/services/writedata/WriteDataByIdentifier.h>
+
+#include <estd/singleton.h>
 
 namespace lifecycle
 {

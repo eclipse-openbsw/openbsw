@@ -3,7 +3,7 @@
 Managing the lifecycle of components
 ====================================
 
-Previous: :ref:`learning_console`
+Previous: :ref:`learning_unit_tests`
 
 Using the BSW module ``lifecycle``, it is easy to divide an application's functionality into components
 to be brought up / down in a specific order at different "run levels".

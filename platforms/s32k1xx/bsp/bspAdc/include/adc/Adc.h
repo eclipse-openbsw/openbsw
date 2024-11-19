@@ -70,7 +70,7 @@ void Adc<AdcResolution, AdcConfiguration, maxChannels>::enableChannel(
         fAdc.SC1[channel] = extInput + isrMask;
         if (0U == channel)
         {
-            uint32_t timeout = 0;
+            uint32_t volatile timeout = 0;
             do
             {
                 timeout++;
@@ -79,7 +79,7 @@ void Adc<AdcResolution, AdcConfiguration, maxChannels>::enableChannel(
                     break;
                 }
             } while ((fAdc.SC1[0] & (COCO)) == 0);
-            ESR_UNUSED uint32_t a = fAdcInResolution(fAdc.R[0]);
+            ESR_UNUSED volatile uint32_t a = fAdcInResolution(fAdc.R[0]);
         }
     }
 }
@@ -116,7 +116,7 @@ bsp::BspReturnCode Adc<AdcResolution, AdcConfiguration, maxChannels>::init()
     fAdc.SC2                       = 0;
     fAdc.SC3                       = 0x87UL;
 
-    uint32_t timeout = 0;
+    uint32_t volatile timeout = 0;
     do
     {
         timeout++;
@@ -248,7 +248,7 @@ bsp::BspReturnCode Adc<AdcResolution, AdcConfiguration, maxChannels>::getValueSy
         ESR_UNUSED volatile uint32_t a = fAdc.R[0];
         fAdc.SC1[0]                    = phChannel;
 
-        uint32_t timeout = 0;
+        uint32_t volatile timeout = 0;
         do
         {
             timeout++;
@@ -277,11 +277,11 @@ bsp::BspReturnCode Adc<AdcResolution, AdcConfiguration, maxChannels>::dma(bool a
     ESR_UNUSED volatile uint32_t a = fAdc.R[0];
     if (true == active)
     {
-        fAdc.SC2 = fAdc.SC2 | (1 << 3);
+        fAdc.SC2 |= (1 << 3);
     }
     else
     {
-        fAdc.SC2 = fAdc.SC2 & ~(1 << 3);
+        fAdc.SC2 &= ~(1 << 3);
     }
     return bsp::BSP_OK;
 }

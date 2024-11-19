@@ -72,6 +72,8 @@ public:
 
     bool setStarted() { return RoutineControlJob::fStarted = true; }
 
+    bool isStarted() const { return RoutineControlJob::fStarted; }
+
     RoutineControlJobNode fStopRoutine;
     RoutineControlJobNode fRequestRoutineResults;
 
@@ -92,6 +94,20 @@ uint8_t const TestableRoutineControlJob::DEFAULT_STOP_ROUTINE_REQUEST[4]
     = {0x31U, 0x02U, 0xF0U, 0x0AU};
 uint8_t const TestableRoutineControlJob::DEFAULT_REQUEST_ROUTINE_RESULTS_REQUEST[4]
     = {0x31U, 0x03U, 0xF0U, 0x0AU};
+
+class TestableStop : public TestableRoutineControlJob
+{
+public:
+    TestableStop() : TestableRoutineControlJob() {}
+
+    MOCK_METHOD(
+        DiagReturnCode::Type,
+        stop,
+        (IncomingDiagConnection & connection,
+         uint8_t const* const request,
+         uint16_t const requestLength),
+        (override));
+};
 
 struct RoutineControlJobTest : ::testing::Test
 {
@@ -122,6 +138,7 @@ struct RoutineControlJobTest : ::testing::Test
     IncomingDiagConnection fIncomingDiagConnection{::async::CONTEXT_INVALID};
     StrictMock<DiagSessionManagerMock> fDiagSessionManager;
     ApplicationDefaultSession fApplicationSession;
+    TestableStop StopRoutine;
 };
 
 /**
@@ -492,4 +509,55 @@ TEST_F(RoutineControlJobTest, process_subfunction_not_supported)
             sizeof(TestableRoutineControlJob::ROUTINE_IDENTIFIER)));
 }
 
+TEST_F(
+    RoutineControlJobTest,
+    process_should_return_ISO_CONDITIONS_NOT_CORRECT_if_identifier_is_stop_routine)
+{
+    fRequestBuffer[1] = 0x02U; // stop routine
+
+    EXPECT_CALL(fDiagSessionManager, getActiveSession()).WillOnce(ReturnRef(fApplicationSession));
+
+    EXPECT_CALL(
+        fDiagSessionManager,
+        acceptedJob(
+            Ref(fIncomingDiagConnection),
+            Ref(fRoutineControlJobExtended.getStopRoutine()),
+            NotNull(),
+            0))
+        .WillOnce(Return(uds::DiagReturnCode::OK));
+
+    EXPECT_TRUE(fRoutineControlJobExtended.setStarted());
+
+    EXPECT_EQ(
+        DiagReturnCode::ISO_CONDITIONS_NOT_CORRECT,
+        fRoutineControlJobExtended.getStopRoutine().execute(
+            fIncomingDiagConnection,
+            TestableRoutineControlJob::ROUTINE_IDENTIFIER,
+            sizeof(TestableRoutineControlJob::ROUTINE_IDENTIFIER)));
+}
+
+TEST_F(RoutineControlJobTest, process_should_return_OK_if_stop_is_returning_OK)
+{
+    fRequestBuffer[1] = 0x02U; // stop routine
+
+    EXPECT_CALL(fDiagSessionManager, getActiveSession()).WillOnce(ReturnRef(fApplicationSession));
+
+    EXPECT_CALL(
+        fDiagSessionManager,
+        acceptedJob(Ref(fIncomingDiagConnection), Ref(StopRoutine), NotNull(), 0))
+        .WillOnce(Return(uds::DiagReturnCode::OK));
+
+    EXPECT_TRUE(StopRoutine.setStarted());
+
+    EXPECT_CALL(StopRoutine, stop(_, _, _)).WillOnce(Return(DiagReturnCode::OK));
+
+    EXPECT_EQ(
+        DiagReturnCode::OK,
+        StopRoutine.execute(
+            fIncomingDiagConnection,
+            TestableRoutineControlJob::ROUTINE_IDENTIFIER,
+            sizeof(TestableRoutineControlJob::ROUTINE_IDENTIFIER)));
+
+    EXPECT_FALSE(StopRoutine.isStarted());
+}
 } // anonymous namespace

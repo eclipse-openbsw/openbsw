@@ -11,67 +11,15 @@
 
 namespace timer
 {
-/**
- * A Timer to manage cyclic and single shot timeouts
- *
- * \section timer_timeouts_example Set cyclic and single shot timeouts example
- * \code{.cpp}
- * [EXAMPLE1_START]
- * void
- * TaskContext::scheduleCyclic(
- *         Timeout& timeout,
- *         const uint32_t period,
- *         const TimeUnitType unit)
- * {
- *     if (!_timer.isActive(timeout))
- *     {
- *         if (_timer.setCyclic(timeout, period * unit, getSystemTimeUs32Bit()))
- *         {
- *             _timerEventPolicy.setEvent(); // OS and HW dependent
- *         }
- *     }
- * }
- *
- * void
- * TaskContext::schedule(
- *         Timeout& timeout,
- *         const uint32_t delay,
- *         const TimeUnitType unit)
- * {
- *     if (!_timer.isActive(timeout))
- *     {
- *         if (_timer.set(timeout, delay * unit, getSystemTimeUs32Bit()))
- *         {
- *             _timerEventPolicy.setEvent(); // OS and HW dependent
- *         }
- *     }
- * }
- * [EXAMPLE1_END]
- * \endcode
- *
- * \section timer_handle_example Handle timer loop example
- * \code{.cpp}
- * [EXAMPLE2_START]
- * void
- * TaskContext::handleTimeout()
- * {
- *     while (_timer.processNextTimeout(getSystemTimeUs32Bit()))
- *     {}
- *     uint32_t nextDelta;
- *     if (_timer.getNextDelta(getSystemTimeUs32Bit(), nextDelta))
- *     {
- *         setTimeout(nextDelta); // OS and HW dependent
- *     }
- * }
- *
- * TaskContext::cancel(Timeout& timeout)
- * {
- *     _timer.cancel(timeout);
- * }
- * [EXAMPLE2_END]
- * \endcode
- */
 
+/**
+ * A template class that serves as collection of timeouts.
+ * It manages and processes both cyclic and
+ * one-shot timeouts, providing functionality to set timeouts,
+ * check if a timer is active, and cancel the enqueued timeouts.
+ *
+ * \tparam LockGuard is the type that implements RAII-based lock for secure section.
+ */
 template<class LockGuard>
 class Timer
 {

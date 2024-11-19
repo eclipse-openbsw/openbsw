@@ -3,17 +3,19 @@
 #ifndef GUARD_4E0CAF56_BD8A_4C9C_98F4_9C8DBF1A0BB7
 #define GUARD_4E0CAF56_BD8A_4C9C_98F4_9C8DBF1A0BB7
 
-#include <estd/uncopyable.h>
-
 namespace os
 {
-
+/**
+ * Class providing interface for synchronization between the main thread and the worker thread
+ *
+ *
+ */
 class IFutureSupport
 {
-    UNCOPYABLE(IFutureSupport);
-
 public:
-    IFutureSupport() {}
+    IFutureSupport(IFutureSupport const&)            = delete;
+    IFutureSupport& operator=(IFutureSupport const&) = delete;
+    IFutureSupport()                                 = default;
 
     virtual void wait()              = 0;
     virtual void notify()            = 0;

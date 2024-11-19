@@ -2,7 +2,20 @@
 
 #include "runtime/StatisticsWriter.h"
 
+#include "bsp/timer/SystemTimer.h"
+
 #include <cstring>
+
+namespace
+{
+
+inline uint32_t systemTicksToTimeUs32Bit(uint32_t const ticks, uint32_t const ticksPerUs)
+{
+    return ticksPerUs == 0 ? static_cast<uint32_t>(::systemTicksToTimeUs(ticks))
+                           : ticks / ticksPerUs;
+}
+
+} // namespace
 
 namespace runtime
 {
@@ -49,7 +62,7 @@ void StatisticsWriter::writeRuntime(
     uint32_t columnWidth = 0U;
     if (!handleDefaultMode(title, minWidth, 3U, false, columnWidth))
     {
-        (void)_writer.printf("%*d us", columnWidth, runtime / _ticksPerUs);
+        (void)_writer.printf("%*d us", columnWidth, systemTicksToTimeUs32Bit(runtime, _ticksPerUs));
     }
 }
 
@@ -59,7 +72,8 @@ void StatisticsWriter::writeRuntimeMS(
     uint32_t columnWidth = 0U;
     if (!handleDefaultMode(title, minWidth, 3U, false, columnWidth))
     {
-        (void)_writer.printf("%*d ms", columnWidth, runtime / (1000U * _ticksPerUs));
+        (void)_writer.printf(
+            "%*d ms", columnWidth, systemTicksToTimeUs32Bit(runtime, _ticksPerUs) / 1000U);
     }
 }
 

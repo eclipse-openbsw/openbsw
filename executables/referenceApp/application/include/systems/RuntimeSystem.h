@@ -3,6 +3,8 @@
 #ifndef GUARD_EB2D422D_3098_4A56_A3FA_884EB2AA7B1C
 #define GUARD_EB2D422D_3098_4A56_A3FA_884EB2AA7B1C
 
+#include <async/Async.h>
+#include <async/IRunnable.h>
 #include <console/AsyncCommandWrapper.h>
 #include <lifecycle/AsyncLifecycleComponent.h>
 #include <lifecycle/console/StatisticsCommand.h>

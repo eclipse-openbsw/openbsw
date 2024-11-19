@@ -33,7 +33,7 @@ void AnalogInput::init()
         &analogInputScaleConfiguration[0]);
 
     SIM->ADCOPT = 0U;
-    SIM->CHIPCTL = SIM->CHIPCTL & ~SIM_CHIPCTL_PDB_BB_SEL_MASK;
+    SIM->CHIPCTL &= ~SIM_CHIPCTL_PDB_BB_SEL_MASK;
 
     (void)fAdc0.init();
 
