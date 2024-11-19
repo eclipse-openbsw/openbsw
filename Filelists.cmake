@@ -33,13 +33,6 @@ add_compile_options(
 add_compile_options(
     "$<$<COMPILE_LANG_AND_ID:C,Clang,GNU>:-O2;-g3;-Werror;-Wall>")
 
-#[[
-    Build type is unspecified by default, but in case it was specified, we're
-    forcing debug to have same flags as release, as difference in optimized and
-    unoptimized version of software in embedded systems can be crucial.
-#]]
-set(CMAKE_CXX_FLAGS_DEBUG ${CMAKE_CXX_FLAGS_RELEASE})
-
 if (BUILD_UNIT_TESTS)
     add_compile_definitions(UNIT_TEST=1)
     include(GoogleTest)
