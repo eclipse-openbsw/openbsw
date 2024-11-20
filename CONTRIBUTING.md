@@ -2,10 +2,10 @@
 
 Before considering contributing you should be familiar with Eclipse OpenBSW project.
 
- * You should have [set up a working environment](https://eclipse-openbsw.github.io/open-bsw/doc/learning/setup/index.html)
+ * You should have [set up a working environment](https://eclipse-openbsw.github.io/openbsw/sphinx_docs/doc/learning/setup/index.html)
    in which you can build and test.
  * You should be familiar with...
-    + [Coding Guidelines](https://eclipse-openbsw.github.io/open-bsw/doc/codingGuidelines/index.html)
+    + [Coding Guidelines](https://eclipse-openbsw.github.io/openbsw/sphinx_docs/doc/codingGuidelines/index.html)
     + [Code of Conduct](CODE_OF_CONDUCT.md)
  * Contributions should pass all automated builds and tests,
 including [building the documentation](doc/README.md).
@@ -15,7 +15,7 @@ including [building the documentation](doc/README.md).
 ### Reporting Bugs / Feature Requests
 
 The primary communication channel for contributions is through
-[issues](https://github.com/eclipse-openbsw/open-bsw/issues).
+[issues](https://github.com/eclipse-openbsw/openbsw/issues).
 If you have found a bug or would like a new feature,
 you should first check if it has already been raised there.
 Please add all information you can share and that will help to reproduce bugs.
@@ -37,7 +37,7 @@ happy to guide you and give feedback.
 
 To contribute your work you need to...
 
-1. Fork the [Eclipse OpenBSW](https://github.com/eclipse-openbsw/open-bsw) project
+1. Fork the [Eclipse OpenBSW](https://github.com/eclipse-openbsw/openbsw) project
 2. Create your Branch (`git checkout -b newBranchName`)
 3. Commit your Changes (`git commit -m 'Add some feature/fix some bug'`)
 4. Push to the Branch (`git push origin newBranchName`)

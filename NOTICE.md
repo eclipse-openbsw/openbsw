@@ -25,7 +25,7 @@ SPDX-License-Identifier: Apache-2.0
 
 The project maintains the following source code repository:
 
- * https://github.com/eclipse-openbsw/open-bsw
+ * https://github.com/eclipse-openbsw/openbsw
 
 ## Third-Party Licenses
 
