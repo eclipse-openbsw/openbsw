@@ -101,10 +101,10 @@ ICanTransceiver::ErrorCode FlexCANDevice::init()
     fPhy.init(fConfig.BusId);
 
     // Enable module
-    fpDevice->MCR &= ~FLEXCAN_MCR_MDIS_MASK;
+    fpDevice->MCR = fpDevice->MCR & ~FLEXCAN_MCR_MDIS_MASK;
 
     // Soft reset
-    fpDevice->MCR |= FLEXCAN_MCR_SOFTRST_MASK;
+    fpDevice->MCR = fpDevice->MCR | FLEXCAN_MCR_SOFTRST_MASK;
     if (::bsp::isEqualAfterTimeout<vuint32_t>(
             &fpDevice->MCR,
             FLEXCAN_MCR_SOFTRST_MASK,
@@ -115,7 +115,7 @@ ICanTransceiver::ErrorCode FlexCANDevice::init()
     }
 
     // Enter freeze mode
-    fpDevice->MCR |= (FLEXCAN_MCR_FRZ_MASK | FLEXCAN_MCR_HALT_MASK);
+    fpDevice->MCR = fpDevice->MCR | (FLEXCAN_MCR_FRZ_MASK | FLEXCAN_MCR_HALT_MASK);
     if (::bsp::isEqualAfterTimeout<vuint32_t>(
             &fpDevice->MCR, FLEXCAN_MCR_FRZACK_MASK, 0UL, INIT_DELAY_TIMEOUT_US))
     {
@@ -125,14 +125,14 @@ ICanTransceiver::ErrorCode FlexCANDevice::init()
     // Setup MCR:
     // Disable self reception
     // IRQM have to be switched on
-    fpDevice->MCR
-        |= (FLEXCAN_MCR_MAXMB(e_TRANSMIT_BUFFER_MAX) | FLEXCAN_MCR_SRXDIS_MASK
+    fpDevice->MCR = fpDevice->MCR
+        | (FLEXCAN_MCR_MAXMB(e_TRANSMIT_BUFFER_MAX) | FLEXCAN_MCR_SRXDIS_MASK
             | FLEXCAN_MCR_IRMQ_MASK);
 
     // Setup CTRL
     fpDevice->CTRL1 = 0;
-    fpDevice->CTRL1 |= fConfig.clockSetupRegister;
-    fpDevice->CTRL2 |= FLEXCAN_CTRL2_MRP_MASK;
+    fpDevice->CTRL1 = fpDevice->CTRL1 | fConfig.clockSetupRegister;
+    fpDevice->CTRL2 = fpDevice->CTRL2 | FLEXCAN_CTRL2_MRP_MASK;
 
     // Setup message buffers
     fRxInterruptMask = 0;
@@ -182,7 +182,7 @@ ICanTransceiver::ErrorCode FlexCANDevice::start()
     fpDevice->IMASK1 = fRxInterruptMask;
 
     // Leave freeze mode
-    fpDevice->MCR &= (~FLEXCAN_MCR_HALT_MASK & ~FLEXCAN_MCR_FRZ_MASK);
+    fpDevice->MCR = fpDevice->MCR & (~FLEXCAN_MCR_HALT_MASK & ~FLEXCAN_MCR_FRZ_MASK);
     if (::bsp::isEqualAfterTimeout<vuint32_t>(
             &fpDevice->MCR,
             (FLEXCAN_MCR_NOTRDY_MASK),
