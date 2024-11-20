@@ -8,6 +8,7 @@ jobs:
     strategy:
       matrix:
         platform: [posix, s32k148]
+        cpp-standard: [14, 17, 20]
 
     steps:
       - name: Checkout repository
@@ -20,9 +21,9 @@ jobs:
           path: |
             cmake-build-posix
             cmake-build-s32k148
-          key: ${{ runner.os }}-cmake-${{ matrix.platform }}-${{ hashFiles('**/*.cpp', '**/*.h',  '**/*.cmake', '**/*.txt', '**/*.c', '**/*.s', 'admin/cmake/ArmNoneEabi.cmake') }}
+          key: ${{ runner.os }}-cmake-${{ matrix.platform }}-${{ matrix.cpp-standard }}-${{ hashFiles('**/*.cpp', '**/*.h',  '**/*.cmake', '**/*.txt', '**/*.c', '**/*.s', 'admin/cmake/ArmNoneEabi.cmake') }}
           restore-keys: |
-            ${{ runner.os }}-cmake-${{ matrix.platform }}-
+            ${{ runner.os }}-cmake-${{ matrix.platform }}-${{ matrix.cpp-standard }}-
 
       - name: Set up CMake
         uses: jwlawson/actions-setup-cmake@v2
@@ -37,11 +38,21 @@ jobs:
 
       - name: Configure CMake for POSIX
         if: ${{ matrix.platform == 'posix' && steps.cache-cmake.outputs.cache-hit != 'true' }}
-        run: cmake -B cmake-build-posix -S executables/referenceApp
+        run: |
+          cmake \
+          -B cmake-build-posix \
+          -S executables/referenceApp \
+          -DCMAKE_CXX_STANDARD=${{ matrix.cpp-standard }}
 
       - name: Configure CMake for S32K148
         if: ${{ matrix.platform == 's32k148' && steps.cache-cmake.outputs.cache-hit != 'true' }}
-        run: cmake -B cmake-build-s32k148 -S executables/referenceApp -DBUILD_TARGET_PLATFORM="S32K148EVB" --toolchain ../../admin/cmake/ArmNoneEabi.cmake
+        run: |
+          cmake \
+          -B cmake-build-s32k148 \
+          -S executables/referenceApp \
+          -DCMAKE_CXX_STANDARD=${{ matrix.cpp-standard }} \
+          -DBUILD_TARGET_PLATFORM="S32K148EVB" \
+          --toolchain ../../admin/cmake/ArmNoneEabi.cmake
 
       - name: Build for ${{ matrix.platform }}
         if: steps.cache-cmake.outputs.cache-hit != 'true'
