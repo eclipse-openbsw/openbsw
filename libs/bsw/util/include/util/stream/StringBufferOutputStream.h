@@ -11,6 +11,11 @@ namespace util
 {
 namespace stream
 {
+/**
+ * Specific IOutputStream class implementation.
+ * A lightweight output stream similar to std::stringstream.
+ * This class provides an interface to write formatted text into a buffer.
+ */
 class StringBufferOutputStream : public IOutputStream
 {
 public:

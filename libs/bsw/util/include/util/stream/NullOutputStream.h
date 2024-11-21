@@ -13,6 +13,10 @@ namespace util
 {
 namespace stream
 {
+/**
+ * The IOutputStream class that implements dummy output.
+ *
+ */
 class NullOutputStream : public IOutputStream
 {
 public:

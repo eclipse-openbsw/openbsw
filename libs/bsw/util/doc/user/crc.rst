@@ -1,15 +1,15 @@
 .. _util_crc:
 
-crc - Cyclic Redundancy Check
-=============================
+`util::crc`
+===========
 
-CRC (Cyclic Redundancy Check) codes are an error detecting code class which are a subset of cyclic
-codes, which are also a subset of linear block codes. The goal of CRC codes is to detect accidental
-changes in e.g. transferred data. This error detecting capability is achieved by adding redundancy
-in form of a checksum to the transferred data. If this checksum of the transferred data
-and the calculated checksum is identical, it is assumed that no error happened during
-transmission. In general this assumption does not hold. There can be errors, which are dividable by
-the generator polynomial and these errors cannot be detected.
+**CRC** (Cyclic Redundancy Check) codes are a class of error-detecting codes, which are a subset of
+cyclic codes and, in turn, a subset of linear block codes. The primary purpose of CRC codes is to
+detect accidental changes in data, such as during transmission. This is achieved by adding redundancy
+in the form of a checksum to the transmitted data. If the checksum of the received data matches
+the calculated checksum, it is assumed that no errors occurred during
+transmission. However, this assumption is not always valid, as certain errors divisible by
+the generator polynomial cannot be detected.
 
 Theory behind CRC calculations
 ------------------------------
@@ -23,7 +23,8 @@ collision probability.
 The most important property of this generator polynomial is its length, which is determined by the
 degree of the polynomial. This property also influences the length of the computed checksum,
 i.e. the remainder of the polynomial division.
-Examples how this polynomial division is performed can be seen `here <https://en.wikipedia.org/wiki/Computation_of_cyclic_redundancy_checks>`_.
+Examples how this polynomial division is performed can be seen here
+`<https://en.wikipedia.org/wiki/Computation_of_cyclic_redundancy_checks>`_.
 
 Commonly used polynomial lengths are:
 
@@ -102,19 +103,21 @@ CRC configurations
 The CRC template class has six different parameters which can be used to implement a CRC.
 The parameters are:
 
-1. CRC width (uint8_t, uint16_t, uint32_t)
-2. the generator polynomial (hex)
-3. the initial value of the remainder (hex)
-4. if the input is reflected (bool)
-5. if the output is reflected (bool)
-6. value of the final XOR (hex)
+1. CRC width (``uint8_t``, ``uint16_t``, ``uint32_t``)
+2. the generator polynomial (`hex`)
+3. the initial value of the remainder (`hex`)
+4. if the input is reflected (``bool``)
+5. if the output is reflected (``bool``)
+6. value of the final XOR (`hex`)
 
 .. note::
     The values for parameters two, three and six can also be given in decimal or octal, but
     hexadecimal is the preferred way.
 
 Parameter one sets the width of the CRC calculation and parameter two specifies the generator
-polynomial. The generator polynomial is set in the "normal" representation, i.e. if :math:`x^{3} + x + 1` is the polynomial, then `0x3` is the representation in hex (without the highest coefficient,
+polynomial. The generator polynomial is set in the "normal" representation, i.e. if
+:math:`x^{3} + x + 1` is the polynomial, then `0x3` is the representation in hex
+(without the highest coefficient,
 as it always equals to one).
 Some applications have a different bit ordering, i.e. the bits are reversed from
 Most-Significant-Bit (MSB) to Least-Significant-Bit (LSB) or vice versa. Therefore parameters four
@@ -134,7 +137,7 @@ CRC configuration is not available, see the next subsection on how to add a new 
 The usage is as follows: Define an instance of the needed CRC. Call the ``.init()`` method. Feed
 the data into the ``.update()`` method and retrieve the checksum with ``.digest()``.
 
-.. literalinclude:: ../examples/Crc8Example.cpp
+.. literalinclude:: ../../examples/Crc8Example.cpp
    :start-after: EXAMPLE_START crc8example
    :end-before: EXAMPLE_END crc8example
    :language: c++
@@ -188,7 +191,7 @@ Directly use the template class and create a new instance if it is just another 
 an already available polynomial. Just include the `util/crc/Crc.h` header file and use it as
 follows:
 
-.. literalinclude:: ../examples/Crc8RohcExample.cpp
+.. literalinclude:: ../../examples/Crc8RohcExample.cpp
    :start-after: EXAMPLE_START crc8rohc
    :end-before: EXAMPLE_END crc8rohc
    :language: c++

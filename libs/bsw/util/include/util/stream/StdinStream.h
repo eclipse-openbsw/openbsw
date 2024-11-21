@@ -9,6 +9,10 @@ namespace util
 {
 namespace stream
 {
+/**
+ * The INonBlockingInputStream class implementation.
+ *
+ */
 class StdinStream : public INonBlockingInputStream
 {
 public:
