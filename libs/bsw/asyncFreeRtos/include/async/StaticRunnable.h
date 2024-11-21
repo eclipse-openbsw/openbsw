@@ -11,6 +11,13 @@
 
 namespace async
 {
+/**
+ * This is a template class that acts as collecion (linked list)
+ * of Tasks to be added to the FreeRTOS system.
+ *
+ * \tparam T The underlying implementing execute function.
+ */
+
 template<class T>
 class StaticRunnable
 {
@@ -32,7 +39,9 @@ template<class T>
 T* StaticRunnable<T>::_first = nullptr;
 
 /**
- * Inline implementation.
+ * Class constructor.
+ * On instance construction the new instance is added into
+ * the inked list by adjusting the pointers _first and _next.
  */
 template<class T>
 StaticRunnable<T>::StaticRunnable() : _next(_first)

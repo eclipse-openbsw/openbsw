@@ -60,6 +60,16 @@ public:
 
 } // namespace internal
 
+/**
+ * Adapter class bridging FreeRTOS functionalities with the application's binding.
+ *
+ * The `FreeRtosAdapter` class serves as a centralized interface for managing tasks, timers,
+ * and scheduling functionalities within a FreeRTOS environment. It utilizes the specified
+ * `Binding` type to adapt and configure task-related components, such as `TaskContext`,
+ * `TaskConfig`, and idle and timer tasks.
+ *
+ * \tparam Binding The binding type specifying application-specific configurations.
+ */
 template<class Binding>
 class FreeRtosAdapter
 {
@@ -90,6 +100,7 @@ public:
     template<ContextType Context, size_t StackSize = 0U>
     using Task = internal::Task<AdapterType, Context, StackSize>;
 
+    /// Struct representing the stack usage for a specific task.
     struct StackUsage
     {
         StackUsage();
@@ -98,6 +109,14 @@ public:
         uint32_t _usedSize;
     };
 
+    /**
+     * Retrieves memory pointers for a FreeRTOS task.
+     *
+     * \tparam Context The task context.
+     * \param ppxTaskTCBBuffer Pointer to the task control block buffer.
+     * \param ppxTaskStackBuffer Pointer to the task stack buffer.
+     * \param pulTaskStackSize Pointer to the task stack size.
+     */
     template<ContextType Context>
     static void getTaskMemory(
         StaticTask_t** ppxTaskTCBBuffer,
@@ -113,25 +132,61 @@ public:
     static ContextType getCurrentTaskContext();
 
 #ifndef ASYNC_TIMEOUTMANAGER2_DISABLE
+    /**
+     * Retrieves the timeout manager for a given context.
+     *
+     * \param context The task context.
+     * \return A reference to the timeout manager.
+     */
     static ::common::ITimeoutManager2& getTimeoutManager(ContextType context);
 #endif // ASYNC_TIMEOUTMANAGER2_DISABLE
 
 #ifndef ASYNC_LOOPER_DISABLE
+    /**
+     * Retrieves the looper for a given context.
+     *
+     * \param context The task context.
+     * \return A reference to the looper.
+     */
     static ::loop::looper& getLooper(ContextType context);
 #endif // ASYNC_LOOPER_DISABLE
 
+    /// Initializes the FreeRTOS adapter and associated tasks.
     static void init();
 
+    /// Starts the FreeRTOS scheduler.
     static void run();
 
     static void runningHook();
 
+    /**
+     * Retrieves the stack usage for a specified task.
+     *
+     * \param taskIdx The index of the task.
+     * \param stackUsage A reference to the StackUsage struct to populate.
+     * \return True if stack usage information is successfully retrieved.
+     */
     static bool getStackUsage(size_t taskIdx, StackUsage& stackUsage);
 
     static void callIdleTaskFunction();
 
+    /**
+     * Executes a specified runnable within a given context.
+     *
+     * \param context The task context.
+     * \param runnable The runnable to execute.
+     */
     static void execute(ContextType context, RunnableType& runnable);
 
+    /**
+     * Schedules a runnable to execute after a delay.
+     *
+     * \param context The task context.
+     * \param runnable The runnable to schedule.
+     * \param timeout The timeout associated with the runnable.
+     * \param delay The delay before execution.
+     * \param unit The time unit for the delay.
+     */
     static void schedule(
         ContextType context,
         RunnableType& runnable,
@@ -139,6 +194,15 @@ public:
         uint32_t delay,
         TimeUnitType unit);
 
+    /**
+     * Schedules a runnable to execute at a fixed rate.
+     *
+     * \param context The task context.
+     * \param runnable The runnable to schedule.
+     * \param timeout The timeout associated with the runnable.
+     * \param delay The delay before the first execution.
+     * \param unit The time unit for the delay.
+     */
     static void scheduleAtFixedRate(
         ContextType context,
         RunnableType& runnable,
@@ -146,14 +210,26 @@ public:
         uint32_t delay,
         TimeUnitType unit);
 
+    /**
+     * Cancels a scheduled runnable.
+     *
+     * \param timeout The timeout associated with the runnable to cancel.
+     */
     static void cancel(TimeoutType& timeout);
 
+    /// Notifies the system of an interrupt entry.
     static void enterIsr();
 
+    /// Notifies the system of an interrupt exit.
     static void leaveIsr();
 
+    /**
+     * Exits the ISR without yielding control.
+     * \return True if yielding is not required after ISR.
+     */
     static bool leaveIsrNoYield();
 
+    /// \return A pointer to the task woken by the ISR.
     static BaseType_t* getHigherPriorityTaskWoken();
 
 private:

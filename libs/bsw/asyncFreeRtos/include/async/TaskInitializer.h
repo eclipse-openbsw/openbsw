@@ -33,6 +33,15 @@ using Stack = ::estd::array<
     StackType_t,
     (adjustStackSize(StackSize) + sizeof(StackType_t) - 1) / sizeof(StackType_t)>;
 
+/**
+ * The TaskInitializer struct centralizes the initialization of tasks within the application.
+ *
+ * This struct provides a standardized way to set up tasks, defining key types and handling
+ * configuration and setup of task and timer objects. It uses a specified Adapter type
+ * for flexibility, allowing for different configurations.
+ *
+ * \tparam Adapter The adapter type used to provide specific task configuration types and functions.
+ */
 template<typename Adapter>
 struct TaskInitializer : public StaticRunnable<TaskInitializer<Adapter>>
 {
@@ -43,6 +52,22 @@ struct TaskInitializer : public StaticRunnable<TaskInitializer<Adapter>>
     using TaskObjectType   = StaticTask_t;
     using TimerObjectType  = StaticTimer_t;
 
+    /**
+     * Creates and initializes a task with the specified parameters.
+     *
+     * This function handles task creation by allocating memory for the object,
+     * setting up the context, stack, and configuration,
+     * and linking them to the specified task and timer objects.
+     *
+     * \tparam T The type of the stack used by the task.
+     * \param context The execution context of the task.
+     * \param name The name of the task.
+     * \param task The static task object to initialize.
+     * \param timer The static timer object associated with the task.
+     * \param stack The stack to use for the task's execution.
+     * \param taskFunction The function that the task will execute.
+     * \param config Configuration settings for the task.
+     */
     template<typename T>
     static void create(
         ContextType context,
@@ -64,17 +89,44 @@ private:
         TaskConfigType const& config);
 
 public:
+    /// Executes task object initialization.
     void execute();
 
+    /// The stack slice used for task execution.
     StackSliceType _stack;
+
+    /// The function assigned for the task's execution.
     TaskFunctionType _taskFunction;
+
+    /// Reference to the static task object.
     TaskObjectType& _task;
+
+    /// Reference to the static timer object associated with the task.
     TimerObjectType& _timer;
+
+    /// The name of the task.
     char const* _name;
+
+    /// The context in which the task will execute.
     ContextType _context;
+
+    /// The configuration settings for the task.
     TaskConfigType _config;
 };
 
+/**
+ * Primary template class that serves as a container for task-related objects and
+ * configuration.
+ *
+ * TaskImpl provides a structure to hold essential components for tasks, such as the stack, task
+ * object, and timer object, along with configuration settings. It serves as a base for derived task
+ * classes (e.g., Task, IdleTask) and is designed for integration with FreeRTOS, using the Adapter
+ * type for flexibility.
+ *
+ * \tparam Adapter The adapter type that supplies specific task configuration types and functions.
+ * \tparam Context The context in which the task operates.
+ * \tparam StackSize The size of the stack allocated for the task.
+ */
 template<class Adapter, ContextType Context, size_t StackSize = 0U>
 class TaskImpl
 {

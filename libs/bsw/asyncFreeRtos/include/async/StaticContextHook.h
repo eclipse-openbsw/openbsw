@@ -10,6 +10,13 @@
 
 namespace async
 {
+/**
+ * A template class implementing static polymorphism
+ * for seamless wrapping of any class with corresponding
+ * method implementations.
+ *
+ * \tparam T The underlying type with method implementations.
+ */
 template<class T>
 class StaticContextHook : public ::estd::singleton<T>
 {
