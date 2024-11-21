@@ -4,7 +4,7 @@
 
 #include <platform/estdint.h>
 
-#include <cassert>
+#include <cstdlib> // std::abort
 
 #if defined(__linux__) || defined(__APPLE__)
 #if __has_include("execinfo.h")
@@ -65,8 +65,7 @@ void AssertDefaultHandler(
 #endif
     std::cout << "Assertion at " << file << ':' << line << " (" << test << ") failed" << std::endl;
 #endif
-    // suppress clang 4 next_construct: usage of cassert intended in the AssertDefaultHandler
-    assert(false);
+    std::abort();
 }
 
 void AssertExceptionHandler(char const* const file, int const line, char const* const test)
