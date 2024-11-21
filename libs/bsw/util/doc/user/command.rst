@@ -1,38 +1,38 @@
 .. _util_command:
 
-command - Command Framework
-===========================
+`util::command`
+===============
 
-Overview command Module
------------------------
+Overview
+--------
 
-Typically our embedded targets are allowing debug access via a simple shell over the console (serial
-port). The new command shell interface is located in the util project and thus allows all bsw
-modules to simply define commands for this shell without adding further dependencies.
+Typically, our embedded targets allow debug access through a simple `shell` over the console (serial
+port). The `command shell` interface is part of the **util** module, allowing all **BSW**
+modules to define commands for this `shell` without introducing additional dependencies.
 
-The interface ``::util::command::ICommand`` is dedicated for implementing such custom
-commands. But there are only rare cases when a custom command needs to implement this interface
-directly. Typically a custom command will derive or reuse one of the existing implementations that
-can be found within the command namespace.
+The ``util::command::ICommand`` interface is designed for implementing custom
+commands. However, it is rare for a custom command to implement this interface
+directly. Typically, a custom command derives from or reuses one of the existing
+implementations available within the command namespace.
 
 SimpleCommand and ParentCommand
 -------------------------------
 
-A simple command can be easily built by using the class ``::util::command::SimpleCommand``
-which can be constructed with all necessary parameters. No derivation is needed to implement a
-simple command, the functionality of this command can easily be packed into a (member) method and
-given as a delegate via a estd function object.
+A simple command can be easily created using the ``util::command::SimpleCommand`` class,
+which can be constructed with all necessary parameters. No derivation is
+required to implement a simple command. Its functionality can be encapsulated in a
+(member) function and passed as a delegate via an ``estd::function`` object.
 
-For groups or hierarchies of commands a ``ParentCommand`` object can be instantiated. It can be
-constructed with all necessary parameters (name and description) and allows adding child commands
-that may be executed as sub commands. Arbitrary command hierarchies can be created by nesting
-parent commands into each other.
+For groups or hierarchies of commands a ``util::command::ParentCommand`` object can be instantiated.
+It is constructed with the necessary parameters (name and description) and allows child commands
+to be added, which can be executed as subcommands. Arbitrary command hierarchies can be created by
+nesting parent commands within each other.
 
 Example
 +++++++
 
-The following code implements a simple command named "test" that offers the two sub commands "get"
-and "put" that allow read and write access to a contained value.
+The following code implements a simple command named "test" that includes two subcommands: "get"
+and "put", which allow read and write access to a contained value.
 
 The header file ``TestCommand.h`` could look like:
 
@@ -73,6 +73,7 @@ and the corresponding source file:
 
     using namespace ::util::command;
     using namespace ::util::format;
+    using ExecuteFunction = ::estd::function<void(CommandContext& context)>;
 
     TestCommand::TestCommand()
     : ParentCommand("test", "Contains simple test commands.")
@@ -88,7 +89,10 @@ and the corresponding source file:
         this
     )
     , _value(0)
-    {}
+    {
+        addCommand(_get);
+        addCommand(_put);
+    }
 
     void
     TestCommand::get(CommandContext& context)
@@ -111,14 +115,13 @@ and the corresponding source file:
 
     } // namespace test
 
-
-
 GroupCommand
 ------------
 
-Whenever you need a small footprint command regarding RAM usage then you should use the
-``GroupCommand`` as a base class for your command functionality. This class is the replacement for
-the former ``::bios::CommandInterpreter`` base class.
+If minimizing RAM usage is a priority, you should use the ``GroupCommand`` class
+as the base for your command functionality. This class replaces the ``bios::CommandInterpreter`` base class. The
+``util::command::GroupCommand`` serves as an alternative to the
+``util::command::ParentCommand`` class but supports only a two-level hierarchy (parent-child).
 
 Example
 +++++++
@@ -171,6 +174,7 @@ with the corresponding source file:
     COMMAND_GROUP_COMMAND(ID_PUT, "put", "Put the test value.")
     DEFINE_COMMAND_GROUP_GET_INFO_END
 
+    // Implement the virtual function in the class:
     void TestCommand::executeCommand(CommandContext& context, uint8_t idx)
     {
         switch (idx)
@@ -200,12 +204,12 @@ with the corresponding source file:
 CommandContext
 --------------
 
-The default implementations are heavily based on the usage of the class
-``::util::command::CommandContext``.  Context objects of this type are used for providing
-access to the command line arguments and the output stream for presenting textual results.
+The default implementations heavily rely on the
+``util::command::CommandContext`` class. Context objects of this type provide
+access to command-line arguments and an output stream for presenting textual results.
 
-A command will need a defined list of arguments. The ``CommandContext`` class provides some useful
-methods for scanning arguments such as identifiers, integer values, hex byte buffers or arbitrary
-whitespace separated tokens. Additionally there are methods for checking certain conditions on the
-arguments or whether there are pending arguments. See ``::util::command::CommandContext``
+Commands require a defined list of arguments. The ``util::command::CommandContext`` class offers helpful
+methods for parsing arguments, such as identifiers, integer values, hex byte buffers, or arbitrary
+whitespace-separated tokens. Additionally, it includes methods for checking conditions on the
+arguments or determining if there are pending arguments. Refer to ``util::command::CommandContext``
 for a more detailed description.

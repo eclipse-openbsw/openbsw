@@ -11,6 +11,12 @@ namespace util
 {
 namespace stream
 {
+/**
+ * The TaggedOutputHelper class provides a set of functions
+ * needed for tagged output, namely for proper outputting
+ * desired prefix and suffix information.
+ *
+ */
 class TaggedOutputHelper
 {
 public:

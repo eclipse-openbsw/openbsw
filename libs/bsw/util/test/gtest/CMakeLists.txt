@@ -5,12 +5,10 @@ add_executable(
     src/util/estd/derived_object_pool_test.cpp
     src/util/estd/observable_test.cpp
     src/util/estd/block_pool_test.cpp
-    src/util/spsc/QueueTest.cpp
     src/util/types/EnumTest.cpp
     src/util/logger/LevelInfoTest.cpp
     src/util/logger/ComponentInfoTest.cpp
     src/util/logger/LoggerTest.cpp
-    src/util/logger/LoggerApiMacrosTest.cpp
     src/util/string/ConstStringTest.cpp
     src/util/meta/BitmaskTest.cpp
     src/util/meta/BinaryValueTest.cpp

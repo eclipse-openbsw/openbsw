@@ -13,9 +13,18 @@ namespace util
 {
 namespace stream
 {
+/**
+ * The IOutputStream class that implements specific output logics.
+ *
+ */
 class NormalizeLfOutputStream : public IOutputStream
 {
 public:
+    /**
+     * The class c-tor
+     * \param stm The output stream
+     * \param crlf (curret return line feed): the CR/LF symbols specific for new line.
+     */
     explicit NormalizeLfOutputStream(IOutputStream& strm, char const* crlf = nullptr);
 
     bool isEof() const override;
