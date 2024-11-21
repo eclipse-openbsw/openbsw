@@ -5,10 +5,15 @@
 
 #include <estd/typed_mem.h>
 
+#include <signal.h>
+#include <unistd.h>
+
 #ifdef PLATFORM_SUPPORT_CAN
 #include "systems/CanSystem.h"
 #endif // PLATFORM_SUPPORT_CAN
 
+void terminal_setup(void);
+void terminal_cleanup(void);
 extern void app_main();
 
 namespace platform
@@ -37,8 +42,16 @@ namespace systems
 } // namespace systems
 #endif // PLATFORM_SUPPORT_CAN
 
+void intHandler(int sig)
+{
+    terminal_cleanup();
+    _exit(0);
+}
+
 int main()
 {
+    signal(SIGINT, intHandler);
+    terminal_setup();
     app_main(); // entry point for the generic part
     return (1); // we never reach this point
 }

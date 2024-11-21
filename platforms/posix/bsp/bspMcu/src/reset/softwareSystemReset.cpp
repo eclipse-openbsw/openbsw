@@ -4,10 +4,20 @@
 
 #include <unistd.h>
 
+void terminal_cleanup(void);
+
 extern "C"
 {
-[[noreturn]] void softwareSystemReset() { _exit(0); }
+[[noreturn]] void softwareSystemReset()
+{
+    terminal_cleanup();
+    _exit(0);
+}
 
-void softwareDestructiveReset() { _exit(0); }
+void softwareDestructiveReset()
+{
+    terminal_cleanup();
+    _exit(0);
+}
 
 } // extern "C"

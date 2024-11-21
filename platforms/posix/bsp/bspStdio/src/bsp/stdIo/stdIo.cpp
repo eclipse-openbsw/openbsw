@@ -2,43 +2,63 @@
 
 #include <platform/estdint.h>
 
+#include <errno.h>
 #include <stdio.h>
 #include <termios.h>
+#include <unistd.h>
 
-namespace
+static bool terminal_setup_done = false;
+static int terminal_stdout_fd   = -1;
+static struct termios terminal_original_attr;
+
+void terminal_setup(void)
 {
-static char input = -1;
-
-int internal_kbhit(void)
-{
-    struct termios org;
-    int const fd = fileno(stdin);
-    (void)tcgetattr(fd, &org);
-    struct termios tmp = org;
-
-    tmp.c_lflag &= ~(ICANON | ECHO);
-
-    (void)tcsetattr(fd, TCSANOW, &tmp);
-    int const chr = getchar();
-    (void)tcsetattr(fd, TCSANOW, &org);
-
-    input = chr;
-    return chr != -1;
+    if (!terminal_setup_done)
+    {
+        terminal_stdout_fd = fileno(stdout);
+        if (terminal_stdout_fd == -1)
+        {
+            return;
+        }
+        (void)tcgetattr(terminal_stdout_fd, &terminal_original_attr);
+        struct termios tmp = terminal_original_attr;
+        tmp.c_lflag &= ~(ICANON | ECHO);
+        (void)tcsetattr(terminal_stdout_fd, TCSANOW, &tmp);
+        terminal_setup_done = true;
+    }
+    return;
 }
 
-inline int internal_getch(void) { return input; }
+void terminal_cleanup(void)
+{
+    if (terminal_setup_done)
+    {
+        (void)tcsetattr(terminal_stdout_fd, TCSANOW, &terminal_original_attr);
+        terminal_setup_done = false;
+    }
+}
 
-} // namespace
-
-extern "C" void putByteToStdout(uint8_t byte) { (void)printf("%c", byte); }
+extern "C" void putByteToStdout(uint8_t byte)
+{
+    if (terminal_setup_done)
+    {
+        while (write(terminal_stdout_fd, &byte, 1) != 1)
+        {
+            // Only if write is interrupted by a signal before it writes any data
+            // then try to write the byte again
+            if (errno != EINTR)
+            {
+                break;
+            }
+        }
+    }
+}
 
 extern "C" int32_t getByteFromStdin()
 {
-    if (!internal_kbhit())
+    if (terminal_setup_done)
     {
-        return -1;
+        return getchar();
     }
-
-    int const byte = internal_getch();
-    return byte ? byte : -1;
+    return -1;
 }
