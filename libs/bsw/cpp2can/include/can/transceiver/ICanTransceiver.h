@@ -53,11 +53,6 @@ class IFilteredCANFrameSentListener;
  * <td>MUTED</td><td>close()</td><td>CLOSED</td>
  * </tr>
  * </table>
- *
- *
- *
- * \todo
- * add a callback for successful transmission of a CANFrame
  */
 class ICanTransceiver
 {
@@ -306,17 +301,6 @@ public:
     virtual void setStateListener(ICANTransceiverStateListener& listener) = 0;
 
     virtual void removeStateListener() = 0;
-
-    /**
-     * \note OBSOLETE INTERFACE
-     *
-     * Please use addCANFrameSentListener()
-     *
-     * Sets and ICANFrameSentListener that gets called when a frame has been
-     * sent. There is only one listener possible.
-     * \param pListener
-     */
-    virtual void setCANFrameSentListener(IFilteredCANFrameSentListener* pListener) = 0;
 };
 
 } // namespace can

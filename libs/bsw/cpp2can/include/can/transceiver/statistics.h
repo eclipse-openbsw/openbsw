@@ -8,6 +8,9 @@
 
 namespace can
 {
+/**
+ * For gathering CAN Rx/Tx Stats.
+ */
 struct Statistics
 {
     Statistics() : errors(0U), rx(0U), tx(0U), rx_dropped(0U), tx_dropped(0U) {}

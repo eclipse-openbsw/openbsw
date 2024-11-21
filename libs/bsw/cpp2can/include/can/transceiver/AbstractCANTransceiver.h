@@ -7,7 +7,7 @@
  */
 #pragma once
 
-#include "can/canframes/BufferedCANFrame.h"
+#include "can/canframes/CANFrame.h"
 #include "can/framemgmt/AbstractBitFieldFilteredCANFrameListener.h"
 #include "can/framemgmt/AbstractIntervalFilteredCANFrameListener.h"
 #include "can/framemgmt/IFilteredCANFrameSentListener.h"
@@ -30,7 +30,7 @@ class CanTransportLayer;
  *
  *
  * An AbstractCANTransceiver is the common hardware independent base class for
- * CanTransceiverS classes. This base implementation or the ICanTransceiver interface
+ * CAN Transceiver classes. This base implementation or the ICanTransceiver interface
  * shall be used in all applications to avoid HW dependencies.
  *
  * This abstract class implements the HW independent methods.
@@ -140,17 +140,6 @@ public:
 
     void removeStateListener() override { _stateListener = nullptr; }
 
-    /**
-     * \note OBSOLETE INTERFACE
-     *
-     * Please use addCANFrameSentListener()
-     *
-     * Sets and ICANFrameSentListener that gets called when a frame has been
-     * sent. There is only one listener possible.
-     * \param pListener
-     */
-    void setCANFrameSentListener(IFilteredCANFrameSentListener* pListener) override;
-
 protected:
     void setState(State newState);
 
@@ -197,26 +186,6 @@ protected:
 };
 
 inline ICanTransceiver::State AbstractCANTransceiver::getState() const { return _state; }
-
-// virtual
-inline void
-AbstractCANTransceiver::setCANFrameSentListener(IFilteredCANFrameSentListener* const pListener)
-{
-    if (nullptr != pListener)
-    {
-        _sentListener = pListener;
-        addCANFrameSentListener(*pListener);
-    }
-    else if (nullptr != _sentListener)
-    {
-        removeCANFrameSentListener(*_sentListener);
-        _sentListener = nullptr;
-    }
-    else
-    {
-        // nothing to do
-    }
-}
 
 inline void AbstractCANTransceiver::setState(ICanTransceiver::State const newState)
 {

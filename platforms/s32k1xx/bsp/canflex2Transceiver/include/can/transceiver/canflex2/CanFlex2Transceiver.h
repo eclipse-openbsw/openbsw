@@ -13,7 +13,7 @@
 #include <bsp/power/IEcuPowerStateController.h>
 #include <bsp/timer/SystemTimer.h>
 #include <can/FlexCANDevice.h>
-#include <can/canframes/BufferedCANFrame.h>
+#include <can/canframes/CANFrame.h>
 #include <can/canframes/ICANFrameSentListener.h>
 #include <can/framemgmt/IFilteredCANFrameSentListener.h>
 #include <can/transceiver/AbstractCANTransceiver.h>

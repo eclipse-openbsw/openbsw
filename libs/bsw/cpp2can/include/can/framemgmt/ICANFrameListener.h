@@ -34,7 +34,7 @@ public:
     virtual void frameReceived(CANFrame const& canFrame) = 0;
 
     /**
-     * Returns the ICANFrameListeners filter.
+     * Returns the ICANFrameListener's filter.
      */
     virtual IFilter& getFilter() = 0;
 };
