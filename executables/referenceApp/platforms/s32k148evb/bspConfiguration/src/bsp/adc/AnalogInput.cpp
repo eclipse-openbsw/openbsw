@@ -10,8 +10,6 @@
 #endif
 #define BSP_ANALOGINPUT_PIN_CONFIGURATION 1
 
-#include "bspError/BspError.h"
-
 namespace bios
 {
 

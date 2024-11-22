@@ -20,7 +20,7 @@ namespace bios
 class CanPhyCommon : public CanPhy
 {
 public:
-    CanPhyCommon() {}
+    CanPhyCommon() = default;
 
     virtual void init(uint32_t id = 0U) {}
 

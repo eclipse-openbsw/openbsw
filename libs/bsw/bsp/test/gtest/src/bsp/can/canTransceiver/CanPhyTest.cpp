@@ -2,8 +2,6 @@
 
 #include "bsp/can/canTransceiver/CanPhy.h"
 
-#include "bsp/can/CanPhyMock.h"
-
 #include <gmock/gmock.h>
 
 namespace

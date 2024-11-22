@@ -7,7 +7,6 @@ target_link_libraries(
     PRIVATE bspDynamicClient
             utbspIo
             util
-            bspCommandInterpreterSimple
             gtest_main)
 
 gtest_discover_tests(bspInputManagerTest PROPERTIES LABELS
