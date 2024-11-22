@@ -1,6 +1,6 @@
 name: Build S32k and posix platform
 
-on: [push,pull_request]
+on: [push, pull_request]
 
 jobs:
   run-command:
@@ -12,6 +12,17 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Cache CMake files
+        id: cache-cmake
+        uses: actions/cache@v3
+        with:
+          path: |
+            cmake-build-posix
+            cmake-build-s32k148
+          key: ${{ runner.os }}-cmake-${{ matrix.platform }}-${{ hashFiles('**/*.cpp', '**/*.h',  '**/*.cmake', '**/*.txt', '**/*.c', '**/*.s', 'admin/cmake/ArmNoneEabi.cmake') }}
+          restore-keys: |
+            ${{ runner.os }}-cmake-${{ matrix.platform }}-
 
       - name: Set up CMake
         uses: jwlawson/actions-setup-cmake@v2
@@ -25,15 +36,13 @@ jobs:
           release: '10.3-2021.10'
 
       - name: Configure CMake for POSIX
-        if: ${{ matrix.platform == 'posix' }}
+        if: ${{ matrix.platform == 'posix' && steps.cache-cmake.outputs.cache-hit != 'true' }}
         run: cmake -B cmake-build-posix -S executables/referenceApp
 
       - name: Configure CMake for S32K148
-        if: ${{ matrix.platform == 's32k148' }}
+        if: ${{ matrix.platform == 's32k148' && steps.cache-cmake.outputs.cache-hit != 'true' }}
         run: cmake -B cmake-build-s32k148 -S executables/referenceApp -DBUILD_TARGET_PLATFORM="S32K148EVB" --toolchain ../../admin/cmake/ArmNoneEabi.cmake
 
       - name: Build for ${{ matrix.platform }}
+        if: steps.cache-cmake.outputs.cache-hit != 'true'
         run: cmake --build cmake-build-${{ matrix.platform }} --target app.referenceApp -j
-
-
-
