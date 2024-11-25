@@ -126,8 +126,8 @@ ICanTransceiver::ErrorCode FlexCANDevice::init()
     // Disable self reception
     // IRQM have to be switched on
     fpDevice->MCR = fpDevice->MCR
-        | (FLEXCAN_MCR_MAXMB(e_TRANSMIT_BUFFER_MAX) | FLEXCAN_MCR_SRXDIS_MASK
-            | FLEXCAN_MCR_IRMQ_MASK);
+                    | (FLEXCAN_MCR_MAXMB(e_TRANSMIT_BUFFER_MAX) | FLEXCAN_MCR_SRXDIS_MASK
+                       | FLEXCAN_MCR_IRMQ_MASK);
 
     // Setup CTRL
     fpDevice->CTRL1 = 0;

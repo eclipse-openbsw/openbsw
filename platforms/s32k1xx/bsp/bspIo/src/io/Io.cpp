@@ -43,7 +43,7 @@ BspReturnCode Io::setConfiguration(uint16_t io, PinConfiguration const& cfg)
             GPIO_Type* portBase = (GPIO_Type*)(gpioPtrs[cfg.port]);
             PORT_Type* cfgBase  = (PORT_Type*)(gpioPrfCfgPtrs[cfg.port]);
             // disable
-            portBase->PIDR = portBase->PIDR | (1 << cfg.pinNumber); // default High-Z
+            portBase->PIDR      = portBase->PIDR | (1 << cfg.pinNumber); // default High-Z
             if (_IN == cfg.dir)
             {
                 // filter settings ..
@@ -184,7 +184,7 @@ bsp::BspReturnCode Io::resetConfig(uint16_t io)
         // disable
         portBase->PIDR = portBase->PIDR | (1 << fPinConfiguration[io].pinNumber); // default High-Z
         portBase->PDDR = portBase->PDDR & ~(1 << fPinConfiguration[io].pinNumber);
-        cfgBase->DFER = cfgBase->DFER & ~(1 << fPinConfiguration[io].pinNumber);
+        cfgBase->DFER  = cfgBase->DFER & ~(1 << fPinConfiguration[io].pinNumber);
         cfgBase->PCR[fPinConfiguration[io].pinNumber] = 0;
         return BSP_OK;
     }

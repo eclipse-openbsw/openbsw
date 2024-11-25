@@ -89,7 +89,7 @@ public:
     {
         (void)setup;
 
-        _cfg = cfg;
+        _cfg               = cfg;
         _ftm.MODE          = _ftm.MODE | FTM_MODE_WPDIS_MASK;
         _ftm.CNTIN         = _cfg->cntin;
         _ftm.MOD           = _cfg->mod;
@@ -120,7 +120,7 @@ public:
     inline void stop()
     {
         _ftm.MODE = _ftm.MODE | FTM_MODE_WPDIS_MASK;
-        _ftm.SC = 0;
+        _ftm.SC   = 0;
     }
 
     inline void start()
