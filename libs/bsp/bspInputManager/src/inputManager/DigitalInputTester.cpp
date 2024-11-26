@@ -22,9 +22,7 @@ void DigitalInputTester::executeCommand(::util::command::CommandContext& context
             ::util::format::SharedStringWriter out(context);
             (void)out.printf(
                 "All digital inputs: %d \r\n", DigitalInput::TOTAL_NUMBER_OF_DIGITAL_INPUTS);
-            for (uint16_t i = 0U;
-                 i < static_cast<uint16_t>(DigitalInput::TOTAL_NUMBER_OF_DIGITAL_INPUTS);
-                 ++i)
+            for (uint16_t i = 0U; i < DigitalInput::TOTAL_NUMBER_OF_DIGITAL_INPUTS; ++i)
             {
                 bool temp;
                 bsp::BspReturnCode const ret
@@ -45,9 +43,8 @@ void DigitalInputTester::executeCommand(::util::command::CommandContext& context
         break;
         case 2: // "get"
         {
-            uint32_t const inputNo = context.scanIntToken<uint32_t>();
-            (void)context.check(
-                inputNo < static_cast<uint32_t>(DigitalInput::TOTAL_NUMBER_OF_DIGITAL_INPUTS));
+            uint16_t const inputNo = context.scanIntToken<uint16_t>();
+            (void)context.check(inputNo < DigitalInput::TOTAL_NUMBER_OF_DIGITAL_INPUTS);
             if (context.checkEol())
             {
                 ::util::format::SharedStringWriter out(context);
@@ -70,9 +67,7 @@ void DigitalInputTester::executeCommand(::util::command::CommandContext& context
         {
             ::util::format::SharedStringWriter out(context);
             (void)out.printf("#");
-            for (uint32_t i = 0U;
-                 i < static_cast<uint32_t>(DigitalInput::TOTAL_NUMBER_OF_DIGITAL_INPUTS);
-                 ++i)
+            for (uint16_t i = 0U; i < DigitalInput::TOTAL_NUMBER_OF_DIGITAL_INPUTS; ++i)
             {
                 bool temp;
                 bsp::BspReturnCode const ret

@@ -34,7 +34,7 @@ void DigitalInput::init(uint8_t const hw, bool const doSetup)
     }
     if (true == doSetup)
     {
-        for (int32_t i = 0; i < NUMBER_OF_INTERNAL_DIGITAL_INPUTS; i++)
+        for (uint16_t i = 0; i < NUMBER_OF_INTERNAL_DIGITAL_INPUTS; i++)
         {
             (void)Io::setDefaultConfiguration(
                 static_cast<uint16_t>(sfpDigitalInputConfiguration[i].ioNumber));
@@ -92,33 +92,37 @@ bsp::BspReturnCode DigitalInput::get(DigitalInputId const channel, bool& result)
         return bsp::BSP_ERROR;
     }
 
-    if (channel < NUMBER_OF_INTERNAL_DIGITAL_INPUTS)
+    uint16_t const tmpChannel = static_cast<uint16_t>(channel);
+
+    // Internal channel
+    if ((NUMBER_OF_INTERNAL_DIGITAL_INPUTS > 0)
+        && (channel <= DigitalInputId::LAST_INTERNAL_DIGITAL_INPUT))
     {
-        if (Io::PORT_UNAVAILABLE == sfpDigitalInputConfiguration[channel].ioNumber)
+        if (Io::PORT_UNAVAILABLE == sfpDigitalInputConfiguration[tmpChannel].ioNumber)
         {
             return bsp::BSP_NOT_SUPPORTED;
         }
 #if (INPUTDIGITAL_DEBOUNCE_ACTIVE == 1)
         result = debounced[channel].vol != 0U;
 #else
-        result = Io::getPin(static_cast<uint16_t>(sfpDigitalInputConfiguration[channel].ioNumber));
+        result
+            = Io::getPin(static_cast<uint16_t>(sfpDigitalInputConfiguration[tmpChannel].ioNumber));
 #endif
 
-        if (sfpDigitalInputConfiguration[channel].isInverted)
+        if (sfpDigitalInputConfiguration[tmpChannel].isInverted)
         {
             result = !result;
         }
         return bsp::BSP_OK;
     }
-    else if (channel == NUMBER_OF_INTERNAL_DIGITAL_INPUTS)
-    {
-        return bsp::BSP_ERROR;
-    }
-    else if (channel < TOTAL_NUMBER_OF_DIGITAL_INPUTS)
+    else if (
+        (DigitalInputId::LAST_DYNAMIC_DIGITAL_INPUT > DigitalInputId::LAST_INTERNAL_DIGITAL_INPUT)
+        && (channel > DigitalInputId::LAST_INTERNAL_DIGITAL_INPUT)
+        && (channel <= DigitalInputId::LAST_DYNAMIC_DIGITAL_INPUT))
     {
         // dynamic instance
         dynamicClientType const dynamicChannel
-            = static_cast<dynamicClientType>(channel - NUMBER_OF_INTERNAL_DIGITAL_INPUTS - 1);
+            = static_cast<dynamicClientType>(tmpChannel - NUMBER_OF_INTERNAL_DIGITAL_INPUTS);
         if (dynamicChannel < NumberOfDynamicInputs)
         {
             if (dynamicInputCfg.getClientValid(dynamicChannel) == true)
@@ -145,12 +149,12 @@ bsp::BspReturnCode DigitalInput::get(DigitalInputId const channel, bool& result)
 bsp::BspReturnCode DigitalInput::setDynamicClient(
     uint16_t const inputNumber, uint16_t const clientInputNumber, IDynamicInputClient* const client)
 {
-    // range of outputNumber check
-    if ((inputNumber > static_cast<uint16_t>(NUMBER_OF_INTERNAL_DIGITAL_INPUTS))
-        && (inputNumber < static_cast<uint16_t>(TOTAL_NUMBER_OF_DIGITAL_INPUTS)))
+    // range of input check
+    if ((inputNumber > static_cast<uint16_t>(DigitalInputId::LAST_INTERNAL_DIGITAL_INPUT))
+        && (inputNumber <= static_cast<uint16_t>(DigitalInputId::LAST_DYNAMIC_DIGITAL_INPUT)))
     {
         dynamicClientType const dynamicChannel
-            = inputNumber - static_cast<uint16_t>(NUMBER_OF_INTERNAL_DIGITAL_INPUTS) - 1U;
+            = static_cast<dynamicClientType>(inputNumber - NUMBER_OF_INTERNAL_DIGITAL_INPUTS);
         interrupts::SuspendResumeAllInterruptsLock fLock;
         fLock.suspend();
         if (dynamicInputCfg.setDynamicClient(dynamicChannel, clientInputNumber, client) == true)
@@ -172,11 +176,12 @@ bsp::BspReturnCode DigitalInput::setDynamicClient(
 
 bsp::BspReturnCode DigitalInput::clrDynamicClient(uint16_t const inputNumber)
 {
-    if ((inputNumber > static_cast<uint16_t>(NUMBER_OF_INTERNAL_DIGITAL_INPUTS))
-        && (inputNumber < static_cast<uint16_t>(TOTAL_NUMBER_OF_DIGITAL_INPUTS)))
+    // range of input check
+    if ((inputNumber > static_cast<uint16_t>(DigitalInputId::LAST_INTERNAL_DIGITAL_INPUT))
+        && (inputNumber <= static_cast<uint16_t>(DigitalInputId::LAST_DYNAMIC_DIGITAL_INPUT)))
     {
         dynamicClientType const dynamicChannel
-            = inputNumber - static_cast<uint16_t>(NUMBER_OF_INTERNAL_DIGITAL_INPUTS) - 1U;
+            = static_cast<dynamicClientType>(inputNumber - NUMBER_OF_INTERNAL_DIGITAL_INPUTS);
         interrupts::SuspendResumeAllInterruptsLock fLock;
         fLock.suspend();
         if (dynamicInputCfg.clearDynamicClient(dynamicChannel) == true)
