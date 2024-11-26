@@ -22,7 +22,7 @@ dynamicClient<
     DigitalInput::dynamicClientType,
     DigitalInput::IDynamicInputClient,
     4,
-    DigitalInput::InputAnzahlDynamic>
+    DigitalInput::NumberOfDynamicInputs>
     DigitalInput::dynamicInputCfg;
 
 void DigitalInput::init(uint8_t const hw, bool const doSetup)
@@ -119,7 +119,7 @@ bsp::BspReturnCode DigitalInput::get(DigitalInputId const channel, bool& result)
         // dynamic instance
         dynamicClientType const dynamicChannel
             = static_cast<dynamicClientType>(channel - NUMBER_OF_INTERNAL_DIGITAL_INPUTS - 1);
-        if (dynamicChannel < InputAnzahlDynamic)
+        if (dynamicChannel < NumberOfDynamicInputs)
         {
             if (dynamicInputCfg.getClientValid(dynamicChannel) == true)
             {
