@@ -1,0 +1,38 @@
+var namespacebios =
+[
+    [ "CanPhy", "df/d86/classbios_1_1CanPhy.html", "df/d86/classbios_1_1CanPhy" ],
+    [ "CanPhyDummy", "d1/d27/classbios_1_1CanPhyDummy.html", "d1/d27/classbios_1_1CanPhyDummy" ],
+    [ "CommandSpec", "d9/dd7/structbios_1_1CommandSpec.html", "d9/dd7/structbios_1_1CommandSpec" ],
+    [ "ICommandInterpreter", "d5/d86/classbios_1_1ICommandInterpreter.html", "d5/d86/classbios_1_1ICommandInterpreter" ],
+    [ "ICommandInterpreterSimple", "d5/db1/classbios_1_1ICommandInterpreterSimple.html", "d5/db1/classbios_1_1ICommandInterpreterSimple" ],
+    [ "IEventListener", "d8/daa/classbios_1_1IEventListener.html", "d8/daa/classbios_1_1IEventListener" ],
+    [ "ILinDevice", "d9/d91/classbios_1_1ILinDevice.html", "d9/d91/classbios_1_1ILinDevice" ],
+    [ "IAwakened", "de/d39/classbios_1_1IAwakened.html", "de/d39/classbios_1_1IAwakened" ],
+    [ "IEcuPowerStateController", "d2/df6/classbios_1_1IEcuPowerStateController.html", "d2/df6/classbios_1_1IEcuPowerStateController" ],
+    [ "ISpi", "d1/d0d/classbios_1_1ISpi.html", "d1/d0d/classbios_1_1ISpi" ],
+    [ "IStepperMotorDevice", "de/d55/classbios_1_1IStepperMotorDevice.html", "de/d55/classbios_1_1IStepperMotorDevice" ],
+    [ "ICompareTimer", "db/dbe/classbios_1_1ICompareTimer.html", "db/dbe/classbios_1_1ICompareTimer" ],
+    [ "IHighResolutionTimer", "d5/d95/classbios_1_1IHighResolutionTimer.html", "d5/d95/classbios_1_1IHighResolutionTimer" ],
+    [ "CommandInterpreter", "d9/dad/classbios_1_1CommandInterpreter.html", "d9/dad/classbios_1_1CommandInterpreter" ],
+    [ "CommandLine", "d7/de7/classbios_1_1CommandLine.html", "d7/de7/classbios_1_1CommandLine" ],
+    [ "BspError", "db/dc7/classbios_1_1BspError.html", "db/dc7/classbios_1_1BspError" ],
+    [ "BspErrorTester", "de/d67/classbios_1_1BspErrorTester.html", "de/d67/classbios_1_1BspErrorTester" ],
+    [ "AlternativeDigitalInput", "da/de5/classbios_1_1AlternativeDigitalInput.html", "da/de5/classbios_1_1AlternativeDigitalInput" ],
+    [ "DigitalInput", "db/d90/classbios_1_1DigitalInput.html", "db/d90/classbios_1_1DigitalInput" ],
+    [ "DigitalInputTester", "de/d86/classbios_1_1DigitalInputTester.html", "de/d86/classbios_1_1DigitalInputTester" ],
+    [ "Output", "da/db0/classbios_1_1Output.html", "da/db0/classbios_1_1Output" ],
+    [ "OutputTester", "d9/d28/classbios_1_1OutputTester.html", "d9/d28/classbios_1_1OutputTester" ],
+    [ "OutputPwm", "d8/dec/classbios_1_1OutputPwm.html", "d8/dec/classbios_1_1OutputPwm" ],
+    [ "OutputPwmTester", "d4/d5c/classbios_1_1OutputPwmTester.html", "d4/d5c/classbios_1_1OutputPwmTester" ],
+    [ "Console", "de/d59/classbios_1_1Console.html", "de/d59/classbios_1_1Console" ],
+    [ "ConsoleMenu", "d0/d3e/classbios_1_1ConsoleMenu.html", "d0/d3e/classbios_1_1ConsoleMenu" ],
+    [ "CommandToken", "d3/d04/namespacebios.html#a9b9056db8e51b72d14c76fd34a2bc153", null ],
+    [ "ConstCommandToken", "d3/d04/namespacebios.html#ae7e9ee6a0b2b011315ae6373606314a7", null ],
+    [ "CommandReturnCode", "d3/d04/namespacebios.html#aa529a3155d4f3f89843f37c3e5a3a37c", [
+      [ "CMD_OK", "d3/d04/namespacebios.html#aa529a3155d4f3f89843f37c3e5a3a37cab4a2632cc401e6432c5dd8e7877be0f6", null ],
+      [ "CMD_ERROR", "d3/d04/namespacebios.html#aa529a3155d4f3f89843f37c3e5a3a37caa8e449a397cb4208940bc4f5fd2db007", null ],
+      [ "CMD_NOCMD", "d3/d04/namespacebios.html#aa529a3155d4f3f89843f37c3e5a3a37ca277aecc80e4300894a4812866cad3b84", null ],
+      [ "CMD_NUM_CODES", "d3/d04/namespacebios.html#aa529a3155d4f3f89843f37c3e5a3a37ca2753c5b2075f7bcd77ef8324f06fbdaf", null ]
+    ] ],
+    [ "getBinFileName", "d3/d04/namespacebios.html#a85adc5668d0310a6a722f89c05a6f849", null ]
+];
