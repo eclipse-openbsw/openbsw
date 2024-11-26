@@ -17,12 +17,13 @@ class Adc12BitConfiguration
 public:
     enum
     {
-        CFG1     = (1UL << 2) + (0UL << 5) + 0,
-        CFG2     = 0x41UL,
-        CV1      = 0,
-        CV2      = 0,
-        SC2      = (0UL << 6) + (1UL << 2),
-        SC3      = 0UL + (0UL << 2) + (0UL << 3),
+        CFG1 = ADC_CFG1_ADIV(0) | ADC_CFG1_MODE(1), // Clock divided by 1, 12-bit conversion mode
+        CFG2 = ADC_CFG2_SMPLTS(41),                 // Sample time is 42 ADC clocks
+        CV1  = 0,
+        CV2  = 0,
+        SC2  = ADC_SC2_ADTRG(0) | ADC_SC2_DMAEN(0), // SW trigger, DMA is off
+        SC3  = ADC_SC3_CAL(0) | ADC_SC3_ADCO(0)
+              | ADC_SC3_AVGE(0), // Calibration disabled, One conversion, HW average disabled
         BASE_OFS = 0x40UL,
         OFS      = 0x0UL,
         USR_OFS  = 0,

@@ -42,14 +42,6 @@ public:
     bsp::BspReturnCode dma(bool active) const;
     bsp::BspReturnCode row2Value(uint32_t r, uint16_t& v) const;
 
-    enum
-    {
-        MODE_8BIT  = 0,
-        MODE_10BIT = 0x8UL,
-        MODE_12BIT = 0x04UL,
-        COCO       = 0x80UL,
-    };
-
     AdcResolution fAdcInResolution;
     ADC_Type& fAdc;
     bool fIsStarted;
@@ -62,12 +54,7 @@ void Adc<AdcResolution, AdcConfiguration, maxChannels>::enableChannel(
 {
     if (channel < maxChannels)
     {
-        uint32_t isrMask = 0x0UL;
-        if (true == isrEn)
-        {
-            isrMask = 0x40UL;
-        }
-        fAdc.SC1[channel] = extInput + isrMask;
+        fAdc.SC1[channel] = ADC_SC1A_ADCH(extInput) + ADC_SC1A_AIEN(isrEn);
         if (0U == channel)
         {
             uint32_t timeout = 0;
@@ -78,7 +65,7 @@ void Adc<AdcResolution, AdcConfiguration, maxChannels>::enableChannel(
                 {
                     break;
                 }
-            } while ((fAdc.SC1[0] & (COCO)) == 0);
+            } while ((fAdc.SC1[0] & ADC_SC1A_COCO_MASK) == 0);
             ESR_UNUSED uint32_t a = fAdcInResolution(fAdc.R[0]);
         }
     }
@@ -100,9 +87,10 @@ bsp::BspReturnCode Adc<AdcResolution, AdcConfiguration, maxChannels>::init()
 
     fAdc.CLPS_OFS = AdcConfiguration::CLPS_OFS;
 
+    // Disable all channels
     for (uint8_t i = 0; i < maxChannels; i++)
     {
-        fAdc.SC1[i] = 0x3fUL;
+        fAdc.SC1[i] = ADC_SC1A_ADCH_MASK;
     }
 
     fAdc.CLP3 = 0;
@@ -114,7 +102,8 @@ bsp::BspReturnCode Adc<AdcResolution, AdcConfiguration, maxChannels>::init()
     fAdc.CLP9                      = 0;
     ESR_UNUSED volatile uint32_t a = fAdc.R[0];
     fAdc.SC2                       = 0;
-    fAdc.SC3                       = 0x87UL;
+    // Start calibration, HW average function enabled, 32 samples averaged
+    fAdc.SC3                       = ADC_SC3_CAL_MASK | ADC_SC3_AVGE_MASK | ADC_SC3_AVGS(3);
 
     uint32_t timeout = 0;
     do
@@ -124,7 +113,7 @@ bsp::BspReturnCode Adc<AdcResolution, AdcConfiguration, maxChannels>::init()
         {
             break;
         }
-    } while ((fAdc.SC1[0] & (COCO)) == 0);
+    } while ((fAdc.SC1[0] & ADC_SC1A_COCO_MASK) == 0);
     a = fAdc.R[0];
 
     fAdc.UG  = AdcConfiguration::UG;
@@ -208,7 +197,7 @@ bsp::BspReturnCode Adc<AdcResolution, AdcConfiguration, maxChannels>::stop()
     fIsInitialized = false;
     for (uint8_t i = 0; i < maxChannels; i++)
     {
-        fAdc.SC1[i] = 0x3fUL;
+        fAdc.SC1[i] = ADC_SC1A_ADCH_MASK;
     }
     return bsp::BSP_OK;
 }
@@ -242,11 +231,11 @@ bsp::BspReturnCode Adc<AdcResolution, AdcConfiguration, maxChannels>::getValueSy
     {
         return bsp::BSP_ERROR;
     }
-    if (((fAdc.SC2 & (1 << 6)) == 0)
-        && ((fAdc.SC2 & (1 << 3)) == 0)) // software mode active and DMA is off
+    if (((fAdc.SC2 & ADC_SC2_ADTRG(1)) == 0)     // Software trigger selected
+        && ((fAdc.SC2 & ADC_SC2_DMAEN(1)) == 0)) // DMA disabled
     {
         ESR_UNUSED volatile uint32_t a = fAdc.R[0];
-        fAdc.SC1[0]                    = phChannel;
+        fAdc.SC1[0]                    = ADC_SC1A_ADCH(phChannel);
 
         uint32_t timeout = 0;
         do
@@ -256,7 +245,7 @@ bsp::BspReturnCode Adc<AdcResolution, AdcConfiguration, maxChannels>::getValueSy
             {
                 return bsp::BSP_ERROR;
             }
-        } while ((fAdc.SC1[0] & (COCO)) == 0);
+        } while ((fAdc.SC1[0] & ADC_SC1A_COCO_MASK) == 0);
         value = fAdcInResolution(fAdc.R[0]);
 
         return bsp::BSP_OK;
@@ -277,11 +266,11 @@ bsp::BspReturnCode Adc<AdcResolution, AdcConfiguration, maxChannels>::dma(bool a
     ESR_UNUSED volatile uint32_t a = fAdc.R[0];
     if (true == active)
     {
-        fAdc.SC2 = fAdc.SC2 | (1 << 3);
+        fAdc.SC2 = fAdc.SC2 | ADC_SC2_DMAEN(1);
     }
     else
     {
-        fAdc.SC2 = fAdc.SC2 & ~(1 << 3);
+        fAdc.SC2 = fAdc.SC2 & ADC_SC2_DMAEN(0);
     }
     return bsp::BSP_OK;
 }
