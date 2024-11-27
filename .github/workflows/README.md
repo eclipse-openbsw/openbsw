@@ -15,3 +15,4 @@ Additionally all jobs for the merge queue have to be explicitly added in the [ot
 2. Each job should have a specific purpose.
 3. Each artifact produced should make sense on it's own.
 4. Don't rely on a different job running afterwards. Keep cohesion low.
+5. Each job should have a unique name.
