@@ -8,10 +8,8 @@ target_include_directories(bspInputManager PUBLIC include)
 target_link_libraries(
     bspInputManager
     PUBLIC bsp
-           bspCommandInterpreterSimple
            bspDynamicClient
            bspIo
-           bspTestConsoleWithCommandInterpreter
            estd
            platform
            util)

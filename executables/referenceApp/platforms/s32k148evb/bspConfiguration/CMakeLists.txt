@@ -9,7 +9,6 @@ target_link_libraries(
     bspConfiguration
     PUBLIC bspAdc
            bspCharInputOutput
-           bspError
            bspFtm
            bspFtmPwm
            bspInterrupts
