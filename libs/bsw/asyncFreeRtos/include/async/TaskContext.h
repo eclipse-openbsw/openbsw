@@ -23,17 +23,48 @@
 
 namespace async
 {
+/**
+ * Provides an interface between application-specific Tasks and Timers
+ * and the FreeRTOS framework, managing FreeRTOS* task and timer callbacks.
+ *
+ * The TaskContext class facilitates seamless integration between the application's
+ * task and timer logic and FreeRTOS by invoking necessary FreeRTOS functions
+ * for task creation, scheduling and processing callbacks.
+ *
+ * \tparam Binding The specific binding type associated with the TaskContext.
+ */
 template<class Binding>
 class TaskContext : public EventDispatcher<2U, LockType>
 {
 public:
     using TaskFunctionType = ::estd::function<void(TaskContext<Binding>&)>;
-    using StackType        = ::estd::slice<StackType_t>;
+
+    using StackType = ::estd::slice<StackType_t>;
 
     TaskContext();
 
+    /**
+     * Initializes a task with a specified context and task function.
+     * \param context The context associated with this task.
+     * \param taskFunction The function to execute in this task.
+     */
     void initTask(ContextType context, TaskFunctionType taskFunction);
+
+    /**
+     * Sets the FreeRTOS task handle for this context.
+     * \param taskHandle The handle to associate with the FreeRTOS task.
+     */
     void initTaskHandle(TaskHandle_t taskHandle);
+
+    /**
+     * Creates a FreeRTOS task with specific configuration.
+     * \param context The task's context.
+     * \param task The static task storage structure.
+     * \param name The name of the task.
+     * \param priority The priority of the task.
+     * \param stack The stack allocated for the task.
+     * \param taskFunction The function that the task will execute.
+     */
     void createTask(
         ContextType context,
         StaticTask_t& task,
@@ -41,26 +72,80 @@ public:
         UBaseType_t priority,
         StackType const& stack,
         TaskFunctionType taskFunction);
+
+    /**
+     * Creates a FreeRTOS timer.
+     * \param timer The static timer storage structure.
+     * \param name The name of the timer.
+     */
     void createTimer(StaticTimer_t& timer, char const* name);
 
     char const* getName() const;
+
     TaskHandle_t getTaskHandle() const;
+
     uint32_t getUnusedStackSize() const;
 
+    /**
+     * Executes asynchronously the specified runnable within this task context.
+     * \param runnable The runnable to execute.
+     */
     void execute(RunnableType& runnable);
+
+    /**
+     * Schedules a runnable to execute after a delay.
+     * \param runnable The runnable to schedule.
+     * \param timeout The timeout associated with the runnable.
+     * \param delay The delay before execution.
+     * \param unit The time unit for the delay.
+     */
     void schedule(RunnableType& runnable, TimeoutType& timeout, uint32_t delay, TimeUnitType unit);
+
+    /**
+     * Schedules a runnable to execute at a fixed rate.
+     * \param runnable The runnable to schedule.
+     * \param timeout The timeout associated with the runnable.
+     * \param period The period between executions.
+     * \param unit The time unit for the period.
+     */
     void scheduleAtFixedRate(
         RunnableType& runnable, TimeoutType& timeout, uint32_t period, TimeUnitType unit);
+
+    /**
+     * Cancels a scheduled runnable.
+     * \param timeout The timeout associated with the runnable to cancel.
+     */
     void cancel(TimeoutType& timeout);
 
+    /// Calls the task's assigned function.
     void callTaskFunction();
+
+    /// Dispatches events for processing within this context.
     void dispatch();
+
+    /// Stops event dispatching.
     void stopDispatch();
+
+    /// Dispatches events while runnable is executing.
     void dispatchWhileWork();
 
+    /**
+     * Sets a timeout value in microseconds.
+     * \param timeInUs The timeout duration in microseconds.
+     */
     void setTimeout(uint32_t timeInUs);
 
+    /**
+     * Retrieves the amount of unused stack space for a specified task.
+     * \param taskHandle The handle of the task.
+     * \return The amount of unused stack space.
+     */
     static uint32_t getUnusedStackSize(TaskHandle_t taskHandle);
+
+    /**
+     * Default function to be executed by a task within this context.
+     * \param taskContext The context in which the task executes.
+     */
     static void defaultTaskFunction(TaskContext<Binding>& taskContext);
 
 private:

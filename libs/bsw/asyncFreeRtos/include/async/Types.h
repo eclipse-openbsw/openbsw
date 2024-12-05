@@ -24,6 +24,11 @@ using ModifiableLockType = ModifiableLock;
 
 ContextType const CONTEXT_INVALID = 0xFFU;
 
+/**
+ * This class stores information about the Runnable
+ * object and its context, as well implements the
+ * "expired" function executed on timer time out.
+ */
 struct TimeoutType : public ::timer::Timeout
 {
 public:

@@ -10,7 +10,14 @@
 
 namespace async
 {
-
+/**
+ * A synchronization mechanism that blocks threads from accessing a resource.
+ *
+ * The Lock class ensures mutual exclusion, allowing only one thread to access a
+ * protected resource or function at a time. When a thread acquires the lock,
+ * any other thread attempting to acquire it is blocked until the lock is released.
+ * The lock is automatically released in the destructor (RAII idiom).
+ */
 class Lock
 {
 public:
