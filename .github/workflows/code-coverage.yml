@@ -19,6 +19,12 @@ jobs:
       uses: jwlawson/actions-setup-cmake@v2
       with:
         cmake-version: '3.22.x'
+    
+    - name: Cleanup coverage files
+      run: |
+            echo "Cleaning up old coverage files..."
+            find . -name "*.gcda" -delete
+            find . -name "*.gcno" -delete
   
     - name: Test
       # Execute tests defined by the CMake configuration.
@@ -28,8 +34,16 @@ jobs:
           ctest --test-dir cmake-build-unit-tests -j4
     
     - name: Install lcov
-      run: sudo apt install lcov
-    
+      run: |
+           sudo apt-get update
+           sudo apt-get install -y lcov
+        
+    - name: Log tool versions
+      run: |
+          gcc --version
+          gcov --version
+          lcov --version
+  
     # no-external command excludes the system libraries in the root directory 
     - name: Capture code coverage
       run: |
