@@ -11,6 +11,7 @@
           default = self.packages."${system}".referenceApp;
 
           referenceApp = pkgs.callPackage ./nix/referenceApp.nix {}; 
+          udstool = pkgs.callPackage ./nix/udstool.nix {};
           interactiveIntegrationTests = self.checks."${system}".integrationTests.driverInteractive;
         };
         checks = {

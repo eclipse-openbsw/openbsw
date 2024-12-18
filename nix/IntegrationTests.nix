@@ -32,7 +32,10 @@ pkgs.nixosTest {
 
     environment.systemPackages = [
       self.packages."${system}".referenceApp
+      self.packages."${system}".udstool
+
       pkgs.can-utils
+      pkgs.tmux
       (pkgs.python3.withPackages (p: [
         p.can-isotp# = 2.0.6
         p.exceptiongroup# = 1.2.2
@@ -46,7 +49,7 @@ pkgs.nixosTest {
         p.tomli# = 2.0.1
         p.typing-extensions# = 4.12.2
         # p.udsoncan# = 1.23.1
-        (pkgs.python3Packages.buildPythonPackage rec {
+        (p.buildPythonPackage rec {
           pname = "udsoncan";
           version = "1.23.1";
           src = pkgs.fetchPypi {
