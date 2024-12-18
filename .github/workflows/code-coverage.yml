@@ -1,11 +1,13 @@
 name: Code Coverage 
 
-on:
-  workflow_call:
-  push:
-    branches:
-      - main
-  pull_request:
+on: [workflow_call, push, pull_request]
+
+# on:
+#   workflow_call:
+#   push:
+#     branches:
+#       - main
+#   pull_request:
 
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
@@ -25,7 +27,7 @@ jobs:
         docker pull ubuntu:22.04
         docker run --rm -v $(pwd):/workspace -w /workspace ubuntu:22.04 bash -c "
           apt-get update &&
-          apt-get install -y gcc-11 g++-11 lcov wget cmake zip &&
+          apt-get install -y gcc-11 g++-11 lcov wget cmake zip bc curl &&
           update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-11 100 &&
           update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-11 100 &&
           update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-11 100 &&
@@ -61,8 +63,29 @@ jobs:
                   --output-directory cmake-build-unit-tests/coverage &&
 
           # Zip the coverage report
-          mv cmake-build-unit-tests/coverage code_coverage &&
-          zip -r code_coverage.zip code_coverage
+          mv cmake-build-unit-tests/coverage code_coverage
+          zip -r code_coverage.zip code_coverage &&
+
+           # Extract coverage percentage and generate badge URL
+          lcov --summary cmake-build-unit-tests/coverage.info | grep lines | awk '{print $2}' > coverage_percentage.txt
+          cat coverage_percentage.txt
+
+          if [[ -s coverage_percentage.txt ]]; then
+            coverage_percentage=$(cat coverage_percentage.txt)
+            line_color="red"
+            if (( $(echo "${coverage_percentage%?} > 75" | bc -l) )); then line_color="yellow"; fi
+            if (( $(echo "${coverage_percentage%?} > 90" | bc -l) )); then line_color="green"; fi
+            encoded_percentage=${coverage_percentage//%/%25} && \
+            badge_url="https://img.shields.io/badge/coverage-${encoded_percentage}-${line_color}"
+            echo "Badge URL: ${badge_url}"
+            curl -s "${badge_url}" -o coverage-badge.svg
+          else
+            echo "Error: Coverage percentage is missing or invalid."
+            exit 1
+          fi 
+          
+          mv coverage-badge.svg coverage-badge && 
+          zip -r coverage-badge.zip coverage-badge
         "
 
     - name: Upload code coverage artifact
@@ -70,3 +93,9 @@ jobs:
       with:
         name: code_coverage
         path: code_coverage.zip
+
+    - name: Upload coverage badge artifact
+      uses:  actions/upload-artifact@v4
+      with:
+        name: coverage-badge
+        path: coverage-badge.zip
