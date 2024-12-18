@@ -69,7 +69,7 @@ pkgs.nixosTest {
     machine.wait_for_unit("default.target")
     machine.succeed("ifconfig vcan0")
     machine.succeed("ls $OPENBSW_SRC | grep README.md")
-    machine.succeed("cd $OPENBSW_SRC/test/pyTest && pytest --target=posix")
+    machine.succeed("cd $OPENBSW_SRC/test/pyTest && pytest --target=posix_ci")
   '';
 
 }
