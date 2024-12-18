@@ -17,6 +17,11 @@
         checks = {
           integrationTests = import ./nix/IntegrationTests.nix { inherit pkgs self system;};
         };
+        devShells.default = pkgs.mkShell {
+          buildInputs = with self.packages."${system}"; [udstool]
+            ++ pkgs.callPackage ./nix/pytestDependencies.nix {};
+          inputsFrom = with self.packages."${system}"; [referenceApp];
+        };
       }
     );
 }
