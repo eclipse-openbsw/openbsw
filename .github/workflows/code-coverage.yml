@@ -60,9 +60,23 @@ jobs:
           genhtml cmake-build-unit-tests/coverage.info \
                   --output-directory cmake-build-unit-tests/coverage &&
 
-          # Zip the coverage report
           mv cmake-build-unit-tests/coverage code_coverage &&
-          zip -r code_coverage.zip code_coverage
+          zip -r code_coverage.zip code_coverage &&
+
+          #Badges
+          LinePercentage=\$(lcov --summary cmake-build-unit-tests/coverage.info | grep 'lines' | awk '{print \$2}') &&
+          echo \"Line Percentage: \$LinePercentage\"  # Debug print &&
+          wget \"https://img.shields.io/badge/coverage-\${LinePercentage}25-brightgreen.svg\" -O line_coverage_badge.svg &&
+
+          FunctionPercentage=\$(lcov --summary cmake-build-unit-tests/coverage.info | grep 'functions' | awk '{print \$2}') &&
+          echo \"Function Percentage: \$FunctionPercentage\"  # Debug print &&
+          wget \"https://img.shields.io/badge/coverage-\${FunctionPercentage}25-brightgreen.svg\" -O function_coverage_badge.svg &&
+
+          mkdir coverage_badges &&
+
+          mv line_coverage_badge.svg coverage_badges/ &&
+          mv function_coverage_badge.svg coverage_badges/ &&
+          zip -r coverage_badges.zip coverage_badges
         "
 
     - name: Upload code coverage artifact
@@ -70,3 +84,9 @@ jobs:
       with:
         name: code_coverage
         path: code_coverage.zip
+
+    - name: Upload Coverage Badge
+      uses: actions/upload-artifact@v4
+      with:
+        name: coverage_badges
+        path: coverage_badges.zip
