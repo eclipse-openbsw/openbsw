@@ -61,6 +61,18 @@ jobs:
             unzip code_coverage.zip
             rm code_coverage.zip
 
+      - name: Download Code coverage badge
+        uses: actions/download-artifact@v4
+        with: 
+           name: code_coverage_badge
+           path: ./doc/github_pages
+      
+      - name: Unzip Code coverage badge
+        working-directory: ./doc/github_pages
+        run: |
+            unzip code_coverage_badge.zip
+            rm code_coverage_badge.zip
+
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
