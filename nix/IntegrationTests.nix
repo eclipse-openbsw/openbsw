@@ -2,7 +2,7 @@
 , self
 , system
 }:
-pkgs.nixosTest {
+pkgs.testers.runNixOSTest {
   name = "referenceApp-integration-test";
 
   nodes.machine = { config, pkgs, ... }: {
@@ -45,9 +45,15 @@ pkgs.nixosTest {
 
   };
 
-  testScript = { nodes, ... }: ''
+  testScript = { nodes, ... }: /* python */''
     machine.wait_for_unit("default.target")
     machine.succeed("ifconfig vcan0")
+    virt = machine.succeed("systemd-detect-virt").strip()
+    if virt != 'kvm':
+      # should interactive test works and 'nix flake check' fail, you probably need to update the permissions on /dev/kvm
+      # if 'sudo -u nixbld1 touch /dev/kvm' fails
+      # you need to run 'sudo setfacl -m g:nixbld:rw- /dev/kvm'
+      raise Exception(f"Tests need to be run with kvm. Only found {virt}")
     machine.succeed("ls $OPENBSW_SRC | grep README.md")
     machine.succeed("cd $OPENBSW_SRC/test/pyTest && pytest -s --target=posix_ci")
   '';
