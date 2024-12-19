@@ -11,6 +11,7 @@
           default = self.packages."${system}".referenceApp;
 
           referenceApp = pkgs.callPackage ./nix/referenceApp.nix {}; 
+          referenceApp_S32K148 = pkgs.callPackage ./nix/referenceApp_S32K148.nix {};
           udstool = pkgs.callPackage ./nix/udstool.nix {};
           interactiveIntegrationTests = self.checks."${system}".integrationTests.driverInteractive;
         };
@@ -18,9 +19,10 @@
           integrationTests = import ./nix/IntegrationTests.nix { inherit pkgs self system;};
         };
         devShells.default = pkgs.mkShell {
-          buildInputs = with self.packages."${system}"; [udstool]
-            ++ pkgs.callPackage ./nix/pytestDependencies.nix {};
-          inputsFrom = with self.packages."${system}"; [referenceApp];
+          packages = with self.packages."${system}"; [udstool]
+            ++ pkgs.callPackage ./nix/pytestDependencies.nix {}
+            ++ (with pkgs; [ gdb ]);
+          inputsFrom = with self.packages."${system}"; [referenceApp referenceApp_S32K148];
         };
       }
     );
