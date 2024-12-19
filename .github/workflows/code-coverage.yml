@@ -28,7 +28,9 @@ jobs:
           ctest --test-dir cmake-build-unit-tests -j4
     
     - name: Install lcov
-      run: sudo apt install lcov
+      run: |
+           sudo apt-get update
+           sudo apt-get install -y lcov
     
     # no-external command excludes the system libraries in the root directory 
     - name: Capture code coverage
@@ -36,6 +38,7 @@ jobs:
         echo "Capturing code coverage..."
         lcov --no-external --capture --directory . \
              --output-file cmake-build-unit-tests/coverage_unfiltered.info
+        geninfo --ignore-errors mismatch
 
     - name: Filter out 3rd party and mock files
       run: |
