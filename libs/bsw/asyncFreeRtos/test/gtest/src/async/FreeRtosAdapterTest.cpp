@@ -57,8 +57,6 @@ TEST_F(FreeRtosAdapterTest, testCreateTask)
             xTaskCreateStatic(
                 NotNull(), name, 256U / sizeof(StackType_t), NotNull(), 1U, NotNull(), NotNull()))
             .WillOnce(Return(&taskHandle));
-        EXPECT_CALL(
-            _freeRtosMock, xTimerCreateStatic(name, _, 0U, NotNull(), NotNull(), NotNull()));
         CutType::init();
     }
     {
@@ -68,19 +66,15 @@ TEST_F(FreeRtosAdapterTest, testCreateTask)
             CutType::TaskFunctionType::
                 create<FreeRtosAdapterTest, &FreeRtosAdapterTest::taskFunction>(*this));
 
-        uint32_t taskHandle  = 13U;
-        uint32_t timerHandle = 14U;
+        uint32_t taskHandle = 13U;
         EXPECT_CALL(
             _freeRtosMock,
             xTaskCreateStatic(
                 NotNull(), name, 512U / sizeof(StackType_t), NotNull(), 2U, NotNull(), NotNull()))
             .WillOnce(Return(&taskHandle));
-        EXPECT_CALL(_freeRtosMock, xTimerCreateStatic(name, _, 0U, NotNull(), NotNull(), NotNull()))
-            .WillOnce(Return(&timerHandle));
         CutType::init();
         {
             // Test get name
-            EXPECT_CALL(_freeRtosMock, pcTimerGetName(&timerHandle)).WillOnce(Return(name));
             EXPECT_EQ(name, CutType::getTaskName(2U));
         }
     }
@@ -106,18 +100,14 @@ TEST_F(FreeRtosAdapterTest, testStackUsage)
             CutType::TaskFunctionType::
                 create<FreeRtosAdapterTest, &FreeRtosAdapterTest::taskFunction>(*this));
 
-        uint32_t taskHandle  = 13U;
-        uint32_t timerHandle = 14U;
+        uint32_t taskHandle = 13U;
         EXPECT_CALL(
             _freeRtosMock,
             xTaskCreateStatic(
                 NotNull(), name, 128U / sizeof(StackType_t), NotNull(), 2U, NotNull(), NotNull()))
             .WillOnce(Return(&taskHandle));
-        EXPECT_CALL(_freeRtosMock, xTimerCreateStatic(name, _, 0U, NotNull(), NotNull(), NotNull()))
-            .WillOnce(Return(&timerHandle));
         CutType::init();
         {
-            EXPECT_CALL(_freeRtosMock, pcTimerGetName(&timerHandle)).WillOnce(Return(name));
             EXPECT_EQ(name, CutType::getTaskName(2U));
 
             EXPECT_CALL(_freeRtosMock, uxTaskGetStackHighWaterMark(&taskHandle))
@@ -244,7 +234,6 @@ TEST_F(FreeRtosAdapterTest, testExecuteAndScheduleCalls)
         xTaskCreateStatic(
             NotNull(), name, 256U / sizeof(StackType_t), NotNull(), 1U, NotNull(), NotNull()))
         .WillOnce(Return(&taskHandle));
-    EXPECT_CALL(_freeRtosMock, xTimerCreateStatic(name, _, 0U, NotNull(), NotNull(), NotNull()));
     CutType::init();
     {
         EXPECT_CALL(_freeRtosMock, xTaskNotify(&taskHandle, _, eSetBits));

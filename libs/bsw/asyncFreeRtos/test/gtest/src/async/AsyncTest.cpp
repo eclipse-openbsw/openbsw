@@ -62,7 +62,6 @@ TEST_F(AsyncTest, testExecuteAndScheduleCalls)
         xTaskCreateStatic(
             NotNull(), name, 256U / sizeof(StackType_t), NotNull(), 1U, NotNull(), NotNull()))
         .WillOnce(Return(&taskHandle));
-    EXPECT_CALL(_freeRtosMock, xTimerCreateStatic(name, _, 0U, NotNull(), NotNull(), NotNull()));
     AdapterType::Task<1U, 256U> task(name);
     AdapterType::init();
     {
@@ -98,11 +97,7 @@ TEST_F(AsyncTest, testInitIdleTask)
     AdapterType::IdleTask<384U> idleTask(
         name, AdapterType::TaskFunctionType::create<AsyncTest, &AsyncTest::taskFunction>(*this));
     {
-        uint32_t timerHandle = 13U;
-        EXPECT_CALL(_freeRtosMock, xTimerCreateStatic(name, _, 0U, NotNull(), NotNull(), NotNull()))
-            .WillOnce(Return(&timerHandle));
         AdapterType::init();
-        EXPECT_CALL(_freeRtosMock, pcTimerGetName(&timerHandle)).WillOnce(Return(name));
         EXPECT_EQ(name, AdapterType::getTaskName(AdapterType::TASK_IDLE));
     }
     {

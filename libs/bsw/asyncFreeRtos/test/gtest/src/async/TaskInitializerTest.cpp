@@ -17,7 +17,6 @@ struct AdapterMock : public ::estd::singleton<AdapterMock>
     using StackSliceType   = ::estd::slice<StackType_t>;
     using TaskFunctionType = ::estd::function<void()>;
     using TaskObjectType   = uint32_t*;
-    using TimerObjectType  = uint32_t*;
     using TaskConfigType   = uint32_t;
 
     AdapterMock() : ::estd::singleton<AdapterMock>(*this) {}
@@ -39,11 +38,10 @@ struct TaskInitializerData
 {
     Cut::StackSliceType _stack;
     Cut::TaskFunctionType _taskFunction;
-    Cut::TaskObjectType* _task   = nullptr;
-    Cut::TimerObjectType* _timer = nullptr;
-    char const* _name            = nullptr;
-    ContextType _context         = CONTEXT_INVALID;
-    Cut::TaskConfigType _config  = 0U;
+    Cut::TaskObjectType* _task  = nullptr;
+    char const* _name           = nullptr;
+    ContextType _context        = CONTEXT_INVALID;
+    Cut::TaskConfigType _config = 0U;
 };
 
 struct TaskInitializerTest : public Test
@@ -61,7 +59,6 @@ ACTION_P(CopyTaskInitializerData, dest)
     dest->_stack        = arg0._stack;
     dest->_taskFunction = arg0._taskFunction;
     dest->_task         = &arg0._task;
-    dest->_timer        = &arg0._timer;
     dest->_name         = arg0._name;
     dest->_context      = arg0._context;
     dest->_config       = arg0._config;
@@ -85,7 +82,6 @@ TEST_F(TaskInitializerTest, testIdleTask)
         EXPECT_EQ(256, data._stack.size() * sizeof(StackType_t));
         EXPECT_EQ(_taskFunction, data._taskFunction);
         EXPECT_TRUE(data._task != nullptr);
-        EXPECT_TRUE(data._timer != nullptr);
         EXPECT_EQ(ContextType(AdapterMock::TASK_IDLE), data._context);
         EXPECT_EQ(7U, data._config);
         Mock::VerifyAndClearExpectations(&_adapterMock);
@@ -104,7 +100,6 @@ TEST_F(TaskInitializerTest, testIdleTask)
         EXPECT_EQ(sizeof(stack), data._stack.size() * sizeof(StackType_t));
         EXPECT_EQ(_taskFunction, data._taskFunction);
         EXPECT_TRUE(data._task != nullptr);
-        EXPECT_TRUE(data._timer != nullptr);
         EXPECT_EQ(ContextType(AdapterMock::TASK_IDLE), data._context);
         EXPECT_EQ(7U, data._config);
         Mock::VerifyAndClearExpectations(&_adapterMock);
@@ -129,7 +124,6 @@ TEST_F(TaskInitializerTest, testTimerTask)
         EXPECT_EQ(512, data._stack.size() * sizeof(StackType_t));
         EXPECT_EQ(AdapterMock::TaskFunctionType(), data._taskFunction);
         EXPECT_TRUE(data._task != nullptr);
-        EXPECT_TRUE(data._timer != nullptr);
         EXPECT_EQ(ContextType(AdapterMock::TASK_TIMER), data._context);
         EXPECT_EQ(9U, data._config);
         Mock::VerifyAndClearExpectations(&_adapterMock);
@@ -148,7 +142,6 @@ TEST_F(TaskInitializerTest, testTimerTask)
         EXPECT_EQ(sizeof(stack), data._stack.size() * sizeof(StackType_t));
         EXPECT_EQ(AdapterMock::TaskFunctionType(), data._taskFunction);
         EXPECT_TRUE(data._task != nullptr);
-        EXPECT_TRUE(data._timer != nullptr);
         EXPECT_EQ(ContextType(AdapterMock::TASK_TIMER), data._context);
         EXPECT_EQ(8U, data._config);
         Mock::VerifyAndClearExpectations(&_adapterMock);
@@ -173,7 +166,6 @@ TEST_F(TaskInitializerTest, testTask)
         EXPECT_EQ(512, data._stack.size() * sizeof(StackType_t));
         EXPECT_EQ(AdapterMock::TaskFunctionType(), data._taskFunction);
         EXPECT_TRUE(data._task != nullptr);
-        EXPECT_TRUE(data._timer != nullptr);
         EXPECT_EQ(5U, data._context);
         EXPECT_EQ(9U, data._config);
         Mock::VerifyAndClearExpectations(&_adapterMock);
@@ -192,7 +184,6 @@ TEST_F(TaskInitializerTest, testTask)
         EXPECT_EQ(sizeof(stack), data._stack.size() * sizeof(StackType_t));
         EXPECT_EQ(AdapterMock::TaskFunctionType(), data._taskFunction);
         EXPECT_TRUE(data._task != nullptr);
-        EXPECT_TRUE(data._timer != nullptr);
         EXPECT_EQ(6U, data._context);
         EXPECT_EQ(8U, data._config);
         Mock::VerifyAndClearExpectations(&_adapterMock);
@@ -209,7 +200,6 @@ TEST_F(TaskInitializerTest, testTask)
         EXPECT_EQ(512, data._stack.size() * sizeof(StackType_t));
         EXPECT_EQ(_taskFunction, data._taskFunction);
         EXPECT_TRUE(data._task != nullptr);
-        EXPECT_TRUE(data._timer != nullptr);
         EXPECT_EQ(5U, data._context);
         EXPECT_EQ(9U, data._config);
         Mock::VerifyAndClearExpectations(&_adapterMock);
@@ -228,7 +218,6 @@ TEST_F(TaskInitializerTest, testTask)
         EXPECT_EQ(sizeof(stack), data._stack.size() * sizeof(StackType_t));
         EXPECT_EQ(_taskFunction, data._taskFunction);
         EXPECT_TRUE(data._task != nullptr);
-        EXPECT_TRUE(data._timer != nullptr);
         EXPECT_EQ(6U, data._context);
         EXPECT_EQ(8U, data._config);
         Mock::VerifyAndClearExpectations(&_adapterMock);

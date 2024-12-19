@@ -237,7 +237,7 @@ private:
 
     static void initTask(TaskInitializer& initializer);
 
-    static void initTask(ContextType context, char const* name, StaticTimer_t& timer);
+    static void initTask(ContextType context);
 
     static void TaskFunction(void* param);
 
@@ -353,12 +353,12 @@ void FreeRtosAdapter<Binding>::initTask(TaskInitializer& initializer)
     }
     else
     {
-        initTask(context, initializer._name, initializer._timer);
+        initTask(context);
         TaskContextType& taskContext = _taskContexts[static_cast<size_t>(context)];
         if (context == TASK_IDLE)
         {
             _idleTaskInitializer = &initializer;
-            taskContext.initTask(TASK_IDLE, initializer._taskFunction);
+            taskContext.initTask(TASK_IDLE, initializer._name, initializer._taskFunction);
         }
         else
         {
@@ -374,11 +374,8 @@ void FreeRtosAdapter<Binding>::initTask(TaskInitializer& initializer)
 }
 
 template<class Binding>
-void FreeRtosAdapter<Binding>::initTask(
-    ContextType const context, char const* const name, StaticTimer_t& timer)
+void FreeRtosAdapter<Binding>::initTask(ContextType const context)
 {
-    TaskContextType& taskContext = _taskContexts[static_cast<size_t>(context)];
-    taskContext.createTimer(timer, name);
 #ifndef ASYNC_TIMEOUTMANAGER2_DISABLE
     _timeoutManagers[static_cast<size_t>(context)].init(context);
 #endif // ASYNC_TIMEOUTMANAGER2_DISABLE

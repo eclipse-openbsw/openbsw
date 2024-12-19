@@ -23,7 +23,7 @@ namespace os
         MOCK_METHOD0(xTaskGetIdleTaskHandle, TaskHandle_t());
         MOCK_METHOD3(xTaskNotify, void(TaskHandle_t taskHandle, uint32_t ulValue, eNotifyAction eAction));
         MOCK_METHOD4(xTaskNotifyFromISR, void(TaskHandle_t taskHandle, uint32_t ulValue, eNotifyAction eAction, BaseType_t *pxHigherPriorityTaskWoken));
-        MOCK_METHOD4(xTaskNotifyWait, void(uint32_t ulBitsToClearOnEntry, uint32_t ulBitsToClearOnExit, uint32_t *pulNotificationValue, TickType_t xTicksToWait));
+        MOCK_METHOD4(xTaskNotifyWait, BaseType_t(uint32_t ulBitsToClearOnEntry, uint32_t ulBitsToClearOnExit, uint32_t *pulNotificationValue, TickType_t xTicksToWait));
         MOCK_METHOD0(vTaskStartScheduler, void());
         MOCK_METHOD1(uxTaskGetTaskNumber, UBaseType_t(TaskHandle_t xTask));
         MOCK_METHOD1(uxTaskGetStackHighWaterMark, BaseType_t(TaskHandle_t taskHandle));

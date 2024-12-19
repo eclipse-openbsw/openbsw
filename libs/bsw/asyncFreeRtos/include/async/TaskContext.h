@@ -19,7 +19,6 @@
 
 #include <FreeRTOS.h>
 #include <task.h>
-#include <timers.h>
 
 namespace async
 {
@@ -46,9 +45,10 @@ public:
     /**
      * Initializes a task with a specified context and task function.
      * \param context The context associated with this task.
+     * \param name The name of this task.
      * \param taskFunction The function to execute in this task.
      */
-    void initTask(ContextType context, TaskFunctionType taskFunction);
+    void initTask(ContextType context, char const* const name, TaskFunctionType taskFunction);
 
     /**
      * Sets the FreeRTOS task handle for this context.
@@ -72,13 +72,6 @@ public:
         UBaseType_t priority,
         StackType const& stack,
         TaskFunctionType taskFunction);
-
-    /**
-     * Creates a FreeRTOS timer.
-     * \param timer The static timer storage structure.
-     * \param name The name of the timer.
-     */
-    void createTimer(StaticTimer_t& timer, char const* name);
 
     char const* getName() const;
 
@@ -130,12 +123,6 @@ public:
     void dispatchWhileWork();
 
     /**
-     * Sets a timeout value in microseconds.
-     * \param timeInUs The timeout duration in microseconds.
-     */
-    void setTimeout(uint32_t timeInUs);
-
-    /**
      * Retrieves the amount of unused stack space for a specified task.
      * \param taskHandle The handle of the task.
      * \return The amount of unused stack space.
@@ -152,29 +139,28 @@ private:
     friend class EventPolicy<TaskContext<Binding>, 0U>;
     friend class EventPolicy<TaskContext<Binding>, 1U>;
 
-    void setEvents(EventMaskType eventMask);
-    EventMaskType waitEvents();
-    EventMaskType peekEvents();
-
-private:
-    using TimerType = ::timer::Timer<LockType>;
+    using ExecuteEventPolicyType = EventPolicy<TaskContext<Binding>, 0U>;
+    using TimerEventPolicyType   = EventPolicy<TaskContext<Binding>, 1U>;
+    using TimerType              = ::timer::Timer<LockType>;
 
     static EventMaskType const STOP_EVENT_MASK = static_cast<EventMaskType>(
         static_cast<EventMaskType>(1U) << static_cast<EventMaskType>(EVENT_COUNT));
     static EventMaskType const WAIT_EVENT_MASK = (STOP_EVENT_MASK << 1U) - 1U;
 
+    void setEvents(EventMaskType eventMask);
+    EventMaskType waitEvents();
+    EventMaskType peekEvents();
+
     void handleTimeout();
 
     static void staticTaskFunction(void* param);
-    static void staticTimerFunction(TimerHandle_t handle);
 
-    RunnableExecutor<RunnableType, EventPolicy<TaskContext<Binding>, 0U>, LockType>
-        _runnableExecutor;
+    RunnableExecutor<RunnableType, ExecuteEventPolicyType, LockType> _runnableExecutor;
     TimerType _timer;
-    EventPolicy<TaskContext<Binding>, 1U> _timerEventPolicy;
+    TimerEventPolicyType _timerEventPolicy;
     TaskFunctionType _taskFunction;
     TaskHandle_t _taskHandle;
-    TimerHandle_t _timerHandle;
+    char const* _name;
     ContextType _context;
 };
 
@@ -184,11 +170,10 @@ private:
 template<class Binding>
 inline TaskContext<Binding>::TaskContext()
 : _runnableExecutor(*this)
-, _timer()
 , _timerEventPolicy(*this)
 , _taskFunction()
 , _taskHandle(nullptr)
-, _timerHandle(nullptr)
+, _name(nullptr)
 , _context(CONTEXT_INVALID)
 {
     _timerEventPolicy.setEventHandler(
@@ -197,9 +182,11 @@ inline TaskContext<Binding>::TaskContext()
 }
 
 template<class Binding>
-void TaskContext<Binding>::initTask(ContextType const context, TaskFunctionType const taskFunction)
+void TaskContext<Binding>::initTask(
+    ContextType const context, char const* const name, TaskFunctionType const taskFunction)
 {
     _context      = context;
+    _name         = name;
     _taskFunction = taskFunction;
 }
 
@@ -219,6 +206,7 @@ void TaskContext<Binding>::createTask(
     TaskFunctionType const taskFunction)
 {
     _context      = context;
+    _name         = name;
     _taskFunction = taskFunction.has_value()
                         ? taskFunction
                         : TaskFunctionType::template create<&TaskContext::defaultTaskFunction>();
@@ -233,16 +221,9 @@ void TaskContext<Binding>::createTask(
 }
 
 template<class Binding>
-void TaskContext<Binding>::createTimer(StaticTimer_t& timer, char const* const name)
-{
-    _timerHandle = xTimerCreateStatic(
-        name, 1U, static_cast<UBaseType_t>(pdFALSE), this, &staticTimerFunction, &timer);
-}
-
-template<class Binding>
 inline char const* TaskContext<Binding>::getName() const
 {
-    return (_timerHandle != nullptr) ? pcTimerGetName(_timerHandle) : nullptr;
+    return _name;
 }
 
 template<class Binding>
@@ -317,31 +298,33 @@ template<class Binding>
 inline EventMaskType TaskContext<Binding>::waitEvents()
 {
     EventMaskType eventMask = 0U;
-    xTaskNotifyWait(0U, WAIT_EVENT_MASK, &eventMask, Binding::WAIT_EVENTS_TICK_COUNT);
-    return eventMask;
+    uint32_t ticks          = Binding::WAIT_EVENTS_TICK_COUNT;
+    uint32_t nextDelta;
+    bool const hasDelta = _timer.getNextDelta(getSystemTimeUs32Bit(), nextDelta);
+    if (hasDelta)
+    {
+        ticks = static_cast<uint32_t>((nextDelta + (Config::TICK_IN_US - 1U)) / Config::TICK_IN_US);
+    }
+    if (xTaskNotifyWait(0U, WAIT_EVENT_MASK, &eventMask, ticks) != 0)
+    {
+        return eventMask;
+    }
+    else if (hasDelta)
+    {
+        return TimerEventPolicyType::EVENT_MASK;
+    }
+    else
+    {
+        return 0U;
+    }
 }
 
 template<class Binding>
 inline EventMaskType TaskContext<Binding>::peekEvents()
 {
     EventMaskType eventMask = 0U;
-    xTaskNotifyWait(0U, WAIT_EVENT_MASK, &eventMask, 0U);
+    (void)xTaskNotifyWait(0U, WAIT_EVENT_MASK, &eventMask, 0U);
     return eventMask;
-}
-
-template<class Binding>
-void TaskContext<Binding>::setTimeout(uint32_t const timeInUs)
-{
-    if (timeInUs > 0U)
-    {
-        uint32_t const ticks
-            = static_cast<uint32_t>((timeInUs + (Config::TICK_IN_US - 1U)) / Config::TICK_IN_US);
-        (void)xTimerChangePeriod(_timerHandle, ticks, 0U);
-    }
-    else
-    {
-        (void)_timerEventPolicy.setEvent();
-    }
 }
 
 template<class Binding>
@@ -364,7 +347,6 @@ void TaskContext<Binding>::dispatch()
 template<class Binding>
 inline void TaskContext<Binding>::stopDispatch()
 {
-    _runnableExecutor.shutdown();
     setEvents(STOP_EVENT_MASK);
 }
 
@@ -373,6 +355,7 @@ void TaskContext<Binding>::dispatchWhileWork()
 {
     while (true)
     {
+        handleTimeout();
         EventMaskType const eventMask = peekEvents();
         if (eventMask != 0U)
         {
@@ -402,11 +385,6 @@ template<class Binding>
 void TaskContext<Binding>::handleTimeout()
 {
     while (_timer.processNextTimeout(getSystemTimeUs32Bit())) {}
-    uint32_t nextDelta;
-    if (_timer.getNextDelta(getSystemTimeUs32Bit(), nextDelta))
-    {
-        setTimeout(nextDelta);
-    }
 }
 
 template<class Binding>
@@ -414,13 +392,6 @@ void TaskContext<Binding>::staticTaskFunction(void* const param)
 {
     TaskContext& taskContext = *reinterpret_cast<TaskContext*>(param);
     taskContext.callTaskFunction();
-}
-
-template<class Binding>
-void TaskContext<Binding>::staticTimerFunction(TimerHandle_t const handle)
-{
-    TaskContext& taskContext = *reinterpret_cast<TaskContext*>(pvTimerGetTimerID(handle));
-    taskContext._timerEventPolicy.setEvent();
 }
 
 } // namespace async

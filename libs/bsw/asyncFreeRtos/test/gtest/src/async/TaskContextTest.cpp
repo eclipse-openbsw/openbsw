@@ -38,7 +38,7 @@ public:
 class TaskContextTest : public Test
 {
 public:
-    TaskContextTest() : _name("test"), _taskHandle(10U), _timerHandle(14U) {}
+    TaskContextTest() : _name("test"), _taskHandle(10U) {}
 
 protected:
     StrictMock<::os::FreeRtosMock> _freeRtosMock;
@@ -53,12 +53,12 @@ protected:
     StackType_t _stack[100];
     char const* _name;
     uint32_t _taskHandle;
-    uint32_t _timerHandle;
 };
 
 /**
  * \req: [BSW_ASFR_39], [BSW_ASFR_52], [BSW_ASFR_54], [BSW_ASFR_57]
- * \refs: SMD_asyncFreeRtos_TaskContext, SMD_asyncFreeRtos_TaskContextEventHandling
+ * \refs: SMD_asyncFreeRtos_TaskContext, SMD_asyncFreeRtos_TaskContextEventHandling,
+ * SMD_asyncFreeRtos_TaskContextInitialization
  * \desc: To test task creation and execution
  */
 TEST_F(TaskContextTest, testCreateAndRunTask)
@@ -76,17 +76,18 @@ TEST_F(TaskContextTest, testCreateAndRunTask)
         EXPECT_TRUE(osTaskFunction != 0L);
         // expect notify wait
         Sequence seq;
+        EXPECT_CALL(_systemTimerMock, getSystemTimeUs32Bit()).WillRepeatedly(Return(100000U));
         EXPECT_CALL(
             _freeRtosMock,
             xTaskNotifyWait(0U, 7U, NotNull(), TestBindingMock::WAIT_EVENTS_TICK_COUNT))
             .InSequence(seq)
-            .WillOnce(SetArgPointee<2>(0U));
+            .WillOnce(DoAll(SetArgPointee<2>(0U), Return(false)));
         // second time do nothing again
         EXPECT_CALL(
             _freeRtosMock,
             xTaskNotifyWait(0U, 7U, NotNull(), TestBindingMock::WAIT_EVENTS_TICK_COUNT))
             .InSequence(seq)
-            .WillOnce(DoAll(SetArgPointee<2>(0U), StopDispatch(&cut)));
+            .WillOnce(DoAll(SetArgPointee<2>(0U), StopDispatch(&cut), Return(false)));
         // trigger shutdown on next iteration
         uint32_t eventMask = 0U;
         EXPECT_CALL(_bindingMock, getHigherPriorityTaskWokenFunc())
@@ -98,7 +99,7 @@ TEST_F(TaskContextTest, testCreateAndRunTask)
             _freeRtosMock,
             xTaskNotifyWait(0U, 7U, NotNull(), TestBindingMock::WAIT_EVENTS_TICK_COUNT))
             .InSequence(seq)
-            .WillOnce(CopyArgPointee2(&eventMask));
+            .WillOnce(DoAll(CopyArgPointee2(&eventMask), Return(true)));
         osTaskFunction(param);
         Mock::VerifyAndClearExpectations(&_freeRtosMock);
     }
@@ -121,24 +122,6 @@ TEST_F(TaskContextTest, testCreateAndRunTask)
 }
 
 /**
- * \refs: SMD_asyncFreeRtos_TaskContextInitialization
- * \desc: To test timer creation
- */
-TEST_F(TaskContextTest, testCreateTimer)
-{
-    TaskContext<TestBindingMock> cut;
-    EXPECT_EQ(0L, cut.getName());
-    StaticTimer_t timer;
-    char const* name     = "test";
-    uint32_t timerHandle = 12U;
-    EXPECT_CALL(_freeRtosMock, xTimerCreateStatic(name, 1U, 0U, NotNull(), NotNull(), &timer))
-        .WillOnce(Return(&timerHandle));
-    EXPECT_CALL(_freeRtosMock, pcTimerGetName(&timerHandle)).WillOnce(Return(name));
-    cut.createTimer(timer, name);
-    EXPECT_EQ(name, cut.getName());
-}
-
-/**
  * \req: [BSW_ASFR_51], [BSW_ASFR_52], [BSW_ASFR_53]
  * \refs: SMD_asyncFreeRtos_TaskContextAsyncApi
  * \desc: To test task execution
@@ -146,9 +129,13 @@ TEST_F(TaskContextTest, testCreateTimer)
 TEST_F(TaskContextTest, testExecute)
 {
     TaskContext<TestBindingMock> cut;
+
+    EXPECT_CALL(_systemTimerMock, getSystemTimeUs32Bit()).WillRepeatedly(Return(100000U));
+
+    TaskFunction_t* osTaskFunction = 0L;
     EXPECT_CALL(
         _freeRtosMock, xTaskCreateStatic(NotNull(), _name, 100, NotNull(), 12U, _stack, &_task))
-        .WillOnce(Return(&_taskHandle));
+        .WillOnce(DoAll(SaveArg<0>(&osTaskFunction), Return(&_taskHandle)));
     cut.createTask(1U, _task, _name, 12U, _stack, TaskContext<TestBindingMock>::TaskFunctionType());
     {
         // from task context
@@ -162,14 +149,29 @@ TEST_F(TaskContextTest, testExecute)
         Mock::VerifyAndClearExpectations(&_freeRtosMock);
 
         Sequence seq;
-        EXPECT_CALL(_freeRtosMock, xTaskNotifyWait(0U, 7U, NotNull(), 0U))
+        EXPECT_CALL(
+            _freeRtosMock,
+            xTaskNotifyWait(0U, 7U, NotNull(), TestBindingMock::WAIT_EVENTS_TICK_COUNT))
             .InSequence(seq)
-            .WillOnce(SetArgPointee<2>(eventMask));
-        EXPECT_CALL(_freeRtosMock, xTaskNotifyWait(0U, 7U, NotNull(), 0U))
+            .WillOnce(DoAll(SetArgPointee<2>(eventMask), Return(true)));
+        EXPECT_CALL(
+            _freeRtosMock,
+            xTaskNotifyWait(0U, 7U, NotNull(), TestBindingMock::WAIT_EVENTS_TICK_COUNT))
             .InSequence(seq)
-            .WillOnce(SetArgPointee<2>(0U));
+            .WillOnce(DoAll(SetArgPointee<2>(0U), StopDispatch(&cut), Return(false)));
         EXPECT_CALL(_runnableMock1, execute());
-        cut.dispatchWhileWork();
+        // trigger shutdown on next iteration
+        EXPECT_CALL(_bindingMock, getHigherPriorityTaskWokenFunc())
+            .WillOnce(Return(static_cast<BaseType_t*>(0L)));
+        EXPECT_CALL(_freeRtosMock, xTaskNotify(&_taskHandle, _, eSetBits))
+            .InSequence(seq)
+            .WillOnce(SaveArg<1>(&eventMask));
+        EXPECT_CALL(
+            _freeRtosMock,
+            xTaskNotifyWait(0U, 7U, NotNull(), TestBindingMock::WAIT_EVENTS_TICK_COUNT))
+            .InSequence(seq)
+            .WillOnce(DoAll(CopyArgPointee2(&eventMask), Return(true)));
+        osTaskFunction(&cut);
         Mock::VerifyAndClearExpectations(&_runnableMock1);
     }
     {
@@ -186,38 +188,30 @@ TEST_F(TaskContextTest, testExecute)
         Mock::VerifyAndClearExpectations(&_freeRtosMock);
 
         Sequence seq;
-        EXPECT_CALL(_freeRtosMock, xTaskNotifyWait(0U, 7U, NotNull(), 0U))
+        EXPECT_CALL(
+            _freeRtosMock,
+            xTaskNotifyWait(0U, 7U, NotNull(), TestBindingMock::WAIT_EVENTS_TICK_COUNT))
             .InSequence(seq)
-            .WillOnce(SetArgPointee<2>(eventMask));
-        EXPECT_CALL(_freeRtosMock, xTaskNotifyWait(0U, 7U, NotNull(), 0U))
+            .WillOnce(DoAll(SetArgPointee<2>(eventMask), Return(true)));
+        EXPECT_CALL(
+            _freeRtosMock,
+            xTaskNotifyWait(0U, 7U, NotNull(), TestBindingMock::WAIT_EVENTS_TICK_COUNT))
             .InSequence(seq)
-            .WillOnce(SetArgPointee<2>(0U));
+            .WillOnce(DoAll(SetArgPointee<2>(0U), StopDispatch(&cut), Return(false)));
         EXPECT_CALL(_runnableMock1, execute());
-        cut.dispatchWhileWork();
-        Mock::VerifyAndClearExpectations(&_runnableMock1);
-    }
-}
-
-/**
- * \refs: SMD_asyncFreeRtos_TaskContextAsyncApi
- * \desc: To test timeout functionality
- */
-TEST_F(TaskContextTest, testSetTimeout)
-{
-    TaskContext<TestBindingMock> cut;
-    EXPECT_CALL(
-        _freeRtosMock, xTaskCreateStatic(NotNull(), _name, 100, NotNull(), 12U, _stack, &_task))
-        .WillOnce(Return(&_taskHandle));
-    cut.createTask(1U, _task, _name, 12U, _stack, TaskContext<TestBindingMock>::TaskFunctionType());
-    {
+        // trigger shutdown on next iteration
         EXPECT_CALL(_bindingMock, getHigherPriorityTaskWokenFunc())
             .WillOnce(Return(static_cast<BaseType_t*>(0L)));
-        uint32_t eventMask = 0U;
-        // set timeout may be called with 0 value and should immediately set event
         EXPECT_CALL(_freeRtosMock, xTaskNotify(&_taskHandle, _, eSetBits))
+            .InSequence(seq)
             .WillOnce(SaveArg<1>(&eventMask));
-        cut.setTimeout(0U);
-        EXPECT_TRUE(eventMask != 0U);
+        EXPECT_CALL(
+            _freeRtosMock,
+            xTaskNotifyWait(0U, 7U, NotNull(), TestBindingMock::WAIT_EVENTS_TICK_COUNT))
+            .InSequence(seq)
+            .WillOnce(DoAll(CopyArgPointee2(&eventMask), Return(true)));
+        osTaskFunction(&cut);
+        Mock::VerifyAndClearExpectations(&_runnableMock1);
     }
 }
 
@@ -229,44 +223,16 @@ TEST_F(TaskContextTest, testSetTimeout)
 TEST_F(TaskContextTest, testSchedule)
 {
     TaskContext<TestBindingMock> cut;
+    TaskFunction_t* osTaskFunction = 0L;
     EXPECT_CALL(
         _freeRtosMock, xTaskCreateStatic(NotNull(), _name, 100, NotNull(), 12U, _stack, &_task))
-        .WillOnce(Return(&_taskHandle));
+        .WillOnce(DoAll(SaveArg<0>(&osTaskFunction), Return(&_taskHandle)));
     cut.createTask(1U, _task, _name, 12U, _stack, TaskContext<TestBindingMock>::TaskFunctionType());
 
-    void* timerId                            = 0L;
-    TimerCallbackFunction_t callbackFunction = 0L;
-    EXPECT_CALL(_freeRtosMock, xTimerCreateStatic(_name, 1U, 0U, _, NotNull(), &_timer))
-        .WillOnce(
-            DoAll(SaveArg<3>(&timerId), SaveArg<4>(&callbackFunction), Return(&_timerHandle)));
-    cut.createTimer(_timer, _name);
-    // now trigger timer the first time
-    EXPECT_CALL(_freeRtosMock, pvTimerGetTimerID(&_timerHandle)).WillRepeatedly(Return(timerId));
-
     {
-        // expect task notify
-        uint32_t eventMask = 0U;
-        EXPECT_CALL(_bindingMock, getHigherPriorityTaskWokenFunc())
-            .WillOnce(Return(static_cast<BaseType_t*>(0L)));
-        EXPECT_CALL(_freeRtosMock, xTaskNotify(&_taskHandle, _, eSetBits))
-            .WillOnce(SaveArg<1>(&eventMask));
-        callbackFunction(&_timerHandle);
-
         // set timer
         EXPECT_CALL(_systemTimerMock, getSystemTimeUs32Bit()).WillRepeatedly(Return(100000U));
 
-        // dispatch and expect system time. Nothing should happen
-        Sequence seq;
-        EXPECT_CALL(_freeRtosMock, xTaskNotifyWait(0U, 7U, NotNull(), 0U))
-            .InSequence(seq)
-            .WillOnce(SetArgPointee<2>(eventMask));
-        EXPECT_CALL(_freeRtosMock, xTaskNotifyWait(0U, 7U, NotNull(), 0U))
-            .InSequence(seq)
-            .WillOnce(SetArgPointee<2>(0U));
-        cut.dispatchWhileWork();
-    }
-
-    {
         // Schedule first timer. Expect task notify
         uint32_t eventMask = 0U;
         EXPECT_CALL(_bindingMock, getHigherPriorityTaskWokenFunc())
@@ -280,50 +246,60 @@ TEST_F(TaskContextTest, testSchedule)
 
         // Schedule second timer (to elapse laster). No task notify expected
         cut.schedule(_runnableMock2, _timeout2, 151U, TimeUnit::MILLISECONDS);
+        // Cancel the second timer, nothing should happen.
+        cut.cancel(_timeout2);
 
         {
-            // timer expires too early
-            EXPECT_CALL(_systemTimerMock, getSystemTimeUs32Bit()).WillRepeatedly(Return(249000U));
+            // an event with an active timer will lead to a different timeout
+            Sequence seq;
+            EXPECT_CALL(_freeRtosMock, xTaskNotifyWait(0U, 7U, NotNull(), 1500U))
+                .InSequence(seq)
+                .WillOnce(DoAll(SetArgPointee<2>(eventMask), Return(true)));
+            EXPECT_CALL(_freeRtosMock, xTaskNotifyWait(0U, 7U, NotNull(), 1500U))
+                .InSequence(seq)
+                .WillOnce(DoAll(SetArgPointee<2>(0U), StopDispatch(&cut), Return(false)));
+            // trigger shutdown on next iteration
             EXPECT_CALL(_bindingMock, getHigherPriorityTaskWokenFunc())
                 .WillOnce(Return(static_cast<BaseType_t*>(0L)));
             EXPECT_CALL(_freeRtosMock, xTaskNotify(&_taskHandle, _, eSetBits))
+                .InSequence(seq)
                 .WillOnce(SaveArg<1>(&eventMask));
-            callbackFunction(&_timerHandle);
-
-            // Cancel the second timer, nothing should happen.
-            cut.cancel(_timeout2);
-
-            Sequence seq;
-            EXPECT_CALL(_freeRtosMock, xTaskNotifyWait(0U, 7U, NotNull(), 0U))
+            EXPECT_CALL(_freeRtosMock, xTaskNotifyWait(0U, 7U, NotNull(), 1500U))
                 .InSequence(seq)
-                .WillOnce(SetArgPointee<2>(eventMask));
-            EXPECT_CALL(_freeRtosMock, xTimerChangePeriod(&_timerHandle, 10U, 0U));
-            EXPECT_CALL(_freeRtosMock, xTaskNotifyWait(0U, 7U, NotNull(), 0U))
-                .InSequence(seq)
-                .WillOnce(SetArgPointee<2>(0U));
-            cut.dispatchWhileWork();
+                .WillOnce(DoAll(CopyArgPointee2(&eventMask), Return(true)));
+            osTaskFunction(&cut);
+            Mock::VerifyAndClearExpectations(&_systemTimerMock);
         }
-
         {
-            // timer expires at correct time
+            // some time has elapsed and OS timer expires a bit too early
+            // which leads to a new setup of the timer.
+            // The timer then elapses after second iteration
+            EXPECT_CALL(_systemTimerMock, getSystemTimeUs32Bit())
+                .WillOnce(Return(249000U))
+                .WillRepeatedly(Return(250000U));
+
+            Sequence seq;
+            EXPECT_CALL(_freeRtosMock, xTaskNotifyWait(0U, 7U, NotNull(), 10U))
+                .InSequence(seq)
+                .WillOnce(DoAll(SetArgPointee<2>(0), Return(false)));
+            EXPECT_CALL(_runnableMock1, execute()).InSequence(seq);
+            EXPECT_CALL(
+                _freeRtosMock,
+                xTaskNotifyWait(0U, 7U, NotNull(), TestBindingMock::WAIT_EVENTS_TICK_COUNT))
+                .InSequence(seq)
+                .WillOnce(DoAll(SetArgPointee<2>(0U), StopDispatch(&cut), Return(false)));
+            // trigger shutdown on next iteration
             EXPECT_CALL(_bindingMock, getHigherPriorityTaskWokenFunc())
                 .WillOnce(Return(static_cast<BaseType_t*>(0L)));
             EXPECT_CALL(_freeRtosMock, xTaskNotify(&_taskHandle, _, eSetBits))
+                .InSequence(seq)
                 .WillOnce(SaveArg<1>(&eventMask));
-            callbackFunction(&_timerHandle);
-
-            // Expect expired
-            EXPECT_CALL(_systemTimerMock, getSystemTimeUs32Bit()).WillRepeatedly(Return(250000U));
-
-            Sequence seq;
-            EXPECT_CALL(_freeRtosMock, xTaskNotifyWait(0U, 7U, NotNull(), 0U))
+            EXPECT_CALL(
+                _freeRtosMock,
+                xTaskNotifyWait(0U, 7U, NotNull(), TestBindingMock::WAIT_EVENTS_TICK_COUNT))
                 .InSequence(seq)
-                .WillOnce(SetArgPointee<2>(eventMask));
-            EXPECT_CALL(_runnableMock1, execute());
-            EXPECT_CALL(_freeRtosMock, xTaskNotifyWait(0U, 7U, NotNull(), 0U))
-                .InSequence(seq)
-                .WillOnce(SetArgPointee<2>(0U));
-            cut.dispatchWhileWork();
+                .WillOnce(DoAll(CopyArgPointee2(&eventMask), Return(true)));
+            osTaskFunction(&cut);
         }
     }
 }
@@ -335,99 +311,90 @@ TEST_F(TaskContextTest, testSchedule)
 TEST_F(TaskContextTest, testScheduleAtFixedRate)
 {
     TaskContext<TestBindingMock> cut;
+    TaskFunction_t* osTaskFunction = 0L;
     EXPECT_CALL(
         _freeRtosMock, xTaskCreateStatic(NotNull(), _name, 100, NotNull(), 12U, _stack, &_task))
-        .WillOnce(Return(&_taskHandle));
+        .WillOnce(DoAll(SaveArg<0>(&osTaskFunction), Return(&_taskHandle)));
     cut.createTask(1U, _task, _name, 12U, _stack, TaskContext<TestBindingMock>::TaskFunctionType());
 
-    void* timerId                            = 0L;
-    TimerCallbackFunction_t callbackFunction = 0L;
-    EXPECT_CALL(_freeRtosMock, xTimerCreateStatic(_name, 1U, 0U, _, NotNull(), &_timer))
-        .WillOnce(
-            DoAll(SaveArg<3>(&timerId), SaveArg<4>(&callbackFunction), Return(&_timerHandle)));
-    cut.createTimer(_timer, _name);
-    // now trigger timer the first time
-    EXPECT_CALL(_freeRtosMock, pvTimerGetTimerID(&_timerHandle)).WillRepeatedly(Return(timerId));
-
     {
-        // expect task notify
-        uint32_t eventMask = 0U;
-        EXPECT_CALL(_bindingMock, getHigherPriorityTaskWokenFunc())
-            .WillOnce(Return(static_cast<BaseType_t*>(0L)));
-        EXPECT_CALL(_freeRtosMock, xTaskNotify(&_taskHandle, _, eSetBits))
-            .WillOnce(SaveArg<1>(&eventMask));
-        callbackFunction(&_timerHandle);
-
         // set timer
         EXPECT_CALL(_systemTimerMock, getSystemTimeUs32Bit()).WillRepeatedly(Return(100000U));
 
-        // dispatch and expect system time. Nothing should happen
-        Sequence seq;
-        EXPECT_CALL(_freeRtosMock, xTaskNotifyWait(0U, 7U, NotNull(), 0U))
-            .InSequence(seq)
-            .WillOnce(SetArgPointee<2>(eventMask));
-        EXPECT_CALL(_freeRtosMock, xTaskNotifyWait(0U, 7U, NotNull(), 0U))
-            .InSequence(seq)
-            .WillOnce(SetArgPointee<2>(0U));
-        cut.dispatchWhileWork();
-    }
-
-    {
         // Schedule first timer at fixed rate. Expect task notify
         uint32_t eventMask = 0U;
         EXPECT_CALL(_bindingMock, getHigherPriorityTaskWokenFunc())
             .WillOnce(Return(static_cast<BaseType_t*>(0L)));
         EXPECT_CALL(_freeRtosMock, xTaskNotify(&_taskHandle, _, eSetBits))
             .WillOnce(SaveArg<1>(&eventMask));
-        cut.scheduleAtFixedRate(_runnableMock1, _timeout1, 10U, TimeUnit::MILLISECONDS);
+        cut.scheduleAtFixedRate(_runnableMock1, _timeout1, 20U, TimeUnit::MILLISECONDS);
+
+        // Schedule second timer (to elapse laster). No task notify expected
+        cut.scheduleAtFixedRate(_runnableMock2, _timeout2, 151U, TimeUnit::MILLISECONDS);
+        // Cancel the second timer, nothing should happen.
+        cut.cancel(_timeout2);
+
         Mock::VerifyAndClearExpectations(&_freeRtosMock);
 
         {
-            EXPECT_CALL(_freeRtosMock, pvTimerGetTimerID(&_timerHandle))
-                .WillRepeatedly(Return(timerId));
             // expect nothing if scheduled again
             cut.scheduleAtFixedRate(_runnableMock1, _timeout1, 10U, TimeUnit::MILLISECONDS);
             Mock::VerifyAndClearExpectations(&_freeRtosMock);
         }
 
         {
-            EXPECT_CALL(_freeRtosMock, pvTimerGetTimerID(&_timerHandle))
-                .WillRepeatedly(Return(timerId));
+            // the event is received and nothing should happen while no time is elapsed
             Sequence seq;
-            EXPECT_CALL(_freeRtosMock, xTaskNotifyWait(0U, 7U, NotNull(), 0U))
+            EXPECT_CALL(_freeRtosMock, xTaskNotifyWait(0U, 7U, NotNull(), 200U))
                 .InSequence(seq)
-                .WillOnce(SetArgPointee<2>(eventMask));
-            EXPECT_CALL(_freeRtosMock, xTimerChangePeriod(&_timerHandle, 100U, 0U));
-            EXPECT_CALL(_freeRtosMock, xTaskNotifyWait(0U, 7U, NotNull(), 0U))
+                .WillOnce(DoAll(SetArgPointee<2>(eventMask), Return(true)));
+            EXPECT_CALL(_freeRtosMock, xTaskNotifyWait(0U, 7U, NotNull(), 200U))
                 .InSequence(seq)
-                .WillOnce(SetArgPointee<2>(0U));
-            cut.dispatchWhileWork();
-            Mock::VerifyAndClearExpectations(&_freeRtosMock);
-        }
-
-        {
-            EXPECT_CALL(_freeRtosMock, pvTimerGetTimerID(&_timerHandle))
-                .WillRepeatedly(Return(timerId));
-            // timer expires at correct time
+                .WillOnce(DoAll(SetArgPointee<2>(0U), StopDispatch(&cut), Return(false)));
+            // trigger shutdown on next iteration
             EXPECT_CALL(_bindingMock, getHigherPriorityTaskWokenFunc())
                 .WillOnce(Return(static_cast<BaseType_t*>(0L)));
             EXPECT_CALL(_freeRtosMock, xTaskNotify(&_taskHandle, _, eSetBits))
+                .InSequence(seq)
                 .WillOnce(SaveArg<1>(&eventMask));
-            callbackFunction(&_timerHandle);
-
-            // Expect expired
-            EXPECT_CALL(_systemTimerMock, getSystemTimeUs32Bit()).WillRepeatedly(Return(110000U));
+            EXPECT_CALL(_freeRtosMock, xTaskNotifyWait(0U, 7U, NotNull(), 200U))
+                .InSequence(seq)
+                .WillOnce(DoAll(CopyArgPointee2(&eventMask), Return(true)));
+            osTaskFunction(&cut);
+            Mock::VerifyAndClearExpectations(&_freeRtosMock);
+        }
+        {
+            // time has elapsed and the timer should expire and lead to the next iteration
+            // with the same timeout
+            EXPECT_CALL(_systemTimerMock, getSystemTimeUs32Bit())
+                .WillOnce(Return(105000U))
+                .WillOnce(Return(120000U))
+                .WillOnce(Return(120000U))
+                .WillOnce(Return(120000U))
+                .WillRepeatedly(Return(140000U));
 
             Sequence seq;
-            EXPECT_CALL(_freeRtosMock, xTaskNotifyWait(0U, 7U, NotNull(), 0U))
+            EXPECT_CALL(_freeRtosMock, xTaskNotifyWait(0U, 7U, NotNull(), 150U))
                 .InSequence(seq)
-                .WillOnce(SetArgPointee<2>(eventMask));
-            EXPECT_CALL(_runnableMock1, execute());
-            EXPECT_CALL(_freeRtosMock, xTimerChangePeriod(&_timerHandle, 100U, 0U));
-            EXPECT_CALL(_freeRtosMock, xTaskNotifyWait(0U, 7U, NotNull(), 0U))
+                .WillOnce(DoAll(SetArgPointee<2>(0), Return(false)));
+            EXPECT_CALL(_runnableMock1, execute()).InSequence(seq);
+            EXPECT_CALL(_freeRtosMock, xTaskNotifyWait(0U, 7U, NotNull(), 200U))
                 .InSequence(seq)
-                .WillOnce(SetArgPointee<2>(0U));
-            cut.dispatchWhileWork();
+                .WillOnce(DoAll(SetArgPointee<2>(0), Return(false)));
+            EXPECT_CALL(_runnableMock1, execute()).InSequence(seq);
+            EXPECT_CALL(_freeRtosMock, xTaskNotifyWait(0U, 7U, NotNull(), 200U))
+                .InSequence(seq)
+                .WillOnce(DoAll(SetArgPointee<2>(0U), StopDispatch(&cut), Return(false)));
+            // trigger shutdown on next iteration
+            EXPECT_CALL(_bindingMock, getHigherPriorityTaskWokenFunc())
+                .WillOnce(Return(static_cast<BaseType_t*>(0L)));
+            EXPECT_CALL(_freeRtosMock, xTaskNotify(&_taskHandle, _, eSetBits))
+                .InSequence(seq)
+                .WillOnce(SaveArg<1>(&eventMask));
+            EXPECT_CALL(_freeRtosMock, xTaskNotifyWait(0U, 7U, NotNull(), 200U))
+                .InSequence(seq)
+                .WillOnce(DoAll(CopyArgPointee2(&eventMask), Return(true)));
+            osTaskFunction(&cut);
         }
     }
 }
@@ -439,21 +406,112 @@ TEST_F(TaskContextTest, testScheduleAtFixedRate)
 TEST_F(TaskContextTest, testScheduleAtFixedRateMultipleTimers)
 {
     TaskContext<TestBindingMock> cut;
-    void* timerId = 0L;
+    TaskFunction_t* osTaskFunction = 0L;
+    EXPECT_CALL(
+        _freeRtosMock, xTaskCreateStatic(NotNull(), _name, 100, NotNull(), 12U, _stack, &_task))
+        .WillOnce(DoAll(SaveArg<0>(&osTaskFunction), Return(&_taskHandle)));
+    cut.createTask(1U, _task, _name, 12U, _stack, TaskContext<TestBindingMock>::TaskFunctionType());
 
-    // set timer
-    EXPECT_CALL(_systemTimerMock, getSystemTimeUs32Bit()).WillRepeatedly(Return(100000U));
+    {
+        // set timer
+        EXPECT_CALL(_systemTimerMock, getSystemTimeUs32Bit()).WillRepeatedly(Return(100000U));
 
-    EXPECT_CALL(_freeRtosMock, pvTimerGetTimerID(&_timerHandle)).WillRepeatedly(Return(timerId));
-    EXPECT_CALL(_bindingMock, getHigherPriorityTaskWokenFunc())
-        .WillOnce(Return(static_cast<BaseType_t*>(0L)));
-    EXPECT_CALL(_freeRtosMock, xTaskNotify(_, _, eSetBits)).Times(1);
-    cut.scheduleAtFixedRate(_runnableMock1, _timeout1, 10U, TimeUnit::MILLISECONDS);
-    Mock::VerifyAndClearExpectations(&_freeRtosMock);
+        // Schedule first timer at fixed rate. Expect task notify
+        uint32_t eventMask = 0U;
+        EXPECT_CALL(_bindingMock, getHigherPriorityTaskWokenFunc())
+            .WillOnce(Return(static_cast<BaseType_t*>(0L)));
+        EXPECT_CALL(_freeRtosMock, xTaskNotify(&_taskHandle, _, eSetBits))
+            .WillOnce(SaveArg<1>(&eventMask));
+        cut.scheduleAtFixedRate(_runnableMock1, _timeout1, 20U, TimeUnit::MILLISECONDS);
+        Mock::VerifyAndClearExpectations(&_freeRtosMock);
+        // Schedule second timer at fixed rate. Expect task notify again because it changes the next
+        // timeout
+        EXPECT_CALL(_bindingMock, getHigherPriorityTaskWokenFunc())
+            .WillOnce(Return(static_cast<BaseType_t*>(0L)));
+        EXPECT_CALL(_freeRtosMock, xTaskNotify(&_taskHandle, _, eSetBits))
+            .WillOnce(SaveArg<1>(&eventMask));
+        cut.scheduleAtFixedRate(_runnableMock2, _timeout2, 12U, TimeUnit::MILLISECONDS);
+        Mock::VerifyAndClearExpectations(&_freeRtosMock);
 
-    // another task that expires later
-    cut.scheduleAtFixedRate(_runnableMock2, _timeout2, 20U, TimeUnit::MILLISECONDS);
-    Mock::VerifyAndClearExpectations(&_freeRtosMock);
+        {
+            // the second timer should lead to the right expected timeout
+            Sequence seq;
+            EXPECT_CALL(_freeRtosMock, xTaskNotifyWait(0U, 7U, NotNull(), 120U))
+                .InSequence(seq)
+                .WillOnce(DoAll(SetArgPointee<2>(eventMask), Return(true)));
+            EXPECT_CALL(_freeRtosMock, xTaskNotifyWait(0U, 7U, NotNull(), 120U))
+                .InSequence(seq)
+                .WillOnce(DoAll(SetArgPointee<2>(0U), StopDispatch(&cut), Return(true)));
+            // trigger shutdown on next iteration
+            EXPECT_CALL(_bindingMock, getHigherPriorityTaskWokenFunc())
+                .WillOnce(Return(static_cast<BaseType_t*>(0L)));
+            EXPECT_CALL(_freeRtosMock, xTaskNotify(&_taskHandle, _, eSetBits))
+                .InSequence(seq)
+                .WillOnce(SaveArg<1>(&eventMask));
+            EXPECT_CALL(_freeRtosMock, xTaskNotifyWait(0U, 7U, NotNull(), 120U))
+                .InSequence(seq)
+                .WillOnce(DoAll(CopyArgPointee2(&eventMask), Return(true)));
+            osTaskFunction(&cut);
+            Mock::VerifyAndClearExpectations(&_freeRtosMock);
+        }
+    }
+}
+
+/**
+ * \req: [BSW_ASFR_51], [BSW_ASFR_52], [BSW_ASFR_53]
+ * \refs: SMD_asyncFreeRtos_TaskContextAsyncApi
+ * \desc: To test dispatchWhileWork function to finish on work done
+ */
+TEST_F(TaskContextTest, testDispatchWhileWork)
+{
+    TaskContext<TestBindingMock> cut;
+    TaskFunction_t* osTaskFunction = 0L;
+    EXPECT_CALL(
+        _freeRtosMock, xTaskCreateStatic(NotNull(), _name, 100, NotNull(), 12U, _stack, &_task))
+        .WillOnce(DoAll(SaveArg<0>(&osTaskFunction), Return(&_taskHandle)));
+    cut.createTask(1U, _task, _name, 12U, _stack, TaskContext<TestBindingMock>::TaskFunctionType());
+
+    {
+        // set timer
+        EXPECT_CALL(_systemTimerMock, getSystemTimeUs32Bit()).WillOnce(Return(100000U));
+
+        // Schedule timer at fixed rate. Expect task notify
+        uint32_t eventMask1 = 0U;
+        EXPECT_CALL(_bindingMock, getHigherPriorityTaskWokenFunc())
+            .WillOnce(Return(static_cast<BaseType_t*>(0L)));
+        EXPECT_CALL(_freeRtosMock, xTaskNotify(&_taskHandle, _, eSetBits))
+            .WillOnce(SaveArg<1>(&eventMask1));
+        cut.schedule(_runnableMock1, _timeout1, 20U, TimeUnit::MILLISECONDS);
+        Mock::VerifyAndClearExpectations(&_freeRtosMock);
+        Mock::VerifyAndClearExpectations(&_systemTimerMock);
+
+        // Execute a task
+        uint32_t eventMask2 = 0U;
+        EXPECT_CALL(_bindingMock, getHigherPriorityTaskWokenFunc())
+            .WillOnce(Return(static_cast<BaseType_t*>(0L)));
+        EXPECT_CALL(_freeRtosMock, xTaskNotify(&_taskHandle, _, eSetBits))
+            .WillOnce(SaveArg<1>(&eventMask2));
+        cut.execute(_runnableMock2);
+        Mock::VerifyAndClearExpectations(&_bindingMock);
+        Mock::VerifyAndClearExpectations(&_freeRtosMock);
+
+        // time is running during dispatch
+        EXPECT_CALL(_systemTimerMock, getSystemTimeUs32Bit())
+            .WillOnce(Return(110000U))
+            .WillOnce(Return(120000U))
+            .WillOnce(Return(120010U))
+            .WillOnce(Return(120020U));
+        Sequence seq;
+        EXPECT_CALL(_freeRtosMock, xTaskNotifyWait(0U, 7U, NotNull(), 0U))
+            .InSequence(seq)
+            .WillOnce(DoAll(SetArgPointee<2>((eventMask1 | eventMask2)), Return(true)));
+        EXPECT_CALL(_runnableMock2, execute()).InSequence(seq);
+        EXPECT_CALL(_runnableMock1, execute()).InSequence(seq);
+        EXPECT_CALL(_freeRtosMock, xTaskNotifyWait(0U, 7U, NotNull(), 0U))
+            .InSequence(seq)
+            .WillOnce(Return(false));
+        cut.dispatchWhileWork();
+    }
 }
 
 /**

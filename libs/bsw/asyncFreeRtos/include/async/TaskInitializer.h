@@ -50,7 +50,6 @@ struct TaskInitializer : public StaticRunnable<TaskInitializer<Adapter>>
     using TaskConfigType   = typename AdapterType::TaskConfigType;
     using TaskFunctionType = typename AdapterType::TaskFunctionType;
     using TaskObjectType   = StaticTask_t;
-    using TimerObjectType  = StaticTimer_t;
 
     /**
      * Creates and initializes a task with the specified parameters.
@@ -73,7 +72,6 @@ struct TaskInitializer : public StaticRunnable<TaskInitializer<Adapter>>
         ContextType context,
         char const* name,
         TaskObjectType& task,
-        TimerObjectType& timer,
         T& stack,
         TaskFunctionType taskFunction,
         TaskConfigType const& config);
@@ -83,7 +81,6 @@ private:
         ContextType context,
         char const* name,
         TaskObjectType& task,
-        TimerObjectType& timer,
         StackSliceType const& stack,
         TaskFunctionType taskFunction,
         TaskConfigType const& config);
@@ -100,10 +97,6 @@ public:
 
     /// Reference to the static task object.
     TaskObjectType& _task;
-
-    /// Reference to the static timer object associated with the task.
-    TimerObjectType& _timer;
-
     /// The name of the task.
     char const* _name;
 
@@ -136,7 +129,6 @@ public:
     using TaskConfigType   = typename AdapterType::TaskConfigType;
     using TaskFunctionType = typename AdapterType::TaskFunctionType;
     using TaskObjectType   = StaticTask_t;
-    using TimerObjectType  = StaticTimer_t;
 
     TaskImpl(char const* name, TaskFunctionType taskFunction, TaskConfigType const& taskConfig);
 
@@ -146,7 +138,6 @@ protected:
 private:
     Stack<StackSize> _stack;
     TaskObjectType _task;
-    TimerObjectType _timer;
 };
 
 template<class Adapter, ContextType Context>
@@ -158,7 +149,6 @@ public:
     using TaskConfigType   = typename AdapterType::TaskConfigType;
     using TaskFunctionType = typename AdapterType::TaskFunctionType;
     using TaskObjectType   = StaticTask_t;
-    using TimerObjectType  = StaticTimer_t;
 
     template<typename T>
     TaskImpl(
@@ -172,7 +162,6 @@ protected:
 
 private:
     TaskObjectType _task;
-    TimerObjectType _timer;
 };
 
 template<class Adapter, size_t StackSize = 0U>
@@ -255,7 +244,6 @@ void TaskInitializer<Adapter>::create(
     ContextType const context,
     char const* const name,
     TaskObjectType& task,
-    TimerObjectType& timer,
     T& stack,
     TaskFunctionType const taskFunction,
     TaskConfigType const& config)
@@ -264,8 +252,7 @@ void TaskInitializer<Adapter>::create(
     ::estd::memory::align(alignof(StackType_t), bytes);
     StackSliceType const stackSlice = bytes.template reinterpret_as<StackType_t>();
     estd_assert((stackSlice.size() * sizeof(StackType_t)) >= sizeof(TaskInitializer));
-    new (stackSlice.data())
-        TaskInitializer(context, name, task, timer, stackSlice, taskFunction, config);
+    new (stackSlice.data()) TaskInitializer(context, name, task, stackSlice, taskFunction, config);
 }
 
 template<class Adapter>
@@ -273,14 +260,12 @@ TaskInitializer<Adapter>::TaskInitializer(
     ContextType const context,
     char const* const name,
     TaskObjectType& task,
-    TimerObjectType& timer,
     StackSliceType const& stack,
     TaskFunctionType const taskFunction,
     TaskConfigType const& config)
 : _stack(stack)
 , _taskFunction(taskFunction)
 , _task(task)
-, _timer(timer)
 , _name(name)
 , _context(context)
 , _config(config)
@@ -296,8 +281,7 @@ template<class Adapter, ContextType Context, size_t StackSize>
 TaskImpl<Adapter, Context, StackSize>::TaskImpl(
     char const* const name, TaskFunctionType const taskFunction, TaskConfigType const& taskConfig)
 {
-    TaskInitializer<Adapter>::create(
-        Context, name, _task, _timer, _stack, taskFunction, taskConfig);
+    TaskInitializer<Adapter>::create(Context, name, _task, _stack, taskFunction, taskConfig);
 }
 
 template<class Adapter, ContextType Context>
@@ -308,7 +292,7 @@ TaskImpl<Adapter, Context, 0U>::TaskImpl(
     TaskFunctionType const taskFunction,
     TaskConfigType const& taskConfig)
 {
-    TaskInitializer<Adapter>::create(Context, name, _task, _timer, stack, taskFunction, taskConfig);
+    TaskInitializer<Adapter>::create(Context, name, _task, stack, taskFunction, taskConfig);
 }
 
 template<class Adapter, size_t StackSize>

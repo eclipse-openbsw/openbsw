@@ -24,6 +24,8 @@ public:
     using EventDispatcherType = EventDispatcher;
     using HandlerFunctionType = typename EventDispatcher::HandlerFunctionType;
 
+    static EventMaskType const EVENT_MASK = static_cast<EventMaskType>(1U << Event);
+
     explicit EventPolicy(EventDispatcher& eventDispatcher);
 
     void setEventHandler(HandlerFunctionType handlerFunction);
@@ -32,8 +34,6 @@ public:
     void setEvent();
 
 private:
-    static EventMaskType const _eventMask = static_cast<EventMaskType>(1U << Event);
-
     EventDispatcher& _eventDispatcher;
 };
 
@@ -61,7 +61,7 @@ inline void EventPolicy<EventDispatcher, Event>::removeEventHandler()
 template<typename EventDispatcher, size_t Event>
 inline void EventPolicy<EventDispatcher, Event>::setEvent()
 {
-    _eventDispatcher.setEvents(_eventMask);
+    _eventDispatcher.setEvents(EVENT_MASK);
 }
 
 } // namespace async
