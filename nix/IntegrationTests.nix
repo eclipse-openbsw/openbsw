@@ -39,6 +39,10 @@ pkgs.nixosTest {
       OPENBSW_SRC = ../.;
     };
 
+    programs.bash.promptInit = ''
+      PS1="$ "
+    '';
+
   };
 
   testScript = { nodes, ... }: ''
