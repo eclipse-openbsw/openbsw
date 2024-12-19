@@ -1,6 +1,11 @@
-name: Code Coverage Report
+name: Code Coverage 
 
-on: [workflow_call, push, pull_request]
+on:
+  workflow_call:
+  push:
+    branches:
+      - main
+  pull_request:
 
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
@@ -28,7 +33,9 @@ jobs:
           ctest --test-dir cmake-build-unit-tests -j4
     
     - name: Install lcov
-      run: sudo apt install lcov
+      run: |
+          sudo apt-get update
+          sudo apt install lcov
     
     # no-external command excludes the system libraries in the root directory 
     - name: Capture code coverage
@@ -65,3 +72,38 @@ jobs:
       with:
         name: code_coverage
         path: code_coverage.zip
+    
+    #To generate code-coverage badge with percentage
+
+    - name: Install npm
+      run: |
+          sudo apt update
+          sudo apt install nodejs npm
+
+    - name: Convert the coverage.info to json format
+      run: |
+         mkdir -p coverage-badge
+         npm install lcov-parse
+         node coverage.js
+         
+    - name: Generate coverage badge
+      run: |
+          sudo npm install -g coverage-badges-cli
+          coverage-badges --source coverage-badge/coverage-summary.json --output coverage-badge/badge-lines.svg --jsonPath 'total.statements.pct'
+          echo "functional coverage"
+          coverage-badges --source coverage-badge/coverage-summary.json --output coverage-badge/badge-functions.svg --jsonPath 'total.functions.pct'
+
+    - name: Upload coverage badge to gh-pages branch
+      env:
+       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        git clone --branch gh-pages https://github.com/${{ github.repository }} gh-pages
+        cp coverage-badge/coverage-summary.json gh-pages/coverage-summary.json
+        cp coverage-badge/badge-lines.svg gh-pages/badge-lines.svg
+        cp coverage-badge/badge-functions.svg gh-pages/badge-functions.svg
+        cd gh-pages
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+        git add .
+        git commit -m "Update coverage badges"
+        git push https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }} gh-pages

@@ -1,5 +1,26 @@
 # Eclipse OpenBSW
 
+<!-- ![Build](https://github.com/eclipse-openbsw/openbsw/actions/workflows/build.yml/badge.svg) -->
+
+## Build Status 🚀
+
+| Platform       | Status                                                                 |
+|----------------|------------------------------------------------------------------------|
+| POSIX Build | ![POSIX](https://github.com/eclipse-openbsw/openbsw/actions/workflows/build.yml/badge.svg?branch=main&event=push&matrix.platform=posix) |
+| S32K148     | ![S32K](https://github.com/eclipse-openbsw/openbsw/actions/workflows/build.yml/badge.svg?branch=main&event=push&matrix.platform=s32k148) |
+
+## Code Coverage 
+
+| Code Coverage       | Status                                                            |         
+|---------------------|-------------------------------------------------------------------| 
+| Line Coverage       | ![Code Coverage](https://raw.githubusercontent.com/esrlabs/openbsw/gh-pages/badge-lines.svg)           |
+| Functional Coverage | ![Code Coverage](https://raw.githubusercontent.com/esrlabs/openbsw/gh-pages/badge-functions.svg)                 |
+
+
+
+<!-- ![Code coverage](https://github.com/eclipse-openbsw/openbsw/actions/workflows/code-coverage.yml/badge.svg) -->
+
+
 ## Overview
 
 Eclipse OpenBSW is an open source SDK to build professional, high quality embedded software products. 
