@@ -13,8 +13,5 @@ def test_rdbi(target_session, did="CF01"):
     command = create_uds_tool_command(target_session.target_info.socketcan["channel"], did)
     output = helper.run_process(command)
 
-    print("udsTool")
-    print(command)
-    print(output)
     assert output[-1].strip()[1:17] == "PositiveResponse"
     assert output[0] == "62cf01010200022202160f0100006d2f0000010600008fe0000001"

@@ -15,6 +15,4 @@ def run_process(cmd):
         text=True,
     )
     subprocess.run(["tmux", "kill-session", "-t", uds_session_name])
-    print("helper.py")
-    print(result.stdout.strip().splitlines())
     return result.stdout.strip().splitlines()[-3:-1]
