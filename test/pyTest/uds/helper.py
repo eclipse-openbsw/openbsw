@@ -7,7 +7,7 @@ def run_process(cmd):
     uds_session_name = f"RefAppUdsTest{os.getpid()}"
     subprocess.run(["tmux", "new-session", "-d", "-s", uds_session_name])
     subprocess.run(["tmux", "send-keys", "-t", uds_session_name, cmd, "C-m"])
-    time.sleep(1)
+    time.sleep(3)
 
     result = subprocess.run(
         ["tmux", "capture-pane", "-t", uds_session_name, "-p"],
