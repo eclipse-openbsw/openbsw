@@ -1,6 +1,7 @@
-{ stdenv
-, cmake
-, gcc-arm-embedded
+{
+  stdenv,
+  cmake,
+  gcc-arm-embedded,
 }:
 stdenv.mkDerivation {
   name = "referenceApp";
@@ -21,4 +22,3 @@ stdenv.mkDerivation {
     cp cmake-build-s32k148/application/app.referenceApp.elf $out/
   '';
 }
-

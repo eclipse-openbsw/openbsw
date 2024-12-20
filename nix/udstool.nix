@@ -1,7 +1,8 @@
-{ python3Packages
-, fetchPypi
+{
+  python3Packages,
+  fetchPypi,
 }:
-python3Packages.buildPythonApplication  {
+python3Packages.buildPythonApplication {
   name = "udstool";
   src = ../tools/UdsTool;
 
