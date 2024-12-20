@@ -1,5 +1,6 @@
-{ stdenv
-, cmake
+{
+  stdenv,
+  cmake,
 }:
 stdenv.mkDerivation {
   name = "referenceApp";
