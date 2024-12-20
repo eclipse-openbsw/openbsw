@@ -31,6 +31,12 @@
             referenceApp_S32K148 = pkgs.callPackage ./nix/referenceApp_S32K148.nix { };
             udstool = pkgs.callPackage ./nix/udstool.nix { };
             interactiveIntegrationTests = self.checks."${system}".integrationTests.driverInteractive;
+
+            # re-export of formatters
+            treefmt = treefmt.packages."${system}".default;
+            nixfmt = pkgs.nixfmt-rfc-style;
+            clang-tools = pkgs.llvmPackages_17.clang-tools;
+            cmake-format = pkgs.cmake-format;
           };
           checks = {
             integrationTests = import ./nix/IntegrationTests.nix { inherit pkgs self system; };
