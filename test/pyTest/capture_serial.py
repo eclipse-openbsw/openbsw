@@ -4,7 +4,7 @@ import queue
 import time
 from target_info import TargetInfo
 from pty_forwarder import PtyForwarder
-from os import symlink, unlink
+from os import symlink, unlink, environ
 
 
 capture_serial_by_name = {}
@@ -209,7 +209,8 @@ class CaptureSerial(Serial):
                 for b in super().read():
                     line.append(b)
                     if b in b'\n':
-                        # print(f"[{self._target_name}] In: {line.decode()}")
+                        if environ["BSW_PYTEST_DEBUG"] == "TRUE":
+                            print(f"[{self._target_name}] In: {line.decode()}")
                         self._check_line(line)
                         self._received_lines_queue.put(line)
                         line = bytearray()

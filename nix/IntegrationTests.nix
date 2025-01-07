@@ -40,6 +40,7 @@ pkgs.testers.runNixOSTest {
 
       environment.variables = {
         OPENBSW_SRC = ../.;
+        BSW_PYTEST_DEBUG = "TRUE";
       };
 
       # required by test_udsToolRDBI.py as long at it's using tmux
