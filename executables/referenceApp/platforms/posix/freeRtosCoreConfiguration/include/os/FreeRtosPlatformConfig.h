@@ -12,16 +12,6 @@ extern "C"
 #undef configCHECK_FOR_STACK_OVERFLOW
 #define configCHECK_FOR_STACK_OVERFLOW 2 // change from 1 in order to watermark check boundaries
 
-// Disable legacy support for async
-
-#ifndef ASYNC_LOOPER_DISABLE
-#define ASYNC_LOOPER_DISABLE 1
-#endif // ASYNC_LOOPER_DISABLE
-
-#ifndef ASYNC_TIMEOUTMANAGER2_DISABLE
-#define ASYNC_TIMEOUTMANAGER2_DISABLE 1
-#endif // ASYNC_TIMEOUTMANAGER2_DISABLE
-
 #ifndef MINIMUM_STACK_SIZE
 #define EXTRA_THREAD_DATA_STACK_SIZE 40U // see pxPortInitialiseStack()
 #if (defined(_DYNAMIC_STACK_SIZE_SOURCE)) || (defined(_GNU_SOURCE))

@@ -9,14 +9,6 @@
 #include "async/TaskContext.h"
 #include "async/TaskInitializer.h"
 
-#ifndef ASYNC_LOOPER_DISABLE
-#include <looper/looper.h>
-#endif // ASYNC_LOOPER_DISABLE
-
-#ifndef ASYNC_TIMEOUTMANAGER2_DISABLE
-#include <util/timeout/AsyncTimeoutManager.h>
-#endif // ASYNC_TIMEOUTMANAGER2_DISABLE
-
 #include <estd/array.h>
 #include <estd/singleton.h>
 
@@ -131,27 +123,6 @@ public:
 
     static ContextType getCurrentTaskContext();
 
-#ifndef ASYNC_TIMEOUTMANAGER2_DISABLE
-    /**
-     * Retrieves the timeout manager for a given context.
-     *
-     * \param context The task context.
-     * \return A reference to the timeout manager.
-     */
-    static ::common::ITimeoutManager2& getTimeoutManager(ContextType context);
-#endif // ASYNC_TIMEOUTMANAGER2_DISABLE
-
-#ifndef ASYNC_LOOPER_DISABLE
-    /**
-     * Retrieves the looper for a given context.
-     *
-     * \param context The task context.
-     * \return A reference to the looper.
-     */
-    static ::loop::looper& getLooper(ContextType context);
-#endif // ASYNC_LOOPER_DISABLE
-
-    /// Initializes the FreeRTOS adapter and associated tasks.
     static void init();
 
     /// Starts the FreeRTOS scheduler.
@@ -237,19 +208,11 @@ private:
 
     static void initTask(TaskInitializer& initializer);
 
-    static void initTask(ContextType context);
-
     static void TaskFunction(void* param);
 
     static TaskInitializer* _idleTaskInitializer;
     static TaskInitializer* _timerTaskInitializer;
     static ::estd::array<TaskContextType, TASK_COUNT> _taskContexts;
-#ifndef ASYNC_TIMEOUTMANAGER2_DISABLE
-    static ::estd::array<::common::AsyncTimeoutManager, TASK_COUNT> _timeoutManagers;
-#endif // ASYNC_TIMEOUTMANAGER2_DISABLE
-#ifndef ASYNC_LOOPER_DISABLE
-    static ::estd::array<::loop::looper, TASK_COUNT> _loopers;
-#endif // ASYNC_LOOPER_DISABLE
     static ::estd::array<uint32_t, FREERTOS_TASK_COUNT> _stackSizes;
     static char const* _timerTaskName;
     static BaseType_t _higherPriorityTaskWokenFlag;
@@ -270,16 +233,6 @@ template<class Binding>
 ::estd::
     array<typename FreeRtosAdapter<Binding>::TaskContextType, FreeRtosAdapter<Binding>::TASK_COUNT>
         FreeRtosAdapter<Binding>::_taskContexts;
-#ifndef ASYNC_TIMEOUTMANAGER2_DISABLE
-template<class Binding>
-::estd::array<::common::AsyncTimeoutManager, FreeRtosAdapter<Binding>::TASK_COUNT>
-    FreeRtosAdapter<Binding>::_timeoutManagers;
-#endif // ASYNC_TIMEOUTMANAGER2_DISABLE
-#ifndef ASYNC_LOOPER_DISABLE
-template<class Binding>
-::estd::array<::loop::looper, FreeRtosAdapter<Binding>::TASK_COUNT>
-    FreeRtosAdapter<Binding>::_loopers;
-#endif // ASYNC_LOOPER_DISABLE
 template<class Binding>
 ::estd::array<uint32_t, FreeRtosAdapter<Binding>::FREERTOS_TASK_COUNT>
     FreeRtosAdapter<Binding>::_stackSizes;
@@ -353,7 +306,6 @@ void FreeRtosAdapter<Binding>::initTask(TaskInitializer& initializer)
     }
     else
     {
-        initTask(context);
         TaskContextType& taskContext = _taskContexts[static_cast<size_t>(context)];
         if (context == TASK_IDLE)
         {
@@ -371,17 +323,6 @@ void FreeRtosAdapter<Binding>::initTask(TaskInitializer& initializer)
                 initializer._taskFunction);
         }
     }
-}
-
-template<class Binding>
-void FreeRtosAdapter<Binding>::initTask(ContextType const context)
-{
-#ifndef ASYNC_TIMEOUTMANAGER2_DISABLE
-    _timeoutManagers[static_cast<size_t>(context)].init(context);
-#endif // ASYNC_TIMEOUTMANAGER2_DISABLE
-#ifndef ASYNC_LOOPER_DISABLE
-    _loopers[static_cast<size_t>(context)].init(context);
-#endif // ASYNC_LOOPER_DISABLE
 }
 
 template<class Binding>
@@ -463,23 +404,6 @@ inline void FreeRtosAdapter<Binding>::cancel(TimeoutType& timeout)
         _taskContexts[static_cast<size_t>(context)].cancel(timeout);
     }
 }
-
-#ifndef ASYNC_LOOPER_DISABLE
-template<class Binding>
-::loop::looper& FreeRtosAdapter<Binding>::getLooper(ContextType const context)
-{
-    return _loopers[static_cast<size_t>(context)];
-}
-#endif // ASYNC_LOOPER_DISABLE
-
-#ifndef ASYNC_TIMEOUTMANAGER2_DISABLE
-template<class Binding>
-inline ::common::ITimeoutManager2&
-FreeRtosAdapter<Binding>::getTimeoutManager(ContextType const context)
-{
-    return _timeoutManagers[static_cast<size_t>(context)];
-}
-#endif // ASYNC_TIMEOUTMANAGER2_DISABLE
 
 template<class Binding>
 inline BaseType_t* FreeRtosAdapter<Binding>::getHigherPriorityTaskWoken()

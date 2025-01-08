@@ -136,14 +136,6 @@ standard names. */
 
 #define configTIMER_SERVICE_TASK_NAME "TIMER_OS"
 
-#ifndef ASYNC_LOOPER_DISABLE
-#define ASYNC_LOOPER_DISABLE 1
-#endif // ASYNC_LOOPER_DISABLE
-
-#ifndef ASYNC_TIMEOUTMANAGER2_DISABLE
-#define ASYNC_TIMEOUTMANAGER2_DISABLE 1
-#endif // ASYNC_TIMEOUTMANAGER2_DISABLE
-
 #ifdef __cplusplus
 } /* extern "C" */
 #endif

@@ -268,21 +268,6 @@ TEST_F(FreeRtosAdapterTest, testMinStackSize)
 }
 
 /**
- * \refs: SMD_asyncFreeRtos_FreeRtosAdapterLegacy
- * \desc: To test Timeout Manager and Looper
- */
-TEST_F(FreeRtosAdapterTest, testGetTimeoutManagerAndLooper)
-{
-#ifndef ASYNC_TIMEOUTMANAGER2_DISABLE
-    CutType::getTimeoutManager(1U);
-#endif // ASYNC_TIMEOUTMANAGER2_DISABLE
-
-#ifndef ASYNC_LOOPER_DISABLE
-    CutType::getLooper(1U);
-#endif // ASYNC_LOOPER_DISABLE}
-}
-
-/**
  * \refs: SMD_asyncFreeRtos_FreeRtosAdapterTimerTask
  * \desc: To test user defined config for tasks
  */

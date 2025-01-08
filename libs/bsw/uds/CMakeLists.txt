@@ -58,7 +58,6 @@ target_link_libraries(
     uds
     PUBLIC async
            bsp
-           commonTimeout
            configuration
            transport
            transportConfiguration
