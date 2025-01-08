@@ -19,4 +19,6 @@ stdenv.mkDerivation {
     mkdir -p $out/bin
     cp cmake-build-posix/application/app.referenceApp.elf $out/bin/referenceApp
   '';
+  separateDebugInfo = true;
+  hardeningDisable = ["all"];
 }
