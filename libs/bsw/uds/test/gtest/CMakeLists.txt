@@ -49,7 +49,6 @@ target_include_directories(udsTest PRIVATE include ../include)
 target_link_libraries(
     udsTest
     PRIVATE uds
-            commonTimeout
             udsMock
             transportMock
             utCommon

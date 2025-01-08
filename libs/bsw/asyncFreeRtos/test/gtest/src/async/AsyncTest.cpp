@@ -5,7 +5,6 @@
 #include "async/AsyncBinding.h"
 #include "async/ContextHookMock.h"
 #include "async/Hook.h"
-#include "async/Legacy.h"
 #include "async/RunnableMock.h"
 #include "async/TickHookMock.h"
 #include "async/TimeoutMock.h"

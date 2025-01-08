@@ -2,7 +2,7 @@ add_library(utCommon src/util/EcuIdList.cpp src/util/crc/CRCCalculator.cpp)
 
 target_include_directories(utCommon PUBLIC include test/gtest/include)
 
-target_link_libraries(utCommon PUBLIC estd platform commonTimeout)
+target_link_libraries(utCommon PUBLIC estd platform)
 
 if (BUILD_UNIT_TESTS)
     add_library(utCommonMock INTERFACE)
