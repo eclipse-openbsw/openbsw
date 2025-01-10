@@ -42,14 +42,15 @@ extern "C" void putByteToStdout(uint8_t byte)
 {
     if (terminal_setup_done)
     {
-        while (write(terminal_stdout_fd, &byte, 1) != 1)
+        // while (write(terminal_stdout_fd, &byte, 1) != 1)
+        while (!putc(byte, stdout))
         {
             // Only if write is interrupted by a signal before it writes any data
             // then try to write the byte again
-            if (errno != EINTR)
-            {
-                break;
-            }
+            // if (errno != EINTR)
+            // {
+            //     break;
+            // }
         }
     }
 }
