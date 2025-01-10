@@ -127,7 +127,7 @@ void staticShutdown()
 
 void run()
 {
-    printf("hello\r\n");
+    // printf("hello\r\n");
     staticInit();
     AsyncAdapter::init();
 
