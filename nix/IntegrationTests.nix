@@ -34,8 +34,8 @@ pkgs.testers.runNixOSTest {
       };
 
       environment.systemPackages = [
-        self.packages."${system}".referenceApp
-        self.packages."${system}".udstool
+        self.packages."${pkgs.system}".referenceApp
+        self.packages."${pkgs.system}".udstool
       ] ++ (pkgs.callPackage ./pytestDependencies.nix { });
 
       environment.variables = {
@@ -56,7 +56,7 @@ pkgs.testers.runNixOSTest {
       machine.wait_for_unit("default.target")
       machine.succeed("ifconfig vcan0")
       virt = machine.succeed("systemd-detect-virt").strip()
-      if virt != 'kvm':
+      if "linux" in "${system}" and virt != 'kvm':
         # if your pc has kvm enabled (/dev/kvm exists) but it is not used in 'nix flake check'
         # the nixbld users probably lack access. To fix this you could
         # add all the nixbld users to the kvm group with the following command
