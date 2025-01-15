@@ -65,7 +65,7 @@ def test_lc_reboot(target_session):
         b"DEBUG: Shutdown level 3 done",
         b"DEBUG: Shutdown level 2 done",
         b"DEBUG: Shutdown level 1 done",
-        # b"hello",
+        b"hello",
         b"DEBUG: Run level 1 done",
         b"DEBUG: Run level 2 done",
         b"DEBUG: Run level 3 done",
