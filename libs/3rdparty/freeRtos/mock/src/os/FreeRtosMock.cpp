@@ -45,14 +45,14 @@ xTaskNotifyFromISR(
         taskHandle, ulValue, eAction, pxHigherPriorityTaskWoken);
 }
 
-void
+BaseType_t
 xTaskNotifyWait(
     uint32_t ulBitsToClearOnEntry,
     uint32_t ulBitsToClearOnExit,
     uint32_t* pulNotificationValue,
     TickType_t xTicksToWait)
 {
-    FreeRtosMock::instance().xTaskNotifyWait(
+    return FreeRtosMock::instance().xTaskNotifyWait(
         ulBitsToClearOnEntry, ulBitsToClearOnExit, pulNotificationValue, xTicksToWait);
 }
 

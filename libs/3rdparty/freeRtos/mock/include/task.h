@@ -11,7 +11,7 @@ TaskHandle_t xTaskCreateStatic(TaskFunction_t pxTaskCode, const char * pcName, c
         void * pvParameters, UBaseType_t uxPriority, StackType_t * puxStackBuffer, StaticTask_t * pxTaskBuffer);
 void xTaskNotify(TaskHandle_t taskHandle, uint32_t ulValue, eNotifyAction eAction);
 void xTaskNotifyFromISR(TaskHandle_t taskHandle, uint32_t ulValue, eNotifyAction eAction, BaseType_t *pxHigherPriorityTaskWoken);
-void xTaskNotifyWait(uint32_t ulBitsToClearOnEntry, uint32_t ulBitsToClearOnExit, uint32_t *pulNotificationValue, TickType_t xTicksToWait);
+BaseType_t xTaskNotifyWait(uint32_t ulBitsToClearOnEntry, uint32_t ulBitsToClearOnExit, uint32_t *pulNotificationValue, TickType_t xTicksToWait);
 const char* pcTaskGetName(TaskHandle_t taskHandle);
 BaseType_t uxTaskGetStackHighWaterMark(TaskHandle_t taskHandle);
 void vTaskStartScheduler();
