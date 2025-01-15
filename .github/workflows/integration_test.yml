@@ -7,9 +7,30 @@ jobs:
     runs-on: macos-13
     steps:
       - uses: actions/checkout@v4
+
+      # Install nix with a linux-builder
+      - run: |
+          cat << EOF | sudo tee /etc/ssh/ssh_config.d/100-linux-builder.conf
+          Host linux-builder
+            Hostname localhost
+            HostKeyAlias linux-builder
+            Port 31022
+          EOF
       - uses: DeterminateSystems/nix-installer-action@main
+        with:
+          source-tag: v0.32.3 # https://github.com/DeterminateSystems/nix-installer-action/issues/133
+          extra-conf: |
+            system-features = apple-virt benchmark big-parallel nixos-test
+            builders = ssh-ng://builder@linux-builder x86_64-linux /etc/nix/builder_ed25519 4 - - - c3NoLWVkMjU1MTkgQUFBQUMzTnphQzFsWkRJMU5URTVBQUFBSUpCV2N4Yi9CbGFxdDFhdU90RStGOFFVV3JVb3RpQzVxQkorVXVFV2RWQ2Igcm9vdEBuaXhvcwo=
+            builders-use-substitutes = true
+           
       - uses: DeterminateSystems/magic-nix-cache-action@main
-      - run: nix --version
+      - uses: JarvusInnovations/background-action@v1
+        name: Start linux-builder
+        with:
+          run: nix run nixpkgs#darwin.linux-builder
+          wait-on: "tcp:localhost:31022"
+          wait-for: 5m
       # - uses: self-actuated/connect-ssh@master
       # - uses: mxschmitt/action-tmate@v3
       - run: nix flake check --print-build-logs .
