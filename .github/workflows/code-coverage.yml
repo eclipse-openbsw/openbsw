@@ -1,6 +1,11 @@
-name: Code Coverage Report
+name: Code Coverage 
 
-on: [workflow_call, push, pull_request]
+on:
+  workflow_call:
+  push:
+    branches:
+      - main
+  pull_request:
 
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
@@ -15,50 +20,50 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Setup cmake
-      uses: jwlawson/actions-setup-cmake@v2
-      with:
-        cmake-version: '3.22.x'
-  
-    - name: Test
-      # Execute tests defined by the CMake configuration.
+    - name: Pull and Run Docker with GCC 11.4.0 and LCOV
       run: |
-          cmake -B cmake-build-unit-tests -S executables/unitTest -DBUILD_UNIT_TESTS=ON -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
-          cmake --build cmake-build-unit-tests -j4
-          ctest --test-dir cmake-build-unit-tests -j4
-    
-    - name: Install lcov
-      run: sudo apt install lcov
-    
-    # no-external command excludes the system libraries in the root directory 
-    - name: Capture code coverage
-      run: |
-        echo "Capturing code coverage..."
-        lcov --no-external --capture --directory . \
-             --output-file cmake-build-unit-tests/coverage_unfiltered.info
+        docker pull ubuntu:22.04
+        docker run --rm -v $(pwd):/workspace -w /workspace ubuntu:22.04 bash -c "
+          apt-get update &&
+          apt-get install -y gcc-11 g++-11 lcov wget cmake zip &&
+          update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-11 100 &&
+          update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-11 100 &&
+          update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-11 100 &&
+          gcc --version &&
+          gcov --version &&
+          lcov --version &&
 
-    - name: Filter out 3rd party and mock files
-      run: |
-        echo "Filtering out 3rd party and mock files from coverage data..."
-        lcov --remove cmake-build-unit-tests/coverage_unfiltered.info \
-             '*libs/3rdparty/googletest/*' \
-             '*/mock/*' \
-             '*/gmock/*' \
-             '*/gtest/*' \
-             '*/test/*' \
-             --output-file cmake-build-unit-tests/coverage.info
+          # Clean old coverage files
+          rm -rf cmake-build-unit-tests/*.gcda cmake-build-unit-tests/*.gcno &&
 
-    - name: Generate HTML coverage report
-      run: |
-        echo "Generating HTML coverage report..."
-        genhtml cmake-build-unit-tests/coverage.info \
-                 --output-directory cmake-build-unit-tests/coverage
-    
-    
-    - name: Zip the coverage report
-      run: |
-        mv  cmake-build-unit-tests/coverage code_coverage
-        zip -r code_coverage.zip code_coverage
+          # Configure and build the tests
+          rm -rf cmake-build-unit-tests &&
+          cmake -B cmake-build-unit-tests -S executables/unitTest -DBUILD_UNIT_TESTS=ON -DCMAKE_BUILD_TYPE=${BUILD_TYPE} &&
+          cmake --build cmake-build-unit-tests -j4 &&
+
+          ctest --test-dir cmake-build-unit-tests -j4 &&
+
+          # Capture code coverage
+          lcov --no-external --capture --directory . \
+               --output-file cmake-build-unit-tests/coverage_unfiltered.info &&
+
+          # Filter out 3rd party and mock files
+          lcov --remove cmake-build-unit-tests/coverage_unfiltered.info \
+               '*libs/3rdparty/googletest/*' \
+               '*/mock/*' \
+               '*/gmock/*' \
+               '*/gtest/*' \
+               '*/test/*' \
+               --output-file cmake-build-unit-tests/coverage.info &&
+
+          # Generate HTML coverage report
+          genhtml cmake-build-unit-tests/coverage.info \
+                  --output-directory cmake-build-unit-tests/coverage &&
+
+          # Zip the coverage report
+          mv cmake-build-unit-tests/coverage code_coverage &&
+          zip -r code_coverage.zip code_coverage
+        "
 
     - name: Upload code coverage artifact
       uses: actions/upload-artifact@v4
