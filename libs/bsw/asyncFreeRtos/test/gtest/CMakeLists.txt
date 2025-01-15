@@ -3,7 +3,6 @@ add_executable(
     src/async/AsyncTest.cpp
     src/async/FreeRtosAdapterTest.cpp
     src/async/FutureSupportTest.cpp
-    src/async/LegacyTest.cpp
     src/async/LockTest.cpp
     src/async/ModifiableLockTest.cpp
     src/async/StaticRunnableTest.cpp

@@ -16,7 +16,6 @@ add_library(
     src/async/Async.cpp
     src/async/FutureSupport.cpp
     src/async/Hook.cpp
-    src/async/Legacy.cpp
     src/async/Types.cpp)
 
 target_include_directories(asyncFreeRtosImpl PRIVATE include)
@@ -37,10 +36,6 @@ target_link_libraries(
 
 if (BUILD_UNIT_TESTS)
     # These compile definitions apply to all unit test
-    target_compile_definitions(
-        asyncFreeRtos INTERFACE ASYNC_LOOPER_DISABLE
-                                ASYNC_TIMEOUTMANAGER2_DISABLE)
-
     add_library(asyncBinding INTERFACE)
 
     target_include_directories(asyncBinding INTERFACE test/include)
