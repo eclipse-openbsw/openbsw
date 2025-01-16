@@ -9,6 +9,10 @@ namespace util
 {
 namespace stream
 {
+/**
+ * The ISharedOutputStream class implementation.
+ *
+ */
 class SharedOutputStream : public ISharedOutputStream
 {
 public:

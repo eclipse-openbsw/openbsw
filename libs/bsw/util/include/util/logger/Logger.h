@@ -7,7 +7,6 @@
 // The framework include path should be injected before util's include path.
 // clang-format off
 #include "util/logger/LoggerBinding.h"   // IWYU pragma: export
-#include "util/logger/LoggerApiMacros.h" // IWYU pragma: export
 // clang-format on
 
 #include "util/logger/LevelInfo.h"

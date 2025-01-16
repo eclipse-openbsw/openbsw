@@ -10,6 +10,11 @@ namespace util
 {
 namespace stream
 {
+/**
+ * The TaggedOutputStream class is implementing the
+ * ISharedOutputStream interface complemented with tagged output.
+ *
+ */
 class TaggedSharedOutputStream
 : public ISharedOutputStream
 , private TaggedOutputHelper

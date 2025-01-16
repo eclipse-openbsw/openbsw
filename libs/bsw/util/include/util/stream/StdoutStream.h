@@ -9,6 +9,10 @@ namespace util
 {
 namespace stream
 {
+/**
+ * The IOutputStream class implementation.
+ *
+ */
 class StdoutStream : public IOutputStream
 {
 public:
