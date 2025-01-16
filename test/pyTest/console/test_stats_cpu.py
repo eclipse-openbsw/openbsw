@@ -29,7 +29,7 @@ def test_console_cpu_health(target_session):
 
     # stats commands need a while after boot we retry a couple of times
     success = False
-    for _ in range(6):
+    for _ in range(10):
         sleep(5)
 
         capserial.clear()
