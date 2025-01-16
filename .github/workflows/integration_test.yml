@@ -4,11 +4,14 @@ on: [ merge_group, pull_request, push ]
 
 jobs:
   integration-test:
+    # The integration tests run on macos because the referenceApp freezes on a nested vm on linux
+    # nested virtualization is only supported on intel based macs or M3 and later
     runs-on: macos-13
     steps:
       - uses: actions/checkout@v4
 
       # Install nix with a linux-builder
+      # This is required to build the referenceApp and the VM containing the tests
       - run: |
           cat << EOF | sudo tee /etc/ssh/ssh_config.d/100-linux-builder.conf
           Host linux-builder
@@ -31,6 +34,6 @@ jobs:
           run: nix run nixpkgs#darwin.linux-builder
           wait-on: "tcp:localhost:31022"
           wait-for: 5m
-      # - uses: self-actuated/connect-ssh@master
-      # - uses: mxschmitt/action-tmate@v3
-      - run: nix flake check --print-build-logs .
+
+      - name: Run Integration Tests in VM
+        run: nix flake check --print-build-logs .
