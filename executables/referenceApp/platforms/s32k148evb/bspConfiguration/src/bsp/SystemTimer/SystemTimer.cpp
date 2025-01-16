@@ -52,9 +52,9 @@ void initSystemTimer()
     LPIT0->TMR[0].TVAL  = 0xFFFFFFFFU;
     LPIT0->SETTEN       = 0x1U;
 
-    DEMCR |= 0x01000000U;
+    DEMCR      = DEMCR | 0x01000000U;
     DWT_CYCCNT = 0;
-    DWT_CTRL |= 0x00000001U;
+    DWT_CTRL   = DWT_CTRL | 0x00000001U;
 
     state.ticks         = 0; // General ticks counter, never overflows
     state.lastDwt       = 0;

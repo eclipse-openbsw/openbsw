@@ -41,8 +41,8 @@ public:
         _ftm.writeProtectionDisable(true);
         _HwChannel.sc = 0;
 
-        _HwChannel.sc |= (_configuration->ctrl & tFtm::CTRL_ELSx_MASK) << 2;
-        _HwChannel.sc |= (_configuration->ctrl & tFtm::CTRL_MSx_MASK) << 2;
+        _HwChannel.sc = _HwChannel.sc | ((_configuration->ctrl & tFtm::CTRL_ELSx_MASK) << 2);
+        _HwChannel.sc = _HwChannel.sc | ((_configuration->ctrl & tFtm::CTRL_MSx_MASK) << 2);
 
         clrEvent();
 
@@ -70,19 +70,19 @@ public:
         _ftm.setPWMen(hwChannel, true);
         if (_configuration->interruptActive)
         {
-            _HwChannel.sc |= FTM_CnSC_CHIE_MASK;
+            _HwChannel.sc = _HwChannel.sc | FTM_CnSC_CHIE_MASK;
         }
         else
         {
-            _HwChannel.sc &= ~FTM_CnSC_CHIE_MASK;
+            _HwChannel.sc = _HwChannel.sc & ~FTM_CnSC_CHIE_MASK;
         }
         if (_configuration->dmaActive)
         {
-            _HwChannel.sc |= FTM_CnSC_DMA_MASK;
+            _HwChannel.sc = _HwChannel.sc | FTM_CnSC_DMA_MASK;
         }
         else
         {
-            _HwChannel.sc &= ~FTM_CnSC_DMA_MASK;
+            _HwChannel.sc = _HwChannel.sc & ~FTM_CnSC_DMA_MASK;
         }
         setDuty(0);
         return bsp::BSP_OK;
@@ -96,8 +96,8 @@ public:
         _ftm.setPWMen(hwChannel, false);
         setDuty(0);
         _ftm.writeProtectionDisable(true);
-        _HwChannel.sc &= ~FTM_CnSC_CHIE_MASK;
-        _HwChannel.sc &= ~FTM_CnSC_DMA_MASK;
+        _HwChannel.sc = _HwChannel.sc & ~FTM_CnSC_CHIE_MASK;
+        _HwChannel.sc = _HwChannel.sc & ~FTM_CnSC_DMA_MASK;
         clrEvent();
 
         return bsp::BSP_OK;
@@ -179,7 +179,7 @@ public:
 
     inline uint8_t getChannel() { return hwChannel; }
 
-    inline void clrEvent() { _HwChannel.sc &= ~FTM_CnSC_CHF_MASK; }
+    inline void clrEvent() { _HwChannel.sc = _HwChannel.sc & ~FTM_CnSC_CHF_MASK; }
 
     inline bool getEvent() { return (_HwChannel.sc & FTM_CnSC_CHF_MASK) != 0; }
 

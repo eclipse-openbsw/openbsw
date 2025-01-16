@@ -5,7 +5,7 @@
 
 // clang-format off
 static inline __attribute__((always_inline))
-volatile void disableAllInterrupts(void)
+void disableAllInterrupts(void)
 {
 asm(
 "cpsid   i;"
@@ -15,7 +15,7 @@ asm(
 );
 }
 static inline __attribute__((always_inline))
- volatile void enableAllInterrupts(void)
+void enableAllInterrupts(void)
 {
 asm (
 "ISB;"
