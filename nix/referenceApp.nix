@@ -20,5 +20,5 @@ stdenv.mkDerivation {
     cp cmake-build-posix/application/app.referenceApp.elf $out/bin/referenceApp
   '';
   separateDebugInfo = true;
-  hardeningDisable = ["all"];
+  hardeningDisable = [ "all" ];
 }
