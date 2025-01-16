@@ -149,7 +149,6 @@ public:
 
     /**
      * Empty destructor to work around a diab bug
-     * See: https://esrlabs.atlassian.net/browse/DIAB-6
      */
     ~slice() = default;
 
