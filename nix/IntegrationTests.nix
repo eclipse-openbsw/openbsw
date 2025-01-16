@@ -12,6 +12,8 @@ pkgs.testers.runNixOSTest {
       system.stateVersion = "24.11";
       boot.loader.systemd-boot.enable = true;
       boot.loader.efi.canTouchEfiVariables = true;
+      
+      boot.kernelParams = [ "noapic" "nolapic" "acpi=off" ]; # required by macos-13 github runner
 
       boot.kernelModules = [ "vcan" ];
 
