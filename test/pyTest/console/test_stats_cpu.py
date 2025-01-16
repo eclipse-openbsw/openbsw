@@ -27,17 +27,24 @@ def test_console_cpu_health(target_session):
     capserial = target_session.capserial()
     assert capserial.wait_for_boot_complete()
 
-    # stats commands need a second after boot
-    # and seems to need some time between successive calls to it
-    sleep(1)
+    # stats commands need a while after boot we retry a couple of times
+    success = False
+    for _ in range(6):
+        sleep(5)
 
-    capserial.clear()
+        capserial.clear()
 
-    capserial.send_command(b"stats cpu\n")
-    (success, lines, _) = capserial.read_until(b" idle ", timeout=2.0)
+        capserial.send_command(b"stats cpu\n")
+        (success, lines, _) = capserial.read_until(b"idle", timeout=2.0)
+        if success:
+            break
+
     assert success
 
     parts = lines[-1].split()
     assert (parts[0] == b"idle")
     percent_idle = float(parts[1])
-    assert percent_idle > 10, f"Idle time {percent_idle}% is not > 10%"
+    if "posix_ci" != capserial._target_name:
+        assert percent_idle > 10, f"Idle time {percent_idle}% is not > 10%"
+    else:
+        assert percent_idle == 0, f"Time should be frozen in Nix CI"

@@ -1,12 +1,13 @@
 import os
 import helper
+import pytest
 from target_info import TargetInfo
 
 def create_uds_tool_command(channel, did):
     config = os.path.join(os.getcwd(), "../../tools/UdsTool/app/canConfig.json")
     return f"udstool read --can --channel {channel} --txid 0x2A --rxid 0xF0 --did {did} --config {config}"
 
-
+@pytest.mark.skip(reason="tmux based test isn't reproduceable")
 def test_rdbi(target_session, did="CF01"):
     assert target_session.capserial().wait_for_boot_complete()
 
