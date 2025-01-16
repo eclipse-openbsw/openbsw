@@ -8,15 +8,8 @@ def test_console_restart(target_session):
     booted_bytes = b"DEBUG: Run level 8 done"
 
     capserial.clear()
+    capserial.mark_not_booted()
     # restart the target
     target_session.restart()
 
-    # Wait for startup line
-    (success, received_lines, expected_found_at_i) = \
-        capserial.read_until(startup_bytes, timeout=0.5)
-    assert success
-
-    # Wait for booted line
-    (success, received_lines, expected_found_at_i) = \
-        capserial.read_until(booted_bytes, timeout=0.5)
-    assert success
+    assert capserial.wait_for_boot_complete()
