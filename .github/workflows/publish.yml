@@ -1,9 +1,10 @@
 name: Publish Documentation
 
-on:
-  push:
-    branches:
-      - main
+on: [push, pull_request]
+# on:
+#   push:
+#     branches:
+#       - main
 
 permissions:
   contents: write
@@ -60,6 +61,18 @@ jobs:
         run: |
             unzip code_coverage.zip
             rm code_coverage.zip
+      
+      - name: Download Coverage badge  artifact
+        uses: actions/download-artifact@v4
+        with:
+            name: coverage-badge
+            path: ./doc/github_pages
+      
+      - name: Unzip Coverage badge artifact
+        working-directory: ./doc/github_pages
+        run: |
+            unzip coverage-badge.zip 
+            rm coverage-badge.zip 
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
