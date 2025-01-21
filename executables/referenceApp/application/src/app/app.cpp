@@ -7,6 +7,9 @@
 #include "logger/logger.h"
 #include "reset/softwareSystemReset.h"
 #include "systems/DemoSystem.h"
+#ifdef BENCHMARK
+#include "systems/BenchmarkSystem.h"
+#endif
 #include "systems/RuntimeSystem.h"
 #include "systems/SysAdminSystem.h"
 
@@ -69,9 +72,15 @@ LifecycleManager lifecycleManager{
     TASK_SYSADMIN,
     ::lifecycle::LifecycleManager::GetTimestampType::create<&getSystemTimeUs32Bit>()};
 
+#ifndef BENCHMARK
 ::estd::typed_mem<::systems::RuntimeSystem> runtimeSystem;
+#endif
 ::estd::typed_mem<::systems::SysAdminSystem> sysAdminSystem;
+#ifndef BENCHMARK
 ::estd::typed_mem<::systems::DemoSystem> demoSystem;
+#else
+::estd::typed_mem<::systems::BenchmarkSystem> benchmarkSystem;
+#endif
 
 #ifdef PLATFORM_SUPPORT_UDS
 ::estd::typed_mem<::transport::TransportSystem> transportSystem;
@@ -133,8 +142,10 @@ void run()
 
     /* runlevel 1 */
     ::platform::platformLifecycleAdd(lifecycleManager, 1U);
+#ifndef BENCHMARK
     lifecycleManager.addComponent(
         "runtime", runtimeSystem.emplace(TASK_BACKGROUND, runtimeMonitor), 1U);
+#endif
     /* runlevel 2 */
     ::platform::platformLifecycleAdd(lifecycleManager, 2U);
     /* runlevel 3 */
@@ -164,6 +175,7 @@ void run()
 
     /* runlevel 8 */
     ::platform::platformLifecycleAdd(lifecycleManager, 8U);
+#ifndef BENCHMARK
     lifecycleManager.addComponent(
         "demo",
         demoSystem.emplace(
@@ -175,10 +187,16 @@ void run()
 #endif
                 ),
         8U);
+#else
+    lifecycleManager.addComponent(
+        "benchmark", benchmarkSystem.emplace(TASK_DEMO, lifecycleManager, runtimeMonitor), 8U);
+#endif
 
     lifecycleManager.transitionToLevel(MaxNumLevels);
 
+#ifndef BENCHMARK
     runtimeMonitor.start();
+#endif
     AsyncAdapter::run();
 
     while (true)
@@ -190,8 +208,10 @@ void run()
 void idle(AsyncAdapter::TaskContextType& taskContext)
 {
     taskContext.dispatchWhileWork();
+#ifndef BENCHMARK
     ::logger::run();
     ::console::run();
+#endif
     if (lifecycleMonitor.isReadyForReset())
     {
         staticShutdown();

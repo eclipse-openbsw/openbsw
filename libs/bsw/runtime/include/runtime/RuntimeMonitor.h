@@ -87,6 +87,13 @@ public:
 
     void enterTask(size_t const taskIdx)
     {
+#ifdef BENCHMARK
+        if (taskIdx != 0)
+        {
+            _lastEnterTaskTimestamp = getSystemTicks32Bit();
+            return;
+        }
+#endif
         ::async::LockType const lock;
         uint32_t const timestamp = getSystemTicks32Bit();
         _lastEnterTaskTimestamp  = timestamp;
@@ -95,6 +102,13 @@ public:
 
     void leaveTask(size_t const taskIdx)
     {
+#ifdef BENCHMARK
+        if (taskIdx != 0)
+        {
+            _lastEnterTaskTimestamp = getSystemTicks32Bit();
+            return;
+        }
+#endif
         ::async::LockType const lock;
         uint32_t const timestamp = getSystemTicks32Bit();
         _contextStack.popEntry(_taskStatistics.getEntry(taskIdx), timestamp);
@@ -102,36 +116,44 @@ public:
 
     void enterIsrGroup(size_t const isrGroupIdx)
     {
+#ifndef BENCHMARK
         ::async::LockType const lock;
         uint32_t const timestamp = getSystemTicks32Bit();
         _contextStack.pushEntry(_isrGroupStatistics.getEntry(isrGroupIdx), timestamp);
+#endif
     }
 
     void leaveIsrGroup(size_t const isrGroupIdx)
     {
+#ifndef BENCHMARK
         ::async::LockType const lock;
         uint32_t const timestamp = getSystemTicks32Bit();
         _contextStack.popEntry(_isrGroupStatistics.getEntry(isrGroupIdx), timestamp);
+#endif
     }
 
     void enterFunction(FunctionEntryType& functionEntry) const
     {
+#ifndef BENCHMARK
         ::async::LockType const lock;
         ContextEntryType* const topEntry = _contextStack.getTopEntry();
         if (topEntry != nullptr)
         {
             topEntry->pushEntry(functionEntry, getSystemTicks32Bit());
         }
+#endif
     }
 
     void leaveFunction(FunctionEntryType& functionEntry) const
     {
+#ifndef BENCHMARK
         ::async::LockType const lock;
         ContextEntryType* const topEntry = _contextStack.getTopEntry();
         if (topEntry != nullptr)
         {
             topEntry->popEntry(functionEntry, getSystemTicks32Bit());
         }
+#endif
     }
 
 private:

@@ -25,6 +25,10 @@ add_executable(
     ${app.referenceAppExtraSources}
     src/main.cpp)
 
+if (BUILD_BENCHMARK)
+    target_sources(app.referenceApp PRIVATE src/systems/BenchmarkSystem.cpp)
+endif ()
+
 set_target_properties(app.referenceApp PROPERTIES SUFFIX ".elf")
 
 if (TARGET startUp)
