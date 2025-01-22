@@ -47,6 +47,8 @@ class IncomingDiagConnection : public transport::ITransportMessageProcessedListe
     UNCOPYABLE(IncomingDiagConnection);
 
 public:
+    virtual ~IncomingDiagConnection() = default;
+
     void setDiagSessionManager(IDiagSessionManager& diagSessionManager)
     {
         fpDiagSessionManager = &diagSessionManager;

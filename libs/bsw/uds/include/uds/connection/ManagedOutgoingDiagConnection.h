@@ -78,7 +78,7 @@ public:
 
     void processResponseQueue();
 
-    void terminate();
+    void terminate() override;
 
     void responseProcessed() override;
 

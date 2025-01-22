@@ -25,7 +25,7 @@ endif ()
 
 message(STATUS "Target platform: <${BUILD_TARGET_PLATFORM}>")
 
-if (BUILD_TARGET_PLATFORM STREQUAL "POSIX")
+if (BUILD_TARGET_PLATFORM STREQUAL "POSIX" AND NOT ${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     set(PLATFORM_SUPPORT_CAN
         ON
         CACHE BOOL "Turn CAN support on or off" FORCE)
