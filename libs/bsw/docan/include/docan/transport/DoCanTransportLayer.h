@@ -62,13 +62,37 @@ public:
         DoCanTransportLayerConfig<DataLinkLayerType>& config,
         uint8_t const loggerComponent);
 
+    /**
+     * Initializes all members - must be called before data can be sent or received.
+     */
     ErrorCode init() override;
+
+    /**
+     * Shuts down all members - ceases all active communication and prevents new communication from
+     * starting.
+     */
     bool shutdown(ShutdownDelegate delegate) override;
+
+    /**
+     * Send a transport message.
+     * Takes an optional notification listener which will be provided with updates when transmission
+     * terminates either successfully or in an error.
+     */
     ErrorCode send(
         ::transport::TransportMessage& transportMessage,
         ::transport::ITransportMessageProcessedListener* pNotificationListener) override;
 
+    /**
+     * Polls the transmitter and receiver to check if there are any new frames to be sent or
+     * received, or if any timeouts have occurred. If there is a next frame to be sent or received &
+     * processed, this function will do so.
+     */
     void cyclicTask(uint32_t nowUs);
+
+    /**
+     * Checks whether it's time to send the next consecutive frame for all segmented transmissions.
+     * Will also attempt to send said next consecutive frame.
+     */
     bool tick(uint32_t nowUs);
 
 private:
