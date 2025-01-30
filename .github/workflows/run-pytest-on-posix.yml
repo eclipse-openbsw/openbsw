@@ -3,8 +3,12 @@ name: Run pytest for posix platform
 on: [push, pull_request]
 
 jobs:
+    cmake-build:
+      uses: ./.github/workflows/build.yml
+
     run-pytest-on-posix:
       runs-on: ubuntu-latest
+      needs: cmake-build
 
       steps:
 
@@ -29,28 +33,31 @@ jobs:
         - name: Checkout repository
           uses: actions/checkout@v4
 
-        - name: Set up CMake
-          uses: jwlawson/actions-setup-cmake@v2
+        - name: Restore cached posix build
+          id: restore-cached-posix-build
+          uses: actions/cache/restore@v3
           with:
-            cmake-version: '3.22.x'
-
-        - name: Build posix target
-          run: |
-            cmake -B cmake-build-posix -S executables/referenceApp
-            cmake --build cmake-build-posix --target app.referenceApp -j
+            path: |
+              cmake-build-posix
+              cmake-build-s32k148
+            key: ${{ runner.os }}-cmake-posix-20-${{ hashFiles('**/*.cpp', '**/*.h',  '**/*.cmake', '**/*.txt', '**/*.c', '**/*.s', 'admin/cmake/ArmNoneEabi.cmake') }}
+            fail-on-cache-miss: true
 
         - name: Set up python 3.10
+          if: ${{ steps.restore-cached-posix-build.outputs.cache-hit == 'true' }}
           uses: actions/setup-python@v5
           with:
             python-version: '3.10'
 
         - name: Install python dependencies for tests
+          if: ${{ steps.restore-cached-posix-build.outputs.cache-hit == 'true' }}
           run: |
             pip install -r test/pyTest/requirements.txt
             cd tools/UdsTool
             pip install .
 
         - name: Run tests
+          if: ${{ steps.restore-cached-posix-build.outputs.cache-hit == 'true' }}
           run: |
             cd test/pyTest
             pytest --target=posix
