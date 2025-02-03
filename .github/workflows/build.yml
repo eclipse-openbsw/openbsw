@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        platform: [posix, s32k148]
+        platform: [posix-gcc, posix-clang, s32k148]
         cpp-standard: [14, 17, 20]
 
     steps:
@@ -36,8 +36,15 @@ jobs:
         with:
           release: '10.3-2021.10'
 
+      - name: Install LLVM and Clang
+        if: ${{ matrix.platform == 'posix-clang' }}
+        uses: KyleMayes/install-llvm-action@v2
+        with:
+          version: "17"
+          env: true
+
       - name: Configure CMake for POSIX
-        if: ${{ matrix.platform == 'posix' && steps.cache-cmake.outputs.cache-hit != 'true' }}
+        if: ${{ startsWith(matrix.platform, 'posix') && steps.cache-cmake.outputs.cache-hit != 'true' }}
         run: |
           cmake \
           -B cmake-build-posix \
@@ -56,4 +63,4 @@ jobs:
 
       - name: Build for ${{ matrix.platform }}
         if: steps.cache-cmake.outputs.cache-hit != 'true'
-        run: cmake --build cmake-build-${{ matrix.platform }} --target app.referenceApp -j
+        run: cmake --build cmake-build-${{ startsWith(matrix.platform, 'posix') && 'posix' || matrix.platform }} --target app.referenceApp -j
