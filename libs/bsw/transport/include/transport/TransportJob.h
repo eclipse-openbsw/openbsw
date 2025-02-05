@@ -12,20 +12,22 @@ class TransportMessage;
 class ITransportMessageProcessedListener;
 
 /**
- * Class for associating a TransportMessage with an ITransportMessageProcessedListener.
+ * Class for associating a TransportMessage with an
+ * ITransportMessageProcessedListener.
  *
  * \see TransportMessage
  * \see ITransportMessageProcessedListener
  */
 class TransportJob
 {
-    TransportJob(TransportJob const&) = delete;
-
 public:
-    TransportJob() : fpTransportMessage(nullptr), fpSendListener(nullptr){};
+    TransportJob() : fpTransportMessage(nullptr), fpSendListener(nullptr) {}
 
     TransportJob(TransportMessage& message, ITransportMessageProcessedListener* const pListener)
-    : fpTransportMessage(&message), fpSendListener(pListener){};
+    : fpTransportMessage(&message), fpSendListener(pListener)
+    {}
+
+    TransportJob(TransportJob const&) = delete;
 
     TransportJob& operator=(TransportJob const& job)
     {

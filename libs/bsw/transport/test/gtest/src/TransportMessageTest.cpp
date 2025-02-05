@@ -27,7 +27,7 @@ TEST_F(TransportMessageTest, TestAsserts)
 {
     ::estd::AssertHandlerScope scope(::estd::AssertExceptionHandler);
     TransportMessage t;
-    ASSERT_THROW(t.init(0, 10), ::estd::assert_exception);
+    ASSERT_THROW(t.init(nullptr, 10), ::estd::assert_exception);
     ASSERT_THROW(t.setServiceId(1), ::estd::assert_exception);
     ASSERT_THROW(t.setPayloadLength(100), ::estd::assert_exception);
 }
@@ -60,10 +60,10 @@ TEST_F(TransportMessageTest, Init)
     EXPECT_EQ(fBuffer, m.getBuffer());
     EXPECT_EQ(0U, m.getBufferLength());
     // empty init
-    m.init(0L, 0);
-    EXPECT_EQ(0L, m.getBuffer());
+    m.init(nullptr, 0);
+    EXPECT_EQ(nullptr, m.getBuffer());
     EXPECT_EQ(0U, m.getBufferLength());
-    ASSERT_THROW(m.init(0L, 1), ::estd::assert_exception);
+    ASSERT_THROW(m.init(nullptr, 1), ::estd::assert_exception);
     EXPECT_EQ(0U, m.missingBytes());
 }
 

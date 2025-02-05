@@ -6,12 +6,14 @@
  * \ingroup
  */
 
+#include "gmock/gmock.h"
 #include "transport/AbstractTransportLayerMock.h"
 #include "transport/TransportMessage.h"
 #include "transport/TransportMessageListenerMock.h"
 #include "transport/TransportMessageProviderMock.h"
 
-#include <gmock/gmock.h>
+#include <memory>
+
 using namespace ::transport;
 using namespace ::testing;
 
@@ -25,9 +27,9 @@ public:
 
     TestTransportLayer() : AbstractTransportLayer(0) {}
 
-    virtual ErrorCode send(
-        TransportMessage& transportMessage,
-        ITransportMessageProcessedListener* pNotificationListener)
+    ErrorCode send(
+        TransportMessage& /*transportMessage*/,
+        ITransportMessageProcessedListener* /*pNotificationListener*/) override
     {
         return AbstractTransportLayer::ErrorCode::TP_OK;
     }
@@ -37,23 +39,30 @@ class AbstractTransportLayerTest : public ::testing::Test
 {
 public:
     AbstractTransportLayerTest();
-    ~AbstractTransportLayerTest();
+    ~AbstractTransportLayerTest() override = default;
 
 protected:
-    AbstractTransportLayerMock* impl;
+    std::unique_ptr<AbstractTransportLayerMock> impl;
     StrictMock<TransportMessageProviderMock> provider;
     StrictMock<TransportMessageListenerMock> listener;
 };
 
 AbstractTransportLayerTest::AbstractTransportLayerTest()
 {
-    impl = new AbstractTransportLayerMock(0);
+    impl = std::make_unique<AbstractTransportLayerMock>(0);
     impl->setTransportMessageListener(&listener);
     impl->setTransportMessageProvider(&provider);
 }
 
-AbstractTransportLayerTest::~AbstractTransportLayerTest() { delete impl; }
-
+/**
+ * This test verifies whether
+ * TransportMessageProvidingListenerHelper::getTransportMessage() triggers
+ * ITransportMessageProvidingListener::getTransportMessage()
+ * (ITransportMessageProvider::getTransportMessage()) and if
+ * TransportMessageProvidingListenerHelper::messageReceived() triggers
+ * ITransportMessageProvidingListener::releaseTransportMessage()
+ * (ITransportMessageProvider::releaseTransportMessage()).
+ */
 TEST_F(AbstractTransportLayerTest, TestHelperMethods)
 {
     EXPECT_CALL(provider, getTransportMessage(_, Eq(1U), Eq(2U), Eq(3U), _, _))
@@ -78,21 +87,32 @@ TEST_F(AbstractTransportLayerTest, TestHelperMethods)
 
     ASSERT_EQ(
         ITransportMessageListener::ReceiveResult::RECEIVED_NO_ERROR,
-        listenerHelper.messageReceived(0, tmp, 0));
+        listenerHelper.messageReceived(0, tmp, nullptr));
 }
 
+/**
+ * This test checks that when ITransportMessageProvider and
+ * ITransportMessageListener are unset in AbstractTransportLayer it's underlying
+ * TransportMessageProvidingListenerHelper::getTransportMessage() will return
+ * NO_MSG_AVAILABLE and when calling
+ * TransportMessageProvidingListenerHelper::releaseTransportMessage(), the
+ * ITransportMessageProvider::releaseTransportMessage() is not called as it's
+ * set to nullptr. Also in this scenario
+ * TransportMessageProvidingListenerHelper::messageReceived() should return
+ * RECEIVED_ERROR.
+ */
 TEST_F(AbstractTransportLayerTest, TestHelperMethodsNoProvider)
 {
-    impl->setTransportMessageProvider(0L);
-    impl->setTransportMessageListener(0L);
+    impl->setTransportMessageProvider(nullptr);
+    impl->setTransportMessageListener(nullptr);
 
     ITransportMessageProvidingListener& listenerHelper = impl->getProvidingListenerHelper_impl();
 
-    TransportMessage* msg = 0;
+    TransportMessage* msg = nullptr;
     ASSERT_EQ(
         ITransportMessageProvidingListener::ErrorCode::TPMSG_NO_MSG_AVAILABLE,
         listenerHelper.getTransportMessage(0, 1, 2, 3, {}, msg));
-    ASSERT_EQ(0L, msg);
+    ASSERT_EQ(nullptr, msg);
 
     TransportMessage tmp;
 
@@ -101,13 +121,12 @@ TEST_F(AbstractTransportLayerTest, TestHelperMethodsNoProvider)
 
     ASSERT_EQ(
         ITransportMessageListener::ReceiveResult::RECEIVED_ERROR,
-        listenerHelper.messageReceived(0, tmp, 0));
+        listenerHelper.messageReceived(0, tmp, nullptr));
 }
 
 /**
- * \desc
- * This test will make sure that transport::AbstractTransportLayer::shutdownCompleteDummy is called
- * once.
+ * This test will make sure that
+ * transport::AbstractTransportLayer::shutdownCompleteDummy is called once.
  */
 TEST_F(AbstractTransportLayerTest, TestShutdownCompleteDummy)
 {
@@ -119,18 +138,30 @@ TEST_F(AbstractTransportLayerTest, TestShutdownCompleteDummy)
                    &transport::AbstractTransportLayerMock::shutdownCompleteDummy>());
 }
 
+/**
+ * Test if TransportMessageProvidingListenerHelper::dump() will trigger
+ * underlying ITransportMessageProvider::dump()
+ */
 TEST_F(AbstractTransportLayerTest, TestDumpWithInitializedTransportMessageProvider)
 {
     EXPECT_CALL(provider, dump()).Times(1);
     ASSERT_NO_THROW(impl->getProvidingListenerHelper_impl().dump());
 }
 
+/**
+ * Default implementation for AbstractTransportLayer::init() should return
+ * TP_OK.
+ */
 TEST_F(AbstractTransportLayerTest, TestInitDefaultImplementation)
 {
     TestTransportLayer tpLayer;
     ASSERT_EQ(AbstractTransportLayer::ErrorCode::TP_OK, tpLayer.init());
 }
 
+/**
+ * Default implementation for AbstractTransportLayer::shutdown() should return
+ * true (SYNC_SHUTDOWN_COMPLETE).
+ */
 TEST_F(AbstractTransportLayerTest, TestShutdownDefaultImplementation)
 {
     TestTransportLayer tpLayer;
@@ -140,6 +171,10 @@ TEST_F(AbstractTransportLayerTest, TestShutdownDefaultImplementation)
                          &TestTransportLayer::shutdownCompleteDummy>()));
 }
 
+/**
+ * Default implementation for TransportMessageProvidingListenerHelper::dump()
+ * shouldn't throw.
+ */
 TEST_F(AbstractTransportLayerTest, TestDumpWithUninitializedTransportMessageProvider)
 {
     TestTransportLayer tpLayer;

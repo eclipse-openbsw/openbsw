@@ -28,16 +28,16 @@ class TransportJobTest
 public:
     static uint8_t const BUFFER_LENGTH = 16; // Max. payload length == 8
 
-    void SetUp()
+    void SetUp() override
     {
         fBuffer = new uint8_t[BUFFER_LENGTH];
         m.init(fBuffer, BUFFER_LENGTH);
     }
 
-    void TearDown() { delete[] fBuffer; }
+    void TearDown() override { delete[] fBuffer; }
 
-    virtual void transportMessageProcessed(
-        transport::TransportMessage& transportMessage, ProcessingResult result)
+    void transportMessageProcessed(
+        transport::TransportMessage& transportMessage, ProcessingResult result) override
     {}
 
 protected:

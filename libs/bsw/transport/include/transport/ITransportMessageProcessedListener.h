@@ -42,8 +42,8 @@ public:
     /**
      * Callback being called when a TransportMessage has been processed.
      * \param transportMessage  the TransportMessage that has been processed
-     * \param result            ProcessingResult indicating if the TransportMessage has
-     * been processed without errors
+     * \param result            ProcessingResult indicating if the
+     * TransportMessage has been processed without errors
      */
     virtual void
     transportMessageProcessed(TransportMessage& transportMessage, ProcessingResult result)

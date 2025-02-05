@@ -131,8 +131,8 @@ bool TransportMessage::operator==(TransportMessage const& rhs) const
     {
         return false;
     }
-    // compare only valid bytes because a larger message may be used to receive a
-    // small amount of data
+    // compare only valid bytes because a larger message may be used to receive
+    // a small amount of data
     if (fValidBytes != rhs.fValidBytes)
     {
         return false;

@@ -6,7 +6,6 @@
 #include <estd/optional.h>
 #include <estd/slice.h>
 
-#include <algorithm>
 #include <array>
 
 namespace transport
@@ -21,10 +20,10 @@ struct LogicalAddress
 namespace addressfinder
 {
 ::estd::optional<LogicalAddress>
-findDoipAddressInSlice(uint16_t const address, ::estd::slice<LogicalAddress const> const& list);
+findDoipAddressInSlice(uint16_t address, ::estd::slice<LogicalAddress const> const& list);
 
 ::estd::optional<LogicalAddress>
-find8BitAddressInSlice(uint16_t const address, ::estd::slice<LogicalAddress const> const& list);
+find8BitAddressInSlice(uint16_t address, ::estd::slice<LogicalAddress const> const& list);
 
 inline bool isDoipAddressIn(uint16_t const address, ::estd::slice<LogicalAddress const> const& list)
 {

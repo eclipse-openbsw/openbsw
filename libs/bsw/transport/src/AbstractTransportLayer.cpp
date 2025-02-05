@@ -49,7 +49,8 @@ AbstractTransportLayer::TransportMessageProvidingListenerHelper::getTransportMes
     }
     Logger::warn(
         TRANSPORT,
-        "AbstractTransportLayer(%s)::getTransportMessage() with no registered provider!",
+        "AbstractTransportLayer(%s)::getTransportMessage() with no registered "
+        "provider!",
         ::common::busid::BusIdTraits::getName(fBusId));
     pTransportMessage = nullptr;
     return ITransportMessageProvidingListener::ErrorCode::TPMSG_NO_MSG_AVAILABLE;
@@ -79,7 +80,8 @@ AbstractTransportLayer::TransportMessageProvidingListenerHelper::messageReceived
     }
     Logger::warn(
         TRANSPORT,
-        "AbstractTransportLayer(%s)::messageReceived() with no registered listener!",
+        "AbstractTransportLayer(%s)::messageReceived() with no registered "
+        "listener!",
         ::common::busid::BusIdTraits::getName(fBusId));
     return ReceiveResult::RECEIVED_ERROR;
 }

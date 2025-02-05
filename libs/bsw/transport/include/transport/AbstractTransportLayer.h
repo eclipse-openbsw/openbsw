@@ -24,7 +24,8 @@ public:
     /** Delegate for asynchronous notification when shutdown is done. */
     using ShutdownDelegate = ::estd::function<void(AbstractTransportLayer&)>;
 
-    /** Return value of function shutdown in case shutdown was performed synchronously. */
+    /** Return value of function shutdown in case shutdown was performed
+     * synchronously. */
     static bool const SYNC_SHUTDOWN_COMPLETE = true;
 
     /**
@@ -59,9 +60,10 @@ public:
      *
      * \note
      * Receiving messages is only possible if an instance of
-     * ::transport::ITransportMessageProvider has been set using setTransportMessageProvider().
-     * To actually get access to the received messages set an
-     * ITransportMessageListener using setTransportMessageListener().
+     * ::transport::ITransportMessageProvider has been set using
+     * setTransportMessageProvider(). To actually get access to the received
+     * messages set an ITransportMessageListener using
+     * setTransportMessageListener().
      *
      * \return  result of initialization
      *          - TP_OK: successfully initialized
@@ -73,14 +75,13 @@ public:
     /**
      * Shuts down a transport layer instance. After completion of shutdown
      * no sending and receiving of messages is possible.
-     * \param  ShutdownDelegate  Delegate that will be called in case shutdown is completed
-     * asynchronously.
-     * \return
+     * \param  ShutdownDelegate  Delegate that will be called in case shutdown
+     * is completed asynchronously. \return
      *  - true if shutdown is complete
      *  - false if shutdown will be done asynchronously.
      * \note
-     * In case shutdown is completed immediately, SYNC_SHUTDOWN_COMPLETE will be returned
-     * an ShutdownDelegate will not be called to avoid recursion.
+     * In case shutdown is completed immediately, SYNC_SHUTDOWN_COMPLETE will be
+     * returned an ShutdownDelegate will not be called to avoid recursion.
      */
 
     virtual bool shutdown(ShutdownDelegate);
@@ -118,7 +119,8 @@ public:
 
 protected:
     /**
-     * Provides access to ITransportMessageProvidingListener for derived classes.
+     * Provides access to ITransportMessageProvidingListener for derived
+     * classes.
      */
     ITransportMessageProvidingListener& getProvidingListenerHelper();
 

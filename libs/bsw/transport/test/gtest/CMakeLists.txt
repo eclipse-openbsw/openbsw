@@ -1,18 +1,14 @@
 add_executable(
     transportTest
-    src/transport/AbstractTransportLayerTest.cpp
-    src/transport/DestitudeTransportMessageProviderTest.cpp
-    src/transport/FunctionalTransportMessageSendJobTest.cpp
-    src/transport/IncludeTest.cpp
-    src/transport/QueuedTransportLayerTest.cpp
-    src/transport/SimpleTransportMessageProviderTest.cpp
-    src/transport/TesterAddressTest.cpp
-    src/transport/TransportJobTest.cpp
-    src/transport/TransportMessageTest.cpp
-    ../src/transport/TransportConfiguration.cpp
-    ../src/Logger.cpp)
+    src/AbstractTransportLayerTest.cpp
+    src/IncludeTest.cpp
+    src/TesterAddressTest.cpp
+    src/TransportJobTest.cpp
+    src/TransportMessageTest.cpp
+    src/TransportConfiguration.cpp
+    src/Logger.cpp)
 
-target_include_directories(transportTest PRIVATE ../include)
+target_include_directories(transportTest PRIVATE include)
 
 target_link_libraries(
     transportTest

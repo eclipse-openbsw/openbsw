@@ -46,8 +46,8 @@ public:
      * \param sourceId          id of TransportMessage's source
      * \param targetId          id of TransportMessage's target
      * \param size              size of the requested TransportMessage
-     * \param peek              slice to the payload of the underlying data buffer
-     * \param pTransportMessage a pointer to TransportMessage (0L if no
+     * \param peek              slice to the payload of the underlying data
+     * buffer \param pTransportMessage a pointer to TransportMessage (0L if no
      *          message was available) is written to this pointer.
      * \return
      *          - TPMSG_OK: pTransportMessage has been set
@@ -55,11 +55,12 @@ public:
      *          - TPMSG_INVALID_TGT_ID: requested targetId is invalid
      *          - TPMSG_NO_MSG_AVAILABLE: all params are valid but all
      *          TransportMessages are currently locked
-     *          - TPMSG_NOT_RESPONSIBLE: not the correct provider for this request
+     *          - TPMSG_NOT_RESPONSIBLE: not the correct provider for this
+     * request
      *
      * \note
-     * The TransportMessage must be released by a call to releaseTransportMessage
-     * before it can be returned again by this method.
+     * The TransportMessage must be released by a call to
+     * releaseTransportMessage before it can be returned again by this method.
      */
     virtual ErrorCode getTransportMessage(
         uint8_t srcBusId,
@@ -74,8 +75,8 @@ public:
      * Function to return a \p transportMessage to this provider.
      *
      * \note
-     * The provider must be also able to accept a \p transportMessage, which doesn't
-     * belong to it and e.g. ignore it. This is not an error case.
+     * The provider must be also able to accept a \p transportMessage, which
+     * doesn't belong to it and e.g. ignore it. This is not an error case.
      */
     virtual void releaseTransportMessage(TransportMessage& transportMessage) = 0;
 

@@ -1,21 +1,13 @@
-add_library(
-    transport
-    src/transport/AbstractTransportLayer.cpp
-    src/transport/DestituteTransportMessageProvider.cpp
-    src/transport/LogicalAddress.cpp
-    src/transport/QueuedTransportLayer.cpp
-    src/transport/SimpleTransportMessageProvider.cpp
-    src/transport/TransportLogger.cpp
-    src/transport/TransportMessage.cpp)
+add_library(transport src/AbstractTransportLayer.cpp src/LogicalAddress.cpp
+                      src/TransportLogger.cpp src/TransportMessage.cpp)
 
 target_include_directories(transport PUBLIC include)
 
 target_link_libraries(transport PUBLIC common estd util async)
 
 if (BUILD_UNIT_TESTS)
-    add_library(
-        transportMock
-        mock/gmock/src/transport/TransportMessageProvidingListenerMock.cpp)
+    add_library(transportMock
+                mock/gmock/src/TransportMessageProvidingListenerMock.cpp)
 
     target_include_directories(transportMock PUBLIC mock/gmock/include)
 

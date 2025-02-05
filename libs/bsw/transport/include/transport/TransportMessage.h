@@ -19,9 +19,9 @@ class IDataProgressListener;
  * amount of data.
  *
  * \note
- * A TransportMessage does not provide any data by itself. It must be initialized
- * by calling the method init and providing it with a pointer to a buffer and the
- * length of the buffer.
+ * A TransportMessage does not provide any data by itself. It must be
+ * initialized by calling the method init and providing it with a pointer to a
+ * buffer and the length of the buffer.
  *
  * \attention
  * The TransportMessage stores some additional information like length, source
@@ -36,8 +36,9 @@ class IDataProgressListener;
  * - bufferlength</td>
  * </tr>
  * <tr>
- *   <th>Value</th><td colspan="4">length</td><td colspan="2">control word</td><td>source
- * id</td><td>target id</td><td>service id</td><td>payload</td>
+ *   <th>Value</th><td colspan="4">length</td><td colspan="2">control
+ * word</td><td>source id</td><td>target id</td><td>service
+ * id</td><td>payload</td>
  * </tr>
  * </table>
  *
@@ -215,7 +216,8 @@ public:
      *          - TP_MSG_OK if data was correctly appended
      *          - TP_MSG_LENGTH_EXCEEDED if data was too long
      *
-     * fValidBytes will be increased by one if one more byte fits into the buffer.
+     * fValidBytes will be increased by one if one more byte fits into the
+     * buffer.
      */
     ErrorCode append(uint8_t data);
 
@@ -229,14 +231,14 @@ public:
      * \param   n value to increase fValidBytes by
      * \return
      *          - TP_MSG_OK if valid bytes was increased
-     *          - TP_MSG_LENGTH_EXCEEDED if valid bytes would have been too large
-     *            (valid bytes are set to getMaxPayloadLength()
+     *          - TP_MSG_LENGTH_EXCEEDED if valid bytes would have been too
+     * large (valid bytes are set to getMaxPayloadLength()
      */
     ErrorCode increaseValidBytes(uint16_t n);
 
     /**
-     * Returns the number of valid bytes in the payload of this TransportMessage.
-     * \deprecated
+     * Returns the number of valid bytes in the payload of this
+     * TransportMessage. \deprecated
      */
     uint16_t getValidBytes() const;
 

@@ -2,6 +2,8 @@
 
 #include "transport/LogicalAddress.h"
 
+#include <algorithm>
+
 namespace transport
 {
 namespace addressfinder
