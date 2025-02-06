@@ -22,6 +22,7 @@ add_executable(
     src/systems/DemoSystem.cpp
     src/systems/RuntimeSystem.cpp
     src/systems/SysAdminSystem.cpp
+    src/systems/SafetySystem.cpp
     ${app.referenceAppExtraSources}
     src/main.cpp)
 
@@ -55,6 +56,7 @@ target_link_libraries(
             util
             udsConfigurationImpl
             runtime
+            safeLifecycle
             socBsp)
 
 if (PLATFORM_SUPPORT_UDS)

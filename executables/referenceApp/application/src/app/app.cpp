@@ -8,6 +8,7 @@
 #include "reset/softwareSystemReset.h"
 #include "systems/DemoSystem.h"
 #include "systems/RuntimeSystem.h"
+#include "systems/SafetySystem.h"
 #include "systems/SysAdminSystem.h"
 
 #include <app/appConfig.h>
@@ -72,6 +73,7 @@ LifecycleManager lifecycleManager{
 ::estd::typed_mem<::systems::RuntimeSystem> runtimeSystem;
 ::estd::typed_mem<::systems::SysAdminSystem> sysAdminSystem;
 ::estd::typed_mem<::systems::DemoSystem> demoSystem;
+::estd::typed_mem<::systems::SafetySystem> safetySystem;
 
 #ifdef PLATFORM_SUPPORT_UDS
 ::estd::typed_mem<::transport::TransportSystem> transportSystem;
@@ -176,6 +178,9 @@ void run()
                 ),
         8U);
 
+    lifecycleManager.addComponent(
+        "safety", safetySystem.emplace(TASK_SAFETY, lifecycleManager), 8U);
+
     lifecycleManager.transitionToLevel(MaxNumLevels);
 
     runtimeMonitor.start();
@@ -221,6 +226,9 @@ DemoTask demoTask{"demo"};
 
 using BackgroundTask = AsyncAdapter::Task<TASK_BACKGROUND, 1024 * 2>;
 BackgroundTask backgroundTask{"background"};
+
+using SafetyTask = AsyncAdapter::Task<TASK_SAFETY, 1024 * 2>;
+SafetyTask safetyTask{"safety"};
 
 AsyncContextHook contextHook{runtimeMonitor};
 

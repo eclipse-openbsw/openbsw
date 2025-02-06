@@ -165,6 +165,14 @@ Eclipse OpenBSW is a trademark of the Eclipse Foundation.
 
 .. toctree::
     :maxdepth: 1
+    :caption: Safety Modules
+    :glob:
+    :hidden:
+
+    ../libs/safety/**/doc/index
+
+.. toctree::
+    :maxdepth: 1
     :caption: BSP Modules
     :glob:
     :hidden:

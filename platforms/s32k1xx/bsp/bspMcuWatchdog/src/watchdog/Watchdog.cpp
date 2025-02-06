@@ -7,6 +7,8 @@
 
 namespace bsp
 {
+uint32_t Watchdog::watchdogServiceCounter = 0;
+
 void Watchdog::enableWatchdog(
     uint32_t const timeout, bool const interruptActive, uint32_t const clockSpeed)
 {
@@ -54,6 +56,8 @@ void Watchdog::disableWatchdog()
 void Watchdog::serviceWatchdog()
 {
     ESR_UNUSED const interrupts::SuspendResumeAllInterruptsScopedLock lock;
+
+    watchdogServiceCounter++;
 
     WDOG->CNT = FEATURE_WDOG_TRIGGER_VALUE;
 }
@@ -122,5 +126,7 @@ void Watchdog::setUserMode()
         // wait until new configuration takes effect
     }
 }
+
+uint32_t Watchdog::getWatchdogServiceCounter() { return watchdogServiceCounter; }
 
 } // namespace bsp

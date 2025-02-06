@@ -26,6 +26,7 @@ enum
     TASK_DEMO,
     TASK_CAN,
     TASK_SYSADMIN,
+    TASK_SAFETY,
     // --------------------
     ASYNC_CONFIG_TASK_COUNT,
 };

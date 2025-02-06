@@ -59,6 +59,10 @@ if (PLATFORM_SUPPORT_IO)
     add_compile_definitions(PLATFORM_SUPPORT_IO=1)
 endif ()
 
+if (PLATFORM_SUPPORT_WATCHDOG)
+    add_compile_definitions(PLATFORM_SUPPORT_WATCHDOG=1)
+endif ()
+
 include(${OPENBSW_DIR}/Filelists.cmake)
 
 # Configure async and freeRtos libs depending on build type.
