@@ -88,7 +88,7 @@ The following comment styles are allowed:
         bool isValid(uint32_t id);
 
   - It is common to omit the *\\brief* tag. The first sentence until the first "." or empty line
-    is treated as brief decription.
+    is treated as brief description.
   - If you use tags, use the backslash style, not the at-sign style (*\\return* vs. *@return*).
   - It is also okay to skip the doxygen comment completely for methods whose functionality,
     parameters and return value are obvious due to the declaration.
@@ -113,7 +113,7 @@ This includes extracting inlined functions and choosing good names.
     class BadTimeout
     {
     public:
-        static const uint8_t MAX_TIMEOUT = 128U; // unit is miliseconds
+        static const uint8_t MAX_TIMEOUT = 128U; // unit is milliseconds
 
         // ...
     };

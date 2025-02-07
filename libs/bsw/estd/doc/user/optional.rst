@@ -69,6 +69,6 @@ The following example shows usage of ‘value_or()’ function:
 The following example shows usage of comparison operators in optional:
 
 .. literalinclude:: ../../examples/optional.cpp
-   :start-after: EXAMPLE_OPTIONAL_COMPARISION_OPERATORS_START
-   :end-before: EXAMPLE_OPTIONAL_COMPARISION_OPERATORS_END
+   :start-after: EXAMPLE_OPTIONAL_COMPARISON_OPERATORS_START
+   :end-before: EXAMPLE_OPTIONAL_COMPARISON_OPERATORS_END
    :language: c++

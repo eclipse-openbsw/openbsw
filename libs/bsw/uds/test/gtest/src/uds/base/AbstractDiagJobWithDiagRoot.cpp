@@ -94,7 +94,7 @@ public:
     using AbstractDiagJob::getDefaultDiagReturnCode;
     using AbstractDiagJob::getDiagSessionManager;
     using AbstractDiagJob::isFamily;
-    using AbstractDiagJob::setEnableSurpressPositiveResponse;
+    using AbstractDiagJob::setEnableSuppressPositiveResponse;
     using AbstractDiagJob::setNextJob;
 };
 

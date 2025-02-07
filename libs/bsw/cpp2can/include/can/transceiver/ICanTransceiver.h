@@ -70,7 +70,7 @@ public:
     ICanTransceiver& operator=(ICanTransceiver const&) = delete;
 
     /**
-     * All ErroCodes used by CanTransceivers
+     * All ErrorCodes used by CanTransceivers
      */
     enum class ErrorCode : uint8_t
     {
@@ -88,7 +88,7 @@ public:
         CAN_ERR_NO_MORE_LISTENERS_POSSIBLE,
         /** The requested baudrate is not supported */
         CAN_ERR_UNSUPPORTED_BAUDRATE,
-        /** Transceiver could not be initalized */
+        /** Transceiver could not be initialized */
         CAN_ERR_INIT_FAILED
     };
 
@@ -243,7 +243,7 @@ public:
      * This method might contains a critical section and uses Suspend-/ResumeOSInterrupts.
      *
      * \attention
-     * The filter of canFrameListener shall be merged into the tranceivers rx-filter.
+     * The filter of canFrameListener shall be merged into the transceivers rx-filter.
      * It must be configured before adding the listener!
      */
     virtual void addCANFrameListener(ICANFrameListener& listener) = 0;
@@ -302,7 +302,7 @@ public:
     /**
      * Sets the transceivers ICANTransceiverStateListener.
      * \param   pListener   ICANTransceiverStateListener to notify when an error
-     * occurrs.
+     * occurs.
      */
     virtual void setStateListener(ICANTransceiverStateListener& listener) = 0;
 

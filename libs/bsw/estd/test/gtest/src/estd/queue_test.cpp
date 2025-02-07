@@ -53,7 +53,7 @@ TEST(Queue, TestSizeOf)
     validateSize<40>(20, 44);
 }
 
-TEST(Queue, TestContructor)
+TEST(Queue, TestConstructor)
 {
     MAKE_QUEUE(int32_t, 10, q);
     ASSERT_TRUE(q.empty());

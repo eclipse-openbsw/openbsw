@@ -12,8 +12,8 @@ extern "C"
 using tCharIOApi = struct
 {
     void (*init)(void);
-    void (*setAsynchron)(void);
-    void (*setSynchron)(void);
+    void (*setAsynchronous)(void);
+    void (*setSynchronous)(void);
     int (*putc)(int c);
     int (*getc)(void);
     void (*Idle)(void);
@@ -38,12 +38,12 @@ int setCharIOApi2Default(void);
 /**
  * Make CharIO output asynchronous
  */
-void charIoSetAsynchron(void);
+void charIoSetAsynchronous(void);
 
 /**
  * Make CharIO output synchronous
  */
-void charIoSetSynchron(void);
+void charIoSetSynchronous(void);
 
 /**
  * CharIO idle task for asynchronous output

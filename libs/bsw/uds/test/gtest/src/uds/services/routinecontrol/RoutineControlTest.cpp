@@ -50,12 +50,12 @@ protected:
     static uint8_t const ROUTINE_CONTROL_SERVICE_ID = 0x31U;
     static uint8_t const WRONG_SERVICE_ID           = 0x22U;
     static uint8_t const START_ROUTINE              = 0x01U;
-    static uint8_t const ROUTINE_IDENTFIER[2U];
+    static uint8_t const ROUTINE_IDENTIFIER[2U];
 
     static uint16_t const RESPONSE_LENGTH = 0U;
 };
 
-uint8_t const RoutineControlTest::ROUTINE_IDENTFIER[] = {
+uint8_t const RoutineControlTest::ROUTINE_IDENTIFIER[] = {
     0x00U, // random value
     0x01U  // random value
 };
@@ -74,7 +74,7 @@ TEST_F(
     verify_which_is_called_by_execute_return_the_DiagReturnCode_OK_if_the_request_is_valid)
 {
     uint8_t const VALID_REQUEST[]
-        = {ROUTINE_CONTROL_SERVICE_ID, START_ROUTINE, ROUTINE_IDENTFIER[0], ROUTINE_IDENTFIER[1]};
+        = {ROUTINE_CONTROL_SERVICE_ID, START_ROUTINE, ROUTINE_IDENTIFIER[0], ROUTINE_IDENTIFIER[1]};
 
     TransportMessageWithBuffer pRequest(SOURCE_ID, TARGET_ID, VALID_REQUEST, RESPONSE_LENGTH);
 
@@ -96,7 +96,7 @@ TEST_F(
     verify_which_is_called_by_execute_return_ISO_INVALID_FORMAT_if_request_length_is_smaller_than_four)
 {
     uint8_t const INVALID_REQUEST[] = {
-        ROUTINE_CONTROL_SERVICE_ID, START_ROUTINE, ROUTINE_IDENTFIER[0]
+        ROUTINE_CONTROL_SERVICE_ID, START_ROUTINE, ROUTINE_IDENTIFIER[0]
         // routineIdentifier 2 is MISSING
     };
 
@@ -121,7 +121,7 @@ TEST_F(
     verify_which_is_called_by_execute_return_NOT_RESPONSIBLE_if_the_service_id_is_wrong)
 {
     uint8_t const INVALID_REQUEST[]
-        = {WRONG_SERVICE_ID, START_ROUTINE, ROUTINE_IDENTFIER[0], ROUTINE_IDENTFIER[1]};
+        = {WRONG_SERVICE_ID, START_ROUTINE, ROUTINE_IDENTIFIER[0], ROUTINE_IDENTIFIER[1]};
 
     TransportMessageWithBuffer pRequest(SOURCE_ID, TARGET_ID, INVALID_REQUEST, RESPONSE_LENGTH);
 

@@ -283,7 +283,7 @@ void ManagedOutgoingDiagConnection::responseProcessed()
     }
 }
 
-void ManagedOutgoingDiagConnection::timeoutOccured()
+void ManagedOutgoingDiagConnection::timeoutOccurred()
 {
     if ((nullptr != fpPendingResponses) && (fpPendingResponses->empty()))
     {

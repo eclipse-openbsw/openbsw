@@ -1,9 +1,9 @@
 .. _async_execution:
 
-Asynchonous execution
-=====================
+Asynchronous execution
+======================
 
-The asyncronous execution family consists of three functions:
+The asynchronous execution family consists of three functions:
 
 * ``async::execute()``
 * ``async::schedule()``

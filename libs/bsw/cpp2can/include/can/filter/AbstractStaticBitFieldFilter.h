@@ -88,7 +88,7 @@ public:
 
     /**
      * Get the byte at position byteIndex from the filter mask
-     * \param byteIndex index of byte to retreive
+     * \param byteIndex index of byte to retrieve
      */
     virtual uint8_t getMaskValue(uint16_t byteIndex) const = 0;
 

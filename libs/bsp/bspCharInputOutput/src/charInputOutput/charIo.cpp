@@ -11,8 +11,8 @@ namespace
  */
 tCharIOApi charIOApi
     = {&SerialLogger_init,
-       &SerialLogger_setAsynchron,
-       &SerialLogger_setSynchron,
+       &SerialLogger_setAsynchronous,
+       &SerialLogger_setSynchronous,
        &SerialLogger_putc,
        &SerialLogger_getc,
        &SerialLogger_Idle,
@@ -25,21 +25,21 @@ void setCharIOApi(tCharIOApi const* const api) { charIOApi = *api; }
 
 int setCharIOApi2Default()
 {
-    charIOApi.init         = &SerialLogger_init;
-    charIOApi.setAsynchron = &SerialLogger_setAsynchron;
-    charIOApi.setSynchron  = &SerialLogger_setSynchron;
-    charIOApi.putc         = &SerialLogger_putc;
-    charIOApi.getc         = &SerialLogger_getc;
-    charIOApi.Idle         = &SerialLogger_Idle;
-    charIOApi.__outchar    = &SerialLogger__outchar;
-    charIOApi.__inchar     = &SerialLogger__inchar;
+    charIOApi.init            = &SerialLogger_init;
+    charIOApi.setAsynchronous = &SerialLogger_setAsynchronous;
+    charIOApi.setSynchronous  = &SerialLogger_setSynchronous;
+    charIOApi.putc            = &SerialLogger_putc;
+    charIOApi.getc            = &SerialLogger_getc;
+    charIOApi.Idle            = &SerialLogger_Idle;
+    charIOApi.__outchar       = &SerialLogger__outchar;
+    charIOApi.__inchar        = &SerialLogger__inchar;
     charIOApi.init();
     return 1;
 }
 
-void charIoSetAsynchron() { charIOApi.setAsynchron(); }
+void charIoSetAsynchronous() { charIOApi.setAsynchronous(); }
 
-void charIoSetSynchron() { charIOApi.setSynchron(); }
+void charIoSetSynchronous() { charIOApi.setSynchronous(); }
 
 void charIoBackground() { charIOApi.Idle(); }
 

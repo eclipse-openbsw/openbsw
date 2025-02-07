@@ -1,7 +1,7 @@
 .. _synch_mechanisms:
 
-Synchrnonization mechanisms
-===========================
+Synchronization mechanisms
+==========================
 
 The synchronization mechanisms allow synchronization of threads and ensure secure sections.
 

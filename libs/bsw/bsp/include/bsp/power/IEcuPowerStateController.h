@@ -59,7 +59,7 @@ public:
      *                      the current HW wakeup reason vector will be passed as parameter;
      *                      in order to trigger a wakeup it must return "true"
      *
-     * \return HW wakeup reason vector (an "or" of all HW wakeup reasons which occured during
+     * \return HW wakeup reason vector (an "or" of all HW wakeup reasons which occurred during
      * sleep)
      */
     virtual uint32_t powerDown(uint8_t mode, tCheckWakeupDelegate delegate) = 0;

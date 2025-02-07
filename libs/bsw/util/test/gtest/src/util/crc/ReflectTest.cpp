@@ -15,7 +15,7 @@ TEST(Reflect, false_uint8_t)
     EXPECT_EQ(expectedResult, Reflect<false>::apply(value));
 }
 
-TEST(Reflect, true_uint8_t_nibbles_are_swaped)
+TEST(Reflect, true_uint8_t_nibbles_are_swapped)
 {
     uint8_t const value          = 0xF0U;
     uint8_t const expectedResult = 0x0FU;
@@ -31,7 +31,7 @@ TEST(Reflect, false_uint16_t)
     EXPECT_EQ(expectedResult, Reflect<false>::apply(value));
 }
 
-TEST(Reflect, true_uint16_t_bytes_are_swaped)
+TEST(Reflect, true_uint16_t_bytes_are_swapped)
 {
     uint16_t const value          = 0xFF00U;
     uint16_t const expectedResult = 0x00FFU;

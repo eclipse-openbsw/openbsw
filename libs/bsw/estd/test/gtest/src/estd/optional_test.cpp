@@ -107,7 +107,7 @@ TEST(optional, can_be_copied_from_and_assigned_from_an_empty_other_optional)
     EXPECT_FALSE(b.has_value());
 }
 
-TEST(optional, can_be_constucted_with_a_value)
+TEST(optional, can_be_constructed_with_a_value)
 {
     ::estd::optional<int32_t> i(5);
     ASSERT_TRUE(i.has_value());

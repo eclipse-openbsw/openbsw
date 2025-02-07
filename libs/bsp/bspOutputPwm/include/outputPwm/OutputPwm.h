@@ -52,7 +52,7 @@ public:
     static uint8_t const outputPwmNumberAll    = _pwmChannelMax;
 
     /**
-     * setDynamicOuputClient
+     * setDynamicOutputClient
      * \param outputNumber see outputConfiguration
      * \param clientOutputNumber number inside from OutputClient
      * \param see IDynamicOutputClient

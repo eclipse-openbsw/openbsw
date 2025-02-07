@@ -3,7 +3,7 @@
 `util::memory`
 ==============
 
-Some utilities that allow working with memory, including lower-level bit operations and custumer memory management.
+Some utilities that allow working with memory, including lower-level bit operations and customer memory management.
 
 Bit Operations
 --------------

@@ -299,7 +299,7 @@ void IncomingDiagConnection::asyncSendNegativeResponse(
         {
             fNestedRequest->setPendingResponseSender(pSender);
             if (fNumPendingMessageProcessedCallbacks != 0U)
-            { // don't send ReponsePending while response is being sent
+            { // don't send ResponsePending while response is being sent
                 fResponsePendingIsPending = true;
             }
             else

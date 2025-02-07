@@ -44,7 +44,7 @@ public:
 
     static bool verify(
         int32_t constructors,
-        int32_t copys,
+        int32_t copies,
         int32_t moves,
         int32_t destructors,
         int32_t copyAssignments,

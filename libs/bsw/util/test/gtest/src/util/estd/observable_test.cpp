@@ -196,7 +196,7 @@ TEST(An_observable_object, more_complex_values_can_be_changed_using_transactions
 
 TEST(
     An_observable_object_transaction,
-    can_be_explicitly_commited_and_returns_true_if_a_notification_was_necessary)
+    can_be_explicitly_committed_and_returns_true_if_a_notification_was_necessary)
 {
     BoolObserver boolObserver1;
     bool_observable::observer o1(

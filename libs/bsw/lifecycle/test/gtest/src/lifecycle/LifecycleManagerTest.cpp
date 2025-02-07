@@ -93,7 +93,7 @@ TEST_F(LifecycleManagerTest, testCompleteLifecycle)
     EXPECT_TRUE(componentInfo2._isTransitionPending);
     EXPECT_EQ(ILifecycleComponent::Transition::Type::INIT, componentInfo2._lastTransition);
 
-    // expect level 1 to be run after initializion has been done
+    // expect level 1 to be run after initialization has been done
     EXPECT_CALL(*this, getTimestamp()).InSequence(seq).WillOnce(Return(200U));
     EXPECT_CALL(*this, getTimestamp()).InSequence(seq).WillOnce(Return(300U));
     callback2->transitionDone(_componentMock2);

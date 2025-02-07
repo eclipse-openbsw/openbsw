@@ -1,6 +1,6 @@
 // Copyright 2024 Accenture.
 
-// gtest conflics with some GCC versions
+// gtest conflicts with some GCC versions
 #define sprintf   GCC_UT_TEMP1
 #define vsprintf  GCC_UT_TEMP2
 #define snprintf  GCC_UT_TEMP3

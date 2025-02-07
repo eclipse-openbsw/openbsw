@@ -33,7 +33,7 @@ public:
      * \post getLowerBound() == MAX_ID
      * \post getUpperBound() == 0x0
      *
-     * Nothing wil be accepted by default
+     * Nothing will be accepted by default
      */
     IntervalFilter();
 

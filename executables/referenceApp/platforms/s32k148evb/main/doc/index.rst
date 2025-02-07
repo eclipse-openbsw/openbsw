@@ -12,7 +12,7 @@ The ``main`` module contains below sub-modules associated to S32k148:
 - startup : Startup code.
 - linker script file : Contains information about memory allocation
 - static BSP : system which controls BSP even before the lifecycle starts ("static")
-- Systems: system associcated to Board Support Package (BSP)
+- Systems: system associated to Board Support Package (BSP)
 
 See the user documentation for detailed information:
 

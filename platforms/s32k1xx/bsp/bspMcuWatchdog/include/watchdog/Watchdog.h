@@ -44,17 +44,17 @@ public:
      */
     static void serviceWatchdog();
     /**
-     * Start testing the low byte of the counter. If the test is successfull the WD will trigger an
+     * Start testing the low byte of the counter. If the test is successful the WD will trigger an
      * Ecu Reset
      */
     static void startFastTestLow();
     /**
-     * Start testing the high byte of the counter. If the test is successfull the WD will trigger an
+     * Start testing the high byte of the counter. If the test is successful the WD will trigger an
      * Ecu Reset
      */
     static void startFastTestHigh();
     /**
-     * After a successfull fast test the WD can be set in user mode where CS[TST]==01
+     * After a successful fast test the WD can be set in user mode where CS[TST]==01
      */
     static void setUserMode();
     /**

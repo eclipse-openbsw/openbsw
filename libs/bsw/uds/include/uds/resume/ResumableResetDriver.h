@@ -25,7 +25,7 @@ public:
     /**
      * Constructor.
      * \param lifecycleAdmin reference to lifecycle admin to perform shutdown
-     * \param conetxt
+     * \param context
      * \param persistence reference to persistence interface
      * \param resumeMessage message that can be used to create the resume request
      * \param resetTimeoutInMs delay in milliseconds before performing reset

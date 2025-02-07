@@ -7,4 +7,4 @@ User Documentation
     startup_sequence
     names_hooking
     asynchronous_execution
-    synchornization_mechanisms
+    synchronization_mechanisms

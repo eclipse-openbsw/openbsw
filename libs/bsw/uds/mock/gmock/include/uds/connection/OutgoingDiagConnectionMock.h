@@ -15,7 +15,7 @@ class OutgoingDiagConnectionMock : public OutgoingDiagConnection
 {
 public:
     MOCK_METHOD0(terminate, void());
-    MOCK_METHOD0(timeoutOccured, void());
+    MOCK_METHOD0(timeoutOccurred, void());
 };
 
 } // namespace uds

@@ -50,9 +50,9 @@ struct EntryBufferTest : ::testing::Test
 
     ~EntryBufferTest()
     {
-        for (auto const& fEntrie : fEntries)
+        for (auto const& fEntry : fEntries)
         {
-            delete[] fEntrie.data();
+            delete[] fEntry.data();
         }
     }
 

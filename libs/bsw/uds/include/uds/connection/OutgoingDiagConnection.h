@@ -71,7 +71,7 @@ public:
      * identifier that the connection considers in its verify() method when a
      * response arrives
      * \param suppressIncomingPendings    Flag to enable filtering of response
-     * pending respones. They will then not be given to any listening application.
+     * pending responses. They will then not be given to any listening application.
      * \return ErrorCode indication result of the send operation
      *          - OK: Successfully sent request
      *          - SEND_FAILED: An error occurred sending the request
@@ -149,7 +149,7 @@ protected:
      * Implemented in ManageOutgoingDiagConnection
      * Notifies the ManageOutgoingDiagConnection of the connection timeout
      */
-    virtual void timeoutOccured() = 0;
+    virtual void timeoutOccurred() = 0;
 
     /**
      * \return  CONNECTION_NOT_OPEN: Impossible to request timeout on a non

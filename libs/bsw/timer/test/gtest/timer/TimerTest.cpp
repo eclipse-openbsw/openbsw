@@ -171,7 +171,7 @@ TEST_F(TimerTest, can_handle_single_cyclic_timeout)
 
 TEST_F(
     TimerTest,
-    can_handle_multiple_timeouts_with_different_experation_registered_at_the_same_point_in_time_ordered)
+    can_handle_multiple_timeouts_with_different_expiration_registered_at_the_same_point_in_time_ordered)
 {
     setAndExpectTrigger(fTimer, fTimeoutMock1, 100);
     fTimer.set(fTimeoutMock2, 200, fNow);
@@ -206,7 +206,7 @@ TEST_F(
 
 TEST_F(
     TimerTest,
-    can_handle_multiple_timeouts_with_different_experation_registered_at_the_same_point_in_time_unordered_3_2_1)
+    can_handle_multiple_timeouts_with_different_expiration_registered_at_the_same_point_in_time_unordered_3_2_1)
 {
     setAndExpectTrigger(fTimer, fTimeoutMock1, 300);
     EXPECT_CALL(fAlarmMock, setAlarm(300));
@@ -241,7 +241,7 @@ TEST_F(
 }
 
 TEST_F(
-    TimerTest, can_handle_multiple_timeouts_with_the_same_experation_time_at_the_same_point_in_time)
+    TimerTest, can_handle_multiple_timeouts_with_the_same_expiration_time_at_the_same_point_in_time)
 {
     setAndExpectTrigger(fTimer, fTimeoutMock1, 300);
     EXPECT_CALL(fAlarmMock, setAlarm(300));
@@ -273,7 +273,7 @@ TEST_F(
 
 TEST_F(
     TimerTest,
-    can_handle_multiple_timeouts_with_the_same_experation_time_at_different_points_in_time)
+    can_handle_multiple_timeouts_with_the_same_expiration_time_at_different_points_in_time)
 {
     setAndExpectTrigger(fTimer, fTimeoutMock1, 300);
     EXPECT_CALL(fAlarmMock, setAlarm(300));
@@ -619,7 +619,7 @@ TEST_F(
     EXPECT_CALL(fAlarmMock, setAlarm(10));
     update(fTimer, fNow);
 
-    // simulate the blocking task by returing 50ms
+    // simulate the blocking task by returning 50ms
     fNow = 50U; // 50ms after overflow
 
     // inside the blocking task a cancel is called with a timeout which isn't in any list

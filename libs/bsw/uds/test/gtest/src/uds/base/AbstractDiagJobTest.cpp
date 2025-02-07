@@ -73,7 +73,7 @@ public:
     using AbstractDiagJob::getDefaultDiagReturnCode;
     using AbstractDiagJob::getDiagSessionManager;
     using AbstractDiagJob::isFamily;
-    using AbstractDiagJob::setEnableSurpressPositiveResponse;
+    using AbstractDiagJob::setEnableSuppressPositiveResponse;
     using AbstractDiagJob::setNextJob;
 };
 
@@ -242,9 +242,9 @@ TEST_F(AbstractDiagJobTest, remove_jobs_in_different_order_should_works_correctl
     fpDiagJobRoot.removeAbstractDiagJob(myJob5);
 }
 
-TEST_F(AbstractDiagJobTest, setEnableSurpressPositiveResponse)
+TEST_F(AbstractDiagJobTest, setEnableSuppressPositiveResponse)
 {
-    fTestableDiagJob.setEnableSurpressPositiveResponse(fTestableDiagJob);
+    fTestableDiagJob.setEnableSuppressPositiveResponse(fTestableDiagJob);
 }
 
 TEST_F(AbstractDiagJobTest, getDefaultDiagReturnCode)

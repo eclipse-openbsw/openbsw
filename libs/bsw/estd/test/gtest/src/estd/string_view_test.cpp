@@ -22,7 +22,7 @@ TEST(String_view, Size)
     ASSERT_EQ(5U, view.length());
 }
 
-TEST(String_view, ContstructorFromConstChar)
+TEST(String_view, ConstructorFromConstChar)
 {
     ::estd::string_view view("Hello");
 
@@ -33,7 +33,7 @@ TEST(String_view, ContstructorFromConstChar)
     ASSERT_EQ(5U, view.max_size());
 }
 
-TEST(String_view, ContstructorFromConstCharCount)
+TEST(String_view, ConstructorFromConstCharCount)
 {
     ::estd::string_view view("Hello", 3);
 

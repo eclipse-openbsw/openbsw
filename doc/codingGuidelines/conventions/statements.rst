@@ -123,7 +123,7 @@ Additionally, C and C++ code can interpret NULL differently which leads to incom
 **Use nullptr!**
 
 Modern code should use ``nullptr`` instead of ``0`` or ``NULL`` to maximize readability and
-prevent suprising overload resolution outcomes between pointer and integral types.
+prevent surprising overload resolution outcomes between pointer and integral types.
 
 .. code-block:: cpp
 
@@ -229,7 +229,7 @@ Critical Sections
 
 | Avoid critical sections if possible by design. Sometimes this is not feasible, e.g. when accessing
   shared HW resources.
-| In these cases use a lock meachnism with the RAII pattern:
+| In these cases use a lock mechanism with the RAII pattern:
 
 .. code-block:: cpp
 

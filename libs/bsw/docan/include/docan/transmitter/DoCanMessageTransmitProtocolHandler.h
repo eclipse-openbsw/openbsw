@@ -12,7 +12,7 @@ namespace docan
 {
 
 /**
- * Enumeration defining tranmission states.
+ * Enumeration defining transmission states.
  */
 enum class TransmitState : uint8_t
 {

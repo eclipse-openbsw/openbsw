@@ -85,7 +85,7 @@ TEST(DoCanNormalAddressingFilterTest, initOnlyValidEntries)
 }
 
 /*
- * A normal addressing filter can be constructed/initalized with some invalid entries as well, but
+ * A normal addressing filter can be constructed/initialized with some invalid entries as well, but
  * only at the end of the set of entries. The handling is to stop processing new entries as soon as
  * an invalid entry is found, and then to assert that all valid entries precede all invalid entries
  * in the set of entries

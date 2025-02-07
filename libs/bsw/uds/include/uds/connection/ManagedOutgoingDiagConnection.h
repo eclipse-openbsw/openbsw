@@ -82,7 +82,7 @@ public:
 
     void responseProcessed() override;
 
-    void timeoutOccured() override;
+    void timeoutOccurred() override;
 
 private:
     using TransportJobQueue = ::estd::queue<transport::TransportJob>;

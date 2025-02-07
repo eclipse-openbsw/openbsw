@@ -6,7 +6,7 @@ from udsoncan.exceptions import NegativeResponseException
 from helpers.helper_functions import hexlify, ByteCodec
 
 
-# Test: Checking positive repsonse for did f100
+# Test: Checking positive response for did f100
 def test_WDBI_F100(target_session):
     uds_client = target_session.uds_client()
     did = 0xF100
@@ -16,7 +16,7 @@ def test_WDBI_F100(target_session):
     assert hexlify(uds_client.send_request(req).get_payload()[0:3]) == "6e f1 00"
 
 
-# Test: Checking positive repsonse for did F190 (Writing 17 bytes of data)
+# Test: Checking positive response for did F190 (Writing 17 bytes of data)
 def test_WDBI_F190(target_session):
     uds_client = target_session.uds_client()
     did = 0xF190

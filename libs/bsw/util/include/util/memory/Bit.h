@@ -11,7 +11,7 @@ namespace memory
 {
 namespace internal
 {
-// This causes certain types to be handled exacly the same
+// This causes certain types to be handled exactly the same
 // clang-format off
     template<typename T> struct TypeMap {};
     template<> struct TypeMap<int8_t>             { using type = uint8_t; };

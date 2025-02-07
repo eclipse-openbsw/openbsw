@@ -14,7 +14,7 @@ def test_RDBI_valid_request(target_session):
     assert uds_client.send_request(req).get_payload()[0] == 0x62
 
 
-# Test: Checking positive repsonse for did F186
+# Test: Checking positive response for did F186
 def test_RDBI_CF01(target_session):
     assert target_session.capserial().wait_for_boot_complete()
 
@@ -28,7 +28,7 @@ def test_RDBI_CF01(target_session):
     )
 
 
-# Test: Checking positive repsonse for did F102
+# Test: Checking positive response for did F102
 def test_RDBI_cf02(target_session):
     assert target_session.capserial().wait_for_boot_complete()
 

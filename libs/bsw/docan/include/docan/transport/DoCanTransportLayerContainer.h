@@ -36,7 +36,7 @@ public:
     explicit DoCanTransportLayerContainer(TransportLayerVectorType& layers);
 
     /**
-     * Alocate a transport layer
+     * Allocate a transport layer
      * \return constructor for the transport layer
      */
     ::estd::constructor<TransportLayerType> createTransportLayer();

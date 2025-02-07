@@ -56,7 +56,7 @@ public:
      * Requests change to default session
      * \return change successful
      * - true possible
-     * - fale current session does not permit transistion
+     * - fale current session does not permit transition
      */
     virtual void resetToDefaultSession() = 0;
 

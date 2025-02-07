@@ -374,7 +374,7 @@ protected:
         fSuppressPositiveResponseBitEnabled = set;
     }
 
-    inline void setEnableSurpressPositiveResponse(AbstractDiagJob& job) const
+    inline void setEnableSuppressPositiveResponse(AbstractDiagJob& job) const
     {
         job.fSuppressPositiveResponseBitEnabled = fSuppressPositiveResponseBitEnabled;
     }

@@ -73,7 +73,7 @@ describes Eclipse OpenBSW in detail and provides simple setup guides to build an
 
 ## Contributing
 
-It is expected that this respository will be used as a starting point for many custom developments.
+It is expected that this repository will be used as a starting point for many custom developments.
 You may wish to contribute back some of your work to this repository.
 For more details see [CONTRIBUTING](CONTRIBUTING.md).
 

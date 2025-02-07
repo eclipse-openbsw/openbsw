@@ -132,7 +132,7 @@ public:
     /**
      * Sets the transceivers ICANTransceiverStateListener.
      * \param    pListener    ICANTransceiverStateListener to notify when an error
-     * occurrs. 0L if no class needs to be notified.
+     * occurs. 0L if no class needs to be notified.
      */
     void setStateListener(ICANTransceiverStateListener& listener) override
     {

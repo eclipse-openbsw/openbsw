@@ -154,7 +154,7 @@ TEST_F(FunctionExecutionMonitorTest, testFunctionExecutionPointMacro)
     Mock::VerifyAndClearExpectations(&_runtimeMonitorMock);
 }
 
-TEST_F(FunctionExecutionMonitorTest, testTakeSnaphsot)
+TEST_F(FunctionExecutionMonitorTest, testTakeSnapshot)
 {
     TestFunctionExecutionMonitorType::Point point("point1");
     EXPECT_EQ(0U, point._entry._value);

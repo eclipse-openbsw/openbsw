@@ -19,7 +19,7 @@ class ProcessRunner():
     contain shell instructions like redirection of stdio
     and any further child processes started by command_line will
     all have the same process group ID, and thus SIGTERM can be
-    sent to all child processses if the option "kill_at_end" is used.
+    sent to all child processes if the option "kill_at_end" is used.
     """
 
     def __init__(self, target_name, **kwargs):

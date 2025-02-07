@@ -4,14 +4,14 @@ User Documentation
 Overview
 --------
 
-The **util** module is a collection of various utilities and redy-to-use
+The **util** module is a collection of various utilities and ready-to-use
 solutions that may be directly integrated in the client code as **util**
 library, including :ref:`commands <util_command>` for terminal,
 :ref:`CRC <util_crc>` algorithms, :ref:`estd extensions <util_estd>`,
 :ref:`logging commands <util_logger>`, :ref:`memory manipulation
 <util_memory>`, user managed memory, :ref:`streaming utilities
 <util_stream>`, and :ref:`string wrapper <util_string>`. The **util**
-module is intensively used throught the project by other modules or
+module is intensively used throughout the project by other modules or
 application code and is subject to update and expansion.
 
 Submodules

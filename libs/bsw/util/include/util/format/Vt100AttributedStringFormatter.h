@@ -37,7 +37,7 @@ namespace format
  * - "string"
  * - VT100-Codes for switching off bold formatting and changing text color to yellow
  * - " attributes"
- * - VT100-Codes for reseting text color to default
+ * - VT100-Codes for resetting text color to default
  */
 class Vt100AttributedStringFormatter
 {

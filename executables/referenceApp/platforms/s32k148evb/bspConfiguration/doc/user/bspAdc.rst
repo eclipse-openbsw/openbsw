@@ -77,7 +77,7 @@ Example
     }
 
 This code snippet placed in the demo system could read the ADC value and store the scaled data in the
-variable `value` wth the context menu.
+variable `value` in the context menu.
 
 As per the demo, ADC channel is configured to read a value from internal potentiometer
 (``ADC0 - Channel_28``) available in the evaluation board. The value is then scaled to

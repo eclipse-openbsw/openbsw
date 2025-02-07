@@ -12,7 +12,7 @@
 namespace async
 {
 /**
- * This is a template class that acts as collecion (linked list)
+ * This is a template class that acts as collection (linked list)
  * of Tasks to be added to the FreeRTOS system.
  *
  * \tparam T The underlying implementing execute function.

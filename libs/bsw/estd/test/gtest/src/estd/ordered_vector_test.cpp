@@ -315,7 +315,7 @@ TEST(OrderedVector, TestRemoveIf)
     ASSERT_EQ(3, iter->tag());
 }
 
-TEST(OrderedVector, TestRemoveIf_SuccedingElements)
+TEST(OrderedVector, TestRemoveIf_SucceedingElements)
 {
     ::estd::declare::ordered_vector<int32_t, 10> a;
 

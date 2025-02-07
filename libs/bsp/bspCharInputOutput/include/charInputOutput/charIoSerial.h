@@ -9,8 +9,8 @@ extern "C"
 /*
  * Make logging synchronous or asynchronous
  */
-void SerialLogger_setAsynchron(void);
-void SerialLogger_setSynchron(void);
+void SerialLogger_setAsynchronous(void);
+void SerialLogger_setSynchronous(void);
 
 void SerialLogger_init(void);
 

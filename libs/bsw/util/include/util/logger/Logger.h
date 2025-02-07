@@ -51,7 +51,7 @@ class ILoggerOutput;
  * handling of the messages. Whenever a module wants to provide log messages it can emit
  * the messages of a specified severity (level) by using the static methods of this class.
  * The messages are then handled in an application-defined manner by delegation to interface
- * implementations. If the Logger isn't initalized by an application all calls to any of
+ * implementations. If the Logger isn't initialized by an application all calls to any of
  * the log-methods will simply be ignored or will indicate disabled logging.
  */
 class Logger
