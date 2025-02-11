@@ -63,7 +63,7 @@ include(${OPENBSW_DIR}/Filelists.cmake)
 
 # Configure async and freeRtos libs depending on build type.
 add_library(asyncPlatform ALIAS asyncFreeRtos)
-add_library(os::freeRtos ALIAS freeRtos)
+add_library(osFreeRtos ALIAS freeRtos)
 
 if (BUILD_TARGET_PLATFORM STREQUAL "POSIX")
     add_subdirectory(platforms/posix)
