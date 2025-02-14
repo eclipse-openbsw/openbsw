@@ -151,11 +151,12 @@ public:
     {
 #ifdef PLATFORM_SUPPORT_MPU
         return ((IP_MPU->CESR & (MPU_CESR_NRGD_MASK | MPU_CESR_VLD_MASK)) == 0x01U);
-#endif
+#else
         return false;
+#endif
     }
 
-    static void setDescriptor(uint8_t const slot, tDescriptor const& d)
+    static void setDescriptor(size_t const slot, tDescriptor const& d)
     {
 #ifdef PLATFORM_SUPPORT_MPU
         IP_MPU->RGD[slot].WORD0 = d.startAdress;

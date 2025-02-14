@@ -38,20 +38,22 @@ static const Mpu::tDescriptor memoryProtectionConfigurationRam[] = {
 
 void MemoryProtection::init()
 {
-    // clang-format off
     Mpu::globalDisable();
+    // clang-format off
     Mpu::setWordInDescriptor<0U, RegionDescriptor_AccessControl,
         safety::mpuWord2<Mpu::R, Mpu::W, Mpu::R, Mpu::W, Mpu::R, Mpu::W, Mpu::R, Mpu::W,
             Mpu::SM_RWX, Mpu::UM_RWX, Mpu::SM_RWX, Mpu::UM_RWX,
             Mpu::nPI, Mpu::SM_UserMode, Mpu::UM_RWX,
             Mpu::nPI, Mpu::SM_UserMode, Mpu::UM_nXnWnR>::word>();
+    // clang-format on
 #ifdef PLATFORM_SUPPORT_MPU
-    for (uint8_t i = 0U; i < ((sizeof(memoryProtectionConfigurationRam)) / (sizeof(Mpu::tDescriptor))); ++i)
+    for (size_t i = 0U;
+         i < ((sizeof(memoryProtectionConfigurationRam)) / (sizeof(Mpu::tDescriptor)));
+         ++i)
     {
-        Mpu::setDescriptor(i + 1U, (const Mpu::tDescriptor&)memoryProtectionConfigurationRam[i]);
+        Mpu::setDescriptor(i + 1U, (Mpu::tDescriptor const&)memoryProtectionConfigurationRam[i]);
     }
 #endif
-    // clang-format on
     Mpu::globalEnable();
 }
 
