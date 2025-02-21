@@ -65,11 +65,11 @@ jobs:
 
           #Badges
           LinePercentage=\$(lcov --summary cmake-build-unit-tests/coverage.info | grep 'lines' | awk '{print \$2}') &&
-          echo \"Line Percentage: \$LinePercentage\"  # Debug print &&
+          echo \"Line Percentage: \$LinePercentage\" &&
           wget \"https://img.shields.io/badge/coverage-\${LinePercentage}25-brightgreen.svg\" -O line_coverage_badge.svg &&
 
           FunctionPercentage=\$(lcov --summary cmake-build-unit-tests/coverage.info | grep 'functions' | awk '{print \$2}') &&
-          echo \"Function Percentage: \$FunctionPercentage\"  # Debug print &&
+          echo \"Function Percentage: \$FunctionPercentage\" &&
           wget \"https://img.shields.io/badge/coverage-\${FunctionPercentage}25-brightgreen.svg\" -O function_coverage_badge.svg &&
 
           mkdir coverage_badges &&
