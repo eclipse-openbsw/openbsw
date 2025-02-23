@@ -101,8 +101,8 @@ void SafeSupervisor::handle(Event const& event)
         {
             Logger::warn(
                 SAFETY,
-                "SafeSupervisor: Received unknown event with ID %s",
-                ::estd::to_underlying(event));
+                "SafeSupervisor: Received unknown event with ID %d",
+                static_cast<int>(::estd::to_underlying(event)));
             // TODO: write event id (int) to no-init ram as unknown error
             break;
         }
