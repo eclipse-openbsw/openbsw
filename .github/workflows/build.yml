@@ -46,6 +46,7 @@ jobs:
       - name: Configure CMake for POSIX
         if: ${{ startsWith(matrix.platform, 'posix') && steps.cache-cmake.outputs.cache-hit != 'true' }}
         run: |
+          rm -rf cmake-build-posix
           cmake \
           -B cmake-build-posix \
           -S executables/referenceApp \
@@ -54,6 +55,7 @@ jobs:
       - name: Configure CMake for S32K148
         if: ${{ matrix.platform == 's32k148' && steps.cache-cmake.outputs.cache-hit != 'true' }}
         run: |
+          rm -rf cmake-build-s32k148
           cmake \
           -B cmake-build-s32k148 \
           -S executables/referenceApp \
