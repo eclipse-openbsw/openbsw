@@ -64,6 +64,9 @@ DoCanSystem::DoCanSystem(
     setTransitionContext(asyncContext);
 }
 
+/**
+ * Creates transport layers using the source and destination addresses.
+ */
 void DoCanSystem::initLayer()
 {
     auto& transceiver = *_canSystem.getCanTransceiver(::busid::CAN_0);
@@ -94,6 +97,9 @@ void DoCanSystem::init()
     transitionDone();
 }
 
+/**
+ * Adds transport layers as a routing target into interface transport system
+ */
 void DoCanSystem::run()
 {
     for (auto& layer : _transportLayers.getTransportLayers())
@@ -108,6 +114,9 @@ void DoCanSystem::run()
     transitionDone();
 }
 
+/**
+ * Removes the transport layers and stops running the docan stack
+ */
 void DoCanSystem::shutdown()
 {
     _cyclicTimeout.cancel();
