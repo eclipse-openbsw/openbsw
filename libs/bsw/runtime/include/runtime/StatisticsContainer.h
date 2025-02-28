@@ -24,6 +24,8 @@ public:
     class Iterator : public StatisticsIterator<Statistics>
     {
     public:
+        Iterator(Iterator const&) = default;
+
         Iterator(
             StatisticsContainer<Statistics, Entry>::GetNameType const getName,
             ConstEntrySliceType const& entries)
