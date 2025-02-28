@@ -61,8 +61,8 @@ struct ConsoleEntryOutputTest
 TEST_F(ConsoleEntryOutputTest, testAll)
 {
     ConsoleEntryOutput<uint32_t, uint32_t> cut(*this);
-    ComponentInfo::PlainInfo const componentInfo = {{"Component_Name"}};
-    LevelInfo::PlainInfo const levelInfo         = {{"Level_Name"}};
+    ComponentInfo::PlainInfo const componentInfo = {{"Component_Name", {}}};
+    LevelInfo::PlainInfo const levelInfo         = {{"Level_Name", {}}, {}};
     cut.outputEntry(
         15,
         15343,

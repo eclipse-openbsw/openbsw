@@ -75,6 +75,8 @@ TEST_F(EntryBufferTest, testEntryRefConstructorAndAssignment)
         entryBuffer.getNextEntry(readArray, src);
         {
             EntryBuffer<>::EntryRef cut(src);
+            ASSERT_EQ(cut.getIndex(), src.getIndex());
+            ASSERT_EQ(cut.getReadPointer(), src.getReadPointer());
         }
         {
             EntryBuffer<>::EntryRef cut;

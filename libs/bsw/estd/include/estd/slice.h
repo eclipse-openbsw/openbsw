@@ -145,7 +145,8 @@ public:
         static_assert(Size <= OtherSize, "static slice size");
     }
 
-    constexpr slice(slice const& other) : _data(other.data()) {}
+    constexpr slice(slice const&)  = default;
+    slice& operator=(slice const&) = default;
 
     /**
      * Empty destructor to work around a diab bug

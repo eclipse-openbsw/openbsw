@@ -45,7 +45,7 @@ TEST_F(DefaultEntryFormatterTest, testAll)
     DefaultEntryFormatter<> cut(*this);
     util::stream::declare::StringBufferOutputStream<200> outputStream;
     ComponentInfo::PlainInfo const componentInfo = {{"Component_Name", {util::format::Color::RED}}};
-    LevelInfo::PlainInfo const levelInfo         = {{"Level_Name", {util::format::Color::BLUE}}};
+    LevelInfo::PlainInfo const levelInfo = {{"Level_Name", {util::format::Color::BLUE}}, {}};
     cut.formatEntry(
         outputStream,
         15,

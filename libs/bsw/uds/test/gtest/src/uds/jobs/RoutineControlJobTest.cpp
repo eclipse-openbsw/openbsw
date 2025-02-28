@@ -59,7 +59,7 @@ public:
 
     uint8_t getRequestLength() const { return RoutineControlJob::getRequestLength(); }
 
-    virtual DiagReturnCode::Type verify(uint8_t const request[], uint16_t requestLength)
+    DiagReturnCode::Type verify(uint8_t const request[], uint16_t requestLength) override
     {
         return RoutineControlJob::verify(request, requestLength);
     }

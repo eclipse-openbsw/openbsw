@@ -8,6 +8,8 @@
 
 #include <gtest/gtest.h>
 
+#pragma GCC diagnostic ignored "-Wunused-variable"
+
 // clang-format off
 namespace
 {

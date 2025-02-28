@@ -201,7 +201,7 @@ TEST_F(EntrySerializerTest, testPrintfDatatypes)
             (char const*)nullptr));
     ASSERT_EQ(
         "124:2:3:12345678",
-        serializeAndDeserialize(300, 124, 2, 3, "%p", (char const*)nullptr + 0x12345678));
+        serializeAndDeserialize(300, 124, 2, 3, "%p", reinterpret_cast<char const*>(0x12345678)));
     ASSERT_EQ("124:2:3:", serializeAndDeserialize(300, 124, 2, 3, "%n", 0));
     ASSERT_EQ("124:2:3:    0017", serializeAndDeserialize(300, 124, 2, 3, "%*.*d", 8, 4, 17));
 }

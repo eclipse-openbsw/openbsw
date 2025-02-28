@@ -43,7 +43,11 @@ class LogicalAddressConverter
 public:
     static uint16_t convertDoipAddressTo8Bit(uint16_t const address)
     {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpragmas"
+#pragma GCC diagnostic ignored "-Wundefined-var-template"
         for (auto& l : TESTER_ADDRESS_LISTS)
+#pragma GCC diagnostic pop
         {
             auto ret = addressfinder::findDoipAddressInSlice(address, l);
             if (ret.has_value())

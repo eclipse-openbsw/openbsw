@@ -27,11 +27,15 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/admin/cmake")
 option(BUILD_UNIT_TESTS "Build unit tests" OFF)
 
 add_compile_options(
-    "$<$<COMPILE_LANG_AND_ID:CXX,Clang,GNU>:-O2;-g3;-Werror;-Wall;-Wvla;-Woverloaded-virtual>"
+    "$<$<COMPILE_LANG_AND_ID:CXX,Clang,GNU>:-O2;-g3;-Werror;-Wall;-Wextra;-Wvla>"
+    # todo: enforce -Wunused-parameter
+    "$<$<COMPILE_LANG_AND_ID:CXX,Clang,GNU>:-Wno-error=unused-parameter>"
+    # note: the below warnings are often false positive
+    "$<$<COMPILE_LANG_AND_ID:CXX,GNU>:-Wno-error=stringop-overflow;-Wno-error=maybe-uninitialized>"
 )
 
 add_compile_options(
-    "$<$<COMPILE_LANG_AND_ID:C,Clang,GNU>:-O2;-g3;-Werror;-Wall>")
+    "$<$<COMPILE_LANG_AND_ID:C,Clang,GNU>:-O2;-g3;-Werror;-Wall;-Wextra>")
 
 if (BUILD_UNIT_TESTS)
     add_compile_definitions(UNIT_TEST=1)

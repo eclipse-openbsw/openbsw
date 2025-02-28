@@ -82,8 +82,8 @@ TEST_F(SharedStreamEntryOutputTest, testAll)
 {
     SharedOutputStreamMock streamMock;
     SharedStreamEntryOutput<uint32_t, uint32_t> cut(streamMock, *this);
-    ComponentInfo::PlainInfo const componentInfo = {{"Component_Name"}};
-    LevelInfo::PlainInfo const levelInfo         = {{"Level_Name"}};
+    ComponentInfo::PlainInfo const componentInfo = {{"Component_Name", {}}};
+    LevelInfo::PlainInfo const levelInfo         = {{"Level_Name", {}}, {}};
     cut.outputEntry(
         15,
         15343,

@@ -7,6 +7,9 @@
 
 #include <gtest/gtest.h>
 
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"
+#pragma clang diagnostic ignored "-Wunused-private-field"
+
 namespace
 {
 void example_construction()

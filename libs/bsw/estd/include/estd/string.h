@@ -160,6 +160,7 @@ class string
 public:
     static constexpr size_t npos = ::estd::numeric_limits<size_t>::max;
 
+    string(string const&) = default;
     /**
      * Copies the data from other to this string, replacing any data already in
      * this string. This function requires that there is room to copy the contents

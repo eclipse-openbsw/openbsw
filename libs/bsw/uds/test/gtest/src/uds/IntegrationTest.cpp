@@ -153,7 +153,7 @@ public:
         // nothing to do, we don't expect responses
     }
 
-    virtual void requestSent(OutgoingDiagConnection& connection, RequestSendResult result) {}
+    void requestSent(OutgoingDiagConnection& connection, RequestSendResult result) override {}
 
 private:
     ::uds::ErrorCode sendEcuResetService(uint8_t subService, uint8_t targetId)
@@ -202,7 +202,6 @@ protected:
     static uint8_t const ECU_UDS_ADDRESS           = 0x10;
     static uint8_t const NUM_INCOMING_CONNECTIONS  = 1;
     static uint8_t const NUM_OUTGOING_CONNECTIONS  = 2;
-    static uint8_t const MAX_NUM_INCOMING_MESSAGES = 10;
 
     static uint8_t const ECU_RESET        = 0x11U;
     static uint8_t const HARD_RESET       = 0x01U;

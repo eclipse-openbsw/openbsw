@@ -83,7 +83,11 @@ TEST(CANFrameTest, Equality)
     }
 
     // test same
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpragmas"
+#pragma GCC diagnostic ignored "-Wself-assign-overloaded"
     frame1 = frame1;
+#pragma GCC diagnostic pop
 
     // test different payload length values
     uint8_t payload[CANFrame::MAX_FRAME_LENGTH] = {0, 1, 2, 3, 4, 5, 6, 7};

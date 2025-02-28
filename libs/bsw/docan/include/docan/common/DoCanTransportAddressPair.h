@@ -18,6 +18,7 @@ public:
 
     DoCanTransportAddressPair();
     DoCanTransportAddressPair(AddressType sourceId, AddressType targetId);
+    DoCanTransportAddressPair(DoCanTransportAddressPair const&) = default;
 
     bool isValid() const;
 

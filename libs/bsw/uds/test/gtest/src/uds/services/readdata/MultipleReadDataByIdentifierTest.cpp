@@ -196,8 +196,6 @@ protected:
     static uint8_t const INVALID_DATA_IDENTIFIER_1[2U];
     static uint8_t const INVALID_DATA_IDENTIFIER_2[2U];
 
-    static uint16_t const RESPONSE_LENGTH = 20U;
-
     static uint8_t const READ_DATA_BY_IDENTIFIER_REQUEST_1[3U];
     static uint8_t const READ_DATA_BY_IDENTIFIER_REQUEST_2[3U];
 };

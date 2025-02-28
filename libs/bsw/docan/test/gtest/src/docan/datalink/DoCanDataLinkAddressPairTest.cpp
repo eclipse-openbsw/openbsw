@@ -41,7 +41,11 @@ TEST(DoCanDataLinkAddressPairTest, testEqOperator)
     // Test assigning itself:
     // This assignment is included in this test so a UB sanitizer can catch the UB if
     // self-assignment does occur
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpragmas"
+#pragma GCC diagnostic ignored "-Wself-assign-overloaded"
     cut = cut;
+#pragma GCC diagnostic pop
 }
 
 TEST(DoCanDataLinkAddressPairTest, testComparison)

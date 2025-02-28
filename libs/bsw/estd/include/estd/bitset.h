@@ -61,6 +61,8 @@ public:
     class reference
     {
     public:
+        reference(reference const&) = default;
+
         /**
          * Write the truth value represented by "rhs" to the bit.
          */
@@ -226,6 +228,8 @@ public:
     class reference
     {
     public:
+        reference(reference const&) = default;
+
         reference& operator=(bool) { return *this; }
 
         reference& operator=(reference const&) = default;
@@ -303,6 +307,8 @@ public:
     class reference
     {
     public:
+        reference(reference const&) = default;
+
         /**
          * Write the truth value represented by "rhs" to the bit.
          */

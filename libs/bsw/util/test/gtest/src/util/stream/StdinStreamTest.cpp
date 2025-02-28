@@ -9,7 +9,6 @@
 
 using namespace ::testing;
 namespace stream = ::util::stream;
-namespace util   = ::util;
 
 struct StdinStreamTest : Test
 {

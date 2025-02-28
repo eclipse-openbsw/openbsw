@@ -50,8 +50,6 @@ protected:
     static uint8_t const READ_DATA_BY_IDENTIFIER_SID = 0x22U;
     static uint8_t const WRONG_SERVICE_ID            = 0x31U;
     static uint8_t const DATA_IDENTIFIER[2U];
-
-    static uint16_t const RESPONSE_LENGTH = 0U;
 };
 
 uint8_t const ReadDataByIdentifierTest::DATA_IDENTIFIER[] = {

@@ -36,6 +36,7 @@ private:
 class RunnableType
 {
 public:
+    virtual ~RunnableType() = default;
     virtual void execute() = 0;
 };
 

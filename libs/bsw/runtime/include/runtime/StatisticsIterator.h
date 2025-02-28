@@ -27,6 +27,8 @@ public:
         moveToNext();
     }
 
+    StatisticsIterator(StatisticsIterator const&) = default;
+
     void next()
     {
         if (_currentIdx < _valueCount)

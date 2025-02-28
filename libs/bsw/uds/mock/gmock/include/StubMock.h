@@ -6,10 +6,10 @@
 class StubMock
 {
 protected:
-    bool stub;
+    bool stub{true};
 
 public:
-    StubMock(bool val = true) { val = true; }
+    StubMock(bool val = true) : stub{val} {}
 
     void setStub(bool val) { stub = val; }
 

@@ -78,9 +78,9 @@ public:
 struct DiagnosticSessionControlTest : ::testing::Test
 {
     DiagnosticSessionControlTest()
-    : fDiagnosticSessionControl(fUdsLifecycleConnector, _asyncContext, fSessionPersistence)
-    , fUdsLifecycleConnector()
+    : fUdsLifecycleConnector()
     , fSessionPersistence()
+    , fDiagnosticSessionControl(fUdsLifecycleConnector, _asyncContext, fSessionPersistence)
     , fIncomingDiagConnection(::async::CONTEXT_INVALID)
     , fDiagSessionChangedListener()
     {
@@ -97,17 +97,17 @@ struct DiagnosticSessionControlTest : ::testing::Test
         fDiagnosticSessionControl.removeDiagSessionListener(fDiagSessionChangedListener);
     }
 
-    TestableDiagnosticSessionControl fDiagnosticSessionControl;
+    ::async::ContextType _asyncContext{};
+    ::async::AsyncMock _asyncMock;
+
     StrictMock<UdsLifecycleConnectorMock> fUdsLifecycleConnector;
     StrictMock<SessionPersistenceMock> fSessionPersistence;
+    TestableDiagnosticSessionControl fDiagnosticSessionControl;
     IncomingDiagConnection fIncomingDiagConnection;
     StrictMock<DiagSessionChangedListenerMock> fDiagSessionChangedListener;
     transport::TransportMessage fResponseMessage;
 
     ::estd::array<uint8_t, 6> fRequestBuffer;
-
-    ::async::ContextType _asyncContext;
-    ::async::AsyncMock _asyncMock;
 };
 
 /**
