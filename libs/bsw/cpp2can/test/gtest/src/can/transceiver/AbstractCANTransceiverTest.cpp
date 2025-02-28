@@ -372,7 +372,7 @@ TEST_F(AbstractCANTransceiverTest, testNotifySentListeners)
 
     FilteredCANFrameSentListenerMock listener1;
     FilteredCANFrameSentListenerMock listener2;
-    transceiver.addCANFrameSentListener(listener1);
+
     transceiver.addCANFrameSentListener(listener1);
     transceiver.addCANFrameSentListener(listener2);
     EXPECT_CALL(listener1, canFrameSent(Ref(frame)));
@@ -382,11 +382,11 @@ TEST_F(AbstractCANTransceiverTest, testNotifySentListeners)
     EXPECT_EQ(150U, frame.timestamp());
 
     transceiver.removeCANFrameSentListener(listener1);
-    transceiver.removeCANFrameSentListener(listener1);
     EXPECT_CALL(listener2, canFrameSent(Ref(frame)));
     EXPECT_CALL(fSystemTimer, getSystemTimeUs32Bit()).WillOnce(Return(180U));
     transceiver.notifySentListeners(frame);
     EXPECT_EQ(180U, frame.timestamp());
+    transceiver.removeCANFrameSentListener(listener2);
 }
 
 TEST_F(AbstractCANTransceiverTest, testSetFrameSentListener)
