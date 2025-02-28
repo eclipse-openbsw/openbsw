@@ -2,6 +2,8 @@
 
 #include "estd/typed_mem.h"
 #include "systems/BspSystem.h"
+
+#include <cinttypes>
 #ifdef PLATFORM_SUPPORT_CAN
 #include "systems/CanSystem.h"
 #endif
@@ -101,7 +103,7 @@ int main()
     {
         safeSupervisor.watchdogStartupCheckMonitor.trigger();
     }
-    printf("main(RCM::SRS 0x%lx)\r\n", *reinterpret_cast<uint32_t volatile*>(0x4007F008));
+    printf("main(RCM::SRS 0x%" PRIx32 ")\r\n", *reinterpret_cast<uint32_t volatile*>(0x4007F008));
     app_main(); // entry point for the generic part
     return (1); // we never reach this point
 }
