@@ -275,8 +275,7 @@ CodecResult DoCanFrameCodec<DataLinkLayer>::decodeFirstFrame(
     if (checkFrameSize(payload, 3U, _config._firstFrameSize))
     {
         size_t const offset = _config._offset;
-        messageSize
-            = static_cast<MessageSizeType>(etl::be_uint16_t::at_address(&payload[offset]) & 0xFFFU);
+        messageSize = static_cast<MessageSizeType>(etl::be_uint16_t(&payload[offset]) & 0xFFFU);
         uint8_t dataStart        = 2U;
         consecutiveFrameDataSize = static_cast<FrameSizeType>(payload.size())
                                    - (static_cast<FrameSizeType>(offset) + 1U);
@@ -287,7 +286,7 @@ CodecResult DoCanFrameCodec<DataLinkLayer>::decodeFirstFrame(
                 return CodecResult::INVALID_FRAME_SIZE;
             }
             // Escape sequence, aka message size > 4095 up to uint32_t
-            uint32_t const escapedMessageSize = etl::be_uint32_t::at_address(&payload[offset + 2U]);
+            uint32_t const escapedMessageSize = etl::be_uint32_t(&payload[offset + 2U]);
 
             if ((escapedMessageSize <= ESCAPED_SEQ_MESSAGE_SIZE)
                 || (escapedMessageSize > ::etl::numeric_limits<MessageSizeType>::max()))
@@ -449,13 +448,13 @@ CodecResult DoCanFrameCodec<DataLinkLayer>::encodeDataFrame(
 
             if (pendingMessageSize <= ESCAPED_SEQ_MESSAGE_SIZE)
             {
-                etl::be_uint16_t::at_address(&payload[offset]) = pendingMessageSize & 0xFFFU;
+                etl::be_uint16_ext_t{&payload[offset]} = pendingMessageSize & 0xFFFU;
             }
             else
             {
-                payload[offset]                                     = 0U;
-                payload[offset + 1U]                                = 0U;
-                etl::be_uint32_t::at_address(&payload[offset + 2U]) = pendingMessageSize;
+                payload[offset]                             = 0U;
+                payload[offset + 1U]                        = 0U;
+                etl::be_uint32_ext_t{&payload[offset + 2U]} = pendingMessageSize;
 
                 destOffset += 4U;
                 consumedDataSize -= 4U;

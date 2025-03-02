@@ -283,10 +283,8 @@ uint8_t FlexCANDevice::enqueueRxFrame(
             can::CANFrame& frame{fRxQueue.emplace(CanId::id(id, extended))};
             frame.setTimestamp(getSystemTimeUs32Bit());
             frame.setPayloadLength(length);
-            etl::span<etl::be_uint32_t, 2> data{
-                &etl::be_uint32_t::at_address(frame.getPayload()), 2};
-            data[0] = payload[0];
-            data[1] = payload[1];
+            etl::be_uint32_ext_t{frame.getPayload()}                            = payload[0];
+            etl::be_uint32_ext_t{frame.getPayload() + sizeof(etl::be_uint32_t)} = payload[1];
             return 1;
         }
     }

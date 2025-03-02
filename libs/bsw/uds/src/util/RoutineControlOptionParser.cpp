@@ -33,16 +33,16 @@ RoutineControlOptionParser::parseParameter(uint8_t const* const buffer, uint8_t 
         }
         case 2U:
         {
-            return static_cast<uint32_t>(::etl::be_uint16_t::at_address(buffer));
+            return static_cast<uint32_t>(::etl::be_uint16_t(buffer));
         }
         case 3U:
         {
             return (static_cast<uint32_t>(*buffer) << 16)
-                   | static_cast<uint32_t>(::etl::be_uint16_t::at_address(buffer + 1));
+                   | static_cast<uint32_t>(::etl::be_uint16_t(buffer + 1));
         }
         case 4U:
         {
-            return ::etl::be_uint32_t::at_address(buffer);
+            return ::etl::be_uint32_t(buffer);
         }
         default:
         {

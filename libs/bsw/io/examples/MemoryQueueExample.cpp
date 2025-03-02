@@ -59,8 +59,8 @@ bool forwardCanFrame(::io::IWriter& writer)
         return false;
     }
     // The big endian 32bit id comes first in the serialization.
-    auto& id = etl::be_uint32_t::at_address(data.data());
-    data.advance(sizeof(id));
+    etl::be_uint32_ext_t id{data.data()};
+    data.advance(id.size());
     // We pass the slice data to the frame so that readCanFrame can read the data directly from
     // the hardware to the allocated memory.
     CanFrame frame;
@@ -121,7 +121,7 @@ bool forwardCanFrame(::io::IWriter& writer)
         return false;
     }
     // The big endian 32bit id comes first in the serialization.
-    etl::be_uint32_t::at_address(data.data()) = rxFrame.id;
+    etl::be_uint32_ext_t{data.data()} = rxFrame.id;
     data.advance(sizeof(etl::be_uint32_t));
     // Copy payload to allocated data.
     ::etl::copy(rxFrame.data, data);
@@ -149,7 +149,7 @@ bool receiveCanFrame(CanFrame& frame, ::io::IReader& reader)
         return false;
     }
     // Copy data to frame. We expect a big endian 32bit id followed by the actual data.
-    frame.id = etl::be_uint32_t::at_address(data.data());
+    frame.id = etl::be_uint32_t(data.data());
     data.advance(sizeof(etl::be_uint32_t));
     ::etl::copy(data, frame.data);
     frame.data = frame.data.first(data.size());
@@ -263,7 +263,7 @@ TEST(MemoryQueueExample, non_virtual_interface)
     {
         auto d = srcWriter.allocate(4);
         ASSERT_EQ(4, d.size());
-        ::etl::be_uint32_t::at_address(d.data()) = 0x1234;
+        ::etl::be_uint32_ext_t{d.data()} = 0x1234;
         srcWriter.commit();
     }
 
@@ -272,7 +272,7 @@ TEST(MemoryQueueExample, non_virtual_interface)
     {
         auto d = dstReader.peek();
         ASSERT_EQ(4, d.size());
-        ASSERT_EQ(0x1234, ::etl::be_uint32_t::at_address(d.data()));
+        ASSERT_EQ(0x1234, ::etl::be_uint32_t(d.data()));
     }
     // EXAMPLE_END WriterReader2
 }
@@ -327,7 +327,7 @@ TEST(MemoryQueueExample, virtual_interface)
     {
         auto d = srcWriter.allocate(4);
         ASSERT_EQ(4, d.size());
-        ::etl::be_uint32_t::at_address(d.data()) = 0x1234;
+        ::etl::be_uint32_ext_t{d.data()} = 0x1234;
         srcWriter.commit();
     }
 
@@ -336,7 +336,7 @@ TEST(MemoryQueueExample, virtual_interface)
     {
         auto d = dstReader.peek();
         ASSERT_EQ(4, d.size());
-        ASSERT_EQ(0x1234, ::etl::be_uint32_t::at_address(d.data()));
+        ASSERT_EQ(0x1234, ::etl::be_uint32_t(d.data()));
     }
     // EXAMPLE_END IWriterIReader2
 }

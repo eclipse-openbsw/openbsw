@@ -131,7 +131,7 @@ void ReadIdentifierFromNvStorage::onLengthNvReadJobFinished(
         return;
     }
 
-    _length = ::etl::be_uint32_t::at_address(_lengthBuffer);
+    _length = ::etl::be_uint32_t(_lengthBuffer);
 
     if (_posResponse->getMaximumLength() < _length)
     {

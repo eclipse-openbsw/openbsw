@@ -231,7 +231,7 @@ DiagReturnCode::Type CommunicationControl::process(
         {
             if (static_cast<uint8_t>(NORMAL_COMMUNICATION_MESSAGES) == communicationTypeLo)
             {
-                rcvNode = ::etl::be_uint16_t::at_address(&request[2]);
+                rcvNode = ::etl::be_uint16_t(&request[2]);
                 if (0U == fSubNodeIdDisabledTx)
                 {
                     if (notifySubListeners(
@@ -267,7 +267,7 @@ DiagReturnCode::Type CommunicationControl::process(
         {
             if (static_cast<uint8_t>(NORMAL_COMMUNICATION_MESSAGES) == communicationTypeLo)
             {
-                rcvNode = ::etl::be_uint16_t::at_address(&request[2]);
+                rcvNode = ::etl::be_uint16_t(&request[2]);
                 if (rcvNode == fSubNodeIdDisabledTx)
                 {
                     if (notifySubListeners(
