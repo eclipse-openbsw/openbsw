@@ -15,7 +15,7 @@ public:
 
 protected:
     DECLARE_COMMAND_GROUP_GET_INFO
-    virtual void executeCommand(class ::util::command::CommandContext& context, uint8_t idx);
+    void executeCommand(class ::util::command::CommandContext& context, uint8_t idx) override;
 };
 
 } // namespace bios

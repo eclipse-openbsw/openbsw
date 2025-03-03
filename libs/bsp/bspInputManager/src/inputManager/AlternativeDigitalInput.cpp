@@ -6,7 +6,10 @@ namespace bios
 {
 AlternativeDigitalInput::AlternativeDigitalInput()
 : state(), edge_neg(), edge_pos(), status_old(), reser(), debounced()
-{}
+{
+  // workaround clang warning -Wunused-private-field
+  static_cast<void>(reser);
+}
 
 /**
  * Init bios level DIGITAL

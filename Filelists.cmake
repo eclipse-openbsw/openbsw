@@ -33,6 +33,8 @@ add_compile_options(
 add_compile_options(
     "$<$<COMPILE_LANG_AND_ID:C,Clang,GNU>:-O2;-g3;-Werror;-Wall>")
 
+add_link_options(-Wl,--noinhibit-exec)
+
 if (BUILD_UNIT_TESTS)
     add_compile_definitions(UNIT_TEST=1)
     include(GoogleTest)

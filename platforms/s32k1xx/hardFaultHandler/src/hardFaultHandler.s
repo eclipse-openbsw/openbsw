@@ -64,22 +64,22 @@
 customHardFaultHandler:
 
     // Save flags for dump in advance
-    mrs     R12, PSR
+    mrs     R12, XPSR
 
     // Save PSR and LR
     ldr     R2, = DUMP_START
-    str     R12, [R2, DUMP_HANDLER_PSR]
-    str     LR,  [R2, DUMP_HANDLER_LR]
+    str     R12, [R2, #DUMP_HANDLER_PSR]
+    str     LR,  [R2, #DUMP_HANDLER_LR]
 
     // Save values of registers which are not framed
-    str     R4,  [R2, DUMP_ORIGIN_R4]
-    str     R5,  [R2, DUMP_ORIGIN_R5]
-    str     R6,  [R2, DUMP_ORIGIN_R6]
-    str     R7,  [R2, DUMP_ORIGIN_R7]
-    str     R8,  [R2, DUMP_ORIGIN_R8]
-    str     R9,  [R2, DUMP_ORIGIN_R9]
-    str     R10, [R2, DUMP_ORIGIN_R10]
-    str     R11, [R2, DUMP_ORIGIN_R11]
+    str     R4,  [R2, #DUMP_ORIGIN_R4]
+    str     R5,  [R2, #DUMP_ORIGIN_R5]
+    str     R6,  [R2, #DUMP_ORIGIN_R6]
+    str     R7,  [R2, #DUMP_ORIGIN_R7]
+    str     R8,  [R2, #DUMP_ORIGIN_R8]
+    str     R9,  [R2, #DUMP_ORIGIN_R9]
+    str     R10, [R2, #DUMP_ORIGIN_R10]
+    str     R11, [R2, #DUMP_ORIGIN_R11]
 
     // Analyze exception return code, calculate the value of SP which was
     // active at the moment of exception, and save it
@@ -88,25 +88,25 @@ customHardFaultHandler:
     mrseq   R1, MSP
     mrsne   R1, PSP
     add     R0, R1, FRAME_SIZE
-    str     R0, [R2, DUMP_ORIGIN_SP]
+    str     R0, [R2, #DUMP_ORIGIN_SP]
 
     // Save value of registers which are framed
-    ldr     R0, [R1, FRAME_R0]
-    str     R0, [R2, DUMP_ORIGIN_R0]
-    ldr     R0, [R1, FRAME_R1]
-    str     R0, [R2, DUMP_ORIGIN_R1]
-    ldr     R0, [R1, FRAME_R2]
-    str     R0, [R2, DUMP_ORIGIN_R2]
-    ldr     R0, [R1, FRAME_R3]
-    str     R0, [R2, DUMP_ORIGIN_R3]
-    ldr     R0, [R1, FRAME_R12]
-    str     R0, [R2, DUMP_ORIGIN_R12]
-    ldr     R0, [R1, FRAME_LR]
-    str     R0, [R2, DUMP_ORIGIN_LR]
-    ldr     R0, [R1, FRAME_PC]
-    str     R0, [R2, DUMP_ORIGIN_PC]
-    ldr     R0, [R1, FRAME_PSR]
-    str     R0, [R2, DUMP_ORIGIN_PSR]
+    ldr     R0, [R1, #FRAME_R0]
+    str     R0, [R2, #DUMP_ORIGIN_R0]
+    ldr     R0, [R1, #FRAME_R1]
+    str     R0, [R2, #DUMP_ORIGIN_R1]
+    ldr     R0, [R1, #FRAME_R2]
+    str     R0, [R2, #DUMP_ORIGIN_R2]
+    ldr     R0, [R1, #FRAME_R3]
+    str     R0, [R2, #DUMP_ORIGIN_R3]
+    ldr     R0, [R1, #FRAME_R12]
+    str     R0, [R2, #DUMP_ORIGIN_R12]
+    ldr     R0, [R1, #FRAME_LR]
+    str     R0, [R2, #DUMP_ORIGIN_LR]
+    ldr     R0, [R1, #FRAME_PC]
+    str     R0, [R2, #DUMP_ORIGIN_PC]
+    ldr     R0, [R1, #FRAME_PSR]
+    str     R0, [R2, #DUMP_ORIGIN_PSR]
 
     // Add some stack contents to dump
     add     R1, FRAME_SIZE

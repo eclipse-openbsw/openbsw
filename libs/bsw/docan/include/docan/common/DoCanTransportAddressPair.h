@@ -17,6 +17,7 @@ public:
     using AddressType = uint16_t;
 
     DoCanTransportAddressPair();
+    DoCanTransportAddressPair(DoCanTransportAddressPair const&) = default;
     DoCanTransportAddressPair(AddressType sourceId, AddressType targetId);
 
     bool isValid() const;

@@ -21,6 +21,8 @@ public:
 
     using GetNameType = ::estd::function<char const*(size_t)>;
 
+    StatisticsIterator(StatisticsIterator const&) = default;
+
     StatisticsIterator(GetNameType const getName, size_t const valueCount)
     : _getName(getName), _valueCount(valueCount)
     {

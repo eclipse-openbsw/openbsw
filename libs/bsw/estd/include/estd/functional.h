@@ -35,6 +35,8 @@ struct function<R(Ps...)>
 
     function(function const& o) = default;
 
+    function& operator=(function const&) = default;
+
     /**
      * Calls the underlying function object.
      *

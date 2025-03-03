@@ -39,14 +39,7 @@
 
 
 /*
- * LLVM/Clang Compiler
- */
-#elif defined ( __clang__ )
-  #include "cmsis_clang.h"
-
-
-/*
- * GNU Compiler
+ * GNU and LLVM/Clang Compiler
  */
 #elif defined ( __GNUC__ )
   #include "cmsis_gcc.h"

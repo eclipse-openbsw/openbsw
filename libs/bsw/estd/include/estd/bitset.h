@@ -226,6 +226,8 @@ public:
     class reference
     {
     public:
+        reference(reference const&) = default;
+
         reference& operator=(bool) { return *this; }
 
         reference& operator=(reference const&) = default;
