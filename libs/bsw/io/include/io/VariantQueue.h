@@ -3,13 +3,12 @@
 #ifndef GUARD_C512CEED_E256_4221_B8CB_BB6E8451A7C7
 #define GUARD_C512CEED_E256_4221_B8CB_BB6E8451A7C7
 
-#include <io/MemoryQueue.h>
-
 #include <etl/memory.h>
 #include <etl/span.h>
 #include <etl/type_list.h>
 #include <etl/type_traits.h>
 #include <etl/variant.h>
+#include <io/MemoryQueue.h>
 
 #include <cassert>
 #include <type_traits>
@@ -77,9 +76,7 @@ struct max_element_size<::etl::type_list<>>
 template<typename R>
 struct return_helper
 {
-    static R help()
-    {
-    }
+    static R help() {}
 };
 
 template<typename T>
@@ -96,7 +93,10 @@ template<>
 struct variant_ops<void>
 {
     template<typename Visitor, typename R>
-    static R call(uint8_t const* const, Visitor&) { return return_helper<R>::help(); }
+    static R call(uint8_t const* const, Visitor&)
+    {
+        return return_helper<R>::help();
+    }
 };
 } // namespace internal
 
@@ -180,7 +180,8 @@ private:
     static void write_header(T const& t, ::etl::span<uint8_t>& buffer)
     {
         static_assert(
-            ::etl::type_list_contains<TypeList, T>::value, "type must be a part of the variant type list");
+            ::etl::type_list_contains<TypeList, T>::value,
+            "type must be a part of the variant type list");
 
         buffer[0] = static_cast<uint8_t>(::etl::type_list_index_of<TypeList, T>::value);
         buffer.advance(1);
@@ -201,7 +202,8 @@ public:
     static void read_with_payload(Visitor& visitor, ::etl::span<uint8_t const> const data)
     {
         assert(data.size() != 0);
-        return variant_do<TypeList>::template call<Visitor, void>(data[0], data.subspan(1), visitor);
+        return variant_do<TypeList>::template call<Visitor, void>(
+            data[0], data.subspan(1), visitor);
     }
 
     template<typename T, typename Writer>
@@ -263,7 +265,8 @@ public:
     static T* alloc_header(Writer& w)
     {
         static_assert(
-            ::etl::type_list_contains<TypeList, T>::value, "type must be a part of the variant type list");
+            ::etl::type_list_contains<TypeList, T>::value,
+            "type must be a part of the variant type list");
 
         auto const buffer = w.allocate(sizeof(T) + 1);
         if (buffer.size() == 0)

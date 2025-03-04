@@ -1,8 +1,7 @@
 // Copyright 2024 Accenture.
 
-#include <io/VariantQueue.h>
-
 #include <etl/unaligned_type.h>
+#include <io/VariantQueue.h>
 
 #include <gtest/gtest.h>
 

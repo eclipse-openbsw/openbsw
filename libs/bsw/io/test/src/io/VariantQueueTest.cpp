@@ -78,8 +78,7 @@ TEST(VariantQueue, read_write_no_payload)
     Visit visitor;
 
     ASSERT_TRUE(abc_queue::write(writer, A{{0, 1, 2, 3, 4}}));
-    ASSERT_TRUE(abc_queue::write(
-        writer, B{::etl::be_uint16_t(3), ::etl::be_uint32_t(0xFAAF1253)}));
+    ASSERT_TRUE(abc_queue::write(writer, B{::etl::be_uint16_t(3), ::etl::be_uint32_t(0xFAAF1253)}));
     ASSERT_TRUE(abc_queue::write(writer, C{}));
     ASSERT_TRUE(abc_queue::write(writer, C{}));
     ASSERT_FALSE(abc_queue::write(writer, C{})); // out of space
@@ -116,7 +115,10 @@ TEST(VariantQueue, read_write_with_payload)
     ASSERT_TRUE(abc_queue::write(writer, A{{9, 8, 7, 6, 5}}, payload));
 
     ASSERT_TRUE(abc_queue::write(
-        writer, C{}, 15, [](::etl::span<uint8_t> buffer) { ::etl::mem_set(buffer.begin(), buffer.end(), 0xAB); }));
+        writer,
+        C{},
+        15,
+        [](::etl::span<uint8_t> buffer) { ::etl::mem_set(buffer.begin(), buffer.end(), 0xAB); }));
 
     ASSERT_FALSE(
         abc_queue::write(writer, C{}, 10, [](::etl::span<uint8_t> buffer) {})); // out of space
@@ -174,7 +176,8 @@ TEST(VariantQueue, manually_allocate_payload)
 
     auto a_payload = abc_queue::alloc_payload(writer, A{{9, 8, 7, 6, 5}}, sizeof(payload));
     ASSERT_NE(0, a_payload.size());
-    ::etl::copy<const uint8_t, 3, uint8_t, 3>(etl::span<const uint8_t>(payload), etl::span<uint8_t>(a_payload));
+    ::etl::copy<uint8_t const, 3, uint8_t, 3>(
+        etl::span<uint8_t const>(payload), etl::span<uint8_t>(a_payload));
     writer.commit();
 
     ASSERT_EQ(15U, abc_queue::alloc_payload(writer, C{}, 15).size());
