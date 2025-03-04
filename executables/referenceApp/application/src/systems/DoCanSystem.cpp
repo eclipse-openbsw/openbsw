@@ -13,8 +13,7 @@
 namespace
 {
 uint32_t const TIMEOUT_DOCAN_SYSTEM   = 10U;
-size_t const TICK_DELTA_TICKS         = 2U;   // Tick delta
-size_t const TICK_100MS               = 100U; // 100us ticks
+size_t const TICK_DELTA_TICKS         = 2U; // Tick delta
 uint16_t const ALLOCATE_TIMEOUT       = 1000U;
 uint16_t const RX_TIMEOUT             = 1000U;
 uint16_t const TX_CALLBACK_TIMEOUT    = 1000U;

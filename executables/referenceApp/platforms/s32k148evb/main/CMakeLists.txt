@@ -27,6 +27,9 @@ target_link_libraries(
             freeRtosCm4SysTick
             lifecycle
             startUp
+            watchdogManager
+            safeLifecycle
+            safeMemory
     PUBLIC bspInputManager bspOutputManager)
 
 add_library(osHooks src/osHooks.cpp)

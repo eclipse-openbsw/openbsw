@@ -58,6 +58,10 @@ public:
      */
     static void setUserMode();
     /**
+     * Returns the number of times the watchdog has been serviced
+     */
+    static uint32_t getWatchdogServiceCounter();
+    /**
      * Default timeout in milliseconds
      */
     static uint32_t const DEFAULT_TIMEOUT     = 500U;
@@ -68,6 +72,7 @@ public:
 
 private:
     static uint32_t const WATCHDOG_DISABLE = 0x00002924U;
+    static uint32_t watchdogServiceCounter;
 };
 
 } // namespace bsp

@@ -1,0 +1,41 @@
+FROM ubuntu:22.04
+
+RUN apt-get update && apt-get install -y \
+    python3.10 \
+    python3-pip \
+    bzip2\
+    tar \
+    clang-tidy \
+    wget \
+    curl \
+    git \
+    gcc-11 \
+    g++-11\
+    lcov\
+    && rm -rf /var/lib/apt/lists/*
+
+RUN wget https://github.com/Kitware/CMake/releases/download/v3.22.5/cmake-3.22.5-linux-x86_64.sh \
+    && chmod +x cmake-3.22.5-linux-x86_64.sh \
+    && ./cmake-3.22.5-linux-x86_64.sh --skip-license --prefix=/usr/local \
+    && rm cmake-3.22.5-linux-x86_64.sh
+
+RUN wget https://developer.arm.com/-/media/Files/downloads/gnu-rm/10.3-2021.10/gcc-arm-none-eabi-10.3-2021.10-x86_64-linux.tar.bz2 \
+    && tar -xjf gcc-arm-none-eabi-10.3-2021.10-x86_64-linux.tar.bz2 -C /usr/local \
+    && rm gcc-arm-none-eabi-10.3-2021.10-x86_64-linux.tar.bz2 \
+    && ln -s /usr/local/gcc-arm-none-eabi-10.3-2021.10/bin/* /usr/local/bin/ 
+
+RUN mkdir -p /root/.local/bin
+
+RUN curl -L https://github.com/numtide/treefmt/releases/download/v2.1.0/treefmt_2.1.0_linux_amd64.tar.gz -o treefmt.tar.gz \
+    && tar -xvzf treefmt.tar.gz \
+    && install -m 755 treefmt /root/.local/bin/treefmt \
+    && rm LICENSE README.md treefmt treefmt.tar.gz
+
+RUN curl -L https://github.com/muttleyxd/clang-tools-static-binaries/releases/download/master-32d3ac78/clang-format-17_linux-amd64 -o /root/.local/bin/clang-format && \
+    chmod +x /root/.local/bin/clang-format
+
+ENV PATH="/root/.local/bin:$PATH"
+
+RUN pip3 install cmakelang
+
+RUN echo 'export HISTFILE=/root/.bash_history/history' >> /root/.bashrc

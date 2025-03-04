@@ -1,0 +1,25 @@
+version: '3'
+services:
+  dev:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.dev
+    working_dir:
+      /usr/src
+    volumes:
+      - ..:/usr/src
+      - ../.docker_history:/root/.bash_history
+    command: /bin/bash
+    tty: true
+
+  docs:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.docs
+    working_dir:
+      /usr/src
+    volumes:
+      - ..:/usr/src
+      - ../.docker_history:/root/.bash_history
+    command: /bin/bash
+    tty: true

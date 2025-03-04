@@ -1,3 +1,4 @@
+add_subdirectory(safety)
 add_subdirectory(bsw)
 if(INCLUDE_OPENBSW_LIBS_BSP)
     add_subdirectory(bsp)

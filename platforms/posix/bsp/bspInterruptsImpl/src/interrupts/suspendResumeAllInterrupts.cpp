@@ -4,13 +4,16 @@
 
 #include <FreeRTOS.h>
 #include <task.h>
+#include <thread>
 #include <unistd.h>
+
+static std::thread::id MAIN_THREAD_ID;
+
+void main_thread_setup(void) { MAIN_THREAD_ID = std::this_thread::get_id(); }
 
 OldIntEnabledStatusValueType getOldIntEnabledStatusValueAndSuspendAllInterrupts(void)
 {
-    static pid_t mainThreadTid = getpid();
-
-    if (gettid() == mainThreadTid)
+    if (std::this_thread::get_id() == MAIN_THREAD_ID)
     {
         // We will reach this place in two cases:
         // 1. The main thread still haven't entered vTaskStartScheduler() - or already exited it.

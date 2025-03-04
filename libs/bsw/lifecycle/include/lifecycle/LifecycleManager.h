@@ -96,6 +96,8 @@ protected:
         , _isPending(true)
         {}
 
+        virtual ~ComponentTransitionExecutor() = default;
+
         void execute() override;
 
         ILifecycleComponent& _component;

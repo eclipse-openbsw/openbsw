@@ -176,11 +176,34 @@ SECTIONS
   }
   > Application = 0xffffffff
 
-  /* Initialized data */
-
   __etext = .;    /* end of code */
-  __DATA_ROM = .; /* start of initialized data */
-  
+  __DATA_ROM = .;
+
+  .mpudata :
+  {
+    . = ALIGN(32);
+    __MPU_DATA_START = .;
+    KEEP("*libsafe*:*"(.data))
+    KEEP("*libsafe*:*"(.data*))
+    . = ALIGN(32);
+    __MPU_DATA_END = .;
+    . = ALIGN(32);
+  } > Data
+  .mpuBss :
+  {
+    . = ALIGN(32);
+    __MPU_BSS_START = .;
+    "*libsafe*:*"(.bss)
+    "*libsafe*:*"(.bss*)
+  } > Data
+  .mpuEnd :
+  {
+    . = ALIGN(32);
+    __MPU_BSS_END = .;
+  } > Data
+
+   /* Initialized data */
+
   .data : AT(__DATA_ROM)
   {
     . = ALIGN(4);
@@ -275,3 +298,4 @@ __FLASH_END = FLASH_END;
 __USED_FLASH_SIZE = __USED_FLASH_END - __FLASH_START;
 __FREE_FLASH_SIZE = __FLASH_END - __USED_FLASH_END;
 __FLASH_OVERFLOW_SIZE = __USED_FLASH_END - __FLASH_END;
+ASSERT(__MPU_DATA_START == __MPU_DATA_END, "safety code must not have preinitialized data");

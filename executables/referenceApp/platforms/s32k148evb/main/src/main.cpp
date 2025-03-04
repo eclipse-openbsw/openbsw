@@ -12,6 +12,8 @@
 #include "lifecycle/StaticBsp.h"
 
 #include <lifecycle/LifecycleManager.h>
+#include <safeLifecycle/SafeSupervisor.h>
+#include <watchdogManager/watchdogManager.h>
 
 #include <estd/indestructible.h>
 #include <estd/optional.h>
@@ -85,8 +87,20 @@ namespace systems
 
 int main()
 {
-    // StaticBsp::init() will disable the watchdog, this must be the first function call in main()!
+    /* StaticBsp::init() disables the watchdog for the startup checks. The watchdog is then enabled
+     by the method SafeWatchdog::init(), which is called later during the startup phase.*/
     ::platform::staticBsp.init();
+    auto& safeSupervisor = safety::SafeSupervisor::getInstance();
+    safeSupervisor.enterLimpHome();
+    bool watchdogTest = safety::WatchdogManager::startTest();
+    if (watchdogTest)
+    {
+        safeSupervisor.leaveLimpHome();
+    }
+    else
+    {
+        safeSupervisor.watchdogStartupCheckMonitor.trigger();
+    }
     printf("main(RCM::SRS 0x%lx)\r\n", *reinterpret_cast<uint32_t volatile*>(0x4007F008));
     app_main(); // entry point for the generic part
     return (1); // we never reach this point

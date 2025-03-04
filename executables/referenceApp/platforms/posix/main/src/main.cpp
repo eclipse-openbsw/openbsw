@@ -12,8 +12,9 @@
 #include "systems/CanSystem.h"
 #endif // PLATFORM_SUPPORT_CAN
 
-void terminal_setup(void);
-void terminal_cleanup(void);
+extern void terminal_setup(void);
+extern void terminal_cleanup(void);
+extern void main_thread_setup(void);
 extern void app_main();
 
 namespace platform
@@ -51,6 +52,7 @@ void intHandler(int sig)
 int main()
 {
     signal(SIGINT, intHandler);
+    main_thread_setup();
     terminal_setup();
     app_main(); // entry point for the generic part
     return (1); // we never reach this point
