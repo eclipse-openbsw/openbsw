@@ -51,7 +51,7 @@ target_link_libraries(
             loggerIntegration
             main
             stdioConsoleInput
-            os::freeRtos
+            osFreeRtos
             asyncFreeRtosImpl
             util
             udsConfigurationImpl
