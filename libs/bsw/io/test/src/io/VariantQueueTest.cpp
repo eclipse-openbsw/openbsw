@@ -3,11 +3,8 @@
 #include "io/VariantQueue.h"
 
 #include <etl/memory.h>
-#include <etl/parameter_pack.h>
 #include <etl/span.h>
-#include <etl/type_traits.h>
 #include <etl/unaligned_type.h>
-#include <etl/variant.h>
 
 #include <gmock/gmock.h>
 
@@ -39,12 +36,12 @@ using abc_variant_q_type_list = ::io::make_variant_queue<
     ::io::VariantQueueType<C, 15>>;
 
 static_assert(
-    ::etl::is_same<abc_variant_q_type_list::type_list, ::etl::parameter_pack<A, B, C>>::value,
+    std::is_same<abc_variant_q_type_list::type_list, ::etl::type_list<A, B, C>>::value,
     "type list from the typedef should be A, B, C");
 
 static_assert(abc_variant_q_type_list::queue_max_element_type == 16, "");
 
-using abc_queue = ::io::variant_q<abc_variant_q_type_list>;
+using abc_queue = ::io::variant_q<abc_variant_q_type_list::type_list>;
 
 using Queue = ::io::VariantQueue<abc_variant_q_type_list, QUEUE_CAPACITY>;
 
@@ -81,7 +78,8 @@ TEST(VariantQueue, read_write_no_payload)
     Visit visitor;
 
     ASSERT_TRUE(abc_queue::write(writer, A{{0, 1, 2, 3, 4}}));
-    ASSERT_TRUE(abc_queue::write(writer, B{::etl::be_uint16_t{3}, ::etl::be_uint32_t{0xFAAF1253}}));
+    ASSERT_TRUE(abc_queue::write(
+        writer, B{::etl::be_uint16_t(3), ::etl::be_uint32_t(0xFAAF1253)}));
     ASSERT_TRUE(abc_queue::write(writer, C{}));
     ASSERT_TRUE(abc_queue::write(writer, C{}));
     ASSERT_FALSE(abc_queue::write(writer, C{})); // out of space
@@ -118,10 +116,7 @@ TEST(VariantQueue, read_write_with_payload)
     ASSERT_TRUE(abc_queue::write(writer, A{{9, 8, 7, 6, 5}}, payload));
 
     ASSERT_TRUE(abc_queue::write(
-        writer,
-        C{},
-        15,
-        [](::etl::span<uint8_t> buffer) { ::etl::mem_set(buffer.begin(), buffer.size(), 0xAB); }));
+        writer, C{}, 15, [](::etl::span<uint8_t> buffer) { ::etl::mem_set(buffer.begin(), buffer.end(), 0xAB); }));
 
     ASSERT_FALSE(
         abc_queue::write(writer, C{}, 10, [](::etl::span<uint8_t> buffer) {})); // out of space
@@ -179,7 +174,7 @@ TEST(VariantQueue, manually_allocate_payload)
 
     auto a_payload = abc_queue::alloc_payload(writer, A{{9, 8, 7, 6, 5}}, sizeof(payload));
     ASSERT_NE(0, a_payload.size());
-    ::etl::mem_copy(payload, sizeof(payload), a_payload.begin());
+    ::etl::copy<const uint8_t, 3, uint8_t, 3>(etl::span<const uint8_t>(payload), etl::span<uint8_t>(a_payload));
     writer.commit();
 
     ASSERT_EQ(15U, abc_queue::alloc_payload(writer, C{}, 15).size());

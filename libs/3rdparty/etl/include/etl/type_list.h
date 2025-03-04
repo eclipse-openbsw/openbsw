@@ -30,6 +30,8 @@ SOFTWARE.
 #define ETL_TYPE_LIST_INCLUDED
 
 #include "platform.h"
+
+#include "algorithm.h"
 #include "nth_type.h"
 #include "static_assert.h"
 #include "type_traits.h"
@@ -61,6 +63,12 @@ namespace etl
     type_list& operator =(const type_list&) ETL_DELETE;
   };
 
+  template <typename... TTypes>
+  struct type_list_helper
+  {
+    using type = type_list<TTypes...>;
+  };
+
   //***************************************************************************
   /// Recursive type list implementation for multiple types.
   //***************************************************************************
@@ -68,6 +76,7 @@ namespace etl
   struct type_list<THead, TTail...> : type_list<TTail...>
   {
     using type = THead;
+    using tail = typename type_list_helper<TTail...>::type;
 
     static constexpr size_t size = sizeof...(TTail) + 1U;
 
@@ -87,6 +96,7 @@ namespace etl
   struct type_list<THead> : type_list<>
   {
     using type = THead;
+    using tail = typename type_list_helper<>::type;
 
     static constexpr size_t size = 1U;
 
@@ -180,6 +190,80 @@ namespace etl
   {
     using type = typename type_list_cat<etl::type_list<TTypes1..., TTypes2...>, TTail...>::type;
   };
+
+  template<typename TL, typename T>
+  struct type_list_contains
+  {
+    enum
+    {
+      value = etl::is_same<typename TL::type, T>::value ? 1 : type_list_contains<typename TL::tail, T>::value
+    };
+  };
+
+  template<typename T>
+  struct type_list_contains<type_list<>, T>
+  {
+    enum
+    {
+      value = 0
+    };
+  };
+
+  template<typename TL, typename T>
+  struct type_list_index_of
+  {
+    enum
+    {
+      value = etl::is_same<typename TL::type, T>::value ? 0 : (type_list_index_of<typename TL::tail, T>::value + 1)
+    };
+  };
+
+  template<typename T>
+  struct type_list_index_of<type_list<>, T>
+  {
+    enum
+    {
+      value = 0
+    };
+  };
+
+  template<typename TL>
+  struct type_list_max_size
+  {
+    enum
+    {
+      value = etl::max(sizeof(typename TL::type), type_list_max_size<typename TL::tail>::value)
+    };
+  };
+
+  template<>
+  struct type_list_max_size<type_list<>>
+  {
+    enum
+    {
+      value = 0
+    };
+  };
+
+  template<typename TL>
+  struct type_list_max_alignment
+  {
+    enum
+    {
+      value = etl::max(etl::alignment_of<typename TL::type>::value,
+      static_cast<size_t>(type_list_max_alignment<typename TL::tail>::value))
+    };
+  };
+
+  template<>
+  struct type_list_max_alignment<type_list<>>
+  {
+    enum
+    {
+      value = 1
+    };
+  };
+
 }
 #endif
 
