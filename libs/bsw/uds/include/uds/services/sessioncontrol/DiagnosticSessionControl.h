@@ -11,8 +11,8 @@
 #include "uds/session/IDiagSessionManager.h"
 
 #include <async/Async.h>
-
-#include <estd/functional.h>
+#include <etl/delegate.h>
+#include <etl/intrusive_forward_list.h>
 
 namespace uds
 {
@@ -20,7 +20,7 @@ class IOperatingModeManager;
 class ISessionPersistence;
 class DiagDispatcher2;
 
-using InitCompleteCallbackType = ::estd::function<void()>;
+using InitCompleteCallbackType = ::etl::delegate<void()>;
 
 class DiagnosticSessionControl
 : public Service
@@ -165,7 +165,7 @@ protected:
     ::async::TimeoutType fAsyncTimeout;
     bool fIsActive;
 
-    ::estd::forward_list<IDiagSessionChangedListener> fListeners;
+    ::etl::intrusive_forward_list<IDiagSessionChangedListener, etl::forward_link<0>> fListeners;
 };
 
 } // namespace uds

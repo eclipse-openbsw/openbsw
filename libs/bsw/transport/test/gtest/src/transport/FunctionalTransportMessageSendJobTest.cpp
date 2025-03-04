@@ -2,7 +2,6 @@
 
 #include "transport/FunctionalTransportMessageSendJob.h"
 
-#include <estd/assert.h>
 #include <platform/estdint.h>
 
 #include <gmock/gmock.h>

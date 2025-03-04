@@ -8,7 +8,7 @@
 
 #include "async/Async.h"
 
-#include <estd/functional.h>
+#include <etl/delegate.h>
 
 namespace async
 {
@@ -40,7 +40,7 @@ private:
     T _call;
 };
 
-using Function = Call<::estd::function<void()>>;
+using Function = Call<::etl::delegate<void()>>;
 
 /**
  * Inline implementations.

@@ -4,10 +4,10 @@
 #define GUARD_FDE16044_F531_4B94_BFB7_6E2FEA811A9D
 
 #include "bsp/Bsp.h"
-#include "estd/assert.h"
-#include "estd/uncopyable.h"
 #include "mcu/mcu.h"
 #include "platform/estdint.h"
+
+#include <util/estd/assert.h>
 
 namespace bios
 {

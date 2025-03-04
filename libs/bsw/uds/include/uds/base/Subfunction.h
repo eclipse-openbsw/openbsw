@@ -3,7 +3,6 @@
 #ifndef GUARD_09D940E9_2D49_4601_85F7_4B1DA97E59D2
 #define GUARD_09D940E9_2D49_4601_85F7_4B1DA97E59D2
 
-#include "estd/uncopyable.h"
 #include "uds/base/AbstractDiagJob.h"
 
 namespace uds
@@ -14,8 +13,6 @@ namespace uds
  */
 class Subfunction : public AbstractDiagJob
 {
-    UNCOPYABLE(Subfunction);
-
 public:
     Subfunction(uint8_t const implementedRequest[], DiagSession::DiagSessionMask sessionMask);
 

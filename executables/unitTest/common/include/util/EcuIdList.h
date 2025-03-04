@@ -7,7 +7,8 @@
 #ifndef GUARD_68EB7097_AB5C_42E1_A708_BF13423B110A
 #define GUARD_68EB7097_AB5C_42E1_A708_BF13423B110A
 
-#include <estd/big_endian.h>
+#include <etl/unaligned_type.h>
+
 #include <platform/estdint.h>
 
 namespace common
@@ -52,7 +53,7 @@ public:
 
     uint16_t getSize() const
     {
-        return (fBufferLength == 0U) ? 0U : ::estd::read_be<uint16_t>(fpData);
+        return (fBufferLength == 0U) ? 0U : static_cast<uint16_t>(etl::be_uint16_t(fpData));
     }
 
     bool empty() const { return (getSize() == 0U); }

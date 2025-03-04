@@ -3,14 +3,14 @@
 #ifndef GUARD_88C26625_9E67_4D69_A325_283FE20FA7BE
 #define GUARD_88C26625_9E67_4D69_A325_283FE20FA7BE
 
-#include <estd/forward_list.h>
-#include <estd/uncopyable.h>
+#include <etl/intrusive_forward_list.h>
+#include <etl/uncopyable.h>
 
 namespace logger
 {
 class ILoggerListener
-: public ::estd::forward_list_node<ILoggerListener>
-, private ::estd::uncopyable
+: public ::etl::forward_link<0>
+, private ::etl::uncopyable
 {
 public:
     ILoggerListener();
@@ -18,9 +18,7 @@ public:
     virtual void logAvailable() = 0;
 };
 
-inline ILoggerListener::ILoggerListener()
-: ::estd::forward_list_node<ILoggerListener>(), ::estd::uncopyable()
-{}
+inline ILoggerListener::ILoggerListener() : ::etl::forward_link<0>(), ::etl::uncopyable() {}
 
 } // namespace logger
 

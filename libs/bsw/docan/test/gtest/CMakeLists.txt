@@ -31,6 +31,7 @@ target_link_libraries(
             transportMock
             utilMock
             bspMock
+            etl
             gtest_main)
 
 gtest_discover_tests(docanTest PROPERTIES LABELS "docanTest")

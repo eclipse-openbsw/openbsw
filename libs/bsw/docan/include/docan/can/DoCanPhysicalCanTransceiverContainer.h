@@ -5,8 +5,9 @@
 
 #include "DoCanPhysicalCanTransceiver.h"
 
-#include <estd/functional.h>
-#include <estd/vector.h>
+#include <etl/delegate.h>
+#include <etl/span.h>
+#include <etl/vector.h>
 
 namespace docan
 {
@@ -20,10 +21,10 @@ class DoCanPhysicalCanTransceiverContainer
 public:
     using AddressingType        = Addressing;
     using TransceiverType       = DoCanPhysicalCanTransceiver<AddressingType>;
-    using TransceiverSliceType  = ::estd::slice<TransceiverType>;
-    using TransceiverVectorType = ::estd::vector<TransceiverType>;
+    using TransceiverSliceType  = ::etl::span<TransceiverType>;
+    using TransceiverVectorType = ::etl::ivector<TransceiverType>;
 
-    using ShutdownCallbackType = ::estd::function<void()>;
+    using ShutdownCallbackType = ::etl::delegate<void()>;
 
     /**
      * Constructor.
@@ -31,11 +32,11 @@ public:
      */
     explicit DoCanPhysicalCanTransceiverContainer(TransceiverVectorType& transceivers);
 
-    /**
-     * Alocate a transceiver
-     * \return constructor for the transport layer
-     */
-    ::estd::constructor<TransceiverType> createTransceiver();
+    template<typename... Args>
+    TransceiverType& emplace_back(Args&&... args)
+    {
+        return _transceivers.emplace_back(etl::forward<Args>(args)...);
+    }
 
     /**
      * Get access to slice of transceivers.
@@ -66,7 +67,7 @@ public:
     DoCanPhysicalCanTransceiverContainer();
 
 private:
-    ::estd::declare::vector<TransceiverType, N> _transceivers;
+    ::etl::vector<TransceiverType, N> _transceivers;
 };
 
 /**
@@ -118,14 +119,6 @@ DoCanPhysicalCanTransceiverContainer<Addressing>::DoCanPhysicalCanTransceiverCon
 {}
 
 template<class Addressing>
-inline ::estd::constructor<
-    typename DoCanPhysicalCanTransceiverContainer<Addressing>::TransceiverType>
-DoCanPhysicalCanTransceiverContainer<Addressing>::createTransceiver()
-{
-    return _transceivers.emplace_back();
-}
-
-template<class Addressing>
 inline typename DoCanPhysicalCanTransceiverContainer<Addressing>::TransceiverSliceType
 DoCanPhysicalCanTransceiverContainer<Addressing>::getTransceivers() const
 {
@@ -157,8 +150,7 @@ DoCanPhysicalCanTransceiver<Addressing>&
 DoCanPhysicalCanTransceiverContainerBuilder<Addressing>::addTransceiver(
     ::can::ICanTransceiver& transceiver)
 {
-    return _container.createTransceiver().construct(
-        transceiver, _filter, _addressConverter, _addressing);
+    return _container.emplace_back(transceiver, _filter, _addressConverter, _addressing);
 }
 
 } // namespace declare

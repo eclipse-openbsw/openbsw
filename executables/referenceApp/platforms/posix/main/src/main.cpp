@@ -1,9 +1,8 @@
 // Copyright 2024 Accenture.
 
 #include <async/AsyncBinding.h>
+#include <etl/alignment.h>
 #include <lifecycle/LifecycleManager.h>
-
-#include <estd/typed_mem.h>
 
 #include <signal.h>
 #include <unistd.h>
@@ -21,7 +20,7 @@ namespace platform
 {
 
 #ifdef PLATFORM_SUPPORT_CAN
-::estd::typed_mem<::systems::CanSystem> canSystem;
+::etl::typed_storage<::systems::CanSystem> canSystem;
 #endif // PLATFORM_SUPPORT_CAN
 
 void platformLifecycleAdd(::lifecycle::LifecycleManager& lifecycleManager, uint8_t const level)

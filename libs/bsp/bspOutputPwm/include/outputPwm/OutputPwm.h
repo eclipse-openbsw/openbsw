@@ -3,19 +3,18 @@
 #ifndef GUARD_5519D93B_600A_46D1_84D9_6F9A7BDC3F79
 #define GUARD_5519D93B_600A_46D1_84D9_6F9A7BDC3F79
 
-#include "estd/uncopyable.h"
 #include "io/DynamicClientCfg.h"
 #include "io/Io.h"
 #include "mcu/mcu.h"
 #include "platform/estdint.h"
 
+#include <etl/uncopyable.h>
+
 namespace bios
 {
 
-class OutputPwm
+class OutputPwm : public ::etl::uncopyable
 {
-    UNCOPYABLE(OutputPwm);
-
 public:
     struct tOutputPwmCfg
     {

@@ -8,7 +8,8 @@
 #include "uds/base/AbstractDiagJob.h"
 #include "uds/connection/IncomingDiagConnection.h"
 
-#include <estd/functional.h>
+#include <etl/utility.h>
+#include <util/estd/functional.h>
 
 namespace uds
 {
@@ -65,7 +66,7 @@ template<class T>
 template<typename... Args>
 AsyncDiagJob<T>::AsyncDiagJob(
     IAsyncDiagHelper& asyncHelper, ::async::ContextType context, Args&&... args)
-: T(::std::forward<Args>(args)...)
+: T(::etl::forward<Args>(args)...)
 , fAsyncJobHelper(asyncHelper, *this, context)
 , fProcess(ProcessClosureType::CallType(
       ProcessClosureType::CallType::fct::create<AsyncDiagJob<T>, &AsyncDiagJob<T>::asyncProcess>(
@@ -99,7 +100,6 @@ DiagReturnCode::Type AsyncDiagJob<T>::process(
         &connection,
         request,
         requestLength);
-
     ::async::execute(fContext, fProcess);
 
     return DiagReturnCode::OK;

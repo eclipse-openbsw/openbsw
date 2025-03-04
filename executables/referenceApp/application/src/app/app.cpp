@@ -3,7 +3,6 @@
 #include "app/app.h"
 
 #include "console/console.h"
-#include "estd/typed_mem.h"
 #include "logger/logger.h"
 #include "reset/softwareSystemReset.h"
 #include "systems/DemoSystem.h"
@@ -12,6 +11,8 @@
 #include "systems/SysAdminSystem.h"
 
 #include <app/appConfig.h>
+#include <etl/alignment.h>
+#include <etl/singleton.h>
 
 #ifdef PLATFORM_SUPPORT_UDS
 #include "busid/BusId.h"
@@ -29,6 +30,8 @@
 
 #ifdef PLATFORM_SUPPORT_CAN
 #include <systems/ICanSystem.h>
+
+#include <cstdio>
 
 namespace systems
 {
@@ -70,21 +73,21 @@ LifecycleManager lifecycleManager{
     TASK_SYSADMIN,
     ::lifecycle::LifecycleManager::GetTimestampType::create<&getSystemTimeUs32Bit>()};
 
-::estd::typed_mem<::systems::RuntimeSystem> runtimeSystem;
-::estd::typed_mem<::systems::SysAdminSystem> sysAdminSystem;
-::estd::typed_mem<::systems::DemoSystem> demoSystem;
-::estd::typed_mem<::systems::SafetySystem> safetySystem;
+::etl::typed_storage<::systems::RuntimeSystem> runtimeSystem;
+::etl::typed_storage<::systems::SysAdminSystem> sysAdminSystem;
+::etl::typed_storage<::systems::DemoSystem> demoSystem;
+::etl::typed_storage<::systems::SafetySystem> safetySystem;
 
 #ifdef PLATFORM_SUPPORT_UDS
-::estd::typed_mem<::transport::TransportSystem> transportSystem;
+::etl::typed_storage<::transport::TransportSystem> transportSystem;
 #endif
 
 #ifdef PLATFORM_SUPPORT_CAN
-::estd::typed_mem<::docan::DoCanSystem> doCanSystem;
+::etl::typed_storage<::docan::DoCanSystem> doCanSystem;
 #endif
 
 #ifdef PLATFORM_SUPPORT_UDS
-::estd::typed_mem<::uds::UdsSystem> udsSystem;
+::etl::typed_storage<::uds::UdsSystem> udsSystem;
 #endif
 
 class LifecycleMonitor : private ::lifecycle::ILifecycleListener

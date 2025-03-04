@@ -10,7 +10,6 @@
 
 #include "can/transceiver/ICANTransceiverStateListener.h"
 
-#include <estd/forward_list.h>
 #include <platform/estdint.h>
 
 namespace can

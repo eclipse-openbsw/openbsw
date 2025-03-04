@@ -8,7 +8,7 @@
 #ifndef GUARD_3991843A_AE0E_493A_8A61_E4A780891238
 #define GUARD_3991843A_AE0E_493A_8A61_E4A780891238
 
-#include <estd/forward_list.h>
+#include <etl/intrusive_forward_list.h>
 
 namespace can
 {
@@ -22,7 +22,7 @@ class IFilter;
  * An ICANFrameListener subclass is a class interested in the reception
  * of CANFrames. Therefore it needs to register at an ICanTransceiver.
  */
-class ICANFrameListener : public ::estd::forward_list_node<ICANFrameListener>
+class ICANFrameListener : public ::etl::forward_link<0>
 {
 public:
     ICANFrameListener();
@@ -43,7 +43,7 @@ public:
 /*
  * inline implementation
  */
-inline ICANFrameListener::ICANFrameListener() : ::estd::forward_list_node<ICANFrameListener>() {}
+inline ICANFrameListener::ICANFrameListener() : ::etl::forward_link<0>() {}
 
 } // namespace can
 

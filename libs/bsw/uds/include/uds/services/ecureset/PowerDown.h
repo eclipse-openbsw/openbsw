@@ -3,7 +3,6 @@
 #ifndef GUARD_60B7ECB8_6564_49EF_8867_35DF38C0C1F8
 #define GUARD_60B7ECB8_6564_49EF_8867_35DF38C0C1F8
 
-#include "estd/uncopyable.h"
 #include "uds/base/Subfunction.h"
 #include "uds/lifecycle/IUdsLifecycleConnector.h"
 
@@ -11,8 +10,6 @@ namespace uds
 {
 class PowerDown : public Subfunction
 {
-    UNCOPYABLE(PowerDown);
-
 public:
     explicit PowerDown(IUdsLifecycleConnector& udsLifecycleConnector);
 

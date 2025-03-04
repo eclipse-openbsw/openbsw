@@ -32,11 +32,9 @@ TEST_F(AsyncCallTest, testFunction)
 
 TEST_F(AsyncCallTest, testClosure)
 {
-    using TestClosure = ::estd::closure<void(uint16_t, uint32_t)>;
-    Call<TestClosure> cut(TestClosure(
-        TestClosure::fct::create<AsyncCallTest, &AsyncCallTest::closureCall>(*this),
-        1234U,
-        3247834U));
+    using TestClosure = ::etl::delegate<void()>;
+    auto l            = [&]() { closureCall(1234U, 3247834U); };
+    Call<TestClosure> cut{TestClosure(l)};
     EXPECT_CALL(*this, closureCall(1234U, 3247834U));
     EXPECT_CALL(_asyncMock, execute(0, _))
         .Times(1)

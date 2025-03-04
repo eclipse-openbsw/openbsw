@@ -7,10 +7,11 @@
 #include "docan/common/DoCanTimerManagement.h"
 #include "docan/transmitter/DoCanMessageTransmitProtocolHandler.h"
 
+#include <etl/intrusive_forward_list.h>
+#include <etl/span.h>
 #include <transport/ITransportMessageProcessedListener.h>
 #include <transport/TransportMessage.h>
 
-#include <estd/forward_list.h>
 #include <platform/estdint.h>
 
 namespace docan
@@ -25,7 +26,7 @@ class DoCanFrameCodec;
 template<class DataLinkLayer>
 class DoCanMessageTransmitter
 : public DoCanMessageTransmitProtocolHandler<typename DataLinkLayer::FrameIndexType>
-, public ::estd::forward_list_node<DoCanMessageTransmitter<DataLinkLayer>>
+, public ::etl::forward_link<0>
 {
 public:
     using DataLinkLayerType       = DataLinkLayer;
@@ -93,7 +94,7 @@ public:
      * Get the data that has not been sent yet.
      * \return slice holding the data
      */
-    ::estd::slice<uint8_t const> getSendData() const;
+    ::etl::span<uint8_t const> getSendData() const;
 
     /**
      * Get the maximum data size of consecutive frames.
@@ -210,7 +211,7 @@ DoCanMessageTransmitter<DataLinkLayer>::DoCanMessageTransmitter(
     FrameIndexType const frameCount,
     FrameSizeType const consecutiveFrameDataSize)
 : DoCanMessageTransmitProtocolHandler<FrameIndexType>(frameCount)
-, ::estd::forward_list_node<DoCanMessageTransmitter>()
+, ::etl::forward_link<0>()
 , _codec(codec)
 , _message(message)
 , _notificationListener(notificationListener)
@@ -260,9 +261,9 @@ DoCanMessageTransmitter<DataLinkLayer>::getTransmissionAddress() const
 }
 
 template<class DataLinkLayer>
-inline ::estd::slice<uint8_t const> DoCanMessageTransmitter<DataLinkLayer>::getSendData() const
+inline ::etl::span<uint8_t const> DoCanMessageTransmitter<DataLinkLayer>::getSendData() const
 {
-    return ::estd::slice<uint8_t const>::from_pointer(
+    return ::etl::span<uint8_t const>(
         &_message.getPayload()[_bytesSent],
         static_cast<size_t>(_message.getPayloadLength()) - static_cast<size_t>(_bytesSent));
 }
