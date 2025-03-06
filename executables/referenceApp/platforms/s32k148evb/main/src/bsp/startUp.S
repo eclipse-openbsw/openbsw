@@ -431,6 +431,22 @@ Reset_Handler:
     bge .LC2
 .LC3:
 
+/*
+ * Zero out the MPU protected BSS section
+ */
+    ldr r1, =__MPU_BSS_START
+    ldr r2, =__MPU_BSS_END
+
+    subs    r2, r1
+    ble .LC7
+
+    movs    r0, 0
+.LC6:
+    str r0, [r1, r2]
+    subs    r2, 4
+    bge .LC6
+.LC7:
+
 #ifndef __START
 #define __START _start
 #endif
