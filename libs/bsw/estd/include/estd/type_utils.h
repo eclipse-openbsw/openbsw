@@ -85,8 +85,7 @@ uintptr_t integer_from_pointer(P const p)
 {
     // clang-format off
     static_assert(std::is_pointer<P>::value, "");
-    return (uintptr_t)
-        (reinterpret_cast<volatile char const*>(p) - static_cast<volatile char const*>(nullptr));
+    return reinterpret_cast<uintptr_t>(p);
     // clang-format on
 }
 
