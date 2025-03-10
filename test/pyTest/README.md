@@ -236,6 +236,7 @@ The following entries are supported.
 | `wait_for_exit` | | Boolean | If `true` then wait until the command exits before proceeding with each test. Note that while the process of the command may end, other child processes it launched may still be running. This option only waits for the command's process to exit. If `false` (the default) do not wait, just kick off the command. |
 | `restart_if_exited` | | Boolean | If `true` then monitor the process and restart it if it stops. If `false` (the default) do nothing. This option only applies when `wait_for_exit` is `false` |
 | `kill_at_end`  | | Boolean | If `true` then when each test is complete, send `SIGTERM` to all child processes started by the command. If `false` (the default) do nothing. |
+| `skip_first`  | | Boolean | If `true` then only run the command before the 2nd and subsequent tests, not before the first test. `false` is the default. |
 
 eg.
 ```

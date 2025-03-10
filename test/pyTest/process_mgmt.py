@@ -80,8 +80,10 @@ class ProcessRunner():
                 pass
 
 
-def start_target_process(target_name):
+def start_target_process(target_name, starting_first_session=False):
     target_info = TargetInfo.by_name[target_name]
+    if starting_first_session and target_info.target_process.get("skip_first"):
+        return
     if target_info.target_process.get("command_line"):
         if target_info.target_process["restart_before_test"] or \
                 not _target_process_runners.get(target_name):
