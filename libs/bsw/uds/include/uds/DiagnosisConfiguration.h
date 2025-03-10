@@ -124,6 +124,12 @@ public:
     {
         auto result = std::find_if(
             IncomingDiagConnectionPool.begin(), IncomingDiagConnectionPool.end(), condition);
+
+        if (result == IncomingDiagConnectionPool.end())
+        {
+            return nullptr;
+        }
+
         return result.operator->();
     }
 
