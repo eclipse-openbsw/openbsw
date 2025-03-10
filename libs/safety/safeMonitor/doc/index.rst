@@ -29,7 +29,7 @@ implemented by the compiler vendor, it's easier to avoid them entirely.
 As few dependencies as possible
 +++++++++++++++++++++++++++++++
 
-Every dependency which gets introduced has to be reviewed form a safety point of view as well. So
+Every dependency which gets introduced has to be reviewed from a safety point of view as well. So
 it's better to avoid dependencies as much as possible.
 
 ASIL partition
@@ -128,25 +128,25 @@ sequence are reported by calling a special method of a handler object. See hit()
 
     enum MyCheckpoint
     {
-        FOXTROTT,
-        UNIFORM,
-        CHARLY,
-        KILO,
+        ALPHA,
+        BETA,
+        CHARLIE,
+        DELTA,
     };
 
     using MySequence = ::safeMonitor::Sequence<MyHandler, MyEvent, MyCheckpoint>;
 
     MyHandler handler;
-    MySequence s(handler, MyEvent::DEVIATION_FROM_SEQUENCE, MyCheckpoint::FOXTROTT, MyCheckpoint::KILO);
+    MySequence s(handler, MyEvent::DEVIATION_FROM_SEQUENCE, MyCheckpoint::ALPHA, MyCheckpoint::DELTA);
 
     void someTask()
     {
-        s.hit(MyCheckpoint::FOXTROTT); // ok
-        s.hit(MyCheckpoint::UNIFORM);  // ok
-        s.hit(MyCheckpoint::CHARLY);   // ok
-        s.hit(MyCheckpoint::KILO);     // ok
-        s.hit(MyCheckpoint::FOXTROTT); // wrap to beginning -> ok
-        s.hit(MyCheckpoint::CHARLY);   // deviation -> handler gets called
+        s.hit(MyCheckpoint::ALPHA); // ok
+        s.hit(MyCheckpoint::BETA);  // ok
+        s.hit(MyCheckpoint::CHARLIE);   // ok
+        s.hit(MyCheckpoint::DELTA);     // ok
+        s.hit(MyCheckpoint::ALPHA); // wrap to beginning -> ok
+        s.hit(MyCheckpoint::CHARLIE);   // deviation -> handler gets called
     }
 
 Trigger
