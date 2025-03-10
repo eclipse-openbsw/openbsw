@@ -90,12 +90,12 @@ private:
 
     using dynamicClientType = uint16_t;
 
-    static uint8_t const InputAnzahlDynamic
+    static uint8_t const NumberOfDynamicInputs
         = ((NUMBER_OF_EXTERNAL_DIGITAL_INPUTS > 0)
                ? static_cast<uint8_t>(NUMBER_OF_EXTERNAL_DIGITAL_INPUTS)
                : 1U);
 
-    static dynamicClient<dynamicClientType, IDynamicInputClient, 4, InputAnzahlDynamic>
+    static dynamicClient<dynamicClientType, IDynamicInputClient, 4, NumberOfDynamicInputs>
         dynamicInputCfg;
 #if (INPUTDIGITAL_DEBOUNCE_ACTIVE == 1)
     static DebounceConfiguration debounced[NUMBER_OF_DIGITAL_INPUTS];
