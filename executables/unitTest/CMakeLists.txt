@@ -21,7 +21,7 @@ add_compile_definitions(PLATFORM_SUPPORT_IO=1)
 include(${OPENBSW_DIR}/Filelists.cmake)
 
 add_library(asyncPlatform ALIAS asyncMock)
-add_library(os::freeRtos ALIAS freeRtosMock)
+add_library(osFreeRtos ALIAS freeRtosMock)
 
 add_subdirectory(bsp)
 add_subdirectory(common)

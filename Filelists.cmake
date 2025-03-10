@@ -42,6 +42,10 @@ if (BUILD_UNIT_TESTS)
     enable_testing()
 endif ()
 
+set(INCLUDE_OPENBSW_LIBS_BSP
+    ON
+    CACHE BOOL "Include openbsw/libs/bsp/ in build")
+
 set(OPENBSW_DIR
     ${CMAKE_CURRENT_SOURCE_DIR}
     CACHE PATH "Path to Eclipse OpenBSW")

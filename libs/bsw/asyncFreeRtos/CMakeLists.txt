@@ -8,7 +8,7 @@ target_link_libraries(
               bsp
               bspInterrupts
               common
-              os::freeRtos
+              osFreeRtos
               timer)
 
 add_library(
