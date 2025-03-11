@@ -7,62 +7,63 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        platform: [posix-gcc, posix-clang, s32k148]
+        platform: [posix, s32k148]
+        compiler: [clang, gcc]
         cpp-standard: [14, 17, 20, 23]
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
       - name: Cache CMake files
         id: cache-cmake
         uses: actions/cache@v4
         with:
-          path: |
-            cmake-build-posix
-            cmake-build-s32k148
-          key: ${{ runner.os }}-cmake-${{ matrix.platform }}-${{ matrix.cpp-standard }}-${{ hashFiles('**/*.cpp', '**/*.h',  '**/*.cmake', '**/*.txt', '**/*.c', '**/*.s') }}
+          path: cmake-build-${{ matrix.platform }}-${{ matrix.compiler }}
+          key: ${{ runner.os }}-cmake-${{ matrix.platform }}-${{ matrix.compiler }}-${{ matrix.cpp-standard }}-${{ hashFiles('**/*.cpp', '**/*.h',  '**/*.cmake', '**/*.txt', '**/*.c', '**/*.s') }}
           restore-keys: |
-            ${{ runner.os }}-cmake-${{ matrix.platform }}-${{ matrix.cpp-standard }}-
+            ${{ runner.os }}-cmake-${{ matrix.platform }}-${{ matrix.compiler }}-${{ matrix.cpp-standard }}-
 
       - name: Set up CMake
         uses: jwlawson/actions-setup-cmake@v2
         with:
           cmake-version: '3.22.x'
 
-      - name: Set up ARM GCC
-        if: ${{ matrix.platform == 's32k148' }}
+      - name: Install ARM GCC
+        if: ${{ matrix.platform == 's32k148' && matrix.compiler == 'gcc' }}
         uses: carlosperate/arm-none-eabi-gcc-action@v1
         with:
           release: '10.3-2021.10'
 
-      - name: Install LLVM and Clang
-        if: ${{ matrix.platform == 'posix-clang' }}
+      - name: Install POSIX LLVM
+        if: ${{ matrix.platform == 'posix' && matrix.compiler == 'clang' }}
         uses: KyleMayes/install-llvm-action@v2
         with:
           version: "17"
           env: true
 
-      - name: Configure CMake for POSIX
-        if: ${{ startsWith(matrix.platform, 'posix') && steps.cache-cmake.outputs.cache-hit != 'true' }}
-        run: |
-          rm -rf cmake-build-posix
-          cmake \
-          -B cmake-build-posix \
-          -S executables/referenceApp \
-          -DCMAKE_CXX_STANDARD=${{ matrix.cpp-standard }}
+      - name: Install ARM LLVM
+        if: ${{ matrix.platform == 's32k148' && matrix.compiler == 'clang' }}
+        uses: stellar-aria/llvm-embedded-toolchain-for-arm-action@v1.2.0
+        with:
+          release: "19.1.1"
 
-      - name: Configure CMake for S32K148
-        if: ${{ matrix.platform == 's32k148' && steps.cache-cmake.outputs.cache-hit != 'true' }}
+      - name: Set environment variables for ARM LLVM
+        if: ${{ matrix.platform == 's32k148' && matrix.compiler == 'clang' }}
         run: |
-          rm -rf cmake-build-s32k148
+          echo "CC=$(which clang)" >> "${GITHUB_ENV}"
+          echo "CXX=$(which clang++)" >> "${GITHUB_ENV}"
+
+      - name: Configure CMake for ${{ matrix.platform }} with ${{ matrix.compiler }}
+        if: steps.cache-cmake.outputs.cache-hit != 'true'
+        run: |
+          rm -rf cmake-build-${{ matrix.platform }}-${{ matrix.compiler }}
           cmake \
-          -B cmake-build-s32k148 \
+          -B cmake-build-${{ matrix.platform }}-${{ matrix.compiler }} \
           -S executables/referenceApp \
           -DCMAKE_CXX_STANDARD=${{ matrix.cpp-standard }} \
-          -DBUILD_TARGET_PLATFORM="S32K148EVB" \
-          --toolchain ../../admin/cmake/ArmNoneEabi-gcc.cmake
+          -DBUILD_TARGET_PLATFORM=${{ matrix.platform == 'posix' && 'POSIX' || 'S32K148EVB' }} \
+          -DCMAKE_TOOLCHAIN_FILE=${{ matrix.platform == 's32k148' && format('../../admin/cmake/ArmNoneEabi-{0}.cmake', matrix.compiler) || '' }}
 
-      - name: Build for ${{ matrix.platform }}
+      - name: Build ${{ matrix.platform }} with ${{ matrix.compiler }}
         if: steps.cache-cmake.outputs.cache-hit != 'true'
-        run: cmake --build cmake-build-${{ startsWith(matrix.platform, 'posix') && 'posix' || matrix.platform }} --target app.referenceApp -j
+        run: cmake --build cmake-build-${{ matrix.platform }}-${{ matrix.compiler }} --target app.referenceApp -j

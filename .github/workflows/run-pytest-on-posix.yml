@@ -9,6 +9,9 @@ jobs:
     run-pytest-on-posix:
       runs-on: ubuntu-latest
       needs: cmake-build
+      strategy:
+        matrix:
+          compiler: [gcc]
 
       steps:
 
@@ -37,10 +40,8 @@ jobs:
           id: restore-cached-posix-build
           uses: actions/cache/restore@v4
           with:
-            path: |
-              cmake-build-posix
-              cmake-build-s32k148
-            key: ${{ runner.os }}-cmake-posix-gcc-20-${{ hashFiles('**/*.cpp', '**/*.h',  '**/*.cmake', '**/*.txt', '**/*.c', '**/*.s') }}
+            path: cmake-build-posix-${{ matrix.compiler }}
+            key: ${{ runner.os }}-cmake-posix-${{ matrix.compiler }}-20-${{ hashFiles('**/*.cpp', '**/*.h',  '**/*.cmake', '**/*.txt', '**/*.c', '**/*.s') }}
             fail-on-cache-miss: true
 
         - name: Set up python 3.10
@@ -59,5 +60,6 @@ jobs:
         - name: Run tests
           if: ${{ steps.restore-cached-posix-build.outputs.cache-hit == 'true' }}
           run: |
+            ln --symbolic cmake-build-posix-${{ matrix.compiler }} cmake-build-posix
             cd test/pyTest
             pytest --target=posix
