@@ -1,3 +1,5 @@
+.. _s32k148_gdb_via_usb:
+
 Using GDB with the S32K148EVB board via USB
 ===========================================
 
@@ -15,6 +17,10 @@ For example see :ref:`setup_s32k148_gdb_vscode`.
 Note that P&E Micro's implementation of gdb server must be used to debug the board via P&E Micro's implementation of the USB / OpenSDA interface.
 P&E Micro provide three pre-built executables for three different host platforms - Linux, Windows and OS X.
 The instructions on this page are focused on setting this up on Linux hosts, including on WSL (Windows Subsystem for Linux).
+
+.. note::
+
+   Please refer to :ref:`known_issues_with_s32k148_board`.
 
 Get P&E Micro's gdb server from NXP's S32 Design Studio installation
 --------------------------------------------------------------------

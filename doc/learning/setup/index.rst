@@ -28,6 +28,8 @@ If you have access to a
 `S32K148 development board <https://www.nxp.com/design/design-center/development-boards/automotive-development-platforms/s32k-mcu-platforms/s32k148-q176-evaluation-board-for-automotive-general-purpose:S32K148EVB>`_
 then below is some important information to note...
 
+.. _known_issues_with_s32k148_board:
+
 Known Issues with the S32K148 board
 +++++++++++++++++++++++++++++++++++
 
@@ -53,6 +55,12 @@ Known Issues with the S32K148 board
         but please note that many people have encountered difficulties with this, especially at the step to enable it
         using an activation code. If you have difficulties you may prefer to set up ``gdbserver`` as described in :doc:`setup_s32k148_gdbserver`
         with an IDE of your choice.
+    * - 4
+      - P&E Micro provide versions of gdb server for Windows, Linux and Mac that work with their OpenSDA USB drivers
+        to support flashing and debugging on the board via USB. See :ref:`s32k148_gdb_via_usb`.
+        However the USB drivers are only available for Windows and Linux on x86 based hosts, not for ARM,
+        and so debugging on the board from ARM hosts (eg. a Raspberry Pi or an ARM-based Mac) requires an external debugger,
+        such as a Lauterbach, working via JTAG.
 
 Jumper setup on the S32K148 board
 +++++++++++++++++++++++++++++++++
