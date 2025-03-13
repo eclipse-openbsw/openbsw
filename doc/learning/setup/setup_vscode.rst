@@ -61,7 +61,7 @@ each task will be listed by their ``label`` below and you can select one to exec
             {
                 "type": "shell",
                 "label": "Generate build system for s32k148",
-                "command": "cmake -B cmake-build-s32k148 -S executables/referenceApp -DBUILD_TARGET_PLATFORM=\"S32K148EVB\" -DCMAKE_EXPORT_COMPILE_COMMANDS=ON --toolchain ../../admin/cmake/ArmNoneEabi.cmake",
+                "command": "cmake -B cmake-build-s32k148 -S executables/referenceApp -DBUILD_TARGET_PLATFORM=\"S32K148EVB\" -DCMAKE_EXPORT_COMPILE_COMMANDS=ON --toolchain ../../admin/cmake/ArmNoneEabi-gcc.cmake",
                 "group": "build"
             },
             {
@@ -175,7 +175,7 @@ and this will be used by the ``CMake Tools`` extension to set up a configuration
             "displayName": "CMake s32k148",
             "generator": "Unix Makefiles",
             "binaryDir": "${workspaceFolder}/cmake-build-s32k148",
-            "toolchainFile": "../../admin/cmake/ArmNoneEabi10.3-2021.10.cmake",
+            "toolchainFile": "../../admin/cmake/ArmNoneEabi-gcc.cmake",
             "cacheVariables": {
             "BUILD_TARGET_PLATFORM": "S32K148EVB",
             "CMAKE_EXPORT_COMPILE_COMMANDS": "YES"
