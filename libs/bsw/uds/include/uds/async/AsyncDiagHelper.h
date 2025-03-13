@@ -6,8 +6,8 @@
 #include "uds/async/IAsyncDiagHelper.h"
 #include "uds/base/AbstractDiagJob.h"
 
-#include <estd/forward_list.h>
-#include <estd/object_pool.h>
+#include <etl/intrusive_forward_list.h>
+#include <etl/pool.h>
 
 namespace uds
 {
@@ -20,7 +20,7 @@ class AsyncDiagHelper
 , private AbstractDiagJob
 {
 public:
-    using StoredRequestPool = ::estd::object_pool<StoredRequest>;
+    using StoredRequestPool = ::etl::ipool;
 
     explicit AsyncDiagHelper(StoredRequestPool& storedRequestPool);
 
@@ -51,7 +51,7 @@ public:
     AsyncDiagHelper();
 
 private:
-    ::estd::declare::object_pool<StoredRequest, N> fStoredRequestPool;
+    ::etl::pool<StoredRequest, N> fStoredRequestPool;
 };
 } // namespace declare
 

@@ -3,7 +3,7 @@
 #ifndef GUARD_2AC28890_0365_4510_AAF2_C6BC49CC731A
 #define GUARD_2AC28890_0365_4510_AAF2_C6BC49CC731A
 
-#include <estd/singleton.h>
+#include <etl/singleton_base.h>
 
 #include <gmock/gmock.h>
 
@@ -25,10 +25,10 @@ namespace testing
  * \endcode
  */
 
-class SystemTimerMock : public ::estd::singleton<SystemTimerMock>
+class SystemTimerMock : public ::etl::singleton_base<SystemTimerMock>
 {
 public:
-    SystemTimerMock() : ::estd::singleton<SystemTimerMock>(*this) {}
+    SystemTimerMock() : ::etl::singleton_base<SystemTimerMock>(*this) {}
 
     /**
      *  \see sysDelayUs(uint32_t delay)

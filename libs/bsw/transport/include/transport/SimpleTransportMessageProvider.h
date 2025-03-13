@@ -9,14 +9,14 @@
 #include "transport/ITransportMessageProvidingListener.h"
 #include "transport/TransportMessageProviderConfiguration.h"
 
-#include <estd/uncopyable.h>
+#include <etl/uncopyable.h>
 
 namespace transport
 {
-class SimpleTransportMessageProvider : public ITransportMessageProvider
+class SimpleTransportMessageProvider
+: public ITransportMessageProvider
+, public etl::uncopyable
 {
-    UNCOPYABLE(SimpleTransportMessageProvider);
-
 public:
     explicit SimpleTransportMessageProvider(ITransportMessageProviderConfiguration& configuration);
 
@@ -28,7 +28,7 @@ public:
         uint16_t sourceId,
         uint16_t targetId,
         uint16_t size,
-        ::estd::slice<uint8_t const> const& peek,
+        ::etl::span<uint8_t const> const& peek,
         ::transport::TransportMessage*& pTransportMessage) override;
 
     /**

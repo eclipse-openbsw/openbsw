@@ -4,6 +4,8 @@
 
 #include "util/StdIoMock.h"
 
+#include <etl/string_view.h>
+
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
@@ -29,8 +31,8 @@ TEST_F(StdoutStreamTest, testSingleCharactersAreWritten)
 TEST_F(StdoutStreamTest, testMultipleCharactersAreWritten)
 {
     StdoutStream cut;
-    cut.write(::estd::make_str("a\rb\n"));
-    cut.write(::estd::make_str("c"));
+    cut.write_string_view("a\rb\n");
+    cut.write_string_view("c");
 
     EXPECT_THAT(stdIo.out, ElementsAre('a', '\r', 'b', '\n', 'c'));
 }

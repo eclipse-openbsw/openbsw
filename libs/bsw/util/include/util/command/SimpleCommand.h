@@ -6,7 +6,7 @@
 #include "util/command/CommandContext.h"
 #include "util/command/ICommand.h"
 
-#include <estd/functional.h>
+#include <etl/delegate.h>
 
 namespace util
 {
@@ -15,7 +15,7 @@ namespace command
 class SimpleCommand : public ICommand
 {
 public:
-    using ExecuteFunction = ::estd::function<void(CommandContext& context)>;
+    using ExecuteFunction = ::etl::delegate<void(CommandContext& context)>;
 
     SimpleCommand(char const* id, char const* description, ExecuteFunction executeFunc);
 

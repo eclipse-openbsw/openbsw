@@ -3,7 +3,6 @@
 #ifndef GUARD_57F36AE3_ABD3_47CB_B568_89F35E1F8C23
 #define GUARD_57F36AE3_ABD3_47CB_B568_89F35E1F8C23
 
-#include "estd/uncopyable.h"
 #include "uds/base/AbstractDiagJob.h"
 
 namespace uds
@@ -12,8 +11,6 @@ class IDiagAuthenticator;
 
 class DiagJobWithAuthentication : public AbstractDiagJob
 {
-    UNCOPYABLE(DiagJobWithAuthentication);
-
 public:
     explicit DiagJobWithAuthentication(
         IDiagAuthenticator const& authenticator,

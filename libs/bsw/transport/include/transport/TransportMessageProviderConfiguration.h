@@ -8,8 +8,7 @@
 
 #include "transport/BufferedTransportMessage.h"
 
-#include <estd/object_pool.h>
-#include <estd/uncopyable.h>
+#include <etl/pool.h>
 
 #include <cstdint>
 
@@ -70,8 +69,7 @@ public:
     void release(TransportMessage& msg) override;
 
 private:
-    using TransportMessagePool
-        = ::estd::declare::object_pool<BufferedTransportMessage<PAYLOAD_SIZE>, NUM_BUFFERS>;
+    using TransportMessagePool = ::etl::pool<BufferedTransportMessage<PAYLOAD_SIZE>, NUM_BUFFERS>;
     TransportMessagePool fTransportMessagesPool;
 };
 } // namespace declare
@@ -100,14 +98,14 @@ uint32_t TransportMessageProviderConfiguration<NUM_BUFFERS, PAYLOAD_SIZE>::getBu
 template<uint8_t NUM_BUFFERS, uint32_t PAYLOAD_SIZE>
 bool TransportMessageProviderConfiguration<NUM_BUFFERS, PAYLOAD_SIZE>::empty() const
 {
-    return fTransportMessagesPool.empty();
+    return fTransportMessagesPool.full();
 }
 
 // virtual
 template<uint8_t NUM_BUFFERS, uint32_t PAYLOAD_SIZE>
 TransportMessage& TransportMessageProviderConfiguration<NUM_BUFFERS, PAYLOAD_SIZE>::acquire()
 {
-    return fTransportMessagesPool.acquire();
+    return *fTransportMessagesPool.allocate();
 }
 
 // virtual
@@ -115,11 +113,11 @@ template<uint8_t NUM_BUFFERS, uint32_t PAYLOAD_SIZE>
 void TransportMessageProviderConfiguration<NUM_BUFFERS, PAYLOAD_SIZE>::release(
     TransportMessage& msg)
 {
-    // This static cast is actually save because BufferedTransportMessage has TransportMessage
+    // This static cast is actually safe because BufferedTransportMessage has TransportMessage
     // as its base class. So the pointer will not change.
     // However, it relies on the fact, that an object_pool checks if the released object
     // belongs to it.
-    fTransportMessagesPool.release(static_cast<BufferedTransportMessage<PAYLOAD_SIZE>&>(msg));
+    fTransportMessagesPool.release(&static_cast<BufferedTransportMessage<PAYLOAD_SIZE>&>(msg));
 }
 } // namespace declare
 } // namespace transport

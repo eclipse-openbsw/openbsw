@@ -6,8 +6,6 @@
 #ifndef GUARD_FA81A16F_4593_4FAF_899A_101D87027137
 #define GUARD_FA81A16F_4593_4FAF_899A_101D87027137
 
-#include <estd/functional.h>
-
 namespace async
 {
 template<typename Node>

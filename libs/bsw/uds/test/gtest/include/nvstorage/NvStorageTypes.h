@@ -3,7 +3,7 @@
 #ifndef GUARD_76CA5B26_B5A0_4D06_8D0B_4C528493A626
 #define GUARD_76CA5B26_B5A0_4D06_8D0B_4C528493A626
 
-#include <estd/functional.h>
+#include <etl/delegate.h>
 
 #include <cstdint>
 
@@ -67,8 +67,8 @@ enum NvStorageReturnCode
     NVSTORAGE_REQ_NV_BUSY
 };
 
-using applJobFinishedCallback = ::estd::function<void(
+using applJobFinishedCallback = ::etl::delegate<void(
     NvStorageOperation const, NvStorageReturnCode const, NvBlockIdType const)>;
-using applInitBlockCallback = ::estd::function<void(NvStorageOperation const, NvBlockIdType const)>;
+using applInitBlockCallback = ::etl::delegate<void(NvStorageOperation const, NvBlockIdType const)>;
 } /* namespace nvstorage */
 #endif // GUARD_76CA5B26_B5A0_4D06_8D0B_4C528493A626

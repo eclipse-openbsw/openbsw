@@ -3,15 +3,12 @@
 #ifndef GUARD_5E99DA0B_F4E2_457F_8E60_6526A61BAA3C
 #define GUARD_5E99DA0B_F4E2_457F_8E60_6526A61BAA3C
 
-#include "estd/uncopyable.h"
 #include "uds/base/Service.h"
 
 namespace uds
 {
 class InputOutputControlByIdentifier : public Service
 {
-    UNCOPYABLE(InputOutputControlByIdentifier);
-
 public:
     struct IOControlParameter
     {

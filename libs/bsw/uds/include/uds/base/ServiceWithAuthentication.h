@@ -3,7 +3,6 @@
 #ifndef GUARD_51B063D4_A3A5_435A_93E1_8E93825857C5
 #define GUARD_51B063D4_A3A5_435A_93E1_8E93825857C5
 
-#include "estd/uncopyable.h"
 #include "uds/base/Service.h"
 
 namespace uds
@@ -18,8 +17,6 @@ class IDiagAuthenticator;
  */
 class ServiceWithAuthentication : public Service
 {
-    UNCOPYABLE(ServiceWithAuthentication);
-
 public:
     explicit ServiceWithAuthentication(
         IDiagAuthenticator const& authenticator,

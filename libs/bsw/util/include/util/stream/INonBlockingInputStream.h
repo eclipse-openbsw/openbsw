@@ -3,7 +3,7 @@
 #ifndef GUARD_F92C2AA6_4256_494A_943C_4F4DE0BAD2D6
 #define GUARD_F92C2AA6_4256_494A_943C_4F4DE0BAD2D6
 
-#include <estd/slice.h>
+#include <etl/span.h>
 
 #include <cstdint>
 
@@ -29,7 +29,7 @@ public:
      * - true if the end of the stream has been reached
      * - false otherwise
      */
-    virtual bool isEof() const                                        = 0;
+    virtual bool isEof() const                                      = 0;
     /**
      * Reads a maximum number of bytes from the stream into a buffer.
      * \param buffer buffer that receives the bytes
@@ -37,7 +37,7 @@ public:
      * \return
      * number of bytes read into the buffer
      */
-    virtual uint32_t readBuffer(::estd::slice<uint8_t> const& buffer) = 0;
+    virtual uint32_t readBuffer(::etl::span<uint8_t> const& buffer) = 0;
 };
 
 } // namespace stream
