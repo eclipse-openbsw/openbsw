@@ -27,7 +27,7 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/admin/cmake")
 option(BUILD_UNIT_TESTS "Build unit tests" OFF)
 
 add_compile_options(
-    "$<$<COMPILE_LANG_AND_ID:CXX,Clang,GNU>:-O2;-g3;-Werror;-Wall;-Wextra;-Wvla>"
+    "$<$<COMPILE_LANG_AND_ID:CXX,Clang,GNU>:-O2;-g3;-Werror;-Wall;-Wextra;-Wvla;-Wno-deprecated-volatile>"
     # todo: enforce -Wunused-parameter
     "$<$<COMPILE_LANG_AND_ID:CXX,Clang,GNU>:-Wno-error=unused-parameter>"
     # note: the below warnings are often false positive
@@ -36,6 +36,8 @@ add_compile_options(
 
 add_compile_options(
     "$<$<COMPILE_LANG_AND_ID:C,Clang,GNU>:-O2;-g3;-Werror;-Wall;-Wextra>")
+
+add_link_options(-Wl,--noinhibit-exec)
 
 if (BUILD_UNIT_TESTS)
     add_compile_definitions(UNIT_TEST=1)

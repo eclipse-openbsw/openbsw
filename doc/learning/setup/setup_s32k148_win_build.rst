@@ -43,7 +43,7 @@ Then, in the base directory run:
 
 .. code-block:: bash
 
-    cmake -B cmake-build-s32k148 -S executables/referenceApp -DBUILD_TARGET_PLATFORM="S32K148EVB" --toolchain ../../admin/cmake/ArmNoneEabi.cmake
+    cmake -B cmake-build-s32k148 -S executables/referenceApp -DBUILD_TARGET_PLATFORM="S32K148EVB" --toolchain ../../admin/cmake/ArmNoneEabi-gcc.cmake
     cmake --build cmake-build-s32k148 --target app.referenceApp -j
 
 The build files should be written to a new subdirectory named ``cmake-build-s32k148``
