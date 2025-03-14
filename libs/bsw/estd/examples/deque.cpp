@@ -8,7 +8,9 @@
 #include <gtest/gtest.h>
 
 #pragma GCC diagnostic ignored "-Wunknown-pragmas"
+#ifdef __clang__
 #pragma clang diagnostic ignored "-Wunused-private-field"
+#endif
 
 namespace
 {
