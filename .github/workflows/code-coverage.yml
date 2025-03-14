@@ -76,7 +76,9 @@ jobs:
 
           mv line_coverage_badge.svg coverage_badges/ &&
           mv function_coverage_badge.svg coverage_badges/ &&
-          zip -r coverage_badges.zip coverage_badges
+          zip -r coverage_badges.zip coverage_badges &&
+
+          chown -R 2001:2001 cmake-build-unit-tests code_coverage coverage_badges
         "
 
     - name: Upload code coverage artifact
