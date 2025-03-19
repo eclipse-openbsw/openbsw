@@ -3,8 +3,6 @@
 #ifndef GUARD_60B6D233_94B4_49E4_9F75_D9416948C6F6
 #define GUARD_60B6D233_94B4_49E4_9F75_D9416948C6F6
 
-#include <estd/slice.h>
-
 namespace docan
 {
 /**

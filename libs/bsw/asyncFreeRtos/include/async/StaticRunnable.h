@@ -6,9 +6,6 @@
 #ifndef GUARD_DACDF931_AF72_4275_BB52_C84A579EB25F
 #define GUARD_DACDF931_AF72_4275_BB52_C84A579EB25F
 
-#include "estd/functional.h"
-#include "estd/slice.h"
-
 namespace async
 {
 /**

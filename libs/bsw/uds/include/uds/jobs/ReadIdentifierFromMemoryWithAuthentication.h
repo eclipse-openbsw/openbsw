@@ -9,8 +9,7 @@
 #include "uds/jobs/ReadIdentifierFromMemory.h"
 #include "uds/session/DiagSession.h"
 
-#include <estd/slice.h>
-#include <estd/uncopyable.h>
+#include <etl/span.h>
 
 namespace uds
 {
@@ -20,8 +19,6 @@ namespace uds
  */
 class ReadIdentifierFromMemoryWithAuthentication : public ReadIdentifierFromMemory
 {
-    UNCOPYABLE(ReadIdentifierFromMemoryWithAuthentication);
-
 public:
     ReadIdentifierFromMemoryWithAuthentication(
         IDiagAuthenticator const& authenticator,
@@ -33,7 +30,7 @@ public:
     ReadIdentifierFromMemoryWithAuthentication(
         IDiagAuthenticator const& authenticator,
         uint16_t identifier,
-        ::estd::slice<uint8_t const> const& responseData,
+        ::etl::span<uint8_t const> const& responseData,
         DiagSessionMask sessionMask = DiagSession::ALL_SESSIONS());
 
 protected:

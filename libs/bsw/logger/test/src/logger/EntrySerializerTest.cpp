@@ -28,8 +28,8 @@ struct EntrySerializerTest
         memset(_buffer, 0xaf, sizeof(_buffer));
         va_list ap;
         va_start(ap, formatString);
-        ::estd::slice<uint8_t> entryBuffer
-            = ::estd::make_slice(_buffer).offset(1).subslice(bufferSize);
+        ::etl::span<uint8_t> entryBuffer
+            = ::etl::span<uint8_t>(_buffer, sizeof(_buffer)).subspan(1, bufferSize);
         _usedBufferSize = serializer.serialize(
             entryBuffer, timestamp, componentIdx, static_cast<Level>(level), formatString, ap);
         _usedBufferSize = _usedBufferSize < bufferSize ? _usedBufferSize : bufferSize;
@@ -37,7 +37,7 @@ struct EntrySerializerTest
         _entry.clear();
         EXPECT_EQ(0xaf, _buffer[0]);
         EXPECT_EQ(0xaf, _buffer[bufferSize + 1]);
-        serializer.deserialize(entryBuffer.subslice(_usedBufferSize), *this);
+        serializer.deserialize(entryBuffer.first(_usedBufferSize), *this);
         return _entry;
     }
 

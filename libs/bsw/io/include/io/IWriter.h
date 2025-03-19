@@ -3,7 +3,7 @@
 #ifndef GUARD_04D23E89_BA90_4B0F_ABD6_FEC7A6F1FBF0
 #define GUARD_04D23E89_BA90_4B0F_ABD6_FEC7A6F1FBF0
 
-#include <estd/slice.h>
+#include <etl/span.h>
 
 namespace io
 {
@@ -33,7 +33,7 @@ public:
      * committed. This can also be used to trim the allocated slice to the right size before
      * committing, thus calling allocate will NOT modify the memory (e.g. zero it).
      */
-    virtual ::estd::slice<uint8_t> allocate(size_t size) = 0;
+    virtual ::etl::span<uint8_t> allocate(size_t size) = 0;
 
     /**
      * Makes the previously allocated slice available for the reader.

@@ -5,7 +5,7 @@
 
 #include "docan/common/DoCanConstants.h"
 
-#include <estd/slice.h>
+#include <etl/span.h>
 
 namespace docan
 {
@@ -41,7 +41,7 @@ public:
         MessageSizeType messageSize,
         FrameIndexType frameCount,
         FrameSizeType consecutiveFrameDataSize,
-        ::estd::slice<uint8_t const> const& data)
+        ::etl::span<uint8_t const> const& data)
         = 0;
 
     /**
@@ -53,7 +53,7 @@ public:
     virtual void consecutiveDataFrameReceived(
         DataLinkAddressType receptionAddress,
         uint8_t sequenceNumber,
-        ::estd::slice<uint8_t const> const& data)
+        ::etl::span<uint8_t const> const& data)
         = 0;
 
     /**

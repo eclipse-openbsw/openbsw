@@ -11,11 +11,10 @@
 
 #include <async/Async.h>
 #include <async/util/Call.h>
+#include <etl/uncopyable.h>
 #include <transport/AbstractTransportLayer.h>
 #include <transport/ITransportMessageProcessedListener.h>
 #include <transport/TransportMessage.h>
-
-#include <estd/uncopyable.h>
 
 #ifdef IS_VARIANT_HANDLING_NEEDED
 #include "uds/DiagnosisConfiguration.h"
@@ -47,9 +46,8 @@ class DiagDispatcher2
 : public IResumableDiagDispatcher
 , public transport::AbstractTransportLayer
 , public transport::ITransportMessageProcessedListener
+, public ::etl::uncopyable
 {
-    UNCOPYABLE(DiagDispatcher2);
-
 public:
     /**
      * Constructor
@@ -135,9 +133,8 @@ private:
 
     class DefaultTransportMessageProcessedListener
     : public transport::ITransportMessageProcessedListener
+    , public ::etl::uncopyable
     {
-        UNCOPYABLE(DefaultTransportMessageProcessedListener);
-
     public:
         DefaultTransportMessageProcessedListener() {}
 

@@ -4,10 +4,9 @@
 #define GUARD_3426A8C5_0A38_4B74_BE74_D069EB452DF0
 
 #include <async/AsyncBinding.h>
+#include <etl/optional.h>
 #include <runtime/StatisticsContainer.h>
 #include <util/command/GroupCommand.h>
-
-#include <estd/optional.h>
 
 namespace lifecycle
 {
@@ -36,7 +35,7 @@ private:
     TaskStatistics _taskStatistics;
     IsrGroupStatistics _isrGroupStatistics;
 
-    ::estd::optional<uint32_t> _ticksPerUs;
+    ::etl::optional<uint32_t> _ticksPerUs;
     uint32_t _totalRuntime;
 };
 

@@ -6,8 +6,7 @@
 #ifndef GUARD_96819215_8F7A_41D6_8DCF_26C038283E2E
 #define GUARD_96819215_8F7A_41D6_8DCF_26C038283E2E
 
-#include <estd/functional.h>
-#include <estd/slice.h>
+#include <etl/delegate.h>
 
 #include <cstddef>
 
@@ -19,7 +18,7 @@ class StatisticsIterator
 public:
     using StatisticsType = Statistics;
 
-    using GetNameType = ::estd::function<char const*(size_t)>;
+    using GetNameType = ::etl::delegate<char const*(size_t)>;
 
     StatisticsIterator(GetNameType const getName, size_t const valueCount)
     : _getName(getName), _valueCount(valueCount)

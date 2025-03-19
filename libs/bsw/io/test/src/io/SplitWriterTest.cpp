@@ -4,11 +4,10 @@
 
 #include "io/MemoryQueue.h"
 
-#include <estd/big_endian.h>
-#include <estd/memory.h>
-#include <estd/optional.h>
-#include <estd/slice.h>
-#include <estd/vec.h>
+#include <etl/array.h>
+#include <etl/memory.h>
+#include <etl/optional.h>
+#include <etl/vector.h>
 
 #include <gmock/gmock.h>
 
@@ -38,14 +37,14 @@ struct SplitWriterTest : ::testing::Test
             auto& w    = _w.emplace_back(_q[i]);
             writers[i] = &w;
         }
-        new (_s.emplace())::io::SplitWriter<NUM_QUEUES>(writers);
+        _s.emplace(writers);
     }
 
-    ::estd::vec<Q, NUM_QUEUES> _q;
-    ::estd::vec<Writer, NUM_QUEUES> _w;
-    ::estd::vec<Reader, NUM_QUEUES> _r;
+    ::etl::vector<Q, NUM_QUEUES> _q;
+    ::etl::vector<Writer, NUM_QUEUES> _w;
+    ::etl::vector<Reader, NUM_QUEUES> _r;
     ::io::IWriter* writers[NUM_QUEUES];
-    ::estd::optional<::io::SplitWriter<NUM_QUEUES>> _s;
+    ::etl::optional<::io::SplitWriter<NUM_QUEUES>> _s;
 };
 
 /**
@@ -56,11 +55,11 @@ struct SplitWriterTest : ::testing::Test
 TEST_F(SplitWriterTest, cannot_initialise_with_nullptrs)
 {
     ::estd::AssertHandlerScope scope(::estd::AssertExceptionHandler);
-    ::estd::array<::io::IWriter*, 1> array1 = {nullptr};
+    ::etl::array<::io::IWriter*, 1> array1 = {nullptr};
 
     ASSERT_THROW(::io::SplitWriter<1> splitWriter1(array1), ::estd::assert_exception);
 
-    ::estd::array<::io::IWriter*, NUM_QUEUES> array_NUM_QUEUES;
+    ::etl::array<::io::IWriter*, NUM_QUEUES> array_NUM_QUEUES;
     for (size_t i = 0; i < _w.size() - 1; i++)
     {
         array_NUM_QUEUES[i] = &_w[i];
@@ -88,7 +87,7 @@ TEST_F(SplitWriterTest, cannot_initialise_with_different_sized_writers)
     AnotherQueue anotherQueue;
     ::io::MemoryQueueWriter<AnotherQueue> anotherSizedIWriter(anotherQueue);
 
-    ::estd::array<::io::IWriter*, NUM_QUEUES> array_NUM_QUEUES;
+    ::etl::array<::io::IWriter*, NUM_QUEUES> array_NUM_QUEUES;
     for (size_t i = 0; i < _w.size() - 1; i++)
     {
         array_NUM_QUEUES[i] = &_w[i];
@@ -164,7 +163,7 @@ TEST_F(SplitWriterTest, write_to_all)
     uint8_t const payload[] = {1, 2, 3, 4, 5};
     auto const b            = _s->allocate(sizeof(payload));
     ASSERT_EQ(sizeof(payload), b.size());
-    ::estd::memory::copy(b, payload);
+    ::etl::mem_copy(payload, sizeof(payload), b.begin());
     _s->commit();
 
     for (size_t i = 0; i < _r.size(); i++)
@@ -201,7 +200,7 @@ TEST_F(SplitWriterTest, reallocation_gives_same_memory)
     uint8_t const payload[] = {1, 2, 3, 4, 5};
     b                       = _s->allocate(sizeof(payload));
     ASSERT_EQ(sizeof(payload), b.size());
-    ::estd::memory::copy(b, payload);
+    ::etl::mem_copy(payload, sizeof(payload), b.begin());
 
     // free the second to last
     r = _r[NUM_QUEUES - 2].peek();

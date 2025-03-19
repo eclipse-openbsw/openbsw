@@ -8,8 +8,9 @@
 
 #include "async/Types.h"
 
-#include <estd/array.h>
-#include <estd/functional.h>
+#include <etl/array.h>
+#include <etl/delegate.h>
+
 #include <platform/config.h>
 
 namespace async
@@ -28,7 +29,7 @@ class EventDispatcher
 public:
     static size_t const EVENT_COUNT = EventCount;
     using LockType                  = Lock;
-    using HandlerFunctionType       = ::estd::function<void()>;
+    using HandlerFunctionType       = ::etl::delegate<void()>;
 
     void setEventHandler(size_t event, HandlerFunctionType handlerFunction);
     void removeEventHandler(size_t event);
@@ -36,7 +37,7 @@ public:
     void handleEvents(EventMaskType eventMask) const;
 
 private:
-    using HandlerFunctionsArrayType = ::estd::array<HandlerFunctionType, EventCount>;
+    using HandlerFunctionsArrayType = ::etl::array<HandlerFunctionType, EventCount>;
 
     template<size_t Event, bool IsValid = (Event < EventCount)>
     struct EventDispatcherImpl

@@ -5,7 +5,6 @@
 #include "transport/ITransportMessageProcessedListener.h"
 #include "transport/TransportMessage.h"
 
-#include <estd/assert.h>
 #include <platform/estdint.h>
 
 #include <gmock/gmock.h>

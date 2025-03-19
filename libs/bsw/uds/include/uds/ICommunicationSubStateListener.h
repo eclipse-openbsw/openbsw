@@ -3,8 +3,8 @@
 #ifndef GUARD_DEDB6DC7_3B13_4ECC_84D1_D6EC188F58E4
 #define GUARD_DEDB6DC7_3B13_4ECC_84D1_D6EC188F58E4
 
-#include <estd/forward_list.h>
-#include <estd/uncopyable.h>
+#include <etl/intrusive_list.h>
+#include <etl/uncopyable.h>
 
 namespace uds
 {
@@ -13,8 +13,7 @@ namespace uds
  * control is aimed for sub-bus segment to diagnostic-only
  * scheduling mode. see the iso 14229-1 for more information.
  */
-class ICommunicationSubStateListener
-: public ::estd::forward_list_node<ICommunicationSubStateListener>
+class ICommunicationSubStateListener : public ::etl::bidirectional_link<0>
 {
 public:
     enum CommunicationEnhancedState
@@ -35,9 +34,6 @@ public:
      */
     virtual bool communicationStateChanged(CommunicationEnhancedState newState, uint16_t /*nodeId*/)
         = 0;
-
-private:
-    UNCOPYABLE(ICommunicationSubStateListener);
 };
 
 } // namespace uds

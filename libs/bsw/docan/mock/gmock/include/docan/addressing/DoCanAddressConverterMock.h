@@ -37,7 +37,7 @@ public:
     MOCK_METHOD(
         char const*,
         formatDataLinkAddress,
-        (DataLinkAddressType, ::estd::slice<char> const&),
+        (DataLinkAddressType, ::etl::span<char> const&),
         (const, override));
 };
 

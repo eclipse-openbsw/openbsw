@@ -3,7 +3,6 @@
 #ifndef GUARD_3D409E3E_26C9_42D7_83CF_42C825C993C5
 #define GUARD_3D409E3E_26C9_42D7_83CF_42C825C993C5
 
-#include "estd/uncopyable.h"
 #include "uds/base/Subfunction.h"
 
 namespace uds
@@ -14,8 +13,6 @@ namespace uds
  */
 class RequestRoutineResults : public Subfunction
 {
-    UNCOPYABLE(RequestRoutineResults);
-
 public:
     RequestRoutineResults();
 

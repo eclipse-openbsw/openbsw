@@ -22,7 +22,7 @@ struct DefaultEntryFormatterTest
         util::stream::IOutputStream& outputStream, uint32_t const& timestamp) const override
     {
         ASSERT_EQ(0x3934UL, timestamp);
-        outputStream.write(::estd::make_str("0x003934"));
+        outputStream.write_string_view(::etl::string_view("0x003934"));
     }
 
     util::format::ParamVariant const* readArgument(util::format::ParamDatatype) override

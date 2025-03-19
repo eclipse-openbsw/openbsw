@@ -3,15 +3,12 @@
 #ifndef GUARD_CC0029EC_A0D6_49B5_A28F_5338533B8D50
 #define GUARD_CC0029EC_A0D6_49B5_A28F_5338533B8D50
 
-#include "estd/uncopyable.h"
 #include "uds/base/AbstractDiagJob.h"
 
 namespace uds
 {
 class RoutineControlJob : public AbstractDiagJob
 {
-    UNCOPYABLE(RoutineControlJob);
-
 protected:
     class RoutineControlJobNode;
 
