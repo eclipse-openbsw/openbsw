@@ -11,7 +11,6 @@
 #include "io/Io.h"
 #include "mcu/mcu.h"
 #include "sci/SciDevice.h"
-#include "watchdog/Watchdog.h"
 
 using namespace bios;
 
@@ -37,11 +36,7 @@ StaticBsp::StaticBsp()
     initSystemTimer();
 }
 
-void StaticBsp::init()
-{
-    bsp::Watchdog::disableWatchdog();
-    hwInit();
-}
+void StaticBsp::init() { hwInit(); }
 
 void StaticBsp::hwInit()
 {

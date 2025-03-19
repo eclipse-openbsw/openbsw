@@ -4,6 +4,9 @@
 
 #include <safeLifecycle/SafetyLogger.h>
 #include <safeLifecycle/SafetyManager.h>
+#ifdef PLATFORM_SUPPORT_WATCHDOG
+#include "watchdog/Watchdog.h"
+#endif
 
 ::safety::SafetyManager safetyManager;
 
@@ -44,6 +47,9 @@ void SafetySystem::run()
 void SafetySystem::shutdown()
 {
     _timeout.cancel();
+#ifdef PLATFORM_SUPPORT_WATCHDOG
+    bsp::Watchdog::disableWatchdog();
+#endif
 
     transitionDone();
 }

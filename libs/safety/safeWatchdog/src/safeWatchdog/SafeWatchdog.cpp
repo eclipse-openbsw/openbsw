@@ -21,14 +21,11 @@ void SafeWatchdog::init()
 {
     // Variables will be initialized in first cyclic call
     _serviceCounter = SERVICE_COUNTER_INIT;
-    enableMcuWatchdog();
 }
 
 void SafeWatchdog::cyclic()
 {
     auto& safeSupervisor = safety::SafeSupervisor::getInstance();
-    safeSupervisor.safeWatchdogSequenceMonitor.hit(
-        safety::SafeSupervisor::EnterLeaveSequence::ENTER);
     // Checks if the Watchdog configuration is valid
     safeSupervisor.safeWatchdogConfigMonitor.check(checkWdConfigs());
 

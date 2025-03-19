@@ -8,7 +8,13 @@ class WatchdogManager
 {
 public:
     /**
-     * Checks if the watchdog functions correctly and resets the ECU if the timeout occurs.
+     * Fast testing of the watchdog.
+     *
+     * Checks if the watchdog functions correctly. It tests the watchdog more quickly by splitting
+     * the watchdog counter into its constituent byte-wide stages. The low and high bytes of counter
+     * are run independently and tested for timeout against the corresponding byte of the timeout
+     * value register. During the test, the watchdog reset occurs twice, once for the fast testing
+     * of low byte and again for the fast testing of high byte of the watchdog counter.
      *
      * \return
      * - false = the check was started, but it was unsuccessful
