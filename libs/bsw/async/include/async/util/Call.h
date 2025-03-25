@@ -55,4 +55,3 @@ void Call<T>::execute()
 }
 
 } // namespace async
-

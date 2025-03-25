@@ -120,4 +120,3 @@ private:
 } // namespace util
 
 #endif // LOGGER_NO_LEGACY_API
-

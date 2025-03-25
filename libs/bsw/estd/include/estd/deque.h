@@ -1917,4 +1917,3 @@ deque<T, N>& deque<T, N>::operator=(this_type const& other)
 
 } // namespace declare
 } // namespace estd
-

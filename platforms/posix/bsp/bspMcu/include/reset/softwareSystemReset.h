@@ -13,4 +13,3 @@ void softwareDestructiveReset() __attribute__((noreturn));
 #ifdef __cplusplus
 }
 #endif
-

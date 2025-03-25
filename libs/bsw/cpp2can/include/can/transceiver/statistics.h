@@ -23,4 +23,3 @@ struct Statistics
 extern Statistics get_statistics(ICanTransceiver& transceiver);
 
 } // namespace can
-

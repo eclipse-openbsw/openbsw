@@ -71,4 +71,3 @@ TransportConfiguration::isTesterPresentWithSuppressPosResponse(TransportMessage 
 }
 
 } // namespace transport
-

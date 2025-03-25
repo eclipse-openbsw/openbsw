@@ -25,4 +25,3 @@ public:
     static uint16_t const BUSY_MESSAGE_EXTRA_BYTES = 7U;
 };
 } // namespace uds
-

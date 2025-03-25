@@ -62,4 +62,3 @@ bool DoCanConnection<DataLinkLayer>::operator==(DoCanConnection const& other) co
            && (_transportAddressPair == other._transportAddressPair);
 }
 } // namespace docan
-

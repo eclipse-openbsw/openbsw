@@ -103,4 +103,3 @@ void Queue<Node>::remove(Node& node)
 }
 
 } // namespace async
-

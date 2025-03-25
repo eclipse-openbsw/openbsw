@@ -5,4 +5,3 @@
 #include <util/logger/Logger.h>
 
 DECLARE_LOGGER_COMPONENT(CONSOLE)
-

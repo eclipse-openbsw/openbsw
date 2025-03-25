@@ -109,4 +109,3 @@ struct Config
 } // namespace async
 
 #endif // __cplusplus
-

@@ -29,4 +29,3 @@ void resumeAllInterrupts(uint32_t oldMachineStateRegisterValue)
 }
 
 // clang-format on
-

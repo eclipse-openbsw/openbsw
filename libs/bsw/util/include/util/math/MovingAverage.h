@@ -50,4 +50,3 @@ private:
 
 } // namespace math
 } // namespace util
-

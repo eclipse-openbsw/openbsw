@@ -44,4 +44,3 @@ const tFtm::tFtmConfiguration _cfgFtm4 = {
 
 // clang-format on
 } // namespace bios
-

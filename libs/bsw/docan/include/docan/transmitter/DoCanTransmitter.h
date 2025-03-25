@@ -811,4 +811,3 @@ inline DoCanTransmitter<DataLinkLayer>::RemoveGuard::~RemoveGuard()
 }
 
 } // namespace docan
-

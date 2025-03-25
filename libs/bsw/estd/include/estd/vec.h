@@ -619,4 +619,3 @@ inline void vec<T, N>::clear()
 }
 
 } // namespace estd
-

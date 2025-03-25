@@ -22,4 +22,3 @@ struct FilteredCANFrameSentListenerMock : public IFilteredCANFrameSentListener
 };
 
 } // namespace can
-

@@ -127,4 +127,3 @@ public:
     E error() const { return _value.get(); }
 };
 } // namespace estd
-

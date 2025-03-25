@@ -85,4 +85,3 @@ template<class T>
 T* singleton<T>::_self = nullptr;
 
 } // namespace estd
-

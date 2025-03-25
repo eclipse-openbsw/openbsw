@@ -67,4 +67,3 @@ inline T* QueueNode<T>::dequeue()
 }
 
 } // namespace async
-

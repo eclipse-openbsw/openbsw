@@ -12,4 +12,3 @@ typedef uint32_t OldIntEnabledStatusValueType;
 OldIntEnabledStatusValueType getOldIntEnabledStatusValueAndSuspendAllInterrupts(void);
 
 void resumeAllInterrupts(OldIntEnabledStatusValueType const oldIntEnabledStatusValue);
-

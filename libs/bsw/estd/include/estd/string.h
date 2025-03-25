@@ -369,4 +369,3 @@ template<typename T>
 }
 
 } // namespace estd
-

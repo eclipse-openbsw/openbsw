@@ -19,4 +19,3 @@ void resumeAllInterrupts(uint32_t oldMachineStateRegisterValue);
 #ifdef __cplusplus
 }
 #endif
-

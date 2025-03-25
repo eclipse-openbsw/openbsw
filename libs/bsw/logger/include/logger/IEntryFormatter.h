@@ -52,4 +52,3 @@ inline IEntryFormatter<E, Timestamp>::IEntryFormatter() : ::estd::uncopyable()
 {}
 
 } // namespace logger
-

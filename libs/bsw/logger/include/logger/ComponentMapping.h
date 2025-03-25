@@ -233,4 +233,3 @@ template<uint8_t IndexUpperBound>
     static _mappingTypeName _mappingName(                                         \
         _componentInfoTableName, _levelInfoTableName, &::util::logger::_globalComponent)
 #endif // DEFINE_LOGGER_COMPONENT_MAPPING
-

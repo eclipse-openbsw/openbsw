@@ -49,4 +49,3 @@ public:
 };
 
 } // namespace can
-

@@ -290,4 +290,3 @@ DoCanTransportLayerContainerBuilder<DataLinkLayer>::addTransportLayer(
 } // namespace declare
 
 } // namespace docan
-

@@ -1376,4 +1376,3 @@ typename forward_list<T>::const_pointer forward_list<T>::lastItem() const
 }
 
 } // namespace estd
-

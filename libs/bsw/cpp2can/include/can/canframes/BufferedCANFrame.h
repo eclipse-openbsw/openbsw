@@ -16,4 +16,3 @@ namespace can
 using BufferedCANFrame = CANFrame;
 
 } // namespace can
-

@@ -60,4 +60,3 @@ void StaticRunnable<T>::run()
 }
 
 } // namespace async
-

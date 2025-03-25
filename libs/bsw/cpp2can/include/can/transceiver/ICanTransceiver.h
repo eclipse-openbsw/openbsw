@@ -320,4 +320,3 @@ public:
 };
 
 } // namespace can
-

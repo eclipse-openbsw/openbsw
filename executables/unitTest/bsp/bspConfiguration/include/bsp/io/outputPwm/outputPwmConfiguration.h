@@ -21,4 +21,3 @@ enum outputPwm
     PORT_UNAVAILABLE = _pwmChannelMax
 
 }; //*enum
-

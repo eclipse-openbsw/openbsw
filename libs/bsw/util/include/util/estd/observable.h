@@ -187,4 +187,3 @@ T& observable<T, Compare>::transaction::get()
 
 } /* namespace estd */
 } /* namespace util */
-

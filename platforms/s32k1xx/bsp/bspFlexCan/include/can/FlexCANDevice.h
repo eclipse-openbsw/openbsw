@@ -373,4 +373,3 @@ enum Code
 } // namespace CANTxBuffer
 
 } // namespace bios
-

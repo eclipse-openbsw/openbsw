@@ -382,4 +382,3 @@ inline void PrintfFormatter::putChar(char const c, size_t count)
 
 } // namespace format
 } // namespace util
-

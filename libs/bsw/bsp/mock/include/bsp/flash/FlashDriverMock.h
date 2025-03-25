@@ -17,4 +17,3 @@ struct FlashDriverMock : IFlashDriver
 };
 
 } /* namespace flash */
-

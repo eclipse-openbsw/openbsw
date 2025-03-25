@@ -3,4 +3,3 @@
 #pragma once
 
 #include "can/FlexCANDevice.h"
-

@@ -25,4 +25,3 @@ struct FilterMock : public IFilter
 };
 
 } // namespace can
-

@@ -13,4 +13,3 @@ void softwareDestructiveReset(void);
 #ifdef __cplusplus
 } /* extern "C" */
 #endif
-

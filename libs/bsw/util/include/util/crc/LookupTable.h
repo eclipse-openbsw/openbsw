@@ -18,4 +18,3 @@ struct LookupTable
 
 } // namespace crc
 } // namespace util
-

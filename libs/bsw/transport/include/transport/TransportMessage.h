@@ -365,4 +365,3 @@ inline uint16_t TransportMessage::missingBytes() const
 }
 
 } // namespace transport
-

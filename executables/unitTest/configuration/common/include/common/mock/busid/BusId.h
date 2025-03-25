@@ -22,4 +22,3 @@ static constexpr uint8_t LAST_BUS = BUS2;
 } // namespace busid
 } // namespace mock
 } // namespace common
-

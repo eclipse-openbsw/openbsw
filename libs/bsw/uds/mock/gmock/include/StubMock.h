@@ -14,4 +14,3 @@ public:
 
     bool isStub() const { return stub; }
 };
-

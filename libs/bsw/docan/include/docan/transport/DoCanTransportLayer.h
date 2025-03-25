@@ -241,4 +241,3 @@ void DoCanTransportLayer<DataLinkLayer>::processShutdown()
     _shutdownDelegate(*this);
 }
 } // namespace docan
-

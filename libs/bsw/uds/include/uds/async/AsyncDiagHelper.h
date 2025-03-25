@@ -68,4 +68,3 @@ inline AsyncDiagHelper<N>::AsyncDiagHelper()
 } // namespace declare
 
 } // namespace uds
-

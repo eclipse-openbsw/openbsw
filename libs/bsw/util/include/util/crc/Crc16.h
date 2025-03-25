@@ -15,4 +15,3 @@ struct Crc16
 
 } /* namespace crc */
 } /* namespace util */
-

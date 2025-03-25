@@ -32,4 +32,3 @@ private:
     Handler& _handler;
 };
 } // namespace async
-

@@ -43,4 +43,3 @@ inline AbstractIntervalFilteredCANFrameListener::AbstractIntervalFilteredCANFram
 inline IFilter& AbstractIntervalFilteredCANFrameListener::getFilter() { return fFilter; }
 
 } // namespace can
-

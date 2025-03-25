@@ -112,4 +112,3 @@ void ComponentConfig<IndexUpperBound>::writeLevels()
 {}
 
 } // namespace logger
-

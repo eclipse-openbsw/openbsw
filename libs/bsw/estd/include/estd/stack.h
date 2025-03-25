@@ -378,4 +378,3 @@ private:
 
 } // namespace declare
 } // namespace estd
-

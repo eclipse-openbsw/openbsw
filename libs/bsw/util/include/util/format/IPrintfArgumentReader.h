@@ -31,4 +31,3 @@ public:
 
 } // namespace format
 } // namespace util
-

@@ -28,4 +28,3 @@ bool isEqualAfterTimeout(T const* const ptr, T const mask, T const value, uint32
 }
 
 } // namespace bsp
-

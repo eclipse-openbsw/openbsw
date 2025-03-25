@@ -28,4 +28,3 @@ inline ILoggerTime<T>::ILoggerTime() : ::estd::uncopyable()
 {}
 
 } // namespace logger
-

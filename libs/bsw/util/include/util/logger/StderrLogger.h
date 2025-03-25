@@ -74,4 +74,3 @@ StderrLogger::StderrLogger(LoggerComponentInfo (&firstComponentInfo)[Count])
 
 } // namespace logger
 } // namespace util
-

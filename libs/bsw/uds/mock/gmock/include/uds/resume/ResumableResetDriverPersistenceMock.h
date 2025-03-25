@@ -16,4 +16,3 @@ public:
     MOCK_METHOD0(clear, void());
 };
 } // namespace uds
-

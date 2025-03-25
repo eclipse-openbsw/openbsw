@@ -181,4 +181,3 @@ inline LifecycleManager& createLifecycleManager(
     return createdManager;
 }
 } // namespace lifecycle
-

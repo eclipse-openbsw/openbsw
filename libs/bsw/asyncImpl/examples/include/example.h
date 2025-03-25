@@ -38,4 +38,3 @@ private:
 // EXAMPLE_END AsyncImplExample
 
 } // namespace asyncNewPlatform
-

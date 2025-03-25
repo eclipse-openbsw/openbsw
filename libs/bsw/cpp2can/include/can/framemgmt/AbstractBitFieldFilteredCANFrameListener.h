@@ -43,4 +43,3 @@ inline AbstractBitFieldFilteredCANFrameListener::AbstractBitFieldFilteredCANFram
 inline IFilter& AbstractBitFieldFilteredCANFrameListener::getFilter() { return fFilter; }
 
 } // namespace can
-

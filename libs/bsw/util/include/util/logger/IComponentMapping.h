@@ -52,4 +52,3 @@ protected:
 
 } // namespace logger
 } // namespace util
-

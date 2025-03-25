@@ -64,4 +64,3 @@ template<typename Handler, typename Event, typename ScopedMutex, typename Contex
 Context const Trigger<Handler, Event, ScopedMutex, Context>::DEFAULT_CONTEXT{};
 
 } // namespace safeMonitor
-

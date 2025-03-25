@@ -22,4 +22,3 @@ uint32_t asyncTickHook(void);
 #ifdef __cplusplus
 }
 #endif // __cplusplus
-

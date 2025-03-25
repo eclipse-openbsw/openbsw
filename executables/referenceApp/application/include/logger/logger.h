@@ -9,4 +9,3 @@ void run();
 void flush();
 
 } // namespace logger
-

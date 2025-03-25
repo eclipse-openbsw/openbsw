@@ -161,4 +161,3 @@ inline void SplitWriter<N>::flush()
 {}
 
 } // namespace io
-

@@ -118,4 +118,3 @@ constexpr underlying_type_t<Enum> to_underlying(Enum const e) noexcept
 }
 
 } // namespace estd
-

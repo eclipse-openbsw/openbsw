@@ -186,4 +186,3 @@ inline void CANFrame::setPayload(uint8_t const* const payload, uint8_t const len
 inline void CANFrame::setTimestamp(uint32_t const aTimestamp) { _timestamp = aTimestamp; }
 
 } // namespace can
-

@@ -34,4 +34,3 @@ private:
 
 } /* namespace command */
 } /* namespace util */
-

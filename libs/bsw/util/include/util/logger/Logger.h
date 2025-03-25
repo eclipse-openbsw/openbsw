@@ -226,4 +226,3 @@ Logger::log(uint8_t const componentIndex, Level const level, char const* const s
 } // namespace util
 
 #endif // LOGGER_NO_LEGACY_API
-

@@ -535,4 +535,3 @@ inline size_t MemoryQueueReader<Queue>::available() const
 }
 
 } // namespace io
-

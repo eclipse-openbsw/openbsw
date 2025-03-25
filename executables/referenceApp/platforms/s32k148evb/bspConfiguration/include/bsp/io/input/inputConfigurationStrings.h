@@ -7,4 +7,3 @@ char const* const inputConfigurationStrings[] = {
     /*  1 */ "EVAL_SW3",
     "lastStatic",
 };
-

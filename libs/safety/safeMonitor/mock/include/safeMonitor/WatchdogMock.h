@@ -26,4 +26,3 @@ public:
     MOCK_CONST_METHOD0_T(getContext, Context&());
 };
 } // namespace safeMonitor
-

@@ -57,4 +57,3 @@ private:
 } // namespace declare
 } // namespace stream
 } // namespace util
-

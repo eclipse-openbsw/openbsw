@@ -57,4 +57,3 @@ bsp::BspReturnCode AnalogInputScaleImplementation<T1, T2>::calc(
     }
     return retCode;
 }
-

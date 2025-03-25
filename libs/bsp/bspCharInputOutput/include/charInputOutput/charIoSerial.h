@@ -45,4 +45,3 @@ int SerialLogger__inchar(void);
 #ifdef __cplusplus
 }
 #endif
-

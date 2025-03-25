@@ -44,4 +44,3 @@ struct ICanTransceiverMock : public ICanTransceiver
 };
 
 } // namespace can
-

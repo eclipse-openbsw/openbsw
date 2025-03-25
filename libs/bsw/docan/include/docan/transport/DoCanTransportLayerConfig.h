@@ -126,4 +126,3 @@ DoCanTransportLayerConfig<DataLinkLayer, RxCount, TxCount, MaxFrameSize>::DoCanT
 } // namespace declare
 
 } // namespace docan
-

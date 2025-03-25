@@ -70,4 +70,3 @@ inline uint64_t reverseBits(uint64_t value)
 
 } // namespace memory
 } // namespace util
-

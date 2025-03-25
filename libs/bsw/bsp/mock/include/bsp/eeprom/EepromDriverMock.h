@@ -17,4 +17,3 @@ public:
 };
 
 } // namespace eeprom
-

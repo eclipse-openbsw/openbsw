@@ -31,4 +31,3 @@ template<std::size_t N>
 using make_index_sequence = typename internal::IndexSequenceHelper<N>::type;
 
 } // namespace estd
-

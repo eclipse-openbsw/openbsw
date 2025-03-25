@@ -235,4 +235,3 @@ inline bool operator!=(optional<T> const& lhs, optional<T> const& rhs)
     return !(lhs == rhs);
 }
 } // namespace estd
-

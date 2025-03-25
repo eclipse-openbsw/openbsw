@@ -99,4 +99,3 @@ inline void EventDispatcher<EventCount, Lock>::EventDispatcherImpl<Event, false>
 {}
 
 } // namespace async
-

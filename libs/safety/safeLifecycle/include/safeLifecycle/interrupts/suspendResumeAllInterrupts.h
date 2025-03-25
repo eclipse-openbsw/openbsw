@@ -28,4 +28,3 @@ resumeAllInterrupts(uint32_t oldMachineStateRegisterValue)
 }
 
 } // namespace safety
-

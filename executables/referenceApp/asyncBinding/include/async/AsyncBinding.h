@@ -29,4 +29,3 @@ struct AsyncBinding : public Config
 
 using AsyncBindingType = AsyncBinding;
 } // namespace async
-

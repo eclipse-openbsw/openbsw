@@ -162,4 +162,3 @@ private:
 } // namespace declare
 } // namespace estd
 } // namespace util
-

@@ -490,4 +490,3 @@ TaskConfigHolder<N, void>::getTaskConfig(size_t const /*taskIdx*/)
 } // namespace internal
 
 } // namespace async
-

@@ -127,4 +127,3 @@ template<
 Context const Register<Handler, Event, RegisterType, ScopedMutex, Context>::DEFAULT_CONTEXT{};
 
 } // namespace safeMonitor
-

@@ -225,4 +225,3 @@ AbstractTransportLayer::TransportMessageProvidingListenerHelper::setTransportMes
 }
 
 } // namespace transport
-

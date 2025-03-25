@@ -29,4 +29,3 @@ struct DoCanFrameCodecConfig
     uint8_t _offset;
 };
 } // namespace docan
-

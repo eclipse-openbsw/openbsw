@@ -691,4 +691,3 @@ struct array_data<T, 0>
 };
 
 } // namespace estd
-

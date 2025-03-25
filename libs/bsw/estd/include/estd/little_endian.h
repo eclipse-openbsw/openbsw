@@ -319,4 +319,3 @@ void write_le_bits(uint8_t* const dst, T src, size_t offset, size_t length)
 }
 
 } // namespace estd
-

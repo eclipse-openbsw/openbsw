@@ -59,4 +59,3 @@ bool operator==(DiagSession const& x, DiagSession const& y);
 bool operator!=(DiagSession const& x, DiagSession const& y);
 
 } // namespace uds
-

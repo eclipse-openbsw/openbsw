@@ -25,4 +25,3 @@ asm (
 }
 
 // clang-format on
-

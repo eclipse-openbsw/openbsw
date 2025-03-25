@@ -72,4 +72,3 @@ public:
     static std::array<::estd::slice<LogicalAddress const>, N> const TESTER_ADDRESS_LISTS;
 };
 } // namespace transport
-

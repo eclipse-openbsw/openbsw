@@ -56,4 +56,3 @@ inline void DoCanNormalAddressing<MessageSize, FrameSize, FrameIndex>::encodeTra
     canId = transmissionAddress;
 }
 } // namespace docan
-

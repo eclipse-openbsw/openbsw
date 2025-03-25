@@ -403,4 +403,3 @@ inline bool ReceiveResult::operator==(ReceiveResult const& other) const
 }
 
 } // namespace docan
-

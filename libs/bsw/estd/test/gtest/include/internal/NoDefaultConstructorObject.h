@@ -15,4 +15,3 @@ struct NoDefaultConstructorObject
 };
 
 } /* namespace internal */
-

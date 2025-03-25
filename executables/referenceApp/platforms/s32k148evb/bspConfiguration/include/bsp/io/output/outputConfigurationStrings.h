@@ -8,4 +8,3 @@ char const* const outputConfigurationStrings[] = {
 
     "lastStatic",
 };
-

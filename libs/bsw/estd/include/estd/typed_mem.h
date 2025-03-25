@@ -166,4 +166,3 @@ inline auto typed_mem<T>::operator*() const -> const_reference
 }
 
 } // namespace estd
-

@@ -116,4 +116,3 @@ void StatisticsWriter::formatStatisticsGroup(
 }
 
 } // namespace runtime
-

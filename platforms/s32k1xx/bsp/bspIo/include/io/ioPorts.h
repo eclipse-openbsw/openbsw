@@ -143,4 +143,3 @@ enum IOPort
     PE25,
     NUM_PORTS = 0xff //, PORT_UNAVAILABLE = NUM_PORTS
 };
-

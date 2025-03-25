@@ -28,4 +28,3 @@ private:
 
 } // namespace stream
 } // namespace util
-

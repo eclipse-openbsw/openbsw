@@ -107,4 +107,3 @@ private:
 
 } // namespace crc
 } // namespace util
-

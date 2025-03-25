@@ -243,4 +243,3 @@ inline uint8_t DoCanParameters::encodeMinSeparationTime(uint32_t const minSepara
 }
 
 } // namespace docan
-

@@ -6,4 +6,3 @@ namespace app
 {
 void run();
 }
-

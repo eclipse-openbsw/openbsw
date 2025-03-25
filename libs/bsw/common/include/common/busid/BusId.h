@@ -38,4 +38,3 @@ public:
 
 } // namespace busid
 } // namespace common
-

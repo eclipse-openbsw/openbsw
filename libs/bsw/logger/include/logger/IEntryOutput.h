@@ -42,4 +42,3 @@ inline IEntryOutput<E, Timestamp>::IEntryOutput() : ::estd::uncopyable()
 {}
 
 } // namespace logger
-

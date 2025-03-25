@@ -44,4 +44,3 @@ inline IFilteredCANFrameSentListener::IFilteredCANFrameSentListener()
 {}
 
 } // namespace can
-

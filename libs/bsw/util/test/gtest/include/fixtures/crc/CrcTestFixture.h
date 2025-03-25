@@ -31,4 +31,3 @@ struct CrcTestFixture : ::testing::Test
 
 } /* namespace fixtures */
 } /* namespace test */
-

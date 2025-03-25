@@ -13,4 +13,3 @@ struct Xor
 };
 } // namespace crc
 } // namespace util
-

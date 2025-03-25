@@ -66,4 +66,3 @@ int charIO__outchar(int c, int last);
 #ifdef __cplusplus
 }
 #endif
-

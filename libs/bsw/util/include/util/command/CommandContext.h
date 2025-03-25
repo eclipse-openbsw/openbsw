@@ -175,4 +175,3 @@ T CommandContext::IdentifierChecker<T>::getValue()
 
 } /* namespace command */
 } /* namespace util */
-

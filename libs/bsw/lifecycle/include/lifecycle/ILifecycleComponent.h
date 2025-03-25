@@ -49,4 +49,3 @@ private:
 };
 
 } // namespace lifecycle
-

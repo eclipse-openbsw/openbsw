@@ -40,4 +40,3 @@ private:
     UserDataType _userData;
 };
 } // namespace docan
-

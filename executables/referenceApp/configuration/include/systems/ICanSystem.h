@@ -24,4 +24,3 @@ public:
     virtual ICanTransceiver* getCanTransceiver(uint8_t busId) = 0;
 };
 } // namespace can
-

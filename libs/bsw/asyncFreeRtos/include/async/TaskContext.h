@@ -394,4 +394,3 @@ void TaskContext<Binding>::staticTaskFunction(void* const param)
 }
 
 } // namespace async
-

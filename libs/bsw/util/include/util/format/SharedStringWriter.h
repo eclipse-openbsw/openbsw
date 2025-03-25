@@ -36,4 +36,3 @@ private:
 
 } // namespace format
 } // namespace util
-

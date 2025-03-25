@@ -33,4 +33,3 @@ public:
 inline IComponentConfig::IComponentConfig() : ::estd::uncopyable() {}
 
 } // namespace logger
-

@@ -57,4 +57,3 @@ private:
 using va_list_ref = internal::_va_list_ref<va_list>;
 
 } // namespace estd
-

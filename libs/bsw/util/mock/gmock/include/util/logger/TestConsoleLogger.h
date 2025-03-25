@@ -74,4 +74,3 @@ TestConsoleLogger::TestConsoleLogger(LoggerComponentInfo (&firstComponentInfo)[C
 
 } // namespace logger
 } // namespace util
-

@@ -6,4 +6,3 @@
 
 extern uint32_t const __MPU_BSS_START[];
 extern uint32_t const __MPU_BSS_END[];
-

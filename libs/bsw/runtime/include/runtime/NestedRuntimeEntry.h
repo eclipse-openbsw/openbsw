@@ -52,4 +52,3 @@ inline void NestedRuntimeEntry<Entry, Statistics, CutOut, Nested>::addSuspendedT
 }
 
 } // namespace runtime
-

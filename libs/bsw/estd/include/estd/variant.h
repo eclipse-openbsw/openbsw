@@ -365,4 +365,3 @@ T value_or_else(Variant& v, F const& f)
 }
 
 } // namespace estd
-

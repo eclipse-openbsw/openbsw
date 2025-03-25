@@ -530,4 +530,3 @@ inline bool TransmitResult::operator==(TransmitResult const& other) const
            && (_message == other._message) && (_param == other._param);
 }
 } // namespace docan
-

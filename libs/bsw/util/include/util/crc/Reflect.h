@@ -30,4 +30,3 @@ struct Reflect<true>
 
 } // namespace crc
 } // namespace util
-

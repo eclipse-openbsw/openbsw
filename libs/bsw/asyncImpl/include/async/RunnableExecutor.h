@@ -101,4 +101,3 @@ void RunnableExecutor<Runnable, EventPolicy, Lock>::handleEvent()
 }
 
 } // namespace async
-

@@ -304,4 +304,3 @@ void BufferedLoggerOutput<Lock, MaxEntrySize, T, E, Timestamp, ReadOnlyPredicate
 }
 
 } /* namespace logger */
-

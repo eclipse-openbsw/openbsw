@@ -358,4 +358,3 @@ bool DoCanMessageTransmitter<DataLinkLayer>::updateTimer(uint32_t const nowUs)
 }
 
 } // namespace docan
-

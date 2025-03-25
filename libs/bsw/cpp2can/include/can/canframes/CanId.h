@@ -233,4 +233,3 @@ inline bool CanId::isForceNoFd(uint32_t const value)
 }
 
 } /* namespace can */
-

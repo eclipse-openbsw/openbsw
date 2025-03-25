@@ -78,4 +78,3 @@ inline Enum<Values, Underlying>::Enum(Enum const& e) : Values(), _value(e._value
 
 } /* namespace types */
 } /* namespace util */
-

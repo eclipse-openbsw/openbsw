@@ -92,4 +92,3 @@ DoCanDataLinkAddressPair<T>::operator=(DoCanDataLinkAddressPair const& other)
     return *this;
 }
 } // namespace docan
-

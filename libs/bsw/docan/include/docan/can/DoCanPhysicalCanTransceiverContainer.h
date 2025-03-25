@@ -163,4 +163,3 @@ DoCanPhysicalCanTransceiverContainerBuilder<Addressing>::addTransceiver(
 } // namespace declare
 
 } // namespace docan
-

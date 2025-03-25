@@ -88,4 +88,3 @@ uint8_t PersistentComponentConfig<IndexUpperBound, Crc8>::getComponentCrc(
 }
 
 } // namespace logger
-

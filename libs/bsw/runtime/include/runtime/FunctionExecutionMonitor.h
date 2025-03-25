@@ -239,4 +239,3 @@ void FunctionExecutionMonitorUsage<RuntimeMonitor>::Initializer::setIsUsed()
 }
 
 } // namespace runtime
-

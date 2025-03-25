@@ -21,4 +21,3 @@ struct DoCanFrameCodecConfigPresets
     static DoCanFrameCodecConfig<uint8_t> const OPTIMIZED_FD;
 };
 } // namespace docan
-

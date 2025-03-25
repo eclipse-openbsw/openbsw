@@ -22,4 +22,3 @@ struct MergerMock : public IMerger
 };
 
 } // namespace can
-

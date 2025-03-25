@@ -1069,4 +1069,3 @@ ordered_map<Key, T, N, Compare>& ordered_map<Key, T, N, Compare>::operator=(this
 
 } // namespace declare
 } // namespace estd
-

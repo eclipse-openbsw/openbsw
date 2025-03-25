@@ -474,4 +474,3 @@ AbstractDiagJob::getAndResetConnection(IncomingDiagConnection*& connection)
 }
 
 } // namespace uds
-

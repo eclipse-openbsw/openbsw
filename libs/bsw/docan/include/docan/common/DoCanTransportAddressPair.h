@@ -67,4 +67,3 @@ inline bool DoCanTransportAddressPair::operator==(DoCanTransportAddressPair cons
 }
 
 } // namespace docan
-

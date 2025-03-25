@@ -78,4 +78,3 @@ TransportMessageSendJob::getTransportMessageProcessedListener()
 }
 
 } // namespace transport
-

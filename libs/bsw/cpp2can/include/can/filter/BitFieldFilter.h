@@ -158,4 +158,3 @@ inline bool operator==(BitFieldFilter const& x, BitFieldFilter const& y)
 }
 
 } // namespace can
-

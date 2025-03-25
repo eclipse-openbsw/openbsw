@@ -19,4 +19,3 @@ uint8_t debug_printf(char const* format, ...);
 #ifdef __cplusplus
 } /* extern "C" */
 #endif
-

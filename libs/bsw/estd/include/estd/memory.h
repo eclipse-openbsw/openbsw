@@ -411,4 +411,3 @@ struct unaligned
 
 } // namespace memory
 } // namespace estd
-

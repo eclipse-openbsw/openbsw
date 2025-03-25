@@ -931,4 +931,3 @@ bitset<Size> operator^(bitset<Size> const& lhs, bitset<Size> const& rhs)
 }
 
 } // namespace estd
-

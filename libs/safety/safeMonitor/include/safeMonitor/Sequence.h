@@ -106,4 +106,3 @@ template<
 Context const Sequence<Handler, Event, Checkpoint, ScopedMutex, Context>::DEFAULT_CONTEXT{};
 
 } // namespace safeMonitor
-

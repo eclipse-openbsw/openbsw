@@ -65,4 +65,3 @@ inline ISharedOutputStream::IContinuousUser::IContinuousUser() = default;
 
 } // namespace stream
 } // namespace util
-

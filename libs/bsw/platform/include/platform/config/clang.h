@@ -7,4 +7,3 @@
  */
 
 #define HAS_STDINT_H_
-

@@ -254,4 +254,3 @@ struct all_types<type_list_end, Trait>
 };
 
 } // namespace estd
-

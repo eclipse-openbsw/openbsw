@@ -109,4 +109,3 @@ inline bool TransportConfiguration::isFromTester(TransportMessage const& message
 }
 
 } // namespace transport
-

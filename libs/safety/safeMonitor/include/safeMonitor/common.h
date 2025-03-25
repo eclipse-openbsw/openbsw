@@ -24,4 +24,3 @@ struct DefaultMutex
     // does nothing
 };
 } // namespace safeMonitor
-

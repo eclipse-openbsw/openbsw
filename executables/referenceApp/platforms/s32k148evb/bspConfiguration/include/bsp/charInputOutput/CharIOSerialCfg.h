@@ -15,4 +15,3 @@
  * Timeout for busy wait
  */
 #define SCI_LOGGERTIMEOUT 10000
-

@@ -68,4 +68,3 @@ protected:
 };
 
 } /* namespace eepromemulation */
-

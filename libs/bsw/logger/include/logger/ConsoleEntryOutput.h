@@ -50,4 +50,3 @@ void ConsoleEntryOutput<E, Timestamp>::outputEntry(
 }
 
 } // namespace logger
-

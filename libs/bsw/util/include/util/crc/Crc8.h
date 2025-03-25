@@ -21,4 +21,3 @@ struct Crc8
 
 } /* namespace crc */
 } /* namespace util */
-

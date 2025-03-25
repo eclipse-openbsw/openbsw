@@ -26,4 +26,3 @@ struct function_mock<R(Ps...)>
 };
 
 } // namespace estd
-

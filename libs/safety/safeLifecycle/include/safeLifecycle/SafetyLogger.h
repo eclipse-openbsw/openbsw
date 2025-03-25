@@ -8,4 +8,3 @@
 // during development. There should not be any logging from within the safety context.
 
 DECLARE_LOGGER_COMPONENT(SAFETY)
-

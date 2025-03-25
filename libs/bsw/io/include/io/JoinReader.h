@@ -117,4 +117,3 @@ void JoinReader<N>::release()
 }
 
 } // namespace io
-

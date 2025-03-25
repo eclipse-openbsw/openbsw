@@ -22,4 +22,3 @@ private:
     IDoCanFrameSizeMapper& operator=(IDoCanFrameSizeMapper const&) = delete;
 };
 } // namespace docan
-

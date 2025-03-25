@@ -33,4 +33,3 @@ struct MyContext
 {
     unsigned int value = 0xDEADBEEF;
 };
-

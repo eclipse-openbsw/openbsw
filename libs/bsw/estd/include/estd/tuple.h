@@ -78,4 +78,3 @@ void for_each(std::tuple<Types...> const& args, F&& f)
 }
 
 } // namespace estd
-

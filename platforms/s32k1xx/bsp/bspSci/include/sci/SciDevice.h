@@ -59,4 +59,3 @@ void sciPuth(int c);
 #ifdef __cplusplus
 } // extern "C"
 #endif
-

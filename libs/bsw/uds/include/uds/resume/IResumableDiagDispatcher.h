@@ -47,4 +47,3 @@ inline IResumableDiagDispatcher::IResumableDiagDispatcher(
 {}
 
 } // namespace uds
-

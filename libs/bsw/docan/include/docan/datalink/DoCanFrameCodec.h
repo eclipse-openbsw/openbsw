@@ -563,4 +563,3 @@ bool DoCanFrameCodec<DataLinkLayer>::checkFrameSize(
            && (payload.size() <= static_cast<size_t>(frameSize._max));
 }
 } // namespace docan
-

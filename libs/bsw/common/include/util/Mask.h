@@ -118,4 +118,3 @@ inline bool Mask<T, V>::isSet(V const b) const
     V const v = static_cast<V>(1U) << b;
     return (fMask & v) > 0U;
 }
-

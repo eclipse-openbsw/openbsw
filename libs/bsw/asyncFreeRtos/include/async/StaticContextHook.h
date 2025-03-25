@@ -63,4 +63,3 @@ inline void StaticContextHook<T>::leaveIsrGroup(size_t const isrGroupIdx)
 }
 
 } // namespace async
-

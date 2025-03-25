@@ -21,4 +21,3 @@ private:
     static uint8_t const crc8Table[256];
     static uint8_t const crc8TableATM[256];
 };
-

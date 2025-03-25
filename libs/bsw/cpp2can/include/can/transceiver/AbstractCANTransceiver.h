@@ -238,4 +238,3 @@ inline void AbstractCANTransceiver::notifyStateListenerWithState(
 }
 
 } // namespace can
-

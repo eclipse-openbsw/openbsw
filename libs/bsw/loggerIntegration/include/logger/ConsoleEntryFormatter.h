@@ -63,4 +63,3 @@ void ConsoleEntryFormatter<E, Timestamp>::formatEntry(
 }
 
 } // namespace logger
-

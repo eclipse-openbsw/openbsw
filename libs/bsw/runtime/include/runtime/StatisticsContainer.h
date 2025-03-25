@@ -110,4 +110,3 @@ private:
 
 } // namespace declare
 } // namespace runtime
-

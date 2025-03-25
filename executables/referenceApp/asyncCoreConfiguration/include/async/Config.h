@@ -40,4 +40,3 @@ enum
     ISR_GROUP_CAN,
     ISR_GROUP_COUNT,
 };
-

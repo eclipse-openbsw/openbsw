@@ -36,4 +36,3 @@ public:
 
 // EXAMPLE_END AsyncImplExample
 } // namespace async
-

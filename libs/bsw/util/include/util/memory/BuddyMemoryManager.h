@@ -344,4 +344,3 @@ BuddyMemoryManager<MIN_NUM_BUCKETS>::BuddyMemoryManager()
 } // namespace declare
 } // namespace memory
 } // namespace util
-

@@ -24,4 +24,3 @@ struct none_t
 static none_t const none;
 
 } // namespace estd
-

@@ -716,4 +716,3 @@ ordered_vector<T, N, Comparator>::operator=(this_type const& other)
 
 } // namespace declare
 } // namespace estd
-

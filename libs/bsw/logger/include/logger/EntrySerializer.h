@@ -474,4 +474,3 @@ inline bool SectionPredicate::operator()(void const* const p) const
 }
 
 } // namespace logger
-

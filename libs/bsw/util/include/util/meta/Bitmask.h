@@ -41,4 +41,3 @@ T const Bitmask<T, 0>::value;
 
 } // namespace meta
 } // namespace util
-

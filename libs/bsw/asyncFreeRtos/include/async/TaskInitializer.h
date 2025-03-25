@@ -353,4 +353,3 @@ Task<Adapter, Context, 0U>::Task(
 
 } // namespace internal
 } // namespace async
-

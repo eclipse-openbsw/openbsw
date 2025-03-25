@@ -324,4 +324,3 @@ inline bool operator>=(ConstString const& lhs, ConstString const& rhs)
 
 } /* namespace string */
 } /* namespace util */
-

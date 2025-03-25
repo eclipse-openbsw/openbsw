@@ -86,4 +86,3 @@ template<
 Context const Value<Handler, Event, ValueType, ScopedMutex, Context>::DEFAULT_CONTEXT{};
 
 } // namespace safeMonitor
-

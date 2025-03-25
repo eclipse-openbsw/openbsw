@@ -40,4 +40,3 @@ void sciPuth(int c);
 #ifdef __cplusplus
 }
 #endif
-

@@ -122,4 +122,3 @@ CodecResult DoCanFrameDecoder<Codec>::decodeFrame(
 }
 
 } // namespace docan
-

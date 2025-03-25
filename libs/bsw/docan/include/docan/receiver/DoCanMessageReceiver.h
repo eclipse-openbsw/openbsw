@@ -423,4 +423,3 @@ inline ::estd::slice<uint8_t const> DoCanMessageReceiver<DataLinkLayer>::getFirs
 }
 
 } // namespace docan
-

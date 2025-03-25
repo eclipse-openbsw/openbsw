@@ -29,4 +29,3 @@ inline BufferedTransportMessage<PAYLOAD_SIZE>::BufferedTransportMessage() : Tran
 }
 
 } // namespace transport
-

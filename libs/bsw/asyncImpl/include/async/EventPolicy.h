@@ -64,4 +64,3 @@ inline void EventPolicy<EventDispatcher, Event>::setEvent()
 }
 
 } // namespace async
-

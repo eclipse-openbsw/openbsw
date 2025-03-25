@@ -9,4 +9,3 @@ char const* const adcChannelsNamingStrings[] = {
     "AiEval_Poti_ADC",
     "AiEval_ADC",
 };
-

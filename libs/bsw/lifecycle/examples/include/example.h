@@ -6,4 +6,3 @@ namespace lifecycle
 {
 void runTheLifecycle();
 } // namespace lifecycle
-

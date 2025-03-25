@@ -17,4 +17,3 @@ bios::FlexCANDevice::Config const Can0Config
        15,
        0,
        0};
-

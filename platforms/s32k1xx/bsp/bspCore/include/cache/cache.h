@@ -16,4 +16,3 @@ void cacheInvalidate(uint32_t addr, uint32_t size);
 #ifdef __cplusplus
 }
 #endif
-

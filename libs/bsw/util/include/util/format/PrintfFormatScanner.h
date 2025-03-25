@@ -208,4 +208,3 @@ inline bool PrintfFormatScanner::isDigit(char const c) { return (c >= '0') && (c
 
 } // namespace format
 } // namespace util
-

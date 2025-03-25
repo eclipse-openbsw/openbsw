@@ -50,4 +50,3 @@ public:
         ESTD_STATIC_CONCAT2(req, __LINE__), sizeof(ESTD_STATIC_CONCAT2(req, __LINE__)), PRE);
 
 } // namespace uds
-

@@ -21,4 +21,3 @@ public:
 
 } // namespace logger
 } // namespace util
-

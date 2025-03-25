@@ -1134,4 +1134,3 @@ ToDur _duration_cast_impl<ToDur, CF, CR, false, true>::_cast(duration<Rep, Perio
 extern "C" uint64_t getSystemTimeNs();
 
 #endif // ifndef ESTD_NO_CHRONO
-

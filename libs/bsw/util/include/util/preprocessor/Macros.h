@@ -42,4 +42,3 @@
 
 #define ESR_IF_1_ELSE(...)
 #define ESR_IF_0_ELSE(...) __VA_ARGS__
-

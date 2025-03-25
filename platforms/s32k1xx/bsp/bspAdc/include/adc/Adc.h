@@ -298,4 +298,3 @@ Adc<AdcResolution, AdcConfiguration, maxChannels>::row2Value(uint32_t row, uint1
 }
 
 } // namespace bios
-

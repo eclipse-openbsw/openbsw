@@ -159,4 +159,3 @@ ResumableResetDriver<N>::ResumableResetDriver(
 } // namespace declare
 
 } // namespace uds
-

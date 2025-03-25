@@ -108,4 +108,3 @@ extern int vsnprintf(char* buf, size_t const maxsize, char const* fmt, va_list a
 #ifdef __cplusplus
 }
 #endif
-

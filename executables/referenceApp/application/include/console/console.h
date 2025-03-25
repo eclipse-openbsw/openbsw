@@ -11,4 +11,3 @@ void init();
 void run();
 
 } // namespace console
-

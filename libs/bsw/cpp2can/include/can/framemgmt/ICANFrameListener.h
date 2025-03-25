@@ -45,4 +45,3 @@ public:
 inline ICANFrameListener::ICANFrameListener() : ::estd::forward_list_node<ICANFrameListener>() {}
 
 } // namespace can
-

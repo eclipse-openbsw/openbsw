@@ -76,4 +76,3 @@ struct intrusive
 
 } /* namespace estd */
 } /* namespace util */
-

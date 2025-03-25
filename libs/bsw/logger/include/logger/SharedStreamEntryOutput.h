@@ -52,4 +52,3 @@ void SharedStreamEntryOutput<E, Timestamp>::outputEntry(
 }
 
 } // namespace logger
-

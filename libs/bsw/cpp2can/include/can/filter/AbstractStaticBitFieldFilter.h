@@ -120,4 +120,3 @@ inline bool operator==(AbstractStaticBitFieldFilter const& x, AbstractStaticBitF
 }
 
 } // namespace can
-

@@ -53,4 +53,3 @@ bool BufferedLoggerOutputClient<T>::outputEntry(
 }
 
 } // namespace logger
-

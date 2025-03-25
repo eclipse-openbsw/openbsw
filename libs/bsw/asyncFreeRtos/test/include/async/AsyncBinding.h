@@ -24,4 +24,3 @@ struct AsyncBinding
 using AsyncBindingType = AsyncBinding;
 
 } // namespace async
-

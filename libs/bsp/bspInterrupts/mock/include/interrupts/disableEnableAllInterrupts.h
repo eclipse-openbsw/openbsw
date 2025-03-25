@@ -16,4 +16,3 @@ bool areInterruptsEnabled(void);
 #ifdef __cplusplus
 }
 #endif
-

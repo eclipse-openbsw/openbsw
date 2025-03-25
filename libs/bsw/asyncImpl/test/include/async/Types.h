@@ -14,4 +14,3 @@ using EventMaskType = uint32_t;
 using RunnableType  = RunnableMock;
 
 } // namespace async
-

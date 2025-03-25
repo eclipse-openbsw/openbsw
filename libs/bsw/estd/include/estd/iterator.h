@@ -14,4 +14,3 @@ ForwardIt next(ForwardIt it, typename std::iterator_traits<ForwardIt>::differenc
 }
 
 } // namespace estd
-

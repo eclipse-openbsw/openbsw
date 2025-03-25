@@ -17,4 +17,3 @@ public:
     MOCK_METHOD1(cancel, void(TimeoutType&));
 };
 } // namespace async
-

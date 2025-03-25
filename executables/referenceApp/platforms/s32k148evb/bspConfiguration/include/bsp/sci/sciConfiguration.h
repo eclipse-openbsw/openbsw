@@ -15,4 +15,3 @@ SciConfig const sciConfiguration
        bios::Io::UART1_RX,
        static_cast<uint8_t>(sizeof(sciBaudRateConfig) / sizeof(sciBaudRate)),
        sciBaudRateConfig};
-

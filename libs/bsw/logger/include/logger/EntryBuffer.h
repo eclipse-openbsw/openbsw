@@ -155,4 +155,3 @@ inline void EntryBuffer<MaxBufferSize, E>::movePointer(T& p, size_t const offset
 }
 
 } // namespace logger
-

@@ -54,4 +54,3 @@ struct TimeUnit
 using TimeUnitType = TimeUnit::Type;
 
 } // namespace async
-

@@ -625,4 +625,3 @@ object_pool<T, N>::object_pool() : base(&_realData[0], &_realUsed[0], N)
 }
 } // namespace declare
 } // namespace estd
-

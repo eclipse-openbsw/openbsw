@@ -16,4 +16,3 @@ struct Crc32
 
 } /* namespace crc */
 } /* namespace util */
-

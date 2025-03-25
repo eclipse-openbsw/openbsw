@@ -22,4 +22,3 @@ inline ILoggerListener::ILoggerListener()
 {}
 
 } // namespace logger
-

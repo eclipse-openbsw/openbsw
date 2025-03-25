@@ -177,4 +177,3 @@ private:
 
 } // namespace declare
 } // namespace lifecycle
-

@@ -221,4 +221,3 @@ int32_t Timer<LockGuard>::diff(uint32_t const a, uint32_t const b)
 }
 
 } // namespace timer
-

@@ -10,4 +10,3 @@ int32_t getByteFromStdin();
 void putByteToStdout(uint8_t);
 
 } /* extern "C" */
-

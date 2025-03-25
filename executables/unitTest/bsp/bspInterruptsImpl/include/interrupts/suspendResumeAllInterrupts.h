@@ -18,4 +18,3 @@ inline void resumeAllInterrupts(OldIntEnabledStatusValueType const oldIntEnabled
 {
     // N/A
 }
-

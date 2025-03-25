@@ -71,4 +71,3 @@ inline CanPhyDummy::ErrorCode CanPhyDummy::getPhyErrorStatus(uint32_t /*id*/)
 }
 
 } /* namespace bios */
-

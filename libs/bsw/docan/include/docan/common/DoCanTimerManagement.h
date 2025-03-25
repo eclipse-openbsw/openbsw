@@ -33,4 +33,3 @@ inline bool less(uint32_t const firstTime, uint32_t const secondTime)
 }
 } // namespace timermanagement
 } // namespace docan
-

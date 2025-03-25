@@ -20,4 +20,3 @@ struct CANFrameSentListenerMock : public ICANFrameSentListener
 };
 
 } // namespace can
-

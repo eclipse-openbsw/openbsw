@@ -46,4 +46,3 @@
 #define PCC            IP_PCC
 #define GPIO_BASE_PTRS IP_GPIO_BASE_PTRS
 #define PORT_BASE_PTRS IP_PORT_BASE_PTRS
-

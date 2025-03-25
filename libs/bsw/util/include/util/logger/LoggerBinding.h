@@ -5,4 +5,3 @@
 #ifdef CUSTOM_LOGGER_BINDING
 #include "util/logger/CustomLoggerBinding.h"
 #endif
-

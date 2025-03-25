@@ -23,4 +23,3 @@ tFtmEPwmConfiguration const EVAL_LED_BLUE_PWM_Configuration
     = {tFtm::PWM_EdgeAlignedetSet0, false, false, false, Io::EVAL_LED_BLUE, 0, 10000};
 
 } // namespace bios
-

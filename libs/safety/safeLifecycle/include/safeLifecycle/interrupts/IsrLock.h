@@ -21,4 +21,3 @@ private:
 };
 
 } // end namespace safety
-

@@ -69,4 +69,3 @@ inline uint8_t const* IAsyncDiagHelper::StoredRequest::getRequest() const { retu
 inline uint16_t IAsyncDiagHelper::StoredRequest::getRequestLength() const { return fRequestLength; }
 
 } // namespace uds
-

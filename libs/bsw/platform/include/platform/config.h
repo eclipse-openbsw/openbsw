@@ -45,4 +45,3 @@
 #define ESR_PACKED_BEGIN _Pragma("pack(push, 1)")
 #define ESR_PACKED_END   _Pragma("pack(pop)")
 #endif
-

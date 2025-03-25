@@ -73,4 +73,3 @@ uint32_t getSystemTime32BitUserTicks(void);
 #ifdef __cplusplus
 } /* extern "C" */
 #endif
-

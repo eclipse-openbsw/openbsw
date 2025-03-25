@@ -73,4 +73,3 @@ inline EventMaskType EventManager<EventCount>::peekEvents()
 }
 
 } // namespace async
-

@@ -23,4 +23,3 @@ struct StdIoMock : ::estd::singleton<StdIoMock>
 
 } // namespace test
 } // namespace util
-

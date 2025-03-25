@@ -20,4 +20,3 @@ template<typename MessageSize, typename FrameSize, typename FrameIndex = uint16_
 using DoCanCanDataLinkLayer
     = DoCanDataLinkLayer<uint32_t, MessageSize, FrameSize, ::can::CanId::INVALID_ID, FrameIndex>;
 } // namespace docan
-

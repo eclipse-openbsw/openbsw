@@ -65,4 +65,3 @@ Defer<F> defer(F&& f)
 }
 } // namespace defer
 } // namespace util
-

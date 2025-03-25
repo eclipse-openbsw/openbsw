@@ -279,4 +279,3 @@ DoCanNormalAddressingFilter<DataLinkLayer, AddressEntry>::getFrameCodec(
     return nullptr;
 }
 } // namespace docan
-

@@ -108,4 +108,3 @@ T tiny_ring<T, N>::front() const
 }
 
 } // namespace estd
-

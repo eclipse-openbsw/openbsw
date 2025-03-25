@@ -32,4 +32,3 @@ ReturnType abs(InputType const& input)
 }
 
 } // namespace estd
-

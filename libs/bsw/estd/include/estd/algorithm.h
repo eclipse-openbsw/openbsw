@@ -181,4 +181,3 @@ bool none_of(InputIterator first, InputIterator const last, UnaryPredicate const
 }
 
 } // namespace estd
-

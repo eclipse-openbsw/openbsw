@@ -27,4 +27,3 @@ inline IBufferedLoggerOutputClient<E, Timestamp>::IBufferedLoggerOutputClient()
 {}
 
 } // namespace logger
-

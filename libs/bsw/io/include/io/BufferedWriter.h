@@ -73,4 +73,3 @@ inline BufferedWriter::BufferedWriter(IWriter& destination)
 inline size_t BufferedWriter::maxSize() const { return _destination.maxSize(); }
 
 } // namespace io
-

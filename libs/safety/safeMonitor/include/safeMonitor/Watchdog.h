@@ -111,4 +111,3 @@ template<typename Handler, typename Event, typename ScopedMutex, typename Contex
 Context const Watchdog<Handler, Event, ScopedMutex, Context>::DEFAULT_CONTEXT{};
 
 } // namespace safeMonitor
-

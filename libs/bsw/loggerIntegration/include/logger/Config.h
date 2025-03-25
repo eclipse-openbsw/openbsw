@@ -19,4 +19,3 @@ using BufferedLoggerOutputType = ::logger::declare::BufferedLoggerOutput<
     TimestampType>;                                     // TimestampType
 
 } // namespace logger
-

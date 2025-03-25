@@ -405,4 +405,3 @@ struct alignas(A) aligned_mem
 };
 
 } // namespace estd
-

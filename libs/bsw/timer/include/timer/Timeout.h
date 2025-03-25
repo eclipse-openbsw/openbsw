@@ -31,4 +31,3 @@ struct Timeout : public ::estd::forward_list_node<Timeout>
 };
 
 } // namespace timer
-

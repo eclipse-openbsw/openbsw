@@ -26,4 +26,3 @@
 #ifndef INTMAX_MAX
 #define INTMAX_MAX 0x7fffffffffffffffULL
 #endif // INTMAX_MAX
-

@@ -75,4 +75,3 @@ private:
     static int32_t moveAssignmentCalls;
 };
 } /* namespace internal */
-

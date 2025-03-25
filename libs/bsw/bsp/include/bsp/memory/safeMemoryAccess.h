@@ -22,4 +22,3 @@ SafeReadStatus safeBlockRead(uint8_t const* src, uint8_t* dst, uint32_t size);
 #ifdef __cplusplus
 } /* extern "C" */
 #endif
-

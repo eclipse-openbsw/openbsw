@@ -12,4 +12,3 @@
     {                                     \
         printf((char const*)__VA_ARGS__); \
     }
-

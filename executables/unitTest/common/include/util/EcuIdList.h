@@ -129,4 +129,3 @@ private:
 inline uint8_t* EcuIdList::toStream() { return fpData; }
 
 } // namespace common
-

@@ -1174,4 +1174,3 @@ vector<T, N>& vector<T, N>::operator=(this_type const& other)
 
 } // namespace declare
 } // namespace estd
-

@@ -284,4 +284,3 @@ auto make_function(F* f) -> typename MakeFunction<F>::f
 }
 
 } // namespace estd
-

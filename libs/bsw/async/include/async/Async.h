@@ -47,4 +47,3 @@ void scheduleAtFixedRate(
     TimeUnitType unit);
 
 } // namespace async
-

@@ -52,4 +52,3 @@ void DefaultLoggerTime<Timepoint>::formatTimestamp(
 }
 
 } /* namespace logger */
-

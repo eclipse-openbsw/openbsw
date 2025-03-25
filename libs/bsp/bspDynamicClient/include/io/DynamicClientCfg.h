@@ -296,4 +296,3 @@ bool dynamicClient<T, IDynamicClient, Size, dynamicChannelsCount, dynamicClientC
         return false;
     }
 }
-

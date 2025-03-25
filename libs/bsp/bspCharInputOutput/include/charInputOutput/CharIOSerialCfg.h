@@ -10,4 +10,3 @@
  * in number of while-loop iterations
  */
 #define SCI_LOGGERTIMEOUT 10000
-

@@ -34,4 +34,3 @@ struct DoCanDataLinkLayer
 };
 
 } // namespace docan
-

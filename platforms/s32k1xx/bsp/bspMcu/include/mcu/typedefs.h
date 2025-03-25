@@ -10,4 +10,3 @@ typedef uint16_t volatile vuint16_t;
 
 typedef int32_t volatile vint32_t;
 typedef uint32_t volatile vuint32_t;
-

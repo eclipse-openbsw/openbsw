@@ -260,4 +260,3 @@ inline void NestedDiagRequest::setResponseCode(DiagReturnCode::Type const respon
 }
 
 } // namespace uds
-

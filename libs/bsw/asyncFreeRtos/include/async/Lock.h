@@ -37,4 +37,3 @@ inline Lock::Lock()
 inline Lock::~Lock() { resumeAllInterrupts(_oldIntEnabledStatusValue); }
 
 } // namespace async
-

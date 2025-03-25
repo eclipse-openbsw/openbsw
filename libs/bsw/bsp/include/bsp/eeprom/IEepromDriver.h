@@ -56,4 +56,3 @@ protected:
 };
 
 } /* namespace eeprom */
-

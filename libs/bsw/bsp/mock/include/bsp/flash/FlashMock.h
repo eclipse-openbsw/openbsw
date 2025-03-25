@@ -21,4 +21,3 @@ struct FlashMock : IFlash
 
 } // namespace flash
 } // namespace bsp
-

@@ -50,4 +50,3 @@ inline bool operator==(ComponentInfo const& a, ComponentInfo const& b)
 
 } // namespace logger
 } // namespace util
-

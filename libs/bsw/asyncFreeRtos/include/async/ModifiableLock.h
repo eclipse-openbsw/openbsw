@@ -68,4 +68,3 @@ inline void ModifiableLock::lock()
 }
 
 } // namespace async
-

@@ -138,4 +138,3 @@ private:
 
     tMode _mode;
 };
-

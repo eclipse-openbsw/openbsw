@@ -56,4 +56,3 @@ void SharedOutputStreamResource<Lock>::releaseContinuousUser(IContinuousUser& us
 
 } // namespace stream
 } // namespace util
-

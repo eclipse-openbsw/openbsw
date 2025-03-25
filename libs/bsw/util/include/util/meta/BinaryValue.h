@@ -64,4 +64,3 @@ struct BinaryValue<0U>
 
 } /* namespace meta */
 } /* namespace util */
-

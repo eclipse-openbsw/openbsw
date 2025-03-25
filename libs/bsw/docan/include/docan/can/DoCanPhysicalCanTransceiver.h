@@ -259,4 +259,3 @@ template<class Addressing>
     return *this;
 }
 } // namespace docan
-
