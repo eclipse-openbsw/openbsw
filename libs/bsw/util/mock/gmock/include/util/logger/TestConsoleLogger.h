@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_30080D7C_6B2C_46C6_B4F2_A09CD5AB0C1E
-#define GUARD_30080D7C_6B2C_46C6_B4F2_A09CD5AB0C1E
+#pragma once
 
 #include "util/logger/IComponentMapping.h"
 #include "util/logger/ILoggerOutput.h"
@@ -76,4 +75,3 @@ TestConsoleLogger::TestConsoleLogger(LoggerComponentInfo (&firstComponentInfo)[C
 } // namespace logger
 } // namespace util
 
-#endif // GUARD_30080D7C_6B2C_46C6_B4F2_A09CD5AB0C1E

@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_BA53826C_0AE9_4314_8EBF_A0AB6E759753
-#define GUARD_BA53826C_0AE9_4314_8EBF_A0AB6E759753
+#pragma once
 
 #include <common/busid/BusId.h>
 #include <transport/AbstractTransportLayer.h>
@@ -78,4 +77,3 @@ private:
 
 } // namespace transport
 
-#endif /* GUARD_BA53826C_0AE9_4314_8EBF_A0AB6E759753 */

@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_A08407C6_467B_4866_A28F_58D0978186FB
-#define GUARD_A08407C6_467B_4866_A28F_58D0978186FB
+#pragma once
 
 #include "logger/BufferedLoggerOutput.h"
 #include "logger/IBufferedLoggerOutputClient.h"
@@ -55,4 +54,3 @@ bool BufferedLoggerOutputClient<T>::outputEntry(
 
 } // namespace logger
 
-#endif // GUARD_A08407C6_467B_4866_A28F_58D0978186FB

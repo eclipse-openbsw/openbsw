@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_671DB169_E79E_4FBE_9CA9_DD12E4F3CFE1
-#define GUARD_671DB169_E79E_4FBE_9CA9_DD12E4F3CFE1
+#pragma once
 
 namespace util
 {
@@ -80,4 +79,3 @@ inline Enum<Values, Underlying>::Enum(Enum const& e) : Values(), _value(e._value
 } /* namespace types */
 } /* namespace util */
 
-#endif /* GUARD_671DB169_E79E_4FBE_9CA9_DD12E4F3CFE1 */

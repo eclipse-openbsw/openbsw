@@ -4,8 +4,7 @@
  * \file
  * \ingroup lifecycle
  */
-#ifndef GUARD_D884B0D0_5BF6_11EB_9102_8FC73864AB9A
-#define GUARD_D884B0D0_5BF6_11EB_9102_8FC73864AB9A
+#pragma once
 
 #include "lifecycle/LifecycleComponent.h"
 
@@ -34,4 +33,3 @@ private:
 
 } // namespace lifecycle
 
-#endif // GUARD_D884B0D0_5BF6_11EB_9102_8FC73864AB9A

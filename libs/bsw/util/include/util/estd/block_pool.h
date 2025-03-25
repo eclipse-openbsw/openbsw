@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_157BE510_ABA8_4C71_8E9D_D03F1F150BF1
-#define GUARD_157BE510_ABA8_4C71_8E9D_D03F1F150BF1
+#pragma once
 
 #include <estd/algorithm.h>
 #include <estd/type_list.h>
@@ -152,4 +151,3 @@ private:
 } // namespace estd
 } // namespace util
 
-#endif // GUARD_157BE510_ABA8_4C71_8E9D_D03F1F150BF1

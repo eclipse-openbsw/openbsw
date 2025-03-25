@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_AC249B4F_FFC3_47CB_8716_E7884AD8A553
-#define GUARD_AC249B4F_FFC3_47CB_8716_E7884AD8A553
+#pragma once
 
 #include <can/filter/IFilter.h>
 
@@ -22,4 +21,3 @@ public:
 
 } // namespace can
 
-#endif /* GUARD_AC249B4F_FFC3_47CB_8716_E7884AD8A553 */

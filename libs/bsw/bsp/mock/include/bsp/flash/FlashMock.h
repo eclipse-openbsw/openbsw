@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_E704BBC3_516C_40E1_BC6A_EAD7C443EFEB
-#define GUARD_E704BBC3_516C_40E1_BC6A_EAD7C443EFEB
+#pragma once
 
 #include "bsp/flash/IFlash.h"
 
@@ -23,4 +22,3 @@ struct FlashMock : IFlash
 } // namespace flash
 } // namespace bsp
 
-#endif /* GUARD_E704BBC3_516C_40E1_BC6A_EAD7C443EFEB */

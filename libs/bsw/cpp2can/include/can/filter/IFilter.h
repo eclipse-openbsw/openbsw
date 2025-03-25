@@ -5,8 +5,7 @@
  * \file IFilter.h
  * \ingroup filter
  */
-#ifndef GUARD_3E8D8547_086B_4CA9_AE22_2C7F6B4E7088
-#define GUARD_3E8D8547_086B_4CA9_AE22_2C7F6B4E7088
+#pragma once
 
 #include <platform/estdint.h>
 
@@ -69,4 +68,3 @@ public:
 
 } // namespace can
 
-#endif /*GUARD_3E8D8547_086B_4CA9_AE22_2C7F6B4E7088*/

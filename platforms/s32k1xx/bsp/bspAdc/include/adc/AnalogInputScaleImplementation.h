@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_827CEFEC_9A24_439B_8D6F_BA384D8CD783
-#define GUARD_827CEFEC_9A24_439B_8D6F_BA384D8CD783
+#pragma once
 
 #include "adcScale.h"
 #include "bsp/adc/AnalogInput.h"
@@ -37,4 +36,3 @@ private:
 #include "adc/AnalogInputScaleImplementation.hpp"
 
 } // namespace bios
-#endif /* GUARD_827CEFEC_9A24_439B_8D6F_BA384D8CD783 */

@@ -3,8 +3,7 @@
 /**
  * \ingroup transport
  */
-#ifndef GUARD_DB3117F1_61DE_4245_8596_EE8DA29DD210
-#define GUARD_DB3117F1_61DE_4245_8596_EE8DA29DD210
+#pragma once
 
 #include "transport/ITransportMessageProvidingListener.h"
 
@@ -227,4 +226,3 @@ AbstractTransportLayer::TransportMessageProvidingListenerHelper::setTransportMes
 
 } // namespace transport
 
-#endif /*GUARD_DB3117F1_61DE_4245_8596_EE8DA29DD210*/

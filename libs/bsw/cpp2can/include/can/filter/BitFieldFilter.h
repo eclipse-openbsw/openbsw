@@ -5,8 +5,7 @@
  * \file        BitFieldFilter.h
  * \ingroup        filter
  */
-#ifndef GUARD_95C783B6_6012_4C4E_8271_88708CE2A585
-#define GUARD_95C783B6_6012_4C4E_8271_88708CE2A585
+#pragma once
 
 #include "can/canframes/CANFrame.h"
 #include "can/filter/AbstractStaticBitFieldFilter.h"
@@ -160,4 +159,3 @@ inline bool operator==(BitFieldFilter const& x, BitFieldFilter const& y)
 
 } // namespace can
 
-#endif // GUARD_95C783B6_6012_4C4E_8271_88708CE2A585

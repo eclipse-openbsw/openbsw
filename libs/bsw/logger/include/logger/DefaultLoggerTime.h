@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_DC68E023_7904_4C5A_93B5_9134D8576E2D
-#define GUARD_DC68E023_7904_4C5A_93B5_9134D8576E2D
+#pragma once
 
 #include "logger/ILoggerTime.h"
 
@@ -54,4 +53,3 @@ void DefaultLoggerTime<Timepoint>::formatTimestamp(
 
 } /* namespace logger */
 
-#endif // GUARD_DC68E023_7904_4C5A_93B5_9134D8576E2D

@@ -3,8 +3,7 @@
 /**
  * \ingroup async
  */
-#ifndef GUARD_18CB5B80_EE86_4FBF_BAD8_015290A7F09C
-#define GUARD_18CB5B80_EE86_4FBF_BAD8_015290A7F09C
+#pragma once
 
 #include <async/Types.h>
 #include <util/concurrent/IFutureSupport.h>
@@ -67,4 +66,3 @@ private:
 
 } // namespace async
 
-#endif // GUARD_18CB5B80_EE86_4FBF_BAD8_015290A7F09C

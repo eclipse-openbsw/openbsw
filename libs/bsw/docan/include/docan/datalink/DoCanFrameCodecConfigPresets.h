@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_5DD10918_7EF9_49B8_9111_5250F6878361
-#define GUARD_5DD10918_7EF9_49B8_9111_5250F6878361
+#pragma once
 
 #include <docan/datalink/DoCanFrameCodecConfig.h>
 
@@ -23,4 +22,3 @@ struct DoCanFrameCodecConfigPresets
 };
 } // namespace docan
 
-#endif

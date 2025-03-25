@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_EB6712AB_E148_4A24_B106_2B72D43439AC
-#define GUARD_EB6712AB_E148_4A24_B106_2B72D43439AC
+#pragma once
 
 #include <async/Async.h>
 #include <async/IRunnable.h>
@@ -113,4 +112,3 @@ private:
 
 } // namespace docan
 
-#endif // GUARD_EB6712AB_E148_4A24_B106_2B72D43439AC

@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_5FA75AF6_D0BD_4A3B_A25D_C6C18E5A24BD
-#define GUARD_5FA75AF6_D0BD_4A3B_A25D_C6C18E5A24BD
+#pragma once
 
 #include "uds/async/IAsyncDiagHelper.h"
 #include "uds/base/AbstractDiagJob.h"
@@ -70,4 +69,3 @@ inline AsyncDiagHelper<N>::AsyncDiagHelper()
 
 } // namespace uds
 
-#endif // GUARD_5FA75AF6_D0BD_4A3B_A25D_C6C18E5A24BD

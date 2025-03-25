@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_25E30AC5_E4DD_4EE0_9F71_2995720B1163
-#define GUARD_25E30AC5_E4DD_4EE0_9F71_2995720B1163
+#pragma once
 
 #include "logger/ComponentMapping.h"
 #include "logger/IComponentConfig.h"
@@ -114,4 +113,3 @@ void ComponentConfig<IndexUpperBound>::writeLevels()
 
 } // namespace logger
 
-#endif // GUARD_25E30AC5_E4DD_4EE0_9F71_2995720B1163

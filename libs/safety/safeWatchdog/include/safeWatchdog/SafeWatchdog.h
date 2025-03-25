@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_C6B62A33_2D22_4527_BAEF_D5952662B626
-#define GUARD_C6B62A33_2D22_4527_BAEF_D5952662B626
+#pragma once
 
 #include <platform/estdint.h>
 
@@ -29,4 +28,3 @@ private:
 
 } // namespace safety
 
-#endif /* GUARD_C6B62A33_2D22_4527_BAEF_D5952662B626 */

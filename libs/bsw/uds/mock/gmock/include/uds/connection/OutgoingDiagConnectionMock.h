@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_3D447BA4_4395_4FD9_B58B_D80FC0EFBDCA
-#define GUARD_3D447BA4_4395_4FD9_B58B_D80FC0EFBDCA
+#pragma once
 
 #include "uds/connection/OutgoingDiagConnection.h"
 
@@ -20,4 +19,3 @@ public:
 
 } // namespace uds
 
-#endif // GUARD_3D447BA4_4395_4FD9_B58B_D80FC0EFBDCA

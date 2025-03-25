@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_0F0BF388_FE12_4277_85D0_2FFCF9D08C9B
-#define GUARD_0F0BF388_FE12_4277_85D0_2FFCF9D08C9B
+#pragma once
 
 #include "uds/UdsConfig.h"
 #include "uds/base/AbstractDiagJob.h"
@@ -69,4 +68,3 @@ protected:
 
 } // namespace uds
 
-#endif // GUARD_0F0BF388_FE12_4277_85D0_2FFCF9D08C9B

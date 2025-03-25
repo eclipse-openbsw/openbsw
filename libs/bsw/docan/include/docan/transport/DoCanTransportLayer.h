@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_018D552C_ED76_416E_8939_86A6A059F680
-#define GUARD_018D552C_ED76_416E_8939_86A6A059F680
+#pragma once
 #include "docan/addressing/IDoCanAddressConverter.h"
 #include "docan/common/DoCanConnection.h"
 #include "docan/common/DoCanConstants.h"
@@ -243,4 +242,3 @@ void DoCanTransportLayer<DataLinkLayer>::processShutdown()
 }
 } // namespace docan
 
-#endif // GUARD_018D552C_ED76_416E_8939_86A6A059F680

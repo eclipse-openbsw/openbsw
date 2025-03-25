@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_E8B3D6DE_13B6_4614_B006_E0663777FE17
-#define GUARD_E8B3D6DE_13B6_4614_B006_E0663777FE17
+#pragma once
 #include "async/EventDispatcher.h"
 #include "async/EventPolicy.h"
 #include "async/RunnableExecutor.h"
@@ -40,4 +39,3 @@ private:
 
 } // namespace asyncNewPlatform
 
-#endif /* GUARD_E8B3D6DE_13B6_4614_B006_E0663777FE17 */

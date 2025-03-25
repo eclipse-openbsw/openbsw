@@ -6,8 +6,7 @@
  * \ingroup
  */
 
-#ifndef GUARD_FB0FFA17_25D3_4D62_BD96_956216D2EE61
-#define GUARD_FB0FFA17_25D3_4D62_BD96_956216D2EE61
+#pragma once
 
 #include "transport/ITransportMessageProvider.h"
 
@@ -35,4 +34,3 @@ public:
 
 } // namespace transport
 
-#endif /* GUARD_FB0FFA17_25D3_4D62_BD96_956216D2EE61 */

@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_6917A99D_A9D7_454C_ACC5_23B96EF4211E
-#define GUARD_6917A99D_A9D7_454C_ACC5_23B96EF4211E
+#pragma once
 
 #include <platform/estdint.h>
 
@@ -21,4 +20,3 @@ uint8_t debug_printf(char const* format, ...);
 } /* extern "C" */
 #endif
 
-#endif /* GUARD_6917A99D_A9D7_454C_ACC5_23B96EF4211E */

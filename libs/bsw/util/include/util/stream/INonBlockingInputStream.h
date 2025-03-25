@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_F92C2AA6_4256_494A_943C_4F4DE0BAD2D6
-#define GUARD_F92C2AA6_4256_494A_943C_4F4DE0BAD2D6
+#pragma once
 
 #include <estd/slice.h>
 
@@ -43,4 +42,3 @@ public:
 } // namespace stream
 } // namespace util
 
-#endif /* GUARD_F92C2AA6_4256_494A_943C_4F4DE0BAD2D6 */

@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_C2A4CB49_29FE_4F33_B998_55F6D425BB00
-#define GUARD_C2A4CB49_29FE_4F33_B998_55F6D425BB00
+#pragma once
 
 #include <estd/forward_list.h>
 
@@ -33,4 +32,3 @@ struct Timeout : public ::estd::forward_list_node<Timeout>
 
 } // namespace timer
 
-#endif /* GUARD_C2A4CB49_29FE_4F33_B998_55F6D425BB00 */

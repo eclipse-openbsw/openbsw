@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_2A81615E_F0E2_47BD_AEAF_A8B88DA403D7
-#define GUARD_2A81615E_F0E2_47BD_AEAF_A8B88DA403D7
+#pragma once
 
 #include <runtime/StatisticsContainer.h>
 
@@ -85,4 +84,3 @@ private:
 
 } // namespace runtime
 
-#endif /* GUARD_2A81615E_F0E2_47BD_AEAF_A8B88DA403D7 */

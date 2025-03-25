@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_2F01A26B_240D_4A6A_B6D4_F02AD5CF0545
-#define GUARD_2F01A26B_240D_4A6A_B6D4_F02AD5CF0545
+#pragma once
 
 namespace docan
 {
@@ -22,4 +21,3 @@ private:
 
 } // namespace docan
 
-#endif // GUARD_2F01A26B_240D_4A6A_B6D4_F02AD5CF0545

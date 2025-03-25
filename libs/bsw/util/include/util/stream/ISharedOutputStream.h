@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_41296792_07ED_4D86_B0B8_4694FA5B0F60
-#define GUARD_41296792_07ED_4D86_B0B8_4694FA5B0F60
+#pragma once
 
 #include "util/stream/IOutputStream.h"
 
@@ -67,4 +66,3 @@ inline ISharedOutputStream::IContinuousUser::IContinuousUser() = default;
 } // namespace stream
 } // namespace util
 
-#endif /* GUARD_41296792_07ED_4D86_B0B8_4694FA5B0F60 */

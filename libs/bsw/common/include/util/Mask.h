@@ -3,8 +3,7 @@
 /**
  * \file Mask.h
  */
-#ifndef GUARD_8D0525C5_14FD_4D1C_B139_6808D353F468
-#define GUARD_8D0525C5_14FD_4D1C_B139_6808D353F468
+#pragma once
 
 #include <platform/estdint.h>
 
@@ -120,4 +119,3 @@ inline bool Mask<T, V>::isSet(V const b) const
     return (fMask & v) > 0U;
 }
 
-#endif /*GUARD_8D0525C5_14FD_4D1C_B139_6808D353F468*/

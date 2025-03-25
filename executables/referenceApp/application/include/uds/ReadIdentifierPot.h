@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_DC726F41_1EE2_4343_818F_8A2F855AB88F
-#define GUARD_DC726F41_1EE2_4343_818F_8A2F855AB88F
+#pragma once
 
 #include "estd/array.h"
 #include "estd/slice.h"
@@ -29,4 +28,3 @@ private:
 
 } // namespace uds
 
-#endif /* GUARD_DC726F41_1EE2_4343_818F_8A2F855AB88F */

@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_34BF5374_F12E_4ACB_80B6_C05391C098AC
-#define GUARD_34BF5374_F12E_4ACB_80B6_C05391C098AC
+#pragma once
 
 #include "docan/datalink/IDoCanDataFrameTransmitterCallback.h"
 
@@ -30,4 +29,3 @@ public:
 
 } // namespace docan
 
-#endif // GUARD_34BF5374_F12E_4ACB_80B6_C05391C098AC

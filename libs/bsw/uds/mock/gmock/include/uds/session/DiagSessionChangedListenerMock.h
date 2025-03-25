@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_E0FD2B6E_99E1_4EE1_A7B5_9F9A8F0144B1
-#define GUARD_E0FD2B6E_99E1_4EE1_A7B5_9F9A8F0144B1
+#pragma once
 
 #include "uds/session/IDiagSessionChangedListener.h"
 
@@ -18,4 +17,3 @@ public:
 
 } // namespace uds
 
-#endif // GUARD_E0FD2B6E_99E1_4EE1_A7B5_9F9A8F0144B1

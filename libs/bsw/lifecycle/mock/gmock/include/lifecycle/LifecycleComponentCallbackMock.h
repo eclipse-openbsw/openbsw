@@ -4,8 +4,7 @@
  * \file
  * \ingroup lifecycle
  */
-#ifndef GUARD_A925CAF1_D979_497B_89E9_9CA3A0B039A6
-#define GUARD_A925CAF1_D979_497B_89E9_9CA3A0B039A6
+#pragma once
 
 #include "lifecycle/ILifecycleComponentCallback.h"
 
@@ -21,4 +20,3 @@ public:
 
 } // namespace lifecycle
 
-#endif // GUARD_A925CAF1_D979_497B_89E9_9CA3A0B039A6

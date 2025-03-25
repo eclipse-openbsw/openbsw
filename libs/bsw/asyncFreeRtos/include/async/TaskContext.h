@@ -3,8 +3,7 @@
 /**
  * \ingroup async
  */
-#ifndef GUARD_60674D25_51E0_4A73_8CD1_9C6C6138C877
-#define GUARD_60674D25_51E0_4A73_8CD1_9C6C6138C877
+#pragma once
 
 #include "async/EventDispatcher.h"
 #include "async/EventPolicy.h"
@@ -396,4 +395,3 @@ void TaskContext<Binding>::staticTaskFunction(void* const param)
 
 } // namespace async
 
-#endif // GUARD_60674D25_51E0_4A73_8CD1_9C6C6138C877

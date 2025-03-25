@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_AD393CC2_F90F_4394_B8C3_975C8695AF01
-#define GUARD_AD393CC2_F90F_4394_B8C3_975C8695AF01
+#pragma once
 
 #include "uds/DiagReturnCode.h"
 
@@ -40,4 +39,3 @@ public:
 
 } // namespace uds
 
-#endif // GUARD_AD393CC2_F90F_4394_B8C3_975C8695AF01

@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_AD07B805_A5C0_4EC6_B918_22434778C357
-#define GUARD_AD07B805_A5C0_4EC6_B918_22434778C357
+#pragma once
 
 #include "estd/assert.h"
 #include "estd/type_traits.h"
@@ -168,4 +167,3 @@ inline auto typed_mem<T>::operator*() const -> const_reference
 
 } // namespace estd
 
-#endif /* GUARD_AD07B805_A5C0_4EC6_B918_22434778C357 */

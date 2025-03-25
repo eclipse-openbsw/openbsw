@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_D1CD7B44_9E37_4B79_8C66_9070E6D3061C
-#define GUARD_D1CD7B44_9E37_4B79_8C66_9070E6D3061C
+#pragma once
 
 #include <async/Async.h>
 #include <async/IRunnable.h>
@@ -104,4 +103,3 @@ private:
 };
 } // namespace uds
 
-#endif /* GUARD_D1CD7B44_9E37_4B79_8C66_9070E6D3061C */

@@ -5,8 +5,7 @@
  * \file ICANTransceiverStateListener.h
  * \ingroup can
  */
-#ifndef GUARD_ED0819E7_E8AE_43EC_817C_900A8E310CD5
-#define GUARD_ED0819E7_E8AE_43EC_817C_900A8E310CD5
+#pragma once
 
 namespace can
 {
@@ -51,4 +50,3 @@ public:
 
 } // namespace can
 
-#endif // GUARD_ED0819E7_E8AE_43EC_817C_900A8E310CD5

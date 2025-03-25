@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_E664740B_663D_402D_B5B3_3C6CFF9986DF
-#define GUARD_E664740B_663D_402D_B5B3_3C6CFF9986DF
+#pragma once
 
 #include <estd/algorithm.h>
 #include <estd/assert.h>
@@ -321,4 +320,3 @@ void write_le_bits(uint8_t* const dst, T src, size_t offset, size_t length)
 
 } // namespace estd
 
-#endif // GUARD_E664740B_663D_402D_B5B3_3C6CFF9986DF

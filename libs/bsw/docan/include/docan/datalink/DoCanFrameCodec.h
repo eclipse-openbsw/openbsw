@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_653515FC_3190_439A_9E17_F5CF3D0B237B
-#define GUARD_653515FC_3190_439A_9E17_F5CF3D0B237B
+#pragma once
 
 #include "docan/common/DoCanConstants.h"
 #include "docan/datalink/DoCanDataLinkLayer.h"
@@ -565,4 +564,3 @@ bool DoCanFrameCodec<DataLinkLayer>::checkFrameSize(
 }
 } // namespace docan
 
-#endif // GUARD_653515FC_3190_439A_9E17_F5CF3D0B237B

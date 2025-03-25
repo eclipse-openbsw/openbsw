@@ -1,10 +1,8 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_F997E247_F7F1_4F44_BB4B_77750D047B9E
-#define GUARD_F997E247_F7F1_4F44_BB4B_77750D047B9E
+#pragma once
 
 #ifdef CUSTOM_LOGGER_BINDING
 #include "util/logger/CustomLoggerBinding.h"
 #endif
 
-#endif /* GUARD_F997E247_F7F1_4F44_BB4B_77750D047B9E */

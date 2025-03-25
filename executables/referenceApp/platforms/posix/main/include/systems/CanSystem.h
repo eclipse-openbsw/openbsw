@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_AD9A8EB2_63B6_42FD_9A69_4F026FD406D0
-#define GUARD_AD9A8EB2_63B6_42FD_9A69_4F026FD406D0
+#pragma once
 
 #include <can/SocketCanTransceiver.h>
 #include <lifecycle/AsyncLifecycleComponent.h>
@@ -39,4 +38,3 @@ private:
 
 } // namespace systems
 
-#endif // GUARD_AD9A8EB2_63B6_42FD_9A69_4F026FD406D0

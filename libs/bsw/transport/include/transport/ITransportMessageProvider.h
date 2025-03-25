@@ -3,8 +3,7 @@
 /**
  * \ingroup transport
  */
-#ifndef GUARD_BD2C14D5_1EC8_47D9_8191_B9C115559C83
-#define GUARD_BD2C14D5_1EC8_47D9_8191_B9C115559C83
+#pragma once
 
 #include <estd/slice.h>
 #include <platform/estdint.h>
@@ -88,4 +87,3 @@ public:
 
 } // namespace transport
 
-#endif /*GUARD_BD2C14D5_1EC8_47D9_8191_B9C115559C83*/

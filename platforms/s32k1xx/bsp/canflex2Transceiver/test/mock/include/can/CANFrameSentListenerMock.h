@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_52494E61_3165_40EE_BFE4_F03401EEFCD4
-#define GUARD_52494E61_3165_40EE_BFE4_F03401EEFCD4
+#pragma once
 
 #include "can/canframes/ICANFrameSentListener.h"
 
@@ -25,4 +24,3 @@ public:
 
 } // namespace can
 
-#endif /* GUARD_52494E61_3165_40EE_BFE4_F03401EEFCD4 */

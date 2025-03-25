@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_E5C0309B_0413_42A2_9FBD_CFFC13CD4048
-#define GUARD_E5C0309B_0413_42A2_9FBD_CFFC13CD4048
+#pragma once
 
 #include <platform/estdint.h>
 
@@ -35,4 +34,3 @@ inline bool less(uint32_t const firstTime, uint32_t const secondTime)
 } // namespace timermanagement
 } // namespace docan
 
-#endif /* GUARD_E5C0309B_0413_42A2_9FBD_CFFC13CD4048 */

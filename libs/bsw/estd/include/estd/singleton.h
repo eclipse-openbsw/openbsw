@@ -5,8 +5,7 @@
  * \file
  * \ingroup estl_utils
  */
-#ifndef GUARD_6773A554_F58F_408F_92C2_88CA85ADAA30
-#define GUARD_6773A554_F58F_408F_92C2_88CA85ADAA30
+#pragma once
 
 #include "estd/assert.h"
 
@@ -87,4 +86,3 @@ T* singleton<T>::_self = nullptr;
 
 } // namespace estd
 
-#endif // GUARD_6773A554_F58F_408F_92C2_88CA85ADAA30

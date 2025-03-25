@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_BA937BED_AF7C_4936_89BF_AF75482D8368
-#define GUARD_BA937BED_AF7C_4936_89BF_AF75482D8368
+#pragma once
 
 #include "docan/common/DoCanConnection.h"
 #include "docan/common/DoCanTimerManagement.h"
@@ -425,4 +424,3 @@ inline ::estd::slice<uint8_t const> DoCanMessageReceiver<DataLinkLayer>::getFirs
 
 } // namespace docan
 
-#endif // GUARD_BA937BED_AF7C_4936_89BF_AF75482D8368

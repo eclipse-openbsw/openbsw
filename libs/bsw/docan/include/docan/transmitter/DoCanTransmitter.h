@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_DE25D9E7_4850_44E3_ABA3_16765A1C38B1
-#define GUARD_DE25D9E7_4850_44E3_ABA3_16765A1C38B1
+#pragma once
 
 #include "docan/addressing/IDoCanAddressConverter.h"
 #include "docan/common/DoCanConstants.h"
@@ -813,4 +812,3 @@ inline DoCanTransmitter<DataLinkLayer>::RemoveGuard::~RemoveGuard()
 
 } // namespace docan
 
-#endif // GUARD_DE25D9E7_4850_44E3_ABA3_16765A1C38B1

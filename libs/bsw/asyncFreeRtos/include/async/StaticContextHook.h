@@ -3,8 +3,7 @@
 /**
  * \ingroup async
  */
-#ifndef GUARD_B00373CC_CBF3_46CD_86E8_6AB0FBC2BDB9
-#define GUARD_B00373CC_CBF3_46CD_86E8_6AB0FBC2BDB9
+#pragma once
 
 #include "estd/singleton.h"
 
@@ -65,4 +64,3 @@ inline void StaticContextHook<T>::leaveIsrGroup(size_t const isrGroupIdx)
 
 } // namespace async
 
-#endif // GUARD_B00373CC_CBF3_46CD_86E8_6AB0FBC2BDB9

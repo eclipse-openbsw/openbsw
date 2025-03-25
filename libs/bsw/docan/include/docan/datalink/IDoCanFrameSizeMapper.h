@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_39217DF8_1B24_4B5C_8EAB_F8BCB6DAD83A
-#define GUARD_39217DF8_1B24_4B5C_8EAB_F8BCB6DAD83A
+#pragma once
 
 #include <platform/estdint.h>
 
@@ -24,4 +23,3 @@ private:
 };
 } // namespace docan
 
-#endif

@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_2248D13B_185E_4DFC_86C6_C354310E3921
-#define GUARD_2248D13B_185E_4DFC_86C6_C354310E3921
+#pragma once
 
 #include <bsp/Bsp.h>
 
@@ -49,4 +48,3 @@ public:
 
 } // namespace bios
 
-#endif // GUARD_2248D13B_185E_4DFC_86C6_C354310E3921

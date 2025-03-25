@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_04D23E89_BA90_4B0F_ABD6_FEC7A6F1FBF0
-#define GUARD_04D23E89_BA90_4B0F_ABD6_FEC7A6F1FBF0
+#pragma once
 
 #include <estd/slice.h>
 
@@ -56,4 +55,3 @@ public:
 
 } // namespace io
 
-#endif // GUARD_04D23E89_BA90_4B0F_ABD6_FEC7A6F1FBF0

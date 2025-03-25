@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_3138B9CD_79E1_4D43_BDF0_6A82E8416608
-#define GUARD_3138B9CD_79E1_4D43_BDF0_6A82E8416608
+#pragma once
 
 #include "docan/common/DoCanConstants.h"
 #include "docan/datalink/IDoCanPhysicalTransceiver.h"
@@ -56,4 +55,3 @@ public:
 
 } // namespace docan
 
-#endif // GUARD_3138B9CD_79E1_4D43_BDF0_6A82E8416608

@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_DC669291_D69E_43F0_A2DA_D14A670D654B
-#define GUARD_DC669291_D69E_43F0_A2DA_D14A670D654B
+#pragma once
 
 #include "estd/slice.h"
 #include "estd/uncopyable.h"
@@ -100,4 +99,3 @@ inline bool PositiveResponse::isOverflow() const { return fIsOverflow; }
 
 } // namespace uds
 
-#endif // GUARD_DC669291_D69E_43F0_A2DA_D14A670D654B

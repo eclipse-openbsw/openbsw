@@ -5,8 +5,7 @@
  * \file    IFilteredCANFrameSentListener.h
  * \ingroup    canframes
  */
-#ifndef GUARD_B1CC6DFA_78C8_4A71_9631_03FBEE82C1DE
-#define GUARD_B1CC6DFA_78C8_4A71_9631_03FBEE82C1DE
+#pragma once
 
 #include <estd/forward_list.h>
 
@@ -46,4 +45,3 @@ inline IFilteredCANFrameSentListener::IFilteredCANFrameSentListener()
 
 } // namespace can
 
-#endif /*GUARD_B1CC6DFA_78C8_4A71_9631_03FBEE82C1DE*/

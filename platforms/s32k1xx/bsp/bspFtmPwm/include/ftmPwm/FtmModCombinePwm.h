@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_31ECC6BC_5FC1_48C8_8B3F_B6FD0205B8E7
-#define GUARD_31ECC6BC_5FC1_48C8_8B3F_B6FD0205B8E7
+#pragma once
 
 #include "bsp/Bsp.h"
 #include "ftm/Ftm.h"
@@ -293,4 +292,3 @@ private:
 
 } // namespace bios
 
-#endif

@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_515AECA5_7781_4602_B07C_683BA6517680
-#define GUARD_515AECA5_7781_4602_B07C_683BA6517680
+#pragma once
 
 #include <cstdint>
 
@@ -43,4 +42,3 @@ T const Bitmask<T, 0>::value;
 } // namespace meta
 } // namespace util
 
-#endif /* GUARD_515AECA5_7781_4602_B07C_683BA6517680 */

@@ -3,8 +3,7 @@
 /**
  * \ingroup async
  */
-#ifndef GUARD_29E42A7E_77FA_4C21_BDC2_AE45965FFE05
-#define GUARD_29E42A7E_77FA_4C21_BDC2_AE45965FFE05
+#pragma once
 
 #include "async/ContextHookMock.h"
 #include "async/FreeRtosAdapter.h"
@@ -26,4 +25,3 @@ using AsyncBindingType = AsyncBinding;
 
 } // namespace async
 
-#endif // GUARD_29E42A7E_77FA_4C21_BDC2_AE45965FFE05

@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_184814C9_D20C_4F7A_8076_D399E54F2C26
-#define GUARD_184814C9_D20C_4F7A_8076_D399E54F2C26
+#pragma once
 
 #include "util/crc/Crc.h"
 #include "util/crc/LookupTable.h"
@@ -23,4 +22,3 @@ struct Crc8
 } /* namespace crc */
 } /* namespace util */
 
-#endif /* GUARD_184814C9_D20C_4F7A_8076_D399E54F2C26 */

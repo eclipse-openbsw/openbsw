@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_7D458DE5_9630_4EF7_9E68_94DB25CBE3DA
-#define GUARD_7D458DE5_9630_4EF7_9E68_94DB25CBE3DA
+#pragma once
 
 #include <cstdint>
 
@@ -166,4 +165,3 @@ private:
 } // namespace format
 } // namespace util
 
-#endif /* GUARD_7D458DE5_9630_4EF7_9E68_94DB25CBE3DA */

@@ -1,8 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_D4C91F00_10A2_437B_902D_15FED575DE04
-#define GUARD_D4C91F00_10A2_437B_902D_15FED575DE04
+#pragma once
 
 #include "can/FlexCANDevice.h"
 
-#endif /* GUARD_D4C91F00_10A2_437B_902D_15FED575DE04 */

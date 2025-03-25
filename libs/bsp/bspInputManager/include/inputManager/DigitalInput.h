@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_CF7B03E0_39CD_48FA_AEF0_45E4BC276713
-#define GUARD_CF7B03E0_39CD_48FA_AEF0_45E4BC276713
+#pragma once
 
 #include "estd/uncopyable.h"
 #include "io/DynamicClientCfg.h"
@@ -104,4 +103,3 @@ private:
 
 } /* namespace bios */
 
-#endif /* GUARD_CF7B03E0_39CD_48FA_AEF0_45E4BC276713 */

@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_B16DC1F5_FC61_4998_8D44_689E59FB9B3A
-#define GUARD_B16DC1F5_FC61_4998_8D44_689E59FB9B3A
+#pragma once
 
 #include "util/estd/signal.h"
 
@@ -189,4 +188,3 @@ T& observable<T, Compare>::transaction::get()
 } /* namespace estd */
 } /* namespace util */
 
-#endif /* GUARD_B16DC1F5_FC61_4998_8D44_689E59FB9B3A */

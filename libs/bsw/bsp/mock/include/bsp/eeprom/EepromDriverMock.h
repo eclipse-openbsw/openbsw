@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_AE103AC8_B8E9_4574_8FEB_8320387EADFB
-#define GUARD_AE103AC8_B8E9_4574_8FEB_8320387EADFB
+#pragma once
 
 #include "bsp/eeprom/IEepromDriver.h"
 
@@ -19,4 +18,3 @@ public:
 
 } // namespace eeprom
 
-#endif /* GUARD_AE103AC8_B8E9_4574_8FEB_8320387EADFB */

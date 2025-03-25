@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_4996B869_F6D7_4638_AD79_DCC98926C908
-#define GUARD_4996B869_F6D7_4638_AD79_DCC98926C908
+#pragma once
 
 #include <util/command/GroupCommand.h>
 
@@ -28,4 +27,3 @@ private:
 
 } // namespace lifecycle
 
-#endif /* GUARD_4996B869_F6D7_4638_AD79_DCC98926C908 */

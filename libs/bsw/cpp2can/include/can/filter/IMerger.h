@@ -5,8 +5,7 @@
  * \file IMerger.h
  * \ingroup filter
  */
-#ifndef GUARD_058F2EBC_3D62_4D90_9E7A_4B24E3C99085
-#define GUARD_058F2EBC_3D62_4D90_9E7A_4B24E3C99085
+#pragma once
 
 namespace can
 {
@@ -51,4 +50,3 @@ public:
 
 } // namespace can
 
-#endif // GUARD_058F2EBC_3D62_4D90_9E7A_4B24E3C99085

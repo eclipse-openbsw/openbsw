@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_DA7CDAF5_0701_447E_AA9C_7BA3D17ED39E
-#define GUARD_DA7CDAF5_0701_447E_AA9C_7BA3D17ED39E
+#pragma once
 
 #include "safeMemory/MemoryProtection.h"
 
@@ -54,4 +53,3 @@ private:
 
 } // namespace safety
 
-#endif /* GUARD_DA7CDAF5_0701_447E_AA9C_7BA3D17ED39E */

@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_1191192F_3EC4_46BF_9186_734B3854DA74
-#define GUARD_1191192F_3EC4_46BF_9186_734B3854DA74
+#pragma once
 
 #include "logger/IEntryFormatter.h"
 #include "logger/ILoggerTime.h"
@@ -65,4 +64,3 @@ void ConsoleEntryFormatter<E, Timestamp>::formatEntry(
 
 } // namespace logger
 
-#endif /* GUARD_1191192F_3EC4_46BF_9186_734B3854DA74 */

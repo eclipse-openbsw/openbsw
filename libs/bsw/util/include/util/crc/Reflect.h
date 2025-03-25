@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_2972EA04_C9D3_4B2B_8C2C_48A471E5E7A9
-#define GUARD_2972EA04_C9D3_4B2B_8C2C_48A471E5E7A9
+#pragma once
 
 #include "util/memory/Bit.h"
 
@@ -32,4 +31,3 @@ struct Reflect<true>
 } // namespace crc
 } // namespace util
 
-#endif /* GUARD_2972EA04_C9D3_4B2B_8C2C_48A471E5E7A9 */

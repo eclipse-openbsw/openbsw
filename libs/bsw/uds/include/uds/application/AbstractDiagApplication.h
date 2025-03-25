@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_44D6432D_A8F2_4655_AD09_E114DD2F3080
-#define GUARD_44D6432D_A8F2_4655_AD09_E114DD2F3080
+#pragma once
 
 #include "platform/estdint.h"
 #include "uds/connection/IOutgoingDiagConnectionProvider.h"
@@ -103,4 +102,3 @@ private:
 
 } // namespace uds
 
-#endif // GUARD_44D6432D_A8F2_4655_AD09_E114DD2F3080

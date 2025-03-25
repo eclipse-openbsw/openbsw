@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_D95DA684_BEC3_403B_B628_31E72CC87FDB
-#define GUARD_D95DA684_BEC3_403B_B628_31E72CC87FDB
+#pragma once
 
 #include "util/command/ICommand.h"
 #include "util/command/IParentCommand.h"
@@ -45,4 +44,3 @@ private:
 } // namespace command
 } // namespace util
 
-#endif /* GUARD_D95DA684_BEC3_403B_B628_31E72CC87FDB */

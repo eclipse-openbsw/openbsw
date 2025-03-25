@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_4CA82602_8DB4_4CFC_B496_CF723394E317
-#define GUARD_4CA82602_8DB4_4CFC_B496_CF723394E317
+#pragma once
 
 #include "util/estd/block_pool.h"
 
@@ -164,4 +163,3 @@ private:
 } // namespace estd
 } // namespace util
 
-#endif // GUARD_4CA82602_8DB4_4CFC_B496_CF723394E317

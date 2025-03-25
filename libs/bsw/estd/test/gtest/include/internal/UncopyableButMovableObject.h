@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_4DFA7ED7_F0FD_44DC_A412_D38AD806C590
-#define GUARD_4DFA7ED7_F0FD_44DC_A412_D38AD806C590
+#pragma once
 
 #include <platform/estdint.h>
 
@@ -24,4 +23,3 @@ public:
 
 } /* namespace internal */
 
-#endif /* GUARD_4DFA7ED7_F0FD_44DC_A412_D38AD806C590 */

@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_CCAF5DB9_0D99_4CDE_906F_6774F3E05D59
-#define GUARD_CCAF5DB9_0D99_4CDE_906F_6774F3E05D59
+#pragma once
 
 #include "can/framemgmt/ICANFrameListener.h"
 
@@ -37,4 +36,3 @@ private:
 
 } // namespace can
 
-#endif // GUARD_CCAF5DB9_0D99_4CDE_906F_6774F3E05D59

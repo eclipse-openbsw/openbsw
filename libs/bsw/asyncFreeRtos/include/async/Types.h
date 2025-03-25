@@ -3,8 +3,7 @@
 /**
  * \ingroup async
  */
-#ifndef GUARD_6CE67238_E66B_4D47_A69C_685DEC0453AD
-#define GUARD_6CE67238_E66B_4D47_A69C_685DEC0453AD
+#pragma once
 
 #include "async/IRunnable.h"
 #include "async/Lock.h"
@@ -56,4 +55,3 @@ using TimeUnitType = TimeUnit::Type;
 
 } // namespace async
 
-#endif // GUARD_6CE67238_E66B_4D47_A69C_685DEC0453AD

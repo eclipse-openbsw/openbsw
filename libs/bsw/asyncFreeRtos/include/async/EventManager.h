@@ -3,8 +3,7 @@
 /**
  * \ingroup async
  */
-#ifndef GUARD_9337F16A_502D_440E_A3D7_4516CD2AB6DF
-#define GUARD_9337F16A_502D_440E_A3D7_4516CD2AB6DF
+#pragma once
 
 #include "async/EventDispatcher.h"
 #include "async/Types.h"
@@ -75,4 +74,3 @@ inline EventMaskType EventManager<EventCount>::peekEvents()
 
 } // namespace async
 
-#endif // GUARD_9337F16A_502D_440E_A3D7_4516CD2AB6DF

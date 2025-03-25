@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_DA66F97C_C8A9_4826_9CBD_F1E24E375E4B
-#define GUARD_DA66F97C_C8A9_4826_9CBD_F1E24E375E4B
+#pragma once
 
 #include "platform/estdint.h"
 
@@ -50,4 +49,3 @@ public:
 
 } // namespace uds
 
-#endif // GUARD_DA66F97C_C8A9_4826_9CBD_F1E24E375E4B

@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_872C2BA9_B0E2_4EC9_9B51_801211F37B68
-#define GUARD_872C2BA9_B0E2_4EC9_9B51_801211F37B68
+#pragma once
 
 #include "uds/authentication/DefaultDiagAuthenticator.h"
 #include "uds/authentication/IDiagAuthenticator.h"
@@ -44,4 +43,3 @@ protected:
 
 } // namespace uds
 
-#endif // GUARD_872C2BA9_B0E2_4EC9_9B51_801211F37B68

@@ -4,8 +4,7 @@
  * Contains interface ITimeoutManager2.
  * \file ITimeoutManager2.h
  */
-#ifndef GUARD_D75B5F3B_5AAF_4821_94CB_D2C822AC36E9
-#define GUARD_D75B5F3B_5AAF_4821_94CB_D2C822AC36E9
+#pragma once
 
 #include <estd/uncopyable.h>
 #include <platform/estdint.h>
@@ -80,4 +79,3 @@ private:
 
 } // namespace common
 
-#endif /*GUARD_D75B5F3B_5AAF_4821_94CB_D2C822AC36E9*/

@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_B8C42E07_E817_4620_B352_EA2FE788AFA0
-#define GUARD_B8C42E07_E817_4620_B352_EA2FE788AFA0
+#pragma once
 
 /**
  * Asynchronous buffer size for logger output in bytes
@@ -17,4 +16,3 @@
  */
 #define SCI_LOGGERTIMEOUT 10000
 
-#endif /* GUARD_B8C42E07_E817_4620_B352_EA2FE788AFA0 */

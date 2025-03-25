@@ -5,8 +5,7 @@
  * \file
  * \ingroup estl_utils
  */
-#ifndef GUARD_F79CF972_B58B_49CD_8234_3F21F3E27221
-#define GUARD_F79CF972_B58B_49CD_8234_3F21F3E27221
+#pragma once
 
 #include <platform/estdint.h>
 
@@ -129,4 +128,3 @@ private:
 
 } // namespace estd
 
-#endif // GUARD_F79CF972_B58B_49CD_8234_3F21F3E27221

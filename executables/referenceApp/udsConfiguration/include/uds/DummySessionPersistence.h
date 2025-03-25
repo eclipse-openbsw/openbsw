@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_B9E6F2FF_EEDD_5CB9_EAF7_AAD589358F6C
-#define GUARD_B9E6F2FF_EEDD_5CB9_EAF7_AAD589358F6C
+#pragma once
 
 #include "uds/services/sessioncontrol/ISessionPersistence.h"
 
@@ -17,4 +16,3 @@ public:
 
 } // namespace uds
 
-#endif // GUARD_B9E6F2FF_EEDD_5CB9_EAF7_AAD589358F6C

@@ -3,8 +3,7 @@
 /**
  * \ingroup lifecycle
  */
-#ifndef GUARD_D1AD1771_8694_4A52_BA38_AA95B1CCC135
-#define GUARD_D1AD1771_8694_4A52_BA38_AA95B1CCC135
+#pragma once
 
 #include "lifecycle/ILifecycleComponent.h"
 
@@ -22,4 +21,3 @@ public:
 
 } // namespace lifecycle
 
-#endif // GUARD_D1AD1771_8694_4A52_BA38_AA95B1CCC135

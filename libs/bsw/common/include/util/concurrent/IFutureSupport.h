@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_4E0CAF56_BD8A_4C9C_98F4_9C8DBF1A0BB7
-#define GUARD_4E0CAF56_BD8A_4C9C_98F4_9C8DBF1A0BB7
+#pragma once
 
 namespace os
 {
@@ -25,4 +24,3 @@ public:
 
 } /* namespace os */
 
-#endif /* GUARD_4E0CAF56_BD8A_4C9C_98F4_9C8DBF1A0BB7 */

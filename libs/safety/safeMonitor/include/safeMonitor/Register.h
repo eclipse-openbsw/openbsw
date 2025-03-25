@@ -1,7 +1,6 @@
 // Copyright 2025 Accenture.
 
-#ifndef GUARD_C436876F_8CBB_4621_88D1_4AFC68A32B69
-#define GUARD_C436876F_8CBB_4621_88D1_4AFC68A32B69
+#pragma once
 
 #include "common.h"
 
@@ -129,4 +128,3 @@ Context const Register<Handler, Event, RegisterType, ScopedMutex, Context>::DEFA
 
 } // namespace safeMonitor
 
-#endif // GUARD_C436876F_8CBB_4621_88D1_4AFC68A32B69

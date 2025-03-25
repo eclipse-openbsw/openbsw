@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_2DE3C9D4_D952_4EDE_946C_51F601E73C25
-#define GUARD_2DE3C9D4_D952_4EDE_946C_51F601E73C25
+#pragma once
 
 #include "docan/datalink/IDoCanFrameSizeMapper.h"
 
@@ -25,4 +24,3 @@ public:
 };
 } // namespace docan
 
-#endif

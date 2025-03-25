@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_F01B28AA_2E8F_4C53_BDAC_3C68563660F4
-#define GUARD_F01B28AA_2E8F_4C53_BDAC_3C68563660F4
+#pragma once
 
 #ifdef PLATFORM_SUPPORT_MPU
 #include <mcu/mcu.h>
@@ -265,4 +264,3 @@ struct mpuWord3
 
 } // namespace safety
 
-#endif /* GUARD_F01B28AA_2E8F_4C53_BDAC_3C68563660F4 */

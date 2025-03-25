@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_367DD5E3_1B67_4833_B198_6D3E1C2B51D4
-#define GUARD_367DD5E3_1B67_4833_B198_6D3E1C2B51D4
+#pragma once
 
 #include "bsp/flash/IFlashDriver.h"
 
@@ -19,4 +18,3 @@ struct FlashDriverMock : IFlashDriver
 
 } /* namespace flash */
 
-#endif /* GUARD_367DD5E3_1B67_4833_B198_6D3E1C2B51D4 */

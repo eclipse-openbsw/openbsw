@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_51B063D4_A3A5_435A_93E1_8E93825857C5
-#define GUARD_51B063D4_A3A5_435A_93E1_8E93825857C5
+#pragma once
 
 #include "estd/uncopyable.h"
 #include "uds/base/Service.h"
@@ -45,4 +44,3 @@ private:
 
 } // namespace uds
 
-#endif // GUARD_51B063D4_A3A5_435A_93E1_8E93825857C5

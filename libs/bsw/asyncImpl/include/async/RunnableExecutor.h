@@ -3,8 +3,7 @@
 /**
  * \ingroup async
  */
-#ifndef GUARD_ECCAA06F_729C_4CDD_9C3B_67D97352DE9E
-#define GUARD_ECCAA06F_729C_4CDD_9C3B_67D97352DE9E
+#pragma once
 
 #include "async/Queue.h"
 
@@ -103,4 +102,3 @@ void RunnableExecutor<Runnable, EventPolicy, Lock>::handleEvent()
 
 } // namespace async
 
-#endif // GUARD_ECCAA06F_729C_4CDD_9C3B_67D97352DE9E

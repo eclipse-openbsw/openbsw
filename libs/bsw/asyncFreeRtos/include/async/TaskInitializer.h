@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_0F3859C6_65E3_4B0E_A12F_392C07B839AD
-#define GUARD_0F3859C6_65E3_4B0E_A12F_392C07B839AD
+#pragma once
 
 #include "async/StaticRunnable.h"
 #include "async/Types.h"
@@ -355,4 +354,3 @@ Task<Adapter, Context, 0U>::Task(
 } // namespace internal
 } // namespace async
 
-#endif // GUARD_0F3859C6_65E3_4B0E_A12F_392C07B839AD

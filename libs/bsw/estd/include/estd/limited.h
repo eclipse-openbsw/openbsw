@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_DE84452D_60E3_4023_94A6_FADC784B8E17
-#define GUARD_DE84452D_60E3_4023_94A6_FADC784B8E17
+#pragma once
 
 #include <limits>
 #include <type_traits>
@@ -64,4 +63,3 @@ private:
 
 } // namespace estd
 
-#endif // GUARD_DE84452D_60E3_4023_94A6_FADC784B8E17

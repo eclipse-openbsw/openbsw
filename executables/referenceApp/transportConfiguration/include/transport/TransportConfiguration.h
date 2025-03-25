@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_F4AB85C3_91F9_46C0_9F4B_C4AD79065CFC
-#define GUARD_F4AB85C3_91F9_46C0_9F4B_C4AD79065CFC
+#pragma once
 
 #include <transport/TransportMessage.h>
 
@@ -111,4 +110,3 @@ inline bool TransportConfiguration::isFromTester(TransportMessage const& message
 
 } // namespace transport
 
-#endif /* GUARD_F4AB85C3_91F9_46C0_9F4B_C4AD79065CFC */

@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_E5BDAACC_712F_4A89_9D5B_C3C2E72CE454
-#define GUARD_E5BDAACC_712F_4A89_9D5B_C3C2E72CE454
+#pragma once
 
 #include <platform/estdint.h>
 
@@ -94,4 +93,3 @@ DoCanDataLinkAddressPair<T>::operator=(DoCanDataLinkAddressPair const& other)
 }
 } // namespace docan
 
-#endif // GUARD_E5BDAACC_712F_4A89_9D5B_C3C2E72CE454

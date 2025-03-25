@@ -4,8 +4,7 @@
  * Alternative Input.
  *
  */
-#ifndef GUARD_2D478B82_5925_45FD_ABBF_9A45FF41E6AC
-#define GUARD_2D478B82_5925_45FD_ABBF_9A45FF41E6AC
+#pragma once
 #include "platform/estdint.h"
 
 namespace bios
@@ -34,4 +33,3 @@ private:
 
 } // namespace bios
 
-#endif /*GUARD_2D478B82_5925_45FD_ABBF_9A45FF41E6AC*/

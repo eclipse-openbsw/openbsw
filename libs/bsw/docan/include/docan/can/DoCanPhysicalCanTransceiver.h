@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_02D40CD8_A597_4AC5_A340_EB1356183B62
-#define GUARD_02D40CD8_A597_4AC5_A340_EB1356183B62
+#pragma once
 
 #include "can/canframes/CANFrame.h"
 #include "can/canframes/ICANFrameSentListener.h"
@@ -261,4 +260,3 @@ template<class Addressing>
 }
 } // namespace docan
 
-#endif // GUARD_02D40CD8_A597_4AC5_A340_EB1356183B62

@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_5263A4CD_7237_4053_AEA7_4FBF0EE2D02C
-#define GUARD_5263A4CD_7237_4053_AEA7_4FBF0EE2D02C
+#pragma once
 
 #include "can/transceiver/canflex2/CanFlex2Transceiver.h"
 #include "lifecycle/SingleContextLifecycleComponent.h"
@@ -136,4 +135,3 @@ private:
 
 } // namespace systems
 
-#endif // GUARD_5263A4CD_7237_4053_AEA7_4FBF0EE2D02C

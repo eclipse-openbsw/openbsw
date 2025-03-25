@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_E8293618_61DB_4256_838A_6C5CC351B7C5
-#define GUARD_E8293618_61DB_4256_838A_6C5CC351B7C5
+#pragma once
 
 namespace safety
 {
@@ -26,4 +25,3 @@ private:
 
 } // namespace safety
 
-#endif /* GUARD_E8293618_61DB_4256_838A_6C5CC351B7C5 */

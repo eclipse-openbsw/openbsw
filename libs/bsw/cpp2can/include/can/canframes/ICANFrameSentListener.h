@@ -5,8 +5,7 @@
  * \file    ICANFrameSentListener.h
  * \ingroup    canframes
  */
-#ifndef GUARD_9001E931_0C39_4A49_83A4_60726128845A
-#define GUARD_9001E931_0C39_4A49_83A4_60726128845A
+#pragma once
 
 namespace can
 {
@@ -34,4 +33,3 @@ public:
 
 } // namespace can
 
-#endif /*GUARD_9001E931_0C39_4A49_83A4_60726128845A*/

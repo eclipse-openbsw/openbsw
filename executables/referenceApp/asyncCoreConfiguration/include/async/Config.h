@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_BCC3EA4F_41A1_473E_9DA1_ADD5AE0FCC15
-#define GUARD_BCC3EA4F_41A1_473E_9DA1_ADD5AE0FCC15
+#pragma once
 
 // NOTE: This file needs to be implemented in C as it ends up being part of FreeRTOSConfig.h
 #define ASYNC_CONFIG_TICK_IN_US (100U) // System tick interval in microseconds.
@@ -42,4 +41,3 @@ enum
     ISR_GROUP_COUNT,
 };
 
-#endif /* GUARD_BCC3EA4F_41A1_473E_9DA1_ADD5AE0FCC15 */

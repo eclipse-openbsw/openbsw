@@ -5,8 +5,7 @@
  * \file IntervalFilter.h
  * \ingroup filter
  */
-#ifndef GUARD_F66B083F_F756_481B_A1D9_A9B2B549F8EE
-#define GUARD_F66B083F_F756_481B_A1D9_A9B2B549F8EE
+#pragma once
 
 #include "can/canframes/CANFrame.h"
 #include "can/filter/IFilter.h"
@@ -118,4 +117,3 @@ private:
 
 } /*namespace can*/
 
-#endif // GUARD_F66B083F_F756_481B_A1D9_A9B2B549F8EE

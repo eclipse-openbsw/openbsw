@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_F2DEA747_830D_4B19_B90B_2B22B0ED3813
-#define GUARD_F2DEA747_830D_4B19_B90B_2B22B0ED3813
+#pragma once
 
 #include "estd/assert.h"
 
@@ -693,4 +692,3 @@ struct array_data<T, 0>
 
 } // namespace estd
 
-#endif // GUARD_F2DEA747_830D_4B19_B90B_2B22B0ED3813

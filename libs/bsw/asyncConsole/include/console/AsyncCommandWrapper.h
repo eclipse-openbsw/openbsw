@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_358D8605_3018_46E9_ADAD_8B40199288A1
-#define GUARD_358D8605_3018_46E9_ADAD_8B40199288A1
+#pragma once
 
 #include <async/Async.h>
 #include <util/command/ICommand.h>
@@ -57,4 +56,3 @@ private:
 
 } /* namespace console */
 
-#endif /* GUARD_358D8605_3018_46E9_ADAD_8B40199288A1 */

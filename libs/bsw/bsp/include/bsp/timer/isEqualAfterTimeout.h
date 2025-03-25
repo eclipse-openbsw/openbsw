@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_E048A4BE_29AC_489D_B187_3E6F34207286
-#define GUARD_E048A4BE_29AC_489D_B187_3E6F34207286
+#pragma once
 
 #include <bsp/timer/SystemTimer.h>
 
@@ -30,4 +29,3 @@ bool isEqualAfterTimeout(T const* const ptr, T const mask, T const value, uint32
 
 } // namespace bsp
 
-#endif // GUARD_E048A4BE_29AC_489D_B187_3E6F34207286

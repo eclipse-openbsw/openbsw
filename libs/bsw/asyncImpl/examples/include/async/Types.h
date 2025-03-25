@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_C3E0A6F3_29D9_424D_B02E_5574DA6088DB
-#define GUARD_C3E0A6F3_29D9_424D_B02E_5574DA6088DB
+#pragma once
 #include "async/IRunnable.h"
 
 #include <platform/estdint.h>
@@ -38,4 +37,3 @@ public:
 // EXAMPLE_END AsyncImplExample
 } // namespace async
 
-#endif /* GUARD_C3E0A6F3_29D9_424D_B02E_5574DA6088DB */

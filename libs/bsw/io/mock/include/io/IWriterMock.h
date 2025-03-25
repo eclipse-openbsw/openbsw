@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_03759470_7328_4ABD_BF30_A922B7D97024
-#define GUARD_03759470_7328_4ABD_BF30_A922B7D97024
+#pragma once
 
 #include "io/IWriter.h"
 
@@ -23,4 +22,3 @@ public:
 
 } // namespace io
 
-#endif // GUARD_03759470_7328_4ABD_BF30_A922B7D97024

@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_F92D313F_656B_4106_8537_2E4B26B996C5
-#define GUARD_F92D313F_656B_4106_8537_2E4B26B996C5
+#pragma once
 
 #include "platform/estdint.h"
 
@@ -69,4 +68,3 @@ public:
 
 } // namespace logger
 
-#endif // GUARD_F92D313F_656B_4106_8537_2E4B26B996C5

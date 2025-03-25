@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_515D84D9_DA5F_4338_987F_C2497E2B8C25
-#define GUARD_515D84D9_DA5F_4338_987F_C2497E2B8C25
+#pragma once
 
 #include <estd/tiny_ring.h>
 
@@ -52,4 +51,3 @@ private:
 } // namespace math
 } // namespace util
 
-#endif /* GUARD_515D84D9_DA5F_4338_987F_C2497E2B8C25 */

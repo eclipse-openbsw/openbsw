@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_4FD4373E_EE4C_4CC5_ACD1_8EB134C35495
-#define GUARD_4FD4373E_EE4C_4CC5_ACD1_8EB134C35495
+#pragma once
 
 #include "estd/limits.h"
 #include "estd/slice.h"
@@ -195,4 +194,3 @@ string_view_tokens string_view::tokenize(T const& delims) const
 
 } // namespace estd
 
-#endif

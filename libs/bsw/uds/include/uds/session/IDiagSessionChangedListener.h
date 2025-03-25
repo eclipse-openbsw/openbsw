@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_1D16CA52_0D50_482A_A390_EEAA69ECB2CF
-#define GUARD_1D16CA52_0D50_482A_A390_EEAA69ECB2CF
+#pragma once
 
 #include <estd/forward_list.h>
 #include <platform/estdint.h>
@@ -25,4 +24,3 @@ public:
 
 } // namespace uds
 
-#endif // GUARD_1D16CA52_0D50_482A_A390_EEAA69ECB2CF

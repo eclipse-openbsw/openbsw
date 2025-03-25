@@ -3,8 +3,7 @@
 /**
  * \ingroup async
  */
-#ifndef GUARD_ECBA8222_466A_46D4_AA94_CC1FF5DCC677
-#define GUARD_ECBA8222_466A_46D4_AA94_CC1FF5DCC677
+#pragma once
 
 #include "async/Async.h"
 
@@ -181,4 +180,3 @@ private:
 
 } // namespace async
 
-#endif // GUARD_ECBA8222_466A_46D4_AA94_CC1FF5DCC677

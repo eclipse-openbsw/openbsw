@@ -5,8 +5,7 @@
  * \file
  * \ingroup estl_time
  */
-#ifndef GUARD_4921C49D_866D_4BD8_BFF7_47D3423A2E31
-#define GUARD_4921C49D_866D_4BD8_BFF7_47D3423A2E31
+#pragma once
 
 #include <platform/estdint.h>
 
@@ -515,4 +514,3 @@ using exa   = ratio<1000000000000000000LL, 1>;
 
 #endif // ifndef ESTD_NO_CHRONO
 
-#endif // GUARD_4921C49D_866D_4BD8_BFF7_47D3423A2E31

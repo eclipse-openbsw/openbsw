@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_E9CE82B1_D727_4563_BB8B_E33EC74F73FF
-#define GUARD_E9CE82B1_D727_4563_BB8B_E33EC74F73FF
+#pragma once
 
 #include "bsp/adc/AnalogInput.h"
 
@@ -59,4 +58,3 @@ bsp::BspReturnCode AnalogInputScaleImplementation<T1, T2>::calc(
     return retCode;
 }
 
-#endif // GUARD_E9CE82B1_D727_4563_BB8B_E33EC74F73FF

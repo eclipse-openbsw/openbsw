@@ -5,8 +5,7 @@
  * \file
  * \ingroup estl_containers
  */
-#ifndef GUARD_7C457549_1FB8_4070_876F_AD829CE87C03
-#define GUARD_7C457549_1FB8_4070_876F_AD829CE87C03
+#pragma once
 
 #include "estd/algorithm.h"
 #include "estd/assert.h"
@@ -1176,4 +1175,3 @@ vector<T, N>& vector<T, N>::operator=(this_type const& other)
 } // namespace declare
 } // namespace estd
 
-#endif // GUARD_7C457549_1FB8_4070_876F_AD829CE87C03

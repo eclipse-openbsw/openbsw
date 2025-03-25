@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_33F444F5_F396_4FCE_B674_2A81FA99DFE1
-#define GUARD_33F444F5_F396_4FCE_B674_2A81FA99DFE1
+#pragma once
 
 #include "can/canframes/ICANFrameSentListener.h"
 #include "can/framemgmt/ICANFrameListener.h"
@@ -46,4 +45,3 @@ struct ICanTransceiverMock : public ICanTransceiver
 
 } // namespace can
 
-#endif /* GUARD_33F444F5_F396_4FCE_B674_2A81FA99DFE1 */

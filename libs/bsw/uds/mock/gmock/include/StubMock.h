@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_0CDC571F_CF9A_42B5_A547_265F29C8370D
-#define GUARD_0CDC571F_CF9A_42B5_A547_265F29C8370D
+#pragma once
 
 class StubMock
 {
@@ -16,4 +15,3 @@ public:
     bool isStub() const { return stub; }
 };
 
-#endif // GUARD_0CDC571F_CF9A_42B5_A547_265F29C8370D

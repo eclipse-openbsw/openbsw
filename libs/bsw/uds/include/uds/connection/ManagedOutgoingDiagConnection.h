@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_DD21C731_100D_4FB8_9CC2_5776381A16EB
-#define GUARD_DD21C731_100D_4FB8_9CC2_5776381A16EB
+#pragma once
 
 #include "estd/forward_list.h"
 #include "estd/queue.h"
@@ -97,4 +96,3 @@ private:
 
 } // namespace uds
 
-#endif // GUARD_DD21C731_100D_4FB8_9CC2_5776381A16EB

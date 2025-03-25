@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_6E309BFB_E441_47E6_AC79_40A3C4E661C5
-#define GUARD_6E309BFB_E441_47E6_AC79_40A3C4E661C5
+#pragma once
 
 #include "uds/DiagReturnCode.h"
 #include "uds/UdsConstants.h"
@@ -476,4 +475,3 @@ AbstractDiagJob::getAndResetConnection(IncomingDiagConnection*& connection)
 
 } // namespace uds
 
-#endif // GUARD_6E309BFB_E441_47E6_AC79_40A3C4E661C5

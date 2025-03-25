@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_DEA0839B_70CB_4E6F_956A_4C9B8792E737
-#define GUARD_DEA0839B_70CB_4E6F_956A_4C9B8792E737
+#pragma once
 
 #include <platform/estdint.h>
 
@@ -27,4 +26,3 @@ public:
 
 } /* namespace uds */
 
-#endif /* GUARD_DEA0839B_70CB_4E6F_956A_4C9B8792E737 */

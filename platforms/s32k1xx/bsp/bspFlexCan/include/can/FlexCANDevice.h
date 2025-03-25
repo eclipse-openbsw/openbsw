@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_3A189DE8_D8A6_4A77_A9E2_2C58CCA2BF6E
-#define GUARD_3A189DE8_D8A6_4A77_A9E2_2C58CCA2BF6E
+#pragma once
 
 #include "bsp/can/canTransceiver/CanPhy.h"
 #include "bsp/power/IEcuPowerStateController.h"
@@ -375,4 +374,3 @@ enum Code
 
 } // namespace bios
 
-#endif /* GUARD_3A189DE8_D8A6_4A77_A9E2_2C58CCA2BF6E */

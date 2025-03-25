@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_071032A6_F337_42C8_9642_9BCD5D6FAA0C
-#define GUARD_071032A6_F337_42C8_9642_9BCD5D6FAA0C
+#pragma once
 
 #include "bsp/Bsp.h"
 #include "io/ioPorts.h"
@@ -161,4 +160,3 @@ private:
 
 } /* namespace bios */
 
-#endif /* GUARD_071032A6_F337_42C8_9642_9BCD5D6FAA0C */

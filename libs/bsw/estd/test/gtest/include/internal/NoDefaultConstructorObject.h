@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_C2B820D3_FF64_42D7_A2E3_ACE2B88C83A1
-#define GUARD_C2B820D3_FF64_42D7_A2E3_ACE2B88C83A1
+#pragma once
 
 #include <platform/estdint.h>
 
@@ -17,4 +16,3 @@ struct NoDefaultConstructorObject
 
 } /* namespace internal */
 
-#endif /* GUARD_C2B820D3_FF64_42D7_A2E3_ACE2B88C83A1 */

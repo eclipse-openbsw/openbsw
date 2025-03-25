@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_10482EE4_8A08_43A4_9717_09276F7804B8
-#define GUARD_10482EE4_8A08_43A4_9717_09276F7804B8
+#pragma once
 #include "estd/result.h"
 
 #include <cstdint>
@@ -34,4 +33,3 @@ ReturnType abs(InputType const& input)
 
 } // namespace estd
 
-#endif /* GUARD_10482EE4_8A08_43A4_9717_09276F7804B8 */

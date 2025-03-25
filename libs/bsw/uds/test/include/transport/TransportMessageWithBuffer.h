@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_B2C93931_57F2_4152_BE44_7BAF51EC0E87
-#define GUARD_B2C93931_57F2_4152_BE44_7BAF51EC0E87
+#pragma once
 
 #include "transport/TransportMessage.h"
 
@@ -40,4 +39,3 @@ private:
 } // namespace test
 } // namespace transport
 
-#endif // GUARD_B2C93931_57F2_4152_BE44_7BAF51EC0E87

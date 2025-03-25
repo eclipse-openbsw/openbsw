@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_011E43CB_A312_42D1_BC33_EA7712BFCB2F
-#define GUARD_011E43CB_A312_42D1_BC33_EA7712BFCB2F
+#pragma once
 
 #include <util/stream/IOutputStream.h>
 
@@ -22,4 +21,3 @@ public:
 } // namespace stream
 } // namespace util
 
-#endif /* GUARD_011E43CB_A312_42D1_BC33_EA7712BFCB2F */

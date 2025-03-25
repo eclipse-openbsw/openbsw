@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_2197BDBF_677B_47C0_B8B7_43B69E5E50FB
-#define GUARD_2197BDBF_677B_47C0_B8B7_43B69E5E50FB
+#pragma once
 
 #include "io/Io.h"
 
@@ -29,4 +28,3 @@ struct IoMock : public ::estd::singleton<IoMock>
 };
 
 } // namespace bios
-#endif // GUARD_2197BDBF_677B_47C0_B8B7_43B69E5E50FB

@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_18C53C42_0FFB_4C58_A9DB_47BCA509C110
-#define GUARD_18C53C42_0FFB_4C58_A9DB_47BCA509C110
+#pragma once
 
 #include "logger/IEntryFormatter.h"
 #include "logger/IEntryOutput.h"
@@ -52,4 +51,3 @@ void ConsoleEntryOutput<E, Timestamp>::outputEntry(
 
 } // namespace logger
 
-#endif // LOGGER_DEFAULTENTRYOUTPUT_H_

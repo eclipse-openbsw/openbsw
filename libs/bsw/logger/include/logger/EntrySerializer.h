@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_08CC8670_1F36_4E6F_822B_8305EE6DC856
-#define GUARD_08CC8670_1F36_4E6F_822B_8305EE6DC856
+#pragma once
 
 #include <util/format/IPrintfArgumentReader.h>
 #include <util/format/PrintfArgumentReader.h>
@@ -476,4 +475,3 @@ inline bool SectionPredicate::operator()(void const* const p) const
 
 } // namespace logger
 
-#endif // GUARD_08CC8670_1F36_4E6F_822B_8305EE6DC856

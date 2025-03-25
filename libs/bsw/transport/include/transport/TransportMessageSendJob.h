@@ -3,8 +3,7 @@
 /**
  * \ingroup transport
  */
-#ifndef GUARD_1D3052EC_A91A_45FE_89F7_9767C8B0EC00
-#define GUARD_1D3052EC_A91A_45FE_89F7_9767C8B0EC00
+#pragma once
 
 #include <estd/forward_list.h>
 
@@ -80,4 +79,3 @@ TransportMessageSendJob::getTransportMessageProcessedListener()
 
 } // namespace transport
 
-#endif // GUARD_1D3052EC_A91A_45FE_89F7_9767C8B0EC00

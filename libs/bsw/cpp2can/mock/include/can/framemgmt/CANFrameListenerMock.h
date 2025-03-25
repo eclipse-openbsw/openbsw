@@ -6,8 +6,7 @@
  * \ingroup
  */
 
-#ifndef GUARD_56BEB4E3_3717_422C_9CE3_8934FA806DDF
-#define GUARD_56BEB4E3_3717_422C_9CE3_8934FA806DDF
+#pragma once
 
 #include "can/framemgmt/ICANFrameListener.h"
 
@@ -23,4 +22,3 @@ struct CANFrameListenerMock : public ICANFrameListener
 
 } // namespace can
 
-#endif /* GUARD_56BEB4E3_3717_422C_9CE3_8934FA806DDF */

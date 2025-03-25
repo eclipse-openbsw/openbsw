@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_FDE16044_F531_4B94_BFB7_6E2FEA811A9D
-#define GUARD_FDE16044_F531_4B94_BFB7_6E2FEA811A9D
+#pragma once
 
 #include "bsp/Bsp.h"
 #include "estd/assert.h"
@@ -299,4 +298,3 @@ using tFtm = Ftm<8>;
 
 } // namespace bios
 
-#endif

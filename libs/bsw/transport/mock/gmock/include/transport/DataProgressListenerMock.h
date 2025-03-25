@@ -6,8 +6,7 @@
  * \ingroup
  */
 
-#ifndef GUARD_16E2FA4F_4F4A_41BD_97AC_4E9F5A4E5A40
-#define GUARD_16E2FA4F_4F4A_41BD_97AC_4E9F5A4E5A40
+#pragma once
 
 #include "transport/IDataProgressListener.h"
 
@@ -25,4 +24,3 @@ public:
 
 } // namespace transport
 
-#endif /* GUARD_16E2FA4F_4F4A_41BD_97AC_4E9F5A4E5A40 */

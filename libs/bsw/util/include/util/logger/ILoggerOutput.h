@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_CA5724D3_1F37_4BEA_AD36_F9E16C96D4FF
-#define GUARD_CA5724D3_1F37_4BEA_AD36_F9E16C96D4FF
+#pragma once
 
 #include "util/logger/ComponentInfo.h"
 #include "util/logger/LevelInfo.h"
@@ -44,4 +43,3 @@ protected:
 } // namespace logger
 } // namespace util
 
-#endif // GUARD_CA5724D3_1F37_4BEA_AD36_F9E16C96D4FF

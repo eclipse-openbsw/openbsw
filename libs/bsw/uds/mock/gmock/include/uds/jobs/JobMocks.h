@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_CE0DA969_03F7_41A8_A8C5_F3D36F5AFB80
-#define GUARD_CE0DA969_03F7_41A8_A8C5_F3D36F5AFB80
+#pragma once
 
 #include "StubMock.h"
 #include "uds/authentication/DefaultDiagAuthenticator.h"
@@ -72,4 +71,3 @@ public:
 
 } // namespace uds
 
-#endif /* GUARD_CE0DA969_03F7_41A8_A8C5_F3D36F5AFB80 */

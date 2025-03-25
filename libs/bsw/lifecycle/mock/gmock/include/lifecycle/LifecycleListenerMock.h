@@ -4,8 +4,7 @@
  * \file
  * \ingroup lifecycle
  */
-#ifndef GUARD_8F9082A6_3076_437F_B927_FDBE7F31EA4F
-#define GUARD_8F9082A6_3076_437F_B927_FDBE7F31EA4F
+#pragma once
 
 #include "lifecycle/ILifecycleListener.h"
 
@@ -23,4 +22,3 @@ public:
 
 } // namespace lifecycle
 
-#endif // GUARD_8F9082A6_3076_437F_B927_FDBE7F31EA4F

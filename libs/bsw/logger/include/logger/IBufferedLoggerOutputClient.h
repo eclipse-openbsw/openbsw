@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_A7D84007_32A4_4AE8_B310_36D2C8514C2B
-#define GUARD_A7D84007_32A4_4AE8_B310_36D2C8514C2B
+#pragma once
 
 #include "logger/IEntryOutput.h"
 
@@ -29,4 +28,3 @@ inline IBufferedLoggerOutputClient<E, Timestamp>::IBufferedLoggerOutputClient()
 
 } // namespace logger
 
-#endif // GUARD_A7D84007_32A4_4AE8_B310_36D2C8514C2B

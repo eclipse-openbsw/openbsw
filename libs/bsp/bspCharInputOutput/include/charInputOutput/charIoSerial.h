@@ -1,5 +1,4 @@
-#ifndef CHARIOSERIAL_H_
-#define CHARIOSERIAL_H_
+#pragma once
 
 #ifdef __cplusplus
 extern "C"
@@ -47,4 +46,3 @@ int SerialLogger__inchar(void);
 }
 #endif
 
-#endif /* CHARIOSERIAL_H_ */

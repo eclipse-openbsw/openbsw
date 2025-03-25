@@ -6,8 +6,7 @@
  * \ingroup
  */
 
-#ifndef GUARD_01FD90B4_C513_41B2_9E47_5E05243F8D0A
-#define GUARD_01FD90B4_C513_41B2_9E47_5E05243F8D0A
+#pragma once
 
 #include "can/filter/IMerger.h"
 
@@ -24,4 +23,3 @@ struct MergerMock : public IMerger
 
 } // namespace can
 
-#endif /* GUARD_01FD90B4_C513_41B2_9E47_5E05243F8D0A */

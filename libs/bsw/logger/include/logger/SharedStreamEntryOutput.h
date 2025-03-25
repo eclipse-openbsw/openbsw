@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_3EAC2075_EA4F_4702_86EB_1EBE06CFB8B2
-#define GUARD_3EAC2075_EA4F_4702_86EB_1EBE06CFB8B2
+#pragma once
 
 #include "logger/IEntryFormatter.h"
 #include "logger/IEntryOutput.h"
@@ -54,4 +53,3 @@ void SharedStreamEntryOutput<E, Timestamp>::outputEntry(
 
 } // namespace logger
 
-#endif // GUARD_3EAC2075_EA4F_4702_86EB_1EBE06CFB8B2

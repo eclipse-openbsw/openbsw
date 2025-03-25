@@ -7,8 +7,7 @@
  * access for a hardware-specific CAN-Transceiver
  */
 
-#ifndef GUARD_F190F018_9C18_47A6_8493_C425AD15C28E
-#define GUARD_F190F018_9C18_47A6_8493_C425AD15C28E
+#pragma once
 
 #include <platform/estdint.h>
 
@@ -73,4 +72,3 @@ inline CanPhyDummy::ErrorCode CanPhyDummy::getPhyErrorStatus(uint32_t /*id*/)
 
 } /* namespace bios */
 
-#endif /* GUARD_F190F018_9C18_47A6_8493_C425AD15C28E */

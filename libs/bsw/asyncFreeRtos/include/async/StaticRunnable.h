@@ -3,8 +3,7 @@
 /**
  * \ingroup async
  */
-#ifndef GUARD_DACDF931_AF72_4275_BB52_C84A579EB25F
-#define GUARD_DACDF931_AF72_4275_BB52_C84A579EB25F
+#pragma once
 
 #include "estd/functional.h"
 #include "estd/slice.h"
@@ -62,4 +61,3 @@ void StaticRunnable<T>::run()
 
 } // namespace async
 
-#endif // GUARD_DACDF931_AF72_4275_BB52_C84A579EB25F

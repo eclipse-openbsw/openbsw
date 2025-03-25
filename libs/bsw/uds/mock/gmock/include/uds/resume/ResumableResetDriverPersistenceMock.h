@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_A559F766_2356_472C_A4A8_C87FF2C731BB
-#define GUARD_A559F766_2356_472C_A4A8_C87FF2C731BB
+#pragma once
 
 #include "uds/resume/IResumableResetDriverPersistence.h"
 
@@ -18,4 +17,3 @@ public:
 };
 } // namespace uds
 
-#endif /* GUARD_A559F766_2356_472C_A4A8_C87FF2C731BB */

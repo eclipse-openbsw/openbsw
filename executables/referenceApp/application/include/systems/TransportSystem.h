@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_FACE7DDD_046B_4B7B_B83F_6212136CBA2E
-#define GUARD_FACE7DDD_046B_4B7B_B83F_6212136CBA2E
+#pragma once
 
 #include <lifecycle/AsyncLifecycleComponent.h>
 #include <transport/ITransportMessageProvider.h>
@@ -45,4 +44,3 @@ private:
 
 } // namespace transport
 
-#endif /*GUARD_FACE7DDD_046B_4B7B_B83F_6212136CBA2E*/

@@ -5,8 +5,7 @@
  * \file
  * \ingroup estl_utils
  */
-#ifndef GUARD_19EC6A21_B228_4D50_A8FC_C62A32ACB79A
-#define GUARD_19EC6A21_B228_4D50_A8FC_C62A32ACB79A
+#pragma once
 
 #ifndef UNCOPYABLE
 
@@ -46,4 +45,3 @@ protected:
 
 } // namespace estd
 
-#endif // GUARD_19EC6A21_B228_4D50_A8FC_C62A32ACB79A

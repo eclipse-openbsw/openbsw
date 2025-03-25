@@ -5,8 +5,7 @@
  * \file
  * \ingroup estl_utils
  */
-#ifndef GUARD_BD5ED2F6_B1FA_4CB1_993F_1423CB4080D5
-#define GUARD_BD5ED2F6_B1FA_4CB1_993F_1423CB4080D5
+#pragma once
 
 #include <platform/estdint.h>
 
@@ -59,4 +58,3 @@ using va_list_ref = internal::_va_list_ref<va_list>;
 
 } // namespace estd
 
-#endif // GUARD_BD5ED2F6_B1FA_4CB1_993F_1423CB4080D5

@@ -5,8 +5,7 @@
  * \file
  * \ingroup estl_containers
  */
-#ifndef GUARD_0450E155_0C11_4835_A544_67395D2EF1EB
-#define GUARD_0450E155_0C11_4835_A544_67395D2EF1EB
+#pragma once
 
 #include "estd/algorithm.h"
 #include "estd/assert.h"
@@ -367,4 +366,3 @@ T value_or_else(Variant& v, F const& f)
 
 } // namespace estd
 
-#endif // GUARD_0450E155_0C11_4835_A544_67395D2EF1EB

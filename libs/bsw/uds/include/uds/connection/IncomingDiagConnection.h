@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_763F7F47_7274_458B_B4A3_BDB48E3A689D
-#define GUARD_763F7F47_7274_458B_B4A3_BDB48E3A689D
+#pragma once
 
 #include "async/util/Call.h"
 #include "estd/uncopyable.h"
@@ -350,4 +349,3 @@ public:
 
 } // namespace uds
 
-#endif // GUARD_763F7F47_7274_458B_B4A3_BDB48E3A689D

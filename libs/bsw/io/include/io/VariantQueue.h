@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_C512CEED_E256_4221_B8CB_BB6E8451A7C7
-#define GUARD_C512CEED_E256_4221_B8CB_BB6E8451A7C7
+#pragma once
 
 #include <io/MemoryQueue.h>
 
@@ -228,4 +227,3 @@ public:
 
 } // namespace io
 
-#endif // GUARD_C512CEED_E256_4221_B8CB_BB6E8451A7C7

@@ -5,8 +5,7 @@
  * \file
  * \ingroup estl_containers
  */
-#ifndef GUARD_2B7C33DB_7D34_430D_9541_B36CFF60BF95
-#define GUARD_2B7C33DB_7D34_430D_9541_B36CFF60BF95
+#pragma once
 
 #include "estd/array.h"
 #include "estd/slice.h"
@@ -362,4 +361,3 @@ multi_slice<T0, T1, T2, T3, T4, T5> make_multi_slice(
 
 } // namespace estd
 
-#endif /* include_guard */

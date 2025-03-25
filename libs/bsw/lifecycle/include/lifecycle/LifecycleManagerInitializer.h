@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_B1DA5A64_FBC4_47B7_AC8C_6EFD0A7E7F83
-#define GUARD_B1DA5A64_FBC4_47B7_AC8C_6EFD0A7E7F83
+#pragma once
 
 #include "lifecycle/LifecycleManager.h"
 
@@ -183,4 +182,3 @@ inline LifecycleManager& createLifecycleManager(
 }
 } // namespace lifecycle
 
-#endif

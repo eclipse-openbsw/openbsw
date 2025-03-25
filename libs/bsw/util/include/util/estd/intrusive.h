@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_0D5C72F6_BB8D_4D7A_A098_D49A67713478
-#define GUARD_0D5C72F6_BB8D_4D7A_A098_D49A67713478
+#pragma once
 #include <utility>
 
 namespace util
@@ -78,4 +77,3 @@ struct intrusive
 } /* namespace estd */
 } /* namespace util */
 
-#endif /* GUARD_0D5C72F6_BB8D_4D7A_A098_D49A67713478 */

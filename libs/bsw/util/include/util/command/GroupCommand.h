@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_2EDB480B_967F_41C6_A9AB_D89313CBE2B6
-#define GUARD_2EDB480B_967F_41C6_A9AB_D89313CBE2B6
+#pragma once
 #include "util/command/CommandContext.h"
 #include "util/command/ICommand.h"
 
@@ -57,4 +56,3 @@ private:
     return _info;                         \
     }
 
-#endif /* GUARD_2EDB480B_967F_41C6_A9AB_D89313CBE2B6 */

@@ -5,8 +5,7 @@
  * \file
  * \ingroup estl_containers
  */
-#ifndef GUARD_F46BAC43_720D_4C23_9DA7_CB175438E6C1
-#define GUARD_F46BAC43_720D_4C23_9DA7_CB175438E6C1
+#pragma once
 
 #include "estd/constructor.h"
 #include "estd/deque.h"
@@ -395,4 +394,3 @@ private:
 } // namespace declare
 } // namespace estd
 
-#endif // GUARD_F46BAC43_720D_4C23_9DA7_CB175438E6C1

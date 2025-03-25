@@ -6,8 +6,7 @@
  * \ingroup estl_utils
  */
 
-#ifndef GUARD_62C3FFBA_0D4C_4A69_B863_1F6F95E33685
-#define GUARD_62C3FFBA_0D4C_4A69_B863_1F6F95E33685
+#pragma once
 
 namespace estd
 {
@@ -183,4 +182,3 @@ bool none_of(InputIterator first, InputIterator const last, UnaryPredicate const
 
 } // namespace estd
 
-#endif // GUARD_62C3FFBA_0D4C_4A69_B863_1F6F95E33685

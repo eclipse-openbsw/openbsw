@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_DFC3180F_D615_44B7_8BF4_2719BF8066CA
-#define GUARD_DFC3180F_D615_44B7_8BF4_2719BF8066CA
+#pragma once
 
 #include "util/stream/ISharedOutputStream.h"
 
@@ -58,4 +57,3 @@ void SharedOutputStreamResource<Lock>::releaseContinuousUser(IContinuousUser& us
 } // namespace stream
 } // namespace util
 
-#endif /* GUARD_DFC3180F_D615_44B7_8BF4_2719BF8066CA */

@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_B720575F_B24F_492A_9978_4EA20A945D36
-#define GUARD_B720575F_B24F_492A_9978_4EA20A945D36
+#pragma once
 
 #include "io/IReader.h"
 #include "io/IWriter.h"
@@ -537,4 +536,3 @@ inline size_t MemoryQueueReader<Queue>::available() const
 
 } // namespace io
 
-#endif // GUARD_B720575F_B24F_492A_9978_4EA20A945D36

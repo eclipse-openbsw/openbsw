@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_427FDDCA_EF4D_4AD0_BA23_B9E3ECFEEAFE
-#define GUARD_427FDDCA_EF4D_4AD0_BA23_B9E3ECFEEAFE
+#pragma once
 
 #include <platform/estdint.h>
 
@@ -69,4 +68,3 @@ inline bool DoCanTransportAddressPair::operator==(DoCanTransportAddressPair cons
 
 } // namespace docan
 
-#endif // GUARD_427FDDCA_EF4D_4AD0_BA23_B9E3ECFEEAFE

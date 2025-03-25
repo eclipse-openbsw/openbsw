@@ -6,8 +6,7 @@
  * \ingroup bspConfig
  */
 
-#ifndef GUARD_76360B39_CF5D_4CBE_B834_5E3EF3220866
-#define GUARD_76360B39_CF5D_4CBE_B834_5E3EF3220866
+#pragma once
 
 #include "ftm/Ftm.h"
 
@@ -46,4 +45,3 @@ const tFtm::tFtmConfiguration _cfgFtm4 = {
 // clang-format on
 } // namespace bios
 
-#endif

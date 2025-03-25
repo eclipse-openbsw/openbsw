@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_689BEDB9_7DA2_45EB_9F55_6A162BF41F8F
-#define GUARD_689BEDB9_7DA2_45EB_9F55_6A162BF41F8F
+#pragma once
 
 #include <cstdint>
 
@@ -72,4 +71,3 @@ inline uint64_t reverseBits(uint64_t value)
 } // namespace memory
 } // namespace util
 
-#endif /* GUARD_689BEDB9_7DA2_45EB_9F55_6A162BF41F8F */

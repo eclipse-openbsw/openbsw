@@ -5,8 +5,7 @@
  * \file CANFrame.h
  * \ingroup cpp2can
  */
-#ifndef GUARD_47B39A9C_ECE1_49E4_A566_154ED1C7E163
-#define GUARD_47B39A9C_ECE1_49E4_A566_154ED1C7E163
+#pragma once
 
 #include "can/canframes/CanId.h"
 
@@ -188,4 +187,3 @@ inline void CANFrame::setTimestamp(uint32_t const aTimestamp) { _timestamp = aTi
 
 } // namespace can
 
-#endif // GUARD_47B39A9C_ECE1_49E4_A566_154ED1C7E163

@@ -5,8 +5,7 @@
  * \file
  * \ingroup estl_containers
  */
-#ifndef GUARD_0FFBC651_ED5E_436C_BAA9_FCE7EAABE3BA
-#define GUARD_0FFBC651_ED5E_436C_BAA9_FCE7EAABE3BA
+#pragma once
 
 #include "estd/array.h"
 #include "estd/assert.h"
@@ -933,4 +932,3 @@ bitset<Size> operator^(bitset<Size> const& lhs, bitset<Size> const& rhs)
 
 } // namespace estd
 
-#endif /* GUARD_0FFBC651_ED5E_436C_BAA9_FCE7EAABE3BA */

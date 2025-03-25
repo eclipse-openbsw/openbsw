@@ -3,8 +3,7 @@
 /**
  * \ingroup transport
  */
-#ifndef GUARD_BF23E108_7BDB_42F4_AD94_F6924A07720A
-#define GUARD_BF23E108_7BDB_42F4_AD94_F6924A07720A
+#pragma once
 
 namespace transport
 {
@@ -57,4 +56,3 @@ private:
 
 } // namespace transport
 
-#endif /* GUARD_BF23E108_7BDB_42F4_AD94_F6924A07720A */

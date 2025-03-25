@@ -3,8 +3,7 @@
 /**
  * \ingroup async
  */
-#ifndef GUARD_194C32A8_DA3A_4AD8_BB52_7ACC8D4CEBEC
-#define GUARD_194C32A8_DA3A_4AD8_BB52_7ACC8D4CEBEC
+#pragma once
 
 #include "async/QueueNode.h"
 
@@ -21,4 +20,3 @@ protected:
 
 } // namespace async
 
-#endif // GUARD_194C32A8_DA3A_4AD8_BB52_7ACC8D4CEBEC

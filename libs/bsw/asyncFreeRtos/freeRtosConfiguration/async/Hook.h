@@ -3,8 +3,7 @@
 /**
  * \ingroup async
  */
-#ifndef GUARD_4B5334A0_F8B0_47F4_A981_CF83833F946D
-#define GUARD_4B5334A0_F8B0_47F4_A981_CF83833F946D
+#pragma once
 
 #ifdef __cplusplus
 extern "C"
@@ -24,4 +23,3 @@ uint32_t asyncTickHook(void);
 }
 #endif // __cplusplus
 
-#endif // GUARD_4B5334A0_F8B0_47F4_A981_CF83833F946D

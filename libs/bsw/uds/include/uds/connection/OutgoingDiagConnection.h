@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_C17B2C67_0FBD_454F_81C1_E86881395506
-#define GUARD_C17B2C67_0FBD_454F_81C1_E86881395506
+#pragma once
 
 #include "transport/ITransportMessageProcessedListener.h"
 #include "uds/application/AbstractDiagApplication.h"
@@ -171,4 +170,3 @@ protected:
 
 } // namespace uds
 
-#endif // GUARD_C17B2C67_0FBD_454F_81C1_E86881395506

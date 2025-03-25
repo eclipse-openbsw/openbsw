@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_F3144ABB_D235_458A_900D_74C193FF2B91
-#define GUARD_F3144ABB_D235_458A_900D_74C193FF2B91
+#pragma once
 #include "uds/resume/IResumableDiagDispatcher.h"
 
 #include <gmock/gmock.h>
@@ -34,4 +33,3 @@ public:
 #endif
 };
 } // namespace uds
-#endif /* GUARD_F3144ABB_D235_458A_900D_74C193FF2B91 */

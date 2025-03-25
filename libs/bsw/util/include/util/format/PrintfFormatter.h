@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_ED8481DF_5E74_40E7_803D_D8432AD78D16
-#define GUARD_ED8481DF_5E74_40E7_803D_D8432AD78D16
+#pragma once
 
 #include "util/format/IPrintfArgumentReader.h"
 #include "util/format/Printf.h"
@@ -384,4 +383,3 @@ inline void PrintfFormatter::putChar(char const c, size_t count)
 } // namespace format
 } // namespace util
 
-#endif /* GUARD_ED8481DF_5E74_40E7_803D_D8432AD78D16 */

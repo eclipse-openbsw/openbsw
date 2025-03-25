@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_5622CB83_9385_4B17_B0AF_3ECE189FE0D9
-#define GUARD_5622CB83_9385_4B17_B0AF_3ECE189FE0D9
+#pragma once
 
 #include "docan/datalink/DoCanDataLinkLayer.h"
 
@@ -22,4 +21,3 @@ using DoCanCanDataLinkLayer
     = DoCanDataLinkLayer<uint32_t, MessageSize, FrameSize, ::can::CanId::INVALID_ID, FrameIndex>;
 } // namespace docan
 
-#endif

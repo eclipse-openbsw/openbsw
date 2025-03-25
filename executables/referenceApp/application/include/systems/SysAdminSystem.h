@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_4FB17945_D233_4B3C_B797_B5DB491C5F47
-#define GUARD_4FB17945_D233_4B3C_B797_B5DB491C5F47
+#pragma once
 
 #include <async/Async.h>
 #include <async/IRunnable.h>
@@ -39,4 +38,3 @@ private:
 
 } // namespace systems
 
-#endif /* GUARD_4FB17945_D233_4B3C_B797_B5DB491C5F47 */

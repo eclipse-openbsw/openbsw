@@ -3,8 +3,7 @@
 /**
  * \ingroup async
  */
-#ifndef GUARD_44C9F9DB_11A5_4094_AB12_8B02A7C1F937
-#define GUARD_44C9F9DB_11A5_4094_AB12_8B02A7C1F937
+#pragma once
 
 #include "async/Types.h"
 
@@ -66,4 +65,3 @@ inline void EventPolicy<EventDispatcher, Event>::setEvent()
 
 } // namespace async
 
-#endif // GUARD_44C9F9DB_11A5_4094_AB12_8B02A7C1F937

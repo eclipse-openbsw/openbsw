@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_AE978583_BA31_4073_8FD6_A46EB93177CF
-#define GUARD_AE978583_BA31_4073_8FD6_A46EB93177CF
+#pragma once
 
 #include "ftmPwm/FtmECombinePwm.h"
 #include "ftmPwm/FtmEPwm.h"
@@ -25,4 +24,3 @@ tFtmEPwmConfiguration const EVAL_LED_BLUE_PWM_Configuration
 
 } // namespace bios
 
-#endif // GUARD_AE978583_BA31_4073_8FD6_A46EB93177CF

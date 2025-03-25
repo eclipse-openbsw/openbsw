@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_E8C7E5A2_A31C_48AA_8036_4549378235B9
-#define GUARD_E8C7E5A2_A31C_48AA_8036_4549378235B9
+#pragma once
 
 #include "util/logger/ComponentInfo.h"
 #include "util/logger/ILoggerOutput.h"
@@ -52,4 +51,3 @@ inline bool operator==(ComponentInfo const& a, ComponentInfo const& b)
 } // namespace logger
 } // namespace util
 
-#endif /* GUARD_E8C7E5A2_A31C_48AA_8036_4549378235B9 */

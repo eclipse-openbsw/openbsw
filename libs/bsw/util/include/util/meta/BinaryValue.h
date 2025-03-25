@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_9602FF2B_CD0E_4310_B139_84E987B70C7F
-#define GUARD_9602FF2B_CD0E_4310_B139_84E987B70C7F
+#pragma once
 
 #include <cstdint>
 
@@ -66,4 +65,3 @@ struct BinaryValue<0U>
 } /* namespace meta */
 } /* namespace util */
 
-#endif /* GUARD_9602FF2B_CD0E_4310_B139_84E987B70C7F */

@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_CE835A95_C3C0_44D8_8289_B302E332AC75
-#define GUARD_CE835A95_C3C0_44D8_8289_B302E332AC75
+#pragma once
 
 #include "estd/forward_list.h"
 #include "estd/object_pool.h"
@@ -225,4 +224,3 @@ private:
 
 } // namespace uds
 
-#endif // GUARD_CE835A95_C3C0_44D8_8289_B302E332AC75

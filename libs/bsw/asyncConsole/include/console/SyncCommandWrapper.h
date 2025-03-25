@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_FEAEF14B_EAD7_40F2_AEE5_B7003620952F
-#define GUARD_FEAEF14B_EAD7_40F2_AEE5_B7003620952F
+#pragma once
 
 #include <util/command/ICommand.h>
 
@@ -46,4 +45,3 @@ private:
 
 } /* namespace console */
 
-#endif /* GUARD_FEAEF14B_EAD7_40F2_AEE5_B7003620952F */

@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_7A4A7245_D016_47DF_9BD2_2BFD720A1BD7
-#define GUARD_7A4A7245_D016_47DF_9BD2_2BFD720A1BD7
+#pragma once
 
 #include <platform/estdint.h>
 
@@ -70,4 +69,3 @@ protected:
 
 } /* namespace eepromemulation */
 
-#endif /* GUARD_7A4A7245_D016_47DF_9BD2_2BFD720A1BD7 */

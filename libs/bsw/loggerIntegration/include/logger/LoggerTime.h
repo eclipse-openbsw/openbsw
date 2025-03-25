@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_015291CF_8D37_4391_83A8_66A6C8944AEB
-#define GUARD_015291CF_8D37_4391_83A8_66A6C8944AEB
+#pragma once
 
 #include <logger/ILoggerTime.h>
 
@@ -22,4 +21,3 @@ private:
 
 } // namespace logger
 
-#endif /* GUARD_015291CF_8D37_4391_83A8_66A6C8944AEB */

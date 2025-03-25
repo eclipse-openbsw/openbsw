@@ -1,7 +1,6 @@
 // Copyright 2025 Accenture.
 
-#ifndef GUARD_3D345972_8CAB_4775_8F41_455C33CAC619
-#define GUARD_3D345972_8CAB_4775_8F41_455C33CAC619
+#pragma once
 
 namespace safeMonitor
 {
@@ -26,4 +25,3 @@ struct DefaultMutex
 };
 } // namespace safeMonitor
 
-#endif // GUARD_3D345972_8CAB_4775_8F41_455C33CAC619

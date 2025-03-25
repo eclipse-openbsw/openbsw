@@ -1,5 +1,4 @@
-#ifndef BSPIOSTD_H_
-#define BSPIOSTD_H_
+#pragma once
 
 #include "platform/config.h"
 #include "platform/estdint.h"
@@ -110,4 +109,3 @@ extern int vsnprintf(char* buf, size_t const maxsize, char const* fmt, va_list a
 }
 #endif
 
-#endif /* _BSPIOSTD_H_ */

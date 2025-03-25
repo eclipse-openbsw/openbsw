@@ -3,8 +3,7 @@
 /**
  * \ingroup async
  */
-#ifndef GUARD_D6443ACA_1633_4D83_8EDB_30748190B6EC
-#define GUARD_D6443ACA_1633_4D83_8EDB_30748190B6EC
+#pragma once
 
 #include "async/IRunnable.h"
 
@@ -20,4 +19,3 @@ public:
 
 } // namespace async
 
-#endif // #ifndef GUARD_D6443ACA_1633_4D83_8EDB_30748190B6EC

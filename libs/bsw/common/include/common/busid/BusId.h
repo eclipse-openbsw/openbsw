@@ -5,8 +5,7 @@
  * \file
  * \ingroup common
  */
-#ifndef GUARD_BFEDE919_D13E_4A5F_866C_E8021D90D2B5
-#define GUARD_BFEDE919_D13E_4A5F_866C_E8021D90D2B5
+#pragma once
 
 #include <estd/bitset.h>
 #include <platform/estdint.h>
@@ -40,4 +39,3 @@ public:
 } // namespace busid
 } // namespace common
 
-#endif /* GUARD_BFEDE919_D13E_4A5F_866C_E8021D90D2B5 */

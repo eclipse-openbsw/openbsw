@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_5E616F47_0CB2_470D_9BC0_772CE398A5EF
-#define GUARD_5E616F47_0CB2_470D_9BC0_772CE398A5EF
+#pragma once
 
 // Bring in size_t
 #ifdef __cplusplus
@@ -28,4 +27,3 @@
 #define INTMAX_MAX 0x7fffffffffffffffULL
 #endif // INTMAX_MAX
 
-#endif // GUARD_5E616F47_0CB2_470D_9BC0_772CE398A5EF

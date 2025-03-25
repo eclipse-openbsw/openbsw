@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_1AE114B1_E4D7_4465_A28F_C4780B9A88DF
-#define GUARD_1AE114B1_E4D7_4465_A28F_C4780B9A88DF
+#pragma once
 
 #include "util/stream/INonBlockingInputStream.h"
 
@@ -23,4 +22,3 @@ public:
 } // namespace stream
 } // namespace util
 
-#endif /* GUARD_1AE114B1_E4D7_4465_A28F_C4780B9A88DF */

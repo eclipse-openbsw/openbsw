@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_5E72815E_E068_44C6_B357_404938726FD3
-#define GUARD_5E72815E_E068_44C6_B357_404938726FD3
+#pragma once
 
 #include "timer/Timeout.h"
 
@@ -223,4 +222,3 @@ int32_t Timer<LockGuard>::diff(uint32_t const a, uint32_t const b)
 
 } // namespace timer
 
-#endif /* GUARD_5E72815E_E068_44C6_B357_404938726FD3 */

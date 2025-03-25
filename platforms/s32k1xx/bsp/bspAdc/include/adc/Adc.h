@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_88D66BA5_75C5_4F3D_BBCA_102D4305AA3F
-#define GUARD_88D66BA5_75C5_4F3D_BBCA_102D4305AA3F
+#pragma once
 
 #include "adc/adcPhysicalName.h"
 #include "adc/adcResolution.h"
@@ -300,4 +299,3 @@ Adc<AdcResolution, AdcConfiguration, maxChannels>::row2Value(uint32_t row, uint1
 
 } // namespace bios
 
-#endif /* GUARD_88D66BA5_75C5_4F3D_BBCA_102D4305AA3F */

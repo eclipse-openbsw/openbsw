@@ -5,8 +5,7 @@
  * \file        ICanTransceiver.h
  * \ingroup     transceiver
  */
-#ifndef GUARD_27E4B707_98D8_4921_AE69_087539D3BDCF
-#define GUARD_27E4B707_98D8_4921_AE69_087539D3BDCF
+#pragma once
 
 #include "can/transceiver/ICANTransceiverStateListener.h"
 
@@ -322,4 +321,3 @@ public:
 
 } // namespace can
 
-#endif // GUARD_27E4B707_98D8_4921_AE69_087539D3BDCF

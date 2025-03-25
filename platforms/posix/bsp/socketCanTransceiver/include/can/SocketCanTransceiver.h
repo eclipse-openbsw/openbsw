@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_B44C60F5_D05E_45C2_B0E0_D94A8A2B646A
-#define GUARD_B44C60F5_D05E_45C2_B0E0_D94A8A2B646A
+#pragma once
 
 #include <can/transceiver/AbstractCANTransceiver.h>
 #include <io/MemoryQueue.h>
@@ -89,4 +88,3 @@ private:
 
 } // namespace can
 
-#endif // GUARD_B44C60F5_D05E_45C2_B0E0_D94A8A2B646A

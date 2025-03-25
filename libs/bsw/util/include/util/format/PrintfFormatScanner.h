@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_1623474A_1DA5_44B2_89F3_51D05CBA87D6
-#define GUARD_1623474A_1DA5_44B2_89F3_51D05CBA87D6
+#pragma once
 
 #include "util/format/Printf.h"
 
@@ -210,4 +209,3 @@ inline bool PrintfFormatScanner::isDigit(char const c) { return (c >= '0') && (c
 } // namespace format
 } // namespace util
 
-#endif /* GUARD_1623474A_1DA5_44B2_89F3_51D05CBA87D6 */

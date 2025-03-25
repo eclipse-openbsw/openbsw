@@ -3,8 +3,7 @@
 /**
  * \ingroup runtime
  */
-#ifndef GUARD_4C9987EA_4BCF_46A5_B5F6_939234153BB3
-#define GUARD_4C9987EA_4BCF_46A5_B5F6_939234153BB3
+#pragma once
 
 #include "runtime/RuntimeStackEntry.h"
 
@@ -21,4 +20,3 @@ public:
 
 } // namespace runtime
 
-#endif // GUARD_4C9987EA_4BCF_46A5_B5F6_939234153BB3

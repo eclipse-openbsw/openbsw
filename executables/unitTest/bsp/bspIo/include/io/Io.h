@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_12EDB516_8790_42D9_83DA_0AB3885A6FFA
-#define GUARD_12EDB516_8790_42D9_83DA_0AB3885A6FFA
+#pragma once
 
 #include "bsp/Bsp.h"
 #include "platform/estdint.h"
@@ -55,4 +54,3 @@ private:
 
 } /* namespace bios */
 
-#endif /* GUARD_12EDB516_8790_42D9_83DA_0AB3885A6FFA */

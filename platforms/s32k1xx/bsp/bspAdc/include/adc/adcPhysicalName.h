@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_6799B99F_0F14_4FA9_831E_BCAF6770C926
-#define GUARD_6799B99F_0F14_4FA9_831E_BCAF6770C926
+#pragma once
 
 namespace bios
 {
@@ -51,4 +50,3 @@ enum
 
 }
 
-#endif /* GUARD_6799B99F_0F14_4FA9_831E_BCAF6770C926 */

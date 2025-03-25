@@ -5,8 +5,7 @@
  * \file
  * \ingroup estl_containers
  */
-#ifndef GUARD_280BF2B5_02C7_4C43_BB3B_69DBA53C7AC2
-#define GUARD_280BF2B5_02C7_4C43_BB3B_69DBA53C7AC2
+#pragma once
 
 #include "estd/algorithm.h"
 #include "estd/assert.h"
@@ -1919,4 +1918,3 @@ deque<T, N>& deque<T, N>::operator=(this_type const& other)
 } // namespace declare
 } // namespace estd
 
-#endif // GUARD_280BF2B5_02C7_4C43_BB3B_69DBA53C7AC2

@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_A0D8404A_8780_469A_A501_B34AF21D8443
-#define GUARD_A0D8404A_8780_469A_A501_B34AF21D8443
+#pragma once
 
 #include <uds/DiagReturnCode.h>
 #include <util/Mask.h>
@@ -61,4 +60,3 @@ bool operator!=(DiagSession const& x, DiagSession const& y);
 
 } // namespace uds
 
-#endif // GUARD_A0D8404A_8780_469A_A501_B34AF21D8443

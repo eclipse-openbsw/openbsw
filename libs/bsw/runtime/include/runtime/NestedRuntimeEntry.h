@@ -3,8 +3,7 @@
 /**
  * \ingroup runtime
  */
-#ifndef GUARD_D64D4865_C1CC_4AFD_9AEF_38BEFFF1587E
-#define GUARD_D64D4865_C1CC_4AFD_9AEF_38BEFFF1587E
+#pragma once
 
 #include "runtime/RuntimeStack.h"
 #include "runtime/RuntimeStackEntry.h"
@@ -54,4 +53,3 @@ inline void NestedRuntimeEntry<Entry, Statistics, CutOut, Nested>::addSuspendedT
 
 } // namespace runtime
 
-#endif // #ifndef GUARD_D64D4865_C1CC_4AFD_9AEF_38BEFFF1587E

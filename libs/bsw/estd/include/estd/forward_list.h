@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_77D4C7DE_5249_44EA_8B29_3E0997DCB340
-#define GUARD_77D4C7DE_5249_44EA_8B29_3E0997DCB340
+#pragma once
 
 #include "estd/assert.h"
 #include "estd/iterator.h"
@@ -1378,4 +1377,3 @@ typename forward_list<T>::const_pointer forward_list<T>::lastItem() const
 
 } // namespace estd
 
-#endif // GUARD_77D4C7DE_5249_44EA_8B29_3E0997DCB340

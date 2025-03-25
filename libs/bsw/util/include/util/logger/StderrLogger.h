@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_CDF7D75A_7836_4122_B0D9_550DC2F66FD4
-#define GUARD_CDF7D75A_7836_4122_B0D9_550DC2F66FD4
+#pragma once
 
 #include <util/logger/IComponentMapping.h>
 #include <util/logger/ILoggerOutput.h>
@@ -76,4 +75,3 @@ StderrLogger::StderrLogger(LoggerComponentInfo (&firstComponentInfo)[Count])
 } // namespace logger
 } // namespace util
 
-#endif // GUARD_CDF7D75A_7836_4122_B0D9_550DC2F66FD4

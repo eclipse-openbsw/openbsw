@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_5E5D97C6_78AD_4943_B76D_F51AEA0FE906
-#define GUARD_5E5D97C6_78AD_4943_B76D_F51AEA0FE906
+#pragma once
 
 #include <util/stream/SharedOutputStream.h>
 #include <util/stream/StdoutStream.h>
@@ -79,4 +78,3 @@ private:
 
 } /* namespace console */
 
-#endif /* GUARD_5E5D97C6_78AD_4943_B76D_F51AEA0FE906 */

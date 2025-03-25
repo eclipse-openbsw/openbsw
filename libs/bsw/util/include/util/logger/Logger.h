@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_C33BDF65_EAA1_4EE7_8F00_0A590F568CFF
-#define GUARD_C33BDF65_EAA1_4EE7_8F00_0A590F568CFF
+#pragma once
 
 // This is the place where a logger framework implementation will be connected.
 // The framework include path should be injected before util's include path.
@@ -228,4 +227,3 @@ Logger::log(uint8_t const componentIndex, Level const level, char const* const s
 
 #endif // LOGGER_NO_LEGACY_API
 
-#endif // GUARD_C33BDF65_EAA1_4EE7_8F00_0A590F568CFF

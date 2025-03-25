@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_21FDAAFA_F0B5_4770_8517_BE1C68586BD9
-#define GUARD_21FDAAFA_F0B5_4770_8517_BE1C68586BD9
+#pragma once
 
 #include "uds/DiagReturnCode.h"
 
@@ -262,4 +261,3 @@ inline void NestedDiagRequest::setResponseCode(DiagReturnCode::Type const respon
 
 } // namespace uds
 
-#endif // GUARD_21FDAAFA_F0B5_4770_8517_BE1C68586BD9

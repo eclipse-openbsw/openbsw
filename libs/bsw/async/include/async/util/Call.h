@@ -3,8 +3,7 @@
 /**
  * \ingroup async
  */
-#ifndef GUARD_494723A2_B0E1_4BA7_B959_49EFF53DA1FB
-#define GUARD_494723A2_B0E1_4BA7_B959_49EFF53DA1FB
+#pragma once
 
 #include "async/Async.h"
 
@@ -57,4 +56,3 @@ void Call<T>::execute()
 
 } // namespace async
 
-#endif // _ASYNC_ASYNCCALL_H_

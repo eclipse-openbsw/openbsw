@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_DEDB6DC7_3B13_4ECC_84D1_D6EC188F58E4
-#define GUARD_DEDB6DC7_3B13_4ECC_84D1_D6EC188F58E4
+#pragma once
 
 #include <estd/forward_list.h>
 #include <estd/uncopyable.h>
@@ -42,4 +41,3 @@ private:
 
 } // namespace uds
 
-#endif // GUARD_DEDB6DC7_3B13_4ECC_84D1_D6EC188F58E4

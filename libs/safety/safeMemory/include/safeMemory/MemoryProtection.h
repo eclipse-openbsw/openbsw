@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_DD12C93C_B902_4A16_90B1_408ED48FD742
-#define GUARD_DD12C93C_B902_4A16_90B1_408ED48FD742
+#pragma once
 
 #include "safeMemory/mpu.h"
 
@@ -41,4 +40,3 @@ private:
 
 } // namespace safety
 
-#endif /* GUARD_DD12C93C_B902_4A16_90B1_408ED48FD742 */

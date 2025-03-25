@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_DBD10C2B_75A6_4975_A404_DEFFD8716534
-#define GUARD_DBD10C2B_75A6_4975_A404_DEFFD8716534
+#pragma once
 
 #include "uds/DiagReturnCode.h"
 #include "uds/async/IAsyncDiagHelper.h"
@@ -76,4 +75,3 @@ private:
 
 } // namespace uds
 
-#endif // GUARD_DBD10C2B_75A6_4975_A404_DEFFD8716534

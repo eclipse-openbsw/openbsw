@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_F7ED78E6_29F6_4D5B_89DE_C8EB8DCC3F1E
-#define GUARD_F7ED78E6_29F6_4D5B_89DE_C8EB8DCC3F1E
+#pragma once
 
 #include "estd/assert.h"
 #include "estd/memory.h"
@@ -163,4 +162,3 @@ inline void SplitWriter<N>::flush()
 
 } // namespace io
 
-#endif /* GUARD_F7ED78E6_29F6_4D5B_89DE_C8EB8DCC3F1E */

@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_2882A829_C9F0_427C_8523_B546207081C1
-#define GUARD_2882A829_C9F0_427C_8523_B546207081C1
+#pragma once
 
 #include "util/stream/IOutputStream.h"
 #include "util/stream/TaggedOutputHelper.h"
@@ -35,4 +34,3 @@ private:
 } // namespace stream
 } // namespace util
 
-#endif /* GUARD_2882A829_C9F0_427C_8523_B546207081C1 */

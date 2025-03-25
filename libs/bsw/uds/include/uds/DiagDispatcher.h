@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_8353C285_BBFB_4A94_8F62_7DF9C665A8CA
-#define GUARD_8353C285_BBFB_4A94_8F62_7DF9C665A8CA
+#pragma once
 
 #include "uds/DiagnosisConfiguration.h"
 #include "uds/IDiagDispatcher.h"
@@ -185,4 +184,3 @@ private:
 
 } // namespace uds
 
-#endif // GUARD_8353C285_BBFB_4A94_8F62_7DF9C665A8CA

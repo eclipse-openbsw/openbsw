@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_DE81AED5_B767_4FD0_BB48_18CD926F70E2
-#define GUARD_DE81AED5_B767_4FD0_BB48_18CD926F70E2
+#pragma once
 
 #include "io/IReader.h"
 #include "io/IWriter.h"
@@ -97,4 +96,3 @@ inline void ForwardingReader::release()
 
 } // namespace io
 
-#endif // GUARD_DE81AED5_B767_4FD0_BB48_18CD926F70E2

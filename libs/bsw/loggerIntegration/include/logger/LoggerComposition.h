@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_D6E2F430_DA04_4AA2_9EC3_2DEF54BBE3F9
-#define GUARD_D6E2F430_DA04_4AA2_9EC3_2DEF54BBE3F9
+#pragma once
 
 #include "logger/Config.h"
 #include "logger/ConsoleEntryFormatter.h"
@@ -47,4 +46,3 @@ private:
 
 } // namespace logger
 
-#endif /* GUARD_D6E2F430_DA04_4AA2_9EC3_2DEF54BBE3F9 */

@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_B51D8460_ACF3_4F07_B002_EEA566F824A2
-#define GUARD_B51D8460_ACF3_4F07_B002_EEA566F824A2
+#pragma once
 
 #include "uds/base/Service.h"
 #include "uds/services/communicationcontrol/ICommunicationStateManager.h"
@@ -101,4 +100,3 @@ protected:
 
 } // namespace uds
 
-#endif // GUARD_B51D8460_ACF3_4F07_B002_EEA566F824A2

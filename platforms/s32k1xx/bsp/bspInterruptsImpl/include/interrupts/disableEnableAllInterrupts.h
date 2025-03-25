@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef DISABLEENABLEALLINTERRUPTS_H_
-#define DISABLEENABLEALLINTERRUPTS_H_
+#pragma once
 
 // clang-format off
 static inline __attribute__((always_inline))
@@ -27,4 +26,3 @@ asm (
 
 // clang-format on
 
-#endif /* DISABLEENABLEALLINTERRUPTS_H_ */

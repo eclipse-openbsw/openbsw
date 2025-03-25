@@ -6,8 +6,7 @@
  * \ingroup
  */
 
-#ifndef GUARD_F008C895_93A2_4B5F_AA4E_1A635E95B4D1
-#define GUARD_F008C895_93A2_4B5F_AA4E_1A635E95B4D1
+#pragma once
 
 #include "transport/ITransportMessageListener.h"
 
@@ -25,4 +24,3 @@ public:
 
 } // namespace transport
 
-#endif /* GUARD_F008C895_93A2_4B5F_AA4E_1A635E95B4D1 */

@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_338EEE11_595F_4EDE_9167_E7C3868089E3
-#define GUARD_338EEE11_595F_4EDE_9167_E7C3868089E3
+#pragma once
 
 #include <bsp/can/canTransceiver/CanPhy.h>
 
@@ -41,4 +40,3 @@ protected:
 
 } // namespace bios
 
-#endif /* GUARD_338EEE11_595F_4EDE_9167_E7C3868089E3 */

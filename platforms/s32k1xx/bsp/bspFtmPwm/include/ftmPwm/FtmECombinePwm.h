@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_55D62E6C_CF71_4D2D_A0D7_86084B646C52
-#define GUARD_55D62E6C_CF71_4D2D_A0D7_86084B646C52
+#pragma once
 
 #include "ftmPwm/FtmCombinePwm.h"
 
@@ -117,4 +116,3 @@ private:
 
 } // namespace bios
 
-#endif

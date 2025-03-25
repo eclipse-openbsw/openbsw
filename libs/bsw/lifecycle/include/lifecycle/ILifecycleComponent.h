@@ -4,8 +4,7 @@
  * \file
  * \ingroup lifecycle
  */
-#ifndef GUARD_926AFEEE_3650_4951_BB77_8F960EC23323
-#define GUARD_926AFEEE_3650_4951_BB77_8F960EC23323
+#pragma once
 
 #include <async/Async.h>
 
@@ -51,4 +50,3 @@ private:
 
 } // namespace lifecycle
 
-#endif // GUARD_926AFEEE_3650_4951_BB77_8F960EC23323

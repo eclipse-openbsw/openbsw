@@ -4,8 +4,7 @@
  * \file
  * \ingroup lifecycle
  */
-#ifndef GUARD_8A55E0D9_E4FF_4108_BDC9_6C1A0973E983
-#define GUARD_8A55E0D9_E4FF_4108_BDC9_6C1A0973E983
+#pragma once
 
 #include "lifecycle/ILifecycleManager.h"
 
@@ -24,4 +23,3 @@ public:
 
 } // namespace lifecycle
 
-#endif // GUARD_8A55E0D9_E4FF_4108_BDC9_6C1A0973E983

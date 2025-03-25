@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_E0DBD384_81F9_4401_A99B_902E13DD49E8
-#define GUARD_E0DBD384_81F9_4401_A99B_902E13DD49E8
+#pragma once
 
 #include "mcu/mcu.h"
 #include "platform/estdint.h"
@@ -145,4 +144,3 @@ enum IOPort
     NUM_PORTS = 0xff //, PORT_UNAVAILABLE = NUM_PORTS
 };
 
-#endif /* GUARD_E0DBD384_81F9_4401_A99B_902E13DD49E8 */

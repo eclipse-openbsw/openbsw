@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_D0F4E2AE_DDF0_4323_B505_64C7E8D0648C
-#define GUARD_D0F4E2AE_DDF0_4323_B505_64C7E8D0648C
+#pragma once
 
 // clang-format off
 #define ESR_1(WHAT, X)      WHAT(X)
@@ -44,4 +43,3 @@
 #define ESR_IF_1_ELSE(...)
 #define ESR_IF_0_ELSE(...) __VA_ARGS__
 
-#endif /* GUARD_D0F4E2AE_DDF0_4323_B505_64C7E8D0648C */

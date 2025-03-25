@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_12F8E218_1BDF_F664_571C_FD245405B74B
-#define GUARD_12F8E218_1BDF_F664_571C_FD245405B74B
+#pragma once
 #include "platform/estdint.h"
 
 namespace uds
@@ -20,4 +19,3 @@ public:
     static uint8_t const BUSY_MESSAGE_EXTRA_BYTES      = 7U;
 };
 } /* namespace uds */
-#endif /* GUARD_12F8E218_1BDF_F664_571C_FD245405B74B */

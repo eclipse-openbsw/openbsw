@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_CD0E1300_58DF_4962_944C_0212D88FAF57
-#define GUARD_CD0E1300_58DF_4962_944C_0212D88FAF57
+#pragma once
 
 #include "estd/type_traits.h"
 
@@ -143,4 +142,3 @@ REGISTER_TYPED_TEST_SUITE_P(
 } // namespace test
 } // namespace estd
 
-#endif // GUARD_CD0E1300_58DF_4962_944C_0212D88FAF57

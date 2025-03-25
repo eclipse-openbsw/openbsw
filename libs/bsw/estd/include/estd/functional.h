@@ -5,8 +5,7 @@
  * \file
  * \ingroup estl_utils
  */
-#ifndef GUARD_05AF1AC2_4439_47BF_8B23_BF54CFC4327C
-#define GUARD_05AF1AC2_4439_47BF_8B23_BF54CFC4327C
+#pragma once
 
 #include "estd/type_traits.h"
 #include "estd/type_utils.h"
@@ -286,4 +285,3 @@ auto make_function(F* f) -> typename MakeFunction<F>::f
 
 } // namespace estd
 
-#endif // GUARD_05AF1AC2_4439_47BF_8B23_BF54CFC4327C

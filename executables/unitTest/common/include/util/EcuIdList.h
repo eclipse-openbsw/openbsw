@@ -4,8 +4,7 @@
  * \file
  * \ingroup common
  */
-#ifndef GUARD_68EB7097_AB5C_42E1_A708_BF13423B110A
-#define GUARD_68EB7097_AB5C_42E1_A708_BF13423B110A
+#pragma once
 
 #include <estd/big_endian.h>
 #include <platform/estdint.h>
@@ -131,4 +130,3 @@ inline uint8_t* EcuIdList::toStream() { return fpData; }
 
 } // namespace common
 
-#endif /*GUARD_68EB7097_AB5C_42E1_A708_BF13423B110A*/

@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_680ADF93_2EE8_49E9_8C98_A61CC05327DF
-#define GUARD_680ADF93_2EE8_49E9_8C98_A61CC05327DF
+#pragma once
 
 #include "docan/datalink/IDoCanDataFrameTransmitterCallback.h"
 
@@ -84,4 +83,3 @@ private:
 
 } // namespace docan
 
-#endif // GUARD_680ADF93_2EE8_49E9_8C98_A61CC05327DF

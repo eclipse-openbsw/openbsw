@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_80365AF8_A2E2_4BCD_BD26_B6E827555C36
-#define GUARD_80365AF8_A2E2_4BCD_BD26_B6E827555C36
+#pragma once
 
 #include <bsp/Bsp.h>
 
@@ -42,4 +41,3 @@ public:
 
 } // namespace bios
 
-#endif // GUARD_80365AF8_A2E2_4BCD_BD26_B6E827555C36

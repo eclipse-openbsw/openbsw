@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_C39212E3_9DB9_43AB_8E28_6EFFDA982A3B
-#define GUARD_C39212E3_9DB9_43AB_8E28_6EFFDA982A3B
+#pragma once
 
 #include <util/logger/Logger.h>
 
@@ -10,4 +9,3 @@
 
 DECLARE_LOGGER_COMPONENT(SAFETY)
 
-#endif /* GUARD_C39212E3_9DB9_43AB_8E28_6EFFDA982A3B */

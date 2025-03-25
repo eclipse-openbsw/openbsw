@@ -5,8 +5,7 @@
  * \file
  * \ingroup estl_containers
  */
-#ifndef GUARD_3749EF49_215A_40EA_9819_4084ABD88FE5
-#define GUARD_3749EF49_215A_40EA_9819_4084ABD88FE5
+#pragma once
 
 #include "estd/constructor.h"
 #include "estd/vector.h"
@@ -234,4 +233,3 @@ private:
 } // namespace declare
 } // namespace estd
 
-#endif // GUARD_3749EF49_215A_40EA_9819_4084ABD88FE5

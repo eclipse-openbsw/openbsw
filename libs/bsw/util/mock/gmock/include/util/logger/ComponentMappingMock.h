@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_2C555BC5_D1D6_4075_8E16_FC200684F015
-#define GUARD_2C555BC5_D1D6_4075_8E16_FC200684F015
+#pragma once
 
 #include "util/logger/IComponentMapping.h"
 
@@ -23,4 +22,3 @@ public:
 } // namespace logger
 } // namespace util
 
-#endif /* GUARD_2C555BC5_D1D6_4075_8E16_FC200684F015 */

@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_FA5105E7_90C3_4A26_B88E_71E18909284B
-#define GUARD_FA5105E7_90C3_4A26_B88E_71E18909284B
+#pragma once
 
 #include <platform/estdint.h>
 
@@ -24,4 +23,3 @@ public:
 
 } // namespace eeprom
 
-#endif // GUARD_FA5105E7_90C3_4A26_B88E_71E18909284B

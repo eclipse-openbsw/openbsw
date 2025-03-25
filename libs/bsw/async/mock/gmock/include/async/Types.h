@@ -3,8 +3,7 @@
 /**
  * \ingroup async
  */
-#ifndef GUARD_E24360C6_00A9_42FF_B33B_F82F9E9A64B8
-#define GUARD_E24360C6_00A9_42FF_B33B_F82F9E9A64B8
+#pragma once
 
 #include "platform/estdint.h"
 
@@ -60,4 +59,3 @@ public:
 
 } // namespace async
 
-#endif // GUARD_E24360C6_00A9_42FF_B33B_F82F9E9A64B8

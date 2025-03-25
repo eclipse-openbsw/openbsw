@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_F7ED31D9_B827_4EB6_AE4F_509C87501BA3
-#define GUARD_F7ED31D9_B827_4EB6_AE4F_509C87501BA3
+#pragma once
 
 #include "DoCanPhysicalCanTransceiver.h"
 
@@ -165,4 +164,3 @@ DoCanPhysicalCanTransceiverContainerBuilder<Addressing>::addTransceiver(
 
 } // namespace docan
 
-#endif // GUARD_F7ED31D9_B827_4EB6_AE4F_509C87501BA3

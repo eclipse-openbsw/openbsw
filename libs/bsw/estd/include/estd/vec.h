@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_727ED730_5DFE_45C5_90D0_B42920CA8AE5
-#define GUARD_727ED730_5DFE_45C5_90D0_B42920CA8AE5
+#pragma once
 
 #include "estd/algorithm.h"
 #include "estd/assert.h"
@@ -621,4 +620,3 @@ inline void vec<T, N>::clear()
 
 } // namespace estd
 
-#endif // GUARD_727ED730_5DFE_45C5_90D0_B42920CA8AE5

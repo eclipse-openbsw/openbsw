@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_15D97725_C47F_42BF_B4FE_34F1E13CA129
-#define GUARD_15D97725_C47F_42BF_B4FE_34F1E13CA129
+#pragma once
 
 // clang-format off
 
@@ -47,4 +46,3 @@
 #define ESR_PACKED_END   _Pragma("pack(pop)")
 #endif
 
-#endif // GUARD_15D97725_C47F_42BF_B4FE_34F1E13CA129

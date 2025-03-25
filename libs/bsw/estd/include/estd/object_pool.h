@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_6700A7A1_4F2D_4837_ABC9_22E43B78811D
-#define GUARD_6700A7A1_4F2D_4837_ABC9_22E43B78811D
+#pragma once
 
 #include "estd/assert.h"
 #include "estd/constructor.h"
@@ -627,4 +626,3 @@ object_pool<T, N>::object_pool() : base(&_realData[0], &_realUsed[0], N)
 } // namespace declare
 } // namespace estd
 
-#endif // GUARD_6700A7A1_4F2D_4837_ABC9_22E43B78811D

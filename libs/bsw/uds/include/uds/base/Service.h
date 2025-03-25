@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_73BFB590_8BCF_453B_8CCB_2A72CEC3E971
-#define GUARD_73BFB590_8BCF_453B_8CCB_2A72CEC3E971
+#pragma once
 
 #include "estd/uncopyable.h"
 #include "uds/base/AbstractDiagJob.h"
@@ -46,4 +45,3 @@ private:
 
 } // namespace uds
 
-#endif // GUARD_73BFB590_8BCF_453B_8CCB_2A72CEC3E971

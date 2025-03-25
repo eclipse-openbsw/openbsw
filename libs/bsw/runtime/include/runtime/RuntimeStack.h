@@ -3,8 +3,7 @@
 /**
  * \ingroup runtime
  */
-#ifndef GUARD_6C9963C9_BBA3_4892_A1DD_DE2A9348DA60
-#define GUARD_6C9963C9_BBA3_4892_A1DD_DE2A9348DA60
+#pragma once
 
 #include <cstdint>
 
@@ -62,4 +61,3 @@ private:
 
 } // namespace runtime
 
-#endif // GUARD_6C9963C9_BBA3_4892_A1DD_DE2A9348DA60

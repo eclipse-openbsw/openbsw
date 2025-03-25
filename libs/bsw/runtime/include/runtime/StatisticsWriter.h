@@ -3,8 +3,7 @@
 /**
  * \ingroup runtime
  */
-#ifndef GUARD_50D4C2A3_D9FB_41D0_977C_8178BA39C5EB
-#define GUARD_50D4C2A3_D9FB_41D0_977C_8178BA39C5EB
+#pragma once
 
 #include "util/format/StringWriter.h"
 
@@ -118,4 +117,3 @@ void StatisticsWriter::formatStatisticsGroup(
 
 } // namespace runtime
 
-#endif //  GUARD_50D4C2A3_D9FB_41D0_977C_8178BA39C5EB

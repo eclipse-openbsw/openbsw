@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_A91C2333_0583_4579_B986_AB77A649E20C
-#define GUARD_A91C2333_0583_4579_B986_AB77A649E20C
+#pragma once
 
 #include "platform/estdint.h"
 
@@ -42,4 +41,3 @@ void sciPuth(int c);
 }
 #endif
 
-#endif /* GUARD_A91C2333_0583_4579_B986_AB77A649E20C */

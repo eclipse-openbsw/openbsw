@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_C313BBB1_1875_4273_AC3D_186626EBB882
-#define GUARD_C313BBB1_1875_4273_AC3D_186626EBB882
+#pragma once
 
 #include "estd/slice.h"
 #include "estd/uncopyable.h"
@@ -42,4 +41,3 @@ private:
 
 } // namespace uds
 
-#endif // GUARD_C313BBB1_1875_4273_AC3D_186626EBB882

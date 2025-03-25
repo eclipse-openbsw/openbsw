@@ -4,8 +4,7 @@
  * \file
  * \ingroup lifecycle
  */
-#ifndef GUARD_8D8E9DE1_2157_4AEB_93E5_F99FE28AB590
-#define GUARD_8D8E9DE1_2157_4AEB_93E5_F99FE28AB590
+#pragma once
 
 #include "lifecycle/LifecycleComponent.h"
 
@@ -34,4 +33,3 @@ private:
 
 } // namespace lifecycle
 
-#endif // GUARD_8D8E9DE1_2157_4AEB_93E5_F99FE28AB590

@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_5AD068F3_DF52_4CA3_965F_3468CC924D28
-#define GUARD_5AD068F3_DF52_4CA3_965F_3468CC924D28
+#pragma once
 
 #include "estd/array.h"
 #include "estd/slice.h"
@@ -110,4 +109,3 @@ T tiny_ring<T, N>::front() const
 
 } // namespace estd
 
-#endif /* GUARD_5AD068F3_DF52_4CA3_965F_3468CC924D28 */

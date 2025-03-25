@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_97DE7412_9915_405A_9094_435C3F8C1350
-#define GUARD_97DE7412_9915_405A_9094_435C3F8C1350
+#pragma once
 
 #include <platform/estdint.h>
 
@@ -27,4 +26,3 @@ enum class FlowStatus : uint8_t
 
 } // namespace docan
 
-#endif // GUARD_97DE7412_9915_405A_9094_435C3F8C1350

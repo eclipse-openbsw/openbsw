@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_CD9C12CE_E7C5_4661_B006_A18B75B892E8
-#define GUARD_CD9C12CE_E7C5_4661_B006_A18B75B892E8
+#pragma once
 
 #include "estd/uncopyable.h"
 #include "platform/estdint.h"
@@ -92,4 +91,3 @@ private:
 
 } // namespace uds
 
-#endif // GUARD_CD9C12CE_E7C5_4661_B006_A18B75B892E8

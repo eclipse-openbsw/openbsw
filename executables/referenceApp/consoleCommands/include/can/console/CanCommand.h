@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_D79BAD98_ECC5_425C_9046_1910B1106AE1
-#define GUARD_D79BAD98_ECC5_425C_9046_1910B1106AE1
+#pragma once
 
 #include <can/canframes/CANFrame.h>
 #include <systems/ICanSystem.h>
@@ -35,4 +34,3 @@ private:
 
 } // namespace can
 
-#endif /* GUARD_D79BAD98_ECC5_425C_9046_1910B1106AE1 */

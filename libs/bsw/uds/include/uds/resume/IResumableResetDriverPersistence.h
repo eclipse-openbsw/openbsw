@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_80343DA5_0676_485B_BB44_19B2A56D3F8B
-#define GUARD_80343DA5_0676_485B_BB44_19B2A56D3F8B
+#pragma once
 
 #include "transport/TransportMessage.h"
 
@@ -36,4 +35,3 @@ public:
 
 } // namespace uds
 
-#endif // GUARD_80343DA5_0676_485B_BB44_19B2A56D3F8B

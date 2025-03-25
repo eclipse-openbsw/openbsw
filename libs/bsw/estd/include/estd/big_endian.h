@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_F2437631_4008_4301_B9A3_62725EA4B459
-#define GUARD_F2437631_4008_4301_B9A3_62725EA4B459
+#pragma once
 
 #include <estd/algorithm.h>
 #include <estd/assert.h>
@@ -358,4 +357,3 @@ void write_be_bits(uint8_t* const dst, T src, size_t offset, size_t length)
 
 } // namespace estd
 
-#endif // GUARD_F2437631_4008_4301_B9A3_62725EA4B459

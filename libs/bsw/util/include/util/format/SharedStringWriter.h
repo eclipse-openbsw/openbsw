@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_205C0900_CB38_4D9D_BD89_0825E803775C
-#define GUARD_205C0900_CB38_4D9D_BD89_0825E803775C
+#pragma once
 
 #include "util/format/StringWriter.h"
 #include "util/stream/ISharedOutputStream.h"
@@ -38,4 +37,3 @@ private:
 } // namespace format
 } // namespace util
 
-#endif /* GUARD_205C0900_CB38_4D9D_BD89_0825E803775C */

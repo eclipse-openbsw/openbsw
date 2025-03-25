@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_C7F48CD3_CA57_4A98_9D43_89AED82883A2
-#define GUARD_C7F48CD3_CA57_4A98_9D43_89AED82883A2
+#pragma once
 
 #include "async/Types.h"
 
@@ -241,4 +240,3 @@ void FunctionExecutionMonitorUsage<RuntimeMonitor>::Initializer::setIsUsed()
 
 } // namespace runtime
 
-#endif // GUARD_C7F48CD3_CA57_4A98_9D43_89AED82883A2

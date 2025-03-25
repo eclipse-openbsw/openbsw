@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_AC2E0C66_F767_4982_BA09_8B8A543261F9
-#define GUARD_AC2E0C66_F767_4982_BA09_8B8A543261F9
+#pragma once
 
 #include <can/framemgmt/IFilteredCANFrameSentListener.h>
 
@@ -20,4 +19,3 @@ public:
 
 } // namespace can
 
-#endif /* GUARD_AC2E0C66_F767_4982_BA09_8B8A543261F9 */

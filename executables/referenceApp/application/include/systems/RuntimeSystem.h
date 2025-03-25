@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_EB2D422D_3098_4A56_A3FA_884EB2AA7B1C
-#define GUARD_EB2D422D_3098_4A56_A3FA_884EB2AA7B1C
+#pragma once
 
 #include <async/Async.h>
 #include <async/IRunnable.h>
@@ -39,4 +38,3 @@ private:
 
 } // namespace systems
 
-#endif /* GUARD_EB2D422D_3098_4A56_A3FA_884EB2AA7B1C */

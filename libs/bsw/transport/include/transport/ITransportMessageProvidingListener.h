@@ -3,8 +3,7 @@
 /**
  * \ingroup transport
  */
-#ifndef GUARD_26B65BF1_9D50_4F0D_80D5_31B9CF626A94
-#define GUARD_26B65BF1_9D50_4F0D_80D5_31B9CF626A94
+#pragma once
 
 #include "transport/ITransportMessageListener.h"
 #include "transport/ITransportMessageProvider.h"
@@ -36,4 +35,3 @@ public:
 
 } // namespace transport
 
-#endif //_GUARD_26B65BF1_9D50_4F0D_80D5_31B9CF626A94

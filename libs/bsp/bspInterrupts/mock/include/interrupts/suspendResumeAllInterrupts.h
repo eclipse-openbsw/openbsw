@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_25D8D44E_A47E_44FA_97F5_504950251177
-#define GUARD_25D8D44E_A47E_44FA_97F5_504950251177
+#pragma once
 
 #include "platform/estdint.h"
 
@@ -21,4 +20,3 @@ void resumeAllInterrupts(uint32_t oldMachineStateRegisterValue);
 }
 #endif
 
-#endif /* GUARD_25D8D44E_A47E_44FA_97F5_504950251177 */

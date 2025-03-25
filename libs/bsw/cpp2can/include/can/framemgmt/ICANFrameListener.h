@@ -5,8 +5,7 @@
  * \file ICANFrameListener.h
  * \ingroup framemgmt
  */
-#ifndef GUARD_3991843A_AE0E_493A_8A61_E4A780891238
-#define GUARD_3991843A_AE0E_493A_8A61_E4A780891238
+#pragma once
 
 #include <estd/forward_list.h>
 
@@ -47,4 +46,3 @@ inline ICANFrameListener::ICANFrameListener() : ::estd::forward_list_node<ICANFr
 
 } // namespace can
 
-#endif // GUARD_3991843A_AE0E_493A_8A61_E4A780891238

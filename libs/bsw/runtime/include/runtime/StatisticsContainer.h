@@ -3,8 +3,7 @@
 /**
  * \ingroup runtime
  */
-#ifndef GUARD_388D33C0_7224_4D1F_B182_87A067C31A86
-#define GUARD_388D33C0_7224_4D1F_B182_87A067C31A86
+#pragma once
 
 #include "estd/array.h"
 #include "runtime/StatisticsIterator.h"
@@ -112,4 +111,3 @@ private:
 } // namespace declare
 } // namespace runtime
 
-#endif // GUARD_388D33C0_7224_4D1F_B182_87A067C31A86

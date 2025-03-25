@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_51953EE0_CF3E_4FFD_B991_3C6912F05F3D
-#define GUARD_51953EE0_CF3E_4FFD_B991_3C6912F05F3D
+#pragma once
 
 #include "adc/Adc.h"
 
@@ -75,4 +74,3 @@ private:
 
 } // namespace bios
 
-#endif /* GUARD_51953EE0_CF3E_4FFD_B991_3C6912F05F3D */

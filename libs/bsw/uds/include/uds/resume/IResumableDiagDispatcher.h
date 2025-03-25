@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_5DF0365E_2F8E_4634_B5C4_FB1D401C214B
-#define GUARD_5DF0365E_2F8E_4634_B5C4_FB1D401C214B
+#pragma once
 
 #include "transport/AbstractTransportLayer.h"
 #include "uds/IDiagDispatcher.h"
@@ -49,4 +48,3 @@ inline IResumableDiagDispatcher::IResumableDiagDispatcher(
 
 } // namespace uds
 
-#endif // GUARD_5DF0365E_2F8E_4634_B5C4_FB1D401C214B

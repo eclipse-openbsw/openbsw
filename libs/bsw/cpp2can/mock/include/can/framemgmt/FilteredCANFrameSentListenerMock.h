@@ -6,8 +6,7 @@
  * \ingroup
  */
 
-#ifndef GUARD_F5E2F172_CF68_49B3_822F_97C00A368ED0
-#define GUARD_F5E2F172_CF68_49B3_822F_97C00A368ED0
+#pragma once
 
 #include "can/framemgmt/ICANFrameListener.h"
 #include "can/framemgmt/IFilteredCANFrameSentListener.h"
@@ -24,4 +23,3 @@ struct FilteredCANFrameSentListenerMock : public IFilteredCANFrameSentListener
 
 } // namespace can
 
-#endif /* GUARD_F5E2F172_CF68_49B3_822F_97C00A368ED0 */

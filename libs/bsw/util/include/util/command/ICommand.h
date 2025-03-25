@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_BB3BEA06_449A_467D_A3FA_B02FB1FD4DEB
-#define GUARD_BB3BEA06_449A_467D_A3FA_B02FB1FD4DEB
+#pragma once
 
 #include "util/string/ConstString.h"
 
@@ -135,4 +134,3 @@ public:
 } // namespace command
 } // namespace util
 
-#endif /* GUARD_BB3BEA06_449A_467D_A3FA_B02FB1FD4DEB */

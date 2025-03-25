@@ -5,8 +5,7 @@
  * \file         AbstractCANTransceiver.h
  * \ingroup        transceiver
  */
-#ifndef GUARD_EA6A5242_D36E_40A9_B7AA_5C6B2784C7F3
-#define GUARD_EA6A5242_D36E_40A9_B7AA_5C6B2784C7F3
+#pragma once
 
 #include "can/canframes/BufferedCANFrame.h"
 #include "can/framemgmt/AbstractBitFieldFilteredCANFrameListener.h"
@@ -240,4 +239,3 @@ inline void AbstractCANTransceiver::notifyStateListenerWithState(
 
 } // namespace can
 
-#endif // GUARD_EA6A5242_D36E_40A9_B7AA_5C6B2784C7F3

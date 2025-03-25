@@ -3,8 +3,7 @@
 /**
  * \ingroup async
  */
-#ifndef GUARD_F14C8DE7_1246_465B_8833_4BA3F0E99CD0
-#define GUARD_F14C8DE7_1246_465B_8833_4BA3F0E99CD0
+#pragma once
 
 #include "estd/singleton.h"
 #include "interrupts/suspendResumeAllInterrupts.h"
@@ -58,4 +57,3 @@ public:
 
 } /* namespace interrupts */
 
-#endif /* GUARD_F14C8DE7_1246_465B_8833_4BA3F0E99CD0 */

@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_83EA24AA_0B98_4AA0_9E20_27F1A1ABA903
-#define GUARD_83EA24AA_0B98_4AA0_9E20_27F1A1ABA903
+#pragma once
 
 #include "estd/slice.h"
 
@@ -99,4 +98,3 @@ private:
 
 } // namespace estd
 
-#endif /* include_guard */

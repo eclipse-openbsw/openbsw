@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_FF231011_FBB2_4D74_ABB0_B395B25EA4E1
-#define GUARD_FF231011_FBB2_4D74_ABB0_B395B25EA4E1
+#pragma once
 
 namespace bsp
 {
@@ -20,4 +19,3 @@ enum BspReturnCode
 
 } /* namespace bsp */
 
-#endif /* GUARD_FF231011_FBB2_4D74_ABB0_B395B25EA4E1 */

@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_0F322417_8B2B_4FB2_9DD9_A0CA4D301C9D
-#define GUARD_0F322417_8B2B_4FB2_9DD9_A0CA4D301C9D
+#pragma once
 
 #include "util/format/IPrintfArgumentReader.h"
 #include "util/stream/IOutputStream.h"
@@ -114,4 +113,3 @@ private:
 } // namespace format
 } // namespace util
 
-#endif /* GUARD_0F322417_8B2B_4FB2_9DD9_A0CA4D301C9D */

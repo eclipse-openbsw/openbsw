@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_40A35A7B_385D_4C52_A692_27C3350DEC91
-#define GUARD_40A35A7B_385D_4C52_A692_27C3350DEC91
+#pragma once
 
 #include "util/stream/BspStubs.h"
 
@@ -25,4 +24,3 @@ struct StdIoMock : ::estd::singleton<StdIoMock>
 } // namespace test
 } // namespace util
 
-#endif // GUARD_40A35A7B_385D_4C52_A692_27C3350DEC91

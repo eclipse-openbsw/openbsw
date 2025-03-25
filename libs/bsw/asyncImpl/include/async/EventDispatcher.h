@@ -3,8 +3,7 @@
 /**
  * \ingroup async
  */
-#ifndef GUARD_DDD1DD79_9BAA_457F_BFAA_C237BA5358CC
-#define GUARD_DDD1DD79_9BAA_457F_BFAA_C237BA5358CC
+#pragma once
 
 #include "async/Types.h"
 
@@ -101,4 +100,3 @@ inline void EventDispatcher<EventCount, Lock>::EventDispatcherImpl<Event, false>
 
 } // namespace async
 
-#endif // GUARD_DDD1DD79_9BAA_457F_BFAA_C237BA5358CC

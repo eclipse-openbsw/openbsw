@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_B541FD59_ECB2_49A6_9DAB_515B4D6675D6
-#define GUARD_B541FD59_ECB2_49A6_9DAB_515B4D6675D6
+#pragma once
 
 #include <platform/estdint.h>
 
@@ -405,4 +404,3 @@ inline bool ReceiveResult::operator==(ReceiveResult const& other) const
 
 } // namespace docan
 
-#endif // GUARD_B541FD59_ECB2_49A6_9DAB_515B4D6675D6

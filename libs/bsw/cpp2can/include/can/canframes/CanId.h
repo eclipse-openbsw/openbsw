@@ -5,8 +5,7 @@
  * \file    CanId.h
  * \ingroup cpp2can
  */
-#ifndef GUARD_E6ADDD0A_03A8_4C75_8ADD_51A0BE7BC487
-#define GUARD_E6ADDD0A_03A8_4C75_8ADD_51A0BE7BC487
+#pragma once
 
 #include <cstdint>
 
@@ -235,4 +234,3 @@ inline bool CanId::isForceNoFd(uint32_t const value)
 
 } /* namespace can */
 
-#endif // GUARD_E6ADDD0A_03A8_4C75_8ADD_51A0BE7BC487

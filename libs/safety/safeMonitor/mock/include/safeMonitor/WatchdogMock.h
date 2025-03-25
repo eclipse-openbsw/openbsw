@@ -1,7 +1,6 @@
 // Copyright 2025 Accenture.
 
-#ifndef GUARD_DA29D979_6A81_45B8_BD34_9661684B622F
-#define GUARD_DA29D979_6A81_45B8_BD34_9661684B622F
+#pragma once
 
 #include "safeMonitor/common.h"
 
@@ -28,4 +27,3 @@ public:
 };
 } // namespace safeMonitor
 
-#endif // GUARD_DA29D979_6A81_45B8_BD34_9661684B622F

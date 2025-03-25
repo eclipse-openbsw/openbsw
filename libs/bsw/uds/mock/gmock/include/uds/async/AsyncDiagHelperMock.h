@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_8A4789C7_3F07_405C_BC86_74443D789840
-#define GUARD_8A4789C7_3F07_405C_BC86_74443D789840
+#pragma once
 
 #include "uds/async/IAsyncDiagHelper.h"
 
@@ -22,4 +21,3 @@ public:
 
 } /* namespace uds */
 
-#endif // GUARD_8A4789C7_3F07_405C_BC86_74443D789840

@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_60DA69EC_9622_4FC2_BB0B_C4C79C5CBD25
-#define GUARD_60DA69EC_9622_4FC2_BB0B_C4C79C5CBD25
+#pragma once
 
 #include "console/AsyncCommandWrapper.h"
 #include "inputManager/DigitalInputTester.h"
@@ -45,4 +44,3 @@ private:
 
 } // namespace systems
 
-#endif /* GUARD_60DA69EC_9622_4FC2_BB0B_C4C79C5CBD25 */

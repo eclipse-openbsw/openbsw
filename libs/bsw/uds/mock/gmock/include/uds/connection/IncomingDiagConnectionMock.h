@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_DDF26B88_D272_4159_81D9_C10219D2A7BB
-#define GUARD_DDF26B88_D272_4159_81D9_C10219D2A7BB
+#pragma once
 
 #include "ResponseMock.h"
 #include "StubMock.h"
@@ -93,4 +92,3 @@ public:
 
 } // namespace uds
 
-#endif // GUARD_DDF26B88_D272_4159_81D9_C10219D2A7BB

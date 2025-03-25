@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_2AC28890_0365_4510_AAF2_C6BC49CC731A
-#define GUARD_2AC28890_0365_4510_AAF2_C6BC49CC731A
+#pragma once
 
 #include <estd/singleton.h>
 
@@ -88,4 +87,3 @@ public:
 
 } // namespace testing
 
-#endif /* GUARD_2AC28890_0365_4510_AAF2_C6BC49CC731A */

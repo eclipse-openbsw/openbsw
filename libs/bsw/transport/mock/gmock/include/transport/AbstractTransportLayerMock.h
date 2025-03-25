@@ -6,8 +6,7 @@
  * \ingroup
  */
 
-#ifndef GUARD_027E686A_FE36_47F0_BB6C_F48FC60383EE
-#define GUARD_027E686A_FE36_47F0_BB6C_F48FC60383EE
+#pragma once
 
 #include "transport/AbstractTransportLayer.h"
 
@@ -36,4 +35,3 @@ public:
 
 } // namespace transport
 
-#endif /* GUARD_027E686A_FE36_47F0_BB6C_F48FC60383EE */

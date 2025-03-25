@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_13E118E0_C1BF_4FED_91E0_921E26107DED
-#define GUARD_13E118E0_C1BF_4FED_91E0_921E26107DED
+#pragma once
 
 #include <estd/slice.h>
 
@@ -157,4 +156,3 @@ inline void EntryBuffer<MaxBufferSize, E>::movePointer(T& p, size_t const offset
 
 } // namespace logger
 
-#endif // GUARD_13E118E0_C1BF_4FED_91E0_921E26107DED

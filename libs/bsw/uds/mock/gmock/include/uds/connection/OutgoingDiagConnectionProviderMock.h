@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_24D0D23D_4EDA_474F_8010_6382121C9295
-#define GUARD_24D0D23D_4EDA_474F_8010_6382121C9295
+#pragma once
 
 #include "uds/connection/IOutgoingDiagConnectionProvider.h"
 
@@ -29,4 +28,3 @@ public:
 
 } // namespace uds
 
-#endif // GUARD_24D0D23D_4EDA_474F_8010_6382121C9295

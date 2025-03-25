@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_31E2381E_019E_47EB_A493_AE62464BA432
-#define GUARD_31E2381E_019E_47EB_A493_AE62464BA432
+#pragma once
 
 #include "logger/ComponentConfig.h"
 #include "logger/IPersistenceManager.h"
@@ -90,4 +89,3 @@ uint8_t PersistentComponentConfig<IndexUpperBound, Crc8>::getComponentCrc(
 
 } // namespace logger
 
-#endif // LOGGER_COMPONENTCONFIG_H_

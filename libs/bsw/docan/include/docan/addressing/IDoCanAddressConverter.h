@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_30346F22_7433_4008_867A_2A334DA71D99
-#define GUARD_30346F22_7433_4008_867A_2A334DA71D99
+#pragma once
 
 #include "docan/common/DoCanTransportAddressPair.h"
 
@@ -76,4 +75,3 @@ private:
 
 } // namespace docan
 
-#endif // GUARD_30346F22_7433_4008_867A_2A334DA71D99

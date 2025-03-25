@@ -4,8 +4,7 @@
  * \file
  * \ingroup lifecycle
  */
-#ifndef GUARD_20ACE502_C1C9_4502_B375_3810A43A032F
-#define GUARD_20ACE502_C1C9_4502_B375_3810A43A032F
+#pragma once
 
 #include "lifecycle/ILifecycleComponent.h"
 
@@ -48,4 +47,3 @@ private:
 
 } // namespace lifecycle
 
-#endif // GUARD_20ACE502_C1C9_4502_B375_3810A43A032F

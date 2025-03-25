@@ -1,7 +1,6 @@
 // Copyright 2025 Accenture.
 
-#ifndef GUARD_210BB089_26CA_43B0_A480_012E7C8E5807
-#define GUARD_210BB089_26CA_43B0_A480_012E7C8E5807
+#pragma once
 
 #include "common.h"
 
@@ -108,4 +107,3 @@ Context const Sequence<Handler, Event, Checkpoint, ScopedMutex, Context>::DEFAUL
 
 } // namespace safeMonitor
 
-#endif // GUARD_210BB089_26CA_43B0_A480_012E7C8E5807

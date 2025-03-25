@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_8791664A_4256_4BA3_B5CF_2710EB2102FE
-#define GUARD_8791664A_4256_4BA3_B5CF_2710EB2102FE
+#pragma once
 
 #include "can/transceiver/ICanTransceiver.h"
 
@@ -25,4 +24,3 @@ extern Statistics get_statistics(ICanTransceiver& transceiver);
 
 } // namespace can
 
-#endif // GUARD_8791664A_4256_4BA3_B5CF_2710EB2102FE

@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_2CF80A7A_1325_4C01_9F89_C3E9C64D2D5A
-#define GUARD_2CF80A7A_1325_4C01_9F89_C3E9C64D2D5A
+#pragma once
 
 #include "StubMock.h"
 #include "uds/base/AbstractDiagJob.h"
@@ -31,4 +30,3 @@ public:
 
 } // namespace uds
 
-#endif /* GUARD_2CF80A7A_1325_4C01_9F89_C3E9C64D2D5A */

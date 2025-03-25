@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_CC07D6C4_A417_493D_B022_13B73D75E36B
-#define GUARD_CC07D6C4_A417_493D_B022_13B73D75E36B
+#pragma once
 
 #include "util/eeprom/IEepromHelper.h"
 
@@ -53,4 +52,3 @@ private:
 
 } // namespace eeprom
 
-#endif // GUARD_CC07D6C4_A417_493D_B022_13B73D75E36B

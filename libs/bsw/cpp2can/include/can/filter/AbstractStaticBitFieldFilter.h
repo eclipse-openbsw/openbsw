@@ -5,8 +5,7 @@
  * \file AbstractStaticBitFieldFilter.h
  * \ingroup filter
  */
-#ifndef GUARD_E7A6E92B_357C_4D76_A06B_8631D2F5D167
-#define GUARD_E7A6E92B_357C_4D76_A06B_8631D2F5D167
+#pragma once
 
 #include "can/canframes/CANFrame.h"
 #include "can/filter/IFilter.h"
@@ -122,4 +121,3 @@ inline bool operator==(AbstractStaticBitFieldFilter const& x, AbstractStaticBitF
 
 } // namespace can
 
-#endif // GUARD_E7A6E92B_357C_4D76_A06B_8631D2F5D167

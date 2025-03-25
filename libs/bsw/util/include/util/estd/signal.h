@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_809DA04C_F7F5_4271_A31F_61BA78DCB839
-#define GUARD_809DA04C_F7F5_4271_A31F_61BA78DCB839
+#pragma once
 
 #include "util/estd/intrusive.h"
 
@@ -147,4 +146,3 @@ inline void signal<F>::operator()(const P1& p1, const P2& p2, const P3& p3, cons
 #define MOCK_SLOT3(_FUNC, _SIG) SLOT_BASE(_FUNC, _SIG) MOCK_METHOD3(_FUNC, void _SIG)
 #define MOCK_SLOT4(_FUNC, _SIG) SLOT_BASE(_FUNC, _SIG) MOCK_METHOD4(_FUNC, void _SIG)
 
-#endif /* GUARD_809DA04C_F7F5_4271_A31F_61BA78DCB839 */

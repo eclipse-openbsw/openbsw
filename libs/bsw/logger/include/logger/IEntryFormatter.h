@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_0AA82C77_8DC8_4A1D_9C80_E8BDD1C7A950
-#define GUARD_0AA82C77_8DC8_4A1D_9C80_E8BDD1C7A950
+#pragma once
 
 #include <estd/uncopyable.h>
 #include <platform/estdint.h>
@@ -54,4 +53,3 @@ inline IEntryFormatter<E, Timestamp>::IEntryFormatter() : ::estd::uncopyable()
 
 } // namespace logger
 
-#endif // GUARD_0AA82C77_8DC8_4A1D_9C80_E8BDD1C7A950

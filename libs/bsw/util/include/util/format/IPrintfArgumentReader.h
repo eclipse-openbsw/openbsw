@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_4207236E_CB3F_4B0B_8D09_3C809E11D82A
-#define GUARD_4207236E_CB3F_4B0B_8D09_3C809E11D82A
+#pragma once
 
 #include "util/format/Printf.h"
 
@@ -33,4 +32,3 @@ public:
 } // namespace format
 } // namespace util
 
-#endif /* GUARD_4207236E_CB3F_4B0B_8D09_3C809E11D82A */

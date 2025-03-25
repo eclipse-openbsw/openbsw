@@ -5,8 +5,7 @@
  * \file
  * \ingroup estl_containers
  */
-#ifndef GUARD_16B23747_EF20_48E0_AE3A_6705F638704E
-#define GUARD_16B23747_EF20_48E0_AE3A_6705F638704E
+#pragma once
 
 #include "estd/assert.h"
 #include "estd/constructor.h"
@@ -1071,4 +1070,3 @@ ordered_map<Key, T, N, Compare>& ordered_map<Key, T, N, Compare>::operator=(this
 } // namespace declare
 } // namespace estd
 
-#endif // GUARD_16B23747_EF20_48E0_AE3A_6705F638704E

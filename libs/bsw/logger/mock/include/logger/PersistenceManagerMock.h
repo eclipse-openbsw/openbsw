@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_99A827D3_0EEC_47C4_85DA_5C2EE7705E46
-#define GUARD_99A827D3_0EEC_47C4_85DA_5C2EE7705E46
+#pragma once
 
 #include <logger/IPersistenceManager.h>
 
@@ -18,4 +17,3 @@ public:
 
 } // namespace logger
 
-#endif // GUARD_99A827D3_0EEC_47C4_85DA_5C2EE7705E46

@@ -4,8 +4,7 @@
  * \file
  * \ingroup async
  */
-#ifndef GUARD_D63B58A1_669D_4AE1_8FD5_455D98523C5D
-#define GUARD_D63B58A1_669D_4AE1_8FD5_455D98523C5D
+#pragma once
 
 #include "estd/singleton.h"
 
@@ -25,4 +24,3 @@ public:
 
 } // namespace async
 
-#endif // GUARD_D63B58A1_669D_4AE1_8FD5_455D98523C5D

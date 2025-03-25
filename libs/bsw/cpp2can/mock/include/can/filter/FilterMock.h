@@ -6,8 +6,7 @@
  * \ingroup
  */
 
-#ifndef GUARD_B042E41A_3B80_4B1B_AE26_876245FD2B8B
-#define GUARD_B042E41A_3B80_4B1B_AE26_876245FD2B8B
+#pragma once
 
 #include "can/filter/IFilter.h"
 
@@ -27,4 +26,3 @@ struct FilterMock : public IFilter
 
 } // namespace can
 
-#endif /* GUARD_B042E41A_3B80_4B1B_AE26_876245FD2B8B */

@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_5519D93B_600A_46D1_84D9_6F9A7BDC3F79
-#define GUARD_5519D93B_600A_46D1_84D9_6F9A7BDC3F79
+#pragma once
 
 #include "estd/uncopyable.h"
 #include "io/DynamicClientCfg.h"
@@ -91,4 +90,3 @@ private:
 
 } /* namespace bios */
 
-#endif /* GUARD_5519D93B_600A_46D1_84D9_6F9A7BDC3F79 */

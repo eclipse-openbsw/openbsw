@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_FBC7FEA1_AFD3_4540_9F5C_432DB28A803E
-#define GUARD_FBC7FEA1_AFD3_4540_9F5C_432DB28A803E
+#pragma once
 
 #include "bsp/power/IEcuPowerStateController.h"
 
@@ -28,4 +27,3 @@ public:
 
 } // namespace power
 
-#endif /* GUARD_FBC7FEA1_AFD3_4540_9F5C_432DB28A803E */

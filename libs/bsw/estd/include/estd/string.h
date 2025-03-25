@@ -6,8 +6,7 @@
  * \ingroup estl_containers
  */
 
-#ifndef GUARD_0552EBDC_85B0_4451_AF80_D2DA8FA08525
-#define GUARD_0552EBDC_85B0_4451_AF80_D2DA8FA08525
+#pragma once
 
 #include "estd/limits.h"
 #include "estd/math.h"
@@ -371,4 +370,3 @@ template<typename T>
 
 } // namespace estd
 
-#endif /* GUARD_0552EBDC_85B0_4451_AF80_D2DA8FA08525 */

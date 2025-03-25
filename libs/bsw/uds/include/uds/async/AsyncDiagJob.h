@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_8AFBD8AF_CBF6_461E_98EE_A83D33504AF5
-#define GUARD_8AFBD8AF_CBF6_461E_98EE_A83D33504AF5
+#pragma once
 
 #include "async/util/Call.h"
 #include "uds/async/AsyncDiagJobHelper.h"
@@ -119,4 +118,3 @@ void AsyncDiagJob<T>::asyncProcess(
 
 } // namespace uds
 
-#endif // GUARD_8AFBD8AF_CBF6_461E_98EE_A83D33504AF5

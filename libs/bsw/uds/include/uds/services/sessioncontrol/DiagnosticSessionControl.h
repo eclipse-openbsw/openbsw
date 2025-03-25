@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_D38479AE_DA40_4ABD_99D1_81DEA7DF17F0
-#define GUARD_D38479AE_DA40_4ABD_99D1_81DEA7DF17F0
+#pragma once
 
 #include "uds/DiagCodes.h"
 #include "uds/base/Service.h"
@@ -170,4 +169,3 @@ protected:
 
 } // namespace uds
 
-#endif /*GUARD_D38479AE_DA40_4ABD_99D1_81DEA7DF17F0*/

@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_A0630C36_3231_4254_8FE9_CC5E21E4151B
-#define GUARD_A0630C36_3231_4254_8FE9_CC5E21E4151B
+#pragma once
 
 /* Device-specific asyncFreeRtos configuration.
  *
@@ -140,4 +139,3 @@ standard names. */
 } /* extern "C" */
 #endif
 
-#endif /* GUARD_A0630C36_3231_4254_8FE9_CC5E21E4151B */

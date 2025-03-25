@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_EDDCA602_08A5_4BD5_BBE8_A7503B35F994
-#define GUARD_EDDCA602_08A5_4BD5_BBE8_A7503B35F994
+#pragma once
 
 #include <gmock/gmock.h>
 
@@ -33,4 +32,3 @@ struct CrcTestFixture : ::testing::Test
 } /* namespace fixtures */
 } /* namespace test */
 
-#endif /** GUARD_EDDCA602_08A5_4BD5_BBE8_A7503B35F994 */

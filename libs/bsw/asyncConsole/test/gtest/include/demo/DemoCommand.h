@@ -1,5 +1,4 @@
-#ifndef GUARD_988E20A7_FCA4_4055_A82E_826FCE85E1C6
-#define GUARD_988E20A7_FCA4_4055_A82E_826FCE85E1C6
+#pragma once
 
 // BEGIN DEMOCOMMAND
 #include "util/command/GroupCommand.h"
@@ -21,4 +20,3 @@ protected:
 
 // END DEMOCOMMAND
 
-#endif /*GUARD_988E20A7_FCA4_4055_A82E_826FCE85E1C6*/

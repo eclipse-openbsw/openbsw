@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef SUSPENDRESUMEALLINTERRUPTS_H_
-#define SUSPENDRESUMEALLINTERRUPTS_H_
+#pragma once
 
 #include "platform/estdint.h"
 
@@ -31,4 +30,3 @@ void resumeAllInterrupts(uint32_t oldMachineStateRegisterValue)
 
 // clang-format on
 
-#endif /* SUSPENDRESUMEALLINTERRUPTS_H_ */

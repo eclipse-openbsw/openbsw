@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_EF05BE05_0AE8_4447_8B06_05C529C9F98E
-#define GUARD_EF05BE05_0AE8_4447_8B06_05C529C9F98E
+#pragma once
 
 #include "uds/IUdsResetConfiguration.h"
 #include "uds/base/Subfunction.h"
@@ -32,4 +31,3 @@ private:
 
 } // namespace uds
 
-#endif // GUARD_EF05BE05_0AE8_4447_8B06_05C529C9F98E

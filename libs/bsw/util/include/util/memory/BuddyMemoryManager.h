@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_23ECC63C_F7E9_48D3_950F_6DEAEFE5B6AA
-#define GUARD_23ECC63C_F7E9_48D3_950F_6DEAEFE5B6AA
+#pragma once
 
 #include <estd/slice.h>
 #include <estd/uncopyable.h>
@@ -346,4 +345,3 @@ BuddyMemoryManager<MIN_NUM_BUCKETS>::BuddyMemoryManager()
 } // namespace memory
 } // namespace util
 
-#endif

@@ -3,8 +3,7 @@
 /**
  * \ingroup async
  */
-#ifndef GUARD_8926F302_BFFF_44FF_92EE_977F85994019
-#define GUARD_8926F302_BFFF_44FF_92EE_977F85994019
+#pragma once
 
 #include "estd/singleton.h"
 
@@ -23,4 +22,3 @@ public:
 
 } // namespace async
 
-#endif // GUARD_8926F302_BFFF_44FF_92EE_977F85994019

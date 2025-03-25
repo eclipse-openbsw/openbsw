@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_A916788D_8B80_4A8B_A535_1865F689B58C
-#define GUARD_A916788D_8B80_4A8B_A535_1865F689B58C
+#pragma once
 
 /*
  * Compiler details for the GNU compiler
@@ -19,4 +18,3 @@
 
 #endif
 
-#endif // GUARD_A916788D_8B80_4A8B_A535_1865F689B58C

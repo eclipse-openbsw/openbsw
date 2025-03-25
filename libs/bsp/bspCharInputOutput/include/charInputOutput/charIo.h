@@ -1,5 +1,4 @@
-#ifndef CHARIO_H_
-#define CHARIO_H_
+#pragma once
 
 /**
  * Implementation independent C API for character I/O
@@ -68,4 +67,3 @@ int charIO__outchar(int c, int last);
 }
 #endif
 
-#endif /* CHARIO_H_ */

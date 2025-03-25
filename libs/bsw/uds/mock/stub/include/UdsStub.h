@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_8EA48045_EA7D_4710_B6E1_C836C4203ADC
-#define GUARD_8EA48045_EA7D_4710_B6E1_C836C4203ADC
+#pragma once
 
 #include "uds/IDiagDispatcher.h"
 #include "uds/base/AbstractDiagJob.h"
@@ -101,4 +100,3 @@ public:
 
 } // namespace uds
 
-#endif // GUARD_8EA48045_EA7D_4710_B6E1_C836C4203ADC

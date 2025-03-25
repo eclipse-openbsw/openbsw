@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_56DEDF59_CC8B_42DF_B9C9_5972C2D46498
-#define GUARD_56DEDF59_CC8B_42DF_B9C9_5972C2D46498
+#pragma once
 
 #include "uds/DiagReturnCode.h"
 #include "uds/authentication/IDiagAuthenticator.h"
@@ -48,4 +47,3 @@ private:
 
 } // namespace uds
 
-#endif // GUARD_56DEDF59_CC8B_42DF_B9C9_5972C2D46498

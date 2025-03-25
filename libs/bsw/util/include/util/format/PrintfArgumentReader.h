@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_4719B1AF_39E6_44D4_B104_DC9C56B8DC16
-#define GUARD_4719B1AF_39E6_44D4_B104_DC9C56B8DC16
+#pragma once
 
 #include "util/format/IPrintfArgumentReader.h"
 #include "util/format/Printf.h"
@@ -29,4 +28,3 @@ private:
 } // namespace format
 } // namespace util
 
-#endif /* GUARD_4719B1AF_39E6_44D4_B104_DC9C56B8DC16 */

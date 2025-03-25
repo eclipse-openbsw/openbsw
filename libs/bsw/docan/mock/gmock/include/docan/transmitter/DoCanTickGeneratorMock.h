@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_EB766B15_490E_4361_AB2C_10672A55C5EB
-#define GUARD_EB766B15_490E_4361_AB2C_10672A55C5EB
+#pragma once
 
 #include "docan/transmitter/IDoCanTickGenerator.h"
 
@@ -20,4 +19,3 @@ public:
 
 } // namespace docan
 
-#endif // GUARD_EB766B15_490E_4361_AB2C_10672A55C5EB

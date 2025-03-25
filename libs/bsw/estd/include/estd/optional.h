@@ -5,8 +5,7 @@
  * \file
  * \ingroup estl_containers
  */
-#ifndef GUARD_0E88E7DF_D05B_4E1E_911F_3385080A8F8E
-#define GUARD_0E88E7DF_D05B_4E1E_911F_3385080A8F8E
+#pragma once
 
 #include "estd/assert.h"
 #include "estd/constructor.h"
@@ -237,4 +236,3 @@ inline bool operator!=(optional<T> const& lhs, optional<T> const& rhs)
 }
 } // namespace estd
 
-#endif // GUARD_0E88E7DF_D05B_4E1E_911F_3385080A8F8E

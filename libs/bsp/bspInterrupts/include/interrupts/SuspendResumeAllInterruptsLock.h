@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_D7E38C8A_C22E_47BC_B05A_773E8AA4F30F
-#define GUARD_D7E38C8A_C22E_47BC_B05A_773E8AA4F30F
+#pragma once
 
 #include "interrupts/suspendResumeAllInterrupts.h"
 
@@ -33,4 +32,3 @@ private:
 
 } /* namespace interrupts */
 
-#endif /* GUARD_D7E38C8A_C22E_47BC_B05A_773E8AA4F30F */

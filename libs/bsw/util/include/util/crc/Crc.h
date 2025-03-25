@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_90DB1B8F_E574_4B6E_9600_63330A15ECEE
-#define GUARD_90DB1B8F_E574_4B6E_9600_63330A15ECEE
+#pragma once
 
 #include "util/crc/LookupTable.h"
 #include "util/crc/Reflect.h"
@@ -109,4 +108,3 @@ private:
 } // namespace crc
 } // namespace util
 
-#endif /* GUARD_90DB1B8F_E574_4B6E_9600_63330A15ECEE */

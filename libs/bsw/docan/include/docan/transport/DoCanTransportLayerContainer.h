@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_6CE7A56B_DD21_43D1_B8C7_B40893A5CDB3
-#define GUARD_6CE7A56B_DD21_43D1_B8C7_B40893A5CDB3
+#pragma once
 
 #include "docan/transport/DoCanTransportLayer.h"
 
@@ -292,4 +291,3 @@ DoCanTransportLayerContainerBuilder<DataLinkLayer>::addTransportLayer(
 
 } // namespace docan
 
-#endif // GUARD_6CE7A56B_DD21_43D1_B8C7_B40893A5CDB3

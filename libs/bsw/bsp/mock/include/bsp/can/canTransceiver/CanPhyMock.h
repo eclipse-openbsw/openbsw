@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_307BC172_E810_489A_B759_A64C060F01DF
-#define GUARD_307BC172_E810_489A_B759_A64C060F01DF
+#pragma once
 
 #include "bsp/can/canTransceiver/CanPhy.h"
 
@@ -20,4 +19,3 @@ public:
 
 } // namespace bios
 
-#endif /* GUARD_307BC172_E810_489A_B759_A64C060F01DF */

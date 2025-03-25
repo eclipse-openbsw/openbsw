@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_9713AE4F_6FEE_4AE0_8DDA_473083B26D2B
-#define GUARD_9713AE4F_6FEE_4AE0_8DDA_473083B26D2B
+#pragma once
 
 #include "util/command/ICommand.h"
 #include "util/stream/ISharedOutputStream.h"
@@ -177,4 +176,3 @@ T CommandContext::IdentifierChecker<T>::getValue()
 } /* namespace command */
 } /* namespace util */
 
-#endif /* GUARD_9713AE4F_6FEE_4AE0_8DDA_473083B26D2B */

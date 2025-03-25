@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_B76A30ED_678A_45F5_8854_EE6509A6D217
-#define GUARD_B76A30ED_678A_45F5_8854_EE6509A6D217
+#pragma once
 
 #include "logger/IComponentConfig.h"
 
@@ -27,4 +26,3 @@ private:
 
 } /* namespace logger */
 
-#endif // GUARD_B76A30ED_678A_45F5_8854_EE6509A6D217

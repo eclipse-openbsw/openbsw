@@ -5,8 +5,7 @@
  * \file
  * \ingroup estl_containers
  */
-#ifndef GUARD_D090BE1B_6AD0_4794_AC78_DD9D7250C2D4
-#define GUARD_D090BE1B_6AD0_4794_AC78_DD9D7250C2D4
+#pragma once
 
 #include "estd/algorithm.h"
 #include "estd/assert.h"
@@ -718,4 +717,3 @@ ordered_vector<T, N, Comparator>::operator=(this_type const& other)
 } // namespace declare
 } // namespace estd
 
-#endif // ESTD_SORTED_VECTOR_H_

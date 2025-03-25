@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_80BE143A_2041_4BE2_A208_D4D9EA5F399F
-#define GUARD_80BE143A_2041_4BE2_A208_D4D9EA5F399F
+#pragma once
 
 #include "uds/session/DiagSession.h"
 
@@ -19,4 +18,3 @@ public:
 
 } // namespace uds
 
-#endif // GUARD_80BE143A_2041_4BE2_A208_D4D9EA5F399F

@@ -5,8 +5,7 @@
  * \file CanFlex2Transceiver.h
  * \ingroup transceiver
  */
-#ifndef GUARD_4805D4F4_1DC3_477D_A8E3_BA38F8DF8C19
-#define GUARD_4805D4F4_1DC3_477D_A8E3_BA38F8DF8C19
+#pragma once
 
 #include <async/Async.h>
 #include <async/util/Call.h>
@@ -190,4 +189,3 @@ private:
 
 } // namespace bios
 
-#endif // GUARD_4805D4F4_1DC3_477D_A8E3_BA38F8DF8C19

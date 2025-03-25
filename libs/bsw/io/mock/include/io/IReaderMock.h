@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_A4F4C0F3_63D2_42F8_BD9E_1EA685931FA3
-#define GUARD_A4F4C0F3_63D2_42F8_BD9E_1EA685931FA3
+#pragma once
 
 #include "io/IReader.h"
 
@@ -21,4 +20,3 @@ public:
 
 } // namespace io
 
-#endif // GUARD_A4F4C0F3_63D2_42F8_BD9E_1EA685931FA3

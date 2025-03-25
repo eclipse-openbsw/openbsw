@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_9E5C6C6A_F33F_4606_92DB_587C48D3D8AB
-#define GUARD_9E5C6C6A_F33F_4606_92DB_587C48D3D8AB
+#pragma once
 
 #ifdef __cplusplus
 extern "C"
@@ -15,4 +14,3 @@ void softwareDestructiveReset() __attribute__((noreturn));
 }
 #endif
 
-#endif /* GUARD_9E5C6C6A_F33F_4606_92DB_587C48D3D8AB */

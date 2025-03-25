@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_5AB91BE2_331A_42D6_981C_83EFDF7742FF
-#define GUARD_5AB91BE2_331A_42D6_981C_83EFDF7742FF
+#pragma once
 
 #include <platform/estdint.h>
 
@@ -44,4 +43,3 @@ protected:
 
 } /* namespace flash */
 
-#endif /* GUARD_5AB91BE2_331A_42D6_981C_83EFDF7742FF */

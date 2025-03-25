@@ -3,8 +3,7 @@
 /**
  * \ingroup transport
  */
-#ifndef GUARD_33557291_08FF_44AE_8CC6_363C7F2B3C5A
-#define GUARD_33557291_08FF_44AE_8CC6_363C7F2B3C5A
+#pragma once
 #include "platform/estdint.h"
 
 namespace transport
@@ -52,4 +51,3 @@ public:
 
 } // namespace transport
 
-#endif /* GUARD_33557291_08FF_44AE_8CC6_363C7F2B3C5A */

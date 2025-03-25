@@ -5,8 +5,7 @@
  * \file
  * \ingroup estl_utils
  */
-#ifndef GUARD_06190AD2_9E10_4BD2_8764_D2443693629D
-#define GUARD_06190AD2_9E10_4BD2_8764_D2443693629D
+#pragma once
 
 #include "estd/type_utils.h"
 
@@ -407,4 +406,3 @@ struct alignas(A) aligned_mem
 
 } // namespace estd
 
-#endif // GUARD_06190AD2_9E10_4BD2_8764_D2443693629D

@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_CC8D6EF3_72E3_4627_9D48_663E57A3AC49
-#define GUARD_CC8D6EF3_72E3_4627_9D48_663E57A3AC49
+#pragma once
 
 #include "estd/singleton.h"
 #include "interrupts/disableEnableAllInterrupts.h"
@@ -37,4 +36,3 @@ public:
 
 } /* namespace interrupts */
 
-#endif /* GUARD_CC8D6EF3_72E3_4627_9D48_663E57A3AC49 */

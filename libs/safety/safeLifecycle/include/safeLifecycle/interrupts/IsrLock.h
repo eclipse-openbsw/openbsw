@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_A34A1932_3ECA_481E_BF1D_8DC25E60BCDF
-#define GUARD_A34A1932_3ECA_481E_BF1D_8DC25E60BCDF
+#pragma once
 
 #include "safeLifecycle/interrupts/suspendResumeAllInterrupts.h"
 
@@ -23,4 +22,3 @@ private:
 
 } // end namespace safety
 
-#endif /* GUARD_A34A1932_3ECA_481E_BF1D_8DC25E60BCDF */

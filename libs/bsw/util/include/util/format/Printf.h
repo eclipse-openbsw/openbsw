@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_C8918548_FD11_43EB_A86B_E1C50E29954B
-#define GUARD_C8918548_FD11_43EB_A86B_E1C50E29954B
+#pragma once
 
 #include "util/string/ConstString.h"
 
@@ -146,4 +145,3 @@ union ParamVariant
 } // namespace format
 } // namespace util
 
-#endif /* GUARD_C8918548_FD11_43EB_A86B_E1C50E29954B */

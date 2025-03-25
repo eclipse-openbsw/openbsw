@@ -3,8 +3,7 @@
 /**
  * \ingroup async
  */
-#ifndef GUARD_97468D82_9418_4F5C_B77D_6CB64B53D336
-#define GUARD_97468D82_9418_4F5C_B77D_6CB64B53D336
+#pragma once
 
 #include "async/Async.h"
 #include "estd/functional.h"
@@ -24,4 +23,3 @@ public:
 
 } // namespace async
 
-#endif // GUARD_97468D82_9418_4F5C_B77D_6CB64B53D336

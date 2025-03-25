@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_0E2647E3_8CE4_468E_BC74_748716A09DA5
-#define GUARD_0E2647E3_8CE4_468E_BC74_748716A09DA5
+#pragma once
 
 #include "util/command/GroupCommand.h"
 
@@ -20,4 +19,3 @@ protected:
 
 } // namespace bios
 
-#endif /* GUARD_0E2647E3_8CE4_468E_BC74_748716A09DA5 */

@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_6C6BE8EF_9236_4B03_B9EC_5B7436E14A02
-#define GUARD_6C6BE8EF_9236_4B03_B9EC_5B7436E14A02
+#pragma once
 
 #include "docan/common/DoCanConstants.h"
 #include "docan/common/DoCanTimerManagement.h"
@@ -360,4 +359,3 @@ bool DoCanMessageTransmitter<DataLinkLayer>::updateTimer(uint32_t const nowUs)
 
 } // namespace docan
 
-#endif // GUARD_6C6BE8EF_9236_4B03_B9EC_5B7436E14A02

@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_7538EA1C_A751_4470_BE2C_7AC110EC6063
-#define GUARD_7538EA1C_A751_4470_BE2C_7AC110EC6063
+#pragma once
 
 #include "docan/addressing/IDoCanAddressConverter.h"
 
@@ -281,4 +280,3 @@ DoCanNormalAddressingFilter<DataLinkLayer, AddressEntry>::getFrameCodec(
 }
 } // namespace docan
 
-#endif // GUARD_7538EA1C_A751_4470_BE2C_7AC110EC6063

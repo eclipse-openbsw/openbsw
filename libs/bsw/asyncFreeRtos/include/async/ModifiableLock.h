@@ -3,8 +3,7 @@
 /**
  * \ingroup async
  */
-#ifndef GUARD_5D6895FC_B608_4C8E_87FB_B600671CA5B0
-#define GUARD_5D6895FC_B608_4C8E_87FB_B600671CA5B0
+#pragma once
 
 #include "interrupts/suspendResumeAllInterrupts.h"
 
@@ -70,4 +69,3 @@ inline void ModifiableLock::lock()
 
 } // namespace async
 
-#endif // GUARD_5D6895FC_B608_4C8E_87FB_B600671CA5B0

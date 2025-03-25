@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_B644A0C5_537A_4913_B8F3_F5BE8EC1F41D
-#define GUARD_B644A0C5_537A_4913_B8F3_F5BE8EC1F41D
+#pragma once
 
 #include "uds/lifecycle/IUdsLifecycleConnector.h"
 
@@ -19,4 +18,3 @@ public:
 
 } // namespace uds
 
-#endif // GUARD_B644A0C5_537A_4913_B8F3_F5BE8EC1F41D

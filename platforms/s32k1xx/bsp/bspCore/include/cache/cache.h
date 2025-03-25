@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_84083D77_EDFF_44FE_A650_2C42AB323B3E
-#define GUARD_84083D77_EDFF_44FE_A650_2C42AB323B3E
+#pragma once
 
 #include "platform/estdint.h"
 
@@ -18,4 +17,3 @@ void cacheInvalidate(uint32_t addr, uint32_t size);
 }
 #endif
 
-#endif // extern "C"

@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_6C6854A5_7D1A_4588_8349_C9D0A81543A6
-#define GUARD_6C6854A5_7D1A_4588_8349_C9D0A81543A6
+#pragma once
 
 #include <platform/estdint.h>
 
@@ -77,4 +76,3 @@ private:
 
 } // namespace bsp
 
-#endif /* GUARD_6C6854A5_7D1A_4588_8349_C9D0A81543A6 */

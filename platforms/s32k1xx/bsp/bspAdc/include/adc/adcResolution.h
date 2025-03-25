@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_03F862CF_BF0D_49C9_8099_4A303BD1E08F
-#define GUARD_03F862CF_BF0D_49C9_8099_4A303BD1E08F
+#pragma once
 
 #include "platform/estdint.h"
 
@@ -45,4 +44,3 @@ public:
 
 } // namespace bios
 
-#endif /* GUARD_03F862CF_BF0D_49C9_8099_4A303BD1E08F */

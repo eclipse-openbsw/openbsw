@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_23F7E29C_0F74_4343_8A2C_3B3F930A710E
-#define GUARD_23F7E29C_0F74_4343_8A2C_3B3F930A710E
+#pragma once
 
 #include "docan/common/DoCanTransportAddressPair.h"
 
@@ -64,4 +63,3 @@ bool DoCanConnection<DataLinkLayer>::operator==(DoCanConnection const& other) co
 }
 } // namespace docan
 
-#endif

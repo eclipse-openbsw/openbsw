@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_910913D6_00E7_4914_866C_328627B10675
-#define GUARD_910913D6_00E7_4914_866C_328627B10675
+#pragma once
 
 #include "bsp/eepromemulation/IEepromEmulationDriver.h"
 
@@ -23,4 +22,3 @@ public:
 
 } // namespace eepromemulation
 
-#endif /* GUARD_910913D6_00E7_4914_866C_328627B10675 */

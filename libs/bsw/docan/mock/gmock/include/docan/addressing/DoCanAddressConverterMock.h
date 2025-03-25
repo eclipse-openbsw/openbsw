@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_09E164E7_D410_4E55_907F_73C0095F17C4
-#define GUARD_09E164E7_D410_4E55_907F_73C0095F17C4
+#pragma once
 
 #include "docan/addressing/IDoCanAddressConverter.h"
 
@@ -43,4 +42,3 @@ public:
 
 } // namespace docan
 
-#endif // GUARD_09E164E7_D410_4E55_907F_73C0095F17C4

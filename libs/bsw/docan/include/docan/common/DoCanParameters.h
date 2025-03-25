@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_A5B1C2A8_E325_48E3_BB8B_4D5E1B725CAC
-#define GUARD_A5B1C2A8_E325_48E3_BB8B_4D5E1B725CAC
+#pragma once
 
 #include <transport/AbstractTransportLayer.h>
 
@@ -245,4 +244,3 @@ inline uint8_t DoCanParameters::encodeMinSeparationTime(uint32_t const minSepara
 
 } // namespace docan
 
-#endif // GUARD_A5B1C2A8_E325_48E3_BB8B_4D5E1B725CAC

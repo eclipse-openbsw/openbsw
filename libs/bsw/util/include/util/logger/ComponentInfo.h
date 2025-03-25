@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_FCF7C2F3_34F8_4601_986B_3026DA97631B
-#define GUARD_FCF7C2F3_34F8_4601_986B_3026DA97631B
+#pragma once
 
 #include "util/logger/LoggerBinding.h"
 
@@ -83,4 +82,3 @@ private:
 
 #endif // LOGGER_NO_LEGACY_API
 
-#endif // GUARD_FCF7C2F3_34F8_4601_986B_3026DA97631B

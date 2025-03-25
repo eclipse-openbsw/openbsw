@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_B096509F_26BB_48E2_9310_07C84197883C
-#define GUARD_B096509F_26BB_48E2_9310_07C84197883C
+#pragma once
 
 #include <async/Config.h>
 #include <async/FreeRtosAdapter.h>
@@ -31,4 +30,3 @@ struct AsyncBinding : public Config
 using AsyncBindingType = AsyncBinding;
 } // namespace async
 
-#endif /* GUARD_B096509F_26BB_48E2_9310_07C84197883C */

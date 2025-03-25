@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_65B5C15D_6753_4F32_A104_ED74DB0B9043
-#define GUARD_65B5C15D_6753_4F32_A104_ED74DB0B9043
+#pragma once
 
 #include "uds/connection/NestedDiagRequest.h"
 
@@ -32,4 +31,3 @@ public:
 
 } // namespace uds
 
-#endif // GUARD_65B5C15D_6753_4F32_A104_ED74DB0B9043

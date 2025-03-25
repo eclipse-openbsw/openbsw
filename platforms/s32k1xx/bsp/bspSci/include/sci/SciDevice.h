@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_C678E32C_69CC_4B99_ACE4_DFF9F36202A9
-#define GUARD_C678E32C_69CC_4B99_ACE4_DFF9F36202A9
+#pragma once
 
 #include "io/Io.h"
 #include "mcu/mcu.h"
@@ -61,4 +60,3 @@ void sciPuth(int c);
 } // extern "C"
 #endif
 
-#endif /* GUARD_C678E32C_69CC_4B99_ACE4_DFF9F36202A9 */

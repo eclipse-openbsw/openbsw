@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_92BB5986_1D0B_438F_B2A9_C713E98DD7EC
-#define GUARD_92BB5986_1D0B_438F_B2A9_C713E98DD7EC
+#pragma once
 
 #include "docan/common/DoCanJobHandle.h"
 #include "docan/datalink/DoCanDataLinkAddressPair.h"
@@ -36,4 +35,3 @@ struct DoCanDataLinkLayer
 
 } // namespace docan
 
-#endif // GUARD_92BB5986_1D0B_438F_B2A9_C713E98DD7EC

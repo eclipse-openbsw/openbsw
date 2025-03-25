@@ -3,8 +3,7 @@
 /**
  * \ingroup async
  */
-#ifndef GUARD_7DDC1C94_0ACD_4CF0_9B50_7732BE66B794
-#define GUARD_7DDC1C94_0ACD_4CF0_9B50_7732BE66B794
+#pragma once
 
 #include "async/RunnableMock.h"
 
@@ -16,4 +15,3 @@ using RunnableType  = RunnableMock;
 
 } // namespace async
 
-#endif // GUARD_7DDC1C94_0ACD_4CF0_9B50_7732BE66B794

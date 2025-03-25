@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_2CE17B68_8C70_46F8_9936_75BFCAC70A27
-#define GUARD_2CE17B68_8C70_46F8_9936_75BFCAC70A27
+#pragma once
 
 #include "util/command/GroupCommand.h"
 
@@ -19,4 +18,3 @@ protected:
 
 } /* namespace bios */
 
-#endif /* GUARD_2CE17B68_8C70_46F8_9936_75BFCAC70A27 */

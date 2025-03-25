@@ -5,8 +5,7 @@
  * \file
  * \ingroup estl_utils
  */
-#ifndef GUARD_CF8086C7_8C2B_4181_AB7E_21B1F43B9FDA
-#define GUARD_CF8086C7_8C2B_4181_AB7E_21B1F43B9FDA
+#pragma once
 
 #include <climits>
 
@@ -81,4 +80,3 @@ struct numeric_limits<unsigned long long>
 
 } // namespace estd
 
-#endif // GUARD_CF8086C7_8C2B_4181_AB7E_21B1F43B9FDA

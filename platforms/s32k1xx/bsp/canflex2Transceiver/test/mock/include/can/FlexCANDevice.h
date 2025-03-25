@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_BCCD38EE_6679_4BF8_96FD_64E5AEEAA164
-#define GUARD_BCCD38EE_6679_4BF8_96FD_64E5AEEAA164
+#pragma once
 
 #include "can/CanPhyMock.h"
 
@@ -115,4 +114,3 @@ public:
 
 } // namespace bios
 
-#endif /* GUARD_BCCD38EE_6679_4BF8_96FD_64E5AEEAA164 */

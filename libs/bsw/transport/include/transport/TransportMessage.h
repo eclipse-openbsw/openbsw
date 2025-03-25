@@ -3,8 +3,7 @@
 /**
  * \ingroup     transport
  */
-#ifndef GUARD_3EC4FE35_8B12_40CC_8E01_64873B810F3E
-#define GUARD_3EC4FE35_8B12_40CC_8E01_64873B810F3E
+#pragma once
 
 #include <estd/slice.h>
 
@@ -367,4 +366,3 @@ inline uint16_t TransportMessage::missingBytes() const
 
 } // namespace transport
 
-#endif // GUARD_3EC4FE35_8B12_40CC_8E01_64873B810F3E

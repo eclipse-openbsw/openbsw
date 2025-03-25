@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_A09987FD_6AC4_4B20_83D9_95FFFFCF12E8
-#define GUARD_A09987FD_6AC4_4B20_83D9_95FFFFCF12E8
+#pragma once
 
 #include "uds/ICommunicationStateListener.h"
 #include "uds/ICommunicationSubStateListener.h"
@@ -33,4 +32,3 @@ public:
 
 } // namespace uds
 
-#endif // GUARD_A09987FD_6AC4_4B20_83D9_95FFFFCF12E8

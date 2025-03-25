@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_D5ABA4AC_EF95_4A54_A278_C256DC351B1A
-#define GUARD_D5ABA4AC_EF95_4A54_A278_C256DC351B1A
+#pragma once
 
 #include <nvstorage/NvStorageTypes.h>
 
@@ -26,4 +25,3 @@ public:
 
 } /* namespace nvstorage */
 
-#endif // GUARD_D5ABA4AC_EF95_4A54_A278_C256DC351B1A

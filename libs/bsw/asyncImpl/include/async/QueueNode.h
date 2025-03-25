@@ -3,8 +3,7 @@
 /**
  * \ingroup async
  */
-#ifndef GUARD_1ED8DBD4_BEC2_4869_AC44_11E89BB45AD1
-#define GUARD_1ED8DBD4_BEC2_4869_AC44_11E89BB45AD1
+#pragma once
 
 #include <estd/functional.h>
 
@@ -69,4 +68,3 @@ inline T* QueueNode<T>::dequeue()
 
 } // namespace async
 
-#endif // GUARD_1ED8DBD4_BEC2_4869_AC44_11E89BB45AD1

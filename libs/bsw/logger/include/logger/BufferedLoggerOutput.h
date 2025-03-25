@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_A4AEAA7E_BB16_4C20_92A1_45834AF85E18
-#define GUARD_A4AEAA7E_BB16_4C20_92A1_45834AF85E18
+#pragma once
 
 #include "logger/EntryBuffer.h"
 #include "logger/EntrySerializer.h"
@@ -306,4 +305,3 @@ void BufferedLoggerOutput<Lock, MaxEntrySize, T, E, Timestamp, ReadOnlyPredicate
 
 } /* namespace logger */
 
-#endif /* GUARD_A4AEAA7E_BB16_4C20_92A1_45834AF85E18 */

@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_47203246_EEB7_4258_993B_E0D35DA2F2B5
-#define GUARD_47203246_EEB7_4258_993B_E0D35DA2F2B5
+#pragma once
 
 #include "util/logger/IComponentMapping.h"
 
@@ -235,4 +234,3 @@ template<uint8_t IndexUpperBound>
         _componentInfoTableName, _levelInfoTableName, &::util::logger::_globalComponent)
 #endif // DEFINE_LOGGER_COMPONENT_MAPPING
 
-#endif // GUARD_47203246_EEB7_4258_993B_E0D35DA2F2B5

@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_33A284CC_0E02_469B_8C57_1757F4CC8AC0
-#define GUARD_33A284CC_0E02_469B_8C57_1757F4CC8AC0
+#pragma once
 
 #include <platform/estdint.h>
 
@@ -120,4 +119,3 @@ constexpr underlying_type_t<Enum> to_underlying(Enum const e) noexcept
 
 } // namespace estd
 
-#endif /* GUARD_33A284CC_0E02_469B_8C57_1757F4CC8AC0 */

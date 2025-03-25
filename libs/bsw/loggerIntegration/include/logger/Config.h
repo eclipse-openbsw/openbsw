@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_9A4E28AA_3816_4B33_A616_2AA7F29B0AE3
-#define GUARD_9A4E28AA_3816_4B33_A616_2AA7F29B0AE3
+#pragma once
 
 #include <interrupts/SuspendResumeAllInterruptsScopedLock.h>
 #include <logger/BufferedLoggerOutput.h>
@@ -21,4 +20,3 @@ using BufferedLoggerOutputType = ::logger::declare::BufferedLoggerOutput<
 
 } // namespace logger
 
-#endif /* GUARD_9A4E28AA_3816_4B33_A616_2AA7F29B0AE3 */

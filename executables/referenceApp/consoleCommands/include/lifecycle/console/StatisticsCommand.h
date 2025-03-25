@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_3426A8C5_0A38_4B74_BE74_D069EB452DF0
-#define GUARD_3426A8C5_0A38_4B74_BE74_D069EB452DF0
+#pragma once
 
 #include <async/AsyncBinding.h>
 #include <runtime/StatisticsContainer.h>
@@ -42,4 +41,3 @@ private:
 
 } // namespace lifecycle
 
-#endif /* GUARD_3426A8C5_0A38_4B74_BE74_D069EB452DF0 */

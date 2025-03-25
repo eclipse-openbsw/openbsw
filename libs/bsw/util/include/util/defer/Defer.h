@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_53701C84_7FF2_11EB_842A_C34D68860C96
-#define GUARD_53701C84_7FF2_11EB_842A_C34D68860C96
+#pragma once
 
 #include <utility>
 
@@ -67,4 +66,3 @@ Defer<F> defer(F&& f)
 } // namespace defer
 } // namespace util
 
-#endif // GUARD_53701C84_7FF2_11EB_842A_C34D68860C96

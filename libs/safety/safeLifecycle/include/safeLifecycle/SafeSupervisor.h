@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_C1644653_6F91_4CBC_A6C9_F19C70F7FCF1
-#define GUARD_C1644653_6F91_4CBC_A6C9_F19C70F7FCF1
+#pragma once
 
 #include <safeMonitor/Sequence.h>
 #include <safeMonitor/Trigger.h>
@@ -68,4 +67,3 @@ private:
 
 } // namespace safety
 
-#endif /* GUARD_C1644653_6F91_4CBC_A6C9_F19C70F7FCF1 */

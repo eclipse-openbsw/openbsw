@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_EEA6A9AC_DC21_4232_AFA4_CF8B3608BF1F
-#define GUARD_EEA6A9AC_DC21_4232_AFA4_CF8B3608BF1F
+#pragma once
 
 #include "estd/algorithm.h"
 #include "estd/array.h"
@@ -413,4 +412,3 @@ struct unaligned
 } // namespace memory
 } // namespace estd
 
-#endif // GUARD_EEA6A9AC_DC21_4232_AFA4_CF8B3608BF1F

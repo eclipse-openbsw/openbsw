@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_7CAE4055_508F_4454_8363_33D396CBA9DF
-#define GUARD_7CAE4055_508F_4454_8363_33D396CBA9DF
+#pragma once
 
 #ifndef ESR_NO_BUFFER_ASSERT
 #include <estd/assert.h>
@@ -326,4 +325,3 @@ inline bool operator>=(ConstString const& lhs, ConstString const& rhs)
 } /* namespace string */
 } /* namespace util */
 
-#endif /* GUARD_7CAE4055_508F_4454_8363_33D396CBA9DF */

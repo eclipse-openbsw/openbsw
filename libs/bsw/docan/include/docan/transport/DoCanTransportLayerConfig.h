@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_63623E40_30AA_4A8C_B8C3_72AA31EAE050
-#define GUARD_63623E40_30AA_4A8C_B8C3_72AA31EAE050
+#pragma once
 
 #include "docan/common/DoCanParameters.h"
 #include "docan/receiver/DoCanMessageReceiver.h"
@@ -128,4 +127,3 @@ DoCanTransportLayerConfig<DataLinkLayer, RxCount, TxCount, MaxFrameSize>::DoCanT
 
 } // namespace docan
 
-#endif // GUARD_63623E40_30AA_4A8C_B8C3_72AA31EAE050

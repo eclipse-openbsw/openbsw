@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_73E7F517_A8F6_423F_9F5C_771172E78044
-#define GUARD_73E7F517_A8F6_423F_9F5C_771172E78044
+#pragma once
 #include <can/filter/BitFieldFilter.h> // pre-integration testing, to be removed later
 #include <can/transceiver/AbstractCANTransceiver.h>
 #include <systems/ICanSystem.h>
@@ -28,4 +27,3 @@ private:
 };
 
 } // namespace can
-#endif /* GUARD_73E7F517_A8F6_423F_9F5C_771172E78044 */

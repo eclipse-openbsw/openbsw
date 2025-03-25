@@ -3,8 +3,7 @@
 /**
  * \ingroup transport
  */
-#ifndef GUARD_84F2CD0C_2DC3_4FC2_8FDC_E1D7FC6524A5
-#define GUARD_84F2CD0C_2DC3_4FC2_8FDC_E1D7FC6524A5
+#pragma once
 
 #include "transport/TransportMessage.h"
 
@@ -31,4 +30,3 @@ inline BufferedTransportMessage<PAYLOAD_SIZE>::BufferedTransportMessage() : Tran
 
 } // namespace transport
 
-#endif // GUARD_84F2CD0C_2DC3_4FC2_8FDC_E1D7FC6524A5

@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_D56C5D48_A0E2_4EF0_BD21_F4620B6F3AF4
-#define GUARD_D56C5D48_A0E2_4EF0_BD21_F4620B6F3AF4
+#pragma once
 
 #include <platform/estdint.h>
 
@@ -30,4 +29,3 @@ resumeAllInterrupts(uint32_t oldMachineStateRegisterValue)
 
 } // namespace safety
 
-#endif /* GUARD_D56C5D48_A0E2_4EF0_BD21_F4620B6F3AF4 */

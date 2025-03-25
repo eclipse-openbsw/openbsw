@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_11075096_3ACA_4F81_92A2_406CEF298C94
-#define GUARD_11075096_3ACA_4F81_92A2_406CEF298C94
+#pragma once
 
 #include "async/Types.h"
 
@@ -34,4 +33,3 @@ private:
 };
 } // namespace async
 
-#endif

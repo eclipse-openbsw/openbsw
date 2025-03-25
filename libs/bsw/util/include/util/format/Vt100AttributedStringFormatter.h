@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_4E1E6EB4_FBB1_4F0B_BBB8_209D12A720DF
-#define GUARD_4E1E6EB4_FBB1_4F0B_BBB8_209D12A720DF
+#pragma once
 
 #include "util/format/AttributedString.h"
 
@@ -194,4 +193,3 @@ private:
 } // namespace format
 } // namespace util
 
-#endif /* GUARD_4E1E6EB4_FBB1_4F0B_BBB8_209D12A720DF */

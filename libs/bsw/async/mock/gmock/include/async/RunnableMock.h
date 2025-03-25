@@ -3,8 +3,7 @@
 /**
  * \ingroup async
  */
-#ifndef GUARD_0A6B590D_CDB3_46A4_9DC2_55EC56EB52AF
-#define GUARD_0A6B590D_CDB3_46A4_9DC2_55EC56EB52AF
+#pragma once
 
 #include "async/Async.h"
 
@@ -20,4 +19,3 @@ public:
 
 } // namespace async
 
-#endif // GUARD_0A6B590D_CDB3_46A4_9DC2_55EC56EB52AF

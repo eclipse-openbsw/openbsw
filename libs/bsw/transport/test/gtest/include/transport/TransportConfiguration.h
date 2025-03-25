@@ -3,8 +3,7 @@
 /**
  * \file    TransportConfiguration.h
  */
-#ifndef GUARD_A22D74C8_745B_4C42_A554_3B44E55AC683
-#define GUARD_A22D74C8_745B_4C42_A554_3B44E55AC683
+#pragma once
 
 #include "transport/LogicalAddress.h"
 #include "transport/TransportMessage.h"
@@ -73,4 +72,3 @@ TransportConfiguration::isTesterPresentWithSuppressPosResponse(TransportMessage 
 
 } // namespace transport
 
-#endif /* GUARD_A22D74C8_745B_4C42_A554_3B44E55AC683 */

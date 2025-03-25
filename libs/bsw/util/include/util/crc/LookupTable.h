@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_C600C7C8_E466_4410_925A_88EEB0C58ABF
-#define GUARD_C600C7C8_E466_4410_925A_88EEB0C58ABF
+#pragma once
 
 namespace util
 {
@@ -20,4 +19,3 @@ struct LookupTable
 } // namespace crc
 } // namespace util
 
-#endif /* GUARD_C600C7C8_E466_4410_925A_88EEB0C58ABF */

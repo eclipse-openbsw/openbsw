@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_3D4AC1D9_3C53_4C65_A4C4_2F4B69FFCF12
-#define GUARD_3D4AC1D9_3C53_4C65_A4C4_2F4B69FFCF12
+#pragma once
 
 #ifdef __cplusplus
 extern "C"
@@ -20,4 +19,3 @@ void systemClock2Pll();
 }
 #endif
 
-#endif /* GUARD_3D4AC1D9_3C53_4C65_A4C4_2F4B69FFCF12 */

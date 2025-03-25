@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_D8D525E4_5798_498A_A3F7_8A8BD60D31B4
-#define GUARD_D8D525E4_5798_498A_A3F7_8A8BD60D31B4
+#pragma once
 
 #include "io/IReader.h"
 
@@ -119,4 +118,3 @@ void JoinReader<N>::release()
 
 } // namespace io
 
-#endif // GUARD_D8D525E4_5798_498A_A3F7_8A8BD60D31B4

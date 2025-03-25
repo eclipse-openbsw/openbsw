@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_54E2611F_03DE_45CB_877B_FA76D872944C
-#define GUARD_54E2611F_03DE_45CB_877B_FA76D872944C
+#pragma once
 
 #include "docan/common/DoCanConstants.h"
 
@@ -47,4 +46,3 @@ private:
 
 } // namespace docan
 
-#endif // GUARD_54E2611F_03DE_45CB_877B_FA76D872944C

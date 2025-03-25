@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_5E750695_2000_4771_ACD9_E13E57316D9D
-#define GUARD_5E750695_2000_4771_ACD9_E13E57316D9D
+#pragma once
 
 #include "util/crc/Crc.h"
 
@@ -18,4 +17,3 @@ struct Crc32
 } /* namespace crc */
 } /* namespace util */
 
-#endif /* GUARD_5E750695_2000_4771_ACD9_E13E57316D9D */

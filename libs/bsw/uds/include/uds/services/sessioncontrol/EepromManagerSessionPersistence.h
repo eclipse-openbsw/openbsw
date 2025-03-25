@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_7EB5E5D9_1034_4B5D_BC01_0C18909432A6
-#define GUARD_7EB5E5D9_1034_4B5D_BC01_0C18909432A6
+#pragma once
 
 #include "nvstorage/NvStorageTypes.h"
 #include "platform/estdint.h"
@@ -35,4 +34,3 @@ private:
 
 } // namespace uds
 
-#endif // GUARD_7EB5E5D9_1034_4B5D_BC01_0C18909432A6

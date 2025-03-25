@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_E64F79D2_A6AC_4231_84EA_38C98BD19D0B
-#define GUARD_E64F79D2_A6AC_4231_84EA_38C98BD19D0B
+#pragma once
 
 #include "estd/forward_list.h"
 #include "estd/functional.h"
@@ -102,4 +101,3 @@ private:
 
 } // namespace uds
 
-#endif // GUARD_E64F79D2_A6AC_4231_84EA_38C98BD19D0B
