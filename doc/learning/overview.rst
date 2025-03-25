@@ -18,3 +18,4 @@ Some simple lessons to get new users up and running.
     can/index
     uds/index
     hwio/index
+    tracing/index

@@ -64,6 +64,19 @@ uint64_t systemTicksToTimeUs(uint64_t ticks);
  */
 uint64_t systemTicksToTimeNs(uint64_t ticks);
 
+/**
+ * Returns a tick count which can be read very efficiently.
+ *
+ * This is a 32bit value which wraps around after reaching its maximum.
+ * Use getFastTicksPerSecond() to get the tick resolution.
+ */
+uint32_t getFastTicks(void);
+
+/**
+ * Returns the number of fast ticks per second.
+ */
+uint32_t getFastTicksPerSecond();
+
 void initSystemTimer();
 /*
  * Returns project dependent TickTime

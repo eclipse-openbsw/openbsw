@@ -21,7 +21,8 @@ struct
     uint64_t ticks; // Main ticks counter, never overflows
     uint32_t lastDwt;
     uint32_t dwtTicksRatio;
-} state = {0, 0, DWT_FREQ_MHZ_RUN / TICK_FREQ_MHZ};
+    uint32_t dwtFreqMhz;
+} state = {0, 0, DWT_FREQ_MHZ_RUN / TICK_FREQ_MHZ, DWT_FREQ_MHZ_RUN};
 
 // DWT registers (refer to ARMv7-M architecture reference manual)
 uint32_t volatile& DWT_CTRL   = *reinterpret_cast<uint32_t volatile*>(0xE0001000U);
@@ -59,12 +60,17 @@ void initSystemTimer()
     state.ticks         = 0; // General ticks counter, never overflows
     state.lastDwt       = 0;
     state.dwtTicksRatio = DWT_FREQ_MHZ_RUN / TICK_FREQ_MHZ;
+    state.dwtFreqMhz    = DWT_FREQ_MHZ_RUN;
 }
 
 void initSystemTimerHelper(bool const sleep)
 {
     (void)updateTicks();
-    state.dwtTicksRatio = (sleep ? DWT_FREQ_MHZ_IDLE : DWT_FREQ_MHZ_RUN) / TICK_FREQ_MHZ;
+    {
+        const ESR_UNUSED interrupts::SuspendResumeAllInterruptsScopedLock lock;
+        state.dwtFreqMhz    = sleep ? DWT_FREQ_MHZ_IDLE : DWT_FREQ_MHZ_RUN;
+        state.dwtTicksRatio = state.dwtFreqMhz / TICK_FREQ_MHZ;
+    }
 }
 
 uint64_t getSystemTicks(void) { return updateTicks(); }
@@ -87,6 +93,14 @@ uint32_t getSystemTimeMs32Bit(void)
 uint64_t systemTicksToTimeUs(uint64_t const ticks) { return ticks / TICK_FREQ_MHZ; }
 
 uint64_t systemTicksToTimeNs(uint64_t const ticks) { return ticks * 1000U / TICK_FREQ_MHZ; }
+
+uint32_t getFastTicks(void) { return DWT_CYCCNT; }
+
+uint32_t getFastTicksPerSecond(void)
+{
+    const ESR_UNUSED interrupts::SuspendResumeAllInterruptsScopedLock lock;
+    return state.dwtFreqMhz * 1000000;
+}
 
 void sysDelayUs(uint32_t const delay)
 {

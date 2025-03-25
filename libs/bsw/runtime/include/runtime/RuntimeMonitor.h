@@ -11,6 +11,9 @@
 #include "runtime/RuntimeStack.h"
 #include "runtime/SimpleRuntimeEntry.h"
 #include "runtime/StatisticsContainer.h"
+#ifdef TRACING
+#include "runtime/Tracer.h"
+#endif
 
 #include <estd/slice.h>
 
@@ -87,6 +90,9 @@ public:
     void enterTask(size_t const taskIdx)
     {
         ::async::LockType const lock;
+#ifdef TRACING
+        Tracer::traceThreadSwitchedIn(static_cast<uint8_t>(taskIdx));
+#endif
         uint32_t const timestamp = getSystemTicks32Bit();
         _lastEnterTaskTimestamp  = timestamp;
         _contextStack.pushEntry(_taskStatistics.getEntry(taskIdx), timestamp);
@@ -95,6 +101,9 @@ public:
     void leaveTask(size_t const taskIdx)
     {
         ::async::LockType const lock;
+#ifdef TRACING
+        Tracer::traceThreadSwitchedOut(static_cast<uint8_t>(taskIdx));
+#endif
         uint32_t const timestamp = getSystemTicks32Bit();
         _contextStack.popEntry(_taskStatistics.getEntry(taskIdx), timestamp);
     }
@@ -102,6 +111,9 @@ public:
     void enterIsrGroup(size_t const isrGroupIdx)
     {
         ::async::LockType const lock;
+#ifdef TRACING
+        Tracer::traceIsrEnter(static_cast<uint8_t>(isrGroupIdx));
+#endif
         uint32_t const timestamp = getSystemTicks32Bit();
         _contextStack.pushEntry(_isrGroupStatistics.getEntry(isrGroupIdx), timestamp);
     }
@@ -109,6 +121,9 @@ public:
     void leaveIsrGroup(size_t const isrGroupIdx)
     {
         ::async::LockType const lock;
+#ifdef TRACING
+        Tracer::traceIsrExit(static_cast<uint8_t>(isrGroupIdx));
+#endif
         uint32_t const timestamp = getSystemTicks32Bit();
         _contextStack.popEntry(_isrGroupStatistics.getEntry(isrGroupIdx), timestamp);
     }

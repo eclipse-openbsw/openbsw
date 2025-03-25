@@ -34,3 +34,7 @@ uint32_t getSystemTicks32Bit(void)
 uint64_t systemTicksToTimeNs(uint64_t ticks) { return ticks; }
 
 uint64_t systemTicksToTimeUs(uint64_t ticks) { return ticks / 1000; }
+
+uint32_t getFastTicks(void) { return getSystemTimeUs32Bit(); }
+
+uint32_t getFastTicksPerSecond(void) { return 1000000; }

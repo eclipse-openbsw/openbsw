@@ -10,6 +10,9 @@
 #include "systems/RuntimeSystem.h"
 #include "systems/SafetySystem.h"
 #include "systems/SysAdminSystem.h"
+#ifdef TRACING
+#include "runtime/Tracer.h"
+#endif
 
 #include <app/appConfig.h>
 
@@ -132,6 +135,10 @@ void run()
     printf("hello\r\n");
     staticInit();
     AsyncAdapter::init();
+#if TRACING
+    runtime::Tracer::init();
+    runtime::Tracer::start();
+#endif
 
     /* runlevel 1 */
     ::platform::platformLifecycleAdd(lifecycleManager, 1U);

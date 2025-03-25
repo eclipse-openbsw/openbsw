@@ -11,6 +11,9 @@
 #include "app/DemoLogger.h"
 
 #include <bsp/SystemTime.h>
+#ifdef TRACING
+#include "runtime/Tracer.h"
+#endif
 
 #include <estd/big_endian.h>
 #ifdef PLATFORM_SUPPORT_CAN
@@ -125,6 +128,10 @@ void DemoSystem::cyclic()
             ++canSentCount;
         }
     }
+#endif
+
+#if TRACING
+    runtime::Tracer::traceUser(42);
 #endif
 }
 

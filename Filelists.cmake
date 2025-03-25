@@ -26,6 +26,8 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/admin/cmake")
 
 option(BUILD_UNIT_TESTS "Build unit tests" OFF)
 
+option(BUILD_TRACING "Build CTF tracing" OFF)
+
 add_compile_options(
     "$<$<COMPILE_LANG_AND_ID:CXX,Clang,GNU>:-O2;-g3;-Werror;-Wall;-Wextra;-Wvla;-Wno-deprecated-volatile>"
     # todo: enforce -Wunused-parameter
@@ -46,6 +48,13 @@ if (BUILD_UNIT_TESTS)
     include(CodeCoverage)
     append_coverage_compiler_flags()
     enable_testing()
+endif ()
+
+if (BUILD_TRACING)
+    add_compile_definitions(TRACING=1)
+    if (TRACING_BUFFER_SIZE)
+        add_compile_definitions(TRACING_BUFFER_SIZE=${TRACING_BUFFER_SIZE})
+    endif ()
 endif ()
 
 set(INCLUDE_OPENBSW_LIBS_BSP
