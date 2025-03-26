@@ -1,9 +1,6 @@
 // Copyright 2024 Accenture.
+#pragma once
 
 /**
  * \ingroup async
  */
-#ifndef GUARD_0333D6DB_2E18_4BEA_B488_CCEC5C403B3F
-#define GUARD_0333D6DB_2E18_4BEA_B488_CCEC5C403B3F
-
-#endif // GUARD_0333D6DB_2E18_4BEA_B488_CCEC5C403B3F
