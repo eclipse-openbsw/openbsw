@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_145C2F46_E29E_4F49_9565_DC88A67FDC4F
-#define GUARD_145C2F46_E29E_4F49_9565_DC88A67FDC4F
+#pragma once
 
 #include "estd/algorithm.h"
 #include "estd/type_traits.h"
@@ -255,5 +254,3 @@ struct all_types<type_list_end, Trait>
 };
 
 } // namespace estd
-
-#endif // GUARD_145C2F46_E29E_4F49_9565_DC88A67FDC4F

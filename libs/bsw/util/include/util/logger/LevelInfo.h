@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_B129C011_09BA_4EE9_BB7A_28F4217D5068
-#define GUARD_B129C011_09BA_4EE9_BB7A_28F4217D5068
+#pragma once
 
 #include "util/logger/LoggerBinding.h"
 
@@ -121,5 +120,3 @@ private:
 } // namespace util
 
 #endif // LOGGER_NO_LEGACY_API
-
-#endif // GUARD_B129C011_09BA_4EE9_BB7A_28F4217D5068

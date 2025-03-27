@@ -3,8 +3,7 @@
 /**
  * \ingroup async
  */
-#ifndef GUARD_2A2B08B1_09D6_4398_8B59_9E02EDE40F4D
-#define GUARD_2A2B08B1_09D6_4398_8B59_9E02EDE40F4D
+#pragma once
 
 #include "async/Types.h"
 
@@ -48,5 +47,3 @@ void scheduleAtFixedRate(
     TimeUnitType unit);
 
 } // namespace async
-
-#endif // GUARD_2A2B08B1_09D6_4398_8B59_9E02EDE40F4D

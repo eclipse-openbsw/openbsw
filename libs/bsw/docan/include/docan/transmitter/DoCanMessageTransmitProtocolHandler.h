@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_E4A42D8B_E35A_4785_AE36_695D4B303FB8
-#define GUARD_E4A42D8B_E35A_4785_AE36_695D4B303FB8
+#pragma once
 
 #include "docan/common/DoCanConstants.h"
 
@@ -531,5 +530,3 @@ inline bool TransmitResult::operator==(TransmitResult const& other) const
            && (_message == other._message) && (_param == other._param);
 }
 } // namespace docan
-
-#endif // GUARD_E4A42D8B_E35A_4785_AE36_695D4B303FB8

@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_ECA56EE9_6D4D_4A4C_BA1A_60DC03035E96
-#define GUARD_ECA56EE9_6D4D_4A4C_BA1A_60DC03035E96
+#pragma once
 
 #include <platform/estdint.h>
 
@@ -23,5 +22,3 @@ SafeReadStatus safeBlockRead(uint8_t const* src, uint8_t* dst, uint32_t size);
 #ifdef __cplusplus
 } /* extern "C" */
 #endif
-
-#endif /* GUARD_ECA56EE9_6D4D_4A4C_BA1A_60DC03035E96 */

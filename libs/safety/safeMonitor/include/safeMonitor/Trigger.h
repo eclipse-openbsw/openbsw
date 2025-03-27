@@ -1,7 +1,6 @@
 // Copyright 2025 Accenture.
 
-#ifndef GUARD_3118F685_8280_4FCD_904C_5172989A142F
-#define GUARD_3118F685_8280_4FCD_904C_5172989A142F
+#pragma once
 
 #include "common.h"
 
@@ -65,5 +64,3 @@ template<typename Handler, typename Event, typename ScopedMutex, typename Contex
 Context const Trigger<Handler, Event, ScopedMutex, Context>::DEFAULT_CONTEXT{};
 
 } // namespace safeMonitor
-
-#endif // GUARD_3118F685_8280_4FCD_904C_5172989A142F

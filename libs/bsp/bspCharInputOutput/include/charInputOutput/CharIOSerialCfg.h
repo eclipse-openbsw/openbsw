@@ -1,5 +1,4 @@
-#ifndef CHARIOSERIALCFG_H_
-#define CHARIOSERIALCFG_H_
+#pragma once
 
 /**
  * Buffer size in bytes for asynchronous logger output
@@ -11,5 +10,3 @@
  * in number of while-loop iterations
  */
 #define SCI_LOGGERTIMEOUT 10000
-
-#endif /* CHARIOSERIALCFG_H_ */

@@ -3,8 +3,7 @@
 /**
  * \ingroup async
  */
-#ifndef GUARD_FA81A16F_4593_4FAF_899A_101D87027137
-#define GUARD_FA81A16F_4593_4FAF_899A_101D87027137
+#pragma once
 
 #include <estd/functional.h>
 
@@ -104,5 +103,3 @@ void Queue<Node>::remove(Node& node)
 }
 
 } // namespace async
-
-#endif // GUARD_FA81A16F_4593_4FAF_899A_101D87027137

@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_9224694B_14C8_497C_B1AA_2D751EC84CA5
-#define GUARD_9224694B_14C8_497C_B1AA_2D751EC84CA5
+#pragma once
 
 #include <platform/estdint.h>
 
@@ -32,5 +31,3 @@ template<std::size_t N>
 using make_index_sequence = typename internal::IndexSequenceHelper<N>::type;
 
 } // namespace estd
-
-#endif // GUARD_9224694B_14C8_497C_B1AA_2D751EC84CA5

@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_A409E1D2_0E91_4CFC_BFE8_D14E93297025
-#define GUARD_A409E1D2_0E91_4CFC_BFE8_D14E93297025
+#pragma once
 
 #include <platform/estdint.h>
 
@@ -30,5 +29,3 @@ struct DoCanFrameCodecConfig
     uint8_t _offset;
 };
 } // namespace docan
-
-#endif

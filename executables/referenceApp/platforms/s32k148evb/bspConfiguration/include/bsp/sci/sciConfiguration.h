@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_04CFEC83_1B43_49EC_975F_F038344D33DF
-#define GUARD_04CFEC83_1B43_49EC_975F_F038344D33DF
+#pragma once
 
 #include "sci/SciDevice.h"
 
@@ -16,5 +15,3 @@ SciConfig const sciConfiguration
        bios::Io::UART1_RX,
        static_cast<uint8_t>(sizeof(sciBaudRateConfig) / sizeof(sciBaudRate)),
        sciBaudRateConfig};
-
-#endif // sciConfiguration.h

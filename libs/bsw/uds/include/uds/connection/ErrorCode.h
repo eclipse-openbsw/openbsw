@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_1967CBF3_37BF_4DAF_9BBD_A53274CCA197
-#define GUARD_1967CBF3_37BF_4DAF_9BBD_A53274CCA197
+#pragma once
 
 namespace uds
 {
@@ -23,5 +22,3 @@ enum class ErrorCode
 };
 
 } // namespace uds
-
-#endif // GUARD_1967CBF3_37BF_4DAF_9BBD_A53274CCA197

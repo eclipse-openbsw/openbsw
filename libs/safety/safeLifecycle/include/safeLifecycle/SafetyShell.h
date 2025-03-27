@@ -1,5 +1,4 @@
-#ifndef GUARD_C0FF9070_3831_4420_BC0A_7F269F192704
-#define GUARD_C0FF9070_3831_4420_BC0A_7F269F192704
+#pragma once
 
 #include "safeLifecycle/interrupts/suspendResumeAllInterrupts.h"
 
@@ -39,5 +38,3 @@ private:
 };
 
 } // namespace safety
-
-#endif /* GUARD_C0FF9070_3831_4420_BC0A_7F269F192704 */

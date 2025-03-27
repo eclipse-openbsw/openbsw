@@ -1,7 +1,6 @@
 // Copyright 2025 Accenture.
 
-#ifndef GUARD_31A06FA7_27C6_4EBA_A312_272438CC7F86
-#define GUARD_31A06FA7_27C6_4EBA_A312_272438CC7F86
+#pragma once
 
 #include "safeMonitor/common.h"
 
@@ -25,5 +24,3 @@ public:
     MOCK_CONST_METHOD0_T(getContext, Context&());
 };
 } // namespace safeMonitor
-
-#endif // GUARD_31A06FA7_27C6_4EBA_A312_272438CC7F86

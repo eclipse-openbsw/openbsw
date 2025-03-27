@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_970268D3_A778_4F47_A514_E815E5E01B99
-#define GUARD_970268D3_A778_4F47_A514_E815E5E01B99
+#pragma once
 
 #include <estd/functional.h>
 #include <platform/estdint.h>
@@ -93,5 +92,3 @@ protected:
 };
 
 } // namespace bios
-
-#endif /* GUARD_970268D3_A778_4F47_A514_E815E5E01B99 */

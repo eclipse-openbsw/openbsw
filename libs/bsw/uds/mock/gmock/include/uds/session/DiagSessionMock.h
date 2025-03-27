@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_FA3492E2_3BCE_4FAB_B55A_A9E1988C5F26
-#define GUARD_FA3492E2_3BCE_4FAB_B55A_A9E1988C5F26
+#pragma once
 
 #include "StubMock.h"
 #include "uds/session/DiagSession.h"
@@ -29,4 +28,3 @@ public:
     }
 };
 } // namespace uds
-#endif /* GUARD_FA3492E2_3BCE_4FAB_B55A_A9E1988C5F26 */

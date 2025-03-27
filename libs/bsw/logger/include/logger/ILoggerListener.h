@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_88C26625_9E67_4D69_A325_283FE20FA7BE
-#define GUARD_88C26625_9E67_4D69_A325_283FE20FA7BE
+#pragma once
 
 #include <estd/forward_list.h>
 #include <estd/uncopyable.h>
@@ -23,5 +22,3 @@ inline ILoggerListener::ILoggerListener()
 {}
 
 } // namespace logger
-
-#endif // GUARD_88C26625_9E67_4D69_A325_283FE20FA7BE

@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_CFEE177C_A8EB_495D_A9B8_A41087CDD6EA
-#define GUARD_CFEE177C_A8EB_495D_A9B8_A41087CDD6EA
+#pragma once
 
 #include "util/command/CommandContext.h"
 #include "util/command/SimpleCommand.h"
@@ -52,5 +51,3 @@ private:
 
 } /* namespace command */
 } /* namespace util */
-
-#endif /* GUARD_CFEE177C_A8EB_495D_A9B8_A41087CDD6EA */

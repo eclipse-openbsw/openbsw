@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_CD4D716E_A170_4650_84C7_E9C4239BD9C3
-#define GUARD_CD4D716E_A170_4650_84C7_E9C4239BD9C3
+#pragma once
 
 #include <estd/forward_list.h>
 
@@ -70,5 +69,3 @@ inline uint8_t const* IAsyncDiagHelper::StoredRequest::getRequest() const { retu
 inline uint16_t IAsyncDiagHelper::StoredRequest::getRequestLength() const { return fRequestLength; }
 
 } // namespace uds
-
-#endif // GUARD_CD4D716E_A170_4650_84C7_E9C4239BD9C3

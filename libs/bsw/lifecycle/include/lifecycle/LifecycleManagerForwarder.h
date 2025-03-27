@@ -4,8 +4,7 @@
  * \file
  * \ingroup lifecycle
  */
-#ifndef GUARD_B5CFAF50_8C23_4D08_9A83_02DBA72C668E
-#define GUARD_B5CFAF50_8C23_4D08_9A83_02DBA72C668E
+#pragma once
 
 #include "lifecycle/ILifecycleManager.h"
 
@@ -27,5 +26,3 @@ private:
 };
 
 } // namespace lifecycle
-
-#endif // GUARD_B5CFAF50_8C23_4D08_9A83_02DBA72C668E

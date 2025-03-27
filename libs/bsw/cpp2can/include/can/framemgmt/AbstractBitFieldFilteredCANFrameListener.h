@@ -5,8 +5,7 @@
  * \file AbstractBitFieldFilteredCANFrameListener.h
  * \ingroup framemgmt
  */
-#ifndef GUARD_994AA90C_A527_4A5B_9772_B1C8B19CCF5F
-#define GUARD_994AA90C_A527_4A5B_9772_B1C8B19CCF5F
+#pragma once
 
 #include "can/filter/BitFieldFilter.h"
 #include "can/framemgmt/ICANFrameListener.h"
@@ -44,5 +43,3 @@ inline AbstractBitFieldFilteredCANFrameListener::AbstractBitFieldFilteredCANFram
 inline IFilter& AbstractBitFieldFilteredCANFrameListener::getFilter() { return fFilter; }
 
 } // namespace can
-
-#endif /*GUARD_994AA90C_A527_4A5B_9772_B1C8B19CCF5F*/

@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_2A3E93D6_DA09_4054_9029_E6233102C5AD
-#define GUARD_2A3E93D6_DA09_4054_9029_E6233102C5AD
+#pragma once
 
 #include "bsp/adc/AnalogInputScale.h"
 
@@ -13,5 +12,3 @@ AnalogInputScale::scale const analogInputScaleConfiguration[] = {
     &scaleFunction<uint32_t, _5_0Volt12BitResolution, precisionFactor, 0>, //AiEval_ADC
     // clang-format on
 };
-
-#endif // GUARD_2A3E93D6_DA09_4054_9029_E6233102C5AD

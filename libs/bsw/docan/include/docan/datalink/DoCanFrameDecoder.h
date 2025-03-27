@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_996E34E7_665B_4CE5_B4E3_F677ECC671DC
-#define GUARD_996E34E7_665B_4CE5_B4E3_F677ECC671DC
+#pragma once
 
 #include "docan/common/DoCanConnection.h"
 #include "docan/common/DoCanConstants.h"
@@ -123,5 +122,3 @@ CodecResult DoCanFrameDecoder<Codec>::decodeFrame(
 }
 
 } // namespace docan
-
-#endif // GUARD_996E34E7_665B_4CE5_B4E3_F677ECC671DC

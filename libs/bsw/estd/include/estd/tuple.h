@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_31FBB82D_9B99_446D_BC36_43975F78F3F0
-#define GUARD_31FBB82D_9B99_446D_BC36_43975F78F3F0
+#pragma once
 
 #include <platform/estdint.h>
 
@@ -79,5 +78,3 @@ void for_each(std::tuple<Types...> const& args, F&& f)
 }
 
 } // namespace estd
-
-#endif

@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_D42952B1_7F51_464A_A6A3_B4C592CB8ECE
-#define GUARD_D42952B1_7F51_464A_A6A3_B4C592CB8ECE
+#pragma once
 
 #include "mcu/mcu.h"
 #include "platform/estdint.h"
@@ -144,5 +143,3 @@ enum IOPort
     PE25,
     NUM_PORTS = 0xff //, PORT_UNAVAILABLE = NUM_PORTS
 };
-
-#endif /* GUARD_D42952B1_7F51_464A_A6A3_B4C592CB8ECE */

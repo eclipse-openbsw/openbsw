@@ -4,8 +4,7 @@
  * \file
  * \ingroup lifecycle
  */
-#ifndef GUARD_059084CD_45D5_4CFD_930C_8A5BCBDAA184
-#define GUARD_059084CD_45D5_4CFD_930C_8A5BCBDAA184
+#pragma once
 
 #include <async/Async.h>
 
@@ -25,5 +24,3 @@ private:
 };
 
 } // namespace lifecycle
-
-#endif // GUARD_059084CD_45D5_4CFD_930C_8A5BCBDAA184

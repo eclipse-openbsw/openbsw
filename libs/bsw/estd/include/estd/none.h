@@ -5,8 +5,7 @@
  * \file
  * \ingroup estl_containers
  */
-#ifndef GUARD_3B852209_F91C_479C_B8CF_8C5B02FBF1A4
-#define GUARD_3B852209_F91C_479C_B8CF_8C5B02FBF1A4
+#pragma once
 
 namespace estd
 {
@@ -25,5 +24,3 @@ struct none_t
 static none_t const none;
 
 } // namespace estd
-
-#endif /* include_guard */

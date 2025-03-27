@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_302DC4AD_7B25_4896_8BE5_5DCA1E7ADF28
-#define GUARD_302DC4AD_7B25_4896_8BE5_5DCA1E7ADF28
+#pragma once
 
 #include "transport/TransportMessage.h"
 
@@ -74,5 +73,3 @@ TransportConfiguration::isTesterPresentWithSuppressPosResponse(TransportMessage 
 }
 
 } // namespace transport
-
-#endif /* GUARD_302DC4AD_7B25_4896_8BE5_5DCA1E7ADF28 */

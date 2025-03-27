@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_9CA90E28_3D12_4C5B_9EAA_FF2CDB970ABF
-#define GUARD_9CA90E28_3D12_4C5B_9EAA_FF2CDB970ABF
+#pragma once
 
 #include "nvstorage/NvStorageTypes.h"
 #include "platform/estdint.h"
@@ -31,5 +30,3 @@ public:
 };
 
 } // namespace eeprom
-
-#endif // GUARD_9CA90E28_3D12_4C5B_9EAA_FF2CDB970ABF

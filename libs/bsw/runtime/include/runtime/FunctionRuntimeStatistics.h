@@ -3,8 +3,7 @@
 /**
  * \ingroup runtime
  */
-#ifndef GUARD_A3BD6A4E_3A23_47B6_BF58_E73AA95DC80C
-#define GUARD_A3BD6A4E_3A23_47B6_BF58_E73AA95DC80C
+#pragma once
 
 #include "runtime/RuntimeStatistics.h"
 
@@ -66,5 +65,3 @@ private:
 };
 
 } // namespace runtime
-
-#endif // GUARD_A3BD6A4E_3A23_47B6_BF58_E73AA95DC80C
