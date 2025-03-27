@@ -3,12 +3,12 @@
 #ifndef GUARD_93DA54A2_4708_4F9A_921C_E547CD648629
 #define GUARD_93DA54A2_4708_4F9A_921C_E547CD648629
 
-#include <platform/estdint.h>
-
 #ifdef __cplusplus
 extern "C"
 {
 #endif
+
+#include <stdint.h>
 
 void sysDelayUs(uint32_t delay);
 
