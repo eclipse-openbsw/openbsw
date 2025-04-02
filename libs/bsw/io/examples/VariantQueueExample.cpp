@@ -68,9 +68,9 @@ void read_no_payload()
     // EXAMPLE_START read_no_payload
     struct Visit
     {
-        void operator()(A const& a) { printf("received A"); }
+        void operator()(A const& /* a */) { printf("received A"); }
 
-        void operator()(B const& b) { printf("received B"); }
+        void operator()(B const& /* b */) { printf("received B"); }
     };
 
     MyQueue queue;
@@ -90,9 +90,15 @@ void read_with_payload()
     // EXAMPLE_START read_with_payload
     struct VisitWithPayload
     {
-        void operator()(A const& a, ::estd::slice<uint8_t const> payload) { printf("received A"); }
+        void operator()(A const& /* a */, ::estd::slice<uint8_t const> /* payload */)
+        {
+            printf("received A");
+        }
 
-        void operator()(B const& b, ::estd::slice<uint8_t const> payload) { printf("received B"); }
+        void operator()(B const& /* b */, ::estd::slice<uint8_t const> /* payload */)
+        {
+            printf("received B");
+        }
     };
 
     MyQueue queue;

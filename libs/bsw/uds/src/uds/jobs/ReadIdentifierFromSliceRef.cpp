@@ -20,7 +20,9 @@ ReadIdentifierFromSliceRef::ReadIdentifierFromSliceRef(
 }
 
 DiagReturnCode::Type ReadIdentifierFromSliceRef::process(
-    IncomingDiagConnection& connection, uint8_t const* const request, uint16_t const requestLength)
+    IncomingDiagConnection& connection,
+    uint8_t const* const /* request */,
+    uint16_t const /* requestLength */)
 {
     PositiveResponse& response = connection.releaseRequestGetResponse();
     (void)response.appendData(_responseSlice.data(), static_cast<uint16_t>(_responseSlice.size()));

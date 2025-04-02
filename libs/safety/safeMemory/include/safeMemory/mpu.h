@@ -162,6 +162,9 @@ public:
         IP_MPU->RGD[slot].WORD1 = d.endAdress;
         IP_MPU->RGD[slot].WORD2 = d.word2.R;
         IP_MPU->RGD[slot].WORD3 = d.word3.R;
+#else
+        (void)slot;
+        (void)d;
 #endif
     }
 
@@ -216,6 +219,8 @@ public:
                 return 0U;
             }
         }
+#else
+        (void)slot;
 #endif
         return 0U;
     }

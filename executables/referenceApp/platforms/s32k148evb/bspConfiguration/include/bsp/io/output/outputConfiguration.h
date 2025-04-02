@@ -10,7 +10,7 @@ Output::OutputConfig const Output::sfOutputConfigurations[1][Output::NUMBER_OF_I
         /*  1 */ {Io::EVAL_LED_RED, Io::HIGH, Io::HIGH_ACTIVE},
     }};
 
-Output::OutputConfig const* Output::getConfiguration(uint8_t hardwareVersion)
+Output::OutputConfig const* Output::getConfiguration(uint8_t /* hardwareVersion */)
 {
     return &sfOutputConfigurations[0][0];
 }

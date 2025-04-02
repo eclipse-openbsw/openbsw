@@ -437,7 +437,8 @@ unsigned char FlexCANDevice::dequeueRxFrameStream(unsigned char* data)
     }
 }
 
-ICanTransceiver::ErrorCode FlexCANDevice::transmitStream(uint8_t* Txframe, bool txInterruptNeeded)
+ICanTransceiver::ErrorCode
+FlexCANDevice::transmitStream(uint8_t* /* Txframe */, bool /* txInterruptNeeded */)
 {
     return ICanTransceiver::ErrorCode::CAN_ERR_TX_FAIL;
 }

@@ -451,7 +451,7 @@ void DiagDispatcher2::connectionManagerShutdownComplete()
 }
 
 void DiagDispatcher2::transportMessageProcessed(
-    TransportMessage& transportMessage, ProcessingResult const result)
+    TransportMessage& transportMessage, ProcessingResult const /* result */)
 {
     getProvidingListenerHelper().releaseTransportMessage(transportMessage);
 }

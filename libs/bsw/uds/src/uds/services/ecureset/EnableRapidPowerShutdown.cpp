@@ -23,7 +23,9 @@ EnableRapidPowerShutdown::EnableRapidPowerShutdown(IUdsLifecycleConnector& udsLi
 {}
 
 DiagReturnCode::Type EnableRapidPowerShutdown::process(
-    IncomingDiagConnection& connection, uint8_t const* const request, uint16_t const requestLength)
+    IncomingDiagConnection& connection,
+    uint8_t const* const /* request */,
+    uint16_t const /* requestLength */)
 {
     PositiveResponse& response = connection.releaseRequestGetResponse();
     (void)response.appendUint8(ShutDownTime);
@@ -32,7 +34,7 @@ DiagReturnCode::Type EnableRapidPowerShutdown::process(
 }
 
 void EnableRapidPowerShutdown::responseSent(
-    IncomingDiagConnection& connection, ResponseSendResult result)
+    IncomingDiagConnection& connection, ResponseSendResult /* result */)
 {
     connection.terminate();
     uint8_t localShutdowntime = ShutDownTime;

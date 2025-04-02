@@ -13,7 +13,7 @@ AsyncDiagHelper::AsyncDiagHelper(StoredRequestPool& storedRequestPool)
 {}
 
 DiagReturnCode::Type
-AsyncDiagHelper::verify(uint8_t const* const request, uint16_t const requestLength)
+AsyncDiagHelper::verify(uint8_t const* const /* request */, uint16_t const /* requestLength */)
 {
     return DiagReturnCode::OK;
 }

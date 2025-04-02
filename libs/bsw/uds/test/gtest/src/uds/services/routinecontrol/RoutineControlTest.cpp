@@ -26,8 +26,10 @@ public:
         return RoutineControl::getDefaultDiagReturnCode();
     }
 
-    virtual DiagReturnCode::Type
-    process(IncomingDiagConnection& connection, uint8_t const request[], uint16_t requestLength)
+    virtual DiagReturnCode::Type process(
+        IncomingDiagConnection& /* connection */,
+        uint8_t const /* request */[],
+        uint16_t /* requestLength */)
     {
         return DiagReturnCode::OK;
     }

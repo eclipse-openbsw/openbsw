@@ -23,10 +23,10 @@ struct ComponentConfigTest
     void readMapping(uint8_t* buffer) { memcpy(buffer, _persistentMapping, _mappingSize); }
 
     void logOutput(
-        ComponentInfo const& componentInfo,
-        LevelInfo const& levelInfo,
-        char const* str,
-        va_list ap) override
+        ComponentInfo const& /* componentInfo */,
+        LevelInfo const& /* levelInfo */,
+        char const* /* str */,
+        va_list /* ap */) override
     {}
 
     uint8_t const* _persistentMapping = nullptr;

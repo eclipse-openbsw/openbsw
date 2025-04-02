@@ -76,7 +76,7 @@ ICanTransceiver::ErrorCode SocketCanTransceiver::open()
     return ErrorCode::CAN_ERR_OK;
 }
 
-ICanTransceiver::ErrorCode SocketCanTransceiver::open(CANFrame const& frame)
+ICanTransceiver::ErrorCode SocketCanTransceiver::open(CANFrame const& /* frame */)
 {
     estd_assert(false);
     return ErrorCode::CAN_ERR_ILLEGAL_STATE;

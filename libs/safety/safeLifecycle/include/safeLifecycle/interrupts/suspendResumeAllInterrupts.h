@@ -24,6 +24,8 @@ resumeAllInterrupts(uint32_t oldMachineStateRegisterValue)
 {
 #ifdef PLATFORM_SUPPORT_MPU
     __asm("msr PRIMASK, %[Input]\n" ::[Input] "r"(oldMachineStateRegisterValue));
+#else
+    (void)oldMachineStateRegisterValue;
 #endif
 }
 

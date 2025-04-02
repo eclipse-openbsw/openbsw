@@ -22,7 +22,7 @@ AbstractDiagJob& RoutineControlJob::getRequestRoutineResults()
 }
 
 DiagReturnCode::Type
-RoutineControlJob::verify(uint8_t const* const request, uint16_t const requestLength)
+RoutineControlJob::verify(uint8_t const* const request, uint16_t const /* requestLength */)
 {
     if (!compare(
             request, getImplementedRequest() + 2U, static_cast<uint16_t>(getRequestLength()) - 2U))

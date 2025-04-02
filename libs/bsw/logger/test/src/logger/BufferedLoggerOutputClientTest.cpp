@@ -34,12 +34,12 @@ struct BufferedLoggerOutputClientTest
     }
 
     void outputEntry(
-        uint32_t entryIndex,
-        uint32_t timestamp,
-        ::util::logger::ComponentInfo const& componentInfo,
-        ::util::logger::LevelInfo const& levelInfo,
-        char const* str,
-        ::util::format::IPrintfArgumentReader& argReader) override
+        uint32_t /* entryIndex */,
+        uint32_t /* timestamp */,
+        ::util::logger::ComponentInfo const& /* componentInfo */,
+        ::util::logger::LevelInfo const& /* levelInfo */,
+        char const* /* str */,
+        ::util::format::IPrintfArgumentReader& /* argReader */) override
     {}
 
     void logAvailable() override {}

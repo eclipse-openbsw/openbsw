@@ -23,7 +23,7 @@ dynamicClient<
 
 OutputPwm::OutputPwm() {}
 
-void OutputPwm::init(uint8_t hwVariant) { cleanDynamicClients(); }
+void OutputPwm::init(uint8_t /* hwVariant */) { cleanDynamicClients(); }
 
 void OutputPwm::shutdown() { cleanDynamicClients(); }
 

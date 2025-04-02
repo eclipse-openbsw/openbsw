@@ -341,7 +341,7 @@ bool AbstractDiagJob::compare(
 }
 
 void AbstractDiagJob::responseSent(
-    IncomingDiagConnection& connection, ResponseSendResult const result)
+    IncomingDiagConnection& connection, ResponseSendResult const /* result */)
 {
     connection.terminate();
 }

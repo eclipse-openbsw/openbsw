@@ -18,9 +18,9 @@ public:
 
     bool isModeChangePossible() const { return true; }
 
-    bool requestPowerdown(bool rapid, uint8_t& time) { return true; }
+    bool requestPowerdown(bool /* rapid */, uint8_t& /* time */) { return true; }
 
-    bool requestShutdown(ShutdownType type, uint32_t) { return true; }
+    bool requestShutdown(ShutdownType /* type */, uint32_t) { return true; }
 };
 
 } // namespace uds

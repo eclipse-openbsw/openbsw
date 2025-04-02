@@ -73,7 +73,7 @@ public:
         DiagSession::DiagSessionMask::getInstance() << DiagSession::APPLICATION_DEFAULT_SESSION())
     {}
 
-    uds::DiagReturnCode::Type verify(uint8_t const request[], uint16_t requestLength) override
+    uds::DiagReturnCode::Type verify(uint8_t const request[], uint16_t /* requestLength */) override
     {
         Logger::debug(UDS, "MyReadDataByIdentifier::verify()");
         if (!compare(request, getImplementedRequest() + 1, 2))
@@ -85,8 +85,8 @@ public:
 
     uds::DiagReturnCode::Type process(
         uds::IncomingDiagConnection& connection,
-        uint8_t const request[],
-        uint16_t requestLength) override
+        uint8_t const /* request */[],
+        uint16_t /* requestLength */) override
     {
         Logger::debug(UDS, "MyReadDataByIdentifier::process()");
         uds::PositiveResponse& response = connection.releaseRequestGetResponse();
@@ -140,20 +140,22 @@ public:
     }
 
     void responseReceived(
-        OutgoingDiagConnection& connection,
-        uint8_t sourceDiagAddress,
-        uint8_t const response[],
-        uint16_t responseLength) override
+        OutgoingDiagConnection& /* connection */,
+        uint8_t /* sourceDiagAddress */,
+        uint8_t const /* response */[],
+        uint16_t /* responseLength */) override
     {
         // nothing to do, we don't expect responses
     }
 
-    void responseTimeout(OutgoingDiagConnection& connection) override
+    void responseTimeout(OutgoingDiagConnection& /* connection */) override
     {
         // nothing to do, we don't expect responses
     }
 
-    void requestSent(OutgoingDiagConnection& connection, RequestSendResult result) override {}
+    void
+    requestSent(OutgoingDiagConnection& /* connection */, RequestSendResult /* result */) override
+    {}
 
 private:
     ::uds::ErrorCode sendEcuResetService(uint8_t subService, uint8_t targetId)

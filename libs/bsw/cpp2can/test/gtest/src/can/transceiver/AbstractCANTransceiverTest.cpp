@@ -74,7 +74,7 @@ class aBitFieldFilter : public AbstractStaticBitFieldFilter
 public:
     aBitFieldFilter() : fMask(0xFF) {}
 
-    uint8_t getMaskValue(uint16_t byteIndex) const override { return fMask; }
+    uint8_t getMaskValue(uint16_t /* byteIndex */) const override { return fMask; }
 
     uint8_t fMask;
 };

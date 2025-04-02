@@ -35,7 +35,7 @@ TransportMessageProvidingListenerMock::TransportMessageProvidingListenerMock(boo
 
 ITransportMessageProvider::ErrorCode
 TransportMessageProvidingListenerMock::getTransportMessageImplementation(
-    uint8_t srcBusId,
+    uint8_t /* srcBusId */,
     uint16_t sourceId,
     uint16_t targetId,
     uint16_t size,
@@ -68,7 +68,7 @@ void TransportMessageProvidingListenerMock::releaseTransportMessageImplementatio
 
 ITransportMessageListener::ReceiveResult
 TransportMessageProvidingListenerMock::messageReceivedImplementation(
-    uint8_t sourceBusId,
+    uint8_t /* sourceBusId */,
     TransportMessage& transportMessage,
     ITransportMessageProcessedListener* pNotificationListener)
 {

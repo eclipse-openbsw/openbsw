@@ -26,7 +26,9 @@ TesterPresent::TesterPresent()
 }
 
 DiagReturnCode::Type TesterPresent::process(
-    IncomingDiagConnection& connection, uint8_t const* const request, uint16_t const requestLength)
+    IncomingDiagConnection& connection,
+    uint8_t const* const request,
+    uint16_t const /* requestLength */)
 {
     if (request[0] == TESTER_PRESENT_ANSWER)
     {

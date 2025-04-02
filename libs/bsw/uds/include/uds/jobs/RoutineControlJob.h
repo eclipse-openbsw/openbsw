@@ -54,17 +54,17 @@ public:
         = 0;
 
     virtual DiagReturnCode::Type stop(
-        IncomingDiagConnection& connection,
-        uint8_t const* const request,
-        uint16_t const requestLength)
+        IncomingDiagConnection& /* connection */,
+        uint8_t const* const /* request */,
+        uint16_t const /* requestLength */)
     {
         return DiagReturnCode::ISO_CONDITIONS_NOT_CORRECT;
     }
 
     virtual DiagReturnCode::Type requestResults(
-        IncomingDiagConnection& connection,
-        uint8_t const* const request,
-        uint16_t const requestLength)
+        IncomingDiagConnection& /* connection */,
+        uint8_t const* const /* request */,
+        uint16_t const /* requestLength */)
     {
         return DiagReturnCode::ISO_CONDITIONS_NOT_CORRECT;
     }

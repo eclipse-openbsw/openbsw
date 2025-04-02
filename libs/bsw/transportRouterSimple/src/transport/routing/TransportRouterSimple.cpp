@@ -34,7 +34,7 @@ void TransportRouterSimple::init() { _transportLayers.clear(); }
 void TransportRouterSimple::shutdown() { _transportLayers.clear(); }
 
 ITransportMessageProvidingListener::ErrorCode TransportRouterSimple::getTransportMessage(
-    uint8_t const srcBusId,
+    uint8_t const /* srcBusId */,
     uint16_t const sourceId,
     uint16_t const targetId,
     uint16_t const size,

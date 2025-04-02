@@ -37,7 +37,7 @@ public:
     void TearDown() override { delete[] fBuffer; }
 
     void transportMessageProcessed(
-        transport::TransportMessage& transportMessage, ProcessingResult result) override
+        transport::TransportMessage& /* transportMessage */, ProcessingResult /* result */) override
     {}
 
 protected:

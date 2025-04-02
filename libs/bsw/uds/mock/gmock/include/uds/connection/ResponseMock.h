@@ -15,7 +15,7 @@ class PositiveResponseMockHelper
 , public PositiveResponse
 {
 public:
-    PositiveResponseMockHelper(IncomingDiagConnection& connection) : StubMock() {}
+    PositiveResponseMockHelper(IncomingDiagConnection& /* connection */) : StubMock() {}
 
     MOCK_METHOD(size_t, appendData, (uint8_t const[], size_t));
     MOCK_METHOD(uint8_t*, getData, ());

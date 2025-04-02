@@ -233,7 +233,7 @@ void CanFlex2Transceiver::resetFirstFrame()
     fFirstFrameNotified = false;
 }
 
-::can::ICanTransceiver::ErrorCode CanFlex2Transceiver::open(::can::CANFrame const& frame)
+::can::ICanTransceiver::ErrorCode CanFlex2Transceiver::open(::can::CANFrame const& /* frame */)
 {
     // not implemented
     estd_assert(false);

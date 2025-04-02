@@ -55,7 +55,8 @@ public:
         comctrl.addCommunicationSubStateListener(*this);
     }
 
-    virtual bool communicationStateChanged(CommunicationEnhancedState newState, uint16_t nodeId)
+    virtual bool
+    communicationStateChanged(CommunicationEnhancedState newState, uint16_t /* nodeId */)
     {
         fState = newState;
         return true;

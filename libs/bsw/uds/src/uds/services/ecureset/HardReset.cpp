@@ -22,7 +22,9 @@ HardReset::HardReset(IUdsLifecycleConnector& udsLifecycleConnector, DiagDispatch
 {}
 
 DiagReturnCode::Type HardReset::process(
-    IncomingDiagConnection& connection, uint8_t const* const request, uint16_t const requestLength)
+    IncomingDiagConnection& connection,
+    uint8_t const* const /* request */,
+    uint16_t const /* requestLength */)
 {
     if (fUdsLifecycleConnector.isModeChangePossible())
     {
@@ -36,7 +38,8 @@ DiagReturnCode::Type HardReset::process(
     }
 }
 
-void HardReset::responseSent(IncomingDiagConnection& connection, ResponseSendResult const result)
+void HardReset::responseSent(
+    IncomingDiagConnection& connection, ResponseSendResult const /* result */)
 {
     connection.terminate();
     if (!fUdsLifecycleConnector.requestShutdown(IUdsLifecycleConnector::HARD_RESET, RESET_TIME))

@@ -4,7 +4,7 @@
 
 namespace uds
 {
-bool DefaultDiagAuthenticator::isAuthenticated(uint16_t const address) const { return true; }
+bool DefaultDiagAuthenticator::isAuthenticated(uint16_t const /* address */) const { return true; }
 
 DiagReturnCode::Type DefaultDiagAuthenticator::getNotAuthenticatedReturnCode() const
 {

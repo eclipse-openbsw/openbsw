@@ -43,7 +43,7 @@ namespace systems
 } // namespace systems
 #endif // PLATFORM_SUPPORT_CAN
 
-void intHandler(int sig)
+void intHandler(int /* sig */)
 {
     terminal_cleanup();
     _exit(0);

@@ -21,9 +21,9 @@ class CanPhyCommon : public CanPhy
 public:
     CanPhyCommon() = default;
 
-    virtual void init(uint32_t id = 0U) {}
+    virtual void init(uint32_t /* id */ = 0U) {}
 
-    virtual bool setMode(Mode mode, uint32_t id = 0U)
+    virtual bool setMode(Mode mode, uint32_t /* id */ = 0U)
     {
         switch (mode)
         {
@@ -43,7 +43,7 @@ public:
         return true;
     }
 
-    virtual ErrorCode getPhyErrorStatus(uint32_t id = 0U) { return CAN_PHY_ERROR_NONE; }
+    virtual ErrorCode getPhyErrorStatus(uint32_t /* id */ = 0U) { return CAN_PHY_ERROR_NONE; }
 
 private:
 };
@@ -84,22 +84,25 @@ private:
     public:
         void startPreSleep() override {}
 
-        uint32_t powerDown(uint8_t mode, tCheckWakeupDelegate delegate) override { return 0; }
+        uint32_t powerDown(uint8_t /* mode */, tCheckWakeupDelegate /* delegate */) override
+        {
+            return 0;
+        }
 
-        uint32_t powerDown(uint8_t mode) override { return 0; }
+        uint32_t powerDown(uint8_t /* mode */) override { return 0; }
 
         void fullPowerUp() override {}
 
         void setWakeupSourceMonitoring(
-            uint32_t source, bool active = true, bool fallingEdge = true) override
+            uint32_t /* source */, bool /* active */ = true, bool /* fallingEdge */ = true) override
         {}
 
         /*!
          * new Interface for  void setMonitorWakeUp(uint32_t wupLine, bool aktiv);
          */
-        void clearWakeupSourceMonitoring(uint32_t source) override {}
+        void clearWakeupSourceMonitoring(uint32_t /* source */) override {}
 
-        bool setWakeupDelegate(tCheckWakeupDelegate& delegate) override { return true; }
+        bool setWakeupDelegate(tCheckWakeupDelegate& /* delegate */) override { return true; }
 
         uint32_t getWakeupSource(void) override { return 0; }
     };

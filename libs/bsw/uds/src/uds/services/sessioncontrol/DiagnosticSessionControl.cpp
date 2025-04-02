@@ -76,7 +76,7 @@ void DiagnosticSessionControl::shutdown()
 DiagSession const& DiagnosticSessionControl::getActiveSession() const { return *fpCurrentSession; }
 
 void DiagnosticSessionControl::responseSent(
-    IncomingDiagConnection& connection, ResponseSendResult const result)
+    IncomingDiagConnection& connection, ResponseSendResult const /* result */)
 {
     connection.terminate();
     if (fRequestProgrammingSession)
@@ -166,7 +166,7 @@ DiagReturnCode::Type DiagnosticSessionControl::acceptedJob(
 }
 
 DiagReturnCode::Type DiagnosticSessionControl::acceptedJob_ext(
-    IncomingDiagConnection const& connection,
+    IncomingDiagConnection const& /* connection */,
     AbstractDiagJob const& job,
     uint8_t const* const /* request */,
     uint16_t const /* requestLength */)

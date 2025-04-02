@@ -59,7 +59,7 @@ public:
     }
 
     /* 10 is some arbitrary number, just override */
-    virtual bool requestPowerdown(bool rapid, uint8_t& time) { return true; }
+    virtual bool requestPowerdown(bool /* rapid */, uint8_t& /* time */) { return true; }
 
     virtual bool isModeChangePossible() const { return fModeChangePossible; }
 

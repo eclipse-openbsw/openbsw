@@ -61,7 +61,7 @@ void printCpu(
 
 void printStack(
     ::util::command::CommandContext& context,
-    ::async::AsyncBinding::RuntimeMonitorType& runtimeMonitor)
+    ::async::AsyncBinding::RuntimeMonitorType& /* runtimeMonitor */)
 {
     ::util::format::SharedStringWriter writer(context);
 

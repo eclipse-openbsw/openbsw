@@ -27,7 +27,9 @@ SoftReset::SoftReset(IUdsLifecycleConnector& udsLifecycleConnector, DiagDispatch
 {}
 
 DiagReturnCode::Type SoftReset::process(
-    IncomingDiagConnection& connection, uint8_t const* const request, uint16_t const requestLength)
+    IncomingDiagConnection& connection,
+    uint8_t const* const /* request */,
+    uint16_t const /* requestLength */)
 {
     if (fUdsLifecycleConnector.isModeChangePossible())
     {
@@ -41,7 +43,8 @@ DiagReturnCode::Type SoftReset::process(
     }
 }
 
-void SoftReset::responseSent(IncomingDiagConnection& connection, ResponseSendResult const result)
+void SoftReset::responseSent(
+    IncomingDiagConnection& connection, ResponseSendResult const /* result */)
 {
     connection.terminate();
     if (!fUdsLifecycleConnector.requestShutdown(IUdsLifecycleConnector::SOFT_RESET, RESET_TIME))

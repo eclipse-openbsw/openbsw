@@ -118,8 +118,8 @@ TEST(VariantQueue, read_write_with_payload)
     ASSERT_TRUE(abc_queue::write(
         writer, C{}, 15, [](::estd::slice<uint8_t> buffer) { ::estd::memory::set(buffer, 0xAB); }));
 
-    ASSERT_FALSE(
-        abc_queue::write(writer, C{}, 10, [](::estd::slice<uint8_t> buffer) {})); // out of space
+    ASSERT_FALSE(abc_queue::write(
+        writer, C{}, 10, [](::estd::slice<uint8_t> /* buffer */) {})); // out of space
 
     ASSERT_NE(0U, reader.peek().size());
     abc_queue::read_with_payload(visitor, reader.peek());

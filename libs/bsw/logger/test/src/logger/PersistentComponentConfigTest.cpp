@@ -34,10 +34,10 @@ struct PersistentComponentConfigTest
 , public ILoggerOutput
 {
     void logOutput(
-        ComponentInfo const& componentInfo,
-        LevelInfo const& levelInfo,
-        char const* str,
-        va_list ap) override
+        ComponentInfo const& /* componentInfo */,
+        LevelInfo const& /* levelInfo */,
+        char const* /* str */,
+        va_list /* ap */) override
     {}
 
     ::logger::PersistenceManagerMock _persistenceManagerMock;

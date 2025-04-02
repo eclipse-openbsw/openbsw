@@ -23,7 +23,7 @@ public:
         uint8_t const implementedRequest[],
         uint8_t const requestLength,
         uint8_t const prefixLength,
-        DiagSessionMask const sessionMask = DiagSession::ALL_SESSIONS())
+        DiagSessionMask const /* sessionMask */ = DiagSession::ALL_SESSIONS())
     : DiagJobWithAuthenticationAndSessionControl(
         authenticator, sessionManager, implementedRequest, requestLength, prefixLength)
     {}
@@ -36,7 +36,7 @@ public:
         uint8_t const prefixLength,
         uint8_t const requestPayloadLength,
         uint8_t const responseLength,
-        DiagSessionMask const sessionMask = DiagSession::ALL_SESSIONS())
+        DiagSessionMask const /* sessionMask */ = DiagSession::ALL_SESSIONS())
     : DiagJobWithAuthenticationAndSessionControl(
         authenticator,
         sessionManager,

@@ -23,13 +23,15 @@ PowerDown::PowerDown(IUdsLifecycleConnector& udsLifecycleConnector)
 {}
 
 DiagReturnCode::Type PowerDown::process(
-    IncomingDiagConnection& connection, uint8_t const* const request, uint16_t const requestLength)
+    IncomingDiagConnection& connection,
+    uint8_t const* const /* request */,
+    uint16_t const /* requestLength */)
 {
     (void)connection.sendPositiveResponse(*this);
     return DiagReturnCode::OK;
 }
 
-void PowerDown::responseSent(IncomingDiagConnection& connection, ResponseSendResult result)
+void PowerDown::responseSent(IncomingDiagConnection& connection, ResponseSendResult /* result */)
 {
     connection.terminate();
     uint8_t dummy;

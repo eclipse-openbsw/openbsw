@@ -7,7 +7,7 @@
 namespace uds
 {
 DiagReturnCode::Type
-DataIdentifierJob::verify(uint8_t const* const request, uint16_t const requestLength)
+DataIdentifierJob::verify(uint8_t const* const request, uint16_t const /* requestLength */)
 {
     if (!compare(request, getImplementedRequest() + 1U, 2U))
     {

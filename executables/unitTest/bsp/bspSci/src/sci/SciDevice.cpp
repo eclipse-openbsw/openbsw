@@ -10,6 +10,6 @@ uint8_t sciGeth() { return 0; }
 
 uint8_t sciGetTxNotReady() { return 0; }
 
-void sciPuth(int c) {}
+void sciPuth(int /* c */) {}
 
 uint8_t sciGetInitState() { return 0; }

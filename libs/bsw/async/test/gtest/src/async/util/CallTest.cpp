@@ -25,7 +25,8 @@ TEST_F(AsyncCallTest, testFunction)
     EXPECT_CALL(*this, functionCall());
     EXPECT_CALL(_asyncMock, execute(0, _))
         .Times(1)
-        .WillOnce([](ContextType const context, RunnableType& runnable) { runnable.execute(); });
+        .WillOnce([](ContextType const /* context */, RunnableType& runnable)
+                  { runnable.execute(); });
     execute(0, cut);
 }
 
@@ -39,7 +40,8 @@ TEST_F(AsyncCallTest, testClosure)
     EXPECT_CALL(*this, closureCall(1234U, 3247834U));
     EXPECT_CALL(_asyncMock, execute(0, _))
         .Times(1)
-        .WillOnce([](ContextType const context, RunnableType& runnable) { runnable.execute(); });
+        .WillOnce([](ContextType const /* context */, RunnableType& runnable)
+                  { runnable.execute(); });
     execute(0, cut);
 }
 } // namespace

@@ -36,7 +36,8 @@ void Service::init(uint8_t const service)
     setDefaultDiagReturnCode(DiagReturnCode::ISO_SUBFUNCTION_NOT_SUPPORTED);
 }
 
-DiagReturnCode::Type Service::verify(uint8_t const* const request, uint16_t const requestLength)
+DiagReturnCode::Type
+Service::verify(uint8_t const* const request, uint16_t const /* requestLength */)
 {
     if (request[0] != fpImplementedRequest[0])
     {

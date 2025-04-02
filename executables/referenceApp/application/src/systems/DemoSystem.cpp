@@ -38,7 +38,7 @@ using ::util::logger::Logger;
 
 DemoSystem::DemoSystem(
     ::async::ContextType const context,
-    ::lifecycle::ILifecycleManager& lifecycleManager
+    ::lifecycle::ILifecycleManager& /* lifecycleManager */
 #ifdef PLATFORM_SUPPORT_CAN
     ,
     ::can::ICanSystem& canSystem

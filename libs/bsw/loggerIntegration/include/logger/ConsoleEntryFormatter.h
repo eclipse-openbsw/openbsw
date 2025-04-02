@@ -42,7 +42,7 @@ ConsoleEntryFormatter<E, Timestamp>::ConsoleEntryFormatter(
 template<class E, class Timestamp>
 void ConsoleEntryFormatter<E, Timestamp>::formatEntry(
     ::util::stream::IOutputStream& outputStream,
-    E const entryIndex,
+    E const /* entryIndex */,
     Timestamp const timestamp,
     ::util::logger::ComponentInfo const& componentInfo,
     ::util::logger::LevelInfo const& levelInfo,

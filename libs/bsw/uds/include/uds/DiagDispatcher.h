@@ -145,7 +145,8 @@ private:
          */
 
         void transportMessageProcessed(
-            transport::TransportMessage& transportMessage, ProcessingResult const result) override
+            transport::TransportMessage& /* transportMessage */,
+            ProcessingResult const /* result */) override
         {}
     };
 

@@ -47,7 +47,7 @@ void PwmSupport::shutdown()
     (void)OutputPwm::clrDynamicClient(OutputPwm::EVAL_LED_BLUE_PWM);
 }
 
-bsp::BspReturnCode PwmSupport::setDuty(uint16_t chan, uint16_t duty, bool immediateUpdate)
+bsp::BspReturnCode PwmSupport::setDuty(uint16_t chan, uint16_t duty, bool /* immediateUpdate */)
 {
     switch (chan)
     {

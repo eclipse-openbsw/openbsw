@@ -40,7 +40,7 @@ DefaultEntryFormatter<E, Timestamp>::DefaultEntryFormatter(ILoggerTime<Timestamp
 template<class E, class Timestamp>
 void DefaultEntryFormatter<E, Timestamp>::formatEntry(
     ::util::stream::IOutputStream& outputStream,
-    E const entryIndex,
+    E const /* entryIndex */,
     Timestamp const timestamp,
     ::util::logger::ComponentInfo const& componentInfo,
     ::util::logger::LevelInfo const& levelInfo,

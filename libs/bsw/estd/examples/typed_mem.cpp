@@ -16,7 +16,8 @@ class ILifecycleSystem
 class LifecycleManager
 {
 public:
-    void addComponent(char const* name, ILifecycleSystem& system, size_t runlevel){};
+    void addComponent(char const* /* name */, ILifecycleSystem& /* system */, size_t /* runlevel */)
+    {}
 } lifecycleManager;
 
 // Some classes just for demonstration purposes.
@@ -27,7 +28,7 @@ class StaticBsp
 class CanSystem : public ILifecycleSystem
 {
 public:
-    CanSystem(uint8_t taskContext, StaticBsp& staticBsp) {}
+    CanSystem(uint8_t /* taskContext */, StaticBsp& /* staticBsp */) {}
 };
 
 constexpr uint8_t TASK_CAN{1};

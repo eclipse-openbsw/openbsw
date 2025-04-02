@@ -29,7 +29,7 @@ DEFINE_COMMAND_GROUP_GET_INFO_END
 CanCommand::CanCommand(::can::ICanSystem& system) : _canSystem(system) {}
 
 void CanCommand::send(
-    ::util::command::CommandContext& context, ::util::format::SharedStringWriter& writer)
+    ::util::command::CommandContext& context, ::util::format::SharedStringWriter& /* writer */)
 {
     if (context.hasToken())
     {

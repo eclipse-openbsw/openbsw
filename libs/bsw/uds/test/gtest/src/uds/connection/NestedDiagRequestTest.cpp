@@ -63,7 +63,7 @@ public:
     ::estd::slice<uint8_t const> getStoredRequest() const { return fStoredRequest; }
 
     ::estd::slice<uint8_t const>
-    prepareRequestWithNegativeResponse(::estd::slice<uint8_t const> const& stored)
+    prepareRequestWithNegativeResponse(::estd::slice<uint8_t const> const& /* stored */)
     {
         setResponseCode(DiagReturnCode::ISO_CONDITIONS_NOT_CORRECT);
         return ::estd::slice<uint8_t const>();

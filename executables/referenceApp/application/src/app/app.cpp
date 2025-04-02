@@ -97,7 +97,7 @@ public:
 private:
     void lifecycleLevelReached(
         uint8_t const level,
-        ::lifecycle::ILifecycleComponent::Transition::Type const transition) override
+        ::lifecycle::ILifecycleComponent::Transition::Type const /* transition */) override
     {
         if (0 == level)
         {

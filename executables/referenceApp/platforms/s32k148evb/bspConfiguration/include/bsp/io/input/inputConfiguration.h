@@ -12,7 +12,8 @@ DigitalInput::InputConfiguration const
         },
 };
 
-DigitalInput::InputConfiguration const* DigitalInput::getConfiguration(uint8_t hardwareVersion)
+DigitalInput::InputConfiguration const*
+DigitalInput::getConfiguration(uint8_t /* hardwareVersion */)
 {
     return &sfDigitalInputConfigurations[0][0];
 }

@@ -24,7 +24,9 @@ ControlDTCSetting::ControlDTCSetting()
 }
 
 DiagReturnCode::Type ControlDTCSetting::process(
-    IncomingDiagConnection& connection, uint8_t const* const request, uint16_t const requestLength)
+    IncomingDiagConnection& connection,
+    uint8_t const* const request,
+    uint16_t const /* requestLength */)
 {
     uint8_t const dtcSettingType = request[0];
     Logger::debug(UDS, "ControlDTCSetting %d", dtcSettingType);

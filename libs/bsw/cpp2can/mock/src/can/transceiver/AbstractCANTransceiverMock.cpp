@@ -42,7 +42,7 @@ void AbstractCANTransceiverMock::inject(CANFrame const& frame)
 }
 
 void AbstractCANTransceiverMock::setTransceiverState2(
-    can::ICANTransceiverStateListener::CANTransceiverState state)
+    can::ICANTransceiverStateListener::CANTransceiverState /* state */)
 {
     notifyStateListenerWithPhyError();
 }

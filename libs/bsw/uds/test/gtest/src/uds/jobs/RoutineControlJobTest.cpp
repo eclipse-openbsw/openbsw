@@ -45,9 +45,9 @@ public:
     {}
 
     DiagReturnCode::Type start(
-        IncomingDiagConnection& connection,
-        uint8_t const request[],
-        uint16_t requestLength) override
+        IncomingDiagConnection& /* connection */,
+        uint8_t const /* request */[],
+        uint16_t /* requestLength */) override
     {
         return DiagReturnCode::OK;
     }
