@@ -32,6 +32,9 @@ static const Mpu::tDescriptor memoryProtectionConfigurationRam[] = {
     /*2*/ {protectedRamStartAddrMinus1 + 1U, protectedRamEndAddr,         {regionLockedReadAccess}, {regionValid}},
     /*3*/ {protectedRamEndAddr + 1U,         0xFFFFFFFFU,                 {regionFullAccess},       {regionValid}},
 };
+
+static const uint8_t numOfMemoryProtectionConfigurationRamRegions =
+    static_cast<uint8_t>(sizeof(memoryProtectionConfigurationRam) / sizeof(memoryProtectionConfigurationRam[0]));
 #endif
 
 // clang-format on
@@ -47,9 +50,7 @@ void MemoryProtection::init()
             Mpu::nPI, Mpu::SM_UserMode, Mpu::UM_nXnWnR>::word>();
     // clang-format on
 #ifdef PLATFORM_SUPPORT_MPU
-    for (size_t i = 0U;
-         i < ((sizeof(memoryProtectionConfigurationRam)) / (sizeof(Mpu::tDescriptor)));
-         ++i)
+    for (size_t i = 0U; i < numOfMemoryProtectionConfigurationRamRegions; ++i)
     {
         Mpu::setDescriptor(i + 1U, (Mpu::tDescriptor const&)memoryProtectionConfigurationRam[i]);
     }
@@ -131,6 +132,11 @@ bool MemoryProtection::checkLockProtection(uint8_t const region)
 
 bool MemoryProtection::checkAdresses(uint8_t const region)
 {
+    if (numOfMemoryProtectionConfigurationRamRegions <= region)
+    {
+        return false;
+    }
+
     uint32_t const start_address
         = Mpu::getWordInDescriptor<RegionDescriptor_StartAddress>(region + 1);
     uint32_t const end_address = Mpu::getWordInDescriptor<RegionDescriptor_EndAddress>(region + 1);
@@ -165,9 +171,7 @@ bool MemoryProtection::areRegionsConfiguredCorrectly(uint8_t& failed_region)
 {
     uint8_t const MAX_MPU_REGIONS = 8U;
 
-    uint8_t const numRegions = static_cast<uint8_t>(
-        sizeof(memoryProtectionConfigurationRam) / sizeof(memoryProtectionConfigurationRam[0]));
-    for (uint8_t i = 0U; i < numRegions; i++)
+    for (uint8_t i = 0U; i < numOfMemoryProtectionConfigurationRamRegions; i++)
     {
         if (!MemoryProtection::checkAdresses(i))
         {
@@ -184,7 +188,7 @@ bool MemoryProtection::areRegionsConfiguredCorrectly(uint8_t& failed_region)
             return false;
         }
     }
-    for (uint8_t i = numRegions + 1; i < MAX_MPU_REGIONS; i++)
+    for (uint8_t i = numOfMemoryProtectionConfigurationRamRegions + 1; i < MAX_MPU_REGIONS; i++)
     {
         uint32_t const validity
             = (Mpu::getWordInDescriptor<RegionDescriptor_Validity>(i) & regionValid);
