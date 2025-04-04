@@ -279,9 +279,9 @@ private:
                 vuint32_t IDE       : 1;
                 // Substitute Remote Request
                 vuint32_t SRR       : 1;
-                vuint32_t           : 1;
+                vuint32_t unnamed0  : 1;
                 vuint32_t CODE      : 4;
-                vuint32_t           : 1;
+                vuint32_t unnamed1  : 1;
                 // Error State Indicator. Indicates if tx node is in error.
                 vuint32_t ESI       : 1;
                 // Bit Rate Switch. Defines bit rate switch for CAN FD.

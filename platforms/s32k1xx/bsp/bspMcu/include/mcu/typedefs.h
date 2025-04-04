@@ -2,7 +2,7 @@
 
 #ifndef GUARD_ADEC07B8_F893_4213_8D4F_7806E3F530E2
 #define GUARD_ADEC07B8_F893_4213_8D4F_7806E3F530E2
-#include <platform/estdint.h>
+#include <stdint.h>
 
 typedef uint8_t volatile vuint8_t;
 
