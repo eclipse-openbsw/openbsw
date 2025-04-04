@@ -1,4 +1,6 @@
 from datetime import datetime
+import yaml
+from docutils import nodes
 
 # General configuration
 project = "Eclipse OpenBSW Documentation"
@@ -32,3 +34,28 @@ include_patterns = [
     "doc/**",
 ]
 exclude_patterns = []
+
+def replace_placeholders(app, doctree, docname):
+    with open("properties.yaml", "r") as f:
+        props = yaml.safe_load(f)
+
+    gcc_arm = props["tool"].get("gcc-arm-none-eabi", "x.x")
+    ubuntu_version = props["tool"].get("ubuntu_version", "x.x")
+
+    for node in doctree.traverse(nodes.Text):
+        text = node.astext()
+        new_text = text
+
+        if "gcc-arm-none-eabi" in text and "x.x" in text:
+            new_text = new_text.replace("x.x", gcc_arm)
+
+        elif "Ubuntu-x.x" in text:
+            new_text = new_text.replace("x.x", ubuntu_version)
+
+        if new_text != text:
+            node.parent.replace(node, nodes.Text(new_text))
+
+
+def setup(app):
+    # Doctree-resolved is a single event that is emitted when the document tree has been fully resolved
+    app.connect("doctree-resolved", replace_placeholders)
