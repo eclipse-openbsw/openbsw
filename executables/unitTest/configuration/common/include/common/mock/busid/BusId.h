@@ -4,8 +4,7 @@
  * \file
  */
 
-#ifndef GUARD_2FA472C5_CA7B_4A63_A654_41434737AC5E
-#define GUARD_2FA472C5_CA7B_4A63_A654_41434737AC5E
+#pragma once
 
 #include "common/busid/BusId.h"
 
@@ -23,5 +22,3 @@ static constexpr uint8_t LAST_BUS = BUS2;
 } // namespace busid
 } // namespace mock
 } // namespace common
-
-#endif /* GUARD_2FA472C5_CA7B_4A63_A654_41434737AC5E */

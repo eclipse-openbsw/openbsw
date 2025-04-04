@@ -4,8 +4,7 @@
  * \file
  * \ingroup lifecycle
  */
-#ifndef GUARD_47F63FF4_0080_470A_A831_C136DBC2CFBE
-#define GUARD_47F63FF4_0080_470A_A831_C136DBC2CFBE
+#pragma once
 
 #include "lifecycle/ILifecycleComponent.h"
 
@@ -23,5 +22,3 @@ public:
 };
 
 } // namespace lifecycle
-
-#endif // LIFECYCLE_ILIFECYCLECOMPONENT_H_

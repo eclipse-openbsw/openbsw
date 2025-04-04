@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_0559CCBA_AF28_45E6_BBD9_59A5553C8649
-#define GUARD_0559CCBA_AF28_45E6_BBD9_59A5553C8649
+#pragma once
 
 // All outputs OutputPwm::
 enum outputPwm
@@ -22,5 +21,3 @@ enum outputPwm
     PORT_UNAVAILABLE = _pwmChannelMax
 
 }; //*enum
-
-#endif /* GUARD_0559CCBA_AF28_45E6_BBD9_59A5553C8649 */

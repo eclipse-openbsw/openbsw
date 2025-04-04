@@ -3,8 +3,7 @@
 /**
  * \ingroup async
  */
-#ifndef GUARD_DB9C7111_F66E_4D50_B724_5DF992A19ED0
-#define GUARD_DB9C7111_F66E_4D50_B724_5DF992A19ED0
+#pragma once
 
 #include "async/TaskContext.h"
 #include "async/TaskInitializer.h"
@@ -491,5 +490,3 @@ TaskConfigHolder<N, void>::getTaskConfig(size_t const /*taskIdx*/)
 } // namespace internal
 
 } // namespace async
-
-#endif // GUARD_DB9C7111_F66E_4D50_B724_5DF992A19ED0

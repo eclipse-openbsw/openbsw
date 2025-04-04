@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_A3FD4445_E3A6_4ED4_B5CF_5EC791893AEE
-#define GUARD_A3FD4445_E3A6_4ED4_B5CF_5EC791893AEE
+#pragma once
 
 #include "bsp/Bsp.h"
 #include "bsp/adc/AnalogInput.h"
@@ -139,5 +138,3 @@ private:
 
     tMode _mode;
 };
-
-#endif

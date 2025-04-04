@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_93DA54A2_4708_4F9A_921C_E547CD648629
-#define GUARD_93DA54A2_4708_4F9A_921C_E547CD648629
+#pragma once
 
 #include <platform/estdint.h>
 
@@ -74,5 +73,3 @@ uint32_t getSystemTime32BitUserTicks(void);
 #ifdef __cplusplus
 } /* extern "C" */
 #endif
-
-#endif /* GUARD_93DA54A2_4708_4F9A_921C_E547CD648629 */

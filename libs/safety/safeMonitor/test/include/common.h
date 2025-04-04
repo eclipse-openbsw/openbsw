@@ -1,7 +1,6 @@
 // Copyright 2025 Accenture.
 
-#ifndef GUARD_2AD5A34E_B215_419B_AA69_63C4981E1DFE
-#define GUARD_2AD5A34E_B215_419B_AA69_63C4981E1DFE
+#pragma once
 
 #include <gmock/gmock.h>
 
@@ -34,5 +33,3 @@ struct MyContext
 {
     unsigned int value = 0xDEADBEEF;
 };
-
-#endif // GUARD_2AD5A34E_B215_419B_AA69_63C4981E1DFE

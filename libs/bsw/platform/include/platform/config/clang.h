@@ -1,12 +1,9 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_7C7A5F6D_94D6_451E_B58B_52C4BF30937A
-#define GUARD_7C7A5F6D_94D6_451E_B58B_52C4BF30937A
+#pragma once
 
 /*
  * Compiler details for the CLANG compiler
  */
 
 #define HAS_STDINT_H_
-
-#endif // GUARD_7C7A5F6D_94D6_451E_B58B_52C4BF30937A

@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_6D4238CB_4CF6_465A_A475_E90F10079457
-#define GUARD_6D4238CB_4CF6_465A_A475_E90F10079457
+#pragma once
 
 #include <platform/estdint.h>
 
@@ -22,5 +21,3 @@ private:
     static uint8_t const crc8Table[256];
     static uint8_t const crc8TableATM[256];
 };
-
-#endif /*GUARD_6D4238CB_4CF6_465A_A475_E90F10079457*/

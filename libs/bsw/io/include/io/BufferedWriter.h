@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_A21FA46D_3086_478E_8687_D5DF5CFDBB1A
-#define GUARD_A21FA46D_3086_478E_8687_D5DF5CFDBB1A
+#pragma once
 
 #include "io/IWriter.h"
 
@@ -74,5 +73,3 @@ inline BufferedWriter::BufferedWriter(IWriter& destination)
 inline size_t BufferedWriter::maxSize() const { return _destination.maxSize(); }
 
 } // namespace io
-
-#endif // GUARD_A21FA46D_3086_478E_8687_D5DF5CFDBB1A

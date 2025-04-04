@@ -3,8 +3,7 @@
 /**
  * \ingroup runtime
  */
-#ifndef GUARD_B6F7B6D6_7697_4F16_AFD0_884923D384C1
-#define GUARD_B6F7B6D6_7697_4F16_AFD0_884923D384C1
+#pragma once
 
 #include <cstdint>
 
@@ -72,5 +71,3 @@ private:
 };
 
 } // namespace runtime
-
-#endif // GUARD_B6F7B6D6_7697_4F16_AFD0_884923D384C1

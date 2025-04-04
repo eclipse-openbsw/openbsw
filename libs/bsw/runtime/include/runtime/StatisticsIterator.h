@@ -3,8 +3,7 @@
 /**
  * \ingroup runtime
  */
-#ifndef GUARD_96819215_8F7A_41D6_8DCF_26C038283E2E
-#define GUARD_96819215_8F7A_41D6_8DCF_26C038283E2E
+#pragma once
 
 #include <estd/functional.h>
 #include <estd/slice.h>
@@ -73,5 +72,3 @@ private:
 };
 
 } // namespace runtime
-
-#endif // GUARD_96819215_8F7A_41D6_8DCF_26C038283E2E

@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_A301C522_D8D8_4BFE_AACF_147EF69B5BD8
-#define GUARD_A301C522_D8D8_4BFE_AACF_147EF69B5BD8
+#pragma once
 
 #include <estd/optional.h>
 #include <estd/slice.h>
@@ -73,5 +72,3 @@ public:
     static std::array<::estd::slice<LogicalAddress const>, N> const TESTER_ADDRESS_LISTS;
 };
 } // namespace transport
-
-#endif

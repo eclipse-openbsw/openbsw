@@ -3,8 +3,7 @@
 /**
  * \ingroup async
  */
-#ifndef GUARD_DF25ABC1_A9FB_444C_8A38_0B3B953B0D88
-#define GUARD_DF25ABC1_A9FB_444C_8A38_0B3B953B0D88
+#pragma once
 
 #include "async/Config.h"
 #include "async/Hook.h"
@@ -110,5 +109,3 @@ struct Config
 } // namespace async
 
 #endif // __cplusplus
-
-#endif // GUARD_DF25ABC1_A9FB_444C_8A38_0B3B953B0D88

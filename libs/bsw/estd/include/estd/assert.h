@@ -5,8 +5,7 @@
  * \file
  * \ingroup estl_utils
  */
-#ifndef GUARD_69DF6325_D4BC_424A_8B5D_257E3E6403DB
-#define GUARD_69DF6325_D4BC_424A_8B5D_257E3E6403DB
+#pragma once
 
 #ifdef ESTD_HAS_EXCEPTIONS
 #include <exception> // IWYU pragma: export
@@ -142,5 +141,3 @@ private:
 } // namespace estd
 
 #endif
-
-#endif // GUARD_69DF6325_D4BC_424A_8B5D_257E3E6403DB

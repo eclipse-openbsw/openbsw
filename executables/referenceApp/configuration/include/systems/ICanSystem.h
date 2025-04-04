@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_4BEC0C6E_710F_4954_B960_19239186B7F5
-#define GUARD_4BEC0C6E_710F_4954_B960_19239186B7F5
+#pragma once
 
 #include <busid/BusId.h>
 
@@ -25,5 +24,3 @@ public:
     virtual ICanTransceiver* getCanTransceiver(uint8_t busId) = 0;
 };
 } // namespace can
-
-#endif // GUARD_4BEC0C6E_710F_4954_B960_19239186B7F5

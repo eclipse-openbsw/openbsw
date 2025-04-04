@@ -1,7 +1,6 @@
 // Copyright 2025 Accenture.
 
-#ifndef GUARD_CE8517F9_5988_4DF2_AB05_C910BC9212AC
-#define GUARD_CE8517F9_5988_4DF2_AB05_C910BC9212AC
+#pragma once
 
 #include "common.h"
 
@@ -87,5 +86,3 @@ template<
 Context const Value<Handler, Event, ValueType, ScopedMutex, Context>::DEFAULT_CONTEXT{};
 
 } // namespace safeMonitor
-
-#endif // GUARD_CE8517F9_5988_4DF2_AB05_C910BC9212AC

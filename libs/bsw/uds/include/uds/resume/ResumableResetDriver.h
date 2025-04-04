@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_72CA254C_1E20_49C9_B67C_E3471AF53B7E
-#define GUARD_72CA254C_1E20_49C9_B67C_E3471AF53B7E
+#pragma once
 
 #include "estd/uncopyable.h"
 #include "platform/estdint.h"
@@ -160,5 +159,3 @@ ResumableResetDriver<N>::ResumableResetDriver(
 } // namespace declare
 
 } // namespace uds
-
-#endif // GUARD_72CA254C_1E20_49C9_B67C_E3471AF53B7E

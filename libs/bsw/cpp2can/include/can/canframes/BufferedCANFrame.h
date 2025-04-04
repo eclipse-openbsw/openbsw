@@ -5,8 +5,7 @@
  * \file BufferedCANFrame.h
  * \ingroup cpp2can
  */
-#ifndef GUARD_1877A9AB_6CB8_47BA_B960_20E9E665F098
-#define GUARD_1877A9AB_6CB8_47BA_B960_20E9E665F098
+#pragma once
 
 #include "can/canframes/CANFrame.h"
 
@@ -17,5 +16,3 @@ namespace can
 using BufferedCANFrame = CANFrame;
 
 } // namespace can
-
-#endif /*GUARD_1877A9AB_6CB8_47BA_B960_20E9E665F098*/

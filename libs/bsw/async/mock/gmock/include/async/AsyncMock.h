@@ -3,8 +3,7 @@
 /**
  * \ingroup async
  */
-#ifndef GUARD_775E51F3_FB99_4636_9C9E_CA09F2349B71
-#define GUARD_775E51F3_FB99_4636_9C9E_CA09F2349B71
+#pragma once
 
 #include "async/Async.h"
 
@@ -39,5 +38,3 @@ public:
 };
 
 } // namespace async
-
-#endif // GUARD_775E51F3_FB99_4636_9C9E_CA09F2349B71

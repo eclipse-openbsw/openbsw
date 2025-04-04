@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_226CD74E_9691_480F_80CB_967EF19AAC26
-#define GUARD_226CD74E_9691_480F_80CB_967EF19AAC26
+#pragma once
 
 #include "docan/datalink/DoCanCanDataLinkLayer.h"
 
@@ -57,5 +56,3 @@ inline void DoCanNormalAddressing<MessageSize, FrameSize, FrameIndex>::encodeTra
     canId = transmissionAddress;
 }
 } // namespace docan
-
-#endif // GUARD_226CD74E_9691_480F_80CB_967EF19AAC26

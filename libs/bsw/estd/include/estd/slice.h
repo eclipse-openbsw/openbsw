@@ -5,8 +5,7 @@
  * \file
  * \ingroup estl_time
  */
-#ifndef GUARD_2626BDF2_63F2_448A_B810_5929FA66F5FF
-#define GUARD_2626BDF2_63F2_448A_B810_5929FA66F5FF
+#pragma once
 
 #include "estd/assert.h"
 #include "estd/type_traits.h"
@@ -670,4 +669,3 @@ static_assert(std::is_trivially_destructible<slice<uint8_t const >>::value, "sli
 } // namespace estd
 
 #define BytesAreSlice(S) ElementsAreArray(S.data(), S.size())
-#endif // GUARD_2626BDF2_63F2_448A_B810_5929FA66F5FF

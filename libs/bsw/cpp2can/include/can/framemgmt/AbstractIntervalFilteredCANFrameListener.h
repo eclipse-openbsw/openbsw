@@ -5,8 +5,7 @@
  * \file AbstractIntervalFilteredCANFrameListener.h
  * \ingroup framemgmt
  */
-#ifndef GUARD_FD605A21_F6CE_4C2D_A034_6513592D546E
-#define GUARD_FD605A21_F6CE_4C2D_A034_6513592D546E
+#pragma once
 
 #include "can/filter/IntervalFilter.h"
 #include "can/framemgmt/ICANFrameListener.h"
@@ -44,5 +43,3 @@ inline AbstractIntervalFilteredCANFrameListener::AbstractIntervalFilteredCANFram
 inline IFilter& AbstractIntervalFilteredCANFrameListener::getFilter() { return fFilter; }
 
 } // namespace can
-
-#endif /*GUARD_FD605A21_F6CE_4C2D_A034_6513592D546E*/

@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_1F715CEB_1FF0_4479_896A_DACB439D6A07
-#define GUARD_1F715CEB_1FF0_4479_896A_DACB439D6A07
+#pragma once
 
 #include "uds/base/AbstractDiagJob.h"
 #include "uds/connection/IncomingDiagConnection.h"
@@ -51,5 +50,3 @@ public:
         ESTD_STATIC_CONCAT2(req, __LINE__), sizeof(ESTD_STATIC_CONCAT2(req, __LINE__)), PRE);
 
 } // namespace uds
-
-#endif // GUARD_1F715CEB_1FF0_4479_896A_DACB439D6A07

@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_DA333343_F48F_41FF_B051_1449F1C46AF6
-#define GUARD_DA333343_F48F_41FF_B051_1449F1C46AF6
+#pragma once
 
 #include "platform/estdint.h"
 
@@ -28,4 +27,3 @@ uint32_t scaleFunction(uint16_t y)
 }
 
 } // namespace bios
-#endif /* GUARD_DA333343_F48F_41FF_B051_1449F1C46AF6 */

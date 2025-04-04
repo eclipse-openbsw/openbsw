@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_AEC896FD_196B_46AC_AD39_F500DE984414
-#define GUARD_AEC896FD_196B_46AC_AD39_F500DE984414
+#pragma once
 
 #include "platform/estdint.h"
 
@@ -297,5 +296,3 @@ bool dynamicClient<T, IDynamicClient, Size, dynamicChannelsCount, dynamicClientC
         return false;
     }
 }
-
-#endif /* GUARD_AEC896FD_196B_46AC_AD39_F500DE984414 */

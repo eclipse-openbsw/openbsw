@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_9D2855EF_EBE0_42B5_B22C_5B850FF79081
-#define GUARD_9D2855EF_EBE0_42B5_B22C_5B850FF79081
+#pragma once
 
 #include "bsp/Bsp.h"
 
@@ -57,5 +56,3 @@ protected:
 };
 
 } /* namespace eeprom */
-
-#endif /* GUARD_9D2855EF_EBE0_42B5_B22C_5B850FF79081 */

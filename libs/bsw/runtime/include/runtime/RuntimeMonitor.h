@@ -3,8 +3,7 @@
 /**
  * \ingroup runtime
  */
-#ifndef GUARD_E2276411_ECBE_4D0E_B7C5_7D18D69C612A
-#define GUARD_E2276411_ECBE_4D0E_B7C5_7D18D69C612A
+#pragma once
 
 #include "async/Types.h"
 #include "bsp/timer/SystemTimer.h"
@@ -183,5 +182,3 @@ private:
 
 } // namespace declare
 } // namespace runtime
-
-#endif // GUARD_E2276411_ECBE_4D0E_B7C5_7D18D69C612A

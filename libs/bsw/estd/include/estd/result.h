@@ -5,8 +5,7 @@
  * \file
  * \ingroup estl_time
  */
-#ifndef GUARD_99BD6D1D_61A0_4633_8630_18FC3265B299
-#define GUARD_99BD6D1D_61A0_4633_8630_18FC3265B299
+#pragma once
 
 #include "estd/limited.h"
 #include "estd/optional.h"
@@ -128,5 +127,3 @@ public:
     E error() const { return _value.get(); }
 };
 } // namespace estd
-
-#endif // GUARD_99BD6D1D_61A0_4633_8630_18FC3265B299

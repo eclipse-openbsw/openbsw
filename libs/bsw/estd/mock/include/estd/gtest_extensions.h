@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_F37534D3_6C73_4A3E_8C20_A253037072D4
-#define GUARD_F37534D3_6C73_4A3E_8C20_A253037072D4
+#pragma once
 
 #include <gmock/gmock.h>
 
@@ -59,5 +58,3 @@ MATCHER_P(
 
 } // namespace test
 } // namespace estd
-
-#endif // GUARD_F37534D3_6C73_4A3E_8C20_A253037072D4

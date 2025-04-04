@@ -5,8 +5,7 @@
  * \file
  * \ingroup estl_time
  */
-#ifndef GUARD_E4205D5C_F9F3_4A98_A1BA_CF1C84675E1F
-#define GUARD_E4205D5C_F9F3_4A98_A1BA_CF1C84675E1F
+#pragma once
 
 #include "estd/limits.h"
 #include "estd/ratio.h"
@@ -1135,5 +1134,3 @@ ToDur _duration_cast_impl<ToDur, CF, CR, false, true>::_cast(duration<Rep, Perio
 extern "C" uint64_t getSystemTimeNs();
 
 #endif // ifndef ESTD_NO_CHRONO
-
-#endif // GUARD_E4205D5C_F9F3_4A98_A1BA_CF1C84675E1F

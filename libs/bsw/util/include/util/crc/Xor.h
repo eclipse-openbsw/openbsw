@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_99E0D26B_C149_42A1_8DCF_ED5B85771501
-#define GUARD_99E0D26B_C149_42A1_8DCF_ED5B85771501
+#pragma once
 
 namespace util
 {
@@ -14,5 +13,3 @@ struct Xor
 };
 } // namespace crc
 } // namespace util
-
-#endif /* GUARD_99E0D26B_C149_42A1_8DCF_ED5B85771501 */

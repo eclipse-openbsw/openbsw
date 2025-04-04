@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_951B153D_E044_4CCD_895D_B3F25747E242
-#define GUARD_951B153D_E044_4CCD_895D_B3F25747E242
+#pragma once
 
 #include <platform/estdint.h>
 
@@ -41,5 +40,3 @@ private:
     UserDataType _userData;
 };
 } // namespace docan
-
-#endif

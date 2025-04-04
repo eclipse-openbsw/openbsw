@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_74944026_98DF_43E9_8445_8984DCF45DAA
-#define GUARD_74944026_98DF_43E9_8445_8984DCF45DAA
+#pragma once
 
 #include <estd/slice.h>
 #include <estd/uncopyable.h>
@@ -20,5 +19,3 @@ protected:
 };
 
 } // namespace logger
-
-#endif // GUARD_74944026_98DF_43E9_8445_8984DCF45DAA

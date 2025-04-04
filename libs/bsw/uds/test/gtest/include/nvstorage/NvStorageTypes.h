@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_76CA5B26_B5A0_4D06_8D0B_4C528493A626
-#define GUARD_76CA5B26_B5A0_4D06_8D0B_4C528493A626
+#pragma once
 
 #include <estd/functional.h>
 
@@ -71,4 +70,3 @@ using applJobFinishedCallback = ::estd::function<void(
     NvStorageOperation const, NvStorageReturnCode const, NvBlockIdType const)>;
 using applInitBlockCallback = ::estd::function<void(NvStorageOperation const, NvBlockIdType const)>;
 } /* namespace nvstorage */
-#endif // GUARD_76CA5B26_B5A0_4D06_8D0B_4C528493A626

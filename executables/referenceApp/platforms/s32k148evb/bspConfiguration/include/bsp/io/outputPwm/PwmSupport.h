@@ -1,7 +1,6 @@
 // Copyright 2024 Accenture.
 
-#ifndef GUARD_E5B17ACC_BE07_4A7C_AF48_9A2325628674
-#define GUARD_E5B17ACC_BE07_4A7C_AF48_9A2325628674
+#pragma once
 
 #include "ftmPwm/FtmCentralAlignedCombinePwm.h"
 #include "ftmPwm/FtmECombinePwm.h"
@@ -30,5 +29,3 @@ private:
 };
 
 } // namespace bios
-
-#endif // GUARD_E5B17ACC_BE07_4A7C_AF48_9A2325628674
