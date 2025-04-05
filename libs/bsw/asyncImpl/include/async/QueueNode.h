@@ -6,8 +6,6 @@
 #ifndef GUARD_1ED8DBD4_BEC2_4869_AC44_11E89BB45AD1
 #define GUARD_1ED8DBD4_BEC2_4869_AC44_11E89BB45AD1
 
-#include <estd/functional.h>
-
 namespace async
 {
 template<typename T>

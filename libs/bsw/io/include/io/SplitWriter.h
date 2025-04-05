@@ -3,11 +3,11 @@
 #ifndef GUARD_F7ED78E6_29F6_4D5B_89DE_C8EB8DCC3F1E
 #define GUARD_F7ED78E6_29F6_4D5B_89DE_C8EB8DCC3F1E
 
-#include "estd/assert.h"
-#include "estd/memory.h"
-#include "estd/slice.h"
-#include "estd/vec.h"
 #include "io/IWriter.h"
+
+#include <etl/memory.h>
+#include <etl/span.h>
+#include <util/estd/assert.h>
 
 #include <array>
 #include <limits>
@@ -39,7 +39,7 @@ public:
      * \assert destinations[0]->maxSize() == destinations[1]->maxSize() ... ==
      * destinations[N-1]->maxSize()
      */
-    explicit SplitWriter(::estd::slice<IWriter*, N> destinations);
+    explicit SplitWriter(::etl::span<IWriter*, N> destinations);
 
     /**
      * \see ::io::IWriter::maxSize()
@@ -54,7 +54,7 @@ public:
      *            is available
      *          - Slice of bytes otherwise.
      */
-    ::estd::slice<uint8_t> allocate(size_t size) override;
+    ::etl::span<uint8_t> allocate(size_t size) override;
 
     /**
      * Commits the previously allocated data to all destinations. If a destination is not
@@ -80,13 +80,13 @@ public:
     std::array<size_t, N> sent;
 
 private:
-    ::estd::slice<IWriter*, N> const _destinations;
-    ::estd::slice<uint8_t> _buffer;
+    ::etl::span<IWriter*, N> const _destinations;
+    ::etl::span<uint8_t> _buffer;
     size_t _bufNum;
 };
 
 template<size_t N>
-SplitWriter<N>::SplitWriter(::estd::slice<IWriter*, N> const destinations)
+SplitWriter<N>::SplitWriter(::etl::span<IWriter*, N> const destinations)
 : drops(), sent(), _destinations(destinations), _buffer(), _bufNum(INVALID_BUF)
 {
     static_assert(N != 0, "Split writers cannot have size 0.");
@@ -107,7 +107,7 @@ inline size_t SplitWriter<N>::maxSize() const
 }
 
 template<size_t N>
-::estd::slice<uint8_t> SplitWriter<N>::allocate(size_t const size)
+::etl::span<uint8_t> SplitWriter<N>::allocate(size_t const size)
 {
     if (INVALID_BUF != _bufNum)
     {
@@ -147,7 +147,7 @@ void SplitWriter<N>::commit()
             drops[i] += 1;
             continue;
         }
-        (void)::estd::memory::copy(tmp, _buffer);
+        (void)::etl::mem_copy(_buffer.begin(), _buffer.size(), tmp.begin());
         sent[i] += 1;
         dest->commit();
     }

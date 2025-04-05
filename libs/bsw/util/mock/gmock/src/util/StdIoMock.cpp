@@ -8,8 +8,9 @@ extern "C"
 {
 int32_t getByteFromStdin()
 {
-    int32_t const ret = StdIoMock::instance().in.size() != 0 ? StdIoMock::instance().in[0] : -1;
-    StdIoMock::instance().in.advance(1);
+    auto& in          = StdIoMock::instance().in;
+    int32_t const ret = in.size() != 0 ? in[0] : -1;
+    in.advance(1);
     return ret;
 }
 

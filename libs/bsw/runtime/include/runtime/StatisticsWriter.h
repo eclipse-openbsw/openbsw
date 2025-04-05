@@ -8,7 +8,7 @@
 
 #include "util/format/StringWriter.h"
 
-#include <estd/functional.h>
+#include <etl/delegate.h>
 
 #include <cstdint>
 
@@ -30,7 +30,7 @@ public:
     template<class Statistics>
     struct FormatStatistics
     {
-        using Type = ::estd::function<void(StatisticsWriter&, Statistics const&)>;
+        using Type = ::etl::delegate<void(StatisticsWriter&, Statistics const&)>;
     };
 
     StatisticsWriter(

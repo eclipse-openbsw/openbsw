@@ -3,7 +3,8 @@
 #ifndef GUARD_970268D3_A778_4F47_A514_E815E5E01B99
 #define GUARD_970268D3_A778_4F47_A514_E815E5E01B99
 
-#include <estd/functional.h>
+#include <etl/delegate.h>
+
 #include <platform/estdint.h>
 
 namespace bios
@@ -35,7 +36,7 @@ class IWakeupEventListener;
 class IEcuPowerStateController
 {
 public:
-    using tCheckWakeupDelegate = ::estd::function<bool(uint32_t)>;
+    using tCheckWakeupDelegate = ::etl::delegate<bool(uint32_t)>;
 
     /**
      * Enter into mode "pre sleep".

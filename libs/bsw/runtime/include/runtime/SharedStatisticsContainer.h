@@ -3,12 +3,11 @@
 #ifndef GUARD_2A81615E_F0E2_47BD_AEAF_A8B88DA403D7
 #define GUARD_2A81615E_F0E2_47BD_AEAF_A8B88DA403D7
 
+#include <etl/array.h>
+#include <etl/optional.h>
+#include <etl/string.h>
 #include <runtime/StatisticsContainer.h>
-
-#include <estd/array.h>
-#include <estd/functional.h>
-#include <estd/optional.h>
-#include <estd/string.h>
+#include <util/estd/assert.h>
 
 namespace runtime
 {
@@ -39,7 +38,7 @@ public:
         if (!_names.has_value())
         {
             estd_assert(src.getEntries().size() <= N);
-            _names.emplace().construct();
+            _names.emplace();
             auto& names = *_names;
             for (uint8_t i = 0; i < src.getEntries().size(); ++i)
             {
@@ -70,17 +69,17 @@ private:
 
     char const* getName(size_t const index) const
     {
-        if ((!_names.has_value()) || (_names->size() < index) || (_names.get()[index].empty()))
+        if ((!_names.has_value()) || (_names->size() < index) || (_names.value()[index].empty()))
         {
             return nullptr;
         }
 
-        return _names.get()[index].c_str();
+        return _names.value()[index].c_str();
     }
 
     StatisticsContainer _statisticsContainer;
 
-    ::estd::optional<::estd::array<::estd::declare::string<MAX_NAME_LENGTH>, N>> _names;
+    ::etl::optional<::etl::array<::etl::string<MAX_NAME_LENGTH>, N>> _names;
 };
 
 } // namespace runtime

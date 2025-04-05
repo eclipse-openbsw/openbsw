@@ -8,7 +8,6 @@
 #ifndef GUARD_BFEDE919_D13E_4A5F_866C_E8021D90D2B5
 #define GUARD_BFEDE919_D13E_4A5F_866C_E8021D90D2B5
 
-#include <estd/bitset.h>
 #include <platform/estdint.h>
 
 #include <type_traits>

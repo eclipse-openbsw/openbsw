@@ -5,6 +5,8 @@
 #include "nvstorage/INvStorage.h"
 #include "uds/UdsLogger.h"
 
+#include <etl/span.h>
+
 namespace eeprom
 {
 using ::nvstorage::INvStorage;
@@ -27,7 +29,7 @@ bool EepromHelper::read(
     EepromJobFinishedNotification callback)
 {
     _eepromJobFinishedCallback = callback;
-    auto const readData        = ::estd::slice<uint8_t>::from_pointer(buffer, length);
+    auto const readData        = ::etl::span<uint8_t>(buffer, length);
 
     auto const jobfinished = EepromJobFinishedNotification::
         create<EepromHelper, &EepromHelper::nvStorageFinishedCallback>(*this);
@@ -48,8 +50,7 @@ bool EepromHelper::write(
     EepromJobFinishedNotification callback)
 {
     _eepromJobFinishedCallback = callback;
-    auto const writeData
-        = ::estd::slice<uint8_t>::from_pointer(const_cast<uint8_t*>(buffer), length);
+    auto const writeData       = ::etl::span<uint8_t>(const_cast<uint8_t*>(buffer), length);
 
     auto const jobfinished = EepromJobFinishedNotification::
         create<EepromHelper, &EepromHelper::nvStorageFinishedCallback>(*this);

@@ -52,7 +52,7 @@ When the queue is full and an element cannot be written, ``write()`` will return
    :dedent: 4
 
 To read from a queue and dispatch elements of different types you need to implement a visitor,
-similar to when you use :ref:`estd::variant <estd_variant>`. You can choose to read header structs
+similar to when you use etl::variant. You can choose to read header structs
 only:
 
 

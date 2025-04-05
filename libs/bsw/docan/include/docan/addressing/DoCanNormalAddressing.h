@@ -5,7 +5,7 @@
 
 #include "docan/datalink/DoCanCanDataLinkLayer.h"
 
-#include <estd/slice.h>
+#include <etl/span.h>
 
 namespace docan
 {
@@ -27,7 +27,7 @@ public:
      * \param payload reference to payload
      */
     static DataLinkAddressType
-    decodeReceptionAddress(uint32_t canId, ::estd::slice<uint8_t const> const& payload);
+    decodeReceptionAddress(uint32_t canId, ::etl::span<uint8_t const> const& payload);
 
     /**
      * Encode transmission address into CAN frame identifier and payload.
@@ -36,7 +36,7 @@ public:
      * \param payload reference to payload to encode
      */
     static void encodeTransmissionAddress(
-        uint32_t transmissionAddress, uint32_t& canId, ::estd::slice<uint8_t> const& payload);
+        uint32_t transmissionAddress, uint32_t& canId, ::etl::span<uint8_t> const& payload);
 };
 
 /**
@@ -45,14 +45,14 @@ public:
 template<class MessageSize, class FrameSize, class FrameIndex>
 inline typename DoCanNormalAddressing<MessageSize, FrameSize, FrameIndex>::DataLinkAddressType
 DoCanNormalAddressing<MessageSize, FrameSize, FrameIndex>::decodeReceptionAddress(
-    uint32_t const canId, ::estd::slice<uint8_t const> const& /*payload*/)
+    uint32_t const canId, ::etl::span<uint8_t const> const& /*payload*/)
 {
     return canId;
 }
 
 template<class MessageSize, class FrameSize, class FrameIndex>
 inline void DoCanNormalAddressing<MessageSize, FrameSize, FrameIndex>::encodeTransmissionAddress(
-    uint32_t const transmissionAddress, uint32_t& canId, ::estd::slice<uint8_t> const& /*payload*/)
+    uint32_t const transmissionAddress, uint32_t& canId, ::etl::span<uint8_t> const& /*payload*/)
 {
     canId = transmissionAddress;
 }

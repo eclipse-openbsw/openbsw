@@ -3,7 +3,6 @@
 #ifndef GUARD_D15703B1_80FF_4FF1_84F4_86313F554F27
 #define GUARD_D15703B1_80FF_4FF1_84F4_86313F554F27
 
-#include "estd/uncopyable.h"
 #include "platform/estdint.h"
 #include "uds/base/Subfunction.h"
 #include "uds/lifecycle/IUdsLifecycleConnector.h"
@@ -14,8 +13,6 @@ class DiagDispatcher2;
 
 class HardReset : public Subfunction
 {
-    UNCOPYABLE(HardReset);
-
 public:
     HardReset(IUdsLifecycleConnector& udsLifecycleConnector, DiagDispatcher2& diagDispatcher);
 

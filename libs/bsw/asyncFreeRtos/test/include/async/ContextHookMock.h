@@ -7,13 +7,13 @@
 #ifndef GUARD_94539508_7E46_4553_9CEE_CEA6E7B176ED
 #define GUARD_94539508_7E46_4553_9CEE_CEA6E7B176ED
 
-#include "estd/singleton.h"
+#include <etl/singleton_base.h>
 
 #include <gmock/gmock.h>
 
 namespace async
 {
-class ContextHookMock : public ::estd::singleton<ContextHookMock>
+class ContextHookMock : public ::etl::singleton_base<ContextHookMock>
 {
 public:
     ContextHookMock();
