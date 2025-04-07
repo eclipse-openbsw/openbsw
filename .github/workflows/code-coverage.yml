@@ -40,12 +40,11 @@ jobs:
       with:
           path: cmake-build-unit-tests
           key: ${{ runner.os }}-cmake-build-unit-tests-${{ hashFiles('**/*.cpp', '**/*.h',  '**/*.cmake', '**/*.txt', '**/*.c', '**/*.s') }}
-          restore-keys: |
-            ${{ runner.os }}-cmake-build-unit-tests
 
     - name: Configure with cmake
       if: steps.cache-build.outputs.cache-hit != 'true'
       run: |
+        rm -rf cmake-build-unit-tests
         cmake -B cmake-build-unit-tests -S executables/unitTest \
               -DBUILD_UNIT_TESTS=ON \
               -DCMAKE_BUILD_TYPE=${{ github.event.inputs.BUILD_TYPE }}\
@@ -61,15 +60,17 @@ jobs:
       run: ctest --test-dir cmake-build-unit-tests -j4
 
     - name: Capture code coverage
+      if: steps.cache-build.outputs.cache-hit != 'true'
       run: lcov --no-external --capture --directory . --output-file cmake-build-unit-tests/coverage_unfiltered.info
 
     - name: Filter out 3rd party and mock files
-      run:  lcov --remove cmake-build-unit-tests/coverage_unfiltered.info '*libs/3rdparty/googletest/*' '*/mock/*' '*/gmock/*' '*/gtest/*' '*/test/*' --output-file cmake-build-unit-tests/coverage.info
+      if: steps.cache-build.outputs.cache-hit != 'true'
+      run: lcov --remove cmake-build-unit-tests/coverage_unfiltered.info '*libs/3rdparty/googletest/*' '*/mock/*' '*/gmock/*' '*/gtest/*' '*/test/*' --output-file cmake-build-unit-tests/coverage.info
 
     - name: Generate HTML coverage report
       run:  |
           chmod 744 cmake-build-unit-tests/coverage.info
-          genhtml cmake-build-unit-tests/coverage.info --output-directory cmake-build-unit-tests/coverage
+          genhtml cmake-build-unit-tests/coverage.info --output-directory cmake-build-unit-tests/coverage --ignore-errors source
 
     - name: Zip coverage html
       run: |
