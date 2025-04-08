@@ -1,0 +1,72 @@
+name: Generate Puncover Report
+
+on: [workflow_call, push, pull_request]
+
+jobs:
+  elf_tool:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Set up CMake
+        uses: jwlawson/actions-setup-cmake@v2
+        with:
+          cmake-version: '3.22.x'
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      
+      - name: Cache CMake files
+        id: cache-cmake
+        uses: actions/cache@v4
+        with:
+            path: |
+              cmake-build-s32k148
+            key: ${{ runner.os }}-cmake-s32k148-${{ hashFiles('**/*.cpp', '**/*.h', '**/*.cmake', '**/*.txt', '**/*.c', '**/*.s', 'admin/cmake/ArmNoneEabi.cmake') }}
+
+      - name: Install Poetry
+        uses: snok/install-poetry@v1.4.1
+      
+      - name: Set up ARM GCC
+        uses: carlosperate/arm-none-eabi-gcc-action@v1
+        with:
+            release: '10.3-2021.10'
+
+      - name: Configure CMake for S32K148
+        if: ${{ steps.cache-cmake.outputs.cache-hit != 'true' }}
+        run: |
+            rm -rf cmake-build-s32k148
+            cmake \
+            -B cmake-build-s32k148 \
+            -S executables/referenceApp \
+            -DBUILD_TARGET_PLATFORM="S32K148EVB" \
+            --toolchain ../../admin/cmake/ArmNoneEabi-gcc.cmake
+
+      - name: Build with cmake
+        # if: ${{ steps.cache-cmake.outputs.cache-hit != 'true' }}
+        run: cmake --build cmake-build-s32k148 --target app.referenceApp -j
+
+      - name: Run script and generate report
+        working-directory: tools/puncover_tool
+        run: |
+           poetry install
+           echo "==> Running script"
+           poetry run puncover_tool
+
+      - name: Zip output as artifact
+        working-directory: tools/puncover_tool
+        run: |
+            zip -r puncover-report.zip output
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: puncover-report
+          path: tools/puncover_tool/puncover-report.zip

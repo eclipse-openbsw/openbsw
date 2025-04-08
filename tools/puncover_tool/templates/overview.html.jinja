@@ -1,0 +1,27 @@
+{% extends "base.html.jinja" %}
+{% block content %}
+
+<h2>Folders</h2>
+
+{% import 'lists.html.jinja' as lists with context %}
+{{ lists.directory(root_folders, root_files) }}
+
+<!-- Generate directory links with relative paths -->
+{% for folder in root_folders %}
+    <div>
+        <a href="{{ folder[PATH] | replace('\\', '/') }}.html">{{ folder[NAME] }}</a>
+    </div>
+{% endfor %}
+
+{# <h2>Files</h2> #}
+{% for file in root_files %}
+    <div>
+        <a href="{{ file[PATH] | replace('\\', '/') }}.html">{{ file[NAME] }}</a>
+    </div>
+{% endfor %}
+
+<!-- Buttons with correct relative links -->
+<a class="btn btn-default" href="./all.html">Show all symbols</a>
+<a class="btn btn-default" href="./rack.html">Analyze text snippet</a>
+
+{% endblock %}

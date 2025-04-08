@@ -210,3 +210,11 @@ Eclipse OpenBSW is a trademark of the Eclipse Foundation.
     :hidden:
 
     ../executables/unitTest/**/doc/index
+
+.. toctree::
+    :maxdepth: 1
+    :caption: Analysis
+    :glob:
+    :hidden:
+
+    ../doc/analysis/index.rst
