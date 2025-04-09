@@ -21,13 +21,13 @@ you can set up the build environment for the S32K148 platform with the following
 
 .. code-block:: bash
 
-    wget https://developer.arm.com/-/media/Files/downloads/gnu-rm/x.x/gcc-arm-none-eabi-x.x-x86_64-linux.tar.bz2
+    wget https://developer.arm.com/-/media/Files/downloads/gnu-rm/10.3-2021.10/gcc-arm-none-eabi-10.3-2021.10-x86_64-linux.tar.bz2
 
 and unpack it in your preferred location as follows:
 
 .. code-block:: bash
 
-    tar xjf gcc-arm-none-eabi-x.x-x86_64-linux.tar.bz2
+    tar xjf gcc-arm-none-eabi-10.3-2021.10-x86_64-linux.tar.bz2
 
 This will create a directory named gcc-arm-none-eabi-:prop:`tool:gcc-arm-none-eabi` with a ``bin`` subdirectory containing the GCC for ARM toolchain.
 Add the full path to gcc-arm-none-eabi-:prop:`tool:gcc-arm-none-eabi`/bin to your ``PATH`` environment variable
