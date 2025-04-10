@@ -2,9 +2,11 @@
 
 #include "async/ContextHookMock.h"
 
+#include <etl/singleton_base.h>
+
 namespace async
 {
-ContextHookMock::ContextHookMock() : ::estd::singleton<ContextHookMock>(*this) {}
+ContextHookMock::ContextHookMock() : ::etl::singleton_base<ContextHookMock>(*this) {}
 
 void ContextHookMock::enterTask(size_t taskIdx)
 {

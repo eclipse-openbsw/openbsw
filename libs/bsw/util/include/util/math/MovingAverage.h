@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include <estd/tiny_ring.h>
+#include <etl/circular_buffer.h>
 
 #include <cstddef>
 
@@ -30,21 +30,21 @@ public:
     {
         while (!_values.full())
         {
-            _values.push_back(initial);
+            _values.push(initial);
         }
     }
 
     void add(T const element)
     {
         _sum -= _values.front();
-        _values.push_back(element);
+        _values.push(element);
         _sum += element;
     }
 
     T get() const { return _sum / static_cast<T>(N); }
 
 private:
-    ::estd::tiny_ring<T, N> _values;
+    ::etl::circular_buffer<T, N> _values;
     T _sum;
 };
 

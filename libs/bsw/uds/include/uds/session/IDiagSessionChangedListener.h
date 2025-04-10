@@ -2,7 +2,8 @@
 
 #pragma once
 
-#include <estd/forward_list.h>
+#include <etl/intrusive_list.h>
+
 #include <platform/estdint.h>
 
 namespace uds
@@ -15,7 +16,7 @@ class DiagSession;
  *
  * \see IDiagSessionManager
  */
-class IDiagSessionChangedListener : public ::estd::forward_list_node<IDiagSessionChangedListener>
+class IDiagSessionChangedListener : public ::etl::bidirectional_link<0>
 {
 public:
     virtual void diagSessionChanged(DiagSession const& session) = 0;

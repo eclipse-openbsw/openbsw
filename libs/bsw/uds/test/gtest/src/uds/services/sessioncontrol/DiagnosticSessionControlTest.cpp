@@ -2,8 +2,6 @@
 
 #include "uds/services/sessioncontrol/DiagnosticSessionControl.h"
 
-#include "estd/array.h"
-#include "estd/function_mock.h"
 #include "transport/TransportConfiguration.h"
 #include "uds/DiagDispatcher.h"
 #include "uds/UdsConfig.h"
@@ -18,9 +16,12 @@
 #include "uds/session/DiagSessionChangedListenerMock.h"
 #include "uds/session/DiagSessionManagerMock.h"
 #include "uds/session/ProgrammingSession.h"
+#include "util/estd/function_mock.h"
 
 #include <async/AsyncMock.h>
 #include <async/TestContext.h>
+#include <etl/array.h>
+#include <etl/delegate.h>
 
 #include <gtest/gtest.h>
 
@@ -107,7 +108,7 @@ struct DiagnosticSessionControlTest : ::testing::Test
     StrictMock<DiagSessionChangedListenerMock> fDiagSessionChangedListener;
     transport::TransportMessage fResponseMessage;
 
-    ::estd::array<uint8_t, 6> fRequestBuffer;
+    ::etl::array<uint8_t, 6> fRequestBuffer;
 };
 
 /**
@@ -414,7 +415,7 @@ TEST_F(
     uint8_t const request[] = {0x01U}; // DEFAULT session
 
     transport::TransportMessage responseMessage;
-    ::estd::array<uint8_t, 4> requestBuffer{};
+    ::etl::array<uint8_t, 4> requestBuffer{};
     responseMessage.init(requestBuffer.data(), requestBuffer.size());
     fIncomingDiagConnection.fpRequestMessage = &responseMessage;
 
@@ -596,7 +597,7 @@ TEST_F(DiagnosticSessionControlTest, sessionRead)
     using void_function = ::estd::function_mock<void()>;
     void_function ic;
     InitCompleteCallbackType initComplete
-        = ::estd::function<void()>::create<void_function, &void_function::callee>(ic);
+        = ::etl::delegate<void()>::create<void_function, &void_function::callee>(ic);
     EXPECT_CALL(ic, callee());
     EXPECT_CALL(fSessionPersistence, readSession(Ref(fDiagnosticSessionControl)));
 

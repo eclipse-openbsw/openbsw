@@ -15,12 +15,12 @@
 #include <async/Types.h>
 #include <async/util/MemberCall.h>
 #include <common/busid/BusId.h>
+#include <etl/intrusive_list.h>
+#include <etl/ipool.h>
+#include <etl/span.h>
 #include <interrupts/SuspendResumeAllInterruptsScopedLock.h>
 #include <transport/AbstractTransportLayer.h>
-#include <util/estd/derived_object_pool.h>
 #include <util/logger/Logger.h>
-
-#include <estd/forward_list.h>
 
 #include <algorithm>
 #include <limits>
@@ -35,19 +35,20 @@ template<class DataLinkLayer>
 class DoCanTransmitter : private IDoCanDataFrameTransmitterCallback<DataLinkLayer>
 {
 public:
-    using DataLinkLayerType          = DataLinkLayer;
-    using DataLinkAddressType        = typename DataLinkLayerType::AddressType;
-    using DataLinkAddressPairType    = typename DataLinkLayerType::AddressPairType;
-    using MessageSizeType            = typename DataLinkLayerType::MessageSizeType;
-    using FrameIndexType             = typename DataLinkLayerType::FrameIndexType;
-    using FrameSizeType              = typename DataLinkLayerType::FrameSizeType;
-    using JobHandleType              = typename DataLinkLayerType::JobHandleType;
-    using FrameCodecType             = DoCanFrameCodec<DataLinkLayer>;
-    using DataFrameTransmitterType   = IDoCanDataFrameTransmitter<DataLinkLayerType>;
-    using MessageTransmitterType     = DoCanMessageTransmitter<DataLinkLayerType>;
-    using MessageTransmitterListType = ::estd::forward_list<MessageTransmitterType>;
-    using MessageTransmitterListIterator =
-        typename ::estd::forward_list<MessageTransmitterType>::iterator;
+    using DataLinkLayerType        = DataLinkLayer;
+    using DataLinkAddressType      = typename DataLinkLayerType::AddressType;
+    using DataLinkAddressPairType  = typename DataLinkLayerType::AddressPairType;
+    using MessageSizeType          = typename DataLinkLayerType::MessageSizeType;
+    using FrameIndexType           = typename DataLinkLayerType::FrameIndexType;
+    using FrameSizeType            = typename DataLinkLayerType::FrameSizeType;
+    using JobHandleType            = typename DataLinkLayerType::JobHandleType;
+    using FrameCodecType           = DoCanFrameCodec<DataLinkLayer>;
+    using DataFrameTransmitterType = IDoCanDataFrameTransmitter<DataLinkLayerType>;
+    using MessageTransmitterType   = DoCanMessageTransmitter<DataLinkLayerType>;
+    using MessageTransmitterListType
+        = ::etl::intrusive_list<MessageTransmitterType, etl::bidirectional_link<0>>;
+    using MessageTransmitterListIterator = typename ::etl::
+        intrusive_list<MessageTransmitterType, etl::bidirectional_link<0>>::iterator;
 
     /** Constructor.
      *
@@ -68,7 +69,7 @@ public:
         ::async::ContextType,
         DataFrameTransmitterType& dataFrameTransmitter,
         IDoCanTickGenerator& tickGenerator,
-        ::util::estd::block_pool& messageTransmitterBlockPool,
+        ::etl::ipool& messageTransmitterBlockPool,
         IDoCanAddressConverter<DataLinkLayerType>& addressConverter,
         DoCanParameters const& parameters,
         uint8_t const loggerComponent);
@@ -161,7 +162,7 @@ private:
     char const* getName() const;
 
     IDoCanAddressConverter<DataLinkLayerType>& _addressConverter;
-    ::util::estd::derived_object_pool<MessageTransmitterType> _messageTransmitterPool;
+    ::etl::ipool& _messageTransmitterPool;
     ::async::MemberCall<DoCanTransmitter, &DoCanTransmitter::processMessageTransmitters>
         _processMessageTransmitters;
     MessageTransmitterListType _messageTransmitters;
@@ -192,7 +193,7 @@ DoCanTransmitter<DataLinkLayer>::DoCanTransmitter(
     ::async::ContextType const context,
     DataFrameTransmitterType& dataFrameTransmitter,
     IDoCanTickGenerator& tickGenerator,
-    ::util::estd::block_pool& messageTransmitterBlockPool,
+    ::etl::ipool& messageTransmitterBlockPool,
     IDoCanAddressConverter<DataLinkLayerType>& addressConverter,
     DoCanParameters const& parameters,
     uint8_t const loggerComponent)
@@ -284,7 +285,7 @@ template<class DataLinkLayer>
             message.getTargetId());
         return ::transport::AbstractTransportLayer::ErrorCode::TP_SEND_FAIL;
     }
-    if (_messageTransmitterPool.empty())
+    if (_messageTransmitterPool.full())
     {
         char formatBuffer[FORMAT_BUFFER_SIZE];
         ::util::logger::Logger::warn(
@@ -295,16 +296,16 @@ template<class DataLinkLayer>
                 dataLinkAddressPair.getReceptionAddress(), formatBuffer));
         return ::transport::AbstractTransportLayer::ErrorCode::TP_QUEUE_FULL;
     }
-    ::estd::constructor<MessageTransmitterType> ctor
-        = _messageTransmitterPool.template allocate<MessageTransmitterType>();
+    uint8_t* transmitter = reinterpret_cast<uint8_t*>(
+        _messageTransmitterPool.template allocate<MessageTransmitterType>());
     auto const poolIndex = static_cast<typename JobHandleType::UserDataType>(
-        _messageTransmitterPool.get_block_pool().index_of(static_cast<uint8_t*>(ctor)));
+        reinterpret_cast<uintptr_t>(transmitter));
     JobHandleType const jobHandle(++_jobCounter, poolIndex);
-    MessageTransmitterType& messageTransmitter = ctor.construct(
+    MessageTransmitterType& messageTransmitter = *::new (transmitter) MessageTransmitterType(
         jobHandle,
         *codec,
         dataLinkAddressPair,
-        ::estd::by_ref(message),
+        ::etl::ref(message),
         notificationListener,
         frameCount,
         consecutiveFrameDataSize);
@@ -703,7 +704,7 @@ void DoCanTransmitter<DataLinkLayer>::releaseRemoveLock(bool const remove)
     sendNextFrames();
     bool switchContext;
     MessageTransmitterListType removedTransmitters;
-    MessageTransmitterListIterator prevRemovedIt = removedTransmitters.before_begin();
+    MessageTransmitterListIterator removedIt = removedTransmitters.begin();
     {
         // Ensure the _removeLockCount decrement won't wrap around
         estd_assert(_removeLockCount != 0);
@@ -711,8 +712,7 @@ void DoCanTransmitter<DataLinkLayer>::releaseRemoveLock(bool const remove)
         --_removeLockCount;
         if (remove && (_removeLockCount == 0U))
         {
-            MessageTransmitterListIterator prevIt = _messageTransmitters.before_begin();
-            MessageTransmitterListIterator it     = _messageTransmitters.begin();
+            MessageTransmitterListIterator it = _messageTransmitters.begin();
             while (_releasedTransmitterCount > 0U)
             {
                 if (it->isDone())
@@ -724,14 +724,12 @@ void DoCanTransmitter<DataLinkLayer>::releaseRemoveLock(bool const remove)
                         ++_sendMessageTransmitterIt;
                     }
                     MessageTransmitterType& messageTransmitter = *it;
-                    it = _messageTransmitters.erase_after(prevIt);
-                    prevRemovedIt
-                        = removedTransmitters.insert_after(prevRemovedIt, messageTransmitter);
+                    it                                         = _messageTransmitters.erase(it);
+                    removedIt = removedTransmitters.insert(removedIt, messageTransmitter);
                     --_releasedTransmitterCount;
                 }
                 else
                 {
-                    prevIt = it;
                     ++it;
                 }
             }
@@ -776,7 +774,7 @@ void DoCanTransmitter<DataLinkLayer>::releaseRemoveLock(bool const remove)
                 messageTransmitter.getMessage(), processingResult);
         }
         ::interrupts::SuspendResumeAllInterruptsScopedLock const lock;
-        _messageTransmitterPool.release(messageTransmitter);
+        _messageTransmitterPool.release(reinterpret_cast<void const*>(&messageTransmitter));
     }
     if (switchContext)
     {

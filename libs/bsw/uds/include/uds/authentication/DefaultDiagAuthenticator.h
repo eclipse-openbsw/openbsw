@@ -5,8 +5,6 @@
 #include "uds/DiagReturnCode.h"
 #include "uds/authentication/IDiagAuthenticator.h"
 
-#include <estd/uncopyable.h>
-
 namespace uds
 {
 /**
@@ -19,8 +17,6 @@ namespace uds
  */
 class DefaultDiagAuthenticator : public IDiagAuthenticator
 {
-    UNCOPYABLE(DefaultDiagAuthenticator);
-
 public:
     DefaultDiagAuthenticator() = default;
 
