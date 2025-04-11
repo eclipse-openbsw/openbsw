@@ -1,7 +1,7 @@
 // Copyright 2024 Accenture.
 
 #pragma once
-#include <platform/estdint.h>
+#include <stdint.h>
 
 typedef uint8_t volatile vuint8_t;
 

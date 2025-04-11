@@ -2,12 +2,12 @@
 
 #pragma once
 
-#include <platform/estdint.h>
-
 #ifdef __cplusplus
 extern "C"
 {
 #endif
+
+#include <stdint.h>
 
 void sysDelayUs(uint32_t delay);
 
