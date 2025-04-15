@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "estd/static_assert.h"
 #include "estd/uncopyable.h"
 #include "io/DynamicClientCfg.h"
 #include "io/Io.h"
@@ -18,6 +19,19 @@ public:
 #undef BSP_INPUT_PIN_CONFIGURATION
 #endif
 #include "bsp/io/input/inputConfiguration.h"
+
+    static uint16_t const TOTAL_NUMBER_OF_DIGITAL_INPUTS
+        = static_cast<uint16_t>(DigitalInputId::PORT_UNAVAILABLE);
+    static uint16_t const NUMBER_OF_EXTERNAL_DIGITAL_INPUTS = static_cast<uint16_t>(
+        DigitalInputId::LAST_DYNAMIC_DIGITAL_INPUT - DigitalInputId::LAST_INTERNAL_DIGITAL_INPUT);
+    static uint16_t const NUMBER_OF_INTERNAL_DIGITAL_INPUTS
+        = TOTAL_NUMBER_OF_DIGITAL_INPUTS - NUMBER_OF_EXTERNAL_DIGITAL_INPUTS;
+
+    // Make sure inputConfiguration has the correct structure
+    ESTD_STATIC_ASSERT(
+        DigitalInputId::LAST_DYNAMIC_DIGITAL_INPUT >= DigitalInputId::LAST_INTERNAL_DIGITAL_INPUT);
+    ESTD_STATIC_ASSERT(
+        DigitalInputId::PORT_UNAVAILABLE == DigitalInputId::LAST_DYNAMIC_DIGITAL_INPUT + 1);
 
     // Api for all DynamicClients
     class IDynamicInputClient
@@ -89,12 +103,10 @@ private:
 
     using dynamicClientType = uint16_t;
 
-    static uint8_t const InputAnzahlDynamic
-        = ((NUMBER_OF_EXTERNAL_DIGITAL_INPUTS > 0)
-               ? static_cast<uint8_t>(NUMBER_OF_EXTERNAL_DIGITAL_INPUTS)
-               : 1U);
+    static uint16_t const InputNumberDynamic
+        = ((NUMBER_OF_EXTERNAL_DIGITAL_INPUTS > 0) ? NUMBER_OF_EXTERNAL_DIGITAL_INPUTS : 1U);
 
-    static dynamicClient<dynamicClientType, IDynamicInputClient, 4, InputAnzahlDynamic>
+    static dynamicClient<dynamicClientType, IDynamicInputClient, 4, InputNumberDynamic>
         dynamicInputCfg;
 #if (INPUTDIGITAL_DEBOUNCE_ACTIVE == 1)
     static DebounceConfiguration debounced[NUMBER_OF_DIGITAL_INPUTS];
