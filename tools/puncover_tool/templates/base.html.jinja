@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+    <title>{% block title %}{% endblock %} - puncover</title>
+    {% endblock %}
+</head>
+<body>
+    <div class="container" id="content">
+        <div class="page-header">
+            <nav class="navbar navbar-default" role="navigation">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="{{ url_for('base') }}">
+                    Puncover
+                  </a>
+                </div>
+              </div>
+            </nav>
+          {% block page_header %}{% endblock %}
+        </div>
+        <div id="inner_content">
+        {% block content %}{% endblock %}
+        </div>
+    <div id="page-footer">
+        <hr>
+        {% block footer %}
+            brought to you with 💖
+            by <a href="https://twitter.com/hbehrens">Heiko Behrens</a>
+            <span class="secondary">– MIT license, copyright © 2014-{{ now.year }}</span>
+        {% endblock %}
+    </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,94 @@
+{% extends "base.html.jinja" %}
+{% import 'lists.html.jinja' as lists with context %}
+
+{% block title %}Symbol{% endblock %}
+{% block content %}
+    {{ lists.breadcrumbs(symbol.file.folder, symbol.file, symbol.line) }}
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <th>Function</th>
+                <td colspan="5">
+                    <span class="icon-function">{{ symbol.display_name }}</span>
+                </td>
+            </tr>
+
+            <tr>
+                <th rowspan="2"></th>
+                <th>Address</th>
+                <th>Remarks</th>
+                <th>Stack</th>
+                <th>Code</th>
+                <th>Static</th>
+            </tr>
+            <tr>
+                <td>0x{{ symbol.address }}</td>
+                <td>{{ lists.symbol_remarks(symbol) }}</td>
+                <td>{% if symbol.stack_size is defined %}{{ symbol.stack_size | bytes }} ({{ symbol.stack_qualifiers }}){% endif %}</td>
+                <td>{{ symbol.size | bytes }}</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th>{% if symbol.callers | length <= 0 %}No Callers{% else %}Callers ({{ symbol.callers | length }}){% endif %}</th>
+                <td colspan="5">
+                {% for function in symbol.callers %}
+                    <a href="{{ url_for('symbol', symbol=function) }}">{{ function.display_name |e }} {{ '(%d)' % function.size if function.size}}</a>
+                    {% if not loop.last %}
+                        ,
+                    {% endif %}
+                {% endfor %}
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    {% if symbol.callees | length <= 0 %}No Callees
+                    {% else %}Callees ({{ symbol.callees | length  }}{% if symbol.callees|sum(attribute='size') %},
+                            <span title="sum of used bytes by all callees">
+                            Σ={{ symbol.callees|sum(attribute='size') }}
+                            </span>
+                        {% endif %})
+                    {% endif %}
+                </th>
+                <td colspan="5">
+                {% for function in symbol.callees %}
+                    <a href="{{ url_for('symbol', symbol=function) }}">{{ function.display_name |e }} {{ '(%d)' % function.size if function.size}}</a>
+                    {% if not loop.last %}
+                        ,
+                    {% endif %}
+                {% endfor %}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    {% if symbol.prev_function %}
+    <pre><a href="{{ url_for('symbol', symbol=symbol.prev_function) }}">{{ symbol.prev_function.display_name |e }} {{ '(%d)' % symbol.prev_function.size if symbol.prev_function.size}}</a></pre>
+    {% endif %}
+
+    <pre>
+{% for line in symbol.asm %}
+    {{ line | assembly | safe }}
+{% endfor %}
+    </pre>
+
+    {% if symbol.next_function %}
+    <pre><a href="{{ url_for('symbol', symbol=symbol.next_function) }}">{{ symbol.next_function.display_name |e }} {{ '(%d)' % symbol.next_function.size if symbol.next_function.size}}</a></pre>
+    {% endif %}
+
+    {% if (symbol.deepest_caller_tree is defined and symbol.deepest_caller_tree[1] | length > 1) or (symbol.deepest_callee_tree is defined and symbol.deepest_callee_tree[1] | length > 1) %}
+        <h1>Stack Worst-Case Scenarios</h1>
+        {% if symbol.deepest_callee_tree is defined and symbol.deepest_callee_tree[1] | length > 1 %}
+        {{ lists.function_stats(symbol.deepest_callee_tree[1][1:] | reverse | list, stack_base=symbol.deepest_caller_tree[1]|symbol_stack_size if symbol.deepest_caller_tree is defined else 0) }}
+        {% else %}
+            <p>No callees for this function.</p>
+        {% endif %}
+        {% if symbol.deepest_caller_tree is defined and symbol.deepest_caller_tree[1] | length > 1 %}
+        {{ lists.function_stats(symbol.deepest_caller_tree[1]) }}
+        {% else %}
+            <p>No callers for this function.</p>
+        {% endif %}
+    {% endif %}
+
+{% endblock %}

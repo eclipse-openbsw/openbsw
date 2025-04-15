@@ -17,10 +17,13 @@ jobs:
 
   build-code-coverage:
     uses: ./.github/workflows/code-coverage.yml
+  
+  build-puncover_tool:
+    uses: ./.github/workflows/puncover_tool.yml
 
   publish-docs:
     runs-on: ubuntu-latest
-    needs: [build-sphinx-docs, build-doxygen-docs, build-code-coverage]
+    needs: [build-sphinx-docs, build-doxygen-docs, build-code-coverage, build-puncover_tool]
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -66,12 +69,24 @@ jobs:
         with:
             name: coverage_badges
             path: ./doc/github_pages
-      
+
       - name: Unzip Coverage badge artifact
         working-directory: ./doc/github_pages
         run: |
             unzip coverage_badges.zip 
             rm coverage_badges.zip
+
+      - name: Download Puncover report
+        uses: actions/download-artifact@v4
+        with:
+            name: puncover-report
+            path: ./doc/github_pages
+
+      - name: Unzip Puncover report
+        working-directory: ./doc/github_pages
+        run: |
+            unzip puncover-report.zip
+            rm puncover-report.zip  
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
