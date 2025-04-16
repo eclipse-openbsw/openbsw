@@ -2,7 +2,8 @@
 
 #pragma once
 
-#include <estd/slice.h>
+#include <etl/span.h>
+#include <etl/type_traits.h>
 
 #include <cstring>
 
@@ -39,7 +40,7 @@ public:
         uint8_t const* _readPos;
     };
 
-    explicit EntryBuffer(::estd::slice<uint8_t> const& outputBuffer)
+    explicit EntryBuffer(::etl::span<uint8_t> const& outputBuffer)
     : _bufferStart(outputBuffer.data())
     , _bufferEnd(_bufferStart + outputBuffer.size())
     , _firstEntry(_bufferStart)
@@ -47,11 +48,11 @@ public:
     , _size(outputBuffer.size())
     {}
 
-    void addEntry(::estd::slice<uint8_t const> const& entryBuffer);
-    uint8_t getNextEntry(::estd::slice<uint8_t> const& entryBuffer, EntryRef& entryRef) const;
+    void addEntry(::etl::span<uint8_t const> const& entryBuffer);
+    uint8_t getNextEntry(::etl::span<uint8_t> const& entryBuffer, EntryRef& entryRef) const;
 
 private:
-    using SignedIndexType = typename ::estd::make_signed<E>::type;
+    using SignedIndexType = typename ::etl::make_signed<E>::type;
 
     template<class T>
     inline void movePointer(T& p, size_t offset) const;
@@ -67,7 +68,7 @@ private:
 };
 
 template<uint8_t MaxBufferSize, class E>
-void EntryBuffer<MaxBufferSize, E>::addEntry(::estd::slice<uint8_t const> const& entryBuffer)
+void EntryBuffer<MaxBufferSize, E>::addEntry(::etl::span<uint8_t const> const& entryBuffer)
 {
     size_t entrySize   = entryBuffer.size();
     uint8_t const* src = entryBuffer.data();
@@ -103,7 +104,7 @@ void EntryBuffer<MaxBufferSize, E>::addEntry(::estd::slice<uint8_t const> const&
 
 template<uint8_t MaxBufferSize, class E>
 uint8_t EntryBuffer<MaxBufferSize, E>::getNextEntry(
-    ::estd::slice<uint8_t> const& entryBuffer, EntryRef& entryRef) const
+    ::etl::span<uint8_t> const& entryBuffer, EntryRef& entryRef) const
 {
     uint8_t const* readPos = entryRef.getReadPointer();
     E entryIndex           = entryRef.getIndex();

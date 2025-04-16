@@ -4,7 +4,9 @@
 
 #include "lifecycle/LifecycleManager.h"
 
-#include <estd/array.h>
+#include <etl/array.h>
+#include <etl/type_traits.h>
+#include <etl/utility.h>
 
 namespace lifecycle
 {
@@ -22,7 +24,7 @@ struct LifecycleLevel
     static constexpr size_t NUM_COMPONENTS = N;
     static constexpr uint8_t LEVEL_WEIGHT  = 1U;
 
-    ::estd::array<LifecycleDesc const, N> const components;
+    ::etl::array<LifecycleDesc const, N> const components;
 };
 
 struct StoreLevelAction
@@ -57,7 +59,7 @@ constexpr size_t countDescriptors<EndTag>()
 template<typename T, typename... A>
 constexpr size_t countComponents()
 {
-    return ::std::remove_reference<T>::type::NUM_COMPONENTS + countComponents<A...>();
+    return ::etl::remove_reference<T>::type::NUM_COMPONENTS + countComponents<A...>();
 }
 
 template<>
@@ -69,7 +71,7 @@ constexpr size_t countComponents<EndTag>()
 template<typename T, typename... A>
 constexpr uint8_t countLevels()
 {
-    return ::std::remove_reference<T>::type::LEVEL_WEIGHT + countLevels<A...>();
+    return ::etl::remove_reference<T>::type::LEVEL_WEIGHT + countLevels<A...>();
 }
 
 template<>
@@ -88,7 +90,7 @@ template<typename T, typename... A>
 constexpr size_t countComponentsPerLevel()
 {
     return countMax(
-        ::std::remove_reference<T>::type::NUM_COMPONENTS, countComponentsPerLevel<A...>());
+        ::etl::remove_reference<T>::type::NUM_COMPONENTS, countComponentsPerLevel<A...>());
 }
 
 template<>
@@ -128,11 +130,11 @@ template<typename T, typename... A>
 inline void
 initManager(uint8_t const currentLevelIndex, LifecycleManager& manager, T&& level, A&&... args)
 {
-    addLevel(currentLevelIndex, manager, ::std::forward<T>(level));
+    addLevel(currentLevelIndex, manager, ::etl::forward<T>(level));
     initManager(
-        currentLevelIndex + ::std::remove_reference<T>::type::LEVEL_WEIGHT,
+        currentLevelIndex + ::etl::remove_reference<T>::type::LEVEL_WEIGHT,
         manager,
-        ::std::forward<A>(args)...);
+        ::etl::forward<A>(args)...);
 }
 
 template<>
@@ -156,7 +158,7 @@ inline constexpr internal::LifecycleLevel<internal::countDescriptors<A..., inter
 makeLevel(A&&... args)
 {
     return internal::LifecycleLevel<internal::countDescriptors<A..., internal::EndTag>()>{
-        {{::std::forward<A>(args)...}}};
+        {{::etl::forward<A>(args)...}}};
 }
 
 inline constexpr internal::StoreLevelAction storeLevel(uint8_t& level)
@@ -177,7 +179,7 @@ inline LifecycleManager& createLifecycleManager(
 
     static declare::LifecycleManager<numComponents, numLevels, numComponentsPerLevel>
         createdManager(transitionContext, getTimestamp);
-    internal::initManager(1U, createdManager, ::std::forward<A>(args)..., EndTag());
+    internal::initManager(1U, createdManager, ::etl::forward<A>(args)..., EndTag());
     return createdManager;
 }
 } // namespace lifecycle

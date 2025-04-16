@@ -5,7 +5,7 @@
  */
 #pragma once
 
-#include <estd/slice.h>
+#include <etl/span.h>
 
 #include <cstdint>
 
@@ -278,7 +278,7 @@ private:
     IDataProgressListener* fpDataProgressListener;
 
     /* internal buffer */
-    ::estd::slice<uint8_t> fBuffer;
+    ::etl::span<uint8_t> fBuffer;
 
     /** source id of TransportMessage */
     uint16_t fSourceId;
@@ -316,7 +316,7 @@ inline void TransportMessage::setTargetId(uint16_t const targetId) { fTargetId =
 
 inline uint8_t TransportMessage::getServiceId() const { return serviceId(); }
 
-inline uint8_t TransportMessage::serviceId() const { return fBuffer.at(SERVICE_ID_INDEX); }
+inline uint8_t TransportMessage::serviceId() const { return fBuffer[SERVICE_ID_INDEX]; }
 
 inline uint8_t* TransportMessage::getBuffer() const { return fBuffer.data(); }
 

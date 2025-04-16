@@ -30,13 +30,13 @@ public:
             MessageSizeType messageSize,
             FrameIndexType frameCount,
             FrameSizeType consecutiveFrameDataSize,
-            ::estd::slice<uint8_t const> const& data));
+            ::etl::span<uint8_t const> const& data));
     MOCK_METHOD3_T(
         consecutiveDataFrameReceived,
         void(
             DataLinkAddressType receptionAddress,
             uint8_t sequenceNumber,
-            ::estd::slice<uint8_t const> const& data));
+            ::etl::span<uint8_t const> const& data));
     MOCK_METHOD4_T(
         flowControlFrameReceived,
         void(
