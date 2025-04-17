@@ -30,6 +30,7 @@ target_link_libraries(
             watchdogManager
             safeLifecycle
             safeMemory
+            safeWatchdog
     PUBLIC bspInputManager bspOutputManager)
 
 add_library(osHooks src/osHooks.cpp)

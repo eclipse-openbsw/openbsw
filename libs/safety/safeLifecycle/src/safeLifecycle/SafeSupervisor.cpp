@@ -62,7 +62,7 @@ void SafeSupervisor::handle(Event const& event)
         case Event::WATCHDOG_STARTUP_CHECK_FAILURE:
         {
             LOGSYNCHRON("Event: WATCHDOG_STARTUP_CHECK_FAILURE\n");
-            return;
+            break;
         }
         case Event::SAFE_WATCHDOG_SEQUENCE_DEVIATION:
         {

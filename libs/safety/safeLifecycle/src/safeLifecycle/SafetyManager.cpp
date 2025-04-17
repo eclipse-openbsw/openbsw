@@ -53,6 +53,8 @@ void SafetyManager::cyclic()
     // timeout(i.e 250ms) occurs
     if (_counter >= WATCHDOG_CYCLIC_COUNTER)
     {
+        supervisor.safeWatchdogSequenceMonitor.hit(
+            safety::SafeSupervisor::EnterLeaveSequence::ENTER);
         safeWatchdog.cyclic();
         _counter = 0;
     }
