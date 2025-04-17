@@ -15,6 +15,17 @@ else ()
     set(CMAKE_C_STANDARD 99)
 endif ()
 
+# Set preprocessor defines based on cmake options by the same name to configure
+# platform features.
+get_cmake_property(_all_vars VARIABLES)
+foreach (var ${_all_vars})
+    if (var MATCHES "^PLATFORM_SUPPORT_")
+        if (${var})
+            add_compile_definitions(${var}=1)
+        endif ()
+    endif ()
+endforeach ()
+
 project(
     "Eclipse OpenBSW"
     VERSION 0.1.0
