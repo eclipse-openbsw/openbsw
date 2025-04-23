@@ -6,7 +6,7 @@ jobs:
   run-command:
     runs-on: ubuntu-latest
     strategy:
-      matrix:
+     matrix:
         platform: [posix, s32k148]
         compiler: [clang, gcc]
         cpp-standard: [14, 17, 20, 23]
@@ -14,56 +14,22 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
       - name: Cache CMake files
         id: cache-cmake
-        uses: actions/cache@v4
+        uses: actions/cache@v3
         with:
           path: cmake-build-${{ matrix.platform }}-${{ matrix.compiler }}
           key: ${{ runner.os }}-cmake-${{ matrix.platform }}-${{ matrix.compiler }}-${{ matrix.cpp-standard }}-${{ hashFiles('**/*.cpp', '**/*.h',  '**/*.cmake', '**/*.txt', '**/*.c', '**/*.s') }}
           restore-keys: |
             ${{ runner.os }}-cmake-${{ matrix.platform }}-${{ matrix.compiler }}-${{ matrix.cpp-standard }}-
 
-      - name: Set up CMake
-        uses: jwlawson/actions-setup-cmake@v2
-        with:
-          cmake-version: '3.22.x'
-
-      - name: Install ARM GCC
-        if: ${{ matrix.platform == 's32k148' && matrix.compiler == 'gcc' }}
-        uses: carlosperate/arm-none-eabi-gcc-action@v1
-        with:
-          release: '10.3-2021.10'
-
-      - name: Install POSIX LLVM
-        if: ${{ matrix.platform == 'posix' && matrix.compiler == 'clang' }}
-        uses: KyleMayes/install-llvm-action@v2
-        with:
-          version: "17"
-          env: true
-
-      - name: Install ARM LLVM
-        if: ${{ matrix.platform == 's32k148' && matrix.compiler == 'clang' }}
-        uses: stellar-aria/llvm-embedded-toolchain-for-arm-action@v1.2.0
-        with:
-          release: "19.1.1"
-
-      - name: Set environment variables for ARM LLVM
-        if: ${{ matrix.platform == 's32k148' && matrix.compiler == 'clang' }}
-        run: |
-          echo "CC=$(which clang)" >> "${GITHUB_ENV}"
-          echo "CXX=$(which clang++)" >> "${GITHUB_ENV}"
-
-      - name: Configure CMake for ${{ matrix.platform }} with ${{ matrix.compiler }}
+      - name: Build the docker image
         if: steps.cache-cmake.outputs.cache-hit != 'true'
         run: |
-          rm -rf cmake-build-${{ matrix.platform }}-${{ matrix.compiler }}
-          cmake \
-          -B cmake-build-${{ matrix.platform }}-${{ matrix.compiler }} \
-          -S executables/referenceApp \
-          -DCMAKE_CXX_STANDARD=${{ matrix.cpp-standard }} \
-          -DBUILD_TARGET_PLATFORM=${{ matrix.platform == 'posix' && 'POSIX' || 'S32K148EVB' }} \
-          -DCMAKE_TOOLCHAIN_FILE=${{ matrix.platform == 's32k148' && format('../../admin/cmake/ArmNoneEabi-{0}.cmake', matrix.compiler) || '' }}
+          docker build -f docker/Dockerfile.dev -t dev .
 
-      - name: Build ${{ matrix.platform }} with ${{ matrix.compiler }}
+      - name: Run the build.py inside the docker container
         if: steps.cache-cmake.outputs.cache-hit != 'true'
-        run: cmake --build cmake-build-${{ matrix.platform }}-${{ matrix.compiler }} --target app.referenceApp -j
+        run: |
+          docker run --rm -v "$PWD:/home/jenkins" -w /home/jenkins --user $(id -u):4996 dev python3 .ci/build.py "${{ matrix.platform }}" "${{ matrix.compiler }}" "${{ matrix.cpp-standard }}"

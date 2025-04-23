@@ -1,4 +1,4 @@
-name: Code Coverage 
+name: Code Coverage
 
 on: [workflow_call, pull_request]
 
@@ -10,29 +10,10 @@ jobs:
 
     env:
       BUILD_TYPE: Debug
-      SCCACHE_GHA_ENABLED: "true"
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-
-    - name: Install GCC 11.4.0 and LCOV
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y gcc-11 g++-11 lcov wget zip
-        sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-11 100
-        sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-11 100
-        sudo update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-11 100
-
-    - name: Set up sccache
-      uses: mozilla-actions/sccache-action@v0.0.8
-      with:
-        version: "v0.10.0"
-
-    - name: Set up CMake
-      uses: jwlawson/actions-setup-cmake@v2
-      with:
-          cmake-version: '3.22.x'
 
     - name: Cache CMake files
       id: cache-build
@@ -41,56 +22,51 @@ jobs:
           path: cmake-build-unit-tests
           key: ${{ runner.os }}-cmake-build-unit-tests-${{ hashFiles('**/*.cpp', '**/*.h',  '**/*.cmake', '**/*.txt', '**/*.c', '**/*.s') }}
 
-    - name: Configure with cmake
-      if: steps.cache-build.outputs.cache-hit != 'true'
+    - name: sccache cache backup from cache
+      uses: actions/cache@v3
+      with:
+       path: sccache_backup
+       key: ${{ runner.os }}-sccache-${{ hashFiles('**/*.cpp', '**/*.h',  '**/*.cmake', '**/*.txt', '**/*.c', '**/*.s') }}
+       restore-keys: |
+         ${{ runner.os }}-sccache-
+
+    - name: Create Docker volume if not exists
       run: |
-        rm -rf cmake-build-unit-tests
-        cmake -B cmake-build-unit-tests -S executables/unitTest \
-              -DBUILD_UNIT_TESTS=ON \
-              -DCMAKE_BUILD_TYPE=${{ github.event.inputs.BUILD_TYPE }}\
-              -DCMAKE_C_COMPILER_LAUNCHER=sccache \
-              -DCMAKE_CXX_COMPILER_LAUNCHER=sccache
+       if ! docker volume inspect sccache_cache_volume >/dev/null 2>&1; then
+         docker volume create sccache_cache_volume
+       fi
 
-    - name: Build with cmake
-      if: steps.cache-build.outputs.cache-hit != 'true'
-      run: cmake --build cmake-build-unit-tests -j4
-
-    - name: Run tests
-      if: steps.cache-build.outputs.cache-hit != 'true'
-      run: ctest --test-dir cmake-build-unit-tests -j4
-
-    - name: Capture code coverage
-      if: steps.cache-build.outputs.cache-hit != 'true'
-      run: lcov --no-external --capture --directory . --output-file cmake-build-unit-tests/coverage_unfiltered.info
-
-    - name: Filter out 3rd party and mock files
-      if: steps.cache-build.outputs.cache-hit != 'true'
-      run: lcov --remove cmake-build-unit-tests/coverage_unfiltered.info '*libs/3rdparty/googletest/*' '*/mock/*' '*/gmock/*' '*/gtest/*' '*/test/*' --output-file cmake-build-unit-tests/coverage.info
-
-    - name: Generate HTML coverage report
-      run:  |
-          chmod 744 cmake-build-unit-tests/coverage.info
-          genhtml cmake-build-unit-tests/coverage.info --output-directory cmake-build-unit-tests/coverage --ignore-errors source
-
-    - name: Zip coverage html
+    - name: Build the docker image
       run: |
-          mv cmake-build-unit-tests/coverage code_coverage
-          zip -r code_coverage.zip code_coverage
+          docker build -f docker/Dockerfile.dev -t dev .
 
-    - name: Badges
+    - name: Copy restored sccache backup into Docker volume
       run: |
-          LinePercentage=$(lcov --summary cmake-build-unit-tests/coverage.info | grep 'lines' | awk '{print $2}') &&
-          echo "Line Percentage: $LinePercentage" &&
-          wget "https://img.shields.io/badge/coverage-${LinePercentage}25-brightgreen.svg" -O line_coverage_badge.svg &&
+        mkdir -p sccache_backup
+        docker run --rm \
+          -v sccache_cache_volume:/to_volume \
+          -v "$PWD/sccache_backup:/from_host" \
+          busybox \
+          sh -c "cp -a /from_host/. /to_volume/" || true
 
-          FunctionPercentage=$(lcov --summary cmake-build-unit-tests/coverage.info | grep 'functions' | awk '{print $2}') &&
-          echo "Function Percentage: $FunctionPercentage" &&
-          wget "https://img.shields.io/badge/coverage-${FunctionPercentage}25-brightgreen.svg" -O function_coverage_badge.svg &&
+    - name: Run the unit-test-build.py inside the docker container
+      run: |
+        docker run --rm \
+          -v "$PWD:/home/jenkins" \
+          -v "sccache_cache_volume:/home/jenkins/.cache/sccache" \
+          -w /home/jenkins \
+          -e SCCACHE_DIR=/home/jenkins/.cache/sccache \
+          --user $(id -u):4996 \
+          dev python3 .ci/code_coverage.py
 
-          mkdir coverage_badges &&
-          mv line_coverage_badge.svg coverage_badges/ &&
-          mv function_coverage_badge.svg coverage_badges/ &&
-          zip -r coverage_badges.zip coverage_badges
+    - name: Zip code_coverage and coverage_badges
+      run: |
+            mv cmake-build-unit-tests/coverage code_coverage
+            zip -r code_coverage.zip code_coverage
+            mkdir coverage_badges
+            mv line_coverage_badge.svg coverage_badges/
+            mv function_coverage_badge.svg coverage_badges/
+            zip -r coverage_badges.zip coverage_badges
 
     - name: Upload code coverage artifact
       uses: actions/upload-artifact@v4
@@ -103,3 +79,12 @@ jobs:
       with:
         name: coverage_badges
         path: coverage_badges.zip
+
+    - name: Copy updated sccache out of Docker volume
+      run: |
+        mkdir -p sccache_backup
+        docker run --rm \
+          -v sccache_cache_volume:/from_volume \
+          -v "$PWD/sccache_backup:/to_host" \
+          busybox \
+          sh -c "cp -a /from_volume/. /to_host/"

@@ -4,22 +4,26 @@ services:
     build:
       context: ..
       dockerfile: docker/Dockerfile.dev
-    working_dir:
-      /usr/src
+      args:
+        user_id: "${UID}"
+    working_dir: /home/jenkins
     volumes:
-      - ..:/usr/src
+      - ..:/home/jenkins
       - ../.docker_history:/root/.bash_history
     command: /bin/bash
+    user: "${UID}:4996"
     tty: true
 
   docs:
     build:
       context: ..
       dockerfile: docker/Dockerfile.docs
-    working_dir:
-      /usr/src
+      args:
+        user_id: "${UID}"
+    working_dir: /home/jenkins
     volumes:
-      - ..:/usr/src
+      - ..:/home/jenkins
       - ../.docker_history:/root/.bash_history
     command: /bin/bash
+    user: "${UID}:4996"
     tty: true

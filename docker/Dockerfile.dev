@@ -3,15 +3,17 @@ FROM ubuntu:22.04
 RUN apt-get update && apt-get install -y \
     python3.10 \
     python3-pip \
-    bzip2\
+    bzip2 \
+    zip \
     tar \
+    tmux \
     clang-tidy \
     wget \
     curl \
     git \
     gcc-11 \
-    g++-11\
-    lcov\
+    g++-11 \
+    lcov \
     && rm -rf /var/lib/apt/lists/*
 
 RUN wget https://github.com/Kitware/CMake/releases/download/v3.22.5/cmake-3.22.5-linux-x86_64.sh \
@@ -20,22 +22,58 @@ RUN wget https://github.com/Kitware/CMake/releases/download/v3.22.5/cmake-3.22.5
     && rm cmake-3.22.5-linux-x86_64.sh
 
 RUN wget https://developer.arm.com/-/media/Files/downloads/gnu-rm/10.3-2021.10/gcc-arm-none-eabi-10.3-2021.10-x86_64-linux.tar.bz2 \
-    && tar -xjf gcc-arm-none-eabi-10.3-2021.10-x86_64-linux.tar.bz2 -C /usr/local \
-    && rm gcc-arm-none-eabi-10.3-2021.10-x86_64-linux.tar.bz2 \
-    && ln -s /usr/local/gcc-arm-none-eabi-10.3-2021.10/bin/* /usr/local/bin/ 
+    && tar -xjf gcc-arm-none-eabi-10.3-2021.10-x86_64-linux.tar.bz2 \
+    && mv gcc-arm-none-eabi-10.3-2021.10 /usr/bin/gcc-arm-none-eabi \
+    && rm gcc-arm-none-eabi-10.3-2021.10-x86_64-linux.tar.bz2
 
-RUN mkdir -p /root/.local/bin
+RUN wget https://github.com/llvm/llvm-project/releases/download/llvmorg-17.0.2/clang+llvm-17.0.2-x86_64-linux-gnu-ubuntu-22.04.tar.xz \
+    && tar -xf clang+llvm-17.0.2-x86_64-linux-gnu-ubuntu-22.04.tar.xz \
+    && mv clang+llvm-17.0.2-x86_64-linux-gnu-ubuntu-22.04 /usr/bin/llvm \
+    && rm clang+llvm-17.0.2-x86_64-linux-gnu-ubuntu-22.04.tar.xz
+
+RUN wget https://github.com/ARM-software/LLVM-embedded-toolchain-for-Arm/releases/download/release-19.1.1/LLVM-ET-Arm-19.1.1-Linux-x86_64.tar.xz \
+    && tar -xf LLVM-ET-Arm-19.1.1-Linux-x86_64.tar.xz \
+    && mv LLVM-ET-Arm-19.1.1-Linux-x86_64 /usr/bin/llvm-arm \
+    && rm LLVM-ET-Arm-19.1.1-Linux-x86_64.tar.xz
 
 RUN curl -L https://github.com/numtide/treefmt/releases/download/v2.1.0/treefmt_2.1.0_linux_amd64.tar.gz -o treefmt.tar.gz \
     && tar -xvzf treefmt.tar.gz \
-    && install -m 755 treefmt /root/.local/bin/treefmt \
+    && install -m 755 treefmt /usr/bin/treefmt \
     && rm LICENSE README.md treefmt treefmt.tar.gz
 
-RUN curl -L https://github.com/muttleyxd/clang-tools-static-binaries/releases/download/master-32d3ac78/clang-format-17_linux-amd64 -o /root/.local/bin/clang-format && \
-    chmod +x /root/.local/bin/clang-format
-
-ENV PATH="/root/.local/bin:$PATH"
+RUN curl -L https://github.com/muttleyxd/clang-tools-static-binaries/releases/download/master-32d3ac78/clang-format-17_linux-amd64 -o usr/bin/clang-format-17 \
+    && chmod +x  usr/bin/clang-format-17
 
 RUN pip3 install cmakelang
 
+RUN wget https://github.com/mozilla/sccache/releases/download/v0.10.0/sccache-v0.10.0-x86_64-unknown-linux-musl.tar.gz \
+    && tar -xzf sccache-v0.10.0-x86_64-unknown-linux-musl.tar.gz \
+    && mv sccache-v0.10.0-x86_64-unknown-linux-musl/sccache /usr/local/bin/sccache \
+    && chmod a+x /usr/local/bin/sccache \
+    && rm sccache-v0.10.0-x86_64-unknown-linux-musl.tar.gz \
+    && rm -rf sccache-v0.10.0-x86_64-unknown-linux-musl
+
+RUN git config --global --add safe.directory /home/jenkins
+ENV PATH="/usr/bin/gcc-arm-none-eabi/bin:/usr/bin/llvm/bin:/usr/bin/llvm-arm/bin:usr/bin/clang-format-17:usr/bin/treefmt:/usr/bin/gcc:/usr/local/bin/sccache${PATH}"
+
 RUN echo 'export HISTFILE=/root/.bash_history/history' >> /root/.bashrc
+
+RUN pip3 install pytest
+
+COPY test/pyTest/requirements.txt /home/jenkins/test/pyTest/requirements.txt
+RUN pip3 install -r /home/jenkins/test/pyTest/requirements.txt
+
+COPY tools/UdsTool /home/jenkins/tools/UdsTool
+
+WORKDIR /home/jenkins/tools/UdsTool
+
+RUN pip3 install .
+
+ARG user_id=2001
+
+RUN groupadd -g 4996 docker
+RUN useradd --shell /bin/bash --uid ${user_id} -g docker -m jenkins
+
+USER jenkins
+
+WORKDIR /home/jenkins
