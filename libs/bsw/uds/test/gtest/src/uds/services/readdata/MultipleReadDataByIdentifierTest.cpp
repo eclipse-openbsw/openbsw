@@ -360,7 +360,7 @@ TEST_F(
 
 TEST_F(
     MultipleReadDataByIdentifierTest,
-    execute_deals_with_one_valid_dateaIdentifier_return_error_and_one_valid_dataIdentifier_and_return_one_positive_response)
+    execute_deals_with_one_valid_dataIdentifier_return_error_and_one_valid_dataIdentifier_and_return_one_positive_response)
 {
     uint8_t const DATA_IDENTIFIERS_REQUEST[]
         = {ServiceId::READ_DATA_BY_IDENTIFIER,

@@ -27,7 +27,7 @@ You can view this as a map to regularly refer back to as you navigate and become
     |   └── s32k1xx
     └── tools
 
-``admin``: holds platform-specific build adapation files.
+``admin``: holds platform-specific build adaptation files.
 In particular the ``cmake`` subdirectory contains platform-specific settings for the build environment.
 
 ``doc``: holds some of the RST (reStructuredText) documentation files from which this documentation is built.

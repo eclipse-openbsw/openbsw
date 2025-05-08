@@ -30,7 +30,7 @@ TEST(CanIdTest, test_static_functions)
     ASSERT_EQ(0x7ffU, can::CanId::rawId(0xA00007ffU));
 }
 
-TEST(CanIdTest, test_type_based_value_retrival)
+TEST(CanIdTest, test_type_based_value_retrieval)
 {
     ASSERT_EQ(0x7ffU, can::CanId::Base<0x7ffU>::value);
     ASSERT_EQ(0x800789abU, can::CanId::Extended<0x789abU>::value);

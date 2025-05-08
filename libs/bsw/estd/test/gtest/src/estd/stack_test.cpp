@@ -59,7 +59,7 @@ TEST(Stack, TestSizeOf)
     validateSize<40>(12, 24);
 }
 
-TEST(Stack, TestContructor)
+TEST(Stack, TestConstructor)
 {
     MAKE_STACK(int32_t, 10, s);
     ASSERT_TRUE(s.empty());
