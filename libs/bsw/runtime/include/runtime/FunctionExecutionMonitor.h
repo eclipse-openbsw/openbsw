@@ -159,7 +159,7 @@ template<class RuntimeMonitor>
 FunctionExecutionMonitor<RuntimeMonitor>::Point::~Point()
 {
     ::async::LockType const lock;
-    _points.remove(this);
+    _points.erase(*this);
 }
 
 template<class RuntimeMonitor>
