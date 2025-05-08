@@ -60,7 +60,7 @@ void AbstractCANTransceiver::addCANFrameSentListener(IFilteredCANFrameSentListen
 void AbstractCANTransceiver::removeCANFrameSentListener(IFilteredCANFrameSentListener& listener)
 {
     ESR_UNUSED const SuspendResumeAllInterruptsScopedLock lock;
-    _sentListeners.remove(&listener);
+    _sentListeners.erase(listener);
 }
 
 void AbstractCANTransceiver::notifyListeners(CANFrame const& frame)
