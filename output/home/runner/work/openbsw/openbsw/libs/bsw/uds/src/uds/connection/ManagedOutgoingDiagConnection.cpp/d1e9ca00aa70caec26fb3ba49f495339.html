@@ -1,0 +1,375 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../../../../../../../../../../../static/css/style.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <title>Symbol - puncover</title>
+    
+</head>
+<body>
+    <div class="container" id="content">
+        <div class="page-header">
+            <nav class="navbar navbar-default" role="navigation">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="../../../../../../../../../../../../index.html">
+                    Puncover
+                  </a>
+                </div>
+              </div>
+            </nav>
+          
+        </div>
+        <div id="inner_content">
+        
+    
+    <ol class="breadcrumb folders">
+        
+        <li><a href="../../../../../../../../../../../../home.html">home</a></li>
+        
+        <li><a href="../../../../../../../../../../../runner.html">runner</a></li>
+        
+        <li><a href="../../../../../../../../../../work.html">work</a></li>
+        
+        <li><a href="../../../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../../libs.html">libs</a></li>
+        
+        <li><a href="../../../../../../bsw.html">bsw</a></li>
+        
+        <li><a href="../../../../../uds.html">uds</a></li>
+        
+        <li><a href="../../../../src.html">src</a></li>
+        
+        <li><a href="../../../uds.html">uds</a></li>
+        
+        <li ><a href="../../connection.html">connection</a>
+            </li>
+
+        
+        <li class="active"><a href="../ManagedOutgoingDiagConnection.cpp.html">ManagedOutgoingDiagConnection.cpp</a>:191
+            </li>
+        
+    </ol>
+
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <th>Function</th>
+                <td colspan="5">
+                    <span class="icon-function">uds::ManagedOutgoingDiagConnection::terminate()</span>
+                </td>
+            </tr>
+
+            <tr>
+                <th rowspan="2"></th>
+                <th>Address</th>
+                <th>Remarks</th>
+                <th>Stack</th>
+                <th>Code</th>
+                <th>Static</th>
+            </tr>
+            <tr>
+                <td>0x0000da40</td>
+                <td>
+    
+    
+</td>
+                <td></td>
+                <td>248</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th>No Callers</th>
+                <td colspan="5">
+                
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Callees (3,
+                            <span title="sum of used bytes by all callees">
+                            Σ=292
+                            </span>
+                        )
+                    
+                </th>
+                <td colspan="5">
+                
+                    <a href="../../../../../util/include/util/logger/Logger.h/36d1ae1365862a45a74fa55e9d725fcd.html">util::logger::Logger::debug(unsigned char, char const*, ...) (56)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../../../../../asyncFreeRtos/src/async/Types.cpp/3decd3b646058460a8725450b13ebf07.html">async::TimeoutType::cancel() (96)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../DiagConnectionManager.cpp/a7f7cf12c5edcdda219a6fa99cee7894.html">uds::DiagConnectionManager::diagConnectionTerminated(uds::ManagedOutgoingDiagConnection&amp;) (140)</a>
+                    
+                
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    
+    <pre><a href="./b389f7525eeb57fe0ec653941314f7b5.html">uds::ManagedOutgoingDiagConnection::timeoutOccured() (72)</a></pre>
+    
+
+    <pre>
+
+    uds::ManagedOutgoingDiagConnection::terminate():
+
+        da40:	b5f0      	push	{r4, r5, r6, r7, lr}
+
+        da42:	4604      	mov	r4, r0
+
+        da44:	b083      	sub	sp, #12
+
+        da46:	f3ef 8310 	mrs	r3, PRIMASK
+
+    getMachineStateRegisterValueAndSuspendAllInterrupts():
+
+        da4a:	b672      	cpsid	i
+
+    uds::ManagedOutgoingDiagConnection::terminate():
+
+        da4c:	7d42      	ldrb	r2, [r0, #21]
+
+        da4e:	b91a      	cbnz	r2, da58 <<a href="./d1e9ca00aa70caec26fb3ba49f495339.html">uds::ManagedOutgoingDiagConnection::terminate()</a>+0x18>
+
+        da50:	f890 2085 	ldrb.w	r2, [r0, #133]	; 0x85
+
+        da54:	2a00      	cmp	r2, #0
+
+        da56:	d054      	beq.n	db02 <<a href="./d1e9ca00aa70caec26fb3ba49f495339.html">uds::ManagedOutgoingDiagConnection::terminate()</a>+0xc2>
+
+        da58:	2200      	movs	r2, #0
+
+        da5a:	7562      	strb	r2, [r4, #21]
+
+        da5c:	f884 2085 	strb.w	r2, [r4, #133]	; 0x85
+
+        da60:	f383 8810 	msr	PRIMASK, r3
+
+        da64:	4b32      	ldr	r3, [pc, #200]	; (db30 <<a href="./d1e9ca00aa70caec26fb3ba49f495339.html">uds::ManagedOutgoingDiagConnection::terminate()</a>+0xf0>)
+
+        da66:	f8d4 1080 	ldr.w	r1, [r4, #128]	; 0x80
+
+        da6a:	7818      	ldrb	r0, [r3, #0]
+
+        da6c:	8ae2      	ldrh	r2, [r4, #22]
+
+        da6e:	8b23      	ldrh	r3, [r4, #24]
+
+        da70:	7ea7      	ldrb	r7, [r4, #26]
+
+        da72:	b151      	cbz	r1, da8a <<a href="./d1e9ca00aa70caec26fb3ba49f495339.html">uds::ManagedOutgoingDiagConnection::terminate()</a>+0x4a>
+
+    _ZNK4estd5queueIN9transport12TransportJobENS_5dequeIS2_EEE4sizeEv():
+
+        da74:	680e      	ldr	r6, [r1, #0]
+
+    _ZNK4estd5dequeIN9transport12TransportJobEE4sizeEv():
+
+        da76:	6875      	ldr	r5, [r6, #4]
+
+        da78:	68f1      	ldr	r1, [r6, #12]
+
+        da7a:	68b6      	ldr	r6, [r6, #8]
+
+        da7c:	4429      	add	r1, r5
+
+        da7e:	3101      	adds	r1, #1
+
+        da80:	1b89      	subs	r1, r1, r6
+
+        da82:	fbb1 f6f5 	udiv	r6, r1, r5
+
+        da86:	fb05 1116 	mls	r1, r5, r6, r1
+
+    uds::ManagedOutgoingDiagConnection::terminate():
+
+        da8a:	9101      	str	r1, [sp, #4]
+
+        da8c:	9700      	str	r7, [sp, #0]
+
+        da8e:	4929      	ldr	r1, [pc, #164]	; (db34 <<a href="./d1e9ca00aa70caec26fb3ba49f495339.html">uds::ManagedOutgoingDiagConnection::terminate()</a>+0xf4>)
+
+        da90:	f7f3 fe80 	bl	1794 <<a href="../../../../../util/include/util/logger/Logger.h/36d1ae1365862a45a74fa55e9d725fcd.html">util::logger::Logger::debug(unsigned char, char const*, ...)</a>>
+
+        da94:	f104 0028 	add.w	r0, r4, #40	; 0x28
+
+        da98:	f7fc f98c 	bl	9db4 <<a href="../../../../../asyncFreeRtos/src/async/Types.cpp/3decd3b646058460a8725450b13ebf07.html">async::TimeoutType::cancel()</a>>
+
+        da9c:	f104 0050 	add.w	r0, r4, #80	; 0x50
+
+        daa0:	f7fc f988 	bl	9db4 <<a href="../../../../../asyncFreeRtos/src/async/Types.cpp/3decd3b646058460a8725450b13ebf07.html">async::TimeoutType::cancel()</a>>
+
+        daa4:	6920      	ldr	r0, [r4, #16]
+
+        daa6:	2300      	movs	r3, #0
+
+        daa8:	f884 3071 	strb.w	r3, [r4, #113]	; 0x71
+
+        daac:	f884 3074 	strb.w	r3, [r4, #116]	; 0x74
+
+        dab0:	61e3      	str	r3, [r4, #28]
+
+        dab2:	b110      	cbz	r0, daba <<a href="./d1e9ca00aa70caec26fb3ba49f495339.html">uds::ManagedOutgoingDiagConnection::terminate()</a>+0x7a>
+
+        dab4:	4621      	mov	r1, r4
+
+        dab6:	f001 ff27 	bl	f908 <<a href="../DiagConnectionManager.cpp/a7f7cf12c5edcdda219a6fa99cee7894.html">uds::DiagConnectionManager::diagConnectionTerminated(uds::ManagedOutgoingDiagConnection&)</a>>
+
+        daba:	f8d4 3080 	ldr.w	r3, [r4, #128]	; 0x80
+
+        dabe:	b1db      	cbz	r3, daf8 <<a href="./d1e9ca00aa70caec26fb3ba49f495339.html">uds::ManagedOutgoingDiagConnection::terminate()</a>+0xb8>
+
+        dac0:	2500      	movs	r5, #0
+
+    _ZNK4estd5queueIN9transport12TransportJobENS_5dequeIS2_EEE5emptyEv():
+
+        dac2:	681e      	ldr	r6, [r3, #0]
+
+    _ZNK4estd5dequeIN9transport12TransportJobEE4sizeEv():
+
+        dac4:	6871      	ldr	r1, [r6, #4]
+
+        dac6:	68f3      	ldr	r3, [r6, #12]
+
+        dac8:	68b2      	ldr	r2, [r6, #8]
+
+        daca:	440b      	add	r3, r1
+
+        dacc:	f103 0e01 	add.w	lr, r3, #1
+
+        dad0:	e009      	b.n	dae6 <<a href="./d1e9ca00aa70caec26fb3ba49f495339.html">uds::ManagedOutgoingDiagConnection::terminate()</a>+0xa6>
+
+    _ZN4estd10type_utilsIN9transport12TransportJobEE12cast_to_typeEPhj():
+
+        dad2:	6833      	ldr	r3, [r6, #0]
+
+    _ZN4estd5dequeIN9transport12TransportJobEE9pop_frontEv():
+
+        dad4:	fbb0 fcf1 	udiv	ip, r0, r1
+
+    _ZN4estd10type_utilsIN9transport12TransportJobEE12cast_to_typeEPhj():
+
+        dad8:	eb03 03c2 	add.w	r3, r3, r2, lsl #3
+
+    _ZN4estd5dequeIN9transport12TransportJobEE9pop_frontEv():
+
+        dadc:	fb01 021c 	mls	r2, r1, ip, r0
+
+    _ZNK9transport12TransportJob20getProcessedListenerEv():
+
+        dae0:	6858      	ldr	r0, [r3, #4]
+
+    _ZN4estd5dequeIN9transport12TransportJobEE9pop_frontEv():
+
+        dae2:	60b2      	str	r2, [r6, #8]
+
+    uds::ManagedOutgoingDiagConnection::terminate():
+
+        dae4:	b988      	cbnz	r0, db0a <<a href="./d1e9ca00aa70caec26fb3ba49f495339.html">uds::ManagedOutgoingDiagConnection::terminate()</a>+0xca>
+
+    _ZNK4estd5dequeIN9transport12TransportJobEE4sizeEv():
+
+        dae6:	ebae 0302 	sub.w	r3, lr, r2
+
+        daea:	fbb3 fcf1 	udiv	ip, r3, r1
+
+        daee:	fb01 331c 	mls	r3, r1, ip, r3
+
+    _ZN4estd5dequeIN9transport12TransportJobEE9pop_frontEv():
+
+        daf2:	1c50      	adds	r0, r2, #1
+
+    uds::ManagedOutgoingDiagConnection::terminate():
+
+        daf4:	2b00      	cmp	r3, #0
+
+        daf6:	d1ec      	bne.n	dad2 <<a href="./d1e9ca00aa70caec26fb3ba49f495339.html">uds::ManagedOutgoingDiagConnection::terminate()</a>+0x92>
+
+        daf8:	2300      	movs	r3, #0
+
+        dafa:	f884 3084 	strb.w	r3, [r4, #132]	; 0x84
+
+        dafe:	b003      	add	sp, #12
+
+        db00:	bdf0      	pop	{r4, r5, r6, r7, pc}
+
+        db02:	f383 8810 	msr	PRIMASK, r3
+
+        db06:	b003      	add	sp, #12
+
+        db08:	bdf0      	pop	{r4, r5, r6, r7, pc}
+
+        db0a:	f894 2084 	ldrb.w	r2, [r4, #132]	; 0x84
+
+        db0e:	b14a      	cbz	r2, db24 <<a href="./d1e9ca00aa70caec26fb3ba49f495339.html">uds::ManagedOutgoingDiagConnection::terminate()</a>+0xe4>
+
+        db10:	6802      	ldr	r2, [r0, #0]
+
+        db12:	6819      	ldr	r1, [r3, #0]
+
+        db14:	6813      	ldr	r3, [r2, #0]
+
+        db16:	2200      	movs	r2, #0
+
+        db18:	4798      	blx	r3
+
+        db1a:	f884 5084 	strb.w	r5, [r4, #132]	; 0x84
+
+        db1e:	f8d4 3080 	ldr.w	r3, [r4, #128]	; 0x80
+
+        db22:	e7ce      	b.n	dac2 <<a href="./d1e9ca00aa70caec26fb3ba49f495339.html">uds::ManagedOutgoingDiagConnection::terminate()</a>+0x82>
+
+        db24:	6802      	ldr	r2, [r0, #0]
+
+        db26:	6819      	ldr	r1, [r3, #0]
+
+        db28:	6813      	ldr	r3, [r2, #0]
+
+        db2a:	2204      	movs	r2, #4
+
+        db2c:	4798      	blx	r3
+
+        db2e:	e7f6      	b.n	db1e <<a href="./d1e9ca00aa70caec26fb3ba49f495339.html">uds::ManagedOutgoingDiagConnection::terminate()</a>+0xde>
+
+        db30:	1ffe0081 	.word	0x1ffe0081
+
+        db34:	000171e8 	.word	0x000171e8
+
+    </pre>
+
+    
+    <pre><a href="./4d2d449e800e84ee8aa53393bc940339.html">uds::ManagedOutgoingDiagConnection::processResponseQueue() (152)</a></pre>
+    
+
+    
+
+
+        </div>
+    <div id="page-footer">
+        <hr>
+        
+            brought to you with 💖
+            by <a href="https://twitter.com/hbehrens">Heiko Behrens</a>
+            <span class="secondary">– MIT license, copyright © 2014-2025</span>
+        
+    </div>
+    </div>
+</body>
+</html>

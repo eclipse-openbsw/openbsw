@@ -1,0 +1,437 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../../../../../../../../../../../../../static/css/style.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <title>Symbol - puncover</title>
+    
+</head>
+<body>
+    <div class="container" id="content">
+        <div class="page-header">
+            <nav class="navbar navbar-default" role="navigation">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="../../../../../../../../../../../../../../index.html">
+                    Puncover
+                  </a>
+                </div>
+              </div>
+            </nav>
+          
+        </div>
+        <div id="inner_content">
+        
+    
+    <ol class="breadcrumb folders">
+        
+        <li><a href="../../../../../../../../../../../../../../home.html">home</a></li>
+        
+        <li><a href="../../../../../../../../../../../../../runner.html">runner</a></li>
+        
+        <li><a href="../../../../../../../../../../../../work.html">work</a></li>
+        
+        <li><a href="../../../../../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../../../../platforms.html">platforms</a></li>
+        
+        <li><a href="../../../../../../../../s32k1xx.html">s32k1xx</a></li>
+        
+        <li><a href="../../../../../../../bsp.html">bsp</a></li>
+        
+        <li><a href="../../../../../../canflex2Transceiver.html">canflex2Transceiver</a></li>
+        
+        <li><a href="../../../../../src.html">src</a></li>
+        
+        <li><a href="../../../../can.html">can</a></li>
+        
+        <li><a href="../../../transceiver.html">transceiver</a></li>
+        
+        <li ><a href="../../canflex2.html">canflex2</a>
+            </li>
+
+        
+        <li class="active"><a href="../CanFlex2Transceiver.cpp.html">CanFlex2Transceiver.cpp</a>:166
+            </li>
+        
+    </ol>
+
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <th>Function</th>
+                <td colspan="5">
+                    <span class="icon-function">bios::CanFlex2Transceiver::canFrameSentAsyncCallback()</span>
+                </td>
+            </tr>
+
+            <tr>
+                <th rowspan="2"></th>
+                <th>Address</th>
+                <th>Remarks</th>
+                <th>Stack</th>
+                <th>Code</th>
+                <th>Static</th>
+            </tr>
+            <tr>
+                <td>0x00010444</td>
+                <td>
+    <span class="label label-success">x-module</span>
+    
+</td>
+                <td></td>
+                <td>284</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th>Callers (1)</th>
+                <td colspan="5">
+                
+                    <a href="../../../../../../../../../libs/bsw/estd/include/estd/functional.h/ec8d5172702bf42411530ea9d168693b.html">void estd::function&lt;void ()&gt;::member_function_caller&lt;bios::CanFlex2Transceiver, &amp;bios::CanFlex2Transceiver::canFrameSentAsyncCallback&gt;(void*) (4)</a>
+                    
+                
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Callees (4,
+                            <span title="sum of used bytes by all callees">
+                            Σ=476
+                            </span>
+                        )
+                    
+                </th>
+                <td colspan="5">
+                
+                    <a href="../../../../../../../../../libs/bsw/cpp2can/src/can/transceiver/AbstractCANTransceiver.cpp/0dcca8866f0480fa593c276289f0eafd.html">can::AbstractCANTransceiver::notifySentListeners(can::CANFrame const&amp;) (44)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../../../../../../bspFlexCan/src/can/FlexCANDevice.cpp/72ef0647a5d920be2f28554d857f39e1.html">bios::FlexCANDevice::getTransmitBuffer(can::CANFrame const&amp;, bool) (176)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../../../../../../bspFlexCan/src/can/FlexCANDevice.cpp/de9afb3f00ea1ccea1910cd447de9d33.html">bios::FlexCANDevice::transmit(can::CANFrame const&amp;, unsigned char, bool) (240)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../../../../../../../../../libs/bsw/estd/src/estd/assert.cpp/38ac861630520857582cce4f749c5937.html">estd::assert_func(char const*, int, char const*) (16)</a>
+                    
+                
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    
+    <pre><a href="./edf0de080bd70ce4243738ed989937cb.html">bios::CanFlex2Transceiver::write(can::CANFrame const&amp;, can::ICANFrameSentListener&amp;) (4)</a></pre>
+    
+
+    <pre>
+
+    bios::CanFlex2Transceiver::canFrameSentAsyncCallback():
+
+       10444:	b570      	push	{r4, r5, r6, lr}
+
+       10446:	4604      	mov	r4, r0
+
+       10448:	b082      	sub	sp, #8
+
+       1044a:	f3ef 8c10 	mrs	ip, PRIMASK
+
+    getMachineStateRegisterValueAndSuspendAllInterrupts():
+
+       1044e:	b672      	cpsid	i
+
+    _ZNK4estd5dequeIN4bios19CanFlex2Transceiver17TxJobWithCallbackEE4sizeEv():
+
+       10450:	f8d0 5418 	ldr.w	r5, [r0, #1048]	; 0x418
+
+    bios::CanFlex2Transceiver::canFrameSentAsyncCallback():
+
+       10454:	f8d0 2410 	ldr.w	r2, [r0, #1040]	; 0x410
+
+    _ZNK4estd5dequeIN4bios19CanFlex2Transceiver17TxJobWithCallbackEE4sizeEv():
+
+       10458:	f8d0 3420 	ldr.w	r3, [r0, #1056]	; 0x420
+
+       1045c:	f8d0 141c 	ldr.w	r1, [r0, #1052]	; 0x41c
+
+    bios::CanFlex2Transceiver::canFrameSentAsyncCallback():
+
+       10460:	3201      	adds	r2, #1
+
+    _ZNK4estd5dequeIN4bios19CanFlex2Transceiver17TxJobWithCallbackEE4sizeEv():
+
+       10462:	442b      	add	r3, r5
+
+    bios::CanFlex2Transceiver::canFrameSentAsyncCallback():
+
+       10464:	f8c0 2410 	str.w	r2, [r0, #1040]	; 0x410
+
+    _ZNK4estd5dequeIN4bios19CanFlex2Transceiver17TxJobWithCallbackEE4sizeEv():
+
+       10468:	1a5a      	subs	r2, r3, r1
+
+       1046a:	3201      	adds	r2, #1
+
+       1046c:	fbb2 f0f5 	udiv	r0, r2, r5
+
+       10470:	fb05 2210 	mls	r2, r5, r0, r2
+
+    bios::CanFlex2Transceiver::canFrameSentAsyncCallback():
+
+       10474:	b91a      	cbnz	r2, 1047e <<a href="./5d2aa3f64ba53bd613f115759777d3c7.html">bios::CanFlex2Transceiver::canFrameSentAsyncCallback()</a>+0x3a>
+
+       10476:	f38c 8810 	msr	PRIMASK, ip
+
+       1047a:	b002      	add	sp, #8
+
+       1047c:	bd70      	pop	{r4, r5, r6, pc}
+
+    _ZN4estd10type_utilsIN4bios19CanFlex2Transceiver17TxJobWithCallbackEE12cast_to_typeEPhj():
+
+       1047e:	f8d4 0414 	ldr.w	r0, [r4, #1044]	; 0x414
+
+    _ZN4estd5dequeIN4bios19CanFlex2Transceiver17TxJobWithCallbackEE9pop_frontEv():
+
+       10482:	1c4a      	adds	r2, r1, #1
+
+    _ZNK4estd5dequeIN4bios19CanFlex2Transceiver17TxJobWithCallbackEE4sizeEv():
+
+       10484:	3301      	adds	r3, #1
+
+    _ZN4estd5dequeIN4bios19CanFlex2Transceiver17TxJobWithCallbackEE9pop_frontEv():
+
+       10486:	fbb2 fef5 	udiv	lr, r2, r5
+
+       1048a:	fb05 221e 	mls	r2, r5, lr, r2
+
+    _ZN4estd10type_utilsIN4bios19CanFlex2Transceiver17TxJobWithCallbackEE12cast_to_typeEPhj():
+
+       1048e:	eb00 0ec1 	add.w	lr, r0, r1, lsl #3
+
+    _ZNK4estd5dequeIN4bios19CanFlex2Transceiver17TxJobWithCallbackEE4sizeEv():
+
+       10492:	1a9b      	subs	r3, r3, r2
+
+    bios::CanFlex2Transceiver::canFrameSentAsyncCallback():
+
+       10494:	f850 0031 	ldr.w	r0, [r0, r1, lsl #3]
+
+       10498:	f8de 1004 	ldr.w	r1, [lr, #4]
+
+    _ZN4estd5dequeIN4bios19CanFlex2Transceiver17TxJobWithCallbackEE9pop_frontEv():
+
+       1049c:	f8c4 241c 	str.w	r2, [r4, #1052]	; 0x41c
+
+    _ZNK4estd5dequeIN4bios19CanFlex2Transceiver17TxJobWithCallbackEE4sizeEv():
+
+       104a0:	fbb3 f2f5 	udiv	r2, r3, r5
+
+       104a4:	fb05 3312 	mls	r3, r5, r2, r3
+
+    bios::CanFlex2Transceiver::canFrameSentAsyncCallback():
+
+       104a8:	b163      	cbz	r3, 104c4 <<a href="./5d2aa3f64ba53bd613f115759777d3c7.html">bios::CanFlex2Transceiver::canFrameSentAsyncCallback()</a>+0x80>
+
+       104aa:	f894 311c 	ldrb.w	r3, [r4, #284]	; 0x11c
+
+       104ae:	f003 03fd 	and.w	r3, r3, #253	; 0xfd
+
+       104b2:	2b01      	cmp	r3, #1
+
+       104b4:	d006      	beq.n	104c4 <<a href="./5d2aa3f64ba53bd613f115759777d3c7.html">bios::CanFlex2Transceiver::canFrameSentAsyncCallback()</a>+0x80>
+
+    _ZNK4estd5dequeIN4bios19CanFlex2Transceiver17TxJobWithCallbackEE8max_sizeEv():
+
+       104b6:	3d01      	subs	r5, #1
+
+    _ZN4estd5dequeIN4bios19CanFlex2Transceiver17TxJobWithCallbackEE5clearEv():
+
+       104b8:	f8c4 5420 	str.w	r5, [r4, #1056]	; 0x420
+
+       104bc:	2500      	movs	r5, #0
+
+       104be:	f8c4 541c 	str.w	r5, [r4, #1052]	; 0x41c
+
+       104c2:	e000      	b.n	104c6 <<a href="./5d2aa3f64ba53bd613f115759777d3c7.html">bios::CanFlex2Transceiver::canFrameSentAsyncCallback()</a>+0x82>
+
+    bios::CanFlex2Transceiver::canFrameSentAsyncCallback():
+
+       104c4:	461d      	mov	r5, r3
+
+       104c6:	f38c 8810 	msr	PRIMASK, ip
+
+       104ca:	6803      	ldr	r3, [r0, #0]
+
+       104cc:	9101      	str	r1, [sp, #4]
+
+       104ce:	681b      	ldr	r3, [r3, #0]
+
+       104d0:	4798      	blx	r3
+
+    _ZN4bios19CanFlex2Transceiver28notifyRegisteredSentListenerERKN3can8CANFrameE():
+
+       104d2:	9901      	ldr	r1, [sp, #4]
+
+       104d4:	4620      	mov	r0, r4
+
+       104d6:	f003 f8df 	bl	13698 <<a href="../../../../../../../../../libs/bsw/cpp2can/src/can/transceiver/AbstractCANTransceiver.cpp/0dcca8866f0480fa593c276289f0eafd.html">can::AbstractCANTransceiver::notifySentListeners(can::CANFrame const&)</a>>
+
+    bios::CanFlex2Transceiver::canFrameSentAsyncCallback():
+
+       104da:	2d00      	cmp	r5, #0
+
+       104dc:	d0cd      	beq.n	1047a <<a href="./5d2aa3f64ba53bd613f115759777d3c7.html">bios::CanFlex2Transceiver::canFrameSentAsyncCallback()</a>+0x36>
+
+       104de:	f3ef 8510 	mrs	r5, PRIMASK
+
+    getMachineStateRegisterValueAndSuspendAllInterrupts():
+
+       104e2:	b672      	cpsid	i
+
+    _ZNK4estd5dequeIN4bios19CanFlex2Transceiver17TxJobWithCallbackEE4sizeEv():
+
+       104e4:	f8d4 2418 	ldr.w	r2, [r4, #1048]	; 0x418
+
+       104e8:	f8d4 3420 	ldr.w	r3, [r4, #1056]	; 0x420
+
+       104ec:	f8d4 141c 	ldr.w	r1, [r4, #1052]	; 0x41c
+
+       104f0:	18d0      	adds	r0, r2, r3
+
+       104f2:	3001      	adds	r0, #1
+
+       104f4:	1a40      	subs	r0, r0, r1
+
+       104f6:	fbb0 f3f2 	udiv	r3, r0, r2
+
+       104fa:	fb02 0013 	mls	r0, r2, r3, r0
+
+    _ZN4estd5dequeIN4bios19CanFlex2Transceiver17TxJobWithCallbackEE5frontEv():
+
+       104fe:	b340      	cbz	r0, 10552 <<a href="./5d2aa3f64ba53bd613f115759777d3c7.html">bios::CanFlex2Transceiver::canFrameSentAsyncCallback()</a>+0x10e>
+
+    bios::CanFlex2Transceiver::canFrameSentAsyncCallback():
+
+       10500:	f8d4 3414 	ldr.w	r3, [r4, #1044]	; 0x414
+
+       10504:	eb03 03c1 	add.w	r3, r3, r1, lsl #3
+
+       10508:	f504 7696 	add.w	r6, r4, #300	; 0x12c
+
+       1050c:	6859      	ldr	r1, [r3, #4]
+
+       1050e:	9101      	str	r1, [sp, #4]
+
+       10510:	2201      	movs	r2, #1
+
+       10512:	4630      	mov	r0, r6
+
+       10514:	f000 fa34 	bl	10980 <<a href="../../../../../../bspFlexCan/src/can/FlexCANDevice.cpp/72ef0647a5d920be2f28554d857f39e1.html">bios::FlexCANDevice::getTransmitBuffer(can::CANFrame const&, bool)</a>>
+
+       10518:	28ff      	cmp	r0, #255	; 0xff
+
+       1051a:	9901      	ldr	r1, [sp, #4]
+
+       1051c:	d006      	beq.n	1052c <<a href="./5d2aa3f64ba53bd613f115759777d3c7.html">bios::CanFlex2Transceiver::canFrameSentAsyncCallback()</a>+0xe8>
+
+       1051e:	4602      	mov	r2, r0
+
+       10520:	2301      	movs	r3, #1
+
+       10522:	4630      	mov	r0, r6
+
+       10524:	f000 fa84 	bl	10a30 <<a href="../../../../../../bspFlexCan/src/can/FlexCANDevice.cpp/de9afb3f00ea1ccea1910cd447de9d33.html">bios::FlexCANDevice::transmit(can::CANFrame const&, unsigned char, bool)</a>>
+
+       10528:	9901      	ldr	r1, [sp, #4]
+
+       1052a:	b178      	cbz	r0, 1054c <<a href="./5d2aa3f64ba53bd613f115759777d3c7.html">bios::CanFlex2Transceiver::canFrameSentAsyncCallback()</a>+0x108>
+
+    _ZNK4estd5dequeIN4bios19CanFlex2Transceiver17TxJobWithCallbackEE8max_sizeEv():
+
+       1052c:	f8d4 3418 	ldr.w	r3, [r4, #1048]	; 0x418
+
+    _ZN4estd5dequeIN4bios19CanFlex2Transceiver17TxJobWithCallbackEE5clearEv():
+
+       10530:	2200      	movs	r2, #0
+
+    _ZNK4estd5dequeIN4bios19CanFlex2Transceiver17TxJobWithCallbackEE8max_sizeEv():
+
+       10532:	3b01      	subs	r3, #1
+
+    _ZN4estd5dequeIN4bios19CanFlex2Transceiver17TxJobWithCallbackEE5clearEv():
+
+       10534:	f8c4 3420 	str.w	r3, [r4, #1056]	; 0x420
+
+       10538:	f8c4 241c 	str.w	r2, [r4, #1052]	; 0x41c
+
+    bios::CanFlex2Transceiver::canFrameSentAsyncCallback():
+
+       1053c:	f385 8810 	msr	PRIMASK, r5
+
+    _ZN4bios19CanFlex2Transceiver28notifyRegisteredSentListenerERKN3can8CANFrameE():
+
+       10540:	4620      	mov	r0, r4
+
+    bios::CanFlex2Transceiver::canFrameSentAsyncCallback():
+
+       10542:	b002      	add	sp, #8
+
+       10544:	e8bd 4070 	ldmia.w	sp!, {r4, r5, r6, lr}
+
+    _ZN4bios19CanFlex2Transceiver28notifyRegisteredSentListenerERKN3can8CANFrameE():
+
+       10548:	f003 b8a6 	b.w	13698 <<a href="../../../../../../../../../libs/bsw/cpp2can/src/can/transceiver/AbstractCANTransceiver.cpp/0dcca8866f0480fa593c276289f0eafd.html">can::AbstractCANTransceiver::notifySentListeners(can::CANFrame const&)</a>>
+
+    bios::CanFlex2Transceiver::canFrameSentAsyncCallback():
+
+       1054c:	f385 8810 	msr	PRIMASK, r5
+
+    resumeAllInterrupts():
+
+       10550:	e793      	b.n	1047a <<a href="./5d2aa3f64ba53bd613f115759777d3c7.html">bios::CanFlex2Transceiver::canFrameSentAsyncCallback()</a>+0x36>
+
+    _ZN4estd5dequeIN4bios19CanFlex2Transceiver17TxJobWithCallbackEE5frontEv():
+
+       10552:	4a02      	ldr	r2, [pc, #8]	; (1055c <<a href="./5d2aa3f64ba53bd613f115759777d3c7.html">bios::CanFlex2Transceiver::canFrameSentAsyncCallback()</a>+0x118>)
+
+       10554:	f240 41fe 	movw	r1, #1278	; 0x4fe
+
+       10558:	f7f5 fc00 	bl	5d5c <<a href="../../../../../../../../../libs/bsw/estd/src/estd/assert.cpp/38ac861630520857582cce4f749c5937.html">estd::assert_func(char const*, int, char const*)</a>>
+
+       1055c:	00017e60 	.word	0x00017e60
+
+    </pre>
+
+    
+    <pre><a href="../../../../../../../../../libs/bsw/estd/include/estd/functional.h/ec8d5172702bf42411530ea9d168693b.html">void estd::function&lt;void ()&gt;::member_function_caller&lt;bios::CanFlex2Transceiver, &amp;bios::CanFlex2Transceiver::canFrameSentAsyncCallback&gt;(void*) (4)</a></pre>
+    
+
+    
+
+
+        </div>
+    <div id="page-footer">
+        <hr>
+        
+            brought to you with 💖
+            by <a href="https://twitter.com/hbehrens">Heiko Behrens</a>
+            <span class="secondary">– MIT license, copyright © 2014-2025</span>
+        
+    </div>
+    </div>
+</body>
+</html>

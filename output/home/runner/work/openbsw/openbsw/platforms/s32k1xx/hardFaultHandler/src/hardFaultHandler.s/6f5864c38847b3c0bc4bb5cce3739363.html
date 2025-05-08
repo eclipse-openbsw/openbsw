@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../../../../../../../../../static/css/style.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <title>Symbol - puncover</title>
+    
+</head>
+<body>
+    <div class="container" id="content">
+        <div class="page-header">
+            <nav class="navbar navbar-default" role="navigation">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="../../../../../../../../../../index.html">
+                    Puncover
+                  </a>
+                </div>
+              </div>
+            </nav>
+          
+        </div>
+        <div id="inner_content">
+        
+    
+    <ol class="breadcrumb folders">
+        
+        <li><a href="../../../../../../../../../../home.html">home</a></li>
+        
+        <li><a href="../../../../../../../../../runner.html">runner</a></li>
+        
+        <li><a href="../../../../../../../../work.html">work</a></li>
+        
+        <li><a href="../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../platforms.html">platforms</a></li>
+        
+        <li><a href="../../../../s32k1xx.html">s32k1xx</a></li>
+        
+        <li><a href="../../../hardFaultHandler.html">hardFaultHandler</a></li>
+        
+        <li ><a href="../../src.html">src</a>
+            </li>
+
+        
+        <li class="active"><a href="../hardFaultHandler.s.html">hardFaultHandler.s</a>:67
+            </li>
+        
+    </ol>
+
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <th>Function</th>
+                <td colspan="5">
+                    <span class="icon-function">customHardFaultHandler</span>
+                </td>
+            </tr>
+
+            <tr>
+                <th rowspan="2"></th>
+                <th>Address</th>
+                <th>Remarks</th>
+                <th>Stack</th>
+                <th>Code</th>
+                <th>Static</th>
+            </tr>
+            <tr>
+                <td>0x00000760</td>
+                <td>
+    <span class="label label-success">x-module</span>
+    
+</td>
+                <td></td>
+                <td>148</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th>Callers (2)</th>
+                <td colspan="5">
+                
+                    <a href="../../../../../executables/referenceApp/platforms/s32k148evb/main/src/os/isr/isr_sys.cpp/17dd9712ba770fe04d05caa1a33cccdf.html">HardFault_Handler (20)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../../../../../executables/referenceApp/platforms/s32k148evb/main/src/os/isr/isr_wdg.cpp/74005671c3fb72c8a7bf18ff3760dedf.html">WDOG_EWM_IRQHandler (8)</a>
+                    
+                
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Callees (1,
+                            <span title="sum of used bytes by all callees">
+                            Σ=16
+                            </span>
+                        )
+                    
+                </th>
+                <td colspan="5">
+                
+                    <a href="../../../../../executables/referenceApp/platforms/s32k148evb/main/src/os/isr/isr_sys.cpp/34b5013642d4ac2b1a2eac1db495f38a.html">HardFault_Handler_Final (16)</a>
+                    
+                
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    
+    <pre><a href="../../../../../executables/referenceApp/platforms/s32k148evb/main/src/bsp/startUp.S/b0d4998a26f5b5742ad38c4af8817e32.html">Exception (4)</a></pre>
+    
+
+    <pre>
+
+    customHardFaultHandler():
+
+         760:	f3ef 8c03 	mrs	ip, PSR
+
+         764:	4a21      	ldr	r2, [pc, #132]	; (7ec <<a href="./6f5864c38847b3c0bc4bb5cce3739363.html">customHardFaultHandler</a>+0x8c>)
+
+         766:	f8c2 c000 	str.w	ip, [r2]
+
+         76a:	f8c2 e004 	str.w	lr, [r2, #4]
+
+         76e:	6194      	str	r4, [r2, #24]
+
+         770:	61d5      	str	r5, [r2, #28]
+
+         772:	6216      	str	r6, [r2, #32]
+
+         774:	6257      	str	r7, [r2, #36]	; 0x24
+
+         776:	f8c2 8028 	str.w	r8, [r2, #40]	; 0x28
+
+         77a:	f8c2 902c 	str.w	r9, [r2, #44]	; 0x2c
+
+         77e:	f8c2 a030 	str.w	sl, [r2, #48]	; 0x30
+
+         782:	f8c2 b034 	str.w	fp, [r2, #52]	; 0x34
+
+         786:	f01e 0f04 	tst.w	lr, #4
+
+         78a:	bf0c      	ite	eq
+
+         78c:	f3ef 8108 	mrseq	r1, MSP
+
+         790:	f3ef 8109 	mrsne	r1, PSP
+
+         794:	f101 0020 	add.w	r0, r1, #32
+
+         798:	63d0      	str	r0, [r2, #60]	; 0x3c
+
+         79a:	6808      	ldr	r0, [r1, #0]
+
+         79c:	6090      	str	r0, [r2, #8]
+
+         79e:	6848      	ldr	r0, [r1, #4]
+
+         7a0:	60d0      	str	r0, [r2, #12]
+
+         7a2:	6888      	ldr	r0, [r1, #8]
+
+         7a4:	6110      	str	r0, [r2, #16]
+
+         7a6:	68c8      	ldr	r0, [r1, #12]
+
+         7a8:	6150      	str	r0, [r2, #20]
+
+         7aa:	6908      	ldr	r0, [r1, #16]
+
+         7ac:	6390      	str	r0, [r2, #56]	; 0x38
+
+         7ae:	6948      	ldr	r0, [r1, #20]
+
+         7b0:	6410      	str	r0, [r2, #64]	; 0x40
+
+         7b2:	6988      	ldr	r0, [r1, #24]
+
+         7b4:	6450      	str	r0, [r2, #68]	; 0x44
+
+         7b6:	69c8      	ldr	r0, [r1, #28]
+
+         7b8:	6490      	str	r0, [r2, #72]	; 0x48
+
+         7ba:	f101 0120 	add.w	r1, r1, #32
+
+         7be:	f102 024c 	add.w	r2, r2, #76	; 0x4c
+
+         7c2:	f102 03f0 	add.w	r3, r2, #240	; 0xf0
+
+         7c6:	f851 0b04 	ldr.w	r0, [r1], #4
+
+         7ca:	f842 0b04 	str.w	r0, [r2], #4
+
+         7ce:	429a      	cmp	r2, r3
+
+         7d0:	d1f9      	bne.n	7c6 <<a href="./6f5864c38847b3c0bc4bb5cce3739363.html">customHardFaultHandler</a>+0x66>
+
+         7d2:	f04f 0100 	mov.w	r1, #0
+
+         7d6:	4a05      	ldr	r2, [pc, #20]	; (7ec <<a href="./6f5864c38847b3c0bc4bb5cce3739363.html">customHardFaultHandler</a>+0x8c>)
+
+         7d8:	4b05      	ldr	r3, [pc, #20]	; (7f0 <<a href="./6f5864c38847b3c0bc4bb5cce3739363.html">customHardFaultHandler</a>+0x90>)
+
+         7da:	f852 0b04 	ldr.w	r0, [r2], #4
+
+         7de:	4401      	add	r1, r0
+
+         7e0:	429a      	cmp	r2, r3
+
+         7e2:	d1fa      	bne.n	7da <<a href="./6f5864c38847b3c0bc4bb5cce3739363.html">customHardFaultHandler</a>+0x7a>
+
+         7e4:	6019      	str	r1, [r3, #0]
+
+         7e6:	f010 bb13 	b.w	10e10 <<a href="../../../../../executables/referenceApp/platforms/s32k148evb/main/src/os/isr/isr_sys.cpp/34b5013642d4ac2b1a2eac1db495f38a.html">HardFault_Handler_Final</a>>
+
+         7ea:	0000      	.short	0x0000
+
+         7ec:	2000eec0 	.word	0x2000eec0
+
+         7f0:	2000effc 	.word	0x2000effc
+
+    </pre>
+
+    
+    <pre><a href="../../../../../../../../../../unknown/unknown/985b4898f9e942c80a378b866de7bf13.html">__aeabi_ldivmod (160)</a></pre>
+    
+
+    
+
+
+        </div>
+    <div id="page-footer">
+        <hr>
+        
+            brought to you with 💖
+            by <a href="https://twitter.com/hbehrens">Heiko Behrens</a>
+            <span class="secondary">– MIT license, copyright © 2014-2025</span>
+        
+    </div>
+    </div>
+</body>
+</html>

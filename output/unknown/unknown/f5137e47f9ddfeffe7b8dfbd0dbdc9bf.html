@@ -1,0 +1,355 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../static/css/style.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <title>Symbol - puncover</title>
+    
+</head>
+<body>
+    <div class="container" id="content">
+        <div class="page-header">
+            <nav class="navbar navbar-default" role="navigation">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="../../index.html">
+                    Puncover
+                  </a>
+                </div>
+              </div>
+            </nav>
+          
+        </div>
+        <div id="inner_content">
+        
+    
+    <ol class="breadcrumb folders">
+        
+        <li class="active"><a href="../../unknown.html">&lt;unknown&gt;</a>
+            </li>
+
+        
+        <li class="active">&lt;unknown&gt;
+            </li>
+        
+    </ol>
+
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <th>Function</th>
+                <td colspan="5">
+                    <span class="icon-function">_malloc_r</span>
+                </td>
+            </tr>
+
+            <tr>
+                <th rowspan="2"></th>
+                <th>Address</th>
+                <th>Remarks</th>
+                <th>Stack</th>
+                <th>Code</th>
+                <th>Static</th>
+            </tr>
+            <tr>
+                <td>0x00013bc0</td>
+                <td>
+    
+    
+</td>
+                <td></td>
+                <td>232</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th>Callers (3)</th>
+                <td colspan="5">
+                
+                    <a href="./3655ac5549e6ba4d157cb8f22ef3a07f.html">__smakebuf_r (128)</a>
+                    
+                        ,
+                    
+                
+                    <a href="./193e5ee6f8c2ee71ed491059b5b36426.html">__sfmoreglue (44)</a>
+                    
+                        ,
+                    
+                
+                    <a href="./224eda3dc1d26b208edcc3a08d3175f2.html">malloc (16)</a>
+                    
+                
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Callees (4,
+                            <span title="sum of used bytes by all callees">
+                            Σ=120
+                            </span>
+                        )
+                    
+                </th>
+                <td colspan="5">
+                
+                    <a href="./73fc8c83e515aa7c32577968232a6680.html">__malloc_lock (12)</a>
+                    
+                        ,
+                    
+                
+                    <a href="./60e3006ae9a36c10808a7a8cb6053ce0.html">sbrk_aligned (64)</a>
+                    
+                        ,
+                    
+                
+                    <a href="./37f3ce9323a0bc96907c7ac1c4200bee.html">_sbrk_r (32)</a>
+                    
+                        ,
+                    
+                
+                    <a href="./708c7f18b0c268fd514765d20a8392b6.html">__malloc_unlock (12)</a>
+                    
+                
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    
+    <pre><a href="./60e3006ae9a36c10808a7a8cb6053ce0.html">sbrk_aligned (64)</a></pre>
+    
+
+    <pre>
+
+    _malloc_r():
+
+       13bc0:	e92d 41f0 	stmdb	sp!, {r4, r5, r6, r7, r8, lr}
+
+       13bc4:	1ccd      	adds	r5, r1, #3
+
+       13bc6:	f025 0503 	bic.w	r5, r5, #3
+
+       13bca:	3508      	adds	r5, #8
+
+       13bcc:	2d0c      	cmp	r5, #12
+
+       13bce:	bf38      	it	cc
+
+       13bd0:	250c      	movcc	r5, #12
+
+       13bd2:	2d00      	cmp	r5, #0
+
+       13bd4:	4607      	mov	r7, r0
+
+       13bd6:	db01      	blt.n	13bdc <<a href="./f5137e47f9ddfeffe7b8dfbd0dbdc9bf.html">_malloc_r</a>+0x1c>
+
+       13bd8:	42a9      	cmp	r1, r5
+
+       13bda:	d905      	bls.n	13be8 <<a href="./f5137e47f9ddfeffe7b8dfbd0dbdc9bf.html">_malloc_r</a>+0x28>
+
+       13bdc:	230c      	movs	r3, #12
+
+       13bde:	603b      	str	r3, [r7, #0]
+
+       13be0:	2600      	movs	r6, #0
+
+       13be2:	4630      	mov	r0, r6
+
+       13be4:	e8bd 81f0 	ldmia.w	sp!, {r4, r5, r6, r7, r8, pc}
+
+       13be8:	4e2e      	ldr	r6, [pc, #184]	; (13ca4 <<a href="./f5137e47f9ddfeffe7b8dfbd0dbdc9bf.html">_malloc_r</a>+0xe4>)
+
+       13bea:	f000 fe9d 	bl	14928 <<a href="./73fc8c83e515aa7c32577968232a6680.html">__malloc_lock</a>>
+
+       13bee:	6833      	ldr	r3, [r6, #0]
+
+       13bf0:	461c      	mov	r4, r3
+
+       13bf2:	bb34      	cbnz	r4, 13c42 <<a href="./f5137e47f9ddfeffe7b8dfbd0dbdc9bf.html">_malloc_r</a>+0x82>
+
+       13bf4:	4629      	mov	r1, r5
+
+       13bf6:	4638      	mov	r0, r7
+
+       13bf8:	f7ff ffc2 	bl	13b80 <<a href="./60e3006ae9a36c10808a7a8cb6053ce0.html">sbrk_aligned</a>>
+
+       13bfc:	1c43      	adds	r3, r0, #1
+
+       13bfe:	4604      	mov	r4, r0
+
+       13c00:	d14d      	bne.n	13c9e <<a href="./f5137e47f9ddfeffe7b8dfbd0dbdc9bf.html">_malloc_r</a>+0xde>
+
+       13c02:	6834      	ldr	r4, [r6, #0]
+
+       13c04:	4626      	mov	r6, r4
+
+       13c06:	2e00      	cmp	r6, #0
+
+       13c08:	d140      	bne.n	13c8c <<a href="./f5137e47f9ddfeffe7b8dfbd0dbdc9bf.html">_malloc_r</a>+0xcc>
+
+       13c0a:	6823      	ldr	r3, [r4, #0]
+
+       13c0c:	4631      	mov	r1, r6
+
+       13c0e:	4638      	mov	r0, r7
+
+       13c10:	eb04 0803 	add.w	r8, r4, r3
+
+       13c14:	f000 fb36 	bl	14284 <<a href="./37f3ce9323a0bc96907c7ac1c4200bee.html">_sbrk_r</a>>
+
+       13c18:	4580      	cmp	r8, r0
+
+       13c1a:	d13a      	bne.n	13c92 <<a href="./f5137e47f9ddfeffe7b8dfbd0dbdc9bf.html">_malloc_r</a>+0xd2>
+
+       13c1c:	6821      	ldr	r1, [r4, #0]
+
+       13c1e:	3503      	adds	r5, #3
+
+       13c20:	1a6d      	subs	r5, r5, r1
+
+       13c22:	f025 0503 	bic.w	r5, r5, #3
+
+       13c26:	3508      	adds	r5, #8
+
+       13c28:	2d0c      	cmp	r5, #12
+
+       13c2a:	bf38      	it	cc
+
+       13c2c:	250c      	movcc	r5, #12
+
+       13c2e:	4629      	mov	r1, r5
+
+       13c30:	4638      	mov	r0, r7
+
+       13c32:	f7ff ffa5 	bl	13b80 <<a href="./60e3006ae9a36c10808a7a8cb6053ce0.html">sbrk_aligned</a>>
+
+       13c36:	3001      	adds	r0, #1
+
+       13c38:	d02b      	beq.n	13c92 <<a href="./f5137e47f9ddfeffe7b8dfbd0dbdc9bf.html">_malloc_r</a>+0xd2>
+
+       13c3a:	6823      	ldr	r3, [r4, #0]
+
+       13c3c:	442b      	add	r3, r5
+
+       13c3e:	6023      	str	r3, [r4, #0]
+
+       13c40:	e00e      	b.n	13c60 <<a href="./f5137e47f9ddfeffe7b8dfbd0dbdc9bf.html">_malloc_r</a>+0xa0>
+
+       13c42:	6822      	ldr	r2, [r4, #0]
+
+       13c44:	1b52      	subs	r2, r2, r5
+
+       13c46:	d41e      	bmi.n	13c86 <<a href="./f5137e47f9ddfeffe7b8dfbd0dbdc9bf.html">_malloc_r</a>+0xc6>
+
+       13c48:	2a0b      	cmp	r2, #11
+
+       13c4a:	d916      	bls.n	13c7a <<a href="./f5137e47f9ddfeffe7b8dfbd0dbdc9bf.html">_malloc_r</a>+0xba>
+
+       13c4c:	1961      	adds	r1, r4, r5
+
+       13c4e:	42a3      	cmp	r3, r4
+
+       13c50:	6025      	str	r5, [r4, #0]
+
+       13c52:	bf18      	it	ne
+
+       13c54:	6059      	strne	r1, [r3, #4]
+
+       13c56:	6863      	ldr	r3, [r4, #4]
+
+       13c58:	bf08      	it	eq
+
+       13c5a:	6031      	streq	r1, [r6, #0]
+
+       13c5c:	5162      	str	r2, [r4, r5]
+
+       13c5e:	604b      	str	r3, [r1, #4]
+
+       13c60:	4638      	mov	r0, r7
+
+       13c62:	f104 060b 	add.w	r6, r4, #11
+
+       13c66:	f000 fe65 	bl	14934 <<a href="./708c7f18b0c268fd514765d20a8392b6.html">__malloc_unlock</a>>
+
+       13c6a:	f026 0607 	bic.w	r6, r6, #7
+
+       13c6e:	1d23      	adds	r3, r4, #4
+
+       13c70:	1af2      	subs	r2, r6, r3
+
+       13c72:	d0b6      	beq.n	13be2 <<a href="./f5137e47f9ddfeffe7b8dfbd0dbdc9bf.html">_malloc_r</a>+0x22>
+
+       13c74:	1b9b      	subs	r3, r3, r6
+
+       13c76:	50a3      	str	r3, [r4, r2]
+
+       13c78:	e7b3      	b.n	13be2 <<a href="./f5137e47f9ddfeffe7b8dfbd0dbdc9bf.html">_malloc_r</a>+0x22>
+
+       13c7a:	6862      	ldr	r2, [r4, #4]
+
+       13c7c:	42a3      	cmp	r3, r4
+
+       13c7e:	bf0c      	ite	eq
+
+       13c80:	6032      	streq	r2, [r6, #0]
+
+       13c82:	605a      	strne	r2, [r3, #4]
+
+       13c84:	e7ec      	b.n	13c60 <<a href="./f5137e47f9ddfeffe7b8dfbd0dbdc9bf.html">_malloc_r</a>+0xa0>
+
+       13c86:	4623      	mov	r3, r4
+
+       13c88:	6864      	ldr	r4, [r4, #4]
+
+       13c8a:	e7b2      	b.n	13bf2 <<a href="./f5137e47f9ddfeffe7b8dfbd0dbdc9bf.html">_malloc_r</a>+0x32>
+
+       13c8c:	4634      	mov	r4, r6
+
+       13c8e:	6876      	ldr	r6, [r6, #4]
+
+       13c90:	e7b9      	b.n	13c06 <<a href="./f5137e47f9ddfeffe7b8dfbd0dbdc9bf.html">_malloc_r</a>+0x46>
+
+       13c92:	230c      	movs	r3, #12
+
+       13c94:	603b      	str	r3, [r7, #0]
+
+       13c96:	4638      	mov	r0, r7
+
+       13c98:	f000 fe4c 	bl	14934 <<a href="./708c7f18b0c268fd514765d20a8392b6.html">__malloc_unlock</a>>
+
+       13c9c:	e7a1      	b.n	13be2 <<a href="./f5137e47f9ddfeffe7b8dfbd0dbdc9bf.html">_malloc_r</a>+0x22>
+
+       13c9e:	6025      	str	r5, [r4, #0]
+
+       13ca0:	e7de      	b.n	13c60 <<a href="./f5137e47f9ddfeffe7b8dfbd0dbdc9bf.html">_malloc_r</a>+0xa0>
+
+       13ca2:	bf00      	nop
+
+       13ca4:	1ffee980 	.word	0x1ffee980
+
+    </pre>
+
+    
+    <pre><a href="./ded7dcda77972ae961c59173e95c260f.html">__sfputc_r (46)</a></pre>
+    
+
+    
+
+
+        </div>
+    <div id="page-footer">
+        <hr>
+        
+            brought to you with 💖
+            by <a href="https://twitter.com/hbehrens">Heiko Behrens</a>
+            <span class="secondary">– MIT license, copyright © 2014-2025</span>
+        
+    </div>
+    </div>
+</body>
+</html>

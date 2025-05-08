@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../../../../../../../../../static/css/style.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <title>Symbol - puncover</title>
+    
+</head>
+<body>
+    <div class="container" id="content">
+        <div class="page-header">
+            <nav class="navbar navbar-default" role="navigation">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="../../../../../../../../../../index.html">
+                    Puncover
+                  </a>
+                </div>
+              </div>
+            </nav>
+          
+        </div>
+        <div id="inner_content">
+        
+    
+    <ol class="breadcrumb folders">
+        
+        <li><a href="../../../../../../../../../../home.html">home</a></li>
+        
+        <li><a href="../../../../../../../../../runner.html">runner</a></li>
+        
+        <li><a href="../../../../../../../../work.html">work</a></li>
+        
+        <li><a href="../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../libs.html">libs</a></li>
+        
+        <li><a href="../../../../3rdparty.html">3rdparty</a></li>
+        
+        <li><a href="../../../freeRtos.html">freeRtos</a></li>
+        
+        <li ><a href="../../src.html">src</a>
+            </li>
+
+        
+        <li class="active"><a href="../tasks.c.html">tasks.c</a>:3367
+            </li>
+        
+    </ol>
+
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <th>Function</th>
+                <td colspan="5">
+                    <span class="icon-function">xTaskCheckForTimeOut</span>
+                </td>
+            </tr>
+
+            <tr>
+                <th rowspan="2"></th>
+                <th>Address</th>
+                <th>Remarks</th>
+                <th>Stack</th>
+                <th>Code</th>
+                <th>Static</th>
+            </tr>
+            <tr>
+                <td>0x00008d70</td>
+                <td>
+    <span class="label label-success">x-module</span>
+    
+</td>
+                <td></td>
+                <td>100</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th>Callers (1)</th>
+                <td colspan="5">
+                
+                    <a href="../queue.c/e175bc34f19fb5ab84d573af67f2b746.html">xQueueReceive (292)</a>
+                    
+                
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Callees (2,
+                            <span title="sum of used bytes by all callees">
+                            Σ=60
+                            </span>
+                        )
+                    
+                </th>
+                <td colspan="5">
+                
+                    <a href="../../../../../platforms/s32k1xx/3rdparty/freertos_cm4_sysTick/src/port.c/51336e5c21ba34fb49b266dd31e701d5.html">vPortEnterCritical (32)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../../../../../platforms/s32k1xx/3rdparty/freertos_cm4_sysTick/src/port.c/f34360f95022a09e4e4cceffa22ec0c6.html">vPortExitCritical (28)</a>
+                    
+                
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    
+    <pre><a href="./058cf982ca1bfff407d210cdc63a4840.html">vTaskInternalSetTimeOutState (24)</a></pre>
+    
+
+    <pre>
+
+    xTaskCheckForTimeOut():
+
+        8d70:	b5f0      	push	{r4, r5, r6, r7, lr}
+
+        8d72:	460d      	mov	r5, r1
+
+        8d74:	b083      	sub	sp, #12
+
+        8d76:	4604      	mov	r4, r0
+
+        8d78:	f00a fd24 	bl	137c4 <<a href="../../../../../platforms/s32k1xx/3rdparty/freertos_cm4_sysTick/src/port.c/51336e5c21ba34fb49b266dd31e701d5.html">vPortEnterCritical</a>>
+
+        8d7c:	682b      	ldr	r3, [r5, #0]
+
+        8d7e:	4a13      	ldr	r2, [pc, #76]	; (8dcc <<a href="./12916f51c757c488402e36f3b8496761.html">xTaskCheckForTimeOut</a>+0x5c>)
+
+        8d80:	1c59      	adds	r1, r3, #1
+
+        8d82:	6810      	ldr	r0, [r2, #0]
+
+        8d84:	d01f      	beq.n	8dc6 <<a href="./12916f51c757c488402e36f3b8496761.html">xTaskCheckForTimeOut</a>+0x56>
+
+        8d86:	f8df c048 	ldr.w	ip, [pc, #72]	; 8dd0 <<a href="./12916f51c757c488402e36f3b8496761.html">xTaskCheckForTimeOut</a>+0x60>
+
+        8d8a:	6826      	ldr	r6, [r4, #0]
+
+        8d8c:	f8dc 7000 	ldr.w	r7, [ip]
+
+        8d90:	6861      	ldr	r1, [r4, #4]
+
+        8d92:	42be      	cmp	r6, r7
+
+        8d94:	d00a      	beq.n	8dac <<a href="./12916f51c757c488402e36f3b8496761.html">xTaskCheckForTimeOut</a>+0x3c>
+
+        8d96:	4281      	cmp	r1, r0
+
+        8d98:	d808      	bhi.n	8dac <<a href="./12916f51c757c488402e36f3b8496761.html">xTaskCheckForTimeOut</a>+0x3c>
+
+        8d9a:	2300      	movs	r3, #0
+
+        8d9c:	602b      	str	r3, [r5, #0]
+
+        8d9e:	2001      	movs	r0, #1
+
+        8da0:	9001      	str	r0, [sp, #4]
+
+        8da2:	f00a fd1f 	bl	137e4 <<a href="../../../../../platforms/s32k1xx/3rdparty/freertos_cm4_sysTick/src/port.c/f34360f95022a09e4e4cceffa22ec0c6.html">vPortExitCritical</a>>
+
+        8da6:	9801      	ldr	r0, [sp, #4]
+
+        8da8:	b003      	add	sp, #12
+
+        8daa:	bdf0      	pop	{r4, r5, r6, r7, pc}
+
+        8dac:	1a47      	subs	r7, r0, r1
+
+        8dae:	42bb      	cmp	r3, r7
+
+        8db0:	d9f3      	bls.n	8d9a <<a href="./12916f51c757c488402e36f3b8496761.html">xTaskCheckForTimeOut</a>+0x2a>
+
+        8db2:	1a1b      	subs	r3, r3, r0
+
+        8db4:	440b      	add	r3, r1
+
+    vTaskInternalSetTimeOutState():
+
+        8db6:	f8dc 1000 	ldr.w	r1, [ip]
+
+        8dba:	6812      	ldr	r2, [r2, #0]
+
+    xTaskCheckForTimeOut():
+
+        8dbc:	602b      	str	r3, [r5, #0]
+
+        8dbe:	2000      	movs	r0, #0
+
+    vTaskInternalSetTimeOutState():
+
+        8dc0:	e9c4 1200 	strd	r1, r2, [r4]
+
+    xTaskCheckForTimeOut():
+
+        8dc4:	e7ec      	b.n	8da0 <<a href="./12916f51c757c488402e36f3b8496761.html">xTaskCheckForTimeOut</a>+0x30>
+
+        8dc6:	2000      	movs	r0, #0
+
+        8dc8:	e7ea      	b.n	8da0 <<a href="./12916f51c757c488402e36f3b8496761.html">xTaskCheckForTimeOut</a>+0x30>
+
+        8dca:	bf00      	nop
+
+        8dcc:	1ffee318 	.word	0x1ffee318
+
+        8dd0:	1ffee2d0 	.word	0x1ffee2d0
+
+    </pre>
+
+    
+    <pre><a href="./ea27e180b3fadc21b1f159df9bfc7de0.html">vTaskMissedYield (12)</a></pre>
+    
+
+    
+
+
+        </div>
+    <div id="page-footer">
+        <hr>
+        
+            brought to you with 💖
+            by <a href="https://twitter.com/hbehrens">Heiko Behrens</a>
+            <span class="secondary">– MIT license, copyright © 2014-2025</span>
+        
+    </div>
+    </div>
+</body>
+</html>

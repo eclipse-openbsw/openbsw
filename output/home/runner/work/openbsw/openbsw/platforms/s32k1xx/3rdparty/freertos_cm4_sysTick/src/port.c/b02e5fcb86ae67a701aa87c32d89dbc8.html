@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../../../../../../../../../../static/css/style.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <title>Symbol - puncover</title>
+    
+</head>
+<body>
+    <div class="container" id="content">
+        <div class="page-header">
+            <nav class="navbar navbar-default" role="navigation">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="../../../../../../../../../../../index.html">
+                    Puncover
+                  </a>
+                </div>
+              </div>
+            </nav>
+          
+        </div>
+        <div id="inner_content">
+        
+    
+    <ol class="breadcrumb folders">
+        
+        <li><a href="../../../../../../../../../../../home.html">home</a></li>
+        
+        <li><a href="../../../../../../../../../../runner.html">runner</a></li>
+        
+        <li><a href="../../../../../../../../../work.html">work</a></li>
+        
+        <li><a href="../../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../platforms.html">platforms</a></li>
+        
+        <li><a href="../../../../../s32k1xx.html">s32k1xx</a></li>
+        
+        <li><a href="../../../../3rdparty.html">3rdparty</a></li>
+        
+        <li><a href="../../../freertos_cm4_sysTick.html">freertos_cm4_sysTick</a></li>
+        
+        <li ><a href="../../src.html">src</a>
+            </li>
+
+        
+        <li class="active"><a href="../port.c.html">port.c</a>:460
+            </li>
+        
+    </ol>
+
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <th>Function</th>
+                <td colspan="5">
+                    <span class="icon-function">PendSV_Handler</span>
+                </td>
+            </tr>
+
+            <tr>
+                <th rowspan="2"></th>
+                <th>Address</th>
+                <th>Remarks</th>
+                <th>Stack</th>
+                <th>Code</th>
+                <th>Static</th>
+            </tr>
+            <tr>
+                <td>0x00013800</td>
+                <td>
+    
+    
+</td>
+                <td></td>
+                <td>96</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th>No Callers</th>
+                <td colspan="5">
+                
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Callees (1,
+                            <span title="sum of used bytes by all callees">
+                            Σ=28
+                            </span>
+                        )
+                    
+                </th>
+                <td colspan="5">
+                
+                    <a href="../../../../../../libs/3rdparty/freeRtos/src/tasks.c/14db0b8137bb15b16e9724365ccf27b8.html">vTaskSwitchContext (28)</a>
+                    
+                
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    
+    <pre><a href="./f34360f95022a09e4e4cceffa22ec0c6.html">vPortExitCritical (28)</a></pre>
+    
+
+    <pre>
+
+    PendSV_Handler():
+
+       13800:	f3ef 8009 	mrs	r0, PSP
+
+       13804:	f3bf 8f6f 	isb	sy
+
+       13808:	4b15      	ldr	r3, [pc, #84]	; (13860 <<a href="../../../../../../../../../../../unknown/unknown/ed6f850e0b44efd737dc0a202d311319.html">pxCurrentTCBConst</a>>)
+
+       1380a:	681a      	ldr	r2, [r3, #0]
+
+       1380c:	f01e 0f10 	tst.w	lr, #16
+
+       13810:	bf08      	it	eq
+
+       13812:	ed20 8a10 	vstmdbeq	r0!, {s16-s31}
+
+       13816:	e920 4ff0 	stmdb	r0!, {r4, r5, r6, r7, r8, r9, sl, fp, lr}
+
+       1381a:	6010      	str	r0, [r2, #0]
+
+       1381c:	e92d 0009 	stmdb	sp!, {r0, r3}
+
+       13820:	f04f 0050 	mov.w	r0, #80	; 0x50
+
+       13824:	f380 8811 	msr	BASEPRI, r0
+
+       13828:	f3bf 8f4f 	dsb	sy
+
+       1382c:	f3bf 8f6f 	isb	sy
+
+       13830:	f7f5 f9e6 	bl	8c00 <<a href="../../../../../../libs/3rdparty/freeRtos/src/tasks.c/14db0b8137bb15b16e9724365ccf27b8.html">vTaskSwitchContext</a>>
+
+       13834:	f04f 0000 	mov.w	r0, #0
+
+       13838:	f380 8811 	msr	BASEPRI, r0
+
+       1383c:	bc09      	pop	{r0, r3}
+
+       1383e:	6819      	ldr	r1, [r3, #0]
+
+       13840:	6808      	ldr	r0, [r1, #0]
+
+       13842:	e8b0 4ff0 	ldmia.w	r0!, {r4, r5, r6, r7, r8, r9, sl, fp, lr}
+
+       13846:	f01e 0f10 	tst.w	lr, #16
+
+       1384a:	bf08      	it	eq
+
+       1384c:	ecb0 8a10 	vldmiaeq	r0!, {s16-s31}
+
+       13850:	f380 8809 	msr	PSP, r0
+
+       13854:	f3bf 8f6f 	isb	sy
+
+       13858:	4770      	bx	lr
+
+       1385a:	bf00      	nop
+
+       1385c:	f3af 8000 	nop.w
+
+    </pre>
+
+    
+    <pre><a href="../../../../../../../../../../../unknown/unknown/ed6f850e0b44efd737dc0a202d311319.html">pxCurrentTCBConst (4)</a></pre>
+    
+
+    
+
+
+        </div>
+    <div id="page-footer">
+        <hr>
+        
+            brought to you with 💖
+            by <a href="https://twitter.com/hbehrens">Heiko Behrens</a>
+            <span class="secondary">– MIT license, copyright © 2014-2025</span>
+        
+    </div>
+    </div>
+</body>
+</html>

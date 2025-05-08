@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../../../../../../../../../../../../../static/css/style.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <title>Symbol - puncover</title>
+    
+</head>
+<body>
+    <div class="container" id="content">
+        <div class="page-header">
+            <nav class="navbar navbar-default" role="navigation">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="../../../../../../../../../../../../../../index.html">
+                    Puncover
+                  </a>
+                </div>
+              </div>
+            </nav>
+          
+        </div>
+        <div id="inner_content">
+        
+    
+    <ol class="breadcrumb folders">
+        
+        <li><a href="../../../../../../../../../../../../../../home.html">home</a></li>
+        
+        <li><a href="../../../../../../../../../../../../../runner.html">runner</a></li>
+        
+        <li><a href="../../../../../../../../../../../../work.html">work</a></li>
+        
+        <li><a href="../../../../../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../../../../executables.html">executables</a></li>
+        
+        <li><a href="../../../../../../../../referenceApp.html">referenceApp</a></li>
+        
+        <li><a href="../../../../../../../platforms.html">platforms</a></li>
+        
+        <li><a href="../../../../../../s32k148evb.html">s32k148evb</a></li>
+        
+        <li><a href="../../../../../bspConfiguration.html">bspConfiguration</a></li>
+        
+        <li><a href="../../../../src.html">src</a></li>
+        
+        <li><a href="../../../bsp.html">bsp</a></li>
+        
+        <li ><a href="../../SystemTimer.html">SystemTimer</a>
+            </li>
+
+        
+        <li class="active"><a href="../SystemTimer.cpp.html">SystemTimer.cpp</a>:80
+            </li>
+        
+    </ol>
+
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <th>Function</th>
+                <td colspan="5">
+                    <span class="icon-function">getSystemTimeNs</span>
+                </td>
+            </tr>
+
+            <tr>
+                <th rowspan="2"></th>
+                <th>Address</th>
+                <th>Remarks</th>
+                <th>Stack</th>
+                <th>Code</th>
+                <th>Static</th>
+            </tr>
+            <tr>
+                <td>0x00012568</td>
+                <td>
+    <span class="label label-success">x-module</span>
+    
+</td>
+                <td></td>
+                <td>104</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th>Callers (1)</th>
+                <td colspan="5">
+                
+                    <a href="../../../../../../../../../libs/bsw/estd/src/estd/chrono.cpp/8902bf1ffc4f6c21cf81738b49df7df4.html">estd::chrono::high_resolution_clock::now() (16)</a>
+                    
+                
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    No Callees
+                    
+                </th>
+                <td colspan="5">
+                
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    
+    <pre><a href="./ef726e6b5f9357a8fa025578b908794c.html">getSystemTicks32Bit (52)</a></pre>
+    
+
+    <pre>
+
+    getSystemTimeNs():
+
+       12568:	f3ef 8c10 	mrs	ip, PRIMASK
+
+       1256c:	b672      	cpsid	i
+
+       1256e:	4b16      	ldr	r3, [pc, #88]	; (125c8 <<a href="./a78994c7b66d975d9f3a9fef3ba9b13c.html">getSystemTimeNs</a>+0x60>)
+
+       12570:	4a16      	ldr	r2, [pc, #88]	; (125cc <<a href="./a78994c7b66d975d9f3a9fef3ba9b13c.html">getSystemTimeNs</a>+0x64>)
+
+       12572:	6898      	ldr	r0, [r3, #8]
+
+       12574:	6852      	ldr	r2, [r2, #4]
+
+       12576:	68d9      	ldr	r1, [r3, #12]
+
+       12578:	609a      	str	r2, [r3, #8]
+
+       1257a:	1a10      	subs	r0, r2, r0
+
+       1257c:	fbb0 f0f1 	udiv	r0, r0, r1
+
+       12580:	e9d3 2100 	ldrd	r2, r1, [r3]
+
+       12584:	1880      	adds	r0, r0, r2
+
+       12586:	f141 0100 	adc.w	r1, r1, #0
+
+       1258a:	e9c3 0100 	strd	r0, r1, [r3]
+
+       1258e:	f38c 8810 	msr	PRIMASK, ip
+
+       12592:	014b      	lsls	r3, r1, #5
+
+       12594:	ea4f 1c40 	mov.w	ip, r0, lsl #5
+
+       12598:	ebbc 0c00 	subs.w	ip, ip, r0
+
+       1259c:	ea43 63d0 	orr.w	r3, r3, r0, lsr #27
+
+       125a0:	eb63 0301 	sbc.w	r3, r3, r1
+
+       125a4:	ea4f 028c 	mov.w	r2, ip, lsl #2
+
+       125a8:	009b      	lsls	r3, r3, #2
+
+       125aa:	1810      	adds	r0, r2, r0
+
+       125ac:	ea43 739c 	orr.w	r3, r3, ip, lsr #30
+
+       125b0:	eb41 0103 	adc.w	r1, r1, r3
+
+       125b4:	00c9      	lsls	r1, r1, #3
+
+       125b6:	ea41 7150 	orr.w	r1, r1, r0, lsr #29
+
+       125ba:	f3c0 005b 	ubfx	r0, r0, #1, #28
+
+       125be:	ea40 7001 	orr.w	r0, r0, r1, lsl #28
+
+       125c2:	0909      	lsrs	r1, r1, #4
+
+       125c4:	4770      	bx	lr
+
+       125c6:	bf00      	nop
+
+       125c8:	1ffe00b0 	.word	0x1ffe00b0
+
+       125cc:	e0001000 	.word	0xe0001000
+
+    </pre>
+
+    
+    <pre><a href="./d027c03bcf336287081f759d27e7e7b6.html">getSystemTimeUs (60)</a></pre>
+    
+
+    
+
+
+        </div>
+    <div id="page-footer">
+        <hr>
+        
+            brought to you with 💖
+            by <a href="https://twitter.com/hbehrens">Heiko Behrens</a>
+            <span class="secondary">– MIT license, copyright © 2014-2025</span>
+        
+    </div>
+    </div>
+</body>
+</html>

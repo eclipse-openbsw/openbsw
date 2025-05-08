@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../../../../../../../../../../static/css/style.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <title>Symbol - puncover</title>
+    
+</head>
+<body>
+    <div class="container" id="content">
+        <div class="page-header">
+            <nav class="navbar navbar-default" role="navigation">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="../../../../../../../../../../../index.html">
+                    Puncover
+                  </a>
+                </div>
+              </div>
+            </nav>
+          
+        </div>
+        <div id="inner_content">
+        
+    
+    <ol class="breadcrumb folders">
+        
+        <li><a href="../../../../../../../../../../../home.html">home</a></li>
+        
+        <li><a href="../../../../../../../../../../runner.html">runner</a></li>
+        
+        <li><a href="../../../../../../../../../work.html">work</a></li>
+        
+        <li><a href="../../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../libs.html">libs</a></li>
+        
+        <li><a href="../../../../../bsw.html">bsw</a></li>
+        
+        <li><a href="../../../../asyncFreeRtos.html">asyncFreeRtos</a></li>
+        
+        <li><a href="../../../src.html">src</a></li>
+        
+        <li ><a href="../../async.html">async</a>
+            </li>
+
+        
+        <li class="active"><a href="../Hook.cpp.html">Hook.cpp</a>:23
+            </li>
+        
+    </ol>
+
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <th>Function</th>
+                <td colspan="5">
+                    <span class="icon-function">asyncLeaveTask</span>
+                </td>
+            </tr>
+
+            <tr>
+                <th rowspan="2"></th>
+                <th>Address</th>
+                <th>Remarks</th>
+                <th>Stack</th>
+                <th>Code</th>
+                <th>Static</th>
+            </tr>
+            <tr>
+                <td>0x00009b48</td>
+                <td>
+    <span class="label label-success">x-module</span>
+    
+</td>
+                <td></td>
+                <td>144</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th>Callers (1)</th>
+                <td colspan="5">
+                
+                    <a href="../../../../../3rdparty/freeRtos/src/tasks.c/14db0b8137bb15b16e9724365ccf27b8.html">vTaskSwitchContext (188)</a>
+                    
+                
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Callees (2,
+                            <span title="sum of used bytes by all callees">
+                            Σ=68
+                            </span>
+                        )
+                    
+                </th>
+                <td colspan="5">
+                
+                    <a href="../../../../../../executables/referenceApp/platforms/s32k148evb/bspConfiguration/src/bsp/SystemTimer/SystemTimer.cpp/ef726e6b5f9357a8fa025578b908794c.html">getSystemTicks32Bit (52)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../../../../estd/include/estd/singleton.h/36a007ec4761e912660afa46580f0140.html">estd::singleton&lt;runtime::declare::RuntimeMonitor&lt;runtime::RuntimeStatistics, runtime::RuntimeStatistics, 9u, 2u&gt; &gt;::instance() (16)</a>
+                    
+                
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    
+    <pre><a href="./4012d1221fb834b85078923e5daff2e7.html">asyncEnterTask (104)</a></pre>
+    
+
+    <pre>
+
+    asyncLeaveTask():
+
+        9b48:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
+
+    estd::singleton<runtime::declare::RuntimeMonitor<runtime::RuntimeStatistics, runtime::RuntimeStatistics, 9u, 2u> >::instance():
+
+        9b4a:	4b22      	ldr	r3, [pc, #136]	; (9bd4 <<a href="./91aa33728d85154d123511cd1ca5f0c0.html">asyncLeaveTask</a>+0x8c>)
+
+        9b4c:	681d      	ldr	r5, [r3, #0]
+
+        9b4e:	2d00      	cmp	r5, #0
+
+        9b50:	d03e      	beq.n	9bd0 <<a href="./91aa33728d85154d123511cd1ca5f0c0.html">asyncLeaveTask</a>+0x88>
+
+        9b52:	4604      	mov	r4, r0
+
+    asyncLeaveTask():
+
+        9b54:	f3ef 8610 	mrs	r6, PRIMASK
+
+    getMachineStateRegisterValueAndSuspendAllInterrupts():
+
+        9b58:	b672      	cpsid	i
+
+    _ZN7runtime14RuntimeMonitorINS_17RuntimeStatisticsES1_E9leaveTaskEj():
+
+        9b5a:	f008 fceb 	bl	12534 <<a href="../../../../../../executables/referenceApp/platforms/s32k148evb/bspConfiguration/src/bsp/SystemTimer/SystemTimer.cpp/ef726e6b5f9357a8fa025578b908794c.html">getSystemTicks32Bit</a>>
+
+    _ZNK4estd5sliceIN7runtime14RuntimeMonitorINS1_17RuntimeStatisticsES3_E12ContextEntryELj0EEixEj():
+
+        9b5e:	68ab      	ldr	r3, [r5, #8]
+
+    _ZN7runtime12RuntimeStackINS_14RuntimeMonitorINS_17RuntimeStatisticsES2_E12ContextEntryEE8popEntryERS4_m():
+
+        9b60:	6829      	ldr	r1, [r5, #0]
+
+    _ZNK4estd5sliceIN7runtime14RuntimeMonitorINS1_17RuntimeStatisticsES3_E12ContextEntryELj0EEixEj():
+
+        9b62:	685a      	ldr	r2, [r3, #4]
+
+        9b64:	eb04 04c4 	add.w	r4, r4, r4, lsl #3
+
+        9b68:	eb02 0384 	add.w	r3, r2, r4, lsl #2
+
+    _ZN7runtime12RuntimeStackINS_14RuntimeMonitorINS_17RuntimeStatisticsES2_E12ContextEntryEE8popEntryERS4_m():
+
+        9b6c:	428b      	cmp	r3, r1
+
+    _ZNK4estd5sliceIN7runtime14RuntimeMonitorINS1_17RuntimeStatisticsES3_E12ContextEntryELj0EEixEj():
+
+        9b6e:	ea4f 0484 	mov.w	r4, r4, lsl #2
+
+    _ZN7runtime12RuntimeStackINS_14RuntimeMonitorINS_17RuntimeStatisticsES2_E12ContextEntryEE8popEntryERS4_m():
+
+        9b72:	d002      	beq.n	9b7a <<a href="./91aa33728d85154d123511cd1ca5f0c0.html">asyncLeaveTask</a>+0x32>
+
+    asyncLeaveTask():
+
+        9b74:	f386 8810 	msr	PRIMASK, r6
+
+        9b78:	bdf8      	pop	{r3, r4, r5, r6, r7, pc}
+
+    _ZN7runtime17RuntimeStackEntryINS_14RuntimeMonitorINS_17RuntimeStatisticsES2_E12ContextEntryELb1EE3popEm():
+
+        9b7a:	6859      	ldr	r1, [r3, #4]
+
+    _ZN7runtime12RuntimeStackINS_14RuntimeMonitorINS_17RuntimeStatisticsES2_E13FunctionEntryEE7suspendEm():
+
+        9b7c:	6118      	str	r0, [r3, #16]
+
+    _ZN7runtime17RuntimeStackEntryINS_14RuntimeMonitorINS_17RuntimeStatisticsES2_E12ContextEntryELb1EE3popEm():
+
+        9b7e:	1a40      	subs	r0, r0, r1
+
+        9b80:	6899      	ldr	r1, [r3, #8]
+
+    _ZN7runtime17RuntimeStatistics6addRunEm():
+
+        9b82:	695f      	ldr	r7, [r3, #20]
+
+        9b84:	f8d3 c018 	ldr.w	ip, [r3, #24]
+
+    _ZN7runtime17RuntimeStackEntryINS_14RuntimeMonitorINS_17RuntimeStatisticsES2_E12ContextEntryELb1EE3popEm():
+
+        9b88:	1a41      	subs	r1, r0, r1
+
+    _ZN7runtime17RuntimeStatistics6addRunEm():
+
+        9b8a:	440f      	add	r7, r1
+
+        9b8c:	615f      	str	r7, [r3, #20]
+
+        9b8e:	f1bc 0f00 	cmp.w	ip, #0
+
+        9b92:	d114      	bne.n	9bbe <<a href="./91aa33728d85154d123511cd1ca5f0c0.html">asyncLeaveTask</a>+0x76>
+
+        9b94:	61d9      	str	r1, [r3, #28]
+
+        9b96:	6219      	str	r1, [r3, #32]
+
+        9b98:	f10c 0701 	add.w	r7, ip, #1
+
+        9b9c:	619f      	str	r7, [r3, #24]
+
+    _ZN7runtime17RuntimeStackEntryINS_14RuntimeMonitorINS_17RuntimeStatisticsES2_E12ContextEntryELb1EE3popEm():
+
+        9b9e:	5913      	ldr	r3, [r2, r4]
+
+        9ba0:	b13b      	cbz	r3, 9bb2 <<a href="./91aa33728d85154d123511cd1ca5f0c0.html">asyncLeaveTask</a>+0x6a>
+
+    _ZN7runtime12RuntimeStackINS_14RuntimeMonitorINS_17RuntimeStatisticsES2_E13FunctionEntryEE16addSuspendedTimeEm():
+
+        9ba2:	68d9      	ldr	r1, [r3, #12]
+
+        9ba4:	b111      	cbz	r1, 9bac <<a href="./91aa33728d85154d123511cd1ca5f0c0.html">asyncLeaveTask</a>+0x64>
+
+    _ZN7runtime17RuntimeStackEntryINS_14RuntimeMonitorINS_17RuntimeStatisticsES2_E13FunctionEntryELb0EE16addSuspendedTimeEm():
+
+        9ba6:	688f      	ldr	r7, [r1, #8]
+
+        9ba8:	4407      	add	r7, r0
+
+        9baa:	608f      	str	r7, [r1, #8]
+
+    _ZN7runtime17RuntimeStackEntryINS_14RuntimeMonitorINS_17RuntimeStatisticsES2_E12ContextEntryELb1EE16addSuspendedTimeEm():
+
+        9bac:	6899      	ldr	r1, [r3, #8]
+
+        9bae:	4408      	add	r0, r1
+
+        9bb0:	6098      	str	r0, [r3, #8]
+
+    _ZN7runtime17RuntimeStackEntryINS_14RuntimeMonitorINS_17RuntimeStatisticsES2_E12ContextEntryELb1EE3popEm():
+
+        9bb2:	2101      	movs	r1, #1
+
+        9bb4:	5111      	str	r1, [r2, r4]
+
+    _ZN7runtime12RuntimeStackINS_14RuntimeMonitorINS_17RuntimeStatisticsES2_E12ContextEntryEE8popEntryERS4_m():
+
+        9bb6:	602b      	str	r3, [r5, #0]
+
+    resumeAllInterrupts():
+
+        9bb8:	f386 8810 	msr	PRIMASK, r6
+
+    asyncLeaveTask():
+
+        9bbc:	bdf8      	pop	{r3, r4, r5, r6, r7, pc}
+
+    _ZN7runtime17RuntimeStatistics6addRunEm():
+
+        9bbe:	69df      	ldr	r7, [r3, #28]
+
+        9bc0:	42b9      	cmp	r1, r7
+
+        9bc2:	6a1f      	ldr	r7, [r3, #32]
+
+        9bc4:	bf38      	it	cc
+
+        9bc6:	61d9      	strcc	r1, [r3, #28]
+
+        9bc8:	42b9      	cmp	r1, r7
+
+        9bca:	bf88      	it	hi
+
+        9bcc:	6219      	strhi	r1, [r3, #32]
+
+        9bce:	e7e3      	b.n	9b98 <<a href="./91aa33728d85154d123511cd1ca5f0c0.html">asyncLeaveTask</a>+0x50>
+
+    estd::singleton<runtime::declare::RuntimeMonitor<runtime::RuntimeStatistics, runtime::RuntimeStatistics, 9u, 2u> >::instance():
+
+        9bd0:	f7ff ff76 	bl	9ac0 <<a href="../../../../estd/include/estd/singleton.h/36a007ec4761e912660afa46580f0140.html">estd::singleton<runtime::declare::RuntimeMonitor<runtime::RuntimeStatistics, runtime::RuntimeStatistics, 9u, 2u> >::instance()</a>.part.0>
+
+        9bd4:	1ffe0178 	.word	0x1ffe0178
+
+    </pre>
+
+    
+    <pre><a href="./9ae8cac48ad6c58751623005c6bd92ef.html">asyncEnterIsrGroup (136)</a></pre>
+    
+
+    
+
+
+        </div>
+    <div id="page-footer">
+        <hr>
+        
+            brought to you with 💖
+            by <a href="https://twitter.com/hbehrens">Heiko Behrens</a>
+            <span class="secondary">– MIT license, copyright © 2014-2025</span>
+        
+    </div>
+    </div>
+</body>
+</html>

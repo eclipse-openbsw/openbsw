@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../../../../../../../../../static/css/style.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <title>Symbol - puncover</title>
+    
+</head>
+<body>
+    <div class="container" id="content">
+        <div class="page-header">
+            <nav class="navbar navbar-default" role="navigation">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="../../../../../../../../../../index.html">
+                    Puncover
+                  </a>
+                </div>
+              </div>
+            </nav>
+          
+        </div>
+        <div id="inner_content">
+        
+    
+    <ol class="breadcrumb folders">
+        
+        <li><a href="../../../../../../../../../../home.html">home</a></li>
+        
+        <li><a href="../../../../../../../../../runner.html">runner</a></li>
+        
+        <li><a href="../../../../../../../../work.html">work</a></li>
+        
+        <li><a href="../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../libs.html">libs</a></li>
+        
+        <li><a href="../../../../3rdparty.html">3rdparty</a></li>
+        
+        <li><a href="../../../freeRtos.html">freeRtos</a></li>
+        
+        <li ><a href="../../src.html">src</a>
+            </li>
+
+        
+        <li class="active"><a href="../queue.c.html">queue.c</a>:2942
+            </li>
+        
+    </ol>
+
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <th>Function</th>
+                <td colspan="5">
+                    <span class="icon-function">vQueueWaitForMessageRestricted</span>
+                </td>
+            </tr>
+
+            <tr>
+                <th rowspan="2"></th>
+                <th>Address</th>
+                <th>Remarks</th>
+                <th>Stack</th>
+                <th>Code</th>
+                <th>Static</th>
+            </tr>
+            <tr>
+                <td>0x000097a8</td>
+                <td>
+    <span class="label label-success">x-module</span>
+    
+</td>
+                <td></td>
+                <td>80</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th>Callers (1)</th>
+                <td colspan="5">
+                
+                    <a href="../timers.c/d35f72ab680b9bc7eb2ff3e6cd07ece5.html">prvTimerTask (488)</a>
+                    
+                
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Callees (4,
+                            <span title="sum of used bytes by all callees">
+                            Σ=276
+                            </span>
+                        )
+                    
+                </th>
+                <td colspan="5">
+                
+                    <a href="../../../../../platforms/s32k1xx/3rdparty/freertos_cm4_sysTick/src/port.c/51336e5c21ba34fb49b266dd31e701d5.html">vPortEnterCritical (32)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../../../../../platforms/s32k1xx/3rdparty/freertos_cm4_sysTick/src/port.c/f34360f95022a09e4e4cceffa22ec0c6.html">vPortExitCritical (28)</a>
+                    
+                        ,
+                    
+                
+                    <a href="./0a1f39941a68d8e44812aa4a79d3144c.html">prvUnlockQueue (140)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../tasks.c/ff261e6301291d97229d25f13c19ed10.html">vTaskPlaceOnEventListRestricted (76)</a>
+                    
+                
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    
+    <pre><a href="./2c24014a9b883e91f57e7cd512f03895.html">vQueueAddToRegistry (88)</a></pre>
+    
+
+    <pre>
+
+    vQueueWaitForMessageRestricted():
+
+        97a8:	b570      	push	{r4, r5, r6, lr}
+
+        97aa:	4604      	mov	r4, r0
+
+        97ac:	460e      	mov	r6, r1
+
+        97ae:	4615      	mov	r5, r2
+
+        97b0:	f00a f808 	bl	137c4 <<a href="../../../../../platforms/s32k1xx/3rdparty/freertos_cm4_sysTick/src/port.c/51336e5c21ba34fb49b266dd31e701d5.html">vPortEnterCritical</a>>
+
+        97b4:	f894 3044 	ldrb.w	r3, [r4, #68]	; 0x44
+
+        97b8:	2bff      	cmp	r3, #255	; 0xff
+
+        97ba:	bf04      	itt	eq
+
+        97bc:	2300      	moveq	r3, #0
+
+        97be:	f884 3044 	strbeq.w	r3, [r4, #68]	; 0x44
+
+        97c2:	f894 3045 	ldrb.w	r3, [r4, #69]	; 0x45
+
+        97c6:	2bff      	cmp	r3, #255	; 0xff
+
+        97c8:	bf04      	itt	eq
+
+        97ca:	2300      	moveq	r3, #0
+
+        97cc:	f884 3045 	strbeq.w	r3, [r4, #69]	; 0x45
+
+        97d0:	f00a f808 	bl	137e4 <<a href="../../../../../platforms/s32k1xx/3rdparty/freertos_cm4_sysTick/src/port.c/f34360f95022a09e4e4cceffa22ec0c6.html">vPortExitCritical</a>>
+
+        97d4:	6ba3      	ldr	r3, [r4, #56]	; 0x38
+
+        97d6:	b123      	cbz	r3, 97e2 <<a href="./7db3134b2fb4931db01a8567fd79567a.html">vQueueWaitForMessageRestricted</a>+0x3a>
+
+        97d8:	4620      	mov	r0, r4
+
+        97da:	e8bd 4070 	ldmia.w	sp!, {r4, r5, r6, lr}
+
+        97de:	f7ff be77 	b.w	94d0 <<a href="./0a1f39941a68d8e44812aa4a79d3144c.html">prvUnlockQueue</a>>
+
+        97e2:	f104 0024 	add.w	r0, r4, #36	; 0x24
+
+        97e6:	462a      	mov	r2, r5
+
+        97e8:	4631      	mov	r1, r6
+
+        97ea:	f7ff fa27 	bl	8c3c <<a href="../tasks.c/ff261e6301291d97229d25f13c19ed10.html">vTaskPlaceOnEventListRestricted</a>>
+
+        97ee:	4620      	mov	r0, r4
+
+        97f0:	e8bd 4070 	ldmia.w	sp!, {r4, r5, r6, lr}
+
+        97f4:	f7ff be6c 	b.w	94d0 <<a href="./0a1f39941a68d8e44812aa4a79d3144c.html">prvUnlockQueue</a>>
+
+    </pre>
+
+    
+    <pre><a href="../../../../bsw/asyncFreeRtos/src/async/Async.cpp/4dfe65e158466f2f9a73b985dc4b0ecc.html">async::execute(unsigned char, async::IRunnable&amp;) (104)</a></pre>
+    
+
+    
+
+
+        </div>
+    <div id="page-footer">
+        <hr>
+        
+            brought to you with 💖
+            by <a href="https://twitter.com/hbehrens">Heiko Behrens</a>
+            <span class="secondary">– MIT license, copyright © 2014-2025</span>
+        
+    </div>
+    </div>
+</body>
+</html>

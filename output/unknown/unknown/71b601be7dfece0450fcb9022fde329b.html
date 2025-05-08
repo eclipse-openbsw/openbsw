@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../static/css/style.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <title>Symbol - puncover</title>
+    
+</head>
+<body>
+    <div class="container" id="content">
+        <div class="page-header">
+            <nav class="navbar navbar-default" role="navigation">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="../../index.html">
+                    Puncover
+                  </a>
+                </div>
+              </div>
+            </nav>
+          
+        </div>
+        <div id="inner_content">
+        
+    
+    <ol class="breadcrumb folders">
+        
+        <li class="active"><a href="../../unknown.html">&lt;unknown&gt;</a>
+            </li>
+
+        
+        <li class="active">&lt;unknown&gt;
+            </li>
+        
+    </ol>
+
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <th>Function</th>
+                <td colspan="5">
+                    <span class="icon-function">_raise_r</span>
+                </td>
+            </tr>
+
+            <tr>
+                <th rowspan="2"></th>
+                <th>Address</th>
+                <th>Remarks</th>
+                <th>Stack</th>
+                <th>Code</th>
+                <th>Static</th>
+            </tr>
+            <tr>
+                <td>0x000004dc</td>
+                <td>
+    
+    
+</td>
+                <td></td>
+                <td>80</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th>Callers (1)</th>
+                <td colspan="5">
+                
+                    <a href="./090245289ce5a188ea08adfb0defd1cb.html">raise (20)</a>
+                    
+                
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Callees (2,
+                            <span title="sum of used bytes by all callees">
+                            Σ=40
+                            </span>
+                        )
+                    
+                </th>
+                <td colspan="5">
+                
+                    <a href="./1d6cffd80d8fed8bfc040bd7634e38dc.html">_getpid_r (4)</a>
+                    
+                        ,
+                    
+                
+                    <a href="./8ad9506fbb324fdfdfd9a724401b249a.html">_kill_r (36)</a>
+                    
+                
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    
+    <pre><a href="./21b275ab62804912a3beb86cb13c61c8.html">__libc_init_array (72)</a></pre>
+    
+
+    <pre>
+
+    _raise_r():
+
+     4dc:	291f      	cmp	r1, #31
+
+     4de:	b538      	push	{r3, r4, r5, lr}
+
+     4e0:	4604      	mov	r4, r0
+
+     4e2:	460d      	mov	r5, r1
+
+     4e4:	d904      	bls.n	4f0 <<a href="./71b601be7dfece0450fcb9022fde329b.html">_raise_r</a>+0x14>
+
+     4e6:	2316      	movs	r3, #22
+
+     4e8:	6003      	str	r3, [r0, #0]
+
+     4ea:	f04f 30ff 	mov.w	r0, #4294967295	; 0xffffffff
+
+     4ee:	bd38      	pop	{r3, r4, r5, pc}
+
+     4f0:	6c42      	ldr	r2, [r0, #68]	; 0x44
+
+     4f2:	b112      	cbz	r2, 4fa <<a href="./71b601be7dfece0450fcb9022fde329b.html">_raise_r</a>+0x1e>
+
+     4f4:	f852 3021 	ldr.w	r3, [r2, r1, lsl #2]
+
+     4f8:	b94b      	cbnz	r3, 50e <<a href="./71b601be7dfece0450fcb9022fde329b.html">_raise_r</a>+0x32>
+
+     4fa:	4620      	mov	r0, r4
+
+     4fc:	f000 f816 	bl	52c <<a href="./1d6cffd80d8fed8bfc040bd7634e38dc.html">_getpid_r</a>>
+
+     500:	462a      	mov	r2, r5
+
+     502:	4601      	mov	r1, r0
+
+     504:	4620      	mov	r0, r4
+
+     506:	e8bd 4038 	ldmia.w	sp!, {r3, r4, r5, lr}
+
+     50a:	f000 b839 	b.w	580 <<a href="./8ad9506fbb324fdfdfd9a724401b249a.html">_kill_r</a>>
+
+     50e:	2b01      	cmp	r3, #1
+
+     510:	d00a      	beq.n	528 <<a href="./71b601be7dfece0450fcb9022fde329b.html">_raise_r</a>+0x4c>
+
+     512:	1c59      	adds	r1, r3, #1
+
+     514:	d103      	bne.n	51e <<a href="./71b601be7dfece0450fcb9022fde329b.html">_raise_r</a>+0x42>
+
+     516:	2316      	movs	r3, #22
+
+     518:	6003      	str	r3, [r0, #0]
+
+     51a:	2001      	movs	r0, #1
+
+     51c:	e7e7      	b.n	4ee <<a href="./71b601be7dfece0450fcb9022fde329b.html">_raise_r</a>+0x12>
+
+     51e:	2400      	movs	r4, #0
+
+     520:	f842 4025 	str.w	r4, [r2, r5, lsl #2]
+
+     524:	4628      	mov	r0, r5
+
+     526:	4798      	blx	r3
+
+     528:	2000      	movs	r0, #0
+
+     52a:	e7e0      	b.n	4ee <<a href="./71b601be7dfece0450fcb9022fde329b.html">_raise_r</a>+0x12>
+
+    </pre>
+
+    
+    <pre><a href="./1d6cffd80d8fed8bfc040bd7634e38dc.html">_getpid_r (4)</a></pre>
+    
+
+    
+
+
+        </div>
+    <div id="page-footer">
+        <hr>
+        
+            brought to you with 💖
+            by <a href="https://twitter.com/hbehrens">Heiko Behrens</a>
+            <span class="secondary">– MIT license, copyright © 2014-2025</span>
+        
+    </div>
+    </div>
+</body>
+</html>
