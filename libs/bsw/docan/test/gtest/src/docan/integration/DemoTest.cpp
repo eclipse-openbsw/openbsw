@@ -12,12 +12,12 @@
 #include <async/AsyncMock.h>
 #include <can/canframes/CanId.h>
 #include <can/transceiver/ICanTransceiverMock.h>
+#include <etl/delegate.h>
+#include <etl/span.h>
 #include <transport/TransportMessage.h>
 #include <transport/TransportMessageListenerMock.h>
 #include <transport/TransportMessageProcessedListenerMock.h>
 #include <transport/TransportMessageProviderMock.h>
-
-#include <estd/functional.h>
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
@@ -57,7 +57,7 @@ TEST(DemoTest, DoCanIntegration)
     uint8_t const BLOCK_SIZE              = 0U;
 
     ::docan::DoCanParameters parameters(
-        ::estd::function<decltype(systemMicro)>::create<&systemMicro>(),
+        ::etl::delegate<decltype(systemMicro)>::create<&systemMicro>(),
         ALLOCATE_TIMEOUT,
         RX_TIMEOUT,
         TX_CALLBACK_TIMEOUT,
@@ -99,8 +99,10 @@ TEST(DemoTest, DoCanIntegration)
         ::docan::DoCanFrameCodecConfigPresets::OPTIMIZED_CLASSIC, mapper);
     static FrameCodecType const* codecEntries[] = {&codecClassic};
 
-    ::docan::DoCanNormalAddressingFilter<DataLinkLayer> addressingFilter(
-        ::estd::make_slice(mappingEntriesCan1), ::estd::make_slice(codecEntries));
+    ::docan::DoCanNormalAddressingFilter<DataLinkLayer> addressingFilter{
+        ::etl::span<::docan::DoCanNormalAddressingFilterAddressEntry<DataLinkLayer> const>(
+            mappingEntriesCan1),
+        ::etl::span<FrameCodecType const*>(codecEntries)};
     // EXAMPLE_END DoCanNormalAddressingFilter
 
     uint8_t canBusId                  = 1;
@@ -159,7 +161,7 @@ TEST(DemoTest, DoCanIntegration)
     uint32_t nowUs        = 0;
     // TP layer shutdown callback takes no parameters and returns void
     auto shutdownLambda   = [](::transport::AbstractTransportLayer&) -> void {};
-    auto shutdownCallback = ::estd::make_function(shutdownLambda);
+    auto shutdownCallback = ::transport::AbstractTransportLayer::ShutdownDelegate(shutdownLambda);
 
     // EXAMPLE_START Running
     // in initialization code

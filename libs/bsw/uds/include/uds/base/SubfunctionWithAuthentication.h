@@ -2,7 +2,6 @@
 
 #pragma once
 
-#include "estd/uncopyable.h"
 #include "uds/base/Subfunction.h"
 
 namespace uds
@@ -15,8 +14,6 @@ class IDiagAuthenticator;
  */
 class SubfunctionWithAuthentication : public Subfunction
 {
-    UNCOPYABLE(SubfunctionWithAuthentication);
-
 public:
     SubfunctionWithAuthentication(
         IDiagAuthenticator const& authenticator,

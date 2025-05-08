@@ -2,7 +2,7 @@
 
 #include "can/filter/IntervalFilter.h"
 
-#include <estd/algorithm.h>
+#include <etl/algorithm.h>
 
 #include <algorithm>
 
@@ -34,9 +34,9 @@ void IntervalFilter::add(uint32_t from, uint32_t to)
         ::std::swap(from, to);
     }
     // adjust lower bound
-    _from = ::estd::min(_from, from);
+    _from = ::etl::min(_from, from);
     // adjust upper bound
-    _to   = ::estd::max(_to, to);
+    _to   = ::etl::max(_to, to);
 }
 
 // virtual

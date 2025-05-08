@@ -12,6 +12,8 @@ uint64_t getSystemTimeNs()
     return duration_cast<nanoseconds>(duration).count();
 }
 
+extern "C" uint64_t etl_get_system_time_nanosec() { return getSystemTimeNs(); }
+
 uint32_t getSystemTimeUs32Bit(void) { return getSystemTimeNs() / 1000; }
 
 uint32_t getSystemTimeMs32Bit(void) { return getSystemTimeNs() / 1000 / 1000; }

@@ -2,7 +2,6 @@
 
 #pragma once
 
-#include "estd/uncopyable.h"
 #include "platform/estdint.h"
 #include "uds/base/Subfunction.h"
 #include "uds/lifecycle/IUdsLifecycleConnector.h"
@@ -13,8 +12,6 @@ class DiagDispatcher2;
 
 class SoftReset : public Subfunction
 {
-    UNCOPYABLE(SoftReset);
-
 public:
     SoftReset(IUdsLifecycleConnector& udsLifecycleConnector, DiagDispatcher2& diagDispatcher);
 

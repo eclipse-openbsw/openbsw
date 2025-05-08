@@ -2,10 +2,11 @@
 
 #pragma once
 
-#include "estd/slice.h"
-#include "estd/uncopyable.h"
 #include "platform/estdint.h"
 #include "uds/connection/ErrorCode.h"
+
+#include <etl/span.h>
+#include <etl/uncopyable.h>
 
 namespace uds
 {
@@ -13,10 +14,8 @@ namespace uds
 /**
  * Class representing a UDS positive response.
  */
-class PositiveResponse
+class PositiveResponse : public ::etl::uncopyable
 {
-    UNCOPYABLE(PositiveResponse);
-
 public:
     PositiveResponse() {}
 #ifdef UNIT_TEST
@@ -90,8 +89,8 @@ public:
     bool isOverflow() const;
 
 private:
-    ::estd::slice<uint8_t> fOriginalBuffer;
-    ::estd::slice<uint8_t> fBuffer;
+    ::etl::span<uint8_t> fOriginalBuffer;
+    ::etl::span<uint8_t> fBuffer;
     bool fIsOverflow;
 };
 

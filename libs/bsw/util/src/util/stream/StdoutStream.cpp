@@ -12,7 +12,7 @@ bool StdoutStream::isEof() const { return false; }
 
 void StdoutStream::write(uint8_t const data) { putByteToStdout(data); }
 
-void StdoutStream::write(::estd::slice<uint8_t const> const& buffer)
+void StdoutStream::write(::etl::span<uint8_t const> const& buffer)
 {
     for (auto b : buffer)
     {
