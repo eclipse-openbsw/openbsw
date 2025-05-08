@@ -372,11 +372,7 @@ namespace etl
         }
 
         p_previous = p_link;
-
-        if (p_link != ETL_NULLPTR)
-        {
-          p_link = p_link->link_type::etl_next;
-        }
+        p_link = p_link->link_type::etl_next;
       }
 
       return ETL_NULLPTR;
@@ -1003,29 +999,6 @@ namespace etl
         if (*i_item == value)
         {
           i_item = erase_after(i_last_item);
-        }
-        else
-        {
-          ++i_item;
-          ++i_last_item;
-        }
-      }
-    }
-
-    //*************************************************************************
-    // Removes the element specified by pointer.
-    //*************************************************************************
-    void remove(const_pointer element)
-    {
-      iterator i_item = begin();
-      iterator i_last_item = before_begin();
-
-      while (i_item != end())
-      {
-        if (&i_item == element)
-        {
-          i_item = erase_after(i_last_item);
-          return;
         }
         else
         {
