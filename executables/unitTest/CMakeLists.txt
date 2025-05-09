@@ -14,10 +14,6 @@ set(BUILD_TARGET_PLATFORM
     "POSIX"
     CACHE STRING "Target Platform")
 
-add_compile_definitions(PLATFORM_SUPPORT_CAN=1)
-add_compile_definitions(PLATFORM_SUPPORT_UDS=1)
-add_compile_definitions(PLATFORM_SUPPORT_IO=1)
-
 include(${OPENBSW_DIR}/Filelists.cmake)
 
 add_library(asyncPlatform ALIAS asyncMock)

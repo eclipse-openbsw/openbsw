@@ -1,3 +1,6 @@
 add_subdirectory(bspConfiguration)
 add_subdirectory(freeRtosCoreConfiguration)
 add_subdirectory(main)
+
+add_library(freeRtosPort ALIAS freeRtosPosixPort)
+add_library(freeRtosPortImpl ALIAS freeRtosPosix)
