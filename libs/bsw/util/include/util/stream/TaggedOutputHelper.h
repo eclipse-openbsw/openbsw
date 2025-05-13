@@ -4,7 +4,8 @@
 
 #include "util/stream/IOutputStream.h"
 
-#include <estd/slice.h>
+#include <etl/span.h>
+#include <etl/string_view.h>
 
 namespace util
 {
@@ -23,7 +24,8 @@ public:
 
     void reset();
     bool isLineStart() const;
-    void writeBytes(IOutputStream& strm, ::estd::slice<uint8_t const> const& buffer);
+    void writeBytes(IOutputStream& strm, ::etl::span<uint8_t const> const& buffer);
+    void writeBytes(IOutputStream& strm, ::etl::string_view const& view);
     void endLine(IOutputStream& strm);
 
 private:

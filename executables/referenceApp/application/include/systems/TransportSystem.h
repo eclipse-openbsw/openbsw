@@ -2,19 +2,18 @@
 
 #pragma once
 
+#include <etl/singleton_base.h>
 #include <lifecycle/AsyncLifecycleComponent.h>
 #include <transport/ITransportMessageProvider.h>
 #include <transport/ITransportSystem.h>
 #include <transport/routing/TransportRouterSimple.h>
-
-#include <estd/singleton.h>
 
 namespace transport
 {
 class AbstractTransportLayer;
 
 class TransportSystem
-: public ::estd::singleton<TransportSystem>
+: public ::etl::singleton_base<TransportSystem>
 , public ::transport::ITransportSystem
 , public ::lifecycle::AsyncLifecycleComponent
 {

@@ -12,7 +12,7 @@ TransportMessageWithBuffer::TransportMessageWithBuffer(uint32_t size) : buffer(s
 }
 
 TransportMessageWithBuffer::TransportMessageWithBuffer(
-    uint8_t sourceId, uint8_t targetId, ::estd::slice<uint8_t const> data, uint32_t maxSize)
+    uint8_t sourceId, uint8_t targetId, ::etl::span<uint8_t const> data, uint32_t maxSize)
 : TransportMessageWithBuffer((0 == maxSize) ? static_cast<uint32_t>(data.size()) : maxSize)
 {
     m.append(data.data(), static_cast<uint16_t>(data.size()));

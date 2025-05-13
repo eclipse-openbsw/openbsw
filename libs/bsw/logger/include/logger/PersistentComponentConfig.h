@@ -5,9 +5,9 @@
 #include "logger/ComponentConfig.h"
 #include "logger/IPersistenceManager.h"
 
+#include <etl/array.h>
+#include <etl/span.h>
 #include <util/string/ConstString.h>
-
-#include <estd/array.h>
 
 namespace logger
 {
@@ -28,7 +28,7 @@ private:
     uint8_t getComponentCrc(uint8_t componentCount) const;
 
     IPersistenceManager& _persistenceManager;
-    ::estd::array<uint8_t, BUFFER_SIZE> _buffer{};
+    ::etl::array<uint8_t, BUFFER_SIZE> _buffer{};
 };
 
 template<uint8_t IndexUpperBound, class Crc8>
@@ -40,7 +40,7 @@ PersistentComponentConfig<IndexUpperBound, Crc8>::PersistentComponentConfig(
 template<uint8_t IndexUpperBound, class Crc8>
 void PersistentComponentConfig<IndexUpperBound, Crc8>::readLevels()
 {
-    ::estd::slice<uint8_t const> const readBuffer = _persistenceManager.readMapping(_buffer);
+    ::etl::span<uint8_t const> const readBuffer = _persistenceManager.readMapping(_buffer);
     if (readBuffer.size() > 1U)
     {
         uint8_t componentCount = static_cast<uint8_t>(readBuffer.size()) - 1U;

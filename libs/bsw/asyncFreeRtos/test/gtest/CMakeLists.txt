@@ -29,13 +29,15 @@ target_link_libraries(
             bspMock
             freeRtosMock
             bspInterruptsMock
-            gmock_main)
+            gmock_main
+            util)
 
 add_executable(asyncFreeRtosMinimumStackTest
                src/async/TaskInitializerMinimumStackTest.cpp)
 
 target_link_libraries(asyncFreeRtosMinimumStackTest PRIVATE asyncFreeRtos
-                                                            gmock_main)
+                                                            gmock_main
+                                                            util)
 
 target_compile_options(asyncFreeRtosTest PRIVATE -Wno-array-bounds)
 
