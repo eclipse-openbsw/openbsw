@@ -11,6 +11,8 @@ namespace uds
 class AsyncDiagHelperMock : public IAsyncDiagHelper
 {
 public:
+    MOCK_CONST_METHOD0(getDiagContext, ::async::ContextType());
+
     MOCK_METHOD3(
         allocateRequest,
         StoredRequest*(

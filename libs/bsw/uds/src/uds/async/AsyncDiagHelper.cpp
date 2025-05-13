@@ -8,8 +8,12 @@
 
 namespace uds
 {
-AsyncDiagHelper::AsyncDiagHelper(StoredRequestPool& storedRequestPool)
-: IAsyncDiagHelper(), AbstractDiagJob(nullptr, 0U, 0U), fStoredRequestPool(storedRequestPool)
+AsyncDiagHelper::AsyncDiagHelper(
+    StoredRequestPool& storedRequestPool, ::async::ContextType diagContext)
+: IAsyncDiagHelper()
+, AbstractDiagJob(nullptr, 0U, 0U)
+, fStoredRequestPool(storedRequestPool)
+, fDiagContext(diagContext)
 {}
 
 DiagReturnCode::Type
@@ -17,6 +21,8 @@ AsyncDiagHelper::verify(uint8_t const* const /* request */, uint16_t const /* re
 {
     return DiagReturnCode::OK;
 }
+
+::async::ContextType AsyncDiagHelper::getDiagContext() const { return fDiagContext; }
 
 AsyncDiagHelper::StoredRequest* AsyncDiagHelper::allocateRequest(
     IncomingDiagConnection& connection, uint8_t const* request, uint16_t requestLength)

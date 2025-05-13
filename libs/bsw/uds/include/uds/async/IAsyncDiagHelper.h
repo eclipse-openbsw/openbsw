@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include <async/Types.h>
 #include <etl/intrusive_list.h>
 
 namespace uds
@@ -30,6 +31,12 @@ public:
         uint8_t const* fRequest;
         uint16_t fRequestLength;
     };
+
+    /**
+     * Get async context where diagnostic jobs are executed. This context is
+     * required to select the correct thread when processing a request.
+     */
+    virtual ::async::ContextType getDiagContext() const = 0;
 
     /**
      * Allocate and return a pointer to a stored request object that

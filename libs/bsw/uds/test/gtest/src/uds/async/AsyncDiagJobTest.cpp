@@ -73,6 +73,11 @@ struct AsyncDiagJobTest : public Test
         fContext.handleAll();
     }
 
+    void SetUp() override
+    {
+        EXPECT_CALL(fAsyncDiagHelperMock, getDiagContext()).WillRepeatedly(Return(fContext));
+    }
+
     async::TestContext fContext{2U};
     StrictMock<IncomingDiagConnectionMock> fConnection1Mock{fContext};
     StrictMock<IncomingDiagConnectionMock> fConnection2Mock{fContext};

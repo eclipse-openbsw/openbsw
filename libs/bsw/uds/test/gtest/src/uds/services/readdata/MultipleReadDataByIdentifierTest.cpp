@@ -86,13 +86,12 @@ ACTION_P3(SendNegativeResponseAfterReleaseGetResponse, connection, diagJob, erro
 class MyMultipleReadDataByIdentifier : public MultipleReadDataByIdentifier
 {
 public:
-    MyMultipleReadDataByIdentifier(IAsyncDiagHelper& asyncHelper, async::TestContext& context)
-    : MultipleReadDataByIdentifier(asyncHelper, context)
+    MyMultipleReadDataByIdentifier(IAsyncDiagHelper& asyncHelper)
+    : MultipleReadDataByIdentifier(asyncHelper)
     {}
 
-    MyMultipleReadDataByIdentifier(
-        IAsyncDiagHelper& asyncHelper, AbstractDiagJob& firstJob, async::TestContext& context)
-    : MultipleReadDataByIdentifier(asyncHelper, firstJob, context)
+    MyMultipleReadDataByIdentifier(IAsyncDiagHelper& asyncHelper, AbstractDiagJob& firstJob)
+    : MultipleReadDataByIdentifier(asyncHelper, firstJob)
     {}
 
     virtual DiagReturnCode::Type getDefaultDiagReturnCode() const
@@ -117,8 +116,9 @@ class MultipleReadDataByIdentifierTest : public ::testing::Test
 public:
     MultipleReadDataByIdentifierTest()
     : fContext(2U)
-    , fMyMultipleReadDataByIdentifier(fAsyncHelper, fContext)
-    , fMyMultipleReadDataByIdentifierWithFirstJob(fAsyncHelper, fDiagJob, fContext)
+    , fAsyncHelper(fContext)
+    , fMyMultipleReadDataByIdentifier(fAsyncHelper)
+    , fMyMultipleReadDataByIdentifierWithFirstJob(fAsyncHelper, fDiagJob)
     , fDiagJob(
           READ_DATA_BY_IDENTIFIER_REQUEST_1,
           sizeof(READ_DATA_BY_IDENTIFIER_REQUEST_1),

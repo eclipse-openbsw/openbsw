@@ -23,6 +23,11 @@ struct AsyncDiagJobHelperTest : public Test
 {
     AsyncDiagJobHelperTest() { fContext.handleAll(); }
 
+    void SetUp() override
+    {
+        EXPECT_CALL(fAsyncHelperMock, getDiagContext()).WillRepeatedly(Return(fContext));
+    }
+
     async::TestContext fContext{2U};
 
     StrictMock<AbstractDiagJobMock> fDiagJobMock{
@@ -37,7 +42,7 @@ struct AsyncDiagJobHelperTest : public Test
 
 TEST_F(AsyncDiagJobHelperTest, AllocateAndProcess)
 {
-    AsyncDiagJobHelper cut(fAsyncHelperMock, fDiagJobMock, fContext);
+    AsyncDiagJobHelper cut(fAsyncHelperMock, fDiagJobMock);
 
     EXPECT_FALSE(cut.hasPendingAsyncRequest());
 
@@ -52,7 +57,7 @@ TEST_F(AsyncDiagJobHelperTest, AllocateAndProcess)
 
 TEST_F(AsyncDiagJobHelperTest, EnqueueAndProcessAsynchronously)
 {
-    AsyncDiagJobHelper cut(fAsyncHelperMock, fDiagJobMock, fContext);
+    AsyncDiagJobHelper cut(fAsyncHelperMock, fDiagJobMock);
 
     cut.endAsyncRequest();
 
