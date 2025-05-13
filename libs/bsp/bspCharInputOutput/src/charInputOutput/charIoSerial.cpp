@@ -11,20 +11,20 @@ extern "C"
 namespace // file-local variables moved from global to anonymous namespace
 {
 char SerialLogger_buffer[CHARIOSERIAL_BUFFERSIZE];
-int SerialLogger_bufferInd        = 0;
+int SerialLogger_bufferInd           = 0;
 // use synchronous by default so that less memory is needed
-int SerialLogger_consoleAsynchron = 0;
+int SerialLogger_consoleAsynchronous = 0;
 } // namespace
 
 /**
  * Make logging asynchronous
  */
-void SerialLogger_setAsynchron() { SerialLogger_consoleAsynchron = 1; }
+void SerialLogger_setAsynchronous() { SerialLogger_consoleAsynchronous = 1; }
 
 /**
  * Make logging synchronous
  */
-void SerialLogger_setSynchron() { SerialLogger_consoleAsynchron = 0; }
+void SerialLogger_setSynchronous() { SerialLogger_consoleAsynchronous = 0; }
 
 /**
  * For checking if logger is initialized or not
@@ -86,7 +86,7 @@ void SerialLogger_Idle()
 int SerialLogger__outchar(int const c, int const last)
 {
     (void)last;
-    if (SerialLogger_consoleAsynchron == 0)
+    if (SerialLogger_consoleAsynchronous == 0)
     {
         // synchronous output
         (void)SerialLogger_putc(c);

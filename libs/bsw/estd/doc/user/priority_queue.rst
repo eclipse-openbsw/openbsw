@@ -40,7 +40,7 @@ Usage
 -----
 
 Below mentioned are the usage constraints and guidelines applicable for
-prority_queue.
+priority_queue.
 
     .. list-table::
        :widths: 30 70

@@ -71,7 +71,7 @@ INSTANTIATE_TYPED_TEST_SUITE_P(Deque, ReverseIterableConcept, IntDeque10_P);
 // deque<internal::TestClassCalls, 15>
 // deque<internal::TestClassCalls, 5>
 // deque<internal::NoDefaultConstructorObject, 15>
-// deque<internal::UncopyableOjbect, 10>
+// deque<internal::UncopyableObject, 10>
 // deque<int32_t, 11>
 // deque<int32_t, 20>
 // deque<int32_t, 15>

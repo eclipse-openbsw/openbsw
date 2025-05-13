@@ -43,7 +43,7 @@ All notable changes to this project will be documented in this file.
 * Clean up includes in application/systems
 * Switch camel_case to PascalCalse filenames
 * Downgrade cmake to version 3.22
-* Make unit test separate executeable
+* Make unit test separate executable
 * Move platform support code into executables
 * Switch from platform::atomic to std::atomic
 
