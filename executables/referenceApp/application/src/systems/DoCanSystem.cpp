@@ -20,7 +20,7 @@ uint16_t const TX_CALLBACK_TIMEOUT    = 1000U;
 uint16_t const FLOW_CONTROL_TIMEOUT   = 1000U;
 uint8_t const ALLOCATE_RETRY_COUNT    = 15U;
 uint8_t const FLOW_CONTROL_WAIT_COUNT = 15U;
-uint16_t const MIN_SEPARATION_TIME    = 2U;
+uint16_t const MIN_SEPARATION_TIME    = 200U;
 uint8_t const BLOCK_SIZE              = 15U;
 
 uint32_t systemUs() { return getSystemTimeUs32Bit(); }
