@@ -20,7 +20,7 @@ struct LifecycleManagerTest : public Test
 {
     LifecycleManagerTest() { _context.handleAll(); }
 
-    MOCK_METHOD0(getTimestamp, uint32_t());
+    MOCK_METHOD(uint32_t, getTimestamp, ());
 
     StrictMock<::async::AsyncMock> _asyncMock;
     StrictMock<LifecycleComponentMock> _componentMock1;

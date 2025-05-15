@@ -14,7 +14,7 @@ using namespace ::runtime;
 class TestEntry : public RuntimeStackEntry<TestEntry, true>
 {
 public:
-    MOCK_METHOD3(addRun, void(uint32_t, uint32_t, uint32_t));
+    MOCK_METHOD(void, addRun, (uint32_t, uint32_t, uint32_t));
 };
 
 TEST(RuntimeStackTest, testPushPop)

@@ -14,7 +14,7 @@ using namespace ::testing;
 class AsyncMemberCallTest : public Test
 {
 public:
-    MOCK_METHOD0(functionCall, void());
+    MOCK_METHOD(void, functionCall, ());
     async::AsyncMock _asyncMock;
 };
 

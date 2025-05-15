@@ -14,6 +14,6 @@ namespace async
 class TimeoutMock : public TimeoutType
 {
 public:
-    MOCK_METHOD1(cancel, void(TimeoutType&));
+    MOCK_METHOD(void, cancel, (TimeoutType&));
 };
 } // namespace async

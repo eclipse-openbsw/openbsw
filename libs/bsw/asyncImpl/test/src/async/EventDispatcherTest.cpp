@@ -16,9 +16,9 @@ class EventDispatcherTest : public Test
 public:
     using HandlerFunctionType = ::etl::delegate<void()>;
 
-    MOCK_METHOD0(handleEvent1, void());
-    MOCK_METHOD0(handleEvent2, void());
-    MOCK_METHOD0(handleEvent3, void());
+    MOCK_METHOD(void, handleEvent1, ());
+    MOCK_METHOD(void, handleEvent2, ());
+    MOCK_METHOD(void, handleEvent3, ());
 };
 
 struct TestLock

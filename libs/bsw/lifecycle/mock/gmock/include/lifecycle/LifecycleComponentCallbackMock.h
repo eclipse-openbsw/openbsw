@@ -15,7 +15,7 @@ namespace lifecycle
 class LifecycleComponentCallbackMock : public ILifecycleComponentCallback
 {
 public:
-    MOCK_METHOD1(transitionDone, void(ILifecycleComponent& component));
+    MOCK_METHOD(void, transitionDone, (ILifecycleComponent & component), (override));
 };
 
 } // namespace lifecycle

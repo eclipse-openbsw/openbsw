@@ -22,10 +22,10 @@ public:
     MOCK_METHOD(IDiagSessionManager const&, getDiagSessionManager, (), (const));
     MOCK_METHOD(IDiagAuthenticator const&, getDefaultDiagAuthenticator, ());
 
-    MOCK_METHOD3(
+    MOCK_METHOD(
+        DiagReturnCode::Type,
         execute,
-        DiagReturnCode::Type(
-            IncomingDiagConnection& connection, uint8_t const request[], uint16_t requestLength));
+        (IncomingDiagConnection & connection, uint8_t const request[], uint16_t requestLength));
     MOCK_METHOD(
         DiagReturnCode::Type, process, (IncomingDiagConnection&, uint8_t const[], uint16_t));
     MOCK_METHOD(void, responseSent, (IncomingDiagConnection&, AbstractDiagJob::ResponseSendResult));

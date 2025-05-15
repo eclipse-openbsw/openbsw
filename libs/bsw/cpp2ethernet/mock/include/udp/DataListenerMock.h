@@ -10,9 +10,10 @@ namespace udp
 {
 struct DataListenerMock : public IDataListener
 {
-    MOCK_METHOD5(
+    MOCK_METHOD(
+        void,
         dataReceived,
-        void(AbstractDatagramSocket&, ::ip::IPAddress, uint16_t, ::ip::IPAddress, uint16_t));
+        (AbstractDatagramSocket&, ::ip::IPAddress, uint16_t, ::ip::IPAddress, uint16_t));
 };
 
 } // namespace udp

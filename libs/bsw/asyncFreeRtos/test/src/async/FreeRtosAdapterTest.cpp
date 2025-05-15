@@ -30,8 +30,8 @@ class FreeRtosAdapterTest : public Test
 public:
     using CutType = FreeRtosAdapter<TestBinding>;
 
-    MOCK_METHOD0(startApp, void());
-    MOCK_METHOD1(taskFunction, void(CutType::TaskContextType& taskContext));
+    MOCK_METHOD(void, startApp, ());
+    MOCK_METHOD(void, taskFunction, (CutType::TaskContextType & taskContext));
 
 protected:
     StrictMock<::os::FreeRtosMock> _freeRtosMock;

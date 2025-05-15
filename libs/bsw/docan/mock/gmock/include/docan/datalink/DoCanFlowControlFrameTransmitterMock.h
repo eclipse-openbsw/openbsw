@@ -20,14 +20,15 @@ public:
     using DataLinkAddressType = typename DataLinkLayer::AddressType;
     using FrameCodecType      = DoCanFrameCodec<DataLinkLayer>;
 
-    MOCK_METHOD5_T(
+    MOCK_METHOD(
+        bool,
         sendFlowControl,
-        bool(
-            FrameCodecType const& codec,
-            DataLinkAddressType transmissionAddress,
-            FlowStatus flowStatus,
-            uint8_t blockSize,
-            uint8_t encodedMinSeparationTime));
+        (FrameCodecType const& codec,
+         DataLinkAddressType transmissionAddress,
+         FlowStatus flowStatus,
+         uint8_t blockSize,
+         uint8_t encodedMinSeparationTime),
+        (override));
 };
 
 } // namespace docan

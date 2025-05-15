@@ -27,8 +27,8 @@ public:
     class Mock
     {
     public:
-        MOCK_METHOD2(set, ::bsp::BspReturnCode(Output::OutputId, uint8_t));
-        MOCK_METHOD2(get, ::bsp::BspReturnCode(Output::OutputId, uint8_t));
+        MOCK_METHOD(::bsp::BspReturnCode, set, (Output::OutputId, uint8_t));
+        MOCK_METHOD(::bsp::BspReturnCode, get, (Output::OutputId, uint8_t));
     };
 
     Output() : ::etl::singleton_base<Output>(*this) {}

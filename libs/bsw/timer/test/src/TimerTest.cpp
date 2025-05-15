@@ -14,28 +14,28 @@ using namespace ::testing;
 
 struct TimeoutMock : public Timeout
 {
-    MOCK_METHOD0(expired, void());
+    MOCK_METHOD(void, expired, ());
 };
 
 struct OsTimeoutMock
 {
-    MOCK_METHOD1(setAlarm, void(uint32_t));
+    MOCK_METHOD(void, setAlarm, (uint32_t));
 };
 
 struct NowMock
 {
-    MOCK_METHOD0(now, uint32_t());
+    MOCK_METHOD(uint32_t, now, ());
 };
 
 struct CallMock
 {
-    MOCK_METHOD0(call, void());
+    MOCK_METHOD(void, call, ());
 };
 
 struct LockPolicyMock
 {
-    MOCK_METHOD0(lock, void());
-    MOCK_METHOD0(unlock, void());
+    MOCK_METHOD(void, lock, ());
+    MOCK_METHOD(void, unlock, ());
 
     LockPolicyMock()
     {

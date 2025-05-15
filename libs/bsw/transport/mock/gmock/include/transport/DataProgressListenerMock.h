@@ -19,7 +19,7 @@ class DataProgressListenerMock : public IDataProgressListener
 public:
     DataProgressListenerMock() {}
 
-    MOCK_METHOD2(dataProgressed, void(TransportMessage&, uint32_t));
+    MOCK_METHOD(void, dataProgressed, (TransportMessage&, uint32_t));
 };
 
 } // namespace transport

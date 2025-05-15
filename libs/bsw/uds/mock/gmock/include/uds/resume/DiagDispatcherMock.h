@@ -17,15 +17,15 @@ public:
     : IDiagDispatcher(sessionManager, jobRoot)
     {}
 
-    MOCK_CONST_METHOD0(getSourceId, uint16_t());
+    MOCK_METHOD(uint16_t, getSourceId, (), (const));
 
-    MOCK_METHOD1(dispatchTriggerEventRequest, uint8_t(transport::TransportMessage& msg));
+    MOCK_METHOD(uint8_t, dispatchTriggerEventRequest, (transport::TransportMessage & msg));
 
-    MOCK_METHOD2(
+    MOCK_METHOD(
+        transport::AbstractTransportLayer::ErrorCode,
         resume,
-        transport::AbstractTransportLayer::ErrorCode(
-            transport::TransportMessage& msg,
-            transport::ITransportMessageProcessedListener* notificationListener));
+        (transport::TransportMessage & msg,
+         transport::ITransportMessageProcessedListener* notificationListener));
 };
 
 } // namespace uds

@@ -12,7 +12,7 @@ namespace storage
 class IStorageMock : public IStorage
 {
 public:
-    MOCK_METHOD1(process, void(StorageJob&));
+    MOCK_METHOD(void, process, (StorageJob&));
 };
 
 } // namespace storage

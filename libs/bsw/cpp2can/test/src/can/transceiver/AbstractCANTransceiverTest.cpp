@@ -43,7 +43,7 @@ public:
         ;
     }
 
-    MOCK_METHOD1(frameReceived, void(CANFrame const& frame));
+    MOCK_METHOD(void, frameReceived, (CANFrame const& frame));
 
 private:
     void frameReceivedImplementation(CANFrame const& frame) { receivedFrame = frame; }
@@ -61,7 +61,7 @@ public:
         ;
     }
 
-    MOCK_METHOD1(frameReceived, void(CANFrame const& frame));
+    MOCK_METHOD(void, frameReceived, (CANFrame const& frame));
 
     void verify() { ASSERT_EQ(expectedFrame, receivedFrame); }
 
@@ -92,7 +92,7 @@ public:
         filter.open();
     }
 
-    MOCK_METHOD1(frameReceived, void(CANFrame const& frame));
+    MOCK_METHOD(void, frameReceived, (CANFrame const& frame));
 
     void verify() { ASSERT_EQ(expectedFrame, receivedFrame); }
 
@@ -121,17 +121,19 @@ class tStateChangeListener
 , public ICANFrameSentListener
 {
 public:
-    MOCK_METHOD2(
-        canTransceiverStateChanged, void(ICanTransceiver& transceiver, CANTransceiverState state));
+    MOCK_METHOD(
+        void,
+        canTransceiverStateChanged,
+        (ICanTransceiver & transceiver, CANTransceiverState state));
 
-    MOCK_METHOD1(phyErrorOccurred, void(ICanTransceiver& transceiver));
-    MOCK_METHOD1(canFrameSent, void(CANFrame const& frame));
+    MOCK_METHOD(void, phyErrorOccurred, (ICanTransceiver & transceiver));
+    MOCK_METHOD(void, canFrameSent, (CANFrame const& frame));
 };
 
 class tSendFrameListener : public IFilteredCANFrameSentListener
 {
 public:
-    MOCK_METHOD1(canFrameSent, void(CANFrame const& frame));
+    MOCK_METHOD(void, canFrameSent, (CANFrame const& frame));
 
     IFilter& getFilter() override { return filter; }
 

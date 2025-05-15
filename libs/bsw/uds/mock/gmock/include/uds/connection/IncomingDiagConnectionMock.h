@@ -22,7 +22,7 @@ public:
     : IncomingDiagConnection(diagContext)
     {}
 
-    MOCK_METHOD0(terminate, void());
+    MOCK_METHOD(void, terminate, (), (override));
 
     using IncomingDiagConnection::terminateNestedRequest;
 };
@@ -57,10 +57,10 @@ public:
        and is expected multiple times in the functional tests,
        Therefore no reason to make a stub version for this function.
     */
-    MOCK_METHOD0(terminate, void());
+    MOCK_METHOD(void, terminate, (), (override));
 
     MOCK_METHOD(void, addIdentifier, ());
-    MOCK_METHOD0(triggerNextNestedRequest, void());
+    MOCK_METHOD(void, triggerNextNestedRequest, ());
     MOCK_METHOD(
         void,
         transportMessageProcessed,

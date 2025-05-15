@@ -46,10 +46,10 @@ public:
         EXPECT_EQ(resumeAllInterruptsCount, 0U);
     }
 
-    MOCK_METHOD0(
-        getOldIntEnabledStatusValueAndSuspendAllInterrupts, OldIntEnabledStatusValueType());
-    MOCK_METHOD0(getMachineStateRegisterValueAndSuspendAllInterrupts, uint32_t());
-    MOCK_METHOD1(resumeAllInterrupts, void(OldIntEnabledStatusValueType));
+    MOCK_METHOD(
+        OldIntEnabledStatusValueType, getOldIntEnabledStatusValueAndSuspendAllInterrupts, ());
+    MOCK_METHOD(uint32_t, getMachineStateRegisterValueAndSuspendAllInterrupts, ());
+    MOCK_METHOD(void, resumeAllInterrupts, (OldIntEnabledStatusValueType));
 
     static uint32_t getOldIntEnabledStatusValueAndSuspendAllInterruptsCount;
     static uint32_t getMachineStateRegisterValueAndSuspendAllInterruptsCount;

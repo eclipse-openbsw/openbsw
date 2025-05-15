@@ -28,7 +28,7 @@ public:
     RegisterMock(Handler&, Event const&, Entry const (&)[N])
     {}
 
-    MOCK_METHOD0(check, void());
+    MOCK_METHOD(void, check, ());
     MOCK_CONST_METHOD0_T(getContext, Context&());
 };
 } // namespace safeMonitor

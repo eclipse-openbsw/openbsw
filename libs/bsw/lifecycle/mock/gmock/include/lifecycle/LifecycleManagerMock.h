@@ -15,10 +15,10 @@ namespace lifecycle
 class LifecycleManagerMock : public ILifecycleManager
 {
 public:
-    MOCK_CONST_METHOD0(getLevelCount, uint8_t());
-    MOCK_METHOD1(transitionToLevel, void(uint8_t level));
-    MOCK_METHOD1(addLifecycleListener, void(ILifecycleListener& listener));
-    MOCK_METHOD1(removeLifecycleListener, void(ILifecycleListener& listener));
+    MOCK_METHOD(uint8_t, getLevelCount, (), (const, override));
+    MOCK_METHOD(void, transitionToLevel, (uint8_t level), (override));
+    MOCK_METHOD(void, addLifecycleListener, (ILifecycleListener & listener), (override));
+    MOCK_METHOD(void, removeLifecycleListener, (ILifecycleListener & listener), (override));
 };
 
 } // namespace lifecycle

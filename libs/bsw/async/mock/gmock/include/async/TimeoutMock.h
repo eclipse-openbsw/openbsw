@@ -18,7 +18,7 @@ class TimeoutMock : public ::etl::singleton_base<TimeoutMock>
 public:
     TimeoutMock() : ::etl::singleton_base<TimeoutMock>(*this) {}
 
-    MOCK_METHOD1(cancel, void(TimeoutType& timeout));
+    MOCK_METHOD(void, cancel, (TimeoutType & timeout));
 };
 
 } // namespace async

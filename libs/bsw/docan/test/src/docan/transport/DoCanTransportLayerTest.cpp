@@ -66,7 +66,7 @@ struct DoCanTransportLayerTest : ::testing::Test
 
     ~DoCanTransportLayerTest() override { Logger::shutdown(); }
 
-    MOCK_METHOD1(shutdownDone, void(AbstractTransportLayer&));
+    MOCK_METHOD(void, shutdownDone, (AbstractTransportLayer&));
 
     void expectLog(Level level);
     void expectLog(Level level, uint32_t address);

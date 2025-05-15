@@ -164,8 +164,8 @@ public:
         fMyMultipleReadDataByIdentifier.removeAbstractDiagJob(fDiagJob);
     }
 
-    MOCK_METHOD1(getDidLimit, uint8_t(::transport::TransportMessage const& message));
-    MOCK_METHOD2(checkResponse, bool(DiagReturnCode::Type, DiagReturnCode::Type&));
+    MOCK_METHOD(uint8_t, getDidLimit, (::transport::TransportMessage const& message));
+    MOCK_METHOD(bool, checkResponse, (DiagReturnCode::Type, DiagReturnCode::Type&));
 
 protected:
     static uint8_t const NUM_INCOMING_CONNECTIONS = 1;

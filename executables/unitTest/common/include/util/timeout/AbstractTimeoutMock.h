@@ -14,6 +14,6 @@ namespace common
 class AbstractTimeoutMock : public AbstractTimeout
 {
 public:
-    MOCK_METHOD1(expired, void(TimeoutExpiredActions));
+    MOCK_METHOD(void, expired, (TimeoutExpiredActions));
 };
 } // namespace common

@@ -32,15 +32,17 @@ public:
             .WillByDefault(Invoke(this, &NestedDiagRequestMock::baseHandleOverflow));
     }
 
-    MOCK_CONST_METHOD1(getStoredRequestLength, uint16_t(::etl::span<uint8_t const> const&));
-    MOCK_CONST_METHOD2(storeRequest, void(::etl::span<uint8_t const> const&, ::etl::span<uint8_t>));
-    MOCK_METHOD1(
-        prepareNestedRequest, ::etl::span<uint8_t const>(::etl::span<uint8_t const> const&));
-    MOCK_METHOD3(
+    MOCK_METHOD(uint16_t, getStoredRequestLength, (::etl::span<uint8_t const> const&), (const));
+    MOCK_METHOD(
+        void, storeRequest, (::etl::span<uint8_t const> const&, ::etl::span<uint8_t>), (const));
+    MOCK_METHOD(
+        ::etl::span<uint8_t const>, prepareNestedRequest, (::etl::span<uint8_t const> const&));
+    MOCK_METHOD(
+        DiagReturnCode::Type,
         processNestedRequest,
-        DiagReturnCode::Type(IncomingDiagConnection&, uint8_t const[], uint16_t));
-    MOCK_METHOD1(handleNestedResponseCode, void(DiagReturnCode::Type));
-    MOCK_METHOD0(handleOverflow, void());
+        (IncomingDiagConnection&, uint8_t const[], uint16_t));
+    MOCK_METHOD(void, handleNestedResponseCode, (DiagReturnCode::Type));
+    MOCK_METHOD(void, handleOverflow, ());
 
     uint16_t baseGetStoredRequestLength(::etl::span<uint8_t const> const& buffer)
     {
@@ -87,8 +89,9 @@ public:
     }
 
 protected:
-    MOCK_METHOD2(verify, DiagReturnCode::Type(uint8_t const[], uint16_t));
-    MOCK_METHOD3(process, DiagReturnCode::Type(IncomingDiagConnection&, uint8_t const[], uint16_t));
+    MOCK_METHOD(DiagReturnCode::Type, verify, (uint8_t const[], uint16_t));
+    MOCK_METHOD(
+        DiagReturnCode::Type, process, (IncomingDiagConnection&, uint8_t const[], uint16_t));
 };
 
 class IncomingDiagConnectionMock : public IncomingDiagConnection
@@ -96,7 +99,7 @@ class IncomingDiagConnectionMock : public IncomingDiagConnection
 public:
     IncomingDiagConnectionMock() : IncomingDiagConnection(::async::CONTEXT_INVALID) {}
 
-    MOCK_METHOD0(terminate, void());
+    MOCK_METHOD(void, terminate, ());
 };
 
 uint8_t buffer[10];

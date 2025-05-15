@@ -12,9 +12,9 @@ using namespace ::testing;
 class SimpleLifecycleComponentMock : public SimpleLifecycleComponent
 {
 public:
-    MOCK_METHOD0(init, void());
-    MOCK_METHOD0(run, void());
-    MOCK_METHOD0(shutdown, void());
+    MOCK_METHOD(void, init, (), (override));
+    MOCK_METHOD(void, run, (), (override));
+    MOCK_METHOD(void, shutdown, (), (override));
 };
 
 TEST(SimpleLifecycleComponentTest, testCompleteComponent)

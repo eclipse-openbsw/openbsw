@@ -12,7 +12,7 @@ using namespace ::runtime;
 class TestStatistics
 {
 public:
-    MOCK_METHOD3(addRun, void(uint32_t, uint32_t, uint32_t));
+    MOCK_METHOD(void, addRun, (uint32_t, uint32_t, uint32_t));
 };
 
 class NestedTestEntry

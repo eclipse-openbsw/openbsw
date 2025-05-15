@@ -14,7 +14,7 @@ namespace async
 class RunnableMock : public IRunnable
 {
 public:
-    MOCK_METHOD0(execute, void());
+    MOCK_METHOD(void, execute, (), (override));
 };
 
 } // namespace async

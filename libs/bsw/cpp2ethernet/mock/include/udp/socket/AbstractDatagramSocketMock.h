@@ -12,21 +12,21 @@ namespace udp
 {
 struct AbstractDatagramSocketMock : public AbstractDatagramSocket
 {
-    MOCK_METHOD2(bind, ErrorCode(ip::IPAddress const*, uint16_t));
-    MOCK_METHOD1(join, ErrorCode(ip::IPAddress const&));
-    MOCK_CONST_METHOD0(isBound, bool());
-    MOCK_METHOD0(close, void());
-    MOCK_CONST_METHOD0(isClosed, bool());
-    MOCK_METHOD3(connect, ErrorCode(ip::IPAddress const&, uint16_t, ip::IPAddress*));
-    MOCK_METHOD0(disconnect, void());
-    MOCK_CONST_METHOD0(isConnected, bool());
-    MOCK_METHOD2(read, size_t(uint8_t*, size_t));
-    MOCK_METHOD1(send, ErrorCode(::etl::span<uint8_t const> const&));
-    MOCK_METHOD1(send, ErrorCode(DatagramPacket const&));
-    MOCK_CONST_METHOD0(getIPAddress, ip::IPAddress const*());
-    MOCK_CONST_METHOD0(getLocalIPAddress, ip::IPAddress const*());
-    MOCK_CONST_METHOD0(getPort, uint16_t());
-    MOCK_CONST_METHOD0(getLocalPort, uint16_t());
+    MOCK_METHOD(ErrorCode, bind, (ip::IPAddress const*, uint16_t));
+    MOCK_METHOD(ErrorCode, join, (ip::IPAddress const&));
+    MOCK_METHOD(bool, isBound, (), (const));
+    MOCK_METHOD(void, close, ());
+    MOCK_METHOD(bool, isClosed, (), (const));
+    MOCK_METHOD(ErrorCode, connect, (ip::IPAddress const&, uint16_t, ip::IPAddress*));
+    MOCK_METHOD(void, disconnect, ());
+    MOCK_METHOD(bool, isConnected, (), (const));
+    MOCK_METHOD(size_t, read, (uint8_t*, size_t));
+    MOCK_METHOD(ErrorCode, send, (::etl::span<uint8_t const> const&));
+    MOCK_METHOD(ErrorCode, send, (DatagramPacket const&));
+    MOCK_METHOD(ip::IPAddress const*, getIPAddress, (), (const));
+    MOCK_METHOD(ip::IPAddress const*, getLocalIPAddress, (), (const));
+    MOCK_METHOD(uint16_t, getPort, (), (const));
+    MOCK_METHOD(uint16_t, getLocalPort, (), (const));
 
     IDataListener* getDataListener() { return _dataListener; }
 

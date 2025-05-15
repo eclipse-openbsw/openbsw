@@ -11,10 +11,10 @@ namespace bios
 class CanPhyMock : public CanPhy
 {
 public:
-    MOCK_METHOD1(init, void(uint32_t));
-    MOCK_METHOD2(setMode, bool(Mode, uint32_t));
-    MOCK_METHOD1(getMode, Mode(uint32_t));
-    MOCK_METHOD1(getPhyErrorStatus, ErrorCode(uint32_t));
+    MOCK_METHOD(void, init, (uint32_t), (override));
+    MOCK_METHOD(bool, setMode, (Mode, uint32_t), (override));
+    MOCK_METHOD(Mode, getMode, (uint32_t), (override));
+    MOCK_METHOD(ErrorCode, getPhyErrorStatus, (uint32_t), (override));
 };
 
 } // namespace bios

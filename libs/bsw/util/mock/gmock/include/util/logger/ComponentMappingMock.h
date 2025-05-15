@@ -13,10 +13,10 @@ namespace logger
 class ComponentMappingMock : public IComponentMapping
 {
 public:
-    MOCK_CONST_METHOD2(isEnabled, bool(uint8_t componentIndex, Level level));
-    MOCK_CONST_METHOD1(getLevel, Level(uint8_t componentIndex));
-    MOCK_CONST_METHOD1(getLevelInfo, LevelInfo(Level level));
-    MOCK_CONST_METHOD1(getComponentInfo, ComponentInfo(uint8_t componentIndex));
+    MOCK_METHOD(bool, isEnabled, (uint8_t componentIndex, Level level), (const, override));
+    MOCK_METHOD(Level, getLevel, (uint8_t componentIndex), (const, override));
+    MOCK_METHOD(LevelInfo, getLevelInfo, (Level level), (const, override));
+    MOCK_METHOD(ComponentInfo, getComponentInfo, (uint8_t componentIndex), (const, override));
 };
 
 } // namespace logger

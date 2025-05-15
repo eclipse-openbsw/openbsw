@@ -16,9 +16,9 @@ namespace can
 {
 struct MergerMock : public IMerger
 {
-    MOCK_METHOD1(mergeWithBitField, void(BitFieldFilter&));
-    MOCK_METHOD1(mergeWithStaticBitField, void(AbstractStaticBitFieldFilter&));
-    MOCK_METHOD1(mergeWithInterval, void(IntervalFilter&));
+    MOCK_METHOD(void, mergeWithBitField, (BitFieldFilter&), (override));
+    MOCK_METHOD(void, mergeWithStaticBitField, (AbstractStaticBitFieldFilter&), (override));
+    MOCK_METHOD(void, mergeWithInterval, (IntervalFilter&), (override));
 };
 
 } // namespace can

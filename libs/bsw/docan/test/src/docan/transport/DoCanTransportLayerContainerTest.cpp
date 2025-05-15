@@ -39,7 +39,7 @@ struct DoCanTransportLayerContainerTest : ::testing::Test
         nowUs = 0;
     }
 
-    MOCK_METHOD0(shutdownDone, void());
+    MOCK_METHOD(void, shutdownDone, ());
 
     uint32_t systemUs() { return nowUs; }
 

@@ -32,25 +32,25 @@ struct AbstractSocketMock : public AbstractSocket
         _dataReadWindow = {};
     }
 
-    MOCK_METHOD2(bind, ErrorCode(ip::IPAddress const&, uint16_t const));
-    MOCK_METHOD3(connect, ErrorCode(ip::IPAddress const&, uint16_t const, ConnectedDelegate));
-    MOCK_METHOD0(close, ErrorCode());
-    MOCK_METHOD0(abort, void());
-    MOCK_METHOD0(flush, ErrorCode());
-    MOCK_METHOD0(discardData, void());
-    MOCK_METHOD0(available, size_t());
-    MOCK_METHOD1(read, uint8_t(uint8_t&));
-    MOCK_METHOD2(read, size_t(uint8_t*, size_t));
-    MOCK_METHOD1(send, ErrorCode(::etl::span<uint8_t const> const&));
-    MOCK_CONST_METHOD0(isClosed, bool());
-    MOCK_CONST_METHOD0(isEstablished, bool());
-    MOCK_CONST_METHOD0(getRemoteIPAddress, ip::IPAddress());
-    MOCK_CONST_METHOD0(getLocalIPAddress, ip::IPAddress());
-    MOCK_CONST_METHOD0(getRemotePort, uint16_t());
-    MOCK_CONST_METHOD0(getLocalPort, uint16_t());
-    MOCK_METHOD0(disableNagleAlgorithm, void());
-    MOCK_METHOD3(enableKeepAlive, void(uint32_t, uint32_t, uint32_t));
-    MOCK_METHOD0(disableKeepAlive, void());
+    MOCK_METHOD(ErrorCode, bind, (ip::IPAddress const&, uint16_t const));
+    MOCK_METHOD(ErrorCode, connect, (ip::IPAddress const&, uint16_t const, ConnectedDelegate));
+    MOCK_METHOD(ErrorCode, close, ());
+    MOCK_METHOD(void, abort, ());
+    MOCK_METHOD(ErrorCode, flush, ());
+    MOCK_METHOD(void, discardData, ());
+    MOCK_METHOD(size_t, available, ());
+    MOCK_METHOD(uint8_t, read, (uint8_t&));
+    MOCK_METHOD(size_t, read, (uint8_t*, size_t));
+    MOCK_METHOD(ErrorCode, send, (::etl::span<uint8_t const> const&));
+    MOCK_METHOD(bool, isClosed, (), (const));
+    MOCK_METHOD(bool, isEstablished, (), (const));
+    MOCK_METHOD(ip::IPAddress, getRemoteIPAddress, (), (const));
+    MOCK_METHOD(ip::IPAddress, getLocalIPAddress, (), (const));
+    MOCK_METHOD(uint16_t, getRemotePort, (), (const));
+    MOCK_METHOD(uint16_t, getLocalPort, (), (const));
+    MOCK_METHOD(void, disableNagleAlgorithm, ());
+    MOCK_METHOD(void, enableKeepAlive, (uint32_t, uint32_t, uint32_t));
+    MOCK_METHOD(void, disableKeepAlive, ());
 
     void signalReceivedData(size_t length)
     {

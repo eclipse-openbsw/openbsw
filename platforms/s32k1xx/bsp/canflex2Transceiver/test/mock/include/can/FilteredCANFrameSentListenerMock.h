@@ -13,8 +13,8 @@ namespace can
 class FilteredCANFrameSentListenerMock : public ::can::IFilteredCANFrameSentListener
 {
 public:
-    MOCK_METHOD1(canFrameSent, void(CANFrame const&));
-    MOCK_METHOD0(getFilter, IFilter&());
+    MOCK_METHOD(void, canFrameSent, (CANFrame const&));
+    MOCK_METHOD(IFilter&, getFilter, ());
 };
 
 } // namespace can

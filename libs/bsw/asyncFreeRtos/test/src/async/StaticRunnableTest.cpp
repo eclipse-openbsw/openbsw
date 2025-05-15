@@ -12,7 +12,7 @@ using namespace ::testing;
 class TestRunnable : public StaticRunnable<TestRunnable>
 {
 public:
-    MOCK_METHOD0(execute, void());
+    MOCK_METHOD(void, execute, ());
 };
 
 /**

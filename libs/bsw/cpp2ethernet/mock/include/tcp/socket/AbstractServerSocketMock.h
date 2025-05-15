@@ -20,10 +20,10 @@ struct AbstractServerSocketMock : public AbstractServerSocket
     : AbstractServerSocket(port, listener)
     {}
 
-    MOCK_METHOD0(accept, bool());
-    MOCK_METHOD2(bind, bool(::ip::IPAddress const&, uint16_t));
-    MOCK_METHOD0(close, void());
-    MOCK_CONST_METHOD0(isClosed, bool());
+    MOCK_METHOD(bool, accept, ());
+    MOCK_METHOD(bool, bind, (::ip::IPAddress const&, uint16_t));
+    MOCK_METHOD(void, close, ());
+    MOCK_METHOD(bool, isClosed, (), (const));
 
     ::tcp::AbstractSocket* connectFrom(::ip::IPAddress const& clientIpAddress, uint16_t clientPort)
     {

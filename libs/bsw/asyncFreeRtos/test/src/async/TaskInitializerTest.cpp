@@ -28,7 +28,7 @@ struct AdapterMock : public ::etl::singleton_base<AdapterMock>
         instance().initTaskCall(taskInitializer);
     }
 
-    MOCK_METHOD1(initTaskCall, void(TaskInitializer<AdapterMock>& taskInitializer));
+    MOCK_METHOD(void, initTaskCall, (TaskInitializer<AdapterMock> & taskInitializer));
 
     static ContextType const TASK_IDLE  = 0U;
     static ContextType const TASK_TIMER = 10U;

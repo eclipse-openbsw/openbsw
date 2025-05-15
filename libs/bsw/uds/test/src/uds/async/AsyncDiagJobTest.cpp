@@ -37,12 +37,12 @@ public:
 
     ::etl::span<uint8_t const> getParams() { return ::etl::span<uint8_t const>(fParams, 5); }
 
-    MOCK_METHOD2(verify, DiagReturnCode::Type(uint8_t const request[], uint16_t requestLength));
+    MOCK_METHOD(DiagReturnCode::Type, verify, (uint8_t const request[], uint16_t requestLength));
 
-    MOCK_METHOD3(
+    MOCK_METHOD(
+        DiagReturnCode::Type,
         doProcess,
-        DiagReturnCode::Type(
-            IncomingDiagConnection& connection, uint8_t const request[], uint16_t requestLength));
+        (IncomingDiagConnection & connection, uint8_t const request[], uint16_t requestLength));
 
     DiagReturnCode::Type
     callProcess(IncomingDiagConnection& connection, uint8_t const request[], uint16_t requestLength)

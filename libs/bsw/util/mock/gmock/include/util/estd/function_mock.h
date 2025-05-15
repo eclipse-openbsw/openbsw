@@ -17,7 +17,7 @@ struct function_mock<R(Ps...)>
 {
     using self_type = function_mock<R(Ps...)>;
 
-    MOCK_METHOD0(callee, void());
+    MOCK_METHOD(void, callee, ());
 
     operator ::etl::delegate<R(Ps...)>()
     {

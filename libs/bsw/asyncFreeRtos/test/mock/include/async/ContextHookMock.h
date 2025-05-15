@@ -22,10 +22,10 @@ public:
     static void enterIsrGroup(size_t isrGroupIdx);
     static void leaveIsrGroup(size_t isrGroupIdx);
 
-    MOCK_METHOD1(doEnterTask, void(size_t));
-    MOCK_METHOD1(doLeaveTask, void(size_t));
-    MOCK_METHOD1(doEnterIsrGroup, void(size_t));
-    MOCK_METHOD1(doLeaveIsrGroup, void(size_t));
+    MOCK_METHOD(void, doEnterTask, (size_t));
+    MOCK_METHOD(void, doLeaveTask, (size_t));
+    MOCK_METHOD(void, doEnterIsrGroup, (size_t));
+    MOCK_METHOD(void, doLeaveIsrGroup, (size_t));
 };
 
 } // namespace async

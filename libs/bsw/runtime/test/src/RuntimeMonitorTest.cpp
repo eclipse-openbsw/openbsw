@@ -12,20 +12,20 @@ using namespace ::runtime;
 class TestContextStatistics
 {
 public:
-    MOCK_METHOD3(addRun, void(uint32_t, uint32_t, uint32_t));
-    MOCK_METHOD0(reset, void());
+    MOCK_METHOD(void, addRun, (uint32_t, uint32_t, uint32_t));
+    MOCK_METHOD(void, reset, ());
 };
 
 class TestFunctionStatistics
 {
 public:
-    MOCK_METHOD3(addRun, void(uint32_t, uint32_t, uint32_t));
+    MOCK_METHOD(void, addRun, (uint32_t, uint32_t, uint32_t));
 };
 
 class RuntimeMonitorTest : public Test
 {
 public:
-    MOCK_METHOD1(getTaskName, char const*(size_t));
+    MOCK_METHOD(char const*, getTaskName, (size_t));
 
 protected:
     StrictMock<SystemTimerMock> _systemTimerMock;

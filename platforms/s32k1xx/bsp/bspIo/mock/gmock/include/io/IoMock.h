@@ -13,17 +13,17 @@ namespace bios
 {
 struct IoMock : public ::etl::singleton_base<IoMock>
 {
-    IoMock() : ::etl::singleton_base<IoMock>(*this){};
+    IoMock() : ::etl::singleton_base<IoMock>(*this) {}
 
-    MOCK_METHOD1(setDefaultConfiguration, bsp::BspReturnCode(uint16_t));
-    MOCK_METHOD1(getPin, bool(uint16_t));
-    MOCK_METHOD2(setPin, bsp::BspReturnCode(uint16_t, bool));
+    MOCK_METHOD(bsp::BspReturnCode, setDefaultConfiguration, (uint16_t));
+    MOCK_METHOD(bool, getPin, (uint16_t));
+    MOCK_METHOD(bsp::BspReturnCode, setPin, (uint16_t, bool));
 
-    MOCK_METHOD1(getPinNumber, uint32_t(Io::PinId));
-    MOCK_METHOD1(resetConfig, bsp::BspReturnCode(uint16_t));
+    MOCK_METHOD(uint32_t, getPinNumber, (Io::PinId));
+    MOCK_METHOD(bsp::BspReturnCode, resetConfig, (uint16_t));
 
-    MOCK_METHOD2(safe, bsp::BspReturnCode(uint16_t, bool));
-    MOCK_METHOD1(getPinIrq, bool(uint16_t));
+    MOCK_METHOD(bsp::BspReturnCode, safe, (uint16_t, bool));
+    MOCK_METHOD(bool, getPinIrq, (uint16_t));
 };
 
 } // namespace bios

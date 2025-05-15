@@ -12,9 +12,13 @@ namespace eeprom
 {
 struct EepromHelperMock : IEepromHelper
 {
-    MOCK_METHOD4(read, bool(uint32_t blockId, size_t offset, uint8_t* buffer, size_t length));
-    MOCK_METHOD4(
-        write, bool(uint32_t blockId, size_t offset, uint8_t const* buffer, size_t length));
+    MOCK_METHOD(
+        bool, read, (uint32_t blockId, size_t offset, uint8_t* buffer, size_t length), (override));
+    MOCK_METHOD(
+        bool,
+        write,
+        (uint32_t blockId, size_t offset, uint8_t const* buffer, size_t length),
+        (override));
 };
 
 ACTION_P(CopyFromBuffer, buf) { ::etl::mem_copy(buf, arg3, arg2); }

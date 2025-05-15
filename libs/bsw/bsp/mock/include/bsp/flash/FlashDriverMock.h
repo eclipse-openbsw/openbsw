@@ -10,10 +10,10 @@ namespace flash
 {
 struct FlashDriverMock : IFlashDriver
 {
-    MOCK_METHOD3(write, FlashOperationStatus(uint32_t, uint8_t const*, uint32_t));
-    MOCK_METHOD2(erase, FlashOperationStatus(uint32_t, uint32_t));
-    MOCK_METHOD0(flush, FlashOperationStatus());
-    MOCK_METHOD2(getBlockSize, FlashOperationStatus(uint32_t, uint32_t&));
+    MOCK_METHOD(FlashOperationStatus, write, (uint32_t, uint8_t const*, uint32_t));
+    MOCK_METHOD(FlashOperationStatus, erase, (uint32_t, uint32_t));
+    MOCK_METHOD(FlashOperationStatus, flush, ());
+    MOCK_METHOD(FlashOperationStatus, getBlockSize, (uint32_t, uint32_t&));
 };
 
 } /* namespace flash */

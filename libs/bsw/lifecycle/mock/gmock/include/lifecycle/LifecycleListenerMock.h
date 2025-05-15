@@ -15,9 +15,11 @@ namespace lifecycle
 class LifecycleListenerMock : public ILifecycleListener
 {
 public:
-    MOCK_METHOD2(
+    MOCK_METHOD(
+        void,
         lifecycleLevelReached,
-        void(uint8_t level, ILifecycleComponent::Transition::Type transition));
+        (uint8_t level, ILifecycleComponent::Transition::Type transition),
+        (override));
 };
 
 } // namespace lifecycle

@@ -17,32 +17,32 @@ class TransportMessageProvidingListenerMock : public ITransportMessageProvidingL
 public:
     TransportMessageProvidingListenerMock(bool defaultImpl = true);
 
-    virtual ~TransportMessageProvidingListenerMock(){};
+    virtual ~TransportMessageProvidingListenerMock() {}
 
-    MOCK_METHOD3(
+    MOCK_METHOD(
+        ReceiveResult,
         messageReceived,
-        ReceiveResult(
-            uint8_t sourceBusId,
-            TransportMessage& transportMessage,
-            ITransportMessageProcessedListener* pNotificationListener));
+        (uint8_t sourceBusId,
+         TransportMessage& transportMessage,
+         ITransportMessageProcessedListener* pNotificationListener));
 
-    MOCK_METHOD6(
+    MOCK_METHOD(
+        ErrorCode,
         getTransportMessage,
-        ErrorCode(
-            uint8_t srcBusId,
-            uint16_t sourceId,
-            uint16_t targetId,
-            uint16_t size,
-            ::etl::span<uint8_t const> const& peek,
-            TransportMessage*& pTransportMessage));
+        (uint8_t srcBusId,
+         uint16_t sourceId,
+         uint16_t targetId,
+         uint16_t size,
+         ::etl::span<uint8_t const> const& peek,
+         TransportMessage*& pTransportMessage));
 
-    MOCK_METHOD1(releaseTransportMessage, void(TransportMessage& transportMessage));
+    MOCK_METHOD(void, releaseTransportMessage, (TransportMessage & transportMessage));
 
-    MOCK_METHOD1(refuseSourceId, void(uint8_t sourceId));
+    MOCK_METHOD(void, refuseSourceId, (uint8_t sourceId));
 
-    MOCK_METHOD1(refuseTargetId, void(uint8_t targetId));
+    MOCK_METHOD(void, refuseTargetId, (uint8_t targetId));
 
-    MOCK_METHOD0(dump, void());
+    MOCK_METHOD(void, dump, ());
 
     ErrorCode getTransportMessageImplementation(
         uint8_t srcBusId,

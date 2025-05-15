@@ -12,7 +12,7 @@ enum MyEvent
 class HandlerMock
 {
 public:
-    MOCK_METHOD1(handle, void(MyEvent const& event));
+    MOCK_METHOD(void, handle, (MyEvent const& event));
 };
 
 class ScopedMutexMock

@@ -20,12 +20,17 @@ public:
     : AbstractDiagJob(implementedRequest, requestLength, prefixLength, sessionMask)
     {}
 
-    MOCK_METHOD2(verify, DiagReturnCode::Type(uint8_t const request[], uint16_t requestLength));
+    MOCK_METHOD(
+        DiagReturnCode::Type,
+        verify,
+        (uint8_t const request[], uint16_t requestLength),
+        (override));
 
-    MOCK_METHOD3(
+    MOCK_METHOD(
+        DiagReturnCode::Type,
         process,
-        DiagReturnCode::Type(
-            IncomingDiagConnection& connection, uint8_t const request[], uint16_t requestLength));
+        (IncomingDiagConnection & connection, uint8_t const request[], uint16_t requestLength),
+        (override));
 };
 
 } // namespace uds

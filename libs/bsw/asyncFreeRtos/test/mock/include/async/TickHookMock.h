@@ -19,7 +19,7 @@ public:
 
     static void handleTick();
 
-    MOCK_METHOD0(doHandleTick, void());
+    MOCK_METHOD(void, doHandleTick, ());
 };
 
 } // namespace async

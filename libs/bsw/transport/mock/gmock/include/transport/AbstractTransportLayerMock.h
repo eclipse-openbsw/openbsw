@@ -23,9 +23,9 @@ public:
 
     using AbstractTransportLayer::shutdownCompleteDummy;
 
-    MOCK_METHOD0(init, ErrorCode());
-    MOCK_METHOD1(shutdown, bool(ShutdownDelegate));
-    MOCK_METHOD2(send, ErrorCode(TransportMessage&, ITransportMessageProcessedListener*));
+    MOCK_METHOD(ErrorCode, init, ());
+    MOCK_METHOD(bool, shutdown, (ShutdownDelegate));
+    MOCK_METHOD(ErrorCode, send, (TransportMessage&, ITransportMessageProcessedListener*));
 
     ITransportMessageProvidingListener& getProvidingListenerHelper_impl()
     {

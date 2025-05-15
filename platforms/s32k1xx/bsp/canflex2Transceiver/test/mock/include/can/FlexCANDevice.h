@@ -66,25 +66,27 @@ public:
         reinterpret_cast<bios::CanPhyMock*>(&canPhy)->setFlexCANDevice(this);
     }
 
-    MOCK_METHOD0(init, can::ICanTransceiver::ErrorCode());
-    MOCK_METHOD0(start, can::ICanTransceiver::ErrorCode());
-    MOCK_METHOD0(stop, void());
-    MOCK_METHOD0(mute, void());
-    MOCK_METHOD0(unmute, void());
-    MOCK_METHOD1(receiveISR, uint8_t(uint8_t const* filterMap));
-    MOCK_METHOD0(transmitISR, void());
-    MOCK_METHOD0(enableTransmitInterrupt, void());
-    MOCK_METHOD0(disableTransmitInterrupt, void());
-    MOCK_METHOD2(getTransmitBuffer, uint8_t(can::CANFrame const& frame, bool callbackRequested));
-    MOCK_METHOD3(
+    MOCK_METHOD(can::ICanTransceiver::ErrorCode, init, ());
+    MOCK_METHOD(can::ICanTransceiver::ErrorCode, start, ());
+    MOCK_METHOD(void, stop, ());
+    MOCK_METHOD(void, mute, ());
+    MOCK_METHOD(void, unmute, ());
+    MOCK_METHOD(uint8_t, receiveISR, (uint8_t const* filterMap));
+    MOCK_METHOD(void, transmitISR, ());
+    MOCK_METHOD(void, enableTransmitInterrupt, ());
+    MOCK_METHOD(void, disableTransmitInterrupt, ());
+    MOCK_METHOD(uint8_t, getTransmitBuffer, (can::CANFrame const& frame, bool callbackRequested));
+    MOCK_METHOD(
+        can::ICanTransceiver::ErrorCode,
         transmit,
-        can::ICanTransceiver::ErrorCode(
-            can::CANFrame const& frame, uint8_t bufIdx, bool txInterruptNeeded));
-    MOCK_METHOD2(
-        transmitStream, can::ICanTransceiver::ErrorCode(uint8_t* Txframe, bool txInterruptNeeded));
-    MOCK_METHOD0(getTxErrorCounter, uint8_t());
-    MOCK_METHOD0(getRxErrorCounter, uint8_t());
-    MOCK_METHOD0(getBusOffState, BusState());
+        (can::CANFrame const& frame, uint8_t bufIdx, bool txInterruptNeeded));
+    MOCK_METHOD(
+        can::ICanTransceiver::ErrorCode,
+        transmitStream,
+        (uint8_t * Txframe, bool txInterruptNeeded));
+    MOCK_METHOD(uint8_t, getTxErrorCounter, ());
+    MOCK_METHOD(uint8_t, getRxErrorCounter, ());
+    MOCK_METHOD(BusState, getBusOffState, ());
 
     CanPhy& getPhy() { return fPhy; }
 
@@ -93,16 +95,16 @@ public:
     // Instead, we just provide a default implementation.
     uint8_t getIndex() { return 0; }
 
-    MOCK_CONST_METHOD0(getBaudrate, uint32_t());
-    MOCK_METHOD0(dequeueRxFrame, can::CANFrame&());
-    MOCK_METHOD1(dequeueRxFrameStream, unsigned char(unsigned char* data));
-    MOCK_METHOD0(getRxFrameQueueFront, can::CANFrame&());
-    MOCK_CONST_METHOD0(isRxQueueEmpty, bool());
-    MOCK_METHOD0(getRxAlive, uint32_t());
-    MOCK_METHOD0(clearRxAlive, void());
-    MOCK_CONST_METHOD0(getFirstCanId, uint32_t());
-    MOCK_METHOD0(resetFirstFrame, void());
-    MOCK_METHOD0(wokenUp, bool());
+    MOCK_METHOD(uint32_t, getBaudrate, (), (const));
+    MOCK_METHOD(can::CANFrame&, dequeueRxFrame, ());
+    MOCK_METHOD(unsigned char, dequeueRxFrameStream, (unsigned char* data));
+    MOCK_METHOD(can::CANFrame&, getRxFrameQueueFront, ());
+    MOCK_METHOD(bool, isRxQueueEmpty, (), (const));
+    MOCK_METHOD(uint32_t, getRxAlive, ());
+    MOCK_METHOD(void, clearRxAlive, ());
+    MOCK_METHOD(uint32_t, getFirstCanId, (), (const));
+    MOCK_METHOD(void, resetFirstFrame, ());
+    MOCK_METHOD(bool, wokenUp, ());
 
     IEcuPowerStateController& fPowerManager;
     Config const& fConfig;

@@ -20,9 +20,9 @@ class RunnableExecutorTest : public Test
 public:
     using HandlerFunctionType = ::etl::delegate<void()>;
 
-    MOCK_METHOD2(setEventHandler, void(size_t event, HandlerFunctionType handlerFunction));
-    MOCK_METHOD1(removeEventHandler, void(size_t event));
-    MOCK_METHOD1(setEvents, void(EventMaskType events));
+    MOCK_METHOD(void, setEventHandler, (size_t event, HandlerFunctionType handlerFunction));
+    MOCK_METHOD(void, removeEventHandler, (size_t event));
+    MOCK_METHOD(void, setEvents, (EventMaskType events));
 
 protected:
     StrictMock<RunnableMock> _runnableMock1;

@@ -31,9 +31,9 @@ public:
         return instance().getHigherPriorityTaskWokenFunc();
     }
 
-    MOCK_METHOD0(getHigherPriorityTaskWokenFunc, BaseType_t*());
+    MOCK_METHOD(BaseType_t*, getHigherPriorityTaskWokenFunc, ());
 
-    MOCK_METHOD1(taskFunction, void(TaskContext<TestBindingMock>& taskContext));
+    MOCK_METHOD(void, taskFunction, (TaskContext<TestBindingMock> & taskContext));
 };
 
 class TaskContextTest : public Test

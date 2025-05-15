@@ -13,11 +13,12 @@ class TransportMessageProcessedListenerMock : public ITransportMessageProcessedL
 public:
     TransportMessageProcessedListenerMock() {}
 
-    virtual ~TransportMessageProcessedListenerMock(){};
+    virtual ~TransportMessageProcessedListenerMock() {}
 
-    MOCK_METHOD2(
+    MOCK_METHOD(
+        void,
         transportMessageProcessed,
-        void(TransportMessage& transportMessage, ProcessingResult result));
+        (TransportMessage & transportMessage, ProcessingResult result));
 };
 
 } // namespace transport

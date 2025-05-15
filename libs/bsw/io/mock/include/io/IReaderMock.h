@@ -13,11 +13,11 @@ namespace io
 class IReaderMock : public IReader
 {
 public:
-    MOCK_CONST_METHOD0(maxSize, size_t());
+    MOCK_METHOD(size_t, maxSize, (), (const));
 
-    MOCK_CONST_METHOD0(peek, ::etl::span<uint8_t>());
+    MOCK_METHOD(::etl::span<uint8_t>, peek, (), (const));
 
-    MOCK_METHOD0(release, void());
+    MOCK_METHOD(void, release, ());
 };
 
 } // namespace io

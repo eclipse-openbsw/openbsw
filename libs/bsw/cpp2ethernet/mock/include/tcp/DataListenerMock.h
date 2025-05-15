@@ -10,8 +10,8 @@ namespace tcp
 {
 struct DataListenerMock : public IDataListener
 {
-    MOCK_METHOD1(dataReceived, void(uint16_t));
-    MOCK_METHOD1(connectionClosed, void(ErrorCode));
+    MOCK_METHOD(void, dataReceived, (uint16_t));
+    MOCK_METHOD(void, connectionClosed, (ErrorCode));
 };
 
 } // namespace tcp

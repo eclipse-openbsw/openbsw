@@ -24,8 +24,8 @@ struct RuntimeMonitorMock
     using FunctionStatisticsType = TestStatistics;
     using FunctionEntryType      = TestEntry;
 
-    MOCK_METHOD1(enterFunction, void(FunctionEntryType&));
-    MOCK_METHOD1(leaveFunction, void(FunctionEntryType&));
+    MOCK_METHOD(void, enterFunction, (FunctionEntryType&));
+    MOCK_METHOD(void, leaveFunction, (FunctionEntryType&));
 };
 
 using TestFunctionExecutionMonitorType = FunctionExecutionMonitor<RuntimeMonitorMock>;

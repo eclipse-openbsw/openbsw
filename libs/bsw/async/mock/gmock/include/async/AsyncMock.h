@@ -18,23 +18,23 @@ class AsyncMock : public ::etl::singleton_base<AsyncMock>
 public:
     AsyncMock() : ::etl::singleton_base<AsyncMock>(*this) {}
 
-    MOCK_METHOD2(execute, void(ContextType contextType, RunnableType& runnableType));
-    MOCK_METHOD5(
+    MOCK_METHOD(void, execute, (ContextType contextType, RunnableType& runnableType));
+    MOCK_METHOD(
+        void,
         schedule,
-        void(
-            ContextType contextType,
-            RunnableType& runnableType,
-            TimeoutType& timeoutType,
-            uint32_t delay,
-            TimeUnitType unit));
-    MOCK_METHOD5(
+        (ContextType contextType,
+         RunnableType& runnableType,
+         TimeoutType& timeoutType,
+         uint32_t delay,
+         TimeUnitType unit));
+    MOCK_METHOD(
+        void,
         scheduleAtFixedRate,
-        void(
-            ContextType context,
-            RunnableType& runnableType,
-            TimeoutType& timeout,
-            uint32_t period,
-            TimeUnitType unit));
+        (ContextType context,
+         RunnableType& runnableType,
+         TimeoutType& timeout,
+         uint32_t period,
+         TimeUnitType unit));
 };
 
 } // namespace async

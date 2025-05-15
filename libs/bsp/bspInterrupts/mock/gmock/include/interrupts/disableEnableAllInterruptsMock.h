@@ -26,10 +26,10 @@ public:
         EXPECT_EQ(enableAllInterruptsCount, 0U);
     }
 
-    MOCK_METHOD0(disableAllInterrupts, void());
-    MOCK_METHOD0(enableAllInterrupts, void());
-    MOCK_METHOD0(areInterruptsDisabled, bool());
-    MOCK_METHOD0(areInterruptsEnabled, bool());
+    MOCK_METHOD(void, disableAllInterrupts, ());
+    MOCK_METHOD(void, enableAllInterrupts, ());
+    MOCK_METHOD(bool, areInterruptsDisabled, ());
+    MOCK_METHOD(bool, areInterruptsEnabled, ());
 
     static uint32_t disableAllInterruptsCount;
     static uint32_t enableAllInterruptsCount;

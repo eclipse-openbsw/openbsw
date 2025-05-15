@@ -13,23 +13,26 @@ namespace uds
 class DiagSessionManagerMock : public IDiagSessionManager
 {
 public:
-    MOCK_CONST_METHOD0(getActiveSession, DiagSession const&());
-    MOCK_METHOD0(startSessionTimeout, void());
-    MOCK_METHOD0(stopSessionTimeout, void());
-    MOCK_METHOD0(isSessionTimeoutActive, bool());
-    MOCK_METHOD0(resetToDefaultSession, void());
-    MOCK_METHOD0(persistAndRestoreSession, bool());
+    MOCK_METHOD(DiagSession const&, getActiveSession, (), (const, override));
+    MOCK_METHOD(void, startSessionTimeout, (), (override));
+    MOCK_METHOD(void, stopSessionTimeout, (), (override));
+    MOCK_METHOD(bool, isSessionTimeoutActive, (), (override));
+    MOCK_METHOD(void, resetToDefaultSession, (), (override));
+    MOCK_METHOD(bool, persistAndRestoreSession, (), (override));
 
-    MOCK_METHOD4(
+    MOCK_METHOD(
+        DiagReturnCode::Type,
         acceptedJob,
-        DiagReturnCode::Type(
-            IncomingDiagConnection&, AbstractDiagJob const&, uint8_t const[], uint16_t));
-    MOCK_METHOD4(
+        (IncomingDiagConnection&, AbstractDiagJob const&, uint8_t const[], uint16_t),
+        (override));
+    MOCK_METHOD(
+        void,
         responseSent,
-        void(IncomingDiagConnection&, DiagReturnCode::Type, uint8_t const[], uint16_t));
+        (IncomingDiagConnection&, DiagReturnCode::Type, uint8_t const[], uint16_t),
+        (override));
 
-    MOCK_METHOD1(addDiagSessionListener, void(IDiagSessionChangedListener&));
-    MOCK_METHOD1(removeDiagSessionListener, void(IDiagSessionChangedListener&));
+    MOCK_METHOD(void, addDiagSessionListener, (IDiagSessionChangedListener&), (override));
+    MOCK_METHOD(void, removeDiagSessionListener, (IDiagSessionChangedListener&), (override));
 };
 
 } // namespace uds

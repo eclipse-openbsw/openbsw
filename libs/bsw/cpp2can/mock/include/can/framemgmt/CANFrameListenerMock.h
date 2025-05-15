@@ -16,8 +16,8 @@ namespace can
 {
 struct CANFrameListenerMock : public ICANFrameListener
 {
-    MOCK_METHOD1(frameReceived, void(CANFrame const&));
-    MOCK_METHOD0(getFilter, IFilter&());
+    MOCK_METHOD(void, frameReceived, (CANFrame const&), (override));
+    MOCK_METHOD(IFilter&, getFilter, (), (override));
 };
 
 } // namespace can

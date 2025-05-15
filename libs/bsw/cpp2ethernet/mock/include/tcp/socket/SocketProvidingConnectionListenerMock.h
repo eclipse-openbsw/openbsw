@@ -11,8 +11,8 @@ namespace tcp
 {
 struct SocketProvidingConnectionListenerMock : public ISocketProvidingConnectionListener
 {
-    MOCK_METHOD2(getSocket, AbstractSocket*(ip::IPAddress const&, uint16_t));
-    MOCK_METHOD1(connectionAccepted, void(AbstractSocket&));
+    MOCK_METHOD(AbstractSocket*, getSocket, (ip::IPAddress const&, uint16_t));
+    MOCK_METHOD(void, connectionAccepted, (AbstractSocket&));
 };
 
 } // namespace tcp

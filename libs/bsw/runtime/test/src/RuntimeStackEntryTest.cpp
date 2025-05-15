@@ -12,13 +12,13 @@ using namespace ::runtime;
 class TestCutOutEntry : public RuntimeStackEntry<TestCutOutEntry, true>
 {
 public:
-    MOCK_METHOD3(addRun, void(uint32_t, uint32_t, uint32_t));
+    MOCK_METHOD(void, addRun, (uint32_t, uint32_t, uint32_t));
 };
 
 class TestNonCutOutEntry : public RuntimeStackEntry<TestNonCutOutEntry, false>
 {
 public:
-    MOCK_METHOD3(addRun, void(uint32_t, uint32_t, uint32_t));
+    MOCK_METHOD(void, addRun, (uint32_t, uint32_t, uint32_t));
 };
 
 TEST(RuntimeStackEntryTest, testCutOutEntry)

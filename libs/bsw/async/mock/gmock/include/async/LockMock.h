@@ -16,8 +16,8 @@ class LockMock : public ::etl::singleton_base<LockMock>
 public:
     LockMock() : ::etl::singleton_base<LockMock>(*this) {}
 
-    MOCK_METHOD0(lock, void());
-    MOCK_METHOD0(unlock, void());
+    MOCK_METHOD(void, lock, ());
+    MOCK_METHOD(void, unlock, ());
 };
 
 } // namespace async

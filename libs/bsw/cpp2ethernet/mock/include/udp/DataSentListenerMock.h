@@ -10,7 +10,7 @@ namespace udp
 {
 struct DataSentListenerMock : public IDataSentListener
 {
-    MOCK_METHOD2(dataSent, void(uint8_t const[], uint16_t));
+    MOCK_METHOD(void, dataSent, (uint8_t const[], uint16_t));
 };
 
 } // namespace udp

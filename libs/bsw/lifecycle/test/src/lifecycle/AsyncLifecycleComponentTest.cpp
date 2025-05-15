@@ -12,9 +12,9 @@ using namespace ::testing;
 class AsyncLifecycleComponentMock : public AsyncLifecycleComponent
 {
 public:
-    MOCK_METHOD0(init, void());
-    MOCK_METHOD0(run, void());
-    MOCK_METHOD0(shutdown, void());
+    MOCK_METHOD(void, init, ());
+    MOCK_METHOD(void, run, ());
+    MOCK_METHOD(void, shutdown, ());
 
     using AsyncLifecycleComponent::setTransitionContext;
 };

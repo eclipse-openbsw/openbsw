@@ -36,8 +36,8 @@ using AdapterType = AsyncBindingType::AdapterType;
 class AsyncTest : public Test
 {
 public:
-    MOCK_METHOD0(startApp, void());
-    MOCK_METHOD1(taskFunction, void(AdapterType::TaskContextType& taskContext));
+    MOCK_METHOD(void, startApp, ());
+    MOCK_METHOD(void, taskFunction, (AdapterType::TaskContextType & taskContext));
 
 protected:
     StrictMock<::os::FreeRtosMock> _freeRtosMock;

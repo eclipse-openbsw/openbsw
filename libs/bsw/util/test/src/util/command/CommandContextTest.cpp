@@ -19,7 +19,7 @@ namespace
 {
 struct ContinuousUserMock : ISharedOutputStream::IContinuousUser
 {
-    MOCK_METHOD1(endContinuousOutput, void(IOutputStream& stream));
+    MOCK_METHOD(void, endContinuousOutput, (IOutputStream & stream));
 };
 } // namespace
 

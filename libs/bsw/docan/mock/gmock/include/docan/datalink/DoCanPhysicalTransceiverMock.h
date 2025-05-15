@@ -26,7 +26,7 @@ public:
     using FrameCodecType      = DoCanFrameCodec<DataLinkLayerType>;
 
     MOCK_METHOD1_T(init, void(IDoCanFrameReceiver<DataLinkLayer>& receiver));
-    MOCK_METHOD0(shutdown, void());
+    MOCK_METHOD(void, shutdown, ());
 
     MOCK_METHOD8_T(
         startSendDataFrames,

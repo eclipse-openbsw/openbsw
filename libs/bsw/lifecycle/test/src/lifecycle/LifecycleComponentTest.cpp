@@ -12,10 +12,10 @@ using namespace ::testing;
 class LifecycleComponentMock : public LifecycleComponent
 {
 public:
-    MOCK_METHOD1(getTransitionContext, ::async::ContextType(Transition::Type transition));
-    MOCK_METHOD0(init, void());
-    MOCK_METHOD0(run, void());
-    MOCK_METHOD0(shutdown, void());
+    MOCK_METHOD(::async::ContextType, getTransitionContext, (Transition::Type transition));
+    MOCK_METHOD(void, init, ());
+    MOCK_METHOD(void, run, ());
+    MOCK_METHOD(void, shutdown, ());
 
     using LifecycleComponent::transitionDone;
 };

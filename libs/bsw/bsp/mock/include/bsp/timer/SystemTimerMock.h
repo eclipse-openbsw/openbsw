@@ -32,57 +32,57 @@ public:
     /**
      *  \see sysDelayUs(uint32_t delay)
      */
-    MOCK_METHOD1(sysDelayUs, void(uint32_t delay));
+    MOCK_METHOD(void, sysDelayUs, (uint32_t delay));
 
     /**
      * \see getSystemTicks(void)
      */
-    MOCK_METHOD0(getSystemTicks, uint64_t());
+    MOCK_METHOD(uint64_t, getSystemTicks, ());
 
     /*
      * \see getSystemTimeUs32Bit(void)
      */
-    MOCK_METHOD0(getSystemTimeUs32Bit, uint32_t());
+    MOCK_METHOD(uint32_t, getSystemTimeUs32Bit, ());
 
     /*
      * \see getSystemTimeMs32Bit(void)
      */
-    MOCK_METHOD0(getSystemTimeMs32Bit, uint32_t());
+    MOCK_METHOD(uint32_t, getSystemTimeMs32Bit, ());
 
     /**
      * \see getSystemTicks32Bit(void)
      */
-    MOCK_METHOD0(getSystemTicks32Bit, uint32_t());
+    MOCK_METHOD(uint32_t, getSystemTicks32Bit, ());
 
     /**
      * \see getSystemTimeNs(void)
      */
-    MOCK_METHOD0(getSystemTimeNs, uint64_t());
+    MOCK_METHOD(uint64_t, getSystemTimeNs, ());
 
     /**
      * \see getSystemTimeUs(void)
      */
-    MOCK_METHOD0(getSystemTimeUs, uint64_t());
+    MOCK_METHOD(uint64_t, getSystemTimeUs, ());
 
     /**
      * \see getSystemTimeMs(void)
      */
-    MOCK_METHOD0(getSystemTimeMs, uint64_t());
+    MOCK_METHOD(uint64_t, getSystemTimeMs, ());
 
     /**
      * \see systemTicksToTimeUs(uint64_t ticks)
      */
-    MOCK_METHOD1(systemTicksToTimeUs, uint64_t(uint64_t ticks));
+    MOCK_METHOD(uint64_t, systemTicksToTimeUs, (uint64_t ticks));
 
     /**
      * \see systemTicksToTimeNs(uint64_t ticks)
      */
-    MOCK_METHOD1(systemTicksToTimeNs, uint64_t(uint64_t ticks));
+    MOCK_METHOD(uint64_t, systemTicksToTimeNs, (uint64_t ticks));
 
     /**
      * \see initSystemTimer()
      */
-    MOCK_METHOD0(initSystemTimer, void());
+    MOCK_METHOD(void, initSystemTimer, ());
 };
 
 } // namespace testing

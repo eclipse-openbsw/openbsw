@@ -10,8 +10,8 @@ namespace ip
 {
 struct NetworkInterfaceConfigRegistryMock
 {
-    MOCK_METHOD0(configChangedSignal, ConfigChangedSignal&());
-    MOCK_METHOD1(updateConfig, void(NetworkInterfaceConfig const&));
+    MOCK_METHOD(ConfigChangedSignal&, configChangedSignal, ());
+    MOCK_METHOD(void, updateConfig, (NetworkInterfaceConfig const&));
 };
 
 } // namespace ip
