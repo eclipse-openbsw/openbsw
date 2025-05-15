@@ -18,6 +18,7 @@
 
 #ifdef PLATFORM_SUPPORT_UDS
 #include "busid/BusId.h"
+#include "systems/StorageSystem.h"
 #include "systems/TransportSystem.h"
 #include "systems/UdsSystem.h"
 #endif // PLATFORM_SUPPORT_UDS
@@ -79,15 +80,13 @@ LifecycleManager lifecycleManager{
 ::estd::typed_mem<::systems::SafetySystem> safetySystem;
 
 #ifdef PLATFORM_SUPPORT_UDS
+::estd::typed_mem<::systems::StorageSystem> storageSystem;
 ::estd::typed_mem<::transport::TransportSystem> transportSystem;
+::estd::typed_mem<::uds::UdsSystem> udsSystem;
 #endif
 
 #ifdef PLATFORM_SUPPORT_CAN
 ::estd::typed_mem<::docan::DoCanSystem> doCanSystem;
-#endif
-
-#ifdef PLATFORM_SUPPORT_UDS
-::estd::typed_mem<::uds::UdsSystem> udsSystem;
 #endif
 
 class LifecycleMonitor : private ::lifecycle::ILifecycleListener
@@ -161,8 +160,10 @@ void run()
         "docan", doCanSystem.emplace(*transportSystem, ::systems::getCanSystem(), TASK_CAN), 5U);
 #endif
 
-    /* runlevel 6 */
 #ifdef PLATFORM_SUPPORT_UDS
+    lifecycleManager.addComponent("storage", storageSystem.emplace(TASK_BSP), 5U);
+
+    /* runlevel 6 */
     lifecycleManager.addComponent(
         "uds",
         udsSystem.emplace(lifecycleManager, *transportSystem, TASK_UDS, LOGICAL_ADDRESS),
@@ -183,6 +184,10 @@ void run()
 #ifdef PLATFORM_SUPPORT_CAN
             ,
             ::systems::getCanSystem()
+#endif
+#ifdef PLATFORM_SUPPORT_UDS
+                ,
+            (*storageSystem).getStorage()
 #endif
                 ),
         8U);
