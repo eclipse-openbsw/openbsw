@@ -46,6 +46,10 @@ DemoSystem::DemoSystem(
     ,
     ::can::ICanSystem& canSystem
 #endif
+#ifdef PLATFORM_SUPPORT_STORAGE
+    ,
+    ::storage::IStorage& storage
+#endif
     )
 : _context(context)
 #ifdef PLATFORM_SUPPORT_CAN
@@ -53,6 +57,18 @@ DemoSystem::DemoSystem(
 , _canDemoListener(canSystem.getCanTransceiver(::busid::CAN_0))
 , _canCommand(_canSystem)
 , _asyncCommandWrapperForCanCommand(_canCommand, _context)
+#endif
+#ifdef PLATFORM_SUPPORT_STORAGE
+, _storage(storage)
+// BEGIN storage buffers
+, _storageReadBuf(
+      ::etl::span<uint8_t>(reinterpret_cast<uint8_t*>(&_storageData), sizeof(_storageData)))
+, _storageWriteBuf(
+      ::etl::span<uint8_t const>(reinterpret_cast<uint8_t const*>(&_storageData.charParam0), 1))
+// END storage buffers
+, _jobDoneCallback(
+      ::storage::StorageJob::JobDoneCallback::create<DemoSystem, &DemoSystem::storageJobDone>(
+          *this))
 #endif
 {
     setTransitionContext(context);
@@ -132,6 +148,51 @@ void DemoSystem::cyclic()
 #if TRACING
     runtime::Tracer::traceUser(42);
 #endif
+
+#ifdef PLATFORM_SUPPORT_STORAGE
+    // storage demo for loading some data at startup, updating it and writing it back
+    if (_storageJob.is<::storage::StorageJob::Type::None>())
+    {
+        // BEGIN trigger storage read
+        _storageJob.init(0xa01 /* block ID */, _jobDoneCallback);
+        _storageJob.initRead(_storageReadBuf, 0 /* start offset */);
+        _storage.process(_storageJob);
+        // END trigger storage read
+    }
+#endif
 }
+
+#ifdef PLATFORM_SUPPORT_STORAGE
+// BEGIN storage job callback
+void DemoSystem::storageJobDone(::storage::StorageJob& job)
+{
+    if (job.is<::storage::StorageJob::Type::Read>())
+    {
+        if (job.hasResult<::storage::StorageJob::Result::DataLoss>())
+        {
+            // data uninitialized or corrupt, initialize
+            (void)memset(&_storageData, 0, sizeof(_storageData));
+        }
+        Logger::debug(
+            DEMO,
+            "Storage read done, result=%d, size=%d, charParam0=0x%X",
+            (int)job.getResult().index(),
+            (int)job.getRead().getReadSize(),
+            _storageData.charParam0);
+
+        // update the data and trigger a write job
+        ++_storageData.charParam0;
+        job.init(0xa01, _jobDoneCallback);
+        job.initWrite(_storageWriteBuf, 4 /* start offset */);
+        _storage.process(job);
+    }
+    else
+    {
+        Logger::debug(DEMO, "Storage write done, result=%d", (int)job.getResult().index());
+    }
+}
+
+// END storage job callback
+#endif
 
 } // namespace systems
