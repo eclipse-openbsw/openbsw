@@ -2,12 +2,13 @@ FROM ubuntu:22.04
 
 RUN apt-get update && apt-get install -y python3.10 python3-pip openjdk-11-jdk graphviz \
     doxygen\
+    zip \
     wget \
+    bzip2 \
     && rm -rf /var/lib/apt/lists/*
 
-COPY ../doc/requirements.txt .
-
-RUN pip3 install --no-cache-dir -r requirements.txt
+COPY doc/requirements.txt /tmp/requirements.txt
+RUN pip3 install -r /tmp/requirements.txt
 
 RUN wget https://sourceforge.net/projects/plantuml/files/plantuml.jar/download -O /usr/local/bin/plantuml.jar \
     && echo '#!/bin/sh\njava -jar /usr/local/bin/plantuml.jar "$@"' > /usr/local/bin/plantuml && \
@@ -16,3 +17,12 @@ RUN wget https://sourceforge.net/projects/plantuml/files/plantuml.jar/download -
 RUN pip3 install coverxygen
 
 RUN echo 'export HISTFILE=/root/.bash_history/history' >> /root/.bashrc
+
+ARG user_id=2001
+
+RUN groupadd -g 4996 docker
+RUN useradd --shell /bin/bash --uid ${user_id} -g docker -m jenkins
+
+USER jenkins
+
+WORKDIR /home/jenkins

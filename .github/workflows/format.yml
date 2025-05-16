@@ -6,33 +6,13 @@ jobs:
   treefmt:
     runs-on: ubuntu-latest
     steps:
-      - name: Create user program directory
-        run: |
-          mkdir -p $HOME/.local/bin
-          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+     - name: Checkout code
+       uses: actions/checkout@v4
 
-      - name: Install treefmt
-        run: |
-          curl -L https://github.com/numtide/treefmt/releases/download/v2.1.0/treefmt_2.1.0_linux_amd64.tar.gz -o treefmt.tar.gz
-          tar -xvzf treefmt.tar.gz
-          install -m 755 treefmt $HOME/.local/bin
-          rm LICENSE README.md treefmt treefmt.tar.gz
+     - name: Build the docker image
+       run: |
+          docker build -f docker/Dockerfile.dev -t dev .
 
-      - name: Install clang-format
-        run: |
-          curl -L https://github.com/muttleyxd/clang-tools-static-binaries/releases/download/master-32d3ac78/clang-format-17_linux-amd64 -o clang-format
-          install -m 755 clang-format $HOME/.local/bin
-          rm clang-format
-
-      - uses: actions/setup-python@v5
-
-      - name: Install cmake-format
-        run: |
-          pip install cmakelang
-
-      - uses: actions/checkout@v4
-
-      - name: Check code format
-        run: |
-          treefmt
-          git diff --exit-code
+     - name: Run the format.py inside the docker container
+       run: |
+          docker run --rm -v "$PWD:/home/jenkins" -w /home/jenkins --user $(id -u):4996 dev python3 .ci/format.py

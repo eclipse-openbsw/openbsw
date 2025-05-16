@@ -15,11 +15,11 @@ environment and the documentation container are consistently set up and managed.
 
 If you have docker compose installed, you can use this command
 
-    docker-compose -f docker/docker-compose.yaml build
+    docker compose -f docker/docker-compose.yaml build --build-arg user_id=$(id -u) 
 
 If you do not want to use docker compose, you can use this command instead
 
-    docker build -f docker/<dockerfile_name> -t <image_name> .
+    docker build --build-arg user_id=$(id -u) -f docker/<dockerfile_name> -t <image_name> .
 
 This will build the image from the Dockerfile in the current directory (the `.`).
 
@@ -27,13 +27,12 @@ This will build the image from the Dockerfile in the current directory (the `.`)
 
 If you have docker compose installed, the easiest way is to call
 
-    docker compose -f docker/docker-compose.yaml run <service_name>
+    docker compose -f docker/docker-compose.yaml run --user $(id -u):4996 <service_name>
 
 If you do not want to use docker compose, you can use this command instead
 
-    docker run -it --rm -v $PWD:$PWD --workdir $PWD <image_name>
+    docker run -it --rm -v "$PWD:/home/jenkins" -w /home/jenkins --user $(id -u):4996 <image_name>
 
 This command creates the docker container and enters it (`-it` for interactive).
 The container will be removed when you leave it again (`--rm`).
-Your current directory is mounted into the container. This is set up as the working
-directory in the container (`-v $PWD:$PWD --workdir $PWD`).
+Your current directory is mounted into the container.
