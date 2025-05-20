@@ -17,4 +17,8 @@ void vIllegalISR()
     for (;;)
         ;
 }
+
+#ifndef BENCHMARK
+void FTM4_Ch0_Ch1_IRQHandler() { vIllegalISR(); }
+#endif
 }
