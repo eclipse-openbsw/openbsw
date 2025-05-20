@@ -23,7 +23,7 @@ TEST(A_tiny_ring, data_returns_slice_of_correct_size_and_values)
     ASSERT_EQ(2, r.data()[1]);
 }
 
-TEST(A_tiny_ring, can_be_pushed_and_poped_a_single_element)
+TEST(A_tiny_ring, can_be_pushed_and_popped_a_single_element)
 {
     ::estd::tiny_ring<uint16_t, 5> r;
     r.push_back(4);
@@ -39,7 +39,7 @@ TEST(A_tiny_ring, can_be_pushed_and_poped_a_single_element)
     ASSERT_TRUE(r.empty());
 }
 
-TEST(A_tiny_ring, can_be_pushed_and_poped_two_elements)
+TEST(A_tiny_ring, can_be_pushed_and_popped_two_elements)
 {
     ::estd::tiny_ring<uint16_t, 5> r;
     r.push_back(5);
@@ -87,7 +87,7 @@ TEST(A_tiny_ring, overwrites_when_full)
 
 /*
  * Ensure the tiny ring doesn't write past the end of the internal array when _read + _count == N,
- * and _read != 0. A previous version of tiny_ring mis-applied the order of operations, allowing a
+ * and _read != 0. A previous version of tiny_ring misapplied the order of operations, allowing a
  * remainder (modulo) operation to take place before an addition when calculating an array write
  * offset. This test ensures that mistake can't happen again.
  */

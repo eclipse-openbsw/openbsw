@@ -11,7 +11,7 @@ Overview
 |br| |br|
 The class template acts as a wrapper to the underlying container. Only stack specific functions
 (push and pop) are provided. ``stack`` appends and removes the elements to/from the back of the
-underlying container. The back of the underlaying container can be considered as the
+underlying container. The back of the underlying container can be considered as the
 ``top of the stack``.
 |br| |br|
 The ``stack`` uses an encapsulated object of :ref:`vector <estd_vector>` (by default) as its

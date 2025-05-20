@@ -86,7 +86,7 @@ TEST(ConstString, contains_returns_true_if_the_specified_string_is_part_of_the_c
 
 TEST(
     ConstString,
-    find_returns_the_offset_of_the_first_occurence_if_the_string_was_found_in_the_const_string)
+    find_returns_the_offset_of_the_first_occurrence_if_the_string_was_found_in_the_const_string)
 {
     ConstString text("fabbfacdefag");
     ConstString searchterm("fa");

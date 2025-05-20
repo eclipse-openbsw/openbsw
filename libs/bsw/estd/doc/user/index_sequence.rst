@@ -24,7 +24,7 @@ at the system, the usage guidelines apply for index_sequence.
       :widths: 30 70
 
       *  - Usage guidance
-         - estd::index_sequence is used to swaping the elements in tuple.
+         - estd::index_sequence is used to swapping the elements in tuple.
            |br| |br|
            Passing estd::index_sequence as parameter to a function indicates that the
            implementation is tailored to work with a specific sequence of indices.

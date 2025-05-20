@@ -108,7 +108,7 @@ using ListOfNode2 = ::estd::forward_list<Node2>;
 class PureVirtualNode : public ::estd::forward_list_node<PureVirtualNode>
 {
 public:
-    virtual void pureVirtural() = 0;
+    virtual void pureVirtual() = 0;
 };
 
 } // namespace
@@ -259,7 +259,7 @@ TEST(ForwardList, TestSequencePushBackEraseAfterPushBack)
 /**
  * \refs:    SMD_estd_forwardList
  * \desc
- * push_back(n1, n2), erase_after begin() (which is n1), remove n1 --> l ist empty. Add both
+ * push_back(n1, n2), erase_after begin() (which is n1), remove n1 --> list empty. Add both
  * nodes again --> list size is two.
  */
 TEST(ForwardList, TestSequencePushBackEraseAfterRemovePushBack)
@@ -293,7 +293,7 @@ TEST(ForwardList, TestSequencePushBackEraseAfterRemovePushBack)
 /**
  * \refs:    SMD_estd_forwardList
  * \desc
- * push_back(n1, n2), erase_after before_begin() to end() (which is n1, n2) --> l ist empty. Add
+ * push_back(n1, n2), erase_after before_begin() to end() (which is n1, n2) --> list empty. Add
  * both nodes again --> list size is two.
  */
 TEST(ForwardList, TestSequencePushBackEraseAfterRangePushBack)
@@ -1010,7 +1010,7 @@ TEST(ForwardList, TestSort)
  * \desc
  * Verifies that an unsorted list is sorted in ascending order if no predicate is passed to sort.
  */
-TEST(ForwardList, TestSortDefaultComparision)
+TEST(ForwardList, TestSortDefaultComparison)
 {
     IntNode i0(0), i1(1), i2(2), i3(3), i4(4);
     IntNodeList l1;
@@ -1830,7 +1830,7 @@ TEST(ForwardListIterator, TestEqualityOperator)
  * This test verifies, a forward_list_iterator can be used to iterate over elements of a list
  * using the prefix increment operator.
  */
-TEST(ForwardListIterator, TestPrefixIncement)
+TEST(ForwardListIterator, TestPrefixIncrement)
 {
     Node2 m1;
     Node2 m2;
@@ -1848,7 +1848,7 @@ TEST(ForwardListIterator, TestPrefixIncement)
  * This test verifies, a forward_list_iterator can be used to iterate over elements of a list
  * using the postfix increment operator.
  */
-TEST(ForwardListIterator, TestPostfixIncement)
+TEST(ForwardListIterator, TestPostfixIncrement)
 {
     Node2 m1;
     Node2 m2;

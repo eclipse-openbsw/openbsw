@@ -82,7 +82,7 @@ public:
     static bsp::BspReturnCode init(OutputId chan);
 
     /**
-     * setDynamicOuputClient
+     * setDynamicOutputClient
      * \param outputNumber see outputConfiguration
      * \param clientOutputNumber number inside from OutputClient
      * \param see IDynamicOutputClient
@@ -93,7 +93,7 @@ public:
         uint16_t outputNumber, uint16_t clientOutputNumber, IDynamicOutputClient* client);
 
     /**
-     * clrDynamicOuputClient
+     * clrDynamicOutputClient
      * \param outputNumber see outputConfiguration
      * \param see IDynamicOutputClient
      * \return see bsp.h

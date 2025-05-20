@@ -89,9 +89,9 @@ TEST(OptionalExample, Can_be_defaulted_to_a_value)
     // [EXAMPLE_OPTIONAL_VALUE_OR_END]
 }
 
-TEST(OptionalExample, Comparison_opearators)
+TEST(OptionalExample, Comparison_operators)
 {
-    // [EXAMPLE_OPTIONAL_COMPARISION_OPERATORS_START]
+    // [EXAMPLE_OPTIONAL_COMPARISON_OPERATORS_START]
     ::estd::optional<int32_t> i0 = 7;
     ::estd::optional<int32_t> i1 = 5;
 
@@ -102,5 +102,5 @@ TEST(OptionalExample, Comparison_opearators)
     i1.reset();
     EXPECT_TRUE(i0 == i1);
     EXPECT_FALSE(i0 != i1);
-    // [EXAMPLE_OPTIONAL_COMPARISION_OPERATORS_END]
+    // [EXAMPLE_OPTIONAL_COMPARISON_OPERATORS_END]
 }

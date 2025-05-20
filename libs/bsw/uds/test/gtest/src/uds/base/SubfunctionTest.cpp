@@ -78,7 +78,7 @@ TEST_F(SubfunctionTest, call_second_constructor_and_expect_that_values_are_set_r
  */
 TEST_F(
     SubfunctionTest,
-    verify_subfunction_shall_return_INVALID_FORMAT_if_the_requestLenght_is_too_small)
+    verify_subfunction_shall_return_INVALID_FORMAT_if_the_requestLength_is_too_small)
 {
     uint8_t const request[] = {0x22, 0x00, 0x01};
     TestableSubfunction subfunction(request, DiagSession::ALL_SESSIONS());

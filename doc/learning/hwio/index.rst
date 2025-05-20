@@ -60,6 +60,6 @@ If you dive deeper, you will find that code under ``executables/referenceApp/pla
 sets up the configuration of the software for this board.
 In the ``main()`` function called at startup, the very first function called is ``StaticBsp::init()`` and this
 initializes the board as configured by the code under ``executables/referenceApp/platforms/s32k148evb/bspConfiguration/``.
-This makes use of resuable APIs defined for BSPs for many different boards and SOCs.
+This makes use of reusable APIs defined for BSPs for many different boards and SOCs.
 Explore this code to further understand how the board's hardware components are configured and then used.
 
