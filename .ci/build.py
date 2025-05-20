@@ -15,7 +15,7 @@ def get_environment_variables(platform, compiler):
     if platform == "s32k148":
         if compiler == "gcc":
             env["CC"] = get_full_command_path("arm-none-eabi-gcc")
-            env["CXX"] = get_full_command_path("arm-none-eabi-gcc")
+            env["CXX"] = get_full_command_path("arm-none-eabi-g++")
         elif compiler == "clang":
             env["CC"] = get_full_command_path("/usr/bin/llvm-arm/bin/clang")
             env["CXX"] = get_full_command_path("/usr/bin/llvm-arm/bin/clang++")
@@ -26,7 +26,7 @@ def get_environment_variables(platform, compiler):
             env["CXX"] = get_full_command_path("clang++")
         elif compiler == "gcc":
             env["CC"] = get_full_command_path("gcc")
-            env["CXX"] = get_full_command_path("gcc")
+            env["CXX"] = get_full_command_path("g++")
     return env
 
 def configure_and_build(platform, compiler, cpp_standard):
