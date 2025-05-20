@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../static/css/style.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <title>Symbol - puncover</title>
+    
+</head>
+<body>
+    <div class="container" id="content">
+        <div class="page-header">
+            <nav class="navbar navbar-default" role="navigation">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="../../index.html">
+                    Puncover
+                  </a>
+                </div>
+              </div>
+            </nav>
+          
+        </div>
+        <div id="inner_content">
+        
+    
+    <ol class="breadcrumb folders">
+        
+        <li class="active"><a href="../../unknown.html">&lt;unknown&gt;</a>
+            </li>
+
+        
+        <li class="active">&lt;unknown&gt;
+            </li>
+        
+    </ol>
+
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <th>Function</th>
+                <td colspan="5">
+                    <span class="icon-function">_free_r</span>
+                </td>
+            </tr>
+
+            <tr>
+                <th rowspan="2"></th>
+                <th>Address</th>
+                <th>Remarks</th>
+                <th>Stack</th>
+                <th>Code</th>
+                <th>Static</th>
+            </tr>
+            <tr>
+                <td>0x00013af8</td>
+                <td>
+    
+    
+</td>
+                <td></td>
+                <td>152</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th>Callers (3)</th>
+                <td colspan="5">
+                
+                    <a href="./f36c2820427b5e0cd5ab33baa79996f6.html">__sflush_r (268)</a>
+                    
+                        ,
+                    
+                
+                    <a href="./ddb6c397a973a81eb635d1056771d221.html">__swsetup_r (220)</a>
+                    
+                        ,
+                    
+                
+                    <a href="./aa2d6e4f578eb0cfaba23beef76c2194.html">free (16)</a>
+                    
+                
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Callees (2,
+                            <span title="sum of used bytes by all callees">
+                            Σ=24
+                            </span>
+                        )
+                    
+                </th>
+                <td colspan="5">
+                
+                    <a href="./73fc8c83e515aa7c32577968232a6680.html">__malloc_lock (12)</a>
+                    
+                        ,
+                    
+                
+                    <a href="./708c7f18b0c268fd514765d20a8392b6.html">__malloc_unlock (12)</a>
+                    
+                
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    
+    <pre><a href="./4287a4df4ae50ebfb8cb668ef27e7b98.html">memcmp (32)</a></pre>
+    
+
+    <pre>
+
+    _free_r():
+
+       13af8:	b537      	push	{r0, r1, r2, r4, r5, lr}
+
+       13afa:	2900      	cmp	r1, #0
+
+       13afc:	d044      	beq.n	13b88 <<a href="./13df39772842dbbe077d5496e2d70bf6.html">_free_r</a>+0x90>
+
+       13afe:	f851 3c04 	ldr.w	r3, [r1, #-4]
+
+       13b02:	9001      	str	r0, [sp, #4]
+
+       13b04:	2b00      	cmp	r3, #0
+
+       13b06:	f1a1 0404 	sub.w	r4, r1, #4
+
+       13b0a:	bfb8      	it	lt
+
+       13b0c:	18e4      	addlt	r4, r4, r3
+
+       13b0e:	f000 ff13 	bl	14938 <<a href="./73fc8c83e515aa7c32577968232a6680.html">__malloc_lock</a>>
+
+       13b12:	4a1e      	ldr	r2, [pc, #120]	; (13b8c <<a href="./13df39772842dbbe077d5496e2d70bf6.html">_free_r</a>+0x94>)
+
+       13b14:	9801      	ldr	r0, [sp, #4]
+
+       13b16:	6813      	ldr	r3, [r2, #0]
+
+       13b18:	b933      	cbnz	r3, 13b28 <<a href="./13df39772842dbbe077d5496e2d70bf6.html">_free_r</a>+0x30>
+
+       13b1a:	6063      	str	r3, [r4, #4]
+
+       13b1c:	6014      	str	r4, [r2, #0]
+
+       13b1e:	b003      	add	sp, #12
+
+       13b20:	e8bd 4030 	ldmia.w	sp!, {r4, r5, lr}
+
+       13b24:	f000 bf0e 	b.w	14944 <<a href="./708c7f18b0c268fd514765d20a8392b6.html">__malloc_unlock</a>>
+
+       13b28:	42a3      	cmp	r3, r4
+
+       13b2a:	d908      	bls.n	13b3e <<a href="./13df39772842dbbe077d5496e2d70bf6.html">_free_r</a>+0x46>
+
+       13b2c:	6825      	ldr	r5, [r4, #0]
+
+       13b2e:	1961      	adds	r1, r4, r5
+
+       13b30:	428b      	cmp	r3, r1
+
+       13b32:	bf01      	itttt	eq
+
+       13b34:	6819      	ldreq	r1, [r3, #0]
+
+       13b36:	685b      	ldreq	r3, [r3, #4]
+
+       13b38:	1949      	addeq	r1, r1, r5
+
+       13b3a:	6021      	streq	r1, [r4, #0]
+
+       13b3c:	e7ed      	b.n	13b1a <<a href="./13df39772842dbbe077d5496e2d70bf6.html">_free_r</a>+0x22>
+
+       13b3e:	461a      	mov	r2, r3
+
+       13b40:	685b      	ldr	r3, [r3, #4]
+
+       13b42:	b10b      	cbz	r3, 13b48 <<a href="./13df39772842dbbe077d5496e2d70bf6.html">_free_r</a>+0x50>
+
+       13b44:	42a3      	cmp	r3, r4
+
+       13b46:	d9fa      	bls.n	13b3e <<a href="./13df39772842dbbe077d5496e2d70bf6.html">_free_r</a>+0x46>
+
+       13b48:	6811      	ldr	r1, [r2, #0]
+
+       13b4a:	1855      	adds	r5, r2, r1
+
+       13b4c:	42a5      	cmp	r5, r4
+
+       13b4e:	d10b      	bne.n	13b68 <<a href="./13df39772842dbbe077d5496e2d70bf6.html">_free_r</a>+0x70>
+
+       13b50:	6824      	ldr	r4, [r4, #0]
+
+       13b52:	4421      	add	r1, r4
+
+       13b54:	1854      	adds	r4, r2, r1
+
+       13b56:	42a3      	cmp	r3, r4
+
+       13b58:	6011      	str	r1, [r2, #0]
+
+       13b5a:	d1e0      	bne.n	13b1e <<a href="./13df39772842dbbe077d5496e2d70bf6.html">_free_r</a>+0x26>
+
+       13b5c:	681c      	ldr	r4, [r3, #0]
+
+       13b5e:	685b      	ldr	r3, [r3, #4]
+
+       13b60:	6053      	str	r3, [r2, #4]
+
+       13b62:	4421      	add	r1, r4
+
+       13b64:	6011      	str	r1, [r2, #0]
+
+       13b66:	e7da      	b.n	13b1e <<a href="./13df39772842dbbe077d5496e2d70bf6.html">_free_r</a>+0x26>
+
+       13b68:	d902      	bls.n	13b70 <<a href="./13df39772842dbbe077d5496e2d70bf6.html">_free_r</a>+0x78>
+
+       13b6a:	230c      	movs	r3, #12
+
+       13b6c:	6003      	str	r3, [r0, #0]
+
+       13b6e:	e7d6      	b.n	13b1e <<a href="./13df39772842dbbe077d5496e2d70bf6.html">_free_r</a>+0x26>
+
+       13b70:	6825      	ldr	r5, [r4, #0]
+
+       13b72:	1961      	adds	r1, r4, r5
+
+       13b74:	428b      	cmp	r3, r1
+
+       13b76:	bf04      	itt	eq
+
+       13b78:	6819      	ldreq	r1, [r3, #0]
+
+       13b7a:	685b      	ldreq	r3, [r3, #4]
+
+       13b7c:	6063      	str	r3, [r4, #4]
+
+       13b7e:	bf04      	itt	eq
+
+       13b80:	1949      	addeq	r1, r1, r5
+
+       13b82:	6021      	streq	r1, [r4, #0]
+
+       13b84:	6054      	str	r4, [r2, #4]
+
+       13b86:	e7ca      	b.n	13b1e <<a href="./13df39772842dbbe077d5496e2d70bf6.html">_free_r</a>+0x26>
+
+       13b88:	b003      	add	sp, #12
+
+       13b8a:	bd30      	pop	{r4, r5, pc}
+
+       13b8c:	1ffee980 	.word	0x1ffee980
+
+    </pre>
+
+    
+    <pre><a href="./60e3006ae9a36c10808a7a8cb6053ce0.html">sbrk_aligned (64)</a></pre>
+    
+
+    
+
+
+        </div>
+    <div id="page-footer">
+        <hr>
+        
+            brought to you with 💖
+            by <a href="https://twitter.com/hbehrens">Heiko Behrens</a>
+            <span class="secondary">– MIT license, copyright © 2014-2025</span>
+        
+    </div>
+    </div>
+</body>
+</html>

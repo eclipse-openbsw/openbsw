@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../../../../../../../../../../static/css/style.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <title>Symbol - puncover</title>
+    
+</head>
+<body>
+    <div class="container" id="content">
+        <div class="page-header">
+            <nav class="navbar navbar-default" role="navigation">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="../../../../../../../../../../../index.html">
+                    Puncover
+                  </a>
+                </div>
+              </div>
+            </nav>
+          
+        </div>
+        <div id="inner_content">
+        
+    
+    <ol class="breadcrumb folders">
+        
+        <li><a href="../../../../../../../../../../../home.html">home</a></li>
+        
+        <li><a href="../../../../../../../../../../runner.html">runner</a></li>
+        
+        <li><a href="../../../../../../../../../work.html">work</a></li>
+        
+        <li><a href="../../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../libs.html">libs</a></li>
+        
+        <li><a href="../../../../../safety.html">safety</a></li>
+        
+        <li><a href="../../../../safeLifecycle.html">safeLifecycle</a></li>
+        
+        <li><a href="../../../src.html">src</a></li>
+        
+        <li ><a href="../../safeLifecycle.html">safeLifecycle</a>
+            </li>
+
+        
+        <li class="active"><a href="../SafeSupervisor.cpp.html">SafeSupervisor.cpp</a>:43
+            </li>
+        
+    </ol>
+
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <th>Function</th>
+                <td colspan="5">
+                    <span class="icon-function">safety::SafeSupervisor::handle(safety::SafeSupervisor::Event const&amp;)</span>
+                </td>
+            </tr>
+
+            <tr>
+                <th rowspan="2"></th>
+                <th>Address</th>
+                <th>Remarks</th>
+                <th>Stack</th>
+                <th>Code</th>
+                <th>Static</th>
+            </tr>
+            <tr>
+                <td>0x0000bee8</td>
+                <td>
+    <span class="label label-success">x-module</span>
+    
+</td>
+                <td></td>
+                <td>184</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th>Callers (3)</th>
+                <td colspan="5">
+                
+                    <a href="../SafetyManager.cpp/b2a77e5f09d16f15691afd3fe6bffa29.html">safety::SafetyManager::cyclic() (216)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../../../../safeWatchdog/src/safeWatchdog/SafeWatchdog.cpp/dac703c40c075b303001e2b6b04f7571.html">safety::SafeWatchdog::cyclic() (132)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../../../../../../executables/referenceApp/platforms/s32k148evb/main/src/main.cpp/fad58de7366495db4650cfefac2fcd61.html">main (76)</a>
+                    
+                
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Callees (3,
+                            <span title="sum of used bytes by all callees">
+                            Σ=152
+                            </span>
+                        )
+                    
+                </th>
+                <td colspan="5">
+                
+                    <a href="../../../../../bsw/util/include/util/logger/Logger.h/36d1ae1365862a45a74fa55e9d725fcd.html">util::logger::Logger::debug(unsigned char, char const*, ...) (56)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../../../../../bsp/bspCharInputOutput/src/charInputOutput/bspIo.cpp/6c492efb4c21b9ebc4f047af3dbd3de7.html">debug_printf (40)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../../../../../bsw/util/include/util/logger/Logger.h/fee4073070054ecc160dbd4d6b194f36.html">util::logger::Logger::warn(unsigned char, char const*, ...) (56)</a>
+                    
+                
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    
+    <pre><a href="../SafetyManager.cpp/5bf7f919979f099b5f97e57af48043d6.html">_GLOBAL__sub_I_safeWatchdog (12)</a></pre>
+    
+
+    <pre>
+
+    safety::SafeSupervisor::handle(safety::SafeSupervisor::Event const&):
+
+        bee8:	780a      	ldrb	r2, [r1, #0]
+
+        beea:	b538      	push	{r3, r4, r5, lr}
+
+        beec:	f3ef 8510 	mrs	r5, PRIMASK
+
+    getMachineStateRegisterValueAndSuspendAllInterrupts():
+
+        bef0:	b672      	cpsid	i
+
+    safety::SafeSupervisor::handle(safety::SafeSupervisor::Event const&):
+
+        bef2:	4604      	mov	r4, r0
+
+        bef4:	2a07      	cmp	r2, #7
+
+        bef6:	d838      	bhi.n	bf6a <<a href="./9b5804dfc8710759bc63ecd487094e86.html">safety::SafeSupervisor::handle(safety::SafeSupervisor::Event const&)</a>+0x82>
+
+        bef8:	e8df f002 	tbb	[pc, r2]
+
+        befc:	1f1b150f 	.word	0x1f1b150f
+
+        bf00:	04312b25 	.word	0x04312b25
+
+        bf04:	4b1c      	ldr	r3, [pc, #112]	; (bf78 <<a href="./9b5804dfc8710759bc63ecd487094e86.html">safety::SafeSupervisor::handle(safety::SafeSupervisor::Event const&)</a>+0x90>)
+
+        bf06:	491d      	ldr	r1, [pc, #116]	; (bf7c <<a href="./9b5804dfc8710759bc63ecd487094e86.html">safety::SafeSupervisor::handle(safety::SafeSupervisor::Event const&)</a>+0x94>)
+
+        bf08:	7818      	ldrb	r0, [r3, #0]
+
+        bf0a:	f7f5 fc43 	bl	1794 <<a href="../../../../../bsw/util/include/util/logger/Logger.h/36d1ae1365862a45a74fa55e9d725fcd.html">util::logger::Logger::debug(unsigned char, char const*, ...)</a>>
+
+    safety::SafeSupervisor::enterLimpHome():
+
+        bf0e:	2301      	movs	r3, #1
+
+        bf10:	f884 3058 	strb.w	r3, [r4, #88]	; 0x58
+
+    safety::SafeSupervisor::handle(safety::SafeSupervisor::Event const&):
+
+        bf14:	f385 8810 	msr	PRIMASK, r5
+
+        bf18:	bd38      	pop	{r3, r4, r5, pc}
+
+        bf1a:	4b17      	ldr	r3, [pc, #92]	; (bf78 <<a href="./9b5804dfc8710759bc63ecd487094e86.html">safety::SafeSupervisor::handle(safety::SafeSupervisor::Event const&)</a>+0x90>)
+
+        bf1c:	4918      	ldr	r1, [pc, #96]	; (bf80 <<a href="./9b5804dfc8710759bc63ecd487094e86.html">safety::SafeSupervisor::handle(safety::SafeSupervisor::Event const&)</a>+0x98>)
+
+        bf1e:	7818      	ldrb	r0, [r3, #0]
+
+        bf20:	f7f5 fc38 	bl	1794 <<a href="../../../../../bsw/util/include/util/logger/Logger.h/36d1ae1365862a45a74fa55e9d725fcd.html">util::logger::Logger::debug(unsigned char, char const*, ...)</a>>
+
+        bf24:	e7f3      	b.n	bf0e <<a href="./9b5804dfc8710759bc63ecd487094e86.html">safety::SafeSupervisor::handle(safety::SafeSupervisor::Event const&)</a>+0x26>
+
+        bf26:	4b14      	ldr	r3, [pc, #80]	; (bf78 <<a href="./9b5804dfc8710759bc63ecd487094e86.html">safety::SafeSupervisor::handle(safety::SafeSupervisor::Event const&)</a>+0x90>)
+
+        bf28:	4916      	ldr	r1, [pc, #88]	; (bf84 <<a href="./9b5804dfc8710759bc63ecd487094e86.html">safety::SafeSupervisor::handle(safety::SafeSupervisor::Event const&)</a>+0x9c>)
+
+        bf2a:	7818      	ldrb	r0, [r3, #0]
+
+        bf2c:	f7f5 fc32 	bl	1794 <<a href="../../../../../bsw/util/include/util/logger/Logger.h/36d1ae1365862a45a74fa55e9d725fcd.html">util::logger::Logger::debug(unsigned char, char const*, ...)</a>>
+
+        bf30:	e7ed      	b.n	bf0e <<a href="./9b5804dfc8710759bc63ecd487094e86.html">safety::SafeSupervisor::handle(safety::SafeSupervisor::Event const&)</a>+0x26>
+
+        bf32:	4815      	ldr	r0, [pc, #84]	; (bf88 <<a href="./9b5804dfc8710759bc63ecd487094e86.html">safety::SafeSupervisor::handle(safety::SafeSupervisor::Event const&)</a>+0xa0>)
+
+        bf34:	f006 fc06 	bl	12744 <<a href="../../../../../bsp/bspCharInputOutput/src/charInputOutput/bspIo.cpp/6c492efb4c21b9ebc4f047af3dbd3de7.html">debug_printf</a>>
+
+        bf38:	e7e9      	b.n	bf0e <<a href="./9b5804dfc8710759bc63ecd487094e86.html">safety::SafeSupervisor::handle(safety::SafeSupervisor::Event const&)</a>+0x26>
+
+        bf3a:	4b0f      	ldr	r3, [pc, #60]	; (bf78 <<a href="./9b5804dfc8710759bc63ecd487094e86.html">safety::SafeSupervisor::handle(safety::SafeSupervisor::Event const&)</a>+0x90>)
+
+        bf3c:	4913      	ldr	r1, [pc, #76]	; (bf8c <<a href="./9b5804dfc8710759bc63ecd487094e86.html">safety::SafeSupervisor::handle(safety::SafeSupervisor::Event const&)</a>+0xa4>)
+
+        bf3e:	7818      	ldrb	r0, [r3, #0]
+
+        bf40:	f7f5 fc28 	bl	1794 <<a href="../../../../../bsw/util/include/util/logger/Logger.h/36d1ae1365862a45a74fa55e9d725fcd.html">util::logger::Logger::debug(unsigned char, char const*, ...)</a>>
+
+        bf44:	e7e3      	b.n	bf0e <<a href="./9b5804dfc8710759bc63ecd487094e86.html">safety::SafeSupervisor::handle(safety::SafeSupervisor::Event const&)</a>+0x26>
+
+        bf46:	4b0c      	ldr	r3, [pc, #48]	; (bf78 <<a href="./9b5804dfc8710759bc63ecd487094e86.html">safety::SafeSupervisor::handle(safety::SafeSupervisor::Event const&)</a>+0x90>)
+
+        bf48:	4911      	ldr	r1, [pc, #68]	; (bf90 <<a href="./9b5804dfc8710759bc63ecd487094e86.html">safety::SafeSupervisor::handle(safety::SafeSupervisor::Event const&)</a>+0xa8>)
+
+        bf4a:	7818      	ldrb	r0, [r3, #0]
+
+        bf4c:	f7f5 fc22 	bl	1794 <<a href="../../../../../bsw/util/include/util/logger/Logger.h/36d1ae1365862a45a74fa55e9d725fcd.html">util::logger::Logger::debug(unsigned char, char const*, ...)</a>>
+
+        bf50:	e7dd      	b.n	bf0e <<a href="./9b5804dfc8710759bc63ecd487094e86.html">safety::SafeSupervisor::handle(safety::SafeSupervisor::Event const&)</a>+0x26>
+
+        bf52:	4b09      	ldr	r3, [pc, #36]	; (bf78 <<a href="./9b5804dfc8710759bc63ecd487094e86.html">safety::SafeSupervisor::handle(safety::SafeSupervisor::Event const&)</a>+0x90>)
+
+        bf54:	490f      	ldr	r1, [pc, #60]	; (bf94 <<a href="./9b5804dfc8710759bc63ecd487094e86.html">safety::SafeSupervisor::handle(safety::SafeSupervisor::Event const&)</a>+0xac>)
+
+        bf56:	7818      	ldrb	r0, [r3, #0]
+
+        bf58:	f7f5 fc1c 	bl	1794 <<a href="../../../../../bsw/util/include/util/logger/Logger.h/36d1ae1365862a45a74fa55e9d725fcd.html">util::logger::Logger::debug(unsigned char, char const*, ...)</a>>
+
+        bf5c:	e7d7      	b.n	bf0e <<a href="./9b5804dfc8710759bc63ecd487094e86.html">safety::SafeSupervisor::handle(safety::SafeSupervisor::Event const&)</a>+0x26>
+
+        bf5e:	4b06      	ldr	r3, [pc, #24]	; (bf78 <<a href="./9b5804dfc8710759bc63ecd487094e86.html">safety::SafeSupervisor::handle(safety::SafeSupervisor::Event const&)</a>+0x90>)
+
+        bf60:	490d      	ldr	r1, [pc, #52]	; (bf98 <<a href="./9b5804dfc8710759bc63ecd487094e86.html">safety::SafeSupervisor::handle(safety::SafeSupervisor::Event const&)</a>+0xb0>)
+
+        bf62:	7818      	ldrb	r0, [r3, #0]
+
+        bf64:	f7f5 fc16 	bl	1794 <<a href="../../../../../bsw/util/include/util/logger/Logger.h/36d1ae1365862a45a74fa55e9d725fcd.html">util::logger::Logger::debug(unsigned char, char const*, ...)</a>>
+
+        bf68:	e7d1      	b.n	bf0e <<a href="./9b5804dfc8710759bc63ecd487094e86.html">safety::SafeSupervisor::handle(safety::SafeSupervisor::Event const&)</a>+0x26>
+
+        bf6a:	4b03      	ldr	r3, [pc, #12]	; (bf78 <<a href="./9b5804dfc8710759bc63ecd487094e86.html">safety::SafeSupervisor::handle(safety::SafeSupervisor::Event const&)</a>+0x90>)
+
+        bf6c:	490b      	ldr	r1, [pc, #44]	; (bf9c <<a href="./9b5804dfc8710759bc63ecd487094e86.html">safety::SafeSupervisor::handle(safety::SafeSupervisor::Event const&)</a>+0xb4>)
+
+        bf6e:	7818      	ldrb	r0, [r3, #0]
+
+        bf70:	f7f6 fefa 	bl	2d68 <<a href="../../../../../bsw/util/include/util/logger/Logger.h/fee4073070054ecc160dbd4d6b194f36.html">util::logger::Logger::warn(unsigned char, char const*, ...)</a>>
+
+        bf74:	e7cb      	b.n	bf0e <<a href="./9b5804dfc8710759bc63ecd487094e86.html">safety::SafeSupervisor::handle(safety::SafeSupervisor::Event const&)</a>+0x26>
+
+        bf76:	bf00      	nop
+
+        bf78:	1ffe0085 	.word	0x1ffe0085
+
+        bf7c:	00016b84 	.word	0x00016b84
+
+        bf80:	00016a70 	.word	0x00016a70
+
+        bf84:	00016a88 	.word	0x00016a88
+
+        bf88:	00016ab4 	.word	0x00016ab4
+
+        bf8c:	00016adc 	.word	0x00016adc
+
+        bf90:	00016b04 	.word	0x00016b04
+
+        bf94:	00016b30 	.word	0x00016b30
+
+        bf98:	00016b58 	.word	0x00016b58
+
+        bf9c:	00016bb0 	.word	0x00016bb0
+
+    </pre>
+
+    
+    <pre><a href="./c982d8ed9b2ddc2e49c8dea2234a5466.html">safety::SafeSupervisor::getInstance() (112)</a></pre>
+    
+
+    
+
+
+        </div>
+    <div id="page-footer">
+        <hr>
+        
+            brought to you with 💖
+            by <a href="https://twitter.com/hbehrens">Heiko Behrens</a>
+            <span class="secondary">– MIT license, copyright © 2014-2025</span>
+        
+    </div>
+    </div>
+</body>
+</html>
