@@ -28,8 +28,9 @@ Encoding looks like this:
 
     Structs used as headers need to be POD. Unless unaligned read/write is acceptable on the
     target platform, they should also have 1-byte alignment requirement. Helper structs:
-    ``estd::big_endian<T>``, ``estd::little_endian<T>`` can be used for serializing integers.
-    Other types can be wrapped with ``estd::unaligned<T>`` (defined in ``estd/memory.h``).
+    ``etl::unaligned_type<T, etl::endian::big>``, ``etl::unaligned_type<T, etl::endian::little>``
+    can be used for serializing integers.  Convenience typedefs are: ``etl::be_uint32_t``,
+    ``etl::le_uint32_t`` etc. (defined in ``etl/unaligned_type.h``).
 
 Example
 -------

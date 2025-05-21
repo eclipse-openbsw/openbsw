@@ -80,12 +80,12 @@ most cases ``uint8_t``.
 One advantage is that variables can now be compared with the scope resolution operator.
 A drawback is that there is no direct conversion from the values of a scoped enumerator to the
 underlying type.
-Use ``::estd::to_underlying`` from ``estd/type_utils.h`` to cast the enumeration value to the
+Use ``::etl::to_underlying`` from ``etl/utility.h`` to cast the enumeration value to the
 underlying type.
 
 .. code-block:: cpp
 
-    #include <estd/type_utils.h>
+    #include <etl/utility.h>
 
     // recommended definition
     enum class Colors : uint8_t
@@ -104,8 +104,8 @@ underlying type.
         case Colors::BLUE   : printf("Blue color\n"); break;
     }
 
-    // option 1: (recommended) use the estd helper function
-    auto const colorRed = ::estd::to_underlying(Colors::RED);
+    // option 1: (recommended) use the etl helper function
+    auto const colorRed = ::etl::to_underlying(Colors::RED);
     // option 2: explicitly cast using the underlying type
     auto const colorGreen = static_cast<::std::underlying_type<Colors>::type>(Colors::GREEN);
     // option 3: explicitly cast to the specified type

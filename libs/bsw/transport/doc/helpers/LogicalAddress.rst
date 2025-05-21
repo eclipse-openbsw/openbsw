@@ -88,7 +88,7 @@ Address lists must be registered with ``LogicalAddressConverter``. This allows `
     //register lists with LogicalAddressConverter helper class, usually in your project's TransportConfiguration.cpp
     template<>
     std::
-        array<::estd::slice<LogicalAddress const>, TransportConfiguration::COUNT_OF_ADDRESS_LISTS> const
+        array<::etl::span<LogicalAddress const>, TransportConfiguration::COUNT_OF_ADDRESS_LISTS> const
             TransportConfiguration::LogicalAddressConverterGateway::TESTER_ADDRESS_LISTS
         = {TransportConfiguration::TESTER_ADDRESS_RANGE_ETH,
         TransportConfiguration::TESTER_ADDRESS_RANGE_CAN,

@@ -211,12 +211,12 @@ which improves readability. Additionally, ``using`` can be used for template ali
 
 .. code-block:: cpp
 
-    using MyArray = ::estd::array<::some::other::Type, 199>; // good - new name comes first
+    using MyArray = ::etl::array<::some::other::Type, 199>; // good - new name comes first
 
-    typedef ::estd::array<::some::other::Type, 199> MyArray; // bad - new name at the end
+    typedef ::etl::array<::some::other::Type, 199> MyArray; // bad - new name at the end
 
     template <typename T>
-    using ArrayOf5 = ::estd::array<T, 5>; // template alias - impossible with typedef
+    using ArrayOf5 = ::etl::array<T, 5>; // template alias - impossible with typedef
 
 OS Specific Code
 ----------------
