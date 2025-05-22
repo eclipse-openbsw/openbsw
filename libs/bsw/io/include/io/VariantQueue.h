@@ -63,7 +63,7 @@ template<typename TL>
 struct max_element_size
 {
     static constexpr size_t value = ::etl::max<size_t>(
-        element_size<typename TL::type>::value, max_element_size<typename TL::tail>::value);
+        element_size<typename TL::head>::value, max_element_size<typename TL::tail>::value);
 };
 
 template<>
@@ -115,7 +115,7 @@ using VariantQueue
 template<typename TypeList, size_t ID = 0>
 struct variant_T_do
 {
-    using T       = typename TypeList::type;
+    using T       = typename TypeList::head;
     using recurse = variant_T_do<typename TypeList::tail, ID + 1>;
 
     template<typename Visitor, typename R>
@@ -150,7 +150,7 @@ private:
     template<typename TL, size_t ID = 0>
     struct variant_do
     {
-        using T       = typename TL::type;
+        using T       = typename TL::head;
         using recurse = variant_do<typename TL::tail, ID + 1>;
 
         template<typename Visitor, typename R>
@@ -182,7 +182,7 @@ private:
             ::etl::type_list_contains<TypeList, T>::value,
             "type must be a part of the variant type list");
 
-        buffer[0] = static_cast<uint8_t>(::etl::type_list_index_of<TypeList, T>::value);
+        buffer[0] = static_cast<uint8_t>(::etl::type_list_index_of_type<TypeList, T>::value);
         buffer.advance(1);
         buffer.reinterpret_as<T>()[0] = t;
         buffer.advance(sizeof(T));
@@ -272,7 +272,7 @@ public:
         {
             return nullptr;
         }
-        buffer[0] = static_cast<uint8_t>(::etl::type_list_index_of<TypeList, T>::value);
+        buffer[0] = static_cast<uint8_t>(::etl::type_list_index_of_type<TypeList, T>::value);
         return reinterpret_cast<T*>(&buffer[1]);
     }
 };
