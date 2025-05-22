@@ -197,8 +197,8 @@ namespace etl
 
       template <typename T>
       explicit ETL_CONSTEXPR vtable_t(etl::type_identity<T>) ETL_NOEXCEPT
-        : invoke_func{[](char* obj, Args&&... args) -> R
-                      { return (*reinterpret_cast<T*>(obj))(
+        : invoke_func{[](char* invoke_obj, Args&&... args) -> R
+                      { return (*reinterpret_cast<T*>(invoke_obj))(
                           etl::forward<Args&&>(args)...); }},
           copy_func{[](char* dst_obj, char* src_obj) -> void
                     { ::new (dst_obj) T{*reinterpret_cast<T*>(src_obj)}; }},
@@ -207,8 +207,8 @@ namespace etl
                       ::new (dst_obj) T{etl::move(*reinterpret_cast<T*>(src_obj))};
                       reinterpret_cast<T*>(src_obj)->~T();
                     }},
-          dtor_func{[](char* obj) -> void
-                    { reinterpret_cast<T*>(obj)->~T(); }}
+          dtor_func{[](char* dtor_obj) -> void
+                    { reinterpret_cast<T*>(dtor_obj)->~T(); }}
       {
       }
 
