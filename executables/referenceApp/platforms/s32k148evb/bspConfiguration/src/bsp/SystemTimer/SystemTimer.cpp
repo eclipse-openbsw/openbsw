@@ -10,6 +10,8 @@
 #include "interrupts/SuspendResumeAllInterruptsScopedLock.h"
 #include "mcu/mcu.h"
 
+#include <etl/chrono.h>
+
 namespace
 {
 uint32_t const DWT_FREQ_MHZ_RUN  = 80U;
@@ -79,13 +81,26 @@ uint32_t getSystemTicks32Bit(void) { return static_cast<uint32_t>(updateTicks())
 
 uint64_t getSystemTimeNs(void) { return updateTicks() * 1000U / TICK_FREQ_MHZ; }
 
-extern "C" uint64_t etl_get_system_time_nanosec() { return getSystemTimeNs(); }
-
 uint64_t getSystemTimeUs(void) { return updateTicks() / TICK_FREQ_MHZ; }
 
 uint32_t getSystemTimeUs32Bit(void) { return static_cast<uint32_t>(updateTicks() / TICK_FREQ_MHZ); }
 
 uint64_t getSystemTimeMs(void) { return updateTicks() / TICK_FREQ_MHZ / 1000U; }
+
+etl::chrono::high_resolution_clock::rep etl_get_high_resolution_clock()
+{
+    return etl::chrono::high_resolution_clock::rep{static_cast<int64_t>(getSystemTimeNs())};
+}
+
+etl::chrono::system_clock::rep etl_get_system_clock()
+{
+    return etl::chrono::system_clock::rep(static_cast<int64_t>(getSystemTimeMs()));
+}
+
+etl::chrono::steady_clock::rep etl_get_steady_clock()
+{
+    return etl::chrono::steady_clock::rep(static_cast<int64_t>(getSystemTimeMs() / 1000));
+}
 
 uint32_t getSystemTimeMs32Bit(void)
 {

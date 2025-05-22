@@ -1,6 +1,7 @@
 // Copyright 2024 Accenture.
 
 #include <bsp/timer/SystemTimer.h>
+#include <etl/chrono.h>
 
 #include <chrono>
 
@@ -12,7 +13,24 @@ uint64_t getSystemTimeNs()
     return duration_cast<nanoseconds>(duration).count();
 }
 
-extern "C" uint64_t etl_get_system_time_nanosec() { return getSystemTimeNs(); }
+extern "C"
+{
+etl::chrono::high_resolution_clock::rep etl_get_high_resolution_clock()
+{
+    return etl::chrono::high_resolution_clock::rep{static_cast<int64_t>(getSystemTimeNs())};
+}
+
+etl::chrono::system_clock::rep etl_get_system_clock()
+{
+    return etl::chrono::system_clock::rep(static_cast<int64_t>(getSystemTimeNs() / 1000 / 1000));
+}
+
+etl::chrono::steady_clock::rep etl_get_steady_clock()
+{
+    return etl::chrono::steady_clock::rep(
+        static_cast<int64_t>(getSystemTimeNs() / 1000 / 1000 / 1000));
+}
+}
 
 uint32_t getSystemTimeUs32Bit(void) { return getSystemTimeNs() / 1000; }
 
