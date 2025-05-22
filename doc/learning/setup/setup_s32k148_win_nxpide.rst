@@ -22,7 +22,7 @@ To download and install this you will first need to register for a free account 
 Note that free activation codes for software you download will be sent to the email account you register with.
 Once registered, you can `download S32 Design Studio for ARM from here <https://www.nxp.com/webapp/swlicensing/sso/downloadSoftware.sp?catid=S32DS-IDE-ARM-V2-X>`_.
 
-Download and run the installer S32DS_ARM_Win32_v :prop:`tool:s32ds_arm_version` .exe (this assumes you administrator rights on your PC).
+Download and run the installer S32DS_ARM_Win32_v :prop:`tool:s32ds_arm_version` .exe (this assumes you have administrator rights on your PC).
 Enter the activation code received by email when prompted and chose **Activate Online**.
 During the installation it will also prompt you to allow drivers from **PEMicro** to be installed - accept this.
 

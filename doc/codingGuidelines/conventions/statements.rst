@@ -184,7 +184,7 @@ memory got corrupted (out of bounds access through operator[]). Comment the usag
 justification.
 
 It might be acceptable during development to use asserts. In this case use ``estd_expect`` instead.
-``estd_expect`` behaves the same as ``estd_assert``, but it must be replaced before SOP with
+``estd_expect`` behaves the same as ``estd_assert``, but it must be replaced before production with
 proper error handling. The usage of ``estd_expect`` is detected by our code analyzers and
 presented in the module overview from Cijack.
 
