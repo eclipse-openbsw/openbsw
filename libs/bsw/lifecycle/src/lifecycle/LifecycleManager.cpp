@@ -4,7 +4,7 @@
 
 #include "lifecycle/LifecycleLogger.h"
 
-#include <estd/assert.h>
+#include <util/estd/assert.h>
 
 namespace lifecycle
 {
@@ -67,7 +67,7 @@ void LifecycleManager::addLifecycleListener(ILifecycleListener& listener)
 void LifecycleManager::removeLifecycleListener(ILifecycleListener& listener)
 {
     ::async::LockType const lock;
-    _listeners.remove(listener);
+    _listeners.erase(listener);
 }
 
 void LifecycleManager::transitionDone(ILifecycleComponent& component)
@@ -127,7 +127,7 @@ void LifecycleManager::execute()
     {
         auto& componentInfo = _componentInfos[static_cast<size_t>(componentIndex)];
         ComponentTransitionExecutor& transitionExecutor
-            = _componentTransitionExecutors.emplace_back().construct(
+            = _componentTransitionExecutors.emplace_back(
                 *componentInfo._component, componentIndex, _transition);
         componentInfo._isTransitionPending = true;
         componentInfo._lastTransition      = _transition;

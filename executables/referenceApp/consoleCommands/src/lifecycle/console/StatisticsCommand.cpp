@@ -6,8 +6,6 @@
 #include <runtime/StatisticsWriter.h>
 #include <util/format/SharedStringWriter.h>
 
-#include <estd/assert.h>
-
 namespace
 {
 void format(
@@ -26,7 +24,7 @@ void printCpu(
     ::util::command::CommandContext& context,
     T const& taskStatistics,
     I const& isrGroupStatistics,
-    ::estd::optional<uint32_t> const& ticksPerUs,
+    ::etl::optional<uint32_t> const& ticksPerUs,
     uint32_t const totalRuntime)
 {
     ::util::format::SharedStringWriter writer(context);

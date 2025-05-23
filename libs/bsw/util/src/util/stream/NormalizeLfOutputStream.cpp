@@ -29,7 +29,7 @@ void NormalizeLfOutputStream::write(uint8_t const data)
     }
 }
 
-void NormalizeLfOutputStream::write(::estd::slice<uint8_t const> const& buffer)
+void NormalizeLfOutputStream::write(::etl::span<uint8_t const> const& buffer)
 {
     size_t const size = buffer.size();
     for (size_t idx = 0U; idx < size; ++idx)

@@ -11,9 +11,9 @@ Usage example:
 
 .. code:: cpp
 
-   auto handleCommands = ::estd::make_function(
+   auto handleCommands = ::etl::inplace_function(
        [](::util::stream::ISharedOutputStream& outStream,
-          ::estd::string const& line,
+          ::etl::istring const& line,
           ::console::StdioConsoleInput::OnLineProcessed const& onProcessed)
    {
        ::util::format::SharedStringWriter writer(outStream);
@@ -48,7 +48,7 @@ Usage example:
 
 A user callback can be represented using a lambda, a free function, or a
 member function. For more information on how callback functions can be
-created, refer to the documentation for ``estd::function``.
+created, refer to the documentation for ``etl::inplace_function``.
 
 .. warning::
 
