@@ -3,19 +3,8 @@ from doipclient import DoIPClient
 from doipclient.connectors import DoIPClientUDSConnector
 from udsoncan.client import Client
 from udsoncan.connections import PythonIsoTpConnection
-import binascii
 import isotp
 import json
-import udsoncan.services as uds
-import udsoncan
-
-
-def handleResponse(response):
-    out = response.get_payload()
-    result = binascii.hexlify(out).decode("ascii")
-    print(result, "\n", response)
-
-    return response
 
 
 def createEthConnection(host, ecu, source):
@@ -66,16 +55,3 @@ def createCanConnection(canif, channel, txid, rxid, config):
 
     except Exception as e:
         print(f"Error during UDS operation: {e}")
-
-
-def read(client, did):
-    did = int(did, 16)
-
-    # Create request
-    req = uds.ReadDataByIdentifier.make_request([did], {did: udsoncan.AsciiCodec(4)})
-
-    # Send a request to the ECU
-    response = client.send_request(req)
-
-    # Print the response
-    return handleResponse(response)
