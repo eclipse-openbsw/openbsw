@@ -13,6 +13,10 @@ using namespace ::uds;
 class AsyncDiagHelperMock : public ::uds::declare::AsyncDiagHelper<1>
 {
 public:
+    AsyncDiagHelperMock(::async::ContextType diagContext)
+    : ::uds::declare::AsyncDiagHelper<1>(diagContext)
+    {}
+
     using AsyncDiagHelper::verify;
 };
 
@@ -25,7 +29,7 @@ struct AsyncDiagHelperTest : public Test
 
 TEST_F(AsyncDiagHelperTest, AllocateAndProcess)
 {
-    ::uds::declare::AsyncDiagHelper<2> cut;
+    ::uds::declare::AsyncDiagHelper<2> cut(2U);
 
     uint8_t buffer1[20];
     AsyncDiagHelper::StoredRequest* request1
@@ -65,7 +69,7 @@ TEST_F(AsyncDiagHelperTest, AllocateAndProcess)
 
 TEST_F(AsyncDiagHelperTest, CoverVerify)
 {
-    AsyncDiagHelperMock cut;
+    AsyncDiagHelperMock cut(2U);
     uint8_t buffer[10];
     EXPECT_EQ(DiagReturnCode::OK, cut.verify(buffer, sizeof(buffer)));
 }

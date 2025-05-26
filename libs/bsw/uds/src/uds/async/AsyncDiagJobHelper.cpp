@@ -6,8 +6,7 @@
 
 namespace uds
 {
-AsyncDiagJobHelper::AsyncDiagJobHelper(
-    IAsyncDiagHelper& asyncHelper, AbstractDiagJob& job, ::async::ContextType const diagContext)
+AsyncDiagJobHelper::AsyncDiagJobHelper(IAsyncDiagHelper& asyncHelper, AbstractDiagJob& job)
 : fAsyncHelper(asyncHelper)
 , fJob(job)
 , fPendingAsyncConnection(nullptr)
@@ -15,7 +14,6 @@ AsyncDiagJobHelper::AsyncDiagJobHelper(
 , fTriggerNextRequests(
       ::async::Function::CallType::
           create<AsyncDiagJobHelper, &AsyncDiagJobHelper::triggerNextRequests>(*this))
-, fContext(diagContext)
 {}
 
 bool AsyncDiagJobHelper::hasPendingAsyncRequest() const
@@ -53,7 +51,7 @@ void AsyncDiagJobHelper::endAsyncRequest()
 {
     if (fPendingAsyncConnection != nullptr)
     {
-        ::async::execute(fContext, fTriggerNextRequests);
+        ::async::execute(fAsyncHelper.getDiagContext(), fTriggerNextRequests);
     }
 }
 

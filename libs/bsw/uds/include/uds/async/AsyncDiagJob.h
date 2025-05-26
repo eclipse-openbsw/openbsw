@@ -65,7 +65,7 @@ template<typename... Args>
 AsyncDiagJob<T>::AsyncDiagJob(
     IAsyncDiagHelper& asyncHelper, ::async::ContextType context, Args&&... args)
 : T(::std::forward<Args>(args)...)
-, fAsyncJobHelper(asyncHelper, *this, context)
+, fAsyncJobHelper(asyncHelper, *this)
 , fProcess(ProcessClosureType::CallType(
       ProcessClosureType::CallType::fct::create<AsyncDiagJob<T>, &AsyncDiagJob<T>::asyncProcess>(
           *this),
