@@ -227,7 +227,7 @@ inline uint32_t DoCanParameters::decodeMinSeparationTime(uint8_t const encodedMi
 inline uint8_t DoCanParameters::encodeMinSeparationTime(uint32_t const minSeparationTimeUs)
 {
     // Encode 100-900us STmin values
-    if ((minSeparationTimeUs > 0) && (minSeparationTimeUs < 1000U))
+    if ((minSeparationTimeUs >= 100U) && (minSeparationTimeUs < 1000U))
     {
         return static_cast<uint8_t>(minSeparationTimeUs / 100U) + 0xF0U;
     }

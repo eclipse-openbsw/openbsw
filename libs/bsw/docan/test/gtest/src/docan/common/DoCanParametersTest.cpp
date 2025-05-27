@@ -70,4 +70,19 @@ TEST(DoCanParameters, testEncodeMinSeparationTime)
     }
 }
 
+TEST(DoCanParameters, encodeMinSeparationTimeTestValueRange)
+{
+    // Test that the encoding of STmin byte in Flow Control Frame is in the range of allowed values
+
+    for (uint32_t t = 0; t < (0x7FU * 1000U) + 1U; t++)
+    {
+        uint8_t result;
+        result = DoCanParameters::encodeMinSeparationTime(t);
+
+        // According to ISO-TP (ISO 15765-2:2016 9.6.5.4), STmin values 0x0 - 0x7F, 0xF1 - 0xF9 are
+        // allowed
+        EXPECT_TRUE(result <= 0x7FU || (result <= 0xF9U && result >= 0xF1U));
+    }
+}
+
 } // anonymous namespace
