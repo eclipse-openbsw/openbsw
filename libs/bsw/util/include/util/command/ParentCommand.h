@@ -5,7 +5,7 @@
 #include "util/command/ICommand.h"
 #include "util/command/IParentCommand.h"
 
-#include <estd/forward_list.h>
+#include <etl/intrusive_forward_list.h>
 
 namespace util
 {
@@ -19,7 +19,7 @@ public:
     ParentCommand(char const* id, char const* description);
 
     char const* getDescription() const;
-    ::estd::forward_list<ICommand> const& getCommands() const;
+    ::etl::intrusive_forward_list<ICommand, ::etl::forward_link<0>> const& getCommands() const;
 
     void addCommand(ICommand& command) override;
     void clearCommands() override;
@@ -38,7 +38,7 @@ private:
 
     char const* _id;
     char const* _description;
-    ::estd::forward_list<ICommand> _commands;
+    ::etl::intrusive_forward_list<ICommand, ::etl::forward_link<0>> _commands;
 };
 
 } // namespace command

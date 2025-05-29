@@ -2,7 +2,9 @@
 
 #include "async/TaskInitializer.h"
 
-#include <estd/singleton.h>
+#include <etl/delegate.h>
+#include <etl/singleton_base.h>
+#include <etl/span.h>
 
 #include <gmock/gmock.h>
 
@@ -12,14 +14,14 @@ using namespace ::async;
 using namespace ::async::internal;
 using namespace ::testing;
 
-struct AdapterMock : public ::estd::singleton<AdapterMock>
+struct AdapterMock : public ::etl::singleton_base<AdapterMock>
 {
-    using StackSliceType   = ::estd::slice<StackType_t>;
-    using TaskFunctionType = ::estd::function<void()>;
+    using StackSliceType   = ::etl::span<StackType_t>;
+    using TaskFunctionType = ::etl::delegate<void()>;
     using TaskObjectType   = uint32_t*;
     using TaskConfigType   = uint32_t;
 
-    AdapterMock() : ::estd::singleton<AdapterMock>(*this) {}
+    AdapterMock() : ::etl::singleton_base<AdapterMock>(*this) {}
 
     static void initTask(TaskInitializer<AdapterMock>& taskInitializer)
     {

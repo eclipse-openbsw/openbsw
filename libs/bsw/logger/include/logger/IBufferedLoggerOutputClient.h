@@ -4,14 +4,14 @@
 
 #include "logger/IEntryOutput.h"
 
-#include <estd/uncopyable.h>
+#include <etl/uncopyable.h>
 
 namespace logger
 {
 class ILoggerListener;
 
 template<class E = uint32_t, class Timestamp = uint32_t>
-class IBufferedLoggerOutputClient : private ::estd::uncopyable
+class IBufferedLoggerOutputClient : private ::etl::uncopyable
 {
 public:
     IBufferedLoggerOutputClient();
@@ -23,7 +23,7 @@ public:
 
 template<class E, class Timestamp>
 inline IBufferedLoggerOutputClient<E, Timestamp>::IBufferedLoggerOutputClient()
-: ::estd::uncopyable()
+: ::etl::uncopyable()
 {}
 
 } // namespace logger

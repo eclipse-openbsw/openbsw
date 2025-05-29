@@ -7,10 +7,11 @@
 #include "docan/common/DoCanTransportAddressPair.h"
 #include "docan/receiver/DoCanMessageReceiveProtocolHandler.h"
 
+#include <etl/intrusive_list.h>
+#include <etl/span.h>
 #include <transport/ITransportMessageProcessedListener.h>
 #include <transport/TransportMessage.h>
 
-#include <estd/forward_list.h>
 #include <platform/estdint.h>
 
 #include <limits>
@@ -24,7 +25,7 @@ namespace docan
 template<class DataLinkLayer>
 class DoCanMessageReceiver
 : public DoCanMessageReceiveProtocolHandler<typename DataLinkLayer::FrameIndexType>
-, public ::estd::forward_list_node<DoCanMessageReceiver<DataLinkLayer>>
+, public ::etl::bidirectional_link<0>
 {
 public:
     using DataLinkLayerType       = DataLinkLayer;
@@ -53,7 +54,7 @@ public:
         FrameSizeType consecutiveFrameDataSize,
         uint8_t maxBlockSize,
         uint8_t encodedMinSeparationTime,
-        ::estd::slice<uint8_t const> const& firstFrameData,
+        ::etl::span<uint8_t const> const& firstFrameData,
         bool blocked);
 
     /**
@@ -133,9 +134,7 @@ public:
      * \return result indicating state transition
      */
     ReceiveResult consecutiveFrameReceived(
-        uint8_t sequenceNumber,
-        FrameSizeType expectedSize,
-        ::estd::slice<uint8_t const> const& data);
+        uint8_t sequenceNumber, FrameSizeType expectedSize, ::etl::span<uint8_t const> const& data);
 
     /**
      * Detach a transport message. Reception address and message are kept.
@@ -186,7 +185,7 @@ public:
      * Get the first frame data
      * \return first frame data
      */
-    ::estd::slice<uint8_t const> getFirstFrameData() const;
+    ::etl::span<uint8_t const> getFirstFrameData() const;
 
     bool operator<(DoCanMessageReceiver<DataLinkLayer> const& rhs) const
     {
@@ -242,10 +241,10 @@ DoCanMessageReceiver<DataLinkLayer>::DoCanMessageReceiver(
     FrameSizeType const consecutiveFrameDataSize,
     uint8_t const maxBlockSize,
     uint8_t const encodedMinSeparationTime,
-    ::estd::slice<uint8_t const> const& firstFrameData,
+    ::etl::span<uint8_t const> const& firstFrameData,
     bool const blocked)
 : DoCanMessageReceiveProtocolHandler<FrameIndexType>(frameCount)
-, ::estd::forward_list_node<DoCanMessageReceiver<DataLinkLayer>>()
+, ::etl::bidirectional_link<0>()
 , _connection(connection)
 , _message(nullptr)
 , _firstFrameData(firstFrameData.data())
@@ -346,7 +345,7 @@ template<class DataLinkLayer>
 inline ReceiveResult DoCanMessageReceiver<DataLinkLayer>::consecutiveFrameReceived(
     uint8_t const sequenceNumber,
     FrameSizeType const expectedSize,
-    ::estd::slice<uint8_t const> const& data)
+    ::etl::span<uint8_t const> const& data)
 {
     auto const result
         = DoCanMessageReceiveProtocolHandler<FrameIndexType>::consecutiveFrameReceived(
@@ -416,10 +415,9 @@ inline void DoCanMessageReceiver<DataLinkLayer>::setBlocked(bool const blocked)
 }
 
 template<class DataLinkLayer>
-inline ::estd::slice<uint8_t const> DoCanMessageReceiver<DataLinkLayer>::getFirstFrameData() const
+inline ::etl::span<uint8_t const> DoCanMessageReceiver<DataLinkLayer>::getFirstFrameData() const
 {
-    return ::estd::slice<uint8_t const>::from_pointer(
-        _firstFrameData, static_cast<size_t>(_firstFrameDataSize));
+    return ::etl::span<uint8_t const>{_firstFrameData, static_cast<size_t>(_firstFrameDataSize)};
 }
 
 } // namespace docan

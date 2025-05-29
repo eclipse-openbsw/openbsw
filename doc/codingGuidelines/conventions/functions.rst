@@ -113,8 +113,8 @@ Code that uses raw byte arrays and a length are very prone to errors or misuse.
     void start(Connection& conn, uint8_t data[], uint16_t length);
 
 It's unclear from the method signature what will happen to data and length.
-Look for existing buffer classes and reuse one of those, for example ``estd::array<>`` or
-``estd::slice<>``.
+Look for existing buffer classes and reuse one of those, for example ``etl::array<>`` or
+``etl::span<>``.
 
 
 Translation-Unit Local Functions
@@ -147,5 +147,5 @@ where we have the certainty that they are supported.
 
 When using lambdas, be careful about object lifetimes: objects captured by reference within a lambda
 have to be still in scope at the time of lambda execution. Also lambda objects themselves have to
-still exist when they're executed - it might be tricky while using function references like
-``estd::function``.
+still exist when they're executed.  A solution to this issue is implemented in
+``etl::inplace_function``.

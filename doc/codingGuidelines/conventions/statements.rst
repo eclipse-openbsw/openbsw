@@ -184,7 +184,7 @@ memory got corrupted (out of bounds access through operator[]). Comment the usag
 justification.
 
 It might be acceptable during development to use asserts. In this case use ``estd_expect`` instead.
-``estd_expect`` behaves the same as ``estd_assert``, but it must be replaced before SOP with
+``estd_expect`` behaves the same as ``estd_assert``, but it must be replaced for production with
 proper error handling. The usage of ``estd_expect`` is detected by our code analyzers and
 presented in the module overview from Cijack.
 
@@ -211,12 +211,12 @@ which improves readability. Additionally, ``using`` can be used for template ali
 
 .. code-block:: cpp
 
-    using MyArray = ::estd::array<::some::other::Type, 199>; // good - new name comes first
+    using MyArray = ::etl::array<::some::other::Type, 199>; // good - new name comes first
 
-    typedef ::estd::array<::some::other::Type, 199> MyArray; // bad - new name at the end
+    typedef ::etl::array<::some::other::Type, 199> MyArray; // bad - new name at the end
 
     template <typename T>
-    using ArrayOf5 = ::estd::array<T, 5>; // template alias - impossible with typedef
+    using ArrayOf5 = ::etl::array<T, 5>; // template alias - impossible with typedef
 
 OS Specific Code
 ----------------

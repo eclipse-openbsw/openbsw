@@ -2,7 +2,6 @@
 
 #pragma once
 
-#include "estd/uncopyable.h"
 #include "uds/base/Service.h"
 
 namespace uds
@@ -13,8 +12,6 @@ namespace uds
  */
 class WriteDataByIdentifier : public Service
 {
-    UNCOPYABLE(WriteDataByIdentifier);
-
 public:
     WriteDataByIdentifier();
 

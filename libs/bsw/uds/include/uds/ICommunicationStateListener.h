@@ -2,12 +2,14 @@
 
 #pragma once
 
-#include <estd/forward_list.h>
-#include <estd/uncopyable.h>
+#include <etl/intrusive_list.h>
+#include <etl/uncopyable.h>
 
 namespace uds
 {
-class ICommunicationStateListener : public ::estd::forward_list_node<ICommunicationStateListener>
+class ICommunicationStateListener
+: public ::etl::bidirectional_link<0>
+, public ::etl::uncopyable
 {
 public:
     enum CommunicationState
@@ -29,9 +31,6 @@ public:
     ICommunicationStateListener() {}
 
     virtual void communicationStateChanged(CommunicationState newState) = 0;
-
-private:
-    UNCOPYABLE(ICommunicationStateListener);
 };
 
 } // namespace uds

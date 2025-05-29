@@ -4,11 +4,8 @@
 
 #include "io/MemoryQueue.h"
 
-#include <estd/big_endian.h>
-#include <estd/memory.h>
-#include <estd/optional.h>
-#include <estd/slice.h>
-#include <estd/vec.h>
+#include <etl/optional.h>
+#include <etl/vector.h>
 
 #include <gmock/gmock.h>
 
@@ -38,14 +35,14 @@ struct JoinReaderTest : ::testing::Test
             auto& r    = _r.emplace_back(_q[i]);
             readers[i] = &r;
         }
-        new (_j.emplace())::io::JoinReader<NUM_QUEUES>(readers);
+        _j.emplace(readers);
     }
 
-    ::estd::vec<Q, NUM_QUEUES> _q;
-    ::estd::vec<Writer, NUM_QUEUES> _w;
-    ::estd::vec<Reader, NUM_QUEUES> _r;
+    ::etl::vector<Q, NUM_QUEUES> _q;
+    ::etl::vector<Writer, NUM_QUEUES> _w;
+    ::etl::vector<Reader, NUM_QUEUES> _r;
     ::io::IReader* readers[NUM_QUEUES];
-    ::estd::optional<::io::JoinReader<NUM_QUEUES>> _j;
+    ::etl::optional<::io::JoinReader<NUM_QUEUES>> _j;
 };
 
 size_t const JoinReaderTest::QUEUE_SIZE;

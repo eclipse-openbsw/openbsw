@@ -10,7 +10,7 @@ bool NullOutputStream::isEof() const { return true; }
 
 void NullOutputStream::write(uint8_t const) {}
 
-void NullOutputStream::write(::estd::slice<uint8_t const> const&) {}
+void NullOutputStream::write(::etl::span<uint8_t const> const&) {}
 
 } // namespace stream
 } // namespace util
