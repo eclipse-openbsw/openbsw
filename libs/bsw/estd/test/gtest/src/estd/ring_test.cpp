@@ -21,7 +21,7 @@ TEST(A_ring, is_initially_empty)
     EXPECT_EQ(5U, r.length());
 }
 
-TEST(A_ring, can_be_pushed_and_poped_a_single_element)
+TEST(A_ring, can_be_pushed_and_popped_a_single_element)
 {
     ::estd::slice<uint8_t> s(mem);
     ::estd::ring<uint16_t>& r = *::estd::ring<uint16_t>::make(5, s);
@@ -40,7 +40,7 @@ TEST(A_ring, can_be_pushed_and_poped_a_single_element)
     EXPECT_TRUE(r.empty());
 }
 
-TEST(A_ring, can_be_pushed_and_poped_two_elements)
+TEST(A_ring, can_be_pushed_and_popped_two_elements)
 {
     ::estd::slice<uint8_t> s(mem);
     ::estd::ring<uint16_t>& r = *::estd::ring<uint16_t>::make(5, s);

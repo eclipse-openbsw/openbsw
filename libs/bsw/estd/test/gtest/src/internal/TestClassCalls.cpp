@@ -51,7 +51,7 @@ void TestClassCalls::reset()
 // static
 bool TestClassCalls::verify(
     int32_t constructors,
-    int32_t copys,
+    int32_t copies,
     int32_t moves,
     int32_t destructors,
     int32_t copyAssignments,
@@ -63,11 +63,11 @@ bool TestClassCalls::verify(
         constructorsEq = (constructors == constructorCalls);
         EXPECT_EQ(constructors, constructorCalls);
     }
-    bool copysEq = true;
-    if (copys != -1)
+    bool copiesEq = true;
+    if (copies != -1)
     {
-        copysEq = (copys == copyCalls);
-        EXPECT_EQ(copys, copyCalls);
+        copiesEq = (copies == copyCalls);
+        EXPECT_EQ(copies, copyCalls);
     }
     bool movesEq = true;
     if (moves != -1)
@@ -94,7 +94,7 @@ bool TestClassCalls::verify(
         EXPECT_EQ(moveAssignments, moveAssignmentCalls);
     }
 
-    return constructorsEq && copysEq && movesEq && destructorsEq && copyAssignmentsEq
+    return constructorsEq && copiesEq && movesEq && destructorsEq && copyAssignmentsEq
            && moveAssignmentsEq;
 }
 

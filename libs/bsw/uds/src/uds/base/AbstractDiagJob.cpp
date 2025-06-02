@@ -271,7 +271,7 @@ void AbstractDiagJob::setNextJob(AbstractDiagJob* const pJob)
     if ((pJob == this) || ((pJob != nullptr) && (*pJob == *this)))
     {
         Logger::debug(
-            UDS, "Tried to add AbstractDiagJob as next job to itsself 0x%X", getRequestId());
+            UDS, "Tried to add AbstractDiagJob as next job to itself 0x%X", getRequestId());
         return;
     }
     fpNextJob = pJob;

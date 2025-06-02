@@ -178,7 +178,7 @@ Locks
 and locked manually.
 
 .. warning::
-    The funcional and non-functional semantics of these lock types can differ between implementations of this module
+    The functional and non-functional semantics of these lock types can differ between implementations of this module
     for different target platforms. In some cases, platform specific usage invariants may apply. Using these lock types
     will impact the software's real-time performance and should only be employed when absolutely necessary
     and with a clear understanding of their broader impact.

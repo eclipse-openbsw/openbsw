@@ -31,7 +31,7 @@ public:
     explicit DoCanPhysicalCanTransceiverContainer(TransceiverVectorType& transceivers);
 
     /**
-     * Alocate a transceiver
+     * Allocate a transceiver
      * \return constructor for the transport layer
      */
     ::estd::constructor<TransceiverType> createTransceiver();

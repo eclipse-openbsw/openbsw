@@ -45,7 +45,7 @@ TEST(Enum, fromUnderlying_creates_an_enum_based_on_an_enum_of_the_underlying_typ
     ASSERT_THAT(color.value(), ::testing::Eq(TestEnum::GREEN));
 }
 
-TEST(Enum, enum_gets_initalized_by_other_enum)
+TEST(Enum, enum_gets_initialized_by_other_enum)
 {
     Enum<TestEnum> color1(TestEnum::BLUE);
     Enum<TestEnum> color2(color1);

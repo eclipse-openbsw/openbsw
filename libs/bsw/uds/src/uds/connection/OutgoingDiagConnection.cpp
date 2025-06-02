@@ -177,7 +177,7 @@ uint16_t OutgoingDiagConnection::verifyResponse(transport::TransportMessage cons
         return 0U;
     }
     if (fMatchingResponseBytes > (response.getPayloadLength() - 1U)) //-1 because of serviceId
-    {                                                                // we cannot check enogh bytes
+    {                                                                // we cannot check enough bytes
         return 0U;
     }
     if (fMatchingResponseBytes > 0U)
@@ -283,7 +283,7 @@ void OutgoingDiagConnection::execute(::async::RunnableType const& /* timeout */)
             fpSender->responseTimeout(*this);
             if (!fKeepAlive)
             {
-                timeoutOccured();
+                timeoutOccurred();
             }
             else
             {
