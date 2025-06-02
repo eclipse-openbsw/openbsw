@@ -26,6 +26,13 @@ add_executable(
     ${app.referenceAppExtraSources}
     src/main.cpp)
 
+if (BUILD_BENCHMARK)
+    if (BUILD_TARGET_PLATFORM STREQUAL "POSIX")
+        message(FATAL_ERROR "Benchmarking not supported on POSIX")
+    endif ()
+    target_sources(app.referenceApp PRIVATE src/systems/BenchmarkSystem.cpp)
+endif ()
+
 set_target_properties(app.referenceApp PROPERTIES SUFFIX ".elf")
 
 if (TARGET startUp)
