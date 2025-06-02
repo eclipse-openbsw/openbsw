@@ -7,7 +7,9 @@ jobs:
       runs-on: ubuntu-latest
       steps:
         - name: Install missing kernel module file for vcan
-          run: sudo apt install linux-modules-extra-$(uname -r)
+          run: |
+            sudo apt update
+            sudo apt install linux-modules-extra-$(uname -r)
 
         - name: Install can kernel modules
           run: |
