@@ -15,12 +15,19 @@ public:
     : AbstractDiagApplication(connectionProvider)
     {}
 
-    MOCK_METHOD4(
-        responseReceived, void(OutgoingDiagConnection&, uint8_t, uint8_t const[], uint16_t));
+    MOCK_METHOD(
+        void,
+        responseReceived,
+        (OutgoingDiagConnection&, uint8_t, uint8_t const[], uint16_t),
+        (override));
 
-    MOCK_METHOD1(responseTimeout, void(OutgoingDiagConnection&));
+    MOCK_METHOD(void, responseTimeout, (OutgoingDiagConnection&), (override));
 
-    MOCK_METHOD2(requestSent, void(OutgoingDiagConnection& connection, RequestSendResult result));
+    MOCK_METHOD(
+        void,
+        requestSent,
+        (OutgoingDiagConnection & connection, RequestSendResult result),
+        (override));
 };
 
 } // namespace uds

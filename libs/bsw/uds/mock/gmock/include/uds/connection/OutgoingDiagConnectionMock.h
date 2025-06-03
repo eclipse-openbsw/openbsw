@@ -13,8 +13,8 @@ using namespace ::testing;
 class OutgoingDiagConnectionMock : public OutgoingDiagConnection
 {
 public:
-    MOCK_METHOD0(terminate, void());
-    MOCK_METHOD0(timeoutOccured, void());
+    MOCK_METHOD(void, terminate, (), (override));
+    MOCK_METHOD(void, timeoutOccured, (), (override));
 };
 
 } // namespace uds

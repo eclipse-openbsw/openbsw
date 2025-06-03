@@ -14,9 +14,10 @@ namespace lifecycle
 class LifecycleComponentMock : public ILifecycleComponent
 {
 public:
-    MOCK_METHOD1(initCallback, void(ILifecycleComponentCallback& callback));
-    MOCK_METHOD1(getTransitionContext, ::async::ContextType(Transition::Type transition));
-    MOCK_METHOD1(startTransition, void(Transition::Type transition));
+    MOCK_METHOD(void, initCallback, (ILifecycleComponentCallback & callback), (override));
+    MOCK_METHOD(
+        ::async::ContextType, getTransitionContext, (Transition::Type transition), (override));
+    MOCK_METHOD(void, startTransition, (Transition::Type transition), (override));
 };
 
 } // namespace lifecycle

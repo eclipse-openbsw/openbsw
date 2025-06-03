@@ -76,16 +76,18 @@ public:
     virtual void
     setWakeupSourceMonitoring(uint32_t source, bool active = true, bool fallingEdge = true)
         = 0;
+
     /**
      * New Interface for  void setMonitorWakeUp(uint32_t wupLine, bool active);
      */
     virtual void clearWakeupSourceMonitoring(uint32_t source) = 0;
 
     virtual bool setWakeupDelegate(tCheckWakeupDelegate& delegate) = 0;
+
     /**
      * Get HW WUP lowLevel WUP.
      */
-    virtual uint32_t getWakeupSource(void)                         = 0;
+    virtual uint32_t getWakeupSource() = 0;
 
 protected:
     IEcuPowerStateController& operator=(IEcuPowerStateController const&) = default;

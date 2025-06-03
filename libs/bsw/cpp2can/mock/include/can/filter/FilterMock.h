@@ -16,12 +16,12 @@ namespace can
 {
 struct FilterMock : public IFilter
 {
-    MOCK_METHOD1(add, void(uint32_t));
-    MOCK_METHOD2(add, void(uint32_t, uint32_t));
-    MOCK_CONST_METHOD1(match, bool(uint32_t));
-    MOCK_METHOD0(clear, void());
-    MOCK_METHOD0(open, void());
-    MOCK_METHOD1(acceptMerger, void(IMerger&));
+    MOCK_METHOD(void, add, (uint32_t), (override));
+    MOCK_METHOD(void, add, (uint32_t, uint32_t), (override));
+    MOCK_METHOD(bool, match, (uint32_t), (const, override));
+    MOCK_METHOD(void, clear, (), (override));
+    MOCK_METHOD(void, open, (), (override));
+    MOCK_METHOD(void, acceptMerger, (IMerger&), (override));
 };
 
 } // namespace can
