@@ -58,7 +58,7 @@ TEST_F(ReadIdentifierFromSliceRefJobTest, execute_valid_request)
         TESTIDENTIFIER & 0xFFU,
     };
 
-    ::etl::mem_set(_responseBuffer, sizeof(_responseBuffer), 0);
+    ::etl::mem_set(_responseBuffer, sizeof(_responseBuffer), static_cast<uint8_t>(0));
     _testSlice = TESTDATA;
 
     TransportMessageWithBuffer request(
@@ -91,7 +91,7 @@ TEST_F(ReadIdentifierFromSliceRefJobTest, execute_valid_request_and_change_slice
         TESTIDENTIFIER & 0xFFU,
     };
 
-    ::etl::mem_set(_responseBuffer, sizeof(_responseBuffer), 0);
+    ::etl::mem_set(_responseBuffer, sizeof(_responseBuffer), static_cast<uint8_t>(0));
     _testSlice = TESTDATA2;
 
     TransportMessageWithBuffer request(

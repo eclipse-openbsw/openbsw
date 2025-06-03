@@ -47,7 +47,7 @@ TEST_F(WriteIdentifierToMemoryJobTest, execute_valid_request)
     uint8_t const VALID_REQUEST[]
         = {TESTIDENTIFIER >> 8U & 0xFFU, TESTIDENTIFIER & 0xFFU, 0x42U, 0x42U, 0x42U, 0x42U};
 
-    ::etl::mem_set(_testBuffer, sizeof(_testBuffer), 0);
+    ::etl::mem_set(_testBuffer, sizeof(_testBuffer), static_cast<uint8_t>(0));
 
     TransportMessageWithBuffer request(
         SOURCE_ID, TARGET_ID, VALID_REQUEST, AbstractDiagJob::VARIABLE_RESPONSE_LENGTH);
@@ -74,7 +74,7 @@ TEST_F(WriteIdentifierToMemoryJobTest, execute_wrong_size_request)
     uint8_t const VALID_REQUEST[]
         = {TESTIDENTIFIER >> 8U & 0xFFU, TESTIDENTIFIER & 0xFFU, 0x42U, 0x42U};
 
-    ::etl::mem_set(_testBuffer, sizeof(_testBuffer), 0);
+    ::etl::mem_set(_testBuffer, sizeof(_testBuffer), static_cast<uint8_t>(0));
 
     TransportMessageWithBuffer request(
         SOURCE_ID, TARGET_ID, VALID_REQUEST, AbstractDiagJob::VARIABLE_RESPONSE_LENGTH);

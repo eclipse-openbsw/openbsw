@@ -1618,7 +1618,7 @@ TEST_F(DoCanTransmitterTest, testSendTooBigMessage)
     // Bigger than DataLinkLayer::FrameIndexType size
     uint8_t
         data[::std::numeric_limits<SmallFrameIndexDataLinkLayer::FrameIndexType>::max() * 8 + 1];
-    ::etl::mem_set(data, sizeof(data), 0xA5);
+    ::etl::mem_set(data, sizeof(data), static_cast<uint8_t>(0xA5));
 
     TransportMessage message;
     auto const addrPair      = SmallFrameIndexDataLinkLayer::AddressPairType(0x1234, 0x5678);

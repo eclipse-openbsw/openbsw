@@ -118,7 +118,7 @@ TEST(VariantQueue, read_write_with_payload)
         writer,
         C{},
         15,
-        [](::etl::span<uint8_t> buffer) { ::etl::mem_set(buffer.begin(), buffer.end(), 0xAB); }));
+        [](::etl::span<uint8_t> buffer) { ::etl::mem_set(buffer.begin(), buffer.end(), static_cast<uint8_t>(0xAB)); }));
 
     ASSERT_FALSE(abc_queue::write(
         writer, C{}, 10, [](::etl::span<uint8_t> /* buffer */) {})); // out of space

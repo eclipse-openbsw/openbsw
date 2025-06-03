@@ -125,7 +125,7 @@ TEST(ByteBufferOutputStreamTest, overflowIsReportedIfWriteAfterEof)
 TEST(ByteBufferOutputStreamTest, writeBufferWorksCorrectly)
 {
     uint8_t array[10];
-    ::etl::mem_set(array, sizeof(array), 0xAF);
+    ::etl::mem_set(array, sizeof(array), static_cast<uint8_t>(0xAF));
     ByteBufferOutputStream stream(::etl::span<uint8_t>(array).first(6));
 
     stream.write('T');
@@ -143,7 +143,7 @@ TEST(ByteBufferOutputStreamTest, skipWorksSkippingAByte)
 {
     uint8_t const ARRAY_SIZE = 3U;
     uint8_t buffer[ARRAY_SIZE];
-    ::etl::mem_set(buffer, sizeof(buffer), 3);
+    ::etl::mem_set(buffer, sizeof(buffer), static_cast<uint8_t>(3));
     ByteBufferOutputStream stream(buffer);
 
     stream.skip(1);
@@ -158,7 +158,7 @@ TEST(ByteBufferOutputStreamTest, skipWorksSkippingExactEofBytes)
 {
     uint8_t const ARRAY_SIZE = 3U;
     uint8_t buffer[ARRAY_SIZE];
-    ::etl::mem_set(buffer, sizeof(buffer), 3);
+    ::etl::mem_set(buffer, sizeof(buffer), static_cast<uint8_t>(3));
     ByteBufferOutputStream stream(buffer);
 
     stream.write(1);
@@ -172,7 +172,7 @@ TEST(ByteBufferOutputStreamTest, skipWorksSkippingTooManyBytes)
 {
     uint8_t const ARRAY_SIZE = 3U;
     uint8_t buffer[ARRAY_SIZE];
-    ::etl::mem_set(buffer, sizeof(buffer), 3);
+    ::etl::mem_set(buffer, sizeof(buffer), static_cast<uint8_t>(3));
     ByteBufferOutputStream stream(buffer);
 
     stream.write(1);

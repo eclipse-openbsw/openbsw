@@ -59,7 +59,7 @@ TEST_F(ReadIdentifierFromMemoryJobTest, execute_valid_request)
         TESTIDENTIFIER & 0xFFU,
     };
 
-    ::etl::mem_set(_responseBuffer, sizeof(_responseBuffer), 0);
+    ::etl::mem_set(_responseBuffer, sizeof(_responseBuffer), static_cast<uint8_t>(0));
 
     TransportMessageWithBuffer request(
         SOURCE_ID, TARGET_ID, VALID_REQUEST, AbstractDiagJob::VARIABLE_RESPONSE_LENGTH);
@@ -91,7 +91,7 @@ TEST_F(ReadIdentifierFromMemoryJobTest, execute_valid_request_slice_constructor)
         TESTIDENTIFIER & 0xFFU,
     };
 
-    ::etl::mem_set(_responseBuffer, sizeof(_responseBuffer), 0);
+    ::etl::mem_set(_responseBuffer, sizeof(_responseBuffer), static_cast<uint8_t>(0));
 
     TransportMessageWithBuffer request(
         SOURCE_ID, TARGET_ID, VALID_REQUEST, AbstractDiagJob::VARIABLE_RESPONSE_LENGTH);
