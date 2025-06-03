@@ -50,7 +50,6 @@ SOFTWARE.
 #include <stddef.h>
 #include <stdint.h>
 #include <string.h>
-#include <wchar.h>
 
 #if ETL_USING_STL && ETL_USING_CPP17
   #include <string_view>
@@ -2709,22 +2708,11 @@ namespace etl
     }
 
     //*********************************************************************
-    /// get_string_length, optimised for sizeof(U) == sizeof(wchar_t).
-    //*********************************************************************
-    template <typename U>
-    static
-    typename etl::enable_if<sizeof(U) == sizeof(wchar_t), size_t>::type
-      get_string_length(const U* src)
-    {
-      return ::wcslen(reinterpret_cast<const wchar_t*>(src));
-    }
-
-    //*********************************************************************
     /// get_string_length, optimised for anything else.
     //*********************************************************************
     template <typename U>
     static
-    typename etl::enable_if<(sizeof(U) != sizeof(char)) && (sizeof(U) != sizeof(wchar_t)), size_t>::type 
+    typename etl::enable_if<(sizeof(U) != sizeof(char)), size_t>::type
       get_string_length(const U* src)
     {
       return etl::strlen(src);
