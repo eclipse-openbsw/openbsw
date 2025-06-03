@@ -21,7 +21,7 @@ set(C_COMMON_FLAGS
     "${CPU_BUILD_FLAGS} -mthumb -fshort-enums \
 -mno-unaligned-access -Wno-psabi \
 -fno-asynchronous-unwind-tables -fno-builtin -fno-common \
--ffunction-sections -fdata-sections")
+-ffunction-sections -fdata-sections -fstack-usage")
 
 set(CMAKE_ASM_FLAGS "-g -mcpu=cortex-m4")
 set(CMAKE_C_FLAGS "${C_COMMON_FLAGS} -ffreestanding")
