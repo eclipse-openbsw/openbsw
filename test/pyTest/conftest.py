@@ -15,7 +15,10 @@ class TargetSession:
     This is instantiated and passed to each test with the target_session
     fixture.
     """
+    counter = 0
+
     def __init__(self, target_name):
+        TargetSession.counter += 1
         self.target_name = target_name
         self.target_info = TargetInfo.by_name[target_name]
 
@@ -25,7 +28,7 @@ class TargetSession:
         it is not intended to be called from a test.
         """
         self.capserial().clear()
-        start_target_process(self.target_name)
+        start_target_process(self.target_name, True if TargetSession.counter == 1 else False)
 
     def stop(self):
         """Stop the target.
