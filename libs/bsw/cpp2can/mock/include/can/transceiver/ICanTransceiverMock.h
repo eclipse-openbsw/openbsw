@@ -40,7 +40,6 @@ struct ICanTransceiverMock : public ICanTransceiver
     MOCK_CONST_METHOD0(getCANTransceiverState, ICANTransceiverStateListener::CANTransceiverState());
     MOCK_METHOD1(setStateListener, void(ICANTransceiverStateListener&));
     MOCK_METHOD0(removeStateListener, void());
-    MOCK_METHOD1(setCANFrameSentListener, void(IFilteredCANFrameSentListener*));
 };
 
 } // namespace can

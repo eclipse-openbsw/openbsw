@@ -456,7 +456,7 @@ Use the ``public`` before ``protected`` before ``private`` order.
         void asyncUnlock(ProcessingResult status);
 
         // ...
-        BufferedCANFrame _txFrame;
+        CANFrame _txFrame;
         ProviderState _state;
         // ...
     };

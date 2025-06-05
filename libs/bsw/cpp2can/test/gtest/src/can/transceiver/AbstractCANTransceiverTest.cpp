@@ -1,6 +1,6 @@
 // Copyright 2024 Accenture.
 
-#include "can/canframes/BufferedCANFrame.h"
+#include "can/canframes/CANFrame.h"
 #include "can/canframes/CANFrameSentListenerMock.h"
 #include "can/filter/FilterMock.h"
 #include "can/framemgmt/AbstractBitFieldFilteredCANFrameListener.h"
@@ -165,7 +165,8 @@ protected:
  */
 TEST_F(AbstractCANTransceiverTest, testConstructor)
 {
-    StrictMock<AbstractCANTransceiverMock> transceiver((0));
+    StrictMock<AbstractCANTransceiverMock> transceiver((123));
+    ASSERT_EQ(123, transceiver.getBusId());
     ASSERT_EQ(ICanTransceiver::State::CLOSED, transceiver.getState());
 }
 
@@ -270,10 +271,10 @@ TEST_F(AbstractCANTransceiverTest, testSendListeners)
     EXPECT_CALL(sendListener, canFrameSent(_)).Times(1);
     fpTransceiver->write(frame, sendListener);
     tSendFrameListener sendListener2;
-    fpTransceiver->setCANFrameSentListener(&sendListener2);
+    fpTransceiver->addCANFrameSentListener(sendListener2);
     EXPECT_CALL(*fpTransceiver, write(_)).Times(1);
     fpTransceiver->write(frame);
-    fpTransceiver->setCANFrameSentListener(nullptr);
+    fpTransceiver->removeCANFrameSentListener(sendListener2);
 }
 
 /**
@@ -396,14 +397,13 @@ TEST_F(AbstractCANTransceiverTest, testSetFrameSentListener)
 
     tCanTransceiver transceiver;
     FilteredCANFrameSentListenerMock listener1;
-    transceiver.setCANFrameSentListener(nullptr);
-    transceiver.setCANFrameSentListener(&listener1);
+    transceiver.addCANFrameSentListener(listener1);
     EXPECT_CALL(listener1, canFrameSent(Ref(frame)));
     EXPECT_CALL(fSystemTimer, getSystemTimeUs32Bit()).WillOnce(Return(150U));
     transceiver.notifySentListeners(frame);
     EXPECT_EQ(150U, frame.timestamp());
 
-    transceiver.setCANFrameSentListener(nullptr);
+    transceiver.removeCANFrameSentListener(listener1);
     transceiver.notifySentListeners(frame);
 }
 

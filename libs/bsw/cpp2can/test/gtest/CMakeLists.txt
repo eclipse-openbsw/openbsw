@@ -4,7 +4,6 @@ add_executable(
     src/can/canframes/CanIdTest.cpp
     src/can/filter/BitFieldFilterTest.cpp
     src/can/filter/IntervalFilterTest.cpp
-    src/can/framemgmt/CANFrameListenerProxyTest.cpp
     src/can/transceiver/AbstractCANTransceiverTest.cpp)
 
 target_include_directories(cpp2canTest PRIVATE)

@@ -5,7 +5,7 @@
 #include "bsp/can/canTransceiver/CanPhy.h"
 #include "bsp/power/IEcuPowerStateController.h"
 #include "bsp/timer/SystemTimer.h"
-#include "can/canframes/BufferedCANFrame.h"
+#include "can/canframes/CANFrame.h"
 #include "can/transceiver/ICanTransceiver.h"
 #include "io/Io.h"
 #include "mcu/mcu.h"
@@ -326,7 +326,7 @@ private:
     uint32_t fLastMessageBuffer;
     uint32_t fTxInterruptMask0;
     uint32_t fRxInterruptMask;
-    ::estd::declare::queue<can::BufferedCANFrame, RX_QUEUE_SIZE> fRxQueue;
+    ::estd::declare::queue<can::CANFrame, RX_QUEUE_SIZE> fRxQueue;
     uint32_t fFirstRxId;
     uint32_t fFramesReceived;
     uint32_t fFramesReceivedTotal;

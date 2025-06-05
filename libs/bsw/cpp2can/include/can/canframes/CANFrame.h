@@ -20,7 +20,7 @@ namespace can
  * Class representing a CANFrame.
  *
  *
- * A object of type CANFrame does not provide any payload-buffer by default.
+ * An object of type CANFrame does not provide any payload-buffer by default.
  * It has to be provided with buffers by using a certain constructor or the
  * setPayload() method.
  *
@@ -43,7 +43,7 @@ public:
 #endif
     /** maximum value of a CANFrame id */
     static uint32_t const MAX_FRAME_ID          = 0x7FFU;
-    /** maximum value of a CANFrame id */
+    /** maximum value of a CANFrame extended id */
     static uint32_t const MAX_FRAME_ID_EXTENDED = 0x1FFFFFFFU;
 
     /**

@@ -570,12 +570,12 @@ TEST_F(InitedCanFlex2TransceiverTest, notifyRegisteredSentListenerMatch)
     ::testing::SystemTimerMock systemTimer;
     EXPECT_CALL(systemTimer, getSystemTimeUs32Bit()).WillOnce(Return(10U));
 
-    fCft.setCANFrameSentListener(&listener);
+    fCft.addCANFrameSentListener(listener);
 
     // will call notifyRegisteredSentListener
     EXPECT_EQ(ICanTransceiver::ErrorCode::CAN_ERR_OK, fCft.write(frame));
 
-    fCft.setCANFrameSentListener(nullptr);
+    fCft.removeCANFrameSentListener(listener);
 }
 
 } // namespace

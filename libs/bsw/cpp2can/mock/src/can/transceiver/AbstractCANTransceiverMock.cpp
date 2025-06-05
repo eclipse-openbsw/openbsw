@@ -104,7 +104,7 @@ ICanTransceiver::ErrorCode AbstractCANTransceiverMock::writeImplementation2(
         frame.getPayload()[6],
         frame.getPayload()[7],
         &listener);
-    BufferedCANFrame txFrame(frame);
+    CANFrame txFrame(frame);
     txFrame.setTimestamp(_txTimestamp);
     listener.canFrameSent(txFrame);
     return ICanTransceiver::ErrorCode::CAN_ERR_OK;
