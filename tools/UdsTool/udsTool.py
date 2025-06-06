@@ -1,3 +1,4 @@
+import functools
 import click
 from app import connection, rawCommand, services
 
@@ -7,23 +8,34 @@ def start():
     pass
 
 
+def conn_params(func):
+    @click.option("--can", is_flag=True, help="Use CAN connection")
+    @click.option(
+        "--canif",
+        default="socketcan",
+        help='python-can interface name. eg. "pcan". Default = "socketcan"',
+    )
+    @click.option("--eth", is_flag=True, help="Use Ethernet connection")
+    @click.option("--host", help="Host IP address for Ethernet connection")
+    @click.option("--ecu", help="ECU Logical address [hex] for Ethernet connection")
+    @click.option(
+        "--source", help="Source logical address [hex] for Ethernet connection"
+    )
+    @click.option("--channel", help="Channel name for CAN connection")
+    @click.option("--txid", help="CAN Tx ID")
+    @click.option("--rxid", help="CAN Rx ID")
+    @click.option("--config", help="Path to configuration file for CAN connection")
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        return func(*args, **kwargs)
+
+    return wrapper
+
+
 # UDS service Read Data By Identifier (0x22)
 @start.command(help="UDS service Read Data By Identifier (0x22)")
-@click.option("--can", is_flag=True, help="Use CAN connection")
-@click.option(
-    "--canif",
-    default="socketcan",
-    help='python-can interface name. eg. "pcan". Default = "socketcan"',
-)
-@click.option("--eth", is_flag=True, help="Use Ethernet connection")
-@click.option("--host", help="Host IP address for Ethernet connection")
-@click.option("--ecu", help="ECU Logical address [hex] for Ethernet connection")
-@click.option("--source", help="Source logical address [hex] for Ethernet connection")
+@conn_params
 @click.option("--did", help="Data Identifier [hex]")
-@click.option("--channel", help="Channel name for CAN connection")
-@click.option("--txid", help="CAN Tx ID")
-@click.option("--rxid", help="CAN Rx ID")
-@click.option("--config", help="Path to configuration file for CAN connection")
 def read(host, ecu, source, did, can, canif, eth, channel, txid, rxid, config):
     if can:
         # Handle CAN connection
@@ -39,20 +51,7 @@ def read(host, ecu, source, did, can, canif, eth, channel, txid, rxid, config):
 
 # UDS service Write Data By Identifier (0x2e)
 @start.command(help="UDS service Write Data By Identifier (0x2e)")
-@click.option("--can", is_flag=True, help="Use CAN connection")
-@click.option(
-    "--canif",
-    default="socketcan",
-    help='python-can interface name. eg. "pcan". Default = "socketcan"',
-)
-@click.option("--eth", is_flag=True, help="Use Ethernet connection")
-@click.option("--channel", help="Channel name for CAN connection")
-@click.option("--txid", help="CAN Tx ID")
-@click.option("--rxid", help="CAN Rx ID")
-@click.option("--config", help="Path to configuration file for CAN connection")
-@click.option("--host", help="Host IP address")
-@click.option("--ecu", help="ECU Logical address [hex]")
-@click.option("--source", help="Source logical address [hex]")
+@conn_params
 @click.option("--did", help="Data Identifier [hex]")
 @click.option("--data", help="Data to write")
 def write(host, ecu, source, did, data, can, canif, eth, channel, txid, rxid, config):
@@ -70,20 +69,7 @@ def write(host, ecu, source, did, data, can, canif, eth, channel, txid, rxid, co
 
 # UDS service Diagnostic Session Control (0x10)
 @start.command(help="UDS service Diagnostic Session Control (0x10)")
-@click.option("--can", is_flag=True, help="Use CAN connection")
-@click.option(
-    "--canif",
-    default="socketcan",
-    help='python-can interface name. eg. "pcan". Default = "socketcan"',
-)
-@click.option("--eth", is_flag=True, help="Use Ethernet connection")
-@click.option("--channel", help="Channel name for CAN connection")
-@click.option("--txid", help="CAN Tx ID")
-@click.option("--rxid", help="CAN Rx ID")
-@click.option("--config", help="Path to configuration file for CAN connection")
-@click.option("--host", help="Host IP address")
-@click.option("--ecu", help="ECU Logical address [hex]")
-@click.option("--source", help="Source logical address [hex]")
+@conn_params
 @click.option(
     "--id",
     help="Session Identifier: [1: Default, 2: Programming, 3: Extended]",
@@ -103,20 +89,7 @@ def session(host, ecu, source, id, can, canif, eth, channel, txid, rxid, config)
 
 # UDS service Security Access (0x27)
 @start.command(help="UDS service Security Access (0x27)")
-@click.option("--can", is_flag=True, help="Use CAN connection")
-@click.option(
-    "--canif",
-    default="socketcan",
-    help='python-can interface name. eg. "pcan". Default = "socketcan"',
-)
-@click.option("--eth", is_flag=True, help="Use Ethernet connection")
-@click.option("--channel", help="Channel name for CAN connection")
-@click.option("--txid", help="CAN Tx ID")
-@click.option("--rxid", help="CAN Rx ID")
-@click.option("--config", help="Path to configuration file for CAN connection")
-@click.option("--host", help="Host IP address")
-@click.option("--ecu", help="ECU Logical address [hex]")
-@click.option("--source", help="Source logical address [hex]")
+@conn_params
 @click.option("--level", type=int, help="Security Level to be unlocked")
 @click.option("--path", help="Shared key path for unlocking security")
 def security(
@@ -136,20 +109,7 @@ def security(
 
 # UDS service Routine Control (0x31)
 @start.command(help="UDS service Routine Control (0x31)")
-@click.option("--can", is_flag=True, help="Use CAN connection")
-@click.option(
-    "--canif",
-    default="socketcan",
-    help='python-can interface name. eg. "pcan". Default = "socketcan"',
-)
-@click.option("--eth", is_flag=True, help="Use Ethernet connection")
-@click.option("--channel", help="Channel name for CAN connection")
-@click.option("--txid", help="CAN Tx ID")
-@click.option("--rxid", help="CAN Rx ID")
-@click.option("--config", help="Path to configuration file for CAN connection")
-@click.option("--host", help="Host IP address")
-@click.option("--ecu", help="ECU Logical address [hex]")
-@click.option("--source", help="Source logical address [hex]")
+@conn_params
 @click.option("--type", help="Service subfunction")
 @click.option("--id", help="Subroutine identifier")
 def routine(host, ecu, source, type, id, can, canif, eth, channel, txid, rxid, config):
@@ -167,20 +127,7 @@ def routine(host, ecu, source, type, id, can, canif, eth, channel, txid, rxid, c
 
 # Enter raw command to send
 @start.command(help="Enter raw command to send")
-@click.option("--can", is_flag=True, help="Use CAN connection")
-@click.option(
-    "--canif",
-    default="socketcan",
-    help='python-can interface name. eg. "pcan". Default = "socketcan"',
-)
-@click.option("--eth", is_flag=True, help="Use Ethernet connection")
-@click.option("--channel", help="Channel name for CAN connection")
-@click.option("--txid", help="CAN Tx ID")
-@click.option("--rxid", help="CAN Rx ID")
-@click.option("--config", help="Path to configuration file for CAN connection")
-@click.option("--host", help="Host IP address")
-@click.option("--ecu", help="ECU Logical address [hex]")
-@click.option("--source", help="Source logical address [hex]")
+@conn_params
 @click.option("--data", help="Diagnostic payload to be sent")
 @click.option("--path", help="Path to binary")
 def raw(
