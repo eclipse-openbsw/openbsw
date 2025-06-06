@@ -2,7 +2,8 @@
 
 #pragma once
 
-#include <estd/uncopyable.h>
+#include <etl/uncopyable.h>
+
 #include <platform/estdint.h>
 
 namespace util
@@ -28,7 +29,7 @@ class IOutputStream;
 namespace logger
 {
 template<class E = uint32_t, class Timestamp = uint32_t>
-class IEntryFormatter : private ::estd::uncopyable
+class IEntryFormatter : private ::etl::uncopyable
 {
 public:
     using EntryIndexType = E;
@@ -48,7 +49,7 @@ public:
 };
 
 template<class E, class Timestamp>
-inline IEntryFormatter<E, Timestamp>::IEntryFormatter() : ::estd::uncopyable()
+inline IEntryFormatter<E, Timestamp>::IEntryFormatter() : ::etl::uncopyable()
 {}
 
 } // namespace logger

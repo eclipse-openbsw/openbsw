@@ -2,7 +2,7 @@
 
 #include "util/RoutineControlOptionParser.h"
 
-#include <estd/big_endian.h>
+#include <etl/unaligned_type.h>
 
 namespace uds
 {
@@ -33,15 +33,16 @@ RoutineControlOptionParser::parseParameter(uint8_t const* const buffer, uint8_t 
         }
         case 2U:
         {
-            return static_cast<uint32_t>(::estd::read_be<uint16_t>(buffer));
+            return static_cast<uint32_t>(::etl::be_uint16_t(buffer));
         }
         case 3U:
         {
-            return ::estd::read_be_24(buffer);
+            return (static_cast<uint32_t>(*buffer) << 16)
+                   | static_cast<uint32_t>(::etl::be_uint16_t(buffer + 1));
         }
         case 4U:
         {
-            return ::estd::read_be<uint32_t>(buffer);
+            return ::etl::be_uint32_t(buffer);
         }
         default:
         {

@@ -16,7 +16,7 @@ class StdinStream : public INonBlockingInputStream
 {
 public:
     bool isEof() const override;
-    uint32_t readBuffer(::estd::slice<uint8_t> const& buffer) override;
+    uint32_t readBuffer(::etl::span<uint8_t> const& buffer) override;
 };
 
 } // namespace stream

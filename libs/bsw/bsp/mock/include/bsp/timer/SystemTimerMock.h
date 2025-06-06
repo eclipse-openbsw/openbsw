@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include <estd/singleton.h>
+#include <etl/singleton_base.h>
 
 #include <gmock/gmock.h>
 
@@ -24,10 +24,10 @@ namespace testing
  * \endcode
  */
 
-class SystemTimerMock : public ::estd::singleton<SystemTimerMock>
+class SystemTimerMock : public ::etl::singleton_base<SystemTimerMock>
 {
 public:
-    SystemTimerMock() : ::estd::singleton<SystemTimerMock>(*this) {}
+    SystemTimerMock() : ::etl::singleton_base<SystemTimerMock>(*this) {}
 
     /**
      *  \see sysDelayUs(uint32_t delay)

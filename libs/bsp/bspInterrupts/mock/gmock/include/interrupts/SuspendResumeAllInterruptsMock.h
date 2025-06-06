@@ -5,18 +5,19 @@
  */
 #pragma once
 
-#include "estd/singleton.h"
 #include "interrupts/suspendResumeAllInterrupts.h"
+
+#include <etl/singleton_base.h>
 
 #include <gmock/gmock.h>
 
 namespace interrupts
 {
 
-class SuspendResumeAllInterruptsMock : public ::estd::singleton<SuspendResumeAllInterruptsMock>
+class SuspendResumeAllInterruptsMock : public ::etl::singleton_base<SuspendResumeAllInterruptsMock>
 {
 public:
-    SuspendResumeAllInterruptsMock() : ::estd::singleton<SuspendResumeAllInterruptsMock>(*this)
+    SuspendResumeAllInterruptsMock() : ::etl::singleton_base<SuspendResumeAllInterruptsMock>(*this)
     {
         if (resumeAllInterruptsCount != 0U)
         {
