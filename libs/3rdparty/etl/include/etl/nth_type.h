@@ -32,11 +32,7 @@ SOFTWARE.
 #include "platform.h"
 #include "static_assert.h"
 
-#if ETL_NOT_USING_CPP11
-  #if !defined(ETL_IN_UNIT_TEST)
-    #error NOT SUPPORTED FOR C++03 OR BELOW
-  #endif
-#else
+#if ETL_USING_CPP11
 namespace etl
 {
   namespace private_nth_type
