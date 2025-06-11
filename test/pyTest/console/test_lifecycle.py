@@ -47,6 +47,7 @@ def test_lc_levelchange(target_session):
         (success, lines, _) = capserial.read_until(expected, timeout=2)
         assert success
     target_session.restart()
+    assert capserial.wait_for_boot_complete()
 
 
 # Test to check lifecycle reboot command
