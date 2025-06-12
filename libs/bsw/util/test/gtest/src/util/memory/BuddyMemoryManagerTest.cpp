@@ -2,7 +2,7 @@
 
 #include "util/memory/BuddyMemoryManager.h"
 
-#include <estd/vector.h>
+#include <etl/vector.h>
 
 #include <gtest/gtest.h>
 
@@ -281,7 +281,7 @@ TEST_F(BuddyMemoryManagerTest, AcquireHalfTreeAndRelease)
 {
     static size_t const SIZE = 256U;
     BuddyMemoryManager<SIZE> manager;
-    ::estd::declare::vector<BuddyMemoryManager<SIZE>::AcquireResult, SIZE> results;
+    ::etl::vector<BuddyMemoryManager<SIZE>::AcquireResult, SIZE> results;
 
     BuddyMemoryManager<SIZE>::AcquireResult rv;
     for (size_t i = 1U; i <= (SIZE / 2U); i *= 2U)
@@ -311,7 +311,7 @@ TEST_F(BuddyMemoryManagerTest, AcquireHalfTreeAndReleaseReverse)
 {
     static size_t const SIZE = 256U;
     BuddyMemoryManager<SIZE> manager;
-    ::estd::declare::vector<BuddyMemoryManager<SIZE>::AcquireResult, SIZE> results;
+    ::etl::vector<BuddyMemoryManager<SIZE>::AcquireResult, SIZE> results;
 
     BuddyMemoryManager<SIZE>::AcquireResult rv;
     rv = manager.acquireMemory(1U);

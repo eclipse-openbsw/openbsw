@@ -1,10 +1,7 @@
 add_executable(
     utilTest
     src/util/defer/DeferTest.cpp
-    src/util/estd/intrusive_test.cpp
-    src/util/estd/derived_object_pool_test.cpp
-    src/util/estd/observable_test.cpp
-    src/util/estd/block_pool_test.cpp
+    src/util/estd/assert_test.cpp
     src/util/types/EnumTest.cpp
     src/util/logger/LevelInfoTest.cpp
     src/util/logger/ComponentInfoTest.cpp
@@ -51,7 +48,7 @@ add_executable(
 
 target_include_directories(utilTest PRIVATE include)
 
-target_link_libraries(utilTest PRIVATE util utilMock gmock_main)
+target_link_libraries(utilTest PRIVATE util utilMock gmock_main etl)
 
 target_compile_options(utilTest PRIVATE -Wno-array-bounds)
 

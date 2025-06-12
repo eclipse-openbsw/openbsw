@@ -6,7 +6,7 @@
 #include "util/crc/Reflect.h"
 #include "util/crc/Xor.h"
 
-#include <estd/assert.h>
+#include <util/estd/assert.h>
 
 #include <cstddef>
 #include <cstdint>
@@ -85,7 +85,7 @@ public:
      *  Generic `update()` method using a `SliceType` embracing pointer and length.
      *
      *  `SliceType` needs to implement `.data()` and `.size()` returning a `uint8_t*` to data and
-     *  a `size_t` respectively, e.g. `estd::slice<uint8_t const>`
+     *  a `size_t` respectively, e.g. `etl::span<uint8_t const>`
      */
     template<class SliceType>
     inline DigestType update(SliceType const& data)

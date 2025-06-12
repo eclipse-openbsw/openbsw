@@ -16,13 +16,14 @@
 #include <async/AsyncMock.h>
 #include <async/TestContext.h>
 #include <bsp/timer/SystemTimerMock.h>
+#include <etl/delegate.h>
+#include <etl/memory.h>
+#include <etl/span.h>
 #include <transport/BufferedTransportMessage.h>
 #include <transport/TransportMessageProcessedListenerMock.h>
 #include <transport/TransportMessageProvidingListenerMock.h>
 #include <util/logger/ComponentMappingMock.h>
 #include <util/logger/LoggerOutputMock.h>
-
-#include <estd/memory.h>
 
 #include <gtest/esr_extensions.h>
 
@@ -42,7 +43,7 @@ struct DoCanTransportLayerTest : ::testing::Test
 {
     DoCanTransportLayerTest()
     : _parameters(
-        ::estd::function<
+        ::etl::delegate<
             uint32_t()>::create<DoCanTransportLayerTest, &DoCanTransportLayerTest::systemUs>(*this),
         200,
         3543,
@@ -143,9 +144,9 @@ TEST_F(DoCanTransportLayerTest, testTransportMessageReceptionLifecycle)
         // check message
         EXPECT_EQ(0x35U, transportMessage.getSourceId());
         EXPECT_EQ(0x69U, transportMessage.getTargetId());
-        EXPECT_TRUE(::estd::memory::is_equal(
-            data,
-            ::estd::slice<uint8_t const>::from_pointer(
+        EXPECT_TRUE(::etl::equal(
+            etl::span<uint8_t const>(data),
+            etl::span<uint8_t const>(
                 transportMessage.getPayload(), transportMessage.getPayloadLength())));
         // release
         EXPECT_CALL(_messageProvidingListenerMock, releaseTransportMessage(Ref(transportMessage)));
@@ -178,7 +179,7 @@ TEST_F(DoCanTransportLayerTest, testTransportMessageReceptionLifecycle)
                 0x00))
             .WillOnce(Return(true));
         frameReceiver->firstDataFrameReceived(
-            connection, 7U, 2U, 7U, ::estd::make_slice(data).subslice(6U));
+            connection, 7U, 2U, 7U, ::etl::span<uint8_t const>(data).first(6U));
         Mock::VerifyAndClearExpectations(&_addressConverterMock);
         Mock::VerifyAndClearExpectations(&_messageProvidingListenerMock);
 
@@ -189,14 +190,14 @@ TEST_F(DoCanTransportLayerTest, testTransportMessageReceptionLifecycle)
                 SaveArg<2>(&notificationListener),
                 Return(ITransportMessageListener::ReceiveResult::RECEIVED_NO_ERROR)));
         frameReceiver->consecutiveDataFrameReceived(
-            0x13348447U, 1U, ::estd::make_slice(data).offset(6U));
+            0x13348447U, 1U, ::etl::span<uint8_t const>(data).subspan(6U));
         // check message
         ASSERT_TRUE(notificationListener != nullptr);
         EXPECT_EQ(0x37U, transportMessage.getSourceId());
         EXPECT_EQ(0x96U, transportMessage.getTargetId());
-        EXPECT_TRUE(::estd::memory::is_equal(
-            data,
-            ::estd::slice<uint8_t const>::from_pointer(
+        EXPECT_TRUE(::etl::equal(
+            etl::span<uint8_t const>(data),
+            etl::span<uint8_t const>(
                 transportMessage.getPayload(), transportMessage.getPayloadLength())));
         // release
         EXPECT_CALL(_messageProvidingListenerMock, releaseTransportMessage(Ref(transportMessage)));
@@ -217,7 +218,7 @@ TEST_F(DoCanTransportLayerTest, testTransportMessageReceptionLifecycle)
         {
             data[i] = i & 0xFF;
         }
-        auto slice = ::estd::make_slice(data);
+        auto slice = ::etl::span<uint8_t>(data);
         ConnectionType connection(
             codec,
             DataLinkAddressPairType(0x13348447U, 0x76333211U),
@@ -237,7 +238,7 @@ TEST_F(DoCanTransportLayerTest, testTransportMessageReceptionLifecycle)
                 0x00))
             .WillOnce(Return(true));
         frameReceiver->firstDataFrameReceived(
-            connection, MESSAGE_SIZE, FRAMES, FRAME_SIZE, slice.subslice(FRAME_SIZE));
+            connection, MESSAGE_SIZE, FRAMES, FRAME_SIZE, slice.first(FRAME_SIZE));
         slice.advance(FRAME_SIZE);
         Mock::VerifyAndClearExpectations(&_addressConverterMock);
         Mock::VerifyAndClearExpectations(&_messageProvidingListenerMock);
@@ -251,20 +252,20 @@ TEST_F(DoCanTransportLayerTest, testTransportMessageReceptionLifecycle)
         for (size_t i = 1; i < FRAMES - 1; i++)
         {
             frameReceiver->consecutiveDataFrameReceived(
-                0x13348447U, i & 0x0F, slice.subslice(FRAME_SIZE));
+                0x13348447U, i & 0x0F, slice.first(FRAME_SIZE));
             slice.advance(FRAME_SIZE);
         }
         // Last frame.
         EXPECT_LT(slice.size(), FRAME_SIZE);
         frameReceiver->consecutiveDataFrameReceived(
-            0x13348447U, (FRAMES - 1) & 0x0F, slice.subslice(slice.size()));
+            0x13348447U, (FRAMES - 1) & 0x0F, slice.first(slice.size()));
         slice.advance(slice.size());
 
         // check message
         EXPECT_EQ(0x37U, transportMessage.getSourceId());
         EXPECT_EQ(0x96U, transportMessage.getTargetId());
         EXPECT_THAT(
-            ::estd::slice<uint8_t const>::from_pointer(
+            ::etl::span<uint8_t const>(
                 transportMessage.getPayload(), transportMessage.getPayloadLength()),
             ElementsAreArray(data));
         // release
@@ -344,6 +345,7 @@ TEST_F(DoCanTransportLayerTest, testTransportMessageTransmissionLifecycle)
         Mock::VerifyAndClearExpectations(&_transceiverMock);
         callback->dataFramesSent(jobHandle, 1U, 6U);
         // expect flow control
+        auto slice0{::etl::span<uint8_t const>(data).subspan(6U)};
         EXPECT_CALL(
             _transceiverMock,
             startSendDataFrames(
@@ -354,7 +356,7 @@ TEST_F(DoCanTransportLayerTest, testTransportMessageTransmissionLifecycle)
                 1U,
                 2U,
                 7U,
-                BytesAreSlice(::estd::make_slice(data).offset(6U))))
+                ElementsAreArray(slice0.data(), slice0.size())))
             .WillOnce(Return(SendResult::QUEUED_FULL));
         frameReceiver->flowControlFrameReceived(0x1235689U, FlowStatus::CTS, 0U, 1U);
         Mock::VerifyAndClearExpectations(&_transceiverMock);
@@ -362,6 +364,7 @@ TEST_F(DoCanTransportLayerTest, testTransportMessageTransmissionLifecycle)
         callback->dataFramesSent(jobHandle, 1U, 7U);
         Mock::VerifyAndClearExpectations(&_tickGeneratorMock);
         // tick received
+        auto slice1{::etl::span<uint8_t const>(data).subspan(13U)};
         EXPECT_CALL(
             _transceiverMock,
             startSendDataFrames(
@@ -372,7 +375,7 @@ TEST_F(DoCanTransportLayerTest, testTransportMessageTransmissionLifecycle)
                 2U,
                 3U,
                 7U,
-                BytesAreSlice(::estd::make_slice(data).offset(13U))))
+                ElementsAreArray(slice1.data(), slice1.size())))
             .WillOnce(Return(SendResult::QUEUED_FULL));
         nowUs = 1000;
         cut.tick(nowUs);

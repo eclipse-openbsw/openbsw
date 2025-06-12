@@ -2,6 +2,8 @@
 
 #include "runtime/StatisticsIterator.h"
 
+#include <etl/span.h>
+
 #include <gmock/gmock.h>
 
 namespace
@@ -18,12 +20,12 @@ struct TestEntry : public TestStatistics
 class TestNames
 {
 public:
-    explicit TestNames(::estd::slice<char const*> const& names) : _names(names) {}
+    explicit TestNames(::etl::span<char const*> const& names) : _names(names) {}
 
     char const* getName(size_t idx) const { return _names[idx]; }
 
 private:
-    ::estd::slice<char const*> _names;
+    ::etl::span<char const*> _names;
 };
 
 class TestIterator : public StatisticsIterator<TestStatistics>
@@ -31,7 +33,7 @@ class TestIterator : public StatisticsIterator<TestStatistics>
 public:
     TestIterator(
         StatisticsIterator<TestStatistics>::GetNameType getName,
-        ::estd::slice<TestStatistics const> const& values)
+        ::etl::span<TestStatistics const> const& values)
     : StatisticsIterator<TestStatistics>(getName, values.size()), _values(values)
     {}
 
@@ -39,7 +41,7 @@ protected:
     TestStatistics const& getValue(size_t const idx) override { return _values[idx]; }
 
 private:
-    ::estd::slice<TestStatistics const> _values;
+    ::etl::span<TestStatistics const> _values;
 };
 
 TEST(StatisticsIteratorTest, testArray)

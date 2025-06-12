@@ -83,8 +83,8 @@ TEST_F(TaggedSharedOutputStreamTestFixture, testPrefixAndSuffixesAreInserted)
             IOutputStream& stream = cut.startOutput(nullptr);
             stream.write('a');
             stream.write('\n');
-            stream.write(::estd::make_str("abc\ndef"));
-            stream.write(::estd::make_str("AB\nDEF"));
+            stream.write_string_view(::etl::string_view("abc\ndef"));
+            stream.write_string_view(::etl::string_view("AB\nDEF"));
             cut.endOutput(nullptr);
         }
         ASSERT_FALSE(checkAndResetEndCalled());
@@ -101,7 +101,7 @@ TEST_F(TaggedSharedOutputStreamTestFixture, testPrefixAndSuffixesAreInserted)
         stream.write('\n');
         cut.endOutput(nullptr);
         stream.write('a');
-        stream.write(::estd::make_str("abc\ndef"));
+        stream.write_string_view(::etl::string_view("abc\ndef"));
         ASSERT_EQ("[START][CRLF]", std::string(bufferStream.getString()));
     }
 }

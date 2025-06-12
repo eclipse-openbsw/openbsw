@@ -16,8 +16,8 @@ TEST(TaggedOutputStream, testPrefixAndSuffixesAreInserted)
             TaggedOutputStream cut(stream, "[START]", "[CRLF]");
             cut.write('a');
             cut.write('\n');
-            cut.write(::estd::make_str("abc\ndef"));
-            cut.write(::estd::make_str("AB\nDEF"));
+            cut.write_string_view(::etl::string_view("abc\ndef"));
+            cut.write_string_view(::etl::string_view("AB\nDEF"));
             ASSERT_EQ(
                 "[START]a[CRLF][START]abc[CRLF][START]defAB[CRLF][START]DEF",
                 std::string(stream.getString()));

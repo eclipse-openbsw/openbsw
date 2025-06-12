@@ -12,7 +12,7 @@ side, the ``ForwardingReader`` allows forking a data stream at the reader side o
 Properties
 ----------
 
-* **Memory consumption**: ``sizeof(IReader&) + sizeof(IWriter&) + (sizeof(::estd::slice<uint8_t>) * 2)``
+* **Memory consumption**: ``sizeof(IReader&) + sizeof(IWriter&) + (sizeof(::etl::span<uint8_t>) * 2)``
 
 Public API
 ----------

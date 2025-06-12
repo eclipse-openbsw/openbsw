@@ -5,16 +5,15 @@
 #include "io/Io.h"
 
 #include <bsp/Bsp.h>
-
-#include <estd/singleton.h>
+#include <etl/singleton_base.h>
 
 #include <gmock/gmock.h>
 
 namespace bios
 {
-struct IoMock : public ::estd::singleton<IoMock>
+struct IoMock : public ::etl::singleton_base<IoMock>
 {
-    IoMock() : ::estd::singleton<IoMock>(*this){};
+    IoMock() : ::etl::singleton_base<IoMock>(*this){};
 
     MOCK_METHOD1(setDefaultConfiguration, bsp::BspReturnCode(uint16_t));
     MOCK_METHOD1(getPin, bool(uint16_t));

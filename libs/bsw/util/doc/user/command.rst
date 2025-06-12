@@ -21,7 +21,7 @@ SimpleCommand and ParentCommand
 A simple command can be easily created using the ``util::command::SimpleCommand`` class,
 which can be constructed with all necessary parameters. No derivation is
 required to implement a simple command. Its functionality can be encapsulated in a
-(member) function and passed as a delegate via an ``estd::function`` object.
+(member) function and passed as a delegate via an ``etl::delegate`` object.
 
 For groups or hierarchies of commands a ``util::command::ParentCommand`` object can be instantiated.
 It is constructed with the necessary parameters (name and description) and allows child commands
@@ -73,7 +73,7 @@ and the corresponding source file:
 
     using namespace ::util::command;
     using namespace ::util::format;
-    using ExecuteFunction = ::estd::function<void(CommandContext& context)>;
+    using ExecuteFunction = ::etl::delegate<void(CommandContext& context)>;
 
     TestCommand::TestCommand()
     : ParentCommand("test", "Contains simple test commands.")

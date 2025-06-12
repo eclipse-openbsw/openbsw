@@ -7,5 +7,5 @@ target_link_libraries(
     bspOutputPwm
     bspDynamicClient
     bspIo
-    estd
+    etl
     util)
