@@ -9,6 +9,7 @@ target_link_libraries(
     bspConfiguration
     PUBLIC bspAdc
            bspCharInputOutput
+           bspEepromDriver
            bspFtm
            bspFtmPwm
            bspInterrupts

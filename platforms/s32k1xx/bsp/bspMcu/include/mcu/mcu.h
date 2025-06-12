@@ -35,6 +35,7 @@
 #define LPUART1        IP_LPUART1
 #define LPIT0          IP_LPIT0
 #define ADC0           IP_ADC0
+#define FTFC           IP_FTFC
 #define FTM0           IP_FTM0
 #define FTM1           IP_FTM1
 #define FTM2           IP_FTM2

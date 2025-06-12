@@ -60,6 +60,8 @@ namespace platform
 {
 StaticBsp staticBsp;
 
+StaticBsp& getStaticBsp() { return staticBsp; }
+
 ::etl::typed_storage<::systems::BspSystem> bspSystem;
 
 #ifdef PLATFORM_SUPPORT_CAN

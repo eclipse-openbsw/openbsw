@@ -7,6 +7,7 @@
 #include "bsp/can/canTransceiver/CanPhy.h"
 #include "bsp/io/outputPwm/PwmSupport.h"
 #include "bsp/power/IEcuPowerStateController.h"
+#include "eeprom/EepromDriver.h"
 #include "ftm/Ftm.h"
 #include "inputManager/DigitalInput.h"
 #include "mcu/mcu.h"
@@ -16,6 +17,7 @@
 
 namespace bios
 {
+
 class CanPhyCommon : public CanPhy
 {
 public:
@@ -58,6 +60,8 @@ public:
     bios::CanPhy& getCanPhy();
 
     bios::IEcuPowerStateController& getPowerStateController() { return fPowerStateController; }
+
+    eeprom::IEepromDriver& getEepromDriver() { return _eepromDriver; }
 
     bios::AnalogInput& getAdc() { return _adc; }
 
@@ -112,6 +116,7 @@ private:
     uint8_t fCyclic10Msec;
 
     static uint32_t const WATCHDOG_TIME = 500U; // msec
+    eeprom::EepromDriver _eepromDriver;
     bios::Output _output;
     bios::DigitalInput _digitalInput;
 

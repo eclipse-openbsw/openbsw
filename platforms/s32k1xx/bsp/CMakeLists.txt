@@ -1,6 +1,7 @@
 add_subdirectory(bspAdc)
 add_subdirectory(bspClock)
 add_subdirectory(bspCore)
+add_subdirectory(bspEepromDriver)
 add_subdirectory(bspFlexCan)
 add_subdirectory(bspFtm)
 add_subdirectory(bspFtmPwm)
@@ -17,6 +18,7 @@ target_link_libraries(
     INTERFACE bspAdc
               bspClock
               bspCore
+              bspEepromDriver
               bspInterruptsImpl
               bspIo
               bspMcu

@@ -15,13 +15,6 @@ namespace eeprom
 class IEepromDriver
 {
 public:
-    struct EepromConfiguration
-    {
-        uint32_t fTotalSize;
-        uint32_t fProtectedAreaSize;
-        uint32_t fPageSize;
-    };
-
     /**
      * Initializes the EEPROM.
      *
