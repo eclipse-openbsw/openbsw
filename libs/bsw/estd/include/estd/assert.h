@@ -59,7 +59,6 @@
 
 // estd_expect behaves the same as estd_assert, but it shall not be used in
 // production code, only for temporary asserts during development.
-// estd_export must be replaced before SOP with proper error handling.
 // The usage of estd_expect can be detected by static code analyzers.
 #if defined(ESTD_EXPECT_ERROR)
 #define estd_expect(E__) static_assert(false, "Replace estd_expect with proper error handling")
