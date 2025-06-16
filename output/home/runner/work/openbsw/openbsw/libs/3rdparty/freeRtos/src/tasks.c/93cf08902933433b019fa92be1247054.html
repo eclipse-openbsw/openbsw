@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../../../../../../../../../static/css/style.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <title>Symbol - puncover</title>
+    
+</head>
+<body>
+    <div class="container" id="content">
+        <div class="page-header">
+            <nav class="navbar navbar-default" role="navigation">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="../../../../../../../../../../index.html">
+                    Puncover
+                  </a>
+                </div>
+              </div>
+            </nav>
+          
+        </div>
+        <div id="inner_content">
+        
+    
+    <ol class="breadcrumb folders">
+        
+        <li><a href="../../../../../../../../../../home.html">home</a></li>
+        
+        <li><a href="../../../../../../../../../runner.html">runner</a></li>
+        
+        <li><a href="../../../../../../../../work.html">work</a></li>
+        
+        <li><a href="../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../libs.html">libs</a></li>
+        
+        <li><a href="../../../../3rdparty.html">3rdparty</a></li>
+        
+        <li><a href="../../../freeRtos.html">freeRtos</a></li>
+        
+        <li ><a href="../../src.html">src</a>
+            </li>
+
+        
+        <li class="active"><a href="../tasks.c.html">tasks.c</a>:5040
+            </li>
+        
+    </ol>
+
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <th>Function</th>
+                <td colspan="5">
+                    <span class="icon-function">xTaskGenericNotifyFromISR</span>
+                </td>
+            </tr>
+
+            <tr>
+                <th rowspan="2"></th>
+                <th>Address</th>
+                <th>Remarks</th>
+                <th>Stack</th>
+                <th>Code</th>
+                <th>Static</th>
+            </tr>
+            <tr>
+                <td>0x00008fcc</td>
+                <td>
+    <span class="label label-success">x-module</span>
+    
+</td>
+                <td></td>
+                <td>316</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th>Callers (3)</th>
+                <td colspan="5">
+                
+                    <a href="../../../../bsw/asyncFreeRtos/src/async/Async.cpp/5aa4f4e4ce0ff8166656d629d7628e7e.html">async::schedule(unsigned char, async::IRunnable&amp;, async::TimeoutType&amp;, unsigned long, async::TimeUnit::Type) (132)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../../../../bsw/asyncFreeRtos/src/async/Async.cpp/f6cc267a73772db399b5446eaec541ae.html">async::scheduleAtFixedRate(unsigned char, async::IRunnable&amp;, async::TimeoutType&amp;, unsigned long, async::TimeUnit::Type) (132)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../../../../bsw/asyncFreeRtos/src/async/Async.cpp/4dfe65e158466f2f9a73b985dc4b0ecc.html">async::execute(unsigned char, async::IRunnable&amp;) (104)</a>
+                    
+                
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Callees (1,
+                            <span title="sum of used bytes by all callees">
+                            Σ=20
+                            </span>
+                        )
+                    
+                </th>
+                <td colspan="5">
+                
+                    <a href="../../../../../platforms/s32k1xx/3rdparty/freertos_cm4_sysTick/src/port.c/4f95af04dbec4da52acc286c44550d5c.html">vPortValidateInterruptPriority (20)</a>
+                    
+                
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    
+    <pre><a href="./5822df0c752554b0290890c533493c1a.html">xTaskGenericNotify (264)</a></pre>
+    
+
+    <pre>
+
+    xTaskGenericNotifyFromISR():
+
+        8fcc:	e92d 41f0 	stmdb	sp!, {r4, r5, r6, r7, r8, lr}
+
+        8fd0:	f8dd 8018 	ldr.w	r8, [sp, #24]
+
+        8fd4:	4604      	mov	r4, r0
+
+        8fd6:	460d      	mov	r5, r1
+
+        8fd8:	4617      	mov	r7, r2
+
+        8fda:	461e      	mov	r6, r3
+
+        8fdc:	f00a fcbc 	bl	13958 <<a href="../../../../../platforms/s32k1xx/3rdparty/freertos_cm4_sysTick/src/port.c/4f95af04dbec4da52acc286c44550d5c.html">vPortValidateInterruptPriority</a>>
+
+    ulPortRaiseBASEPRI():
+
+        8fe0:	f3ef 8c11 	mrs	ip, BASEPRI
+
+        8fe4:	f04f 0350 	mov.w	r3, #80	; 0x50
+
+        8fe8:	f383 8811 	msr	BASEPRI, r3
+
+        8fec:	f3bf 8f6f 	isb	sy
+
+        8ff0:	f3bf 8f4f 	dsb	sy
+
+    xTaskGenericNotifyFromISR():
+
+        8ff4:	f1b8 0f00 	cmp.w	r8, #0
+
+        8ff8:	d005      	beq.n	9006 <<a href="./93cf08902933433b019fa92be1247054.html">xTaskGenericNotifyFromISR</a>+0x3a>
+
+        8ffa:	f105 0316 	add.w	r3, r5, #22
+
+        8ffe:	f854 3023 	ldr.w	r3, [r4, r3, lsl #2]
+
+        9002:	f8c8 3000 	str.w	r3, [r8]
+
+        9006:	1961      	adds	r1, r4, r5
+
+        9008:	2202      	movs	r2, #2
+
+        900a:	f891 005c 	ldrb.w	r0, [r1, #92]	; 0x5c
+
+        900e:	f881 205c 	strb.w	r2, [r1, #92]	; 0x5c
+
+        9012:	1e73      	subs	r3, r6, #1
+
+        9014:	b2c0      	uxtb	r0, r0
+
+        9016:	2b03      	cmp	r3, #3
+
+        9018:	d808      	bhi.n	902c <<a href="./93cf08902933433b019fa92be1247054.html">xTaskGenericNotifyFromISR</a>+0x60>
+
+        901a:	e8df f003 	tbb	[pc, r3]
+
+        901e:	0e39      	.short	0x0e39
+
+        9020:	0204      	.short	0x0204
+
+        9022:	2802      	cmp	r0, #2
+
+        9024:	d062      	beq.n	90ec <<a href="./93cf08902933433b019fa92be1247054.html">xTaskGenericNotifyFromISR</a>+0x120>
+
+        9026:	3516      	adds	r5, #22
+
+        9028:	f844 7025 	str.w	r7, [r4, r5, lsl #2]
+
+        902c:	2801      	cmp	r0, #1
+
+        902e:	d00c      	beq.n	904a <<a href="./93cf08902933433b019fa92be1247054.html">xTaskGenericNotifyFromISR</a>+0x7e>
+
+        9030:	2001      	movs	r0, #1
+
+    vPortSetBASEPRI():
+
+        9032:	f38c 8811 	msr	BASEPRI, ip
+
+    xTaskGenericNotifyFromISR():
+
+        9036:	e8bd 81f0 	ldmia.w	sp!, {r4, r5, r6, r7, r8, pc}
+
+        903a:	eb04 0585 	add.w	r5, r4, r5, lsl #2
+
+        903e:	2801      	cmp	r0, #1
+
+        9040:	6dab      	ldr	r3, [r5, #88]	; 0x58
+
+        9042:	f103 0301 	add.w	r3, r3, #1
+
+        9046:	65ab      	str	r3, [r5, #88]	; 0x58
+
+        9048:	d1f2      	bne.n	9030 <<a href="./93cf08902933433b019fa92be1247054.html">xTaskGenericNotifyFromISR</a>+0x64>
+
+        904a:	4b29      	ldr	r3, [pc, #164]	; (90f0 <<a href="./93cf08902933433b019fa92be1247054.html">xTaskGenericNotifyFromISR</a>+0x124>)
+
+        904c:	681b      	ldr	r3, [r3, #0]
+
+        904e:	b32b      	cbz	r3, 909c <<a href="./93cf08902933433b019fa92be1247054.html">xTaskGenericNotifyFromISR</a>+0xd0>
+
+        9050:	4a28      	ldr	r2, [pc, #160]	; (90f4 <<a href="./93cf08902933433b019fa92be1247054.html">xTaskGenericNotifyFromISR</a>+0x128>)
+
+        9052:	6853      	ldr	r3, [r2, #4]
+
+        9054:	61e3      	str	r3, [r4, #28]
+
+        9056:	6899      	ldr	r1, [r3, #8]
+
+        9058:	6221      	str	r1, [r4, #32]
+
+        905a:	6811      	ldr	r1, [r2, #0]
+
+        905c:	3101      	adds	r1, #1
+
+        905e:	6011      	str	r1, [r2, #0]
+
+        9060:	6899      	ldr	r1, [r3, #8]
+
+        9062:	f104 0018 	add.w	r0, r4, #24
+
+        9066:	6048      	str	r0, [r1, #4]
+
+        9068:	6098      	str	r0, [r3, #8]
+
+        906a:	6ae3      	ldr	r3, [r4, #44]	; 0x2c
+
+        906c:	62a2      	str	r2, [r4, #40]	; 0x28
+
+        906e:	4a22      	ldr	r2, [pc, #136]	; (90f8 <<a href="./93cf08902933433b019fa92be1247054.html">xTaskGenericNotifyFromISR</a>+0x12c>)
+
+        9070:	6812      	ldr	r2, [r2, #0]
+
+        9072:	6ad2      	ldr	r2, [r2, #44]	; 0x2c
+
+        9074:	429a      	cmp	r2, r3
+
+        9076:	d2db      	bcs.n	9030 <<a href="./93cf08902933433b019fa92be1247054.html">xTaskGenericNotifyFromISR</a>+0x64>
+
+        9078:	9b07      	ldr	r3, [sp, #28]
+
+        907a:	b113      	cbz	r3, 9082 <<a href="./93cf08902933433b019fa92be1247054.html">xTaskGenericNotifyFromISR</a>+0xb6>
+
+        907c:	9a07      	ldr	r2, [sp, #28]
+
+        907e:	2301      	movs	r3, #1
+
+        9080:	6013      	str	r3, [r2, #0]
+
+        9082:	4b1e      	ldr	r3, [pc, #120]	; (90fc <<a href="./93cf08902933433b019fa92be1247054.html">xTaskGenericNotifyFromISR</a>+0x130>)
+
+        9084:	2001      	movs	r0, #1
+
+        9086:	6018      	str	r0, [r3, #0]
+
+    vPortSetBASEPRI():
+
+        9088:	f38c 8811 	msr	BASEPRI, ip
+
+    xTaskGenericNotifyFromISR():
+
+        908c:	e8bd 81f0 	ldmia.w	sp!, {r4, r5, r6, r7, r8, pc}
+
+        9090:	eb04 0585 	add.w	r5, r4, r5, lsl #2
+
+        9094:	6daa      	ldr	r2, [r5, #88]	; 0x58
+
+        9096:	4317      	orrs	r7, r2
+
+        9098:	65af      	str	r7, [r5, #88]	; 0x58
+
+        909a:	e7c7      	b.n	902c <<a href="./93cf08902933433b019fa92be1247054.html">xTaskGenericNotifyFromISR</a>+0x60>
+
+        909c:	6963      	ldr	r3, [r4, #20]
+
+        909e:	68a1      	ldr	r1, [r4, #8]
+
+        90a0:	68e2      	ldr	r2, [r4, #12]
+
+        90a2:	608a      	str	r2, [r1, #8]
+
+        90a4:	6051      	str	r1, [r2, #4]
+
+        90a6:	6859      	ldr	r1, [r3, #4]
+
+        90a8:	4d15      	ldr	r5, [pc, #84]	; (9100 <<a href="./93cf08902933433b019fa92be1247054.html">xTaskGenericNotifyFromISR</a>+0x134>)
+
+        90aa:	4816      	ldr	r0, [pc, #88]	; (9104 <<a href="./93cf08902933433b019fa92be1247054.html">xTaskGenericNotifyFromISR</a>+0x138>)
+
+        90ac:	1d27      	adds	r7, r4, #4
+
+        90ae:	42b9      	cmp	r1, r7
+
+        90b0:	bf08      	it	eq
+
+        90b2:	605a      	streq	r2, [r3, #4]
+
+        90b4:	681a      	ldr	r2, [r3, #0]
+
+        90b6:	3a01      	subs	r2, #1
+
+        90b8:	601a      	str	r2, [r3, #0]
+
+        90ba:	6ae3      	ldr	r3, [r4, #44]	; 0x2c
+
+        90bc:	682e      	ldr	r6, [r5, #0]
+
+        90be:	eb03 0283 	add.w	r2, r3, r3, lsl #2
+
+        90c2:	2101      	movs	r1, #1
+
+        90c4:	eb00 0e82 	add.w	lr, r0, r2, lsl #2
+
+        90c8:	4099      	lsls	r1, r3
+
+        90ca:	4331      	orrs	r1, r6
+
+        90cc:	6029      	str	r1, [r5, #0]
+
+        90ce:	f8de 1004 	ldr.w	r1, [lr, #4]
+
+        90d2:	60a1      	str	r1, [r4, #8]
+
+        90d4:	0092      	lsls	r2, r2, #2
+
+        90d6:	688d      	ldr	r5, [r1, #8]
+
+        90d8:	60e5      	str	r5, [r4, #12]
+
+        90da:	5885      	ldr	r5, [r0, r2]
+
+        90dc:	688e      	ldr	r6, [r1, #8]
+
+        90de:	3501      	adds	r5, #1
+
+        90e0:	6077      	str	r7, [r6, #4]
+
+        90e2:	608f      	str	r7, [r1, #8]
+
+        90e4:	f8c4 e014 	str.w	lr, [r4, #20]
+
+        90e8:	5085      	str	r5, [r0, r2]
+
+        90ea:	e7c0      	b.n	906e <<a href="./93cf08902933433b019fa92be1247054.html">xTaskGenericNotifyFromISR</a>+0xa2>
+
+        90ec:	2000      	movs	r0, #0
+
+        90ee:	e7a0      	b.n	9032 <<a href="./93cf08902933433b019fa92be1247054.html">xTaskGenericNotifyFromISR</a>+0x66>
+
+        90f0:	1ffee294 	.word	0x1ffee294
+
+        90f4:	1ffee2d8 	.word	0x1ffee2d8
+
+        90f8:	1ffee1c4 	.word	0x1ffee1c4
+
+        90fc:	1ffee31c 	.word	0x1ffee31c
+
+        9100:	1ffee29c 	.word	0x1ffee29c
+
+        9104:	1ffee1d0 	.word	0x1ffee1d0
+
+    </pre>
+
+    
+    <pre><a href="../timers.c/25fd83c3d905940072a19718ff477a03.html">prvCheckForValidListAndQueue (108)</a></pre>
+    
+
+    
+
+
+        </div>
+    <div id="page-footer">
+        <hr>
+        
+            brought to you with 💖
+            by <a href="https://twitter.com/hbehrens">Heiko Behrens</a>
+            <span class="secondary">– MIT license, copyright © 2014-2025</span>
+        
+    </div>
+    </div>
+</body>
+</html>

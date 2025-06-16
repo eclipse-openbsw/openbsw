@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../static/css/style.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <title>Symbol - puncover</title>
+    
+</head>
+<body>
+    <div class="container" id="content">
+        <div class="page-header">
+            <nav class="navbar navbar-default" role="navigation">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="../../index.html">
+                    Puncover
+                  </a>
+                </div>
+              </div>
+            </nav>
+          
+        </div>
+        <div id="inner_content">
+        
+    
+    <ol class="breadcrumb folders">
+        
+        <li class="active"><a href="../../unknown.html">&lt;unknown&gt;</a>
+            </li>
+
+        
+        <li class="active">&lt;unknown&gt;
+            </li>
+        
+    </ol>
+
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <th>Function</th>
+                <td colspan="5">
+                    <span class="icon-function">__smakebuf_r</span>
+                </td>
+            </tr>
+
+            <tr>
+                <th rowspan="2"></th>
+                <th>Address</th>
+                <th>Remarks</th>
+                <th>Stack</th>
+                <th>Code</th>
+                <th>Static</th>
+            </tr>
+            <tr>
+                <td>0x00014888</td>
+                <td>
+    
+    
+</td>
+                <td></td>
+                <td>128</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th>Callers (1)</th>
+                <td colspan="5">
+                
+                    <a href="./ddb6c397a973a81eb635d1056771d221.html">__swsetup_r (220)</a>
+                    
+                
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Callees (3,
+                            <span title="sum of used bytes by all callees">
+                            Σ=338
+                            </span>
+                        )
+                    
+                </th>
+                <td colspan="5">
+                
+                    <a href="./21d1112dea231bed3aab76cdcbc76833.html">__swhatbuf_r (74)</a>
+                    
+                        ,
+                    
+                
+                    <a href="./f5137e47f9ddfeffe7b8dfbd0dbdc9bf.html">_malloc_r (232)</a>
+                    
+                        ,
+                    
+                
+                    <a href="./dab4888231565979727ee7de00d9b98b.html">_isatty_r (32)</a>
+                    
+                
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    
+    <pre><a href="./21d1112dea231bed3aab76cdcbc76833.html">__swhatbuf_r (74)</a></pre>
+    
+
+    <pre>
+
+    __smakebuf_r():
+
+       14888:	898b      	ldrh	r3, [r1, #12]
+
+       1488a:	b573      	push	{r0, r1, r4, r5, r6, lr}
+
+       1488c:	079d      	lsls	r5, r3, #30
+
+       1488e:	4606      	mov	r6, r0
+
+       14890:	460c      	mov	r4, r1
+
+       14892:	d507      	bpl.n	148a4 <<a href="./3655ac5549e6ba4d157cb8f22ef3a07f.html">__smakebuf_r</a>+0x1c>
+
+       14894:	f104 0347 	add.w	r3, r4, #71	; 0x47
+
+       14898:	6023      	str	r3, [r4, #0]
+
+       1489a:	6123      	str	r3, [r4, #16]
+
+       1489c:	2301      	movs	r3, #1
+
+       1489e:	6163      	str	r3, [r4, #20]
+
+       148a0:	b002      	add	sp, #8
+
+       148a2:	bd70      	pop	{r4, r5, r6, pc}
+
+       148a4:	ab01      	add	r3, sp, #4
+
+       148a6:	466a      	mov	r2, sp
+
+       148a8:	f7ff ffc9 	bl	1483e <<a href="./21d1112dea231bed3aab76cdcbc76833.html">__swhatbuf_r</a>>
+
+       148ac:	9900      	ldr	r1, [sp, #0]
+
+       148ae:	4605      	mov	r5, r0
+
+       148b0:	4630      	mov	r0, r6
+
+       148b2:	f7ff f975 	bl	13ba0 <<a href="./f5137e47f9ddfeffe7b8dfbd0dbdc9bf.html">_malloc_r</a>>
+
+       148b6:	b948      	cbnz	r0, 148cc <<a href="./3655ac5549e6ba4d157cb8f22ef3a07f.html">__smakebuf_r</a>+0x44>
+
+       148b8:	f9b4 300c 	ldrsh.w	r3, [r4, #12]
+
+       148bc:	059a      	lsls	r2, r3, #22
+
+       148be:	d4ef      	bmi.n	148a0 <<a href="./3655ac5549e6ba4d157cb8f22ef3a07f.html">__smakebuf_r</a>+0x18>
+
+       148c0:	f023 0303 	bic.w	r3, r3, #3
+
+       148c4:	f043 0302 	orr.w	r3, r3, #2
+
+       148c8:	81a3      	strh	r3, [r4, #12]
+
+       148ca:	e7e3      	b.n	14894 <<a href="./3655ac5549e6ba4d157cb8f22ef3a07f.html">__smakebuf_r</a>+0xc>
+
+       148cc:	4b0d      	ldr	r3, [pc, #52]	; (14904 <<a href="./3655ac5549e6ba4d157cb8f22ef3a07f.html">__smakebuf_r</a>+0x7c>)
+
+       148ce:	62b3      	str	r3, [r6, #40]	; 0x28
+
+       148d0:	89a3      	ldrh	r3, [r4, #12]
+
+       148d2:	6020      	str	r0, [r4, #0]
+
+       148d4:	f043 0380 	orr.w	r3, r3, #128	; 0x80
+
+       148d8:	81a3      	strh	r3, [r4, #12]
+
+       148da:	9b00      	ldr	r3, [sp, #0]
+
+       148dc:	6163      	str	r3, [r4, #20]
+
+       148de:	9b01      	ldr	r3, [sp, #4]
+
+       148e0:	6120      	str	r0, [r4, #16]
+
+       148e2:	b15b      	cbz	r3, 148fc <<a href="./3655ac5549e6ba4d157cb8f22ef3a07f.html">__smakebuf_r</a>+0x74>
+
+       148e4:	f9b4 100e 	ldrsh.w	r1, [r4, #14]
+
+       148e8:	4630      	mov	r0, r6
+
+       148ea:	f000 f891 	bl	14a10 <<a href="./dab4888231565979727ee7de00d9b98b.html">_isatty_r</a>>
+
+       148ee:	b128      	cbz	r0, 148fc <<a href="./3655ac5549e6ba4d157cb8f22ef3a07f.html">__smakebuf_r</a>+0x74>
+
+       148f0:	89a3      	ldrh	r3, [r4, #12]
+
+       148f2:	f023 0303 	bic.w	r3, r3, #3
+
+       148f6:	f043 0301 	orr.w	r3, r3, #1
+
+       148fa:	81a3      	strh	r3, [r4, #12]
+
+       148fc:	89a0      	ldrh	r0, [r4, #12]
+
+       148fe:	4305      	orrs	r5, r0
+
+       14900:	81a5      	strh	r5, [r4, #12]
+
+       14902:	e7cd      	b.n	148a0 <<a href="./3655ac5549e6ba4d157cb8f22ef3a07f.html">__smakebuf_r</a>+0x18>
+
+       14904:	00014695 	.word	0x00014695
+
+    </pre>
+
+    
+    <pre><a href="./73fc8c83e515aa7c32577968232a6680.html">__malloc_lock (12)</a></pre>
+    
+
+    
+
+
+        </div>
+    <div id="page-footer">
+        <hr>
+        
+            brought to you with 💖
+            by <a href="https://twitter.com/hbehrens">Heiko Behrens</a>
+            <span class="secondary">– MIT license, copyright © 2014-2025</span>
+        
+    </div>
+    </div>
+</body>
+</html>
