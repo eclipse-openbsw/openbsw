@@ -150,7 +150,7 @@ __isr_vector:
     .long   DefaultISR                                      /* FTM3_Ch6_Ch7_IRQHandler                         /* FTM3 Channel 6 and 7 interrupt*/
     .long   DefaultISR                                      /* FTM3_Fault_IRQHandler                           /* FTM3 Fault interrupt*/
     .long   DefaultISR                                      /* FTM3_Ovf_Reload_IRQHandler                      /* FTM3 Counter overflow and Reload interrupt*/
-    .long   DefaultISR                                      /* FTM4_Ch0_Ch1_IRQHandler                         /* FTM4 Channel 0 and 1 interrupt*/
+    .long   FTM4_Ch0_Ch1_IRQHandler                         /* FTM4_Ch0_Ch1_IRQHandler                         /* FTM4 Channel 0 and 1 interrupt*/
     .long   DefaultISR                                      /* FTM4_Ch2_Ch3_IRQHandler                         /* FTM4 Channel 2 and 3 interrupt*/
     .long   DefaultISR                                      /* FTM4_Ch4_Ch5_IRQHandler                         /* FTM4 Channel 4 and 5 interrupt*/
     .long   DefaultISR                                      /* FTM4_Ch6_Ch7_IRQHandler                         /* FTM4 Channel 6 and 7 interrupt*/
