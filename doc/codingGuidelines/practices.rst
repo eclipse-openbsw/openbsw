@@ -5,7 +5,7 @@ Coding practices are important as they define a common ground for our developers
 reviewing code. Especially for the fields of *functional safety* and *security* it is really crucial to follow our
 secure coding practices.
 
-The following practices apply to all of our code except stated otherwise regardless of the programming language.
+The following practices apply to all of our code except when stated otherwise, regardless of the programming language.
 
 Validate Input
 --------------
@@ -14,7 +14,7 @@ Validate input from all untrusted data sources. Proper input validation can elim
 vulnerabilities.
 
 Be suspicious of most external data sources, including command line arguments, network interfaces, environmental
-variables, and user controlled files (2).
+variables, and user controlled files.
 
 Heed Compiler Warnings
 ----------------------
@@ -47,8 +47,6 @@ Target Builds
 All warnings shall be turned into errors similar to the unit test build.
 If that is not possible with the given target compiler, the change must be rejected by the
 pre-commit verifier if warnings are found in the build log.
-
-Target compiler flags are project specific and finalized in the **Software Architecture**.
 
 Third Party Code
 ++++++++++++++++
@@ -91,7 +89,7 @@ Adhere to the Principle of Least Privilege
 
 Every process should execute with the least set of privileges necessary to complete the job.
 Any elevated permission should only be accessed for the least amount of time required to complete the privileged task.
-This approach reduces the opportunities an attacker has to execute arbitrary code with elevated privileges (3,4).
+This approach reduces the opportunities an attacker has to execute arbitrary code with elevated privileges.
 
 
 Sanitize Data Sent to Other Systems

@@ -65,11 +65,10 @@ Column Width
 Split too long expressions into several lines and if applicable define some
 intermediate variables (which are usually optimized out by the linker).
 
-This is the rule which as discussed.
 We decided to limit the width to 100 (and not more) because:
 
 - It makes comparing and three-way merging of code easier.
-- It helps colleagues which want/need a larger display scaling.
+- It helps colleagues who want/need a larger display scaling.
 - It improves readability of complex code.
 
 If you have code with many indention levels and long variable names rethink your code structure.
@@ -85,7 +84,7 @@ of code.
 Line Endings
 ------------
 
-*git* is taking care of the line endings automatically.
+*git* takes care of the line endings automatically.
 The result depends on the local setup, typically on Windows CRLF or on Linux LF, etc.
 
 :rule:`FORMAT-020` Use the system standard line endings for source files.

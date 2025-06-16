@@ -10,7 +10,7 @@ Expressions with Booleans
 -------------------------
 
 Never use the constants ``true`` or ``false`` as operands to the operators
-``==`` or ``!=``. It makes the expressions unnecessary long and hard to read.
+``==`` or ``!=``. It makes the expressions unnecessarily long and hard to read.
 
 .. code-block:: cpp
 
@@ -175,7 +175,7 @@ Asserts
 To control the behavior of asserts on ECUs, use the ``estd_assert`` macro instead of the regular
 ``assert`` from the standard *cassert* header.
 
-In opposite to a *PC* program where asserts are ignored in release builds, an ``estd_assert``
+In contrast to a *PC* program where asserts are ignored in release builds, an ``estd_assert``
 will be present in release code causing an ECU reset and most likely a customer noticeable event.
 We usually do not distinguish between debug and release builds.
 
