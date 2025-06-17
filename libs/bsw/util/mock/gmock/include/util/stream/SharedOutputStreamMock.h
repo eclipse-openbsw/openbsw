@@ -13,15 +13,15 @@ namespace stream
 class SharedOutputStreamMock : public ISharedOutputStream
 {
 public:
-    MOCK_METHOD1(startOutput, IOutputStream&(IContinuousUser* user));
-    MOCK_METHOD1(endOutput, void(IContinuousUser* user));
-    MOCK_METHOD1(releaseContinuousUser, void(IContinuousUser& user));
+    MOCK_METHOD(IOutputStream&, startOutput, (IContinuousUser * user), (override);
+    MOCK_METHOD(void, endOutput, (IContinuousUser * user), (override));
+    MOCK_METHOD(void, releaseContinuousUser, (IContinuousUser & user), (override));
 };
 
 class ContinuousUserMock : public ISharedOutputStream::IContinuousUser
 {
 public:
-    MOCK_METHOD1(endContinuousOutput, void(IOutputStream& stream));
+    MOCK_METHOD(void, endContinuousOutput, (IOutputStream & stream), (override));
 };
 
 } // namespace stream

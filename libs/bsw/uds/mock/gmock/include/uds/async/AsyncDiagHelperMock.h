@@ -11,12 +11,17 @@ namespace uds
 class AsyncDiagHelperMock : public IAsyncDiagHelper
 {
 public:
-    MOCK_METHOD3(
+    MOCK_METHOD(
+        StoredRequest*,
         allocateRequest,
-        StoredRequest*(
-            IncomingDiagConnection& connection, uint8_t const* request, uint16_t requestLength));
+        (IncomingDiagConnection & connection, uint8_t const* request, uint16_t requestLength),
+        (override));
 
-    MOCK_METHOD2(processAndReleaseRequest, void(AbstractDiagJob& job, StoredRequest& request));
+    MOCK_METHOD(
+        void,
+        processAndReleaseRequest,
+        (AbstractDiagJob & job, StoredRequest& request),
+        (override));
 };
 
 } /* namespace uds */

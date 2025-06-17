@@ -21,9 +21,11 @@ namespace uds
 class OutgoingDiagConnectionProviderMock : public IOutgoingDiagConnectionProvider
 {
 public:
-    MOCK_METHOD3(
+    MOCK_METHOD(
+        ErrorCode,
         getOutgoingDiagConnection,
-        ErrorCode(uint8_t, OutgoingDiagConnection*&, transport::TransportMessage*));
+        (uint8_t, OutgoingDiagConnection*&, transport::TransportMessage*),
+        (override));
 };
 
 } // namespace uds

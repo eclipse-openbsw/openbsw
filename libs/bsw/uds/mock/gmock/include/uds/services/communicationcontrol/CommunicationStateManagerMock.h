@@ -13,21 +13,40 @@ namespace uds
 class CommunicationStateManagerMock : public ICommunicationStateManager
 {
 public:
-    MOCK_METHOD1(addCommunicationStateListener, void(ICommunicationStateListener& listener));
+    MOCK_METHOD(
+        void, addCommunicationStateListener, (ICommunicationStateListener & listener), (override));
 
-    MOCK_METHOD1(removeCommunicationStateListener, void(ICommunicationStateListener& listener));
+    MOCK_METHOD(
+        void,
+        removeCommunicationStateListener,
+        (ICommunicationStateListener & listener),
+        (override));
 
-    MOCK_METHOD1(addCommunicationSubStateListener, void(ICommunicationSubStateListener& listener));
+    MOCK_METHOD(
+        void,
+        addCommunicationSubStateListener,
+        (ICommunicationSubStateListener & listener),
+        (override));
 
-    MOCK_METHOD1(
-        removeCommunicationSubStateListener, void(ICommunicationSubStateListener& listener));
+    MOCK_METHOD(
+        void,
+        removeCommunicationSubStateListener,
+        (ICommunicationSubStateListener & listener),
+        (override));
 
-    MOCK_CONST_METHOD0(getCommunicationState, ICommunicationStateListener::CommunicationState());
+    MOCK_METHOD(
+        ICommunicationStateListener::CommunicationState,
+        getCommunicationState,
+        (),
+        (const, override));
 
-    MOCK_METHOD1(
-        setCommunicationState, void(ICommunicationStateListener::CommunicationState state));
+    MOCK_METHOD(
+        void,
+        setCommunicationState,
+        (ICommunicationStateListener::CommunicationState state),
+        (override));
 
-    MOCK_METHOD0(resetCommunicationSubState, void());
+    MOCK_METHOD(void, resetCommunicationSubState, (), (override));
 };
 
 } // namespace uds

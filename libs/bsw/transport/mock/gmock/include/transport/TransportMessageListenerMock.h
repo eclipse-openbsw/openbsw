@@ -17,9 +17,11 @@ namespace transport
 class TransportMessageListenerMock : public ITransportMessageListener
 {
 public:
-    MOCK_METHOD3(
+    MOCK_METHOD(
+        ReceiveResult,
         messageReceived,
-        ReceiveResult(uint8_t, TransportMessage&, ITransportMessageProcessedListener*));
+        (uint8_t, TransportMessage&, ITransportMessageProcessedListener*),
+        (override));
 };
 
 } // namespace transport

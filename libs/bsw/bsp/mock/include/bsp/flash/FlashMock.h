@@ -12,11 +12,11 @@ namespace flash
 {
 struct FlashMock : IFlash
 {
-    MOCK_CONST_METHOD0(memory, ::estd::slice<uint8_t const>());
-    MOCK_METHOD2(write, uint32_t(uint32_t, ::estd::slice<uint8_t const>));
-    MOCK_METHOD0(flush, bool());
-    MOCK_METHOD1(erase, bool(FlashBlock const&));
-    MOCK_CONST_METHOD2(block, FlashBlock(uint32_t, uint32_t));
+    MOCK_METHOD(::estd::slice<uint8_t const>, memory, (), (const, override));
+    MOCK_METHOD(uint32_t, write, (uint32_t, ::estd::slice<uint8_t const>), (override));
+    MOCK_METHOD(bool, flush, (), (override));
+    MOCK_METHOD(bool, erase, (FlashBlock const&), (override));
+    MOCK_METHOD(FlashBlock, block, (uint32_t, uint32_t), (const, override));
 };
 
 } // namespace flash

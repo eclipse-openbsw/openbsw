@@ -11,13 +11,13 @@ namespace io
 class IWriterMock : public IWriter
 {
 public:
-    MOCK_CONST_METHOD0(maxSize, size_t());
+    MOCK_METHOD(size_t, maxSize, (), (const, override));
 
-    MOCK_METHOD1(allocate, ::estd::slice<uint8_t>(size_t));
+    MOCK_METHOD(::estd::slice<uint8_t>, allocate, (size_t), (override));
 
-    MOCK_METHOD0(commit, void());
+    MOCK_METHOD(void, commit, (), (override));
 
-    MOCK_METHOD0(flush, void());
+    MOCK_METHOD(void, flush, (), (override));
 };
 
 } // namespace io

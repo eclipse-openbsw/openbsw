@@ -13,20 +13,23 @@ class NestedDiagRequestMock : public NestedDiagRequest
 public:
     NestedDiagRequestMock(uint8_t prefixLength) : NestedDiagRequest(prefixLength) {}
 
-    MOCK_CONST_METHOD1(
-        getStoredRequestLength, uint16_t(::estd::slice<uint8_t const> const& request));
-    MOCK_CONST_METHOD2(
+    MOCK_METHOD(
+        uint16_t, getStoredRequestLength, (::estd::slice<uint8_t const> const& request), (const));
+    MOCK_METHOD(
+        void,
         storeRequest,
-        void(::estd::slice<uint8_t const> const& request, ::estd::slice<uint8_t> dest));
-    MOCK_METHOD1(
+        (::estd::slice<uint8_t const> const& request, ::estd::slice<uint8_t> dest),
+        (const));
+    MOCK_METHOD(
+        ::estd::slice<uint8_t const>,
         prepareNestedRequest,
-        ::estd::slice<uint8_t const>(::estd::slice<uint8_t const> const& storedRequest));
-    MOCK_METHOD3(
+        (::estd::slice<uint8_t const> const& storedRequest));
+    MOCK_METHOD(
+        DiagReturnCode::Type,
         processNestedRequest,
-        DiagReturnCode::Type(
-            IncomingDiagConnection& connection, uint8_t const request[], uint16_t requestLength));
-    MOCK_METHOD1(handleNestedResponseCode, void(DiagReturnCode::Type responseCode));
-    MOCK_METHOD0(handleOverflow, void());
+        (IncomingDiagConnection & connection, uint8_t const request[], uint16_t requestLength));
+    MOCK_METHOD(void, handleNestedResponseCode, (DiagReturnCode::Type responseCode));
+    MOCK_METHOD(void, handleOverflow, ());
 };
 
 } // namespace uds

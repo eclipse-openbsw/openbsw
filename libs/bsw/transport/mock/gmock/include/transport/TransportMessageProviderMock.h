@@ -17,19 +17,20 @@ namespace transport
 class TransportMessageProviderMock : public ITransportMessageProvider
 {
 public:
-    MOCK_METHOD6(
+    MOCK_METHOD(
+        ErrorCode,
         getTransportMessage,
-        ErrorCode(
-            uint8_t,
-            uint16_t,
-            uint16_t,
-            uint16_t,
-            ::estd::slice<uint8_t const> const&,
-            TransportMessage*&));
+        (uint8_t,
+         uint16_t,
+         uint16_t,
+         uint16_t,
+         ::estd::slice<uint8_t const> const&,
+         TransportMessage*&),
+        (override));
 
-    MOCK_METHOD1(releaseTransportMessage, void(TransportMessage&));
+    MOCK_METHOD(void, releaseTransportMessage, (TransportMessage&), (override));
 
-    MOCK_METHOD0(dump, void());
+    MOCK_METHOD(void, dump, (), (override));
 };
 
 } // namespace transport

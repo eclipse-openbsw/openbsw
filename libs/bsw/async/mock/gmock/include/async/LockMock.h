@@ -16,8 +16,8 @@ class LockMock : public ::estd::singleton<LockMock>
 public:
     LockMock() : ::estd::singleton<LockMock>(*this) {}
 
-    MOCK_METHOD0(lock, void());
-    MOCK_METHOD0(unlock, void());
+    MOCK_METHOD(void, lock, ());
+    MOCK_METHOD(void, unlock, ());
 };
 
 } // namespace async
