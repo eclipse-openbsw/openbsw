@@ -5,9 +5,6 @@
  */
 #pragma once
 
-#include "estd/functional.h"
-#include "estd/slice.h"
-
 namespace async
 {
 /**

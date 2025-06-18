@@ -33,7 +33,7 @@ static constexpr char MAX_VALID_CHR = 0x7EU; // tilde
  *
  * If the character read is less than or equal to 0, returns false
  */
-bool getline(::estd::string& line)
+bool getline(::etl::istring& line)
 {
     char const chr = getByteFromStdin();
 
@@ -142,7 +142,7 @@ void StdioConsoleInput::run()
 
 void StdioConsoleInput::onLineReceived(
     ::util::stream::ISharedOutputStream& /*outputStream*/,
-    ::estd::string const& /*line*/,
+    ::etl::istring const& /*line*/,
     OnLineProcessed const& callback)
 {
     callback();

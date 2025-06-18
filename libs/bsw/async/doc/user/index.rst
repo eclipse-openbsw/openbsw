@@ -21,7 +21,7 @@ scheduleAtFixedRate   Allows to schedule a ``async::RunnableType`` to be run per
 
 The ``util/Call.h`` declares a runnable class that allows customized implementation on execution
 by providing callable object (with *function call* operator ``()``).
-For example the predefined ``async::Function`` type is declaring ``::estd::function`` as callable type.
+For example the predefined ``async::Function`` type is declaring ``::etl::inplace_function`` as callable type.
 
 The ``util/MemberCall.h`` provides a ``async::MemberCall`` class, which allows to create a ``async::RunnableType``
 from a member function of a non-runnable class.

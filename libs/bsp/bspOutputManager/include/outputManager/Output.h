@@ -2,17 +2,16 @@
 
 #pragma once
 
-#include "estd/uncopyable.h"
 #include "io/DynamicClientCfg.h"
 #include "io/Io.h"
 #include "platform/estdint.h"
+
+#include <etl/uncopyable.h>
 
 namespace bios
 {
 class Output
 {
-    UNCOPYABLE(Output);
-
 public:
     /**
      * Configuration of outputs

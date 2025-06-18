@@ -3,4 +3,4 @@ add_library(loggerIntegration src/logger/LoggerComposition.cpp
 
 target_include_directories(loggerIntegration PUBLIC include)
 
-target_link_libraries(loggerIntegration PRIVATE logger bspInterrupts)
+target_link_libraries(loggerIntegration PRIVATE logger bspInterrupts etl)

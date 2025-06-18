@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include <estd/optional.h>
-#include <estd/slice.h>
+#include <etl/optional.h>
+#include <etl/span.h>
 
 #include <array>
 
@@ -18,18 +18,18 @@ struct LogicalAddress
 
 namespace addressfinder
 {
-::estd::optional<LogicalAddress>
-findDoipAddressInSlice(uint16_t address, ::estd::slice<LogicalAddress const> const& list);
+::etl::optional<LogicalAddress>
+findDoipAddressInSlice(uint16_t address, ::etl::span<LogicalAddress const> const& list);
 
-::estd::optional<LogicalAddress>
-find8BitAddressInSlice(uint16_t address, ::estd::slice<LogicalAddress const> const& list);
+::etl::optional<LogicalAddress>
+find8BitAddressInSlice(uint16_t address, ::etl::span<LogicalAddress const> const& list);
 
-inline bool isDoipAddressIn(uint16_t const address, ::estd::slice<LogicalAddress const> const& list)
+inline bool isDoipAddressIn(uint16_t const address, ::etl::span<LogicalAddress const> const& list)
 {
     return findDoipAddressInSlice(address, list).has_value();
 }
 
-inline bool is8BitAddressIn(uint16_t const address, ::estd::slice<LogicalAddress const> const& list)
+inline bool is8BitAddressIn(uint16_t const address, ::etl::span<LogicalAddress const> const& list)
 {
     return find8BitAddressInSlice(address, list).has_value();
 }
@@ -69,6 +69,6 @@ public:
         return address;
     }
 
-    static std::array<::estd::slice<LogicalAddress const>, N> const TESTER_ADDRESS_LISTS;
+    static etl::array<::etl::span<LogicalAddress const>, N> const TESTER_ADDRESS_LISTS;
 };
 } // namespace transport
