@@ -3,10 +3,12 @@
 
 ## Build Status 🚀
 
+<!-- [![Build S32k and posix platform](https://github.com/eclipse-openbsw/openbsw/actions/workflows/build.yml/badge.svg?branch=main&event=push)](https://github.com/eclipse-openbsw/openbsw/actions/workflows/build.yml) -->
+
 | Platform       | Status                                                                 |
 |----------------|------------------------------------------------------------------------|
-| POSIX Build | ![POSIX](https://github.com/eclipse-openbsw/openbsw/actions/workflows/build.yml/badge.svg?branch=main&event=push&matrix.platform=posix) |
-| S32K148     | ![S32K](https://github.com/eclipse-openbsw/openbsw/actions/workflows/build.yml/badge.svg?branch=main&event=push&matrix.platform=s32k148) |
+| POSIX Build | [![Build S32k and posix platform](https://github.com/eclipse-openbsw/openbsw/actions/workflows/build.yml/badge.svg?branch=main&event=push&matrix.platform=posix)](https://github.com/eclipse-openbsw/openbsw/actions/workflows/build.yml) |
+| S32K148     | [![Build S32k and posix platform](https://github.com/eclipse-openbsw/openbsw/actions/workflows/build.yml/badge.svg?branch=main&event=push&matrix.platform=s32k148)](https://github.com/eclipse-openbsw/openbsw/actions/workflows/build.yml) |
 
 ## Code Coverage 
 
