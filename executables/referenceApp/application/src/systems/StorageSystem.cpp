@@ -6,15 +6,20 @@ namespace systems
 {
 
 // BEGIN initialization
-StorageSystem::StorageSystem(::async::ContextType context, ::eeprom::IEepromDriver& eepDriver)
+StorageSystem::StorageSystem(
+    ::async::ContextType const driverContext,
+    ::async::ContextType const userContext,
+    ::eeprom::IEepromDriver& eepDriver)
 : _eepDriver(eepDriver)
 , _eepStorage(EEP_BLOCK_CONFIG, _eepDriver)
 , _feeStorage()
-, _eepQueuingStorage(_eepStorage, context)
-, _feeQueuingStorage(_feeStorage, context)
-, _mappingStorage(MAPPING_CONFIG, context, _eepQueuingStorage, _feeQueuingStorage)
+, _eepQueuingStorage(_eepStorage, driverContext)
+, _feeQueuingStorage(_feeStorage, driverContext)
+, _mappingStorage(MAPPING_CONFIG, driverContext, _eepQueuingStorage, _feeQueuingStorage)
+, _storageTester(_mappingStorage, driverContext)
+, _asyncStorageTester(_storageTester, userContext)
 {
-    setTransitionContext(context);
+    setTransitionContext(driverContext);
 }
 
 void StorageSystem::init() { transitionDone(); }

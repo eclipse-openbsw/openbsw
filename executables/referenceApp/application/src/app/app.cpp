@@ -173,7 +173,7 @@ void run()
 #ifdef PLATFORM_SUPPORT_STORAGE
     lifecycleManager.addComponent(
         "storage",
-        storageSystem.create(TASK_BSP, ::platform::getStaticBsp().getEepromDriver()),
+        storageSystem.create(TASK_BSP, TASK_DEMO, ::platform::getStaticBsp().getEepromDriver()),
         5U);
 #endif
 
