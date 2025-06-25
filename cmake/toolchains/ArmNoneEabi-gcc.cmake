@@ -14,6 +14,6 @@ include("${CMAKE_CURRENT_LIST_DIR}/ArmNoneEabi.cmake")
 
 set(CMAKE_C_COMPILER arm-none-eabi-gcc)
 set(CMAKE_CXX_COMPILER arm-none-eabi-g++)
-set(CMAKE_ASM_COMPILER arm-none-eabi-as)
+set(CMAKE_ASM_COMPILER arm-none-eabi-gcc)
 set(CMAKE_LINKER arm-none-eabi-g++)
 set(CMAKE_AR arm-none-eabi-ar)

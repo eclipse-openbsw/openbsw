@@ -10,21 +10,25 @@ You can view this as a map to regularly refer back to as you navigate and become
 
 .. code-block:: text
 
-    .
-    ├── admin
-    |   └── cmake
+    ├── build
+    │   ├── posix
+    │   ├── s32k148-clang
+    │   └── s32k148-gcc
+    ├── cmake
+    │   ├── modules
+    │   ├── presets
+    │   └── toolchains
     ├── doc
-    ├── cmake-build-posix
-    ├── cmake-build-s32k148
     ├── executables
-    |   └── referenceApp
+    │   ├── referenceApp
+    │   └── unitTest
     ├── libs
-    |   ├── bsp
-    |   ├── bsw
-    |   └── os
+    │   ├── bsp
+    │   ├── bsw
+    │   └── os
     ├── platforms
-    |   ├── posix
-    |   └── s32k1xx
+    │   ├── posix
+    │   └── s32k1xx
     └── tools
 
 ``admin``: holds platform-specific build adaptation files.
@@ -34,8 +38,8 @@ In particular the ``cmake`` subdirectory contains platform-specific settings for
 Most libraries also contain their own RST documentation along-side their code and all these are pulled together
 when this documentation is built, as can be seen in the index on the left.
 
-``cmake-build-[target]``: holds build artifacts & executables created by ``cmake`` for different ``[target]`` platforms.
-For example if you build for the ``posix`` platform the directory ``cmake-build-posix`` is created.
+``build/[preset]``: holds build artifacts & executables created by ``cmake`` for different ``[presets]``.
+For example if you build for the ``posix`` platform the directory ``build/posix`` is created.
 
 ``executables``: holds application-specific code (not the built executables).
 The ``referenceApp`` subdirectory contains an example application.

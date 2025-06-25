@@ -4,8 +4,7 @@
 
 #include <sys/errno.h>
 
-#include <platform/estdint.h>
-
+#include <stdint.h>
 #include <stdlib.h>
 
 #define BROADCAST_NETIF_CHECK 1

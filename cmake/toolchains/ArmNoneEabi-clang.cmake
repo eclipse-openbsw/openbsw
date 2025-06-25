@@ -17,7 +17,6 @@ cmake_path(GET TOOLCHAIN_BIN_DIR PARENT_PATH TOOLCHAIN_PREFIX)
 
 set(CMAKE_CXX_COMPILER "${TOOLCHAIN_BIN_DIR}/clang++")
 set(CMAKE_ASM_COMPILER "${TOOLCHAIN_BIN_DIR}/clang")
-set(CMAKE_LINKER "${TOOLCHAIN_BIN_DIR}/clang")
 set(CMAKE_NM "${TOOLCHAIN_BIN_DIR}/llvm-nm")
 set(CMAKE_OBJCOPY "${TOOLCHAIN_BIN_DIR}/llvm-objcopy")
 set(CMAKE_OBJDUMP "${TOOLCHAIN_BIN_DIR}/llvm-objdump")
@@ -32,5 +31,12 @@ set(CMAKE_ASM_COMPILER_TARGET ${CLANG_TARGET_TRIPLE})
 set(CMAKE_SYSROOT
     "${TOOLCHAIN_PREFIX}/lib/clang-runtimes/${CLANG_TARGET_TRIPLE}/armv7m_soft_fpv4_sp_d16"
 )
+
+set(_EXE_LINKER_FLAGS
+    "-Wl,--start-group \
+        -lc \
+        -ldummyhost \
+        -lclang_rt.builtins \
+    -Wl,--end-group")
 
 include("${CMAKE_CURRENT_LIST_DIR}/ArmNoneEabi.cmake")

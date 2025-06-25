@@ -183,13 +183,13 @@ check the following...
 
    .. code-block:: bash
 
-     cmake-build-s32k148/application/app.referenceApp.elf
+     build/s32k148-gcc/executables/referenceApp/application/RelWithDebInfo/gapp.referenceApp.elf
 
 Then, in the root folder you can run the gdb client to start an interactive debug session...
 
   .. code-block:: bash
 
-   arm-none-eabi-gdb -x tools/gdb/pegdbserver.gdb cmake-build-s32k148/application/app.referenceApp.elf
+   arm-none-eabi-gdb -x tools/gdb/pegdbserver.gdb build/s32k148-gcc/executables/referenceApp/application/RelWithDebInfo/gapp.referenceApp.elf
 
 Flash the board on command-line
 -------------------------------
@@ -200,7 +200,7 @@ it may be more convenient to flash it in a single command as follows...
 
   .. code-block:: bash
 
-   arm-none-eabi-gdb -batch -x test/pyTest/flash.gdb cmake-build-s32k148/application/app.referenceApp.elf
+   arm-none-eabi-gdb -batch -x test/pyTest/flash.gdb build/s32k148-gcc/executables/referenceApp/application/RelWithDebInfo/gapp.referenceApp.elf
 
 Reset the board on command-line
 -------------------------------
@@ -209,4 +209,4 @@ You can reset the board in a single command as follows...
 
   .. code-block:: bash
 
-   arm-none-eabi-gdb -batch -x test/pyTest/reset.gdb cmake-build-s32k148/application/app.referenceApp.elf
+   arm-none-eabi-gdb -batch -x test/pyTest/reset.gdb build/s32k148-gcc/executables/referenceApp/application/RelWithDebInfo/gapp.referenceApp.elf

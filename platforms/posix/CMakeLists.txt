@@ -1,6 +1,6 @@
-set(PLATFORM_SUPPORT_CAN TRUE)
-set(PLATFORM_SUPPORT_UDS TRUE)
-set(PLATFORM_SUPPORT_IO TRUE)
+set(PLATFORM_SUPPORT_CAN ON)
+set(PLATFORM_SUPPORT_UDS ON)
+set(PLATFORM_SUPPORT_IO ON)
 
 # 3rdparty modules
 add_subdirectory(3rdparty/freeRtosPosix)

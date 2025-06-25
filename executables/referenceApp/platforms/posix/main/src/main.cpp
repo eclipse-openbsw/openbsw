@@ -6,7 +6,7 @@
 #include <etl/alignment.h>
 #include <lifecycle/LifecycleManager.h>
 
-#include <signal.h>
+#include <csignal>
 #include <unistd.h>
 
 #ifdef PLATFORM_SUPPORT_CAN
@@ -38,6 +38,7 @@ StaticBsp& getStaticBsp() { return staticBsp; }
 
 void platformLifecycleAdd(::lifecycle::LifecycleManager& lifecycleManager, uint8_t const level)
 {
+    (void)lifecycleManager;
     if (level == 2)
     {
 #ifdef PLATFORM_SUPPORT_CAN

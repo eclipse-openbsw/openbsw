@@ -1,25 +1,5 @@
 set(app.referenceAppExtraSources)
 
-if (PLATFORM_SUPPORT_UDS)
-    list(
-        APPEND
-        app.referenceAppExtraSources
-        src/systems/TransportSystem.cpp
-        src/systems/UdsSystem.cpp
-        src/uds/ReadIdentifierPot.cpp)
-
-    if (PLATFORM_SUPPORT_CAN)
-        list(APPEND app.referenceAppExtraSources src/systems/DoCanSystem.cpp)
-    endif ()
-    if (PLATFORM_SUPPORT_ETHERNET)
-        list(APPEND app.referenceAppExtraSources src/systems/EthernetSystem.cpp)
-    endif ()
-endif ()
-
-if (PLATFORM_SUPPORT_STORAGE)
-    list(APPEND app.referenceAppExtraSources src/systems/StorageSystem.cpp)
-endif ()
-
 add_executable(
     app.referenceApp
     src/app/app.cpp
@@ -30,8 +10,26 @@ add_executable(
     src/systems/RuntimeSystem.cpp
     src/systems/SysAdminSystem.cpp
     src/systems/SafetySystem.cpp
-    ${app.referenceAppExtraSources}
     src/main.cpp)
+
+if (PLATFORM_SUPPORT_UDS)
+    target_sources(
+        app.referenceApp
+        PRIVATE src/systems/TransportSystem.cpp src/systems/UdsSystem.cpp
+                src/uds/ReadIdentifierPot.cpp)
+endif ()
+
+if (PLATFORM_SUPPORT_CAN)
+    target_sources(app.referenceApp PRIVATE src/systems/DoCanSystem.cpp)
+endif ()
+
+if (PLATFORM_SUPPORT_ETHERNET)
+    target_sources(app.referenceApp PRIVATE src/systems/EthernetSystem.cpp)
+endif ()
+
+if (PLATFORM_SUPPORT_STORAGE)
+    target_sources(app.referenceApp PRIVATE src/systems/StorageSystem.cpp)
+endif ()
 
 set_target_properties(app.referenceApp PROPERTIES SUFFIX ".elf")
 
@@ -70,14 +68,11 @@ target_link_libraries(
             socBsp)
 
 if (PLATFORM_SUPPORT_UDS)
-
     target_link_libraries(app.referenceApp PRIVATE transport
                                                    transportRouterSimple uds)
-
 endif ()
 
 if (PLATFORM_SUPPORT_CAN)
-
     target_link_libraries(app.referenceApp PRIVATE cpp2can docan)
 endif ()
 

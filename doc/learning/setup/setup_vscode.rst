@@ -55,37 +55,37 @@ each task will be listed by their ``label`` below and you can select one to exec
             {
                 "type": "shell",
                 "label": "Clean s32k148 build",
-                "command": "rm -rf cmake-build-s32k148",
+                "command": "rm -rf build/s32k148-gcc",
                 "group": "build"
             },
             {
                 "type": "shell",
                 "label": "Generate build system for s32k148",
-                "command": "cmake -B cmake-build-s32k148 -S executables/referenceApp -DBUILD_TARGET_PLATFORM=\"S32K148EVB\" -DCMAKE_EXPORT_COMPILE_COMMANDS=ON --toolchain ../../admin/cmake/ArmNoneEabi-gcc.cmake",
+                "command": "cmake --build --preset s32k148-gcc",
                 "group": "build"
             },
             {
                 "type": "shell",
                 "label": "Build s32k148 elf file",
-                "command": "cmake --build cmake-build-s32k148 --target app.referenceApp -j",
+                "command": "cmake --build --preset s32k148-gcc",
                 "group": "build"
             },
             {
                 "type": "shell",
                 "label": "Clean posix build",
-                "command": "rm -rf cmake-build-posix",
+                "command": "rm -rf build/posix",
                 "group": "build"
             },
             {
                 "type": "shell",
                 "label": "Generate build system for posix",
-                "command": "cmake -B cmake-build-posix -S executables/referenceApp -DCMAKE_EXPORT_COMPILE_COMMANDS=ON",
+                "command": "cmake --preset posix",
                 "group": "build"
             },
             {
                 "type": "shell",
                 "label": "Build posix elf file",
-                "command": "cmake --build cmake-build-posix --target app.referenceApp -j",
+                "command": "cmake --build --preset posix",
                 "group": "build"
             }
         ]
@@ -118,14 +118,14 @@ the generated ``compile_commands.json`` files.
                 "cStandard": "c99",
                 "cppStandard": "c++14",
                 "intelliSenseMode": "linux-gcc-x64",
-                "compileCommands": "${workspaceFolder}/cmake-build-posix/compile_commands.json"
+                "compileCommands": "${workspaceFolder}/build/posix/compile_commands.json"
             },
             {
                 "name": "s32k148",
                 "cStandard": "c99",
                 "cppStandard": "c++14",
                 "intelliSenseMode": "gcc-arm",
-                "compileCommands": "${workspaceFolder}/cmake-build-s32k148/compile_commands.json"
+                "compileCommands": "${workspaceFolder}/build/s32k148-gcc/compile_commands.json"
             }
         ],
         "version": 4
@@ -153,49 +153,6 @@ Add the following settings to ``.vscode/settings.json``...
 
 The ``CMake Tools`` extension supports using a `CMakePresets.json <https://cmake.org/cmake/help/v3.22/manual/cmake-presets.7.html>`_ file
 which is always placed in the ``CMake`` source directory.
-For example, you can create the file ``executables/referenceApp/CMakePresets.json`` with the content below
-and this will be used by the ``CMake Tools`` extension to set up a configuration for each target.
-
-.. code-block::
-
-    {
-        "version": 3,
-        "configurePresets": [
-        {
-            "name": "default",
-            "displayName": "CMake posix",
-            "generator": "Unix Makefiles",
-            "binaryDir": "${workspaceFolder}/cmake-build-posix",
-            "cacheVariables": {
-            "CMAKE_EXPORT_COMPILE_COMMANDS": "YES"
-            }
-        },
-        {
-            "name": "CMake s32k148",
-            "displayName": "CMake s32k148",
-            "generator": "Unix Makefiles",
-            "binaryDir": "${workspaceFolder}/cmake-build-s32k148",
-            "toolchainFile": "../../admin/cmake/ArmNoneEabi-gcc.cmake",
-            "cacheVariables": {
-            "BUILD_TARGET_PLATFORM": "S32K148EVB",
-            "CMAKE_EXPORT_COMPILE_COMMANDS": "YES"
-            }
-        }
-        ],
-        "buildPresets": [
-        {
-            "name": "default",
-            "configurePreset": "default",
-            "targets": "app.referenceApp"
-        },
-        {
-            "name": "CMake s32k148",
-            "configurePreset": "CMake s32k148",
-            "targets": "app.referenceApp"
-        }
-        ]
-    }
-
 
 Debugging with the ``posix`` build in Visual Studio Code
 --------------------------------------------------------
@@ -219,7 +176,7 @@ The debugger will launch and stop at the entry point in ``main()``.
                 "name": "Debug posix",
                 "type": "cppdbg",
                 "request": "launch",
-                "program": "${workspaceFolder}/cmake-build-posix/application/app.referenceApp.elf",
+                "program": "${workspaceFolder}/build/posix/executables/referenceApp/application/Debug/app.referenceApp.elf",
                 "args": [],
                 "stopAtEntry": true,
                 "cwd": "${workspaceFolder}",
@@ -264,7 +221,7 @@ For example, the task below will flash the elf file onto the S32K148EVB Board.
             {
                 "type": "shell",
                 "label": "Flash s32k148 elf file",
-                "command": "arm-none-eabi-gdb -batch -x test/pyTest/flash.gdb cmake-build-s32k148/application/app.referenceApp.elf",
+                "command": "arm-none-eabi-gdb -batch -x test/pyTest/flash.gdb build/s32k148/executables/referenceApp/application/Debug/app.referenceApp.elf",
                 "group": "build"
             }
         ]
@@ -299,7 +256,7 @@ Cut & paste the configuration below into your ``.vscode/launch.json``...
                 {
                     "name": "Debug s32k148",
                     "cwd": "${workspaceFolder}",
-                    "executable": "${workspaceFolder}/cmake-build-s32k148/application/app.referenceApp.elf",
+                    "executable": "${workspaceFolder}/build/s32k148/executables/referenceApp/application/Debug/app.referenceApp.elf",
                     "request": "launch",
                     "type": "cortex-debug",
                     "runToEntryPoint": "main",

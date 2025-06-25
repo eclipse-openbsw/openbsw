@@ -1,7 +1,13 @@
 add_library(
-    startUp
+    startUpAsm OBJECT
     src/bsp/bootHeader.S
-    src/bsp/startUp.S
+    src/bsp/startUp.S)
+
+set_target_properties(startUpAsm PROPERTIES COMPILE_WARNING_AS_ERROR OFF)
+
+add_library(
+    startUp
+    "$<TARGET_OBJECTS:startUpAsm>"
     src/os/isr/isr_can.cpp
     src/os/isr/isr_enet.cpp
     src/os/isr/isr_erm.cpp

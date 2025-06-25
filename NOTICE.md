@@ -43,7 +43,7 @@ We recommend to read their licenses, as their terms may differ from the terms de
 | FreeRTOS Real Time Kernel | 10.6.2  | MIT       | ``libs/os/3rdparty/freeRtos/LICENSE.md``                             |
 | CMSIS                     | 6.1.0   | Apache v2 | ``platforms/s32k1xx/bsp/bspMcu/include/3rdparty/cmsis/LICENSE``      |
 | NXP S32K148 Headers       | 1.1a    | BSD-3     | ``platforms/s32k1xx/bsp/bspMcu/include/3rdparty/nxp``                |
-| CodeCoverage              |         | BSD-3     | ``admin/cmake/CodeCoverage.cmake``                                   |
+| CodeCoverage              |         | BSD-3     | ``cmake/toolchains/CodeCoverage.cmake``                                   |
 
 ## MISRA
 

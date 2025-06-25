@@ -22,6 +22,3 @@ Standard Headers
   Note that not all includes make sense in embedded code. Some parts are replaced by the
   ``etl`` library.
 - :rule:`FILE-010` If a file needs to be compiled for C++ and C, use the C headers.
-- :rule:`FILE-011` For C++ standard types, include ``<platform/estdint.h>``. It'll behave as if you
-  included ``<cstdint>`` and ``<cstddef>`` and allow the usage of ``size_t`` directly without the
-  namespace ``std``.  Please look in the module documentation for more details.

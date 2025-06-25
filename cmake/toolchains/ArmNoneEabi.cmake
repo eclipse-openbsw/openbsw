@@ -17,6 +17,8 @@ if (NOT DEFINED _CC_CXX_COMMON)
     set(_CC_CXX_COMMON "")
 endif ()
 
+add_compile_definitions(REALTIME_OS=1)
+
 set(_CC_CXX_COMMON
     "${_ARCH_FLAGS} \
     ${_CC_CXX_COMMON} \

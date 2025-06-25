@@ -9,6 +9,9 @@ set(PLATFORM_SUPPORT_CAN
 set(PLATFORM_SUPPORT_ETHERNET
     ON
     CACHE BOOL "Turn ethernet support on or off" FORCE)
+set(PLATFORM_SUPPORT_UDS
+    ON
+    CACHE BOOL "Turn UDS support on or off" FORCE)
 set(PLATFORM_SUPPORT_WATCHDOG
     ON
     CACHE BOOL "Turn ON Watchdog support" FORCE)

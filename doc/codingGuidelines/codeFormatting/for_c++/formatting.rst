@@ -678,8 +678,8 @@ Sorting
 
     #. own header file
     #. files from current module
-    #. files from other modules except estd, platform, gtest and gmock
-    #. files from estd and platform
+    #. files from other modules except platform, gtest and gmock
+    #. files from platform
     #. files from gtest and gmock
     #. compiler includes.
 

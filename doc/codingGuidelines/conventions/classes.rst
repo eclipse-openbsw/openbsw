@@ -321,9 +321,6 @@ also disable move construction:
     Example& operator=(Example&&) = delete;
 
 
-Before the adoption of the C++11 standard, ``UNCOPYABLE`` macro from ``estd`` library was used.
-
-
 Indestructible
 --------------
 

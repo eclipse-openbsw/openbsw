@@ -52,9 +52,8 @@ the tracing buffer size. For example, to build for S32K148EVB:
 
 .. code-block:: bash
 
-    cmake -B cmake-build-s32k148-tracing -S executables/referenceApp -DBUILD_TARGET_PLATFORM="S32K148EVB" \
-        -DBUILD_TRACING=ON -DTRACING_BUFFER_SIZE=65536 --toolchain ../../admin/cmake/ArmNoneEabi-gcc.cmake
-    cmake --build cmake-build-s32k148-tracing --target app.referenceApp -j
+    cmake --preset s32k148-gcc -DBUILD_TRACING=ON -DTRACING_BUFFER_SIZE=65536
+    cmake --build --preset s32k148-gcc
 
 The size of tracing buffer in RAM is configurable (TRACING_BUFFER_SIZE).
 If it is not provided in the cmake command, then the default value of 4096 bytes is configured.

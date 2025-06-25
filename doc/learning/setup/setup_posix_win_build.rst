@@ -15,7 +15,7 @@ For Ubuntu :prop:`tool:ubuntu_version`, the ``apt`` package ``build-essential`` 
 
 .. code-block:: bash
 
-    sudo apt install build-essential
+    sudo apt install build-essential ninja-build
 
 You will also need ``cmake`` version >= :prop:`tool:cmake_version` . To install it, simply run:
 
@@ -35,16 +35,25 @@ In the base directory of the ``git`` clone ``referenceApp`` run...
 
 .. code-block:: bash
 
-    cmake -B cmake-build-posix -S executables/referenceApp
-    cmake --build cmake-build-posix --target app.referenceApp -j
+    cmake --preset posix
+    cmake --build --preset posix --parallel
 
-The build files should be written to a new subdirectory named ``cmake-build-posix``
-and the built executable should be found at ``cmake-build-posix/application/app.referenceApp.elf``.
+By default release configuration is used. If you want to build debug configuration, use
+
+.. code-block:: bash
+
+    cmake --build --preset posix --config Debug --parallel
+
+The build files should be written to a new subdirectory named ``build/posix``
+and the built executable should be found at
+``build/posix/executables/referenceApp/application/Release/app.referenceApp.elf``.
+If you've built it with `--config Debug`, then the executable can be found at
+``build/posix/executables/referenceApp/application/Debug/app.referenceApp.elf``.
 You should be able to run and see output like this in your shell terminal...
 
 .. code-block:: bash
 
-    $ cmake-build-posix/application/app.referenceApp.elf
+    $ build/posix/executables/referenceApp/application/Release/app.referenceApp.elf
     hello
     106367434: RefApp: LIFECYCLE: INFO: Initialize level 1
     106367434: RefApp: LIFECYCLE: INFO: Initialize runtime

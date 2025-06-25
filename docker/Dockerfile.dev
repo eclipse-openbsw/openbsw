@@ -2,28 +2,29 @@ FROM ubuntu:22.04
 
 RUN for i in 1 2 3; do \
         apt-get update && apt-get install -y \
-            python3.10 \
-            python3-pip \
             bzip2 \
-            zip \
+            clang-tidy \
+            curl \
+            g++-11 \
+            gcc-11 \
+            git \
+            iputils-ping \
+            lcov \
+            ninja-build \
+            python3-pip \
+            python3.10 \
             tar \
             tmux \
-            clang-tidy \
             wget \
-            curl \
-            git \
-            gcc-11 \
-            g++-11 \
-            lcov \
-            iputils-ping \
+            zip \
         && rm -rf /var/lib/apt/lists/* \
         && break || { echo "Apt install failed, retrying ($i/3)..."; sleep 10; }; \
     done
 
-RUN wget https://github.com/Kitware/CMake/releases/download/v3.22.5/cmake-3.22.5-linux-x86_64.sh \
-    && chmod +x cmake-3.22.5-linux-x86_64.sh \
-    && ./cmake-3.22.5-linux-x86_64.sh --skip-license --prefix=/usr/local \
-    && rm cmake-3.22.5-linux-x86_64.sh
+RUN wget https://github.com/Kitware/CMake/releases/download/v3.28.3/cmake-3.28.3-linux-x86_64.sh \
+    && chmod +x cmake-3.28.3-linux-x86_64.sh \
+    && ./cmake-3.28.3-linux-x86_64.sh --skip-license --prefix=/usr/local \
+    && rm cmake-3.28.3-linux-x86_64.sh
 
 RUN wget https://developer.arm.com/-/media/Files/downloads/gnu-rm/10.3-2021.10/gcc-arm-none-eabi-10.3-2021.10-x86_64-linux.tar.bz2 \
     && tar -xjf gcc-arm-none-eabi-10.3-2021.10-x86_64-linux.tar.bz2 \
@@ -63,6 +64,7 @@ ENV PATH="/usr/bin/gcc-arm-none-eabi/bin:/usr/bin/llvm/bin:/usr/bin/llvm-arm/bin
 RUN echo 'export HISTFILE=/root/.bash_history/history' >> /root/.bashrc
 
 RUN pip3 install pytest
+RUN pip3 install rich
 
 COPY test/pyTest/requirements.txt /home/jenkins/test/pyTest/requirements.txt
 RUN pip3 install -r /home/jenkins/test/pyTest/requirements.txt

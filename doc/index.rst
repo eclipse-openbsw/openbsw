@@ -63,9 +63,9 @@ This is how to build and run the unit tests from the root of the workspace:
 
 .. code-block:: bash
 
-   cmake -B cmake-build-unit-tests -S executables/unitTest -DBUILD_UNIT_TESTS=ON -DCMAKE_BUILD_TYPE=Debug
-   cmake --build cmake-build-unit-tests -j
-   ctest --test-dir cmake-build-unit-tests -j
+   cmake --preset tests-dbg
+   cmake --build --preset tests-dbg --parallel $(nproc)
+   ctest --preset tests-dbg --parallel $(nproc)
    # if you modified some CMakeLists.txt files in the project don't forget to run:
    cmake-format -i $(find . -name CMakeLists.txt | sed '/3rdparty\/.*\/CMakeLists\.txt/d')
 
@@ -90,17 +90,17 @@ visualize and analyze the results more effectively.
 
    # capture the coverage
    lcov --capture --directory . \
-    --output-file cmake-build-unit-tests/coverage_unfiltered.info
+    --output-file build/tests/Debug/coverage_unfiltered.info
    # filter out the coverage of 3rd party googletest module as it is not used on target and
    # also coverage for mocks
-   lcov --remove cmake-build-unit-tests/coverage_unfiltered.info \
+   lcov --remove build/tests/Debug/coverage_unfiltered.info \
     '*libs/3rdparty/googletest/*' \
     '*/mock/*' \
     '*/gmock/*' \
-    --output-file cmake-build-unit-tests/coverage.info
+    --output-file build/tests/Debug/coverage.info
    # create a HTML report
-   genhtml cmake-build-unit-tests/coverage.info \
-    --output-directory cmake-build-unit-tests/coverage
+   genhtml build/tests/Debug/coverage.info \
+    --output-directory build/tests/Debug/coverage
 
 .. note::
 

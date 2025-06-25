@@ -15,45 +15,35 @@ Configure and generate a project buildsystem for the unit test build:
 
 .. code-block:: bash
 
-    cmake -DBUILD_UNIT_TESTS=ON -B cmake-build-unit-tests -S executables/unitTest
-
-Different generators are also supported, for example Ninja:
-
-.. code-block:: bash
-
-    cmake \
-        -G Ninja \
-        -DBUILD_UNIT_TESTS=ON \
-        -B cmake-build-unit-tests \
-        -S executable/unitTest
+    cmake --preset tests-dbg
 
 Build all tests or a specified target:
 
 .. code-block:: bash
 
     # all tests
-    cmake --build cmake-build-unit-tests -j
+    cmake --build --preset tests-dbg
     # specific target
-    cmake --build cmake-build-unit-tests -j --target <unit_test_target>
+    cmake --build --preset tests-dbg --target <target>
     # example
-    cmake --build cmake-build-unit-tests -j --target estdTest
+    cmake --build --preset tests-dbg --target ioTest
 
 Find all available targets for the unit test build:
 
 .. code-block:: bash
 
-    cmake --build cmake-build-unit-tests --target help
+    cmake --build --preset tests-dbg --target help
 
 Prepare a clean build using the clean target:
 
 .. code-block:: bash
 
-    cmake --build cmake-build-unit-tests -j --target clean
+    cmake --build --preset tests-dbg --target clean
 
 Run the tests:
 
 .. code-block:: bash
 
-    ctest --test-dir cmake-build-unit-tests -j
+    ctest --preset tests-dbg --parallel
 
 Next: :ref:`learning_lifecycle`

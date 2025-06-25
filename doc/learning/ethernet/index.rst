@@ -36,7 +36,7 @@ Setup in Testing PC:
    - Navigate to the openBsw root directory.
    - Run the script to set up the tap interface: ``./tools/enet/bring-up-ethernet.sh``
    - Run the application on POSIX with the below command in the terminal:
-     ``cmake-build-posix/application/app.referenceApp.elf``
+     ``build/posix/executables/referenceApp/application/Release/app.referenceApp.elf``
 
 S32K148
 +++++++
