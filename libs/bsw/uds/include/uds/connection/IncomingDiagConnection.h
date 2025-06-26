@@ -10,7 +10,6 @@
 #include "uds/connection/ErrorCode.h"
 #include "uds/connection/PositiveResponse.h"
 
-#include <etl/inplace_function.h>
 #include <etl/uncopyable.h>
 #include <etl/vector.h>
 
