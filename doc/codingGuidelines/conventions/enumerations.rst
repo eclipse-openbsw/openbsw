@@ -23,7 +23,7 @@ More information can be found `here <https://en.cppreference.com/w/cpp/language/
 Unscoped Enumerations
 ---------------------
 Unscoped enumerations should **not** be used anymore.
-The rationale behind this is, that the underlying type is implementation-defined by the compiler.
+The rationale behind this is that the underlying type is implementation-defined by the compiler.
 The only restriction is that the type must be able to represent the enumeration values.
 Usually this type will be implemented as an ``int`` or ``unsigned int``.
 
