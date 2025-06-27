@@ -10,19 +10,65 @@ A simple tool to talk to ECUs via UDS (ISO 14229-1).
 
 Installation
 ------------
-Inside the ``tools/UdsTool`` folder run:
+Inside the ``tools/UdsTool`` folder run: ``pip install .``
 
-        ``pip install .``
+.. note::
+
+    - If you are using WSL, make sure you have already successfully followed the steps in :ref:`setup_wsl_socketcan` and your WSL kernel supports USB.
+      Recent versions of Windows running WSL kernel :prop:`tool:wsl_kernel_version` or later already include support for many USB scenarios.
+    - If you would like to be able to edit the source code, you can install it in editable mode by adding the ``editable`` flag in the command: ``pip install --editable .``
 
 Usage
 -----
 You can view all the options available by executing the following command:
 
-    ``udstool --help``
+    .. code-block::
 
-The tool has the following structure:
+      > udstool --help
 
-    ``udstool [OPTIONS] COMMAND [ARGS]...``
+      Usage: udstool [OPTIONS] COMMAND [ARGS]...
+
+      Options:
+        --help  Show this message and exit.
+
+      Commands:
+        raw       Enter raw command to send
+        read      UDS service Read Data By Identifier (0x22)
+        routine   UDS service Routine Control (0x31)
+        security  UDS service Security Access (0x27)
+        session   UDS service Diagnostic Session Control (0x10)
+        write     UDS service Write Data By Identifier (0x2e)
+
+Services Supported
+------------------
+.. list-table::
+    :header-rows: 1
+    :stub-columns: 1
+    :widths: auto
+
+    * - **Service**
+      - **SID**
+    * - Read Data By Identifier
+      - ``0x22``
+    * - Write Data By Identifier
+      - ``0x2E``
+    * - Session Control
+      - ``0x10``
+    * - ECU Reset
+      - ``0x11``
+    * - Security Access
+      - ``0x27``
+    * - Routine Control
+      - ``0x31``
+    * - Request Download
+      - ``0x34``
+    * - Transfer Data
+      - ``0x36``
+    * - Transfer Exit
+      - ``0x37``
+
+All these services can be requested using the ``raw`` command. For example :
+  ``udstool raw --eth --host [Host IP] --ecu [ECU logical address] --source [Client logical address] --data [UDS payload ex:22cf01]``
 
 Example
 -------
