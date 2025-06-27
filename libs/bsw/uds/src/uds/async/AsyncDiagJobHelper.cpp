@@ -12,7 +12,9 @@ AsyncDiagJobHelper::AsyncDiagJobHelper(
 , fJob(job)
 , fPendingAsyncConnection(nullptr)
 , fPendingRequests()
-, fTriggerNextRequests([this]() { triggerNextRequests(); })
+, fTriggerNextRequests(
+      ::async::Function::CallType::
+          create<AsyncDiagJobHelper, &AsyncDiagJobHelper::triggerNextRequests>(*this))
 , fContext(diagContext)
 {}
 

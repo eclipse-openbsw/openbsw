@@ -7,7 +7,7 @@
 
 #include "async/Async.h"
 
-#include <etl/inplace_function.h>
+#include <etl/delegate.h>
 
 namespace async
 {
@@ -39,7 +39,7 @@ private:
     T _call;
 };
 
-using Function = Call<::etl::inplace_function<void()>>;
+using Function = Call<::etl::delegate<void()>>;
 
 /**
  * Inline implementations.

@@ -21,7 +21,8 @@ public:
 
 TEST_F(AsyncCallTest, testFunction)
 {
-    Function cut([this]() { functionCall(); });
+    auto l = [this]() { functionCall(); };
+    Function cut(l);
     EXPECT_CALL(*this, functionCall());
     EXPECT_CALL(_asyncMock, execute(0, _))
         .Times(1)

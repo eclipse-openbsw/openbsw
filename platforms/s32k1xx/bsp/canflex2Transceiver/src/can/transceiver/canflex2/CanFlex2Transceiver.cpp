@@ -40,9 +40,13 @@ CanFlex2Transceiver::CanFlex2Transceiver(
 , fFirstFrameNotified(false)
 , fRxAlive(false)
 , _context(context)
-, _cyclicTask([this]() { cyclicTask(); })
+, _cyclicTask(
+      ::async::Function::CallType::create<CanFlex2Transceiver, &CanFlex2Transceiver::cyclicTask>(
+          *this))
 , _cyclicTaskTimeout()
-, _canFrameSent([this]() { canFrameSentAsyncCallback(); })
+, _canFrameSent(
+      ::async::Function::CallType::
+          create<CanFlex2Transceiver, &CanFlex2Transceiver::canFrameSentAsyncCallback>(*this))
 {
     fpCanTransceivers[fFlexCANDevice.getIndex()] = this;
 }

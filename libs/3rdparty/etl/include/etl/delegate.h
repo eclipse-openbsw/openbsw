@@ -39,4 +39,96 @@ SOFTWARE.
   #include "private/delegate_cpp03.h" // IWYU pragma: export
 #endif
 
+namespace etl {
+    //***************************************************************************
+  template<typename>
+  struct closure;
+  
+  template<typename R, typename P0>
+  struct closure<R(P0)>
+  {
+      using fct = delegate<R(P0)>;
+  
+      closure(fct const& f, P0 const p0) : _f(f), _p0(p0) {}
+  
+      R operator()() const { return _f(_p0); }
+  
+  private:
+      fct _f;
+      P0 _p0;
+  };
+  
+  template<typename R, typename P0, typename P1>
+  struct closure<R(P0, P1)>
+  {
+      using fct = delegate<R(P0, P1)>;
+  
+      closure(fct const& f, P0 const p0, P1 const p1) : _f(f), _p0(p0), _p1(p1) {}
+  
+      R operator()() const { return _f(_p0, _p1); }
+  
+  private:
+      fct _f;
+      P0 _p0;
+      P1 _p1;
+  };
+  
+  template<typename R, typename P0, typename P1, typename P2>
+  struct closure<R(P0, P1, P2)>
+  {
+      using fct = delegate<R(P0, P1, P2)>;
+  
+      closure(fct const& f, P0 const p0, P1 const p1, P2 const p2) : _f(f), _p0(p0), _p1(p1), _p2(p2)
+      {}
+  
+      R operator()() const { return _f(_p0, _p1, _p2); }
+  
+  private:
+      fct _f;
+      P0 _p0;
+      P1 _p1;
+      P2 _p2;
+  };
+  
+  template<typename R, typename P0, typename P1, typename P2, typename P3>
+  struct closure<R(P0, P1, P2, P3)>
+  {
+      using fct = delegate<R(P0, P1, P2, P3)>;
+  
+      closure(fct const& f, P0 const p0, P1 const p1, P2 const p2, P3 const p3)
+      : _f(f), _p0(p0), _p1(p1), _p2(p2), _p3(p3)
+      {}
+  
+      R operator()() const { return _f(_p0, _p1, _p2, _p3); }
+  
+  private:
+      fct _f;
+      P0 _p0;
+      P1 _p1;
+      P2 _p2;
+      P3 _p3;
+  };
+  
+  template<typename R, typename P0, typename P1, typename P2, typename P3, typename P4>
+  struct closure<R(P0, P1, P2, P3, P4)>
+  {
+      using fct = delegate<R(P0, P1, P2, P3, P4)>;
+  
+      closure(fct const& f, P0 const p0, P1 const p1, P2 const p2, P3 const p3, P4 const p4)
+      : _f(f), _p0(p0), _p1(p1), _p2(p2), _p3(p3), _p4(p4)
+      {}
+  
+      R operator()() const { return _f(_p0, _p1, _p2, _p3, _p4); }
+  
+  private:
+      fct _f;
+      P0 _p0;
+      P1 _p1;
+      P2 _p2;
+      P3 _p3;
+      P4 _p4;
+  };
+
+}
+
 #endif

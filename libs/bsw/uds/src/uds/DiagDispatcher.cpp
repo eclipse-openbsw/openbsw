@@ -40,7 +40,8 @@ DiagDispatcher2::DiagDispatcher2(
 , fDefaultTransportMessageProcessedListener()
 , fBusyMessage()
 , fBusyMessageBuffer()
-, fAsyncProcessQueue([this]() { processQueue(); })
+, fAsyncProcessQueue(
+      ::async::Function::CallType::create<DiagDispatcher2, &DiagDispatcher2::processQueue>(*this))
 {
     fBusyMessage.init(
         &fBusyMessageBuffer[0], BUSY_MESSAGE_LENGTH + UdsVmsConstants::BUSY_MESSAGE_EXTRA_BYTES);

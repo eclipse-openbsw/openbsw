@@ -91,7 +91,11 @@ IncomingDiagConnection::sendPositiveResponseInternal(uint16_t const length, Abst
         ++fNumPendingMessageProcessedCallbacks;
 
         fSendPositiveResponseClosure = SendPositiveResponseClosure::CallType(
-            [this, length, &sender]() { asyncSendPositiveResponse(length, &sender); });
+            SendPositiveResponseClosure::CallType::fct::
+                create<IncomingDiagConnection, &IncomingDiagConnection::asyncSendPositiveResponse>(
+                    *this),
+            length,
+            &sender);
         ::async::execute(fContext, fSendPositiveResponseClosure);
         return ::uds::ErrorCode::OK;
     }
@@ -225,7 +229,7 @@ bool IncomingDiagConnection::terminateNestedRequest()
     {
         if (fNestedRequest->getResponseCode() == DiagReturnCode::OK)
         {
-            ::async::execute(fContext, fTriggerNextNestedRequestClosure);
+            ::async::execute(fContext, fTriggerNextNestedRequestDelegate);
         }
         else
         {
@@ -264,7 +268,11 @@ IncomingDiagConnection::sendNegativeResponse(uint8_t const responseCode, Abstrac
         ++fNumPendingMessageProcessedCallbacks;
 
         fSendNegativeResponseClosure = SendNegativeResponseClosure::CallType(
-            [this, responseCode, &sender]() { asyncSendNegativeResponse(responseCode, &sender); });
+            SendNegativeResponseClosure::CallType::fct::
+                create<IncomingDiagConnection, &IncomingDiagConnection::asyncSendNegativeResponse>(
+                    *this),
+            responseCode,
+            &sender);
         ::async::execute(fContext, fSendNegativeResponseClosure);
         return ::uds::ErrorCode::OK;
     }
@@ -406,9 +414,12 @@ void IncomingDiagConnection::endNestedRequest()
 void IncomingDiagConnection::transportMessageProcessed(
     transport::TransportMessage& transportMessage, ProcessingResult const result)
 {
-    fTransportMessageProcessedClosure = TransportMessageProcessedClosure::CallType(
-        [this, &transportMessage, result]()
-        { asyncTransportMessageProcessed(&transportMessage, result); });
+    fTransportMessageProcessedClosure = TransportMessageClosure::CallType(
+        TransportMessageClosure::CallType::fct::
+            create<IncomingDiagConnection, &IncomingDiagConnection::asyncTransportMessageProcessed>(
+                *this),
+        &transportMessage,
+        result);
     ::async::execute(fContext, fTransportMessageProcessedClosure);
 }
 
