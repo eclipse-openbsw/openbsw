@@ -6,10 +6,10 @@
 #include "uds/session/ApplicationDefaultSession.h"
 #include "uds/session/DiagSessionManagerMock.h"
 
+#include <etl/memory.h>
+#include <etl/span.h>
 #include <transport/TransportMessage.h>
 #include <transport/TransportMessageWithBuffer.h>
-
-#include <estd/memory.h>
 
 #include <gtest/gtest.h>
 
@@ -43,7 +43,7 @@ protected:
     uint8_t _responseBuffer[10U];
     StrictMock<DiagSessionManagerMock> _sessionManager;
     StrictMock<IncomingDiagConnectionMock> _incomingDiagConnection{::async::CONTEXT_INVALID};
-    ::estd::slice<uint8_t const> _testSlice;
+    ::etl::span<uint8_t const> _testSlice;
     ReadIdentifierFromSliceRef _cut;
 };
 
@@ -58,7 +58,7 @@ TEST_F(ReadIdentifierFromSliceRefJobTest, execute_valid_request)
         TESTIDENTIFIER & 0xFFU,
     };
 
-    ::estd::memory::set(_responseBuffer, 0);
+    ::etl::mem_set(_responseBuffer, sizeof(_responseBuffer), static_cast<uint8_t>(0));
     _testSlice = TESTDATA;
 
     TransportMessageWithBuffer request(
@@ -80,7 +80,7 @@ TEST_F(ReadIdentifierFromSliceRefJobTest, execute_valid_request)
         _cut.execute(_incomingDiagConnection, VALID_REQUEST, sizeof(VALID_REQUEST)));
 
     EXPECT_THAT(
-        ::estd::slice<uint8_t const>(TESTDATA),
+        ::etl::span<uint8_t const>(TESTDATA),
         ElementsAreArray(&_responseBuffer[2], sizeof(TESTDATA)));
 }
 
@@ -91,7 +91,7 @@ TEST_F(ReadIdentifierFromSliceRefJobTest, execute_valid_request_and_change_slice
         TESTIDENTIFIER & 0xFFU,
     };
 
-    ::estd::memory::set(_responseBuffer, 0);
+    ::etl::mem_set(_responseBuffer, sizeof(_responseBuffer), static_cast<uint8_t>(0));
     _testSlice = TESTDATA2;
 
     TransportMessageWithBuffer request(
@@ -113,7 +113,7 @@ TEST_F(ReadIdentifierFromSliceRefJobTest, execute_valid_request_and_change_slice
         _cut.execute(_incomingDiagConnection, VALID_REQUEST, sizeof(VALID_REQUEST)));
 
     EXPECT_THAT(
-        ::estd::slice<uint8_t const>(TESTDATA2),
+        ::etl::span<uint8_t const>(TESTDATA2),
         ElementsAreArray(&_responseBuffer[2], sizeof(TESTDATA2)));
 }
 

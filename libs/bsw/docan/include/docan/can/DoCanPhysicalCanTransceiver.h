@@ -15,6 +15,8 @@
 #include "docan/datalink/IDoCanFrameReceiver.h"
 #include "docan/datalink/IDoCanPhysicalTransceiver.h"
 
+#include <etl/span.h>
+
 namespace docan
 {
 /**
@@ -61,7 +63,7 @@ public:
         FrameIndexType firstFrameIndex,
         FrameIndexType lastFrameIndex,
         FrameSizeType consecutiveFrameDataSize,
-        ::estd::slice<uint8_t const> const& data) override;
+        ::etl::span<uint8_t const> const& data) override;
     void cancelSendDataFrames(
         IDoCanDataFrameTransmitterCallback<DataLinkLayerType>& callback,
         JobHandleType jobHandle) override;
@@ -136,12 +138,12 @@ SendResult DoCanPhysicalCanTransceiver<Addressing>::startSendDataFrames(
     FrameIndexType const firstFrameIndex,
     FrameIndexType const lastFrameIndex,
     FrameSizeType const consecutiveFrameDataSize,
-    ::estd::slice<uint8_t const> const& data)
+    ::etl::span<uint8_t const> const& data)
 {
     (void)lastFrameIndex;
     if (!_sendPending)
     {
-        ::estd::slice<uint8_t> payload = ::estd::slice<uint8_t>::from_pointer(
+        ::etl::span<uint8_t> payload(
             _frame.getPayload(), static_cast<size_t>(_frame.getMaxPayloadLength()));
 
         if (codec.encodeDataFrame(
@@ -194,7 +196,7 @@ bool DoCanPhysicalCanTransceiver<Addressing>::sendFlowControl(
 {
     ::can::CANFrame frame;
 
-    ::estd::slice<uint8_t> payload = ::estd::slice<uint8_t>::from_pointer(
+    ::etl::span<uint8_t> payload(
         frame.getPayload(), static_cast<size_t>(frame.getMaxPayloadLength()));
     (void)codec.encodeFlowControlFrame(payload, flowStatus, blockSize, encodedMinSeparationTime);
     uint32_t canId;
@@ -212,8 +214,7 @@ void DoCanPhysicalCanTransceiver<Addressing>::frameReceived(::can::CANFrame cons
         return;
     }
 
-    ::estd::slice<uint8_t const> const payload = ::estd::slice<uint8_t const>::from_pointer(
-        canFrame.getPayload(), canFrame.getPayloadLength());
+    ::etl::span<uint8_t const> const payload(canFrame.getPayload(), canFrame.getPayloadLength());
     DataLinkAddressType const receptionAddress
         = _addressing.decodeReceptionAddress(canFrame.getId(), payload);
 

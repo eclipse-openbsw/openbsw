@@ -6,9 +6,6 @@
 #include "util/format/Printf.h"
 #include "util/stream/IOutputStream.h"
 
-#include <estd/memory.h>
-#include <estd/slice.h>
-
 #include <cstdarg>
 #include <cstring>
 #include <type_traits>
@@ -367,7 +364,7 @@ inline char const* PrintfFormatter::getIntPrefix(ParamInfo const& paramInfo, int
 inline void PrintfFormatter::putString(char const* const string, size_t const length)
 {
     _pos += length;
-    _stream.write(::estd::memory::as_slice(string, length).reinterpret_as<uint8_t const>());
+    _stream.write_string_view(::etl::string_view{string, length});
 }
 
 inline void PrintfFormatter::putChar(char const c, size_t count)

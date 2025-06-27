@@ -4,6 +4,7 @@
 
 #include <async/Async.h>
 #include <async/IRunnable.h>
+#include <etl/singleton_base.h>
 #include <lifecycle/AsyncLifecycleComponent.h>
 #include <uds/DiagDispatcher.h>
 #include <uds/DummySessionPersistence.h>
@@ -22,8 +23,6 @@
 #include <uds/services/testerpresent/TesterPresent.h>
 #include <uds/services/writedata/WriteDataByIdentifier.h>
 
-#include <estd/singleton.h>
-
 namespace lifecycle
 {
 class LifecycleManager;
@@ -38,11 +37,9 @@ namespace uds
 {
 class UdsSystem
 : public lifecycle::AsyncLifecycleComponent
-, public ::estd::singleton<UdsSystem>
+, public ::etl::singleton_base<UdsSystem>
 , private ::async::IRunnable
 {
-    using Base = ::estd::singleton<UdsSystem>;
-
 public:
     UdsSystem(
         lifecycle::LifecycleManager& lManager,

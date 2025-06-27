@@ -8,6 +8,8 @@
 #include "docan/datalink/DoCanFrameCodec.h"
 #include "docan/datalink/DoCanFrameCodecConfigPresets.h"
 
+#include <etl/span.h>
+
 #include <gmock/gmock.h>
 
 namespace
@@ -152,7 +154,7 @@ TEST(DoCanMessageReceiverTest, testMultipleFramesAreReceived)
         7U,
         0x02U,
         0x3fU,
-        ::estd::slice<uint8_t const>::from_pointer(data, 6U),
+        ::etl::span<uint8_t const>(data, 6U),
         false);
     EXPECT_EQ(ReceiveState::ALLOCATE, cut.getState());
     EXPECT_EQ(ReceiveTimeout::NONE, cut.getTimeout());
@@ -172,8 +174,7 @@ TEST(DoCanMessageReceiverTest, testMultipleFramesAreReceived)
     EXPECT_EQ(7U, cut.getExpectedConsecutiveFrameDataSize());
     EXPECT_EQ(
         ReceiveResult(true),
-        cut.consecutiveFrameReceived(
-            1U, 7U, ::estd::slice<uint8_t const>::from_pointer(data + 6U, 7U)));
+        cut.consecutiveFrameReceived(1U, 7U, ::etl::span<uint8_t const>(data + 6U, 7U)));
     EXPECT_EQ(ReceiveState::WAIT, cut.getState());
     EXPECT_EQ(ReceiveTimeout::RX, cut.getTimeout());
     EXPECT_FALSE(cut.isAllocating());
@@ -181,8 +182,7 @@ TEST(DoCanMessageReceiverTest, testMultipleFramesAreReceived)
     EXPECT_EQ(2U, cut.getExpectedConsecutiveFrameDataSize());
     EXPECT_EQ(
         ReceiveResult(true),
-        cut.consecutiveFrameReceived(
-            2U, 2U, ::estd::slice<uint8_t const>::from_pointer(data + 13U, 2U)));
+        cut.consecutiveFrameReceived(2U, 2U, ::etl::span<uint8_t const>(data + 13U, 2U)));
     EXPECT_EQ(ReceiveState::PROCESSING, cut.getState());
     EXPECT_EQ(ReceiveTimeout::NONE, cut.getTimeout());
     EXPECT_FALSE(cut.isAllocating());
@@ -206,14 +206,7 @@ TEST(DoCanMessageReceiverTest, testMultipleFramesAreReceivedAfterDelayedAllocati
     uint8_t const data[] = {
         0x12, 0x34, 0x56, 0x78, 0x9a, 0xbc, 0xde, 0xf0, 0x13, 0x24, 0x35, 0x46, 0x57, 0x68, 0x79};
     DoCanMessageReceiver<DataLinkLayer> cut(
-        connection,
-        sizeof(data),
-        3U,
-        7U,
-        0x03U,
-        0x00,
-        ::estd::slice<uint8_t const>::from_pointer(data, 6U),
-        false);
+        connection, sizeof(data), 3U, 7U, 0x03U, 0x00, ::etl::span<uint8_t const>(data, 6U), false);
     EXPECT_EQ(ReceiveState::ALLOCATE, cut.getState());
     EXPECT_EQ(ReceiveTimeout::NONE, cut.getTimeout());
     EXPECT_TRUE(cut.isAllocating());
@@ -252,15 +245,13 @@ TEST(DoCanMessageReceiverTest, testMultipleFramesAreReceivedAfterDelayedAllocati
     EXPECT_EQ(7U, cut.getExpectedConsecutiveFrameDataSize());
     EXPECT_EQ(
         ReceiveResult(true),
-        cut.consecutiveFrameReceived(
-            1U, 7U, ::estd::slice<uint8_t const>::from_pointer(data + 6U, 7U)));
+        cut.consecutiveFrameReceived(1U, 7U, ::etl::span<uint8_t const>(data + 6U, 7U)));
     EXPECT_EQ(ReceiveState::WAIT, cut.getState());
     EXPECT_EQ(ReceiveTimeout::RX, cut.getTimeout());
     EXPECT_FALSE(cut.isAllocating());
     EXPECT_EQ(
         ReceiveResult(true),
-        cut.consecutiveFrameReceived(
-            2U, 2U, ::estd::slice<uint8_t const>::from_pointer(data + 13U, 2U)));
+        cut.consecutiveFrameReceived(2U, 2U, ::etl::span<uint8_t const>(data + 13U, 2U)));
     EXPECT_EQ(ReceiveState::PROCESSING, cut.getState());
     EXPECT_EQ(ReceiveTimeout::NONE, cut.getTimeout());
     EXPECT_FALSE(cut.isAllocating());
@@ -291,7 +282,7 @@ TEST(DoCanMessageReceiverTest, testMultipleFramesAreReceivedWithBlockSize)
         7U,
         0x01U,
         0x03fU,
-        ::estd::slice<uint8_t const>::from_pointer(data, 6U),
+        ::etl::span<uint8_t const>(data, 6U),
         false);
     EXPECT_EQ(ReceiveState::ALLOCATE, cut.getState());
     EXPECT_EQ(ReceiveTimeout::NONE, cut.getTimeout());
@@ -311,8 +302,7 @@ TEST(DoCanMessageReceiverTest, testMultipleFramesAreReceivedWithBlockSize)
     EXPECT_EQ(7U, cut.getExpectedConsecutiveFrameDataSize());
     EXPECT_EQ(
         ReceiveResult(true),
-        cut.consecutiveFrameReceived(
-            1U, 7U, ::estd::slice<uint8_t const>::from_pointer(data + 6U, 7U)));
+        cut.consecutiveFrameReceived(1U, 7U, ::etl::span<uint8_t const>(data + 6U, 7U)));
     EXPECT_EQ(ReceiveState::SEND, cut.getState());
     EXPECT_EQ(ReceiveTimeout::NONE, cut.getTimeout());
     EXPECT_FALSE(cut.isAllocating());
@@ -325,8 +315,7 @@ TEST(DoCanMessageReceiverTest, testMultipleFramesAreReceivedWithBlockSize)
     EXPECT_EQ(2U, cut.getExpectedConsecutiveFrameDataSize());
     EXPECT_EQ(
         ReceiveResult(true),
-        cut.consecutiveFrameReceived(
-            2U, 2U, ::estd::slice<uint8_t const>::from_pointer(data + 13U, 2U)));
+        cut.consecutiveFrameReceived(2U, 2U, ::etl::span<uint8_t const>(data + 13U, 2U)));
     EXPECT_EQ(ReceiveState::PROCESSING, cut.getState());
     EXPECT_EQ(ReceiveTimeout::NONE, cut.getTimeout());
     EXPECT_FALSE(cut.isAllocating());
@@ -350,14 +339,7 @@ TEST(DoCanMessageReceiverTest, testConsecutiveFrameWithBadSequenceNumberIsReceiv
     uint8_t const data[] = {
         0x12, 0x34, 0x56, 0x78, 0x9a, 0xbc, 0xde, 0xf0, 0x13, 0x24, 0x35, 0x46, 0x57, 0x68, 0x79};
     DoCanMessageReceiver<DataLinkLayer> cut(
-        connection,
-        sizeof(data),
-        3U,
-        7U,
-        1U,
-        0x3fU,
-        ::estd::slice<uint8_t const>::from_pointer(data, 6U),
-        false);
+        connection, sizeof(data), 3U, 7U, 1U, 0x3fU, ::etl::span<uint8_t const>(data, 6U), false);
     EXPECT_EQ(ReceiveState::ALLOCATE, cut.getState());
     EXPECT_EQ(ReceiveTimeout::NONE, cut.getTimeout());
     EXPECT_TRUE(cut.isAllocating());
@@ -376,8 +358,7 @@ TEST(DoCanMessageReceiverTest, testConsecutiveFrameWithBadSequenceNumberIsReceiv
     EXPECT_EQ(7U, cut.getExpectedConsecutiveFrameDataSize());
     EXPECT_EQ(
         ReceiveResult(true).setMessage(ReceiveMessage::BAD_SEQUENCE_NUMBER, 2U),
-        cut.consecutiveFrameReceived(
-            2U, 7U, ::estd::slice<uint8_t const>::from_pointer(data + 6U, 7U)));
+        cut.consecutiveFrameReceived(2U, 7U, ::etl::span<uint8_t const>(data + 6U, 7U)));
     EXPECT_EQ(ReceiveState::DONE, cut.getState());
     EXPECT_EQ(ReceiveTimeout::NONE, cut.getTimeout());
     EXPECT_FALSE(cut.isAllocating());
@@ -392,14 +373,7 @@ TEST(DoCanMessageReceiverTest, testConsecutiveFrameIsReceivedDuringAllocation)
     uint8_t const data[] = {
         0x12, 0x34, 0x56, 0x78, 0x9a, 0xbc, 0xde, 0xf0, 0x13, 0x24, 0x35, 0x46, 0x57, 0x68, 0x79};
     DoCanMessageReceiver<DataLinkLayer> cut(
-        connection,
-        sizeof(data),
-        3U,
-        7U,
-        0U,
-        0U,
-        ::estd::slice<uint8_t const>::from_pointer(data, 6U),
-        false);
+        connection, sizeof(data), 3U, 7U, 0U, 0U, ::etl::span<uint8_t const>(data, 6U), false);
     EXPECT_EQ(ReceiveState::ALLOCATE, cut.getState());
     EXPECT_EQ(ReceiveTimeout::NONE, cut.getTimeout());
     EXPECT_TRUE(cut.isAllocating());
@@ -418,14 +392,7 @@ TEST(DoCanMessageReceiverTest, testTimeoutIfAllocationFailsRepeatedly)
     uint8_t const data[] = {
         0x12, 0x34, 0x56, 0x78, 0x9a, 0xbc, 0xde, 0xf0, 0x13, 0x24, 0x35, 0x46, 0x57, 0x68, 0x79};
     DoCanMessageReceiver<DataLinkLayer> cut(
-        connection,
-        sizeof(data),
-        3U,
-        7U,
-        0U,
-        0U,
-        ::estd::slice<uint8_t const>::from_pointer(data, 6U),
-        false);
+        connection, sizeof(data), 3U, 7U, 0U, 0U, ::etl::span<uint8_t const>(data, 6U), false);
     EXPECT_EQ(ReceiveState::ALLOCATE, cut.getState());
     EXPECT_EQ(ReceiveTimeout::NONE, cut.getTimeout());
     EXPECT_TRUE(cut.isAllocating());

@@ -4,7 +4,9 @@
 
 #include "io/IReader.h"
 
-#include <estd/array.h>
+#include <etl/array.h>
+#include <etl/span.h>
+#include <util/estd/assert.h>
 
 namespace io
 {
@@ -30,7 +32,7 @@ public:
      * \assert sources[0..N-1] != nullptr
      * \assert sources[0]->maxSize() == sources[1]->maxSize() ... == sources[N-1]->maxSize()
      */
-    explicit JoinReader(::estd::slice<IReader*, N> const& sources);
+    explicit JoinReader(::etl::span<IReader*, N> const& sources);
 
     /**
      * \see ::io::IReader::maxSize()
@@ -47,7 +49,7 @@ public:
      * \return - Slice of bytes if one of the underlying queues was not empty
      *         - Empty slice otherwise
      */
-    ::estd::slice<uint8_t> peek() const override;
+    ::etl::span<uint8_t> peek() const override;
 
     /**
      * \see ::io::IReader::release()
@@ -58,16 +60,16 @@ public:
     /**
      * The number of peeked messages released from each IReader.
      */
-    ::estd::array<size_t, N> stats;
+    ::etl::array<size_t, N> stats;
 
 private:
-    ::estd::slice<IReader*, N> _sources;
+    ::etl::span<IReader*, N> _sources;
     mutable size_t _current;
     mutable bool _hasPeeked = false;
 };
 
 template<size_t N>
-JoinReader<N>::JoinReader(::estd::slice<IReader*, N> const& sources)
+JoinReader<N>::JoinReader(::etl::span<IReader*, N> const& sources)
 : stats(), _sources(sources), _current(0)
 {
     estd_assert(_sources[0] != nullptr);
@@ -87,7 +89,7 @@ inline size_t JoinReader<N>::maxSize() const
 }
 
 template<size_t N>
-::estd::slice<uint8_t> JoinReader<N>::peek() const
+::etl::span<uint8_t> JoinReader<N>::peek() const
 {
     for (size_t i = _current; i < (N + _current); i++)
     {

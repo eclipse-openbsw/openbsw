@@ -2,7 +2,8 @@
 
 #include "util/stream/ByteBufferOutputStream.h"
 
-#include <cstring>
+#include <etl/memory.h>
+#include <etl/span.h>
 
 namespace util
 {
@@ -19,7 +20,7 @@ void ByteBufferOutputStream::write(uint8_t const data)
     ++_position;
 }
 
-void ByteBufferOutputStream::write(::estd::slice<uint8_t const> const& buffer)
+void ByteBufferOutputStream::write(::etl::span<uint8_t const> const& buffer)
 {
     if (_position < _buffer.size())
     {
@@ -27,7 +28,7 @@ void ByteBufferOutputStream::write(::estd::slice<uint8_t const> const& buffer)
                                        ? buffer.size()
                                        : (_buffer.size() - _position);
 
-        (void)::memcpy(_buffer.data() + _position, buffer.data(), bytesToCopy);
+        (void)::etl::mem_copy(buffer.data(), bytesToCopy, _buffer.data() + _position);
     }
     _position += buffer.size();
 }

@@ -4,13 +4,11 @@
 
 #include "uds/connection/IncomingDiagConnection.h"
 
-using ::estd::slice;
-
 namespace uds
 {
 ReadIdentifierFromSliceRef::ReadIdentifierFromSliceRef(
     uint16_t const identifier,
-    slice<uint8_t const> const& responseData,
+    ::etl::span<uint8_t const> const& responseData,
     DiagSessionMask const sessionMask)
 : DataIdentifierJob(_implementedRequest, sessionMask), _responseSlice(responseData)
 {

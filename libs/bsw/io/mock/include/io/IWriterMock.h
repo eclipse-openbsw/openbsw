@@ -13,7 +13,7 @@ class IWriterMock : public IWriter
 public:
     MOCK_CONST_METHOD0(maxSize, size_t());
 
-    MOCK_METHOD1(allocate, ::estd::slice<uint8_t>(size_t));
+    MOCK_METHOD1(allocate, ::etl::span<uint8_t>(size_t));
 
     MOCK_METHOD0(commit, void());
 

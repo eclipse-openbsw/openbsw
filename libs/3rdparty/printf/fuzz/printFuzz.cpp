@@ -2,8 +2,6 @@
 
 #include <fuzzing/fuzzing.h>
 
-#include <estd/memory.h>
-
 namespace test
 {
 // use functions in own test namespace to avoid stdio conflicts
@@ -20,8 +18,6 @@ void _out_fct(char character, void* arg)
     (void)arg;
     printf_buffer[0] = character;
 }
-
-namespace memory = ::estd::memory;
 
 FUZZ(3rdpartyPrint, string_snprintf)
 {
