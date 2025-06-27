@@ -18,7 +18,7 @@ public:
     class IDynamicInputClient
     {
     public:
-        virtual bsp::BspReturnCode get(uint16_t chan, bool& result) = 0;
+        virtual ::bsp::BspReturnCode get(uint16_t chan, bool& result) = 0;
     };
 
     using DigitalInputId = uint8_t;

@@ -11,11 +11,11 @@ namespace io
 class IReaderMock : public IReader
 {
 public:
-    MOCK_CONST_METHOD0(maxSize, size_t());
+    MOCK_METHOD(size_t, maxSize, (), (const, override));
 
-    MOCK_CONST_METHOD0(peek, ::estd::slice<uint8_t>());
+    MOCK_METHOD(::estd::slice<uint8_t>, peek, (), (const, override));
 
-    MOCK_METHOD0(release, void());
+    MOCK_METHOD(void, release, (), (override));
 };
 
 } // namespace io

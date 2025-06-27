@@ -18,7 +18,7 @@ class TimeoutMock : public ::estd::singleton<TimeoutMock>
 public:
     TimeoutMock() : ::estd::singleton<TimeoutMock>(*this) {}
 
-    MOCK_METHOD1(cancel, void(TimeoutType& timeout));
+    MOCK_METHOD(void, cancel, (TimeoutType & timeout));
 };
 
 } // namespace async

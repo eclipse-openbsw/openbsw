@@ -15,13 +15,11 @@ namespace logger
 class LoggerOutputMock : public ILoggerOutput
 {
 public:
-    MOCK_METHOD4(
+    MOCK_METHOD(
+        void,
         logOutput,
-        void(
-            ComponentInfo const& componentInfo,
-            LevelInfo const& levelInfo,
-            char const* str,
-            va_list));
+        (ComponentInfo const& componentInfo, LevelInfo const& levelInfo, char const* str, va_list),
+        (override));
 };
 
 inline bool operator==(LevelInfo const& a, LevelInfo const& b)

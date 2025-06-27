@@ -25,32 +25,36 @@ public:
     using JobHandleType       = typename DataLinkLayerType::JobHandleType;
     using FrameCodecType      = DoCanFrameCodec<DataLinkLayerType>;
 
-    MOCK_METHOD1_T(init, void(IDoCanFrameReceiver<DataLinkLayer>& receiver));
-    MOCK_METHOD0(shutdown, void());
+    MOCK_METHOD(void, init, (IDoCanFrameReceiver<DataLinkLayer> & receiver), (override));
+    MOCK_METHOD(void, shutdown, (), (override));
 
-    MOCK_METHOD8_T(
+    MOCK_METHOD(
+        SendResult,
         startSendDataFrames,
-        SendResult(
-            FrameCodecType const& codec,
-            IDoCanDataFrameTransmitterCallback<DataLinkLayer>& callback,
-            JobHandleType jobHandle,
-            DataLinkAddressType transmissionAddress,
-            FrameIndexType firstFrameIndex,
-            FrameIndexType lastFrameIndex,
-            FrameSizeType consecutiveFrameDataSize,
-            ::estd::slice<uint8_t const> const& data));
-    MOCK_METHOD2_T(
+        (FrameCodecType const& codec,
+         IDoCanDataFrameTransmitterCallback<DataLinkLayer>& callback,
+         JobHandleType jobHandle,
+         DataLinkAddressType transmissionAddress,
+         FrameIndexType firstFrameIndex,
+         FrameIndexType lastFrameIndex,
+         FrameSizeType consecutiveFrameDataSize,
+         ::estd::slice<uint8_t const> const& data),
+        (override));
+    MOCK_METHOD(
+        void,
         cancelSendDataFrames,
-        void(IDoCanDataFrameTransmitterCallback<DataLinkLayer>& callback, JobHandleType jobHandle));
+        (IDoCanDataFrameTransmitterCallback<DataLinkLayer> & callback, JobHandleType jobHandle),
+        (override));
 
-    MOCK_METHOD5_T(
+    MOCK_METHOD(
+        bool,
         sendFlowControl,
-        bool(
-            FrameCodecType const& codec,
-            DataLinkAddressType transmissionAddress,
-            FlowStatus flowStatus,
-            uint8_t blockSize,
-            uint8_t encodedMinSeparationTime));
+        (FrameCodecType const& codec,
+         DataLinkAddressType transmissionAddress,
+         FlowStatus flowStatus,
+         uint8_t blockSize,
+         uint8_t encodedMinSeparationTime),
+        (override));
 };
 
 } // namespace docan

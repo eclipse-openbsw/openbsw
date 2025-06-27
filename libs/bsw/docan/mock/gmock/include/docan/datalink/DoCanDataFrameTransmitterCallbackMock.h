@@ -22,9 +22,11 @@ public:
     using FrameIndexType    = typename DataLinkLayerType::FrameIndexType;
     using JobHandleType     = typename DataLinkLayerType::JobHandleType;
 
-    MOCK_METHOD3_T(
+    MOCK_METHOD(
+        void,
         dataFramesSent,
-        void(JobHandleType jobHandle, FrameIndexType frameCount, MessageSizeType dataSize));
+        (JobHandleType jobHandle, FrameIndexType frameCount, MessageSizeType dataSize),
+        (override));
 };
 
 } // namespace docan

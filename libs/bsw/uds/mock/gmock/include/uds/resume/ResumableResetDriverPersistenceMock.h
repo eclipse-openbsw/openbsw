@@ -11,8 +11,8 @@ namespace uds
 class ResumableResetDriverPersistenceMock : public IResumableResetDriverPersistence
 {
 public:
-    MOCK_CONST_METHOD1(readRequest, bool(::transport::TransportMessage& message));
-    MOCK_METHOD1(writeRequest, void(::transport::TransportMessage const& message));
-    MOCK_METHOD0(clear, void());
+    MOCK_METHOD(bool, readRequest, (::transport::TransportMessage & message), (const, override));
+    MOCK_METHOD(void, writeRequest, (::transport::TransportMessage const& message), (override));
+    MOCK_METHOD(void, clear, (), (override));
 };
 } // namespace uds

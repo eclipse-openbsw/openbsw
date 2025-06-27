@@ -14,7 +14,7 @@ namespace docan
 class DoCanTickGeneratorMock : public IDoCanTickGenerator
 {
 public:
-    MOCK_METHOD0(tickNeeded, void());
+    MOCK_METHOD(void, tickNeeded, (), (override));
 };
 
 } // namespace docan

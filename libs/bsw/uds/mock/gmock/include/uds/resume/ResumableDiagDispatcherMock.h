@@ -14,22 +14,25 @@ public:
     : IResumableDiagDispatcher(sessionManager, jobRoot)
     {}
 
-    MOCK_METHOD2(
+    MOCK_METHOD(
+        ::transport::AbstractTransportLayer::ErrorCode,
         resume,
-        transport::AbstractTransportLayer::ErrorCode(
-            ::transport::TransportMessage& transportMessage,
-            ::transport::ITransportMessageProcessedListener* notificationListener));
-    MOCK_CONST_METHOD0(getSourceId, uint16_t(void));
-    MOCK_METHOD1(dispatchTriggerEventRequest, uint8_t(transport::TransportMessage& msg));
-    MOCK_METHOD3(
+        (::transport::TransportMessage & transportMessage,
+         ::transport::ITransportMessageProcessedListener* notificationListener),
+        (override));
+    MOCK_METHOD(uint16_t, getSourceId, (void), (const, override));
+    MOCK_METHOD(
+        uint8_t, dispatchTriggerEventRequest, (::transport::TransportMessage & msg), (override));
+    MOCK_METHOD(
+        ErrorCode,
         getOutgoingDiagConnection,
-        ErrorCode(
-            uint16_t targetId,
-            OutgoingDiagConnection*& connection,
-            transport::TransportMessage* pRequestMessage = nullptr));
+        (uint16_t targetId,
+         OutgoingDiagConnection*& connection,
+         ::transport::TransportMessage* pRequestMessage = nullptr),
+        (override));
 
 #ifdef IS_VARIANT_HANDLING_NEEDED
-    MOCK_METHOD1(setSourceId, void(uint16_t));
+    MOCK_METHOD(void, setSourceId, (uint16_t), (override));
 #endif
 };
 } // namespace uds

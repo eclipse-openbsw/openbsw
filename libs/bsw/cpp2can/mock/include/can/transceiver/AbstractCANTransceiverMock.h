@@ -15,27 +15,28 @@ struct AbstractCANTransceiverMock : public AbstractCANTransceiver
 
     virtual ~AbstractCANTransceiverMock() = default;
 
-    MOCK_METHOD0(init, ErrorCode());
+    MOCK_METHOD(ErrorCode, init, (), (override));
 
-    MOCK_METHOD0(shutdown, void());
+    MOCK_METHOD(void, shutdown, (), (override));
 
-    MOCK_METHOD1(open, ErrorCode(CANFrame const& frame));
+    MOCK_METHOD(ErrorCode, open, (CANFrame const& frame), (override));
 
-    MOCK_METHOD0(open, ErrorCode());
+    MOCK_METHOD(ErrorCode, open, (), (override));
 
-    MOCK_METHOD0(close, ErrorCode());
+    MOCK_METHOD(ErrorCode, close, (), (override));
 
-    MOCK_METHOD0(mute, ErrorCode());
+    MOCK_METHOD(ErrorCode, mute, (), (override));
 
-    MOCK_METHOD0(unmute, ErrorCode());
+    MOCK_METHOD(ErrorCode, unmute, ());
 
-    MOCK_METHOD1(write, ErrorCode(CANFrame const& frame));
+    MOCK_METHOD(ErrorCode, write, (CANFrame const& frame), (override));
 
-    MOCK_METHOD2(write, ErrorCode(CANFrame const& frame, ICANFrameSentListener& listener));
+    MOCK_METHOD(
+        ErrorCode, write, (CANFrame const& frame, ICANFrameSentListener& listener), (override));
 
-    MOCK_CONST_METHOD0(getBaudrate, uint32_t());
+    MOCK_METHOD(uint32_t, getBaudrate, (), (const, override));
 
-    MOCK_CONST_METHOD0(getHwQueueTimeout, uint16_t());
+    MOCK_METHOD(uint16_t, getHwQueueTimeout, (), (const, override));
 
     //        MOCK_CONST_METHOD0(getCANTransceiverState,
     //        can::ICANTransceiverStateListener::CANTransceiverState());

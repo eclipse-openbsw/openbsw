@@ -14,32 +14,37 @@ namespace can
 {
 struct ICanTransceiverMock : public ICanTransceiver
 {
-    MOCK_METHOD0(init, ErrorCode());
-    MOCK_METHOD0(shutdown, void());
-    MOCK_METHOD1(open, ErrorCode(CANFrame const& frame));
-    MOCK_METHOD0(open, ErrorCode());
-    MOCK_METHOD0(close, ErrorCode());
-    MOCK_METHOD0(mute, ErrorCode());
-    MOCK_METHOD0(unmute, ErrorCode());
-    MOCK_CONST_METHOD0(getState, State());
+    MOCK_METHOD(ErrorCode, init, (), (override));
+    MOCK_METHOD(void, shutdown, (), (override));
+    MOCK_METHOD(ErrorCode, open, (CANFrame const& frame), (override));
+    MOCK_METHOD(ErrorCode, open, (), (override));
+    MOCK_METHOD(ErrorCode, close, (), (override));
+    MOCK_METHOD(ErrorCode, mute, (), (override));
+    MOCK_METHOD(ErrorCode, unmute, (), (override));
+    MOCK_METHOD(State, getState, (), (const, override));
 
-    MOCK_METHOD1(write, ErrorCode(CANFrame const& frame));
-    MOCK_METHOD2(write, ErrorCode(CANFrame const& frame, ICANFrameSentListener& listener));
+    MOCK_METHOD(ErrorCode, write, (CANFrame const& frame), (override));
+    MOCK_METHOD(
+        ErrorCode, write, (CANFrame const& frame, ICANFrameSentListener& listener), (override));
 
-    MOCK_CONST_METHOD0(getBaudrate, uint32_t());
-    MOCK_CONST_METHOD0(getHwQueueTimeout, uint16_t());
-    MOCK_CONST_METHOD0(getBusId, uint8_t());
+    MOCK_METHOD(uint32_t, getBaudrate, (), (const, override));
+    MOCK_METHOD(uint16_t, getHwQueueTimeout, (), (const, override));
+    MOCK_METHOD(uint8_t, getBusId, (), (const, override));
 
-    MOCK_METHOD1(addCANFrameListener, void(ICANFrameListener&));
-    MOCK_METHOD1(addVIPCANFrameListener, void(ICANFrameListener&));
-    MOCK_METHOD1(removeCANFrameListener, void(ICANFrameListener&));
+    MOCK_METHOD(void, addCANFrameListener, (ICANFrameListener&), (override));
+    MOCK_METHOD(void, addVIPCANFrameListener, (ICANFrameListener&), (override));
+    MOCK_METHOD(void, removeCANFrameListener, (ICANFrameListener&), (override));
 
-    MOCK_METHOD1(addCANFrameSentListener, void(IFilteredCANFrameSentListener&));
-    MOCK_METHOD1(removeCANFrameSentListener, void(IFilteredCANFrameSentListener&));
+    MOCK_METHOD(void, addCANFrameSentListener, (IFilteredCANFrameSentListener&), (override));
+    MOCK_METHOD(void, removeCANFrameSentListener, (IFilteredCANFrameSentListener&), (override));
 
-    MOCK_CONST_METHOD0(getCANTransceiverState, ICANTransceiverStateListener::CANTransceiverState());
-    MOCK_METHOD1(setStateListener, void(ICANTransceiverStateListener&));
-    MOCK_METHOD0(removeStateListener, void());
+    MOCK_METHOD(
+        ICANTransceiverStateListener::CANTransceiverState,
+        getCANTransceiverState,
+        (),
+        (const, override));
+    MOCK_METHOD(void, setStateListener, (ICANTransceiverStateListener&), (override));
+    MOCK_METHOD(void, removeStateListener, (), (override));
 };
 
 } // namespace can

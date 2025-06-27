@@ -11,9 +11,9 @@ namespace eeprom
 class EepromDriverMock : public IEepromDriver
 {
 public:
-    MOCK_METHOD0(init, bsp::BspReturnCode());
-    MOCK_METHOD3(write, bsp::BspReturnCode(uint32_t, uint8_t const*, uint32_t));
-    MOCK_METHOD3(read, bsp::BspReturnCode(uint32_t, uint8_t*, uint32_t));
+    MOCK_METHOD(::bsp::BspReturnCode, init, (), (override));
+    MOCK_METHOD(::bsp::BspReturnCode, write, (uint32_t, uint8_t const*, uint32_t), (override));
+    MOCK_METHOD(::bsp::BspReturnCode, read, (uint32_t, uint8_t*, uint32_t), (override));
 };
 
 } // namespace eeprom
