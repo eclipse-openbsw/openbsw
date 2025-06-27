@@ -7,6 +7,9 @@
 #include "logger/logger.h"
 #include "reset/softwareSystemReset.h"
 #include "systems/DemoSystem.h"
+#ifdef BENCHMARK
+#include "systems/BenchmarkSystem.h"
+#endif
 #include "systems/RuntimeSystem.h"
 #include "systems/SafetySystem.h"
 #include "systems/SysAdminSystem.h"
@@ -73,9 +76,13 @@ LifecycleManager lifecycleManager{
     TASK_SYSADMIN,
     ::lifecycle::LifecycleManager::GetTimestampType::create<&getSystemTimeUs32Bit>()};
 
+#ifdef BENCHMARK
+::estd::typed_mem<::systems::BenchmarkSystem> benchmarkSystem;
+#else
 ::estd::typed_mem<::systems::RuntimeSystem> runtimeSystem;
-::estd::typed_mem<::systems::SysAdminSystem> sysAdminSystem;
 ::estd::typed_mem<::systems::DemoSystem> demoSystem;
+#endif
+::estd::typed_mem<::systems::SysAdminSystem> sysAdminSystem;
 ::estd::typed_mem<::systems::SafetySystem> safetySystem;
 
 #ifdef PLATFORM_SUPPORT_UDS
@@ -142,8 +149,10 @@ void run()
 
     /* runlevel 1 */
     ::platform::platformLifecycleAdd(lifecycleManager, 1U);
+#ifndef BENCHMARK
     lifecycleManager.addComponent(
         "runtime", runtimeSystem.emplace(TASK_BACKGROUND, runtimeMonitor), 1U);
+#endif
     lifecycleManager.addComponent(
         "safety", safetySystem.emplace(TASK_SAFETY, lifecycleManager), 1U);
     /* runlevel 2 */
@@ -175,6 +184,7 @@ void run()
 
     /* runlevel 8 */
     ::platform::platformLifecycleAdd(lifecycleManager, 8U);
+#ifndef BENCHMARK
     lifecycleManager.addComponent(
         "demo",
         demoSystem.emplace(
@@ -186,10 +196,16 @@ void run()
 #endif
                 ),
         8U);
+#else
+    lifecycleManager.addComponent(
+        "benchmark", benchmarkSystem.emplace(TASK_DEMO, runtimeMonitor), 8U);
+#endif
 
     lifecycleManager.transitionToLevel(MaxNumLevels);
 
+#ifndef BENCHMARK
     runtimeMonitor.start();
+#endif
     AsyncAdapter::run();
 
     while (true)
@@ -201,8 +217,10 @@ void run()
 void idle(AsyncAdapter::TaskContextType& taskContext)
 {
     taskContext.dispatchWhileWork();
+#ifndef BENCHMARK
     ::logger::run();
     ::console::run();
+#endif
     if (lifecycleMonitor.isReadyForReset())
     {
         staticShutdown();

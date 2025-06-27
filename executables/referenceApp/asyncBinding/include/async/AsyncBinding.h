@@ -5,7 +5,11 @@
 #include <async/Config.h>
 #include <async/FreeRtosAdapter.h>
 #include <async/StaticContextHook.h>
+#ifdef BENCHMARK
+#include <runtime/RuntimeMonitorSimple.h>
+#else
 #include <runtime/RuntimeMonitor.h>
+#endif
 #include <runtime/RuntimeStatistics.h>
 
 #include <platform/estdint.h>

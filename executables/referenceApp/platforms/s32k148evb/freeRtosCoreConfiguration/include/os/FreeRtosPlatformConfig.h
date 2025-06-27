@@ -115,10 +115,14 @@ See http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html. */
 #if defined(__GNUC__) && (!defined(__ASSEMBLER__))
 #include "mcu/mcu.h"
 #endif
+#ifndef BENCHMARK
 #define configASSERT(x) DEV_ASSERT(x)
+#else
+#define configASSERT(x) ((void)0)
+#endif
 
 /* Tickless Idle Mode */
-#define configUSE_TICKLESS_IDLE               0
+#define configUSE_TICKLESS_IDLE               1
 #define configEXPECTED_IDLE_TIME_BEFORE_SLEEP 2
 #define configUSE_TICKLESS_IDLE_DECISION_HOOK 0
 

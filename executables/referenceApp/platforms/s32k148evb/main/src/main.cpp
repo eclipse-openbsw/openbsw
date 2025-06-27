@@ -50,9 +50,15 @@ void setupApplicationsIsr(void)
     // interrupts
     SYS_SetPriority(CAN0_ORed_0_15_MB_IRQn, 8);  // can0 buffer 0 - 15
     SYS_SetPriority(CAN0_ORed_16_31_MB_IRQn, 8); // can0 buffer 16 - 32
+#ifdef BENCHMARK
+    SYS_SetPriority(FTM4_Ch0_Ch1_IRQn, 8);
+#endif
 
     SYS_EnableIRQ(CAN0_ORed_0_15_MB_IRQn);
     SYS_EnableIRQ(CAN0_ORed_16_31_MB_IRQn);
+#ifdef BENCHMARK
+    SYS_EnableIRQ(FTM4_Ch0_Ch1_IRQn);
+#endif
 
     ENABLE_INTERRUPTS();
 }
