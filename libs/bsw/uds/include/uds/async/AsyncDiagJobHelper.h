@@ -22,10 +22,8 @@ public:
      * Constructor
      * \param helper Reference to async helper class
      * \param job Reference to diag job
-     * \param diagcontext Context to execute on
      */
-    AsyncDiagJobHelper(
-        IAsyncDiagHelper& asyncHelper, AbstractDiagJob& job, ::async::ContextType diagcontext);
+    AsyncDiagJobHelper(IAsyncDiagHelper& asyncHelper, AbstractDiagJob& job);
 
     AsyncDiagJobHelper(AsyncDiagJobHelper const&)            = delete;
     AsyncDiagJobHelper& operator=(AsyncDiagJobHelper const&) = delete;
@@ -70,7 +68,6 @@ private:
     IncomingDiagConnection* fPendingAsyncConnection;
     ::estd::forward_list<IAsyncDiagHelper::StoredRequest> fPendingRequests;
     ::async::Function fTriggerNextRequests;
-    ::async::ContextType fContext;
 };
 
 } // namespace uds
