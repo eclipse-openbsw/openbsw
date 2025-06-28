@@ -351,7 +351,7 @@ TEST_F(
     fIncomingDiagConnection.terminateNestedRequest();
     CONTEXT_EXECUTE;
 
-    auto buffer = ::estd::slice<uint8_t const>::from_pointer(
+    auto buffer = ::etl::span<uint8_t const>(
         fIncomingDiagConnection.fpResponseMessage->getPayload(),
         fIncomingDiagConnection.fpResponseMessage->getPayloadLength());
 
@@ -433,7 +433,7 @@ TEST_F(
     fIncomingDiagConnection.terminateNestedRequest();
     CONTEXT_EXECUTE;
 
-    auto buffer = ::estd::slice<uint8_t const>::from_pointer(
+    auto buffer = ::etl::span<uint8_t const>(
         fIncomingDiagConnection.fpResponseMessage->getPayload(),
         fIncomingDiagConnection.fpResponseMessage->getPayloadLength());
 
@@ -512,7 +512,7 @@ TEST_F(
     fIncomingDiagConnection.terminateNestedRequest();
     CONTEXT_EXECUTE;
 
-    auto buffer = ::estd::slice<uint8_t const>::from_pointer(
+    auto buffer = ::etl::span<uint8_t const>(
         fIncomingDiagConnection.fpResponseMessage->getPayload(),
         fIncomingDiagConnection.fpResponseMessage->getPayloadLength());
 
@@ -599,7 +599,7 @@ TEST_F(
     Mock::VerifyAndClearExpectations(&fIncomingDiagConnection);
     Mock::VerifyAndClearExpectations(&fSessionManager);
 
-    auto buffer = ::estd::slice<uint8_t const>::from_pointer(
+    auto buffer = ::etl::span<uint8_t const>(
         fIncomingDiagConnection.fpResponseMessage->getPayload(),
         fIncomingDiagConnection.fpResponseMessage->getPayloadLength());
 
@@ -665,7 +665,7 @@ TEST_F(
             sizeof(INVALID_DATA_IDENTIFIERS_REQUEST)));
     CONTEXT_EXECUTE;
 
-    auto buffer = ::estd::slice<uint8_t const>::from_pointer(
+    auto buffer = ::etl::span<uint8_t const>(
         fIncomingDiagConnection.fpResponseMessage->getPayload(),
         fIncomingDiagConnection.fpResponseMessage->getPayloadLength());
 
@@ -729,7 +729,7 @@ TEST_F(
             sizeof(INVALID_DATA_IDENTIFIERS_REQUEST)));
     CONTEXT_EXECUTE;
 
-    auto buffer = ::estd::slice<uint8_t const>::from_pointer(
+    auto buffer = ::etl::span<uint8_t const>(
         fIncomingDiagConnection.fpResponseMessage->getPayload(),
         fIncomingDiagConnection.fpResponseMessage->getPayloadLength());
 
@@ -821,7 +821,7 @@ TEST_F(MultipleReadDataByIdentifierTest, get_did_limit_is_called_and_checked_if_
     Mock::VerifyAndClearExpectations(&fIncomingDiagConnection);
     Mock::VerifyAndClearExpectations(&fSessionManager);
 
-    auto buffer = ::estd::slice<uint8_t const>::from_pointer(
+    auto buffer = ::etl::span<uint8_t const>(
         fIncomingDiagConnection.fpResponseMessage->getPayload(),
         fIncomingDiagConnection.fpResponseMessage->getPayloadLength());
 
@@ -913,7 +913,7 @@ TEST_F(MultipleReadDataByIdentifierTest, get_did_limit_is_called_and_not_checked
     Mock::VerifyAndClearExpectations(&fIncomingDiagConnection);
     Mock::VerifyAndClearExpectations(&fSessionManager);
 
-    auto buffer = ::estd::slice<uint8_t const>::from_pointer(
+    auto buffer = ::etl::span<uint8_t const>(
         fIncomingDiagConnection.fpResponseMessage->getPayload(),
         fIncomingDiagConnection.fpResponseMessage->getPayloadLength());
 

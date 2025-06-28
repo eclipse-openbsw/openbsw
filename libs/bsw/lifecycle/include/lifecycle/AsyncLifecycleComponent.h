@@ -8,7 +8,7 @@
 
 #include "lifecycle/LifecycleComponent.h"
 
-#include <estd/array.h>
+#include <etl/array.h>
 
 namespace lifecycle
 {
@@ -38,7 +38,7 @@ protected:
     void setTransitionContext(Transition::Type transition, ::async::ContextType context);
 
 private:
-    ::estd::array<::async::ContextType, Transition::COUNT> _contexts{};
+    ::etl::array<::async::ContextType, Transition::COUNT> _contexts{};
 };
 
 } // namespace lifecycle

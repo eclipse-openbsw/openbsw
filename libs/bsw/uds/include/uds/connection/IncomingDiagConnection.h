@@ -3,7 +3,6 @@
 #pragma once
 
 #include "async/util/Call.h"
-#include "estd/uncopyable.h"
 #include "transport/ITransportMessageProcessedListener.h"
 #include "transport/TransportMessage.h"
 #include "uds/DiagCodes.h"
@@ -11,7 +10,8 @@
 #include "uds/connection/ErrorCode.h"
 #include "uds/connection/PositiveResponse.h"
 
-#include <estd/vec.h>
+#include <etl/uncopyable.h>
+#include <etl/vector.h>
 
 namespace transport
 {
@@ -41,10 +41,10 @@ class DiagConnectionManager;
  *
  * \see     transport::ITransportMessageProcessedListener
  */
-class IncomingDiagConnection : public transport::ITransportMessageProcessedListener
+class IncomingDiagConnection
+: public transport::ITransportMessageProcessedListener
+, public etl::uncopyable
 {
-    UNCOPYABLE(IncomingDiagConnection);
-
 public:
     virtual ~IncomingDiagConnection() = default;
 
@@ -86,7 +86,7 @@ public:
     {
         fContext = diagContext;
         fPendingMessage.init(&fPendingMessageBuffer[0], PENDING_MESSAGE_BUFFER_LENGTH);
-        for (uint8_t cnt = 0U; cnt < fIdentifiers.max_size; cnt++)
+        for (uint8_t cnt = 0U; cnt < fIdentifiers.capacity(); cnt++)
         {
             fIdentifiers[cnt] = 0U;
         }
@@ -325,11 +325,11 @@ public:
     void endNestedRequest();
 
     using SendPositiveResponseClosure
-        = ::async::Call<::estd::closure<void(uint16_t, AbstractDiagJob*)>>;
+        = ::async::Call<::etl::closure<void(uint16_t, AbstractDiagJob*)>>;
     using SendNegativeResponseClosure
-        = ::async::Call<::estd::closure<void(uint8_t, AbstractDiagJob*)>>;
+        = ::async::Call<::etl::closure<void(uint8_t, AbstractDiagJob*)>>;
     using TransportMessageClosure
-        = ::async::Call<::estd::closure<void(transport::TransportMessage*, ProcessingResult)>>;
+        = ::async::Call<::etl::closure<void(transport::TransportMessage*, ProcessingResult)>>;
 
     TransportMessageClosure fTransportMessageProcessedClosure;
     SendPositiveResponseClosure fSendPositiveResponseClosure;
@@ -342,7 +342,7 @@ public:
     NestedDiagRequest* fNestedRequest                                                = nullptr;
     uint8_t fPendingMessageBuffer[PENDING_MESSAGE_BUFFER_LENGTH]                     = {};
     uint8_t fNegativeResponseTempBuffer[DiagCodes::NEGATIVE_RESPONSE_MESSAGE_LENGTH] = {};
-    ::estd::vec<uint8_t, MAXIMUM_NUMBER_OF_IDENTIFIERS> fIdentifiers;
+    ::etl::vector<uint8_t, MAXIMUM_NUMBER_OF_IDENTIFIERS> fIdentifiers;
     bool fIsResuming         = false;
     uint32_t fPendingTimeOut = DEFAULT_PENDING_TIMEOUT_MS;
 };

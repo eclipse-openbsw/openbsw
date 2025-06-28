@@ -2,18 +2,12 @@
 
 #pragma once
 
+#include <etl/delegate.h>
+#include <etl/singleton_base.h>
+#include <etl/string.h>
+#include <etl/uncopyable.h>
 #include <util/command/ICommand.h>
 #include <util/stream/ISharedOutputStream.h>
-
-#include <estd/functional.h>
-#include <estd/singleton.h>
-#include <estd/string.h>
-#include <estd/uncopyable.h>
-
-namespace estd
-{
-class string;
-}
 
 namespace console
 {
@@ -27,11 +21,11 @@ namespace console
  * \ingroup asyncConsole
  */
 class AsyncConsole
-: public ::estd::singleton<AsyncConsole>
-, private ::estd::uncopyable
+: public ::etl::singleton_base<AsyncConsole>
+, private ::etl::uncopyable
 {
 public:
-    using OnLineProcessed = ::estd::function<void(void)>;
+    using OnLineProcessed = ::etl::delegate<void(void)>;
 
     /**
      * AsyncConsole
@@ -48,7 +42,7 @@ public:
      */
     void onLineReceived(
         ::util::stream::ISharedOutputStream& outputStream,
-        ::estd::string const& line,
+        ::etl::istring const& line,
         OnLineProcessed const& onLineProcessed);
 
 private:

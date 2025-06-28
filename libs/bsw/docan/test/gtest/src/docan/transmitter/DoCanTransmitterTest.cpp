@@ -15,12 +15,14 @@
 #include <async/AsyncMock.h>
 #include <async/TestContext.h>
 #include <bsp/timer/SystemTimerMock.h>
+#include <etl/delegate.h>
+#include <etl/generic_pool.h>
+#include <etl/memory.h>
+#include <etl/span.h>
 #include <transport/BufferedTransportMessage.h>
 #include <transport/TransportMessageProcessedListenerMock.h>
 #include <util/logger/ComponentMappingMock.h>
 #include <util/logger/LoggerOutputMock.h>
-
-#include <estd/functional.h>
 
 #include <gtest/esr_extensions.h>
 
@@ -71,7 +73,7 @@ struct DoCanTransmitterTest : ::testing::Test
 
     DoCanTransmitterTest()
     : _parameters(
-        ::estd::function<uint32_t()>::create<DoCanTransmitterTest, &DoCanTransmitterTest::systemUs>(
+        ::etl::delegate<uint32_t()>::create<DoCanTransmitterTest, &DoCanTransmitterTest::systemUs>(
             *this),
         waitAllocateTimeout,
         waitRxTimeout,
@@ -134,13 +136,14 @@ struct DoCanTransmitterTest : ::testing::Test
     ::async::TestContext _context;
 };
 
+using ItemT = ::docan::DoCanMessageTransmitter<DataLinkLayer>;
+
 /**
  * \req: [BSW_DoCAN_186], [BSW_DoCAN_72]
  */
 TEST_F(DoCanTransmitterTest, testTransmitSingleFrameMessageAndShutdown)
 {
-    ::util::estd::declare::block_pool<5U, sizeof(::docan::DoCanMessageTransmitter<DataLinkLayer>)>
-        messageTransmitterBlockPool;
+    ::etl::generic_pool<sizeof(ItemT), alignof(ItemT), 5U> messageTransmitterBlockPool;
     DoCanTransmitter<DataLinkLayer> cut(
         _busId,
         _context,
@@ -185,16 +188,14 @@ TEST_F(DoCanTransmitterTest, testTransmitSingleFrameMessageAndShutdown)
             ITransportMessageProcessedListener::ProcessingResult::PROCESSED_NO_ERROR));
     _context.execute();
 
-    ASSERT_TRUE(messageTransmitterBlockPool.full());
+    ASSERT_TRUE(messageTransmitterBlockPool.empty());
     cut.shutdown();
 }
 
 TEST_F(DoCanTransmitterTest, testTransmitMultipleSingleFrameMessageExpectDifferentJobHandles)
 {
     constexpr size_t NUMBER_OF_SLOTS = 3;
-    ::util::estd::declare::
-        block_pool<NUMBER_OF_SLOTS, sizeof(::docan::DoCanMessageTransmitter<DataLinkLayer>)>
-            messageTransmitterBlockPool;
+    ::etl::generic_pool<sizeof(ItemT), alignof(ItemT), NUMBER_OF_SLOTS> messageTransmitterBlockPool;
     DoCanTransmitter<DataLinkLayer> cut(
         _busId,
         _context,
@@ -246,15 +247,14 @@ TEST_F(DoCanTransmitterTest, testTransmitMultipleSingleFrameMessageExpectDiffere
                 ITransportMessageProcessedListener::ProcessingResult::PROCESSED_NO_ERROR));
         _context.execute();
 
-        ASSERT_TRUE(messageTransmitterBlockPool.full());
+        ASSERT_TRUE(messageTransmitterBlockPool.empty());
     }
     cut.shutdown();
 }
 
 TEST_F(DoCanTransmitterTest, testTransmitSingleFrameMessageWithoutNotificationListenerAndShutdown)
 {
-    ::util::estd::declare::block_pool<5U, sizeof(::docan::DoCanMessageTransmitter<DataLinkLayer>)>
-        messageTransmitterBlockPool;
+    ::etl::generic_pool<sizeof(ItemT), alignof(ItemT), 5U> messageTransmitterBlockPool;
     DoCanTransmitter<DataLinkLayer> cut(
         _busId,
         _context,
@@ -291,7 +291,7 @@ TEST_F(DoCanTransmitterTest, testTransmitSingleFrameMessageWithoutNotificationLi
     callback->dataFramesSent(jobHandle, 1U, sizeof(data));
     // expect no result from context
     _context.execute();
-    ASSERT_TRUE(messageTransmitterBlockPool.full());
+    ASSERT_TRUE(messageTransmitterBlockPool.empty());
     cut.shutdown();
 }
 
@@ -300,8 +300,7 @@ TEST_F(DoCanTransmitterTest, testTransmitSingleFrameMessageWithoutNotificationLi
  */
 TEST_F(DoCanTransmitterTest, testTransmitSegmentedMessageAndShutdown)
 {
-    ::util::estd::declare::block_pool<5U, sizeof(::docan::DoCanMessageTransmitter<DataLinkLayer>)>
-        messageTransmitterBlockPool;
+    ::etl::generic_pool<sizeof(ItemT), alignof(ItemT), 5U> messageTransmitterBlockPool;
     DoCanTransmitter<DataLinkLayer> cut(
         _busId,
         _context,
@@ -340,6 +339,7 @@ TEST_F(DoCanTransmitterTest, testTransmitSegmentedMessageAndShutdown)
     // frames sent
     callback->dataFramesSent(jobHandle, 1U, 6U);
     // Expect immediate send after flow control
+    ::etl::span<uint8_t const> span = ::etl::span<uint8_t const>(data).subspan(6U);
     EXPECT_CALL(
         _dataFrameTransmitterMock,
         startSendDataFrames(
@@ -350,10 +350,11 @@ TEST_F(DoCanTransmitterTest, testTransmitSegmentedMessageAndShutdown)
             1U,
             3U,
             7U,
-            BytesAreSlice(::estd::make_slice(data).offset(6U))))
+            ElementsAreArray(span.data(), span.size())))
         .WillOnce(Return(SendResult::QUEUED_FULL));
     cut.flowControlFrameReceived(addrPair.getReceptionAddress(), FlowStatus::CTS, 0U, 0U);
     // Expect immediate send after frames sent
+    ::etl::span<uint8_t const> span2 = ::etl::span<uint8_t const>(data).subspan(13U);
     EXPECT_CALL(
         _dataFrameTransmitterMock,
         startSendDataFrames(
@@ -364,7 +365,7 @@ TEST_F(DoCanTransmitterTest, testTransmitSegmentedMessageAndShutdown)
             2U,
             3U,
             7U,
-            BytesAreSlice(::estd::make_slice(data).offset(13U))))
+            ElementsAreArray(span2.data(), span2.size())))
         .WillOnce(Return(SendResult::QUEUED_FULL));
     callback->dataFramesSent(jobHandle, 1U, 7U);
     // No direct response after last frame sent
@@ -377,14 +378,13 @@ TEST_F(DoCanTransmitterTest, testTransmitSegmentedMessageAndShutdown)
             ITransportMessageProcessedListener::ProcessingResult::PROCESSED_NO_ERROR));
     _context.execute();
 
-    ASSERT_TRUE(messageTransmitterBlockPool.full());
+    ASSERT_TRUE(messageTransmitterBlockPool.empty());
     cut.shutdown();
 }
 
 TEST_F(DoCanTransmitterTest, testTransmitSegmentedMessageWithFlowControlOverflowAndShutdown)
 {
-    ::util::estd::declare::block_pool<5U, sizeof(::docan::DoCanMessageTransmitter<DataLinkLayer>)>
-        messageTransmitterBlockPool;
+    ::etl::generic_pool<sizeof(ItemT), alignof(ItemT), 5U> messageTransmitterBlockPool;
     DoCanTransmitter<DataLinkLayer> cut(
         _busId,
         _context,
@@ -431,14 +431,13 @@ TEST_F(DoCanTransmitterTest, testTransmitSegmentedMessageWithFlowControlOverflow
     cut.flowControlFrameReceived(addrPair.getReceptionAddress(), FlowStatus::OVFLW, 0U, 0U);
     Mock::VerifyAndClearExpectations(&_processedListenerMock);
 
-    ASSERT_TRUE(messageTransmitterBlockPool.full());
+    ASSERT_TRUE(messageTransmitterBlockPool.empty());
     cut.shutdown();
 }
 
 TEST_F(DoCanTransmitterTest, testTransmitSegmentedMessageWithInvalidFlowControlAndShutdown)
 {
-    ::util::estd::declare::block_pool<5U, sizeof(::docan::DoCanMessageTransmitter<DataLinkLayer>)>
-        messageTransmitterBlockPool;
+    ::etl::generic_pool<sizeof(ItemT), alignof(ItemT), 5U> messageTransmitterBlockPool;
     DoCanTransmitter<DataLinkLayer> cut(
         _busId,
         _context,
@@ -486,14 +485,13 @@ TEST_F(DoCanTransmitterTest, testTransmitSegmentedMessageWithInvalidFlowControlA
         addrPair.getReceptionAddress(), static_cast<FlowStatus>(4U), 0U, 0U);
     Mock::VerifyAndClearExpectations(&_processedListenerMock);
 
-    ASSERT_TRUE(messageTransmitterBlockPool.full());
+    ASSERT_TRUE(messageTransmitterBlockPool.empty());
     cut.shutdown();
 }
 
 TEST_F(DoCanTransmitterTest, testTransmitSegmentedMessageWithFlowControlWaitOverflowAndShutdown)
 {
-    ::util::estd::declare::block_pool<5U, sizeof(::docan::DoCanMessageTransmitter<DataLinkLayer>)>
-        messageTransmitterBlockPool;
+    ::etl::generic_pool<sizeof(ItemT), alignof(ItemT), 5U> messageTransmitterBlockPool;
     DoCanTransmitter<DataLinkLayer> cut(
         _busId,
         _context,
@@ -546,7 +544,7 @@ TEST_F(DoCanTransmitterTest, testTransmitSegmentedMessageWithFlowControlWaitOver
     cut.flowControlFrameReceived(addrPair.getReceptionAddress(), FlowStatus::WAIT, 0U, 0U);
     Mock::VerifyAndClearExpectations(&_processedListenerMock);
 
-    ASSERT_TRUE(messageTransmitterBlockPool.full());
+    ASSERT_TRUE(messageTransmitterBlockPool.empty());
     cut.shutdown();
 }
 
@@ -555,8 +553,7 @@ TEST_F(DoCanTransmitterTest, testTransmitSegmentedMessageWithFlowControlWaitOver
  */
 TEST_F(DoCanTransmitterTest, testTransmitSegmentedMessageWithSeparationTimeAndShutdown)
 {
-    ::util::estd::declare::block_pool<5U, sizeof(::docan::DoCanMessageTransmitter<DataLinkLayer>)>
-        messageTransmitterBlockPool;
+    ::etl::generic_pool<sizeof(ItemT), alignof(ItemT), 5U> messageTransmitterBlockPool;
     DoCanTransmitter<DataLinkLayer> cut(
         _busId,
         _context,
@@ -594,6 +591,7 @@ TEST_F(DoCanTransmitterTest, testTransmitSegmentedMessageWithSeparationTimeAndSh
     Mock::VerifyAndClearExpectations(&_dataFrameTransmitterMock);
     // frames sent
     callback->dataFramesSent(jobHandle, 1U, 9U);
+    ::etl::span<uint8_t const> span = ::etl::span<uint8_t const>(data).subspan(9U);
     // Expect immediate send after flow control
     EXPECT_CALL(
         _dataFrameTransmitterMock,
@@ -605,7 +603,7 @@ TEST_F(DoCanTransmitterTest, testTransmitSegmentedMessageWithSeparationTimeAndSh
             1U,
             2U,
             7U,
-            BytesAreSlice(::estd::make_slice(data).offset(9U))))
+            ElementsAreArray(span.data(), span.size())))
         .WillOnce(Return(SendResult::QUEUED_FULL));
     cut.flowControlFrameReceived(addrPair.getReceptionAddress(), FlowStatus::CTS, 0U, 2U);
     Mock::VerifyAndClearExpectations(&_dataFrameTransmitterMock);
@@ -614,6 +612,7 @@ TEST_F(DoCanTransmitterTest, testTransmitSegmentedMessageWithSeparationTimeAndSh
     callback->dataFramesSent(jobHandle, 1U, 3U);
     cut.cyclicTask(nowUs);
     cut.cyclicTask(nowUs);
+    span = ::etl::span<uint8_t const>(data).subspan(12U);
     EXPECT_CALL(
         _dataFrameTransmitterMock,
         startSendDataFrames(
@@ -624,7 +623,7 @@ TEST_F(DoCanTransmitterTest, testTransmitSegmentedMessageWithSeparationTimeAndSh
             2U,
             3U,
             7U,
-            BytesAreSlice(::estd::make_slice(data).offset(12U))))
+            ElementsAreArray(span.data(), span.size())))
         .WillOnce(Return(SendResult::QUEUED_FULL));
     nowUs = 2000;
     cut.cyclicTask(nowUs);
@@ -639,7 +638,7 @@ TEST_F(DoCanTransmitterTest, testTransmitSegmentedMessageWithSeparationTimeAndSh
             ITransportMessageProcessedListener::ProcessingResult::PROCESSED_NO_ERROR));
     _context.execute();
 
-    ASSERT_TRUE(messageTransmitterBlockPool.full());
+    ASSERT_TRUE(messageTransmitterBlockPool.empty());
     cut.shutdown();
 }
 
@@ -648,8 +647,7 @@ TEST_F(DoCanTransmitterTest, sequentialFramesSentCorrectlyWithNowUsWraparound)
     nowUs = std::numeric_limits<uint32_t>::max() - 999;
     DoCanDefaultFrameSizeMapper<uint8_t> const mapper;
     CodecType codec(DoCanFrameCodecConfigPresets::OPTIMIZED_CLASSIC, mapper);
-    ::util::estd::declare::block_pool<5U, sizeof(::docan::DoCanMessageTransmitter<DataLinkLayer>)>
-        messageTransmitterBlockPool;
+    ::etl::generic_pool<sizeof(ItemT), alignof(ItemT), 5U> messageTransmitterBlockPool;
     DoCanTransmitter<DataLinkLayer> cut(
         _busId,
         _context,
@@ -686,6 +684,7 @@ TEST_F(DoCanTransmitterTest, sequentialFramesSentCorrectlyWithNowUsWraparound)
     Mock::VerifyAndClearExpectations(&_dataFrameTransmitterMock);
     // frames sent
     callback->dataFramesSent(jobHandle, 1U, 9U);
+    ::etl::span<uint8_t const> span = ::etl::span<uint8_t const>(data).subspan(9U);
     // Expect immediate send after flow control
     EXPECT_CALL(
         _dataFrameTransmitterMock,
@@ -697,7 +696,7 @@ TEST_F(DoCanTransmitterTest, sequentialFramesSentCorrectlyWithNowUsWraparound)
             1U,
             2U,
             7U,
-            BytesAreSlice(::estd::make_slice(data).offset(9U))))
+            ElementsAreArray(span.data(), span.size())))
         .WillOnce(Return(SendResult::QUEUED_FULL));
     // Set an STmin of 2ms
     cut.flowControlFrameReceived(0x1234U, FlowStatus::CTS, 0U, 2U);
@@ -710,6 +709,7 @@ TEST_F(DoCanTransmitterTest, sequentialFramesSentCorrectlyWithNowUsWraparound)
     // timer wraparound
     nowUs = 999;
     cut.cyclicTask(nowUs);
+    span = ::etl::span<uint8_t const>(data).subspan(12U);
     EXPECT_CALL(
         _dataFrameTransmitterMock,
         startSendDataFrames(
@@ -720,7 +720,7 @@ TEST_F(DoCanTransmitterTest, sequentialFramesSentCorrectlyWithNowUsWraparound)
             2U,
             3U,
             7U,
-            BytesAreSlice(::estd::make_slice(data).offset(12U))))
+            ElementsAreArray(span.data(), span.size())))
         .WillOnce(Return(SendResult::QUEUED_FULL));
     nowUs = 1000;
     cut.cyclicTask(nowUs);
@@ -735,7 +735,7 @@ TEST_F(DoCanTransmitterTest, sequentialFramesSentCorrectlyWithNowUsWraparound)
             ITransportMessageProcessedListener::ProcessingResult::PROCESSED_NO_ERROR));
     _context.execute();
 
-    ASSERT_TRUE(messageTransmitterBlockPool.full());
+    ASSERT_TRUE(messageTransmitterBlockPool.empty());
     cut.shutdown();
 }
 
@@ -746,8 +746,7 @@ TEST_F(
     DoCanTransmitterTest,
     testTransmitSegmentedMessageWithMultipleConsecutiveFramesAtOnceAndShutdown)
 {
-    ::util::estd::declare::block_pool<5U, sizeof(::docan::DoCanMessageTransmitter<DataLinkLayer>)>
-        messageTransmitterBlockPool;
+    ::etl::generic_pool<sizeof(ItemT), alignof(ItemT), 5U> messageTransmitterBlockPool;
     DoCanTransmitter<DataLinkLayer> cut(
         _busId,
         _context,
@@ -786,6 +785,7 @@ TEST_F(
     // frames sent
     callback->dataFramesSent(jobHandle, 1U, 6U);
     // Expect immediate send after flow control
+    ::etl::span<uint8_t const> span = ::etl::span<uint8_t const>(data).subspan(6U);
     EXPECT_CALL(
         _dataFrameTransmitterMock,
         startSendDataFrames(
@@ -796,7 +796,7 @@ TEST_F(
             1U,
             3U,
             7U,
-            BytesAreSlice(::estd::make_slice(data).offset(6U))))
+            ElementsAreArray(span.data(), span.size())))
         .WillOnce(Return(SendResult::QUEUED_FULL));
     cut.flowControlFrameReceived(addrPair.getReceptionAddress(), FlowStatus::CTS, 0U, 0U);
     Mock::VerifyAndClearExpectations(&_dataFrameTransmitterMock);
@@ -810,7 +810,7 @@ TEST_F(
             ITransportMessageProcessedListener::ProcessingResult::PROCESSED_NO_ERROR));
     _context.execute();
 
-    ASSERT_TRUE(messageTransmitterBlockPool.full());
+    ASSERT_TRUE(messageTransmitterBlockPool.empty());
     cut.shutdown();
 }
 
@@ -821,8 +821,7 @@ TEST_F(
     DoCanTransmitterTest,
     testTransmitSegmentedMessageWithMultipleConsecutiveFramesAtOnceAndEscapeSequenceAndShutdown)
 {
-    ::util::estd::declare::block_pool<105U, sizeof(::docan::DoCanMessageTransmitter<DataLinkLayer>)>
-        messageTransmitterBlockPool;
+    ::etl::generic_pool<sizeof(ItemT), alignof(ItemT), 105U> messageTransmitterBlockPool;
     DoCanTransmitter<DataLinkLayer> cut(
         _busId,
         _context,
@@ -842,7 +841,7 @@ TEST_F(
     {
         data[i] = i & 0xFF;
     }
-    auto slice = ::estd::make_slice(data);
+    ::etl::span<uint8_t const> span(data);
     TransportMessage message;
     auto const addrPair      = DataLinkLayer::AddressPairType(0x1234, 0x5678);
     auto const transportPair = DoCanTransportAddressPair(0x45, 0x54);
@@ -867,7 +866,7 @@ TEST_F(
     Mock::VerifyAndClearExpectations(&_dataFrameTransmitterMock);
     // frames sent
     callback->dataFramesSent(jobHandle, 1U, 2U);
-    slice.advance(2U);
+    span.advance(2U);
 
     // Expect immediate send after flow control
     EXPECT_CALL(
@@ -880,12 +879,12 @@ TEST_F(
             1U,
             FRAMES,
             7U,
-            BytesAreSlice(slice)))
+            ElementsAreArray(span.data(), span.size())))
         .WillOnce(Return(SendResult::QUEUED_FULL));
     cut.flowControlFrameReceived(addrPair.getReceptionAddress(), FlowStatus::CTS, 0U, 0U);
     Mock::VerifyAndClearExpectations(&_dataFrameTransmitterMock);
 
-    callback->dataFramesSent(jobHandle, FRAMES, slice.size());
+    callback->dataFramesSent(jobHandle, FRAMES, span.size());
     EXPECT_CALL(
         _processedListenerMock,
         transportMessageProcessed(
@@ -893,7 +892,7 @@ TEST_F(
             ITransportMessageProcessedListener::ProcessingResult::PROCESSED_NO_ERROR));
     _context.execute();
 
-    ASSERT_TRUE(messageTransmitterBlockPool.full());
+    ASSERT_TRUE(messageTransmitterBlockPool.empty());
     cut.shutdown();
 }
 
@@ -902,8 +901,7 @@ TEST_F(
  */
 TEST_F(DoCanTransmitterTest, testSendTwoSegmentedMessagesRoundRobin)
 {
-    ::util::estd::declare::block_pool<5U, sizeof(::docan::DoCanMessageTransmitter<DataLinkLayer>)>
-        messageTransmitterBlockPool;
+    ::etl::generic_pool<sizeof(ItemT), alignof(ItemT), 5U> messageTransmitterBlockPool;
     DoCanTransmitter<DataLinkLayer> cut(
         _busId,
         _context,
@@ -970,6 +968,7 @@ TEST_F(DoCanTransmitterTest, testSendTwoSegmentedMessagesRoundRobin)
     EXPECT_NE(jobHandle1, jobHandle2);
     // expect next frames of message 2 when flow control and no more sent
     cut.flowControlFrameReceived(addrPair2.getReceptionAddress(), FlowStatus::CTS, 0U, 0U);
+    ::etl::span<uint8_t const> span2 = ::etl::span<uint8_t const>(data2).subspan(6U);
     EXPECT_CALL(
         _dataFrameTransmitterMock,
         startSendDataFrames(
@@ -980,12 +979,13 @@ TEST_F(DoCanTransmitterTest, testSendTwoSegmentedMessagesRoundRobin)
             1U,
             4U,
             7U,
-            BytesAreSlice(::estd::make_slice(data2).offset(6U))))
+            ElementsAreArray(span2.data(), span2.size())))
         .WillOnce(Return(SendResult::QUEUED_FULL));
     callback->dataFramesSent(jobHandle2, 1U, 6U);
     Mock::VerifyAndClearExpectations(&_dataFrameTransmitterMock);
     // expect next frames of message 1 (round robin)
     cut.flowControlFrameReceived(addrPair1.getReceptionAddress(), FlowStatus::CTS, 0U, 0U);
+    ::etl::span<uint8_t const> span1 = ::etl::span<uint8_t const>(data1).subspan(6U);
     EXPECT_CALL(
         _dataFrameTransmitterMock,
         startSendDataFrames(
@@ -996,7 +996,7 @@ TEST_F(DoCanTransmitterTest, testSendTwoSegmentedMessagesRoundRobin)
             1U,
             3U,
             7U,
-            BytesAreSlice(::estd::make_slice(data1).offset(6U))))
+            ElementsAreArray(span1.data(), span1.size())))
         .WillOnce(Return(SendResult::QUEUED_FULL));
     callback->dataFramesSent(jobHandle2, 1U, 7U);
     // expect next frames of message 2 (round robin)
@@ -1010,7 +1010,7 @@ TEST_F(DoCanTransmitterTest, testSendTwoSegmentedMessagesRoundRobin)
             2U,
             4U,
             7U,
-            BytesAreSlice(::estd::make_slice(data2).offset(13U))))
+            ElementsAreArray(::etl::span<uint8_t const>(data2).subspan(13U))))
         .WillOnce(Return(SendResult::QUEUED_FULL));
     callback->dataFramesSent(jobHandle1, 1U, 7U);
     // expect next frames of message 1 (round robin)
@@ -1024,7 +1024,7 @@ TEST_F(DoCanTransmitterTest, testSendTwoSegmentedMessagesRoundRobin)
             2U,
             3U,
             7U,
-            BytesAreSlice(::estd::make_slice(data1).offset(13U))))
+            ElementsAreArray(::etl::span<uint8_t const>(data1).subspan(13U))))
         .WillOnce(Return(SendResult::QUEUED_FULL));
     callback->dataFramesSent(jobHandle2, 1U, 7U);
     // expect next frames of message 2 (round robin)
@@ -1038,7 +1038,7 @@ TEST_F(DoCanTransmitterTest, testSendTwoSegmentedMessagesRoundRobin)
             3U,
             4U,
             7U,
-            BytesAreSlice(::estd::make_slice(data2).offset(20U))))
+            ElementsAreArray(::etl::span<uint8_t const>(data2).subspan(20U))))
         .WillOnce(Return(SendResult::QUEUED_FULL));
     callback->dataFramesSent(jobHandle1, 1U, 2U);
     // expect message 1 to be released (from context)
@@ -1059,7 +1059,7 @@ TEST_F(DoCanTransmitterTest, testSendTwoSegmentedMessagesRoundRobin)
     _context.execute();
 
     // shutdown
-    ASSERT_TRUE(messageTransmitterBlockPool.full());
+    ASSERT_TRUE(messageTransmitterBlockPool.empty());
     cut.shutdown();
 }
 
@@ -1068,8 +1068,7 @@ TEST_F(DoCanTransmitterTest, testSendTwoSegmentedMessagesRoundRobin)
  */
 TEST_F(DoCanTransmitterTest, testSendThreeSegmentedMessagesRoundRobinWithTwoSendSlots)
 {
-    ::util::estd::declare::block_pool<5U, sizeof(::docan::DoCanMessageTransmitter<DataLinkLayer>)>
-        messageTransmitterBlockPool;
+    ::etl::generic_pool<sizeof(ItemT), alignof(ItemT), 5U> messageTransmitterBlockPool;
     DoCanTransmitter<DataLinkLayer> cut(
         _busId,
         _context,
@@ -1181,7 +1180,7 @@ TEST_F(DoCanTransmitterTest, testSendThreeSegmentedMessagesRoundRobinWithTwoSend
             1U,
             4U,
             7U,
-            BytesAreSlice(::estd::make_slice(data2).offset(6U))))
+            ElementsAreArray(::etl::span<uint8_t>(data2).subspan(6U))))
         .WillOnce(Return(SendResult::QUEUED_FULL));
     callback->dataFramesSent(jobHandle3, 1U, 6U);
     Mock::VerifyAndClearExpectations(&_dataFrameTransmitterMock);
@@ -1196,7 +1195,7 @@ TEST_F(DoCanTransmitterTest, testSendThreeSegmentedMessagesRoundRobinWithTwoSend
             2U,
             4U,
             7U,
-            BytesAreSlice(::estd::make_slice(data2).offset(13U))))
+            ElementsAreArray(::etl::span<uint8_t const>(data2).subspan(13U))))
         .WillOnce(Return(SendResult::QUEUED_FULL));
     callback->dataFramesSent(jobHandle2, 1U, 7U);
     Mock::VerifyAndClearExpectations(&_dataFrameTransmitterMock);
@@ -1211,7 +1210,7 @@ TEST_F(DoCanTransmitterTest, testSendThreeSegmentedMessagesRoundRobinWithTwoSend
             1U,
             3U,
             7U,
-            BytesAreSlice(::estd::make_slice(data1).offset(6U))))
+            ElementsAreArray(::etl::span<uint8_t const>(data1).subspan(6U))))
         .WillOnce(Return(SendResult::QUEUED_FULL));
     cut.flowControlFrameReceived(addrPair1.getReceptionAddress(), FlowStatus::CTS, 0U, 0U);
     callback->dataFramesSent(jobHandle1, 1U, 6U);
@@ -1227,7 +1226,7 @@ TEST_F(DoCanTransmitterTest, testSendThreeSegmentedMessagesRoundRobinWithTwoSend
             3U,
             4U,
             7U,
-            BytesAreSlice(::estd::make_slice(data2).offset(20U))))
+            ElementsAreArray(::etl::span<uint8_t const>(data2).subspan(20U))))
         .WillOnce(Return(SendResult::QUEUED_FULL));
     cut.flowControlFrameReceived(addrPair3.getReceptionAddress(), FlowStatus::CTS, 0U, 0U);
     callback->dataFramesSent(jobHandle2, 1U, 7U);
@@ -1243,7 +1242,7 @@ TEST_F(DoCanTransmitterTest, testSendThreeSegmentedMessagesRoundRobinWithTwoSend
             1U,
             3U,
             7U,
-            BytesAreSlice(::estd::make_slice(data3).offset(6U))))
+            ElementsAreArray(::etl::span<uint8_t const>(data3).subspan(6U))))
         .WillOnce(Return(SendResult::QUEUED_FULL));
     callback->dataFramesSent(jobHandle2, 1U, 1U);
     // message 2 should be processed now
@@ -1265,7 +1264,7 @@ TEST_F(DoCanTransmitterTest, testSendThreeSegmentedMessagesRoundRobinWithTwoSend
             2U,
             3U,
             7U,
-            BytesAreSlice(::estd::make_slice(data1).offset(13U))))
+            ElementsAreArray(::etl::span<uint8_t>(data1).subspan(13U))))
         .WillOnce(Return(SendResult::QUEUED_FULL));
     callback->dataFramesSent(jobHandle1, 1U, 7U);
     Mock::VerifyAndClearExpectations(&_dataFrameTransmitterMock);
@@ -1280,7 +1279,7 @@ TEST_F(DoCanTransmitterTest, testSendThreeSegmentedMessagesRoundRobinWithTwoSend
             2U,
             3U,
             7U,
-            BytesAreSlice(::estd::make_slice(data3).offset(13U))))
+            ElementsAreArray(::etl::span<uint8_t const>(data3).subspan(13U))))
         .WillOnce(Return(SendResult::QUEUED_FULL));
     callback->dataFramesSent(jobHandle3, 1U, 7U);
     Mock::VerifyAndClearExpectations(&_dataFrameTransmitterMock);
@@ -1302,7 +1301,7 @@ TEST_F(DoCanTransmitterTest, testSendThreeSegmentedMessagesRoundRobinWithTwoSend
     Mock::VerifyAndClearExpectations(&_dataFrameTransmitterMock);
 
     // shutdown
-    ASSERT_TRUE(messageTransmitterBlockPool.full());
+    ASSERT_TRUE(messageTransmitterBlockPool.empty());
     cut.shutdown();
 }
 
@@ -1320,9 +1319,7 @@ TEST_F(DoCanTransmitterTest, testMultipleDifferentTimeoutsWithDifferentExpiry)
 {
     nowUs                          = 0;
     constexpr uint8_t MESSAGE_SIZE = 15;
-    ::util::estd::declare::
-        block_pool<MESSAGE_SIZE, sizeof(::docan::DoCanMessageTransmitter<DataLinkLayer>)>
-            messageTransmitterBlockPool;
+    ::etl::generic_pool<sizeof(ItemT), alignof(ItemT), MESSAGE_SIZE> messageTransmitterBlockPool;
     DoCanTransmitter<DataLinkLayer> cut(
         _busId,
         _context,
@@ -1395,7 +1392,7 @@ TEST_F(DoCanTransmitterTest, testMultipleDifferentTimeoutsWithDifferentExpiry)
             1U,
             3U,
             7U,
-            BytesAreSlice(::estd::make_slice(data[SUCCESS]).offset(7U))))
+            ElementsAreArray(::etl::span<uint8_t const>(data[SUCCESS]).subspan(7U))))
         .WillOnce(Return(SendResult::QUEUED));
     cut.flowControlFrameReceived(addrPair[SUCCESS].getReceptionAddress(), FlowStatus::CTS, 0U, 0U);
     Mock::VerifyAndClearExpectations(&_dataFrameTransmitterMock);
@@ -1409,7 +1406,7 @@ TEST_F(DoCanTransmitterTest, testMultipleDifferentTimeoutsWithDifferentExpiry)
             2U,
             3U,
             7U,
-            BytesAreSlice(::estd::make_slice(data[SUCCESS]).offset(12U))))
+            ElementsAreArray(::etl::span<uint8_t const>(data[SUCCESS]).subspan(12U))))
         .WillOnce(Return(SendResult::QUEUED));
     callback->dataFramesSent(jobHandles[SUCCESS], 1U, 5U);
     Mock::VerifyAndClearExpectations(&_dataFrameTransmitterMock);
@@ -1440,7 +1437,7 @@ TEST_F(DoCanTransmitterTest, testMultipleDifferentTimeoutsWithDifferentExpiry)
             1U,
             2U,
             7U,
-            BytesAreSlice(::estd::make_slice(data[MINSEPARATION_TIMEOUT]).offset(7U))))
+            ElementsAreArray(::etl::span<uint8_t const>(data[MINSEPARATION_TIMEOUT]).subspan(7U))))
         .WillOnce(Return(SendResult::QUEUED));
 
     cut.flowControlFrameReceived(
@@ -1466,7 +1463,7 @@ TEST_F(DoCanTransmitterTest, testMultipleDifferentTimeoutsWithDifferentExpiry)
             2U,
             3U,
             7U,
-            BytesAreSlice(::estd::make_slice(data[MINSEPARATION_TIMEOUT]).offset(12U))))
+            ElementsAreArray(::etl::span<uint8_t const>(data[MINSEPARATION_TIMEOUT]).subspan(12U))))
         .WillOnce(Return(SendResult::QUEUED));
     nowUs += 1;
     cut.cyclicTask(nowUs);
@@ -1518,14 +1515,13 @@ TEST_F(DoCanTransmitterTest, testMultipleDifferentTimeoutsWithDifferentExpiry)
     Mock::VerifyAndClearExpectations(&_processedListenerMock);
 
     // shutdown
-    ASSERT_TRUE(messageTransmitterBlockPool.full());
+    ASSERT_TRUE(messageTransmitterBlockPool.empty());
     cut.shutdown();
 }
 
 TEST_F(DoCanTransmitterTest, testSendMessageFailsOnSendError)
 {
-    ::util::estd::declare::block_pool<5U, sizeof(::docan::DoCanMessageTransmitter<DataLinkLayer>)>
-        messageTransmitterBlockPool;
+    ::etl::generic_pool<sizeof(ItemT), alignof(ItemT), 5U> messageTransmitterBlockPool;
     DoCanTransmitter<DataLinkLayer> cut(
         _busId,
         _context,
@@ -1561,14 +1557,13 @@ TEST_F(DoCanTransmitterTest, testSendMessageFailsOnSendError)
     Mock::VerifyAndClearExpectations(&_dataFrameTransmitterMock);
 
     // shutdown
-    ASSERT_TRUE(messageTransmitterBlockPool.full());
+    ASSERT_TRUE(messageTransmitterBlockPool.empty());
     cut.shutdown();
 }
 
 TEST_F(DoCanTransmitterTest, testSendEmptyMessage)
 {
-    ::util::estd::declare::block_pool<5U, sizeof(::docan::DoCanMessageTransmitter<DataLinkLayer>)>
-        messageTransmitterBlockPool;
+    ::etl::generic_pool<sizeof(ItemT), alignof(ItemT), 5U> messageTransmitterBlockPool;
     DoCanTransmitter<DataLinkLayer> cut(
         _busId,
         _context,
@@ -1607,9 +1602,8 @@ TEST_F(DoCanTransmitterTest, testSendTooBigMessage)
     DoCanFrameCodec<SmallFrameIndexDataLinkLayer> smallFrameCodec(
         DoCanFrameCodecConfigPresets::OPTIMIZED_CLASSIC, _mapper);
 
-    ::util::estd::declare::
-        block_pool<5U, sizeof(::docan::DoCanMessageTransmitter<SmallFrameIndexDataLinkLayer>)>
-            messageTransmitterBlockPool;
+    using T = ::docan::DoCanMessageTransmitter<SmallFrameIndexDataLinkLayer>;
+    ::etl::generic_pool<sizeof(T), alignof(T), 5U> messageTransmitterBlockPool;
     DoCanTransmitter<SmallFrameIndexDataLinkLayer> cut(
         _busId,
         _context,
@@ -1624,7 +1618,7 @@ TEST_F(DoCanTransmitterTest, testSendTooBigMessage)
     // Bigger than DataLinkLayer::FrameIndexType size
     uint8_t
         data[::std::numeric_limits<SmallFrameIndexDataLinkLayer::FrameIndexType>::max() * 8 + 1];
-    ::estd::memory::set(data, 0xA5);
+    ::etl::mem_set(data, sizeof(data), static_cast<uint8_t>(0xA5));
 
     TransportMessage message;
     auto const addrPair      = SmallFrameIndexDataLinkLayer::AddressPairType(0x1234, 0x5678);
@@ -1645,8 +1639,7 @@ TEST_F(DoCanTransmitterTest, testSendTooBigMessage)
 
 TEST_F(DoCanTransmitterTest, testSendIncompleteMessage)
 {
-    ::util::estd::declare::block_pool<5U, sizeof(::docan::DoCanMessageTransmitter<DataLinkLayer>)>
-        messageTransmitterBlockPool;
+    ::etl::generic_pool<sizeof(ItemT), alignof(ItemT), 5U> messageTransmitterBlockPool;
     DoCanTransmitter<DataLinkLayer> cut(
         _busId,
         _context,
@@ -1678,8 +1671,7 @@ TEST_F(DoCanTransmitterTest, testSendIncompleteMessage)
 
 TEST_F(DoCanTransmitterTest, testSendSecondSegmentedMessageForSameTransportAddressPair)
 {
-    ::util::estd::declare::block_pool<5U, sizeof(::docan::DoCanMessageTransmitter<DataLinkLayer>)>
-        messageTransmitterBlockPool;
+    ::etl::generic_pool<sizeof(ItemT), alignof(ItemT), 5U> messageTransmitterBlockPool;
     DoCanTransmitter<DataLinkLayer> cut(
         _busId,
         _context,
@@ -1718,13 +1710,12 @@ TEST_F(DoCanTransmitterTest, testSendSecondSegmentedMessageForSameTransportAddre
         transportMessageProcessed(
             Ref(message1), ITransportMessageProcessedListener::ProcessingResult::PROCESSED_ERROR));
     cut.shutdown();
-    ASSERT_TRUE(messageTransmitterBlockPool.full());
+    ASSERT_TRUE(messageTransmitterBlockPool.empty());
 }
 
 TEST_F(DoCanTransmitterTest, testFillUpSendQueue)
 {
-    ::util::estd::declare::block_pool<2U, sizeof(::docan::DoCanMessageTransmitter<DataLinkLayer>)>
-        messageTransmitterBlockPool;
+    ::etl::generic_pool<sizeof(ItemT), alignof(ItemT), 2U> messageTransmitterBlockPool;
     DoCanTransmitter<DataLinkLayer> cut(
         _busId,
         _context,
@@ -1776,13 +1767,12 @@ TEST_F(DoCanTransmitterTest, testFillUpSendQueue)
         transportMessageProcessed(
             Ref(message2), ITransportMessageProcessedListener::ProcessingResult::PROCESSED_ERROR));
     cut.shutdown();
-    ASSERT_TRUE(messageTransmitterBlockPool.full());
+    ASSERT_TRUE(messageTransmitterBlockPool.empty());
 }
 
 TEST_F(DoCanTransmitterTest, testDataLinkQueueFull)
 {
-    ::util::estd::declare::block_pool<5U, sizeof(::docan::DoCanMessageTransmitter<DataLinkLayer>)>
-        messageTransmitterBlockPool;
+    ::etl::generic_pool<sizeof(ItemT), alignof(ItemT), 5U> messageTransmitterBlockPool;
     DoCanTransmitter<DataLinkLayer> cut(
         _busId,
         _context,
@@ -1844,8 +1834,7 @@ TEST_F(DoCanTransmitterTest, flowControlFrameTimeout)
 {
     DoCanDefaultFrameSizeMapper<uint8_t> const mapper;
     CodecType codec(DoCanFrameCodecConfigPresets::OPTIMIZED_CLASSIC, mapper);
-    ::util::estd::declare::block_pool<5U, sizeof(::docan::DoCanMessageTransmitter<DataLinkLayer>)>
-        messageTransmitterBlockPool;
+    ::etl::generic_pool<sizeof(ItemT), alignof(ItemT), 5U> messageTransmitterBlockPool;
     DoCanTransmitter<DataLinkLayer> cut(
         _busId,
         _context,
@@ -1900,8 +1889,7 @@ TEST_F(DoCanTransmitterTest, flowControlFrameTimeout)
 
 TEST_F(DoCanTransmitterTest, testSendSecondMessageAfterFirstMessageTransmissionTimeout)
 {
-    ::util::estd::declare::block_pool<5U, sizeof(::docan::DoCanMessageTransmitter<DataLinkLayer>)>
-        messageTransmitterBlockPool;
+    ::etl::generic_pool<sizeof(ItemT), alignof(ItemT), 5U> messageTransmitterBlockPool;
     DoCanTransmitter<DataLinkLayer> cut(
         _busId,
         _context,
@@ -1957,8 +1945,7 @@ TEST_F(DoCanTransmitterTest, testSendSecondMessageAfterFirstMessageTransmissionT
 
 TEST_F(DoCanTransmitterTest, testCanFrameSentIgnoredIfNoPendingSender)
 {
-    ::util::estd::declare::block_pool<5U, sizeof(::docan::DoCanMessageTransmitter<DataLinkLayer>)>
-        messageTransmitterBlockPool;
+    ::etl::generic_pool<sizeof(ItemT), alignof(ItemT), 5U> messageTransmitterBlockPool;
     DoCanTransmitter<DataLinkLayer> cut(
         _busId,
         _context,

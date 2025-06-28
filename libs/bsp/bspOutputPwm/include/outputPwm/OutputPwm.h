@@ -2,19 +2,18 @@
 
 #pragma once
 
-#include "estd/uncopyable.h"
 #include "io/DynamicClientCfg.h"
 #include "io/Io.h"
 #include "mcu/mcu.h"
 #include "platform/estdint.h"
 
+#include <etl/uncopyable.h>
+
 namespace bios
 {
 
-class OutputPwm
+class OutputPwm : public ::etl::uncopyable
 {
-    UNCOPYABLE(OutputPwm);
-
 public:
     struct tOutputPwmCfg
     {

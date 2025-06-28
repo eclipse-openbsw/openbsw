@@ -5,8 +5,7 @@
  */
 #pragma once
 
-#include <estd/functional.h>
-#include <estd/slice.h>
+#include <etl/delegate.h>
 
 #include <cstddef>
 
@@ -18,7 +17,7 @@ class StatisticsIterator
 public:
     using StatisticsType = Statistics;
 
-    using GetNameType = ::estd::function<char const*(size_t)>;
+    using GetNameType = ::etl::delegate<char const*(size_t)>;
 
     StatisticsIterator(GetNameType const getName, size_t const valueCount)
     : _getName(getName), _valueCount(valueCount)

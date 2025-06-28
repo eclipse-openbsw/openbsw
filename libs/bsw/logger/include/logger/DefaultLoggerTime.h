@@ -4,16 +4,15 @@
 
 #include "logger/ILoggerTime.h"
 
+#include <etl/chrono.h>
 #include <util/format/StringWriter.h>
-
-#include <estd/chrono.h>
 
 namespace logger
 {
 template<
-    class Timepoint = ::estd::chrono::time_point<
-        ::estd::chrono::high_resolution_clock,
-        ::estd::chrono::duration<uint32_t, ::estd::milli>>>
+    class Timepoint = ::etl::chrono::time_point<
+        ::etl::chrono::high_resolution_clock,
+        ::etl::chrono::duration<uint32_t, ::etl::milli>>>
 class DefaultLoggerTime : public ILoggerTime<typename Timepoint::duration::rep>
 {
 public:
@@ -38,7 +37,7 @@ template<class Timepoint>
 typename DefaultLoggerTime<Timepoint>::TimestampType
 DefaultLoggerTime<Timepoint>::getTimestamp() const
 {
-    return ::estd::chrono::time_point_cast<typename Timepoint::duration>(Timepoint::clock::now())
+    return ::etl::chrono::time_point_cast<typename Timepoint::duration>(Timepoint::clock::now())
         .time_since_epoch()
         .count();
 }

@@ -6,4 +6,4 @@ endif ()
 
 target_include_directories(runtime PUBLIC include)
 
-target_link_libraries(runtime PUBLIC async bsp estd util)
+target_link_libraries(runtime PUBLIC async bsp etl util)
