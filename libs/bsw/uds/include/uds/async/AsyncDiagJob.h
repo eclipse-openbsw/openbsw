@@ -7,6 +7,7 @@
 #include "uds/base/AbstractDiagJob.h"
 #include "uds/connection/IncomingDiagConnection.h"
 
+#include <etl/closure.h>
 #include <etl/functional.h>
 #include <etl/utility.h>
 
