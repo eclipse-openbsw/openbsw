@@ -38,4 +38,4 @@ add_subdirectory(freeRtos EXCLUDE_FROM_ALL)
 
 add_library(etl INTERFACE)
 
-target_include_directories(etl INTERFACE etl/include)
+target_include_directories(etl INTERFACE etl/include etl_configuration etl_addons/include)
