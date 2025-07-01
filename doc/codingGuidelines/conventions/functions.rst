@@ -148,5 +148,4 @@ where we have the certainty that they are supported.
 When using lambdas, be careful about object lifetimes: objects captured by reference within a lambda
 have to be still in scope at the time of lambda execution. Also lambda objects themselves have to
 still exist when they're executed - it might be tricky while using function references like
-``etl::delegate``.  A solution to this issue is implemented in
-``etl::inplace_function``.
+``etl::delegate``.

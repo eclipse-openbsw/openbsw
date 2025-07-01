@@ -11,7 +11,7 @@ Usage example:
 
 .. code:: cpp
 
-   auto handleCommands = ::etl::inplace_function(
+   auto handleCommands = ::etl::delegate::create(
        [](::util::stream::ISharedOutputStream& outStream,
           ::etl::istring const& line,
           ::console::StdioConsoleInput::OnLineProcessed const& onProcessed)
@@ -48,7 +48,7 @@ Usage example:
 
 A user callback can be represented using a lambda, a free function, or a
 member function. For more information on how callback functions can be
-created, refer to the documentation for ``etl::inplace_function``.
+created, refer to the documentation for ``etl::delegate``.
 
 .. warning::
 
