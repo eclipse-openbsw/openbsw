@@ -4,6 +4,8 @@
 
 #include "async/AsyncMock.h"
 
+#include <etl/closure.h>
+
 #include <gmock/gmock.h>
 
 namespace
@@ -21,8 +23,7 @@ public:
 
 TEST_F(AsyncCallTest, testFunction)
 {
-    auto l = [this]() { functionCall(); };
-    Function cut(l);
+    Function cut(Function::CallType::create<AsyncCallTest, &AsyncCallTest::functionCall>(*this));
     EXPECT_CALL(*this, functionCall());
     EXPECT_CALL(_asyncMock, execute(0, _))
         .Times(1)
@@ -33,9 +34,11 @@ TEST_F(AsyncCallTest, testFunction)
 
 TEST_F(AsyncCallTest, testClosure)
 {
-    auto l            = [&]() { closureCall(1234U, 3247834U); };
-    using TestClosure = decltype(l);
-    Call<TestClosure> cut{TestClosure(l)};
+    using TestClosure = ::etl::closure<void(uint16_t, uint32_t)>;
+    Call<TestClosure> cut(TestClosure(
+        TestClosure::fct::create<AsyncCallTest, &AsyncCallTest::closureCall>(*this),
+        1234U,
+        3247834U));
     EXPECT_CALL(*this, closureCall(1234U, 3247834U));
     EXPECT_CALL(_asyncMock, execute(0, _))
         .Times(1)
