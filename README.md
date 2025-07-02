@@ -9,10 +9,8 @@
 
 | Code Coverage            | Status                                                                 |
 |--------------------------|------------------------------------------------------------------------|
-| Line Coverage            | ![Line Coverage](https://raw.githubusercontent.com/esrlabs/openbsw/gh-pages/coverage_badges/line_coverage_badge.svg) |
-| Function Coverage        | ![Function Coverage](https://raw.githubusercontent.com/esrlabs/openbsw/gh-pages/coverage_badges/function_coverage_badge.svg) |
-
-
+| Line Coverage            | [![Line Coverage](https://eclipse-openbsw.github.io/openbsw/coverage_badges/line_coverage_badge.svg)](https://github.com/eclipse-openbsw/openbsw/actions/workflows/code-coverage.yml) |
+| Function Coverage        | [![Function Coverage](https://eclipse-openbsw.github.io/openbsw/coverage_badges/function_coverage_badge.svg)](https://github.com/eclipse-openbsw/openbsw/actions/workflows/code-coverage.yml) |
 
 ## Overview
 
