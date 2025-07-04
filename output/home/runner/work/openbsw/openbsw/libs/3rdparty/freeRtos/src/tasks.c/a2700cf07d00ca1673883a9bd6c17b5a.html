@@ -1,0 +1,465 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../../../../../../../../../static/css/style.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <title>Symbol - puncover</title>
+    
+</head>
+<body>
+    <div class="container" id="content">
+        <div class="page-header">
+            <nav class="navbar navbar-default" role="navigation">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="../../../../../../../../../../index.html">
+                    Puncover
+                  </a>
+                </div>
+              </div>
+            </nav>
+          
+        </div>
+        <div id="inner_content">
+        
+    
+    <ol class="breadcrumb folders">
+        
+        <li><a href="../../../../../../../../../../home.html">home</a></li>
+        
+        <li><a href="../../../../../../../../../runner.html">runner</a></li>
+        
+        <li><a href="../../../../../../../../work.html">work</a></li>
+        
+        <li><a href="../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../libs.html">libs</a></li>
+        
+        <li><a href="../../../../3rdparty.html">3rdparty</a></li>
+        
+        <li><a href="../../../freeRtos.html">freeRtos</a></li>
+        
+        <li ><a href="../../src.html">src</a>
+            </li>
+
+        
+        <li class="active"><a href="../tasks.c.html">tasks.c</a>:5387
+            </li>
+        
+    </ol>
+
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <th>Function</th>
+                <td colspan="5">
+                    <span class="icon-function">prvAddCurrentTaskToDelayedList</span>
+                </td>
+            </tr>
+
+            <tr>
+                <th rowspan="2"></th>
+                <th>Address</th>
+                <th>Remarks</th>
+                <th>Stack</th>
+                <th>Code</th>
+                <th>Static</th>
+            </tr>
+            <tr>
+                <td>0x00008b30</td>
+                <td>
+    
+    
+</td>
+                <td>24 (static)</td>
+                <td>168</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th>Callers (3)</th>
+                <td colspan="5">
+                
+                    <a href="./e3b0b757ef6331124620ce14313dcc71.html">xTaskGenericNotifyWait (172)</a>
+                    
+                        ,
+                    
+                
+                    <a href="./ff261e6301291d97229d25f13c19ed10.html">vTaskPlaceOnEventListRestricted (76)</a>
+                    
+                        ,
+                    
+                
+                    <a href="./0975a0d61c9f6b0e61639c753c84406d.html">vTaskPlaceOnEventList (32)</a>
+                    
+                
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Callees (2,
+                            <span title="sum of used bytes by all callees">
+                            Σ=88
+                            </span>
+                        )
+                    
+                </th>
+                <td colspan="5">
+                
+                    <a href="../list.c/1abc5ae8b61049fbb0433232e839935f.html">uxListRemove (40)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../list.c/4a1a844861e946c94e3a62dd84492ace.html">vListInsert (48)</a>
+                    
+                
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    
+    <pre><a href="../../../../bsw/stdioConsoleInput/src/console/StdioConsoleInput.cpp/eef7c492925a836588c8e8540506e9fb.html">console::StdioConsoleInput::run() (436)</a></pre>
+    
+
+    <pre>
+
+    prvAddCurrentTaskToDelayedList():
+
+        8b30:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
+
+        8b32:	4b22      	ldr	r3, [pc, #136]	; (8bbc <<a href="./a2700cf07d00ca1673883a9bd6c17b5a.html">prvAddCurrentTaskToDelayedList</a>+0x8c>)
+
+        8b34:	4e22      	ldr	r6, [pc, #136]	; (8bc0 <<a href="./a2700cf07d00ca1673883a9bd6c17b5a.html">prvAddCurrentTaskToDelayedList</a>+0x90>)
+
+        8b36:	681c      	ldr	r4, [r3, #0]
+
+        8b38:	6833      	ldr	r3, [r6, #0]
+
+        8b3a:	4605      	mov	r5, r0
+
+        8b3c:	1d18      	adds	r0, r3, #4
+
+        8b3e:	460f      	mov	r7, r1
+
+        8b40:	f001 f820 	bl	9b84 <<a href="../list.c/1abc5ae8b61049fbb0433232e839935f.html">uxListRemove</a>>
+
+        8b44:	b948      	cbnz	r0, 8b5a <<a href="./a2700cf07d00ca1673883a9bd6c17b5a.html">prvAddCurrentTaskToDelayedList</a>+0x2a>
+
+        8b46:	6833      	ldr	r3, [r6, #0]
+
+        8b48:	491e      	ldr	r1, [pc, #120]	; (8bc4 <<a href="./a2700cf07d00ca1673883a9bd6c17b5a.html">prvAddCurrentTaskToDelayedList</a>+0x94>)
+
+        8b4a:	6ada      	ldr	r2, [r3, #44]	; 0x2c
+
+        8b4c:	2301      	movs	r3, #1
+
+        8b4e:	fa03 f202 	lsl.w	r2, r3, r2
+
+        8b52:	680b      	ldr	r3, [r1, #0]
+
+        8b54:	ea23 0302 	bic.w	r3, r3, r2
+
+        8b58:	600b      	str	r3, [r1, #0]
+
+        8b5a:	1c6b      	adds	r3, r5, #1
+
+        8b5c:	d017      	beq.n	8b8e <<a href="./a2700cf07d00ca1673883a9bd6c17b5a.html">prvAddCurrentTaskToDelayedList</a>+0x5e>
+
+        8b5e:	6833      	ldr	r3, [r6, #0]
+
+        8b60:	1964      	adds	r4, r4, r5
+
+        8b62:	605c      	str	r4, [r3, #4]
+
+        8b64:	d307      	bcc.n	8b76 <<a href="./a2700cf07d00ca1673883a9bd6c17b5a.html">prvAddCurrentTaskToDelayedList</a>+0x46>
+
+        8b66:	4b18      	ldr	r3, [pc, #96]	; (8bc8 <<a href="./a2700cf07d00ca1673883a9bd6c17b5a.html">prvAddCurrentTaskToDelayedList</a>+0x98>)
+
+        8b68:	6818      	ldr	r0, [r3, #0]
+
+        8b6a:	6831      	ldr	r1, [r6, #0]
+
+        8b6c:	e8bd 40f8 	ldmia.w	sp!, {r3, r4, r5, r6, r7, lr}
+
+        8b70:	3104      	adds	r1, #4
+
+        8b72:	f000 bfef 	b.w	9b54 <<a href="../list.c/4a1a844861e946c94e3a62dd84492ace.html">vListInsert</a>>
+
+        8b76:	4b15      	ldr	r3, [pc, #84]	; (8bcc <<a href="./a2700cf07d00ca1673883a9bd6c17b5a.html">prvAddCurrentTaskToDelayedList</a>+0x9c>)
+
+        8b78:	6818      	ldr	r0, [r3, #0]
+
+        8b7a:	6831      	ldr	r1, [r6, #0]
+
+        8b7c:	3104      	adds	r1, #4
+
+        8b7e:	f000 ffe9 	bl	9b54 <<a href="../list.c/4a1a844861e946c94e3a62dd84492ace.html">vListInsert</a>>
+
+        8b82:	4b13      	ldr	r3, [pc, #76]	; (8bd0 <<a href="./a2700cf07d00ca1673883a9bd6c17b5a.html">prvAddCurrentTaskToDelayedList</a>+0xa0>)
+
+        8b84:	681a      	ldr	r2, [r3, #0]
+
+        8b86:	42a2      	cmp	r2, r4
+
+        8b88:	bf88      	it	hi
+
+        8b8a:	601c      	strhi	r4, [r3, #0]
+
+        8b8c:	bdf8      	pop	{r3, r4, r5, r6, r7, pc}
+
+        8b8e:	2f00      	cmp	r7, #0
+
+        8b90:	d0e5      	beq.n	8b5e <<a href="./a2700cf07d00ca1673883a9bd6c17b5a.html">prvAddCurrentTaskToDelayedList</a>+0x2e>
+
+        8b92:	4b10      	ldr	r3, [pc, #64]	; (8bd4 <<a href="./a2700cf07d00ca1673883a9bd6c17b5a.html">prvAddCurrentTaskToDelayedList</a>+0xa4>)
+
+        8b94:	6830      	ldr	r0, [r6, #0]
+
+        8b96:	685a      	ldr	r2, [r3, #4]
+
+        8b98:	6831      	ldr	r1, [r6, #0]
+
+        8b9a:	6082      	str	r2, [r0, #8]
+
+        8b9c:	6890      	ldr	r0, [r2, #8]
+
+        8b9e:	60c8      	str	r0, [r1, #12]
+
+        8ba0:	6831      	ldr	r1, [r6, #0]
+
+        8ba2:	6890      	ldr	r0, [r2, #8]
+
+        8ba4:	3104      	adds	r1, #4
+
+        8ba6:	6041      	str	r1, [r0, #4]
+
+        8ba8:	6830      	ldr	r0, [r6, #0]
+
+        8baa:	6834      	ldr	r4, [r6, #0]
+
+        8bac:	6819      	ldr	r1, [r3, #0]
+
+        8bae:	3004      	adds	r0, #4
+
+        8bb0:	3101      	adds	r1, #1
+
+        8bb2:	6090      	str	r0, [r2, #8]
+
+        8bb4:	6019      	str	r1, [r3, #0]
+
+        8bb6:	6163      	str	r3, [r4, #20]
+
+        8bb8:	bdf8      	pop	{r3, r4, r5, r6, r7, pc}
+
+        8bba:	bf00      	nop
+
+        8bbc:	1ffee57c 	.word	0x1ffee57c
+
+        8bc0:	1ffee428 	.word	0x1ffee428
+
+        8bc4:	1ffee500 	.word	0x1ffee500
+
+        8bc8:	1ffee430 	.word	0x1ffee430
+
+        8bcc:	1ffee42c 	.word	0x1ffee42c
+
+        8bd0:	1ffee530 	.word	0x1ffee530
+
+        8bd4:	1ffee554 	.word	0x1ffee554
+
+    </pre>
+
+    
+    <pre><a href="./71b6abfea20a21a05ef90c3fbceff33f.html">prvIdleTask (96)</a></pre>
+    
+
+    
+        <h1>Stack Worst-Case Scenarios</h1>
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 136</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 48</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    136
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                8 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">48</td>
+                <td><a href="../list.c/4a1a844861e946c94e3a62dd84492ace.html" class="icon-function">vListInsert</a></td>
+            </tr>
+        
+        </tbody>
+        
+        <tfoot>
+            <tr>
+                <th></th>
+                <th class="col_size">128
+                </th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </tfoot>
+        
+    </table>
+        
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 128</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 980</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    128
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                24 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    980
+                    
+                    
+                </td>
+                <td class="col_size">168</td>
+                <td><a href="./a2700cf07d00ca1673883a9bd6c17b5a.html" class="icon-function">prvAddCurrentTaskToDelayedList</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                    
+                    104
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                8 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    812
+                    
+                    
+                </td>
+                <td class="col_size">32</td>
+                <td><a href="./0975a0d61c9f6b0e61639c753c84406d.html" class="icon-function">vTaskPlaceOnEventList</a></td>
+            </tr>
+        
+            <tr>
+                <th>3</th>
+                <td class="col_size">
+                    
+                    96
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                48 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    780
+                    
+                    
+                </td>
+                <td class="col_size">292</td>
+                <td><a href="../queue.c/e175bc34f19fb5ab84d573af67f2b746.html" class="icon-function">xQueueReceive</a></td>
+            </tr>
+        
+            <tr>
+                <th>4</th>
+                <td class="col_size">
+                </td>
+                <td class="col_size">
+            
+                48 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">488</td>
+                <td><a href="../timers.c/d35f72ab680b9bc7eb2ff3e6cd07ece5.html" class="icon-function">prvTimerTask</a></td>
+            </tr>
+        
+        </tbody>
+        
+    </table>
+        
+    
+
+
+        </div>
+    <div id="page-footer">
+        <hr>
+        
+            brought to you with 💖
+            by <a href="https://twitter.com/hbehrens">Heiko Behrens</a>
+            <span class="secondary">– MIT license, copyright © 2014-2025</span>
+        
+    </div>
+    </div>
+</body>
+</html>

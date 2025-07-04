@@ -1,0 +1,620 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../../../../../../../../../../static/css/style.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <title>Symbol - puncover</title>
+    
+</head>
+<body>
+    <div class="container" id="content">
+        <div class="page-header">
+            <nav class="navbar navbar-default" role="navigation">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="../../../../../../../../../../../index.html">
+                    Puncover
+                  </a>
+                </div>
+              </div>
+            </nav>
+          
+        </div>
+        <div id="inner_content">
+        
+    
+    <ol class="breadcrumb folders">
+        
+        <li><a href="../../../../../../../../../../../home.html">home</a></li>
+        
+        <li><a href="../../../../../../../../../../runner.html">runner</a></li>
+        
+        <li><a href="../../../../../../../../../work.html">work</a></li>
+        
+        <li><a href="../../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../libs.html">libs</a></li>
+        
+        <li><a href="../../../../../bsw.html">bsw</a></li>
+        
+        <li><a href="../../../../uds.html">uds</a></li>
+        
+        <li><a href="../../../src.html">src</a></li>
+        
+        <li ><a href="../../uds.html">uds</a>
+            </li>
+
+        
+        <li class="active"><a href="../DiagDispatcher.cpp.html">DiagDispatcher.cpp</a>:55
+            </li>
+        
+    </ol>
+
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <th>Function</th>
+                <td colspan="5">
+                    <span class="icon-function">uds::DiagDispatcher2::send_local(transport::TransportMessage&amp;, transport::ITransportMessageProcessedListener*)</span>
+                </td>
+            </tr>
+
+            <tr>
+                <th rowspan="2"></th>
+                <th>Address</th>
+                <th>Remarks</th>
+                <th>Stack</th>
+                <th>Code</th>
+                <th>Static</th>
+            </tr>
+            <tr>
+                <td>0x0000fa80</td>
+                <td>
+    <span class="label label-success">x-module</span>
+    
+</td>
+                <td>24 (static)</td>
+                <td>316</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th>Callers (2)</th>
+                <td colspan="5">
+                
+                    <a href="../../../../../../../../../../../unknown/unknown/7231d126f98f40ded30284494041e166.html">non-virtual thunk to uds::DiagDispatcher2::send(transport::TransportMessage&amp;, transport::ITransportMessageProcessedListener*) (8)</a>
+                    
+                        ,
+                    
+                
+                    <a href="./8a7ec0422a360eb70ddcaf8ba7265f53.html">uds::DiagDispatcher2::send(transport::TransportMessage&amp;, transport::ITransportMessageProcessedListener*) (4)</a>
+                    
+                
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Callees (3,
+                            <span title="sum of used bytes by all callees">
+                            Σ=260
+                            </span>
+                        )
+                    
+                </th>
+                <td colspan="5">
+                
+                    <a href="../../../../transport/src/AbstractTransportLayer.cpp/95b7df615e72f80e0520bff6278a138e.html">transport::AbstractTransportLayer::TransportMessageProvidingListenerHelper::messageReceived(unsigned char, transport::TransportMessage&amp;, transport::ITransportMessageProcessedListener*) (52)</a>
+                    
+                        ,
+                    
+                
+                    <a href="./d2e8e15b8e3fc0172c1bdb87a61e9a05.html">uds::DiagDispatcher2::enqueueMessage(transport::TransportMessage&amp;, transport::ITransportMessageProcessedListener*) (152)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../../../../util/include/util/logger/Logger.h/e675253f5bfedd299c26bd0145e28698.html">util::logger::Logger::error(unsigned char, char const*, ...) (56)</a>
+                    
+                
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    
+    <pre><a href="./f53ea407a0e4886803008b58e9a431f2.html">uds::DiagDispatcher2::sendBusyResponse(transport::TransportMessage const*) (84)</a></pre>
+    
+
+    <pre>
+
+    uds::DiagDispatcher2::send_local(transport::TransportMessage&, transport::ITransportMessageProcessedListener*):
+
+        fa80:	e92d 41f0 	stmdb	sp!, {r4, r5, r6, r7, r8, lr}
+
+    _ZN3etl19intrusive_list_baseINS_18bidirectional_linkILj0EEEE8get_headEv():
+
+        fa84:	6e04      	ldr	r4, [r0, #96]	; 0x60
+
+    _ZN3etl14intrusive_listIN3uds29ManagedOutgoingDiagConnectionENS_18bidirectional_linkILj0EEEE3endEv():
+
+        fa86:	f100 035c 	add.w	r3, r0, #92	; 0x5c
+
+    uds::DiagDispatcher2::send_local(transport::TransportMessage&, transport::ITransportMessageProcessedListener*):
+
+        fa8a:	429c      	cmp	r4, r3
+
+        fa8c:	460d      	mov	r5, r1
+
+        fa8e:	d007      	beq.n	faa0 <<a href="./f252fb71971771b90de8f71e99de827b.html">uds::DiagDispatcher2::send_local(transport::TransportMessage&, transport::ITransportMessageProcessedListener*)</a>+0x20>
+
+    _ZNK3etl14intrusive_listIN3uds29ManagedOutgoingDiagConnectionENS_18bidirectional_linkILj0EEEE8iteratorptEv():
+
+        fa90:	b38c      	cbz	r4, faf6 <<a href="./f252fb71971771b90de8f71e99de827b.html">uds::DiagDispatcher2::send_local(transport::TransportMessage&, transport::ITransportMessageProcessedListener*)</a>+0x76>
+
+        fa92:	f1a4 0c7c 	sub.w	ip, r4, #124	; 0x7c
+
+    uds::DiagDispatcher2::send_local(transport::TransportMessage&, transport::ITransportMessageProcessedListener*):
+
+        fa96:	4562      	cmp	r2, ip
+
+        fa98:	d030      	beq.n	fafc <<a href="./f252fb71971771b90de8f71e99de827b.html">uds::DiagDispatcher2::send_local(transport::TransportMessage&, transport::ITransportMessageProcessedListener*)</a>+0x7c>
+
+    _ZN3etl14intrusive_listIN3uds29ManagedOutgoingDiagConnectionENS_18bidirectional_linkILj0EEEE8iteratorppEv():
+
+        fa9a:	6864      	ldr	r4, [r4, #4]
+
+    uds::DiagDispatcher2::send_local(transport::TransportMessage&, transport::ITransportMessageProcessedListener*):
+
+        fa9c:	429c      	cmp	r4, r3
+
+        fa9e:	d1f7      	bne.n	fa90 <<a href="./f252fb71971771b90de8f71e99de827b.html">uds::DiagDispatcher2::send_local(transport::TransportMessage&, transport::ITransportMessageProcessedListener*)</a>+0x10>
+
+        faa0:	f8d0 8038 	ldr.w	r8, [r0, #56]	; 0x38
+
+        faa4:	f8d8 7000 	ldr.w	r7, [r8]
+
+    _ZN3etl5ipool5beginEv():
+
+        faa8:	683e      	ldr	r6, [r7, #0]
+
+    _ZNK3etl5ipool10buffer_endEv():
+
+        faaa:	6939      	ldr	r1, [r7, #16]
+
+        faac:	68fb      	ldr	r3, [r7, #12]
+
+        faae:	fb03 6e01 	mla	lr, r3, r1, r6
+
+    _ZN3etl5ipool14ipool_iteratorILb0EE14find_allocatedEv():
+
+        fab2:	4576      	cmp	r6, lr
+
+        fab4:	46b4      	mov	ip, r6
+
+        fab6:	d204      	bcs.n	fac2 <<a href="./f252fb71971771b90de8f71e99de827b.html">uds::DiagDispatcher2::send_local(transport::TransportMessage&, transport::ITransportMessageProcessedListener*)</a>+0x42>
+
+        fab8:	f8dc 3000 	ldr.w	r3, [ip]
+
+    _ZNK3etl5ipool39is_pointing_into_pool_or_end_or_nullptrEPKc():
+
+        fabc:	b363      	cbz	r3, fb18 <<a href="./f252fb71971771b90de8f71e99de827b.html">uds::DiagDispatcher2::send_local(transport::TransportMessage&, transport::ITransportMessageProcessedListener*)</a>+0x98>
+
+        fabe:	429e      	cmp	r6, r3
+
+        fac0:	d928      	bls.n	fb14 <<a href="./f252fb71971771b90de8f71e99de827b.html">uds::DiagDispatcher2::send_local(transport::TransportMessage&, transport::ITransportMessageProcessedListener*)</a>+0x94>
+
+    uds::DiagDispatcher2::send_local(transport::TransportMessage&, transport::ITransportMessageProcessedListener*):
+
+        fac2:	45f4      	cmp	ip, lr
+
+    find_if<etl::ipool::ipool_iterator<false>, uds::DiagDispatcher2::send_local(transport::TransportMessage&, transport::ITransportMessageProcessedListener*)::<lambda(void*)> >():
+
+        fac4:	d048      	beq.n	fb58 <<a href="./f252fb71971771b90de8f71e99de827b.html">uds::DiagDispatcher2::send_local(transport::TransportMessage&, transport::ITransportMessageProcessedListener*)</a>+0xd8>
+
+        fac6:	4562      	cmp	r2, ip
+
+        fac8:	d032      	beq.n	fb30 <<a href="./f252fb71971771b90de8f71e99de827b.html">uds::DiagDispatcher2::send_local(transport::TransportMessage&, transport::ITransportMessageProcessedListener*)</a>+0xb0>
+
+    _ZN3etl5ipool14ipool_iteratorILb0EEppEv():
+
+        faca:	448c      	add	ip, r1
+
+    _ZN3etl5ipool14ipool_iteratorILb0EE14find_allocatedEv():
+
+        facc:	45f4      	cmp	ip, lr
+
+        face:	d2f8      	bcs.n	fac2 <<a href="./f252fb71971771b90de8f71e99de827b.html">uds::DiagDispatcher2::send_local(transport::TransportMessage&, transport::ITransportMessageProcessedListener*)</a>+0x42>
+
+        fad0:	f8dc 4000 	ldr.w	r4, [ip]
+
+    _ZNK3etl5ipool39is_pointing_into_pool_or_end_or_nullptrEPKc():
+
+        fad4:	b11c      	cbz	r4, fade <<a href="./f252fb71971771b90de8f71e99de827b.html">uds::DiagDispatcher2::send_local(transport::TransportMessage&, transport::ITransportMessageProcessedListener*)</a>+0x5e>
+
+        fad6:	42a6      	cmp	r6, r4
+
+        fad8:	d8f3      	bhi.n	fac2 <<a href="./f252fb71971771b90de8f71e99de827b.html">uds::DiagDispatcher2::send_local(transport::TransportMessage&, transport::ITransportMessageProcessedListener*)</a>+0x42>
+
+        fada:	4574      	cmp	r4, lr
+
+        fadc:	d8f1      	bhi.n	fac2 <<a href="./f252fb71971771b90de8f71e99de827b.html">uds::DiagDispatcher2::send_local(transport::TransportMessage&, transport::ITransportMessageProcessedListener*)</a>+0x42>
+
+    _ZNK3etl5ipool15is_in_free_listEPKc():
+
+        fade:	687c      	ldr	r4, [r7, #4]
+
+        fae0:	b91c      	cbnz	r4, faea <<a href="./f252fb71971771b90de8f71e99de827b.html">uds::DiagDispatcher2::send_local(transport::TransportMessage&, transport::ITransportMessageProcessedListener*)</a>+0x6a>
+
+        fae2:	e7ee      	b.n	fac2 <<a href="./f252fb71971771b90de8f71e99de827b.html">uds::DiagDispatcher2::send_local(transport::TransportMessage&, transport::ITransportMessageProcessedListener*)</a>+0x42>
+
+        fae4:	6824      	ldr	r4, [r4, #0]
+
+        fae6:	2c00      	cmp	r4, #0
+
+        fae8:	d0eb      	beq.n	fac2 <<a href="./f252fb71971771b90de8f71e99de827b.html">uds::DiagDispatcher2::send_local(transport::TransportMessage&, transport::ITransportMessageProcessedListener*)</a>+0x42>
+
+        faea:	4564      	cmp	r4, ip
+
+        faec:	d1fa      	bne.n	fae4 <<a href="./f252fb71971771b90de8f71e99de827b.html">uds::DiagDispatcher2::send_local(transport::TransportMessage&, transport::ITransportMessageProcessedListener*)</a>+0x64>
+
+    _ZN3etl5ipool14ipool_iteratorILb0EE14find_allocatedEv():
+
+        faee:	448c      	add	ip, r1
+
+        faf0:	45e6      	cmp	lr, ip
+
+        faf2:	d8ed      	bhi.n	fad0 <<a href="./f252fb71971771b90de8f71e99de827b.html">uds::DiagDispatcher2::send_local(transport::TransportMessage&, transport::ITransportMessageProcessedListener*)</a>+0x50>
+
+        faf4:	e7e5      	b.n	fac2 <<a href="./f252fb71971771b90de8f71e99de827b.html">uds::DiagDispatcher2::send_local(transport::TransportMessage&, transport::ITransportMessageProcessedListener*)</a>+0x42>
+
+    _ZNK3etl14intrusive_listIN3uds29ManagedOutgoingDiagConnectionENS_18bidirectional_linkILj0EEEE8iteratorptEv():
+
+        faf6:	46a4      	mov	ip, r4
+
+    uds::DiagDispatcher2::send_local(transport::TransportMessage&, transport::ITransportMessageProcessedListener*):
+
+        faf8:	4562      	cmp	r2, ip
+
+        fafa:	d1ce      	bne.n	fa9a <<a href="./f252fb71971771b90de8f71e99de827b.html">uds::DiagDispatcher2::send_local(transport::TransportMessage&, transport::ITransportMessageProcessedListener*)</a>+0x1a>
+
+        fafc:	6b81      	ldr	r1, [r0, #56]	; 0x38
+
+        fafe:	7e89      	ldrb	r1, [r1, #26]
+
+        fb00:	4613      	mov	r3, r2
+
+        fb02:	462a      	mov	r2, r5
+
+        fb04:	3020      	adds	r0, #32
+
+        fb06:	f7fc ff5f 	bl	c9c8 <<a href="../../../../transport/src/AbstractTransportLayer.cpp/95b7df615e72f80e0520bff6278a138e.html">transport::AbstractTransportLayer::TransportMessageProvidingListenerHelper::messageReceived(unsigned char, transport::TransportMessage&, transport::ITransportMessageProcessedListener*)</a>>
+
+        fb0a:	3800      	subs	r0, #0
+
+        fb0c:	bf18      	it	ne
+
+        fb0e:	2001      	movne	r0, #1
+
+        fb10:	e8bd 81f0 	ldmia.w	sp!, {r4, r5, r6, r7, r8, pc}
+
+    _ZNK3etl5ipool39is_pointing_into_pool_or_end_or_nullptrEPKc():
+
+        fb14:	4573      	cmp	r3, lr
+
+        fb16:	d8d4      	bhi.n	fac2 <<a href="./f252fb71971771b90de8f71e99de827b.html">uds::DiagDispatcher2::send_local(transport::TransportMessage&, transport::ITransportMessageProcessedListener*)</a>+0x42>
+
+    _ZNK3etl5ipool15is_in_free_listEPKc():
+
+        fb18:	687b      	ldr	r3, [r7, #4]
+
+        fb1a:	b91b      	cbnz	r3, fb24 <<a href="./f252fb71971771b90de8f71e99de827b.html">uds::DiagDispatcher2::send_local(transport::TransportMessage&, transport::ITransportMessageProcessedListener*)</a>+0xa4>
+
+        fb1c:	e7d1      	b.n	fac2 <<a href="./f252fb71971771b90de8f71e99de827b.html">uds::DiagDispatcher2::send_local(transport::TransportMessage&, transport::ITransportMessageProcessedListener*)</a>+0x42>
+
+        fb1e:	681b      	ldr	r3, [r3, #0]
+
+        fb20:	2b00      	cmp	r3, #0
+
+        fb22:	d0ce      	beq.n	fac2 <<a href="./f252fb71971771b90de8f71e99de827b.html">uds::DiagDispatcher2::send_local(transport::TransportMessage&, transport::ITransportMessageProcessedListener*)</a>+0x42>
+
+        fb24:	4563      	cmp	r3, ip
+
+        fb26:	d1fa      	bne.n	fb1e <<a href="./f252fb71971771b90de8f71e99de827b.html">uds::DiagDispatcher2::send_local(transport::TransportMessage&, transport::ITransportMessageProcessedListener*)</a>+0x9e>
+
+    _ZN3etl5ipool14ipool_iteratorILb0EE14find_allocatedEv():
+
+        fb28:	448c      	add	ip, r1
+
+        fb2a:	45f4      	cmp	ip, lr
+
+        fb2c:	d3c4      	bcc.n	fab8 <<a href="./f252fb71971771b90de8f71e99de827b.html">uds::DiagDispatcher2::send_local(transport::TransportMessage&, transport::ITransportMessageProcessedListener*)</a>+0x38>
+
+        fb2e:	e7c8      	b.n	fac2 <<a href="./f252fb71971771b90de8f71e99de827b.html">uds::DiagDispatcher2::send_local(transport::TransportMessage&, transport::ITransportMessageProcessedListener*)</a>+0x42>
+
+        fb30:	4572      	cmp	r2, lr
+
+        fb32:	d20e      	bcs.n	fb52 <<a href="./f252fb71971771b90de8f71e99de827b.html">uds::DiagDispatcher2::send_local(transport::TransportMessage&, transport::ITransportMessageProcessedListener*)</a>+0xd2>
+
+        fb34:	f8dc 3000 	ldr.w	r3, [ip]
+
+    _ZNK3etl5ipool39is_pointing_into_pool_or_end_or_nullptrEPKc():
+
+        fb38:	b11b      	cbz	r3, fb42 <<a href="./f252fb71971771b90de8f71e99de827b.html">uds::DiagDispatcher2::send_local(transport::TransportMessage&, transport::ITransportMessageProcessedListener*)</a>+0xc2>
+
+        fb3a:	429e      	cmp	r6, r3
+
+        fb3c:	d803      	bhi.n	fb46 <<a href="./f252fb71971771b90de8f71e99de827b.html">uds::DiagDispatcher2::send_local(transport::TransportMessage&, transport::ITransportMessageProcessedListener*)</a>+0xc6>
+
+        fb3e:	4573      	cmp	r3, lr
+
+        fb40:	d801      	bhi.n	fb46 <<a href="./f252fb71971771b90de8f71e99de827b.html">uds::DiagDispatcher2::send_local(transport::TransportMessage&, transport::ITransportMessageProcessedListener*)</a>+0xc6>
+
+    _ZNK3etl5ipool15is_in_free_listEPKc():
+
+        fb42:	687b      	ldr	r3, [r7, #4]
+
+        fb44:	bb1b      	cbnz	r3, fb8e <<a href="./f252fb71971771b90de8f71e99de827b.html">uds::DiagDispatcher2::send_local(transport::TransportMessage&, transport::ITransportMessageProcessedListener*)</a>+0x10e>
+
+    findIncomingDiagConnection<uds::DiagDispatcher2::send_local(transport::TransportMessage&, transport::ITransportMessageProcessedListener*)::<lambda(void*)> >():
+
+        fb46:	45e6      	cmp	lr, ip
+
+        fb48:	d006      	beq.n	fb58 <<a href="./f252fb71971771b90de8f71e99de827b.html">uds::DiagDispatcher2::send_local(transport::TransportMessage&, transport::ITransportMessageProcessedListener*)</a>+0xd8>
+
+    uds::DiagDispatcher2::send_local(transport::TransportMessage&, transport::ITransportMessageProcessedListener*):
+
+        fb4a:	f898 101a 	ldrb.w	r1, [r8, #26]
+
+        fb4e:	4613      	mov	r3, r2
+
+        fb50:	e7d7      	b.n	fb02 <<a href="./f252fb71971771b90de8f71e99de827b.html">uds::DiagDispatcher2::send_local(transport::TransportMessage&, transport::ITransportMessageProcessedListener*)</a>+0x82>
+
+    findIncomingDiagConnection<uds::DiagDispatcher2::send_local(transport::TransportMessage&, transport::ITransportMessageProcessedListener*)::<lambda(void*)> >():
+
+        fb52:	d001      	beq.n	fb58 <<a href="./f252fb71971771b90de8f71e99de827b.html">uds::DiagDispatcher2::send_local(transport::TransportMessage&, transport::ITransportMessageProcessedListener*)</a>+0xd8>
+
+    uds::DiagDispatcher2::send_local(transport::TransportMessage&, transport::ITransportMessageProcessedListener*):
+
+        fb54:	2a00      	cmp	r2, #0
+
+        fb56:	d1f8      	bne.n	fb4a <<a href="./f252fb71971771b90de8f71e99de827b.html">uds::DiagDispatcher2::send_local(transport::TransportMessage&, transport::ITransportMessageProcessedListener*)</a>+0xca>
+
+    _ZNK9transport16TransportMessage13targetAddressEv():
+
+        fb58:	89ec      	ldrh	r4, [r5, #14]
+
+    uds::DiagDispatcher2::send_local(transport::TransportMessage&, transport::ITransportMessageProcessedListener*):
+
+        fb5a:	f8b8 3014 	ldrh.w	r3, [r8, #20]
+
+        fb5e:	42a3      	cmp	r3, r4
+
+        fb60:	d007      	beq.n	fb72 <<a href="./f252fb71971771b90de8f71e99de827b.html">uds::DiagDispatcher2::send_local(transport::TransportMessage&, transport::ITransportMessageProcessedListener*)</a>+0xf2>
+
+        fb62:	f8b8 1016 	ldrh.w	r1, [r8, #22]
+
+        fb66:	f64f 76ff 	movw	r6, #65535	; 0xffff
+
+        fb6a:	42b1      	cmp	r1, r6
+
+        fb6c:	d001      	beq.n	fb72 <<a href="./f252fb71971771b90de8f71e99de827b.html">uds::DiagDispatcher2::send_local(transport::TransportMessage&, transport::ITransportMessageProcessedListener*)</a>+0xf2>
+
+        fb6e:	42a1      	cmp	r1, r4
+
+        fb70:	d115      	bne.n	fb9e <<a href="./f252fb71971771b90de8f71e99de827b.html">uds::DiagDispatcher2::send_local(transport::TransportMessage&, transport::ITransportMessageProcessedListener*)</a>+0x11e>
+
+    uds::DiagDispatcher2::enqueueMessage(transport::TransportMessage&, transport::ITransportMessageProcessedListener*):
+
+        fb72:	7b03      	ldrb	r3, [r0, #12]
+
+        fb74:	b18b      	cbz	r3, fb9a <<a href="./f252fb71971771b90de8f71e99de827b.html">uds::DiagDispatcher2::send_local(transport::TransportMessage&, transport::ITransportMessageProcessedListener*)</a>+0x11a>
+
+        fb76:	8a69      	ldrh	r1, [r5, #18]
+
+        fb78:	8a2b      	ldrh	r3, [r5, #16]
+
+        fb7a:	4299      	cmp	r1, r3
+
+        fb7c:	d317      	bcc.n	fbae <<a href="./f252fb71971771b90de8f71e99de827b.html">uds::DiagDispatcher2::send_local(transport::TransportMessage&, transport::ITransportMessageProcessedListener*)</a>+0x12e>
+
+        fb7e:	4629      	mov	r1, r5
+
+    uds::DiagDispatcher2::send_local(transport::TransportMessage&, transport::ITransportMessageProcessedListener*):
+
+        fb80:	e8bd 41f0 	ldmia.w	sp!, {r4, r5, r6, r7, r8, lr}
+
+    uds::DiagDispatcher2::enqueueMessage(transport::TransportMessage&, transport::ITransportMessageProcessedListener*):
+
+        fb84:	f7ff be22 	b.w	f7cc <<a href="./d2e8e15b8e3fc0172c1bdb87a61e9a05.html">uds::DiagDispatcher2::enqueueMessage(transport::TransportMessage&, transport::ITransportMessageProcessedListener*)</a>.part.0>
+
+    _ZNK3etl5ipool15is_in_free_listEPKc():
+
+        fb88:	681b      	ldr	r3, [r3, #0]
+
+        fb8a:	2b00      	cmp	r3, #0
+
+        fb8c:	d0db      	beq.n	fb46 <<a href="./f252fb71971771b90de8f71e99de827b.html">uds::DiagDispatcher2::send_local(transport::TransportMessage&, transport::ITransportMessageProcessedListener*)</a>+0xc6>
+
+        fb8e:	4563      	cmp	r3, ip
+
+        fb90:	d1fa      	bne.n	fb88 <<a href="./f252fb71971771b90de8f71e99de827b.html">uds::DiagDispatcher2::send_local(transport::TransportMessage&, transport::ITransportMessageProcessedListener*)</a>+0x108>
+
+    _ZN3etl5ipool14ipool_iteratorILb0EE14find_allocatedEv():
+
+        fb92:	448c      	add	ip, r1
+
+        fb94:	45f4      	cmp	ip, lr
+
+        fb96:	d3cd      	bcc.n	fb34 <<a href="./f252fb71971771b90de8f71e99de827b.html">uds::DiagDispatcher2::send_local(transport::TransportMessage&, transport::ITransportMessageProcessedListener*)</a>+0xb4>
+
+        fb98:	e7d6      	b.n	fb48 <<a href="./f252fb71971771b90de8f71e99de827b.html">uds::DiagDispatcher2::send_local(transport::TransportMessage&, transport::ITransportMessageProcessedListener*)</a>+0xc8>
+
+    uds::DiagDispatcher2::enqueueMessage(transport::TransportMessage&, transport::ITransportMessageProcessedListener*):
+
+        fb9a:	2001      	movs	r0, #1
+
+        fb9c:	e7b8      	b.n	fb10 <<a href="./f252fb71971771b90de8f71e99de827b.html">uds::DiagDispatcher2::send_local(transport::TransportMessage&, transport::ITransportMessageProcessedListener*)</a>+0x90>
+
+    uds::DiagDispatcher2::send_local(transport::TransportMessage&, transport::ITransportMessageProcessedListener*):
+
+        fb9e:	4a05      	ldr	r2, [pc, #20]	; (fbb4 <<a href="./f252fb71971771b90de8f71e99de827b.html">uds::DiagDispatcher2::send_local(transport::TransportMessage&, transport::ITransportMessageProcessedListener*)</a>+0x134>)
+
+        fba0:	4905      	ldr	r1, [pc, #20]	; (fbb8 <<a href="./f252fb71971771b90de8f71e99de827b.html">uds::DiagDispatcher2::send_local(transport::TransportMessage&, transport::ITransportMessageProcessedListener*)</a>+0x138>)
+
+        fba2:	7810      	ldrb	r0, [r2, #0]
+
+        fba4:	4622      	mov	r2, r4
+
+        fba6:	f7f3 fa07 	bl	2fb8 <<a href="../../../../util/include/util/logger/Logger.h/e675253f5bfedd299c26bd0145e28698.html">util::logger::Logger::error(unsigned char, char const*, ...)</a>>
+
+        fbaa:	2001      	movs	r0, #1
+
+        fbac:	e7b0      	b.n	fb10 <<a href="./f252fb71971771b90de8f71e99de827b.html">uds::DiagDispatcher2::send_local(transport::TransportMessage&, transport::ITransportMessageProcessedListener*)</a>+0x90>
+
+    uds::DiagDispatcher2::enqueueMessage(transport::TransportMessage&, transport::ITransportMessageProcessedListener*):
+
+        fbae:	2003      	movs	r0, #3
+
+        fbb0:	e7ae      	b.n	fb10 <<a href="./f252fb71971771b90de8f71e99de827b.html">uds::DiagDispatcher2::send_local(transport::TransportMessage&, transport::ITransportMessageProcessedListener*)</a>+0x90>
+
+        fbb2:	bf00      	nop
+
+        fbb4:	1ffe0081 	.word	0x1ffe0081
+
+        fbb8:	00018168 	.word	0x00018168
+
+    </pre>
+
+    
+    <pre><a href="./8a7ec0422a360eb70ddcaf8ba7265f53.html">uds::DiagDispatcher2::send(transport::TransportMessage&amp;, transport::ITransportMessageProcessedListener*) (4)</a></pre>
+    
+
+    
+        <h1>Stack Worst-Case Scenarios</h1>
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 108</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 176</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    108
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                48 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    176
+                    
+                    
+                </td>
+                <td class="col_size">68</td>
+                <td><a href="../../../../util/src/util/logger/Logger.cpp/d658d7c78dcca1ca01e61ef198b3eeaa.html" class="icon-function">util::logger::Logger::doLog(unsigned char, util::logger::Level, char const*, std::__va_list)</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                    
+                    60
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                20 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    108
+                    
+                    
+                </td>
+                <td class="col_size">56</td>
+                <td><a href="../../../../util/include/util/logger/Logger.h/fee4073070054ecc160dbd4d6b194f36.html" class="icon-function">util::logger::Logger::warn(unsigned char, char const*, ...)</a></td>
+            </tr>
+        
+            <tr>
+                <th>3</th>
+                <td class="col_size">
+                    
+                    40
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                16 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">52</td>
+                <td><a href="../../../../transport/src/AbstractTransportLayer.cpp/95b7df615e72f80e0520bff6278a138e.html" class="icon-function">transport::AbstractTransportLayer::TransportMessageProvidingListenerHelper::messageReceived(unsigned char, transport::TransportMessage&amp;, transport::ITransportMessageProcessedListener*)</a></td>
+            </tr>
+        
+        </tbody>
+        
+        <tfoot>
+            <tr>
+                <th></th>
+                <th class="col_size">24
+                </th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </tfoot>
+        
+    </table>
+        
+        
+            <p>No callers for this function.</p>
+        
+    
+
+
+        </div>
+    <div id="page-footer">
+        <hr>
+        
+            brought to you with 💖
+            by <a href="https://twitter.com/hbehrens">Heiko Behrens</a>
+            <span class="secondary">– MIT license, copyright © 2014-2025</span>
+        
+    </div>
+    </div>
+</body>
+</html>

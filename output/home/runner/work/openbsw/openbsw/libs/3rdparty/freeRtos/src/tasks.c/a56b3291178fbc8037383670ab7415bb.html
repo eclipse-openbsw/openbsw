@@ -1,0 +1,765 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../../../../../../../../../static/css/style.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <title>Symbol - puncover</title>
+    
+</head>
+<body>
+    <div class="container" id="content">
+        <div class="page-header">
+            <nav class="navbar navbar-default" role="navigation">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="../../../../../../../../../../index.html">
+                    Puncover
+                  </a>
+                </div>
+              </div>
+            </nav>
+          
+        </div>
+        <div id="inner_content">
+        
+    
+    <ol class="breadcrumb folders">
+        
+        <li><a href="../../../../../../../../../../home.html">home</a></li>
+        
+        <li><a href="../../../../../../../../../runner.html">runner</a></li>
+        
+        <li><a href="../../../../../../../../work.html">work</a></li>
+        
+        <li><a href="../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../libs.html">libs</a></li>
+        
+        <li><a href="../../../../3rdparty.html">3rdparty</a></li>
+        
+        <li><a href="../../../freeRtos.html">freeRtos</a></li>
+        
+        <li ><a href="../../src.html">src</a>
+            </li>
+
+        
+        <li class="active"><a href="../tasks.c.html">tasks.c</a>:568
+            </li>
+        
+    </ol>
+
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <th>Function</th>
+                <td colspan="5">
+                    <span class="icon-function">xTaskCreateStatic</span>
+                </td>
+            </tr>
+
+            <tr>
+                <th rowspan="2"></th>
+                <th>Address</th>
+                <th>Remarks</th>
+                <th>Stack</th>
+                <th>Code</th>
+                <th>Static</th>
+            </tr>
+            <tr>
+                <td>0x00008e74</td>
+                <td>
+    <span class="label label-success">x-module</span>
+    
+</td>
+                <td>40 (static)</td>
+                <td>508</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th>Callers (3)</th>
+                <td colspan="5">
+                
+                    <a href="../../../../bsw/asyncFreeRtos/include/async/StaticRunnable.h/c718d1e03430cb4c0615c638032cb47f.html">async::StaticRunnable&lt;async::internal::TaskInitializer&lt;async::FreeRtosAdapter&lt;async::AsyncBinding&gt; &gt; &gt;::run() (236)</a>
+                    
+                        ,
+                    
+                
+                    <a href="./f63e0c737b2bc0ba20133fcf0cb62874.html">vTaskStartScheduler (152)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../timers.c/3c747f35b7e966dd4eda189278fe89bf.html">xTimerCreateTimerTask (84)</a>
+                    
+                
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Callees (6,
+                            <span title="sum of used bytes by all callees">
+                            Σ=164
+                            </span>
+                        )
+                    
+                </th>
+                <td colspan="5">
+                
+                    <a href="../../../../../../../../../../unknown/unknown/716af30655f8f3d9b32750dca746ddfb.html">memset (16)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../list.c/a3d4e7dbbd5797f8a8e40ad4850a23d6.html">vListInitialiseItem (8)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../../../../../platforms/s32k1xx/3rdparty/freertos_cm4_sysTick/src/port.c/f551b40798bc5a3bc17b348e65494e97.html">pxPortInitialiseStack (56)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../../../../../platforms/s32k1xx/3rdparty/freertos_cm4_sysTick/src/port.c/51336e5c21ba34fb49b266dd31e701d5.html">vPortEnterCritical (32)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../../../../../platforms/s32k1xx/3rdparty/freertos_cm4_sysTick/src/port.c/f34360f95022a09e4e4cceffa22ec0c6.html">vPortExitCritical (28)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../list.c/f4f6151389b1f3f3b7c5b2ea2ad5a578.html">vListInitialise (24)</a>
+                    
+                
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    
+    <pre><a href="./8ad4f985dd50983ba2bb37f1c4c561c8.html">xTaskIncrementTick (384)</a></pre>
+    
+
+    <pre>
+
+    xTaskCreateStatic():
+
+        8e74:	e92d 43f0 	stmdb	sp!, {r4, r5, r6, r7, r8, r9, lr}
+
+        8e78:	b083      	sub	sp, #12
+
+        8e7a:	4694      	mov	ip, r2
+
+        8e7c:	9c0c      	ldr	r4, [sp, #48]	; 0x30
+
+        8e7e:	f8dd 902c 	ldr.w	r9, [sp, #44]	; 0x2c
+
+        8e82:	2260      	movs	r2, #96	; 0x60
+
+        8e84:	9201      	str	r2, [sp, #4]
+
+        8e86:	4698      	mov	r8, r3
+
+        8e88:	9b01      	ldr	r3, [sp, #4]
+
+        8e8a:	2c00      	cmp	r4, #0
+
+        8e8c:	f000 8090 	beq.w	8fb0 <<a href="./a56b3291178fbc8037383670ab7415bb.html">xTaskCreateStatic</a>+0x13c>
+
+        8e90:	f1b9 0f00 	cmp.w	r9, #0
+
+        8e94:	f000 8090 	beq.w	8fb8 <<a href="./a56b3291178fbc8037383670ab7415bb.html">xTaskCreateStatic</a>+0x144>
+
+    prvInitialiseNewTask():
+
+        8e98:	ea4f 068c 	mov.w	r6, ip, lsl #2
+
+        8e9c:	4607      	mov	r7, r0
+
+    xTaskCreateStatic():
+
+        8e9e:	460d      	mov	r5, r1
+
+        8ea0:	4620      	mov	r0, r4
+
+        8ea2:	2100      	movs	r1, #0
+
+        8ea4:	f7f7 fb65 	bl	572 <<a href="../../../../../../../../../../unknown/unknown/716af30655f8f3d9b32750dca746ddfb.html">memset</a>>
+
+        8ea8:	f8c4 9030 	str.w	r9, [r4, #48]	; 0x30
+
+    prvInitialiseNewTask():
+
+        8eac:	4648      	mov	r0, r9
+
+        8eae:	4632      	mov	r2, r6
+
+        8eb0:	21a5      	movs	r1, #165	; 0xa5
+
+        8eb2:	f7f7 fb5e 	bl	572 <<a href="../../../../../../../../../../unknown/unknown/716af30655f8f3d9b32750dca746ddfb.html">memset</a>>
+
+        8eb6:	f1a6 0c04 	sub.w	ip, r6, #4
+
+        8eba:	6b26      	ldr	r6, [r4, #48]	; 0x30
+
+        8ebc:	4466      	add	r6, ip
+
+        8ebe:	f026 0907 	bic.w	r9, r6, #7
+
+        8ec2:	f8c4 9040 	str.w	r9, [r4, #64]	; 0x40
+
+        8ec6:	b175      	cbz	r5, 8ee6 <<a href="./a56b3291178fbc8037383670ab7415bb.html">xTaskCreateStatic</a>+0x72>
+
+        8ec8:	f105 3cff 	add.w	ip, r5, #4294967295	; 0xffffffff
+
+        8ecc:	f104 0333 	add.w	r3, r4, #51	; 0x33
+
+        8ed0:	3509      	adds	r5, #9
+
+        8ed2:	f81c 6f01 	ldrb.w	r6, [ip, #1]!
+
+        8ed6:	f803 6f01 	strb.w	r6, [r3, #1]!
+
+        8eda:	b10e      	cbz	r6, 8ee0 <<a href="./a56b3291178fbc8037383670ab7415bb.html">xTaskCreateStatic</a>+0x6c>
+
+        8edc:	45ac      	cmp	ip, r5
+
+        8ede:	d1f8      	bne.n	8ed2 <<a href="./a56b3291178fbc8037383670ab7415bb.html">xTaskCreateStatic</a>+0x5e>
+
+        8ee0:	2300      	movs	r3, #0
+
+        8ee2:	f884 303d 	strb.w	r3, [r4, #61]	; 0x3d
+
+        8ee6:	9d0a      	ldr	r5, [sp, #40]	; 0x28
+
+        8ee8:	2d08      	cmp	r5, #8
+
+        8eea:	bf28      	it	cs
+
+        8eec:	2508      	movcs	r5, #8
+
+        8eee:	1d26      	adds	r6, r4, #4
+
+        8ef0:	62e5      	str	r5, [r4, #44]	; 0x2c
+
+        8ef2:	64e5      	str	r5, [r4, #76]	; 0x4c
+
+        8ef4:	4630      	mov	r0, r6
+
+        8ef6:	f000 fe29 	bl	9b4c <<a href="../list.c/a3d4e7dbbd5797f8a8e40ad4850a23d6.html">vListInitialiseItem</a>>
+
+        8efa:	f1c5 0509 	rsb	r5, r5, #9
+
+        8efe:	f104 0018 	add.w	r0, r4, #24
+
+        8f02:	f000 fe23 	bl	9b4c <<a href="../list.c/a3d4e7dbbd5797f8a8e40ad4850a23d6.html">vListInitialiseItem</a>>
+
+        8f06:	4642      	mov	r2, r8
+
+        8f08:	4639      	mov	r1, r7
+
+        8f0a:	61a5      	str	r5, [r4, #24]
+
+        8f0c:	6124      	str	r4, [r4, #16]
+
+        8f0e:	6264      	str	r4, [r4, #36]	; 0x24
+
+        8f10:	4648      	mov	r0, r9
+
+        8f12:	f00b f8a1 	bl	14058 <<a href="../../../../../platforms/s32k1xx/3rdparty/freertos_cm4_sysTick/src/port.c/f551b40798bc5a3bc17b348e65494e97.html">pxPortInitialiseStack</a>>
+
+        8f16:	6020      	str	r0, [r4, #0]
+
+    prvAddNewTaskToReadyList():
+
+        8f18:	f00b f8cc 	bl	140b4 <<a href="../../../../../platforms/s32k1xx/3rdparty/freertos_cm4_sysTick/src/port.c/51336e5c21ba34fb49b266dd31e701d5.html">vPortEnterCritical</a>>
+
+        8f1c:	4a47      	ldr	r2, [pc, #284]	; (903c <<a href="./a56b3291178fbc8037383670ab7415bb.html">xTaskCreateStatic</a>+0x1c8>)
+
+        8f1e:	4f48      	ldr	r7, [pc, #288]	; (9040 <<a href="./a56b3291178fbc8037383670ab7415bb.html">xTaskCreateStatic</a>+0x1cc>)
+
+        8f20:	6813      	ldr	r3, [r2, #0]
+
+        8f22:	3301      	adds	r3, #1
+
+        8f24:	6013      	str	r3, [r2, #0]
+
+        8f26:	683b      	ldr	r3, [r7, #0]
+
+        8f28:	2b00      	cmp	r3, #0
+
+        8f2a:	d053      	beq.n	8fd4 <<a href="./a56b3291178fbc8037383670ab7415bb.html">xTaskCreateStatic</a>+0x160>
+
+        8f2c:	f8df 812c 	ldr.w	r8, [pc, #300]	; 905c <<a href="./a56b3291178fbc8037383670ab7415bb.html">xTaskCreateStatic</a>+0x1e8>
+
+        8f30:	f8d8 3000 	ldr.w	r3, [r8]
+
+        8f34:	2b00      	cmp	r3, #0
+
+        8f36:	d044      	beq.n	8fc2 <<a href="./a56b3291178fbc8037383670ab7415bb.html">xTaskCreateStatic</a>+0x14e>
+
+        8f38:	f8d4 c02c 	ldr.w	ip, [r4, #44]	; 0x2c
+
+        8f3c:	4d41      	ldr	r5, [pc, #260]	; (9044 <<a href="./a56b3291178fbc8037383670ab7415bb.html">xTaskCreateStatic</a>+0x1d0>)
+
+        8f3e:	f8df e120 	ldr.w	lr, [pc, #288]	; 9060 <<a href="./a56b3291178fbc8037383670ab7415bb.html">xTaskCreateStatic</a>+0x1ec>
+
+    vTaskSetTaskNumber():
+
+        8f42:	f8c4 c048 	str.w	ip, [r4, #72]	; 0x48
+
+    prvAddNewTaskToReadyList():
+
+        8f46:	eb0c 038c 	add.w	r3, ip, ip, lsl #2
+
+        8f4a:	eb05 0083 	add.w	r0, r5, r3, lsl #2
+
+        8f4e:	f8de 9000 	ldr.w	r9, [lr]
+
+        8f52:	6841      	ldr	r1, [r0, #4]
+
+        8f54:	60a1      	str	r1, [r4, #8]
+
+        8f56:	2201      	movs	r2, #1
+
+        8f58:	fa02 f20c 	lsl.w	r2, r2, ip
+
+        8f5c:	ea42 0209 	orr.w	r2, r2, r9
+
+        8f60:	f8df c100 	ldr.w	ip, [pc, #256]	; 9064 <<a href="./a56b3291178fbc8037383670ab7415bb.html">xTaskCreateStatic</a>+0x1f0>
+
+        8f64:	f8ce 2000 	str.w	r2, [lr]
+
+        8f68:	688a      	ldr	r2, [r1, #8]
+
+        8f6a:	60e2      	str	r2, [r4, #12]
+
+        8f6c:	f8dc 2000 	ldr.w	r2, [ip]
+
+        8f70:	3201      	adds	r2, #1
+
+        8f72:	6462      	str	r2, [r4, #68]	; 0x44
+
+        8f74:	009b      	lsls	r3, r3, #2
+
+        8f76:	f8cc 2000 	str.w	r2, [ip]
+
+        8f7a:	688a      	ldr	r2, [r1, #8]
+
+        8f7c:	6056      	str	r6, [r2, #4]
+
+        8f7e:	58ea      	ldr	r2, [r5, r3]
+
+        8f80:	608e      	str	r6, [r1, #8]
+
+        8f82:	3201      	adds	r2, #1
+
+        8f84:	6160      	str	r0, [r4, #20]
+
+        8f86:	50ea      	str	r2, [r5, r3]
+
+        8f88:	f00b f8a4 	bl	140d4 <<a href="../../../../../platforms/s32k1xx/3rdparty/freertos_cm4_sysTick/src/port.c/f34360f95022a09e4e4cceffa22ec0c6.html">vPortExitCritical</a>>
+
+        8f8c:	f8d8 3000 	ldr.w	r3, [r8]
+
+        8f90:	b173      	cbz	r3, 8fb0 <<a href="./a56b3291178fbc8037383670ab7415bb.html">xTaskCreateStatic</a>+0x13c>
+
+        8f92:	683a      	ldr	r2, [r7, #0]
+
+        8f94:	6ae3      	ldr	r3, [r4, #44]	; 0x2c
+
+        8f96:	6ad2      	ldr	r2, [r2, #44]	; 0x2c
+
+        8f98:	429a      	cmp	r2, r3
+
+        8f9a:	d209      	bcs.n	8fb0 <<a href="./a56b3291178fbc8037383670ab7415bb.html">xTaskCreateStatic</a>+0x13c>
+
+        8f9c:	f04f 23e0 	mov.w	r3, #3758153728	; 0xe000e000
+
+        8fa0:	f04f 5280 	mov.w	r2, #268435456	; 0x10000000
+
+        8fa4:	f8c3 2d04 	str.w	r2, [r3, #3332]	; 0xd04
+
+        8fa8:	f3bf 8f4f 	dsb	sy
+
+        8fac:	f3bf 8f6f 	isb	sy
+
+    xTaskCreateStatic():
+
+        8fb0:	4620      	mov	r0, r4
+
+        8fb2:	b003      	add	sp, #12
+
+        8fb4:	e8bd 83f0 	ldmia.w	sp!, {r4, r5, r6, r7, r8, r9, pc}
+
+        8fb8:	464c      	mov	r4, r9
+
+        8fba:	4620      	mov	r0, r4
+
+        8fbc:	b003      	add	sp, #12
+
+        8fbe:	e8bd 83f0 	ldmia.w	sp!, {r4, r5, r6, r7, r8, r9, pc}
+
+    prvAddNewTaskToReadyList():
+
+        8fc2:	683b      	ldr	r3, [r7, #0]
+
+        8fc4:	f8d4 c02c 	ldr.w	ip, [r4, #44]	; 0x2c
+
+        8fc8:	6adb      	ldr	r3, [r3, #44]	; 0x2c
+
+        8fca:	4d1e      	ldr	r5, [pc, #120]	; (9044 <<a href="./a56b3291178fbc8037383670ab7415bb.html">xTaskCreateStatic</a>+0x1d0>)
+
+        8fcc:	4563      	cmp	r3, ip
+
+        8fce:	bf98      	it	ls
+
+        8fd0:	603c      	strls	r4, [r7, #0]
+
+        8fd2:	e7b4      	b.n	8f3e <<a href="./a56b3291178fbc8037383670ab7415bb.html">xTaskCreateStatic</a>+0xca>
+
+        8fd4:	603c      	str	r4, [r7, #0]
+
+        8fd6:	6813      	ldr	r3, [r2, #0]
+
+        8fd8:	2b01      	cmp	r3, #1
+
+        8fda:	d005      	beq.n	8fe8 <<a href="./a56b3291178fbc8037383670ab7415bb.html">xTaskCreateStatic</a>+0x174>
+
+        8fdc:	f8d4 c02c 	ldr.w	ip, [r4, #44]	; 0x2c
+
+        8fe0:	4d18      	ldr	r5, [pc, #96]	; (9044 <<a href="./a56b3291178fbc8037383670ab7415bb.html">xTaskCreateStatic</a>+0x1d0>)
+
+        8fe2:	f8df 8078 	ldr.w	r8, [pc, #120]	; 905c <<a href="./a56b3291178fbc8037383670ab7415bb.html">xTaskCreateStatic</a>+0x1e8>
+
+        8fe6:	e7aa      	b.n	8f3e <<a href="./a56b3291178fbc8037383670ab7415bb.html">xTaskCreateStatic</a>+0xca>
+
+        8fe8:	4d16      	ldr	r5, [pc, #88]	; (9044 <<a href="./a56b3291178fbc8037383670ab7415bb.html">xTaskCreateStatic</a>+0x1d0>)
+
+        8fea:	46a8      	mov	r8, r5
+
+        8fec:	f105 09b4 	add.w	r9, r5, #180	; 0xb4
+
+    prvInitialiseTaskLists():
+
+        8ff0:	4640      	mov	r0, r8
+
+        8ff2:	f108 0814 	add.w	r8, r8, #20
+
+        8ff6:	f000 fd9d 	bl	9b34 <<a href="../list.c/f4f6151389b1f3f3b7c5b2ea2ad5a578.html">vListInitialise</a>>
+
+        8ffa:	45c1      	cmp	r9, r8
+
+        8ffc:	d1f8      	bne.n	8ff0 <<a href="./a56b3291178fbc8037383670ab7415bb.html">xTaskCreateStatic</a>+0x17c>
+
+        8ffe:	f8df 9068 	ldr.w	r9, [pc, #104]	; 9068 <<a href="./a56b3291178fbc8037383670ab7415bb.html">xTaskCreateStatic</a>+0x1f4>
+
+        9002:	f8df 8068 	ldr.w	r8, [pc, #104]	; 906c <<a href="./a56b3291178fbc8037383670ab7415bb.html">xTaskCreateStatic</a>+0x1f8>
+
+        9006:	4648      	mov	r0, r9
+
+        9008:	f000 fd94 	bl	9b34 <<a href="../list.c/f4f6151389b1f3f3b7c5b2ea2ad5a578.html">vListInitialise</a>>
+
+        900c:	4640      	mov	r0, r8
+
+        900e:	f000 fd91 	bl	9b34 <<a href="../list.c/f4f6151389b1f3f3b7c5b2ea2ad5a578.html">vListInitialise</a>>
+
+        9012:	480d      	ldr	r0, [pc, #52]	; (9048 <<a href="./a56b3291178fbc8037383670ab7415bb.html">xTaskCreateStatic</a>+0x1d4>)
+
+        9014:	f000 fd8e 	bl	9b34 <<a href="../list.c/f4f6151389b1f3f3b7c5b2ea2ad5a578.html">vListInitialise</a>>
+
+        9018:	480c      	ldr	r0, [pc, #48]	; (904c <<a href="./a56b3291178fbc8037383670ab7415bb.html">xTaskCreateStatic</a>+0x1d8>)
+
+        901a:	f000 fd8b 	bl	9b34 <<a href="../list.c/f4f6151389b1f3f3b7c5b2ea2ad5a578.html">vListInitialise</a>>
+
+        901e:	480c      	ldr	r0, [pc, #48]	; (9050 <<a href="./a56b3291178fbc8037383670ab7415bb.html">xTaskCreateStatic</a>+0x1dc>)
+
+        9020:	f000 fd88 	bl	9b34 <<a href="../list.c/f4f6151389b1f3f3b7c5b2ea2ad5a578.html">vListInitialise</a>>
+
+        9024:	4b0b      	ldr	r3, [pc, #44]	; (9054 <<a href="./a56b3291178fbc8037383670ab7415bb.html">xTaskCreateStatic</a>+0x1e0>)
+
+    prvAddNewTaskToReadyList():
+
+        9026:	f8d4 c02c 	ldr.w	ip, [r4, #44]	; 0x2c
+
+    prvInitialiseTaskLists():
+
+        902a:	f8c3 9000 	str.w	r9, [r3]
+
+        902e:	4b0a      	ldr	r3, [pc, #40]	; (9058 <<a href="./a56b3291178fbc8037383670ab7415bb.html">xTaskCreateStatic</a>+0x1e4>)
+
+        9030:	f8c3 8000 	str.w	r8, [r3]
+
+        9034:	f8df 8024 	ldr.w	r8, [pc, #36]	; 905c <<a href="./a56b3291178fbc8037383670ab7415bb.html">xTaskCreateStatic</a>+0x1e8>
+
+        9038:	e781      	b.n	8f3e <<a href="./a56b3291178fbc8037383670ab7415bb.html">xTaskCreateStatic</a>+0xca>
+
+        903a:	bf00      	nop
+
+        903c:	1ffee4f0 	.word	0x1ffee4f0
+
+        9040:	1ffee428 	.word	0x1ffee428
+
+        9044:	1ffee434 	.word	0x1ffee434
+
+        9048:	1ffee53c 	.word	0x1ffee53c
+
+        904c:	1ffee568 	.word	0x1ffee568
+
+        9050:	1ffee554 	.word	0x1ffee554
+
+        9054:	1ffee42c 	.word	0x1ffee42c
+
+        9058:	1ffee430 	.word	0x1ffee430
+
+        905c:	1ffee550 	.word	0x1ffee550
+
+        9060:	1ffee500 	.word	0x1ffee500
+
+        9064:	1ffee4fc 	.word	0x1ffee4fc
+
+        9068:	1ffee504 	.word	0x1ffee504
+
+        906c:	1ffee518 	.word	0x1ffee518
+
+    </pre>
+
+    
+    <pre><a href="./f63e0c737b2bc0ba20133fcf0cb62874.html">vTaskStartScheduler (152)</a></pre>
+    
+
+    
+        <h1>Stack Worst-Case Scenarios</h1>
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 156</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 56</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    156
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                4 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">56</td>
+                <td><a href="../../../../../platforms/s32k1xx/3rdparty/freertos_cm4_sysTick/src/port.c/f551b40798bc5a3bc17b348e65494e97.html" class="icon-function">pxPortInitialiseStack</a></td>
+            </tr>
+        
+        </tbody>
+        
+        <tfoot>
+            <tr>
+                <th></th>
+                <th class="col_size">152
+                </th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </tfoot>
+        
+    </table>
+        
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 152</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 1,196</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    152
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                40 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    1,196
+                    
+                    
+                </td>
+                <td class="col_size">508</td>
+                <td><a href="./a56b3291178fbc8037383670ab7415bb.html" class="icon-function">xTaskCreateStatic</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                    
+                    112
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                40 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    688
+                    
+                    
+                </td>
+                <td class="col_size">84</td>
+                <td><a href="../timers.c/3c747f35b7e966dd4eda189278fe89bf.html" class="icon-function">xTimerCreateTimerTask</a></td>
+            </tr>
+        
+            <tr>
+                <th>3</th>
+                <td class="col_size">
+                    
+                    72
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                48 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    604
+                    
+                    
+                </td>
+                <td class="col_size">152</td>
+                <td><a href="./f63e0c737b2bc0ba20133fcf0cb62874.html" class="icon-function">vTaskStartScheduler</a></td>
+            </tr>
+        
+            <tr>
+                <th>4</th>
+                <td class="col_size">
+                    
+                    24
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                16 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    452
+                    
+                    
+                </td>
+                <td class="col_size">372</td>
+                <td><a href="../../../../../executables/referenceApp/application/src/app/app.cpp/f0c3e37b78904f0cb22bd585a8fa9842.html" class="icon-function">app::run()</a></td>
+            </tr>
+        
+            <tr>
+                <th>5</th>
+                <td class="col_size">
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    80
+                    
+                    
+                </td>
+                <td class="col_size">4</td>
+                <td><a href="../../../../../executables/referenceApp/application/src/main.cpp/5ca4565b9d11184b1d3b82aa1ebe323f.html" class="icon-function">app_main()</a></td>
+            </tr>
+        
+            <tr>
+                <th>6</th>
+                <td class="col_size">
+                </td>
+                <td class="col_size">
+            
+                8 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">76</td>
+                <td><a href="../../../../../executables/referenceApp/platforms/s32k148evb/main/src/main.cpp/fad58de7366495db4650cfefac2fcd61.html" class="icon-function">main</a></td>
+            </tr>
+        
+        </tbody>
+        
+    </table>
+        
+    
+
+
+        </div>
+    <div id="page-footer">
+        <hr>
+        
+            brought to you with 💖
+            by <a href="https://twitter.com/hbehrens">Heiko Behrens</a>
+            <span class="secondary">– MIT license, copyright © 2014-2025</span>
+        
+    </div>
+    </div>
+</body>
+</html>
