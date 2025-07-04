@@ -5,6 +5,7 @@
 #include "io/DynamicClientCfg.h"
 #include "io/Io.h"
 #include "platform/estdint.h"
+#include "static_assert.h"
 
 #include <etl/uncopyable.h>
 
@@ -17,6 +18,19 @@ public:
 #undef BSP_INPUT_PIN_CONFIGURATION
 #endif
 #include "bsp/io/input/inputConfiguration.h"
+
+    static uint16_t const TOTAL_NUMBER_OF_DIGITAL_INPUTS
+        = static_cast<uint16_t>(DigitalInputId::PORT_UNAVAILABLE);
+    static uint16_t const NUMBER_OF_EXTERNAL_DIGITAL_INPUTS = static_cast<uint16_t>(
+        DigitalInputId::LAST_DYNAMIC_DIGITAL_INPUT - DigitalInputId::LAST_INTERNAL_DIGITAL_INPUT);
+    static uint16_t const NUMBER_OF_INTERNAL_DIGITAL_INPUTS
+        = TOTAL_NUMBER_OF_DIGITAL_INPUTS - NUMBER_OF_EXTERNAL_DIGITAL_INPUTS;
+
+    // Make sure inputConfiguration has the correct structure
+    ETL_STATIC_ASSERT(
+        DigitalInputId::LAST_DYNAMIC_DIGITAL_INPUT >= DigitalInputId::LAST_INTERNAL_DIGITAL_INPUT);
+    ETL_STATIC_ASSERT(
+        DigitalInputId::PORT_UNAVAILABLE == DigitalInputId::LAST_DYNAMIC_DIGITAL_INPUT + 1);
 
     // Api for all DynamicClients
     class IDynamicInputClient

@@ -23,15 +23,14 @@ DigitalInput::getConfiguration(uint8_t /* hardwareVersion */)
 enum DigitalInputId
 {
     /*  0 */ EVAL_DI_1,
-    /* 1 */ EVAL_SW3,
-
-    /* xx */ NUMBER_OF_INTERNAL_DIGITAL_INPUTS,
-
-    // TODO: dynamic inputs here
-    /* yy */ // MyDynamicInput,
-
-    NUMBER_OF_EXTERNAL_DIGITAL_INPUTS,
-    TOTAL_NUMBER_OF_DIGITAL_INPUTS = NUMBER_OF_EXTERNAL_DIGITAL_INPUTS,
-    PORT_UNAVAILABLE               = TOTAL_NUMBER_OF_DIGITAL_INPUTS
+    /*  1 */ EVAL_SW3,
+    // TODO: other internal inputs go here
+    //       update LAST_INTERNAL_DIGITAL_INPUT when adding a new internal input
+    LAST_INTERNAL_DIGITAL_INPUT = EVAL_SW3,
+    // TODO: dynamic inputs go here
+    //       update LAST_DYNAMIC_DIGITAL_INPUT when adding a new external input
+    /* yy */ // MyFirstDynamicInput,
+    LAST_DYNAMIC_DIGITAL_INPUT  = LAST_INTERNAL_DIGITAL_INPUT,
+    PORT_UNAVAILABLE
 };
 #endif /* #if (BSP_INPUT_PIN_CONFIGURATION == 1) */
