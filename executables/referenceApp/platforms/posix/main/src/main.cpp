@@ -1,5 +1,7 @@
 // Copyright 2024 Accenture.
 
+#include "lifecycle/StaticBsp.h"
+
 #include <async/AsyncBinding.h>
 #include <etl/alignment.h>
 #include <lifecycle/LifecycleManager.h>
@@ -18,6 +20,7 @@ extern void app_main();
 
 namespace platform
 {
+StaticBsp staticBsp;
 
 #ifdef PLATFORM_SUPPORT_CAN
 ::etl::typed_storage<::systems::CanSystem> canSystem;
@@ -53,6 +56,7 @@ int main()
     signal(SIGINT, intHandler);
     main_thread_setup();
     terminal_setup();
+    ::platform::staticBsp.init();
     app_main(); // entry point for the generic part
     return (1); // we never reach this point
 }
