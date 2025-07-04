@@ -44,3 +44,7 @@ set_target_properties(
     startUp
     PROPERTIES PROP_LINKER_SCRIPT
                "${CMAKE_CURRENT_SOURCE_DIR}/linkerscript/application.dld")
+set_target_properties(
+    startUp
+    PROPERTIES LINK_DEPENDS
+               "${CMAKE_CURRENT_SOURCE_DIR}/linkerscript/application.dld")
