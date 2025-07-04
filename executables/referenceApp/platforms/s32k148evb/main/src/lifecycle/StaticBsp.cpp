@@ -3,6 +3,7 @@
 #include "lifecycle/StaticBsp.h"
 
 #include "bsp/SystemTime.h"
+#include "bsp/eeprom/EepromConfiguration.h"
 #include "bsp/timer/ftmConfiguration.hpp"
 #include "clock/clockConfig.h"
 #include "commonDebug.h"
@@ -12,17 +13,18 @@
 #include "mcu/mcu.h"
 #include "sci/SciDevice.h"
 
-using namespace bios;
-
 extern "C"
 {
 extern void initSystemTimerHelper(bool sleep);
 }
 
+using Io = bios::Io;
+
 extern StaticBsp staticBsp;
 
 StaticBsp::StaticBsp()
 : fCyclic10Msec(0U)
+, _eepromDriver(eeprom::EEPROM_CONFIG)
 , _output()
 , _digitalInput()
 , _commonCanPhy()
@@ -41,6 +43,7 @@ void StaticBsp::init() { hwInit(); }
 void StaticBsp::hwInit()
 {
     initSystemTimerHelper(false);
+    (void)_eepromDriver.init();
     _output.init(0);
     _digitalInput.init(0);
 
@@ -49,7 +52,7 @@ void StaticBsp::hwInit()
     _adc.init();
     _adc.start();
 
-    _ftm4.init(&_cfgFtm4);
+    _ftm4.init(&bios::_cfgFtm4);
 
     _pwmSupport.init();
     _ftm4.start();
