@@ -3,8 +3,7 @@
 #include "can/filter/IntervalFilter.h"
 
 #include <etl/algorithm.h>
-
-#include <algorithm>
+#include <etl/utility.h>
 
 namespace can
 {
@@ -31,7 +30,7 @@ void IntervalFilter::add(uint32_t from, uint32_t to)
     // assert order
     if (from > to)
     {
-        ::std::swap(from, to);
+        ::ETL_OR_STD::swap(from, to);
     }
     // adjust lower bound
     _from = ::etl::min(_from, from);
