@@ -18,7 +18,7 @@ Language
 When writing comments, write them as **English** prose, using **proper spelling, grammar,
 capitalization and punctuation.**
 
-Exceptions are short comments which are "less than once sentence". You can start them with
+Exceptions are short comments which are "less than one sentence". You can start them with
 lowercase letters and you don't need punctuation. But still take care that your text
 fragments are as close as possible to a proper English language.
 
@@ -88,7 +88,7 @@ The following comment styles are allowed:
         bool isValid(uint32_t id);
 
   - It is common to omit the *\\brief* tag. The first sentence until the first "." or empty line
-    is treated as brief description.
+    is treated as a brief description.
   - If you use tags, use the backslash style, not the at-sign style (*\\return* vs. *@return*).
   - It is also okay to skip the doxygen comment completely for methods whose functionality,
     parameters and return value are obvious due to the declaration.
@@ -97,7 +97,7 @@ The following comment styles are allowed:
 Code Expressiveness
 -------------------
 
-Enhancing code expressiveness is better then commenting.
+Enhancing code expressiveness is better than commenting.
 This includes extracting inlined functions and choosing good names.
 
 .. code-block:: cpp

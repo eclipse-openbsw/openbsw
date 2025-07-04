@@ -40,7 +40,7 @@ function can be evaluated at compile time for constant expression arguments if t
 requires it or the compiler decides to do so to optimize.
 
 The only way to ensure that the function can be evaluated at compile-time, is testing it at
-compile-time, by checking it's output within a ``static_assert``.
+compile-time, by checking its output within a ``static_assert``.
 
 This rule quotes `rule F.4 of the C++ Core Guidelines
 <https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md#user-content-f4-if-a-function-might-have-to-be-evaluated-at-compile-time-declare-it-constexpr>`_.
@@ -139,11 +139,6 @@ different jobs, making its use potentially ambiguous and/or confusing.
 
 Lambdas
 -------
-
-Using lambdas is possible since the adoption of C++11, but can be restricted on some platforms due
-to poor compiler support. Therefore **lambdas are not allowed in all the customer projects yet**.
-However, they can be freely used in unit tests or in the project-specific modules and applications,
-where we have the certainty that they are supported.
 
 When using lambdas, be careful about object lifetimes: objects captured by reference within a lambda
 have to be still in scope at the time of lambda execution. Also lambda objects themselves have to

@@ -241,7 +241,7 @@ Module Names
 
     // good
     doip
-    cdc2Crypto
+    cpp2Crypto
     osUtils
     noInitRam
 

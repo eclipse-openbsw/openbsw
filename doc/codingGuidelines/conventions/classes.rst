@@ -161,13 +161,13 @@ might add a considerable amount of ROM usage to an applications binary, especial
 is subclassed very often (e.g. ``::async::IRunnable``).
 
 :rule:`CPP-024` The destructor of an C++ interface should be protected non virtual.
-    This makes sure, that code, which would delete an object through a pointer to an interface
+    This makes sure that code, which would delete an object through a pointer to an interface
     will not compile.
 
 :rule:`CPP-025` A class, which is not intended to be subclassed should be declared final and have
 public non-virtual destructor.
 
-    This makes it clear to users of the code, that a class is not designed to be a base class.
+    This makes it clear to users of the code that a class is not designed to be a base class.
     This is the default in our embedded applications. In other words: if no subclass exists in the
     code base, a class should most likely be declared final.
 
@@ -289,7 +289,7 @@ but in contrast
         char _day;
     };
 
-contains an invariant, thus is should be a ``class`` definition.
+contains an invariant, thus it should be a ``class`` definition.
 
 This rule quotes directly `rule C.2 of the C++ Core Guidelines
 <https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md#user-content-c2-use-class-if-the-class-has-an-invariant-use-struct-if-the-data-members-can-vary-independently>`_.
@@ -327,7 +327,7 @@ Before the adoption of the C++11 standard, ``UNCOPYABLE`` macro from ``estd`` li
 Indestructible
 --------------
 
-To avoid destructions of objects, use the ``etl::typed_storage`` wrapper. The type will
+To avoid destruction of objects, use the ``etl::typed_storage`` wrapper. The type will
 become `trivially destructible
 <http://www.cplusplus.com/reference/type_traits/is_trivially_destructible/>`_.
 
@@ -394,7 +394,7 @@ Virtual Functions Should Specify Exactly one of Virtual, Override, or Final
 Virtual functions should be used with caution and only when necessary - as they introduce a layer
 of indirection in the function call. They have drawbacks both for humans (making it harder to reason
 about the code execution flow) and for machines (enforcing indirect function call, taking space for
-``vtable``, prohibiting compiler from optimizing your code etc.).
+``vtable``, prohibiting the compiler from optimizing your code, etc.).
 
 Whenever declaring a virtual function, **one** of the following keywords should be used:
 

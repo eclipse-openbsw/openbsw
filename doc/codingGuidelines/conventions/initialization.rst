@@ -23,7 +23,7 @@ could lead to confusing results or just look confusing to the reader.
     int a = {42};                   // copy initialization (available in C++11)
     xyz pointA{x, y, z};            // direct-list-initialization
     xyz pointB = {x, y, b};         // copy-list-initialization
-    vector<int> validIndices(3, 0); // direct initialization of vector with three zeroes
+    vector<int> validIndices(3, 0); // direct initialization of vector with three zeros
 
     struct xyz {
         int x{0}; // non-static data member initialization (NSDMI)
@@ -127,7 +127,7 @@ Example:
         // bad
 
         // in C++03 and later causes all members to be initialized to zero
-        auto zeroSizedBox = Box(); // uses default constructor and initializes data with zeroes
+        auto zeroSizedBox = Box(); // uses default constructor and initializes data with zeros
         cout << zeroSizeBox.x; // OK in C++03, but undefined behavior in C++98
 
         // good
@@ -173,7 +173,7 @@ will not cause undefined behavior.
 
     int main()
     {
-        auto zeroSizedBox = Box(); // initializes everything by zeroes
+        auto zeroSizedBox = Box(); // initializes everything with zeros
     }
 
 **Warning:** However, defining a constructor as default *after* the declaration makes it seen as
@@ -247,9 +247,9 @@ trivially constructible.
     // bad - mixed initialization
     struct Location
     {
-        Location(): latitude(1000), longtitude(2000) { ... }
+        Location(): latitude(1000), longitude(2000) { ... }
         int32_t latitude{0};
-        int32_t longtitude{0};
+        int32_t longitude{0};
     };
 
 **Rationale:** When initialization is done both in NSDMI and the constructor's initializer list it's hard to read,
@@ -294,7 +294,7 @@ The way of initialization above *should not be used* both for behavior and appea
     Box b = { 1, 2, 10, 15 }; // bad: initializer_list
     Box c = {};               // bad: causes undefined behavior under certain conditions
 
-    Box d{1};                 // bad: partial initialization / implicit initialization with zeroes
+    Box d{1};                 // bad: partial initialization / implicit initialization with zeros
                               //      of everything except for the first data member
 
     Box d{1, 2, 10, 15};      // good: all data members are initialized
