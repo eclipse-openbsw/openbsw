@@ -4,6 +4,7 @@ if (PLATFORM_SUPPORT_UDS)
     list(
         APPEND
         app.referenceAppExtraSources
+        src/systems/StorageSystem.cpp
         src/systems/TransportSystem.cpp
         src/systems/UdsSystem.cpp
         src/uds/ReadIdentifierPot.cpp)
@@ -61,8 +62,10 @@ target_link_libraries(
 
 if (PLATFORM_SUPPORT_UDS)
 
-    target_link_libraries(app.referenceApp PRIVATE transport
-                                                   transportRouterSimple uds)
+    target_link_libraries(app.referenceApp PRIVATE storage
+                                                   transport
+                                                   transportRouterSimple
+                                                   uds)
 
 endif ()
 
