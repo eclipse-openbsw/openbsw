@@ -7,7 +7,6 @@
 #include <printf/printf.h>
 
 #include <cstring>
-#include <limits>
 
 #ifdef __cplusplus
 extern "C"
