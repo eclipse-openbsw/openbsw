@@ -1,4 +1,4 @@
-// Copyright 2024 Accenture.
+// Copyright 2025 Accenture.
 
 #include "logger/logger.h"
 
@@ -23,6 +23,9 @@ DEFINE_LOGGER_COMPONENT(DEMO);
 DEFINE_LOGGER_COMPONENT(GLOBAL);
 DEFINE_LOGGER_COMPONENT(SAFETY);
 DEFINE_LOGGER_COMPONENT(UDS);
+#ifdef SUPPORT_THREADX
+DEFINE_LOGGER_COMPONENT(BACKGROUND);
+#endif // SUPPORT_THREADX
 
 #include <async/AsyncBinding.h>
 #include <console/AsyncCommandWrapper.h>
@@ -40,6 +43,9 @@ LOGGER_COMPONENT_MAPPING_INFO(_DEBUG, GLOBAL, ::util::format::Color::DEFAULT_COL
 LOGGER_COMPONENT_MAPPING_INFO(_DEBUG, LIFECYCLE, ::util::format::Color::DARK_GRAY)
 LOGGER_COMPONENT_MAPPING_INFO(_DEBUG, CONSOLE, ::util::format::Color::DEFAULT_COLOR)
 LOGGER_COMPONENT_MAPPING_INFO(_DEBUG, SAFETY, ::util::format::Color::DEFAULT_COLOR)
+#ifdef SUPPORT_THREADX
+LOGGER_COMPONENT_MAPPING_INFO(_DEBUG, BACKGROUND, ::util::format::Color::DEFAULT_COLOR)
+#endif // SUPPORT_THREADX
 #ifdef PLATFORM_SUPPORT_CAN
 LOGGER_COMPONENT_MAPPING_INFO(_DEBUG, CAN, ::util::format::Color::LIGHT_BLUE)
 LOGGER_COMPONENT_MAPPING_INFO(_DEBUG, DOCAN, ::util::format::Color::LIGHT_GRAY)
@@ -65,8 +71,14 @@ ComponentConfigType loggerComponentConfig(loggerComponentMapping);
 LoggerComposition loggerComposition(loggerComponentMapping, "RefApp");
 
 DefaultLoggerCommand loggerCommand(loggerComponentConfig);
-::console::AsyncCommandWrapper
-    asyncCommandWrapper(loggerCommand.root(), ::async::AsyncBinding::AdapterType::TASK_IDLE);
+
+::console::AsyncCommandWrapper asyncCommandWrapper(
+    loggerCommand.root(),
+#ifdef SUPPORT_FREERTOS
+    ::async::AsyncBinding::AdapterType::TASK_IDLE);
+#elif SUPPORT_THREADX
+    ::async::AsyncBinding::AdapterType::TASK_BACKGROUND);
+#endif // SUPPORT_THREADX
 
 void init()
 {

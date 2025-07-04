@@ -1,3 +1,4 @@
 add_library(hardFaultHandler src/hardFaultHandler.s)
 
-target_link_libraries(hardFaultHandler PRIVATE)
+# is the dependency to startUp needed?
+target_link_libraries(hardFaultHandler PRIVATE startUp)

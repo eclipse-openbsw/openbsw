@@ -1,5 +1,9 @@
 add_library(asyncBinding INTERFACE)
 
-target_include_directories(asyncBinding INTERFACE include)
+if (OPENBSW_TARGET_RTOS STREQUAL "freertos")
+    target_include_directories(asyncBinding INTERFACE freertos/include)
+elseif (OPENBSW_TARGET_RTOS STREQUAL "threadx")
+    target_include_directories(asyncBinding INTERFACE threadx/include)
+endif ()
 
 target_link_libraries(asyncBinding INTERFACE runtime)

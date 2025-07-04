@@ -3,8 +3,8 @@ import os
 import sys
 
 def build_reference_app():
-    subprocess.run(["cmake", "-B", "cmake-build-posix", "-S", "executables/referenceApp"], check=True)
-    subprocess.run(["cmake", "--build", "cmake-build-posix", "--target", "app.referenceApp", "-j"], check=True)
+    subprocess.run(["cmake", "-B", "cmake-build-posix-freertos", "-S", "executables/referenceApp"], check=True)
+    subprocess.run(["cmake", "--build", "cmake-build-posix-freertos", "--target", "app.referenceApp", "-j"], check=True)
 
 def run_pytest():
     os.chdir("./test/pyTest")

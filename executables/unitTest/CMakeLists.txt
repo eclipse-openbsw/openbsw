@@ -14,6 +14,10 @@ set(BUILD_TARGET_PLATFORM
     "POSIX"
     CACHE STRING "Target Platform")
 
+set(BUILD_TARGET_RTOS
+    "FREERTOS"
+    CACHE STRING "Target Rtos")
+
 include(${OPENBSW_DIR}/Filelists.cmake)
 
 add_library(asyncPlatform ALIAS asyncMock)

@@ -2,35 +2,71 @@
     "version": 3,
     "configurePresets": [
     {
-        "name": "default",
-        "displayName": "CMake posix",
+        "name": "posix-freertos",
+        "displayName": "CMake posix-freertos (default)",
         "generator": "Unix Makefiles",
-        "binaryDir": "${workspaceFolder}/cmake-build-posix",
+        "binaryDir": "${workspaceFolder}/cmake-build-posix-freertos",
         "cacheVariables": {
+        "BUILD_TARGET_PLATFORM": "POSIX",
+        "BUILD_TARGET_RTOS": "FREERTOS",
         "CMAKE_EXPORT_COMPILE_COMMANDS": "YES"
         }
     },
     {
-        "name": "CMake s32k148",
-        "displayName": "CMake s32k148",
+        "name": "CMake posix-threadx",
+        "displayName": "CMake posix-threadx",
         "generator": "Unix Makefiles",
-        "binaryDir": "${workspaceFolder}/cmake-build-s32k148",
+        "binaryDir": "${workspaceFolder}/cmake-build-posix-threadx",
+        "cacheVariables": {
+        "BUILD_TARGET_PLATFORM": "POSIX",
+        "BUILD_TARGET_RTOS": "THREADX",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "YES"
+        }
+    },
+    {
+        "name": "CMake s32k148-freertos",
+        "displayName": "CMake s32k148-freertos",
+        "generator": "Unix Makefiles",
+        "binaryDir": "${workspaceFolder}/cmake-build-s32k148-freertos",
         "toolchainFile": "../../admin/cmake/ArmNoneEabi-gcc.cmake",
         "cacheVariables": {
         "BUILD_TARGET_PLATFORM": "S32K148EVB",
+        "BUILD_TARGET_RTOS": "FREERTOS",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "YES"
+        }
+    },
+    {
+        "name": "CMake s32k148-threadx",
+        "displayName": "CMake s32k148-threadx",
+        "generator": "Unix Makefiles",
+        "binaryDir": "${workspaceFolder}/cmake-build-s32k148-threadx",
+        "toolchainFile": "../../admin/cmake/ArmNoneEabi-gcc.cmake",
+        "cacheVariables": {
+        "BUILD_TARGET_PLATFORM": "S32K148EVB",
+        "BUILD_TARGET_RTOS": "THREADX",
         "CMAKE_EXPORT_COMPILE_COMMANDS": "YES"
         }
     }
     ],
     "buildPresets": [
     {
-        "name": "default",
-        "configurePreset": "default",
+        "name": "Cmake posix-freertos",
+        "configurePreset": "Cmake posix-freertos",
         "targets": "app.referenceApp"
     },
     {
-        "name": "CMake s32k148",
+        "name": "CMake posix-threadx",
+        "configurePreset": "CMake posix-threadx",
+        "targets": "app.referenceApp"
+    },
+    {
+        "name": "CMake s32k148-freertos",
         "configurePreset": "CMake s32k148",
+        "targets": "app.referenceApp"
+    },
+    {
+        "name": "CMake s32k148-threadx",
+        "configurePreset": "CMake s32k148-threadx",
         "targets": "app.referenceApp"
     }
     ]

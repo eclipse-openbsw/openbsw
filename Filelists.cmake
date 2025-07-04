@@ -43,6 +43,7 @@ add_compile_options(
     "$<$<COMPILE_LANG_AND_ID:CXX,Clang,GNU>:-O2;-g3;-Werror;-Wall;-Wextra;-Wvla;-Wno-deprecated-volatile>"
     # todo: enforce -Wunused-parameter
     "$<$<COMPILE_LANG_AND_ID:CXX,Clang,GNU>:-Wno-error=unused-parameter>"
+    "$<$<COMPILE_LANG_AND_ID:C,Clang,GNU>:-Wno-error=unused-parameter>"
     # note: the below warnings are often false positive
     "$<$<COMPILE_LANG_AND_ID:CXX,GNU>:-Wno-error=stringop-overflow;-Wno-error=maybe-uninitialized>"
 )

@@ -23,7 +23,8 @@ set(C_COMMON_FLAGS
 -fno-asynchronous-unwind-tables -fno-builtin -fno-common \
 -ffunction-sections -fdata-sections -fstack-usage")
 
-set(CMAKE_ASM_FLAGS "-g -mcpu=cortex-m4")
+set(CMAKE_ASM_FLAGS "-g -mcpu=cortex-m4 \
+-mfloat-abi=hard -mfpu=fpv4-sp-d16")
 set(CMAKE_C_FLAGS "${C_COMMON_FLAGS} -ffreestanding")
 set(CMAKE_CXX_FLAGS "${C_COMMON_FLAGS} -fno-rtti -fno-exceptions \
 -fno-non-call-exceptions -fno-threadsafe-statics -fno-use-cxa-atexit")

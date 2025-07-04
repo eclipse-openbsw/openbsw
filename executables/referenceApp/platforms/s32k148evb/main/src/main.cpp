@@ -8,6 +8,7 @@
 #ifdef PLATFORM_SUPPORT_CAN
 #include "systems/CanSystem.h"
 #endif
+#include "async/Config.h"
 #include "cache/cache.h"
 #include "clock/clockConfig.h"
 #include "commonDebug.h"

@@ -36,6 +36,9 @@ add_subdirectory(printf EXCLUDE_FROM_ALL)
 
 add_subdirectory(freeRtos EXCLUDE_FROM_ALL)
 
+add_subdirectory(threadx EXCLUDE_FROM_ALL)
+
 add_library(etl INTERFACE)
 
-target_include_directories(etl INTERFACE etl/include etl_configuration etl_addons/include)
+target_include_directories(etl INTERFACE etl/include etl_configuration
+                                         etl_addons/include)

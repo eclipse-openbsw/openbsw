@@ -4,6 +4,8 @@
 
 #include "platform/estdint.h"
 
+void setThreadXInitialized();
+
 // TODO: migrate getMachineStateRegisterValueAndSuspendAllInterrupts to the newer
 // getOldIntEnabledStatusValueAndSuspendAllInterrupts below and remove this define
 typedef int32_t OldIntEnabledStatusValueType;

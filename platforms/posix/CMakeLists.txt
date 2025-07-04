@@ -4,6 +4,7 @@ set(PLATFORM_SUPPORT_IO TRUE)
 
 # 3rdparty modules
 add_subdirectory(3rdparty/freeRtosPosix)
+add_subdirectory(3rdparty/threadx_linux)
 
 # BSP modules
 add_subdirectory(bsp)
