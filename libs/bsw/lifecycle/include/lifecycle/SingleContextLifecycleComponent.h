@@ -25,7 +25,8 @@ public:
 
     ::async::ContextType getTransitionContext(Transition::Type transition) override;
 
-    ~SingleContextLifecycleComponent() override = default;
+protected:
+    ~SingleContextLifecycleComponent() = default;
 
 private:
     ::async::ContextType const _context;

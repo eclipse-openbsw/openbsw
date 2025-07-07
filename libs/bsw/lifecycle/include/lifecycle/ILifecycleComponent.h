@@ -9,6 +9,7 @@
 #include <async/Async.h>
 
 #include <cstddef>
+#include <cstdint>
 
 namespace lifecycle
 {
@@ -29,6 +30,8 @@ public:
         static size_t const COUNT = 3U;
     };
 
+    ILifecycleComponent& operator=(ILifecycleComponent const&) = delete;
+
     /// Register the callback on which to call `transitionDone()`.
     ///
     /// When adding this component to a LifecycleManager, it uses this method to set itself as the
@@ -42,10 +45,8 @@ public:
     /// called on the callback
     virtual void startTransition(Transition::Type transition)                      = 0;
 
-    virtual ~ILifecycleComponent() = default;
-
-private:
-    ILifecycleComponent& operator=(ILifecycleComponent const&) = delete;
+protected:
+    ~ILifecycleComponent() = default;
 };
 
 } // namespace lifecycle

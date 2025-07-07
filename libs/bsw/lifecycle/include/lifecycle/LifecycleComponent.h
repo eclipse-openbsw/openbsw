@@ -31,9 +31,9 @@ public:
     /// See ILifecycleComponentCallback::startTransition()
     void startTransition(Transition::Type transition) override;
 
-    ~LifecycleComponent() override = default;
-
 protected:
+    ~LifecycleComponent() = default;
+
     void transitionDone();
 
     virtual void init()     = 0;

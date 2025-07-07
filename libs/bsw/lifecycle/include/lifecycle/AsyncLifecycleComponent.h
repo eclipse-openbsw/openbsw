@@ -29,9 +29,9 @@ public:
 
     ::async::ContextType getTransitionContext(Transition::Type transition) override;
 
-    ~AsyncLifecycleComponent() override = default;
-
 protected:
+    ~AsyncLifecycleComponent() = default;
+
     /// Set the async `context` for all transitions to be run in.
     void setTransitionContext(::async::ContextType context);
     /// Set the async `context` for a single transitions of a single type to be run in.

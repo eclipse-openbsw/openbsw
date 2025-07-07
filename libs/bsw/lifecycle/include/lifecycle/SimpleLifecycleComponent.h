@@ -20,15 +20,16 @@ namespace lifecycle
 class SimpleLifecycleComponent : public LifecycleComponent
 {
 public:
+    SimpleLifecycleComponent& operator=(SimpleLifecycleComponent const&) = delete;
+
     /// The transition context of this SimpleLifecycleComponent.
     ///
     /// Returns CONTEXT_INVALID, which means that the LifecycleManager will run all transitions in
     /// its own context.
     ::async::ContextType getTransitionContext(Transition::Type transition) override;
-    ~SimpleLifecycleComponent() override = default;
 
-private:
-    SimpleLifecycleComponent& operator=(SimpleLifecycleComponent const&) = delete;
+protected:
+    ~SimpleLifecycleComponent() = default;
 };
 
 } // namespace lifecycle
