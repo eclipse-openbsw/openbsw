@@ -1,8 +1,14 @@
 add_library(main src/main.cpp src/lifecycle/StaticBsp.cpp)
 
-target_include_directories(main PRIVATE include)
+target_include_directories(main PUBLIC include)
 
-target_link_libraries(main PRIVATE asyncBinding lifecycle bspEepromDriver)
+target_link_libraries(main
+PRIVATE
+    asyncBinding
+    lifecycle
+PUBLIC
+    bspEepromDriver
+)
 
 add_library(osHooks src/osHooks.cpp)
 
