@@ -1,0 +1,551 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../../../../../../../../../static/css/style.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <title>Symbol - puncover</title>
+    
+</head>
+<body>
+    <div class="container" id="content">
+        <div class="page-header">
+            <nav class="navbar navbar-default" role="navigation">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="../../../../../../../../../../index.html">
+                    Puncover
+                  </a>
+                </div>
+              </div>
+            </nav>
+          
+        </div>
+        <div id="inner_content">
+        
+    
+    <ol class="breadcrumb folders">
+        
+        <li><a href="../../../../../../../../../../home.html">home</a></li>
+        
+        <li><a href="../../../../../../../../../runner.html">runner</a></li>
+        
+        <li><a href="../../../../../../../../work.html">work</a></li>
+        
+        <li><a href="../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../libs.html">libs</a></li>
+        
+        <li><a href="../../../../3rdparty.html">3rdparty</a></li>
+        
+        <li><a href="../../../freeRtos.html">freeRtos</a></li>
+        
+        <li ><a href="../../src.html">src</a>
+            </li>
+
+        
+        <li class="active"><a href="../tasks.c.html">tasks.c</a>:5040
+            </li>
+        
+    </ol>
+
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <th>Function</th>
+                <td colspan="5">
+                    <span class="icon-function">xTaskGenericNotifyFromISR</span>
+                </td>
+            </tr>
+
+            <tr>
+                <th rowspan="2"></th>
+                <th>Address</th>
+                <th>Remarks</th>
+                <th>Stack</th>
+                <th>Code</th>
+                <th>Static</th>
+            </tr>
+            <tr>
+                <td>0x0000908c</td>
+                <td>
+    <span class="label label-success">x-module</span>
+    
+</td>
+                <td>24 (static)</td>
+                <td>316</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th>Callers (3)</th>
+                <td colspan="5">
+                
+                    <a href="../../../../bsw/asyncFreeRtos/src/async/Async.cpp/5aa4f4e4ce0ff8166656d629d7628e7e.html">async::schedule(unsigned char, async::IRunnable&amp;, async::TimeoutType&amp;, unsigned long, async::TimeUnit::Type) (128)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../../../../bsw/asyncFreeRtos/src/async/Async.cpp/f6cc267a73772db399b5446eaec541ae.html">async::scheduleAtFixedRate(unsigned char, async::IRunnable&amp;, async::TimeoutType&amp;, unsigned long, async::TimeUnit::Type) (128)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../../../../bsw/asyncFreeRtos/src/async/Async.cpp/4dfe65e158466f2f9a73b985dc4b0ecc.html">async::execute(unsigned char, async::IRunnable&amp;) (104)</a>
+                    
+                
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Callees (1,
+                            <span title="sum of used bytes by all callees">
+                            Σ=20
+                            </span>
+                        )
+                    
+                </th>
+                <td colspan="5">
+                
+                    <a href="../../../../../platforms/s32k1xx/3rdparty/freertos_cm4_sysTick/src/port.c/4f95af04dbec4da52acc286c44550d5c.html">vPortValidateInterruptPriority (20)</a>
+                    
+                
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    
+    <pre><a href="./5822df0c752554b0290890c533493c1a.html">xTaskGenericNotify (264)</a></pre>
+    
+
+    <pre>
+
+    xTaskGenericNotifyFromISR():
+
+        908c:	e92d 41f0 	stmdb	sp!, {r4, r5, r6, r7, r8, lr}
+
+        9090:	f8dd 8018 	ldr.w	r8, [sp, #24]
+
+        9094:	4604      	mov	r4, r0
+
+        9096:	460d      	mov	r5, r1
+
+        9098:	4617      	mov	r7, r2
+
+        909a:	461e      	mov	r6, r3
+
+        909c:	f00a ff8c 	bl	13fb8 <<a href="../../../../../platforms/s32k1xx/3rdparty/freertos_cm4_sysTick/src/port.c/4f95af04dbec4da52acc286c44550d5c.html">vPortValidateInterruptPriority</a>>
+
+    ulPortRaiseBASEPRI():
+
+        90a0:	f3ef 8c11 	mrs	ip, BASEPRI
+
+        90a4:	f04f 0350 	mov.w	r3, #80	; 0x50
+
+        90a8:	f383 8811 	msr	BASEPRI, r3
+
+        90ac:	f3bf 8f6f 	isb	sy
+
+        90b0:	f3bf 8f4f 	dsb	sy
+
+    xTaskGenericNotifyFromISR():
+
+        90b4:	f1b8 0f00 	cmp.w	r8, #0
+
+        90b8:	d005      	beq.n	90c6 <<a href="./93cf08902933433b019fa92be1247054.html">xTaskGenericNotifyFromISR</a>+0x3a>
+
+        90ba:	f105 0316 	add.w	r3, r5, #22
+
+        90be:	f854 3023 	ldr.w	r3, [r4, r3, lsl #2]
+
+        90c2:	f8c8 3000 	str.w	r3, [r8]
+
+        90c6:	1961      	adds	r1, r4, r5
+
+        90c8:	2202      	movs	r2, #2
+
+        90ca:	f891 005c 	ldrb.w	r0, [r1, #92]	; 0x5c
+
+        90ce:	f881 205c 	strb.w	r2, [r1, #92]	; 0x5c
+
+        90d2:	1e73      	subs	r3, r6, #1
+
+        90d4:	b2c0      	uxtb	r0, r0
+
+        90d6:	2b03      	cmp	r3, #3
+
+        90d8:	d808      	bhi.n	90ec <<a href="./93cf08902933433b019fa92be1247054.html">xTaskGenericNotifyFromISR</a>+0x60>
+
+        90da:	e8df f003 	tbb	[pc, r3]
+
+        90de:	0e39      	.short	0x0e39
+
+        90e0:	0204      	.short	0x0204
+
+        90e2:	2802      	cmp	r0, #2
+
+        90e4:	d062      	beq.n	91ac <<a href="./93cf08902933433b019fa92be1247054.html">xTaskGenericNotifyFromISR</a>+0x120>
+
+        90e6:	3516      	adds	r5, #22
+
+        90e8:	f844 7025 	str.w	r7, [r4, r5, lsl #2]
+
+        90ec:	2801      	cmp	r0, #1
+
+        90ee:	d00c      	beq.n	910a <<a href="./93cf08902933433b019fa92be1247054.html">xTaskGenericNotifyFromISR</a>+0x7e>
+
+        90f0:	2001      	movs	r0, #1
+
+    vPortSetBASEPRI():
+
+        90f2:	f38c 8811 	msr	BASEPRI, ip
+
+    xTaskGenericNotifyFromISR():
+
+        90f6:	e8bd 81f0 	ldmia.w	sp!, {r4, r5, r6, r7, r8, pc}
+
+        90fa:	eb04 0585 	add.w	r5, r4, r5, lsl #2
+
+        90fe:	2801      	cmp	r0, #1
+
+        9100:	6dab      	ldr	r3, [r5, #88]	; 0x58
+
+        9102:	f103 0301 	add.w	r3, r3, #1
+
+        9106:	65ab      	str	r3, [r5, #88]	; 0x58
+
+        9108:	d1f2      	bne.n	90f0 <<a href="./93cf08902933433b019fa92be1247054.html">xTaskGenericNotifyFromISR</a>+0x64>
+
+        910a:	4b29      	ldr	r3, [pc, #164]	; (91b0 <<a href="./93cf08902933433b019fa92be1247054.html">xTaskGenericNotifyFromISR</a>+0x124>)
+
+        910c:	681b      	ldr	r3, [r3, #0]
+
+        910e:	b32b      	cbz	r3, 915c <<a href="./93cf08902933433b019fa92be1247054.html">xTaskGenericNotifyFromISR</a>+0xd0>
+
+        9110:	4a28      	ldr	r2, [pc, #160]	; (91b4 <<a href="./93cf08902933433b019fa92be1247054.html">xTaskGenericNotifyFromISR</a>+0x128>)
+
+        9112:	6853      	ldr	r3, [r2, #4]
+
+        9114:	61e3      	str	r3, [r4, #28]
+
+        9116:	6899      	ldr	r1, [r3, #8]
+
+        9118:	6221      	str	r1, [r4, #32]
+
+        911a:	6811      	ldr	r1, [r2, #0]
+
+        911c:	3101      	adds	r1, #1
+
+        911e:	6011      	str	r1, [r2, #0]
+
+        9120:	6899      	ldr	r1, [r3, #8]
+
+        9122:	f104 0018 	add.w	r0, r4, #24
+
+        9126:	6048      	str	r0, [r1, #4]
+
+        9128:	6098      	str	r0, [r3, #8]
+
+        912a:	6ae3      	ldr	r3, [r4, #44]	; 0x2c
+
+        912c:	62a2      	str	r2, [r4, #40]	; 0x28
+
+        912e:	4a22      	ldr	r2, [pc, #136]	; (91b8 <<a href="./93cf08902933433b019fa92be1247054.html">xTaskGenericNotifyFromISR</a>+0x12c>)
+
+        9130:	6812      	ldr	r2, [r2, #0]
+
+        9132:	6ad2      	ldr	r2, [r2, #44]	; 0x2c
+
+        9134:	429a      	cmp	r2, r3
+
+        9136:	d2db      	bcs.n	90f0 <<a href="./93cf08902933433b019fa92be1247054.html">xTaskGenericNotifyFromISR</a>+0x64>
+
+        9138:	9b07      	ldr	r3, [sp, #28]
+
+        913a:	b113      	cbz	r3, 9142 <<a href="./93cf08902933433b019fa92be1247054.html">xTaskGenericNotifyFromISR</a>+0xb6>
+
+        913c:	9a07      	ldr	r2, [sp, #28]
+
+        913e:	2301      	movs	r3, #1
+
+        9140:	6013      	str	r3, [r2, #0]
+
+        9142:	4b1e      	ldr	r3, [pc, #120]	; (91bc <<a href="./93cf08902933433b019fa92be1247054.html">xTaskGenericNotifyFromISR</a>+0x130>)
+
+        9144:	2001      	movs	r0, #1
+
+        9146:	6018      	str	r0, [r3, #0]
+
+    vPortSetBASEPRI():
+
+        9148:	f38c 8811 	msr	BASEPRI, ip
+
+    xTaskGenericNotifyFromISR():
+
+        914c:	e8bd 81f0 	ldmia.w	sp!, {r4, r5, r6, r7, r8, pc}
+
+        9150:	eb04 0585 	add.w	r5, r4, r5, lsl #2
+
+        9154:	6daa      	ldr	r2, [r5, #88]	; 0x58
+
+        9156:	4317      	orrs	r7, r2
+
+        9158:	65af      	str	r7, [r5, #88]	; 0x58
+
+        915a:	e7c7      	b.n	90ec <<a href="./93cf08902933433b019fa92be1247054.html">xTaskGenericNotifyFromISR</a>+0x60>
+
+        915c:	6963      	ldr	r3, [r4, #20]
+
+        915e:	68a1      	ldr	r1, [r4, #8]
+
+        9160:	68e2      	ldr	r2, [r4, #12]
+
+        9162:	608a      	str	r2, [r1, #8]
+
+        9164:	6051      	str	r1, [r2, #4]
+
+        9166:	6859      	ldr	r1, [r3, #4]
+
+        9168:	4d15      	ldr	r5, [pc, #84]	; (91c0 <<a href="./93cf08902933433b019fa92be1247054.html">xTaskGenericNotifyFromISR</a>+0x134>)
+
+        916a:	4816      	ldr	r0, [pc, #88]	; (91c4 <<a href="./93cf08902933433b019fa92be1247054.html">xTaskGenericNotifyFromISR</a>+0x138>)
+
+        916c:	1d27      	adds	r7, r4, #4
+
+        916e:	42b9      	cmp	r1, r7
+
+        9170:	bf08      	it	eq
+
+        9172:	605a      	streq	r2, [r3, #4]
+
+        9174:	681a      	ldr	r2, [r3, #0]
+
+        9176:	3a01      	subs	r2, #1
+
+        9178:	601a      	str	r2, [r3, #0]
+
+        917a:	6ae3      	ldr	r3, [r4, #44]	; 0x2c
+
+        917c:	682e      	ldr	r6, [r5, #0]
+
+        917e:	eb03 0283 	add.w	r2, r3, r3, lsl #2
+
+        9182:	2101      	movs	r1, #1
+
+        9184:	eb00 0e82 	add.w	lr, r0, r2, lsl #2
+
+        9188:	4099      	lsls	r1, r3
+
+        918a:	4331      	orrs	r1, r6
+
+        918c:	6029      	str	r1, [r5, #0]
+
+        918e:	f8de 1004 	ldr.w	r1, [lr, #4]
+
+        9192:	60a1      	str	r1, [r4, #8]
+
+        9194:	0092      	lsls	r2, r2, #2
+
+        9196:	688d      	ldr	r5, [r1, #8]
+
+        9198:	60e5      	str	r5, [r4, #12]
+
+        919a:	5885      	ldr	r5, [r0, r2]
+
+        919c:	688e      	ldr	r6, [r1, #8]
+
+        919e:	3501      	adds	r5, #1
+
+        91a0:	6077      	str	r7, [r6, #4]
+
+        91a2:	608f      	str	r7, [r1, #8]
+
+        91a4:	f8c4 e014 	str.w	lr, [r4, #20]
+
+        91a8:	5085      	str	r5, [r0, r2]
+
+        91aa:	e7c0      	b.n	912e <<a href="./93cf08902933433b019fa92be1247054.html">xTaskGenericNotifyFromISR</a>+0xa2>
+
+        91ac:	2000      	movs	r0, #0
+
+        91ae:	e7a0      	b.n	90f2 <<a href="./93cf08902933433b019fa92be1247054.html">xTaskGenericNotifyFromISR</a>+0x66>
+
+        91b0:	1ffee510 	.word	0x1ffee510
+
+        91b4:	1ffee554 	.word	0x1ffee554
+
+        91b8:	1ffee440 	.word	0x1ffee440
+
+        91bc:	1ffee598 	.word	0x1ffee598
+
+        91c0:	1ffee518 	.word	0x1ffee518
+
+        91c4:	1ffee44c 	.word	0x1ffee44c
+
+    </pre>
+
+    
+    <pre><a href="../timers.c/25fd83c3d905940072a19718ff477a03.html">prvCheckForValidListAndQueue (108)</a></pre>
+    
+
+    
+        <h1>Stack Worst-Case Scenarios</h1>
+        
+            <p>No callees for this function.</p>
+        
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 240</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 1,224</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    240
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                24 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    1,224
+                    
+                    
+                </td>
+                <td class="col_size">316</td>
+                <td><a href="./93cf08902933433b019fa92be1247054.html" class="icon-function">xTaskGenericNotifyFromISR</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                    
+                    216
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                24 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    908
+                    
+                    
+                </td>
+                <td class="col_size">104</td>
+                <td><a href="../../../../bsw/asyncFreeRtos/src/async/Async.cpp/4dfe65e158466f2f9a73b985dc4b0ecc.html" class="icon-function">async::execute(unsigned char, async::IRunnable&amp;)</a></td>
+            </tr>
+        
+            <tr>
+                <th>3</th>
+                <td class="col_size">
+                    
+                    192
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                48 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    804
+                    
+                    
+                </td>
+                <td class="col_size">468</td>
+                <td><a href="../../../../bsw/docan/include/docan/transmitter/DoCanTransmitter.h/522c0124e45dce5c143b4eb6df62f011.html" class="icon-function">docan::DoCanTransmitter&lt;docan::DoCanDataLinkLayer&lt;unsigned long, unsigned short, unsigned char, 4294967295ul, unsigned short&gt; &gt;::releaseRemoveLock(bool)</a></td>
+            </tr>
+        
+            <tr>
+                <th>4</th>
+                <td class="col_size">
+                    
+                    144
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                128 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    336
+                    
+                    
+                </td>
+                <td class="col_size">316</td>
+                <td><a href="../../../../bsw/docan/include/docan/transmitter/DoCanTransmitter.h/942d73404c5b10fcc3bf45f9b3e685b6.html" class="icon-function">docan::DoCanTransmitter&lt;docan::DoCanDataLinkLayer&lt;unsigned long, unsigned short, unsigned char, 4294967295ul, unsigned short&gt; &gt;::flowControlFrameReceived(unsigned long, docan::FlowStatus, unsigned char, unsigned char)</a></td>
+            </tr>
+        
+            <tr>
+                <th>5</th>
+                <td class="col_size">
+                </td>
+                <td class="col_size">
+            
+                16 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">20</td>
+                <td><a href="../../../../bsw/docan/include/docan/transport/DoCanTransportLayer.h/436d3b350f320a1d526c919929f53111.html" class="icon-function">docan::DoCanTransportLayer&lt;docan::DoCanDataLinkLayer&lt;unsigned long, unsigned short, unsigned char, 4294967295ul, unsigned short&gt; &gt;::flowControlFrameReceived(unsigned long, docan::FlowStatus, unsigned char, unsigned char)</a></td>
+            </tr>
+        
+        </tbody>
+        
+    </table>
+        
+    
+
+
+        </div>
+    <div id="page-footer">
+        <hr>
+        
+            brought to you with 💖
+            by <a href="https://twitter.com/hbehrens">Heiko Behrens</a>
+            <span class="secondary">– MIT license, copyright © 2014-2025</span>
+        
+    </div>
+    </div>
+</body>
+</html>
