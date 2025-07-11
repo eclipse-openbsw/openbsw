@@ -36,7 +36,7 @@ TEST_F(AsyncCallTest, testClosure)
 {
     using TestClosure = ::etl::closure<void(uint16_t, uint32_t)>;
     Call<TestClosure> cut(TestClosure(
-        TestClosure::fct::create<AsyncCallTest, &AsyncCallTest::closureCall>(*this),
+        TestClosure::delegate_type::create<AsyncCallTest, &AsyncCallTest::closureCall>(*this),
         1234U,
         3247834U));
     EXPECT_CALL(*this, closureCall(1234U, 3247834U));
