@@ -54,8 +54,13 @@ add_executable(etl_tests
 	test_callback_service.cpp
 	test_callback_timer.cpp
 	test_callback_timer_atomic.cpp
+	test_callback_timer_deferred_locked.cpp
 	test_callback_timer_interrupt.cpp
 	test_callback_timer_locked.cpp
+	test_const_map.cpp
+	test_const_map_constexpr.cpp
+	test_const_multimap.cpp
+	test_const_multimap_constexpr.cpp
 	test_char_traits.cpp
 	test_checksum.cpp
 	test_chrono_clocks.cpp
@@ -82,6 +87,8 @@ add_executable(etl_tests
 	test_circular_buffer.cpp
 	test_circular_buffer_external_buffer.cpp
 	test_circular_iterator.cpp
+	test_closure.cpp
+	test_closure_constexpr.cpp
 	test_compare.cpp
 	test_constant.cpp
 	test_container.cpp
@@ -106,6 +113,8 @@ add_executable(etl_tests
 	test_crc16_maxim.cpp
 	test_crc16_mcrf4xx.cpp
 	test_crc16_modbus.cpp
+	test_crc16_opensafety_a.cpp
+	test_crc16_opensafety_b.cpp
 	test_crc16_profibus.cpp
 	test_crc16_riello.cpp
 	test_crc16_t10dif.cpp
@@ -124,6 +133,7 @@ add_executable(etl_tests
 	test_crc32_q.cpp
 	test_crc32_xfer.cpp
 	test_crc64_ecma.cpp
+	test_crc64_iso.cpp
 	test_crc8_ccitt.cpp
 	test_crc8_cdma2000.cpp
 	test_crc8_darc.cpp
@@ -134,8 +144,11 @@ add_executable(etl_tests
 	test_crc8_j1850.cpp
 	test_crc8_j1850_zero.cpp
 	test_crc8_maxim.cpp
+	test_crc8_nrsc5.cpp
+	test_crc8_opensafety.cpp
 	test_crc8_rohc.cpp
 	test_crc8_wcdma.cpp
+	test_crc8_nrsc5.cpp
 	test_cyclic_value.cpp
 	test_debounce.cpp
 	test_delegate.cpp
@@ -359,9 +372,11 @@ elseif (ETL_CXX_STANDARD MATCHES "17")
 elseif (ETL_CXX_STANDARD MATCHES "20")
 	message(STATUS "Compiling for C++20")
 	set_property(TARGET etl_tests PROPERTY CXX_STANDARD 20)
-else()
+elseif (ETL_CXX_STANDARD MATCHES "23")
 	message(STATUS "Compiling for C++23")
 	set_property(TARGET etl_tests PROPERTY CXX_STANDARD 23)
+else()
+	message(STATUS "Unsupported C++ standard")
 endif()
 
 if (NO_STL OR ETL_NO_STL)
@@ -387,7 +402,7 @@ if (ETL_MESSAGES_ARE_NOT_VIRTUAL)
 endif()
 
 if (ETL_FORCE_TEST_CPP03_IMPLEMENTATION)
-	message(STATUS "Compiling for C++03 tests")
+	message(STATUS "Compiling for forced C++03 tests")
 	target_compile_definitions(etl_tests PRIVATE -DETL_FORCE_TEST_CPP03_IMPLEMENTATION)
 endif()
 

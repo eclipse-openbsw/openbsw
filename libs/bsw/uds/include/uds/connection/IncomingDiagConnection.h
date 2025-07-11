@@ -64,19 +64,19 @@ public:
     : fResponsePendingTimeout(*this)
     , fGlobalPendingTimeout(*this)
     , fTransportMessageProcessedClosure(TransportMessageClosure::CallType(
-          TransportMessageClosure::CallType::fct::create<
+          TransportMessageClosure::CallType::delegate_type::create<
               IncomingDiagConnection,
               &IncomingDiagConnection::asyncTransportMessageProcessed>(*this),
           nullptr,
           ProcessingResult::PROCESSED_ERROR))
     , fSendPositiveResponseClosure(SendPositiveResponseClosure::CallType(
-          SendPositiveResponseClosure::CallType::fct::
+          SendPositiveResponseClosure::CallType::delegate_type::
               create<IncomingDiagConnection, &IncomingDiagConnection::asyncSendPositiveResponse>(
                   *this),
           0U,
           nullptr))
     , fSendNegativeResponseClosure(SendNegativeResponseClosure::CallType(
-          SendNegativeResponseClosure::CallType::fct::
+          SendNegativeResponseClosure::CallType::delegate_type::
               create<IncomingDiagConnection, &IncomingDiagConnection::asyncSendNegativeResponse>(
                   *this),
           0U,

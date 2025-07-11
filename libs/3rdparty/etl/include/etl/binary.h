@@ -45,6 +45,7 @@ SOFTWARE.
 #include "smallest.h"
 #include "exception.h"
 #include "error_handler.h"
+#include "functional.h"
 
 #if ETL_USING_CPP20 && ETL_USING_STL
   #include <bit>
@@ -738,7 +739,7 @@ namespace etl
     typename etl::enable_if<etl::is_integral<T>::value && etl::is_unsigned<T>::value && (etl::integral_limits<T>::bits == 16U), T>::type
     reverse_bytes(T value)
   {
-#if ETL_CPP23_SUPPORTED && ETL_USING_STL
+#if ETL_CPP23_SUPPORTED && ETL_USING_STL && ETL_HAS_STD_BYTESWAP
     return std::byteswap(value);
 #else
     return (value >> 8U) | (value << 8U);
@@ -754,7 +755,7 @@ namespace etl
     typename etl::enable_if<etl::is_integral<T>::value && etl::is_unsigned<T>::value && (etl::integral_limits<T>::bits == 32U), T>::type
     reverse_bytes(T value)
   {
-#if ETL_CPP23_SUPPORTED && ETL_USING_STL
+#if ETL_CPP23_SUPPORTED && ETL_USING_STL && ETL_HAS_STD_BYTESWAP
     return std::byteswap(value);
 #else
     value = ((value & 0xFF00FF00UL) >> 8U) | ((value & 0x00FF00FFUL) << 8U);
@@ -774,7 +775,7 @@ namespace etl
     typename etl::enable_if<etl::is_integral<T>::value && etl::is_unsigned<T>::value && (etl::integral_limits<T>::bits == 64U), T>::type
     reverse_bytes(T value)
   {
-#if ETL_CPP23_SUPPORTED && ETL_USING_STL
+#if ETL_CPP23_SUPPORTED && ETL_USING_STL && ETL_HAS_STD_BYTESWAP
     return std::byteswap(value);
 #else
     value = ((value & 0xFF00FF00FF00FF00ULL) >> 8U)  | ((value & 0x00FF00FF00FF00FFULL) << 8U);

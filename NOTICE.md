@@ -34,7 +34,7 @@ We recommend to read their licenses, as their terms may differ from the terms de
 
 | Project                   | Version | License   | Path                                                                 |
 |---------------------------|---------|-----------|----------------------------------------------------------------------|
-| ETL                       | 20.41.7 | MIT       | ``libs/bsw/3rdparty/etl/LICENSE``                                    |
+| ETL                       | 20.42.2 | MIT       | ``libs/bsw/3rdparty/etl/LICENSE``                                    |
 | LwIP                      | 2.2.1   | BSD-3     | ``libs/3rdparty/lwip/COPYING``                                       |
 | googletest                | 1.12.1  | BSD-3     | ``libs/bsw/3rdparty/googletest/LICENSE``                             |
 | printf                    | 5.2.0   | MIT       | ``libs/bsw/3rdparty/printf/LICENSE``                                 |
