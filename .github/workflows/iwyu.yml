@@ -1,0 +1,70 @@
+name: IWYU Analysis
+
+on: [push, pull_request]
+
+jobs:
+  iwyu-analysis:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Register problem matcher
+        run: echo "::add-matcher::./.github/problem-matcher.json"
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      
+      - name: Set up CMake
+        uses: jwlawson/actions-setup-cmake@v2
+        with:
+          cmake-version: '3.22.x'
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wget software-properties-common build-essential clang-17 clang++-17
+
+      - name: Install iwyu
+        run: |
+             sudo apt-get update 
+             sudo apt-get install -y iwyu
+  
+      - name: Build Posix target and run IWYU
+        run: |
+          rm -rf cmake-build-posix
+          cmake -B cmake-build-posix -S executables/referenceApp \
+                -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+                -DCMAKE_CXX_COMPILER=clang++-17 \
+                -DCMAKE_CXX_FLAGS='-isystem /usr/lib/llvm-17/lib/clang/17/include/'
+
+          iwyu_tool.py -p cmake-build-posix | tee ./.github/iwyu_output_posix.txt || true
+
+      - name: Build Unit tests target and run IWYU
+        run: |
+          rm -rf cmake-build-unit-tests
+          cmake -B cmake-build-unit-tests -S executables/unitTest \
+                -DBUILD_UNIT_TESTS=ON \
+                -DCMAKE_BUILD_TYPE=Debug \
+                -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+                -DCMAKE_CXX_COMPILER=clang++-17 \
+                -DCMAKE_CXX_FLAGS='-isystem /usr/lib/llvm-17/lib/clang/17/include/'
+
+          iwyu_tool.py -p cmake-build-unit-tests | tee ./.github/iwyu_output_unit_tests.txt || true
+
+      - name: Unregister problem matcher
+        if: always()
+        run: echo "::remove-matcher owner=iwyu-matcher::"
+
+      - name: Upload IWYU Output (Artifacts)
+        uses: actions/upload-artifact@v4
+        with:
+          name: iwyu-results
+          path: |
+            ./.github/iwyu_output_posix.txt
+            ./.github/iwyu_output_unit_tests.txt
