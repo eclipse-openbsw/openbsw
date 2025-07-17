@@ -1,5 +1,6 @@
 // Copyright 2024 Accenture.
 
+#include "util/buffer/LinkedBuffer.h"
 #include "util/command/CommandContext.h"
 #include "util/command/GroupCommand.h"
 #include "util/command/HelpCommand.h"

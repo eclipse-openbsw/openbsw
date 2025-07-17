@@ -22,6 +22,8 @@ namespace platform
 {
 StaticBsp staticBsp;
 
+StaticBsp& getStaticBsp() { return staticBsp; }
+
 #ifdef PLATFORM_SUPPORT_CAN
 ::etl::typed_storage<::systems::CanSystem> canSystem;
 #endif // PLATFORM_SUPPORT_CAN
