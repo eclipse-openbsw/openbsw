@@ -1,0 +1,414 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../../../../../../../../../static/css/style.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <title>Symbol - puncover</title>
+    
+</head>
+<body>
+    <div class="container" id="content">
+        <div class="page-header">
+            <nav class="navbar navbar-default" role="navigation">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="../../../../../../../../../../index.html">
+                    Puncover
+                  </a>
+                </div>
+              </div>
+            </nav>
+          
+        </div>
+        <div id="inner_content">
+        
+    
+    <ol class="breadcrumb folders">
+        
+        <li><a href="../../../../../../../../../../home.html">home</a></li>
+        
+        <li><a href="../../../../../../../../../runner.html">runner</a></li>
+        
+        <li><a href="../../../../../../../../work.html">work</a></li>
+        
+        <li><a href="../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../libs.html">libs</a></li>
+        
+        <li><a href="../../../../3rdparty.html">3rdparty</a></li>
+        
+        <li><a href="../../../freeRtos.html">freeRtos</a></li>
+        
+        <li ><a href="../../src.html">src</a>
+            </li>
+
+        
+        <li class="active"><a href="../queue.c.html">queue.c</a>:2340
+            </li>
+        
+    </ol>
+
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <th>Function</th>
+                <td colspan="5">
+                    <span class="icon-function">prvUnlockQueue</span>
+                </td>
+            </tr>
+
+            <tr>
+                <th rowspan="2"></th>
+                <th>Address</th>
+                <th>Remarks</th>
+                <th>Stack</th>
+                <th>Code</th>
+                <th>Static</th>
+            </tr>
+            <tr>
+                <td>0x00009594</td>
+                <td>
+    
+    
+</td>
+                <td>16 (static)</td>
+                <td>140</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th>Callers (2)</th>
+                <td colspan="5">
+                
+                    <a href="./e175bc34f19fb5ab84d573af67f2b746.html">xQueueReceive (292)</a>
+                    
+                        ,
+                    
+                
+                    <a href="./7db3134b2fb4931db01a8567fd79567a.html">vQueueWaitForMessageRestricted (80)</a>
+                    
+                
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Callees (4,
+                            <span title="sum of used bytes by all callees">
+                            Σ=280
+                            </span>
+                        )
+                    
+                </th>
+                <td colspan="5">
+                
+                    <a href="../../../../../platforms/s32k1xx/3rdparty/freertos_cm4_sysTick/src/port.c/51336e5c21ba34fb49b266dd31e701d5.html">vPortEnterCritical (32)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../tasks.c/743b1e332b78e221e06478f6fa7578e0.html">xTaskRemoveFromEventList (208)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../tasks.c/ea27e180b3fadc21b1f159df9bfc7de0.html">vTaskMissedYield (12)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../../../../../platforms/s32k1xx/3rdparty/freertos_cm4_sysTick/src/port.c/f34360f95022a09e4e4cceffa22ec0c6.html">vPortExitCritical (28)</a>
+                    
+                
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    
+    <pre><a href="../list.c/1abc5ae8b61049fbb0433232e839935f.html">uxListRemove (40)</a></pre>
+    
+
+    <pre>
+
+    prvUnlockQueue():
+
+        9594:	b570      	push	{r4, r5, r6, lr}
+
+        9596:	4605      	mov	r5, r0
+
+        9598:	f00a fc34 	bl	13e04 <<a href="../../../../../platforms/s32k1xx/3rdparty/freertos_cm4_sysTick/src/port.c/51336e5c21ba34fb49b266dd31e701d5.html">vPortEnterCritical</a>>
+
+        959c:	f895 3045 	ldrb.w	r3, [r5, #69]	; 0x45
+
+        95a0:	b25c      	sxtb	r4, r3
+
+        95a2:	2c00      	cmp	r4, #0
+
+        95a4:	dd14      	ble.n	95d0 <<a href="./0a1f39941a68d8e44812aa4a79d3144c.html">prvUnlockQueue</a>+0x3c>
+
+        95a6:	f105 0624 	add.w	r6, r5, #36	; 0x24
+
+        95aa:	e003      	b.n	95b4 <<a href="./0a1f39941a68d8e44812aa4a79d3144c.html">prvUnlockQueue</a>+0x20>
+
+        95ac:	1e63      	subs	r3, r4, #1
+
+        95ae:	b2da      	uxtb	r2, r3
+
+        95b0:	b25c      	sxtb	r4, r3
+
+        95b2:	b16a      	cbz	r2, 95d0 <<a href="./0a1f39941a68d8e44812aa4a79d3144c.html">prvUnlockQueue</a>+0x3c>
+
+        95b4:	6a6b      	ldr	r3, [r5, #36]	; 0x24
+
+        95b6:	4630      	mov	r0, r6
+
+        95b8:	b153      	cbz	r3, 95d0 <<a href="./0a1f39941a68d8e44812aa4a79d3144c.html">prvUnlockQueue</a>+0x3c>
+
+        95ba:	f7ff fbc7 	bl	8d4c <<a href="../tasks.c/743b1e332b78e221e06478f6fa7578e0.html">xTaskRemoveFromEventList</a>>
+
+        95be:	2800      	cmp	r0, #0
+
+        95c0:	d0f4      	beq.n	95ac <<a href="./0a1f39941a68d8e44812aa4a79d3144c.html">prvUnlockQueue</a>+0x18>
+
+        95c2:	f7ff fc69 	bl	8e98 <<a href="../tasks.c/ea27e180b3fadc21b1f159df9bfc7de0.html">vTaskMissedYield</a>>
+
+        95c6:	1e63      	subs	r3, r4, #1
+
+        95c8:	b2da      	uxtb	r2, r3
+
+        95ca:	b25c      	sxtb	r4, r3
+
+        95cc:	2a00      	cmp	r2, #0
+
+        95ce:	d1f1      	bne.n	95b4 <<a href="./0a1f39941a68d8e44812aa4a79d3144c.html">prvUnlockQueue</a>+0x20>
+
+        95d0:	23ff      	movs	r3, #255	; 0xff
+
+        95d2:	f885 3045 	strb.w	r3, [r5, #69]	; 0x45
+
+        95d6:	f00a fc25 	bl	13e24 <<a href="../../../../../platforms/s32k1xx/3rdparty/freertos_cm4_sysTick/src/port.c/f34360f95022a09e4e4cceffa22ec0c6.html">vPortExitCritical</a>>
+
+        95da:	f00a fc13 	bl	13e04 <<a href="../../../../../platforms/s32k1xx/3rdparty/freertos_cm4_sysTick/src/port.c/51336e5c21ba34fb49b266dd31e701d5.html">vPortEnterCritical</a>>
+
+        95de:	f895 3044 	ldrb.w	r3, [r5, #68]	; 0x44
+
+        95e2:	b25c      	sxtb	r4, r3
+
+        95e4:	2c00      	cmp	r4, #0
+
+        95e6:	dd14      	ble.n	9612 <<a href="./0a1f39941a68d8e44812aa4a79d3144c.html">prvUnlockQueue</a>+0x7e>
+
+        95e8:	f105 0610 	add.w	r6, r5, #16
+
+        95ec:	e003      	b.n	95f6 <<a href="./0a1f39941a68d8e44812aa4a79d3144c.html">prvUnlockQueue</a>+0x62>
+
+        95ee:	1e63      	subs	r3, r4, #1
+
+        95f0:	b2da      	uxtb	r2, r3
+
+        95f2:	b25c      	sxtb	r4, r3
+
+        95f4:	b16a      	cbz	r2, 9612 <<a href="./0a1f39941a68d8e44812aa4a79d3144c.html">prvUnlockQueue</a>+0x7e>
+
+        95f6:	692b      	ldr	r3, [r5, #16]
+
+        95f8:	4630      	mov	r0, r6
+
+        95fa:	b153      	cbz	r3, 9612 <<a href="./0a1f39941a68d8e44812aa4a79d3144c.html">prvUnlockQueue</a>+0x7e>
+
+        95fc:	f7ff fba6 	bl	8d4c <<a href="../tasks.c/743b1e332b78e221e06478f6fa7578e0.html">xTaskRemoveFromEventList</a>>
+
+        9600:	2800      	cmp	r0, #0
+
+        9602:	d0f4      	beq.n	95ee <<a href="./0a1f39941a68d8e44812aa4a79d3144c.html">prvUnlockQueue</a>+0x5a>
+
+        9604:	f7ff fc48 	bl	8e98 <<a href="../tasks.c/ea27e180b3fadc21b1f159df9bfc7de0.html">vTaskMissedYield</a>>
+
+        9608:	1e63      	subs	r3, r4, #1
+
+        960a:	b2da      	uxtb	r2, r3
+
+        960c:	b25c      	sxtb	r4, r3
+
+        960e:	2a00      	cmp	r2, #0
+
+        9610:	d1f1      	bne.n	95f6 <<a href="./0a1f39941a68d8e44812aa4a79d3144c.html">prvUnlockQueue</a>+0x62>
+
+        9612:	23ff      	movs	r3, #255	; 0xff
+
+        9614:	f885 3044 	strb.w	r3, [r5, #68]	; 0x44
+
+        9618:	e8bd 4070 	ldmia.w	sp!, {r4, r5, r6, lr}
+
+        961c:	f00a bc02 	b.w	13e24 <<a href="../../../../../platforms/s32k1xx/3rdparty/freertos_cm4_sysTick/src/port.c/f34360f95022a09e4e4cceffa22ec0c6.html">vPortExitCritical</a>>
+
+    </pre>
+
+    
+    <pre><a href="./ab8b1461e5c95d9bc2914feae28c9534.html">xQueueGenericReset (132)</a></pre>
+    
+
+    
+        <h1>Stack Worst-Case Scenarios</h1>
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 128</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 208</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    128
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                16 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">208</td>
+                <td><a href="../tasks.c/743b1e332b78e221e06478f6fa7578e0.html" class="icon-function">xTaskRemoveFromEventList</a></td>
+            </tr>
+        
+        </tbody>
+        
+        <tfoot>
+            <tr>
+                <th></th>
+                <th class="col_size">112
+                </th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </tfoot>
+        
+    </table>
+        
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 112</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 920</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    112
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                16 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    920
+                    
+                    
+                </td>
+                <td class="col_size">140</td>
+                <td><a href="./0a1f39941a68d8e44812aa4a79d3144c.html" class="icon-function">prvUnlockQueue</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                    
+                    96
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                48 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    780
+                    
+                    
+                </td>
+                <td class="col_size">292</td>
+                <td><a href="./e175bc34f19fb5ab84d573af67f2b746.html" class="icon-function">xQueueReceive</a></td>
+            </tr>
+        
+            <tr>
+                <th>3</th>
+                <td class="col_size">
+                </td>
+                <td class="col_size">
+            
+                48 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">488</td>
+                <td><a href="../timers.c/d35f72ab680b9bc7eb2ff3e6cd07ece5.html" class="icon-function">prvTimerTask</a></td>
+            </tr>
+        
+        </tbody>
+        
+    </table>
+        
+    
+
+
+        </div>
+    <div id="page-footer">
+        <hr>
+        
+            brought to you with 💖
+            by <a href="https://twitter.com/hbehrens">Heiko Behrens</a>
+            <span class="secondary">– MIT license, copyright © 2014-2025</span>
+        
+    </div>
+    </div>
+</body>
+</html>

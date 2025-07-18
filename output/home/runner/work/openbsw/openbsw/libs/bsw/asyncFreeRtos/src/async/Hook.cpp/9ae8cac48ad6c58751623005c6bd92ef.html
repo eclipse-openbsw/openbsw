@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../../../../../../../../../../static/css/style.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <title>Symbol - puncover</title>
+    
+</head>
+<body>
+    <div class="container" id="content">
+        <div class="page-header">
+            <nav class="navbar navbar-default" role="navigation">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="../../../../../../../../../../../index.html">
+                    Puncover
+                  </a>
+                </div>
+              </div>
+            </nav>
+          
+        </div>
+        <div id="inner_content">
+        
+    
+    <ol class="breadcrumb folders">
+        
+        <li><a href="../../../../../../../../../../../home.html">home</a></li>
+        
+        <li><a href="../../../../../../../../../../runner.html">runner</a></li>
+        
+        <li><a href="../../../../../../../../../work.html">work</a></li>
+        
+        <li><a href="../../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../libs.html">libs</a></li>
+        
+        <li><a href="../../../../../bsw.html">bsw</a></li>
+        
+        <li><a href="../../../../asyncFreeRtos.html">asyncFreeRtos</a></li>
+        
+        <li><a href="../../../src.html">src</a></li>
+        
+        <li ><a href="../../async.html">async</a>
+            </li>
+
+        
+        <li class="active"><a href="../Hook.cpp.html">Hook.cpp</a>:25
+            </li>
+        
+    </ol>
+
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <th>Function</th>
+                <td colspan="5">
+                    <span class="icon-function">asyncEnterIsrGroup</span>
+                </td>
+            </tr>
+
+            <tr>
+                <th rowspan="2"></th>
+                <th>Address</th>
+                <th>Remarks</th>
+                <th>Stack</th>
+                <th>Code</th>
+                <th>Static</th>
+            </tr>
+            <tr>
+                <td>0x00009d0c</td>
+                <td>
+    <span class="label label-success">x-module</span>
+    
+</td>
+                <td>24 (static)</td>
+                <td>132</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th>Callers (2)</th>
+                <td colspan="5">
+                
+                    <a href="../../../../../../executables/referenceApp/platforms/s32k148evb/main/src/systems/CanSystem.cpp/62cfef291a40896c53ab359c7bf84f02.html">call_can_isr_RX (80)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../../../../../../executables/referenceApp/platforms/s32k148evb/main/src/systems/CanSystem.cpp/0fe596cbd2385865a4429183a1cee479.html">call_can_isr_TX (36)</a>
+                    
+                
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Callees (1,
+                            <span title="sum of used bytes by all callees">
+                            Σ=52
+                            </span>
+                        )
+                    
+                </th>
+                <td colspan="5">
+                
+                    <a href="../../../../../../executables/referenceApp/platforms/s32k148evb/bspConfiguration/src/bsp/SystemTimer/SystemTimer.cpp/ef726e6b5f9357a8fa025578b908794c.html">getSystemTicks32Bit (52)</a>
+                    
+                
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    
+    <pre><a href="./91aa33728d85154d123511cd1ca5f0c0.html">asyncLeaveTask (136)</a></pre>
+    
+
+    <pre>
+
+    asyncEnterIsrGroup():
+
+        9d0c:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
+
+        9d0e:	4604      	mov	r4, r0
+
+        9d10:	f3ef 8110 	mrs	r1, PRIMASK
+
+    getMachineStateRegisterValueAndSuspendAllInterrupts():
+
+        9d14:	b672      	cpsid	i
+
+    _ZN5async15FreeRtosAdapterINS_12AsyncBindingEE8enterIsrEv():
+
+        9d16:	4a1a      	ldr	r2, [pc, #104]	; (9d80 <<a href="./9ae8cac48ad6c58751623005c6bd92ef.html">asyncEnterIsrGroup</a>+0x74>)
+
+        9d18:	481a      	ldr	r0, [pc, #104]	; (9d84 <<a href="./9ae8cac48ad6c58751623005c6bd92ef.html">asyncEnterIsrGroup</a>+0x78>)
+
+        9d1a:	7813      	ldrb	r3, [r2, #0]
+
+        9d1c:	3301      	adds	r3, #1
+
+        9d1e:	7013      	strb	r3, [r2, #0]
+
+        9d20:	4b19      	ldr	r3, [pc, #100]	; (9d88 <<a href="./9ae8cac48ad6c58751623005c6bd92ef.html">asyncEnterIsrGroup</a>+0x7c>)
+
+        9d22:	6003      	str	r3, [r0, #0]
+
+    asyncEnterIsrGroup():
+
+        9d24:	f381 8810 	msr	PRIMASK, r1
+
+    _ZN3etl14singleton_baseIN7runtime7declare14RuntimeMonitorINS1_17RuntimeStatisticsES4_Lj9ELj2EEEE8instanceEv():
+
+        9d28:	4b18      	ldr	r3, [pc, #96]	; (9d8c <<a href="./9ae8cac48ad6c58751623005c6bd92ef.html">asyncEnterIsrGroup</a>+0x80>)
+
+        9d2a:	681d      	ldr	r5, [r3, #0]
+
+    asyncEnterIsrGroup():
+
+        9d2c:	f3ef 8610 	mrs	r6, PRIMASK
+
+    getMachineStateRegisterValueAndSuspendAllInterrupts():
+
+        9d30:	b672      	cpsid	i
+
+    _ZN7runtime14RuntimeMonitorINS_17RuntimeStatisticsES1_E13enterIsrGroupEj():
+
+        9d32:	f008 fd7f 	bl	12834 <<a href="../../../../../../executables/referenceApp/platforms/s32k148evb/bspConfiguration/src/bsp/SystemTimer/SystemTimer.cpp/ef726e6b5f9357a8fa025578b908794c.html">getSystemTicks32Bit</a>>
+
+    _ZNK3etl4spanIN7runtime14RuntimeMonitorINS1_17RuntimeStatisticsES3_E12ContextEntryELj4294967295EEixEj():
+
+        9d36:	68eb      	ldr	r3, [r5, #12]
+
+        9d38:	eb04 04c4 	add.w	r4, r4, r4, lsl #3
+
+        9d3c:	6819      	ldr	r1, [r3, #0]
+
+        9d3e:	00a3      	lsls	r3, r4, #2
+
+        9d40:	eb01 0484 	add.w	r4, r1, r4, lsl #2
+
+    _ZN7runtime12RuntimeStackINS_14RuntimeMonitorINS_17RuntimeStatisticsES2_E12ContextEntryEE9pushEntryERS4_m():
+
+        9d44:	58ca      	ldr	r2, [r1, r3]
+
+        9d46:	2a01      	cmp	r2, #1
+
+        9d48:	d002      	beq.n	9d50 <<a href="./9ae8cac48ad6c58751623005c6bd92ef.html">asyncEnterIsrGroup</a>+0x44>
+
+    asyncEnterIsrGroup():
+
+        9d4a:	f386 8810 	msr	PRIMASK, r6
+
+        9d4e:	bdf8      	pop	{r3, r4, r5, r6, r7, pc}
+
+    _ZN7runtime12RuntimeStackINS_14RuntimeMonitorINS_17RuntimeStatisticsES2_E13FunctionEntryEE16addSuspendedTimeEm():
+
+        9d50:	f8d4 e00c 	ldr.w	lr, [r4, #12]
+
+    _ZN7runtime12RuntimeStackINS_14RuntimeMonitorINS_17RuntimeStatisticsES2_E12ContextEntryEE9pushEntryERS4_m():
+
+        9d54:	f8d5 c000 	ldr.w	ip, [r5]
+
+    _ZN7runtime12RuntimeStackINS_14RuntimeMonitorINS_17RuntimeStatisticsES2_E13FunctionEntryEE16addSuspendedTimeEm():
+
+        9d58:	f1be 0f00 	cmp.w	lr, #0
+
+        9d5c:	d006      	beq.n	9d6c <<a href="./9ae8cac48ad6c58751623005c6bd92ef.html">asyncEnterIsrGroup</a>+0x60>
+
+    _ZN7runtime17RuntimeStackEntryINS_14RuntimeMonitorINS_17RuntimeStatisticsES2_E13FunctionEntryELb0EE16addSuspendedTimeEm():
+
+        9d5e:	f8de 2008 	ldr.w	r2, [lr, #8]
+
+        9d62:	6927      	ldr	r7, [r4, #16]
+
+        9d64:	1bd2      	subs	r2, r2, r7
+
+        9d66:	4402      	add	r2, r0
+
+        9d68:	f8ce 2008 	str.w	r2, [lr, #8]
+
+    _ZN7runtime17RuntimeStackEntryINS_14RuntimeMonitorINS_17RuntimeStatisticsES2_E12ContextEntryELb1EE4pushEmPS4_():
+
+        9d6c:	f841 c003 	str.w	ip, [r1, r3]
+
+        9d70:	2300      	movs	r3, #0
+
+        9d72:	6060      	str	r0, [r4, #4]
+
+        9d74:	60a3      	str	r3, [r4, #8]
+
+    _ZN7runtime12RuntimeStackINS_14RuntimeMonitorINS_17RuntimeStatisticsES2_E12ContextEntryEE9pushEntryERS4_m():
+
+        9d76:	602c      	str	r4, [r5, #0]
+
+    resumeAllInterrupts():
+
+        9d78:	f386 8810 	msr	PRIMASK, r6
+
+    asyncEnterIsrGroup():
+
+        9d7c:	bdf8      	pop	{r3, r4, r5, r6, r7, pc}
+
+        9d7e:	bf00      	nop
+
+        9d80:	1ffee8fc 	.word	0x1ffee8fc
+
+        9d84:	1ffee8f8 	.word	0x1ffee8f8
+
+        9d88:	1ffee900 	.word	0x1ffee900
+
+        9d8c:	1ffe0170 	.word	0x1ffe0170
+
+    </pre>
+
+    
+    <pre><a href="./b9408dd518758e610c00201ee08f321c.html">asyncLeaveIsrGroup (196)</a></pre>
+    
+
+    
+        <h1>Stack Worst-Case Scenarios</h1>
+        
+            <p>No callees for this function.</p>
+        
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 32</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 212</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    32
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                24 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    212
+                    
+                    
+                </td>
+                <td class="col_size">132</td>
+                <td><a href="./9ae8cac48ad6c58751623005c6bd92ef.html" class="icon-function">asyncEnterIsrGroup</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                </td>
+                <td class="col_size">
+            
+                8 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">80</td>
+                <td><a href="../../../../../../executables/referenceApp/platforms/s32k148evb/main/src/systems/CanSystem.cpp/62cfef291a40896c53ab359c7bf84f02.html" class="icon-function">call_can_isr_RX</a></td>
+            </tr>
+        
+        </tbody>
+        
+    </table>
+        
+    
+
+
+        </div>
+    <div id="page-footer">
+        <hr>
+        
+            brought to you with 💖
+            by <a href="https://twitter.com/hbehrens">Heiko Behrens</a>
+            <span class="secondary">– MIT license, copyright © 2014-2025</span>
+        
+    </div>
+    </div>
+</body>
+</html>
