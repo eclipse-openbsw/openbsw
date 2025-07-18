@@ -10,7 +10,6 @@ namespace uds
 {
 WriteIdentifierToNvStorage::WriteIdentifierToNvStorage(
     IAsyncDiagHelper& asyncHelper,
-    ::async::ContextType const diagContext,
     uint16_t const identifier,
     ::eeprom::IEepromHelper& iEepromHelper,
     ::nvstorage::NvBlockIdType const nvItem,
@@ -23,7 +22,7 @@ WriteIdentifierToNvStorage::WriteIdentifierToNvStorage(
     VARIABLE_REQUEST_LENGTH,
     VARIABLE_RESPONSE_LENGTH,
     sessionMask)
-, _asyncJobHelper(asyncHelper, *this, diagContext)
+, _asyncJobHelper(asyncHelper, *this)
 , _ieepromHelper(iEepromHelper)
 , _nvLengthItem(0)
 , _nvItem(nvItem)
@@ -47,7 +46,6 @@ WriteIdentifierToNvStorage::WriteIdentifierToNvStorage(
 
 WriteIdentifierToNvStorage::WriteIdentifierToNvStorage(
     IAsyncDiagHelper& asyncHelper,
-    ::async::ContextType const diagContext,
     uint16_t const identifier,
     ::eeprom::IEepromHelper& iEepromHelper,
     ::nvstorage::NvBlockIdType const nvLengthItem,
@@ -61,7 +59,7 @@ WriteIdentifierToNvStorage::WriteIdentifierToNvStorage(
     VARIABLE_REQUEST_LENGTH,
     VARIABLE_RESPONSE_LENGTH,
     sessionMask)
-, _asyncJobHelper(asyncHelper, *this, diagContext)
+, _asyncJobHelper(asyncHelper, *this)
 , _ieepromHelper(iEepromHelper)
 , _nvLengthItem(nvLengthItem)
 , _nvItem(nvItem)

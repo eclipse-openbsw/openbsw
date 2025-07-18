@@ -14,11 +14,10 @@ namespace uds
 
 uint8_t const thisimplementedRequest[] = {ServiceId::READ_DATA_BY_IDENTIFIER};
 
-MultipleReadDataByIdentifier::MultipleReadDataByIdentifier(
-    IAsyncDiagHelper& asyncHelper, ::async::ContextType const diagContext)
+MultipleReadDataByIdentifier::MultipleReadDataByIdentifier(IAsyncDiagHelper& asyncHelper)
 : AbstractDiagJob(&thisimplementedRequest[0], 1U, 0U, DiagSession::ALL_SESSIONS())
 , NestedDiagRequest(1U)
-, fAsyncJobHelper(asyncHelper, *this, diagContext)
+, fAsyncJobHelper(asyncHelper, *this)
 , fFirstJob(*this)
 , fGetDidLimit()
 , fCheckResponse()
@@ -31,12 +30,10 @@ MultipleReadDataByIdentifier::MultipleReadDataByIdentifier(
 }
 
 MultipleReadDataByIdentifier::MultipleReadDataByIdentifier(
-    IAsyncDiagHelper& asyncHelper,
-    AbstractDiagJob& firstJob,
-    ::async::ContextType const diagContext)
+    IAsyncDiagHelper& asyncHelper, AbstractDiagJob& firstJob)
 : AbstractDiagJob(&thisimplementedRequest[0], 1U, 0U, DiagSession::ALL_SESSIONS())
 , NestedDiagRequest(1U)
-, fAsyncJobHelper(asyncHelper, *this, diagContext)
+, fAsyncJobHelper(asyncHelper, *this)
 , fFirstJob(firstJob)
 , fGetDidLimit()
 , fCheckResponse()

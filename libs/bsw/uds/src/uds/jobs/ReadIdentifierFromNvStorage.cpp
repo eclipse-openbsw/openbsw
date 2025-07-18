@@ -12,14 +12,13 @@ namespace uds
 {
 ReadIdentifierFromNvStorage::ReadIdentifierFromNvStorage(
     IAsyncDiagHelper& asyncHelper,
-    ::async::ContextType const diagContext,
     uint16_t const identifier,
     ::eeprom::IEepromHelper& iEepromHelper,
     ::nvstorage::NvBlockIdType const nvItem,
     size_t const length,
     DiagSessionMask const sessionMask)
 : DataIdentifierJob(_implementedRequest, sessionMask)
-, _asyncJobHelper(asyncHelper, *this, diagContext)
+, _asyncJobHelper(asyncHelper, *this)
 , _ieepromHelper(iEepromHelper)
 , _nvLengthItem(0)
 , _nvItem(nvItem)
@@ -42,14 +41,13 @@ ReadIdentifierFromNvStorage::ReadIdentifierFromNvStorage(
 
 ReadIdentifierFromNvStorage::ReadIdentifierFromNvStorage(
     IAsyncDiagHelper& asyncHelper,
-    ::async::ContextType const diagContext,
     uint16_t const identifier,
     ::eeprom::IEepromHelper& iEepromHelper,
     nvstorage::NvBlockIdType const nvLengthItem,
     nvstorage::NvBlockIdType const nvItem,
     DiagSessionMask const sessionMask)
 : DataIdentifierJob(_implementedRequest, sessionMask)
-, _asyncJobHelper(asyncHelper, *this, diagContext)
+, _asyncJobHelper(asyncHelper, *this)
 , _ieepromHelper(iEepromHelper)
 , _nvLengthItem(nvLengthItem)
 , _nvItem(nvItem)

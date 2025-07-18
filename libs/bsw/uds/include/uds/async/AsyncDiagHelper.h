@@ -21,8 +21,10 @@ class AsyncDiagHelper
 public:
     using StoredRequestPool = ::etl::ipool;
 
-    explicit AsyncDiagHelper(StoredRequestPool& storedRequestPool);
+    explicit AsyncDiagHelper(
+        StoredRequestPool& storedRequestPool, ::async::ContextType diagContext);
 
+    ::async::ContextType getDiagContext() const override;
     StoredRequest* allocateRequest(
         IncomingDiagConnection& connection,
         uint8_t const* request,
@@ -34,6 +36,7 @@ protected:
 
 private:
     StoredRequestPool& fStoredRequestPool;
+    ::async::ContextType fDiagContext;
 };
 
 namespace declare
@@ -47,7 +50,7 @@ template<size_t N>
 class AsyncDiagHelper : public ::uds::AsyncDiagHelper
 {
 public:
-    AsyncDiagHelper();
+    AsyncDiagHelper(::async::ContextType diagContext);
 
 private:
     ::etl::pool<StoredRequest, N> fStoredRequestPool;
@@ -61,8 +64,8 @@ private:
 namespace declare
 {
 template<size_t N>
-inline AsyncDiagHelper<N>::AsyncDiagHelper()
-: ::uds::AsyncDiagHelper(fStoredRequestPool), fStoredRequestPool()
+inline AsyncDiagHelper<N>::AsyncDiagHelper(::async::ContextType const diagContext)
+: ::uds::AsyncDiagHelper(fStoredRequestPool, diagContext), fStoredRequestPool()
 {}
 
 } // namespace declare

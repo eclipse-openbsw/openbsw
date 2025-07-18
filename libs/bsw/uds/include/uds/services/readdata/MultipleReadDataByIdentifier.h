@@ -40,15 +40,13 @@ public:
      * constructor.
      * \param asyncHelper reference to async helper
      */
-    explicit MultipleReadDataByIdentifier(
-        IAsyncDiagHelper& asyncHelper, ::async::ContextType diagContext);
+    explicit MultipleReadDataByIdentifier(IAsyncDiagHelper& asyncHelper);
     /**
      * constructor.
      * \param asyncHelper reference to async helper
      * \param firstJob first job to start searching for ReadDataByIdentifier jobs
      */
-    MultipleReadDataByIdentifier(
-        IAsyncDiagHelper& asyncHelper, AbstractDiagJob& firstJob, ::async::ContextType diagContext);
+    MultipleReadDataByIdentifier(IAsyncDiagHelper& asyncHelper, AbstractDiagJob& firstJob);
 
     /**
      * Set a callback function for retrieving the limit of DIDs for a request.

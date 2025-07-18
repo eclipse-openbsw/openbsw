@@ -29,7 +29,6 @@ public:
      */
     ReadIdentifierFromNvStorage(
         IAsyncDiagHelper& asyncHelper,
-        ::async::ContextType const diagContext,
         uint16_t const identifier,
         ::eeprom::IEepromHelper& iEepromHelper,
         ::nvstorage::NvBlockIdType const nvItem,
@@ -46,7 +45,6 @@ public:
      */
     ReadIdentifierFromNvStorage(
         IAsyncDiagHelper& asyncHelper,
-        ::async::ContextType const diagContext,
         uint16_t const identifier,
         ::eeprom::IEepromHelper& iEepromHelper,
         nvstorage::NvBlockIdType const nvLengthItem,
