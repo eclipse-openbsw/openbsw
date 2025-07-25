@@ -1,21 +1,23 @@
 FROM ubuntu:22.04
 
-RUN apt-get update && \
-    apt-get install -y --fix-missing \
-    python3.10 \
-    python3-pip \
-    bzip2 \
-    zip \
-    tar \
-    tmux \
-    clang-tidy \
-    wget \
-    curl \
-    git \
-    gcc-11 \
-    g++-11 \
-    lcov \
-    && rm -rf /var/lib/apt/lists/*
+RUN for i in 1 2 3; do \
+        apt-get update && apt-get install -y \
+            python3.10 \
+            python3-pip \
+            bzip2 \
+            zip \
+            tar \
+            tmux \
+            clang-tidy \
+            wget \
+            curl \
+            git \
+            gcc-11 \
+            g++-11 \
+            lcov \
+        && rm -rf /var/lib/apt/lists/* \
+        && break || { echo "Apt install failed, retrying ($i/3)..."; sleep 10; }; \
+    done
 
 RUN wget https://github.com/Kitware/CMake/releases/download/v3.22.5/cmake-3.22.5-linux-x86_64.sh \
     && chmod +x cmake-3.22.5-linux-x86_64.sh \
