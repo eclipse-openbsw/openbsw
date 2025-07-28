@@ -35,6 +35,7 @@ SOFTWARE.
 #include "delegate.h"
 #include "tuple.h"
 #include "utility.h"
+#include "type_list.h"
 
 namespace etl
 {
@@ -62,15 +63,15 @@ namespace etl
   {
   public:
    
-    using delegate_type = etl::delegate<TReturn(TArgs...)>; ///< The delegate type to be invoked.   
-    using tuple_type    = etl::tuple<TArgs...>;             ///< Tuple type for storing arguments.
-
+    using delegate_type  = etl::delegate<TReturn(TArgs...)>; ///< The delegate type to be invoked.
+    using argument_types = etl::type_list<TArgs...>;         ///< The type list of arguments.
+    
     //*********************************************************************
     /// Construct a closure with a delegate and its arguments.
     /// \param f    The delegate to be invoked.
     /// \param args The arguments to bind to the delegate.
     //*********************************************************************
-    closure(const delegate_type& f, const TArgs... args)
+    ETL_CONSTEXPR14 closure(const delegate_type& f, const TArgs... args) ETL_NOEXCEPT
       : m_f(f)
       , m_args(args...)
     {
@@ -80,7 +81,7 @@ namespace etl
     /// Invoke the stored delegate with the bound arguments.
     /// \return The result of the delegate invocation.
     //*********************************************************************
-    TReturn operator()() const
+    ETL_CONSTEXPR14 TReturn operator()() const ETL_NOEXCEPT
     {
       return execute(etl::index_sequence_for<TArgs...>{});
     }
@@ -92,20 +93,22 @@ namespace etl
     /// \tparam TArg  Type of the argument.
     /// \param arg    The new value to bind.
     //*********************************************************************
-    template <size_t index, typename TArg,
-              typename = etl::enable_if_t<etl::is_same<TArg, etl::tuple_element_t<index, tuple_type>>::value && !etl::is_reference<TArg>::value>>
-    void bind(TArg arg)
+    template <size_t Index, typename UArg>
+    ETL_CONSTEXPR14 void bind(UArg arg) ETL_NOEXCEPT
     {
-      etl::get<index>(m_args) = arg;
+      static_assert(etl::is_convertible<UArg, etl::type_list_type_at_index_t<argument_types, Index>>::value, "Argument is not convertible");
+      static_assert(!etl::is_reference<UArg>::value, "Cannot bind reference arguments");
+
+      etl::get<Index>(m_args) = arg;
     }
 
     //*********************************************************************
     /// Bind new values to multiple arguments at once.
-    /// The number and types of arguments must match the tuple.
+    /// The number of arguments must match the tuple.
     /// \param args The new values to bind.
     ///*********************************************************************
     template <typename... UArgs>
-    void bind(UArgs&&... args)
+    ETL_CONSTEXPR14 void bind(UArgs&&... args) ETL_NOEXCEPT
     {
       static_assert(sizeof...(UArgs) == sizeof...(TArgs), "Argument count mismatch");
       bind_impl(etl::make_index_sequence<sizeof...(TArgs)>{}, etl::forward<UArgs>(args)...);
@@ -118,10 +121,10 @@ namespace etl
     /// \param args The new values to bind.
     ///*********************************************************************
     template <size_t... Indexes, typename... UArgs>
-    void bind_impl(etl::index_sequence<Indexes...>, UArgs&&... args)
+    ETL_CONSTEXPR14 void bind_impl(etl::index_sequence<Indexes...>, UArgs&&... args) ETL_NOEXCEPT
     {
-      // Use an initializer list to expand the pack and assign each argument
-      int dummy[] = {0, (etl::get<Indexes>(m_args) = etl::forward<UArgs>(args), 0)...};
+      // Expand the pack and call bind<Index>(arg) for each argument
+      int dummy[] = {0, (bind<Indexes>(etl::forward<UArgs>(args)), 0)...};
       (void)dummy; // Suppress unused variable warning
     }
 
@@ -131,13 +134,13 @@ namespace etl
     /// \return The result of the delegate invocation.
     //*********************************************************************
     template<size_t... Indexes>
-    TReturn execute(etl::index_sequence<Indexes...>) const
+    ETL_CONSTEXPR14 TReturn execute(etl::index_sequence<Indexes...>) const ETL_NOEXCEPT
     {
       return m_f(etl::get<Indexes>(m_args)...);
     }
 
-    delegate_type m_f; ///< The delegate to invoke.
-    tuple_type m_args; ///< The bound arguments.
+    delegate_type m_f;           ///< The delegate to invoke.
+    etl::tuple<TArgs...> m_args; ///< The bound arguments.
   };
 #else
   //*************************************************************************

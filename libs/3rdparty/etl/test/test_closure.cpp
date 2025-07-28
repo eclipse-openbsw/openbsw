@@ -5,7 +5,7 @@ Embedded Template Library.
 https://github.com/ETLCPP/etl
 https://www.etlcpp.com
 
-Copyright(c) 2025 BMW AG
+Copyright(c) 2025 BMW AG, John Wellbelove
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files(the "Software"), to deal
@@ -32,7 +32,6 @@ SOFTWARE.
 
 namespace
 {
-
   SUITE(test_closure)
   {
     int f1(int a1)
@@ -151,5 +150,15 @@ namespace
       CHECK_EQUAL(23, c5());
     }
 
+    //*************************************************************************
+    TEST(test_bind_static_assert)
+    {
+      etl::closure<int(int, int)> c(df2, 1, 2);
+
+      // Uncomment to generate static_assert errors.
+      //c.bind(1);                // Argument count mismatch
+      //c.bind(1, 2, 3);          // Argument count mismatch
+      //c.bind(1, std::string()); // Argument is not convertible
+    }
   };
 }

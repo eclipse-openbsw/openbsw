@@ -1,3 +1,5 @@
+///\file
+
 /******************************************************************************
 The MIT License(MIT)
 
@@ -5,7 +7,7 @@ Embedded Template Library.
 https://github.com/ETLCPP/etl
 https://www.etlcpp.com
 
-Copyright(c) 2021 John Wellbelove
+Copyright(c) 2025 John Wellbelove
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files(the "Software"), to deal
@@ -26,74 +28,51 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ******************************************************************************/
 
-#include "unit_test_framework.h"
+#ifndef ETL_CRC16_OPENSAFETY_A_INCLUDED
+#define ETL_CRC16_OPENSAFETY_A_INCLUDED
 
-#include "etl/gamma.h"
+#include "platform.h"
+#include "private/crc_implementation.h"
 
-#include <array>
-#include <algorithm>
-#include <math.h>
+///\defgroup crc16_opensafety_a 16 bit CRC calculation
+///\ingroup crc
 
-namespace
+namespace etl
 {
-  constexpr size_t Size = 10UL;
-
-  using GammaEncode = etl::gamma_encode<double>;
-  using GammaDecode = etl::gamma_decode<double>;
-
-  struct Compare
+#if ETL_USING_CPP11 && !defined(ETL_CRC_FORCE_CPP03_IMPLEMENTATION)
+  template <size_t Table_Size>
+  using crc16_opensafety_a_t = etl::crc_type<etl::private_crc::crc16_opensafety_a_parameters, Table_Size>;
+#else
+  template <size_t Table_Size>    
+  class crc16_opensafety_a_t : public etl::crc_type<etl::private_crc::crc16_opensafety_a_parameters, Table_Size>
   {
-    bool operator ()(double lhs, double rhs) const
-    {
-      return fabs(lhs - rhs) < 0.1;
-    }
-  };
+  public:
 
-  //***********************************
-  const std::array<double, Size> input1a =
-  {
-    0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0
-  };
-
-  const std::array<double, Size> result2a =
-  {
-    0.0, 0.11, 0.44, 1.00, 1.78, 2.78, 4.00, 5.44, 7.11, 9.00
-  };
-
-  const std::array<double, Size> input1b =
-  {
-    0.0, 0.11, 0.44, 1.00, 1.78, 2.78, 4.00, 5.44, 7.11, 9.00
-  };
-
-  const std::array<double, Size> result2b =
-  {
-    0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0
-  };
-
-  std::array<double, Size> output2;
-
-  SUITE(test_gamma)
-  {
     //*************************************************************************
-    TEST(test_gamma_encode)
+    /// Default constructor.
+    //*************************************************************************
+    crc16_opensafety_a_t()
     {
-      GammaEncode gamma(0.5, 9.0);
-
-      std::transform(input1a.begin(), input1a.end(), output2.begin(), gamma);
-
-      bool isEqual = std::equal(output2.begin(), output2.end(), result2a.begin(), Compare());
-      CHECK(isEqual);
+      this->reset();
     }
 
     //*************************************************************************
-    TEST(test_gamma_decode)
+    /// Constructor from range.
+    /// \param begin Start of the range.
+    /// \param end   End of the range.
+    //*************************************************************************
+    template<typename TIterator>
+    crc16_opensafety_a_t(TIterator begin, const TIterator end)
     {
-      GammaDecode gamma(0.5, 9.0);
-
-      std::transform(input1b.begin(), input1b.end(), output2.begin(), gamma);
-
-      bool isEqual = std::equal(output2.begin(), output2.end(), result2b.begin(), Compare());
-      CHECK(isEqual);
+      this->reset();
+      this->add(begin, end);
     }
   };
+#endif
+
+  typedef etl::crc16_opensafety_a_t<256U> crc16_opensafety_a_t256;
+  typedef etl::crc16_opensafety_a_t<16U>  crc16_opensafety_a_t16;
+  typedef etl::crc16_opensafety_a_t<4U>   crc16_opensafety_a_t4;
+  typedef crc16_opensafety_a_t256         crc16_opensafety_a;
 }
+#endif
