@@ -92,6 +92,7 @@ target_sources(tests PRIVATE
 		callback_service.h.t.cpp
 		callback_timer.h.t.cpp
 		callback_timer_atomic.h.t.cpp
+		callback_timer_deferred_locked.h.t.cpp
 		callback_timer_interrupt.h.t.cpp
 		callback_timer_locked.h.t.cpp
 		char_traits.h.t.cpp
@@ -99,6 +100,7 @@ target_sources(tests PRIVATE
 		chrono.h.t.cpp
 		circular_buffer.h.t.cpp
 		circular_iterator.h.t.cpp
+		closure.h.t.cpp
 		combinations.h.t.cpp
 		compare.h.t.cpp
 		constant.h.t.cpp
