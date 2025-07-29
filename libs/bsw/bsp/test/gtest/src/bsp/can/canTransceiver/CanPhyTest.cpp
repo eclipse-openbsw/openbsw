@@ -13,10 +13,10 @@ TEST(CanPhyDummy, SimpleTest)
 {
     uint32_t const DOES_NOT_HAVE_ANY_EFFECT = 0U;
     CanPhyDummy& canPhy                     = CanPhyDummy::getInstance();
-    canPhy.init();
-    canPhy.setMode(CanPhy::CAN_PHY_MODE_STANDBY);
+    canPhy.init(0U);
+    canPhy.setMode(CanPhy::CAN_PHY_MODE_STANDBY, 0U);
 
-    ASSERT_EQ(CanPhy::CAN_PHY_MODE_STANDBY, canPhy.getMode());
+    ASSERT_EQ(CanPhy::CAN_PHY_MODE_STANDBY, canPhy.getMode(0U));
     ASSERT_EQ(
         CanPhy::CAN_PHY_ERROR_UNSUPPORTED, canPhy.getPhyErrorStatus(DOES_NOT_HAVE_ANY_EFFECT));
 }

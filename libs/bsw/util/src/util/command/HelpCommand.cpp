@@ -37,7 +37,7 @@ void HelpCommand::help(CommandContext& context) const
 
     while ((cmd != nullptr) && context.hasToken())
     {
-        ExecuteResult const result = cmd->execute(context.scanIdentifierToken());
+        ExecuteResult const result = cmd->execute(context.scanIdentifierToken(), nullptr);
         cmd       = context.check(result.isValid()) ? result.getCommand() : nullptr;
         showFirst = true;
     }

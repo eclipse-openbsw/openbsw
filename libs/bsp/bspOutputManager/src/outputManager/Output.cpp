@@ -88,12 +88,12 @@ bsp::BspReturnCode Output::invert(OutputId const chan)
                     if (t)
                     {
                         return (dynamicOutputCfg.getClientInstance(channel)->set(
-                            dynamicOutputCfg.getChannelInsideClient(channel), 0U));
+                            dynamicOutputCfg.getChannelInsideClient(channel), 0U, true));
                     }
                     else
                     {
                         return (dynamicOutputCfg.getClientInstance(channel)->set(
-                            dynamicOutputCfg.getChannelInsideClient(channel), 1U));
+                            dynamicOutputCfg.getChannelInsideClient(channel), 1U, true));
                     }
                 }
                 else

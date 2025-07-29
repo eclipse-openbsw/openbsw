@@ -47,7 +47,7 @@ public:
         FLASH_BLOCK2_ERASE_FAILED = 0x8000000DU
     };
 
-    virtual EepromEmulationReturnCode init(bool wakeUp = false) = 0;
+    virtual EepromEmulationReturnCode init(bool wakeUp) = 0;
 
     virtual EepromEmulationReturnCode read(uint16_t dataId, uint8_t* buffer, uint16_t& size) = 0;
 

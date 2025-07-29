@@ -200,7 +200,7 @@ void FlexCANDevice::stop()
 
     fpDevice->IFLAG1 = 0xffffffff;
 
-    fPowerManager.setWakeupSourceMonitoring(fConfig.wakeUp);
+    fPowerManager.setWakeupSourceMonitoring(fConfig.wakeUp, true, true);
 }
 
 void FlexCANDevice::mute()

@@ -74,13 +74,11 @@ public:
     /**
      * New Interface for  void setMonitorWakeUp(uint32_t wupLine, bool active);
      */
-    virtual void
-    setWakeupSourceMonitoring(uint32_t source, bool active = true, bool fallingEdge = true)
-        = 0;
+    virtual void setWakeupSourceMonitoring(uint32_t source, bool active, bool fallingEdge) = 0;
     /**
      * New Interface for  void setMonitorWakeUp(uint32_t wupLine, bool active);
      */
-    virtual void clearWakeupSourceMonitoring(uint32_t source) = 0;
+    virtual void clearWakeupSourceMonitoring(uint32_t source)                              = 0;
 
     virtual bool setWakeupDelegate(tCheckWakeupDelegate& delegate) = 0;
     /**

@@ -45,10 +45,10 @@ void SharedStreamEntryOutput<E, Timestamp>::outputEntry(
     char const* const str,
     ::util::format::IPrintfArgumentReader& argReader)
 {
-    ::util::stream::IOutputStream& outstream = _sharedstream.startOutput();
+    ::util::stream::IOutputStream& outstream = _sharedstream.startOutput(nullptr);
     _formatter.formatEntry(
         outstream, entryIndex, timestamp, componentInfo, levelInfo, str, argReader);
-    _sharedstream.endOutput();
+    _sharedstream.endOutput(nullptr);
 }
 
 } // namespace logger

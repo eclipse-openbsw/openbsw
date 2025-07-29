@@ -37,7 +37,7 @@ GroupCommand::execute(ConstString const& arguments, ISharedOutputStream* const s
 
 void GroupCommand::getHelp(IHelpCallback& callback) const
 {
-    callback.startCommand(getId(), getDescription());
+    callback.startCommand(getId(), getDescription(), false);
     for (GroupCommand::PlainCommandInfo const* info = getInfo() + 1; info->_id != nullptr; ++info)
     {
         callback.startCommand(info->_id, info->_description, true);

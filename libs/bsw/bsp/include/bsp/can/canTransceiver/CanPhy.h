@@ -30,10 +30,10 @@ public:
         CAN_PHY_MODE_ACTIVE    = 2
     };
 
-    virtual void init(uint32_t id = 0U)               = 0;
-    virtual bool setMode(Mode mode, uint32_t id = 0U) = 0;
-    virtual Mode getMode(uint32_t id = 0U);
-    virtual ErrorCode getPhyErrorStatus(uint32_t id = 0U) = 0;
+    virtual void init(uint32_t id)               = 0;
+    virtual bool setMode(Mode mode, uint32_t id) = 0;
+    virtual Mode getMode(uint32_t id);
+    virtual ErrorCode getPhyErrorStatus(uint32_t id) = 0;
 
 protected:
     Mode fMode = CAN_PHY_MODE_UNDEFINED;
@@ -52,8 +52,8 @@ public:
         return phyDummy;
     }
 
-    void init(uint32_t id = 0U) override;
-    bool setMode(Mode mode, uint32_t id = 0U) override;
+    void init(uint32_t id) override;
+    bool setMode(Mode mode, uint32_t id) override;
     ErrorCode getPhyErrorStatus(uint32_t id) override;
 };
 

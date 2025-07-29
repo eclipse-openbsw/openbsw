@@ -26,7 +26,7 @@ public:
     virtual ErrorCode getOutgoingDiagConnection(
         uint16_t targetId,
         OutgoingDiagConnection*& pConnection,
-        transport::TransportMessage* pRequestMessage = nullptr)
+        transport::TransportMessage* pRequestMessage)
         = 0;
 };
 
