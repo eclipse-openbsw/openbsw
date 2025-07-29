@@ -12,6 +12,7 @@ Coding Conventions
     files
     functions
     initialization
+    interfaces
     namespaces
     naming
     statements
