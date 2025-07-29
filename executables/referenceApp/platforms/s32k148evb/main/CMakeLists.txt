@@ -35,6 +35,7 @@ target_link_libraries(
             bspClock
             bspCore
             bspTja1101
+            bspUart
             canflex2Transceiver
             configuration
             ethConfiguration
