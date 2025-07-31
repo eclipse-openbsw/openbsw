@@ -52,11 +52,11 @@ public:
          *        a corresponding call to endCommand() is expected after all nested help
          *        information has been reported
          */
-        virtual void startCommand(char const* id, char const* description, bool end = false) = 0;
+        virtual void startCommand(char const* id, char const* description, bool end) = 0;
         /**
          * Called to indicate the end of the information started with startCommand().
          */
-        virtual void endCommand()                                                            = 0;
+        virtual void endCommand()                                                    = 0;
     };
 
     /**

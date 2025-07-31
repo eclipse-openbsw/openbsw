@@ -7,10 +7,10 @@ namespace util
 namespace format
 {
 SharedStringWriter::SharedStringWriter(::util::stream::ISharedOutputStream& strm)
-: StringWriter(strm.startOutput()), _stream(strm)
+: StringWriter(strm.startOutput(nullptr)), _stream(strm)
 {}
 
-SharedStringWriter::~SharedStringWriter() { _stream.endOutput(); }
+SharedStringWriter::~SharedStringWriter() { _stream.endOutput(nullptr); }
 
 } // namespace format
 } // namespace util

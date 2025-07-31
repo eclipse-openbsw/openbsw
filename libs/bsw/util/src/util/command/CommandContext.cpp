@@ -129,7 +129,7 @@ IOutputStream& CommandContext::startOutput(IContinuousUser* const /* user */)
 {
     if (_sharedOutputStream != nullptr)
     {
-        _activeStream = &_sharedOutputStream->startOutput();
+        _activeStream = &_sharedOutputStream->startOutput(nullptr);
         return *_activeStream;
     }
 
@@ -145,7 +145,7 @@ void CommandContext::endOutput(IContinuousUser* const user)
             user->endContinuousOutput(*_activeStream);
         }
         _activeStream = nullptr;
-        _sharedOutputStream->endOutput();
+        _sharedOutputStream->endOutput(nullptr);
     }
 }
 

@@ -16,7 +16,7 @@ TEST(CanPhyDummy, SimpleTest)
     canPhy.init();
     canPhy.setMode(CanPhy::CAN_PHY_MODE_STANDBY);
 
-    ASSERT_EQ(CanPhy::CAN_PHY_MODE_STANDBY, canPhy.getMode());
+    ASSERT_EQ(CanPhy::CAN_PHY_MODE_STANDBY, canPhy.getMode(0U));
     ASSERT_EQ(
         CanPhy::CAN_PHY_ERROR_UNSUPPORTED, canPhy.getPhyErrorStatus(DOES_NOT_HAVE_ANY_EFFECT));
 }

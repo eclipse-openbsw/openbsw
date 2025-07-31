@@ -37,14 +37,14 @@ public:
      * \return reference to the output stream to use.
      * \note this stream is only guaranteed to be valid up to the corresponding call to endOutput().
      */
-    virtual IOutputStream& startOutput(IContinuousUser* user = nullptr) = 0;
+    virtual IOutputStream& startOutput(IContinuousUser* user) = 0;
     /**
      * end the output previously started with startOutput.
      * \param user optional pointer to the user that has ended its output and wants to continue
      *        the output on the next call to startOutput. If another user allocates the output in
      *        between the method endContinuousOutput on the user interface will be called.
      */
-    virtual void endOutput(IContinuousUser* user = nullptr)             = 0;
+    virtual void endOutput(IContinuousUser* user)             = 0;
     /**
      * remove pending references to a continuous user. This method has to be called if a user object
      * gets invalid and there was a previous call to endOutput with the corresponding user. From
@@ -53,7 +53,7 @@ public:
      *
      * \param user reference to the user interface for which all references should be removed
      */
-    virtual void releaseContinuousUser(IContinuousUser& user)           = 0;
+    virtual void releaseContinuousUser(IContinuousUser& user) = 0;
 };
 
 /**

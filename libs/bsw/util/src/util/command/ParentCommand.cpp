@@ -77,7 +77,7 @@ ParentCommand::execute(ConstString const& arguments, ISharedOutputStream* const 
 // virtual
 void ParentCommand::getHelp(IHelpCallback& callback) const
 {
-    callback.startCommand(_id, _description);
+    callback.startCommand(_id, _description, false);
     for (auto const& _command : _commands)
     {
         _command.getHelp(callback);

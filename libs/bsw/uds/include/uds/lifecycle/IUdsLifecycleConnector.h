@@ -20,9 +20,9 @@ public:
         BOOTLOADER_UPDATE
     };
 
-    virtual bool isModeChangePossible() const                              = 0;
-    virtual bool requestPowerdown(bool rapid, uint8_t& time)               = 0;
-    virtual bool requestShutdown(ShutdownType type, uint32_t timeout = 0U) = 0;
+    virtual bool isModeChangePossible() const                         = 0;
+    virtual bool requestPowerdown(bool rapid, uint8_t& time)          = 0;
+    virtual bool requestShutdown(ShutdownType type, uint32_t timeout) = 0;
 };
 
 } // namespace uds

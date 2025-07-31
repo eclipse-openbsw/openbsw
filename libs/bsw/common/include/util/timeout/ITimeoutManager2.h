@@ -59,7 +59,7 @@ public:
      *          - TIMEOUT_ALREADY_SET: the given timeout was already in use
      *          - TIMEOUT_INVALID_VALUE: time == 0
      */
-    virtual ErrorCode set(AbstractTimeout& timeout, uint32_t time, bool cyclic = false) = 0;
+    virtual ErrorCode set(AbstractTimeout& timeout, uint32_t time, bool cyclic) = 0;
 
     /**
      * Cancels a given timeout.

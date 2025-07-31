@@ -23,9 +23,9 @@ class CanPhyCommon : public CanPhy
 public:
     CanPhyCommon() = default;
 
-    virtual void init(uint32_t /* id */ = 0U) {}
+    virtual void init(uint32_t /* id */) {}
 
-    virtual bool setMode(Mode mode, uint32_t /* id */ = 0U)
+    virtual bool setMode(Mode mode, uint32_t /* id */)
     {
         switch (mode)
         {
@@ -45,7 +45,7 @@ public:
         return true;
     }
 
-    virtual ErrorCode getPhyErrorStatus(uint32_t /* id */ = 0U) { return CAN_PHY_ERROR_NONE; }
+    virtual ErrorCode getPhyErrorStatus(uint32_t /* id */) { return CAN_PHY_ERROR_NONE; }
 
 private:
 };
