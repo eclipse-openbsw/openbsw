@@ -4,6 +4,7 @@
 
 #include "bsp/SystemTime.h"
 #include "bsp/eeprom/EepromConfiguration.h"
+#include "bsp/phy/phyConfiguration.h"
 #include "bsp/timer/ftmConfiguration.hpp"
 #include "clock/clockConfig.h"
 #include "commonDebug.h"
@@ -11,7 +12,10 @@
 #include "interrupts/disableEnableAllInterrupts.h"
 #include "io/Io.h"
 #include "mcu/mcu.h"
+#include "mdio/MdioTja1101.h"
 #include "sci/SciDevice.h"
+
+using namespace bios;
 
 extern "C"
 {
@@ -58,6 +62,10 @@ void StaticBsp::hwInit()
     _ftm4.start();
     _pwmSupport.start();
 
+    IP_MPU->RGDAAC[0] = IP_MPU->RGDAAC[0]
+                        | (MPU_RGDAAC_M3SM(3) /* 11b - Same as User mode defined in M3UM */
+                           | MPU_RGDAAC_M3UM(7) /* 111b - r/w/x */);
+
     _mode = _RUN_;
 }
 
@@ -75,20 +83,3 @@ void StaticBsp::cyclic()
 }
 
 bios::CanPhy& StaticBsp::getCanPhy() { return _commonCanPhy; }
-
-void StaticBsp::releasePins()
-{
-    (void)Io::resetConfig(Io::SPI1_SCK);
-    (void)Io::resetConfig(Io::SPI1_CSN1);
-    (void)Io::resetConfig(Io::SPI1_MOSI);
-    (void)Io::resetConfig(Io::SPI1_CSN0);
-    (void)Io::resetConfig(Io::SPI2_MOSI);
-    (void)Io::resetConfig(Io::SPI2_CSN0);
-    (void)Io::resetConfig(Io::SPI2_SCK);
-
-    (void)Io::resetConfig(Io::UART1_RX);
-
-    (void)Io::resetConfig(Io::canTx);
-    (void)Io::resetConfig(Io::LIN1_Tx);
-    (void)Io::resetConfig(Io::UART_TX);
-}

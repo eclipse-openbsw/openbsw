@@ -27,6 +27,10 @@
 #include "systems/DoCanSystem.h"
 #endif // PLATFORM_SUPPORT_CAN
 
+#ifdef PLATFORM_SUPPORT_ETHERNET
+#include "systems/EthernetSystem.h"
+#endif // PLATFORM_SUPPORT_ETHERNET
+
 #include <async/AsyncBinding.h>
 #include <lifecycle/LifecycleLogger.h>
 #include <lifecycle/LifecycleManager.h>
@@ -39,6 +43,15 @@
 namespace systems
 {
 extern ::can::ICanSystem& getCanSystem();
+} // namespace systems
+#endif
+
+#ifdef PLATFORM_SUPPORT_ETHERNET
+#include <systems/IEthernetDriverSystem.h>
+
+namespace systems
+{
+extern ::ethernet::IEthernetDriverSystem& getEthernetSystem();
 } // namespace systems
 #endif
 
@@ -80,6 +93,9 @@ LifecycleManager lifecycleManager{
 ::etl::typed_storage<::systems::SysAdminSystem> sysAdminSystem;
 ::etl::typed_storage<::systems::DemoSystem> demoSystem;
 ::etl::typed_storage<::systems::SafetySystem> safetySystem;
+#ifdef PLATFORM_SUPPORT_ETHERNET
+::etl::typed_storage<::systems::EthernetSystem> ethernetSystem;
+#endif
 
 #ifdef PLATFORM_SUPPORT_UDS
 ::etl::typed_storage<::transport::TransportSystem> transportSystem;
@@ -163,6 +179,11 @@ void run()
         "docan", doCanSystem.create(*transportSystem, ::systems::getCanSystem(), TASK_CAN), 5U);
 #endif
 
+#ifdef PLATFORM_SUPPORT_ETHERNET
+    lifecycleManager.addComponent(
+        "ethernet", ethernetSystem.create(TASK_ETHERNET, ::systems::getEthernetSystem()), 5U);
+#endif
+
     /* runlevel 6 */
 #ifdef PLATFORM_SUPPORT_UDS
     lifecycleManager.addComponent(
@@ -223,6 +244,9 @@ SysadminTask sysadminTask{"sysadmin"};
 
 using CanTask = AsyncAdapter::Task<TASK_CAN, 1024 * 2>;
 CanTask canTask{"can"};
+
+using EthernetTask = AsyncAdapter::Task<TASK_ETHERNET, 1024 * 2>;
+EthernetTask ethernetTask{"ethernet"};
 
 using BspTask = AsyncAdapter::Task<TASK_BSP, 1024 * 2>;
 BspTask bspTask{"bsp"};

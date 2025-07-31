@@ -6,3 +6,4 @@ add_subdirectory(bsp)
 
 # Other modules
 add_subdirectory(hardFaultHandler)
+add_subdirectory(lwipSysArch)

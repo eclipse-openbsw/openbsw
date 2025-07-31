@@ -23,6 +23,7 @@ enum
     TASK_BSP,
     TASK_UDS,
     TASK_DEMO,
+    TASK_ETHERNET,
     TASK_CAN,
     TASK_SYSADMIN,
     TASK_SAFETY,
@@ -38,5 +39,6 @@ enum
     ISR_GROUP_TEST = 0,
     // ------------
     ISR_GROUP_CAN,
+    ISR_GROUP_ENET,
     ISR_GROUP_COUNT,
 };

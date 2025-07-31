@@ -1,4 +1,4 @@
-// Copyright 2024 Accenture.
+// Copyright 2025 Accenture.
 
 #include "systems/DemoSystem.h"
 #ifdef PLATFORM_SUPPORT_IO
@@ -23,7 +23,13 @@
 namespace
 {
 constexpr uint32_t DEMO_CYCLE_TIME = 10;
-}
+#ifdef PLATFORM_SUPPORT_ETHERNET
+constexpr uint16_t RX_UDP_PORT       = 49444U;
+constexpr uint16_t RX_UDP_IPERF_PORT = 5001U;
+constexpr uint16_t RX_TCP_PORT       = 49555U;
+constexpr uint16_t RX_TCP_IPERF_PORT = 5001U;
+#endif // PLATFORM_SUPPORT_ETHERNET
+} // namespace
 
 #ifdef PLATFORM_SUPPORT_IO
 using bios::AnalogInput;
@@ -54,6 +60,18 @@ DemoSystem::DemoSystem(
 , _canCommand(_canSystem)
 , _asyncCommandWrapperForCanCommand(_canCommand, _context)
 #endif
+#ifdef PLATFORM_SUPPORT_ETHERNET
+, _udpEchoSocket()
+, _udpIperfSocket()
+, _echoServer(::ip::make_ip4(0), RX_UDP_PORT, _udpEchoSocket)
+, _udpIperfServer(::ip::make_ip4(0), RX_UDP_IPERF_PORT, _udpIperfSocket)
+, _tcpLoopbackSocket()
+, _tcpIperfSocket()
+, _tcpLoopbackListener(_tcpLoopbackSocket)
+, _loopbackServer(RX_TCP_PORT, _tcpLoopbackListener)
+, _tcpIperfListener(_tcpIperfSocket)
+, _iperfServer(RX_TCP_IPERF_PORT, _tcpIperfListener)
+#endif
 {
     setTransitionContext(context);
 }
@@ -65,6 +83,13 @@ void DemoSystem::run()
 #ifdef PLATFORM_SUPPORT_CAN
     _canDemoListener.run();
 #endif
+#ifdef PLATFORM_SUPPORT_ETHERNET
+    _echoServer.start();
+    _udpIperfServer.start();
+    _loopbackServer.accept();
+    _iperfServer.accept();
+#endif
+
     ::async::scheduleAtFixedRate(
         _context, *this, _timeout, DEMO_CYCLE_TIME, ::async::TimeUnit::MILLISECONDS);
     transitionDone();
@@ -74,6 +99,12 @@ void DemoSystem::shutdown()
 {
 #ifdef PLATFORM_SUPPORT_CAN
     _canDemoListener.shutdown();
+#endif
+#ifdef PLATFORM_SUPPORT_ETHERNET
+    _echoServer.stop();
+    _udpIperfServer.stop();
+    _loopbackServer.close();
+    _iperfServer.close();
 #endif
     _timeout.cancel();
     transitionDone();

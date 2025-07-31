@@ -51,8 +51,6 @@ Connections
    "PC6", "IN, ALT 2", "UART1_RX", "Serial Debugger Receiver"
    "PC7", "IN, ALT 2", "UART1_TX", ""
    "PC28", "IN", "EVAL_POTI_ADC", "ADC"
-   "PD6", "IN, ALT2", "UART_RX", ""
-   "PD7", "OUT, ALT2", "UART_TX", "Serial Debugger Transmitter"
    "PE4", "IN, ALT5", "canRx", ""
    "PE5", "OUT, ALT3", "canTx", ""
    "PE21", "OUT, GPIO", "EVAL_LED_RED", "Red LED"

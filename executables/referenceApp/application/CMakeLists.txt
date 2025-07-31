@@ -11,6 +11,9 @@ if (PLATFORM_SUPPORT_UDS)
     if (PLATFORM_SUPPORT_CAN)
         list(APPEND app.referenceAppExtraSources src/systems/DoCanSystem.cpp)
     endif ()
+    if (PLATFORM_SUPPORT_ETHERNET)
+        list(APPEND app.referenceAppExtraSources src/systems/EthernetSystem.cpp)
+    endif ()
 endif ()
 
 add_executable(
@@ -41,13 +44,16 @@ target_include_directories(app.referenceApp PRIVATE include)
 target_link_libraries(
     app.referenceApp
     PRIVATE asyncBinding
+            lwipcore
             asyncConsole
             bspMcu
             configuration
+            ethConfiguration
             etl
             lifecycle
             consoleCommands
             logger
+            printf
             loggerIntegration
             main
             stdioConsoleInput
@@ -69,4 +75,9 @@ endif ()
 if (PLATFORM_SUPPORT_CAN)
 
     target_link_libraries(app.referenceApp PRIVATE cpp2can docan)
+endif ()
+
+if (PLATFORM_SUPPORT_ETHERNET)
+
+    target_link_libraries(app.referenceApp PRIVATE cpp2ethernet lwipSocket)
 endif ()
