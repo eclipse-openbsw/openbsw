@@ -79,6 +79,8 @@ public:
     using TaskConfigsType = internal::TaskConfigHolder<FREERTOS_TASK_COUNT>;
     using TaskConfigType  = typename TaskConfigsType::TaskConfigType;
 
+    using StartAppFunctionType = ::etl::delegate<void()>;
+
     template<size_t StackSize>
     using Stack           = internal::Stack<StackSize>;
     using TaskInitializer = internal::TaskInitializer<AdapterType>;
@@ -121,10 +123,14 @@ public:
 
     static ContextType getCurrentTaskContext();
 
-    static void init();
-
-    /// Starts the FreeRTOS scheduler.
-    static void run();
+    /**
+     * Runs the adapter. All tasks are initialized and the scheduler is started.
+     * Once the async functions can safely be called the application defined startApp
+     * function will be called.
+     *
+     * \param startApp The function to start the application.
+     */
+    static void run(StartAppFunctionType startApp);
 
     static void runningHook();
 
@@ -208,6 +214,7 @@ private:
 
     static void TaskFunction(void* param);
 
+    static StartAppFunctionType _startApp;
     static TaskInitializer* _idleTaskInitializer;
     static TaskInitializer* _timerTaskInitializer;
     static ::etl::array<TaskContextType, TASK_COUNT> _taskContexts;
@@ -221,6 +228,8 @@ private:
 /**
  * Inline implementations.
  */
+template<class Binding>
+typename FreeRtosAdapter<Binding>::StartAppFunctionType FreeRtosAdapter<Binding>::_startApp;
 template<class Binding>
 typename FreeRtosAdapter<Binding>::TaskInitializer* FreeRtosAdapter<Binding>::_idleTaskInitializer
     = nullptr;
@@ -324,14 +333,10 @@ void FreeRtosAdapter<Binding>::initTask(TaskInitializer& initializer)
 }
 
 template<class Binding>
-void FreeRtosAdapter<Binding>::init()
+void FreeRtosAdapter<Binding>::run(StartAppFunctionType startApp)
 {
+    _startApp = startApp;
     TaskInitializer::run();
-}
-
-template<class Binding>
-void FreeRtosAdapter<Binding>::run()
-{
     vTaskStartScheduler();
 }
 
@@ -339,6 +344,7 @@ template<class Binding>
 void FreeRtosAdapter<Binding>::runningHook()
 {
     _taskContexts[TASK_IDLE].initTaskHandle(xTaskGetIdleTaskHandle());
+    _startApp();
 }
 
 template<class Binding>

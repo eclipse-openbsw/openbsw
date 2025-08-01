@@ -179,6 +179,8 @@ struct IdleTask : public TaskImpl<Adapter, Adapter::TASK_IDLE, StackSize>
     using TaskFunctionType = typename Adapter::TaskFunctionType;
     using TaskConfigType   = typename Adapter::TaskConfigType;
 
+    IdleTask(char const* name, TaskConfigType const& taskConfig = TaskConfigType());
+
     IdleTask(
         char const* name,
         TaskFunctionType taskFunction,
@@ -190,6 +192,9 @@ struct IdleTask<Adapter, 0U> : public TaskImpl<Adapter, Adapter::TASK_IDLE>
 {
     using TaskFunctionType = typename Adapter::TaskFunctionType;
     using TaskConfigType   = typename Adapter::TaskConfigType;
+
+    template<typename T>
+    IdleTask(char const* name, T& stack, TaskConfigType const& taskConfig = TaskConfigType());
 
     template<typename T>
     IdleTask(
@@ -305,9 +310,20 @@ TaskImpl<Adapter, Context, 0U>::TaskImpl(
 }
 
 template<class Adapter, size_t StackSize>
+IdleTask<Adapter, StackSize>::IdleTask(char const* const name, TaskConfigType const& taskConfig)
+: TaskImpl<Adapter, Adapter::TASK_IDLE, StackSize>(name, TaskFunctionType(), taskConfig)
+{}
+
+template<class Adapter, size_t StackSize>
 IdleTask<Adapter, StackSize>::IdleTask(
     char const* const name, TaskFunctionType const taskFunction, TaskConfigType const& taskConfig)
 : TaskImpl<Adapter, Adapter::TASK_IDLE, StackSize>(name, taskFunction, taskConfig)
+{}
+
+template<class Adapter>
+template<typename T>
+IdleTask<Adapter, 0U>::IdleTask(char const* const name, T& stack, TaskConfigType const& taskConfig)
+: TaskImpl<Adapter, Adapter::TASK_IDLE>(name, stack, TaskFunctionType(), taskConfig)
 {}
 
 template<class Adapter>

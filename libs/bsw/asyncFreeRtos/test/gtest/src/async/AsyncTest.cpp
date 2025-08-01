@@ -36,6 +36,7 @@ using AdapterType = AsyncBindingType::AdapterType;
 class AsyncTest : public Test
 {
 public:
+    MOCK_METHOD0(startApp, void());
     MOCK_METHOD1(taskFunction, void(AdapterType::TaskContextType& taskContext));
 
 protected:
@@ -61,8 +62,11 @@ TEST_F(AsyncTest, testExecuteAndScheduleCalls)
         xTaskCreateStatic(
             NotNull(), name, 256U / sizeof(StackType_t), NotNull(), 1U, NotNull(), NotNull()))
         .WillOnce(Return(&taskHandle));
+    EXPECT_CALL(_freeRtosMock, vTaskStartScheduler());
+
     AdapterType::Task<1U, 256U> task(name);
-    AdapterType::init();
+    AdapterType::run(
+        AdapterType::StartAppFunctionType::create<AsyncTest, &AsyncTest::startApp>(*this));
     {
         EXPECT_CALL(_freeRtosMock, xTaskNotify(&taskHandle, _, eSetBits));
         execute(1U, _runnableMock);
@@ -96,7 +100,9 @@ TEST_F(AsyncTest, testInitIdleTask)
     AdapterType::IdleTask<384U> idleTask(
         name, AdapterType::TaskFunctionType::create<AsyncTest, &AsyncTest::taskFunction>(*this));
     {
-        AdapterType::init();
+        EXPECT_CALL(_freeRtosMock, vTaskStartScheduler());
+        AdapterType::run(
+            AdapterType::StartAppFunctionType::create<AsyncTest, &AsyncTest::startApp>(*this));
         EXPECT_EQ(name, AdapterType::getTaskName(AdapterType::TASK_IDLE));
     }
     {
@@ -113,6 +119,7 @@ TEST_F(AsyncTest, testInitIdleTask)
     {
         uint32_t taskHandle = 12;
         EXPECT_CALL(_freeRtosMock, xTaskGetIdleTaskHandle()).WillOnce(Return(&taskHandle));
+        EXPECT_CALL(*this, startApp());
         asyncInitialized();
         ::estd::AssertHandlerScope scope(::estd::AssertExceptionHandler);
         EXPECT_THROW({ asyncGetTaskConfig(taskHandle); }, ::estd::assert_exception);
@@ -136,7 +143,9 @@ TEST_F(AsyncTest, testInitTimerTask)
     char const* name = "timer";
     AdapterType::TimerTask<768U> timerTask(name);
     {
-        AdapterType::init();
+        EXPECT_CALL(_freeRtosMock, vTaskStartScheduler());
+        AdapterType::run(
+            AdapterType::StartAppFunctionType::create<AsyncTest, &AsyncTest::startApp>(*this));
         EXPECT_EQ(name, AdapterType::getTaskName(AdapterType::TASK_TIMER));
     }
     {

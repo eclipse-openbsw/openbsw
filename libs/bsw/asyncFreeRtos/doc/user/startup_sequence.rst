@@ -13,12 +13,15 @@ Startup Sequence
   required by **FreeRTOS**. However, typically more tasks will be needed in the application,
   e.g. communication (CAN, UDS, Ethernet), monitoring, SWC scheduler,
   as well as lifecycle task managing desired order of modules start up and shut down.
-  This initialization is completed by calling ``async::FreeRtosAdapter::init()``,
-  which creates the corresponding **FreeRTOS** tasks.
 
 2. **Running the Adapter**
 
-  The application starts the **FreeRTOS** scheduler by calling ``async::FreeRtosAdapter::run()``.
+  Before performing a first call to one of the `async` functions the application needs to
+  start the **FreeRTOS** adapter by calling ``async::FreeRtosAdapter::run()``. All required
+  tasks are created and started by this call. The adapter will then start the **FreeRTOS** scheduler.
+  As soon as the scheduler is running the adapter performs a call to the application-defined
+  startApp function that was handed over on the call to ``async::FreeRtosAdapter::run()``.
+
   The `runnables` are executed according to their priority and designated time,
   whether immediate or scheduled.
   Refer to :ref:`async_execution` for more information about task priorities.
@@ -54,12 +57,13 @@ Typical routine for creating, initializing, and starting a task:
     // make decision about the stack size for the task:
     const uint32_t STACK_SIZE = 1024;
 
-    async::internal::Task<AsyncAdapter, TASK_DEMO, STACK_SIZE> demoTask{"demo"};
+    AsyncAdapter::Task<AsyncAdapter, TASK_DEMO, STACK_SIZE> demoTask{"demo"};
+
+    void startApp()
+    {
+        // application-defined callback that performs first calls to async functions
+    }
 
     ...
 
-    AsyncAdapter::init();
-
-    ...
-
-    AsyncAdapter::run();
+    AsyncAdapter::run(AsyncAdapter::StartAppFunctionType::create<&startApp>());

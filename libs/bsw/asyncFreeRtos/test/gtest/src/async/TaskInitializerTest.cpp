@@ -88,6 +88,22 @@ TEST_F(TaskInitializerTest, testIdleTask)
         EXPECT_EQ(7U, data._config);
         Mock::VerifyAndClearExpectations(&_adapterMock);
     }
+    // with allocated stack, without function
+    {
+        char const* name = "idle";
+        IdleTask<AdapterMock, 256> idleTask(name, 7U);
+
+        TaskInitializerData data;
+        EXPECT_CALL(_adapterMock, initTaskCall(_)).WillOnce(CopyTaskInitializerData(&data));
+        Cut::TaskInitializer::run();
+        EXPECT_EQ(name, data._name);
+        EXPECT_EQ(256, data._stack.size() * sizeof(StackType_t));
+        EXPECT_EQ(Cut::TaskFunctionType(), data._taskFunction);
+        EXPECT_TRUE(data._task != nullptr);
+        EXPECT_EQ(ContextType(AdapterMock::TASK_IDLE), data._context);
+        EXPECT_EQ(7U, data._config);
+        Mock::VerifyAndClearExpectations(&_adapterMock);
+    }
     // with input stack
     {
         char const* name = "idle";
@@ -101,6 +117,24 @@ TEST_F(TaskInitializerTest, testIdleTask)
         EXPECT_EQ(&stack[0], data._stack.data());
         EXPECT_EQ(sizeof(stack), data._stack.size() * sizeof(StackType_t));
         EXPECT_EQ(_taskFunction, data._taskFunction);
+        EXPECT_TRUE(data._task != nullptr);
+        EXPECT_EQ(ContextType(AdapterMock::TASK_IDLE), data._context);
+        EXPECT_EQ(7U, data._config);
+        Mock::VerifyAndClearExpectations(&_adapterMock);
+    }
+    // with input stack, without task function
+    {
+        char const* name = "idle";
+        Stack<256> stack;
+        IdleTask<AdapterMock> idleTask(name, stack, 7U);
+
+        TaskInitializerData data;
+        EXPECT_CALL(_adapterMock, initTaskCall(_)).WillOnce(CopyTaskInitializerData(&data));
+        Cut::TaskInitializer::run();
+        EXPECT_EQ(name, data._name);
+        EXPECT_EQ(&stack[0], data._stack.data());
+        EXPECT_EQ(sizeof(stack), data._stack.size() * sizeof(StackType_t));
+        EXPECT_EQ(Cut::TaskFunctionType(), data._taskFunction);
         EXPECT_TRUE(data._task != nullptr);
         EXPECT_EQ(ContextType(AdapterMock::TASK_IDLE), data._context);
         EXPECT_EQ(7U, data._config);
