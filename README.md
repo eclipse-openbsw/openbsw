@@ -52,7 +52,7 @@ allowing developers to get up and running quickly.
 | Logging | Diagnostic logging is implemented per software component. | Yes | Yes | |
 | CAN | Support for CAN bus communication | If ``SocketCAN`` is supported | Yes | Since Release 0.1 |
 | Sensors and actuators integration | ADC, PWM & GPIO | | Yes | |
-| UDP, DoCAN | Diagnostics over CAN | If ``SocketCAN`` is supported | Yes | Since Release 0.1 |
+| UDS, DoCAN | Diagnostics over CAN | If ``SocketCAN`` is supported | Yes | Since Release 0.1 |
 
 ## Roadmap
 
