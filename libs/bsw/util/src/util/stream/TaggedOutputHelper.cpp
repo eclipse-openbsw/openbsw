@@ -42,7 +42,7 @@ void TaggedOutputHelper::writeBytes(IOutputStream& strm, ::etl::span<uint8_t con
 void TaggedOutputHelper::writeBytes(IOutputStream& strm, ::etl::string_view const& view)
 {
     ::etl::span<uint8_t const> buffer{reinterpret_cast<uint8_t const*>(view.begin()), view.size()};
-    return writeBytes(strm, buffer);
+    writeBytes(strm, buffer);
 }
 
 void TaggedOutputHelper::endLine(IOutputStream& strm)
