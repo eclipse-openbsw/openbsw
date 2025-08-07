@@ -380,23 +380,16 @@ FlexCANDevice::transmit(CANFrame const& frame, uint8_t bufIdx, bool txInterruptN
                 messageBuffer(bufIdx).ID.B.ID_STD = CanId::rawId(frame.getId());
                 messageBuffer(bufIdx).FLAGS.B.IDE = 0;
             }
-            if (frame.getPayloadLength() >= 8)
+            ::etl::byte_stream_reader byte_stream{frame.getPayload(), 8, etl::endian::big};
+            messageBuffer(bufIdx).DATA.W[0]   = byte_stream.read_unchecked<uint32_t>();
+            messageBuffer(bufIdx).DATA.W[1]   = byte_stream.read_unchecked<uint32_t>();
+            messageBuffer(bufIdx).FLAGS.B.DLC = frame.getPayloadLength();
+            if (txInterruptNeeded)
             {
-                ::etl::byte_stream_reader byte_stream{frame.getPayload(), 8, etl::endian::big};
-                messageBuffer(bufIdx).DATA.W[0]   = byte_stream.read_unchecked<uint32_t>();
-                messageBuffer(bufIdx).DATA.W[1]   = byte_stream.read_unchecked<uint32_t>();
-                messageBuffer(bufIdx).FLAGS.B.DLC = frame.getPayloadLength();
-                if (txInterruptNeeded)
-                {
-                    enableTransmitInterrupt();
-                }
-                messageBuffer(bufIdx).FLAGS.B.CODE = CANTxBuffer::CODE_TRANSMIT;
-                return ICanTransceiver::ErrorCode::CAN_ERR_OK;
+                enableTransmitInterrupt();
             }
-            else
-            {
-                return ICanTransceiver::ErrorCode::CAN_ERR_TX_FAIL;
-            }
+            messageBuffer(bufIdx).FLAGS.B.CODE = CANTxBuffer::CODE_TRANSMIT;
+            return ICanTransceiver::ErrorCode::CAN_ERR_OK;
         }
         else
         {
