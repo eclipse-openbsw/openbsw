@@ -132,6 +132,12 @@ public:
      */
     static void defaultTaskFunction(TaskContext<Binding>& taskContext);
 
+    /**
+     * Default function to be executed by the idle task.
+     * \param taskContext The context in which the task executes.
+     */
+    static void defaultIdleFunction(TaskContext<Binding>& taskContext);
+
 private:
     friend class EventPolicy<TaskContext<Binding>, 0U>;
     friend class EventPolicy<TaskContext<Binding>, 1U>;
@@ -184,7 +190,9 @@ void TaskContext<Binding>::initTask(
 {
     _context      = context;
     _name         = name;
-    _taskFunction = taskFunction;
+    _taskFunction = taskFunction.is_valid()
+                        ? taskFunction
+                        : TaskFunctionType::template create<&TaskContext::defaultIdleFunction>();
 }
 
 template<class Binding>
@@ -376,6 +384,12 @@ template<class Binding>
 void TaskContext<Binding>::defaultTaskFunction(TaskContext<Binding>& taskContext)
 {
     taskContext.dispatch();
+}
+
+template<class Binding>
+void TaskContext<Binding>::defaultIdleFunction(TaskContext<Binding>& taskContext)
+{
+    taskContext.dispatchWhileWork();
 }
 
 template<class Binding>

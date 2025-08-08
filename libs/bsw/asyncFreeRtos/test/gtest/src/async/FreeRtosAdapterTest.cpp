@@ -30,6 +30,7 @@ class FreeRtosAdapterTest : public Test
 public:
     using CutType = FreeRtosAdapter<TestBinding>;
 
+    MOCK_METHOD0(startApp, void());
     MOCK_METHOD1(taskFunction, void(CutType::TaskContextType& taskContext));
 
 protected:
@@ -50,14 +51,17 @@ TEST_F(FreeRtosAdapterTest, testCreateTask)
     {
         char const* name = "test";
         CutType::Task<1U, 256> task(name);
-
         uint32_t taskHandle = 12;
+
+        Sequence s;
         EXPECT_CALL(
             _freeRtosMock,
             xTaskCreateStatic(
                 NotNull(), name, 256U / sizeof(StackType_t), NotNull(), 1U, NotNull(), NotNull()))
             .WillOnce(Return(&taskHandle));
-        CutType::init();
+        EXPECT_CALL(_freeRtosMock, vTaskStartScheduler());
+        CutType::run(CutType::StartAppFunctionType::
+                         create<FreeRtosAdapterTest, &FreeRtosAdapterTest::startApp>(*this));
     }
     {
         char const* name = "test2";
@@ -72,7 +76,9 @@ TEST_F(FreeRtosAdapterTest, testCreateTask)
             xTaskCreateStatic(
                 NotNull(), name, 512U / sizeof(StackType_t), NotNull(), 2U, NotNull(), NotNull()))
             .WillOnce(Return(&taskHandle));
-        CutType::init();
+        EXPECT_CALL(_freeRtosMock, vTaskStartScheduler());
+        CutType::run(CutType::StartAppFunctionType::
+                         create<FreeRtosAdapterTest, &FreeRtosAdapterTest::startApp>(*this));
         {
             // Test get name
             EXPECT_EQ(name, CutType::getTaskName(2U));
@@ -99,14 +105,16 @@ TEST_F(FreeRtosAdapterTest, testStackUsage)
             name3,
             CutType::TaskFunctionType::
                 create<FreeRtosAdapterTest, &FreeRtosAdapterTest::taskFunction>(*this));
-
         uint32_t taskHandle = 13U;
+
         EXPECT_CALL(
             _freeRtosMock,
             xTaskCreateStatic(
                 NotNull(), name, 128U / sizeof(StackType_t), NotNull(), 2U, NotNull(), NotNull()))
             .WillOnce(Return(&taskHandle));
-        CutType::init();
+        EXPECT_CALL(_freeRtosMock, vTaskStartScheduler());
+        CutType::run(CutType::StartAppFunctionType::
+                         create<FreeRtosAdapterTest, &FreeRtosAdapterTest::startApp>(*this));
         {
             EXPECT_EQ(name, CutType::getTaskName(2U));
 
@@ -216,7 +224,9 @@ TEST_F(FreeRtosAdapterTest, testInterruptScopeNoYield)
 TEST_F(FreeRtosAdapterTest, testRun)
 {
     EXPECT_CALL(_freeRtosMock, vTaskStartScheduler());
-    CutType::run();
+    CutType::run(
+        CutType::StartAppFunctionType::create<FreeRtosAdapterTest, &FreeRtosAdapterTest::startApp>(
+            *this));
 }
 
 /**
@@ -234,7 +244,10 @@ TEST_F(FreeRtosAdapterTest, testExecuteAndScheduleCalls)
         xTaskCreateStatic(
             NotNull(), name, 256U / sizeof(StackType_t), NotNull(), 1U, NotNull(), NotNull()))
         .WillOnce(Return(&taskHandle));
-    CutType::init();
+    EXPECT_CALL(_freeRtosMock, vTaskStartScheduler());
+    CutType::run(
+        CutType::StartAppFunctionType::create<FreeRtosAdapterTest, &FreeRtosAdapterTest::startApp>(
+            *this));
     {
         EXPECT_CALL(_freeRtosMock, xTaskNotify(&taskHandle, _, eSetBits));
         CutType::execute(1U, _runnableMock);
