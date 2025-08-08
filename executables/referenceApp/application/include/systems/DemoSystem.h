@@ -14,6 +14,19 @@
 #include <systems/ICanSystem.h>
 #endif
 
+#ifdef PLATFORM_SUPPORT_ETHERNET
+#include <lwipSocket/netif/LwipNetworkInterface.h>
+#include <lwipSocket/tcp/LwipServerSocket.h>
+#include <lwipSocket/tcp/LwipSocket.h>
+#include <lwipSocket/udp/LwipDatagramSocket.h>
+#include <tcp/socket/AbstractServerSocket.h>
+#include <tcp/util/LoopbackTestServer.h>
+#include <tcp/util/TcpIperf2Server.h>
+#include <udp/socket/AbstractDatagramSocket.h>
+#include <udp/util/UdpEchoTestServer.h>
+#include <udp/util/UdpIperf2Server.h>
+#endif
+
 namespace systems
 {
 
@@ -51,6 +64,20 @@ private:
     ::can::CanDemoListener _canDemoListener;
     ::can::CanCommand _canCommand;
     ::console::AsyncCommandWrapper _asyncCommandWrapperForCanCommand;
+#endif
+
+#ifdef PLATFORM_SUPPORT_ETHERNET
+    ::udp::LwipDatagramSocket _udpEchoSocket;
+    ::udp::LwipDatagramSocket _udpIperfSocket;
+    ::udp::UdpEchoTestServer _echoServer;
+    ::udp::UdpIperf2Server _udpIperfServer;
+
+    ::tcp::LwipSocket _tcpLoopbackSocket;
+    ::tcp::LwipSocket _tcpIperfSocket;
+    ::tcp::LoopbackTestServer _tcpLoopbackListener;
+    ::tcp::LwipServerSocket _loopbackServer;
+    ::tcp::TcpIperf2Server _tcpIperfListener;
+    ::tcp::LwipServerSocket _iperfServer;
 #endif
 };
 

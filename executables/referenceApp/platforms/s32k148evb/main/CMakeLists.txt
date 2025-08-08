@@ -3,6 +3,7 @@ add_library(
     src/bsp/bootHeader.S
     src/bsp/startUp.S
     src/os/isr/isr_can.cpp
+    src/os/isr/isr_enet.cpp
     src/os/isr/isr_erm.cpp
     src/os/isr/isr_ftfc.cpp
     src/os/isr/isr_sys.cpp
@@ -10,8 +11,13 @@ add_library(
 
 target_link_libraries(startUp PRIVATE bspMcu common hardFaultHandler)
 
-add_library(main src/systems/BspSystem.cpp src/lifecycle/StaticBsp.cpp
-                 src/systems/CanSystem.cpp src/main.cpp)
+add_library(
+    main
+    src/systems/BspSystem.cpp
+    src/lifecycle/StaticBsp.cpp
+    src/systems/S32K148EvbEthernetSystem.cpp
+    src/systems/CanSystem.cpp
+    src/main.cpp)
 
 target_include_directories(main PUBLIC include)
 
@@ -21,9 +27,11 @@ target_link_libraries(
             bsp
             bspClock
             bspCore
+            bspTja1101
             bspMcuWatchdog
             canflex2Transceiver
             configuration
+            ethConfiguration
             etl
             freeRtosCm4SysTick
             lifecycle

@@ -74,9 +74,14 @@ If you examine that and the scripts it references you will find that it expects 
     as the name of the `SocketCAN` interface in use,
     so this must be set up for tests involving `CAN` to pass.
 
+3. Need to have tap0 set up
+
+    The posix build uses a ethernet interface named tap0.
+    Run ./tools/enet/bring-up-ethernet.sh before pytest to set up tap0.
+
 ### Running `pytest` with `--target=s32k148`
 
-For this option... 
+For this option...
 
 1. Need to have built an image for the `s32k148` target
 
@@ -128,7 +133,7 @@ To run all tests found in one file on all targets (for which `target_*.toml` fil
 ```
 pytest --target=* can/test_can.py
 ```
-To run all test files in the `uds` subdirectory, but ignore one, for `s32k148`... 
+To run all test files in the `uds` subdirectory, but ignore one, for `s32k148`...
 ```
 pytest --target=s32k148 --ignore=uds/test_udsToolRDBI.py uds/
 ```
@@ -188,6 +193,15 @@ Note that...
   If this is set then the `[pty_forwarder]` section is required.
 * The method `CaptureSerial.send_command()` will only work if `send_command_expected` and `send_command_timeout` are defined
   whereas `send_command_max_retries` is optional.
+
+### `[eth]`
+Entries under this heading are used to configure ethernet ip.
+
+eg.
+```
+[eth]
+ip_address = "192.168.0.200"
+```
 
 ### [pty_forwarder]
 If `port = "PTY_FORWARDER"` in the `[serial]` section then this section is required and must have the entry `ext_link`

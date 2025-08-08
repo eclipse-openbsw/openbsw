@@ -42,6 +42,10 @@ class TargetSession:
         stop_target_process(self.target_name, force=True)
         start_target_process(self.target_name)
 
+    def target_ip_address(self):
+        """Provides Target IP Address"""
+        return (self.target_info.eth["ip_address"])
+
     def can_bus(self):
         """This can be called from a test to get a SocketcanBus object
 
@@ -96,7 +100,7 @@ def target_session(request):
     session.stop()
 
 
-@pytest.fixture(scope='session', autouse=True)
+@pytest.fixture(scope="session", autouse=True)
 def once_per_pytest_run():
     """This is used once for the whole pytest run to provide opportunity
     for setup before all tests and teardown after all tests.
@@ -134,7 +138,7 @@ def pytest_addoption(parser):
 def pytest_configure(config):
     if not TargetInfo.by_name:
         TargetInfo.load(config.getoption("target"),
-                        config.getoption('--no-restart'))
+                        config.getoption("--no-restart"))
 
 
 def pytest_generate_tests(metafunc):

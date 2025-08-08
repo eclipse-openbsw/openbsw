@@ -15,6 +15,7 @@ project(
     LANGUAGES CXX C ASM)
 
 option(PLATFORM_SUPPORT_CAN "Turn CAN support on or off" OFF)
+option(PLATFORM_SUPPORT_ETHERNET "Turn ethernet support on or off" OFF)
 option(PLATFORM_SUPPORT_IO "Turn IO support on or off" OFF)
 option(PLATFORM_SUPPORT_UDS "Turn UDS support on or off" OFF)
 
@@ -56,3 +57,4 @@ add_subdirectory(configuration)
 add_subdirectory(consoleCommands)
 add_subdirectory(udsConfiguration)
 add_subdirectory(transportConfiguration)
+add_subdirectory(lwipConfiguration)

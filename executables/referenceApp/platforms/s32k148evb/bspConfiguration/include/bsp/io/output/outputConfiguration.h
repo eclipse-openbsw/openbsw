@@ -8,6 +8,8 @@ Output::OutputConfig const Output::sfOutputConfigurations[1][Output::NUMBER_OF_I
     = {{
         /*  0 */ {Io::EVAL_DO_1, Io::LOW, Io::HIGH_ACTIVE},
         /*  1 */ {Io::EVAL_LED_RED, Io::HIGH, Io::HIGH_ACTIVE},
+        /*  2 */ {Io::TJA_MDIO, Io::HIGH, Io::HIGH_ACTIVE},
+        /*  3 */ {Io::TJA_MDC, Io::HIGH, Io::HIGH_ACTIVE},
     }};
 
 Output::OutputConfig const* Output::getConfiguration(uint8_t /* hardwareVersion */)
@@ -21,6 +23,8 @@ enum OutputId
 {
     /*  0 */ EVAL_DO_1,
     /*  1 */ EVAL_LED_RED,
+    /*  2 */ TJA_MDIO,
+    /*  3 */ TJA_MDC,
 
     /* xx */ NUMBER_OF_INTERNAL_OUTPUTS,
 

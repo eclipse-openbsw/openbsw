@@ -85,6 +85,9 @@ void disablePeripheralClocks(void)
 #ifdef PCC_CMU1_INDEX
     PCC->PCCn[PCC_CMU1_INDEX] = 0U;
 #endif
+#ifdef PCC_ENET_INDEX
+    PCC->PCCn[PCC_ENET_INDEX] = 0U;
+#endif
 }
 
 void enablePeripheralClocks(void)
@@ -170,6 +173,10 @@ void enablePeripheralClocks(void)
 #endif
 #ifdef PCC_CMU1_INDEX
     PCC->PCCn[PCC_CMU1_INDEX] = 0xC0000000U;
+#endif
+#ifdef PCC_ENET_INDEX
+    PCC->PCCn[PCC_ENET_INDEX] = CLOCK_SOURCE_ENET;
+    PCC->PCCn[PCC_ENET_INDEX] = PCC->PCCn[PCC_ENET_INDEX] | 0xC0000000U;
 #endif
 }
 

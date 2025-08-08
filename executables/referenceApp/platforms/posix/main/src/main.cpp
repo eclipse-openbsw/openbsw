@@ -16,6 +16,10 @@
 extern void terminal_setup(void);
 extern void terminal_cleanup(void);
 extern void main_thread_setup(void);
+#ifdef PLATFORM_SUPPORT_ETHERNET
+#include "systems/TapEthernetSystem.h"
+#endif // PLATFORM_SUPPORT_ETHERNET
+
 extern void app_main();
 
 namespace platform
@@ -26,6 +30,10 @@ StaticBsp staticBsp;
 ::etl::typed_storage<::systems::CanSystem> canSystem;
 #endif // PLATFORM_SUPPORT_CAN
 
+#ifdef PLATFORM_SUPPORT_ETHERNET
+::etl::typed_storage<::systems::TapEthernetSystem> tapEthernetSystem;
+#endif // PLATFORM_SUPPORT_ETHERNET
+
 void platformLifecycleAdd(::lifecycle::LifecycleManager& lifecycleManager, uint8_t const level)
 {
     if (level == 2)
@@ -33,6 +41,9 @@ void platformLifecycleAdd(::lifecycle::LifecycleManager& lifecycleManager, uint8
 #ifdef PLATFORM_SUPPORT_CAN
         lifecycleManager.addComponent("can", canSystem.create(TASK_CAN), level);
 #endif // PLATFORM_SUPPORT_CAN
+#ifdef PLATFORM_SUPPORT_ETHERNET
+        lifecycleManager.addComponent("eth", tapEthernetSystem.create(TASK_ETHERNET), level);
+#endif // PLATFORM_SUPPORT_ETHERNET
     }
 }
 
@@ -44,6 +55,18 @@ namespace systems
 ::can::ICanSystem& getCanSystem() { return *::platform::canSystem; }
 } // namespace systems
 #endif // PLATFORM_SUPPORT_CAN
+
+#ifdef PLATFORM_SUPPORT_ETHERNET
+namespace systems
+{
+::ethernet::IEthernetDriverSystem& getEthernetSystem() { return *::platform::tapEthernetSystem; }
+} // namespace systems
+#endif // PLATFORM_SUPPORT_ETHERNET
+
+extern "C"
+{
+void putchar_(char character) { putchar(character); }
+}
 
 void intHandler(int /* sig */)
 {
