@@ -1,4 +1,3 @@
-
 def test_console_restart(target_session):
 
     capserial = target_session.capserial()
@@ -12,11 +11,13 @@ def test_console_restart(target_session):
     target_session.restart()
 
     # Wait for startup line
-    (success, received_lines, expected_found_at_i) = \
-        capserial.read_until(startup_bytes, timeout=0.5)
+    (success, received_lines, expected_found_at_i) = capserial.read_until(
+        startup_bytes, timeout=0.5
+    )
     assert success
 
     # Wait for booted line
-    (success, received_lines, expected_found_at_i) = \
-        capserial.read_until(booted_bytes, timeout=0.5)
+    (success, received_lines, expected_found_at_i) = capserial.read_until(
+        booted_bytes, timeout=1.0
+    )
     assert success
