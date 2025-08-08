@@ -1,0 +1,462 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../static/css/style.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <title>Symbol - puncover</title>
+    
+</head>
+<body>
+    <div class="container" id="content">
+        <div class="page-header">
+            <nav class="navbar navbar-default" role="navigation">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="../../index.html">
+                    Puncover
+                  </a>
+                </div>
+              </div>
+            </nav>
+          
+        </div>
+        <div id="inner_content">
+        
+    
+    <ol class="breadcrumb folders">
+        
+        <li class="active"><a href="../../unknown.html">&lt;unknown&gt;</a>
+            </li>
+
+        
+        <li class="active">&lt;unknown&gt;
+            </li>
+        
+    </ol>
+
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <th>Function</th>
+                <td colspan="5">
+                    <span class="icon-function">_raise_r</span>
+                </td>
+            </tr>
+
+            <tr>
+                <th rowspan="2"></th>
+                <th>Address</th>
+                <th>Remarks</th>
+                <th>Stack</th>
+                <th>Code</th>
+                <th>Static</th>
+            </tr>
+            <tr>
+                <td>0x000004f4</td>
+                <td>
+    
+    
+</td>
+                <td></td>
+                <td>80</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th>Callers (1)</th>
+                <td colspan="5">
+                
+                    <a href="./090245289ce5a188ea08adfb0defd1cb.html">raise (28)</a>
+                    
+                
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Callees (2,
+                            <span title="sum of used bytes by all callees">
+                            Σ=40
+                            </span>
+                        )
+                    
+                </th>
+                <td colspan="5">
+                
+                    <a href="./1d6cffd80d8fed8bfc040bd7634e38dc.html">_getpid_r (4)</a>
+                    
+                        ,
+                    
+                
+                    <a href="./8ad9506fbb324fdfdfd9a724401b249a.html">_kill_r (36)</a>
+                    
+                
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    
+    <pre><a href="./21b275ab62804912a3beb86cb13c61c8.html">__libc_init_array (72)</a></pre>
+    
+
+    <pre>
+
+    _raise_r():
+
+     4f4:	291f      	cmp	r1, #31
+
+     4f6:	b538      	push	{r3, r4, r5, lr}
+
+     4f8:	4604      	mov	r4, r0
+
+     4fa:	460d      	mov	r5, r1
+
+     4fc:	d904      	bls.n	508 <<a href="./71b601be7dfece0450fcb9022fde329b.html">_raise_r</a>+0x14>
+
+     4fe:	2316      	movs	r3, #22
+
+     500:	6003      	str	r3, [r0, #0]
+
+     502:	f04f 30ff 	mov.w	r0, #4294967295	; 0xffffffff
+
+     506:	bd38      	pop	{r3, r4, r5, pc}
+
+     508:	6c42      	ldr	r2, [r0, #68]	; 0x44
+
+     50a:	b112      	cbz	r2, 512 <<a href="./71b601be7dfece0450fcb9022fde329b.html">_raise_r</a>+0x1e>
+
+     50c:	f852 3021 	ldr.w	r3, [r2, r1, lsl #2]
+
+     510:	b94b      	cbnz	r3, 526 <<a href="./71b601be7dfece0450fcb9022fde329b.html">_raise_r</a>+0x32>
+
+     512:	4620      	mov	r0, r4
+
+     514:	f000 f816 	bl	544 <<a href="./1d6cffd80d8fed8bfc040bd7634e38dc.html">_getpid_r</a>>
+
+     518:	462a      	mov	r2, r5
+
+     51a:	4601      	mov	r1, r0
+
+     51c:	4620      	mov	r0, r4
+
+     51e:	e8bd 4038 	ldmia.w	sp!, {r3, r4, r5, lr}
+
+     522:	f000 b83d 	b.w	5a0 <<a href="./8ad9506fbb324fdfdfd9a724401b249a.html">_kill_r</a>>
+
+     526:	2b01      	cmp	r3, #1
+
+     528:	d00a      	beq.n	540 <<a href="./71b601be7dfece0450fcb9022fde329b.html">_raise_r</a>+0x4c>
+
+     52a:	1c59      	adds	r1, r3, #1
+
+     52c:	d103      	bne.n	536 <<a href="./71b601be7dfece0450fcb9022fde329b.html">_raise_r</a>+0x42>
+
+     52e:	2316      	movs	r3, #22
+
+     530:	6003      	str	r3, [r0, #0]
+
+     532:	2001      	movs	r0, #1
+
+     534:	e7e7      	b.n	506 <<a href="./71b601be7dfece0450fcb9022fde329b.html">_raise_r</a>+0x12>
+
+     536:	2400      	movs	r4, #0
+
+     538:	f842 4025 	str.w	r4, [r2, r5, lsl #2]
+
+     53c:	4628      	mov	r0, r5
+
+     53e:	4798      	blx	r3
+
+     540:	2000      	movs	r0, #0
+
+     542:	e7e0      	b.n	506 <<a href="./71b601be7dfece0450fcb9022fde329b.html">_raise_r</a>+0x12>
+
+    </pre>
+
+    
+    <pre><a href="./1d6cffd80d8fed8bfc040bd7634e38dc.html">_getpid_r (4)</a></pre>
+    
+
+    
+        <h1>Stack Worst-Case Scenarios</h1>
+        
+            <p>No callees for this function.</p>
+        
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 128</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 1,242</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    1,242
+                    
+                    
+                </td>
+                <td class="col_size">80</td>
+                <td><a href="./71b601be7dfece0450fcb9022fde329b.html" class="icon-function">_raise_r</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    1,162
+                    
+                    
+                </td>
+                <td class="col_size">28</td>
+                <td><a href="./090245289ce5a188ea08adfb0defd1cb.html" class="icon-function">raise</a></td>
+            </tr>
+        
+            <tr>
+                <th>3</th>
+                <td class="col_size">
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    1,134
+                    
+                    
+                </td>
+                <td class="col_size">14</td>
+                <td><a href="./5bb94a1c12413a2e5d14deabab29f2aa.html" class="icon-function">abort</a></td>
+            </tr>
+        
+            <tr>
+                <th>4</th>
+                <td class="col_size">
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    1,120
+                    
+                    
+                </td>
+                <td class="col_size">60</td>
+                <td><a href="./18989ee4aad345b8b598568f851bfc76.html" class="icon-function">__assert_func</a></td>
+            </tr>
+        
+            <tr>
+                <th>5</th>
+                <td class="col_size">
+                    
+                    128
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                24 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    1,060
+                    
+                    
+                </td>
+                <td class="col_size">192</td>
+                <td><a href="../../home/runner/work/openbsw/openbsw/platforms/s32k1xx/bsp/bspFlexCan/src/can/FlexCANDevice.cpp/b15b0010147a9c97308f4e1a02c92279.html" class="icon-function">bios::FlexCANDevice::FlexCANDevice(bios::FlexCANDevice::Config const&amp;, bios::CanPhy&amp;, etl::delegate&lt;void ()&gt;, bios::IEcuPowerStateController&amp;)</a></td>
+            </tr>
+        
+            <tr>
+                <th>6</th>
+                <td class="col_size">
+                    
+                    104
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                32 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    868
+                    
+                    
+                </td>
+                <td class="col_size">212</td>
+                <td><a href="../../home/runner/work/openbsw/openbsw/platforms/s32k1xx/bsp/canflex2Transceiver/src/can/transceiver/canflex2/CanFlex2Transceiver.cpp/7cb8fadcdab70f36cecf385ce3259a07.html" class="icon-function">bios::CanFlex2Transceiver::CanFlex2Transceiver(unsigned char, unsigned char, bios::FlexCANDevice::Config const&amp;, bios::CanPhy&amp;, bios::IEcuPowerStateController&amp;)</a></td>
+            </tr>
+        
+            <tr>
+                <th>7</th>
+                <td class="col_size">
+                    
+                    72
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                32 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    656
+                    
+                    
+                </td>
+                <td class="col_size">100</td>
+                <td><a href="../../home/runner/work/openbsw/openbsw/executables/referenceApp/platforms/s32k148evb/main/src/systems/CanSystem.cpp/2e1c47610716b2f99c81f4d19b0a6836.html" class="icon-function">systems::CanSystem::CanSystem(unsigned char, StaticBsp&amp;)</a></td>
+            </tr>
+        
+            <tr>
+                <th>8</th>
+                <td class="col_size">
+                    
+                    40
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                16 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    556
+                    
+                    
+                </td>
+                <td class="col_size">104</td>
+                <td><a href="../../home/runner/work/openbsw/openbsw/executables/referenceApp/platforms/s32k148evb/main/src/main.cpp/97ca1c6b6c6550542b317e127d620f42.html" class="icon-function">platform::platformLifecycleAdd(lifecycle::LifecycleManager&amp;, unsigned char)</a></td>
+            </tr>
+        
+            <tr>
+                <th>9</th>
+                <td class="col_size">
+                    
+                    24
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                16 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    452
+                    
+                    
+                </td>
+                <td class="col_size">372</td>
+                <td><a href="../../home/runner/work/openbsw/openbsw/executables/referenceApp/application/src/app/app.cpp/f0c3e37b78904f0cb22bd585a8fa9842.html" class="icon-function">app::run()</a></td>
+            </tr>
+        
+            <tr>
+                <th>10</th>
+                <td class="col_size">
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    80
+                    
+                    
+                </td>
+                <td class="col_size">4</td>
+                <td><a href="../../home/runner/work/openbsw/openbsw/executables/referenceApp/application/src/main.cpp/5ca4565b9d11184b1d3b82aa1ebe323f.html" class="icon-function">app_main()</a></td>
+            </tr>
+        
+            <tr>
+                <th>11</th>
+                <td class="col_size">
+                </td>
+                <td class="col_size">
+            
+                8 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">76</td>
+                <td><a href="../../home/runner/work/openbsw/openbsw/executables/referenceApp/platforms/s32k148evb/main/src/main.cpp/fad58de7366495db4650cfefac2fcd61.html" class="icon-function">main</a></td>
+            </tr>
+        
+        </tbody>
+        
+    </table>
+        
+    
+
+
+        </div>
+    <div id="page-footer">
+        <hr>
+        
+            brought to you with 💖
+            by <a href="https://twitter.com/hbehrens">Heiko Behrens</a>
+            <span class="secondary">– MIT license, copyright © 2014-2025</span>
+        
+    </div>
+    </div>
+</body>
+</html>
