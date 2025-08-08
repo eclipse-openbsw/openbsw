@@ -13,6 +13,11 @@
 #include <console/AsyncCommandWrapper.h>
 #include <systems/ICanSystem.h>
 #endif
+#ifdef PLATFORM_SUPPORT_STORAGE
+#include <storage/IStorage.h>
+#include <storage/StorageJob.h>
+#include <util/buffer/LinkedBuffer.h>
+#endif
 
 namespace systems
 {
@@ -28,6 +33,10 @@ public:
 #ifdef PLATFORM_SUPPORT_CAN
         ,
         ::can::ICanSystem& canSystem
+#endif
+#ifdef PLATFORM_SUPPORT_STORAGE
+        ,
+        ::storage::IStorage& storage
 #endif
     );
 
@@ -51,6 +60,28 @@ private:
     ::can::CanDemoListener _canDemoListener;
     ::can::CanCommand _canCommand;
     ::console::AsyncCommandWrapper _asyncCommandWrapperForCanCommand;
+#endif
+#ifdef PLATFORM_SUPPORT_STORAGE
+    void storageJobDone(::storage::StorageJob&);
+
+    ::storage::IStorage& _storage;
+    ::storage::StorageJob _storageJob;
+    ::util::buffer::LinkedBuffer<uint8_t> _storageReadBuf;
+    ::util::buffer::LinkedBuffer<uint8_t const> _storageWriteBuf;
+    ::storage::StorageJob::JobDoneCallback const _jobDoneCallback;
+
+    // BEGIN storage data
+    struct StorageData
+    {
+        uint32_t intParam;
+        uint8_t charParam0;
+        uint8_t charParam1;
+        uint16_t reserved;
+    };
+
+    // END storage data
+
+    StorageData _storageData;
 #endif
 };
 

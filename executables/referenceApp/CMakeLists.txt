@@ -17,6 +17,7 @@ project(
 option(PLATFORM_SUPPORT_CAN "Turn CAN support on or off" OFF)
 option(PLATFORM_SUPPORT_IO "Turn IO support on or off" OFF)
 option(PLATFORM_SUPPORT_UDS "Turn UDS support on or off" OFF)
+option(PLATFORM_SUPPORT_STORAGE "Turn persistent storage on or off" OFF)
 
 set(BUILD_TARGET_PLATFORM
     "POSIX"
