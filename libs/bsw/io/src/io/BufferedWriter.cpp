@@ -13,36 +13,36 @@ namespace io
         _size = 0;
         return {};
     }
-    bool const isEnoughSpaceAvailable = _current.size() >= size;
+    bool const isEnoughSpaceAvailable = _currentBuffer.size() >= size;
     if (!isEnoughSpaceAvailable)
     {
         flush();
-        _current = _destination.allocate(MAXIMUM_BUFFER_SIZE);
-        if (_current.size() < MAXIMUM_BUFFER_SIZE)
+        _currentBuffer = _destination.allocate(MAXIMUM_BUFFER_SIZE);
+        if (_currentBuffer.size() < MAXIMUM_BUFFER_SIZE)
         {
             _size = 0;
             return {};
         }
     }
     _size = size;
-    return _current.first(_size);
+    return _currentBuffer.first(_size);
 }
 
 void BufferedWriter::commit()
 {
-    _current.advance(_size);
+    _currentBuffer.advance(_size);
     _size = 0;
 }
 
 void BufferedWriter::flush()
 {
-    if (_current.size() > 0)
+    if (_currentBuffer.size() > 0)
     {
         // Trim the buffer before committing.
-        (void)_destination.allocate(_destination.maxSize() - _current.size());
+        (void)_destination.allocate(_destination.maxSize() - _currentBuffer.size());
     }
     _destination.commit();
-    _current = {};
+    _currentBuffer = {};
 }
 
 } // namespace io

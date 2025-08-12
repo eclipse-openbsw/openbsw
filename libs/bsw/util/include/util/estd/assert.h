@@ -134,7 +134,7 @@ public:
     ~AssertHandlerScope();
 
 private:
-    AssertHandler _current;
+    AssertHandler _currentHandler;
 };
 
 } // namespace estd

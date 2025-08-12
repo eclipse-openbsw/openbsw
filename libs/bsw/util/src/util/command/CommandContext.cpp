@@ -15,7 +15,7 @@ CommandContext::CommandContext(
 , _sharedOutputStream(sharedOutputStream)
 , _activeStream(nullptr)
 , _start(line.data())
-, _current(_start)
+, _currentPosition(_start)
 , _end(_start + line.length())
 , _tokenStart(_start)
 , _result(ICommand::Result::OK)
@@ -23,22 +23,22 @@ CommandContext::CommandContext(
     (void)ignoreWhitespace();
 }
 
-bool CommandContext::hasToken() const { return isValid() && (_current != _end); }
+bool CommandContext::hasToken() const { return isValid() && (_currentPosition != _end); }
 
 ConstString CommandContext::scanToken()
 {
-    char const* const start = _current;
+    char const* const start = _currentPosition;
     if (isValid())
     {
-        _tokenStart = _current;
-        while ((_current != _end) && (!isWhitespace(*_current)))
+        _tokenStart = _currentPosition;
+        while ((_currentPosition != _end) && (!isWhitespace(*_currentPosition)))
         {
-            ++_current;
+            ++_currentPosition;
         }
     }
-    if (check(_current != start, ICommand::Result::BAD_TOKEN))
+    if (check(_currentPosition != start, ICommand::Result::BAD_TOKEN))
     {
-        char const* const end = _current;
+        char const* const end = _currentPosition;
         (void)ignoreWhitespace();
         return ConstString(start, static_cast<size_t>(end - start));
     }
@@ -48,17 +48,18 @@ ConstString CommandContext::scanToken()
 
 ConstString CommandContext::scanIdentifierToken()
 {
-    char const* const start = _current;
+    char const* const start = _currentPosition;
     if (isValid())
     {
-        _tokenStart = _current;
-        while ((_current != _end) && isIdentifierChar(*_current, _current == _tokenStart))
+        _tokenStart = _currentPosition;
+        while ((_currentPosition != _end)
+               && isIdentifierChar(*_currentPosition, _currentPosition == _tokenStart))
         {
-            ++_current;
+            ++_currentPosition;
         }
     }
-    char const* const end = _current;
-    if (check((_current != start) && ignoreWhitespace(), ICommand::Result::BAD_TOKEN))
+    char const* const end = _currentPosition;
+    if (check((_currentPosition != start) && ignoreWhitespace(), ICommand::Result::BAD_TOKEN))
     {
         return ConstString(start, static_cast<size_t>(end - start));
     }
@@ -68,25 +69,25 @@ ConstString CommandContext::scanIdentifierToken()
 
 ::etl::span<uint8_t> CommandContext::scanByteBufferToken(::etl::span<uint8_t> const& buf)
 {
-    char const* const start = _current;
+    char const* const start = _currentPosition;
     uint32_t pos            = 0U;
     if (isValid())
     {
-        _tokenStart = _current;
+        _tokenStart = _currentPosition;
 
-        while ((_current != _end) && ((_current + 1) != _end))
+        while ((_currentPosition != _end) && ((_currentPosition + 1) != _end))
         {
-            int32_t const hiNibble = getDigit(*_current, 16U);
+            int32_t const hiNibble = getDigit(*_currentPosition, 16U);
             if ((hiNibble >= 0) && check(pos < buf.size(), ICommand::Result::BAD_VALUE))
             {
-                ++_current;
-                int32_t const loNibble = getDigit(*_current, 16U);
+                ++_currentPosition;
+                int32_t const loNibble = getDigit(*_currentPosition, 16U);
                 if (check(loNibble >= 0, ICommand::Result::BAD_TOKEN))
                 {
                     buf[pos] = static_cast<uint8_t>(static_cast<uint8_t>(hiNibble) << 4U)
                                | static_cast<uint8_t>(loNibble);
                     ++pos;
-                    ++_current;
+                    ++_currentPosition;
                 }
             }
             else
@@ -95,7 +96,7 @@ ConstString CommandContext::scanIdentifierToken()
             }
         }
     }
-    if (check((_current != start) && ignoreWhitespace(), ICommand::Result::BAD_TOKEN))
+    if (check((_currentPosition != start) && ignoreWhitespace(), ICommand::Result::BAD_TOKEN))
     {
         return buf.first(pos);
     }
@@ -105,7 +106,7 @@ ConstString CommandContext::scanIdentifierToken()
 
 bool CommandContext::checkEol()
 {
-    return check(_current == _end, ICommand::Result::UNEXPECTED_TOKEN);
+    return check(_currentPosition == _end, ICommand::Result::UNEXPECTED_TOKEN);
 }
 
 bool CommandContext::check(bool const condition, ICommand::Result const result)
@@ -121,7 +122,8 @@ ICommand::Result CommandContext::getResult() const { return _result; }
 
 ConstString CommandContext::getSuffix() const
 {
-    char const* const start = (_result == ICommand::Result::BAD_VALUE) ? _tokenStart : _current;
+    char const* const start
+        = (_result == ICommand::Result::BAD_VALUE) ? _tokenStart : _currentPosition;
     return ConstString(start, static_cast<size_t>(_end - start));
 }
 
@@ -155,12 +157,12 @@ bool CommandContext::isValid() const { return _result == ICommand::Result::OK; }
 
 bool CommandContext::ignoreWhitespace()
 {
-    char const* const start = _current;
-    while ((_current != _end) && isWhitespace(*_current))
+    char const* const start = _currentPosition;
+    while ((_currentPosition != _end) && isWhitespace(*_currentPosition))
     {
-        ++_current;
+        ++_currentPosition;
     }
-    return (_current != start) || (_current == _end);
+    return (_currentPosition != start) || (_currentPosition == _end);
 }
 
 // static
