@@ -714,12 +714,12 @@ TEST_F(StorageTest, SameJobTriggeredAgain)
 
 TEST_F(StorageTest, SameJobTriggeredFromCallback)
 {
+    uint8_t idx = 0U;
     StorageJob::ResultType results[]{StorageJob::Result::Init(), StorageJob::Result::Init()};
-    auto cbk = [&results, this](StorageJob& job)
+    auto cbk = [&idx, &results, this](StorageJob& job)
     {
         estd_assert(job.getId() == BLOCKID3);
-        static uint8_t idx = 0U;
-        results[idx++]     = job.getResult();
+        results[idx++] = job.getResult();
         if (idx == 1U)
         {
             // first retrigger identical job
