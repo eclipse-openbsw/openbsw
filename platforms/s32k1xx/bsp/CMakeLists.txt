@@ -10,6 +10,7 @@ add_subdirectory(bspIo)
 add_subdirectory(bspMcu)
 add_subdirectory(bspMcuWatchdog)
 add_subdirectory(bspSci)
+add_subdirectory(bspUart)
 add_subdirectory(canflex2Transceiver)
 
 add_library(socBsp INTERFACE)
@@ -23,4 +24,5 @@ target_link_libraries(
               bspIo
               bspMcu
               bspMcuWatchdog
-              bspSci)
+              bspSci
+              bspUart)
