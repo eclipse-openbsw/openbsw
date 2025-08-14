@@ -1,0 +1,695 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../../../../../../../../../../static/css/style.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <title>Symbol - puncover</title>
+    
+</head>
+<body>
+    <div class="container" id="content">
+        <div class="page-header">
+            <nav class="navbar navbar-default" role="navigation">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="../../../../../../../../../../../index.html">
+                    Puncover
+                  </a>
+                </div>
+              </div>
+            </nav>
+          
+        </div>
+        <div id="inner_content">
+        
+    
+    <ol class="breadcrumb folders">
+        
+        <li><a href="../../../../../../../../../../../home.html">home</a></li>
+        
+        <li><a href="../../../../../../../../../../runner.html">runner</a></li>
+        
+        <li><a href="../../../../../../../../../work.html">work</a></li>
+        
+        <li><a href="../../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../libs.html">libs</a></li>
+        
+        <li><a href="../../../../../3rdparty.html">3rdparty</a></li>
+        
+        <li><a href="../../../../lwip.html">lwip</a></li>
+        
+        <li><a href="../../../src.html">src</a></li>
+        
+        <li ><a href="../../core.html">core</a>
+            </li>
+
+        
+        <li class="active"><a href="../pbuf.c.html">pbuf.c</a>:989
+            </li>
+        
+    </ol>
+
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <th>Function</th>
+                <td colspan="5">
+                    <span class="icon-function">pbuf_copy_partial_pbuf</span>
+                </td>
+            </tr>
+
+            <tr>
+                <th rowspan="2"></th>
+                <th>Address</th>
+                <th>Remarks</th>
+                <th>Stack</th>
+                <th>Code</th>
+                <th>Static</th>
+            </tr>
+            <tr>
+                <td>0x0000d92c</td>
+                <td>
+    <span class="label label-success">x-module</span>
+    
+</td>
+                <td>32 (static)</td>
+                <td>304</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th>Callers (3)</th>
+                <td colspan="5">
+                
+                    <a href="../ipv4/icmp.c/f7587be2f24f2e6dbf826db282f8a8c5.html">icmp_dest_unreach (144)</a>
+                    
+                        ,
+                    
+                
+                    <a href="./cb8c644da5edde8baf6c2f9518b22342.html">pbuf_clone (32)</a>
+                    
+                        ,
+                    
+                
+                    <a href="./4810e53e69d075ab6c9796d76bc8ed98.html">pbuf_copy (28)</a>
+                    
+                
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Callees (2,
+                            <span title="sum of used bytes by all callees">
+                            Σ=80
+                            </span>
+                        )
+                    
+                </th>
+                <td colspan="5">
+                
+                    <a href="../../../../../../../../../../../unknown/unknown/72d4bd12d6ca07360602e0d6cbc8dc4b.html">memcpy (28)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../../../../../../executables/referenceApp/application/src/logger/logger.cpp/98866fb3d81ee8db78cbfd1e2dfd931d.html">log_lwipInfo (52)</a>
+                    
+                
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    
+    <pre><a href="./10167fb6905f20490b0e8e5bdc4aa1e0.html">pbuf_chain (84)</a></pre>
+    
+
+    <pre>
+
+    pbuf_copy_partial_pbuf():
+
+        d92c:	e92d 43f8 	stmdb	sp!, {r3, r4, r5, r6, r7, r8, r9, lr}
+
+        d930:	2900      	cmp	r1, #0
+
+        d932:	d07c      	beq.n	da2e <<a href="./9843e82ed70cbff709e1dee6a223e80b.html">pbuf_copy_partial_pbuf</a>+0x102>
+
+        d934:	4699      	mov	r9, r3
+
+        d936:	890b      	ldrh	r3, [r1, #8]
+
+        d938:	4293      	cmp	r3, r2
+
+        d93a:	4615      	mov	r5, r2
+
+        d93c:	460e      	mov	r6, r1
+
+        d93e:	d376      	bcc.n	da2e <<a href="./9843e82ed70cbff709e1dee6a223e80b.html">pbuf_copy_partial_pbuf</a>+0x102>
+
+        d940:	4607      	mov	r7, r0
+
+        d942:	2800      	cmp	r0, #0
+
+        d944:	d079      	beq.n	da3a <<a href="./9843e82ed70cbff709e1dee6a223e80b.html">pbuf_copy_partial_pbuf</a>+0x10e>
+
+        d946:	8902      	ldrh	r2, [r0, #8]
+
+        d948:	eb09 0305 	add.w	r3, r9, r5
+
+        d94c:	429a      	cmp	r2, r3
+
+        d94e:	bfa8      	it	ge
+
+        d950:	f04f 0800 	movge.w	r8, #0
+
+        d954:	db71      	blt.n	da3a <<a href="./9843e82ed70cbff709e1dee6a223e80b.html">pbuf_copy_partial_pbuf</a>+0x10e>
+
+        d956:	897c      	ldrh	r4, [r7, #10]
+
+        d958:	8972      	ldrh	r2, [r6, #10]
+
+        d95a:	6871      	ldr	r1, [r6, #4]
+
+        d95c:	6878      	ldr	r0, [r7, #4]
+
+        d95e:	eba4 0409 	sub.w	r4, r4, r9
+
+        d962:	eba2 0208 	sub.w	r2, r2, r8
+
+        d966:	4294      	cmp	r4, r2
+
+        d968:	bf28      	it	cs
+
+        d96a:	4614      	movcs	r4, r2
+
+        d96c:	42ac      	cmp	r4, r5
+
+        d96e:	bf28      	it	cs
+
+        d970:	462c      	movcs	r4, r5
+
+        d972:	4441      	add	r1, r8
+
+        d974:	4448      	add	r0, r9
+
+        d976:	4622      	mov	r2, r4
+
+        d978:	f7f2 fdef 	bl	55a <<a href="../../../../../../../../../../../unknown/unknown/72d4bd12d6ca07360602e0d6cbc8dc4b.html">memcpy</a>>
+
+        d97c:	8973      	ldrh	r3, [r6, #10]
+
+        d97e:	897a      	ldrh	r2, [r7, #10]
+
+        d980:	44a0      	add	r8, r4
+
+        d982:	1b2d      	subs	r5, r5, r4
+
+        d984:	4543      	cmp	r3, r8
+
+        d986:	44a1      	add	r9, r4
+
+        d988:	b2ad      	uxth	r5, r5
+
+        d98a:	d803      	bhi.n	d994 <<a href="./9843e82ed70cbff709e1dee6a223e80b.html">pbuf_copy_partial_pbuf</a>+0x68>
+
+        d98c:	6836      	ldr	r6, [r6, #0]
+
+        d98e:	b176      	cbz	r6, d9ae <<a href="./9843e82ed70cbff709e1dee6a223e80b.html">pbuf_copy_partial_pbuf</a>+0x82>
+
+        d990:	f04f 0800 	mov.w	r8, #0
+
+        d994:	454a      	cmp	r2, r9
+
+        d996:	d01b      	beq.n	d9d0 <<a href="./9843e82ed70cbff709e1dee6a223e80b.html">pbuf_copy_partial_pbuf</a>+0xa4>
+
+        d998:	8972      	ldrh	r2, [r6, #10]
+
+        d99a:	8933      	ldrh	r3, [r6, #8]
+
+        d99c:	429a      	cmp	r2, r3
+
+        d99e:	d01f      	beq.n	d9e0 <<a href="./9843e82ed70cbff709e1dee6a223e80b.html">pbuf_copy_partial_pbuf</a>+0xb4>
+
+        d9a0:	897a      	ldrh	r2, [r7, #10]
+
+        d9a2:	893b      	ldrh	r3, [r7, #8]
+
+        d9a4:	429a      	cmp	r2, r3
+
+        d9a6:	d00c      	beq.n	d9c2 <<a href="./9843e82ed70cbff709e1dee6a223e80b.html">pbuf_copy_partial_pbuf</a>+0x96>
+
+        d9a8:	2d00      	cmp	r5, #0
+
+        d9aa:	d1d4      	bne.n	d956 <<a href="./9843e82ed70cbff709e1dee6a223e80b.html">pbuf_copy_partial_pbuf</a>+0x2a>
+
+        d9ac:	e027      	b.n	d9fe <<a href="./9843e82ed70cbff709e1dee6a223e80b.html">pbuf_copy_partial_pbuf</a>+0xd2>
+
+        d9ae:	2d00      	cmp	r5, #0
+
+        d9b0:	d131      	bne.n	da16 <<a href="./9843e82ed70cbff709e1dee6a223e80b.html">pbuf_copy_partial_pbuf</a>+0xea>
+
+        d9b2:	454a      	cmp	r2, r9
+
+        d9b4:	d026      	beq.n	da04 <<a href="./9843e82ed70cbff709e1dee6a223e80b.html">pbuf_copy_partial_pbuf</a>+0xd8>
+
+        d9b6:	897a      	ldrh	r2, [r7, #10]
+
+        d9b8:	893b      	ldrh	r3, [r7, #8]
+
+        d9ba:	429a      	cmp	r2, r3
+
+        d9bc:	d11f      	bne.n	d9fe <<a href="./9843e82ed70cbff709e1dee6a223e80b.html">pbuf_copy_partial_pbuf</a>+0xd2>
+
+        d9be:	f04f 0800 	mov.w	r8, #0
+
+        d9c2:	683b      	ldr	r3, [r7, #0]
+
+        d9c4:	b97b      	cbnz	r3, d9e6 <<a href="./9843e82ed70cbff709e1dee6a223e80b.html">pbuf_copy_partial_pbuf</a>+0xba>
+
+        d9c6:	2d00      	cmp	r5, #0
+
+        d9c8:	d1c5      	bne.n	d956 <<a href="./9843e82ed70cbff709e1dee6a223e80b.html">pbuf_copy_partial_pbuf</a>+0x2a>
+
+        d9ca:	e018      	b.n	d9fe <<a href="./9843e82ed70cbff709e1dee6a223e80b.html">pbuf_copy_partial_pbuf</a>+0xd2>
+
+        d9cc:	e8bd 83f8 	ldmia.w	sp!, {r3, r4, r5, r6, r7, r8, r9, pc}
+
+        d9d0:	683f      	ldr	r7, [r7, #0]
+
+        d9d2:	b17f      	cbz	r7, d9f4 <<a href="./9843e82ed70cbff709e1dee6a223e80b.html">pbuf_copy_partial_pbuf</a>+0xc8>
+
+        d9d4:	8972      	ldrh	r2, [r6, #10]
+
+        d9d6:	8933      	ldrh	r3, [r6, #8]
+
+        d9d8:	429a      	cmp	r2, r3
+
+        d9da:	f04f 0900 	mov.w	r9, #0
+
+        d9de:	d1df      	bne.n	d9a0 <<a href="./9843e82ed70cbff709e1dee6a223e80b.html">pbuf_copy_partial_pbuf</a>+0x74>
+
+        d9e0:	6833      	ldr	r3, [r6, #0]
+
+        d9e2:	2b00      	cmp	r3, #0
+
+        d9e4:	d0dc      	beq.n	d9a0 <<a href="./9843e82ed70cbff709e1dee6a223e80b.html">pbuf_copy_partial_pbuf</a>+0x74>
+
+        d9e6:	4818      	ldr	r0, [pc, #96]	; (da48 <<a href="./9843e82ed70cbff709e1dee6a223e80b.html">pbuf_copy_partial_pbuf</a>+0x11c>)
+
+        d9e8:	f7f4 f91e 	bl	1c28 <<a href="../../../../../../executables/referenceApp/application/src/logger/logger.cpp/98866fb3d81ee8db78cbfd1e2dfd931d.html">log_lwipInfo</a>>
+
+        d9ec:	f06f 0005 	mvn.w	r0, #5
+
+        d9f0:	e8bd 83f8 	ldmia.w	sp!, {r3, r4, r5, r6, r7, r8, r9, pc}
+
+        d9f4:	b9ad      	cbnz	r5, da22 <<a href="./9843e82ed70cbff709e1dee6a223e80b.html">pbuf_copy_partial_pbuf</a>+0xf6>
+
+        d9f6:	8932      	ldrh	r2, [r6, #8]
+
+        d9f8:	8973      	ldrh	r3, [r6, #10]
+
+        d9fa:	429a      	cmp	r2, r3
+
+        d9fc:	d007      	beq.n	da0e <<a href="./9843e82ed70cbff709e1dee6a223e80b.html">pbuf_copy_partial_pbuf</a>+0xe2>
+
+        d9fe:	2000      	movs	r0, #0
+
+        da00:	e8bd 83f8 	ldmia.w	sp!, {r3, r4, r5, r6, r7, r8, r9, pc}
+
+        da04:	683f      	ldr	r7, [r7, #0]
+
+        da06:	2f00      	cmp	r7, #0
+
+        da08:	d0f9      	beq.n	d9fe <<a href="./9843e82ed70cbff709e1dee6a223e80b.html">pbuf_copy_partial_pbuf</a>+0xd2>
+
+        da0a:	46a9      	mov	r9, r5
+
+        da0c:	e7d3      	b.n	d9b6 <<a href="./9843e82ed70cbff709e1dee6a223e80b.html">pbuf_copy_partial_pbuf</a>+0x8a>
+
+        da0e:	6837      	ldr	r7, [r6, #0]
+
+        da10:	2f00      	cmp	r7, #0
+
+        da12:	d0f4      	beq.n	d9fe <<a href="./9843e82ed70cbff709e1dee6a223e80b.html">pbuf_copy_partial_pbuf</a>+0xd2>
+
+        da14:	e7e7      	b.n	d9e6 <<a href="./9843e82ed70cbff709e1dee6a223e80b.html">pbuf_copy_partial_pbuf</a>+0xba>
+
+        da16:	480d      	ldr	r0, [pc, #52]	; (da4c <<a href="./9843e82ed70cbff709e1dee6a223e80b.html">pbuf_copy_partial_pbuf</a>+0x120>)
+
+        da18:	f7f4 f906 	bl	1c28 <<a href="../../../../../../executables/referenceApp/application/src/logger/logger.cpp/98866fb3d81ee8db78cbfd1e2dfd931d.html">log_lwipInfo</a>>
+
+        da1c:	f06f 000f 	mvn.w	r0, #15
+
+        da20:	e7d4      	b.n	d9cc <<a href="./9843e82ed70cbff709e1dee6a223e80b.html">pbuf_copy_partial_pbuf</a>+0xa0>
+
+        da22:	480b      	ldr	r0, [pc, #44]	; (da50 <<a href="./9843e82ed70cbff709e1dee6a223e80b.html">pbuf_copy_partial_pbuf</a>+0x124>)
+
+        da24:	f7f4 f900 	bl	1c28 <<a href="../../../../../../executables/referenceApp/application/src/logger/logger.cpp/98866fb3d81ee8db78cbfd1e2dfd931d.html">log_lwipInfo</a>>
+
+        da28:	f06f 000f 	mvn.w	r0, #15
+
+        da2c:	e7ce      	b.n	d9cc <<a href="./9843e82ed70cbff709e1dee6a223e80b.html">pbuf_copy_partial_pbuf</a>+0xa0>
+
+        da2e:	4809      	ldr	r0, [pc, #36]	; (da54 <<a href="./9843e82ed70cbff709e1dee6a223e80b.html">pbuf_copy_partial_pbuf</a>+0x128>)
+
+        da30:	f7f4 f8fa 	bl	1c28 <<a href="../../../../../../executables/referenceApp/application/src/logger/logger.cpp/98866fb3d81ee8db78cbfd1e2dfd931d.html">log_lwipInfo</a>>
+
+        da34:	f06f 000f 	mvn.w	r0, #15
+
+        da38:	e7c8      	b.n	d9cc <<a href="./9843e82ed70cbff709e1dee6a223e80b.html">pbuf_copy_partial_pbuf</a>+0xa0>
+
+        da3a:	4807      	ldr	r0, [pc, #28]	; (da58 <<a href="./9843e82ed70cbff709e1dee6a223e80b.html">pbuf_copy_partial_pbuf</a>+0x12c>)
+
+        da3c:	f7f4 f8f4 	bl	1c28 <<a href="../../../../../../executables/referenceApp/application/src/logger/logger.cpp/98866fb3d81ee8db78cbfd1e2dfd931d.html">log_lwipInfo</a>>
+
+        da40:	f06f 000f 	mvn.w	r0, #15
+
+        da44:	e7c2      	b.n	d9cc <<a href="./9843e82ed70cbff709e1dee6a223e80b.html">pbuf_copy_partial_pbuf</a>+0xa0>
+
+        da46:	bf00      	nop
+
+        da48:	00022a88 	.word	0x00022a88
+
+        da4c:	00022a68 	.word	0x00022a68
+
+        da50:	00022a78 	.word	0x00022a78
+
+        da54:	00022a04 	.word	0x00022a04
+
+        da58:	00022a38 	.word	0x00022a38
+
+    </pre>
+
+    
+    <pre><a href="./4810e53e69d075ab6c9796d76bc8ed98.html">pbuf_copy (28)</a></pre>
+    
+
+    
+        <h1>Stack Worst-Case Scenarios</h1>
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 488</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 2,448</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    488
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                40 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    2,448
+                    
+                    
+                </td>
+                <td class="col_size">136</td>
+                <td><a href="../../../../printf/src/printf/printf.c/aead89a8c09454d3b52c82329b9d6539.html" class="icon-function">out_rev_</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                    
+                    448
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                112 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    2,312
+                    
+                    
+                </td>
+                <td class="col_size">656</td>
+                <td><a href="../../../../printf/src/printf/printf.c/ac6598d6032c1151c802f0c9a9979746.html" class="icon-function">print_integer</a></td>
+            </tr>
+        
+            <tr>
+                <th>3</th>
+                <td class="col_size">
+                    
+                    336
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                96 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    1,656
+                    
+                    
+                </td>
+                <td class="col_size">1,572</td>
+                <td><a href="../../../../printf/src/printf/printf.c/6d7d630ec5529648e33ae989eebb2cb7.html" class="icon-function">_vsnprintf</a></td>
+            </tr>
+        
+            <tr>
+                <th>4</th>
+                <td class="col_size">
+                    
+                    240
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                16 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    84
+                    
+                    
+                </td>
+                <td class="col_size">32</td>
+                <td><a href="../../../../printf/src/printf/printf.c/529535ce0d5bfecabb7841bebeaf251c.html" class="icon-function">vsnprintf_</a></td>
+            </tr>
+        
+            <tr>
+                <th>5</th>
+                <td class="col_size">
+                    
+                    224
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                16 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">52</td>
+                <td><a href="../../../../../../executables/referenceApp/application/src/logger/logger.cpp/98866fb3d81ee8db78cbfd1e2dfd931d.html" class="icon-function">log_lwipInfo</a></td>
+            </tr>
+        
+        </tbody>
+        
+        <tfoot>
+            <tr>
+                <th></th>
+                <th class="col_size">208
+                </th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </tfoot>
+        
+    </table>
+        
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 208</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 1,932</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    208
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                32 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    1,932
+                    
+                    
+                </td>
+                <td class="col_size">304</td>
+                <td><a href="./9843e82ed70cbff709e1dee6a223e80b.html" class="icon-function">pbuf_copy_partial_pbuf</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                    
+                    176
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                48 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    1,628
+                    
+                    
+                </td>
+                <td class="col_size">144</td>
+                <td><a href="../ipv4/icmp.c/f7587be2f24f2e6dbf826db282f8a8c5.html" class="icon-function">icmp_dest_unreach</a></td>
+            </tr>
+        
+            <tr>
+                <th>3</th>
+                <td class="col_size">
+                    
+                    128
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                64 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    1,484
+                    
+                    
+                </td>
+                <td class="col_size">552</td>
+                <td><a href="../udp.c/c7b3c7087e81ea32f5b897f91e48eac9.html" class="icon-function">udp_input</a></td>
+            </tr>
+        
+            <tr>
+                <th>4</th>
+                <td class="col_size">
+                    
+                    64
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                40 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    932
+                    
+                    
+                </td>
+                <td class="col_size">716</td>
+                <td><a href="../ipv4/ip4.c/17641b681261fdfd4309a84b5ab2c56e.html" class="icon-function">ip4_input</a></td>
+            </tr>
+        
+            <tr>
+                <th>5</th>
+                <td class="col_size">
+                </td>
+                <td class="col_size">
+            
+                24 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">216</td>
+                <td><a href="../../netif/ethernet.c/e2fa4588adea7f5422e68cfb57168248.html" class="icon-function">ethernet_input</a></td>
+            </tr>
+        
+        </tbody>
+        
+    </table>
+        
+    
+
+
+        </div>
+    <div id="page-footer">
+        <hr>
+        
+            brought to you with 💖
+            by <a href="https://twitter.com/hbehrens">Heiko Behrens</a>
+            <span class="secondary">– MIT license, copyright © 2014-2025</span>
+        
+    </div>
+    </div>
+</body>
+</html>

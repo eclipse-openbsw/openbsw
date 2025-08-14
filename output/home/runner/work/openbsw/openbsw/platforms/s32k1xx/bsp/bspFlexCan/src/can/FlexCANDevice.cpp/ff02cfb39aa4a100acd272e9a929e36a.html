@@ -1,0 +1,494 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../../../../../../../../../../../static/css/style.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <title>Symbol - puncover</title>
+    
+</head>
+<body>
+    <div class="container" id="content">
+        <div class="page-header">
+            <nav class="navbar navbar-default" role="navigation">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="../../../../../../../../../../../../index.html">
+                    Puncover
+                  </a>
+                </div>
+              </div>
+            </nav>
+          
+        </div>
+        <div id="inner_content">
+        
+    
+    <ol class="breadcrumb folders">
+        
+        <li><a href="../../../../../../../../../../../../home.html">home</a></li>
+        
+        <li><a href="../../../../../../../../../../../runner.html">runner</a></li>
+        
+        <li><a href="../../../../../../../../../../work.html">work</a></li>
+        
+        <li><a href="../../../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../../platforms.html">platforms</a></li>
+        
+        <li><a href="../../../../../../s32k1xx.html">s32k1xx</a></li>
+        
+        <li><a href="../../../../../bsp.html">bsp</a></li>
+        
+        <li><a href="../../../../bspFlexCan.html">bspFlexCan</a></li>
+        
+        <li><a href="../../../src.html">src</a></li>
+        
+        <li ><a href="../../can.html">can</a>
+            </li>
+
+        
+        <li class="active"><a href="../FlexCANDevice.cpp.html">FlexCANDevice.cpp</a>:215
+            </li>
+        
+    </ol>
+
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <th>Function</th>
+                <td colspan="5">
+                    <span class="icon-function">bios::FlexCANDevice::receiveISR(unsigned char const*)</span>
+                </td>
+            </tr>
+
+            <tr>
+                <th rowspan="2"></th>
+                <th>Address</th>
+                <th>Remarks</th>
+                <th>Stack</th>
+                <th>Code</th>
+                <th>Static</th>
+            </tr>
+            <tr>
+                <td>0x0001bd14</td>
+                <td>
+    <span class="label label-success">x-module</span>
+    
+</td>
+                <td>64 (static)</td>
+                <td>260</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th>Callers (1)</th>
+                <td colspan="5">
+                
+                    <a href="../../../../../../../executables/referenceApp/platforms/s32k148evb/main/src/systems/CanSystem.cpp/62cfef291a40896c53ab359c7bf84f02.html">call_can_isr_RX (80)</a>
+                    
+                
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Callees (1,
+                            <span title="sum of used bytes by all callees">
+                            Σ=148
+                            </span>
+                        )
+                    
+                </th>
+                <td colspan="5">
+                
+                    <a href="./d1cc25a9acc15132a9981454b396529f.html">bios::FlexCANDevice::enqueueRxFrame(unsigned long, unsigned char, unsigned long volatile*, bool, unsigned char const*) (148)</a>
+                    
+                
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    
+    <pre><a href="./65ccc34776894ca0254b0ba85a0a2177.html">bios::FlexCANDevice::mute() (60)</a></pre>
+    
+
+    <pre>
+
+    bios::FlexCANDevice::receiveISR(unsigned char const*):
+
+       1bd14:	e92d 4ff0 	stmdb	sp!, {r4, r5, r6, r7, r8, r9, sl, fp, lr}
+
+       1bd18:	4604      	mov	r4, r0
+
+       1bd1a:	6880      	ldr	r0, [r0, #8]
+
+       1bd1c:	f8d4 c014 	ldr.w	ip, [r4, #20]
+
+       1bd20:	6b02      	ldr	r2, [r0, #48]	; 0x30
+
+       1bd22:	2700      	movs	r7, #0
+
+       1bd24:	ea12 020c 	ands.w	r2, r2, ip
+
+       1bd28:	b087      	sub	sp, #28
+
+       1bd2a:	f884 72c5 	strb.w	r7, [r4, #709]	; 0x2c5
+
+       1bd2e:	d070      	beq.n	1be12 <<a href="./ff02cfb39aa4a100acd272e9a929e36a.html">bios::FlexCANDevice::receiveISR(unsigned char const*)</a>+0xfe>
+
+       1bd30:	2501      	movs	r5, #1
+
+       1bd32:	4688      	mov	r8, r1
+
+       1bd34:	46b9      	mov	r9, r7
+
+       1bd36:	f04f 36ff 	mov.w	r6, #4294967295	; 0xffffffff
+
+    bios::FlexCANDevice::enqueueRxFrame(unsigned long, unsigned char, unsigned long volatile*, bool, unsigned char const*):
+
+       1bd3a:	46aa      	mov	sl, r5
+
+       1bd3c:	e009      	b.n	1bd52 <<a href="./ff02cfb39aa4a100acd272e9a929e36a.html">bios::FlexCANDevice::receiveISR(unsigned char const*)</a>+0x3e>
+
+    bios::FlexCANDevice::receiveISR(unsigned char const*):
+
+       1bd3e:	6b03      	ldr	r3, [r0, #48]	; 0x30
+
+       1bd40:	0076      	lsls	r6, r6, #1
+
+       1bd42:	ea06 020c 	and.w	r2, r6, ip
+
+       1bd46:	401a      	ands	r2, r3
+
+       1bd48:	ea4f 0545 	mov.w	r5, r5, lsl #1
+
+       1bd4c:	f107 0701 	add.w	r7, r7, #1
+
+       1bd50:	d053      	beq.n	1bdfa <<a href="./ff02cfb39aa4a100acd272e9a929e36a.html">bios::FlexCANDevice::receiveISR(unsigned char const*)</a>+0xe6>
+
+       1bd52:	f8d4 32b4 	ldr.w	r3, [r4, #692]	; 0x2b4
+
+       1bd56:	422a      	tst	r2, r5
+
+       1bd58:	f103 0301 	add.w	r3, r3, #1
+
+       1bd5c:	f8c4 32b4 	str.w	r3, [r4, #692]	; 0x2b4
+
+       1bd60:	d0ed      	beq.n	1bd3e <<a href="./ff02cfb39aa4a100acd272e9a929e36a.html">bios::FlexCANDevice::receiveISR(unsigned char const*)</a>+0x2a>
+
+    _ZN4bios13FlexCANDevice13messageBufferEh():
+
+       1bd62:	b2fb      	uxtb	r3, r7
+
+       1bd64:	f100 0c80 	add.w	ip, r0, #128	; 0x80
+
+       1bd68:	ea4f 1e03 	mov.w	lr, r3, lsl #4
+
+       1bd6c:	eb0c 1303 	add.w	r3, ip, r3, lsl #4
+
+    bios::FlexCANDevice::receiveISR(unsigned char const*):
+
+       1bd70:	681a      	ldr	r2, [r3, #0]
+
+       1bd72:	9205      	str	r2, [sp, #20]
+
+       1bd74:	9a05      	ldr	r2, [sp, #20]
+
+       1bd76:	01d1      	lsls	r1, r2, #7
+
+       1bd78:	d4fa      	bmi.n	1bd70 <<a href="./ff02cfb39aa4a100acd272e9a929e36a.html">bios::FlexCANDevice::receiveISR(unsigned char const*)</a>+0x5c>
+
+       1bd7a:	6305      	str	r5, [r0, #48]	; 0x30
+
+       1bd7c:	f85c 200e 	ldr.w	r2, [ip, lr]
+
+       1bd80:	6859      	ldr	r1, [r3, #4]
+
+       1bd82:	0292      	lsls	r2, r2, #10
+
+       1bd84:	bf54      	ite	pl
+
+       1bd86:	f3c1 428a 	ubfxpl	r2, r1, #18, #11
+
+       1bd8a:	f021 4260 	bicmi.w	r2, r1, #3758096384	; 0xe0000000
+
+       1bd8e:	9202      	str	r2, [sp, #8]
+
+       1bd90:	f8d4 22ac 	ldr.w	r2, [r4, #684]	; 0x2ac
+
+       1bd94:	b912      	cbnz	r2, 1bd9c <<a href="./ff02cfb39aa4a100acd272e9a929e36a.html">bios::FlexCANDevice::receiveISR(unsigned char const*)</a>+0x88>
+
+       1bd96:	9a02      	ldr	r2, [sp, #8]
+
+       1bd98:	f8c4 22ac 	str.w	r2, [r4, #684]	; 0x2ac
+
+       1bd9c:	f85c 200e 	ldr.w	r2, [ip, lr]
+
+    bios::FlexCANDevice::enqueueRxFrame(unsigned long, unsigned char, unsigned long volatile*, bool, unsigned char const*):
+
+       1bda0:	6a61      	ldr	r1, [r4, #36]	; 0x24
+
+    bios::FlexCANDevice::receiveISR(unsigned char const*):
+
+       1bda2:	f85c c00e 	ldr.w	ip, [ip, lr]
+
+       1bda6:	f3c2 4203 	ubfx	r2, r2, #16, #4
+
+       1bdaa:	9203      	str	r2, [sp, #12]
+
+    bios::FlexCANDevice::enqueueRxFrame(unsigned long, unsigned char, unsigned long volatile*, bool, unsigned char const*):
+
+       1bdac:	6a22      	ldr	r2, [r4, #32]
+
+       1bdae:	428a      	cmp	r2, r1
+
+    bios::FlexCANDevice::receiveISR(unsigned char const*):
+
+       1bdb0:	f3cc 5c40 	ubfx	ip, ip, #21, #1
+
+    bios::FlexCANDevice::enqueueRxFrame(unsigned long, unsigned char, unsigned long volatile*, bool, unsigned char const*):
+
+       1bdb4:	d011      	beq.n	1bdda <<a href="./ff02cfb39aa4a100acd272e9a929e36a.html">bios::FlexCANDevice::receiveISR(unsigned char const*)</a>+0xc6>
+
+       1bdb6:	f1b8 0f00 	cmp.w	r8, #0
+
+       1bdba:	d011      	beq.n	1bde0 <<a href="./ff02cfb39aa4a100acd272e9a929e36a.html">bios::FlexCANDevice::receiveISR(unsigned char const*)</a>+0xcc>
+
+       1bdbc:	f1bc 0f00 	cmp.w	ip, #0
+
+       1bdc0:	d10e      	bne.n	1bde0 <<a href="./ff02cfb39aa4a100acd272e9a929e36a.html">bios::FlexCANDevice::receiveISR(unsigned char const*)</a>+0xcc>
+
+       1bdc2:	9a02      	ldr	r2, [sp, #8]
+
+       1bdc4:	ea4f 0ed2 	mov.w	lr, r2, lsr #3
+
+       1bdc8:	f818 b00e 	ldrb.w	fp, [r8, lr]
+
+       1bdcc:	f002 0e07 	and.w	lr, r2, #7
+
+       1bdd0:	fa0a fe0e 	lsl.w	lr, sl, lr
+
+       1bdd4:	ea1b 0f0e 	tst.w	fp, lr
+
+       1bdd8:	d102      	bne.n	1bde0 <<a href="./ff02cfb39aa4a100acd272e9a929e36a.html">bios::FlexCANDevice::receiveISR(unsigned char const*)</a>+0xcc>
+
+       1bdda:	f8d4 c014 	ldr.w	ip, [r4, #20]
+
+       1bdde:	e7ae      	b.n	1bd3e <<a href="./ff02cfb39aa4a100acd272e9a929e36a.html">bios::FlexCANDevice::receiveISR(unsigned char const*)</a>+0x2a>
+
+       1bde0:	9a03      	ldr	r2, [sp, #12]
+
+       1bde2:	9902      	ldr	r1, [sp, #8]
+
+       1bde4:	f8cd c000 	str.w	ip, [sp]
+
+       1bde8:	3308      	adds	r3, #8
+
+       1bdea:	4620      	mov	r0, r4
+
+       1bdec:	f7ff feb2 	bl	1bb54 <<a href="./d1cc25a9acc15132a9981454b396529f.html">bios::FlexCANDevice::enqueueRxFrame(unsigned long, unsigned char, unsigned long volatile*, bool, unsigned char const*)</a>.part.0>
+
+    bios::FlexCANDevice::receiveISR(unsigned char const*):
+
+       1bdf0:	4448      	add	r0, r9
+
+       1bdf2:	fa5f f980 	uxtb.w	r9, r0
+
+       1bdf6:	68a0      	ldr	r0, [r4, #8]
+
+       1bdf8:	e7ef      	b.n	1bdda <<a href="./ff02cfb39aa4a100acd272e9a929e36a.html">bios::FlexCANDevice::receiveISR(unsigned char const*)</a>+0xc6>
+
+       1bdfa:	464a      	mov	r2, r9
+
+       1bdfc:	f8d4 32b0 	ldr.w	r3, [r4, #688]	; 0x2b0
+
+       1be00:	6881      	ldr	r1, [r0, #8]
+
+       1be02:	9105      	str	r1, [sp, #20]
+
+       1be04:	4413      	add	r3, r2
+
+       1be06:	4648      	mov	r0, r9
+
+       1be08:	f8c4 32b0 	str.w	r3, [r4, #688]	; 0x2b0
+
+       1be0c:	b007      	add	sp, #28
+
+       1be0e:	e8bd 8ff0 	ldmia.w	sp!, {r4, r5, r6, r7, r8, r9, sl, fp, pc}
+
+       1be12:	4691      	mov	r9, r2
+
+       1be14:	e7f2      	b.n	1bdfc <<a href="./ff02cfb39aa4a100acd272e9a929e36a.html">bios::FlexCANDevice::receiveISR(unsigned char const*)</a>+0xe8>
+
+       1be16:	bf00      	nop
+
+    </pre>
+
+    
+    <pre><a href="./72ef0647a5d920be2f28554d857f39e1.html">bios::FlexCANDevice::getTransmitBuffer(can::CANFrame const&amp;, bool) (176)</a></pre>
+    
+
+    
+        <h1>Stack Worst-Case Scenarios</h1>
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 100</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 176</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    100
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                8 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    176
+                    
+                    
+                </td>
+                <td class="col_size">28</td>
+                <td><a href="../../../../../../../libs/bsw/cpp2can/src/can/canframes/CANFrame.cpp/be383a58ad01485f1b6888ff7abb6f7f.html" class="icon-function">can::CANFrame::CANFrame(unsigned long)</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                    
+                    92
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                20 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">148</td>
+                <td><a href="./d1cc25a9acc15132a9981454b396529f.html" class="icon-function">bios::FlexCANDevice::enqueueRxFrame(unsigned long, unsigned char, unsigned long volatile*, bool, unsigned char const*)</a></td>
+            </tr>
+        
+        </tbody>
+        
+        <tfoot>
+            <tr>
+                <th></th>
+                <th class="col_size">72
+                </th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </tfoot>
+        
+    </table>
+        
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 72</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 340</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    72
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                64 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    340
+                    
+                    
+                </td>
+                <td class="col_size">260</td>
+                <td><a href="./ff02cfb39aa4a100acd272e9a929e36a.html" class="icon-function">bios::FlexCANDevice::receiveISR(unsigned char const*)</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                </td>
+                <td class="col_size">
+            
+                8 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">80</td>
+                <td><a href="../../../../../../../executables/referenceApp/platforms/s32k148evb/main/src/systems/CanSystem.cpp/62cfef291a40896c53ab359c7bf84f02.html" class="icon-function">call_can_isr_RX</a></td>
+            </tr>
+        
+        </tbody>
+        
+    </table>
+        
+    
+
+
+        </div>
+    <div id="page-footer">
+        <hr>
+        
+            brought to you with 💖
+            by <a href="https://twitter.com/hbehrens">Heiko Behrens</a>
+            <span class="secondary">– MIT license, copyright © 2014-2025</span>
+        
+    </div>
+    </div>
+</body>
+</html>

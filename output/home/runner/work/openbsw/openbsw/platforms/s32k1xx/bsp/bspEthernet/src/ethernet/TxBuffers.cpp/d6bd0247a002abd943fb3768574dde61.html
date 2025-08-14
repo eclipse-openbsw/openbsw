@@ -1,0 +1,401 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../../../../../../../../../../../static/css/style.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <title>Symbol - puncover</title>
+    
+</head>
+<body>
+    <div class="container" id="content">
+        <div class="page-header">
+            <nav class="navbar navbar-default" role="navigation">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="../../../../../../../../../../../../index.html">
+                    Puncover
+                  </a>
+                </div>
+              </div>
+            </nav>
+          
+        </div>
+        <div id="inner_content">
+        
+    
+    <ol class="breadcrumb folders">
+        
+        <li><a href="../../../../../../../../../../../../home.html">home</a></li>
+        
+        <li><a href="../../../../../../../../../../../runner.html">runner</a></li>
+        
+        <li><a href="../../../../../../../../../../work.html">work</a></li>
+        
+        <li><a href="../../../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../../platforms.html">platforms</a></li>
+        
+        <li><a href="../../../../../../s32k1xx.html">s32k1xx</a></li>
+        
+        <li><a href="../../../../../bsp.html">bsp</a></li>
+        
+        <li><a href="../../../../bspEthernet.html">bspEthernet</a></li>
+        
+        <li><a href="../../../src.html">src</a></li>
+        
+        <li ><a href="../../ethernet.html">ethernet</a>
+            </li>
+
+        
+        <li class="active"><a href="../TxBuffers.cpp.html">TxBuffers.cpp</a>:94
+            </li>
+        
+    </ol>
+
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <th>Function</th>
+                <td colspan="5">
+                    <span class="icon-function">ethernet::TxBuffers::writeBuffer(unsigned char, etl::span&lt;unsigned char const, 4294967295u&gt;, bool)</span>
+                </td>
+            </tr>
+
+            <tr>
+                <th rowspan="2"></th>
+                <th>Address</th>
+                <th>Remarks</th>
+                <th>Stack</th>
+                <th>Code</th>
+                <th>Static</th>
+            </tr>
+            <tr>
+                <td>0x0001eac8</td>
+                <td>
+    
+    
+</td>
+                <td>16 (static)</td>
+                <td>136</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th>Callers (1)</th>
+                <td colspan="5">
+                
+                    <a href="./b3cff0ebb1afa7620591fef5667b5637.html">ethernet::TxBuffers::writeFrame(unsigned short, pbuf const*) (424)</a>
+                    
+                
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Callees (2,
+                            <span title="sum of used bytes by all callees">
+                            Σ=76
+                            </span>
+                        )
+                    
+                </th>
+                <td colspan="5">
+                
+                    <a href="../../../../../../../libs/bsw/util/include/util/logger/Logger.h/16ed4f7f357fda1c5edc4479ef99d0a4.html">util::logger::Logger::log(unsigned char, util::logger::Level, char const*, ...) (60)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../../../../../../../libs/bsw/util/src/util/estd/assert.cpp/38ac861630520857582cce4f749c5937.html">estd::assert_func(char const*, int, char const*) (16)</a>
+                    
+                
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    
+    <pre><a href="./417289b20f808f85131762a73bbb88d7.html">ethernet::TxBuffers::init() (108)</a></pre>
+    
+
+    <pre>
+
+    ethernet::TxBuffers::writeBuffer(unsigned char, etl::span<unsigned char const, 4294967295u>, bool):
+
+       1eac8:	b538      	push	{r3, r4, r5, lr}
+
+    _ZNK3etl4spanI9ENET_ETXDLj4294967295EE4sizeEv():
+
+       1eaca:	68c5      	ldr	r5, [r0, #12]
+
+       1eacc:	6904      	ldr	r4, [r0, #16]
+
+       1eace:	1b64      	subs	r4, r4, r5
+
+    ethernet::TxBuffers::writeBuffer(unsigned char, etl::span<unsigned char const, 4294967295u>, bool):
+
+       1ead0:	ebb1 1f64 	cmp.w	r1, r4, asr #5
+
+       1ead4:	d22e      	bcs.n	1eb34 <<a href="./d6bd0247a002abd943fb3768574dde61.html">ethernet::TxBuffers::writeBuffer(unsigned char, etl::span<unsigned char const, 4294967295u>, bool)</a>+0x6c>
+
+    _ZNK3etl4spanI9ENET_ETXDLj4294967295EEixEj():
+
+       1ead6:	014c      	lsls	r4, r1, #5
+
+       1ead8:	eb05 1141 	add.w	r1, r5, r1, lsl #5
+
+    ethernet::TxBuffers::writeBuffer(unsigned char, etl::span<unsigned char const, 4294967295u>, bool):
+
+       1eadc:	f8b1 c002 	ldrh.w	ip, [r1, #2]
+
+       1eae0:	f41c 5080 	ands.w	r0, ip, #4096	; 0x1000
+
+       1eae4:	d022      	beq.n	1eb2c <<a href="./d6bd0247a002abd943fb3768574dde61.html">ethernet::TxBuffers::writeBuffer(unsigned char, etl::span<unsigned char const, 4294967295u>, bool)</a>+0x64>
+
+    _ZNK3etl4spanIKhLj4294967295EE4sizeEv():
+
+       1eae6:	e9d2 0200 	ldrd	r0, r2, [r2]
+
+       1eaea:	eba2 0e00 	sub.w	lr, r2, r0
+
+    ethernet::TxBuffers::writeBuffer(unsigned char, etl::span<unsigned char const, 4294967295u>, bool):
+
+       1eaee:	f240 52f2 	movw	r2, #1522	; 0x5f2
+
+       1eaf2:	4596      	cmp	lr, r2
+
+       1eaf4:	d811      	bhi.n	1eb1a <<a href="./d6bd0247a002abd943fb3768574dde61.html">ethernet::TxBuffers::writeBuffer(unsigned char, etl::span<unsigned char const, 4294967295u>, bool)</a>+0x52>
+
+       1eaf6:	f40c 5c00 	and.w	ip, ip, #8192	; 0x2000
+
+       1eafa:	6048      	str	r0, [r1, #4]
+
+       1eafc:	f44c 6c80 	orr.w	ip, ip, #1024	; 0x400
+
+       1eb00:	f825 e004 	strh.w	lr, [r5, r4]
+
+       1eb04:	b12b      	cbz	r3, 1eb12 <<a href="./d6bd0247a002abd943fb3768574dde61.html">ethernet::TxBuffers::writeBuffer(unsigned char, etl::span<unsigned char const, 4294967295u>, bool)</a>+0x4a>
+
+       1eb06:	f44c 6c00 	orr.w	ip, ip, #2048	; 0x800
+
+       1eb0a:	f8a1 c002 	strh.w	ip, [r1, #2]
+
+       1eb0e:	4618      	mov	r0, r3
+
+       1eb10:	bd38      	pop	{r3, r4, r5, pc}
+
+       1eb12:	f8a1 c002 	strh.w	ip, [r1, #2]
+
+       1eb16:	2001      	movs	r0, #1
+
+       1eb18:	bd38      	pop	{r3, r4, r5, pc}
+
+       1eb1a:	4b09      	ldr	r3, [pc, #36]	; (1eb40 <<a href="./d6bd0247a002abd943fb3768574dde61.html">ethernet::TxBuffers::writeBuffer(unsigned char, etl::span<unsigned char const, 4294967295u>, bool)</a>+0x78>)
+
+       1eb1c:	4a09      	ldr	r2, [pc, #36]	; (1eb44 <<a href="./d6bd0247a002abd943fb3768574dde61.html">ethernet::TxBuffers::writeBuffer(unsigned char, etl::span<unsigned char const, 4294967295u>, bool)</a>+0x7c>)
+
+       1eb1e:	7818      	ldrb	r0, [r3, #0]
+
+       1eb20:	2103      	movs	r1, #3
+
+       1eb22:	4673      	mov	r3, lr
+
+       1eb24:	f7ff fc2e 	bl	1e384 <<a href="../../../../../../../libs/bsw/util/include/util/logger/Logger.h/16ed4f7f357fda1c5edc4479ef99d0a4.html">util::logger::Logger::log(unsigned char, util::logger::Level, char const*, ...)</a>>
+
+       1eb28:	2000      	movs	r0, #0
+
+       1eb2a:	bd38      	pop	{r3, r4, r5, pc}
+
+       1eb2c:	4a06      	ldr	r2, [pc, #24]	; (1eb48 <<a href="./d6bd0247a002abd943fb3768574dde61.html">ethernet::TxBuffers::writeBuffer(unsigned char, etl::span<unsigned char const, 4294967295u>, bool)</a>+0x80>)
+
+       1eb2e:	2165      	movs	r1, #101	; 0x65
+
+       1eb30:	f7f4 fe1a 	bl	13768 <<a href="../../../../../../../libs/bsw/util/src/util/estd/assert.cpp/38ac861630520857582cce4f749c5937.html">estd::assert_func(char const*, int, char const*)</a>>
+
+       1eb34:	4a05      	ldr	r2, [pc, #20]	; (1eb4c <<a href="./d6bd0247a002abd943fb3768574dde61.html">ethernet::TxBuffers::writeBuffer(unsigned char, etl::span<unsigned char const, 4294967295u>, bool)</a>+0x84>)
+
+       1eb36:	2164      	movs	r1, #100	; 0x64
+
+       1eb38:	2000      	movs	r0, #0
+
+       1eb3a:	f7f4 fe15 	bl	13768 <<a href="../../../../../../../libs/bsw/util/src/util/estd/assert.cpp/38ac861630520857582cce4f749c5937.html">estd::assert_func(char const*, int, char const*)</a>>
+
+       1eb3e:	bf00      	nop
+
+       1eb40:	1ffe0087 	.word	0x1ffe0087
+
+       1eb44:	000266f0 	.word	0x000266f0
+
+       1eb48:	000266a4 	.word	0x000266a4
+
+       1eb4c:	0002667c 	.word	0x0002667c
+
+    </pre>
+
+    
+    <pre><a href="./345eaa815ae0b5b7577e4f835e01d138.html">ethernet::TxBuffers::getNextDescriptorIndex(unsigned char, etl::span&lt;unsigned char, 4294967295u&gt;) (124)</a></pre>
+    
+
+    
+        <h1>Stack Worst-Case Scenarios</h1>
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 152</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 128</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    152
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                48 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    128
+                    
+                    
+                </td>
+                <td class="col_size">68</td>
+                <td><a href="../../../../../../../libs/bsw/util/src/util/logger/Logger.cpp/d658d7c78dcca1ca01e61ef198b3eeaa.html" class="icon-function">util::logger::Logger::doLog(unsigned char, util::logger::Level, char const*, std::__va_list)</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                    
+                    104
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                24 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">60</td>
+                <td><a href="../../../../../../../libs/bsw/util/include/util/logger/Logger.h/16ed4f7f357fda1c5edc4479ef99d0a4.html" class="icon-function">util::logger::Logger::log(unsigned char, util::logger::Level, char const*, ...)</a></td>
+            </tr>
+        
+        </tbody>
+        
+        <tfoot>
+            <tr>
+                <th></th>
+                <th class="col_size">80
+                </th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </tfoot>
+        
+    </table>
+        
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 80</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 560</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    80
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                16 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    560
+                    
+                    
+                </td>
+                <td class="col_size">136</td>
+                <td><a href="./d6bd0247a002abd943fb3768574dde61.html" class="icon-function">ethernet::TxBuffers::writeBuffer(unsigned char, etl::span&lt;unsigned char const, 4294967295u&gt;, bool)</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                </td>
+                <td class="col_size">
+            
+                64 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">424</td>
+                <td><a href="./b3cff0ebb1afa7620591fef5667b5637.html" class="icon-function">ethernet::TxBuffers::writeFrame(unsigned short, pbuf const*)</a></td>
+            </tr>
+        
+        </tbody>
+        
+    </table>
+        
+    
+
+
+        </div>
+    <div id="page-footer">
+        <hr>
+        
+            brought to you with 💖
+            by <a href="https://twitter.com/hbehrens">Heiko Behrens</a>
+            <span class="secondary">– MIT license, copyright © 2014-2025</span>
+        
+    </div>
+    </div>
+</body>
+</html>
