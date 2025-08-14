@@ -71,7 +71,7 @@ private:
     ::util::stream::ISharedOutputStream* _sharedOutputStream;
     ::util::stream::IOutputStream* _activeStream;
     char const* _start;
-    char const* _current;
+    char const* _currentPosition;
     char const* _end;
     char const* _tokenStart;
     ICommand::Result _result;
@@ -91,26 +91,27 @@ T CommandContext::scanIntToken()
 {
     T result          = static_cast<T>(0);
     bool negative     = false;
-    char const* start = _current;
+    char const* start = _currentPosition;
     if (isValid())
     {
-        _tokenStart   = _current;
+        _tokenStart   = _currentPosition;
         uint32_t base = 10U;
-        switch (*_current)
+        switch (*_currentPosition)
         {
             case '+':
             case '-':
             {
-                negative = *_current == '-';
-                ++_current;
+                negative = *_currentPosition == '-';
+                ++_currentPosition;
                 break;
             }
             case '0':
             {
-                if (((_current + 1) < _end) && ((_current[1] == 'x') || (_current[1] == 'X')))
+                if (((_currentPosition + 1) < _end)
+                    && ((_currentPosition[1] == 'x') || (_currentPosition[1] == 'X')))
                 {
                     base = 16U;
-                    _current += 2;
+                    _currentPosition += 2;
                 }
                 else
                 {
@@ -123,19 +124,19 @@ T CommandContext::scanIntToken()
                 break;
             }
         }
-        start = _current;
-        while (_current != _end)
+        start = _currentPosition;
+        while (_currentPosition != _end)
         {
-            int32_t const digit = getDigit(*_current, base);
+            int32_t const digit = getDigit(*_currentPosition, base);
             if (digit < 0)
             {
                 break;
             }
             result = result * static_cast<T>(base) + static_cast<T>(digit);
-            ++_current;
+            ++_currentPosition;
         }
     }
-    bool checkCondition = (_current != start);
+    bool checkCondition = (_currentPosition != start);
     if (checkCondition)
     {
         checkCondition = ignoreWhitespace();

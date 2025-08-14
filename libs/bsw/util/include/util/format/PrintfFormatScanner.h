@@ -154,7 +154,7 @@ private:
     static inline bool isDigit(char c);
 
     char const* _start;
-    char const* _current;
+    char const* _currentPosition;
     TokenType _tokenType;
     ParamInfo _paramInfo;
 };
@@ -166,7 +166,7 @@ inline TokenType PrintfFormatScanner::getTokenType() const { return _tokenType; 
 
 inline char const* PrintfFormatScanner::getTokenStart() const { return _start; }
 
-inline char const* PrintfFormatScanner::getTokenEnd() const { return _current; }
+inline char const* PrintfFormatScanner::getTokenEnd() const { return _currentPosition; }
 
 inline ParamInfo const& PrintfFormatScanner::getParamInfo() const { return _paramInfo; }
 

@@ -8,7 +8,7 @@ namespace format
 {
 PrintfFormatScanner::PrintfFormatScanner(char const* const formatString)
 : _start(nullptr)
-, _current((formatString != nullptr) ? formatString : "")
+, _currentPosition((formatString != nullptr) ? formatString : "")
 , _tokenType(TokenType::END)
 , _paramInfo()
 {
@@ -17,7 +17,7 @@ PrintfFormatScanner::PrintfFormatScanner(char const* const formatString)
 
 void PrintfFormatScanner::nextToken()
 {
-    if (*_current == '%')
+    if (*_currentPosition == '%')
     {
         scanParam();
     }
@@ -29,14 +29,14 @@ void PrintfFormatScanner::nextToken()
 
 void PrintfFormatScanner::scanString(uint32_t const offset)
 {
-    _start = _current;
-    if (*_current != '\0')
+    _start = _currentPosition;
+    if (*_currentPosition != '\0')
     {
         _tokenType = TokenType::STRING;
-        _current += offset;
-        while ((*_current != '\0') && (*_current != '%'))
+        _currentPosition += offset;
+        while ((*_currentPosition != '\0') && (*_currentPosition != '%'))
         {
-            ++_current;
+            ++_currentPosition;
         }
     }
     else
@@ -48,14 +48,14 @@ void PrintfFormatScanner::scanString(uint32_t const offset)
 void PrintfFormatScanner::scanParam()
 {
     _tokenType        = TokenType::PARAM;
-    _start            = _current;
+    _start            = _currentPosition;
     _paramInfo._flags = 0U;
-    ++_current;
+    ++_currentPosition;
     scanParamFlags();
     _paramInfo._width = scanWidthOrPrecision();
-    if (*_current == '.')
+    if (*_currentPosition == '.')
     {
-        ++_current;
+        ++_currentPosition;
         _paramInfo._precision = scanWidthOrPrecision();
     }
     else
@@ -69,18 +69,18 @@ void PrintfFormatScanner::scanParam()
 int32_t PrintfFormatScanner::scanWidthOrPrecision()
 {
     int32_t result;
-    if (isDigit(*_current))
+    if (isDigit(*_currentPosition))
     {
         result = 0;
         do
         {
-            result = (10 * result) + static_cast<int32_t>((*_current - '0'));
-            ++_current;
-        } while (isDigit(*_current));
+            result = (10 * result) + static_cast<int32_t>((*_currentPosition - '0'));
+            ++_currentPosition;
+        } while (isDigit(*_currentPosition));
     }
-    else if (*_current == '*')
+    else if (*_currentPosition == '*')
     {
-        ++_current;
+        ++_currentPosition;
         result = ParamWidthOrPrecision::PARAM;
     }
     else
@@ -94,7 +94,7 @@ void PrintfFormatScanner::scanParamFlags()
 {
     while (true)
     {
-        switch (*_current)
+        switch (*_currentPosition)
         {
             case '-':
             {
@@ -126,31 +126,31 @@ void PrintfFormatScanner::scanParamFlags()
                 return;
             }
         }
-        ++_current;
+        ++_currentPosition;
     }
 }
 
 uint8_t PrintfFormatScanner::scanParamLength()
 {
-    switch (*_current)
+    switch (*_currentPosition)
     {
         case 'h':
         {
-            ++_current;
+            ++_currentPosition;
             return 1U;
         }
         case 'l':
         {
-            ++_current;
-            if (*_current == 'l')
+            ++_currentPosition;
+            if (*_currentPosition == 'l')
             {
-                ++_current;
+                ++_currentPosition;
             }
             return 3U;
         }
         case 'L':
         {
-            ++_current;
+            ++_currentPosition;
             return 2U;
         }
         default:
@@ -162,8 +162,8 @@ uint8_t PrintfFormatScanner::scanParamLength()
 
 void PrintfFormatScanner::scanParamFormatSpecifier(uint8_t const intPower)
 {
-    char const specifier = *_current;
-    ++_current;
+    char const specifier = *_currentPosition;
+    ++_currentPosition;
     switch (specifier)
     {
         case 'c':
@@ -227,7 +227,7 @@ void PrintfFormatScanner::scanParamFormatSpecifier(uint8_t const intPower)
 
         case 0:
         {
-            --_current;
+            --_currentPosition;
             scanString();
             break;
         }
@@ -235,7 +235,7 @@ void PrintfFormatScanner::scanParamFormatSpecifier(uint8_t const intPower)
         default:
         {
             ++_start;
-            --_current;
+            --_currentPosition;
             scanString(1U);
             break;
         }

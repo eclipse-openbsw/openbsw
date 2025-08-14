@@ -63,12 +63,12 @@ public:
     // [PUBLIC_API_END]
 private:
     IWriter& _destination;
-    ::etl::span<uint8_t> _current;
+    ::etl::span<uint8_t> _currentBuffer;
     size_t _size;
 };
 
 inline BufferedWriter::BufferedWriter(IWriter& destination)
-: _destination(destination), _current(), _size(0)
+: _destination(destination), _currentBuffer(), _size(0)
 {}
 
 inline size_t BufferedWriter::maxSize() const { return _destination.maxSize(); }

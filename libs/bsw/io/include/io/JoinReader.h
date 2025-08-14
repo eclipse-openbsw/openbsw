@@ -64,13 +64,13 @@ public:
 
 private:
     ::etl::span<IReader*, N> _sources;
-    mutable size_t _current;
+    mutable size_t _currentPosition;
     mutable bool _hasPeeked = false;
 };
 
 template<size_t N>
 JoinReader<N>::JoinReader(::etl::span<IReader*, N> const& sources)
-: stats(), _sources(sources), _current(0)
+: stats(), _sources(sources), _currentPosition(0)
 {
     estd_assert(_sources[0] != nullptr);
     auto const max = _sources[0]->maxSize();
@@ -91,14 +91,14 @@ inline size_t JoinReader<N>::maxSize() const
 template<size_t N>
 ::etl::span<uint8_t> JoinReader<N>::peek() const
 {
-    for (size_t i = _current; i < (N + _current); i++)
+    for (size_t i = _currentPosition; i < (N + _currentPosition); i++)
     {
         size_t const real_i = i % N;
         auto const b        = _sources[real_i]->peek();
         if (b.size() > 0)
         {
-            _current   = real_i;
-            _hasPeeked = true;
+            _currentPosition = real_i;
+            _hasPeeked       = true;
             return b;
         }
     }
@@ -110,11 +110,11 @@ void JoinReader<N>::release()
 {
     if (_hasPeeked)
     {
-        stats[_current] += 1;
+        stats[_currentPosition] += 1;
     }
-    _sources[_current]->release();
-    _current++;
-    _current %= N;
+    _sources[_currentPosition]->release();
+    _currentPosition++;
+    _currentPosition %= N;
     _hasPeeked = false;
 }
 

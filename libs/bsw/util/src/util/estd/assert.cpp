@@ -106,9 +106,9 @@ char const* assert_exception::getTest() const { return _test; }
 
 AssertHandlerScope::AssertHandlerScope(AssertHandler const next)
 {
-    _current = get_assert_handler();
+    _currentHandler = get_assert_handler();
     set_assert_handler(next);
 }
 
-AssertHandlerScope::~AssertHandlerScope() { set_assert_handler(_current); }
+AssertHandlerScope::~AssertHandlerScope() { set_assert_handler(_currentHandler); }
 } // namespace estd
