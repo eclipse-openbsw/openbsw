@@ -140,27 +140,56 @@ private:
 
 LifecycleMonitor lifecycleMonitor(lifecycleManager);
 
-void staticInit()
+class IdleHandler : private ::async::RunnableType
 {
-    ::logger::init();
+public:
+    void init()
+    {
+        ::logger::init();
 
-    ::console::init();
-    ::console::enable();
-}
+        ::console::init();
+        ::console::enable();
+    }
 
-void staticShutdown()
-{
-    Logger::info(LIFECYCLE, "Lifecycle shutdown complete");
-    ::logger::flush();
+    void start() { ::async::execute(AsyncAdapter::TASK_IDLE, *this); }
 
-    softwareSystemReset();
-}
+private:
+    void execute() override
+    {
+        ::logger::run();
+        ::console::run();
+        if (lifecycleMonitor.isReadyForReset())
+        {
+            shutdown();
+        }
+        else
+        {
+            ::async::execute(AsyncAdapter::TASK_IDLE, *this);
+        }
+    }
+
+    void shutdown()
+    {
+        Logger::info(LIFECYCLE, "Lifecycle shutdown complete");
+        ::logger::flush();
+
+        softwareSystemReset();
+    }
+};
+
+IdleHandler idleHandler;
+
+void startApp();
 
 void run()
 {
     printf("hello\r\n");
-    staticInit();
-    AsyncAdapter::init();
+    idleHandler.init();
+    AsyncAdapter::run(AsyncAdapter::StartAppFunctionType::create<&startApp>());
+}
+
+void startApp()
+{
 #if TRACING
     runtime::Tracer::init();
     runtime::Tracer::start();
@@ -229,27 +258,11 @@ void run()
     lifecycleManager.transitionToLevel(MaxNumLevels);
 
     runtimeMonitor.start();
-    AsyncAdapter::run();
-
-    while (true)
-    {
-        ;
-    }
-}
-
-void idle(AsyncAdapter::TaskContextType& taskContext)
-{
-    taskContext.dispatchWhileWork();
-    ::logger::run();
-    ::console::run();
-    if (lifecycleMonitor.isReadyForReset())
-    {
-        staticShutdown();
-    }
+    idleHandler.start();
 }
 
 using IdleTask = AsyncAdapter::IdleTask<1024 * 2>;
-IdleTask idleTask{"idle", AsyncAdapter::TaskFunctionType::create<&idle>()};
+IdleTask idleTask{"idle"};
 
 using TimerTask = AsyncAdapter::TimerTask<1024 * 1>;
 TimerTask timerTask{"timer"};
