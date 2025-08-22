@@ -21,8 +21,8 @@ class CanFlex2TransceiverTest : public Test
 {
 public:
     ::async::AsyncMock fAsyncMock;
-    ::async::ContextType fAsyncContext;
-    uint8_t fBusId;
+    ::async::ContextType fAsyncContext = 0;
+    uint8_t fBusId                     = 0xFF;
     ::bios::FlexCANDevice::Config fDevConfig;
     ::bios::CanPhyMock fCanPhy;
     ::power::PowerStateControllerMock fPowerStateController;
@@ -564,6 +564,8 @@ TEST_F(InitedCanFlex2TransceiverTest, notifyRegisteredSentListenerMatch)
 
     EXPECT_CALL(*fpFlexCANDevice, transmit(_, _, _))
         .WillRepeatedly(Return(ICanTransceiver::ErrorCode::CAN_ERR_OK));
+
+    EXPECT_CALL(*fpFlexCANDevice, getTransmitBuffer(_, _)).WillOnce(Return(0));
 
     EXPECT_CALL(listener, canFrameSent(_)).Times(1);
 
