@@ -1,0 +1,461 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../../../../../../../../../../../static/css/style.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <title>Symbol - puncover</title>
+    
+</head>
+<body>
+    <div class="container" id="content">
+        <div class="page-header">
+            <nav class="navbar navbar-default" role="navigation">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="../../../../../../../../../../../../index.html">
+                    Puncover
+                  </a>
+                </div>
+              </div>
+            </nav>
+          
+        </div>
+        <div id="inner_content">
+        
+    
+    <ol class="breadcrumb folders">
+        
+        <li><a href="../../../../../../../../../../../../home.html">home</a></li>
+        
+        <li><a href="../../../../../../../../../../../runner.html">runner</a></li>
+        
+        <li><a href="../../../../../../../../../../work.html">work</a></li>
+        
+        <li><a href="../../../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../../libs.html">libs</a></li>
+        
+        <li><a href="../../../../../../bsw.html">bsw</a></li>
+        
+        <li><a href="../../../../../uds.html">uds</a></li>
+        
+        <li><a href="../../../../src.html">src</a></li>
+        
+        <li><a href="../../../uds.html">uds</a></li>
+        
+        <li ><a href="../../connection.html">connection</a>
+            </li>
+
+        
+        <li class="active"><a href="../DiagConnectionManager.cpp.html">DiagConnectionManager.cpp</a>:217
+            </li>
+        
+    </ol>
+
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <th>Function</th>
+                <td colspan="5">
+                    <span class="icon-function">uds::DiagConnectionManager::getExpectingConnection(transport::TransportMessage const&amp;)</span>
+                </td>
+            </tr>
+
+            <tr>
+                <th rowspan="2"></th>
+                <th>Address</th>
+                <th>Remarks</th>
+                <th>Stack</th>
+                <th>Code</th>
+                <th>Static</th>
+            </tr>
+            <tr>
+                <td>0x00018f34</td>
+                <td>
+    <span class="label label-success">x-module</span>
+    
+</td>
+                <td>64 (static)</td>
+                <td>148</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th>Callers (1)</th>
+                <td colspan="5">
+                
+                    <a href="../../DiagDispatcher.cpp/7ba11d22d39fda2c3e456e9c34fe1995.html">uds::DiagDispatcher2::processQueue() (124)</a>
+                    
+                
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Callees (2,
+                            <span title="sum of used bytes by all callees">
+                            Σ=108
+                            </span>
+                        )
+                    
+                </th>
+                <td colspan="5">
+                
+                    <a href="../ManagedOutgoingDiagConnection.cpp/b0f778336b0e82ba83a5bfc1cde7110d.html">uds::ManagedOutgoingDiagConnection::isExpectedResponse(transport::TransportMessage const&amp;) (52)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../../../../../util/include/util/logger/Logger.h/36d1ae1365862a45a74fa55e9d725fcd.html">util::logger::Logger::debug(unsigned char, char const*, ...) (56)</a>
+                    
+                
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    
+    <pre><a href="./9e441d98338966d18ba65dfae6e0f652.html">uds::DiagConnectionManager::requestIncomingConnection(transport::TransportMessage&amp;) (136)</a></pre>
+    
+
+    <pre>
+
+    uds::DiagConnectionManager::getExpectingConnection(transport::TransportMessage const&):
+
+       18f34:	e92d 4ff0 	stmdb	sp!, {r4, r5, r6, r7, r8, r9, sl, fp, lr}
+
+       18f38:	b087      	sub	sp, #28
+
+       18f3a:	f3ef 8310 	mrs	r3, PRIMASK
+
+    getMachineStateRegisterValueAndSuspendAllInterrupts():
+
+       18f3e:	b672      	cpsid	i
+
+    _ZN3etl19intrusive_list_baseINS_18bidirectional_linkILj0EEEE8get_headEv():
+
+       18f40:	6a44      	ldr	r4, [r0, #36]	; 0x24
+
+    getMachineStateRegisterValueAndSuspendAllInterrupts():
+
+       18f42:	9305      	str	r3, [sp, #20]
+
+    _ZN3etl14intrusive_listIN3uds29ManagedOutgoingDiagConnectionENS_18bidirectional_linkILj0EEEE3endEv():
+
+       18f44:	f100 0720 	add.w	r7, r0, #32
+
+    uds::DiagConnectionManager::getExpectingConnection(transport::TransportMessage const&):
+
+       18f48:	42bc      	cmp	r4, r7
+
+       18f4a:	d02f      	beq.n	18fac <<a href="./64501e83ceef8e68ada8c1d9ef1a64ee.html">uds::DiagConnectionManager::getExpectingConnection(transport::TransportMessage const&)</a>+0x78>
+
+       18f4c:	f04f 0800 	mov.w	r8, #0
+
+       18f50:	f8df b06c 	ldr.w	fp, [pc, #108]	; 18fc0 <<a href="./64501e83ceef8e68ada8c1d9ef1a64ee.html">uds::DiagConnectionManager::getExpectingConnection(transport::TransportMessage const&)</a>+0x8c>
+
+       18f54:	f8df a06c 	ldr.w	sl, [pc, #108]	; 18fc4 <<a href="./64501e83ceef8e68ada8c1d9ef1a64ee.html">uds::DiagConnectionManager::getExpectingConnection(transport::TransportMessage const&)</a>+0x90>
+
+       18f58:	f8cd 8010 	str.w	r8, [sp, #16]
+
+       18f5c:	4689      	mov	r9, r1
+
+    _ZNK3etl14intrusive_listIN3uds29ManagedOutgoingDiagConnectionENS_18bidirectional_linkILj0EEEE8iteratorptEv():
+
+       18f5e:	b344      	cbz	r4, 18fb2 <<a href="./64501e83ceef8e68ada8c1d9ef1a64ee.html">uds::DiagConnectionManager::getExpectingConnection(transport::TransportMessage const&)</a>+0x7e>
+
+       18f60:	f1a4 067c 	sub.w	r6, r4, #124	; 0x7c
+
+    uds::DiagConnectionManager::getExpectingConnection(transport::TransportMessage const&):
+
+       18f64:	4649      	mov	r1, r9
+
+       18f66:	4630      	mov	r0, r6
+
+       18f68:	f7fd ff8e 	bl	16e88 <<a href="../ManagedOutgoingDiagConnection.cpp/b0f778336b0e82ba83a5bfc1cde7110d.html">uds::ManagedOutgoingDiagConnection::isExpectedResponse(transport::TransportMessage const&)</a>>
+
+       18f6c:	f854 2c78 	ldr.w	r2, [r4, #-120]
+
+    _ZNK3etl4spanIhLj4294967295EE4dataEv():
+
+       18f70:	6851      	ldr	r1, [r2, #4]
+
+    uds::DiagConnectionManager::getExpectingConnection(transport::TransportMessage const&):
+
+       18f72:	89d3      	ldrh	r3, [r2, #14]
+
+       18f74:	8992      	ldrh	r2, [r2, #12]
+
+       18f76:	9003      	str	r0, [sp, #12]
+
+       18f78:	4605      	mov	r5, r0
+
+       18f7a:	7888      	ldrb	r0, [r1, #2]
+
+       18f7c:	9002      	str	r0, [sp, #8]
+
+       18f7e:	7848      	ldrb	r0, [r1, #1]
+
+       18f80:	9001      	str	r0, [sp, #4]
+
+       18f82:	7809      	ldrb	r1, [r1, #0]
+
+       18f84:	9100      	str	r1, [sp, #0]
+
+       18f86:	f89b 0000 	ldrb.w	r0, [fp]
+
+       18f8a:	4651      	mov	r1, sl
+
+       18f8c:	f7e8 fc18 	bl	17c0 <<a href="../../../../../util/include/util/logger/Logger.h/36d1ae1365862a45a74fa55e9d725fcd.html">util::logger::Logger::debug(unsigned char, char const*, ...)</a>>
+
+    _ZN3etl14intrusive_listIN3uds29ManagedOutgoingDiagConnectionENS_18bidirectional_linkILj0EEEE8iteratorppEv():
+
+       18f90:	6864      	ldr	r4, [r4, #4]
+
+    uds::DiagConnectionManager::getExpectingConnection(transport::TransportMessage const&):
+
+       18f92:	4545      	cmp	r5, r8
+
+       18f94:	bf84      	itt	hi
+
+       18f96:	46a8      	movhi	r8, r5
+
+    _ZNK3etl14intrusive_listIN3uds29ManagedOutgoingDiagConnectionENS_18bidirectional_linkILj0EEEE8iteratorptEv():
+
+       18f98:	9604      	strhi	r6, [sp, #16]
+
+    uds::DiagConnectionManager::getExpectingConnection(transport::TransportMessage const&):
+
+       18f9a:	42bc      	cmp	r4, r7
+
+       18f9c:	d1df      	bne.n	18f5e <<a href="./64501e83ceef8e68ada8c1d9ef1a64ee.html">uds::DiagConnectionManager::getExpectingConnection(transport::TransportMessage const&)</a>+0x2a>
+
+       18f9e:	9b05      	ldr	r3, [sp, #20]
+
+    resumeAllInterrupts():
+
+       18fa0:	f383 8810 	msr	PRIMASK, r3
+
+    uds::DiagConnectionManager::getExpectingConnection(transport::TransportMessage const&):
+
+       18fa4:	9804      	ldr	r0, [sp, #16]
+
+       18fa6:	b007      	add	sp, #28
+
+       18fa8:	e8bd 8ff0 	ldmia.w	sp!, {r4, r5, r6, r7, r8, r9, sl, fp, pc}
+
+       18fac:	2300      	movs	r3, #0
+
+       18fae:	9304      	str	r3, [sp, #16]
+
+       18fb0:	e7f5      	b.n	18f9e <<a href="./64501e83ceef8e68ada8c1d9ef1a64ee.html">uds::DiagConnectionManager::getExpectingConnection(transport::TransportMessage const&)</a>+0x6a>
+
+       18fb2:	4649      	mov	r1, r9
+
+       18fb4:	4620      	mov	r0, r4
+
+       18fb6:	f7fd ff67 	bl	16e88 <<a href="../ManagedOutgoingDiagConnection.cpp/b0f778336b0e82ba83a5bfc1cde7110d.html">uds::ManagedOutgoingDiagConnection::isExpectedResponse(transport::TransportMessage const&)</a>>
+
+       18fba:	6863      	ldr	r3, [r4, #4]
+
+       18fbc:	deff      	udf	#255	; 0xff
+
+       18fbe:	bf00      	nop
+
+       18fc0:	1ffe0081 	.word	0x1ffe0081
+
+       18fc4:	00024ad8 	.word	0x00024ad8
+
+    </pre>
+
+    
+    <pre><a href="./574eaa80329ba6d2070fd1663527c7fd.html">uds::DiagConnectionManager::processPendingResponses() (44)</a></pre>
+    
+
+    
+        <h1>Stack Worst-Case Scenarios</h1>
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 172</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 176</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    172
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                48 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    176
+                    
+                    
+                </td>
+                <td class="col_size">68</td>
+                <td><a href="../../../../../util/src/util/logger/Logger.cpp/d658d7c78dcca1ca01e61ef198b3eeaa.html" class="icon-function">util::logger::Logger::doLog(unsigned char, util::logger::Level, char const*, std::__va_list)</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                    
+                    124
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                20 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    108
+                    
+                    
+                </td>
+                <td class="col_size">56</td>
+                <td><a href="../../../../../util/include/util/logger/Logger.h/36d1ae1365862a45a74fa55e9d725fcd.html" class="icon-function">util::logger::Logger::debug(unsigned char, char const*, ...)</a></td>
+            </tr>
+        
+            <tr>
+                <th>3</th>
+                <td class="col_size">
+                    
+                    104
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                8 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">52</td>
+                <td><a href="../ManagedOutgoingDiagConnection.cpp/b0f778336b0e82ba83a5bfc1cde7110d.html" class="icon-function">uds::ManagedOutgoingDiagConnection::isExpectedResponse(transport::TransportMessage const&amp;)</a></td>
+            </tr>
+        
+        </tbody>
+        
+        <tfoot>
+            <tr>
+                <th></th>
+                <th class="col_size">96
+                </th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </tfoot>
+        
+    </table>
+        
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 96</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 272</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    96
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                64 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    272
+                    
+                    
+                </td>
+                <td class="col_size">148</td>
+                <td><a href="./64501e83ceef8e68ada8c1d9ef1a64ee.html" class="icon-function">uds::DiagConnectionManager::getExpectingConnection(transport::TransportMessage const&amp;)</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                </td>
+                <td class="col_size">
+            
+                32 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">124</td>
+                <td><a href="../../DiagDispatcher.cpp/7ba11d22d39fda2c3e456e9c34fe1995.html" class="icon-function">uds::DiagDispatcher2::processQueue()</a></td>
+            </tr>
+        
+        </tbody>
+        
+    </table>
+        
+    
+
+
+        </div>
+    <div id="page-footer">
+        <hr>
+        
+            brought to you with 💖
+            by <a href="https://twitter.com/hbehrens">Heiko Behrens</a>
+            <span class="secondary">– MIT license, copyright © 2014-2025</span>
+        
+    </div>
+    </div>
+</body>
+</html>

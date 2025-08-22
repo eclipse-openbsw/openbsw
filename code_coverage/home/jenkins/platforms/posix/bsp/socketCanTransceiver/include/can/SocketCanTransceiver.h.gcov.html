@@ -1,0 +1,165 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - coverage.info - /home/jenkins/platforms/posix/bsp/socketCanTransceiver/include/can/SocketCanTransceiver.h</title>
+  <link rel="stylesheet" type="text/css" href="../../../../../../../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../../../../../../../index.html">top level</a> - <a href="index.html">home/jenkins/platforms/posix/bsp/socketCanTransceiver/include/can</a> - SocketCanTransceiver.h<span style="font-size: 80%;"> (source / <a href="SocketCanTransceiver.h.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">coverage.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">1</td>
+            <td class="headerCovTableEntry">2</td>
+            <td class="headerCovTableEntryLo">50.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2025-08-22 14:59:44</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntryHi">-</td>
+          </tr>
+          <tr><td><img src="../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : // Copyright 2024 Accenture.</a>
+<a name="2"><span class="lineNum">       2 </span>            : </a>
+<a name="3"><span class="lineNum">       3 </span>            : #pragma once</a>
+<a name="4"><span class="lineNum">       4 </span>            : </a>
+<a name="5"><span class="lineNum">       5 </span>            : #include &lt;can/transceiver/AbstractCANTransceiver.h&gt;</a>
+<a name="6"><span class="lineNum">       6 </span>            : #include &lt;io/MemoryQueue.h&gt;</a>
+<a name="7"><span class="lineNum">       7 </span>            : </a>
+<a name="8"><span class="lineNum">       8 </span>            : #include &lt;atomic&gt;</a>
+<a name="9"><span class="lineNum">       9 </span>            : </a>
+<a name="10"><span class="lineNum">      10 </span>            : namespace can</a>
+<a name="11"><span class="lineNum">      11 </span>            : {</a>
+<a name="12"><span class="lineNum">      12 </span>            : </a>
+<a name="13"><span class="lineNum">      13 </span>            : /**</a>
+<a name="14"><span class="lineNum">      14 </span>            :  * The implementation of ICanTransceiver using Linux SocketCAN stack</a>
+<a name="15"><span class="lineNum">      15 </span>            :  *</a>
+<a name="16"><span class="lineNum">      16 </span>            :  * The class assumes that all its methods except write(), the constructor, and the destructor are</a>
+<a name="17"><span class="lineNum">      17 </span>            :  * run in the same task context. The deviation from this can result in unobvious UBs.</a>
+<a name="18"><span class="lineNum">      18 </span>            :  * The transceiver state change detection is currently not implemented,</a>
+<a name="19"><span class="lineNum">      19 </span>            :  * the corresponding callback is never called.</a>
+<a name="20"><span class="lineNum">      20 </span>            :  */</a>
+<a name="21"><span class="lineNum">      21 </span><span class="lineCov">          1 : class SocketCanTransceiver final : public AbstractCANTransceiver</span></a>
+<a name="22"><span class="lineNum">      22 </span>            : {</a>
+<a name="23"><span class="lineNum">      23 </span>            : public:</a>
+<a name="24"><span class="lineNum">      24 </span>            :     /**</a>
+<a name="25"><span class="lineNum">      25 </span>            :      * The transceiver device (static) configuration</a>
+<a name="26"><span class="lineNum">      26 </span>            :      *</a>
+<a name="27"><span class="lineNum">      27 </span>            :      * The instance of this class is provided to SocketCanTransceiver constructor</a>
+<a name="28"><span class="lineNum">      28 </span>            :      * and is kept by reference during the lifetime of the constructed object.</a>
+<a name="29"><span class="lineNum">      29 </span>            :      */</a>
+<a name="30"><span class="lineNum">      30 </span>            :     struct DeviceConfig</a>
+<a name="31"><span class="lineNum">      31 </span>            :     {</a>
+<a name="32"><span class="lineNum">      32 </span>            :         char const* name; /// SocketCAN interface name</a>
+<a name="33"><span class="lineNum">      33 </span>            :         uint8_t busId;    /// currently not used</a>
+<a name="34"><span class="lineNum">      34 </span>            :     };</a>
+<a name="35"><span class="lineNum">      35 </span>            : </a>
+<a name="36"><span class="lineNum">      36 </span>            :     explicit SocketCanTransceiver(DeviceConfig const&amp; config);</a>
+<a name="37"><span class="lineNum">      37 </span>            : </a>
+<a name="38"><span class="lineNum">      38 </span>            :     SocketCanTransceiver(SocketCanTransceiver const&amp;)            = delete;</a>
+<a name="39"><span class="lineNum">      39 </span>            :     SocketCanTransceiver&amp; operator=(SocketCanTransceiver const&amp;) = delete;</a>
+<a name="40"><span class="lineNum">      40 </span>            : </a>
+<a name="41"><span class="lineNum">      41 </span>            :     ICanTransceiver::ErrorCode init() final;</a>
+<a name="42"><span class="lineNum">      42 </span>            :     ICanTransceiver::ErrorCode open() final;</a>
+<a name="43"><span class="lineNum">      43 </span>            :     ICanTransceiver::ErrorCode open(CANFrame const&amp; frame) final;</a>
+<a name="44"><span class="lineNum">      44 </span>            :     ICanTransceiver::ErrorCode close() final;</a>
+<a name="45"><span class="lineNum">      45 </span>            :     void shutdown() final;</a>
+<a name="46"><span class="lineNum">      46 </span>            : </a>
+<a name="47"><span class="lineNum">      47 </span>            :     ICanTransceiver::ErrorCode write(CANFrame const&amp; frame) final;</a>
+<a name="48"><span class="lineNum">      48 </span>            :     ICanTransceiver::ErrorCode write(CANFrame const&amp; frame, ICANFrameSentListener&amp; listener) final;</a>
+<a name="49"><span class="lineNum">      49 </span>            : </a>
+<a name="50"><span class="lineNum">      50 </span>            :     ICanTransceiver::ErrorCode mute() final;</a>
+<a name="51"><span class="lineNum">      51 </span>            :     ICanTransceiver::ErrorCode unmute() final;</a>
+<a name="52"><span class="lineNum">      52 </span>            : </a>
+<a name="53"><span class="lineNum">      53 </span>            :     uint32_t getBaudrate() const final;</a>
+<a name="54"><span class="lineNum">      54 </span>            :     uint16_t getHwQueueTimeout() const final;</a>
+<a name="55"><span class="lineNum">      55 </span>            : </a>
+<a name="56"><span class="lineNum">      56 </span>            :     /**</a>
+<a name="57"><span class="lineNum">      57 </span>            :      * This function is supposed to be run periodically.</a>
+<a name="58"><span class="lineNum">      58 </span>            :      * The callbacks registered with the ICanTransceiver will be triggered from inside this call.</a>
+<a name="59"><span class="lineNum">      59 </span>            :      */</a>
+<a name="60"><span class="lineNum">      60 </span>            :     void run(int maxSentPerRun, int maxReceivedPerRun);</a>
+<a name="61"><span class="lineNum">      61 </span>            : </a>
+<a name="62"><span class="lineNum">      62 </span>            : private:</a>
+<a name="63"><span class="lineNum">      63 </span>            :     static size_t const TX_QUEUE_SIZE_BYTES = 512;</a>
+<a name="64"><span class="lineNum">      64 </span>            : </a>
+<a name="65"><span class="lineNum">      65 </span><span class="lineNoCov">          0 :     struct FrameWithListener</span></a>
+<a name="66"><span class="lineNum">      66 </span>            :     {</a>
+<a name="67"><span class="lineNum">      67 </span>            :         CANFrame frame;</a>
+<a name="68"><span class="lineNum">      68 </span>            :         ICANFrameSentListener* listener;</a>
+<a name="69"><span class="lineNum">      69 </span>            :     };</a>
+<a name="70"><span class="lineNum">      70 </span>            : </a>
+<a name="71"><span class="lineNum">      71 </span>            :     using TxQueue = ::io::MemoryQueue&lt;TX_QUEUE_SIZE_BYTES, sizeof(FrameWithListener)&gt;;</a>
+<a name="72"><span class="lineNum">      72 </span>            : </a>
+<a name="73"><span class="lineNum">      73 </span>            :     // these functions are making system calls and shall be signal-masked</a>
+<a name="74"><span class="lineNum">      74 </span>            :     void guardedOpen();</a>
+<a name="75"><span class="lineNum">      75 </span>            :     void guardedClose();</a>
+<a name="76"><span class="lineNum">      76 </span>            :     void guardedRun(int maxSentPerRun, int maxReceivedPerRun);</a>
+<a name="77"><span class="lineNum">      77 </span>            : </a>
+<a name="78"><span class="lineNum">      78 </span>            :     TxQueue _txQueue;</a>
+<a name="79"><span class="lineNum">      79 </span>            :     ::io::MemoryQueueReader&lt;TxQueue&gt; _txReader;</a>
+<a name="80"><span class="lineNum">      80 </span>            :     ::io::MemoryQueueWriter&lt;TxQueue&gt; _txWriter;</a>
+<a name="81"><span class="lineNum">      81 </span>            : </a>
+<a name="82"><span class="lineNum">      82 </span>            :     DeviceConfig const&amp; _config;</a>
+<a name="83"><span class="lineNum">      83 </span>            : </a>
+<a name="84"><span class="lineNum">      84 </span>            :     int _fileDescriptor;</a>
+<a name="85"><span class="lineNum">      85 </span>            : </a>
+<a name="86"><span class="lineNum">      86 </span>            :     ::std::atomic_bool _writable;</a>
+<a name="87"><span class="lineNum">      87 </span>            : };</a>
+<a name="88"><span class="lineNum">      88 </span>            : </a>
+<a name="89"><span class="lineNum">      89 </span>            : } // namespace can</a>
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.14</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>
