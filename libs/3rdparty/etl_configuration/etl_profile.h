@@ -35,6 +35,10 @@ SOFTWARE.
 #define ETL_TARGET_OS_NONE
 
 #define ETL_NO_STL
+
+// When using clang, the headers are using the std::initializer_list
+// definitions even though we are configuring ETL_NO_STL in general
+#include <initializer_list>
 #define ETL_FORCE_STD_INITIALIZER_LIST
 
 #define ETL_NO_LIBC_WCHAR_H
