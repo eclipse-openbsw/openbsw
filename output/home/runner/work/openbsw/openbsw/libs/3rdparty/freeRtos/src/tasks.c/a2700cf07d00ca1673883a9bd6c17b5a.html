@@ -1,0 +1,494 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../../../../../../../../../static/css/style.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <title>Symbol - puncover</title>
+    
+</head>
+<body>
+    <div class="container" id="content">
+        <div class="page-header">
+            <nav class="navbar navbar-default" role="navigation">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="../../../../../../../../../../index.html">
+                    Puncover
+                  </a>
+                </div>
+              </div>
+            </nav>
+          
+        </div>
+        <div id="inner_content">
+        
+    
+    <ol class="breadcrumb folders">
+        
+        <li><a href="../../../../../../../../../../home.html">home</a></li>
+        
+        <li><a href="../../../../../../../../../runner.html">runner</a></li>
+        
+        <li><a href="../../../../../../../../work.html">work</a></li>
+        
+        <li><a href="../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../libs.html">libs</a></li>
+        
+        <li><a href="../../../../3rdparty.html">3rdparty</a></li>
+        
+        <li><a href="../../../freeRtos.html">freeRtos</a></li>
+        
+        <li ><a href="../../src.html">src</a>
+            </li>
+
+        
+        <li class="active"><a href="../tasks.c.html">tasks.c</a>:5387
+            </li>
+        
+    </ol>
+
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <th>Function</th>
+                <td colspan="5">
+                    <span class="icon-function">prvAddCurrentTaskToDelayedList</span>
+                </td>
+            </tr>
+
+            <tr>
+                <th rowspan="2"></th>
+                <th>Address</th>
+                <th>Remarks</th>
+                <th>Stack</th>
+                <th>Code</th>
+                <th>Static</th>
+            </tr>
+            <tr>
+                <td>0x00011a20</td>
+                <td>
+    
+    
+</td>
+                <td>24 (static)</td>
+                <td>168</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th>Callers (4)</th>
+                <td colspan="5">
+                
+                    <a href="./e3b0b757ef6331124620ce14313dcc71.html">xTaskGenericNotifyWait (172)</a>
+                    
+                        ,
+                    
+                
+                    <a href="./ff261e6301291d97229d25f13c19ed10.html">vTaskPlaceOnEventListRestricted (76)</a>
+                    
+                        ,
+                    
+                
+                    <a href="./26c8d7293d280927a5c3536c7c3d612e.html">vTaskPlaceOnUnorderedEventList (68)</a>
+                    
+                        ,
+                    
+                
+                    <a href="./0975a0d61c9f6b0e61639c753c84406d.html">vTaskPlaceOnEventList (32)</a>
+                    
+                
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Callees (2,
+                            <span title="sum of used bytes by all callees">
+                            Σ=88
+                            </span>
+                        )
+                    
+                </th>
+                <td colspan="5">
+                
+                    <a href="../list.c/1abc5ae8b61049fbb0433232e839935f.html">uxListRemove (40)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../list.c/4a1a844861e946c94e3a62dd84492ace.html">vListInsert (48)</a>
+                    
+                
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    
+    <pre><a href="../../../../bsw/stdioConsoleInput/src/console/StdioConsoleInput.cpp/eef7c492925a836588c8e8540506e9fb.html">console::StdioConsoleInput::run() (436)</a></pre>
+    
+
+    <pre>
+
+    prvAddCurrentTaskToDelayedList():
+
+       11a20:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
+
+       11a22:	4b22      	ldr	r3, [pc, #136]	; (11aac <<a href="./a2700cf07d00ca1673883a9bd6c17b5a.html">prvAddCurrentTaskToDelayedList</a>+0x8c>)
+
+       11a24:	4e22      	ldr	r6, [pc, #136]	; (11ab0 <<a href="./a2700cf07d00ca1673883a9bd6c17b5a.html">prvAddCurrentTaskToDelayedList</a>+0x90>)
+
+       11a26:	681c      	ldr	r4, [r3, #0]
+
+       11a28:	6833      	ldr	r3, [r6, #0]
+
+       11a2a:	4605      	mov	r5, r0
+
+       11a2c:	1d18      	adds	r0, r3, #4
+
+       11a2e:	460f      	mov	r7, r1
+
+       11a30:	f001 f90a 	bl	12c48 <<a href="../list.c/1abc5ae8b61049fbb0433232e839935f.html">uxListRemove</a>>
+
+       11a34:	b948      	cbnz	r0, 11a4a <<a href="./a2700cf07d00ca1673883a9bd6c17b5a.html">prvAddCurrentTaskToDelayedList</a>+0x2a>
+
+       11a36:	6833      	ldr	r3, [r6, #0]
+
+       11a38:	491e      	ldr	r1, [pc, #120]	; (11ab4 <<a href="./a2700cf07d00ca1673883a9bd6c17b5a.html">prvAddCurrentTaskToDelayedList</a>+0x94>)
+
+       11a3a:	6ada      	ldr	r2, [r3, #44]	; 0x2c
+
+       11a3c:	2301      	movs	r3, #1
+
+       11a3e:	fa03 f202 	lsl.w	r2, r3, r2
+
+       11a42:	680b      	ldr	r3, [r1, #0]
+
+       11a44:	ea23 0302 	bic.w	r3, r3, r2
+
+       11a48:	600b      	str	r3, [r1, #0]
+
+       11a4a:	1c6b      	adds	r3, r5, #1
+
+       11a4c:	d017      	beq.n	11a7e <<a href="./a2700cf07d00ca1673883a9bd6c17b5a.html">prvAddCurrentTaskToDelayedList</a>+0x5e>
+
+       11a4e:	6833      	ldr	r3, [r6, #0]
+
+       11a50:	1964      	adds	r4, r4, r5
+
+       11a52:	605c      	str	r4, [r3, #4]
+
+       11a54:	d307      	bcc.n	11a66 <<a href="./a2700cf07d00ca1673883a9bd6c17b5a.html">prvAddCurrentTaskToDelayedList</a>+0x46>
+
+       11a56:	4b18      	ldr	r3, [pc, #96]	; (11ab8 <<a href="./a2700cf07d00ca1673883a9bd6c17b5a.html">prvAddCurrentTaskToDelayedList</a>+0x98>)
+
+       11a58:	6818      	ldr	r0, [r3, #0]
+
+       11a5a:	6831      	ldr	r1, [r6, #0]
+
+       11a5c:	e8bd 40f8 	ldmia.w	sp!, {r3, r4, r5, r6, r7, lr}
+
+       11a60:	3104      	adds	r1, #4
+
+       11a62:	f001 b8d9 	b.w	12c18 <<a href="../list.c/4a1a844861e946c94e3a62dd84492ace.html">vListInsert</a>>
+
+       11a66:	4b15      	ldr	r3, [pc, #84]	; (11abc <<a href="./a2700cf07d00ca1673883a9bd6c17b5a.html">prvAddCurrentTaskToDelayedList</a>+0x9c>)
+
+       11a68:	6818      	ldr	r0, [r3, #0]
+
+       11a6a:	6831      	ldr	r1, [r6, #0]
+
+       11a6c:	3104      	adds	r1, #4
+
+       11a6e:	f001 f8d3 	bl	12c18 <<a href="../list.c/4a1a844861e946c94e3a62dd84492ace.html">vListInsert</a>>
+
+       11a72:	4b13      	ldr	r3, [pc, #76]	; (11ac0 <<a href="./a2700cf07d00ca1673883a9bd6c17b5a.html">prvAddCurrentTaskToDelayedList</a>+0xa0>)
+
+       11a74:	681a      	ldr	r2, [r3, #0]
+
+       11a76:	42a2      	cmp	r2, r4
+
+       11a78:	bf88      	it	hi
+
+       11a7a:	601c      	strhi	r4, [r3, #0]
+
+       11a7c:	bdf8      	pop	{r3, r4, r5, r6, r7, pc}
+
+       11a7e:	2f00      	cmp	r7, #0
+
+       11a80:	d0e5      	beq.n	11a4e <<a href="./a2700cf07d00ca1673883a9bd6c17b5a.html">prvAddCurrentTaskToDelayedList</a>+0x2e>
+
+       11a82:	4b10      	ldr	r3, [pc, #64]	; (11ac4 <<a href="./a2700cf07d00ca1673883a9bd6c17b5a.html">prvAddCurrentTaskToDelayedList</a>+0xa4>)
+
+       11a84:	6830      	ldr	r0, [r6, #0]
+
+       11a86:	685a      	ldr	r2, [r3, #4]
+
+       11a88:	6831      	ldr	r1, [r6, #0]
+
+       11a8a:	6082      	str	r2, [r0, #8]
+
+       11a8c:	6890      	ldr	r0, [r2, #8]
+
+       11a8e:	60c8      	str	r0, [r1, #12]
+
+       11a90:	6831      	ldr	r1, [r6, #0]
+
+       11a92:	6890      	ldr	r0, [r2, #8]
+
+       11a94:	3104      	adds	r1, #4
+
+       11a96:	6041      	str	r1, [r0, #4]
+
+       11a98:	6830      	ldr	r0, [r6, #0]
+
+       11a9a:	6834      	ldr	r4, [r6, #0]
+
+       11a9c:	6819      	ldr	r1, [r3, #0]
+
+       11a9e:	3004      	adds	r0, #4
+
+       11aa0:	3101      	adds	r1, #1
+
+       11aa2:	6090      	str	r0, [r2, #8]
+
+       11aa4:	6019      	str	r1, [r3, #0]
+
+       11aa6:	6163      	str	r3, [r4, #20]
+
+       11aa8:	bdf8      	pop	{r3, r4, r5, r6, r7, pc}
+
+       11aaa:	bf00      	nop
+
+       11aac:	1fff65ac 	.word	0x1fff65ac
+
+       11ab0:	1fff6444 	.word	0x1fff6444
+
+       11ab4:	1fff6530 	.word	0x1fff6530
+
+       11ab8:	1fff644c 	.word	0x1fff644c
+
+       11abc:	1fff6448 	.word	0x1fff6448
+
+       11ac0:	1fff6560 	.word	0x1fff6560
+
+       11ac4:	1fff6584 	.word	0x1fff6584
+
+    </pre>
+
+    
+    <pre><a href="./71b6abfea20a21a05ef90c3fbceff33f.html">prvIdleTask (96)</a></pre>
+    
+
+    
+        <h1>Stack Worst-Case Scenarios</h1>
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 224</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 48</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    224
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                8 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">48</td>
+                <td><a href="../list.c/4a1a844861e946c94e3a62dd84492ace.html" class="icon-function">vListInsert</a></td>
+            </tr>
+        
+        </tbody>
+        
+        <tfoot>
+            <tr>
+                <th></th>
+                <th class="col_size">216
+                </th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </tfoot>
+        
+    </table>
+        
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 216</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 1,440</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    216
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                24 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    1,440
+                    
+                    
+                </td>
+                <td class="col_size">168</td>
+                <td><a href="./a2700cf07d00ca1673883a9bd6c17b5a.html" class="icon-function">prvAddCurrentTaskToDelayedList</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                    
+                    192
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                16 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    1,272
+                    
+                    
+                </td>
+                <td class="col_size">68</td>
+                <td><a href="./26c8d7293d280927a5c3536c7c3d612e.html" class="icon-function">vTaskPlaceOnUnorderedEventList</a></td>
+            </tr>
+        
+            <tr>
+                <th>3</th>
+                <td class="col_size">
+                    
+                    176
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                24 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    1,204
+                    
+                    
+                </td>
+                <td class="col_size">180</td>
+                <td><a href="../event_groups.c/5504d9808e53d1ba7d00471cb60393d1.html" class="icon-function">xEventGroupWaitBits</a></td>
+            </tr>
+        
+            <tr>
+                <th>4</th>
+                <td class="col_size">
+                    
+                    152
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                24 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    1,024
+                    
+                    
+                </td>
+                <td class="col_size">56</td>
+                <td><a href="../../../../bsw/asyncFreeRtos/src/async/FutureSupport.cpp/748682a52e2520d2db38b4eee4f703b8.html" class="icon-function">async::FutureSupport::wait()</a></td>
+            </tr>
+        
+            <tr>
+                <th>5</th>
+                <td class="col_size">
+                </td>
+                <td class="col_size">
+            
+                128 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">968</td>
+                <td><a href="../../../../bsw/storage/src/storage/StorageTester.cpp/67fa68a7bcf103a087d72ac11f843f38.html" class="icon-function">storage::StorageTester::executeCommand(util::command::CommandContext&amp;, unsigned char)</a></td>
+            </tr>
+        
+        </tbody>
+        
+    </table>
+        
+    
+
+
+        </div>
+    <div id="page-footer">
+        <hr>
+        
+            brought to you with 💖
+            by <a href="https://twitter.com/hbehrens">Heiko Behrens</a>
+            <span class="secondary">– MIT license, copyright © 2014-2025</span>
+        
+    </div>
+    </div>
+</body>
+</html>
