@@ -127,7 +127,7 @@ struct DoCanTransmitterTest : ::testing::Test
     StrictMock<DoCanAddressConverterMock<DataLinkLayer>> _addressConverterMock;
     DoCanParameters _parameters;
     ::testing::SystemTimerMock _systemTimer;
-    uint8_t _busId;
+    uint8_t _busId = 0xFF;
     uint32_t nowUs;
     uint8_t _loggerComponent;
     CodecType _codec;

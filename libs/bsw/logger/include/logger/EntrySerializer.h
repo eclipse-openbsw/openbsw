@@ -441,7 +441,9 @@ void EntrySerializer<T, Timestamp, ReadOnlyPredicate>::EntryReader::readParamVar
         {
             _variant._sizedCharPtrValue = &_plainSizedString;
             _plainSizedString._data     = readCharArray();
-            _plainSizedString._length   = strlen(_plainSizedString._data);
+            _plainSizedString._length   = strnlen(
+                _plainSizedString._data,
+                _bufferEnd - reinterpret_cast<uint8_t const*>(_plainSizedString._data));
             break;
         }
         default:
