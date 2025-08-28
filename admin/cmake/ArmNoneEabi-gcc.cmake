@@ -1,11 +1,16 @@
-# Toolchain for gcc-arm-none-eabi-10.3-2021.10
-include("${CMAKE_CURRENT_LIST_DIR}/ArmNoneEabi.cmake")
+include_guard(GLOBAL)
 
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -funsigned-bitfields")
-set(CMAKE_CXX_FLAGS
-    "${CMAKE_CXX_FLAGS} -funsigned-bitfields -femit-class-debug-always")
-set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} \
---specs=nano.specs -specs=nosys.specs")
+include("${CMAKE_CURRENT_LIST_DIR}/ArmNoneEabi-header.cmake")
+
+set(_C_FLAGS "-funsigned-bitfields")
+
+set(_CXX_FLAGS "-femit-class-debug-always \
+    -funsigned-bitfields")
+
+set(_EXE_LINKER_FLAGS "-specs=nano.specs \
+    -specs=nosys.specs")
+
+include("${CMAKE_CURRENT_LIST_DIR}/ArmNoneEabi.cmake")
 
 set(CMAKE_C_COMPILER arm-none-eabi-gcc)
 set(CMAKE_CXX_COMPILER arm-none-eabi-g++)

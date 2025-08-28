@@ -1,4 +1,6 @@
-include("${CMAKE_CURRENT_LIST_DIR}/ArmNoneEabi.cmake")
+include_guard(GLOBAL)
+
+include("${CMAKE_CURRENT_LIST_DIR}/ArmNoneEabi-header.cmake")
 
 set(CLANG_TARGET_TRIPLE "${ARM_TARGET_TRIPLE}")
 
@@ -30,3 +32,5 @@ set(CMAKE_ASM_COMPILER_TARGET ${CLANG_TARGET_TRIPLE})
 set(CMAKE_SYSROOT
     "${TOOLCHAIN_PREFIX}/lib/clang-runtimes/${CLANG_TARGET_TRIPLE}/armv7m_soft_fpv4_sp_d16"
 )
+
+include("${CMAKE_CURRENT_LIST_DIR}/ArmNoneEabi.cmake")
