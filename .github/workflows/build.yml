@@ -33,3 +33,23 @@ jobs:
         if: steps.cache-cmake.outputs.cache-hit != 'true'
         run: |
           docker run --rm -v "$PWD:/home/jenkins" -w /home/jenkins --user $(id -u):4996 dev python3 .ci/build.py "${{ matrix.platform }}" "${{ matrix.compiler }}" "${{ matrix.cpp-standard }}"
+
+      - name: Set commit hash and metadata
+        if: steps.cache-cmake.outputs.cache-hit != 'true' && matrix.platform == 's32k148' && matrix.compiler == 'gcc' && matrix.cpp-standard == '14'
+        id: vars
+        run: |
+          echo "COMMIT_HASH=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+          echo "ARTIFACT_NAME=elf-s32k148-${{ matrix.compiler }}-gdwarf4-${GITHUB_SHA::7}" >> $GITHUB_ENV
+
+      - name: Find ELF files
+        if: steps.cache-cmake.outputs.cache-hit != 'true' && matrix.platform == 's32k148' && matrix.compiler == 'gcc' && matrix.cpp-standard == '14'
+        run: |
+          mkdir -p elf-artifacts
+          cp cmake-build-s32k148-${{ matrix.compiler }}-gdwarf4/application/*.elf elf-artifacts/
+
+      - name: Upload ELF as GitHub Artifact
+        if: steps.cache-cmake.outputs.cache-hit != 'true' && matrix.platform == 's32k148'  && matrix.compiler == 'gcc' && matrix.cpp-standard == '14'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.ARTIFACT_NAME }}
+          path: elf-artifacts/*.elf
