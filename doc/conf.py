@@ -40,6 +40,7 @@ def replace_placeholders(app, doctree, docname):
         props = yaml.safe_load(f)
 
     gcc_arm = props["tool"].get("gcc-arm-none-eabi", "x.x")
+    llvm_arm = props["tool"].get("llvm-arm", "x.x")
     ubuntu_version = props["tool"].get("ubuntu_version", "x.x")
 
     for node in doctree.traverse(nodes.Text):
@@ -48,6 +49,9 @@ def replace_placeholders(app, doctree, docname):
 
         if "gcc-arm-none-eabi" in text and "x.x" in text:
             new_text = new_text.replace("x.x", gcc_arm)
+
+        if "LLVM-ET-Arm" in text and "x.x" in text:
+            new_text = new_text.replace("x.x", llvm_arm)
 
         elif "Ubuntu-x.x" in text:
             new_text = new_text.replace("x.x", ubuntu_version)
