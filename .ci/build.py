@@ -45,6 +45,25 @@ def configure_and_build(platform, compiler, cpp_standard):
     subprocess.run(cmake_command, check=True, env=get_environment_variables(platform, compiler))
     subprocess.run(["cmake", "--build", build_dir, "--target", "app.referenceApp", "-j"], check=True, env=get_environment_variables(platform, compiler))
 
+    if platform == "s32k148" and compiler == "gcc" and cpp_standard == "14":
+        gdwarf_build = Path("cmake-build-s32k148-gcc-gdwarf4")
+        if gdwarf_build.exists():
+            shutil.rmtree(gdwarf_build)
+        print(f"Built {platform} with {compiler} C++{cpp_standard} and -gdwarf-4 flag")
+
+        cmake_command = [
+            "cmake",
+            "-B", gdwarf_build,
+            "-S", "executables/referenceApp",
+            "-DCMAKE_CXX_FLAGS=-gdwarf-4",
+            "-DCMAKE_C_FLAGS=-gdwarf-4",
+            f"-DCMAKE_CXX_STANDARD={cpp_standard}",
+            "-DBUILD_TARGET_PLATFORM=S32K148EVB",
+            "-DCMAKE_TOOLCHAIN_FILE=../../admin/cmake/ArmNoneEabi-gcc.cmake"
+        ]
+        subprocess.run(cmake_command, check=True, env=get_environment_variables(platform, compiler))
+        subprocess.run(["cmake", "--build", gdwarf_build, "--target", "app.referenceApp", "-j"], check=True, env=get_environment_variables(platform, compiler))
+
 def main():
     if len(sys.argv) != 4:
         print("ERROR: Usage: build.py <platform> <compiler> <cpp_standard>")
