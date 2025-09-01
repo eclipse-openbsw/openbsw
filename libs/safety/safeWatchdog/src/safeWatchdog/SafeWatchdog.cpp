@@ -65,11 +65,4 @@ bool SafeWatchdog::checkWdConfigs()
     return true;
 }
 
-#ifdef PLATFORM_SUPPORT_WATCHDOG
-uint8_t SafeWatchdog::getCsTst()
-{
-    return static_cast<uint8_t>((WDOG->CS & WDOG_CS_TST_MASK) >> WDOG_CS_TST_SHIFT);
-}
-#endif
-
 } // namespace safety

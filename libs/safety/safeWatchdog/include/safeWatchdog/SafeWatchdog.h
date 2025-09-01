@@ -15,8 +15,6 @@ public:
     void cyclic();
     static void enableMcuWatchdog();
 
-    static uint8_t getCsTst();
-
 private:
     static bool checkWdConfigs();
 
