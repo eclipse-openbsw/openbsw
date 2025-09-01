@@ -21,7 +21,7 @@ public:
      */
     explicit Watchdog(uint32_t const timeout, uint32_t const clockSpeed = DEFAULT_CLOCK_SPEED)
     {
-        enableWatchdog(timeout, clockSpeed);
+        enableWatchdog(timeout, false, clockSpeed);
     }
 
     /**
