@@ -27,9 +27,6 @@ private:
 private:
     ::async::ContextType const _context;
     ::async::TimeoutType _timeout;
-
-    ::lifecycle::LifecycleControlCommand _lifecycleControlCommand;
-    ::console::AsyncCommandWrapper _asyncCommandWrapperForLifecycleControlCommand;
 };
 
 } // namespace systems

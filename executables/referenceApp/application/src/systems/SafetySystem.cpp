@@ -22,10 +22,7 @@ using ::util::logger::SAFETY;
 
 SafetySystem::SafetySystem(
     ::async::ContextType const context, ::lifecycle::ILifecycleManager& lifecycleManager)
-: _context(context)
-, _timeout()
-, _lifecycleControlCommand(lifecycleManager)
-, _asyncCommandWrapperForLifecycleControlCommand(_lifecycleControlCommand, context)
+: _context(context), _timeout()
 {
     setTransitionContext(context);
 }
