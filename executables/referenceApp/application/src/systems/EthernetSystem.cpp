@@ -63,7 +63,7 @@ static err_t joinMulticastGroupIpV4(
     if (action == NETIF_ADD_MAC_FILTER)
     {
         auto const ethernetSystem = reinterpret_cast<::systems::EthernetSystem*>(aNetif->state);
-        uint8_t groupAddress[6]
+        ::etl::array<uint8_t, 6> groupAddress
             = {LL_IP4_MULTICAST_ADDR_0,
                LL_IP4_MULTICAST_ADDR_1,
                LL_IP4_MULTICAST_ADDR_2,

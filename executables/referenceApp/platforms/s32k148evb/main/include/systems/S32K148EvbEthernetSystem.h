@@ -30,7 +30,7 @@ public:
     void shutdown() override;
     void execute() override;
 
-    void setGroupcastAddressRecognition(uint8_t const* const mac) const override
+    void setGroupcastAddressRecognition(::etl::array<uint8_t, 6> const mac) const override
     {
         _driver.setGroupcastAddressRecognition(mac);
     }

@@ -49,7 +49,7 @@ public:
     void interruptGroup2();
     void interruptGroup3();
 
-    void setGroupcastAddressRecognition(uint8_t const* mac) const;
+    void setGroupcastAddressRecognition(::etl::array<uint8_t, 6> const mac) const;
 
     void enableVlanTagging();
     void disableVlanTagging();

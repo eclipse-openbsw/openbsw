@@ -50,7 +50,7 @@ public:
     /**
      * TODO: NYI
      */
-    void setGroupcastAddressRecognition(uint8_t const* mac) const;
+    void setGroupcastAddressRecognition(::etl::array<uint8_t, 6> const mac) const;
 
     int getTapInterfaceFd() const { return _tapFd; }
 

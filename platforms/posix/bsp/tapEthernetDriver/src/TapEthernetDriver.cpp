@@ -56,7 +56,8 @@ static int allocTapInterface(char const* const ifName)
 namespace ethernet
 {
 
-void TapEthernetDriver::setGroupcastAddressRecognition(uint8_t const* const /*mac*/) const {}
+void TapEthernetDriver::setGroupcastAddressRecognition(::etl::array<uint8_t, 6> const /*mac*/) const
+{}
 
 TapEthernetDriver::TapEthernetDriver(::etl::array<uint8_t const, 6> const macAddr)
 : _macAddr(macAddr), _tapFd(-1)
