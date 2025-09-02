@@ -17,11 +17,30 @@ using namespace ::util::logger;
 
 namespace
 {
-static uint8_t calculateHashIndex(uint8_t const* /* pMulticastAddr */)
+
+static uint8_t calculateHashIndex(uint8_t const* addr)
 {
-    // TODO: implement GAUR/GALR hash CRC calculation.
-    return 0;
+    uint32_t crc = 0xFFFFFFFFu;
+
+    for (size_t i = 0; i < 6; i++)
+    {
+        crc = crc ^ addr[i];
+        for (size_t b = 0; b < 8; b++)
+        {
+            if (crc & 1u)
+            {
+                crc = (crc >> 1) ^ 0xEDB88320u;
+            }
+            else
+            {
+                crc = crc >> 1;
+            }
+        }
+    }
+
+    return static_cast<uint8_t>((crc >> 26) & 0x3Fu);
 }
+
 } // namespace
 
 namespace ethernet

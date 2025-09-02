@@ -67,7 +67,7 @@ DemoSystem::DemoSystem(
 #ifdef PLATFORM_SUPPORT_ETHERNET
 , _udpEchoSocket()
 , _udpIperfSocket()
-, _echoServer(::ip::make_ip4(0), RX_UDP_PORT, _udpEchoSocket)
+, _echoServer(::ip::make_ip4(0), RX_UDP_PORT, ::ip::make_ip4(239, 192, 0, 1), _udpEchoSocket)
 , _udpIperfServer(::ip::make_ip4(0), RX_UDP_IPERF_PORT, _udpIperfSocket)
 , _tcpLoopbackSocket()
 , _tcpIperfSocket()

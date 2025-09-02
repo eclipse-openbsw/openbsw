@@ -24,7 +24,10 @@ public:
      * \param rxPort    Port to listen on.
      */
     UdpEchoTestServer(
-        ::ip::IPAddress const& ipAddr, uint16_t rxPort, AbstractDatagramSocket& socket);
+        ::ip::IPAddress const& ipAddr,
+        uint16_t rxPort,
+        ::ip::IPAddress const& multicastAddr,
+        AbstractDatagramSocket& socket);
 
     /**
      * Binds to the IP address and port passed in the constructor.
@@ -46,6 +49,7 @@ public:
 
 private:
     ip::IPAddress const _ipAddr;
+    ip::IPAddress const _multicastAddr;
     uint16_t const _rxPort;
     ::udp::AbstractDatagramSocket& _socket;
     static constexpr size_t UDP_RECV_SIZE{1518U};

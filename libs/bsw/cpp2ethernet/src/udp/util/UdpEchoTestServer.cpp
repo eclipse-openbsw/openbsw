@@ -11,8 +11,11 @@ using ::util::logger::Logger;
 using ::util::logger::UDP;
 
 UdpEchoTestServer::UdpEchoTestServer(
-    ip::IPAddress const& ipAddr, uint16_t const rxPort, AbstractDatagramSocket& socket)
-: _ipAddr(ipAddr), _rxPort(rxPort), _socket(socket), _receiveData()
+    ip::IPAddress const& ipAddr,
+    uint16_t const rxPort,
+    ::ip::IPAddress const& multicastAddr,
+    AbstractDatagramSocket& socket)
+: _ipAddr(ipAddr), _multicastAddr(multicastAddr), _rxPort(rxPort), _socket(socket), _receiveData()
 {}
 
 bool UdpEchoTestServer::start()
@@ -24,7 +27,21 @@ bool UdpEchoTestServer::start()
     {
         _socket.setDataListener(this);
         Logger::info(UDP, "Listening on port %d.", _rxPort);
+    }
+    else
+    {
+        Logger::error(UDP, "UDP socket bind failed");
+        return false;
+    }
+
+    if (_socket.join(_multicastAddr) == ::udp::AbstractDatagramSocket::ErrorCode::UDP_SOCKET_OK)
+    {
+        Logger::info(UDP, "Joined multicast group");
         return true;
+    }
+    else
+    {
+        Logger::error(UDP, "Multicast join failed");
     }
 
     return false;
