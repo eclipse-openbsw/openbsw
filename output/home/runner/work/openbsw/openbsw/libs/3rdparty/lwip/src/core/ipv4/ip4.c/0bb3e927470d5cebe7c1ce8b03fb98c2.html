@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../../../../../../../../../../../static/css/style.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <title>Symbol - puncover</title>
+    
+</head>
+<body>
+    <div class="container" id="content">
+        <div class="page-header">
+            <nav class="navbar navbar-default" role="navigation">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="../../../../../../../../../../../../index.html">
+                    Puncover
+                  </a>
+                </div>
+              </div>
+            </nav>
+          
+        </div>
+        <div id="inner_content">
+        
+    
+    <ol class="breadcrumb folders">
+        
+        <li><a href="../../../../../../../../../../../../home.html">home</a></li>
+        
+        <li><a href="../../../../../../../../../../../runner.html">runner</a></li>
+        
+        <li><a href="../../../../../../../../../../work.html">work</a></li>
+        
+        <li><a href="../../../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../../libs.html">libs</a></li>
+        
+        <li><a href="../../../../../../3rdparty.html">3rdparty</a></li>
+        
+        <li><a href="../../../../../lwip.html">lwip</a></li>
+        
+        <li><a href="../../../../src.html">src</a></li>
+        
+        <li><a href="../../../core.html">core</a></li>
+        
+        <li ><a href="../../ipv4.html">ipv4</a>
+            </li>
+
+        
+        <li class="active"><a href="../ip4.c.html">ip4.c</a>:408
+            </li>
+        
+    </ol>
+
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <th>Function</th>
+                <td colspan="5">
+                    <span class="icon-function">ip4_input_accept</span>
+                </td>
+            </tr>
+
+            <tr>
+                <th rowspan="2"></th>
+                <th>Address</th>
+                <th>Remarks</th>
+                <th>Stack</th>
+                <th>Code</th>
+                <th>Static</th>
+            </tr>
+            <tr>
+                <td>0x0000d1ac</td>
+                <td>
+    
+    
+</td>
+                <td>16 (static)</td>
+                <td>64</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th>Callers (1)</th>
+                <td colspan="5">
+                
+                    <a href="./17641b681261fdfd4309a84b5ab2c56e.html">ip4_input (716)</a>
+                    
+                
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Callees (2,
+                            <span title="sum of used bytes by all callees">
+                            Σ=92
+                            </span>
+                        )
+                    
+                </th>
+                <td colspan="5">
+                
+                    <a href="../ip4_addr.c/212eebf156fd7f3954882e0492a918a0.html">ip4_addr_isbroadcast_u32 (60)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../autoip.c/3376118caadd83def339a6164895c8cd.html">autoip_accept_packet (32)</a>
+                    
+                
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    
+    <pre><a href="../igmp.c/20eb6231e98f96d6cc714530856d60c5.html">igmp_tmr (112)</a></pre>
+    
+
+    <pre>
+
+    ip4_input_accept():
+
+        d1ac:	b538      	push	{r3, r4, r5, lr}
+
+        d1ae:	f890 3045 	ldrb.w	r3, [r0, #69]	; 0x45
+
+        d1b2:	f013 0301 	ands.w	r3, r3, #1
+
+        d1b6:	d013      	beq.n	d1e0 <<a href="./0bb3e927470d5cebe7c1ce8b03fb98c2.html">ip4_input_accept</a>+0x34>
+
+        d1b8:	6843      	ldr	r3, [r0, #4]
+
+        d1ba:	4604      	mov	r4, r0
+
+        d1bc:	b183      	cbz	r3, d1e0 <<a href="./0bb3e927470d5cebe7c1ce8b03fb98c2.html">ip4_input_accept</a>+0x34>
+
+        d1be:	4d0a      	ldr	r5, [pc, #40]	; (d1e8 <<a href="./0bb3e927470d5cebe7c1ce8b03fb98c2.html">ip4_input_accept</a>+0x3c>)
+
+        d1c0:	6968      	ldr	r0, [r5, #20]
+
+        d1c2:	4283      	cmp	r3, r0
+
+        d1c4:	d00e      	beq.n	d1e4 <<a href="./0bb3e927470d5cebe7c1ce8b03fb98c2.html">ip4_input_accept</a>+0x38>
+
+        d1c6:	4621      	mov	r1, r4
+
+        d1c8:	f000 faa0 	bl	d70c <<a href="../ip4_addr.c/212eebf156fd7f3954882e0492a918a0.html">ip4_addr_isbroadcast_u32</a>>
+
+        d1cc:	b950      	cbnz	r0, d1e4 <<a href="./0bb3e927470d5cebe7c1ce8b03fb98c2.html">ip4_input_accept</a>+0x38>
+
+        d1ce:	f105 0114 	add.w	r1, r5, #20
+
+        d1d2:	4620      	mov	r0, r4
+
+        d1d4:	f7fd fd94 	bl	ad00 <<a href="../autoip.c/3376118caadd83def339a6164895c8cd.html">autoip_accept_packet</a>>
+
+        d1d8:	3800      	subs	r0, #0
+
+        d1da:	bf18      	it	ne
+
+        d1dc:	2001      	movne	r0, #1
+
+        d1de:	bd38      	pop	{r3, r4, r5, pc}
+
+        d1e0:	4618      	mov	r0, r3
+
+        d1e2:	bd38      	pop	{r3, r4, r5, pc}
+
+        d1e4:	2001      	movs	r0, #1
+
+        d1e6:	bd38      	pop	{r3, r4, r5, pc}
+
+        d1e8:	1fff471c 	.word	0x1fff471c
+
+    </pre>
+
+    
+    <pre><a href="./635f734dbf094c02303984afd7853623.html">ip4_route (144)</a></pre>
+    
+
+    
+        <h1>Stack Worst-Case Scenarios</h1>
+        
+            <p>No callees for this function.</p>
+        
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 80</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 996</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    80
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                16 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    996
+                    
+                    
+                </td>
+                <td class="col_size">64</td>
+                <td><a href="./0bb3e927470d5cebe7c1ce8b03fb98c2.html" class="icon-function">ip4_input_accept</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                    
+                    64
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                40 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    932
+                    
+                    
+                </td>
+                <td class="col_size">716</td>
+                <td><a href="./17641b681261fdfd4309a84b5ab2c56e.html" class="icon-function">ip4_input</a></td>
+            </tr>
+        
+            <tr>
+                <th>3</th>
+                <td class="col_size">
+                </td>
+                <td class="col_size">
+            
+                24 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">216</td>
+                <td><a href="../../../netif/ethernet.c/e2fa4588adea7f5422e68cfb57168248.html" class="icon-function">ethernet_input</a></td>
+            </tr>
+        
+        </tbody>
+        
+    </table>
+        
+    
+
+
+        </div>
+    <div id="page-footer">
+        <hr>
+        
+            brought to you with 💖
+            by <a href="https://twitter.com/hbehrens">Heiko Behrens</a>
+            <span class="secondary">– MIT license, copyright © 2014-2025</span>
+        
+    </div>
+    </div>
+</body>
+</html>

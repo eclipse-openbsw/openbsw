@@ -1,0 +1,540 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../static/css/style.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <title>Symbol - puncover</title>
+    
+</head>
+<body>
+    <div class="container" id="content">
+        <div class="page-header">
+            <nav class="navbar navbar-default" role="navigation">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="../../index.html">
+                    Puncover
+                  </a>
+                </div>
+              </div>
+            </nav>
+          
+        </div>
+        <div id="inner_content">
+        
+    
+    <ol class="breadcrumb folders">
+        
+        <li class="active"><a href="../../unknown.html">&lt;unknown&gt;</a>
+            </li>
+
+        
+        <li class="active">&lt;unknown&gt;
+            </li>
+        
+    </ol>
+
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <th>Function</th>
+                <td colspan="5">
+                    <span class="icon-function">__sfp</span>
+                </td>
+            </tr>
+
+            <tr>
+                <th rowspan="2"></th>
+                <th>Address</th>
+                <th>Remarks</th>
+                <th>Stack</th>
+                <th>Code</th>
+                <th>Static</th>
+            </tr>
+            <tr>
+                <td>0x00022448</td>
+                <td>
+    
+    
+</td>
+                <td></td>
+                <td>140</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th>Callers (1)</th>
+                <td colspan="5">
+                
+                    <a href="./b6eeecba90bb5fa5769c661acacd6426.html">__sinit (112)</a>
+                    
+                
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Callees (6,
+                            <span title="sum of used bytes by all callees">
+                            Σ=198
+                            </span>
+                        )
+                    
+                </th>
+                <td colspan="5">
+                
+                    <a href="./761b1e3923df6bd1910940d772d797e6.html">__sfp_lock_acquire (12)</a>
+                    
+                        ,
+                    
+                
+                    <a href="./b6eeecba90bb5fa5769c661acacd6426.html">__sinit (112)</a>
+                    
+                        ,
+                    
+                
+                    <a href="./f37c41d2c4866c55328b2ff7347fb813.html">__retarget_lock_init_recursive (2)</a>
+                    
+                        ,
+                    
+                
+                    <a href="./9f03ddc397c59cbf0ba33abe40877fe6.html">__sfp_lock_release (12)</a>
+                    
+                        ,
+                    
+                
+                    <a href="./716af30655f8f3d9b32750dca746ddfb.html">memset (16)</a>
+                    
+                        ,
+                    
+                
+                    <a href="./193e5ee6f8c2ee71ed491059b5b36426.html">__sfmoreglue (44)</a>
+                    
+                
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    
+    <pre><a href="./b6eeecba90bb5fa5769c661acacd6426.html">__sinit (112)</a></pre>
+    
+
+    <pre>
+
+    __sfp():
+
+       22448:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
+
+       2244a:	4607      	mov	r7, r0
+
+       2244c:	f7ff ffac 	bl	223a8 <<a href="./761b1e3923df6bd1910940d772d797e6.html">__sfp_lock_acquire</a>>
+
+       22450:	4b1e      	ldr	r3, [pc, #120]	; (224cc <<a href="./b60a763b8bfd988c089c337602bc52e6.html">__sfp</a>+0x84>)
+
+       22452:	681e      	ldr	r6, [r3, #0]
+
+       22454:	69b3      	ldr	r3, [r6, #24]
+
+       22456:	b913      	cbnz	r3, 2245e <<a href="./b60a763b8bfd988c089c337602bc52e6.html">__sfp</a>+0x16>
+
+       22458:	4630      	mov	r0, r6
+
+       2245a:	f7ff ffbd 	bl	223d8 <<a href="./b6eeecba90bb5fa5769c661acacd6426.html">__sinit</a>>
+
+       2245e:	3648      	adds	r6, #72	; 0x48
+
+       22460:	e9d6 3401 	ldrd	r3, r4, [r6, #4]
+
+       22464:	3b01      	subs	r3, #1
+
+       22466:	d503      	bpl.n	22470 <<a href="./b60a763b8bfd988c089c337602bc52e6.html">__sfp</a>+0x28>
+
+       22468:	6833      	ldr	r3, [r6, #0]
+
+       2246a:	b30b      	cbz	r3, 224b0 <<a href="./b60a763b8bfd988c089c337602bc52e6.html">__sfp</a>+0x68>
+
+       2246c:	6836      	ldr	r6, [r6, #0]
+
+       2246e:	e7f7      	b.n	22460 <<a href="./b60a763b8bfd988c089c337602bc52e6.html">__sfp</a>+0x18>
+
+       22470:	f9b4 500c 	ldrsh.w	r5, [r4, #12]
+
+       22474:	b9d5      	cbnz	r5, 224ac <<a href="./b60a763b8bfd988c089c337602bc52e6.html">__sfp</a>+0x64>
+
+       22476:	4b16      	ldr	r3, [pc, #88]	; (224d0 <<a href="./b60a763b8bfd988c089c337602bc52e6.html">__sfp</a>+0x88>)
+
+       22478:	60e3      	str	r3, [r4, #12]
+
+       2247a:	f104 0058 	add.w	r0, r4, #88	; 0x58
+
+       2247e:	6665      	str	r5, [r4, #100]	; 0x64
+
+       22480:	f000 f847 	bl	22512 <<a href="./f37c41d2c4866c55328b2ff7347fb813.html">__retarget_lock_init_recursive</a>>
+
+       22484:	f7ff ff96 	bl	223b4 <<a href="./9f03ddc397c59cbf0ba33abe40877fe6.html">__sfp_lock_release</a>>
+
+       22488:	e9c4 5501 	strd	r5, r5, [r4, #4]
+
+       2248c:	e9c4 5504 	strd	r5, r5, [r4, #16]
+
+       22490:	6025      	str	r5, [r4, #0]
+
+       22492:	61a5      	str	r5, [r4, #24]
+
+       22494:	2208      	movs	r2, #8
+
+       22496:	4629      	mov	r1, r5
+
+       22498:	f104 005c 	add.w	r0, r4, #92	; 0x5c
+
+       2249c:	f7de f873 	bl	586 <<a href="./716af30655f8f3d9b32750dca746ddfb.html">memset</a>>
+
+       224a0:	e9c4 550d 	strd	r5, r5, [r4, #52]	; 0x34
+
+       224a4:	e9c4 5512 	strd	r5, r5, [r4, #72]	; 0x48
+
+       224a8:	4620      	mov	r0, r4
+
+       224aa:	bdf8      	pop	{r3, r4, r5, r6, r7, pc}
+
+       224ac:	3468      	adds	r4, #104	; 0x68
+
+       224ae:	e7d9      	b.n	22464 <<a href="./b60a763b8bfd988c089c337602bc52e6.html">__sfp</a>+0x1c>
+
+       224b0:	2104      	movs	r1, #4
+
+       224b2:	4638      	mov	r0, r7
+
+       224b4:	f7ff ff62 	bl	2237c <<a href="./193e5ee6f8c2ee71ed491059b5b36426.html">__sfmoreglue</a>>
+
+       224b8:	4604      	mov	r4, r0
+
+       224ba:	6030      	str	r0, [r6, #0]
+
+       224bc:	2800      	cmp	r0, #0
+
+       224be:	d1d5      	bne.n	2246c <<a href="./b60a763b8bfd988c089c337602bc52e6.html">__sfp</a>+0x24>
+
+       224c0:	f7ff ff78 	bl	223b4 <<a href="./9f03ddc397c59cbf0ba33abe40877fe6.html">__sfp_lock_release</a>>
+
+       224c4:	230c      	movs	r3, #12
+
+       224c6:	603b      	str	r3, [r7, #0]
+
+       224c8:	e7ee      	b.n	224a8 <<a href="./b60a763b8bfd988c089c337602bc52e6.html">__sfp</a>+0x60>
+
+       224ca:	bf00      	nop
+
+       224cc:	00028d6c 	.word	0x00028d6c
+
+       224d0:	ffff0001 	.word	0xffff0001
+
+    </pre>
+
+    
+    <pre><a href="./7f2c55df607b8623294f2232eeca4b4c.html">_fwalk_reent (62)</a></pre>
+    
+
+    
+        <h1>Stack Worst-Case Scenarios</h1>
+        
+            <p>No callees for this function.</p>
+        
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 248</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 2,512</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    2,512
+                    
+                    
+                </td>
+                <td class="col_size">140</td>
+                <td><a href="./b60a763b8bfd988c089c337602bc52e6.html" class="icon-function">__sfp</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    2,372
+                    
+                    
+                </td>
+                <td class="col_size">112</td>
+                <td><a href="./b6eeecba90bb5fa5769c661acacd6426.html" class="icon-function">__sinit</a></td>
+            </tr>
+        
+            <tr>
+                <th>3</th>
+                <td class="col_size">
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    2,260
+                    
+                    
+                </td>
+                <td class="col_size">608</td>
+                <td><a href="./4c80f6b46d91b52164c3a8c4ce20a9f8.html" class="icon-function">_vfiprintf_r</a></td>
+            </tr>
+        
+            <tr>
+                <th>4</th>
+                <td class="col_size">
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    1,652
+                    
+                    
+                </td>
+                <td class="col_size">36</td>
+                <td><a href="./b7f884a63512d29acd09bc7c7023f8d3.html" class="icon-function">fiprintf</a></td>
+            </tr>
+        
+            <tr>
+                <th>5</th>
+                <td class="col_size">
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    1,616
+                    
+                    
+                </td>
+                <td class="col_size">60</td>
+                <td><a href="./18989ee4aad345b8b598568f851bfc76.html" class="icon-function">__assert_func</a></td>
+            </tr>
+        
+            <tr>
+                <th>6</th>
+                <td class="col_size">
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    1,556
+                    
+                    
+                </td>
+                <td class="col_size">124</td>
+                <td><a href="./34d1c35063280164066ecc517050da0b.html" class="icon-function">rand</a></td>
+            </tr>
+        
+            <tr>
+                <th>7</th>
+                <td class="col_size">
+                    
+                    248
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                16 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    1,432
+                    
+                    
+                </td>
+                <td class="col_size">88</td>
+                <td><a href="../../home/runner/work/openbsw/openbsw/libs/3rdparty/lwip/src/core/ipv4/igmp.c/294a82ce28c752320afaa8590334c56f.html" class="icon-function">igmp_report_groups</a></td>
+            </tr>
+        
+            <tr>
+                <th>8</th>
+                <td class="col_size">
+                    
+                    232
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                24 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    1,344
+                    
+                    
+                </td>
+                <td class="col_size">116</td>
+                <td><a href="../../home/runner/work/openbsw/openbsw/libs/3rdparty/lwip/src/core/netif.c/02ca1881b5a0fcf35803d50c5cd5a9a6.html" class="icon-function">netif_do_set_ipaddr</a></td>
+            </tr>
+        
+            <tr>
+                <th>9</th>
+                <td class="col_size">
+                    
+                    208
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                48 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    1,228
+                    
+                    
+                </td>
+                <td class="col_size">200</td>
+                <td><a href="../../home/runner/work/openbsw/openbsw/libs/3rdparty/lwip/src/core/netif.c/7d4b6ac49a1bb495f62582300a5d9e4a.html" class="icon-function">netif_set_addr</a></td>
+            </tr>
+        
+            <tr>
+                <th>10</th>
+                <td class="col_size">
+                    
+                    160
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                64 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    1,028
+                    
+                    
+                </td>
+                <td class="col_size">348</td>
+                <td><a href="../../home/runner/work/openbsw/openbsw/libs/3rdparty/lwip/src/core/ipv4/dhcp.c/4daa8f7f4379045adbdfb1ced5875b2d.html" class="icon-function">dhcp_release_and_stop</a></td>
+            </tr>
+        
+            <tr>
+                <th>11</th>
+                <td class="col_size">
+                    
+                    96
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                24 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    680
+                    
+                    
+                </td>
+                <td class="col_size">204</td>
+                <td><a href="../../home/runner/work/openbsw/openbsw/libs/3rdparty/lwip/src/core/ipv4/dhcp.c/7d1c7091a5300ee38546c4eec2908e12.html" class="icon-function">dhcp_start</a></td>
+            </tr>
+        
+            <tr>
+                <th>12</th>
+                <td class="col_size">
+                </td>
+                <td class="col_size">
+            
+                72 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">476</td>
+                <td><a href="../../home/runner/work/openbsw/openbsw/libs/3rdparty/lwip/src/core/ipv4/dhcp.c/625c8433015a8cb580108e0f733b653d.html" class="icon-function">dhcp_coarse_tmr</a></td>
+            </tr>
+        
+        </tbody>
+        
+    </table>
+        
+    
+
+
+        </div>
+    <div id="page-footer">
+        <hr>
+        
+            brought to you with 💖
+            by <a href="https://twitter.com/hbehrens">Heiko Behrens</a>
+            <span class="secondary">– MIT license, copyright © 2014-2025</span>
+        
+    </div>
+    </div>
+</body>
+</html>

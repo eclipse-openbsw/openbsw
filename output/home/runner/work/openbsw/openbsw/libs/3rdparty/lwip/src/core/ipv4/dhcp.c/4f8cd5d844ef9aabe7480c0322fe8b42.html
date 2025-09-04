@@ -1,0 +1,515 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../../../../../../../../../../../static/css/style.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <title>Symbol - puncover</title>
+    
+</head>
+<body>
+    <div class="container" id="content">
+        <div class="page-header">
+            <nav class="navbar navbar-default" role="navigation">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="../../../../../../../../../../../../index.html">
+                    Puncover
+                  </a>
+                </div>
+              </div>
+            </nav>
+          
+        </div>
+        <div id="inner_content">
+        
+    
+    <ol class="breadcrumb folders">
+        
+        <li><a href="../../../../../../../../../../../../home.html">home</a></li>
+        
+        <li><a href="../../../../../../../../../../../runner.html">runner</a></li>
+        
+        <li><a href="../../../../../../../../../../work.html">work</a></li>
+        
+        <li><a href="../../../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../../libs.html">libs</a></li>
+        
+        <li><a href="../../../../../../3rdparty.html">3rdparty</a></li>
+        
+        <li><a href="../../../../../lwip.html">lwip</a></li>
+        
+        <li><a href="../../../../src.html">src</a></li>
+        
+        <li><a href="../../../core.html">core</a></li>
+        
+        <li ><a href="../../ipv4.html">ipv4</a>
+            </li>
+
+        
+        <li class="active"><a href="../dhcp.c.html">dhcp.c</a>:273
+            </li>
+        
+    </ol>
+
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <th>Function</th>
+                <td colspan="5">
+                    <span class="icon-function">dhcp_inc_pcb_refcount</span>
+                </td>
+            </tr>
+
+            <tr>
+                <th rowspan="2"></th>
+                <th>Address</th>
+                <th>Remarks</th>
+                <th>Stack</th>
+                <th>Code</th>
+                <th>Static</th>
+            </tr>
+            <tr>
+                <td>0x0000af68</td>
+                <td>
+    
+    
+</td>
+                <td>16 (static)</td>
+                <td>88</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th>Callers (1)</th>
+                <td colspan="5">
+                
+                    <a href="./7d1c7091a5300ee38546c4eec2908e12.html">dhcp_start (204)</a>
+                    
+                
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Callees (4,
+                            <span title="sum of used bytes by all callees">
+                            Σ=416
+                            </span>
+                        )
+                    
+                </th>
+                <td colspan="5">
+                
+                    <a href="../../udp.c/2eae66ab287fccce9f95833024c8edfe.html">udp_new (32)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../../udp.c/1ea122cbfc3de9dda16195031e5eb78f.html">udp_bind (248)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../../udp.c/f4a8153b7ba352484a66f2271242c850.html">udp_connect (116)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../../udp.c/3d133c4afb49db284438a408622ea2a3.html">udp_recv (20)</a>
+                    
+                
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    
+    <pre><a href="./2b1ebc5954482d687e80ac66a03395fb.html">dhcp_bind (228)</a></pre>
+    
+
+    <pre>
+
+    dhcp_inc_pcb_refcount():
+
+        af68:	b570      	push	{r4, r5, r6, lr}
+
+        af6a:	4d11      	ldr	r5, [pc, #68]	; (afb0 <<a href="./4f8cd5d844ef9aabe7480c0322fe8b42.html">dhcp_inc_pcb_refcount</a>+0x48>)
+
+        af6c:	782c      	ldrb	r4, [r5, #0]
+
+        af6e:	b11c      	cbz	r4, af78 <<a href="./4f8cd5d844ef9aabe7480c0322fe8b42.html">dhcp_inc_pcb_refcount</a>+0x10>
+
+        af70:	3401      	adds	r4, #1
+
+        af72:	702c      	strb	r4, [r5, #0]
+
+        af74:	2000      	movs	r0, #0
+
+        af76:	bd70      	pop	{r4, r5, r6, pc}
+
+        af78:	f7ff fc62 	bl	a840 <<a href="../../udp.c/2eae66ab287fccce9f95833024c8edfe.html">udp_new</a>>
+
+        af7c:	4e0d      	ldr	r6, [pc, #52]	; (afb4 <<a href="./4f8cd5d844ef9aabe7480c0322fe8b42.html">dhcp_inc_pcb_refcount</a>+0x4c>)
+
+        af7e:	6030      	str	r0, [r6, #0]
+
+        af80:	b198      	cbz	r0, afaa <<a href="./4f8cd5d844ef9aabe7480c0322fe8b42.html">dhcp_inc_pcb_refcount</a>+0x42>
+
+        af82:	7a42      	ldrb	r2, [r0, #9]
+
+        af84:	490c      	ldr	r1, [pc, #48]	; (afb8 <<a href="./4f8cd5d844ef9aabe7480c0322fe8b42.html">dhcp_inc_pcb_refcount</a>+0x50>)
+
+        af86:	f042 0220 	orr.w	r2, r2, #32
+
+        af8a:	7242      	strb	r2, [r0, #9]
+
+        af8c:	2244      	movs	r2, #68	; 0x44
+
+        af8e:	f7ff fa15 	bl	a3bc <<a href="../../udp.c/1ea122cbfc3de9dda16195031e5eb78f.html">udp_bind</a>>
+
+        af92:	4909      	ldr	r1, [pc, #36]	; (afb8 <<a href="./4f8cd5d844ef9aabe7480c0322fe8b42.html">dhcp_inc_pcb_refcount</a>+0x50>)
+
+        af94:	6830      	ldr	r0, [r6, #0]
+
+        af96:	2243      	movs	r2, #67	; 0x43
+
+        af98:	f7ff fbf0 	bl	a77c <<a href="../../udp.c/f4a8153b7ba352484a66f2271242c850.html">udp_connect</a>>
+
+        af9c:	4622      	mov	r2, r4
+
+        af9e:	4907      	ldr	r1, [pc, #28]	; (afbc <<a href="./4f8cd5d844ef9aabe7480c0322fe8b42.html">dhcp_inc_pcb_refcount</a>+0x54>)
+
+        afa0:	6830      	ldr	r0, [r6, #0]
+
+        afa2:	f7ff fc25 	bl	a7f0 <<a href="../../udp.c/3d133c4afb49db284438a408622ea2a3.html">udp_recv</a>>
+
+        afa6:	782c      	ldrb	r4, [r5, #0]
+
+        afa8:	e7e2      	b.n	af70 <<a href="./4f8cd5d844ef9aabe7480c0322fe8b42.html">dhcp_inc_pcb_refcount</a>+0x8>
+
+        afaa:	f04f 30ff 	mov.w	r0, #4294967295	; 0xffffffff
+
+        afae:	bd70      	pop	{r4, r5, r6, pc}
+
+        afb0:	1fff3af0 	.word	0x1fff3af0
+
+        afb4:	1fff3aec 	.word	0x1fff3aec
+
+        afb8:	000246a0 	.word	0x000246a0
+
+        afbc:	0000b6b5 	.word	0x0000b6b5
+
+    </pre>
+
+    
+    <pre><a href="./a4214e003d57d371924e1e60a852bb60.html">dhcp_handle_ack (132)</a></pre>
+    
+
+    
+        <h1>Stack Worst-Case Scenarios</h1>
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 432</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 2,812</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    432
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                40 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    2,812
+                    
+                    
+                </td>
+                <td class="col_size">136</td>
+                <td><a href="../../../../../printf/src/printf/printf.c/aead89a8c09454d3b52c82329b9d6539.html" class="icon-function">out_rev_</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                    
+                    392
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                112 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    2,676
+                    
+                    
+                </td>
+                <td class="col_size">656</td>
+                <td><a href="../../../../../printf/src/printf/printf.c/ac6598d6032c1151c802f0c9a9979746.html" class="icon-function">print_integer</a></td>
+            </tr>
+        
+            <tr>
+                <th>3</th>
+                <td class="col_size">
+                    
+                    280
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                96 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    2,020
+                    
+                    
+                </td>
+                <td class="col_size">1,572</td>
+                <td><a href="../../../../../printf/src/printf/printf.c/6d7d630ec5529648e33ae989eebb2cb7.html" class="icon-function">_vsnprintf</a></td>
+            </tr>
+        
+            <tr>
+                <th>4</th>
+                <td class="col_size">
+                    
+                    184
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                16 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    448
+                    
+                    
+                </td>
+                <td class="col_size">32</td>
+                <td><a href="../../../../../printf/src/printf/printf.c/529535ce0d5bfecabb7841bebeaf251c.html" class="icon-function">vsnprintf_</a></td>
+            </tr>
+        
+            <tr>
+                <th>5</th>
+                <td class="col_size">
+                    
+                    168
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                16 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    416
+                    
+                    
+                </td>
+                <td class="col_size">52</td>
+                <td><a href="../../../../../../../executables/referenceApp/application/src/logger/logger.cpp/98866fb3d81ee8db78cbfd1e2dfd931d.html" class="icon-function">log_lwipInfo</a></td>
+            </tr>
+        
+            <tr>
+                <th>6</th>
+                <td class="col_size">
+                    
+                    152
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                24 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    364
+                    
+                    
+                </td>
+                <td class="col_size">248</td>
+                <td><a href="../../udp.c/1ea122cbfc3de9dda16195031e5eb78f.html" class="icon-function">udp_bind</a></td>
+            </tr>
+        
+            <tr>
+                <th>7</th>
+                <td class="col_size">
+                    
+                    128
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                16 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">116</td>
+                <td><a href="../../udp.c/f4a8153b7ba352484a66f2271242c850.html" class="icon-function">udp_connect</a></td>
+            </tr>
+        
+        </tbody>
+        
+        <tfoot>
+            <tr>
+                <th></th>
+                <th class="col_size">112
+                </th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </tfoot>
+        
+    </table>
+        
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 112</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 768</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    112
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                16 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    768
+                    
+                    
+                </td>
+                <td class="col_size">88</td>
+                <td><a href="./4f8cd5d844ef9aabe7480c0322fe8b42.html" class="icon-function">dhcp_inc_pcb_refcount</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                    
+                    96
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                24 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    680
+                    
+                    
+                </td>
+                <td class="col_size">204</td>
+                <td><a href="./7d1c7091a5300ee38546c4eec2908e12.html" class="icon-function">dhcp_start</a></td>
+            </tr>
+        
+            <tr>
+                <th>3</th>
+                <td class="col_size">
+                </td>
+                <td class="col_size">
+            
+                72 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">476</td>
+                <td><a href="./625c8433015a8cb580108e0f733b653d.html" class="icon-function">dhcp_coarse_tmr</a></td>
+            </tr>
+        
+        </tbody>
+        
+    </table>
+        
+    
+
+
+        </div>
+    <div id="page-footer">
+        <hr>
+        
+            brought to you with 💖
+            by <a href="https://twitter.com/hbehrens">Heiko Behrens</a>
+            <span class="secondary">– MIT license, copyright © 2014-2025</span>
+        
+    </div>
+    </div>
+</body>
+</html>

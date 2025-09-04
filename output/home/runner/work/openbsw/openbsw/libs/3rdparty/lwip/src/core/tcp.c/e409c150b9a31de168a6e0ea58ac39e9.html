@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../../../../../../../../../../static/css/style.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <title>Symbol - puncover</title>
+    
+</head>
+<body>
+    <div class="container" id="content">
+        <div class="page-header">
+            <nav class="navbar navbar-default" role="navigation">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="../../../../../../../../../../../index.html">
+                    Puncover
+                  </a>
+                </div>
+              </div>
+            </nav>
+          
+        </div>
+        <div id="inner_content">
+        
+    
+    <ol class="breadcrumb folders">
+        
+        <li><a href="../../../../../../../../../../../home.html">home</a></li>
+        
+        <li><a href="../../../../../../../../../../runner.html">runner</a></li>
+        
+        <li><a href="../../../../../../../../../work.html">work</a></li>
+        
+        <li><a href="../../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../libs.html">libs</a></li>
+        
+        <li><a href="../../../../../3rdparty.html">3rdparty</a></li>
+        
+        <li><a href="../../../../lwip.html">lwip</a></li>
+        
+        <li><a href="../../../src.html">src</a></li>
+        
+        <li ><a href="../../core.html">core</a>
+            </li>
+
+        
+        <li class="active"><a href="../tcp.c.html">tcp.c</a>:934
+            </li>
+        
+    </ol>
+
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <th>Function</th>
+                <td colspan="5">
+                    <span class="icon-function">tcp_update_rcv_ann_wnd</span>
+                </td>
+            </tr>
+
+            <tr>
+                <th rowspan="2"></th>
+                <th>Address</th>
+                <th>Remarks</th>
+                <th>Stack</th>
+                <th>Code</th>
+                <th>Static</th>
+            </tr>
+            <tr>
+                <td>0x00007018</td>
+                <td>
+    <span class="label label-success">x-module</span>
+    
+</td>
+                <td>12 (static)</td>
+                <td>64</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th>Callers (1)</th>
+                <td colspan="5">
+                
+                    <a href="../tcp_in.c/bdbc7697dbea1dd6a66ef321eb568efb.html">tcp_receive (1148)</a>
+                    
+                
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    No Callees
+                    
+                </th>
+                <td colspan="5">
+                
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    
+    <pre><a href="./848f02953c565e3a7aeca68172aa2cc3.html">tcp_listen_with_backlog (8)</a></pre>
+    
+
+    <pre>
+
+    tcp_update_rcv_ann_wnd():
+
+        7018:	f8b0 c028 	ldrh.w	ip, [r0, #40]	; 0x28
+
+        701c:	6ac2      	ldr	r2, [r0, #44]	; 0x2c
+
+        701e:	6a41      	ldr	r1, [r0, #36]	; 0x24
+
+        7020:	b530      	push	{r4, r5, lr}
+
+        7022:	8e45      	ldrh	r5, [r0, #50]	; 0x32
+
+        7024:	f240 54b4 	movw	r4, #1460	; 0x5b4
+
+        7028:	ebac 0302 	sub.w	r3, ip, r2
+
+        702c:	42a5      	cmp	r5, r4
+
+        702e:	440b      	add	r3, r1
+
+        7030:	bf94      	ite	ls
+
+        7032:	eba3 0e05 	subls.w	lr, r3, r5
+
+        7036:	eba3 0e04 	subhi.w	lr, r3, r4
+
+        703a:	f1be 0f00 	cmp.w	lr, #0
+
+        703e:	db03      	blt.n	7048 <<a href="./e409c150b9a31de168a6e0ea58ac39e9.html">tcp_update_rcv_ann_wnd</a>+0x30>
+
+        7040:	f8a0 c02a 	strh.w	ip, [r0, #42]	; 0x2a
+
+        7044:	4618      	mov	r0, r3
+
+        7046:	bd30      	pop	{r4, r5, pc}
+
+        7048:	1a52      	subs	r2, r2, r1
+
+        704a:	bf4b      	itete	mi
+
+        704c:	2300      	movmi	r3, #0
+
+        704e:	2300      	movpl	r3, #0
+
+        7050:	8543      	strhmi	r3, [r0, #42]	; 0x2a
+
+        7052:	8542      	strhpl	r2, [r0, #42]	; 0x2a
+
+        7054:	4618      	mov	r0, r3
+
+        7056:	bd30      	pop	{r4, r5, pc}
+
+    </pre>
+
+    
+    <pre><a href="./c8c2e3a4e22714a4357334ba2ee1950f.html">tcp_recved (112)</a></pre>
+    
+
+    
+        <h1>Stack Worst-Case Scenarios</h1>
+        
+            <p>No callees for this function.</p>
+        
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 188</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 4,972</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    188
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                12 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    4,972
+                    
+                    
+                </td>
+                <td class="col_size">64</td>
+                <td><a href="./e409c150b9a31de168a6e0ea58ac39e9.html" class="icon-function">tcp_update_rcv_ann_wnd</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                    
+                    176
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                32 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    4,908
+                    
+                    
+                </td>
+                <td class="col_size">1,148</td>
+                <td><a href="../tcp_in.c/bdbc7697dbea1dd6a66ef321eb568efb.html" class="icon-function">tcp_receive</a></td>
+            </tr>
+        
+            <tr>
+                <th>3</th>
+                <td class="col_size">
+                    
+                    144
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                80 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    3,760
+                    
+                    
+                </td>
+                <td class="col_size">2,828</td>
+                <td><a href="../tcp_in.c/e3c17e1b95f3b9b4519367e33fff205b.html" class="icon-function">tcp_input</a></td>
+            </tr>
+        
+            <tr>
+                <th>4</th>
+                <td class="col_size">
+                    
+                    64
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                40 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    932
+                    
+                    
+                </td>
+                <td class="col_size">716</td>
+                <td><a href="../ipv4/ip4.c/17641b681261fdfd4309a84b5ab2c56e.html" class="icon-function">ip4_input</a></td>
+            </tr>
+        
+            <tr>
+                <th>5</th>
+                <td class="col_size">
+                </td>
+                <td class="col_size">
+            
+                24 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">216</td>
+                <td><a href="../../netif/ethernet.c/e2fa4588adea7f5422e68cfb57168248.html" class="icon-function">ethernet_input</a></td>
+            </tr>
+        
+        </tbody>
+        
+    </table>
+        
+    
+
+
+        </div>
+    <div id="page-footer">
+        <hr>
+        
+            brought to you with 💖
+            by <a href="https://twitter.com/hbehrens">Heiko Behrens</a>
+            <span class="secondary">– MIT license, copyright © 2014-2025</span>
+        
+    </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,428 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../../../../../../../../../../../../../static/css/style.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <title>Symbol - puncover</title>
+    
+</head>
+<body>
+    <div class="container" id="content">
+        <div class="page-header">
+            <nav class="navbar navbar-default" role="navigation">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="../../../../../../../../../../../../../../index.html">
+                    Puncover
+                  </a>
+                </div>
+              </div>
+            </nav>
+          
+        </div>
+        <div id="inner_content">
+        
+    
+    <ol class="breadcrumb folders">
+        
+        <li><a href="../../../../../../../../../../../../../../home.html">home</a></li>
+        
+        <li><a href="../../../../../../../../../../../../../runner.html">runner</a></li>
+        
+        <li><a href="../../../../../../../../../../../../work.html">work</a></li>
+        
+        <li><a href="../../../../../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../../../../executables.html">executables</a></li>
+        
+        <li><a href="../../../../../../../../referenceApp.html">referenceApp</a></li>
+        
+        <li><a href="../../../../../../../platforms.html">platforms</a></li>
+        
+        <li><a href="../../../../../../s32k148evb.html">s32k148evb</a></li>
+        
+        <li><a href="../../../../../bspConfiguration.html">bspConfiguration</a></li>
+        
+        <li><a href="../../../../src.html">src</a></li>
+        
+        <li><a href="../../../bsp.html">bsp</a></li>
+        
+        <li ><a href="../../SystemTimer.html">SystemTimer</a>
+            </li>
+
+        
+        <li class="active"><a href="../SystemTimer.cpp.html">SystemTimer.cpp</a>:122
+            </li>
+        
+    </ol>
+
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <th>Function</th>
+                <td colspan="5">
+                    <span class="icon-function">sysDelayUs</span>
+                </td>
+            </tr>
+
+            <tr>
+                <th rowspan="2"></th>
+                <th>Address</th>
+                <th>Remarks</th>
+                <th>Stack</th>
+                <th>Code</th>
+                <th>Static</th>
+            </tr>
+            <tr>
+                <td>0x0001fa84</td>
+                <td>
+    <span class="label label-success">x-module</span>
+    
+</td>
+                <td>24 (static)</td>
+                <td>128</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th>Callers (3)</th>
+                <td colspan="5">
+                
+                    <a href="../../../../../../../../../platforms/s32k1xx/bsp/bspTja1101/src/mdio/MdioTja1101.cpp/ef01c613d567ec78544a6e1750175912.html">enetphy::MdioTja1101::transfer(unsigned long*, bool) const (464)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../../../../../main/src/lifecycle/StaticBsp.cpp/bbaf0c02e73cc075f1271c2d33d1014c.html">StaticBsp::hwInit() (240)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../../../../../../../../../libs/safety/watchdogManager/src/watchdogManager/watchdogManager.cpp/db9b09f3c6acb0abda1ae8d0ee062f2a.html">safety::WatchdogManager::startTest() (80)</a>
+                    
+                
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    No Callees
+                    
+                </th>
+                <td colspan="5">
+                
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    
+    <pre><a href="./1e3ec6cc8505539c750405f8d898bbdd.html">systemTicksToTimeUs (12)</a></pre>
+    
+
+    <pre>
+
+    sysDelayUs():
+
+       1fa84:	e92d 41f0 	stmdb	sp!, {r4, r5, r6, r7, r8, lr}
+
+       1fa88:	f3ef 8210 	mrs	r2, PRIMASK
+
+    getMachineStateRegisterValueAndSuspendAllInterrupts():
+
+       1fa8c:	b672      	cpsid	i
+
+    sysDelayUs():
+
+       1fa8e:	4e1b      	ldr	r6, [pc, #108]	; (1fafc <<a href="./35425094d4e9dc32f9e47f58106b4135.html">sysDelayUs</a>+0x78>)
+
+    updateTicks():
+
+       1fa90:	f8df e06c 	ldr.w	lr, [pc, #108]	; 1fb00 <<a href="./35425094d4e9dc32f9e47f58106b4135.html">sysDelayUs</a>+0x7c>
+
+       1fa94:	68b3      	ldr	r3, [r6, #8]
+
+       1fa96:	f8de 5004 	ldr.w	r5, [lr, #4]
+
+       1fa9a:	68f7      	ldr	r7, [r6, #12]
+
+       1fa9c:	60b5      	str	r5, [r6, #8]
+
+       1fa9e:	e9d6 1400 	ldrd	r1, r4, [r6]
+
+       1faa2:	1aeb      	subs	r3, r5, r3
+
+       1faa4:	fbb3 f3f7 	udiv	r3, r3, r7
+
+       1faa8:	1859      	adds	r1, r3, r1
+
+       1faaa:	f144 0400 	adc.w	r4, r4, #0
+
+    sysDelayUs():
+
+       1faae:	f382 8810 	msr	PRIMASK, r2
+
+       1fab2:	090b      	lsrs	r3, r1, #4
+
+    getSystemTimeUs():
+
+       1fab4:	ea43 7304 	orr.w	r3, r3, r4, lsl #28
+
+    sysDelayUs():
+
+       1fab8:	1818      	adds	r0, r3, r0
+
+    getSystemTimeUs():
+
+       1faba:	ea4f 1c14 	mov.w	ip, r4, lsr #4
+
+    sysDelayUs():
+
+       1fabe:	f14c 0c00 	adc.w	ip, ip, #0
+
+       1fac2:	f3ef 8810 	mrs	r8, PRIMASK
+
+    getMachineStateRegisterValueAndSuspendAllInterrupts():
+
+       1fac6:	b672      	cpsid	i
+
+    sysDelayUs():
+
+       1fac8:	462a      	mov	r2, r5
+
+    updateTicks():
+
+       1faca:	f8de 5004 	ldr.w	r5, [lr, #4]
+
+       1face:	60b5      	str	r5, [r6, #8]
+
+       1fad0:	1aaa      	subs	r2, r5, r2
+
+       1fad2:	fbb2 f3f7 	udiv	r3, r2, r7
+
+       1fad6:	185b      	adds	r3, r3, r1
+
+       1fad8:	4619      	mov	r1, r3
+
+       1fada:	f144 0400 	adc.w	r4, r4, #0
+
+    sysDelayUs():
+
+       1fade:	f388 8810 	msr	PRIMASK, r8
+
+       1fae2:	091b      	lsrs	r3, r3, #4
+
+    getSystemTimeUs():
+
+       1fae4:	ea43 7304 	orr.w	r3, r3, r4, lsl #28
+
+       1fae8:	0922      	lsrs	r2, r4, #4
+
+    sysDelayUs():
+
+       1faea:	4283      	cmp	r3, r0
+
+       1faec:	eb72 030c 	sbcs.w	r3, r2, ip
+
+       1faf0:	d3e7      	bcc.n	1fac2 <<a href="./35425094d4e9dc32f9e47f58106b4135.html">sysDelayUs</a>+0x3e>
+
+       1faf2:	e9c6 1400 	strd	r1, r4, [r6]
+
+       1faf6:	e8bd 81f0 	ldmia.w	sp!, {r4, r5, r6, r7, r8, pc}
+
+       1fafa:	bf00      	nop
+
+       1fafc:	1ffe00b8 	.word	0x1ffe00b8
+
+       1fb00:	e0001000 	.word	0xe0001000
+
+    </pre>
+
+    
+    <pre><a href="../../../../../../../../../libs/bsp/bspCharInputOutput/src/charInputOutput/bspIo.cpp/1e3f2befae03ad7cf0b4e4cf68923266.html">fctprintf_helper (40)</a></pre>
+    
+
+    
+        <h1>Stack Worst-Case Scenarios</h1>
+        
+            <p>No callees for this function.</p>
+        
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 160</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 1,036</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    160
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                24 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    1,036
+                    
+                    
+                </td>
+                <td class="col_size">128</td>
+                <td><a href="./35425094d4e9dc32f9e47f58106b4135.html" class="icon-function">sysDelayUs</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                    
+                    136
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                40 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    908
+                    
+                    
+                </td>
+                <td class="col_size">464</td>
+                <td><a href="../../../../../../../../../platforms/s32k1xx/bsp/bspTja1101/src/mdio/MdioTja1101.cpp/ef01c613d567ec78544a6e1750175912.html" class="icon-function">enetphy::MdioTja1101::transfer(unsigned long*, bool) const</a></td>
+            </tr>
+        
+            <tr>
+                <th>3</th>
+                <td class="col_size">
+                    
+                    96
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                24 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    444
+                    
+                    
+                </td>
+                <td class="col_size">44</td>
+                <td><a href="../../../../../../../../../platforms/s32k1xx/bsp/bspTja1101/src/mdio/MdioTja1101.cpp/735431b1f23e63069c3761b6410bdf89.html" class="icon-function">enetphy::MdioTja1101::miimRead(unsigned char, unsigned char, unsigned short&amp;)</a></td>
+            </tr>
+        
+            <tr>
+                <th>4</th>
+                <td class="col_size">
+                    
+                    72
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                24 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    400
+                    
+                    
+                </td>
+                <td class="col_size">164</td>
+                <td><a href="../../../../../../../../../platforms/s32k1xx/bsp/bspTja1101/src/phy/Tja1101.cpp/7c1eb7a473dce6485ad67909700355d1.html" class="icon-function">enetphy::Tja1101::isLinkUp()</a></td>
+            </tr>
+        
+            <tr>
+                <th>5</th>
+                <td class="col_size">
+                    
+                    48
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                8 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    236
+                    
+                    
+                </td>
+                <td class="col_size">32</td>
+                <td><a href="../../../../../../../../../platforms/s32k1xx/bsp/bspTja1101/src/phy/Tja1101.cpp/2ac1e3dfbe51be7094a3f0ff0a04757f.html" class="icon-function">enetphy::Tja1101::start()</a></td>
+            </tr>
+        
+            <tr>
+                <th>6</th>
+                <td class="col_size">
+                </td>
+                <td class="col_size">
+            
+                40 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">204</td>
+                <td><a href="../../../../../../../../../platforms/s32k1xx/bsp/bspTja1101/src/phy/Tja1101Tester.cpp/23f1eca3a55db5d02b04e61c9d013fc1.html" class="icon-function">enetphy::Tja1101Tester::executeCommand(util::command::CommandContext&amp;, unsigned char)</a></td>
+            </tr>
+        
+        </tbody>
+        
+    </table>
+        
+    
+
+
+        </div>
+    <div id="page-footer">
+        <hr>
+        
+            brought to you with 💖
+            by <a href="https://twitter.com/hbehrens">Heiko Behrens</a>
+            <span class="secondary">– MIT license, copyright © 2014-2025</span>
+        
+    </div>
+    </div>
+</body>
+</html>

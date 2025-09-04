@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../../../../../../../../../../../static/css/style.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <title>Symbol - puncover</title>
+    
+</head>
+<body>
+    <div class="container" id="content">
+        <div class="page-header">
+            <nav class="navbar navbar-default" role="navigation">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="../../../../../../../../../../../../index.html">
+                    Puncover
+                  </a>
+                </div>
+              </div>
+            </nav>
+          
+        </div>
+        <div id="inner_content">
+        
+    
+    <ol class="breadcrumb folders">
+        
+        <li><a href="../../../../../../../../../../../../home.html">home</a></li>
+        
+        <li><a href="../../../../../../../../../../../runner.html">runner</a></li>
+        
+        <li><a href="../../../../../../../../../../work.html">work</a></li>
+        
+        <li><a href="../../../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../../platforms.html">platforms</a></li>
+        
+        <li><a href="../../../../../../s32k1xx.html">s32k1xx</a></li>
+        
+        <li><a href="../../../../../bsp.html">bsp</a></li>
+        
+        <li><a href="../../../../bspEepromDriver.html">bspEepromDriver</a></li>
+        
+        <li><a href="../../../src.html">src</a></li>
+        
+        <li ><a href="../../eeprom.html">eeprom</a>
+            </li>
+
+        
+        <li class="active"><a href="../EepromDriver.cpp.html">EepromDriver.cpp</a>:209
+            </li>
+        
+    </ol>
+
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <th>Function</th>
+                <td colspan="5">
+                    <span class="icon-function">eeprom::EepromDriver::read(unsigned long, unsigned char*, unsigned long)</span>
+                </td>
+            </tr>
+
+            <tr>
+                <th rowspan="2"></th>
+                <th>Address</th>
+                <th>Remarks</th>
+                <th>Stack</th>
+                <th>Code</th>
+                <th>Static</th>
+            </tr>
+            <tr>
+                <td>0x00020b90</td>
+                <td>
+    
+    
+</td>
+                <td>24 (static)</td>
+                <td>80</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th>No Callers</th>
+                <td colspan="5">
+                
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Callees (1,
+                            <span title="sum of used bytes by all callees">
+                            Σ=56
+                            </span>
+                        )
+                    
+                </th>
+                <td colspan="5">
+                
+                    <a href="./909d101c7b811cb7d2c6fde1b9438a84.html">eeprom::EepromDriver::isOperationAllowed(unsigned long, unsigned char const*, unsigned long) const (56)</a>
+                    
+                
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    
+    <pre><a href="./e70f002cc556aba9cfbd9abfd938d560.html">eeprom::EepromDriver::write(unsigned long, unsigned char const*, unsigned long) (80)</a></pre>
+    
+
+    <pre>
+
+    eeprom::EepromDriver::read(unsigned long, unsigned char*, unsigned long):
+
+       20b90:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
+
+       20b92:	4606      	mov	r6, r0
+
+       20b94:	460f      	mov	r7, r1
+
+       20b96:	4615      	mov	r5, r2
+
+       20b98:	461c      	mov	r4, r3
+
+       20b9a:	f7ff ffb5 	bl	20b08 <<a href="./909d101c7b811cb7d2c6fde1b9438a84.html">eeprom::EepromDriver::isOperationAllowed(unsigned long, unsigned char const*, unsigned long) const</a>>
+
+       20b9e:	b1d0      	cbz	r0, 20bd6 <<a href="./872507ad832d2bd1ba4f59007c6abe27.html">eeprom::EepromDriver::read(unsigned long, unsigned char*, unsigned long)</a>+0x46>
+
+       20ba0:	6873      	ldr	r3, [r6, #4]
+
+       20ba2:	6819      	ldr	r1, [r3, #0]
+
+       20ba4:	eb07 0c01 	add.w	ip, r7, r1
+
+       20ba8:	b15c      	cbz	r4, 20bc2 <<a href="./872507ad832d2bd1ba4f59007c6abe27.html">eeprom::EepromDriver::read(unsigned long, unsigned char*, unsigned long)</a>+0x32>
+
+       20baa:	1e61      	subs	r1, r4, #1
+
+       20bac:	1e6b      	subs	r3, r5, #1
+
+       20bae:	4429      	add	r1, r5
+
+       20bb0:	f1c5 0001 	rsb	r0, r5, #1
+
+       20bb4:	eb03 020c 	add.w	r2, r3, ip
+
+       20bb8:	5c12      	ldrb	r2, [r2, r0]
+
+       20bba:	f803 2f01 	strb.w	r2, [r3, #1]!
+
+       20bbe:	428b      	cmp	r3, r1
+
+       20bc0:	d1f8      	bne.n	20bb4 <<a href="./872507ad832d2bd1ba4f59007c6abe27.html">eeprom::EepromDriver::read(unsigned long, unsigned char*, unsigned long)</a>+0x24>
+
+       20bc2:	4b06      	ldr	r3, [pc, #24]	; (20bdc <<a href="./872507ad832d2bd1ba4f59007c6abe27.html">eeprom::EepromDriver::read(unsigned long, unsigned char*, unsigned long)</a>+0x4c>)
+
+       20bc4:	7818      	ldrb	r0, [r3, #0]
+
+       20bc6:	f010 0040 	ands.w	r0, r0, #64	; 0x40
+
+       20bca:	d100      	bne.n	20bce <<a href="./872507ad832d2bd1ba4f59007c6abe27.html">eeprom::EepromDriver::read(unsigned long, unsigned char*, unsigned long)</a>+0x3e>
+
+       20bcc:	bdf8      	pop	{r3, r4, r5, r6, r7, pc}
+
+       20bce:	2240      	movs	r2, #64	; 0x40
+
+       20bd0:	701a      	strb	r2, [r3, #0]
+
+       20bd2:	2001      	movs	r0, #1
+
+       20bd4:	bdf8      	pop	{r3, r4, r5, r6, r7, pc}
+
+       20bd6:	2001      	movs	r0, #1
+
+       20bd8:	bdf8      	pop	{r3, r4, r5, r6, r7, pc}
+
+       20bda:	bf00      	nop
+
+       20bdc:	40020000 	.word	0x40020000
+
+    </pre>
+
+    
+    <pre><a href="./f688893a563be4bd43dc3349b0f4962f.html">eeprom::EepromDriver::launchCommand() (152)</a></pre>
+    
+
+    
+
+
+        </div>
+    <div id="page-footer">
+        <hr>
+        
+            brought to you with 💖
+            by <a href="https://twitter.com/hbehrens">Heiko Behrens</a>
+            <span class="secondary">– MIT license, copyright © 2014-2025</span>
+        
+    </div>
+    </div>
+</body>
+</html>

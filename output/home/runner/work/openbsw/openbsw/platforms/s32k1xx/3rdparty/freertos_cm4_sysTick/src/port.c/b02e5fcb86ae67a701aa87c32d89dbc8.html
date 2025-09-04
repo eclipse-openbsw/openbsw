@@ -1,0 +1,398 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../../../../../../../../../../static/css/style.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <title>Symbol - puncover</title>
+    
+</head>
+<body>
+    <div class="container" id="content">
+        <div class="page-header">
+            <nav class="navbar navbar-default" role="navigation">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="../../../../../../../../../../../index.html">
+                    Puncover
+                  </a>
+                </div>
+              </div>
+            </nav>
+          
+        </div>
+        <div id="inner_content">
+        
+    
+    <ol class="breadcrumb folders">
+        
+        <li><a href="../../../../../../../../../../../home.html">home</a></li>
+        
+        <li><a href="../../../../../../../../../../runner.html">runner</a></li>
+        
+        <li><a href="../../../../../../../../../work.html">work</a></li>
+        
+        <li><a href="../../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../platforms.html">platforms</a></li>
+        
+        <li><a href="../../../../../s32k1xx.html">s32k1xx</a></li>
+        
+        <li><a href="../../../../3rdparty.html">3rdparty</a></li>
+        
+        <li><a href="../../../freertos_cm4_sysTick.html">freertos_cm4_sysTick</a></li>
+        
+        <li ><a href="../../src.html">src</a>
+            </li>
+
+        
+        <li class="active"><a href="../port.c.html">port.c</a>:460
+            </li>
+        
+    </ol>
+
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <th>Function</th>
+                <td colspan="5">
+                    <span class="icon-function">PendSV_Handler</span>
+                </td>
+            </tr>
+
+            <tr>
+                <th rowspan="2"></th>
+                <th>Address</th>
+                <th>Remarks</th>
+                <th>Stack</th>
+                <th>Code</th>
+                <th>Static</th>
+            </tr>
+            <tr>
+                <td>0x00021480</td>
+                <td>
+    
+    
+</td>
+                <td>0 (static)</td>
+                <td>96</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th>No Callers</th>
+                <td colspan="5">
+                
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Callees (1,
+                            <span title="sum of used bytes by all callees">
+                            Σ=28
+                            </span>
+                        )
+                    
+                </th>
+                <td colspan="5">
+                
+                    <a href="../../../../../../libs/3rdparty/freeRtos/src/tasks.c/14db0b8137bb15b16e9724365ccf27b8.html">vTaskSwitchContext (28)</a>
+                    
+                
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    
+    <pre><a href="./f34360f95022a09e4e4cceffa22ec0c6.html">vPortExitCritical (28)</a></pre>
+    
+
+    <pre>
+
+    PendSV_Handler():
+
+       21480:	f3ef 8009 	mrs	r0, PSP
+
+       21484:	f3bf 8f6f 	isb	sy
+
+       21488:	4b15      	ldr	r3, [pc, #84]	; (214e0 <<a href="../../../../../../../../../../../unknown/unknown/ed6f850e0b44efd737dc0a202d311319.html">pxCurrentTCBConst</a>>)
+
+       2148a:	681a      	ldr	r2, [r3, #0]
+
+       2148c:	f01e 0f10 	tst.w	lr, #16
+
+       21490:	bf08      	it	eq
+
+       21492:	ed20 8a10 	vstmdbeq	r0!, {s16-s31}
+
+       21496:	e920 4ff0 	stmdb	r0!, {r4, r5, r6, r7, r8, r9, sl, fp, lr}
+
+       2149a:	6010      	str	r0, [r2, #0]
+
+       2149c:	e92d 0009 	stmdb	sp!, {r0, r3}
+
+       214a0:	f04f 0050 	mov.w	r0, #80	; 0x50
+
+       214a4:	f380 8811 	msr	BASEPRI, r0
+
+       214a8:	f3bf 8f4f 	dsb	sy
+
+       214ac:	f3bf 8f6f 	isb	sy
+
+       214b0:	f7f0 febe 	bl	12230 <<a href="../../../../../../libs/3rdparty/freeRtos/src/tasks.c/14db0b8137bb15b16e9724365ccf27b8.html">vTaskSwitchContext</a>>
+
+       214b4:	f04f 0000 	mov.w	r0, #0
+
+       214b8:	f380 8811 	msr	BASEPRI, r0
+
+       214bc:	bc09      	pop	{r0, r3}
+
+       214be:	6819      	ldr	r1, [r3, #0]
+
+       214c0:	6808      	ldr	r0, [r1, #0]
+
+       214c2:	e8b0 4ff0 	ldmia.w	r0!, {r4, r5, r6, r7, r8, r9, sl, fp, lr}
+
+       214c6:	f01e 0f10 	tst.w	lr, #16
+
+       214ca:	bf08      	it	eq
+
+       214cc:	ecb0 8a10 	vldmiaeq	r0!, {s16-s31}
+
+       214d0:	f380 8809 	msr	PSP, r0
+
+       214d4:	f3bf 8f6f 	isb	sy
+
+       214d8:	4770      	bx	lr
+
+       214da:	bf00      	nop
+
+       214dc:	f3af 8000 	nop.w
+
+    </pre>
+
+    
+    <pre><a href="../../../../../../../../../../../unknown/unknown/ed6f850e0b44efd737dc0a202d311319.html">pxCurrentTCBConst (4)</a></pre>
+    
+
+    
+        <h1>Stack Worst-Case Scenarios</h1>
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 288</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 2,668</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    288
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                40 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    2,668
+                    
+                    
+                </td>
+                <td class="col_size">136</td>
+                <td><a href="../../../../../../libs/3rdparty/printf/src/printf/printf.c/aead89a8c09454d3b52c82329b9d6539.html" class="icon-function">out_rev_</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                    
+                    248
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                112 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    2,532
+                    
+                    
+                </td>
+                <td class="col_size">656</td>
+                <td><a href="../../../../../../libs/3rdparty/printf/src/printf/printf.c/ac6598d6032c1151c802f0c9a9979746.html" class="icon-function">print_integer</a></td>
+            </tr>
+        
+            <tr>
+                <th>3</th>
+                <td class="col_size">
+                    
+                    136
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                96 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    1,876
+                    
+                    
+                </td>
+                <td class="col_size">1,572</td>
+                <td><a href="../../../../../../libs/3rdparty/printf/src/printf/printf.c/6d7d630ec5529648e33ae989eebb2cb7.html" class="icon-function">_vsnprintf</a></td>
+            </tr>
+        
+            <tr>
+                <th>4</th>
+                <td class="col_size">
+                    
+                    40
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                24 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    304
+                    
+                    
+                </td>
+                <td class="col_size">36</td>
+                <td><a href="../../../../../../libs/3rdparty/printf/src/printf/printf.c/5312ec35df88995f2f21271b5c68c054.html" class="icon-function">vfctprintf</a></td>
+            </tr>
+        
+            <tr>
+                <th>5</th>
+                <td class="col_size">
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    268
+                    
+                    
+                </td>
+                <td class="col_size">40</td>
+                <td><a href="../../../../../../libs/bsp/bspCharInputOutput/src/charInputOutput/bspIo.cpp/6c492efb4c21b9ebc4f047af3dbd3de7.html" class="icon-function">debug_printf</a></td>
+            </tr>
+        
+            <tr>
+                <th>6</th>
+                <td class="col_size">
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    228
+                    
+                    
+                </td>
+                <td class="col_size">12</td>
+                <td><a href="../../../../../../executables/referenceApp/platforms/s32k148evb/main/src/osHooks.cpp/45bbe829857fb87663cdbf538f18cad7.html" class="icon-function">vApplicationStackOverflowHook</a></td>
+            </tr>
+        
+            <tr>
+                <th>7</th>
+                <td class="col_size">
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    216
+                    
+                    
+                </td>
+                <td class="col_size">188</td>
+                <td><a href="../../../../../../libs/3rdparty/freeRtos/src/tasks.c/14db0b8137bb15b16e9724365ccf27b8.html" class="icon-function">vTaskSwitchContext</a></td>
+            </tr>
+        
+            <tr>
+                <th>8</th>
+                <td class="col_size">
+                </td>
+                <td class="col_size">
+            
+                16 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">28</td>
+                <td><a href="../../../../../../libs/3rdparty/freeRtos/src/tasks.c/14db0b8137bb15b16e9724365ccf27b8.html" class="icon-function">vTaskSwitchContext</a></td>
+            </tr>
+        
+        </tbody>
+        
+    </table>
+        
+        
+            <p>No callers for this function.</p>
+        
+    
+
+
+        </div>
+    <div id="page-footer">
+        <hr>
+        
+            brought to you with 💖
+            by <a href="https://twitter.com/hbehrens">Heiko Behrens</a>
+            <span class="secondary">– MIT license, copyright © 2014-2025</span>
+        
+    </div>
+    </div>
+</body>
+</html>

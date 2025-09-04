@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../../../../../../../../../../../static/css/style.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <title>Symbol - puncover</title>
+    
+</head>
+<body>
+    <div class="container" id="content">
+        <div class="page-header">
+            <nav class="navbar navbar-default" role="navigation">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="../../../../../../../../../../../../index.html">
+                    Puncover
+                  </a>
+                </div>
+              </div>
+            </nav>
+          
+        </div>
+        <div id="inner_content">
+        
+    
+    <ol class="breadcrumb folders">
+        
+        <li><a href="../../../../../../../../../../../../home.html">home</a></li>
+        
+        <li><a href="../../../../../../../../../../../runner.html">runner</a></li>
+        
+        <li><a href="../../../../../../../../../../work.html">work</a></li>
+        
+        <li><a href="../../../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../../platforms.html">platforms</a></li>
+        
+        <li><a href="../../../../../../s32k1xx.html">s32k1xx</a></li>
+        
+        <li><a href="../../../../../bsp.html">bsp</a></li>
+        
+        <li><a href="../../../../bspFlexCan.html">bspFlexCan</a></li>
+        
+        <li><a href="../../../src.html">src</a></li>
+        
+        <li ><a href="../../can.html">can</a>
+            </li>
+
+        
+        <li class="active"><a href="../FlexCANDevice.cpp.html">FlexCANDevice.cpp</a>:169
+            </li>
+        
+    </ol>
+
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <th>Function</th>
+                <td colspan="5">
+                    <span class="icon-function">bios::FlexCANDevice::start()</span>
+                </td>
+            </tr>
+
+            <tr>
+                <th rowspan="2"></th>
+                <th>Address</th>
+                <th>Remarks</th>
+                <th>Stack</th>
+                <th>Code</th>
+                <th>Static</th>
+            </tr>
+            <tr>
+                <td>0x0001db50</td>
+                <td>
+    <span class="label label-success">x-module</span>
+    
+</td>
+                <td>16 (static)</td>
+                <td>80</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th>Callers (1)</th>
+                <td colspan="5">
+                
+                    <a href="../../../../canflex2Transceiver/src/can/transceiver/canflex2/CanFlex2Transceiver.cpp/d7dff5862f869b799494c5b4075ba335.html">bios::CanFlex2Transceiver::open() (104)</a>
+                    
+                
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Callees (1,
+                            <span title="sum of used bytes by all callees">
+                            Σ=76
+                            </span>
+                        )
+                    
+                </th>
+                <td colspan="5">
+                
+                    <a href="../../../../../../../libs/bsw/bsp/include/bsp/timer/isEqualAfterTimeout.h/e6bed7a376b976fb3027a77516f202dd.html">bool bsp::isEqualAfterTimeout&lt;unsigned long volatile&gt;(unsigned long volatile const*, unsigned long volatile, unsigned long volatile, unsigned long) (76)</a>
+                    
+                
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    
+    <pre><a href="./857396a19ed691dd05fe4d4419b1328e.html">bios::FlexCANDevice::init() (504)</a></pre>
+    
+
+    <pre>
+
+    bios::FlexCANDevice::start():
+
+       1db50:	b538      	push	{r3, r4, r5, lr}
+
+       1db52:	4604      	mov	r4, r0
+
+       1db54:	6880      	ldr	r0, [r0, #8]
+
+       1db56:	f04f 33ff 	mov.w	r3, #4294967295	; 0xffffffff
+
+       1db5a:	6303      	str	r3, [r0, #48]	; 0x30
+
+       1db5c:	6963      	ldr	r3, [r4, #20]
+
+       1db5e:	6283      	str	r3, [r0, #40]	; 0x28
+
+       1db60:	6801      	ldr	r1, [r0, #0]
+
+       1db62:	f04f 6200 	mov.w	r2, #134217728	; 0x8000000
+
+       1db66:	f021 41a0 	bic.w	r1, r1, #1342177280	; 0x50000000
+
+       1db6a:	6001      	str	r1, [r0, #0]
+
+       1db6c:	f44f 7396 	mov.w	r3, #300	; 0x12c
+
+       1db70:	4611      	mov	r1, r2
+
+       1db72:	f7ff fecb 	bl	1d90c <<a href="../../../../../../../libs/bsw/bsp/include/bsp/timer/isEqualAfterTimeout.h/e6bed7a376b976fb3027a77516f202dd.html">bool bsp::isEqualAfterTimeout<unsigned long volatile>(unsigned long volatile const*, unsigned long volatile, unsigned long volatile, unsigned long)</a>>
+
+       1db76:	b988      	cbnz	r0, 1db9c <<a href="./47957dd6917c7f67d5ab2cace17fe52d.html">bios::FlexCANDevice::start()</a>+0x4c>
+
+       1db78:	4605      	mov	r5, r0
+
+       1db7a:	f8d4 02c0 	ldr.w	r0, [r4, #704]	; 0x2c0
+
+       1db7e:	6822      	ldr	r2, [r4, #0]
+
+       1db80:	6803      	ldr	r3, [r0, #0]
+
+       1db82:	2110      	movs	r1, #16
+
+       1db84:	695b      	ldr	r3, [r3, #20]
+
+       1db86:	60e1      	str	r1, [r4, #12]
+
+       1db88:	6991      	ldr	r1, [r2, #24]
+
+       1db8a:	f884 52c5 	strb.w	r5, [r4, #709]	; 0x2c5
+
+       1db8e:	f8c4 52ac 	str.w	r5, [r4, #684]	; 0x2ac
+
+       1db92:	f8c4 52b0 	str.w	r5, [r4, #688]	; 0x2b0
+
+       1db96:	4798      	blx	r3
+
+       1db98:	4628      	mov	r0, r5
+
+       1db9a:	bd38      	pop	{r3, r4, r5, pc}
+
+       1db9c:	2004      	movs	r0, #4
+
+       1db9e:	bd38      	pop	{r3, r4, r5, pc}
+
+    </pre>
+
+    
+    <pre><a href="../../../../../../../executables/referenceApp/platforms/s32k148evb/main/src/os/isr/isr_can.cpp/aeef8cd63366bb9e2ee4d217f4e1e533.html">CAN0_ORed_0_15_MB_IRQHandler (4)</a></pre>
+    
+
+    
+        <h1>Stack Worst-Case Scenarios</h1>
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 88</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 76</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    88
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                32 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">76</td>
+                <td><a href="../../../../../../../libs/bsw/bsp/include/bsp/timer/isEqualAfterTimeout.h/e6bed7a376b976fb3027a77516f202dd.html" class="icon-function">bool bsp::isEqualAfterTimeout&lt;unsigned long volatile&gt;(unsigned long volatile const*, unsigned long volatile, unsigned long volatile, unsigned long)</a></td>
+            </tr>
+        
+        </tbody>
+        
+        <tfoot>
+            <tr>
+                <th></th>
+                <th class="col_size">56
+                </th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </tfoot>
+        
+    </table>
+        
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 56</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 220</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    56
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                16 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    220
+                    
+                    
+                </td>
+                <td class="col_size">80</td>
+                <td><a href="./47957dd6917c7f67d5ab2cace17fe52d.html" class="icon-function">bios::FlexCANDevice::start()</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                    
+                    40
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                24 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    140
+                    
+                    
+                </td>
+                <td class="col_size">104</td>
+                <td><a href="../../../../canflex2Transceiver/src/can/transceiver/canflex2/CanFlex2Transceiver.cpp/d7dff5862f869b799494c5b4075ba335.html" class="icon-function">bios::CanFlex2Transceiver::open()</a></td>
+            </tr>
+        
+            <tr>
+                <th>3</th>
+                <td class="col_size">
+                </td>
+                <td class="col_size">
+            
+                16 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">36</td>
+                <td><a href="../../../../../../../executables/referenceApp/platforms/s32k148evb/main/src/systems/CanSystem.cpp/c8aeefa6b106453e995765444f89f55b.html" class="icon-function">systems::CanSystem::run()</a></td>
+            </tr>
+        
+        </tbody>
+        
+    </table>
+        
+    
+
+
+        </div>
+    <div id="page-footer">
+        <hr>
+        
+            brought to you with 💖
+            by <a href="https://twitter.com/hbehrens">Heiko Behrens</a>
+            <span class="secondary">– MIT license, copyright © 2014-2025</span>
+        
+    </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,377 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../../../../../../../../../static/css/style.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <title>Symbol - puncover</title>
+    
+</head>
+<body>
+    <div class="container" id="content">
+        <div class="page-header">
+            <nav class="navbar navbar-default" role="navigation">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="../../../../../../../../../../index.html">
+                    Puncover
+                  </a>
+                </div>
+              </div>
+            </nav>
+          
+        </div>
+        <div id="inner_content">
+        
+    
+    <ol class="breadcrumb folders">
+        
+        <li><a href="../../../../../../../../../../home.html">home</a></li>
+        
+        <li><a href="../../../../../../../../../runner.html">runner</a></li>
+        
+        <li><a href="../../../../../../../../work.html">work</a></li>
+        
+        <li><a href="../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../libs.html">libs</a></li>
+        
+        <li><a href="../../../../3rdparty.html">3rdparty</a></li>
+        
+        <li><a href="../../../freeRtos.html">freeRtos</a></li>
+        
+        <li ><a href="../../src.html">src</a>
+            </li>
+
+        
+        <li class="active"><a href="../timers.c.html">timers.c</a>:546
+            </li>
+        
+    </ol>
+
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <th>Function</th>
+                <td colspan="5">
+                    <span class="icon-function">prvReloadTimer</span>
+                </td>
+            </tr>
+
+            <tr>
+                <th rowspan="2"></th>
+                <th>Address</th>
+                <th>Remarks</th>
+                <th>Stack</th>
+                <th>Code</th>
+                <th>Static</th>
+            </tr>
+            <tr>
+                <td>0x00012940</td>
+                <td>
+    
+    
+</td>
+                <td>16 (static)</td>
+                <td>88</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th>Callers (2)</th>
+                <td colspan="5">
+                
+                    <a href="./d35f72ab680b9bc7eb2ff3e6cd07ece5.html">prvTimerTask (488)</a>
+                    
+                        ,
+                    
+                
+                    <a href="./c7acf9685cf652ad4c90399541e8b94d.html">prvProcessExpiredTimer (72)</a>
+                    
+                
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Callees (1,
+                            <span title="sum of used bytes by all callees">
+                            Σ=48
+                            </span>
+                        )
+                    
+                </th>
+                <td colspan="5">
+                
+                    <a href="../list.c/4a1a844861e946c94e3a62dd84492ace.html">vListInsert (48)</a>
+                    
+                
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    
+    <pre><a href="./25fd83c3d905940072a19718ff477a03.html">prvCheckForValidListAndQueue (108)</a></pre>
+    
+
+    <pre>
+
+    prvReloadTimer():
+
+       12940:	b570      	push	{r4, r5, r6, lr}
+
+       12942:	4604      	mov	r4, r0
+
+       12944:	4616      	mov	r6, r2
+
+       12946:	e005      	b.n	12954 <<a href="./7d53b7478873e191a805386b7b6a469e.html">prvReloadTimer</a>+0x14>
+
+    prvInsertTimerInActiveList():
+
+       12948:	4293      	cmp	r3, r2
+
+       1294a:	d819      	bhi.n	12980 <<a href="./7d53b7478873e191a805386b7b6a469e.html">prvReloadTimer</a>+0x40>
+
+    prvReloadTimer():
+
+       1294c:	6a23      	ldr	r3, [r4, #32]
+
+       1294e:	4620      	mov	r0, r4
+
+       12950:	4798      	blx	r3
+
+       12952:	4629      	mov	r1, r5
+
+       12954:	69a3      	ldr	r3, [r4, #24]
+
+    prvInsertTimerInActiveList():
+
+       12956:	6124      	str	r4, [r4, #16]
+
+       12958:	185d      	adds	r5, r3, r1
+
+       1295a:	bf2c      	ite	cs
+
+       1295c:	2001      	movcs	r0, #1
+
+       1295e:	2000      	movcc	r0, #0
+
+       12960:	42b5      	cmp	r5, r6
+
+       12962:	eba6 0201 	sub.w	r2, r6, r1
+
+       12966:	6065      	str	r5, [r4, #4]
+
+       12968:	d9ee      	bls.n	12948 <<a href="./7d53b7478873e191a805386b7b6a469e.html">prvReloadTimer</a>+0x8>
+
+       1296a:	42b1      	cmp	r1, r6
+
+       1296c:	d901      	bls.n	12972 <<a href="./7d53b7478873e191a805386b7b6a469e.html">prvReloadTimer</a>+0x32>
+
+       1296e:	2800      	cmp	r0, #0
+
+       12970:	d0ec      	beq.n	1294c <<a href="./7d53b7478873e191a805386b7b6a469e.html">prvReloadTimer</a>+0xc>
+
+       12972:	4b07      	ldr	r3, [pc, #28]	; (12990 <<a href="./7d53b7478873e191a805386b7b6a469e.html">prvReloadTimer</a>+0x50>)
+
+       12974:	1d21      	adds	r1, r4, #4
+
+       12976:	6818      	ldr	r0, [r3, #0]
+
+    prvReloadTimer():
+
+       12978:	e8bd 4070 	ldmia.w	sp!, {r4, r5, r6, lr}
+
+    prvInsertTimerInActiveList():
+
+       1297c:	f000 b978 	b.w	12c70 <<a href="../list.c/4a1a844861e946c94e3a62dd84492ace.html">vListInsert</a>>
+
+       12980:	4b04      	ldr	r3, [pc, #16]	; (12994 <<a href="./7d53b7478873e191a805386b7b6a469e.html">prvReloadTimer</a>+0x54>)
+
+       12982:	1d21      	adds	r1, r4, #4
+
+       12984:	6818      	ldr	r0, [r3, #0]
+
+    prvReloadTimer():
+
+       12986:	e8bd 4070 	ldmia.w	sp!, {r4, r5, r6, lr}
+
+    prvInsertTimerInActiveList():
+
+       1298a:	f000 b971 	b.w	12c70 <<a href="../list.c/4a1a844861e946c94e3a62dd84492ace.html">vListInsert</a>>
+
+       1298e:	bf00      	nop
+
+       12990:	1fff65b4 	.word	0x1fff65b4
+
+       12994:	1fff65b8 	.word	0x1fff65b8
+
+    </pre>
+
+    
+    <pre><a href="./c7acf9685cf652ad4c90399541e8b94d.html">prvProcessExpiredTimer (72)</a></pre>
+    
+
+    
+        <h1>Stack Worst-Case Scenarios</h1>
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 88</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 48</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    88
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                8 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">48</td>
+                <td><a href="../list.c/4a1a844861e946c94e3a62dd84492ace.html" class="icon-function">vListInsert</a></td>
+            </tr>
+        
+        </tbody>
+        
+        <tfoot>
+            <tr>
+                <th></th>
+                <th class="col_size">80
+                </th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </tfoot>
+        
+    </table>
+        
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 80</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 648</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    80
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                16 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    648
+                    
+                    
+                </td>
+                <td class="col_size">88</td>
+                <td><a href="./7d53b7478873e191a805386b7b6a469e.html" class="icon-function">prvReloadTimer</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                    
+                    64
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                16 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    560
+                    
+                    
+                </td>
+                <td class="col_size">72</td>
+                <td><a href="./c7acf9685cf652ad4c90399541e8b94d.html" class="icon-function">prvProcessExpiredTimer</a></td>
+            </tr>
+        
+            <tr>
+                <th>3</th>
+                <td class="col_size">
+                </td>
+                <td class="col_size">
+            
+                48 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">488</td>
+                <td><a href="./d35f72ab680b9bc7eb2ff3e6cd07ece5.html" class="icon-function">prvTimerTask</a></td>
+            </tr>
+        
+        </tbody>
+        
+    </table>
+        
+    
+
+
+        </div>
+    <div id="page-footer">
+        <hr>
+        
+            brought to you with 💖
+            by <a href="https://twitter.com/hbehrens">Heiko Behrens</a>
+            <span class="secondary">– MIT license, copyright © 2014-2025</span>
+        
+    </div>
+    </div>
+</body>
+</html>

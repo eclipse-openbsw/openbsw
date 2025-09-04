@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../../../../../../../../../../../static/css/style.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <title>Symbol - puncover</title>
+    
+</head>
+<body>
+    <div class="container" id="content">
+        <div class="page-header">
+            <nav class="navbar navbar-default" role="navigation">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="../../../../../../../../../../../../index.html">
+                    Puncover
+                  </a>
+                </div>
+              </div>
+            </nav>
+          
+        </div>
+        <div id="inner_content">
+        
+    
+    <ol class="breadcrumb folders">
+        
+        <li><a href="../../../../../../../../../../../../home.html">home</a></li>
+        
+        <li><a href="../../../../../../../../../../../runner.html">runner</a></li>
+        
+        <li><a href="../../../../../../../../../../work.html">work</a></li>
+        
+        <li><a href="../../../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../../platforms.html">platforms</a></li>
+        
+        <li><a href="../../../../../../s32k1xx.html">s32k1xx</a></li>
+        
+        <li><a href="../../../../../bsp.html">bsp</a></li>
+        
+        <li><a href="../../../../bspEthernet.html">bspEthernet</a></li>
+        
+        <li><a href="../../../src.html">src</a></li>
+        
+        <li ><a href="../../ethernet.html">ethernet</a>
+            </li>
+
+        
+        <li class="active"><a href="../RxBuffers.cpp.html">RxBuffers.cpp</a>:28
+            </li>
+        
+    </ol>
+
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <th>Function</th>
+                <td colspan="5">
+                    <span class="icon-function">ethernet::freeCustomPbufHelper(pbuf*)</span>
+                </td>
+            </tr>
+
+            <tr>
+                <th rowspan="2"></th>
+                <th>Address</th>
+                <th>Remarks</th>
+                <th>Stack</th>
+                <th>Code</th>
+                <th>Static</th>
+            </tr>
+            <tr>
+                <td>0x0002001c</td>
+                <td>
+    
+    
+</td>
+                <td>24 (static)</td>
+                <td>84</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th>No Callers</th>
+                <td colspan="5">
+                
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Callees (1,
+                            <span title="sum of used bytes by all callees">
+                            Σ=76
+                            </span>
+                        )
+                    
+                </th>
+                <td colspan="5">
+                
+                    <a href="./cedaf3eb3a1e2d0bed824ca6cf855cff.html">ethernet::freeRxDescriptorIndex(unsigned int, unsigned char, etl::span&lt;pbuf*, 4294967295u&gt;) (76)</a>
+                    
+                
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    
+    <pre><a href="./cedaf3eb3a1e2d0bed824ca6cf855cff.html">ethernet::freeRxDescriptorIndex(unsigned int, unsigned char, etl::span&lt;pbuf*, 4294967295u&gt;) (76)</a></pre>
+    
+
+    <pre>
+
+    ethernet::freeCustomPbufHelper(pbuf*):
+
+       2001c:	b530      	push	{r4, r5, lr}
+
+       2001e:	6944      	ldr	r4, [r0, #20]
+
+       20020:	6980      	ldr	r0, [r0, #24]
+
+    _ZNK3etl4spanI9ENET_ERXDLj4294967295EE5beginEv():
+
+       20022:	6b62      	ldr	r2, [r4, #52]	; 0x34
+
+    ethernet::freeCustomPbufHelper(pbuf*):
+
+       20024:	1a80      	subs	r0, r0, r2
+
+       20026:	b083      	sub	sp, #12
+
+       20028:	1140      	asrs	r0, r0, #5
+
+       2002a:	f3ef 8510 	mrs	r5, PRIMASK
+
+    getMachineStateRegisterValueAndSuspendAllInterrupts():
+
+       2002e:	b672      	cpsid	i
+
+    ethernet::freeCustomPbufHelper(pbuf*):
+
+       20030:	f894 104d 	ldrb.w	r1, [r4, #77]	; 0x4d
+
+    _ZNK3etl4spanI9ENET_ERXDLj4294967295EEixEj():
+
+       20034:	eb02 1241 	add.w	r2, r2, r1, lsl #5
+
+    ethernet::freeCustomPbufHelper(pbuf*):
+
+       20038:	8853      	ldrh	r3, [r2, #2]
+
+       2003a:	f403 5300 	and.w	r3, r3, #8192	; 0x2000
+
+       2003e:	ea6f 4343 	mvn.w	r3, r3, lsl #17
+
+       20042:	ea6f 4353 	mvn.w	r3, r3, lsr #17
+
+       20046:	8053      	strh	r3, [r2, #2]
+
+    _ZN3etl4spanIP4pbufLj4294967295EEC4ERKS3_():
+
+       20048:	6be3      	ldr	r3, [r4, #60]	; 0x3c
+
+       2004a:	9300      	str	r3, [sp, #0]
+
+    ethernet::freeCustomPbufHelper(pbuf*):
+
+       2004c:	466a      	mov	r2, sp
+
+    _ZN3etl4spanIP4pbufLj4294967295EEC4ERKS3_():
+
+       2004e:	6c23      	ldr	r3, [r4, #64]	; 0x40
+
+       20050:	9301      	str	r3, [sp, #4]
+
+    ethernet::freeCustomPbufHelper(pbuf*):
+
+       20052:	f7ff ffbd 	bl	1ffd0 <<a href="./cedaf3eb3a1e2d0bed824ca6cf855cff.html">ethernet::freeRxDescriptorIndex(unsigned int, unsigned char, etl::span<pbuf*, 4294967295u>)</a>>
+
+       20056:	f884 004d 	strb.w	r0, [r4, #77]	; 0x4d
+
+       2005a:	f385 8810 	msr	PRIMASK, r5
+
+       2005e:	4a03      	ldr	r2, [pc, #12]	; (2006c <<a href="./2ac00728892ccef2c99ca8623d938f73.html">ethernet::freeCustomPbufHelper(pbuf*)</a>+0x50>)
+
+       20060:	6913      	ldr	r3, [r2, #16]
+
+       20062:	f043 7380 	orr.w	r3, r3, #16777216	; 0x1000000
+
+       20066:	6113      	str	r3, [r2, #16]
+
+       20068:	b003      	add	sp, #12
+
+       2006a:	bd30      	pop	{r4, r5, pc}
+
+       2006c:	40079000 	.word	0x40079000
+
+    </pre>
+
+    
+    <pre><a href="./007899ce0221b81b6b20e43feaa447e8.html">ethernet::RxBuffers::init() (240)</a></pre>
+    
+
+    
+        <h1>Stack Worst-Case Scenarios</h1>
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 40</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 76</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    40
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                16 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">76</td>
+                <td><a href="./cedaf3eb3a1e2d0bed824ca6cf855cff.html" class="icon-function">ethernet::freeRxDescriptorIndex(unsigned int, unsigned char, etl::span&lt;pbuf*, 4294967295u&gt;)</a></td>
+            </tr>
+        
+        </tbody>
+        
+        <tfoot>
+            <tr>
+                <th></th>
+                <th class="col_size">24
+                </th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </tfoot>
+        
+    </table>
+        
+        
+            <p>No callers for this function.</p>
+        
+    
+
+
+        </div>
+    <div id="page-footer">
+        <hr>
+        
+            brought to you with 💖
+            by <a href="https://twitter.com/hbehrens">Heiko Behrens</a>
+            <span class="secondary">– MIT license, copyright © 2014-2025</span>
+        
+    </div>
+    </div>
+</body>
+</html>

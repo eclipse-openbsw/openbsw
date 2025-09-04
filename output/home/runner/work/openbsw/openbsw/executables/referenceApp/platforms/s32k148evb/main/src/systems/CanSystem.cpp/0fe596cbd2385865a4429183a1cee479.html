@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../../../../../../../../../../../../static/css/style.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <title>Symbol - puncover</title>
+    
+</head>
+<body>
+    <div class="container" id="content">
+        <div class="page-header">
+            <nav class="navbar navbar-default" role="navigation">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="../../../../../../../../../../../../../index.html">
+                    Puncover
+                  </a>
+                </div>
+              </div>
+            </nav>
+          
+        </div>
+        <div id="inner_content">
+        
+    
+    <ol class="breadcrumb folders">
+        
+        <li><a href="../../../../../../../../../../../../../home.html">home</a></li>
+        
+        <li><a href="../../../../../../../../../../../../runner.html">runner</a></li>
+        
+        <li><a href="../../../../../../../../../../../work.html">work</a></li>
+        
+        <li><a href="../../../../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../../../executables.html">executables</a></li>
+        
+        <li><a href="../../../../../../../referenceApp.html">referenceApp</a></li>
+        
+        <li><a href="../../../../../../platforms.html">platforms</a></li>
+        
+        <li><a href="../../../../../s32k148evb.html">s32k148evb</a></li>
+        
+        <li><a href="../../../../main.html">main</a></li>
+        
+        <li><a href="../../../src.html">src</a></li>
+        
+        <li ><a href="../../systems.html">systems</a>
+            </li>
+
+        
+        <li class="active"><a href="../CanSystem.cpp.html">CanSystem.cpp</a>:96
+            </li>
+        
+    </ol>
+
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <th>Function</th>
+                <td colspan="5">
+                    <span class="icon-function">call_can_isr_TX</span>
+                </td>
+            </tr>
+
+            <tr>
+                <th rowspan="2"></th>
+                <th>Address</th>
+                <th>Remarks</th>
+                <th>Stack</th>
+                <th>Code</th>
+                <th>Static</th>
+            </tr>
+            <tr>
+                <td>0x00011728</td>
+                <td>
+    <span class="label label-success">x-module</span>
+    
+</td>
+                <td>8 (static)</td>
+                <td>36</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th>Callers (1)</th>
+                <td colspan="5">
+                
+                    <a href="../../os/isr/isr_can.cpp/6280ab8f4384c9dbe3c9d1e8404f89f5.html">CAN0_ORed_16_31_MB_IRQHandler (4)</a>
+                    
+                
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Callees (3,
+                            <span title="sum of used bytes by all callees">
+                            Σ=360
+                            </span>
+                        )
+                    
+                </th>
+                <td colspan="5">
+                
+                    <a href="../../../../../../../../libs/bsw/asyncFreeRtos/src/async/Hook.cpp/9ae8cac48ad6c58751623005c6bd92ef.html">asyncEnterIsrGroup (132)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../../../../../../../../platforms/s32k1xx/bsp/bspFlexCan/src/can/FlexCANDevice.cpp/75676e3eaa4aa5c6fb9f06bb71383ad9.html">bios::FlexCANDevice::transmitISR() (32)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../../../../../../../../libs/bsw/asyncFreeRtos/src/async/Hook.cpp/b9408dd518758e610c00201ee08f321c.html">asyncLeaveIsrGroup (196)</a>
+                    
+                
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    
+    <pre><a href="./62cfef291a40896c53ab359c7bf84f02.html">call_can_isr_RX (80)</a></pre>
+    
+
+    <pre>
+
+    call_can_isr_TX():
+
+       11728:	b508      	push	{r3, lr}
+
+       1172a:	2001      	movs	r0, #1
+
+       1172c:	f001 ff14 	bl	13558 <<a href="../../../../../../../../libs/bsw/asyncFreeRtos/src/async/Hook.cpp/9ae8cac48ad6c58751623005c6bd92ef.html">asyncEnterIsrGroup</a>>
+
+    _ZN4bios19CanFlex2Transceiver17transmitInterruptEh():
+
+       11730:	4b05      	ldr	r3, [pc, #20]	; (11748 <<a href="./0fe596cbd2385865a4429183a1cee479.html">call_can_isr_TX</a>+0x20>)
+
+       11732:	6818      	ldr	r0, [r3, #0]
+
+       11734:	f500 709c 	add.w	r0, r0, #312	; 0x138
+
+       11738:	f00c f8d8 	bl	1d8ec <<a href="../../../../../../../../platforms/s32k1xx/bsp/bspFlexCan/src/can/FlexCANDevice.cpp/75676e3eaa4aa5c6fb9f06bb71383ad9.html">bios::FlexCANDevice::transmitISR()</a>>
+
+    call_can_isr_TX():
+
+       1173c:	e8bd 4008 	ldmia.w	sp!, {r3, lr}
+
+       11740:	2001      	movs	r0, #1
+
+       11742:	f001 bf4b 	b.w	135dc <<a href="../../../../../../../../libs/bsw/asyncFreeRtos/src/async/Hook.cpp/b9408dd518758e610c00201ee08f321c.html">asyncLeaveIsrGroup</a>>
+
+       11746:	bf00      	nop
+
+       11748:	1fff6988 	.word	0x1fff6988
+
+    </pre>
+
+    
+    <pre><a href="../../../../../../../../libs/3rdparty/etl/include/etl/intrusive_forward_list.h/26048de89537748be95c7b8fa31a25a4.html">_GLOBAL__sub_I__ZN7systems9CanSystemC2EhR9StaticBsp (28)</a></pre>
+    
+
+    
+        <h1>Stack Worst-Case Scenarios</h1>
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 32</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 132</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    32
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                24 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">132</td>
+                <td><a href="../../../../../../../../libs/bsw/asyncFreeRtos/src/async/Hook.cpp/9ae8cac48ad6c58751623005c6bd92ef.html" class="icon-function">asyncEnterIsrGroup</a></td>
+            </tr>
+        
+        </tbody>
+        
+        <tfoot>
+            <tr>
+                <th></th>
+                <th class="col_size">8
+                </th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </tfoot>
+        
+    </table>
+        
+        
+            <p>No callers for this function.</p>
+        
+    
+
+
+        </div>
+    <div id="page-footer">
+        <hr>
+        
+            brought to you with 💖
+            by <a href="https://twitter.com/hbehrens">Heiko Behrens</a>
+            <span class="secondary">– MIT license, copyright © 2014-2025</span>
+        
+    </div>
+    </div>
+</body>
+</html>

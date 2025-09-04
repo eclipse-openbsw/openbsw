@@ -1,0 +1,437 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../../../../../../../../../static/css/style.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <title>Symbol - puncover</title>
+    
+</head>
+<body>
+    <div class="container" id="content">
+        <div class="page-header">
+            <nav class="navbar navbar-default" role="navigation">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="../../../../../../../../../../index.html">
+                    Puncover
+                  </a>
+                </div>
+              </div>
+            </nav>
+          
+        </div>
+        <div id="inner_content">
+        
+    
+    <ol class="breadcrumb folders">
+        
+        <li><a href="../../../../../../../../../../home.html">home</a></li>
+        
+        <li><a href="../../../../../../../../../runner.html">runner</a></li>
+        
+        <li><a href="../../../../../../../../work.html">work</a></li>
+        
+        <li><a href="../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../libs.html">libs</a></li>
+        
+        <li><a href="../../../../3rdparty.html">3rdparty</a></li>
+        
+        <li><a href="../../../freeRtos.html">freeRtos</a></li>
+        
+        <li ><a href="../../src.html">src</a>
+            </li>
+
+        
+        <li class="active"><a href="../queue.c.html">queue.c</a>:1096
+            </li>
+        
+    </ol>
+
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <th>Function</th>
+                <td colspan="5">
+                    <span class="icon-function">xQueueGenericSendFromISR</span>
+                </td>
+            </tr>
+
+            <tr>
+                <th rowspan="2"></th>
+                <th>Address</th>
+                <th>Remarks</th>
+                <th>Stack</th>
+                <th>Code</th>
+                <th>Static</th>
+            </tr>
+            <tr>
+                <td>0x00012e9c</td>
+                <td>
+    <span class="label label-success">x-module</span>
+    
+</td>
+                <td>24 (static)</td>
+                <td>136</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th>Callers (1)</th>
+                <td colspan="5">
+                
+                    <a href="../timers.c/97b7c14db39b7abb49271ab7cb959c97.html">xTimerPendFunctionCallFromISR (40)</a>
+                    
+                
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Callees (4,
+                            <span title="sum of used bytes by all callees">
+                            Σ=360
+                            </span>
+                        )
+                    
+                </th>
+                <td colspan="5">
+                
+                    <a href="../../../../../platforms/s32k1xx/3rdparty/freertos_cm4_sysTick/src/port.c/4f95af04dbec4da52acc286c44550d5c.html">vPortValidateInterruptPriority (20)</a>
+                    
+                        ,
+                    
+                
+                    <a href="./03fc7cb4d158937df64546c4af79991a.html">prvCopyDataToQueue (120)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../tasks.c/306d5e508f89917a5418a016e903646a.html">uxTaskGetNumberOfTasks (12)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../tasks.c/743b1e332b78e221e06478f6fa7578e0.html">xTaskRemoveFromEventList (208)</a>
+                    
+                
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    
+    <pre><a href="./0615b9724f1a85b23e5eea6a25411419.html">xQueueGenericCreateStatic (76)</a></pre>
+    
+
+    <pre>
+
+    xQueueGenericSendFromISR():
+
+       12e9c:	e92d 41f0 	stmdb	sp!, {r4, r5, r6, r7, r8, lr}
+
+       12ea0:	4604      	mov	r4, r0
+
+       12ea2:	460e      	mov	r6, r1
+
+       12ea4:	4617      	mov	r7, r2
+
+       12ea6:	461d      	mov	r5, r3
+
+       12ea8:	f00e fba6 	bl	215f8 <<a href="../../../../../platforms/s32k1xx/3rdparty/freertos_cm4_sysTick/src/port.c/4f95af04dbec4da52acc286c44550d5c.html">vPortValidateInterruptPriority</a>>
+
+    ulPortRaiseBASEPRI():
+
+       12eac:	f3ef 8811 	mrs	r8, BASEPRI
+
+       12eb0:	f04f 0350 	mov.w	r3, #80	; 0x50
+
+       12eb4:	f383 8811 	msr	BASEPRI, r3
+
+       12eb8:	f3bf 8f6f 	isb	sy
+
+       12ebc:	f3bf 8f4f 	dsb	sy
+
+    xQueueGenericSendFromISR():
+
+       12ec0:	6ba2      	ldr	r2, [r4, #56]	; 0x38
+
+       12ec2:	6be3      	ldr	r3, [r4, #60]	; 0x3c
+
+       12ec4:	429a      	cmp	r2, r3
+
+       12ec6:	d306      	bcc.n	12ed6 <<a href="./3a5a3780600ed210406b45b13f3ae577.html">xQueueGenericSendFromISR</a>+0x3a>
+
+       12ec8:	2d02      	cmp	r5, #2
+
+       12eca:	d004      	beq.n	12ed6 <<a href="./3a5a3780600ed210406b45b13f3ae577.html">xQueueGenericSendFromISR</a>+0x3a>
+
+       12ecc:	2000      	movs	r0, #0
+
+    vPortSetBASEPRI():
+
+       12ece:	f388 8811 	msr	BASEPRI, r8
+
+    xQueueGenericSendFromISR():
+
+       12ed2:	e8bd 81f0 	ldmia.w	sp!, {r4, r5, r6, r7, r8, pc}
+
+       12ed6:	462a      	mov	r2, r5
+
+       12ed8:	f894 5045 	ldrb.w	r5, [r4, #69]	; 0x45
+
+       12edc:	6ba3      	ldr	r3, [r4, #56]	; 0x38
+
+       12ede:	4631      	mov	r1, r6
+
+       12ee0:	b26d      	sxtb	r5, r5
+
+       12ee2:	4620      	mov	r0, r4
+
+       12ee4:	f7ff fef0 	bl	12cc8 <<a href="./03fc7cb4d158937df64546c4af79991a.html">prvCopyDataToQueue</a>>
+
+       12ee8:	1c6b      	adds	r3, r5, #1
+
+       12eea:	d106      	bne.n	12efa <<a href="./3a5a3780600ed210406b45b13f3ae577.html">xQueueGenericSendFromISR</a>+0x5e>
+
+       12eec:	6a63      	ldr	r3, [r4, #36]	; 0x24
+
+       12eee:	b973      	cbnz	r3, 12f0e <<a href="./3a5a3780600ed210406b45b13f3ae577.html">xQueueGenericSendFromISR</a>+0x72>
+
+       12ef0:	2001      	movs	r0, #1
+
+    vPortSetBASEPRI():
+
+       12ef2:	f388 8811 	msr	BASEPRI, r8
+
+    xQueueGenericSendFromISR():
+
+       12ef6:	e8bd 81f0 	ldmia.w	sp!, {r4, r5, r6, r7, r8, pc}
+
+       12efa:	f7ff f97d 	bl	121f8 <<a href="../tasks.c/306d5e508f89917a5418a016e903646a.html">uxTaskGetNumberOfTasks</a>>
+
+       12efe:	4285      	cmp	r5, r0
+
+       12f00:	d2f6      	bcs.n	12ef0 <<a href="./3a5a3780600ed210406b45b13f3ae577.html">xQueueGenericSendFromISR</a>+0x54>
+
+       12f02:	3501      	adds	r5, #1
+
+       12f04:	b26d      	sxtb	r5, r5
+
+       12f06:	f884 5045 	strb.w	r5, [r4, #69]	; 0x45
+
+       12f0a:	2001      	movs	r0, #1
+
+       12f0c:	e7f1      	b.n	12ef2 <<a href="./3a5a3780600ed210406b45b13f3ae577.html">xQueueGenericSendFromISR</a>+0x56>
+
+       12f0e:	f104 0024 	add.w	r0, r4, #36	; 0x24
+
+       12f12:	f7ff f9f3 	bl	122fc <<a href="../tasks.c/743b1e332b78e221e06478f6fa7578e0.html">xTaskRemoveFromEventList</a>>
+
+       12f16:	2800      	cmp	r0, #0
+
+       12f18:	d0ea      	beq.n	12ef0 <<a href="./3a5a3780600ed210406b45b13f3ae577.html">xQueueGenericSendFromISR</a>+0x54>
+
+       12f1a:	2f00      	cmp	r7, #0
+
+       12f1c:	d0e8      	beq.n	12ef0 <<a href="./3a5a3780600ed210406b45b13f3ae577.html">xQueueGenericSendFromISR</a>+0x54>
+
+       12f1e:	2001      	movs	r0, #1
+
+       12f20:	6038      	str	r0, [r7, #0]
+
+       12f22:	e7d4      	b.n	12ece <<a href="./3a5a3780600ed210406b45b13f3ae577.html">xQueueGenericSendFromISR</a>+0x32>
+
+    </pre>
+
+    
+    <pre><a href="./e175bc34f19fb5ab84d573af67f2b746.html">xQueueReceive (292)</a></pre>
+    
+
+    
+        <h1>Stack Worst-Case Scenarios</h1>
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 100</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 292</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    100
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                4 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    292
+                    
+                    
+                </td>
+                <td class="col_size">40</td>
+                <td><a href="../list.c/1abc5ae8b61049fbb0433232e839935f.html" class="icon-function">uxListRemove</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                    
+                    96
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                24 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    252
+                    
+                    
+                </td>
+                <td class="col_size">132</td>
+                <td><a href="../tasks.c/ac4d40847a9d110c7d274f3cdf7521f5.html" class="icon-function">xTaskPriorityDisinherit</a></td>
+            </tr>
+        
+            <tr>
+                <th>3</th>
+                <td class="col_size">
+                    
+                    72
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                16 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">120</td>
+                <td><a href="./03fc7cb4d158937df64546c4af79991a.html" class="icon-function">prvCopyDataToQueue</a></td>
+            </tr>
+        
+        </tbody>
+        
+        <tfoot>
+            <tr>
+                <th></th>
+                <th class="col_size">56
+                </th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </tfoot>
+        
+    </table>
+        
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 56</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 176</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    56
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                24 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    176
+                    
+                    
+                </td>
+                <td class="col_size">136</td>
+                <td><a href="./3a5a3780600ed210406b45b13f3ae577.html" class="icon-function">xQueueGenericSendFromISR</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                </td>
+                <td class="col_size">
+            
+                32 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">40</td>
+                <td><a href="../timers.c/97b7c14db39b7abb49271ab7cb959c97.html" class="icon-function">xTimerPendFunctionCallFromISR</a></td>
+            </tr>
+        
+        </tbody>
+        
+    </table>
+        
+    
+
+
+        </div>
+    <div id="page-footer">
+        <hr>
+        
+            brought to you with 💖
+            by <a href="https://twitter.com/hbehrens">Heiko Behrens</a>
+            <span class="secondary">– MIT license, copyright © 2014-2025</span>
+        
+    </div>
+    </div>
+</body>
+</html>
