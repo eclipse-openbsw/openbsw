@@ -12,7 +12,7 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      
+
       - name: Set up CMake
         uses: jwlawson/actions-setup-cmake@v2
         with:
@@ -22,7 +22,7 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      
+
       - name: Cache CMake files
         id: cache-cmake
         uses: actions/cache@v4
@@ -31,9 +31,14 @@ jobs:
               cmake-build-s32k148
             key: ${{ runner.os }}-cmake-s32k148-${{ hashFiles('**/*.cpp', '**/*.h', '**/*.cmake', '**/*.txt', '**/*.c', '**/*.s') }}
 
-      - name: Install Poetry
-        uses: snok/install-poetry@v1.4.1
-      
+      - name: Set up Python virtual environment and install Poetry
+        run: |
+          python3 -m venv .pvenv
+          source .pvenv/bin/activate
+          pip install --upgrade pip
+          pip install poetry
+          poetry --version
+
       - name: Set up ARM GCC
         uses: carlosperate/arm-none-eabi-gcc-action@v1
         with:
@@ -50,12 +55,13 @@ jobs:
             --toolchain ../../admin/cmake/ArmNoneEabi-gcc.cmake
 
       - name: Build with cmake
-        # if: ${{ steps.cache-cmake.outputs.cache-hit != 'true' }}
+        if: ${{ steps.cache-cmake.outputs.cache-hit != 'true' }}
         run: cmake --build cmake-build-s32k148 --target app.referenceApp -j
 
       - name: Run script and generate report
         working-directory: tools/puncover_tool
         run: |
+           source ../../.pvenv/bin/activate
            poetry install
            echo "==> Running script"
            poetry run puncover_tool
