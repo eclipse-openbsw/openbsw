@@ -146,11 +146,13 @@ TEST_F(
  * addDiagSessionListener should do nothing, because the given listener was already added before
  * (see SetUp() function).
  */
-TEST_F(
-    DiagnosticSessionControlTest,
-    addDiagSessionListener_should_do_nothing_because_the_given_listener_was_already_added)
+TEST_F(DiagnosticSessionControlTest, addDiagSessionListener_throws_on_adding_given_listener_again)
 {
-    fDiagnosticSessionControl.addDiagSessionListener(fDiagSessionChangedListener);
+    // In production code without exceptions, ETL silently doesn't add the listener and continues
+    // but this corner of the unit tests has exceptions activated
+    ASSERT_THROW(
+        fDiagnosticSessionControl.addDiagSessionListener(fDiagSessionChangedListener),
+        etl::intrusive_list_value_is_already_linked);
 }
 
 /**
