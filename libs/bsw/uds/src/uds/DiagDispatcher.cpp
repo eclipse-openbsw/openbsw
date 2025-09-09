@@ -345,7 +345,6 @@ void DiagDispatcher2::dispatchIncomingRequest(TransportJob& job)
                 pConnection->fSourceId,
                 pConnection->fTargetId,
                 pConnection->fServiceId);
-            pConnection->setResuming(isResuming);
             pConnection->setRequestNotificationListener(*job.getProcessedListener());
             DiagReturnCode::Type const result = fDiagJobRoot.execute(
                 *pConnection,
