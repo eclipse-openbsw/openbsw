@@ -36,6 +36,8 @@ add_subdirectory(printf)
 
 add_subdirectory(freeRtos EXCLUDE_FROM_ALL)
 
+add_subdirectory(threadx EXCLUDE_FROM_ALL)
+
 set(LWIP_DIR "${CMAKE_CURRENT_SOURCE_DIR}/lwip")
 set(LWIP_INCLUDE_DIRS
     "${LWIP_DIR}/src/include"

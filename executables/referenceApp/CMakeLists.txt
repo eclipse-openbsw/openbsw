@@ -5,9 +5,14 @@ endif ()
 
 add_subdirectory(platforms/${OPENBSW_TARGET})
 
-# Configure async and freeRtos libs depending on build type.
-add_library(asyncPlatform ALIAS asyncFreeRtos)
-add_library(osFreeRtos ALIAS freeRtos)
+# Configure async and Rtos libs depending on target rtos.
+if (BUILD_TARGET_RTOS STREQUAL "FREERTOS")
+    add_library(asyncPlatform ALIAS asyncFreeRtos)
+    add_library(osFreeRtos ALIAS freeRtos)
+elseif (BUILD_TARGET_RTOS STREQUAL "THREADX")
+    add_library(asyncPlatform ALIAS asyncThreadX)
+    add_library(osThreadX ALIAS threadX)
+endif ()
 
 # Injections
 add_subdirectory(application)

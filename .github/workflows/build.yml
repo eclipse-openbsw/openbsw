@@ -6,8 +6,9 @@ jobs:
   run-command:
     runs-on: ubuntu-latest
     strategy:
+    #   max-parallel: 1
       matrix:
-        preset: [ "tests-posix-debug", "tests-posix-release", "tests-s32k1xx-debug", "tests-s32k1xx-release", "posix", "posix-with-tracing", "s32k148-gcc", "s32k148-clang" ]
+        preset: [ "tests-posix-debug", "tests-posix-release", "tests-s32k1xx-debug", "tests-s32k1xx-release", "posix-freertos", "posix-threadx", "posix-freertos-with-tracing", "s32k148-freertos-gcc", "s32k148-threadx-gcc", "s32k148-freertos-clang", "s32k148-threadx-clang" ]
         platform: [ "arm", "linux" ]
         config: [ "Debug", "Release", "RelWithDebInfo" ]
         cxxid: ["gcc", "clang"]
@@ -39,21 +40,35 @@ jobs:
           - preset: "tests-s32k1xx-release"
             config: "RelWithDebInfo"
 
-          - preset: "posix"
+          - preset: "posix-freertos"
             platform: "arm"
-          - preset: "posix"
-            config: "RelWithDebInfo"
-          - preset: "posix-with-tracing"
+          - preset: "posix-threadx"
             platform: "arm"
-          - preset: "posix-with-tracing"
+          - preset: "posix-freertos"
             config: "RelWithDebInfo"
-          - preset: "s32k148-gcc"
+          - preset: "posix-threadx"
+            config: "RelWithDebInfo"
+          - preset: "posix-freertos-with-tracing"
+            platform: "arm"
+          - preset: "posix-freertos-with-tracing"
+            config: "RelWithDebInfo"
+
+          - preset: "s32k148-freertos-gcc"
             platform: "linux"
-          - preset: "s32k148-clang"
+          - preset: "s32k148-threadx-gcc"
             platform: "linux"
-          - preset: "s32k148-gcc"
+          - preset: "s32k148-freertos-gcc"
             cxxid: "clang"
-          - preset: "s32k148-clang"
+          - preset: "s32k148-threadx-gcc"
+            cxxid: "clang"
+
+          - preset: "s32k148-freertos-clang"
+            platform: "linux"
+          - preset: "s32k148-threadx-clang"
+            platform: "linux"
+          - preset: "s32k148-freertos-clang"
+            cxxid: "gcc"
+          - preset: "s32k148-threadx-clang"
             cxxid: "gcc"
 
     steps:
@@ -65,7 +80,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: build
-          key: ${{ runner.os }}-cmake-${{ matrix.preset }}-${{ matrix.config }}-${{ matrix.platform }}-${{ matrix.cxxid }}-${{ matrix.cxxstd }}-${{ hashFiles('**/*.cpp', '**/*.h',  '**/*.cmake', '**/*.txt', '**/*.c', '**/*.s') }}
+          key: ${{ runner.os }}-cmake-${{ matrix.preset }}-${{ matrix.config }}-${{ matrix.platform }}-${{ matrix.cxxid }}-${{ matrix.cxxstd }}-${{ hashFiles('**/*.cpp', '**/*.h',  '**/*.cmake', '**/*.txt', '**/*.c', '**/*.s', '**/*.S') }}
           restore-keys: ${{ runner.os }}-cmake-${{ matrix.preset }}-${{ matrix.config }}-${{ matrix.platform }}-${{ matrix.cxxid }}-${{ matrix.cxxstd }}-
 
       - name: Build the docker image
@@ -79,24 +94,24 @@ jobs:
           docker run --rm -v "$PWD:/home/jenkins" -w /home/jenkins --user $(id -u):4996 dev python3 .ci/build.py --preset "${{ matrix.preset }}" --platform "${{ matrix.platform }}" --cxxid "${{ matrix.cxxid }}" --cxxstd "${{ matrix.cxxstd }}" --config "${{ matrix.config }}"
 
       - name: Run custom CMake build for elf-analyzer
-        if: steps.cache-cmake.outputs.cache-hit != 'true' && matrix.preset == 's32k148-gcc' && matrix.platform == 'arm' && matrix.cxxid == 'gcc' && matrix.cxxstd == '14' && matrix.config != ''
+        if: steps.cache-cmake.outputs.cache-hit != 'true' && matrix.platform == 'arm' && matrix.cxxid == 'gcc' && matrix.cxxstd == '14' && matrix.config != ''
         run: |
           docker run --rm -v "$PWD:/home/jenkins" -w /home/jenkins --user $(id -u):4996 dev bash -c "
-            cmake --preset ${{matrix.preset}} -DCMAKE_CXX_FLAGS="-gdwarf-4" -DCMAKE_C_FLAGS="-gdwarf-4" -B elf-analyzer-artifacts
-            cmake --build elf-analyzer-artifacts -t app.referenceApp --config ${{ matrix.config }} "
+            cmake --preset ${{matrix.preset}} -DCMAKE_CXX_FLAGS="-gdwarf-4" -DCMAKE_C_FLAGS="-gdwarf-4" -B elf-analyzer-artifacts/${{matrix.preset}}
+            cmake --build elf-analyzer-artifacts/${{matrix.preset}} -t app.referenceApp --config ${{ matrix.config }} "
 
       - name: Set commit hash and metadata
         if: steps.cache-cmake.outputs.cache-hit != 'true' && matrix.platform == 'arm' && matrix.cxxid == 'gcc' && matrix.cxxstd == '14' && matrix.config != ''
         id: vars
         run: |
           echo "COMMIT_HASH=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
-          echo "ARTIFACT_NAME=elf-s32k148-${{ matrix.cxxid }}-${{ matrix.cxxstd }}-${{ matrix.config }}-gdwarf4-${GITHUB_SHA::7}" >> $GITHUB_ENV
+          echo "ARTIFACT_NAME=elf-${{ matrix.preset }}-${{ matrix.cxxstd }}-${{ matrix.config }}-gdwarf4-${GITHUB_SHA::7}" >> $GITHUB_ENV
 
       - name: Find ELF files
         if: steps.cache-cmake.outputs.cache-hit != 'true' && matrix.platform == 'arm' && matrix.cxxid == 'gcc' && matrix.cxxstd == '14' && matrix.config != ''
         run: |
           mkdir -p elf-artifacts
-          cp elf-analyzer-artifacts/executables/referenceApp/application/${{ matrix.config }}/app.referenceApp.elf elf-artifacts/
+          cp elf-analyzer-artifacts/${{matrix.preset}}/executables/referenceApp/application/${{ matrix.config }}/app.referenceApp.elf elf-artifacts/
 
       - name: Upload ELF as GitHub Artifact
         if: steps.cache-cmake.outputs.cache-hit != 'true' && matrix.platform == 'arm'  && matrix.cxxid == 'gcc' && matrix.cxxstd == '14' && matrix.config != ''

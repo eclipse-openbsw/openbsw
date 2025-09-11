@@ -58,6 +58,7 @@ DemoSystem::DemoSystem(
 #endif
     )
 : _context(context)
+, _timeout()
 #ifdef PLATFORM_SUPPORT_CAN
 , _canSystem(canSystem)
 , _canDemoListener(canSystem.getCanTransceiver(::busid::CAN_0))
@@ -167,13 +168,14 @@ void DemoSystem::cyclic()
         ::can::ICanTransceiver* canTransceiver = _canSystem.getCanTransceiver(::busid::CAN_0);
         if (canTransceiver != nullptr)
         {
-            // Logger::debug(DEMO, "Sending frame %d", canSentCount);
+            Logger::debug(DEMO, "Sending frame %d", canSentCount);
             etl::be_uint32_t canData{canSentCount};
             ::can::CANFrame frame(0x558, static_cast<uint8_t*>(canData.data()), 4);
             canTransceiver->write(frame);
             ++canSentCount;
         }
     }
+
 #endif
 
 #if TRACING

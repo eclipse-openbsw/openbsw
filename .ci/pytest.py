@@ -11,13 +11,16 @@ def build_reference_app():
     env = dict(os.environ)
     env["CMAKE_BUILD_PARALLEL_LEVEL"] = str(threads)
 
-    subprocess.run(["cmake", "--preset", "posix"], check=True)
-    subprocess.run(["cmake", "--build", "--preset", "posix", "--verbose"], check=True, env=env)
+    subprocess.run(["cmake", "--preset", "posix-freertos"], check=True)
+    subprocess.run(["cmake", "--build", "--preset", "posix-freertos", "--verbose"], check=True, env=env)
+    subprocess.run(["cmake", "--preset", "posix-threadx"], check=True)
+    subprocess.run(["cmake", "--build", "--preset", "posix-threadx", "--verbose"], check=True, env=env)
 
 
 def run_pytest():
     os.chdir("./test/pyTest")
-    subprocess.run(["pytest", "--target=posix"], check=True)
+    subprocess.run(["pytest", "--target=posix-freertos"], check=True)
+    subprocess.run(["pytest", "--target=posix-threadx"], check=True)
 
 
 if __name__ == "__main__":

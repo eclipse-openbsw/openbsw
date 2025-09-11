@@ -1,4 +1,4 @@
-// Copyright 2024 Accenture.
+// Copyright 2025 Accenture.
 
 #include "logger/logger.h"
 
@@ -81,6 +81,7 @@ ComponentConfigType loggerComponentConfig(loggerComponentMapping);
 LoggerComposition loggerComposition(loggerComponentMapping, "RefApp");
 
 DefaultLoggerCommand loggerCommand(loggerComponentConfig);
+
 ::console::AsyncCommandWrapper
     asyncCommandWrapper(loggerCommand.root(), ::async::AsyncBinding::AdapterType::TASK_IDLE);
 

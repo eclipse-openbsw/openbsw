@@ -7,9 +7,13 @@ target_link_libraries(
     PRIVATE asyncBinding lifecycle safeSupervisor
     PUBLIC bspEepromDriver)
 
-add_library(osHooks src/osHooks.cpp)
-
-target_link_libraries(osHooks PRIVATE freeRtos)
+if (BUILD_TARGET_RTOS STREQUAL "FREERTOS")
+    add_library(osHooks src/osHooks/freertos/osHooks.cpp)
+    target_link_libraries(osHooks PRIVATE freeRtos)
+elseif (BUILD_TARGET_RTOS STREQUAL "THREADX")
+    add_library(osHooks src/osHooks/threadx/osHooks.cpp)
+    target_link_libraries(osHooks PRIVATE threadX)
+endif ()
 
 if (PLATFORM_SUPPORT_CAN)
     target_sources(main PRIVATE src/systems/CanSystem.cpp)

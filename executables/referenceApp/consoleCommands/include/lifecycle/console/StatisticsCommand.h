@@ -24,7 +24,7 @@ protected:
 private:
     using TaskStatistics = ::runtime::declare::StatisticsContainer<
         ::runtime::RuntimeStatistics,
-        ::async::AsyncBindingType::AdapterType::FREERTOS_TASK_COUNT>;
+        ::async::AsyncBindingType::AdapterType::OS_TASK_COUNT>;
 
     using IsrGroupStatistics
         = ::runtime::declare::StatisticsContainer<::runtime::RuntimeStatistics, ISR_GROUP_COUNT>;
