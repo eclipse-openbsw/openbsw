@@ -2,8 +2,8 @@
 
 #pragma once
 
+#include <etl/memory.h>
 #include <etl/span.h>
-#include <util/estd/memory.h>
 
 namespace ethernet
 {
@@ -22,7 +22,12 @@ struct ReadBytesFrom
 
     size_t operator()(uint8_t* dest, size_t size) const
     {
-        return ::estd::memory::copy(::etl::span<uint8_t>(dest, size), src).size();
+        if (size < src.size())
+        {
+            return 0;
+        }
+        ::etl::mem_copy(src.begin(), src.size(), dest);
+        return size;
     }
 
     ::etl::span<uint8_t const> src;
@@ -43,7 +48,10 @@ struct WriteBytesTo
 
     ErrorCode operator()(::etl::span<uint8_t const> src)
     {
-        ::estd::memory::copy(dest, src);
+        if (dest.size() >= src.size())
+        {
+            ::etl::mem_copy(src.begin(), src.size(), dest.begin());
+        }
         return ec;
     }
 

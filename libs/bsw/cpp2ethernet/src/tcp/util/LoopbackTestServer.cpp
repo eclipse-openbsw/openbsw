@@ -5,12 +5,10 @@
 #include "tcp/TcpLogger.h"
 #include "tcp/socket/AbstractSocket.h"
 
-#include <util/estd/memory.h>
+#include <etl/span.h>
 
 namespace tcp
 {
-namespace memory = ::estd::memory;
-
 using ::util::logger::Logger;
 using ::util::logger::TCP;
 
@@ -35,7 +33,7 @@ void LoopbackTestServer::connectionAccepted(AbstractSocket& socket)
 void LoopbackTestServer::sendByte(uint8_t byte)
 {
     AbstractSocket::ErrorCode result;
-    result = _socket.send(::estd::memory::as_span(&byte));
+    result = _socket.send(::etl::span<uint8_t>(&byte, 1));
 
     switch (result)
     {

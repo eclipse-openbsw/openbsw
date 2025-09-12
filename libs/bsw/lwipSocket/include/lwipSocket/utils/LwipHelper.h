@@ -4,7 +4,6 @@
 
 #include <etl/span.h>
 #include <ip/IPAddress.h>
-#include <util/estd/memory.h>
 #include <util/spsc/Queue.h>
 
 extern "C"

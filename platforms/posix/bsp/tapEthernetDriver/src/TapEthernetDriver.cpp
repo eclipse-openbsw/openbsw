@@ -9,7 +9,6 @@
 #include "lwipSocket/utils/LwipHelper.h"
 #include "lwipopts.h"
 #include "netif/etharp.h"
-#include "util/estd/big_endian.h"
 #if LWIP_IPV6
 #include "lwip/ethip6.h"
 #endif

@@ -5,12 +5,8 @@
 #include "tcp/TcpLogger.h"
 #include "tcp/socket/AbstractSocket.h"
 
-#include <util/estd/memory.h>
-
 namespace tcp
 {
-namespace memory = ::estd::memory;
-
 using ::util::logger::Logger;
 using ::util::logger::TCP;
 

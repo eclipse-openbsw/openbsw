@@ -9,6 +9,7 @@
 #include <async/Async.h>
 #include <async/IRunnable.h>
 #include <async/util/Call.h>
+#include <etl/array.h>
 #include <lifecycle/AsyncLifecycleComponent.h>
 #include <systems/IEthernetDriverSystem.h>
 

@@ -6,7 +6,7 @@
 #include "udp/UdpLogger.h"
 
 #include <etl/math.h>
-#include <util/estd/big_endian.h>
+#include <etl/unaligned_type.h>
 
 namespace udp
 {
@@ -134,12 +134,12 @@ void UdpIperf2Server::dataReceived(
 
             // Fill the value for report (wite in big endian)
             UDPiPerf2ServerResponse response{};
-            ::estd::write_be<uint32_t>(&response.totalBytes[0U], _totalBytes);
-            ::estd::write_be<uint32_t>(&response.totalTimeS[0U], durationS);
-            ::estd::write_be<uint32_t>(&response.totalTimeUs[0U], durationUs);
-            ::estd::write_be<uint32_t>(&response.packetLoss[0U], packetLoss);
-            ::estd::write_be<uint32_t>(&response.outOfOrder[0U], _packetOutOfOrder);
-            ::estd::write_be<uint32_t>(&response.packetTotal[0U], _totalPacket);
+            ::etl::be_uint32_ext_t(&response.totalBytes[0U])  = _totalBytes;
+            ::etl::be_uint32_ext_t(&response.totalTimeS[0U])  = durationS;
+            ::etl::be_uint32_ext_t(&response.totalTimeUs[0U]) = durationUs;
+            ::etl::be_uint32_ext_t(&response.packetLoss[0U])  = packetLoss;
+            ::etl::be_uint32_ext_t(&response.outOfOrder[0U])  = _packetOutOfOrder;
+            ::etl::be_uint32_ext_t(&response.packetTotal[0U]) = _totalPacket;
 
             _totalPacket = 0U;
             _totalBytes  = 0U;

@@ -10,7 +10,7 @@ using namespace ::ip;
 #ifndef OPENBSW_NO_IPV6
 TEST(IPAddressTest, defaults_to_ipv6)
 {
-    IPAddress ip = {{{0}}};
+    IPAddress ip = {{0}};
     EXPECT_EQ(IPAddress::IPV6, addressFamilyOf(ip));
     EXPECT_THAT(ip.raw, Each(Eq(0U)));
 }
@@ -20,7 +20,7 @@ TEST(IPAddressTest, zero_ip_address_ip4)
 {
     constexpr IPAddress ip = make_ip4(0U);
     EXPECT_EQ(IPAddress::IPV4, addressFamilyOf(ip));
-    EXPECT_THAT(ip.raw[ip::internal::RAW_IP4_IDX], Eq(0U));
+    EXPECT_THAT(ip.be_uint32_at(ip::internal::IP4_IDX), Eq(0U));
     EXPECT_TRUE(isUnspecified(ip));
 }
 
@@ -82,10 +82,10 @@ TEST(IPAddressTest, factory_make_ip6_array)
     constexpr IPAddress ip    = make_ip6(addr);
 
     EXPECT_EQ(IPAddress::IPV6, addressFamilyOf(ip));
-    EXPECT_EQ(0x11223344U, ip.raw[0U]);
-    EXPECT_EQ(0x55667788U, ip.raw[1U]);
-    EXPECT_EQ(0x99AABBCCU, ip.raw[2U]);
-    EXPECT_EQ(0xDDEEFF00U, ip.raw[3U]);
+    EXPECT_EQ(0x11223344U, ip.be_uint32_at(0U));
+    EXPECT_EQ(0x55667788U, ip.be_uint32_at(1U));
+    EXPECT_EQ(0x99AABBCCU, ip.be_uint32_at(2U));
+    EXPECT_EQ(0xDDEEFF00U, ip.be_uint32_at(3U));
 }
 #endif
 
@@ -95,10 +95,10 @@ TEST(IPAddressTest, factory_make_ip6_integers)
     constexpr IPAddress ip = make_ip6(0x11223344U, 0x55667788U, 0x99AABBCCU, 0xDDEEFF00U);
 
     EXPECT_EQ(IPAddress::IPV6, addressFamilyOf(ip));
-    EXPECT_EQ(0x11223344U, ip.raw[0U]);
-    EXPECT_EQ(0x55667788U, ip.raw[1U]);
-    EXPECT_EQ(0x99AABBCCU, ip.raw[2U]);
-    EXPECT_EQ(0xDDEEFF00U, ip.raw[3U]);
+    EXPECT_EQ(0x11223344U, ip.be_uint32_at(0U));
+    EXPECT_EQ(0x55667788U, ip.be_uint32_at(1U));
+    EXPECT_EQ(0x99AABBCCU, ip.be_uint32_at(2U));
+    EXPECT_EQ(0xDDEEFF00U, ip.be_uint32_at(3U));
 }
 #endif
 
@@ -116,10 +116,10 @@ TEST(IPAddressTest, factory_make_ip6_slice)
     IPAddress ip = make_ip6(addr);
 
     EXPECT_EQ(IPAddress::IPV6, addressFamilyOf(ip));
-    EXPECT_EQ(0x00010203U, ip.raw[0U]);
-    EXPECT_EQ(0x10111213U, ip.raw[1U]);
-    EXPECT_EQ(0x20212223U, ip.raw[2U]);
-    EXPECT_EQ(0x30313233U, ip.raw[3U]);
+    EXPECT_EQ(0x00010203U, ip.be_uint32_at(0U));
+    EXPECT_EQ(0x10111213U, ip.be_uint32_at(1U));
+    EXPECT_EQ(0x20212223U, ip.be_uint32_at(2U));
+    EXPECT_EQ(0x30313233U, ip.be_uint32_at(3U));
 
     ::estd::AssertHandlerScope scope(::estd::AssertExceptionHandler);
     // clang-format off
@@ -301,7 +301,7 @@ TEST(IPAddressTest, isMulticastAddress_ip6)
     IPAddress ip = make_ip6(addr);
     EXPECT_FALSE(isMulticastAddress(ip));
 
-    ip.raw[0].bytes[0U] = 0xFF;
+    ip.raw[0U] = 0xFF;
     EXPECT_TRUE(isMulticastAddress(ip));
 }
 #endif
@@ -355,11 +355,11 @@ TEST(IPAddressTest, isLoopbackAddress_ip4)
 #ifndef OPENBSW_NO_IPV6
 TEST(IPAddressTest, isLoopbackAddress_ip6)
 {
-    IPAddress ip6 = {};
-    ip6.raw[3U]   = 0x01;
+    IPAddress ip6        = {};
+    ip6.be_uint32_at(3U) = 0x01;
     EXPECT_TRUE(isLoopbackAddress(ip6));
 
-    ip6.raw[3U] = 0x02;
+    ip6.be_uint32_at(3U) = 0x02;
     EXPECT_FALSE(isLoopbackAddress(ip6));
 }
 #endif
@@ -410,7 +410,7 @@ TEST(IPAddressTest, isNetworkLocal_ip6)
     // clang-format on
     IPAddress ip61 = make_ip6(buffer);
     IPAddress ip62(ip61);
-    ip62.raw[3U].bytes[3U] = 0x80;
+    ip62.raw[3U * 4U + 3U] = 0x80;
 
     uint8_t const maxIP6Prefix = IPAddress::IP6LENGTH * 8U;
 

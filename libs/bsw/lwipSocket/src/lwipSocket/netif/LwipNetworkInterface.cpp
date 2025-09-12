@@ -5,10 +5,10 @@
 #include "lwipSocket/utils/LwipHelper.h"
 
 #include <ethernet/EthernetLogger.h>
+#include <etl/span.h>
 #include <ip/IPAddress.h>
 #include <ip/NetworkInterfaceConfig.h>
 #include <tcp/TcpLogger.h>
-#include <util/estd/memory.h>
 
 extern "C"
 {
@@ -22,7 +22,6 @@ extern "C"
 
 namespace lwipnetif
 {
-namespace memory = ::estd::memory;
 using ::util::logger::Logger;
 using ::util::logger::TCP;
 
@@ -41,13 +40,18 @@ bool initNetifIp4(
 
     if (!config.useDhcp)
     {
-        (void)memory::copy(
-            memory::as_bytes(&ipAddress.addr), ip::packed(networkInterfaceConfig.ipAddress()));
-        (void)memory::copy(
-            memory::as_bytes(&networkMask.addr), ip::packed(networkInterfaceConfig.networkMask()));
-        (void)memory::copy(
-            memory::as_bytes(&defaultGateway.addr),
-            ip::packed(networkInterfaceConfig.defaultGateway()));
+        ::etl::copy(
+            ip::packed(networkInterfaceConfig.ipAddress()),
+            ::etl::span<uint8_t>(
+                reinterpret_cast<uint8_t*>(&ipAddress.addr), sizeof(ipAddress.addr)));
+        ::etl::copy(
+            ip::packed(networkInterfaceConfig.networkMask()),
+            ::etl::span<uint8_t>(
+                reinterpret_cast<uint8_t*>(&networkMask.addr), sizeof(networkMask.addr)));
+        ::etl::copy(
+            ip::packed(networkInterfaceConfig.defaultGateway()),
+            ::etl::span<uint8_t>(
+                reinterpret_cast<uint8_t*>(&defaultGateway.addr), sizeof(defaultGateway.addr)));
     }
 
     auto const isInitialized
