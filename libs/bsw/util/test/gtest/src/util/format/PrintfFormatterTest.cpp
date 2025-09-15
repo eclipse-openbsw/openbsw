@@ -65,25 +65,31 @@ struct PrintfFormatterTest
         return stream.getString();
     }
 
+#if defined(__linux) && defined(__GNUC__) && __x86_64__
     template<class T>
     void checkPrintf(char const* formatString, T value)
     {
-#if defined(__linux) && defined(__GNUC__) && __x86_64__
         std::string pf = printf(formatString, value);
         std::string f  = format(formatString, value);
         ASSERT_EQ(pf, f);
-#endif
     }
 
     template<class T1, class T2>
     void checkPrintf(char const* formatString, T1 value1, T2 value2)
     {
-#if defined(__linux) && defined(__GNUC__) && __x86_64__
         std::string pf = printf(formatString, value1, value2);
         std::string f  = format(formatString, value1, value2);
         ASSERT_EQ(pf, f);
-#endif
     }
+#else
+    template<class T>
+    void checkPrintf(char const*, T)
+    {}
+
+    template<class T1, class T2>
+    void checkPrintf(char const*, T1, T2)
+    {}
+#endif
 
     void expectPrintf(char const* pExpected, char const* formatString, ...)
     {
