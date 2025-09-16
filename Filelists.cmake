@@ -52,6 +52,16 @@ add_compile_options(
 
 add_link_options(-Wl,--noinhibit-exec)
 
+# Fix missing CMAKE_ASM_COMPILER_VERSION if undefined or empty
+if (NOT DEFINED CMAKE_ASM_COMPILER_VERSION OR "${CMAKE_ASM_COMPILER_VERSION}"
+                                              STREQUAL "")
+    set(CMAKE_ASM_COMPILER_VERSION "${CMAKE_C_COMPILER_VERSION}")
+    message(
+        STATUS
+            "CMAKE_ASM_COMPILER_VERSION was empty; falling back to ${CMAKE_C_COMPILER_VERSION}"
+    )
+endif ()
+
 if (BUILD_UNIT_TESTS)
     add_compile_definitions(UNIT_TEST=1)
     include(GoogleTest)
