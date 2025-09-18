@@ -136,6 +136,8 @@ if (BUILD_UNIT_TESTS)
     add_subdirectory(platforms/s32k1xx/bsp/canflex2Transceiver/test/mock)
 
     add_subdirectory(executables/unitTest)
+    target_include_directories(etl BEFORE INTERFACE executables/unitTest/etl_profile)
 elseif(BUILD_REFERENCE)
+    target_include_directories(etl BEFORE INTERFACE executables/referenceApp/etl_profile)
     add_subdirectory(executables/referenceApp)
 endif()

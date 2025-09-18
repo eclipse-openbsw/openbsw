@@ -10,14 +10,7 @@
 #include "uds/connection/ErrorCode.h"
 #include "uds/connection/PositiveResponse.h"
 
-// clang-format off
-
-// compilation on clang won't work without tuple_size
-#include <tuple> 
 #include <etl/closure.h>
-
-// clang-format on
-
 #include <etl/uncopyable.h>
 #include <etl/vector.h>
 

@@ -1,8 +1,7 @@
-option(PLATFORM_SUPPORT_CAN "Turn CAN support on or off" OFF)
-option(PLATFORM_SUPPORT_ETHERNET "Turn ethernet support on or off" OFF)
-option(PLATFORM_SUPPORT_IO "Turn IO support on or off" OFF)
-option(PLATFORM_SUPPORT_UDS "Turn UDS support on or off" OFF)
-option(PLATFORM_SUPPORT_STORAGE "Turn persistent storage on or off" OFF)
+# Platform configuration should be inherited from parent CMakeLists.txt
+if (NOT DEFINED OPENBSW_TARGET)
+    string(TOLOWER "${BUILD_TARGET_PLATFORM}" OPENBSW_TARGET)
+endif()
 
 add_subdirectory(platforms/${OPENBSW_TARGET})
 
@@ -19,3 +18,4 @@ add_subdirectory(consoleCommands)
 add_subdirectory(udsConfiguration)
 add_subdirectory(transportConfiguration)
 add_subdirectory(lwipConfiguration)
+

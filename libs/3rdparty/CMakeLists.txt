@@ -53,6 +53,7 @@ target_include_directories(
 if (NOT BUILD_UNIT_TESTS)
 target_link_libraries(lwipcore PUBLIC lwipConfiguration)
 endif ()
-add_library(etl INTERFACE)
 
-target_include_directories(etl INTERFACE etl/include etl_configuration etl_addons/include)
+set(GIT_DIR_LOOKUP_POLICY DISALLOW_LOOKING_ABOVE_CMAKE_SOURCE_DIR)
+add_subdirectory(etl)
+

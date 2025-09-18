@@ -45,7 +45,8 @@ target_include_directories(app.referenceApp PRIVATE include)
 
 target_link_libraries(
     app.referenceApp
-    PRIVATE asyncBinding
+    PRIVATE
+            asyncBinding
             lwipcore
             asyncConsole
             bspMcu

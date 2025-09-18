@@ -1,79 +1,113 @@
-import shutil
-from pathlib import Path
-import subprocess
+import argparse
 import sys
-import os
+from buildoperations import BuildOpTpl
+from buildoperations import run_builds
 
-def get_full_command_path(command):
-    if (cmd := shutil.which(command)) is None:
-        print(f"ERROR: Compiler command {command} not found!")
-        sys.exit(1)
-    return cmd
+# MATRIX
+commands = {
+    "wf-tests-debug": BuildOpTpl(
+        config_cmd="cmake --workflow --preset wf-tests-debug",
+        platforms=["linux"],
+        cxxstds=[0],
+        build_dir="build/tests/Debug",
+    ),
+    "wf-tests-release": BuildOpTpl(
+        config_cmd="cmake --workflow --preset wf-tests-release",
+        platforms=["linux"],
+        cxxstds=[0],
+        build_dir="build/tests/Release",
+    ),
+    "wf-posix": BuildOpTpl(
+        config_cmd="cmake --workflow --preset wf-posix",
+        platforms=["linux"],
+        cxxstds=[0],
+        build_dir="build/posix",
+    ),
+    "wf-s32k148-gcc": BuildOpTpl(
+        config_cmd="cmake --workflow --preset wf-s32k148-gcc",
+        platforms=["arm"],
+        cxxstds=[0],
+        build_dir="build/s32k148-gcc",
+    ),
+    # "wf-s32k148-clang": BuildOpTpl(
+    #     config_cmd="cmake --workflow --preset wf-s32k148-clang",
+    #     platforms=["arm"],
+    #     cxxstds=[0],
+    #     build_dir="build/s32k148-clang",
+    # ),
+    "tests-debug": BuildOpTpl(
+        config_cmd="cmake --preset tests-debug",
+        build_cmd="cmake --build --preset tests-debug",
+        test_cmd="ctest --preset tests-debug",
+        configs=["Debug"],
+        platforms=["linux"],
+        build_dir="build/tests/Debug",
+    ),
+    "tests-release": BuildOpTpl(
+        config_cmd="cmake --preset tests-release",
+        build_cmd="cmake --build --preset tests-release",
+        test_cmd="ctest --preset tests-release",
+        configs=["Release"],
+        platforms=["linux"],
+        build_dir="build/tests/Release",
+    ),
+    "posix": BuildOpTpl(
+        config_cmd="cmake --preset posix",
+        build_cmd="cmake --build --preset posix",
+        configs=["Debug", "Release"],
+        platforms=["linux"],
+        build_dir="build/posix",
+    ),
+    "posix-with-tracing": BuildOpTpl(
+        config_cmd="cmake --preset posix -DBUILD_TRACING=Yes",
+        build_cmd="cmake --build --preset posix",
+        configs=["Debug", "Release"],
+        platforms=["linux"],
+        build_dir="build/posix",
+    ),
+    "s32k148-gcc": BuildOpTpl(
+        config_cmd="cmake --preset s32k148-gcc",
+        build_cmd="cmake --build --preset s32k148-gcc",
+        configs=["Debug", "Release", "RelWithDebInfo"],
+        platforms=["arm"],
+        cxxids=["gcc"],
+        build_dir="build/s32k148-gcc",
+    ),
+    # "s32k148-clang": BuildOpTpl(
+    #     config_cmd="cmake --preset s32k148-clang",
+    #     build_cmd="cmake --build --preset s32k148-clang",
+    #     platforms=["arm"],
+    #     cxxids=["clang"],
+    # ),
+}
 
-def get_environment_variables(platform, compiler):
-    env = dict(os.environ)
-    if platform == "s32k148":
-        if compiler == "gcc":
-            env["CC"] = get_full_command_path("arm-none-eabi-gcc")
-            env["CXX"] = get_full_command_path("arm-none-eabi-g++")
-        elif compiler == "clang":
-            env["CC"] = get_full_command_path("/usr/bin/llvm-arm/bin/clang")
-            env["CXX"] = get_full_command_path("/usr/bin/llvm-arm/bin/clang++")
-    
-    elif platform == "posix":
-        if compiler == "clang":
-            env["CC"] = get_full_command_path("clang")
-            env["CXX"] = get_full_command_path("clang++")
-        elif compiler == "gcc":
-            env["CC"] = get_full_command_path("gcc")
-            env["CXX"] = get_full_command_path("g++")
-    return env
 
-def configure_and_build(platform, compiler, cpp_standard):
-    build_dir = Path(f"cmake-build-{platform}-{compiler}")
-    if build_dir.exists():
-        shutil.rmtree(build_dir)
+def main(argv: list[str] | None = None) -> int:
+    pargs = argparse.ArgumentParser(description="Build runner")
 
-    cmake_command = [
-        "cmake",
-        "-B", build_dir,
-        "-S", "executables/referenceApp",
-        f"-DCMAKE_CXX_STANDARD={cpp_standard}",
-        f"-DBUILD_TARGET_PLATFORM={'POSIX' if platform == 'posix' else 'S32K148EVB'}",
-        f"-DCMAKE_TOOLCHAIN_FILE={'../../admin/cmake/ArmNoneEabi-' + compiler + '.cmake' if platform == 's32k148' else ''}"
-    ]
-    subprocess.run(cmake_command, check=True, env=get_environment_variables(platform, compiler))
-    subprocess.run(["cmake", "--build", build_dir, "--target", "app.referenceApp", "-j"], check=True, env=get_environment_variables(platform, compiler))
+    pargs.add_argument("--preset", default="", help="preset name (optional)")
 
-    if platform == "s32k148" and compiler == "gcc" and cpp_standard == "14":
-        gdwarf_build = Path("cmake-build-s32k148-gcc-gdwarf4")
-        if gdwarf_build.exists():
-            shutil.rmtree(gdwarf_build)
-        print(f"Built {platform} with {compiler} C++{cpp_standard} and -gdwarf-4 flag")
+    pargs.add_argument(
+        "--cxxid", default="", help="C++ compiler id (clang or gcc - optional)"
+    )
 
-        cmake_command = [
-            "cmake",
-            "-B", gdwarf_build,
-            "-S", "executables/referenceApp",
-            "-DCMAKE_CXX_FLAGS=-gdwarf-4",
-            "-DCMAKE_C_FLAGS=-gdwarf-4",
-            f"-DCMAKE_CXX_STANDARD={cpp_standard}",
-            "-DBUILD_TARGET_PLATFORM=S32K148EVB",
-            "-DCMAKE_TOOLCHAIN_FILE=../../admin/cmake/ArmNoneEabi-gcc.cmake"
-        ]
-        subprocess.run(cmake_command, check=True, env=get_environment_variables(platform, compiler))
-        subprocess.run(["cmake", "--build", gdwarf_build, "--target", "app.referenceApp", "-j"], check=True, env=get_environment_variables(platform, compiler))
+    pargs.add_argument("--cxxstd", type=int, default=0, help="C++ standard (optional)")
 
-def main():
-    if len(sys.argv) != 4:
-        print("ERROR: Usage: build.py <platform> <compiler> <cpp_standard>")
-        sys.exit(1)
+    pargs.add_argument(
+        "--config",
+        default="",
+        help='Build config ("Debug", "Release", "RelWithDebInfo" - optional)',
+    )
 
-    platform = sys.argv[1]
-    compiler = sys.argv[2]
-    cpp_standard = sys.argv[3]
+    pargs.add_argument(
+        "--platform", default="", help='Target platform ("arm" or "linux" - optional)'
+    )
 
-    configure_and_build(platform, compiler, cpp_standard)
+    args = pargs.parse_args(argv)
+
+    run_builds(args, commands)
+    return 0
+
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

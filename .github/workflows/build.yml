@@ -6,10 +6,77 @@ jobs:
   run-command:
     runs-on: ubuntu-latest
     strategy:
-     matrix:
-        platform: [posix, s32k148]
-        compiler: [clang, gcc]
-        cpp-standard: [14, 17, 20, 23]
+      matrix:
+        preset: [ "tests-debug", "tests-release", "posix", "posix-with-tracing", "s32k148-gcc" ]
+        platform: [ "arm", "linux" ]
+        config: [ "", "Debug", "Release", "RelWithDebInfo" ]
+        cxxid: ["gcc", "clang"]
+        cxxstd: [ 14, 17, 20, 23 ]
+        exclude:
+          - preset: "tests-debug"
+            platform: "arm"
+          - preset: "tests-debug"
+            config: "Debug"
+          - preset: "tests-debug"
+            config: "Release"
+          - preset: "tests-debug"
+            config: "RelWithDebInfo"
+          - preset: "tests-release"
+            platform: "arm"
+          - preset: "tests-release"
+            config: "Debug"
+          - preset: "tests-release"
+            config: "Release"
+          - preset: "tests-release"
+            config: "RelWithDebInfo"
+          - preset: "posix"
+            platform: "arm"
+          - preset: "posix"
+            config: "RelWithDebInfo"
+          - preset: "posix-with-tracing"
+            platform: "arm"
+          - preset: "posix-with-tracing"
+            config: "RelWithDebInfo"
+          - preset: "s32k148-gcc"
+            platform: "linux"
+          - preset: "s32k148-gcc"
+            cxxid: "clang"
+        include:
+          - preset: "wf-tests-debug"
+            platform: "linux"
+            config: ""
+            cxxid: "gcc"
+            cxxstd: 0
+          - preset: "wf-tests-debug"
+            platform: "linux"
+            config: ""
+            cxxid: "clang"
+            cxxstd: 0
+          - preset: "wf-tests-release"
+            platform: "linux"
+            config: ""
+            cxxid: "gcc"
+            cxxstd: 0
+          - preset: "wf-tests-release"
+            platform: "linux"
+            config: ""
+            cxxid: "clang"
+            cxxstd: 0
+          - preset: "wf-posix"
+            platform: "linux"
+            config: ""
+            cxxid: "gcc"
+            cxxstd: 0
+          - preset: "wf-posix"
+            platform: "linux"
+            config: ""
+            cxxid: "clang"
+            cxxstd: 0
+          - preset: "wf-s32k148-gcc"
+            platform: "arm"
+            config: ""
+            cxxid: "gcc"
+            cxxstd: 0
 
     steps:
       - name: Checkout repository
@@ -19,10 +86,10 @@ jobs:
         id: cache-cmake
         uses: actions/cache@v3
         with:
-          path: cmake-build-${{ matrix.platform }}-${{ matrix.compiler }}
-          key: ${{ runner.os }}-cmake-${{ matrix.platform }}-${{ matrix.compiler }}-${{ matrix.cpp-standard }}-${{ hashFiles('**/*.cpp', '**/*.h',  '**/*.cmake', '**/*.txt', '**/*.c', '**/*.s') }}
+          path: build
+          key: ${{ runner.os }}-cmake-${{ matrix.platform }}-${{ matrix.cxxid }}-${{ matrix.cxxstd }}-${{ hashFiles('**/*.cpp', '**/*.h',  '**/*.cmake', '**/*.txt', '**/*.c', '**/*.s') }}
           restore-keys: |
-            ${{ runner.os }}-cmake-${{ matrix.platform }}-${{ matrix.compiler }}-${{ matrix.cpp-standard }}-
+            ${{ runner.os }}-cmake-${{ matrix.platform }}-${{ matrix.cxxid }}-${{ matrix.cxxstd }}-
 
       - name: Build the docker image
         if: steps.cache-cmake.outputs.cache-hit != 'true'
@@ -32,23 +99,23 @@ jobs:
       - name: Run the build.py inside the docker container
         if: steps.cache-cmake.outputs.cache-hit != 'true'
         run: |
-          docker run --rm -v "$PWD:/home/jenkins" -w /home/jenkins --user $(id -u):4996 dev python3 .ci/build.py "${{ matrix.platform }}" "${{ matrix.compiler }}" "${{ matrix.cpp-standard }}"
+          docker run --rm -v "$PWD:/home/jenkins" -w /home/jenkins --user $(id -u):4996 dev python3 .ci/build.py --preset "${{ matrix.preset }}" --platform "${{ matrix.platform }}" --cxxid "${{ matrix.cxxid }}" --cxxstd "${{ matrix.cxxstd }}" --config "${{ matrix.config }}"
 
       - name: Set commit hash and metadata
-        if: steps.cache-cmake.outputs.cache-hit != 'true' && matrix.platform == 's32k148' && matrix.compiler == 'gcc' && matrix.cpp-standard == '14'
+        if: steps.cache-cmake.outputs.cache-hit != 'true' && matrix.platform == 'arm' && matrix.cxxid == 'gcc' && matrix.cxxstd == '14' && matrix.config != ''
         id: vars
         run: |
           echo "COMMIT_HASH=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
-          echo "ARTIFACT_NAME=elf-s32k148-${{ matrix.compiler }}-gdwarf4-${GITHUB_SHA::7}" >> $GITHUB_ENV
+          echo "ARTIFACT_NAME=elf-s32k148-${{ matrix.cxxid }}-${{ matrix.cxxstd }}-${{ matrix.config }}-gdwarf4-${GITHUB_SHA::7}" >> $GITHUB_ENV
 
       - name: Find ELF files
-        if: steps.cache-cmake.outputs.cache-hit != 'true' && matrix.platform == 's32k148' && matrix.compiler == 'gcc' && matrix.cpp-standard == '14'
+        if: steps.cache-cmake.outputs.cache-hit != 'true' && matrix.platform == 'arm' && matrix.cxxid == 'gcc' && matrix.cxxstd == '14' && matrix.config != ''
         run: |
           mkdir -p elf-artifacts
-          cp cmake-build-s32k148-${{ matrix.compiler }}-gdwarf4/application/*.elf elf-artifacts/
+          cp build/s32k148-gcc/executables/referenceApp/application/${{ matrix.config }}/app.referenceApp.elf elf-artifacts/
 
       - name: Upload ELF as GitHub Artifact
-        if: steps.cache-cmake.outputs.cache-hit != 'true' && matrix.platform == 's32k148'  && matrix.compiler == 'gcc' && matrix.cpp-standard == '14'
+        if: steps.cache-cmake.outputs.cache-hit != 'true' && matrix.platform == 'arm'  && matrix.cxxid == 'gcc' && matrix.cxxstd == '14' && matrix.config != ''
         uses: actions/upload-artifact@v4
         with:
           name: ${{ env.ARTIFACT_NAME }}
