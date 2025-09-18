@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include <etl/char_traits.h>
 #include <etl/span.h>
 #include <etl/uncopyable.h>
 #include <util/format/IPrintfArgumentReader.h>
@@ -301,7 +302,9 @@ void EntrySerializer<T, Timestamp, ReadOnlyPredicate>::EntryWriter::writeString(
     else
     {
         writeString(
-            static_cast<uint8_t>(DATATYPE_CHARARRAY), source, static_cast<T>(strlen(source)));
+            static_cast<uint8_t>(DATATYPE_CHARARRAY),
+            source,
+            static_cast<T>(::etl::strlen(source)));
     }
 }
 
@@ -441,9 +444,9 @@ void EntrySerializer<T, Timestamp, ReadOnlyPredicate>::EntryReader::readParamVar
         {
             _variant._sizedCharPtrValue = &_plainSizedString;
             _plainSizedString._data     = readCharArray();
-            _plainSizedString._length   = strnlen(
-                _plainSizedString._data,
+            size_t const limit          = static_cast<size_t>(
                 _bufferEnd - reinterpret_cast<uint8_t const*>(_plainSizedString._data));
+            _plainSizedString._length = ::etl::strlen(_plainSizedString._data, limit);
             break;
         }
         default:
