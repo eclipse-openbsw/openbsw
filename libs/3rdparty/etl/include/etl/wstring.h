@@ -46,7 +46,7 @@ namespace etl
   {
     inline namespace string_literals
     {
-      inline constexpr etl::wstring_view operator ""_sv(const wchar_t* str, size_t length) ETL_NOEXCEPT
+      inline constexpr etl::wstring_view operator ""_sv(const wchar_t* str, size_t length) noexcept
       {
         return etl::wstring_view{ str, length };
       }
@@ -263,8 +263,8 @@ namespace etl
   };
 
   //***************************************************************************
-  /// A string implementation that uses a fixed size external buffer.
-  ///\ingroup string
+  /// A wstring implementation that uses a fixed size external buffer.
+  ///\ingroup wstring
   //***************************************************************************
   class wstring_ext : public iwstring
   {
@@ -274,7 +274,6 @@ namespace etl
     typedef iwstring interface_type;
 
     typedef iwstring::value_type value_type;
-    typedef iwstring::size_type size_type;
 
     //*************************************************************************
     /// Constructor.
@@ -292,15 +291,8 @@ namespace etl
     wstring_ext(const etl::wstring_ext& other, value_type* buffer, size_type buffer_size)
       : iwstring(buffer, buffer_size - 1U)
     {
-      if (this->is_within_buffer(other.data()))
-      {
-        this->current_size = other.size();
-      }
-      else
-      {
-        this->initialise();
-        this->assign(other);
-      }
+      this->initialise();
+      this->assign(other);
     }
 
     //*************************************************************************
@@ -310,15 +302,8 @@ namespace etl
     wstring_ext(const etl::iwstring& other, value_type* buffer, size_type buffer_size)
       : iwstring(buffer, buffer_size - 1U)
     {
-      if (this->is_within_buffer(other.data()))
-      {
-        this->current_size = other.size();
-      }
-      else
-      {
-        this->initialise();
-        this->assign(other);
-      }
+      this->initialise();
+      this->assign(other);
     }
 
     //*************************************************************************
@@ -332,27 +317,19 @@ namespace etl
     {
       ETL_ASSERT(position < other.size(), ETL_ERROR(string_out_of_bounds));
 
-      if (this->is_within_buffer(other.data()))
-      {
-        this->current_size = other.size();
-      }
-      else
-      {
-        this->initialise();
-        this->assign(other, position, length);
-      }
+      this->initialise();
+      this->assign(other, position, length);
     }
 
     //*************************************************************************
     /// Constructor, from null terminated text.
     ///\param text The initial text of the wstring_ext.
     //*************************************************************************
-    template <typename TPointer>
-    wstring_ext(TPointer text, value_type* buffer, size_type buffer_size,
-                typename etl::enable_if<etl::is_same<const value_type*, TPointer>::value, int>::type* = ETL_NULLPTR)
+    wstring_ext(const value_type* text, value_type* buffer, size_type buffer_size)
       : iwstring(buffer, buffer_size - 1U)
     {
-      if (this->is_within_buffer(text))
+      // Is the initial text at the same address as the buffer?
+      if (text == buffer)
       {
         this->current_size = etl::strlen(buffer);
       }
@@ -364,25 +341,6 @@ namespace etl
     }
 
     //*************************************************************************
-    /// Constructor, from null terminated literal text.
-    ///\param text The initial text of the wstring_ext.
-    //*************************************************************************
-    template <size_t Size>
-    wstring_ext(const value_type (&literal)[Size], value_type* buffer, size_type buffer_size)
-      : iwstring(buffer, buffer_size - 1U)
-    {
-      if (this->is_within_buffer(literal))
-      {
-        this->current_size = etl::strlen(literal);
-      }
-      else
-      {
-        this->initialise();
-        this->assign(literal);
-      }
-    }
-
-    //*************************************************************************
     /// Constructor, from null terminated text and count.
     ///\param text  The initial text of the wstring_ext.
     ///\param count The number of characters to copy.
@@ -390,15 +348,8 @@ namespace etl
     wstring_ext(const value_type* text, size_type count, value_type* buffer, size_type buffer_size)
       : iwstring(buffer, buffer_size - 1U)
     {
-      if (this->is_within_buffer(text))
-      {
-        this->current_size = count;
-      }
-      else
-      {
-        this->initialise();
-        this->assign(text, text + count);
-      }
+      this->initialise();
+      this->assign(text, text + count);
     }
 
     //*************************************************************************
@@ -414,24 +365,6 @@ namespace etl
     }
 
     //*************************************************************************
-    /// From wstring_view.
-    ///\param view The wstring_view.
-    //*************************************************************************
-    explicit wstring_ext(const etl::wstring_view& view, value_type* buffer, size_type buffer_size)
-      : iwstring(buffer, buffer_size - 1U)
-    {
-      if (this->is_within_buffer(view.data()))
-      {
-        this->current_size = view.size();
-      }
-      else
-      {
-        this->initialise();
-        this->assign(view.begin(), view.end());
-      }
-    }
-
-    //*************************************************************************
     /// Constructor, from an iterator range.
     ///\tparam TIterator The iterator type.
     ///\param first The iterator to the first element.
@@ -441,15 +374,8 @@ namespace etl
     wstring_ext(TIterator first, TIterator last, value_type* buffer, size_type buffer_size, typename etl::enable_if<!etl::is_integral<TIterator>::value, int>::type = 0)
       : iwstring(buffer, buffer_size - 1U)
     {
-      if (this->is_within_buffer(etl::addressof(*first)))
-      {
-        this->current_size = etl::distance(first, last);
-      }
-      else
-      {
-        this->initialise();
-        this->assign(first, last);
-      }     
+      this->initialise();
+      this->assign(first, last);
     }
 
 #if ETL_HAS_INITIALIZER_LIST
@@ -463,6 +389,17 @@ namespace etl
       this->assign(init.begin(), init.end());
     }
 #endif
+
+    //*************************************************************************
+    /// From string_view.
+    ///\param view The string_view.
+    //*************************************************************************
+    explicit wstring_ext(const etl::wstring_view& view, value_type* buffer, size_type buffer_size)
+      : iwstring(buffer, buffer_size - 1U)
+    {
+      this->initialise();
+      this->assign(view.begin(), view.end());
+    }
 
     //*************************************************************************
     /// Assignment operator.

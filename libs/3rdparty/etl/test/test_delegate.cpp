@@ -36,8 +36,6 @@ SOFTWARE.
 #include <vector>
 #include <functional>
 #include <algorithm>
-#include <type_traits>
-#include <stdexcept>
 
 namespace
 {
@@ -159,20 +157,6 @@ namespace
 
     return i + j + 1;
   }
-
-  //*****************************************************************************
-  // The throwing function.
-  //*****************************************************************************
-  void throwing_void()
-  {
-    throw std::runtime_error("throwing function");
-  }
-
-  int throwing_normal(int, int)
-  {
-    throw std::runtime_error("throwing function with two parameters");
-  }
-
 
   //*****************************************************************************
   // The test class with member functions.
@@ -304,18 +288,6 @@ namespace
   SUITE(test_delegate)
   {
     //*************************************************************************
-    TEST_FIXTURE(SetupFixture, test_delegate_types)
-    {
-      using Delegate = etl::delegate<int(float, long)>;
-
-      // Check the return type.
-      CHECK_TRUE((std::is_same<Delegate::return_type, int>::value));
-  
-      // Check the argument types.
-      CHECK_TRUE((std::is_same<Delegate::argument_types, etl::type_list<float, long>>::value));
-    }
-
-    //*************************************************************************
     TEST_FIXTURE(SetupFixture, test_is_valid_false)
     {
       etl::delegate<void(void)> d;
@@ -371,24 +343,6 @@ namespace
       d();
 
       CHECK(function_called == FunctionCalled::Free_Void_Called);
-    }
-
-    //*************************************************************************
-    TEST_FIXTURE(SetupFixture, test_throwing)
-    {
-      {
-        auto d = etl::delegate<void(void)>::create<throwing_void>();
-
-        CHECK_THROW(d(), std::runtime_error);
-        CHECK_THROW(d.call_if(), std::runtime_error);
-      }
-
-      {
-        auto d = etl::delegate<int(int, int)>::create<throwing_normal>();
-
-        CHECK_THROW({d.call_or(alternative, VALUE1, VALUE2);}, std::runtime_error);
-        CHECK_THROW({d.call_or<alternative>(VALUE1, VALUE2);}, std::runtime_error);
-      }
     }
 
     //*************************************************************************
@@ -1459,7 +1413,7 @@ namespace
 
     //*************************************************************************
 #if ETL_USING_CPP17
-    TEST_FIXTURE(SetupFixture, test_make_delegate_member_int_const_compile_time_new_api)
+    TEST_FIXTURE(SetupFixture, test_make_delegate_member_int_const_compile_tim1e_new_api)
     {
       auto d = etl::make_delegate<Object, &Object::member_int_const, const_object_static>();
 

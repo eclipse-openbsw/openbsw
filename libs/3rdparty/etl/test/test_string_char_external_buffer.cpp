@@ -2526,7 +2526,6 @@ namespace
 
       compare_text.replace(compare_text.begin() + 2, compare_text.begin() + 4, TextSTD(STR("Replace")));
       compare_text.resize(std::min(compare_text.size(), SIZE));
-
       text.replace(text.begin() + 2, text.begin() + 4, View(STR("Replace")));
 
       bool is_equal = Equal(compare_text, text);
@@ -3821,7 +3820,7 @@ namespace
     //*************************************************************************
     TEST_FIXTURE(SetupFixture, test_find_string)
     {
-      const value_t the_haystack[] = STR("A haystack with a needle and another needle");
+      const value_t* the_haystack = STR("A haystack with a needle and another needle");
 
       TextSTD compare_needle(STR("needle"));
 
@@ -3855,7 +3854,7 @@ namespace
     //*************************************************************************
     TEST_FIXTURE(SetupFixture, test_find_view)
     {
-      const value_t the_haystack[] = STR("A haystack with a needle and another needle");
+      const value_t* the_haystack = STR("A haystack with a needle and another needle");
 
       TextSTD compare_needle(STR("needle"));
       View needle_view(STR("needle"));
@@ -3886,9 +3885,9 @@ namespace
     //*************************************************************************
     TEST_FIXTURE(SetupFixture, test_find_pointer)
     {
-      const value_t the_haystack[] = STR("A haystack with a needle and another needle");
+      const value_t* the_haystack = STR("A haystack with a needle and another needle");
 
-      const value_t needle[] = STR("needle");
+      const value_t* needle = STR("needle");
 
       TextSTD compare_haystack(the_haystack);
 
@@ -3917,9 +3916,9 @@ namespace
     //*************************************************************************
     TEST_FIXTURE(SetupFixture, test_find_char_pointer_n)
     {
-      const value_t the_haystack[] = STR("A haystack with a needle and another needle");
+      const value_t* the_haystack = STR("A haystack with a needle and another needle");
 
-      const value_t needle[] = STR("needle");
+      const value_t* needle = STR("needle");
 
       TextSTD compare_haystack(the_haystack);
 
@@ -4035,7 +4034,7 @@ namespace
     TEST_FIXTURE(SetupFixture, test_starts_with_char)
     {
       TextBufferL buffer1{0};
-      Text haystack(STR("A haystack with a needle and nothing else"), buffer1.data(), buffer1.size()); 
+      Text haystack(STR("A haystack with a needle and nothing else"), buffer1.data(), buffer1.size());
 
       CHECK_TRUE(haystack.starts_with(haystack[0]));
       CHECK_FALSE(haystack.starts_with(haystack[1]));
@@ -4093,7 +4092,7 @@ namespace
     //*************************************************************************
     TEST_FIXTURE(SetupFixture, test_rfind_string)
     {
-      const value_t the_haystack[] = STR("A haystack with a needle and another needle");
+      const value_t* the_haystack = STR("A haystack with a needle and another needle");
 
       TextSTD compare_needle(STR("needle"));
 
@@ -4125,7 +4124,7 @@ namespace
     //*************************************************************************
     TEST_FIXTURE(SetupFixture, test_rfind_view)
     {
-      const value_t the_haystack[] = STR("A haystack with a needle and another needle");
+      const value_t* the_haystack = STR("A haystack with a needle and another needle");
 
       TextSTD compare_needle(STR("needle"));
       View needle_view(STR("needle"));
@@ -4152,14 +4151,14 @@ namespace
     //*************************************************************************
     TEST_FIXTURE(SetupFixture, test_rfind_pointer)
     {
-      const value_t the_haystack[] = STR("A haystack with a needle and another needle");
+      const value_t*the_haystack = STR("A haystack with a needle and another needle");
 
       TextSTD compare_haystack(the_haystack);
 
       TextBufferL buffer{0};
       Text haystack(the_haystack, buffer.data(), buffer.size());
 
-      const value_t needle[] = STR("needle");
+      const value_t* needle = STR("needle");
 
       size_t position1 = TextSTD::npos;
       size_t position2 = TextL::npos;
@@ -4181,14 +4180,14 @@ namespace
     //*************************************************************************
     TEST_FIXTURE(SetupFixture, test_rfind_pointer_n)
     {
-      const value_t the_haystack[] = STR("A haystack with a needle and another needle");
+      const value_t*the_haystack = STR("A haystack with a needle and another needle");
 
       TextSTD compare_haystack(the_haystack);
 
       TextBufferL buffer{0};
       Text haystack(the_haystack, buffer.data(), buffer.size());
 
-      const value_t needle[] = STR("needle");
+      const value_t* needle = STR("needle");
 
       size_t position1 = TextSTD::npos;
 
@@ -4209,7 +4208,7 @@ namespace
     //*************************************************************************
     TEST_FIXTURE(SetupFixture, test_rfind_c_position)
     {
-      const value_t the_haystack[] = STR("A haystack with a needle and another needle");
+      const value_t*the_haystack = STR("A haystack with a needle and another needle");
 
       TextSTD compare_haystack(the_haystack);
 

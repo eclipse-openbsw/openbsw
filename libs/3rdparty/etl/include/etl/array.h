@@ -1164,32 +1164,32 @@ namespace etl
 
   //*************************************************************************
   /// Gets a reference to an element in the array.
-  ///\tparam Index The index.
+  ///\tparam I The index.
   ///\tparam T The type.
-  ///\tparam Size The array size.
+  ///\tparam MAXN The array size.
   ///\param a The array.
   ///\return A reference to the element
   //*************************************************************************
-  template <size_t Index, typename T, size_t Size>
-  inline T& get(array<T, Size>& a)
+  template <size_t I, typename T, size_t MAXN>
+  inline T& get(array<T, MAXN>& a)
   {
-    ETL_STATIC_ASSERT(Index < Size, "Index out of bounds");
-    return a[Index];
+    ETL_STATIC_ASSERT(I < MAXN, "Index out of bounds");
+    return a[I];
   }
 
   //*************************************************************************
   /// Gets a const reference to an element in the array.
-  ///\tparam Index The index.
+  ///\tparam I The index.
   ///\tparam T The type.
-  ///\tparam Size The array size.
+  ///\tparam MAXN The array size.
   ///\param a The array.
   ///\return A const reference to the element
   //*************************************************************************
-  template <size_t Index, typename T, size_t Size>
-  inline const T& get(const array<T, Size>& a)
+  template <size_t I, typename T, size_t MAXN>
+  inline const T& get(const array<T, MAXN>& a)
   {
-    ETL_STATIC_ASSERT(Index < Size, "Index out of bounds");
-    return a[Index];
+    ETL_STATIC_ASSERT(I < MAXN, "Index out of bounds");
+    return a[I];
   }
 }
 

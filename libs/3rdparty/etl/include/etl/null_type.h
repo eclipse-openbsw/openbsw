@@ -35,7 +35,7 @@ SOFTWARE.
 
 namespace etl
 {
-  template <size_t Index>
+  template <size_t N>
   class null_type
   {
   };

@@ -31,7 +31,6 @@ SOFTWARE.
 #include <string>
 #include <ostream>
 #include <cstdint>
-#include <vector>
 
 #include "etl/optional.h"
 #include "etl/vector.h"
@@ -119,75 +118,6 @@ namespace
       CHECK(!data4.has_value());
     }
 
-#if ETL_USING_CPP14
-    //*************************************************************************
-    TEST(test_emplace_construction_cpp14)
-    {
-      constexpr etl::optional<int> opt(etl::in_place_t{}, 1);
-
-      CHECK_TRUE(opt.has_value());
-      CHECK(bool(opt));
-      CHECK_EQUAL(1, opt.value());
-    }
-#endif
-
-#if ETL_USING_CPP20 && ETL_USING_STL
-    //*************************************************************************
-    TEST(test_emplace_construction_cpp20)
-    {
-      struct TestData
-      {
-        constexpr TestData(int a_, int b_)
-          : a(a_), b(b_)
-        {
-        }
-
-        int a;
-        int b;
-      };
-
-      constexpr etl::optional<TestData> opt(etl::in_place_t{}, 1, 2);
-
-      CHECK_TRUE(opt.has_value());
-      CHECK(bool(opt));
-      CHECK_EQUAL(1, opt.value().a);
-      CHECK_EQUAL(2, opt.value().b);
-    }
-#endif
-
-    //*************************************************************************
-    TEST(test_construct_from_initializer_list_and_arguments)
-    {
-      struct S
-      {
-        S()
-          : vi()
-          , a(0)
-          , b(0)
-        {
-        }
-
-        S(std::initializer_list<int> il, int a_, int b_)
-          : vi(il)
-          , a(a_)
-          , b(b_)
-        {
-        }
-
-        std::vector<int> vi;
-        int a;
-        int b;
-      };
-
-      etl::optional<S> opt(etl::in_place_t{}, { 10, 11, 12 }, 1, 2);
-
-      CHECK_EQUAL(10, opt.value().vi[0]);
-      CHECK_EQUAL(11, opt.value().vi[1]);
-      CHECK_EQUAL(12, opt.value().vi[2]);
-      CHECK_EQUAL(1, opt.value().a);
-      CHECK_EQUAL(2, opt.value().b);
-    }
-
     //*************************************************************************
     TEST(test_deduced_initialisation)
     {
@@ -218,25 +148,13 @@ namespace
     }
 
     //*************************************************************************
-    TEST(test_emplace_zero_parameters_fundamental)
+    TEST(test_emplace_zero_parameters)
     {
       etl::optional<std::uint8_t> result = 1;
-      CHECK_EQUAL(0, static_cast<int>(result.emplace()));
+      result.emplace();
 
       CHECK_TRUE(result.has_value());
       CHECK_EQUAL(0, int(result.value()));
-    }
-
-    //*************************************************************************
-    TEST(test_emplace_zero_parameters_non_fundamental)
-    {
-      etl::optional<std::string> result = std::string("abc");
-
-      std::string& ref = result.emplace();
-      CHECK_EQUAL(std::string(), ref);
-      CHECK_EQUAL(&ref, &result.value());
-      CHECK_TRUE(result.has_value());
-      CHECK_EQUAL("", std::string(result.value()));
     }
 
     //*************************************************************************
@@ -988,36 +906,7 @@ namespace
         }
       };
     }
-
-    //*************************************************************************
-    using ItemType = etl::array<uint8_t, 2>;
-
-    etl::optional<const ItemType> create_optional_issue_1171() 
-    {
-      ItemType t;
-      t[0] = 1;
-      t[1] = 20;
-
-      return etl::optional<const ItemType>(t);
-    }
-
-    TEST(test_optional_issue_1171)
-    {
-      etl::optional<const ItemType> opt1 = create_optional_issue_1171(); 
-      CHECK_TRUE(opt1.has_value());
-      CHECK_EQUAL(1, (*opt1)[0]);
-      CHECK_EQUAL(20, (*opt1)[1]);
-
-      etl::optional<const ItemType> opt2(create_optional_issue_1171());     
-      CHECK_TRUE(opt2.has_value());
-      CHECK_EQUAL(1, (*opt2)[0]);
-      CHECK_EQUAL(20, (*opt2)[1]);
-
-      etl::optional<const ItemType> opt3;
-      opt3.emplace(create_optional_issue_1171());
-      CHECK_TRUE(opt3.has_value());
-      CHECK_EQUAL(1, (*opt3)[0]);
-      CHECK_EQUAL(20, (*opt3)[1]);
-    }
   };
 }
+
+

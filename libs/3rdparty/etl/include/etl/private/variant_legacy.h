@@ -66,7 +66,7 @@ namespace etl
       /// Placeholder for unused template parameters.
       /// This class is never instantiated.
       //*************************************************************************
-      template <size_t Id>
+      template <size_t ID>
       struct no_type
       {
       };

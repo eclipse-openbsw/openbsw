@@ -761,7 +761,7 @@ namespace etl
     //*******************************************
     /// Constructor.
     //*******************************************
-    icallback_timer(callback_timer_data* const timer_array_, const uint_least8_t  Max_Timers_)
+    icallback_timer(callback_timer_data* const timer_array_, const uint_least8_t  MAX_TIMERS_)
       : timer_array(timer_array_),
         active_list(timer_array_),
         enabled(false),
@@ -769,7 +769,7 @@ namespace etl
         process_semaphore(0),
 #endif
         registered_timers(0),
-        MAX_TIMERS(Max_Timers_)
+        MAX_TIMERS(MAX_TIMERS_)
     {
     }
 
@@ -814,24 +814,24 @@ namespace etl
   //***************************************************************************
   /// The callback timer
   //***************************************************************************
-  template <const uint_least8_t Max_Timers_>
+  template <const uint_least8_t MAX_TIMERS_>
   class callback_timer : public etl::icallback_timer
   {
   public:
 
-    ETL_STATIC_ASSERT(Max_Timers_ <= 254, "No more than 254 timers are allowed");
+    ETL_STATIC_ASSERT(MAX_TIMERS_ <= 254, "No more than 254 timers are allowed");
 
     //*******************************************
     /// Constructor.
     //*******************************************
     callback_timer()
-      : icallback_timer(timer_array, Max_Timers_)
+      : icallback_timer(timer_array, MAX_TIMERS_)
     {
     }
 
   private:
 
-    callback_timer_data timer_array[Max_Timers_];
+    callback_timer_data timer_array[MAX_TIMERS_];
   };
 }
 

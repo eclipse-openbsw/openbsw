@@ -193,7 +193,7 @@ namespace etl
     //***********************************************************************
 #if ETL_USING_CPP20
     [[nodiscard]] inline constexpr auto operator <=>(const etl::chrono::month_day& lhs, 
-                                                     const etl::chrono::month_day& rhs) ETL_NOEXCEPT
+                                                     const etl::chrono::month_day& rhs) noexcept
     {
       auto cmp = lhs.month() <=> rhs.month();
 
@@ -321,7 +321,7 @@ namespace etl
     /// Spaceship operator
     //***********************************************************************
 #if ETL_USING_CPP20
-    [[nodiscard]] inline constexpr auto operator <=>(const etl::chrono::month_day_last& mdl1, const etl::chrono::month_day_last& mdl2) ETL_NOEXCEPT
+    [[nodiscard]] inline constexpr auto operator <=>(const etl::chrono::month_day_last& mdl1, const etl::chrono::month_day_last& mdl2) noexcept
     {
       return (static_cast<unsigned>(mdl1.month()) <=> static_cast<unsigned>(mdl2.month()));
     }

@@ -49,7 +49,7 @@ namespace etl
   {
     inline namespace string_literals
     {
-      inline constexpr etl::u8string_view operator ""_sv(const char8_t* str, size_t length) ETL_NOEXCEPT
+      inline constexpr etl::u8string_view operator ""_sv(const char8_t* str, size_t length) noexcept
       {
         return etl::u8string_view{ str, length };
       }
@@ -283,8 +283,8 @@ namespace etl
   ETL_CONSTANT size_t u8string<MAX_SIZE_>::MAX_SIZE;
 
   //***************************************************************************
-  /// A string implementation that uses a fixed size external buffer.
-  ///\ingroup string
+  /// A u8string implementation that uses a fixed size external buffer.
+  ///\ingroup u8string
   //***************************************************************************
   class u8string_ext : public iu8string
   {
@@ -312,15 +312,8 @@ namespace etl
     u8string_ext(const etl::u8string_ext& other, value_type* buffer, size_type buffer_size)
       : iu8string(buffer, buffer_size - 1U)
     {
-      if (this->is_within_buffer(other.data()))
-      {
-        this->current_size = other.size();
-      }
-      else
-      {
-        this->initialise();
-        this->assign(other);
-      }
+      this->initialise();
+      this->assign(other);
     }
 
     //*************************************************************************
@@ -330,15 +323,8 @@ namespace etl
     u8string_ext(const etl::iu8string& other, value_type* buffer, size_type buffer_size)
       : iu8string(buffer, buffer_size - 1U)
     {
-      if (this->is_within_buffer(other.data()))
-      {
-        this->current_size = other.size();
-      }
-      else
-      {
-        this->initialise();
-        this->assign(other);
-      }
+      this->initialise();
+      this->assign(other);
     }
 
     //*************************************************************************
@@ -352,27 +338,19 @@ namespace etl
     {
       ETL_ASSERT(position < other.size(), ETL_ERROR(string_out_of_bounds));
 
-      if (this->is_within_buffer(other.data()))
-      {
-        this->current_size = other.size();
-      }
-      else
-      {
-        this->initialise();
-        this->assign(other, position, length);
-      }
+      this->initialise();
+      this->assign(other, position, length);
     }
 
     //*************************************************************************
     /// Constructor, from null terminated text.
     ///\param text The initial text of the u8string_ext.
     //*************************************************************************
-    template <typename TPointer>
-    u8string_ext(TPointer text, value_type* buffer, size_type buffer_size,
-                 typename etl::enable_if<etl::is_same<const value_type*, TPointer>::value, int>::type* = ETL_NULLPTR)
+    u8string_ext(const char8_t* text, char8_t* buffer, size_type buffer_size)
       : iu8string(buffer, buffer_size - 1U)
     {
-      if (this->is_within_buffer(text))
+      // Is the initial text at the same address as the buffer?
+      if (text == buffer)
       {
         this->current_size = etl::strlen(buffer);
       }
@@ -384,25 +362,6 @@ namespace etl
     }
 
     //*************************************************************************
-    /// Constructor, from null terminated literal text.
-    ///\param text The initial text of the u8string_ext.
-    //*************************************************************************
-    template <size_t Size>
-    u8string_ext(const value_type (&literal)[Size], value_type* buffer, size_type buffer_size)
-      : iu8string(buffer, buffer_size - 1U)
-    {
-      if (this->is_within_buffer(literal))
-      {
-        this->current_size = etl::strlen(literal);
-      }
-      else
-      {
-        this->initialise();
-        this->assign(literal);
-      }
-    }
-
-    //*************************************************************************
     /// Constructor, from null terminated text and count.
     ///\param text  The initial text of the u8string_ext.
     ///\param count The number of characters to copy.
@@ -410,15 +369,8 @@ namespace etl
     u8string_ext(const value_type* text, size_type count, value_type* buffer, size_type buffer_size)
       : iu8string(buffer, buffer_size - 1U)
     {
-      if (this->is_within_buffer(text))
-      {
-        this->current_size = count;
-      }
-      else
-      {
-        this->initialise();
-        this->assign(text, text + count);
-      }
+      this->initialise();
+      this->assign(text, text + count);
     }
 
     //*************************************************************************
@@ -434,24 +386,6 @@ namespace etl
     }
 
     //*************************************************************************
-    /// From u8string_view.
-    ///\param view The u8string_view.
-    //*************************************************************************
-    explicit u8string_ext(const etl::u8string_view& view, value_type* buffer, size_type buffer_size)
-      : iu8string(buffer, buffer_size - 1U)
-    {
-      if (this->is_within_buffer(view.data()))
-      {
-        this->current_size = view.size();
-      }
-      else
-      {
-        this->initialise();
-        this->assign(view.begin(), view.end());
-      }
-    }
-
-    //*************************************************************************
     /// Constructor, from an iterator range.
     ///\tparam TIterator The iterator type.
     ///\param first The iterator to the first element.
@@ -461,15 +395,8 @@ namespace etl
     u8string_ext(TIterator first, TIterator last, value_type* buffer, size_type buffer_size, typename etl::enable_if<!etl::is_integral<TIterator>::value, int>::type = 0)
       : iu8string(buffer, buffer_size - 1U)
     {
-      if (this->is_within_buffer(etl::addressof(*first)))
-      {
-        this->current_size = etl::distance(first, last);
-      }
-      else
-      {
-        this->initialise();
-        this->assign(first, last);
-      }     
+      this->initialise();
+      this->assign(first, last);
     }
 
 #if ETL_HAS_INITIALIZER_LIST
@@ -483,6 +410,17 @@ namespace etl
       this->assign(init.begin(), init.end());
     }
 #endif
+
+    //*************************************************************************
+    /// From string_view.
+    ///\param view The string_view.
+    //*************************************************************************
+    explicit u8string_ext(const etl::u8string_view& view, value_type* buffer, size_type buffer_size)
+      : iu8string(buffer, buffer_size - 1U)
+    {
+      this->initialise();
+      this->assign(view.begin(), view.end());
+    }
 
     //*************************************************************************
     /// Assignment operator.

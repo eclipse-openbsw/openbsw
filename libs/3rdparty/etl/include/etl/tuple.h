@@ -240,7 +240,7 @@ namespace etl
     //*********************************
     ETL_CONSTEXPR14
     tuple()
-      : value()
+      : value(THead())
     {
     }
 
@@ -1146,12 +1146,12 @@ namespace etl
     }
 
     // Recursive case: compare the current element and recurse.
-    template <typename TTuple1, typename TTuple2, size_t Index, size_t... Indices>
+    template <typename TTuple1, typename TTuple2, size_t I, size_t... Indices>
     ETL_NODISCARD
     ETL_CONSTEXPR14
-    bool tuple_equality(const TTuple1& lhs, const TTuple2& rhs, etl::index_sequence<Index, Indices...>)
+    bool tuple_equality(const TTuple1& lhs, const TTuple2& rhs, etl::index_sequence<I, Indices...>)
     {
-      return etl::get<Index>(lhs) == etl::get<Index>(rhs) && tuple_equality(lhs, rhs, etl::index_sequence<Indices...>{});
+      return etl::get<I>(lhs) == etl::get<I>(rhs) && tuple_equality(lhs, rhs, etl::index_sequence<Indices...>{});
     }
 
     //***************************************************************************
@@ -1167,17 +1167,17 @@ namespace etl
     }
 
     // Recursively compare the current element and the rest.
-    template <typename TTuple1, typename TTuple2, size_t Index, size_t... Indices>
+    template <typename TTuple1, typename TTuple2, size_t I, size_t... Indices>
     ETL_NODISCARD
     ETL_CONSTEXPR14
-    bool tuple_less_than(const TTuple1& lhs, const TTuple2& rhs, etl::index_sequence<Index, Indices...>)
+    bool tuple_less_than(const TTuple1& lhs, const TTuple2& rhs, etl::index_sequence<I, Indices...>)
     {
-      if (get<Index>(lhs) < get<Index>(rhs))
+      if (get<I>(lhs) < get<I>(rhs))
       {
         return true;
       }
 
-      if (get<Index>(rhs) < get<Index>(lhs))
+      if (get<I>(rhs) < get<I>(lhs))
       {
         return false;
       }
@@ -1282,7 +1282,7 @@ namespace std
   template <typename T>
   struct tuple_size;
 
-  template <size_t Index, typename TType>
+  template <size_t I, typename TType>
   struct tuple_element;
 #endif
 
@@ -1297,10 +1297,10 @@ namespace std
   //***************************************************************************
   /// Specialisation of tuple_element to allow the use of C++ structured bindings.
   //***************************************************************************
-  template <size_t Index, typename... Types>
-  struct tuple_element<Index, etl::tuple<Types...>>
+  template <size_t I, typename... Types>
+  struct tuple_element<I, etl::tuple<Types...>>
   {
-    using type = typename etl::nth_type_t<Index, Types...>;
+    using type = typename etl::nth_type_t<I, Types...>;
   };
 }
 

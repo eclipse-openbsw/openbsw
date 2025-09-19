@@ -445,6 +445,9 @@ namespace etl
     using const_iterator  = typename base_t::const_iterator;
     using size_type       = typename base_t::size_type;
 
+    /// Defines the parameter types
+    using const_reference = const key_type&;
+
     static_assert((etl::is_default_constructible<key_type>::value), "key_type must be default constructible");
 
     //*************************************************************************
@@ -478,11 +481,11 @@ namespace etl
   /// Template deduction guides.
   //*************************************************************************
 #if ETL_USING_CPP17
-  template <typename TElements, size_t Size>
-  const_set_ext(const etl::span<TElements, Size>&) -> const_set_ext<TElements>;
+  template <typename TElements, size_t N>
+  const_set_ext(const etl::span<TElements, N>&) -> const_set_ext<TElements>;
 
-  template <typename TElements, size_t Size>
-  const_set_ext(const TElements(&)[Size]) -> const_set_ext<TElements>;
+  template <typename TElements, size_t N>
+  const_set_ext(const TElements(&)[N]) -> const_set_ext<TElements>;
 #endif
 
   //*************************************************************************

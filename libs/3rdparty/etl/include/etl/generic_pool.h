@@ -170,7 +170,8 @@ namespace etl
     {
       ETL_STATIC_ASSERT(etl::alignment_of<U>::value <= VAlignment, "Type has incompatible alignment");
       ETL_STATIC_ASSERT(sizeof(U) <= VTypeSize, "Type too large for pool");
-      ipool::destroy(p_object);
+      p_object->~U();
+      ipool::release(p_object);
     }
 
   private:
@@ -337,7 +338,8 @@ namespace etl
     {
       ETL_STATIC_ASSERT(etl::alignment_of<U>::value <= VAlignment, "Type has incompatible alignment");
       ETL_STATIC_ASSERT(sizeof(U) <= VTypeSize, "Type too large for pool");
-      ipool::destroy(p_object);
+      p_object->~U();
+      ipool::release(p_object);
     }
 
   private:

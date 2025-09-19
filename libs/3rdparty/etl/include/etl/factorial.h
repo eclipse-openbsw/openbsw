@@ -36,7 +36,7 @@ SOFTWARE.
 #include <stddef.h>
 
 ///\defgroup factorial factorial
-/// fibonacci<Value> : Calculates the factorial of Value.
+/// fibonacci<N> : Calculates the Nth factorial value.
 ///\ingroup maths
 
 namespace etl
@@ -44,16 +44,16 @@ namespace etl
   //***************************************************************************
   ///\ingroup fibonacci
   /// Defines <b>value</b> as the Nth factorial number.
-  ///\tparam Value The number to find the factorial value of.
+  ///\tparam N The number to find the factorial value of.
   //***************************************************************************
-  template <size_t Value>
+  template <size_t N>
   struct factorial
   {
-    static ETL_CONSTANT size_t value = Value * factorial<Value - 1>::value;
+    static ETL_CONSTANT size_t value = N * factorial<N - 1>::value;
   };
 
   //***************************************************************************
-  // Specialisation for Value = 0
+  // Specialisation for N = 0
   //***************************************************************************
   template <>
   struct factorial<0>
@@ -61,12 +61,12 @@ namespace etl
     static ETL_CONSTANT size_t value = 1;
   };
 
-  template <size_t Value>
-  ETL_CONSTANT size_t factorial<Value>::value;
+  template <size_t N>
+  ETL_CONSTANT size_t factorial<N>::value;
 
 #if ETL_USING_CPP17
-  template <size_t Value>
-  inline constexpr size_t factorial_v = factorial<Value>::value;
+  template <size_t N>
+  inline constexpr size_t factorial_v = factorial<N>::value;
 #endif
 }
 

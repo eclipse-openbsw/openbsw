@@ -71,7 +71,7 @@ namespace std
     //*************************************************************************
     /// Default constructor 
     //*************************************************************************
-    constexpr initializer_list() ETL_NOEXCEPT 
+    constexpr initializer_list() noexcept 
       : pfirst(nullptr), plast(nullptr)
     {
     }
@@ -79,7 +79,7 @@ namespace std
     //*************************************************************************
     /// Constructor 
     //*************************************************************************
-    constexpr initializer_list(const T* pfirst_, const T* plast_) ETL_NOEXCEPT
+    constexpr initializer_list(const T* pfirst_, const T* plast_) noexcept
       : pfirst(pfirst_), plast(plast_) 
     {
     }
@@ -87,7 +87,7 @@ namespace std
     //*************************************************************************
     /// Get the beginning of the list.
     //*************************************************************************
-    constexpr const T* begin() const ETL_NOEXCEPT 
+    constexpr const T* begin() const noexcept 
     { 
       return pfirst; 
     }
@@ -95,7 +95,7 @@ namespace std
     //*************************************************************************
     /// Get the end of the list.
     //*************************************************************************
-    constexpr const T* end() const ETL_NOEXCEPT 
+    constexpr const T* end() const noexcept 
     { 
       return plast; 
     }
@@ -103,7 +103,7 @@ namespace std
     //*************************************************************************
     /// Get the size of the list.
     //*************************************************************************
-    constexpr size_t size() const ETL_NOEXCEPT
+    constexpr size_t size() const noexcept
     {
       return static_cast<size_t>(plast - pfirst);
     }
@@ -118,7 +118,7 @@ namespace std
   /// Get the beginning of the list.
   //*************************************************************************
   template<typename T>
-  constexpr const T* begin(initializer_list<T> init) ETL_NOEXCEPT
+  constexpr const T* begin(initializer_list<T> init) noexcept
   {
     return init.begin();
   }
@@ -127,7 +127,7 @@ namespace std
   /// Get the end of the list.
   //*************************************************************************
   template <typename T>
-  constexpr const T* end(initializer_list<T> init) ETL_NOEXCEPT
+  constexpr const T* end(initializer_list<T> init) noexcept
   {
     return init.end();
   }
@@ -154,7 +154,7 @@ namespace std
     //*************************************************************************
     /// Default constructor 
     //*************************************************************************
-    constexpr initializer_list() ETL_NOEXCEPT 
+    constexpr initializer_list() noexcept 
       : pfirst(nullptr), length(0)
     {
     }
@@ -162,7 +162,7 @@ namespace std
     //*************************************************************************
     /// Get the beginning of the list.
     //*************************************************************************
-    constexpr const T* begin() const ETL_NOEXCEPT 
+    constexpr const T* begin() const noexcept 
     { 
       return pfirst; 
     }
@@ -170,7 +170,7 @@ namespace std
     //*************************************************************************
     /// Get the end of the list.
     //*************************************************************************
-    constexpr const T* end() const ETL_NOEXCEPT 
+    constexpr const T* end() const noexcept 
     { 
       return pfirst + length; 
     }
@@ -178,7 +178,7 @@ namespace std
     //*************************************************************************
     /// Get the size of the list.
     //*************************************************************************
-    constexpr size_t size()  const ETL_NOEXCEPT
+    constexpr size_t size()  const noexcept
     {
       return length;
     }
@@ -188,7 +188,7 @@ namespace std
     //*************************************************************************
     /// Constructor 
     //*************************************************************************
-    constexpr initializer_list(const T* pfirst_, size_t length_) ETL_NOEXCEPT
+    constexpr initializer_list(const T* pfirst_, size_t length_) noexcept
       : pfirst(pfirst_)
       , length(length_)
     {
@@ -202,7 +202,7 @@ namespace std
   /// Get the beginning of the list.
   //*************************************************************************
   template<class T>
-  constexpr const T* begin(initializer_list<T> init) ETL_NOEXCEPT
+  constexpr const T* begin(initializer_list<T> init) noexcept
   {
     return init.begin();
   }
@@ -211,7 +211,7 @@ namespace std
   /// Get the end of the list.
   //*************************************************************************
   template<class T>
-  constexpr const T* end(initializer_list<T> init) ETL_NOEXCEPT
+  constexpr const T* end(initializer_list<T> init) noexcept
   {
     return init.end();
   }
