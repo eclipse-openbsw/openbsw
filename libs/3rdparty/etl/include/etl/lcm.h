@@ -42,10 +42,10 @@ namespace etl
   // Least Common Multiple.
   // Compile time.
   //***************************************************************************
-  template <intmax_t A, intmax_t B>
+  template <intmax_t Value1, intmax_t Value2>
   struct lcm_const
   {
-    static ETL_CONSTANT intmax_t value = (A / gcd_const<A, B>::value) * B;
+    static ETL_CONSTANT intmax_t value = (Value1 / gcd_const<Value1, Value2>::value) * Value2;
   };
 
   //***************************************************************************
