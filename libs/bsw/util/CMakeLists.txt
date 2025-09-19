@@ -44,8 +44,7 @@ target_link_libraries(util PUBLIC etl platform)
 
 if (BUILD_UNIT_TESTS)
     target_compile_definitions(util PUBLIC ESTD_HAS_EXCEPTIONS
-                                           ESTL_ASSERT_MESSAGE_ALL
-                                           ETL_THROW_EXCEPTIONS)
+                                           ESTL_ASSERT_MESSAGE_ALL)
 
     add_library(utilMock mock/gmock/src/util/StdIoMock.cpp
                          mock/gmock/src/util/logger/TestConsoleLogger.cpp)

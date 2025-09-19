@@ -14,7 +14,6 @@ target_link_libraries(
 if (BUILD_UNIT_TESTS)
 
     target_compile_definitions(safeLifecycle PUBLIC ESTD_HAS_EXCEPTIONS
-                                                    ESTL_ASSERT_MESSAGE_ALL
-                                                    ETL_THROW_EXCEPTIONS)
+                                                    ESTL_ASSERT_MESSAGE_ALL)
 
 endif ()
