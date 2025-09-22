@@ -15,7 +15,8 @@ add_library(
     src/os/isr/isr_sys.cpp
     src/os/isr/isr_wdg.cpp)
 
-target_link_libraries(startUp PRIVATE bspMcu common hardFaultHandler)
+target_link_libraries(startUp PRIVATE bspMcu common hardFaultHandler
+                                      safeLifecycle safeMemory)
 
 add_library(
     main
@@ -34,7 +35,6 @@ target_link_libraries(
             bspClock
             bspCore
             bspTja1101
-            bspMcuWatchdog
             canflex2Transceiver
             configuration
             ethConfiguration
@@ -42,8 +42,9 @@ target_link_libraries(
             freeRtosCm4SysTick
             lifecycle
             startUp
-            watchdogManager
+            safeBspMcuWatchdog
             safeLifecycle
+            safeSupervisor
             safeMemory
             safeWatchdog
     PUBLIC bspInputManager bspOutputManager)

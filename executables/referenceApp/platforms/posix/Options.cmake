@@ -16,6 +16,9 @@ set(PLATFORM_SUPPORT_WATCHDOG
 set(PLATFORM_SUPPORT_MPU
     OFF
     CACHE BOOL "Turn OFF MPU support" FORCE)
+set(PLATFORM_SUPPORT_ROM_CHECK
+    OFF
+    CACHE BOOL "Turn ROM check support off" FORCE)
 set(PLATFORM_SUPPORT_ETHERNET
     ON
     CACHE BOOL "Turn ethernet support on or off" FORCE)

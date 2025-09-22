@@ -1,0 +1,2 @@
+add_subdirectory(safeSupervisor)
+add_subdirectory(safeWatchdog)

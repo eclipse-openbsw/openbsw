@@ -48,8 +48,8 @@ __isr_vector:
     .long   DefaultISR                                      /* FTFC_IRQHandler                                    FTFC Command complete */
     .long   DefaultISR                                      /* Read_Collision_IRQHandler                          FTFC Read collision */
     .long   DefaultISR                                      /* LVD_LVW_IRQHandler                                 PMC Low voltage detect interrupt */
-    .long   FTFC_Fault_IRQHandler                           /* FTFC Double bit fault detect */
-    .long   WDOG_EWM_IRQHandler                             /* WDOG_EWM_IRQHandler                                Single interrupt vector for WDOG and EWM */
+    .long   Safe_FTFC_Fault_IRQHandler                      /* FTFC Double bit fault detect */
+    .long   Safe_WDOG_EWM_IRQHandler                        /* WDOG_EWM_IRQHandler                                Single interrupt vector for WDOG and EWM */
     .long   DefaultISR                                      /* RCM_IRQHandler                                     RCM Asynchronous Interrupt */
     .long   DefaultISR                                      /* LPI2C0_Master_IRQHandler                           LPI2C0 Master Interrupt */
     .long   DefaultISR                                      /* LPI2C0_Slave_IRQHandler                            LPI2C0 Slave Interrupt */
@@ -72,7 +72,7 @@ __isr_vector:
     .long   DefaultISR                                      /* Reserved58_IRQHandler                              Reserved Interrupt 58 */
     .long   DefaultISR                                      /* Reserved59_IRQHandler                              Reserved Interrupt 59 */
     .long   DefaultISR                                      /* ERM_single_fault_IRQHandler                        ERM single bit error correction */
-    .long   ERM_double_fault_IRQHandler                     /* ERM double bit error non-correctable */
+    .long   Safe_ERM_double_fault_IRQHandler                /* ERM double bit error non-correctable */
     .long   DefaultISR                                      /* RTC_IRQHandler                                     RTC alarm interrupt */
     .long   DefaultISR                                      /* RTC_Seconds_IRQHandler                             RTC seconds interrupt */
     .long   DefaultISR                                      /* LPIT0_Ch0_IRQHandler                               LPIT0 channel 0 overflow interrupt */
@@ -108,8 +108,8 @@ __isr_vector:
     .long   DefaultISR                                      /* CAN0_ORed_IRQHandler                               CAN0 OR'ed [Bus Off OR Transmit Warning OR Receive Warning] */
     .long   DefaultISR                                      /* CAN0_Error_IRQHandler                              CAN0 Interrupt indicating that errors were detected on the CAN bus */
     .long   DefaultISR                                      /* CAN0_Wake_Up_IRQHandler                            CAN0 Interrupt asserted when Pretended Networking operation is enabled, and a valid message matches the selected filter criteria during Low Power mode */
-    .long   CAN0_ORed_0_15_MB_IRQHandler                    /* CAN0 OR'ed Message buffer (0-15) */
-    .long   CAN0_ORed_16_31_MB_IRQHandler                   /* CAN0 OR'ed Message buffer (16-31) */
+    .long   Safe_CAN0_ORed_0_15_MB_IRQHandler               /* CAN0 OR'ed Message buffer (0-15) */
+    .long   Safe_CAN0_ORed_16_31_MB_IRQHandler              /* CAN0 OR'ed Message buffer (16-31) */
     .long   DefaultISR                                      /* Reserved99_IRQHandler                              Reserved Interrupt 99 */
     .long   DefaultISR                                      /* Reserved100_IRQHandler                             Reserved Interrupt 100 */
     .long   DefaultISR                                      /* CAN1_ORed_IRQHandler                               CAN1 OR'ed [Bus Off OR Transmit Warning OR Receive Warning] */

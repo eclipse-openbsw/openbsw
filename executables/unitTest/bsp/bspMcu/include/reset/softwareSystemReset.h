@@ -2,12 +2,16 @@
 
 #pragma once
 
+#include <cstdint>
+
 #ifdef __cplusplus
 extern "C"
 {
 #endif
+uint32_t softwareSystemResetCalled;
 
-void softwareSystemReset(void);
+void softwareSystemReset() { ++softwareSystemResetCalled; }
+
 void softwareDestructiveReset(void);
 
 #ifdef __cplusplus

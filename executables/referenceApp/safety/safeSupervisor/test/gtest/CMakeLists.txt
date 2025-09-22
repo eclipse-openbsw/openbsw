@@ -1,0 +1,5 @@
+add_executable(safeSupervisorTest src/safeSupervisor/SafeSupervisorTest.cpp)
+
+target_link_libraries(safeSupervisorTest PRIVATE gtest_main safeSupervisor)
+
+gtest_discover_tests(safeSupervisorTest PROPERTIES LABELS "safeSupervisorTest")

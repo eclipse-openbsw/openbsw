@@ -21,3 +21,6 @@ set(PLATFORM_SUPPORT_MPU
 set(PLATFORM_SUPPORT_STORAGE
     ON
     CACHE BOOL "Turn persistent storage on or off" FORCE)
+set(PLATFORM_SUPPORT_ROM_CHECK
+    OFF
+    CACHE BOOL "Turn ON ROM check support" FORCE)

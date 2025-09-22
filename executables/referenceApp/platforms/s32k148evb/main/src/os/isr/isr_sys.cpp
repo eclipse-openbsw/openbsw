@@ -3,6 +3,8 @@
 #include "commonDebug.h"
 #include "reset/softwareSystemReset.h"
 
+#include <safeMemory/SafeMemory.h>
+
 extern "C"
 {
 void HardFault_Handler()
@@ -21,6 +23,7 @@ void HardFault_Handler()
 void HardFault_Handler_Final()
 {
     printf("HardFault_Handler_Final\r\n");
+    ::safety::safe_memory::checkEccErrors();
     softwareSystemReset();
     while (true) {}
 }

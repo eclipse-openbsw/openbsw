@@ -10,5 +10,7 @@ AnalogInputScale::scale const analogInputScaleConfiguration[] = {
     // clang-format off
     &scaleFunction<uint32_t, _5_0Volt12BitResolution, precisionFactor, 0>, // AiEVAL_POTI_ADC
     &scaleFunction<uint32_t, _5_0Volt12BitResolution, precisionFactor, 0>, //AiEval_ADC
+    &scaleFunction<uint32_t, _5_0Volt12BitResolution, precisionFactor, 0>, //Ai_BANDGAP
+    &scaleFunction<uint32_t, _5_0Volt12BitResolution, precisionFactor, 0>, //Ai_ADCINTERNAL0
     // clang-format on
 };

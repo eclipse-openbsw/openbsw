@@ -66,6 +66,9 @@ RUN echo 'export HISTFILE=/root/.bash_history/history' >> /root/.bashrc
 RUN pip3 install pytest
 RUN pip3 install rich
 
+# Install eftools required for ROM check functionality
+RUN pip3 install pyelftools==0.32
+
 COPY test/pyTest/requirements.txt /home/jenkins/test/pyTest/requirements.txt
 RUN pip3 install -r /home/jenkins/test/pyTest/requirements.txt
 

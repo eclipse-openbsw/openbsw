@@ -121,7 +121,7 @@ if (BUILD_UNIT_TESTS)
     add_subdirectory(libs/bsp/bspOutputManager/test/gtest)
     add_subdirectory(libs/bsp/bspOutputPwm/test/gtest)
 
-    add_subdirectory(libs/safety/safeLifecycle/test/gtest)
+    add_subdirectory(libs/safety/safeUtils/test/gtest)
     add_subdirectory(libs/safety/safeMonitor/test)
 
     add_subdirectory(platforms/posix/bsp/bspEepromDriver/test/gtest)
@@ -134,6 +134,9 @@ if (BUILD_UNIT_TESTS)
     add_subdirectory(platforms/s32k1xx/bsp/canflex2Transceiver)
     add_subdirectory(platforms/s32k1xx/bsp/canflex2Transceiver/test/gtest)
     add_subdirectory(platforms/s32k1xx/bsp/canflex2Transceiver/test/mock)
+
+    add_subdirectory(executables/referenceApp/safety/safeSupervisor EXCLUDE_FROM_ALL)
+    add_subdirectory(executables/referenceApp/safety/safeSupervisor/test/gtest)
 
     add_subdirectory(executables/unitTest)
     target_include_directories(etl BEFORE INTERFACE executables/unitTest/etl_profile)

@@ -5,6 +5,7 @@
 #include <async/AsyncBinding.h>
 #include <etl/alignment.h>
 #include <lifecycle/LifecycleManager.h>
+#include <safeSupervisor/SafeSupervisor.h>
 
 #include <csignal>
 #include <unistd.h>
@@ -82,6 +83,7 @@ int main()
     signal(SIGINT, intHandler);
     main_thread_setup();
     terminal_setup();
+    ::safety::safeSupervisorConstructor.construct();
     ::platform::staticBsp.init();
     app_main(); // entry point for the generic part
     return (1); // we never reach this point

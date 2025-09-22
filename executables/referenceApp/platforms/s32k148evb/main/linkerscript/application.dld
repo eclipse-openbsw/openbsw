@@ -22,6 +22,7 @@ MEMORY
   FlashConfigField (RX) : ORIGIN = FLASH_START + 0x00000400, LENGTH = 0x00000010
   ApplicationStartUpCode (RX) : ORIGIN = FLASH_START + 0x410, LENGTH = 0x20
   Application (RX) : ORIGIN = FLASH_START + 0x430, LENGTH = FLASH_END + 1 - FLASH_START - 0x430
+  CrcMeta (RX) : ORIGIN = FLASH_END + 1 - 64,  LENGTH = 64
   /* SRAM_L */
   Data (RW) : ORIGIN = SRAM_L_START, LENGTH = SRAM_L_END + 1 - SRAM_L_START
   /* SRAM_U */
@@ -40,6 +41,7 @@ SECTIONS
 
   .first :
   {
+    __ROM_CRC_START = .;
     *(.glue_7)
     *(.glue_7t)
     *(.eh_frame)
@@ -172,14 +174,14 @@ SECTIONS
     KEEP (*(.fini_array*))
     PROVIDE_HIDDEN (__fini_array_end = .);
     . = ALIGN(4);
-     __ROM_CRC_END = .;
+    __ROM_CRC_END = .;
   }
   > Application = 0xffffffff
 
   __etext = .;    /* end of code */
   __DATA_ROM = .;
 
-  .mpudata :
+  .mpu_data :
   {
     . = ALIGN(32);
     __MPU_DATA_START = .;
@@ -187,17 +189,14 @@ SECTIONS
     KEEP("*libsafe*:*"(.data*))
     . = ALIGN(32);
     __MPU_DATA_END = .;
-    . = ALIGN(32);
   } > Data
-  .mpuBss :
+
+  .mpu_bss :
   {
     . = ALIGN(32);
     __MPU_BSS_START = .;
     "*libsafe*:*"(.bss)
     "*libsafe*:*"(.bss*)
-  } > Data
-  .mpuEnd :
-  {
     . = ALIGN(32);
     __MPU_BSS_END = .;
   } > Data
@@ -225,6 +224,7 @@ SECTIONS
     __DATA_ROM_START = .;
     . += ___data_size;
     . = ALIGN(4);
+    __DATA_ROM_END = .;
     __USED_FLASH_END = .;
   }
   > Application = 0xffffffff
@@ -255,7 +255,29 @@ SECTIONS
     LONG(0);
     LONG(0);
   } > Data
-  
+
+  __CRC_IVT_START   = ADDR(.interrupts);
+  __CRC_IVT_END     = ADDR(.interrupts) + SIZEOF(.interrupts);
+  __CRC_APP_START   = __ROM_CRC_START;
+  __CRC_APP_END     = __ROM_CRC_END;
+  __CRC_DATA_ROM_START = __DATA_ROM_START;
+  __CRC_DATA_ROM_END = __DATA_ROM_END;
+  .checksum :
+  {
+    . = ALIGN(4);
+    __checksum_list_start = .;
+    LONG(3) /* Number of Areas */
+    LONG(__CRC_IVT_START)
+    LONG(__CRC_IVT_END)
+    LONG(__CRC_APP_START)
+    LONG(__CRC_APP_END)
+    LONG(__CRC_DATA_ROM_START)
+    LONG(__CRC_DATA_ROM_END)
+    __checksum_list_end = .;
+    __checksum_result = .;
+    LONG(0x12345678)
+  } > CrcMeta
+
   /* Heap */
 
   .heap :

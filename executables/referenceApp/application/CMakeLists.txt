@@ -33,6 +33,16 @@ endif ()
 
 set_target_properties(app.referenceApp PROPERTIES SUFFIX ".elf")
 
+if (PLATFORM_SUPPORT_ROM_CHECK)
+    add_custom_command(
+        TARGET app.referenceApp
+        POST_BUILD
+        COMMAND python3 ${OPENBSW_DIR}/tools/safety/crcCheck.py
+        COMMENT
+            "Running post-build script to run the CRC and inject the result into the ELF file"
+    )
+endif ()
+
 if (TARGET startUp)
     get_target_property(LINKER_SCRIPT startUp PROP_LINKER_SCRIPT)
 
@@ -66,6 +76,8 @@ target_link_libraries(
             udsConfigurationImpl
             runtime
             safeLifecycle
+            safeUtils
+            safeWatchdog
             socBsp)
 
 if (PLATFORM_SUPPORT_UDS)
@@ -78,10 +90,13 @@ if (PLATFORM_SUPPORT_CAN)
 endif ()
 
 if (PLATFORM_SUPPORT_ETHERNET)
-
     target_link_libraries(app.referenceApp PRIVATE cpp2ethernet lwipSocket)
 endif ()
 
 if (PLATFORM_SUPPORT_STORAGE)
     target_link_libraries(app.referenceApp PRIVATE storage)
+endif ()
+
+if (PLATFORM_SUPPORT_ROM_CHECK)
+    target_link_libraries(app.referenceApp PRIVATE safeMemory)
 endif ()

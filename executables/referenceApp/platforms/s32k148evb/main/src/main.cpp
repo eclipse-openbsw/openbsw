@@ -20,14 +20,14 @@
 #include "watchdog/Watchdog.h"
 
 #include <lifecycle/LifecycleManager.h>
-#include <safeLifecycle/SafeSupervisor.h>
+#include <safeMemory/MemoryProtection.h>
+#include <safeMemory/SafetyShell.h>
+#include <safeSupervisor/SafeSupervisor.h>
 #include <safeWatchdog/SafeWatchdog.h>
-#include <watchdog/Watchdog.h>
-#include <watchdogManager/watchdogManager.h>
 
 extern void app_main();
 
-extern safety::SafeWatchdog safeWatchdog;
+extern ::safety::SafeWatchdog safeWatchdog;
 
 extern "C"
 {
@@ -43,7 +43,7 @@ void boardInit()
 {
     /* Disables the watchdog early before the timeout occurs, which is then enabled later in the
        main function. */
-    bsp::Watchdog::disableWatchdog();
+    ::safety::bsp::Watchdog::disableWatchdog();
     configurPll();
     cacheEnable();
 }
@@ -127,18 +127,26 @@ namespace systems
 
 int main()
 {
-    auto& safeSupervisor = safety::SafeSupervisor::getInstance();
-    safeSupervisor.enterLimpHome();
-    bool watchdogTest = safety::WatchdogManager::startTest();
-    if (watchdogTest)
+    ::safety::MemoryProtection::init();
     {
-        safeSupervisor.leaveLimpHome();
+        ::safety::SafetyShell const safetyShell;
+        ::safety::safeSupervisorConstructor.construct();
+        auto& safeSupervisor = safety::SafeSupervisor::getInstance();
+        safeSupervisor.enterLimpHome();
+        uint32_t const TIME_OUT_WD_FAST_TEST_US = 6000U;
+        auto const isWatchdogTestSuccess
+            = ::safety::bsp::Watchdog::executeFastTest(TIME_OUT_WD_FAST_TEST_US);
+        if (isWatchdogTestSuccess)
+        {
+            LOGSYNCHRON("MCU watchdog fast tests successful\r\n");
+            safeSupervisor.leaveLimpHome();
+        }
+        else
+        {
+            safeSupervisor.watchdogStartupCheckMonitor.trigger();
+        }
+        safeWatchdog.enableMcuWatchdog();
     }
-    else
-    {
-        safeSupervisor.watchdogStartupCheckMonitor.trigger();
-    }
-    safeWatchdog.enableMcuWatchdog();
     ::platform::staticBsp.init();
     printf("main(RCM::SRS 0x%" PRIx32 ")\r\n", *reinterpret_cast<uint32_t volatile*>(0x4007F008));
     app_main(); // entry point for the generic part

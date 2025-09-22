@@ -17,6 +17,9 @@
 #include <app/appConfig.h>
 #include <etl/alignment.h>
 #include <etl/singleton.h>
+#ifdef PLATFORM_SUPPORT_ROM_CHECK
+#include <safeMemory/RomCheck.h>
+#endif
 
 #ifdef PLATFORM_SUPPORT_UDS
 #include "busid/BusId.h"
@@ -42,6 +45,8 @@
 
 #include <cstdio>
 
+alignas(32)::async::internal::Stack<safety_task_stackSize> safetyStack;
+
 #ifdef PLATFORM_SUPPORT_CAN
 #include <systems/ICanSystem.h>
 
@@ -61,6 +66,10 @@ extern ::ethernet::IEthernetDriverSystem& getEthernetSystem();
 #endif
 
 #include <platform/estdint.h>
+
+#ifdef PLATFORM_SUPPORT_ROM_CHECK
+::safety::RomCheck RomCheck;
+#endif
 
 namespace platform
 {
@@ -158,6 +167,9 @@ private:
     {
         ::logger::run();
         ::console::run();
+#ifdef PLATFORM_SUPPORT_ROM_CHECK
+        RomCheck.idle();
+#endif
         if (lifecycleMonitor.isReadyForReset())
         {
             shutdown();
@@ -288,8 +300,8 @@ DemoTask demoTask{"demo"};
 using BackgroundTask = AsyncAdapter::Task<TASK_BACKGROUND, 1024 * 2>;
 BackgroundTask backgroundTask{"background"};
 
-using SafetyTask = AsyncAdapter::Task<TASK_SAFETY, 1024 * 2>;
-SafetyTask safetyTask{"safety"};
+using SafetyTask = AsyncAdapter::TaskStack<TASK_SAFETY>;
+SafetyTask safetyTask{"safety", safetyStack};
 
 AsyncContextHook contextHook{runtimeMonitor};
 

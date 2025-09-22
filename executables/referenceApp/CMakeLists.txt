@@ -18,4 +18,4 @@ add_subdirectory(consoleCommands)
 add_subdirectory(udsConfiguration)
 add_subdirectory(transportConfiguration)
 add_subdirectory(lwipConfiguration)
-
+add_subdirectory(safety)

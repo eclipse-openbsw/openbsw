@@ -6,6 +6,7 @@ target_link_libraries(main
 PRIVATE
     asyncBinding
     lifecycle
+    safeSupervisor
 PUBLIC
     bspEepromDriver
 )
