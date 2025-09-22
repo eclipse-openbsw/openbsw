@@ -37,16 +37,13 @@ static uint8_t const SERVICE_ID   = 0x22;
 struct ManagedIncomingDiagConnectionTest : Test
 {
     static uint8_t const NUM_INCOMING_CONNECTIONS  = 4;
-    static uint8_t const NUM_OUTGOING_CONNECTIONS  = 4;
     static uint8_t const MAX_NUM_INCOMING_MESSAGES = 4;
 
     async::TestContext fContext;
     async::AsyncMock fAsyncMock;
     IncomingDiagConnection* fpIncomingDiagConnection;
-    DiagnosisConfiguration<
-        NUM_INCOMING_CONNECTIONS,
-        NUM_OUTGOING_CONNECTIONS,
-        MAX_NUM_INCOMING_MESSAGES>* fpDiagnosisConfiguration;
+    DiagnosisConfiguration<NUM_INCOMING_CONNECTIONS, MAX_NUM_INCOMING_MESSAGES>*
+        fpDiagnosisConfiguration;
     TransportMessageProvidingListenerMock* fpTpRouterMock;
     AbstractTransportLayerMock* fpTpLayerMock;
     DiagConnectionManager* fpDiagConnectionManager;
@@ -66,18 +63,15 @@ struct ManagedIncomingDiagConnectionTest : Test
         fpDiagJobRoot     = new DiagJobRoot();
         AbstractDiagJob::setDefaultDiagSessionManager(*fpSessionProvider);
 
-        fpDiagnosisConfiguration = new DiagnosisConfiguration<
-            NUM_INCOMING_CONNECTIONS,
-            NUM_OUTGOING_CONNECTIONS,
-            MAX_NUM_INCOMING_MESSAGES>(
-            DIAGNOSIS_ID,
-            BROADCAST_ID,
-            0u,
-            TransportConfiguration::DIAG_PAYLOAD_SIZE,
-            true,
-            false,
-            true,
-            fContext);
+        fpDiagnosisConfiguration
+            = new DiagnosisConfiguration<NUM_INCOMING_CONNECTIONS, MAX_NUM_INCOMING_MESSAGES>(
+                DIAGNOSIS_ID,
+                BROADCAST_ID,
+                0u,
+                TransportConfiguration::DIAG_PAYLOAD_SIZE,
+                false,
+                true,
+                fContext);
 
         fpDiagDispatcher = new DiagDispatcher2(
             *fpDiagnosisConfiguration, *fpSessionProvider, *fpDiagJobRoot, fContext);

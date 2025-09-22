@@ -5,7 +5,6 @@
 #include "uds/UdsConfig.h"
 #include "uds/base/AbstractDiagJob.h"
 #include "uds/base/DiagJobRoot.h"
-#include "uds/connection/IOutgoingDiagConnectionProvider.h"
 
 namespace uds
 {
@@ -20,7 +19,7 @@ class IDiagSessionManager;
  *
  * \see     IOutgoingDiagConnectionProvider
  */
-class IDiagDispatcher : public IOutgoingDiagConnectionProvider
+class IDiagDispatcher
 {
 public:
     /**

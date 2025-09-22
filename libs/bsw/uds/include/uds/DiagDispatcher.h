@@ -81,14 +81,6 @@ public:
         transport::ITransportMessageProcessedListener* pNotificationListener) override;
 
     /**
-     * \see IOutgoingDiagConnectionProvider::getOutgoingDiagConnection()
-     */
-    IOutgoingDiagConnectionProvider::ErrorCode getOutgoingDiagConnection(
-        uint16_t targetId,
-        OutgoingDiagConnection*& pConnection,
-        transport::TransportMessage* pRequestMessage) override;
-
-    /**
      * \see transport::ITransportMessageProcessedListener::transportMessageProcessed()
      */
     void transportMessageProcessed(

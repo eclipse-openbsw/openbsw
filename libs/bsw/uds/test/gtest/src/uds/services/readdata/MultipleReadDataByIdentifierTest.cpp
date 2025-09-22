@@ -137,7 +137,6 @@ public:
           0xDFU,
           0u,
           transport::TransportConfiguration::DIAG_PAYLOAD_SIZE,
-          true,
           false,
           true,
           fContext)
@@ -170,7 +169,6 @@ public:
 
 protected:
     static uint8_t const NUM_INCOMING_CONNECTIONS = 1;
-    static uint8_t const NUM_OUTGOING_CONNECTIONS = 2;
 
     async::TestContext fContext;
     async::AsyncMock fAsyncMock;
@@ -182,7 +180,7 @@ protected:
     StrictMock<AbstractDiagJobMock> fDiagJob2;
     StrictMock<IncomingDiagConnectionMock> fIncomingDiagConnection;
     StrictMock<DiagSessionManagerMock> fSessionManager;
-    DiagnosisConfiguration<NUM_INCOMING_CONNECTIONS, NUM_OUTGOING_CONNECTIONS, 1> fUdsConfiguration;
+    DiagnosisConfiguration<NUM_INCOMING_CONNECTIONS, 1> fUdsConfiguration;
     DiagDispatcher2 fUdsDispatcher;
     DiagJobRoot fDiagJobRoot;
 

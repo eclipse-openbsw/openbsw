@@ -1,6 +1,5 @@
 add_library(
     uds
-    src/uds/application/AbstractDiagApplication.cpp
     src/uds/async/AsyncDiagHelper.cpp
     src/uds/async/AsyncDiagJobHelper.cpp
     src/uds/authentication/DefaultDiagAuthenticator.cpp
@@ -16,9 +15,7 @@ add_library(
     src/uds/base/SubfunctionWithAuthenticationAndSessionControl.cpp
     src/uds/connection/DiagConnectionManager.cpp
     src/uds/connection/IncomingDiagConnection.cpp
-    src/uds/connection/ManagedOutgoingDiagConnection.cpp
     src/uds/connection/NestedDiagRequest.cpp
-    src/uds/connection/OutgoingDiagConnection.cpp
     src/uds/connection/PositiveResponse.cpp
     src/uds/jobs/DataIdentifierJob.cpp
     src/uds/jobs/ReadIdentifierFromMemory.cpp

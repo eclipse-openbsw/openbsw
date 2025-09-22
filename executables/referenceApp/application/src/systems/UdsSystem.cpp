@@ -35,7 +35,6 @@ UdsSystem::UdsSystem(
       transport::TransportConfiguration::FUNCTIONAL_ALL_ISO14229,
       ::busid::SELFDIAG,
       transport::TransportConfiguration::DIAG_PAYLOAD_SIZE,
-      true,  /* activate outgoing and pending */
       false, /* accept all requests */
       true,  /* copy functional requests */
       context)

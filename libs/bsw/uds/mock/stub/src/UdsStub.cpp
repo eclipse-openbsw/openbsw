@@ -250,39 +250,4 @@ DiagJobRoot::verifySupplierIndication(uint8_t const* const request, uint16_t con
     return DiagReturnCode::OK;
 }
 
-/*
- * class AbstractDiagApplication
- */
-AbstractDiagApplication::AbstractDiagApplication(
-    IOutgoingDiagConnectionProvider& connectionProvider)
-: fConnectionProvider(connectionProvider)
-{}
-
-void OutgoingDiagConnection::getRequestBuffer(uint8_t*& pBuffer, uint16_t& length)
-{
-    if (fpRequestMessage)
-    {
-        pBuffer = fpRequestMessage->getPayload();
-        length  = fpRequestMessage->getMaxPayloadLength();
-    }
-}
-
-::uds::ErrorCode OutgoingDiagConnection::sendDiagRequest(
-    uint16_t length,
-    AbstractDiagApplication& sender,
-    uint32_t timeout,
-    uint16_t matchingResponseBytes,
-    bool acceptNegativeResponse,
-    bool suppressSend,
-    bool suppressIncomingPendings)
-{
-    return ::uds::ErrorCode::OK;
-}
-
-void OutgoingDiagConnection::transportMessageProcessed(
-    transport::TransportMessage& transportMessage, ProcessingResult const result)
-{}
-
-void OutgoingDiagConnection::execute(::async::RunnableType const& /* timeout */) {}
-
 } // namespace uds

@@ -11,8 +11,6 @@
 #include "uds/UdsLogger.h"
 #include "uds/connection/ErrorCode.h"
 #include "uds/connection/IncomingDiagConnection.h"
-#include "uds/connection/ManagedOutgoingDiagConnection.h"
-#include "uds/connection/OutgoingDiagConnection.h"
 
 #include <async/Async.h>
 #include <etl/pool.h>
@@ -39,8 +37,6 @@ DiagConnectionManager::DiagConnectionManager(
 , fOutgoingTransportMessageProvider(outgoingProvider)
 , fContext(context)
 , fDiagDispatcher(diagDispatcher)
-, fOutgoingDiagConnections(configuration.OutgoingDiagConnections)
-, fReleasedOutgoingDiagConnections()
 , fShutdownRequested(false)
 {}
 
@@ -70,110 +66,6 @@ void DiagConnectionManager::diagConnectionTerminated(IncomingDiagConnection& dia
     }
 
     checkShutdownProgress();
-}
-
-void DiagConnectionManager::diagConnectionTerminated(ManagedOutgoingDiagConnection& diagConnection)
-{
-    TransportMessage* const pRequestMessage = diagConnection.fpRequestMessage;
-    if (pRequestMessage != nullptr)
-    {
-        fOutgoingTransportMessageProvider.releaseTransportMessage(*pRequestMessage);
-    }
-
-    {
-        ::async::LockType const lock;
-        fReleasedOutgoingDiagConnections.erase(diagConnection);
-        fOutgoingDiagConnections.push_back(diagConnection);
-    }
-    checkShutdownProgress();
-}
-
-IOutgoingDiagConnectionProvider::ErrorCode DiagConnectionManager::requestOutgoingConnection(
-    uint16_t const targetId,
-    OutgoingDiagConnection*& pOutgoingConnection,
-    TransportMessage* pRequestMessage)
-{
-    ::async::ModifiableLockType lock;
-    pOutgoingConnection = nullptr;
-    if ((!fOutgoingDiagConnections.empty()) && (!fShutdownRequested))
-    {
-        ManagedOutgoingDiagConnection* const pConnection = &fOutgoingDiagConnections.front();
-        fOutgoingDiagConnections.pop_front();
-        lock.unlock();
-        uint16_t payloadSize;
-        if (TransportConfiguration::isFunctionalAddress(targetId))
-        {
-            payloadSize = TransportConfiguration::MAX_FUNCTIONAL_MESSAGE_PAYLOAD_SIZE;
-        }
-        else
-        {
-            payloadSize = TransportConfiguration::DIAG_PAYLOAD_SIZE;
-        }
-        ITransportMessageProvider::ErrorCode result
-            = ITransportMessageProvider::ErrorCode::TPMSG_OK;
-        if (nullptr == pRequestMessage)
-        {
-            result = fOutgoingTransportMessageProvider.getTransportMessage(
-                fConfiguration.DiagBusId,
-                fConfiguration.DiagAddress,
-                targetId,
-                payloadSize,
-                {},
-                pRequestMessage);
-        }
-        else
-        {
-            if (payloadSize > pRequestMessage->getMaxPayloadLength())
-            {
-                pRequestMessage = nullptr;
-                result          = ITransportMessageProvider::ErrorCode::TPMSG_SIZE_TOO_LARGE;
-            }
-        }
-        if ((result == ITransportMessageProvidingListener::ErrorCode::TPMSG_OK)
-            && (pRequestMessage != nullptr))
-        {
-            pConnection->fpDiagConnectionManager = this;
-            pConnection->fpMessageSender         = &fOutgoingTransportMessageSender;
-            pRequestMessage->resetValidBytes();
-            pConnection->fpRequestMessage = pRequestMessage;
-            pConnection->fSourceId        = fConfiguration.DiagAddress;
-            pConnection->fTargetId        = targetId;
-            pConnection->open();
-            lock.lock();
-            fReleasedOutgoingDiagConnections.push_back(*pConnection);
-            lock.unlock();
-            pOutgoingConnection = pConnection;
-            return IOutgoingDiagConnectionProvider::CONNECTION_OK;
-        }
-        else if (result == ITransportMessageProvidingListener::ErrorCode::TPMSG_NO_MSG_AVAILABLE)
-        {
-            Logger::warn(
-                UDS, "No request buffer available for outgoing connection to 0x%x", targetId);
-            lock.lock();
-            fOutgoingDiagConnections.push_back(*pConnection);
-            lock.unlock();
-            return IOutgoingDiagConnectionProvider::NO_CONNECTION_AVAILABLE;
-        }
-        else
-        {
-            Logger::warn(
-                UDS,
-                "Error 0x%x getting request buffer available for outgoing "
-                "connection to 0x%x",
-                result,
-                targetId);
-            lock.lock();
-            fOutgoingDiagConnections.push_back(*pConnection);
-            lock.unlock();
-            return IOutgoingDiagConnectionProvider::GENERAL_ERROR;
-        }
-    }
-    else
-    {
-        lock.unlock();
-        Logger::warn(UDS, "No outgoing connection available for target 0x%x", targetId);
-        return IOutgoingDiagConnectionProvider::GENERAL_ERROR;
-    }
 }
 
 IncomingDiagConnection*
@@ -213,62 +105,6 @@ DiagConnectionManager::requestIncomingConnection(TransportMessage& requestMessag
     }
 }
 
-ManagedOutgoingDiagConnection*
-DiagConnectionManager::getExpectingConnection(TransportMessage const& transportMessage)
-{
-    ManagedOutgoingDiagConnection* pExpectingConnection = nullptr;
-    uint16_t maxMatchLevel                              = 0U;
-    ::async::ModifiableLockType const lock;
-    for (ManagedOutgoingDiagConnectionList::iterator itr = fReleasedOutgoingDiagConnections.begin();
-         itr != fReleasedOutgoingDiagConnections.end();
-         ++itr)
-    {
-        uint16_t const matchLevel    = itr->isExpectedResponse(transportMessage);
-        uint8_t const* const payload = itr->fpRequestMessage->getPayload();
-        Logger::debug(
-            UDS,
-            "(0x%x --> 0x%x): 0x%x 0x%x 0x%x has matchlevel %d",
-            itr->fpRequestMessage->getSourceId(),
-            itr->fpRequestMessage->getTargetId(),
-            payload[0],
-            payload[1],
-            payload[2],
-            matchLevel);
-        if (matchLevel > maxMatchLevel)
-        {
-            maxMatchLevel        = matchLevel;
-            pExpectingConnection = itr.operator->();
-        }
-    }
-    return pExpectingConnection;
-}
-
-bool DiagConnectionManager::hasConflictingConnection(OutgoingDiagConnection const& connection)
-{
-    ::async::LockType const lock;
-    for (ManagedOutgoingDiagConnectionList::iterator itr = fReleasedOutgoingDiagConnections.begin();
-         itr != fReleasedOutgoingDiagConnections.end();
-         ++itr)
-    {
-        if ((itr.operator->() != &connection) && (itr->isConflicting(connection)))
-        {
-            return true;
-        }
-    }
-    return false;
-}
-
-void DiagConnectionManager::processPendingResponses()
-{
-    ::async::LockType const lock;
-    for (ManagedOutgoingDiagConnectionList::iterator itr = fReleasedOutgoingDiagConnections.begin();
-         itr != fReleasedOutgoingDiagConnections.end();
-         ++itr)
-    {
-        itr->processResponseQueue();
-    }
-}
-
 void DiagConnectionManager::triggerResponseProcessing() { fDiagDispatcher.trigger(); }
 
 bool DiagConnectionManager::isPendingActivated() const
@@ -293,17 +129,14 @@ void DiagConnectionManager::checkShutdownProgress()
     {
         ::etl::ipool const& incomingDiagConnections = fConfiguration.incomingDiagConnectionPool();
 
-        if ((!incomingDiagConnections.full()) || (!fReleasedOutgoingDiagConnections.empty()))
+        if ((!incomingDiagConnections.full()))
         {
             Logger::error(
                 UDS,
-                "DiagConnectionManager::problem at shutdown(in: %d/%d, out: %d/%d)",
+                "DiagConnectionManager::problem at shutdown(in: %d/%d)",
                 incomingDiagConnections.size(),
-                incomingDiagConnections.max_size(),
-                fOutgoingDiagConnections.size(),
-                fOutgoingDiagConnections.size() + fReleasedOutgoingDiagConnections.size());
+                incomingDiagConnections.max_size());
             fConfiguration.clearIncomingDiagConnections();
-            fReleasedOutgoingDiagConnections.clear();
         }
         Logger::debug(UDS, "DiagConnectionManager shutdown complete");
         fShutdownDelegate();

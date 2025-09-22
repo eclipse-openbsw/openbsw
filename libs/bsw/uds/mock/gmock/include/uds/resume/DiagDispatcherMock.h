@@ -25,13 +25,6 @@ public:
         transport::AbstractTransportLayer::ErrorCode(
             transport::TransportMessage& msg,
             transport::ITransportMessageProcessedListener* notificationListener));
-
-    MOCK_METHOD3(
-        getOutgoingDiagConnection,
-        IOutgoingDiagConnectionProvider::ErrorCode(
-            uint16_t targetId,
-            OutgoingDiagConnection*& pConnection,
-            transport::TransportMessage* pRequestMessage));
 };
 
 } // namespace uds

@@ -14,11 +14,9 @@
 #include "uds/DiagDispatcher.h"
 #include "uds/DiagnosisConfiguration.h"
 #include "uds/UdsLogger.h"
-#include "uds/application/AbstractDiagApplication.h"
 #include "uds/base/AbstractDiagJobMock.h"
 #include "uds/connection/DiagConnectionManager.h"
 #include "uds/connection/IncomingDiagConnectionMock.h"
-#include "uds/connection/OutgoingDiagConnectionMock.h"
 #include "uds/lifecycle/UdsLifecycleConnectorMock.h"
 #include "uds/services/ecureset/EnableRapidPowerShutdown.h"
 #include "uds/services/ecureset/HardReset.h"
@@ -48,8 +46,6 @@ using namespace uds;
 using namespace ::util::logger;
 using namespace ::testing;
 using namespace ::transport::test;
-
-static constexpr uint16_t TESTER_ID = 0xF0;
 
 MATCHER_P(SameAddress, n, "")
 {
@@ -103,96 +99,6 @@ private:
 
 uint8_t const MyReadDataByIdentifier::IMPLEMENTED_REQUEST[3] = {0x22, 0x01, 0x01};
 
-/**
- * MyDiagnosisApplication is a class that provides a specific implementation
- * of the AbstractDiagApplication class. This class gives the opportunity to
- * create outgoing request messages and request outgoing diagnose connections.
- */
-class MyDiagnosisApplication : public uds::AbstractDiagApplication
-{
-public:
-    explicit MyDiagnosisApplication(IOutgoingDiagConnectionProvider& connectionProvider)
-    : AbstractDiagApplication(connectionProvider)
-    {}
-
-    ::uds::ErrorCode sendEcuReset(uint8_t ecuId)
-    {
-        return sendEcuResetService(
-            0x01,   // Subservice HardReset
-            ecuId); // Target EcuId
-    }
-
-    void createRequestMessageForEcuReset(
-        uint8_t ecuId, uds::OutgoingDiagConnection*& pCurrentOutgoingConnection)
-    {
-        createRequestMessageForEcuResetService(
-            0x01,  // Subservice HardReset
-            ecuId, // Target EcuId
-            pCurrentOutgoingConnection);
-    }
-
-    void createRequestMessageForPowerdown(uds::OutgoingDiagConnection*& pCurrentOutgoingConnection)
-    {
-        createRequestMessageForEcuResetService(
-            0x41,                                       // Subservice PowerDown
-            DiagCodes::FUNCTIONAL_ID_ALL_ISO14229_ECUS, // Target Functional
-            pCurrentOutgoingConnection);
-    }
-
-    void responseReceived(
-        OutgoingDiagConnection& /* connection */,
-        uint8_t /* sourceDiagAddress */,
-        uint8_t const /* response */[],
-        uint16_t /* responseLength */) override
-    {
-        // nothing to do, we don't expect responses
-    }
-
-    void responseTimeout(OutgoingDiagConnection& /* connection */) override
-    {
-        // nothing to do, we don't expect responses
-    }
-
-    void
-    requestSent(OutgoingDiagConnection& /* connection */, RequestSendResult /* result */) override
-    {}
-
-private:
-    ::uds::ErrorCode sendEcuResetService(uint8_t subService, uint8_t targetId)
-    {
-        uint8_t const REQUEST_LENGTH                            = 9;
-        uds::OutgoingDiagConnection* pCurrentOutgoingConnection = nullptr;
-
-        createRequestMessageForEcuResetService(subService, targetId, pCurrentOutgoingConnection);
-
-        return pCurrentOutgoingConnection->sendDiagRequest(REQUEST_LENGTH, *this);
-    }
-
-    void createRequestMessageForEcuResetService(
-        uint8_t subService,
-        uint8_t targetId,
-        uds::OutgoingDiagConnection*& pCurrentOutgoingConnection)
-    {
-        getOutgoingDiagConnection(TESTER_ID, pCurrentOutgoingConnection);
-
-        uint8_t* requestBuffer;
-        uint16_t requestBufferLength;
-        pCurrentOutgoingConnection->getRequestBuffer(requestBuffer, requestBufferLength);
-
-        // first the parameters for the TAS
-        requestBuffer[0] = 0x31; // Request Routine Control
-        requestBuffer[1] = 0x01; // Id Routine Control: Start Routine
-        requestBuffer[2] = 0x0F; // Routine Identifier (MSB)
-        requestBuffer[3] = 0x0B; // Routine Identifier (LSB)
-        // now the diag request the TAS should execute
-        requestBuffer[4] = targetId;
-        requestBuffer[5] = 0x00; // length (MSB)
-        requestBuffer[6] = 0x02; // length (LSB)
-        requestBuffer[7] = 0x11; // Service ID: request ecu reset
-        requestBuffer[8] = subService;
-    }
-};
-
 /*
  *
  * Implementation of UdsIntegration
@@ -203,7 +109,6 @@ class UdsIntegration : public Test
 protected:
     static uint8_t const ECU_UDS_ADDRESS          = 0x10;
     static uint8_t const NUM_INCOMING_CONNECTIONS = 1;
-    static uint8_t const NUM_OUTGOING_CONNECTIONS = 2;
 
     static uint8_t const ECU_RESET        = 0x11U;
     static uint8_t const HARD_RESET       = 0x01U;
@@ -224,7 +129,6 @@ protected:
           0xDF,
           0u,
           transport::TransportConfiguration::DIAG_PAYLOAD_SIZE,
-          true,
           false,
           true,
           fContext)
@@ -233,7 +137,6 @@ protected:
           transport::TransportMessage::INVALID_ADDRESS,
           0u,
           transport::TransportConfiguration::DIAG_PAYLOAD_SIZE,
-          true,
           true,
           true,
           fContext)
@@ -252,8 +155,6 @@ protected:
     , _softReset(_lifecycle, _udsDispatcher)
     , _powerDown(_lifecycle)
     , _enableRapidPowerShutdown(_lifecycle)
-    , _outgoingDiagConnectionProvider(_udsDispatcher)
-    , _myDiagnosisApplication(_outgoingDiagConnectionProvider)
     , _outgoingSender(0u)
     , _diagConnectionManager(
           _udsConfiguration, _outgoingSender, _messageProvider, fContext, _udsDispatcher)
@@ -282,10 +183,8 @@ protected:
     }
 
     async::TestContext fContext;
-    uds::DiagnosisConfiguration<NUM_INCOMING_CONNECTIONS, NUM_OUTGOING_CONNECTIONS, 1>
-        _udsConfiguration;
-    uds::DiagnosisConfiguration<NUM_INCOMING_CONNECTIONS, NUM_OUTGOING_CONNECTIONS, 1>
-        _udsConfiguration2;
+    uds::DiagnosisConfiguration<NUM_INCOMING_CONNECTIONS, 1> _udsConfiguration;
+    uds::DiagnosisConfiguration<NUM_INCOMING_CONNECTIONS, 1> _udsConfiguration2;
     StrictMock<uds::DiagSessionManagerMock> _sessionManager;
     DiagJobRoot _jobRoot;
     StrictMock<transport::TransportMessageListenerMock> _messageListener;
@@ -301,8 +200,6 @@ protected:
     uds::SoftReset _softReset;
     uds::PowerDown _powerDown;
     uds::EnableRapidPowerShutdown _enableRapidPowerShutdown;
-    IOutgoingDiagConnectionProvider& _outgoingDiagConnectionProvider;
-    MyDiagnosisApplication _myDiagnosisApplication;
     StrictMock<transport::AbstractTransportLayerMock> _outgoingSender;
     uds::DiagConnectionManager _diagConnectionManager;
     transport::AbstractTransportLayer* pTransportLayer;
@@ -327,8 +224,6 @@ TEST_F(UdsIntegration, positive_response)
     transport::TransportMessage* pMessage                             = nullptr;
 
     _udsDispatcher.send(*pRequest, &_messageProcessedListener);
-    // see DiagDispatcher2::trigger()
-    EXPECT_CALL(fAsyncMock, schedule(_, _, _, _, _)).Times(2);
 
     EXPECT_CALL(_sessionManager, getActiveSession())
         .WillRepeatedly(ReturnRef(DiagSession::APPLICATION_DEFAULT_SESSION()));
@@ -386,9 +281,6 @@ TEST_F(UdsIntegration, negative_response_request_out_of_range)
     transport::TransportMessage* pMessage                             = nullptr;
 
     _udsDispatcher.send(*pRequest, &_messageProcessedListener);
-
-    // see DiagDispatcher2::trigger()
-    EXPECT_CALL(fAsyncMock, schedule(_, _, _, _, _)).Times(2);
 
     EXPECT_CALL(_sessionManager, getActiveSession())
         .WillRepeatedly(ReturnRef(DiagSession::APPLICATION_DEFAULT_SESSION()));
@@ -476,9 +368,6 @@ TEST_F(UdsIntegration, negative_response_request_out_of_range_in_wrong_session)
 
     _udsDispatcher.send(*pRequest, &_messageProcessedListener);
 
-    // see DiagDispatcher2::trigger()
-    EXPECT_CALL(fAsyncMock, schedule(_, _, _, _, _)).Times(2);
-
     EXPECT_CALL(_sessionManager, getActiveSession())
         .WillRepeatedly(ReturnRef(DiagSession::APPLICATION_EXTENDED_SESSION()));
 
@@ -516,108 +405,6 @@ TEST_F(UdsIntegration, negative_response_request_out_of_range_in_wrong_session)
     CONTEXT_EXECUTE;
 }
 
-TEST_F(UdsIntegration, OutgoingDiagConnection_sendEcuReset_expect_OK_status)
-{
-    transport::TransportMessage message;
-    ::etl::array<uint8_t, 9> requestBuffer;
-    message.init(requestBuffer.data(), requestBuffer.size());
-    transport::TransportMessage* pMessage = &message;
-
-    uint8_t ecuId = 0xA0;
-
-    EXPECT_CALL(fAsyncMock, schedule(_, _, _, _, _)).Times(1);
-
-    EXPECT_CALL(_messageProvider, getTransportMessage(_, _, _, _, _, _))
-        .WillOnce(DoAll(
-            SetArgReferee<5>(pMessage),
-            Return(transport::ITransportMessageProvider::ErrorCode::TPMSG_OK)));
-
-    EXPECT_CALL(_messageListener, messageReceived(Eq(0u), _, NotNull()))
-        .WillOnce(Return(transport::ITransportMessageListener::ReceiveResult::RECEIVED_NO_ERROR));
-
-    EXPECT_EQ(::uds::ErrorCode::OK, _myDiagnosisApplication.sendEcuReset(ecuId));
-}
-
-TEST_F(
-    UdsIntegration,
-    two_OutgoingDiagConnections_create_ecuReset_and_powerdown_requests_send_them_in_reverse_order_\
-expect_OK_status)
-{
-    transport::TransportMessage message;
-    ::etl::array<uint8_t, 9> requestBuffer;
-    message.init(requestBuffer.data(), requestBuffer.size());
-    transport::TransportMessage* pMessage = &message;
-
-    transport::TransportMessage message2;
-    ::etl::array<uint8_t, 9> requestBuffer2;
-    message2.init(requestBuffer2.data(), requestBuffer2.size());
-    transport::TransportMessage* pMessage2 = &message2;
-
-    uint8_t ecuId = 0xA0;
-
-    EXPECT_CALL(_messageProvider, getTransportMessage(_, _, _, _, _, _))
-        .WillRepeatedly(DoAll(
-            SetArgReferee<5>(pMessage),
-            Return(transport::ITransportMessageProvider::ErrorCode::TPMSG_OK)));
-
-    EXPECT_CALL(_messageListener, messageReceived(Eq(0u), _, NotNull()))
-        .WillRepeatedly(
-            Return(transport::ITransportMessageListener::ReceiveResult::RECEIVED_NO_ERROR));
-
-    uds::OutgoingDiagConnection* pCurrentOutgoingConnectionForEcuReset  = nullptr;
-    uds::OutgoingDiagConnection* pCurrentOutgoingConnectionForPowerdown = nullptr;
-
-    _myDiagnosisApplication.createRequestMessageForEcuReset(
-        ecuId, pCurrentOutgoingConnectionForEcuReset);
-
-    memcpy(requestBuffer.data(), pMessage->getBuffer(), requestBuffer.size() * sizeof(uint8_t));
-
-    _myDiagnosisApplication.createRequestMessageForPowerdown(
-        pCurrentOutgoingConnectionForPowerdown);
-
-    memcpy(requestBuffer2.data(), pMessage2->getBuffer(), requestBuffer2.size() * sizeof(uint8_t));
-
-    // send first the "powerdown" request and then the "ecu reset" request to
-    // not meet the true case "if (pListener == pNotificationListener)"
-    // immediately in AbstractTransportLayer::ErrorCode DiagDispatcher2::send(...)
-    EXPECT_EQ(
-        transport::AbstractTransportLayer::ErrorCode::TP_OK,
-        _udsDispatcher.send(*pMessage, pCurrentOutgoingConnectionForPowerdown));
-
-    EXPECT_EQ(
-        transport::AbstractTransportLayer::ErrorCode::TP_OK,
-        _udsDispatcher.send(*pMessage2, pCurrentOutgoingConnectionForEcuReset));
-}
-
-TEST_F(
-    UdsIntegration,
-    create_OutgoingDiagConnection_sendEcuReset_check_if_message_is_received_expect_TP_SEND_FAIL)
-{
-    transport::TransportMessage message;
-    ::etl::array<uint8_t, 9> requestBuffer;
-    message.init(requestBuffer.data(), requestBuffer.size());
-    transport::TransportMessage* pMessage = &message;
-
-    uint8_t ecuId = 0xA0;
-
-    EXPECT_CALL(_messageProvider, getTransportMessage(_, _, _, _, _, _))
-        .WillOnce(DoAll(
-            SetArgReferee<5>(pMessage),
-            Return(transport::ITransportMessageProvider::ErrorCode::TPMSG_OK)));
-
-    EXPECT_CALL(_messageListener, messageReceived(Eq(0u), _, NotNull()))
-        .WillOnce(Return(transport::ITransportMessageListener::ReceiveResult::RECEIVED_ERROR));
-
-    uds::OutgoingDiagConnection* pCurrentOutgoingConnectionForEcuReset = nullptr;
-
-    _myDiagnosisApplication.createRequestMessageForEcuReset(
-        ecuId, pCurrentOutgoingConnectionForEcuReset);
-
-    EXPECT_EQ(
-        transport::AbstractTransportLayer::ErrorCode::TP_SEND_FAIL,
-        _udsDispatcher.send(*pMessage, pCurrentOutgoingConnectionForEcuReset));
-}
-
 TEST_F(
     UdsIntegration,
     a_TransportMessage_sent_by_an_IncomingDiagConnection_is_not_received_completely_so_\
@@ -634,8 +421,6 @@ TP_SEND_FAIL_is_expected)
     transport::TransportMessage* pMessage                             = nullptr;
 
     _udsDispatcher.send(*pRequest, &_messageProcessedListener);
-
-    EXPECT_CALL(fAsyncMock, schedule(_, _, _, _, _)).Times(2);
 
     EXPECT_CALL(_sessionManager, getActiveSession())
         .WillRepeatedly(ReturnRef(DiagSession::APPLICATION_DEFAULT_SESSION()));
@@ -809,8 +594,6 @@ TEST_F(
         .WillOnce(DoAll(
             SetArgReferee<5>(pMessage),
             Return(transport::ITransportMessageProvider::ErrorCode::TPMSG_OK)));
-
-    EXPECT_CALL(fAsyncMock, schedule(_, _, _, _, _)).Times(2);
 
     EXPECT_CALL(_sessionManager, getActiveSession())
         .WillRepeatedly(ReturnRef(DiagSession::APPLICATION_EXTENDED_SESSION()));
@@ -1098,42 +881,6 @@ TEST_F(
 
     _udsDispatcher.processQueue();
     CONTEXT_EXECUTE;
-}
-
-TEST_F(
-    UdsIntegration,
-    getOutgoingDiagConnection_returns_NO_CONNECTION_AVAILABLE_if_dispatcher_is_disable)
-{
-    uint8_t buffer[]           = {0x22U, 0x01U, 0x01U};
-    uint8_t expectedResponse[] = {0x62U, 0x01U, 0x01U, 0x01U, 0x02U, 0x03U};
-
-    TransportMessageWithBuffer pRequest(0xF1U, 0x10U, buffer, sizeof(expectedResponse));
-
-    _udsDispatcher.disable();
-
-    uds::OutgoingDiagConnection* pCurrentOutgoingConnection = nullptr;
-
-    EXPECT_EQ(
-        IOutgoingDiagConnectionProvider::NO_CONNECTION_AVAILABLE,
-        _udsDispatcher.getOutgoingDiagConnection(
-            TESTER_ID, pCurrentOutgoingConnection, pRequest.get()));
-}
-
-TEST_F(
-    UdsIntegration,
-    getOutgoingDiagConnection_returns_status_value_of_requestOutgoingConnection_if_no_connection_exists)
-{
-    uint8_t buffer[]           = {0x22U, 0x01U, 0x01U};
-    uint8_t expectedResponse[] = {0x62U, 0x01U, 0x01U, 0x01U, 0x02U, 0x03U};
-
-    TransportMessageWithBuffer pRequest(0xF1U, 0x10U, buffer, sizeof(expectedResponse));
-
-    uds::OutgoingDiagConnection* pCurrentOutgoingConnection = nullptr;
-
-    EXPECT_EQ(
-        IOutgoingDiagConnectionProvider::GENERAL_ERROR,
-        _udsDispatcher.getOutgoingDiagConnection(
-            TESTER_ID, pCurrentOutgoingConnection, pRequest.get()));
 }
 
 TEST_F(UdsIntegration, init)

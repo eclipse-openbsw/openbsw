@@ -56,27 +56,6 @@ ESR_NO_INLINE AbstractTransportLayer::ErrorCode DiagDispatcher2::send_local(
     TransportMessage& transportMessage,
     ITransportMessageProcessedListener* const pNotificationListener)
 {
-    for (DiagConnectionManager::ManagedOutgoingDiagConnectionList::iterator itr
-         = fConnectionManager.getReleasedConnections().begin();
-         itr != fConnectionManager.getReleasedConnections().end();
-         ++itr)
-    { // is this is a request sent by one of our outgoing connections?
-        ITransportMessageProcessedListener* const pListener = itr.operator->();
-        if (pListener == pNotificationListener)
-        {
-            ITransportMessageListener::ReceiveResult const status
-                = getProvidingListenerHelper().messageReceived(
-                    fConfiguration.DiagBusId, transportMessage, pNotificationListener);
-            if (status == ITransportMessageListener::ReceiveResult::RECEIVED_NO_ERROR)
-            {
-                return AbstractTransportLayer::ErrorCode::TP_OK;
-            }
-            else
-            {
-                return AbstractTransportLayer::ErrorCode::TP_SEND_FAIL;
-            }
-        }
-    }
     auto connection = fConfiguration.findIncomingDiagConnection(
         [pNotificationListener](void* const conn) -> bool
         { return reinterpret_cast<void*>(pNotificationListener) == conn; });
@@ -213,23 +192,10 @@ void DiagDispatcher2::processQueue()
             TransportJob* const pSendJob = &fConfiguration.SendJobQueue.front();
             fConfiguration.SendJobQueue.pop();
             lock.unlock();
-            TransportMessage* const pTransportMessage = pSendJob->getTransportMessage();
-
-            ManagedOutgoingDiagConnection* const pOutgoingConnection
-                = fConnectionManager.getExpectingConnection(*pTransportMessage);
-            if (pOutgoingConnection != nullptr)
-            {
-                pOutgoingConnection->responseReceived(
-                    *pTransportMessage, pSendJob->getProcessedListener());
-            }
-            else
-            {
-                dispatchIncomingRequest(*pSendJob);
-            }
+            dispatchIncomingRequest(*pSendJob);
             lock.lock();
         }
     }
-    fConnectionManager.processPendingResponses();
 }
 
 uint8_t DiagDispatcher2::dispatchTriggerEventRequest(TransportMessage& tmsg)
@@ -404,24 +370,6 @@ bool DiagDispatcher2::isNegativeResponse(TransportMessage const& transportMessag
 bool DiagDispatcher2::isFromValidSender(TransportMessage const& transportMessage)
 {
     return TransportConfiguration::isFromTester(transportMessage);
-}
-
-IOutgoingDiagConnectionProvider::ErrorCode DiagDispatcher2::getOutgoingDiagConnection(
-    uint16_t const targetId,
-    OutgoingDiagConnection*& pConnection,
-    TransportMessage* const pRequestMessage)
-{
-    if (!fEnabled)
-    {
-        return IOutgoingDiagConnectionProvider::NO_CONNECTION_AVAILABLE;
-    }
-    IOutgoingDiagConnectionProvider::ErrorCode const status
-        = fConnectionManager.requestOutgoingConnection(targetId, pConnection, pRequestMessage);
-    if (pConnection != nullptr)
-    {
-        Logger::debug(UDS, "Opened outgoing diag connection to target 0x%x", targetId);
-    }
-    return status;
 }
 
 void DiagDispatcher2::trigger() { ::async::execute(fConfiguration.Context, fAsyncProcessQueue); }

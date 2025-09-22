@@ -6,7 +6,6 @@
 #include "transport/TransportJob.h"
 #include "uds/UdsConfig.h"
 #include "uds/connection/IncomingDiagConnection.h"
-#include "uds/connection/ManagedOutgoingDiagConnection.h"
 
 #include <etl/algorithm.h>
 #include <etl/intrusive_list.h>
@@ -27,9 +26,7 @@ class AbstractDiagnosisConfiguration
 {
 public:
     using ManagedIncomingDiagConnectionPool = ::etl::ipool;
-    using ManagedOutgoingDiagConnectionList
-        = ::etl::intrusive_list<ManagedOutgoingDiagConnection, ::etl::bidirectional_link<0>>;
-    using TransportJobQueue = ::etl::iqueue<transport::TransportJob>;
+    using TransportJobQueue                 = ::etl::iqueue<transport::TransportJob>;
 
     /**
      * Constructor
@@ -39,7 +36,6 @@ public:
      * a diagnosis layer may also receive requests that are broadcasted within
      * the system.
      * @param   busId   The diagnosis layers BusId.
-     * @param   activateOutgoingPending Flag to enable response pending responses
      * being sent automatically by an IncomingDiagConnection.
      * @param   copyFunctionalRequests  Copy functional requests before processing.
      * To keep the default behaviour use 'true' here, otherwise it is up to the
@@ -51,20 +47,17 @@ public:
         uint16_t const broadcastAddress,
         uint8_t const busId,
         uint16_t const maxResponsePayloadSize,
-        bool const activateOutgoingPending,
         bool const acceptAllRequests,
         bool const copyFunctionalRequests,
         ManagedIncomingDiagConnectionPool& incomingPool,
         TransportJobQueue& sendJobQueue,
         ::async::ContextType const context)
     : IncomingDiagConnectionPool(incomingPool)
-    , OutgoingDiagConnections()
     , SendJobQueue(sendJobQueue)
     , DiagAddress(diagAddress)
     , BroadcastAddress(broadcastAddress)
     , MaxResponsePayloadSize(maxResponsePayloadSize)
     , DiagBusId(busId)
-    , ActivateOutgoingPending(activateOutgoingPending)
     , AcceptAllRequests(acceptAllRequests)
     , CopyFunctionalRequests(copyFunctionalRequests)
     , Context(context)
@@ -74,7 +67,6 @@ private:
     ManagedIncomingDiagConnectionPool& IncomingDiagConnectionPool;
 
 public:
-    ManagedOutgoingDiagConnectionList OutgoingDiagConnections;
     TransportJobQueue& SendJobQueue;
 
 #ifdef IS_VARIANT_HANDLING_NEEDED
@@ -145,37 +137,18 @@ public:
      * gets destroyed when this function is called.
      */
     void clearIncomingDiagConnections() { IncomingDiagConnectionPool.release_all(); }
-
-protected:
-    void init(
-        ManagedOutgoingDiagConnection* const outgoingConnections,
-        TransportJobQueue** const responseQueues,
-        uint8_t const numberOfOutgoingConnections)
-    {
-        for (uint8_t i = 0U; i < numberOfOutgoingConnections; ++i)
-        {
-            outgoingConnections[i].setResponseQueue(*responseQueues[i]);
-            OutgoingDiagConnections.push_back(outgoingConnections[i]);
-        }
-    }
 };
 
 /**
  * Configuration for a diagnosis layer
  * @tparam  NUM_INCOMING_CONNECTIONS    number of incoming connections that are
  * handled by the layer (i.e. simultaneous requests from outside to the layer)
- * @tparam  NUM_OUTGOING_CONNECTIONS    number of outgoing connections provided
- * by the layer (i.e. number of simultaneous request that applications may
- * use to send requests
  * @tparam  MAX_NUM_INCOMING_MESSAGES   this parameter specifies the maximum
  * number of TransportMessages that can be queued inside the diagnosis
  * layer. For a functional request this number should equal the number of
  * TransportMessages available in the system.
  */
-template<
-    uint8_t NUM_INCOMING_CONNECTIONS,
-    uint8_t NUM_OUTGOING_CONNECTIONS,
-    uint8_t MAX_NUM_INCOMING_MESSAGES>
+template<uint8_t NUM_INCOMING_CONNECTIONS, uint8_t MAX_NUM_INCOMING_MESSAGES>
 class DiagnosisConfiguration : public AbstractDiagnosisConfiguration
 {
 public:
@@ -187,7 +160,6 @@ public:
         uint16_t const broadcastAddress,
         uint8_t const busId,
         uint16_t const maxResponsePayloadSize,
-        bool const activateOutgoingPending,
         bool const acceptAllRequests,
         bool const copyFunctionalRequests,
         ::async::ContextType const context)
@@ -196,35 +168,18 @@ public:
         broadcastAddress,
         busId,
         maxResponsePayloadSize,
-        activateOutgoingPending,
         acceptAllRequests,
         copyFunctionalRequests,
         fIncomingDiagConnectionPool,
         fSendJobQueue,
         context)
     , fIncomingDiagConnectionPool()
-    , fOutgoingDiagConnections()
     , fSendJobQueue()
-    , fResponseQueues()
-    {
-        // Because we must not use fResponseQueues polymorphical, i.e. passing
-        // it as an array of ::etl::iqueue to AbstractDiagnosisConfiguration
-        // we need to convert it first
-        ::etl::iqueue<transport::TransportJob>* baseQueues[NUM_OUTGOING_CONNECTIONS];
-        for (uint8_t i = 0U; i < NUM_OUTGOING_CONNECTIONS; ++i)
-        {
-            baseQueues[i] = &fResponseQueues[i];
-        }
-        AbstractDiagnosisConfiguration::init(
-            fOutgoingDiagConnections, baseQueues, NUM_OUTGOING_CONNECTIONS);
-    }
+    {}
 
 private:
     ::etl::pool<IncomingDiagConnection, NUM_INCOMING_CONNECTIONS> fIncomingDiagConnectionPool;
-    ManagedOutgoingDiagConnection fOutgoingDiagConnections[NUM_OUTGOING_CONNECTIONS];
     ::etl::queue<transport::TransportJob, MAX_NUM_INCOMING_MESSAGES> fSendJobQueue;
-    ::etl::queue<transport::TransportJob, MAX_NUM_INCOMING_MESSAGES>
-        fResponseQueues[NUM_OUTGOING_CONNECTIONS];
 };
 
 } // namespace uds

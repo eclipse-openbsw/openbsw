@@ -381,12 +381,11 @@ TEST_F(
 
     DiagJobRoot fDiagJobRoot;
 
-    DiagnosisConfiguration<1, 2, 10> udsConfiguration(
+    DiagnosisConfiguration<1, 10> udsConfiguration(
         0x10U,
         0xDFU,
         0u,
         transport::TransportConfiguration::DIAG_PAYLOAD_SIZE,
-        true,
         false,
         true,
         static_cast<::async::ContextType>(1U));

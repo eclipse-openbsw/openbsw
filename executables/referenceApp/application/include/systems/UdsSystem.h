@@ -81,7 +81,7 @@ private:
     DiagJobRoot _jobRoot;
     DiagnosticSessionControl _diagnosticSessionControl;
     CommunicationControl _communicationControl;
-    DiagnosisConfiguration<5, 1, 16> _udsConfiguration;
+    DiagnosisConfiguration<5, 16> _udsConfiguration;
     DiagDispatcher2 _udsDispatcher;
     uds::declare::AsyncDiagHelper<5> _asyncDiagHelper;
 
