@@ -67,6 +67,9 @@ jobs:
             mv line_coverage_badge.svg coverage_badges/
             mv function_coverage_badge.svg coverage_badges/
             zip -r coverage_badges.zip coverage_badges
+            mkdir memory-check
+            mv cmake-build-unit-tests/Testing memory-check
+            zip -r memory-check.zip memory-check
 
     - name: Upload code coverage artifact
       uses: actions/upload-artifact@v4
@@ -79,6 +82,12 @@ jobs:
       with:
         name: coverage_badges
         path: coverage_badges.zip
+
+    - name: Upload Memory Check log
+      uses: actions/upload-artifact@v4
+      with:
+        name: memory-check
+        path: memory-check.zip
 
     - name: Copy updated sccache out of Docker volume
       run: |

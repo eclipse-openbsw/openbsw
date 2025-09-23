@@ -23,6 +23,7 @@ def build_with_cmake():
 
 def run_tests():
     subprocess.run(["ctest", "--test-dir", "cmake-build-unit-tests", "-j4", "--output-on-failure"], check=True)
+    subprocess.run(["ctest", "--test-dir", "cmake-build-unit-tests","-T", "memcheck", "-j4", "--output-on-failure"], check=True)
 
 def generate_coverage():
     # Capture coverage data
