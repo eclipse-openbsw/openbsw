@@ -80,7 +80,7 @@ namespace systems
 {
 
 EthernetSystem::EthernetSystem(
-    ::async::ContextType const context, ::ethernet::IEthernetDriverSystem& ethernetSystem)
+    ::async::ContextType const context, ::ethernet::IEthernetSystem& ethernetSystem)
 : ethernetDriverSystem(ethernetSystem), _context(context), _executeCounter(0)
 {
 #if LWIP_NETIF_SPECIFIC_TTL

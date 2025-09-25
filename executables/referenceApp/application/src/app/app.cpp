@@ -45,19 +45,25 @@
 #ifdef PLATFORM_SUPPORT_CAN
 #include <systems/ICanSystem.h>
 
+namespace platform
+{
 namespace systems
 {
 extern ::can::ICanSystem& getCanSystem();
 } // namespace systems
+} // namespace platform
 #endif
 
 #ifdef PLATFORM_SUPPORT_ETHERNET
-#include <systems/IEthernetDriverSystem.h>
+#include <systems/IEthernetSystem.h>
 
+namespace platform
+{
 namespace systems
 {
-extern ::ethernet::IEthernetDriverSystem& getEthernetSystem();
+extern ::ethernet::IEthernetSystem& getEthernetSystem();
 } // namespace systems
+} // namespace platform
 #endif
 
 #include <platform/estdint.h>
@@ -212,12 +218,12 @@ void startApp()
     /* runlevel 5 */
 #ifdef PLATFORM_SUPPORT_CAN
     lifecycleManager.addComponent(
-        "docan", doCanSystem.create(*transportSystem, ::systems::getCanSystem(), TASK_CAN), 5U);
+        "docan", doCanSystem.create(*transportSystem, ::platform::systems::getCanSystem(), TASK_CAN), 5U);
 #endif
 
 #ifdef PLATFORM_SUPPORT_ETHERNET
     lifecycleManager.addComponent(
-        "ethernet", ethernetSystem.create(TASK_ETHERNET, ::systems::getEthernetSystem()), 5U);
+        "ethernet", ethernetSystem.create(TASK_ETHERNET, ::platform::systems::getEthernetSystem()), 5U);
 #endif
 
 #ifdef PLATFORM_SUPPORT_STORAGE
@@ -246,7 +252,7 @@ void startApp()
             TASK_DEMO,
             lifecycleManager
 #ifdef PLATFORM_SUPPORT_CAN
-            , ::systems::getCanSystem()
+            , ::platform::systems::getCanSystem()
 #endif
 #ifdef PLATFORM_SUPPORT_STORAGE
             , (*storageSystem).getStorage()

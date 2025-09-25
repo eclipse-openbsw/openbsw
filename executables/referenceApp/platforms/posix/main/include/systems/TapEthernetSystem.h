@@ -6,13 +6,13 @@
 
 #include <ethernet/EthernetLogger.h>
 #include <lifecycle/AsyncLifecycleComponent.h>
-#include <systems/IEthernetDriverSystem.h>
+#include <systems/IEthernetSystem.h>
 
 namespace systems
 {
 
 class TapEthernetSystem final
-: public ::ethernet::IEthernetDriverSystem
+: public ::ethernet::IEthernetSystem
 , public ::lifecycle::AsyncLifecycleComponent
 , public ::async::IRunnable
 {
