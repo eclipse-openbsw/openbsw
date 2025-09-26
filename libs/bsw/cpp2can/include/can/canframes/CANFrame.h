@@ -9,7 +9,7 @@
 
 #include "can/canframes/CanId.h"
 
-#include <util/estd/assert.h>
+#include <etl/error_handler.h>
 
 #include <platform/estdint.h>
 
@@ -178,7 +178,9 @@ inline uint8_t const& CANFrame::operator[](uint8_t const pos) const { return _pa
 
 inline void CANFrame::setPayload(uint8_t const* const payload, uint8_t const length)
 {
-    estd_assert(length <= MAX_FRAME_LENGTH);
+    ETL_ASSERT(
+        length <= MAX_FRAME_LENGTH,
+        ETL_ERROR_GENERIC("can frame length must be smaller than maximum length"));
 
     (void)memcpy(_payload, payload, static_cast<size_t>(length));
     _payloadLength = length;

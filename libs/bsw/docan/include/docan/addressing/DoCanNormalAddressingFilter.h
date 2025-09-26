@@ -5,9 +5,11 @@
 #include "docan/addressing/IDoCanAddressConverter.h"
 
 #include <can/filter/BitFieldFilter.h>
-#include <etl/span.h>
 #include <util/format/StringWriter.h>
 #include <util/stream/StringBufferOutputStream.h>
+
+#include <etl/error_handler.h>
+#include <etl/span.h>
 
 #include <platform/estdint.h>
 
@@ -140,7 +142,9 @@ void DoCanNormalAddressingFilter<DataLinkLayer, AddressEntry>::init(
     AddressEntrySliceType const addressEntries, CodecsSliceType const codecEntries)
 {
     // Address entries must be non-zero in size
-    estd_assert(addressEntries.size() != 0);
+    ETL_ASSERT(
+        addressEntries.size() != 0, ETL_ERROR_GENERIC("list of addresses must not be empty"));
+
     _entries                                                          = addressEntries;
     _codecEntries                                                     = codecEntries;
     typename AddressEntrySliceType::iterator firstExtendedEntryTypeIt = _entries.end();
@@ -152,7 +156,9 @@ void DoCanNormalAddressingFilter<DataLinkLayer, AddressEntry>::init(
         DataLinkAddressType const canReceptionId = it->_canReceptionId;
         if (it != _entries.begin())
         {
-            estd_assert(prevCanReceptionId < canReceptionId);
+            ETL_ASSERT(
+                prevCanReceptionId < canReceptionId,
+                ETL_ERROR_GENERIC("can reception id must be monotonically increasing"));
         }
         prevCanReceptionId = canReceptionId;
         if (::can::CanId::isBase(canReceptionId))
@@ -177,7 +183,9 @@ void DoCanNormalAddressingFilter<DataLinkLayer, AddressEntry>::init(
 
     for (; it != _entries.end(); ++it)
     {
-        estd_assert(!::can::CanId::isValid(it->_canReceptionId));
+        ETL_ASSERT(
+            !::can::CanId::isValid(it->_canReceptionId),
+            ETL_ERROR_GENERIC("can reception id must be valid"));
     }
 }
 

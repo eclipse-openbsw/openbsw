@@ -13,9 +13,10 @@
 #include "uds/connection/NestedDiagRequest.h"
 #include "uds/connection/PositiveResponse.h"
 #include "uds/session/IDiagSessionManager.h"
-#include "util/estd/assert.h"
 
 #include <async/Async.h>
+
+#include <etl/error_handler.h>
 #include <etl/span.h>
 
 using ::transport::AbstractTransportLayer;
@@ -29,7 +30,7 @@ namespace uds
 
 void IncomingDiagConnection::addIdentifier()
 {
-    estd_assert(!fIsResponseActive);
+    ETL_ASSERT(!fIsResponseActive, ETL_ERROR_GENERIC("response must not be active"));
     if (fNestedRequest != nullptr)
     {
         fNestedRequest->addIdentifier();
@@ -176,9 +177,12 @@ DiagReturnCode::Type IncomingDiagConnection::startNestedRequest(
     uint8_t const* const request,
     uint16_t const requestLength)
 {
-    estd_assert(fNestedRequest == nullptr);
+    ETL_ASSERT(
+        fNestedRequest == nullptr, ETL_ERROR_GENERIC("a nested request must not run already"));
     (void)releaseRequestGetResponse();
-    estd_assert(requestLength < fpResponseMessage->getBufferLength());
+    ETL_ASSERT(
+        requestLength < fpResponseMessage->getBufferLength(),
+        ETL_ERROR_GENERIC("request length must be smaller than supported maximum"));
     fIdentifiers.resize(nestedRequest.fPrefixLength);
     nestedRequest.init(
         sender,
@@ -580,7 +584,7 @@ void IncomingDiagConnection::setSourceId(TransportMessage& transportMessage) con
                 UDS,
                 "IncomingDiagConnection::setSourceId(): "
                 "fpDiagConnectionManager == nullptr!");
-            estd_assert(fpDiagConnectionManager != nullptr);
+            ETL_ASSERT_FAIL(ETL_ERROR_GENERIC("diagnostic connection manager must not be null"));
         }
         transportMessage.setSourceId(fpDiagConnectionManager->getSourceDiagId());
     }
@@ -654,10 +658,8 @@ void IncomingDiagConnection::terminate()
     if (nullptr == fpDiagConnectionManager)
     {
         Logger::critical(
-            UDS,
-            "IncomingDiagConnection::terminate(): fpDiagConnectionManager == "
-            "nullptr!");
-        estd_assert(fpDiagConnectionManager != nullptr);
+            UDS, "IncomingDiagConnection::terminate(): fpDiagConnectionManager == nullptr!");
+        ETL_ASSERT_FAIL(ETL_ERROR_GENERIC("diagnostic connection manager must not be null"));
     }
     fConnectionTerminationIsPending = false;
     fpSender                        = nullptr;

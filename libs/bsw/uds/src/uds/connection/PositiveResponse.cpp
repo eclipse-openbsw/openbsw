@@ -2,9 +2,9 @@
 
 #include "uds/connection/PositiveResponse.h"
 
+#include <etl/error_handler.h>
 #include <etl/memory.h>
 #include <etl/unaligned_type.h>
-#include <util/estd/assert.h>
 
 #include <cstring>
 
@@ -79,7 +79,7 @@ size_t PositiveResponse::increaseDataLength(size_t const length)
         // because we have exposed the pointer to the buffer by having a public getData() method!
         // The system is now in potentially in an unpredictable state. Therefore, asserting here is
         // only fair!
-        estd_assert(false);
+        ETL_ASSERT_FAIL(ETL_ERROR_GENERIC("length must not be greater than available data length"));
         return 0U;
     }
     fBuffer.advance(length);

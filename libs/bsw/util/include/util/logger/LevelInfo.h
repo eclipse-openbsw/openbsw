@@ -8,7 +8,8 @@
 
 #include "util/format/AttributedString.h"
 
-#include <util/estd/assert.h>
+#include <etl/error_handler.h>
+
 // Currently we still define the enum value _DEBUG to make the levels compliant to the former Logger
 // levels. Unfortunately on Visual Studio this is a predefined macro which we will undefine here
 // until we can remove support of the deprecated Logger levels starting with underscore.
@@ -88,7 +89,7 @@ public:
      */
     ::util::format::AttributedString getName() const
     {
-        estd_assert(_plainInfo != nullptr);
+        ETL_ASSERT(_plainInfo != nullptr, ETL_ERROR_GENERIC("info must not be null"));
         return ::util::format::AttributedString(_plainInfo->_nameInfo);
     }
 
@@ -97,7 +98,7 @@ public:
      */
     Level getLevel() const
     {
-        estd_assert(_plainInfo != nullptr);
+        ETL_ASSERT(_plainInfo != nullptr, ETL_ERROR_GENERIC("info must not be null"));
         return _plainInfo->_level;
     }
 
@@ -107,7 +108,7 @@ public:
      */
     char const* getPlainInfoString() const
     {
-        estd_assert(_plainInfo != nullptr);
+        ETL_ASSERT(_plainInfo != nullptr, ETL_ERROR_GENERIC("info must not be null"));
         return _plainInfo->_nameInfo._string;
     }
 

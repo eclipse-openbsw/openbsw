@@ -4,7 +4,8 @@
 
 #include <async/Async.h>
 #include <lifecycle/ILifecycleManager.h>
-#include <util/estd/assert.h>
+
+#include <etl/error_handler.h>
 
 namespace
 {
@@ -79,7 +80,7 @@ void LifecycleControlCommand::executeCommand(::util::command::CommandContext& co
         }
         case ID_ASSERT:
         {
-            estd_assert(false);
+            ETL_ASSERT_FAIL(ETL_ERROR_GENERIC("requested assert"));
             break;
         }
         default:

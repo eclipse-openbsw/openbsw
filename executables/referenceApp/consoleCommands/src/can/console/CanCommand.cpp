@@ -10,7 +10,6 @@ using namespace ::util::command;
 using namespace ::util::format;
 using namespace ::util::stream;
 using namespace ::util::string;
-using namespace ::estd;
 
 namespace can
 {

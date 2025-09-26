@@ -9,8 +9,8 @@
 
 #include <etl/array.h>
 #include <etl/delegate.h>
+#include <etl/error_handler.h>
 #include <etl/span.h>
-#include <util/estd/assert.h>
 
 namespace runtime
 {
@@ -73,7 +73,11 @@ public:
     {
         auto const srcEntries = src.getEntries();
         size_t const srcSize  = srcEntries.size();
-        estd_assert(_entries.size() >= srcEntries.size());
+
+        ETL_ASSERT(
+            srcEntries.size() <= _entries.size(),
+            ETL_ERROR_GENERIC("number of entries in source must fit into this container"));
+
         for (size_t idx = 0U; idx < srcSize; ++idx)
         {
             _entries[idx] = srcEntries[idx];

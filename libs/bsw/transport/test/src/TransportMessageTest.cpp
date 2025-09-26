@@ -5,7 +5,6 @@
 #include "transport/DataProgressListenerMock.h"
 
 #include <etl/span.h>
-#include <util/estd/assert.h>
 
 #include <gmock/gmock.h>
 
