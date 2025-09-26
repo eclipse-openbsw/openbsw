@@ -8,7 +8,6 @@
 #include "docan/datalink/DoCanFrameCodecConfigPresets.h"
 
 #include <can/canframes/CanId.h>
-#include <util/estd/assert.h>
 
 #include <gmock/gmock.h>
 

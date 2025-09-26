@@ -9,6 +9,8 @@
 #include "uds/connection/IncomingDiagConnection.h"
 #include "uds/session/IDiagSessionManager.h"
 
+#include <etl/error_handler.h>
+
 #include <cstring>
 
 namespace uds
@@ -243,7 +245,7 @@ void AbstractDiagJob::removeAbstractDiagJob(AbstractDiagJob& job)
 
 IDiagSessionManager& AbstractDiagJob::getDiagSessionManager()
 {
-    estd_assert(sfpSessionManager);
+    ETL_ASSERT(sfpSessionManager != nullptr, ETL_ERROR_GENERIC("session manager must not be null"));
     return *sfpSessionManager;
 }
 
@@ -251,7 +253,7 @@ DiagJobRoot* AbstractDiagJob::getDiagJobRoot() { return sfpDiagJobRoot; }
 
 IDiagSessionManager const& AbstractDiagJob::getDiagSessionManager() const
 {
-    estd_assert(sfpSessionManager);
+    ETL_ASSERT(sfpSessionManager != nullptr, ETL_ERROR_GENERIC("session manager must not be null"));
     return *sfpSessionManager;
 }
 

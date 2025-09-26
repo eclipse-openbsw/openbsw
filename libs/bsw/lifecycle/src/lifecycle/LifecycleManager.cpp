@@ -4,7 +4,7 @@
 
 #include "lifecycle/LifecycleLogger.h"
 
-#include <util/estd/assert.h>
+#include <etl/error_handler.h>
 
 namespace lifecycle
 {
@@ -28,10 +28,13 @@ LifecycleManager::LifecycleManager(
 void LifecycleManager::addComponent(
     char const* const name, ILifecycleComponent& component, uint8_t const level)
 {
-    estd_assert(_componentCount < _componentInfos.size());
-    estd_assert(level > 0U);
-    estd_assert(level < _levelIndices.size());
-    estd_assert(level >= _levelCount);
+    ETL_ASSERT(
+        _componentCount < _componentInfos.size(),
+        ETL_ERROR_GENERIC("not too many components must be added"));
+    ETL_ASSERT(level > 0U, ETL_ERROR_GENERIC("level must be greater than zero"));
+    ETL_ASSERT(
+        level < _levelIndices.size(), ETL_ERROR_GENERIC("level must be monotonically increasing"));
+    ETL_ASSERT(level >= _levelCount, ETL_ERROR_GENERIC("level must not be greater than the count"));
 
     while (_levelCount < level)
     {
@@ -40,7 +43,9 @@ void LifecycleManager::addComponent(
             = _levelIndices[static_cast<size_t>(_levelCount) - 1U];
     }
 
-    estd_assert(getLevelComponentCount(level) < _componentTransitionExecutors.max_size());
+    ETL_ASSERT(
+        getLevelComponentCount(level) < _componentTransitionExecutors.max_size(),
+        ETL_ERROR_GENERIC("transition executors must be big enough"));
 
     auto& componentInfo      = _componentInfos[static_cast<size_t>(_componentCount)];
     componentInfo._name      = name;

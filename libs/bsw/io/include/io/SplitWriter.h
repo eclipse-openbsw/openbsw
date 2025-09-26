@@ -4,9 +4,9 @@
 
 #include "io/IWriter.h"
 
+#include <etl/error_handler.h>
 #include <etl/memory.h>
 #include <etl/span.h>
-#include <util/estd/assert.h>
 
 #include <array>
 #include <limits>
@@ -89,13 +89,13 @@ SplitWriter<N>::SplitWriter(::etl::span<IWriter*, N> const destinations)
 : drops(), sent(), _destinations(destinations), _buffer(), _bufNum(INVALID_BUF)
 {
     static_assert(N != 0, "Split writers cannot have size 0.");
-    estd_assert(_destinations[0] != nullptr);
+    ETL_ASSERT(_destinations[0] != nullptr, ETL_ERROR_GENERIC("destination must not be null"));
     auto const max = _destinations[0]->maxSize();
     for (size_t i = 1; i < N; i++)
     {
-        estd_assert(_destinations[i] != nullptr);
+        ETL_ASSERT(_destinations[i] != nullptr, ETL_ERROR_GENERIC("destination must not be null"));
         auto const maxi = _destinations[i]->maxSize();
-        estd_assert(maxi == max);
+        ETL_ASSERT(maxi == max, ETL_ERROR_GENERIC("max size must be all equal"));
     }
 }
 

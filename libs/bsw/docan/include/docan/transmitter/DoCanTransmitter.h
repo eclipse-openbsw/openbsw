@@ -15,12 +15,14 @@
 #include <async/Types.h>
 #include <async/util/MemberCall.h>
 #include <common/busid/BusId.h>
-#include <etl/intrusive_list.h>
-#include <etl/ipool.h>
-#include <etl/span.h>
 #include <interrupts/SuspendResumeAllInterruptsScopedLock.h>
 #include <transport/AbstractTransportLayer.h>
 #include <util/logger/Logger.h>
+
+#include <etl/error_handler.h>
+#include <etl/intrusive_list.h>
+#include <etl/ipool.h>
+#include <etl/span.h>
 
 #include <algorithm>
 #include <limits>
@@ -477,9 +479,10 @@ void DoCanTransmitter<DataLinkLayer>::handleResult(
             }
             messageTransmitter.release();
             // Ensure we don't wrap _releasedTransmitterCount back to 0
-            estd_assert(
+            ETL_ASSERT(
                 _releasedTransmitterCount
-                != std::numeric_limits<decltype(_releasedTransmitterCount)>::max());
+                    != std::numeric_limits<decltype(_releasedTransmitterCount)>::max(),
+                ETL_ERROR_GENERIC("transmitter count must not wrap"));
             ++_releasedTransmitterCount;
             _switchContext = true;
         }
@@ -577,7 +580,8 @@ void DoCanTransmitter<DataLinkLayer>::resetTimer(MessageTransmitterType& message
     if (messageTransmitter.isSendingConsecutiveFrames())
     {
         // Ensure _tickNeededCount won't wrap around
-        estd_assert(_sendingConsecutiveFramesCount != 0);
+        ETL_ASSERT(
+            _sendingConsecutiveFramesCount != 0, ETL_ERROR_GENERIC("frame count must not wrap"));
         --_sendingConsecutiveFramesCount;
     }
 
@@ -610,9 +614,10 @@ void DoCanTransmitter<DataLinkLayer>::resetTimer(MessageTransmitterType& message
     if (messageTransmitter.isSendingConsecutiveFrames())
     {
         // Ensure _tickNeededCount won't wrap around
-        estd_assert(
+        ETL_ASSERT(
             _sendingConsecutiveFramesCount
-            != std::numeric_limits<decltype(_sendingConsecutiveFramesCount)>::max());
+                != std::numeric_limits<decltype(_sendingConsecutiveFramesCount)>::max(),
+            ETL_ERROR_GENERIC("frame count must not wrap"));
         ++_sendingConsecutiveFramesCount;
     }
 }
@@ -693,7 +698,10 @@ template<class DataLinkLayer>
 void DoCanTransmitter<DataLinkLayer>::setRemoveLock()
 {
     // Ensure the _removeLockCount increment won't wrap around
-    estd_assert(_removeLockCount != std::numeric_limits<decltype(_removeLockCount)>::max());
+    ETL_ASSERT(
+        _removeLockCount != std::numeric_limits<decltype(_removeLockCount)>::max(),
+        ETL_ERROR_GENERIC("lock count must not wrap"));
+
     ::interrupts::SuspendResumeAllInterruptsScopedLock const lock;
     ++_removeLockCount;
 }
@@ -707,7 +715,8 @@ void DoCanTransmitter<DataLinkLayer>::releaseRemoveLock(bool const remove)
     MessageTransmitterListIterator removedIt = removedTransmitters.begin();
     {
         // Ensure the _removeLockCount decrement won't wrap around
-        estd_assert(_removeLockCount != 0);
+        ETL_ASSERT(_removeLockCount != 0, ETL_ERROR_GENERIC("lock count must not wrap"));
+
         ::interrupts::SuspendResumeAllInterruptsScopedLock const lock;
         --_removeLockCount;
         if (remove && (_removeLockCount == 0U))

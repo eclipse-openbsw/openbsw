@@ -13,12 +13,14 @@
 #include <async/Types.h>
 #include <async/util/MemberCall.h>
 #include <common/busid/BusId.h>
-#include <etl/intrusive_list.h>
-#include <etl/ipool.h>
-#include <etl/span.h>
 #include <interrupts/SuspendResumeAllInterruptsScopedLock.h>
 #include <transport/ITransportMessageProvidingListener.h>
 #include <util/logger/Logger.h>
+
+#include <etl/error_handler.h>
+#include <etl/intrusive_list.h>
+#include <etl/ipool.h>
+#include <etl/span.h>
 
 #include <limits>
 
@@ -204,12 +206,16 @@ void DoCanReceiver<DataLinkLayer>::init()
     // cause serious problems for some of our projects (HW getting locked due to cyclic resets)
     // Ensure the block pool block size >= MessageReceiverType size, otherwise
     // _maxFirstFrameDataSize will be an invalid garbage value
-    estd_assert(_messageReceiverPool.max_item_size() >= sizeof(MessageReceiverType));
+    ETL_ASSERT(
+        _messageReceiverPool.max_item_size() >= sizeof(MessageReceiverType),
+        ETL_ERROR_GENERIC("message receiver object size must fit into the receiver pool"));
+
     // Ensure the following subtraction is less than FrameSizeType's max value, otherwise
     // _maxFirstFrameDataSize will be an invalid garbage value
-    estd_assert(
+    ETL_ASSERT(
         _messageReceiverPool.max_item_size() - sizeof(MessageReceiverType)
-        < std::numeric_limits<FrameSizeType>::max());
+            < std::numeric_limits<FrameSizeType>::max(),
+        ETL_ERROR_GENERIC("message receiver object size must fit"));
 }
 
 template<class DataLinkLayer>
@@ -668,8 +674,9 @@ ReceiveResult DoCanReceiver<DataLinkLayer>::release(MessageReceiverType& message
         }
     }
     // Ensure we don't wrap _releasedReceiverCount back to 0
-    estd_assert(
-        _releasedReceiverCount != std::numeric_limits<decltype(_releasedReceiverCount)>::max());
+    ETL_ASSERT(
+        _releasedReceiverCount != std::numeric_limits<decltype(_releasedReceiverCount)>::max(),
+        ETL_ERROR_GENERIC("receive count must not wrap"));
     ++_releasedReceiverCount;
     return ReceiveResult(false);
 }
@@ -753,7 +760,9 @@ template<class DataLinkLayer>
 void DoCanReceiver<DataLinkLayer>::setRemoveLock()
 {
     // Don't allow _removeLockCount to wrap around
-    estd_assert(_removeLockCount != std::numeric_limits<decltype(_removeLockCount)>::max());
+    ETL_ASSERT(
+        _removeLockCount != std::numeric_limits<decltype(_removeLockCount)>::max(),
+        ETL_ERROR_GENERIC("lock count must not wrap"));
     ::interrupts::SuspendResumeAllInterruptsScopedLock const lock;
     ++_removeLockCount;
 }
@@ -762,7 +771,7 @@ template<class DataLinkLayer>
 void DoCanReceiver<DataLinkLayer>::releaseRemoveLock()
 {
     // Don't allow _removeLockCount to wrap around
-    estd_assert(_removeLockCount != 0);
+    ETL_ASSERT(_removeLockCount != 0, ETL_ERROR_GENERIC("lock count must not wrap"));
     ::interrupts::SuspendResumeAllInterruptsScopedLock const lock;
     --_removeLockCount;
     if ((_removeLockCount == 0U) && (_releasedReceiverCount > 0U))

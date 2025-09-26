@@ -2,8 +2,8 @@
 
 #include "util/EcuIdList.h"
 
+#include <etl/error_handler.h>
 #include <etl/unaligned_type.h>
-#include <util/estd/assert.h>
 
 #include <cstdlib>
 #include <cstring>
@@ -64,14 +64,14 @@ EcuIdList::init(uint8_t* const pData, uint16_t const length, bool const initiali
 EcuId EcuIdList::peek() const
 {
     uint16_t const size = getSize();
-    estd_assert(size > 0U);
+    ETL_ASSERT(size > 0U, ETL_ERROR_GENERIC("size must not be zero"));
     return fpData[static_cast<uint16_t>(2U + static_cast<uint16_t>(size - 1U))];
 }
 
 EcuId EcuIdList::pop_back()
 {
     uint16_t const size = getSize();
-    estd_assert(size > 0U);
+    ETL_ASSERT(size > 0U, ETL_ERROR_GENERIC("size must not be zero"));
     uint16_t const newSize       = static_cast<uint16_t>(size - 1U);
     etl::be_uint16_ext_t{fpData} = newSize;
     return fpData[static_cast<uint16_t>(2U + static_cast<uint16_t>(size - 1U))];
@@ -118,8 +118,10 @@ EcuIdList& EcuIdList::operator=(EcuIdList const& other)
     {
         return *this;
     }
-    estd_assert(fpData != nullptr);
-    estd_assert(fBufferLength >= other.fBufferLength);
+    ETL_ASSERT(fpData != nullptr, ETL_ERROR_GENERIC("buffer data must not be null"));
+    ETL_ASSERT(
+        fBufferLength >= other.fBufferLength,
+        ETL_ERROR_GENERIC("buffer length must be large enough"));
     (void)memcpy(fpData, other.fpData, static_cast<size_t>(other.fBufferLength));
     return *this;
 }

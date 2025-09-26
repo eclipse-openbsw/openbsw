@@ -2,8 +2,6 @@
 
 #include "util/logger/ComponentInfo.h"
 
-#include <util/estd/assert.h>
-
 #include <gtest/gtest.h>
 
 using namespace ::util::logger;

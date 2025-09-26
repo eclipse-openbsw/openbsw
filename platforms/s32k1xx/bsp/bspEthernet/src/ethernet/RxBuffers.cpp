@@ -6,6 +6,8 @@
 #include "interrupts/SuspendResumeAllInterruptsScopedLock.h"
 #include "mcu/mcu.h"
 
+#include <etl/error_handler.h>
+
 using namespace ::util::logger;
 
 namespace ethernet
@@ -14,7 +16,7 @@ namespace ethernet
 uint8_t freeRxDescriptorIndex(
     size_t const descriptorIndex, uint8_t const nextBusy, ::etl::span<pbuf*> const pbufAtIndex)
 {
-    estd_assert(pbufAtIndex.size() != 0L);
+    ETL_ASSERT(pbufAtIndex.size() != 0L, ETL_ERROR_GENERIC("buffer size must not be null"));
 
     auto const pbuf1 = reinterpret_cast<::lwiputils::RxCustomPbuf*>(pbufAtIndex[nextBusy]);
     auto const pbuf2 = reinterpret_cast<::lwiputils::RxCustomPbuf*>(pbufAtIndex[descriptorIndex]);
@@ -51,13 +53,16 @@ void freeCustomPbufHelper(pbuf* const p)
 void RxBuffers::init()
 {
     // initialize receive buffer descriptors
-    estd_assert((RX_BUFFER_SIZE % 4) == 0U);
+    ETL_ASSERT(
+        (RX_BUFFER_SIZE % 4) == 0U, ETL_ERROR_GENERIC("buffer size must be multiple of four"));
     for (size_t i = 0U; i < _descriptors.size(); i++)
     {
         _descriptors[i].status1 = ENET_ERXD_STATUS1_EMPTY(1);
         _descriptors[i].status3 = _descriptors[i].status3 | ENET_ERXD_STATUS3_INT(1);
         _descriptors[i].length  = 0U;
-        estd_assert((reinterpret_cast<uint32_t>(_descriptors[i].data) % 64) == 0U);
+        ETL_ASSERT(
+            (reinterpret_cast<uint32_t>(_descriptors[i].data) % 64) == 0U,
+            ETL_ERROR_GENERIC("descriptor data must 64 byte aligned"));
 
         _descriptors[_descriptors.size() - 1].status1
             = _descriptors[_descriptors.size() - 1].status1 | ENET_ERXD_STATUS1_WRAP(1U);
@@ -69,7 +74,7 @@ void RxBuffers::init()
         pbuf* const p       = pbuf_alloced_custom(
             PBUF_RAW, RX_BUFFER_SIZE, PBUF_REF, &_customPbufs[i].buf, payload, RX_BUFFER_SIZE);
 
-        estd_assert(p);
+        ETL_ASSERT(p != nullptr, ETL_ERROR_GENERIC("pbuf must not be null"));
         _customPbufs[i].driver                   = this;
         _customPbufs[i].buf.custom_free_function = &freeCustomPbufHelper;
         _customPbufs[i].slot                     = &_descriptors[i];

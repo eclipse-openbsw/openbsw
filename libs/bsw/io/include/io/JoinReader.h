@@ -5,8 +5,8 @@
 #include "io/IReader.h"
 
 #include <etl/array.h>
+#include <etl/error_handler.h>
 #include <etl/span.h>
-#include <util/estd/assert.h>
 
 namespace io
 {
@@ -72,13 +72,13 @@ template<size_t N>
 JoinReader<N>::JoinReader(::etl::span<IReader*, N> const& sources)
 : stats(), _sources(sources), _currentPosition(0)
 {
-    estd_assert(_sources[0] != nullptr);
+    ETL_ASSERT(_sources[0] != nullptr, ETL_ERROR_GENERIC("source must not be null"));
     auto const max = _sources[0]->maxSize();
     for (size_t i = 1; i < N; i++)
     {
-        estd_assert(_sources[i] != nullptr);
+        ETL_ASSERT(_sources[i] != nullptr, ETL_ERROR_GENERIC("source must not be null"));
         auto const maxi = _sources[i]->maxSize();
-        estd_assert(maxi == max);
+        ETL_ASSERT(maxi == max, ETL_ERROR_GENERIC("max size must be all equal"));
     }
 }
 
