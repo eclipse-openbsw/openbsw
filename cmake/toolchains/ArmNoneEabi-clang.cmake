@@ -34,7 +34,6 @@ set(CMAKE_SYSROOT
 
 set(_EXE_LINKER_FLAGS
     "-Wl,--start-group \
-        -lc \
         -ldummyhost \
         -lclang_rt.builtins \
     -Wl,--end-group")
