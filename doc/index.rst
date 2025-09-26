@@ -63,9 +63,9 @@ This is how to build and run the unit tests from the root of the workspace:
 
 .. code-block:: bash
 
-   cmake --preset tests-dbg
-   cmake --build --preset tests-dbg --parallel $(nproc)
-   ctest --preset tests-dbg --parallel $(nproc)
+   cmake --preset tests-debug
+   cmake --build --preset tests-debug --parallel $(nproc)
+   ctest --preset tests-debug --parallel $(nproc)
    # if you modified some CMakeLists.txt files in the project don't forget to run:
    cmake-format -i $(find . -name CMakeLists.txt | sed '/3rdparty\/.*\/CMakeLists\.txt/d')
 
