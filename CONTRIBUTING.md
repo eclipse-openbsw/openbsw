@@ -43,6 +43,104 @@ To contribute your work you need to...
 4. Push to the Branch (`git push origin newBranchName`)
 5. Open a Pull Request
 
+### Commit Message Format
+
+We have very precise rules over how our Git commit messages must be formatted.
+This format leads to **easier to read commit history**.
+
+Each commit message consists of a **header**, a **body**, and a **footer**.
+
+```
+<header>
+<BLANK LINE>
+<body>
+<BLANK LINE>
+<footer>
+```
+
+#### Commit Message Header
+
+```
+<type>: <subject line>
+  │            │
+  │            └─⫸ Subject in present tense. Capitalized. No period at the end.
+  │
+  │
+  └─⫸ Commit Type: build|ci|docs|feat|fix|perf|refactor|test|revert|style
+```
+
+The `<type>` and `<subject line>` fields are mandatory.
+
+##### Type
+
+Must be one of the following:
+
+* **build**: Changes that affect the build system 
+* **ci**: Changes to our CI configuration files and scripts 
+* **docs**: Documentation changes
+* **feat**: A new feature
+* **fix**: A bug fix
+* **perf**: A code change that improves performance
+* **refactor**: A code change that neither fixes a bug nor adds a feature
+* **test**: Adding missing tests or correcting existing tests
+* **revert**: To undo previous commits
+* **style**: Changes related to formatting or whitespace adjustments
+
+##### Subject line
+
+Use the subject field to provide a breif description of the change:
+
+* Use the imperative, present tense: "change" not "changed" nor "changes".
+* Stick to plain text in the subject.
+* Limit the subject line to 50 characters.
+* Capitalize the subject line.
+* Do not end the subject line with a period (.).
+* Avoid Overly Generic Commit Messages.
+
+#### Commit Message Body
+
+Explain the motivation for the change in the commit message body. This commit message should
+explain why you are making the change.
+You can include a comparison of the previous behavior with the new behavior in order to
+illustrate the impact of the change.
+It should also wrap up within 72 characters per line. 
+If the subject line is sufficiently descriptive, the body can be optional.
+
+#### Commit Message Footer
+
+The footer section is used for additional information that doesn't fit into the subject or body.
+This can include references to GitHub issues, Jira tickets, and other PRs related discussions.
+A common practice is to include a "Signed-off-by" line in the footer. This line indicates
+who is responsible for the commit and is formatted as follows:
+
+```
+Signed-off-by: Full Name <email@example.com>
+```
+
+#### Good Example for a Commit Message
+
+```
+docs: Create design documentation for main.cpp
+
+- Add high-level overview of the main.cpp file
+- Describe the purpose and functionality of each major function
+- Include UML diagrams to illustrate class relationships
+
+Resolves: ####
+Signed-off-by: Full Name <email@example.com>
+```
+
+#### Revert commits
+
+If the commit reverts a previous commit, it should begin with `revert: `, followed by the header
+of the reverted commit.
+
+The content of the commit message body should contain:
+
+- Information about the SHA ID of the commit being reverted in the following format:
+`This reverts commit <SHA ID>`.
+- A clear description of the reason for reverting the commit message.
+
 ## Eclipse Contributor Agreement
 
 Before your contribution can be accepted by the project team contributors must
