@@ -66,10 +66,9 @@ set(_EXE_LINKER_FLAGS
 set(_ASM_FLAGS "-g -mcpu=cortex-m4")
 
 if (DEFINED CMAKE_CXX_FLAGS)
-    if (NOT DEFINED _CXX_MERGED)
-        set(_CXX_MERGED
-            ON
-            CACHE INTERNAL "")
+    # Check if our toolchain flags are already present
+    string(FIND "${CMAKE_CXX_FLAGS}" "-mcpu=cortex-m4" _TOOLCHAIN_FLAGS_FOUND)
+    if (_TOOLCHAIN_FLAGS_FOUND EQUAL -1)
         set(CMAKE_CXX_FLAGS
             "${_CXX_FLAGS} ${CMAKE_CXX_FLAGS}"
             CACHE STRING "C++ flags" FORCE)
@@ -79,10 +78,9 @@ else ()
 endif ()
 
 if (DEFINED CMAKE_C_FLAGS)
-    if (NOT DEFINED _C_MERGED)
-        set(_C_MERGED
-            ON
-            CACHE INTERNAL "")
+    # Check if our toolchain flags are already present
+    string(FIND "${CMAKE_C_FLAGS}" "-mcpu=cortex-m4" _TOOLCHAIN_FLAGS_FOUND)
+    if (_TOOLCHAIN_FLAGS_FOUND EQUAL -1)
         set(CMAKE_C_FLAGS
             "${_C_FLAGS} ${CMAKE_C_FLAGS}"
             CACHE STRING "C flags" FORCE)
@@ -105,10 +103,10 @@ else ()
 endif ()
 
 if (DEFINED CMAKE_EXE_LINKER_FLAGS)
-    if (NOT DEFINED _EXE_LINKER_MERGED)
-        set(_EXE_LINKER_MERGED
-            ON
-            CACHE INTERNAL "")
+    # Check if our toolchain flags are already present
+    string(FIND "${CMAKE_EXE_LINKER_FLAGS}" "-specs=nano.specs"
+                _LINKER_FLAGS_FOUND)
+    if (_LINKER_FLAGS_FOUND EQUAL -1)
         set(CMAKE_EXE_LINKER_FLAGS
             "${_EXE_LINKER_FLAGS} ${CMAKE_EXE_LINKER_FLAGS}"
             CACHE STRING "linker flags" FORCE)
