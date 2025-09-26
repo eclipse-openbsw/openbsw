@@ -181,7 +181,7 @@ bsp::BspReturnCode Adc<AdcResolution, AdcConfiguration, maxChannels>::startInjec
 
 template<typename AdcResolution, typename AdcConfiguration, uint8_t maxChannels>
 bsp::BspReturnCode
-Adc<AdcResolution, AdcConfiguration, maxChannels>::InjectionsReady(uint32_t timeout)
+Adc<AdcResolution, AdcConfiguration, maxChannels>::InjectionsReady(uint32_t /*timeout*/)
 {
     bool mask0Ready = false;
     bool mask1Ready = false;
