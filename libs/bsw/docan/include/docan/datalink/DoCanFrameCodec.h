@@ -195,6 +195,10 @@ private:
     IDoCanFrameSizeMapper<FrameSizeType> const& _mapper;
 };
 
+template<class DataLinkLayer>
+typename DoCanFrameCodec<DataLinkLayer>::FrameSizeType const
+    DoCanFrameCodec<DataLinkLayer>::EXTENDED_SF_DL_EDGE_SIZE;
+
 /**
  * Inline implementations.
  */
