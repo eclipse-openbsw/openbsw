@@ -1,0 +1,5 @@
+if(EXISTS "/home/jenkins/code_coverage/libs/bsw/lwipSocket/test/gtest/lwipSocketTest[1]_tests.cmake")
+  include("/home/jenkins/code_coverage/libs/bsw/lwipSocket/test/gtest/lwipSocketTest[1]_tests.cmake")
+else()
+  add_test(lwipSocketTest_NOT_BUILT lwipSocketTest_NOT_BUILT)
+endif()

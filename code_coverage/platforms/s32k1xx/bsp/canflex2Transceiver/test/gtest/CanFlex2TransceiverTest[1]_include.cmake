@@ -1,0 +1,5 @@
+if(EXISTS "/home/jenkins/code_coverage/platforms/s32k1xx/bsp/canflex2Transceiver/test/gtest/CanFlex2TransceiverTest[1]_tests.cmake")
+  include("/home/jenkins/code_coverage/platforms/s32k1xx/bsp/canflex2Transceiver/test/gtest/CanFlex2TransceiverTest[1]_tests.cmake")
+else()
+  add_test(CanFlex2TransceiverTest_NOT_BUILT CanFlex2TransceiverTest_NOT_BUILT)
+endif()

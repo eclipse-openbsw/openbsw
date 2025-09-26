@@ -1,0 +1,5 @@
+if(EXISTS "/home/jenkins/code_coverage/executables/referenceApp/safety/safeSupervisor/test/gtest/safeSupervisorTest[1]_tests.cmake")
+  include("/home/jenkins/code_coverage/executables/referenceApp/safety/safeSupervisor/test/gtest/safeSupervisorTest[1]_tests.cmake")
+else()
+  add_test(safeSupervisorTest_NOT_BUILT safeSupervisorTest_NOT_BUILT)
+endif()

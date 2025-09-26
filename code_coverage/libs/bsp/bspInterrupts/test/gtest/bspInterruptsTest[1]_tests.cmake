@@ -1,0 +1,7 @@
+add_test([=[InterruptTest.SuspendResumeAllInterruptsLock]=]  /home/jenkins/code_coverage/libs/bsp/bspInterrupts/test/gtest/Debug/bspInterruptsTest [==[--gtest_filter=InterruptTest.SuspendResumeAllInterruptsLock]==] --gtest_also_run_disabled_tests)
+set_tests_properties([=[InterruptTest.SuspendResumeAllInterruptsLock]=]  PROPERTIES WORKING_DIRECTORY /home/jenkins/code_coverage/libs/bsp/bspInterrupts/test/gtest SKIP_REGULAR_EXPRESSION [==[\[  SKIPPED \]]==] LABELS bspInterruptsTest)
+add_test([=[InterruptTest.SuspendResumeAllInterruptsScopedLock]=]  /home/jenkins/code_coverage/libs/bsp/bspInterrupts/test/gtest/Debug/bspInterruptsTest [==[--gtest_filter=InterruptTest.SuspendResumeAllInterruptsScopedLock]==] --gtest_also_run_disabled_tests)
+set_tests_properties([=[InterruptTest.SuspendResumeAllInterruptsScopedLock]=]  PROPERTIES WORKING_DIRECTORY /home/jenkins/code_coverage/libs/bsp/bspInterrupts/test/gtest SKIP_REGULAR_EXPRESSION [==[\[  SKIPPED \]]==] LABELS bspInterruptsTest)
+add_test([=[BspTest.IncludeCheck]=]  /home/jenkins/code_coverage/libs/bsp/bspInterrupts/test/gtest/Debug/bspInterruptsTest [==[--gtest_filter=BspTest.IncludeCheck]==] --gtest_also_run_disabled_tests)
+set_tests_properties([=[BspTest.IncludeCheck]=]  PROPERTIES WORKING_DIRECTORY /home/jenkins/code_coverage/libs/bsp/bspInterrupts/test/gtest SKIP_REGULAR_EXPRESSION [==[\[  SKIPPED \]]==] LABELS bspInterruptsTest)
+set(  bspInterruptsTest_TESTS InterruptTest.SuspendResumeAllInterruptsLock InterruptTest.SuspendResumeAllInterruptsScopedLock BspTest.IncludeCheck)

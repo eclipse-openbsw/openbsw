@@ -1,0 +1,5 @@
+add_test([=[IncludeTest.TestIncludes]=]  /home/jenkins/code_coverage/libs/bsw/asyncConsole/test/gtest/Debug/asyncConsoleTest [==[--gtest_filter=IncludeTest.TestIncludes]==] --gtest_also_run_disabled_tests)
+set_tests_properties([=[IncludeTest.TestIncludes]=]  PROPERTIES WORKING_DIRECTORY /home/jenkins/code_coverage/libs/bsw/asyncConsole/test/gtest SKIP_REGULAR_EXPRESSION [==[\[  SKIPPED \]]==] LABELS asyncConsoleTest)
+add_test([=[ExampleTest.AsyncCommandWrapperTest]=]  /home/jenkins/code_coverage/libs/bsw/asyncConsole/test/gtest/Debug/asyncConsoleTest [==[--gtest_filter=ExampleTest.AsyncCommandWrapperTest]==] --gtest_also_run_disabled_tests)
+set_tests_properties([=[ExampleTest.AsyncCommandWrapperTest]=]  PROPERTIES WORKING_DIRECTORY /home/jenkins/code_coverage/libs/bsw/asyncConsole/test/gtest SKIP_REGULAR_EXPRESSION [==[\[  SKIPPED \]]==] LABELS asyncConsoleTest)
+set(  asyncConsoleTest_TESTS IncludeTest.TestIncludes ExampleTest.AsyncCommandWrapperTest)

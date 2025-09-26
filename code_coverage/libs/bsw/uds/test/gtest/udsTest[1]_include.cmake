@@ -1,0 +1,5 @@
+if(EXISTS "/home/jenkins/code_coverage/libs/bsw/uds/test/gtest/udsTest[1]_tests.cmake")
+  include("/home/jenkins/code_coverage/libs/bsw/uds/test/gtest/udsTest[1]_tests.cmake")
+else()
+  add_test(udsTest_NOT_BUILT udsTest_NOT_BUILT)
+endif()

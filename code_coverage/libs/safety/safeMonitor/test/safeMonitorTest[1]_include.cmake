@@ -1,0 +1,5 @@
+if(EXISTS "/home/jenkins/code_coverage/libs/safety/safeMonitor/test/safeMonitorTest[1]_tests.cmake")
+  include("/home/jenkins/code_coverage/libs/safety/safeMonitor/test/safeMonitorTest[1]_tests.cmake")
+else()
+  add_test(safeMonitorTest_NOT_BUILT safeMonitorTest_NOT_BUILT)
+endif()

@@ -1,0 +1,5 @@
+if(EXISTS "/home/jenkins/code_coverage/libs/bsw/cpp2ethernet/test/gtest/cpp2ethernetTest[1]_tests.cmake")
+  include("/home/jenkins/code_coverage/libs/bsw/cpp2ethernet/test/gtest/cpp2ethernetTest[1]_tests.cmake")
+else()
+  add_test(cpp2ethernetTest_NOT_BUILT cpp2ethernetTest_NOT_BUILT)
+endif()

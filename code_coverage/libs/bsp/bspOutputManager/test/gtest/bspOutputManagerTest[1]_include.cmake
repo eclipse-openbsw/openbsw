@@ -1,0 +1,5 @@
+if(EXISTS "/home/jenkins/code_coverage/libs/bsp/bspOutputManager/test/gtest/bspOutputManagerTest[1]_tests.cmake")
+  include("/home/jenkins/code_coverage/libs/bsp/bspOutputManager/test/gtest/bspOutputManagerTest[1]_tests.cmake")
+else()
+  add_test(bspOutputManagerTest_NOT_BUILT bspOutputManagerTest_NOT_BUILT)
+endif()

@@ -1,0 +1,5 @@
+if(EXISTS "/home/jenkins/code_coverage/libs/bsw/platform/test/gtest/platformTest[1]_tests.cmake")
+  include("/home/jenkins/code_coverage/libs/bsw/platform/test/gtest/platformTest[1]_tests.cmake")
+else()
+  add_test(platformTest_NOT_BUILT platformTest_NOT_BUILT)
+endif()

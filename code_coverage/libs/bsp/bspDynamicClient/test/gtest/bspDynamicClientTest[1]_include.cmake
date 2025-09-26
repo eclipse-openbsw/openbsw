@@ -1,0 +1,5 @@
+if(EXISTS "/home/jenkins/code_coverage/libs/bsp/bspDynamicClient/test/gtest/bspDynamicClientTest[1]_tests.cmake")
+  include("/home/jenkins/code_coverage/libs/bsp/bspDynamicClient/test/gtest/bspDynamicClientTest[1]_tests.cmake")
+else()
+  add_test(bspDynamicClientTest_NOT_BUILT bspDynamicClientTest_NOT_BUILT)
+endif()

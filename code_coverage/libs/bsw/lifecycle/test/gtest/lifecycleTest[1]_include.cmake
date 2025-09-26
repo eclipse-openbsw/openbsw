@@ -1,0 +1,5 @@
+if(EXISTS "/home/jenkins/code_coverage/libs/bsw/lifecycle/test/gtest/lifecycleTest[1]_tests.cmake")
+  include("/home/jenkins/code_coverage/libs/bsw/lifecycle/test/gtest/lifecycleTest[1]_tests.cmake")
+else()
+  add_test(lifecycleTest_NOT_BUILT lifecycleTest_NOT_BUILT)
+endif()

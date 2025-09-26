@@ -1,0 +1,5 @@
+if(EXISTS "/home/jenkins/code_coverage/libs/bsw/asyncFreeRtos/test/gtest/asyncFreeRtosMinimumStackTest[1]_tests.cmake")
+  include("/home/jenkins/code_coverage/libs/bsw/asyncFreeRtos/test/gtest/asyncFreeRtosMinimumStackTest[1]_tests.cmake")
+else()
+  add_test(asyncFreeRtosMinimumStackTest_NOT_BUILT asyncFreeRtosMinimumStackTest_NOT_BUILT)
+endif()

@@ -1,0 +1,5 @@
+add_test([=[IncludeTest.TestIncludes]=]  /home/jenkins/code_coverage/platforms/posix/bsp/socketCanTransceiver/test/gtest/Debug/socketCanTransceiverTest [==[--gtest_filter=IncludeTest.TestIncludes]==] --gtest_also_run_disabled_tests)
+set_tests_properties([=[IncludeTest.TestIncludes]=]  PROPERTIES WORKING_DIRECTORY /home/jenkins/code_coverage/platforms/posix/bsp/socketCanTransceiver/test/gtest SKIP_REGULAR_EXPRESSION [==[\[  SKIPPED \]]==] LABELS socketCanTransceiverTest)
+add_test([=[SocketCanTransceiverTest.transceiver_creation]=]  /home/jenkins/code_coverage/platforms/posix/bsp/socketCanTransceiver/test/gtest/Debug/socketCanTransceiverTest [==[--gtest_filter=SocketCanTransceiverTest.transceiver_creation]==] --gtest_also_run_disabled_tests)
+set_tests_properties([=[SocketCanTransceiverTest.transceiver_creation]=]  PROPERTIES WORKING_DIRECTORY /home/jenkins/code_coverage/platforms/posix/bsp/socketCanTransceiver/test/gtest SKIP_REGULAR_EXPRESSION [==[\[  SKIPPED \]]==] LABELS socketCanTransceiverTest)
+set(  socketCanTransceiverTest_TESTS IncludeTest.TestIncludes SocketCanTransceiverTest.transceiver_creation)

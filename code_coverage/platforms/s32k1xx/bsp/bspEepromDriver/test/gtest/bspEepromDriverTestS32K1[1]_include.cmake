@@ -1,0 +1,5 @@
+if(EXISTS "/home/jenkins/code_coverage/platforms/s32k1xx/bsp/bspEepromDriver/test/gtest/bspEepromDriverTestS32K1[1]_tests.cmake")
+  include("/home/jenkins/code_coverage/platforms/s32k1xx/bsp/bspEepromDriver/test/gtest/bspEepromDriverTestS32K1[1]_tests.cmake")
+else()
+  add_test(bspEepromDriverTestS32K1_NOT_BUILT bspEepromDriverTestS32K1_NOT_BUILT)
+endif()

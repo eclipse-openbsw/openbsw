@@ -1,0 +1,5 @@
+if(EXISTS "/home/jenkins/code_coverage/libs/bsw/logger/test/loggerTest[1]_tests.cmake")
+  include("/home/jenkins/code_coverage/libs/bsw/logger/test/loggerTest[1]_tests.cmake")
+else()
+  add_test(loggerTest_NOT_BUILT loggerTest_NOT_BUILT)
+endif()

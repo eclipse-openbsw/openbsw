@@ -1,0 +1,7 @@
+add_test([=[CanPhyDummy.SimpleTest]=]  /home/jenkins/code_coverage/libs/bsw/bsp/test/gtest/Debug/bspTest [==[--gtest_filter=CanPhyDummy.SimpleTest]==] --gtest_also_run_disabled_tests)
+set_tests_properties([=[CanPhyDummy.SimpleTest]=]  PROPERTIES WORKING_DIRECTORY /home/jenkins/code_coverage/libs/bsw/bsp/test/gtest SKIP_REGULAR_EXPRESSION [==[\[  SKIPPED \]]==] LABELS bspTest)
+add_test([=[IsEqualAfterTimeoutTest.Check]=]  /home/jenkins/code_coverage/libs/bsw/bsp/test/gtest/Debug/bspTest [==[--gtest_filter=IsEqualAfterTimeoutTest.Check]==] --gtest_also_run_disabled_tests)
+set_tests_properties([=[IsEqualAfterTimeoutTest.Check]=]  PROPERTIES WORKING_DIRECTORY /home/jenkins/code_coverage/libs/bsw/bsp/test/gtest SKIP_REGULAR_EXPRESSION [==[\[  SKIPPED \]]==] LABELS bspTest)
+add_test([=[BspTest.IncludeCheck]=]  /home/jenkins/code_coverage/libs/bsw/bsp/test/gtest/Debug/bspTest [==[--gtest_filter=BspTest.IncludeCheck]==] --gtest_also_run_disabled_tests)
+set_tests_properties([=[BspTest.IncludeCheck]=]  PROPERTIES WORKING_DIRECTORY /home/jenkins/code_coverage/libs/bsw/bsp/test/gtest SKIP_REGULAR_EXPRESSION [==[\[  SKIPPED \]]==] LABELS bspTest)
+set(  bspTest_TESTS CanPhyDummy.SimpleTest IsEqualAfterTimeoutTest.Check BspTest.IncludeCheck)

@@ -1,0 +1,5 @@
+if(EXISTS "/home/jenkins/code_coverage/libs/bsw/asyncFreeRtos/test/gtest/asyncFreeRtosTest[1]_tests.cmake")
+  include("/home/jenkins/code_coverage/libs/bsw/asyncFreeRtos/test/gtest/asyncFreeRtosTest[1]_tests.cmake")
+else()
+  add_test(asyncFreeRtosTest_NOT_BUILT asyncFreeRtosTest_NOT_BUILT)
+endif()

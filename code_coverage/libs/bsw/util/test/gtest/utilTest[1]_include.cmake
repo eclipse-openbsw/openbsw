@@ -1,0 +1,5 @@
+if(EXISTS "/home/jenkins/code_coverage/libs/bsw/util/test/gtest/utilTest[1]_tests.cmake")
+  include("/home/jenkins/code_coverage/libs/bsw/util/test/gtest/utilTest[1]_tests.cmake")
+else()
+  add_test(utilTest_NOT_BUILT utilTest_NOT_BUILT)
+endif()

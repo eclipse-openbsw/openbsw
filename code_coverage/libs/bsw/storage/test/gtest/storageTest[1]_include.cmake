@@ -1,0 +1,5 @@
+if(EXISTS "/home/jenkins/code_coverage/libs/bsw/storage/test/gtest/storageTest[1]_tests.cmake")
+  include("/home/jenkins/code_coverage/libs/bsw/storage/test/gtest/storageTest[1]_tests.cmake")
+else()
+  add_test(storageTest_NOT_BUILT storageTest_NOT_BUILT)
+endif()

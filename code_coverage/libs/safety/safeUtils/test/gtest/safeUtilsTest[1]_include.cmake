@@ -1,0 +1,5 @@
+if(EXISTS "/home/jenkins/code_coverage/libs/safety/safeUtils/test/gtest/safeUtilsTest[1]_tests.cmake")
+  include("/home/jenkins/code_coverage/libs/safety/safeUtils/test/gtest/safeUtilsTest[1]_tests.cmake")
+else()
+  add_test(safeUtilsTest_NOT_BUILT safeUtilsTest_NOT_BUILT)
+endif()

@@ -1,0 +1,5 @@
+if(EXISTS "/home/jenkins/code_coverage/libs/bsp/bspInputManager/test/gtest/bspInputManagerTest[1]_tests.cmake")
+  include("/home/jenkins/code_coverage/libs/bsp/bspInputManager/test/gtest/bspInputManagerTest[1]_tests.cmake")
+else()
+  add_test(bspInputManagerTest_NOT_BUILT bspInputManagerTest_NOT_BUILT)
+endif()

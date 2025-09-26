@@ -1,0 +1,5 @@
+if(EXISTS "/home/jenkins/code_coverage/libs/bsw/docan/test/gtest/docanTest[1]_tests.cmake")
+  include("/home/jenkins/code_coverage/libs/bsw/docan/test/gtest/docanTest[1]_tests.cmake")
+else()
+  add_test(docanTest_NOT_BUILT docanTest_NOT_BUILT)
+endif()

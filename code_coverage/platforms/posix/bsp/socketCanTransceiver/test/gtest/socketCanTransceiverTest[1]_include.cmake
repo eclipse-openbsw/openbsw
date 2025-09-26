@@ -1,0 +1,5 @@
+if(EXISTS "/home/jenkins/code_coverage/platforms/posix/bsp/socketCanTransceiver/test/gtest/socketCanTransceiverTest[1]_tests.cmake")
+  include("/home/jenkins/code_coverage/platforms/posix/bsp/socketCanTransceiver/test/gtest/socketCanTransceiverTest[1]_tests.cmake")
+else()
+  add_test(socketCanTransceiverTest_NOT_BUILT socketCanTransceiverTest_NOT_BUILT)
+endif()

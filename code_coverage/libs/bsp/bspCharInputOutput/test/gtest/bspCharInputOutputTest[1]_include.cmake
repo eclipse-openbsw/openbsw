@@ -1,0 +1,5 @@
+if(EXISTS "/home/jenkins/code_coverage/libs/bsp/bspCharInputOutput/test/gtest/bspCharInputOutputTest[1]_tests.cmake")
+  include("/home/jenkins/code_coverage/libs/bsp/bspCharInputOutput/test/gtest/bspCharInputOutputTest[1]_tests.cmake")
+else()
+  add_test(bspCharInputOutputTest_NOT_BUILT bspCharInputOutputTest_NOT_BUILT)
+endif()

@@ -1,0 +1,5 @@
+if(EXISTS "/home/jenkins/code_coverage/libs/bsp/bspOutputPwm/test/gtest/bspOutputPwmTest[1]_tests.cmake")
+  include("/home/jenkins/code_coverage/libs/bsp/bspOutputPwm/test/gtest/bspOutputPwmTest[1]_tests.cmake")
+else()
+  add_test(bspOutputPwmTest_NOT_BUILT bspOutputPwmTest_NOT_BUILT)
+endif()

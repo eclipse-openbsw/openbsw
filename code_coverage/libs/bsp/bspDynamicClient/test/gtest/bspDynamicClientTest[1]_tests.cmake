@@ -1,0 +1,5 @@
+add_test([=[DynamicClientTest.ConstructorTest]=]  /home/jenkins/code_coverage/libs/bsp/bspDynamicClient/test/gtest/Debug/bspDynamicClientTest [==[--gtest_filter=DynamicClientTest.ConstructorTest]==] --gtest_also_run_disabled_tests)
+set_tests_properties([=[DynamicClientTest.ConstructorTest]=]  PROPERTIES WORKING_DIRECTORY /home/jenkins/code_coverage/libs/bsp/bspDynamicClient/test/gtest SKIP_REGULAR_EXPRESSION [==[\[  SKIPPED \]]==] LABELS bspDynamicClientTest)
+add_test([=[DynamicClientTest.UseCaseWith2Clients]=]  /home/jenkins/code_coverage/libs/bsp/bspDynamicClient/test/gtest/Debug/bspDynamicClientTest [==[--gtest_filter=DynamicClientTest.UseCaseWith2Clients]==] --gtest_also_run_disabled_tests)
+set_tests_properties([=[DynamicClientTest.UseCaseWith2Clients]=]  PROPERTIES WORKING_DIRECTORY /home/jenkins/code_coverage/libs/bsp/bspDynamicClient/test/gtest SKIP_REGULAR_EXPRESSION [==[\[  SKIPPED \]]==] LABELS bspDynamicClientTest)
+set(  bspDynamicClientTest_TESTS DynamicClientTest.ConstructorTest DynamicClientTest.UseCaseWith2Clients)

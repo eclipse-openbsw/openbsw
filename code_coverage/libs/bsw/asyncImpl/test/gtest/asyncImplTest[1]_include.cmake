@@ -1,0 +1,5 @@
+if(EXISTS "/home/jenkins/code_coverage/libs/bsw/asyncImpl/test/gtest/asyncImplTest[1]_tests.cmake")
+  include("/home/jenkins/code_coverage/libs/bsw/asyncImpl/test/gtest/asyncImplTest[1]_tests.cmake")
+else()
+  add_test(asyncImplTest_NOT_BUILT asyncImplTest_NOT_BUILT)
+endif()

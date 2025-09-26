@@ -1,0 +1,5 @@
+if(EXISTS "/home/jenkins/code_coverage/libs/bsw/timer/test/gtest/timerTest[1]_tests.cmake")
+  include("/home/jenkins/code_coverage/libs/bsw/timer/test/gtest/timerTest[1]_tests.cmake")
+else()
+  add_test(timerTest_NOT_BUILT timerTest_NOT_BUILT)
+endif()

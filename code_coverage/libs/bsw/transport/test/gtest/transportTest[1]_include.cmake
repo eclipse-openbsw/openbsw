@@ -1,0 +1,5 @@
+if(EXISTS "/home/jenkins/code_coverage/libs/bsw/transport/test/gtest/transportTest[1]_tests.cmake")
+  include("/home/jenkins/code_coverage/libs/bsw/transport/test/gtest/transportTest[1]_tests.cmake")
+else()
+  add_test(transportTest_NOT_BUILT transportTest_NOT_BUILT)
+endif()

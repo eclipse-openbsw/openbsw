@@ -1,0 +1,5 @@
+if(EXISTS "/home/jenkins/code_coverage/libs/bsw/cpp2can/test/gtest/cpp2canTest[1]_tests.cmake")
+  include("/home/jenkins/code_coverage/libs/bsw/cpp2can/test/gtest/cpp2canTest[1]_tests.cmake")
+else()
+  add_test(cpp2canTest_NOT_BUILT cpp2canTest_NOT_BUILT)
+endif()

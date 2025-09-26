@@ -1,0 +1,5 @@
+if(EXISTS "/home/jenkins/code_coverage/libs/bsw/io/test/ioTest[1]_tests.cmake")
+  include("/home/jenkins/code_coverage/libs/bsw/io/test/ioTest[1]_tests.cmake")
+else()
+  add_test(ioTest_NOT_BUILT ioTest_NOT_BUILT)
+endif()

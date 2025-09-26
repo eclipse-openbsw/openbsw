@@ -1,0 +1,5 @@
+if(EXISTS "/home/jenkins/code_coverage/libs/bsp/bspInterrupts/test/gtest/bspInterruptsTest[1]_tests.cmake")
+  include("/home/jenkins/code_coverage/libs/bsp/bspInterrupts/test/gtest/bspInterruptsTest[1]_tests.cmake")
+else()
+  add_test(bspInterruptsTest_NOT_BUILT bspInterruptsTest_NOT_BUILT)
+endif()
