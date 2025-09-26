@@ -22,11 +22,9 @@ constexpr size_t NUM_RX_BUFFER_DESCRIPTORS = 16;
 constexpr size_t PBUF_RX_BUFSIZE           = 256;
 
 // align to 512-bit boundary
-__attribute__((aligned(64))) ENET_ETXD __attribute__((section(".ethernetDescriptorsTx")))
-fTxDescriptor[NUM_TX_BUFFER_DESCRIPTORS];
+__attribute__((aligned(64))) ENET_ETXD fTxDescriptor[NUM_TX_BUFFER_DESCRIPTORS];
 
-__attribute__((aligned(64))) ENET_ERXD __attribute__((section(".ethernetDescriptorsRx")))
-fRxDescriptor[NUM_RX_BUFFER_DESCRIPTORS];
+__attribute__((aligned(64))) ENET_ERXD fRxDescriptor[NUM_RX_BUFFER_DESCRIPTORS];
 
 __attribute__((aligned(64))) uint8_t fRxBuffers[(NUM_RX_BUFFER_DESCRIPTORS * PBUF_RX_BUFSIZE)];
 

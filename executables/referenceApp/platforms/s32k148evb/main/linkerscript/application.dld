@@ -21,7 +21,7 @@ MEMORY
   Isr (RX) : ORIGIN = FLASH_START, LENGTH = 0x00000400
   FlashConfigField (RX) : ORIGIN = FLASH_START + 0x00000400, LENGTH = 0x00000010
   ApplicationStartUpCode (RX) : ORIGIN = FLASH_START + 0x410, LENGTH = 0x20
-  Application (RX) : ORIGIN = FLASH_START + 0x430, LENGTH = FLASH_END + 1 - FLASH_START - 0x430
+  Application (RX) : ORIGIN = FLASH_START + 0x430, LENGTH = FLASH_END + 1 - FLASH_START - 0x430 - 64
   CrcMeta (RX) : ORIGIN = FLASH_END + 1 - 64,  LENGTH = 64
   /* SRAM_L */
   Data (RW) : ORIGIN = SRAM_L_START, LENGTH = SRAM_L_END + 1 - SRAM_L_START
@@ -218,16 +218,11 @@ SECTIONS
   } > Data
 
   __DATA_END = __DATA_ROM + (__data_end__ - __data_start__);
-   ___data_size = _edata - _sdata;
-  .data_rom : AT(__DATA_ROM)
-  {
-    __DATA_ROM_START = .;
-    . += ___data_size;
-    . = ALIGN(4);
-    __DATA_ROM_END = .;
-    __USED_FLASH_END = .;
-  }
-  > Application = 0xffffffff
+  ___data_size = _edata - _sdata;
+
+  __DATA_ROM_START = __DATA_ROM;
+  __DATA_ROM_END = __DATA_ROM + ___data_size;
+  __USED_FLASH_END = __DATA_ROM_END;
 
   /* Uninitialized data */
 
@@ -242,18 +237,6 @@ SECTIONS
     . = ALIGN(4);
     __bss_end__ = .;
     __END_BSS = .;
-  } > Data
-
-  _romp_at = __DATA_ROM + SIZEOF(.data);
-  .romp : AT(_romp_at)
-  {
-    __S_romp = _romp_at;
-    LONG(__DATA_ROM);
-    LONG(_sdata);
-    LONG(___data_size);
-    LONG(0);
-    LONG(0);
-    LONG(0);
   } > Data
 
   __CRC_IVT_START   = ADDR(.interrupts);
