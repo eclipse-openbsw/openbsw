@@ -10,6 +10,8 @@
 using bsp::Uart;
 using bsp::UartImpl;
 
+static uint32_t const WRITE_TIMEOUT = 1000U;
+
 size_t Uart::read(uint8_t* data, size_t length)
 {
     size_t bytes_read = 0;
@@ -87,7 +89,14 @@ bool UartImpl::writeByte(uint8_t data)
     if (!isTxActive())
     {
         _uartDevice.uart.DATA = (static_cast<uint32_t>(data) & 0xFFU);
-        while (isTxActive()) {}
+        uint32_t count        = 0U;
+        while (isTxActive())
+        {
+            if (++count > WRITE_TIMEOUT)
+            {
+                return false;
+            }
+        }
         return true;
     }
     return false;
