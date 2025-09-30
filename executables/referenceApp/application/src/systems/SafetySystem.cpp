@@ -21,7 +21,12 @@ using ::util::logger::Logger;
 using ::util::logger::SAFETY;
 
 SafetySystem::SafetySystem(::async::ContextType const context, ::lifecycle::ILifecycleManager&)
-: _context(context), _timeout()
+: _context(context)
+, _timeout()
+#ifdef PLATFORM_SUPPORT_IO
+, _safetyCommand()
+, _asyncCommandWrapperForSafetyCommand(_safetyCommand, context)
+#endif
 {
     setTransitionContext(context);
 }

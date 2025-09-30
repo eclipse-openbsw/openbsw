@@ -13,7 +13,7 @@ using ::util::logger::SAFETY;
 
 SafetyManager::SafetyManager() {}
 
-void SafetyManager::init() { Logger::warn(SAFETY, "SafetyManager initialized"); }
+void SafetyManager::init() { Logger::debug(SAFETY, "SafetyManager initialized"); }
 
 void SafetyManager::run() {}
 

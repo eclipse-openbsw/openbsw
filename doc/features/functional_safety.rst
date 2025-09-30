@@ -10,6 +10,7 @@ The implementation includes the following features:
 - MPU configuration to protect the safety RAM and stack memory regions
 - ECC for RAM and flash memory
 - CRC calculations for specific ROM memory regions
+- Monitoring IO configuration
 - Event handling for safety related events. For instance, if the watchdog startup test fails
   (indicates the watchdog is not functioning properly), the watchdog startup check monitor will
   be triggered with a test failure event, this event will be handled by the safeSupervisor's event
@@ -22,8 +23,7 @@ The generic modules can be used on any platform, but functional safety always de
 specific features and must be developed according to the safety manual of the controller, project
 requirements and stakeholder needs.
 
-The implementation of MPU, ECC, ROM check and Watchdog in ReferenceApp is specific to S32K1XX
-platform.
+The implementation of e.g. MPU, ECC or watchdog in ReferenceApp is specific to S32K1XX platform.
 
 Code Partition
 --------------
@@ -67,6 +67,9 @@ The safety implementation consists of following modules:
      - Implements the handling of safety-related events.
    * - :ref:`safeWatchdog`
      - Manages the watchdog and provides the safety checks.
+   * - :ref:`safeIo`
+     - Monitors the configuration registers of safety relevant IOs and provides methods to
+       enter and leave a safe state for IOs.
    * - :ref:`safeMonitor`
      - A collection of templated classes which formalize a condition, its check and the reporting
        event if the condition isn't met.
@@ -116,8 +119,8 @@ SafetyManager
 SafetyManager is the central point of safety application and the features. Centralize all
 init/cyclic calls here. The SafetyManager is called from safety task.
 
-safeWatchdog
-++++++++++++
+Watchdog
+++++++++
 
 Initialize safeWatchdog as early as possible and service the watchdog at regular intervals, choose
 the watchdog timeout value and service time according to the project requirements. For demonstration
@@ -145,6 +148,18 @@ write access to the protected RAM and safety stack regions before the execution 
 write access to these regions after the ISR execution is complete. Every data written into those
 sections before MPU is enabled, is not reliable. So, initialization of safety applications must be
 done after MPU init.
+
+IOs
++++
+
+The values of inputs cannot be validated without context, e.g. depending on the system state,
+only certain values are valid. Appropriate checks must be implemented in application specifics
+software components.
+
+On a generic level, the configuration of IOs can be monitored. The easiest way is to lock the
+configuration registers at startup. Afterwards they must be checked once to ensure that
+the right configuration is locked. Configuration registers, which cannot be locked, must be checked
+cyclically.
 
 ROM Check
 +++++++++

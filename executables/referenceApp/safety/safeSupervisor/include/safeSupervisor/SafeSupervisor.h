@@ -18,7 +18,6 @@ class SafeSupervisor
 public:
     enum class Event : uint8_t
     {
-        SAFE_EVENT_DUMMY,
         SAFETY_MANAGER_SEQUENCE_DEVIATION,
         WATCHDOG_STARTUP_CHECK_FAILURE,
         SAFE_WATCHDOG_SEQUENCE_DEVIATION,
@@ -31,7 +30,9 @@ public:
         MPU_NOT_ENABLED,
         MPU_CONFIGURATION_ERROR,
         ADC_REFERENCE_ERROR,
-        INTERNAL_SUPPLIES_ERROR
+        INTERNAL_SUPPLIES_ERROR,
+        CHECK_REGISTER_ERROR,
+        LOCK_REGISTER_ERROR
     };
 
     enum class SafetyManagerSequence : uint8_t
@@ -78,6 +79,8 @@ public:
     TriggerMonitor mpuConfigMonitor;
     TriggerMonitor adcReferenceMonitor;
     TriggerMonitor internalSuppliesMonitor;
+    TriggerMonitor checkRegisterMonitor;
+    TriggerMonitor lockRegisterMonitor;
 
 private:
     bool _limpHome;

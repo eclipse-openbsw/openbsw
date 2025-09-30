@@ -137,7 +137,7 @@ Io::PinConfiguration const Io::fPinConfiguration[Io::NUMBER_OF_IOS] = {
     /* 124  */ {_PORTD_, PD28, _IN, (uint8_t) FILTER_ACTIVE | (uint8_t) FILTER_TICK1, PINDISABLE},
     /* 125  */ {_PORTD_, PD29, _IN, (uint8_t) FILTER_ACTIVE | (uint8_t) FILTER_TICK1, PINDISABLE},
     /* 126  */ {_PORTD_, PD30, _IN, (uint8_t) FILTER_ACTIVE | (uint8_t) FILTER_TICK1, PINDISABLE},
-    /* 127  */ {_PORTD_, PD31, _IN, (uint8_t) FILTER_ACTIVE | (uint8_t) FILTER_TICK1, PINDISABLE},
+    /* 127  */ {_PORTD_, PD31, _IN, (uint8_t) FILTER_ACTIVE | (uint8_t) FILTER_TICK1, GPIO},
 
     /* 128  */ {_PORTE_, PE0, _OUT, 0, (uint32_t) ALT5 | (uint32_t) STRENGTH_ON},
     /* 129  */ {_PORTE_, PE1, _OUT, 0, (uint32_t) GPIO | (uint32_t) (uint32_t) STRENGTH_ON | (uint32_t) PULLUP},
@@ -305,7 +305,7 @@ enum PinId
     /* 124 */ PIN_D_28,
     /* 125 */ PIN_D_29,
     /* 126 */ PIN_D_30,
-    /* 127 */ PIN_D_31,
+    /* 127 */ SAFETY_TEST, // used by safety demo - no need to physically connect the pin
 
     /* 128 */ SPI1_MOSI,
     /* 129 */ SPI1_CSN0,

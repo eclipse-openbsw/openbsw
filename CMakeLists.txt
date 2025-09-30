@@ -93,6 +93,7 @@ add_subdirectory(platforms EXCLUDE_FROM_ALL)
 add_subdirectory(libs EXCLUDE_FROM_ALL)
 
 if (BUILD_UNIT_TESTS)
+
     add_subdirectory(executables/unitTest EXCLUDE_FROM_ALL)
     target_include_directories(etl BEFORE INTERFACE executables/unitTest/etl_profile)
 
