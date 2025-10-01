@@ -196,9 +196,9 @@ ReferenceApp Test Guide
                 ok
                6937: RefApp: CONSOLE: INFO: Received console command "help"
                7036: RefApp: CONSOLE: INFO: console command Succeeded
-               pwm set 2 2000
+               pwm set 1 2000
 
-               PWM channel 2 (eval_led_green_pwm) set to 0x1388 % On
+               PWM channel 1 (eval_led_green_pwm) set to 0x7d0 % On
 
                19355: RefApp: CONSOLE: INFO: Received console command "pwm set 2 2000"
                19360: RefApp: CONSOLE: INFO: console command Succeeded
@@ -206,10 +206,10 @@ ReferenceApp Test Guide
 
 
           pwm set channel # value from 0-10000 |br|
-          pwm set 2        2000
+          pwm set 1 2000
 
    * For 50% duty cycle use command:
-     pwm set 2 5000
+     pwm set 1 5000
 
    * This command can be used to change the duty cycle for all available channels (currently - 3).
      Duty cycle can be changed from 0-100 % using values from 0 – 10000.

@@ -15,11 +15,11 @@ Below is the example usage:
 
 .. code-block:: bash
 
-  pwm set 2 5000
+  pwm set 1 5000
 
-    PWM channel 2 (eval_led_green_pwm) set to 0x1388 % On
+    PWM channel 1 (eval_led_green_pwm) set to 0x1388 % On
   ok
-  23587: RefApp: CONSOLE: INFO: Received console command "pwm set 2 5000"
+  23587: RefApp: CONSOLE: INFO: Received console command "pwm set 1 5000"
   23593: RefApp: CONSOLE: INFO: Console command succeeded
 
 Next: :ref:`lifecycle_console`

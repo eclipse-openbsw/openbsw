@@ -23,7 +23,6 @@ public:
 
 private:
     // < hw channel, resolution >
-    FtmEPwm<1, 100> eval_led_red_pwm;
     FtmEPwm<2, 100> eval_led_green_pwm;
     FtmEPwm<3, 100> eval_led_blue_pwm;
 };

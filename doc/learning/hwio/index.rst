@@ -23,11 +23,10 @@ and that this enables code in ``DemoSystem::cyclic()`` to read the ADC value con
 
     (void)AnalogInputScale::get(AnalogInput::AiEVAL_POTI_ADC, value);
 
-and then set PWM values for each colour on the RGB LED based on the measured ADC value...
+and then set PWM values for RGB LEDs based on the measured ADC value...
 
 .. code-block:: cpp
 
-    OutputPwm::setDuty(OutputPwm::EVAL_LED_RED_PWM, value * 10000 / 5000);
     OutputPwm::setDuty(OutputPwm::EVAL_LED_GREEN_PWM, value * 10000 / 5000);
     OutputPwm::setDuty(OutputPwm::EVAL_LED_BLUE_PWM, value * 10000 / 5000);
 
