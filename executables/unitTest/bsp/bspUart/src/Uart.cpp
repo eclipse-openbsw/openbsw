@@ -5,17 +5,15 @@
 namespace bsp
 {
 
-size_t Uart::write(uint8_t const* data, size_t length)
+size_t Uart::write(::etl::span<uint8_t const> const& data)
 {
     (void)data;
-    (void)length;
     return 0;
 }
 
-size_t Uart::read(uint8_t* data, size_t length)
+size_t Uart::read(::etl::span<uint8_t> data)
 {
     (void)data;
-    (void)length;
     return 0;
 }
 

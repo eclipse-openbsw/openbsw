@@ -13,7 +13,7 @@ UartBaudRate const baudRateConfig[] = {
     {(LPUART_BAUD_OSR(9)) + LPUART_BAUD_SBR(8)}    // = 2MBit 80MHz PLL
 };
 
-UartImpl::UartDevice const UartImpl::config_uart[] = {
+UartSpecific::UartDevice const UartSpecific::config_uart[] = {
     {
         *LPUART1,
         bios::Io::UART1_TX,
@@ -30,16 +30,15 @@ UartImpl::UartDevice const UartImpl::config_uart[] = {
     },
 };
 
-bsp::Uart& Uart::getInstance(Id id)
+Uart instance_terminal{Uart(Uart::Id::TERMINAL)};
+
+bsp::Uart& UartSpecific::getInstance(Id id)
 {
     switch (id)
     {
         case Id::TERMINAL:
         {
-            static Uart instance{
-                Uart(id),
-            };
-            return instance;
+            return instance_terminal;
         }
         break;
         case Id::DUMMY_UART:
