@@ -1,2 +1,1 @@
-maturity: raw
 oss: true

@@ -1,4 +1,4 @@
-add_library(bspUart src/UartImpl.cpp)
+add_library(bspUart src/UartSpecific.cpp)
 
 target_include_directories(bspUart PUBLIC include)
 

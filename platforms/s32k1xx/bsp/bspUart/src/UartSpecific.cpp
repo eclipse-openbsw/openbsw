@@ -8,20 +8,20 @@
 #include <util/estd/assert.h>
 
 using bsp::Uart;
-using bsp::UartImpl;
+using bsp::UartSpecific;
 
 static uint32_t const WRITE_TIMEOUT = 1000U;
 
-size_t Uart::read(uint8_t* data, size_t length)
+size_t Uart::read(::etl::span<uint8_t> data)
 {
     size_t bytes_read = 0;
 
-    if (data == nullptr)
+    if (data.size() == 0U)
     {
         return 0;
     }
 
-    while (isRxReady() && (bytes_read < length))
+    while (isRxReady() && (bytes_read < data.size()))
     {
         data[bytes_read] = _uartDevice.uart.DATA & 0xFFU;
         bytes_read++;
@@ -30,16 +30,16 @@ size_t Uart::read(uint8_t* data, size_t length)
     return bytes_read;
 }
 
-size_t Uart::write(uint8_t const* data, size_t length)
+size_t Uart::write(::etl::span<uint8_t const> const& data)
 {
     size_t counter = 0;
 
-    if (data == nullptr)
+    if (data.size() == 0U)
     {
         return 0;
     }
 
-    while (counter < length)
+    while (counter < data.size())
     {
         if (!writeByte(data[counter]))
         {
@@ -51,9 +51,9 @@ size_t Uart::write(uint8_t const* data, size_t length)
     return counter;
 }
 
-UartImpl::UartImpl(Id id) : _uartDevice(config_uart[static_cast<uint8_t>(id)]) {}
+UartSpecific::UartSpecific(Id id) : _uartDevice(config_uart[static_cast<uint8_t>(id)]) {}
 
-void UartImpl::init()
+void UartSpecific::init()
 {
     (void)bios::Io::setDefaultConfiguration(_uartDevice.txPin);
     (void)bios::Io::setDefaultConfiguration(_uartDevice.rxPin);
@@ -73,7 +73,7 @@ void UartImpl::init()
     _uartDevice.uart.CTRL  = LPUART_CTRL_RE(1U) + LPUART_CTRL_TE(1U);
 }
 
-bool UartImpl::isRxReady() const
+bool UartSpecific::isRxReady() const
 {
     if ((_uartDevice.uart.STAT & LPUART_STAT_OR_MASK) != 0)
     {
@@ -82,9 +82,12 @@ bool UartImpl::isRxReady() const
     return ((_uartDevice.uart.STAT & LPUART_STAT_RDRF_MASK) != 0);
 }
 
-bool UartImpl::isTxActive() const { return ((_uartDevice.uart.STAT & LPUART_STAT_TDRE_MASK) == 0); }
+bool UartSpecific::isTxActive() const
+{
+    return ((_uartDevice.uart.STAT & LPUART_STAT_TDRE_MASK) == 0);
+}
 
-bool UartImpl::writeByte(uint8_t data)
+bool UartSpecific::writeByte(uint8_t data)
 {
     if (!isTxActive())
     {

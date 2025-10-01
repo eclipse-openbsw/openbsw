@@ -1,19 +1,20 @@
 #pragma once
 
 #include <bsp/uart/UartConfig.h>
+#include <etl/span.h>
 
 namespace bsp
 {
-struct Uart;
+class Uart;
 
 /**
  * This class implements the UART communication for S32K1xx platforms.
  * It is used as a base class for the Uart class.
  * The Uart class implements the methods for writing and reading data
  * over the UART interface.
- * The UartImpl provides methods specifics to the S32K1xx platform.
+ * The UartSpecific provides methods specifics to the S32K1xx platform.
  */
-class UartImpl : public bsp::UartConfig
+class UartSpecific : public bsp::UartConfig
 {
 public:
     /**
@@ -28,8 +29,15 @@ public:
      */
     bool isRxReady() const;
 
+    /**
+     * factory method which instantiates and configures an UART object.
+     * If the object exists it will returns only a reference to it.
+     * @param id: TERMINAL, ...
+     */
+    static Uart& getInstance(Id id);
+
 protected:
-    UartImpl(Id id);
+    UartSpecific(Id id);
 
     /**
      * it verifies if the transmission is completed and the hardware is ready for the next transfer
@@ -47,7 +55,7 @@ protected:
 protected:
     struct UartDevice;
     UartDevice const& _uartDevice;
-    static UartImpl::UartDevice const config_uart[NUMBER_OF_UARTS];
+    static UartSpecific::UartDevice const config_uart[NUMBER_OF_UARTS];
 };
 
 } // namespace bsp
