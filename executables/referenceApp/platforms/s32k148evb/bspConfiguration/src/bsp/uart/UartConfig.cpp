@@ -3,6 +3,7 @@
 
 #include <bsp/UartPrivate.h>
 #include <bsp/uart/Uart.h>
+#include <etl/tuple.h>
 #include <util/estd/assert.h>
 
 namespace bsp
@@ -21,36 +22,17 @@ UartSpecific::UartDevice const UartSpecific::config_uart[] = {
         static_cast<uint8_t>(sizeof(baudRateConfig) / sizeof(UartBaudRate)),
         baudRateConfig,
     },
-    {
-        *LPUART1,
-        bios::Io::PORT_UNAVAILABLE,
-        bios::Io::PORT_UNAVAILABLE,
-        0,
-        nullptr, // Dummy UART does not have a valid configuration
-    },
 };
 
-Uart instance_terminal{Uart(Uart::Id::TERMINAL)};
+etl::tuple<bsp::Uart> uart_instances{Uart(Uart::Id::TERMINAL)};
 
 bsp::Uart& UartSpecific::getInstance(Id id)
 {
     switch (id)
     {
-        case Id::TERMINAL:
-        {
-            return instance_terminal;
-        }
-        break;
-        case Id::DUMMY_UART:
-        {
-            estd_assert(false);
-        }
-        break;
-        default:
-        {
-            estd_assert(false);
-        }
-        break;
+        case Id::TERMINAL: return etl::get<0>(uart_instances); break;
+        case Id::INVALID:  estd_assert(false); break;
+        default:           estd_assert(false); break;
     }
 }
 
