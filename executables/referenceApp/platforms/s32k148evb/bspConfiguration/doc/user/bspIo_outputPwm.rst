@@ -23,9 +23,9 @@ Configuration
     - `PWM Mode`, `interruptActive`, `dmaActive`, `icrst`, `IO pin Mapping`, `minimum` and
         `maximum` dutycycle.
 
-- For demo purposes `EVAL_LED_RED_PWM`, `EVAL_LED_GREEN_PWM` and `EVAL_LED_BLUE_PWM` are configured
-  as the PWM channels for controlling the brightness of red, green and blue internal LEDs available
-  in the evaluation Board.
+- For demo purposes, `EVAL_LED_GREEN_PWM` and `EVAL_LED_BLUE_PWM` are configured
+  as the PWM channels for controlling the brightness of green and blue internal LEDs available
+  on the evaluation board.
 
 PwmSupport
 ----------
@@ -60,9 +60,8 @@ Example
     void DemoSystem::cyclic()
     {
     #ifdef PLATFORM_SUPPORT_IO
-        uint32_t value = 2500;  // 2500 is the sample value for 50% dutycycle
+        uint32_t value = 2500;  // 2500 is the sample value for 50% duty cycle
 
-        OutputPwm::setDuty(OutputPwm::EVAL_LED_RED_PWM, value * 10000 / 5000);
         OutputPwm::setDuty(OutputPwm::EVAL_LED_GREEN_PWM, value * 10000 / 5000);
         OutputPwm::setDuty(OutputPwm::EVAL_LED_BLUE_PWM, value * 10000 / 5000);
 

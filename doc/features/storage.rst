@@ -1,14 +1,12 @@
-.. _learning_storage:
+.. _feature_storage:
 
-Persistent storage
+Persistent Storage
 ==================
-
-Previous: :ref:`learning_tracing`
 
 Overview
 --------
 
-``Storage`` is a module for storing blocks of data persistently at runtime. This data may
+:ref:`storage` is a module for storing blocks of data persistently at runtime. This data may
 include individual configuration parameters written once after a software update, or runtime data
 updated throughout the device lifetime by user applications or by other OpenBSW modules. The data
 can be stored to various kinds of storage devices such as flash or EEPROM.
@@ -370,7 +368,7 @@ the API via ``StorageSystem::getStorage()``, which returns a reference to the ma
 The snippet below shows the block configuration defined inside ``StorageSystem`` (copied from
 ``executables/referenceApp/application/include/systems/StorageSystem.h``):
 
-.. sourceinclude:: ../../../executables/referenceApp/application/include/systems/StorageSystem.h
+.. sourceinclude:: ../../executables/referenceApp/application/include/systems/StorageSystem.h
   :start-after: BEGIN config
   :end-before: END config
 
@@ -391,7 +389,7 @@ outgoing block IDs in the first table refer to correct indices.
 
 Next, the various storage objects need to be declared. This is shown below:
 
-.. sourceinclude:: ../../../executables/referenceApp/application/include/systems/StorageSystem.h
+.. sourceinclude:: ../../executables/referenceApp/application/include/systems/StorageSystem.h
   :start-after: BEGIN declaration
   :end-before: END declaration
 
@@ -401,7 +399,7 @@ storages as template parameters.
 The next snippet shows the construction of these objects (copied from
 ``executables/referenceApp/application/src/systems/StorageSystem.cpp``):
 
-.. sourceinclude:: ../../../executables/referenceApp/application/src/systems/StorageSystem.cpp
+.. sourceinclude:: ../../executables/referenceApp/application/src/systems/StorageSystem.cpp
   :start-after: BEGIN initialization
   :end-before: END initialization
 
@@ -437,7 +435,7 @@ done. Please see the full code in
 When ``DemoSystem::cyclic()`` gets called for the first time, a read job will be triggered like
 this:
 
-.. sourceinclude:: ../../../executables/referenceApp/application/src/systems/DemoSystem.cpp
+.. sourceinclude:: ../../executables/referenceApp/application/src/systems/DemoSystem.cpp
   :start-after: BEGIN trigger storage read
   :end-before: END trigger storage read
 
@@ -449,7 +447,7 @@ block, i.e. from EEPROM address 10 in this case.
 The job is then sent for processing and eventually the callback will be run. The demo uses the
 following callback:
 
-.. sourceinclude:: ../../../executables/referenceApp/application/src/systems/DemoSystem.cpp
+.. sourceinclude:: ../../executables/referenceApp/application/src/systems/DemoSystem.cpp
   :start-after: BEGIN storage job callback
   :end-before: END storage job callback
 
@@ -473,13 +471,13 @@ the whole block is read, only one byte is written back into the offset 4 (i.e. i
 This offset corresponds to the ``charParam0`` variable. This is apparent when looking at the data
 type of ``_storageData``:
 
-.. sourceinclude:: ../../../executables/referenceApp/application/include/systems/DemoSystem.h
+.. sourceinclude:: ../../executables/referenceApp/application/include/systems/DemoSystem.h
   :start-after: BEGIN storage data
   :end-before: END storage data
 
 Buffers with varying start addresses and sizes can be created as follows:
 
-.. sourceinclude:: ../../../executables/referenceApp/application/src/systems/DemoSystem.cpp
+.. sourceinclude:: ../../executables/referenceApp/application/src/systems/DemoSystem.cpp
   :start-after: BEGIN storage buffers
   :end-before: END storage buffers
 

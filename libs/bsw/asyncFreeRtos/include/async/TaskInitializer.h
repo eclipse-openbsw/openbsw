@@ -28,12 +28,16 @@ constexpr size_t adjustStackSize(size_t const stackSize)
 #endif // (defined(MINIMUM_STACK_SIZE)) && (MINIMUM_STACK_SIZE != 0)
 }
 
-inline void align(size_t const alignment, ::etl::span<uint8_t>& s)
+inline ::etl::span<uint8_t> align(size_t const alignment, ::etl::span<uint8_t> s)
 {
     auto const mod = reinterpret_cast<size_t>(s.data()) % alignment;
     if (mod != 0)
     {
-        s = s.subspan(alignment - mod);
+        return s.subspan(alignment - mod);
+    }
+    else
+    {
+        return s;
     }
 }
 
@@ -262,11 +266,13 @@ void TaskInitializer<Adapter>::create(
     TaskFunctionType const taskFunction,
     TaskConfigType const& config)
 {
-    ::etl::span<uint8_t> bytes = ::etl::make_span(stack).template reinterpret_as<uint8_t>();
-    align(alignof(StackType_t), bytes);
-    StackSliceType const stackSlice = bytes.template reinterpret_as<StackType_t>();
-    estd_assert((stackSlice.size() * sizeof(StackType_t)) >= sizeof(TaskInitializer));
-    new (stackSlice.data()) TaskInitializer(context, name, task, stackSlice, taskFunction, config);
+    auto const stackSliceRaw = ::etl::make_span(stack).template reinterpret_as<uint8_t>();
+    auto const stackSlice
+        = align(alignof(StackType_t), stackSliceRaw).template reinterpret_as<StackType_t>();
+    auto const taskInitializerSlice = align(alignof(TaskInitializer), stackSliceRaw);
+    estd_assert((taskInitializerSlice.size()) >= sizeof(TaskInitializer));
+    new (taskInitializerSlice.data())
+        TaskInitializer(context, name, task, stackSlice, taskFunction, config);
 }
 
 template<class Adapter>

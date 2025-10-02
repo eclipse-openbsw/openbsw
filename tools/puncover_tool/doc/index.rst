@@ -1,5 +1,4 @@
-
-Analysis
+Puncover
 ========
 
 Puncover examines C/C++ binaries to assess code size, static memory usage, and stack requirements.
