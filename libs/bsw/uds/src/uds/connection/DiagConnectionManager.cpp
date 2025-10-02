@@ -44,7 +44,7 @@ void DiagConnectionManager::diagConnectionTerminated(IncomingDiagConnection& dia
 {
     TransportMessage* const requestMessage = diagConnection.fpRequestMessage;
     ITransportMessageProcessedListener* const notificationListener
-        = diagConnection.getRequestNotificationListener();
+        = diagConnection.fpRequestNotificationListener;
     if ((nullptr != notificationListener) && (nullptr != requestMessage))
     {
         requestMessage->resetValidBytes();
@@ -84,10 +84,10 @@ DiagConnectionManager::requestIncomingConnection(TransportMessage& requestMessag
     {
         pConnection->fpDiagConnectionManager = this;
         pConnection->fpMessageSender         = &fOutgoingTransportMessageSender;
-        pConnection->setDiagSessionManager(fDiagDispatcher.getDiagSessionManager());
-        pConnection->fSourceId  = requestMessage.getSourceId();
-        pConnection->fTargetId  = requestMessage.getTargetId();
-        pConnection->fServiceId = requestMessage.getServiceId();
+        pConnection->fpDiagSessionManager    = &fDiagDispatcher.fSessionManager;
+        pConnection->fSourceId               = requestMessage.getSourceId();
+        pConnection->fTargetId               = requestMessage.getTargetId();
+        pConnection->fServiceId              = requestMessage.getServiceId();
         pConnection->open(fConfiguration.ActivateOutgoingPending);
         pConnection->fpRequestMessage  = &requestMessage;
         pConnection->fpResponseMessage = nullptr;

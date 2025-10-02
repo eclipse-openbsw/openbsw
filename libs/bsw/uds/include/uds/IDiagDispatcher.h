@@ -31,20 +31,12 @@ public:
     : fDiagJobRoot(jobRoot), fSessionManager(sessionManager), fEnabled(true)
     {}
 
-    IDiagSessionManager& getDiagSessionManager() const { return fSessionManager; }
-
     AbstractDiagJob::ErrorCode addAbstractDiagJob(AbstractDiagJob& job)
     {
         return fDiagJobRoot.addAbstractDiagJob(job);
     }
 
     void removeAbstractDiagJob(AbstractDiagJob& job) { fDiagJobRoot.removeAbstractDiagJob(job); }
-
-    bool isEnabled() const { return fEnabled; }
-
-    void disable() { fEnabled = false; }
-
-    void enable() { fEnabled = true; }
 
     virtual uint16_t getSourceId() const = 0;
 
@@ -66,8 +58,9 @@ public:
 
 protected:
     DiagJobRoot& fDiagJobRoot;
-    IDiagSessionManager& fSessionManager;
 
+public:
+    IDiagSessionManager& fSessionManager;
     bool fEnabled;
 };
 

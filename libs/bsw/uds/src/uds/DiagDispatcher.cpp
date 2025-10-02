@@ -149,7 +149,7 @@ AbstractTransportLayer::ErrorCode DiagDispatcher::enqueueMessage(
     TransportMessage& transportMessage,
     ITransportMessageProcessedListener* const pNotificationListener)
 {
-    if (!isEnabled())
+    if (!fEnabled)
     {
         return AbstractTransportLayer::ErrorCode::TP_SEND_FAIL;
     }
@@ -200,7 +200,7 @@ void DiagDispatcher::processQueue()
 
 uint8_t DiagDispatcher::dispatchTriggerEventRequest(TransportMessage& tmsg)
 {
-    if ((fConfiguration.SendJobQueue.empty()) && (isEnabled()))
+    if ((fConfiguration.SendJobQueue.empty()) && (fEnabled))
     {
         /* check for TransportConfiguration::isFunctionallyAddressed
          * is obsolete because ALL triggerEvent are of this type  -
@@ -218,7 +218,6 @@ uint8_t DiagDispatcher::dispatchTriggerEventRequest(TransportMessage& tmsg)
                     pConnection->fSourceId,
                     pConnection->fTargetId,
                     pConnection->fServiceId);
-                // pConnection->setRequestNotificationListener(*job.getProcessedListener());
                 DiagReturnCode::Type const result = fDiagJobRoot.execute(
                     *pConnection, pRequest->getPayload(), pRequest->getPayloadLength());
                 if (result != DiagReturnCode::OK)
@@ -311,8 +310,8 @@ void DiagDispatcher::dispatchIncomingRequest(TransportJob& job)
                 pConnection->fSourceId,
                 pConnection->fTargetId,
                 pConnection->fServiceId);
-            pConnection->setRequestNotificationListener(*job.getProcessedListener());
-            DiagReturnCode::Type const result = fDiagJobRoot.execute(
+            pConnection->fpRequestNotificationListener = job.getProcessedListener();
+            DiagReturnCode::Type const result          = fDiagJobRoot.execute(
                 *pConnection,
                 job.getTransportMessage()->getPayload(),
                 job.getTransportMessage()->getPayloadLength());
@@ -377,14 +376,14 @@ void DiagDispatcher::trigger() { ::async::execute(fConfiguration.Context, fAsync
 AbstractTransportLayer::ErrorCode DiagDispatcher::init()
 {
     fConnectionManager.init();
-    enable();
+    fEnabled = true;
     return AbstractTransportLayer::ErrorCode::TP_OK;
 }
 
 ESR_NO_INLINE bool DiagDispatcher::shutdown_local(ShutdownDelegate const delegate)
 {
     Logger::debug(UDS, "DiagDispatcher::shutdown()");
-    disable();
+    fEnabled          = false;
     fShutdownDelegate = delegate;
     fConnectionManager.shutdown(
         ::etl::delegate<void()>::

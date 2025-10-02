@@ -179,7 +179,7 @@ DiagReturnCode::Type IncomingDiagConnection::startNestedRequest(
     estd_assert(fNestedRequest == nullptr);
     (void)releaseRequestGetResponse();
     estd_assert(requestLength < fpResponseMessage->getBufferLength());
-    fIdentifiers.resize(nestedRequest.getPrefixLength());
+    fIdentifiers.resize(nestedRequest.fPrefixLength);
     nestedRequest.init(
         sender,
         ::etl::span<uint8_t>(
@@ -219,7 +219,7 @@ bool IncomingDiagConnection::terminateNestedRequest()
     {
         return true;
     }
-    if (fNestedRequest->getResponseCode() == DiagReturnCode::OK)
+    if (fNestedRequest->fResponseCode == DiagReturnCode::OK)
     {
         ::async::execute(fContext, fTriggerNextNestedRequestDelegate);
     }
@@ -280,10 +280,10 @@ void IncomingDiagConnection::asyncSendNegativeResponse(
                 static_cast<DiagReturnCode::Type>(responseCode));
             pSender->responseSent(*this, AbstractDiagJob::RESPONSE_SENT);
         }
-        else if (!fNestedRequest->isPendingSent())
+        else if (!fNestedRequest->fIsPendingSent)
         {
-            fNestedRequest->setPendingResponseSender(pSender);
-            fResponsePendingIsPending = (fNumPendingMessageProcessedCallbacks != 0U);
+            fNestedRequest->fPendingResponseSender = pSender;
+            fResponsePendingIsPending              = (fNumPendingMessageProcessedCallbacks != 0U);
 
             if (!fResponsePendingIsPending)
             { // Only send ResponsePending while response is not being sent
@@ -359,7 +359,7 @@ void IncomingDiagConnection::asyncSendNegativeResponse(
 
 void IncomingDiagConnection::triggerNextNestedRequest()
 {
-    while ((fNestedRequest->getResponseCode() == DiagReturnCode::OK)
+    while ((fNestedRequest->fResponseCode == DiagReturnCode::OK)
            && (fNestedRequest->prepareNextRequest()))
     {
         fIsResponseActive       = false;
@@ -375,9 +375,9 @@ void IncomingDiagConnection::triggerNextNestedRequest()
 
 void IncomingDiagConnection::endNestedRequest()
 {
-    auto const sender       = fNestedRequest->getSender();
-    auto const length       = fNestedRequest->getResponseLength();
-    auto const responseCode = fNestedRequest->getResponseCode();
+    auto const sender       = fNestedRequest->fSender;
+    auto const length       = fNestedRequest->responseLength();
+    auto const responseCode = fNestedRequest->fResponseCode;
     fNestedRequest          = nullptr;
     if (responseCode == DiagReturnCode::OK)
     {
@@ -411,12 +411,11 @@ void IncomingDiagConnection::asyncTransportMessageProcessed(
         fResponsePendingIsBeingSent = false;
         if (fNestedRequest != nullptr)
         {
-            fNestedRequest->setIsPendingSent();
-            AbstractDiagJob* const pendingResponseSender
-                = fNestedRequest->getPendingResponseSender();
+            fNestedRequest->fIsPendingSent               = true;
+            AbstractDiagJob* const pendingResponseSender = fNestedRequest->fPendingResponseSender;
             if (pendingResponseSender != nullptr)
             {
-                fNestedRequest->setPendingResponseSender(nullptr);
+                fNestedRequest->fPendingResponseSender = nullptr;
                 pendingResponseSender->responseSent(
                     *this,
                     (status == ProcessingResult::PROCESSED_NO_ERROR)
