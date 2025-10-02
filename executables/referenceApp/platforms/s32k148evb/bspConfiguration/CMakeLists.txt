@@ -17,4 +17,5 @@ target_link_libraries(
            bspInterrupts
            bspMcu
            bspOutputPwm
-           bspUart)
+           bspUart
+           etl)

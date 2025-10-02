@@ -13,7 +13,6 @@ public:
     enum class Id
     {
         TERMINAL,
-        DUMMY_UART,
         INVALID,
     };
 
