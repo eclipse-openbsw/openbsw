@@ -19,7 +19,7 @@ class ITransportMessageProvider;
 namespace uds
 {
 class AbstractDiagnosisConfiguration;
-class DiagDispatcher2;
+class DiagDispatcher;
 
 class DiagConnectionManager : public etl::uncopyable
 {
@@ -34,7 +34,7 @@ public:
         transport::AbstractTransportLayer& outgoingSender,
         transport::ITransportMessageProvider& outgoingProvider,
         ::async::ContextType context,
-        DiagDispatcher2& diagDispatcher);
+        DiagDispatcher& diagDispatcher);
 
     IncomingDiagConnection* requestIncomingConnection(transport::TransportMessage& requestMessage);
 
@@ -53,7 +53,7 @@ public:
     void shutdown(::etl::delegate<void()> delegate);
 
 private:
-    friend class DiagDispatcher2;
+    friend class DiagDispatcher;
 
     void checkShutdownProgress();
 
@@ -62,7 +62,7 @@ private:
     transport::AbstractTransportLayer& fOutgoingTransportMessageSender;
     transport::ITransportMessageProvider& fOutgoingTransportMessageProvider;
     ::async::ContextType fContext;
-    DiagDispatcher2& fDiagDispatcher;
+    DiagDispatcher& fDiagDispatcher;
     bool fShutdownRequested;
 };
 

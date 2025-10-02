@@ -8,12 +8,12 @@
 
 namespace uds
 {
-class DiagDispatcher2;
+class DiagDispatcher;
 
 class HardReset : public Subfunction
 {
 public:
-    HardReset(IUdsLifecycleConnector& udsLifecycleConnector, DiagDispatcher2& diagDispatcher);
+    HardReset(IUdsLifecycleConnector& udsLifecycleConnector, DiagDispatcher& diagDispatcher);
 
     void responseSent(IncomingDiagConnection& connection, ResponseSendResult result) override;
 
@@ -26,7 +26,7 @@ private:
         uint16_t requestLength) override;
 
     IUdsLifecycleConnector& fUdsLifecycleConnector;
-    DiagDispatcher2& fDiagDispatcher;
+    DiagDispatcher& fDiagDispatcher;
 
     static uint8_t const sfImplementedRequest[2];
 };

@@ -8,12 +8,12 @@
 
 namespace uds
 {
-class DiagDispatcher2;
+class DiagDispatcher;
 
 class SoftReset : public Subfunction
 {
 public:
-    SoftReset(IUdsLifecycleConnector& udsLifecycleConnector, DiagDispatcher2& diagDispatcher);
+    SoftReset(IUdsLifecycleConnector& udsLifecycleConnector, DiagDispatcher& diagDispatcher);
 
     void responseSent(IncomingDiagConnection& connection, ResponseSendResult result) override;
 
@@ -27,7 +27,7 @@ private:
         uint16_t requestLength) override;
 
     IUdsLifecycleConnector& fUdsLifecycleConnector;
-    DiagDispatcher2& fDiagDispatcher;
+    DiagDispatcher& fDiagDispatcher;
 };
 
 } // namespace uds

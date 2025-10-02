@@ -192,8 +192,8 @@ protected:
     StrictMock<transport::TransportMessageProcessedListenerMock> _messageProcessedListener;
     StrictMock<uds::IncomingDiagConnectionMock> _incomingDiagConnection;
     StrictMock<UdsLifecycleConnectorMock> _lifecycle;
-    uds::DiagDispatcher2 _udsDispatcher;
-    uds::DiagDispatcher2 _udsDispatcher2;
+    uds::DiagDispatcher _udsDispatcher;
+    uds::DiagDispatcher _udsDispatcher2;
     uds::ReadDataByIdentifier _rdbi;
     MyReadDataByIdentifier _myRdbi;
     uds::HardReset _hardReset;

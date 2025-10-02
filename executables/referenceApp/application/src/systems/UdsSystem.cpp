@@ -88,7 +88,7 @@ void UdsSystem::shutdownComplete(transport::AbstractTransportLayer&)
     transitionDone();
 }
 
-DiagDispatcher2& UdsSystem::getUdsDispatcher() { return _udsDispatcher; }
+DiagDispatcher& UdsSystem::getUdsDispatcher() { return _udsDispatcher; }
 
 IAsyncDiagHelper& UdsSystem::getAsyncDiagHelper() { return _asyncDiagHelper; }
 

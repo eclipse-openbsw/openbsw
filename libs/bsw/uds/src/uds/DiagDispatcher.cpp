@@ -27,7 +27,7 @@ using ::util::logger::GLOBAL;
 using ::util::logger::Logger;
 using ::util::logger::UDS;
 
-DiagDispatcher2::DiagDispatcher2(
+DiagDispatcher::DiagDispatcher(
     AbstractDiagnosisConfiguration& configuration,
     IDiagSessionManager& sessionManager,
     DiagJobRoot& jobRoot,
@@ -41,7 +41,7 @@ DiagDispatcher2::DiagDispatcher2(
 , fBusyMessage()
 , fBusyMessageBuffer()
 , fAsyncProcessQueue(
-      ::async::Function::CallType::create<DiagDispatcher2, &DiagDispatcher2::processQueue>(*this))
+      ::async::Function::CallType::create<DiagDispatcher, &DiagDispatcher::processQueue>(*this))
 {
     fBusyMessage.init(
         &fBusyMessageBuffer[0], BUSY_MESSAGE_LENGTH + UdsVmsConstants::BUSY_MESSAGE_EXTRA_BYTES);
@@ -52,7 +52,7 @@ DiagDispatcher2::DiagDispatcher2(
     fBusyMessage.setPayloadLength(BUSY_MESSAGE_LENGTH);
 }
 
-ESR_NO_INLINE AbstractTransportLayer::ErrorCode DiagDispatcher2::send_local(
+ESR_NO_INLINE AbstractTransportLayer::ErrorCode DiagDispatcher::send_local(
     TransportMessage& transportMessage,
     ITransportMessageProcessedListener* const pNotificationListener)
 {
@@ -88,14 +88,14 @@ ESR_NO_INLINE AbstractTransportLayer::ErrorCode DiagDispatcher2::send_local(
     return enqueueMessage(transportMessage, pNotificationListener);
 }
 
-AbstractTransportLayer::ErrorCode DiagDispatcher2::send(
+AbstractTransportLayer::ErrorCode DiagDispatcher::send(
     TransportMessage& transportMessage,
     ITransportMessageProcessedListener* const pNotificationListener)
 {
     return send_local(transportMessage, pNotificationListener);
 }
 
-AbstractTransportLayer::ErrorCode DiagDispatcher2::resume(
+AbstractTransportLayer::ErrorCode DiagDispatcher::resume(
     TransportMessage& transportMessage,
     ITransportMessageProcessedListener* const pNotificationListener)
 {
@@ -118,7 +118,7 @@ AbstractTransportLayer::ErrorCode DiagDispatcher2::resume(
     return enqueueMessage(transportMessage, pNotificationListener);
 }
 
-TransportMessage* DiagDispatcher2::copyFunctionalRequest(TransportMessage& request)
+TransportMessage* DiagDispatcher::copyFunctionalRequest(TransportMessage& request)
 {
     TransportMessage* pRequest = nullptr;
     ITransportMessageProvider::ErrorCode const result
@@ -145,7 +145,7 @@ TransportMessage* DiagDispatcher2::copyFunctionalRequest(TransportMessage& reque
     return pRequest;
 }
 
-AbstractTransportLayer::ErrorCode DiagDispatcher2::enqueueMessage(
+AbstractTransportLayer::ErrorCode DiagDispatcher::enqueueMessage(
     TransportMessage& transportMessage,
     ITransportMessageProcessedListener* const pNotificationListener)
 {
@@ -183,7 +183,7 @@ AbstractTransportLayer::ErrorCode DiagDispatcher2::enqueueMessage(
     }
 }
 
-void DiagDispatcher2::processQueue()
+void DiagDispatcher::processQueue()
 {
     {
         ::async::ModifiableLockType lock;
@@ -198,7 +198,7 @@ void DiagDispatcher2::processQueue()
     }
 }
 
-uint8_t DiagDispatcher2::dispatchTriggerEventRequest(TransportMessage& tmsg)
+uint8_t DiagDispatcher::dispatchTriggerEventRequest(TransportMessage& tmsg)
 {
     if ((fConfiguration.SendJobQueue.empty()) && (isEnabled()))
     {
@@ -252,7 +252,7 @@ uint8_t DiagDispatcher2::dispatchTriggerEventRequest(TransportMessage& tmsg)
 }
 
 // METRIC STCYC 11 // The function is already in use as is
-void DiagDispatcher2::dispatchIncomingRequest(TransportJob& job)
+void DiagDispatcher::dispatchIncomingRequest(TransportJob& job)
 {
     bool const isResuming
         = job.getTransportMessage()->getTargetId() == TransportMessage::INVALID_ADDRESS;
@@ -337,7 +337,7 @@ void DiagDispatcher2::dispatchIncomingRequest(TransportJob& job)
     }
 }
 
-void DiagDispatcher2::sendBusyResponse(TransportMessage const* const message)
+void DiagDispatcher::sendBusyResponse(TransportMessage const* const message)
 {
     Logger::error(UDS, "No incoming connection available -> request discarded --> BUSY");
 
@@ -355,7 +355,7 @@ void DiagDispatcher2::sendBusyResponse(TransportMessage const* const message)
     }
 }
 
-bool DiagDispatcher2::isNegativeResponse(TransportMessage const& transportMessage)
+bool DiagDispatcher::isNegativeResponse(TransportMessage const& transportMessage)
 {
     if (transportMessage.getPayloadLength() < 1U)
     {
@@ -367,40 +367,40 @@ bool DiagDispatcher2::isNegativeResponse(TransportMessage const& transportMessag
     }
 }
 
-bool DiagDispatcher2::isFromValidSender(TransportMessage const& transportMessage)
+bool DiagDispatcher::isFromValidSender(TransportMessage const& transportMessage)
 {
     return TransportConfiguration::isFromTester(transportMessage);
 }
 
-void DiagDispatcher2::trigger() { ::async::execute(fConfiguration.Context, fAsyncProcessQueue); }
+void DiagDispatcher::trigger() { ::async::execute(fConfiguration.Context, fAsyncProcessQueue); }
 
-AbstractTransportLayer::ErrorCode DiagDispatcher2::init()
+AbstractTransportLayer::ErrorCode DiagDispatcher::init()
 {
     fConnectionManager.init();
     enable();
     return AbstractTransportLayer::ErrorCode::TP_OK;
 }
 
-ESR_NO_INLINE bool DiagDispatcher2::shutdown_local(ShutdownDelegate const delegate)
+ESR_NO_INLINE bool DiagDispatcher::shutdown_local(ShutdownDelegate const delegate)
 {
-    Logger::debug(UDS, "DiagDispatcher2::shutdown()");
+    Logger::debug(UDS, "DiagDispatcher::shutdown()");
     disable();
     fShutdownDelegate = delegate;
     fConnectionManager.shutdown(
         ::etl::delegate<void()>::
-            create<DiagDispatcher2, &DiagDispatcher2::connectionManagerShutdownComplete>(*this));
+            create<DiagDispatcher, &DiagDispatcher::connectionManagerShutdownComplete>(*this));
     return false;
 }
 
-bool DiagDispatcher2::shutdown(ShutdownDelegate const delegate) { return shutdown_local(delegate); }
+bool DiagDispatcher::shutdown(ShutdownDelegate const delegate) { return shutdown_local(delegate); }
 
-void DiagDispatcher2::connectionManagerShutdownComplete()
+void DiagDispatcher::connectionManagerShutdownComplete()
 {
-    Logger::debug(UDS, "DiagDispatcher2::connectionManagerShutdownComplete()");
+    Logger::debug(UDS, "DiagDispatcher::connectionManagerShutdownComplete()");
     fShutdownDelegate(*this);
 }
 
-void DiagDispatcher2::transportMessageProcessed(
+void DiagDispatcher::transportMessageProcessed(
     TransportMessage& transportMessage, ProcessingResult const /* result */)
 {
     getProvidingListenerHelper().releaseTransportMessage(transportMessage);

@@ -51,7 +51,7 @@ public:
     void run() override;
     void shutdown() override;
 
-    DiagDispatcher2& getUdsDispatcher();
+    DiagDispatcher& getUdsDispatcher();
 
     IAsyncDiagHelper& getAsyncDiagHelper();
 
@@ -82,7 +82,7 @@ private:
     DiagnosticSessionControl _diagnosticSessionControl;
     CommunicationControl _communicationControl;
     DiagnosisConfiguration<5, 16> _udsConfiguration;
-    DiagDispatcher2 _udsDispatcher;
+    DiagDispatcher _udsDispatcher;
     uds::declare::AsyncDiagHelper<5> _asyncDiagHelper;
 
     ReadDataByIdentifier _readDataByIdentifier;

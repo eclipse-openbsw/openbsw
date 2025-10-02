@@ -12,7 +12,7 @@
 
 namespace uds
 {
-class DiagDispatcher2;
+class DiagDispatcher;
 class IResumableResetDriverPersistence;
 
 // Note: you have to call lifecycleComplete() when lifecycle enters RUN state

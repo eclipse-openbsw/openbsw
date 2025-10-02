@@ -40,7 +40,7 @@ class IDiagSessionManager;
  *
  * \see     transport::AbstractTransportLayer
  */
-class DiagDispatcher2
+class DiagDispatcher
 : public IDiagDispatcher
 , public transport::AbstractTransportLayer
 , public transport::ITransportMessageProcessedListener
@@ -52,10 +52,10 @@ public:
      * \param   configuration   AbstractDiagnosisConfiguration holding
      * the configuration for this DiagDispatcher
      * \param   sessionManager  IDiagSessionManager
-     * \param   context  Context used to handle DiagDispatcher2's
+     * \param   context  Context used to handle DiagDispatcher's
      * timeouts
      */
-    DiagDispatcher2(
+    DiagDispatcher(
         AbstractDiagnosisConfiguration& configuration,
         IDiagSessionManager& sessionManager,
         DiagJobRoot& jobRoot,

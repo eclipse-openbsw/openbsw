@@ -390,7 +390,7 @@ TEST_F(
         true,
         static_cast<::async::ContextType>(1U));
 
-    DiagDispatcher2 dispatcher(
+    DiagDispatcher dispatcher(
         udsConfiguration,
         static_cast<IDiagSessionManager&>(diagSessionManager),
         fDiagJobRoot,

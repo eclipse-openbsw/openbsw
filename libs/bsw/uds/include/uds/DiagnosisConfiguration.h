@@ -31,7 +31,7 @@ public:
     /**
      * Constructor
      * @param   diagAddress Diagnosis address of this configuration. Used e.g.
-     * by DiagDispatcher2 to filter incoming requests.
+     * by DiagDispatcher to filter incoming requests.
      * @param   broadcastAddress    In addition to the specific diagnosis address
      * a diagnosis layer may also receive requests that are broadcasted within
      * the system.

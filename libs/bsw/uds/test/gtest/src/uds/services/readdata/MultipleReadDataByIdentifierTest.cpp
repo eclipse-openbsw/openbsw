@@ -181,7 +181,7 @@ protected:
     StrictMock<IncomingDiagConnectionMock> fIncomingDiagConnection;
     StrictMock<DiagSessionManagerMock> fSessionManager;
     DiagnosisConfiguration<NUM_INCOMING_CONNECTIONS, 1> fUdsConfiguration;
-    DiagDispatcher2 fUdsDispatcher;
+    DiagDispatcher fUdsDispatcher;
     DiagJobRoot fDiagJobRoot;
 
     static uint8_t const SOURCE_ID = 0xF1U;

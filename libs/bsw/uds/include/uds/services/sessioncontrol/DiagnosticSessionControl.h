@@ -17,7 +17,7 @@ namespace uds
 {
 class IOperatingModeManager;
 class ISessionPersistence;
-class DiagDispatcher2;
+class DiagDispatcher;
 
 using InitCompleteCallbackType = ::etl::delegate<void()>;
 
@@ -46,11 +46,11 @@ public:
     void responseSent(IncomingDiagConnection& connection, ResponseSendResult result) override;
 
     /**
-     * If a DiagDispatcher2 is set, it will be disabled when a session change
+     * If a DiagDispatcher is set, it will be disabled when a session change
      * that requires a reset is performed.
-     * \param pDiagDispatcher   DiagDispatcher2 to disable
+     * \param pDiagDispatcher   DiagDispatcher to disable
      */
-    void setDiagDispatcher(DiagDispatcher2* const pDiagDispatcher)
+    void setDiagDispatcher(DiagDispatcher* const pDiagDispatcher)
     {
         fpDiagDispatcher = pDiagDispatcher;
     }
@@ -148,7 +148,7 @@ protected:
     ::async::ContextType fContext;
     IUdsLifecycleConnector& fUdsLifecycleConnector;
     ISessionPersistence& fPersistence;
-    DiagDispatcher2* fpDiagDispatcher;
+    DiagDispatcher* fpDiagDispatcher;
 
     DiagSession* fpCurrentSession;
     AbstractDiagJob const* fpRequestedJob;

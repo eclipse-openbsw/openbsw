@@ -47,7 +47,7 @@ struct ManagedIncomingDiagConnectionTest : Test
     TransportMessageProvidingListenerMock* fpTpRouterMock;
     AbstractTransportLayerMock* fpTpLayerMock;
     DiagConnectionManager* fpDiagConnectionManager;
-    DiagDispatcher2* fpDiagDispatcher;
+    DiagDispatcher* fpDiagDispatcher;
     DiagSessionManagerMock* fpSessionProvider;
     DiagJobRoot* fpDiagJobRoot;
 
@@ -73,7 +73,7 @@ struct ManagedIncomingDiagConnectionTest : Test
                 true,
                 fContext);
 
-        fpDiagDispatcher = new DiagDispatcher2(
+        fpDiagDispatcher = new DiagDispatcher(
             *fpDiagnosisConfiguration, *fpSessionProvider, *fpDiagJobRoot, fContext);
 
         fpDiagConnectionManager = new DiagConnectionManager(

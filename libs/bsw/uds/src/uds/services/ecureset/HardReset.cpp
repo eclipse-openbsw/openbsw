@@ -11,7 +11,7 @@ namespace uds
 {
 uint8_t const HardReset::sfImplementedRequest[] = {ServiceId::ECU_RESET, 0x01U};
 
-HardReset::HardReset(IUdsLifecycleConnector& udsLifecycleConnector, DiagDispatcher2& diagDispatcher)
+HardReset::HardReset(IUdsLifecycleConnector& udsLifecycleConnector, DiagDispatcher& diagDispatcher)
 : Subfunction(
     &sfImplementedRequest[0],
     AbstractDiagJob::EMPTY_REQUEST,

@@ -31,7 +31,7 @@ DiagConnectionManager::DiagConnectionManager(
     AbstractTransportLayer& outgoingSender,
     ITransportMessageProvider& outgoingProvider,
     ::async::ContextType context,
-    DiagDispatcher2& diagDispatcher)
+    DiagDispatcher& diagDispatcher)
 : fConfiguration(configuration)
 , fOutgoingTransportMessageSender(outgoingSender)
 , fOutgoingTransportMessageProvider(outgoingProvider)
