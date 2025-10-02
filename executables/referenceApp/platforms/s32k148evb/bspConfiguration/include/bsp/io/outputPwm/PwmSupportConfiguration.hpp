@@ -10,10 +10,6 @@
 namespace bios
 {
 
-// ftm4:1
-tFtmEPwmConfiguration const EVAL_LED_RED_PWM_Configuration
-    = {tFtm::PWM_EdgeAlignedetSet0, false, false, false, Io::EVAL_LED_RED, 0, 10000};
-
 // ftm4:2
 tFtmEPwmConfiguration const EVAL_LED_GREEN_PWM_Configuration
     = {tFtm::PWM_EdgeAlignedetSet0, false, false, false, Io::EVAL_LED_GREEN, 0, 10000};

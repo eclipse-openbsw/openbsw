@@ -130,18 +130,23 @@ Eclipse OpenBSW is a trademark of the Eclipse Foundation.
 .. toctree::
     :maxdepth: 1
     :caption: Learning
-    :glob:
     :hidden:
 
     learning/overview
     learning/SysTest/HW_Testing_Guide
-    ../tools/UdsTool/doc/index
-    codingGuidelines/index
+
+.. toctree::
+    :maxdepth: 1
+    :caption: Guidelines
+    :hidden:
+
+    guidelines/conventions/index
+    guidelines/practices
+    guidelines/codeFormatting/index
 
 .. toctree::
     :maxdepth: 2
     :caption: Platforms
-    :glob:
     :hidden:
 
     platforms/posix/index
@@ -150,79 +155,26 @@ Eclipse OpenBSW is a trademark of the Eclipse Foundation.
 .. toctree::
     :maxdepth: 1
     :caption: Features
-    :glob:
     :hidden:
 
+    features/storage
     features/functional_safety
 
 .. toctree::
     :maxdepth: 1
-    :caption: Application
-    :glob:
+    :caption: Software Modules
     :hidden:
 
-    ../executables/referenceApp/**/doc/index
+    modules/common
+    modules/posix
+    modules/s32k1xx
+    modules/executables
+    modules/mocks
 
 .. toctree::
     :maxdepth: 1
-    :caption: BSW Modules
+    :caption: Tools
     :glob:
     :hidden:
 
-    ../libs/bsw/**/doc/index
-
-.. toctree::
-    :maxdepth: 1
-    :caption: Safety Modules
-    :glob:
-    :hidden:
-
-    ../libs/safety/**/doc/index
-
-.. toctree::
-    :maxdepth: 1
-    :caption: BSP Modules
-    :glob:
-    :hidden:
-
-    ../libs/bsp/**/doc/index
-
-.. toctree::
-    :maxdepth: 1
-    :caption: BSP Modules posix
-    :glob:
-    :hidden:
-
-    ../platforms/posix/**/doc/index
-
-.. toctree::
-    :maxdepth: 1
-    :caption: BSP Modules s32k1xx
-    :glob:
-    :hidden:
-
-    ../platforms/s32k1xx/**/doc/index
-
-.. toctree::
-    :maxdepth: 1
-    :caption: BSP Configuration for s32k148evb
-    :glob:
-    :hidden:
-
-    ../executables/referenceApp/platforms/s32k148evb/**/doc/index
-
-.. toctree::
-    :maxdepth: 1
-    :caption: UT Modules
-    :glob:
-    :hidden:
-
-    ../executables/unitTest/**/doc/index
-
-.. toctree::
-    :maxdepth: 1
-    :caption: Analysis
-    :glob:
-    :hidden:
-
-    ../doc/analysis/index.rst
+    ../tools/**/doc/index

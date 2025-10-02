@@ -1,5 +1,5 @@
-Conventions
-===========
+Coding Conventions
+==================
 
 .. toctree::
     :maxdepth: 2

@@ -11,8 +11,7 @@ enum outputPwm
     _pwmDynamicStart = _pwmStaticEnd
 
     ,
-    EVAL_LED_RED_PWM = _pwmDynamicStart,
-    EVAL_LED_GREEN_PWM,
+    EVAL_LED_GREEN_PWM = _pwmDynamicStart,
     EVAL_LED_BLUE_PWM
 
     ,
