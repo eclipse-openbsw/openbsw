@@ -3,6 +3,11 @@
 Set up build for S32K148 platform on Ubuntu :prop:`tool:ubuntu_version`
 =======================================================================
 
+Using the GCC toolchain
+-----------------------
+
+(For using clang, see next section.)
+
 Required tools:
 
 * gcc for ARM (tested with version `10-3-2021-10 <https://developer.arm.com/downloads/-/gnu-rm/10-3-2021-10>`_).
@@ -47,7 +52,58 @@ Then, in the base directory run:
     cmake --build --preset s32k148-gcc
 
 The build files should be written to a new subdirectory named ``build/s32k148-gcc``
-and the built executable should be found at ``build/s32k148/executables/referenceApp/application/RelWithDebInfo/app.referenceApp.elf``
+and the built executable should be found at ``build/s32k148-gcc/executables/referenceApp/application/RelWithDebInfo/app.referenceApp.elf``
+which you can flash on the S32K148 development board.
+
+Using the clang toolchain
+-------------------------
+
+Required tools:
+
+* llvm for ARM (tested with version `19.1.1 <https://github.com/ARM-software/LLVM-embedded-toolchain-for-Arm/releases/download/release-19.1.1>`_).
+* cmake >= :prop:`tool:cmake_version`
+* make
+
+The steps below assume you have already completed :doc:`setup_posix_ubuntu_build`.
+If not then please do that first.
+When that is working, then you just need to add the LLVM for ARM toolchain to this environment to build for the S32K148 platform.
+
+You can download the LLVM for ARM toolchain for your platform from
+https://github.com/ARM-software/LLVM-embedded-toolchain-for-Arm/releases/
+
+These steps were tested with version :prop:`tool:llvm-arm`, you may wish to choose a newer version for your platform.
+
+Assuming you have Ubuntu :prop:`tool:ubuntu_version` running on a ``x86_64`` platform,
+you can set up the build environment for the S32K148 platform with the following steps.
+
+.. code-block:: bash
+
+    wget https://github.com/ARM-software/LLVM-embedded-toolchain-for-Arm/releases/download/release-x.x/LLVM-ET-Arm-x.x-Linux-x86_64.tar.xz
+
+and unpack it in your preferred location as follows:
+
+.. code-block:: bash
+
+    tar xJf LLVM-ET-Arm-x.x-Linux-x86_64.tar.xz
+
+This will create a directory named LLVM-ET-Arm-:prop:`tool:llvm-arm`-Linux-x86_64 with a ``bin`` subdirectory containing the LLVM for ARM toolchain.
+
+Set the CC and CXX environment variables to the compiler in this directory:
+
+.. code-block:: bash
+
+    export CC=`pwd`/LLVM-ET-Arm-:prop:`tool:llvm-arm`-Linux-x86_64/bin/clang
+    export CXX=`pwd`/LLVM-ET-Arm-:prop:`tool:llvm-arm`-Linux-x86_64/bin/clang++
+
+Then, in the base directory run:
+
+.. code-block:: bash
+
+    cmake --preset s32k148-clang
+    cmake --build --preset s32k148-clang
+
+The build files should be written to a new subdirectory named ``build/s32k148-gcc``
+and the built executable should be found at ``build/s32k148-clang/executables/referenceApp/application/RelWithDebInfo/app.referenceApp.elf``
 which you can flash on the S32K148 development board.
 
 Next :doc:`setup_s32k148_ubuntu_nxpide`
