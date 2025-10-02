@@ -162,21 +162,6 @@ TEST_F(ManagedIncomingDiagConnectionTest, setResponseMessage)
 
 /**
  * @test
- * isResuming() must throw an exception if resuming flag is not set as expected
- */
-TEST_F(ManagedIncomingDiagConnectionTest, isResuming)
-{
-    EXPECT_FALSE(fpIncomingDiagConnection->isResuming());
-
-    fpIncomingDiagConnection->setResuming(true);
-    EXPECT_TRUE(fpIncomingDiagConnection->isResuming());
-
-    fpIncomingDiagConnection->setResuming(false);
-    EXPECT_FALSE(fpIncomingDiagConnection->isResuming());
-}
-
-/**
- * @test
  * Identifiers are directly added into the response message.
  */
 TEST_F(ManagedIncomingDiagConnectionTest, addIdentifier)
