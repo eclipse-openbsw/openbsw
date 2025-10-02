@@ -86,8 +86,8 @@ struct ManagedIncomingDiagConnectionTest : Test
         fpIncomingDiagConnection                          = new IncomingDiagConnection(fContext);
         fpIncomingDiagConnection->fpMessageSender         = fpTpLayerMock;
         fpIncomingDiagConnection->fpDiagConnectionManager = fpDiagConnectionManager;
-        fpIncomingDiagConnection->setDiagSessionManager(*fpSessionProvider);
-        fpIncomingDiagConnection->fpMessageSender = fpTpLayerMock;
+        fpIncomingDiagConnection->fpDiagSessionManager    = fpSessionProvider;
+        fpIncomingDiagConnection->fpMessageSender         = fpTpLayerMock;
     }
 
     virtual void TearDown()
@@ -231,7 +231,7 @@ TEST_F(ManagedIncomingDiagConnectionTest, sendPositiveResponse)
  */
 TEST_F(ManagedIncomingDiagConnectionTest, isNestedRequest)
 {
-    EXPECT_FALSE(fpIncomingDiagConnection->isNestedRequest());
+    EXPECT_FALSE(fpIncomingDiagConnection->fNestedRequest != nullptr);
 
     NiceMock<NestedDiagRequestMock> nestedRequestMock(1U);
     NiceMock<AbstractDiagJobMock> diagJobMock(static_cast<uint8_t const*>(nullptr), 0U, 0U, 0U);
@@ -245,5 +245,5 @@ TEST_F(ManagedIncomingDiagConnectionTest, isNestedRequest)
     EXPECT_CALL(nestedRequestMock, processNestedRequest(_, _, _))
         .WillOnce(Return(DiagReturnCode::OK));
     fpIncomingDiagConnection->startNestedRequest(diagJobMock, nestedRequestMock, nullptr, 0U);
-    EXPECT_TRUE(fpIncomingDiagConnection->isNestedRequest());
+    EXPECT_TRUE(fpIncomingDiagConnection->fNestedRequest != nullptr);
 }
