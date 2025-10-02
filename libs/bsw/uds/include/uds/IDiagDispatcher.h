@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "transport/AbstractTransportLayer.h"
 #include "uds/UdsConfig.h"
 #include "uds/base/AbstractDiagJob.h"
 #include "uds/base/DiagJobRoot.h"
@@ -57,6 +58,11 @@ public:
      * \note - will only be executed in case no incoming diag message
      */
     virtual uint8_t dispatchTriggerEventRequest(transport::TransportMessage& tmsg) = 0;
+
+    virtual ::transport::AbstractTransportLayer::ErrorCode resume(
+        ::transport::TransportMessage& transportMessage,
+        ::transport::ITransportMessageProcessedListener* pNotificationListener)
+        = 0;
 
 protected:
     DiagJobRoot& fDiagJobRoot;

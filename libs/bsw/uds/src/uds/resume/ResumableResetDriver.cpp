@@ -20,7 +20,7 @@ ResumableResetDriver::ResumableResetDriver(
     uint16_t const testerObdEthSourceId,
     uint16_t const testerObdEthStartupDelayInMs)
 : fUdsLifecycleConnector(udsLifecycleConnector)
-, fResumableDiagDispatcher(nullptr)
+, fDiagDispatcher(nullptr)
 , fContext(context)
 , fPersistence(persistence)
 , fResumeMessage(resumeMessage)
@@ -30,9 +30,9 @@ ResumableResetDriver::ResumableResetDriver(
 , fShutdownType(shutdownType)
 {}
 
-void ResumableResetDriver::resume(IResumableDiagDispatcher& resumableDiagDispatcher)
+void ResumableResetDriver::resume(IDiagDispatcher& diagDispatcher)
 {
-    fResumableDiagDispatcher = &resumableDiagDispatcher;
+    fDiagDispatcher = &diagDispatcher;
     if (fPersistence.readRequest(fResumeMessage))
     {
         fPersistence.clear();
@@ -52,14 +52,14 @@ void ResumableResetDriver::resume(IResumableDiagDispatcher& resumableDiagDispatc
         }
         else
         {
-            (void)resumableDiagDispatcher.resume(fResumeMessage, nullptr);
+            (void)diagDispatcher.resume(fResumeMessage, nullptr);
         }
     }
 }
 
-void ResumableResetDriver::init(IResumableDiagDispatcher& resumableDiagDispatcher)
+void ResumableResetDriver::init(IDiagDispatcher& diagDispatcher)
 {
-    fResumableDiagDispatcher = &resumableDiagDispatcher;
+    fDiagDispatcher = &diagDispatcher;
 }
 
 void ResumableResetDriver::shutdown() {}
@@ -76,7 +76,7 @@ bool ResumableResetDriver::prepareReset(::transport::TransportMessage const* con
         {
             fPersistence.clear();
         }
-        fResumableDiagDispatcher->disable();
+        fDiagDispatcher->disable();
         return true;
     }
     else
@@ -88,7 +88,7 @@ bool ResumableResetDriver::prepareReset(::transport::TransportMessage const* con
 void ResumableResetDriver::abortReset()
 {
     fPersistence.clear();
-    fResumableDiagDispatcher->enable();
+    fDiagDispatcher->enable();
 }
 
 void ResumableResetDriver::reset() { reset(fShutdownType, fResetTimeoutInMs); }
@@ -103,11 +103,8 @@ void ResumableResetDriver::reset(
     }
 }
 
-void ResumableResetDriver::lifecycleComplete() { resume(*fResumableDiagDispatcher); }
+void ResumableResetDriver::lifecycleComplete() { resume(*fDiagDispatcher); }
 
-void ResumableResetDriver::execute()
-{
-    (void)fResumableDiagDispatcher->resume(fResumeMessage, nullptr);
-}
+void ResumableResetDriver::execute() { (void)fDiagDispatcher->resume(fResumeMessage, nullptr); }
 
 } // namespace uds

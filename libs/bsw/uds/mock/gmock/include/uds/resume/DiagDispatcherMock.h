@@ -3,17 +3,18 @@
 #pragma once
 
 #include "transport/AbstractTransportLayer.h"
-#include "uds/resume/IResumableDiagDispatcher.h"
+#include "transport/ITransportMessageProcessedListener.h"
+#include "uds/IDiagDispatcher.h"
 
 #include <gmock/gmock.h>
 
 namespace uds
 {
-class DiagDispatcherMock : public IResumableDiagDispatcher
+class DiagDispatcherMock : public IDiagDispatcher
 {
 public:
     DiagDispatcherMock(IDiagSessionManager& sessionManager, DiagJobRoot& jobRoot)
-    : IResumableDiagDispatcher(sessionManager, jobRoot)
+    : IDiagDispatcher(sessionManager, jobRoot)
     {}
 
     MOCK_CONST_METHOD0(getSourceId, uint16_t());

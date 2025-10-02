@@ -4,8 +4,8 @@
 
 #include "platform/estdint.h"
 #include "transport/BufferedTransportMessage.h"
+#include "uds/IDiagDispatcher.h"
 #include "uds/lifecycle/IUdsLifecycleConnector.h"
-#include "uds/resume/IResumableDiagDispatcher.h"
 
 #include <async/Async.h>
 #include <etl/uncopyable.h>
@@ -47,14 +47,14 @@ public:
      * Will be typically used from bootloader. In this case no init()/shutdown() should be used.
      * \param resumableDiagDispatcher resumable diagnosis dispatcher to use
      */
-    void resume(IResumableDiagDispatcher& resumableDiagDispatcher);
+    void resume(IDiagDispatcher& diagDispatcher);
 
     /**
      * Initialize within lifecycle. The driver will add itself as a lifecycle listener
      * and resume the request if lifecycle has completed. In this case no resume() should be used.
      * \param resumableDiagDispatcher resumable diagnosis dispatcher to use
      */
-    void init(IResumableDiagDispatcher& resumableDiagDispatcher);
+    void init(IDiagDispatcher& diagDispatcher);
     /**
      * Remove from lifecycle.
      */
@@ -93,7 +93,7 @@ private:
     void dispatchMessage();
 
     IUdsLifecycleConnector& fUdsLifecycleConnector;
-    IResumableDiagDispatcher* fResumableDiagDispatcher;
+    IDiagDispatcher* fDiagDispatcher;
     ::async::ContextType fContext;
     ::async::TimeoutType fTimeout;
     IResumableResetDriverPersistence& fPersistence;

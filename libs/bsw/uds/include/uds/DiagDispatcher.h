@@ -6,7 +6,6 @@
 #include "uds/IDiagDispatcher.h"
 #include "uds/UdsConfig.h"
 #include "uds/connection/DiagConnectionManager.h"
-#include "uds/resume/IResumableDiagDispatcher.h"
 
 #include <async/Async.h>
 #include <async/util/Call.h>
@@ -42,7 +41,7 @@ class IDiagSessionManager;
  * \see     transport::AbstractTransportLayer
  */
 class DiagDispatcher2
-: public IResumableDiagDispatcher
+: public IDiagDispatcher
 , public transport::AbstractTransportLayer
 , public transport::ITransportMessageProcessedListener
 , public ::etl::uncopyable
@@ -86,9 +85,6 @@ public:
     void transportMessageProcessed(
         transport::TransportMessage& transportMessage, ProcessingResult result) override;
 
-    /**
-     * \see uds::IResumableDiagDispatcher::resume()
-     */
     transport::AbstractTransportLayer::ErrorCode resume(
         transport::TransportMessage& transportMessage,
         transport::ITransportMessageProcessedListener* pNotificationListener) override;

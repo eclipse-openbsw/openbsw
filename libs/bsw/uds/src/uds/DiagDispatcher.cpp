@@ -32,7 +32,7 @@ DiagDispatcher2::DiagDispatcher2(
     IDiagSessionManager& sessionManager,
     DiagJobRoot& jobRoot,
     ::async::ContextType context)
-: IResumableDiagDispatcher(sessionManager, jobRoot)
+: IDiagDispatcher(sessionManager, jobRoot)
 , AbstractTransportLayer(configuration.DiagBusId)
 , fConfiguration(configuration)
 , fConnectionManager(fConfiguration, *this, getProvidingListenerHelper(), context, *this)
