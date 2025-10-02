@@ -177,46 +177,6 @@ IDiagAuthenticator const& AbstractDiagJob::getDiagAuthenticator() const
     return authenticator;
 }
 
-void TestDiagnosisSessionManager::testSwitchSession(DiagSession::SessionType targetSession)
-{
-    switch (targetSession)
-    {
-        case DiagSession::DEFAULT:
-            fpCurrentSession = &DiagSession::APPLICATION_DEFAULT_SESSION();
-            break;
-        case DiagSession::EXTENDED:
-            fpCurrentSession = &DiagSession::APPLICATION_EXTENDED_SESSION();
-            break;
-        default: break;
-    }
-    for (auto itr = fListeners.begin(); itr != fListeners.end(); ++itr)
-    {
-        itr->diagSessionChanged(*fpCurrentSession);
-    }
-}
-
-void TestDiagnosisSessionManager::responseSent(
-    IncomingDiagConnection& connection,
-    DiagReturnCode::Type result,
-    uint8_t const response[],
-    uint16_t responseLength)
-{
-    for (auto itr = fListeners.begin(); itr != fListeners.end(); ++itr)
-    {
-        itr->diagSessionResponseSent(result);
-    }
-}
-
-void TestDiagnosisSessionManager::addDiagSessionListener(IDiagSessionChangedListener& listener)
-{
-    fListeners.push_back(listener);
-}
-
-void TestDiagnosisSessionManager::removeDiagSessionListener(IDiagSessionChangedListener& listener)
-{
-    fListeners.remove(listener);
-}
-
 DiagReturnCode::Type AbstractDiagJob::process(
     IncomingDiagConnection& connection, uint8_t const request[], uint16_t requestLength)
 {
