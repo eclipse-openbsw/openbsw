@@ -61,7 +61,9 @@ jobs:
 
     - name: Zip code_coverage and coverage_badges
       run: |
-            zip -r code_coverage.zip code_coverage
+            cd code_coverage
+            zip -r coverage.zip coverage
+            cd ..
             mkdir coverage_badges
             mv line_coverage_badge.svg coverage_badges/
             mv function_coverage_badge.svg coverage_badges/
@@ -70,8 +72,8 @@ jobs:
     - name: Upload code coverage artifact
       uses: actions/upload-artifact@v4
       with:
-        name: code_coverage
-        path: code_coverage.zip
+        name: coverage
+        path: code_coverage/coverage.zip
 
     - name: Upload Coverage Badge
       uses: actions/upload-artifact@v4
