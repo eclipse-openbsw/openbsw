@@ -19,7 +19,7 @@ jobs:
       id: cache-build
       uses: actions/cache@v3
       with:
-          path: cmake-build-unit-tests
+          path: code_coverage
           key: ${{ runner.os }}-cmake-build-unit-tests-${{ hashFiles('**/*.cpp', '**/*.h',  '**/*.cmake', '**/*.txt', '**/*.c', '**/*.s') }}
 
     - name: sccache cache backup from cache
@@ -61,7 +61,6 @@ jobs:
 
     - name: Zip code_coverage and coverage_badges
       run: |
-            mv cmake-build-unit-tests/coverage code_coverage
             zip -r code_coverage.zip code_coverage
             mkdir coverage_badges
             mv line_coverage_badge.svg coverage_badges/

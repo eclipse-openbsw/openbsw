@@ -1,6 +1,6 @@
 set(OPENBSW_PLATFORM posix)
 
-if (NOT ${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+if (NOT CMAKE_SYSTEM_NAME OR NOT CMAKE_SYSTEM_NAME MATCHES "Darwin")
     set(PLATFORM_SUPPORT_CAN
         ON
         CACHE BOOL "Turn CAN support on or off" FORCE)
@@ -16,9 +16,15 @@ set(PLATFORM_SUPPORT_WATCHDOG
 set(PLATFORM_SUPPORT_MPU
     OFF
     CACHE BOOL "Turn OFF MPU support" FORCE)
+set(PLATFORM_SUPPORT_ROM_CHECK
+    OFF
+    CACHE BOOL "Turn ROM check support off" FORCE)
 set(PLATFORM_SUPPORT_ETHERNET
     ON
     CACHE BOOL "Turn ethernet support on or off" FORCE)
 set(PLATFORM_SUPPORT_STORAGE
     ON
     CACHE BOOL "Turn persistent storage on or off" FORCE)
+set(PLATFORM_SUPPORT_UDS
+    ON
+    CACHE BOOL "Turn UDS support on or off" FORCE)

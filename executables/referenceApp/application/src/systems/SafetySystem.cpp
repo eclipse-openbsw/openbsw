@@ -2,10 +2,10 @@
 
 #include "systems/SafetySystem.h"
 
-#include <safeLifecycle/SafetyLogger.h>
 #include <safeLifecycle/SafetyManager.h>
+#include <safeUtils/SafetyLogger.h>
 #ifdef PLATFORM_SUPPORT_WATCHDOG
-#include "watchdog/Watchdog.h"
+#include <watchdog/Watchdog.h>
 #endif
 
 ::safety::SafetyManager safetyManager;
@@ -20,12 +20,8 @@ namespace systems
 using ::util::logger::Logger;
 using ::util::logger::SAFETY;
 
-SafetySystem::SafetySystem(
-    ::async::ContextType const context, ::lifecycle::ILifecycleManager& lifecycleManager)
-: _context(context)
-, _timeout()
-, _lifecycleControlCommand(lifecycleManager)
-, _asyncCommandWrapperForLifecycleControlCommand(_lifecycleControlCommand, context)
+SafetySystem::SafetySystem(::async::ContextType const context, ::lifecycle::ILifecycleManager&)
+: _context(context), _timeout()
 {
     setTransitionContext(context);
 }
@@ -48,7 +44,7 @@ void SafetySystem::shutdown()
 {
     _timeout.cancel();
 #ifdef PLATFORM_SUPPORT_WATCHDOG
-    bsp::Watchdog::disableWatchdog();
+    ::safety::bsp::Watchdog::disableWatchdog();
 #endif
 
     transitionDone();

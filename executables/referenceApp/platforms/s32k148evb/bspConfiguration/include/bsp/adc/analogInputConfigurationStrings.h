@@ -8,4 +8,6 @@
 char const* const adcChannelsNamingStrings[] = {
     "AiEval_Poti_ADC",
     "AiEval_ADC",
+    "Ai_BANDGAP",
+    "Ai_ADCINTERNAL0",
 };

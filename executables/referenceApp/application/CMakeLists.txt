@@ -1,25 +1,5 @@
 set(app.referenceAppExtraSources)
 
-if (PLATFORM_SUPPORT_UDS)
-    list(
-        APPEND
-        app.referenceAppExtraSources
-        src/systems/TransportSystem.cpp
-        src/systems/UdsSystem.cpp
-        src/uds/ReadIdentifierPot.cpp)
-
-    if (PLATFORM_SUPPORT_CAN)
-        list(APPEND app.referenceAppExtraSources src/systems/DoCanSystem.cpp)
-    endif ()
-    if (PLATFORM_SUPPORT_ETHERNET)
-        list(APPEND app.referenceAppExtraSources src/systems/EthernetSystem.cpp)
-    endif ()
-endif ()
-
-if (PLATFORM_SUPPORT_STORAGE)
-    list(APPEND app.referenceAppExtraSources src/systems/StorageSystem.cpp)
-endif ()
-
 add_executable(
     app.referenceApp
     src/app/app.cpp
@@ -30,10 +10,38 @@ add_executable(
     src/systems/RuntimeSystem.cpp
     src/systems/SysAdminSystem.cpp
     src/systems/SafetySystem.cpp
-    ${app.referenceAppExtraSources}
     src/main.cpp)
 
+if (PLATFORM_SUPPORT_UDS)
+    target_sources(
+        app.referenceApp
+        PRIVATE src/systems/TransportSystem.cpp src/systems/UdsSystem.cpp
+                src/uds/ReadIdentifierPot.cpp)
+endif ()
+
+if (PLATFORM_SUPPORT_CAN)
+    target_sources(app.referenceApp PRIVATE src/systems/DoCanSystem.cpp)
+endif ()
+
+if (PLATFORM_SUPPORT_ETHERNET)
+    target_sources(app.referenceApp PRIVATE src/systems/EthernetSystem.cpp)
+endif ()
+
+if (PLATFORM_SUPPORT_STORAGE)
+    target_sources(app.referenceApp PRIVATE src/systems/StorageSystem.cpp)
+endif ()
+
 set_target_properties(app.referenceApp PROPERTIES SUFFIX ".elf")
+
+if (PLATFORM_SUPPORT_ROM_CHECK)
+    add_custom_command(
+        TARGET app.referenceApp
+        POST_BUILD
+        COMMAND python3 ${OPENBSW_DIR}/tools/safety/crcCheck.py
+        COMMENT
+            "Running post-build script to run the CRC and inject the result into the ELF file"
+    )
+endif ()
 
 if (TARGET startUp)
     get_target_property(LINKER_SCRIPT startUp PROP_LINKER_SCRIPT)
@@ -47,7 +55,8 @@ target_include_directories(app.referenceApp PRIVATE include)
 
 target_link_libraries(
     app.referenceApp
-    PRIVATE asyncBinding
+    PRIVATE
+            asyncBinding
             lwipcore
             asyncConsole
             bspMcu
@@ -67,25 +76,27 @@ target_link_libraries(
             udsConfigurationImpl
             runtime
             safeLifecycle
+            safeUtils
+            safeWatchdog
             socBsp)
 
 if (PLATFORM_SUPPORT_UDS)
-
     target_link_libraries(app.referenceApp PRIVATE transport
                                                    transportRouterSimple uds)
-
 endif ()
 
 if (PLATFORM_SUPPORT_CAN)
-
     target_link_libraries(app.referenceApp PRIVATE cpp2can docan)
 endif ()
 
 if (PLATFORM_SUPPORT_ETHERNET)
-
     target_link_libraries(app.referenceApp PRIVATE cpp2ethernet lwipSocket)
 endif ()
 
 if (PLATFORM_SUPPORT_STORAGE)
     target_link_libraries(app.referenceApp PRIVATE storage)
+endif ()
+
+if (PLATFORM_SUPPORT_ROM_CHECK)
+    target_link_libraries(app.referenceApp PRIVATE safeMemory)
 endif ()

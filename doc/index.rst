@@ -63,9 +63,9 @@ This is how to build and run the unit tests from the root of the workspace:
 
 .. code-block:: bash
 
-   cmake -B cmake-build-unit-tests -S executables/unitTest -DBUILD_UNIT_TESTS=ON -DCMAKE_BUILD_TYPE=Debug
-   cmake --build cmake-build-unit-tests -j
-   ctest --test-dir cmake-build-unit-tests -j
+   cmake --preset tests-debug
+   cmake --build --preset tests-debug --parallel $(nproc)
+   ctest --preset tests-debug --parallel $(nproc)
    # if you modified some CMakeLists.txt files in the project don't forget to run:
    cmake-format -i $(find . -name CMakeLists.txt | sed '/3rdparty\/.*\/CMakeLists\.txt/d')
 
@@ -90,17 +90,17 @@ visualize and analyze the results more effectively.
 
    # capture the coverage
    lcov --capture --directory . \
-    --output-file cmake-build-unit-tests/coverage_unfiltered.info
+    --output-file build/tests/Debug/coverage_unfiltered.info
    # filter out the coverage of 3rd party googletest module as it is not used on target and
    # also coverage for mocks
-   lcov --remove cmake-build-unit-tests/coverage_unfiltered.info \
+   lcov --remove build/tests/Debug/coverage_unfiltered.info \
     '*libs/3rdparty/googletest/*' \
     '*/mock/*' \
     '*/gmock/*' \
-    --output-file cmake-build-unit-tests/coverage.info
+    --output-file build/tests/Debug/coverage.info
    # create a HTML report
-   genhtml cmake-build-unit-tests/coverage.info \
-    --output-directory cmake-build-unit-tests/coverage
+   genhtml build/tests/Debug/coverage.info \
+    --output-directory build/tests/Debug/coverage
 
 .. note::
 
@@ -130,18 +130,23 @@ Eclipse OpenBSW is a trademark of the Eclipse Foundation.
 .. toctree::
     :maxdepth: 1
     :caption: Learning
-    :glob:
     :hidden:
 
     learning/overview
     learning/SysTest/HW_Testing_Guide
-    ../tools/UdsTool/doc/index
-    codingGuidelines/index
+
+.. toctree::
+    :maxdepth: 1
+    :caption: Guidelines
+    :hidden:
+
+    guidelines/conventions/index
+    guidelines/practices
+    guidelines/codeFormatting/index
 
 .. toctree::
     :maxdepth: 2
     :caption: Platforms
-    :glob:
     :hidden:
 
     platforms/posix/index
@@ -149,72 +154,27 @@ Eclipse OpenBSW is a trademark of the Eclipse Foundation.
 
 .. toctree::
     :maxdepth: 1
-    :caption: Application
-    :glob:
+    :caption: Features
     :hidden:
 
-    ../executables/referenceApp/**/doc/index
+    features/storage
+    features/functional_safety
 
 .. toctree::
     :maxdepth: 1
-    :caption: BSW Modules
-    :glob:
+    :caption: Software Modules
     :hidden:
 
-    ../libs/bsw/**/doc/index
+    modules/common
+    modules/posix
+    modules/s32k1xx
+    modules/executables
+    modules/mocks
 
 .. toctree::
     :maxdepth: 1
-    :caption: Safety Modules
+    :caption: Tools
     :glob:
     :hidden:
 
-    ../libs/safety/**/doc/index
-
-.. toctree::
-    :maxdepth: 1
-    :caption: BSP Modules
-    :glob:
-    :hidden:
-
-    ../libs/bsp/**/doc/index
-
-.. toctree::
-    :maxdepth: 1
-    :caption: BSP Modules posix
-    :glob:
-    :hidden:
-
-    ../platforms/posix/**/doc/index
-
-.. toctree::
-    :maxdepth: 1
-    :caption: BSP Modules s32k1xx
-    :glob:
-    :hidden:
-
-    ../platforms/s32k1xx/**/doc/index
-
-.. toctree::
-    :maxdepth: 1
-    :caption: BSP Configuration for s32k148evb
-    :glob:
-    :hidden:
-
-    ../executables/referenceApp/platforms/s32k148evb/**/doc/index
-
-.. toctree::
-    :maxdepth: 1
-    :caption: UT Modules
-    :glob:
-    :hidden:
-
-    ../executables/unitTest/**/doc/index
-
-.. toctree::
-    :maxdepth: 1
-    :caption: Analysis
-    :glob:
-    :hidden:
-
-    ../doc/analysis/index.rst
+    ../tools/**/doc/index

@@ -1,13 +1,4 @@
-#[[
-  Ignore compilation warnings for the entire 3rdparty directory,
-  but keep all the other compilation options.
-]]
-get_directory_property(THIRD_PARTY_COMPILE_OPTIONS_ COMPILE_OPTIONS)
-list(APPEND THIRD_PARTY_COMPILE_OPTIONS_ "-w")
-set_directory_properties(PROPERTIES COMPILE_OPTIONS
-                                    "${THIRD_PARTY_COMPILE_OPTIONS_}")
-
-add_subdirectory(googletest EXCLUDE_FROM_ALL)
+add_subdirectory(googletest)
 
 # add the custom extensions for unit tests
 target_include_directories(
@@ -41,7 +32,7 @@ set(SUPPORT_EXPONENTIAL_SPECIFIERS
         "Support exponential floating point format conversion specifiers (%e,%E,%g,%G)"
         FORCE)
 
-add_subdirectory(printf EXCLUDE_FROM_ALL)
+add_subdirectory(printf)
 
 add_subdirectory(freeRtos EXCLUDE_FROM_ALL)
 
@@ -62,6 +53,7 @@ target_include_directories(
 if (NOT BUILD_UNIT_TESTS)
 target_link_libraries(lwipcore PUBLIC lwipConfiguration)
 endif ()
-add_library(etl INTERFACE)
 
-target_include_directories(etl INTERFACE etl/include etl_configuration etl_addons/include)
+set(GIT_DIR_LOOKUP_POLICY DISALLOW_LOOKING_ABOVE_CMAKE_SOURCE_DIR)
+add_subdirectory(etl)
+

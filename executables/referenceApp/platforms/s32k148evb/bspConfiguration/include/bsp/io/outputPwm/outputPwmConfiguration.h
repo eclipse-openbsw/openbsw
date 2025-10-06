@@ -2,7 +2,6 @@
 
 #pragma once
 
-// All outputs OutputPwm::
 enum outputPwm
 {
     _pwmStaticStart = 0,
@@ -11,13 +10,11 @@ enum outputPwm
     _pwmDynamicStart = _pwmStaticEnd
 
     ,
-    EVAL_LED_RED_PWM = _pwmDynamicStart,
-    EVAL_LED_GREEN_PWM,
+    EVAL_LED_GREEN_PWM = _pwmDynamicStart,
     EVAL_LED_BLUE_PWM
 
     ,
     _pwmDynamicMark,
     _pwmChannelMax   = _pwmDynamicMark,
     PORT_UNAVAILABLE = _pwmChannelMax
-
-}; //*enum
+};

@@ -7,8 +7,8 @@
 #include "tcp/IDataSendNotificationListener.h"
 #include "tcp/socket/AbstractSocket.h"
 
+#include <etl/memory.h>
 #include <etl/span.h>
-#include <util/estd/memory.h>
 
 #include <gmock/gmock.h>
 
@@ -81,7 +81,7 @@ struct AbstractSocketMock : public AbstractSocket
         // safeguard in case a test tries to inject more data than _injectedData can hold
         estd_assert(_dataWriteWindow.size() >= data.size());
 
-        ::estd::memory::copy(_dataWriteWindow, data);
+        ::etl::mem_copy(data.cbegin(), data.size(), _dataWriteWindow.begin());
         _dataWriteWindow.advance(data.size());
 
         _dataReadWindow = ::etl::span<uint8_t const>(
@@ -100,8 +100,7 @@ struct AbstractSocketMock : public AbstractSocket
 
         if (buffer != nullptr)
         {
-            auto const destination = ::etl::span<uint8_t>(buffer, length);
-            ::estd::memory::copy(destination, _dataReadWindow.subspan(length));
+            ::etl::mem_copy(_dataReadWindow.begin(), length, buffer);
         }
         _dataReadWindow.advance(length);
 

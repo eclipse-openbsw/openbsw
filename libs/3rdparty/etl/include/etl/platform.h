@@ -331,14 +331,8 @@ SOFTWARE.
   #define ETL_ENUM_CLASS(name)            enum class name
   #define ETL_ENUM_CLASS_TYPE(name, type) enum class name : type
   #define ETL_LVALUE_REF_QUALIFIER        &
-
-  #if ETL_USING_EXCEPTIONS
-    #define ETL_NOEXCEPT           noexcept
-    #define ETL_NOEXCEPT_EXPR(...) noexcept(__VA_ARGS__)
-  #else
-    #define ETL_NOEXCEPT
-    #define ETL_NOEXCEPT_EXPR(...)
-  #endif
+  #define ETL_NOEXCEPT                    noexcept
+  #define ETL_NOEXCEPT_EXPR(...)          noexcept(__VA_ARGS__)
 #else
   #define ETL_CONSTEXPR
   #define ETL_CONSTEXPR11
@@ -463,6 +457,14 @@ SOFTWARE.
 
 //*************************************
 // Determine if the ETL can use libc's wchar.h
+#if !defined(ETL_NO_LIBC_WCHAR_H)
+  #if defined(__has_include)
+    #if !__has_include(<wchar.h>)
+        #define ETL_NO_LIBC_WCHAR_H
+    #endif
+  #endif
+#endif
+
 #if defined(ETL_NO_LIBC_WCHAR_H)
   #define ETL_USING_LIBC_WCHAR_H     0
   #define ETL_NOT_USING_LIBC_WCHAR_H 1
@@ -472,12 +474,31 @@ SOFTWARE.
 #endif
 
 //*************************************
+// Determine if the ETL can use STL ostream
+#if !defined(ETL_NO_STD_OSTREAM) && ETL_USING_STL
+  #if defined(__has_include)
+    #if !__has_include(<ostream>)
+      #define ETL_NO_STD_OSTREAM
+    #endif
+  #endif
+#endif
+
+#if defined(ETL_NO_STD_OSTREAM) || (ETL_NOT_USING_STL && !defined(ETL_IN_UNIT_TEST))
+  #define ETL_USING_STD_OSTREAM     0
+  #define ETL_NOT_USING_STD_OSTREAM 1
+#else
+  #define ETL_USING_STD_OSTREAM     1
+  #define ETL_NOT_USING_STD_OSTREAM 0
+#endif
+
+//*************************************
 // Determine if the ETL should support atomics.
 #if defined(ETL_NO_ATOMICS) || \
     defined(ETL_TARGET_DEVICE_ARM_CORTEX_M0) || \
     defined(ETL_TARGET_DEVICE_ARM_CORTEX_M0_PLUS) || \
     defined(__STDC_NO_ATOMICS__)
   #define ETL_HAS_ATOMIC 0
+  #define ETL_HAS_ATOMIC_ALWAYS_LOCK_FREE 0
 #else
   #if ((ETL_USING_CPP11 && (ETL_USING_STL || defined(ETL_IN_UNIT_TEST))) || \
         defined(ETL_COMPILER_ARM5)  || \

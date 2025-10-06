@@ -6,6 +6,7 @@ target_link_libraries(main
 PRIVATE
     asyncBinding
     lifecycle
+    safeSupervisor
 PUBLIC
     bspEepromDriver
 )
@@ -23,6 +24,6 @@ endif ()
 if (PLATFORM_SUPPORT_ETHERNET)
     target_sources(main PRIVATE src/systems/TapEthernetSystem.cpp)
     target_link_libraries(main PRIVATE lwipSocket tapEthernetDriver
-                                       ethConfiguration)
+                                       ethConfiguration configuration)
 
 endif ()

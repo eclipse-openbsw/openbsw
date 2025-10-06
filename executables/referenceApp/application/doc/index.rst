@@ -62,3 +62,4 @@ brings up or tears down each “System“.
   systems/TransportSystem
   systems/RuntimeSystem
   systems/UdsSystem
+  systems/SafetySystem

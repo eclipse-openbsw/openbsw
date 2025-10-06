@@ -19,7 +19,8 @@ extensions = [
 
 # Extensions configuration
 html_context = {"data_classification_default": None}
-stylecheck = {"top_level_modulename": {"exclude": ["doc/index"]}}
+stylecheck = {"top_level_modulename": {"exclude": ["doc/index", 'tools/**']}}
+
 dox_style_footer = "footer.yaml"
 dox_trace_properties_file = "properties.yaml"
 
@@ -30,7 +31,7 @@ include_patterns = [
     "libs/**/doc/**",
     "platforms/**/doc/**",
     "platforms/python/sca/doc/**",
-    "tools/UdsTool/doc/**",
+    "tools/**",
     "doc/**",
 ]
 exclude_patterns = []

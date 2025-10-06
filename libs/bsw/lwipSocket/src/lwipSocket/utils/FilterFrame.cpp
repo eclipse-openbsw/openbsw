@@ -2,10 +2,10 @@
 
 #include "lwip/netif.h"
 
+#include <etl/memory.h>
 #include <etl/span.h>
+#include <etl/unaligned_type.h>
 #include <lwipSocket/utils/LwipHelper.h>
-#include <util/estd/big_endian.h>
-#include <util/estd/memory.h>
 
 uint16_t const VLAN_TAG              = 0x8100U;
 uint16_t const VLAN_OUTER_TAG_LEGACY = 0x9100U;
@@ -22,7 +22,7 @@ bool macAddressMatches(
     {
         return true;
     }
-    auto const isSentToUs = ::estd::memory::is_equal(dstMac, ourMac);
+    auto const isSentToUs = ::etl::equal(dstMac, ourMac);
     return isSentToUs;
 }
 } // namespace
@@ -43,10 +43,10 @@ netif* filterETHFrames(
     auto payload = ::etl::span<uint8_t const>(
         static_cast<uint8_t*>(pCompleteFrame->payload), pCompleteFrame->len);
 
-    auto const dstMac = ::estd::memory::take<::etl::array<uint8_t, 6>>(payload);
+    auto const dstMac = payload.take<::etl::array<uint8_t, 6> const>();
     payload.advance(6); // skip src mac
-    uint16_t const ethernetType = ::estd::memory::take<::estd::be_uint16_t>(payload);
-    uint16_t const tci          = ::estd::memory::take<::estd::be_uint16_t>(payload);
+    uint16_t const ethernetType = payload.take<::etl::be_uint16_t const>();
+    uint16_t const tci          = payload.take<::etl::be_uint16_t const>();
 
     if ((VLAN_OUTER_TAG == ethernetType) || (VLAN_OUTER_TAG_LEGACY == ethernetType))
     {
@@ -118,14 +118,14 @@ void to_lwipIp(::ip::IPAddress const& ip, ip_addr_t* const dst)
 
             ::etl::span<uint32_t> const ip4Slice
                 = ::etl::span<uint32_t>(&(ip_2_ip4(dst)->addr), 1U);
-            (void)::estd::memory::copy(ip4Slice.reinterpret_as<uint8_t>(), ipSlice);
+            (void)::etl::copy(ipSlice, ip4Slice.reinterpret_as<uint8_t>());
         }
         else
         {
 #if LWIP_IPV6
             IP_SET_TYPE(dst, IPADDR_TYPE_V6);
             ::etl::span<uint32_t, 4U> const ip6Slice(ip_2_ip6(dst)->addr);
-            (void)::estd::memory::copy(ip6Slice.reinterpret_as<uint8_t>(), ipSlice);
+            (void)::etl::copy(ipSlice, ip6Slice.reinterpret_as<uint8_t>());
 #endif
         }
     }
@@ -149,7 +149,7 @@ err_t initNetifDriverParameters(::etl::span<uint8_t const, 6> const macAddr, net
         = NETIF_FLAG_BROADCAST | NETIF_FLAG_ETHARP | NETIF_FLAG_IGMP;
     lwipNetif.flags |= DEFAULT_FLAGS;
 
-    ::estd::memory::copy(lwipNetif.hwaddr, macAddr);
+    ::etl::copy(macAddr, ::etl::span<uint8_t>(lwipNetif.hwaddr));
 
     return ERR_OK;
 }

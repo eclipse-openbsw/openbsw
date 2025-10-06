@@ -5,8 +5,9 @@
 #include <async/AsyncBinding.h>
 #include <etl/alignment.h>
 #include <lifecycle/LifecycleManager.h>
+#include <safeSupervisor/SafeSupervisor.h>
 
-#include <signal.h>
+#include <csignal>
 #include <unistd.h>
 
 #ifdef PLATFORM_SUPPORT_CAN
@@ -38,6 +39,7 @@ StaticBsp& getStaticBsp() { return staticBsp; }
 
 void platformLifecycleAdd(::lifecycle::LifecycleManager& lifecycleManager, uint8_t const level)
 {
+    (void)lifecycleManager;
     if (level == 2)
     {
 #ifdef PLATFORM_SUPPORT_CAN
@@ -81,6 +83,7 @@ int main()
     signal(SIGINT, intHandler);
     main_thread_setup();
     terminal_setup();
+    ::safety::safeSupervisorConstructor.construct();
     ::platform::staticBsp.init();
     app_main(); // entry point for the generic part
     return (1); // we never reach this point

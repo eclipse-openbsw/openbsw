@@ -6,4 +6,4 @@ target_link_libraries(configuration INTERFACE common)
 
 add_library(commonImpl common/src/busid/BusId.cpp)
 
-target_link_libraries(commonImpl PRIVATE configuration)
+target_link_libraries(commonImpl PRIVATE configuration async)

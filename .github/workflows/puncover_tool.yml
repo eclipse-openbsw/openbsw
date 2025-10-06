@@ -16,7 +16,7 @@ jobs:
       - name: Set up CMake
         uses: jwlawson/actions-setup-cmake@v2
         with:
-          cmake-version: '3.22.x'
+          cmake-version: '3.28.3'
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -28,7 +28,7 @@ jobs:
         uses: actions/cache@v4
         with:
             path: |
-              cmake-build-s32k148
+              build/s32k148-gcc
             key: ${{ runner.os }}-cmake-s32k148-${{ hashFiles('**/*.cpp', '**/*.h', '**/*.cmake', '**/*.txt', '**/*.c', '**/*.s') }}
 
       - name: Set up Python virtual environment and install Poetry
@@ -47,16 +47,14 @@ jobs:
       - name: Configure CMake for S32K148
         if: ${{ steps.cache-cmake.outputs.cache-hit != 'true' }}
         run: |
-            rm -rf cmake-build-s32k148
-            cmake \
-            -B cmake-build-s32k148 \
-            -S executables/referenceApp \
-            -DBUILD_TARGET_PLATFORM="S32K148EVB" \
-            --toolchain ../../admin/cmake/ArmNoneEabi-gcc.cmake
+            rm -rf build/s32k148-gcc
+            cmake --preset s32k148-gcc
 
       - name: Build with cmake
         if: ${{ steps.cache-cmake.outputs.cache-hit != 'true' }}
-        run: cmake --build cmake-build-s32k148 --target app.referenceApp -j
+        run: |
+            export CMAKE_BUILD_PARALLEL_LEVEL=$(nproc)
+            cmake --build --preset s32k148-gcc
 
       - name: Run script and generate report
         working-directory: tools/puncover_tool

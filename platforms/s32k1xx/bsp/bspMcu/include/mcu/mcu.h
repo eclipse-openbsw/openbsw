@@ -45,5 +45,8 @@
 #define RCM            IP_RCM
 #define SCG            IP_SCG
 #define PCC            IP_PCC
+#define ERM            IP_ERM
+#define FTFC           IP_FTFC
+#define CRC            IP_CRC
 #define GPIO_BASE_PTRS IP_GPIO_BASE_PTRS
 #define PORT_BASE_PTRS IP_PORT_BASE_PTRS

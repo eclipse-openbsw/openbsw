@@ -13,6 +13,8 @@
 AnalogInput::tAnalogConfiguration const ADChannelCfg[AnalogInput::_AdcChannelMax] = {
     {ADC_0_CH, _ADCCHANNEL28, Io::EVAL_POTI_ADC, _ADCCHANNEL0},
     {ADC_0_CH, _ADCCHANNEL29, Io::EVAL_ADC, _ADCCHANNEL0},
+    {ADC_0_CH, _BANDGAP, Io::PORT_UNAVAILABLE, _ADCCHANNEL13},
+    {ADC_0_CH, _ADCINTERNAL0, Io::PORT_UNAVAILABLE, _ADCCHANNEL14},
 };
 
 #else
@@ -23,6 +25,8 @@ enum AnalogInputId
 {
     AiEVAL_POTI_ADC,
     AiEval_ADC,
+    Ai_BANDGAP,
+    Ai_ADCINTERNAL0,
 
     // end marker
     _AdcChannelMax

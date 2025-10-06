@@ -1,0 +1,277 @@
+{
+    "version": 6,
+    "cmakeMinimumRequired": {
+        "major": 3,
+        "minor": 28,
+        "patch": 3
+    },
+    "include": [
+        "cmake/presets/config-base.json"
+    ],
+    "configurePresets": [
+        {
+            "name": "tests-debug",
+            "displayName": "Configure for testing",
+            "description": "Configure for testing",
+            "inherits": "_config-base",
+            "binaryDir": "${sourceDir}/build/tests/Debug",
+            "cacheVariables": {
+                "CMAKE_DEFAULT_BUILD_TYPE": "Debug",
+                "CMAKE_CONFIGURATION_TYPES": "Debug",
+                "BUILD_UNIT_TESTS": "ON"
+            }
+        },
+        {
+            "name": "tests-release",
+            "displayName": "Configure for testing",
+            "description": "Configure for testing",
+            "inherits": "_config-base",
+            "binaryDir": "${sourceDir}/build/tests/Release",
+            "cacheVariables": {
+                "CMAKE_DEFAULT_BUILD_TYPE": "Release",
+                "CMAKE_CONFIGURATION_TYPES": "Release",
+                "BUILD_UNIT_TESTS": "ON"
+            }
+        },
+        {
+            "name": "posix",
+            "displayName": "POSIX-compliant configuration",
+            "description": "Configure for POSIX-compliant environment",
+            "inherits": "_config-base",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "BUILD_REFERENCE": "ON",
+                "BUILD_TARGET_PLATFORM": "POSIX"
+            }
+        },
+        {
+            "name": "s32k148-gcc",
+            "generator": "Ninja Multi-Config",
+            "displayName": "S32K148 configuration (GCC)",
+            "description": "Configure for S32K148 platform using ARM GCC toolchain",
+            "inherits": "_config-base",
+            "toolchainFile": "${sourceDir}/cmake/toolchains/ArmNoneEabi-gcc.cmake",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "BUILD_REFERENCE": "ON",
+                "BUILD_TARGET_PLATFORM": "S32K148EVB",
+                "CMAKE_ASM_FLAGS_RELWITHDEBINFO": "-g3",
+                "CMAKE_CONFIGURATION_TYPES": "RelWithDebInfo;Debug;Release",
+                "CMAKE_CXX_FLAGS_RELWITHDEBINFO": "-g3 -O2 -DNDEBUG",
+                "CMAKE_DEFAULT_BUILD_TYPE": "RelWithDebInfo"
+            }
+        },
+        {
+            "name": "s32k148-clang",
+            "generator": "Ninja Multi-Config",
+            "displayName": "S32K148 configuration (Clang)",
+            "description": "Configure for S32K148 platform using ARM Clang toolchain",
+            "inherits": "_config-base",
+            "toolchainFile": "${sourceDir}/cmake/toolchains/ArmNoneEabi-clang.cmake",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "BUILD_REFERENCE": "ON",
+                "BUILD_TARGET_PLATFORM": "S32K148EVB",
+                "CMAKE_ASM_FLAGS_RELWITHDEBINFO": "-g3",
+                "CMAKE_CONFIGURATION_TYPES": "RelWithDebInfo;Debug;Release",
+                "CMAKE_CXX_FLAGS_RELWITHDEBINFO": "-g3 -O2 -DNDEBUG",
+                "CMAKE_DEFAULT_BUILD_TYPE": "RelWithDebInfo"
+            }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "tests-debug",
+            "displayName": "Build tests (debug configuration)",
+            "description": "Build tests (debug configuration)",
+            "configurePreset": "tests-debug",
+            "configuration": "Debug"
+        },
+        {
+            "name": "tests-release",
+            "displayName": "Build tests (release configuration)",
+            "description": "Build tests (release configuration)",
+            "configurePreset": "tests-release",
+            "configuration": "Release"
+        },
+        {
+            "name": "posix",
+            "displayName": "build POSIX",
+            "description": "Build reference application for POSIX-compliant environment (Release by default; for Debug use --config Debug)",
+            "configurePreset": "posix"
+        },
+        {
+            "name": "_posix-dbg",
+            "inherits": "posix",
+            "configuration": "Debug"
+        },
+        {
+            "name": "_posix-rel",
+            "inherits": "posix",
+            "configuration": "Release"
+        },
+        {
+            "name": "s32k148-gcc",
+            "displayName": "S32K148 build (GCC)",
+            "description": "Build reference application for S32K148 platform with Clang (Release by default; for Debug use --config Debug)",
+            "configurePreset": "s32k148-gcc"
+        },
+        {
+            "name": "_s32k148-gcc_debug",
+            "inherits": "s32k148-gcc",
+            "configuration": "Debug"
+        },
+        {
+            "name": "_s32k148-gcc_release",
+            "inherits": "s32k148-gcc",
+            "configuration": "Release"
+        },
+        {
+            "name": "_s32k148-gcc_relwithdebinfo",
+            "inherits": "s32k148-gcc",
+            "configuration": "RelWithDebInfo"
+        },
+        {
+            "name": "s32k148-clang",
+            "displayName": "S32K148 build (Clang)",
+            "description": "Build reference application for S32K148 platform with Clang (Release by default; for Debug use --config Debug)",
+            "configurePreset": "s32k148-clang"
+        },
+        {
+            "name": "_s32k147-clang_debug",
+            "inherits": "s32k148-clang",
+            "configuration": "Debug"
+        },
+        {
+            "name": "_s32k148-clang_release",
+            "inherits": "s32k148-clang",
+            "configuration": "Release"
+        },
+        {
+            "name": "_s32k148-clang_relwithdebinfo",
+            "inherits": "s32k148-clang",
+            "configuration": "RelWithDebInfo"
+        }
+    ],
+    "testPresets": [
+        {
+            "name": "tests-debug",
+            "displayName": "Run tests (debug)",
+            "description": "Run tests (debug)",
+            "configuration": "Debug",
+            "configurePreset": "tests-debug"
+        },
+        {
+            "name": "tests-release",
+            "displayName": "Run tests (debug)",
+            "description": "Run tests (debug)",
+            "configuration": "Release",
+            "configurePreset": "tests-release"
+        }
+    ],
+    "workflowPresets": [
+        {
+            "name": "wf-tests-debug",
+            "displayName": "Configure & build tests (debug)",
+            "description": "Configure & build tests (debug)",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "tests-debug"
+                },
+                {
+                    "type": "build",
+                    "name": "tests-debug"
+                },
+                {
+                    "type": "test",
+                    "name": "tests-debug"
+                }
+            ]
+        },
+        {
+            "name": "wf-tests-release",
+            "displayName": "Configure & build tests (release)",
+            "description": "Configure & build tests (release)",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "tests-release"
+                },
+                {
+                    "type": "build",
+                    "name": "tests-release"
+                },
+                {
+                    "type": "test",
+                    "name": "tests-release"
+                }
+            ]
+        },
+        {
+            "name": "wf-posix",
+            "displayName": "Configure & build for POSIX (debug & release)",
+            "description": "Configure & build for POSIX-compliant environment both Debug and Release configurations",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "posix"
+                },
+                {
+                    "type": "build",
+                    "name": "_posix-dbg"
+                },
+                {
+                    "type": "build",
+                    "name": "_posix-rel"
+                }
+            ]
+        },
+        {
+            "name": "wf-s32k148-gcc",
+            "displayName": "Configure & build for S32K148 (GCC Debug & Release)",
+            "description": "Configure & build for S32K148 platform using GCC",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "s32k148-gcc"
+                },
+                {
+                    "type": "build",
+                    "name": "_s32k148-gcc_debug"
+                },
+                {
+                    "type": "build",
+                    "name": "_s32k148-gcc_release"
+                },
+                {
+                    "type": "build",
+                    "name": "_s32k148-gcc_relwithdebinfo"
+                }
+            ]
+        },
+        {
+            "name": "wf-s32k148-clang",
+            "displayName": "Configure & build for S32K148 (Clang Debug & Release)",
+            "description": "Configure & build for S32K148 platform using Clang",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "s32k148-clang"
+                },
+                {
+                    "type": "build",
+                    "name": "_s32k147-clang_debug"
+                },
+                {
+                    "type": "build",
+                    "name": "_s32k148-clang_release"
+                },
+                {
+                    "type": "build",
+                    "name": "_s32k148-clang_relwithdebinfo"
+                }
+            ]
+        }
+    ]
+}

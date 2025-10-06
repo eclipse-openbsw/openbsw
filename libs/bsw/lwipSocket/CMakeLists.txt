@@ -1,11 +1,11 @@
 add_library(
     lwipSocket
-    src/lwipSocket/tcp/LwipSocket.cpp
-    src/lwipSocket/tcp/LwipServerSocket.cpp
     src/lwipSocket/netif/LwipNetworkInterface.cpp
+    src/lwipSocket/tcp/LwipServerSocket.cpp
+    src/lwipSocket/tcp/LwipSocket.cpp
     src/lwipSocket/udp/LwipDatagramSocket.cpp
-    src/lwipSocket/utils/TaskAssert.cpp
-    src/lwipSocket/utils/FilterFrame.cpp)
+    src/lwipSocket/utils/FilterFrame.cpp
+    src/lwipSocket/utils/TaskAssert.cpp)
 
 target_include_directories(lwipSocket PUBLIC include)
 

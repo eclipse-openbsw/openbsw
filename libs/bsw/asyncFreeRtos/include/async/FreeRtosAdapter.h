@@ -91,6 +91,8 @@ public:
     using TimerTask = internal::TimerTask<AdapterType, StackSize>;
     template<ContextType Context, size_t StackSize = 0U>
     using Task = internal::Task<AdapterType, Context, StackSize>;
+    template<ContextType Context>
+    using TaskStack = internal::Task<AdapterType, Context>;
 
     /// Struct representing the stack usage for a specific task.
     struct StackUsage

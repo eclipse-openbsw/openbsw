@@ -2,4 +2,4 @@ add_library(lwipConfiguration INTERFACE)
 
 target_include_directories(lwipConfiguration INTERFACE include)
 
-target_link_libraries(lwipConfiguration INTERFACE lwipSysArch)
+target_link_libraries(lwipConfiguration INTERFACE lwipSysArch platform)

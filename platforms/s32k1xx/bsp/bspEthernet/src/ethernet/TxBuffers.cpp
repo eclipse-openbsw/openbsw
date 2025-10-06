@@ -7,7 +7,8 @@
 #include "etl/array.h"
 #include "interrupts/SuspendResumeAllInterruptsScopedLock.h"
 #include "mcu/mcu.h"
-#include "util/estd/big_endian.h"
+
+#include <etl/unaligned_type.h>
 
 #include <cstring>
 
@@ -166,10 +167,9 @@ bool TxBuffers::writeFrame(uint16_t const vlanId, const struct pbuf* const buf)
             if (0U == bufferIndex)
             {
                 // Copy the original ETYPE
-                uint16_t const etherType
-                    = *reinterpret_cast<::estd::be_uint16_t*>(payload + 6U * 2);
-                uint8_t* header  = payload;
-                uint8_t writeLen = 0U;
+                uint16_t const etherType = ::etl::be_uint16_t(payload + 6U * 2);
+                uint8_t* header          = payload;
+                uint8_t writeLen         = 0U;
 
                 if (_enableVlanTagging) // VLAN enabled
                 {
@@ -192,8 +192,7 @@ bool TxBuffers::writeFrame(uint16_t const vlanId, const struct pbuf* const buf)
 
                 if (insert != header)
                 {
-                    *reinterpret_cast<::estd::be_uint16_t*>(insert)
-                        = etherType; // Insert the original ETYPE
+                    ::etl::be_uint16_ext_t{insert} = etherType; // Insert the original ETYPE
                 }
 
                 payload = header;

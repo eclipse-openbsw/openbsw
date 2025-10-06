@@ -1,3 +1,5 @@
+.. _safeMonitor:
+
 safeMonitor - System Integrity Classes
 ======================================
 

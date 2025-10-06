@@ -65,7 +65,7 @@ If you examine that and the scripts it references you will find that it expects 
     To run tests using the `posix` you must first have built the image for that target
     in its expected default location...
     ```
-    cmake-build-posix/application/app.referenceApp.elf
+    build/posix/executables/referenceApp/application/Release/app.referenceApp.elf
     ```
 
 2. Need to have `vcan0` set up
@@ -88,7 +88,7 @@ For this option...
     To run tests using the `s32k148` you must first have built the image for that target
     in its expected default location...
     ```
-    cmake-build-s32k148/application/app.referenceApp.elf
+    build/s32k148-gcc/executables/referenceApp/application/Release/app.referenceApp.elf
     ```
 
 2. Need an [S32K148 development board](https://www.nxp.com/design/design-center/development-boards/automotive-development-platforms/s32k-mcu-platforms/s32k148-q176-evaluation-board-for-automotive-general-purpose:S32K148EVB)
@@ -234,7 +234,7 @@ If present, the following entries are supported.
 eg.
 ```
 [per_run_process]
-command_line = "arm-none-eabi-gdb -batch -x flash.gdb ../../cmake-build-s32k148/application/app.referenceApp.elf > /dev/null 2>&1"
+command_line = "arm-none-eabi-gdb -batch -x flash.gdb ../../build/s32k148-gcc/executables/referenceApp/application/Release/app.referenceApp.elf > /dev/null 2>&1"
 wait_for_exit = true
 ```
 
@@ -255,7 +255,7 @@ The following entries are supported.
 eg.
 ```
 [target_process]
-command_line = "../../cmake-build-posix/application/app.referenceApp.elf < /tmp/pty_forwarder > /tmp/pty_forwarder"
+command_line = "../../build/posix/executables/referenceApp/application/Release/app.referenceApp.elf < /tmp/pty_forwarder > /tmp/pty_forwarder"
 kill_at_end = true
 ```
 

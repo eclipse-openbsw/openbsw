@@ -7,7 +7,7 @@
 #include <lifecycle/LifecycleLogger.h>
 #include <logger/ConsoleLogger.h>
 #include <printf/printf.h>
-#include <safeLifecycle/SafetyLogger.h>
+#include <safeUtils/SafetyLogger.h>
 #ifdef PLATFORM_SUPPORT_CAN
 #include <can/CanLogger.h>
 #include <docan/common/DoCanLogger.h>

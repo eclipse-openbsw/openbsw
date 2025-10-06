@@ -4,12 +4,11 @@
 
 #include <bsp/SystemTime.h>
 #include <ethernet/EthernetLogger.h>
-#include <etl/functional.h>
 #include <lwip/init.h>
 #include <lwip/prot/ethernet.h>
 #include <lwip/timeouts.h>
 #include <lwipSocket/utils/LwipHelper.h>
-#include <util/estd/big_endian.h>
+#include <util/estd/assert.h>
 
 extern "C"
 {
@@ -91,9 +90,7 @@ EthernetSystem::EthernetSystem(
 #endif
     for (auto& netif : netifs.netifs)
     {
-        ::estd::memory::copy(
-            ::estd::memory::make_span(netif.name).reinterpret_as<uint8_t>(),
-            ::estd::memory::make_str(""));
+        netif.name[0] = 0;
     }
     setTransitionContext(context);
 }

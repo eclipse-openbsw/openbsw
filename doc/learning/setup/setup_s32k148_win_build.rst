@@ -45,11 +45,11 @@ Then, in the base directory run:
 
 .. code-block:: bash
 
-    cmake -B cmake-build-s32k148 -S executables/referenceApp -DBUILD_TARGET_PLATFORM="S32K148EVB" --toolchain ../../admin/cmake/ArmNoneEabi-gcc.cmake
-    cmake --build cmake-build-s32k148 --target app.referenceApp -j
+    cmake --preset s32k148-gcc
+    cmake --build --preset s32k148-gcc
 
-The build files should be written to a new subdirectory named ``cmake-build-s32k148``
-and the built executable should be found at ``cmake-build-s32k148/application/app.referenceApp.elf``
+The build files should be written to a new subdirectory named ``build/s32k148-gcc``
+and the built executable should be found at ``build/s32k148-gcc/executables/referenceApp/application/RelWithDebInfo/app.referenceApp.elf``
 which you can flash on the S32K148 development board.
 
 Next :doc:`setup_s32k148_win_nxpide`

@@ -13,6 +13,7 @@
 #include <etl/unaligned_type.h>
 #include <util/estd/assert.h>
 
+#include <cstdint>
 #include <limits>
 
 namespace docan
@@ -35,6 +36,9 @@ enum class CodecResult : uint8_t
     INVALID_FRAME_TYPE
 };
 
+static constexpr uint8_t EXTENDED_SF_DL_EDGE_SIZE  = 8U;
+static constexpr uint16_t ESCAPED_SEQ_MESSAGE_SIZE = 4095U;
+
 /**
  * helper class for encoding/decoding frame payloads according to DoCAN spec.
  * \tparam DataLinkLayer class providing data link functionality
@@ -48,9 +52,6 @@ public:
     using MessageSizeType     = typename DataLinkLayerType::MessageSizeType;
     using FrameIndexType      = typename DataLinkLayerType::FrameIndexType;
     using FrameSizeType       = typename DataLinkLayerType::FrameSizeType;
-
-    static FrameSizeType const EXTENDED_SF_DL_EDGE_SIZE   = 8U;
-    static MessageSizeType const ESCAPED_SEQ_MESSAGE_SIZE = 4095U;
 
     // Standard define max Escaped seq message size to be uint32_t max.
     static_assert(
