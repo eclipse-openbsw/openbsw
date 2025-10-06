@@ -19,6 +19,7 @@ namespace uds
 using ::transport::AbstractTransportLayer;
 using ::transport::ITransportMessageListener;
 using ::transport::ITransportMessageProvider;
+using ::transport::ITransportMessageProvidingListener;
 using ::transport::TransportConfiguration;
 using ::transport::TransportJob;
 using ::transport::TransportMessage;
@@ -118,17 +119,19 @@ AbstractTransportLayer::ErrorCode DiagDispatcher::resume(
     return enqueueMessage(transportMessage, pNotificationListener);
 }
 
-TransportMessage* DiagDispatcher::copyFunctionalRequest(TransportMessage& request)
+TransportMessage* DiagDispatcher::copyFunctionalRequest(
+    TransportMessage& request,
+    ITransportMessageProvidingListener& providingListener,
+    AbstractDiagnosisConfiguration& configuration)
 {
-    TransportMessage* pRequest = nullptr;
-    ITransportMessageProvider::ErrorCode const result
-        = getProvidingListenerHelper().getTransportMessage(
-            getBusId(),
-            request.sourceAddress(),
-            fConfiguration.DiagAddress,
-            TransportConfiguration::DIAG_PAYLOAD_SIZE,
-            {},
-            pRequest);
+    TransportMessage* pRequest                        = nullptr;
+    ITransportMessageProvider::ErrorCode const result = providingListener.getTransportMessage(
+        configuration.DiagBusId,
+        request.sourceAddress(),
+        configuration.DiagAddress,
+        TransportConfiguration::DIAG_PAYLOAD_SIZE,
+        {},
+        pRequest);
     if ((ITransportMessageProvider::ErrorCode::TPMSG_OK == result) && (nullptr != pRequest))
     {
         pRequest->resetValidBytes();
@@ -192,7 +195,15 @@ void DiagDispatcher::processQueue()
             TransportJob* const pSendJob = &fConfiguration.SendJobQueue.front();
             fConfiguration.SendJobQueue.pop();
             lock.unlock();
-            dispatchIncomingRequest(*pSendJob);
+            dispatchIncomingRequest(
+                *pSendJob,
+                fConfiguration,
+                fConnectionManager,
+                fDiagJobRoot,
+                getProvidingListenerHelper(),
+                this,
+                SendBusyResponseCallback::create<DiagDispatcher, &DiagDispatcher::sendBusyResponse>(
+                    *this));
             lock.lock();
         }
     }
@@ -205,7 +216,8 @@ uint8_t DiagDispatcher::dispatchTriggerEventRequest(TransportMessage& tmsg)
         /* check for TransportConfiguration::isFunctionallyAddressed
          * is obsolete because ALL triggerEvent are of this type  -
          * so exchange transport message against buffer and copy */
-        TransportMessage* const pRequest = copyFunctionalRequest(tmsg);
+        TransportMessage* const pRequest
+            = copyFunctionalRequest(tmsg, getProvidingListenerHelper(), fConfiguration);
         if (pRequest != nullptr)
         {
             IncomingDiagConnection* const pConnection
@@ -251,15 +263,22 @@ uint8_t DiagDispatcher::dispatchTriggerEventRequest(TransportMessage& tmsg)
 }
 
 // METRIC STCYC 11 // The function is already in use as is
-void DiagDispatcher::dispatchIncomingRequest(TransportJob& job)
+void DiagDispatcher::dispatchIncomingRequest(
+    TransportJob& job,
+    AbstractDiagnosisConfiguration& configuration,
+    DiagConnectionManager& connectionManager,
+    DiagJobRoot& diagJobRoot,
+    ITransportMessageProvidingListener& providingListener,
+    ITransportMessageProcessedListener* const dispatcherProcessedListener,
+    SendBusyResponseCallback sendBusyResponse)
 {
     bool const isResuming
         = job.getTransportMessage()->getTargetId() == TransportMessage::INVALID_ADDRESS;
     if (isResuming)
     {
-        job.getTransportMessage()->setTargetId(fConfiguration.DiagAddress);
+        job.getTransportMessage()->setTargetId(configuration.DiagAddress);
     }
-    if (!fConfiguration.AcceptAllRequests)
+    if (!configuration.AcceptAllRequests)
     { // check if source is a tester or functional request
         if (!isFromValidSender(*job.getTransportMessage()))
         {
@@ -276,10 +295,10 @@ void DiagDispatcher::dispatchIncomingRequest(TransportJob& job)
     bool sendBusyNegativeResponse      = false;
     TransportMessage& transportMessage = *job.getTransportMessage();
     TransportMessage* pRequest         = &transportMessage;
-    if (fConfiguration.CopyFunctionalRequests
+    if (configuration.CopyFunctionalRequests
         && TransportConfiguration::isFunctionallyAddressed(transportMessage))
     {
-        pRequest = copyFunctionalRequest(transportMessage);
+        pRequest = copyFunctionalRequest(transportMessage, providingListener, configuration);
         if (pRequest != nullptr)
         {
             if (job.getProcessedListener() != nullptr)
@@ -288,7 +307,10 @@ void DiagDispatcher::dispatchIncomingRequest(TransportJob& job)
                     transportMessage,
                     ITransportMessageProcessedListener::ProcessingResult::PROCESSED_NO_ERROR);
             }
-            job.setProcessedListener(this);
+            if (dispatcherProcessedListener != nullptr)
+            {
+                job.setProcessedListener(dispatcherProcessedListener);
+            }
             job.setTransportMessage(*pRequest);
         }
         else
@@ -297,11 +319,10 @@ void DiagDispatcher::dispatchIncomingRequest(TransportJob& job)
             sendBusyNegativeResponse = true;
         }
     }
-
     if (!sendBusyNegativeResponse)
     {
         IncomingDiagConnection* const pConnection
-            = fConnectionManager.requestIncomingConnection(*job.getTransportMessage());
+            = connectionManager.requestIncomingConnection(*job.getTransportMessage());
         if (pConnection != nullptr)
         {
             Logger::debug(
@@ -311,13 +332,13 @@ void DiagDispatcher::dispatchIncomingRequest(TransportJob& job)
                 pConnection->fTargetId,
                 pConnection->fServiceId);
             pConnection->fpRequestNotificationListener = job.getProcessedListener();
-            DiagReturnCode::Type const result          = fDiagJobRoot.execute(
+            DiagReturnCode::Type const result          = diagJobRoot.execute(
                 *pConnection,
                 job.getTransportMessage()->getPayload(),
                 job.getTransportMessage()->getPayloadLength());
             if (result != DiagReturnCode::OK)
             {
-                (void)pConnection->sendNegativeResponse(static_cast<uint8_t>(result), fDiagJobRoot);
+                (void)pConnection->sendNegativeResponse(static_cast<uint8_t>(result), diagJobRoot);
                 pConnection->terminate();
             }
         }
@@ -330,7 +351,10 @@ void DiagDispatcher::dispatchIncomingRequest(TransportJob& job)
     if (sendBusyNegativeResponse)
     {
         TransportMessage* const pMessage = job.getTransportMessage();
-        sendBusyResponse(pMessage);
+        if (sendBusyResponse.is_valid())
+        {
+            sendBusyResponse(pMessage);
+        }
         job.getProcessedListener()->transportMessageProcessed(
             *pMessage, ITransportMessageProcessedListener::ProcessingResult::PROCESSED_NO_ERROR);
     }

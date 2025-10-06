@@ -97,7 +97,8 @@ add_subdirectory(libs EXCLUDE_FROM_ALL)
 if (BUILD_UNIT_TESTS)
 
     add_subdirectory(executables/unitTest EXCLUDE_FROM_ALL)
-    target_include_directories(etl BEFORE INTERFACE executables/unitTest/etl_profile)
+    target_include_directories(etl BEFORE
+                               INTERFACE executables/unitTest/etl_profile)
 
     if (OPENBSW_PLATFORM STREQUAL "posix")
 
@@ -150,10 +151,13 @@ if (BUILD_UNIT_TESTS)
         add_subdirectory(platforms/s32k1xx/bsp/canflex2Transceiver/test)
 
     else ()
-        message (FATAL_ERROR  "Invalid value for OPENBSW_PLATFORM: ${OPENBSW_PLATFORM}")
+        message(
+            FATAL_ERROR
+                "Invalid value for OPENBSW_PLATFORM: ${OPENBSW_PLATFORM}")
     endif ()
 
-elseif(BUILD_REFERENCE)
-    target_include_directories(etl BEFORE INTERFACE executables/referenceApp/etl_profile)
+elseif (BUILD_REFERENCE)
+    target_include_directories(etl BEFORE
+                               INTERFACE executables/referenceApp/etl_profile)
     add_subdirectory(executables/referenceApp)
-endif()
+endif ()
