@@ -22,7 +22,6 @@ namespace
 class TestTransportLayer : public AbstractTransportLayer
 {
 public:
-    using AbstractTransportLayer::getProvidingListenerHelper;
     using AbstractTransportLayer::shutdownCompleteDummy;
 
     TestTransportLayer() : AbstractTransportLayer(0) {}
@@ -50,8 +49,8 @@ protected:
 AbstractTransportLayerTest::AbstractTransportLayerTest()
 {
     impl = std::make_unique<AbstractTransportLayerMock>(0);
-    impl->setTransportMessageListener(&listener);
-    impl->setTransportMessageProvider(&provider);
+    impl->fProvidingListenerHelper.fpMessageListener = &listener;
+    impl->fProvidingListenerHelper.fpMessageProvider = &provider;
 }
 
 /**
@@ -103,8 +102,8 @@ TEST_F(AbstractTransportLayerTest, TestHelperMethods)
  */
 TEST_F(AbstractTransportLayerTest, TestHelperMethodsNoProvider)
 {
-    impl->setTransportMessageProvider(nullptr);
-    impl->setTransportMessageListener(nullptr);
+    impl->fProvidingListenerHelper.fpMessageProvider = nullptr;
+    impl->fProvidingListenerHelper.fpMessageListener = nullptr;
 
     ITransportMessageProvidingListener& listenerHelper = impl->getProvidingListenerHelper_impl();
 
@@ -178,7 +177,7 @@ TEST_F(AbstractTransportLayerTest, TestShutdownDefaultImplementation)
 TEST_F(AbstractTransportLayerTest, TestDumpWithUninitializedTransportMessageProvider)
 {
     TestTransportLayer tpLayer;
-    ASSERT_NO_THROW(tpLayer.getProvidingListenerHelper().dump());
+    ASSERT_NO_THROW(tpLayer.fProvidingListenerHelper.dump());
 }
 
 } // anonymous namespace

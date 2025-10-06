@@ -29,7 +29,7 @@ public:
 
     ITransportMessageProvidingListener& getProvidingListenerHelper_impl()
     {
-        return getProvidingListenerHelper();
+        return fProvidingListenerHelper;
     }
 };
 

@@ -29,7 +29,7 @@ bool AbstractTransportLayer::shutdown(ShutdownDelegate) { return SYNC_SHUTDOWN_C
 
 AbstractTransportLayer::TransportMessageProvidingListenerHelper::
     TransportMessageProvidingListenerHelper(uint8_t const busId)
-: fBusId(busId), fpMessageProvider(nullptr), fpMessageListener(nullptr)
+: fpMessageProvider(nullptr), fpMessageListener(nullptr), fBusId(busId)
 {}
 
 // virtual

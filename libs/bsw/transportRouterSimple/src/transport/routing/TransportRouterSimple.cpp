@@ -153,8 +153,8 @@ void TransportRouterSimple::addTransportLayer(AbstractTransportLayer& transportL
             return;
         }
     }
-    transportLayer.setTransportMessageListener(this);
-    transportLayer.setTransportMessageProvider(this);
+    transportLayer.fProvidingListenerHelper.fpMessageListener = this;
+    transportLayer.fProvidingListenerHelper.fpMessageProvider = this;
     _transportLayers.push_back(transportLayer);
 }
 
@@ -164,8 +164,8 @@ void TransportRouterSimple::removeTransportLayer(AbstractTransportLayer& transpo
     {
         return;
     }
-    transportLayer.setTransportMessageListener(0L);
-    transportLayer.setTransportMessageProvider(0L);
+    transportLayer.fProvidingListenerHelper.fpMessageListener = nullptr;
+    transportLayer.fProvidingListenerHelper.fpMessageProvider = nullptr;
     _transportLayers.erase(transportLayer);
 }
 

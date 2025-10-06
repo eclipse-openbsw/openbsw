@@ -59,10 +59,9 @@ public:
      *
      * \note
      * Receiving messages is only possible if an instance of
-     * ::transport::ITransportMessageProvider has been set using
-     * setTransportMessageProvider(). To actually get access to the received
-     * messages set an ITransportMessageListener using
-     * setTransportMessageListener().
+     * ::transport::ITransportMessageProvider has been registered via
+     * fProvidingListenerHelper. Likewise, to access received messages, an
+     * ITransportMessageListener has to be registered on the helper.
      *
      * \return  result of initialization
      *          - TP_OK: successfully initialized
@@ -106,44 +105,14 @@ public:
      */
     uint8_t getBusId() const;
 
-    /**
-     * \param pProvider Pointer to ITransportMessageProvider
-     */
-    void setTransportMessageProvider(ITransportMessageProvider* pProvider);
-
-    /**
-     * \param pListener Pointer to ITransportMessageListener
-     */
-    void setTransportMessageListener(ITransportMessageListener* pListener);
-
-protected:
-    /**
-     * Provides access to ITransportMessageProvidingListener for derived
-     * classes.
-     */
-    ITransportMessageProvidingListener& getProvidingListenerHelper();
-
-    /**
-     * This function may be used by all subclasses as a default initialization
-     * of an instance variable of type ShutdownDelegate.
-     */
-    static void shutdownCompleteDummy(AbstractTransportLayer&);
-
 private:
+    uint8_t fBusId;
+
+public:
     class TransportMessageProvidingListenerHelper : public ITransportMessageProvidingListener
     {
     public:
         explicit TransportMessageProvidingListenerHelper(uint8_t busId);
-
-        /**
-         * \param pProvider Pointer to ITransportMessageProvider
-         */
-        void setTransportMessageProvider(ITransportMessageProvider* pProvider);
-
-        /**
-         * \param pListener Pointer to ITransportMessageListener
-         */
-        void setTransportMessageListener(ITransportMessageListener* pListener);
 
         /**
          * \see ITransportMessageProvidingListener::getTransportMessage()
@@ -171,14 +140,20 @@ private:
 
         void dump() override;
 
-    private:
-        uint8_t fBusId;
         ITransportMessageProvider* fpMessageProvider;
         ITransportMessageListener* fpMessageListener;
+
+    private:
+        uint8_t fBusId;
     };
 
-    uint8_t fBusId;
     TransportMessageProvidingListenerHelper fProvidingListenerHelper;
+
+    /**
+     * This function may be used by all subclasses as a default initialization
+     * of an instance variable of type ShutdownDelegate.
+     */
+    static void shutdownCompleteDummy(AbstractTransportLayer&);
 };
 
 /*
@@ -189,39 +164,7 @@ private:
 
 inline uint8_t AbstractTransportLayer::getBusId() const { return fBusId; }
 
-inline void
-AbstractTransportLayer::setTransportMessageProvider(ITransportMessageProvider* const pProvider)
-{
-    fProvidingListenerHelper.setTransportMessageProvider(pProvider);
-}
-
-inline void
-AbstractTransportLayer::setTransportMessageListener(ITransportMessageListener* const pListener)
-{
-    fProvidingListenerHelper.setTransportMessageListener(pListener);
-}
-
-// protected
-inline ITransportMessageProvidingListener& AbstractTransportLayer::getProvidingListenerHelper()
-{
-    return fProvidingListenerHelper;
-}
-
 // static
 inline void AbstractTransportLayer::shutdownCompleteDummy(AbstractTransportLayer&) {}
-
-inline void
-AbstractTransportLayer::TransportMessageProvidingListenerHelper::setTransportMessageProvider(
-    ITransportMessageProvider* const pProvider)
-{
-    fpMessageProvider = pProvider;
-}
-
-inline void
-AbstractTransportLayer::TransportMessageProvidingListenerHelper::setTransportMessageListener(
-    ITransportMessageListener* const pListener)
-{
-    fpMessageListener = pListener;
-}
 
 } // namespace transport

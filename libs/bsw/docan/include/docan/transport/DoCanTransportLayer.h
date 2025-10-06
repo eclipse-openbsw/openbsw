@@ -140,7 +140,7 @@ DoCanTransportLayer<DataLinkLayer>::DoCanTransportLayer(
 , _receiver(
       busId,
       context,
-      getProvidingListenerHelper(),
+      fProvidingListenerHelper,
       _transceiver,
       config.getMessageReceiverPool(),
       addressConverter,

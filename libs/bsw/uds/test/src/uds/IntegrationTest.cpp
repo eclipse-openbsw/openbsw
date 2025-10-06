@@ -162,8 +162,8 @@ protected:
     {
         fContext.handleAll();
         uds::AbstractDiagJob::setDefaultDiagSessionManager(_sessionManager);
-        _udsDispatcher.setTransportMessageListener(&_messageListener);
-        _udsDispatcher.setTransportMessageProvider(&_messageProvider);
+        _udsDispatcher.fProvidingListenerHelper.fpMessageListener = &_messageListener;
+        _udsDispatcher.fProvidingListenerHelper.fpMessageProvider = &_messageProvider;
         _udsDispatcher.addAbstractDiagJob(_rdbi);
         _udsDispatcher.addAbstractDiagJob(_myRdbi);
         _udsDispatcher.addAbstractDiagJob(_hardReset);

@@ -103,8 +103,8 @@ TEST_F(DoCanTransportLayerTest, testTransportMessageReceptionLifecycle)
         _tickGeneratorMock,
         _config,
         _loggerComponent);
-    cut.setTransportMessageListener(&_messageProvidingListenerMock);
-    cut.setTransportMessageProvider(&_messageProvidingListenerMock);
+    cut.fProvidingListenerHelper.fpMessageListener        = &_messageProvidingListenerMock;
+    cut.fProvidingListenerHelper.fpMessageProvider        = &_messageProvidingListenerMock;
     IDoCanFrameReceiver<DataLinkLayerType>* frameReceiver = nullptr;
     EXPECT_CALL(_transceiverMock, init(_)).WillOnce(SaveRef<0>(&frameReceiver));
     EXPECT_EQ(AbstractTransportLayer::ErrorCode::TP_OK, cut.init());
@@ -304,8 +304,8 @@ TEST_F(DoCanTransportLayerTest, testTransportMessageTransmissionLifecycle)
         _tickGeneratorMock,
         _config,
         _loggerComponent);
-    cut.setTransportMessageListener(&_messageProvidingListenerMock);
-    cut.setTransportMessageProvider(&_messageProvidingListenerMock);
+    cut.fProvidingListenerHelper.fpMessageListener        = &_messageProvidingListenerMock;
+    cut.fProvidingListenerHelper.fpMessageProvider        = &_messageProvidingListenerMock;
     IDoCanFrameReceiver<DataLinkLayerType>* frameReceiver = nullptr;
     EXPECT_CALL(_transceiverMock, init(_)).WillOnce(SaveRef<0>(&frameReceiver));
     EXPECT_EQ(AbstractTransportLayer::ErrorCode::TP_OK, cut.init());

@@ -154,8 +154,8 @@ TEST(DemoTest, DoCanIntegration)
     // EXAMPLE_END DoCanTransportLayer
 
     // EXAMPLE_START TransportConnection
-    transportLayer.setTransportMessageProvider(&messageProvider);
-    transportLayer.setTransportMessageListener(&messageListener);
+    transportLayer.fProvidingListenerHelper.fpMessageProvider = &messageProvider;
+    transportLayer.fProvidingListenerHelper.fpMessageListener = &messageListener;
     // EXAMPLE_END TransportConnection
 
     uint32_t nowUs        = 0;
