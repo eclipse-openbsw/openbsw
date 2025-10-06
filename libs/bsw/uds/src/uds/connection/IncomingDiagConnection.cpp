@@ -627,43 +627,42 @@ void IncomingDiagConnection::open(bool const activatePending)
 
 void IncomingDiagConnection::terminate()
 {
-    if (terminateNestedRequest())
+    if (!terminateNestedRequest())
+    {
+        return;
+    }
+    Logger::debug(
+        UDS,
+        "IncomingDiagConnection::terminate(): 0x%x --> 0x%x, service 0x%x",
+        fSourceId,
+        fTargetId,
+        fServiceId);
     {
         ::async::ModifiableLockType lock;
-        if (fOpen)
+        if (!fOpen)
         {
-            Logger::debug(
-                UDS,
-                "IncomingDiagConnection::terminate(): 0x%x --> 0x%x, service 0x%x",
-                fSourceId,
-                fTargetId,
-                fServiceId);
-            if (fNumPendingMessageProcessedCallbacks != 0U)
-            {
-                fConnectionTerminationIsPending = true;
-                return;
-            }
-            fOpen = false;
-            lock.unlock();
-            fResponsePendingTimeout._asyncTimeout.cancel();
-            fGlobalPendingTimeout._asyncTimeout.cancel();
-            if (nullptr == fpDiagConnectionManager)
-            {
-                Logger::critical(
-                    UDS,
-                    "IncomingDiagConnection::terminate(): fpDiagConnectionManager == "
-                    "nullptr!");
-                estd_assert(fpDiagConnectionManager != nullptr);
-            }
-            fConnectionTerminationIsPending = false;
-            fpSender                        = nullptr;
-            fpDiagConnectionManager->diagConnectionTerminated(*this);
+            return;
         }
-        else
+        if (fNumPendingMessageProcessedCallbacks != 0U)
         {
-            // nothing to do
+            fConnectionTerminationIsPending = true;
+            return;
         }
+        fOpen = false;
     }
+    fResponsePendingTimeout._asyncTimeout.cancel();
+    fGlobalPendingTimeout._asyncTimeout.cancel();
+    if (nullptr == fpDiagConnectionManager)
+    {
+        Logger::critical(
+            UDS,
+            "IncomingDiagConnection::terminate(): fpDiagConnectionManager == "
+            "nullptr!");
+        estd_assert(fpDiagConnectionManager != nullptr);
+    }
+    fConnectionTerminationIsPending = false;
+    fpSender                        = nullptr;
+    fpDiagConnectionManager->diagConnectionTerminated(*this);
 }
 
 } // namespace uds
