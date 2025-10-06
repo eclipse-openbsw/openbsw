@@ -183,20 +183,6 @@ public:
      */
     bool isBusy() const { return (fpSender != nullptr); }
 
-    /**
-     * Set whether the connection represents a resuming request or not
-     * \param resuming true if resuming
-     */
-    void setResuming(bool const resuming) { fIsResuming = resuming; }
-
-    /**
-     * Returns if the connection represents a resuming request
-     * \return
-     * - true if resuming
-     * - false otherwise
-     */
-    bool isResuming() const { return fIsResuming; }
-
     void setRequestNotificationListener(
         transport::ITransportMessageProcessedListener& notificationListener)
     {
@@ -344,7 +330,6 @@ public:
     uint8_t fPendingMessageBuffer[PENDING_MESSAGE_BUFFER_LENGTH]                     = {};
     uint8_t fNegativeResponseTempBuffer[DiagCodes::NEGATIVE_RESPONSE_MESSAGE_LENGTH] = {};
     ::etl::vector<uint8_t, MAXIMUM_NUMBER_OF_IDENTIFIERS> fIdentifiers;
-    bool fIsResuming         = false;
     uint32_t fPendingTimeOut = DEFAULT_PENDING_TIMEOUT_MS;
 };
 
