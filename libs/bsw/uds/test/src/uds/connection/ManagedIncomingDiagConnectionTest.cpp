@@ -11,7 +11,6 @@
 #include "uds/base/AbstractDiagJobMock.h"
 #include "uds/base/DiagJobMock.h"
 #include "uds/base/DiagJobRoot.h"
-#include "uds/connection/DiagConnectionManager.h"
 #include "uds/connection/IncomingDiagConnection.h"
 #include "uds/connection/NestedDiagRequestMock.h"
 #include "uds/session/DiagSessionManagerMock.h"
@@ -46,7 +45,6 @@ struct ManagedIncomingDiagConnectionTest : Test
         fpDiagnosisConfiguration;
     TransportMessageProvidingListenerMock* fpTpRouterMock;
     AbstractTransportLayerMock* fpTpLayerMock;
-    DiagConnectionManager* fpDiagConnectionManager;
     DiagDispatcher* fpDiagDispatcher;
     DiagSessionManagerMock* fpSessionProvider;
     DiagJobRoot* fpDiagJobRoot;
@@ -73,21 +71,14 @@ struct ManagedIncomingDiagConnectionTest : Test
                 true,
                 fContext);
 
-        fpDiagDispatcher = new DiagDispatcher(
-            *fpDiagnosisConfiguration, *fpSessionProvider, *fpDiagJobRoot, fContext);
+        fpDiagDispatcher
+            = new DiagDispatcher(*fpDiagnosisConfiguration, *fpSessionProvider, *fpDiagJobRoot);
 
-        fpDiagConnectionManager = new DiagConnectionManager(
-            *fpDiagnosisConfiguration,
-            *fpTpLayerMock,
-            *fpTpRouterMock,
-            fContext,
-            *fpDiagDispatcher);
-
-        fpIncomingDiagConnection                          = new IncomingDiagConnection(fContext);
-        fpIncomingDiagConnection->fpMessageSender         = fpTpLayerMock;
-        fpIncomingDiagConnection->fpDiagConnectionManager = fpDiagConnectionManager;
-        fpIncomingDiagConnection->fpDiagSessionManager    = fpSessionProvider;
-        fpIncomingDiagConnection->fpMessageSender         = fpTpLayerMock;
+        fpIncomingDiagConnection                       = new IncomingDiagConnection(fContext);
+        fpIncomingDiagConnection->fpMessageSender      = fpTpLayerMock;
+        fpIncomingDiagConnection->fpDiagDispatcher     = fpDiagDispatcher;
+        fpIncomingDiagConnection->fpDiagSessionManager = fpSessionProvider;
+        fpIncomingDiagConnection->fpMessageSender      = fpTpLayerMock;
     }
 
     virtual void TearDown()
@@ -100,7 +91,6 @@ struct ManagedIncomingDiagConnectionTest : Test
 #endif
         delete fpIncomingDiagConnection;
         delete fpDiagJobRoot;
-        delete fpDiagConnectionManager;
         delete fpDiagDispatcher;
         delete fpDiagnosisConfiguration;
         delete fpSessionProvider;

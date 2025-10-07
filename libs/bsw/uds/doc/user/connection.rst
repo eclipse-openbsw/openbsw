@@ -27,12 +27,13 @@ When a job is completed (see the concrete implementation of the ``process()`` fu
 the algorithm identifies the corresponding connection in the list of active **incoming** connections
 and sends the response.
 
-DiagConnectionManager
+Connection management
 ---------------------
 
-The class implements specific logic to manage incoming and outgoing connections
-upon request. It uses the underlying ``DiagnosisConfiguration`` as a structure containing the
-allocated connections.
+``DiagDispatcher`` manages the pool of incoming diagnostic connections provided by
+``DiagnosisConfiguration``. It allocates an ``IncomingDiagConnection`` when a new request
+arrives, wires it with the active session manager, and ensures that the connection is
+returned to the pool once processing completes.
 
 
 Nested Request

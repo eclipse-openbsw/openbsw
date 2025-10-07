@@ -15,7 +15,6 @@
 #include "uds/DiagnosisConfiguration.h"
 #include "uds/UdsLogger.h"
 #include "uds/base/AbstractDiagJobMock.h"
-#include "uds/connection/DiagConnectionManager.h"
 #include "uds/connection/IncomingDiagConnectionMock.h"
 #include "uds/lifecycle/UdsLifecycleConnectorMock.h"
 #include "uds/services/ecureset/EnableRapidPowerShutdown.h"
@@ -147,8 +146,8 @@ protected:
     , _messageProcessedListener()
     , _incomingDiagConnection(fContext)
     , _lifecycle()
-    , _udsDispatcher(_udsConfiguration, _sessionManager, _jobRoot, fContext)
-    , _udsDispatcher2(_udsConfiguration2, _sessionManager, _jobRoot, fContext)
+    , _udsDispatcher(_udsConfiguration, _sessionManager, _jobRoot)
+    , _udsDispatcher2(_udsConfiguration2, _sessionManager, _jobRoot)
     , _rdbi()
     , _myRdbi()
     , _hardReset(_lifecycle, _udsDispatcher)
@@ -156,8 +155,6 @@ protected:
     , _powerDown(_lifecycle)
     , _enableRapidPowerShutdown(_lifecycle)
     , _outgoingSender(0u)
-    , _diagConnectionManager(
-          _udsConfiguration, _outgoingSender, _messageProvider, fContext, _udsDispatcher)
     , pTransportLayer(nullptr)
     {
         fContext.handleAll();
@@ -201,7 +198,6 @@ protected:
     uds::PowerDown _powerDown;
     uds::EnableRapidPowerShutdown _enableRapidPowerShutdown;
     StrictMock<transport::AbstractTransportLayerMock> _outgoingSender;
-    uds::DiagConnectionManager _diagConnectionManager;
     transport::AbstractTransportLayer* pTransportLayer;
     async::AsyncMock fAsyncMock;
 
@@ -633,7 +629,7 @@ TEST_F(
     StrictMock<estd::function_mock<void()>> initComplete;
     EXPECT_CALL(initComplete, callee());
 
-    _udsDispatcher.getConnectionManager().shutdown(initComplete);
+    _udsDispatcher.shutdownIncomingConnections(initComplete);
 
     EXPECT_CALL(_sessionManager, getActiveSession())
         .WillRepeatedly(ReturnRef(DiagSession::APPLICATION_EXTENDED_SESSION()));

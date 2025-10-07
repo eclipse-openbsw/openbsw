@@ -28,7 +28,6 @@
 #include "uds/base/Subfunction.h"
 #include "uds/base/SubfunctionWithAuthentication.h"
 #include "uds/base/SubfunctionWithAuthenticationAndSessionControl.h"
-#include "uds/connection/DiagConnectionManager.h"
 #include "uds/connection/ErrorCode.h"
 #include "uds/connection/IncomingDiagConnection.h"
 #include "uds/connection/PositiveResponse.h"

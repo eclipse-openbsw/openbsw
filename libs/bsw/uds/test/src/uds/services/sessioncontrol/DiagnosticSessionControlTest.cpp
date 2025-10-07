@@ -391,10 +391,7 @@ TEST_F(
         static_cast<::async::ContextType>(1U));
 
     DiagDispatcher dispatcher(
-        udsConfiguration,
-        static_cast<IDiagSessionManager&>(diagSessionManager),
-        fDiagJobRoot,
-        _asyncContext);
+        udsConfiguration, static_cast<IDiagSessionManager&>(diagSessionManager), fDiagJobRoot);
 
     fDiagnosticSessionControl.setDiagDispatcher(&dispatcher);
 

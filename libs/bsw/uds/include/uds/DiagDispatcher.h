@@ -5,7 +5,6 @@
 #include "uds/DiagnosisConfiguration.h"
 #include "uds/IDiagDispatcher.h"
 #include "uds/UdsConfig.h"
-#include "uds/connection/DiagConnectionManager.h"
 
 #include <async/Async.h>
 #include <async/util/Call.h>
@@ -36,6 +35,7 @@ class TransportJob;
 namespace uds
 {
 class IDiagSessionManager;
+class IncomingDiagConnection;
 
 /**
  * DiagDispatcher is the ITransportMessageSender for a uds instance.
@@ -60,8 +60,7 @@ public:
     DiagDispatcher(
         AbstractDiagnosisConfiguration& configuration,
         IDiagSessionManager& sessionManager,
-        DiagJobRoot& jobRoot,
-        ::async::ContextType context);
+        DiagJobRoot& jobRoot);
 
     /**
      * \see     AbstractTransportLayer::init()
@@ -93,7 +92,7 @@ public:
 
     void processQueue();
 
-    DiagConnectionManager& getConnectionManager() { return fConnectionManager; }
+    void shutdownIncomingConnections(::etl::delegate<void()> delegate);
 
     uint16_t getSourceId() const override { return fConfiguration.DiagAddress; }
 
@@ -121,7 +120,7 @@ private:
     static uint8_t const BUSY_MESSAGE_LENGTH = 3U;
 
     friend class ::http::html::UdsController;
-    friend class DiagConnectionManager;
+    friend class IncomingDiagConnection;
 
     class DefaultTransportMessageProcessedListener
     : public transport::ITransportMessageProcessedListener
@@ -151,7 +150,7 @@ private:
     static void dispatchIncomingRequest(
         transport::TransportJob& job,
         AbstractDiagnosisConfiguration& configuration,
-        DiagConnectionManager& connectionManager,
+        DiagDispatcher& dispatcher,
         DiagJobRoot& diagJobRoot,
         transport::ITransportMessageProvidingListener& providingListener,
         transport::ITransportMessageProcessedListener* dispatcherProcessedListener,
@@ -173,8 +172,15 @@ private:
         transport::ITransportMessageProvidingListener& providingListener,
         AbstractDiagnosisConfiguration& configuration);
 
+    IncomingDiagConnection* requestIncomingConnection(transport::TransportMessage& requestMessage);
+
+    void diagConnectionTerminated(IncomingDiagConnection& diagConnection);
+
+    void checkConnectionShutdownProgress();
+
     AbstractDiagnosisConfiguration& fConfiguration;
-    DiagConnectionManager fConnectionManager;
+    ::etl::delegate<void()> fConnectionShutdownDelegate;
+    bool fConnectionShutdownRequested;
 
     ShutdownDelegate fShutdownDelegate;
     DefaultTransportMessageProcessedListener fDefaultTransportMessageProcessedListener;

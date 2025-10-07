@@ -140,7 +140,7 @@ public:
           false,
           true,
           fContext)
-    , fUdsDispatcher(fUdsConfiguration, fSessionManager, fDiagJobRoot, fContext)
+    , fUdsDispatcher(fUdsConfiguration, fSessionManager, fDiagJobRoot)
     {}
 
     virtual void SetUp()

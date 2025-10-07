@@ -8,6 +8,7 @@
 #include "transport/TransportJob.h"
 #include "uds/DiagCodes.h"
 #include "uds/UdsLogger.h"
+#include "uds/connection/IncomingDiagConnection.h"
 #include "uds/session/IDiagSessionManager.h"
 
 #include <etl/delegate.h>
@@ -31,12 +32,12 @@ using ::util::logger::UDS;
 DiagDispatcher::DiagDispatcher(
     AbstractDiagnosisConfiguration& configuration,
     IDiagSessionManager& sessionManager,
-    DiagJobRoot& jobRoot,
-    ::async::ContextType context)
+    DiagJobRoot& jobRoot)
 : IDiagDispatcher(sessionManager, jobRoot)
 , AbstractTransportLayer(configuration.DiagBusId)
 , fConfiguration(configuration)
-, fConnectionManager(fConfiguration, *this, fProvidingListenerHelper, context, *this)
+, fConnectionShutdownDelegate()
+, fConnectionShutdownRequested(false)
 , fShutdownDelegate()
 , fDefaultTransportMessageProcessedListener()
 , fBusyMessage()
@@ -198,7 +199,7 @@ void DiagDispatcher::processQueue()
             dispatchIncomingRequest(
                 *pSendJob,
                 fConfiguration,
-                fConnectionManager,
+                *this,
                 fDiagJobRoot,
                 fProvidingListenerHelper,
                 this,
@@ -220,8 +221,7 @@ uint8_t DiagDispatcher::dispatchTriggerEventRequest(TransportMessage& tmsg)
             = copyFunctionalRequest(tmsg, fProvidingListenerHelper, fConfiguration);
         if (pRequest != nullptr)
         {
-            IncomingDiagConnection* const pConnection
-                = fConnectionManager.requestIncomingConnection(*pRequest);
+            IncomingDiagConnection* const pConnection = requestIncomingConnection(*pRequest);
             if (pConnection != nullptr)
             {
                 Logger::debug(
@@ -266,7 +266,7 @@ uint8_t DiagDispatcher::dispatchTriggerEventRequest(TransportMessage& tmsg)
 void DiagDispatcher::dispatchIncomingRequest(
     TransportJob& job,
     AbstractDiagnosisConfiguration& configuration,
-    DiagConnectionManager& connectionManager,
+    DiagDispatcher& dispatcher,
     DiagJobRoot& diagJobRoot,
     ITransportMessageProvidingListener& providingListener,
     ITransportMessageProcessedListener* const dispatcherProcessedListener,
@@ -322,7 +322,7 @@ void DiagDispatcher::dispatchIncomingRequest(
     if (!sendBusyNegativeResponse)
     {
         IncomingDiagConnection* const pConnection
-            = connectionManager.requestIncomingConnection(*job.getTransportMessage());
+            = dispatcher.requestIncomingConnection(*job.getTransportMessage());
         if (pConnection != nullptr)
         {
             Logger::debug(
@@ -358,6 +358,103 @@ void DiagDispatcher::dispatchIncomingRequest(
         job.getProcessedListener()->transportMessageProcessed(
             *pMessage, ITransportMessageProcessedListener::ProcessingResult::PROCESSED_NO_ERROR);
     }
+}
+
+IncomingDiagConnection* DiagDispatcher::requestIncomingConnection(TransportMessage& requestMessage)
+{
+    if (fConnectionShutdownRequested)
+    {
+        return nullptr;
+    }
+    IncomingDiagConnection* pConnection = nullptr;
+    {
+        ::async::LockType const lock;
+        pConnection = fConfiguration.acquireIncomingDiagConnection();
+    }
+    if (pConnection != nullptr)
+    {
+        pConnection->fpDiagDispatcher     = this;
+        pConnection->fpMessageSender      = this;
+        pConnection->fpDiagSessionManager = &fSessionManager;
+        pConnection->fSourceId            = requestMessage.getSourceId();
+        pConnection->fTargetId            = requestMessage.getTargetId();
+        pConnection->fServiceId           = requestMessage.getServiceId();
+        pConnection->open(fConfiguration.ActivateOutgoingPending);
+        pConnection->fpRequestMessage  = &requestMessage;
+        pConnection->fpResponseMessage = nullptr;
+        return pConnection;
+    }
+
+    Logger::warn(
+        UDS,
+        "No incoming diag connection available for 0x%x --> 0x%x, service 0x%x",
+        requestMessage.getSourceId(),
+        requestMessage.getTargetId(),
+        requestMessage.getServiceId());
+    return nullptr;
+}
+
+void DiagDispatcher::diagConnectionTerminated(IncomingDiagConnection& diagConnection)
+{
+    transport::TransportMessage* const requestMessage = diagConnection.fpRequestMessage;
+    transport::ITransportMessageProcessedListener* const notificationListener
+        = diagConnection.fpRequestNotificationListener;
+    if ((notificationListener != nullptr) && (requestMessage != nullptr))
+    {
+        requestMessage->resetValidBytes();
+        (void)requestMessage->increaseValidBytes(requestMessage->getPayloadLength());
+        notificationListener->transportMessageProcessed(
+            *requestMessage,
+            transport::ITransportMessageProcessedListener::ProcessingResult::PROCESSED_NO_ERROR);
+    }
+
+    transport::TransportMessage* const responseMessage = diagConnection.fpResponseMessage;
+    if (responseMessage != nullptr)
+    {
+        fProvidingListenerHelper.releaseTransportMessage(*responseMessage);
+    }
+
+    {
+        ::async::LockType const lock;
+        fConfiguration.releaseIncomingDiagConnection(diagConnection);
+    }
+
+    diagConnection.fpRequestMessage              = nullptr;
+    diagConnection.fpResponseMessage             = nullptr;
+    diagConnection.fpDiagDispatcher              = nullptr;
+    diagConnection.fpMessageSender               = nullptr;
+    diagConnection.fpRequestNotificationListener = nullptr;
+
+    checkConnectionShutdownProgress();
+}
+
+void DiagDispatcher::shutdownIncomingConnections(::etl::delegate<void()> delegate)
+{
+    fConnectionShutdownDelegate  = delegate;
+    fConnectionShutdownRequested = true;
+    checkConnectionShutdownProgress();
+}
+
+void DiagDispatcher::checkConnectionShutdownProgress()
+{
+    if (!fConnectionShutdownRequested)
+    {
+        return;
+    }
+
+    ::etl::ipool const& incomingDiagConnections = fConfiguration.incomingDiagConnectionPool();
+
+    if (!incomingDiagConnections.full())
+    {
+        Logger::error(
+            UDS,
+            "DiagDispatcher::problem at shutdown(in: %d/%d)",
+            incomingDiagConnections.size(),
+            incomingDiagConnections.max_size());
+        fConfiguration.clearIncomingDiagConnections();
+    }
+    Logger::debug(UDS, "DiagDispatcher incoming connection shutdown complete");
+    fConnectionShutdownDelegate();
 }
 
 void DiagDispatcher::sendBusyResponse(TransportMessage const* const message)
@@ -398,8 +495,9 @@ void DiagDispatcher::trigger() { ::async::execute(fConfiguration.Context, fAsync
 
 AbstractTransportLayer::ErrorCode DiagDispatcher::init()
 {
-    fConnectionManager.init();
-    fEnabled = true;
+    fConnectionShutdownDelegate  = ::etl::delegate<void()>();
+    fConnectionShutdownRequested = false;
+    fEnabled                     = true;
     return AbstractTransportLayer::ErrorCode::TP_OK;
 }
 
@@ -408,7 +506,7 @@ ESR_NO_INLINE bool DiagDispatcher::shutdown_local(ShutdownDelegate const delegat
     Logger::debug(UDS, "DiagDispatcher::shutdown()");
     fEnabled          = false;
     fShutdownDelegate = delegate;
-    fConnectionManager.shutdown(
+    shutdownIncomingConnections(
         ::etl::delegate<void()>::
             create<DiagDispatcher, &DiagDispatcher::connectionManagerShutdownComplete>(*this));
     return false;

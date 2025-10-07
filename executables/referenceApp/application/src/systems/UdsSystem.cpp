@@ -38,7 +38,7 @@ UdsSystem::UdsSystem(
       false, /* accept all requests */
       true,  /* copy functional requests */
       context)
-, _udsDispatcher(_udsConfiguration, _diagnosticSessionControl, _jobRoot, context)
+, _udsDispatcher(_udsConfiguration, _diagnosticSessionControl, _jobRoot)
 , _asyncDiagHelper(context)
 , _readDataByIdentifier()
 , _writeDataByIdentifier()

@@ -13,7 +13,6 @@ add_library(
     src/uds/base/Subfunction.cpp
     src/uds/base/SubfunctionWithAuthentication.cpp
     src/uds/base/SubfunctionWithAuthenticationAndSessionControl.cpp
-    src/uds/connection/DiagConnectionManager.cpp
     src/uds/connection/IncomingDiagConnection.cpp
     src/uds/connection/NestedDiagRequest.cpp
     src/uds/connection/PositiveResponse.cpp

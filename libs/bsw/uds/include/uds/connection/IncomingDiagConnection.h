@@ -24,7 +24,7 @@ namespace uds
 class AbstractDiagJob;
 class IDiagSessionManager;
 class NestedDiagRequest;
-class DiagConnectionManager;
+class DiagDispatcher;
 
 /**
  * A diagnosis connection representing an incoming request.
@@ -207,7 +207,7 @@ public:
     transport::TransportMessage* fpRequestMessage      = nullptr;
     transport::TransportMessage* fpResponseMessage     = nullptr;
     transport::AbstractTransportLayer* fpMessageSender = nullptr;
-    DiagConnectionManager* fpDiagConnectionManager     = nullptr;
+    DiagDispatcher* fpDiagDispatcher                   = nullptr;
     ::async::ContextType fContext;
     bool fOpen = false;
 
@@ -271,7 +271,7 @@ public:
     /**
      * Sets the source id of a given TransportMessage, based on the target id
      * of the incoming request. If the request was a functional one, the source
-     * id will be set to source id of the DiagConnectionManager, otherwise
+     * id will be set to source id of the DiagDispatcher, otherwise
      * it'll be set to the target id of this IncomingDiagConnection.
      */
     void setSourceId(transport::TransportMessage& transportMessage) const;
