@@ -53,13 +53,11 @@ allowing developers to get up and running quickly.
 | CAN | Support for CAN bus communication | If ``SocketCAN`` is supported | Yes | Since Release 0.1 |
 | Sensors and actuators integration | ADC, PWM & GPIO | | Yes | |
 | UDS, DoCAN | Diagnostics over CAN | If ``SocketCAN`` is supported | Yes | Since Release 0.1 |
+| Ethernet | Basic TCP and UDP support | Yes | Yes | On current `main` |
 
 ## Roadmap
 
-| Feature | Description | Planned for |
-| --- | --- | --- |
-| Ethernet | Add support for Ethernet communication to demo | Release 0.2 |
-| DoIP | Add support for Diagnostics over IP to demo | Release 0.2 |
+See [GitHub Issues](https://github.com/eclipse-openbsw/openbsw/issues?q=is%3Aissue%20state%3Aopen%20label%3Aenhancement).
 
 ## Documentation
 
