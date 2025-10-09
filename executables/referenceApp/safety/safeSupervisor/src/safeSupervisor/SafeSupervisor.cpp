@@ -7,8 +7,6 @@
 #include <reset/softwareSystemReset.h>
 #include <safeUtils/SafetyLogger.h>
 
-#include <commonDebug.h>
-
 namespace safety
 {
 
@@ -70,7 +68,7 @@ void SafeSupervisor::handle(Event const& event)
         }
         case Event::WATCHDOG_STARTUP_CHECK_FAILURE:
         {
-            LOGSYNCHRON("Event: WATCHDOG_STARTUP_CHECK_FAILURE\n");
+            Logger::error(SAFETY, "Event: WATCHDOG_STARTUP_CHECK_FAILURE");
             return;
         }
         case Event::SAFE_WATCHDOG_SEQUENCE_DEVIATION:

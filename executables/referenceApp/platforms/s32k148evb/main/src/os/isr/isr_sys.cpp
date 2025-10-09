@@ -1,9 +1,10 @@
 // Copyright 2024 Accenture.
 
-#include "commonDebug.h"
 #include "reset/softwareSystemReset.h"
 
 #include <safeMemory/SafeMemory.h>
+
+#include <cstdio>
 
 extern "C"
 {

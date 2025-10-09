@@ -1,6 +1,6 @@
 // Copyright 2024 Accenture.
 
-#include "commonDebug.h"
+#include <cstdio>
 
 extern "C"
 {

@@ -1,7 +1,5 @@
 // Copyright 2025 Accenture.
 
-#include "commonDebug.h"
-
 extern "C"
 {
 extern void enetRxIsr();

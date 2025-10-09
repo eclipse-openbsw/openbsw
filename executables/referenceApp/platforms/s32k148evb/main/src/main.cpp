@@ -13,7 +13,6 @@
 #endif
 #include "cache/cache.h"
 #include "clock/clockConfig.h"
-#include "commonDebug.h"
 #include "interrupt_manager.h"
 #include "lifecycle/StaticBsp.h"
 #include "systems/IEthernetDriverSystem.h"
@@ -24,6 +23,8 @@
 #include <safeMemory/SafetyShell.h>
 #include <safeSupervisor/SafeSupervisor.h>
 #include <safeWatchdog/SafeWatchdog.h>
+
+#include <cstdio>
 
 extern void app_main();
 
@@ -138,7 +139,7 @@ int main()
             = ::safety::bsp::Watchdog::executeFastTest(TIME_OUT_WD_FAST_TEST_US);
         if (isWatchdogTestSuccess)
         {
-            LOGSYNCHRON("MCU watchdog fast tests successful\r\n");
+            printf("MCU watchdog fast tests successful\n");
             safeSupervisor.leaveLimpHome();
         }
         else

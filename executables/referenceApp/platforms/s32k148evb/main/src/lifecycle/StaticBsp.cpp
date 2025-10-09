@@ -7,7 +7,6 @@
 #include "bsp/phy/phyConfiguration.h"
 #include "bsp/timer/ftmConfiguration.hpp"
 #include "clock/clockConfig.h"
-#include "commonDebug.h"
 #include "interrupts/SuspendResumeAllInterruptsScopedLock.h"
 #include "interrupts/disableEnableAllInterrupts.h"
 #include "io/Io.h"

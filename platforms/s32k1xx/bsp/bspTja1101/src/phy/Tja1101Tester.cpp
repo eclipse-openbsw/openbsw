@@ -2,7 +2,6 @@
 
 #include "phy/Tja1101Tester.h"
 
-#include "commonDebug.h"
 #include "phy/Tja1101.h"
 #include "util/format/SharedStringWriter.h"
 

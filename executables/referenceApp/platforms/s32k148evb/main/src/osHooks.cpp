@@ -1,8 +1,9 @@
 // Copyright 2024 Accenture.
 
 #include "FreeRTOS.h"
-#include "commonDebug.h"
 #include "task.h"
+
+#include <cstdio>
 
 extern "C"
 {

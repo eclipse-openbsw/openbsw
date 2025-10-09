@@ -1,7 +1,5 @@
 // Copyright 2024 Accenture.
 
-#include "commonDebug.h"
-
 extern "C"
 {
 extern void call_can_isr_RX();
