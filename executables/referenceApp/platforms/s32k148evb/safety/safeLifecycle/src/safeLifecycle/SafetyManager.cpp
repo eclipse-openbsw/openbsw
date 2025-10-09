@@ -2,6 +2,7 @@
 
 #include "safeLifecycle/SafetyManager.h"
 
+#include <safeIo/SafeIo.h>
 #include <safeLifecycle/IsrHooks.h>
 #include <safeMemory/MemoryProtection.h>
 #include <safeMemory/ProtectedRamScopedUnlock.h>
@@ -15,6 +16,7 @@
 
 ::safety::SafeWatchdog safeWatchdog;
 ::safety::SafeSystem safeSystem;
+::safety::SafeIo safeIo;
 
 namespace safety
 {
@@ -26,12 +28,13 @@ SafetyManager::SafetyManager() : _counter(0) {}
 
 void SafetyManager::init()
 {
-    Logger::warn(SAFETY, "SafetyManager initialized");
+    Logger::debug(SAFETY, "SafetyManager initialized");
     {
         SafetyShell const safetyShell;
         resetCounterSafeIsrHook();
         safeWatchdog.init();
         safeSystem.init();
+        safeIo.init();
     }
     RomCheck::init();
 }
@@ -60,6 +63,7 @@ void SafetyManager::cyclic()
     }
     safe_memory::cyclic();
     safeSystem.cyclic();
+    safeIo.cyclic();
     supervisor.safetyManagerSequenceMonitor.hit(
         SafeSupervisor::SafetyManagerSequence::SAFETY_MANAGER_LEAVE);
     bool const safeRamLockStatusOnLeave = MemoryProtection::fusaGateIsLocked();

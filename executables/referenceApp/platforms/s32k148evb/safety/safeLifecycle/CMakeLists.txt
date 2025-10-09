@@ -10,6 +10,7 @@ target_link_libraries(
     PUBLIC platform
     PRIVATE safeSupervisor
             safeSystem
+            safeIo
             safeWatchdog
             safeUtils
             safeMemory

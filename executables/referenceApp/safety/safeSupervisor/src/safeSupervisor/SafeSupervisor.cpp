@@ -7,6 +7,10 @@
 #include <reset/softwareSystemReset.h>
 #include <safeUtils/SafetyLogger.h>
 
+#ifdef PLATFORM_SUPPORT_IO
+#include <safeIo/SafeState.h>
+#endif
+
 namespace safety
 {
 
@@ -35,6 +39,8 @@ SafeSupervisor::SafeSupervisor()
 , mpuConfigMonitor(*this, Event::MPU_CONFIGURATION_ERROR)
 , adcReferenceMonitor(*this, Event::ADC_REFERENCE_ERROR)
 , internalSuppliesMonitor(*this, Event::INTERNAL_SUPPLIES_ERROR)
+, checkRegisterMonitor(*this, Event::CHECK_REGISTER_ERROR)
+, lockRegisterMonitor(*this, Event::LOCK_REGISTER_ERROR)
 , _limpHome(true)
 {}
 
@@ -52,16 +58,9 @@ void SafeSupervisor::handle(Event const& event)
     ::interrupts::SuspendResumeAllInterruptsScopedLock const lock;
     switch (event)
     {
-        case Event::SAFE_EVENT_DUMMY:
-        {
-            Logger::debug(SAFETY, "Event: SAFE_EVENT_DUMMY");
-            // TODO: remove the log, and replace it with writing the event to no-init ram
-            // Note: use event.getContext to get extra information about the event
-            break;
-        }
         case Event::SAFETY_MANAGER_SEQUENCE_DEVIATION:
         {
-            Logger::debug(SAFETY, "Event: SAFETY_MANAGER_SEQUENCE_DEVIATION");
+            Logger::error(SAFETY, "Event: SAFETY_MANAGER_SEQUENCE_DEVIATION");
             // TODO: remove the log, and replace it with writing the event to no-init ram
             // Note: use event.getContext to get extra information about the event
             break;
@@ -73,66 +72,64 @@ void SafeSupervisor::handle(Event const& event)
         }
         case Event::SAFE_WATCHDOG_SEQUENCE_DEVIATION:
         {
-            Logger::debug(SAFETY, "Event: SAFE_WATCHDOG_SEQUENCE_DEVIATION");
+            Logger::error(SAFETY, "Event: SAFE_WATCHDOG_SEQUENCE_DEVIATION");
             // TODO: remove the log, and replace it with writing the event to no-init ram
             // Note: use event.getContext to get extra information about the event
             break;
         }
         case Event::SAFE_WATCHDOG_CONFIGURATION_ERROR:
         {
-            Logger::debug(SAFETY, "Event: SAFE_WATCHDOG_CONFIGURATION_ERROR");
+            Logger::error(SAFETY, "Event: SAFE_WATCHDOG_CONFIGURATION_ERROR");
             // TODO: remove the log, and replace it with writing the event to no-init ram
             // Note: use event.getContext to get extra information about the event
             break;
         }
         case Event::SAFE_WATCHDOG_SERVICE_DEVIATION:
         {
-            Logger::debug(SAFETY, "Event: SAFE_WATCHDOG_SERVICE_DEVIATION");
+            Logger::error(SAFETY, "Event: SAFE_WATCHDOG_SERVICE_DEVIATION");
             // TODO: remove the log, and replace it with writing the event to no-init ram
             // Note: use event.getContext to get extra information about the event
             break;
         }
         case Event::MPU_UNLOCKED_ON_SAFETY_MANAGER_ENTRY:
         {
-            Logger::debug(SAFETY, "Event: MPU_UNLOCKED_ON_SAFETY_MANAGER_ENTRY");
+            Logger::error(SAFETY, "Event: MPU_UNLOCKED_ON_SAFETY_MANAGER_ENTRY");
             // TODO: remove the log, and replace it with writing the event to no-init ram
             // Note: use event.getContext to get extra information about the event
             break;
         }
         case Event::MPU_LOCKED_ON_SAFETY_MANAGER_EXIT:
         {
-            Logger::debug(SAFETY, "Event: MPU_LOCKED_ON_SAFETY_MANAGER_EXIT");
+            Logger::error(SAFETY, "Event: MPU_LOCKED_ON_SAFETY_MANAGER_EXIT");
             // TODO: remove the log, and replace it with writing the event to no-init ram
             // Note: use event.getContext to get extra information about the event
             break;
         }
         case Event::INTEGRITY_EVENT_DMA_ECC_ERROR:
         {
-            Logger::debug(SAFETY, "Event: INTEGRITY_EVENT_DMA_ECC_ERROR, System Reset");
+            Logger::error(SAFETY, "Event: INTEGRITY_EVENT_DMA_ECC_ERROR, System Reset");
             // TODO: remove the log, and replace it with writing the event to no-init ram
             // Note: use event.getContext to get extra information about the event
             break;
         }
         case Event::ROM_CHECK_FAILURE:
         {
-            Logger::debug(SAFETY, "Event: ROM_CHECK_FAILURE");
+            Logger::error(SAFETY, "Event: ROM_CHECK_FAILURE");
             // TODO: remove the log, and replace it with writing the event to no-init ram
             // Note: use event.getContext to get extra information about the event
             return;
         }
         case Event::MPU_NOT_ENABLED:
         {
-            Logger::debug(SAFETY, "Event: MPU_NOT_ENABLED");
+            Logger::error(SAFETY, "Event: MPU_NOT_ENABLED");
             // TODO: remove the log, and replace it with writing the event to no-init ram
             // Note: use event.getContext to get extra information about the event
             break;
         }
         case Event::MPU_CONFIGURATION_ERROR:
         {
-            Logger::debug(
-                SAFETY,
-                "Event: MPU_CONFIGURATION_ERROR, failed region: %d",
-                mpuConfigMonitor.getContext());
+            uint32_t const region = mpuConfigMonitor.getContext();
+            Logger::error(SAFETY, "Event: MPU_CONFIGURATION_ERROR, failed region: %d", region);
             // TODO: remove the log, and replace it with writing the event to no-init ram
             // Note: use event.getContext to get extra information about the event
             break;
@@ -149,6 +146,33 @@ void SafeSupervisor::handle(Event const& event)
             Logger::error(SAFETY, "Event: INTERNAL_SUPPLIES_ERROR");
             // TODO: remove the log, and replace it with writing the event to no-init ram
             // Note: use event.getContext to get extra information about the event
+            break;
+        }
+        case Event::CHECK_REGISTER_ERROR:
+        {
+#ifdef PLATFORM_SUPPORT_IO
+            bool const ok = checkRegisterMonitor.getContext();
+            if (ok)
+            {
+                Logger::error(SAFETY, "Event: CHECK_REGISTER_ERROR (leave safe state)");
+                ::safety::SafeState::leaveSafeState();
+            }
+            else
+            {
+                Logger::error(SAFETY, "Event: CHECK_REGISTER_ERROR (enter safe state)");
+                ::safety::SafeState::enterSafeState();
+            }
+#else
+            Logger::error(SAFETY, "Event: CHECK_REGISTER_ERROR");
+#endif
+            // This is not a fatal error, so we do not enter limp home or reset the MCU.
+            return;
+        }
+        case Event::LOCK_REGISTER_ERROR:
+        {
+            auto const reg_id = lockRegisterMonitor.getContext();
+            Logger::error(SAFETY, "Event: LOCK_REGISTER_ERROR, failed register id: %d", reg_id);
+            // TODO: remove the log, and replace it with writing the event to no-init ram
             break;
         }
         default:

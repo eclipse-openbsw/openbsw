@@ -1,8 +1,12 @@
 // Copyright 2024 Accenture.
 
-#include <console/AsyncCommandWrapper.h>
 #include <lifecycle/AsyncLifecycleComponent.h>
-#include <lifecycle/console/LifecycleControlCommand.h>
+#include <lifecycle/ILifecycleManager.h>
+
+#if PLATFORM_SUPPORT_IO
+#include <console/AsyncCommandWrapper.h>
+#include <safety/console/SafetyCommand.h>
+#endif
 
 namespace systems
 {
@@ -27,6 +31,10 @@ private:
 private:
     ::async::ContextType const _context;
     ::async::TimeoutType _timeout;
+#if PLATFORM_SUPPORT_IO
+    ::safety::SafetyCommand _safetyCommand;
+    ::console::AsyncCommandWrapper _asyncCommandWrapperForSafetyCommand;
+#endif
 };
 
 } // namespace systems

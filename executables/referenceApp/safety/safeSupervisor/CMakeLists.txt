@@ -7,12 +7,8 @@ target_link_libraries(
     PUBLIC safeMonitor platform
     PRIVATE safeUtils common bspInterrupts)
 
-if (NOT BUILD_UNIT_TESTS)
-    target_link_libraries(safeSupervisor PUBLIC bspMcu)
+if (PLATFORM_SUPPORT_IO)
+    target_link_libraries(safeSupervisor PRIVATE bspIo safeIo)
 endif ()
 
-if (BUILD_UNIT_TESTS)
-    add_subdirectory(mock)
-    target_include_directories(safeSupervisor PUBLIC mock/include)
-    target_link_libraries(safeSupervisor PUBLIC safeSupervisorMock utbspMcu)
-endif ()
+target_link_libraries(safeSupervisor PUBLIC bspMcu)
