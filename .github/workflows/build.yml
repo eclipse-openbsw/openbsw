@@ -7,11 +7,11 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        preset: [ "tests-debug", "tests-release", "posix", "posix-with-tracing", "s32k148-gcc" ]
+        preset: [ "tests-debug", "tests-release", "posix", "posix-with-tracing", "s32k148-gcc", "s32k148-clang" ]
         platform: [ "arm", "linux" ]
         config: [ "Debug", "Release", "RelWithDebInfo" ]
         cxxid: ["gcc", "clang"]
-        cxxstd: [ 14, 20 ]
+        cxxstd: [ 14, 17, 20, 23 ]
         exclude:
           - preset: "tests-debug"
             platform: "arm"
@@ -41,6 +41,8 @@ jobs:
             platform: "linux"
           - preset: "s32k148-gcc"
             cxxid: "clang"
+          - preset: "s32k148-clang"
+            cxxid: "gcc"
         include:
           - preset: "wf-tests-debug"
             platform: "linux"
@@ -76,6 +78,11 @@ jobs:
             platform: "arm"
             config: ""
             cxxid: "gcc"
+            cxxstd: 0
+          - preset: "wf-s32k148-clang"
+            platform: "arm"
+            config: ""
+            cxxid: "clang"
             cxxstd: 0
 
     steps:

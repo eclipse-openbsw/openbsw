@@ -29,12 +29,12 @@ commands = {
         cxxstds=[0],
         build_dir="build/s32k148-gcc",
     ),
-    # "wf-s32k148-clang": BuildOpTpl(
-    #     config_cmd="cmake --workflow --preset wf-s32k148-clang",
-    #     platforms=["arm"],
-    #     cxxstds=[0],
-    #     build_dir="build/s32k148-clang",
-    # ),
+    "wf-s32k148-clang": BuildOpTpl(
+        config_cmd="cmake --workflow --preset wf-s32k148-clang",
+        platforms=["arm"],
+        cxxstds=[0],
+        build_dir="build/s32k148-clang",
+    ),
     "tests-debug": BuildOpTpl(
         config_cmd="cmake --preset tests-debug",
         build_cmd="cmake --build --preset tests-debug",
@@ -73,12 +73,14 @@ commands = {
         cxxids=["gcc"],
         build_dir="build/s32k148-gcc",
     ),
-    # "s32k148-clang": BuildOpTpl(
-    #     config_cmd="cmake --preset s32k148-clang",
-    #     build_cmd="cmake --build --preset s32k148-clang",
-    #     platforms=["arm"],
-    #     cxxids=["clang"],
-    # ),
+    "s32k148-clang": BuildOpTpl(
+        config_cmd="cmake --preset s32k148-clang",
+        build_cmd="cmake --build --preset s32k148-clang",
+        configs=["Debug", "Release", "RelWithDebInfo"],
+        platforms=["arm"],
+        cxxids=["clang"],
+        build_dir="build/s32k148-clang",
+    ),
 }
 
 
