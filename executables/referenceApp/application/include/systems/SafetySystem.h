@@ -1,8 +1,7 @@
 // Copyright 2024 Accenture.
 
-#include <console/AsyncCommandWrapper.h>
 #include <lifecycle/AsyncLifecycleComponent.h>
-#include <lifecycle/console/LifecycleControlCommand.h>
+#include <lifecycle/ILifecycleManager.h>
 
 namespace systems
 {

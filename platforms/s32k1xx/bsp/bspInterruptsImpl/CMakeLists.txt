@@ -1,5 +1,11 @@
-add_library(bspInterruptsImpl INTERFACE)
-
-target_include_directories(bspInterruptsImpl INTERFACE include)
-
-target_link_libraries(bspInterruptsImpl INTERFACE platform)
+if (BUILD_TARGET_RTOS STREQUAL "FREERTOS")
+    add_library(bspInterruptsImpl INTERFACE)
+    target_include_directories(bspInterruptsImpl INTERFACE include)
+    target_include_directories(bspInterruptsImpl INTERFACE freertos/include)
+    target_link_libraries(bspInterruptsImpl INTERFACE platform)
+elseif (BUILD_TARGET_RTOS STREQUAL "THREADX")
+    add_library(bspInterruptsImpl INTERFACE)
+    target_include_directories(bspInterruptsImpl INTERFACE include)
+    target_include_directories(bspInterruptsImpl INTERFACE threadx/include)
+    target_link_libraries(bspInterruptsImpl INTERFACE platform threadX)
+endif ()

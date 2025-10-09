@@ -162,6 +162,7 @@ __isr_vector:
     .long   DefaultISR                                      /* FTM5_Ch6_Ch7_IRQHandler                            FTM5 Channel 6 and 7 interrupt */
     .long   DefaultISR                                      /* FTM5_Fault_IRQHandler                              FTM5 Fault interrupt */
     .long   DefaultISR                                      /* FTM5_Ovf_Reload_IRQHandler                         FTM5 Counter overflow and Reload interrupt */
+
     .long   DefaultISR                                      /* 151 */
     .long   DefaultISR                                      /* 152 */
     .long   DefaultISR                                      /* 153 */

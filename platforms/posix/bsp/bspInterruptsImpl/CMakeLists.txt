@@ -1,7 +1,13 @@
-add_library(bspInterruptsImpl src/interrupts/suspendResumeAllInterrupts.cpp)
-
-target_include_directories(bspInterruptsImpl PUBLIC include)
+if (BUILD_TARGET_RTOS STREQUAL "FREERTOS")
+    add_library(bspInterruptsImpl
+                freertos/src/interrupts/suspendResumeAllInterrupts.cpp)
+    target_include_directories(bspInterruptsImpl PUBLIC freertos/include)
+    target_link_libraries(bspInterruptsImpl PRIVATE freeRtos)
+elseif (BUILD_TARGET_RTOS STREQUAL "THREADX")
+    add_library(bspInterruptsImpl
+                threadx/src/interrupts/suspendResumeAllInterrupts.cpp)
+    target_include_directories(bspInterruptsImpl PUBLIC threadx/include)
+    target_link_libraries(bspInterruptsImpl PRIVATE threadX)
+endif ()
 
 target_link_libraries(bspInterruptsImpl PUBLIC platform)
-
-target_link_libraries(bspInterruptsImpl PRIVATE freeRtos)

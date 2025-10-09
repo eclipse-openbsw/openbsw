@@ -41,7 +41,32 @@
             "binaryDir": "${sourceDir}/build/${presetName}",
             "cacheVariables": {
                 "BUILD_REFERENCE": "ON",
-                "BUILD_TARGET_PLATFORM": "POSIX"
+                "BUILD_TARGET_PLATFORM": "POSIX",
+                "BUILD_TARGET_RTOS": "FREERTOS"
+            }
+        },
+        {
+            "name": "posix-freertos",
+            "displayName": "POSIX-FREERTOS compliant configuration",
+            "description": "Configure for POSIX-compliant environment",
+            "inherits": "_config-base",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "BUILD_REFERENCE": "ON",
+                "BUILD_TARGET_PLATFORM": "POSIX",
+                "BUILD_TARGET_RTOS": "FREERTOS"
+            }
+        },
+        {
+            "name": "posix-threadx",
+            "displayName": "POSIX-THREADX compliant configuration",
+            "description": "Configure for POSIX-compliant environment",
+            "inherits": "_config-base",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "BUILD_REFERENCE": "ON",
+                "BUILD_TARGET_PLATFORM": "POSIX",
+                "BUILD_TARGET_RTOS": "THREADX"
             }
         },
         {
@@ -55,6 +80,43 @@
             "cacheVariables": {
                 "BUILD_REFERENCE": "ON",
                 "BUILD_TARGET_PLATFORM": "S32K148EVB",
+                "BUILD_TARGET_RTOS": "FREERTOS",
+                "CMAKE_ASM_FLAGS_RELWITHDEBINFO": "-g3",
+                "CMAKE_CONFIGURATION_TYPES": "RelWithDebInfo;Debug;Release",
+                "CMAKE_CXX_FLAGS_RELWITHDEBINFO": "-g3 -O2 -DNDEBUG",
+                "CMAKE_DEFAULT_BUILD_TYPE": "RelWithDebInfo"
+            }
+        },
+        {
+            "name": "s32k148-freertos-gcc",
+            "generator": "Ninja Multi-Config",
+            "displayName": "S32K148 FreeRTOS configuration (GCC)",
+            "description": "Configure for S32K148 platform using ARM GCC toolchain",
+            "inherits": "_config-base",
+            "toolchainFile": "${sourceDir}/cmake/toolchains/ArmNoneEabi-gcc.cmake",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "BUILD_REFERENCE": "ON",
+                "BUILD_TARGET_PLATFORM": "S32K148EVB",
+                "BUILD_TARGET_RTOS": "FREERTOS",
+                "CMAKE_ASM_FLAGS_RELWITHDEBINFO": "-g3",
+                "CMAKE_CONFIGURATION_TYPES": "RelWithDebInfo;Debug;Release",
+                "CMAKE_CXX_FLAGS_RELWITHDEBINFO": "-g3 -O2 -DNDEBUG",
+                "CMAKE_DEFAULT_BUILD_TYPE": "RelWithDebInfo"
+            }
+        },
+        {
+            "name": "s32k148-threadx-gcc",
+            "generator": "Ninja Multi-Config",
+            "displayName": "S32K148 ThreadX configuration (GCC)",
+            "description": "Configure for S32K148 platform using ARM GCC toolchain",
+            "inherits": "_config-base",
+            "toolchainFile": "${sourceDir}/cmake/toolchains/ArmNoneEabi-gcc.cmake",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "BUILD_REFERENCE": "ON",
+                "BUILD_TARGET_PLATFORM": "S32K148EVB",
+                "BUILD_TARGET_RTOS": "THREADX",
                 "CMAKE_ASM_FLAGS_RELWITHDEBINFO": "-g3",
                 "CMAKE_CONFIGURATION_TYPES": "RelWithDebInfo;Debug;Release",
                 "CMAKE_CXX_FLAGS_RELWITHDEBINFO": "-g3 -O2 -DNDEBUG",
@@ -72,6 +134,43 @@
             "cacheVariables": {
                 "BUILD_REFERENCE": "ON",
                 "BUILD_TARGET_PLATFORM": "S32K148EVB",
+                "BUILD_TARGET_RTOS": "FREERTOS",
+                "CMAKE_ASM_FLAGS_RELWITHDEBINFO": "-g3",
+                "CMAKE_CONFIGURATION_TYPES": "RelWithDebInfo;Debug;Release",
+                "CMAKE_CXX_FLAGS_RELWITHDEBINFO": "-g3 -O2 -DNDEBUG",
+                "CMAKE_DEFAULT_BUILD_TYPE": "RelWithDebInfo"
+            }
+        },
+        {
+            "name": "s32k148-freertos-clang",
+            "generator": "Ninja Multi-Config",
+            "displayName": "S32K148 FreeRTOS configuration (Clang)",
+            "description": "Configure for S32K148 platform using ARM Clang toolchain",
+            "inherits": "_config-base",
+            "toolchainFile": "${sourceDir}/cmake/toolchains/ArmNoneEabi-clang.cmake",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "BUILD_REFERENCE": "ON",
+                "BUILD_TARGET_PLATFORM": "S32K148EVB",
+                "BUILD_TARGET_RTOS": "FREERTOS",
+                "CMAKE_ASM_FLAGS_RELWITHDEBINFO": "-g3",
+                "CMAKE_CONFIGURATION_TYPES": "RelWithDebInfo;Debug;Release",
+                "CMAKE_CXX_FLAGS_RELWITHDEBINFO": "-g3 -O2 -DNDEBUG",
+                "CMAKE_DEFAULT_BUILD_TYPE": "RelWithDebInfo"
+            }
+        },
+        {
+            "name": "s32k148-threadx-clang",
+            "generator": "Ninja Multi-Config",
+            "displayName": "S32K148 ThreadX configuration (Clang)",
+            "description": "Configure for S32K148 platform using ARM Clang toolchain",
+            "inherits": "_config-base",
+            "toolchainFile": "${sourceDir}/cmake/toolchains/ArmNoneEabi-clang.cmake",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "BUILD_REFERENCE": "ON",
+                "BUILD_TARGET_PLATFORM": "S32K148EVB",
+                "BUILD_TARGET_RTOS": "THREADX",
                 "CMAKE_ASM_FLAGS_RELWITHDEBINFO": "-g3",
                 "CMAKE_CONFIGURATION_TYPES": "RelWithDebInfo;Debug;Release",
                 "CMAKE_CXX_FLAGS_RELWITHDEBINFO": "-g3 -O2 -DNDEBUG",
@@ -101,13 +200,45 @@
             "configurePreset": "posix"
         },
         {
+            "name": "posix-freertos",
+            "displayName": "build POSIX-FREERTOS",
+            "description": "Build reference application for POSIX-compliant environment (Release by default; for Debug use --config Debug)",
+            "configurePreset": "posix-freertos"
+        },
+        {
+            "name": "posix-threadx",
+            "displayName": "build POSIX-THREADX",
+            "description": "Build reference application for POSIX-compliant environment (Release by default; for Debug use --config Debug)",
+            "configurePreset": "posix-threadx"
+        },
+        {
             "name": "_posix-dbg",
             "inherits": "posix",
             "configuration": "Debug"
         },
         {
+            "name": "_posix-freertos-dbg",
+            "inherits": "posix-freertos",
+            "configuration": "Debug"
+        },
+        {
+            "name": "_posix-threadx-dbg",
+            "inherits": "posix-threadx",
+            "configuration": "Debug"
+        },
+        {
             "name": "_posix-rel",
             "inherits": "posix",
+            "configuration": "Release"
+        },
+        {
+            "name": "_posix-freertos-rel",
+            "inherits": "posix-freertos",
+            "configuration": "Release"
+        },
+        {
+            "name": "_posix-threadx-rel",
+            "inherits": "posix-threadx",
             "configuration": "Release"
         },
         {
@@ -117,8 +248,30 @@
             "configurePreset": "s32k148-gcc"
         },
         {
+            "name": "s32k148-freertos-gcc",
+            "displayName": "S32K148 FreeRTOS build (GCC)",
+            "description": "Build reference application for S32K148 platform with Clang (Release by default; for Debug use --config Debug)",
+            "configurePreset": "s32k148-freertos-gcc"
+        },
+        {
+            "name": "s32k148-threadx-gcc",
+            "displayName": "S32K148 ThreadX build (GCC)",
+            "description": "Build reference application for S32K148 platform with Clang (Release by default; for Debug use --config Debug)",
+            "configurePreset": "s32k148-threadx-gcc"
+        },
+        {
             "name": "_s32k148-gcc_debug",
             "inherits": "s32k148-gcc",
+            "configuration": "Debug"
+        },
+        {
+            "name": "_s32k148-freertos-gcc_debug",
+            "inherits": "s32k148-freertos-gcc",
+            "configuration": "Debug"
+        },
+        {
+            "name": "_s32k148-threadx-gcc_debug",
+            "inherits": "s32k148-threadx-gcc",
             "configuration": "Debug"
         },
         {
@@ -127,8 +280,28 @@
             "configuration": "Release"
         },
         {
+            "name": "_s32k148-freertos-gcc_release",
+            "inherits": "s32k148-freertos-gcc",
+            "configuration": "Release"
+        },
+        {
+            "name": "_s32k148-threadx-gcc_release",
+            "inherits": "s32k148-threadx-gcc",
+            "configuration": "Release"
+        },
+        {
             "name": "_s32k148-gcc_relwithdebinfo",
             "inherits": "s32k148-gcc",
+            "configuration": "RelWithDebInfo"
+        },
+        {
+            "name": "_s32k148-freertos-gcc_relwithdebinfo",
+            "inherits": "s32k148-freertos-gcc",
+            "configuration": "RelWithDebInfo"
+        },
+        {
+            "name": "_s32k148-threadx-gcc_relwithdebinfo",
+            "inherits": "s32k148-threadx-gcc",
             "configuration": "RelWithDebInfo"
         },
         {
@@ -138,8 +311,30 @@
             "configurePreset": "s32k148-clang"
         },
         {
+            "name": "s32k148-freertos-clang",
+            "displayName": "S32K148 FreeRTOS build (Clang)",
+            "description": "Build reference application for S32K148 platform with Clang (Release by default; for Debug use --config Debug)",
+            "configurePreset": "s32k148-freertos-clang"
+        },
+        {
+            "name": "s32k148-threadx-clang",
+            "displayName": "S32K148 ThreadX build (Clang)",
+            "description": "Build reference application for S32K148 platform with Clang (Release by default; for Debug use --config Debug)",
+            "configurePreset": "s32k148-threadx-clang"
+        },
+        {
             "name": "_s32k147-clang_debug",
             "inherits": "s32k148-clang",
+            "configuration": "Debug"
+        },
+        {
+            "name": "_s32k147-freertos-clang_debug",
+            "inherits": "s32k148-freertos-clang",
+            "configuration": "Debug"
+        },
+        {
+            "name": "_s32k147-threadx-clang_debug",
+            "inherits": "s32k148-threadx-clang",
             "configuration": "Debug"
         },
         {
@@ -148,8 +343,28 @@
             "configuration": "Release"
         },
         {
+            "name": "_s32k148-freertos-clang_release",
+            "inherits": "s32k148-freertos-clang",
+            "configuration": "Release"
+        },
+        {
+            "name": "_s32k148-threadx-clang_release",
+            "inherits": "s32k148-threadx-clang",
+            "configuration": "Release"
+        },
+        {
             "name": "_s32k148-clang_relwithdebinfo",
             "inherits": "s32k148-clang",
+            "configuration": "RelWithDebInfo"
+        },
+        {
+            "name": "_s32k148-freertos-clang_relwithdebinfo",
+            "inherits": "s32k148-freertos-clang",
+            "configuration": "RelWithDebInfo"
+        },
+        {
+            "name": "_s32k148-threadx-clang_relwithdebinfo",
+            "inherits": "s32k148-threadx-clang",
             "configuration": "RelWithDebInfo"
         }
     ],
@@ -228,6 +443,44 @@
             ]
         },
         {
+            "name": "wf-posix-freertos",
+            "displayName": "Configure & build for POSIX FreeRTOS (debug & release)",
+            "description": "Configure & build for POSIX-compliant environment both Debug and Release configurations",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "posix-freertos"
+                },
+                {
+                    "type": "build",
+                    "name": "_posix-freertos-dbg"
+                },
+                {
+                    "type": "build",
+                    "name": "_posix-freertos-rel"
+                }
+            ]
+        },
+        {
+            "name": "wf-posix-threadx",
+            "displayName": "Configure & build for POSIX ThreadX (debug & release)",
+            "description": "Configure & build for POSIX-compliant environment both Debug and Release configurations",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "posix-threadx"
+                },
+                {
+                    "type": "build",
+                    "name": "_posix-threadx-dbg"
+                },
+                {
+                    "type": "build",
+                    "name": "_posix-threadx-rel"
+                }
+            ]
+        },
+        {
             "name": "wf-s32k148-gcc",
             "displayName": "Configure & build for S32K148 (GCC Debug & Release)",
             "description": "Configure & build for S32K148 platform using GCC",
@@ -251,6 +504,52 @@
             ]
         },
         {
+            "name": "wf-s32k148-freertos-gcc",
+            "displayName": "Configure & build for S32K148 FreeRTOS (GCC Debug & Release)",
+            "description": "Configure & build for S32K148 platform using GCC",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "s32k148-freertos-gcc"
+                },
+                {
+                    "type": "build",
+                    "name": "_s32k148-freertos-gcc_debug"
+                },
+                {
+                    "type": "build",
+                    "name": "_s32k148-freertos-gcc_release"
+                },
+                {
+                    "type": "build",
+                    "name": "_s32k148-freertos-gcc_relwithdebinfo"
+                }
+            ]
+        },
+        {
+            "name": "wf-s32k148-threadx-gcc",
+            "displayName": "Configure & build for S32K148 ThreadX (GCC Debug & Release)",
+            "description": "Configure & build for S32K148 platform using GCC",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "s32k148-threadx-gcc"
+                },
+                {
+                    "type": "build",
+                    "name": "_s32k148-threadx-gcc_debug"
+                },
+                {
+                    "type": "build",
+                    "name": "_s32k148-threadx-gcc_release"
+                },
+                {
+                    "type": "build",
+                    "name": "_s32k148-threadx-gcc_relwithdebinfo"
+                }
+            ]
+        },
+        {
             "name": "wf-s32k148-clang",
             "displayName": "Configure & build for S32K148 (Clang Debug & Release)",
             "description": "Configure & build for S32K148 platform using Clang",
@@ -270,6 +569,52 @@
                 {
                     "type": "build",
                     "name": "_s32k148-clang_relwithdebinfo"
+                }
+            ]
+        },
+        {
+            "name": "wf-s32k148-freertos-clang",
+            "displayName": "Configure & build for S32K148 FreeRTOS (Clang Debug & Release)",
+            "description": "Configure & build for S32K148 platform using Clang",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "s32k148-freertos-clang"
+                },
+                {
+                    "type": "build",
+                    "name": "_s32k147-freertos-clang_debug"
+                },
+                {
+                    "type": "build",
+                    "name": "_s32k148-freertos-clang_release"
+                },
+                {
+                    "type": "build",
+                    "name": "_s32k148-freertos-clang_relwithdebinfo"
+                }
+            ]
+        },
+        {
+            "name": "wf-s32k148-threadx-clang",
+            "displayName": "Configure & build for S32K148 ThreadX (Clang Debug & Release)",
+            "description": "Configure & build for S32K148 platform using Clang",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "s32k148-threadx-clang"
+                },
+                {
+                    "type": "build",
+                    "name": "_s32k147-threadx-clang_debug"
+                },
+                {
+                    "type": "build",
+                    "name": "_s32k148-threadx-clang_release"
+                },
+                {
+                    "type": "build",
+                    "name": "_s32k148-threadx-clang_relwithdebinfo"
                 }
             ]
         }

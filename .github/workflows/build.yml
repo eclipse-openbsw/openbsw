@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        preset: [ "tests-debug", "tests-release", "posix", "posix-with-tracing", "s32k148-gcc" ]
+        preset: [ "tests-debug", "tests-release", "posix-freertos", "posix-threadx", "posix-freertos-with-tracing", "s32k148-freertos-gcc", "s32k148-threadx-gcc" ]
         platform: [ "arm", "linux" ]
         config: [ "Debug", "Release", "RelWithDebInfo" ]
         cxxid: ["gcc", "clang"]
@@ -29,17 +29,25 @@ jobs:
             config: "Release"
           - preset: "tests-release"
             config: "RelWithDebInfo"
-          - preset: "posix"
+          - preset: "posix-freertos"
             platform: "arm"
-          - preset: "posix"
-            config: "RelWithDebInfo"
-          - preset: "posix-with-tracing"
+          - preset: "posix-threadx"
             platform: "arm"
-          - preset: "posix-with-tracing"
+          - preset: "posix-freertos"
             config: "RelWithDebInfo"
-          - preset: "s32k148-gcc"
+          - preset: "posix-threadx"
+            config: "RelWithDebInfo"
+          - preset: "posix-freertos-with-tracing"
+            platform: "arm"
+          - preset: "posix-freertos-with-tracing"
+            config: "RelWithDebInfo"
+          - preset: "s32k148-freertos-gcc"
             platform: "linux"
-          - preset: "s32k148-gcc"
+          - preset: "s32k148-threadx-gcc"
+            platform: "linux"
+          - preset: "s32k148-freertos-gcc"
+            cxxid: "clang"
+          - preset: "s32k148-threadx-gcc"
             cxxid: "clang"
         include:
           - preset: "wf-tests-debug"
@@ -62,17 +70,32 @@ jobs:
             config: ""
             cxxid: "clang"
             cxxstd: 0
-          - preset: "wf-posix"
+          - preset: "wf-posix-freertos"
             platform: "linux"
             config: ""
             cxxid: "gcc"
             cxxstd: 0
-          - preset: "wf-posix"
+          - preset: "wf-posix-threadx"
+            platform: "linux"
+            config: ""
+            cxxid: "gcc"
+            cxxstd: 0
+          - preset: "wf-posix-freertos"
             platform: "linux"
             config: ""
             cxxid: "clang"
             cxxstd: 0
-          - preset: "wf-s32k148-gcc"
+          - preset: "wf-posix-threadx"
+            platform: "linux"
+            config: ""
+            cxxid: "clang"
+            cxxstd: 0
+          - preset: "wf-s32k148-freertos-gcc"
+            platform: "arm"
+            config: ""
+            cxxid: "gcc"
+            cxxstd: 0
+          - preset: "wf-s32k148-threadx-gcc"
             platform: "arm"
             config: ""
             cxxid: "gcc"

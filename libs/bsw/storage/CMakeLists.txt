@@ -19,4 +19,10 @@ add_library(storage
 
 target_include_directories(storage PUBLIC include)
 
-target_link_libraries(storage PUBLIC etl async asyncFreeRtosImpl util bsp)
+target_link_libraries(storage PUBLIC etl async util bsp)
+
+if (BUILD_TARGET_RTOS STREQUAL "FREERTOS")
+    target_link_libraries(storage PUBLIC asyncFreeRtosImpl)
+elseif (BUILD_TARGET_RTOS STREQUAL "THREADX")
+    target_link_libraries(storage PUBLIC asyncThreadXImpl)
+endif ()

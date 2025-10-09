@@ -3,7 +3,7 @@
 #pragma once
 
 // NOTE: This file needs to be implemented in C as it ends up being part of FreeRTOSConfig.h
-#define ASYNC_CONFIG_TICK_IN_US (100U) // System tick interval in microseconds.
+#define ASYNC_CONFIG_TICK_IN_US (1000U) // System tick interval in microseconds.
 
 /**
  * There are two implicit contexts/tasks: One is TASK_IDLE with the value 0 and the other is
@@ -14,11 +14,14 @@
  * See asyncFreeRtos/include/async/FreeRtosAdapter.h
  */
 
+#ifndef __ASSEMBLER__
+
 /**
  * Tasks for different operations are defined here.
  */
 enum
 {
+    // TASK_IDLE = 0
     TASK_BACKGROUND = 1,
     TASK_BSP,
     TASK_UDS,
@@ -27,6 +30,7 @@ enum
     TASK_CAN,
     TASK_SYSADMIN,
     TASK_SAFETY,
+    // TASK_TIMER,
     // --------------------
     ASYNC_CONFIG_TASK_COUNT,
 };
@@ -42,3 +46,5 @@ enum
     ISR_GROUP_ENET,
     ISR_GROUP_COUNT,
 };
+
+#endif // __ASSEMBLER__

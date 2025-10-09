@@ -1,5 +1,5 @@
 if (NOT BUILD_UNIT_TESTS)
     if (OPENBSW_PLATFORM)
         add_subdirectory(${OPENBSW_PLATFORM})
-    endif()
+    endif ()
 endif ()
