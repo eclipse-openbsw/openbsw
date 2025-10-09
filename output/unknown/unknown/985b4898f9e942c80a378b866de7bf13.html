@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../static/css/style.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <title>Symbol - puncover</title>
+    
+</head>
+<body>
+    <div class="container" id="content">
+        <div class="page-header">
+            <nav class="navbar navbar-default" role="navigation">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="../../index.html">
+                    Puncover
+                  </a>
+                </div>
+              </div>
+            </nav>
+          
+        </div>
+        <div id="inner_content">
+        
+    
+    <ol class="breadcrumb folders">
+        
+        <li class="active"><a href="../../unknown.html">&lt;unknown&gt;</a>
+            </li>
+
+        
+        <li class="active">&lt;unknown&gt;
+            </li>
+        
+    </ol>
+
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <th>Function</th>
+                <td colspan="5">
+                    <span class="icon-function">__aeabi_ldivmod</span>
+                </td>
+            </tr>
+
+            <tr>
+                <th rowspan="2"></th>
+                <th>Address</th>
+                <th>Remarks</th>
+                <th>Stack</th>
+                <th>Code</th>
+                <th>Static</th>
+            </tr>
+            <tr>
+                <td>0x00000834</td>
+                <td>
+    <span class="label label-success">x-module</span>
+    
+</td>
+                <td></td>
+                <td>160</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th>Callers (2)</th>
+                <td colspan="5">
+                
+                    <a href="../../home/runner/work/openbsw/openbsw/libs/bsw/logger/include/logger/BufferedLoggerOutput.h/e3ad7a78fb2838fed1a54520f3662fc5.html">logger::BufferedLoggerOutput&lt;interrupts::SuspendResumeAllInterruptsScopedLock, (unsigned char)128, unsigned short, unsigned long, unsigned long, logger::SectionPredicate&gt;::logOutput(util::logger::ComponentInfo const&amp;, util::logger::LevelInfo const&amp;, char const*, std::__va_list) (320)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../../home/runner/work/openbsw/openbsw/libs/bsw/logger/include/logger/DefaultLoggerTime.h/dc49d30db40f71253f98da52dd2d4530.html">logger::DefaultLoggerTime&lt;etl::chrono::time_point&lt;etl::chrono::high_resolution_clock, etl::chrono::duration&lt;unsigned long, etl::ratio&lt;1ll, 1000ll&gt; &gt; &gt; &gt;::getTimestamp() const (20)</a>
+                    
+                
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Callees (2,
+                            <span title="sum of used bytes by all callees">
+                            Σ=724
+                            </span>
+                        )
+                    
+                </th>
+                <td colspan="5">
+                
+                    <a href="./babe32a5f64dce84480a6da9eebb38a4.html">__aeabi_idiv0 (4)</a>
+                    
+                        ,
+                    
+                
+                    <a href="./3372af3c02900bba27f6c78efc20d0b8.html">__udivmoddi4 (720)</a>
+                    
+                
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    
+    <pre><a href="../../home/runner/work/openbsw/openbsw/platforms/s32k1xx/hardFaultHandler/src/hardFaultHandler.s/6f5864c38847b3c0bc4bb5cce3739363.html">customHardFaultHandler (148)</a></pre>
+    
+
+    <pre>
+
+    __aeabi_ldivmod():
+
+         834:	b97b      	cbnz	r3, 856 <<a href="./985b4898f9e942c80a378b866de7bf13.html">__aeabi_ldivmod</a>+0x22>
+
+         836:	b972      	cbnz	r2, 856 <<a href="./985b4898f9e942c80a378b866de7bf13.html">__aeabi_ldivmod</a>+0x22>
+
+         838:	2900      	cmp	r1, #0
+
+         83a:	bfbe      	ittt	lt
+
+         83c:	2000      	movlt	r0, #0
+
+         83e:	f04f 4100 	movlt.w	r1, #2147483648	; 0x80000000
+
+         842:	e006      	blt.n	852 <<a href="./985b4898f9e942c80a378b866de7bf13.html">__aeabi_ldivmod</a>+0x1e>
+
+         844:	bf08      	it	eq
+
+         846:	2800      	cmpeq	r0, #0
+
+         848:	bf1c      	itt	ne
+
+         84a:	f06f 4100 	mvnne.w	r1, #2147483648	; 0x80000000
+
+         84e:	f04f 30ff 	movne.w	r0, #4294967295	; 0xffffffff
+
+         852:	f000 b9bf 	b.w	bd4 <<a href="./babe32a5f64dce84480a6da9eebb38a4.html">__aeabi_idiv0</a>>
+
+         856:	f1ad 0c08 	sub.w	ip, sp, #8
+
+         85a:	e96d ce04 	strd	ip, lr, [sp, #-16]!
+
+         85e:	2900      	cmp	r1, #0
+
+         860:	db09      	blt.n	876 <<a href="./985b4898f9e942c80a378b866de7bf13.html">__aeabi_ldivmod</a>+0x42>
+
+         862:	2b00      	cmp	r3, #0
+
+         864:	db1a      	blt.n	89c <<a href="./985b4898f9e942c80a378b866de7bf13.html">__aeabi_ldivmod</a>+0x68>
+
+         866:	f000 f84d 	bl	904 <<a href="./3372af3c02900bba27f6c78efc20d0b8.html">__udivmoddi4</a>>
+
+         86a:	f8dd e004 	ldr.w	lr, [sp, #4]
+
+         86e:	e9dd 2302 	ldrd	r2, r3, [sp, #8]
+
+         872:	b004      	add	sp, #16
+
+         874:	4770      	bx	lr
+
+         876:	4240      	negs	r0, r0
+
+         878:	eb61 0141 	sbc.w	r1, r1, r1, lsl #1
+
+         87c:	2b00      	cmp	r3, #0
+
+         87e:	db1b      	blt.n	8b8 <<a href="./985b4898f9e942c80a378b866de7bf13.html">__aeabi_ldivmod</a>+0x84>
+
+         880:	f000 f840 	bl	904 <<a href="./3372af3c02900bba27f6c78efc20d0b8.html">__udivmoddi4</a>>
+
+         884:	f8dd e004 	ldr.w	lr, [sp, #4]
+
+         888:	e9dd 2302 	ldrd	r2, r3, [sp, #8]
+
+         88c:	b004      	add	sp, #16
+
+         88e:	4240      	negs	r0, r0
+
+         890:	eb61 0141 	sbc.w	r1, r1, r1, lsl #1
+
+         894:	4252      	negs	r2, r2
+
+         896:	eb63 0343 	sbc.w	r3, r3, r3, lsl #1
+
+         89a:	4770      	bx	lr
+
+         89c:	4252      	negs	r2, r2
+
+         89e:	eb63 0343 	sbc.w	r3, r3, r3, lsl #1
+
+         8a2:	f000 f82f 	bl	904 <<a href="./3372af3c02900bba27f6c78efc20d0b8.html">__udivmoddi4</a>>
+
+         8a6:	f8dd e004 	ldr.w	lr, [sp, #4]
+
+         8aa:	e9dd 2302 	ldrd	r2, r3, [sp, #8]
+
+         8ae:	b004      	add	sp, #16
+
+         8b0:	4240      	negs	r0, r0
+
+         8b2:	eb61 0141 	sbc.w	r1, r1, r1, lsl #1
+
+         8b6:	4770      	bx	lr
+
+         8b8:	4252      	negs	r2, r2
+
+         8ba:	eb63 0343 	sbc.w	r3, r3, r3, lsl #1
+
+         8be:	f000 f821 	bl	904 <<a href="./3372af3c02900bba27f6c78efc20d0b8.html">__udivmoddi4</a>>
+
+         8c2:	f8dd e004 	ldr.w	lr, [sp, #4]
+
+         8c6:	e9dd 2302 	ldrd	r2, r3, [sp, #8]
+
+         8ca:	b004      	add	sp, #16
+
+         8cc:	4252      	negs	r2, r2
+
+         8ce:	eb63 0343 	sbc.w	r3, r3, r3, lsl #1
+
+         8d2:	4770      	bx	lr
+
+    </pre>
+
+    
+    <pre><a href="./1c7eb7a1a927e1255dd679ad9135aad5.html">__aeabi_uldivmod (48)</a></pre>
+    
+
+    
+        <h1>Stack Worst-Case Scenarios</h1>
+        
+            <p>No callees for this function.</p>
+        
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 184</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 480</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    480
+                    
+                    
+                </td>
+                <td class="col_size">160</td>
+                <td><a href="./985b4898f9e942c80a378b866de7bf13.html" class="icon-function">__aeabi_ldivmod</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                </td>
+                <td class="col_size">
+            
+                184 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">320</td>
+                <td><a href="../../home/runner/work/openbsw/openbsw/libs/bsw/logger/include/logger/BufferedLoggerOutput.h/e3ad7a78fb2838fed1a54520f3662fc5.html" class="icon-function">logger::BufferedLoggerOutput&lt;interrupts::SuspendResumeAllInterruptsScopedLock, (unsigned char)128, unsigned short, unsigned long, unsigned long, logger::SectionPredicate&gt;::logOutput(util::logger::ComponentInfo const&amp;, util::logger::LevelInfo const&amp;, char const*, std::__va_list)</a></td>
+            </tr>
+        
+        </tbody>
+        
+    </table>
+        
+    
+
+
+        </div>
+    <div id="page-footer">
+        <hr>
+        
+            brought to you with 💖
+            by <a href="https://twitter.com/hbehrens">Heiko Behrens</a>
+            <span class="secondary">– MIT license, copyright © 2014-2025</span>
+        
+    </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,503 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../static/css/style.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <title>Symbol - puncover</title>
+    
+</head>
+<body>
+    <div class="container" id="content">
+        <div class="page-header">
+            <nav class="navbar navbar-default" role="navigation">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="../../index.html">
+                    Puncover
+                  </a>
+                </div>
+              </div>
+            </nav>
+          
+        </div>
+        <div id="inner_content">
+        
+    
+    <ol class="breadcrumb folders">
+        
+        <li class="active"><a href="../../unknown.html">&lt;unknown&gt;</a>
+            </li>
+
+        
+        <li class="active">&lt;unknown&gt;
+            </li>
+        
+    </ol>
+
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <th>Function</th>
+                <td colspan="5">
+                    <span class="icon-function">memchr</span>
+                </td>
+            </tr>
+
+            <tr>
+                <th rowspan="2"></th>
+                <th>Address</th>
+                <th>Remarks</th>
+                <th>Stack</th>
+                <th>Code</th>
+                <th>Static</th>
+            </tr>
+            <tr>
+                <td>0x00000bf0</td>
+                <td>
+    
+    
+</td>
+                <td></td>
+                <td>160</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th>Callers (2)</th>
+                <td colspan="5">
+                
+                    <a href="./4c80f6b46d91b52164c3a8c4ce20a9f8.html">_vfiprintf_r (608)</a>
+                    
+                        ,
+                    
+                
+                    <a href="./b25614e10f494542c05819bca25d1c80.html">_printf_i (588)</a>
+                    
+                
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    No Callees
+                    
+                </th>
+                <td colspan="5">
+                
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    
+    <pre><a href="./73d3a702db472629f27b06ac8f056476.html">strlen (24)</a></pre>
+    
+
+    <pre>
+
+    memchr():
+
+         bf0:	f001 01ff 	and.w	r1, r1, #255	; 0xff
+
+         bf4:	2a10      	cmp	r2, #16
+
+         bf6:	db2b      	blt.n	c50 <<a href="./8861021ea041394f627e3a1b60c3e92c.html">memchr</a>+0x60>
+
+         bf8:	f010 0f07 	tst.w	r0, #7
+
+         bfc:	d008      	beq.n	c10 <<a href="./8861021ea041394f627e3a1b60c3e92c.html">memchr</a>+0x20>
+
+         bfe:	f810 3b01 	ldrb.w	r3, [r0], #1
+
+         c02:	3a01      	subs	r2, #1
+
+         c04:	428b      	cmp	r3, r1
+
+         c06:	d02d      	beq.n	c64 <<a href="./8861021ea041394f627e3a1b60c3e92c.html">memchr</a>+0x74>
+
+         c08:	f010 0f07 	tst.w	r0, #7
+
+         c0c:	b342      	cbz	r2, c60 <<a href="./8861021ea041394f627e3a1b60c3e92c.html">memchr</a>+0x70>
+
+         c0e:	d1f6      	bne.n	bfe <<a href="./8861021ea041394f627e3a1b60c3e92c.html">memchr</a>+0xe>
+
+         c10:	b4f0      	push	{r4, r5, r6, r7}
+
+         c12:	ea41 2101 	orr.w	r1, r1, r1, lsl #8
+
+         c16:	ea41 4101 	orr.w	r1, r1, r1, lsl #16
+
+         c1a:	f022 0407 	bic.w	r4, r2, #7
+
+         c1e:	f07f 0700 	mvns.w	r7, #0
+
+         c22:	2300      	movs	r3, #0
+
+         c24:	e8f0 5602 	ldrd	r5, r6, [r0], #8
+
+         c28:	3c08      	subs	r4, #8
+
+         c2a:	ea85 0501 	eor.w	r5, r5, r1
+
+         c2e:	ea86 0601 	eor.w	r6, r6, r1
+
+         c32:	fa85 f547 	uadd8	r5, r5, r7
+
+         c36:	faa3 f587 	sel	r5, r3, r7
+
+         c3a:	fa86 f647 	uadd8	r6, r6, r7
+
+         c3e:	faa5 f687 	sel	r6, r5, r7
+
+         c42:	b98e      	cbnz	r6, c68 <<a href="./8861021ea041394f627e3a1b60c3e92c.html">memchr</a>+0x78>
+
+         c44:	d1ee      	bne.n	c24 <<a href="./8861021ea041394f627e3a1b60c3e92c.html">memchr</a>+0x34>
+
+         c46:	bcf0      	pop	{r4, r5, r6, r7}
+
+         c48:	f001 01ff 	and.w	r1, r1, #255	; 0xff
+
+         c4c:	f002 0207 	and.w	r2, r2, #7
+
+         c50:	b132      	cbz	r2, c60 <<a href="./8861021ea041394f627e3a1b60c3e92c.html">memchr</a>+0x70>
+
+         c52:	f810 3b01 	ldrb.w	r3, [r0], #1
+
+         c56:	3a01      	subs	r2, #1
+
+         c58:	ea83 0301 	eor.w	r3, r3, r1
+
+         c5c:	b113      	cbz	r3, c64 <<a href="./8861021ea041394f627e3a1b60c3e92c.html">memchr</a>+0x74>
+
+         c5e:	d1f8      	bne.n	c52 <<a href="./8861021ea041394f627e3a1b60c3e92c.html">memchr</a>+0x62>
+
+         c60:	2000      	movs	r0, #0
+
+         c62:	4770      	bx	lr
+
+         c64:	3801      	subs	r0, #1
+
+         c66:	4770      	bx	lr
+
+         c68:	2d00      	cmp	r5, #0
+
+         c6a:	bf06      	itte	eq
+
+         c6c:	4635      	moveq	r5, r6
+
+         c6e:	3803      	subeq	r0, #3
+
+         c70:	3807      	subne	r0, #7
+
+         c72:	f015 0f01 	tst.w	r5, #1
+
+         c76:	d107      	bne.n	c88 <<a href="./8861021ea041394f627e3a1b60c3e92c.html">memchr</a>+0x98>
+
+         c78:	3001      	adds	r0, #1
+
+         c7a:	f415 7f80 	tst.w	r5, #256	; 0x100
+
+         c7e:	bf02      	ittt	eq
+
+         c80:	3001      	addeq	r0, #1
+
+         c82:	f415 3fc0 	tsteq.w	r5, #98304	; 0x18000
+
+         c86:	3001      	addeq	r0, #1
+
+         c88:	bcf0      	pop	{r4, r5, r6, r7}
+
+         c8a:	3801      	subs	r0, #1
+
+         c8c:	4770      	bx	lr
+
+         c8e:	bf00      	nop
+
+    </pre>
+
+    
+    <pre><a href="../../home/runner/work/openbsw/openbsw/libs/bsw/lifecycle/include/lifecycle/LifecycleManager.h/e17a3abedc57c6e09cd9fb978b461488.html">lifecycle::LifecycleManager::getLevelCount() const (8)</a></pre>
+    
+
+    
+        <h1>Stack Worst-Case Scenarios</h1>
+        
+            <p>No callees for this function.</p>
+        
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 248</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 2,420</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    2,420
+                    
+                    
+                </td>
+                <td class="col_size">160</td>
+                <td><a href="./8861021ea041394f627e3a1b60c3e92c.html" class="icon-function">memchr</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    2,260
+                    
+                    
+                </td>
+                <td class="col_size">608</td>
+                <td><a href="./4c80f6b46d91b52164c3a8c4ce20a9f8.html" class="icon-function">_vfiprintf_r</a></td>
+            </tr>
+        
+            <tr>
+                <th>3</th>
+                <td class="col_size">
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    1,652
+                    
+                    
+                </td>
+                <td class="col_size">36</td>
+                <td><a href="./b7f884a63512d29acd09bc7c7023f8d3.html" class="icon-function">fiprintf</a></td>
+            </tr>
+        
+            <tr>
+                <th>4</th>
+                <td class="col_size">
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    1,616
+                    
+                    
+                </td>
+                <td class="col_size">60</td>
+                <td><a href="./18989ee4aad345b8b598568f851bfc76.html" class="icon-function">__assert_func</a></td>
+            </tr>
+        
+            <tr>
+                <th>5</th>
+                <td class="col_size">
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    1,556
+                    
+                    
+                </td>
+                <td class="col_size">124</td>
+                <td><a href="./34d1c35063280164066ecc517050da0b.html" class="icon-function">rand</a></td>
+            </tr>
+        
+            <tr>
+                <th>6</th>
+                <td class="col_size">
+                    
+                    248
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                16 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    1,432
+                    
+                    
+                </td>
+                <td class="col_size">88</td>
+                <td><a href="../../home/runner/work/openbsw/openbsw/libs/3rdparty/lwip/src/core/ipv4/igmp.c/294a82ce28c752320afaa8590334c56f.html" class="icon-function">igmp_report_groups</a></td>
+            </tr>
+        
+            <tr>
+                <th>7</th>
+                <td class="col_size">
+                    
+                    232
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                24 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    1,344
+                    
+                    
+                </td>
+                <td class="col_size">116</td>
+                <td><a href="../../home/runner/work/openbsw/openbsw/libs/3rdparty/lwip/src/core/netif.c/02ca1881b5a0fcf35803d50c5cd5a9a6.html" class="icon-function">netif_do_set_ipaddr</a></td>
+            </tr>
+        
+            <tr>
+                <th>8</th>
+                <td class="col_size">
+                    
+                    208
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                48 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    1,228
+                    
+                    
+                </td>
+                <td class="col_size">200</td>
+                <td><a href="../../home/runner/work/openbsw/openbsw/libs/3rdparty/lwip/src/core/netif.c/7d4b6ac49a1bb495f62582300a5d9e4a.html" class="icon-function">netif_set_addr</a></td>
+            </tr>
+        
+            <tr>
+                <th>9</th>
+                <td class="col_size">
+                    
+                    160
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                64 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    1,028
+                    
+                    
+                </td>
+                <td class="col_size">348</td>
+                <td><a href="../../home/runner/work/openbsw/openbsw/libs/3rdparty/lwip/src/core/ipv4/dhcp.c/4daa8f7f4379045adbdfb1ced5875b2d.html" class="icon-function">dhcp_release_and_stop</a></td>
+            </tr>
+        
+            <tr>
+                <th>10</th>
+                <td class="col_size">
+                    
+                    96
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                24 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    680
+                    
+                    
+                </td>
+                <td class="col_size">204</td>
+                <td><a href="../../home/runner/work/openbsw/openbsw/libs/3rdparty/lwip/src/core/ipv4/dhcp.c/7d1c7091a5300ee38546c4eec2908e12.html" class="icon-function">dhcp_start</a></td>
+            </tr>
+        
+            <tr>
+                <th>11</th>
+                <td class="col_size">
+                </td>
+                <td class="col_size">
+            
+                72 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">476</td>
+                <td><a href="../../home/runner/work/openbsw/openbsw/libs/3rdparty/lwip/src/core/ipv4/dhcp.c/625c8433015a8cb580108e0f733b653d.html" class="icon-function">dhcp_coarse_tmr</a></td>
+            </tr>
+        
+        </tbody>
+        
+    </table>
+        
+    
+
+
+        </div>
+    <div id="page-footer">
+        <hr>
+        
+            brought to you with 💖
+            by <a href="https://twitter.com/hbehrens">Heiko Behrens</a>
+            <span class="secondary">– MIT license, copyright © 2014-2025</span>
+        
+    </div>
+    </div>
+</body>
+</html>
