@@ -24,11 +24,6 @@ public:
 
     MOCK_METHOD0(terminate, void());
 
-    void setDiagSessionManager(IDiagSessionManager& diagSessionManager)
-    {
-        fpDiagSessionManager = &diagSessionManager;
-    }
-
     using IncomingDiagConnection::terminateNestedRequest;
 };
 

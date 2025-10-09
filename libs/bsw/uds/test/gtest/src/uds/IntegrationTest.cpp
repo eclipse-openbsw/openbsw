@@ -474,7 +474,7 @@ TEST_F(UdsIntegration, send_calls_enqueueMessage_and_return_TP_SEND_FAIL_if_isEn
 
     TransportMessageWithBuffer pRequest(0xF1U, 0xDFU, buffer, sizeof(expectedResponse));
 
-    _udsDispatcher.disable();
+    _udsDispatcher.fEnabled = false;
 
     EXPECT_EQ(
         transport::AbstractTransportLayer::ErrorCode::TP_SEND_FAIL,
@@ -949,7 +949,7 @@ TEST_F(
     UdsIntegration,
     calling_HardReset_responseSent_will_not_enable_DiagDispatcher_if_LIFECYCLE_is_OK)
 {
-    _udsDispatcher.disable();
+    _udsDispatcher.fEnabled = false;
     EXPECT_CALL(_incomingDiagConnection, terminate()).Times(1U);
 
     EXPECT_CALL(_lifecycle, requestShutdown(IUdsLifecycleConnector::HARD_RESET, _))
@@ -957,14 +957,14 @@ TEST_F(
 
     _hardReset.responseSent(_incomingDiagConnection, AbstractDiagJob::RESPONSE_SENT);
 
-    EXPECT_FALSE(_udsDispatcher.isEnabled());
+    EXPECT_FALSE(_udsDispatcher.fEnabled);
 }
 
 TEST_F(
     UdsIntegration,
     calling_HardReset_responseSent_will_enable_DiagDispatcher_if_LIFECYCLE_is_not_OK)
 {
-    _udsDispatcher.disable();
+    _udsDispatcher.fEnabled = false;
     EXPECT_CALL(_incomingDiagConnection, terminate()).Times(1U);
 
     EXPECT_CALL(_lifecycle, requestShutdown(IUdsLifecycleConnector::HARD_RESET, _))
@@ -972,7 +972,7 @@ TEST_F(
 
     _hardReset.responseSent(_incomingDiagConnection, AbstractDiagJob::RESPONSE_SENT);
 
-    EXPECT_TRUE(_udsDispatcher.isEnabled());
+    EXPECT_TRUE(_udsDispatcher.fEnabled);
 }
 
 TEST_F(
@@ -1031,7 +1031,7 @@ TEST_F(
     UdsIntegration,
     calling_SoftReset_responseSent_will_not_enable_DiagDispatcher_if_LIFECYCLE_is_OK)
 {
-    _udsDispatcher.disable();
+    _udsDispatcher.fEnabled = false;
     EXPECT_CALL(_incomingDiagConnection, terminate());
 
     EXPECT_CALL(_lifecycle, requestShutdown(IUdsLifecycleConnector::SOFT_RESET, _))
@@ -1039,14 +1039,14 @@ TEST_F(
 
     _softReset.responseSent(_incomingDiagConnection, AbstractDiagJob::RESPONSE_SENT);
 
-    EXPECT_FALSE(_udsDispatcher.isEnabled());
+    EXPECT_FALSE(_udsDispatcher.fEnabled);
 }
 
 TEST_F(
     UdsIntegration,
     calling_SoftReset_responseSent_will_enable_DiagDispatcher_if_LIFECYCLE_is_not_OK)
 {
-    _udsDispatcher.disable();
+    _udsDispatcher.fEnabled = false;
     EXPECT_CALL(_incomingDiagConnection, terminate());
 
     EXPECT_CALL(_lifecycle, requestShutdown(IUdsLifecycleConnector::SOFT_RESET, _))
@@ -1054,7 +1054,7 @@ TEST_F(
 
     _softReset.responseSent(_incomingDiagConnection, AbstractDiagJob::RESPONSE_SENT);
 
-    EXPECT_TRUE(_udsDispatcher.isEnabled());
+    EXPECT_TRUE(_udsDispatcher.fEnabled);
 }
 
 TEST_F(UdsIntegration, calling_PowerDown)
@@ -1064,10 +1064,10 @@ TEST_F(UdsIntegration, calling_PowerDown)
     TransportMessageWithBuffer pRequest(
         SOURCE_ID, TARGET_ID, POWER_DOWN_REQUEST, sizeof(POWER_DOWN_REQUEST));
 
-    _incomingDiagConnection.fpRequestMessage = pRequest.get();
-    _incomingDiagConnection.fpMessageSender  = &_udsDispatcher;
-    _incomingDiagConnection.setDiagSessionManager(_sessionManager);
-    _incomingDiagConnection.fServiceId = ECU_RESET;
+    _incomingDiagConnection.fpRequestMessage     = pRequest.get();
+    _incomingDiagConnection.fpMessageSender      = &_udsDispatcher;
+    _incomingDiagConnection.fpDiagSessionManager = &_sessionManager;
+    _incomingDiagConnection.fServiceId           = ECU_RESET;
 
     _incomingDiagConnection.fOpen = true;
 
@@ -1097,10 +1097,10 @@ TEST_F(UdsIntegration, calling_RapidPowerDown)
     TransportMessageWithBuffer pRequest(
         SOURCE_ID, TARGET_ID, POWER_DOWN_REQUEST, sizeof(POWER_DOWN_REQUEST));
 
-    _incomingDiagConnection.fpRequestMessage = pRequest.get();
-    _incomingDiagConnection.fpMessageSender  = &_udsDispatcher;
-    _incomingDiagConnection.setDiagSessionManager(_sessionManager);
-    _incomingDiagConnection.fServiceId = ECU_RESET;
+    _incomingDiagConnection.fpRequestMessage     = pRequest.get();
+    _incomingDiagConnection.fpMessageSender      = &_udsDispatcher;
+    _incomingDiagConnection.fpDiagSessionManager = &_sessionManager;
+    _incomingDiagConnection.fServiceId           = ECU_RESET;
 
     _incomingDiagConnection.fOpen = true;
 

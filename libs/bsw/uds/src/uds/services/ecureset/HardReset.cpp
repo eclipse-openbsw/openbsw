@@ -28,7 +28,7 @@ DiagReturnCode::Type HardReset::process(
 {
     if (fUdsLifecycleConnector.isModeChangePossible())
     {
-        fDiagDispatcher.disable();
+        fDiagDispatcher.fEnabled = false;
         (void)connection.sendPositiveResponse(*this);
         return DiagReturnCode::OK;
     }
@@ -44,7 +44,7 @@ void HardReset::responseSent(
     connection.terminate();
     if (!fUdsLifecycleConnector.requestShutdown(IUdsLifecycleConnector::HARD_RESET, RESET_TIME))
     {
-        fDiagDispatcher.enable();
+        fDiagDispatcher.fEnabled = true;
     }
 }
 
