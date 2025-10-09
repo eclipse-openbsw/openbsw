@@ -191,6 +191,16 @@ SECTIONS
     __MPU_DATA_END = .;
   } > Data
 
+  .mpu_rodata :
+  {
+    . = ALIGN(32);
+    __MPU_RODATA_START = .;
+    KEEP("*libsafe*:*"(.rodata))
+    KEEP("*libsafe*:*"(.rodata*))
+    . = ALIGN(32);
+    __MPU_RODATA_END = .;
+  } > Data
+
   .mpu_bss :
   {
     . = ALIGN(32);
@@ -303,4 +313,6 @@ __FLASH_END = FLASH_END;
 __USED_FLASH_SIZE = __USED_FLASH_END - __FLASH_START;
 __FREE_FLASH_SIZE = __FLASH_END - __USED_FLASH_END;
 __FLASH_OVERFLOW_SIZE = __USED_FLASH_END - __FLASH_END;
+
 ASSERT(__MPU_DATA_START == __MPU_DATA_END, "safety code must not have preinitialized data");
+ASSERT(__MPU_RODATA_START == __MPU_RODATA_END, "safety code must not have preinitialized rodata");

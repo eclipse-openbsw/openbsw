@@ -130,8 +130,13 @@ Memory Protection Unit
 ++++++++++++++++++++++
 
 The memory regions are project specific. In ReferenceApp, the initialized safety relevant data is
-mapped to .mpu_data section and uninitialized data relevant to safety is mapped to .mpu_bss section
-in the linkerscript. The memory is divided into several sections, which are configured by the MPU.
+mapped to .mpu_data/.mpu_rodata section and uninitialized data relevant to safety is mapped
+to .mpu_bss section in the linkerscript.
+The linkerscript asserts that both .mpu_data and .mpu_rodata are empty. Since data should not be
+initialized/assigned before mpu is enabled. All mpu-related global variables are placed in
+.mpu_bss and explicitly initialized/assigned while mpu is enabled.
+
+The memory is divided into several sections, which are configured by the MPU.
 Among these sections, the protected RAM and safety task stack contain safety-relevant data. All
 sections are always readable and writeable, but the protected RAM is writeable only from safety
 context and safety task stack is not writeable when an ISR interrupts the safety context. As ISRs

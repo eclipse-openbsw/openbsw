@@ -49,25 +49,11 @@ static constexpr uint32_t REGION_LOCKED_READ_ACCESS = mpuWord2(
     mpu::AccessSupervisorMode::SM_UserMode,
     mpu::AccessUserMode::UM_R);
 
-static uint32_t const PROTECTED_RAM_START_ADDR_MINUS_1
-    = reinterpret_cast<uintptr_t>(__MPU_BSS_START) - 1U;
-static uint32_t const PROTECTED_RAM_END_ADDR = reinterpret_cast<uintptr_t>(__MPU_BSS_END) - 1U;
-static uint32_t const SAFETY_TASK_START_ADDR = reinterpret_cast<uint32_t>(&safetyStack[0]);
-static uint32_t const SAFETY_TASK_END_ADDR
-    = SAFETY_TASK_START_ADDR + (static_cast<uint32_t>(safety_task_stackSize) - 1U);
+static constexpr uint8_t numOfMemoryProtectionConfigurationRamRegions = 5;
 
-// clang-format off
-static const mpu::Descriptor memoryProtectionConfigurationRam[] = {
-    {0x0000000U,                            PROTECTED_RAM_START_ADDR_MINUS_1, {REGION_FULL_ACCESS},        {REGION_VALID}},
-    {PROTECTED_RAM_START_ADDR_MINUS_1 + 1U, PROTECTED_RAM_END_ADDR,           {REGION_LOCKED_READ_ACCESS}, {REGION_VALID}},
-    {PROTECTED_RAM_END_ADDR + 1U,           SAFETY_TASK_START_ADDR - 1U,      {REGION_FULL_ACCESS},        {REGION_VALID}},
-    {SAFETY_TASK_START_ADDR,                SAFETY_TASK_END_ADDR,             {REGION_FULL_ACCESS},        {REGION_VALID}},
-    {SAFETY_TASK_END_ADDR + 1U,             0xFFFFFFFFU,                      {REGION_FULL_ACCESS},        {REGION_VALID}},
-};
-// clang-format on
-
-static uint8_t const numOfMemoryProtectionConfigurationRamRegions = static_cast<uint8_t>(
-    sizeof(memoryProtectionConfigurationRam) / sizeof(memoryProtectionConfigurationRam[0]));
+// linker script asserts that .data and .rodata are empty
+static mpu::Descriptor __attribute__((section(".bss")))
+memoryProtectionConfigurationRam[numOfMemoryProtectionConfigurationRamRegions];
 
 void MemoryProtection::init()
 {
@@ -81,7 +67,26 @@ void MemoryProtection::init()
             mpu::AccessSupervisorMode::SM_RWX, mpu::AccessUserMode::UM_RWX, mpu::AccessSupervisorMode::SM_RWX, mpu::AccessUserMode::UM_RWX,
             mpu::ProcessIdentifier::nPI, mpu::AccessSupervisorMode::SM_UserMode, mpu::AccessUserMode::UM_RWX,
             mpu::ProcessIdentifier::nPI, mpu::AccessSupervisorMode::SM_UserMode, mpu::AccessUserMode::UM_nXnWnR)>();
+
+    uint32_t const PROTECTED_RAM_START_ADDR_MINUS_1
+        = reinterpret_cast<uintptr_t>(__MPU_BSS_START) - 1U;
+    uint32_t const PROTECTED_RAM_END_ADDR = reinterpret_cast<uintptr_t>(__MPU_BSS_END) - 1U;
+    uint32_t const SAFETY_TASK_START_ADDR = reinterpret_cast<uint32_t>(&safetyStack[0]);
+    uint32_t const SAFETY_TASK_END_ADDR
+        = SAFETY_TASK_START_ADDR + (static_cast<uint32_t>(safety_task_stackSize) - 1U);
+
+    memoryProtectionConfigurationRam[0] =
+        {0x0000000U,                            PROTECTED_RAM_START_ADDR_MINUS_1, {REGION_FULL_ACCESS},        {REGION_VALID}};
+    memoryProtectionConfigurationRam[1] =
+        {PROTECTED_RAM_START_ADDR_MINUS_1 + 1U, PROTECTED_RAM_END_ADDR,           {REGION_LOCKED_READ_ACCESS}, {REGION_VALID}};
+    memoryProtectionConfigurationRam[2] =
+        {PROTECTED_RAM_END_ADDR + 1U,           SAFETY_TASK_START_ADDR - 1U,      {REGION_FULL_ACCESS},        {REGION_VALID}};
+    memoryProtectionConfigurationRam[3] =
+        {SAFETY_TASK_START_ADDR,                SAFETY_TASK_END_ADDR,             {REGION_FULL_ACCESS},        {REGION_VALID}};
+    memoryProtectionConfigurationRam[4] =
+        {SAFETY_TASK_END_ADDR + 1U,             0xFFFFFFFFU,                      {REGION_FULL_ACCESS},        {REGION_VALID}};
     // clang-format on
+
     for (size_t i = 0U; i < numOfMemoryProtectionConfigurationRamRegions; ++i)
     {
         mpu::setDescriptor(i + 1U, (mpu::Descriptor const&)memoryProtectionConfigurationRam[i]);
