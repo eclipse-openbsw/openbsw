@@ -7,11 +7,11 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        preset: [ "tests-posix-debug", "tests-posix-release", "tests-s32k1xx-debug", "tests-s32k1xx-release", "posix", "posix-with-tracing", "s32k148-gcc" ]
+        preset: [ "tests-posix-debug", "tests-posix-release", "tests-s32k1xx-debug", "tests-s32k1xx-release", "posix", "posix-with-tracing", "s32k148-gcc", "s32k148-clang" ]
         platform: [ "arm", "linux" ]
         config: [ "Debug", "Release", "RelWithDebInfo" ]
         cxxid: ["gcc", "clang"]
-        cxxstd: [ 14, 20 ]
+        cxxstd: [ 14, 17, 20, 23 ]
         exclude:
           - preset: "tests-posix-debug"
             platform: "arm"
@@ -49,8 +49,12 @@ jobs:
             config: "RelWithDebInfo"
           - preset: "s32k148-gcc"
             platform: "linux"
+          - preset: "s32k148-clang"
+            platform: "linux"
           - preset: "s32k148-gcc"
             cxxid: "clang"
+          - preset: "s32k148-clang"
+            cxxid: "gcc"
 
     steps:
       - name: Checkout repository
