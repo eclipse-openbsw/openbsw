@@ -39,8 +39,6 @@ public:
 
     virtual uint16_t getSourceId() const { return 0xab; }
 
-    virtual uint8_t dispatchTriggerEventRequest(transport::TransportMessage& msg) { return 0; }
-
     virtual transport::AbstractTransportLayer::ErrorCode
     resume(transport::TransportMessage&, transport::ITransportMessageProcessedListener*)
     {

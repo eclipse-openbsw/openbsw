@@ -44,13 +44,6 @@ public:
     virtual void setSourceId(uint16_t) = 0;
 #endif
 
-    /*
-     * \param tmsg - preset message to trigger uds flow
-     * \return - 0 successful, 1 - not successful
-     * \note - will only be executed in case no incoming diag message
-     */
-    virtual uint8_t dispatchTriggerEventRequest(transport::TransportMessage& tmsg) = 0;
-
     virtual ::transport::AbstractTransportLayer::ErrorCode resume(
         ::transport::TransportMessage& transportMessage,
         ::transport::ITransportMessageProcessedListener* pNotificationListener)

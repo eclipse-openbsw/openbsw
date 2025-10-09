@@ -210,58 +210,6 @@ void DiagDispatcher::processQueue()
     }
 }
 
-uint8_t DiagDispatcher::dispatchTriggerEventRequest(TransportMessage& tmsg)
-{
-    if ((fConfiguration.SendJobQueue.empty()) && (fEnabled))
-    {
-        /* check for TransportConfiguration::isFunctionallyAddressed
-         * is obsolete because ALL triggerEvent are of this type  -
-         * so exchange transport message against buffer and copy */
-        TransportMessage* const pRequest
-            = copyFunctionalRequest(tmsg, fProvidingListenerHelper, fConfiguration);
-        if (pRequest != nullptr)
-        {
-            IncomingDiagConnection* const pConnection = requestIncomingConnection(*pRequest);
-            if (pConnection != nullptr)
-            {
-                Logger::debug(
-                    UDS,
-                    "Opening triggered connection 0x%x --> 0x%x, service 0x%x",
-                    pConnection->fSourceId,
-                    pConnection->fTargetId,
-                    pConnection->fServiceId);
-                DiagReturnCode::Type const result = fDiagJobRoot.execute(
-                    *pConnection, pRequest->getPayload(), pRequest->getPayloadLength());
-                if (result != DiagReturnCode::OK)
-                {
-                    (void)pConnection->sendNegativeResponse(
-                        static_cast<uint8_t>(result), fDiagJobRoot);
-                    pConnection->terminate();
-                }
-                /* release the transport message immediately */
-                transportMessageProcessed(
-                    *pRequest,
-                    ITransportMessageProcessedListener::ProcessingResult::PROCESSED_NO_ERROR);
-                return 0U;
-            }
-            else
-            {
-                /* release the transport message immediately */
-                transportMessageProcessed(
-                    *pRequest,
-                    ITransportMessageProcessedListener::ProcessingResult::PROCESSED_ERROR);
-                return 1U;
-            }
-        }
-        else
-        {
-            /* enable for debugging */
-            sendBusyResponse(&tmsg);
-        }
-    }
-    return 1U;
-}
-
 // METRIC STCYC 11 // The function is already in use as is
 void DiagDispatcher::dispatchIncomingRequest(
     TransportJob& job,

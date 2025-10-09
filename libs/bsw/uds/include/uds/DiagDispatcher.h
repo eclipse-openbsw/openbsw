@@ -100,13 +100,6 @@ public:
     virtual void setSourceId(uint16_t diagAddress) { fConfiguration.DiagAddress = diagAddress; }
 #endif
 
-    /*
-     * \param msg - preset message to trigger uds flow
-     * \return - 0 successful, 1 - not successful
-     * \note - will only be executed in case no incoming diag message
-     */
-    uint8_t dispatchTriggerEventRequest(transport::TransportMessage& tmsg) override;
-
 private:
     using SendBusyResponseCallback
         = ::etl::delegate<void(transport::TransportMessage const* const)>;

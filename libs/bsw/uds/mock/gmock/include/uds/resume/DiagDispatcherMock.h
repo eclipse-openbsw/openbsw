@@ -19,8 +19,6 @@ public:
 
     MOCK_METHOD(uint16_t, getSourceId, (), (const));
 
-    MOCK_METHOD(uint8_t, dispatchTriggerEventRequest, (transport::TransportMessage & msg));
-
     MOCK_METHOD(
         transport::AbstractTransportLayer::ErrorCode,
         resume,

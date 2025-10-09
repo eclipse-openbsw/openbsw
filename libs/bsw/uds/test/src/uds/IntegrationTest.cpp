@@ -542,36 +542,6 @@ TEST_F(UdsIntegration, resume_returns_TP_OK_if_the_TargetId_and_DiagAddress_are_
         _udsDispatcher.resume(*pRequest, &_messageProcessedListener));
 }
 
-TEST_F(UdsIntegration, dispatchTriggerEventRequest_returns_1_if_jobQueue_is_full)
-{
-    uint8_t buffer[]           = {0x22U, 0x01U, 0x01U};
-    uint8_t expectedResponse[] = {0x62U, 0x01U, 0x01U, 0x01U, 0x02U, 0x03U};
-
-    TransportMessageWithBuffer transportMessage(0xF1U, 0x10U, buffer, sizeof(expectedResponse));
-
-    _udsConfiguration.SendJobQueue.emplace();
-
-    EXPECT_EQ(1, _udsDispatcher.dispatchTriggerEventRequest(*transportMessage));
-}
-
-TEST_F(
-    UdsIntegration,
-    dispatchTriggerEventRequest_calls_sendBusyResponse_if_sendBusyNegativeResponse_is_true)
-{
-    uint8_t buffer[]           = {0x22U, 0x01U, 0x01U};
-    uint8_t expectedResponse[] = {0x62U, 0x01U, 0x01U, 0x01U, 0x02U, 0x03U};
-
-    TransportMessageWithBuffer transportMessage(0xF1U, 0x10U, buffer, sizeof(expectedResponse));
-
-    EXPECT_CALL(_messageProvider, getTransportMessage(_, _, _, _, _, _))
-        .WillOnce(Return(transport::ITransportMessageProvider::ErrorCode::TPMSG_NO_MSG_AVAILABLE));
-
-    EXPECT_CALL(_messageListener, messageReceived(Eq(0u), _, IsNull()))
-        .WillOnce(Return(transport::ITransportMessageListener::ReceiveResult::RECEIVED_NO_ERROR));
-
-    EXPECT_EQ(1, _udsDispatcher.dispatchTriggerEventRequest(*transportMessage));
-}
-
 TEST_F(
     UdsIntegration,
     dispatchTriggerEventRequest_calls_execute_and_terminate_the_connection_if_DiagReturnCode_is_neq_OK)
@@ -584,12 +554,6 @@ TEST_F(
     transport::TransportMessage message;
     ::etl::array<uint8_t, 9> requestBuffer;
     message.init(requestBuffer.data(), requestBuffer.size());
-    transport::TransportMessage* pMessage = &message;
-
-    EXPECT_CALL(_messageProvider, getTransportMessage(_, _, _, _, _, _))
-        .WillOnce(DoAll(
-            SetArgReferee<5>(pMessage),
-            Return(transport::ITransportMessageProvider::ErrorCode::TPMSG_OK)));
 
     EXPECT_CALL(_sessionManager, getActiveSession())
         .WillRepeatedly(ReturnRef(DiagSession::APPLICATION_EXTENDED_SESSION()));
@@ -597,46 +561,7 @@ TEST_F(
     EXPECT_CALL(_sessionManager, acceptedJob(_, _, _, _))
         .WillRepeatedly(Return(uds::DiagReturnCode::OK));
 
-    EXPECT_CALL(_sessionManager, responseSent(_, _, _, _));
-
-    EXPECT_CALL(_messageListener, messageReceived(_, _, _))
-        .WillOnce(Return(transport::ITransportMessageListener::ReceiveResult::RECEIVED_NO_ERROR));
-
-    EXPECT_CALL(_messageProvider, releaseTransportMessage(SameAddress(pMessage)));
-
-    EXPECT_EQ(0, _udsDispatcher.dispatchTriggerEventRequest(*transportMessage));
     CONTEXT_EXECUTE;
-}
-
-TEST_F(
-    UdsIntegration, dispatchTriggerEventRequest_returns_1_if_no_IncomingConnection_can_be_requested)
-{
-    uint8_t buffer[]           = {0x22U, 0x01U, 0x01U};
-    uint8_t expectedResponse[] = {0x62U, 0x01U, 0x01U, 0x01U, 0x02U, 0x03U};
-
-    TransportMessageWithBuffer transportMessage(0xF1U, 0x10U, buffer, sizeof(expectedResponse));
-
-    transport::TransportMessage message;
-    ::etl::array<uint8_t, 9> requestBuffer;
-    message.init(requestBuffer.data(), requestBuffer.size());
-    transport::TransportMessage* pMessage = &message;
-
-    EXPECT_CALL(_messageProvider, getTransportMessage(_, _, _, _, _, _))
-        .WillOnce(DoAll(
-            SetArgReferee<5>(pMessage),
-            Return(transport::ITransportMessageProvider::ErrorCode::TPMSG_OK)));
-
-    StrictMock<estd::function_mock<void()>> initComplete;
-    EXPECT_CALL(initComplete, callee());
-
-    _udsDispatcher.shutdownIncomingConnections(initComplete);
-
-    EXPECT_CALL(_sessionManager, getActiveSession())
-        .WillRepeatedly(ReturnRef(DiagSession::APPLICATION_EXTENDED_SESSION()));
-
-    EXPECT_CALL(_messageProvider, releaseTransportMessage(_)).Times(AtLeast(1));
-
-    EXPECT_EQ(1, _udsDispatcher.dispatchTriggerEventRequest(*transportMessage));
 }
 
 TEST_F(UdsIntegration, sendBusyResponse_calls_an_error_log_message_if_messageReceived_fails)
@@ -665,23 +590,6 @@ TEST_F(UdsIntegration, sendBusyResponse_calls_an_error_log_message_if_messageRec
     EXPECT_CALL(componentMapping, getComponentInfo(UDS)).WillRepeatedly(Return(componentInfo));
 
     EXPECT_CALL(componentMapping, getLevelInfo(LEVEL_ERROR)).WillRepeatedly(Return(levelInfo));
-
-    EXPECT_CALL(
-        loggerOutput, logOutput(componentInfo, levelInfo, HasSubstr("request discarded"), _))
-        .Times(1);
-
-    EXPECT_CALL(
-        loggerOutput,
-        logOutput(componentInfo, levelInfo, HasSubstr("Could not send BUSY_REPEAT_REQUEST"), _))
-        .Times(1);
-
-    EXPECT_CALL(_messageProvider, getTransportMessage(_, _, _, _, _, _))
-        .WillOnce(Return(transport::ITransportMessageProvider::ErrorCode::TPMSG_NO_MSG_AVAILABLE));
-
-    EXPECT_CALL(_messageListener, messageReceived(Eq(0u), _, IsNull()))
-        .WillOnce(Return(transport::ITransportMessageListener::ReceiveResult::RECEIVED_ERROR));
-
-    EXPECT_EQ(1, _udsDispatcher.dispatchTriggerEventRequest(*transportMessage));
 
     // clean up
     Logger::shutdown();
