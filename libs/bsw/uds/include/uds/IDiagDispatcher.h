@@ -27,8 +27,8 @@ public:
      * Constructor
      * \param   sessionManager  IDiagSessionManager
      */
-    explicit IDiagDispatcher(IDiagSessionManager& sessionManager, DiagJobRoot& jobRoot)
-    : fDiagJobRoot(jobRoot), fSessionManager(sessionManager), fEnabled(true)
+    explicit IDiagDispatcher(IDiagSessionManager& sessionManager)
+    : fSessionManager(sessionManager), fEnabled(true)
     {}
 
     virtual uint16_t getSourceId() const = 0;
@@ -41,9 +41,6 @@ public:
         ::transport::TransportMessage& transportMessage,
         ::transport::ITransportMessageProcessedListener* pNotificationListener)
         = 0;
-
-protected:
-    DiagJobRoot& fDiagJobRoot;
 
 public:
     IDiagSessionManager& fSessionManager;

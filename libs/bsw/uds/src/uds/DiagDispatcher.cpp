@@ -33,7 +33,7 @@ DiagDispatcher::DiagDispatcher(
     AbstractDiagnosisConfiguration& configuration,
     IDiagSessionManager& sessionManager,
     DiagJobRoot& jobRoot)
-: IDiagDispatcher(sessionManager, jobRoot)
+: IDiagDispatcher(sessionManager)
 , AbstractTransportLayer(configuration.DiagBusId)
 , fConfiguration(configuration)
 , fConnectionShutdownDelegate()
@@ -44,6 +44,7 @@ DiagDispatcher::DiagDispatcher(
 , fBusyMessageBuffer()
 , fAsyncProcessQueue(
       ::async::Function::CallType::create<DiagDispatcher, &DiagDispatcher::processQueue>(*this))
+, fDiagJobRoot(jobRoot)
 {
     fBusyMessage.init(
         &fBusyMessageBuffer[0], BUSY_MESSAGE_LENGTH + UdsVmsConstants::BUSY_MESSAGE_EXTRA_BYTES);

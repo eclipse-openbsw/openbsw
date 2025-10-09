@@ -21,7 +21,7 @@ using namespace ::testing;
 class TestDiagDispatcher : public DiagDispatcherMock
 {
 public:
-    TestDiagDispatcher() : DiagDispatcherMock(fSessionManagerMock, fJobRoot) {}
+    TestDiagDispatcher() : DiagDispatcherMock(fSessionManagerMock) {}
 
 private:
     DiagSessionManagerMock fSessionManagerMock;

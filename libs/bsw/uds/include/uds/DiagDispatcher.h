@@ -180,6 +180,7 @@ private:
     transport::TransportMessage fBusyMessage;
     uint8_t fBusyMessageBuffer[BUSY_MESSAGE_LENGTH + UdsVmsConstants::BUSY_MESSAGE_EXTRA_BYTES];
     ::async::Function fAsyncProcessQueue;
+    DiagJobRoot& fDiagJobRoot;
 };
 
 } // namespace uds
