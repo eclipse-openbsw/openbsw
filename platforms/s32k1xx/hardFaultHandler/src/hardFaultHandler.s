@@ -60,6 +60,7 @@
 
 .text
 .globl customHardFaultHandler
+.type customHardFaultHandler, %function
 
 customHardFaultHandler:
 
