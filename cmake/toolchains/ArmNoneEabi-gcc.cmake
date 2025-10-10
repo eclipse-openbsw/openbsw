@@ -12,8 +12,18 @@ set(_EXE_LINKER_FLAGS "-specs=nano.specs \
 
 include("${CMAKE_CURRENT_LIST_DIR}/ArmNoneEabi.cmake")
 
-set(CMAKE_C_COMPILER arm-none-eabi-gcc)
-set(CMAKE_CXX_COMPILER arm-none-eabi-g++)
-set(CMAKE_ASM_COMPILER arm-none-eabi-gcc)
-set(CMAKE_LINKER arm-none-eabi-g++)
-set(CMAKE_AR arm-none-eabi-ar)
+if (NOT DEFINED CMAKE_C_COMPILER)
+    if (DEFINED ENV{CC})
+        set(CMAKE_C_COMPILER $ENV{CC})
+    else ()
+        find_program(CMAKE_C_COMPILER arm-none-eabi-gcc REQUIRED)
+    endif ()
+endif ()
+
+cmake_path(GET CMAKE_C_COMPILER PARENT_PATH TOOLCHAIN_BIN_DIR)
+
+set(CMAKE_C_COMPILER ${TOOLCHAIN_BIN_DIR}/arm-none-eabi-gcc)
+set(CMAKE_CXX_COMPILER ${TOOLCHAIN_BIN_DIR}/arm-none-eabi-g++)
+set(CMAKE_ASM_COMPILER ${TOOLCHAIN_BIN_DIR}/arm-none-eabi-gcc)
+set(CMAKE_LINKER ${TOOLCHAIN_BIN_DIR}/arm-none-eabi-g++)
+set(CMAKE_AR ${TOOLCHAIN_BIN_DIR}/arm-none-eabi-ar)
