@@ -129,6 +129,8 @@ class BuildOpTpl:
 
                 build_cmd_str += f" --config {str(config)}"
 
+        build_cmd_str += " --verbose"
+
         return build_cmd_str
 
     def get_full_test_command(self):
