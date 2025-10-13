@@ -6,6 +6,7 @@
 #include "bsp/eeprom/EepromConfiguration.h"
 #include "bsp/phy/phyConfiguration.h"
 #include "bsp/timer/ftmConfiguration.hpp"
+#include "bsp/uart/Uart.h"
 #include "clock/clockConfig.h"
 #include "interrupts/SuspendResumeAllInterruptsScopedLock.h"
 #include "interrupts/disableEnableAllInterrupts.h"
@@ -22,6 +23,7 @@ extern void initSystemTimerHelper(bool sleep);
 }
 
 using Io = bios::Io;
+using bsp::Uart;
 
 extern StaticBsp staticBsp;
 
@@ -37,7 +39,7 @@ StaticBsp::StaticBsp()
 , _requestUpdateGateRegisters(false)
 , _mode(_INIT_)
 {
-    sciInit();
+    Uart::getInstance(Uart::Id::TERMINAL).init();
     initSystemTimer();
 }
 
