@@ -7,49 +7,49 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        preset: [ "tests-debug", "tests-release", "tests-debug-posix", "tests-release-posix", "tests-debug-s32k1xx", "tests-release-s32k1xx", "posix", "posix-with-tracing", "s32k148-gcc" ]
+        preset: [ "tests-generic-debug", "tests-generic-release", "tests-posix-debug", "tests-posix-release", "tests-s32k1xx-debug", "tests-s32k1xx-release", "posix", "posix-with-tracing", "s32k148-gcc" ]
         platform: [ "arm", "linux" ]
         config: [ "Debug", "Release", "RelWithDebInfo" ]
         cxxid: ["gcc", "clang"]
         cxxstd: [ 14, 20 ]
         exclude:
-          - preset: "tests-debug"
+          - preset: "tests-generic-debug"
             platform: "arm"
-          - preset: "tests-debug"
+          - preset: "tests-generic-debug"
             config: "Release"
-          - preset: "tests-debug"
+          - preset: "tests-generic-debug"
             config: "RelWithDebInfo"
-          - preset: "tests-release"
+          - preset: "tests-generic-release"
             platform: "arm"
-          - preset: "tests-release"
+          - preset: "tests-generic-release"
             config: "Debug"
-          - preset: "tests-release"
+          - preset: "tests-generic-release"
             config: "RelWithDebInfo"
 
-          - preset: "tests-debug-posix"
+          - preset: "tests-posix-debug"
             platform: "arm"
-          - preset: "tests-debug-posix"
+          - preset: "tests-posix-debug"
             config: "Release"
-          - preset: "tests-debug-posix"
+          - preset: "tests-posix-debug"
             config: "RelWithDebInfo"
-          - preset: "tests-release-posix"
+          - preset: "tests-posix-release"
             platform: "arm"
-          - preset: "tests-release-posix"
+          - preset: "tests-posix-release"
             config: "Debug"
-          - preset: "tests-release-posix"
+          - preset: "tests-posix-release"
             config: "RelWithDebInfo"
 
-          - preset: "tests-debug-s32k1xx"
+          - preset: "tests-s32k1xx-debug"
             platform: "arm"
-          - preset: "tests-debug-s32k1xx"
+          - preset: "tests-s32k1xx-debug"
             config: "Release"
-          - preset: "tests-debug-s32k1xx"
+          - preset: "tests-s32k1xx-debug"
             config: "RelWithDebInfo"
-          - preset: "tests-release-s32k1xx"
+          - preset: "tests-s32k1xx-release"
             platform: "arm"
-          - preset: "tests-release-s32k1xx"
+          - preset: "tests-s32k1xx-release"
             config: "Debug"
-          - preset: "tests-release-s32k1xx"
+          - preset: "tests-s32k1xx-release"
             config: "RelWithDebInfo"
 
           - preset: "posix"

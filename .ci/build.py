@@ -5,50 +5,50 @@ from buildoperations import run_builds
 
 # MATRIX
 commands = {
-    "tests-debug": BuildOpTpl(
-        config_cmd="cmake --preset tests-debug",
-        build_cmd="cmake --build --preset tests-debug",
-        test_cmd="ctest --preset tests-debug",
+    "tests-generic-debug": BuildOpTpl(
+        config_cmd="cmake --preset tests-generic-debug",
+        build_cmd="cmake --build --preset tests-generic-debug",
+        test_cmd="ctest --preset tests-generic-debug",
         configs=["Debug"],
         platforms=["linux"],
-        build_dir="build/tests/Debug",
+        build_dir="build/tests/generic/Debug",
     ),
-    "tests-release": BuildOpTpl(
-        config_cmd="cmake --preset tests-release",
-        build_cmd="cmake --build --preset tests-release",
-        test_cmd="ctest --preset tests-release",
+    "tests-generic-release": BuildOpTpl(
+        config_cmd="cmake --preset tests-generic-release",
+        build_cmd="cmake --build --preset tests-generic-release",
+        test_cmd="ctest --preset tests-generic-release",
         configs=["Release"],
         platforms=["linux"],
-        build_dir="build/tests/Release",
+        build_dir="build/tests/generic/Release",
     ),
-    "tests-debug-posix": BuildOpTpl(
-        config_cmd="cmake --preset tests-debug-posix",
-        build_cmd="cmake --build --preset tests-debug-posix",
-        test_cmd="ctest --preset tests-debug-posix",
+    "tests-posix-debug": BuildOpTpl(
+        config_cmd="cmake --preset tests-posix-debug",
+        build_cmd="cmake --build --preset tests-posix-debug",
+        test_cmd="ctest --preset tests-posix-debug",
         configs=["Debug"],
         platforms=["linux"],
         build_dir="build/tests/posix/Debug",
     ),
-    "tests-release-posix": BuildOpTpl(
-        config_cmd="cmake --preset tests-release-posix",
-        build_cmd="cmake --build --preset tests-release-posix",
-        test_cmd="ctest --preset tests-release-posix",
+    "tests-posix-release": BuildOpTpl(
+        config_cmd="cmake --preset tests-posix-release",
+        build_cmd="cmake --build --preset tests-posix-release",
+        test_cmd="ctest --preset tests-posix-release",
         configs=["Release"],
         platforms=["linux"],
         build_dir="build/tests/posix/Release",
     ),
-    "tests-debug-s32k1xx": BuildOpTpl(
-        config_cmd="cmake --preset tests-debug-s32k1xx",
-        build_cmd="cmake --build --preset tests-debug-s32k1xx",
-        test_cmd="ctest --preset tests-debug-s32k1xx",
+    "tests-s32k1xx-debug": BuildOpTpl(
+        config_cmd="cmake --preset tests-s32k1xx-debug",
+        build_cmd="cmake --build --preset tests-s32k1xx-debug",
+        test_cmd="ctest --preset tests-s32k1xx-debug",
         configs=["Debug"],
         platforms=["linux"],
         build_dir="build/tests/s32k1xx/Debug",
     ),
-    "tests-release-s32k1xx": BuildOpTpl(
-        config_cmd="cmake --preset tests-release-s32k1xx",
-        build_cmd="cmake --build --preset tests-release-s32k1xx",
-        test_cmd="ctest --preset tests-release-s32k1xx",
+    "tests-s32k1xx-release": BuildOpTpl(
+        config_cmd="cmake --preset tests-s32k1xx-release",
+        build_cmd="cmake --build --preset tests-s32k1xx-release",
+        test_cmd="ctest --preset tests-s32k1xx-release",
         configs=["Release"],
         platforms=["linux"],
         build_dir="build/tests/s32k1xx/Release",
