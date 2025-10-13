@@ -101,6 +101,13 @@ jobs:
         run: |
           docker run --rm -v "$PWD:/home/jenkins" -w /home/jenkins --user $(id -u):4996 dev python3 .ci/build.py --preset "${{ matrix.preset }}" --platform "${{ matrix.platform }}" --cxxid "${{ matrix.cxxid }}" --cxxstd "${{ matrix.cxxstd }}" --config "${{ matrix.config }}"
 
+      - name: Run custom CMake build for elf-analyzer
+        if: steps.cache-cmake.outputs.cache-hit != 'true' && matrix.preset == 's32k148-gcc' && matrix.platform == 'arm' && matrix.cxxid == 'gcc' && matrix.cxxstd == '14' && matrix.config != ''
+        run: |
+          docker run --rm -v "$PWD:/home/jenkins" -w /home/jenkins --user $(id -u):4996 dev bash -c "
+            cmake --preset ${{matrix.preset}} -DCMAKE_CXX_FLAGS="-gdwarf-4" -DCMAKE_C_FLAGS="-gdwarf-4" -B elf-analyzer-artifacts
+            cmake --build elf-analyzer-artifacts -t app.referenceApp --config ${{ matrix.config }} "
+
       - name: Set commit hash and metadata
         if: steps.cache-cmake.outputs.cache-hit != 'true' && matrix.platform == 'arm' && matrix.cxxid == 'gcc' && matrix.cxxstd == '14' && matrix.config != ''
         id: vars
@@ -112,7 +119,7 @@ jobs:
         if: steps.cache-cmake.outputs.cache-hit != 'true' && matrix.platform == 'arm' && matrix.cxxid == 'gcc' && matrix.cxxstd == '14' && matrix.config != ''
         run: |
           mkdir -p elf-artifacts
-          cp build/s32k148-gcc/executables/referenceApp/application/${{ matrix.config }}/app.referenceApp.elf elf-artifacts/
+          cp elf-analyzer-artifacts/executables/referenceApp/application/${{ matrix.config }}/app.referenceApp.elf elf-artifacts/
 
       - name: Upload ELF as GitHub Artifact
         if: steps.cache-cmake.outputs.cache-hit != 'true' && matrix.platform == 'arm'  && matrix.cxxid == 'gcc' && matrix.cxxstd == '14' && matrix.config != ''
