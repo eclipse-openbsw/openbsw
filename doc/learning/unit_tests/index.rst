@@ -17,34 +17,33 @@ Configure and generate a project buildsystem for the unit test build:
 
     cmake --preset tests-debug
 
-Build all tests or a specified target:
+Build all tests from generic modules or a specified target:
 
 .. code-block:: bash
 
-    # all tests
+    # all tests for generic modules
     cmake --build --preset tests-debug
-    # all tests with parallel build
-    cmake --build --preset tests-debug --parallel $(nproc)
     # specific target
     cmake --build --preset tests-debug --target <target>
     # example
     cmake --build --preset tests-debug --target ioTest
-
-By default, the unit tests from the generic modules are built. To select platform specific unit
-tests, specify ``PLATFORM_CONFIG``:
-
-.. code-block:: bash
-
-    # plaform config option
-    cmake --preset tests-debug [-DPLATFORM_CONFIG=GENERIC|POSIX|S32K1XX]
-    # example
-    cmake --preset tests-debug -DPLATFORM_CONFIG=POSIX
 
 Find all available targets for the unit test build:
 
 .. code-block:: bash
 
     cmake --build --preset tests-debug --target help
+
+Configure and build tests from platform specific modules:
+
+.. code-block:: bash
+
+    # POSIX
+    cmake --preset tests-debug-posix
+    cmake --build --preset tests-debug-posix
+    # S32K1XX
+    cmake --preset tests-debug-s32k1xx
+    cmake --build --preset tests-debug-s32k1xx
 
 Prepare a clean build using the clean target:
 

@@ -11,26 +11,80 @@
     "configurePresets": [
         {
             "name": "tests-debug",
-            "displayName": "Configure for testing",
-            "description": "Configure for testing",
+            "displayName": "Configure for testing generic modules (debug)",
+            "description": "Configure for testing generic modules (debug)",
             "inherits": "_config-base",
             "binaryDir": "${sourceDir}/build/tests/Debug",
             "cacheVariables": {
                 "CMAKE_DEFAULT_BUILD_TYPE": "Debug",
                 "CMAKE_CONFIGURATION_TYPES": "Debug",
-                "BUILD_UNIT_TESTS": "ON"
+                "BUILD_UNIT_TESTS": "ON",
+                "PLATFORM_CONFIG": "GENERIC"
             }
         },
         {
             "name": "tests-release",
-            "displayName": "Configure for testing",
-            "description": "Configure for testing",
+            "displayName": "Configure for testing generic modules (release)",
+            "description": "Configure for testing generic modules (release)",
             "inherits": "_config-base",
             "binaryDir": "${sourceDir}/build/tests/Release",
             "cacheVariables": {
                 "CMAKE_DEFAULT_BUILD_TYPE": "Release",
                 "CMAKE_CONFIGURATION_TYPES": "Release",
-                "BUILD_UNIT_TESTS": "ON"
+                "BUILD_UNIT_TESTS": "ON",
+                "PLATFORM_CONFIG": "GENERIC"
+            }
+        },
+        {
+            "name": "tests-debug-posix",
+            "displayName": "Configure for testing POSIX modules (debug)",
+            "description": "Configure for testing POSIX modules (debug)",
+            "inherits": "_config-base",
+            "binaryDir": "${sourceDir}/build/tests/posix/Debug",
+            "cacheVariables": {
+                "CMAKE_DEFAULT_BUILD_TYPE": "Debug",
+                "CMAKE_CONFIGURATION_TYPES": "Debug",
+                "BUILD_UNIT_TESTS": "ON",
+                "PLATFORM_CONFIG": "POSIX"
+            }
+        },
+        {
+            "name": "tests-release-posix",
+            "displayName": "Configure for testing POSIX modules (release)",
+            "description": "Configure for testing POSIX modules (release)",
+            "inherits": "_config-base",
+            "binaryDir": "${sourceDir}/build/tests/posix/Release",
+            "cacheVariables": {
+                "CMAKE_DEFAULT_BUILD_TYPE": "Release",
+                "CMAKE_CONFIGURATION_TYPES": "Release",
+                "BUILD_UNIT_TESTS": "ON",
+                "PLATFORM_CONFIG": "POSIX"
+            }
+        },
+        {
+            "name": "tests-debug-s32k1xx",
+            "displayName": "Configure for testing S32K1XX modules (debug)",
+            "description": "Configure for testing S32K1XX modules (debug)",
+            "inherits": "_config-base",
+            "binaryDir": "${sourceDir}/build/tests/s32k1xx/Debug",
+            "cacheVariables": {
+                "CMAKE_DEFAULT_BUILD_TYPE": "Debug",
+                "CMAKE_CONFIGURATION_TYPES": "Debug",
+                "BUILD_UNIT_TESTS": "ON",
+                "PLATFORM_CONFIG": "S32K1XX"
+            }
+        },
+        {
+            "name": "tests-release-s32k1xx",
+            "displayName": "Configure for testing S32K1XX modules (release)",
+            "description": "Configure for testing S32K1XX modules (release)",
+            "inherits": "_config-base",
+            "binaryDir": "${sourceDir}/build/tests/s32k1xx/Release",
+            "cacheVariables": {
+                "CMAKE_DEFAULT_BUILD_TYPE": "Release",
+                "CMAKE_CONFIGURATION_TYPES": "Release",
+                "BUILD_UNIT_TESTS": "ON",
+                "PLATFORM_CONFIG": "S32K1XX"
             }
         },
         {
@@ -82,16 +136,44 @@
     "buildPresets": [
         {
             "name": "tests-debug",
-            "displayName": "Build tests (debug configuration)",
-            "description": "Build tests (debug configuration)",
+            "displayName": "Build tests of generic modules (debug)",
+            "description": "Build tests of generic modules (debug)",
             "configurePreset": "tests-debug",
             "configuration": "Debug"
         },
         {
             "name": "tests-release",
-            "displayName": "Build tests (release configuration)",
-            "description": "Build tests (release configuration)",
+            "displayName": "Build tests of generic modules (release)",
+            "description": "Build tests of generic modules (release)",
             "configurePreset": "tests-release",
+            "configuration": "Release"
+        },
+        {
+            "name": "tests-debug-posix",
+            "displayName": "Build tests of POSIX modules (debug)",
+            "description": "Build tests of POSIX modules (debug)",
+            "configurePreset": "tests-debug-posix",
+            "configuration": "Debug"
+        },
+        {
+            "name": "tests-release-posix",
+            "displayName": "Build tests of POSIX modules (release)",
+            "description": "Build tests of POSIX modules (release)",
+            "configurePreset": "tests-release-posix",
+            "configuration": "Release"
+        },
+        {
+            "name": "tests-debug-s32k1xx",
+            "displayName": "Build tests of S32K1XX modules (debug)",
+            "description": "Build tests of S32K1XX modules (debug)",
+            "configurePreset": "tests-debug-s32k1xx",
+            "configuration": "Debug"
+        },
+        {
+            "name": "tests-release-s32k1xx",
+            "displayName": "Build tests of S32K1XX modules (release)",
+            "description": "Build tests of S32K1XX modules (release)",
+            "configurePreset": "tests-release-s32k1xx",
             "configuration": "Release"
         },
         {
@@ -101,70 +183,58 @@
             "configurePreset": "posix"
         },
         {
-            "name": "_posix-dbg",
-            "inherits": "posix",
-            "configuration": "Debug"
-        },
-        {
-            "name": "_posix-rel",
-            "inherits": "posix",
-            "configuration": "Release"
-        },
-        {
             "name": "s32k148-gcc",
             "displayName": "S32K148 build (GCC)",
             "description": "Build reference application for S32K148 platform with Clang (Release by default; for Debug use --config Debug)",
             "configurePreset": "s32k148-gcc"
         },
         {
-            "name": "_s32k148-gcc_debug",
-            "inherits": "s32k148-gcc",
-            "configuration": "Debug"
-        },
-        {
-            "name": "_s32k148-gcc_release",
-            "inherits": "s32k148-gcc",
-            "configuration": "Release"
-        },
-        {
-            "name": "_s32k148-gcc_relwithdebinfo",
-            "inherits": "s32k148-gcc",
-            "configuration": "RelWithDebInfo"
-        },
-        {
             "name": "s32k148-clang",
             "displayName": "S32K148 build (Clang)",
             "description": "Build reference application for S32K148 platform with Clang (Release by default; for Debug use --config Debug)",
             "configurePreset": "s32k148-clang"
-        },
-        {
-            "name": "_s32k147-clang_debug",
-            "inherits": "s32k148-clang",
-            "configuration": "Debug"
-        },
-        {
-            "name": "_s32k148-clang_release",
-            "inherits": "s32k148-clang",
-            "configuration": "Release"
-        },
-        {
-            "name": "_s32k148-clang_relwithdebinfo",
-            "inherits": "s32k148-clang",
-            "configuration": "RelWithDebInfo"
         }
     ],
     "testPresets": [
         {
             "name": "tests-debug",
-            "displayName": "Run tests (debug)",
-            "description": "Run tests (debug)",
+            "displayName": "Run tests of generic modules (debug)",
+            "description": "Run tests of generic modules (debug)",
             "configuration": "Debug",
             "configurePreset": "tests-debug"
         },
         {
             "name": "tests-release",
-            "displayName": "Run tests (release)",
-            "description": "Run tests (release)",
+            "displayName": "Run tests of generic modules (release)",
+            "description": "Run tests of generic modules (release)",
+            "configuration": "Release",
+            "configurePreset": "tests-release"
+        },
+        {
+            "name": "tests-debug-posix",
+            "displayName": "Run tests of POSIX modules (debug)",
+            "description": "Run tests of POSIX modules (debug)",
+            "configuration": "Debug",
+            "configurePreset": "tests-debug"
+        },
+        {
+            "name": "tests-release-posix",
+            "displayName": "Run tests of POSIX modules (release)",
+            "description": "Run tests of POSIX modules (release)",
+            "configuration": "Release",
+            "configurePreset": "tests-release"
+        },
+        {
+            "name": "tests-debug-s32k1xx",
+            "displayName": "Run tests of S32K1XX modules (debug)",
+            "description": "Run tests of S32K1XX modules (debug)",
+            "configuration": "Debug",
+            "configurePreset": "tests-debug"
+        },
+        {
+            "name": "tests-release-s32k1xx",
+            "displayName": "Run tests of S32K1XX modules (release)",
+            "description": "Run tests of S32K1XX modules (release)",
             "configuration": "Release",
             "configurePreset": "tests-release"
         }
