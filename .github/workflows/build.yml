@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        preset: [ "tests-debug", "tests-release", "posix", "posix-with-tracing", "s32k148-gcc" ]
+        preset: [ "tests-debug", "tests-release", "tests-debug-posix", "tests-release-posix", "tests-debug-s32k1xx", "tests-release-s32k1xx", "posix", "posix-with-tracing", "s32k148-gcc" ]
         platform: [ "arm", "linux" ]
         config: [ "Debug", "Release", "RelWithDebInfo" ]
         cxxid: ["gcc", "clang"]
@@ -29,6 +29,41 @@ jobs:
             config: "Release"
           - preset: "tests-release"
             config: "RelWithDebInfo"
+
+          - preset: "tests-debug-posix"
+            platform: "arm"
+          - preset: "tests-debug-posix"
+            config: "Debug"
+          - preset: "tests-debug-posix"
+            config: "Release"
+          - preset: "tests-debug-posix"
+            config: "RelWithDebInfo"
+          - preset: "tests-release-posix"
+            platform: "arm"
+          - preset: "tests-release-posix"
+            config: "Debug"
+          - preset: "tests-release-posix"
+            config: "Release"
+          - preset: "tests-release-posix"
+            config: "RelWithDebInfo"
+
+          - preset: "tests-debug-s32k1xx"
+            platform: "arm"
+          - preset: "tests-debug-s32k1xx"
+            config: "Debug"
+          - preset: "tests-debug-s32k1xx"
+            config: "Release"
+          - preset: "tests-debug-s32k1xx"
+            config: "RelWithDebInfo"
+          - preset: "tests-release-s32k1xx"
+            platform: "arm"
+          - preset: "tests-release-s32k1xx"
+            config: "Debug"
+          - preset: "tests-release-s32k1xx"
+            config: "Release"
+          - preset: "tests-release-s32k1xx"
+            config: "RelWithDebInfo"
+
           - preset: "posix"
             platform: "arm"
           - preset: "posix"
@@ -41,42 +76,6 @@ jobs:
             platform: "linux"
           - preset: "s32k148-gcc"
             cxxid: "clang"
-        include:
-          - preset: "wf-tests-debug"
-            platform: "linux"
-            config: ""
-            cxxid: "gcc"
-            cxxstd: 0
-          - preset: "wf-tests-debug"
-            platform: "linux"
-            config: ""
-            cxxid: "clang"
-            cxxstd: 0
-          - preset: "wf-tests-release"
-            platform: "linux"
-            config: ""
-            cxxid: "gcc"
-            cxxstd: 0
-          - preset: "wf-tests-release"
-            platform: "linux"
-            config: ""
-            cxxid: "clang"
-            cxxstd: 0
-          - preset: "wf-posix"
-            platform: "linux"
-            config: ""
-            cxxid: "gcc"
-            cxxstd: 0
-          - preset: "wf-posix"
-            platform: "linux"
-            config: ""
-            cxxid: "clang"
-            cxxstd: 0
-          - preset: "wf-s32k148-gcc"
-            platform: "arm"
-            config: ""
-            cxxid: "gcc"
-            cxxstd: 0
 
     steps:
       - name: Checkout repository

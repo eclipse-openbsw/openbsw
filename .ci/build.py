@@ -5,36 +5,6 @@ from buildoperations import run_builds
 
 # MATRIX
 commands = {
-    "wf-tests-debug": BuildOpTpl(
-        config_cmd="cmake --workflow --preset wf-tests-debug",
-        platforms=["linux"],
-        cxxstds=[0],
-        build_dir="build/tests/Debug",
-    ),
-    "wf-tests-release": BuildOpTpl(
-        config_cmd="cmake --workflow --preset wf-tests-release",
-        platforms=["linux"],
-        cxxstds=[0],
-        build_dir="build/tests/Release",
-    ),
-    "wf-posix": BuildOpTpl(
-        config_cmd="cmake --workflow --preset wf-posix",
-        platforms=["linux"],
-        cxxstds=[0],
-        build_dir="build/posix",
-    ),
-    "wf-s32k148-gcc": BuildOpTpl(
-        config_cmd="cmake --workflow --preset wf-s32k148-gcc",
-        platforms=["arm"],
-        cxxstds=[0],
-        build_dir="build/s32k148-gcc",
-    ),
-    # "wf-s32k148-clang": BuildOpTpl(
-    #     config_cmd="cmake --workflow --preset wf-s32k148-clang",
-    #     platforms=["arm"],
-    #     cxxstds=[0],
-    #     build_dir="build/s32k148-clang",
-    # ),
     "tests-debug": BuildOpTpl(
         config_cmd="cmake --preset tests-debug",
         build_cmd="cmake --build --preset tests-debug",
@@ -47,6 +17,38 @@ commands = {
         config_cmd="cmake --preset tests-release",
         build_cmd="cmake --build --preset tests-release",
         test_cmd="ctest --preset tests-release",
+        configs=["Release"],
+        platforms=["linux"],
+        build_dir="build/tests/Release",
+    ),
+    "tests-debug-posix": BuildOpTpl(
+        config_cmd="cmake --preset tests-debug -DPLATFORM_CONFIG=POSIX",
+        build_cmd="cmake --build --preset tests-debug -DPLATFORM_CONFIG=POSIX",
+        test_cmd="ctest --preset tests-debug -DPLATFORM_CONFIG=POSIX",
+        configs=["Debug"],
+        platforms=["linux"],
+        build_dir="build/tests/Debug",
+    ),
+    "tests-release-posix": BuildOpTpl(
+        config_cmd="cmake --preset tests-release -DPLATFORM_CONFIG=POSIX",
+        build_cmd="cmake --build --preset tests-release -DPLATFORM_CONFIG=POSIX",
+        test_cmd="ctest --preset tests-release -DPLATFORM_CONFIG=POSIX",
+        configs=["Release"],
+        platforms=["linux"],
+        build_dir="build/tests/Release",
+    ),
+    "tests-debug-s32k1xx": BuildOpTpl(
+        config_cmd="cmake --preset tests-debug -DPLATFORM_CONFIG=S32K1XX",
+        build_cmd="cmake --build --preset tests-debug -DPLATFORM_CONFIG=S32K1XX",
+        test_cmd="ctest --preset tests-debug -DPLATFORM_CONFIG=S32K1XX",
+        configs=["Debug"],
+        platforms=["linux"],
+        build_dir="build/tests/Debug",
+    ),
+    "tests-release-s32k1xx": BuildOpTpl(
+        config_cmd="cmake --preset tests-release -DPLATFORM_CONFIG=S32K1XX",
+        build_cmd="cmake --build --preset tests-release -DPLATFORM_CONFIG=S32K1XX",
+        test_cmd="ctest --preset tests-release -DPLATFORM_CONFIG=S32K1XX",
         configs=["Release"],
         platforms=["linux"],
         build_dir="build/tests/Release",

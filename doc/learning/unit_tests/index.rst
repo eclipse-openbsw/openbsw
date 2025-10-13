@@ -23,10 +23,22 @@ Build all tests or a specified target:
 
     # all tests
     cmake --build --preset tests-debug
+    # all tests with parallel build
+    cmake --build --preset tests-debug --parallel $(nproc)
     # specific target
     cmake --build --preset tests-debug --target <target>
     # example
     cmake --build --preset tests-debug --target ioTest
+
+By default, the unit tests from the generic modules are built. To select platform specific unit
+tests, specify ``PLATFORM_CONFIG``:
+
+.. code-block:: bash
+
+    # plaform config option
+    cmake --preset tests-debug [-DPLATFORM_CONFIG=GENERIC|POSIX|S32K1XX]
+    # example
+    cmake --preset tests-debug -DPLATFORM_CONFIG=POSIX
 
 Find all available targets for the unit test build:
 
@@ -45,5 +57,11 @@ Run the tests:
 .. code-block:: bash
 
     ctest --preset tests-debug --parallel
+
+If you modified some CMakeLists.txt files in the project don't forget to run:
+
+.. code-block:: bash
+
+   cmake-format -i $(find . -name CMakeLists.txt | sed '/3rdparty\/.*\/CMakeLists\.txt/d')
 
 Next: :ref:`learning_lifecycle`
