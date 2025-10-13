@@ -96,7 +96,7 @@ CommunicationControlTest::CommunicationControlTest()
 , request(1024)
 {
     AbstractDiagJob::setDefaultDiagSessionManager(_sessionManager);
-    _conn.fpRequestMessage = request.get();
+    _conn.requestMessage = request.get();
 }
 
 TEST_F(CommunicationControlTest, VariableLengthConstructor)

@@ -83,14 +83,14 @@ struct AbstractDiagJobTest : public Test
         fResponseMessage.init(fRequestBuffer.data(), fRequestBuffer.size());
 
         fpDiagAuthenticator.reset(new DefaultDiagAuthenticator());
-        fpDiagSessionManager.reset(new DiagSessionManagerMock());
-        AbstractDiagJob::setDefaultDiagSessionManager(*fpDiagSessionManager);
+        diagSessionManager.reset(new DiagSessionManagerMock());
+        AbstractDiagJob::setDefaultDiagSessionManager(*diagSessionManager);
 
-        fIncomingConnection.fSourceId        = 0x10U;
-        fIncomingConnection.fpRequestMessage = &fResponseMessage;
+        fIncomingConnection.sourceAddress  = 0x10U;
+        fIncomingConnection.requestMessage = &fResponseMessage;
     }
 
-    std::unique_ptr<IDiagSessionManager> fpDiagSessionManager;
+    std::unique_ptr<IDiagSessionManager> diagSessionManager;
     std::unique_ptr<IDiagAuthenticator> fpDiagAuthenticator;
     DiagJobRoot fpDiagJobRoot;
     DiagJobRoot fJobRoot;
@@ -405,7 +405,7 @@ TEST_F(
         sizeof(IMPLEMENTED_REQUEST), // fRequestLength
         0U,                          // fPrefixLength
         0U,                          // fRequestPayloadLength
-        1U);                         // fResponseLength
+        1U);                         // _responseLength
 
     extendedDiagJob.setDefaultDiagSessionManager(fSessionManager);
 

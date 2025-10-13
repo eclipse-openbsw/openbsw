@@ -66,8 +66,8 @@ TEST_F(ReadIdentifierFromSliceRefJobTest, execute_valid_request)
 
     ::transport::TransportMessage responseMessage(_responseBuffer, sizeof(_responseBuffer));
 
-    _incomingDiagConnection.fpRequestMessage  = request.get();
-    _incomingDiagConnection.fpResponseMessage = &responseMessage;
+    _incomingDiagConnection.requestMessage  = request.get();
+    _incomingDiagConnection.responseMessage = &responseMessage;
 
     EXPECT_CALL(_sessionManager, getActiveSession())
         .WillRepeatedly(ReturnRef(DiagSession::APPLICATION_DEFAULT_SESSION()));
@@ -99,8 +99,8 @@ TEST_F(ReadIdentifierFromSliceRefJobTest, execute_valid_request_and_change_slice
 
     ::transport::TransportMessage responseMessage(_responseBuffer, sizeof(_responseBuffer));
 
-    _incomingDiagConnection.fpRequestMessage  = request.get();
-    _incomingDiagConnection.fpResponseMessage = &responseMessage;
+    _incomingDiagConnection.requestMessage  = request.get();
+    _incomingDiagConnection.responseMessage = &responseMessage;
 
     EXPECT_CALL(_sessionManager, getActiveSession())
         .WillRepeatedly(ReturnRef(DiagSession::APPLICATION_DEFAULT_SESSION()));

@@ -94,10 +94,13 @@ public:
 
     void shutdownIncomingConnections(::etl::delegate<void()> delegate);
 
-    uint16_t getSourceId() const override { return fConfiguration.DiagAddress; }
+    uint16_t getDispatcherSourceId() const override { return fConfiguration.DiagAddress; }
 
 #ifdef IS_VARIANT_HANDLING_NEEDED
-    virtual void setSourceId(uint16_t diagAddress) { fConfiguration.DiagAddress = diagAddress; }
+    virtual void setSourceAddress(uint16_t diagAddress)
+    {
+        fConfiguration.DiagAddress = diagAddress;
+    }
 #endif
 
 private:

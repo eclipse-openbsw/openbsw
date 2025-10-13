@@ -76,8 +76,8 @@ public:
     {
         if (fTransportMessage.getSourceId() != ::transport::TransportMessage::INVALID_ADDRESS)
         {
-            message.setSourceId(fTransportMessage.getSourceId());
-            message.setTargetId(fTransportMessage.getTargetId());
+            message.setSourceAddress(fTransportMessage.getSourceId());
+            message.setTargetAddress(fTransportMessage.getTargetId());
             message.append(fTransportMessage.getPayload(), fTransportMessage.getPayloadLength());
             message.setPayloadLength(fTransportMessage.getPayloadLength());
             return true;
@@ -90,8 +90,8 @@ public:
 
     void writeRequest(::transport::TransportMessage const& message) override
     {
-        fTransportMessage.setSourceId(message.getSourceId());
-        fTransportMessage.setTargetId(message.getTargetId());
+        fTransportMessage.setSourceAddress(message.getSourceId());
+        fTransportMessage.setTargetAddress(message.getTargetId());
         fTransportMessage.append(message.getPayload(), message.getPayloadLength());
         fTransportMessage.setPayloadLength(message.getPayloadLength());
     }
@@ -100,7 +100,7 @@ public:
     {
         fTransportMessage.init(
             fTransportMessage.getPayload(), fTransportMessage.getPayloadLength());
-        fTransportMessage.setSourceId(::transport::TransportMessage::INVALID_ADDRESS);
+        fTransportMessage.setSourceAddress(::transport::TransportMessage::INVALID_ADDRESS);
     }
 
 private:
@@ -126,8 +126,8 @@ TEST_F(ResumableResetDriverTest, driverStoresTransportMessageAndForcesShutdown)
         fLifecycleAdmin, _context, fResumableResetDriverPersistence, fTransportMessage);
     cut.resume(fDiagDispatcher);
     EXPECT_CALL(fDiagDispatcher, resume(_, _)).Times(0);
-    fTransportMessage.setSourceId(0x1234);
-    fTransportMessage.setTargetId(0x5678);
+    fTransportMessage.setSourceAddress(0x1234);
+    fTransportMessage.setTargetAddress(0x5678);
     uint8_t const payload[] = {0x22, 0x34};
     fTransportMessage.append(payload, sizeof(payload));
     fTransportMessage.setPayloadLength(sizeof(payload));
@@ -153,7 +153,7 @@ TEST_F(ResumableResetDriverTest, driverResetsStoredTransportMessageIfNoneGivenIn
         fLifecycleAdmin, _context, fResumableResetDriverPersistence, fTransportMessage);
     cut.resume(fDiagDispatcher);
     EXPECT_CALL(fDiagDispatcher, resume(_, _)).Times(0);
-    fResumableResetDriverPersistence.getTransportMessage().setSourceId(1U);
+    fResumableResetDriverPersistence.getTransportMessage().setSourceAddress(1U);
     ASSERT_TRUE(cut.prepareReset());
     EXPECT_EQ(
         uint32_t(TransportMessage::INVALID_ADDRESS),
@@ -167,8 +167,8 @@ TEST_F(ResumableResetDriverTest, driverResumesTransportMessageOnStartupIfStored)
 {
     ResumableResetDriver cut(
         fLifecycleAdmin, _context, fResumableResetDriverPersistence, fTransportMessage);
-    fResumableResetDriverPersistence.getTransportMessage().setSourceId(0x1425);
-    fResumableResetDriverPersistence.getTransportMessage().setTargetId(0x6823);
+    fResumableResetDriverPersistence.getTransportMessage().setSourceAddress(0x1425);
+    fResumableResetDriverPersistence.getTransportMessage().setTargetAddress(0x6823);
     uint8_t const payload[] = {0x34, 0x38};
     fResumableResetDriverPersistence.getTransportMessage().append(payload, sizeof(payload));
     fResumableResetDriverPersistence.getTransportMessage().setPayloadLength(sizeof(payload));
@@ -184,8 +184,8 @@ TEST_F(ResumableResetDriverTest, driverClearsPersistenceOnStartupIfEmptyMessageS
 {
     ResumableResetDriver cut(
         fLifecycleAdmin, _context, fResumableResetDriverPersistence, fTransportMessage);
-    fResumableResetDriverPersistence.getTransportMessage().setSourceId(0x1425);
-    fResumableResetDriverPersistence.getTransportMessage().setTargetId(0x6823);
+    fResumableResetDriverPersistence.getTransportMessage().setSourceAddress(0x1425);
+    fResumableResetDriverPersistence.getTransportMessage().setTargetAddress(0x6823);
     cut.resume(fDiagDispatcher);
     EXPECT_EQ(
         uint32_t(TransportMessage::INVALID_ADDRESS),
@@ -197,8 +197,8 @@ TEST_F(ResumableResetDriverTest, prepareResetFailsIfModeChangeIsNotAllowed)
     ResumableResetDriver cut(
         fLifecycleAdmin, _context, fResumableResetDriverPersistence, fTransportMessage);
     cut.resume(fDiagDispatcher);
-    fTransportMessage.setSourceId(0x1234);
-    fTransportMessage.setTargetId(0x5678);
+    fTransportMessage.setSourceAddress(0x1234);
+    fTransportMessage.setTargetAddress(0x5678);
     uint8_t const payload[] = {0x22, 0x34};
     fTransportMessage.append(payload, sizeof(payload));
     fTransportMessage.setPayloadLength(sizeof(payload));
@@ -214,8 +214,8 @@ TEST_F(ResumableResetDriverTest, driverAbortsResetIfShutdownFails)
     ResumableResetDriver cut(
         fLifecycleAdmin, _context, fResumableResetDriverPersistence, fTransportMessage);
     cut.resume(fDiagDispatcher);
-    fTransportMessage.setSourceId(0x1234);
-    fTransportMessage.setTargetId(0x5678);
+    fTransportMessage.setSourceAddress(0x1234);
+    fTransportMessage.setTargetAddress(0x5678);
     uint8_t const payload[] = {0x22, 0x34};
     fTransportMessage.append(payload, sizeof(payload));
     fTransportMessage.setPayloadLength(sizeof(payload));
@@ -249,8 +249,8 @@ TEST_F(ResumableResetDriverTest, driverListensToLifecycleEvents)
         0x6677,
         300U);
     cut.init(fDiagDispatcher);
-    fResumableResetDriverPersistence.getTransportMessage().setSourceId(0x6321);
-    fResumableResetDriverPersistence.getTransportMessage().setTargetId(0x6823);
+    fResumableResetDriverPersistence.getTransportMessage().setSourceAddress(0x6321);
+    fResumableResetDriverPersistence.getTransportMessage().setTargetAddress(0x6823);
     uint8_t const payload[] = {0x34, 0x38};
     fResumableResetDriverPersistence.getTransportMessage().append(payload, sizeof(payload));
     fResumableResetDriverPersistence.getTransportMessage().setPayloadLength(sizeof(payload));
@@ -276,8 +276,8 @@ TEST_F(
         IUdsLifecycleConnector::POWER_DOWN,
         0x6677,
         300U);
-    fResumableResetDriverPersistence.getTransportMessage().setSourceId(0x1425);
-    fResumableResetDriverPersistence.getTransportMessage().setTargetId(0x6823);
+    fResumableResetDriverPersistence.getTransportMessage().setSourceAddress(0x1425);
+    fResumableResetDriverPersistence.getTransportMessage().setTargetAddress(0x6823);
     uint8_t const payload[] = {0x34, 0x38};
     fResumableResetDriverPersistence.getTransportMessage().append(payload, sizeof(payload));
     fResumableResetDriverPersistence.getTransportMessage().setPayloadLength(sizeof(payload));
@@ -300,8 +300,8 @@ TEST_F(ResumableResetDriverTest, driverResumesTransportMessageAfterTimeoutInCase
         IUdsLifecycleConnector::POWER_DOWN,
         0x6677,
         300U);
-    fResumableResetDriverPersistence.getTransportMessage().setSourceId(0x6677);
-    fResumableResetDriverPersistence.getTransportMessage().setTargetId(0x6823);
+    fResumableResetDriverPersistence.getTransportMessage().setSourceAddress(0x6677);
+    fResumableResetDriverPersistence.getTransportMessage().setTargetAddress(0x6823);
     uint8_t const payload[] = {0x34, 0x38};
     fResumableResetDriverPersistence.getTransportMessage().append(payload, sizeof(payload));
     fResumableResetDriverPersistence.getTransportMessage().setPayloadLength(sizeof(payload));
@@ -330,8 +330,8 @@ TEST_F(
         IUdsLifecycleConnector::POWER_DOWN,
         0x6677,
         0U);
-    fResumableResetDriverPersistence.getTransportMessage().setSourceId(0x6677);
-    fResumableResetDriverPersistence.getTransportMessage().setTargetId(0x6823);
+    fResumableResetDriverPersistence.getTransportMessage().setSourceAddress(0x6677);
+    fResumableResetDriverPersistence.getTransportMessage().setTargetAddress(0x6823);
     uint8_t const payload[] = {0x34, 0x38};
     fResumableResetDriverPersistence.getTransportMessage().append(payload, sizeof(payload));
     fResumableResetDriverPersistence.getTransportMessage().setPayloadLength(sizeof(payload));

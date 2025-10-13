@@ -176,8 +176,8 @@ struct TransmissionBenchmark : public ::benchmark::Fixture
         {
             data[idx] = idx % 256;
         }
-        transportMessage.setSourceId(0x10U);
-        transportMessage.setTargetId(0x11U);
+        transportMessage.setSourceAddress(0x10U);
+        transportMessage.setTargetAddress(0x11U);
         transportMessage.append(data, sizeof(data));
         transportMessage.setPayloadLength(sizeof(data));
     }
@@ -408,8 +408,8 @@ void TransmissionFullSegmentedMessage(benchmark::State& state)
     {
         data[idx] = idx % 256;
     }
-    transportMessage.setSourceId(0x10U);
-    transportMessage.setTargetId(0x11U);
+    transportMessage.setSourceAddress(0x10U);
+    transportMessage.setTargetAddress(0x11U);
     transportMessage.append(data, sizeof(data));
     transportMessage.setPayloadLength(sizeof(data));
 
@@ -535,8 +535,8 @@ void TransmissionMultipleTransportLayersFullSegmentedMessages(benchmark::State& 
         {
             data[messageIndex][byteIndex] = (messageIndex + byteIndex) % 0xFF;
         }
-        transportMessage[messageIndex].setSourceId(messageIndex + 3);
-        transportMessage[messageIndex].setTargetId(messageIndex + 2);
+        transportMessage[messageIndex].setSourceAddress(messageIndex + 3);
+        transportMessage[messageIndex].setTargetAddress(messageIndex + 2);
         transportMessage[messageIndex].append(data[messageIndex], sizeof(data[messageIndex]));
         transportMessage[messageIndex].setPayloadLength(sizeof(data[messageIndex]));
 
@@ -666,8 +666,8 @@ void TransmissionMultipleFullSegmentedMessages(benchmark::State& state)
         {
             data[messageIndex][byteIndex] = (messageIndex + byteIndex) % 0xFF;
         }
-        transportMessage[messageIndex].setSourceId(messageIndex + 3);
-        transportMessage[messageIndex].setTargetId(messageIndex + 2);
+        transportMessage[messageIndex].setSourceAddress(messageIndex + 3);
+        transportMessage[messageIndex].setTargetAddress(messageIndex + 2);
         transportMessage[messageIndex].append(data[messageIndex], sizeof(data[messageIndex]));
         transportMessage[messageIndex].setPayloadLength(sizeof(data[messageIndex]));
 

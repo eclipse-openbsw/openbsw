@@ -104,7 +104,7 @@ When we receive a message in router, we can convert between wide/cropped address
     if(targetBusId == ::busid::BusId::CAN())
     {
         uint16_t croppedTargetAddress = LogicalAddressConverterGateway::convertDoipAddressTo8Bit(targetAddress);
-        pTransportMessage->setTargetId(croppedTargetAddress);
+        pTransportMessage->setTargetAddress(croppedTargetAddress);
     }
 
 If the address passed is not found in any list, the unchanged argument will be returned.

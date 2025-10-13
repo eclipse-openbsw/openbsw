@@ -45,7 +45,7 @@ struct ManagedIncomingDiagConnectionTest : Test
         fpDiagnosisConfiguration;
     TransportMessageProvidingListenerMock* fpTpRouterMock;
     AbstractTransportLayerMock* fpTpLayerMock;
-    DiagDispatcher* fpDiagDispatcher;
+    DiagDispatcher* diagDispatcher;
     DiagSessionManagerMock* fpSessionProvider;
     DiagJobRoot* fpDiagJobRoot;
 
@@ -71,14 +71,14 @@ struct ManagedIncomingDiagConnectionTest : Test
                 true,
                 fContext);
 
-        fpDiagDispatcher
+        diagDispatcher
             = new DiagDispatcher(*fpDiagnosisConfiguration, *fpSessionProvider, *fpDiagJobRoot);
 
-        fpIncomingDiagConnection                       = new IncomingDiagConnection(fContext);
-        fpIncomingDiagConnection->fpMessageSender      = fpTpLayerMock;
-        fpIncomingDiagConnection->fpDiagDispatcher     = fpDiagDispatcher;
-        fpIncomingDiagConnection->fpDiagSessionManager = fpSessionProvider;
-        fpIncomingDiagConnection->fpMessageSender      = fpTpLayerMock;
+        fpIncomingDiagConnection                     = new IncomingDiagConnection(fContext);
+        fpIncomingDiagConnection->messageSender      = fpTpLayerMock;
+        fpIncomingDiagConnection->diagDispatcher     = diagDispatcher;
+        fpIncomingDiagConnection->diagSessionManager = fpSessionProvider;
+        fpIncomingDiagConnection->messageSender      = fpTpLayerMock;
     }
 
     virtual void TearDown()
@@ -91,7 +91,7 @@ struct ManagedIncomingDiagConnectionTest : Test
 #endif
         delete fpIncomingDiagConnection;
         delete fpDiagJobRoot;
-        delete fpDiagDispatcher;
+        delete diagDispatcher;
         delete fpDiagnosisConfiguration;
         delete fpSessionProvider;
         delete fpTpRouterMock;
@@ -111,10 +111,10 @@ struct ManagedIncomingDiagConnectionTest : Test
 TEST_F(ManagedIncomingDiagConnectionTest, constructor)
 {
     IncomingDiagConnection c{fContext};
-    ASSERT_EQ(TransportConfiguration::INVALID_DIAG_ADDRESS, c.fSourceId);
-    ASSERT_EQ(TransportConfiguration::INVALID_DIAG_ADDRESS, c.fTargetId);
-    ASSERT_EQ(nullptr, c.fpRequestMessage);
-    ASSERT_EQ(nullptr, c.fpResponseMessage);
+    ASSERT_EQ(TransportConfiguration::INVALID_DIAG_ADDRESS, c.sourceAddress);
+    ASSERT_EQ(TransportConfiguration::INVALID_DIAG_ADDRESS, c.targetAddress);
+    ASSERT_EQ(nullptr, c.requestMessage);
+    ASSERT_EQ(nullptr, c.responseMessage);
 }
 
 /**
@@ -125,9 +125,9 @@ TEST_F(ManagedIncomingDiagConnectionTest, constructor)
 TEST_F(ManagedIncomingDiagConnectionTest, setRequestMessage)
 {
     TransportMessageWithBuffer pRequest(1024);
-    fpIncomingDiagConnection->fpRequestMessage = pRequest.get();
+    fpIncomingDiagConnection->requestMessage = pRequest.get();
 
-    ASSERT_EQ(pRequest.get(), fpIncomingDiagConnection->fpRequestMessage);
+    ASSERT_EQ(pRequest.get(), fpIncomingDiagConnection->requestMessage);
 }
 
 /**
@@ -139,9 +139,9 @@ TEST_F(ManagedIncomingDiagConnectionTest, setResponseMessage)
 {
     TransportMessageWithBuffer pResponse(1024);
 
-    fpIncomingDiagConnection->fpResponseMessage = pResponse.get();
+    fpIncomingDiagConnection->responseMessage = pResponse.get();
 
-    ASSERT_EQ(pResponse.get(), fpIncomingDiagConnection->fpResponseMessage);
+    ASSERT_EQ(pResponse.get(), fpIncomingDiagConnection->responseMessage);
 }
 
 /**
@@ -158,7 +158,7 @@ TEST_F(ManagedIncomingDiagConnectionTest, addIdentifier)
     {
         pRequest->append(identifierCount);
     }
-    fpIncomingDiagConnection->fpRequestMessage = pRequest.get();
+    fpIncomingDiagConnection->requestMessage = pRequest.get();
     for (uint16_t identifierCount = 1;
          identifierCount <= 6; // IncomingDiagConnection::MAXIMUM_NUMBER_OF_IDENTIFIERS;
          ++identifierCount)
@@ -180,8 +180,8 @@ TEST_F(ManagedIncomingDiagConnectionTest, sendPositiveResponse)
 {
     uint32_t const MAX_PAYLOAD_LENGTH = 1024;
     TransportMessageWithBuffer pExpectedResponse(MAX_PAYLOAD_LENGTH);
-    pExpectedResponse->setTargetId(TESTER_ID);
-    pExpectedResponse->setSourceId(DIAGNOSIS_ID);
+    pExpectedResponse->setTargetAddress(TESTER_ID);
+    pExpectedResponse->setSourceAddress(DIAGNOSIS_ID);
     pExpectedResponse->resetValidBytes();
     pExpectedResponse->append(SERVICE_ID + DiagReturnCode::POSITIVE_RESPONSE_OFFSET);
     pExpectedResponse->append(1);
@@ -190,10 +190,10 @@ TEST_F(ManagedIncomingDiagConnectionTest, sendPositiveResponse)
     pExpectedResponse->setPayloadLength(4); // +1 because of 1 identifier (service id)
 
     TransportMessageWithBuffer pRequest(MAX_PAYLOAD_LENGTH);
-    fpIncomingDiagConnection->fSourceId        = TESTER_ID;
-    fpIncomingDiagConnection->fTargetId        = DIAGNOSIS_ID;
-    fpIncomingDiagConnection->fServiceId       = SERVICE_ID;
-    fpIncomingDiagConnection->fpRequestMessage = pRequest.get();
+    fpIncomingDiagConnection->sourceAddress  = TESTER_ID;
+    fpIncomingDiagConnection->targetAddress  = DIAGNOSIS_ID;
+    fpIncomingDiagConnection->serviceId      = SERVICE_ID;
+    fpIncomingDiagConnection->requestMessage = pRequest.get();
     fpIncomingDiagConnection->open(false);
     // save service id
     fpIncomingDiagConnection->addIdentifier();
@@ -210,7 +210,7 @@ TEST_F(ManagedIncomingDiagConnectionTest, sendPositiveResponse)
         .Times(1);
     EXPECT_CALL(*fpTpLayerMock, send(Eq(*pExpectedResponse), Eq(fpIncomingDiagConnection)))
         .WillOnce(Return(AbstractTransportLayer::ErrorCode::TP_OK));
-    fpIncomingDiagConnection->fpResponseMessage = pExpectedResponse.get();
+    fpIncomingDiagConnection->responseMessage = pExpectedResponse.get();
     fpIncomingDiagConnection->sendPositiveResponse(sender);
     fContext.execute();
 }

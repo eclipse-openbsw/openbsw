@@ -105,8 +105,8 @@ struct DoCanTransmitterTest : ::testing::Test
         message.init(buffer, N);
         message.setPayloadLength(N);
         message.increaseValidBytes(N);
-        message.setSourceId(tPair.getSourceId());
-        message.setTargetId(tPair.getTargetId());
+        message.setSourceAddress(tPair.getSourceId());
+        message.setTargetAddress(tPair.getTargetId());
         EXPECT_CALL(_addressConverterMock, getTransmissionParameters(tPair, _))
             .WillRepeatedly(DoAll(SetArgReferee<1>(aPair), Return(&_codec)));
     }
@@ -1582,8 +1582,8 @@ TEST_F(DoCanTransmitterTest, testSendEmptyMessage)
     auto const transportPair = DoCanTransportAddressPair(0x45, 0x54);
     message.init(data, sizeof(data));
     message.setPayloadLength(sizeof(data));
-    message.setSourceId(transportPair.getSourceId());
-    message.setTargetId(transportPair.getTargetId());
+    message.setSourceAddress(transportPair.getSourceId());
+    message.setTargetAddress(transportPair.getTargetId());
 
     EXPECT_CALL(_addressConverterMock, getTransmissionParameters(transportPair, _))
         .WillRepeatedly(DoAll(SetArgReferee<1>(addrPair), Return(&_codec)));
@@ -1626,8 +1626,8 @@ TEST_F(DoCanTransmitterTest, testSendTooBigMessage)
     message.init(data, sizeof(data));
     message.setPayloadLength(sizeof(data));
     message.increaseValidBytes(sizeof(data));
-    message.setSourceId(transportPair.getSourceId());
-    message.setTargetId(transportPair.getTargetId());
+    message.setSourceAddress(transportPair.getSourceId());
+    message.setTargetAddress(transportPair.getTargetId());
     EXPECT_CALL(smallAddressConverterMock, getTransmissionParameters(transportPair, _))
         .WillRepeatedly(DoAll(SetArgReferee<1>(addrPair), Return(&smallFrameCodec)));
 
@@ -1658,8 +1658,8 @@ TEST_F(DoCanTransmitterTest, testSendIncompleteMessage)
     auto const transportPair = DoCanTransportAddressPair(0x45, 0x54);
     message.init(data, sizeof(data));
     message.setPayloadLength(sizeof(data));
-    message.setSourceId(transportPair.getSourceId());
-    message.setTargetId(transportPair.getTargetId());
+    message.setSourceAddress(transportPair.getSourceId());
+    message.setTargetAddress(transportPair.getTargetId());
     EXPECT_CALL(_addressConverterMock, getTransmissionParameters(transportPair, _))
         .WillRepeatedly(DoAll(SetArgReferee<1>(addrPair), Return(&_codec)));
 

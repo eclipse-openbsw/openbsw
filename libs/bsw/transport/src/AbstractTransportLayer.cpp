@@ -36,8 +36,8 @@ AbstractTransportLayer::TransportMessageProvidingListenerHelper::
 ITransportMessageProvidingListener::ErrorCode
 AbstractTransportLayer::TransportMessageProvidingListenerHelper::getTransportMessage(
     uint8_t const srcBusId,
-    uint16_t const sourceId,
-    uint16_t const targetId,
+    uint16_t const sourceAddress,
+    uint16_t const targetAddress,
     uint16_t const size,
     ::etl::span<uint8_t const> const& peek,
     TransportMessage*& pTransportMessage)
@@ -45,7 +45,7 @@ AbstractTransportLayer::TransportMessageProvidingListenerHelper::getTransportMes
     if (fpMessageProvider != nullptr)
     {
         return fpMessageProvider->getTransportMessage(
-            srcBusId, sourceId, targetId, size, peek, pTransportMessage);
+            srcBusId, sourceAddress, targetAddress, size, peek, pTransportMessage);
     }
     Logger::warn(
         TRANSPORT,

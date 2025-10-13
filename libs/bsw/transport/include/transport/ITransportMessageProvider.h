@@ -29,9 +29,9 @@ public:
         /** no error */
         TPMSG_OK,
         /** source id is invalid */
-        TPMSG_INVALID_SRC_ID,
+        TPMSG_INVALID_SRC_ADDRESS,
         /** target id is invalid */
-        TPMSG_INVALID_TGT_ID,
+        TPMSG_INVALID_TGT_ADDRESS,
         /** no TransportMessage is available */
         TPMSG_NO_MSG_AVAILABLE,
         /** requested size is too large*/
@@ -41,18 +41,18 @@ public:
     };
 
     /**
-     * returns a TransportMessage for a given sourceBusId and targetId
+     * returns a TransportMessage for a given sourceBusId and targetAddress
      * \param srcBusId          id of bus message is received from
-     * \param sourceId          id of TransportMessage's source
-     * \param targetId          id of TransportMessage's target
+     * \param sourceAddress          id of TransportMessage's source
+     * \param targetAddress          id of TransportMessage's target
      * \param size              size of the requested TransportMessage
      * \param peek              slice to the payload of the underlying data
      * buffer \param pTransportMessage a pointer to TransportMessage (0L if no
      *          message was available) is written to this pointer.
      * \return
      *          - TPMSG_OK: pTransportMessage has been set
-     *          - TPMSG_INVALID_SRC_ID: sourceId is not allowed from srcBusId
-     *          - TPMSG_INVALID_TGT_ID: requested targetId is invalid
+     *          - TPMSG_INVALID_SRC_ADDRESS: sourceAddress is not allowed from srcBusId
+     *          - TPMSG_INVALID_TGT_ADDRESS: requested targetAddress is invalid
      *          - TPMSG_NO_MSG_AVAILABLE: all params are valid but all
      *          TransportMessages are currently locked
      *          - TPMSG_NOT_RESPONSIBLE: not the correct provider for this
@@ -64,8 +64,8 @@ public:
      */
     virtual ErrorCode getTransportMessage(
         uint8_t srcBusId,
-        uint16_t sourceId,
-        uint16_t targetId,
+        uint16_t sourceAddress,
+        uint16_t targetAddress,
         uint16_t size,
         ::etl::span<uint8_t const> const& peek,
         TransportMessage*& pTransportMessage)

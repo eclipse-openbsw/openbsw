@@ -39,7 +39,7 @@ TEST_F(TesterPresentTest, process_which_is_called_by_execute_should_return_DiagR
 
     TransportMessageWithBuffer pRequest(0xF1U, 0x10U, request, 0U);
 
-    fIncomingDiagConnection.fpRequestMessage = pRequest.get();
+    fIncomingDiagConnection.requestMessage = pRequest.get();
 
     EXPECT_CALL(fSessionManager, getActiveSession())
         .WillRepeatedly(ReturnRef(DiagSession::APPLICATION_DEFAULT_SESSION()));
@@ -62,7 +62,7 @@ TEST_F(
 
     TransportMessageWithBuffer pRequest(0xF1U, 0x10U, request, 0U);
 
-    fIncomingDiagConnection.fpRequestMessage = pRequest.get();
+    fIncomingDiagConnection.requestMessage = pRequest.get();
 
     EXPECT_CALL(fSessionManager, getActiveSession())
         .WillRepeatedly(ReturnRef(DiagSession::APPLICATION_DEFAULT_SESSION()));

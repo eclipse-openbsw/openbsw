@@ -316,8 +316,8 @@ TEST_F(DoCanTransportLayerTest, testTransportMessageTransmissionLifecycle)
         BufferedTransportMessage<30> transportMessage;
         uint8_t const data[]
             = {0x12, 0x34, 0x56, 0x78, 0x19, 0x38, 0x9a, 0x5f, 0x14, 0x91, 0xa3, 0x57, 0x89, 0x99};
-        transportMessage.setSourceId(0x56U);
-        transportMessage.setTargetId(0x64U);
+        transportMessage.setSourceAddress(0x56U);
+        transportMessage.setTargetAddress(0x64U);
         transportMessage.append(data, sizeof(data));
         transportMessage.setPayloadLength(sizeof(data));
         EXPECT_CALL(
@@ -391,8 +391,8 @@ TEST_F(DoCanTransportLayerTest, testTransportMessageTransmissionLifecycle)
         // send to unknown address pair
         BufferedTransportMessage<10> transportMessage;
         uint8_t const data[] = {0x12, 0x34, 0x56, 0x78, 0x19};
-        transportMessage.setSourceId(0x56U);
-        transportMessage.setTargetId(0x64U);
+        transportMessage.setSourceAddress(0x56U);
+        transportMessage.setTargetAddress(0x64U);
         transportMessage.append(data, sizeof(data));
         transportMessage.setPayloadLength(sizeof(data));
         EXPECT_CALL(

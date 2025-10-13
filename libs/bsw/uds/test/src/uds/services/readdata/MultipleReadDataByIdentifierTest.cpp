@@ -151,8 +151,8 @@ public:
         fDiagRoot.addAbstractDiagJob(fDiagJob);
         fMyMultipleReadDataByIdentifier.setDefaultDiagSessionManager(fSessionManager);
         fMyMultipleReadDataByIdentifierWithFirstJob.setDefaultDiagSessionManager(fSessionManager);
-        fIncomingDiagConnection.fOpen      = true;
-        fIncomingDiagConnection.fServiceId = ::ServiceId::READ_DATA_BY_IDENTIFIER;
+        fIncomingDiagConnection.isOpen    = true;
+        fIncomingDiagConnection.serviceId = ::ServiceId::READ_DATA_BY_IDENTIFIER;
 
         fMyMultipleReadDataByIdentifier.addAbstractDiagJob(fDiagJob);
         fDiagRoot.addAbstractDiagJob(fDiagJob);
@@ -312,9 +312,9 @@ TEST_F(
     TransportMessageWithBuffer pRequest(
         SOURCE_ID, TARGET_ID, DATA_IDENTIFIERS_REQUEST, AbstractDiagJob::VARIABLE_RESPONSE_LENGTH);
 
-    fIncomingDiagConnection.fpRequestMessage     = pRequest.get();
-    fIncomingDiagConnection.fpMessageSender      = &fUdsDispatcher;
-    fIncomingDiagConnection.fpDiagSessionManager = &fSessionManager;
+    fIncomingDiagConnection.requestMessage     = pRequest.get();
+    fIncomingDiagConnection.messageSender      = &fUdsDispatcher;
+    fIncomingDiagConnection.diagSessionManager = &fSessionManager;
 
     EXPECT_CALL(fDiagJob, verify(_, _)).WillOnce(Return(DiagReturnCode::OK));
 
@@ -350,8 +350,8 @@ TEST_F(
     CONTEXT_EXECUTE;
 
     auto buffer = ::etl::span<uint8_t const>(
-        fIncomingDiagConnection.fpResponseMessage->getPayload(),
-        fIncomingDiagConnection.fpResponseMessage->getPayloadLength());
+        fIncomingDiagConnection.responseMessage->getPayload(),
+        fIncomingDiagConnection.responseMessage->getPayloadLength());
 
     EXPECT_THAT(buffer, ElementsAreArray(EXPECTED_RESPONSE));
 }
@@ -381,9 +381,9 @@ TEST_F(
     TransportMessageWithBuffer pRequest(
         SOURCE_ID, TARGET_ID, DATA_IDENTIFIERS_REQUEST, AbstractDiagJob::VARIABLE_RESPONSE_LENGTH);
 
-    fIncomingDiagConnection.fpRequestMessage     = pRequest.get();
-    fIncomingDiagConnection.fpMessageSender      = &fUdsDispatcher;
-    fIncomingDiagConnection.fpDiagSessionManager = &fSessionManager;
+    fIncomingDiagConnection.requestMessage     = pRequest.get();
+    fIncomingDiagConnection.messageSender      = &fUdsDispatcher;
+    fIncomingDiagConnection.diagSessionManager = &fSessionManager;
 
     Sequence seq;
 
@@ -432,8 +432,8 @@ TEST_F(
     CONTEXT_EXECUTE;
 
     auto buffer = ::etl::span<uint8_t const>(
-        fIncomingDiagConnection.fpResponseMessage->getPayload(),
-        fIncomingDiagConnection.fpResponseMessage->getPayloadLength());
+        fIncomingDiagConnection.responseMessage->getPayload(),
+        fIncomingDiagConnection.responseMessage->getPayloadLength());
 
     EXPECT_THAT(buffer, ElementsAreArray(EXPECTED_RESPONSE));
 }
@@ -466,9 +466,9 @@ TEST_F(
             MultipleReadDataByIdentifierTest,
             &MultipleReadDataByIdentifierTest::checkResponse>(*this));
 
-    fIncomingDiagConnection.fpRequestMessage     = pRequest.get();
-    fIncomingDiagConnection.fpMessageSender      = &fUdsDispatcher;
-    fIncomingDiagConnection.fpDiagSessionManager = &fSessionManager;
+    fIncomingDiagConnection.requestMessage     = pRequest.get();
+    fIncomingDiagConnection.messageSender      = &fUdsDispatcher;
+    fIncomingDiagConnection.diagSessionManager = &fSessionManager;
 
     Sequence seq;
 
@@ -511,8 +511,8 @@ TEST_F(
     CONTEXT_EXECUTE;
 
     auto buffer = ::etl::span<uint8_t const>(
-        fIncomingDiagConnection.fpResponseMessage->getPayload(),
-        fIncomingDiagConnection.fpResponseMessage->getPayloadLength());
+        fIncomingDiagConnection.responseMessage->getPayload(),
+        fIncomingDiagConnection.responseMessage->getPayloadLength());
 
     EXPECT_THAT(buffer, ElementsAreArray(EXPECTED_RESPONSE));
 }
@@ -545,9 +545,9 @@ TEST_F(
     TransportMessageWithBuffer pRequest(
         SOURCE_ID, TARGET_ID, DATA_IDENTIFIERS_REQUEST, AbstractDiagJob::VARIABLE_RESPONSE_LENGTH);
 
-    fIncomingDiagConnection.fpRequestMessage     = pRequest.get();
-    fIncomingDiagConnection.fpMessageSender      = &fUdsDispatcher;
-    fIncomingDiagConnection.fpDiagSessionManager = &fSessionManager;
+    fIncomingDiagConnection.requestMessage     = pRequest.get();
+    fIncomingDiagConnection.messageSender      = &fUdsDispatcher;
+    fIncomingDiagConnection.diagSessionManager = &fSessionManager;
 
     EXPECT_CALL(fDiagJob, verify(_, _)).WillOnce(Return(DiagReturnCode::OK));
 
@@ -598,8 +598,8 @@ TEST_F(
     Mock::VerifyAndClearExpectations(&fSessionManager);
 
     auto buffer = ::etl::span<uint8_t const>(
-        fIncomingDiagConnection.fpResponseMessage->getPayload(),
-        fIncomingDiagConnection.fpResponseMessage->getPayloadLength());
+        fIncomingDiagConnection.responseMessage->getPayload(),
+        fIncomingDiagConnection.responseMessage->getPayloadLength());
 
     EXPECT_THAT(buffer, ElementsAreArray(EXPECTED_RESPONSE));
 }
@@ -627,9 +627,9 @@ TEST_F(
         INVALID_DATA_IDENTIFIERS_REQUEST,
         AbstractDiagJob::VARIABLE_RESPONSE_LENGTH);
 
-    fIncomingDiagConnection.fpRequestMessage     = pRequest.get();
-    fIncomingDiagConnection.fpMessageSender      = &fUdsDispatcher;
-    fIncomingDiagConnection.fpDiagSessionManager = &fSessionManager;
+    fIncomingDiagConnection.requestMessage     = pRequest.get();
+    fIncomingDiagConnection.messageSender      = &fUdsDispatcher;
+    fIncomingDiagConnection.diagSessionManager = &fSessionManager;
 
     EXPECT_CALL(fSessionManager, getActiveSession())
         .WillRepeatedly(ReturnRef(DiagSession::APPLICATION_DEFAULT_SESSION()));
@@ -664,8 +664,8 @@ TEST_F(
     CONTEXT_EXECUTE;
 
     auto buffer = ::etl::span<uint8_t const>(
-        fIncomingDiagConnection.fpResponseMessage->getPayload(),
-        fIncomingDiagConnection.fpResponseMessage->getPayloadLength());
+        fIncomingDiagConnection.responseMessage->getPayload(),
+        fIncomingDiagConnection.responseMessage->getPayloadLength());
 
     EXPECT_THAT(buffer, ElementsAreArray(EXPECTED_RESPONSE));
 }
@@ -693,9 +693,9 @@ TEST_F(
         INVALID_DATA_IDENTIFIERS_REQUEST,
         AbstractDiagJob::VARIABLE_RESPONSE_LENGTH);
 
-    fIncomingDiagConnection.fpRequestMessage     = pRequest.get();
-    fIncomingDiagConnection.fpMessageSender      = &fUdsDispatcher;
-    fIncomingDiagConnection.fpDiagSessionManager = &fSessionManager;
+    fIncomingDiagConnection.requestMessage     = pRequest.get();
+    fIncomingDiagConnection.messageSender      = &fUdsDispatcher;
+    fIncomingDiagConnection.diagSessionManager = &fSessionManager;
 
     EXPECT_CALL(fSessionManager, getActiveSession())
         .WillRepeatedly(ReturnRef(DiagSession::APPLICATION_DEFAULT_SESSION()));
@@ -728,8 +728,8 @@ TEST_F(
     CONTEXT_EXECUTE;
 
     auto buffer = ::etl::span<uint8_t const>(
-        fIncomingDiagConnection.fpResponseMessage->getPayload(),
-        fIncomingDiagConnection.fpResponseMessage->getPayloadLength());
+        fIncomingDiagConnection.responseMessage->getPayload(),
+        fIncomingDiagConnection.responseMessage->getPayloadLength());
 
     EXPECT_THAT(buffer, ElementsAreArray(EXPECTED_RESPONSE));
 }
@@ -765,9 +765,9 @@ TEST_F(MultipleReadDataByIdentifierTest, get_did_limit_is_called_and_checked_if_
     TransportMessageWithBuffer pRequest(
         SOURCE_ID, TARGET_ID, DATA_IDENTIFIERS_REQUEST, AbstractDiagJob::VARIABLE_RESPONSE_LENGTH);
 
-    fIncomingDiagConnection.fpRequestMessage     = pRequest.get();
-    fIncomingDiagConnection.fpMessageSender      = &fUdsDispatcher;
-    fIncomingDiagConnection.fpDiagSessionManager = &fSessionManager;
+    fIncomingDiagConnection.requestMessage     = pRequest.get();
+    fIncomingDiagConnection.messageSender      = &fUdsDispatcher;
+    fIncomingDiagConnection.diagSessionManager = &fSessionManager;
 
     EXPECT_CALL(fDiagJob, verify(_, _)).WillOnce(Return(DiagReturnCode::OK));
 
@@ -820,8 +820,8 @@ TEST_F(MultipleReadDataByIdentifierTest, get_did_limit_is_called_and_checked_if_
     Mock::VerifyAndClearExpectations(&fSessionManager);
 
     auto buffer = ::etl::span<uint8_t const>(
-        fIncomingDiagConnection.fpResponseMessage->getPayload(),
-        fIncomingDiagConnection.fpResponseMessage->getPayloadLength());
+        fIncomingDiagConnection.responseMessage->getPayload(),
+        fIncomingDiagConnection.responseMessage->getPayloadLength());
 
     EXPECT_THAT(buffer, ElementsAreArray(EXPECTED_RESPONSE));
 }
@@ -857,9 +857,9 @@ TEST_F(MultipleReadDataByIdentifierTest, get_did_limit_is_called_and_not_checked
     TransportMessageWithBuffer pRequest(
         SOURCE_ID, TARGET_ID, DATA_IDENTIFIERS_REQUEST, AbstractDiagJob::VARIABLE_RESPONSE_LENGTH);
 
-    fIncomingDiagConnection.fpRequestMessage     = pRequest.get();
-    fIncomingDiagConnection.fpMessageSender      = &fUdsDispatcher;
-    fIncomingDiagConnection.fpDiagSessionManager = &fSessionManager;
+    fIncomingDiagConnection.requestMessage     = pRequest.get();
+    fIncomingDiagConnection.messageSender      = &fUdsDispatcher;
+    fIncomingDiagConnection.diagSessionManager = &fSessionManager;
 
     EXPECT_CALL(fDiagJob, verify(_, _)).WillOnce(Return(DiagReturnCode::OK));
 
@@ -912,8 +912,8 @@ TEST_F(MultipleReadDataByIdentifierTest, get_did_limit_is_called_and_not_checked
     Mock::VerifyAndClearExpectations(&fSessionManager);
 
     auto buffer = ::etl::span<uint8_t const>(
-        fIncomingDiagConnection.fpResponseMessage->getPayload(),
-        fIncomingDiagConnection.fpResponseMessage->getPayloadLength());
+        fIncomingDiagConnection.responseMessage->getPayload(),
+        fIncomingDiagConnection.responseMessage->getPayloadLength());
 
     EXPECT_THAT(buffer, ElementsAreArray(EXPECTED_RESPONSE));
 }
@@ -935,9 +935,9 @@ TEST_F(MultipleReadDataByIdentifierTest, get_did_limit_is_called_and_returns_ISO
     TransportMessageWithBuffer pRequest(
         SOURCE_ID, TARGET_ID, DATA_IDENTIFIERS_REQUEST, AbstractDiagJob::VARIABLE_RESPONSE_LENGTH);
 
-    fIncomingDiagConnection.fpRequestMessage     = pRequest.get();
-    fIncomingDiagConnection.fpMessageSender      = &fUdsDispatcher;
-    fIncomingDiagConnection.fpDiagSessionManager = &fSessionManager;
+    fIncomingDiagConnection.requestMessage     = pRequest.get();
+    fIncomingDiagConnection.messageSender      = &fUdsDispatcher;
+    fIncomingDiagConnection.diagSessionManager = &fSessionManager;
 
     EXPECT_CALL(fSessionManager, getActiveSession())
         .WillRepeatedly(ReturnRef(DiagSession::APPLICATION_DEFAULT_SESSION()));

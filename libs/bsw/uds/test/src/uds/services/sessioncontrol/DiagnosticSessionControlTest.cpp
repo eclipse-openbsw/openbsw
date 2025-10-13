@@ -87,8 +87,8 @@ struct DiagnosticSessionControlTest : ::testing::Test
     {
         fResponseMessage.init(fRequestBuffer.data(), fRequestBuffer.size());
 
-        fIncomingDiagConnection.fpRequestMessage = &fResponseMessage;
-        fIncomingDiagConnection.fSourceId        = 0x10U;
+        fIncomingDiagConnection.requestMessage = &fResponseMessage;
+        fIncomingDiagConnection.sourceAddress  = 0x10U;
 
         fDiagnosticSessionControl.addDiagSessionListener(fDiagSessionChangedListener);
     }
@@ -415,7 +415,7 @@ TEST_F(
     transport::TransportMessage responseMessage;
     ::etl::array<uint8_t, 4> requestBuffer{};
     responseMessage.init(requestBuffer.data(), requestBuffer.size());
-    fIncomingDiagConnection.fpRequestMessage = &responseMessage;
+    fIncomingDiagConnection.requestMessage = &responseMessage;
 
     EXPECT_EQ(
         DiagReturnCode::ISO_RESPONSE_TOO_LONG,

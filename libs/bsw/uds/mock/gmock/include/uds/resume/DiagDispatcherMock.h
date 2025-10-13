@@ -15,7 +15,7 @@ class DiagDispatcherMock : public IDiagDispatcher
 public:
     DiagDispatcherMock(IDiagSessionManager& sessionManager) : IDiagDispatcher(sessionManager) {}
 
-    MOCK_METHOD(uint16_t, getSourceId, (), (const));
+    MOCK_METHOD(uint16_t, getDispatcherSourceId, (), (const));
 
     MOCK_METHOD(
         transport::AbstractTransportLayer::ErrorCode,

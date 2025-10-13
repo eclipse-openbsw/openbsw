@@ -1433,7 +1433,7 @@ TEST_F(DoCanReceiverTest, testReceiveFirstFrameOfUnknownSender)
     uint8_t data[] = {0x10, 0x08, 0xab, 0xcd};
     EXPECT_CALL(
         _messageProvidingListenerMock, getTransportMessage(_busId, 0x14, 0x23, sizeof(data), _, _))
-        .WillOnce(Return(ITransportMessageProvider::ErrorCode::TPMSG_INVALID_SRC_ID));
+        .WillOnce(Return(ITransportMessageProvider::ErrorCode::TPMSG_INVALID_SRC_ADDRESS));
     // receive the first frame
     expectLog(
         LEVEL_WARN, 0x1234, "DoCanReceiver(%s)::allocateTransportMessage(%s): Illegal source id.");
@@ -1472,7 +1472,7 @@ TEST_F(DoCanReceiverTest, testReceiveFirstFrameOfUnknownReceiver)
     uint8_t data[] = {0x10, 0x08, 0xab, 0xcd};
     EXPECT_CALL(
         _messageProvidingListenerMock, getTransportMessage(_busId, 0x14, 0x23, sizeof(data), _, _))
-        .WillOnce(Return(ITransportMessageProvider::ErrorCode::TPMSG_INVALID_TGT_ID));
+        .WillOnce(Return(ITransportMessageProvider::ErrorCode::TPMSG_INVALID_TGT_ADDRESS));
     // receive the first frame
     expectLog(
         LEVEL_WARN, 0x1234, "DoCanReceiver(%s)::allocateTransportMessage(%s): Illegal target id.");

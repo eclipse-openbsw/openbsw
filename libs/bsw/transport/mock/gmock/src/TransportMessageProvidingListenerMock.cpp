@@ -25,32 +25,32 @@ TransportMessageProvidingListenerMock::TransportMessageProvidingListenerMock(boo
                 this,
                 &TransportMessageProvidingListenerMock::releaseTransportMessageImplementation));
         ON_CALL(*this, refuseSourceId(_))
-            .WillByDefault(
-                Invoke(this, &TransportMessageProvidingListenerMock::refuseSourceIdImplementation));
+            .WillByDefault(Invoke(
+                this, &TransportMessageProvidingListenerMock::refuseSourceAddressImplementation));
         ON_CALL(*this, refuseTargetId(_))
-            .WillByDefault(
-                Invoke(this, &TransportMessageProvidingListenerMock::refuseTargetIdImplementation));
+            .WillByDefault(Invoke(
+                this, &TransportMessageProvidingListenerMock::refuseTargetAddressImplementation));
     }
 }
 
 ITransportMessageProvider::ErrorCode
 TransportMessageProvidingListenerMock::getTransportMessageImplementation(
     uint8_t /* srcBusId */,
-    uint16_t sourceId,
-    uint16_t targetId,
+    uint16_t sourceAddress,
+    uint16_t targetAddress,
     uint16_t size,
     ::etl::span<uint8_t const> const& /* peek */,
     TransportMessage*& pTransportMessage)
 {
-    if (fRefusedSourceIds.count(sourceId) > 0)
+    if (fRefusedSourceIds.count(sourceAddress) > 0)
     {
         pTransportMessage = 0L;
-        return ITransportMessageProvidingListener::ErrorCode::TPMSG_INVALID_SRC_ID;
+        return ITransportMessageProvidingListener::ErrorCode::TPMSG_INVALID_SRC_ADDRESS;
     }
-    if (fRefusedTargetIds.count(targetId) > 0)
+    if (fRefusedTargetIds.count(targetAddress) > 0)
     {
         pTransportMessage = 0L;
-        return ITransportMessageProvidingListener::ErrorCode::TPMSG_INVALID_TGT_ID;
+        return ITransportMessageProvidingListener::ErrorCode::TPMSG_INVALID_TGT_ADDRESS;
     }
     pTransportMessage = new TransportMessage();
     pTransportMessage->init(new uint8_t[size], size);
@@ -81,14 +81,14 @@ TransportMessageProvidingListenerMock::messageReceivedImplementation(
     return ITransportMessageListener::ReceiveResult::RECEIVED_NO_ERROR;
 }
 
-void TransportMessageProvidingListenerMock::refuseSourceIdImplementation(uint8_t sourceId)
+void TransportMessageProvidingListenerMock::refuseSourceAddressImplementation(uint8_t sourceAddress)
 {
-    fRefusedSourceIds.insert(sourceId);
+    fRefusedSourceIds.insert(sourceAddress);
 }
 
-void TransportMessageProvidingListenerMock::refuseTargetIdImplementation(uint8_t targetId)
+void TransportMessageProvidingListenerMock::refuseTargetAddressImplementation(uint8_t targetAddress)
 {
-    fRefusedTargetIds.insert(targetId);
+    fRefusedTargetIds.insert(targetAddress);
 }
 
 } // namespace transport

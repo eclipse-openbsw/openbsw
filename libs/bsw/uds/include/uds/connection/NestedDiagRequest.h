@@ -31,7 +31,7 @@ public:
     /**
      * Initialize a new nested request. The request is (eventually converted) and stored.
      * \param sender Reference to abstract diag job that will send the response. This sender
-     *        is stored during the nested request in fSender.
+     *        is stored during the nested request in senderJob.
      * \param messageBuffer Available buffer for both response and stored request
      * \param request Incoming request
      */
@@ -152,21 +152,21 @@ protected:
     ::etl::span<uint8_t const> consumeStoredRequest(uint16_t consumedLength);
 
 public:
-    uint16_t responseLength() const { return fResponseLength; }
+    uint16_t responseLength() const { return _responseLength; }
 
-    AbstractDiagJob* fSender;
-    AbstractDiagJob* fPendingResponseSender;
-    uint8_t const fPrefixLength;
-    bool fIsPendingSent;
-    DiagReturnCode::Type fResponseCode;
+    AbstractDiagJob* senderJob;
+    AbstractDiagJob* pendingResponseSender;
+    uint8_t const prefixLength;
+    bool isPendingSent;
+    DiagReturnCode::Type responseCode;
 
 protected:
-    uint16_t fResponseLength = 0;
-    ::etl::span<uint8_t> fMessageBuffer;
-    uint16_t fStoredRequestLength;
-    uint8_t fNumIdentifiers;
-    uint8_t fNumPrefixIdentifiers;
-    ::etl::span<uint8_t const> fNestedRequest = {};
+    uint16_t _responseLength = 0;
+    ::etl::span<uint8_t> _messageBuffer;
+    uint16_t _storedRequestLength;
+    uint8_t _numIdentifiers;
+    uint8_t _numPrefixIdentifiers;
+    ::etl::span<uint8_t const> _nestedRequest = {};
 };
 
 /**

@@ -50,7 +50,7 @@ DiagReturnCode::Type AbstractDiagJob::execute(
             acceptJob(connection, request, requestLength);
             return DiagReturnCode::ISO_REQUEST_OUT_OF_RANGE;
         }
-        if (!getDiagAuthenticator().isAuthenticated(connection.fSourceId))
+        if (!getDiagAuthenticator().isAuthenticated(connection.sourceAddress))
         {
             acceptJob(connection, request, requestLength);
             return getDiagAuthenticator().getNotAuthenticatedReturnCode();

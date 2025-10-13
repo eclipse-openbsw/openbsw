@@ -93,7 +93,7 @@ DiagReturnCode::Type MultipleReadDataByIdentifier::process(
     }
     else if (fGetDidLimit.is_valid())
     {
-        uint8_t const didLimit = fGetDidLimit(*connection.fpRequestMessage);
+        uint8_t const didLimit = fGetDidLimit(*connection.requestMessage);
         if ((didLimit > 0U) && ((requestLength / 2U) > didLimit))
         {
             return DiagReturnCode::ISO_INVALID_FORMAT;
@@ -130,7 +130,7 @@ MultipleReadDataByIdentifier::prepareNestedRequest(::etl::span<uint8_t const> co
     }
     else
     {
-        fResponseCode = fCombinedResponseCode;
+        responseCode = fCombinedResponseCode;
         return {};
     }
 }
@@ -148,11 +148,12 @@ DiagReturnCode::Type MultipleReadDataByIdentifier::processNestedRequest(
     return responseCode;
 }
 
-void MultipleReadDataByIdentifier::handleNestedResponseCode(DiagReturnCode::Type const responseCode)
+void MultipleReadDataByIdentifier::handleNestedResponseCode(
+    DiagReturnCode::Type const nestedResponseCode)
 {
-    if (!fCheckResponse(responseCode, fCombinedResponseCode))
+    if (!fCheckResponse(nestedResponseCode, fCombinedResponseCode))
     {
-        fResponseCode = fCombinedResponseCode;
+        responseCode = fCombinedResponseCode;
     }
 }
 

@@ -69,19 +69,19 @@ TEST_F(TransportMessageTest, Init)
 
 TEST_F(TransportMessageTest, GetSetSourceId)
 {
-    m.setSourceId(2U);
+    m.setSourceAddress(2U);
     EXPECT_EQ(2U, m.getSourceId());
 
-    m.setSourceId(0xFFFFU);
+    m.setSourceAddress(0xFFFFU);
     EXPECT_EQ(0xFFFFU, m.getSourceId());
 }
 
 TEST_F(TransportMessageTest, GetSetTargetId)
 {
-    m.setTargetId(42U);
+    m.setTargetAddress(42U);
     EXPECT_EQ(42U, m.getTargetId());
 
-    m.setTargetId(0xFFFFU);
+    m.setTargetAddress(0xFFFFU);
     EXPECT_EQ(0xFFFFU, m.getTargetId());
 }
 
@@ -181,8 +181,8 @@ TEST_F(TransportMessageTest, TransportMessageAppend)
     uint8_t buffer[16] = {0};
     TransportMessage m;
     m.init(buffer, 16);
-    m.setTargetId(0x1);
-    m.setSourceId(0x2);
+    m.setTargetAddress(0x1);
+    m.setSourceAddress(0x2);
     uint8_t const data[8] = {0, 1, 2, 3, 4, 5, 6, 7};
 
     EXPECT_EQ(TransportMessage::ErrorCode::TP_MSG_LENGTH_EXCEEDED, m.append(data, 17));
@@ -213,12 +213,12 @@ TEST_F(TransportMessageTest, CompareOperator)
     memset(fBuffer, 0xAB, BUFFER_LENGTH);
 
     localMessage.init(fpLocalBuffer, BUFFER_LENGTH);
-    localMessage.setSourceId(0xC0);
-    localMessage.setTargetId(0xC1);
+    localMessage.setSourceAddress(0xC0);
+    localMessage.setTargetAddress(0xC1);
     localMessage.setPayloadLength(BUFFER_LENGTH);
     m.init(fBuffer, BUFFER_LENGTH);
-    m.setSourceId(0xC0);
-    m.setTargetId(0xC1);
+    m.setSourceAddress(0xC0);
+    m.setTargetAddress(0xC1);
     m.setPayloadLength(BUFFER_LENGTH);
     EXPECT_EQ(true, m == localMessage);
 
@@ -251,21 +251,21 @@ TEST_F(TransportMessageTest, CompareOperator)
     localMessage.resetValidBytes();
     EXPECT_EQ(m, localMessage);
     EXPECT_EQ(m.getTargetId(), localMessage.getTargetId());
-    m.setTargetId(0xF1);
-    localMessage.setTargetId(0xF2);
+    m.setTargetAddress(0xF1);
+    localMessage.setTargetAddress(0xF2);
     EXPECT_FALSE(m == localMessage);
 
     // source different
-    m.setTargetId(0xF1);
-    localMessage.setTargetId(0xF1);
+    m.setTargetAddress(0xF1);
+    localMessage.setTargetAddress(0xF1);
     EXPECT_EQ(m, localMessage);
-    m.setSourceId(0xAB);
-    localMessage.setSourceId(0xCD);
+    m.setSourceAddress(0xAB);
+    localMessage.setSourceAddress(0xCD);
     EXPECT_FALSE(m == localMessage);
 
     // restore equality
-    m.setSourceId(0xAB);
-    localMessage.setSourceId(0xAB);
+    m.setSourceAddress(0xAB);
+    localMessage.setSourceAddress(0xAB);
     EXPECT_EQ(m, localMessage);
 
     // payload contents different
@@ -291,10 +291,10 @@ TEST_F(TransportMessageTest, CompareSameEverything)
     localMessage.init(fpLocalBuffer, BUFFER_LENGTH);
     m.init(fBuffer, BUFFER_LENGTH);
 
-    m.setSourceId(0xC0);
-    m.setTargetId(0xC1);
-    localMessage.setSourceId(0xC0);
-    localMessage.setTargetId(0xC1);
+    m.setSourceAddress(0xC0);
+    m.setTargetAddress(0xC1);
+    localMessage.setSourceAddress(0xC0);
+    localMessage.setTargetAddress(0xC1);
     EXPECT_EQ(m, localMessage);
 
     // payload contents different

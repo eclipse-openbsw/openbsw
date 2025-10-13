@@ -31,7 +31,7 @@ DiagnosticSessionControl::DiagnosticSessionControl(
 , fContext(context)
 , fUdsLifecycleConnector(udsLifecycleConnector)
 , fPersistence(persistence)
-, fpDiagDispatcher(nullptr)
+, diagDispatcher(nullptr)
 , fpCurrentSession(&DiagSession::APPLICATION_DEFAULT_SESSION())
 , fpRequestedJob(nullptr)
 , fpTesterPresent(nullptr)
@@ -304,9 +304,9 @@ void DiagnosticSessionControl::switchSession(DiagSession& newSession)
     }
     else if (newSession == DiagSession::PROGRAMMING_SESSION())
     {
-        if (fpDiagDispatcher != nullptr)
+        if (diagDispatcher != nullptr)
         {
-            fpDiagDispatcher->fEnabled = false;
+            diagDispatcher->fEnabled = false;
         }
         fRequestProgrammingSession = true;
     }

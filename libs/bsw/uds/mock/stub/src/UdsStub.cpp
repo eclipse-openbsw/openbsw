@@ -41,7 +41,7 @@ size_t PositiveResponse::increaseDataLength(size_t length)
     return ::uds::ErrorCode::OK;
 }
 
-PositiveResponse& IncomingDiagConnection::releaseRequestGetResponse() { return fPositiveResponse; }
+PositiveResponse& IncomingDiagConnection::releaseRequestGetResponse() { return _positiveResponse; }
 
 void IncomingDiagConnection::transportMessageProcessed(
     transport::TransportMessage&, ProcessingResult status)
@@ -74,15 +74,15 @@ IncomingDiagConnection::sendPositiveResponseInternal(uint16_t const length, Abst
 
 void IncomingDiagConnection::open(bool activatePending)
 {
-    fOpen                       = true;
-    fPendingActivated           = activatePending;
-    fSuppressPositiveResponse   = false;
-    fResponsePendingSent        = false;
-    fResponsePendingIsBeingSent = false;
-    fIsResponseActive           = false;
+    open                        = true;
+    _pendingActivated           = activatePending;
+    _suppressPositiveResponse   = false;
+    _responsePendingSent        = false;
+    _responsePendingIsBeingSent = false;
+    _isResponseActive           = false;
 }
 
-void IncomingDiagConnection::terminate() { fOpen = false; }
+void IncomingDiagConnection::terminate() { open = false; }
 
 /*
  * class DiagSession

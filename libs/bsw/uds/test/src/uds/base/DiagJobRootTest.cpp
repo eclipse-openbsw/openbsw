@@ -73,11 +73,11 @@ TEST_F(
     DiagJobRootTest,
     session_timeout_is_not_active_so_TesterPresent_request_should_be_ignore_and_execute_returns_OK)
 {
-    uint8_t const request[]          = {0x3E, 0x80};
-    uint16_t const serviceId         = request[0];
-    uint16_t const functionalAddress = 0xDF;
-    fIncomingConnection.fTargetId    = functionalAddress;
-    fIncomingConnection.fServiceId   = serviceId;
+    uint8_t const request[]           = {0x3E, 0x80};
+    uint16_t const serviceId          = request[0];
+    uint16_t const functionalAddress  = 0xDF;
+    fIncomingConnection.targetAddress = functionalAddress;
+    fIncomingConnection.serviceId     = serviceId;
 
     EXPECT_CALL(fSessionManager, isSessionTimeoutActive()).WillOnce(Return(false));
 
@@ -93,11 +93,11 @@ TEST_F(
 TEST_F(
     DiagJobRootTest, session_timeout_is_active_AbstractDiagJob_execute_should_be_call_immediately)
 {
-    uint8_t const request[]          = {0x3E, 0x80};
-    uint16_t const serviceId         = request[0];
-    uint16_t const functionalAddress = 0xDF;
-    fIncomingConnection.fTargetId    = functionalAddress;
-    fIncomingConnection.fServiceId   = serviceId;
+    uint8_t const request[]           = {0x3E, 0x80};
+    uint16_t const serviceId          = request[0];
+    uint16_t const functionalAddress  = 0xDF;
+    fIncomingConnection.targetAddress = functionalAddress;
+    fIncomingConnection.serviceId     = serviceId;
 
     EXPECT_CALL(fSessionManager, isSessionTimeoutActive()).WillOnce(Return(true));
 
@@ -118,11 +118,11 @@ TEST_F(
     DiagJobRootTest,
     service_id_is_not_TesterPresent_AbstractDiagJob_execute_should_be_call_immediately)
 {
-    uint8_t const request[]          = {0x21, 0x80};
-    uint16_t const serviceId         = request[0];
-    uint16_t const functionalAddress = 0xDF;
-    fIncomingConnection.fTargetId    = functionalAddress;
-    fIncomingConnection.fServiceId   = serviceId;
+    uint8_t const request[]           = {0x21, 0x80};
+    uint16_t const serviceId          = request[0];
+    uint16_t const functionalAddress  = 0xDF;
+    fIncomingConnection.targetAddress = functionalAddress;
+    fIncomingConnection.serviceId     = serviceId;
 
     EXPECT_CALL(fSessionManager, getActiveSession()).WillOnce(ReturnRef(fApplicationSession));
 
@@ -141,11 +141,11 @@ TEST_F(
     DiagJobRootTest,
     TesterPresent_request_is_too_short_AbstractDiagJob_execute_should_be_call_immediately)
 {
-    uint8_t const request[]          = {0x3E};
-    uint16_t const serviceId         = request[0];
-    uint16_t const functionalAddress = 0xDF;
-    fIncomingConnection.fTargetId    = functionalAddress;
-    fIncomingConnection.fServiceId   = serviceId;
+    uint8_t const request[]           = {0x3E};
+    uint16_t const serviceId          = request[0];
+    uint16_t const functionalAddress  = 0xDF;
+    fIncomingConnection.targetAddress = functionalAddress;
+    fIncomingConnection.serviceId     = serviceId;
 
     EXPECT_CALL(fSessionManager, isSessionTimeoutActive()).WillOnce(Return(false));
 
@@ -167,11 +167,11 @@ TEST_F(
     DiagJobRootTest,
     positive_response_is_not_suppress_AbstractDiagJob_execute_should_be_call_immediately)
 {
-    uint8_t const request[]          = {0x3E, 0x00};
-    uint16_t const serviceId         = request[0];
-    uint16_t const functionalAddress = 0xDF;
-    fIncomingConnection.fTargetId    = functionalAddress;
-    fIncomingConnection.fServiceId   = serviceId;
+    uint8_t const request[]           = {0x3E, 0x00};
+    uint16_t const serviceId          = request[0];
+    uint16_t const functionalAddress  = 0xDF;
+    fIncomingConnection.targetAddress = functionalAddress;
+    fIncomingConnection.serviceId     = serviceId;
 
     EXPECT_CALL(fSessionManager, isSessionTimeoutActive()).WillOnce(Return(false));
 

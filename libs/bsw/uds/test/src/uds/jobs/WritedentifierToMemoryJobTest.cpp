@@ -52,7 +52,7 @@ TEST_F(WriteIdentifierToMemoryJobTest, execute_valid_request)
     TransportMessageWithBuffer request(
         SOURCE_ID, TARGET_ID, VALID_REQUEST, AbstractDiagJob::VARIABLE_RESPONSE_LENGTH);
 
-    _incomingDiagConnection.fpRequestMessage = request.get();
+    _incomingDiagConnection.requestMessage = request.get();
 
     EXPECT_CALL(_sessionManager, getActiveSession())
         .WillRepeatedly(ReturnRef(DiagSession::APPLICATION_DEFAULT_SESSION()));
@@ -79,7 +79,7 @@ TEST_F(WriteIdentifierToMemoryJobTest, execute_wrong_size_request)
     TransportMessageWithBuffer request(
         SOURCE_ID, TARGET_ID, VALID_REQUEST, AbstractDiagJob::VARIABLE_RESPONSE_LENGTH);
 
-    _incomingDiagConnection.fpRequestMessage = request.get();
+    _incomingDiagConnection.requestMessage = request.get();
 
     EXPECT_CALL(_sessionManager, getActiveSession())
         .WillRepeatedly(ReturnRef(DiagSession::APPLICATION_DEFAULT_SESSION()));

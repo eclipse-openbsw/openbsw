@@ -81,7 +81,7 @@ TEST_F(
     TransportMessageWithBuffer pRequest(
         SOURCE_ID, TARGET_ID, VALID_REQUEST, AbstractDiagJob::VARIABLE_RESPONSE_LENGTH);
 
-    fIncomingDiagConnection.fpRequestMessage = pRequest.get();
+    fIncomingDiagConnection.requestMessage = pRequest.get();
 
     EXPECT_CALL(fSessionManager, getActiveSession())
         .WillRepeatedly(ReturnRef(DiagSession::APPLICATION_DEFAULT_SESSION()));
@@ -107,7 +107,7 @@ TEST_F(
     TransportMessageWithBuffer pRequest(
         SOURCE_ID, TARGET_ID, INVALID_REQUEST, AbstractDiagJob::VARIABLE_RESPONSE_LENGTH);
 
-    fIncomingDiagConnection.fpRequestMessage = pRequest.get();
+    fIncomingDiagConnection.requestMessage = pRequest.get();
 
     EXPECT_CALL(fSessionManager, getActiveSession())
         .WillRepeatedly(ReturnRef(DiagSession::APPLICATION_DEFAULT_SESSION()));
@@ -130,7 +130,7 @@ TEST_F(
     TransportMessageWithBuffer pRequest(
         SOURCE_ID, TARGET_ID, INVALID_REQUEST, AbstractDiagJob::VARIABLE_RESPONSE_LENGTH);
 
-    fIncomingDiagConnection.fpRequestMessage = pRequest.get();
+    fIncomingDiagConnection.requestMessage = pRequest.get();
 
     EXPECT_CALL(fSessionManager, getActiveSession())
         .WillRepeatedly(ReturnRef(DiagSession::APPLICATION_DEFAULT_SESSION()));

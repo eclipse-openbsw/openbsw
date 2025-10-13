@@ -42,7 +42,7 @@ TEST_F(
 
     TransportMessageWithBuffer pRequest(0xF1U, 0x10U, request, 0U);
 
-    fIncomingDiagConnection.fpRequestMessage = pRequest.get();
+    fIncomingDiagConnection.requestMessage = pRequest.get();
 
     EXPECT_CALL(fSessionManager, getActiveSession())
         .WillRepeatedly(ReturnRef(DiagSession::APPLICATION_EXTENDED_SESSION()));
@@ -66,7 +66,7 @@ TEST_F(
 
     TransportMessageWithBuffer pRequest(0xF1U, 0x10U, request, 0U);
 
-    fIncomingDiagConnection.fpRequestMessage = pRequest.get();
+    fIncomingDiagConnection.requestMessage = pRequest.get();
 
     EXPECT_CALL(fSessionManager, getActiveSession())
         .WillRepeatedly(ReturnRef(DiagSession::APPLICATION_EXTENDED_SESSION()));
@@ -90,7 +90,7 @@ TEST_F(
 
     TransportMessageWithBuffer pRequest(0xF1U, 0x10U, request, 0U);
 
-    fIncomingDiagConnection.fpRequestMessage = pRequest.get();
+    fIncomingDiagConnection.requestMessage = pRequest.get();
 
     EXPECT_CALL(fSessionManager, getActiveSession())
         .WillRepeatedly(ReturnRef(DiagSession::APPLICATION_EXTENDED_SESSION()));

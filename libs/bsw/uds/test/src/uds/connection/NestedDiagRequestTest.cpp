@@ -67,13 +67,13 @@ public:
     ::etl::span<uint8_t const>
     prepareRequestWithNegativeResponse(::etl::span<uint8_t const> const& /* stored */)
     {
-        fResponseCode = DiagReturnCode::ISO_CONDITIONS_NOT_CORRECT;
+        responseCode = DiagReturnCode::ISO_CONDITIONS_NOT_CORRECT;
         return ::etl::span<uint8_t const>();
     }
 
+    using NestedDiagRequest::_nestedRequest;
+    using NestedDiagRequest::_responseLength;
     using NestedDiagRequest::consumeStoredRequest;
-    using NestedDiagRequest::fNestedRequest;
-    using NestedDiagRequest::fResponseLength;
 
 private:
     ::etl::span<uint8_t const> fStoredRequest;
@@ -114,7 +114,7 @@ struct NestedDiagRequestTest : public Test
 
     AbstractDiagJobMock fJob;
     IncomingDiagConnectionMock fConnection{};
-    ::etl::span<uint8_t, 10U> fMessageBuffer = ::etl::span<uint8_t, 10U>(buffer);
+    ::etl::span<uint8_t, 10U> _messageBuffer = ::etl::span<uint8_t, 10U>(buffer);
 };
 
 /**
@@ -124,15 +124,15 @@ struct NestedDiagRequestTest : public Test
 TEST_F(NestedDiagRequestTest, Constructor)
 {
     NestedDiagRequestMock cut(13U);
-    EXPECT_EQ(13U, cut.fPrefixLength);
-    EXPECT_EQ(nullptr, cut.fSender);
-    ASSERT_EQ(cut.fNestedRequest.data(), nullptr);
+    EXPECT_EQ(13U, cut.prefixLength);
+    EXPECT_EQ(nullptr, cut.senderJob);
+    ASSERT_EQ(cut._nestedRequest.data(), nullptr);
     ASSERT_EQ(cut.getResponseBuffer().data(), nullptr);
-    EXPECT_EQ(0U, cut.fResponseLength);
-    EXPECT_EQ(DiagReturnCode::OK, cut.fResponseCode);
+    EXPECT_EQ(0U, cut._responseLength);
+    EXPECT_EQ(DiagReturnCode::OK, cut.responseCode);
     EXPECT_EQ(0U, cut.getMaxNestedResponseLength());
-    EXPECT_EQ(nullptr, cut.fPendingResponseSender);
-    ASSERT_FALSE(cut.fIsPendingSent);
+    EXPECT_EQ(nullptr, cut.pendingResponseSender);
+    ASSERT_FALSE(cut.isPendingSent);
 }
 
 /**
@@ -143,16 +143,16 @@ TEST_F(NestedDiagRequestTest, Constructor)
 TEST_F(NestedDiagRequestTest, InitWithDefaultImplementation)
 {
     NestedDiagRequestMock cut(1U);
-    EXPECT_EQ(1U, cut.fPrefixLength);
+    EXPECT_EQ(1U, cut.prefixLength);
     uint8_t const request[] = {0x13, 0x45, 0x77};
     ::etl::span<uint8_t const> requestBuffer(request);
     EXPECT_CALL(cut, getStoredRequestLength(ElementsAreArray(requestBuffer))).Times(1);
     EXPECT_CALL(cut, storeRequest(ElementsAreArray(requestBuffer), _)).Times(1);
-    cut.init(fJob, fMessageBuffer, ::etl::span<uint8_t const>(request));
+    cut.init(fJob, _messageBuffer, ::etl::span<uint8_t const>(request));
     EXPECT_THAT(requestBuffer, ElementsAreArray(cut.getStoredRequest()));
     EXPECT_EQ(7U, cut.getMaxNestedResponseLength());
-    EXPECT_EQ(fMessageBuffer.data() + 7U, cut.getStoredRequest().data());
-    EXPECT_EQ(&fJob, cut.fSender);
+    EXPECT_EQ(_messageBuffer.data() + 7U, cut.getStoredRequest().data());
+    EXPECT_EQ(&fJob, cut.senderJob);
 }
 
 /**
@@ -170,13 +170,13 @@ TEST_F(NestedDiagRequestTest, InitStoringDataTwice)
     EXPECT_CALL(cut, storeRequest(ElementsAreArray(requestBuffer), _))
         .Times(1)
         .WillOnce(Invoke(this, &NestedDiagRequestTest::storeRequestTwice));
-    cut.init(fJob, fMessageBuffer, ::etl::span<uint8_t const>(request));
+    cut.init(fJob, _messageBuffer, ::etl::span<uint8_t const>(request));
     EXPECT_EQ(4U, cut.getMaxNestedResponseLength());
     EXPECT_THAT(
-        ::etl::span<uint8_t const>(fMessageBuffer.data() + 4U, 3), ElementsAreArray(requestBuffer));
+        ::etl::span<uint8_t const>(_messageBuffer.data() + 4U, 3), ElementsAreArray(requestBuffer));
     EXPECT_THAT(
-        ::etl::span<uint8_t const>(fMessageBuffer.data() + 7U, 3), ElementsAreArray(requestBuffer));
-    EXPECT_EQ(&fJob, cut.fSender);
+        ::etl::span<uint8_t const>(_messageBuffer.data() + 7U, 3), ElementsAreArray(requestBuffer));
+    EXPECT_EQ(&fJob, cut.senderJob);
 }
 
 /**
@@ -191,9 +191,9 @@ TEST_F(NestedDiagRequestTest, InitNotStoringAnything)
     EXPECT_CALL(cut, getStoredRequestLength(ElementsAreArray(requestBuffer)))
         .Times(1)
         .WillOnce(Return(0));
-    cut.init(fJob, fMessageBuffer, ::etl::span<uint8_t const>(request));
+    cut.init(fJob, _messageBuffer, ::etl::span<uint8_t const>(request));
     EXPECT_EQ(10U, cut.getMaxNestedResponseLength());
-    EXPECT_EQ(&fJob, cut.fSender);
+    EXPECT_EQ(&fJob, cut.senderJob);
 }
 
 /**
@@ -208,12 +208,12 @@ TEST_F(NestedDiagRequestTest, PrepareNonEmptyNextRequestReturnsTrue)
     uint8_t const nestedRequest[] = {0x11, 0x22, 0x33, 0x44};
     EXPECT_CALL(cut, getStoredRequestLength(ElementsAreArray(requestBuffer))).Times(1);
     EXPECT_CALL(cut, storeRequest(ElementsAreArray(requestBuffer), _)).Times(1);
-    cut.init(fJob, fMessageBuffer, ::etl::span<uint8_t const>(request));
+    cut.init(fJob, _messageBuffer, ::etl::span<uint8_t const>(request));
     EXPECT_CALL(cut, prepareNestedRequest(ElementsAreArray(requestBuffer)))
         .Times(1)
         .WillOnce(Return(::etl::span<uint8_t const>(nestedRequest)));
     EXPECT_TRUE(cut.prepareNextRequest());
-    EXPECT_THAT(::etl::span<uint8_t const>(nestedRequest), ElementsAreArray(cut.fNestedRequest));
+    EXPECT_THAT(::etl::span<uint8_t const>(nestedRequest), ElementsAreArray(cut._nestedRequest));
 }
 
 /**
@@ -227,12 +227,12 @@ TEST_F(NestedDiagRequestTest, PrepareEmptyNextRequestReturnsFalse)
     ::etl::span<uint8_t const> requestBuffer(request);
     EXPECT_CALL(cut, getStoredRequestLength(ElementsAreArray(requestBuffer))).Times(1);
     EXPECT_CALL(cut, storeRequest(ElementsAreArray(requestBuffer), _)).Times(1);
-    cut.init(fJob, fMessageBuffer, ::etl::span<uint8_t const>(request));
+    cut.init(fJob, _messageBuffer, ::etl::span<uint8_t const>(request));
     EXPECT_CALL(cut, prepareNestedRequest(ElementsAreArray(requestBuffer)))
         .Times(1)
         .WillOnce(Return(::etl::span<uint8_t const>()));
     EXPECT_FALSE(cut.prepareNextRequest());
-    EXPECT_THAT(::etl::span<uint8_t const>(), ElementsAreArray(cut.fNestedRequest));
+    EXPECT_THAT(::etl::span<uint8_t const>(), ElementsAreArray(cut._nestedRequest));
 }
 
 /**
@@ -246,12 +246,12 @@ TEST_F(NestedDiagRequestTest, PrepareNextRequestSettingNegativeResponseCodeRetur
     ::etl::span<uint8_t const> requestBuffer(request);
     EXPECT_CALL(cut, getStoredRequestLength(ElementsAreArray(requestBuffer))).Times(1);
     EXPECT_CALL(cut, storeRequest(ElementsAreArray(requestBuffer), _)).Times(1);
-    cut.init(fJob, fMessageBuffer, ::etl::span<uint8_t const>(request));
+    cut.init(fJob, _messageBuffer, ::etl::span<uint8_t const>(request));
     EXPECT_CALL(cut, prepareNestedRequest(ElementsAreArray(requestBuffer)))
         .Times(1)
         .WillOnce(Invoke(&cut, &NestedDiagRequestMock::prepareRequestWithNegativeResponse));
     EXPECT_FALSE(cut.prepareNextRequest());
-    EXPECT_THAT(::etl::span<uint8_t const>(), ElementsAreArray(cut.fNestedRequest));
+    EXPECT_THAT(::etl::span<uint8_t const>(), ElementsAreArray(cut._nestedRequest));
     // next request won't even be processed
     EXPECT_FALSE(cut.prepareNextRequest());
 }
@@ -267,7 +267,7 @@ TEST_F(NestedDiagRequestTest, ProcessNextRequestCallsInternalMethodAndReturnsRes
     ::etl::span<uint8_t const> requestBuffer(request);
     EXPECT_CALL(cut, getStoredRequestLength(ElementsAreArray(requestBuffer))).Times(1);
     EXPECT_CALL(cut, storeRequest(ElementsAreArray(requestBuffer), _)).Times(1);
-    cut.init(fJob, fMessageBuffer, ::etl::span<uint8_t const>(request));
+    cut.init(fJob, _messageBuffer, ::etl::span<uint8_t const>(request));
     uint8_t const nextRequest[] = {0x22, 0x33};
     ::etl::span<uint8_t const> nextRequestBuffer(nextRequest);
     EXPECT_CALL(cut, prepareNestedRequest(ElementsAreArray(requestBuffer)))
@@ -291,7 +291,7 @@ TEST_F(NestedDiagRequestTest, HandleNegativeResponseCodeCallsInternalMethod)
     EXPECT_CALL(cut, handleNestedResponseCode(Eq(DiagReturnCode::ISO_GENERAL_PROGRAMMING_FAILURE)))
         .Times(1);
     cut.handleNegativeResponseCode(DiagReturnCode::ISO_GENERAL_PROGRAMMING_FAILURE);
-    EXPECT_EQ(DiagReturnCode::ISO_GENERAL_PROGRAMMING_FAILURE, cut.fResponseCode);
+    EXPECT_EQ(DiagReturnCode::ISO_GENERAL_PROGRAMMING_FAILURE, cut.responseCode);
 }
 
 /**
@@ -303,7 +303,7 @@ TEST_F(NestedDiagRequestTest, HandleResponseOverflowCallsInternalMethod)
     NestedDiagRequestMock cut(0U);
     EXPECT_CALL(cut, handleOverflow()).Times(1);
     cut.handleResponseOverflow();
-    EXPECT_EQ(DiagReturnCode::ISO_RESPONSE_TOO_LONG, cut.fResponseCode);
+    EXPECT_EQ(DiagReturnCode::ISO_RESPONSE_TOO_LONG, cut.responseCode);
 }
 
 /**
@@ -317,7 +317,7 @@ TEST_F(NestedDiagRequestTest, RequestMessageIsCopiedWithoutPrefixToResponseBuffe
     ::etl::span<uint8_t const> requestBuffer(request);
     EXPECT_CALL(cut, getStoredRequestLength(ElementsAreArray(requestBuffer))).Times(1);
     EXPECT_CALL(cut, storeRequest(ElementsAreArray(requestBuffer), _)).Times(1);
-    cut.init(fJob, fMessageBuffer, ::etl::span<uint8_t const>(request));
+    cut.init(fJob, _messageBuffer, ::etl::span<uint8_t const>(request));
     uint8_t const nextRequest[] = {0x22, 0x33, 0x44};
     ::etl::span<uint8_t const> nextRequestBuffer(nextRequest);
     EXPECT_CALL(cut, prepareNestedRequest(ElementsAreArray(requestBuffer)))
@@ -337,10 +337,10 @@ TEST_F(NestedDiagRequestTest, RequestMessageIsCopiedWithoutPrefixToResponseBuffe
     EXPECT_EQ(0x44, cut.getIdentifier(2U));
     EXPECT_EQ(0U, cut.getIdentifier(3U));
     ::etl::span<uint8_t const> responseBuffer = cut.getResponseBuffer();
-    EXPECT_EQ(fMessageBuffer.data() + 2U, responseBuffer.data());
+    EXPECT_EQ(_messageBuffer.data() + 2U, responseBuffer.data());
     EXPECT_EQ(5U, responseBuffer.size());
     EXPECT_THAT(
-        ::etl::span<uint8_t>(fMessageBuffer).first(2U),
+        ::etl::span<uint8_t>(_messageBuffer).first(2U),
         ElementsAreArray(nextRequestBuffer.subspan(1U, 2U)));
     // repeated request should return the same result
     ::etl::span<uint8_t const> responseBuffer2 = cut.getResponseBuffer();
@@ -359,7 +359,7 @@ TEST_F(NestedDiagRequestTest, SetNestedResponseLengthCallsSetResponseCodeWithPos
     ::etl::span<uint8_t const> requestBuffer(request);
     EXPECT_CALL(cut, getStoredRequestLength(ElementsAreArray(requestBuffer))).Times(1);
     EXPECT_CALL(cut, storeRequest(ElementsAreArray(requestBuffer), _)).Times(1);
-    cut.init(fJob, fMessageBuffer, ::etl::span<uint8_t const>(request));
+    cut.init(fJob, _messageBuffer, ::etl::span<uint8_t const>(request));
     EXPECT_CALL(cut, prepareNestedRequest(ElementsAreArray(requestBuffer)))
         .Times(1)
         .WillOnce(Return(requestBuffer));
@@ -381,7 +381,7 @@ TEST_F(NestedDiagRequestTest, ConsumingStoredRequestClipsRequest)
     ::etl::span<uint8_t const> requestBuffer(request);
     EXPECT_CALL(cut, getStoredRequestLength(ElementsAreArray(requestBuffer))).Times(1);
     EXPECT_CALL(cut, storeRequest(ElementsAreArray(requestBuffer), _)).Times(1);
-    cut.init(fJob, fMessageBuffer, ::etl::span<uint8_t const>(request));
+    cut.init(fJob, _messageBuffer, ::etl::span<uint8_t const>(request));
     EXPECT_THAT(requestBuffer.first(2U), ElementsAreArray(cut.consumeStoredRequest(2U)));
     EXPECT_THAT(requestBuffer.subspan(2U, 1U), ElementsAreArray(cut.consumeStoredRequest(1U)));
     EXPECT_THAT(::etl::span<uint8_t const>(), ElementsAreArray(cut.consumeStoredRequest(3U)));

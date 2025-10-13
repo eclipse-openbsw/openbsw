@@ -33,14 +33,14 @@ DiagReturnCode::Type DiagJobRoot::verify(uint8_t const* const request, uint16_t 
 DiagReturnCode::Type DiagJobRoot::execute(
     IncomingDiagConnection& connection, uint8_t const* const request, uint16_t const requestLength)
 {
-    if (connection.fServiceId == 0x7FU) // no response to incoming NRC
+    if (connection.serviceId == 0x7FU) // no response to incoming NRC
     {
         connection.terminate();
         return DiagReturnCode::OK;
     }
-    if (TransportConfiguration::isFunctionalAddress(connection.fTargetId))
+    if (TransportConfiguration::isFunctionalAddress(connection.targetAddress))
     {
-        if (connection.fServiceId == uds::ServiceId::TESTER_PRESENT)
+        if (connection.serviceId == uds::ServiceId::TESTER_PRESENT)
         {
             if ((!getDiagSessionManager().isSessionTimeoutActive()) && (requestLength > 1U)
                 && (((request[1] & SUPPRESS_POSITIVE_RESPONSE_MASK)) > 0U))

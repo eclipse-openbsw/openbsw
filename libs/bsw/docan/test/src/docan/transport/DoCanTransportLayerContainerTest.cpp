@@ -112,8 +112,8 @@ TEST_F(DoCanTransportLayerContainerTest, testConstructedTransportLayers)
                0x77,
                0x66};
         BufferedTransportMessage<20> transportMessage;
-        transportMessage.setSourceId(0x46U);
-        transportMessage.setTargetId(0x89U);
+        transportMessage.setSourceAddress(0x46U);
+        transportMessage.setTargetAddress(0x89U);
         transportMessage.append(data, sizeof(data));
         transportMessage.setPayloadLength(sizeof(data));
         EXPECT_CALL(

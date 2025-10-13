@@ -52,7 +52,7 @@ public:
      */
     void setDiagDispatcher(DiagDispatcher* const pDiagDispatcher)
     {
-        fpDiagDispatcher = pDiagDispatcher;
+        diagDispatcher = pDiagDispatcher;
     }
 
     /**
@@ -148,7 +148,7 @@ protected:
     ::async::ContextType fContext;
     IUdsLifecycleConnector& fUdsLifecycleConnector;
     ISessionPersistence& fPersistence;
-    DiagDispatcher* fpDiagDispatcher;
+    DiagDispatcher* diagDispatcher;
 
     DiagSession* fpCurrentSession;
     AbstractDiagJob const* fpRequestedJob;

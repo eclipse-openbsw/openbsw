@@ -111,7 +111,7 @@ public:
     /**
      * \pre   fpBuffer != NULL
      */
-    void setSourceId(uint16_t sourceId);
+    void setSourceAddress(uint16_t sourceAddress);
 
     /**
      * Returns the target id of the TransportMessage.
@@ -125,7 +125,7 @@ public:
     /**
      * \pre   fpBuffer != NULL
      */
-    void setTargetId(uint16_t targetId);
+    void setTargetAddress(uint16_t targetId);
 
     /**
      * Returns the service id of the TransportMessage.
@@ -202,9 +202,9 @@ public:
      *          - TP_MSG_OK if data was correctly appended
      *          - TP_MSG_LENGTH_EXCEEDED if data was too long
      *
-     * The TransportMessage has internal counter fValidBytes which is
+     * The TransportMessage has internal counter _validBytes which is
      * initialized with 0. Appending data will copy the data to the index
-     * fValidBytes in the payload of the TransportMessage.
+     * _validBytes in the payload of the TransportMessage.
      */
     ErrorCode append(uint8_t const data[], uint16_t length);
 
@@ -215,19 +215,19 @@ public:
      *          - TP_MSG_OK if data was correctly appended
      *          - TP_MSG_LENGTH_EXCEEDED if data was too long
      *
-     * fValidBytes will be increased by one if one more byte fits into the
+     * _validBytes will be increased by one if one more byte fits into the
      * buffer.
      */
     ErrorCode append(uint8_t data);
 
     /**
-     * Resets fValidBytes to 0.
+     * Resets _validBytes to 0.
      */
     void resetValidBytes();
 
     /**
-     * Increases fValidBytes by n.
-     * \param   n value to increase fValidBytes by
+     * Increases _validBytes by n.
+     * \param   n value to increase _validBytes by
      * \return
      *          - TP_MSG_OK if valid bytes was increased
      *          - TP_MSG_LENGTH_EXCEEDED if valid bytes would have been too
@@ -275,22 +275,22 @@ public:
 
 private:
     /** Pointer to optional IDataProgressListener */
-    IDataProgressListener* fpDataProgressListener;
+    IDataProgressListener* _dataProgressListener;
 
     /* internal buffer */
-    ::etl::span<uint8_t> fBuffer;
+    ::etl::span<uint8_t> _buffer;
 
     /** source id of TransportMessage */
-    uint16_t fSourceId;
+    uint16_t _sourceAddress;
 
     /** target id of TransportMessage */
-    uint16_t fTargetId;
+    uint16_t _targetAddress;
 
     /** total length of payload in bytes */
-    uint16_t fPayloadLength;
+    uint16_t _payloadLength;
 
     /** Current number of valid bytes in payload */
-    uint16_t fValidBytes;
+    uint16_t _validBytes;
 
 private:
     void notifyDataProgressListener(uint32_t numberOfNewValidBytes);
@@ -304,59 +304,65 @@ private:
 
 inline uint16_t TransportMessage::getSourceId() const { return sourceAddress(); }
 
-inline void TransportMessage::setSourceId(uint16_t const sourceId) { fSourceId = sourceId; }
+inline void TransportMessage::setSourceAddress(uint16_t const sourceAddress)
+{
+    _sourceAddress = sourceAddress;
+}
 
-inline uint16_t TransportMessage::sourceAddress() const { return fSourceId; }
+inline uint16_t TransportMessage::sourceAddress() const { return _sourceAddress; }
 
 inline uint16_t TransportMessage::getTargetId() const { return targetAddress(); }
 
-inline uint16_t TransportMessage::targetAddress() const { return fTargetId; }
+inline uint16_t TransportMessage::targetAddress() const { return _targetAddress; }
 
-inline void TransportMessage::setTargetId(uint16_t const targetId) { fTargetId = targetId; }
+inline void TransportMessage::setTargetAddress(uint16_t const targetId)
+{
+    _targetAddress = targetId;
+}
 
 inline uint8_t TransportMessage::getServiceId() const { return serviceId(); }
 
-inline uint8_t TransportMessage::serviceId() const { return fBuffer[SERVICE_ID_INDEX]; }
+inline uint8_t TransportMessage::serviceId() const { return _buffer[SERVICE_ID_INDEX]; }
 
-inline uint8_t* TransportMessage::getBuffer() const { return fBuffer.data(); }
+inline uint8_t* TransportMessage::getBuffer() const { return _buffer.data(); }
 
 inline uint32_t TransportMessage::getBufferLength() const
 {
-    return static_cast<uint32_t>(fBuffer.size());
+    return static_cast<uint32_t>(_buffer.size());
 }
 
-inline uint8_t* TransportMessage::getPayload() { return fBuffer.data(); }
+inline uint8_t* TransportMessage::getPayload() { return _buffer.data(); }
 
-inline uint8_t const* TransportMessage::getPayload() const { return fBuffer.data(); }
+inline uint8_t const* TransportMessage::getPayload() const { return _buffer.data(); }
 
 inline uint8_t& TransportMessage::operator[](uint16_t const pos)
 {
-    return fBuffer[static_cast<size_t>(pos)];
+    return _buffer[static_cast<size_t>(pos)];
 }
 
 inline uint8_t const& TransportMessage::operator[](uint16_t const pos) const
 {
-    return fBuffer[static_cast<size_t>(pos)];
+    return _buffer[static_cast<size_t>(pos)];
 }
 
 inline uint16_t TransportMessage::getPayloadLength() const { return payloadLength(); }
 
-inline uint16_t TransportMessage::payloadLength() const { return fPayloadLength; }
+inline uint16_t TransportMessage::payloadLength() const { return _payloadLength; }
 
 inline uint16_t TransportMessage::getMaxPayloadLength() const { return maxPayloadLength(); }
 
 inline uint16_t TransportMessage::maxPayloadLength() const
 {
-    return static_cast<uint16_t>(fBuffer.size());
+    return static_cast<uint16_t>(_buffer.size());
 }
 
-inline void TransportMessage::resetValidBytes() { fValidBytes = 0U; }
+inline void TransportMessage::resetValidBytes() { _validBytes = 0U; }
 
 inline uint16_t TransportMessage::getValidBytes() const { return validBytes(); }
 
-inline uint16_t TransportMessage::validBytes() const { return fValidBytes; }
+inline uint16_t TransportMessage::validBytes() const { return _validBytes; }
 
-inline bool TransportMessage::isComplete() const { return fValidBytes >= getPayloadLength(); }
+inline bool TransportMessage::isComplete() const { return _validBytes >= getPayloadLength(); }
 
 inline uint16_t TransportMessage::missingBytes() const
 {

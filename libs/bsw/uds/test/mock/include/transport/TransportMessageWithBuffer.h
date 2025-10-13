@@ -17,7 +17,10 @@ struct TransportMessageWithBuffer
 {
     explicit TransportMessageWithBuffer(uint32_t size);
     TransportMessageWithBuffer(
-        uint8_t sourceId, uint8_t targetId, ::etl::span<uint8_t const> data, uint32_t maxSize = 0);
+        uint8_t sourceAddress,
+        uint8_t targetId,
+        ::etl::span<uint8_t const> data,
+        uint32_t maxSize = 0);
 
     TransportMessageWithBuffer(TransportMessageWithBuffer const&)            = delete;
     TransportMessageWithBuffer& operator=(TransportMessageWithBuffer const&) = delete;

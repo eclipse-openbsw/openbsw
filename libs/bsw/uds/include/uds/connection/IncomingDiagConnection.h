@@ -56,35 +56,35 @@ public:
      * Constructs an IncomingDiagConnection to use a given \p diagContext
      */
     IncomingDiagConnection(::async::ContextType const diagContext)
-    : fResponsePendingTimeout(*this)
-    , fGlobalPendingTimeout(*this)
-    , fTransportMessageProcessedClosure(TransportMessageClosure::CallType(
+    : _responsePendingTimeout(*this)
+    , _globalPendingTimeout(*this)
+    , _transportMessageProcessedClosure(TransportMessageClosure::CallType(
           TransportMessageClosure::CallType::delegate_type::create<
               IncomingDiagConnection,
               &IncomingDiagConnection::asyncTransportMessageProcessed>(*this),
           nullptr,
           ProcessingResult::PROCESSED_ERROR))
-    , fSendPositiveResponseClosure(SendPositiveResponseClosure::CallType(
+    , _sendPositiveResponseClosure(SendPositiveResponseClosure::CallType(
           SendPositiveResponseClosure::CallType::delegate_type::
               create<IncomingDiagConnection, &IncomingDiagConnection::asyncSendPositiveResponse>(
                   *this),
           0U,
           nullptr))
-    , fSendNegativeResponseClosure(SendNegativeResponseClosure::CallType(
+    , _sendNegativeResponseClosure(SendNegativeResponseClosure::CallType(
           SendNegativeResponseClosure::CallType::delegate_type::
               create<IncomingDiagConnection, &IncomingDiagConnection::asyncSendNegativeResponse>(
                   *this),
           0U,
           nullptr))
-    , fTriggerNextNestedRequestDelegate(::async::Function::CallType::create<
+    , _triggerNextNestedRequestDelegate(::async::Function::CallType::create<
                                         IncomingDiagConnection,
                                         &IncomingDiagConnection::triggerNextNestedRequest>(*this))
     {
-        fContext = diagContext;
-        fPendingMessage.init(&fPendingMessageBuffer[0], PENDING_MESSAGE_BUFFER_LENGTH);
-        for (uint8_t cnt = 0U; cnt < fIdentifiers.capacity(); cnt++)
+        _context = diagContext;
+        _pendingMessage.init(&_pendingMessageBuffer[0], PENDING_MESSAGE_BUFFER_LENGTH);
+        for (uint8_t cnt = 0U; cnt < _identifiers.capacity(); cnt++)
         {
-            fIdentifiers[cnt] = 0U;
+            _identifiers[cnt] = 0U;
         }
     }
 
@@ -110,7 +110,7 @@ public:
      * Returns an identifier for a given index.
      *
      * \note
-     * This function will return 0 if fpResponseMessage is NULL or if index is
+     * This function will return 0 if responseMessage is NULL or if index is
      * greater then getNumIdentifiers().
      *
      * \see addIdentifier()
@@ -125,7 +125,7 @@ public:
      * \param   length  Variable that will hold the length of the response buffer
      *
      * \note
-     * If fpResponseMessage is NULL, pBuffer will be set to NULL and length will
+     * If responseMessage is NULL, pBuffer will be set to NULL and length will
      * be 0. The caller is responsible for checking these values.
      */
     PositiveResponse& releaseRequestGetResponse();
@@ -155,7 +155,7 @@ public:
     /**
      * Calling this function will disable sending of positive responses.
      */
-    void suppressPositiveResponse() { fSuppressPositiveResponse = true; }
+    void suppressPositiveResponse() { _suppressPositiveResponse = true; }
 
     /**
      * Calling this function will disable response pending timeout.
@@ -176,7 +176,7 @@ public:
      * - true if a response is being sent
      * - false otherwise
      */
-    bool isBusy() const { return (fpSender != nullptr); }
+    bool isBusy() const { return (_sender != nullptr); }
 
     /**
      * Start a nested request. This starts a nested session that allows to
@@ -200,20 +200,13 @@ public:
      */
     void changeRespPendingTimer(int32_t const diffTimeMs)
     {
-        fPendingTimeOut
+        _pendingTimeOut
             = static_cast<uint32_t>(static_cast<int32_t>(DEFAULT_PENDING_TIMEOUT_MS) + diffTimeMs);
     }
 
-    transport::TransportMessage* fpRequestMessage      = nullptr;
-    transport::TransportMessage* fpResponseMessage     = nullptr;
-    transport::AbstractTransportLayer* fpMessageSender = nullptr;
-    DiagDispatcher* fpDiagDispatcher                   = nullptr;
-    ::async::ContextType fContext;
-    bool fOpen = false;
-
-    uint16_t fSourceId = static_cast<uint16_t>(0xFFU);
-    uint16_t fTargetId = static_cast<uint16_t>(0XFFU);
-    uint8_t fServiceId = 0xFFU;
+    uint16_t sourceAddress = static_cast<uint16_t>(0xFFU);
+    uint16_t targetAddress = static_cast<uint16_t>(0XFFU);
+    uint8_t serviceId      = 0xFFU;
 
     /** Time in ms after which the first pending will be sent */
     static uint32_t const INITIAL_PENDING_TIMEOUT_MS = 40U;
@@ -239,19 +232,6 @@ public:
 
     bool terminateNestedRequest();
 
-    Timeout fResponsePendingTimeout;
-    Timeout fGlobalPendingTimeout;
-    AbstractDiagJob* fpSender                    = nullptr;
-    IDiagSessionManager* fpDiagSessionManager    = nullptr;
-    uint8_t fNumPendingMessageProcessedCallbacks = 0U;
-    bool fConnectionTerminationIsPending         = false;
-    bool fSuppressPositiveResponse               = false;
-    bool fPendingActivated                       = true;
-    bool fResponsePendingIsPending               = false;
-    bool fResponsePendingSent                    = false;
-    bool fResponsePendingIsBeingSent             = false;
-    bool fIsResponseActive                       = false;
-
 public:
     static uint8_t const MAXIMUM_NUMBER_OF_IDENTIFIERS  = 6U;
     static uint8_t const PENDING_MESSAGE_PAYLOAD_LENGTH = 3U;
@@ -274,7 +254,7 @@ public:
      * id will be set to source id of the DiagDispatcher, otherwise
      * it'll be set to the target id of this IncomingDiagConnection.
      */
-    void setSourceId(transport::TransportMessage& transportMessage) const;
+    uint16_t sourceAddressForResponse() const;
 
     void asyncTransportMessageProcessed(
         transport::TransportMessage* pTransportMessage, ProcessingResult status);
@@ -293,21 +273,41 @@ public:
     using TransportMessageClosure
         = ::async::Call<::etl::closure<void(transport::TransportMessage*, ProcessingResult)>>;
 
-    TransportMessageClosure fTransportMessageProcessedClosure;
-    SendPositiveResponseClosure fSendPositiveResponseClosure;
-    SendNegativeResponseClosure fSendNegativeResponseClosure;
-    ::async::Function fTriggerNextNestedRequestDelegate;
-    transport::ITransportMessageProcessedListener* fpRequestNotificationListener = nullptr;
-    transport::TransportMessage fPendingMessage                                  = {};
-    transport::TransportMessage fResponseMessage                                 = {};
-    PositiveResponse fPositiveResponse;
-    uint8_t fPendingMessageBuffer[PENDING_MESSAGE_BUFFER_LENGTH]                     = {};
-    uint8_t fNegativeResponseTempBuffer[DiagCodes::NEGATIVE_RESPONSE_MESSAGE_LENGTH] = {};
-    ::etl::vector<uint8_t, MAXIMUM_NUMBER_OF_IDENTIFIERS> fIdentifiers;
-    uint32_t fPendingTimeOut = DEFAULT_PENDING_TIMEOUT_MS;
+public:
+    transport::ITransportMessageProcessedListener* requestNotificationListener = nullptr;
+    IDiagSessionManager* diagSessionManager                                    = nullptr;
+    transport::TransportMessage* requestMessage                                = nullptr;
+    transport::AbstractTransportLayer* messageSender                           = nullptr;
+    transport::TransportMessage* responseMessage                               = nullptr;
+    DiagDispatcher* diagDispatcher                                             = nullptr;
+    bool isOpen                                                                = false;
 
 private:
-    NestedDiagRequest* fNestedRequest = nullptr;
+    ::async::ContextType _context;
+
+    Timeout _responsePendingTimeout;
+    Timeout _globalPendingTimeout;
+    AbstractDiagJob* _sender                     = nullptr;
+    uint8_t _numPendingMessageProcessedCallbacks = 0U;
+    bool _connectionTerminationIsPending         = false;
+    bool _suppressPositiveResponse               = false;
+    bool _pendingActivated                       = true;
+    bool _responsePendingIsPending               = false;
+    bool _responsePendingSent                    = false;
+    bool _responsePendingIsBeingSent             = false;
+    bool _isResponseActive                       = false;
+    TransportMessageClosure _transportMessageProcessedClosure;
+    SendPositiveResponseClosure _sendPositiveResponseClosure;
+    SendNegativeResponseClosure _sendNegativeResponseClosure;
+    ::async::Function _triggerNextNestedRequestDelegate;
+    transport::TransportMessage _pendingMessage  = {};
+    transport::TransportMessage _responseMessage = {};
+    PositiveResponse _positiveResponse;
+    uint8_t _pendingMessageBuffer[PENDING_MESSAGE_BUFFER_LENGTH]                     = {};
+    uint8_t _negativeResponseTempBuffer[DiagCodes::NEGATIVE_RESPONSE_MESSAGE_LENGTH] = {};
+    ::etl::vector<uint8_t, MAXIMUM_NUMBER_OF_IDENTIFIERS> _identifiers;
+    uint32_t _pendingTimeOut          = DEFAULT_PENDING_TIMEOUT_MS;
+    NestedDiagRequest* _nestedRequest = nullptr;
 };
 
 } // namespace uds

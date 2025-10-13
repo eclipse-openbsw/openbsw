@@ -559,7 +559,7 @@ ReceiveResult DoCanReceiver<DataLinkLayer>::allocateTransportMessage(
                 messageReceiver.getReceptionAddress(), stringBuffer);
             switch (result)
             {
-                case ::transport::ITransportMessageProvider::ErrorCode::TPMSG_INVALID_SRC_ID:
+                case ::transport::ITransportMessageProvider::ErrorCode::TPMSG_INVALID_SRC_ADDRESS:
                 {
                     ::util::logger::Logger::warn(
                         _loggerComponent,
@@ -570,7 +570,7 @@ ReceiveResult DoCanReceiver<DataLinkLayer>::allocateTransportMessage(
                         formattedAddress);
                     break;
                 }
-                case ::transport::ITransportMessageProvider::ErrorCode::TPMSG_INVALID_TGT_ID:
+                case ::transport::ITransportMessageProvider::ErrorCode::TPMSG_INVALID_TGT_ADDRESS:
                 {
                     ::util::logger::Logger::warn(
                         _loggerComponent,
@@ -599,8 +599,8 @@ ReceiveResult DoCanReceiver<DataLinkLayer>::allocateTransportMessage(
         if (message != nullptr)
         {
             message->resetValidBytes();
-            message->setSourceId(transportAddressPair.getSourceId());
-            message->setTargetId(transportAddressPair.getTargetId());
+            message->setSourceAddress(transportAddressPair.getSourceId());
+            message->setTargetAddress(transportAddressPair.getTargetId());
             message->setPayloadLength(messageReceiver.getMessageSize());
         }
         // Don't do anything in this scope if message == nullptr

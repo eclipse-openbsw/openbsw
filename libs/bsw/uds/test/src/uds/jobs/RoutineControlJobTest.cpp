@@ -121,7 +121,7 @@ struct RoutineControlJobTest : ::testing::Test
         fRequestBuffer[3] = TestableRoutineControlJob::ROUTINE_IDENTIFIER[1];
 
         fRoutineControlJobExtended.setDefaultDiagSessionManager(fDiagSessionManager);
-        fIncomingDiagConnection.fpRequestMessage = &fMessage;
+        fIncomingDiagConnection.requestMessage = &fMessage;
     }
 
     transport::TransportMessage fMessage;

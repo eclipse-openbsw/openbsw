@@ -16,21 +16,21 @@ using ::util::logger::Logger;
 using ::util::logger::TRANSPORT;
 
 TransportMessage::TransportMessage()
-: fpDataProgressListener(nullptr)
-, fBuffer()
-, fSourceId(INVALID_ADDRESS)
-, fTargetId(INVALID_ADDRESS)
-, fPayloadLength(0U)
-, fValidBytes(0U)
+: _dataProgressListener(nullptr)
+, _buffer()
+, _sourceAddress(INVALID_ADDRESS)
+, _targetAddress(INVALID_ADDRESS)
+, _payloadLength(0U)
+, _validBytes(0U)
 {}
 
 TransportMessage::TransportMessage(uint8_t* const buffer, uint32_t const bufferLength)
-: fpDataProgressListener(nullptr)
-, fBuffer(::etl::span<uint8_t>(buffer, bufferLength))
-, fSourceId(INVALID_ADDRESS)
-, fTargetId(INVALID_ADDRESS)
-, fPayloadLength(0U)
-, fValidBytes(0U)
+: _dataProgressListener(nullptr)
+, _buffer(::etl::span<uint8_t>(buffer, bufferLength))
+, _sourceAddress(INVALID_ADDRESS)
+, _targetAddress(INVALID_ADDRESS)
+, _payloadLength(0U)
+, _validBytes(0U)
 {}
 
 void TransportMessage::init(uint8_t* const buffer, uint32_t const bufferLength)
@@ -43,10 +43,10 @@ void TransportMessage::init(uint8_t* const buffer, uint32_t const bufferLength)
             bufferLength);
         ETL_ASSERT_FAIL(ETL_ERROR_GENERIC("buffer is null but buffer length is not zero"));
     }
-    fpDataProgressListener = nullptr;
-    fBuffer                = ::etl::span<uint8_t>(buffer, bufferLength);
-    fValidBytes            = 0U;
-    if (fBuffer.size() != 0U)
+    _dataProgressListener = nullptr;
+    _buffer               = ::etl::span<uint8_t>(buffer, bufferLength);
+    _validBytes           = 0U;
+    if (_buffer.size() != 0U)
     {
         setPayloadLength(0U);
     }
@@ -54,14 +54,14 @@ void TransportMessage::init(uint8_t* const buffer, uint32_t const bufferLength)
 
 void TransportMessage::setServiceId(uint8_t const theServiceId)
 {
-    if (fBuffer.size() == 0U)
+    if (_buffer.size() == 0U)
     {
         Logger::critical(TRANSPORT, "TransportMessage::setServiceId(): fpBuffer is NULL!");
         ETL_ASSERT_FAIL(ETL_ERROR_GENERIC("buffer size is zero"));
     }
-    fBuffer[SERVICE_ID_INDEX] = theServiceId;
+    _buffer[SERVICE_ID_INDEX] = theServiceId;
     // to be consistent with append, valid bytes must be increased here!
-    if (0U == fValidBytes)
+    if (0U == _validBytes)
     {
         (void)increaseValidBytes(1U);
     }
@@ -79,47 +79,47 @@ void TransportMessage::setPayloadLength(uint16_t const length)
             getMaxPayloadLength());
         ETL_ASSERT_FAIL(ETL_ERROR_GENERIC("length is too large"));
     }
-    fPayloadLength = length;
+    _payloadLength = length;
 }
 
 TransportMessage::ErrorCode
 TransportMessage::append(uint8_t const* const data, uint16_t const length)
 {
-    if ((fValidBytes + length) > getMaxPayloadLength())
+    if ((_validBytes + length) > getMaxPayloadLength())
     {
         return ErrorCode::TP_MSG_LENGTH_EXCEEDED;
     }
 
     ::etl::span<uint8_t const> source(data, length);
-    (void)::etl::copy(source, fBuffer.subspan(fValidBytes));
+    (void)::etl::copy(source, _buffer.subspan(_validBytes));
     (void)increaseValidBytes(length);
     return ErrorCode::TP_MSG_OK;
 }
 
 TransportMessage::ErrorCode TransportMessage::append(uint8_t const data)
 {
-    if ((fValidBytes + 1U) > getMaxPayloadLength())
+    if ((_validBytes + 1U) > getMaxPayloadLength())
     {
         return ErrorCode::TP_MSG_LENGTH_EXCEEDED;
     }
-    fBuffer[static_cast<size_t>(fValidBytes)] = data;
+    _buffer[static_cast<size_t>(_validBytes)] = data;
     (void)increaseValidBytes(1U);
     return ErrorCode::TP_MSG_OK;
 }
 
 TransportMessage::ErrorCode TransportMessage::increaseValidBytes(uint16_t const n)
 {
-    if ((fValidBytes + n) > getMaxPayloadLength())
+    if ((_validBytes + n) > getMaxPayloadLength())
     {
         // this is an overflow, we only add as much as possible
         uint32_t const numberOfNewValidBytes
-            = static_cast<uint32_t>(getMaxPayloadLength()) - static_cast<uint32_t>(fValidBytes);
-        fValidBytes = getMaxPayloadLength();
+            = static_cast<uint32_t>(getMaxPayloadLength()) - static_cast<uint32_t>(_validBytes);
+        _validBytes = getMaxPayloadLength();
         notifyDataProgressListener(numberOfNewValidBytes);
         return ErrorCode::TP_MSG_LENGTH_EXCEEDED;
     }
 
-    fValidBytes += n;
+    _validBytes += n;
     notifyDataProgressListener(static_cast<uint32_t>(n));
     return ErrorCode::TP_MSG_OK;
 }
@@ -132,7 +132,7 @@ bool TransportMessage::operator==(TransportMessage const& rhs) const
     }
     // compare only valid bytes because a larger message may be used to receive
     // a small amount of data
-    if (fValidBytes != rhs.fValidBytes)
+    if (_validBytes != rhs._validBytes)
     {
         return false;
     }
@@ -141,26 +141,26 @@ bool TransportMessage::operator==(TransportMessage const& rhs) const
         return false;
     }
 
-    return 0 == ::memcmp(rhs.fBuffer.data(), fBuffer.data(), fValidBytes);
+    return 0 == ::memcmp(rhs._buffer.data(), _buffer.data(), _validBytes);
 }
 
 void TransportMessage::setDataProgressListener(IDataProgressListener& listener)
 {
-    fpDataProgressListener = &listener;
+    _dataProgressListener = &listener;
 }
 
 bool TransportMessage::isDataProgressListener(IDataProgressListener const& listener) const
 {
-    return fpDataProgressListener == &listener;
+    return _dataProgressListener == &listener;
 }
 
-void TransportMessage::removeDataProgressListener() { fpDataProgressListener = nullptr; }
+void TransportMessage::removeDataProgressListener() { _dataProgressListener = nullptr; }
 
 void TransportMessage::notifyDataProgressListener(uint32_t const numberOfNewValidBytes)
 {
-    if (fpDataProgressListener != nullptr)
+    if (_dataProgressListener != nullptr)
     {
-        fpDataProgressListener->dataProgressed(*this, numberOfNewValidBytes);
+        _dataProgressListener->dataProgressed(*this, numberOfNewValidBytes);
     }
 }
 

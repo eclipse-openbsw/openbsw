@@ -75,7 +75,7 @@ PositiveResponse& IncomingDiagConnection::releaseRequestGetResponse()
 {
     if (IncomingDiagConnectionMockHelper::instance().isStub())
     {
-        return fPositiveResponse;
+        return _positiveResponse;
     }
     return IncomingDiagConnectionMockHelper::instance().releaseRequestGetResponse();
 }
@@ -94,11 +94,11 @@ uint8_t IncomingDiagConnection::getIdentifier(uint16_t idx) const
 {
     if (IncomingDiagConnectionMockHelper::instance().isStub())
     {
-        if (idx >= fIdentifiers.size())
+        if (idx >= _identifiers.size())
         {
             return 0U;
         }
-        return fIdentifiers[idx];
+        return _identifiers[idx];
     }
     return IncomingDiagConnectionMockHelper::instance().getIdentifier(idx);
 }

@@ -240,7 +240,7 @@ TEST_F(UdsIntegration, positive_response)
             SaveArg<2>(&pProcessedListener),
             Return(transport::ITransportMessageListener::ReceiveResult::RECEIVED_NO_ERROR)));
 
-    EXPECT_EQ(_udsDispatcher.getSourceId(), 0x10);
+    EXPECT_EQ(_udsDispatcher.getDispatcherSourceId(), 0x10);
 
     _udsDispatcher.processQueue();
     CONTEXT_EXECUTE;
@@ -322,8 +322,8 @@ TEST_F(UdsIntegration, no_response_for_7f)
 
     transport::TransportMessage transportMessage(buffer, sizeof(buffer));
     transportMessage.setServiceId(0x7fU);
-    transportMessage.setSourceId(0x01U);
-    transportMessage.setTargetId(0x02U);
+    transportMessage.setSourceAddress(0x01U);
+    transportMessage.setTargetAddress(0x02U);
 
     EXPECT_CALL(_messageProvider, getTransportMessage(_, _, _, _, _, _))
         .WillRepeatedly(
@@ -600,8 +600,8 @@ TEST_F(UdsIntegration, dispatchIncomingRequest_returns_earlier_if_request_comes_
     uint8_t buffer[] = {0x22U, 0x01U, 0x01U};
 
     transport::TransportMessage transportMessage(buffer, sizeof(buffer));
-    transportMessage.setSourceId(0x10U);
-    transportMessage.setTargetId(transport::TransportMessage::INVALID_ADDRESS);
+    transportMessage.setSourceAddress(0x10U);
+    transportMessage.setTargetAddress(transport::TransportMessage::INVALID_ADDRESS);
 
     transport::TransportMessage message;
     ::etl::array<uint8_t, 9> requestBuffer;
@@ -630,8 +630,8 @@ TEST_F(
     uint8_t buffer[] = {0x22U, 0x01U, 0x01U};
 
     transport::TransportMessage transportMessage(buffer, sizeof(buffer));
-    transportMessage.setSourceId(0x10U);
-    transportMessage.setTargetId(0xDFU);
+    transportMessage.setSourceAddress(0x10U);
+    transportMessage.setTargetAddress(0xDFU);
 
     EXPECT_CALL(_messageProvider, getTransportMessage(_, _, _, _, _, _))
         .WillRepeatedly(Return(transport::ITransportMessageProvider::ErrorCode::TPMSG_OK));
@@ -660,8 +660,8 @@ TEST_F(
     uint8_t buffer[] = {0x22U, 0x01U, 0x01U};
 
     transport::TransportMessage transportMessage(buffer, sizeof(buffer));
-    transportMessage.setSourceId(0x10U);
-    transportMessage.setTargetId(0xDFU);
+    transportMessage.setSourceAddress(0x10U);
+    transportMessage.setTargetAddress(0xDFU);
 
     EXPECT_CALL(_messageProvider, getTransportMessage(_, _, _, _, _, _))
         .WillRepeatedly(
@@ -688,8 +688,8 @@ TEST_F(UdsIntegration, dispatchIncomingRequest_setProcessedListener_if_no_one_wa
     uint8_t buffer[] = {0x22U, 0x01U, 0x01U};
 
     transport::TransportMessage transportMessage(buffer, sizeof(buffer));
-    transportMessage.setSourceId(0x10U);
-    transportMessage.setTargetId(0xDFU);
+    transportMessage.setSourceAddress(0x10U);
+    transportMessage.setTargetAddress(0xDFU);
 
     transport::TransportMessage message;
     ::etl::array<uint8_t, 9> requestBuffer;
@@ -725,8 +725,8 @@ TEST_F(
 
     transport::TransportMessage transportMessage(buffer, sizeof(buffer));
     transportMessage.setServiceId(0x31U);
-    transportMessage.setSourceId(0x10U);
-    transportMessage.setTargetId(0xDFU);
+    transportMessage.setSourceAddress(0x10U);
+    transportMessage.setTargetAddress(0xDFU);
 
     transport::TransportMessage message;
     ::etl::array<uint8_t, 9> requestBuffer;
@@ -763,8 +763,8 @@ TEST_F(
 
     transport::TransportMessage transportMessage(buffer, sizeof(buffer));
     transportMessage.setServiceId(0x3EU);
-    transportMessage.setSourceId(0x10U);
-    transportMessage.setTargetId(0xDFU);
+    transportMessage.setSourceAddress(0x10U);
+    transportMessage.setTargetAddress(0xDFU);
 
     EXPECT_CALL(_messageProvider, getTransportMessage(_, _, _, _, _, _))
         .WillRepeatedly(
@@ -809,7 +809,7 @@ TEST_F(
 
     TransportMessageWithBuffer pRequest(SOURCE_ID, TARGET_ID, hardResetRequest, EMPTY_RESPONSE);
 
-    _incomingDiagConnection.fpRequestMessage = pRequest.get();
+    _incomingDiagConnection.requestMessage = pRequest.get();
 
     EXPECT_CALL(_sessionManager, getActiveSession())
         .WillRepeatedly(ReturnRef(DiagSession::APPLICATION_DEFAULT_SESSION()));
@@ -834,7 +834,7 @@ TEST_F(
 
     TransportMessageWithBuffer pRequest(SOURCE_ID, TARGET_ID, hardResetRequest, EMPTY_RESPONSE);
 
-    _incomingDiagConnection.fpRequestMessage = pRequest.get();
+    _incomingDiagConnection.requestMessage = pRequest.get();
 
     EXPECT_CALL(_sessionManager, getActiveSession())
         .WillRepeatedly(ReturnRef(DiagSession::APPLICATION_DEFAULT_SESSION()));
@@ -887,7 +887,7 @@ TEST_F(
 
     TransportMessageWithBuffer pRequest(SOURCE_ID, TARGET_ID, softResetRequest, EMPTY_RESPONSE);
 
-    _incomingDiagConnection.fpRequestMessage = pRequest.get();
+    _incomingDiagConnection.requestMessage = pRequest.get();
 
     EXPECT_CALL(_sessionManager, getActiveSession())
         .WillRepeatedly(ReturnRef(DiagSession::APPLICATION_DEFAULT_SESSION()));
@@ -913,7 +913,7 @@ TEST_F(
 
     TransportMessageWithBuffer pRequest(SOURCE_ID, TARGET_ID, softResetRequest, EMPTY_RESPONSE);
 
-    _incomingDiagConnection.fpRequestMessage = pRequest.get();
+    _incomingDiagConnection.requestMessage = pRequest.get();
 
     EXPECT_CALL(_sessionManager, getActiveSession())
         .WillRepeatedly(ReturnRef(DiagSession::APPLICATION_DEFAULT_SESSION()));
@@ -968,12 +968,12 @@ TEST_F(UdsIntegration, calling_PowerDown)
     TransportMessageWithBuffer pRequest(
         SOURCE_ID, TARGET_ID, POWER_DOWN_REQUEST, sizeof(POWER_DOWN_REQUEST));
 
-    _incomingDiagConnection.fpRequestMessage     = pRequest.get();
-    _incomingDiagConnection.fpMessageSender      = &_udsDispatcher;
-    _incomingDiagConnection.fpDiagSessionManager = &_sessionManager;
-    _incomingDiagConnection.fServiceId           = ECU_RESET;
+    _incomingDiagConnection.requestMessage     = pRequest.get();
+    _incomingDiagConnection.messageSender      = &_udsDispatcher;
+    _incomingDiagConnection.diagSessionManager = &_sessionManager;
+    _incomingDiagConnection.serviceId          = ECU_RESET;
 
-    _incomingDiagConnection.fOpen = true;
+    _incomingDiagConnection.isOpen = true;
 
     EXPECT_CALL(_lifecycle, requestPowerdown(false, _)).WillOnce(Return(true));
 
@@ -1001,12 +1001,12 @@ TEST_F(UdsIntegration, calling_RapidPowerDown)
     TransportMessageWithBuffer pRequest(
         SOURCE_ID, TARGET_ID, POWER_DOWN_REQUEST, sizeof(POWER_DOWN_REQUEST));
 
-    _incomingDiagConnection.fpRequestMessage     = pRequest.get();
-    _incomingDiagConnection.fpMessageSender      = &_udsDispatcher;
-    _incomingDiagConnection.fpDiagSessionManager = &_sessionManager;
-    _incomingDiagConnection.fServiceId           = ECU_RESET;
+    _incomingDiagConnection.requestMessage     = pRequest.get();
+    _incomingDiagConnection.messageSender      = &_udsDispatcher;
+    _incomingDiagConnection.diagSessionManager = &_sessionManager;
+    _incomingDiagConnection.serviceId          = ECU_RESET;
 
-    _incomingDiagConnection.fOpen = true;
+    _incomingDiagConnection.isOpen = true;
 
     EXPECT_CALL(_lifecycle, requestPowerdown(true, _)).WillOnce(Return(true));
 

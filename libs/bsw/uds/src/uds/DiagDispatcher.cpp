@@ -115,7 +115,7 @@ AbstractTransportLayer::ErrorCode DiagDispatcher::resume(
     }
     else
     {
-        transportMessage.setTargetId(TransportMessage::INVALID_ADDRESS);
+        transportMessage.setTargetAddress(TransportMessage::INVALID_ADDRESS);
     }
 
     return enqueueMessage(transportMessage, pNotificationListener);
@@ -137,8 +137,8 @@ TransportMessage* DiagDispatcher::copyFunctionalRequest(
     if ((ITransportMessageProvider::ErrorCode::TPMSG_OK == result) && (nullptr != pRequest))
     {
         pRequest->resetValidBytes();
-        pRequest->setSourceId(request.getSourceId());
-        pRequest->setTargetId(request.getTargetId());
+        pRequest->setSourceAddress(request.getSourceId());
+        pRequest->setTargetAddress(request.getTargetId());
         pRequest->setPayloadLength(request.getPayloadLength());
 
         (void)pRequest->append(request.getPayload(), request.getPayloadLength());
@@ -225,7 +225,7 @@ void DiagDispatcher::dispatchIncomingRequest(
         = job.getTransportMessage()->getTargetId() == TransportMessage::INVALID_ADDRESS;
     if (isResuming)
     {
-        job.getTransportMessage()->setTargetId(configuration.DiagAddress);
+        job.getTransportMessage()->setTargetAddress(configuration.DiagAddress);
     }
     if (!configuration.AcceptAllRequests)
     { // check if source is a tester or functional request
@@ -277,11 +277,11 @@ void DiagDispatcher::dispatchIncomingRequest(
             Logger::debug(
                 UDS,
                 "Opening incoming connection 0x%x --> 0x%x, service 0x%x",
-                pConnection->fSourceId,
-                pConnection->fTargetId,
-                pConnection->fServiceId);
-            pConnection->fpRequestNotificationListener = job.getProcessedListener();
-            DiagReturnCode::Type const result          = diagJobRoot.execute(
+                pConnection->sourceAddress,
+                pConnection->targetAddress,
+                pConnection->serviceId);
+            pConnection->requestNotificationListener = job.getProcessedListener();
+            DiagReturnCode::Type const result        = diagJobRoot.execute(
                 *pConnection,
                 job.getTransportMessage()->getPayload(),
                 job.getTransportMessage()->getPayloadLength());
@@ -322,15 +322,15 @@ IncomingDiagConnection* DiagDispatcher::requestIncomingConnection(TransportMessa
     }
     if (pConnection != nullptr)
     {
-        pConnection->fpDiagDispatcher     = this;
-        pConnection->fpMessageSender      = this;
-        pConnection->fpDiagSessionManager = &fSessionManager;
-        pConnection->fSourceId            = requestMessage.getSourceId();
-        pConnection->fTargetId            = requestMessage.getTargetId();
-        pConnection->fServiceId           = requestMessage.getServiceId();
+        pConnection->diagDispatcher     = this;
+        pConnection->messageSender      = this;
+        pConnection->diagSessionManager = &fSessionManager;
+        pConnection->sourceAddress      = requestMessage.getSourceId();
+        pConnection->targetAddress      = requestMessage.getTargetId();
+        pConnection->serviceId          = requestMessage.getServiceId();
         pConnection->open(fConfiguration.ActivateOutgoingPending);
-        pConnection->fpRequestMessage  = &requestMessage;
-        pConnection->fpResponseMessage = nullptr;
+        pConnection->requestMessage  = &requestMessage;
+        pConnection->responseMessage = nullptr;
         return pConnection;
     }
 
@@ -345,9 +345,9 @@ IncomingDiagConnection* DiagDispatcher::requestIncomingConnection(TransportMessa
 
 void DiagDispatcher::diagConnectionTerminated(IncomingDiagConnection& diagConnection)
 {
-    transport::TransportMessage* const requestMessage = diagConnection.fpRequestMessage;
+    transport::TransportMessage* const requestMessage = diagConnection.requestMessage;
     transport::ITransportMessageProcessedListener* const notificationListener
-        = diagConnection.fpRequestNotificationListener;
+        = diagConnection.requestNotificationListener;
     if ((notificationListener != nullptr) && (requestMessage != nullptr))
     {
         requestMessage->resetValidBytes();
@@ -357,7 +357,7 @@ void DiagDispatcher::diagConnectionTerminated(IncomingDiagConnection& diagConnec
             transport::ITransportMessageProcessedListener::ProcessingResult::PROCESSED_NO_ERROR);
     }
 
-    transport::TransportMessage* const responseMessage = diagConnection.fpResponseMessage;
+    transport::TransportMessage* const responseMessage = diagConnection.responseMessage;
     if (responseMessage != nullptr)
     {
         fProvidingListenerHelper.releaseTransportMessage(*responseMessage);
@@ -368,11 +368,11 @@ void DiagDispatcher::diagConnectionTerminated(IncomingDiagConnection& diagConnec
         fConfiguration.releaseIncomingDiagConnection(diagConnection);
     }
 
-    diagConnection.fpRequestMessage              = nullptr;
-    diagConnection.fpResponseMessage             = nullptr;
-    diagConnection.fpDiagDispatcher              = nullptr;
-    diagConnection.fpMessageSender               = nullptr;
-    diagConnection.fpRequestNotificationListener = nullptr;
+    diagConnection.requestMessage              = nullptr;
+    diagConnection.responseMessage             = nullptr;
+    diagConnection.diagDispatcher              = nullptr;
+    diagConnection.messageSender               = nullptr;
+    diagConnection.requestNotificationListener = nullptr;
 
     checkConnectionShutdownProgress();
 }
@@ -410,8 +410,8 @@ void DiagDispatcher::sendBusyResponse(TransportMessage const* const message)
 {
     Logger::error(UDS, "No incoming connection available -> request discarded --> BUSY");
 
-    fBusyMessage.setSourceId(fConfiguration.DiagAddress);
-    fBusyMessage.setTargetId(message->getSourceId());
+    fBusyMessage.setSourceAddress(fConfiguration.DiagAddress);
+    fBusyMessage.setTargetAddress(message->getSourceId());
     fBusyMessage.getPayload()[1] = message->getServiceId();
 
     ITransportMessageListener::ReceiveResult const status
