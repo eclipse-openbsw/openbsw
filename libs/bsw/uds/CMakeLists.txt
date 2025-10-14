@@ -64,7 +64,7 @@ if (BUILD_UNIT_TESTS)
 
     add_subdirectory(mock)
 
-    target_include_directories(uds PUBLIC test/include)
+    target_include_directories(uds PUBLIC test/mock/include)
 
     target_link_libraries(uds PUBLIC udsMock)
 

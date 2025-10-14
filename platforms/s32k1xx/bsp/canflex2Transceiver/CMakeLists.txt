@@ -12,7 +12,6 @@ if (BUILD_UNIT_TESTS)
                cpp2can
                etl
                utbspIo
-               canflex2TransceiverMock
                lifecycle
                gmock)
 else ()

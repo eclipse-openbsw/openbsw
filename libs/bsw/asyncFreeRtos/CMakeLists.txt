@@ -39,13 +39,15 @@ if (BUILD_UNIT_TESTS)
     # These compile definitions apply to all unit test
     add_library(asyncBinding INTERFACE)
 
-    target_include_directories(asyncBinding INTERFACE test/include)
+    target_include_directories(asyncBinding INTERFACE test/mock/include)
 
     add_library(asyncCoreConfiguration INTERFACE)
 
-    target_include_directories(asyncCoreConfiguration INTERFACE test/include)
+    target_include_directories(asyncCoreConfiguration
+                               INTERFACE test/mock/include)
 
     add_library(freeRtosCoreConfiguration INTERFACE)
 
-    target_include_directories(freeRtosCoreConfiguration INTERFACE test/include)
+    target_include_directories(freeRtosCoreConfiguration
+                               INTERFACE test/mock/include)
 endif ()

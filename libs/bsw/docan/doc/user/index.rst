@@ -279,7 +279,7 @@ Normal Addressing
 As the architect has already chosen *normal addressing* for the example integration, the integrator
 can already select and instantiate the ``docan::DoCanNormalAddressing`` class.
 
-.. sourceinclude::  test/gtest/src/docan/integration/DemoTest.cpp
+.. sourceinclude:: test/src/docan/integration/DemoTest.cpp
    :language: c++
    :start-after: EXAMPLE_START DoCanNormalAddressing
    :end-before: EXAMPLE_END DoCanNormalAddressing
@@ -296,7 +296,7 @@ receive segmented packets of data every 1ms. Lastly, we'll set the block size to
 ECUs which are sending segmented data to us may send all of their data after receiving just one flow
 control frame.
 
-.. sourceinclude::  test/gtest/src/docan/integration/DemoTest.cpp
+.. sourceinclude:: test/src/docan/integration/DemoTest.cpp
    :language: c++
    :start-after: EXAMPLE_START DoCanParameters
    :end-before: EXAMPLE_END DoCanParameters
@@ -308,7 +308,7 @@ The main class for integration is ``docan::DoCanTransportLayer``. A transport la
 internal classes and data structures necessary for performing data transmission and reception, and
 handling error cases along the way.
 
-.. sourceinclude::  test/gtest/src/docan/integration/DemoTest.cpp
+.. sourceinclude:: test/src/docan/integration/DemoTest.cpp
    :language: c++
    :start-after: EXAMPLE_START DoCanTransportLayer
    :end-before: EXAMPLE_END DoCanTransportLayer
@@ -358,7 +358,7 @@ classic" preset, as our example assumes classic CAN and that no padding is requi
 the ``docan::DoCanNormalAddressingFilter`` itself by creating slices to the mapping entries and all
 available codecs.
 
-.. sourceinclude::  test/gtest/src/docan/integration/DemoTest.cpp
+.. sourceinclude:: test/src/docan/integration/DemoTest.cpp
    :language: c++
    :start-after: EXAMPLE_START DoCanNormalAddressingFilter
    :end-before: EXAMPLE_END DoCanNormalAddressingFilter
@@ -379,7 +379,7 @@ implementer of ``docan::IDoCanPhysicalCanTransceiver``.
 
 For our example integration, we will be using the provided physical CAN transceiver.
 
-.. sourceinclude::  test/gtest/src/docan/integration/DemoTest.cpp
+.. sourceinclude:: test/src/docan/integration/DemoTest.cpp
    :language: c++
    :start-after: EXAMPLE_START DoCanPhysicalCanTransceiver
    :end-before: EXAMPLE_END DoCanPhysicalCanTransceiver
@@ -400,7 +400,7 @@ frequent rate. The more frequently ``tick`` is run, the more accurate consecutiv
 sent in regards to their set minimum separation time, but running ``tick`` more frequently will also
 require more CPU time.
 
-.. sourceinclude::  test/gtest/src/docan/integration/DemoTest.cpp
+.. sourceinclude:: test/src/docan/integration/DemoTest.cpp
    :language: c++
    :start-after: EXAMPLE_START IDoCanTickGenerator
    :end-before: EXAMPLE_END IDoCanTickGenerator
@@ -416,7 +416,7 @@ For our example integration, we've selected that the transport layer must suppor
 simultaneous communications, so we set our reception count and transmission count to 2. Because
 we're using the classic CAN protocol, we additionally set our max frame size to 8.
 
-.. sourceinclude::  test/gtest/src/docan/integration/DemoTest.cpp
+.. sourceinclude:: test/src/docan/integration/DemoTest.cpp
    :language: c++
    :start-after: EXAMPLE_START DoCanTransportLayerConfig
    :end-before: EXAMPLE_END DoCanTransportLayerConfig
@@ -433,7 +433,7 @@ With our transport layers created, we now need to connect them to the project's 
 which will provide the **docan** stack with transport messages to send, and onto which the stack
 will forward received transport messages.
 
-.. sourceinclude::  test/gtest/src/docan/integration/DemoTest.cpp
+.. sourceinclude:: test/src/docan/integration/DemoTest.cpp
    :language: c++
    :start-after: EXAMPLE_START TransportConnection
    :end-before: EXAMPLE_END TransportConnection
@@ -444,7 +444,7 @@ Running the Stack
 Lastly, we just have to initialize everything, run it all, and shut it down if the ECU needs to
 turn off.
 
-.. sourceinclude::  test/gtest/src/docan/integration/DemoTest.cpp
+.. sourceinclude:: test/src/docan/integration/DemoTest.cpp
    :language: c++
    :start-after: EXAMPLE_START Running
    :end-before: EXAMPLE_END Running
@@ -458,7 +458,7 @@ from **docan**, but if you want to send data via the **docan** transport layers 
 have to do is call ``transportLayer.send()`` with the transport layer and notification listener that
 make sense for your transmission.
 
-.. sourceinclude::  test/gtest/src/docan/integration/DemoTest.cpp
+.. sourceinclude:: test/src/docan/integration/DemoTest.cpp
    :language: c++
    :start-after: EXAMPLE_START SendingData
    :end-before: EXAMPLE_END SendingData

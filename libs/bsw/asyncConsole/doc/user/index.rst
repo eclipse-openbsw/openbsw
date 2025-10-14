@@ -30,7 +30,7 @@ Example - registering a command
 
 Given the :ref:`bsw command <util_command>` class :ref:`DemoCommand<learning_commands>`, registering this DemoCommand to the *AsyncConsole* can be done as follows:
 
-.. sourceinclude:: test/gtest/src/console/DemoTest.cpp
+.. sourceinclude:: test/src/console/DemoTest.cpp
    :language: c++
    :start-after: EXAMPLE_START AsyncCommandWrapper
    :end-before: EXAMPLE_END AsyncCommandWrapper
