@@ -1,9 +1,6 @@
 add_executable(
-    bspTest
-    src/bsp/can/canTransceiver/CanPhyTest.cpp
-    src/bsp/timer/IsEqualAfterTimeoutTest.cpp
-    src/bsp/IncludeTest.cpp
-    )
+    bspTest src/bsp/can/canTransceiver/CanPhyTest.cpp
+            src/bsp/timer/IsEqualAfterTimeoutTest.cpp src/bsp/IncludeTest.cpp)
 
 target_include_directories(bspTest PRIVATE)
 

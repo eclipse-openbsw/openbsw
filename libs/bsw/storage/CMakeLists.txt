@@ -10,13 +10,16 @@ else ()
     list(APPEND storage.extraSources src/storage/StorageTester.cpp)
 endif ()
 
-add_library(storage
-    src/storage/MappingStorage.cpp
-    src/storage/QueuingStorage.cpp
-    src/storage/EepStorage.cpp
-    ${storage.extraSources}
-)
+add_library(
+    storage src/storage/MappingStorage.cpp src/storage/QueuingStorage.cpp
+            src/storage/EepStorage.cpp ${storage.extraSources})
 
 target_include_directories(storage PUBLIC include)
 
-target_link_libraries(storage PUBLIC etl async asyncFreeRtosImpl util bsp)
+target_link_libraries(
+    storage
+    PUBLIC etl
+           async
+           asyncFreeRtosImpl
+           util
+           bsp)

@@ -11,17 +11,18 @@ target_link_libraries(
               osFreeRtos
               timer)
 
-add_library(
-    asyncFreeRtosImpl
-    src/async/Async.cpp
-    src/async/FutureSupport.cpp
-    src/async/Hook.cpp
-    src/async/Types.cpp)
+add_library(asyncFreeRtosImpl src/async/Async.cpp src/async/FutureSupport.cpp
+                              src/async/Hook.cpp src/async/Types.cpp)
 
 target_include_directories(asyncFreeRtosImpl PRIVATE include)
 
-target_link_libraries(asyncFreeRtosImpl PRIVATE asyncFreeRtos asyncBinding
-                                                asyncCoreConfiguration etl util)
+target_link_libraries(
+    asyncFreeRtosImpl
+    PRIVATE asyncFreeRtos
+            asyncBinding
+            asyncCoreConfiguration
+            etl
+            util)
 
 # For FreeRTOSConfig.h, freertos_task_c_additions.h, Hook.h
 

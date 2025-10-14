@@ -36,7 +36,6 @@ add_subdirectory(printf)
 
 add_subdirectory(freeRtos EXCLUDE_FROM_ALL)
 
-
 set(LWIP_DIR "${CMAKE_CURRENT_SOURCE_DIR}/lwip")
 set(LWIP_INCLUDE_DIRS
     "${LWIP_DIR}/src/include"
@@ -51,9 +50,8 @@ target_include_directories(
                     "${OPENBSW_APP_DIR}/application/include")
 
 if (NOT BUILD_UNIT_TESTS)
-target_link_libraries(lwipcore PUBLIC lwipConfiguration)
+    target_link_libraries(lwipcore PUBLIC lwipConfiguration)
 endif ()
 
 set(GIT_DIR_LOOKUP_POLICY DISALLOW_LOOKING_ABOVE_CMAKE_SOURCE_DIR)
 add_subdirectory(etl)
-

@@ -20,7 +20,12 @@ Formatting several files at once:
 
 *-i* edits the files in-place.
 
-For editor integration see :ref:`automatic_formatting`.
+cmake-format is also called by *treefmt*, see :ref:`automatic_formatting`.
+So the easiest way to format all CMake files is using treefmt:
+
+.. code-block:: bash
+
+    treefmt
 
 Configuration
 -------------

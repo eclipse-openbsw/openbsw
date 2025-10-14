@@ -11,8 +11,17 @@ add_executable(
     src/tcp/socket/AbstractServerSocketTest.cpp
     src/logger/Logger.cpp)
 
-target_include_directories(cpp2ethernetTest PRIVATE include ../../mock/include ../../../util/mock/include)
+target_include_directories(cpp2ethernetTest PRIVATE include ../../mock/include
+                                                    ../../../util/mock/include)
 
-target_link_libraries(cpp2ethernetTest PRIVATE cpp2ethernet bspMock gtest_main gmock utilMock asyncMock asyncMockImpl)
+target_link_libraries(
+    cpp2ethernetTest
+    PRIVATE cpp2ethernet
+            bspMock
+            gtest_main
+            gmock
+            utilMock
+            asyncMock
+            asyncMockImpl)
 
 gtest_discover_tests(cpp2ethernetTest PROPERTIES LABELS "cpp2ethernetTest")

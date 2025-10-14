@@ -1,7 +1,4 @@
-add_library(
-    startUpAsm OBJECT
-    src/bsp/bootHeader.S
-    src/bsp/startUp.S)
+add_library(startUpAsm OBJECT src/bsp/bootHeader.S src/bsp/startUp.S)
 
 set_target_properties(startUpAsm PROPERTIES COMPILE_WARNING_AS_ERROR OFF)
 
@@ -15,8 +12,13 @@ add_library(
     src/os/isr/isr_sys.cpp
     src/os/isr/isr_wdg.cpp)
 
-target_link_libraries(startUp PRIVATE bspMcu common hardFaultHandler
-                                      safeLifecycle safeMemory)
+target_link_libraries(
+    startUp
+    PRIVATE bspMcu
+            common
+            hardFaultHandler
+            safeLifecycle
+            safeMemory)
 
 add_library(
     main

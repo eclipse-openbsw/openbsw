@@ -6,7 +6,9 @@ target_link_libraries(
     bspIo
     PUBLIC bsp
            bspConfiguration # TODO: should this be split to ioConfiguration?
-           bspMcu etl platform)
+           bspMcu
+           etl
+           platform)
 
 if (BUILD_UNIT_TESTS)
     add_library(bspIoMock mock/gmock/src/IoMock.cpp)

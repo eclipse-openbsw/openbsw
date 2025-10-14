@@ -36,8 +36,7 @@ add_executable(asyncFreeRtosMinimumStackTest
                src/async/TaskInitializerMinimumStackTest.cpp)
 
 target_link_libraries(asyncFreeRtosMinimumStackTest PRIVATE asyncFreeRtos
-                                                            gmock_main
-                                                            util)
+                                                            gmock_main util)
 
 target_compile_options(asyncFreeRtosTest PRIVATE -Wno-array-bounds)
 

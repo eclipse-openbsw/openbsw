@@ -1,7 +1,7 @@
 # Platform configuration should be inherited from parent CMakeLists.txt
 if (NOT DEFINED OPENBSW_TARGET)
     string(TOLOWER "${BUILD_TARGET_PLATFORM}" OPENBSW_TARGET)
-endif()
+endif ()
 
 add_subdirectory(platforms/${OPENBSW_TARGET})
 
