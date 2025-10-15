@@ -4,10 +4,18 @@ import isotp
 from udsoncan.client import Client
 from udsoncan.connections import PythonIsoTpConnection
 from target_info import TargetInfo
-from process_mgmt import start_target_process, stop_target_process, \
-    start_per_run_processes, stop_all_processes
-from capture_serial import start_capture_serial, close_capture_serial, \
-    capture_serial_by_name, CaptureSerial
+from process_mgmt import (
+    start_target_process,
+    stop_target_process,
+    start_per_run_processes,
+    stop_all_processes,
+)
+from capture_serial import (
+    start_capture_serial,
+    close_capture_serial,
+    capture_serial_by_name,
+    CaptureSerial,
+)
 
 
 class TargetSession:
@@ -15,6 +23,7 @@ class TargetSession:
     This is instantiated and passed to each test with the target_session
     fixture.
     """
+
     counter = 0
 
     def __init__(self, target_name):
@@ -28,7 +37,9 @@ class TargetSession:
         it is not intended to be called from a test.
         """
         self.capserial().clear()
-        start_target_process(self.target_name, True if TargetSession.counter == 1 else False)
+        start_target_process(
+            self.target_name, True if TargetSession.counter == 1 else False
+        )
 
     def stop(self):
         """Stop the target.
@@ -44,7 +55,7 @@ class TargetSession:
 
     def target_ip_address(self):
         """Provides Target IP Address"""
-        return (self.target_info.eth["ip_address"])
+        return self.target_info.eth["ip_address"]
 
     def can_bus(self):
         """This can be called from a test to get a SocketcanBus object
@@ -123,10 +134,7 @@ def hw_tester(request):
 
 def pytest_addoption(parser):
     parser.addoption(
-        "--target",
-        action="append",
-        default=[],
-        help=TargetInfo.target_arg_help
+        "--target", action="append", default=[], help=TargetInfo.target_arg_help
     )
     parser.addoption(
         "--no-restart",
@@ -137,8 +145,7 @@ def pytest_addoption(parser):
 
 def pytest_configure(config):
     if not TargetInfo.by_name:
-        TargetInfo.load(config.getoption("target"),
-                        config.getoption("--no-restart"))
+        TargetInfo.load(config.getoption("target"), config.getoption("--no-restart"))
 
 
 def pytest_generate_tests(metafunc):
@@ -148,10 +155,10 @@ def pytest_generate_tests(metafunc):
             for name, target_info in TargetInfo.by_name.items():
                 if target_info.hw_tester_serial:
                     fixture_args.append([name, target_info.hw_tester_serial])
-            metafunc.parametrize("target_session,hw_tester",
-                                 fixture_args,
-                                 indirect=True)
+            metafunc.parametrize(
+                "target_session,hw_tester", fixture_args, indirect=True
+            )
         else:
-            metafunc.parametrize("target_session",
-                                 [name for name in TargetInfo.by_name],
-                                 indirect=True)
+            metafunc.parametrize(
+                "target_session", [name for name in TargetInfo.by_name], indirect=True
+            )

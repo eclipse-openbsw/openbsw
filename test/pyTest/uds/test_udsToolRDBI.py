@@ -1,5 +1,5 @@
 import os
-import helper
+import helper.helper as helper
 from target_info import TargetInfo
 
 
