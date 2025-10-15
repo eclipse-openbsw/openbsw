@@ -18,7 +18,9 @@ set(BUILD_TARGET_PLATFORM
 
 # Convert target name to lower case to match directory name
 string(TOLOWER "${BUILD_TARGET_PLATFORM}" OPENBSW_TARGET)
-include(executables/referenceApp/platforms/${OPENBSW_TARGET}/Options.cmake)
+if (BUILD_REFERENCE)
+    include(executables/referenceApp/platforms/${OPENBSW_TARGET}/Options.cmake)
+endif ()
 
 message(STATUS "Target platform: <${BUILD_TARGET_PLATFORM}>")
 
@@ -91,11 +93,10 @@ add_subdirectory(platforms EXCLUDE_FROM_ALL)
 add_subdirectory(libs EXCLUDE_FROM_ALL)
 
 if (BUILD_UNIT_TESTS)
-
     add_subdirectory(executables/unitTest EXCLUDE_FROM_ALL)
     target_include_directories(etl BEFORE INTERFACE executables/unitTest/etl_profile)
 
-    if (NOT DEFINED PLATFORM_CONFIG OR PLATFORM_CONFIG STREQUAL "GENERIC")
+    if (OPENBSW_PLATFORM STREQUAL "posix")
 
         add_subdirectory(libs/bsw/async/test)
         add_subdirectory(libs/bsw/asyncConsole/test)
@@ -130,23 +131,23 @@ if (BUILD_UNIT_TESTS)
         add_subdirectory(libs/safety/safeUtils/test)
         add_subdirectory(libs/safety/safeMonitor/test)
 
-    elseif (PLATFORM_CONFIG STREQUAL "POSIX")
+        add_subdirectory(platforms/posix/unitTest EXCLUDE_FROM_ALL)
 
         add_subdirectory(platforms/posix/bsp/bspEepromDriver/test)
-        add_subdirectory(platforms/posix/bsp/socketCanTransceiver EXCLUDE_FROM_ALL)
         add_subdirectory(platforms/posix/bsp/socketCanTransceiver/test)
 
-    elseif (PLATFORM_CONFIG STREQUAL "S32K1XX")
+    elseif (OPENBSW_PLATFORM STREQUAL "s32k1xx")
+
+        add_subdirectory(platforms/s32k1xx/unitTest EXCLUDE_FROM_ALL)
 
         add_subdirectory(platforms/s32k1xx/bsp/bspCore/test)
         add_subdirectory(platforms/s32k1xx/bsp/bspEepromDriver/test)
         add_subdirectory(platforms/s32k1xx/bsp/bspIo/test)
         add_subdirectory(platforms/s32k1xx/bsp/bspSci/test)
-        add_subdirectory(platforms/s32k1xx/bsp/canflex2Transceiver EXCLUDE_FROM_ALL)
         add_subdirectory(platforms/s32k1xx/bsp/canflex2Transceiver/test)
 
     else ()
-        message (FATAL_ERROR  "Invalid value for PLATFORM_CONFIG: ${PLATFORM_CONFIG}")
+        message (FATAL_ERROR  "Invalid value for OPENBSW_PLATFORM: ${OPENBSW_PLATFORM}")
     endif ()
 
 elseif(BUILD_REFERENCE)

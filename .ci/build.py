@@ -5,22 +5,6 @@ from buildoperations import run_builds
 
 # MATRIX
 commands = {
-    "tests-generic-debug": BuildOpTpl(
-        config_cmd="cmake --preset tests-generic-debug",
-        build_cmd="cmake --build --preset tests-generic-debug",
-        test_cmd="ctest --preset tests-generic-debug",
-        configs=["Debug"],
-        platforms=["linux"],
-        build_dir="build/tests/generic/Debug",
-    ),
-    "tests-generic-release": BuildOpTpl(
-        config_cmd="cmake --preset tests-generic-release",
-        build_cmd="cmake --build --preset tests-generic-release",
-        test_cmd="ctest --preset tests-generic-release",
-        configs=["Release"],
-        platforms=["linux"],
-        build_dir="build/tests/generic/Release",
-    ),
     "tests-posix-debug": BuildOpTpl(
         config_cmd="cmake --preset tests-posix-debug",
         build_cmd="cmake --build --preset tests-posix-debug",

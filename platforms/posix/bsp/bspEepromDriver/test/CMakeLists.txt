@@ -3,7 +3,7 @@ add_executable(bspEepromDriverTest src/eeprom/EepromDriverTest.cpp
 
 target_include_directories(bspEepromDriverTest PRIVATE ../include)
 
-target_link_libraries(bspEepromDriverTest PRIVATE bsp utbspConfiguration
+target_link_libraries(bspEepromDriverTest PRIVATE bsp bspConfiguration
                                                   gtest_main)
 
 gtest_discover_tests(bspEepromDriverTest PROPERTIES LABELS

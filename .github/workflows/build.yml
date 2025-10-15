@@ -7,25 +7,12 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        preset: [ "tests-generic-debug", "tests-generic-release", "tests-posix-debug", "tests-posix-release", "tests-s32k1xx-debug", "tests-s32k1xx-release", "posix", "posix-with-tracing", "s32k148-gcc" ]
+        preset: [ "tests-posix-debug", "tests-posix-release", "tests-s32k1xx-debug", "tests-s32k1xx-release", "posix", "posix-with-tracing", "s32k148-gcc" ]
         platform: [ "arm", "linux" ]
         config: [ "Debug", "Release", "RelWithDebInfo" ]
         cxxid: ["gcc", "clang"]
         cxxstd: [ 14, 20 ]
         exclude:
-          - preset: "tests-generic-debug"
-            platform: "arm"
-          - preset: "tests-generic-debug"
-            config: "Release"
-          - preset: "tests-generic-debug"
-            config: "RelWithDebInfo"
-          - preset: "tests-generic-release"
-            platform: "arm"
-          - preset: "tests-generic-release"
-            config: "Debug"
-          - preset: "tests-generic-release"
-            config: "RelWithDebInfo"
-
           - preset: "tests-posix-debug"
             platform: "arm"
           - preset: "tests-posix-debug"
@@ -75,8 +62,7 @@ jobs:
         with:
           path: build
           key: ${{ runner.os }}-cmake-${{ matrix.preset }}-${{ matrix.config }}-${{ matrix.platform }}-${{ matrix.cxxid }}-${{ matrix.cxxstd }}-${{ hashFiles('**/*.cpp', '**/*.h',  '**/*.cmake', '**/*.txt', '**/*.c', '**/*.s') }}
-          restore-keys: |
-            ${{ runner.os }}-cmake-${{ matrix.platform }}-${{ matrix.cxxid }}-${{ matrix.cxxstd }}-
+          restore-keys: ${{ runner.os }}-cmake-${{ matrix.preset }}-${{ matrix.config }}-${{ matrix.platform }}-${{ matrix.cxxid }}-${{ matrix.cxxstd }}-
 
       - name: Build the docker image
         if: steps.cache-cmake.outputs.cache-hit != 'true'

@@ -49,9 +49,7 @@ target_include_directories(
     lwipcore PUBLIC "${LWIP_DIR}/src/include"
                     "${OPENBSW_APP_DIR}/application/include")
 
-if (NOT BUILD_UNIT_TESTS)
-    target_link_libraries(lwipcore PUBLIC lwipConfiguration)
-endif ()
+target_link_libraries(lwipcore PUBLIC lwipConfiguration)
 
 set(GIT_DIR_LOOKUP_POLICY DISALLOW_LOOKING_ABOVE_CMAKE_SOURCE_DIR)
 add_subdirectory(etl)

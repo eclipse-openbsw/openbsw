@@ -37,7 +37,7 @@ def build():
         [
             "cmake",
             "--preset",
-            "tests-generic-debug",
+            "tests-posix-debug",
             "-B",
             f"{build_dir_name}",
             "-DCMAKE_C_COMPILER_LAUNCHER=sccache",

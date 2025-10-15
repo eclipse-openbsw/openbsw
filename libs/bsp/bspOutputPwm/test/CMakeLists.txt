@@ -6,7 +6,7 @@ target_link_libraries(
     bspOutputPwmTest
     PRIVATE etl
             bspDynamicClient
-            utbspConfiguration
+            bspConfiguration
             utbspIo
             utbspMcu
             util

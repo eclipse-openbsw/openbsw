@@ -82,17 +82,17 @@ visualize and analyze the results more effectively.
 
    # capture the coverage
    lcov --capture --directory . \
-    --output-file build/tests/generic/Debug/coverage_unfiltered.info
+    --output-file build/tests/posix/Debug/coverage_unfiltered.info
    # filter out the coverage of 3rd party googletest module as it is not used on target and
    # also coverage for mocks
-   lcov --remove build/tests/generic/Debug/coverage_unfiltered.info \
+   lcov --remove build/tests/posix/Debug/coverage_unfiltered.info \
     '*libs/3rdparty/googletest/*' \
     '*/mock/*' \
     '*/gmock/*' \
-    --output-file build/tests/generic/Debug/coverage.info
+    --output-file build/tests/posix/Debug/coverage.info
    # create a HTML report
-   genhtml build/tests/generic/Debug/coverage.info \
-    --output-directory build/tests/generic/Debug/coverage
+   genhtml build/tests/posix/Debug/coverage.info \
+    --output-directory build/tests/posix/Debug/coverage
 
 .. note::
 

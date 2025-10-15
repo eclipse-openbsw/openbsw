@@ -1,3 +1,3 @@
-add_library(utbspConfiguration INTERFACE)
+add_library(bspConfiguration INTERFACE)
 
-target_include_directories(utbspConfiguration INTERFACE include)
+target_include_directories(bspConfiguration INTERFACE include)

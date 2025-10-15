@@ -15,32 +15,29 @@ Configure and generate a project buildsystem for the unit test build:
 
 .. code-block:: bash
 
-    cmake --preset tests-generic-debug
+    cmake --preset tests-posix-debug
 
-Build all tests from generic modules or a specified target:
+Build all tests or a specified target:
 
 .. code-block:: bash
 
     # all tests for generic modules
-    cmake --build --preset tests-generic-debug
+    cmake --build --preset tests-posix-debug
     # specific target
-    cmake --build --preset tests-generic-debug --target <target>
+    cmake --build --preset tests-posix-debug --target <target>
     # example
-    cmake --build --preset tests-generic-debug --target ioTest
+    cmake --build --preset tests-posix-debug --target ioTest
 
 Find all available targets for the unit test build:
 
 .. code-block:: bash
 
-    cmake --build --preset tests-generic-debug --target help
+    cmake --build --preset tests-posix-debug --target help
 
-Configure and build tests from platform specific modules:
+Configure and build tests for platform specific modules other than POSIX:
 
 .. code-block:: bash
 
-    # POSIX
-    cmake --preset tests-posix-debug
-    cmake --build --preset tests-posix-debug
     # S32K1XX
     cmake --preset tests-s32k1xx-debug
     cmake --build --preset tests-s32k1xx-debug
@@ -49,13 +46,13 @@ Prepare a clean build using the clean target:
 
 .. code-block:: bash
 
-    cmake --build --preset tests-generic-debug --target clean
+    cmake --build --preset tests-posix-debug --target clean
 
 Run the tests:
 
 .. code-block:: bash
 
-    ctest --preset tests-generic-debug --parallel
+    ctest --preset tests-posix-debug --parallel
 
 If you modified some CMakeLists.txt files in the project don't forget to run:
 

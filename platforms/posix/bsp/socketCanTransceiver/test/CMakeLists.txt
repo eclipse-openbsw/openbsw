@@ -4,8 +4,11 @@ add_executable(socketCanTransceiverTest src/can/IncludeTest.cpp
 target_link_libraries(
     socketCanTransceiverTest
     PRIVATE
+        asyncFreeRtos
         "-Wl,--whole-archive \"$<TARGET_FILE:bspMock>\" -Wl,--no-whole-archive"
-        socketCanTransceiver bspMock gtest_main)
+        socketCanTransceiver
+        bspMock
+        gtest_main)
 
 gtest_discover_tests(socketCanTransceiverTest
                      PROPERTIES LABELS "socketCanTransceiverTest")
