@@ -194,6 +194,7 @@ add_executable(etl_tests
 	test_hash.cpp
 	test_hfsm.cpp
 	test_hfsm_recurse_to_inner_state_on_start.cpp
+	test_hfsm_transition_on_enter.cpp
 	test_histogram.cpp
 	test_index_of_type.cpp
 	test_indirect_vector.cpp
@@ -285,6 +286,7 @@ add_executable(etl_tests
 	test_scaled_rounding.cpp
 	test_set.cpp
 	test_shared_message.cpp
+	test_signal.cpp
 	test_singleton.cpp
 	test_singleton_base.cpp
 	test_smallest.cpp
