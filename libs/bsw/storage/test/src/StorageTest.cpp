@@ -668,8 +668,6 @@ TEST_F(StorageTest, MultipleErrors)
 
 TEST_F(StorageTest, SameCallbackCalledAgain)
 {
-    ::estd::AssertHandlerScope scope(::estd::AssertExceptionHandler);
-
     uint8_t data[] = {0U};
     StorageJob::Type::Read::BufferType buf(data);
 
@@ -677,7 +675,7 @@ TEST_F(StorageTest, SameCallbackCalledAgain)
     job.init(BLOCKID7, jobDoneCb);
     job.initRead(buf);
     EXPECT_CALL(storageMock, process(_)).WillOnce(Invoke(this, &StorageTest::processCallsCbTwice));
-    ASSERT_THROW(storage.process(job), ::estd::assert_exception);
+    ASSERT_THROW(storage.process(job), ::etl::exception);
 }
 
 TEST_F(StorageTest, SameJobTriggeredAgain)

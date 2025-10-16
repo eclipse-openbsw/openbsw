@@ -121,8 +121,7 @@ TEST_F(AsyncTest, testInitIdleTask)
         EXPECT_CALL(_freeRtosMock, xTaskGetIdleTaskHandle()).WillOnce(Return(&taskHandle));
         EXPECT_CALL(*this, startApp());
         asyncInitialized();
-        ::estd::AssertHandlerScope scope(::estd::AssertExceptionHandler);
-        EXPECT_THROW({ asyncGetTaskConfig(taskHandle); }, ::estd::assert_exception);
+        EXPECT_THROW({ asyncGetTaskConfig(taskHandle); }, ::etl::exception);
         // check idle handle
         EXPECT_EQ(&taskHandle, AdapterType::getTaskHandle(AdapterType::TASK_IDLE));
     }

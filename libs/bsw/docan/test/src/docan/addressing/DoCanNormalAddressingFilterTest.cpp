@@ -50,12 +50,11 @@ static DoCanNormalAddressingFilter<DataLinkLayerType>::AddressEntryType const te
  */
 TEST(DoCanNormalAddressingFilterTest, initAssertsIfEntriesIsEmpty)
 {
-    ::estd::AssertHandlerScope scope(::estd::AssertExceptionHandler);
     ASSERT_THROW(
         { DoCanNormalAddressingFilter<DataLinkLayerType> cut1({}, codecEntries); },
-        ::estd::assert_exception);
+        ::etl::exception);
     DoCanNormalAddressingFilter<DataLinkLayerType> cut2;
-    ASSERT_THROW(cut2.init({}, codecEntries), ::estd::assert_exception);
+    ASSERT_THROW(cut2.init({}, codecEntries), ::etl::exception);
 }
 
 /*
@@ -310,10 +309,8 @@ static DoCanNormalAddressingFilterType::AddressEntryType const unsortedEntries[]
 
 TEST(DoCanNormalAddressingFilterTypeTest, testAscendingReceptionAddressesExpected)
 {
-    ::estd::AssertHandlerScope scope(::estd::AssertExceptionHandler);
     ASSERT_THROW(
-        { DoCanNormalAddressingFilterType cut(unsortedEntries, codecEntries); },
-        ::estd::assert_exception);
+        { DoCanNormalAddressingFilterType cut(unsortedEntries, codecEntries); }, ::etl::exception);
 }
 
 static DoCanNormalAddressingFilterType::AddressEntryType const invalidInvalidEntries[] = {
@@ -327,10 +324,9 @@ static DoCanNormalAddressingFilterType::AddressEntryType const invalidInvalidEnt
  */
 TEST(DoCanNormalAddressingFilterTypeTest, testOnlyInvalidAddressesExpectedAtEnd)
 {
-    ::estd::AssertHandlerScope scope(::estd::AssertExceptionHandler);
     ASSERT_THROW(
         { DoCanNormalAddressingFilterType cut(invalidInvalidEntries, codecEntries); },
-        ::estd::assert_exception);
+        ::etl::exception);
 }
 
 static DoCanNormalAddressingFilterType::AddressEntryType const anyEntries[] = {

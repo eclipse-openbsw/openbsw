@@ -131,13 +131,11 @@ TEST(ConstString, testSubscriptionOperator)
         ASSERT_EQ('b', cut[1]);
         ASSERT_EQ('c', cut[2]);
         ASSERT_EQ('d', cut[3]);
-        ::estd::AssertHandlerScope scope(::estd::AssertExceptionHandler);
-        ASSERT_THROW({ cut[4]; }, ::estd::assert_exception);
+        ASSERT_THROW({ cut[4]; }, ::etl::exception);
     }
     {
         ConstString cut;
-        ::estd::AssertHandlerScope scope(::estd::AssertExceptionHandler);
-        ASSERT_THROW({ cut[0]; }, ::estd::assert_exception);
+        ASSERT_THROW({ cut[0]; }, ::etl::exception);
     }
 }
 

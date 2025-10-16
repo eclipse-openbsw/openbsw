@@ -70,9 +70,8 @@ TEST(IPAddressTest, factory_make_ip4_slice)
     EXPECT_EQ(IPAddress::IPV4, addressFamilyOf(ip));
     EXPECT_EQ(0xABCDEF01, ip4_to_u32(ip));
 
-    ::estd::AssertHandlerScope scope(::estd::AssertExceptionHandler);
     uint8_t const bytes_wrong_length[] = {0xAB, 0xCD, 0xEF, 0x01, 0x02};
-    EXPECT_THROW({ make_ip4(bytes_wrong_length); }, ::estd::assert_exception);
+    EXPECT_THROW({ make_ip4(bytes_wrong_length); }, ::etl::exception);
 }
 
 #ifndef OPENBSW_NO_IPV6
@@ -121,7 +120,6 @@ TEST(IPAddressTest, factory_make_ip6_slice)
     EXPECT_EQ(0x20212223U, ip.be_uint32_at(2U));
     EXPECT_EQ(0x30313233U, ip.be_uint32_at(3U));
 
-    ::estd::AssertHandlerScope scope(::estd::AssertExceptionHandler);
     // clang-format off
     const uint8_t addr_wrong_length[] = {
         0x00, 0x01, 0x02, 0x03,
@@ -131,7 +129,7 @@ TEST(IPAddressTest, factory_make_ip6_slice)
         0x40, 0x41, 0x42, 0x43,
     };
     // clang-format on
-    EXPECT_THROW({ make_ip6(addr_wrong_length); }, ::estd::assert_exception);
+    EXPECT_THROW({ make_ip6(addr_wrong_length); }, ::etl::exception);
 }
 #endif
 
@@ -252,8 +250,7 @@ TEST(IPAddressTest, ip6_to_u32)
     EXPECT_EQ(0x99AABBCCU, ip6_to_u32(ip, 2));
     EXPECT_EQ(0xDDEEFF00U, ip6_to_u32(ip, 3));
 
-    ::estd::AssertHandlerScope scope(::estd::AssertExceptionHandler);
-    EXPECT_THROW({ ip6_to_u32(ip, 4); }, ::estd::assert_exception);
+    EXPECT_THROW({ ip6_to_u32(ip, 4); }, ::etl::exception);
 }
 #endif
 

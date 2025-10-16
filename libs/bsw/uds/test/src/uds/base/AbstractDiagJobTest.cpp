@@ -255,22 +255,18 @@ TEST_F(
     AbstractDiagJobTest,
     constructor_one_calls_an_exception_if_prefixLength_is_greaterEq_requestLength)
 {
-    ::estd::AssertHandlerScope scope(::estd::AssertExceptionHandler);
-
     ASSERT_THROW(
         { TestableDiagJob diagJob(IMPLEMENTED_REQUEST, sizeof(IMPLEMENTED_REQUEST), 1U); },
-        ::estd::assert_exception);
+        ::etl::exception);
 }
 
 TEST_F(
     AbstractDiagJobTest,
     constructor_two_calls_an_exception_if_prefixLength_is_greaterEq_requestLength)
 {
-    ::estd::AssertHandlerScope scope(::estd::AssertExceptionHandler);
-
     ASSERT_THROW(
         { TestableDiagJob diagJob(IMPLEMENTED_REQUEST, sizeof(IMPLEMENTED_REQUEST), 1U, 0U, 1U); },
-        ::estd::assert_exception);
+        ::etl::exception);
 }
 
 TEST_F(
@@ -293,9 +289,7 @@ TEST_F(
 {
     IDiagSessionManager* diagSessionManager = nullptr;
     AbstractDiagJob::setDefaultDiagSessionManager(*diagSessionManager);
-    ::estd::AssertHandlerScope scope(::estd::AssertExceptionHandler);
-
-    ASSERT_THROW(fTestableDiagJob.getDiagSessionManager(), ::estd::assert_exception);
+    ASSERT_THROW(fTestableDiagJob.getDiagSessionManager(), ::etl::exception);
 }
 
 TEST_F(
@@ -306,9 +300,7 @@ TEST_F(
 
     IDiagSessionManager* diagSessionManager = nullptr;
     AbstractDiagJob::setDefaultDiagSessionManager(*diagSessionManager);
-    ::estd::AssertHandlerScope scope(::estd::AssertExceptionHandler);
-
-    ASSERT_THROW(diagJob.getDiagSessionManager(), ::estd::assert_exception);
+    ASSERT_THROW(diagJob.getDiagSessionManager(), ::etl::exception);
 }
 
 TEST_F(

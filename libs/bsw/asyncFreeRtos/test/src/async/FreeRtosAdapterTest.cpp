@@ -274,10 +274,9 @@ TEST_F(FreeRtosAdapterTest, testExecuteAndScheduleCalls)
  */
 TEST_F(FreeRtosAdapterTest, testMinStackSize)
 {
-    ::estd::AssertHandlerScope scope(::estd::AssertExceptionHandler);
     using TaskType = CutType::Task<1U, 4U>;
 
-    EXPECT_THROW({ TaskType task("test"); }, ::estd::assert_exception);
+    EXPECT_THROW({ TaskType task("test"); }, ::etl::exception);
 }
 
 /**

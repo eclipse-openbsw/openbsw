@@ -268,8 +268,7 @@ TEST_F(
 {
     TestableRoutineControlJob routineControlJob(true);
 
-    ::estd::AssertHandlerScope scope(::estd::AssertExceptionHandler);
-    ASSERT_THROW(routineControlJob.getStopRoutine(), ::estd::assert_exception);
+    ASSERT_THROW(routineControlJob.getStopRoutine(), ::etl::exception);
 }
 
 /**
@@ -294,8 +293,7 @@ TEST_F(
 {
     TestableRoutineControlJob routineControlJob("NullPointerTest");
 
-    ::estd::AssertHandlerScope scope(::estd::AssertExceptionHandler);
-    ASSERT_THROW(routineControlJob.getRequestRoutineResults(), ::estd::assert_exception);
+    ASSERT_THROW(routineControlJob.getRequestRoutineResults(), ::etl::exception);
 }
 
 /**
