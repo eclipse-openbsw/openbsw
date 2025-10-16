@@ -48,7 +48,7 @@ def build():
     )
 
     subprocess.run(
-        ["cmake", "--build", f"{build_dir_name}", "--config", "Debug"],
+        ["cmake", "--build", f"{build_dir_name}", "--config", "Debug", "--verbose"],
         check=True,
         env=env,
     )

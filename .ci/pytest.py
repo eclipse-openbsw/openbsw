@@ -12,7 +12,7 @@ def build_reference_app():
     env["CMAKE_BUILD_PARALLEL_LEVEL"] = str(threads)
 
     subprocess.run(["cmake", "--preset", "posix"], check=True)
-    subprocess.run(["cmake", "--build", "--preset", "posix"], check=True, env=env)
+    subprocess.run(["cmake", "--build", "--preset", "posix", "--verbose"], check=True, env=env)
 
 
 def run_pytest():
