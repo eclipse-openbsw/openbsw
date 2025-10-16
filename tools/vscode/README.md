@@ -11,7 +11,7 @@ For example, ``settings.json`` has settings for the
 [Cortex-Debug](https://marketplace.visualstudio.com/items?itemName=marus25.cortex-debug)
 extension including where to find the ARM Toolchain...
 ```
-"cortex-debug.armToolchainPath": "/home/username/gcc-arm-none-eabi-10.3-2021.10/bin/"
+"cortex-debug.armToolchainPath": "/home/username/arm-gnu-toolchain-14.3.rel1-x86_64-arm-none-eabi/bin/"
 ```
 so this needs to be adjusted for your local setup if you wish to use this extension.
 

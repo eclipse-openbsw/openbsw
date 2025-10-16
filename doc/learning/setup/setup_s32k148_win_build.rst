@@ -7,7 +7,7 @@ Open a Ubuntu :prop:`tool:ubuntu_version` shell running in WSL.
 
 Required tools:
 
-* gcc for ARM (tested with version `10-3-2021-10 <https://developer.arm.com/downloads/-/gnu-rm/10-3-2021-10>`_).
+* gcc for ARM (tested with version `14.3.rel1 <https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads>`_).
 * cmake >= :prop:`tool:cmake_version`
 * make
 
@@ -25,13 +25,13 @@ you can set up the build environment for the S32K148 platform with the following
 
 .. code-block:: bash
 
-    wget https://developer.arm.com/-/media/Files/downloads/gnu-rm/x.x/gcc-arm-none-eabi-x.x-x86_64-linux.tar.bz2
+    wget https://developer.arm.com/-/media/Files/downloads/gnu/x.x/binrel/arm-gnu-toolchain-x.x-x86_64-arm-none-eabi.tar.xz
 
 and unpack it in your preferred location as follows:
 
 .. code-block:: bash
 
-    tar xjf gcc-arm-none-eabi-x.x-x86_64-linux.tar.bz2
+    tar xf arm-gnu-toolchain-x.x-x86_64-arm-none-eabi.tar.xz
 
 This will create a directory named gcc-arm-none-eabi-:prop:`tool:gcc-arm-none-eabi` with a ``bin`` subdirectory containing the GCC for ARM toolchain.
 Add the full path to gcc-arm-none-eabi-:prop:`tool:gcc-arm-none-eabi`/bin to your ``PATH`` environment variable
