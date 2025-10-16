@@ -107,8 +107,7 @@ TEST_F(DoCanReceiverTest, testAssertsOnTooSmallBlocksInBlockPool)
         _addressConverterMock,
         _parameters,
         _loggerComponent);
-    ::estd::AssertHandlerScope scope(::estd::AssertExceptionHandler);
-    ASSERT_THROW(cut.init(), ::estd::assert_exception);
+    ASSERT_THROW(cut.init(), ::etl::exception);
 }
 
 TEST_F(DoCanReceiverTest, testAssertsOnTooBigBlocksInBlockPool)
@@ -128,8 +127,7 @@ TEST_F(DoCanReceiverTest, testAssertsOnTooBigBlocksInBlockPool)
         _addressConverterMock,
         _parameters,
         _loggerComponent);
-    ::estd::AssertHandlerScope scope(::estd::AssertExceptionHandler);
-    ASSERT_THROW(cut.init(), ::estd::assert_exception);
+    ASSERT_THROW(cut.init(), ::etl::exception);
 }
 
 /**

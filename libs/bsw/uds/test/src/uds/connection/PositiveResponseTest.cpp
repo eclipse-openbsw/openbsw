@@ -270,14 +270,13 @@ TEST_F(PositiveResponseTest, GetAvailableDataLength)
  */
 TEST_F(PositiveResponseTest, IncreaseDataLength)
 {
-    ::estd::AssertHandlerScope scope(::estd::AssertExceptionHandler);
     uint8_t buffer[4] = {0xFF, 0xFF, 0xFF, 0xFF};
     response.init(buffer, sizeof(buffer));
     ASSERT_EQ(4, response.getAvailableDataLength());
     ASSERT_EQ(0, response.getLength());
 
     // Increasing past available size will assert.
-    ASSERT_THROW(response.increaseDataLength(5), ::estd::assert_exception);
+    ASSERT_THROW(response.increaseDataLength(5), ::etl::exception);
 
     ASSERT_EQ(1, response.increaseDataLength(1));
     ASSERT_EQ(3, response.getAvailableDataLength());
@@ -288,7 +287,7 @@ TEST_F(PositiveResponseTest, IncreaseDataLength)
     ASSERT_EQ(4, response.getLength());
 
     // Increasing past available size will assert.
-    ASSERT_THROW(response.increaseDataLength(1), ::estd::assert_exception);
+    ASSERT_THROW(response.increaseDataLength(1), ::etl::exception);
 }
 
 } // namespace

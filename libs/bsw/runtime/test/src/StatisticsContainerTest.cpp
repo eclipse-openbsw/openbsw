@@ -175,11 +175,9 @@ TEST(StatisticsContainerTest, testEntryArray)
         }
     }
     {
-        ::estd::AssertHandlerScope scope(::estd::AssertExceptionHandler);
-
         TestStatistics destEntries[4];
         StatisticsContainer<TestStatistics> dest(destEntries);
-        EXPECT_THROW({ dest.copyFrom(cut); }, ::estd::assert_exception);
+        EXPECT_THROW({ dest.copyFrom(cut); }, ::etl::exception);
     }
 }
 
