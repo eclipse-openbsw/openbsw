@@ -1,0 +1,18 @@
+name: Third party libraries check
+
+on: [ merge_group, push, pull_request ]
+
+jobs:
+  rim:
+    runs-on: ubuntu-latest
+    steps:
+     - name: Checkout code
+       uses: actions/checkout@v4
+
+     - name: Build the docker image
+       run: |
+          docker build -f docker/Dockerfile.dev -t dev .
+
+     - name: Run the third party libraries check via RIM inside the docker container
+       run: |
+          docker run --rm -v "$PWD:/home/jenkins" -w /home/jenkins --user $(id -u):4996 dev rim status -d --verify-clean
