@@ -13,6 +13,7 @@ RUN for i in 1 2 3; do \
             ninja-build \
             python3-pip \
             python3.10 \
+            ruby-rubygems \
             tar \
             tmux \
             wget \
@@ -58,8 +59,10 @@ RUN wget https://github.com/mozilla/sccache/releases/download/v0.10.0/sccache-v0
     && rm sccache-v0.10.0-x86_64-unknown-linux-musl.tar.gz \
     && rm -rf sccache-v0.10.0-x86_64-unknown-linux-musl
 
+RUN gem install esr-rim
+
 RUN git config --global --add safe.directory /home/jenkins
-ENV PATH="/usr/bin/gcc-arm-none-eabi/bin:/usr/bin/llvm/bin:/usr/bin/llvm-arm/bin:usr/bin/clang-format-17:usr/bin/treefmt:/usr/bin/gcc:/usr/local/bin/sccache${PATH}"
+ENV PATH="/usr/bin/gcc-arm-none-eabi/bin:/usr/bin/llvm/bin:/usr/bin/llvm-arm/bin:${PATH}"
 
 RUN echo 'export HISTFILE=/root/.bash_history/history' >> /root/.bashrc
 
