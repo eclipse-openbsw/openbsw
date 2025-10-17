@@ -66,6 +66,8 @@ target_link_libraries(
             loggerIntegration
             main
             stdioConsoleInput
+            osRtos
+            asyncRtosImpl
             util
             udsConfigurationImpl
             runtime
@@ -73,17 +75,6 @@ target_link_libraries(
             safeUtils
             safeWatchdog
             socBsp)
-
-if (BUILD_TARGET_RTOS STREQUAL "FREERTOS")
-    target_link_libraries(app.referenceApp PRIVATE osFreeRtos asyncFreeRtosImpl)
-elseif (BUILD_TARGET_RTOS STREQUAL "THREADX")
-    target_link_libraries(app.referenceApp PRIVATE osThreadX asyncThreadXImpl)
-else ()
-    message(
-        FATAL_ERROR
-            "The target_build_rtos '${BUILD_TARGET_RTOS}' is not included in the suppported rtoses."
-    )
-endif ()
 
 if (PLATFORM_SUPPORT_UDS)
     target_link_libraries(app.referenceApp PRIVATE transport

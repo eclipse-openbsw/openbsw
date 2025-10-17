@@ -14,9 +14,9 @@
 
 #include <bsp/timer/SystemTimer.h>
 #include <etl/delegate.h>
+#include <etl/error_handler.h>
 #include <etl/span.h>
 #include <timer/Timer.h>
-#include <util/estd/assert.h>
 
 namespace async
 {
@@ -144,13 +144,14 @@ void TaskContext<Binding>::createTask(
         priority,
         TX_NO_TIME_SLICE,
         TX_DONT_START);
-    estd_assert(status == TX_SUCCESS);
+    ETL_ASSERT(status == TX_SUCCESS, ETL_ERROR_GENERIC("tx_thread_create must return success"));
 
     status = tx_event_flags_create(
         &_eventObject,
         const_cast<CHAR*>(name) // use same name as for the task
     );
-    estd_assert(status == TX_SUCCESS);
+    ETL_ASSERT(
+        status == TX_SUCCESS, ETL_ERROR_GENERIC("tx_event_flags_create must return success"));
     _taskHandle = &task;
 }
 

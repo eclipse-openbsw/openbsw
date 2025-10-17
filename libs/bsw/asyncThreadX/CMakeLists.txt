@@ -8,8 +8,11 @@ target_link_libraries(
               bsp
               bspInterrupts
               common
-              osThreadX
               timer)
+
+if (NOT BUILD_UNIT_TESTS)
+    target_link_libraries(asyncThreadX INTERFACE threadX)
+endif ()
 
 add_library(asyncThreadXImpl src/async/Async.cpp src/async/FutureSupport.cpp
                              src/async/Hook.cpp src/async/Types.cpp)

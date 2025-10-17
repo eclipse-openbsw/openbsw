@@ -9,6 +9,14 @@ if possible:
 * ``googletest``
 * ``lwip``
 * ``printf``
+* ``threadx/common``
+
+Platform specific 3rdparty libraries should be placed under
+``platforms/<<platform_name>>/3rdparty``,
+if possible:
+
+* ``platforms/posix/3rdparty/threadx/ports/linux/gnu``
+* ``platforms/s32k1xx/3rdparty/threadx/ports/cortex_m4/gnu``
 
 Other libraries might not be suitable for maintenance via RIM, because RIM is
 based on git, and libraries might not be available via a public git

@@ -62,13 +62,43 @@
 #ifndef TX_PORT_H
 #define TX_PORT_H
 
+
+#define TX_MAX_PRIORITIES                       32
 /* #define TX_MISRA_ENABLE  */
 
-#include "async/Config.h"
+
+/* #define TX_INLINE_INITIALIZATION */
+
+/* #define TX_NOT_INTERRUPTABLE  */
+/* #define TX_TIMER_PROCESS_IN_ISR */
+/* #define TX_REACTIVATE_INLINE */
+/* #define TX_DISABLE_STACK_FILLING */
+/* #define TX_ENABLE_STACK_CHECKING */
+/* #define TX_DISABLE_PREEMPTION_THRESHOLD */
+/* #define TX_DISABLE_REDUNDANT_CLEARING */
+/* #define TX_DISABLE_NOTIFY_CALLBACKS */
+/* #define TX_INLINE_THREAD_RESUME_SUSPEND */
+/* #define TX_ENABLE_EVENT_TRACE */
+
+
+/* For MISRA, define enable performance info. Also, for MISRA TX_DISABLE_NOTIFY_CALLBACKS should not be defined.  */
+
+
+/* #define TX_BLOCK_POOL_ENABLE_PERFORMANCE_INFO
+#define TX_BYTE_POOL_ENABLE_PERFORMANCE_INFO
+#define TX_EVENT_FLAGS_ENABLE_PERFORMANCE_INFO
+#define TX_MUTEX_ENABLE_PERFORMANCE_INFO
+#define TX_QUEUE_ENABLE_PERFORMANCE_INFO
+#define TX_SEMAPHORE_ENABLE_PERFORMANCE_INFO
+#define TX_THREAD_ENABLE_PERFORMANCE_INFO
+#define TX_TIMER_ENABLE_PERFORMANCE_INFO */
+
+
 
 /* Determine if the optional ThreadX user define file should be used.  */
 
 #ifdef TX_INCLUDE_USER_DEFINE_FILE
+
 
 /* Yes, include the user defines in tx_user.h. The defines in this file may
    alternately be defined on the command line.  */
@@ -76,47 +106,6 @@
 #include "tx_user.h"
 #endif
 
-#define ROUND_UP_32(x)   (((x) + 31U) & ~31U)
-#define TX_MAX_PRIORITIES_LIMIT 1024
-#define TX_MIN_PRIORITIES       32
-
-/* Define the priority levels for ThreadX.  Legal values range
-   from 32 to 1024 and MUST be evenly divisible by 32.  */
-#ifndef TX_MAX_PRIORITIES
-#define TX_MAX_PRIORITIES \
-    ((ROUND_UP_32(ASYNC_CONFIG_TASK_COUNT + 1U)) > TX_MAX_PRIORITIES_LIMIT ? \
-        TX_MAX_PRIORITIES_LIMIT : \
-        ((ROUND_UP_32(ASYNC_CONFIG_TASK_COUNT + 1U)) < TX_MIN_PRIORITIES ? \
-            TX_MIN_PRIORITIES : \
-            ROUND_UP_32(ASYNC_CONFIG_TASK_COUNT + 1U)))
-#endif  // TX_MAX_PRIORITIES
-
-#if (TX_MAX_PRIORITIES < 32) || (TX_MAX_PRIORITIES > 1024) || ((TX_MAX_PRIORITIES % 32) != 0)
-#error "TX_MAX_PRIORITIES must be between 32 and 1024 and evenly divisible by 32"
-#endif
-
-/* Define the minimum stack for a ThreadX thread on this processor. If the size supplied during
-   thread creation is less than this value, the thread create call will return an error.  */
-#ifndef TX_MINIMUM_STACK
-#define TX_MINIMUM_STACK (1024U)
-#endif
-
-// #define TX_LINUX_NO_IDLE_ENABLE
-#define TX_TIMER_TICKS_PER_SECOND (1000000U / ASYNC_CONFIG_TICK_IN_US) // System tick interval in seconds.
-
-#define TX_NO_FILEX_POINTER
-
-#define TX_DISABLE_PREEMPTION_THRESHOLD
-
-#define TX_LINUX_MULTI_CORE
-
-#if defined(TX_LINUX_MULTI_CORE) && defined(__linux__)
-  #ifndef _GNU_SOURCE
-  #define _GNU_SOURCE
-  #endif
-
-  #include <sched.h>
-#endif
 
 /* Define compiler library include files.  */
 
@@ -189,6 +178,84 @@ extern TEST_FLAG        test_initialize_flag;
 extern TEST_FLAG        test_forced_mutex_timeout;
 
 
+#ifdef TX_REGRESSION_TEST
+
+/* Define extension macros for automated coverage tests.  */
+
+
+#define TX_BYTE_ALLOCATE_EXTENSION              if (threadx_byte_allocate_loop_test == ((TEST_FLAG) 1))         \
+                                                {                                                               \
+                                                    pool_ptr -> tx_byte_pool_owner =  TX_NULL;                  \
+                                                    threadx_byte_allocate_loop_test = ((TEST_FLAG) 0);          \
+                                                }
+
+#define TX_BYTE_RELEASE_EXTENSION               if (threadx_byte_release_loop_test == ((TEST_FLAG) 1))          \
+                                                {                                                               \
+                                                    threadx_byte_release_loop_test = ((TEST_FLAG) 0);           \
+                                                    abort_and_resume_byte_allocating_thread();                  \
+                                                }
+
+#define TX_MUTEX_PUT_EXTENSION_1                if (threadx_mutex_suspension_put_test == ((TEST_FLAG) 1))       \
+                                                {                                                               \
+                                                    threadx_mutex_suspension_put_test = ((TEST_FLAG) 0);        \
+                                                    abort_all_threads_suspended_on_mutex();                     \
+                                                }
+
+
+#define TX_MUTEX_PUT_EXTENSION_2                if (test_forced_mutex_timeout == ((TEST_FLAG) 1))               \
+                                                {                                                               \
+                                                    test_forced_mutex_timeout = ((TEST_FLAG) 0);                \
+                                                    _tx_thread_wait_abort(mutex_ptr -> tx_mutex_suspension_list); \
+                                                }
+
+
+#define TX_MUTEX_PRIORITY_CHANGE_EXTENSION      if (threadx_mutex_suspension_priority_test == ((TEST_FLAG) 1))  \
+                                                {                                                               \
+                                                    threadx_mutex_suspension_priority_test = ((TEST_FLAG) 0);   \
+                                                    suspend_lowest_priority();                                  \
+                                                }
+
+#ifndef TX_TIMER_PROCESS_IN_ISR
+
+#define TX_TIMER_INITIALIZE_EXTENSION(a)        if (threadx_delete_timer_thread == ((TEST_FLAG) 1))             \
+                                                {                                                               \
+                                                    threadx_delete_timer_thread = ((TEST_FLAG) 0);              \
+                                                    delete_timer_thread();                                      \
+                                                    (a) =  ((UINT) 1);                                          \
+                                                }
+
+#endif
+
+#define TX_THREAD_STACK_ANALYZE_EXTENSION       if (test_stack_analyze_flag == ((TEST_FLAG) 1))                 \
+                                                {                                                               \
+                                                    thread_ptr -> tx_thread_id =  ((TEST_FLAG) 0);              \
+                                                    test_stack_analyze_flag =     ((TEST_FLAG) 0);              \
+                                                }                                                               \
+                                                else if (test_stack_analyze_flag == ((TEST_FLAG) 2))            \
+                                                {                                                               \
+                                                    stack_ptr =  thread_ptr -> tx_thread_stack_start;           \
+                                                    test_stack_analyze_flag =     ((TEST_FLAG) 0);              \
+                                                }                                                               \
+                                                else if (test_stack_analyze_flag == ((TEST_FLAG) 3))            \
+                                                {                                                               \
+                                                    *stack_ptr =  TX_STACK_FILL;                                \
+                                                    test_stack_analyze_flag =     ((TEST_FLAG) 0);              \
+                                                }                                                               \
+                                                else                                                            \
+                                                {                                                               \
+                                                    test_stack_analyze_flag =     ((TEST_FLAG) 0);              \
+                                                }
+
+#define TX_INITIALIZE_KERNEL_ENTER_EXTENSION    if (test_initialize_flag == ((TEST_FLAG) 1))                    \
+                                                {                                                               \
+                                                    test_initialize_flag =  ((TEST_FLAG) 0);                    \
+                                                    return;                                                     \
+                                                }
+
+#endif
+
+
+
 /* Add Linux debug insert prototype.  */
 
 void    _tx_linux_debug_entry_insert(char *action, char *file, unsigned long line);
@@ -219,6 +286,23 @@ void    _tx_linux_debug_entry_insert(char *action, char *file, unsigned long lin
                                                     }                                   \
                                                 }
 #endif
+
+
+/* Define the priority levels for ThreadX.  Legal values range
+   from 32 to 1024 and MUST be evenly divisible by 32.  */
+
+#ifndef TX_MAX_PRIORITIES
+#define TX_MAX_PRIORITIES                       32
+#endif
+
+
+/* Define the minimum stack for a ThreadX thread on this processor. If the size supplied during
+   thread creation is less than this value, the thread create call will return an error.  */
+
+#ifndef TX_MINIMUM_STACK
+#define TX_MINIMUM_STACK                        200         /* Minimum stack size for this port */
+#endif
+
 
 /* Define the system timer thread's default stack size and priority.  These are only applicable
    if TX_TIMER_PROCESS_IN_ISR is not defined.  */
@@ -463,7 +547,7 @@ VOID   _tx_thread_interrupt_restore(UINT previous_posture);
 
 #ifdef TX_THREAD_INIT
 CHAR                            _tx_version_id[] =
-                                    "Copyright (c) Microsoft Corporation * ThreadX Linux/gcc Version 6.4.1 *";
+                                    "Copyright (c) Microsoft Corporation * ThreadX Linux/gcc Version 6.4.2 *";
 #else
 extern  CHAR                    _tx_version_id[];
 #endif
@@ -484,7 +568,7 @@ void    _tx_linux_thread_resume(pthread_t thread_id);
 void    _tx_linux_thread_init(void);
 
 #ifndef TX_LINUX_MEMORY_SIZE
-#define TX_LINUX_MEMORY_SIZE                    256000
+#define TX_LINUX_MEMORY_SIZE                    64000
 #endif
 
 /* Define priorities of pthreads. */
@@ -494,3 +578,4 @@ void    _tx_linux_thread_init(void);
 #define TX_LINUX_PRIORITY_USER_THREAD           (1)
 
 #endif
+

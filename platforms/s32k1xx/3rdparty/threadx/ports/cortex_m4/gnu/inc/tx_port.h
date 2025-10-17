@@ -67,7 +67,6 @@
 #ifndef TX_PORT_H
 #define TX_PORT_H
 
-#include "async/Config.h"
 
 /* Determine if the optional ThreadX user define file should be used.  */
 
@@ -79,36 +78,6 @@
 #include "tx_user.h"
 #endif
 
-#define ROUND_UP_32(x)   (((x) + 31U) & ~31U)
-#define TX_MAX_PRIORITIES_LIMIT 1024
-#define TX_MIN_PRIORITIES       32
-
-/* Define the priority levels for ThreadX.  Legal values range
-   from 32 to 1024 and MUST be evenly divisible by 32.  */
-#ifndef TX_MAX_PRIORITIES
-#define TX_MAX_PRIORITIES \
-    ((ROUND_UP_32(ASYNC_CONFIG_TASK_COUNT + 1U)) > TX_MAX_PRIORITIES_LIMIT ? \
-        TX_MAX_PRIORITIES_LIMIT : \
-        ((ROUND_UP_32(ASYNC_CONFIG_TASK_COUNT + 1U)) < TX_MIN_PRIORITIES ? \
-            TX_MIN_PRIORITIES : \
-            ROUND_UP_32(ASYNC_CONFIG_TASK_COUNT + 1U)))
-#endif  // TX_MAX_PRIORITIES
-
-#if (TX_MAX_PRIORITIES < 32) || (TX_MAX_PRIORITIES > 1024) || ((TX_MAX_PRIORITIES % 32) != 0)
-#error "TX_MAX_PRIORITIES must be between 32 and 1024 and evenly divisible by 32"
-#endif
-
-/* Define the minimum stack for a ThreadX thread on this processor. If the size supplied during
-   thread creation is less than this value, the thread create call will return an error.  */
-#ifndef TX_MINIMUM_STACK
-#define TX_MINIMUM_STACK (1024U)
-#endif
-
-#define TX_ENABLE_STACK_CHECKING
-
-#define TX_NO_FILEX_POINTER
-
-#define TX_TIMER_TICKS_PER_SECOND (1000000U / ASYNC_CONFIG_TICK_IN_US) // System tick interval in seconds.
 
 /* Define compiler library include files.  */
 
@@ -151,6 +120,21 @@ typedef unsigned long long                      ULONG64;
 typedef short                                   SHORT;
 typedef unsigned short                          USHORT;
 #define ULONG64_DEFINED
+
+/* Define the priority levels for ThreadX.  Legal values range
+   from 32 to 1024 and MUST be evenly divisible by 32.  */
+
+#ifndef TX_MAX_PRIORITIES
+#define TX_MAX_PRIORITIES                       32
+#endif
+
+
+/* Define the minimum stack for a ThreadX thread on this processor. If the size supplied during
+   thread creation is less than this value, the thread create call will return an error.  */
+
+#ifndef TX_MINIMUM_STACK
+#define TX_MINIMUM_STACK                        200         /* Minimum stack size for this port  */
+#endif
 
 
 /* Define the system timer thread's default stack size and priority.  These are only applicable
@@ -731,7 +715,7 @@ void    tx_thread_fpu_disable(void);
 
 #ifdef TX_THREAD_INIT
 CHAR                            _tx_version_id[] =
-                                    "Copyright (c) 2024 Microsoft Corporation.  *  ThreadX Cortex-M4/GNU Version 6.4.1 *";
+                                    "Copyright (c) 2024 Microsoft Corporation.  *  ThreadX Cortex-M4/GNU Version 6.4.2 *";
 #else
 #ifdef TX_MISRA_ENABLE
 extern  CHAR                    _tx_version_id[100];

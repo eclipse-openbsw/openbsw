@@ -1,5 +1,4 @@
 add_library(asyncPlatform ALIAS asyncMock)
-add_library(osFreeRtos ALIAS freeRtosMock)
 
 add_subdirectory(bsp)
 add_subdirectory(common)

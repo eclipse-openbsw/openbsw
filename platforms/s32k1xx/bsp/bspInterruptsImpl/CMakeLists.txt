@@ -6,17 +6,15 @@ else ()
     set(bspInterruptsImplName "bspInterruptsImplUt")
 endif ()
 
-add_library(${bspInterruptsImplName} INTERFACE)
+add_library(${bspInterruptsImplName} src/interrupt_manager.c)
 
-target_include_directories(${bspInterruptsImplName} INTERFACE include)
+target_include_directories(${bspInterruptsImplName} PUBLIC include)
 
 if (BUILD_TARGET_RTOS STREQUAL "FREERTOS")
-    target_include_directories(${bspInterruptsImplName}
-                               INTERFACE freertos/include)
+    target_include_directories(${bspInterruptsImplName} PUBLIC freertos/include)
 elseif (BUILD_TARGET_RTOS STREQUAL "THREADX")
-    target_include_directories(${bspInterruptsImplName}
-                               INTERFACE threadx/include)
-    target_link_libraries(${bspInterruptsImplName} INTERFACE threadX)
+    target_include_directories(${bspInterruptsImplName} PUBLIC threadx/include)
+    target_link_libraries(${bspInterruptsImplName} PUBLIC threadX)
 endif ()
 
-target_link_libraries(${bspInterruptsImplName} INTERFACE platform)
+target_link_libraries(${bspInterruptsImplName} PRIVATE bspMcu platform)

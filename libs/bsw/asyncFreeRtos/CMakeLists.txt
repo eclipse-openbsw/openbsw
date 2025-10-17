@@ -8,8 +8,13 @@ target_link_libraries(
               bsp
               bspInterrupts
               common
-              osFreeRtos
               timer)
+
+if (BUILD_UNIT_TESTS)
+    target_link_libraries(asyncFreeRtos INTERFACE freeRtosMock)
+else ()
+    target_link_libraries(asyncFreeRtos INTERFACE freeRtos)
+endif ()
 
 add_library(asyncFreeRtosImpl src/async/Async.cpp src/async/FutureSupport.cpp
                               src/async/Hook.cpp src/async/Types.cpp)

@@ -12,6 +12,7 @@
 #include "tx_api.h"
 
 #include <etl/array.h>
+#include <etl/error_handler.h>
 
 extern "C"
 {
@@ -252,7 +253,7 @@ template<class Binding>
 void ThreadXAdapter<Binding>::run(StartAppFunctionType startApp)
 {
     static_assert(TASK_COUNT <= TX_MAX_PRIORITIES, "TASK_COUNT exceeds TX_MAX_PRIORITIES");
-    estd_assert(startApp.is_valid());
+    ETL_ASSERT(startApp.is_valid(), ETL_ERROR_GENERIC("startApp function must be valid"));
     _startApp = startApp;
     tx_kernel_enter();
 }
@@ -368,7 +369,8 @@ template<size_t N>
 typename TaskConfigHolder<N, void>::TaskConfigType const*
 TaskConfigHolder<N, void>::getTaskConfig(size_t const /*taskIdx*/)
 {
-    estd_assert(false);
+    ETL_ASSERT_FAIL(ETL_ERROR_GENERIC("TaskConfig not supported"));
+
     return nullptr;
 }
 

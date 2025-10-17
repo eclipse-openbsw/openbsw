@@ -6,9 +6,9 @@
 #include "async/Types.h"
 
 #include <etl/array.h>
+#include <etl/error_handler.h>
 #include <etl/memory.h>
 #include <etl/span.h>
-#include <util/estd/assert.h>
 
 #include <tx_api.h>
 
@@ -271,7 +271,9 @@ void TaskInitializer<Adapter>::create(
     auto const stackSliceRaw = ::etl::make_span(stack).template reinterpret_as<uint8_t>();
     auto const stackSlice = align(alignof(ULONG), stackSliceRaw).template reinterpret_as<ULONG>();
     auto const taskInitializerSlice = align(alignof(TaskInitializer), stackSliceRaw);
-    estd_assert((taskInitializerSlice.size()) >= sizeof(TaskInitializer));
+    ETL_ASSERT(
+        (taskInitializerSlice.size()) >= sizeof(TaskInitializer),
+        ETL_ERROR_GENERIC("slice size must be larger than size of TaskInitializer"));
     new (taskInitializerSlice.data())
         TaskInitializer(context, name, task, stackSlice, taskFunction, config);
 }

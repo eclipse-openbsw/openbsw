@@ -106,6 +106,9 @@
 /*  03-01-2024      Tiejun Zhou             Modified comment(s),          */
 /*                                            update version number,      */
 /*                                            resulting in version 6.4.1  */
+/*  02-19-2025      Frédéric Desbiens       Modified comment(s),          */
+/*                                            update version number,      */
+/*                                            resulting in version 6.4.2  */
 /*                                                                        */
 /**************************************************************************/
 
@@ -145,7 +148,9 @@ extern   "C" {
 #define AZURE_RTOS_THREADX
 #define THREADX_MAJOR_VERSION           6
 #define THREADX_MINOR_VERSION           4
-#define THREADX_PATCH_VERSION           1
+#define THREADX_PATCH_VERSION           3
+#define THREADX_BUILD_VERSION           202503
+#define THREADX_HOTFIX_VERSION          ''
 
 /* Define the following symbol for backward compatibility */
 #define EL_PRODUCT_THREADX
@@ -325,6 +330,12 @@ extern   "C" {
 #define TX_TIMER_TICKS_PER_SECOND       (100UL)
 #endif
 
+/* Define the default maximum message size in a queue. The default value is TX_16_ULONG, but may
+   be customized in tx_user.h or as a compilation option. */
+
+#ifndef TX_QUEUE_MESSAGE_MAX_SIZE
+#define TX_QUEUE_MESSAGE_MAX_SIZE           TX_16_ULONG
+#endif
 
 /* Event numbers 0 through 4095 are reserved by Azure RTOS. Specific event assignments are:
 

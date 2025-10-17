@@ -7,7 +7,8 @@
 #endif
 
 #if defined(__cplusplus)
-extern "C" {
+extern "C"
+{
 #endif /* __cplusplus*/
 
 void DefaultISR(void);
@@ -27,7 +28,6 @@ void SYS_SetPendingIRQ(IRQn_Type irqNumber);
 uint32_t SYS_GetPendingIRQ(IRQn_Type irqNumber);
 
 uint32_t SYS_GetActive(IRQn_Type irqNumber);
-
 
 #if defined(__cplusplus)
 }

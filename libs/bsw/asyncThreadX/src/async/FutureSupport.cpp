@@ -2,7 +2,8 @@
 
 #include "async/FutureSupport.h"
 
-#include "etl/to_string.h"
+#include <etl/error_handler.h>
+#include <etl/to_string.h>
 
 #include <async/AsyncBinding.h>
 
@@ -49,7 +50,10 @@ void FutureSupport::notify()
     );
 }
 
-void FutureSupport::assertTaskContext() { estd_assert(verifyTaskContext()); }
+void FutureSupport::assertTaskContext()
+{
+    ETL_ASSERT(verifyTaskContext(), ETL_ERROR_GENERIC("TaskContext must be verified"));
+}
 
 bool FutureSupport::verifyTaskContext()
 {
