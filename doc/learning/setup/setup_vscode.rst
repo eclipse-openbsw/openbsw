@@ -243,7 +243,7 @@ In ``.vscode/settings.json`` (create this if needed) enter these settings
 
         {
             "cortex-debug.liveWatchRefreshRate": 500,
-            "cortex-debug.armToolchainPath": "/home/user/gcc-arm-none-eabi-10.3-2021.10/bin/",
+            "cortex-debug.armToolchainPath": "/home/user/arm-gnu-toolchain-14.3.rel1-x86_64-arm-none-eabi/bin/",
         }
 
 Cut & paste the configuration below into your ``.vscode/launch.json``...
