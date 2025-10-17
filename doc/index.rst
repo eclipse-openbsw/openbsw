@@ -134,6 +134,7 @@ Eclipse OpenBSW is a trademark of the Eclipse Foundation.
 
     guidelines/conventions/index
     guidelines/practices
+    guidelines/3rdparty
     guidelines/codeFormatting/index
 
 .. toctree::
