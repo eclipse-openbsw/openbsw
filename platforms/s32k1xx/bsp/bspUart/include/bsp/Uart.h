@@ -1,6 +1,7 @@
 #pragma once
 
 #include <bsp/uart/UartApi.h>
+#include <bsp/uart/UartConcept.h>
 #include <bsp/uart/UartConfig.h>
 
 namespace bsp
@@ -73,5 +74,8 @@ private:
 private:
     UartDevice const& _uartDevice;
 };
+
+static_assert(
+    bsp::UartCheckInterface<bsp::Uart>, "Uart does not implement UartApi interface correctly");
 
 } // namespace bsp
