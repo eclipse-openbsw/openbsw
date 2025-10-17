@@ -100,6 +100,12 @@ if (BUILD_UNIT_TESTS)
     target_include_directories(etl BEFORE INTERFACE executables/unitTest/etl_profile)
 
     if (OPENBSW_PLATFORM STREQUAL "posix")
+        add_subdirectory(libs/bsp/bspCharInputOutput/test)
+        add_subdirectory(libs/bsp/bspDynamicClient/test)
+        add_subdirectory(libs/bsp/bspInputManager/test)
+        add_subdirectory(libs/bsp/bspInterrupts/test)
+        add_subdirectory(libs/bsp/bspOutputManager/test)
+        add_subdirectory(libs/bsp/bspOutputPwm/test)
 
         add_subdirectory(libs/bsw/async/test)
         add_subdirectory(libs/bsw/asyncConsole/test)
@@ -124,15 +130,11 @@ if (BUILD_UNIT_TESTS)
         add_subdirectory(libs/bsw/uds/test)
         add_subdirectory(libs/bsw/util/test)
 
-        add_subdirectory(libs/bsp/bspInputManager/test)
-        add_subdirectory(libs/bsp/bspCharInputOutput/test)
-        add_subdirectory(libs/bsp/bspDynamicClient/test)
-        add_subdirectory(libs/bsp/bspInterrupts/test)
-        add_subdirectory(libs/bsp/bspOutputManager/test)
-        add_subdirectory(libs/bsp/bspOutputPwm/test)
+        add_subdirectory(libs/middleware/core/test)
+        add_subdirectory(libs/middleware/queue/test)
 
-        add_subdirectory(libs/safety/safeUtils/test)
         add_subdirectory(libs/safety/safeMonitor/test)
+        add_subdirectory(libs/safety/safeUtils/test)
 
         add_subdirectory(platforms/posix/unitTest EXCLUDE_FROM_ALL)
 
