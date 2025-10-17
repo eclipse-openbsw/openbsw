@@ -1,0 +1,416 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../../../../../../../../../../../static/css/style.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <title>Symbol - puncover</title>
+    
+</head>
+<body>
+    <div class="container" id="content">
+        <div class="page-header">
+            <nav class="navbar navbar-default" role="navigation">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="../../../../../../../../../../../../index.html">
+                    Puncover
+                  </a>
+                </div>
+              </div>
+            </nav>
+          
+        </div>
+        <div id="inner_content">
+        
+    
+    <ol class="breadcrumb folders">
+        
+        <li><a href="../../../../../../../../../../../../home.html">home</a></li>
+        
+        <li><a href="../../../../../../../../../../../runner.html">runner</a></li>
+        
+        <li><a href="../../../../../../../../../../work.html">work</a></li>
+        
+        <li><a href="../../../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../../platforms.html">platforms</a></li>
+        
+        <li><a href="../../../../../../s32k1xx.html">s32k1xx</a></li>
+        
+        <li><a href="../../../../../bsp.html">bsp</a></li>
+        
+        <li><a href="../../../../bspEepromDriver.html">bspEepromDriver</a></li>
+        
+        <li><a href="../../../src.html">src</a></li>
+        
+        <li ><a href="../../eeprom.html">eeprom</a>
+            </li>
+
+        
+        <li class="active"><a href="../EepromDriver.cpp.html">EepromDriver.cpp</a>:100
+            </li>
+        
+    </ol>
+
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <th>Function</th>
+                <td colspan="5">
+                    <span class="icon-function">eeprom::EepromDriver::launchCommand()</span>
+                </td>
+            </tr>
+
+            <tr>
+                <th rowspan="2"></th>
+                <th>Address</th>
+                <th>Remarks</th>
+                <th>Stack</th>
+                <th>Code</th>
+                <th>Static</th>
+            </tr>
+            <tr>
+                <td>0x00020b60</td>
+                <td>
+    
+    
+</td>
+                <td>296 (static)</td>
+                <td>152</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th>Callers (1)</th>
+                <td colspan="5">
+                
+                    <a href="./abad383116191f344db2f89c64b25aad.html">eeprom::EepromDriver::init() (172)</a>
+                    
+                
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Callees (4,
+                            <span title="sum of used bytes by all callees">
+                            Σ=76
+                            </span>
+                        )
+                    
+                </th>
+                <td colspan="5">
+                
+                    <a href="../../../../bspCore/src/cache/cache.cpp/55acb15ed39c90173cff5d4d2e689e89.html">cacheInvalidate (16)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../../../../bspCore/src/cache/cache.cpp/753fa26f2b5f316865ab293d61d5cd05.html">cacheDisable (16)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../../../../../../../../../../../../unknown/unknown/72d4bd12d6ca07360602e0d6cbc8dc4b.html">memcpy (28)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../../../../bspCore/src/cache/cache.cpp/c892cc265c66bdad73f8e6821a8c38e4.html">cacheEnable (16)</a>
+                    
+                
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    
+    <pre><a href="./872507ad832d2bd1ba4f59007c6abe27.html">eeprom::EepromDriver::read(unsigned long, unsigned char*, unsigned long) (80)</a></pre>
+    
+
+    <pre>
+
+    eeprom::EepromDriver::launchCommand():
+
+       20b60:	b570      	push	{r4, r5, r6, lr}
+
+       20b62:	2100      	movs	r1, #0
+
+       20b64:	b0c6      	sub	sp, #280	; 0x118
+
+       20b66:	4606      	mov	r6, r0
+
+       20b68:	f10d 041f 	add.w	r4, sp, #31
+
+       20b6c:	4608      	mov	r0, r1
+
+       20b6e:	f000 f8a9 	bl	20cc4 <<a href="../../../../bspCore/src/cache/cache.cpp/55acb15ed39c90173cff5d4d2e689e89.html">cacheInvalidate</a>>
+
+       20b72:	f024 041f 	bic.w	r4, r4, #31
+
+       20b76:	f000 f89d 	bl	20cb4 <<a href="../../../../bspCore/src/cache/cache.cpp/753fa26f2b5f316865ab293d61d5cd05.html">cacheDisable</a>>
+
+       20b7a:	f3ef 8510 	mrs	r5, PRIMASK
+
+    getMachineStateRegisterValueAndSuspendAllInterrupts():
+
+       20b7e:	b672      	cpsid	i
+
+    eeprom::EepromDriver::launchCommand():
+
+       20b80:	4a1b      	ldr	r2, [pc, #108]	; (20bf0 <<a href="./f688893a563be4bd43dc3349b0f4962f.html">eeprom::EepromDriver::launchCommand()</a>+0x90>)
+
+       20b82:	4630      	mov	r0, r6
+
+    getMachineStateRegisterValueAndSuspendAllInterrupts():
+
+       20b84:	2300      	movs	r3, #0
+
+    eeprom::EepromDriver::launchCommand():
+
+       20b86:	eb02 0c03 	add.w	ip, r2, r3
+
+       20b8a:	f890 e00b 	ldrb.w	lr, [r0, #11]
+
+       20b8e:	f88c e004 	strb.w	lr, [ip, #4]
+
+       20b92:	1c59      	adds	r1, r3, #1
+
+       20b94:	4411      	add	r1, r2
+
+       20b96:	f890 e00a 	ldrb.w	lr, [r0, #10]
+
+       20b9a:	f881 e004 	strb.w	lr, [r1, #4]
+
+       20b9e:	f103 0c02 	add.w	ip, r3, #2
+
+       20ba2:	4494      	add	ip, r2
+
+       20ba4:	f890 e009 	ldrb.w	lr, [r0, #9]
+
+       20ba8:	f88c e004 	strb.w	lr, [ip, #4]
+
+       20bac:	1cd9      	adds	r1, r3, #3
+
+       20bae:	4411      	add	r1, r2
+
+       20bb0:	3304      	adds	r3, #4
+
+       20bb2:	f890 c008 	ldrb.w	ip, [r0, #8]
+
+       20bb6:	f881 c004 	strb.w	ip, [r1, #4]
+
+       20bba:	2b0c      	cmp	r3, #12
+
+       20bbc:	f100 0004 	add.w	r0, r0, #4
+
+       20bc0:	d1e1      	bne.n	20b86 <<a href="./f688893a563be4bd43dc3349b0f4962f.html">eeprom::EepromDriver::launchCommand()</a>+0x26>
+
+       20bc2:	490c      	ldr	r1, [pc, #48]	; (20bf4 <<a href="./f688893a563be4bd43dc3349b0f4962f.html">eeprom::EepromDriver::launchCommand()</a>+0x94>)
+
+    _ZN3etl8mem_copyIhEEPT_PKS1_jS2_():
+
+       20bc4:	f44f 7280 	mov.w	r2, #256	; 0x100
+
+       20bc8:	f021 0101 	bic.w	r1, r1, #1
+
+       20bcc:	4620      	mov	r0, r4
+
+    eeprom::EepromDriver::launchCommand():
+
+       20bce:	3401      	adds	r4, #1
+
+    _ZN3etl8mem_copyIhEEPT_PKS1_jS2_():
+
+       20bd0:	f7df fcf5 	bl	5be <<a href="../../../../../../../../../../../../unknown/unknown/72d4bd12d6ca07360602e0d6cbc8dc4b.html">memcpy</a>>
+
+    eeprom::EepromDriver::launchCommand():
+
+       20bd4:	47a0      	blx	r4
+
+       20bd6:	4604      	mov	r4, r0
+
+       20bd8:	f000 f864 	bl	20ca4 <<a href="../../../../bspCore/src/cache/cache.cpp/c892cc265c66bdad73f8e6821a8c38e4.html">cacheEnable</a>>
+
+       20bdc:	f385 8810 	msr	PRIMASK, r5
+
+       20be0:	f014 0f31 	tst.w	r4, #49	; 0x31
+
+       20be4:	bf14      	ite	ne
+
+       20be6:	2001      	movne	r0, #1
+
+       20be8:	2000      	moveq	r0, #0
+
+       20bea:	b046      	add	sp, #280	; 0x118
+
+       20bec:	bd70      	pop	{r4, r5, r6, pc}
+
+       20bee:	bf00      	nop
+
+       20bf0:	40020000 	.word	0x40020000
+
+       20bf4:	00020a41 	.word	0x00020a41
+
+    </pre>
+
+    
+    <pre><a href="./abad383116191f344db2f89c64b25aad.html">eeprom::EepromDriver::init() (172)</a></pre>
+    
+
+    
+        <h1>Stack Worst-Case Scenarios</h1>
+        
+            <p>No callees for this function.</p>
+        
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 352</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 700</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    352
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                296 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    700
+                    
+                    
+                </td>
+                <td class="col_size">152</td>
+                <td><a href="./f688893a563be4bd43dc3349b0f4962f.html" class="icon-function">eeprom::EepromDriver::launchCommand()</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                    
+                    56
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                16 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    548
+                    
+                    
+                </td>
+                <td class="col_size">172</td>
+                <td><a href="./abad383116191f344db2f89c64b25aad.html" class="icon-function">eeprom::EepromDriver::init()</a></td>
+            </tr>
+        
+            <tr>
+                <th>3</th>
+                <td class="col_size">
+                    
+                    40
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                24 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    376
+                    
+                    
+                </td>
+                <td class="col_size">240</td>
+                <td><a href="../../../../../../../executables/referenceApp/platforms/s32k148evb/main/src/lifecycle/StaticBsp.cpp/bbaf0c02e73cc075f1271c2d33d1014c.html" class="icon-function">StaticBsp::hwInit()</a></td>
+            </tr>
+        
+            <tr>
+                <th>4</th>
+                <td class="col_size">
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    136
+                    
+                    
+                </td>
+                <td class="col_size">4</td>
+                <td><a href="../../../../../../../executables/referenceApp/platforms/s32k148evb/main/src/lifecycle/StaticBsp.cpp/f42c098a5d902487276fda6a241ec854.html" class="icon-function">StaticBsp::init()</a></td>
+            </tr>
+        
+            <tr>
+                <th>5</th>
+                <td class="col_size">
+                </td>
+                <td class="col_size">
+            
+                16 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">132</td>
+                <td><a href="../../../../../../../executables/referenceApp/platforms/s32k148evb/main/src/main.cpp/fad58de7366495db4650cfefac2fcd61.html" class="icon-function">main</a></td>
+            </tr>
+        
+        </tbody>
+        
+    </table>
+        
+    
+
+
+        </div>
+    <div id="page-footer">
+        <hr>
+        
+            brought to you with 💖
+            by <a href="https://twitter.com/hbehrens">Heiko Behrens</a>
+            <span class="secondary">– MIT license, copyright © 2014-2025</span>
+        
+    </div>
+    </div>
+</body>
+</html>

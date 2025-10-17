@@ -1,0 +1,409 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../../../../../../../../../../static/css/style.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <title>Symbol - puncover</title>
+    
+</head>
+<body>
+    <div class="container" id="content">
+        <div class="page-header">
+            <nav class="navbar navbar-default" role="navigation">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="../../../../../../../../../../../index.html">
+                    Puncover
+                  </a>
+                </div>
+              </div>
+            </nav>
+          
+        </div>
+        <div id="inner_content">
+        
+    
+    <ol class="breadcrumb folders">
+        
+        <li><a href="../../../../../../../../../../../home.html">home</a></li>
+        
+        <li><a href="../../../../../../../../../../runner.html">runner</a></li>
+        
+        <li><a href="../../../../../../../../../work.html">work</a></li>
+        
+        <li><a href="../../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../libs.html">libs</a></li>
+        
+        <li><a href="../../../../../bsw.html">bsw</a></li>
+        
+        <li><a href="../../../../uds.html">uds</a></li>
+        
+        <li><a href="../../../src.html">src</a></li>
+        
+        <li ><a href="../../uds.html">uds</a>
+            </li>
+
+        
+        <li class="active"><a href="../DiagDispatcher.cpp.html">DiagDispatcher.cpp</a>:186
+            </li>
+        
+    </ol>
+
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <th>Function</th>
+                <td colspan="5">
+                    <span class="icon-function">uds::DiagDispatcher::processQueue()</span>
+                </td>
+            </tr>
+
+            <tr>
+                <th rowspan="2"></th>
+                <th>Address</th>
+                <th>Remarks</th>
+                <th>Stack</th>
+                <th>Code</th>
+                <th>Static</th>
+            </tr>
+            <tr>
+                <td>0x00018cf4</td>
+                <td>
+    <span class="label label-success">x-module</span>
+    
+</td>
+                <td>24 (static)</td>
+                <td>72</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th>Callers (1)</th>
+                <td colspan="5">
+                
+                    <a href="../../../../../3rdparty/etl/include/etl/private/delegate_cpp11.h/1d2de5b6844ef1d2b319d2147fde9cc6.html">void etl::delegate&lt;void ()&gt;::method_stub&lt;uds::DiagDispatcher, &amp;uds::DiagDispatcher::processQueue&gt;(void*) (4)</a>
+                    
+                
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Callees (1,
+                            <span title="sum of used bytes by all callees">
+                            Σ=284
+                            </span>
+                        )
+                    
+                </th>
+                <td colspan="5">
+                
+                    <a href="./1c535d81fe670774bd9dcc9279a168b4.html">uds::DiagDispatcher::dispatchIncomingRequest(transport::TransportJob&amp;) (284)</a>
+                    
+                
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    
+    <pre><a href="./1c535d81fe670774bd9dcc9279a168b4.html">uds::DiagDispatcher::dispatchIncomingRequest(transport::TransportJob&amp;) (284)</a></pre>
+    
+
+    <pre>
+
+    uds::DiagDispatcher::processQueue():
+
+       18cf4:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
+
+       18cf6:	4607      	mov	r7, r0
+
+       18cf8:	f3ef 8c10 	mrs	ip, PRIMASK
+
+    getMachineStateRegisterValueAndSuspendAllInterrupts():
+
+       18cfc:	b672      	cpsid	i
+
+    _ZN3etl10queue_baseILj2EE7del_outEv():
+
+       18cfe:	2600      	movs	r6, #0
+
+    _ZN5async14ModifiableLockC4Ev():
+
+       18d00:	e013      	b.n	18d2a <<a href="./e00d400272b7aeeb8e6c582d70d53119.html">uds::DiagDispatcher::processQueue()</a>+0x36>
+
+    _ZN3etl6iqueueIN9transport12TransportJobELj2EE5frontEv():
+
+       18d02:	685c      	ldr	r4, [r3, #4]
+
+    _ZN3etl10queue_baseILj2EE7del_outEv():
+
+       18d04:	68dd      	ldr	r5, [r3, #12]
+
+    _ZN3etl6iqueueIN9transport12TransportJobELj2EE5frontEv():
+
+       18d06:	6919      	ldr	r1, [r3, #16]
+
+    _ZN3etl10queue_baseILj2EE7del_outEv():
+
+       18d08:	6098      	str	r0, [r3, #8]
+
+       18d0a:	1c62      	adds	r2, r4, #1
+
+       18d0c:	42aa      	cmp	r2, r5
+
+       18d0e:	bf14      	ite	ne
+
+       18d10:	4615      	movne	r5, r2
+
+       18d12:	4635      	moveq	r5, r6
+
+    _ZN3etl6iqueueIN9transport12TransportJobELj2EE5frontEv():
+
+       18d14:	eb01 01c4 	add.w	r1, r1, r4, lsl #3
+
+    _ZN3etl10queue_baseILj2EE7del_outEv():
+
+       18d18:	605d      	str	r5, [r3, #4]
+
+    uds::DiagDispatcher::processQueue():
+
+       18d1a:	f38c 8810 	msr	PRIMASK, ip
+
+       18d1e:	4638      	mov	r0, r7
+
+       18d20:	f7ff ff5a 	bl	18bd8 <<a href="./1c535d81fe670774bd9dcc9279a168b4.html">uds::DiagDispatcher::dispatchIncomingRequest(transport::TransportJob&)</a>>
+
+       18d24:	f3ef 8c10 	mrs	ip, PRIMASK
+
+    getMachineStateRegisterValueAndSuspendAllInterrupts():
+
+       18d28:	b672      	cpsid	i
+
+    uds::DiagDispatcher::processQueue():
+
+       18d2a:	6bbb      	ldr	r3, [r7, #56]	; 0x38
+
+       18d2c:	685b      	ldr	r3, [r3, #4]
+
+    _ZNK3etl10queue_baseILj2EE5emptyEv():
+
+       18d2e:	689a      	ldr	r2, [r3, #8]
+
+    _ZN3etl10queue_baseILj2EE7del_outEv():
+
+       18d30:	1e50      	subs	r0, r2, #1
+
+    uds::DiagDispatcher::processQueue():
+
+       18d32:	2a00      	cmp	r2, #0
+
+       18d34:	d1e5      	bne.n	18d02 <<a href="./e00d400272b7aeeb8e6c582d70d53119.html">uds::DiagDispatcher::processQueue()</a>+0xe>
+
+       18d36:	f38c 8810 	msr	PRIMASK, ip
+
+       18d3a:	bdf8      	pop	{r3, r4, r5, r6, r7, pc}
+
+    </pre>
+
+    
+    <pre><a href="../../../../../3rdparty/etl/include/etl/private/delegate_cpp11.h/1d2de5b6844ef1d2b319d2147fde9cc6.html">void etl::delegate&lt;void ()&gt;::method_stub&lt;uds::DiagDispatcher, &amp;uds::DiagDispatcher::processQueue&gt;(void*) (4)</a></pre>
+    
+
+    
+        <h1>Stack Worst-Case Scenarios</h1>
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 196</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 704</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    196
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                48 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    704
+                    
+                    
+                </td>
+                <td class="col_size">68</td>
+                <td><a href="../../../../util/src/util/logger/Logger.cpp/d658d7c78dcca1ca01e61ef198b3eeaa.html" class="icon-function">util::logger::Logger::doLog(unsigned char, util::logger::Level, char const*, std::__va_list)</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                    
+                    148
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                20 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    636
+                    
+                    
+                </td>
+                <td class="col_size">56</td>
+                <td><a href="../../../../util/include/util/logger/Logger.h/fee4073070054ecc160dbd4d6b194f36.html" class="icon-function">util::logger::Logger::warn(unsigned char, char const*, ...)</a></td>
+            </tr>
+        
+            <tr>
+                <th>3</th>
+                <td class="col_size">
+                    
+                    128
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                24 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    580
+                    
+                    
+                </td>
+                <td class="col_size">108</td>
+                <td><a href="../../../../transport/src/AbstractTransportLayer.cpp/48fd406898405043d07bc2f43ca0137d.html" class="icon-function">transport::AbstractTransportLayer::TransportMessageProvidingListenerHelper::getTransportMessage(unsigned char, unsigned short, unsigned short, unsigned short, etl::span&lt;unsigned char const, 4294967295u&gt; const&amp;, transport::TransportMessage*&amp;)</a></td>
+            </tr>
+        
+            <tr>
+                <th>4</th>
+                <td class="col_size">
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    472
+                    
+                    
+                </td>
+                <td class="col_size">100</td>
+                <td><a href="../../../../../../../../../../../unknown/unknown/a972809af9df876e8f2297146e45e0db.html" class="icon-function">non-virtual thunk to transport::AbstractTransportLayer::TransportMessageProvidingListenerHelper::getTransportMessage(unsigned char, unsigned short, unsigned short, unsigned short, etl::span&lt;unsigned char const, 4294967295u&gt; const&amp;, transport::TransportMessage*&amp;)</a></td>
+            </tr>
+        
+            <tr>
+                <th>5</th>
+                <td class="col_size">
+                    
+                    104
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                48 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    372
+                    
+                    
+                </td>
+                <td class="col_size">88</td>
+                <td><a href="./7cc6184c92d348ccf44dc4e5bf5d77ba.html" class="icon-function">uds::DiagDispatcher::copyFunctionalRequest(transport::TransportMessage&amp;)</a></td>
+            </tr>
+        
+            <tr>
+                <th>6</th>
+                <td class="col_size">
+                    
+                    56
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                32 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">284</td>
+                <td><a href="./1c535d81fe670774bd9dcc9279a168b4.html" class="icon-function">uds::DiagDispatcher::dispatchIncomingRequest(transport::TransportJob&amp;)</a></td>
+            </tr>
+        
+        </tbody>
+        
+        <tfoot>
+            <tr>
+                <th></th>
+                <th class="col_size">24
+                </th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </tfoot>
+        
+    </table>
+        
+        
+            <p>No callers for this function.</p>
+        
+    
+
+
+        </div>
+    <div id="page-footer">
+        <hr>
+        
+            brought to you with 💖
+            by <a href="https://twitter.com/hbehrens">Heiko Behrens</a>
+            <span class="secondary">– MIT license, copyright © 2014-2025</span>
+        
+    </div>
+    </div>
+</body>
+</html>

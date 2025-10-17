@@ -1,0 +1,427 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../../../../../../../../../static/css/style.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <title>Symbol - puncover</title>
+    
+</head>
+<body>
+    <div class="container" id="content">
+        <div class="page-header">
+            <nav class="navbar navbar-default" role="navigation">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="../../../../../../../../../../index.html">
+                    Puncover
+                  </a>
+                </div>
+              </div>
+            </nav>
+          
+        </div>
+        <div id="inner_content">
+        
+    
+    <ol class="breadcrumb folders">
+        
+        <li><a href="../../../../../../../../../../home.html">home</a></li>
+        
+        <li><a href="../../../../../../../../../runner.html">runner</a></li>
+        
+        <li><a href="../../../../../../../../work.html">work</a></li>
+        
+        <li><a href="../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../libs.html">libs</a></li>
+        
+        <li><a href="../../../../3rdparty.html">3rdparty</a></li>
+        
+        <li><a href="../../../freeRtos.html">freeRtos</a></li>
+        
+        <li ><a href="../../src.html">src</a>
+            </li>
+
+        
+        <li class="active"><a href="../queue.c.html">queue.c</a>:2236
+            </li>
+        
+    </ol>
+
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <th>Function</th>
+                <td colspan="5">
+                    <span class="icon-function">prvCopyDataToQueue</span>
+                </td>
+            </tr>
+
+            <tr>
+                <th rowspan="2"></th>
+                <th>Address</th>
+                <th>Remarks</th>
+                <th>Stack</th>
+                <th>Code</th>
+                <th>Static</th>
+            </tr>
+            <tr>
+                <td>0x00012f50</td>
+                <td>
+    <span class="label label-success">x-module</span>
+    
+</td>
+                <td>16 (static)</td>
+                <td>120</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th>Callers (1)</th>
+                <td colspan="5">
+                
+                    <a href="../../include/queue.h/3a5a3780600ed210406b45b13f3ae577.html">xQueueGenericSendFromISR (136)</a>
+                    
+                
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Callees (2,
+                            <span title="sum of used bytes by all callees">
+                            Σ=160
+                            </span>
+                        )
+                    
+                </th>
+                <td colspan="5">
+                
+                    <a href="../../../../../../../../../../unknown/unknown/72d4bd12d6ca07360602e0d6cbc8dc4b.html">memcpy (28)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../../include/task.h/ac4d40847a9d110c7d274f3cdf7521f5.html">xTaskPriorityDisinherit (132)</a>
+                    
+                
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    
+    <pre><a href="../../include/list.h/1abc5ae8b61049fbb0433232e839935f.html">uxListRemove (40)</a></pre>
+    
+
+    <pre>
+
+    prvCopyDataToQueue():
+
+       12f50:	b570      	push	{r4, r5, r6, lr}
+
+       12f52:	4604      	mov	r4, r0
+
+       12f54:	6c00      	ldr	r0, [r0, #64]	; 0x40
+
+       12f56:	6ba6      	ldr	r6, [r4, #56]	; 0x38
+
+       12f58:	b920      	cbnz	r0, 12f64 <<a href="./03fc7cb4d158937df64546c4af79991a.html">prvCopyDataToQueue</a>+0x14>
+
+       12f5a:	6825      	ldr	r5, [r4, #0]
+
+       12f5c:	b34d      	cbz	r5, 12fb2 <<a href="./03fc7cb4d158937df64546c4af79991a.html">prvCopyDataToQueue</a>+0x62>
+
+       12f5e:	3601      	adds	r6, #1
+
+       12f60:	63a6      	str	r6, [r4, #56]	; 0x38
+
+       12f62:	bd70      	pop	{r4, r5, r6, pc}
+
+       12f64:	4615      	mov	r5, r2
+
+       12f66:	4602      	mov	r2, r0
+
+       12f68:	b97d      	cbnz	r5, 12f8a <<a href="./03fc7cb4d158937df64546c4af79991a.html">prvCopyDataToQueue</a>+0x3a>
+
+       12f6a:	6860      	ldr	r0, [r4, #4]
+
+       12f6c:	f7ed fb27 	bl	5be <<a href="../../../../../../../../../../unknown/unknown/72d4bd12d6ca07360602e0d6cbc8dc4b.html">memcpy</a>>
+
+       12f70:	6863      	ldr	r3, [r4, #4]
+
+       12f72:	6c22      	ldr	r2, [r4, #64]	; 0x40
+
+       12f74:	4413      	add	r3, r2
+
+       12f76:	68a2      	ldr	r2, [r4, #8]
+
+       12f78:	6063      	str	r3, [r4, #4]
+
+       12f7a:	4293      	cmp	r3, r2
+
+       12f7c:	bf24      	itt	cs
+
+       12f7e:	6823      	ldrcs	r3, [r4, #0]
+
+       12f80:	6063      	strcs	r3, [r4, #4]
+
+       12f82:	3601      	adds	r6, #1
+
+       12f84:	4628      	mov	r0, r5
+
+       12f86:	63a6      	str	r6, [r4, #56]	; 0x38
+
+       12f88:	bd70      	pop	{r4, r5, r6, pc}
+
+       12f8a:	68e0      	ldr	r0, [r4, #12]
+
+       12f8c:	f7ed fb17 	bl	5be <<a href="../../../../../../../../../../unknown/unknown/72d4bd12d6ca07360602e0d6cbc8dc4b.html">memcpy</a>>
+
+       12f90:	6c22      	ldr	r2, [r4, #64]	; 0x40
+
+       12f92:	68e3      	ldr	r3, [r4, #12]
+
+       12f94:	4251      	negs	r1, r2
+
+       12f96:	1a9b      	subs	r3, r3, r2
+
+       12f98:	6822      	ldr	r2, [r4, #0]
+
+       12f9a:	60e3      	str	r3, [r4, #12]
+
+       12f9c:	4293      	cmp	r3, r2
+
+       12f9e:	d202      	bcs.n	12fa6 <<a href="./03fc7cb4d158937df64546c4af79991a.html">prvCopyDataToQueue</a>+0x56>
+
+       12fa0:	68a3      	ldr	r3, [r4, #8]
+
+       12fa2:	440b      	add	r3, r1
+
+       12fa4:	60e3      	str	r3, [r4, #12]
+
+       12fa6:	2d02      	cmp	r5, #2
+
+       12fa8:	d008      	beq.n	12fbc <<a href="./03fc7cb4d158937df64546c4af79991a.html">prvCopyDataToQueue</a>+0x6c>
+
+       12faa:	3601      	adds	r6, #1
+
+       12fac:	2000      	movs	r0, #0
+
+       12fae:	63a6      	str	r6, [r4, #56]	; 0x38
+
+       12fb0:	bd70      	pop	{r4, r5, r6, pc}
+
+       12fb2:	68a0      	ldr	r0, [r4, #8]
+
+       12fb4:	f7ff fc0c 	bl	127d0 <<a href="../../include/task.h/ac4d40847a9d110c7d274f3cdf7521f5.html">xTaskPriorityDisinherit</a>>
+
+       12fb8:	60a5      	str	r5, [r4, #8]
+
+       12fba:	e7d0      	b.n	12f5e <<a href="./03fc7cb4d158937df64546c4af79991a.html">prvCopyDataToQueue</a>+0xe>
+
+       12fbc:	2e01      	cmp	r6, #1
+
+       12fbe:	bf38      	it	cc
+
+       12fc0:	2601      	movcc	r6, #1
+
+       12fc2:	2000      	movs	r0, #0
+
+       12fc4:	e7cc      	b.n	12f60 <<a href="./03fc7cb4d158937df64546c4af79991a.html">prvCopyDataToQueue</a>+0x10>
+
+       12fc6:	bf00      	nop
+
+    </pre>
+
+    
+    <pre><a href="./0a1f39941a68d8e44812aa4a79d3144c.html">prvUnlockQueue (140)</a></pre>
+    
+
+    
+        <h1>Stack Worst-Case Scenarios</h1>
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 100</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 172</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    100
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                4 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    172
+                    
+                    
+                </td>
+                <td class="col_size">40</td>
+                <td><a href="../../include/list.h/1abc5ae8b61049fbb0433232e839935f.html" class="icon-function">uxListRemove</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                    
+                    96
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                24 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">132</td>
+                <td><a href="../../include/task.h/ac4d40847a9d110c7d274f3cdf7521f5.html" class="icon-function">xTaskPriorityDisinherit</a></td>
+            </tr>
+        
+        </tbody>
+        
+        <tfoot>
+            <tr>
+                <th></th>
+                <th class="col_size">72
+                </th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </tfoot>
+        
+    </table>
+        
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 72</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 296</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    72
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                16 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    296
+                    
+                    
+                </td>
+                <td class="col_size">120</td>
+                <td><a href="./03fc7cb4d158937df64546c4af79991a.html" class="icon-function">prvCopyDataToQueue</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                    
+                    56
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                24 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    176
+                    
+                    
+                </td>
+                <td class="col_size">136</td>
+                <td><a href="../../include/queue.h/3a5a3780600ed210406b45b13f3ae577.html" class="icon-function">xQueueGenericSendFromISR</a></td>
+            </tr>
+        
+            <tr>
+                <th>3</th>
+                <td class="col_size">
+                </td>
+                <td class="col_size">
+            
+                32 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">40</td>
+                <td><a href="../../include/timers.h/97b7c14db39b7abb49271ab7cb959c97.html" class="icon-function">xTimerPendFunctionCallFromISR</a></td>
+            </tr>
+        
+        </tbody>
+        
+    </table>
+        
+    
+
+
+        </div>
+    <div id="page-footer">
+        <hr>
+        
+            brought to you with 💖
+            by <a href="https://twitter.com/hbehrens">Heiko Behrens</a>
+            <span class="secondary">– MIT license, copyright © 2014-2025</span>
+        
+    </div>
+    </div>
+</body>
+</html>

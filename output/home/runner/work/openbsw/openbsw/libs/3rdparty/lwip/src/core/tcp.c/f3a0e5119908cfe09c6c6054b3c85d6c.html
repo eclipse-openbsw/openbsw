@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../../../../../../../../../../static/css/style.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <title>Symbol - puncover</title>
+    
+</head>
+<body>
+    <div class="container" id="content">
+        <div class="page-header">
+            <nav class="navbar navbar-default" role="navigation">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="../../../../../../../../../../../index.html">
+                    Puncover
+                  </a>
+                </div>
+              </div>
+            </nav>
+          
+        </div>
+        <div id="inner_content">
+        
+    
+    <ol class="breadcrumb folders">
+        
+        <li><a href="../../../../../../../../../../../home.html">home</a></li>
+        
+        <li><a href="../../../../../../../../../../runner.html">runner</a></li>
+        
+        <li><a href="../../../../../../../../../work.html">work</a></li>
+        
+        <li><a href="../../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../libs.html">libs</a></li>
+        
+        <li><a href="../../../../../3rdparty.html">3rdparty</a></li>
+        
+        <li><a href="../../../../lwip.html">lwip</a></li>
+        
+        <li><a href="../../../src.html">src</a></li>
+        
+        <li ><a href="../../core.html">core</a>
+            </li>
+
+        
+        <li class="active"><a href="../tcp.c.html">tcp.c</a>:1015
+            </li>
+        
+    </ol>
+
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <th>Function</th>
+                <td colspan="5">
+                    <span class="icon-function">tcp_new_port</span>
+                </td>
+            </tr>
+
+            <tr>
+                <th rowspan="2"></th>
+                <th>Address</th>
+                <th>Remarks</th>
+                <th>Stack</th>
+                <th>Code</th>
+                <th>Static</th>
+            </tr>
+            <tr>
+                <td>0x00006efc</td>
+                <td>
+    
+    
+</td>
+                <td>16 (static)</td>
+                <td>96</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th>Callers (2)</th>
+                <td colspan="5">
+                
+                    <a href="./023477140fe3afd2005c820e49bbb43a.html">tcp_connect (420)</a>
+                    
+                        ,
+                    
+                
+                    <a href="./7257a35627e94c30525a90dd5674d1ba.html">tcp_bind (184)</a>
+                    
+                
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    No Callees
+                    
+                </th>
+                <td colspan="5">
+                
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    
+    <pre><a href="../stats.c/fee054e74a67c0ecc1da4ff6065321e1.html">stats_init (20)</a></pre>
+    
+
+    <pre>
+
+    tcp_new_port():
+
+        6efc:	b4f0      	push	{r4, r5, r6, r7}
+
+        6efe:	4f13      	ldr	r7, [pc, #76]	; (6f4c <<a href="./f3a0e5119908cfe09c6c6054b3c85d6c.html">tcp_new_port</a>+0x50>)
+
+        6f00:	4e13      	ldr	r6, [pc, #76]	; (6f50 <<a href="./f3a0e5119908cfe09c6c6054b3c85d6c.html">tcp_new_port</a>+0x54>)
+
+        6f02:	8838      	ldrh	r0, [r7, #0]
+
+        6f04:	4d13      	ldr	r5, [pc, #76]	; (6f54 <<a href="./f3a0e5119908cfe09c6c6054b3c85d6c.html">tcp_new_port</a>+0x58>)
+
+        6f06:	f44f 4180 	mov.w	r1, #16384	; 0x4000
+
+        6f0a:	f64f 7cff 	movw	ip, #65535	; 0xffff
+
+        6f0e:	3001      	adds	r0, #1
+
+        6f10:	b280      	uxth	r0, r0
+
+        6f12:	4c11      	ldr	r4, [pc, #68]	; (6f58 <<a href="./f3a0e5119908cfe09c6c6054b3c85d6c.html">tcp_new_port</a>+0x5c>)
+
+        6f14:	4560      	cmp	r0, ip
+
+        6f16:	bf08      	it	eq
+
+        6f18:	f44f 4040 	moveq.w	r0, #49152	; 0xc000
+
+        6f1c:	462b      	mov	r3, r5
+
+        6f1e:	681b      	ldr	r3, [r3, #0]
+
+        6f20:	b913      	cbnz	r3, 6f28 <<a href="./f3a0e5119908cfe09c6c6054b3c85d6c.html">tcp_new_port</a>+0x2c>
+
+        6f22:	e00b      	b.n	6f3c <<a href="./f3a0e5119908cfe09c6c6054b3c85d6c.html">tcp_new_port</a>+0x40>
+
+        6f24:	68db      	ldr	r3, [r3, #12]
+
+        6f26:	b14b      	cbz	r3, 6f3c <<a href="./f3a0e5119908cfe09c6c6054b3c85d6c.html">tcp_new_port</a>+0x40>
+
+        6f28:	8ada      	ldrh	r2, [r3, #22]
+
+        6f2a:	4282      	cmp	r2, r0
+
+        6f2c:	d1fa      	bne.n	6f24 <<a href="./f3a0e5119908cfe09c6c6054b3c85d6c.html">tcp_new_port</a>+0x28>
+
+        6f2e:	3901      	subs	r1, #1
+
+        6f30:	b289      	uxth	r1, r1
+
+        6f32:	2900      	cmp	r1, #0
+
+        6f34:	d1eb      	bne.n	6f0e <<a href="./f3a0e5119908cfe09c6c6054b3c85d6c.html">tcp_new_port</a>+0x12>
+
+        6f36:	8038      	strh	r0, [r7, #0]
+
+        6f38:	4608      	mov	r0, r1
+
+        6f3a:	e005      	b.n	6f48 <<a href="./f3a0e5119908cfe09c6c6054b3c85d6c.html">tcp_new_port</a>+0x4c>
+
+        6f3c:	42b4      	cmp	r4, r6
+
+        6f3e:	d002      	beq.n	6f46 <<a href="./f3a0e5119908cfe09c6c6054b3c85d6c.html">tcp_new_port</a>+0x4a>
+
+        6f40:	f854 3b04 	ldr.w	r3, [r4], #4
+
+        6f44:	e7eb      	b.n	6f1e <<a href="./f3a0e5119908cfe09c6c6054b3c85d6c.html">tcp_new_port</a>+0x22>
+
+        6f46:	8038      	strh	r0, [r7, #0]
+
+        6f48:	bcf0      	pop	{r4, r5, r6, r7}
+
+        6f4a:	4770      	bx	lr
+
+        6f4c:	1ffe013c 	.word	0x1ffe013c
+
+        6f50:	00024194 	.word	0x00024194
+
+        6f54:	1fff33c4 	.word	0x1fff33c4
+
+        6f58:	00024188 	.word	0x00024188
+
+    </pre>
+
+    
+    <pre><a href="./60203faf22fd34bc9978b8e19064581b.html">tcp_close_shutdown_fin (72)</a></pre>
+    
+
+    
+        <h1>Stack Worst-Case Scenarios</h1>
+        
+            <p>No callees for this function.</p>
+        
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 144</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 884</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    144
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                16 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    884
+                    
+                    
+                </td>
+                <td class="col_size">96</td>
+                <td><a href="./f3a0e5119908cfe09c6c6054b3c85d6c.html" class="icon-function">tcp_new_port</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                    
+                    128
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                32 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    788
+                    
+                    
+                </td>
+                <td class="col_size">420</td>
+                <td><a href="./023477140fe3afd2005c820e49bbb43a.html" class="icon-function">tcp_connect</a></td>
+            </tr>
+        
+            <tr>
+                <th>3</th>
+                <td class="col_size">
+                </td>
+                <td class="col_size">
+            
+                96 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">368</td>
+                <td><a href="../../../../../bsw/lwipSocket/src/lwipSocket/tcp/LwipSocket.cpp/cb24dee7ef7e1dd6c6a48415edf10d33.html" class="icon-function">tcp::LwipSocket::connect(ip::IPAddress const&amp;, unsigned short, etl::delegate&lt;void (tcp::AbstractSocket::ErrorCode)&gt;)</a></td>
+            </tr>
+        
+        </tbody>
+        
+    </table>
+        
+    
+
+
+        </div>
+    <div id="page-footer">
+        <hr>
+        
+            brought to you with 💖
+            by <a href="https://twitter.com/hbehrens">Heiko Behrens</a>
+            <span class="secondary">– MIT license, copyright © 2014-2025</span>
+        
+    </div>
+    </div>
+</body>
+</html>
