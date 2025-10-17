@@ -16,7 +16,7 @@ namespace lwiputils
  *      // example implementation
  *      TaskType actualTask;
  *      GetTaskID(&actualTask);
- *      estd_assert(actualTask == task_tcpip);
+ *      ETL_ASSERT(actualTask == task_tcpip, ETL_ERROR_GENERIC("..."));
  * \endcode
  */
 void TASK_ASSERT_HOOK();

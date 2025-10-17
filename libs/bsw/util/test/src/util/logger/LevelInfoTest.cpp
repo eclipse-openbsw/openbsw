@@ -64,17 +64,16 @@ TEST(LoggerLevelInfoTest, testLevelInfo)
 TEST(LoggerLevelInfoTest, LevelInfoInvalidPlainInfoCase)
 {
     LevelInfo cut(nullptr);
-    ::estd::AssertHandlerScope scope(::estd::AssertExceptionHandler);
     {
         ASSERT_FALSE(cut.isValid());
     }
     {
-        EXPECT_THROW(cut.getName(), ::estd::assert_exception);
+        EXPECT_THROW(cut.getName(), ::etl::exception);
     }
     {
-        EXPECT_THROW(cut.getLevel(), ::estd::assert_exception);
+        EXPECT_THROW(cut.getLevel(), ::etl::exception);
     }
     {
-        EXPECT_THROW(cut.getPlainInfoString(), ::estd::assert_exception);
+        EXPECT_THROW(cut.getPlainInfoString(), ::etl::exception);
     }
 }

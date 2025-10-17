@@ -10,7 +10,6 @@
 
 #include <etl/memory.h>
 #include <etl/span.h>
-#include <util/estd/assert.h>
 
 #include <gmock/gmock.h>
 
@@ -238,7 +237,6 @@ TEST(DoCanFrameCodecTest, firstFrameFitsIntoLongSingleFrame)
  */
 TEST(DoCanFrameCodecTest, singleFrameMaxSizeSmallerThanOffset)
 {
-    ::estd::AssertHandlerScope scope(::estd::AssertExceptionHandler);
     // Custom frame codec config to make the single frame max (2) too close to the offset (1), which
     // will trigger an assert when "fitsIntoLongSingleFrame" is called
     DoCanFrameCodecConfig<uint8_t> const CUSTOM_FD
@@ -257,7 +255,7 @@ TEST(DoCanFrameCodecTest, singleFrameMaxSizeSmallerThanOffset)
         uint8_t const payload[] = {0xAB, 0x10, 0x0B, 0x01, 0x23, 0x45, 0x67, 0x89, 0xAB};
         ASSERT_THROW(
             cut.decodeFirstFrame(payload, messageSize, frameCount, consecutiveFrameDataSize, data),
-            ::estd::assert_exception);
+            ::etl::exception);
     }
 }
 
@@ -270,7 +268,6 @@ TEST(DoCanFrameCodecTest, singleFrameMaxSizeSmallerThanOffset)
 TEST(DoCanFrameCodecTest, consecutiveFrameMaxSizeSmallerThanOffset)
 {
     using DataLinkLayerType = DoCanDataLinkLayer<uint32_t, uint16_t, uint8_t, 0xFFFFFFFFU>;
-    ::estd::AssertHandlerScope scope(::estd::AssertExceptionHandler);
     // Custom frame codec config to make the single frame max (2) too close to the offset (1), which
     // will trigger an assert when "fitsIntoLongSingleFrame" is called
     DoCanFrameCodecConfig<uint8_t> const CUSTOM_FD
@@ -284,7 +281,7 @@ TEST(DoCanFrameCodecTest, consecutiveFrameMaxSizeSmallerThanOffset)
     {
         DataLinkLayerType::FrameIndexType frameIdx = 0;
         DataLinkLayerType::FrameSizeType frameSize = 0;
-        ASSERT_THROW(cut.getEncodedFrameCount(0, frameIdx, frameSize), ::estd::assert_exception);
+        ASSERT_THROW(cut.getEncodedFrameCount(0, frameIdx, frameSize), ::etl::exception);
     }
 }
 

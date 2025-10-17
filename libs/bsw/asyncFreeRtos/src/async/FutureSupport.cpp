@@ -4,6 +4,8 @@
 
 #include <async/AsyncBinding.h>
 
+#include <etl/error_handler.h>
+
 namespace async
 {
 static EventBits_t const FUTURE_SUPPORT_BITS_TO_WAIT = 0x01U;
@@ -45,7 +47,10 @@ void FutureSupport::notify()
     }
 }
 
-void FutureSupport::assertTaskContext() { estd_assert(verifyTaskContext()); }
+void FutureSupport::assertTaskContext()
+{
+    ETL_ASSERT(verifyTaskContext(), ETL_ERROR_GENERIC("task context not verified"));
+}
 
 bool FutureSupport::verifyTaskContext()
 {

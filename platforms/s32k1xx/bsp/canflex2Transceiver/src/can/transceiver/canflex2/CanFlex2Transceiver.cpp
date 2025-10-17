@@ -6,11 +6,12 @@
 #include <can/CanLogger.h>
 #include <can/framemgmt/IFilteredCANFrameSentListener.h>
 #include <common/busid/BusId.h>
-#include <etl/delegate.h>
-#include <util/estd/assert.h>
 
 #include <platform/config.h>
 #include <platform/estdint.h>
+
+#include <etl/delegate.h>
+#include <etl/error_handler.h>
 
 namespace logger = ::util::logger;
 
@@ -237,7 +238,7 @@ void CanFlex2Transceiver::resetFirstFrame()
 ::can::ICanTransceiver::ErrorCode CanFlex2Transceiver::open(::can::CANFrame const& /* frame */)
 {
     // not implemented
-    estd_assert(false);
+    ETL_ASSERT_FAIL(ETL_ERROR_GENERIC("not implemented"));
     return ::can::ICanTransceiver::ErrorCode::CAN_ERR_ILLEGAL_STATE;
 }
 

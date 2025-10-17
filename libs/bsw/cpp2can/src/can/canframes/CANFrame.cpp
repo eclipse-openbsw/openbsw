@@ -9,6 +9,8 @@
 using ::util::logger::Logger;
 #endif
 
+#include <etl/error_handler.h>
+
 namespace can
 {
 // define const variables for GCC
@@ -40,7 +42,10 @@ CANFrame::CANFrame(CANFrame const& frame)
 CANFrame::CANFrame(uint32_t const id, uint8_t const* const payload, uint8_t const length)
 : _id(id), _timestamp(0U), _payloadLength(length)
 {
-    estd_assert(length <= MAX_FRAME_LENGTH);
+    ETL_ASSERT(
+        length <= MAX_FRAME_LENGTH,
+        ETL_ERROR_GENERIC("can frame length must be smaller than maximum length"));
+
     (void)memcpy(_payload, payload, static_cast<size_t>(length));
 }
 
@@ -51,8 +56,14 @@ CANFrame::CANFrame(
     bool const isExtendedId)
 : _id(CanId::id(rawId, isExtendedId)), _timestamp(0U), _payloadLength(length)
 {
-    estd_assert(rawId <= MAX_FRAME_ID_EXTENDED);
-    estd_assert(length <= MAX_FRAME_LENGTH);
+    ETL_ASSERT(
+        rawId <= MAX_FRAME_ID_EXTENDED,
+        ETL_ERROR_GENERIC("can frame id must be smaller than the maximum allowed one"));
+
+    ETL_ASSERT(
+        length <= MAX_FRAME_LENGTH,
+        ETL_ERROR_GENERIC("can frame length must be smaller than maximum length"));
+
     (void)memcpy(_payload, payload, static_cast<size_t>(length));
 }
 

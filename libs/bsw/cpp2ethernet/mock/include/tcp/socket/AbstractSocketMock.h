@@ -7,6 +7,7 @@
 #include "tcp/IDataSendNotificationListener.h"
 #include "tcp/socket/AbstractSocket.h"
 
+#include <etl/error_handler.h>
 #include <etl/memory.h>
 #include <etl/span.h>
 
@@ -79,7 +80,9 @@ struct AbstractSocketMock : public AbstractSocket
     ErrorCode inject(::etl::span<uint8_t const> const data)
     {
         // safeguard in case a test tries to inject more data than _injectedData can hold
-        estd_assert(_dataWriteWindow.size() >= data.size());
+        ETL_ASSERT(
+            _dataWriteWindow.size() >= data.size(),
+            ETL_ERROR_GENERIC("buffer must be large enough for injected data"));
 
         ::etl::mem_copy(data.cbegin(), data.size(), _dataWriteWindow.begin());
         _dataWriteWindow.advance(data.size());

@@ -15,6 +15,8 @@ extern "C"
 #include "lwip/tcp.h"
 }
 
+#include <etl/error_handler.h>
+
 using ip::IPAddress;
 
 namespace tcp
@@ -134,7 +136,11 @@ err_t LwipServerSocket::tcpAcceptListener(void* const arg, tcp_pcb* const pcb, e
     }
 
     LwipServerSocket const* const pServerSocket = static_cast<LwipServerSocket*>(arg);
-    estd_assert(pServerSocket->_socketProvidingConnectionListener != nullptr);
+
+    ETL_ASSERT(
+        pServerSocket->_socketProvidingConnectionListener != nullptr,
+        ETL_ERROR_GENERIC("listener must not be null"));
+
     ip::IPAddress const rAddr = lwiputils::from_lwipIp(pcb->remote_ip);
 
     LwipSocket* const pSocket = static_cast<LwipSocket*>(

@@ -8,7 +8,7 @@
 
 #include "util/format/AttributedString.h"
 
-#include <util/estd/assert.h>
+#include <etl/error_handler.h>
 
 namespace util
 {
@@ -68,7 +68,7 @@ public:
      */
     inline char const* getPlainInfoString() const
     {
-        estd_assert(_plainInfo != nullptr);
+        ETL_ASSERT(_plainInfo != nullptr, ETL_ERROR_GENERIC("info must not be null"));
         return _plainInfo->_nameInfo._string;
     }
 

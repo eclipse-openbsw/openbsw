@@ -1,9 +1,11 @@
 // Copyright 2025 Accenture.
 
 #include <async/Types.h>
-#include <etl/algorithm.h>
+
 #include <storage/MappingStorage.h>
-#include <util/estd/assert.h>
+
+#include <etl/algorithm.h>
+#include <etl/error_handler.h>
 
 namespace storage
 {
@@ -116,14 +118,14 @@ void MappingStorage::callback(StorageJob& job)
 {
     auto const slotIdx = getUsedSlotIdx(job);
     // slotIdx will be out of bounds if job object is unknown
-    estd_assert(slotIdx < _inJobs.size());
+    ETL_ASSERT(slotIdx < _inJobs.size(), ETL_ERROR_GENERIC("index must be within range of jobs"));
     auto* jobInPtr = _inJobs[slotIdx];
     // if jobInPtr is already null, a storage has probably run the callback too many times; this
     // problem is not detectable here though in case there were items in the waiting list during
     // the previous call and the outgoing job was re-used for the next job; in this case the
     // problem is less obvious and a wrong callback might get called instead, but let's just
     // crash here if anything seems wrong
-    estd_assert(jobInPtr != nullptr);
+    ETL_ASSERT(jobInPtr != nullptr, ETL_ERROR_GENERIC("job pointer must not be null"));
     auto& jobIn = *jobInPtr;
     if (job.is<StorageJob::Type::Read>())
     {

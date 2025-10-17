@@ -2,7 +2,7 @@
 
 #include "uds/jobs/JobMocks.h"
 
-#include <util/estd/assert.h>
+#include <etl/error_handler.h>
 
 namespace uds
 {
@@ -74,7 +74,8 @@ IDiagSessionManager& AbstractDiagJob::getDiagSessionManager()
 {
     if (AbstractDiagJobMockHelper::instance().isStub())
     {
-        estd_assert(sfpSessionManager);
+        ETL_ASSERT(
+            sfpSessionManager != nullptr, ETL_ERROR_GENERIC("session manager must not be null"));
         return *sfpSessionManager;
     }
     return AbstractDiagJobMockHelper::instance().getDiagSessionManager();
@@ -84,7 +85,8 @@ IDiagSessionManager const& AbstractDiagJob::getDiagSessionManager() const
 {
     if (AbstractDiagJobMockHelper::instance().isStub())
     {
-        estd_assert(sfpSessionManager);
+        ETL_ASSERT(
+            sfpSessionManager != nullptr, ETL_ERROR_GENERIC("session manager must not be null"));
         return *sfpSessionManager;
     }
     return AbstractDiagJobMockHelper::instance().getDiagSessionManager();

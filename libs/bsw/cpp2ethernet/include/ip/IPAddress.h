@@ -2,9 +2,9 @@
 
 #pragma once
 
+#include <etl/error_handler.h>
 #include <etl/span.h>
 #include <etl/unaligned_type.h>
-#include <util/estd/assert.h>
 
 #include <platform/estdint.h>
 
@@ -132,7 +132,9 @@ make_ip4(uint8_t const byte0, uint8_t const byte1, uint8_t const byte2, uint8_t 
 
 inline IPAddress make_ip4(::etl::span<uint8_t const> const& ip4addr)
 {
-    estd_assert(ip4addr.size() == IPAddress::IP4LENGTH);
+    ETL_ASSERT(
+        ip4addr.size() == IPAddress::IP4LENGTH,
+        ETL_ERROR_GENERIC("ipv4 addres must be of correct length"));
 
     // clang-format off
     IPAddress const newAddr = {{
@@ -194,7 +196,9 @@ inline constexpr IPAddress make_ip6(uint32_t const ip6addr[IPAddress::IP6LENGTH 
 
 inline IPAddress make_ip6(::etl::span<uint8_t const> const& ip6addr)
 {
-    estd_assert(ip6addr.size() == IPAddress::IP6LENGTH);
+    ETL_ASSERT(
+        ip6addr.size() == IPAddress::IP6LENGTH,
+        ETL_ERROR_GENERIC("ipv6 address must be of correct length"));
 
     IPAddress newAddr;
     (void)memcpy(&newAddr.raw[0U], ip6addr.data(), IPAddress::IP6LENGTH);
@@ -230,7 +234,8 @@ inline uint32_t ip4_to_u32(IPAddress const& ipAddr)
 #ifndef OPENBSW_NO_IPV6
 inline uint32_t ip6_to_u32(IPAddress const& ipAddr, size_t const offset)
 {
-    estd_assert(offset <= 3U);
+    ETL_ASSERT(offset <= 3U, ETL_ERROR_GENERIC("offset must be smaller than 3"));
+
     return ipAddr.be_uint32_at(offset);
 }
 #endif

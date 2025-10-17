@@ -3,7 +3,8 @@
 #include "uds/jobs/RoutineControlJob.h"
 
 #include "uds/connection/IncomingDiagConnection.h"
-#include "util/estd/assert.h"
+
+#include <etl/error_handler.h>
 
 namespace uds
 {
@@ -11,13 +12,15 @@ AbstractDiagJob& RoutineControlJob::getStartRoutine() { return *this; }
 
 AbstractDiagJob& RoutineControlJob::getStopRoutine()
 {
-    estd_assert(fpStopRoutine);
+    ETL_ASSERT(fpStopRoutine != nullptr, ETL_ERROR_GENERIC("stop routine must not be null"));
     return *fpStopRoutine;
 }
 
 AbstractDiagJob& RoutineControlJob::getRequestRoutineResults()
 {
-    estd_assert(fpRequestRoutineResults);
+    ETL_ASSERT(
+        fpRequestRoutineResults != nullptr,
+        ETL_ERROR_GENERIC("request routine results must not be null"));
     return *fpRequestRoutineResults;
 }
 

@@ -33,10 +33,9 @@ TEST(CrcTests, CalculateCRCWithNoData)
 
 TEST(CrcTests, CalculateCRCWithInvalidData)
 {
-    ::estd::AssertHandlerScope scope(::estd::AssertExceptionHandler);
     uint8_t* data = nullptr;
     using Crc8    = CrcCalculator<uint8_t, 0x07>;
-    ASSERT_THROW(Crc8::update(data, 1, 0), ::estd::assert_exception);
+    ASSERT_THROW(Crc8::update(data, 1, 0), ::etl::exception);
 }
 
 } // anonymous namespace

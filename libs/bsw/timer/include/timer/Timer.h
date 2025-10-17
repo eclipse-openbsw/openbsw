@@ -189,6 +189,11 @@ template<class LockGuard>
 bool Timer<LockGuard>::addTimeout(
     Timeout& timeout, uint32_t const absoluteTimeout, uint32_t const cycleTime, uint32_t const now)
 {
+    if (timeout.is_linked())
+    {
+        return false;
+    }
+
     timeout._time      = absoluteTimeout;
     timeout._cycleTime = cycleTime;
 

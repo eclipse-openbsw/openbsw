@@ -6,8 +6,8 @@
 #include "uds/UdsConstants.h"
 #include "uds/session/DiagSession.h"
 
+#include <etl/error_handler.h>
 #include <etl/uncopyable.h>
-#include <util/estd/assert.h>
 
 #include <platform/estdint.h>
 
@@ -109,7 +109,9 @@ public:
     {
         if (requestLength > 0U)
         {
-            estd_assert(requestLength > prefixLength);
+            ETL_ASSERT(
+                requestLength > prefixLength,
+                ETL_ERROR_GENERIC("requested length must be greater than the prefix length"));
         }
     }
 
@@ -150,7 +152,9 @@ public:
     {
         if (requestLength > 0U)
         {
-            estd_assert(requestLength > prefixLength);
+            ETL_ASSERT(
+                requestLength > prefixLength,
+                ETL_ERROR_GENERIC("requested length must be greater than the prefix length"));
         }
     }
 

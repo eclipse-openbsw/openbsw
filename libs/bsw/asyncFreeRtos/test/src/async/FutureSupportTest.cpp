@@ -43,8 +43,7 @@ TEST_F(FutureSupportTest, testAll)
             .Times(2)
             .WillRepeatedly(Return(&_taskHandle1));
         EXPECT_FALSE(cut.verifyTaskContext());
-        ::estd::AssertHandlerScope scope(::estd::AssertExceptionHandler);
-        EXPECT_THROW({ cut.assertTaskContext(); }, ::estd::assert_exception);
+        EXPECT_THROW({ cut.assertTaskContext(); }, ::etl::exception);
     }
     {
         // check correct context

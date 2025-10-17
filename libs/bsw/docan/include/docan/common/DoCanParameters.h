@@ -2,9 +2,10 @@
 
 #pragma once
 
-#include <etl/delegate.h>
 #include <transport/AbstractTransportLayer.h>
-#include <util/estd/assert.h>
+
+#include <etl/delegate.h>
+#include <etl/error_handler.h>
 
 #include <platform/estdint.h>
 
@@ -166,10 +167,18 @@ inline DoCanParameters::DoCanParameters(
 , _maxAllocateRetryCount(maxAllocateRetryCount)
 , _maxFlowControlWaitCount(maxFlowControlWaitCount)
 {
-    estd_assert(minSeparationTimeUs < uint32_t(waitAllocateTimeout) * 1000U);
-    estd_assert(minSeparationTimeUs < uint32_t(waitRxTimeout) * 1000U);
-    estd_assert(minSeparationTimeUs < uint32_t(waitTxCallbackTimeout) * 1000U);
-    estd_assert(minSeparationTimeUs < uint32_t(waitFlowControlTimeout) * 1000U);
+    ETL_ASSERT(
+        minSeparationTimeUs < uint32_t(waitAllocateTimeout) * 1000U,
+        ETL_ERROR_GENERIC("minimum separation time must be smaller than the allocate timeout"));
+    ETL_ASSERT(
+        minSeparationTimeUs < uint32_t(waitRxTimeout) * 1000U,
+        ETL_ERROR_GENERIC("minimum separation time must be smaller than the rx timeout"));
+    ETL_ASSERT(
+        minSeparationTimeUs < uint32_t(waitTxCallbackTimeout) * 1000U,
+        ETL_ERROR_GENERIC("minimum separation time must be smaller than the tx timeout"));
+    ETL_ASSERT(
+        minSeparationTimeUs < uint32_t(waitFlowControlTimeout) * 1000U,
+        ETL_ERROR_GENERIC("minimum separation time must be smaller than the flow control timeout"));
 }
 
 inline uint32_t DoCanParameters::nowUs() const { return _systemUs(); }

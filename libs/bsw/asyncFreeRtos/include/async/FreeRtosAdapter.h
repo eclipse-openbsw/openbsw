@@ -9,6 +9,7 @@
 #include "async/TaskInitializer.h"
 
 #include <etl/array.h>
+#include <etl/error_handler.h>
 
 namespace async
 {
@@ -263,9 +264,9 @@ void FreeRtosAdapter<Binding>::getTaskMemory(
 {
     TaskInitializer& initializer
         = *((Context == TASK_IDLE) ? _idleTaskInitializer : _timerTaskInitializer);
-    estd_assert(ppxTaskTCBBuffer != nullptr);
-    estd_assert(ppxTaskStackBuffer != nullptr);
-    estd_assert(pulTaskStackSize != nullptr);
+    ETL_ASSERT(ppxTaskTCBBuffer != nullptr, ETL_ERROR_GENERIC("tcb buffer must not be null"));
+    ETL_ASSERT(ppxTaskStackBuffer != nullptr, ETL_ERROR_GENERIC("stack buffer must not be null"));
+    ETL_ASSERT(pulTaskStackSize != nullptr, ETL_ERROR_GENERIC("stack size must not be null"));
     *ppxTaskTCBBuffer   = &initializer._task;
     *ppxTaskStackBuffer = initializer._stack.data();
     // Conversion to uint32_t is OK, stack will not exceed 4GB.
@@ -490,7 +491,7 @@ template<size_t N>
 typename TaskConfigHolder<N, void>::TaskConfigType const*
 TaskConfigHolder<N, void>::getTaskConfig(size_t const /*taskIdx*/)
 {
-    estd_assert(false);
+    ETL_ASSERT_FAIL(ETL_ERROR_GENERIC("not implemented"));
     return nullptr;
 }
 

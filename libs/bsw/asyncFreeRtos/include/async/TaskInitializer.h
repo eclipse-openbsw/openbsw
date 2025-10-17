@@ -6,9 +6,9 @@
 #include "async/Types.h"
 
 #include <etl/array.h>
+#include <etl/error_handler.h>
 #include <etl/memory.h>
 #include <etl/span.h>
-#include <util/estd/assert.h>
 
 #include <FreeRTOS.h>
 #include <task.h>
@@ -270,7 +270,9 @@ void TaskInitializer<Adapter>::create(
     auto const stackSlice
         = align(alignof(StackType_t), stackSliceRaw).template reinterpret_as<StackType_t>();
     auto const taskInitializerSlice = align(alignof(TaskInitializer), stackSliceRaw);
-    estd_assert((taskInitializerSlice.size()) >= sizeof(TaskInitializer));
+    ETL_ASSERT(
+        taskInitializerSlice.size() >= sizeof(TaskInitializer),
+        ETL_ERROR_GENERIC("stack must be big enough to hold a task initializer object"));
     new (taskInitializerSlice.data())
         TaskInitializer(context, name, task, stackSlice, taskFunction, config);
 }

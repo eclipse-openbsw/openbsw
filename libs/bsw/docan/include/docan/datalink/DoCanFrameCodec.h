@@ -9,9 +9,9 @@
 #include "docan/datalink/IDoCanFrameSizeMapper.h"
 
 #include <etl/algorithm.h>
+#include <etl/error_handler.h>
 #include <etl/limits.h>
 #include <etl/unaligned_type.h>
-#include <util/estd/assert.h>
 
 #include <cstdint>
 #include <limits>
@@ -365,7 +365,9 @@ bool DoCanFrameCodec<DataLinkLayer>::fitsIntoLongSingleFrame(
     MessageSizeType const messageSize) const
 {
     // Ensure _singleFrameSize._max is at least as large as _config._offset + 2
-    estd_assert(_config._singleFrameSize._max >= _config._offset + 2);
+    ETL_ASSERT(
+        _config._singleFrameSize._max >= _config._offset + 2,
+        ETL_ERROR_GENERIC("single frame size must be large enough"));
     uint8_t const offset = _config._offset + 2U;
     return messageSize <= static_cast<MessageSizeType>(_config._singleFrameSize._max) - offset;
 }
@@ -378,7 +380,9 @@ CodecResult DoCanFrameCodec<DataLinkLayer>::getEncodedFrameCount(
 {
     // The max consecutive frame size needs to be at least 2 larger than the configured offset for
     // this function.
-    estd_assert(_config._consecutiveFrameSize._max >= _config._offset + 2);
+    ETL_ASSERT(
+        _config._consecutiveFrameSize._max >= _config._offset + 2,
+        ETL_ERROR_GENERIC("consecutive frame size must be large enough"));
 
     if (messageSize == 0U)
     {

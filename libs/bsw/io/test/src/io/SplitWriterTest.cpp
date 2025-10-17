@@ -54,10 +54,9 @@ struct SplitWriterTest : ::testing::Test
  */
 TEST_F(SplitWriterTest, cannot_initialise_with_nullptrs)
 {
-    ::estd::AssertHandlerScope scope(::estd::AssertExceptionHandler);
     ::etl::array<::io::IWriter*, 1> array1 = {nullptr};
 
-    ASSERT_THROW(::io::SplitWriter<1> splitWriter1(array1), ::estd::assert_exception);
+    ASSERT_THROW(::io::SplitWriter<1> splitWriter1(array1), ::etl::exception);
 
     ::etl::array<::io::IWriter*, NUM_QUEUES> array_NUM_QUEUES;
     for (size_t i = 0; i < _w.size() - 1; i++)
@@ -69,8 +68,7 @@ TEST_F(SplitWriterTest, cannot_initialise_with_nullptrs)
     // No throw.
     ::io::SplitWriter<NUM_QUEUES - 1> splitWriter2(array_NUM_QUEUES);
 
-    ASSERT_THROW(
-        ::io::SplitWriter<NUM_QUEUES> splitWriter3(array_NUM_QUEUES), ::estd::assert_exception);
+    ASSERT_THROW(::io::SplitWriter<NUM_QUEUES> splitWriter3(array_NUM_QUEUES), ::etl::exception);
 }
 
 /**
@@ -81,8 +79,6 @@ TEST_F(SplitWriterTest, cannot_initialise_with_nullptrs)
  */
 TEST_F(SplitWriterTest, cannot_initialise_with_different_sized_writers)
 {
-    ::estd::AssertHandlerScope scope(::estd::AssertExceptionHandler);
-
     using AnotherQueue = ::io::MemoryQueue<2, 1, uint8_t>;
     AnotherQueue anotherQueue;
     ::io::MemoryQueueWriter<AnotherQueue> anotherSizedIWriter(anotherQueue);
@@ -97,8 +93,7 @@ TEST_F(SplitWriterTest, cannot_initialise_with_different_sized_writers)
     // No throw.
     ::io::SplitWriter<NUM_QUEUES - 1> splitWriter2(array_NUM_QUEUES);
 
-    ASSERT_THROW(
-        ::io::SplitWriter<NUM_QUEUES> splitWriter3(array_NUM_QUEUES), ::estd::assert_exception);
+    ASSERT_THROW(::io::SplitWriter<NUM_QUEUES> splitWriter3(array_NUM_QUEUES), ::etl::exception);
 }
 
 /**
