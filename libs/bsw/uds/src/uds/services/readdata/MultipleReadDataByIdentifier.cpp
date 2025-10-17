@@ -130,7 +130,7 @@ MultipleReadDataByIdentifier::prepareNestedRequest(::etl::span<uint8_t const> co
     }
     else
     {
-        setResponseCode(fCombinedResponseCode);
+        fResponseCode = fCombinedResponseCode;
         return {};
     }
 }
@@ -152,7 +152,7 @@ void MultipleReadDataByIdentifier::handleNestedResponseCode(DiagReturnCode::Type
 {
     if (!fCheckResponse(responseCode, fCombinedResponseCode))
     {
-        setResponseCode(fCombinedResponseCode);
+        fResponseCode = fCombinedResponseCode;
     }
 }
 
