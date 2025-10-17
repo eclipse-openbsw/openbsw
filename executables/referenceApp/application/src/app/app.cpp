@@ -1,4 +1,4 @@
-// Copyright 2024 Accenture.
+// Copyright 2025 Accenture.
 
 #include "app/app.h"
 
@@ -10,7 +10,7 @@
 #include "systems/RuntimeSystem.h"
 #include "systems/SafetySystem.h"
 #include "systems/SysAdminSystem.h"
-#ifdef TRACING
+#if defined(SUPPORT_FREERTOS) && defined(TRACING)
 #include "runtime/Tracer.h"
 #endif
 
@@ -209,13 +209,17 @@ void startApp()
 
     /* runlevel 1 */
     ::platform::platformLifecycleAdd(lifecycleManager, 1U);
+
     lifecycleManager.addComponent(
         "runtime", runtimeSystem.create(TASK_BACKGROUND, runtimeMonitor), 1U);
     lifecycleManager.addComponent("safety", safetySystem.create(TASK_SAFETY, lifecycleManager), 1U);
+
     /* runlevel 2 */
     ::platform::platformLifecycleAdd(lifecycleManager, 2U);
+
     /* runlevel 3 */
     ::platform::platformLifecycleAdd(lifecycleManager, 3U);
+
     /* runlevel 4 */
 #ifdef PLATFORM_SUPPORT_UDS
     lifecycleManager.addComponent("transport", transportSystem.create(TASK_UDS), 4U);
@@ -273,11 +277,11 @@ void startApp()
     idleHandler.start();
 }
 
-using IdleTask = AsyncAdapter::IdleTask<1024 * 2>;
-IdleTask idleTask{"idle"};
-
 using TimerTask = AsyncAdapter::TimerTask<1024 * 1>;
 TimerTask timerTask{"timer"};
+
+using IdleTask = AsyncAdapter::IdleTask<1024 * 2>;
+IdleTask idleTask{"idle"};
 
 using UdsTask = AsyncAdapter::Task<TASK_UDS, 1024 * 2>;
 UdsTask udsTask{"uds"};

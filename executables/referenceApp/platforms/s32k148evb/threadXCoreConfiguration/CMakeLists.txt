@@ -1,0 +1,3 @@
+add_library(threadXCoreConfiguration INTERFACE)
+
+target_include_directories(threadXCoreConfiguration INTERFACE include)

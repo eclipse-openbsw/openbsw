@@ -4,13 +4,13 @@
 #include <etl/chrono.h>
 
 #include <chrono>
+using namespace ::std::chrono;
+
+static auto const startTime = steady_clock::now();
 
 uint64_t getSystemTimeNs()
 {
-    using namespace ::std::chrono;
-    steady_clock::time_point const now = steady_clock::now();
-    auto const duration                = now.time_since_epoch();
-    return duration_cast<nanoseconds>(duration).count();
+    return duration_cast<nanoseconds>(steady_clock::now() - startTime).count();
 }
 
 extern "C"
@@ -32,9 +32,17 @@ etl::chrono::steady_clock::rep etl_get_steady_clock()
 }
 }
 
-uint32_t getSystemTimeUs32Bit(void) { return getSystemTimeNs() / 1000; }
+uint32_t getSystemTimeUs32Bit(void)
+{
+    auto elapsed = duration_cast<microseconds>(steady_clock::now() - startTime).count();
+    return static_cast<uint32_t>(elapsed & 0xFFFFFFFF); // wrap naturally
+}
 
-uint32_t getSystemTimeMs32Bit(void) { return getSystemTimeNs() / 1000 / 1000; }
+uint32_t getSystemTimeMs32Bit(void)
+{
+    auto elapsed = duration_cast<milliseconds>(steady_clock::now() - startTime).count();
+    return static_cast<uint32_t>(elapsed & 0xFFFFFFFF); // wrap naturally
+}
 
 void sysDelayUs(uint32_t const delay)
 {

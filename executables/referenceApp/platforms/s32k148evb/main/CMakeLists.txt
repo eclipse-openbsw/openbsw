@@ -12,6 +12,12 @@ add_library(
     src/os/isr/isr_sys.cpp
     src/os/isr/isr_wdg.cpp)
 
+if (BUILD_TARGET_RTOS STREQUAL "THREADX")
+    target_sources(startUpAsm PRIVATE src/bsp/threadx/tx_initialize_low_level.S)
+    target_sources(startUp PRIVATE src/bsp/threadx/tx_execution_initialize.c)
+    target_link_libraries(startUpAsm PRIVATE asyncCoreConfiguration)
+endif ()
+
 target_link_libraries(
     startUp
     PRIVATE bspMcu
@@ -41,7 +47,6 @@ target_link_libraries(
             configuration
             ethConfiguration
             etl
-            freeRtosCm4SysTick
             lifecycle
             startUp
             safeBspMcuWatchdog
@@ -51,11 +56,18 @@ target_link_libraries(
             safeWatchdog
     PUBLIC bspInputManager bspOutputManager)
 
-add_library(osHooks src/osHooks.cpp)
-
-target_include_directories(osHooks PRIVATE include)
-
-target_link_libraries(osHooks PRIVATE common freeRtosCm4SysTick)
+if (BUILD_TARGET_RTOS STREQUAL "FREERTOS")
+    target_link_libraries(main PRIVATE freeRtosCm4SysTick)
+    add_library(osHooks src/osHooks/freertos/osHooks.cpp)
+    target_include_directories(osHooks PRIVATE include)
+    target_link_libraries(osHooks PRIVATE common freeRtosCm4SysTick)
+elseif (BUILD_TARGET_RTOS STREQUAL "THREADX")
+    target_link_libraries(main PRIVATE threadXCortexM4)
+    add_library(osHooks src/osHooks/threadx/osHooks.cpp)
+    target_include_directories(osHooks PRIVATE include/osHooks/threadx)
+    target_link_libraries(osHooks PRIVATE common threadXCortexM4 asyncThreadX
+                                          threadXConfiguration)
+endif ()
 
 set_target_properties(
     startUp

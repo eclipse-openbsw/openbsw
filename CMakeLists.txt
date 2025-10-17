@@ -17,6 +17,9 @@ endif ()
 set(BUILD_TARGET_PLATFORM
     "POSIX"
     CACHE STRING "Target Platform")
+set(BUILD_TARGET_RTOS
+    "FREERTOS"
+    CACHE STRING "Target RTOS")
 
 # Convert target name to lower case to match directory name
 string(TOLOWER "${BUILD_TARGET_PLATFORM}" OPENBSW_TARGET)
@@ -24,7 +27,15 @@ if (BUILD_REFERENCE)
     include(executables/referenceApp/platforms/${OPENBSW_TARGET}/Options.cmake)
 endif ()
 
+# Configure async and Rtos libs depending on target rtos.
+if (BUILD_TARGET_RTOS STREQUAL "FREERTOS")
+    add_compile_definitions(SUPPORT_FREERTOS)
+elseif (BUILD_TARGET_RTOS STREQUAL "THREADX")
+    add_compile_definitions(SUPPORT_THREADX)
+endif ()
+
 message(STATUS "Target platform: <${BUILD_TARGET_PLATFORM}>")
+message(STATUS "Target RTOS: <${BUILD_TARGET_RTOS}>")
 
 # Set preprocessor defines based on cmake options by the same name to configure
 # platform features.

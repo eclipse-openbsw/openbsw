@@ -5,7 +5,7 @@
 #include <async/Async.h>
 #include <async/IRunnable.h>
 #include <lifecycle/AsyncLifecycleComponent.h>
-#include <lifecycle/console/LifecycleControlCommand.h>
+#include <lifecycle/ILifecycleManager.h>
 #ifdef PLATFORM_SUPPORT_CAN
 #include "app/CanDemoListener.h"
 

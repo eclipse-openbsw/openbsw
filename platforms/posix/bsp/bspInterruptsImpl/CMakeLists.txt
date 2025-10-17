@@ -6,11 +6,16 @@ else ()
     set(bspInterruptsImplName "bspInterruptsImplUt")
 endif ()
 
-add_library(${bspInterruptsImplName}
-            src/interrupts/suspendResumeAllInterrupts.cpp)
-
-target_include_directories(${bspInterruptsImplName} PUBLIC include)
+if (BUILD_TARGET_RTOS STREQUAL "FREERTOS")
+    add_library(${bspInterruptsImplName}
+                freertos/src/interrupts/suspendResumeAllInterrupts.cpp)
+    target_include_directories(${bspInterruptsImplName} PUBLIC freertos/include)
+    target_link_libraries(${bspInterruptsImplName} PRIVATE freeRtos)
+elseif (BUILD_TARGET_RTOS STREQUAL "THREADX")
+    add_library(${bspInterruptsImplName}
+                threadx/src/interrupts/suspendResumeAllInterrupts.cpp)
+    target_include_directories(${bspInterruptsImplName} PUBLIC threadx/include)
+    target_link_libraries(${bspInterruptsImplName} PRIVATE threadX)
+endif ()
 
 target_link_libraries(${bspInterruptsImplName} PUBLIC platform)
-
-target_link_libraries(${bspInterruptsImplName} PRIVATE freeRtos)
