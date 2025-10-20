@@ -45,7 +45,7 @@ project(
         "BSW workspace with reference application for multiple platforms"
     LANGUAGES CXX C ASM)
 
-list(APPEND CMAKE_MODULE_PATH "cmake/modules")
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules")
 
 option(BUILD_UNIT_TESTS "Build unit tests" OFF)
 
@@ -67,16 +67,17 @@ if (BUILD_UNIT_TESTS)
     append_coverage_compiler_flags()
     enable_testing()
 
-    set(OPENBSW_APP_DIR "${CMAKE_CURRENT_LIST_DIR}/executables/unitTest")
-    set(OPENBSW_PLATFORM_DIR "${CMAKE_CURRENT_LIST_DIR}/platforms/posix")
+    set(OPENBSW_APP_DIR "${CMAKE_CURRENT_SOURCE_DIR}/executables/unitTest")
+    set(OPENBSW_PLATFORM_DIR "${CMAKE_CURRENT_SOURCE_DIR}/platforms/posix")
 endif ()
 
 if (BUILD_REFERENCE)
-    set(OPENBSW_APP_DIR "${CMAKE_CURRENT_LIST_DIR}/executables/referenceApp")
+    set(OPENBSW_APP_DIR "${CMAKE_CURRENT_SOURCE_DIR}/executables/referenceApp")
     if (BUILD_TARGET_PLATFORM STREQUAL "S32K148EVB")
-        set(OPENBSW_PLATFORM_DIR "${CMAKE_CURRENT_LIST_DIR}/platforms/s32k1xx")
+        set(OPENBSW_PLATFORM_DIR
+            "${CMAKE_CURRENT_SOURCE_DIR}/platforms/s32k1xx")
     else ()
-        set(OPENBSW_PLATFORM_DIR "${CMAKE_CURRENT_LIST_DIR}/platforms/posix")
+        set(OPENBSW_PLATFORM_DIR "${CMAKE_CURRENT_SOURCE_DIR}/platforms/posix")
     endif ()
 endif ()
 
@@ -97,7 +98,8 @@ add_subdirectory(libs EXCLUDE_FROM_ALL)
 if (BUILD_UNIT_TESTS)
 
     add_subdirectory(executables/unitTest EXCLUDE_FROM_ALL)
-    target_include_directories(etl BEFORE INTERFACE executables/unitTest/etl_profile)
+    target_include_directories(etl BEFORE
+                               INTERFACE executables/unitTest/etl_profile)
 
     if (OPENBSW_PLATFORM STREQUAL "posix")
 
@@ -150,10 +152,13 @@ if (BUILD_UNIT_TESTS)
         add_subdirectory(platforms/s32k1xx/bsp/canflex2Transceiver/test)
 
     else ()
-        message (FATAL_ERROR  "Invalid value for OPENBSW_PLATFORM: ${OPENBSW_PLATFORM}")
+        message(
+            FATAL_ERROR
+                "Invalid value for OPENBSW_PLATFORM: ${OPENBSW_PLATFORM}")
     endif ()
 
-elseif(BUILD_REFERENCE)
-    target_include_directories(etl BEFORE INTERFACE executables/referenceApp/etl_profile)
+elseif (BUILD_REFERENCE)
+    target_include_directories(etl BEFORE
+                               INTERFACE executables/referenceApp/etl_profile)
     add_subdirectory(executables/referenceApp)
-endif()
+endif ()
