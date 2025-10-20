@@ -12,6 +12,7 @@ namespace bsp
 
 #if __cpp_concepts
 
+// clang-format off
 template<typename T>
 concept UartConcept
     = requires(T a, ::etl::span<uint8_t const> const& writeData, ::etl::span<uint8_t> readData) {
@@ -25,7 +26,7 @@ concept UartConcept
 
 template<typename T>
 concept UartCheckInterface = std::derived_from<T, bsp::UartApi> && UartConcept<T>;
-
+// clang-format on
 #else
 
 template<typename T>
