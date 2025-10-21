@@ -44,7 +44,7 @@ CANFrame::CANFrame(uint32_t const id, uint8_t const* const payload, uint8_t cons
 {
     ETL_ASSERT(
         length <= MAX_FRAME_LENGTH,
-        ETL_ERROR_GENERIC("can frame length must be smaller than maximum length"));
+        ETL_ERROR_GENERIC("CAN frame length must be smaller than maximum length"));
 
     (void)memcpy(_payload, payload, static_cast<size_t>(length));
 }
@@ -58,11 +58,11 @@ CANFrame::CANFrame(
 {
     ETL_ASSERT(
         rawId <= MAX_FRAME_ID_EXTENDED,
-        ETL_ERROR_GENERIC("can frame id must be smaller than the maximum allowed one"));
+        ETL_ERROR_GENERIC("CAN frame id must be smaller than the maximum allowed one"));
 
     ETL_ASSERT(
         length <= MAX_FRAME_LENGTH,
-        ETL_ERROR_GENERIC("can frame length must be smaller than maximum length"));
+        ETL_ERROR_GENERIC("CAN frame length must be smaller than maximum length"));
 
     (void)memcpy(_payload, payload, static_cast<size_t>(length));
 }

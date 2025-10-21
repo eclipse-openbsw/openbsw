@@ -180,7 +180,7 @@ inline void CANFrame::setPayload(uint8_t const* const payload, uint8_t const len
 {
     ETL_ASSERT(
         length <= MAX_FRAME_LENGTH,
-        ETL_ERROR_GENERIC("can frame length must be smaller than maximum length"));
+        ETL_ERROR_GENERIC("CAN frame length must be smaller than maximum length"));
 
     (void)memcpy(_payload, payload, static_cast<size_t>(length));
     _payloadLength = length;

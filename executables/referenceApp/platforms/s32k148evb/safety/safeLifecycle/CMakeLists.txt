@@ -18,7 +18,3 @@ target_link_libraries(
             bsp
             bspInterrupts
             startUp)
-
-if (BUILD_UNIT_TESTS)
-    target_compile_definitions(safeLifecycle PUBLIC ETL_THROW_EXCEPTIONS)
-endif ()

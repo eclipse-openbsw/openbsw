@@ -21,7 +21,7 @@ void etl_assert_function(etl::exception const& exception)
               << exception.what() << ") failed" << std::endl;
     std::abort();
 }
-#else
+#else // defined(__linux__) || defined(__APPLE__)
 #include <cstdlib>
 
 void etl_assert_function(etl::exception const&) { std::abort(); }
