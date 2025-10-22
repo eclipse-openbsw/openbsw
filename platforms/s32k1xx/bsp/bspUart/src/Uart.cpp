@@ -4,7 +4,6 @@
 #include "bsp/UartPrivate.h"
 
 #include <bsp/clock/boardClock.h>
-#include <util/estd/assert.h>
 
 using bsp::Uart;
 

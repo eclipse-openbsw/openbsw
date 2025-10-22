@@ -75,7 +75,6 @@ private:
     UartConfig const& _uartConfig;
 };
 
-static_assert(
-    bsp::UartCheckInterface<bsp::Uart>, "Uart does not implement UartApi interface correctly");
+BSP_UART_CONCEPT_CHECKER(Uart)
 
 } // namespace bsp

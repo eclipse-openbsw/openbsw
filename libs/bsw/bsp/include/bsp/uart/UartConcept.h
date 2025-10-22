@@ -27,30 +27,14 @@ concept UartConcept
 template<typename T>
 concept UartCheckInterface = std::derived_from<T, bsp::UartApi> && UartConcept<T>;
 // clang-format on
+
+#define BSP_UART_CONCEPT_CHECKER(_class) \
+    static_assert(                       \
+        bsp::UartCheckInterface<_class>, \
+        "Class " #_class " does not implement UartApi interface correctly");
+
 #else
-
-template<typename T>
-struct UartConcept
-{
-    static uint8_t dataBuffer[1];
-    static constexpr bool value
-        = etl::is_base_of<bsp::UartApi, T>::value
-          && etl::is_same<
-              decltype(etl::declval<T>().write(
-                  static_cast<etl::span<uint8_t const> const&>(dataBuffer))),
-              size_t>::value
-          && etl::is_same<
-              decltype(etl::declval<T>().read(static_cast<etl::span<uint8_t>>(dataBuffer))),
-              size_t>::value;
-};
-
-template<typename T>
-struct UartDerivedFromUartApiStruct : etl::integral_constant<bool, UartConcept<T>::value>
-{};
-
-template<typename T>
-constexpr bool UartCheckInterface = UartDerivedFromUartApiStruct<T>::value;
-
+#define BSP_UART_CONCEPT_CHECKER(_class)
 #endif
 
 } // namespace bsp

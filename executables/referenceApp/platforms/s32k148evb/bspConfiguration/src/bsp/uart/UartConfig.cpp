@@ -2,7 +2,6 @@
 // Copyright 2025 BMW AG
 
 #include <bsp/UartPrivate.h>
-#include <util/estd/assert.h>
 
 namespace bsp
 {
@@ -28,8 +27,9 @@ static Uart instances[] = {
 
 bsp::Uart& Uart::getInstance(Id id)
 {
-    // estd_assert(static_cast<uint8_t>(Uart::Id::INVALID) <
-    // static_cast<uint8_t>(etl::size(instances)));
+    static_assert(
+        static_cast<uint8_t>(Uart::Id::INVALID) >= static_cast<uint8_t>(etl::size(instances)),
+        "Not enough Uart instances defined");
     return instances[static_cast<uint8_t>(id)];
 }
 
