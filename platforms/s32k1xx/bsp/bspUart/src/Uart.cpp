@@ -12,31 +12,31 @@ static uint32_t const WRITE_TIMEOUT = 1000U;
 
 void Uart::init()
 {
-    (void)bios::Io::setDefaultConfiguration(_uartDevice.txPin);
-    (void)bios::Io::setDefaultConfiguration(_uartDevice.rxPin);
-    _uartDevice.uart.GLOBAL = 0;
-    _uartDevice.uart.CTRL   = 0;
+    (void)bios::Io::setDefaultConfiguration(_uartConfig.txPin);
+    (void)bios::Io::setDefaultConfiguration(_uartConfig.rxPin);
+    _uartConfig.uart.GLOBAL = 0;
+    _uartConfig.uart.CTRL   = 0;
 
-    _uartDevice.uart.PINCFG = 0;
-    _uartDevice.uart.BAUD   = 0;
-    _uartDevice.uart.BAUD   = _uartDevice.baudRate[0].baud;
-    _uartDevice.uart.STAT   = 0xFFFFFFFFU;
-    _uartDevice.uart.STAT   = 0;
-    _uartDevice.uart.MODIR  = 0;
+    _uartConfig.uart.PINCFG = 0;
+    _uartConfig.uart.BAUD   = 0;
+    _uartConfig.uart.BAUD   = _uartConfig.baudRate[0].baud;
+    _uartConfig.uart.STAT   = 0xFFFFFFFFU;
+    _uartConfig.uart.STAT   = 0;
+    _uartConfig.uart.MODIR  = 0;
 
-    _uartDevice.uart.FIFO  = 0;
-    _uartDevice.uart.WATER = 0;
+    _uartConfig.uart.FIFO  = 0;
+    _uartConfig.uart.WATER = 0;
     // Last
-    _uartDevice.uart.CTRL  = LPUART_CTRL_RE(1U) + LPUART_CTRL_TE(1U);
+    _uartConfig.uart.CTRL  = LPUART_CTRL_RE(1U) + LPUART_CTRL_TE(1U);
 }
 
 bool Uart::isRxReady() const
 {
-    if ((_uartDevice.uart.STAT & LPUART_STAT_OR_MASK) != 0)
+    if ((_uartConfig.uart.STAT & LPUART_STAT_OR_MASK) != 0)
     {
-        _uartDevice.uart.STAT = _uartDevice.uart.STAT | LPUART_STAT_OR_MASK;
+        _uartConfig.uart.STAT = _uartConfig.uart.STAT | LPUART_STAT_OR_MASK;
     }
-    return ((_uartDevice.uart.STAT & LPUART_STAT_RDRF_MASK) != 0);
+    return ((_uartConfig.uart.STAT & LPUART_STAT_RDRF_MASK) != 0);
 }
 
 size_t Uart::read(::etl::span<uint8_t> data)
@@ -50,14 +50,14 @@ size_t Uart::read(::etl::span<uint8_t> data)
 
     while (isRxReady() && (bytes_read < data.size()))
     {
-        data[bytes_read] = _uartDevice.uart.DATA & 0xFFU;
+        data[bytes_read] = _uartConfig.uart.DATA & 0xFFU;
         bytes_read++;
     }
 
     return bytes_read;
 }
 
-bool Uart::isTxActive() const { return ((_uartDevice.uart.STAT & LPUART_STAT_TDRE_MASK) == 0); }
+bool Uart::isTxActive() const { return ((_uartConfig.uart.STAT & LPUART_STAT_TDRE_MASK) == 0); }
 
 size_t Uart::write(::etl::span<uint8_t const> const& data)
 {
@@ -84,7 +84,7 @@ bool Uart::writeByte(uint8_t data)
 {
     if (!isTxActive())
     {
-        _uartDevice.uart.DATA = (static_cast<uint32_t>(data) & 0xFFU);
+        _uartConfig.uart.DATA = (static_cast<uint32_t>(data) & 0xFFU);
         uint32_t count        = 0U;
         while (isTxActive())
         {

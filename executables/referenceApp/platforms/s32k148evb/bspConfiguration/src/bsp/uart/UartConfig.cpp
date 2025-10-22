@@ -12,7 +12,7 @@ UartBaudRate const baudRateConfig[] = {
     {(LPUART_BAUD_OSR(9)) + LPUART_BAUD_SBR(8)}    // = 2MBit 80MHz PLL
 };
 
-Uart::UartDevice const config_uart[] = {
+Uart::UartConfig const config_uart[] = {
     {
         *LPUART1,
         bios::Io::UART1_TX,

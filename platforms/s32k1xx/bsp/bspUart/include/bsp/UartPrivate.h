@@ -14,7 +14,7 @@ struct UartBaudRate
     uint32_t baud;
 };
 
-struct Uart::UartDevice
+struct Uart::UartConfig
 {
     LPUART_Type& uart;
     bios::Io::PinId txPin;

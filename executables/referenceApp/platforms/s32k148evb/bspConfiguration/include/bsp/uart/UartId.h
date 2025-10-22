@@ -7,7 +7,7 @@
 namespace bsp
 {
 
-class UartConfig
+class UartId
 {
 public:
     enum class Id
@@ -17,6 +17,6 @@ public:
     };
 };
 
-static constexpr uint8_t NUMBER_OF_UARTS = static_cast<uint8_t>(UartConfig::Id::INVALID);
+static constexpr uint8_t NUMBER_OF_UARTS = static_cast<uint8_t>(UartId::Id::INVALID);
 
 } // namespace bsp

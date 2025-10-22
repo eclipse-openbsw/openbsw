@@ -2,7 +2,7 @@
 
 #include <bsp/uart/UartApi.h>
 #include <bsp/uart/UartConcept.h>
-#include <bsp/uart/UartConfig.h>
+#include <bsp/uart/UartId.h>
 
 namespace bsp
 {
@@ -13,7 +13,7 @@ namespace bsp
  */
 class Uart
 : public bsp::UartApi
-, public bsp::UartConfig
+, public bsp::UartId
 {
 public:
     /**
@@ -53,9 +53,9 @@ public:
      */
     bool isRxReady() const;
 
-    struct UartDevice;
+    struct UartConfig;
 
-    Uart(UartDevice const& uartDevice) : _uartDevice(uartDevice) {}
+    Uart(UartConfig const& uartConfig) : _uartConfig(uartConfig) {}
 
 private:
     /**
@@ -72,7 +72,7 @@ private:
     bool writeByte(uint8_t data);
 
 private:
-    UartDevice const& _uartDevice;
+    UartConfig const& _uartConfig;
 };
 
 static_assert(
