@@ -306,16 +306,19 @@ TEST_F(
 
 TEST_F(TimerTest, the_same_timeout_is_added_multiple_times)
 {
-    // forward_list handles this issue with is_in_use()
-    // it doesn't allow to add same node twice
+    // intrusive_forward_list will assert if the same noe is added twice.
+    // The implementation of Timer::set() has ta handle this and prevent
+    // a Timer instance from being added twice.
 
     setAndExpectTrigger(fTimer, fTimeoutMock1, 100);
     EXPECT_CALL(fAlarmMock, setAlarm(100));
     update(fTimer, fNow);
     fTimer.set(fTimeoutMock1, 100, fNow);
-    fTimer.set(fTimeoutMock1, 100, fNow);
+    // Pass different values, to make sure they are not used.
+    fTimer.set(fTimeoutMock1, 200, fNow);
 
     EXPECT_CALL(fTimeoutMock1, expired());
+    // Expire first passed value and make sure it's still used.
     fNow = 100U;
     update(fTimer, fNow);
 }
