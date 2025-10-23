@@ -4,7 +4,7 @@
 
 #ifndef LOGGER_NO_LEGACY_API
 
-#include <util/estd/assert.h>
+#include <etl/error_handler.h>
 
 namespace util
 {
@@ -22,7 +22,7 @@ ComponentInfo& ComponentInfo::operator=(ComponentInfo const& src)
 
 ::util::format::AttributedString ComponentInfo::getName() const
 {
-    estd_assert(_plainInfo != nullptr);
+    ETL_ASSERT(_plainInfo != nullptr, ETL_ERROR_GENERIC("info must not be null"));
     return ::util::format::AttributedString(_plainInfo->_nameInfo);
 }
 

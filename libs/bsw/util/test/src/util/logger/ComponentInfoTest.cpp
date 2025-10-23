@@ -2,8 +2,6 @@
 
 #include "util/logger/ComponentInfo.h"
 
-#include <util/estd/assert.h>
-
 #include <gtest/gtest.h>
 
 using namespace ::util::logger;
@@ -59,23 +57,21 @@ TEST(LoggerComponentInfoTest, testComponentInfo)
 TEST(LoggerComponentInfoTest, ComponentInfoInvalidPlainInfoCase)
 {
     ComponentInfo cut(12);
-    ::estd::AssertHandlerScope scope(::estd::AssertExceptionHandler);
     {
         ASSERT_FALSE(cut.isValid());
     }
     {
-        ASSERT_THROW(cut.getName(), ::estd::assert_exception);
+        ASSERT_THROW(cut.getName(), ::etl::exception);
     }
 }
 
 TEST(LoggerComponentInfoTest, ComponentInfoInvalidPlainInfoCaseForGetPlainInfoString)
 {
     ComponentInfo cut(12);
-    ::estd::AssertHandlerScope scope(::estd::AssertExceptionHandler);
     {
         ASSERT_FALSE(cut.isValid());
     }
     {
-        ASSERT_THROW(cut.getPlainInfoString(), ::estd::assert_exception);
+        ASSERT_THROW(cut.getPlainInfoString(), ::etl::exception);
     }
 }

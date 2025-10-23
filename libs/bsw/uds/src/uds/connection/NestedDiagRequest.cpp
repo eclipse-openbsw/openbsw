@@ -11,15 +11,13 @@ namespace uds
 NestedDiagRequest::NestedDiagRequest(uint8_t const prefixLength)
 : fSender(nullptr)
 , fPendingResponseSender(nullptr)
-, fMessageBuffer()
-, fNestedRequest()
-, fStoredRequestLength(0)
-, fResponseLength(0)
 , fPrefixLength(prefixLength)
-, fNumIdentifiers(0)
-, fNumPrefixIdentifiers(0)
 , fIsPendingSent(false)
 , fResponseCode(DiagReturnCode::OK)
+, fMessageBuffer()
+, fStoredRequestLength(0)
+, fNumIdentifiers(0)
+, fNumPrefixIdentifiers(0)
 {}
 
 void NestedDiagRequest::init(
@@ -123,11 +121,11 @@ void NestedDiagRequest::storeRequest(
     (void)::etl::copy(request, dest);
 }
 
-void NestedDiagRequest::handleOverflow() { setResponseCode(DiagReturnCode::ISO_RESPONSE_TOO_LONG); }
+void NestedDiagRequest::handleOverflow() { fResponseCode = DiagReturnCode::ISO_RESPONSE_TOO_LONG; }
 
 void NestedDiagRequest::handleNestedResponseCode(DiagReturnCode::Type const responseCode)
 {
-    setResponseCode(responseCode);
+    fResponseCode = responseCode;
 }
 
 ::etl::span<uint8_t const> NestedDiagRequest::consumeStoredRequest(uint16_t const consumedLength)

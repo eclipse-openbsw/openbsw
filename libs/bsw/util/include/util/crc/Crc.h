@@ -6,7 +6,7 @@
 #include "util/crc/Reflect.h"
 #include "util/crc/Xor.h"
 
-#include <util/estd/assert.h>
+#include <etl/error_handler.h>
 
 #include <cstddef>
 #include <cstdint>
@@ -29,7 +29,7 @@ struct CrcCalculatorBase
         DigestType const initValue = DigestType())
     {
         DigestType reg = initValue;
-        estd_assert(data != nullptr || length == 0);
+        ETL_ASSERT(data != nullptr || length == 0, ETL_ERROR_GENERIC("data must not be null"));
         for (size_t idx = 0U; idx < length; ++idx)
         {
             uint8_t const value            = Reflect<ReflectInput>::apply(data[idx]);

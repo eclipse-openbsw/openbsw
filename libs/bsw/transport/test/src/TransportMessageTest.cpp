@@ -5,7 +5,6 @@
 #include "transport/DataProgressListenerMock.h"
 
 #include <etl/span.h>
-#include <util/estd/assert.h>
 
 #include <gmock/gmock.h>
 
@@ -28,11 +27,10 @@ uint8_t const TransportMessageTest::BUFFER_LENGTH;
 
 TEST_F(TransportMessageTest, TestAsserts)
 {
-    ::estd::AssertHandlerScope scope(::estd::AssertExceptionHandler);
     TransportMessage t;
-    ASSERT_THROW(t.init(nullptr, 10), ::estd::assert_exception);
-    ASSERT_THROW(t.setServiceId(1), ::estd::assert_exception);
-    ASSERT_THROW(t.setPayloadLength(100), ::estd::assert_exception);
+    ASSERT_THROW(t.init(nullptr, 10), ::etl::exception);
+    ASSERT_THROW(t.setServiceId(1), ::etl::exception);
+    ASSERT_THROW(t.setPayloadLength(100), ::etl::exception);
 }
 
 TEST_F(TransportMessageTest, DefaultConstructor)
@@ -52,7 +50,6 @@ TEST_F(TransportMessageTest, Constructor)
 
 TEST_F(TransportMessageTest, Init)
 {
-    ::estd::AssertHandlerScope scope(::estd::AssertExceptionHandler);
     m.init(fBuffer, BUFFER_LENGTH);
     EXPECT_EQ(fBuffer, m.getBuffer());
     EXPECT_EQ(BUFFER_LENGTH, m.getBufferLength());
@@ -66,7 +63,7 @@ TEST_F(TransportMessageTest, Init)
     m.init(nullptr, 0);
     EXPECT_EQ(nullptr, m.getBuffer());
     EXPECT_EQ(0U, m.getBufferLength());
-    ASSERT_THROW(m.init(nullptr, 1), ::estd::assert_exception);
+    ASSERT_THROW(m.init(nullptr, 1), ::etl::exception);
     EXPECT_EQ(0U, m.missingBytes());
 }
 
@@ -175,9 +172,8 @@ TEST_F(TransportMessageTest, SetGetPayloadLength)
 
 TEST_F(TransportMessageTest, SetPayloadLengthAssertion)
 {
-    ::estd::AssertHandlerScope scope(::estd::AssertExceptionHandler);
     uint16_t testPayloadLength = m.getMaxPayloadLength() + 1;
-    ASSERT_THROW(m.setPayloadLength(testPayloadLength), ::estd::assert_exception);
+    ASSERT_THROW(m.setPayloadLength(testPayloadLength), ::etl::exception);
 }
 
 TEST_F(TransportMessageTest, TransportMessageAppend)

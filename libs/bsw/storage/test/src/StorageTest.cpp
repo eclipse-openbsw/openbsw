@@ -5,6 +5,7 @@
 #include <async/TestContext.h>
 #include <bsp/eeprom/EepromDriverMock.h>
 #include <etl/array.h>
+#include <etl/error_handler.h>
 #include <etl/memory.h>
 #include <etl/span.h>
 #include <storage/EepStorage.h>
@@ -13,7 +14,6 @@
 #include <storage/MappingStorage.h>
 #include <storage/QueuingStorage.h>
 #include <storage/StorageJob.h>
-#include <util/estd/assert.h>
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
@@ -94,13 +94,17 @@ public:
 
     void eepRead(uint32_t address, uint8_t* dst, uint32_t length)
     {
-        estd_assert((address + length) <= sizeof(eepData));
+        ETL_ASSERT(
+            (address + length) <= sizeof(eepData),
+            ETL_ERROR_GENERIC("data to read must be in range"));
         (void)::etl::mem_copy(&(eepData[address]), length, dst);
     }
 
     void eepWrite(uint32_t address, uint8_t const* src, uint32_t length)
     {
-        estd_assert((address + length) <= sizeof(eepData));
+        ETL_ASSERT(
+            (address + length) <= sizeof(eepData),
+            ETL_ERROR_GENERIC("data to write must be in range"));
         (void)::etl::mem_copy(src, length, &(eepData[address]));
     }
 
@@ -664,8 +668,6 @@ TEST_F(StorageTest, MultipleErrors)
 
 TEST_F(StorageTest, SameCallbackCalledAgain)
 {
-    ::estd::AssertHandlerScope scope(::estd::AssertExceptionHandler);
-
     uint8_t data[] = {0U};
     StorageJob::Type::Read::BufferType buf(data);
 
@@ -673,7 +675,7 @@ TEST_F(StorageTest, SameCallbackCalledAgain)
     job.init(BLOCKID7, jobDoneCb);
     job.initRead(buf);
     EXPECT_CALL(storageMock, process(_)).WillOnce(Invoke(this, &StorageTest::processCallsCbTwice));
-    ASSERT_THROW(storage.process(job), ::estd::assert_exception);
+    ASSERT_THROW(storage.process(job), ::etl::exception);
 }
 
 TEST_F(StorageTest, SameJobTriggeredAgain)
@@ -718,7 +720,7 @@ TEST_F(StorageTest, SameJobTriggeredFromCallback)
     StorageJob::ResultType results[]{StorageJob::Result::Init(), StorageJob::Result::Init()};
     auto cbk = [&idx, &results, this](StorageJob& job)
     {
-        estd_assert(job.getId() == BLOCKID3);
+        ETL_ASSERT(job.getId() == BLOCKID3, ETL_ERROR_GENERIC("job id must be BLOCKID3"));
         results[idx++] = job.getResult();
         if (idx == 1U)
         {

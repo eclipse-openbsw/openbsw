@@ -2,11 +2,12 @@
 
 #pragma once
 
+#include <runtime/StatisticsContainer.h>
+
 #include <etl/array.h>
+#include <etl/error_handler.h>
 #include <etl/optional.h>
 #include <etl/string.h>
-#include <runtime/StatisticsContainer.h>
-#include <util/estd/assert.h>
 
 namespace runtime
 {
@@ -36,7 +37,10 @@ public:
         // if names not initialized, do so now
         if (!_names.has_value())
         {
-            estd_assert(src.getEntries().size() <= N);
+            ETL_ASSERT(
+                src.getEntries().size() <= N,
+                ETL_ERROR_GENERIC("number of entries in source must fit into this container"));
+
             _names.emplace();
             auto& names = *_names;
             for (uint8_t i = 0; i < src.getEntries().size(); ++i)

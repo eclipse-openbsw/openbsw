@@ -2,12 +2,12 @@
 
 #pragma once
 
-#ifndef ESR_NO_BUFFER_ASSERT
-#include <util/estd/assert.h>
-#endif
-
 #include <cstdint>
 #include <cstring>
+
+#ifndef ESR_NO_BUFFER_ASSERT
+#include <etl/error_handler.h>
+#endif
 
 namespace util
 {
@@ -271,7 +271,7 @@ inline size_t ConstString::length() const { return _length; }
 inline char ConstString::operator[](size_t const n) const
 {
 #ifndef ESR_NO_BUFFER_ASSERT
-    estd_assert(n < _length);
+    ETL_ASSERT(n < _length, ETL_ERROR_GENERIC("index must not be out of range"));
 #endif
     return _data[n];
 }

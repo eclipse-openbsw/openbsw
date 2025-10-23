@@ -13,9 +13,10 @@
 #include "uds/connection/NestedDiagRequest.h"
 #include "uds/connection/PositiveResponse.h"
 #include "uds/session/IDiagSessionManager.h"
-#include "util/estd/assert.h"
 
 #include <async/Async.h>
+
+#include <etl/error_handler.h>
 #include <etl/span.h>
 
 using ::transport::AbstractTransportLayer;
@@ -29,7 +30,7 @@ namespace uds
 
 void IncomingDiagConnection::addIdentifier()
 {
-    estd_assert(!fIsResponseActive);
+    ETL_ASSERT(!fIsResponseActive, ETL_ERROR_GENERIC("response must not be active"));
     if (fNestedRequest != nullptr)
     {
         fNestedRequest->addIdentifier();
@@ -176,10 +177,13 @@ DiagReturnCode::Type IncomingDiagConnection::startNestedRequest(
     uint8_t const* const request,
     uint16_t const requestLength)
 {
-    estd_assert(fNestedRequest == nullptr);
+    ETL_ASSERT(
+        fNestedRequest == nullptr, ETL_ERROR_GENERIC("a nested request must not run already"));
     (void)releaseRequestGetResponse();
-    estd_assert(requestLength < fpResponseMessage->getBufferLength());
-    fIdentifiers.resize(nestedRequest.getPrefixLength());
+    ETL_ASSERT(
+        requestLength < fpResponseMessage->getBufferLength(),
+        ETL_ERROR_GENERIC("request length must be smaller than supported maximum"));
+    fIdentifiers.resize(nestedRequest.fPrefixLength);
     nestedRequest.init(
         sender,
         ::etl::span<uint8_t>(
@@ -219,7 +223,7 @@ bool IncomingDiagConnection::terminateNestedRequest()
     {
         return true;
     }
-    if (fNestedRequest->getResponseCode() == DiagReturnCode::OK)
+    if (fNestedRequest->fResponseCode == DiagReturnCode::OK)
     {
         ::async::execute(fContext, fTriggerNextNestedRequestDelegate);
     }
@@ -280,10 +284,10 @@ void IncomingDiagConnection::asyncSendNegativeResponse(
                 static_cast<DiagReturnCode::Type>(responseCode));
             pSender->responseSent(*this, AbstractDiagJob::RESPONSE_SENT);
         }
-        else if (!fNestedRequest->isPendingSent())
+        else if (!fNestedRequest->fIsPendingSent)
         {
-            fNestedRequest->setPendingResponseSender(pSender);
-            fResponsePendingIsPending = (fNumPendingMessageProcessedCallbacks != 0U);
+            fNestedRequest->fPendingResponseSender = pSender;
+            fResponsePendingIsPending              = (fNumPendingMessageProcessedCallbacks != 0U);
 
             if (!fResponsePendingIsPending)
             { // Only send ResponsePending while response is not being sent
@@ -359,7 +363,7 @@ void IncomingDiagConnection::asyncSendNegativeResponse(
 
 void IncomingDiagConnection::triggerNextNestedRequest()
 {
-    while ((fNestedRequest->getResponseCode() == DiagReturnCode::OK)
+    while ((fNestedRequest->fResponseCode == DiagReturnCode::OK)
            && (fNestedRequest->prepareNextRequest()))
     {
         fIsResponseActive       = false;
@@ -375,9 +379,9 @@ void IncomingDiagConnection::triggerNextNestedRequest()
 
 void IncomingDiagConnection::endNestedRequest()
 {
-    auto const sender       = fNestedRequest->getSender();
-    auto const length       = fNestedRequest->getResponseLength();
-    auto const responseCode = fNestedRequest->getResponseCode();
+    auto const sender       = fNestedRequest->fSender;
+    auto const length       = fNestedRequest->responseLength();
+    auto const responseCode = fNestedRequest->fResponseCode;
     fNestedRequest          = nullptr;
     if (responseCode == DiagReturnCode::OK)
     {
@@ -411,12 +415,11 @@ void IncomingDiagConnection::asyncTransportMessageProcessed(
         fResponsePendingIsBeingSent = false;
         if (fNestedRequest != nullptr)
         {
-            fNestedRequest->setIsPendingSent();
-            AbstractDiagJob* const pendingResponseSender
-                = fNestedRequest->getPendingResponseSender();
+            fNestedRequest->fIsPendingSent               = true;
+            AbstractDiagJob* const pendingResponseSender = fNestedRequest->fPendingResponseSender;
             if (pendingResponseSender != nullptr)
             {
-                fNestedRequest->setPendingResponseSender(nullptr);
+                fNestedRequest->fPendingResponseSender = nullptr;
                 pendingResponseSender->responseSent(
                     *this,
                     (status == ProcessingResult::PROCESSED_NO_ERROR)
@@ -581,7 +584,7 @@ void IncomingDiagConnection::setSourceId(TransportMessage& transportMessage) con
                 UDS,
                 "IncomingDiagConnection::setSourceId(): "
                 "fpDiagConnectionManager == nullptr!");
-            estd_assert(fpDiagConnectionManager != nullptr);
+            ETL_ASSERT_FAIL(ETL_ERROR_GENERIC("diagnostic connection manager must not be null"));
         }
         transportMessage.setSourceId(fpDiagConnectionManager->getSourceDiagId());
     }
@@ -655,10 +658,8 @@ void IncomingDiagConnection::terminate()
     if (nullptr == fpDiagConnectionManager)
     {
         Logger::critical(
-            UDS,
-            "IncomingDiagConnection::terminate(): fpDiagConnectionManager == "
-            "nullptr!");
-        estd_assert(fpDiagConnectionManager != nullptr);
+            UDS, "IncomingDiagConnection::terminate(): fpDiagConnectionManager == nullptr!");
+        ETL_ASSERT_FAIL(ETL_ERROR_GENERIC("diagnostic connection manager must not be null"));
     }
     fConnectionTerminationIsPending = false;
     fpSender                        = nullptr;

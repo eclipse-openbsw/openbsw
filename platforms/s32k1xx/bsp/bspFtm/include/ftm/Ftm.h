@@ -6,7 +6,7 @@
 #include "mcu/mcu.h"
 #include "platform/estdint.h"
 
-#include <util/estd/assert.h>
+#include <etl/error_handler.h>
 
 namespace bios
 {
@@ -154,7 +154,8 @@ public:
 
     inline tFtmChannelConfiguration& getChannel(uint8_t const channel)
     {
-        estd_assert(channel < maxChannels);
+        ETL_ASSERT(
+            channel < maxChannels, ETL_ERROR_GENERIC("channel index must not be out of range"));
 
         // Warning: dereferencing type-punned pointer will break strict-aliasing rules
         // [-Wstrict-aliasing]

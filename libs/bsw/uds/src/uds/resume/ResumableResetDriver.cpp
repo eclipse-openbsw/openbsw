@@ -76,7 +76,7 @@ bool ResumableResetDriver::prepareReset(::transport::TransportMessage const* con
         {
             fPersistence.clear();
         }
-        fDiagDispatcher->disable();
+        fDiagDispatcher->fEnabled = false;
         return true;
     }
     else
@@ -88,7 +88,7 @@ bool ResumableResetDriver::prepareReset(::transport::TransportMessage const* con
 void ResumableResetDriver::abortReset()
 {
     fPersistence.clear();
-    fDiagDispatcher->enable();
+    fDiagDispatcher->fEnabled = true;
 }
 
 void ResumableResetDriver::reset() { reset(fShutdownType, fResetTimeoutInMs); }

@@ -5,7 +5,7 @@
 #include "transport/IDataProgressListener.h"
 #include "transport/TransportLogger.h"
 
-#include <util/estd/assert.h>
+#include <etl/error_handler.h>
 
 #include <cstring>
 
@@ -41,7 +41,7 @@ void TransportMessage::init(uint8_t* const buffer, uint32_t const bufferLength)
             TRANSPORT,
             "TransportMessage::init(): buffer is NULL but bufferLength is %d!",
             bufferLength);
-        estd_assert(false);
+        ETL_ASSERT_FAIL(ETL_ERROR_GENERIC("buffer is null but buffer length is not zero"));
     }
     fpDataProgressListener = nullptr;
     fBuffer                = ::etl::span<uint8_t>(buffer, bufferLength);
@@ -57,7 +57,7 @@ void TransportMessage::setServiceId(uint8_t const theServiceId)
     if (fBuffer.size() == 0U)
     {
         Logger::critical(TRANSPORT, "TransportMessage::setServiceId(): fpBuffer is NULL!");
-        estd_assert(false);
+        ETL_ASSERT_FAIL(ETL_ERROR_GENERIC("buffer size is zero"));
     }
     fBuffer[SERVICE_ID_INDEX] = theServiceId;
     // to be consistent with append, valid bytes must be increased here!
@@ -77,7 +77,7 @@ void TransportMessage::setPayloadLength(uint16_t const length)
             " maxLength is:%d!",
             length,
             getMaxPayloadLength());
-        estd_assert(false);
+        ETL_ASSERT_FAIL(ETL_ERROR_GENERIC("length is too large"));
     }
     fPayloadLength = length;
 }

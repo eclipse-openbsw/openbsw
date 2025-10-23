@@ -306,7 +306,7 @@ void DiagnosticSessionControl::switchSession(DiagSession& newSession)
     {
         if (fpDiagDispatcher != nullptr)
         {
-            fpDiagDispatcher->disable();
+            fpDiagDispatcher->fEnabled = false;
         }
         fRequestProgrammingSession = true;
     }

@@ -49,11 +49,6 @@ class IncomingDiagConnection
 public:
     virtual ~IncomingDiagConnection() = default;
 
-    void setDiagSessionManager(IDiagSessionManager& diagSessionManager)
-    {
-        fpDiagSessionManager = &diagSessionManager;
-    }
-
     void open(bool activatePending);
 
 public:
@@ -183,17 +178,6 @@ public:
      */
     bool isBusy() const { return (fpSender != nullptr); }
 
-    void setRequestNotificationListener(
-        transport::ITransportMessageProcessedListener& notificationListener)
-    {
-        fpRequestNotificationListener = &notificationListener;
-    }
-
-    transport::ITransportMessageProcessedListener* getRequestNotificationListener() const
-    {
-        return fpRequestNotificationListener;
-    }
-
     /**
      * Start a nested request. This starts a nested session that allows to
      * repeatedly process diagnostic requests on child nodes.
@@ -208,13 +192,6 @@ public:
         NestedDiagRequest& nestedRequest,
         uint8_t const request[],
         uint16_t requestLength);
-
-    /**
-     * Check whether the request is executed as a nested request i.e. is part of
-     * a nested session that performs repeatedly requests on child nodes.
-     * \return true if the request is executed as a nested request
-     */
-    bool isNestedRequest() const { return fNestedRequest != nullptr; }
 
     /**
      * Change how fast the response pending messages are send. Provided value will be added
@@ -276,8 +253,6 @@ public:
     bool fIsResponseActive                       = false;
 
 public:
-    Timeout const& getResponsePendingTimeout() const { return fResponsePendingTimeout; }
-
     static uint8_t const MAXIMUM_NUMBER_OF_IDENTIFIERS  = 6U;
     static uint8_t const PENDING_MESSAGE_PAYLOAD_LENGTH = 3U;
     static uint8_t const PENDING_MESSAGE_BUFFER_LENGTH  = PENDING_MESSAGE_PAYLOAD_LENGTH;
@@ -326,11 +301,13 @@ public:
     transport::TransportMessage fPendingMessage                                  = {};
     transport::TransportMessage fResponseMessage                                 = {};
     PositiveResponse fPositiveResponse;
-    NestedDiagRequest* fNestedRequest                                                = nullptr;
     uint8_t fPendingMessageBuffer[PENDING_MESSAGE_BUFFER_LENGTH]                     = {};
     uint8_t fNegativeResponseTempBuffer[DiagCodes::NEGATIVE_RESPONSE_MESSAGE_LENGTH] = {};
     ::etl::vector<uint8_t, MAXIMUM_NUMBER_OF_IDENTIFIERS> fIdentifiers;
     uint32_t fPendingTimeOut = DEFAULT_PENDING_TIMEOUT_MS;
+
+private:
+    NestedDiagRequest* fNestedRequest = nullptr;
 };
 
 } // namespace uds

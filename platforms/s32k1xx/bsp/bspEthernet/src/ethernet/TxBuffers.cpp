@@ -4,10 +4,11 @@
 
 #include "bsp/timer/SystemTimer.h"
 #include "ethernet/EthernetLogger.h"
-#include "etl/array.h"
 #include "interrupts/SuspendResumeAllInterruptsScopedLock.h"
 #include "mcu/mcu.h"
 
+#include "etl/array.h"
+#include <etl/error_handler.h>
 #include <etl/unaligned_type.h>
 
 #include <cstring>
@@ -98,8 +99,12 @@ bool TxBuffers::writeBuffer(
     bool const lastBufferInFrame)
 {
     // sanity checks
-    estd_assert(txDescriptorIndex < _descriptors.size());
-    estd_assert(0U != (_descriptors[txDescriptorIndex].status1 & ENET_ETXD_STATUS1_TO2(1)));
+    ETL_ASSERT(
+        txDescriptorIndex < _descriptors.size(),
+        ETL_ERROR_GENERIC("tx descriptor index must be in range"));
+    ETL_ASSERT(
+        0U != (_descriptors[txDescriptorIndex].status1 & ENET_ETXD_STATUS1_TO2(1)),
+        ETL_ERROR_GENERIC("status1 of tx descriptor must be set"));
 
     if (data.size() > MAX_FRAME_LENGTH)
     {
@@ -187,7 +192,7 @@ bool TxBuffers::writeFrame(uint16_t const vlanId, const struct pbuf* const buf)
 
                 if (vlanId != 0)
                 {
-                    estd_assert(false);
+                    ETL_ASSERT_FAIL(ETL_ERROR_GENERIC("vlan id must not be zero"));
                 }
 
                 if (insert != header)
@@ -219,8 +224,12 @@ bool TxBuffers::writeFrame(uint16_t const vlanId, const struct pbuf* const buf)
 
     if (ok)
     {
-        estd_assert(bufferIndex == txBufferDescriptorCount);
-        estd_assert(txBufferDescriptorCount > 0U);
+        ETL_ASSERT(
+            bufferIndex == txBufferDescriptorCount,
+            ETL_ERROR_GENERIC("index must be equal to index"));
+        ETL_ASSERT(
+            txBufferDescriptorCount > 0U,
+            ETL_ERROR_GENERIC("number of tx descriptors must be greater than zero"));
 
         pbuf_ref(p);
         _referencedPbufs[_descriptorIndices[txBufferDescriptorCount - 1U]] = p;

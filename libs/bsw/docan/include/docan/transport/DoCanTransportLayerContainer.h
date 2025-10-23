@@ -5,7 +5,9 @@
 #include "docan/transport/DoCanTransportLayer.h"
 
 #include <async/Types.h>
+
 #include <etl/delegate.h>
+#include <etl/error_handler.h>
 #include <etl/functional.h>
 #include <etl/span.h>
 #include <etl/vector.h>
@@ -190,9 +192,10 @@ void DoCanTransportLayerContainer<DataLinkLayer>::shutdown(
             // Even if the value changes between now and the increment, we want to ensure this
             // function is never about to be incremented when _shutdownPendingCount is ever the max
             // possible value.
-            estd_assert(
+            ETL_ASSERT(
                 _shutdownPendingCount
-                != std::numeric_limits<decltype(_shutdownPendingCount)>::max());
+                    != std::numeric_limits<decltype(_shutdownPendingCount)>::max(),
+                ETL_ERROR_GENERIC("pending count must not wrap"));
             ::interrupts::SuspendResumeAllInterruptsScopedLock const lock;
             ++_shutdownPendingCount;
         }
@@ -240,7 +243,7 @@ void DoCanTransportLayerContainer<DataLinkLayer>::singleShutdownDone()
     {
         // Even if the value changes between now and the decrement, we want to ensure this function
         // is never called when _shutdownPendingCount is ever 0.
-        estd_assert(_shutdownPendingCount != 0);
+        ETL_ASSERT(_shutdownPendingCount != 0, ETL_ERROR_GENERIC("pending count must not wrap"));
         ::interrupts::SuspendResumeAllInterruptsScopedLock const lock;
         --_shutdownPendingCount;
         done = (_shutdownPendingCount == 0U);

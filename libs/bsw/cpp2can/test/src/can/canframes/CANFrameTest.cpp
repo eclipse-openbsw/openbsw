@@ -4,8 +4,6 @@
 
 #include "can/canframes/CanId.h"
 
-#include <util/estd/assert.h>
-
 #include <gmock/gmock.h>
 
 using namespace can;
@@ -28,28 +26,23 @@ TEST(CANFrameTest, DefaultConstructor)
  */
 TEST(CANFrameTest, InitConstructor)
 {
-    ::estd::AssertHandlerScope scope(::estd::AssertExceptionHandler);
-
     // constructor with too long payload
     {
         uint8_t payload[CANFrame::MAX_FRAME_LENGTH + 1];
-        ASSERT_THROW(
-            { CANFrame frame(0x345, payload, sizeof(payload)); }, ::estd::assert_exception);
+        ASSERT_THROW({ CANFrame frame(0x345, payload, sizeof(payload)); }, ::etl::exception);
     }
 
     // extended constructor with too long payload
     {
         uint8_t payload[CANFrame::MAX_FRAME_LENGTH + 1];
-        ASSERT_THROW(
-            { CANFrame frame(0x345, payload, sizeof(payload), true); }, ::estd::assert_exception);
+        ASSERT_THROW({ CANFrame frame(0x345, payload, sizeof(payload), true); }, ::etl::exception);
     }
 
     // extended constructor with invalid extended id
     {
         uint8_t payload[CANFrame::MAX_FRAME_LENGTH];
         ASSERT_THROW(
-            { CANFrame frame(0xffffffffU, payload, sizeof(payload), true); },
-            ::estd::assert_exception);
+            { CANFrame frame(0xffffffffU, payload, sizeof(payload), true); }, ::etl::exception);
     }
 }
 
@@ -144,10 +137,7 @@ TEST(CANFrameTest, Setter)
     frame.setPayload(payload, CANFrame::MAX_FRAME_LENGTH);
     ASSERT_EQ(CANFrame::MAX_FRAME_LENGTH, frame.getPayloadLength());
 
-    ::estd::AssertHandlerScope scope(::estd::AssertExceptionHandler);
-
-    ASSERT_THROW(
-        { frame.setPayload(payload, CANFrame::MAX_FRAME_LENGTH + 1); }, ::estd::assert_exception);
+    ASSERT_THROW({ frame.setPayload(payload, CANFrame::MAX_FRAME_LENGTH + 1); }, ::etl::exception);
 
     for (uint8_t i = 0; i <= CANFrame::MAX_FRAME_LENGTH; ++i)
     {

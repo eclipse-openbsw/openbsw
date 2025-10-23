@@ -5,7 +5,6 @@
 #include "lwipSocket/utils/LwipHelper.h"
 
 #include <ethernet/EthernetLogger.h>
-#include <etl/span.h>
 #include <ip/IPAddress.h>
 #include <ip/NetworkInterfaceConfig.h>
 #include <tcp/TcpLogger.h>
@@ -19,6 +18,9 @@ extern "C"
 #include "lwip/prot/autoip.h"
 #include "lwip/prot/dhcp.h"
 } // extern "C"
+
+#include <etl/error_handler.h>
+#include <etl/span.h>
 
 namespace lwipnetif
 {
@@ -90,7 +92,7 @@ bool initNetifWithStaticIp6Address(
             netif_set_ipaddr(&_netif, ip_2_ip4(&convertedAddress));
             _hasStaticIp4Address = true;
 #else
-            estd_assert(false);
+            ETL_ASSERT_FAIL(ETL_ERROR_GENERIC("ipv4 not supported"));
 #endif
         }
         else

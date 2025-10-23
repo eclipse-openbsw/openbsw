@@ -7,7 +7,6 @@
 
 #include <async/AsyncMock.h>
 #include <async/TestContext.h>
-#include <util/estd/assert.h>
 
 #include <gtest/esr_extensions.h>
 #include <gtest/gtest.h>
@@ -243,17 +242,13 @@ TEST_F(LifecycleManagerTest, testCompleteLifecycle)
 
 TEST_F(LifecycleManagerTest, testAddComponentAssertsComponentsAreAddedWithLevelGreater0)
 {
-    ::estd::AssertHandlerScope scope(::estd::AssertExceptionHandler);
-
     ::lifecycle::declare::LifecycleManager<4, 4, 4> cut(_context, _getTimestamp);
     NiceMock<LifecycleComponentMock> componentMock;
-    ASSERT_THROW({ cut.addComponent("comp1", componentMock, 0U); }, ::estd::assert_exception);
+    ASSERT_THROW({ cut.addComponent("comp1", componentMock, 0U); }, ::etl::exception);
 }
 
 TEST_F(LifecycleManagerTest, testAddComponentAssertsNotTooManyComponentsAreAdded)
 {
-    ::estd::AssertHandlerScope scope(::estd::AssertExceptionHandler);
-
     ::lifecycle::declare::LifecycleManager<3, 4, 4> cut(_context, _getTimestamp);
     NiceMock<LifecycleComponentMock> componentMock1;
     NiceMock<LifecycleComponentMock> componentMock2;
@@ -262,39 +257,33 @@ TEST_F(LifecycleManagerTest, testAddComponentAssertsNotTooManyComponentsAreAdded
     cut.addComponent("comp1", componentMock1, 1U);
     cut.addComponent("comp2", componentMock2, 2U);
     cut.addComponent("comp3", componentMock3, 3U);
-    ASSERT_THROW({ cut.addComponent("comp4", componentMock4, 4U); }, ::estd::assert_exception);
+    ASSERT_THROW({ cut.addComponent("comp4", componentMock4, 4U); }, ::etl::exception);
 }
 
 TEST_F(LifecycleManagerTest, testAddComponentAssertsNotTooManyComponentsPerLevelAreAdded)
 {
-    ::estd::AssertHandlerScope scope(::estd::AssertExceptionHandler);
-
     ::lifecycle::declare::LifecycleManager<3, 2, 2> cut(_context, _getTimestamp);
     NiceMock<LifecycleComponentMock> componentMock1;
     NiceMock<LifecycleComponentMock> componentMock2;
     NiceMock<LifecycleComponentMock> componentMock3;
     cut.addComponent("comp1", componentMock1, 1U);
     cut.addComponent("comp2", componentMock2, 1U);
-    ASSERT_THROW({ cut.addComponent("comp3", componentMock3, 1U); }, ::estd::assert_exception);
+    ASSERT_THROW({ cut.addComponent("comp3", componentMock3, 1U); }, ::etl::exception);
 }
 
 TEST_F(LifecycleManagerTest, testAddComponentAssertsNotTooManyLevelsAreUsed)
 {
-    ::estd::AssertHandlerScope scope(::estd::AssertExceptionHandler);
-
     ::lifecycle::declare::LifecycleManager<3, 4, 2> cut(_context, _getTimestamp);
     NiceMock<LifecycleComponentMock> componentMock1;
     NiceMock<LifecycleComponentMock> componentMock2;
     NiceMock<LifecycleComponentMock> componentMock3;
     cut.addComponent("comp1", componentMock1, 1U);
     cut.addComponent("comp2", componentMock2, 4U);
-    ASSERT_THROW({ cut.addComponent("comp3", componentMock3, 5U); }, ::estd::assert_exception);
+    ASSERT_THROW({ cut.addComponent("comp3", componentMock3, 5U); }, ::etl::exception);
 }
 
 TEST_F(LifecycleManagerTest, testAddComponentAssertsComponentsAreAddedByAscendingLevels)
 {
-    ::estd::AssertHandlerScope scope(::estd::AssertExceptionHandler);
-
     ::lifecycle::declare::LifecycleManager<4, 4, 4> cut(_context, _getTimestamp);
     NiceMock<LifecycleComponentMock> componentMock1;
     NiceMock<LifecycleComponentMock> componentMock2;
@@ -303,7 +292,7 @@ TEST_F(LifecycleManagerTest, testAddComponentAssertsComponentsAreAddedByAscendin
     cut.addComponent("comp1", componentMock1, 1U);
     cut.addComponent("comp2", componentMock2, 1U);
     cut.addComponent("comp3", componentMock3, 2U);
-    ASSERT_THROW({ cut.addComponent("comp4", componentMock4, 1U); }, ::estd::assert_exception);
+    ASSERT_THROW({ cut.addComponent("comp4", componentMock4, 1U); }, ::etl::exception);
 }
 
 } // anonymous namespace

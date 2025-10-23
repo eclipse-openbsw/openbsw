@@ -1,7 +1,6 @@
 add_executable(
     utilTest
     src/util/defer/DeferTest.cpp
-    src/util/estd/assert_test.cpp
     src/util/types/EnumTest.cpp
     src/util/logger/LevelInfoTest.cpp
     src/util/logger/ComponentInfoTest.cpp

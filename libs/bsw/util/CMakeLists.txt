@@ -15,7 +15,6 @@ add_library(
     src/util/stream/NullOutputStream.cpp
     src/util/stream/SharedOutputStream.cpp
     src/util/stream/TaggedOutputStream.cpp
-    src/util/estd/assert.cpp
     src/util/crc/LookupTable_0x1D.cpp
     src/util/crc/LookupTable_0x07.cpp
     src/util/crc/LookupTable_0x1021.cpp
@@ -43,10 +42,6 @@ target_include_directories(util PUBLIC include)
 target_link_libraries(util PUBLIC etl platform)
 
 if (BUILD_UNIT_TESTS)
-    target_compile_definitions(
-        util PUBLIC ESTD_HAS_EXCEPTIONS ESTL_ASSERT_MESSAGE_ALL
-                    ETL_THROW_EXCEPTIONS)
-
     add_library(utilMock mock/gmock/src/util/StdIoMock.cpp
                          mock/gmock/src/util/logger/TestConsoleLogger.cpp)
 

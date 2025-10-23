@@ -8,19 +8,22 @@
 #include <lwip/prot/ethernet.h>
 #include <lwip/timeouts.h>
 #include <lwipSocket/utils/LwipHelper.h>
-#include <util/estd/assert.h>
+
+#include <etl/error_handler.h>
 
 extern "C"
 {
 int32_t vlanForNetif(void const* const vlwipNi)
 {
-    estd_assert(vlwipNi != nullptr);
+    ETL_ASSERT(vlwipNi != nullptr, ETL_ERROR_GENERIC("netif must not be null"));
+
     auto const lwipNi         = reinterpret_cast<netif const*>(vlwipNi);
     auto const ethernetSystem = reinterpret_cast<::systems::EthernetSystem*>(lwipNi->state);
 
-    estd_assert(
+    ETL_ASSERT(
         lwipNi >= ethernetSystem->netifs.netifs.begin()
-        && lwipNi < ethernetSystem->netifs.netifs.end());
+            && lwipNi < ethernetSystem->netifs.netifs.end(),
+        ETL_ERROR_GENERIC("netif must be part of this system"));
 
     auto const i = lwipNi - ethernetSystem->netifs.netifs.begin();
 

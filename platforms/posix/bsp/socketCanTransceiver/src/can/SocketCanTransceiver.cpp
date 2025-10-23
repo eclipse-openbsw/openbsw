@@ -4,7 +4,6 @@
 
 #include <can/CanLogger.h>
 #include <can/canframes/ICANFrameSentListener.h>
-#include <etl/span.h>
 #include <linux/can.h>
 #include <linux/can/raw.h>
 #include <net/if.h>
@@ -15,6 +14,9 @@
 #include <signal.h>
 #include <type_traits>
 #include <unistd.h>
+
+#include <etl/error_handler.h>
+#include <etl/span.h>
 
 static_assert(
     std::is_standard_layout<::can::CANFrame>::value
@@ -79,7 +81,7 @@ ICanTransceiver::ErrorCode SocketCanTransceiver::open()
 
 ICanTransceiver::ErrorCode SocketCanTransceiver::open(CANFrame const& /* frame */)
 {
-    estd_assert(false);
+    ETL_ASSERT_FAIL(ETL_ERROR_GENERIC("not implemented"));
     return ErrorCode::CAN_ERR_ILLEGAL_STATE;
 }
 

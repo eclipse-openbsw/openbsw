@@ -18,6 +18,8 @@ extern "C"
 #include "lwip/tcp.h"
 }
 
+#include <etl/error_handler.h>
+
 namespace
 {
 err_t const ERR_NO_MORE_BUF = -100;
@@ -165,7 +167,9 @@ err_t LwipSocket::sendPendingData(tcp_pcb* const pcb)
         pendingBytes,
         availableBuffer);
 
-    estd_assert(bytesToWrite <= UINT16_MAX);
+    ETL_ASSERT(
+        bytesToWrite <= UINT16_MAX, ETL_ERROR_GENERIC("number of bytes must fit in 16 bits"));
+
     err_t result = tcp_write(pcb, fPendingTcpData.data(), static_cast<uint16_t>(bytesToWrite), 1);
     if (result == ERR_OK)
     {
