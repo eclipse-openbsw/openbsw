@@ -23,20 +23,21 @@ public:
     using JobHandleType       = typename DataLinkLayer::JobHandleType;
     using FrameCodecType      = DoCanFrameCodec<DataLinkLayer>;
 
-    MOCK_METHOD8_T(
+    MOCK_METHOD(
+        SendResult,
         startSendDataFrames,
-        SendResult(
-            FrameCodecType const& codec,
-            IDoCanDataFrameTransmitterCallback<DataLinkLayer>& callback,
-            JobHandleType jobHandle,
-            DataLinkAddressType transmissionAddress,
-            FrameIndexType firstFrameIndex,
-            FrameIndexType lastFrameIndex,
-            FrameSizeType consecutiveFrameDataSize,
-            ::etl::span<uint8_t const> const& data));
-    MOCK_METHOD2_T(
+        (FrameCodecType const& codec,
+         IDoCanDataFrameTransmitterCallback<DataLinkLayer>& callback,
+         JobHandleType jobHandle,
+         DataLinkAddressType transmissionAddress,
+         FrameIndexType firstFrameIndex,
+         FrameIndexType lastFrameIndex,
+         FrameSizeType consecutiveFrameDataSize,
+         ::etl::span<uint8_t const> const& data));
+    MOCK_METHOD(
+        void,
         cancelSendDataFrames,
-        void(IDoCanDataFrameTransmitterCallback<DataLinkLayer>& callback, JobHandleType jobHandle));
+        (IDoCanDataFrameTransmitterCallback<DataLinkLayer> & callback, JobHandleType jobHandle));
 };
 
 } // namespace docan

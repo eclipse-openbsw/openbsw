@@ -21,8 +21,8 @@ public:
     constexpr Watchdog(Handler const&, Event const&, Timeout const) {}
 
     MOCK_METHOD(void, kick, ());
-    MOCK_METHOD1_T(kick, void(Context const&));
+    MOCK_METHOD(void, kick, (Context const&));
     MOCK_METHOD(void, service, ());
-    MOCK_CONST_METHOD0_T(getContext, Context&());
+    MOCK_METHOD(Context&, getContext, (), (const));
 };
 } // namespace safeMonitor

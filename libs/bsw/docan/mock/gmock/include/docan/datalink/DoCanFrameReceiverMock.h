@@ -23,27 +23,27 @@ public:
     using FrameIndexType      = typename DataLinkLayer::FrameIndexType;
     using ConnectionType      = DoCanConnection<DataLinkLayer>;
 
-    MOCK_METHOD5_T(
+    MOCK_METHOD(
+        void,
         firstDataFrameReceived,
-        void(
-            ConnectionType const& connection,
-            MessageSizeType messageSize,
-            FrameIndexType frameCount,
-            FrameSizeType consecutiveFrameDataSize,
-            ::etl::span<uint8_t const> const& data));
-    MOCK_METHOD3_T(
+        (ConnectionType const& connection,
+         MessageSizeType messageSize,
+         FrameIndexType frameCount,
+         FrameSizeType consecutiveFrameDataSize,
+         ::etl::span<uint8_t const> const& data));
+    MOCK_METHOD(
+        void,
         consecutiveDataFrameReceived,
-        void(
-            DataLinkAddressType receptionAddress,
-            uint8_t sequenceNumber,
-            ::etl::span<uint8_t const> const& data));
-    MOCK_METHOD4_T(
+        (DataLinkAddressType receptionAddress,
+         uint8_t sequenceNumber,
+         ::etl::span<uint8_t const> const& data));
+    MOCK_METHOD(
+        void,
         flowControlFrameReceived,
-        void(
-            DataLinkAddressType receptionAddress,
-            FlowStatus flowStatus,
-            uint8_t blockSize,
-            uint8_t encodedMinSeparationTime));
+        (DataLinkAddressType receptionAddress,
+         FlowStatus flowStatus,
+         uint8_t blockSize,
+         uint8_t encodedMinSeparationTime));
 };
 
 } // namespace docan

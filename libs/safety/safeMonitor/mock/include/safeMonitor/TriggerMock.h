@@ -19,7 +19,7 @@ public:
     TriggerMock(Handler&, Event const&) {}
 
     MOCK_METHOD(void, trigger, ());
-    MOCK_METHOD1_T(trigger, void(Context const&));
-    MOCK_CONST_METHOD0_T(getContext, Context&());
+    MOCK_METHOD(void, trigger, (Context const&));
+    MOCK_METHOD(Context&, getContext, (), (const));
 };
 } // namespace safeMonitor

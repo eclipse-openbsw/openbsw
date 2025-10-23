@@ -19,8 +19,8 @@ class ValueMock
 public:
     ValueMock(Handler&, Event const&, ValueType const&) {}
 
-    MOCK_METHOD1_T(check, void(ValueType const&));
-    MOCK_METHOD2_T(check, void(ValueType const&, Context const&));
-    MOCK_CONST_METHOD0_T(getContext, Context&());
+    MOCK_METHOD(void, check, (ValueType const&));
+    MOCK_METHOD(void, check, (ValueType const&, Context const&));
+    MOCK_METHOD(Context&, getContext, (), (const));
 };
 } // namespace safeMonitor

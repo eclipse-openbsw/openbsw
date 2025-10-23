@@ -19,8 +19,8 @@ class SequenceMock
 public:
     SequenceMock(Handler&, Event const&, Checkpoint const&, Checkpoint const&) {}
 
-    MOCK_METHOD1_T(hit, void(Checkpoint const&));
-    MOCK_METHOD2_T(hit, void(Checkpoint const&, Context const&));
-    MOCK_CONST_METHOD0_T(getContext, Context&());
+    MOCK_METHOD(void, hit, (Checkpoint const&));
+    MOCK_METHOD(void, hit, (Checkpoint const&, Context const&));
+    MOCK_METHOD(Context&, getContext, (), (const));
 };
 } // namespace safeMonitor

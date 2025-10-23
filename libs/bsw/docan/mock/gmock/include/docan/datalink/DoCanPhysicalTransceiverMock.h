@@ -25,32 +25,33 @@ public:
     using JobHandleType       = typename DataLinkLayerType::JobHandleType;
     using FrameCodecType      = DoCanFrameCodec<DataLinkLayerType>;
 
-    MOCK_METHOD1_T(init, void(IDoCanFrameReceiver<DataLinkLayer>& receiver));
+    MOCK_METHOD(void, init, (IDoCanFrameReceiver<DataLinkLayer> & receiver));
     MOCK_METHOD(void, shutdown, ());
 
-    MOCK_METHOD8_T(
+    MOCK_METHOD(
+        SendResult,
         startSendDataFrames,
-        SendResult(
-            FrameCodecType const& codec,
-            IDoCanDataFrameTransmitterCallback<DataLinkLayer>& callback,
-            JobHandleType jobHandle,
-            DataLinkAddressType transmissionAddress,
-            FrameIndexType firstFrameIndex,
-            FrameIndexType lastFrameIndex,
-            FrameSizeType consecutiveFrameDataSize,
-            ::etl::span<uint8_t const> const& data));
-    MOCK_METHOD2_T(
+        (FrameCodecType const& codec,
+         IDoCanDataFrameTransmitterCallback<DataLinkLayer>& callback,
+         JobHandleType jobHandle,
+         DataLinkAddressType transmissionAddress,
+         FrameIndexType firstFrameIndex,
+         FrameIndexType lastFrameIndex,
+         FrameSizeType consecutiveFrameDataSize,
+         ::etl::span<uint8_t const> const& data));
+    MOCK_METHOD(
+        void,
         cancelSendDataFrames,
-        void(IDoCanDataFrameTransmitterCallback<DataLinkLayer>& callback, JobHandleType jobHandle));
+        (IDoCanDataFrameTransmitterCallback<DataLinkLayer> & callback, JobHandleType jobHandle));
 
-    MOCK_METHOD5_T(
+    MOCK_METHOD(
+        bool,
         sendFlowControl,
-        bool(
-            FrameCodecType const& codec,
-            DataLinkAddressType transmissionAddress,
-            FlowStatus flowStatus,
-            uint8_t blockSize,
-            uint8_t encodedMinSeparationTime));
+        (FrameCodecType const& codec,
+         DataLinkAddressType transmissionAddress,
+         FlowStatus flowStatus,
+         uint8_t blockSize,
+         uint8_t encodedMinSeparationTime));
 };
 
 } // namespace docan
