@@ -84,7 +84,7 @@ def generate_coverage():
             "lcov",
             "--remove",
             f"{build_dir_name}/coverage_unfiltered.info",
-            "*/libs/3rdparty/googletest/*",
+            "*/3rdparty/*",
             "*/mock/*",
             "*/gmock/*",
             "*/gtest/*",
@@ -102,6 +102,8 @@ def generate_coverage():
             f"{build_dir_name}/coverage.info",
             "--output-directory",
             f"{build_dir_name}/coverage",
+            "--prefix",
+            "/home/jenkins/",
         ],
         check=True,
     )
