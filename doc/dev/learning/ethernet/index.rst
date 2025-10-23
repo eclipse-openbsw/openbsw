@@ -81,8 +81,8 @@ To verify the Ethernet connection, you can perform a ping test.
 
 Open a terminal and run:
 
-- For POSIX: ``ping 192.168.0.200``
-- For S32K148: ``ping 192.168.0.201``
+- For POSIX: ``ping 192.168.0.201``
+- For S32K148: ``ping 192.168.0.200``
 
 This should show a response indicating that the Ethernet connection is working correctly.
 
