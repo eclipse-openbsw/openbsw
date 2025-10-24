@@ -43,6 +43,11 @@ To contribute your work you need to...
 4. Push to the Branch (`git push origin newBranchName`)
 5. Open a Pull Request
 
+### Commit Message Format
+
+For detailed commit message guidelines, see the
+[Commit Message Format](https://eclipse-openbsw.github.io/openbsw/sphinx_docs/doc/learning/commitmessage/index.rst).
+
 ## Eclipse Contributor Agreement
 
 Before your contribution can be accepted by the project team contributors must
