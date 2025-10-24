@@ -9,9 +9,11 @@
 
 #include <async/Async.h>
 #include <async/util/Call.h>
+#include <etl/delegate.h>
 #include <etl/uncopyable.h>
 #include <transport/AbstractTransportLayer.h>
 #include <transport/ITransportMessageProcessedListener.h>
+#include <transport/ITransportMessageProvidingListener.h>
 #include <transport/TransportMessage.h>
 
 #ifdef IS_VARIANT_HANDLING_NEEDED
@@ -107,6 +109,9 @@ public:
     uint8_t dispatchTriggerEventRequest(transport::TransportMessage& tmsg) override;
 
 private:
+    using SendBusyResponseCallback
+        = ::etl::delegate<void(transport::TransportMessage const* const)>;
+
     // workaround for large non virtual thunks
     bool shutdown_local(ShutdownDelegate delegate);
     transport::AbstractTransportLayer::ErrorCode send_local(
@@ -143,7 +148,14 @@ private:
 
     void trigger();
 
-    void dispatchIncomingRequest(transport::TransportJob& job);
+    static void dispatchIncomingRequest(
+        transport::TransportJob& job,
+        AbstractDiagnosisConfiguration& configuration,
+        DiagConnectionManager& connectionManager,
+        DiagJobRoot& diagJobRoot,
+        transport::ITransportMessageProvidingListener& providingListener,
+        transport::ITransportMessageProcessedListener* dispatcherProcessedListener,
+        SendBusyResponseCallback sendBusyResponse);
 
     void sendBusyResponse(transport::TransportMessage const* const message);
 
@@ -156,7 +168,10 @@ private:
      * is instantiated on a gateway. Thus, its content must not be altered
      * which is why a copy is made for further processing.
      */
-    transport::TransportMessage* copyFunctionalRequest(transport::TransportMessage& request);
+    static transport::TransportMessage* copyFunctionalRequest(
+        transport::TransportMessage& request,
+        transport::ITransportMessageProvidingListener& providingListener,
+        AbstractDiagnosisConfiguration& configuration);
 
     AbstractDiagnosisConfiguration& fConfiguration;
     DiagConnectionManager fConnectionManager;
