@@ -11,13 +11,13 @@
 #include "lifecycle/ILifecycleManager.h"
 #include "phy/Tja1101.h"
 #include "phy/Tja1101Tester.h"
-#include "systems/IEthernetDriverSystem.h"
+#include "systems/IEthernetSystem.h"
 
 namespace systems
 {
 
 class S32K148EvbEthernetSystem final
-: public ::ethernet::IEthernetDriverSystem
+: public ::ethernet::IEthernetSystem
 , private ::async::IRunnable
 , public ::lifecycle::AsyncLifecycleComponent
 {
