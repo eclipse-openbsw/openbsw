@@ -172,27 +172,22 @@ For more information and examples see `CERT rule EXP50 <https://wiki.sei.cmu.edu
 Asserts
 -------
 
-To control the behavior of asserts on ECUs, use the ``estd_assert`` macro instead of the regular
-``assert`` from the standard *cassert* header.
+To control the behavior of asserts on ECUs, use the ``ETL_ASSERT`` macro from the ETL library
+instead of the regular ``assert`` from the standard *cassert* header. For documentation on this
+have a look into the ETL documentation.
 
-In contrast to a *PC* program where asserts are ignored in release builds, an ``estd_assert``
+In contrast to a *PC* program where asserts are ignored in release builds, an ``ETL_ASSERT``
 will be present in release code causing an ECU reset and most likely a customer noticeable event.
 We usually do not distinguish between debug and release builds.
 
-Therefore, an ``estd_assert`` shall only be used if continuing execution is impossible, e.g. because
+Therefore, an ``ETL_ASSERT`` shall only be used if continuing execution is impossible, e.g. because
 memory got corrupted (out of bounds access through operator[]). Comment the usage with a
 justification.
-
-It might be acceptable during development to use asserts. In this case use ``estd_expect`` instead.
-``estd_expect`` behaves the same as ``estd_assert``, but it must be replaced for production with
-proper error handling. The usage of ``estd_expect`` is detected by our code analyzers and
-presented in the module overview from Cijack.
 
 Summary:
 
 - Prefer proper error handling over asserts
-- For temporary asserts, use ``estd_expect``
-- For production code asserts, use ``estd_assert`` and comment the usage with a justification
+- For production code asserts, use ``ETL_ASSERT`` and comment the usage with a justification
 
 Forward Declarations
 --------------------

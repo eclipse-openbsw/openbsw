@@ -49,9 +49,9 @@ replacement of using ``::strcmp``/``::stricmp``:
     ::util::string::ConstString str2("abcdefg", 4);
     ::util::string::ConstString str3("AbCde", 4);
 
-    estd_assert(str1.compare(str2) == 0);
-    estd_assert(str1.compare(str3) != 0);
-    estd_assert(str1.compareIgnoreCase(str3) == 0);
+    ETL_ASSERT(str1.compare(str2) == 0, ETL_ERROR_GENERIC("equal"));
+    ETL_ASSERT(str1.compare(str3) != 0, ETL_ERROR_GENERIC("unequal"));
+    ETL_ASSERT(str1.compareIgnoreCase(str3) == 0, ETL_ERROR_GENERIC("equal ignoring case"));
 
 There are also comparison operators for binary comparisons (based on the case senstitive comparison
 method):
@@ -62,9 +62,9 @@ method):
     ::util::string::ConstString str2("abcdefg", 4);
     ::util::string::ConstString str3("abe");
 
-    estd_assert(str1 == str2);
-    estd_assert(str1 != str3);
-    estd_assert(str1 < str3);
+    ETL_ASSERT(str1 == str2, ETL_ERROR_GENERIC("equal"));
+    ETL_ASSERT(str1 != str3, ETL_ERROR_GENERIC("unequal"));
+    ETL_ASSERT(str1 < str3, ETL_ERROR_GENERIC("smaller"));
 
 
 Using ConstStrings in printf arguments
