@@ -1,10 +1,14 @@
-#ifndef GUARD_1179B604_D69A_440B_B7EC_9D8E64F977CE
-#define GUARD_1179B604_D69A_440B_B7EC_9D8E64F977CE
+// Copyright 2025 Accenture.
 
-#include "FreeRTOSConfig.h"
+#pragma once
+
+#if defined(__GNUC__) && (!defined(__ASSEMBLER__))
+#include "mcu/mcu.h"
+#endif
 
 #if defined(__cplusplus)
-extern "C" {
+extern "C"
+{
 #endif /* __cplusplus*/
 
 void DefaultISR(void);
@@ -25,9 +29,6 @@ uint32_t SYS_GetPendingIRQ(IRQn_Type irqNumber);
 
 uint32_t SYS_GetActive(IRQn_Type irqNumber);
 
-
 #if defined(__cplusplus)
 }
 #endif /* __cplusplus*/
-
-#endif /* GUARD_1179B604_D69A_440B_B7EC_9D8E64F977CE */

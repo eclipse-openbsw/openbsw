@@ -11,6 +11,7 @@
 #ifdef PLATFORM_SUPPORT_ETHERNET
 #include "systems/S32K148EvbEthernetSystem.h"
 #endif
+#include "async/Config.h"
 #include "cache/cache.h"
 #include "clock/clockConfig.h"
 #include "interrupt_manager.h"

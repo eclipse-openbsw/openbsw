@@ -2,7 +2,7 @@ add_library(freeRtosCm4SysTickPort INTERFACE)
 
 target_include_directories(freeRtosCm4SysTickPort INTERFACE include)
 
-add_library(freeRtosCm4SysTick src/interrupt_manager.c src/port.c)
+add_library(freeRtosCm4SysTick src/port.c)
 
 target_include_directories(freeRtosCm4SysTick PUBLIC include)
 
