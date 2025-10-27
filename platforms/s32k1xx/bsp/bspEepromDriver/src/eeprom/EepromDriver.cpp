@@ -229,4 +229,11 @@ EepromDriver::read(uint32_t const address, uint8_t* const buffer, uint32_t const
     return bsp::BSP_OK;
 }
 
+bsp::BspReturnCode EepromDriver::deinit()
+{
+    // No hardware deinitialization required for S32K148 EEPROM.
+    // FlexNVM and FlexRAM configuration persist until device reset.
+    return bsp::BSP_OK;
+}
+
 } // namespace eeprom
