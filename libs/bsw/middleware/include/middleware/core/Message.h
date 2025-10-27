@@ -25,7 +25,7 @@ namespace core
  * - a payload which is a union of a buffer, and external handle that contains information to where
  * the actual payload might be stored or an error value.
  */
-class MiddlewareMessage
+class Message
 {
 public:
     /**
@@ -81,13 +81,13 @@ public:
      * queue, the default c'tor of all messages is called again, thus invalidating the first core's
      * message payload. As such the constructor needs to be empty in order to not do any work.
      */
-    MiddlewareMessage() {}
+    Message() {}
 
-    ~MiddlewareMessage()                                           = default;
-    MiddlewareMessage(MiddlewareMessage const& other)              = default;
-    MiddlewareMessage& operator=(MiddlewareMessage const& other) & = default;
-    MiddlewareMessage(MiddlewareMessage&& other)                   = default;
-    MiddlewareMessage& operator=(MiddlewareMessage&& other) &      = default;
+    ~Message()                                 = default;
+    Message(Message const& other)              = default;
+    Message& operator=(Message const& other) & = default;
+    Message(Message&& other)                   = default;
+    Message& operator=(Message&& other) &      = default;
 
     /**
      * \brief Get a constant reference to the message's header.
@@ -155,15 +155,15 @@ public:
      * \param addressId unique ID of the target skeleton
      * \return created message
      */
-    static constexpr MiddlewareMessage createRequest(
+    static constexpr Message createRequest(
         Header const& header,
         uint8_t const srcClusterId,
         uint8_t const tgtClusterId,
         uint8_t const addressId)
     {
-        MiddlewareMessage msg{header, srcClusterId, tgtClusterId, addressId};
-        msg.setFlag_(MessageFlags::SkeletonTarget);
-        msg.setFlag_(MessageFlags::HasOutArgs);
+        Message msg{header, srcClusterId, tgtClusterId, addressId};
+        msg.setFlag_(Flags::SkeletonTarget);
+        msg.setFlag_(Flags::HasOutArgs);
 
         return msg;
     }
@@ -179,7 +179,7 @@ public:
      * \param tgtClusterId target cluster ID
      * \return created message
      */
-    static constexpr MiddlewareMessage createFireAndForgetRequest(
+    static constexpr Message createFireAndForgetRequest(
         uint16_t const serviceId,
         uint16_t const memberId,
         uint16_t const serviceInstanceId,
@@ -187,8 +187,8 @@ public:
         uint8_t const tgtClusterId)
     {
         Header const header{serviceId, memberId, INVALID_REQUEST_ID, serviceInstanceId};
-        MiddlewareMessage msg{header, srcClusterId, tgtClusterId};
-        msg.setFlag_(MessageFlags::SkeletonTarget);
+        Message msg{header, srcClusterId, tgtClusterId};
+        msg.setFlag_(Flags::SkeletonTarget);
 
         return msg;
     }
@@ -203,15 +203,15 @@ public:
      * \param addressId unique ID of the target proxy
      * \return created message
      */
-    static constexpr MiddlewareMessage createResponse(
+    static constexpr Message createResponse(
         Header const& header,
         uint8_t const srcClusterId,
         uint8_t const tgtClusterId,
         uint8_t const addressId)
     {
-        MiddlewareMessage msg{header, srcClusterId, tgtClusterId, addressId};
-        msg.setFlag_(MessageFlags::ProxyTarget);
-        msg.setFlag_(MessageFlags::HasOutArgs);
+        Message msg{header, srcClusterId, tgtClusterId, addressId};
+        msg.setFlag_(Flags::ProxyTarget);
+        msg.setFlag_(Flags::HasOutArgs);
 
         return msg;
     }
@@ -227,7 +227,7 @@ public:
      * \param serviceInstanceId the service instance ID
      * \return the created message
      */
-    static constexpr MiddlewareMessage createEvent(
+    static constexpr Message createEvent(
         uint16_t const serviceId,
         uint16_t const memberId,
         uint16_t const serviceInstanceId,
@@ -239,9 +239,9 @@ public:
             INVALID_REQUEST_ID,
             serviceInstanceId,
         };
-        MiddlewareMessage msg{header, srcClusterId};
-        msg.setFlag_(MessageFlags::ProxyTarget);
-        msg.setFlag_(MessageFlags::IsEvent);
+        Message msg{header, srcClusterId};
+        msg.setFlag_(Flags::ProxyTarget);
+        msg.setFlag_(Flags::IsEvent);
 
         return msg;
     }
@@ -257,16 +257,16 @@ public:
      * \param error error code to be sent in the payload
      * \return created message
      */
-    static constexpr MiddlewareMessage createErrorResponse(
+    static constexpr Message createErrorResponse(
         Header const& header,
         uint8_t const srcClusterId,
         uint8_t const tgtClusterId,
         uint8_t const addressId,
         ErrorState const error)
     {
-        MiddlewareMessage msg{header, srcClusterId, tgtClusterId, addressId};
-        msg.setFlag_(MessageFlags::ProxyTarget);
-        msg.setFlag_(MessageFlags::HasError);
+        Message msg{header, srcClusterId, tgtClusterId, addressId};
+        msg.setFlag_(Flags::ProxyTarget);
+        msg.setFlag_(Flags::HasError);
         msg.payload_.error = error;
 
         return msg;
@@ -275,44 +275,44 @@ public:
     /**
      * \brief Check if message is a proxy target.
      *
-     * \return true if MessageFlags::ProxyTarget is active, otherwise returns false.
+     * \return true if Flags::ProxyTarget is active, otherwise returns false.
      */
-    bool isProxyTarget() const { return hasActiveFlag_(MessageFlags::ProxyTarget); }
+    bool isProxyTarget() const { return hasActiveFlag_(Flags::ProxyTarget); }
 
     /**
      * \brief Check if message is a skeleton target.
      *
-     * \return true if MessageFlags::SkeletonTarget is active, otherwise returns false.
+     * \return true if Flags::SkeletonTarget is active, otherwise returns false.
      */
-    bool isSkeletonTarget() const { return hasActiveFlag_(MessageFlags::SkeletonTarget); }
+    bool isSkeletonTarget() const { return hasActiveFlag_(Flags::SkeletonTarget); }
 
     /**
      * \brief Check if message contains an error.
      *
-     * \return true if MessageFlags::HasError is active, otherwise returns false.
+     * \return true if Flags::HasError is active, otherwise returns false.
      */
-    bool hasError() const { return hasActiveFlag_(MessageFlags::HasError); }
+    bool hasError() const { return hasActiveFlag_(Flags::HasError); }
 
     /**
      * \brief Check if message is an event.
      *
-     * \return true if MessageFlags::IsEvent is active, otherwise returns false.
+     * \return true if Flags::IsEvent is active, otherwise returns false.
      */
-    bool isEvent() const { return hasActiveFlag_(MessageFlags::IsEvent); }
+    bool isEvent() const { return hasActiveFlag_(Flags::IsEvent); }
 
     /**
      * \brief Check if message contains output arguments.
      *
-     * \return true if MessageFlags::HasOutArgs is active, otherwise returns false.
+     * \return true if Flags::HasOutArgs is active, otherwise returns false.
      */
-    bool hasOutArgs() const { return hasActiveFlag_(MessageFlags::HasOutArgs); }
+    bool hasOutArgs() const { return hasActiveFlag_(Flags::HasOutArgs); }
 
     /**
      * \brief Check if message contains a reference to an external payload.
      *
-     * \return true if MessageFlags::HasExternalPayload is active, otherwise returns false.
+     * \return true if Flags::HasExternalPayload is active, otherwise returns false.
      */
-    bool hasExternalPayload() const { return hasActiveFlag_(MessageFlags::HasExternalPayload); }
+    bool hasExternalPayload() const { return hasActiveFlag_(Flags::HasExternalPayload); }
 
     /**
      * \brief Get the ErrorState value of the message.
@@ -325,7 +325,7 @@ public:
 private:
     friend class MessageAllocator;
 
-    constexpr MiddlewareMessage(
+    constexpr Message(
         Header const& header,
         uint8_t const srcClusterId,
         uint8_t const tgtClusterId = INVALID_CLUSTER_ID,
@@ -338,7 +338,7 @@ private:
     , payload_()
     {}
 
-    enum class MessageFlags : uint8_t
+    enum class Flags : uint8_t
     {
         ProxyTarget        = 0b00000001U, // 1 << 0
         SkeletonTarget     = 0b00000010U, // 1 << 1
@@ -381,7 +381,7 @@ private:
         static_assert(
             etl::is_copy_constructible<T>::value, "T must have a trivial copy constructor!");
 
-        unsetFlag_(MessageFlags::HasExternalPayload);
+        unsetFlag_(Flags::HasExternalPayload);
         etl::construct_object_at(payload_.internalBuffer.data(), obj);
     }
 
@@ -409,7 +409,7 @@ private:
      */
     void setExternalHandle_(ExternalHandle const& handle)
     {
-        setFlag_(MessageFlags::HasExternalPayload);
+        setFlag_(Flags::HasExternalPayload);
         etl::construct_object_at<ExternalHandle>(&payload_.externalHandle, handle);
     }
 
@@ -419,7 +419,7 @@ private:
      * \param flag
      * \return true if \param flag is active, otherwise false.
      */
-    constexpr bool hasActiveFlag_(MessageFlags const flag) const
+    constexpr bool hasActiveFlag_(Flags const flag) const
     {
         return (flags_ & static_cast<uint8_t>(flag)) == static_cast<uint8_t>(flag);
     }
@@ -429,21 +429,21 @@ private:
      *
      * \param flag
      */
-    constexpr void setFlag_(MessageFlags const flag) { flags_ |= static_cast<uint8_t>(flag); }
+    constexpr void setFlag_(Flags const flag) { flags_ |= static_cast<uint8_t>(flag); }
 
     /**
      * \brief Unsets the \param flag to active in the flags bitmask.
      *
      * \param flag
      */
-    constexpr void unsetFlag_(MessageFlags const& flag) { flags_ &= ~static_cast<uint8_t>(flag); }
+    constexpr void unsetFlag_(Flags const& flag) { flags_ &= ~static_cast<uint8_t>(flag); }
 
     Header
         header_; ///< The message header containing the service, method, request and instance ids.
     uint8_t srcClusterId_; ///< The source cluster id.
     uint8_t tgtClusterId_; ///< The target cluster id.
     uint8_t addressId_;    ///< The proxy unique id.
-    uint8_t flags_;        ///< Flags bitmask which contains a combination of MessageFlags values.
+    uint8_t flags_;        ///< Flags bitmask which contains a combination of Flags values.
     PayloadType payload_;  ///< The message payload which can either store some data
                            ///< constructed in place, and external handle pointing to the
                            ///< place where the actual data is stored or an error value.
@@ -453,16 +453,16 @@ private:
 } // namespace middleware
 
 constexpr bool operator==(
-    middleware::core::MiddlewareMessage::ExternalHandle const& lhs,
-    middleware::core::MiddlewareMessage::ExternalHandle const& rhs)
+    middleware::core::Message::ExternalHandle const& lhs,
+    middleware::core::Message::ExternalHandle const& rhs)
 {
     return (lhs.offset == rhs.offset) && (lhs.size == rhs.size)
            && (lhs.isPayloadShared == rhs.isPayloadShared);
 }
 
 constexpr bool operator!=(
-    middleware::core::MiddlewareMessage::ExternalHandle const& lhs,
-    middleware::core::MiddlewareMessage::ExternalHandle const& rhs)
+    middleware::core::Message::ExternalHandle const& lhs,
+    middleware::core::Message::ExternalHandle const& rhs)
 {
     return !(lhs == rhs);
 }

@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "middleware/queue/queue_base.h"
+#include "middleware/queue/QueueBase.h"
 
 #include <etl/array.h>
 #include <etl/error_handler.h>

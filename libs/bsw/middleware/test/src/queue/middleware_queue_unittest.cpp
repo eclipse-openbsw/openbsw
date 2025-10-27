@@ -1,6 +1,6 @@
 // Copyright 2025 BMW AG
 
-#include "middleware/queue/queue.h"
+#include "middleware/queue/Queue.h"
 
 #include <gtest/gtest.h>
 

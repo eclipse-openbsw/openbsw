@@ -1,6 +1,6 @@
 // Copyright 2025 BMW AG
 
-#include "middleware/core/middleware_message.h"
+#include "middleware/core/Message.h"
 #include "middleware/core/types.h"
 
 #include <etl/limits.h>
@@ -17,8 +17,8 @@ namespace test
 
 MATCHER_P(CheckMsgHeader, expected, "Message headers did not match")
 {
-    MiddlewareMessage::Header const& argHeader      = arg.getHeader();
-    MiddlewareMessage::Header const& expectedHeader = expected.getHeader();
+    Message::Header const& argHeader      = arg.getHeader();
+    Message::Header const& expectedHeader = expected.getHeader();
     return arg.getSourceClusterId() == expected.getSourceClusterId()
            && arg.getTargetClusterId() == expected.getTargetClusterId()
            && argHeader.serviceId == expectedHeader.serviceId
@@ -38,12 +38,11 @@ class MiddlewareMessageTest : public ::testing::Test
 TEST_F(MiddlewareMessageTest, TestSkeletonResponseCreation)
 {
     // ARRANGE
-    MiddlewareMessage::Header const header{0x0FD9U, 0x8001U, 0x0010U, 0x0002U};
+    Message::Header const header{0x0FD9U, 0x8001U, 0x0010U, 0x0002U};
     uint8_t const sourceClusterId = 0xA0U;
     uint8_t const targetClusterId = 0x10U;
     uint8_t const addressId       = 0x02U;
-    MiddlewareMessage msg
-        = MiddlewareMessage::createResponse(header, sourceClusterId, targetClusterId, addressId);
+    Message msg = Message::createResponse(header, sourceClusterId, targetClusterId, addressId);
 
     // ACT && ASSERT
     EXPECT_TRUE(msg.hasOutArgs());
@@ -61,12 +60,11 @@ TEST_F(MiddlewareMessageTest, TestSkeletonResponseCreation)
 TEST_F(MiddlewareMessageTest, TestProxyRequestCreation)
 {
     // ARRANGE
-    MiddlewareMessage::Header const header{0x0237U, 0x0051U, 0x0610U, 0x0011U};
+    Message::Header const header{0x0237U, 0x0051U, 0x0610U, 0x0011U};
     uint8_t const sourceClusterId = 0xA6U;
     uint8_t const targetClusterId = 0x23U;
     uint8_t const addressId       = 0x05U;
-    MiddlewareMessage msg
-        = MiddlewareMessage::createRequest(header, sourceClusterId, targetClusterId, addressId);
+    Message msg = Message::createRequest(header, sourceClusterId, targetClusterId, addressId);
 
     // ACT && ASSERT
     EXPECT_TRUE(msg.isSkeletonTarget());
@@ -89,7 +87,7 @@ TEST_F(MiddlewareMessageTest, TestProxyFireAndForgetRequestCreation)
     uint16_t const instanceId{0x0710U};
     uint8_t const sourceClusterId = 0x06U;
     uint8_t const targetClusterId = 0x87U;
-    MiddlewareMessage msg         = MiddlewareMessage::createFireAndForgetRequest(
+    Message msg                   = Message::createFireAndForgetRequest(
         serviceId, memberId, instanceId, sourceClusterId, targetClusterId);
 
     // ACT && ASSERT
@@ -108,13 +106,13 @@ TEST_F(MiddlewareMessageTest, TestProxyFireAndForgetRequestCreation)
 TEST_F(MiddlewareMessageTest, TestErrorResponseCreation)
 {
     // ARRANGE
-    MiddlewareMessage::Header const header{0x1CD7U, 0x005DU, 0x0609U, 0x0000U};
+    Message::Header const header{0x1CD7U, 0x005DU, 0x0609U, 0x0000U};
     uint8_t const sourceClusterId = 0xC3U;
     uint8_t const targetClusterId = 0xF1U;
     uint8_t const addressId       = 0x29U;
     ErrorState error              = ErrorState::SerializationError;
-    MiddlewareMessage msg         = MiddlewareMessage::createErrorResponse(
-        header, sourceClusterId, targetClusterId, addressId, error);
+    Message msg
+        = Message::createErrorResponse(header, sourceClusterId, targetClusterId, addressId, error);
 
     // ACT && ASSERT
     EXPECT_TRUE(msg.hasError());
@@ -133,18 +131,17 @@ TEST_F(MiddlewareMessageTest, TestErrorResponseCreation)
 TEST_F(MiddlewareMessageTest, TestDefaultConstructor)
 {
     // ARRAGE - Create a ProxyRequest
-    MiddlewareMessage::Header const header{0xABD7U, 0xA951U, 0xC910U, 0x5011U};
+    Message::Header const header{0xABD7U, 0xA951U, 0xC910U, 0x5011U};
     uint8_t const sourceClusterId = 0xEDU;
     uint8_t const targetClusterId = 0x81U;
     uint8_t const addressId       = 0x36U;
-    MiddlewareMessage msg
-        = MiddlewareMessage::createRequest(header, sourceClusterId, targetClusterId, addressId);
+    Message msg = Message::createRequest(header, sourceClusterId, targetClusterId, addressId);
 
-    MiddlewareMessage const oldMsg = msg;
+    Message const oldMsg = msg;
 
     // ACT
     // Default constructor will be called and shouldn't change the pre-allocated values
-    new (&msg) MiddlewareMessage();
+    new (&msg) Message();
 
     // ASSERT
     EXPECT_THAT(msg, CheckMsgHeader(oldMsg));
@@ -162,8 +159,7 @@ TEST_F(MiddlewareMessageTest, TestEventCreation)
     uint16_t const instanceId{0x010BU};
     uint8_t const sourceClusterId = 0x86U;
     uint8_t const targetClusterId = 0x90U;
-    MiddlewareMessage msg
-        = MiddlewareMessage::createEvent(serviceId, memberId, instanceId, sourceClusterId);
+    Message msg = Message::createEvent(serviceId, memberId, instanceId, sourceClusterId);
     msg.setTargetClusterId(targetClusterId);
 
     // ACT && ASSERT
