@@ -35,6 +35,8 @@ public:
 
     EepromConfiguration const& getConfiguration() const { return _configuration; }
 
+    bsp::BspReturnCode deinit() override;
+
 private:
     bool isOperationAllowed(uint32_t address, uint8_t const* buffer, uint32_t length) const;
     void clearCommand();

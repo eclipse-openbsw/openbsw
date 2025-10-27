@@ -15,6 +15,7 @@ namespace eeprom
 class IEepromDriver
 {
 public:
+    virtual ~IEepromDriver()          = default;
     /**
      * Initializes the EEPROM.
      *
@@ -23,6 +24,14 @@ public:
      *                      be used!
      */
     virtual bsp::BspReturnCode init() = 0;
+
+    /**
+     * Deinitializes the EEPROM.
+     *
+     * \return BSP_OK      EEPROM was deinitialized correctly
+     *         BSP_ERROR   Error during deinitialization
+     */
+    virtual bsp::BspReturnCode deinit() = 0;
 
     /**
      * Writes data to the EEPROM.

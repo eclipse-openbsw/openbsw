@@ -16,6 +16,12 @@ protected:
 
 public:
     static constexpr size_t EEPROM_SIZE = 4096; // 4KB
+
+    void TearDown() override
+    {
+        // Ensure cleanup every test so file descriptors are not leaked.
+        (void)_cut.deinit();
+    }
 };
 
 TEST_F(EepromDriverTest, testEepromWriteBeyondSizeError)
@@ -25,7 +31,7 @@ TEST_F(EepromDriverTest, testEepromWriteBeyondSizeError)
     uint8_t dataToWrite[] = {0x01, 0x02, 0x03, 0x04, 0x05};
     uint32_t address      = EepromDriverTest::EEPROM_SIZE + 1; // Start address beyond size
 
-    bool result = _cut.write(address, dataToWrite, sizeof(dataToWrite));
+    ::bsp::BspReturnCode result = _cut.write(address, dataToWrite, sizeof(dataToWrite));
     EXPECT_EQ(::bsp::BSP_ERROR, result);
 }
 
@@ -36,7 +42,7 @@ TEST_F(EepromDriverTest, testEepromWriteRead)
     uint8_t dataToWrite[] = {0x01, 0x02, 0x03, 0x04, 0x05};
     uint32_t address      = 0x00;
 
-    bool result = _cut.write(address, dataToWrite, sizeof(dataToWrite));
+    ::bsp::BspReturnCode result = _cut.write(address, dataToWrite, sizeof(dataToWrite));
     EXPECT_EQ(::bsp::BSP_OK, result);
 
     uint8_t readData[sizeof(dataToWrite)] = {0};
@@ -57,7 +63,7 @@ TEST_F(EepromDriverTest, testEepromReadBeyondSizeError)
     uint8_t readData[10] = {0};
     uint32_t address     = EepromDriverTest::EEPROM_SIZE + 1;
 
-    bool result = _cut.read(address, readData, sizeof(readData));
+    ::bsp::BspReturnCode result = _cut.read(address, readData, sizeof(readData));
     EXPECT_EQ(::bsp::BSP_ERROR, result);
 }
 
@@ -65,8 +71,8 @@ TEST_F(EepromDriverTest, testNullpointerBufferRead)
 {
     EXPECT_EQ(::bsp::BSP_OK, _cut.init());
 
-    uint32_t address = 0x00;
-    bool result      = _cut.read(address, nullptr, 10);
+    uint32_t address            = 0x00;
+    ::bsp::BspReturnCode result = _cut.read(address, nullptr, 10);
 
     EXPECT_EQ(::bsp::BSP_ERROR, result);
 }
@@ -75,8 +81,8 @@ TEST_F(EepromDriverTest, testNullpointerBufferWrite)
 {
     EXPECT_EQ(::bsp::BSP_OK, _cut.init());
 
-    uint32_t address = 0x00;
-    bool result      = _cut.write(address, nullptr, 10);
+    uint32_t address            = 0x00;
+    ::bsp::BspReturnCode result = _cut.write(address, nullptr, 10);
 
     EXPECT_EQ(::bsp::BSP_ERROR, result);
 }
@@ -86,7 +92,7 @@ TEST_F(EepromDriverTest, testWriteWithoutInit)
     uint8_t dataToWrite[] = {0x01, 0x02, 0x03, 0x04, 0x05};
     uint32_t address      = 0x00;
 
-    bool result = _cut.write(address, dataToWrite, sizeof(dataToWrite));
+    ::bsp::BspReturnCode result = _cut.write(address, dataToWrite, sizeof(dataToWrite));
     EXPECT_EQ(::bsp::BSP_ERROR, result);
 }
 
@@ -95,7 +101,7 @@ TEST_F(EepromDriverTest, testReadWithoutInit)
     uint8_t readData[10] = {0};
     uint32_t address     = 0x00;
 
-    bool result = _cut.read(address, readData, sizeof(readData));
+    ::bsp::BspReturnCode result = _cut.read(address, readData, sizeof(readData));
     EXPECT_EQ(::bsp::BSP_ERROR, result);
 }
 

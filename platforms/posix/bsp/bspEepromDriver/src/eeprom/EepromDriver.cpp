@@ -52,6 +52,7 @@ bsp::BspReturnCode EepromDriver::init()
     {
         return ::bsp::BSP_ERROR;
     }
+    isInitialised = true;
     return ::bsp::BSP_OK;
 }
 
@@ -89,5 +90,35 @@ EepromDriver::read(uint32_t const address, uint8_t* const buffer, uint32_t const
     }
     return ::bsp::BSP_OK;
 }
+
+bsp::BspReturnCode EepromDriver::deinit()
+{
+    if (!isInitialised)
+    {
+        return ::bsp::BSP_OK;
+    }
+
+    bsp::BspReturnCode status = ::bsp::BSP_OK;
+
+    if (eepromFd >= 0)
+    {
+        if (fsync(eepromFd) != 0)
+        {
+            status = ::bsp::BSP_ERROR;
+        }
+
+        if (close(eepromFd) != 0)
+        {
+            status = ::bsp::BSP_ERROR;
+        }
+
+        eepromFd = -1;
+    }
+
+    isInitialised = false;
+    return status;
+}
+
+EepromDriver::~EepromDriver() = default;
 
 } // namespace eeprom
