@@ -6,7 +6,7 @@ This section describes the conventions to be followed when defining low level in
 Naming Conventions
 ------------------
 - Interface names should end with the suffix "Api" to clearly indicate their purpose as interfaces.
-  For example, a UART interface should be named `UartApi`.
+  For example, a UART interface should be named `IUartApi`.
 - Interface methods should be prefixed with a verb that clearly indicates the action being
   performed, such as "get", "set", "init", "read", or "write".
   For example, a method to read data from a UART interface could be named `read()` or `readData()`.
@@ -224,7 +224,7 @@ References
 
 - Please refer to the following files for examples of interface definitions and configurations:
 
-  - `bsp/uart/UartApi.h` - Interface definition using static interfaces with concepts.
+  - `bsp/uart/IUartApi.h` - Interface definition using static interfaces with concepts.
   - `bsp/uart/UartConcept.h` - Concept checks for static interface.
   - `bsp/uart/Uart.h` - Concrete implementation of the interface.
   - `bsp/uart/UartConfig.cpp` - Configuration of concrete implementations.

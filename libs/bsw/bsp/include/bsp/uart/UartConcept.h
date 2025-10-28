@@ -1,6 +1,6 @@
 #pragma once
 
-#include <bsp/uart/UartApi.h>
+#include <bsp/uart/IUartApi.h>
 #include <etl/type_traits.h>
 
 #include <concepts>
@@ -25,13 +25,13 @@ concept UartConcept
       };
 
 template<typename T>
-concept UartCheckInterface = std::derived_from<T, bsp::UartApi> && UartConcept<T>;
+concept UartCheckInterface = std::derived_from<T, bsp::IUartApi> && UartConcept<T>;
 // clang-format on
 
 #define BSP_UART_CONCEPT_CHECKER(_class) \
     static_assert(                       \
         bsp::UartCheckInterface<_class>, \
-        "Class " #_class " does not implement UartApi interface correctly");
+        "Class " #_class " does not implement IUartApi interface correctly");
 
 #else
 #define BSP_UART_CONCEPT_CHECKER(_class)
@@ -40,6 +40,6 @@ concept UartCheckInterface = std::derived_from<T, bsp::UartApi> && UartConcept<T
 } // namespace bsp
 
 /**
- * This concept checks if a class implements the UartApi interface correctly.
+ * This concept checks if a class implements the IUartApi interface correctly.
  * It verifies the presence of write and read methods with the expected signatures.
  */

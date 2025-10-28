@@ -1,6 +1,6 @@
 #pragma once
 
-#include <bsp/uart/UartApi.h>
+#include <bsp/uart/IUartApi.h>
 #include <bsp/uart/UartConcept.h>
 #include <bsp/uart/UartId.h>
 
@@ -8,11 +8,11 @@ namespace bsp
 {
 /**
  * This class implements the UART communication for S32K1xx platforms.
- * It inherits from the base class UartApi and implements the methods for writing and reading data
+ * It inherits from the base class IUartApi and implements the methods for writing and reading data
  * over the UART interface. It also provides a method for initializing the UART communication.
  */
 class Uart
-: public bsp::UartApi
+: public bsp::IUartApi
 , public bsp::UartId
 {
 public:
@@ -39,6 +39,18 @@ public:
      * this method must be called before using the read/write methods
      */
     void init();
+
+    /**
+     * checks if the UART is initialized
+     * @return true if initialized, false otherwise
+     */
+    bool isInitialized() const;
+
+    /**
+     * waits until the UART is ready to transmit data
+     * @return true if ready within timeout, false otherwise
+     */
+    bool waitForTxReady();
 
     /**
      * factory method which instantiates and configures an UART object.

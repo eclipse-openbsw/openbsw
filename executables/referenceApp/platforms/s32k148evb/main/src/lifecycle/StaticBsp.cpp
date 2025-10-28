@@ -13,9 +13,9 @@
 #include "io/Io.h"
 #include "mcu/mcu.h"
 #include "mdio/MdioTja1101.h"
-#include "sci/SciDevice.h"
 
 using namespace bios;
+using bsp::Uart;
 
 extern "C"
 {
@@ -23,7 +23,6 @@ extern void initSystemTimerHelper(bool sleep);
 }
 
 using Io = bios::Io;
-using bsp::Uart;
 
 extern StaticBsp staticBsp;
 
