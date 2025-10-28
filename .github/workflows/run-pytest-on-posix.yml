@@ -3,48 +3,54 @@ name: Run pytest for posix platform
 on: [push, pull_request]
 
 jobs:
-    run-pytest-on-posix:
-      runs-on: ubuntu-latest
-      steps:
-        - name: Install missing kernel module file for vcan
-          run: |
-            sudo apt update
-            sudo apt install linux-modules-extra-$(uname -r)
+  run-pytest-on-posix:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install missing kernel module file for vcan
+        run: |
+          sudo apt update
+          sudo apt install linux-modules-extra-$(uname -r)
 
-        - name: Install can kernel modules
-          run: |
-            sudo modprobe can
-            sudo modprobe can-raw
-            sudo modprobe vcan
+      - name: Install can kernel modules
+        run: |
+          sudo modprobe can
+          sudo modprobe can-raw
+          sudo modprobe vcan
 
-        - name: Set up vcan0 interface
-          run: |
-            sudo ip link add dev vcan0 type vcan
-            sudo ip link set vcan0 mtu 16
-            sudo ip link set up vcan0
+      - name: Set up vcan0 interface
+        run: |
+          sudo ip link add dev vcan0 type vcan
+          sudo ip link set vcan0 mtu 16
+          sudo ip link set up vcan0
 
-        - name: Show all interface info, vcan0 should be set up
-          run: ip a
+      - name: Show all interface info, vcan0 should be set up
+        run: ip a
 
-        - name: Checkout repository
-          uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-        - name: Set up virtual ethernet interface
-          run: |
-            sudo tools/enet/bring-up-ethernet.sh
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
-        - name: Build the docker image
-          run: |
-           docker build -f docker/Dockerfile.dev -t dev .
+      - name: Build development Image
+        uses: docker/build-push-action@v6
+        with:
+          context: "{{defaultContext}}:docker/development"
+          push: false
+          tags: openbsw-development:latest
+          outputs: type=docker
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
-        - name: Run the pytest inside the docker container
-          run: |
-            docker run --rm --network=host \
-              --cap-add=NET_ADMIN --cap-add=SYS_MODULE \
-              --device /dev/net/tun \
-              --volume /lib/modules:/lib/modules \
-              -v "$PWD:/home/jenkins" \
-              -w /home/jenkins \
-              --user "$(id -u):4996" \
-              dev python3 .ci/pytest.py
+      - name: Set up virtual ethernet interface
+        run: |
+          sudo tools/enet/bring-up-ethernet.sh
+
+      - name: Run the pytest inside the docker container
+        run: >-
+          DOCKER_UID=$(id -u) DOCKER_GID=$(id -g) DOCKER_HISTORY=/dev/null docker compose run --rm development-sil
+          bash -c "
+          pip3 install -r test/pyTest/requirements.txt &&
+          python3 .ci/pytest.py
+          "
 

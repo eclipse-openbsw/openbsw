@@ -177,7 +177,7 @@ class LocalHTMLRenderer(HTMLRenderer):
 
 def generate_html_output(gcc_tools_base):
     src_root = os.path.abspath("../source") + os.sep
-    build_dir = os.path.abspath("../../build/s32k148-gcc") + os.sep
+    build_dir = os.path.abspath("../../build/s32k148-freertos-gcc") + os.sep
     elf_file = os.path.join(
         build_dir,
         "executables/referenceApp/application/RelWithDebInfo/app.referenceApp.elf",
@@ -235,7 +235,7 @@ def create_builder(gcc_base_filename, elf_file=None, su_dir=None, src_root=None)
 
 
 def get_arm_tools_prefix_path():
-    obj_dump = shutil.which("arm-none-eabi-objdump")
+    obj_dump = shutil.which("/usr/bin/gcc-arm-none-eabi/bin/arm-none-eabi-objdump")
     if not obj_dump:
         return None
     gcc_tools_base_dir = os.path.dirname(os.path.dirname(obj_dump))

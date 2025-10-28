@@ -13,56 +13,40 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up CMake
-        uses: jwlawson/actions-setup-cmake@v2
-        with:
-          cmake-version: '3.28.3'
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - name: Build development Image
+        uses: docker/build-push-action@v6
         with:
-          python-version: '3.12'
+          context: "{{defaultContext}}:docker/development"
+          push: false
+          tags: openbsw-development:latest
+          outputs: type=docker
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
       - name: Cache CMake files
         id: cache-cmake
         uses: actions/cache@v4
         with:
-            path: |
-              build/s32k148-gcc
-            key: ${{ runner.os }}-cmake-s32k148-${{ hashFiles('**/*.cpp', '**/*.h', '**/*.cmake', '**/*.txt', '**/*.c', '**/*.s') }}
+            path: build/s32k148-gcc
+            key: ${{ runner.os }}-cmake-s32k148-freertos-gcc-RelWithDebInfo-arm-gcc-14-${{ hashFiles('**/*.cpp', '**/*.h',  '**/*.cmake', '**/*.txt', '**/*.c', '**/*.s', '**/*.S') }}
 
-      - name: Set up Python virtual environment and install Poetry
-        run: |
-          python3 -m venv .pvenv
-          source .pvenv/bin/activate
-          pip install --upgrade pip
-          pip install poetry
-          poetry --version
+      - name: Run the build.py inside the docker container
+        if: steps.cache-cmake.outputs.cache-hit != 'true'
+        run: >-
+          DOCKER_UID=$(id -u) DOCKER_GID=$(id -g) DOCKER_HISTORY=/dev/null docker compose run --rm development
+          python3 .ci/build.py --preset s32k148-freertos-gcc --platform arm --cxxid gcc --cxxstd 14 --config RelWithDebInfo
 
-      - name: Set up ARM GCC
-        uses: carlosperate/arm-none-eabi-gcc-action@v1
-        with:
-            release: '10.3-2021.10'
-
-      - name: Configure CMake for S32K148
-        if: ${{ steps.cache-cmake.outputs.cache-hit != 'true' }}
-        run: |
-            rm -rf build/s32k148-gcc
-            cmake --preset s32k148-gcc
-
-      - name: Build with cmake
-        if: ${{ steps.cache-cmake.outputs.cache-hit != 'true' }}
-        run: |
-            export CMAKE_BUILD_PARALLEL_LEVEL=$(nproc)
-            cmake --build --preset s32k148-gcc
-
-      - name: Run script and generate report
-        working-directory: tools/puncover_tool
-        run: |
-           source ../../.pvenv/bin/activate
-           poetry install
-           echo "==> Running script"
-           poetry run puncover_tool
+      - name: Generate report inside the docker container
+        run: >-
+          DOCKER_UID=$(id -u) DOCKER_GID=$(id -g) DOCKER_HISTORY=/dev/null docker compose run --rm --workdir ${PWD}/tools/puncover_tool development
+          bash -c "
+          pip3 install poetry &&
+          python3 -m poetry install &&
+          python3 -m poetry run puncover_tool
+          "
 
       - name: Zip output as artifact
         working-directory: tools/puncover_tool

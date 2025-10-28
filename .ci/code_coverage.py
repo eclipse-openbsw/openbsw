@@ -40,8 +40,6 @@ def build():
             "tests-posix-debug",
             "-B",
             f"{build_dir_name}",
-            "-DCMAKE_C_COMPILER_LAUNCHER=sccache",
-            "-DCMAKE_CXX_COMPILER_LAUNCHER=sccache",
         ],
         check=True,
         env=env,
@@ -125,6 +123,9 @@ def generate_badges():
     line_percentage = re.search(r"lines\.*:\s+(\d+\.\d+)%", summary)
     function_percentage = re.search(r"functions\.*:\s+(\d+\.\d+)%", summary)
 
+    coverage_badge_path = Path(build_dir_name).joinpath("coverage_badges")
+    coverage_badge_path.mkdir(parents=True, exist_ok=True)
+
     if line_percentage:
         line_value = line_percentage.group(1)
         print(f"Line Percentage: {line_value}%")
@@ -133,7 +134,7 @@ def generate_badges():
                 "wget",
                 f"https://img.shields.io/badge/coverage-{line_value}%25-brightgreen.svg",
                 "-O",
-                "line_coverage_badge.svg",
+                coverage_badge_path.joinpath("line_coverage_badge.svg").as_posix(),
             ],
             check=True,
         )
@@ -146,7 +147,7 @@ def generate_badges():
                 "wget",
                 f"https://img.shields.io/badge/coverage-{function_value}%25-brightgreen.svg",
                 "-O",
-                "function_coverage_badge.svg",
+                coverage_badge_path.joinpath("function_coverage_badge.svg").as_posix(),
             ],
             check=True,
         )

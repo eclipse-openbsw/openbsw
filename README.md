@@ -39,6 +39,33 @@ allowing developers to get up and running quickly.
   learning about automotive technologies, conducting research, and exploring innovative solutions
   in automotive areas.
 
+## Getting Started
+
+To get started, we recommend to compile our reference application for one of the supported platforms
+using the docker image we provide including all the necessary tools. Therefore, you can simply run
+the development service in the docker compose in the root of the repo, call cmake with the correct
+options and build the generated project.
+
+> [!NOTE]
+> 
+> In case your local user already uses `UID`/`GID` of `1000` you can skip the `DOCKER_UID` and
+> `DOCKER_GID` variables, since this is the default. Otherwise, you need it to make sure you have
+> proper access to your local files.
+> 
+> In case you want to use a custom history file for the commands you run in the container you can
+> also set the `DOCKER_HISTORY` variable, which defaults to the `~/.docker_history` file.
+>
+> Note, that we bind mount your current working directory into the container and use it as working
+> directory. This makes sure, that you will have the same paths inside and outside of the container
+> when for example loading a generated elf into a debugger or following symlinks created within the
+> container.
+
+```
+host> DOCKER_UID=$(id -u) DOCKER_GID=$(id -g) docker compose run --build development
+docker> cmake --preset posix
+docker> cmake --build --preset posix
+```
+
 ## Feature Overview
 
 ### Implemented Features

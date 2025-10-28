@@ -6,13 +6,21 @@ jobs:
   rim:
     runs-on: ubuntu-latest
     steps:
-     - name: Checkout code
-       uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-     - name: Build the docker image
-       run: |
-          docker build -f docker/Dockerfile.dev -t dev .
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
-     - name: Run the third party libraries check via RIM inside the docker container
-       run: |
-          docker run --rm -v "$PWD:/home/jenkins" -w /home/jenkins --user $(id -u):4996 dev rim status -w -d --verify-clean
+      - name: Build development Image
+        uses: docker/build-push-action@v6
+        with:
+          context: "{{defaultContext}}:docker/development"
+          push: false
+          tags: openbsw-development:latest
+          outputs: type=docker
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Run the third party libraries check via RIM inside the docker container
+        run: DOCKER_UID=$(id -u) DOCKER_GID=$(id -g) DOCKER_HISTORY=/dev/null docker compose run --rm development rim status -w -d --verify-clean

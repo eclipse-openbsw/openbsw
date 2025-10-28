@@ -12,80 +12,49 @@ jobs:
       BUILD_TYPE: Debug
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - name: Cache CMake files
-      id: cache-build
-      uses: actions/cache@v3
-      with:
-          path: code_coverage
-          key: ${{ runner.os }}-cmake-build-unit-tests-${{ hashFiles('**/*.cpp', '**/*.h',  '**/*.cmake', '**/*.txt', '**/*.c', '**/*.s') }}
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
-    - name: sccache cache backup from cache
-      uses: actions/cache@v3
-      with:
-       path: sccache_backup
-       key: ${{ runner.os }}-sccache-${{ hashFiles('**/*.cpp', '**/*.h',  '**/*.cmake', '**/*.txt', '**/*.c', '**/*.s') }}
-       restore-keys: |
-         ${{ runner.os }}-sccache-
+      - name: Build development Image
+        uses: docker/build-push-action@v6
+        with:
+          context: "{{defaultContext}}:docker/development"
+          push: false
+          tags: openbsw-development:latest
+          outputs: type=docker
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
-    - name: Create Docker volume if not exists
-      run: |
-       if ! docker volume inspect sccache_cache_volume >/dev/null 2>&1; then
-         docker volume create sccache_cache_volume
-       fi
+      - name: Cache CMake files
+        id: cache-cmake
+        uses: actions/cache@v3
+        with:
+            path: code_coverage
+            key: ${{ runner.os }}-cmake-build-unit-tests-${{ hashFiles('**/*.cpp', '**/*.h',  '**/*.cmake', '**/*.txt', '**/*.c', '**/*.s', '**/*.S', '.ci/code_coverage.py') }}
 
-    - name: Build the docker image
-      run: |
-          docker build -f docker/Dockerfile.dev -t dev .
+      - name: Run the code_coverage.py inside the docker container
+        if: steps.cache-cmake.outputs.cache-hit != 'true'
+        run: >-
+          DOCKER_UID=$(id -u) DOCKER_GID=$(id -g) DOCKER_HISTORY=/dev/null docker compose run --rm development
+          python3 .ci/code_coverage.py
 
-    - name: Copy restored sccache backup into Docker volume
-      run: |
-        mkdir -p sccache_backup
-        docker run --rm \
-          -v sccache_cache_volume:/to_volume \
-          -v "$PWD/sccache_backup:/from_host" \
-          busybox \
-          sh -c "cp -a /from_host/. /to_volume/" || true
+      - name: Zip code_coverage and coverage_badges
+        run: |
+              cd code_coverage
+              zip -r coverage.zip coverage
+              zip -r coverage_badges.zip coverage_badges
 
-    - name: Run the code_coverage.py inside the docker container
-      run: |
-        docker run --rm \
-          -v "$PWD:/home/jenkins" \
-          -v "sccache_cache_volume:/home/jenkins/.cache/sccache" \
-          -w /home/jenkins \
-          -e SCCACHE_DIR=/home/jenkins/.cache/sccache \
-          --user $(id -u):4996 \
-          dev python3 .ci/code_coverage.py
+      - name: Upload code coverage artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: code_coverage/coverage.zip
 
-    - name: Zip code_coverage and coverage_badges
-      run: |
-            cd code_coverage
-            zip -r coverage.zip coverage
-            cd ..
-            mkdir coverage_badges
-            mv line_coverage_badge.svg coverage_badges/
-            mv function_coverage_badge.svg coverage_badges/
-            zip -r coverage_badges.zip coverage_badges
-
-    - name: Upload code coverage artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: coverage
-        path: code_coverage/coverage.zip
-
-    - name: Upload Coverage Badge
-      uses: actions/upload-artifact@v4
-      with:
-        name: coverage_badges
-        path: coverage_badges.zip
-
-    - name: Copy updated sccache out of Docker volume
-      run: |
-        mkdir -p sccache_backup
-        docker run --rm \
-          -v sccache_cache_volume:/from_volume \
-          -v "$PWD/sccache_backup:/to_host" \
-          busybox \
-          sh -c "cp -a /from_volume/. /to_host/"
+      - name: Upload Coverage Badge
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage_badges
+          path: coverage_badges.zip
