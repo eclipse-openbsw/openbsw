@@ -33,18 +33,11 @@ jobs:
           run: |
             sudo tools/enet/bring-up-ethernet.sh
 
-        - name: Build the docker image
-          run: |
-           docker build -f docker/Dockerfile.dev -t dev .
-
         - name: Run the pytest inside the docker container
-          run: |
-            docker run --rm --network=host \
-              --cap-add=NET_ADMIN --cap-add=SYS_MODULE \
-              --device /dev/net/tun \
-              --volume /lib/modules:/lib/modules \
-              -v "$PWD:/home/jenkins" \
-              -w /home/jenkins \
-              --user "$(id -u):4996" \
-              dev python3 .ci/pytest.py
+          run: >-
+            DOCKER_UID=$(id -u) DOCKER_GID=$(id -g) DOCKER_HISTORY=/dev/null docker compose run --rm development-sil
+            bash -c "
+            pip3 install -r test/pyTest/requirements.txt &&
+            python3 .ci/pytest.py
+            "
 

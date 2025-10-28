@@ -1,0 +1,79 @@
+services:
+  development:
+    image: ghcr.io/eclipse-openbsw/docker/development:v0.0.2
+    user: build
+    stdin_open: true
+    tty: true
+    network_mode: host
+    working_dir: ${PWD}
+    configs:
+      - source: passwd
+        target: /etc/passwd
+      - source: group
+        target: /etc/group
+      - source: shadow
+        target: /etc/shadow
+    environment:
+      http_proxy: ${http_proxy}
+      https_proxy: ${https_proxy}
+      no_proxy: ${no_proxy}
+    volumes:
+      - type: bind
+        source: ${PWD}
+        target: ${PWD}
+        bind:
+          create_host_path: false
+      - type: bind
+        source: ${DOCKER_HISTORY:-${HOME}/.docker_history}
+        target: /home/build/.bash_history
+        bind:
+          create_host_path: false
+  development-sil:
+    image: ghcr.io/eclipse-openbsw/docker/development:main
+    user: build
+    stdin_open: true
+    tty: true
+    network_mode: host
+    working_dir: ${PWD}
+    configs:
+      - source: passwd
+        target: /etc/passwd
+      - source: group
+        target: /etc/group
+      - source: shadow
+        target: /etc/shadow
+    environment:
+      http_proxy: ${http_proxy}
+      https_proxy: ${https_proxy}
+      no_proxy: ${no_proxy}
+    volumes:
+      - type: bind
+        source: ${PWD}
+        target: ${PWD}
+        bind:
+          create_host_path: false
+      - type: bind
+        source: ${DOCKER_HISTORY:-${HOME}/.docker_history}
+        target: /home/build/.bash_history
+        bind:
+          create_host_path: false
+      - type: bind
+        source: /lib/modules
+        target: /lib/modules
+        bind:
+          create_host_path: false
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+
+configs:
+  passwd:
+    content: |
+      build::${DOCKER_UID:-1000}:${DOCKER_GID:-1000}::/home/build:/usr/bin/bash
+  group:
+    content: |
+      build::${DOCKER_GID:-1000}:
+  shadow:
+    content: "#empty"

@@ -80,25 +80,23 @@ jobs:
         uses: actions/cache@v3
         with:
           path: build
-          key: ${{ runner.os }}-cmake-${{ matrix.preset }}-${{ matrix.config }}-${{ matrix.platform }}-${{ matrix.cxxid }}-${{ matrix.cxxstd }}-${{ hashFiles('**/*.cpp', '**/*.h',  '**/*.cmake', '**/*.txt', '**/*.c', '**/*.s', '**/*.S') }}
+          key: ${{ runner.os }}-cmake-${{ matrix.preset }}-${{ matrix.config }}-${{ matrix.platform }}-${{ matrix.cxxid }}-${{ matrix.cxxstd }}-${{ hashFiles('**/*.cpp', '**/*.h',  '**/*.cmake', '**/*.txt', '**/*.c', '**/*.s', '**/*.S', '.ci/build.py') }}
           restore-keys: ${{ runner.os }}-cmake-${{ matrix.preset }}-${{ matrix.config }}-${{ matrix.platform }}-${{ matrix.cxxid }}-${{ matrix.cxxstd }}-
-
-      - name: Build the docker image
-        if: steps.cache-cmake.outputs.cache-hit != 'true'
-        run: |
-          docker build -f docker/Dockerfile.dev -t dev .
 
       - name: Run the build.py inside the docker container
         if: steps.cache-cmake.outputs.cache-hit != 'true'
-        run: |
-          docker run --rm -v "$PWD:/home/jenkins" -w /home/jenkins --user $(id -u):4996 dev python3 .ci/build.py --preset "${{ matrix.preset }}" --platform "${{ matrix.platform }}" --cxxid "${{ matrix.cxxid }}" --cxxstd "${{ matrix.cxxstd }}" --config "${{ matrix.config }}"
+        run: >-
+          DOCKER_UID=$(id -u) DOCKER_GID=$(id -g) DOCKER_HISTORY=/dev/null docker compose run --rm development
+          python3 .ci/build.py --preset ${{ matrix.preset }} --platform ${{ matrix.platform }} --cxxid ${{ matrix.cxxid }} --cxxstd ${{ matrix.cxxstd }} --config ${{ matrix.config }}
 
       - name: Run custom CMake build for elf-analyzer
         if: steps.cache-cmake.outputs.cache-hit != 'true' && matrix.platform == 'arm' && matrix.cxxid == 'gcc' && matrix.cxxstd == '14' && matrix.config != ''
-        run: |
-          docker run --rm -v "$PWD:/home/jenkins" -w /home/jenkins --user $(id -u):4996 dev bash -c "
-            cmake --preset ${{matrix.preset}} -DCMAKE_CXX_FLAGS="-gdwarf-4" -DCMAKE_C_FLAGS="-gdwarf-4" -B elf-analyzer-artifacts/${{matrix.preset}}
-            cmake --build elf-analyzer-artifacts/${{matrix.preset}} -t app.referenceApp --config ${{ matrix.config }} "
+        run: >-
+          DOCKER_UID=$(id -u) DOCKER_GID=$(id -g) DOCKER_HISTORY=/dev/null docker compose run --rm development
+          bash -c "
+          cmake --preset ${{ matrix.preset }} -DCMAKE_CXX_FLAGS="-gdwarf-4" -DCMAKE_C_FLAGS="-gdwarf-4" -B elf-analyzer-artifacts/${{ matrix.preset }} &&
+          cmake --build elf-analyzer-artifacts/${{ matrix.preset }} -t app.referenceApp --config ${{ matrix.config }}
+          "
 
       - name: Set commit hash and metadata
         if: steps.cache-cmake.outputs.cache-hit != 'true' && matrix.platform == 'arm' && matrix.cxxid == 'gcc' && matrix.cxxstd == '14' && matrix.config != ''
