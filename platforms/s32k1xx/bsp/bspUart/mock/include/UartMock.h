@@ -1,6 +1,6 @@
 #pragma once
 
-#include "bsp/uart/UartApi.h"
+#include "bsp/uart/IUartApi.h"
 
 #include <gmock/gmock.h>
 
@@ -10,7 +10,7 @@ namespace bsp
 namespace bsp
 {
 
-class UartMock : public UartApi
+class UartMock : public IUartApi
 {
 public:
     MOCK_METHOD1(write, size_t(::etl::span<uint8_t const> const data));

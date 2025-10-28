@@ -13,7 +13,7 @@ namespace bsp
 /**
  * Base class used to define the generic interface for the uart communication
  */
-class UartApi
+class IUartApi
 {
 public:
     /**
