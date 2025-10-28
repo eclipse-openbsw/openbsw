@@ -41,6 +41,18 @@ public:
     void init();
 
     /**
+     * checks if the UART is initialized
+     * @return true if initialized, false otherwise
+     */
+    bool isInitialized() const;
+
+    /**
+     * waits until the UART is ready to transmit data
+     * @return true if ready within timeout, false otherwise
+     */
+    bool waitForTxReady();
+
+    /**
      * factory method which instantiates and configures an UART object.
      * If the object exists it will returns only a reference to it.
      * @param id: TERMINAL, ...

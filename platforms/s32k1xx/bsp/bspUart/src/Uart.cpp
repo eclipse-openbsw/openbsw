@@ -87,15 +87,25 @@ bool Uart::writeByte(uint8_t data)
     if (!isTxActive(_uartConfig.uart.STAT))
     {
         _uartConfig.uart.DATA = (static_cast<uint32_t>(data) & 0xFFU);
-        uint32_t count        = 0U;
-        while (isTxActive(_uartConfig.uart.STAT))
-        {
-            if (++count > WRITE_TIMEOUT)
-            {
-                return false;
-            }
-        }
-        return true;
+        return waitForTxReady();
     }
     return false;
+}
+
+bool Uart::isInitialized() const
+{
+    return (_uartConfig.uart.CTRL & (LPUART_CTRL_TE_MASK | LPUART_CTRL_RE_MASK)) != 0;
+}
+
+bool Uart::waitForTxReady()
+{
+    uint32_t count = 0U;
+    while (isTxActive(_uartConfig.uart.STAT))
+    {
+        if (++count > WRITE_TIMEOUT)
+        {
+            return false;
+        }
+    }
+    return true;
 }

@@ -11,7 +11,6 @@ Modules
 
    bspAdc
    bspCan
-   bspSci
    bspIo
    bspTimer
    bspClock
@@ -23,7 +22,6 @@ Modules
 
    :ref:`bspConfig_AnalogInput`, "Configuration for acquiring and reading ADC measurements."
    :ref:`bspConfig_Can`, "CAN module configurations"
-   :ref:`bspConfig_Sci`, "Serial communication module configuration"
    :ref:`bspConfig_Io`, "Input, Output, OutputPwm module configuration"
    :ref:`bspConfig_Timer`, "Timer module configuration"
    :ref:`bspConfig_Clock`, "Board clock configuration"

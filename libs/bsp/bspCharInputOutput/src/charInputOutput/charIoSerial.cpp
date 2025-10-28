@@ -1,10 +1,12 @@
 #include "charInputOutput/charIoSerial.h"
 
+#include "bsp/Uart.h"
 #include "charInputOutput/CharIOSerialCfg.h"
 #include "platform/estdint.h"
-#include "sci/SciDevice.h"
 
 #include <stdio.h>
+
+using bsp::Uart;
 
 extern "C"
 {
@@ -14,6 +16,7 @@ char SerialLogger_buffer[CHARIOSERIAL_BUFFERSIZE];
 int SerialLogger_bufferInd           = 0;
 // use synchronous by default so that less memory is needed
 int SerialLogger_consoleAsynchronous = 0;
+Uart& uart                           = Uart::getInstance(Uart::Id::TERMINAL);
 } // namespace
 
 /**
@@ -32,54 +35,36 @@ void SerialLogger_setSynchronous() { SerialLogger_consoleAsynchronous = 0; }
  * - 1 if already initialized
  * - 0 if not yet initialized
  */
-uint8_t SerialLogger_getInitState() { return (sciGetInitState()); }
+uint8_t SerialLogger_getInitState() { return (static_cast<uint8_t>(uart.isInitialized())); }
 
 // below functions documented in the header file
 void SerialLogger_init()
 {
     // setup UART on ESCIA
-    sciInit();
+    uart.init();
 }
 
 int SerialLogger_putc(int const c)
 {
-    int i = 0;
-    if (SerialLogger_getInitState() == 0U)
-    {
-        SerialLogger_init();
-    }
-    while (sciGetTxNotReady() != 0U)
-    {
-        i++;
-        if (i > SCI_LOGGERTIMEOUT)
-        {
-            break;
-        }
-    }
-
-    sciPuth(c);
-
-    return 1;
+    uint8_t const byte = static_cast<uint8_t>(c);
+    return uart.write(etl::span<uint8_t const>(&byte, 1U));
 }
 
 int SerialLogger_getc()
 {
-    if (sciGetRxReady() != 0U)
+    etl::span<uint8_t> data{};
+    uart.read(data);
+    if (data.size() == 0)
     {
-        return (static_cast<int>(sciGeth()));
+        return -1;
     }
-    else
-    {
-        return 0;
-    }
+    return data[0];
 }
 
 void SerialLogger_Idle()
 {
-    for (int i = 0; i < SerialLogger_bufferInd; i++)
-    {
-        (void)SerialLogger_putc(static_cast<int>(SerialLogger_buffer[i]));
-    }
+    uart.write(etl::span<uint8_t const>(
+        reinterpret_cast<uint8_t const*>(&SerialLogger_buffer[0]), SerialLogger_bufferInd));
     SerialLogger_bufferInd = 0;
 }
 
@@ -110,12 +95,7 @@ int SerialLogger__inchar()
         SerialLogger_init();
     }
 
-    while (sciGetRxReady() != 1U)
-    {
-        ; // wait for receive data to be available
-    }
-
-    return static_cast<int>(sciGeth());
+    return SerialLogger_getc();
 }
 
 } // extern "C"
