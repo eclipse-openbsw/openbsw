@@ -54,7 +54,8 @@ int SerialLogger_putc(int const c)
 
 int SerialLogger_getc()
 {
-    etl::span<uint8_t> data{};
+    uint8_t data_byte = 0;
+    etl::span<uint8_t> data(&data_byte, 1U);
     uart.read(data);
     if (data.size() == 0)
     {

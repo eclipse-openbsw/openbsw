@@ -7,7 +7,9 @@ namespace
 {
 TEST(BspTest, IncludeCheck)
 {
-    // This test currently only checks if the includes are working.
+    bsp::UartMock uartMock;
+    uartMock.write(::etl::span<uint8_t const>{});
+    uartMock.read(::etl::span<uint8_t>{});
 }
 
 } // anonymous namespace

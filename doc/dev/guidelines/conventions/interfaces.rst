@@ -26,7 +26,7 @@ Design Conventions
 - Provide clear and concise documentation for each interface and its methods,
   including descriptions of parameters, return values.
 - The interface should be placed in a dedicated header file,
-  typically named after the interface itself (e.g., `ExampleApi.h` for the `ExampleApi` interface).
+  typically named after the interface itself (e.g., `IExampleApi.h` for the `IExampleApi` interface).
 - Declaration of interfaces using pure virtual methods should be also possible,
   but for performance reasons, prefer static interfaces with concept checks where applicable.
 - The low level interfaces should be placed in the bsp namespace.
@@ -52,16 +52,17 @@ Example:
 
 .. code-block:: cpp
 
-    // libs/bsw/bsp/include/bsp/example/ExampleApi.h
+    // libs/bsw/bsp/include/bsp/example/IExampleApi.h
 
     #pragma once
 
     namespace bsp {
-    class ExampleApi {
+    class IExampleApi {
     public:
-        virtual ~ExampleApi() = default;
         virtual size_t read(::etl::span<uint8_t> data) = 0;
-        virtual size_t write(::etl::span<uint8_t const> const& data) = 0;
+        virtual size_t write(::etl::span<uint8_t const> const data) = 0;
+    protected:
+        ~IExampleApi() = default;
     };
     } // namespace bsp
 
@@ -71,13 +72,13 @@ Example:
 
     #pragma once
 
-    #include <bsp/ExampleApi.h>
+    #include <bsp/IExampleApi.h>
 
     namespace bsp {
-    class Example : public ExampleApi {
+    class Example : public IExampleApi {
     public:
         size_t read(::etl::span<uint8_t> data) override;
-        size_t write(::etl::span<uint8_t const> const& data) override;
+        size_t write(::etl::span<uint8_t const> const data) override;
     };
     } // namespace bsp
 
@@ -91,16 +92,16 @@ Example:
 
 .. code-block:: cpp
 
-    // libs/bsw/bsp/include/bsp/example/ExampleApi.h
+    // libs/bsw/bsp/include/bsp/example/IExampleApi.h
 
     #pragma once
 
     namespace bsp {
 
-    class ExampleApi {
+    class IExampleApi {
     public:
         size_t read(::etl::span<uint8_t> data);
-        size_t write(::etl::span<uint8_t const> const& data);
+        size_t write(::etl::span<uint8_t const> const data);
     };
 
     } // namespace bsp
@@ -123,12 +124,12 @@ Example:
         };
 
     template<typename T>
-    concept ExampleCheckInterface = std::derived_from<T, bsp::ExampleApi> && ExampleConcept<T>;
+    concept ExampleCheckInterface = std::derived_from<T, bsp::IExampleApi> && ExampleConcept<T>;
 
     #define BSP_EXAMPLE_CONCEPT_CHECKER(_class) \
         static_assert(                       \
             bsp::ExampleCheckInterface<_class>, \
-            "Class " #_class " does not implement ExampleApi interface correctly");
+            "Class " #_class " does not implement IExampleApi interface correctly");
 
     #else
     #define BSP_EXAMPLE_CONCEPT_CHECKER(_class)
@@ -140,13 +141,13 @@ Example:
 
     #pragma once
 
-    #include <bsp/ExampleApi.h>
+    #include <bsp/IExampleApi.h>
     #include <bsp/ExampleConcept.h>
     namespace bsp {
-    class Example : public ExampleApi {
+    class Example {
     public:
         size_t read(::etl::span<uint8_t> data);
-        size_t write(::etl::span<uint8_t const> const& data);
+        size_t write(::etl::span<uint8_t const> const data);
     };
     BSP_EXAMPLE_CONCEPT_CHECKER(Example);
     } // namespace bsp
@@ -161,12 +162,12 @@ Example:
 
 .. code-block:: cpp
 
-    // libs/bsw/bsp/include/bsp/example/ExampleApi.h
+    // libs/bsw/bsp/include/bsp/example/IExampleApi.h
 
     #pragma once
 
     namespace bsp {
-    class ExampleApi {
+    class IExampleApi {
     public:
         static size_t read(::etl::span<uint8_t> data);
         static size_t write(::etl::span<uint8_t const> const& data);
@@ -178,10 +179,10 @@ Example:
     // platforms/s32k1xx/bsp/bspExample/include/bsp/Example.h
     #pragma once
 
-    #include <bsp/ExampleApi.h>
+    #include <bsp/IExampleApi.h>
 
     namespace bsp {
-    class Example : public ExampleApi {
+    class Example : public IExampleApi {
     public:
         static size_t read(::etl::span<uint8_t> data);
         static size_t write(::etl::span<uint8_t const> const& data);
@@ -203,13 +204,13 @@ Example:
     #include <bsp/ExampleConfig.h> // application specific includes
 
     namespace bsp {
-    Example::ExampleConfig const config_example[] = {
+    Example::ExampleConfig const configExample[] = {
         // Configuration for Example instances
     };
 
     static Example instances[] = {
-        Example(config_example[0]),
-        Example(config_example[1]),
+        Example(configExample[0]),
+        Example(configExample[1]),
     };
 
     bsp::Example& Example::getInstance(Id id)

@@ -13,7 +13,8 @@ extern "C" void putByteToStdout(uint8_t const byte)
 extern "C" int32_t getByteFromStdin()
 {
     static bsp::Uart& uart = bsp::Uart::getInstance(bsp::Uart::Id::TERMINAL);
-    etl::span<uint8_t> data{};
+    uint8_t dataByte       = 0;
+    etl::span<uint8_t> data(&dataByte, 1U);
     uart.read(data);
     if (data.size() == 0)
     {

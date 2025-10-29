@@ -2,6 +2,7 @@
 // Copyright 2025 BMW AG
 
 #include <bsp/UartConfig.h>
+#include <etl/error_handler.h>
 
 namespace bsp
 {
@@ -11,7 +12,7 @@ uint32_t const baudRateConfig[] = {
     (LPUART_BAUD_OSR(9)) + LPUART_BAUD_SBR(8)    // = 2MBit 80MHz PLL
 };
 
-Uart::UartConfig const configUart[] = {
+Uart::UartConfig const CONFIG_UART[] = {
     {
         *LPUART1,
         bios::Io::UART1_TX,
@@ -21,15 +22,17 @@ Uart::UartConfig const configUart[] = {
 };
 
 static Uart instances[] = {
-    Uart(configUart[static_cast<uint8_t>(Uart::Id::TERMINAL)]),
+    Uart(CONFIG_UART[static_cast<size_t>(Uart::Id::TERMINAL)]),
 };
 
 bsp::Uart& Uart::getInstance(Id id)
 {
+    ETL_ASSERT(
+        id < Id::INVALID, ETL_ERROR_GENERIC("UartId::INVALID is not a valid Uart identifier"));
     static_assert(
-        static_cast<uint8_t>(Uart::Id::INVALID) >= static_cast<uint8_t>(etl::size(instances)),
+        NUMBER_OF_UARTS == static_cast<size_t>(etl::size(instances)),
         "Not enough Uart instances defined");
-    return instances[static_cast<uint8_t>(id)];
+    return instances[static_cast<size_t>(id)];
 }
 
 } // namespace bsp

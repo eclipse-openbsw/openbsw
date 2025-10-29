@@ -7,9 +7,6 @@
 namespace bsp
 {
 
-namespace bsp
-{
-
 class UartMock : public IUartApi
 {
 public:
@@ -17,5 +14,4 @@ public:
     MOCK_METHOD1(read, size_t(::etl::span<uint8_t> data));
 };
 
-} // namespace bsp
 } // namespace bsp
