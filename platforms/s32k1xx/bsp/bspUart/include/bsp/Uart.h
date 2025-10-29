@@ -17,20 +17,18 @@ class Uart
 {
 public:
     /**
-     * sends out an array of bytes over the UART interface.
+     * sends out a number of bytes over the UART interface.
      * the method will block until the data is sent.
-     * @param data - pointer to the data to be sent
-     *        length - the number of bytes to be sent
-     * @return the number of bytes written to the uart interface
+     * \param data - span of data to be sent
+     * \return the number of bytes written to the uart interface
      */
     size_t write(::etl::span<uint8_t const> const data);
 
     /**
-     * reads an array of bytes over the UART interface.
+     * reads a number of bytes over the UART interface.
      * the method will block until the data is read.
-     * @param data - pointer to the data to be read
-     *        length - the number of bytes to be read
-     * @return the number of bytes read from the uart interface
+     * \param data - the span where the data will be read
+     * \return the number of bytes read from the uart interface
      */
     size_t read(::etl::span<uint8_t> data);
 
@@ -42,20 +40,20 @@ public:
 
     /**
      * checks if the UART is initialized
-     * @return true if initialized, false otherwise
+     * \return true if initialized, false otherwise
      */
     bool isInitialized() const;
 
     /**
      * waits until the UART is ready to transmit data
-     * @return true if ready within timeout, false otherwise
+     * \return true if ready within timeout, false otherwise
      */
     bool waitForTxReady();
 
     /**
      * factory method which instantiates and configures an UART object.
      * If the object exists it will returns only a reference to it.
-     * @param id: TERMINAL, ...
+     * \param id: TERMINAL, ...
      */
     static Uart& getInstance(Id id);
 
@@ -66,8 +64,8 @@ public:
 private:
     /**
      * writes one byte of data to the UART interface.
-     * @param data - the byte to be written
-     * @return true if the byte was written successfully, false otherwise
+     * \param data - the byte to be written
+     * \return true if the byte was written successfully, false otherwise
      */
     bool writeByte(uint8_t data);
 

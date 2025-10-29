@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include <cstddef>
 #include <cstdint>
 
 namespace bsp
@@ -17,6 +18,6 @@ public:
     };
 };
 
-static constexpr uint8_t NUMBER_OF_UARTS = static_cast<uint8_t>(UartId::Id::INVALID);
+static constexpr size_t NUMBER_OF_UARTS = static_cast<size_t>(UartId::Id::INVALID);
 
 } // namespace bsp

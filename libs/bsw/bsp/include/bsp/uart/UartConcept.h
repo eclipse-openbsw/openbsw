@@ -3,14 +3,21 @@
 #include <bsp/uart/IUartApi.h>
 #include <etl/type_traits.h>
 
-#include <concepts>
 #include <cstddef>
 #include <cstdint>
+#include <type_traits>
 
 namespace bsp
 {
 
 #if __cpp_concepts
+
+#include <concepts>
+
+/**
+ * This concept checks if a class implements the IUartApi interface correctly.
+ * It verifies the presence of write and read methods with the expected signatures.
+ */
 
 // clang-format off
 template<typename T>
@@ -38,8 +45,3 @@ concept UartCheckInterface = std::derived_from<T, bsp::IUartApi> && UartConcept<
 #endif
 
 } // namespace bsp
-
-/**
- * This concept checks if a class implements the IUartApi interface correctly.
- * It verifies the presence of write and read methods with the expected signatures.
- */

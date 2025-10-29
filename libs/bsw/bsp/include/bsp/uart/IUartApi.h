@@ -11,24 +11,22 @@ namespace bsp
 {
 
 /**
- * Base class used to define the generic interface for the uart communication
+ * Base class defining the generic interface for UART communication.
  */
 class IUartApi
 {
 public:
     /**
-     * sends out an array of bytes
-     * @param data - pointer to the data to be send
-     *        length - the number of bytes to be send
-     * @return the number of bytes written
+     * sends out a number of bytes
+     * \param data - span of data to be sent
+     * \return the number of bytes written
      */
     size_t write(::etl::span<uint8_t const> const data);
 
     /**
-     * reads an array of bytes
-     * @param data - pointer to the array where the data will be read
-     *        length - the number of bytes to be read
-     * @return the of bytes read from the uart interface
+     * reads a number of bytes
+     * \param data - the span where the data will be read
+     * \return the number of bytes read from the UART interface
      */
     size_t read(::etl::span<uint8_t> data);
 };

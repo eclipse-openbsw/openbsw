@@ -38,7 +38,6 @@ StaticBsp::StaticBsp()
 , _requestUpdateGateRegisters(false)
 , _mode(_INIT_)
 {
-    Uart::getInstance(Uart::Id::TERMINAL).init();
     initSystemTimer();
 }
 

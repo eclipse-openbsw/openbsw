@@ -160,6 +160,7 @@ if (BUILD_UNIT_TESTS)
         add_subdirectory(platforms/s32k1xx/bsp/bspEepromDriver/test)
         add_subdirectory(platforms/s32k1xx/bsp/bspIo/test)
         add_subdirectory(platforms/s32k1xx/bsp/canflex2Transceiver/test)
+        add_subdirectory(platforms/s32k1xx/bsp/bspUart/test)
 
     else ()
         message(
