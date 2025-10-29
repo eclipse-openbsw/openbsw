@@ -77,6 +77,7 @@ target_link_libraries(
             safeLifecycle
             safeUtils
             safeWatchdog
+            bspUart
             socBsp)
 
 if (PLATFORM_SUPPORT_UDS)
