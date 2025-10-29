@@ -11,6 +11,7 @@ Some simple lessons to get new users up and running.
     setup/index
     layout/index
     console/index
+    commitmessage/index
     unit_tests/index
     lifecycle/index
     logging/index
