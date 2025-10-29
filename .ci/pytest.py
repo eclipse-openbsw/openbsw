@@ -17,8 +17,7 @@ def build_reference_app():
 
 def run_pytest():
     os.chdir("./test/pyTest")
-    subprocess.run(["pytest", "--target=posix"], check=True)
-
+    subprocess.run(['pytest', '--target=posix', '--timeout=120'], check=True)
 
 if __name__ == "__main__":
     try:
