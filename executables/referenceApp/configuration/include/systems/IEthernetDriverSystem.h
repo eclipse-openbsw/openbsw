@@ -8,10 +8,10 @@
 namespace ethernet
 {
 
-class IEthernetDriverSystem
+class IEthernetSystem
 {
 protected:
-    ~IEthernetDriverSystem() = default;
+    ~IEthernetSystem() = default;
 
 public:
     virtual void setGroupcastAddressRecognition(::etl::array<uint8_t, 6> const mac) const = 0;
