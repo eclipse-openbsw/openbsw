@@ -61,6 +61,11 @@ Known Issues with the S32K148 board
         However the USB drivers are only available for Windows and Linux on x86 based hosts, not for ARM,
         and so debugging on the board from ARM hosts (eg. a Raspberry Pi or an ARM-based Mac) requires an external debugger,
         such as a Lauterbach, working via JTAG.
+    * - 5
+      - In order to enable the Ethernet interface for boards that use the part number ``LSF24D`` at
+        ``U16``, ``R553`` needs to be depopulated (Check `SCH-29642 Rev.B <https://www.nxp.com/design/design-center/development-boards-and-designs/automotive-development-platforms/s32k-mcu-platforms/s32k148-q176-evaluation-board-for-automotive-general-purpose:S32K148EVB#design>`_).
+        This is because the LSF24D part has an active low enable line and removing ``R553`` makes
+        sure the ``EN`` enable line for the level shifters gets low.
 
 Jumper setup on the S32K148 board
 +++++++++++++++++++++++++++++++++
