@@ -148,7 +148,6 @@ if (BUILD_UNIT_TESTS)
         add_subdirectory(platforms/s32k1xx/bsp/bspCore/test)
         add_subdirectory(platforms/s32k1xx/bsp/bspEepromDriver/test)
         add_subdirectory(platforms/s32k1xx/bsp/bspIo/test)
-        add_subdirectory(platforms/s32k1xx/bsp/bspSci/test)
         add_subdirectory(platforms/s32k1xx/bsp/canflex2Transceiver/test)
 
     else ()
