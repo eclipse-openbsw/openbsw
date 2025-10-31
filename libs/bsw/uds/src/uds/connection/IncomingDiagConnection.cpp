@@ -604,7 +604,6 @@ void IncomingDiagConnection::open(bool const activatePending)
     _identifiers.clear();
 
     _responsePendingTimeout._asyncTimeout.cancel();
-    changeRespPendingTimer(0);
     if (_pendingActivated)
     {
         ::async::schedule(
