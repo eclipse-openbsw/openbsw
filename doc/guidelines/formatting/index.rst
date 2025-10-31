@@ -1,7 +1,7 @@
 .. _code_formatting:
 
-Code Formatting
-===============
+Formatting
+==========
 
 Why should we format our code?
 
