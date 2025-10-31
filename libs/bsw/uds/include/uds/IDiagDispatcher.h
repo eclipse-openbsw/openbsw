@@ -31,13 +31,6 @@ public:
     : fDiagJobRoot(jobRoot), fSessionManager(sessionManager), fEnabled(true)
     {}
 
-    AbstractDiagJob::ErrorCode addAbstractDiagJob(AbstractDiagJob& job)
-    {
-        return fDiagJobRoot.addAbstractDiagJob(job);
-    }
-
-    void removeAbstractDiagJob(AbstractDiagJob& job) { fDiagJobRoot.removeAbstractDiagJob(job); }
-
     virtual uint16_t getSourceId() const = 0;
 
 #ifdef IS_VARIANT_HANDLING_NEEDED

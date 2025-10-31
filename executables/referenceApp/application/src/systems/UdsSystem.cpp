@@ -106,45 +106,45 @@ ReadDataByIdentifier& UdsSystem::getReadDataByIdentifier() { return _readDataByI
 void UdsSystem::addDiagJobs()
 {
     // 22 - ReadDataByIdentifier
-    (void)_udsDispatcher.addAbstractDiagJob(_readDataByIdentifier);
-    (void)_udsDispatcher.addAbstractDiagJob(_read22Cf01);
-    (void)_udsDispatcher.addAbstractDiagJob(_read22Cf02);
+    (void)_jobRoot.addAbstractDiagJob(_readDataByIdentifier);
+    (void)_jobRoot.addAbstractDiagJob(_read22Cf01);
+    (void)_jobRoot.addAbstractDiagJob(_read22Cf02);
 
     // 2E - WriteDataByIdentifier
-    (void)_udsDispatcher.addAbstractDiagJob(_writeDataByIdentifier);
+    (void)_jobRoot.addAbstractDiagJob(_writeDataByIdentifier);
 
     // 31 - Routine Control
-    (void)_udsDispatcher.addAbstractDiagJob(_routineControl);
-    (void)_udsDispatcher.addAbstractDiagJob(_startRoutine);
-    (void)_udsDispatcher.addAbstractDiagJob(_stopRoutine);
-    (void)_udsDispatcher.addAbstractDiagJob(_requestRoutineResults);
+    (void)_jobRoot.addAbstractDiagJob(_routineControl);
+    (void)_jobRoot.addAbstractDiagJob(_startRoutine);
+    (void)_jobRoot.addAbstractDiagJob(_stopRoutine);
+    (void)_jobRoot.addAbstractDiagJob(_requestRoutineResults);
 
     // Services
-    (void)_udsDispatcher.addAbstractDiagJob(_testerPresent);
-    (void)_udsDispatcher.addAbstractDiagJob(_diagnosticSessionControl);
-    (void)_udsDispatcher.addAbstractDiagJob(_communicationControl);
+    (void)_jobRoot.addAbstractDiagJob(_testerPresent);
+    (void)_jobRoot.addAbstractDiagJob(_diagnosticSessionControl);
+    (void)_jobRoot.addAbstractDiagJob(_communicationControl);
 }
 
 void UdsSystem::removeDiagJobs()
 {
     // 22 - ReadDataByIdentifier
-    (void)_udsDispatcher.removeAbstractDiagJob(_readDataByIdentifier);
-    (void)_udsDispatcher.removeAbstractDiagJob(_read22Cf01);
-    (void)_udsDispatcher.removeAbstractDiagJob(_read22Cf02);
+    (void)_jobRoot.removeAbstractDiagJob(_readDataByIdentifier);
+    (void)_jobRoot.removeAbstractDiagJob(_read22Cf01);
+    (void)_jobRoot.removeAbstractDiagJob(_read22Cf02);
 
     // 2E - WriteDataByIdentifier
-    (void)_udsDispatcher.removeAbstractDiagJob(_writeDataByIdentifier);
+    (void)_jobRoot.removeAbstractDiagJob(_writeDataByIdentifier);
 
     // 31 - Routine Control
-    (void)_udsDispatcher.removeAbstractDiagJob(_routineControl);
-    (void)_udsDispatcher.removeAbstractDiagJob(_startRoutine);
-    (void)_udsDispatcher.removeAbstractDiagJob(_stopRoutine);
-    (void)_udsDispatcher.removeAbstractDiagJob(_requestRoutineResults);
+    (void)_jobRoot.removeAbstractDiagJob(_routineControl);
+    (void)_jobRoot.removeAbstractDiagJob(_startRoutine);
+    (void)_jobRoot.removeAbstractDiagJob(_stopRoutine);
+    (void)_jobRoot.removeAbstractDiagJob(_requestRoutineResults);
 
     // Services
-    (void)_udsDispatcher.removeAbstractDiagJob(_testerPresent);
-    (void)_udsDispatcher.removeAbstractDiagJob(_diagnosticSessionControl);
-    (void)_udsDispatcher.removeAbstractDiagJob(_communicationControl);
+    (void)_jobRoot.removeAbstractDiagJob(_testerPresent);
+    (void)_jobRoot.removeAbstractDiagJob(_diagnosticSessionControl);
+    (void)_jobRoot.removeAbstractDiagJob(_communicationControl);
 }
 
 void UdsSystem::execute() {}

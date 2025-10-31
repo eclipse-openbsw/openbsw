@@ -161,22 +161,22 @@ protected:
         uds::AbstractDiagJob::setDefaultDiagSessionManager(_sessionManager);
         _udsDispatcher.fProvidingListenerHelper.fpMessageListener = &_messageListener;
         _udsDispatcher.fProvidingListenerHelper.fpMessageProvider = &_messageProvider;
-        _udsDispatcher.addAbstractDiagJob(_rdbi);
-        _udsDispatcher.addAbstractDiagJob(_myRdbi);
-        _udsDispatcher.addAbstractDiagJob(_hardReset);
-        _udsDispatcher.addAbstractDiagJob(_softReset);
-        _udsDispatcher.addAbstractDiagJob(_powerDown);
-        _udsDispatcher.addAbstractDiagJob(_enableRapidPowerShutdown);
+        _jobRoot.addAbstractDiagJob(_rdbi);
+        _jobRoot.addAbstractDiagJob(_myRdbi);
+        _jobRoot.addAbstractDiagJob(_hardReset);
+        _jobRoot.addAbstractDiagJob(_softReset);
+        _jobRoot.addAbstractDiagJob(_powerDown);
+        _jobRoot.addAbstractDiagJob(_enableRapidPowerShutdown);
     }
 
     ~UdsIntegration() override
     {
-        _udsDispatcher.removeAbstractDiagJob(_enableRapidPowerShutdown);
-        _udsDispatcher.removeAbstractDiagJob(_powerDown);
-        _udsDispatcher.removeAbstractDiagJob(_softReset);
-        _udsDispatcher.removeAbstractDiagJob(_hardReset);
-        _udsDispatcher.removeAbstractDiagJob(_myRdbi);
-        _udsDispatcher.removeAbstractDiagJob(_rdbi);
+        _jobRoot.removeAbstractDiagJob(_enableRapidPowerShutdown);
+        _jobRoot.removeAbstractDiagJob(_powerDown);
+        _jobRoot.removeAbstractDiagJob(_softReset);
+        _jobRoot.removeAbstractDiagJob(_hardReset);
+        _jobRoot.removeAbstractDiagJob(_myRdbi);
+        _jobRoot.removeAbstractDiagJob(_rdbi);
     }
 
     async::TestContext fContext;

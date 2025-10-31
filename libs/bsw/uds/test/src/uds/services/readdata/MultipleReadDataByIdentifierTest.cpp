@@ -155,12 +155,12 @@ public:
         fIncomingDiagConnection.fServiceId = ::ServiceId::READ_DATA_BY_IDENTIFIER;
 
         fMyMultipleReadDataByIdentifier.addAbstractDiagJob(fDiagJob);
-        fUdsDispatcher.addAbstractDiagJob(fDiagJob);
+        fDiagRoot.addAbstractDiagJob(fDiagJob);
     }
 
     virtual void TearDown()
     {
-        fUdsDispatcher.removeAbstractDiagJob(fDiagJob);
+        fDiagRoot.removeAbstractDiagJob(fDiagJob);
         fMyMultipleReadDataByIdentifier.removeAbstractDiagJob(fDiagJob);
     }
 
