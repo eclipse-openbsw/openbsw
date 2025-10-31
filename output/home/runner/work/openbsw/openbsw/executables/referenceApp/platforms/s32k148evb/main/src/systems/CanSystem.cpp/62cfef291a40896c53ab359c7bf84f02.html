@@ -1,0 +1,451 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../../../../../../../../../../../../static/css/style.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <title>Symbol - puncover</title>
+    
+</head>
+<body>
+    <div class="container" id="content">
+        <div class="page-header">
+            <nav class="navbar navbar-default" role="navigation">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="../../../../../../../../../../../../../index.html">
+                    Puncover
+                  </a>
+                </div>
+              </div>
+            </nav>
+          
+        </div>
+        <div id="inner_content">
+        
+    
+    <ol class="breadcrumb folders">
+        
+        <li><a href="../../../../../../../../../../../../../home.html">home</a></li>
+        
+        <li><a href="../../../../../../../../../../../../runner.html">runner</a></li>
+        
+        <li><a href="../../../../../../../../../../../work.html">work</a></li>
+        
+        <li><a href="../../../../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../../../executables.html">executables</a></li>
+        
+        <li><a href="../../../../../../../referenceApp.html">referenceApp</a></li>
+        
+        <li><a href="../../../../../../platforms.html">platforms</a></li>
+        
+        <li><a href="../../../../../s32k148evb.html">s32k148evb</a></li>
+        
+        <li><a href="../../../../main.html">main</a></li>
+        
+        <li><a href="../../../src.html">src</a></li>
+        
+        <li ><a href="../../systems.html">systems</a>
+            </li>
+
+        
+        <li class="active"><a href="../CanSystem.cpp.html">CanSystem.cpp</a>:78
+            </li>
+        
+    </ol>
+
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <th>Function</th>
+                <td colspan="5">
+                    <span class="icon-function">call_can_isr_RX</span>
+                </td>
+            </tr>
+
+            <tr>
+                <th rowspan="2"></th>
+                <th>Address</th>
+                <th>Remarks</th>
+                <th>Stack</th>
+                <th>Code</th>
+                <th>Static</th>
+            </tr>
+            <tr>
+                <td>0x000122d8</td>
+                <td>
+    <span class="label label-success">x-module</span>
+    
+</td>
+                <td>16 (static)</td>
+                <td>116</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th>Callers (1)</th>
+                <td colspan="5">
+                
+                    <a href="../../os/isr/isr_can.cpp/aeef8cd63366bb9e2ee4d217f4e1e533.html">CAN0_ORed_0_15_MB_IRQHandler (4)</a>
+                    
+                
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Callees (4,
+                            <span title="sum of used bytes by all callees">
+                            Σ=768
+                            </span>
+                        )
+                    
+                </th>
+                <td colspan="5">
+                
+                    <a href="../../../../../../../../libs/bsw/asyncFreeRtos/src/async/Hook.cpp/9ae8cac48ad6c58751623005c6bd92ef.html">asyncEnterIsrGroup (168)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../../../../../../../../platforms/s32k1xx/bsp/bspFlexCan/src/can/FlexCANDevice.cpp/ff02cfb39aa4a100acd272e9a929e36a.html">bios::FlexCANDevice::receiveISR(unsigned char const*) (260)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../../../../../../../../libs/bsw/asyncFreeRtos/src/async/Hook.cpp/b9408dd518758e610c00201ee08f321c.html">asyncLeaveIsrGroup (236)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../../../../../../../../libs/bsw/asyncFreeRtos/src/async/Async.cpp/4dfe65e158466f2f9a73b985dc4b0ecc.html">async::execute(unsigned char, async::IRunnable&amp;) (104)</a>
+                    
+                
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    
+    <pre><a href="./2e1c47610716b2f99c81f4d19b0a6836.html">systems::CanSystem::CanSystem(unsigned char, StaticBsp&amp;) (144)</a></pre>
+    
+
+    <pre>
+
+    call_can_isr_RX():
+
+       122d8:	b510      	push	{r4, lr}
+
+       122da:	2001      	movs	r0, #1
+
+       122dc:	b082      	sub	sp, #8
+
+       122de:	f001 fff5 	bl	142cc <<a href="../../../../../../../../libs/bsw/asyncFreeRtos/src/async/Hook.cpp/9ae8cac48ad6c58751623005c6bd92ef.html">asyncEnterIsrGroup</a>>
+
+       122e2:	f3ef 8410 	mrs	r4, PRIMASK
+
+    getMachineStateRegisterValueAndSuspendAllInterrupts():
+
+       122e6:	b672      	cpsid	i
+
+    _ZN4bios19CanFlex2Transceiver16receiveInterruptEh():
+
+       122e8:	4b14      	ldr	r3, [pc, #80]	; (1233c <<a href="./62cfef291a40896c53ab359c7bf84f02.html">call_can_isr_RX</a>+0x64>)
+
+       122ea:	6818      	ldr	r0, [r3, #0]
+
+       122ec:	f100 010c 	add.w	r1, r0, #12
+
+       122f0:	f500 709c 	add.w	r0, r0, #312	; 0x138
+
+       122f4:	f00b fef8 	bl	1e0e8 <<a href="../../../../../../../../platforms/s32k1xx/bsp/bspFlexCan/src/can/FlexCANDevice.cpp/ff02cfb39aa4a100acd272e9a929e36a.html">bios::FlexCANDevice::receiveISR(unsigned char const*)</a>>
+
+    call_can_isr_RX():
+
+       122f8:	f384 8810 	msr	PRIMASK, r4
+
+       122fc:	b928      	cbnz	r0, 1230a <<a href="./62cfef291a40896c53ab359c7bf84f02.html">call_can_isr_RX</a>+0x32>
+
+       122fe:	2001      	movs	r0, #1
+
+       12300:	b002      	add	sp, #8
+
+       12302:	e8bd 4010 	ldmia.w	sp!, {r4, lr}
+
+       12306:	f002 b835 	b.w	14374 <<a href="../../../../../../../../libs/bsw/asyncFreeRtos/src/async/Hook.cpp/b9408dd518758e610c00201ee08f321c.html">asyncLeaveIsrGroup</a>>
+
+    _ZN3etl14singleton_baseIN7systems9CanSystemEE8instanceEv():
+
+       1230a:	4c0d      	ldr	r4, [pc, #52]	; (12340 <<a href="./62cfef291a40896c53ab359c7bf84f02.html">call_can_isr_RX</a>+0x68>)
+
+       1230c:	6821      	ldr	r1, [r4, #0]
+
+       1230e:	b151      	cbz	r1, 12326 <<a href="./62cfef291a40896c53ab359c7bf84f02.html">call_can_isr_RX</a>+0x4e>
+
+    _ZN7systems9CanSystem14dispatchRxTaskEv():
+
+       12310:	7b48      	ldrb	r0, [r1, #13]
+
+       12312:	f501 6194 	add.w	r1, r1, #1184	; 0x4a0
+
+       12316:	f001 fd2b 	bl	13d70 <<a href="../../../../../../../../libs/bsw/asyncFreeRtos/src/async/Async.cpp/4dfe65e158466f2f9a73b985dc4b0ecc.html">async::execute(unsigned char, async::IRunnable&)</a>>
+
+    call_can_isr_RX():
+
+       1231a:	2001      	movs	r0, #1
+
+       1231c:	b002      	add	sp, #8
+
+       1231e:	e8bd 4010 	ldmia.w	sp!, {r4, lr}
+
+       12322:	f002 b827 	b.w	14374 <<a href="../../../../../../../../libs/bsw/asyncFreeRtos/src/async/Hook.cpp/b9408dd518758e610c00201ee08f321c.html">asyncLeaveIsrGroup</a>>
+
+    _ZN3etl9exceptionC4EPKcS2_i():
+
+       12326:	4907      	ldr	r1, [pc, #28]	; (12344 <<a href="./62cfef291a40896c53ab359c7bf84f02.html">call_can_isr_RX</a>+0x6c>)
+
+    _ZN3etl14singleton_baseIN7systems9CanSystemEE8instanceEv():
+
+       12328:	4b07      	ldr	r3, [pc, #28]	; (12348 <<a href="./62cfef291a40896c53ab359c7bf84f02.html">call_can_isr_RX</a>+0x70>)
+
+    _ZN3etl9exceptionC4EPKcS2_i():
+
+       1232a:	227e      	movs	r2, #126	; 0x7e
+
+       1232c:	e9cd 1200 	strd	r1, r2, [sp]
+
+    _ZN3etl14singleton_baseIN7systems9CanSystemEE8instanceEv():
+
+       12330:	681b      	ldr	r3, [r3, #0]
+
+       12332:	4668      	mov	r0, sp
+
+       12334:	4798      	blx	r3
+
+       12336:	6821      	ldr	r1, [r4, #0]
+
+       12338:	e7ea      	b.n	12310 <<a href="./62cfef291a40896c53ab359c7bf84f02.html">call_can_isr_RX</a>+0x38>
+
+       1233a:	bf00      	nop
+
+       1233c:	1fff68c8 	.word	0x1fff68c8
+
+       12340:	1fff6380 	.word	0x1fff6380
+
+       12344:	000258ec 	.word	0x000258ec
+
+       12348:	1ffe0120 	.word	0x1ffe0120
+
+    </pre>
+
+    
+    <pre><a href="./0fe596cbd2385865a4429183a1cee479.html">call_can_isr_TX (36)</a></pre>
+    
+
+    
+        <h1>Stack Worst-Case Scenarios</h1>
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 116</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 436</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    116
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                8 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    436
+                    
+                    
+                </td>
+                <td class="col_size">28</td>
+                <td><a href="../../../../../../../../libs/bsw/cpp2can/src/can/canframes/CANFrame.cpp/be383a58ad01485f1b6888ff7abb6f7f.html" class="icon-function">can::CANFrame::CANFrame(unsigned long)</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                    
+                    108
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                20 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    408
+                    
+                    
+                </td>
+                <td class="col_size">148</td>
+                <td><a href="../../../../../../../../platforms/s32k1xx/bsp/bspFlexCan/src/can/FlexCANDevice.cpp/d1cc25a9acc15132a9981454b396529f.html" class="icon-function">bios::FlexCANDevice::enqueueRxFrame(unsigned long, unsigned char, unsigned long volatile*, bool, unsigned char const*)</a></td>
+            </tr>
+        
+            <tr>
+                <th>3</th>
+                <td class="col_size">
+                    
+                    88
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                64 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">260</td>
+                <td><a href="../../../../../../../../platforms/s32k1xx/bsp/bspFlexCan/src/can/FlexCANDevice.cpp/ff02cfb39aa4a100acd272e9a929e36a.html" class="icon-function">bios::FlexCANDevice::receiveISR(unsigned char const*)</a></td>
+            </tr>
+        
+        </tbody>
+        
+        <tfoot>
+            <tr>
+                <th></th>
+                <th class="col_size">24
+                </th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </tfoot>
+        
+    </table>
+        
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 24</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 140</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    24
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                16 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    140
+                    
+                    
+                </td>
+                <td class="col_size">116</td>
+                <td><a href="./62cfef291a40896c53ab359c7bf84f02.html" class="icon-function">call_can_isr_RX</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    24
+                    
+                    
+                </td>
+                <td class="col_size">4</td>
+                <td><a href="../../os/isr/isr_can.cpp/aeef8cd63366bb9e2ee4d217f4e1e533.html" class="icon-function">CAN0_ORed_0_15_MB_IRQHandler</a></td>
+            </tr>
+        
+            <tr>
+                <th>3</th>
+                <td class="col_size">
+                </td>
+                <td class="col_size">
+            
+                8 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">20</td>
+                <td><a href="../../../../safety/safeLifecycle/src/safeLifecycle/IsrWrapper.cpp/ffe7b6cb1e88b6284469e57ba4afd9ca.html" class="icon-function">Safe_CAN0_ORed_0_15_MB_IRQHandler</a></td>
+            </tr>
+        
+        </tbody>
+        
+    </table>
+        
+    
+
+
+        </div>
+    <div id="page-footer">
+        <hr>
+        
+            brought to you with 💖
+            by <a href="https://twitter.com/hbehrens">Heiko Behrens</a>
+            <span class="secondary">– MIT license, copyright © 2014-2025</span>
+        
+    </div>
+    </div>
+</body>
+</html>
