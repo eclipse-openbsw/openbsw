@@ -2,40 +2,22 @@ include_guard(GLOBAL)
 
 include("${CMAKE_CURRENT_LIST_DIR}/ArmNoneEabi-header.cmake")
 
-set(CLANG_TARGET_TRIPLE "${ARM_TARGET_TRIPLE}")
+# Note: When using a toolchain file, it normally specifies the compiler itself
+# and it is unexpected that somebody tries to overwrite it using e.g. the CC
+# environment variable. However, thats exactly what we are doing at the moment,
+# therefore, we only set a compiler when the CC environment variable is not set.
+# Further note, that we only set the C compiler, since CMake deduces the others
+# automatically from it (respecting the order in the project call).
 
-if (NOT DEFINED CMAKE_C_COMPILER)
-    if (NOT DEFINED ENV{CC})
-        message(FATAL_ERROR "C compiler unspecified")
-    endif ()
-
-    set(CMAKE_C_COMPILER $ENV{CC})
+if (NOT DEFINED CMAKE_C_COMPILER AND NOT DEFINED ENV{CC})
+    set(CMAKE_C_COMPILER "/usr/bin/llvm-arm/bin/clang")
 endif ()
 
-cmake_path(GET CMAKE_C_COMPILER PARENT_PATH TOOLCHAIN_BIN_DIR)
-cmake_path(GET TOOLCHAIN_BIN_DIR PARENT_PATH TOOLCHAIN_PREFIX)
-
-set(CMAKE_CXX_COMPILER "${TOOLCHAIN_BIN_DIR}/clang++")
-set(CMAKE_ASM_COMPILER "${TOOLCHAIN_BIN_DIR}/clang")
-set(CMAKE_NM "${TOOLCHAIN_BIN_DIR}/llvm-nm")
-set(CMAKE_OBJCOPY "${TOOLCHAIN_BIN_DIR}/llvm-objcopy")
-set(CMAKE_OBJDUMP "${TOOLCHAIN_BIN_DIR}/llvm-objdump")
-set(CMAKE_RANLIB "${TOOLCHAIN_BIN_DIR}/llvm-ranlib")
-set(CMAKE_SIZE "${TOOLCHAIN_BIN_DIR}/llvm-size")
-set(CMAKE_STRIP "${TOOLCHAIN_BIN_DIR}/llvm-strip")
-set(CMAKE_AR "${TOOLCHAIN_BIN_DIR}/llvm-ar")
-set(CMAKE_C_COMPILER_TARGET ${CLANG_TARGET_TRIPLE})
-set(CMAKE_CXX_COMPILER_TARGET ${CLANG_TARGET_TRIPLE})
-set(CMAKE_ASM_COMPILER_TARGET ${CLANG_TARGET_TRIPLE})
-
-set(CMAKE_SYSROOT
-    "${TOOLCHAIN_PREFIX}/lib/clang-runtimes/${CLANG_TARGET_TRIPLE}/armv7m_soft_fpv4_sp_d16"
-)
+set(CMAKE_C_COMPILER_TARGET ${ARM_TARGET_TRIPLE})
+set(CMAKE_CXX_COMPILER_TARGET ${ARM_TARGET_TRIPLE})
+set(CMAKE_ASM_COMPILER_TARGET ${ARM_TARGET_TRIPLE})
 
 set(_EXE_LINKER_FLAGS
-    "-Wl,--start-group \
-        -ldummyhost \
-        -lclang_rt.builtins \
-    -Wl,--end-group")
+    "-Wl,--start-group -ldummyhost -lclang_rt.builtins -Wl,--end-group")
 
 include("${CMAKE_CURRENT_LIST_DIR}/ArmNoneEabi.cmake")
