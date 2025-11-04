@@ -30,15 +30,17 @@ UdsSystem::UdsSystem(
 , _jobRoot()
 , _diagnosticSessionControl(_udsLifecycleConnector, context, _dummySessionPersistence)
 , _communicationControl()
-, _udsConfiguration(
+, _udsConfiguration{
       udsAddress,
       transport::TransportConfiguration::FUNCTIONAL_ALL_ISO14229,
-      ::busid::SELFDIAG,
       transport::TransportConfiguration::DIAG_PAYLOAD_SIZE,
+      ::busid::SELFDIAG,
+      true,  /* activate outgoing pending */
       false, /* accept all requests */
       true,  /* copy functional requests */
-      context)
-, _udsDispatcher(_udsConfiguration, _diagnosticSessionControl, _jobRoot)
+      context}
+, _udsDispatcher(
+      _connectionPool, _sendJobQueue, _udsConfiguration, _diagnosticSessionControl, _jobRoot)
 , _asyncDiagHelper(context)
 , _readDataByIdentifier()
 , _writeDataByIdentifier()

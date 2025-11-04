@@ -123,22 +123,8 @@ protected:
 
     UdsIntegration()
     : fContext(2U)
-    , _udsConfiguration(
-          ECU_UDS_ADDRESS,
-          0xDF,
-          0u,
-          transport::TransportConfiguration::DIAG_PAYLOAD_SIZE,
-          false,
-          true,
-          fContext)
-    , _udsConfiguration2(
-          ECU_UDS_ADDRESS,
-          transport::TransportMessage::INVALID_ADDRESS,
-          0u,
-          transport::TransportConfiguration::DIAG_PAYLOAD_SIZE,
-          true,
-          true,
-          fContext)
+    , _udsConfiguration{ECU_UDS_ADDRESS, 0xDF, transport::TransportConfiguration::DIAG_PAYLOAD_SIZE, 0u, true, false, true, fContext}
+    , _udsConfiguration2{ECU_UDS_ADDRESS, transport::TransportMessage::INVALID_ADDRESS, transport::TransportConfiguration::DIAG_PAYLOAD_SIZE, 0u, true, true, true, fContext}
     , _sessionManager()
     , _jobRoot()
     , _messageListener()
@@ -146,8 +132,8 @@ protected:
     , _messageProcessedListener()
     , _incomingDiagConnection(fContext)
     , _lifecycle()
-    , _udsDispatcher(_udsConfiguration, _sessionManager, _jobRoot)
-    , _udsDispatcher2(_udsConfiguration2, _sessionManager, _jobRoot)
+    , _udsDispatcher(_connectionPool, _sendJobQueue, _udsConfiguration, _sessionManager, _jobRoot)
+    , _udsDispatcher2(_connectionPool, _sendJobQueue, _udsConfiguration2, _sessionManager, _jobRoot)
     , _rdbi()
     , _myRdbi()
     , _hardReset(_lifecycle, _udsDispatcher)
@@ -180,8 +166,10 @@ protected:
     }
 
     async::TestContext fContext;
-    uds::DiagnosisConfiguration<NUM_INCOMING_CONNECTIONS, 1> _udsConfiguration;
-    uds::DiagnosisConfiguration<NUM_INCOMING_CONNECTIONS, 1> _udsConfiguration2;
+    uds::DiagnosisConfiguration _udsConfiguration;
+    uds::DiagnosisConfiguration _udsConfiguration2;
+    ::etl::pool<IncomingDiagConnection, NUM_INCOMING_CONNECTIONS> _connectionPool;
+    ::etl::queue<transport::TransportJob, 1> _sendJobQueue;
     StrictMock<uds::DiagSessionManagerMock> _sessionManager;
     DiagJobRoot _jobRoot;
     StrictMock<transport::TransportMessageListenerMock> _messageListener;
@@ -329,14 +317,13 @@ TEST_F(UdsIntegration, no_response_for_7f)
         .WillRepeatedly(
             Return(transport::ITransportMessageProvider::ErrorCode::TPMSG_NOT_RESPONSIBLE));
 
-    transport::TransportJob& response1 = _udsConfiguration.SendJobQueue.emplace();
+    transport::TransportJob& response1 = _sendJobQueue.emplace();
 
     response1.setTransportMessage(transportMessage);
     response1.setProcessedListener(&_udsDispatcher);
 
     _udsConfiguration.AcceptAllRequests = true;
-    acquireIncomingDiagConnection(
-        _udsConfiguration.IncomingDiagConnectionPool, ::etl::move(_udsConfiguration.Context));
+    acquireIncomingDiagConnection(_connectionPool, ::etl::move(fContext));
 
     EXPECT_CALL(_messageListener, messageReceived(Eq(0u), _, IsNull()))
         .WillOnce(Return(transport::ITransportMessageListener::ReceiveResult::RECEIVED_ERROR));
@@ -501,7 +488,7 @@ TEST_F(
 
     TransportMessageWithBuffer pRequest(0xF1U, 0xDFU, buffer, sizeof(expectedResponse));
 
-    _udsConfiguration.SendJobQueue.emplace();
+    _sendJobQueue.emplace();
 
     EXPECT_EQ(
         transport::AbstractTransportLayer::ErrorCode::TP_QUEUE_FULL,
@@ -614,7 +601,7 @@ TEST_F(UdsIntegration, dispatchIncomingRequest_returns_earlier_if_request_comes_
             SetArgReferee<5>(pMessage),
             Return(transport::ITransportMessageProvider::ErrorCode::TPMSG_OK)));
 
-    transport::TransportJob& response1 = _udsConfiguration.SendJobQueue.emplace();
+    transport::TransportJob& response1 = _sendJobQueue.emplace();
     response1.setTransportMessage(transportMessage);
     response1.setProcessedListener(&_udsDispatcher);
 
@@ -637,14 +624,13 @@ TEST_F(
     EXPECT_CALL(_messageProvider, getTransportMessage(_, _, _, _, _, _))
         .WillRepeatedly(Return(transport::ITransportMessageProvider::ErrorCode::TPMSG_OK));
 
-    transport::TransportJob& response1 = _udsConfiguration.SendJobQueue.emplace();
+    transport::TransportJob& response1 = _sendJobQueue.emplace();
 
     response1.setTransportMessage(transportMessage);
     response1.setProcessedListener(&_udsDispatcher);
 
     _udsConfiguration.AcceptAllRequests = true;
-    acquireIncomingDiagConnection(
-        _udsConfiguration.IncomingDiagConnectionPool, ::etl::move(_udsConfiguration.Context));
+    acquireIncomingDiagConnection(_connectionPool, ::etl::move(fContext));
 
     EXPECT_CALL(_messageListener, messageReceived(Eq(0u), _, IsNull()))
         .WillOnce(Return(transport::ITransportMessageListener::ReceiveResult::RECEIVED_NO_ERROR));
@@ -669,7 +655,7 @@ TEST_F(
         .WillRepeatedly(
             Return(transport::ITransportMessageProvider::ErrorCode::TPMSG_NOT_RESPONSIBLE));
 
-    transport::TransportJob& response1 = _udsConfiguration.SendJobQueue.emplace();
+    transport::TransportJob& response1 = _sendJobQueue.emplace();
 
     response1.setTransportMessage(transportMessage);
     response1.setProcessedListener(&_udsDispatcher);
@@ -703,13 +689,12 @@ TEST_F(UdsIntegration, dispatchIncomingRequest_setProcessedListener_if_no_one_wa
             SetArgReferee<5>(pMessage),
             Return(transport::ITransportMessageProvider::ErrorCode::TPMSG_OK)));
 
-    transport::TransportJob& response1 = _udsConfiguration.SendJobQueue.emplace();
+    transport::TransportJob& response1 = _sendJobQueue.emplace();
 
     response1.setTransportMessage(transportMessage);
 
     _udsConfiguration.AcceptAllRequests = true;
-    acquireIncomingDiagConnection(
-        _udsConfiguration.IncomingDiagConnectionPool, ::etl::move(_udsConfiguration.Context));
+    acquireIncomingDiagConnection(_connectionPool, ::etl::move(fContext));
 
     EXPECT_CALL(_messageListener, messageReceived(Eq(0u), _, IsNull()))
         .WillOnce(Return(transport::ITransportMessageListener::ReceiveResult::RECEIVED_ERROR));
@@ -741,14 +726,13 @@ TEST_F(
             SetArgReferee<5>(pMessage),
             Return(transport::ITransportMessageProvider::ErrorCode::TPMSG_OK)));
 
-    transport::TransportJob& response1 = _udsConfiguration.SendJobQueue.emplace();
+    transport::TransportJob& response1 = _sendJobQueue.emplace();
 
     response1.setProcessedListener(&_udsDispatcher);
     response1.setTransportMessage(transportMessage);
 
     _udsConfiguration.AcceptAllRequests = true;
-    acquireIncomingDiagConnection(
-        _udsConfiguration.IncomingDiagConnectionPool, ::etl::move(_udsConfiguration.Context));
+    acquireIncomingDiagConnection(_connectionPool, ::etl::move(fContext));
 
     EXPECT_CALL(_messageListener, messageReceived(Eq(0u), _, IsNull()))
         .WillOnce(Return(transport::ITransportMessageListener::ReceiveResult::RECEIVED_ERROR));
@@ -774,14 +758,13 @@ TEST_F(
         .WillRepeatedly(
             Return(transport::ITransportMessageProvider::ErrorCode::TPMSG_NOT_RESPONSIBLE));
 
-    transport::TransportJob& response1 = _udsConfiguration.SendJobQueue.emplace();
+    transport::TransportJob& response1 = _sendJobQueue.emplace();
 
     response1.setTransportMessage(transportMessage);
     response1.setProcessedListener(&_udsDispatcher);
 
     _udsConfiguration.AcceptAllRequests = true;
-    acquireIncomingDiagConnection(
-        _udsConfiguration.IncomingDiagConnectionPool, ::etl::move(_udsConfiguration.Context));
+    acquireIncomingDiagConnection(_connectionPool, ::etl::move(fContext));
 
     EXPECT_CALL(_messageListener, messageReceived(Eq(0u), _, IsNull()))
         .WillOnce(Return(transport::ITransportMessageListener::ReceiveResult::RECEIVED_ERROR));

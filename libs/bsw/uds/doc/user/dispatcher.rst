@@ -42,7 +42,7 @@ within the same branch of the hierarchy is maintained**.
     ReadIdentifierFromMemory _read22Cf01;
     ReadIdentifierFromNvStorage _read22Cf02;
 
-    void createDispatcher(AbstractDiagnosisConfiguration& configuration,
+    void createDispatcher(DiagnosisConfiguration& configuration,
         IDiagSessionManager& sessionManager,
         DiagJobRoot& jobRoot,
         ::async::ContextType context)

@@ -381,17 +381,25 @@ TEST_F(
 
     DiagJobRoot fDiagJobRoot;
 
-    DiagnosisConfiguration<1, 10> udsConfiguration(
+    ::etl::pool<IncomingDiagConnection, 1> _connectionPool;
+    ::etl::queue<transport::TransportJob, 10> _sendJobQueue;
+
+    DiagnosisConfiguration udsConfiguration{
         0x10U,
         0xDFU,
-        0u,
         transport::TransportConfiguration::DIAG_PAYLOAD_SIZE,
+        0u,
+        true,
         false,
         true,
-        static_cast<::async::ContextType>(1U));
+        static_cast<::async::ContextType>(1U)};
 
     DiagDispatcher dispatcher(
-        udsConfiguration, static_cast<IDiagSessionManager&>(diagSessionManager), fDiagJobRoot);
+        _connectionPool,
+        _sendJobQueue,
+        udsConfiguration,
+        static_cast<IDiagSessionManager&>(diagSessionManager),
+        fDiagJobRoot);
 
     fDiagnosticSessionControl.setDiagDispatcher(&dispatcher);
 

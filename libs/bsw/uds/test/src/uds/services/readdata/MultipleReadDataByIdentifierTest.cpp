@@ -132,15 +132,9 @@ public:
           ,
           DiagSession::ALL_SESSIONS())
     , fIncomingDiagConnection(fContext)
-    , fUdsConfiguration(
-          0x10U,
-          0xDFU,
-          0u,
-          transport::TransportConfiguration::DIAG_PAYLOAD_SIZE,
-          false,
-          true,
-          fContext)
-    , fUdsDispatcher(fUdsConfiguration, fSessionManager, fDiagJobRoot)
+    , fUdsConfiguration{0x10U, 0xDFU, transport::TransportConfiguration::DIAG_PAYLOAD_SIZE, 0u, true, false, true, fContext}
+    , fUdsDispatcher(
+          _connectionPool, _sendJobQueue, fUdsConfiguration, fSessionManager, fDiagJobRoot)
     {}
 
     virtual void SetUp()
@@ -180,7 +174,9 @@ protected:
     StrictMock<AbstractDiagJobMock> fDiagJob2;
     StrictMock<IncomingDiagConnectionMock> fIncomingDiagConnection;
     StrictMock<DiagSessionManagerMock> fSessionManager;
-    DiagnosisConfiguration<NUM_INCOMING_CONNECTIONS, 1> fUdsConfiguration;
+    DiagnosisConfiguration fUdsConfiguration;
+    ::etl::pool<IncomingDiagConnection, NUM_INCOMING_CONNECTIONS> _connectionPool;
+    ::etl::queue<transport::TransportJob, 1> _sendJobQueue;
     DiagDispatcher fUdsDispatcher;
     DiagJobRoot fDiagJobRoot;
 

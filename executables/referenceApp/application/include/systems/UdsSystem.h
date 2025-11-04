@@ -81,7 +81,9 @@ private:
     DiagJobRoot _jobRoot;
     DiagnosticSessionControl _diagnosticSessionControl;
     CommunicationControl _communicationControl;
-    DiagnosisConfiguration<5, 16> _udsConfiguration;
+    DiagnosisConfiguration _udsConfiguration;
+    ::etl::pool<IncomingDiagConnection, 5> _connectionPool;
+    ::etl::queue<transport::TransportJob, 16> _sendJobQueue;
     DiagDispatcher _udsDispatcher;
     uds::declare::AsyncDiagHelper<5> _asyncDiagHelper;
 

@@ -13,7 +13,10 @@
 #include <transport/AbstractTransportLayer.h>
 #include <transport/ITransportMessageProcessedListener.h>
 #include <transport/ITransportMessageProvidingListener.h>
+#include <transport/TransportJob.h>
 #include <transport/TransportMessage.h>
+
+#include <etl/queue.h>
 
 #ifdef IS_VARIANT_HANDLING_NEEDED
 #include "uds/DiagnosisConfiguration.h"
@@ -51,14 +54,16 @@ class DiagDispatcher
 public:
     /**
      * Constructor
-     * \param   configuration   AbstractDiagnosisConfiguration holding
+     * \param   configuration   DiagnosisConfiguration holding
      * the configuration for this DiagDispatcher
      * \param   sessionManager  IDiagSessionManager
      * \param   context  Context used to handle DiagDispatcher's
      * timeouts
      */
     DiagDispatcher(
-        AbstractDiagnosisConfiguration& configuration,
+        ::etl::ipool& incomingDiagConnectionPool,
+        ::etl::iqueue<transport::TransportJob>& sendJobQueue,
+        DiagnosisConfiguration& configuration,
         IDiagSessionManager& sessionManager,
         DiagJobRoot& jobRoot);
 
@@ -145,7 +150,7 @@ private:
 
     static void dispatchIncomingRequest(
         transport::TransportJob& job,
-        AbstractDiagnosisConfiguration& configuration,
+        DiagnosisConfiguration& configuration,
         DiagDispatcher& dispatcher,
         DiagJobRoot& diagJobRoot,
         transport::ITransportMessageProvidingListener& providingListener,
@@ -166,7 +171,7 @@ private:
     static transport::TransportMessage* copyFunctionalRequest(
         transport::TransportMessage& request,
         transport::ITransportMessageProvidingListener& providingListener,
-        AbstractDiagnosisConfiguration& configuration);
+        DiagnosisConfiguration& configuration);
 
     IncomingDiagConnection* requestIncomingConnection(transport::TransportMessage& requestMessage);
 
@@ -174,7 +179,9 @@ private:
 
     void checkConnectionShutdownProgress();
 
-    AbstractDiagnosisConfiguration& fConfiguration;
+    ::etl::ipool& incomingDiagConnectionPool;
+    ::etl::iqueue<transport::TransportJob>& sendJobQueue;
+    DiagnosisConfiguration& fConfiguration;
     ::etl::delegate<void()> fConnectionShutdownDelegate;
     bool fConnectionShutdownRequested;
 
