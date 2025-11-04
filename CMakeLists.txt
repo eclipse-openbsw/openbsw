@@ -54,7 +54,7 @@ project(
     VERSION 0.1.0
     DESCRIPTION
         "BSW workspace with reference application for multiple platforms"
-    LANGUAGES CXX C ASM)
+    LANGUAGES C CXX ASM)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules")
 
