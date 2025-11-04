@@ -10,12 +10,12 @@ send_command_expected = "Console command succeeded"
 send_command_timeout = 0.1
 send_command_max_retries = 2
 
-[per_run_process]
-command_line = "arm-none-eabi-gdb -batch -x flash.gdb ../../build/s32k148/executables/referenceApp/application/Release/app.referenceApp.elf > /dev/null 2>&1"
+[freertos.per_run_process]
+command_line = "arm-none-eabi-gdb -batch -x flash.gdb ../../build/s32k148-freertos-gcc/executables/referenceApp/application/RelWithDebInfo/app.referenceApp.elf > /dev/null 2>&1"
 wait_for_exit = true
 
-[target_process]
-command_line = "arm-none-eabi-gdb -batch -x reset.gdb ../../build/s32k148/executables/referenceApp/application/Release/app.referenceApp.elf > /dev/null 2>&1"
+[freertos.target_process]
+command_line = "arm-none-eabi-gdb -batch -x reset.gdb ../../build/s32k148-freertos-gcc/executables/referenceApp/application/RelWithDebInfo/app.referenceApp.elf > /dev/null 2>&1"
 wait_for_exit = true
 skip_first = true
 
@@ -23,6 +23,15 @@ skip_first = true
 started_str = "INFO: Run level 1"
 complete_str = "DEBUG: Run level 8 done"
 max_time = 1.0
+
+[threadx.per_run_process]
+command_line = "arm-none-eabi-gdb -batch -x flash.gdb ../../build/s32k148-threadx-gcc/executables/referenceApp/application/RelWithDebInfo/app.referenceApp.elf > /dev/null 2>&1"
+wait_for_exit = true
+
+[threadx.target_process]
+command_line = "arm-none-eabi-gdb -batch -x reset.gdb ../../build/s32k148-threadx-gcc/executables/referenceApp/application/RelWithDebInfo/app.referenceApp.elf > /dev/null 2>&1"
+wait_for_exit = true
+skip_first = true
 
 [hw_tester_serial]
 port = "/dev/ttyACM1"

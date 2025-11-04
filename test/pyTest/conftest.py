@@ -38,7 +38,7 @@ class TargetSession:
         """
         self.capserial().clear()
         start_target_process(
-            self.target_name, True if TargetSession.counter == 1 else False
+            self.target_name, TargetSession.counter == 1
         )
 
     def stop(self):
@@ -141,11 +141,21 @@ def pytest_addoption(parser):
         action="store_true",
         help="Skip restart of target(s) before each test",
     )
+    parser.addoption(
+        "--app",
+        action="store",
+        default="freertos",
+        help="Select which software (app) configuration to flash, e.g., threadx or freertos based application",
+    )
 
 
 def pytest_configure(config):
     if not TargetInfo.by_name:
-        TargetInfo.load(config.getoption("target"), config.getoption("--no-restart"))
+        TargetInfo.load(
+            config.getoption("target"),
+            config.getoption("--no-restart"),
+            config.getoption("app"),
+        )
 
 
 def pytest_generate_tests(metafunc):

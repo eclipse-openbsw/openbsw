@@ -47,6 +47,9 @@ Custom options:
                         eg.3: "--target=*" reads from files matching "target_*.toml".
                         Default="posix".
   --no-restart          Skip restart of target(s) before each test
+  --app                 To choose the freertos based or threadx based elf file.
+                        Usage example is --app=threadx
+                        Default="freertos"
 ```
 The `--target` option allows you to choose the target to run tests with.
 Each target's TOML file defines its details (see format description below).

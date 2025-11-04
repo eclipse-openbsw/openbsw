@@ -14,8 +14,8 @@ ip_address = "192.168.0.201"
 [pty_forwarder]
 ext_link = "/tmp/pty_forwarder"
 
-[target_process]
-command_line = "../../build/posix/executables/referenceApp/application/Release/app.referenceApp.elf < /tmp/pty_forwarder > /tmp/pty_forwarder"
+[freertos.target_process]
+command_line = "../../build/posix-freertos/executables/referenceApp/application/Release/app.referenceApp.elf < /tmp/pty_forwarder > /tmp/pty_forwarder"
 restart_if_exited = true
 kill_at_end = true
 
@@ -23,3 +23,10 @@ kill_at_end = true
 started_str = "INFO: Run level 1"
 complete_str = "DEBUG: Run level 8 done"
 max_time = 0.5
+
+[threadx.target_process]
+command_line = "../../build/posix-threadx/executables/referenceApp/application/Release/app.referenceApp.elf < /tmp/pty_forwarder > /tmp/pty_forwarder"
+restart_if_exited = true
+kill_at_end = true
+
+

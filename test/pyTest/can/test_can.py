@@ -12,7 +12,7 @@ def test_canListener(target_session):
     can_bus = target_session.can_bus()
     can_bus.set_filters([{"can_id": 0x124, "can_mask": 0x7FF}])
     can_bus.send(msg)
-    rx_msg = can_bus.recv(timeout=30)  # Waits for 30sec to receive message from 0x124
+    rx_msg = can_bus.recv(2.0)  # Waits for 2 seconds to receive message from 0x124
     can_bus.shutdown()
     assert rx_msg is not None, "CAN message not received within the timeout"
     assert rx_msg.arbitration_id == msg.arbitration_id + 1

@@ -12,7 +12,7 @@ from pathlib import Path
 # before using them in pytest
 
 
-class TargetInfo():
+class TargetInfo:
     """Reads target configuration from a .toml file
     and makes it available through read-only properties.
     """
@@ -20,27 +20,31 @@ class TargetInfo():
     by_name = {}
 
     target_arg_help = (
-        "Name of target where the file \"target_[TARGET].toml\" exists. \n"
-        "eg.1: \"--target=posix\" reads from \"target_posix.toml\". \n"
+        'Name of target where the file "target_[TARGET].toml" exists. \n'
+        'eg.1: "--target=posix" reads from "target_posix.toml". \n'
         "Can be specified multiple times. \n"
-        "Tests with the fixture \"target_session\" are parameterized \n"
+        'Tests with the fixture "target_session" are parameterized \n'
         "to run once for each target specified. \n"
-        "eg.2: \"--target=posix --target=s32k148\" \n"
-        "reads from \"target_posix.toml\" and \"target_s32k148.toml\" and\n"
-        "each test with fixture \"target_session\" runs for both targets. \n"
-        "Supports \"*\". \n"
-        "eg.3: \"--target=*\" reads from files matching \"target_*.toml\". \n"
-        "Default=\"posix\".")
+        'eg.2: "--target=posix --target=s32k148" \n'
+        'reads from "target_posix.toml" and "target_s32k148.toml" and\n'
+        'each test with fixture "target_session" runs for both targets. \n'
+        'Supports "*". \n'
+        'eg.3: "--target=*" reads from files matching "target_*.toml". \n'
+        'Default="posix".'
+    )
 
-    def __init__(self, name, fp, cmd_line_no_restart):
+    def __init__(self, name, fp, cmd_line_no_restart, app="freertos"):
         self._name = name
         target_info = tomli.load(fp)
+        app_info = target_info.get(app, {})
+        if not app_info:
+            raise ValueError(f"No configuration found for app '{app}'")
         self._socketcan = target_info.get("socketcan", {})
         self._serial = target_info.get("serial", {})
         self._eth = target_info.get("eth", {})
         self._pty_forwarder = target_info.get("pty_forwarder", {})
-        self._per_run_process = target_info.get("per_run_process", {})
-        self._target_process = target_info.get("target_process", {})
+        self._per_run_process = app_info.get("per_run_process", {})
+        self._target_process = app_info.get("target_process", {})
         self._boot = target_info.get("boot", {})
         self._hw_tester_serial = target_info.get("hw_tester_serial", {})
         self._set_defaults(cmd_line_no_restart)
@@ -125,7 +129,7 @@ class TargetInfo():
         desc = f"name={self.name}\n"
         desc = desc + f"socketcan={self.socketcan}\n"
         desc = desc + f"serial={self.serial}\n"
-        desc = desc + f"ip_addr={self.ip_addr}\n"
+        desc = desc + f"ip_addr={self.eth}\n"
         desc = desc + f"pty_forwarder={self.pty_forwarder}\n"
         desc = desc + f"per_run_process={self.per_run_process}\n"
         desc = desc + f"target_process={self.target_process}\n"
@@ -134,45 +138,48 @@ class TargetInfo():
         return desc
 
     @staticmethod
-    def load(targets, cmd_line_no_restart):
+    def load(targets, cmd_line_no_restart, app="freertos"):
         if not targets:
             targets = ["posix"]
         elif isinstance(targets, str):
             targets = [targets]
         for target in targets:
             if not target.startswith("target_"):
-                target = "target_"+target
+                target = "target_" + target
             if not target.endswith(".toml"):
-                target = target+".toml"
+                target = target + ".toml"
             for file_name in glob(target):
                 with open(file_name, mode="rb") as fp:
-                    name = Path(file_name).stem[len("target_"):]
-                    TargetInfo.by_name[name] = TargetInfo(name,
-                                                          fp,
-                                                          cmd_line_no_restart)
+                    name = Path(file_name).stem[len("target_") :]
+                    TargetInfo.by_name[name] = TargetInfo(
+                        name, fp, cmd_line_no_restart, app
+                    )
 
 
 if __name__ == "__main__":
     import argparse
 
     parser = argparse.ArgumentParser(
-        description='Test loading target files.',
-        formatter_class=argparse.RawTextHelpFormatter)
+        description="Test loading target files.",
+        formatter_class=argparse.RawTextHelpFormatter,
+    )
     parser.add_argument(
-        "--target",
-        action="append",
-        default=[],
-        help=TargetInfo.target_arg_help
+        "--target", action="append", default=[], help=TargetInfo.target_arg_help
     )
     parser.add_argument(
         "--no-restart",
         action="store_true",
         help="Skip restart of target(s) before each test",
+    ) 
+    parser.add_argument(
+        "--app",
+        action="store",
+        default="freertos",
+       help="Select which software (app) configuration to flash, e.g., threadx or freertos based application",
     )
+
     args = parser.parse_args()
-
-    TargetInfo.load(args.target, args.no_restart)
-
+    TargetInfo.load(args.target, args.no_restart, args.app)
     for name in TargetInfo.by_name:
-        print("target \""+name+"\" read from target_"+name+".toml")
+        print(f'target "{name}" read from target_{name}.toml')
         print(TargetInfo.by_name[name])
