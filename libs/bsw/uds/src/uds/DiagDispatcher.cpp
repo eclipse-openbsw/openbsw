@@ -59,10 +59,14 @@ ESR_NO_INLINE AbstractTransportLayer::ErrorCode DiagDispatcher::send_local(
     TransportMessage& transportMessage,
     ITransportMessageProcessedListener* const pNotificationListener)
 {
-    auto connection = fConfiguration.findIncomingDiagConnection(
+    // FIXME: This reinterpret_cast works for now but is somewhat frage
+    auto result = etl::find_if(
+        fConfiguration.IncomingDiagConnectionPool.begin(),
+        fConfiguration.IncomingDiagConnectionPool.end(),
         [pNotificationListener](void* const conn) -> bool
         { return reinterpret_cast<void*>(pNotificationListener) == conn; });
-    if (connection != nullptr)
+
+    if (result != fConfiguration.IncomingDiagConnectionPool.end())
     {
         ITransportMessageListener::ReceiveResult const status
             = fProvidingListenerHelper.messageReceived(
@@ -318,7 +322,8 @@ IncomingDiagConnection* DiagDispatcher::requestIncomingConnection(TransportMessa
     IncomingDiagConnection* pConnection = nullptr;
     {
         ::async::LockType const lock;
-        pConnection = fConfiguration.acquireIncomingDiagConnection();
+        pConnection = acquireIncomingDiagConnection(
+            fConfiguration.IncomingDiagConnectionPool, ::etl::move(fConfiguration.Context));
     }
     if (pConnection != nullptr)
     {
@@ -333,7 +338,6 @@ IncomingDiagConnection* DiagDispatcher::requestIncomingConnection(TransportMessa
         pConnection->responseMessage = nullptr;
         return pConnection;
     }
-
     Logger::warn(
         UDS,
         "No incoming diag connection available for 0x%x --> 0x%x, service 0x%x",
@@ -365,7 +369,7 @@ void DiagDispatcher::diagConnectionTerminated(IncomingDiagConnection& diagConnec
 
     {
         ::async::LockType const lock;
-        fConfiguration.releaseIncomingDiagConnection(diagConnection);
+        fConfiguration.IncomingDiagConnectionPool.destroy(&diagConnection);
     }
 
     diagConnection.requestMessage              = nullptr;
@@ -391,7 +395,7 @@ void DiagDispatcher::checkConnectionShutdownProgress()
         return;
     }
 
-    ::etl::ipool const& incomingDiagConnections = fConfiguration.incomingDiagConnectionPool();
+    ::etl::ipool const& incomingDiagConnections = fConfiguration.IncomingDiagConnectionPool;
 
     if (!incomingDiagConnections.empty())
     {
@@ -400,7 +404,7 @@ void DiagDispatcher::checkConnectionShutdownProgress()
             "DiagDispatcher::problem at shutdown(in: %d/%d)",
             incomingDiagConnections.size(),
             incomingDiagConnections.max_size());
-        fConfiguration.clearIncomingDiagConnections();
+        fConfiguration.IncomingDiagConnectionPool.release_all();
     }
     Logger::debug(UDS, "DiagDispatcher incoming connection shutdown complete");
     fConnectionShutdownDelegate();

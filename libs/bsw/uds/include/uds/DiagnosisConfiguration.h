@@ -25,9 +25,6 @@ namespace uds
 class AbstractDiagnosisConfiguration
 {
 public:
-    using ManagedIncomingDiagConnectionPool = ::etl::ipool;
-    using TransportJobQueue                 = ::etl::iqueue<transport::TransportJob>;
-
     /**
      * Constructor
      * @param   diagAddress Diagnosis address of this configuration. Used e.g.
@@ -49,8 +46,8 @@ public:
         uint16_t const maxResponsePayloadSize,
         bool const acceptAllRequests,
         bool const copyFunctionalRequests,
-        ManagedIncomingDiagConnectionPool& incomingPool,
-        TransportJobQueue& sendJobQueue,
+        ::etl::ipool& incomingPool,
+        ::etl::iqueue<transport::TransportJob>& sendJobQueue,
         ::async::ContextType const context)
     : IncomingDiagConnectionPool(incomingPool)
     , SendJobQueue(sendJobQueue)
@@ -63,11 +60,10 @@ public:
     , Context(context)
     {}
 
-private:
-    ManagedIncomingDiagConnectionPool& IncomingDiagConnectionPool;
-
 public:
-    TransportJobQueue& SendJobQueue;
+    ::etl::ipool& IncomingDiagConnectionPool;
+
+    ::etl::iqueue<transport::TransportJob>& SendJobQueue;
 
 #ifdef IS_VARIANT_HANDLING_NEEDED
     uint16_t DiagAddress;
@@ -84,67 +80,20 @@ public:
     ::async::ContextType Context;
 
     /**
-     * Returns a read only reference to IncomingDiagConnectionPool.
-     *
-     * This can be useful to do statistics by reading the current size of the pool.
-     */
-    ManagedIncomingDiagConnectionPool const& incomingDiagConnectionPool() const
-    {
-        return IncomingDiagConnectionPool;
-    }
-
-    /**
      * Returns an acquired IncomingDiagConnection initialized with the appropriate async
      * context, nullptr if no connection is available.
      */
-    IncomingDiagConnection* acquireIncomingDiagConnection()
-    {
-        if (IncomingDiagConnectionPool.full())
-        {
-            return nullptr;
-        }
-        return IncomingDiagConnectionPool
-            .template create<IncomingDiagConnection, ::async::ContextType const>(
-                etl::move(Context));
-    }
-
-    /**
-     * Releases a given IncomingDiagConnection back to the pool.
-     */
-    void releaseIncomingDiagConnection(IncomingDiagConnection const& connection)
-    {
-        IncomingDiagConnectionPool.destroy(&connection);
-    }
-
-    template<class Pred>
-    IncomingDiagConnection* findIncomingDiagConnection(Pred const condition)
-    {
-        auto result = etl::find_if(
-            IncomingDiagConnectionPool.begin(), IncomingDiagConnectionPool.end(), condition);
-
-        if (result == IncomingDiagConnectionPool.end())
-        {
-            return nullptr;
-        }
-
-        return &result.template get<IncomingDiagConnection>();
-    }
-
-    /**
-     * Clears the pool of ManagedIncomingDiagConnections (destroying all released elements).
-     * This function should only be called in case of an error and might have unforeseen
-     * effects because some user code might still hold a reference to an elements which
-     * gets destroyed when this function is called.
-     */
-    void clearIncomingDiagConnections()
-    {
-        while (!IncomingDiagConnectionPool.empty())
-        {
-            IncomingDiagConnectionPool.destroy(
-                static_cast<IncomingDiagConnection*>(*IncomingDiagConnectionPool.begin()));
-        }
-    }
 };
+
+inline IncomingDiagConnection*
+acquireIncomingDiagConnection(::etl::ipool& pool, ::async::ContextType context)
+{
+    if (pool.full())
+    {
+        return nullptr;
+    }
+    return pool.template create<IncomingDiagConnection>(context);
+}
 
 /**
  * Configuration for a diagnosis layer

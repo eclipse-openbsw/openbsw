@@ -335,7 +335,8 @@ TEST_F(UdsIntegration, no_response_for_7f)
     response1.setProcessedListener(&_udsDispatcher);
 
     _udsConfiguration.AcceptAllRequests = true;
-    _udsConfiguration.acquireIncomingDiagConnection();
+    acquireIncomingDiagConnection(
+        _udsConfiguration.IncomingDiagConnectionPool, ::etl::move(_udsConfiguration.Context));
 
     EXPECT_CALL(_messageListener, messageReceived(Eq(0u), _, IsNull()))
         .WillOnce(Return(transport::ITransportMessageListener::ReceiveResult::RECEIVED_ERROR));
@@ -642,7 +643,8 @@ TEST_F(
     response1.setProcessedListener(&_udsDispatcher);
 
     _udsConfiguration.AcceptAllRequests = true;
-    _udsConfiguration.acquireIncomingDiagConnection();
+    acquireIncomingDiagConnection(
+        _udsConfiguration.IncomingDiagConnectionPool, ::etl::move(_udsConfiguration.Context));
 
     EXPECT_CALL(_messageListener, messageReceived(Eq(0u), _, IsNull()))
         .WillOnce(Return(transport::ITransportMessageListener::ReceiveResult::RECEIVED_NO_ERROR));
@@ -706,7 +708,8 @@ TEST_F(UdsIntegration, dispatchIncomingRequest_setProcessedListener_if_no_one_wa
     response1.setTransportMessage(transportMessage);
 
     _udsConfiguration.AcceptAllRequests = true;
-    _udsConfiguration.acquireIncomingDiagConnection();
+    acquireIncomingDiagConnection(
+        _udsConfiguration.IncomingDiagConnectionPool, ::etl::move(_udsConfiguration.Context));
 
     EXPECT_CALL(_messageListener, messageReceived(Eq(0u), _, IsNull()))
         .WillOnce(Return(transport::ITransportMessageListener::ReceiveResult::RECEIVED_ERROR));
@@ -744,7 +747,8 @@ TEST_F(
     response1.setTransportMessage(transportMessage);
 
     _udsConfiguration.AcceptAllRequests = true;
-    _udsConfiguration.acquireIncomingDiagConnection();
+    acquireIncomingDiagConnection(
+        _udsConfiguration.IncomingDiagConnectionPool, ::etl::move(_udsConfiguration.Context));
 
     EXPECT_CALL(_messageListener, messageReceived(Eq(0u), _, IsNull()))
         .WillOnce(Return(transport::ITransportMessageListener::ReceiveResult::RECEIVED_ERROR));
@@ -776,7 +780,8 @@ TEST_F(
     response1.setProcessedListener(&_udsDispatcher);
 
     _udsConfiguration.AcceptAllRequests = true;
-    _udsConfiguration.acquireIncomingDiagConnection();
+    acquireIncomingDiagConnection(
+        _udsConfiguration.IncomingDiagConnectionPool, ::etl::move(_udsConfiguration.Context));
 
     EXPECT_CALL(_messageListener, messageReceived(Eq(0u), _, IsNull()))
         .WillOnce(Return(transport::ITransportMessageListener::ReceiveResult::RECEIVED_ERROR));
