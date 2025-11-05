@@ -19,9 +19,16 @@ You will also need ``cmake`` version >= :prop:`tool:cmake_version`. To install i
 
 .. code-block:: bash
 
+    sudo snap install cmake --classic
+
+which (at time of writing) installs ``cmake`` version 4.1.1 on Ubuntu :prop:`tool:ubuntu_version`.
+
+On a more recent Ubuntu version, installation via ``apt`` (instead of ``snap``) should be sufficient:
+
+.. code-block:: bash
+
     sudo apt install cmake
 
-which (at time of writing) installs ``cmake`` version 3.28.3 on Ubuntu 24.04
 Once installed, check ``cmake`` is found and is version :prop:`tool:cmake_version` or higher:
 
 .. code-block:: bash
