@@ -17,14 +17,21 @@ For Ubuntu :prop:`tool:ubuntu_version`, the ``apt`` package ``build-essential`` 
 
     sudo apt install build-essential ninja-build
 
-You will also need ``cmake`` version >= :prop:`tool:cmake_version` . To install it, simply run:
+You will also need ``cmake`` version >= :prop:`tool:cmake_version`. To install it, simply run:
+
+.. code-block:: bash
+
+    sudo snap install cmake --classic
+
+which (at time of writing) installs ``cmake`` version 4.1.1 on Ubuntu :prop:`tool:ubuntu_version`.
+
+On a more recent Ubuntu version, installation via ``apt`` (instead of ``snap``) should be sufficient:
 
 .. code-block:: bash
 
     sudo apt install cmake
 
-which (at time of writing) installs ``cmake`` version 3.22.1
-Once installed, check ``cmake`` is found and is version :prop:`tool:cmake_version` or higher...
+Once installed, check ``cmake`` is found and is version :prop:`tool:cmake_version` or higher:
 
 .. code-block:: bash
 
