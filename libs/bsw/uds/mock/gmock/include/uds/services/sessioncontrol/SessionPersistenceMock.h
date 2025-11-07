@@ -13,8 +13,12 @@ class SessionPersistenceMock : public ISessionPersistence
 public:
     SessionPersistenceMock() {}
 
-    MOCK_METHOD(void, readSession, (DiagnosticSessionControl & sessionControl));
-    MOCK_METHOD(void, writeSession, (DiagnosticSessionControl & sessionControl, uint8_t session));
+    MOCK_METHOD(void, readSession, (DiagnosticSessionControl & sessionControl), (override));
+    MOCK_METHOD(
+        void,
+        writeSession,
+        (DiagnosticSessionControl & sessionControl, uint8_t session),
+        (override));
 };
 
 } // namespace uds

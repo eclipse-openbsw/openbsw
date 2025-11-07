@@ -36,11 +36,12 @@ public:
         sessionMask)
     {}
 
+    MOCK_METHOD(DiagReturnCode::Type, verify, (uint8_t const[], uint16_t), (override));
     MOCK_METHOD(
-        DiagReturnCode::Type, verify, (IncomingDiagConnection const&, uint8_t const[], uint16_t));
-    MOCK_METHOD(DiagReturnCode::Type, verify, (uint8_t const[], uint16_t));
-    MOCK_METHOD(
-        DiagReturnCode::Type, process, (IncomingDiagConnection&, uint8_t const[], uint16_t));
+        DiagReturnCode::Type,
+        process,
+        (IncomingDiagConnection&, uint8_t const[], uint16_t),
+        (override));
 };
 
 #define STATIC_CONCAT(X, Y)  X##Y
