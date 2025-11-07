@@ -33,10 +33,6 @@ public:
 
     virtual uint16_t getDispatcherSourceId() const = 0;
 
-#ifdef IS_VARIANT_HANDLING_NEEDED
-    virtual void setSourceAddress(uint16_t) = 0;
-#endif
-
     virtual ::transport::AbstractTransportLayer::ErrorCode resume(
         ::transport::TransportMessage& transportMessage,
         ::transport::ITransportMessageProcessedListener* pNotificationListener)

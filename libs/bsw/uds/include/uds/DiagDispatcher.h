@@ -18,10 +18,6 @@
 
 #include <etl/queue.h>
 
-#ifdef IS_VARIANT_HANDLING_NEEDED
-#include "uds/DiagnosisConfiguration.h"
-#endif
-
 namespace http
 {
 namespace html
@@ -100,13 +96,6 @@ public:
     void shutdownIncomingConnections(::etl::delegate<void()> delegate);
 
     uint16_t getDispatcherSourceId() const override { return fConfiguration.DiagAddress; }
-
-#ifdef IS_VARIANT_HANDLING_NEEDED
-    virtual void setSourceAddress(uint16_t diagAddress)
-    {
-        fConfiguration.DiagAddress = diagAddress;
-    }
-#endif
 
 private:
     using SendBusyResponseCallback

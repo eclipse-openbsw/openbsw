@@ -2,8 +2,6 @@
 
 #pragma once
 
-#undef IS_VARIANT_HANDLING_NEEDED
-
 #include "platform/estdint.h"
 
 namespace uds
