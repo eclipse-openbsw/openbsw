@@ -332,12 +332,18 @@ IncomingDiagConnection* DiagDispatcher::requestIncomingConnection(TransportMessa
     }
     if (pConnection != nullptr)
     {
+        auto const targetAddress = requestMessage.getTargetId();
+
         pConnection->diagDispatcher     = this;
         pConnection->messageSender      = this;
         pConnection->diagSessionManager = &fSessionManager;
         pConnection->sourceAddress      = requestMessage.getSourceId();
-        pConnection->targetAddress      = requestMessage.getTargetId();
-        pConnection->serviceId          = requestMessage.getServiceId();
+        pConnection->targetAddress      = targetAddress;
+        pConnection->responseSourceAddress
+            = (TransportConfiguration::isFunctionalAddress(targetAddress))
+                  ? fConfiguration.DiagAddress
+                  : targetAddress;
+        pConnection->serviceId = requestMessage.getServiceId();
         pConnection->open(fConfiguration.ActivateOutgoingPending);
         pConnection->requestMessage  = &requestMessage;
         pConnection->responseMessage = nullptr;

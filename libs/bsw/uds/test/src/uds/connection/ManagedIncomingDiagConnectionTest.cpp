@@ -195,10 +195,11 @@ TEST_F(ManagedIncomingDiagConnectionTest, sendPositiveResponse)
     pExpectedResponse->setPayloadLength(4); // +1 because of 1 identifier (service id)
 
     TransportMessageWithBuffer pRequest(MAX_PAYLOAD_LENGTH);
-    fpIncomingDiagConnection->sourceAddress  = TESTER_ID;
-    fpIncomingDiagConnection->targetAddress  = DIAGNOSIS_ID;
-    fpIncomingDiagConnection->serviceId      = SERVICE_ID;
-    fpIncomingDiagConnection->requestMessage = pRequest.get();
+    fpIncomingDiagConnection->sourceAddress         = TESTER_ID;
+    fpIncomingDiagConnection->targetAddress         = DIAGNOSIS_ID;
+    fpIncomingDiagConnection->responseSourceAddress = DIAGNOSIS_ID;
+    fpIncomingDiagConnection->serviceId             = SERVICE_ID;
+    fpIncomingDiagConnection->requestMessage        = pRequest.get();
     fpIncomingDiagConnection->open(false);
     // save service id
     fpIncomingDiagConnection->addIdentifier();

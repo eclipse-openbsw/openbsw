@@ -31,8 +31,6 @@ public:
     : fSessionManager(sessionManager), fEnabled(true)
     {}
 
-    virtual uint16_t getDispatcherSourceId() const = 0;
-
     virtual ::transport::AbstractTransportLayer::ErrorCode resume(
         ::transport::TransportMessage& transportMessage,
         ::transport::ITransportMessageProcessedListener* pNotificationListener)

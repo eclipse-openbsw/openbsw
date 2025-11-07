@@ -121,7 +121,7 @@ void IncomingDiagConnection::asyncSendPositiveResponse(
     uint16_t const tmpSourceId = sourceAddress;
     if (nullptr != responseMessage)
     {
-        responseMessage->setSourceAddress(sourceAddressForResponse());
+        responseMessage->setSourceAddress(responseSourceAddress);
         responseMessage->setTargetAddress(tmpSourceId);
         if (DiagReturnCode::NEGATIVE_RESPONSE_IDENTIFIER == responseMessage->getServiceId())
         { // we did send a negative response before --> restore payload
@@ -303,7 +303,7 @@ void IncomingDiagConnection::asyncSendNegativeResponse(
     }
     responseMessage->setPayloadLength(DiagCodes::NEGATIVE_RESPONSE_MESSAGE_LENGTH);
     // invert source and target because we are a incoming connection
-    responseMessage->setSourceAddress(sourceAddressForResponse());
+    responseMessage->setSourceAddress(responseSourceAddress);
     responseMessage->setTargetAddress(sourceAddress);
     if (DiagReturnCode::NEGATIVE_RESPONSE_IDENTIFIER != responseMessage->getServiceId())
     { // make a backup only the first time a negative response is sent!
@@ -545,7 +545,7 @@ void IncomingDiagConnection::sendResponsePending()
         return;
     }
     _pendingMessage.setTargetAddress(sourceAddress);
-    _pendingMessage.setSourceAddress(sourceAddressForResponse());
+    _pendingMessage.setSourceAddress(responseSourceAddress);
     _pendingMessage.resetValidBytes();
     (void)_pendingMessage.append(DiagReturnCode::NEGATIVE_RESPONSE_IDENTIFIER);
     (void)_pendingMessage.append(serviceId);
@@ -570,22 +570,6 @@ void IncomingDiagConnection::sendResponsePending()
             "sendResult = %d!",
             sendResult);
     }
-}
-
-uint16_t IncomingDiagConnection::sourceAddressForResponse() const
-{
-    if (TransportConfiguration::isFunctionalAddress(targetAddress))
-    {
-        // FIXME: Above branch should not be necessary: diagDispatcher should also
-        // be set for functional requests.
-        if (diagDispatcher == nullptr)
-        {
-            ETL_ASSERT_FAIL(ETL_ERROR_GENERIC("diagDispatcher must not be null"));
-        }
-    }
-    return (TransportConfiguration::isFunctionalAddress(targetAddress))
-               ? diagDispatcher->getDispatcherSourceId()
-               : targetAddress;
 }
 
 void IncomingDiagConnection::open(bool const activatePending)

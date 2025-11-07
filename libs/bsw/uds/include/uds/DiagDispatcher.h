@@ -95,8 +95,6 @@ public:
 
     void shutdownIncomingConnections(::etl::delegate<void()> delegate);
 
-    uint16_t getDispatcherSourceId() const override { return fConfiguration.DiagAddress; }
-
 private:
     using SendBusyResponseCallback
         = ::etl::delegate<void(transport::TransportMessage const* const)>;

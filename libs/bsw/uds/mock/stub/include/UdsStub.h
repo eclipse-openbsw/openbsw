@@ -37,8 +37,6 @@ public:
     : IDiagDispatcher(sessionManager, fDiagJobRoot)
     {}
 
-    virtual uint16_t getDispatcherSourceId() const { return 0xab; }
-
     virtual transport::AbstractTransportLayer::ErrorCode
     resume(transport::TransportMessage&, transport::ITransportMessageProcessedListener*)
     {

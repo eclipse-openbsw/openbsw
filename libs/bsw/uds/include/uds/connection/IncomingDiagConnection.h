@@ -193,9 +193,11 @@ public:
         uint8_t const request[],
         uint16_t requestLength);
 
-    uint16_t sourceAddress = static_cast<uint16_t>(0xFFU);
-    uint16_t targetAddress = static_cast<uint16_t>(0XFFU);
-    uint8_t serviceId      = 0xFFU;
+    uint16_t sourceAddress         = static_cast<uint16_t>(0xFFU);
+    uint16_t targetAddress         = static_cast<uint16_t>(0xFFU);
+    uint16_t responseSourceAddress = static_cast<uint16_t>(0xFFU);
+
+    uint8_t serviceId = 0xFFU;
 
     /** Time in ms after which the first pending will be sent */
     static uint32_t const INITIAL_PENDING_TIMEOUT_MS = 40U;
@@ -236,14 +238,6 @@ public:
     void restartPendingTimeout();
 
     void sendResponsePending();
-
-    /**
-     * Sets the source id of a given TransportMessage, based on the target id
-     * of the incoming request. If the request was a functional one, the source
-     * id will be set to source id of the DiagDispatcher, otherwise
-     * it'll be set to the target id of this IncomingDiagConnection.
-     */
-    uint16_t sourceAddressForResponse() const;
 
     void asyncTransportMessageProcessed(
         transport::TransportMessage* pTransportMessage, ProcessingResult status);
