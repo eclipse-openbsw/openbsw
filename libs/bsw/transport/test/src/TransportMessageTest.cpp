@@ -2,8 +2,6 @@
 
 #include "transport/TransportMessage.h"
 
-#include "transport/DataProgressListenerMock.h"
-
 #include <etl/span.h>
 
 #include <gmock/gmock.h>
@@ -304,27 +302,4 @@ TEST_F(TransportMessageTest, CompareSameEverything)
         localMessage.append((i % MESSAGE_SIZE));
     }
     EXPECT_EQ(m, localMessage);
-}
-
-TEST_F(TransportMessageTest, DataProgressListenerNoListener)
-{
-    StrictMock<DataProgressListenerMock> listener;
-    EXPECT_CALL(listener, dataProgressed(_, _)).Times(0);
-    m.increaseValidBytes(1);
-}
-
-TEST_F(TransportMessageTest, DataProgressListenerListener)
-{
-    StrictMock<DataProgressListenerMock> listener;
-    EXPECT_FALSE(m.isDataProgressListener(listener));
-    m.setDataProgressListener(listener);
-    EXPECT_TRUE(m.isDataProgressListener(listener));
-
-    EXPECT_CALL(listener, dataProgressed(_, Eq(1U))).Times(1);
-    m.increaseValidBytes(1);
-
-    m.removeDataProgressListener();
-    EXPECT_FALSE(m.isDataProgressListener(listener));
-    EXPECT_CALL(listener, dataProgressed(_, _)).Times(0);
-    m.increaseValidBytes(1);
 }

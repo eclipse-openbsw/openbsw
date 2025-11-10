@@ -11,7 +11,6 @@
 
 // IWYU pragma: begin_keep
 #include "transport/AbstractTransportLayer.h"
-#include "transport/IDataProgressListener.h"
 #include "transport/ITransportMessageListener.h"
 #include "transport/ITransportMessageProcessedListener.h"
 #include "transport/ITransportMessageProvider.h"

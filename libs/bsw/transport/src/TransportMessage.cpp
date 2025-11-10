@@ -2,7 +2,6 @@
 
 #include "transport/TransportMessage.h"
 
-#include "transport/IDataProgressListener.h"
 #include "transport/TransportLogger.h"
 
 #include <etl/error_handler.h>
@@ -16,8 +15,7 @@ using ::util::logger::Logger;
 using ::util::logger::TRANSPORT;
 
 TransportMessage::TransportMessage()
-: _dataProgressListener(nullptr)
-, _buffer()
+: _buffer()
 , _sourceAddress(INVALID_ADDRESS)
 , _targetAddress(INVALID_ADDRESS)
 , _payloadLength(0U)
@@ -25,8 +23,7 @@ TransportMessage::TransportMessage()
 {}
 
 TransportMessage::TransportMessage(uint8_t* const buffer, uint32_t const bufferLength)
-: _dataProgressListener(nullptr)
-, _buffer(::etl::span<uint8_t>(buffer, bufferLength))
+: _buffer(::etl::span<uint8_t>(buffer, bufferLength))
 , _sourceAddress(INVALID_ADDRESS)
 , _targetAddress(INVALID_ADDRESS)
 , _payloadLength(0U)
@@ -43,9 +40,8 @@ void TransportMessage::init(uint8_t* const buffer, uint32_t const bufferLength)
             bufferLength);
         ETL_ASSERT_FAIL(ETL_ERROR_GENERIC("buffer is null but buffer length is not zero"));
     }
-    _dataProgressListener = nullptr;
-    _buffer               = ::etl::span<uint8_t>(buffer, bufferLength);
-    _validBytes           = 0U;
+    _buffer     = ::etl::span<uint8_t>(buffer, bufferLength);
+    _validBytes = 0U;
     if (_buffer.size() != 0U)
     {
         setPayloadLength(0U);
@@ -112,15 +108,11 @@ TransportMessage::ErrorCode TransportMessage::increaseValidBytes(uint16_t const 
     if ((_validBytes + n) > getMaxPayloadLength())
     {
         // this is an overflow, we only add as much as possible
-        uint32_t const numberOfNewValidBytes
-            = static_cast<uint32_t>(getMaxPayloadLength()) - static_cast<uint32_t>(_validBytes);
         _validBytes = getMaxPayloadLength();
-        notifyDataProgressListener(numberOfNewValidBytes);
         return ErrorCode::TP_MSG_LENGTH_EXCEEDED;
     }
 
     _validBytes += n;
-    notifyDataProgressListener(static_cast<uint32_t>(n));
     return ErrorCode::TP_MSG_OK;
 }
 
@@ -142,26 +134,6 @@ bool TransportMessage::operator==(TransportMessage const& rhs) const
     }
 
     return 0 == ::memcmp(rhs._buffer.data(), _buffer.data(), _validBytes);
-}
-
-void TransportMessage::setDataProgressListener(IDataProgressListener& listener)
-{
-    _dataProgressListener = &listener;
-}
-
-bool TransportMessage::isDataProgressListener(IDataProgressListener const& listener) const
-{
-    return _dataProgressListener == &listener;
-}
-
-void TransportMessage::removeDataProgressListener() { _dataProgressListener = nullptr; }
-
-void TransportMessage::notifyDataProgressListener(uint32_t const numberOfNewValidBytes)
-{
-    if (_dataProgressListener != nullptr)
-    {
-        _dataProgressListener->dataProgressed(*this, numberOfNewValidBytes);
-    }
 }
 
 } // namespace transport

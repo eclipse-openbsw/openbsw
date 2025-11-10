@@ -11,8 +11,6 @@
 
 namespace transport
 {
-class IDataProgressListener;
-
 /**
  * A TransportMessage is a bus-independent message that can take a certain
  * amount of data.
@@ -258,12 +256,6 @@ public:
      */
     bool isComplete() const;
 
-    void setDataProgressListener(IDataProgressListener& listener);
-
-    bool isDataProgressListener(IDataProgressListener const& listener) const;
-
-    void removeDataProgressListener();
-
     /**
      * Compares two TransportMessages
      * \param   rhs TransportMessage to compare to
@@ -274,9 +266,6 @@ public:
     bool operator==(TransportMessage const& rhs) const;
 
 private:
-    /** Pointer to optional IDataProgressListener */
-    IDataProgressListener* _dataProgressListener;
-
     /* internal buffer */
     ::etl::span<uint8_t> _buffer;
 
@@ -291,9 +280,6 @@ private:
 
     /** Current number of valid bytes in payload */
     uint16_t _validBytes;
-
-private:
-    void notifyDataProgressListener(uint32_t numberOfNewValidBytes);
 };
 
 /*
