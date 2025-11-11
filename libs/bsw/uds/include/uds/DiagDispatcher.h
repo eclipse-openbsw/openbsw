@@ -129,12 +129,6 @@ private:
 
     void connectionManagerShutdownComplete();
 
-    transport::AbstractTransportLayer::ErrorCode enqueueMessage(
-        transport::TransportMessage& transportMessage,
-        transport::ITransportMessageProcessedListener* pNotificationListener);
-
-    void trigger();
-
     static void dispatchIncomingRequest(
         transport::TransportJob& job,
         DiagnosisConfiguration& configuration,

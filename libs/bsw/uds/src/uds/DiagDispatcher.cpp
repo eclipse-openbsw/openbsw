@@ -30,6 +30,39 @@ using ::util::logger::GLOBAL;
 using ::util::logger::Logger;
 using ::util::logger::UDS;
 
+AbstractTransportLayer::ErrorCode enqueueMessage(
+    ::etl::iqueue<TransportJob>& sendJobQueue,
+    TransportMessage& transportMessage,
+    ::transport::ITransportMessageProcessedListener* const pNotificationListener,
+    ::transport::ITransportMessageProcessedListener& defaultProcessedListener)
+{
+    if (!transportMessage.isComplete())
+    {
+        return AbstractTransportLayer::ErrorCode::TP_MESSAGE_INCOMPLETE;
+    }
+
+    ::async::ModifiableLockType lock;
+    if (!sendJobQueue.full())
+    {
+        sendJobQueue.emplace();
+        TransportJob& sendJob = sendJobQueue.back();
+        lock.unlock();
+        sendJob.setTransportMessage(transportMessage);
+        if (pNotificationListener != nullptr)
+        {
+            sendJob.setProcessedListener(pNotificationListener);
+        }
+        else
+        {
+            sendJob.setProcessedListener(&defaultProcessedListener);
+        }
+        return AbstractTransportLayer::ErrorCode::TP_OK;
+    }
+
+    Logger::warn(UDS, "SendJobQueue full.");
+    return AbstractTransportLayer::ErrorCode::TP_QUEUE_FULL;
+}
+
 DiagDispatcher::DiagDispatcher(
     ::etl::ipool& incomingDiagConnectionPool,
     ::etl::iqueue<transport::TransportJob>& sendJobQueue,
@@ -64,14 +97,19 @@ ESR_NO_INLINE AbstractTransportLayer::ErrorCode DiagDispatcher::send_local(
     TransportMessage& transportMessage,
     ITransportMessageProcessedListener* const pNotificationListener)
 {
-    // FIXME: This reinterpret_cast works for now but is somewhat frage
-    auto result = etl::find_if(
+    if (!fEnabled)
+    {
+        return AbstractTransportLayer::ErrorCode::TP_SEND_FAIL;
+    }
+
+    // FIXME: This reinterpret_cast works for now but is somewhat fragile
+    auto connection = etl::find_if(
         incomingDiagConnectionPool.begin(),
         incomingDiagConnectionPool.end(),
         [pNotificationListener](void* const conn) -> bool
         { return reinterpret_cast<void*>(pNotificationListener) == conn; });
 
-    if (result != incomingDiagConnectionPool.end())
+    if (connection != incomingDiagConnectionPool.end())
     {
         ITransportMessageListener::ReceiveResult const status
             = fProvidingListenerHelper.messageReceived(
@@ -97,7 +135,17 @@ ESR_NO_INLINE AbstractTransportLayer::ErrorCode DiagDispatcher::send_local(
         return AbstractTransportLayer::ErrorCode::TP_SEND_FAIL;
     }
 
-    return enqueueMessage(transportMessage, pNotificationListener);
+    auto const result = enqueueMessage(
+        sendJobQueue,
+        transportMessage,
+        pNotificationListener,
+        fDefaultTransportMessageProcessedListener);
+
+    if (AbstractTransportLayer::ErrorCode::TP_OK == result)
+    {
+        ::async::execute(fConfiguration.Context, fAsyncProcessQueue);
+    }
+    return result;
 }
 
 AbstractTransportLayer::ErrorCode DiagDispatcher::send(
@@ -111,6 +159,10 @@ AbstractTransportLayer::ErrorCode DiagDispatcher::resume(
     TransportMessage& transportMessage,
     ITransportMessageProcessedListener* const pNotificationListener)
 {
+    if (!fEnabled)
+    {
+        return AbstractTransportLayer::ErrorCode::TP_SEND_FAIL;
+    }
     if ((transportMessage.getTargetId() != fConfiguration.DiagAddress)
         && ((fConfiguration.BroadcastAddress == TransportMessage::INVALID_ADDRESS)
             || (transportMessage.getTargetId() != fConfiguration.BroadcastAddress)))
@@ -127,7 +179,16 @@ AbstractTransportLayer::ErrorCode DiagDispatcher::resume(
         transportMessage.setTargetAddress(TransportMessage::INVALID_ADDRESS);
     }
 
-    return enqueueMessage(transportMessage, pNotificationListener);
+    auto const result = enqueueMessage(
+        sendJobQueue,
+        transportMessage,
+        pNotificationListener,
+        fDefaultTransportMessageProcessedListener);
+    if (AbstractTransportLayer::ErrorCode::TP_OK == result)
+    {
+        ::async::execute(fConfiguration.Context, fAsyncProcessQueue);
+    }
+    return result;
 }
 
 TransportMessage* DiagDispatcher::copyFunctionalRequest(
@@ -157,44 +218,6 @@ TransportMessage* DiagDispatcher::copyFunctionalRequest(
         pRequest = nullptr;
     }
     return pRequest;
-}
-
-AbstractTransportLayer::ErrorCode DiagDispatcher::enqueueMessage(
-    TransportMessage& transportMessage,
-    ITransportMessageProcessedListener* const pNotificationListener)
-{
-    if (!fEnabled)
-    {
-        return AbstractTransportLayer::ErrorCode::TP_SEND_FAIL;
-    }
-
-    if (!transportMessage.isComplete())
-    {
-        return AbstractTransportLayer::ErrorCode::TP_MESSAGE_INCOMPLETE;
-    }
-    ::async::ModifiableLockType lock;
-    if (!sendJobQueue.full())
-    {
-        sendJobQueue.emplace();
-        TransportJob& sendJob = sendJobQueue.back();
-        lock.unlock();
-        sendJob.setTransportMessage(transportMessage);
-        if (pNotificationListener != nullptr)
-        {
-            sendJob.setProcessedListener(pNotificationListener);
-        }
-        else
-        {
-            sendJob.setProcessedListener(&fDefaultTransportMessageProcessedListener);
-        }
-        trigger();
-        return AbstractTransportLayer::ErrorCode::TP_OK;
-    }
-    else
-    {
-        Logger::warn(UDS, "SendJobQueue full.");
-        return AbstractTransportLayer::ErrorCode::TP_QUEUE_FULL;
-    }
 }
 
 void DiagDispatcher::processQueue()
@@ -454,8 +477,6 @@ bool DiagDispatcher::isFromValidSender(TransportMessage const& transportMessage)
 {
     return TransportConfiguration::isFromTester(transportMessage);
 }
-
-void DiagDispatcher::trigger() { ::async::execute(fConfiguration.Context, fAsyncProcessQueue); }
 
 AbstractTransportLayer::ErrorCode DiagDispatcher::init()
 {
