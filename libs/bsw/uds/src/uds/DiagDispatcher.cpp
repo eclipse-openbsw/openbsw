@@ -63,6 +63,55 @@ AbstractTransportLayer::ErrorCode enqueueMessage(
     return AbstractTransportLayer::ErrorCode::TP_QUEUE_FULL;
 }
 
+IncomingDiagConnection* requestIncomingConnection(
+    bool connectionShutdownRequested,
+    ::etl::ipool& incomingDiagConnectionPool,
+    DiagnosisConfiguration& configuration,
+    IDiagSessionManager& sessionManager,
+    transport::AbstractTransportLayer& messageSender,
+    TransportMessage& requestMessage)
+{
+    if (connectionShutdownRequested)
+    {
+        return nullptr;
+    }
+
+    IncomingDiagConnection* pConnection = nullptr;
+    {
+        ::async::LockType const lock;
+        pConnection
+            = acquireIncomingDiagConnection(incomingDiagConnectionPool, configuration.Context);
+    }
+
+    if (pConnection != nullptr)
+    {
+        auto const targetAddress = requestMessage.getTargetId();
+
+        pConnection->messageSender      = &messageSender;
+        pConnection->diagSessionManager = &sessionManager;
+        pConnection->sourceAddress      = requestMessage.getSourceId();
+        pConnection->targetAddress      = targetAddress;
+        pConnection->responseSourceAddress
+            = (TransportConfiguration::isFunctionalAddress(targetAddress))
+                  ? configuration.DiagAddress
+                  : targetAddress;
+        pConnection->serviceId = requestMessage.getServiceId();
+        pConnection->open(configuration.ActivateOutgoingPending);
+        pConnection->requestMessage  = &requestMessage;
+        pConnection->responseMessage = nullptr;
+        return pConnection;
+    }
+
+    Logger::warn(
+        UDS,
+        "No incoming diag connection available for 0x%x --> 0x%x, service 0x%x",
+        requestMessage.getSourceId(),
+        requestMessage.getTargetId(),
+        requestMessage.getServiceId());
+
+    return nullptr;
+}
+
 DiagDispatcher::DiagDispatcher(
     ::etl::ipool& incomingDiagConnectionPool,
     ::etl::iqueue<transport::TransportJob>& sendJobQueue,
@@ -295,10 +344,16 @@ void DiagDispatcher::dispatchIncomingRequest(
     }
     if (!sendBusyNegativeResponse)
     {
-        IncomingDiagConnection* const pConnection
-            = dispatcher.requestIncomingConnection(*job.getTransportMessage());
+        IncomingDiagConnection* const pConnection = requestIncomingConnection(
+            dispatcher.fConnectionShutdownRequested,
+            dispatcher.incomingDiagConnectionPool,
+            configuration,
+            dispatcher.fSessionManager,
+            dispatcher,
+            *job.getTransportMessage());
         if (pConnection != nullptr)
         {
+            pConnection->diagDispatcher = &dispatcher;
             Logger::debug(
                 UDS,
                 "Opening incoming connection 0x%x --> 0x%x, service 0x%x",
@@ -332,46 +387,6 @@ void DiagDispatcher::dispatchIncomingRequest(
         job.getProcessedListener()->transportMessageProcessed(
             *pMessage, ITransportMessageProcessedListener::ProcessingResult::PROCESSED_NO_ERROR);
     }
-}
-
-IncomingDiagConnection* DiagDispatcher::requestIncomingConnection(TransportMessage& requestMessage)
-{
-    if (fConnectionShutdownRequested)
-    {
-        return nullptr;
-    }
-    IncomingDiagConnection* pConnection = nullptr;
-    {
-        ::async::LockType const lock;
-        pConnection
-            = acquireIncomingDiagConnection(incomingDiagConnectionPool, fConfiguration.Context);
-    }
-    if (pConnection != nullptr)
-    {
-        auto const targetAddress = requestMessage.getTargetId();
-
-        pConnection->diagDispatcher     = this;
-        pConnection->messageSender      = this;
-        pConnection->diagSessionManager = &fSessionManager;
-        pConnection->sourceAddress      = requestMessage.getSourceId();
-        pConnection->targetAddress      = targetAddress;
-        pConnection->responseSourceAddress
-            = (TransportConfiguration::isFunctionalAddress(targetAddress))
-                  ? fConfiguration.DiagAddress
-                  : targetAddress;
-        pConnection->serviceId = requestMessage.getServiceId();
-        pConnection->open(fConfiguration.ActivateOutgoingPending);
-        pConnection->requestMessage  = &requestMessage;
-        pConnection->responseMessage = nullptr;
-        return pConnection;
-    }
-    Logger::warn(
-        UDS,
-        "No incoming diag connection available for 0x%x --> 0x%x, service 0x%x",
-        requestMessage.getSourceId(),
-        requestMessage.getTargetId(),
-        requestMessage.getServiceId());
-    return nullptr;
 }
 
 void DiagDispatcher::diagConnectionTerminated(IncomingDiagConnection& diagConnection)

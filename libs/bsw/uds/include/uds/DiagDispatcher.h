@@ -131,8 +131,6 @@ private:
         transport::ITransportMessageProvidingListener& providingListener,
         DiagnosisConfiguration& configuration);
 
-    IncomingDiagConnection* requestIncomingConnection(transport::TransportMessage& requestMessage);
-
     void diagConnectionTerminated(IncomingDiagConnection& diagConnection);
 
     void checkConnectionShutdownProgress();
