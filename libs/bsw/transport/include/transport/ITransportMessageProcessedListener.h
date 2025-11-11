@@ -49,4 +49,16 @@ public:
         = 0;
 };
 
+class DefaultTransportMessageProcessedListener
+: public transport::ITransportMessageProcessedListener
+{
+public:
+    DefaultTransportMessageProcessedListener() {}
+
+    void transportMessageProcessed(
+        transport::TransportMessage& /* transportMessage */,
+        ProcessingResult const /* result */) override
+    {}
+};
+
 } // namespace transport

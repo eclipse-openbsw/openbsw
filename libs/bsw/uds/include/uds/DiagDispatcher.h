@@ -104,23 +104,6 @@ private:
     friend class ::http::html::UdsController;
     friend class IncomingDiagConnection;
 
-    class DefaultTransportMessageProcessedListener
-    : public transport::ITransportMessageProcessedListener
-    , public ::etl::uncopyable
-    {
-    public:
-        DefaultTransportMessageProcessedListener() {}
-
-        /**
-         * \see transport::ITransportMessageProcessedListener::transportMessageProcessed()
-         */
-
-        void transportMessageProcessed(
-            transport::TransportMessage& /* transportMessage */,
-            ProcessingResult const /* result */) override
-        {}
-    };
-
     void connectionManagerShutdownComplete();
 
     static void dispatchIncomingRequest(
@@ -161,7 +144,7 @@ private:
     bool fConnectionShutdownRequested;
 
     ShutdownDelegate fShutdownDelegate;
-    DefaultTransportMessageProcessedListener fDefaultTransportMessageProcessedListener;
+    ::transport::DefaultTransportMessageProcessedListener fDefaultTransportMessageProcessedListener;
     transport::TransportMessage fBusyMessage;
     uint8_t fBusyMessageBuffer[BUSY_MESSAGE_LENGTH + UdsVmsConstants::BUSY_MESSAGE_EXTRA_BYTES];
     ::async::Function fAsyncProcessQueue;
