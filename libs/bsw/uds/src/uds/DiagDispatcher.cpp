@@ -93,7 +93,7 @@ DiagDispatcher::DiagDispatcher(
     fBusyMessage.setPayloadLength(BUSY_MESSAGE_LENGTH);
 }
 
-ESR_NO_INLINE AbstractTransportLayer::ErrorCode DiagDispatcher::send_local(
+ESR_NO_INLINE AbstractTransportLayer::ErrorCode DiagDispatcher::send(
     TransportMessage& transportMessage,
     ITransportMessageProcessedListener* const pNotificationListener)
 {
@@ -146,13 +146,6 @@ ESR_NO_INLINE AbstractTransportLayer::ErrorCode DiagDispatcher::send_local(
         ::async::execute(fConfiguration.Context, fAsyncProcessQueue);
     }
     return result;
-}
-
-AbstractTransportLayer::ErrorCode DiagDispatcher::send(
-    TransportMessage& transportMessage,
-    ITransportMessageProcessedListener* const pNotificationListener)
-{
-    return send_local(transportMessage, pNotificationListener);
 }
 
 AbstractTransportLayer::ErrorCode DiagDispatcher::resume(
@@ -486,7 +479,7 @@ AbstractTransportLayer::ErrorCode DiagDispatcher::init()
     return AbstractTransportLayer::ErrorCode::TP_OK;
 }
 
-ESR_NO_INLINE bool DiagDispatcher::shutdown_local(ShutdownDelegate const delegate)
+ESR_NO_INLINE bool DiagDispatcher::shutdown(ShutdownDelegate const delegate)
 {
     Logger::debug(UDS, "DiagDispatcher::shutdown()");
     fEnabled          = false;
@@ -496,8 +489,6 @@ ESR_NO_INLINE bool DiagDispatcher::shutdown_local(ShutdownDelegate const delegat
             create<DiagDispatcher, &DiagDispatcher::connectionManagerShutdownComplete>(*this));
     return false;
 }
-
-bool DiagDispatcher::shutdown(ShutdownDelegate const delegate) { return shutdown_local(delegate); }
 
 void DiagDispatcher::connectionManagerShutdownComplete()
 {

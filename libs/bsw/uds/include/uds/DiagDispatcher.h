@@ -99,12 +99,6 @@ private:
     using SendBusyResponseCallback
         = ::etl::delegate<void(transport::TransportMessage const* const)>;
 
-    // workaround for large non virtual thunks
-    bool shutdown_local(ShutdownDelegate delegate);
-    transport::AbstractTransportLayer::ErrorCode send_local(
-        transport::TransportMessage& transportMessage,
-        transport::ITransportMessageProcessedListener* pNotificationListener);
-
     static uint8_t const BUSY_MESSAGE_LENGTH = 3U;
 
     friend class ::http::html::UdsController;
