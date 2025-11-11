@@ -140,6 +140,7 @@ Eclipse OpenBSW is a trademark of the Eclipse Foundation.
     guidelines/documentation
     guidelines/diagrams
     guidelines/3rdparty
+    guidelines/commit_message
 
 .. toctree::
     :maxdepth: 2
