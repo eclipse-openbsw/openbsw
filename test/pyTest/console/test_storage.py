@@ -95,7 +95,6 @@ def check_output(output, value):
     found = False
     for line in output:
         if b'0    :' in line:
-            print(f"line: {line}")
             # Extract the part after the colon, remove all whitespace, and compare
             hex_part = line.split(b':', 1)[1].decode(errors='ignore')
             # Remove all whitespace (spaces, tabs, etc.)
