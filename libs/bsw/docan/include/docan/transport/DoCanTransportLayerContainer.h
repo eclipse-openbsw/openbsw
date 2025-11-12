@@ -194,7 +194,7 @@ void DoCanTransportLayerContainer<DataLinkLayer>::shutdown(
             // possible value.
             ETL_ASSERT(
                 _shutdownPendingCount
-                    != std::numeric_limits<decltype(_shutdownPendingCount)>::max(),
+                    != ::etl::numeric_limits<decltype(_shutdownPendingCount)>::max(),
                 ETL_ERROR_GENERIC("pending count must not wrap"));
             ::interrupts::SuspendResumeAllInterruptsScopedLock const lock;
             ++_shutdownPendingCount;

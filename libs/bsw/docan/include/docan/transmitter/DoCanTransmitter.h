@@ -22,10 +22,8 @@
 #include <etl/error_handler.h>
 #include <etl/intrusive_list.h>
 #include <etl/ipool.h>
+#include <etl/limits.h>
 #include <etl/span.h>
-
-#include <algorithm>
-#include <limits>
 
 namespace docan
 {
@@ -48,9 +46,9 @@ public:
     using DataFrameTransmitterType = IDoCanDataFrameTransmitter<DataLinkLayerType>;
     using MessageTransmitterType   = DoCanMessageTransmitter<DataLinkLayerType>;
     using MessageTransmitterListType
-        = ::etl::intrusive_list<MessageTransmitterType, etl::bidirectional_link<0>>;
+        = ::etl::intrusive_list<MessageTransmitterType, ::etl::bidirectional_link<0>>;
     using MessageTransmitterListIterator = typename ::etl::
-        intrusive_list<MessageTransmitterType, etl::bidirectional_link<0>>::iterator;
+        intrusive_list<MessageTransmitterType, ::etl::bidirectional_link<0>>::iterator;
 
     /** Constructor.
      *
@@ -481,7 +479,7 @@ void DoCanTransmitter<DataLinkLayer>::handleResult(
             // Ensure we don't wrap _releasedTransmitterCount back to 0
             ETL_ASSERT(
                 _releasedTransmitterCount
-                    != std::numeric_limits<decltype(_releasedTransmitterCount)>::max(),
+                    != ::etl::numeric_limits<decltype(_releasedTransmitterCount)>::max(),
                 ETL_ERROR_GENERIC("transmitter count must not wrap"));
             ++_releasedTransmitterCount;
             _switchContext = true;
@@ -616,7 +614,7 @@ void DoCanTransmitter<DataLinkLayer>::resetTimer(MessageTransmitterType& message
         // Ensure _tickNeededCount won't wrap around
         ETL_ASSERT(
             _sendingConsecutiveFramesCount
-                != std::numeric_limits<decltype(_sendingConsecutiveFramesCount)>::max(),
+                != ::etl::numeric_limits<decltype(_sendingConsecutiveFramesCount)>::max(),
             ETL_ERROR_GENERIC("frame count must not wrap"));
         ++_sendingConsecutiveFramesCount;
     }
@@ -699,7 +697,7 @@ void DoCanTransmitter<DataLinkLayer>::setRemoveLock()
 {
     // Ensure the _removeLockCount increment won't wrap around
     ETL_ASSERT(
-        _removeLockCount != std::numeric_limits<decltype(_removeLockCount)>::max(),
+        _removeLockCount != ::etl::numeric_limits<decltype(_removeLockCount)>::max(),
         ETL_ERROR_GENERIC("lock count must not wrap"));
 
     ::interrupts::SuspendResumeAllInterruptsScopedLock const lock;

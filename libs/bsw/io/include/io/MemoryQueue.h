@@ -7,10 +7,10 @@
 
 #include <etl/algorithm.h>
 #include <etl/array.h>
+#include <etl/atomic.h>
 #include <etl/span.h>
 #include <etl/unaligned_type.h>
 
-#include <atomic>
 #include <cstddef>
 #include <cstdint>
 
@@ -44,14 +44,14 @@ class MemoryQueue
 
     struct RxData
     {
-        std::atomic<size_t> received{0U};
+        ::etl::atomic<size_t> received{0U};
     };
 
     RxData rx;
 
     struct TxData
     {
-        std::atomic<size_t> sent{0U};
+        ::etl::atomic<size_t> sent{0U};
         ::etl::array<uint8_t, CAPACITY> data;
         size_t allocated{0U};
         size_t minAvailable{CAPACITY};

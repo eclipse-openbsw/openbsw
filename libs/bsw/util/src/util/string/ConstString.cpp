@@ -2,7 +2,8 @@
 
 #include "util/string/ConstString.h"
 
-#include <cstring>
+#include <etl/char_traits.h>
+#include <etl/memory.h>
 
 namespace util
 {
@@ -11,7 +12,8 @@ namespace string
 int32_t ConstString::compare(ConstString const& other) const
 {
     size_t const compareLength = (_length < other._length) ? _length : other._length;
-    int32_t result = (compareLength > 0U) ? ::std::memcmp(_data, other._data, compareLength) : 0;
+    int32_t result
+        = (compareLength > 0U) ? ::etl::mem_compare(other._data, compareLength, _data) : 0;
     if (result == 0)
     {
         result = static_cast<int32_t>(_length) - static_cast<int32_t>(other._length);
@@ -49,7 +51,7 @@ int32_t ConstString::find(ConstString const& str, uint32_t const offset) const
     size_t idx = 0U;
     while ((idx + str._length) <= substring._length)
     {
-        if (std::strncmp(substring._data + idx, str._data, str._length) == ConstString::IS_EQUAL)
+        if (::etl::strncmp(substring._data + idx, str._data, str._length) == ConstString::IS_EQUAL)
         {
             return static_cast<int32_t>(idx) + static_cast<int32_t>(offset);
         }

@@ -6,9 +6,10 @@
 #include "util/format/Printf.h"
 #include "util/stream/IOutputStream.h"
 
+#include <etl/type_traits.h>
+
 #include <cstdarg>
 #include <cstring>
-#include <type_traits>
 
 namespace util
 {
@@ -229,7 +230,7 @@ private:
         char const* digits,
         T value,
         bool signedType,
-        typename std::make_unsigned<T>::type base,
+        typename ::etl::make_unsigned<T>::type base,
         int8_t& sign);
     static inline char const* getIntSign(ParamInfo const& paramInfo, int8_t sign);
     static inline char const* getIntPrefix(ParamInfo const& paramInfo, int8_t sign);
@@ -253,14 +254,14 @@ inline char* PrintfFormatter::formatIntDigits(
     char const* const digits,
     T value,
     bool const signedType,
-    typename std::make_unsigned<T>::type const base,
+    typename ::etl::make_unsigned<T>::type const base,
     int8_t& sign)
 {
     if (value != 0U)
     {
         if (signedType)
         {
-            if (static_cast<typename std::make_signed<T>::type>(value) < 0)
+            if (static_cast<typename ::etl::make_signed<T>::type>(value) < 0)
             {
                 value = -value;
                 sign  = -1;
