@@ -16,7 +16,7 @@
 #include "clock/clockConfig.h"
 #include "interrupt_manager.h"
 #include "lifecycle/StaticBsp.h"
-#include "systems/IEthernetDriverSystem.h"
+#include "systems/IEthernetSystem.h"
 #include "watchdog/Watchdog.h"
 
 #include <lifecycle/LifecycleManager.h>
@@ -123,7 +123,7 @@ namespace systems
 #ifdef PLATFORM_SUPPORT_ETHERNET
 namespace systems
 {
-::ethernet::IEthernetDriverSystem& getEthernetSystem() { return *::platform::s32kEthernetSystem; }
+::ethernet::IEthernetSystem& getEthernetSystem() { return *::platform::s32kEthernetSystem; }
 } // namespace systems
 #endif // PLATFORM_SUPPORT_ETHERNET
 
