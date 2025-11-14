@@ -17,11 +17,6 @@ build_dir_name = "code_coverage"
 
 
 def build():
-    build_dir = Path(build_dir_name)
-    build_dir.parents
-    if build_dir.exists():
-        shutil.rmtree(build_dir)
-
     env = dict(os.environ)
 
     threads = os.cpu_count() - 1
@@ -33,81 +28,78 @@ def build():
     env["CC"] = get_full_path("gcc-11")
     env["CXX"] = get_full_path("g++-11")
 
-    subprocess.run(
-        [
-            "cmake",
-            "--preset",
-            "tests-posix-debug",
-            "-B",
-            f"{build_dir_name}",
-            "-DCMAKE_C_COMPILER_LAUNCHER=sccache",
-            "-DCMAKE_CXX_COMPILER_LAUNCHER=sccache",
-        ],
-        check=True,
-        env=env,
-    )
+    build_dir1 = Path(build_dir_name) / "s32k1xx"
+    build_dir2 = Path(build_dir_name) / "posix"
 
-    subprocess.run(
-        ["cmake", "--build", f"{build_dir_name}", "--config", "Debug", "--verbose"],
-        check=True,
-        env=env,
-    )
+    for d in [build_dir1, build_dir2]:
+        if d.exists():
+            shutil.rmtree(d)
 
-    subprocess.run(
-        ["ctest", "--test-dir", f"{build_dir_name}", "--output-on-failure"],
-        check=True,
-        env=env,
-    )
+    subprocess.run([
+        "cmake", "--preset", "tests-s32k1xx-debug",
+        "-B", str(build_dir1),
+        "-DCMAKE_C_COMPILER_LAUNCHER=sccache",
+        "-DCMAKE_CXX_COMPILER_LAUNCHER=sccache"
+    ], check=True, env=env)
 
+    subprocess.run(["cmake", "--build", str(build_dir1), "--config", "Debug"], check=True, env=env)
 
-def generate_coverage():
-    # Capture coverage data
-    subprocess.run(
-        [
-            "lcov",
-            "--capture",
-            "--directory",
-            f"{build_dir_name}",
-            "--no-external",
-            "--base-directory",
-            ".",
-            "--output-file",
-            f"{build_dir_name}/coverage_unfiltered.info",
-        ],
-        check=True,
-    )
+    subprocess.run(["ctest", "--test-dir", str(build_dir1), "--output-on-failure"], check=True, env=env)
 
-    # Remove unwanted paths from coverage
+    subprocess.run([
+        "cmake", "--preset", "tests-posix-debug",
+        "-B", str(build_dir2),
+        "-DCMAKE_C_COMPILER_LAUNCHER=sccache",
+        "-DCMAKE_CXX_COMPILER_LAUNCHER=sccache"
+    ], check=True, env=env)
 
-    subprocess.run(
-        [
-            "lcov",
-            "--remove",
-            f"{build_dir_name}/coverage_unfiltered.info",
-            "*/3rdparty/*",
-            "*/mock/*",
-            "*/gmock/*",
-            "*/gtest/*",
-            "*/test/*",
-            "--output-file",
-            f"{build_dir_name}/coverage.info",
-        ],
-        check=True,
-    )
+    subprocess.run(["cmake", "--build", str(build_dir2), "--config", "Debug"], check=True, env=env)
 
-    # Generate HTML report
-    subprocess.run(
-        [
-            "genhtml",
-            f"{build_dir_name}/coverage.info",
-            "--output-directory",
-            f"{build_dir_name}/coverage",
-            "--prefix",
-            "/home/jenkins/",
-        ],
-        check=True,
-    )
+    subprocess.run(["ctest", "--test-dir", str(build_dir2), "--output-on-failure"], check=True, env=env)
 
+def generate_combined_coverage():
+    subprocess.run([
+        "lcov", "--capture", "--directory", "code_coverage/s32k1xx",
+        "--no-external", "--base-directory", ".", "--output-file",
+        "code_coverage/coverage_s32k1xx_unfiltered.info"
+    ], check=True)
+
+    subprocess.run([
+        "lcov", "--capture", "--directory", "code_coverage/posix",
+        "--no-external", "--base-directory", ".", "--output-file",
+        "code_coverage/coverage_posix_unfiltered.info"
+    ], check=True)
+
+    exclude_patterns = [
+        "*/mock/*",
+        "*/gmock/*",
+        "*/gtest/*",
+        "*/test/*",
+        "*/3rdparty/*"
+    ]
+
+    subprocess.run([
+        "lcov", "--remove", "code_coverage/coverage_s32k1xx_unfiltered.info", *exclude_patterns,
+        "--output-file", "code_coverage/coverage_s32k1xx.info"
+    ], check=True)
+
+    subprocess.run([
+        "lcov", "--remove", "code_coverage/coverage_posix_unfiltered.info", *exclude_patterns,
+        "--output-file", "code_coverage/coverage_posix.info"
+    ], check=True)
+
+    subprocess.run([
+        "lcov", "--add-tracefile", "code_coverage/coverage_s32k1xx.info",
+        "--add-tracefile", "code_coverage/coverage_posix.info",
+        "--output-file", f"{build_dir_name}/coverage.info"
+    ], check=True)
+
+    repo_root = Path(__file__).resolve().parents[1]
+    subprocess.run([
+        "genhtml", f"{build_dir_name}/coverage.info",
+        "--prefix", str(repo_root),
+        "--output-directory", f"{build_dir_name}/coverage"
+    ], check=True)
 
 def generate_badges():
     result = subprocess.run(
@@ -127,35 +119,34 @@ def generate_badges():
 
     if line_percentage:
         line_value = line_percentage.group(1)
-        print(f"Line Percentage: {line_value}%")
+        print(f"Line Coverage: {line_value}%")
         subprocess.run(
             [
                 "wget",
-                f"https://img.shields.io/badge/coverage-{line_value}%25-brightgreen.svg",
+                f"https://img.shields.io/badge/lines-{line_value}%25-brightgreen.svg",
                 "-O",
-                "line_coverage_badge.svg",
+                f"{build_dir_name}/line_coverage_badge.svg",
             ],
             check=True,
         )
 
     if function_percentage:
         function_value = function_percentage.group(1)
-        print(f"Function Percentage: {function_value}%")
+        print(f"Function Coverage: {function_value}%")
         subprocess.run(
             [
                 "wget",
-                f"https://img.shields.io/badge/coverage-{function_value}%25-brightgreen.svg",
+                f"https://img.shields.io/badge/functions-{function_value}%25-brightgreen.svg",
                 "-O",
-                "function_coverage_badge.svg",
+                f"{build_dir_name}/function_coverage_badge.svg",
             ],
             check=True,
         )
 
-
 if __name__ == "__main__":
     try:
         build()
-        generate_coverage()
+        generate_combined_coverage()
         generate_badges()
     except subprocess.CalledProcessError as e:
         print(f"Command failed with exit code {e.returncode}")
