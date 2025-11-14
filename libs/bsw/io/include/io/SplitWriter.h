@@ -27,7 +27,7 @@ template<size_t N>
 class SplitWriter : public IWriter
 {
 private:
-    static constexpr size_t INVALID_BUF = std::numeric_limits<size_t>::max();
+    static constexpr size_t INVALID_BUF = ::etl::numeric_limits<size_t>::max();
 
 public:
     // [PUBLIC_API_BEGIN]
@@ -71,12 +71,12 @@ public:
     /**
      * Statistics about dropped messages for each writer
      */
-    std::array<size_t, N> drops;
+    ::etl::array<size_t, N> drops;
 
     /**
      * Statistics about messages sent to each writer
      */
-    std::array<size_t, N> sent;
+    ::etl::array<size_t, N> sent;
 
 private:
     ::etl::span<IWriter*, N> const _destinations;

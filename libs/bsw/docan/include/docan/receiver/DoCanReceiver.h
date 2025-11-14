@@ -20,9 +20,8 @@
 #include <etl/error_handler.h>
 #include <etl/intrusive_list.h>
 #include <etl/ipool.h>
+#include <etl/limits.h>
 #include <etl/span.h>
-
-#include <limits>
 
 namespace docan
 {
@@ -214,7 +213,7 @@ void DoCanReceiver<DataLinkLayer>::init()
     // _maxFirstFrameDataSize will be an invalid garbage value
     ETL_ASSERT(
         _messageReceiverPool.max_item_size() - sizeof(MessageReceiverType)
-            < std::numeric_limits<FrameSizeType>::max(),
+            < ::etl::numeric_limits<FrameSizeType>::max(),
         ETL_ERROR_GENERIC("message receiver object size must fit"));
 }
 
@@ -675,7 +674,7 @@ ReceiveResult DoCanReceiver<DataLinkLayer>::release(MessageReceiverType& message
     }
     // Ensure we don't wrap _releasedReceiverCount back to 0
     ETL_ASSERT(
-        _releasedReceiverCount != std::numeric_limits<decltype(_releasedReceiverCount)>::max(),
+        _releasedReceiverCount != ::etl::numeric_limits<decltype(_releasedReceiverCount)>::max(),
         ETL_ERROR_GENERIC("receive count must not wrap"));
     ++_releasedReceiverCount;
     return ReceiveResult(false);
@@ -761,7 +760,7 @@ void DoCanReceiver<DataLinkLayer>::setRemoveLock()
 {
     // Don't allow _removeLockCount to wrap around
     ETL_ASSERT(
-        _removeLockCount != std::numeric_limits<decltype(_removeLockCount)>::max(),
+        _removeLockCount != ::etl::numeric_limits<decltype(_removeLockCount)>::max(),
         ETL_ERROR_GENERIC("lock count must not wrap"));
     ::interrupts::SuspendResumeAllInterruptsScopedLock const lock;
     ++_removeLockCount;

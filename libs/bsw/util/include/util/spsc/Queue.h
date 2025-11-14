@@ -3,10 +3,9 @@
 #pragma once
 
 #include <etl/array.h>
+#include <etl/atomic.h>
 
 #include <platform/estdint.h>
-
-#include <atomic>
 
 namespace util
 {
@@ -55,7 +54,7 @@ class Queue
 
     struct RxData
     {
-        std::atomic<size_t> received;
+        ::etl::atomic<size_t> received;
 
         RxData() : received(0U) {}
     };
@@ -190,8 +189,8 @@ namespace internal
 template<class T, size_t N, bool>
 struct TxData
 {
-    std::atomic<size_t> sent;
-    std::atomic<size_t> acked;
+    ::etl::atomic<size_t> sent;
+    ::etl::atomic<size_t> acked;
     ::etl::array<T, N> data;
 
     TxData() : sent(0U), acked(0U), data() {}
@@ -226,7 +225,7 @@ struct TxData
 template<class T, size_t N>
 struct TxData<T, N, false>
 {
-    std::atomic<size_t> sent;
+    ::etl::atomic<size_t> sent;
     ::etl::array<T, N> data;
 
     TxData() : sent(0U), data() {}

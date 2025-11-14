@@ -4,7 +4,7 @@
 
 #include <platform/estdint.h>
 
-#include <limits>
+#include <etl/limits.h>
 
 namespace docan
 {
@@ -29,7 +29,7 @@ inline bool less(uint32_t const firstTime, uint32_t const secondTime)
     // meaning the system will believe the given container is not yet ready to send, when actually
     // it most certainly is. However, INT32_MAX microseconds is 35 minutes, 47 seconds, so if the
     // system has waited that long in between time updates then something's obviously very wrong.
-    return (firstTime - secondTime) > static_cast<uint32_t>(::std::numeric_limits<int32_t>::max());
+    return (firstTime - secondTime) > static_cast<uint32_t>(::etl::numeric_limits<int32_t>::max());
 }
 } // namespace timermanagement
 } // namespace docan

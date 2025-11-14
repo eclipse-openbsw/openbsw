@@ -8,12 +8,11 @@
 #include <util/format/StringWriter.h>
 #include <util/stream/StringBufferOutputStream.h>
 
+#include <etl/algorithm.h>
 #include <etl/error_handler.h>
 #include <etl/span.h>
 
 #include <platform/estdint.h>
-
-#include <algorithm>
 
 namespace docan
 {
@@ -263,7 +262,7 @@ DoCanNormalAddressingFilter<DataLinkLayer, AddressEntry>::findEntryTypeByRecepti
     AddressEntryType key{};
     key._canReceptionId = receptionAddress;
     typename AddressEntrySliceType::const_iterator const it
-        = std::lower_bound(beginIt, endIt, key, &lessReceptionId);
+        = ::etl::lower_bound(beginIt, endIt, key, &lessReceptionId);
     return ((it != endIt) && (it->_canReceptionId == receptionAddress)) ? &*it : nullptr;
 }
 

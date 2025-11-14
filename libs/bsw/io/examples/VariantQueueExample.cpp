@@ -1,5 +1,6 @@
 // Copyright 2024 Accenture.
 
+#include <etl/algorithm.h>
 #include <etl/unaligned_type.h>
 #include <io/VariantQueue.h>
 
@@ -58,7 +59,7 @@ void write()
         writer,
         b,
         big_payload_size,
-        [](::etl::span<uint8_t> const& buffer) { std::fill(buffer.begin(), buffer.end(), 42); });
+        [](::etl::span<uint8_t> const& buffer) { ::etl::fill(buffer.begin(), buffer.end(), 42); });
     // EXAMPLE_END write
 }
 
