@@ -2,6 +2,7 @@
 
 #include "app/app.h"
 
+#include "bsp/Uart.h"
 #include "console/console.h"
 #include "lifecycle/StaticBsp.h"
 #include "logger/logger.h"
@@ -80,6 +81,7 @@ extern StaticBsp& getStaticBsp();
 
 namespace app
 {
+using bsp::Uart;
 using ::util::logger::LIFECYCLE;
 using ::util::logger::Logger;
 
@@ -193,8 +195,15 @@ IdleHandler idleHandler;
 
 void startApp();
 
+void staticInit()
+{
+    Uart::getInstance(Uart::Id::TERMINAL).init();
+    Uart::getInstance(Uart::Id::TERMINAL).waitForTxReady();
+}
+
 void run()
 {
+    staticInit();
     printf("hello\r\n");
     idleHandler.init();
     AsyncAdapter::run(AsyncAdapter::StartAppFunctionType::create<&startApp>());

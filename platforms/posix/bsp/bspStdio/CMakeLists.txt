@@ -1,3 +1,3 @@
 add_library(bspStdio src/bsp/stdIo/stdIo.cpp)
 
-target_link_libraries(bspStdio PRIVATE platform)
+target_link_libraries(bspStdio PRIVATE bsp bspUart platform)

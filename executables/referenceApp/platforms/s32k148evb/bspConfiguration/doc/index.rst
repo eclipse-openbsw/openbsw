@@ -24,7 +24,6 @@ Below are the modules available for configuration:
 - ``bspIo_output`` module contains configuration related to output pins.
 - ``bspPwm`` module provides an interface for configuring and managing a PWM device.
 - ``bspIo`` module contains configuration related to input/output pins.
-- ``bspSci`` module contains the configuration of the serial communication interface.
 - ``bspTimer`` module contains the configuration of Flex Timer (FTM) register values.
 
 .. toctree::

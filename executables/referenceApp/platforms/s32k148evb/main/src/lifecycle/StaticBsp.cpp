@@ -3,6 +3,7 @@
 #include "lifecycle/StaticBsp.h"
 
 #include "bsp/SystemTime.h"
+#include "bsp/Uart.h"
 #include "bsp/eeprom/EepromConfiguration.h"
 #include "bsp/phy/phyConfiguration.h"
 #include "bsp/timer/ftmConfiguration.hpp"
@@ -12,9 +13,9 @@
 #include "io/Io.h"
 #include "mcu/mcu.h"
 #include "mdio/MdioTja1101.h"
-#include "sci/SciDevice.h"
 
 using namespace bios;
+using bsp::Uart;
 
 extern "C"
 {
@@ -37,7 +38,6 @@ StaticBsp::StaticBsp()
 , _requestUpdateGateRegisters(false)
 , _mode(_INIT_)
 {
-    sciInit();
     initSystemTimer();
 }
 
