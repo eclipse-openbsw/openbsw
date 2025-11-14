@@ -21,8 +21,8 @@ uint8_t freeRxDescriptorIndex(
     auto const pbuf1 = reinterpret_cast<::lwiputils::RxCustomPbuf*>(pbufAtIndex[nextBusy]);
     auto const pbuf2 = reinterpret_cast<::lwiputils::RxCustomPbuf*>(pbufAtIndex[descriptorIndex]);
 
-    ::etl::swap(pbufAtIndex[nextBusy], pbufAtIndex[descriptorIndex]);
-    ::etl::swap(pbuf1->slot, pbuf2->slot);
+    ::ETL_OR_STD::swap(pbufAtIndex[nextBusy], pbufAtIndex[descriptorIndex]);
+    ::ETL_OR_STD::swap(pbuf1->slot, pbuf2->slot);
 
     return (nextBusy + 1) % pbufAtIndex.size();
 }

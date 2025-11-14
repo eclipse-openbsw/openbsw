@@ -58,6 +58,7 @@ public:
     , BroadcastAddress(broadcastAddress)
     , MaxResponsePayloadSize(maxResponsePayloadSize)
     , DiagBusId(busId)
+    , ActivateOutgoingPending(true)
     , AcceptAllRequests(acceptAllRequests)
     , CopyFunctionalRequests(copyFunctionalRequests)
     , Context(context)

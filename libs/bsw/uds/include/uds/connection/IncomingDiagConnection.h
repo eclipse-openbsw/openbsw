@@ -193,17 +193,6 @@ public:
         uint8_t const request[],
         uint16_t requestLength);
 
-    /**
-     * Change how fast the response pending messages are send. Provided value will be added
-     * to the original value. A negative value will cause the message to be send faster.
-     * \param diffTimeMs Timing difference in milliseconds
-     */
-    void changeRespPendingTimer(int32_t const diffTimeMs)
-    {
-        _pendingTimeOut
-            = static_cast<uint32_t>(static_cast<int32_t>(DEFAULT_PENDING_TIMEOUT_MS) + diffTimeMs);
-    }
-
     uint16_t sourceAddress = static_cast<uint16_t>(0xFFU);
     uint16_t targetAddress = static_cast<uint16_t>(0XFFU);
     uint8_t serviceId      = 0xFFU;

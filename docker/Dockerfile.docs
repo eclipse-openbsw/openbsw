@@ -13,9 +13,9 @@ RUN for i in 1 2 3; do \
 COPY doc/requirements.txt /tmp/requirements.txt
 RUN pip3 install -r /tmp/requirements.txt
 
-RUN wget https://sourceforge.net/projects/plantuml/files/plantuml.jar/download -O /usr/local/bin/plantuml.jar \
-    && echo '#!/bin/sh\njava -jar /usr/local/bin/plantuml.jar "$@"' > /usr/local/bin/plantuml && \
-    chmod +x /usr/local/bin/plantuml
+RUN wget https://github.com/plantuml/plantuml/releases/download/v1.2025.10/plantuml.jar -O /usr/local/bin/plantuml.jar \
+    && echo '#!/bin/sh\njava -jar /usr/local/bin/plantuml.jar "$@"' > /usr/local/bin/plantuml \
+    && chmod +x /usr/local/bin/plantuml
 
 RUN pip3 install coverxygen
 
