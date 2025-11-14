@@ -27,14 +27,4 @@ struct DiagnosisConfiguration
     ::async::ContextType Context;
 };
 
-inline IncomingDiagConnection*
-acquireIncomingDiagConnection(::etl::ipool& pool, ::async::ContextType context)
-{
-    if (pool.full())
-    {
-        return nullptr;
-    }
-    return pool.template create<IncomingDiagConnection>(context);
-}
-
 } // namespace uds

@@ -149,4 +149,16 @@ private:
     DiagJobRoot& fDiagJobRoot;
 };
 
+// FIXME: This should not be public api, it is just exposed here because
+// of strange usage in tests.
+inline IncomingDiagConnection*
+acquireIncomingDiagConnection(::etl::ipool& pool, ::async::ContextType context)
+{
+    if (pool.full())
+    {
+        return nullptr;
+    }
+    return pool.template create<IncomingDiagConnection>(context);
+}
+
 } // namespace uds
