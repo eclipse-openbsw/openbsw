@@ -68,7 +68,7 @@ void StaticBsp::hwInit()
     _mode = _RUN_;
 }
 
-void StaticBsp::shutdown() {}
+void StaticBsp::shutdown() { _eepromDriver.deinit(); }
 
 void StaticBsp::cyclic()
 {

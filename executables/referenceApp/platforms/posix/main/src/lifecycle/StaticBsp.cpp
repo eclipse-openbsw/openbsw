@@ -3,3 +3,5 @@
 #include "lifecycle/StaticBsp.h"
 
 void StaticBsp::init() { _eepromDriver.init(); }
+
+void StaticBsp::deinit() { _eepromDriver.deinit(); }

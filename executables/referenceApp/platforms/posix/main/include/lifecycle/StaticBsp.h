@@ -11,6 +11,7 @@ public:
     StaticBsp() {}
 
     void init();
+    void deinit();
 
     eeprom::IEepromDriver& getEepromDriver() { return _eepromDriver; }
 
