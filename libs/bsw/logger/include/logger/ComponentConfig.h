@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include <cstdint>
+
 #include "logger/ComponentMapping.h"
 #include "logger/IComponentConfig.h"
 
@@ -29,6 +31,11 @@ public:
     getComponentInfoByName(::util::string::ConstString const& componentName) const override;
     void readLevels() override;
     void writeLevels() override;
+
+    void DoSomething()
+    {
+        // Intentionally just to trigger clang-tidy on file changed
+    }
 
 private:
     ComponentMapping<IndexUpperBound>& _componentMapping;
