@@ -1,6 +1,5 @@
 #pragma once
 
-#include <bsp/uart/IUartApi.h>
 #include <bsp/uart/UartConcept.h>
 #include <bsp/uart/UartId.h>
 
@@ -8,12 +7,11 @@ namespace bsp
 {
 /**
  * This class implements the UART communication for S32K1xx platforms.
- * It inherits from the base class IUartApi and implements the methods for writing and reading data
- * over the UART interface. It also provides a method for initializing the UART communication.
+ * It implements the methods for writing and reading data over the UART interface.
+ * It also provides a method for initializing the UART communication.
+ * It follows the method signatures defined in the UartConcept.h file.
  */
-class Uart
-: public bsp::IUartApi
-, public bsp::UartId
+class Uart : public bsp::UartId
 {
 public:
     /**

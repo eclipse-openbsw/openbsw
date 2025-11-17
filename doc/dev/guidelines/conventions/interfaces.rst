@@ -29,7 +29,6 @@ Design Conventions
   typically named after the interface itself (e.g., `IExampleApi.h` for the `IExampleApi` interface).
 - Declaration of interfaces using pure virtual methods should be also possible,
   but for performance reasons, prefer static interfaces with concept checks where applicable.
-- The low level interfaces should be placed in the bsp namespace.
 - Isolate the configuration and platform-specific details from the interface definition
   to ensure portability across different platforms.
 - Configure the concrete implementations of the interfaces in separate configuration
@@ -37,9 +36,9 @@ Design Conventions
 
 Approaches to Interface Definition
 ----------------------------------
-There are three possible approaches to define interfaces:
-using pure virtual classes (abstract base classes), using static interfaces with concept checks,
-and using static interface methods.
+There are two possible approaches to define interfaces:
+using pure virtual classes (abstract base classes) and using static interfaces with concept checks.
+The second approach can be applied also for classes having only static methods.
 
 1. Pure Virtual Classes (Abstract Base Classes):
 
@@ -84,7 +83,8 @@ Example:
 
 2. Static Interfaces with Concept Checks:
 
-- Define a class with methods representing the interface.
+- The interface is documented in a concept file.
+- Concrete classes implement the required methods without inheriting from a base class.
 - Use C++20 concepts to enforce that concrete classes implement the required methods.
 - This approach provides compile-time checking without the overhead of virtual function calls.
 
@@ -92,29 +92,19 @@ Example:
 
 .. code-block:: cpp
 
-    // libs/bsw/bsp/include/bsp/example/IExampleApi.h
-
-    #pragma once
-
-    namespace bsp {
-
-    class IExampleApi {
-    public:
-        size_t read(::etl::span<uint8_t> data);
-        size_t write(::etl::span<uint8_t const> const data);
-    };
-
-    } // namespace bsp
-
-.. code-block:: cpp
-
     // libs/bsw/bsp/include/bsp/example/ExampleConcept.h. Example concept check
 
     #if __cpp_concepts
 
+    /**
+    * Concept to check if a class implements the ExampleApi correctly.
+    * The class must provide the following methods:
+    * - size_t write(::etl::span<uint8_t const> const& data)
+    * - size_t read(::etl::span<uint8_t> data)
+    */
     template<typename T>
     concept ExampleConcept
-        = requires(T a, ::etl::span<uint8_t const> const& writeData, ::etl::span<uint8_t> readData) {
+        = requires(T a, ::etl::span<uint8_t const> const writeData, ::etl::span<uint8_t> readData) {
             {
                 a.write(writeData)
             } -> std::same_as<size_t>;
@@ -123,12 +113,9 @@ Example:
             } -> std::same_as<size_t>;
         };
 
-    template<typename T>
-    concept ExampleCheckInterface = std::derived_from<T, bsp::IExampleApi> && ExampleConcept<T>;
-
     #define BSP_EXAMPLE_CONCEPT_CHECKER(_class) \
         static_assert(                       \
-            bsp::ExampleCheckInterface<_class>, \
+            bsp::ExampleConcept<_class>, \
             "Class " #_class " does not implement IExampleApi interface correctly");
 
     #else
@@ -141,7 +128,6 @@ Example:
 
     #pragma once
 
-    #include <bsp/IExampleApi.h>
     #include <bsp/ExampleConcept.h>
     namespace bsp {
     class Example {
@@ -150,43 +136,6 @@ Example:
         size_t write(::etl::span<uint8_t const> const data);
     };
     BSP_EXAMPLE_CONCEPT_CHECKER(Example);
-    } // namespace bsp
-
-3. Static Interface Methods:
-
-- Define a class with static methods representing the interface.
-- Concrete classes implement the static methods.
-- This approach is suitable for scenarios where instance management is not required.
-
-Example:
-
-.. code-block:: cpp
-
-    // libs/bsw/bsp/include/bsp/example/IExampleApi.h
-
-    #pragma once
-
-    namespace bsp {
-    class IExampleApi {
-    public:
-        static size_t read(::etl::span<uint8_t> data);
-        static size_t write(::etl::span<uint8_t const> const& data);
-    };
-    } // namespace bsp
-
-.. code-block:: cpp
-
-    // platforms/s32k1xx/bsp/bspExample/include/bsp/Example.h
-    #pragma once
-
-    #include <bsp/IExampleApi.h>
-
-    namespace bsp {
-    class Example : public IExampleApi {
-    public:
-        static size_t read(::etl::span<uint8_t> data);
-        static size_t write(::etl::span<uint8_t const> const& data);
-    };
     } // namespace bsp
 
 Configuration of Concrete Implementations
@@ -225,7 +174,6 @@ References
 
 - Please refer to the following files for examples of interface definitions and configurations:
 
-  - `bsp/uart/IUartApi.h` - Interface definition using static interfaces with concepts.
   - `bsp/uart/UartConcept.h` - Concept checks for static interface.
   - `bsp/uart/Uart.h` - Concrete implementation of the interface.
   - `bsp/uart/UartConfig.cpp` - Configuration of concrete implementations.

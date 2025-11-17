@@ -1,7 +1,6 @@
 #pragma once
 
 #include <bsp/UartId.h>
-#include <bsp/uart/IUartApi.h>
 #include <bsp/uart/UartConcept.h>
 
 namespace bsp
@@ -9,9 +8,7 @@ namespace bsp
 /**
  * This class implements the UART communication for the unit tests.
  */
-class Uart
-: public bsp::IUartApi
-, public bsp::UartId
+class Uart : public bsp::UartId
 {
 public:
     /**

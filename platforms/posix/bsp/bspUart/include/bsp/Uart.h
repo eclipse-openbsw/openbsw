@@ -1,7 +1,6 @@
 #pragma once
 
 #include <bsp/UartId.h>
-#include <bsp/uart/IUartApi.h>
 #include <bsp/uart/UartConcept.h>
 
 #include <termios.h>
@@ -10,15 +9,12 @@ namespace bsp
 {
 /**
  * This class implements the UART communication for the Posix platform.
- * It inherits from the IUartApi and UartId classes to provide the necessary
- * functionality and configuration for UART communication.
+ * It provides the necessary functionality and configuration for UART communication.
  * It uses the terminal stdout and stdin interfaces for reading and writing data.
  * The class provides methods to write and read data over the UART interface,
  * initialize the stdout/stdin communication, and retrieve a singleton instance of the Uart class.
  */
-class Uart
-: public bsp::IUartApi
-, public bsp::UartId
+class Uart : public bsp::UartId
 {
 public:
     /**
