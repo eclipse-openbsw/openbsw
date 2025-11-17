@@ -235,7 +235,7 @@ def create_builder(gcc_base_filename, elf_file=None, su_dir=None, src_root=None)
 
 
 def get_arm_tools_prefix_path():
-    obj_dump = shutil.which("/usr/bin/gcc-arm-none-eabi/bin/arm-none-eabi-objdump")
+    obj_dump = shutil.which("/opt/arm-gnu-toolchain/bin/arm-none-eabi-objdump")
     if not obj_dump:
         return None
     gcc_tools_base_dir = os.path.dirname(os.path.dirname(obj_dump))

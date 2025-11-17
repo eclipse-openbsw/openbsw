@@ -1,9 +1,7 @@
 # Docker Information
 
 > [!WARNING]
-> The docker setup is currently in re-work. We are moving the image to a separate repository and
-> upload it as a re-usable image to avoid building it locally. Also the CI can benefit from it by
-> not needing to build the image for every build.
+> The docker setup is currently in re-work.
 
 Developer Dockerfile can be used to set up the development environment.
 It includes all the necessary tools, libraries, and dependencies required

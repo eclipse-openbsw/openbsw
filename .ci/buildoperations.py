@@ -33,12 +33,12 @@ def get_environment(cxxid: str, platform: str):
 
     if platform == "arm":
         if cxxid == "gcc":
-            env["CC"] = get_full_path("/usr/bin/gcc-arm-none-eabi/bin/arm-none-eabi-gcc")
-            env["CXX"] = get_full_path("/usr/bin/gcc-arm-none-eabi/bin/arm-none-eabi-g++")
+            env["CC"] = get_full_path("/opt/arm-gnu-toolchain/bin/arm-none-eabi-gcc")
+            env["CXX"] = get_full_path("/opt/arm-gnu-toolchain/bin/arm-none-eabi-g++")
             return env
         if cxxid == "clang":
-            env["CC"] = get_full_path("/usr/bin/llvm-arm/bin/clang")
-            env["CXX"] = get_full_path("/usr/bin/llvm-arm/bin/clang++")
+            env["CC"] = get_full_path("/opt/llvm-et-arm/bin/clang")
+            env["CXX"] = get_full_path("/opt/llvm-et-arm/bin/clang++")
             return env
 
     if platform == "linux":

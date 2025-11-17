@@ -10,7 +10,7 @@ include("${CMAKE_CURRENT_LIST_DIR}/ArmNoneEabi-header.cmake")
 # automatically from it (respecting the order in the project call).
 
 if (NOT DEFINED CMAKE_C_COMPILER AND NOT DEFINED ENV{CC})
-    set(CMAKE_C_COMPILER "/usr/bin/llvm-arm/bin/clang")
+    set(CMAKE_C_COMPILER "/opt/llvm-et-arm/bin/clang")
 endif ()
 
 set(CMAKE_C_COMPILER_TARGET ${ARM_TARGET_TRIPLE})

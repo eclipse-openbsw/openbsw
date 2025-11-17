@@ -36,12 +36,12 @@ ENV PATH="/usr/bin/llvm/bin:${PATH}"
 
 RUN wget https://developer.arm.com/-/media/Files/downloads/gnu/14.3.rel1/binrel/arm-gnu-toolchain-14.3.rel1-x86_64-arm-none-eabi.tar.xz \
     && tar xf arm-gnu-toolchain-14.3.rel1-x86_64-arm-none-eabi.tar.xz \
-    && mv arm-gnu-toolchain-14.3.rel1-x86_64-arm-none-eabi /usr/bin/gcc-arm-none-eabi \
+    && mv arm-gnu-toolchain-14.3.rel1-x86_64-arm-none-eabi /opt/arm-gnu-toolchain \
     && rm arm-gnu-toolchain-14.3.rel1-x86_64-arm-none-eabi.tar.xz
 
 RUN wget https://github.com/ARM-software/LLVM-embedded-toolchain-for-Arm/releases/download/release-19.1.1/LLVM-ET-Arm-19.1.1-Linux-x86_64.tar.xz \
     && tar -xf LLVM-ET-Arm-19.1.1-Linux-x86_64.tar.xz \
-    && mv LLVM-ET-Arm-19.1.1-Linux-x86_64 /usr/bin/llvm-arm \
+    && mv LLVM-ET-Arm-19.1.1-Linux-x86_64 /opt/llvm-et-arm \
     && rm LLVM-ET-Arm-19.1.1-Linux-x86_64.tar.xz
 
 RUN curl -L https://github.com/numtide/treefmt/releases/download/v2.1.0/treefmt_2.1.0_linux_amd64.tar.gz -o treefmt.tar.gz \
