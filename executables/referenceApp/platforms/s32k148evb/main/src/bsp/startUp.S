@@ -410,6 +410,28 @@ Reset_Handler:
     bgt    .LC1
 .LC0:
 
+/*     Loop to copy code from read only memory to RAM. The ranges
+ *      of copy from/to are specified by following symbols evaluated in
+ *      linker script.
+ *      __DATA_ROM_RX: Start of executable code on ROM to copy i.e., begin
+ *      of launchFromRAM section to copy from.
+ *      __LAUNCH_FROM_RAM_START/__LAUNCH_FROM_RAM_END: RAM address range that
+ *      data should be copied to. Both must be aligned to 4 bytes boundary.  */
+
+    ldr    r1, =__DATA_ROM_RX
+    ldr    r2, =__LAUNCH_FROM_RAM_START
+    ldr    r3, =__LAUNCH_FROM_RAM_END
+
+    subs    r3, r2
+    ble     .L2C0
+
+.L2C1:
+    subs    r3, 4
+    ldr    r0, [r1,r3]
+    str    r0, [r2,r3]
+    bgt    .L2C1
+.L2C0:
+
 /*     This part of work usually is done in C library startup code. Otherwise,
  *     define this macro to enable it in this startup.
  *

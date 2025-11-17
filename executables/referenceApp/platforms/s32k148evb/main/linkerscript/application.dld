@@ -26,6 +26,7 @@ MEMORY
   /* SRAM_L */
   Data (RW) : ORIGIN = SRAM_L_START, LENGTH = SRAM_L_END + 1 - SRAM_L_START
   /* SRAM_U */
+  ApplicationRAM (RX) : ORIGIN = SRAM_U_START, LENGTH = 0x100
   NoInit (RW) : ORIGIN = SRAM_U_END + 1 - 0x400, LENGTH = 0x400
 }
 
@@ -218,20 +219,33 @@ SECTIONS
     . = ALIGN(4);
     __DATA_RAM = .;
     __data_start__ = .;
-    _sdata = .;
     *(.data)
     *(.data*)
     KEEP(*(.jcr*))
     . = ALIGN(4);
     __data_end__ = .;
-    _edata = .;
   } > Data
 
-  __DATA_END = __DATA_ROM + (__data_end__ - __data_start__);
-  ___data_size = _edata - _sdata;
+  /* Compute start of executable code in ROM, necessary to be executed
+   * from RAM */
+  __DATA_ROM_RX = __DATA_ROM + (__data_end__ - __data_start__);
+
+  .launchFromRAM : AT(__DATA_ROM_RX)
+  {
+    . = ALIGN(4);
+    __LAUNCH_FROM_RAM_START = .;
+    KEEP(*(.launchFromRAM))
+    KEEP(*(.launchFromRAM*))
+    . = ALIGN(4);
+    __LAUNCH_FROM_RAM_END = .;
+  }
+  > ApplicationRAM = 0xffffffff
+
+  ___data_size = __data_end__ - __data_start__;
+  ___data_rx_size = __LAUNCH_FROM_RAM_END - __LAUNCH_FROM_RAM_START;
 
   __DATA_ROM_START = __DATA_ROM;
-  __DATA_ROM_END = __DATA_ROM + ___data_size;
+  __DATA_ROM_END = __DATA_ROM + ___data_size + ___data_rx_size;
   __USED_FLASH_END = __DATA_ROM_END;
 
   /* Uninitialized data */

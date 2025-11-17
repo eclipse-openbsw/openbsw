@@ -63,6 +63,17 @@ bool EepromDriver::isInitialized() const
             == _configuration.fPartitionCode));
 }
 
+/* Some EEPROM commands (ex. Program partition) must not be launched from flash memory,
+ * since flash memory resources are not accessible during command execution.
+ * That is why we launch command from RAM.
+ *
+ * The code it copied from ROM to RAM in startUp.S. Also, MemoryProtection.cpp needs
+ * to configure MPU correctly. Currently, configured as REGION_FULL_ACCESS for us.
+ */
+#ifndef UNIT_TEST
+uint8_t launchCommandFromRAM() __attribute__((section(".launchFromRAM")));
+#endif
+
 __attribute__((aligned(32))) uint8_t launchCommandFromRAM()
 {
     uint32_t timeout             = 0U;
@@ -112,23 +123,7 @@ bsp::BspReturnCode EepromDriver::launchCommand()
         FTFC->FCCOB[i + 3U] = _cmd[i];
     }
 
-    /* The maximum possible size of the launchCommandFromRAM function is 0x88 bytes,
-     * which was checked with different compiler optimization options.
-     * Use slightly bigger RAM buffer to store the function */
-    constexpr size_t FUNCTION_BUF_SIZE = 0x100U;
-    __attribute__((aligned(32))) ::etl::array<uint8_t, FUNCTION_BUF_SIZE> copyOfLaunchFunction;
-
-    /* Some EEPROM commands (ex. Program partition) must not be launched from flash memory,
-     * since flash memory resources are not accessible during command execution.
-     * That is why we launch command from RAM.
-     * NOTE: Also make sure to clear the Thumb state bit to get the actual function address. */
-    auto const* funPtr
-        = reinterpret_cast<uint8_t*>(reinterpret_cast<uintptr_t>(&launchCommandFromRAM) & ~1U);
-
-    (void)::etl::mem_copy(funPtr, copyOfLaunchFunction.size(), copyOfLaunchFunction.data());
-
-    uint8_t (*f)()    = reinterpret_cast<uint8_t (*)()>(&copyOfLaunchFunction[1U]);
-    auto const result = f();
+    auto const result = launchCommandFromRAM();
 
     cacheEnable();
     resumeAllInterrupts(oldInterruptStatus);
