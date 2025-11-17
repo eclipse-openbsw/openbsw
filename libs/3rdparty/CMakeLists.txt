@@ -1,10 +1,14 @@
-add_subdirectory(googletest)
+if (BUILD_UNIT_TESTS)
+    add_subdirectory(googletest)
 
-# add the custom extensions for unit tests
-target_include_directories(
-    gtest_main
-    PUBLIC
-        "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/googletest/extensions>")
+    # add the custom extensions for unit tests
+    target_include_directories(
+        gtest_main
+        PUBLIC
+            "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/googletest/extensions>"
+    )
+
+endif ()
 
 # configure printf options
 set(BUILD_STATIC_LIBRARY
@@ -34,9 +38,13 @@ set(SUPPORT_EXPONENTIAL_SPECIFIERS
 
 add_subdirectory(printf)
 
-add_subdirectory(freeRtos EXCLUDE_FROM_ALL)
+if (BUILD_TARGET_RTOS STREQUAL "FREERTOS")
+    add_subdirectory(freeRtos EXCLUDE_FROM_ALL)
+endif ()
 
-add_subdirectory(threadx EXCLUDE_FROM_ALL)
+if (BUILD_TARGET_RTOS STREQUAL "THREADX")
+    add_subdirectory(threadx EXCLUDE_FROM_ALL)
+endif ()
 
 set(LWIP_DIR "${CMAKE_CURRENT_SOURCE_DIR}/lwip")
 set(LWIP_INCLUDE_DIRS
