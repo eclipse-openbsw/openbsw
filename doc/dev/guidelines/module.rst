@@ -64,6 +64,8 @@ tools
 
 Optional folder for tools or scripts related to this module.
 
+.. _module_spec:
+
 module.spec
 -----------
 
@@ -97,6 +99,9 @@ Every module requires a ``module.spec`` file which includes the basic settings o
     security: true              # Module is security capable.     [true, false]                  false
                                 # Additional security tests are
                                 # executed on this module.
+
+    unit_test: false            # Module must have a unit test    [true, false]                  true
+
 
 .. note::
     - Only properties differing from their respective default values should be stated in the

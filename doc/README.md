@@ -1,45 +1,49 @@
-# Building the project documentation
+# Building the Project Documentation
 
-## Building documentation with [`Sphinx`](https://www.sphinx-doc.org/)
+## Building Developer Documentation With [`Sphinx`](https://www.sphinx-doc.org/)
 
-[`Download Zipped Documentation`](https://github.com/esrlabs/open-bsw/releases/download/preview/open-bsw-doc.zip)
+Sphinx is a documentation generator originally created for the Python language, but now used widely
+for many kinds of projects including C++.
 
-Documentation in RST format throughout the code can be exported to HTML as described below.
+Sphinx uses
+[`reStructuredText`](https://docutils.sourceforge.io/rst.html) as its markup language.
+If you are not familiar with reStructuredText, you may read the
+[`reStructuredText Primer`](https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html)
+on the Sphinx webpage first.
 
 Prerequisites:
-- Python 3.10.x
-- [`plantuml`](https://plantuml.com/starting)
+- Install Python 3.10 or higher
+- Install [`plantuml`](https://plantuml.com/starting)
+- Install the required Python modules:
+  ```bash
+  pip install -r doc/dev/requirements.txt
+  ```
 
-First install the required Python modules:
-```bash
-pip install -r requirements.txt
-```
-and then build the documentation calling:
+To build the documentation, go to `doc/dev` and call:
 ```bash
 make html
 ```
 
-## Building documentation with [`Doxygen`](https://www.doxygen.nl/)
+The entry point HTML page is found at `doc/dev/build/html/doc/dev/index.html`.
 
-Using the settings file ``doc/api/Doxyfile``,
-`Doxygen` will generate documentation
-from formatted comments in C/C++ code in the subdirectories...
+## Building API Documentation with [`Doxygen`](https://www.doxygen.nl/)
 
-* ``libs/bsp``
-* ``libs/bsw``
+ Using the settings file `doc/api/Doxyfile`, Doxygen generates the documentation from formatted
+comments in the C/C++ code across all relevant subfolders; see
+[Doxygen Main Page](DoxygenMainPage.md) for details.
 
-by running the following in the ``doc/api`` directory...
-
+To build the documentation, go to `doc/api` and call:
 ```bash
 doxygen Doxyfile
 ```
 
-The entry point html file is found at `doc/api/doxygenOut/html/index.html`
+The entry point HTML page is found at `doc/api/doxygenOut/html/index.html`.
 
-XML output is also generated in  `doc/api/doxygenOut/xml/` from which coverage information can be extracted using [`coverxygen`](https://github.com/psycofdj/coverxygen). For example...
+XML output is also generated in  `doc/api/doxygenOut/xml/` from which coverage information can
+be extracted using [`coverxygen`](https://github.com/psycofdj/coverxygen). For example:
 
 ```bash
-$ python3 -m coverxygen --format summary --xml-dir doxygenOut/xml/ --src-dir .. --output -
+$ python3 -m coverxygen --format summary --xml-dir doxygenOut/xml/ --src-dir ../.. --output -
 Classes    :  50.2% (231/460)
 Defines    :   2.4% (4/169)
 Enum Values:  35.9% (185/515)
@@ -55,5 +59,4 @@ Unions     : 100.0% (1/1)
 Variables  :   7.7% (110/1435)
 -----------------------------------
 Total      :  30.9% (2743/8886)
-
 ```
