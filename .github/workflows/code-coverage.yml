@@ -19,6 +19,7 @@ jobs:
         uses: docker/setup-buildx-action@v3
 
       - name: Build development Image
+        id: build-docker-development
         uses: docker/build-push-action@v6
         with:
           context: "{{defaultContext}}:docker/development"
@@ -33,7 +34,7 @@ jobs:
         uses: actions/cache@v3
         with:
             path: code_coverage
-            key: ${{ runner.os }}-cmake-build-unit-tests-${{ hashFiles('**/*.cpp', '**/*.h',  '**/*.cmake', '**/*.txt', '**/*.c', '**/*.s', '**/*.S', '.ci/code_coverage.py') }}
+            key: ${{ runner.os }}-${{ steps.build-docker-development.outputs.digest }}-cmake-build-unit-tests-${{ hashFiles('**/*.cpp', '**/*.h',  '**/*.cmake', '**/*.txt', '**/*.c', '**/*.s', '**/*.S', '.ci/code_coverage.py') }}
 
       - name: Run the code_coverage.py inside the docker container
         if: steps.cache-cmake.outputs.cache-hit != 'true'

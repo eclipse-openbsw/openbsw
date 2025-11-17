@@ -79,6 +79,7 @@ jobs:
         uses: docker/setup-buildx-action@v3
 
       - name: Build development Image
+        id: build-docker-development
         uses: docker/build-push-action@v6
         with:
           context: "{{defaultContext}}:docker/development"
@@ -93,8 +94,8 @@ jobs:
         uses: actions/cache@v3
         with:
           path: build
-          key: ${{ runner.os }}-cmake-${{ matrix.preset }}-${{ matrix.config }}-${{ matrix.platform }}-${{ matrix.cxxid }}-${{ matrix.cxxstd }}-${{ hashFiles('**/*.cpp', '**/*.h',  '**/*.cmake', '**/*.txt', '**/*.c', '**/*.s', '**/*.S', '.ci/build.py') }}
-          restore-keys: ${{ runner.os }}-cmake-${{ matrix.preset }}-${{ matrix.config }}-${{ matrix.platform }}-${{ matrix.cxxid }}-${{ matrix.cxxstd }}-
+          key: ${{ runner.os }}-${{ steps.build-docker-development.outputs.digest }}-cmake-${{ matrix.preset }}-${{ matrix.config }}-${{ matrix.platform }}-${{ matrix.cxxid }}-${{ matrix.cxxstd }}-${{ hashFiles('**/*.cpp', '**/*.h',  '**/*.cmake', '**/*.txt', '**/*.c', '**/*.s', '**/*.S', '.ci/build.py') }}
+          restore-keys: ${{ runner.os }}-${{ steps.build-docker-development.outputs.digest }}-cmake-${{ matrix.preset }}-${{ matrix.config }}-${{ matrix.platform }}-${{ matrix.cxxid }}-${{ matrix.cxxstd }}-
 
       - name: Run the build.py inside the docker container
         if: steps.cache-cmake.outputs.cache-hit != 'true'

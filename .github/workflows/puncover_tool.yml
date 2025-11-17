@@ -17,6 +17,7 @@ jobs:
         uses: docker/setup-buildx-action@v3
 
       - name: Build development Image
+        id: build-docker-development
         uses: docker/build-push-action@v6
         with:
           context: "{{defaultContext}}:docker/development"
@@ -31,7 +32,7 @@ jobs:
         uses: actions/cache@v4
         with:
             path: build/s32k148-gcc
-            key: ${{ runner.os }}-cmake-s32k148-freertos-gcc-RelWithDebInfo-arm-gcc-14-${{ hashFiles('**/*.cpp', '**/*.h',  '**/*.cmake', '**/*.txt', '**/*.c', '**/*.s', '**/*.S') }}
+            key: ${{ runner.os }}-${{ steps.build-docker-development.outputs.digest }}-cmake-s32k148-freertos-gcc-RelWithDebInfo-arm-gcc-14-${{ hashFiles('**/*.cpp', '**/*.h',  '**/*.cmake', '**/*.txt', '**/*.c', '**/*.s', '**/*.S') }}
 
       - name: Run the build.py inside the docker container
         if: steps.cache-cmake.outputs.cache-hit != 'true'
