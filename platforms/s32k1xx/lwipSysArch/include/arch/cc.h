@@ -25,8 +25,6 @@ typedef unsigned char bool_t;
 
 #define MEM_ALIGNMENT 16
 
-#define PACK_STRUCT_STRUCT
-
 /* Mapped LWIP_PLATFORM_DIAG to Logger in openBSW */
 #define LWIP_PLATFORM_DIAG(x) log_lwipInfo x
 

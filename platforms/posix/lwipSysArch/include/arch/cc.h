@@ -14,8 +14,6 @@ typedef unsigned char bool_t;
 
 #define LWIP_CHKSUM_ALGORITHM 3
 
-#define PACK_STRUCT_STRUCT
-
 #define LWIP_PLATFORM_DIAG(x) // printf x;
 
 #define LWIP_PLATFORM_ASSERT(x) assert(x)
