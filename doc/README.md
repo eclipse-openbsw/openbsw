@@ -21,22 +21,22 @@ make html
 
 ## Building documentation with [`Doxygen`](https://www.doxygen.nl/)
 
-Using the settings file ``doc/Doxyfile``,
+Using the settings file ``doc/api/Doxyfile``,
 `Doxygen` will generate documentation
 from formatted comments in C/C++ code in the subdirectories...
 
 * ``libs/bsp``
 * ``libs/bsw``
 
-by running the following in the ``doc`` directory...
+by running the following in the ``doc/api`` directory...
 
 ```bash
 doxygen Doxyfile
 ```
 
-The entry point html file is found at `doc/doxygenOut/html/index.html`
+The entry point html file is found at `doc/api/doxygenOut/html/index.html`
 
-XML output is also generated in  `doc/doxygenOut/xml/` from which coverage information can be extracted using [`coverxygen`](https://github.com/psycofdj/coverxygen). For example...
+XML output is also generated in  `doc/api/doxygenOut/xml/` from which coverage information can be extracted using [`coverxygen`](https://github.com/psycofdj/coverxygen). For example...
 
 ```bash
 $ python3 -m coverxygen --format summary --xml-dir doxygenOut/xml/ --src-dir .. --output -

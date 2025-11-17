@@ -8,4 +8,4 @@ To avoid duplicating these mocks, they are collected in the `executables/unitTes
     :maxdepth: 1
     :glob:
 
-    ../../executables/unitTest/**/doc/index
+    ../../../executables/unitTest/**/doc/index

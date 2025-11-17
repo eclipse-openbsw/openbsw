@@ -2,10 +2,10 @@
 
 Before considering contributing you should be familiar with Eclipse OpenBSW project.
 
- * You should have [set up a working environment](https://eclipse-openbsw.github.io/openbsw/sphinx_docs/doc/learning/setup/index.html)
+ * You should have [set up a working environment](https://eclipse-openbsw.github.io/openbsw/sphinx_docs/doc/dev/learning/setup/index.html)
    in which you can build and test.
  * You should be familiar with...
-    + [Coding Guidelines](https://eclipse-openbsw.github.io/openbsw/sphinx_docs/doc/codingGuidelines/index.html)
+    + [Coding Guidelines](https://eclipse-openbsw.github.io/openbsw/sphinx_docs/doc/dev/codingGuidelines/index.html)
     + [Code of Conduct](CODE_OF_CONDUCT.md)
  * Contributions should pass all automated builds and tests,
 including [building the documentation](doc/README.md).

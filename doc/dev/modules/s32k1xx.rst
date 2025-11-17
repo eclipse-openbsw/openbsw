@@ -7,7 +7,7 @@ BSW
 .. toctree::
     :maxdepth: 1
 
-    ../../platforms/s32k1xx/hardFaultHandler//doc/index
+    ../../../platforms/s32k1xx/hardFaultHandler//doc/index
 
 BSP
 ---
@@ -16,7 +16,7 @@ BSP
     :maxdepth: 1
     :glob:
 
-    ../../platforms/s32k1xx/bsp/**/doc/index
+    ../../../platforms/s32k1xx/bsp/**/doc/index
 
 Safety
 ------
@@ -25,4 +25,4 @@ Safety
     :maxdepth: 1
     :glob:
 
-    ../../platforms/s32k1xx/safety/**/doc/index
+    ../../../platforms/s32k1xx/safety/**/doc/index

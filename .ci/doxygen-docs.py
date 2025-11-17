@@ -5,18 +5,18 @@ from pathlib import Path
 import sys
 
 def clean_build():
-    build_dir = Path("doc/doxygenOut")
+    build_dir = Path("doc/api/doxygenOut")
     if build_dir.exists():
         shutil.rmtree(build_dir)
-    file_path_doc_coverage = Path("doc/doc-coverage.info")
+    file_path_doc_coverage = Path("doc/api/doc-coverage.info")
     if os.path.exists(file_path_doc_coverage):
         os.remove(file_path_doc_coverage)
-    file_path_warning = Path("doc/DoxygenWarningLog.txt")
+    file_path_warning = Path("doc/api/DoxygenWarningLog.txt")
     if os.path.exists(file_path_warning):
         os.remove(file_path_warning)
 
 def run_doxygen():
-    os.chdir("./doc")
+    os.chdir("./doc/api")
     subprocess.run(["doxygen", "Doxyfile"], check=True)
 
 def print_doxygen_warning_log():
@@ -24,7 +24,7 @@ def print_doxygen_warning_log():
         print(file.read())
 
 def run_coverxygen():
-    subprocess.run(["python3", "-m", "coverxygen", "--format", "summary", "--xml-dir", "doxygenOut/xml/", "--src-dir", "..", "--output", "doc-coverage.info"], check=True)
+    subprocess.run(["python3", "-m", "coverxygen", "--format", "summary", "--xml-dir", "doxygenOut/xml/", "--src-dir", "../..", "--output", "doc-coverage.info"], check=True)
 
 def print_doc_coverage():
     with open("doc-coverage.info", "r") as file:

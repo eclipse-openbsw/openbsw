@@ -8,7 +8,7 @@ BSW
     :maxdepth: 1
     :glob:
 
-    ../../libs/bsw/**/doc/index
+    ../../../libs/bsw/**/doc/index
 
 BSP
 ---
@@ -17,7 +17,7 @@ BSP
     :maxdepth: 1
     :glob:
 
-    ../../libs/bsp/**/doc/index
+    ../../../libs/bsp/**/doc/index
 
 Safety
 ------
@@ -26,4 +26,4 @@ Safety
     :maxdepth: 1
     :glob:
 
-    ../../libs/safety/**/doc/index
+    ../../../libs/safety/**/doc/index

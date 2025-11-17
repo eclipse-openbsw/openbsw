@@ -175,4 +175,4 @@ Eclipse OpenBSW is a trademark of the Eclipse Foundation.
     :glob:
     :hidden:
 
-    ../tools/**/doc/index
+    ../../tools/**/doc/index

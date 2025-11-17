@@ -19,20 +19,20 @@ extensions = [
 
 # Extensions configuration
 html_context = {"data_classification_default": None}
-stylecheck = {"top_level_modulename": {"exclude": ["doc/index", 'tools/**']}}
+stylecheck = {"top_level_modulename": {"exclude": ["doc/dev/index", 'tools/**']}}
 
 dox_style_footer = "footer.yaml"
 dox_trace_properties_file = "properties.yaml"
 
 # Main page and files to be included and excluded
-master_doc = "doc/index"
+master_doc = "doc/dev/index"
 include_patterns = [
     "executables/**/doc/**",
     "libs/**/doc/**",
     "platforms/**/doc/**",
     "platforms/python/sca/doc/**",
     "tools/**",
-    "doc/**",
+    "doc/dev/**",
 ]
 exclude_patterns = []
 

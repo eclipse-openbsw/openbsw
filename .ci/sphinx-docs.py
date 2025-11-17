@@ -5,10 +5,10 @@ from pathlib import Path
 import sys
 
 def build_sphinx_docs():
-    build_dir = Path("doc/build")
+    build_dir = Path("doc/dev/build")
     if build_dir.exists():
         shutil.rmtree(build_dir)
-    os.chdir("./doc")
+    os.chdir("./doc/dev")
     subprocess.run(["make", "html", "OFFICIAL_BUILD=1"], check=True)
 
 if __name__ == "__main__":

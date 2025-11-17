@@ -13,14 +13,14 @@ If you search the code for ``GroupCommand`` you will find many example console c
 One such example is ``StatisticsCommand``. You could add your own ``DemoCommand`` following this example.
 Add a new file ``executables/referenceApp/consoleCommands/include/demo/DemoCommand.h`` containing...
 
-.. sourceinclude:: ../../../libs/bsw/asyncConsole/test/include/demo/DemoCommand.h
+.. sourceinclude:: ../../../../libs/bsw/asyncConsole/test/include/demo/DemoCommand.h
     :language: c++
     :start-after: BEGIN DEMOCOMMAND
     :end-before: END DEMOCOMMAND
 
 and add a new file ``executables/referenceApp/consoleCommands/src/demo/DemoCommand.cpp`` containing...
 
-.. sourceinclude:: ../../../libs/bsw/asyncConsole/test/src/demo/DemoCommand.cpp
+.. sourceinclude:: ../../../../libs/bsw/asyncConsole/test/src/demo/DemoCommand.cpp
     :language: c++
 
 Look at how ``StatisticsCommand`` is added to ``RuntimeSystem``

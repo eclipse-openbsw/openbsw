@@ -1,6 +1,6 @@
 SPHINXOPTS    ?=
 SPHINXBUILD   ?= sphinx-build
-SOURCEDIR     = ../
+SOURCEDIR     = ../../
 BUILDDIR      = build
 CONFIGDIR     = .
 

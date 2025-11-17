@@ -32,5 +32,5 @@ Configuration
 
 Configuration is provided in the `.cmake-format` file:
 
-.. sourceinclude:: ../../../.cmake-format
+.. sourceinclude:: ../../../../.cmake-format
    :language: python
