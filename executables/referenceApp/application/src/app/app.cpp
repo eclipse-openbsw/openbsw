@@ -2,7 +2,7 @@
 
 #include "app/app.h"
 
-#include "bsp/Uart.h"
+#include "bsp/uart/UartConfig.h"
 #include "console/console.h"
 #include "lifecycle/StaticBsp.h"
 #include "logger/logger.h"

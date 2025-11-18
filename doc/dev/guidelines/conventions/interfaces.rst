@@ -3,14 +3,6 @@ Low Level Interfaces
 
 This section describes the conventions to be followed when defining low level interfaces in the BSP.
 
-Naming Conventions
-------------------
-- Interface names should end with the suffix "Api" to clearly indicate their purpose as interfaces.
-  For example, a UART interface should be named `IUartApi`.
-- Interface methods should be prefixed with a verb that clearly indicates the action being
-  performed, such as "get", "set", "init", "read", or "write".
-  For example, a method to read data from a UART interface could be named `read()` or `readData()`.
-
 Design Conventions
 ------------------
 - Interfaces should be designed to be as generic as possible,
@@ -26,7 +18,7 @@ Design Conventions
 - Provide clear and concise documentation for each interface and its methods,
   including descriptions of parameters, return values.
 - The interface should be placed in a dedicated header file,
-  typically named after the interface itself (e.g., `IExampleApi.h` for the `IExampleApi` interface).
+  typically named after the interface itself (e.g., `IExample.h` for the `IExample` interface).
 - Declaration of interfaces using pure virtual methods should be also possible,
   but for performance reasons, prefer static interfaces with concept checks where applicable.
 - Isolate the configuration and platform-specific details from the interface definition
@@ -51,17 +43,17 @@ Example:
 
 .. code-block:: cpp
 
-    // libs/bsw/bsp/include/bsp/example/IExampleApi.h
+    // libs/bsw/bsp/include/bsp/example/IExample.h
 
     #pragma once
 
     namespace bsp {
-    class IExampleApi {
+    class IExample {
     public:
         virtual size_t read(::etl::span<uint8_t> data) = 0;
         virtual size_t write(::etl::span<uint8_t const> const data) = 0;
     protected:
-        ~IExampleApi() = default;
+        ~IExample() = default;
     };
     } // namespace bsp
 
@@ -71,10 +63,10 @@ Example:
 
     #pragma once
 
-    #include <bsp/IExampleApi.h>
+    #include <bsp/IExample.h>
 
     namespace bsp {
-    class Example : public IExampleApi {
+    class Example : public IExample {
     public:
         size_t read(::etl::span<uint8_t> data) override;
         size_t write(::etl::span<uint8_t const> const data) override;
@@ -99,7 +91,7 @@ Example:
     /**
     * Concept to check if a class implements the ExampleApi correctly.
     * The class must provide the following methods:
-    * - size_t write(::etl::span<uint8_t const> const& data)
+    * - size_t write(::etl::span<uint8_t const> const data)
     * - size_t read(::etl::span<uint8_t> data)
     */
     template<typename T>
@@ -116,7 +108,7 @@ Example:
     #define BSP_EXAMPLE_CONCEPT_CHECKER(_class) \
         static_assert(                       \
             bsp::ExampleConcept<_class>, \
-            "Class " #_class " does not implement IExampleApi interface correctly");
+            "Class " #_class " does not implement IExample interface correctly");
 
     #else
     #define BSP_EXAMPLE_CONCEPT_CHECKER(_class)
@@ -175,5 +167,6 @@ References
 - Please refer to the following files for examples of interface definitions and configurations:
 
   - `bsp/uart/UartConcept.h` - Concept checks for static interface.
-  - `bsp/uart/Uart.h` - Concrete implementation of the interface.
-  - `bsp/uart/UartConfig.cpp` - Configuration of concrete implementations.
+  - `bspUart/include/bsp/Uart.h` - Concrete implementation of the interface.
+  - `bspUart/include/bsp/UartConfig.h` - Definition of concrete implementations.
+  - `bspUart/src/bsp/UartConfig.cpp` - Configuration of concrete implementations.

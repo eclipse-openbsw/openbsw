@@ -4,13 +4,13 @@
 #include <cstddef>
 #include <cstdint>
 
-namespace bsp
-{
-
 #if __cpp_concepts
 
 #include <etl/type_traits.h>
 #include <concepts>
+
+namespace bsp
+{
 
 /**
  * This concept checks if a class implements the Uart interface correctly.
@@ -39,8 +39,10 @@ concept UartConcept
         bsp::UartConcept<_class>,        \
         "Class " #_class " does not implement Uart interface correctly");
 
-#else
-#define BSP_UART_CONCEPT_CHECKER(_class)
-#endif
-
 } // namespace bsp
+
+#else
+
+#define BSP_UART_CONCEPT_CHECKER(_class)
+
+#endif

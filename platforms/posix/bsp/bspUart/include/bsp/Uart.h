@@ -1,6 +1,5 @@
 #pragma once
 
-#include <bsp/UartId.h>
 #include <bsp/uart/UartConcept.h>
 
 #include <termios.h>
@@ -9,55 +8,53 @@ namespace bsp
 {
 /**
  * This class implements the UART communication for the Posix platform.
- * It provides the necessary functionality and configuration for UART communication.
  * It uses the terminal stdout and stdin interfaces for reading and writing data.
- * The class provides methods to write and read data over the UART interface,
- * initialize the stdout/stdin communication, and retrieve a singleton instance of the Uart class.
+ * Initialize the stdout/stdin communication, and retrieve a singleton instance of the Uart class.
  */
-class Uart : public bsp::UartId
+class Uart
 {
 public:
+    enum class Id : size_t;
+
     /**
-     * sends out a number of bytes
+     * Sends out a number of bytes.
      * \param data - span of data to be sent
      * \return the number of bytes written
      */
     size_t write(::etl::span<uint8_t const> const data);
 
     /**
-     * reads a number of bytes
+     * Reads a number of bytes.
      * \param data - span of data to be read
      * \return the number of bytes read from the terminal
      */
     size_t read(::etl::span<uint8_t> data);
 
     /**
-     * configures and starts the terminal stdin/stdout communication
-     * this method must be called before using the read/write methods
+     * Configures and starts the terminal stdin/stdout communication.
+     * This method must be called before using the read/write methods.
      */
     void init();
 
     /**
-     * deinitializes the terminal stdin/stdout communication
-     * this method should be called at the end of the application to clean up resources
+     * Deinitializes the terminal stdin/stdout communication.
+     * This method should be called at the end of the application to clean up resources.
      */
     void deinit();
 
     /**
-     * checks if the stdin/stdout is initialized
-     * \return true if initialized, false otherwise
+     * Returns if this Uart instance is initialized or not.
      */
     bool isInitialized() const;
 
     /**
-     * waits until the stdin/stdout is ready to transmit data
+     * Waits until the stdin/stdout is ready to transmit data.
      * \return true if ready within timeout, false otherwise
      */
     bool waitForTxReady();
 
     /**
-     * factory method which instantiates and configures an UART object.
-     * If the object exists it will returns only a reference to it.
+     * Returns the singleton instance of the Uart object.
      * \param id: TERMINAL, ...
      */
     static Uart& getInstance(Id id);

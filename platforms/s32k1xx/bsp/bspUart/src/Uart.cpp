@@ -1,7 +1,7 @@
 // Copyright 2024 Accenture.
 // Copyright 2025 BMW AG
 
-#include "bsp/UartConfig.h"
+#include "bsp/UartParams.h"
 
 #include <bsp/clock/boardClock.h>
 

@@ -1,6 +1,6 @@
 #include "charInputOutput/charIoSerial.h"
 
-#include "bsp/Uart.h"
+#include "bsp/uart/UartConfig.h"
 #include "charInputOutput/CharIOSerialCfg.h"
 #include "platform/estdint.h"
 #include <etl/span.h>

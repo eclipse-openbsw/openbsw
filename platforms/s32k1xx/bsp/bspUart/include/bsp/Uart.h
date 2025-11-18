@@ -1,56 +1,55 @@
 #pragma once
 
 #include <bsp/uart/UartConcept.h>
-#include <bsp/uart/UartId.h>
 
 namespace bsp
 {
 /**
  * This class implements the UART communication for S32K1xx platforms.
- * It implements the methods for writing and reading data over the UART interface.
- * It also provides a method for initializing the UART communication.
  * It follows the method signatures defined in the UartConcept.h file.
  */
-class Uart : public bsp::UartId
+class Uart
 {
 public:
+    /*
+     * Enum for identifying different UART instances (e.g., TERMINAL).
+     */
+    enum class Id : size_t;
     /**
-     * sends out a number of bytes over the UART interface.
-     * the method will block until the data is sent.
+     * Sends out a number of bytes over the UART interface.
+     * The method will block until the data is sent.
      * \param data - span of data to be sent
      * \return the number of bytes written to the uart interface
      */
     size_t write(::etl::span<uint8_t const> const data);
 
     /**
-     * reads a number of bytes over the UART interface.
-     * the method will block until the data is read.
+     * Reads a number of bytes over the UART interface.
+     * The method will block until the data is read.
      * \param data - the span where the data will be read
      * \return the number of bytes read from the uart interface
      */
     size_t read(::etl::span<uint8_t> data);
 
     /**
-     * configures and starts the UART communication
-     * this method must be called before using the read/write methods
+     * Configures and starts the UART communication.
+     * This method must be called before using the read/write methods.
      */
     void init();
 
     /**
-     * checks if the UART is initialized
-     * \return true if initialized, false otherwise
+     * Returns if this Uart instance is initialized or not.
      */
     bool isInitialized() const;
 
     /**
-     * waits until the UART is ready to transmit data
-     * \return true if ready within timeout, false otherwise
+     * Waits until the UART is ready to transmit data.
+     * \return true if the Uart is ready for transmission, false otherwise
      */
     bool waitForTxReady();
 
     /**
-     * factory method which instantiates and configures an UART object.
-     * If the object exists it will returns only a reference to it.
+     * Returns the singleton instance of the Uart object.
      * \param id: TERMINAL, ...
      */
     static Uart& getInstance(Id id);
@@ -61,7 +60,7 @@ public:
 
 private:
     /**
-     * writes one byte of data to the UART interface.
+     * Writes one byte of data to the UART interface.
      * \param data - the byte to be written
      * \return true if the byte was written successfully, false otherwise
      */

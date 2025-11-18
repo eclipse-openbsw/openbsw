@@ -12,9 +12,9 @@ namespace bsp
 struct Uart::UartConfig
 {
     LPUART_Type& uart;
-    bios::Io::PinId txPin;
-    bios::Io::PinId rxPin;
-    uint32_t baudRate;
+    bios::Io::PinId const txPin;
+    bios::Io::PinId const rxPin;
+    uint32_t const baudRate;
 };
 
 } // namespace bsp

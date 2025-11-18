@@ -1,6 +1,6 @@
 // Copyright 2024 Accenture.
 
-#include <bsp/Uart.h>
+#include <bsp/uart/UartConfig.h>
 
 #include <platform/estdint.h>
 
