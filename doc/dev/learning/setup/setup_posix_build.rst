@@ -1,15 +1,17 @@
-.. _setup_posix_ubuntu_build:
+.. _setup_posix_build:
 
-Set up build environment for POSIX platform on Ubuntu :prop:`tool:ubuntu_version`
-=================================================================================
+Set up build environment for POSIX platform on Ubuntu :prop:`tool:ubuntu_version` or Windows
+============================================================================================
 
-Required tools...
+Open an Ubuntu :prop:`tool:ubuntu_version` shell (in WSL, if your are on Windows).
+
+Required tools:
 
 * gcc :prop:`tool:gcc_version` or later
 * cmake >= :prop:`tool:cmake_version`
 * make
 
-For Ubuntu :prop:`tool:ubuntu_version`, the ``apt`` package ``build-essential`` includes ``gcc`` and ``make``. You can install it as follows...
+For Ubuntu :prop:`tool:ubuntu_version`, the ``apt`` package ``build-essential`` includes ``gcc`` and ``make``. You can install it as follows:
 
 .. code-block:: bash
 
@@ -20,8 +22,6 @@ You will also need ``cmake`` version >= :prop:`tool:cmake_version`. To install i
 .. code-block:: bash
 
     sudo snap install cmake --classic
-
-which (at time of writing) installs ``cmake`` version 4.1.1 on Ubuntu :prop:`tool:ubuntu_version`.
 
 On a more recent Ubuntu version, installation via ``apt`` (instead of ``snap``) should be sufficient:
 
@@ -36,15 +36,24 @@ Once installed, check ``cmake`` is found and is version :prop:`tool:cmake_versio
     cmake --version
 
 Once the above tools are installed you should be able to create an image for the POSIX platform.
-In the base directory, run:
+In the root directory of the repository, run:
 
 .. code-block:: bash
 
     cmake --preset posix
-    cmake --build --preset posix
+    cmake --build --preset posix --parallel
+
+By default release configuration is used. If you want to build debug configuration, use
+
+.. code-block:: bash
+
+    cmake --build --preset posix --config Debug --parallel
 
 The build files should be written to a new subdirectory named ``build/posix``
-and the built executable should be found at ``build/posix/executables/referenceApp/application/Release/app.referenceApp.elf``.
+and the built executable should be found at
+``build/posix/executables/referenceApp/application/Release/app.referenceApp.elf``.
+If you've built it with `--config Debug`, then the executable can be found at
+``build/posix/executables/referenceApp/application/Debug/app.referenceApp.elf``.
 You should be able to run and see output like this in your shell terminal...
 
 .. code-block:: bash

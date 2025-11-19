@@ -14,7 +14,7 @@ POSIX build
 -----------
 
 Assuming you have successfully built and run the executable ``app.referenceApp.elf`` on a POSIX platform
-as instructed in :ref:`setup_posix_ubuntu_build`
+as instructed in :ref:`setup_posix_build`
 then you may see one of the following errors during startup of ``app.referenceApp.elf``...
 
 .. code-block:: bash

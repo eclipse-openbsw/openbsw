@@ -14,7 +14,7 @@ Required tools:
 * cmake >= :prop:`tool:cmake_version`
 * make
 
-The steps below assume you have already completed :doc:`setup_posix_ubuntu_build`.
+The steps below assume you have already completed :doc:`setup_posix_build`.
 If not then please do that first.
 When that is working, then you just need to add the GCC for ARM toolchain to this environment to build for S32K148 platform.
 
@@ -64,7 +64,7 @@ Required tools:
 * cmake >= :prop:`tool:cmake_version`
 * make
 
-The steps below assume you have already completed :doc:`setup_posix_ubuntu_build`.
+The steps below assume you have already completed :doc:`setup_posix_build`.
 If not then please do that first.
 When that is working, then you just need to add the LLVM for ARM toolchain to this environment to build for the S32K148 platform.
 

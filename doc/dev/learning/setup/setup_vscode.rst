@@ -9,13 +9,13 @@ This assumes you have already set up the tools to build for the ``posix`` and ``
 
 * On Ubuntu :prop:`tool:ubuntu_version` host platform...
 
-  * :doc:`setup_posix_ubuntu_build`
+  * :doc:`setup_posix_build`
   * :doc:`setup_s32k148_ubuntu_build`
 
 * On Windows host platform with WSL (Windows Subsystem for Linux)...
 
   * :doc:`setup_windows_wsl`
-  * :doc:`setup_posix_win_build`
+  * :doc:`setup_posix_build`
   * :doc:`setup_s32k148_win_build`
 
 Install Visual Studio

@@ -22,7 +22,7 @@ Before proceeding with the Ethernet setup, ensure you have built the openBsw pro
 respective platform.
 
 Reference for instructions:
-   - For POSIX Build: :ref:`Ubuntu<setup_posix_ubuntu_build>` or :ref:`Windows<setup_posix_win_build>`.
+   - For POSIX Build: :ref:`Ubuntu<setup_posix_build>`.
    - For S32K148 Build: :ref:`Ubuntu<setup_s32k148_ubuntu_build>` or
      :ref:`Windows<setup_s32k148_win_build>`.
 

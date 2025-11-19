@@ -22,7 +22,7 @@ ie. You don't need an embedded platform to get started.
    :maxdepth: 1
    :glob:
 
-   setup_posix_win_*
+   setup_posix_build
 
 S32K148 platform
 ----------------

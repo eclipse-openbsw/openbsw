@@ -3,7 +3,7 @@
 Add SocketCAN support in WSL
 ============================
 
-If you have followed the steps in :doc:`setup_posix_win_build`
+If you have followed the steps in :doc:`setup_posix_build`
 then you should now have an environment in which you can build and run the POSIX platform executable
 and this enables experimentation and learning through making your own changes to the codebase.
 
