@@ -35,13 +35,14 @@ jobs:
       - name: Build development Image
         uses: docker/build-push-action@v6
         with:
-          context: "{{defaultContext}}:docker/development"
+          context: .
+          file: docker/development/Dockerfile
           push: false
           tags: openbsw-development:local
           outputs: type=docker
           cache-from: type=gha
           cache-to: type=gha,mode=max,ignore-error=true
-
+      
       - name: Set up virtual ethernet interface
         run: |
           sudo tools/enet/bring-up-ethernet.sh

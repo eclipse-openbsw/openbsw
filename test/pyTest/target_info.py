@@ -1,5 +1,6 @@
 from glob import glob
 import tomli
+import pytest
 from pathlib import Path
 
 # Note that the same command-line options that are added to pytest
@@ -154,6 +155,10 @@ class TargetInfo:
                     TargetInfo.by_name[name] = TargetInfo(
                         name, fp, cmd_line_no_restart, app
                     )
+            if not TargetInfo.by_name:
+                raise pytest.UsageError(
+                    f"Incorrect target name. No matching TOML file found for target: {targets}."
+                )
 
 
 if __name__ == "__main__":
@@ -170,12 +175,12 @@ if __name__ == "__main__":
         "--no-restart",
         action="store_true",
         help="Skip restart of target(s) before each test",
-    ) 
+    )
     parser.add_argument(
         "--app",
         action="store",
         default="freertos",
-       help="Select which software (app) configuration to flash, e.g., threadx or freertos based application",
+        help="Select which software (app) configuration to flash, e.g., threadx or freertos based application",
     )
 
     args = parser.parse_args()
