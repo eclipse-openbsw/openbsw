@@ -43,12 +43,12 @@ def get_environment(cxxid: str, platform: str):
 
     if platform == "linux":
         if cxxid == "gcc":
-            env["CC"] = get_full_path("gcc")
-            env["CXX"] = get_full_path("g++")
+            env["CC"] = get_full_path("gcc-11")
+            env["CXX"] = get_full_path("g++-11")
             return env
         if cxxid == "clang":
-            env["CC"] = get_full_path("clang")
-            env["CXX"] = get_full_path("clang++")
+            env["CC"] = get_full_path("clang-17")
+            env["CXX"] = get_full_path("clang++-17")
             return env
 
     raise RuntimeError("Wrong platform or compiler ID")

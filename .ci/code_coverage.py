@@ -5,6 +5,7 @@ import shutil
 import subprocess
 import sys
 
+GCC_VERSION = 11
 
 def get_full_path(command):
     if (cmd := shutil.which(command)) is None:
@@ -30,8 +31,8 @@ def build():
 
     env["CTEST_PARALLEL_LEVEL"] = str(threads)
     env["CMAKE_BUILD_PARALLEL_LEVEL"] = str(threads)
-    env["CC"] = get_full_path("gcc-11")
-    env["CXX"] = get_full_path("g++-11")
+    env["CC"] = get_full_path(f"gcc-{GCC_VERSION}")
+    env["CXX"] = get_full_path(f"g++-{GCC_VERSION}")
 
     subprocess.run(
         [
@@ -63,6 +64,7 @@ def generate_coverage():
     subprocess.run(
         [
             "lcov",
+            "--gcov-tool", f"gcov-{GCC_VERSION}",
             "--capture",
             "--directory",
             f"{build_dir_name}",
@@ -71,6 +73,7 @@ def generate_coverage():
             ".",
             "--output-file",
             f"{build_dir_name}/coverage_unfiltered.info",
+            "--ignore-errors", "mismatch",
         ],
         check=True,
     )
@@ -80,15 +83,15 @@ def generate_coverage():
     subprocess.run(
         [
             "lcov",
+            "--gcov-tool", f"gcov-{GCC_VERSION}",
             "--remove",
             f"{build_dir_name}/coverage_unfiltered.info",
             "*/3rdparty/*",
             "*/mock/*",
-            "*/gmock/*",
-            "*/gtest/*",
             "*/test/*",
             "--output-file",
             f"{build_dir_name}/coverage.info",
+            "--ignore-errors", "mismatch",
         ],
         check=True,
     )
@@ -111,8 +114,10 @@ def generate_badges():
     result = subprocess.run(
         [
             "lcov",
+            "--gcov-tool", f"gcov-{GCC_VERSION}",
             "--summary",
             f"{build_dir_name}/coverage.info",
+            "--ignore-errors", "mismatch",
         ],
         capture_output=True,
         text=True,
