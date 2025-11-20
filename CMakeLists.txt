@@ -1,5 +1,8 @@
 cmake_minimum_required(VERSION 3.28 FATAL_ERROR)
 
+# We do not support modules at the moment
+set(CMAKE_CXX_SCAN_FOR_MODULES FALSE)
+
 if (CMAKE_CXX_STANDARD AND NOT ${CMAKE_CXX_STANDARD} EQUAL 14)
     message(WARNING "Using custom CXX standard (C++${CMAKE_CXX_STANDARD})")
     set(CMAKE_CXX_STANDARD_REQUIRED ON)
