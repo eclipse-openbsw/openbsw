@@ -5,6 +5,9 @@ import shutil
 import subprocess
 import sys
 
+# FIXME: Hard-coding the compiler version in this python script feels wrong. It
+# should be changed in the future to provide the compiler from the outside.
+GCC_VERSION = 11
 
 def get_full_path(command):
     if (cmd := shutil.which(command)) is None:
@@ -30,8 +33,8 @@ def build():
 
     env["CTEST_PARALLEL_LEVEL"] = str(threads)
     env["CMAKE_BUILD_PARALLEL_LEVEL"] = str(threads)
-    env["CC"] = get_full_path("gcc-11")
-    env["CXX"] = get_full_path("g++-11")
+    env["CC"] = get_full_path(f"gcc-{GCC_VERSION}")
+    env["CXX"] = get_full_path(f"g++-{GCC_VERSION}")
 
     subprocess.run(
         [
@@ -40,8 +43,6 @@ def build():
             "tests-posix-debug",
             "-B",
             f"{build_dir_name}",
-            "-DCMAKE_C_COMPILER_LAUNCHER=sccache",
-            "-DCMAKE_CXX_COMPILER_LAUNCHER=sccache",
         ],
         check=True,
         env=env,
@@ -65,6 +66,7 @@ def generate_coverage():
     subprocess.run(
         [
             "lcov",
+            "--gcov-tool", f"gcov-{GCC_VERSION}",
             "--capture",
             "--directory",
             f"{build_dir_name}",
@@ -73,6 +75,7 @@ def generate_coverage():
             ".",
             "--output-file",
             f"{build_dir_name}/coverage_unfiltered.info",
+            "--ignore-errors", "mismatch",
         ],
         check=True,
     )
@@ -82,15 +85,15 @@ def generate_coverage():
     subprocess.run(
         [
             "lcov",
+            "--gcov-tool", f"gcov-{GCC_VERSION}",
             "--remove",
             f"{build_dir_name}/coverage_unfiltered.info",
             "*/3rdparty/*",
             "*/mock/*",
-            "*/gmock/*",
-            "*/gtest/*",
             "*/test/*",
             "--output-file",
             f"{build_dir_name}/coverage.info",
+            "--ignore-errors", "mismatch",
         ],
         check=True,
     )
@@ -110,11 +113,18 @@ def generate_coverage():
 
 
 def generate_badges():
+    # FIXME: It's questionable whether we want to have a dependency to an
+    # external service for generating these badges. This introduces a possible
+    # cause of instabilities in case the external service becomes unavailable,
+    # as already happened in the CI.
+
     result = subprocess.run(
         [
             "lcov",
+            "--gcov-tool", f"gcov-{GCC_VERSION}",
             "--summary",
             f"{build_dir_name}/coverage.info",
+            "--ignore-errors", "mismatch",
         ],
         capture_output=True,
         text=True,
@@ -125,6 +135,9 @@ def generate_badges():
     line_percentage = re.search(r"lines\.*:\s+(\d+\.\d+)%", summary)
     function_percentage = re.search(r"functions\.*:\s+(\d+\.\d+)%", summary)
 
+    coverage_badge_path = Path(build_dir_name).joinpath("coverage_badges")
+    coverage_badge_path.mkdir(parents=True, exist_ok=True)
+
     if line_percentage:
         line_value = line_percentage.group(1)
         print(f"Line Percentage: {line_value}%")
@@ -133,7 +146,7 @@ def generate_badges():
                 "wget",
                 f"https://img.shields.io/badge/coverage-{line_value}%25-brightgreen.svg",
                 "-O",
-                "line_coverage_badge.svg",
+                coverage_badge_path.joinpath("line_coverage_badge.svg").as_posix(),
             ],
             check=True,
         )
@@ -146,7 +159,7 @@ def generate_badges():
                 "wget",
                 f"https://img.shields.io/badge/coverage-{function_value}%25-brightgreen.svg",
                 "-O",
-                "function_coverage_badge.svg",
+                coverage_badge_path.joinpath("function_coverage_badge.svg").as_posix(),
             ],
             check=True,
         )

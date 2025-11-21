@@ -31,24 +31,30 @@ def get_environment(cxxid: str, platform: str):
     env["CTEST_PARALLEL_LEVEL"] = str(threads)
     env["CMAKE_BUILD_PARALLEL_LEVEL"] = str(threads)
 
+    # FIXME: We should not hard-code the paths/versions of the compiler in this
+    # python script. The build should also work with cmake only without using
+    # this script and we even have path's as well in the toolchain files. In the
+    # future we might use more tailored docker images which only contain a
+    # single compiler, so there weill be no longer a question of choice here.
+
     if platform == "arm":
         if cxxid == "gcc":
-            env["CC"] = get_full_path("arm-none-eabi-gcc")
-            env["CXX"] = get_full_path("arm-none-eabi-g++")
+            env["CC"] = get_full_path("/opt/arm-gnu-toolchain/bin/arm-none-eabi-gcc")
+            env["CXX"] = get_full_path("/opt/arm-gnu-toolchain/bin/arm-none-eabi-g++")
             return env
         if cxxid == "clang":
-            env["CC"] = get_full_path("/usr/bin/llvm-arm/bin/clang")
-            env["CXX"] = get_full_path("/usr/bin/llvm-arm/bin/clang++")
+            env["CC"] = get_full_path("/opt/llvm-et-arm/bin/clang")
+            env["CXX"] = get_full_path("/opt/llvm-et-arm/bin/clang++")
             return env
 
     if platform == "linux":
         if cxxid == "gcc":
-            env["CC"] = get_full_path("gcc")
-            env["CXX"] = get_full_path("g++")
+            env["CC"] = get_full_path("gcc-11")
+            env["CXX"] = get_full_path("g++-11")
             return env
         if cxxid == "clang":
-            env["CC"] = get_full_path("clang")
-            env["CXX"] = get_full_path("clang++")
+            env["CC"] = get_full_path("clang-17")
+            env["CXX"] = get_full_path("clang++-17")
             return env
 
     raise RuntimeError("Wrong platform or compiler ID")

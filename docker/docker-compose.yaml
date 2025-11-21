@@ -1,19 +1,4 @@
-version: '3'
 services:
-  dev:
-    build:
-      context: ..
-      dockerfile: docker/Dockerfile.dev
-      args:
-        user_id: "${UID}"
-    working_dir: /home/jenkins
-    volumes:
-      - ..:/home/jenkins
-      - ../.docker_history:/root/.bash_history
-    command: /bin/bash
-    user: "${UID}:4996"
-    tty: true
-
   docs:
     build:
       context: ..

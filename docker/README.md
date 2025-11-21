@@ -1,5 +1,8 @@
 # Docker Information
 
+> [!WARNING]
+> The docker setup is currently in re-work.
+
 Developer Dockerfile can be used to set up the development environment.
 It includes all the necessary tools, libraries, and dependencies required
 for development. This ensures that all developers work in a consistent
