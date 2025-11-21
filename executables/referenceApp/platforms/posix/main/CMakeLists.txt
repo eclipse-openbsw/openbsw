@@ -4,7 +4,7 @@ target_include_directories(main PUBLIC include)
 
 target_link_libraries(
     main
-    PRIVATE asyncBinding lifecycle safeSupervisor
+    PRIVATE bspUart asyncBinding lifecycle safeSupervisor
     PUBLIC bspEepromDriver)
 
 if (BUILD_TARGET_RTOS STREQUAL "FREERTOS")

@@ -14,7 +14,6 @@
 #include "systems/CanSystem.h"
 #endif // PLATFORM_SUPPORT_CAN
 
-extern void terminal_setup(void);
 extern void terminal_cleanup(void);
 extern void main_thread_setup(void);
 #ifdef PLATFORM_SUPPORT_ETHERNET
@@ -82,7 +81,6 @@ int main()
 {
     signal(SIGINT, intHandler);
     main_thread_setup();
-    terminal_setup();
     ::safety::safeSupervisorConstructor.construct();
     ::platform::staticBsp.init();
     app_main(); // entry point for the generic part
