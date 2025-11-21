@@ -81,7 +81,6 @@ public:
                                         &IncomingDiagConnection::triggerNextNestedRequest>(*this))
     {
         _context = diagContext;
-        _pendingMessage.init(&_pendingMessageBuffer[0], PENDING_MESSAGE_BUFFER_LENGTH);
         for (uint8_t cnt = 0U; cnt < _identifiers.capacity(); cnt++)
         {
             _identifiers[cnt] = 0U;
@@ -236,8 +235,6 @@ public:
     ErrorCode sendPositiveResponseInternal(uint16_t length, AbstractDiagJob& sender);
 
     void restartPendingTimeout();
-
-    void sendResponsePending();
 
     void asyncTransportMessageProcessed(
         transport::TransportMessage* pTransportMessage, ProcessingResult status);
