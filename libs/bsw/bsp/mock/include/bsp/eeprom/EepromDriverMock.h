@@ -12,6 +12,7 @@ class EepromDriverMock : public IEepromDriver
 {
 public:
     MOCK_METHOD(::bsp::BspReturnCode, init, (), (override));
+    MOCK_METHOD(::bsp::BspReturnCode, deinit, (), (override));
     MOCK_METHOD(::bsp::BspReturnCode, write, (uint32_t, uint8_t const*, uint32_t), (override));
     MOCK_METHOD(::bsp::BspReturnCode, read, (uint32_t, uint8_t*, uint32_t), (override));
 };
