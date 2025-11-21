@@ -5,6 +5,8 @@ import shutil
 import subprocess
 import sys
 
+# FIXME: Hard-coding the compiler version in this python script feels wrong. It
+# should be changed in the future to provide the compiler from the outside.
 GCC_VERSION = 11
 
 def get_full_path(command):
@@ -111,6 +113,11 @@ def generate_coverage():
 
 
 def generate_badges():
+    # FIXME: It's questionable whether we want to have a dependency to an
+    # external service for generating these badges. This introduces a possible
+    # cause of instabilities in case the external service becomes unavailable,
+    # as already happened in the CI.
+
     result = subprocess.run(
         [
             "lcov",

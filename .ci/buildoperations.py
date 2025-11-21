@@ -31,6 +31,12 @@ def get_environment(cxxid: str, platform: str):
     env["CTEST_PARALLEL_LEVEL"] = str(threads)
     env["CMAKE_BUILD_PARALLEL_LEVEL"] = str(threads)
 
+    # FIXME: We should not hard-code the paths/versions of the compiler in this
+    # python script. The build should also work with cmake only without using
+    # this script and we even have path's as well in the toolchain files. In the
+    # future we might use more tailored docker images which only contain a
+    # single compiler, so there weill be no longer a question of choice here.
+
     if platform == "arm":
         if cxxid == "gcc":
             env["CC"] = get_full_path("/opt/arm-gnu-toolchain/bin/arm-none-eabi-gcc")
