@@ -1,0 +1,24 @@
+name: Clang-tidy check
+
+on: [ merge_group, push, pull_request ]
+
+jobs:
+  clang-tidy:
+    runs-on: ubuntu-latest
+    steps:
+     - name: Checkout code
+       uses: actions/checkout@v4
+       with:
+         fetch-depth: 0
+
+     - name: Build the docker image
+       run: |
+          docker build -f docker/Dockerfile.dev -t dev .
+
+     - name: Run the posix debug build inside the docker container
+       run: |
+          docker run --rm -v "$PWD:/home/jenkins" -w /home/jenkins --user $(id -u):4996 dev python3 .ci/build.py --preset "tests-posix-debug" --platform "linux" --cxxid "clang" --cxxstd "14" --config "Debug"
+
+     - name: Run the clang-tidy.py inside the docker container
+       run: |
+          docker run --rm -v "$PWD:/home/jenkins" -w /home/jenkins --user $(id -u):4996 dev python3 .ci/clang-tidy.py build/tests/posix/Debug
