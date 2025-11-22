@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include "rng.h"
+
 #include <sys/errno.h>
 
 #include <stdint.h>
@@ -54,7 +56,7 @@
 #endif
 
 #ifndef LWIP_RAND
-#define LWIP_RAND() rand()
+#define LWIP_RAND() lwip_rand()
 #endif
 
 #ifndef LWIP_AUTOIP_CREATE_SEED_ADDR

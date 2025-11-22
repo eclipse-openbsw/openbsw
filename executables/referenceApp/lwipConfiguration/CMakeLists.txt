@@ -1,5 +1,5 @@
-add_library(lwipConfiguration INTERFACE)
+add_library(lwipConfiguration src/rng.cpp)
 
-target_include_directories(lwipConfiguration INTERFACE include)
+target_include_directories(lwipConfiguration PUBLIC include)
 
-target_link_libraries(lwipConfiguration INTERFACE lwipSysArch platform)
+target_link_libraries(lwipConfiguration PUBLIC lwipSysArch platform etl)
