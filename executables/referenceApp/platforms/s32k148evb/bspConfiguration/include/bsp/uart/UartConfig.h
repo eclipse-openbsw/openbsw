@@ -12,6 +12,6 @@ enum class Uart::Id : size_t
     INVALID,
 };
 
-static constexpr uint8_t NUMBER_OF_UARTS = static_cast<uint8_t>(Uart::Id::INVALID);
+static constexpr size_t NUMBER_OF_UARTS = static_cast<size_t>(Uart::Id::INVALID);
 
 } // namespace bsp

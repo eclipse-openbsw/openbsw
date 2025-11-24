@@ -31,6 +31,8 @@ static bool isTxActive(uint32_t volatile& uart_stat)
     return ((uart_stat & LPUART_STAT_TDRE_MASK) == 0);
 }
 
+Uart::Uart(Uart::Id id) : _uartConfig(_uartConfigs[static_cast<size_t>(id)]) {}
+
 void Uart::init()
 {
     (void)bios::Io::setDefaultConfiguration(_uartConfig.txPin);

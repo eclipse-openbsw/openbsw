@@ -13,7 +13,7 @@ uint32_t const baudRateConfig[] = {
     (LPUART_BAUD_OSR(9)) + LPUART_BAUD_SBR(8)    // = 2MBit 80MHz PLL
 };
 
-Uart::UartConfig const CONFIG_UART[] = {
+Uart::UartConfig const Uart::_uartConfigs[] = {
     {
         *LPUART1,
         bios::Io::UART1_TX,
@@ -23,7 +23,7 @@ Uart::UartConfig const CONFIG_UART[] = {
 };
 
 static Uart instances[] = {
-    Uart(CONFIG_UART[static_cast<size_t>(Uart::Id::TERMINAL)]),
+    Uart(Uart::Id::TERMINAL),
 };
 
 bsp::Uart& Uart::getInstance(Id id)

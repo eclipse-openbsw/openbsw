@@ -55,8 +55,7 @@ public:
     static Uart& getInstance(Id id);
 
     struct UartConfig;
-
-    Uart(UartConfig const& uartConfig) : _uartConfig(uartConfig) {}
+    Uart(Uart::Id id);
 
 private:
     /**
@@ -68,6 +67,7 @@ private:
 
 private:
     UartConfig const& _uartConfig;
+    static UartConfig const _uartConfigs[];
 };
 
 BSP_UART_CONCEPT_CHECKER(Uart)
