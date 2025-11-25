@@ -74,7 +74,7 @@ bool EepromDriver::isInitialized() const
 uint8_t launchCommandFromRAM() __attribute__((section(".launchFromRAM")));
 #endif
 
-__attribute__((aligned(32))) uint8_t launchCommandFromRAM()
+__attribute__((aligned(32), noinline)) uint8_t launchCommandFromRAM()
 {
     uint32_t timeout             = 0U;
     constexpr uint8_t CMD_FAILED = 0xFFU;
