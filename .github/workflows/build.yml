@@ -89,22 +89,13 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max,ignore-error=true
 
-      - name: Cache CMake files
-        id: cache-cmake
-        uses: actions/cache@v3
-        with:
-          path: build
-          key: ${{ runner.os }}-${{ steps.build-docker-development.outputs.digest }}-cmake-${{ matrix.preset }}-${{ matrix.config }}-${{ matrix.platform }}-${{ matrix.cxxid }}-${{ matrix.cxxstd }}-${{ hashFiles('**/*.cpp', '**/*.h',  '**/*.cmake', '**/*.txt', '**/*.c', '**/*.s', '**/*.S', '.ci/build.py') }}
-          restore-keys: ${{ runner.os }}-${{ steps.build-docker-development.outputs.digest }}-cmake-${{ matrix.preset }}-${{ matrix.config }}-${{ matrix.platform }}-${{ matrix.cxxid }}-${{ matrix.cxxstd }}-
-
       - name: Run the build.py inside the docker container
-        if: steps.cache-cmake.outputs.cache-hit != 'true'
         run: >-
           DOCKER_UID=$(id -u) DOCKER_GID=$(id -g) DOCKER_HISTORY=/dev/null docker compose run --rm development
           python3 .ci/build.py --preset ${{ matrix.preset }} --platform ${{ matrix.platform }} --cxxid ${{ matrix.cxxid }} --cxxstd ${{ matrix.cxxstd }} --config ${{ matrix.config }}
 
       - name: Run custom CMake build for elf-analyzer
-        if: steps.cache-cmake.outputs.cache-hit != 'true' && matrix.platform == 'arm' && matrix.cxxid == 'gcc' && matrix.cxxstd == '14' && matrix.config != ''
+        if: matrix.platform == 'arm' && matrix.cxxid == 'gcc' && matrix.cxxstd == '14' && matrix.config != ''
         run: >-
           DOCKER_UID=$(id -u) DOCKER_GID=$(id -g) DOCKER_HISTORY=/dev/null docker compose run --rm development
           bash -c "
@@ -113,20 +104,20 @@ jobs:
           "
 
       - name: Set commit hash and metadata
-        if: steps.cache-cmake.outputs.cache-hit != 'true' && matrix.platform == 'arm' && matrix.cxxid == 'gcc' && matrix.cxxstd == '14' && matrix.config != ''
+        if: matrix.platform == 'arm' && matrix.cxxid == 'gcc' && matrix.cxxstd == '14' && matrix.config != ''
         id: vars
         run: |
           echo "COMMIT_HASH=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
           echo "ARTIFACT_NAME=elf-${{ matrix.preset }}-${{ matrix.cxxstd }}-${{ matrix.config }}-gdwarf4-${GITHUB_SHA::7}" >> $GITHUB_ENV
 
       - name: Find ELF files
-        if: steps.cache-cmake.outputs.cache-hit != 'true' && matrix.platform == 'arm' && matrix.cxxid == 'gcc' && matrix.cxxstd == '14' && matrix.config != ''
+        if: matrix.platform == 'arm' && matrix.cxxid == 'gcc' && matrix.cxxstd == '14' && matrix.config != ''
         run: |
           mkdir -p elf-artifacts
           cp elf-analyzer-artifacts/${{matrix.preset}}/executables/referenceApp/application/${{ matrix.config }}/app.referenceApp.elf elf-artifacts/
 
       - name: Upload ELF as GitHub Artifact
-        if: steps.cache-cmake.outputs.cache-hit != 'true' && matrix.platform == 'arm'  && matrix.cxxid == 'gcc' && matrix.cxxstd == '14' && matrix.config != ''
+        if: matrix.platform == 'arm'  && matrix.cxxid == 'gcc' && matrix.cxxstd == '14' && matrix.config != ''
         uses: actions/upload-artifact@v4
         with:
           name: ${{ env.ARTIFACT_NAME }}
