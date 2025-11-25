@@ -14,7 +14,7 @@ if (BUILD_UNIT_TESTS)
 
     target_link_libraries(bspCharInputOutputMock INTERFACE bspCharInputOutput)
 
-    target_link_libraries(bspCharInputOutput PUBLIC utbspUart)
+    target_link_libraries(bspCharInputOutput PUBLIC bspMock)
 
 else ()
     target_link_libraries(bspCharInputOutput PUBLIC bspUart)
