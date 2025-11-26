@@ -81,6 +81,7 @@ docker> cmake --build --preset posix
 | Sensors and actuators integration | ADC, PWM & GPIO | | Yes | |
 | UDS, DoCAN | Diagnostics over CAN | If ``SocketCAN`` is supported | Yes | Since Release 0.1 |
 | Ethernet | Basic TCP and UDP support | Yes | Yes | On current `main` |
+| Storage | Persistent data storage on EEPROM and Flash | Yes | Yes | On current `main` |
 
 ## Roadmap
 
