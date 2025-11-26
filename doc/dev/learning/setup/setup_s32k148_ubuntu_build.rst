@@ -37,12 +37,13 @@ and unpack it in your preferred location as follows:
     tar xf arm-gnu-toolchain-x.x-x86_64-arm-none-eabi.tar.xz
 
 This will create a directory named gcc-arm-none-eabi-:prop:`tool:gcc-arm-none-eabi` with a ``bin`` subdirectory containing the GCC for ARM toolchain.
-Add the full path to gcc-arm-none-eabi-:prop:`tool:gcc-arm-none-eabi`/bin to your ``PATH`` environment variable
-and check the compiler is found when you run it:
+
+Set the CC and CXX environment variables to the compiler in this directory:
 
 .. code-block:: bash
 
-    arm-none-eabi-gcc --version
+    export CC=`pwd`/arm-gnu-toolchain-x.x-x86_64-arm-none-eabi/bin/arm-none-eabi-gcc
+    export CXX=`pwd`/arm-gnu-toolchain-x.x-x86_64-arm-none-eabi/bin/arm-none-eabi-g++
 
 Then, in the base directory run:
 
@@ -92,8 +93,8 @@ Set the CC and CXX environment variables to the compiler in this directory:
 
 .. code-block:: bash
 
-    export CC=`pwd`/LLVM-ET-Arm-:prop:`tool:llvm-arm`-Linux-x86_64/bin/clang
-    export CXX=`pwd`/LLVM-ET-Arm-:prop:`tool:llvm-arm`-Linux-x86_64/bin/clang++
+    export CC=`pwd`/LLVM-ET-Arm-x.x-Linux-x86_64/bin/clang
+    export CXX=`pwd`/LLVM-ET-Arm-x.x-Linux-x86_64/bin/clang++
 
 Then, in the base directory run:
 
