@@ -176,7 +176,7 @@ protected:
     StrictMock<DiagSessionManagerMock> fSessionManager;
     DiagnosisConfiguration fUdsConfiguration;
     ::etl::pool<IncomingDiagConnection, NUM_INCOMING_CONNECTIONS> _connectionPool;
-    ::etl::queue<transport::TransportJob, 1> _sendJobQueue;
+    ::etl::queue<TransportJob, 1> _sendJobQueue;
     DiagDispatcher fUdsDispatcher;
     DiagJobRoot fDiagJobRoot;
 

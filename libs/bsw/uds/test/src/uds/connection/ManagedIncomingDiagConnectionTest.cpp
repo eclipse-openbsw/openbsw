@@ -43,7 +43,7 @@ struct ManagedIncomingDiagConnectionTest : Test
     IncomingDiagConnection* fpIncomingDiagConnection;
     DiagnosisConfiguration* fpDiagnosisConfiguration;
     ::etl::pool<IncomingDiagConnection, NUM_INCOMING_CONNECTIONS> _connectionPool;
-    ::etl::queue<transport::TransportJob, MAX_NUM_INCOMING_MESSAGES> _sendJobQueue;
+    ::etl::queue<TransportJob, MAX_NUM_INCOMING_MESSAGES> _sendJobQueue;
     TransportMessageProvidingListenerMock* fpTpRouterMock;
     AbstractTransportLayerMock* fpTpLayerMock;
     DiagDispatcher* diagDispatcher;

@@ -13,7 +13,6 @@
 #include <transport/AbstractTransportLayer.h>
 #include <transport/ITransportMessageProcessedListener.h>
 #include <transport/ITransportMessageProvidingListener.h>
-#include <transport/TransportJob.h>
 #include <transport/TransportMessage.h>
 
 #include <etl/queue.h>
@@ -26,15 +25,16 @@ class UdsController;
 }
 } // namespace http
 
-namespace transport
-{
-class TransportJob;
-}
-
 namespace uds
 {
 class IDiagSessionManager;
 class IncomingDiagConnection;
+
+struct TransportJob
+{
+    ::transport::TransportMessage* transportMessage                    = nullptr;
+    ::transport::ITransportMessageProcessedListener* processedListener = nullptr;
+};
 
 /**
  * DiagDispatcher is the ITransportMessageSender for a uds instance.
@@ -58,7 +58,7 @@ public:
      */
     DiagDispatcher(
         ::etl::ipool& incomingDiagConnectionPool,
-        ::etl::iqueue<transport::TransportJob>& sendJobQueue,
+        ::etl::iqueue<TransportJob>& sendJobQueue,
         DiagnosisConfiguration& configuration,
         IDiagSessionManager& sessionManager,
         DiagJobRoot& jobRoot);
@@ -96,8 +96,8 @@ public:
     void shutdownIncomingConnections(::etl::delegate<void()> delegate);
 
 private:
-    using SendBusyResponseCallback
-        = ::etl::delegate<void(transport::TransportMessage const* const)>;
+    ::etl::ipool& _incomingDiagConnectionPool;
+    bool _connectionShutdownRequested = false;
 
     static uint8_t const BUSY_MESSAGE_LENGTH = 3U;
 
@@ -106,47 +106,24 @@ private:
 
     void connectionManagerShutdownComplete();
 
-    static void dispatchIncomingRequest(
-        transport::TransportJob& job,
-        DiagnosisConfiguration& configuration,
-        DiagDispatcher& dispatcher,
-        DiagJobRoot& diagJobRoot,
-        transport::ITransportMessageProvidingListener& providingListener,
-        transport::ITransportMessageProcessedListener* dispatcherProcessedListener,
-        SendBusyResponseCallback sendBusyResponse);
-
-    void sendBusyResponse(transport::TransportMessage const* const message);
-
-    static bool isNegativeResponse(transport::TransportMessage const& transportMessage);
-
-    static bool isFromValidSender(transport::TransportMessage const& transportMessage);
-
     /**
      * Functional requests might be routed to other busses if this UDS layer
      * is instantiated on a gateway. Thus, its content must not be altered
      * which is why a copy is made for further processing.
      */
-    static transport::TransportMessage* copyFunctionalRequest(
-        transport::TransportMessage& request,
-        transport::ITransportMessageProvidingListener& providingListener,
-        DiagnosisConfiguration& configuration);
-
     void diagConnectionTerminated(IncomingDiagConnection& diagConnection);
 
     void checkConnectionShutdownProgress();
 
-    ::etl::ipool& incomingDiagConnectionPool;
-    ::etl::iqueue<transport::TransportJob>& sendJobQueue;
-    DiagnosisConfiguration& fConfiguration;
-    ::etl::delegate<void()> fConnectionShutdownDelegate;
-    bool fConnectionShutdownRequested;
-
-    ShutdownDelegate fShutdownDelegate;
-    ::transport::DefaultTransportMessageProcessedListener fDefaultTransportMessageProcessedListener;
-    transport::TransportMessage fBusyMessage;
-    uint8_t fBusyMessageBuffer[BUSY_MESSAGE_LENGTH + UdsVmsConstants::BUSY_MESSAGE_EXTRA_BYTES];
-    ::async::Function fAsyncProcessQueue;
-    DiagJobRoot& fDiagJobRoot;
+    ::etl::iqueue<TransportJob>& _sendJobQueue;
+    DiagnosisConfiguration& _configuration;
+    ::etl::delegate<void()> _connectionShutdownDelegate;
+    ShutdownDelegate _shutdownDelegate;
+    ::transport::DefaultTransportMessageProcessedListener _defaultTransportMessageProcessedListener;
+    transport::TransportMessage _busyMessage;
+    uint8_t _busyMessageBuffer[BUSY_MESSAGE_LENGTH + UdsVmsConstants::BUSY_MESSAGE_EXTRA_BYTES];
+    ::async::Function _asyncProcessQueue;
+    DiagJobRoot& _diagJobRoot;
 };
 
 // FIXME: This should not be public api, it is just exposed here because

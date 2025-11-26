@@ -382,7 +382,7 @@ TEST_F(
     DiagJobRoot fDiagJobRoot;
 
     ::etl::pool<IncomingDiagConnection, 1> _connectionPool;
-    ::etl::queue<transport::TransportJob, 10> _sendJobQueue;
+    ::etl::queue<TransportJob, 10> _sendJobQueue;
 
     DiagnosisConfiguration udsConfiguration{
         0x10U,
