@@ -221,12 +221,10 @@ template<class DataLinkLayer>
 void DoCanReceiver<DataLinkLayer>::shutdown()
 {
     RemoveGuard const guard(this);
-    for (typename MessageReceiverListType::iterator it = _messageReceivers.begin();
-         it != _messageReceivers.end();
-         ++it)
+    for (auto& it : _messageReceivers)
     {
         ::interrupts::SuspendResumeAllInterruptsScopedLock const lock;
-        handleTransitions(*it, it->shutdown(), "shutdown");
+        handleTransitions(it, it.shutdown(), "shutdown");
     }
 }
 
@@ -356,16 +354,14 @@ void DoCanReceiver<DataLinkLayer>::cyclicTask(uint32_t const nowUs)
 {
     {
         RemoveGuard const guard(this);
-        for (typename MessageReceiverListType::iterator it = _messageReceivers.begin();
-             it != _messageReceivers.end();
-             ++it)
+        for (auto& it : _messageReceivers)
         {
-            if (!it->updateTimer(nowUs))
+            if (!it.updateTimer(nowUs))
             {
                 break;
             }
             ::interrupts::SuspendResumeAllInterruptsScopedLock const lock;
-            handleTransitions(*it, it->expired(), "cyclicTask");
+            handleTransitions(it, it.expired(), "cyclicTask");
         }
     }
     // Sort after removal.
@@ -389,11 +385,8 @@ template<class DataLinkLayer>
 void DoCanReceiver<DataLinkLayer>::processMessageReceivers()
 {
     RemoveGuard const guard(this);
-    for (typename MessageReceiverListType::iterator it = _messageReceivers.begin();
-         it != _messageReceivers.end();
-         ++it)
+    for (MessageReceiverType& messageReceiver : _messageReceivers)
     {
-        MessageReceiverType& messageReceiver = *it;
         ::interrupts::SuspendResumeAllInterruptsScopedLock const lock;
         if (messageReceiver.isAllocating())
         {
@@ -662,13 +655,11 @@ ReceiveResult DoCanReceiver<DataLinkLayer>::release(MessageReceiverType& message
     {
         _messageProvidingListener.releaseTransportMessage(*message);
     }
-    for (typename MessageReceiverListType::iterator it = _messageReceivers.begin();
-         it != _messageReceivers.end();
-         ++it)
+    for (auto& it : _messageReceivers)
     {
-        if (it->isBlocked() && (it->getReceptionAddress() == receptionAddress))
+        if (it.isBlocked() && (it.getReceptionAddress() == receptionAddress))
         {
-            it->setBlocked(false);
+            it.setBlocked(false);
             break;
         }
     }
@@ -711,13 +702,11 @@ bool DoCanReceiver<DataLinkLayer>::handlePendingMessageReceivers(
     DataLinkAddressType const receptionAddress)
 {
     bool blocked = false;
-    for (typename MessageReceiverListType::iterator it = _messageReceivers.begin();
-         it != _messageReceivers.end();
-         ++it)
+    for (auto& it : _messageReceivers)
     {
-        if (it->getReceptionAddress() == receptionAddress)
+        if (it.getReceptionAddress() == receptionAddress)
         {
-            if (it->getFrameCount() > 1U)
+            if (it.getFrameCount() > 1U)
             {
                 char formatBuffer[FORMAT_BUFFER_SIZE];
 
@@ -727,8 +716,8 @@ bool DoCanReceiver<DataLinkLayer>::handlePendingMessageReceivers(
                     "Segmented transfer cancelled due to new first frame.",
                     getName(),
                     _addressConverter.formatDataLinkAddress(
-                        it->getReceptionAddress(), formatBuffer));
-                handleTransitions(*it, it->cancel(), "handlingPendingMessageReceivers");
+                        it.getReceptionAddress(), formatBuffer));
+                handleTransitions(it, it.cancel(), "handlingPendingMessageReceivers");
             }
             else
             {
@@ -743,13 +732,11 @@ template<class DataLinkLayer>
 typename DoCanReceiver<DataLinkLayer>::MessageReceiverType*
 DoCanReceiver<DataLinkLayer>::findMessageReceiver(DataLinkAddressType const receptionAddress)
 {
-    for (typename MessageReceiverListType::iterator it = _messageReceivers.begin();
-         it != _messageReceivers.end();
-         ++it)
+    for (auto& it : _messageReceivers)
     {
-        if (it->getReceptionAddress() == receptionAddress)
+        if (it.getReceptionAddress() == receptionAddress)
         {
-            return &*it;
+            return &it;
         }
     }
     return nullptr;

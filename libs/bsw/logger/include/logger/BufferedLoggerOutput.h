@@ -252,10 +252,9 @@ void BufferedLoggerOutput<Lock, MaxEntrySize, T, E, Timestamp, ReadOnlyPredicate
         Lock const lock;
         _entryBuffer.addEntry(::etl::span<uint8_t>(entryBuffer).first(size));
     }
-    for (typename decltype(_listeners)::iterator it = _listeners.begin(); it != _listeners.end();
-         ++it)
+    for (auto& it : _listeners)
     {
-        (*it).logAvailable();
+        it.logAvailable();
     }
 }
 
