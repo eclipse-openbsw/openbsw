@@ -81,10 +81,6 @@ public:
                                         &IncomingDiagConnection::triggerNextNestedRequest>(*this))
     {
         _context = diagContext;
-        for (uint8_t cnt = 0U; cnt < _identifiers.capacity(); cnt++)
-        {
-            _identifiers[cnt] = 0U;
-        }
     }
 
     /**
