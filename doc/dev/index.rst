@@ -17,8 +17,8 @@ Structure of the Stack
      :scale: 100 %
      :align: center
 
-Eclipse OpenBSW includes a demo application that showcases the use of ADC, PWM, GPIO, UDS and CAN
-communication.
+Eclipse OpenBSW includes a demo application that showcases the use of ADC, PWM, GPIO, UDS, CAN
+and Ethernet communication.
 
 The stack is implemented in C++ to leverage flexibility and optimization. It has been designed
 with efficiency in mind, offering freedom for customized implementation to address
@@ -95,7 +95,6 @@ visualize and analyze the results more effectively.
     --output-directory build/tests/posix/Debug/coverage
 
 .. note::
-
     lcov can be installed with ``sudo apt install lcov``
 
 Explore the code
@@ -116,6 +115,7 @@ Also refer to the beginners guide pages below:
 * :ref:`learning_uds`
 * :ref:`learning_console`
 * :ref:`learning_lifecycle`
+* :ref:`learning_ethernet`
 
 Eclipse OpenBSW is a trademark of the Eclipse Foundation.
 
