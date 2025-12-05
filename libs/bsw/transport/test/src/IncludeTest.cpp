@@ -15,7 +15,6 @@
 #include "transport/ITransportMessageProcessedListener.h"
 #include "transport/ITransportMessageProvider.h"
 #include "transport/ITransportMessageProvidingListener.h"
-#include "transport/TransportJob.h"
 #include "transport/TransportMessage.h"
 #include "transport/TransportMessageSendJob.h"
 // IWYU pragma: end_keep

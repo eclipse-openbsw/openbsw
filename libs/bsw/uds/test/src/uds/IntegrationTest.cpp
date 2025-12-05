@@ -169,7 +169,7 @@ protected:
     uds::DiagnosisConfiguration _udsConfiguration;
     uds::DiagnosisConfiguration _udsConfiguration2;
     ::etl::pool<IncomingDiagConnection, NUM_INCOMING_CONNECTIONS> _connectionPool;
-    ::etl::queue<transport::TransportJob, 1> _sendJobQueue;
+    ::etl::queue<TransportJob, 1> _sendJobQueue;
     StrictMock<uds::DiagSessionManagerMock> _sessionManager;
     DiagJobRoot _jobRoot;
     StrictMock<transport::TransportMessageListenerMock> _messageListener;
@@ -315,10 +315,10 @@ TEST_F(UdsIntegration, no_response_for_7f)
         .WillRepeatedly(
             Return(transport::ITransportMessageProvider::ErrorCode::TPMSG_NOT_RESPONSIBLE));
 
-    transport::TransportJob& response1 = _sendJobQueue.emplace();
+    TransportJob& response1 = _sendJobQueue.emplace();
 
-    response1.setTransportMessage(transportMessage);
-    response1.setProcessedListener(&_udsDispatcher);
+    response1.transportMessage  = &transportMessage;
+    response1.processedListener = &_udsDispatcher;
 
     _udsConfiguration.AcceptAllRequests = true;
     acquireIncomingDiagConnection(_connectionPool, ::etl::move(fContext));
@@ -599,9 +599,9 @@ TEST_F(UdsIntegration, dispatchIncomingRequest_returns_earlier_if_request_comes_
             SetArgReferee<5>(pMessage),
             Return(transport::ITransportMessageProvider::ErrorCode::TPMSG_OK)));
 
-    transport::TransportJob& response1 = _sendJobQueue.emplace();
-    response1.setTransportMessage(transportMessage);
-    response1.setProcessedListener(&_udsDispatcher);
+    TransportJob& response1     = _sendJobQueue.emplace();
+    response1.transportMessage  = &transportMessage;
+    response1.processedListener = &_udsDispatcher;
 
     EXPECT_CALL(_messageProvider, releaseTransportMessage(Ref(transportMessage)));
 
@@ -622,10 +622,10 @@ TEST_F(
     EXPECT_CALL(_messageProvider, getTransportMessage(_, _, _, _, _, _))
         .WillRepeatedly(Return(transport::ITransportMessageProvider::ErrorCode::TPMSG_OK));
 
-    transport::TransportJob& response1 = _sendJobQueue.emplace();
+    TransportJob& response1 = _sendJobQueue.emplace();
 
-    response1.setTransportMessage(transportMessage);
-    response1.setProcessedListener(&_udsDispatcher);
+    response1.transportMessage  = &transportMessage;
+    response1.processedListener = &_udsDispatcher;
 
     _udsConfiguration.AcceptAllRequests = true;
     acquireIncomingDiagConnection(_connectionPool, ::etl::move(fContext));
@@ -653,10 +653,10 @@ TEST_F(
         .WillRepeatedly(
             Return(transport::ITransportMessageProvider::ErrorCode::TPMSG_NOT_RESPONSIBLE));
 
-    transport::TransportJob& response1 = _sendJobQueue.emplace();
+    TransportJob& response1 = _sendJobQueue.emplace();
 
-    response1.setTransportMessage(transportMessage);
-    response1.setProcessedListener(&_udsDispatcher);
+    response1.transportMessage  = &transportMessage;
+    response1.processedListener = &_udsDispatcher;
 
     _udsConfiguration.AcceptAllRequests = true;
 
@@ -687,9 +687,9 @@ TEST_F(UdsIntegration, dispatchIncomingRequest_setProcessedListener_if_no_one_wa
             SetArgReferee<5>(pMessage),
             Return(transport::ITransportMessageProvider::ErrorCode::TPMSG_OK)));
 
-    transport::TransportJob& response1 = _sendJobQueue.emplace();
+    TransportJob& response1 = _sendJobQueue.emplace();
 
-    response1.setTransportMessage(transportMessage);
+    response1.transportMessage = &transportMessage;
 
     _udsConfiguration.AcceptAllRequests = true;
     acquireIncomingDiagConnection(_connectionPool, ::etl::move(fContext));
@@ -724,10 +724,10 @@ TEST_F(
             SetArgReferee<5>(pMessage),
             Return(transport::ITransportMessageProvider::ErrorCode::TPMSG_OK)));
 
-    transport::TransportJob& response1 = _sendJobQueue.emplace();
+    TransportJob& response1 = _sendJobQueue.emplace();
 
-    response1.setProcessedListener(&_udsDispatcher);
-    response1.setTransportMessage(transportMessage);
+    response1.processedListener = &_udsDispatcher;
+    response1.transportMessage  = &transportMessage;
 
     _udsConfiguration.AcceptAllRequests = true;
     acquireIncomingDiagConnection(_connectionPool, ::etl::move(fContext));
@@ -756,10 +756,10 @@ TEST_F(
         .WillRepeatedly(
             Return(transport::ITransportMessageProvider::ErrorCode::TPMSG_NOT_RESPONSIBLE));
 
-    transport::TransportJob& response1 = _sendJobQueue.emplace();
+    TransportJob& response1 = _sendJobQueue.emplace();
 
-    response1.setTransportMessage(transportMessage);
-    response1.setProcessedListener(&_udsDispatcher);
+    response1.transportMessage  = &transportMessage;
+    response1.processedListener = &_udsDispatcher;
 
     _udsConfiguration.AcceptAllRequests = true;
     acquireIncomingDiagConnection(_connectionPool, ::etl::move(fContext));

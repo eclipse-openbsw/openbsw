@@ -79,7 +79,7 @@ private:
     CommunicationControl _communicationControl;
     DiagnosisConfiguration _udsConfiguration;
     ::etl::pool<IncomingDiagConnection, 5> _connectionPool;
-    ::etl::queue<transport::TransportJob, 16> _sendJobQueue;
+    ::etl::queue<TransportJob, 16> _sendJobQueue;
     DiagDispatcher _udsDispatcher;
     uds::declare::AsyncDiagHelper<5> _asyncDiagHelper;
 

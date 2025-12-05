@@ -3,7 +3,6 @@
 #pragma once
 
 #include "platform/estdint.h"
-#include "transport/TransportJob.h"
 #include "uds/UdsConfig.h"
 #include "uds/connection/IncomingDiagConnection.h"
 

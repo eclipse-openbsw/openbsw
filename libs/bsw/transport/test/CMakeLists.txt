@@ -3,7 +3,6 @@ add_executable(
     src/AbstractTransportLayerTest.cpp
     src/IncludeTest.cpp
     src/TesterAddressTest.cpp
-    src/TransportJobTest.cpp
     src/TransportMessageTest.cpp
     src/TransportConfiguration.cpp
     src/Logger.cpp)
