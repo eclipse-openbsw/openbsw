@@ -37,9 +37,7 @@ class TargetSession:
         it is not intended to be called from a test.
         """
         self.capserial().clear()
-        start_target_process(
-            self.target_name, TargetSession.counter == 1
-        )
+        start_target_process(self.target_name, TargetSession.counter == 1)
 
     def stop(self):
         """Stop the target.
@@ -172,3 +170,15 @@ def pytest_generate_tests(metafunc):
             metafunc.parametrize(
                 "target_session", [name for name in TargetInfo.by_name], indirect=True
             )
+
+
+def pytest_runtest_setup(item):
+    skip_marker = item.get_closest_marker("skip_if")
+    if skip_marker:
+        condition = skip_marker.args[0]
+        target = item.config.getoption("target")
+        app = item.config.getoption("app")
+
+        context = {"target": target, "app": app}
+        if eval(condition, {}, context):
+            pytest.skip(f"Skipped because condition '{condition}' matched")
