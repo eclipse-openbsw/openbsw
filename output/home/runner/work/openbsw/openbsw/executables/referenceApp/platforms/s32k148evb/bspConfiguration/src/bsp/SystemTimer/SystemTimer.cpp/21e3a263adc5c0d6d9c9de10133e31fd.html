@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../../../../../../../../../../../../../static/css/style.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <title>Symbol - puncover</title>
+    
+</head>
+<body>
+    <div class="container" id="content">
+        <div class="page-header">
+            <nav class="navbar navbar-default" role="navigation">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="../../../../../../../../../../../../../../index.html">
+                    Puncover
+                  </a>
+                </div>
+              </div>
+            </nav>
+          
+        </div>
+        <div id="inner_content">
+        
+    
+    <ol class="breadcrumb folders">
+        
+        <li><a href="../../../../../../../../../../../../../../home.html">home</a></li>
+        
+        <li><a href="../../../../../../../../../../../../../runner.html">runner</a></li>
+        
+        <li><a href="../../../../../../../../../../../../work.html">work</a></li>
+        
+        <li><a href="../../../../../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../../../../executables.html">executables</a></li>
+        
+        <li><a href="../../../../../../../../referenceApp.html">referenceApp</a></li>
+        
+        <li><a href="../../../../../../../platforms.html">platforms</a></li>
+        
+        <li><a href="../../../../../../s32k148evb.html">s32k148evb</a></li>
+        
+        <li><a href="../../../../../bspConfiguration.html">bspConfiguration</a></li>
+        
+        <li><a href="../../../../src.html">src</a></li>
+        
+        <li><a href="../../../bsp.html">bsp</a></li>
+        
+        <li ><a href="../../SystemTimer.html">SystemTimer</a>
+            </li>
+
+        
+        <li class="active"><a href="../SystemTimer.cpp.html">SystemTimer.cpp</a>:90
+            </li>
+        
+    </ol>
+
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <th>Function</th>
+                <td colspan="5">
+                    <span class="icon-function">etl_get_high_resolution_clock</span>
+                </td>
+            </tr>
+
+            <tr>
+                <th rowspan="2"></th>
+                <th>Address</th>
+                <th>Remarks</th>
+                <th>Stack</th>
+                <th>Code</th>
+                <th>Static</th>
+            </tr>
+            <tr>
+                <td>0x000204d0</td>
+                <td>
+    <span class="label label-success">x-module</span>
+    
+</td>
+                <td>0 (static)</td>
+                <td>104</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th>Callers (2)</th>
+                <td colspan="5">
+                
+                    <a href="../../../../../../../../../libs/bsw/logger/include/logger/BufferedLoggerOutput.h/e3ad7a78fb2838fed1a54520f3662fc5.html">logger::BufferedLoggerOutput&lt;interrupts::SuspendResumeAllInterruptsScopedLock, (unsigned char)128, unsigned short, unsigned long, unsigned long, logger::SectionPredicate&gt;::logOutput(util::logger::ComponentInfo const&amp;, util::logger::LevelInfo const&amp;, char const*, std::__va_list) (680)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../../../../../../../../../libs/bsw/logger/include/logger/DefaultLoggerTime.h/dc49d30db40f71253f98da52dd2d4530.html">logger::DefaultLoggerTime&lt;etl::chrono::time_point&lt;etl::chrono::high_resolution_clock, etl::chrono::duration&lt;unsigned long, etl::ratio&lt;1ll, 1000ll&gt; &gt; &gt; &gt;::getTimestamp() const (20)</a>
+                    
+                
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    No Callees
+                    
+                </th>
+                <td colspan="5">
+                
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    
+    <pre><a href="./e7f55a9d953f32b1317f54c0d66911d5.html">getSystemTimeUs32Bit (60)</a></pre>
+    
+
+    <pre>
+
+    etl_get_high_resolution_clock():
+
+       204d0:	f3ef 8c10 	mrs	ip, PRIMASK
+
+       204d4:	b672      	cpsid	i
+
+       204d6:	4a16      	ldr	r2, [pc, #88]	@ (20530 <<a href="./21e3a263adc5c0d6d9c9de10133e31fd.html">etl_get_high_resolution_clock</a>+0x60>)
+
+       204d8:	4916      	ldr	r1, [pc, #88]	@ (20534 <<a href="./21e3a263adc5c0d6d9c9de10133e31fd.html">etl_get_high_resolution_clock</a>+0x64>)
+
+       204da:	6893      	ldr	r3, [r2, #8]
+
+       204dc:	6849      	ldr	r1, [r1, #4]
+
+       204de:	68d0      	ldr	r0, [r2, #12]
+
+       204e0:	6091      	str	r1, [r2, #8]
+
+       204e2:	1acb      	subs	r3, r1, r3
+
+       204e4:	fbb3 f3f0 	udiv	r3, r3, r0
+
+       204e8:	e9d2 0100 	ldrd	r0, r1, [r2]
+
+       204ec:	181b      	adds	r3, r3, r0
+
+       204ee:	f141 0100 	adc.w	r1, r1, #0
+
+       204f2:	e9c2 3100 	strd	r3, r1, [r2]
+
+       204f6:	f38c 8810 	msr	PRIMASK, ip
+
+       204fa:	014a      	lsls	r2, r1, #5
+
+       204fc:	ea4f 1c43 	mov.w	ip, r3, lsl #5
+
+       20500:	ebbc 0c03 	subs.w	ip, ip, r3
+
+       20504:	ea42 62d3 	orr.w	r2, r2, r3, lsr #27
+
+       20508:	eb62 0201 	sbc.w	r2, r2, r1
+
+       2050c:	ea4f 008c 	mov.w	r0, ip, lsl #2
+
+       20510:	0092      	lsls	r2, r2, #2
+
+       20512:	18c0      	adds	r0, r0, r3
+
+       20514:	ea42 729c 	orr.w	r2, r2, ip, lsr #30
+
+       20518:	eb41 0102 	adc.w	r1, r1, r2
+
+       2051c:	00c9      	lsls	r1, r1, #3
+
+       2051e:	ea41 7150 	orr.w	r1, r1, r0, lsr #29
+
+       20522:	f3c0 005b 	ubfx	r0, r0, #1, #28
+
+       20526:	ea40 7001 	orr.w	r0, r0, r1, lsl #28
+
+       2052a:	0909      	lsrs	r1, r1, #4
+
+       2052c:	4770      	bx	lr
+
+       2052e:	bf00      	nop
+
+       20530:	1ffe0150 	.word	0x1ffe0150
+
+       20534:	e0001000 	.word	0xe0001000
+
+    </pre>
+
+    
+    <pre><a href="./a857dde1963b018a532cddd3ac0ab673.html">getSystemTimeMs32Bit (64)</a></pre>
+    
+
+    
+        <h1>Stack Worst-Case Scenarios</h1>
+        
+            <p>No callees for this function.</p>
+        
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 240</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 784</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    784
+                    
+                    
+                </td>
+                <td class="col_size">104</td>
+                <td><a href="./21e3a263adc5c0d6d9c9de10133e31fd.html" class="icon-function">etl_get_high_resolution_clock</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                </td>
+                <td class="col_size">
+            
+                240 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">680</td>
+                <td><a href="../../../../../../../../../libs/bsw/logger/include/logger/BufferedLoggerOutput.h/e3ad7a78fb2838fed1a54520f3662fc5.html" class="icon-function">logger::BufferedLoggerOutput&lt;interrupts::SuspendResumeAllInterruptsScopedLock, (unsigned char)128, unsigned short, unsigned long, unsigned long, logger::SectionPredicate&gt;::logOutput(util::logger::ComponentInfo const&amp;, util::logger::LevelInfo const&amp;, char const*, std::__va_list)</a></td>
+            </tr>
+        
+        </tbody>
+        
+    </table>
+        
+    
+
+
+        </div>
+    <div id="page-footer">
+        <hr>
+        
+            brought to you with 💖
+            by <a href="https://twitter.com/hbehrens">Heiko Behrens</a>
+            <span class="secondary">– MIT license, copyright © 2014-2025</span>
+        
+    </div>
+    </div>
+</body>
+</html>

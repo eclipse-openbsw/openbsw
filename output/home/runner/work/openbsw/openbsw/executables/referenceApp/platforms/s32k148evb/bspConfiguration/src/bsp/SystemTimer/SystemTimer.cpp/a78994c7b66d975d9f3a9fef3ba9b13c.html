@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../../../../../../../../../../../../../static/css/style.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <title>Symbol - puncover</title>
+    
+</head>
+<body>
+    <div class="container" id="content">
+        <div class="page-header">
+            <nav class="navbar navbar-default" role="navigation">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="../../../../../../../../../../../../../../index.html">
+                    Puncover
+                  </a>
+                </div>
+              </div>
+            </nav>
+          
+        </div>
+        <div id="inner_content">
+        
+    
+    <ol class="breadcrumb folders">
+        
+        <li><a href="../../../../../../../../../../../../../../home.html">home</a></li>
+        
+        <li><a href="../../../../../../../../../../../../../runner.html">runner</a></li>
+        
+        <li><a href="../../../../../../../../../../../../work.html">work</a></li>
+        
+        <li><a href="../../../../../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../../../../executables.html">executables</a></li>
+        
+        <li><a href="../../../../../../../../referenceApp.html">referenceApp</a></li>
+        
+        <li><a href="../../../../../../../platforms.html">platforms</a></li>
+        
+        <li><a href="../../../../../../s32k148evb.html">s32k148evb</a></li>
+        
+        <li><a href="../../../../../bspConfiguration.html">bspConfiguration</a></li>
+        
+        <li><a href="../../../../src.html">src</a></li>
+        
+        <li><a href="../../../bsp.html">bsp</a></li>
+        
+        <li ><a href="../../SystemTimer.html">SystemTimer</a>
+            </li>
+
+        
+        <li class="active"><a href="../SystemTimer.cpp.html">SystemTimer.cpp</a>:82
+            </li>
+        
+    </ol>
+
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <th>Function</th>
+                <td colspan="5">
+                    <span class="icon-function">getSystemTimeNs</span>
+                </td>
+            </tr>
+
+            <tr>
+                <th rowspan="2"></th>
+                <th>Address</th>
+                <th>Remarks</th>
+                <th>Stack</th>
+                <th>Code</th>
+                <th>Static</th>
+            </tr>
+            <tr>
+                <td>0x000203f0</td>
+                <td>
+    <span class="label label-success">x-module</span>
+    
+</td>
+                <td>0 (static)</td>
+                <td>104</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th>Callers (1)</th>
+                <td colspan="5">
+                
+                    <a href="../../../../../../../../../platforms/s32k1xx/bsp/bspEthernet/src/ethernet/TxBuffers.cpp/bb8fa584dc09347240119e4fbbafae55.html">ethernet::TxBuffers::interrupt() (224)</a>
+                    
+                
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    No Callees
+                    
+                </th>
+                <td colspan="5">
+                
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    
+    <pre><a href="./ef726e6b5f9357a8fa025578b908794c.html">getSystemTicks32Bit (52)</a></pre>
+    
+
+    <pre>
+
+    getSystemTimeNs():
+
+       203f0:	f3ef 8c10 	mrs	ip, PRIMASK
+
+       203f4:	b672      	cpsid	i
+
+       203f6:	4a16      	ldr	r2, [pc, #88]	@ (20450 <<a href="./a78994c7b66d975d9f3a9fef3ba9b13c.html">getSystemTimeNs</a>+0x60>)
+
+       203f8:	4916      	ldr	r1, [pc, #88]	@ (20454 <<a href="./a78994c7b66d975d9f3a9fef3ba9b13c.html">getSystemTimeNs</a>+0x64>)
+
+       203fa:	6893      	ldr	r3, [r2, #8]
+
+       203fc:	6849      	ldr	r1, [r1, #4]
+
+       203fe:	68d0      	ldr	r0, [r2, #12]
+
+       20400:	6091      	str	r1, [r2, #8]
+
+       20402:	1acb      	subs	r3, r1, r3
+
+       20404:	fbb3 f3f0 	udiv	r3, r3, r0
+
+       20408:	e9d2 0100 	ldrd	r0, r1, [r2]
+
+       2040c:	181b      	adds	r3, r3, r0
+
+       2040e:	f141 0100 	adc.w	r1, r1, #0
+
+       20412:	e9c2 3100 	strd	r3, r1, [r2]
+
+       20416:	f38c 8810 	msr	PRIMASK, ip
+
+       2041a:	014a      	lsls	r2, r1, #5
+
+       2041c:	ea4f 1c43 	mov.w	ip, r3, lsl #5
+
+       20420:	ebbc 0c03 	subs.w	ip, ip, r3
+
+       20424:	ea42 62d3 	orr.w	r2, r2, r3, lsr #27
+
+       20428:	eb62 0201 	sbc.w	r2, r2, r1
+
+       2042c:	ea4f 008c 	mov.w	r0, ip, lsl #2
+
+       20430:	0092      	lsls	r2, r2, #2
+
+       20432:	18c0      	adds	r0, r0, r3
+
+       20434:	ea42 729c 	orr.w	r2, r2, ip, lsr #30
+
+       20438:	eb41 0102 	adc.w	r1, r1, r2
+
+       2043c:	00c9      	lsls	r1, r1, #3
+
+       2043e:	ea41 7150 	orr.w	r1, r1, r0, lsr #29
+
+       20442:	f3c0 005b 	ubfx	r0, r0, #1, #28
+
+       20446:	ea40 7001 	orr.w	r0, r0, r1, lsl #28
+
+       2044a:	0909      	lsrs	r1, r1, #4
+
+       2044c:	4770      	bx	lr
+
+       2044e:	bf00      	nop
+
+       20450:	1ffe0150 	.word	0x1ffe0150
+
+       20454:	e0001000 	.word	0xe0001000
+
+    </pre>
+
+    
+    <pre><a href="./d027c03bcf336287081f759d27e7e7b6.html">getSystemTimeUs (60)</a></pre>
+    
+
+    
+        <h1>Stack Worst-Case Scenarios</h1>
+        
+            <p>No callees for this function.</p>
+        
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 72</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 372</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    372
+                    
+                    
+                </td>
+                <td class="col_size">104</td>
+                <td><a href="./a78994c7b66d975d9f3a9fef3ba9b13c.html" class="icon-function">getSystemTimeNs</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                    
+                    72
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                56 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    268
+                    
+                    
+                </td>
+                <td class="col_size">224</td>
+                <td><a href="../../../../../../../../../platforms/s32k1xx/bsp/bspEthernet/src/ethernet/TxBuffers.cpp/bb8fa584dc09347240119e4fbbafae55.html" class="icon-function">ethernet::TxBuffers::interrupt()</a></td>
+            </tr>
+        
+            <tr>
+                <th>3</th>
+                <td class="col_size">
+                </td>
+                <td class="col_size">
+            
+                16 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">44</td>
+                <td><a href="../../../../../../../../../platforms/s32k1xx/bsp/bspEthernet/src/ethernet/EnetDriver.cpp/d73c6856ae94204df84a1e64d54fc496.html" class="icon-function">ethernet::EnetDriver::interruptGroup0()</a></td>
+            </tr>
+        
+        </tbody>
+        
+    </table>
+        
+    
+
+
+        </div>
+    <div id="page-footer">
+        <hr>
+        
+            brought to you with 💖
+            by <a href="https://twitter.com/hbehrens">Heiko Behrens</a>
+            <span class="secondary">– MIT license, copyright © 2014-2025</span>
+        
+    </div>
+    </div>
+</body>
+</html>
