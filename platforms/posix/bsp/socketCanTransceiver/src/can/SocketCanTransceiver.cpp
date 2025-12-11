@@ -101,35 +101,29 @@ void SocketCanTransceiver::shutdown() {}
 
 ICanTransceiver::ErrorCode SocketCanTransceiver::write(CANFrame const& frame)
 {
-    if (!_writable.load(std::memory_order_relaxed))
-    {
-        return ErrorCode::CAN_ERR_ILLEGAL_STATE;
-    }
-    FrameWithListener slot{frame, nullptr};
-    ::etl::span<uint8_t> memory = _txWriter.allocate(sizeof(slot));
-    if (memory.size() == 0)
-    {
-        return ErrorCode::CAN_ERR_TX_HW_QUEUE_FULL;
-    }
-    ::std::memcpy(memory.data(), &slot, sizeof(slot));
-    _txWriter.commit();
-    return ErrorCode::CAN_ERR_OK;
+    return writeImpl(frame, nullptr);
 }
 
 ICanTransceiver::ErrorCode
 SocketCanTransceiver::write(CANFrame const& frame, ICANFrameSentListener& listener)
 {
+    return writeImpl(frame, &listener);
+}
+
+ICanTransceiver::ErrorCode
+SocketCanTransceiver::writeImpl(CANFrame const& frame, ICANFrameSentListener* listener)
+{
     if (!_writable.load(std::memory_order_relaxed))
     {
         return ErrorCode::CAN_ERR_ILLEGAL_STATE;
     }
-    FrameWithListener slot{frame, &listener};
-    ::etl::span<uint8_t> memory = _txWriter.allocate(sizeof(slot));
-    if (memory.size() == 0)
+    auto memory = _txWriter.allocate(TX_ELEMENT_SIZE_BYTES);
+    if (memory.size() < TX_ELEMENT_SIZE_BYTES)
     {
         return ErrorCode::CAN_ERR_TX_HW_QUEUE_FULL;
     }
-    ::std::memcpy(memory.data(), &slot, sizeof(slot));
+    ::std::memcpy(memory.data(), &frame, sizeof(frame));
+    ::std::memcpy(memory.data() + sizeof(frame), static_cast<void*>(&listener), sizeof(void*));
     _txWriter.commit();
     return ErrorCode::CAN_ERR_OK;
 }
@@ -239,14 +233,17 @@ void SocketCanTransceiver::guardedRun(int maxSentPerRun, int maxReceivedPerRun)
     // we shall try to deliver it.
     for (int count = 0; count < maxSentPerRun; ++count)
     {
-        ::etl::span<uint8_t const> canFrameSlice = _txReader.peek();
-        if (canFrameSlice.size() == 0)
+        auto memory = _txReader.peek();
+        if (memory.size() < TX_ELEMENT_SIZE_BYTES)
         {
             break;
         }
-        FrameWithListener slot;
-        ::std::memcpy(static_cast<void*>(&slot), canFrameSlice.data(), sizeof(slot));
-        CANFrame& canFrame = slot.frame;
+        CANFrame canFrame;
+        ::std::memcpy(static_cast<void*>(&canFrame), memory.data(), sizeof(canFrame));
+        ICANFrameSentListener* listener = nullptr;
+        ::std::memcpy(
+            static_cast<void*>(&listener), memory.data() + sizeof(canFrame), sizeof(void*));
+        _txReader.release();
         can_frame socketCanFrame;
         ::std::memset(&socketCanFrame, 0, sizeof(socketCanFrame));
         socketCanFrame.can_id  = canFrame.getId();
@@ -259,10 +256,9 @@ void SocketCanTransceiver::guardedRun(int maxSentPerRun, int maxReceivedPerRun)
         {
             break;
         }
-        _txReader.release();
-        if (slot.listener != nullptr)
+        if (listener != nullptr)
         {
-            slot.listener->canFrameSent(canFrame);
+            listener->canFrameSent(canFrame);
         }
         notifySentListeners(canFrame);
     }
