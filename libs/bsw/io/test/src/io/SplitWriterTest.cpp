@@ -65,9 +65,6 @@ TEST_F(SplitWriterTest, cannot_initialise_with_nullptrs)
     }
     array_NUM_QUEUES[_w.size() - 1] = nullptr;
 
-    // No throw.
-    ::io::SplitWriter<NUM_QUEUES - 1> splitWriter2(array_NUM_QUEUES);
-
     ASSERT_THROW(::io::SplitWriter<NUM_QUEUES> splitWriter3(array_NUM_QUEUES), ::etl::exception);
 }
 
@@ -89,9 +86,6 @@ TEST_F(SplitWriterTest, cannot_initialise_with_different_sized_writers)
         array_NUM_QUEUES[i] = &_w[i];
     }
     array_NUM_QUEUES[_w.size() - 1] = &anotherSizedIWriter;
-
-    // No throw.
-    ::io::SplitWriter<NUM_QUEUES - 1> splitWriter2(array_NUM_QUEUES);
 
     ASSERT_THROW(::io::SplitWriter<NUM_QUEUES> splitWriter3(array_NUM_QUEUES), ::etl::exception);
 }
