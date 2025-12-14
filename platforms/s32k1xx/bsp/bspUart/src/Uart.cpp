@@ -7,7 +7,7 @@
 
 using bsp::Uart;
 
-static uint32_t const WRITE_TIMEOUT = 1000U;
+static uint32_t const WRITE_TIMEOUT = 100000U;
 
 /**
  * it checks if there is active reading communication
