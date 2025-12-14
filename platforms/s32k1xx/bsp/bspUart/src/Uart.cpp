@@ -102,6 +102,12 @@ bool Uart::isInitialized() const
 bool Uart::waitForTxReady()
 {
     uint32_t count = 0U;
+
+    if (!isInitialized())
+    {
+        init();
+    }
+
     while (isTxActive(_uartConfig.uart.STAT))
     {
         if (++count > WRITE_TIMEOUT)
