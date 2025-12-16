@@ -39,6 +39,7 @@ public:
 
 private:
     ComponentMapping<IndexUpperBound>& _componentMapping;
+    int newVariable_;
 };
 
 template<uint8_t IndexUpperBound>
