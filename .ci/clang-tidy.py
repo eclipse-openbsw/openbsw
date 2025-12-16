@@ -3,8 +3,8 @@ Clang-tidy Checker
 ==================
 
 This script runs the llvm helper tool clang-tidy-diff on all commits
-from the current branch until origin/main. It receives as argument
-the build directory where compile_commands.json is located.
+from the current branch's HEAD to the common commit between this branch and origin/main.
+It receives as argument the build directory where compile_commands.json is located.
 Before running the clang-tidy-diff tool, it creates a temporary cleaned
 version of compile_commands.json without flags that clang does not
 recognize. If any clang-tidy warning is found in the changed lines,
@@ -55,8 +55,17 @@ def check_clang_tidy(build_dir: str) -> str:
     Runs clang-tidy-diff from llvm, on the git diff and returns stderr output.
     """
 
+    # First, get the merge base
+    merge_base = subprocess.run(
+        ["git", "merge-base", "HEAD", "origin/main"],
+        capture_output=True,
+        text=True,
+        check=True,
+    )
+    base_commit = merge_base.stdout.strip()
+
     git_diff = subprocess.run(
-        ["git", "diff", "-U0", "origin/main..HEAD"],
+        ["git", "diff", "-U0", f"{base_commit}...HEAD"],
         capture_output=True,
         text=True,
         check=True,
@@ -90,7 +99,7 @@ if __name__ == "__main__":
 
         clang_tidy_stderr = check_clang_tidy(TMP_BUILD_DIR.as_posix())
         shutil.rmtree(TMP_BUILD_DIR)
-        if re.search(r"warning treated as error", clang_tidy_stderr, re.MULTILINE):
+        if re.search(r"warnings? treated as errors?", clang_tidy_stderr, re.MULTILINE):
             print("\nClang-Tidy Warnings Detected", file=sys.stderr)
             sys.exit(1)
         else:
