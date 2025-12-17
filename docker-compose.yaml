@@ -2,8 +2,8 @@ services:
   development:
     image: openbsw-development:local
     build:
-      context: .
-      dockerfile: docker/development/Dockerfile
+      context: docker/development
+      network: host
       args:
         http_proxy: ${http_proxy}
         https_proxy: ${https_proxy}
@@ -42,8 +42,8 @@ services:
   development-sil:
     image: openbsw-development:local
     build:
-      context: .
-      dockerfile: docker/development/Dockerfile
+      context: docker/development
+      network: host
       args:
         http_proxy: ${http_proxy}
         https_proxy: ${https_proxy}

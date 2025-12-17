@@ -5,7 +5,7 @@ from target_info import TargetInfo
 
 def create_uds_tool_command(channel, did):
     config = os.path.join(os.getcwd(), "../../tools/UdsTool/app/canConfig.json")
-    return f"udstool read --can --channel {channel} --txid 0x2A --rxid 0xF0 --did {did} --config {config}"
+    return f"python3 ../../tools/UdsTool/udsTool.py read --can --channel {channel} --txid 0x2A --rxid 0xF0 --did {did} --config {config}"
 
 
 def test_rdbi(target_session, did="CF01"):
@@ -14,6 +14,7 @@ def test_rdbi(target_session, did="CF01"):
     command = create_uds_tool_command(
         target_session.target_info.socketcan["channel"], did
     )
+    print(command)
     output = helper.run_process(command)
 
     assert any(

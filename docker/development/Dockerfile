@@ -46,13 +46,11 @@ RUN gem install esr-rim
 
 RUN python3 -m venv /opt/venv
 ENV PATH=/opt/venv/bin:${PATH}
-RUN --mount=type=bind,source=./docker/development/files/requirements.lock,target=/tmp/requirements.lock pip3 install -r /tmp/requirements.lock
-
-RUN --mount=type=bind,source=./tools/UdsTool,target=/opt/UdsTool,rw pip3 install /opt/UdsTool
+RUN --mount=type=bind,source=files/requirements.lock,target=/tmp/requirements.lock pip3 install -r /tmp/requirements.lock
 
 RUN useradd build
 RUN install -d /home/build --mode 0777 --owner build --group build
-COPY --chown=build:build --chmod=0666 ./docker/development/files/.bashrc /home/build/.bashrc
-COPY --chown=build:build --chmod=0666 ./docker/development/files/.bash_profile /home/build/.bash_profile
+COPY --chown=build:build --chmod=0666 files/.bashrc /home/build/.bashrc
+COPY --chown=build:build --chmod=0666 files/.bash_profile /home/build/.bash_profile
 
 USER build

@@ -20,8 +20,7 @@ jobs:
         id: build-docker-development
         uses: docker/build-push-action@v6
         with:
-          context: .
-          file: docker/development/Dockerfile
+          context: "{{defaultContext}}:docker/development"
           push: false
           tags: openbsw-development:local
           outputs: type=docker

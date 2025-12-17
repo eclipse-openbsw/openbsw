@@ -143,3 +143,7 @@ def raw(
         # Handle Ethernet connection
         client = connection.createEthConnection(host, ecu, source)
         rawCommand.raw(client, data, path)
+
+
+if __name__ == "__main__":
+    start()
