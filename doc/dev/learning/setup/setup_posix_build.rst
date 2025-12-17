@@ -75,3 +75,19 @@ You should be able to run and see output like this in your shell terminal...
 Press ``CTRL-C`` should exit the running application.
 
 Now that you can build the code and run it, you can explore the code, make changes and learn how it works.
+
+Optional: Rust Support
+----------------------
+
+If you want to build OpenBSW with Rust components, you need to install the Rust compiler:
+
+.. code-block:: bash
+
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+
+Then build using the Rust preset:
+
+.. code-block:: bash
+
+    cmake --preset posix-rust
+    cmake --build --preset posix-rust --parallel

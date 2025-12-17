@@ -107,4 +107,22 @@ The build files should be written to a new subdirectory named ``build/s32k148-gc
 and the built executable should be found at ``build/s32k148-clang/executables/referenceApp/application/RelWithDebInfo/app.referenceApp.elf``
 which you can flash on the S32K148 development board.
 
+Optional: Rust Support
+----------------------
+
+If you want to build OpenBSW with Rust components for the S32K148 platform, you need to install
+the Rust compiler and the ARM cross-compilation target:
+
+.. code-block:: bash
+
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+    rustup target add thumbv7em-none-eabihf
+
+Then build using the Rust preset:
+
+.. code-block:: bash
+
+    cmake --preset s32k148-rust-gcc
+    cmake --build --preset s32k148-rust-gcc
+
 Next :doc:`setup_s32k148_ubuntu_nxpide`
