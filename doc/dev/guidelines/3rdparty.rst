@@ -5,6 +5,7 @@ Third party libraries under the project root's ``libs/3rdparty`` are
 recommended to be maintained by `RIM <https://github.com/esrlabs/esr-rim>`,
 if possible:
 
+* ``corrosion``
 * ``etl``
 * ``googletest``
 * ``lwip``
