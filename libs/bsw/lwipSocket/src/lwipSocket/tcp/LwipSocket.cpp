@@ -23,7 +23,7 @@ extern "C"
 namespace
 {
 err_t const ERR_NO_MORE_BUF = -100;
-}
+} // namespace
 
 namespace tcp
 {
