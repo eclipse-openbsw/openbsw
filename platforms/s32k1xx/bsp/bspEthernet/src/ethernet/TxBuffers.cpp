@@ -11,6 +11,7 @@
 #include <etl/error_handler.h>
 #include <etl/unaligned_type.h>
 
+#include <cstddef>
 #include <cstring>
 
 using namespace ::util::logger;
@@ -172,9 +173,10 @@ bool TxBuffers::writeFrame(uint16_t const vlanId, const struct pbuf* const buf)
             if (0U == bufferIndex)
             {
                 // Copy the original ETYPE
-                uint16_t const etherType = ::etl::be_uint16_t(payload + 6U * 2);
-                uint8_t* header          = payload;
-                uint8_t writeLen         = 0U;
+                size_t const ethTypeOffset = static_cast<size_t>(6U * 2U);
+                uint16_t const etherType   = ::etl::be_uint16_t(payload + ethTypeOffset);
+                uint8_t* header            = payload;
+                uint8_t writeLen           = 0U;
 
                 if (_enableVlanTagging) // VLAN enabled
                 {
@@ -186,8 +188,8 @@ bool TxBuffers::writeFrame(uint16_t const vlanId, const struct pbuf* const buf)
                 uint8_t* insert = header;
                 if (payload != header)
                 {
-                    (void)memmove(header, payload, 6U * 2); // Copy MACS
-                    insert += 6U * 2;                       // Move pointer by 12
+                    (void)memmove(header, payload, 6UL * 2UL); // Copy MACS
+                    insert += 6UL * 2UL;                       // Move pointer by 12
                 }
 
                 if (vlanId != 0)

@@ -247,7 +247,7 @@ TEST(DoCanMessageTransmitterTest, testMultipleFramesAreEmittedWithEscapeSequence
     EXPECT_EQ(TransmitState::WAIT, cut.getState());
     EXPECT_EQ(TransmitTimeout::TX_CALLBACK, cut.getTimeout());
     EXPECT_EQ(TransmitResult(true), cut.framesSent(51U, 51 * 7U));
-    span.advance(51 * 7);
+    span.advance(51UL * 7UL);
     EXPECT_EQ(TransmitState::SEND, cut.getState());
     EXPECT_EQ(TransmitTimeout::TX_CALLBACK, cut.getTimeout());
     EXPECT_TRUE(::etl::equal(span, cut.getSendData()));

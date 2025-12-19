@@ -17,9 +17,9 @@ struct DoIpCyclicTaskGeneratorTest : Test
 {
     DoIpCyclicTaskGeneratorTest() : asyncMock(), testContext(1U) {}
 
-    void SetUp() override { testContext.setNow(1 * 1000U); }
+    void SetUp() override { testContext.setNow(1000U); }
 
-    void TearDown() override { testContext.setNow(0 * 1000U); }
+    void TearDown() override { testContext.setNow(0U); }
 
     MOCK_METHOD0(cyclicTask, void());
 
@@ -39,25 +39,25 @@ TEST_F(DoIpCyclicTaskGeneratorTest, TestAll)
 
     testContext.expire();
 
-    testContext.elapse(99 * 1000U);
+    testContext.elapse(static_cast<uint64_t>(99U * 1000U));
     testContext.expire();
 
-    testContext.elapse(1 * 1000U);
+    testContext.elapse(1000U);
     EXPECT_CALL(*this, cyclicTask());
     testContext.expire();
     Mock::VerifyAndClearExpectations(this);
 
-    testContext.elapse(80 * 1000U);
+    testContext.elapse(static_cast<uint64_t>(80U * 1000U));
     testContext.expire();
 
-    testContext.elapse(80 * 1000U);
+    testContext.elapse(static_cast<uint64_t>(80U * 1000U));
     EXPECT_CALL(*this, cyclicTask());
     testContext.expire();
     Mock::VerifyAndClearExpectations(this);
 
     cut.shutdown();
 
-    testContext.elapse(200 * 1000U);
+    testContext.elapse(static_cast<uint64_t>(200U * 1000U));
     testContext.expire();
 }
 
