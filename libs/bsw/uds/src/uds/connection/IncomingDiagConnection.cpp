@@ -242,6 +242,11 @@ DiagReturnCode::Type IncomingDiagConnection::startNestedRequest(
 
 ::uds::ErrorCode IncomingDiagConnection::sendResponse()
 {
+    if (responseMessage == nullptr)
+    {
+        return ::uds::ErrorCode::NO_TP_MESSAGE;
+    }
+
     AbstractTransportLayer::ErrorCode const sendResult
         = messageSender->send(*responseMessage, this);
     if (sendResult == AbstractTransportLayer::ErrorCode::TP_OK)
