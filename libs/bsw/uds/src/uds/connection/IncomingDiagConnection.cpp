@@ -176,9 +176,9 @@ void IncomingDiagConnection::asyncSendPositiveResponse(
             }
         }
         responseMessage->resetValidBytes();
-        for (uint8_t i = 0U; i < _identifiers.size(); ++i)
+        for (auto& identifier : _identifiers)
         {
-            (void)responseMessage->append(_identifiers[i]);
+            (void)responseMessage->append(identifier);
         }
         responseMessage->setServiceId(serviceId + DiagReturnCode::POSITIVE_RESPONSE_OFFSET);
         (void)responseMessage->increaseValidBytes(length);

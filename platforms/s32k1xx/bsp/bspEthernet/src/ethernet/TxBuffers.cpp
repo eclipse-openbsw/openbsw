@@ -29,7 +29,7 @@ void TxBuffers::freeDescriptor(uint8_t const n)
 void TxBuffers::init()
 {
     // initialize transmit buffer descriptors
-    for (uint8_t i = 0U; i < _descriptors.size(); i++)
+    for (size_t i = 0U; i < _descriptors.size(); i++)
     {
         _referencedPbufs[i]     = 0L;
         _descriptors[i].status1 = ENET_ETXD_STATUS1_TO2(1);
