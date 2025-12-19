@@ -1260,7 +1260,6 @@ TEST_F(
             .InSequence(seq)
             .WillOnce(
                 Invoke(ReadBytesFrom(::estd::slice<uint8_t const>::from_pointer(messagePtr, 4U))));
-        messagePtr += 4;
 
         EXPECT_CALL(
             fMessageProvidingListenerMock, getTransportMessage(fBusId, 0x1234, 0x1519, 3, _, _))

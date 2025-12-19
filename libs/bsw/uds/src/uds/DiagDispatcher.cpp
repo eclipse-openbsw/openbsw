@@ -206,11 +206,11 @@ PrecheckResult precheckRequest(
         }
     }
     TransportMessage& transportMessage = *job.transportMessage;
-    TransportMessage* pRequest         = &transportMessage;
     if (configuration.CopyFunctionalRequests
         && TransportConfiguration::isFunctionallyAddressed(transportMessage))
     {
-        pRequest = copyFunctionalRequest(transportMessage, providingListener, configuration);
+        TransportMessage* pRequest
+            = copyFunctionalRequest(transportMessage, providingListener, configuration);
         if (pRequest != nullptr)
         {
             if (job.processedListener != nullptr)
