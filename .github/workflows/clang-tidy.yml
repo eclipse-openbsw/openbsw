@@ -1,0 +1,65 @@
+name: Clang-tidy check
+
+on: [ merge_group, push, pull_request ]
+
+jobs:
+  clang-tidy:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        preset: ["tests-posix-debug", "tests-posix-release", "tests-s32k1xx-debug", "tests-s32k1xx-release"]
+        config: [Debug, Release]
+        platform: [posix, s32k1xx]
+        exclude:
+          - preset: "tests-posix-debug"
+            config: "Release"
+          - preset: "tests-s32k1xx-debug"
+            config: "Release"
+          - preset: "tests-posix-release"
+            config: "Debug"
+          - preset: "tests-s32k1xx-release"
+            config: "Debug"
+          - preset: "tests-posix-debug"
+            platform: "s32k1xx"
+          - preset: "tests-posix-release"
+            platform: "s32k1xx"
+          - preset: "tests-s32k1xx-debug"
+            platform: "posix"
+          - preset: "tests-s32k1xx-release"
+            platform: "posix"
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build development Image
+        id: build-docker-development
+        uses: docker/build-push-action@v6
+        with:
+          context: "{{defaultContext}}:docker/development"
+          push: false
+          tags: openbsw-development:local
+          outputs: type=docker
+          cache-from: type=gha
+          cache-to: type=gha,mode=max,ignore-error=true
+
+      - name: Run the ${{ matrix.platform }} ${{ matrix.config }} build inside the docker container
+        run: >-
+          DOCKER_UID=$(id -u) DOCKER_GID=$(id -g) DOCKER_HISTORY=/dev/null docker compose run --rm development
+          python3 .ci/build.py --preset ${{ matrix.preset }} --platform "linux" --cxxid "clang" --cxxstd "14" --config "${{ matrix.config }}"
+      - name: Run the clang-tidy.py inside the docker container
+        run: >-
+          DOCKER_UID=$(id -u) DOCKER_GID=$(id -g) DOCKER_HISTORY=/dev/null docker compose run --rm development
+          python3 .ci/clang-tidy.py build/tests/${{ matrix.platform }}/${{ matrix.config }} ct-findings.yaml
+
+      - name: Upload clang-tidy findings
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ct-findings-${{ matrix.platform }}-${{ matrix.config }}
+          path: ct-findings.yaml
+          if-no-files-found: warn
