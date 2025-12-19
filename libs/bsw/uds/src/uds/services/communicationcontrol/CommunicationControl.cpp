@@ -134,9 +134,6 @@ DiagReturnCode::Type CommunicationControl::process(
 
     PositiveResponse& response = connection.releaseRequestGetResponse();
 
-    ICommunicationStateListener::CommunicationState newState
-        = fCommunicationState; // default to no change
-
     /* */
     switch (controlType)
     {
@@ -144,18 +141,20 @@ DiagReturnCode::Type CommunicationControl::process(
         {
             if (static_cast<uint8_t>(NORMAL_COMMUNICATION_MESSAGES) == communicationTypeLo)
             {
-                newState = ICommunicationStateListener::
-                    DISABLE_REC_ENABLE_NORMAL_MESSAGE_SEND_TRANSMISSION;
+                setCommunicationState(ICommunicationStateListener::
+                                          DISABLE_REC_ENABLE_NORMAL_MESSAGE_SEND_TRANSMISSION);
             }
             else if (static_cast<uint8_t>(NM_COMMUNICATION_MESSAGES) == communicationTypeLo)
             {
-                newState = ICommunicationStateListener::DISABLE_REC_ENABLE_NM_SEND_TRANSMISSION;
+                setCommunicationState(
+                    ICommunicationStateListener::DISABLE_REC_ENABLE_NM_SEND_TRANSMISSION);
             }
             else
             {
-                newState = ICommunicationStateListener::DISABLE_REC_ENABLE_ALL_SEND_TRANSMISSION;
+                setCommunicationState(
+                    ICommunicationStateListener::DISABLE_REC_ENABLE_ALL_SEND_TRANSMISSION);
             }
-            setCommunicationState(newState);
+
             (void)response.appendUint8(controlType);
             (void)connection.sendPositiveResponseInternal(response.getLength(), *this);
         }
@@ -164,18 +163,19 @@ DiagReturnCode::Type CommunicationControl::process(
         {
             if (static_cast<uint8_t>(NORMAL_COMMUNICATION_MESSAGES) == communicationTypeLo)
             {
-                newState = ICommunicationStateListener::DISABLE_NORMAL_MESSAGE_TRANSMISSION;
+                setCommunicationState(
+                    ICommunicationStateListener::DISABLE_NORMAL_MESSAGE_TRANSMISSION);
             }
             else if (static_cast<uint8_t>(NM_COMMUNICATION_MESSAGES) == communicationTypeLo)
             {
-                newState = ICommunicationStateListener::DISABLE_NM_MESSAGE_TRANSMISSION;
+                setCommunicationState(ICommunicationStateListener::DISABLE_NM_MESSAGE_TRANSMISSION);
             }
             else
             {
-                newState = ICommunicationStateListener::DISABLE_ALL_MESSAGE_TRANSMISSION;
+                setCommunicationState(
+                    ICommunicationStateListener::DISABLE_ALL_MESSAGE_TRANSMISSION);
             }
 
-            setCommunicationState(newState);
             (void)response.appendUint8(controlType);
             (void)connection.sendPositiveResponseInternal(response.getLength(), *this);
         }
@@ -184,17 +184,18 @@ DiagReturnCode::Type CommunicationControl::process(
         {
             if (static_cast<uint8_t>(NORMAL_COMMUNICATION_MESSAGES) == communicationTypeLo)
             {
-                newState = ICommunicationStateListener::ENABLE_NORMAL_MESSAGE_TRANSMISSION;
+                setCommunicationState(
+                    ICommunicationStateListener::ENABLE_NORMAL_MESSAGE_TRANSMISSION);
             }
             else if (static_cast<uint8_t>(NM_COMMUNICATION_MESSAGES) == communicationTypeLo)
             {
-                newState = ICommunicationStateListener::ENABLE_NN_MESSAGE_TRANSMISSION;
+                setCommunicationState(ICommunicationStateListener::ENABLE_NN_MESSAGE_TRANSMISSION);
             }
             else
             {
-                newState = ICommunicationStateListener::ENABLE_ALL_MESSAGE_TRANSMISSION;
+                setCommunicationState(ICommunicationStateListener::ENABLE_ALL_MESSAGE_TRANSMISSION);
             }
-            setCommunicationState(newState);
+
             // reset also subnet nodes under these circumstances
             if (((REC_NODE_COMMUNICATION_MESSAGES == communicationTypeHi)
                  || (NO_REC_NODE_COMMUNICATION_MESSAGES == communicationTypeHi))
@@ -211,18 +212,20 @@ DiagReturnCode::Type CommunicationControl::process(
         {
             if (static_cast<uint8_t>(NORMAL_COMMUNICATION_MESSAGES) == communicationTypeLo)
             {
-                newState = ICommunicationStateListener::
-                    ENABLE_REC_DISABLE_NORMAL_MESSAGE_SEND_TRANSMISSION;
+                setCommunicationState(ICommunicationStateListener::
+                                          ENABLE_REC_DISABLE_NORMAL_MESSAGE_SEND_TRANSMISSION);
             }
             else if (static_cast<uint8_t>(NM_COMMUNICATION_MESSAGES) == communicationTypeLo)
             {
-                newState = ICommunicationStateListener::ENABLE_REC_DISABLE_NM_SEND_TRANSMISSION;
+                setCommunicationState(
+                    ICommunicationStateListener::ENABLE_REC_DISABLE_NM_SEND_TRANSMISSION);
             }
             else
             {
-                newState = ICommunicationStateListener::ENABLE_REC_DISABLE_ALL_SEND_TRANSMISSION;
+                setCommunicationState(
+                    ICommunicationStateListener::ENABLE_REC_DISABLE_ALL_SEND_TRANSMISSION);
             }
-            setCommunicationState(newState);
+
             (void)response.appendUint8(controlType);
             (void)connection.sendPositiveResponseInternal(response.getLength(), *this);
         }
