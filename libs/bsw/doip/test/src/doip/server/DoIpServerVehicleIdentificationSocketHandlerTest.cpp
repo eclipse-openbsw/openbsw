@@ -755,7 +755,7 @@ TEST_F(DoIpServerVehicleIdentificationSocketHandlerTest, SendAnnouncementsToUnic
         .WillRepeatedly(Return(fParametersMock.getAnnounceWait()));
     cut.updateUnicastAddresses(configKey, unicastAddresses);
     testContext.expireAndExecute();
-    testContext.elapse(1 * 1000U);
+    testContext.elapse(1000U);
     testContext.expireAndExecute();
 
     // expect unicast packets first broadcast
@@ -1031,7 +1031,7 @@ TEST_F(DoIpServerVehicleIdentificationSocketHandlerTest, AnnouncementTimeouts)
     tick(2896U);
 
     // 10 more seconds pass, nothing should happen
-    testContext.elapse(10000U * 1000U);
+    testContext.elapse(static_cast<uint64_t>(10000U * 1000U));
     testContext.expireAndExecute();
     EXPECT_CALL(*fSocketMock, close());
     cut.shutdown();
@@ -1276,7 +1276,7 @@ void DoIpServerVehicleIdentificationSocketHandlerTest::expectEntityStatusRespons
 
 void DoIpServerVehicleIdentificationSocketHandlerTest::tick(uint32_t epochTime)
 {
-    testContext.setNow(epochTime * 1000);
+    testContext.setNow(static_cast<uint64_t>(epochTime) * 1000U);
     testContext.expireAndExecute();
     Mock::VerifyAndClearExpectations(fSocketMock);
     Mock::VerifyAndClearExpectations(&timerMock);

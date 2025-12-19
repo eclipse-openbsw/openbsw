@@ -1813,7 +1813,7 @@ TEST_F(DoIpServerTransportLayerTest, TestAliveCheckWithInactiveRegisteredSource)
         .WillOnce(Return(::tcp::AbstractSocket::ErrorCode::SOCKET_ERR_OK));
     EXPECT_CALL(fConnectionPoolMock, releaseConnection(Ref(fConnection1)));
     EXPECT_CALL(fSocketHandlerMock, releaseSocket(Ref(fSocketMock1), ConnectionType::PLAIN));
-    testContext.elapse(fParameters.getAliveCheckTimeout() * 1000U);
+    testContext.elapse(static_cast<uint64_t>(fParameters.getAliveCheckTimeout()) * 1000U);
     testContext.expireAndExecute();
     ASSERT_THAT(response, ElementsAreArray(expectedResponse));
     endRoutingActivationResponse(fSocketMock2);
