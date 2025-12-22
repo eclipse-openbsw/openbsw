@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include <cstdint>
+
 #include "logger/ComponentMapping.h"
 #include "logger/IComponentConfig.h"
 
@@ -30,8 +32,14 @@ public:
     void readLevels() override;
     void writeLevels() override;
 
+    void DoSomething()
+    {
+        // Intentionally just to trigger clang-tidy on file changed
+    }
+
 private:
     ComponentMapping<IndexUpperBound>& _componentMapping;
+    int newVariable_;
 };
 
 template<uint8_t IndexUpperBound>

@@ -7,6 +7,29 @@ secure coding practices.
 
 The following practices apply to all of our code except when stated otherwise, regardless of the programming language.
 
+Clang-tidy
+----------
+
+Additionally, most of these practices are enforced by clang-tidy which is run as part of our CI pipeline.
+The clang-tidy configuration can be found in the file ``.clang-tidy`` in the root directory of openbsw repository.
+The ci script for running clang-tidy is located in ``.ci/clang-tidy.py``, which runs an llvm helper tool called
+``clang-tidy-diff`` to only check the changed lines in a git diff.
+In case you want to run clang-tidy locally you can use the dev container in ``docker/docker-compose.yaml`` and
+will have to adjust the compile_commands.json file to remove two flags that clang does not recognize
+(``-Wno-error=maybe-uninitialized`` and ``-Wno-error=stringop-overflow``). After that you can run one of the
+following commands in the terminal:
+
+.. code-block:: bash
+
+  git diff -U0 upstream/main...HEAD | clang-tidy-diff -p1 -use-color -path Directory_to_cleaned_compile_commands
+
+or, in case you want to run clang-tidy for all lines and not only the changed ones:
+
+.. code-block:: bash
+
+  clang-tidy --use-color -p Directory_to_cleaned_compile_commands Path_to_file_or_directory
+
+
 Validate Input
 --------------
 
