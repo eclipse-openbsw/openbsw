@@ -87,7 +87,7 @@ uint8_t initDevice(
     IP_ENET->ECR = ENET_ECR_RESET_MASK;
 
     if (::bsp::isEqualAfterTimeout<uint32_t>(
-            (uint32_t*)(&IP_ENET->ECR), ENET_ECR_RESET_MASK, ENET_ECR_RESET_MASK, 1U))
+            const_cast<uint32_t*>(&IP_ENET->ECR), ENET_ECR_RESET_MASK, ENET_ECR_RESET_MASK, 1U))
     {
         return 0x14U;
     }
@@ -101,12 +101,12 @@ uint8_t initDevice(
     uint32_t address;
 
     /* Set physical address lower register. */
-    address = ((uint32_t)macAddr[0] << 24) | ((uint32_t)macAddr[1] << 16)
-              | ((uint32_t)macAddr[2] << 8) | ((uint32_t)macAddr[3] << 0);
+    address = (static_cast<uint32_t>(macAddr[0]) << 24) | (static_cast<uint32_t>(macAddr[1]) << 16)
+              | (static_cast<uint32_t>(macAddr[2]) << 8) | (static_cast<uint32_t>(macAddr[3]) << 0);
     IP_ENET->PALR = address;
 
     /* Set physical address high register. */
-    address       = ((uint32_t)macAddr[4] << 8) | ((uint32_t)macAddr[5] << 0);
+    address = (static_cast<uint32_t>(macAddr[4]) << 8) | (static_cast<uint32_t>(macAddr[5]) << 0);
     IP_ENET->PAUR = ENET_PAUR_PADDR2(address);
 
     // Transmit FIFO watermark: Min. (64 bytes)

@@ -49,14 +49,14 @@ TEST(PrintfArgumentReaderTest, testRead)
 {
     readArguments(
         "",
-        (int8_t)1,
-        (uint8_t)2,
-        (int16_t)3,
-        (uint16_t)4,
-        (int32_t)5,
-        (uint32_t)6,
-        (int64_t)7,
-        (uint64_t)8,
+        static_cast<int8_t>(1),
+        static_cast<uint8_t>(2),
+        static_cast<int16_t>(3),
+        static_cast<uint16_t>(4),
+        static_cast<int32_t>(5),
+        static_cast<uint32_t>(6),
+        static_cast<int64_t>(7),
+        static_cast<uint64_t>(8),
         toPointer<void const*>(9),
         toPointer<char const*>(10),
         toPointer<int32_t*>(11));

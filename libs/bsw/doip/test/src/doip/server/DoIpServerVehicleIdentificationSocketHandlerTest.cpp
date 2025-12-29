@@ -256,7 +256,7 @@ TEST_F(DoIpServerVehicleIdentificationSocketHandlerTest, IgnoreUnknownNetworkCon
     cut.start();
 
     fNetworkInterfaceConfigRegistryMock.configChangedSignal(
-        ::ip::NetworkInterfaceConfigKey(1U), config);
+        static_cast<::ip::NetworkInterfaceConfigKey>(1U), config);
 
     cut.shutdown();
 

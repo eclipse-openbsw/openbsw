@@ -145,7 +145,7 @@ struct PrintfFormatterTest
         uint8_t flags = 0)
     {
         expectAndCheckIntPrintf(!(flags & IGNORE_NEGATIVE), pNegative, formatString, -value);
-        expectAndCheckIntPrintf(!(flags & IGNORE_ZERO), pZero, formatString, (T)0);
+        expectAndCheckIntPrintf(!(flags & IGNORE_ZERO), pZero, formatString, static_cast<T>(0));
         expectAndCheckIntPrintf(!(flags & IGNORE_POSITIVE), pPositive, formatString, value);
     }
 };
@@ -255,7 +255,7 @@ TEST_F(PrintfFormatterTest, testFormatParamWithInvalidValues)
     {
         PrintfFormatter formatter(stream);
         {
-            ParamInfo paramInfo = {(ParamType)80, 0, 10, ParamDatatype::UINT16, 0, 0};
+            ParamInfo paramInfo = {static_cast<ParamType>(80), 0, 10, ParamDatatype::UINT16, 0, 0};
             formatter.formatParam(paramInfo, ParamVariant());
         }
         stream.write('.');
