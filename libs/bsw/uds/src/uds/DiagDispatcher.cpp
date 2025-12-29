@@ -416,8 +416,8 @@ void DiagDispatcher::processQueue()
 
 void DiagDispatcher::diagConnectionTerminated(IncomingDiagConnection& diagConnection)
 {
-    auto const requestMessage       = diagConnection.requestMessage;
-    auto const notificationListener = diagConnection.requestNotificationListener;
+    auto* const requestMessage       = diagConnection.requestMessage;
+    auto* const notificationListener = diagConnection.requestNotificationListener;
     if ((notificationListener != nullptr) && (requestMessage != nullptr))
     {
         requestMessage->resetValidBytes();

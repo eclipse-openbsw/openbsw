@@ -93,8 +93,8 @@ bool processPbufQueue(
     auto const queued = receiver.size();
     for (size_t i = 0; i < queued; ++i)
     {
-        auto const p      = receiver.read();
-        auto const pNetIf = filterETHFrames(p, lwnetifs, vlanIds);
+        auto* const p      = receiver.read();
+        auto* const pNetIf = filterETHFrames(p, lwnetifs, vlanIds);
         if ((pNetIf != nullptr) && (pNetIf->input != nullptr))
         {
             (void)pNetIf->input(p, pNetIf);

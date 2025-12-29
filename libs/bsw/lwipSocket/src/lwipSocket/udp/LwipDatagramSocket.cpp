@@ -194,7 +194,7 @@ bool LwipDatagramSocket::isAlreadyJoined(ip::IPAddress const& ip) const
 {
     ip_addr_t groupAddr = lwiputils::to_lwipIp(ip);
 
-    for (auto it = fMulticastPcbs.begin(); it != fMulticastPcbs.end(); ++it)
+    for (auto const* it = fMulticastPcbs.begin(); it != fMulticastPcbs.end(); ++it)
     {
         if (ip_addr_cmp(&(*it)->local_ip, &groupAddr) != 0)
         {
@@ -480,7 +480,7 @@ void LwipDatagramSocket::close()
         udp_remove(fpRxPcb);
         fpRxPcb = nullptr;
     }
-    for (auto it = fMulticastPcbs.begin(); it != fMulticastPcbs.end(); ++it)
+    for (auto* it = fMulticastPcbs.begin(); it != fMulticastPcbs.end(); ++it)
     {
         udp_remove(*it);
     }
