@@ -555,10 +555,8 @@ uint16_t IncomingDiagConnection::getMaximumResponseLength() const
     {
         return _nestedRequest->getMaxNestedResponseLength();
     }
-    else
-    {
-        return requestMessage->getMaxPayloadLength() - _identifiers.size();
-    }
+
+    return requestMessage->getMaxPayloadLength() - _identifiers.size();
 }
 
 PositiveResponse& IncomingDiagConnection::releaseRequestGetResponse()

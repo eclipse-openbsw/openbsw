@@ -36,10 +36,8 @@ DiagReturnCode::Type AsyncDiagJobHelper::enqueueRequest(
         fPendingRequests.push_back(*storedRequest);
         return DiagReturnCode::OK;
     }
-    else
-    {
-        return DiagReturnCode::ISO_BUSY_REPEAT_REQUEST;
-    }
+
+    return DiagReturnCode::ISO_BUSY_REPEAT_REQUEST;
 }
 
 void AsyncDiagJobHelper::startAsyncRequest(IncomingDiagConnection& connection)

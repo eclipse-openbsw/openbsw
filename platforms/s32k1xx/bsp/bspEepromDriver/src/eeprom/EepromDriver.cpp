@@ -133,10 +133,8 @@ bsp::BspReturnCode EepromDriver::launchCommand()
     {
         return bsp::BSP_OK;
     }
-    else
-    {
-        return bsp::BSP_ERROR;
-    }
+
+    return bsp::BSP_ERROR;
 }
 
 bsp::BspReturnCode EepromDriver::init()

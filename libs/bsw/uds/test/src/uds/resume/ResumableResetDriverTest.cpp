@@ -82,10 +82,7 @@ public:
             message.setPayloadLength(fTransportMessage.getPayloadLength());
             return true;
         }
-        else
-        {
-            return false;
-        }
+        return false;
     }
 
     void writeRequest(::transport::TransportMessage const& message) override
