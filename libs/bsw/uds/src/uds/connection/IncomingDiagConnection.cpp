@@ -444,7 +444,7 @@ void IncomingDiagConnection::triggerNextNestedRequest()
 
 void IncomingDiagConnection::endNestedRequest()
 {
-    auto const sender       = _nestedRequest->senderJob;
+    auto* const sender      = _nestedRequest->senderJob;
     auto const length       = _nestedRequest->responseLength();
     auto const responseCode = _nestedRequest->responseCode;
     _nestedRequest          = nullptr;

@@ -148,8 +148,8 @@ DoIpTransportMessageSendJob* DoIpServerTransportMessageHandler::allocateJob(
 void DoIpServerTransportMessageHandler::releaseSendJob(
     DoIpTransportMessageSendJob& sendJob, bool const success)
 {
-    auto const busIdName     = ::common::busid::BusIdTraits::getName(_config.getBusId());
-    auto const sourceAddress = sendJob.getSourceAddress();
+    auto const* const busIdName = ::common::busid::BusIdTraits::getName(_config.getBusId());
+    auto const sourceAddress    = sendJob.getSourceAddress();
     if (success)
     {
         Logger::debug(
@@ -274,7 +274,7 @@ void DoIpServerTransportMessageHandler::diagnosticMessageUserDataPrefixReceivedN
     uint8_t const nackCode, bool const closeAfterSend, ::estd::slice<uint8_t const> const payload)
 {
     _connection->endReceiveMessage(IDoIpConnection::PayloadDiscardedCallbackType{});
-    auto const job = queueDiagnosticAck(
+    auto* const job = queueDiagnosticAck(
         DoIpConstants::PayloadTypes::DIAGNOSTIC_MESSAGE_NEGATIVE_ACK,
         _payloadPeekContext.sourceAddress,
         _payloadPeekContext.targetAddress,
