@@ -52,20 +52,14 @@ bsp::BspReturnCode Output::invert(OutputId const chan)
 
     if (chan < NUMBER_OF_INTERNAL_OUTPUTS)
     {
-        bool t;
         if (Io::PORT_UNAVAILABLE == sfpOutputConfiguration[chan].ioNumber)
         {
             return bsp::BSP_NOT_SUPPORTED;
         }
-        t = Io::getPin(static_cast<uint16_t>(sfpOutputConfiguration[chan].ioNumber));
-        if (t)
-        {
-            (void)Io::setPin(static_cast<uint16_t>(sfpOutputConfiguration[chan].ioNumber), 0);
-        }
-        else
-        {
-            (void)Io::setPin(static_cast<uint16_t>(sfpOutputConfiguration[chan].ioNumber), 1);
-        }
+
+        bool const pinVal
+            = Io::getPin(static_cast<uint16_t>(sfpOutputConfiguration[chan].ioNumber));
+        (void)Io::setPin(static_cast<uint16_t>(sfpOutputConfiguration[chan].ioNumber), !pinVal);
         return bsp::BSP_OK;
     }
     else if (chan == NUMBER_OF_INTERNAL_OUTPUTS)
