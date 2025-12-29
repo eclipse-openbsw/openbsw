@@ -17,6 +17,7 @@
 
 #include <etl/error_handler.h>
 #include <etl/span.h>
+#include <sys/types.h>
 
 static_assert(
     std::is_standard_layout<::can::CANFrame>::value
@@ -251,8 +252,9 @@ void SocketCanTransceiver::guardedRun(int maxSentPerRun, int maxReceivedPerRun)
         socketCanFrame.can_dlc = length;
         ::std::memcpy(socketCanFrame.data, canFrame.getPayload(), length);
         ::std::memset(socketCanFrame.data + length, 0, sizeof(socketCanFrame.data) - length);
-        length = ::write(_fileDescriptor, reinterpret_cast<char*>(&socketCanFrame), CAN_MTU);
-        if (length != CAN_MTU)
+        ssize_t const bytesWritten
+            = ::write(_fileDescriptor, reinterpret_cast<char*>(&socketCanFrame), CAN_MTU);
+        if (bytesWritten != CAN_MTU)
         {
             break;
         }
@@ -266,7 +268,7 @@ void SocketCanTransceiver::guardedRun(int maxSentPerRun, int maxReceivedPerRun)
     for (int count = 0; count < maxReceivedPerRun; ++count)
     {
         alignas(can_frame) uint8_t buffer[CANFD_MTU];
-        int const length = read(_fileDescriptor, reinterpret_cast<char*>(buffer), CANFD_MTU);
+        ssize_t const length = read(_fileDescriptor, reinterpret_cast<char*>(buffer), CANFD_MTU);
         if (length < 0)
         {
             break;

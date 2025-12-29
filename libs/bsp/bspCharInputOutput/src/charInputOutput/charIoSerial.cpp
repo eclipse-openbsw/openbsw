@@ -49,7 +49,7 @@ void SerialLogger_init()
 int SerialLogger_putc(int const c)
 {
     uint8_t const byte = static_cast<uint8_t>(c);
-    return uart.write(etl::span<uint8_t const>(&byte, 1U));
+    return static_cast<int>(uart.write(etl::span<uint8_t const>(&byte, 1U)));
 }
 
 int SerialLogger_getc()
