@@ -2095,8 +2095,8 @@ void DoIpServerTransportLayerTest::expectRoutingActivationRequest(
            0x00,
            0x00,
            0x07,
-           uint8_t((sourceAddress >> 8) & 0xff),
-           uint8_t(sourceAddress & 0xff),
+           static_cast<uint8_t>((sourceAddress >> 8) & 0xff),
+           static_cast<uint8_t>(sourceAddress & 0xff),
            activationType,
            0x00,
            0x00,
@@ -2155,8 +2155,8 @@ void DoIpServerTransportLayerTest::expectAliveCheckResponse(
            0x00,
            0x00,
            0x02,
-           uint8_t((sourceAddress >> 8) & 0xff),
-           uint8_t(sourceAddress & 0xff)};
+           static_cast<uint8_t>((sourceAddress >> 8) & 0xff),
+           static_cast<uint8_t>(sourceAddress & 0xff)};
     ::estd::slice<uint8_t> response = allocateBuffer(sizeof(responseData));
     ::estd::memory::copy(response, responseData);
 

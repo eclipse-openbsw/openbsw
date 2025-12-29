@@ -33,7 +33,7 @@ TEST_F(StringWriterTest, testMixedUsage)
         .printf("%d", 10)
         .printf(nullptr)
         .write("test")
-        .write((char const*)nullptr)
+        .write(nullptr)
         .write("test", 3)
         .write(::util::string::ConstString("ABCD"))
         .endl();

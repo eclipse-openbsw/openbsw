@@ -42,7 +42,7 @@ static int allocTapInterface(char const* const ifName)
         strncpy(ifr.ifr_name, ifName, IFNAMSIZ);
     }
 
-    int result = ioctl(fd, TUNSETIFF, (void*)&ifr);
+    int result = ioctl(fd, TUNSETIFF, &ifr);
     if (result < 0)
     {
         close(fd);

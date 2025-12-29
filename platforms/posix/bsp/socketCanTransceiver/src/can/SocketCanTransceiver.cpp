@@ -210,7 +210,7 @@ void SocketCanTransceiver::guardedOpen()
     ::std::memset(&addr, 0, sizeof(addr));
     addr.can_family  = AF_CAN;
     addr.can_ifindex = ifr.ifr_ifindex;
-    error            = bind(fd, (struct sockaddr*)&addr, sizeof(addr));
+    error            = bind(fd, reinterpret_cast<sockaddr*>(&addr), sizeof(addr));
     if (error < 0)
     {
         Logger::error(
@@ -279,8 +279,8 @@ void SocketCanTransceiver::guardedRun(int maxSentPerRun, int maxReceivedPerRun)
             Logger::debug(
                 CAN,
                 "[SocketCanTransceiver] received CAN frame, id=0x%X, length=%d",
-                (int)socketCanFrame.can_id,
-                (int)socketCanFrame.can_dlc);
+                static_cast<int>(socketCanFrame.can_id),
+                static_cast<int>(socketCanFrame.can_dlc));
             CANFrame canFrame;
             canFrame.setId(socketCanFrame.can_id);
             canFrame.setPayload(socketCanFrame.data, socketCanFrame.can_dlc);
