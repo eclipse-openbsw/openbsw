@@ -104,10 +104,8 @@ uint8_t NestedDiagRequest::getIdentifier(uint16_t const idx) const
     {
         return _nestedRequest[static_cast<size_t>(idx)];
     }
-    else
-    {
-        return 0U;
-    }
+
+    return 0U;
 }
 
 uint16_t NestedDiagRequest::getStoredRequestLength(::etl::span<uint8_t const> const& request) const

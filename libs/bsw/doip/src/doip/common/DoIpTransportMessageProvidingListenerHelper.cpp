@@ -20,11 +20,9 @@ DoIpTransportMessageProvidingListenerHelper::getTransportMessage(
         return _transportMessageProvidingListener->getTransportMessage(
             sourceBusId, sourceId, targetId, size, peek, transportMessage);
     }
-    else
-    {
-        return createGetResult(_fallbackTransportMessageProvidingListener.getTransportMessage(
-            sourceBusId, sourceId, targetId, size, peek, transportMessage));
-    }
+
+    return createGetResult(_fallbackTransportMessageProvidingListener.getTransportMessage(
+        sourceBusId, sourceId, targetId, size, peek, transportMessage));
 }
 
 void DoIpTransportMessageProvidingListenerHelper::releaseTransportMessage(
@@ -51,11 +49,9 @@ DoIpTransportMessageProvidingListenerHelper::messageReceived(
         return _transportMessageProvidingListener->messageReceived(
             sourceBusId, transportMessage, notificationListener);
     }
-    else
-    {
-        return createReceiveResult(_fallbackTransportMessageProvidingListener.messageReceived(
-            sourceBusId, transportMessage, notificationListener));
-    }
+
+    return createReceiveResult(_fallbackTransportMessageProvidingListener.messageReceived(
+        sourceBusId, transportMessage, notificationListener));
 }
 
 ::transport::ITransportMessageProvider::ErrorCode

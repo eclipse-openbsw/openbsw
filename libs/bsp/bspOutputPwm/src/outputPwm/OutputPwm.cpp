@@ -32,35 +32,21 @@ bsp::BspReturnCode OutputPwm::setDuty(uint16_t chan, uint16_t duty, bool immedia
         // dummy channel
         return bsp::BSP_OK;
     }
-    else
+
+    if (chan < outputPwmNumberAll)
     {
-        if (chan < outputPwmNumberAll)
+        dynamicClientType channel = chan - outputPwmStaticNumber; // dynamic instance
+        if (channel < outputNumberDynamic)
         {
-            dynamicClientType channel = chan - outputPwmStaticNumber; // dynamic instance
-            if (channel < outputNumberDynamic)
+            if (dynamicPwmOutputCfg.getClientValid(channel))
             {
-                if (dynamicPwmOutputCfg.getClientValid(channel))
-                {
-                    return (dynamicPwmOutputCfg.getClientInstance(channel)->setDuty(
-                        dynamicPwmOutputCfg.getChannelInsideClient(channel),
-                        duty,
-                        immediateUpdate));
-                }
-                else
-                {
-                    return bsp::BSP_ERROR;
-                }
+                return (dynamicPwmOutputCfg.getClientInstance(channel)->setDuty(
+                    dynamicPwmOutputCfg.getChannelInsideClient(channel), duty, immediateUpdate));
             }
-            else
-            {
-                return bsp::BSP_ERROR;
-            }
-        }
-        else
-        {
-            return bsp::BSP_ERROR;
         }
     }
+
+    return bsp::BSP_ERROR;
 }
 
 bsp::BspReturnCode OutputPwm::setPeriod(uint16_t chan, uint16_t period)
@@ -70,33 +56,18 @@ bsp::BspReturnCode OutputPwm::setPeriod(uint16_t chan, uint16_t period)
         // dummy channel
         return bsp::BSP_OK;
     }
-    else
+
+    if (chan < outputPwmNumberAll)
     {
-        if (chan < outputPwmNumberAll)
+        dynamicClientType channel = chan - outputPwmStaticNumber; // dynamic instance
+        if ((channel < outputNumberDynamic) && dynamicPwmOutputCfg.getClientValid(channel))
         {
-            dynamicClientType channel = chan - outputPwmStaticNumber; // dynamic instance
-            if (channel < outputNumberDynamic)
-            {
-                if (dynamicPwmOutputCfg.getClientValid(channel))
-                {
-                    return (dynamicPwmOutputCfg.getClientInstance(channel)->setPeriod(
-                        dynamicPwmOutputCfg.getChannelInsideClient(channel), period));
-                }
-                else
-                {
-                    return bsp::BSP_ERROR;
-                }
-            }
-            else
-            {
-                return bsp::BSP_ERROR;
-            }
-        }
-        else
-        {
-            return bsp::BSP_ERROR;
+            return (dynamicPwmOutputCfg.getClientInstance(channel)->setPeriod(
+                dynamicPwmOutputCfg.getChannelInsideClient(channel), period));
         }
     }
+
+    return bsp::BSP_ERROR;
 }
 
 bsp::BspReturnCode OutputPwm::setDynamicClient(
@@ -113,16 +84,10 @@ bsp::BspReturnCode OutputPwm::setDynamicClient(
             fLock.resume();
             return bsp::BSP_OK;
         }
-        else
-        {
-            fLock.resume();
-            return bsp::BSP_ERROR;
-        }
+        fLock.resume();
     }
-    else
-    {
-        return bsp::BSP_ERROR;
-    }
+
+    return bsp::BSP_ERROR;
 }
 
 bsp::BspReturnCode OutputPwm::clrDynamicClient(uint16_t outputNumber)
@@ -138,16 +103,10 @@ bsp::BspReturnCode OutputPwm::clrDynamicClient(uint16_t outputNumber)
             fLock.resume();
             return bsp::BSP_OK;
         }
-        else
-        {
-            fLock.resume();
-            return bsp::BSP_ERROR;
-        }
+        fLock.resume();
     }
-    else
-    {
-        return bsp::BSP_ERROR;
-    }
+
+    return bsp::BSP_ERROR;
 }
 
 void OutputPwm::cleanDynamicClients()
@@ -164,10 +123,7 @@ char const* OutputPwm::getName(uint16_t channel)
     {
         return outputPwmConfigurationStrings[channel];
     }
-    else
-    {
-        return ("??? ->");
-    }
+    return ("??? ->");
 }
 
 } // namespace bios

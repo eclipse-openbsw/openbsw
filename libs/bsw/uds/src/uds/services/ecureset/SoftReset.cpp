@@ -37,10 +37,7 @@ DiagReturnCode::Type SoftReset::process(
         (void)connection.sendPositiveResponse(*this);
         return DiagReturnCode::OK;
     }
-    else
-    {
-        return DiagReturnCode::ISO_CONDITIONS_NOT_CORRECT;
-    }
+    return DiagReturnCode::ISO_CONDITIONS_NOT_CORRECT;
 }
 
 void SoftReset::responseSent(

@@ -62,10 +62,8 @@ bool DoIpUdpConnection::receivePayload(
         _payloadReceivedCallback = payloadReceivedCallback;
         return true;
     }
-    else
-    {
-        return false;
-    }
+
+    return false;
 }
 
 void DoIpUdpConnection::endReceiveMessage(
@@ -101,10 +99,8 @@ bool DoIpUdpConnection::sendMessage(IDoIpSendJob& sendJob)
         }
         return true;
     }
-    else
-    {
-        return false;
-    }
+
+    return false;
 }
 
 void DoIpUdpConnection::close() { closeConnection(ConnectionState::INACTIVE); }
@@ -265,10 +261,8 @@ void DoIpUdpConnection::tryReceive()
     {
         return job.getSendBuffer(_writeBuffer, 0U);
     }
-    else
-    {
-        return fillWriteBuffer(job);
-    }
+
+    return fillWriteBuffer(job);
 }
 
 void DoIpUdpConnection::closeConnection(ConnectionState const connectionState)

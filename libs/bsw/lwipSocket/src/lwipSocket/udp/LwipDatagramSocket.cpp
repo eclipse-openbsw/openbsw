@@ -135,13 +135,7 @@ AbstractDatagramSocket::ErrorCode LwipDatagramSocket::join(ip::IPAddress const& 
             }
             err_t const status
                 = igmp_joingroup(ip_2_ip4(&fpRxPcb->local_ip), ip_2_ip4(&lwipGroupAddr));
-            if (status == ERR_OK)
-            {
-                logger::Logger::info(logger::UDP, "DatagramSocket joined the group");
-                fMulticastPcbs.push_back(pRxMulticastPcb);
-                return AbstractDatagramSocket::ErrorCode::UDP_SOCKET_OK;
-            }
-            else
+            if (status != ERR_OK)
             {
                 logger::Logger::error(
                     logger::UDP,
@@ -149,6 +143,9 @@ AbstractDatagramSocket::ErrorCode LwipDatagramSocket::join(ip::IPAddress const& 
                     status);
                 return AbstractDatagramSocket::ErrorCode::UDP_SOCKET_NOT_OK;
             }
+
+            logger::Logger::info(logger::UDP, "DatagramSocket joined the group");
+            fMulticastPcbs.push_back(pRxMulticastPcb);
         }
 #else
         return AbstractDatagramSocket::ErrorCode::UDP_SOCKET_NOT_OK;
@@ -176,18 +173,19 @@ AbstractDatagramSocket::ErrorCode LwipDatagramSocket::join(ip::IPAddress const& 
                 pRxMulticastPcb->remote_ip = fpRxPcb->local_ip;
                 udp_recv(pRxMulticastPcb, &udpReceiveListener, static_cast<void*>(this));
             }
-            if (mld6_joingroup(ip_2_ip6(&fpRxPcb->local_ip), ip_2_ip6(&lwipGroupAddr)) == ERR_OK)
+            if (mld6_joingroup(ip_2_ip6(&fpRxPcb->local_ip), ip_2_ip6(&lwipGroupAddr)) != ERR_OK)
             {
-                fMulticastPcbs.push_back(pRxMulticastPcb);
-                return AbstractDatagramSocket::ErrorCode::UDP_SOCKET_OK;
+                return AbstractDatagramSocket::ErrorCode::UDP_SOCKET_NOT_OK;
             }
+
+            fMulticastPcbs.push_back(pRxMulticastPcb);
         }
 #else
         return AbstractDatagramSocket::ErrorCode::UDP_SOCKET_NOT_OK;
 #endif // LWIP_IPV6
     }
 
-    return AbstractDatagramSocket::ErrorCode::UDP_SOCKET_NOT_OK;
+    return AbstractDatagramSocket::ErrorCode::UDP_SOCKET_OK;
 }
 
 bool LwipDatagramSocket::isAlreadyJoined(ip::IPAddress const& ip) const
@@ -280,10 +278,8 @@ size_t LwipDatagramSocket::read(uint8_t* buffer, size_t n)
         }
         return n;
     }
-    else
-    {
-        return 0;
-    }
+
+    return 0;
 }
 
 AbstractDatagramSocket::ErrorCode LwipDatagramSocket::connect(
@@ -445,7 +441,6 @@ LwipDatagramSocket::ErrorCode LwipDatagramSocket::send(DatagramPacket const& pac
                 logger::UDP, "LwipDatagramSocket::send() failed (status:0x%x)!", status);
             return AbstractDatagramSocket::ErrorCode::UDP_SOCKET_NOT_OK;
         }
-        return AbstractDatagramSocket::ErrorCode::UDP_SOCKET_OK;
     }
     else
     {
@@ -466,8 +461,9 @@ LwipDatagramSocket::ErrorCode LwipDatagramSocket::send(DatagramPacket const& pac
                 logger::UDP, "LwipDatagramSocket::send() failed (status:0x%x)!", status);
             return AbstractDatagramSocket::ErrorCode::UDP_SOCKET_NOT_OK;
         }
-        return AbstractDatagramSocket::ErrorCode::UDP_SOCKET_OK;
     }
+
+    return AbstractDatagramSocket::ErrorCode::UDP_SOCKET_OK;
 }
 
 void LwipDatagramSocket::close()

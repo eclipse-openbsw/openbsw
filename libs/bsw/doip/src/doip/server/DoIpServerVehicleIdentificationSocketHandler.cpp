@@ -221,11 +221,13 @@ bool DoIpServerVehicleIdentificationSocketHandler::checkVersion(DoIpHeader const
     {
         return false;
     }
-    else if (checkProtocolVersion(header, static_cast<uint8_t>(_protocolVersion)))
+
+    if (checkProtocolVersion(header, static_cast<uint8_t>(_protocolVersion)))
     {
         return true;
     }
-    else if (checkProtocolVersion(header, 0xffU))
+
+    if (checkProtocolVersion(header, 0xffU))
     {
         if ((payloadType == DoIpConstants::PayloadTypes::VEHICLE_IDENTIFICATION_REQUEST_MESSAGE)
             || (payloadType
@@ -235,17 +237,13 @@ bool DoIpServerVehicleIdentificationSocketHandler::checkVersion(DoIpHeader const
         {
             return true;
         }
-        else
-        {
-            enqueueNack(DoIpConstants::NackCodes::NACK_UNKNOWN_PAYLOAD_TYPE);
-            return false;
-        }
-    }
-    else
-    {
-        enqueueNack(DoIpConstants::NackCodes::NACK_INCORRECT_PATTERN);
+
+        enqueueNack(DoIpConstants::NackCodes::NACK_UNKNOWN_PAYLOAD_TYPE);
         return false;
     }
+
+    enqueueNack(DoIpConstants::NackCodes::NACK_INCORRECT_PATTERN);
+    return false;
 }
 
 bool DoIpServerVehicleIdentificationSocketHandler::handleVehicleIdentificationRequestMessage(
@@ -667,11 +665,9 @@ DoIpServerVehicleIdentificationSocketHandler::createResponse(
         {
             return createResponseOemMessage(oemMessageHandler);
         }
-        else
-        {
-            // should never be reached
-            return createResponseHeaderNack(nackCode);
-        }
+
+        // should never be reached
+        return createResponseHeaderNack(nackCode);
     }
 }
 

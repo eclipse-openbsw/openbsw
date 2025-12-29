@@ -312,10 +312,8 @@ ESR_NO_INLINE AbstractTransportLayer::ErrorCode DiagDispatcher::send(
         {
             return AbstractTransportLayer::ErrorCode::TP_OK;
         }
-        else
-        {
-            return AbstractTransportLayer::ErrorCode::TP_SEND_FAIL;
-        }
+
+        return AbstractTransportLayer::ErrorCode::TP_SEND_FAIL;
     }
     if ((transportMessage.getTargetId() != _configuration.DiagAddress)
         && ((_configuration.BroadcastAddress != TransportMessage::INVALID_ADDRESS)
@@ -361,10 +359,8 @@ AbstractTransportLayer::ErrorCode DiagDispatcher::resume(
             _configuration.DiagAddress);
         return AbstractTransportLayer::ErrorCode::TP_SEND_FAIL;
     }
-    else
-    {
-        transportMessage.setTargetAddress(TransportMessage::INVALID_ADDRESS);
-    }
+
+    transportMessage.setTargetAddress(TransportMessage::INVALID_ADDRESS);
 
     auto const result = enqueueMessage(
         _sendJobQueue,

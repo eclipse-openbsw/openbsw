@@ -162,14 +162,11 @@ err_t initNetifDriverParameters(::etl::span<uint8_t const, 6> const macAddr, net
         ::etl::span<uint32_t const> const ip4Slice = ::etl::span<uint32_t const>(lwipIp4Ptr, 1U);
         return ::ip::make_ip4(ip4Slice.reinterpret_as<uint8_t const>());
     }
-    else
-    {
 #if LWIP_IPV6
-        ::etl::span<uint32_t const, 4U> const ip6Slice(ip_2_ip6(&lwipIp)->addr);
-        return ::ip::make_ip6(ip6Slice.reinterpret_as<uint8_t const>());
+    ::etl::span<uint32_t const, 4U> const ip6Slice(ip_2_ip6(&lwipIp)->addr);
+    return ::ip::make_ip6(ip6Slice.reinterpret_as<uint8_t const>());
 #else
-        return ::ip::IPAddress();
+    return ::ip::IPAddress();
 #endif
-    }
 }
 } // namespace lwiputils

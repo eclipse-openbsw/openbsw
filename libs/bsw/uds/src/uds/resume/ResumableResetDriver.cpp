@@ -79,10 +79,8 @@ bool ResumableResetDriver::prepareReset(::transport::TransportMessage const* con
         fDiagDispatcher->fEnabled = false;
         return true;
     }
-    else
-    {
-        return false;
-    }
+
+    return false;
 }
 
 void ResumableResetDriver::abortReset()
