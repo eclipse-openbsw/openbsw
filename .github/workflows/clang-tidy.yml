@@ -6,6 +6,7 @@ jobs:
   clang-tidy:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         preset: ["tests-posix-debug", "tests-posix-release", "tests-s32k1xx-debug", "tests-s32k1xx-release"]
         config: [Debug, Release]
@@ -54,7 +55,7 @@ jobs:
       - name: Run the clang-tidy.py inside the docker container
         run: >-
           DOCKER_UID=$(id -u) DOCKER_GID=$(id -g) DOCKER_HISTORY=/dev/null docker compose run --rm development
-          python3 .ci/clang-tidy.py build/tests/${{ matrix.platform }}/${{ matrix.config }} ct-findings.yaml
+          python3 .ci/clang-tidy.py --build_directory=build/tests/${{ matrix.platform }}/${{ matrix.config }} --output_file=ct-findings.yaml --exclude="3rdparty"
 
       - name: Upload clang-tidy findings
         if: always()
@@ -63,3 +64,4 @@ jobs:
           name: ct-findings-${{ matrix.platform }}-${{ matrix.config }}
           path: ct-findings.yaml
           if-no-files-found: warn
+          overwrite: true
