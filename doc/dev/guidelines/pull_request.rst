@@ -50,6 +50,25 @@ pull request must be **discussed** with other committers. Examples:
 
 There is always a grey zone. In case of doubt, the committer must consult other committers.
 
+Tags
+----
+
+The following tags are set on PRs for OpenBSW on Github:
+
+- ``tested_on_hw``: This tag can be set if a defined
+  set of tests did run successfully for the PR's changes on the reference
+  hardware s32k148.  Currently, the defined set of tests is just a simple
+  "sanity check" that starts up the application and checks if the initial
+  console messages contain expected contents.  This might change in the future
+  to run the system tests involving CAN and Ethernet tests also. This tag
+  can be set manually (by the author, if testing manually), or automatically
+  (when hardware tests are automated).
+- ``no_hw_test_required``: For changes involving only minor or non-functional
+  changes, a PR can have this tag set instead of ``tested_on_hw``. This tag
+  needs to be set be the author or by a project committer.
+
+Every PR shall have one of those tags defined before being ready for merge.
+
 Checklist
 ---------
 
