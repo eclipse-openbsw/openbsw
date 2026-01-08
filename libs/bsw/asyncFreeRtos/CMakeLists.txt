@@ -10,7 +10,7 @@ target_link_libraries(
               common
               timer)
 
-if (BUILD_UNIT_TESTS)
+if (BUILD_EXECUTABLE STREQUAL "unitTest")
     target_link_libraries(asyncFreeRtos INTERFACE freeRtosMock)
 else ()
     target_link_libraries(asyncFreeRtos INTERFACE freeRtos)
@@ -40,7 +40,7 @@ target_link_libraries(
     freeRtosConfiguration INTERFACE asyncCoreConfiguration
                                     freeRtosCoreConfiguration platform)
 
-if (BUILD_UNIT_TESTS)
+if (BUILD_EXECUTABLE STREQUAL "unitTest")
     # These compile definitions apply to all unit test
     add_library(asyncBinding INTERFACE)
 

@@ -1,4 +1,4 @@
-if (BUILD_UNIT_TESTS)
+if (BUILD_EXECUTABLE STREQUAL "unitTest")
     add_subdirectory(googletest)
 
     # add the custom extensions for unit tests

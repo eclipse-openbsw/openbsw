@@ -10,7 +10,7 @@ target_link_libraries(
               common
               timer)
 
-if (NOT BUILD_UNIT_TESTS)
+if (NOT BUILD_EXECUTABLE STREQUAL "unitTest")
     target_link_libraries(asyncThreadX INTERFACE threadX)
 endif ()
 
@@ -36,18 +36,9 @@ target_link_libraries(
     threadXConfiguration INTERFACE asyncCoreConfiguration platform
                                    threadXCoreConfiguration)
 
-if (BUILD_UNIT_TESTS)
+if (BUILD_EXECUTABLE STREQUAL "unitTest")
     # These compile definitions apply to all unit test
     target_compile_definitions(
         asyncThreadX INTERFACE ASYNC_LOOPER_DISABLE
                                ASYNC_TIMEOUTMANAGER2_DISABLE)
-
-    # add_library(asyncBinding INTERFACE)
-
-    # target_include_directories(asyncBinding INTERFACE test/include)
-
-    # add_library(asyncCoreConfiguration INTERFACE)
-
-    # target_include_directories(asyncCoreConfiguration INTERFACE test/include)
-
 endif ()

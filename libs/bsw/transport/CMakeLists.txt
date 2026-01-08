@@ -5,7 +5,7 @@ target_include_directories(transport PUBLIC include)
 
 target_link_libraries(transport PUBLIC common etl util async)
 
-if (BUILD_UNIT_TESTS)
+if (BUILD_EXECUTABLE STREQUAL "unitTest")
     add_library(transportMock
                 mock/gmock/src/TransportMessageProvidingListenerMock.cpp)
 

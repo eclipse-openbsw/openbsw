@@ -1,7 +1,7 @@
 add_library(canflex2Transceiver
             src/can/transceiver/canflex2/CanFlex2Transceiver.cpp)
 
-if (BUILD_UNIT_TESTS)
+if (BUILD_EXECUTABLE STREQUAL "unitTest")
     target_include_directories(canflex2Transceiver PUBLIC include
                                                           test/mock/include)
 

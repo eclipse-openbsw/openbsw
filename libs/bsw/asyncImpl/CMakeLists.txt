@@ -4,7 +4,7 @@ target_include_directories(asyncImpl INTERFACE include)
 
 target_link_libraries(asyncImpl INTERFACE etl platform)
 
-if (BUILD_UNIT_TESTS)
+if (BUILD_EXECUTABLE STREQUAL "unitTest")
 
     add_library(asyncImplMock INTERFACE)
 

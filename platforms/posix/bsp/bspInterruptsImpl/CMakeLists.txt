@@ -1,4 +1,4 @@
-if (NOT BUILD_UNIT_TESTS)
+if (NOT BUILD_EXECUTABLE STREQUAL "unitTest")
     set(bspInterruptsImplName "bspInterruptsImpl")
 else ()
     # For unit tests, the mock implementation from bspInterrupts is used. To

@@ -59,7 +59,7 @@ target_link_libraries(
            transportConfiguration
            udsConfiguration)
 
-if (BUILD_UNIT_TESTS)
+if (BUILD_EXECUTABLE STREQUAL "unitTest")
 
     add_subdirectory(mock)
 

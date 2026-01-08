@@ -10,7 +10,7 @@ target_link_libraries(
            etl
            platform)
 
-if (BUILD_UNIT_TESTS)
+if (BUILD_EXECUTABLE STREQUAL "unitTest")
     add_library(bspIoMock mock/gmock/src/IoMock.cpp)
 
     target_include_directories(bspIoMock PUBLIC mock/gmock/include)

@@ -1,6 +1,6 @@
 set(storage.extraSources)
 
-if (BUILD_UNIT_TESTS)
+if (BUILD_EXECUTABLE STREQUAL "unitTest")
     add_library(storageMock INTERFACE)
 
     target_include_directories(storageMock INTERFACE mock/include)

@@ -12,7 +12,7 @@ target_include_directories(lifecycle PUBLIC include)
 
 target_link_libraries(lifecycle PUBLIC async util etl)
 
-if (BUILD_UNIT_TESTS)
+if (BUILD_EXECUTABLE STREQUAL "unitTest")
 
     add_library(lifecycleMock INTERFACE)
 

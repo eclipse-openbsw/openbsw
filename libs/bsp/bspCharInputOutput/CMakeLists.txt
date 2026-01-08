@@ -7,7 +7,7 @@ target_include_directories(bspCharInputOutput PUBLIC include)
 
 target_link_libraries(bspCharInputOutput PUBLIC bsp bspConfiguration printf)
 
-if (BUILD_UNIT_TESTS)
+if (BUILD_EXECUTABLE STREQUAL "unitTest")
     add_library(bspCharInputOutputMock INTERFACE)
 
     target_include_directories(bspCharInputOutputMock INTERFACE mock/include)

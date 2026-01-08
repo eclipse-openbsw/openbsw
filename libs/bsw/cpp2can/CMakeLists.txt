@@ -14,7 +14,7 @@ target_link_libraries(
     PUBLIC common etl util
     PRIVATE bsp bspInterrupts)
 
-if (BUILD_UNIT_TESTS)
+if (BUILD_EXECUTABLE STREQUAL "unitTest")
     add_library(cpp2canMock
                 mock/src/can/transceiver/AbstractCANTransceiverMock.cpp)
 

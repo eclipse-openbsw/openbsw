@@ -18,7 +18,7 @@
             "cacheVariables": {
                 "CMAKE_DEFAULT_BUILD_TYPE": "Debug",
                 "CMAKE_CONFIGURATION_TYPES": "Debug",
-                "BUILD_UNIT_TESTS": "ON",
+                "BUILD_EXECUTABLE": "unitTest",
                 "OPENBSW_PLATFORM": "posix"
             }
         },
@@ -31,7 +31,7 @@
             "cacheVariables": {
                 "CMAKE_DEFAULT_BUILD_TYPE": "Release",
                 "CMAKE_CONFIGURATION_TYPES": "Release",
-                "BUILD_UNIT_TESTS": "ON",
+                "BUILD_EXECUTABLE": "unitTest",
                 "OPENBSW_PLATFORM": "posix"
             }
         },
@@ -44,7 +44,7 @@
             "cacheVariables": {
                 "CMAKE_DEFAULT_BUILD_TYPE": "Debug",
                 "CMAKE_CONFIGURATION_TYPES": "Debug",
-                "BUILD_UNIT_TESTS": "ON",
+                "BUILD_EXECUTABLE": "unitTest",
                 "OPENBSW_PLATFORM": "s32k1xx"
             }
         },
@@ -57,20 +57,8 @@
             "cacheVariables": {
                 "CMAKE_DEFAULT_BUILD_TYPE": "Release",
                 "CMAKE_CONFIGURATION_TYPES": "Release",
-                "BUILD_UNIT_TESTS": "ON",
+                "BUILD_EXECUTABLE": "unitTest",
                 "OPENBSW_PLATFORM": "s32k1xx"
-            }
-        },
-        {
-            "name": "posix",
-            "displayName": "POSIX-compliant configuration",
-            "description": "Configure for POSIX-compliant environment",
-            "inherits": "_config-base",
-            "binaryDir": "${sourceDir}/build/${presetName}",
-            "cacheVariables": {
-                "BUILD_REFERENCE": "ON",
-                "BUILD_TARGET_PLATFORM": "POSIX",
-                "BUILD_TARGET_RTOS": "FREERTOS"
             }
         },
         {
@@ -80,7 +68,7 @@
             "inherits": "_config-base",
             "binaryDir": "${sourceDir}/build/${presetName}",
             "cacheVariables": {
-                "BUILD_REFERENCE": "ON",
+                "BUILD_EXECUTABLE": "referenceApp",
                 "BUILD_TARGET_PLATFORM": "POSIX",
                 "BUILD_TARGET_RTOS": "FREERTOS"
             }
@@ -92,28 +80,9 @@
             "inherits": "_config-base",
             "binaryDir": "${sourceDir}/build/${presetName}",
             "cacheVariables": {
-                "BUILD_REFERENCE": "ON",
+                "BUILD_EXECUTABLE": "referenceApp",
                 "BUILD_TARGET_PLATFORM": "POSIX",
                 "BUILD_TARGET_RTOS": "THREADX"
-            }
-        },
-        {
-            "name": "s32k148-gcc",
-            "generator": "Ninja Multi-Config",
-            "displayName": "S32K148 configuration (GCC)",
-            "description": "Configure for S32K148 platform using ARM GCC toolchain",
-            "inherits": "_config-base",
-            "toolchainFile": "${sourceDir}/cmake/toolchains/ArmNoneEabi-gcc.cmake",
-            "binaryDir": "${sourceDir}/build/${presetName}",
-            "cacheVariables": {
-                "BUILD_REFERENCE": "ON",
-                "BUILD_TARGET_PLATFORM": "S32K148EVB",
-                "BUILD_TARGET_RTOS": "FREERTOS",
-                "CMAKE_ASM_FLAGS_RELWITHDEBINFO": "-g3",
-                "CMAKE_CONFIGURATION_TYPES": "RelWithDebInfo;Debug;Release",
-                "CMAKE_C_FLAGS_RELWITHDEBINFO": "-g3 -O2 -DNDEBUG",
-                "CMAKE_CXX_FLAGS_RELWITHDEBINFO": "-g3 -O2 -DNDEBUG",
-                "CMAKE_DEFAULT_BUILD_TYPE": "RelWithDebInfo"
             }
         },
         {
@@ -125,7 +94,7 @@
             "toolchainFile": "${sourceDir}/cmake/toolchains/ArmNoneEabi-gcc.cmake",
             "binaryDir": "${sourceDir}/build/${presetName}",
             "cacheVariables": {
-                "BUILD_REFERENCE": "ON",
+                "BUILD_EXECUTABLE": "referenceApp",
                 "BUILD_TARGET_PLATFORM": "S32K148EVB",
                 "BUILD_TARGET_RTOS": "FREERTOS",
                 "CMAKE_ASM_FLAGS_RELWITHDEBINFO": "-g3",
@@ -144,34 +113,13 @@
             "toolchainFile": "${sourceDir}/cmake/toolchains/ArmNoneEabi-gcc.cmake",
             "binaryDir": "${sourceDir}/build/${presetName}",
             "cacheVariables": {
-                "BUILD_REFERENCE": "ON",
+                "BUILD_EXECUTABLE": "referenceApp",
                 "BUILD_TARGET_PLATFORM": "S32K148EVB",
                 "BUILD_TARGET_RTOS": "THREADX",
                 "CMAKE_ASM_FLAGS_RELWITHDEBINFO": "-g3",
                 "CMAKE_CONFIGURATION_TYPES": "RelWithDebInfo;Debug;Release",
                 "CMAKE_C_FLAGS_RELWITHDEBINFO": "-g3 -O2 -DNDEBUG",
                 "CMAKE_CXX_FLAGS_RELWITHDEBINFO": "-g3 -O2 -DNDEBUG",
-                "CMAKE_DEFAULT_BUILD_TYPE": "RelWithDebInfo"
-            }
-        },
-        {
-            "name": "s32k148-clang",
-            "generator": "Ninja Multi-Config",
-            "displayName": "S32K148 configuration (Clang)",
-            "description": "Configure for S32K148 platform using ARM Clang toolchain",
-            "inherits": "_config-base",
-            "toolchainFile": "${sourceDir}/cmake/toolchains/ArmNoneEabi-clang.cmake",
-            "binaryDir": "${sourceDir}/build/${presetName}",
-            "cacheVariables": {
-                "BUILD_REFERENCE": "ON",
-                "BUILD_TARGET_PLATFORM": "S32K148EVB",
-                "BUILD_TARGET_RTOS": "FREERTOS",
-                "CMAKE_ASM_FLAGS_RELWITHDEBINFO": "-g3",
-                "CMAKE_CONFIGURATION_TYPES": "RelWithDebInfo;Debug;Release",
-                "CMAKE_C_FLAGS_RELEASE": "-Os -DNDEBUG",
-                "CMAKE_CXX_FLAGS_RELEASE": "-Os -DNDEBUG",
-                "CMAKE_C_FLAGS_RELWITHDEBINFO": "-g3 -Os -DNDEBUG",
-                "CMAKE_CXX_FLAGS_RELWITHDEBINFO": "-g3 -Os -DNDEBUG",
                 "CMAKE_DEFAULT_BUILD_TYPE": "RelWithDebInfo"
             }
         },
@@ -184,7 +132,7 @@
             "toolchainFile": "${sourceDir}/cmake/toolchains/ArmNoneEabi-clang.cmake",
             "binaryDir": "${sourceDir}/build/${presetName}",
             "cacheVariables": {
-                "BUILD_REFERENCE": "ON",
+                "BUILD_EXECUTABLE": "referenceApp",
                 "BUILD_TARGET_PLATFORM": "S32K148EVB",
                 "BUILD_TARGET_RTOS": "FREERTOS",
                 "CMAKE_ASM_FLAGS_RELWITHDEBINFO": "-g3",
@@ -205,7 +153,7 @@
             "toolchainFile": "${sourceDir}/cmake/toolchains/ArmNoneEabi-clang.cmake",
             "binaryDir": "${sourceDir}/build/${presetName}",
             "cacheVariables": {
-                "BUILD_REFERENCE": "ON",
+                "BUILD_EXECUTABLE": "referenceApp",
                 "BUILD_TARGET_PLATFORM": "S32K148EVB",
                 "BUILD_TARGET_RTOS": "THREADX",
                 "CMAKE_ASM_FLAGS_RELWITHDEBINFO": "-g3",
@@ -248,12 +196,6 @@
             "configuration": "Release"
         },
         {
-            "name": "posix",
-            "displayName": "build POSIX",
-            "description": "Build reference application for POSIX-compliant environment (Release by default; for Debug use --config Debug)",
-            "configurePreset": "posix"
-        },
-        {
             "name": "posix-freertos",
             "displayName": "build POSIX-FREERTOS",
             "description": "Build reference application for POSIX-compliant environment (Release by default; for Debug use --config Debug)",
@@ -266,12 +208,6 @@
             "configurePreset": "posix-threadx"
         },
         {
-            "name": "s32k148-gcc",
-            "displayName": "S32K148 build (GCC)",
-            "description": "Build reference application for S32K148 platform with Clang (Release by default; for Debug use --config Debug)",
-            "configurePreset": "s32k148-gcc"
-        },
-        {
             "name": "s32k148-freertos-gcc",
             "displayName": "S32K148 FreeRTOS build (GCC)",
             "description": "Build reference application for S32K148 platform with Clang (Release by default; for Debug use --config Debug)",
@@ -282,12 +218,6 @@
             "displayName": "S32K148 ThreadX build (GCC)",
             "description": "Build reference application for S32K148 platform with Clang (Release by default; for Debug use --config Debug)",
             "configurePreset": "s32k148-threadx-gcc"
-        },
-        {
-            "name": "s32k148-clang",
-            "displayName": "S32K148 build (Clang)",
-            "description": "Build reference application for S32K148 platform with Clang (Release by default; for Debug use --config Debug)",
-            "configurePreset": "s32k148-clang"
         },
         {
             "name": "s32k148-freertos-clang",

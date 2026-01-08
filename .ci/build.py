@@ -89,7 +89,7 @@ commands = {
         platforms=["arm"],
         cxxids=["clang"],
         build_dir="build/s32k148-threadx-clang",
-    ),
+    )
 }
 
 

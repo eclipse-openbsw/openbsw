@@ -17,6 +17,6 @@ target_link_libraries(
 
 target_compile_options(freeRtos PRIVATE -Wno-unused-variable)
 
-if (BUILD_UNIT_TESTS)
+if (BUILD_EXECUTABLE STREQUAL "unitTest")
     add_subdirectory(mock)
 endif ()

@@ -41,7 +41,7 @@ target_include_directories(util PUBLIC include)
 
 target_link_libraries(util PUBLIC etl platform)
 
-if (BUILD_UNIT_TESTS)
+if (BUILD_EXECUTABLE STREQUAL "unitTest")
     add_library(utilMock mock/gmock/src/util/StdIoMock.cpp
                          mock/gmock/src/util/logger/TestConsoleLogger.cpp)
 

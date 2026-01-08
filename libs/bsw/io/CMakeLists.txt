@@ -4,7 +4,7 @@ target_include_directories(io PUBLIC include)
 
 target_link_libraries(io PUBLIC etl platform util)
 
-if (BUILD_UNIT_TESTS)
+if (BUILD_EXECUTABLE STREQUAL "unitTest")
     add_library(ioMock INTERFACE)
 
     target_include_directories(ioMock INTERFACE mock/include)

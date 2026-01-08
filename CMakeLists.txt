@@ -24,9 +24,20 @@ set(BUILD_TARGET_RTOS
     "FREERTOS"
     CACHE STRING "Target RTOS")
 
+set(BUILD_EXECUTABLE
+    ""
+    CACHE STRING "Which build to enable: referenceApp, unitTest")
+
+if (BUILD_EXECUTABLE STREQUAL "referenceApp")
+    # no action for referenceApp build
+elseif (BUILD_EXECUTABLE STREQUAL "unitTest")
+    add_compile_definitions(UNIT_TEST=1)
+endif ()
+
 # Convert target name to lower case to match directory name
 string(TOLOWER "${BUILD_TARGET_PLATFORM}" OPENBSW_TARGET)
-if (BUILD_REFERENCE)
+
+if (BUILD_EXECUTABLE STREQUAL "referenceApp")
     include(executables/referenceApp/platforms/${OPENBSW_TARGET}/Options.cmake)
 endif ()
 
@@ -61,8 +72,6 @@ project(
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules")
 
-option(BUILD_UNIT_TESTS "Build unit tests" OFF)
-
 option(BUILD_TRACING "Build CTF tracing" OFF)
 
 add_compile_options(
@@ -73,8 +82,7 @@ add_compile_options(
     "$<$<COMPILE_LANG_AND_ID:CXX,GNU>:-Wno-error=stringop-overflow;-Wno-error=maybe-uninitialized>"
 )
 
-if (BUILD_UNIT_TESTS)
-    add_compile_definitions(UNIT_TEST=1)
+if (BUILD_EXECUTABLE STREQUAL "unitTest")
     include(GoogleTest)
     include(CTest)
     include(CodeCoverage)
@@ -85,8 +93,8 @@ if (BUILD_UNIT_TESTS)
     set(OPENBSW_PLATFORM_DIR "${CMAKE_CURRENT_SOURCE_DIR}/platforms/posix")
 endif ()
 
-if (BUILD_REFERENCE)
-    set(OPENBSW_APP_DIR "${CMAKE_CURRENT_SOURCE_DIR}/executables/referenceApp")
+if (BUILD_EXECUTABLE STREQUAL "referenceApp")
+    set(OPENBSW_APP_DIR "${CMAKE_CURRENT_LIST_DIR}/executables/referenceApp")
     if (BUILD_TARGET_PLATFORM STREQUAL "S32K148EVB")
         set(OPENBSW_PLATFORM_DIR
             "${CMAKE_CURRENT_SOURCE_DIR}/platforms/s32k1xx")
@@ -109,7 +117,7 @@ set(INCLUDE_OPENBSW_LIBS_BSP
 add_subdirectory(platforms EXCLUDE_FROM_ALL)
 add_subdirectory(libs EXCLUDE_FROM_ALL)
 
-if (BUILD_UNIT_TESTS)
+if (BUILD_EXECUTABLE STREQUAL "unitTest")
 
     add_subdirectory(executables/unitTest EXCLUDE_FROM_ALL)
     target_include_directories(etl BEFORE
@@ -171,7 +179,7 @@ if (BUILD_UNIT_TESTS)
                 "Invalid value for OPENBSW_PLATFORM: ${OPENBSW_PLATFORM}")
     endif ()
 
-elseif (BUILD_REFERENCE)
+elseif (BUILD_EXECUTABLE STREQUAL "referenceApp")
     target_include_directories(etl BEFORE
                                INTERFACE executables/referenceApp/etl_profile)
     add_subdirectory(executables/referenceApp)

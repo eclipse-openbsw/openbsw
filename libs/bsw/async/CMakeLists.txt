@@ -4,7 +4,7 @@ target_include_directories(async INTERFACE include)
 
 target_link_libraries(async INTERFACE asyncPlatform asyncBinding)
 
-if (BUILD_UNIT_TESTS)
+if (BUILD_EXECUTABLE STREQUAL "unitTest")
 
     add_subdirectory(mock)
 

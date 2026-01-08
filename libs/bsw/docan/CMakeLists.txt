@@ -14,7 +14,7 @@ target_link_libraries(
            transport
            util)
 
-if (BUILD_UNIT_TESTS)
+if (BUILD_EXECUTABLE STREQUAL "unitTest")
 
     add_library(docanMock INTERFACE)
 
