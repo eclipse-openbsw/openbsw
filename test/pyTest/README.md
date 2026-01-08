@@ -4,7 +4,7 @@
 The tests in this directory expect a suitable environment to be in place.
 In the instructions below, it is assumed that you have
 been able to set up a working build and test environment
-following the instructions in the documentation produced from `doc/learning/setup`.
+following the instructions in the documentation produced from `doc/dev/learning/setup`.
 This README only captures those additional steps needed to run `pytest` with the tests in this directory,
 which includes setting up the python environment
 and setting up each target's requirements as explained below.

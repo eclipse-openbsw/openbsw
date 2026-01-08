@@ -1,7 +1,7 @@
 # Visual Studio Code settings
 
 This directory contains example settings files for Visual Studio Code
-based on the setup described in ``doc/learning/setup/setup_vscode.rst``.
+based on the setup described in ``doc/dev/learning/setup/setup_vscode.rst``.
 Assuming you have opened Visual Studio Code from the base of the code (let's call this ``[WORKSPACE_DIR]``),
 then Visual Studio Code will look for settings files in ``[WORKSPACE_DIR]/.vscode/``.
 
