@@ -5,5 +5,8 @@ add_subdirectory(3rdparty/threadx)
 # BSP modules
 add_subdirectory(bsp)
 
+# ETL implementation
+add_subdirectory(etlImpl)
+
 # Other modules
 add_subdirectory(lwipSysArch)

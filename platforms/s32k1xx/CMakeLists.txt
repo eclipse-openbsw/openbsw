@@ -13,6 +13,9 @@ add_subdirectory(bsp)
 # Safety modules
 add_subdirectory(safety)
 
+# ETL implementation
+add_subdirectory(etlImpl)
+
 # Other modules
 add_subdirectory(hardFaultHandler)
 add_subdirectory(lwipSysArch)

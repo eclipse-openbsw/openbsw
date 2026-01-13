@@ -59,6 +59,7 @@ target_link_libraries(
             configuration
             ethConfiguration
             etl
+            etlImpl
             lifecycle
             consoleCommands
             logger
