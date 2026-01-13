@@ -6,8 +6,8 @@
 
 #if __cpp_concepts
 
+#include <etl/concepts.h>
 #include <etl/type_traits.h>
-#include <concepts>
 
 namespace bsp
 {
@@ -26,10 +26,10 @@ concept UartConcept
     = requires(T a, ::etl::span<uint8_t const> const writeData, ::etl::span<uint8_t> readData) {
           {
               a.write(writeData)
-          } -> std::same_as<size_t>;
+          } -> etl::same_as<size_t>;
           {
               a.read(readData)
-          } -> std::same_as<size_t>;
+          } -> etl::same_as<size_t>;
       };
 
 // clang-format on
