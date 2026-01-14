@@ -17,6 +17,7 @@
 
 #include <app/appConfig.h>
 #include <etl/alignment.h>
+#include <etl/print.h>
 #include <etl/singleton.h>
 #ifdef PLATFORM_SUPPORT_ROM_CHECK
 #include <safeMemory/RomCheck.h>
@@ -43,8 +44,6 @@
 #include <async/AsyncBinding.h>
 #include <lifecycle/LifecycleLogger.h>
 #include <lifecycle/LifecycleManager.h>
-
-#include <cstdio>
 
 alignas(32)::async::internal::Stack<safety_task_stackSize> safetyStack;
 
@@ -203,7 +202,7 @@ void staticInit()
 void run()
 {
     staticInit();
-    printf("hello\r\n");
+    etl::print("hello\r\n");
     idleHandler.init();
     AsyncAdapter::run(AsyncAdapter::StartAppFunctionType::create<&startApp>());
 }
