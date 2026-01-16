@@ -1,4 +1,5 @@
 // Copyright 2024 Accenture.
+// Copyright 2026 BMW AG.
 
 #pragma once
 
@@ -7,6 +8,8 @@
 #include "docan/datalink/DoCanFrameCodecConfig.h"
 #include "docan/datalink/IDoCanFrameReceiver.h"
 #include "docan/datalink/IDoCanFrameSizeMapper.h"
+
+#include "can/canframes/CANFrame.h"
 
 #include <etl/algorithm.h>
 #include <etl/error_handler.h>
@@ -36,7 +39,7 @@ enum class CodecResult : uint8_t
     INVALID_FRAME_TYPE
 };
 
-static constexpr uint8_t EXTENDED_SF_DL_EDGE_SIZE  = 8U;
+static constexpr uint8_t EXTENDED_SF_DL_EDGE_SIZE  = can::CANFrame::MAX_FRAME_LENGTH;
 static constexpr uint16_t ESCAPED_SEQ_MESSAGE_SIZE = 4095U;
 
 /**
