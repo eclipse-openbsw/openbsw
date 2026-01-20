@@ -30,7 +30,7 @@ Alternatively you can run the same script that is used in the CI pipeline:
 
   python3 .ci/clang-tidy.py <Path_to_compile_commands_directory> <Output_file_for_ct_findings>
 
-In case you want to run clang-tidy directly, you can also use the following command:
+In case you want to run clang-tidy on a single file, you can also use the following command:
 
 .. code-block:: bash
 

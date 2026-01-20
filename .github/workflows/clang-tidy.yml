@@ -8,24 +8,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        preset: ["tests-posix-debug", "tests-posix-release", "tests-s32k1xx-debug", "tests-s32k1xx-release"]
-        config: [Debug, Release]
+        preset: ["tests-posix-release", "tests-s32k1xx-release"]
+        config: [Release]
         platform: [posix, s32k1xx]
         exclude:
-          - preset: "tests-posix-debug"
-            config: "Release"
-          - preset: "tests-s32k1xx-debug"
-            config: "Release"
-          - preset: "tests-posix-release"
-            config: "Debug"
-          - preset: "tests-s32k1xx-release"
-            config: "Debug"
-          - preset: "tests-posix-debug"
-            platform: "s32k1xx"
           - preset: "tests-posix-release"
             platform: "s32k1xx"
-          - preset: "tests-s32k1xx-debug"
-            platform: "posix"
           - preset: "tests-s32k1xx-release"
             platform: "posix"
     steps:

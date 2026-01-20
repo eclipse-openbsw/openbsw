@@ -8,19 +8,6 @@ and generates a detailed report with the number of findings per diagnostic which
 The script exits with:
     - Exit code 0: No findings detected
     - Exit code 1: Findings were detected or an error occurred
-
-Examples:
-    Basic usage:
-        python3 .ci/clang-tidy.py build/tests/posix/Debug ct-findings.yaml
-
-    With custom exclusion pattern (files matching 'test' or 'mock' will be excluded):
-        python3 .ci/clang-tidy.py build/tests/posix/Debug ct-findings.yaml --exclude "test|mock"
-
-    Quiet mode (no progress output from run-clang-tidy):
-        python3 .ci/clang-tidy.py build/tests/posix/Debug ct-findings.yaml --quiet
-
-    Verbose mode (show run-clang-tidy output):
-        python3 .ci/clang-tidy.py build/tests/posix/Debug ct-findings.yaml --verbose
 """
 
 import argparse
@@ -43,10 +30,10 @@ def parse_arguments():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-  %(prog)s build/tests/posix/Debug ct-findings.yaml
-  %(prog)s build/tests/posix/Debug ct-findings.yaml --exclude "test|mock"
-  %(prog)s build/tests/posix/Debug ct-findings.yaml --quiet
-  %(prog)s build/tests/posix/Debug ct-findings.yaml --verbose
+  %(prog)s --build_directory build/tests/posix/Debug --output_file ct-findings.yaml
+  %(prog)s --build_directory build/tests/posix/Debug --output_file ct-findings.yaml --exclude "test|mock"
+  %(prog)s --build_directory build/tests/posix/Debug --output_file ct-findings.yaml --quiet
+  %(prog)s --build_directory build/tests/posix/Debug --output_file ct-findings.yaml --verbose
         """,
     )
 
@@ -80,12 +67,6 @@ Examples:
         "--verbose",
         action="store_true",
         help="Show run-clang-tidy progress output",
-    )
-
-    parser.add_argument(
-        "--version",
-        action="version",
-        version="%(prog)s 1.0",
     )
 
     args = parser.parse_args()
