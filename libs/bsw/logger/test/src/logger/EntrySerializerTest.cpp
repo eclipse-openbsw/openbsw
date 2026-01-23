@@ -43,8 +43,9 @@ struct EntrySerializerTest
 
     char const* addConstString(char const* string)
     {
-        char* destString = _constStrings + _nextConstStringOffset;
-        strcpy(destString, string);
+        size_t const maxSize = sizeof(_constStrings) - _nextConstStringOffset;
+        char* destString     = _constStrings + _nextConstStringOffset;
+        etl::strncpy(destString, string, maxSize);
         _nextConstStringOffset += strlen(destString) + 1;
         return destString;
     }

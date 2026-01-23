@@ -15,6 +15,7 @@
 #include <type_traits>
 #include <unistd.h>
 
+#include <etl/char_traits.h>
 #include <etl/error_handler.h>
 #include <etl/span.h>
 #include <sys/types.h>
@@ -174,7 +175,7 @@ void SocketCanTransceiver::guardedOpen()
     }
 
     struct ifreq ifr;
-    ::std::strcpy(ifr.ifr_name, name);
+    etl::strncpy(ifr.ifr_name, name, sizeof(ifr.ifr_name) / sizeof(ifr.ifr_name[0]));
     error = ioctl(fd, SIOCGIFINDEX, &ifr);
     if (error < 0)
     {
