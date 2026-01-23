@@ -133,7 +133,12 @@ err_t LwipSocket::sendPendingData(tcp_pcb* const pcb)
         return checkResult(ERR_OK);
     }
 
-    size_t const availableBuffer = static_cast<size_t>(tcp_sndbuf(pcb));
+    size_t availableBuffer{0U};
+    if (pcb != nullptr)
+    {
+        availableBuffer = static_cast<size_t>(tcp_sndbuf(pcb));
+    };
+
     if (availableBuffer == 0U)
     {
         return checkResult(ERR_MEM);
