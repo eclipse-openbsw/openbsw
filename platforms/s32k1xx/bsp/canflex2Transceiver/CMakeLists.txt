@@ -11,7 +11,7 @@ if (BUILD_EXECUTABLE STREQUAL "unitTest")
                bsp
                cpp2can
                etl
-               utbspIo
+               bspIo
                lifecycle
                gmock)
 else ()

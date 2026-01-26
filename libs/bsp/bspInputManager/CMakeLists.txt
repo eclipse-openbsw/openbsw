@@ -9,6 +9,8 @@ target_link_libraries(
     bspInputManager
     PUBLIC bsp
            bspDynamicClient
+           bspInterrupts
+           bspConfiguration
            bspIo
            etl
            platform

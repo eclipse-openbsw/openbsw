@@ -1,14 +1,13 @@
 
-
 #if (BSPOUTPUTCONFIG == 1)
 
 Output::OutputConfig const Output::sfOutputConfigurations[][Output::NUMBER_OF_INTERNAL_OUTPUTS] = {
     {
-        /* 00 */ {Io::MOCK_OUTPUT_1, Io::HIGH, Io::HIGH_ACTIVE},
+        /* 00 */ {Io::TestPin0, Io::HIGH, Io::HIGH_ACTIVE},
     },
 };
 
-Output::OutputConfig const* Output::getConfiguration(uint8_t hw)
+Output::OutputConfig const* Output::getConfiguration(uint8_t /* hw */)
 {
     return &sfOutputConfigurations[0][0];
 }
