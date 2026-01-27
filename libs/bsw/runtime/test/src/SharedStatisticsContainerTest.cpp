@@ -16,6 +16,7 @@ using namespace ::testing;
 using namespace ::runtime;
 using namespace ::estd::test;
 
+// NOLINTBEGIN(cert-oop54-cpp): This is intentional for testing purposes.
 // NOLINTBEGIN(bugprone-unhandled-self-assignment): This is intentional for testing purposes.
 struct TestStatistics
 {
@@ -29,6 +30,7 @@ struct TestStatistics
 };
 
 // NOLINTEND(bugprone-unhandled-self-assignment)
+// NOLINTEND(cert-oop54-cpp)
 
 struct TestEntry : public TestStatistics
 {};
