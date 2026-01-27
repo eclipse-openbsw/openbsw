@@ -1,0 +1,448 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../static/css/style.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <title>Symbol - puncover</title>
+    
+</head>
+<body>
+    <div class="container" id="content">
+        <div class="page-header">
+            <nav class="navbar navbar-default" role="navigation">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="../../index.html">
+                    Puncover
+                  </a>
+                </div>
+              </div>
+            </nav>
+          
+        </div>
+        <div id="inner_content">
+        
+    
+    <ol class="breadcrumb folders">
+        
+        <li class="active"><a href="../../unknown.html">&lt;unknown&gt;</a>
+            </li>
+
+        
+        <li class="active">&lt;unknown&gt;
+            </li>
+        
+    </ol>
+
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <th>Function</th>
+                <td colspan="5">
+                    <span class="icon-function">scalbn</span>
+                </td>
+            </tr>
+
+            <tr>
+                <th rowspan="2"></th>
+                <th>Address</th>
+                <th>Remarks</th>
+                <th>Stack</th>
+                <th>Code</th>
+                <th>Static</th>
+            </tr>
+            <tr>
+                <td>0x0002f0f8</td>
+                <td>
+    
+    
+</td>
+                <td></td>
+                <td>276</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th>Callers (1)</th>
+                <td colspan="5">
+                
+                    <a href="./e450723e1734f08e327340a417d23c37.html">__ieee754_pow (3172)</a>
+                    
+                
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Callees (2,
+                            <span title="sum of used bytes by all callees">
+                            Σ=1228
+                            </span>
+                        )
+                    
+                </th>
+                <td colspan="5">
+                
+                    <a href="./ed44d9757d23672067bed75a430410d4.html">__aeabi_dmul (596)</a>
+                    
+                        ,
+                    
+                
+                    <a href="./31b46c24b54aa235c2335ec98f5e34d9.html">__adddf3 (632)</a>
+                    
+                
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    
+    <pre><a href="./31eb051ccbf29263e4b891ac8c921171.html">fabs (20)</a></pre>
+    
+
+    <pre>
+
+    scalbn():
+
+       2f0f8:	b570      	push	{r4, r5, r6, lr}
+
+       2f0fa:	ec55 4b10 	vmov	r4, r5, d0
+
+       2f0fe:	f3c5 520a 	ubfx	r2, r5, #20, #11
+
+       2f102:	4606      	mov	r6, r0
+
+       2f104:	462b      	mov	r3, r5
+
+       2f106:	bb72      	cbnz	r2, 2f166 <<a href="./641f1d4590bbf175a9f459810ac8aed0.html">scalbn</a>+0x6e>
+
+       2f108:	f025 4300 	bic.w	r3, r5, #2147483648	@ 0x80000000
+
+       2f10c:	4323      	orrs	r3, r4
+
+       2f10e:	d029      	beq.n	2f164 <<a href="./641f1d4590bbf175a9f459810ac8aed0.html">scalbn</a>+0x6c>
+
+       2f110:	4b3b      	ldr	r3, [pc, #236]	@ (2f200 <<a href="./641f1d4590bbf175a9f459810ac8aed0.html">scalbn</a>+0x108>)
+
+       2f112:	4620      	mov	r0, r4
+
+       2f114:	4629      	mov	r1, r5
+
+       2f116:	2200      	movs	r2, #0
+
+       2f118:	f7d1 fd56 	bl	bc8 <<a href="./ed44d9757d23672067bed75a430410d4.html">__aeabi_dmul</a>>
+
+       2f11c:	4b39      	ldr	r3, [pc, #228]	@ (2f204 <<a href="./641f1d4590bbf175a9f459810ac8aed0.html">scalbn</a>+0x10c>)
+
+       2f11e:	429e      	cmp	r6, r3
+
+       2f120:	4604      	mov	r4, r0
+
+       2f122:	460d      	mov	r5, r1
+
+       2f124:	db52      	blt.n	2f1cc <<a href="./641f1d4590bbf175a9f459810ac8aed0.html">scalbn</a>+0xd4>
+
+       2f126:	f3c1 520a 	ubfx	r2, r1, #20, #11
+
+       2f12a:	460b      	mov	r3, r1
+
+       2f12c:	3a36      	subs	r2, #54	@ 0x36
+
+       2f12e:	f24c 3150 	movw	r1, #50000	@ 0xc350
+
+       2f132:	428e      	cmp	r6, r1
+
+       2f134:	dc23      	bgt.n	2f17e <<a href="./641f1d4590bbf175a9f459810ac8aed0.html">scalbn</a>+0x86>
+
+       2f136:	4416      	add	r6, r2
+
+       2f138:	f240 72fe 	movw	r2, #2046	@ 0x7fe
+
+       2f13c:	4296      	cmp	r6, r2
+
+       2f13e:	dc1e      	bgt.n	2f17e <<a href="./641f1d4590bbf175a9f459810ac8aed0.html">scalbn</a>+0x86>
+
+       2f140:	2e00      	cmp	r6, #0
+
+       2f142:	dc34      	bgt.n	2f1ae <<a href="./641f1d4590bbf175a9f459810ac8aed0.html">scalbn</a>+0xb6>
+
+       2f144:	f116 0f35 	cmn.w	r6, #53	@ 0x35
+
+       2f148:	db38      	blt.n	2f1bc <<a href="./641f1d4590bbf175a9f459810ac8aed0.html">scalbn</a>+0xc4>
+
+       2f14a:	f36f 531e 	bfc	r3, #20, #11
+
+       2f14e:	3636      	adds	r6, #54	@ 0x36
+
+       2f150:	ea43 5506 	orr.w	r5, r3, r6, lsl #20
+
+       2f154:	4620      	mov	r0, r4
+
+       2f156:	4b2c      	ldr	r3, [pc, #176]	@ (2f208 <<a href="./641f1d4590bbf175a9f459810ac8aed0.html">scalbn</a>+0x110>)
+
+       2f158:	4629      	mov	r1, r5
+
+       2f15a:	2200      	movs	r2, #0
+
+       2f15c:	f7d1 fd34 	bl	bc8 <<a href="./ed44d9757d23672067bed75a430410d4.html">__aeabi_dmul</a>>
+
+       2f160:	ec41 0b10 	vmov	d0, r0, r1
+
+       2f164:	bd70      	pop	{r4, r5, r6, pc}
+
+       2f166:	f240 71ff 	movw	r1, #2047	@ 0x7ff
+
+       2f16a:	428a      	cmp	r2, r1
+
+       2f16c:	d1df      	bne.n	2f12e <<a href="./641f1d4590bbf175a9f459810ac8aed0.html">scalbn</a>+0x36>
+
+       2f16e:	4622      	mov	r2, r4
+
+       2f170:	4620      	mov	r0, r4
+
+       2f172:	4629      	mov	r1, r5
+
+       2f174:	f7d1 fb72 	bl	85c <<a href="./31b46c24b54aa235c2335ec98f5e34d9.html">__adddf3</a>>
+
+       2f178:	ec41 0b10 	vmov	d0, r0, r1
+
+       2f17c:	bd70      	pop	{r4, r5, r6, pc}
+
+       2f17e:	2d00      	cmp	r5, #0
+
+       2f180:	a117      	add	r1, pc, #92	@ (adr r1, 2f1e0 <<a href="./641f1d4590bbf175a9f459810ac8aed0.html">scalbn</a>+0xe8>)
+
+       2f182:	e9d1 0100 	ldrd	r0, r1, [r1]
+
+       2f186:	db07      	blt.n	2f198 <<a href="./641f1d4590bbf175a9f459810ac8aed0.html">scalbn</a>+0xa0>
+
+       2f188:	a315      	add	r3, pc, #84	@ (adr r3, 2f1e0 <<a href="./641f1d4590bbf175a9f459810ac8aed0.html">scalbn</a>+0xe8>)
+
+       2f18a:	e9d3 2300 	ldrd	r2, r3, [r3]
+
+       2f18e:	f7d1 fd1b 	bl	bc8 <<a href="./ed44d9757d23672067bed75a430410d4.html">__aeabi_dmul</a>>
+
+       2f192:	ec41 0b10 	vmov	d0, r0, r1
+
+       2f196:	bd70      	pop	{r4, r5, r6, pc}
+
+       2f198:	a113      	add	r1, pc, #76	@ (adr r1, 2f1e8 <<a href="./641f1d4590bbf175a9f459810ac8aed0.html">scalbn</a>+0xf0>)
+
+       2f19a:	e9d1 0100 	ldrd	r0, r1, [r1]
+
+       2f19e:	a310      	add	r3, pc, #64	@ (adr r3, 2f1e0 <<a href="./641f1d4590bbf175a9f459810ac8aed0.html">scalbn</a>+0xe8>)
+
+       2f1a0:	e9d3 2300 	ldrd	r2, r3, [r3]
+
+       2f1a4:	f7d1 fd10 	bl	bc8 <<a href="./ed44d9757d23672067bed75a430410d4.html">__aeabi_dmul</a>>
+
+       2f1a8:	ec41 0b10 	vmov	d0, r0, r1
+
+       2f1ac:	e7f3      	b.n	2f196 <<a href="./641f1d4590bbf175a9f459810ac8aed0.html">scalbn</a>+0x9e>
+
+       2f1ae:	f36f 531e 	bfc	r3, #20, #11
+
+       2f1b2:	ea43 5506 	orr.w	r5, r3, r6, lsl #20
+
+       2f1b6:	ec45 4b10 	vmov	d0, r4, r5
+
+       2f1ba:	bd70      	pop	{r4, r5, r6, pc}
+
+       2f1bc:	2d00      	cmp	r5, #0
+
+       2f1be:	a10c      	add	r1, pc, #48	@ (adr r1, 2f1f0 <<a href="./641f1d4590bbf175a9f459810ac8aed0.html">scalbn</a>+0xf8>)
+
+       2f1c0:	e9d1 0100 	ldrd	r0, r1, [r1]
+
+       2f1c4:	da02      	bge.n	2f1cc <<a href="./641f1d4590bbf175a9f459810ac8aed0.html">scalbn</a>+0xd4>
+
+       2f1c6:	a10c      	add	r1, pc, #48	@ (adr r1, 2f1f8 <<a href="./641f1d4590bbf175a9f459810ac8aed0.html">scalbn</a>+0x100>)
+
+       2f1c8:	e9d1 0100 	ldrd	r0, r1, [r1]
+
+       2f1cc:	a308      	add	r3, pc, #32	@ (adr r3, 2f1f0 <<a href="./641f1d4590bbf175a9f459810ac8aed0.html">scalbn</a>+0xf8>)
+
+       2f1ce:	e9d3 2300 	ldrd	r2, r3, [r3]
+
+       2f1d2:	f7d1 fcf9 	bl	bc8 <<a href="./ed44d9757d23672067bed75a430410d4.html">__aeabi_dmul</a>>
+
+       2f1d6:	ec41 0b10 	vmov	d0, r0, r1
+
+       2f1da:	bd70      	pop	{r4, r5, r6, pc}
+
+       2f1dc:	f3af 8000 	nop.w
+
+       2f1e0:	8800759c 	.word	0x8800759c
+
+       2f1e4:	7e37e43c 	.word	0x7e37e43c
+
+       2f1e8:	8800759c 	.word	0x8800759c
+
+       2f1ec:	fe37e43c 	.word	0xfe37e43c
+
+       2f1f0:	c2f8f359 	.word	0xc2f8f359
+
+       2f1f4:	01a56e1f 	.word	0x01a56e1f
+
+       2f1f8:	c2f8f359 	.word	0xc2f8f359
+
+       2f1fc:	81a56e1f 	.word	0x81a56e1f
+
+       2f200:	43500000 	.word	0x43500000
+
+       2f204:	ffff3cb0 	.word	0xffff3cb0
+
+       2f208:	3c900000 	.word	0x3c900000
+
+    </pre>
+
+    
+    <pre><a href="./61b9f9b83d6d53d3e3d1154710fb1570.html">with_errno (36)</a></pre>
+    
+
+    
+        <h1>Stack Worst-Case Scenarios</h1>
+        
+            <p>No callees for this function.</p>
+        
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 160</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 5,516</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    5,516
+                    
+                    
+                </td>
+                <td class="col_size">276</td>
+                <td><a href="./641f1d4590bbf175a9f459810ac8aed0.html" class="icon-function">scalbn</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    5,240
+                    
+                    
+                </td>
+                <td class="col_size">3,172</td>
+                <td><a href="./e450723e1734f08e327340a417d23c37.html" class="icon-function">__ieee754_pow</a></td>
+            </tr>
+        
+            <tr>
+                <th>3</th>
+                <td class="col_size">
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    2,068
+                    
+                    
+                </td>
+                <td class="col_size">240</td>
+                <td><a href="./30d7e0494351def45591fccb21d3510b.html" class="icon-function">pow</a></td>
+            </tr>
+        
+            <tr>
+                <th>4</th>
+                <td class="col_size">
+                    
+                    160
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                80 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    1,828
+                    
+                    
+                </td>
+                <td class="col_size">520</td>
+                <td><a href="../../home/runner/work/openbsw/openbsw/libs/3rdparty/etl/include/etl/format.h/136699ea7b8b264c27bb76fd1e5c3ba3.html" class="icon-function">void etl::private_format::format_floating_e&lt;etl::private_print::print_iterator, float&gt;(etl::private_print::print_iterator&amp;, float, etl::private_format::format_spec_t const&amp;)</a></td>
+            </tr>
+        
+            <tr>
+                <th>5</th>
+                <td class="col_size">
+                </td>
+                <td class="col_size">
+            
+                80 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">1,308</td>
+                <td><a href="../../home/runner/work/openbsw/openbsw/libs/3rdparty/etl/include/etl/format.h/9911a8a23eecd0accb274962e4c14134.html" class="icon-function">etl::format_context&lt;etl::private_print::print_iterator, char&gt;::iterator etl::private_format::format_aligned_floating&lt;etl::private_print::print_iterator, float&gt;(float, etl::format_context&lt;etl::private_print::print_iterator, char&gt;&amp;)</a></td>
+            </tr>
+        
+        </tbody>
+        
+    </table>
+        
+    
+
+
+        </div>
+    <div id="page-footer">
+        <hr>
+        
+            brought to you with 💖
+            by <a href="https://twitter.com/hbehrens">Heiko Behrens</a>
+            <span class="secondary">– MIT license, copyright © 2014-2026</span>
+        
+    </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,403 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../../../../../../../../../../../static/css/style.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <title>Symbol - puncover</title>
+    
+</head>
+<body>
+    <div class="container" id="content">
+        <div class="page-header">
+            <nav class="navbar navbar-default" role="navigation">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="../../../../../../../../../../../../index.html">
+                    Puncover
+                  </a>
+                </div>
+              </div>
+            </nav>
+          
+        </div>
+        <div id="inner_content">
+        
+    
+    <ol class="breadcrumb folders">
+        
+        <li><a href="../../../../../../../../../../../../home.html">home</a></li>
+        
+        <li><a href="../../../../../../../../../../../runner.html">runner</a></li>
+        
+        <li><a href="../../../../../../../../../../work.html">work</a></li>
+        
+        <li><a href="../../../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../../libs.html">libs</a></li>
+        
+        <li><a href="../../../../../../bsw.html">bsw</a></li>
+        
+        <li><a href="../../../../../doip.html">doip</a></li>
+        
+        <li><a href="../../../../src.html">src</a></li>
+        
+        <li><a href="../../../doip.html">doip</a></li>
+        
+        <li ><a href="../../common.html">common</a>
+            </li>
+
+        
+        <li class="active"><a href="../DoIpUdpConnection.cpp.html">DoIpUdpConnection.cpp</a>:151
+            </li>
+        
+    </ol>
+
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <th>Function</th>
+                <td colspan="5">
+                    <span class="icon-function">doip::DoIpUdpConnection::trySend()</span>
+                </td>
+            </tr>
+
+            <tr>
+                <th rowspan="2"></th>
+                <th>Address</th>
+                <th>Remarks</th>
+                <th>Stack</th>
+                <th>Code</th>
+                <th>Static</th>
+            </tr>
+            <tr>
+                <td>0x000274e4</td>
+                <td>
+    <span class="label label-success">x-module</span>
+    
+</td>
+                <td>80 (static)</td>
+                <td>184</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th>Callers (2)</th>
+                <td colspan="5">
+                
+                    <a href="../../../../include/doip/common/DoIpUdpConnection.h/050d3233aa50ea6f33048a424d1a3969.html">non-virtual thunk to doip::DoIpUdpConnection::execute() (8)</a>
+                    
+                        ,
+                    
+                
+                    <a href="./28b7bea9b68d586519421b354593c3b4.html">doip::DoIpUdpConnection::execute() (4)</a>
+                    
+                
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Callees (2,
+                            <span title="sum of used bytes by all callees">
+                            Σ=92
+                            </span>
+                        )
+                    
+                </th>
+                <td colspan="5">
+                
+                    <a href="../../../../../cpp2ethernet/src/udp/DatagramPacket.cpp/14af509204a86622cd33d621ef32032b.html">udp::DatagramPacket::DatagramPacket(unsigned char const*, unsigned short, ip::IPEndpoint const&amp;) (24)</a>
+                    
+                        ,
+                    
+                
+                    <a href="./5a52784ecbd50c8f6fdc35671b0f13c3.html">doip::DoIpUdpConnection::prepareSendBuffer(doip::IDoIpSendJob&amp;) (68)</a>
+                    
+                
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    
+    <pre><a href="./5a52784ecbd50c8f6fdc35671b0f13c3.html">doip::DoIpUdpConnection::prepareSendBuffer(doip::IDoIpSendJob&amp;) (68)</a></pre>
+    
+
+    <pre>
+
+    doip::DoIpUdpConnection::trySend():
+
+       274e4:	f3ef 8310 	mrs	r3, PRIMASK
+
+       274e8:	b672      	cpsid	i
+
+       274ea:	f890 2083 	ldrb.w	r2, [r0, #131]	@ 0x83
+
+       274ee:	2a00      	cmp	r2, #0
+
+       274f0:	d151      	bne.n	27596 <<a href="./82e7550ff9515719f313e67249c7d6e8.html">doip::DoIpUdpConnection::trySend()</a>+0xb2>
+
+       274f2:	e92d 4ff0 	stmdb	sp!, {r4, r5, r6, r7, r8, r9, sl, fp, lr}
+
+       274f6:	4606      	mov	r6, r0
+
+       274f8:	b08b      	sub	sp, #44	@ 0x2c
+
+       274fa:	f383 8810 	msr	PRIMASK, r3
+
+       274fe:	f890 8081 	ldrb.w	r8, [r0, #129]	@ 0x81
+
+       27502:	f1b8 0f01 	cmp.w	r8, #1
+
+       27506:	d01f      	beq.n	27548 <<a href="./82e7550ff9515719f313e67249c7d6e8.html">doip::DoIpUdpConnection::trySend()</a>+0x64>
+
+       27508:	e03d      	b.n	27586 <<a href="./82e7550ff9515719f313e67249c7d6e8.html">doip::DoIpUdpConnection::trySend()</a>+0xa2>
+
+       2750a:	f8d6 9028 	ldr.w	r9, [r6, #40]	@ 0x28
+
+       2750e:	691a      	ldr	r2, [r3, #16]
+
+       27510:	f8d9 3000 	ldr.w	r3, [r9]
+
+    _ZNK4estd5sliceIKhLj0EE4dataEv():
+
+       27514:	f8dd b008 	ldr.w	fp, [sp, #8]
+
+    doip::DoIpUdpConnection::trySend():
+
+       27518:	f8d3 a028 	ldr.w	sl, [r3, #40]	@ 0x28
+
+       2751c:	4790      	blx	r2
+
+       2751e:	b2ba      	uxth	r2, r7
+
+       27520:	4603      	mov	r3, r0
+
+       27522:	4659      	mov	r1, fp
+
+       27524:	a803      	add	r0, sp, #12
+
+       27526:	f7f2 fcb5 	bl	19e94 <<a href="../../../../../cpp2ethernet/src/udp/DatagramPacket.cpp/14af509204a86622cd33d621ef32032b.html">udp::DatagramPacket::DatagramPacket(unsigned char const*, unsigned short, ip::IPEndpoint const&)</a>>
+
+       2752a:	a903      	add	r1, sp, #12
+
+       2752c:	4648      	mov	r0, r9
+
+       2752e:	47d0      	blx	sl
+
+       27530:	f855 3c04 	ldr.w	r3, [r5, #-4]
+
+       27534:	fab0 f180 	clz	r1, r0
+
+       27538:	695b      	ldr	r3, [r3, #20]
+
+       2753a:	0949      	lsrs	r1, r1, #5
+
+       2753c:	4620      	mov	r0, r4
+
+       2753e:	4798      	blx	r3
+
+       27540:	f896 3081 	ldrb.w	r3, [r6, #129]	@ 0x81
+
+       27544:	2b01      	cmp	r3, #1
+
+       27546:	d11e      	bne.n	27586 <<a href="./82e7550ff9515719f313e67249c7d6e8.html">doip::DoIpUdpConnection::trySend()</a>+0xa2>
+
+       27548:	f3ef 8310 	mrs	r3, PRIMASK
+
+    getMachineStateRegisterValueAndSuspendAllInterrupts():
+
+       2754c:	b672      	cpsid	i
+
+    _ZNK4estd17forward_list_nodeIN4doip12IDoIpSendJobEE4nextEv():
+
+       2754e:	6f35      	ldr	r5, [r6, #112]	@ 0x70
+
+    _ZN4estd12forward_listIN4doip12IDoIpSendJobEE5frontEv():
+
+       27550:	462c      	mov	r4, r5
+
+    _ZN4doip17DoIpUdpConnection10popSendJobEv():
+
+       27552:	b1dd      	cbz	r5, 2758c <<a href="./82e7550ff9515719f313e67249c7d6e8.html">doip::DoIpUdpConnection::trySend()</a>+0xa8>
+
+    _ZN4estd17forward_list_nodeIN4doip12IDoIpSendJobEE4nextEv():
+
+       27554:	f854 2904 	ldr.w	r2, [r4], #-4
+
+    _ZN4estd17forward_list_nodeIN4doip12IDoIpSendJobEE8set_nextEPS3_():
+
+       27558:	6732      	str	r2, [r6, #112]	@ 0x70
+
+    _ZN4estd17forward_list_nodeIN4doip12IDoIpSendJobEE8set_freeEv():
+
+       2755a:	f8c5 8000 	str.w	r8, [r5]
+
+    doip::DoIpUdpConnection::trySend():
+
+       2755e:	f383 8810 	msr	PRIMASK, r3
+
+       27562:	4631      	mov	r1, r6
+
+       27564:	a801      	add	r0, sp, #4
+
+       27566:	4622      	mov	r2, r4
+
+       27568:	f7ff ff9a 	bl	274a0 <<a href="./5a52784ecbd50c8f6fdc35671b0f13c3.html">doip::DoIpUdpConnection::prepareSendBuffer(doip::IDoIpSendJob&)</a>>
+
+    _ZNK4estd5sliceIKhLj0EE4sizeEv():
+
+       2756c:	9f01      	ldr	r7, [sp, #4]
+
+    doip::DoIpUdpConnection::trySend():
+
+       2756e:	f855 3c04 	ldr.w	r3, [r5, #-4]
+
+       27572:	4620      	mov	r0, r4
+
+       27574:	4639      	mov	r1, r7
+
+       27576:	2f00      	cmp	r7, #0
+
+       27578:	d1c7      	bne.n	2750a <<a href="./82e7550ff9515719f313e67249c7d6e8.html">doip::DoIpUdpConnection::trySend()</a>+0x26>
+
+       2757a:	695b      	ldr	r3, [r3, #20]
+
+       2757c:	4798      	blx	r3
+
+       2757e:	f896 3081 	ldrb.w	r3, [r6, #129]	@ 0x81
+
+       27582:	2b01      	cmp	r3, #1
+
+       27584:	d0e0      	beq.n	27548 <<a href="./82e7550ff9515719f313e67249c7d6e8.html">doip::DoIpUdpConnection::trySend()</a>+0x64>
+
+       27586:	b00b      	add	sp, #44	@ 0x2c
+
+       27588:	e8bd 8ff0 	ldmia.w	sp!, {r4, r5, r6, r7, r8, r9, sl, fp, pc}
+
+    resumeAllInterrupts():
+
+       2758c:	f383 8810 	msr	PRIMASK, r3
+
+    doip::DoIpUdpConnection::trySend():
+
+       27590:	b00b      	add	sp, #44	@ 0x2c
+
+       27592:	e8bd 8ff0 	ldmia.w	sp!, {r4, r5, r6, r7, r8, r9, sl, fp, pc}
+
+       27596:	f383 8810 	msr	PRIMASK, r3
+
+    resumeAllInterrupts():
+
+       2759a:	4770      	bx	lr
+
+    </pre>
+
+    
+    <pre><a href="./28b7bea9b68d586519421b354593c3b4.html">doip::DoIpUdpConnection::execute() (4)</a></pre>
+    
+
+    
+        <h1>Stack Worst-Case Scenarios</h1>
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 184</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 252</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    184
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                80 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    252
+                    
+                    
+                </td>
+                <td class="col_size">184</td>
+                <td><a href="./84967a3fad6965945ad85e818d0647e1.html" class="icon-function">doip::DoIpUdpConnection::fillWriteBuffer(doip::IDoIpSendJob&amp;)</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                    
+                    104
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                24 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">68</td>
+                <td><a href="./5a52784ecbd50c8f6fdc35671b0f13c3.html" class="icon-function">doip::DoIpUdpConnection::prepareSendBuffer(doip::IDoIpSendJob&amp;)</a></td>
+            </tr>
+        
+        </tbody>
+        
+        <tfoot>
+            <tr>
+                <th></th>
+                <th class="col_size">80
+                </th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </tfoot>
+        
+    </table>
+        
+        
+            <p>No callers for this function.</p>
+        
+    
+
+
+        </div>
+    <div id="page-footer">
+        <hr>
+        
+            brought to you with 💖
+            by <a href="https://twitter.com/hbehrens">Heiko Behrens</a>
+            <span class="secondary">– MIT license, copyright © 2014-2026</span>
+        
+    </div>
+    </div>
+</body>
+</html>
