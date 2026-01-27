@@ -112,3 +112,13 @@ endif ()
 if (PLATFORM_SUPPORT_ROM_CHECK)
     target_link_libraries(app.referenceApp PRIVATE safeMemory)
 endif ()
+
+if (BUILD_RUST)
+    target_compile_definitions(app.referenceApp PRIVATE BUILD_RUST)
+    # Link against Rust static library(should be only one static library)
+    target_link_libraries(app.referenceApp PRIVATE rust_hello_world)
+    # Add include directory for Rust C/C++ headers
+    target_include_directories(
+        app.referenceApp
+        PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../rustHelloWorld/include)
+endif ()

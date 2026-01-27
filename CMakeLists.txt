@@ -74,6 +74,8 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules")
 
 option(BUILD_TRACING "Build CTF tracing" OFF)
 
+option(BUILD_RUST "Build Rust components" OFF)
+
 add_compile_options(
     #[[
         Supressing stringop-overflow and maybe-uninitialized, as they are often
@@ -81,6 +83,26 @@ add_compile_options(
     ]]
     "$<$<COMPILE_LANG_AND_ID:CXX,GNU>:-Wno-error=stringop-overflow;-Wno-error=maybe-uninitialized>"
 )
+
+# Rust support Note: Only one static Rust library can be linked in the final
+# binary, otherwise the linker will complain about duplicate symbol definitions
+# from the Rust core crate.
+if (BUILD_RUST)
+    # Set Rust target for cross-compilation (ARM Cortex-M4F for S32K148)
+    if (BUILD_TARGET_PLATFORM STREQUAL "S32K148EVB")
+        set(Rust_CARGO_TARGET
+            "thumbv7em-none-eabihf"
+            CACHE STRING "Rust target triple")
+    endif ()
+
+    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/libs/3rdparty/corrosion)
+
+    corrosion_import_crate(
+        MANIFEST_PATH
+        ${CMAKE_CURRENT_SOURCE_DIR}/executables/referenceApp/rustHelloWorld/Cargo.toml
+    )
+
+endif ()
 
 if (BUILD_EXECUTABLE STREQUAL "unitTest")
     include(GoogleTest)

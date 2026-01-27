@@ -51,6 +51,12 @@
 #include <lifecycle/LifecycleLogger.h>
 #include <lifecycle/LifecycleManager.h>
 
+#include <cstdio>
+
+#ifdef BUILD_RUST
+#include <rust_hello_world.h>
+#endif
+
 alignas(32)::async::internal::Stack<safety_task_stackSize> safetyStack;
 
 #ifdef PLATFORM_SUPPORT_CAN
@@ -213,7 +219,11 @@ void staticInit()
 void run()
 {
     staticInit();
-    etl::print("hello\r\n");
+    printf("hello\r\n");
+#ifdef BUILD_RUST
+    printf("Hello Rust!\r\n");
+    printf("Rust add(3, 4) = %d\r\n", static_cast<int>(rust_add(3, 4)));
+#endif
     idleHandler.init();
     AsyncAdapter::run(AsyncAdapter::StartAppFunctionType::create<&startApp>());
 }

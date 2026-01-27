@@ -58,6 +58,21 @@ commands = {
         platforms=["linux"],
         build_dir="build/posix-freertos",
     ),
+    "posix-rust": BuildOpTpl(
+        config_cmd="cmake --preset posix-rust",
+        build_cmd="cmake --build --preset posix-rust",
+        configs=["Debug", "Release"],
+        platforms=["linux"],
+        build_dir="build/posix-rust",
+    ),
+    "s32k148-rust-gcc": BuildOpTpl(
+        config_cmd="cmake --preset s32k148-rust-gcc",
+        build_cmd="cmake --build --preset s32k148-rust-gcc",
+        configs=["Debug", "Release", "RelWithDebInfo"],
+        platforms=["arm"],
+        cxxids=["gcc"],
+        build_dir="build/s32k148-rust-gcc",
+    ),
     "s32k148-freertos-gcc": BuildOpTpl(
         config_cmd="cmake --preset s32k148-freertos-gcc",
         build_cmd="cmake --build --preset s32k148-freertos-gcc",
