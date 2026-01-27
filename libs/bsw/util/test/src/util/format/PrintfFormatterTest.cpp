@@ -45,7 +45,7 @@ struct PrintfFormatterTest
     std::string printfV(char const* formatString, va_list ap)
     {
         char buffer[300];
-        vsnprintf(buffer, sizeof(buffer), formatString, ap);
+        static_cast<void>(vsnprintf(buffer, sizeof(buffer), formatString, ap));
         return buffer;
     }
 #endif

@@ -63,7 +63,7 @@ struct LoggerTest
         _outComponentInfo = componentInfo;
         _outLevelInfo     = levelInfo;
         char buffer[300];
-        vsnprintf(buffer, sizeof(buffer), str, ap);
+        static_cast<void>(vsnprintf(buffer, sizeof(buffer), str, ap));
         _logStr = buffer;
     }
 
