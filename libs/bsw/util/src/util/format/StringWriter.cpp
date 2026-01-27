@@ -45,6 +45,7 @@ StringWriter& StringWriter::write(ConstString const& str)
     return write(str.data(), str.length());
 }
 
+// NOLINTNEXTLINE(cert-dcl50-cpp): va_list usage only for printing functionalities.
 StringWriter& StringWriter::printf(char const* const formatString, ...)
 {
     va_list ap;
