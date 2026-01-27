@@ -10,9 +10,13 @@ namespace
 {
 using namespace docan;
 using TransmitProtocolHandler = DoCanMessageTransmitProtocolHandler<uint16_t>;
+// NOLINTBEGIN(cert-err58-cpp): Lots of references to these names in this file, as such suppress was
+// prefered here since it's just a test file.
 static TransmitActionSetType storeSeparationTime
     = TransmitActionSetType().set(TransmitAction::STORE_SEPARATION_TIME);
 static TransmitActionSetType cancelSend = TransmitActionSetType().set(TransmitAction::CANCEL_SEND);
+
+// NOLINTEND(cert-err58-cpp)
 
 TEST(DoCanMessageTransmitProtocolHandlerTest, testResultClass)
 {

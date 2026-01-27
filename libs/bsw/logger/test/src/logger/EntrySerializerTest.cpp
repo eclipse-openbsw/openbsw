@@ -15,6 +15,7 @@ struct EntrySerializerTest
 : ::testing::Test
 , private IEntrySerializerCallback<uint32_t>
 {
+    // NOLINTNEXTLINE(cert-dcl50-cpp): va_list usage only in these tests.
     std::string const& serializeAndDeserialize(
         uint32_t bufferSize,
         uint32_t timestamp,

@@ -23,9 +23,12 @@ using DoCanNormalAddressingFilterType = DoCanNormalAddressingFilter<DataLinkLaye
 using DataLinkAddressPairType         = DoCanNormalAddressingFilterType::DataLinkAddressPairType;
 
 static MapperType const mapper;
+// NOLINTBEGIN(cert-err58-cpp): Lots of references to these names in this file, as such suppress was
+// prefered here since it's just a test file.
 static CodecType const codec1(DoCanFrameCodecConfigPresets::PADDED_CLASSIC, mapper);
 static CodecType const codec2(DoCanFrameCodecConfigPresets::PADDED_FD, mapper);
 static CodecType const codec3(DoCanFrameCodecConfigPresets::PADDED_FD, mapper);
+// NOLINTEND(cert-err58-cpp)
 
 static CodecType const* codecEntries[4] = {
     nullptr,

@@ -11,7 +11,7 @@ namespace logger
 {
 using ::util::format::BOLD;
 
-LevelInfo::PlainInfo const LevelInfo::_defaultConstLevelInfos[LEVEL_COUNT]
+constexpr LevelInfo::PlainInfo LevelInfo::_defaultConstLevelInfos[LEVEL_COUNT]
     = {{{"DEBUG", {format::Color::DEFAULT_COLOR, 0U, format::Color::DEFAULT_COLOR}}, LEVEL_DEBUG},
        {{"INFO", {format::Color::DEFAULT_COLOR, 0U, format::Color::DEFAULT_COLOR}}, LEVEL_INFO},
        {{"WARN", {format::Color::YELLOW, BOLD, format::Color::DEFAULT_COLOR}}, LEVEL_WARN},

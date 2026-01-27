@@ -3,12 +3,23 @@
 #include "uds/UdsLogger.h"
 #include "util/logger/TestConsoleLogger.h"
 
+#include <etl/array.h>
+#include <etl/span.h>
+
 DEFINE_LOGGER_COMPONENT(GLOBAL)
 
 using namespace ::util::logger;
 
-LoggerComponentInfo components[]
-    = {LoggerComponentInfo(GLOBAL, "GLOBAL", LEVEL_DEBUG),
-       LoggerComponentInfo(UDS, "UDS", LEVEL_DEBUG)};
+etl::span<LoggerComponentInfo> getComponents()
+{
+    static auto components = etl::make_array<LoggerComponentInfo>(
+        LoggerComponentInfo(GLOBAL, "GLOBAL", LEVEL_DEBUG),
+        LoggerComponentInfo(UDS, "UDS", LEVEL_DEBUG));
+    return components;
+}
 
-TestConsoleLogger logger(components);
+TestConsoleLogger& getLogger()
+{
+    static TestConsoleLogger logger(getComponents());
+    return logger;
+}

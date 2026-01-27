@@ -6,9 +6,16 @@
 
 using namespace ::util::logger;
 
-LoggerComponentInfo components[] = {
-    LoggerComponentInfo(ETHERNET, "ETHERNET", LEVEL_DEBUG),
-    LoggerComponentInfo(TCP, "TCP", LEVEL_DEBUG),
-};
+etl::span<LoggerComponentInfo> getComponents()
+{
+    static auto components = etl::make_array<LoggerComponentInfo>(
+        LoggerComponentInfo(ETHERNET, "ETHERNET", LEVEL_DEBUG),
+        LoggerComponentInfo(TCP, "TCP", LEVEL_DEBUG));
+    return components;
+}
 
-TestConsoleLogger logger(components);
+TestConsoleLogger& getLogger()
+{
+    static TestConsoleLogger logger(getComponents());
+    return logger;
+}

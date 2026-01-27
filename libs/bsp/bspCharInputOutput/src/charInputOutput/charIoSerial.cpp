@@ -9,6 +9,13 @@
 
 using bsp::Uart;
 
+namespace
+{
+
+Uart& getUart() { return Uart::getInstance(Uart::Id::TERMINAL); }
+
+} // namespace
+
 extern "C"
 {
 namespace // file-local variables moved from global to anonymous namespace
@@ -18,7 +25,7 @@ etl::span<char> LoggerBuffer(SerialLogger_buffer, CHARIOSERIAL_BUFFERSIZE);
 int SerialLogger_bufferInd           = 0;
 // use synchronous by default so that less memory is needed
 int SerialLogger_consoleAsynchronous = 0;
-Uart& uart                           = Uart::getInstance(Uart::Id::TERMINAL);
+
 } // namespace
 
 /**
@@ -37,26 +44,26 @@ void SerialLogger_setSynchronous() { SerialLogger_consoleAsynchronous = 0; }
  * - 1 if already initialized
  * - 0 if not yet initialized
  */
-uint8_t SerialLogger_getInitState() { return (static_cast<uint8_t>(uart.isInitialized())); }
+uint8_t SerialLogger_getInitState() { return (static_cast<uint8_t>(getUart().isInitialized())); }
 
 // below functions documented in the header file
 void SerialLogger_init()
 {
     // setup UART on ESCIA
-    uart.init();
+    getUart().init();
 }
 
 int SerialLogger_putc(int const c)
 {
     uint8_t const byte = static_cast<uint8_t>(c);
-    return static_cast<int>(uart.write(etl::span<uint8_t const>(&byte, 1U)));
+    return static_cast<int>(getUart().write(etl::span<uint8_t const>(&byte, 1U)));
 }
 
 int SerialLogger_getc()
 {
     uint8_t data_byte = 0;
     etl::span<uint8_t> data(&data_byte, 1U);
-    uart.read(data);
+    getUart().read(data);
     if (data.size() == 0)
     {
         return -1;
@@ -68,7 +75,7 @@ void SerialLogger_Idle()
 {
     etl::span<uint8_t const> const data(
         reinterpret_cast<uint8_t const*>(LoggerBuffer.data()), SerialLogger_bufferInd);
-    uart.write(data);
+    getUart().write(data);
     SerialLogger_bufferInd = 0;
 }
 
