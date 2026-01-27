@@ -51,8 +51,10 @@ LOGGER_COMPONENT_MAPPING_INFO(LEVEL_NONE, CONF1)
 LOGGER_COMPONENT_MAPPING_INFO(LEVEL_NONE, CONF2)
 END_LOGGER_COMPONENT_MAPPING_INFO_TABLE();
 
+// NOLINTBEGIN(cert-err58-cpp): Instantiation of variable is done by macro.
 DEFINE_LOGGER_COMPONENT_MAPPING(
     TestMappingType, testMapping, componentInfoTable, LevelInfo::getDefaultTable(), CONF1);
+// NOLINTEND(cert-err58-cpp)
 
 } // namespace mapping1
 
@@ -64,8 +66,10 @@ LOGGER_COMPONENT_MAPPING_INFO(LEVEL_NONE, CONF2)
 LOGGER_COMPONENT_MAPPING_INFO(LEVEL_NONE, CONF3)
 END_LOGGER_COMPONENT_MAPPING_INFO_TABLE();
 
+// NOLINTBEGIN(cert-err58-cpp): Instantiation of variable is done by macro.
 DEFINE_LOGGER_COMPONENT_MAPPING(
     TestMappingType, testMapping, componentInfoTable, LevelInfo::getDefaultTable(), CONF1);
+// NOLINTEND(cert-err58-cpp)
 
 } // namespace mapping2
 
@@ -77,8 +81,10 @@ LOGGER_COMPONENT_MAPPING_INFO(LEVEL_NONE, CONF1)
 LOGGER_COMPONENT_MAPPING_INFO(LEVEL_NONE, CONF2)
 END_LOGGER_COMPONENT_MAPPING_INFO_TABLE();
 
+// NOLINTBEGIN(cert-err58-cpp): Instantiation of variable is done by macro.
 DEFINE_LOGGER_COMPONENT_MAPPING(
     TestMappingType, testMapping, componentInfoTable, LevelInfo::getDefaultTable(), CONF1);
+// NOLINTEND(cert-err58-cpp)
 
 } // namespace mapping3
 
@@ -88,8 +94,10 @@ START_LOGGER_COMPONENT_MAPPING_INFO_TABLE(componentInfoTable)
 LOGGER_COMPONENT_MAPPING_INFO(LEVEL_NONE, CONF1)
 END_LOGGER_COMPONENT_MAPPING_INFO_TABLE();
 
+// NOLINTBEGIN(cert-err58-cpp): Instantiation of variable is done by macro.
 DEFINE_LOGGER_COMPONENT_MAPPING(
     TestMappingType, testMapping, componentInfoTable, LevelInfo::getDefaultTable(), CONF1);
+// NOLINTEND(cert-err58-cpp)
 
 } // namespace mapping4
 

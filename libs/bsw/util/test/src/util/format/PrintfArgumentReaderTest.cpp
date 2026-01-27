@@ -20,6 +20,7 @@ ParamVariant const& safeReadArgument(PrintfArgumentReader& reader, ParamDatatype
     return *pVariant;
 }
 
+// NOLINTNEXTLINE(cert-dcl50-cpp): va_list usage only for this file.
 void readArguments(char const* pDummy, ...)
 {
     va_list ap;

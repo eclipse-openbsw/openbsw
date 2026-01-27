@@ -11,6 +11,7 @@ using namespace ::util::format;
 
 namespace
 {
+// NOLINTNEXTLINE(cert-dcl50-cpp): va_list usage only for printing functionalities.
 void callLog(uint8_t index, Level level, char const* formatString, ...)
 {
     va_list ap;

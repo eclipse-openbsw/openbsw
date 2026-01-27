@@ -32,6 +32,7 @@ struct PrintfFormatterTest
     ParamVariant const* readArgument(ParamDatatype /* datatype */) override { return nullptr; }
 
 #if defined(__linux) && defined(__GNUC__) && __x86_64__
+    // NOLINTNEXTLINE(cert-dcl50-cpp): va_list usage only for printing functionalities.
     std::string printf(char const* formatString, ...)
     {
         va_list ap;
@@ -48,6 +49,7 @@ struct PrintfFormatterTest
         return buffer;
     }
 #endif
+    // NOLINTNEXTLINE(cert-dcl50-cpp): va_list usage only for printing functionalities.
     std::string format(char const* formatString, ...)
     {
         va_list ap;
@@ -91,6 +93,7 @@ struct PrintfFormatterTest
     {}
 #endif
 
+    // NOLINTNEXTLINE(cert-dcl50-cpp): va_list usage only for printing functionalities.
     void expectPrintf(char const* pExpected, char const* formatString, ...)
     {
         va_list ap;
