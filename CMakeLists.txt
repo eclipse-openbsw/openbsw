@@ -122,6 +122,8 @@ if (BUILD_EXECUTABLE STREQUAL "unitTest")
     add_subdirectory(executables/unitTest EXCLUDE_FROM_ALL)
     target_include_directories(etl BEFORE
                                INTERFACE executables/unitTest/etl_profile)
+    target_include_directories(
+        uds PUBLIC executables/referenceApp/udsConfiguration/include)
 
     if (OPENBSW_PLATFORM STREQUAL "posix")
         add_subdirectory(libs/bsp/bspCharInputOutput/test)

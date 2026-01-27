@@ -41,9 +41,6 @@ add_library(
     src/uds/services/sessioncontrol/DiagnosticSessionControl.cpp
     src/uds/services/testerpresent/TesterPresent.cpp
     src/uds/services/writedata/WriteDataByIdentifier.cpp
-    src/uds/session/ApplicationDefaultSession.cpp
-    src/uds/session/ApplicationExtendedSession.cpp
-    src/uds/session/ProgrammingSession.cpp
     src/uds/DiagDispatcher.cpp
     src/uds/UdsLogger.cpp
     src/util/RoutineControlOptionParser.cpp)
