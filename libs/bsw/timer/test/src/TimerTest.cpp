@@ -48,6 +48,7 @@ struct LockPolicyMock
         }
     }
 
+    // NOLINTBEGIN(bugprone-exception-escape): This is just for testing purposes.
     ~LockPolicyMock()
     {
         if (_lock)
@@ -56,6 +57,8 @@ struct LockPolicyMock
             lockCounter--;
         }
     }
+
+    // NOLINTEND(bugprone-exception-escape)
 
     static void setLock(LockPolicyMock* mock) { _lock = mock; }
 

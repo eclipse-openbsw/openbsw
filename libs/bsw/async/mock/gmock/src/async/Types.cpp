@@ -20,6 +20,7 @@ LockType::LockType()
     }
 }
 
+// NOLINTBEGIN(bugprone-exception-escape): This is just for testing purposes.
 LockType::~LockType()
 {
     if (singleton_base<LockMock>::is_valid())
@@ -28,8 +29,11 @@ LockType::~LockType()
     }
 }
 
+// NOLINTEND(bugprone-exception-escape)
+
 ModifiableLockType::ModifiableLockType() : _isLocked(false) { lock(); }
 
+// NOLINTNEXTLINE(bugprone-exception-escape): This is just for testing purposes.
 ModifiableLockType::~ModifiableLockType() { unlock(); }
 
 void ModifiableLockType::unlock()
