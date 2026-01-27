@@ -16,7 +16,7 @@ using namespace ::testing;
 using namespace ::runtime;
 using namespace ::estd::test;
 
-// NOTLINTBEGIN(bugprone-unhandled-self-assignment): This is intentional for testing purposes.
+// NOLINTBEGIN(bugprone-unhandled-self-assignment): This is intentional for testing purposes.
 struct TestStatistics
 {
     TestStatistics& operator=(TestStatistics const& src)
@@ -28,7 +28,7 @@ struct TestStatistics
     TestStatistics const* _assignedFrom = nullptr;
 };
 
-// NOTLINTEND(bugprone-unhandled-self-assignment)
+// NOLINTEND(bugprone-unhandled-self-assignment)
 
 struct TestEntry : public TestStatistics
 {};
