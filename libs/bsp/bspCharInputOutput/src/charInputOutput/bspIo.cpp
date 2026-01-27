@@ -13,6 +13,7 @@ extern "C"
 {
 #endif
 
+// NOLINTBEGIN(cert-dcl37-c): Explanation for this suppression is below
 // NOLINTBEGIN(bugprone-reserved-identifier): Explanation for this suppression is below
 /**
  * \par Linking this module
@@ -38,6 +39,7 @@ int __outedit(int const c, int const last)
 }
 
 // NOLINTEND(bugprone-reserved-identifier)
+// NOLINTEND(cert-dcl37-c)
 
 int vsnprintf(char* buf, size_t const maxsize, char const* fmt, va_list args)
 {
