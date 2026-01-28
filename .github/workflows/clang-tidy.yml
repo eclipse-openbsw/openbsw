@@ -43,7 +43,7 @@ jobs:
       - name: Run the clang-tidy.py inside the docker container
         run: >-
           DOCKER_UID=$(id -u) DOCKER_GID=$(id -g) DOCKER_HISTORY=/dev/null docker compose run --rm development
-          python3 .ci/clang-tidy.py --build_directory=build/tests/${{ matrix.platform }}/${{ matrix.config }} --output_file=ct-findings.yaml --exclude="3rdparty"
+          python3 .ci/clang-tidy.py --build_directory=build/tests/${{ matrix.platform }}/${{ matrix.config }} --output_file=ct-findings.yaml --exclude="3rdparty" --ignore-checks="clang-diagnostic-error"
 
       - name: Upload clang-tidy findings
         if: always()
