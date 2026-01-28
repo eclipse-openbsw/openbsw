@@ -38,8 +38,8 @@ void LoggerTime::formatTimestamp(
 
     size_t const timestampBufferSize = 50;
     char timestampBuffer[timestampBufferSize];
-    ::std::tm* localTime = ::std::localtime(&seconds);
-    int timestampLength  = 0;
+    ::std::tm* localTime   = ::std::localtime(&seconds);
+    size_t timestampLength = 0;
 
     if (timestamp < NO_INIT_BOUNDARY)
     {
@@ -52,7 +52,7 @@ void LoggerTime::formatTimestamp(
             = ::std::strftime(timestampBuffer, timestampBufferSize, _timestampFormat, localTime);
     }
 
-    if (timestampLength != 0)
+    if (timestampLength > 0)
     {
         int n = snprintf(
             timestampBuffer + timestampLength,

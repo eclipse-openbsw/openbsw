@@ -32,6 +32,7 @@ DiagReturnCode::Type ControlDTCSetting::process(
     Logger::debug(UDS, "ControlDTCSetting %d", dtcSettingType);
     switch (dtcSettingType)
     {
+        // NOLINTNEXTLINE(bugprone-branch-clone): Remove suppression when cases are implemented.
         case CONTROL_DTC_SETTING_ON:
         {
             // Allow creation of new DTCs. Intentionally not implemented.

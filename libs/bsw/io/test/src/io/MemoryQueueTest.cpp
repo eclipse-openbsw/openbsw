@@ -35,9 +35,9 @@ size_t const MemoryQueueTest::MAX_ELEMENT_SIZE;
 template<class Q>
 struct MemoryQueueTypedTest : public ::testing::Test
 {
-    static size_t const QUEUE_SIZE       = Q::capacity();
-    static size_t const MAX_ELEMENT_SIZE = Q::maxElementSize();
-    static size_t const NUM_POSSIBLE_MAX_ELEMENT_SIZE_ALLOCATIONS
+    static constexpr size_t QUEUE_SIZE       = Q::capacity();
+    static constexpr size_t MAX_ELEMENT_SIZE = Q::maxElementSize();
+    static constexpr size_t NUM_POSSIBLE_MAX_ELEMENT_SIZE_ALLOCATIONS
         = (QUEUE_SIZE / (MAX_ELEMENT_SIZE + sizeof(typename Q::size_type)));
 
     MemoryQueueTypedTest() : _q(), _w(_q), _r(_q) {}

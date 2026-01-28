@@ -21,11 +21,11 @@ OldIntEnabledStatusValueType getOldIntEnabledStatusValueAndSuspendAllInterrupts(
         // 2. Inside vTaskStartScheduler(), with interrupts disabled, asyncEnterTask() is called.
         //    We shall not mess with the interrupt logic there.
 
-        return OldIntEnabledStatusValueType(0);
+        return static_cast<OldIntEnabledStatusValueType>(0);
     }
 
     taskENTER_CRITICAL();
-    return OldIntEnabledStatusValueType(1);
+    return static_cast<OldIntEnabledStatusValueType>(1);
 }
 
 void resumeAllInterrupts(OldIntEnabledStatusValueType const oldIntEnabledStatusValue)

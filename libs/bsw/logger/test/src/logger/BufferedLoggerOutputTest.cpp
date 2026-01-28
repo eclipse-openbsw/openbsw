@@ -68,6 +68,7 @@ struct BufferedLoggerOutputTest
         writer.printf("%d", timestamp);
     }
 
+    // NOLINTBEGIN(cert-dcl50-cpp): va_list usage only for this test file.
     template<class T>
     void callLogOutput(
         T& buffer,
@@ -81,6 +82,8 @@ struct BufferedLoggerOutputTest
         buffer.logOutput(componentInfo, levelInfo, str, ap);
         va_end(ap);
     }
+
+    // NOLINTEND(cert-dcl50-cpp)
 
     void setTimestamp(uint32_t timestamp) { _timestamp = timestamp; }
 
@@ -102,12 +105,15 @@ LOGGER_COMPONENT_MAPPING_INFO(LEVEL_DEBUG, CONF2)
 LOGGER_COMPONENT_MAPPING_INFO(LEVEL_DEBUG, CONF3)
 END_LOGGER_COMPONENT_MAPPING_INFO_TABLE();
 
+// NOLINTBEGIN(cert-err58-cpp): Instantiation of variable is done by macro.
 DEFINE_LOGGER_COMPONENT_MAPPING(
     TestMappingType,
     testMapping,
     componentInfoTable,
     ::util::logger::LevelInfo::getDefaultTable(),
     CONF1);
+
+// NOLINTEND(cert-err58-cpp)
 
 TEST_F(BufferedLoggerOutputTest, testAll)
 {

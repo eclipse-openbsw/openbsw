@@ -220,6 +220,7 @@ uint16_t CanFlex2Transceiver::getHwQueueTimeout() const
 {
     // 64 = 8 byte payload
     // 53 = CAN overhead
+    // NOLINTNEXTLINE(clang-analyzer-core.DivideZero): CAN Baudrate can never be zero here.
     auto const timeout = ((53U + 64U) * 1000U / (fFlexCANDevice.getBaudrate()));
     return static_cast<uint16_t>(timeout);
 }
@@ -244,31 +245,23 @@ void CanFlex2Transceiver::resetFirstFrame()
 
 ::can::ICanTransceiver::ErrorCode CanFlex2Transceiver::open()
 {
-    if ((State::INITIALIZED == _state) || (State::CLOSED == _state))
+    bool const isStateValid = (State::INITIALIZED == _state) || (State::CLOSED == _state);
+    if (isStateValid && (ErrorCode::CAN_ERR_OK == fFlexCANDevice.start()))
     {
-        if (ErrorCode::CAN_ERR_OK == fFlexCANDevice.start())
-        {
-            (void)fFlexCANDevice.getPhy().setMode(CanPhy::CAN_PHY_MODE_ACTIVE, fdevConfig.BusId);
-            _state = State::OPEN;
+        (void)fFlexCANDevice.getPhy().setMode(CanPhy::CAN_PHY_MODE_ACTIVE, fdevConfig.BusId);
+        _state = State::OPEN;
 
-            ::async::scheduleAtFixedRate(
-                _context,
-                _cyclicTask,
-                _cyclicTaskTimeout,
-                ERROR_POLLING_TIMEOUT,
-                ::async::TimeUnitType::MILLISECONDS);
+        ::async::scheduleAtFixedRate(
+            _context,
+            _cyclicTask,
+            _cyclicTaskTimeout,
+            ERROR_POLLING_TIMEOUT,
+            ::async::TimeUnitType::MILLISECONDS);
 
-            return ErrorCode::CAN_ERR_OK;
-        }
-        else
-        {
-            return ErrorCode::CAN_ERR_ILLEGAL_STATE;
-        }
+        return ErrorCode::CAN_ERR_OK;
     }
-    else
-    {
-        return ErrorCode::CAN_ERR_ILLEGAL_STATE;
-    }
+
+    return ErrorCode::CAN_ERR_ILLEGAL_STATE;
 }
 
 ::can::ICanTransceiver::ErrorCode CanFlex2Transceiver::close()
@@ -287,10 +280,8 @@ void CanFlex2Transceiver::resetFirstFrame()
         }
         return ErrorCode::CAN_ERR_OK;
     }
-    else
-    {
-        return ErrorCode::CAN_ERR_ILLEGAL_STATE;
-    }
+
+    return ErrorCode::CAN_ERR_ILLEGAL_STATE;
 }
 
 void CanFlex2Transceiver::shutdown()
@@ -311,10 +302,8 @@ void CanFlex2Transceiver::shutdown()
         _state = State::MUTED;
         return ErrorCode::CAN_ERR_OK;
     }
-    else
-    {
-        return ErrorCode::CAN_ERR_ILLEGAL_STATE;
-    }
+
+    return ErrorCode::CAN_ERR_ILLEGAL_STATE;
 }
 
 ::can::ICanTransceiver::ErrorCode CanFlex2Transceiver::unmute()
@@ -325,10 +314,8 @@ void CanFlex2Transceiver::shutdown()
         _state = State::OPEN;
         return ErrorCode::CAN_ERR_OK;
     }
-    else
-    {
-        return ErrorCode::CAN_ERR_ILLEGAL_STATE;
-    }
+
+    return ErrorCode::CAN_ERR_ILLEGAL_STATE;
 }
 
 void CanFlex2Transceiver::receiveTask()

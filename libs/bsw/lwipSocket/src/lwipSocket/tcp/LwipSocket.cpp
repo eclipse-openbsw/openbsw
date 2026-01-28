@@ -23,7 +23,7 @@ extern "C"
 namespace
 {
 err_t const ERR_NO_MORE_BUF = -100;
-}
+} // namespace
 
 namespace tcp
 {
@@ -61,52 +61,40 @@ AbstractSocket::ErrorCode LwipSocket::send(::etl::span<uint8_t const> const& dat
         logger::Logger::warn(logger::TCP, "LwipSocket::send() called on closed or closing socket!");
         return AbstractSocket::ErrorCode::SOCKET_ERR_NOT_OPEN;
     }
-    else
-    {
-        if ((0L == fPendingTcpData.size()) && (data.size() > 0U))
-        { // no data is pending
-            logger::Logger::debug(
-                logger::TCP,
-                "LwipSocket::send(%x, %u) no data is pending!",
-                data.data(),
-                data.size());
-            if (available() > 0)
-            {
-                fPendingTcpData = data;
 
-                err_t const e = sendPendingData(fpHandle);
-                if (e == ERR_OK)
-                {
-                    return AbstractSocket::ErrorCode::SOCKET_ERR_OK;
-                }
-                else if (e == ERR_NO_MORE_BUF)
-                {
-                    // wait for send ack before return
-                    return AbstractSocket::ErrorCode::SOCKET_ERR_NO_MORE_BUFFER;
-                }
-                else if (e == ERR_MEM)
-                {
-                    fPendingTcpData = {};
-                    // flush and wait for send ack before return
-                    return AbstractSocket::ErrorCode::SOCKET_FLUSH;
-                }
-                else
-                {
-                    fPendingTcpData = {};
-                    return AbstractSocket::ErrorCode::SOCKET_ERR_NOT_OK;
-                }
-            }
-            else
-            {
-                // wait for send ack before retry
-                return AbstractSocket::ErrorCode::SOCKET_ERR_NOT_OK;
-            }
-        }
-        else
+    if ((0L == fPendingTcpData.size()) && (data.size() > 0U))
+    { // no data is pending
+        logger::Logger::debug(
+            logger::TCP, "LwipSocket::send(%x, %u) no data is pending!", data.data(), data.size());
+        if (available() > 0)
         {
-            return AbstractSocket::ErrorCode::SOCKET_FLUSH;
+            fPendingTcpData = data;
+
+            err_t const e = sendPendingData(fpHandle);
+            if (e == ERR_OK)
+            {
+                return AbstractSocket::ErrorCode::SOCKET_ERR_OK;
+            }
+
+            if (e == ERR_NO_MORE_BUF)
+            {
+                // wait for send ack before return
+                return AbstractSocket::ErrorCode::SOCKET_ERR_NO_MORE_BUFFER;
+            }
+
+            // flush pending data
+            fPendingTcpData = {};
+            if (e == ERR_MEM)
+            {
+                // wait for send ack before return
+                return AbstractSocket::ErrorCode::SOCKET_FLUSH;
+            }
         }
+        // wait for send ack before retry
+        return AbstractSocket::ErrorCode::SOCKET_ERR_NOT_OK;
     }
+
+    return AbstractSocket::ErrorCode::SOCKET_FLUSH;
 }
 
 err_t LwipSocket::tcpSentListener(void* const arg, tcp_pcb* const pcb, uint16_t const len)
@@ -145,7 +133,12 @@ err_t LwipSocket::sendPendingData(tcp_pcb* const pcb)
         return checkResult(ERR_OK);
     }
 
-    size_t const availableBuffer = static_cast<size_t>(tcp_sndbuf(pcb));
+    size_t availableBuffer{0U};
+    if (pcb != nullptr)
+    {
+        availableBuffer = static_cast<size_t>(tcp_sndbuf(pcb));
+    };
+
     if (availableBuffer == 0U)
     {
         return checkResult(ERR_MEM);
@@ -474,10 +467,7 @@ AbstractSocket::ErrorCode LwipSocket::flush()
         }
         return AbstractSocket::ErrorCode::SOCKET_ERR_OK;
     }
-    else
-    {
-        return AbstractSocket::ErrorCode::SOCKET_ERR_NOT_OPEN;
-    }
+    return AbstractSocket::ErrorCode::SOCKET_ERR_NOT_OPEN;
 }
 
 uint8_t LwipSocket::read(uint8_t& byte)
@@ -488,10 +478,8 @@ uint8_t LwipSocket::read(uint8_t& byte)
         byte = value[0];
         return 1U;
     }
-    else
-    {
-        return 0U;
-    }
+
+    return 0U;
 }
 
 size_t LwipSocket::read(uint8_t* buffer, size_t n)
@@ -537,10 +525,7 @@ size_t LwipSocket::read(uint8_t* buffer, size_t n)
         }
         return n;
     }
-    else
-    {
-        return 0;
-    }
+    return 0;
 }
 
 void LwipSocket::discardData()
@@ -705,10 +690,7 @@ err_t LwipSocket::checkResult(err_t const error) const
     {
         return ERR_ABRT;
     }
-    else
-    {
-        return error;
-    }
+    return error;
 }
 
 void LwipSocket::enableKeepAlive(

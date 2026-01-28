@@ -30,6 +30,7 @@ void sysDelayUs(uint32_t const delay)
     while ((getSystemTimeUs32Bit() - t) < delay) {}
 }
 
+// NOLINTNEXTLINE(cert-err58-cpp): Not sure about the need of this here.
 uint64_t const SystemTimeNs = getSystemTimeNs();
 
 // only used in statistics, where it should not overflow for 1-second intervals.

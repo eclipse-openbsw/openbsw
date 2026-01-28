@@ -11,7 +11,7 @@ namespace addressfinder
 ::etl::optional<LogicalAddress>
 findDoipAddressInSlice(uint16_t const address, ::etl::span<LogicalAddress const> const& list)
 {
-    auto const iter = etl::find_if(
+    auto* const iter = etl::find_if(
         list.begin(),
         list.end(),
         [address](LogicalAddress const addr) -> bool { return addr.addressDoip == address; });
@@ -25,7 +25,7 @@ findDoipAddressInSlice(uint16_t const address, ::etl::span<LogicalAddress const>
 ::etl::optional<LogicalAddress>
 find8BitAddressInSlice(uint16_t const address, ::etl::span<LogicalAddress const> const& list)
 {
-    auto const iter = etl::find_if(
+    auto* const iter = etl::find_if(
         list.begin(),
         list.end(),
         [address](LogicalAddress const addr) -> bool { return addr.address8Bit == address; });

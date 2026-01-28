@@ -1260,7 +1260,6 @@ TEST_F(
             .InSequence(seq)
             .WillOnce(
                 Invoke(ReadBytesFrom(::estd::slice<uint8_t const>::from_pointer(messagePtr, 4U))));
-        messagePtr += 4;
 
         EXPECT_CALL(
             fMessageProvidingListenerMock, getTransportMessage(fBusId, 0x1234, 0x1519, 3, _, _))
@@ -1814,7 +1813,7 @@ TEST_F(DoIpServerTransportLayerTest, TestAliveCheckWithInactiveRegisteredSource)
         .WillOnce(Return(::tcp::AbstractSocket::ErrorCode::SOCKET_ERR_OK));
     EXPECT_CALL(fConnectionPoolMock, releaseConnection(Ref(fConnection1)));
     EXPECT_CALL(fSocketHandlerMock, releaseSocket(Ref(fSocketMock1), ConnectionType::PLAIN));
-    testContext.elapse(fParameters.getAliveCheckTimeout() * 1000U);
+    testContext.elapse(static_cast<uint64_t>(fParameters.getAliveCheckTimeout()) * 1000U);
     testContext.expireAndExecute();
     ASSERT_THAT(response, ElementsAreArray(expectedResponse));
     endRoutingActivationResponse(fSocketMock2);
@@ -2096,8 +2095,8 @@ void DoIpServerTransportLayerTest::expectRoutingActivationRequest(
            0x00,
            0x00,
            0x07,
-           uint8_t((sourceAddress >> 8) & 0xff),
-           uint8_t(sourceAddress & 0xff),
+           static_cast<uint8_t>((sourceAddress >> 8) & 0xff),
+           static_cast<uint8_t>(sourceAddress & 0xff),
            activationType,
            0x00,
            0x00,
@@ -2156,8 +2155,8 @@ void DoIpServerTransportLayerTest::expectAliveCheckResponse(
            0x00,
            0x00,
            0x02,
-           uint8_t((sourceAddress >> 8) & 0xff),
-           uint8_t(sourceAddress & 0xff)};
+           static_cast<uint8_t>((sourceAddress >> 8) & 0xff),
+           static_cast<uint8_t>(sourceAddress & 0xff)};
     ::estd::slice<uint8_t> response = allocateBuffer(sizeof(responseData));
     ::estd::memory::copy(response, responseData);
 

@@ -141,9 +141,11 @@ TEST_F(BitFieldFilterTest, MergeWithIntervalFilter)
     IntervalFilter intervalFilter;
     set<uint16_t> randomIds;
     pair<set<uint16_t>::iterator, bool> result;
+    // NOLINTNEXTLINE(cert-msc30-c, cert-msc32-c, cert-msc51-cpp): Constant seed is fine.
     srand(0);
     while (randomIds.size() < 100)
     { // generate 100
+        // NOLINTNEXTLINE(cert-msc30-c, cert-msc50-cpp): Probably not needed for this test purpose.
         result = randomIds.insert(rand() % BitFieldFilter::MAX_ID + 1);
         fFilter.add(*result.first);
     }
