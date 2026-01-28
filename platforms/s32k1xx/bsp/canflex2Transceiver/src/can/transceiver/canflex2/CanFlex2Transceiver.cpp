@@ -220,6 +220,7 @@ uint16_t CanFlex2Transceiver::getHwQueueTimeout() const
 {
     // 64 = 8 byte payload
     // 53 = CAN overhead
+    // NOLINTNEXTLINE(clang-analyzer-core.DivideZero): CAN Baudrate can never be zero here.
     auto const timeout = ((53U + 64U) * 1000U / (fFlexCANDevice.getBaudrate()));
     return static_cast<uint16_t>(timeout);
 }
