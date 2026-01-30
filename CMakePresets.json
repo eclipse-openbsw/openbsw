@@ -86,6 +86,39 @@
             }
         },
         {
+            "name": "posix-rust",
+            "displayName": "POSIX with Rust configuration and FreeRTOS",
+            "description": "Configure for POSIX-compliant environment with Rust support enabled, gcc and FreeRTOS",
+            "inherits": "_config-base",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "BUILD_EXECUTABLE": "referenceApp",
+                "BUILD_RUST": "ON",
+                "BUILD_TARGET_PLATFORM": "POSIX",
+                "BUILD_TARGET_RTOS": "FREERTOS"
+            }
+        },
+        {
+            "name": "s32k148-rust-gcc",
+            "generator": "Ninja Multi-Config",
+            "displayName": "S32K148 with Rust configuration and FreeRTOS",
+            "description": "Configure for S32K148 platform with Rust support enabled, gcc and FreeRTOS",
+            "inherits": "_config-base",
+            "toolchainFile": "${sourceDir}/cmake/toolchains/ArmNoneEabi-gcc.cmake",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "BUILD_EXECUTABLE": "referenceApp",
+                "BUILD_RUST": "ON",
+                "BUILD_TARGET_PLATFORM": "S32K148EVB",
+                "BUILD_TARGET_RTOS": "FREERTOS",
+                "CMAKE_ASM_FLAGS_RELWITHDEBINFO": "-g3",
+                "CMAKE_CONFIGURATION_TYPES": "RelWithDebInfo;Debug;Release",
+                "CMAKE_C_FLAGS_RELWITHDEBINFO": "-g3 -O2 -DNDEBUG",
+                "CMAKE_CXX_FLAGS_RELWITHDEBINFO": "-g3 -O2 -DNDEBUG",
+                "CMAKE_DEFAULT_BUILD_TYPE": "RelWithDebInfo"
+            }
+        },
+        {
             "name": "s32k148-freertos-gcc",
             "generator": "Ninja Multi-Config",
             "displayName": "S32K148 FreeRTOS configuration (GCC)",
@@ -206,6 +239,18 @@
             "displayName": "build POSIX-THREADX",
             "description": "Build reference application for POSIX-compliant environment (Release by default; for Debug use --config Debug)",
             "configurePreset": "posix-threadx"
+        },
+        {
+            "name": "posix-rust",
+            "displayName": "build POSIX with Rust build and FreeRTOS",
+            "description": "Build reference application for POSIX-compliant environment with Rust support, gcc and FreeRTOS (Release by default; for Debug use --config Debug)",
+            "configurePreset": "posix-rust"
+        },
+        {
+            "name": "s32k148-rust-gcc",
+            "displayName": "S32K148 with Rust build and FreeRTOS",
+            "description": "Build reference application for S32K148 platform with Rust support, gcc and FreeRTOS",
+            "configurePreset": "s32k148-rust-gcc"
         },
         {
             "name": "s32k148-freertos-gcc",

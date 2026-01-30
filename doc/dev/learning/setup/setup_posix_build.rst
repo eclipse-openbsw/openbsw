@@ -75,3 +75,24 @@ You should be able to run and see output like this in your shell terminal...
 Press ``CTRL-C`` should exit the running application.
 
 Now that you can build the code and run it, you can explore the code, make changes and learn how it works.
+
+Optional: Rust Support
+----------------------
+
+To build OpenBSW with Rust components for the POSIX platform, you need:
+
+1. The build tools set up as described above (gcc, cmake, make)
+2. The Rust compiler
+
+Install Rust 1.90.0 to be compatible with the CI builds:
+
+.. code-block:: bash
+
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --default-toolchain 1.90.0
+
+Then build using the Rust preset:
+
+.. code-block:: bash
+
+    cmake --preset posix-rust
+    cmake --build --preset posix-rust --parallel

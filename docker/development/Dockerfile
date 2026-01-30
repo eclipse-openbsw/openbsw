@@ -73,6 +73,14 @@ RUN tar -xf treefmt.tar.gz \
 
 RUN gem install esr-rim
 
+
+ENV RUSTUP_HOME=/opt/rustup
+ENV CARGO_HOME=/opt/cargo
+ENV PATH=/opt/cargo/bin:${PATH}
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain 1.90.0 --profile minimal \
+    && rustup target add thumbv7em-none-eabihf \
+    && cargo install cbindgen --version 0.27.0 --locked
+
 RUN python3 -m venv /opt/venv
 ENV PATH=/opt/venv/bin:${PATH}
 RUN --mount=type=bind,source=files/requirements.lock,target=/tmp/requirements.lock pip3 install -r /tmp/requirements.lock
