@@ -6,7 +6,7 @@ target_link_libraries(
             bsp
             canflex2Transceiver
             cpp2can
-            utbspIo
+            bspIo
             lifecycle
             bspMock
             gmock)

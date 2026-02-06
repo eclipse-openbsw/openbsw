@@ -538,14 +538,12 @@ DoIpServerConnectionHandler::StaticPayloadSendJobType* DoIpServerConnectionHandl
     {
         return nullptr;
     }
-    else if (closeAfterSend)
+
+    if (closeAfterSend)
     {
         _state = State::CLOSING;
     }
-    else
-    {
-        // no special handling here
-    }
+
     // RAII mutex
     DoIpLock const lock;
     if (_sendJobPool.empty())

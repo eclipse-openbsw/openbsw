@@ -11,6 +11,7 @@ using namespace ::util::format;
 
 namespace
 {
+// NOLINTNEXTLINE(cert-dcl50-cpp): va_list usage only for printing functionalities.
 void callLog(uint8_t index, Level level, char const* formatString, ...)
 {
     va_list ap;
@@ -62,7 +63,7 @@ struct LoggerTest
         _outComponentInfo = componentInfo;
         _outLevelInfo     = levelInfo;
         char buffer[300];
-        vsnprintf(buffer, sizeof(buffer), str, ap);
+        static_cast<void>(vsnprintf(buffer, sizeof(buffer), str, ap));
         _logStr = buffer;
     }
 

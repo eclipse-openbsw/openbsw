@@ -15,6 +15,7 @@ struct EntrySerializerTest
 : ::testing::Test
 , private IEntrySerializerCallback<uint32_t>
 {
+    // NOLINTNEXTLINE(cert-dcl50-cpp): va_list usage only in these tests.
     std::string const& serializeAndDeserialize(
         uint32_t bufferSize,
         uint32_t timestamp,
@@ -43,8 +44,9 @@ struct EntrySerializerTest
 
     char const* addConstString(char const* string)
     {
-        char* destString = _constStrings + _nextConstStringOffset;
-        strcpy(destString, string);
+        size_t const maxSize = sizeof(_constStrings) - _nextConstStringOffset;
+        char* destString     = _constStrings + _nextConstStringOffset;
+        etl::strncpy(destString, string, maxSize);
         _nextConstStringOffset += strlen(destString) + 1;
         return destString;
     }

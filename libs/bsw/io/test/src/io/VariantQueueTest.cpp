@@ -147,7 +147,7 @@ TEST(VariantQueue, manually_allocate_header)
 
     Visit visitor;
 
-    auto const b = abc_queue::alloc_header<B>(writer);
+    auto* const b = abc_queue::alloc_header<B>(writer);
     ASSERT_NE(b, nullptr);
     b->x = 42;
     b->y = 1337;

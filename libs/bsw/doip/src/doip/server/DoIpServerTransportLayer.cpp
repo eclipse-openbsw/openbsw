@@ -75,10 +75,8 @@ AbstractTransportLayer::ErrorCode DoIpServerTransportLayer::send(
             {
                 return ErrorCode::TP_OK;
             }
-            else
-            {
-                return ErrorCode::TP_QUEUE_FULL;
-            }
+
+            return ErrorCode::TP_QUEUE_FULL;
         }
     }
     Logger::warn(
@@ -260,17 +258,15 @@ DoIpServerTransportLayer::checkRoutingActivation(
             oemField,
             isResuming);
     }
-    else if (activationType <= 0x01U)
+
+    if (activationType <= 0x01U)
     {
         return RoutingActivationCheckResult();
     }
-    else
-    {
-        return RoutingActivationCheckResult()
-            .setAction(Action::REJECT)
-            .setResponseCode(
-                DoIpConstants::RoutingResponseCodes::ROUTING_UNSUPPORTED_ACTIVATION_TYPE);
-    }
+
+    return RoutingActivationCheckResult()
+        .setAction(Action::REJECT)
+        .setResponseCode(DoIpConstants::RoutingResponseCodes::ROUTING_UNSUPPORTED_ACTIVATION_TYPE);
 }
 
 void DoIpServerTransportLayer::routingActive(DoIpServerConnectionHandler& handler)

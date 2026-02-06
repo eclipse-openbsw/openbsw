@@ -7,7 +7,7 @@ target_link_libraries(
     PRIVATE etl
             bspDynamicClient
             bspConfiguration
-            utbspIo
+            bspIo
             utbspMcu
             util
             gtest_main)

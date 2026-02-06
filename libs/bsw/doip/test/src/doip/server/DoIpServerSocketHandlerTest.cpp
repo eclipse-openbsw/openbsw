@@ -125,7 +125,8 @@ TEST_P(DoIpServerSocketHandlerTest, SimpleServerLifecycle)
     Mock::VerifyAndClearExpectations(&serverSocketMock1);
 
     // unknown config has changed
-    fNetworkInterfaceConfigRegistryMock.configChangedSignal(NetworkInterfaceConfigKey(1U), config2);
+    fNetworkInterfaceConfigRegistryMock.configChangedSignal(
+        static_cast<NetworkInterfaceConfigKey>(1U), config2);
 
     EXPECT_CALL(serverSocketMock1, isClosed()).WillOnce(Return(true));
     EXPECT_CALL(serverSocketMock2, isClosed()).WillOnce(Return(false));

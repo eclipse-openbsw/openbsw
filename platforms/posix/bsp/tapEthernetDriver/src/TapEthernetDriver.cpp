@@ -42,7 +42,7 @@ static int allocTapInterface(char const* const ifName)
         strncpy(ifr.ifr_name, ifName, IFNAMSIZ);
     }
 
-    int result = ioctl(fd, TUNSETIFF, (void*)&ifr);
+    int result = ioctl(fd, TUNSETIFF, &ifr);
     if (result < 0)
     {
         close(fd);
@@ -79,15 +79,15 @@ void TapEthernetDriver::readFrame()
         return;
     }
 
-    auto const frameData = new uint8_t[::ethernet::TapEthernetDriver::MAX_FRAME_LENGTH];
-    auto const nread     = read(_tapFd, frameData, ::ethernet::TapEthernetDriver::MAX_FRAME_LENGTH);
+    auto* const frameData = new uint8_t[::ethernet::TapEthernetDriver::MAX_FRAME_LENGTH];
+    auto const nread = read(_tapFd, frameData, ::ethernet::TapEthernetDriver::MAX_FRAME_LENGTH);
     if ((nread <= 0) || (nread > MAX_FRAME_LENGTH))
     {
         delete[] frameData;
         return;
     }
 
-    auto const frameBuf = new ::lwiputils::RxCustomPbuf;
+    auto* const frameBuf = new ::lwiputils::RxCustomPbuf;
 
     // This lwip function is thread safe, so we can call it outside the lwip thread
     pbuf_alloced_custom(

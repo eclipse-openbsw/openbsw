@@ -14,6 +14,7 @@ struct StringWriterTest : ::testing::Test
 {
     void apply(format::StringWriter& writer) const { writer.printf("ext0"); }
 
+    // NOLINTNEXTLINE(cert-dcl50-cpp): va_list usage only for printing functionalities.
     void callVprintf(format::StringWriter& writer, char const* format, ...)
     {
         va_list va;
@@ -33,7 +34,7 @@ TEST_F(StringWriterTest, testMixedUsage)
         .printf("%d", 10)
         .printf(nullptr)
         .write("test")
-        .write((char const*)nullptr)
+        .write(nullptr)
         .write("test", 3)
         .write(::util::string::ConstString("ABCD"))
         .endl();

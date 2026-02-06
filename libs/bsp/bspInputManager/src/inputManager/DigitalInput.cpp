@@ -115,35 +115,23 @@ bsp::BspReturnCode DigitalInput::get(DigitalInputId const channel, bool& result)
         }
         return bsp::BSP_OK;
     }
-    else if (
-        (DigitalInputId::LAST_DYNAMIC_DIGITAL_INPUT > DigitalInputId::LAST_INTERNAL_DIGITAL_INPUT)
+
+    if ((DigitalInputId::LAST_DYNAMIC_DIGITAL_INPUT > DigitalInputId::LAST_INTERNAL_DIGITAL_INPUT)
         && (channel > DigitalInputId::LAST_INTERNAL_DIGITAL_INPUT)
         && (channel <= DigitalInputId::LAST_DYNAMIC_DIGITAL_INPUT))
     {
         // dynamic instance
         dynamicClientType const dynamicChannel
             = static_cast<dynamicClientType>(tmpChannel - NUMBER_OF_INTERNAL_DIGITAL_INPUTS);
-        if (dynamicChannel < NumberOfDynamicInputs)
+        if ((dynamicChannel < NumberOfDynamicInputs)
+            && dynamicInputCfg.getClientValid(dynamicChannel))
         {
-            if (dynamicInputCfg.getClientValid(dynamicChannel))
-            {
-                return (dynamicInputCfg.getClientInstance(dynamicChannel)
-                            ->get(dynamicInputCfg.getChannelInsideClient(dynamicChannel), result));
-            }
-            else
-            {
-                return bsp::BSP_ERROR;
-            }
-        }
-        else
-        {
-            return bsp::BSP_ERROR;
+            return (dynamicInputCfg.getClientInstance(dynamicChannel)
+                        ->get(dynamicInputCfg.getChannelInsideClient(dynamicChannel), result));
         }
     }
-    else
-    {
-        return bsp::BSP_ERROR;
-    }
+
+    return bsp::BSP_ERROR;
 }
 
 bsp::BspReturnCode DigitalInput::setDynamicClient(
@@ -162,16 +150,11 @@ bsp::BspReturnCode DigitalInput::setDynamicClient(
             fLock.resume();
             return bsp::BSP_OK;
         }
-        else
-        {
-            fLock.resume();
-            return bsp::BSP_ERROR;
-        }
+
+        fLock.resume();
     }
-    else
-    {
-        return bsp::BSP_ERROR;
-    }
+
+    return bsp::BSP_ERROR;
 }
 
 bsp::BspReturnCode DigitalInput::clrDynamicClient(uint16_t const inputNumber)
@@ -189,16 +172,10 @@ bsp::BspReturnCode DigitalInput::clrDynamicClient(uint16_t const inputNumber)
             fLock.resume();
             return bsp::BSP_OK;
         }
-        else
-        {
-            fLock.resume();
-            return bsp::BSP_ERROR;
-        }
+        fLock.resume();
     }
-    else
-    {
-        return bsp::BSP_ERROR;
-    }
+
+    return bsp::BSP_ERROR;
 }
 
 void DigitalInput::cleanDynamicClients()
@@ -215,10 +192,8 @@ char const* DigitalInput::getName(uint16_t const channel)
     {
         return inputConfigurationStrings[channel];
     }
-    else
-    {
-        return ("??? ->");
-    }
+
+    return ("??? ->");
 }
 
 } /* namespace bios */
