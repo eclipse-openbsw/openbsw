@@ -1,0 +1,592 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../../../../../../../../../../../static/css/style.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <title>Symbol - puncover</title>
+    
+</head>
+<body>
+    <div class="container" id="content">
+        <div class="page-header">
+            <nav class="navbar navbar-default" role="navigation">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="../../../../../../../../../../../../index.html">
+                    Puncover
+                  </a>
+                </div>
+              </div>
+            </nav>
+          
+        </div>
+        <div id="inner_content">
+        
+    
+    <ol class="breadcrumb folders">
+        
+        <li><a href="../../../../../../../../../../../../home.html">home</a></li>
+        
+        <li><a href="../../../../../../../../../../../runner.html">runner</a></li>
+        
+        <li><a href="../../../../../../../../../../work.html">work</a></li>
+        
+        <li><a href="../../../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../../libs.html">libs</a></li>
+        
+        <li><a href="../../../../../../bsw.html">bsw</a></li>
+        
+        <li><a href="../../../../../doip.html">doip</a></li>
+        
+        <li><a href="../../../../src.html">src</a></li>
+        
+        <li><a href="../../../doip.html">doip</a></li>
+        
+        <li ><a href="../../server.html">server</a>
+            </li>
+
+        
+        <li class="active"><a href="../DoIpServerVehicleIdentificationSocketHandler.cpp.html">DoIpServerVehicleIdentificationSocketHandler.cpp</a>:340
+            </li>
+        
+    </ol>
+
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <th>Function</th>
+                <td colspan="5">
+                    <span class="icon-function">doip::DoIpServerVehicleIdentificationSocketHandler::handleOemRequest(doip::DoIpHeader const&amp;)</span>
+                </td>
+            </tr>
+
+            <tr>
+                <th rowspan="2"></th>
+                <th>Address</th>
+                <th>Remarks</th>
+                <th>Stack</th>
+                <th>Code</th>
+                <th>Static</th>
+            </tr>
+            <tr>
+                <td>0x00025e7c</td>
+                <td>
+    
+    
+</td>
+                <td>48 (static)</td>
+                <td>216</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th>Callers (1)</th>
+                <td colspan="5">
+                
+                    <a href="./ea9b1881bcc36d1d62b90b97075643de.html">doip::DoIpServerVehicleIdentificationSocketHandler::handleRequest(doip::DoIpHeader const&amp;) (228)</a>
+                    
+                
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Callees (3,
+                            <span title="sum of used bytes by all callees">
+                            Σ=304
+                            </span>
+                        )
+                    
+                </th>
+                <td colspan="5">
+                
+                    <a href="./aea906a7cc79cefaf9484b6c39646043.html">doip::DoIpServerVehicleIdentificationSocketHandler::enqueueResponse(estd::variant&lt;doip::DoIpServerVehicleIdentificationRequest::ISOType, unsigned short&gt; const&amp;) (136)</a>
+                    
+                        ,
+                    
+                
+                    <a href="./26a09aedc9b81d922cda7d24d7fbd4b2.html">doip::DoIpServerVehicleIdentificationSocketHandler::enqueueNack(unsigned char) (72)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../../common/DoIpUdpConnection.cpp/42ffecf207dd8e7b9302046cc883ee2d.html">doip::DoIpUdpConnection::receivePayload(estd::slice&lt;unsigned char, 0u&gt;, estd::function&lt;void (estd::slice&lt;unsigned char const, 0u&gt;)&gt;) (96)</a>
+                    
+                
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    
+    <pre><a href="../../../../../estd/include/estd/functional.h/c2f6bc9950bde7d0ada3c6a115743bec.html">void estd::function&lt;void (estd::slice&lt;unsigned char const, 0u&gt;)&gt;::member_function_caller&lt;doip::DoIpServerVehicleIdentificationSocketHandler, &amp;doip::DoIpServerVehicleIdentificationSocketHandler::vehicleIdentificationVinRequestReceived&gt;(void*, estd::slice&lt;unsigned char const, 0u&gt;) (16)</a></pre>
+    
+
+    <pre>
+
+    doip::DoIpServerVehicleIdentificationSocketHandler::handleOemRequest(doip::DoIpHeader const&):
+
+       25e7c:	b5f0      	push	{r4, r5, r6, r7, lr}
+
+       25e7e:	460c      	mov	r4, r1
+
+       25e80:	7889      	ldrb	r1, [r1, #2]
+
+       25e82:	78e3      	ldrb	r3, [r4, #3]
+
+       25e84:	ea41 2103 	orr.w	r1, r1, r3, lsl #8
+
+       25e88:	ba49      	rev16	r1, r1
+
+       25e8a:	b289      	uxth	r1, r1
+
+       25e8c:	f5b1 4f70 	cmp.w	r1, #61440	@ 0xf000
+
+       25e90:	b087      	sub	sp, #28
+
+       25e92:	d339      	bcc.n	25f08 <<a href="./04de4069feb8d381f38cf8414620a73f.html">doip::DoIpServerVehicleIdentificationSocketHandler::handleOemRequest(doip::DoIpHeader const&)</a>+0x8c>
+
+    _ZNK4doip37DoIpServerVehicleIdentificationConfig32getVehicleIdentificationCallbackEv():
+
+       25e94:	f8d0 30b4 	ldr.w	r3, [r0, #180]	@ 0xb4
+
+       25e98:	4606      	mov	r6, r0
+
+       25e9a:	6818      	ldr	r0, [r3, #0]
+
+    doip::DoIpServerVehicleIdentificationSocketHandler::handleOemRequest(doip::DoIpHeader const&):
+
+       25e9c:	6803      	ldr	r3, [r0, #0]
+
+       25e9e:	695b      	ldr	r3, [r3, #20]
+
+       25ea0:	4798      	blx	r3
+
+       25ea2:	4607      	mov	r7, r0
+
+       25ea4:	2800      	cmp	r0, #0
+
+       25ea6:	d02f      	beq.n	25f08 <<a href="./04de4069feb8d381f38cf8414620a73f.html">doip::DoIpServerVehicleIdentificationSocketHandler::handleOemRequest(doip::DoIpHeader const&)</a>+0x8c>
+
+       25ea8:	7963      	ldrb	r3, [r4, #5]
+
+       25eaa:	7925      	ldrb	r5, [r4, #4]
+
+       25eac:	ea45 2503 	orr.w	r5, r5, r3, lsl #8
+
+       25eb0:	79a3      	ldrb	r3, [r4, #6]
+
+       25eb2:	ea45 4503 	orr.w	r5, r5, r3, lsl #16
+
+       25eb6:	79e3      	ldrb	r3, [r4, #7]
+
+       25eb8:	ea45 6503 	orr.w	r5, r5, r3, lsl #24
+
+       25ebc:	6803      	ldr	r3, [r0, #0]
+
+       25ebe:	691b      	ldr	r3, [r3, #16]
+
+       25ec0:	4798      	blx	r3
+
+       25ec2:	ba2d      	rev	r5, r5
+
+       25ec4:	42a8      	cmp	r0, r5
+
+       25ec6:	d118      	bne.n	25efa <<a href="./04de4069feb8d381f38cf8414620a73f.html">doip::DoIpServerVehicleIdentificationSocketHandler::handleOemRequest(doip::DoIpHeader const&)</a>+0x7e>
+
+       25ec8:	7962      	ldrb	r2, [r4, #5]
+
+       25eca:	7923      	ldrb	r3, [r4, #4]
+
+       25ecc:	ea43 2302 	orr.w	r3, r3, r2, lsl #8
+
+       25ed0:	79a2      	ldrb	r2, [r4, #6]
+
+       25ed2:	ea43 4302 	orr.w	r3, r3, r2, lsl #16
+
+       25ed6:	79e2      	ldrb	r2, [r4, #7]
+
+       25ed8:	ea53 6302 	orrs.w	r3, r3, r2, lsl #24
+
+       25edc:	d117      	bne.n	25f0e <<a href="./04de4069feb8d381f38cf8414620a73f.html">doip::DoIpServerVehicleIdentificationSocketHandler::handleOemRequest(doip::DoIpHeader const&)</a>+0x92>
+
+       25ede:	683b      	ldr	r3, [r7, #0]
+
+       25ee0:	4638      	mov	r0, r7
+
+       25ee2:	68db      	ldr	r3, [r3, #12]
+
+       25ee4:	4798      	blx	r3
+
+    _ZN4estd7variantIJN4doip38DoIpServerVehicleIdentificationRequest7ISOTypeEtEEC4ItEERKT_():
+
+       25ee6:	2201      	movs	r2, #1
+
+    doip::DoIpServerVehicleIdentificationSocketHandler::handleOemRequest(doip::DoIpHeader const&):
+
+       25ee8:	4603      	mov	r3, r0
+
+       25eea:	a904      	add	r1, sp, #16
+
+       25eec:	4630      	mov	r0, r6
+
+    _ZN4estd7variantIJN4doip38DoIpServerVehicleIdentificationRequest7ISOTypeEtEEC4ItEERKT_():
+
+       25eee:	9205      	str	r2, [sp, #20]
+
+       25ef0:	f8ad 3010 	strh.w	r3, [sp, #16]
+
+    doip::DoIpServerVehicleIdentificationSocketHandler::handleOemRequest(doip::DoIpHeader const&):
+
+       25ef4:	f7ff ff16 	bl	25d24 <<a href="./aea906a7cc79cefaf9484b6c39646043.html">doip::DoIpServerVehicleIdentificationSocketHandler::enqueueResponse(estd::variant<doip::DoIpServerVehicleIdentificationRequest::ISOType, unsigned short> const&)</a>>
+
+       25ef8:	e003      	b.n	25f02 <<a href="./04de4069feb8d381f38cf8414620a73f.html">doip::DoIpServerVehicleIdentificationSocketHandler::handleOemRequest(doip::DoIpHeader const&)</a>+0x86>
+
+       25efa:	2104      	movs	r1, #4
+
+       25efc:	4630      	mov	r0, r6
+
+       25efe:	f7ff fe6f 	bl	25be0 <<a href="./26a09aedc9b81d922cda7d24d7fbd4b2.html">doip::DoIpServerVehicleIdentificationSocketHandler::enqueueNack(unsigned char)</a>>
+
+       25f02:	2001      	movs	r0, #1
+
+       25f04:	b007      	add	sp, #28
+
+       25f06:	bdf0      	pop	{r4, r5, r6, r7, pc}
+
+       25f08:	2000      	movs	r0, #0
+
+       25f0a:	b007      	add	sp, #28
+
+       25f0c:	bdf0      	pop	{r4, r5, r6, r7, pc}
+
+       25f0e:	f8c6 7180 	str.w	r7, [r6, #384]	@ 0x180
+
+    _ZN4estd5sliceIhLj0EEC4ILj19EEERAT__h():
+
+       25f12:	7960      	ldrb	r0, [r4, #5]
+
+       25f14:	7922      	ldrb	r2, [r4, #4]
+
+       25f16:	79a1      	ldrb	r1, [r4, #6]
+
+       25f18:	79e3      	ldrb	r3, [r4, #7]
+
+       25f1a:	ea42 2200 	orr.w	r2, r2, r0, lsl #8
+
+       25f1e:	ea42 4201 	orr.w	r2, r2, r1, lsl #16
+
+       25f22:	ea42 6203 	orr.w	r2, r2, r3, lsl #24
+
+       25f26:	ba12      	rev	r2, r2
+
+    _ZN4estd5sliceIhLj0EE4trimEj():
+
+       25f28:	2a14      	cmp	r2, #20
+
+       25f2a:	bf28      	it	cs
+
+       25f2c:	2200      	movcs	r2, #0
+
+    doip::DoIpServerVehicleIdentificationSocketHandler::handleOemRequest(doip::DoIpHeader const&):
+
+       25f2e:	f206 1169 	addw	r1, r6, #361	@ 0x169
+
+       25f32:	e9cd 2102 	strd	r2, r1, [sp, #8]
+
+    _ZN4estd8functionIFvNS_5sliceIKhLj0EEEEEC4EPFvPvS3_ES6_():
+
+       25f36:	4b06      	ldr	r3, [pc, #24]	@ (25f50 <<a href="./04de4069feb8d381f38cf8414620a73f.html">doip::DoIpServerVehicleIdentificationSocketHandler::handleOemRequest(doip::DoIpHeader const&)</a>+0xd4>)
+
+    doip::DoIpServerVehicleIdentificationSocketHandler::handleOemRequest(doip::DoIpHeader const&):
+
+       25f38:	aa02      	add	r2, sp, #8
+
+       25f3a:	ca06      	ldmia	r2, {r1, r2}
+
+       25f3c:	f106 000c 	add.w	r0, r6, #12
+
+       25f40:	9600      	str	r6, [sp, #0]
+
+    _ZN4estd8functionIFvNS_5sliceIKhLj0EEEEEC4EPFvPvS3_ES6_():
+
+       25f42:	e9cd 3604 	strd	r3, r6, [sp, #16]
+
+    doip::DoIpServerVehicleIdentificationSocketHandler::handleOemRequest(doip::DoIpHeader const&):
+
+       25f46:	f001 f8bd 	bl	270c4 <<a href="../../common/DoIpUdpConnection.cpp/42ffecf207dd8e7b9302046cc883ee2d.html">doip::DoIpUdpConnection::receivePayload(estd::slice<unsigned char, 0u>, estd::function<void (estd::slice<unsigned char const, 0u>)>)</a>>
+
+       25f4a:	b007      	add	sp, #28
+
+       25f4c:	bdf0      	pop	{r4, r5, r6, r7, pc}
+
+       25f4e:	bf00      	nop
+
+       25f50:	00025fcd 	.word	0x00025fcd
+
+    </pre>
+
+    
+    <pre><a href="./01bf389c4dfeedcb934c655f47e5040c.html">doip::DoIpServerVehicleIdentificationSocketHandler::oemMessagePayloadReceived(estd::slice&lt;unsigned char const, 0u&gt;) (120)</a></pre>
+    
+
+    
+        <h1>Stack Worst-Case Scenarios</h1>
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 248</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 888</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    248
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                24 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    888
+                    
+                    
+                </td>
+                <td class="col_size">308</td>
+                <td><a href="../../../../../../3rdparty/freeRtos/include/task.h/93cf08902933433b019fa92be1247054.html" class="icon-function">xTaskGenericNotifyFromISR</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                    
+                    224
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                40 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    580
+                    
+                    
+                </td>
+                <td class="col_size">128</td>
+                <td><a href="../../../../../asyncFreeRtos/src/async/Async.cpp/5aa4f4e4ce0ff8166656d629d7628e7e.html" class="icon-function">async::schedule(unsigned char, async::IRunnable&amp;, async::TimeoutType&amp;, unsigned long, async::TimeUnit::Type)</a></td>
+            </tr>
+        
+            <tr>
+                <th>3</th>
+                <td class="col_size">
+                    
+                    184
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                24 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    452
+                    
+                    
+                </td>
+                <td class="col_size">80</td>
+                <td><a href="./ee0d12a78e891a1dc9ec93e78de78808.html" class="icon-function">doip::DoIpServerVehicleIdentificationSocketHandler::scheduleMessage()</a></td>
+            </tr>
+        
+            <tr>
+                <th>4</th>
+                <td class="col_size">
+                    
+                    160
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                8 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    372
+                    
+                    
+                </td>
+                <td class="col_size">300</td>
+                <td><a href="./dba62d8335c3b99f28618f72cdd3bad3.html" class="icon-function">doip::DoIpServerVehicleIdentificationSocketHandler::enqueueAny(estd::variant&lt;doip::DoIpServerVehicleIdentificationRequest::ISOType, unsigned short&gt; const&amp;, unsigned char, ip::IPEndpoint const&amp;, unsigned short)</a></td>
+            </tr>
+        
+            <tr>
+                <th>5</th>
+                <td class="col_size">
+                    
+                    152
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                64 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">72</td>
+                <td><a href="./26a09aedc9b81d922cda7d24d7fbd4b2.html" class="icon-function">doip::DoIpServerVehicleIdentificationSocketHandler::enqueueNack(unsigned char)</a></td>
+            </tr>
+        
+        </tbody>
+        
+        <tfoot>
+            <tr>
+                <th></th>
+                <th class="col_size">88
+                </th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </tfoot>
+        
+    </table>
+        
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 88</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 588</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    88
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                48 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    588
+                    
+                    
+                </td>
+                <td class="col_size">216</td>
+                <td><a href="./04de4069feb8d381f38cf8414620a73f.html" class="icon-function">doip::DoIpServerVehicleIdentificationSocketHandler::handleOemRequest(doip::DoIpHeader const&amp;)</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                    
+                    40
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                16 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    372
+                    
+                    
+                </td>
+                <td class="col_size">228</td>
+                <td><a href="./ea9b1881bcc36d1d62b90b97075643de.html" class="icon-function">doip::DoIpServerVehicleIdentificationSocketHandler::handleRequest(doip::DoIpHeader const&amp;)</a></td>
+            </tr>
+        
+            <tr>
+                <th>3</th>
+                <td class="col_size">
+                </td>
+                <td class="col_size">
+            
+                24 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">144</td>
+                <td><a href="./a3c00f6c875f768765eb684b88320efa.html" class="icon-function">doip::DoIpServerVehicleIdentificationSocketHandler::headerReceived(doip::DoIpHeader const&amp;)</a></td>
+            </tr>
+        
+        </tbody>
+        
+    </table>
+        
+    
+
+
+        </div>
+    <div id="page-footer">
+        <hr>
+        
+            brought to you with 💖
+            by <a href="https://twitter.com/hbehrens">Heiko Behrens</a>
+            <span class="secondary">– MIT license, copyright © 2014-2026</span>
+        
+    </div>
+    </div>
+</body>
+</html>

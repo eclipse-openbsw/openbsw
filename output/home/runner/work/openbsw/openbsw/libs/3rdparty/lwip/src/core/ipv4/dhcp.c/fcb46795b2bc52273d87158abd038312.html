@@ -1,0 +1,812 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../../../../../../../../../../../static/css/style.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <title>Symbol - puncover</title>
+    
+</head>
+<body>
+    <div class="container" id="content">
+        <div class="page-header">
+            <nav class="navbar navbar-default" role="navigation">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="../../../../../../../../../../../../index.html">
+                    Puncover
+                  </a>
+                </div>
+              </div>
+            </nav>
+          
+        </div>
+        <div id="inner_content">
+        
+    
+    <ol class="breadcrumb folders">
+        
+        <li><a href="../../../../../../../../../../../../home.html">home</a></li>
+        
+        <li><a href="../../../../../../../../../../../runner.html">runner</a></li>
+        
+        <li><a href="../../../../../../../../../../work.html">work</a></li>
+        
+        <li><a href="../../../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../../libs.html">libs</a></li>
+        
+        <li><a href="../../../../../../3rdparty.html">3rdparty</a></li>
+        
+        <li><a href="../../../../../lwip.html">lwip</a></li>
+        
+        <li><a href="../../../../src.html">src</a></li>
+        
+        <li><a href="../../../core.html">core</a></li>
+        
+        <li ><a href="../../ipv4.html">ipv4</a>
+            </li>
+
+        
+        <li class="active"><a href="../dhcp.c.html">dhcp.c</a>:1157
+            </li>
+        
+    </ol>
+
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <th>Function</th>
+                <td colspan="5">
+                    <span class="icon-function">dhcp_renew</span>
+                </td>
+            </tr>
+
+            <tr>
+                <th rowspan="2"></th>
+                <th>Address</th>
+                <th>Remarks</th>
+                <th>Stack</th>
+                <th>Code</th>
+                <th>Static</th>
+            </tr>
+            <tr>
+                <td>0x00021ec4</td>
+                <td>
+    
+    
+</td>
+                <td>72 (static)</td>
+                <td>336</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th>Callers (1)</th>
+                <td colspan="5">
+                
+                    <a href="./625c8433015a8cb580108e0f733b653d.html">dhcp_coarse_tmr (476)</a>
+                    
+                
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Callees (5,
+                            <span title="sum of used bytes by all callees">
+                            Σ=664
+                            </span>
+                        )
+                    
+                </th>
+                <td colspan="5">
+                
+                    <a href="./26aa383e202dd40190d8c1ff510d8b8c.html">dhcp_create_msg (344)</a>
+                    
+                        ,
+                    
+                
+                    <a href="./699875e3de39152454f386959b414384.html">dhcp_option_hostname (88)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../../pbuf.c/68108b6628d7b9ef8a7b88f2490c569c.html">pbuf_realloc (112)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../../udp.c/f8c887f66b79e75c3d421fb1ed410582.html">udp_sendto_if (112)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../../pbuf.c/9b6fd2596874539050b4147be9634d35.html">pbuf_free (8)</a>
+                    
+                
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    
+    <pre><a href="./8af280401fa7f8e7448c8810e631c47f.html">dhcp_network_changed_link_up (40)</a></pre>
+    
+
+    <pre>
+
+    dhcp_renew():
+
+       21ec4:	e92d 4ff0 	stmdb	sp!, {r4, r5, r6, r7, r8, r9, sl, fp, lr}
+
+       21ec8:	6a86      	ldr	r6, [r0, #40]	@ 0x28
+
+    dhcp_set_state():
+
+       21eca:	7973      	ldrb	r3, [r6, #5]
+
+       21ecc:	2b05      	cmp	r3, #5
+
+    dhcp_renew():
+
+       21ece:	b089      	sub	sp, #36	@ 0x24
+
+       21ed0:	4607      	mov	r7, r0
+
+    dhcp_set_state():
+
+       21ed2:	d004      	beq.n	21ede <<a href="./fcb46795b2bc52273d87158abd038312.html">dhcp_renew</a>+0x1a>
+
+       21ed4:	2300      	movs	r3, #0
+
+       21ed6:	2205      	movs	r2, #5
+
+       21ed8:	7172      	strb	r2, [r6, #5]
+
+       21eda:	71b3      	strb	r3, [r6, #6]
+
+       21edc:	8133      	strh	r3, [r6, #8]
+
+    dhcp_renew():
+
+       21ede:	f10d 031e 	add.w	r3, sp, #30
+
+       21ee2:	2203      	movs	r2, #3
+
+       21ee4:	4631      	mov	r1, r6
+
+       21ee6:	4638      	mov	r0, r7
+
+       21ee8:	f7ff f854 	bl	20f94 <<a href="./26aa383e202dd40190d8c1ff510d8b8c.html">dhcp_create_msg</a>>
+
+       21eec:	4680      	mov	r8, r0
+
+       21eee:	2800      	cmp	r0, #0
+
+       21ef0:	f000 8088 	beq.w	22004 <<a href="./fcb46795b2bc52273d87158abd038312.html">dhcp_renew</a>+0x140>
+
+       21ef4:	f8bd 001e 	ldrh.w	r0, [sp, #30]
+
+       21ef8:	f8d8 4004 	ldr.w	r4, [r8, #4]
+
+    dhcp_option():
+
+       21efc:	1c43      	adds	r3, r0, #1
+
+    dhcp_renew():
+
+       21efe:	f104 05f0 	add.w	r5, r4, #240	@ 0xf0
+
+    dhcp_option():
+
+       21f02:	b29b      	uxth	r3, r3
+
+       21f04:	2239      	movs	r2, #57	@ 0x39
+
+       21f06:	542a      	strb	r2, [r5, r0]
+
+       21f08:	2202      	movs	r2, #2
+
+       21f0a:	54ea      	strb	r2, [r5, r3]
+
+       21f0c:	1d83      	adds	r3, r0, #6
+
+    dhcp_renew():
+
+       21f0e:	f8b7 a03c 	ldrh.w	sl, [r7, #60]	@ 0x3c
+
+    dhcp_option():
+
+       21f12:	eb00 0e02 	add.w	lr, r0, r2
+
+    dhcp_option_byte():
+
+       21f16:	f100 0907 	add.w	r9, r0, #7
+
+    dhcp_option_short():
+
+       21f1a:	f100 0c03 	add.w	ip, r0, #3
+
+    dhcp_option_byte():
+
+       21f1e:	b29b      	uxth	r3, r3
+
+       21f20:	9303      	str	r3, [sp, #12]
+
+    dhcp_option_short():
+
+       21f22:	fa1f fe8e 	uxth.w	lr, lr
+
+    dhcp_option_byte():
+
+       21f26:	fa1f f389 	uxth.w	r3, r9
+
+    dhcp_option_short():
+
+       21f2a:	fa1f fc8c 	uxth.w	ip, ip
+
+    dhcp_option_byte():
+
+       21f2e:	f100 0908 	add.w	r9, r0, #8
+
+    dhcp_option_short():
+
+       21f32:	1d01      	adds	r1, r0, #4
+
+    dhcp_option():
+
+       21f34:	1d42      	adds	r2, r0, #5
+
+    dhcp_option_byte():
+
+       21f36:	9304      	str	r3, [sp, #16]
+
+    dhcp_option():
+
+       21f38:	b289      	uxth	r1, r1
+
+    dhcp_option_byte():
+
+       21f3a:	fa1f f389 	uxth.w	r3, r9
+
+    dhcp_option():
+
+       21f3e:	b292      	uxth	r2, r2
+
+    dhcp_option_short():
+
+       21f40:	ea4f 2b1a 	mov.w	fp, sl, lsr #8
+
+       21f44:	f805 b00e 	strb.w	fp, [r5, lr]
+
+    dhcp_option_byte():
+
+       21f48:	9305      	str	r3, [sp, #20]
+
+    dhcp_option_short():
+
+       21f4a:	f805 a00c 	strb.w	sl, [r5, ip]
+
+    dhcp_option_byte():
+
+       21f4e:	9b03      	ldr	r3, [sp, #12]
+
+    dhcp_option():
+
+       21f50:	f04f 0903 	mov.w	r9, #3
+
+       21f54:	f04f 0c37 	mov.w	ip, #55	@ 0x37
+
+       21f58:	f805 c001 	strb.w	ip, [r5, r1]
+
+       21f5c:	f805 9002 	strb.w	r9, [r5, r2]
+
+    dhcp_option_byte():
+
+       21f60:	2201      	movs	r2, #1
+
+       21f62:	54ea      	strb	r2, [r5, r3]
+
+       21f64:	9b04      	ldr	r3, [sp, #16]
+
+       21f66:	9a05      	ldr	r2, [sp, #20]
+
+       21f68:	f805 9003 	strb.w	r9, [r5, r3]
+
+       21f6c:	3009      	adds	r0, #9
+
+       21f6e:	231c      	movs	r3, #28
+
+       21f70:	54ab      	strb	r3, [r5, r2]
+
+    dhcp_renew():
+
+       21f72:	4629      	mov	r1, r5
+
+       21f74:	b280      	uxth	r0, r0
+
+       21f76:	463a      	mov	r2, r7
+
+       21f78:	f7ff f8b8 	bl	210ec <<a href="./699875e3de39152454f386959b414384.html">dhcp_option_hostname</a>>
+
+    dhcp_option_trailer():
+
+       21f7c:	1c41      	adds	r1, r0, #1
+
+       21f7e:	b289      	uxth	r1, r1
+
+       21f80:	23ff      	movs	r3, #255	@ 0xff
+
+       21f82:	2943      	cmp	r1, #67	@ 0x43
+
+       21f84:	542b      	strb	r3, [r5, r0]
+
+       21f86:	d80c      	bhi.n	21fa2 <<a href="./fcb46795b2bc52273d87158abd038312.html">dhcp_renew</a>+0xde>
+
+       21f88:	440d      	add	r5, r1
+
+       21f8a:	f1c0 0042 	rsb	r0, r0, #66	@ 0x42
+
+       21f8e:	31ef      	adds	r1, #239	@ 0xef
+
+       21f90:	440c      	add	r4, r1
+
+       21f92:	fa15 f380 	uxtah	r3, r5, r0
+
+       21f96:	2200      	movs	r2, #0
+
+       21f98:	f804 2f01 	strb.w	r2, [r4, #1]!
+
+       21f9c:	429c      	cmp	r4, r3
+
+       21f9e:	d1fb      	bne.n	21f98 <<a href="./fcb46795b2bc52273d87158abd038312.html">dhcp_renew</a>+0xd4>
+
+       21fa0:	2144      	movs	r1, #68	@ 0x44
+
+       21fa2:	31f0      	adds	r1, #240	@ 0xf0
+
+       21fa4:	b289      	uxth	r1, r1
+
+       21fa6:	4640      	mov	r0, r8
+
+       21fa8:	f7fa fb5e 	bl	1c668 <<a href="../../pbuf.c/68108b6628d7b9ef8a7b88f2490c569c.html">pbuf_realloc</a>>
+
+    dhcp_renew():
+
+       21fac:	4a17      	ldr	r2, [pc, #92]	@ (2200c <<a href="./fcb46795b2bc52273d87158abd038312.html">dhcp_renew</a>+0x148>)
+
+       21fae:	2343      	movs	r3, #67	@ 0x43
+
+       21fb0:	6810      	ldr	r0, [r2, #0]
+
+       21fb2:	9700      	str	r7, [sp, #0]
+
+       21fb4:	f106 0218 	add.w	r2, r6, #24
+
+       21fb8:	4641      	mov	r1, r8
+
+       21fba:	f7fe fc7d 	bl	208b8 <<a href="../../udp.c/f8c887f66b79e75c3d421fb1ed410582.html">udp_sendto_if</a>>
+
+       21fbe:	4604      	mov	r4, r0
+
+       21fc0:	4640      	mov	r0, r8
+
+       21fc2:	f7fa fc07 	bl	1c7d4 <<a href="../../pbuf.c/9b6fd2596874539050b4147be9634d35.html">pbuf_free</a>>
+
+       21fc6:	79b3      	ldrb	r3, [r6, #6]
+
+       21fc8:	2bff      	cmp	r3, #255	@ 0xff
+
+       21fca:	d015      	beq.n	21ff8 <<a href="./fcb46795b2bc52273d87158abd038312.html">dhcp_renew</a>+0x134>
+
+       21fcc:	3301      	adds	r3, #1
+
+       21fce:	b2db      	uxtb	r3, r3
+
+       21fd0:	2b09      	cmp	r3, #9
+
+       21fd2:	71b3      	strb	r3, [r6, #6]
+
+       21fd4:	d810      	bhi.n	21ff8 <<a href="./fcb46795b2bc52273d87158abd038312.html">dhcp_renew</a>+0x134>
+
+       21fd6:	ebc3 1243 	rsb	r2, r3, r3, lsl #5
+
+       21fda:	eb03 0382 	add.w	r3, r3, r2, lsl #2
+
+       21fde:	011b      	lsls	r3, r3, #4
+
+       21fe0:	4a0b      	ldr	r2, [pc, #44]	@ (22010 <<a href="./fcb46795b2bc52273d87158abd038312.html">dhcp_renew</a>+0x14c>)
+
+       21fe2:	f203 13f3 	addw	r3, r3, #499	@ 0x1f3
+
+       21fe6:	b29b      	uxth	r3, r3
+
+       21fe8:	fba2 2303 	umull	r2, r3, r2, r3
+
+       21fec:	095b      	lsrs	r3, r3, #5
+
+       21fee:	4620      	mov	r0, r4
+
+       21ff0:	8133      	strh	r3, [r6, #8]
+
+       21ff2:	b009      	add	sp, #36	@ 0x24
+
+       21ff4:	e8bd 8ff0 	ldmia.w	sp!, {r4, r5, r6, r7, r8, r9, sl, fp, pc}
+
+       21ff8:	2328      	movs	r3, #40	@ 0x28
+
+       21ffa:	4620      	mov	r0, r4
+
+       21ffc:	8133      	strh	r3, [r6, #8]
+
+       21ffe:	b009      	add	sp, #36	@ 0x24
+
+       22000:	e8bd 8ff0 	ldmia.w	sp!, {r4, r5, r6, r7, r8, r9, sl, fp, pc}
+
+       22004:	f04f 34ff 	mov.w	r4, #4294967295	@ 0xffffffff
+
+       22008:	e7dd      	b.n	21fc6 <<a href="./fcb46795b2bc52273d87158abd038312.html">dhcp_renew</a>+0x102>
+
+       2200a:	bf00      	nop
+
+       2200c:	1fff7278 	.word	0x1fff7278
+
+       22010:	10624dd3 	.word	0x10624dd3
+
+    </pre>
+
+    
+    <pre><a href="./4daa8f7f4379045adbdfb1ced5875b2d.html">dhcp_release_and_stop (332)</a></pre>
+    
+
+    
+        <h1>Stack Worst-Case Scenarios</h1>
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 552</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 3,904</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    552
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                48 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    3,904
+                    
+                    
+                </td>
+                <td class="col_size">160</td>
+                <td><a href="../../../../../printf/src/printf/printf.c/aead89a8c09454d3b52c82329b9d6539.html" class="icon-function">out_rev_</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                    
+                    504
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                112 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    3,744
+                    
+                    
+                </td>
+                <td class="col_size">792</td>
+                <td><a href="../../../../../printf/src/printf/printf.c/ac6598d6032c1151c802f0c9a9979746.html" class="icon-function">print_integer</a></td>
+            </tr>
+        
+            <tr>
+                <th>3</th>
+                <td class="col_size">
+                    
+                    392
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                88 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    2,952
+                    
+                    
+                </td>
+                <td class="col_size">1,964</td>
+                <td><a href="../../../../../printf/src/printf/printf.c/6d7d630ec5529648e33ae989eebb2cb7.html" class="icon-function">_vsnprintf</a></td>
+            </tr>
+        
+            <tr>
+                <th>4</th>
+                <td class="col_size">
+                    
+                    304
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                16 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    988
+                    
+                    
+                </td>
+                <td class="col_size">32</td>
+                <td><a href="../../../../../printf/src/printf/printf.c/529535ce0d5bfecabb7841bebeaf251c.html" class="icon-function">vsnprintf_</a></td>
+            </tr>
+        
+            <tr>
+                <th>5</th>
+                <td class="col_size">
+                    
+                    288
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                16 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    956
+                    
+                    
+                </td>
+                <td class="col_size">52</td>
+                <td><a href="../../../../../../../executables/referenceApp/application/src/logger/logger.cpp/98866fb3d81ee8db78cbfd1e2dfd931d.html" class="icon-function">log_lwipInfo</a></td>
+            </tr>
+        
+            <tr>
+                <th>6</th>
+                <td class="col_size">
+                    
+                    272
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                16 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    904
+                    
+                    
+                </td>
+                <td class="col_size">60</td>
+                <td><a href="../../memp.c/39d50c52143357af896630c36b8c515f.html" class="icon-function">memp_free</a></td>
+            </tr>
+        
+            <tr>
+                <th>7</th>
+                <td class="col_size">
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    844
+                    
+                    
+                </td>
+                <td class="col_size">112</td>
+                <td><a href="../../pbuf.c/9b6fd2596874539050b4147be9634d35.html" class="icon-function">pbuf_free</a></td>
+            </tr>
+        
+            <tr>
+                <th>8</th>
+                <td class="col_size">
+                    
+                    256
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                32 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    732
+                    
+                    
+                </td>
+                <td class="col_size">264</td>
+                <td><a href="../../pbuf.c/00f9d6c635a80626d607c18477d3504a.html" class="icon-function">pbuf_alloc</a></td>
+            </tr>
+        
+            <tr>
+                <th>9</th>
+                <td class="col_size">
+                    
+                    224
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                56 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    468
+                    
+                    
+                </td>
+                <td class="col_size">356</td>
+                <td><a href="../../udp.c/98b639583090b8420a937b79d3bd3d07.html" class="icon-function">udp_sendto_if_src</a></td>
+            </tr>
+        
+            <tr>
+                <th>10</th>
+                <td class="col_size">
+                    
+                    168
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                24 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">112</td>
+                <td><a href="../../udp.c/f8c887f66b79e75c3d421fb1ed410582.html" class="icon-function">udp_sendto_if</a></td>
+            </tr>
+        
+        </tbody>
+        
+        <tfoot>
+            <tr>
+                <th></th>
+                <th class="col_size">144
+                </th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </tfoot>
+        
+    </table>
+        
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 144</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 812</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    144
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                72 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    812
+                    
+                    
+                </td>
+                <td class="col_size">336</td>
+                <td><a href="./fcb46795b2bc52273d87158abd038312.html" class="icon-function">dhcp_renew</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                </td>
+                <td class="col_size">
+            
+                72 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">476</td>
+                <td><a href="./625c8433015a8cb580108e0f733b653d.html" class="icon-function">dhcp_coarse_tmr</a></td>
+            </tr>
+        
+        </tbody>
+        
+    </table>
+        
+    
+
+
+        </div>
+    <div id="page-footer">
+        <hr>
+        
+            brought to you with 💖
+            by <a href="https://twitter.com/hbehrens">Heiko Behrens</a>
+            <span class="secondary">– MIT license, copyright © 2014-2026</span>
+        
+    </div>
+    </div>
+</body>
+</html>
