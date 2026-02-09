@@ -9,10 +9,9 @@
 #include <bsp/timer/SystemTimer.h>
 #include <bsp/timer/isEqualAfterTimeout.h>
 #include <etl/byte_stream.h>
+#include <etl/error_handler.h>
 #include <etl/span.h>
 #include <etl/unaligned_type.h>
-
-#include <cassert>
 
 using namespace can;
 
@@ -44,15 +43,17 @@ FlexCANDevice::FlexCANDevice(
         case 0x40025000UL: fIndex = 1; break;
         case 0x4002B000UL: fIndex = 2; break;
 
-        default: assert(1);
+        default: ETL_ASSERT_FAIL(ETL_ERROR_GENERIC("Unsupported baseAddress"));
     }
 
     // Buffers 0..16 are used for reception
-    assert(fConfig.numRxBufsExt + fConfig.numRxBufsStd <= FIRST_TRANSMIT_BUFFER);
+    ETL_ASSERT(
+        fConfig.numRxBufsExt + fConfig.numRxBufsStd <= FIRST_TRANSMIT_BUFFER,
+        ETL_ERROR_GENERIC("Bad reception buffer"));
 
     // Buffers 16..31 are used for transmission (application),
     // buffer CALLBACK_TRANSMIT_BUFFER for transport transmission
-    assert(fConfig.numTxBufsApp <= 31);
+    ETL_ASSERT(fConfig.numTxBufsApp <= 31, ETL_ERROR_GENERIC("Bad transmission buffer"));
 }
 
 FlexCANDevice::FlexCANDevice(
@@ -77,14 +78,16 @@ FlexCANDevice::FlexCANDevice(
         case 0x40025000UL: fIndex = 1; break;
         case 0x4002B000UL: fIndex = 2; break;
 
-        default: assert(1);
+        default: ETL_ASSERT_FAIL(ETL_ERROR_GENERIC("Unsupported baseAddress"));
     }
     // Buffers 0..16 are used for reception
-    assert(fConfig.numRxBufsExt + fConfig.numRxBufsStd <= FIRST_TRANSMIT_BUFFER);
+    ETL_ASSERT(
+        fConfig.numRxBufsExt + fConfig.numRxBufsStd <= FIRST_TRANSMIT_BUFFER,
+        ETL_ERROR_GENERIC("Bad reception buffer"));
 
     // Buffers 16..31 are used for transmission (application),
     // buffer CALLBACK_TRANSMIT_BUFFER for transport transmission
-    assert(fConfig.numTxBufsApp <= 31);
+    ETL_ASSERT(fConfig.numTxBufsApp <= 31, ETL_ERROR_GENERIC("Bad transmission buffer"));
 }
 
 ICanTransceiver::ErrorCode FlexCANDevice::init()
