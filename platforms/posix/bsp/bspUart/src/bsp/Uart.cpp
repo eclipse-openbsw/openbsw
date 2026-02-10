@@ -1,7 +1,6 @@
 #include <bsp/Uart.h>
 #include <bsp/uart/UartConfig.h>
 
-#include <cassert>
 #include <errno.h>
 #include <fcntl.h> // For fcntl and O_NONBLOCK
 #include <stdio.h>

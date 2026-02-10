@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include <etl/error_handler.h>
 #include <etl/memory.h>
 #include <etl/span.h>
 #include <etl/type_list.h>
@@ -9,7 +10,6 @@
 #include <etl/variant.h>
 #include <io/MemoryQueue.h>
 
-#include <cassert>
 #include <type_traits>
 
 /**
@@ -192,7 +192,7 @@ public:
     template<typename Visitor>
     static void read(Visitor& visitor, ::etl::span<uint8_t const> const data)
     {
-        assert(data.size() != 0);
+        ETL_ASSERT(data.size() != 0, ETL_ERROR_GENERIC("Buffer empty"));
         return variant_T_do<TypeList>::template call<Visitor, void>(
             data[0], data.subspan(1).data(), visitor);
     }
@@ -200,7 +200,7 @@ public:
     template<typename Visitor>
     static void read_with_payload(Visitor& visitor, ::etl::span<uint8_t const> const data)
     {
-        assert(data.size() != 0);
+        ETL_ASSERT(data.size() != 0, ETL_ERROR_GENERIC("Buffer empty"));
         return variant_do<TypeList>::template call<Visitor, void>(
             data[0], data.subspan(1), visitor);
     }

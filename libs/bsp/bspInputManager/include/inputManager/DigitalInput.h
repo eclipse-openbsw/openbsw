@@ -8,8 +8,6 @@
 
 #include <etl/uncopyable.h>
 
-#include <cassert>
-
 namespace bios
 {
 class DigitalInput : public ::etl::uncopyable
