@@ -1,4 +1,4 @@
-import pytest
+import pytest, os
 from can.interfaces import socketcan
 import isotp
 from doipclient import DoIPClient
@@ -18,6 +18,9 @@ from capture_serial import (
     capture_serial_by_name,
     CaptureSerial,
 )
+from serial_minilog import start_minilog, stop_minilog, on_line as minilog_on_line
+import functools
+from datetime import datetime
 
 
 class TargetSession:
@@ -134,14 +137,25 @@ def once_per_pytest_run():
     """This is used once for the whole pytest run to provide opportunity
     for setup before all tests and teardown after all tests.
     """
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    log_path = os.environ.get("SERIAL_LOG_PATH", f"artifacts/serial_{timestamp}.log")
     if TargetInfo.by_name:
         # Will be executed before the first test
         start_per_run_processes()
-        start_capture_serial()
+
+        start_minilog(log_path)
+
+        def on_line_factory(target_name):
+            # Bind the target into the callback (CaptureSerial calls _on_line(self._target_name, bytes(line)))
+            return functools.partial(minilog_on_line, target_name)
+
+        start_capture_serial(on_line_factory=on_line_factory)
+
     yield 1
+
     if TargetInfo.by_name:
-        # Will be executed after the last test
         close_capture_serial()
+        stop_minilog()
         stop_all_processes()
 
 
@@ -211,7 +225,7 @@ def pytest_generate_tests(metafunc):
         if "hw_tester" in metafunc.fixturenames:
             need_hw_tester = True
             fixture_names += ",hw_tester"
- 
+
         need_uds_transport = False
         if "uds_transport" in metafunc.fixturenames:
             need_uds_transport = True
@@ -225,7 +239,9 @@ def pytest_generate_tests(metafunc):
             if need_hw_tester:
                 if target_info.hw_tester_serial:
                     # The target has hw_tester so this test can run
-                    all_targets_fixture_args.append([name, target_info.hw_tester_serial])
+                    all_targets_fixture_args.append(
+                        [name, target_info.hw_tester_serial]
+                    )
 
             if need_uds_transport:
                 if target_info.socketcan:
@@ -235,9 +251,7 @@ def pytest_generate_tests(metafunc):
                     # Test UDS over Ethernet
                     all_targets_fixture_args.append([name, "eth"])
 
-        metafunc.parametrize(fixture_names,
-                            all_targets_fixture_args,
-                            indirect=True)
+        metafunc.parametrize(fixture_names, all_targets_fixture_args, indirect=True)
 
 
 def pytest_runtest_setup(item):
