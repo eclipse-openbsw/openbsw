@@ -7,7 +7,11 @@ add_subdirectory(bspFlexCan)
 add_subdirectory(bspFtm)
 add_subdirectory(bspFtmPwm)
 add_subdirectory(bspInterruptsImpl)
-add_subdirectory(bspIo)
+
+if (BUILD_EXECUTABLE STREQUAL "referenceApp")
+    add_subdirectory(bspIo)
+endif ()
+
 add_subdirectory(bspMcu)
 add_subdirectory(bspTja1101)
 add_subdirectory(bspUart)

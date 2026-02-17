@@ -74,12 +74,12 @@ void Uart::deinit()
     }
 }
 
-static Uart instances[] = {
-    Uart(Uart::Id::TERMINAL),
-};
-
 bsp::Uart& Uart::getInstance(Id id)
 {
+    static Uart instances[] = {
+        Uart(Uart::Id::TERMINAL),
+    };
+
     ETL_ASSERT(
         id < Id::INVALID, ETL_ERROR_GENERIC("UartId::INVALID is not a valid Uart identifier"));
 

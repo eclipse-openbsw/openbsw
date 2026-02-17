@@ -52,27 +52,23 @@ bsp::BspReturnCode Output::invert(OutputId const chan)
 
     if (chan < NUMBER_OF_INTERNAL_OUTPUTS)
     {
-        bool t;
         if (Io::PORT_UNAVAILABLE == sfpOutputConfiguration[chan].ioNumber)
         {
             return bsp::BSP_NOT_SUPPORTED;
         }
-        t = Io::getPin(static_cast<uint16_t>(sfpOutputConfiguration[chan].ioNumber));
-        if (t)
-        {
-            (void)Io::setPin(static_cast<uint16_t>(sfpOutputConfiguration[chan].ioNumber), 0);
-        }
-        else
-        {
-            (void)Io::setPin(static_cast<uint16_t>(sfpOutputConfiguration[chan].ioNumber), 1);
-        }
+
+        bool const pinVal
+            = Io::getPin(static_cast<uint16_t>(sfpOutputConfiguration[chan].ioNumber));
+        (void)Io::setPin(static_cast<uint16_t>(sfpOutputConfiguration[chan].ioNumber), !pinVal);
         return bsp::BSP_OK;
     }
-    else if (chan == NUMBER_OF_INTERNAL_OUTPUTS)
+
+    if (chan == NUMBER_OF_INTERNAL_OUTPUTS)
     {
         return bsp::BSP_NOT_SUPPORTED;
     }
-    else if (chan < TOTAL_NUMBER_OF_OUTPUTS)
+
+    if (chan < TOTAL_NUMBER_OF_OUTPUTS)
     {
         // dynamic instance
         dynamicClientType const channel = chan - NUMBER_OF_INTERNAL_OUTPUTS - 1;
@@ -90,31 +86,15 @@ bsp::BspReturnCode Output::invert(OutputId const chan)
                         return (dynamicOutputCfg.getClientInstance(channel)->set(
                             dynamicOutputCfg.getChannelInsideClient(channel), 0U, true));
                     }
-                    else
-                    {
-                        return (dynamicOutputCfg.getClientInstance(channel)->set(
-                            dynamicOutputCfg.getChannelInsideClient(channel), 1U, true));
-                    }
-                }
-                else
-                {
-                    return bsp::BSP_ERROR;
+
+                    return (dynamicOutputCfg.getClientInstance(channel)->set(
+                        dynamicOutputCfg.getChannelInsideClient(channel), 1U, true));
                 }
             }
-            else
-            {
-                return bsp::BSP_ERROR;
-            }
-        }
-        else
-        {
-            return bsp::BSP_ERROR;
         }
     }
-    else
-    {
-        return bsp::BSP_ERROR;
-    }
+
+    return bsp::BSP_ERROR;
 }
 
 bsp::BspReturnCode Output::init(OutputId const chan)
@@ -177,35 +157,19 @@ bsp::BspReturnCode Output::get(OutputId const chan, bool& result)
         result = volRow;
         return bsp::BSP_OK;
     }
-    else if (chan == NUMBER_OF_INTERNAL_OUTPUTS)
-    {
-        return bsp::BSP_ERROR;
-    }
-    else if (chan < TOTAL_NUMBER_OF_OUTPUTS)
+
+    if ((chan != NUMBER_OF_INTERNAL_OUTPUTS) && (chan < TOTAL_NUMBER_OF_OUTPUTS))
     {
         // dynamic instance
         dynamicClientType const channel = chan - NUMBER_OF_INTERNAL_OUTPUTS - 1;
-        if (channel < NUMBER_OF_DYNAMIC_OUTPUTS)
+        if ((channel < NUMBER_OF_DYNAMIC_OUTPUTS) && dynamicOutputCfg.getClientValid(channel))
         {
-            if (dynamicOutputCfg.getClientValid(channel))
-            {
-                return (dynamicOutputCfg.getClientInstance(channel)->get(
-                    dynamicOutputCfg.getChannelInsideClient(channel), result));
-            }
-            else
-            {
-                return bsp::BSP_ERROR;
-            }
-        }
-        else
-        {
-            return bsp::BSP_ERROR;
+            return (dynamicOutputCfg.getClientInstance(channel)->get(
+                dynamicOutputCfg.getChannelInsideClient(channel), result));
         }
     }
-    else
-    {
-        return bsp::BSP_ERROR;
-    }
+
+    return bsp::BSP_ERROR;
 }
 
 bsp::BspReturnCode Output::set(OutputId const chan, uint8_t const vol, bool const latch)
@@ -229,35 +193,19 @@ bsp::BspReturnCode Output::set(OutputId const chan, uint8_t const vol, bool cons
         (void)Io::setPin(static_cast<uint16_t>(sfpOutputConfiguration[chan].ioNumber), volRow);
         return bsp::BSP_OK;
     }
-    else if (chan == NUMBER_OF_INTERNAL_OUTPUTS)
-    {
-        return bsp::BSP_NOT_SUPPORTED;
-    }
-    else if (chan < TOTAL_NUMBER_OF_OUTPUTS)
+
+    if ((chan != NUMBER_OF_INTERNAL_OUTPUTS) && (chan < TOTAL_NUMBER_OF_OUTPUTS))
     {
         // dynamic instance
         dynamicClientType const channel = chan - NUMBER_OF_INTERNAL_OUTPUTS - 1;
-        if (channel < NUMBER_OF_DYNAMIC_OUTPUTS)
+        if ((channel < NUMBER_OF_DYNAMIC_OUTPUTS) && dynamicOutputCfg.getClientValid(channel))
         {
-            if (dynamicOutputCfg.getClientValid(channel))
-            {
-                return (dynamicOutputCfg.getClientInstance(channel)->set(
-                    dynamicOutputCfg.getChannelInsideClient(channel), vol, latch));
-            }
-            else
-            {
-                return bsp::BSP_ERROR;
-            }
-        }
-        else
-        {
-            return bsp::BSP_ERROR;
+            return (dynamicOutputCfg.getClientInstance(channel)->set(
+                dynamicOutputCfg.getChannelInsideClient(channel), vol, latch));
         }
     }
-    else
-    {
-        return bsp::BSP_ERROR;
-    }
+
+    return bsp::BSP_ERROR;
 }
 
 bsp::BspReturnCode Output::setDynamicClient(
@@ -277,16 +225,10 @@ bsp::BspReturnCode Output::setDynamicClient(
             fLock.resume();
             return bsp::BSP_OK;
         }
-        else
-        {
-            fLock.resume();
-            return bsp::BSP_ERROR;
-        }
+        fLock.resume();
     }
-    else
-    {
-        return bsp::BSP_ERROR;
-    }
+
+    return bsp::BSP_ERROR;
 }
 
 bsp::BspReturnCode Output::clrDynamicClient(uint16_t const outputNumber)
@@ -302,16 +244,10 @@ bsp::BspReturnCode Output::clrDynamicClient(uint16_t const outputNumber)
             fLock.resume();
             return bsp::BSP_OK;
         }
-        else
-        {
-            fLock.resume();
-            return bsp::BSP_ERROR;
-        }
+        fLock.resume();
     }
-    else
-    {
-        return bsp::BSP_ERROR;
-    }
+
+    return bsp::BSP_ERROR;
 }
 
 void Output::cleanDynamicClients()
@@ -328,10 +264,7 @@ char const* Output::getName(uint16_t const channel)
     {
         return outputConfigurationStrings[channel];
     }
-    else
-    {
-        return ("??? ->");
-    }
+    return ("??? ->");
 }
 
 } /* namespace bios */

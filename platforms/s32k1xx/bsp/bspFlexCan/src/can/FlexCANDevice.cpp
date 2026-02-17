@@ -305,10 +305,8 @@ uint8_t FlexCANDevice::getTransmitBuffer(CANFrame const& frame, bool callbackReq
         {
             return CALLBACK_TRANSMIT_BUFFER;
         }
-        else
-        {
-            return TRANSMIT_BUFFER_UNAVAILABLE;
-        }
+
+        return TRANSMIT_BUFFER_UNAVAILABLE;
     }
 
     uint32_t frameId = CanId::rawId(frame.getId());
@@ -359,50 +357,40 @@ ICanTransceiver::ErrorCode
 FlexCANDevice::transmit(CANFrame const& frame, uint8_t bufIdx, bool txInterruptNeeded)
 {
     interrupts::SuspendResumeAllInterruptsScopedLock lock;
-
-    if (((bufIdx >= FIRST_TRANSMIT_BUFFER)
-         && (bufIdx < FIRST_TRANSMIT_BUFFER + fConfig.numTxBufsApp))
-        || (CALLBACK_TRANSMIT_BUFFER == bufIdx))
+    bool const isValidBufferIdx = ((bufIdx >= FIRST_TRANSMIT_BUFFER)
+                                   && (bufIdx < (FIRST_TRANSMIT_BUFFER + fConfig.numTxBufsApp)))
+                                  || (CALLBACK_TRANSMIT_BUFFER == bufIdx);
+    if (isValidBufferIdx && (CANTxBuffer::CODE_INACTIVE == messageBuffer(bufIdx).FLAGS.B.CODE))
     {
-        if (CANTxBuffer::CODE_INACTIVE == messageBuffer(bufIdx).FLAGS.B.CODE)
+        if (txInterruptNeeded)
         {
-            if (txInterruptNeeded)
-            {
-                fTxInterruptMask0 = 0;
-                fTxInterruptMask0
-                    |= (1 << (bufIdx - e_TRANSMIT_BUFFER_START + FIRST_TRANSMIT_BUFFER));
-            }
-            if (CanId::isExtended(frame.getId()))
-            {
-                messageBuffer(bufIdx).ID.R        = CanId::rawId(frame.getId());
-                messageBuffer(bufIdx).FLAGS.B.IDE = 1;
-                messageBuffer(bufIdx).FLAGS.B.SRR = 1;
-            }
-            else
-            {
-                messageBuffer(bufIdx).ID.B.ID_STD = CanId::rawId(frame.getId());
-                messageBuffer(bufIdx).FLAGS.B.IDE = 0;
-            }
-            ::etl::byte_stream_reader byte_stream{frame.getPayload(), 8, etl::endian::big};
-            messageBuffer(bufIdx).DATA.W[0]   = byte_stream.read_unchecked<uint32_t>();
-            messageBuffer(bufIdx).DATA.W[1]   = byte_stream.read_unchecked<uint32_t>();
-            messageBuffer(bufIdx).FLAGS.B.DLC = frame.getPayloadLength();
-            if (txInterruptNeeded)
-            {
-                enableTransmitInterrupt();
-            }
-            messageBuffer(bufIdx).FLAGS.B.CODE = CANTxBuffer::CODE_TRANSMIT;
-            return ICanTransceiver::ErrorCode::CAN_ERR_OK;
+            fTxInterruptMask0 = 0;
+            fTxInterruptMask0 |= (1 << (bufIdx - e_TRANSMIT_BUFFER_START + FIRST_TRANSMIT_BUFFER));
+        }
+        if (CanId::isExtended(frame.getId()))
+        {
+            messageBuffer(bufIdx).ID.R        = CanId::rawId(frame.getId());
+            messageBuffer(bufIdx).FLAGS.B.IDE = 1;
+            messageBuffer(bufIdx).FLAGS.B.SRR = 1;
         }
         else
         {
-            return ICanTransceiver::ErrorCode::CAN_ERR_TX_FAIL;
+            messageBuffer(bufIdx).ID.B.ID_STD = CanId::rawId(frame.getId());
+            messageBuffer(bufIdx).FLAGS.B.IDE = 0;
         }
+        ::etl::byte_stream_reader byte_stream{frame.getPayload(), 8, etl::endian::big};
+        messageBuffer(bufIdx).DATA.W[0]   = byte_stream.read_unchecked<uint32_t>();
+        messageBuffer(bufIdx).DATA.W[1]   = byte_stream.read_unchecked<uint32_t>();
+        messageBuffer(bufIdx).FLAGS.B.DLC = frame.getPayloadLength();
+        if (txInterruptNeeded)
+        {
+            enableTransmitInterrupt();
+        }
+        messageBuffer(bufIdx).FLAGS.B.CODE = CANTxBuffer::CODE_TRANSMIT;
+        return ICanTransceiver::ErrorCode::CAN_ERR_OK;
     }
-    else
-    {
-        return ICanTransceiver::ErrorCode::CAN_ERR_TX_FAIL;
-    }
+
+    return ICanTransceiver::ErrorCode::CAN_ERR_TX_FAIL;
 }
 
 unsigned char FlexCANDevice::dequeueRxFrameStream(unsigned char* data)
@@ -414,21 +402,19 @@ unsigned char FlexCANDevice::dequeueRxFrameStream(unsigned char* data)
     {
         return 0;
     }
-    else
+
+    can::CANFrame& frame = fRxQueue.front();
+    data[0]              = frame.getPayloadLength();
+    id                   = frame.getId();
+    data[1]              = static_cast<unsigned char>(id >> 8);
+    data[2]              = static_cast<unsigned char>(id);
+    ptr                  = frame.getPayload();
+    for (i = 0; i < data[0]; ++i)
     {
-        can::CANFrame& frame = fRxQueue.front();
-        data[0]              = frame.getPayloadLength();
-        id                   = frame.getId();
-        data[1]              = static_cast<unsigned char>(id >> 8);
-        data[2]              = static_cast<unsigned char>(id);
-        ptr                  = frame.getPayload();
-        for (i = 0; i < data[0]; ++i)
-        {
-            data[3 + i] = ptr[i];
-        }
-        fRxQueue.pop();
-        return 1;
+        data[3 + i] = ptr[i];
     }
+    fRxQueue.pop();
+    return 1;
 }
 
 ICanTransceiver::ErrorCode

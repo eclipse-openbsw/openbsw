@@ -176,7 +176,7 @@ TEST_F(RegisterTest, LastCheckedEntryIsInitiallyNull)
 
 TEST_F(RegisterTest, LastCheckedEntryPointsToLastEntryAfterCheck)
 {
-    auto const ptrToLastEntry = &_entries[NUMBER_OF_ENTRIES - 1];
+    auto* const ptrToLastEntry = &_entries[NUMBER_OF_ENTRIES - 1];
     _registerMonitor.check();
     EXPECT_EQ(_registerMonitor.getLastCheckedEntry(), ptrToLastEntry);
 }
@@ -184,8 +184,8 @@ TEST_F(RegisterTest, LastCheckedEntryPointsToLastEntryAfterCheck)
 TEST_F(RegisterTest, LastCheckedEntryPointsToFaultyEntry)
 {
     EXPECT_CALL(_handler, handle(SOMETHING_HAPPENED));
-    auto const ptrToFaultyEntry = &_entries[2];
-    _r2                         = ~_r2;
+    auto* const ptrToFaultyEntry = &_entries[2];
+    _r2                          = ~_r2;
     _registerMonitor.check();
     EXPECT_EQ(_registerMonitor.getLastCheckedEntry(), ptrToFaultyEntry);
 }
