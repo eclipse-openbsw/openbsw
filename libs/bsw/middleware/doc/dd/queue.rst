@@ -2,7 +2,7 @@ Queue
 =====
 
 The queue folder contains a multi-producer single-consumer queue implementation, which is composed of a non-templated base class and a generic templated class.
-This queue will be unique to each cluster in the middleware system, and will be used to store ``MiddlewareMessage`` objects.
+This queue will be unique to each cluster in the middleware system, and will be used to store ``Message`` objects.
 The queue must be declared with a ``QueueTraits`` type, which is a templated structure that contains the following members:
 
 * T - the type that will be contained in the queue
