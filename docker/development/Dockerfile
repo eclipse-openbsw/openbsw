@@ -42,6 +42,8 @@ RUN apt-get update && apt-get install -y \
         g++-11 \
         gcc-11 \
         git \
+        iproute2 \
+        iputils-ping \
         lcov \
         ninja-build \
         python-is-python3 \
@@ -54,6 +56,7 @@ RUN apt-get update && apt-get install -y \
         wget \
         iproute2\
         iputils-ping\
+        can-utils \
         zip
 
 COPY --from=external-downloads /gcc-arm.tar.xz /gcc-arm.tar.xz
