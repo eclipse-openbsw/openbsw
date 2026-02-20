@@ -10,6 +10,7 @@ class ProgrammingSession : public DiagSession
 {
 public:
     ProgrammingSession() : DiagSession(PROGRAMMING, 0x04U) {}
+    ~ProgrammingSession() = default;
 
     DiagReturnCode::Type isTransitionPossible(DiagSession::SessionType targetSession) override;
 
