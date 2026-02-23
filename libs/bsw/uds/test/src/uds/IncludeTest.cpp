@@ -48,7 +48,6 @@
 #include "uds/services/routinecontrol/StopRoutine.h"
 // #include "uds/services/securityaccess/SecurityAccess.h"
 #include "uds/services/sessioncontrol/DiagnosticSessionControl.h"
-#include "uds/services/sessioncontrol/EepromManagerSessionPersistence.h"
 #include "uds/services/sessioncontrol/ISessionPersistence.h"
 #include "uds/services/testerpresent/TesterPresent.h"
 #include "uds/services/writedata/WriteDataByIdentifier.h"
