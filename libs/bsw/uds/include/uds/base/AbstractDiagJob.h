@@ -159,7 +159,7 @@ public:
     }
 
 #ifdef UNIT_TEST
-    static void unsetDiagSession() { sfpSessionManager = nullptr; }
+    static void unsetDiagSessionManager() { sfpSessionManager = nullptr; }
 
     virtual ~AbstractDiagJob() {}
 #endif

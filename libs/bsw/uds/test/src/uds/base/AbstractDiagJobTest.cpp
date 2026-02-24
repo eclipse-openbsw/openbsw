@@ -287,7 +287,7 @@ TEST_F(
     AbstractDiagJobTest,
     getDiagSessionManager_calls_an_exception_if_a_sessionManager_does_not_exist)
 {
-    AbstractDiagJob::unsetDiagSession();
+    AbstractDiagJob::unsetDiagSessionManager();
     ASSERT_THROW(fTestableDiagJob.getDiagSessionManager(), ::etl::exception);
 }
 
@@ -295,7 +295,7 @@ TEST_F(
     AbstractDiagJobTest,
     const_getDiagSessionManager_calls_an_exception_if_a_sessionManager_does_not_exist)
 {
-    AbstractDiagJob::unsetDiagSession();
+    AbstractDiagJob::unsetDiagSessionManager();
     TestableDiagJob const diagJob(IMPLEMENTED_REQUEST, sizeof(IMPLEMENTED_REQUEST), 0U, 0U, 1U);
 
     ASSERT_THROW(diagJob.getDiagSessionManager(), ::etl::exception);
