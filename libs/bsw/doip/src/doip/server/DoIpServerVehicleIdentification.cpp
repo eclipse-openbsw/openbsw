@@ -40,7 +40,7 @@ DoIpServerVehicleIdentification::getOemMessageHandler(uint16_t payloadType) cons
     {
         return nullptr;
     }
-    auto const oemMessageHandler = _oemMessageHandlers->find(payloadType);
+    auto const* const oemMessageHandler = _oemMessageHandlers->find(payloadType);
     if (oemMessageHandler == _oemMessageHandlers->end())
     {
         return nullptr;

@@ -175,9 +175,9 @@ void EntrySerializer<T, Timestamp, ReadOnlyPredicate>::deserialize(
     ::etl::span<uint8_t const> const& srcBuffer, IEntrySerializerCallback<Timestamp>& callback)
 {
     EntryReader reader(srcBuffer.data(), srcBuffer.data() + srcBuffer.size());
-    Timestamp timestamp;
-    uint8_t componentIdx;
-    uint8_t level;
+    Timestamp timestamp{};
+    uint8_t componentIdx{};
+    uint8_t level{};
     reader.readBytes(&timestamp, static_cast<T>(sizeof(timestamp)));
     reader.readBytes(&componentIdx, static_cast<T>(sizeof(componentIdx)));
     reader.readBytes(&level, static_cast<T>(sizeof(level)));

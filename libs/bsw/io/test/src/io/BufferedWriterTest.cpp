@@ -13,8 +13,8 @@ namespace
 {
 struct BufferedWriterTest : ::testing::Test
 {
-    static size_t const QUEUE_SIZE       = 10 * 1024;
-    static size_t const MAX_ELEMENT_SIZE = 1024;
+    static constexpr size_t MAX_ELEMENT_SIZE = 1024UL;
+    static constexpr size_t QUEUE_SIZE       = MAX_ELEMENT_SIZE * 10UL;
 
     using Q = ::io::MemoryQueue<QUEUE_SIZE, MAX_ELEMENT_SIZE>;
 
@@ -27,8 +27,8 @@ struct BufferedWriterTest : ::testing::Test
     ::io::BufferedWriter _bmqw;
 };
 
-size_t const BufferedWriterTest::QUEUE_SIZE;
-size_t const BufferedWriterTest::MAX_ELEMENT_SIZE;
+constexpr size_t BufferedWriterTest::QUEUE_SIZE;
+constexpr size_t BufferedWriterTest::MAX_ELEMENT_SIZE;
 
 /**
  * \refs:   SMD_io_BufferedWriter
@@ -70,7 +70,7 @@ TEST_F(BufferedWriterTest, allocate_max_size_will_return_max_size_slice)
  */
 TEST_F(BufferedWriterTest, allocate_on_full_writer_will_return_empty_slice)
 {
-    for (size_t i = 0; i < 10 * 10; ++i)
+    for (size_t i = 0; i < 100U; ++i)
     {
         auto const b = _bmqw.allocate(100);
         ASSERT_EQ(100, b.size()) << "@" << i;

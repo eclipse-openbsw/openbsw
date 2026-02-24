@@ -93,6 +93,7 @@ void exampleRunnableA() { printf("exampleRunnableA is called.\n"); }
 
 void exampleRunnableB() { printf("exampleRunnableB is called.\n"); }
 
+// NOLINTBEGIN(bugprone-exception-escape): This is just for testing purposes.
 int main()
 {
     auto eventManager = asyncNewPlatform::AsyncImplExample();
@@ -105,5 +106,7 @@ int main()
     eventManager.dispatch();
     return 0;
 }
+
+// NOLINTEND(bugprone-exception-escape)
 
 // EXAMPLE_END AsyncImplExample

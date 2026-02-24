@@ -408,7 +408,7 @@ TEST_F(DoIpTcpConnectionTest, RepeatSendingOfUnsentMessageBlockAfterDataHasBeenQ
     EXPECT_CALL(fSocketMock, flush())
         .InSequence(seq)
         .WillOnce(Return(::tcp::AbstractSocket::ErrorCode::SOCKET_ERR_OK));
-    testContext.elapse(1 * 1000U);
+    testContext.elapse(1000U);
     testContext.expireAndExecute();
     Mock::VerifyAndClearExpectations(&sendJobMock);
     Mock::VerifyAndClearExpectations(&fSocketMock);

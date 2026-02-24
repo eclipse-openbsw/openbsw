@@ -15,8 +15,10 @@
 #include <type_traits>
 #include <unistd.h>
 
+#include <etl/char_traits.h>
 #include <etl/error_handler.h>
 #include <etl/span.h>
+#include <sys/types.h>
 
 static_assert(
     std::is_standard_layout<::can::CANFrame>::value
@@ -173,7 +175,7 @@ void SocketCanTransceiver::guardedOpen()
     }
 
     struct ifreq ifr;
-    ::std::strcpy(ifr.ifr_name, name);
+    etl::strncpy(ifr.ifr_name, name, sizeof(ifr.ifr_name) / sizeof(ifr.ifr_name[0]));
     error = ioctl(fd, SIOCGIFINDEX, &ifr);
     if (error < 0)
     {
@@ -209,7 +211,7 @@ void SocketCanTransceiver::guardedOpen()
     ::std::memset(&addr, 0, sizeof(addr));
     addr.can_family  = AF_CAN;
     addr.can_ifindex = ifr.ifr_ifindex;
-    error            = bind(fd, (struct sockaddr*)&addr, sizeof(addr));
+    error            = bind(fd, reinterpret_cast<sockaddr*>(&addr), sizeof(addr));
     if (error < 0)
     {
         Logger::error(
@@ -251,8 +253,9 @@ void SocketCanTransceiver::guardedRun(int maxSentPerRun, int maxReceivedPerRun)
         socketCanFrame.can_dlc = length;
         ::std::memcpy(socketCanFrame.data, canFrame.getPayload(), length);
         ::std::memset(socketCanFrame.data + length, 0, sizeof(socketCanFrame.data) - length);
-        length = ::write(_fileDescriptor, reinterpret_cast<char*>(&socketCanFrame), CAN_MTU);
-        if (length != CAN_MTU)
+        ssize_t const bytesWritten
+            = ::write(_fileDescriptor, reinterpret_cast<char*>(&socketCanFrame), CAN_MTU);
+        if (bytesWritten != CAN_MTU)
         {
             break;
         }
@@ -266,7 +269,7 @@ void SocketCanTransceiver::guardedRun(int maxSentPerRun, int maxReceivedPerRun)
     for (int count = 0; count < maxReceivedPerRun; ++count)
     {
         alignas(can_frame) uint8_t buffer[CANFD_MTU];
-        int const length = read(_fileDescriptor, reinterpret_cast<char*>(buffer), CANFD_MTU);
+        ssize_t const length = read(_fileDescriptor, reinterpret_cast<char*>(buffer), CANFD_MTU);
         if (length < 0)
         {
             break;
@@ -277,8 +280,8 @@ void SocketCanTransceiver::guardedRun(int maxSentPerRun, int maxReceivedPerRun)
             Logger::debug(
                 CAN,
                 "[SocketCanTransceiver] received CAN frame, id=0x%X, length=%d",
-                (int)socketCanFrame.can_id,
-                (int)socketCanFrame.can_dlc);
+                static_cast<int>(socketCanFrame.can_id),
+                static_cast<int>(socketCanFrame.can_dlc));
             CANFrame canFrame;
             canFrame.setId(socketCanFrame.can_id);
             canFrame.setPayload(socketCanFrame.data, socketCanFrame.can_dlc);

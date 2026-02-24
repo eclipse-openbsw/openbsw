@@ -31,8 +31,11 @@ LOGGER_COMPONENT_MAPPING_INFO(LEVEL_DEBUG, _CONF2)
 LOGGER_COMPONENT_MAPPING_INFO(LEVEL_NONE, _CONF3)
 END_LOGGER_COMPONENT_MAPPING_INFO_TABLE();
 
+// NOLINTBEGIN(cert-err58-cpp): Instantiation of variable is done by macro.
 DEFINE_LOGGER_COMPONENT_MAPPING(
     TestMappingType, testMapping, componentInfoTable, LevelInfo::getDefaultTable(), _CONF1);
+
+// NOLINTEND(cert-err58-cpp)
 
 struct DefaultLoggerCommandTest : Test
 {

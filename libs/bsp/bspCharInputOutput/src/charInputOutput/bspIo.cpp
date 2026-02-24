@@ -13,6 +13,7 @@ extern "C"
 {
 #endif
 
+// NOLINTBEGIN(bugprone-reserved-identifier): Explanation for this suppression is below
 /**
  * \par Linking this module
  * The diab compiler is providing these methods for char in-/output. They will
@@ -35,6 +36,8 @@ int __outedit(int const c, int const last)
     }
     return __outchar(c, last);
 }
+
+// NOLINTEND(bugprone-reserved-identifier)
 
 int vsnprintf(char* buf, size_t const maxsize, char const* fmt, va_list args)
 {

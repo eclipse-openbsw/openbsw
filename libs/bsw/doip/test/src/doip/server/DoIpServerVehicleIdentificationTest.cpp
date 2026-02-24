@@ -21,8 +21,7 @@ struct DoIpServerVehicleIdentificationTest : Test
     DoIpServerVehicleIdentificationTest()
     {
         ON_CALL(fVehicleIdentificationCallbackMock, getPowerMode())
-            .WillByDefault(Return(
-                DoIpConstants::DiagnosticPowerMode(DoIpConstants::DiagnosticPowerMode::READY)));
+            .WillByDefault(Return(DoIpConstants::DiagnosticPowerMode::READY));
     }
 
     doip::DoIpServerVehicleIdentificationCallbackMock fVehicleIdentificationCallbackMock;

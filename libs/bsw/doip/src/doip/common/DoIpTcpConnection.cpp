@@ -115,10 +115,8 @@ bool DoIpTcpConnection::receivePayload(
         tryReceive();
         return true;
     }
-    else
-    {
-        return false;
-    }
+
+    return false;
 }
 
 void DoIpTcpConnection::endReceiveMessage(
@@ -166,10 +164,8 @@ bool DoIpTcpConnection::sendMessage(IDoIpSendJob& sendJob)
         }
         return true;
     }
-    else
-    {
-        return false;
-    }
+
+    return false;
 }
 
 void DoIpTcpConnection::close() { closeConnection(ConnectionState::INACTIVE, false, true); }

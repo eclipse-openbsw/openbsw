@@ -176,9 +176,9 @@ void IncomingDiagConnection::asyncSendPositiveResponse(
             }
         }
         responseMessage->resetValidBytes();
-        for (uint8_t i = 0U; i < _identifiers.size(); ++i)
+        for (auto& identifier : _identifiers)
         {
-            (void)responseMessage->append(_identifiers[i]);
+            (void)responseMessage->append(identifier);
         }
         responseMessage->setServiceId(serviceId + DiagReturnCode::POSITIVE_RESPONSE_OFFSET);
         (void)responseMessage->increaseValidBytes(length);
@@ -242,6 +242,11 @@ DiagReturnCode::Type IncomingDiagConnection::startNestedRequest(
 
 ::uds::ErrorCode IncomingDiagConnection::sendResponse()
 {
+    if (responseMessage == nullptr)
+    {
+        return ::uds::ErrorCode::NO_TP_MESSAGE;
+    }
+
     AbstractTransportLayer::ErrorCode const sendResult
         = messageSender->send(*responseMessage, this);
     if (sendResult == AbstractTransportLayer::ErrorCode::TP_OK)
@@ -439,7 +444,7 @@ void IncomingDiagConnection::triggerNextNestedRequest()
 
 void IncomingDiagConnection::endNestedRequest()
 {
-    auto const sender       = _nestedRequest->senderJob;
+    auto* const sender      = _nestedRequest->senderJob;
     auto const length       = _nestedRequest->responseLength();
     auto const responseCode = _nestedRequest->responseCode;
     _nestedRequest          = nullptr;
@@ -550,10 +555,8 @@ uint16_t IncomingDiagConnection::getMaximumResponseLength() const
     {
         return _nestedRequest->getMaxNestedResponseLength();
     }
-    else
-    {
-        return requestMessage->getMaxPayloadLength() - _identifiers.size();
-    }
+
+    return requestMessage->getMaxPayloadLength() - _identifiers.size();
 }
 
 PositiveResponse& IncomingDiagConnection::releaseRequestGetResponse()

@@ -108,7 +108,14 @@ void TestContext::expire()
             TimeoutType& timeout     = current->_key;
             TimeoutValue const value = current->_value;
             current                  = _timeoutQueue.remove(*current, prev);
-            if ((value._period > 0U) && (value._runnable != nullptr))
+
+            if (value._runnable == nullptr)
+            {
+                // Should not happen, but guard against it
+                continue;
+            }
+
+            if (value._period > 0U)
             {
                 schedule(*value._runnable, timeout, value._period, true);
             }

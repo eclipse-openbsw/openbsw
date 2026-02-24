@@ -140,7 +140,7 @@ TEST_F(TaggedSharedOutputStreamTestFixture, testContinuousStream)
     stream = &cut.startOutput(&otherUser);
     stream->write('d');
     cut.endOutput(&otherUser);
-    stream = &cut.startOutput(this);
+    static_cast<void>(cut.startOutput(this));
     cut.endOutput(this);
     stream = &cut.startOutput(this);
     stream->write('e');

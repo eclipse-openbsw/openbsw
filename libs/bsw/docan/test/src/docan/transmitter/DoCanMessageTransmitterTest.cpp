@@ -32,8 +32,12 @@ using TransmitProtocolHandler = DoCanMessageTransmitProtocolHandler<DataLinkLaye
 using JobHandle               = DataLinkLayer::JobHandleType;
 using CodecType               = DoCanFrameCodec<DataLinkLayer>;
 
-static TransmitActionSetType storeSeparationTime
-    = TransmitActionSetType().set(TransmitAction::STORE_SEPARATION_TIME);
+TransmitActionSetType& getStoreSeparationTime()
+{
+    static TransmitActionSetType storeSeparationTime
+        = TransmitActionSetType().set(TransmitAction::STORE_SEPARATION_TIME);
+    return storeSeparationTime;
+}
 
 TEST(DoCanMessageTransmitterTest, testConstructedTransmitter)
 {
@@ -173,7 +177,7 @@ TEST(DoCanMessageTransmitterTest, testMultipleFramesAreEmitted)
     EXPECT_EQ(TransmitState::WAIT, cut.getState());
     EXPECT_EQ(TransmitTimeout::FLOW_CONTROL, cut.getTimeout());
     EXPECT_EQ(
-        TransmitResult(true).setActionSet(storeSeparationTime),
+        TransmitResult(true).setActionSet(getStoreSeparationTime()),
         cut.handleFlowControl(FlowStatus::CTS, 0, 0, 2));
     EXPECT_EQ(
         true,
@@ -238,7 +242,7 @@ TEST(DoCanMessageTransmitterTest, testMultipleFramesAreEmittedWithEscapeSequence
     EXPECT_EQ(TransmitState::WAIT, cut.getState());
     EXPECT_EQ(TransmitTimeout::FLOW_CONTROL, cut.getTimeout());
     EXPECT_EQ(
-        TransmitResult(true).setActionSet(storeSeparationTime),
+        TransmitResult(true).setActionSet(getStoreSeparationTime()),
         cut.handleFlowControl(FlowStatus::CTS, 0, 0, 2));
     EXPECT_TRUE(::etl::equal(span, cut.getSendData()));
     EXPECT_EQ(TransmitState::SEND, cut.getState());
@@ -247,7 +251,7 @@ TEST(DoCanMessageTransmitterTest, testMultipleFramesAreEmittedWithEscapeSequence
     EXPECT_EQ(TransmitState::WAIT, cut.getState());
     EXPECT_EQ(TransmitTimeout::TX_CALLBACK, cut.getTimeout());
     EXPECT_EQ(TransmitResult(true), cut.framesSent(51U, 51 * 7U));
-    span.advance(51 * 7);
+    span.advance(51UL * 7UL);
     EXPECT_EQ(TransmitState::SEND, cut.getState());
     EXPECT_EQ(TransmitTimeout::TX_CALLBACK, cut.getTimeout());
     EXPECT_TRUE(::etl::equal(span, cut.getSendData()));

@@ -23,28 +23,26 @@ bool UdpEchoTestServer::start()
     Logger::info(UDP, "UDP echo test server initialisation");
 
     _socket.setDataListener(this);
-    if (_socket.bind(&_ipAddr, _rxPort) == ::udp::AbstractDatagramSocket::ErrorCode::UDP_SOCKET_OK)
-    {
-        _socket.setDataListener(this);
-        Logger::info(UDP, "Listening on port %d.", _rxPort);
-    }
-    else
+    if (_socket.bind(&_ipAddr, _rxPort) != ::udp::AbstractDatagramSocket::ErrorCode::UDP_SOCKET_OK)
     {
         Logger::error(UDP, "UDP socket bind failed");
         return false;
     }
 
-    if (_socket.join(_multicastAddr) == ::udp::AbstractDatagramSocket::ErrorCode::UDP_SOCKET_OK)
+    _socket.setDataListener(this);
+    Logger::info(UDP, "Listening on port %d.", _rxPort);
+
+    if (_socket.join(_multicastAddr) != ::udp::AbstractDatagramSocket::ErrorCode::UDP_SOCKET_OK)
     {
+        Logger::error(UDP, "Multicast join failed");
+        return false;
         Logger::info(UDP, "Joined multicast group");
         return true;
     }
-    else
-    {
-        Logger::error(UDP, "Multicast join failed");
-    }
 
-    return false;
+    Logger::info(UDP, "Joined multicast group");
+
+    return true;
 }
 
 void UdpEchoTestServer::stop()

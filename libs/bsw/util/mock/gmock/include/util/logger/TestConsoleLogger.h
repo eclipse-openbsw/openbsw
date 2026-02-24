@@ -5,6 +5,8 @@
 #include "util/logger/IComponentMapping.h"
 #include "util/logger/ILoggerOutput.h"
 
+#include <etl/span.h>
+
 namespace util
 {
 namespace logger
@@ -29,8 +31,7 @@ class TestConsoleLogger
 , private ILoggerOutput
 {
 public:
-    template<uint8_t Count>
-    TestConsoleLogger(LoggerComponentInfo (&firstComponentInfo)[Count]);
+    TestConsoleLogger(etl::span<LoggerComponentInfo> firstComponentInfo);
     ~TestConsoleLogger();
 
     static void init();
@@ -64,13 +65,6 @@ public:
     TestLoggingGuard();
     ~TestLoggingGuard();
 };
-
-template<uint8_t Count>
-TestConsoleLogger::TestConsoleLogger(LoggerComponentInfo (&firstComponentInfo)[Count])
-: _firstComponent(firstComponentInfo), _count(Count), _prevInstance(_instance)
-{
-    _instance = this;
-}
 
 } // namespace logger
 } // namespace util

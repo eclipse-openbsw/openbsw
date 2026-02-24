@@ -37,10 +37,8 @@ DiagReturnCode::Type TesterPresent::process(
         (void)connection.sendPositiveResponseInternal(response.getLength(), *this);
         return DiagReturnCode::OK;
     }
-    else
-    {
-        return DiagReturnCode::ISO_SUBFUNCTION_NOT_SUPPORTED;
-    }
+
+    return DiagReturnCode::ISO_SUBFUNCTION_NOT_SUPPORTED;
 }
 
 } // namespace uds

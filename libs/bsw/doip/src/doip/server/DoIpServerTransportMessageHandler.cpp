@@ -28,6 +28,10 @@ using ::transport::TransportMessage;
 using ::util::logger::DOIP;
 using ::util::logger::Logger;
 
+constexpr size_t DoIpServerTransportMessageHandler::PEEK_MAX_SIZE;
+constexpr size_t DoIpServerTransportMessageHandler::ACK_PAYLOAD_SIZE;
+constexpr size_t DoIpServerTransportMessageHandler::PAYLOAD_PREFIX_BUFFER_SIZE;
+
 DoIpServerTransportMessageHandler::DoIpServerTransportMessageHandler(
     DoIpConstants::ProtocolVersion const protocolVersion,
     ::util::estd::block_pool& diagnosticSendJobBlockPool,
@@ -148,8 +152,8 @@ DoIpTransportMessageSendJob* DoIpServerTransportMessageHandler::allocateJob(
 void DoIpServerTransportMessageHandler::releaseSendJob(
     DoIpTransportMessageSendJob& sendJob, bool const success)
 {
-    auto const busIdName     = ::common::busid::BusIdTraits::getName(_config.getBusId());
-    auto const sourceAddress = sendJob.getSourceAddress();
+    auto const* const busIdName = ::common::busid::BusIdTraits::getName(_config.getBusId());
+    auto const sourceAddress    = sendJob.getSourceAddress();
     if (success)
     {
         Logger::debug(
@@ -179,8 +183,8 @@ void DoIpServerTransportMessageHandler::diagnosticMessageLogicalAddressInfoRecei
         = logicalAddressInfo.reinterpret_as<::estd::be_uint16_t const>()[0];
     _payloadPeekContext.targetAddress
         = logicalAddressInfo.reinterpret_as<::estd::be_uint16_t const>()[1];
-    auto const payloadPrefixSize = std::min(
-        static_cast<size_t>(_receiveMessagePayloadLength), size_t(PAYLOAD_PREFIX_BUFFER_SIZE));
+    auto const payloadPrefixSize
+        = std::min(static_cast<size_t>(_receiveMessagePayloadLength), PAYLOAD_PREFIX_BUFFER_SIZE);
     (void)_connection->receivePayload(
         ::estd::make_slice(_payloadPeekContext.payloadPrefixBuffer).subslice(payloadPrefixSize),
         IDoIpConnection::PayloadReceivedCallbackType::create<
@@ -194,8 +198,7 @@ DoIpServerTransportMessageHandler::getTpMessageAndReceiveDiagnosticUserData(
     uint16_t const /* targetAddress */,
     ::estd::slice<uint8_t const> const payloadPrefix)
 {
-    auto const peekSlice
-        = payloadPrefix.subslice(std::min(payloadPrefix.size(), size_t(PEEK_MAX_SIZE)));
+    auto const peekSlice = payloadPrefix.subslice(std::min(payloadPrefix.size(), PEEK_MAX_SIZE));
     auto const getResult = _config.getMessageProvidingListener().getTransportMessage(
         _config.getBusId(),
         _connection->getInternalSourceAddress(),
@@ -274,7 +277,7 @@ void DoIpServerTransportMessageHandler::diagnosticMessageUserDataPrefixReceivedN
     uint8_t const nackCode, bool const closeAfterSend, ::estd::slice<uint8_t const> const payload)
 {
     _connection->endReceiveMessage(IDoIpConnection::PayloadDiscardedCallbackType{});
-    auto const job = queueDiagnosticAck(
+    auto* const job = queueDiagnosticAck(
         DoIpConstants::PayloadTypes::DIAGNOSTIC_MESSAGE_NEGATIVE_ACK,
         _payloadPeekContext.sourceAddress,
         _payloadPeekContext.targetAddress,

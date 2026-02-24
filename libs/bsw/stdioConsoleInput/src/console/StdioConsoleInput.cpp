@@ -35,7 +35,7 @@ constexpr char MAX_VALID_CHR = 0x7EU; // tilde
  */
 bool getline(::etl::istring& line)
 {
-    char const chr = getByteFromStdin();
+    char const chr = static_cast<char>(getByteFromStdin());
 
     if (chr <= 0)
     {

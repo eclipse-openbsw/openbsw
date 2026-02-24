@@ -61,9 +61,8 @@ DiagReturnCode::Type AbstractDiagJob::execute(
                 request - fPrefixLength, requestLength + fPrefixLength);
             if (vsistat != DiagReturnCode::OK)
             {
-                status = vsistat;
                 acceptJob(connection, request, requestLength);
-                return status;
+                return vsistat;
             }
         }
         if (fRequestPayloadLength != VARIABLE_REQUEST_LENGTH)
@@ -94,13 +93,13 @@ DiagReturnCode::Type AbstractDiagJob::execute(
             request + (fRequestLength - fPrefixLength),
             requestLength - (static_cast<uint16_t>(fRequestLength) - fPrefixLength));
         Logger::debug(UDS, "Process diag job 0x%X", getRequestId());
-        status = process(
+        return process(
             connection,
             request + (fRequestLength - fPrefixLength),
             requestLength - (static_cast<uint16_t>(fRequestLength) - fPrefixLength));
-        return status;
     }
-    else if (status != DiagReturnCode::NOT_RESPONSIBLE)
+
+    if (status != DiagReturnCode::NOT_RESPONSIBLE)
     {
         if ((jobRoot != nullptr) && (status != DiagReturnCode::ISO_SERVICE_NOT_SUPPORTED)
             && (status != DiagReturnCode::ISO_SERVICE_NOT_SUPPORTED_IN_ACTIVE_SESSION)
@@ -115,10 +114,7 @@ DiagReturnCode::Type AbstractDiagJob::execute(
         }
         (void)getDiagSessionManager().acceptedJob(connection, *this, request, requestLength);
     }
-    else
-    {
-        // nothing to do
-    }
+
     return status;
 }
 
@@ -220,26 +216,21 @@ void AbstractDiagJob::removeAbstractDiagJob(AbstractDiagJob& job)
         fpFirstChild = job.getNextJob();
         return;
     }
-    else if (fpFirstChild != nullptr)
+
+    if (fpFirstChild != nullptr)
     {
         fpFirstChild->removeAbstractDiagJob(job);
     }
-    else
-    {
-        // nothing to do
-    }
+
     if (getNextJob() == &job)
     {
         setNextJob(job.getNextJob());
         return;
     }
-    else if (getNextJob() != nullptr)
+
+    if (getNextJob() != nullptr)
     {
         getNextJob()->removeAbstractDiagJob(job);
-    }
-    else
-    {
-        // nothing to do
     }
 }
 
@@ -285,10 +276,8 @@ bool AbstractDiagJob::isFamily(uint8_t const* const prefix, uint16_t const lengt
     {
         return compare(prefix, fpImplementedRequest, length);
     }
-    else
-    {
-        return false;
-    }
+
+    return false;
 }
 
 bool AbstractDiagJob::isChild(uint8_t const* const prefix, uint16_t const length) const
@@ -297,10 +286,7 @@ bool AbstractDiagJob::isChild(uint8_t const* const prefix, uint16_t const length
     {
         return compare(prefix, fpImplementedRequest, length);
     }
-    else
-    {
-        return false;
-    }
+    return false;
 }
 
 DiagReturnCode::Type AbstractDiagJob::process(
@@ -318,10 +304,7 @@ DiagReturnCode::Type AbstractDiagJob::process(
     {
         return fDefaultDiagReturnCode;
     }
-    else
-    {
-        return result;
-    }
+    return result;
 }
 
 bool AbstractDiagJob::compare(

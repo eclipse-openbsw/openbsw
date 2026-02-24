@@ -1197,9 +1197,9 @@ TEST_F(DoIpServerConnectionHandlerTest, TestAliveCheckTimeoutExpires)
         ::estd::slice<uint8_t const>::from_pointer(request + 8U, 0U),
         sendJob->getSendBuffer(fHeaderBuffer, 1U)));
     // increase timer
-    testContext.elapse((fParameters.getAliveCheckTimeout() - 1) * 1000U);
+    testContext.elapse(static_cast<uint64_t>(fParameters.getAliveCheckTimeout() - 1) * 1000U);
     testContext.expireAndExecute();
-    testContext.elapse(1 * 1000U);
+    testContext.elapse(1000U);
     EXPECT_CALL(fMessageHandlerMock, connectionClosed());
     EXPECT_CALL(fConnectionMock, close());
     Sequence seq;
@@ -1305,12 +1305,13 @@ TEST_F(DoIpServerConnectionHandlerTest, TestInitialTimeout)
             IDoIpConnection::PayloadDiscardedCallbackType{}});
 
     // step within time
-    testContext.elapse((fParameters.getInitialInactivityTimeout() - 1) * 1000U);
+    testContext.elapse(
+        static_cast<uint64_t>(fParameters.getInitialInactivityTimeout() - 1) * 1000U);
     testContext.expireAndExecute();
     EXPECT_CALL(fMessageHandlerMock, connectionClosed());
     EXPECT_CALL(fConnectionMock, close());
     EXPECT_CALL(fCallbackMock, connectionClosed(Ref(cut)));
-    testContext.elapse(1 * 1000U);
+    testContext.elapse(1000U);
     testContext.expireAndExecute();
     // now start alive check and expect negative response
 }
@@ -1391,13 +1392,14 @@ TEST_F(DoIpServerConnectionHandlerTest, TestGeneralInactivityTimeout)
         ::estd::slice<uint8_t const>::from_pointer(activationResponse + 8U, 9U),
         sendJob->getSendBuffer(fHeaderBuffer, 1U)));
     // Routing is active => now general inactivity timer should expire if no message is sent
-    testContext.elapse((fParameters.getGeneralInactivityTimeout() - 1) * 1000U);
+    testContext.elapse(
+        static_cast<uint64_t>(fParameters.getGeneralInactivityTimeout() - 1) * 1000U);
     testContext.expireAndExecute();
     EXPECT_CALL(fMessageHandlerMock, connectionClosed());
     EXPECT_CALL(fConnectionMock, setCloseMode(IDoIpTcpConnection::CloseMode::ABORT));
     EXPECT_CALL(fConnectionMock, close());
     EXPECT_CALL(fCallbackMock, connectionClosed(Ref(cut)));
-    testContext.elapse(1 * 1000U);
+    testContext.elapse(1000U);
     testContext.expireAndExecute();
     // now start alive check and expect negative response
 }
@@ -1431,7 +1433,7 @@ TEST_F(DoIpServerConnectionHandlerTest, TestTimeoutDuringSendingNack)
     Mock::VerifyAndClearExpectations(&fConnectionMock);
     EXPECT_TRUE(sendJob != nullptr);
     // Timeout will be ignored
-    testContext.elapse(fParameters.getGeneralInactivityTimeout() * 1000U);
+    testContext.elapse(static_cast<uint64_t>(fParameters.getGeneralInactivityTimeout()) * 1000U);
     testContext.expireAndExecute();
     // close expected
     EXPECT_CALL(fMessageHandlerMock, connectionClosed());

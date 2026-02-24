@@ -129,18 +129,17 @@ bool Watchdog::executeFastTest(uint32_t const timeout)
         // Watchdog reset should occur before reaching the return statement
         return false;
     }
-    else if (isWdFastTestHigh())
+
+    if (isWdFastTestHigh())
     {
         setUserMode();
         return true;
     }
-    else
-    {
-        startFastTestLow();
-        sysDelayUs(timeout);
-        // Watchdog reset should occur before reaching the return statement
-        return false;
-    }
+
+    startFastTestLow();
+    sysDelayUs(timeout);
+    // Watchdog reset should occur before reaching the return statement
+    return false;
 }
 
 void Watchdog::setUserMode()

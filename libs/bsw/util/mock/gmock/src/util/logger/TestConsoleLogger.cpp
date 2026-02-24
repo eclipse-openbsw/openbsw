@@ -13,6 +13,14 @@ namespace logger
 {
 TestConsoleLogger* TestConsoleLogger::_instance = nullptr;
 
+TestConsoleLogger::TestConsoleLogger(etl::span<LoggerComponentInfo> firstComponentInfo)
+: _firstComponent(firstComponentInfo.data())
+, _count(firstComponentInfo.size())
+, _prevInstance(_instance)
+{
+    _instance = this;
+}
+
 TestConsoleLogger::~TestConsoleLogger()
 {
     if (_instance == this)

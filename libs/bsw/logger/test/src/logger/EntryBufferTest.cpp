@@ -17,7 +17,7 @@ struct EntryBufferTest : ::testing::Test
         B& buffer, typename B::EntryRef& entryRef, int32_t expectedIdx = -1, int32_t entrySize = -1)
     {
         ::etl::span<uint8_t> const* pEntry = nullptr;
-        if (expectedIdx >= 0 && expectedIdx < int32_t(fEntries.size()))
+        if (expectedIdx >= 0 && expectedIdx < static_cast<int32_t>(fEntries.size()))
         {
             pEntry = &(*(fEntries.begin() + expectedIdx));
         }

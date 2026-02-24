@@ -15,6 +15,7 @@ PrintfFormatter::PrintfFormatter(IOutputStream& strm, bool const writeParam)
 : _stream(strm), _writeParam(writeParam), _pos(0U)
 {}
 
+// NOLINTNEXTLINE(cert-dcl50-cpp): va_list usage only for printing functionalities.
 void PrintfFormatter::format(char const* const formatString, ...)
 {
     va_list ap;

@@ -73,15 +73,11 @@ MultipleReadDataByIdentifier::verify(uint8_t const* const request, uint16_t cons
         {
             return DiagReturnCode::OK;
         }
-        else
-        {
-            return DiagReturnCode::ISO_INVALID_FORMAT;
-        }
+
+        return DiagReturnCode::ISO_INVALID_FORMAT;
     }
-    else
-    {
-        return DiagReturnCode::NOT_RESPONSIBLE;
-    }
+
+    return DiagReturnCode::NOT_RESPONSIBLE;
 }
 
 DiagReturnCode::Type MultipleReadDataByIdentifier::process(
@@ -91,7 +87,8 @@ DiagReturnCode::Type MultipleReadDataByIdentifier::process(
     {
         return AbstractDiagJob::process(connection, request, requestLength);
     }
-    else if (fGetDidLimit.is_valid())
+
+    if (fGetDidLimit.is_valid())
     {
         uint8_t const didLimit = fGetDidLimit(*connection.requestMessage);
         if ((didLimit > 0U) && ((requestLength / 2U) > didLimit))
@@ -99,14 +96,12 @@ DiagReturnCode::Type MultipleReadDataByIdentifier::process(
             return DiagReturnCode::ISO_INVALID_FORMAT;
         }
     }
-    else
-    {
-        // nothing to do
-    }
+
     if (fAsyncJobHelper.hasPendingAsyncRequest())
     {
         return fAsyncJobHelper.enqueueRequest(connection, request, requestLength);
     }
+
     fCombinedResponseCode = DiagReturnCode::ISO_REQUEST_OUT_OF_RANGE;
     fAsyncJobHelper.startAsyncRequest(connection);
     return connection.startNestedRequest(*this, *this, request, requestLength);
@@ -128,11 +123,9 @@ MultipleReadDataByIdentifier::prepareNestedRequest(::etl::span<uint8_t const> co
         (void)::etl::mem_copy<uint8_t>(src.cbegin(), src.size(), fBuffer.begin() + 1);
         return fBuffer;
     }
-    else
-    {
-        responseCode = fCombinedResponseCode;
-        return {};
-    }
+
+    responseCode = fCombinedResponseCode;
+    return {};
 }
 
 DiagReturnCode::Type MultipleReadDataByIdentifier::processNestedRequest(
@@ -165,11 +158,9 @@ bool MultipleReadDataByIdentifier::defaultCheckResponse(
     {
         return true;
     }
-    else
-    {
-        combinedResponse = responseCode;
-        return responseCode == DiagReturnCode::OK;
-    }
+
+    combinedResponse = responseCode;
+    return responseCode == DiagReturnCode::OK;
 }
 
 } // namespace uds

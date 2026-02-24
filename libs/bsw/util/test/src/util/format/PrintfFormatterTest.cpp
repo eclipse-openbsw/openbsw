@@ -32,6 +32,7 @@ struct PrintfFormatterTest
     ParamVariant const* readArgument(ParamDatatype /* datatype */) override { return nullptr; }
 
 #if defined(__linux) && defined(__GNUC__) && __x86_64__
+    // NOLINTNEXTLINE(cert-dcl50-cpp): va_list usage only for printing functionalities.
     std::string printf(char const* formatString, ...)
     {
         va_list ap;
@@ -44,10 +45,11 @@ struct PrintfFormatterTest
     std::string printfV(char const* formatString, va_list ap)
     {
         char buffer[300];
-        vsnprintf(buffer, sizeof(buffer), formatString, ap);
+        static_cast<void>(vsnprintf(buffer, sizeof(buffer), formatString, ap));
         return buffer;
     }
 #endif
+    // NOLINTNEXTLINE(cert-dcl50-cpp): va_list usage only for printing functionalities.
     std::string format(char const* formatString, ...)
     {
         va_list ap;
@@ -91,6 +93,7 @@ struct PrintfFormatterTest
     {}
 #endif
 
+    // NOLINTNEXTLINE(cert-dcl50-cpp): va_list usage only for printing functionalities.
     void expectPrintf(char const* pExpected, char const* formatString, ...)
     {
         va_list ap;
@@ -145,7 +148,7 @@ struct PrintfFormatterTest
         uint8_t flags = 0)
     {
         expectAndCheckIntPrintf(!(flags & IGNORE_NEGATIVE), pNegative, formatString, -value);
-        expectAndCheckIntPrintf(!(flags & IGNORE_ZERO), pZero, formatString, (T)0);
+        expectAndCheckIntPrintf(!(flags & IGNORE_ZERO), pZero, formatString, static_cast<T>(0));
         expectAndCheckIntPrintf(!(flags & IGNORE_POSITIVE), pPositive, formatString, value);
     }
 };
@@ -255,7 +258,7 @@ TEST_F(PrintfFormatterTest, testFormatParamWithInvalidValues)
     {
         PrintfFormatter formatter(stream);
         {
-            ParamInfo paramInfo = {(ParamType)80, 0, 10, ParamDatatype::UINT16, 0, 0};
+            ParamInfo paramInfo = {static_cast<ParamType>(80), 0, 10, ParamDatatype::UINT16, 0, 0};
             formatter.formatParam(paramInfo, ParamVariant());
         }
         stream.write('.');

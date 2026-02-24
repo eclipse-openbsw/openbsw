@@ -18,8 +18,8 @@ uint8_t freeRxDescriptorIndex(
 {
     ETL_ASSERT(pbufAtIndex.size() != 0L, ETL_ERROR_GENERIC("buffer size must not be null"));
 
-    auto const pbuf1 = reinterpret_cast<::lwiputils::RxCustomPbuf*>(pbufAtIndex[nextBusy]);
-    auto const pbuf2 = reinterpret_cast<::lwiputils::RxCustomPbuf*>(pbufAtIndex[descriptorIndex]);
+    auto* const pbuf1 = reinterpret_cast<::lwiputils::RxCustomPbuf*>(pbufAtIndex[nextBusy]);
+    auto* const pbuf2 = reinterpret_cast<::lwiputils::RxCustomPbuf*>(pbufAtIndex[descriptorIndex]);
 
     ::ETL_OR_STD::swap(pbufAtIndex[nextBusy], pbufAtIndex[descriptorIndex]);
     ::ETL_OR_STD::swap(pbuf1->slot, pbuf2->slot);
@@ -31,8 +31,8 @@ void freeCustomPbufHelper(pbuf* const p)
 {
     // We can "upcast" here since the initial allocation was made as RxCustimPbuf
     // The pbuf is embedded as the first memeber so the address stays the same.
-    auto const customPbuf = reinterpret_cast<::lwiputils::RxCustomPbuf*>(p);
-    auto const driver     = reinterpret_cast<RxBuffers*>(customPbuf->driver);
+    auto* const customPbuf = reinterpret_cast<::lwiputils::RxCustomPbuf*>(p);
+    auto* const driver     = reinterpret_cast<RxBuffers*>(customPbuf->driver);
     auto const index
         = reinterpret_cast<ENET_ERXD*>(customPbuf->slot) - driver->_descriptors.begin();
 
