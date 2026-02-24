@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../../../../../../../../../../static/css/style.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <title>Symbol - puncover</title>
+    
+</head>
+<body>
+    <div class="container" id="content">
+        <div class="page-header">
+            <nav class="navbar navbar-default" role="navigation">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="../../../../../../../../../../../index.html">
+                    Puncover
+                  </a>
+                </div>
+              </div>
+            </nav>
+          
+        </div>
+        <div id="inner_content">
+        
+    
+    <ol class="breadcrumb folders">
+        
+        <li><a href="../../../../../../../../../../../home.html">home</a></li>
+        
+        <li><a href="../../../../../../../../../../runner.html">runner</a></li>
+        
+        <li><a href="../../../../../../../../../work.html">work</a></li>
+        
+        <li><a href="../../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../libs.html">libs</a></li>
+        
+        <li><a href="../../../../../3rdparty.html">3rdparty</a></li>
+        
+        <li><a href="../../../../lwip.html">lwip</a></li>
+        
+        <li><a href="../../../src.html">src</a></li>
+        
+        <li ><a href="../../core.html">core</a>
+            </li>
+
+        
+        <li class="active"><a href="../tcp.c.html">tcp.c</a>:1015
+            </li>
+        
+    </ol>
+
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <th>Function</th>
+                <td colspan="5">
+                    <span class="icon-function">tcp_new_port</span>
+                </td>
+            </tr>
+
+            <tr>
+                <th rowspan="2"></th>
+                <th>Address</th>
+                <th>Remarks</th>
+                <th>Stack</th>
+                <th>Code</th>
+                <th>Static</th>
+            </tr>
+            <tr>
+                <td>0x0001cb98</td>
+                <td>
+    
+    
+</td>
+                <td>12 (static)</td>
+                <td>88</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th>Callers (2)</th>
+                <td colspan="5">
+                
+                    <a href="./023477140fe3afd2005c820e49bbb43a.html">tcp_connect (448)</a>
+                    
+                        ,
+                    
+                
+                    <a href="./7257a35627e94c30525a90dd5674d1ba.html">tcp_bind (196)</a>
+                    
+                
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    No Callees
+                    
+                </th>
+                <td colspan="5">
+                
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    
+    <pre><a href="../stats.c/fee054e74a67c0ecc1da4ff6065321e1.html">stats_init (20)</a></pre>
+    
+
+    <pre>
+
+    tcp_new_port():
+
+       1cb98:	b470      	push	{r4, r5, r6}
+
+       1cb9a:	4e12      	ldr	r6, [pc, #72]	@ (1cbe4 <<a href="./f3a0e5119908cfe09c6c6054b3c85d6c.html">tcp_new_port</a>+0x4c>)
+
+       1cb9c:	4d12      	ldr	r5, [pc, #72]	@ (1cbe8 <<a href="./f3a0e5119908cfe09c6c6054b3c85d6c.html">tcp_new_port</a>+0x50>)
+
+       1cb9e:	8831      	ldrh	r1, [r6, #0]
+
+       1cba0:	f44f 4080 	mov.w	r0, #16384	@ 0x4000
+
+       1cba4:	f64f 7cff 	movw	ip, #65535	@ 0xffff
+
+       1cba8:	3101      	adds	r1, #1
+
+       1cbaa:	b289      	uxth	r1, r1
+
+       1cbac:	4c0f      	ldr	r4, [pc, #60]	@ (1cbec <<a href="./f3a0e5119908cfe09c6c6054b3c85d6c.html">tcp_new_port</a>+0x54>)
+
+       1cbae:	4561      	cmp	r1, ip
+
+       1cbb0:	bf08      	it	eq
+
+       1cbb2:	f44f 4140 	moveq.w	r1, #49152	@ 0xc000
+
+       1cbb6:	6823      	ldr	r3, [r4, #0]
+
+       1cbb8:	681b      	ldr	r3, [r3, #0]
+
+       1cbba:	b913      	cbnz	r3, 1cbc2 <<a href="./f3a0e5119908cfe09c6c6054b3c85d6c.html">tcp_new_port</a>+0x2a>
+
+       1cbbc:	e00b      	b.n	1cbd6 <<a href="./f3a0e5119908cfe09c6c6054b3c85d6c.html">tcp_new_port</a>+0x3e>
+
+       1cbbe:	68db      	ldr	r3, [r3, #12]
+
+       1cbc0:	b14b      	cbz	r3, 1cbd6 <<a href="./f3a0e5119908cfe09c6c6054b3c85d6c.html">tcp_new_port</a>+0x3e>
+
+       1cbc2:	8ada      	ldrh	r2, [r3, #22]
+
+       1cbc4:	428a      	cmp	r2, r1
+
+       1cbc6:	d1fa      	bne.n	1cbbe <<a href="./f3a0e5119908cfe09c6c6054b3c85d6c.html">tcp_new_port</a>+0x26>
+
+       1cbc8:	3801      	subs	r0, #1
+
+       1cbca:	b280      	uxth	r0, r0
+
+       1cbcc:	2800      	cmp	r0, #0
+
+       1cbce:	d1eb      	bne.n	1cba8 <<a href="./f3a0e5119908cfe09c6c6054b3c85d6c.html">tcp_new_port</a>+0x10>
+
+       1cbd0:	8031      	strh	r1, [r6, #0]
+
+       1cbd2:	bc70      	pop	{r4, r5, r6}
+
+       1cbd4:	4770      	bx	lr
+
+       1cbd6:	3404      	adds	r4, #4
+
+       1cbd8:	42ac      	cmp	r4, r5
+
+       1cbda:	d1ec      	bne.n	1cbb6 <<a href="./f3a0e5119908cfe09c6c6054b3c85d6c.html">tcp_new_port</a>+0x1e>
+
+       1cbdc:	4608      	mov	r0, r1
+
+       1cbde:	8031      	strh	r1, [r6, #0]
+
+       1cbe0:	bc70      	pop	{r4, r5, r6}
+
+       1cbe2:	4770      	bx	lr
+
+       1cbe4:	1ffe0154 	.word	0x1ffe0154
+
+       1cbe8:	00035cb8 	.word	0x00035cb8
+
+       1cbec:	00035ca8 	.word	0x00035ca8
+
+    </pre>
+
+    
+    <pre><a href="./60203faf22fd34bc9978b8e19064581b.html">tcp_close_shutdown_fin (64)</a></pre>
+    
+
+    
+        <h1>Stack Worst-Case Scenarios</h1>
+        
+            <p>No callees for this function.</p>
+        
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 188</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 988</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    188
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                12 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    988
+                    
+                    
+                </td>
+                <td class="col_size">88</td>
+                <td><a href="./f3a0e5119908cfe09c6c6054b3c85d6c.html" class="icon-function">tcp_new_port</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                    
+                    176
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                24 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    900
+                    
+                    
+                </td>
+                <td class="col_size">196</td>
+                <td><a href="./7257a35627e94c30525a90dd5674d1ba.html" class="icon-function">tcp_bind</a></td>
+            </tr>
+        
+            <tr>
+                <th>3</th>
+                <td class="col_size">
+                    
+                    152
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                32 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    704
+                    
+                    
+                </td>
+                <td class="col_size">344</td>
+                <td><a href="../../../../../bsw/lwipSocket/src/lwipSocket/tcp/LwipServerSocket.cpp/1aceef4959a77e937b267152e5dac48e.html" class="icon-function">tcp::LwipServerSocket::bind(ip::IPAddress const&amp;, unsigned short)</a></td>
+            </tr>
+        
+            <tr>
+                <th>4</th>
+                <td class="col_size">
+                    
+                    120
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                72 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    360
+                    
+                    
+                </td>
+                <td class="col_size">192</td>
+                <td><a href="../../../../../bsw/doip/include/doip/server/DoIpServerSocketHandler.h/6bbc34dd8ab6860fabdae144aa23f6df.html" class="icon-function">doip::declare::DoIpServerSocketHandler&lt;tcp::LwipServerSocket, tcp::LwipSocket, 2u, 6u, 0u&gt;::SocketHandler::updateSocket(ip::NetworkInterfaceConfig const&amp;)</a></td>
+            </tr>
+        
+            <tr>
+                <th>5</th>
+                <td class="col_size">
+                </td>
+                <td class="col_size">
+            
+                48 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">168</td>
+                <td><a href="../../../../../bsw/doip/include/doip/server/DoIpServerSocketHandler.h/833096376e5abe78f9dad83d775108dc.html" class="icon-function">doip::declare::DoIpServerSocketHandler&lt;tcp::LwipServerSocket, tcp::LwipSocket, 2u, 6u, 0u&gt;::start(doip::IDoIpServerSocketHandlerListener&amp;)</a></td>
+            </tr>
+        
+        </tbody>
+        
+    </table>
+        
+    
+
+
+        </div>
+    <div id="page-footer">
+        <hr>
+        
+            brought to you with 💖
+            by <a href="https://twitter.com/hbehrens">Heiko Behrens</a>
+            <span class="secondary">– MIT license, copyright © 2014-2026</span>
+        
+    </div>
+    </div>
+</body>
+</html>

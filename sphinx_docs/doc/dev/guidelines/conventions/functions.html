@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="EclipseOpenBSWDocumentation" name="dox_trace_storage" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Functions &mdash; Eclipse OpenBSW Documentation  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/rtd_theme_overrides.css?v=6fd0d55b" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=eafc0fe6" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/colors.css?v=3cafd8aa" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/colored_table.css?v=34b816d5" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/header.css?v=e632285e" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/dox_util_colors.css?v=dd14b177" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/dox_trace.css?v=60d3f72c" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../../../../_static/copybutton.js?v=f281be69"></script>
+        <script src="../../../../_static/dox_trace.js?v=40719b51"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="Initialization" href="initialization.html" />
+    <link rel="prev" title="Files" href="files.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Eclipse OpenBSW Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Learning</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../learning/overview.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../learning/SysTest/HW_Testing_Guide.html">Hardware Testing Guide</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guidelines</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Coding Conventions</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="classes.html">Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="comments.html">Comments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="constants.html">Constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="disallowed.html">Disallowed Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="enumerations.html">Enumerations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="files.html">Files</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Functions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#a-function-should-perform-a-single-logical-operation">A Function Should Perform a Single Logical Operation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#keep-functions-short-and-simple">Keep Functions Short and Simple</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#if-a-function-might-have-to-be-evaluated-at-compile-time-declare-it-constexpr">If a Function Might Have to be Evaluated at Compile Time, Declare it constexpr</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#for-in-parameters-pass-cheaply-copied-types-by-value-and-others-by-reference-to-const">For “in” Parameters, Pass Cheaply-Copied Types by Value and Others by Reference to const</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#raw-pointer-arguments">Raw Pointer Arguments</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#raw-byte-array-arguments">Raw Byte Array Arguments</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#translation-unit-local-functions">Translation-Unit Local Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lambdas">Lambdas</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="initialization.html">Initialization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interfaces.html">Low Level Interfaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="namespaces.html">Namespaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="naming.html">Naming Conventions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="statements.html">Statements and Expressions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../practices.html">Coding Practices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../formatting/index.html">Formatting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../unittests.html">Unit Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../module.html">Module Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../documentation.html">Module Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../diagrams.html">Diagrams</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../3rdparty.html">Third Party Libraries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commit_message.html">Commit Message</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pull_request.html">Pull Request</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Platforms</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../platforms/posix/index.html">POSIX</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../platforms/s32k148evb/index.html">S32K148 Evaluation Board</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Features</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../features/storage.html">Persistent Storage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/functional_safety.html">Functional Safety</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Software Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/common.html">Common</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/posix.html">Posix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/s32k1xx.html">S32K1xx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/executables.html">Executables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/mocks.html">Mocks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tools/UdsTool/doc/index.html">UdsTool</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tools/puncover_tool/doc/index.html">Puncover</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Eclipse OpenBSW Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="index.html">Coding Conventions</a> &raquo;</li>
+        
+        <li>Functions</li>
+    
+
+    
+
+      <li class="wy-breadcrumbs-aside">
+
+        <!-- DOCUMENT STATUS -->
+
+        
+
+        <!-- DATA CLASSIFICATION -->
+
+        
+
+      </li>
+
+    
+  </ul>
+
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="functions">
+<h1>Functions<a class="headerlink" href="#functions" title="Link to this heading"></a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<section id="a-function-should-perform-a-single-logical-operation">
+<h2>A Function Should Perform a Single Logical Operation<a class="headerlink" href="#a-function-should-perform-a-single-logical-operation" title="Link to this heading"></a></h2>
+<p>A function that performs a single operation is simpler to understand, test, and
+reuse.</p>
+</section>
+<section id="keep-functions-short-and-simple">
+<h2>Keep Functions Short and Simple<a class="headerlink" href="#keep-functions-short-and-simple" title="Link to this heading"></a></h2>
+<p>Large functions are hard to read, more likely to contain complex code, and more
+likely to have variables in larger rather than minimal scopes.</p>
+<p>Functions with complex control structures are more likely to be long and more
+likely to hide logical errors</p>
+<p><em>“It doesn’t fit on a screen”</em> is often a good practical definition of <em>“far
+too large.”</em></p>
+<p>Break large functions up into smaller cohesive and named functions. Small
+simple functions are easily inlined where the cost of a function call is
+significant.</p>
+</section>
+<section id="if-a-function-might-have-to-be-evaluated-at-compile-time-declare-it-constexpr">
+<h2>If a Function Might Have to be Evaluated at Compile Time, Declare it constexpr<a class="headerlink" href="#if-a-function-might-have-to-be-evaluated-at-compile-time-declare-it-constexpr" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">constexpr</span></code> is needed to tell the compiler to allow compile-time evaluation. Adding it e.g. to the
+constructor of your type might allow storing objects of your type in ROM.</p>
+<p>Note that <code class="docutils literal notranslate"><span class="pre">constexpr</span></code> does not guarantee compile-time evaluation; it just guarantees that the
+function can be evaluated at compile time for constant expression arguments if the programmer
+requires it or the compiler decides to do so to optimize.</p>
+<p>The only way to ensure that the function can be evaluated at compile-time, is testing it at
+compile-time, by checking its output within a <code class="docutils literal notranslate"><span class="pre">static_assert</span></code>.</p>
+<p>This rule quotes <a class="reference external" href="https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md#user-content-f4-if-a-function-might-have-to-be-evaluated-at-compile-time-declare-it-constexpr">rule F.4 of the C++ Core Guidelines</a>.</p>
+</section>
+<section id="for-in-parameters-pass-cheaply-copied-types-by-value-and-others-by-reference-to-const">
+<h2>For “in” Parameters, Pass Cheaply-Copied Types by Value and Others by Reference to const<a class="headerlink" href="#for-in-parameters-pass-cheaply-copied-types-by-value-and-others-by-reference-to-const" title="Link to this heading"></a></h2>
+<p>Both let the caller know that a function will not modify the argument, and both
+allow initialization by rvalues.</p>
+<p>What is “cheap to copy” depends on the machine architecture, but two or three
+words (doubles, pointers, references) are usually best passed by value.</p>
+<p>When copying is cheap, nothing beats the simplicity and safety of copying, and
+for small objects (up to two or three words) it is also faster than passing by
+reference because it does not require an extra indirection to access from the
+function.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">f1</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">s</span><span class="p">);</span><span class="w">   </span><span class="c1">// pass by reference to const; always cheap</span>
+<span class="kt">void</span><span class="w"> </span><span class="nf">f2</span><span class="p">(</span><span class="n">string</span><span class="w"> </span><span class="n">s</span><span class="p">);</span><span class="w">          </span><span class="c1">// potentially expensive</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">f3</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">x</span><span class="p">);</span><span class="w">             </span><span class="c1">// Unbeatable</span>
+<span class="kt">void</span><span class="w"> </span><span class="nf">f4</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="o">&amp;</span><span class="w"> </span><span class="n">x</span><span class="p">);</span><span class="w">      </span><span class="c1">// overhead on access in f4()</span>
+</pre></div>
+</div>
+</section>
+<section id="raw-pointer-arguments">
+<h2>Raw Pointer Arguments<a class="headerlink" href="#raw-pointer-arguments" title="Link to this heading"></a></h2>
+<p>In general, avoid passing raw pointer arguments, but in cases where pointers
+are really needed, they have to be checked before they are dereferenced.</p>
+<p>Example:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">f1</span><span class="p">(</span><span class="n">BufferType</span><span class="o">*</span><span class="w"> </span><span class="n">buffer</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">buffer</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="k">nullptr</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="p">...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>For performance reasons or due to third-party API compatibility this
+check can be omitted, but then the missing check must be documented like this:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cm">/**</span>
+<span class="cm">* ...</span>
+<span class="cm">*</span>
+<span class="cm">* \param[in] buffer Description of buffer...</span>
+<span class="cm">                    Note: buffer will not be checked for null, it has to be</span>
+<span class="cm">                    ensured that buffer is not null before calling this function.</span>
+<span class="cm">*/</span>
+<span class="kt">void</span><span class="w"> </span><span class="n">f1</span><span class="p">(</span><span class="n">BufferType</span><span class="o">*</span><span class="w"> </span><span class="n">buffer</span><span class="p">)</span>
+<span class="p">...</span>
+</pre></div>
+</div>
+</section>
+<section id="raw-byte-array-arguments">
+<h2>Raw Byte Array Arguments<a class="headerlink" href="#raw-byte-array-arguments" title="Link to this heading"></a></h2>
+<p>Code that uses raw byte arrays and a length are very prone to errors or misuse.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">start</span><span class="p">(</span><span class="n">Connection</span><span class="o">&amp;</span><span class="w"> </span><span class="n">conn</span><span class="p">,</span><span class="w"> </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">data</span><span class="p">[],</span><span class="w"> </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">length</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>It’s unclear from the method signature what will happen to data and length.
+Look for existing buffer classes and reuse one of those, for example <code class="docutils literal notranslate"><span class="pre">etl::array&lt;&gt;</span></code> or
+<code class="docutils literal notranslate"><span class="pre">etl::span&lt;&gt;</span></code>.</p>
+</section>
+<section id="translation-unit-local-functions">
+<h2>Translation-Unit Local Functions<a class="headerlink" href="#translation-unit-local-functions" title="Link to this heading"></a></h2>
+<p>To mark a function as translation-unit local, place the function inside an anonymous namespace. This
+is preferred over marking the function as static because the static keyword already performs many
+different jobs, making its use potentially ambiguous and/or confusing.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">global</span><span class="p">();</span><span class="w">                 </span><span class="c1">// bad, is global</span>
+
+<span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">staticallyLocal</span><span class="p">();</span><span class="w"> </span><span class="c1">// bad, is translation-unit local, but uses static</span>
+
+<span class="k">namespace</span>
+<span class="p">{</span>
+<span class="kt">void</span><span class="w"> </span><span class="nf">translationUnitLocal</span><span class="p">();</span><span class="w">   </span><span class="c1">// good, is translation-unit local in anonymous namespace</span>
+
+<span class="p">}</span><span class="w"> </span><span class="c1">// namespace</span>
+</pre></div>
+</div>
+</section>
+<section id="lambdas">
+<h2>Lambdas<a class="headerlink" href="#lambdas" title="Link to this heading"></a></h2>
+<p>When using lambdas, be careful about object lifetimes: objects captured by reference within a lambda
+have to be still in scope at the time of lambda execution. Also lambda objects themselves have to
+still exist when they’re executed - it might be tricky while using function references like
+<code class="docutils literal notranslate"><span class="pre">etl::delegate</span></code>.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026 Accenture.</p>
+  </div>
+
+  <div role="footer_string">
+    <p>Documentation from 2026-02-24 10:51:51, official build.</p>
+
+    
+      <a href="../../../../_sources/doc/dev/guidelines/conventions/functions.rst.txt" rel="nofollow"> View page source</a>
+    
+
+  </div>
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(false);
+      });
+  </script> 
+
+</body>
+</html>

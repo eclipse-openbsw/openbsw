@@ -1,0 +1,347 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../../../../../../../../../../../static/css/style.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <title>Symbol - puncover</title>
+    
+</head>
+<body>
+    <div class="container" id="content">
+        <div class="page-header">
+            <nav class="navbar navbar-default" role="navigation">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="../../../../../../../../../../../../index.html">
+                    Puncover
+                  </a>
+                </div>
+              </div>
+            </nav>
+          
+        </div>
+        <div id="inner_content">
+        
+    
+    <ol class="breadcrumb folders">
+        
+        <li><a href="../../../../../../../../../../../../home.html">home</a></li>
+        
+        <li><a href="../../../../../../../../../../../runner.html">runner</a></li>
+        
+        <li><a href="../../../../../../../../../../work.html">work</a></li>
+        
+        <li><a href="../../../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../../libs.html">libs</a></li>
+        
+        <li><a href="../../../../../../bsw.html">bsw</a></li>
+        
+        <li><a href="../../../../../doip.html">doip</a></li>
+        
+        <li><a href="../../../../src.html">src</a></li>
+        
+        <li><a href="../../../doip.html">doip</a></li>
+        
+        <li ><a href="../../server.html">server</a>
+            </li>
+
+        
+        <li class="active"><a href="../DoIpServerConnectionHandler.cpp.html">DoIpServerConnectionHandler.cpp</a>:341
+            </li>
+        
+    </ol>
+
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <th>Function</th>
+                <td colspan="5">
+                    <span class="icon-function">doip::DoIpServerConnectionHandler::aliveCheckResponseReceived(estd::slice&lt;unsigned char const, 0u&gt;)</span>
+                </td>
+            </tr>
+
+            <tr>
+                <th rowspan="2"></th>
+                <th>Address</th>
+                <th>Remarks</th>
+                <th>Stack</th>
+                <th>Code</th>
+                <th>Static</th>
+            </tr>
+            <tr>
+                <td>0x00027b24</td>
+                <td>
+    <span class="label label-success">x-module</span>
+    
+</td>
+                <td>40 (static)</td>
+                <td>144</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th>Callers (1)</th>
+                <td colspan="5">
+                
+                    <a href="../../../../../estd/include/estd/functional.h/47f8acdb63a3e3fba100c0df6d4ec6e9.html">void estd::function&lt;void (estd::slice&lt;unsigned char const, 0u&gt;)&gt;::member_function_caller&lt;doip::DoIpServerConnectionHandler, &amp;doip::DoIpServerConnectionHandler::aliveCheckResponseReceived&gt;(void*, estd::slice&lt;unsigned char const, 0u&gt;) (16)</a>
+                    
+                
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Callees (1,
+                            <span title="sum of used bytes by all callees">
+                            Σ=56
+                            </span>
+                        )
+                    
+                </th>
+                <td colspan="5">
+                
+                    <a href="../../../../../util/include/util/logger/Logger.h/0ab01804358606b880086539418bdb3a.html">util::logger::Logger::info(unsigned char, char const*, ...) (56)</a>
+                    
+                
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    
+    <pre><a href="./c63a2b80fffed187df23b8d0733e3a8e.html">doip::DoIpServerConnectionHandler::headerReceived(doip::DoIpHeader const&amp;) (204)</a></pre>
+    
+
+    <pre>
+
+    doip::DoIpServerConnectionHandler::aliveCheckResponseReceived(estd::slice<unsigned char const, 0u>):
+
+       27b24:	b570      	push	{r4, r5, r6, lr}
+
+       27b26:	b086      	sub	sp, #24
+
+       27b28:	ab02      	add	r3, sp, #8
+
+       27b2a:	e883 0006 	stmia.w	r3, {r1, r2}
+
+       27b2e:	4613      	mov	r3, r2
+
+       27b30:	f890 20c5 	ldrb.w	r2, [r0, #197]	@ 0xc5
+
+       27b34:	781d      	ldrb	r5, [r3, #0]
+
+       27b36:	785b      	ldrb	r3, [r3, #1]
+
+       27b38:	f8b0 60b2 	ldrh.w	r6, [r0, #178]	@ 0xb2
+
+       27b3c:	ea45 2503 	orr.w	r5, r5, r3, lsl #8
+
+       27b40:	ba6d      	rev16	r5, r5
+
+       27b42:	4604      	mov	r4, r0
+
+       27b44:	b2ad      	uxth	r5, r5
+
+       27b46:	b15a      	cbz	r2, 27b60 <<a href="./0d90e164156e14da99d9803c2035f86c.html">doip::DoIpServerConnectionHandler::aliveCheckResponseReceived(estd::slice<unsigned char const, 0u>)</a>+0x3c>
+
+       27b48:	6900      	ldr	r0, [r0, #16]
+
+       27b4a:	2300      	movs	r3, #0
+
+       27b4c:	f884 30c5 	strb.w	r3, [r4, #197]	@ 0xc5
+
+       27b50:	1b72      	subs	r2, r6, r5
+
+       27b52:	6803      	ldr	r3, [r0, #0]
+
+       27b54:	fab2 f282 	clz	r2, r2
+
+       27b58:	68db      	ldr	r3, [r3, #12]
+
+       27b5a:	0952      	lsrs	r2, r2, #5
+
+       27b5c:	4621      	mov	r1, r4
+
+       27b5e:	4798      	blx	r3
+
+       27b60:	42ae      	cmp	r6, r5
+
+       27b62:	d10d      	bne.n	27b80 <<a href="./0d90e164156e14da99d9803c2035f86c.html">doip::DoIpServerConnectionHandler::aliveCheckResponseReceived(estd::slice<unsigned char const, 0u>)</a>+0x5c>
+
+    _ZN4estd8functionIFvvEEC4Ev():
+
+       27b64:	4a10      	ldr	r2, [pc, #64]	@ (27ba8 <<a href="./0d90e164156e14da99d9803c2035f86c.html">doip::DoIpServerConnectionHandler::aliveCheckResponseReceived(estd::slice<unsigned char const, 0u>)</a>+0x84>)
+
+    doip::DoIpServerConnectionHandler::aliveCheckResponseReceived(estd::slice<unsigned char const, 0u>):
+
+       27b66:	6960      	ldr	r0, [r4, #20]
+
+    _ZN4estd8functionIFvvEEC4Ev():
+
+       27b68:	2100      	movs	r1, #0
+
+       27b6a:	e9cd 2104 	strd	r2, r1, [sp, #16]
+
+    doip::DoIpServerConnectionHandler::aliveCheckResponseReceived(estd::slice<unsigned char const, 0u>):
+
+       27b6e:	6803      	ldr	r3, [r0, #0]
+
+       27b70:	aa06      	add	r2, sp, #24
+
+       27b72:	e912 0006 	ldmdb	r2, {r1, r2}
+
+       27b76:	691b      	ldr	r3, [r3, #16]
+
+       27b78:	b006      	add	sp, #24
+
+       27b7a:	e8bd 4070 	ldmia.w	sp!, {r4, r5, r6, lr}
+
+       27b7e:	4718      	bx	r3
+
+       27b80:	480a      	ldr	r0, [pc, #40]	@ (27bac <<a href="./0d90e164156e14da99d9803c2035f86c.html">doip::DoIpServerConnectionHandler::aliveCheckResponseReceived(estd::slice<unsigned char const, 0u>)</a>+0x88>)
+
+       27b82:	f894 10c5 	ldrb.w	r1, [r4, #197]	@ 0xc5
+
+       27b86:	f894 30b8 	ldrb.w	r3, [r4, #184]	@ 0xb8
+
+       27b8a:	f8b4 20b2 	ldrh.w	r2, [r4, #178]	@ 0xb2
+
+       27b8e:	7800      	ldrb	r0, [r0, #0]
+
+       27b90:	9100      	str	r1, [sp, #0]
+
+       27b92:	4907      	ldr	r1, [pc, #28]	@ (27bb0 <<a href="./0d90e164156e14da99d9803c2035f86c.html">doip::DoIpServerConnectionHandler::aliveCheckResponseReceived(estd::slice<unsigned char const, 0u>)</a>+0x8c>)
+
+       27b94:	f7db f8a4 	bl	2ce0 <<a href="../../../../../util/include/util/logger/Logger.h/0ab01804358606b880086539418bdb3a.html">util::logger::Logger::info(unsigned char, char const*, ...)</a>>
+
+       27b98:	6823      	ldr	r3, [r4, #0]
+
+       27b9a:	6a1b      	ldr	r3, [r3, #32]
+
+       27b9c:	4620      	mov	r0, r4
+
+       27b9e:	b006      	add	sp, #24
+
+       27ba0:	e8bd 4070 	ldmia.w	sp!, {r4, r5, r6, lr}
+
+       27ba4:	4718      	bx	r3
+
+       27ba6:	bf00      	nop
+
+       27ba8:	00009a01 	.word	0x00009a01
+
+       27bac:	1ffe0126 	.word	0x1ffe0126
+
+       27bb0:	00033550 	.word	0x00033550
+
+    </pre>
+
+    
+    <pre><a href="../../../../../estd/include/estd/functional.h/47f8acdb63a3e3fba100c0df6d4ec6e9.html">void estd::function&lt;void (estd::slice&lt;unsigned char const, 0u&gt;)&gt;::member_function_caller&lt;doip::DoIpServerConnectionHandler, &amp;doip::DoIpServerConnectionHandler::aliveCheckResponseReceived&gt;(void*, estd::slice&lt;unsigned char const, 0u&gt;) (16)</a></pre>
+    
+
+    
+        <h1>Stack Worst-Case Scenarios</h1>
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 108</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 124</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    108
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                48 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    124
+                    
+                    
+                </td>
+                <td class="col_size">68</td>
+                <td><a href="../../../../../util/src/util/logger/Logger.cpp/d658d7c78dcca1ca01e61ef198b3eeaa.html" class="icon-function">util::logger::Logger::doLog(unsigned char, util::logger::Level, char const*, std::__va_list)</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                    
+                    60
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                20 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">56</td>
+                <td><a href="../../../../../util/include/util/logger/Logger.h/0ab01804358606b880086539418bdb3a.html" class="icon-function">util::logger::Logger::info(unsigned char, char const*, ...)</a></td>
+            </tr>
+        
+        </tbody>
+        
+        <tfoot>
+            <tr>
+                <th></th>
+                <th class="col_size">40
+                </th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </tfoot>
+        
+    </table>
+        
+        
+            <p>No callers for this function.</p>
+        
+    
+
+
+        </div>
+    <div id="page-footer">
+        <hr>
+        
+            brought to you with 💖
+            by <a href="https://twitter.com/hbehrens">Heiko Behrens</a>
+            <span class="secondary">– MIT license, copyright © 2014-2026</span>
+        
+    </div>
+    </div>
+</body>
+</html>

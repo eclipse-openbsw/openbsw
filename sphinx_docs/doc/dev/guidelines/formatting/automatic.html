@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="EclipseOpenBSWDocumentation" name="dox_trace_storage" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Automatic Formatting &mdash; Eclipse OpenBSW Documentation  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/rtd_theme_overrides.css?v=6fd0d55b" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=eafc0fe6" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/colors.css?v=3cafd8aa" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/colored_table.css?v=34b816d5" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/header.css?v=e632285e" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/dox_util_colors.css?v=dd14b177" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/dox_trace.css?v=60d3f72c" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../../../../_static/copybutton.js?v=f281be69"></script>
+        <script src="../../../../_static/dox_trace.js?v=40719b51"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="Unit Tests" href="../unittests.html" />
+    <link rel="prev" title="CMake" href="cmake.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Eclipse OpenBSW Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Learning</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../learning/overview.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../learning/SysTest/HW_Testing_Guide.html">Hardware Testing Guide</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guidelines</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../conventions/index.html">Coding Conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../practices.html">Coding Practices</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Formatting</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="for_c%2B%2B/index.html">C++</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cmake.html">CMake</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Automatic Formatting</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#usage">Usage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ide-integration">IDE Integration</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#vs-code">VS Code</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#vim-builtin-format-operator-gq">Vim Builtin Format Operator gq</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#header-guard-generation">Header Guard Generation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#vs-code-include-guard-extension">VS Code Include Guard Extension</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#vim-uuid-generation-plugin">Vim UUID Generation Plugin</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../unittests.html">Unit Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../module.html">Module Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../documentation.html">Module Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../diagrams.html">Diagrams</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../3rdparty.html">Third Party Libraries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commit_message.html">Commit Message</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pull_request.html">Pull Request</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Platforms</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../platforms/posix/index.html">POSIX</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../platforms/s32k148evb/index.html">S32K148 Evaluation Board</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Features</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../features/storage.html">Persistent Storage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/functional_safety.html">Functional Safety</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Software Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/common.html">Common</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/posix.html">Posix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/s32k1xx.html">S32K1xx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/executables.html">Executables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/mocks.html">Mocks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tools/UdsTool/doc/index.html">UdsTool</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tools/puncover_tool/doc/index.html">Puncover</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Eclipse OpenBSW Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="index.html">Formatting</a> &raquo;</li>
+        
+        <li>Automatic Formatting</li>
+    
+
+    
+
+      <li class="wy-breadcrumbs-aside">
+
+        <!-- DOCUMENT STATUS -->
+
+        
+
+        <!-- DATA CLASSIFICATION -->
+
+        
+
+      </li>
+
+    
+  </ul>
+
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="automatic-formatting">
+<span id="id1"></span><h1>Automatic Formatting<a class="headerlink" href="#automatic-formatting" title="Link to this heading"></a></h1>
+<p>To format all code, use <a class="reference external" href="https://treefmt.com">Treefmt</a>.</p>
+<section id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Link to this heading"></a></h2>
+<p>Formatting a file:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>treefmt<span class="w"> </span>&lt;file_to_check&gt;
+</pre></div>
+</div>
+<p>Formatting all files at once:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>treefmt
+</pre></div>
+</div>
+</section>
+<section id="ide-integration">
+<h2>IDE Integration<a class="headerlink" href="#ide-integration" title="Link to this heading"></a></h2>
+<section id="vs-code">
+<span id="vscode-formatting"></span><h3>VS Code<a class="headerlink" href="#vs-code" title="Link to this heading"></a></h3>
+<p>To use treefmt from within VS Code install the
+<a class="reference external" href="https://marketplace.visualstudio.com/items?itemName=ibecker.treefmt-vscode">treefmt-vscode plugin</a>.</p>
+<p>And configure the plugin by adding the following lines into the .vscode/settings.json file:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="nt">&quot;editor.defaultFormatter&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ibecker.treefmt-vscode&quot;</span><span class="p">,</span>
+<span class="nt">&quot;editor.formatOnSave&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+</pre></div>
+</div>
+</section>
+<section id="vim-builtin-format-operator-gq">
+<h3>Vim Builtin Format Operator gq<a class="headerlink" href="#vim-builtin-format-operator-gq" title="Link to this heading"></a></h3>
+<p>You may use vim’s builtin format operator <strong>gq</strong> (see <code class="docutils literal notranslate"><span class="pre">:help</span> <span class="pre">gq</span></code> in case you don’t know it) b
+pointing its <em>formatprg</em> option to <em>clang-format</em>, i.e.:</p>
+<div class="literal-block-wrapper docutils container" id="id2">
+<div class="code-block-caption"><span class="caption-text">.vimrc</span><a class="headerlink" href="#id2" title="Link to this code"></a></div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>&quot;&quot; Make sure to have &#39;filetype&#39; activated, e.g.
+filetype plugin indent on
+
+&quot;&quot; set formatexpr and formatprg when filetype is cpp
+au FileType cpp setlocal formatexpr= formatprg=clang-format\ -style=file
+</pre></div>
+</div>
+</div>
+<p>This (of course) assumes clang-format being in your $PATH.
+You can now apply the formatting e.g. by hitting gq on your selected text:</p>
+<img alt="../../../../_images/gq.gif" src="../../../../_images/gq.gif" />
+</section>
+</section>
+<section id="header-guard-generation">
+<h2>Header Guard Generation<a class="headerlink" href="#header-guard-generation" title="Link to this heading"></a></h2>
+<p>You can create a header guard manually or use one of the following tools.</p>
+<section id="vs-code-include-guard-extension">
+<h3>VS Code Include Guard Extension<a class="headerlink" href="#vs-code-include-guard-extension" title="Link to this heading"></a></h3>
+<p>Install the “C/C++ Include Guard” extension.</p>
+<p>Aside from the built-in extension browser, you can also find it here:
+<a class="reference external" href="https://marketplace.visualstudio.com/items?itemName=akiramiyakoda.cppincludeguard">https://marketplace.visualstudio.com/items?itemName=akiramiyakoda.cppincludeguard</a>
+or here: <a class="reference external" href="https://github.com/AkiraMiyakoda/cppIncludeGuard">https://github.com/AkiraMiyakoda/cppIncludeGuard</a></p>
+<p>Next, configure the extension in your settings menu (search &#64;ext:akiramiyakoda.cppincludeguard)
+and set the prefix to “GUARD_”.</p>
+</section>
+<section id="vim-uuid-generation-plugin">
+<h3>Vim UUID Generation Plugin<a class="headerlink" href="#vim-uuid-generation-plugin" title="Link to this heading"></a></h3>
+<p>Install a UUID generation plugin (here’s one): <a class="reference external" href="https://github.com/kburdett/vim-nuuid">https://github.com/kburdett/vim-nuuid</a></p>
+<p>Create a new custom function to use the UUID generator, and insert the appropriate preprocessor
+statements:</p>
+<div class="highlight-vim notranslate"><div class="highlight"><pre><span></span><span class="k">function</span><span class="p">!</span> GenIncludeGuard<span class="p">()</span>
+    <span class="k">let</span> guard  <span class="p">=</span> <span class="k">join</span><span class="p">(</span>[<span class="s2">&quot;GUARD&quot;</span><span class="p">,</span> substitute<span class="p">(</span>NuuidNewUuid<span class="p">(),</span> <span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="s1">&#39;g&#39;</span><span class="p">)</span>]<span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span>
+    <span class="k">let</span> ifndef <span class="p">=</span> <span class="k">join</span><span class="p">(</span>[<span class="s2">&quot;#ifndef&quot;</span><span class="p">,</span>   guard]<span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span>
+    <span class="k">let</span> <span class="nb">define</span> <span class="p">=</span> <span class="k">join</span><span class="p">(</span>[<span class="s2">&quot;#define&quot;</span><span class="p">,</span>   guard]<span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span>
+    <span class="k">let</span> <span class="k">endif</span>  <span class="p">=</span> <span class="k">join</span><span class="p">(</span>[<span class="s2">&quot;#endif //&quot;</span><span class="p">,</span> guard]<span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span>
+<span class="c">    &quot; Extra empty strings included here to insert another newline before the endif</span>
+    <span class="k">return</span> <span class="k">join</span><span class="p">(</span>[ifndef<span class="p">,</span> <span class="nb">define</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="k">endif</span>]<span class="p">,</span> <span class="s2">&quot;\n&quot;</span><span class="p">)</span>
+<span class="k">endfunction</span>
+</pre></div>
+</div>
+<p>Lastly, map this function (along with ancillary operations) to your favorite keystroke combination.
+Here’s an example mapping:</p>
+<div class="highlight-vim notranslate"><div class="highlight"><pre><span></span><span class="nb">nnoremap</span> <span class="p">&lt;</span>leader<span class="p">&gt;</span><span class="k">u</span> <span class="k">i</span><span class="p">&lt;</span>C<span class="p">-</span>R<span class="p">&gt;=</span>GenIncludeGuard<span class="p">()&lt;</span>CR<span class="p">&gt;&lt;</span>Esc<span class="p">&gt;</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026 Accenture.</p>
+  </div>
+
+  <div role="footer_string">
+    <p>Documentation from 2026-02-24 10:51:52, official build.</p>
+
+    
+      <a href="../../../../_sources/doc/dev/guidelines/formatting/automatic.rst.txt" rel="nofollow"> View page source</a>
+    
+
+  </div>
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(false);
+      });
+  </script> 
+
+</body>
+</html>

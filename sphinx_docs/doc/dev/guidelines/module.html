@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="EclipseOpenBSWDocumentation" name="dox_trace_storage" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Module Structure &mdash; Eclipse OpenBSW Documentation  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/rtd_theme_overrides.css?v=6fd0d55b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=eafc0fe6" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/colors.css?v=3cafd8aa" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/colored_table.css?v=34b816d5" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/header.css?v=e632285e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/dox_util_colors.css?v=dd14b177" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/dox_trace.css?v=60d3f72c" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../../../_static/copybutton.js?v=f281be69"></script>
+        <script src="../../../_static/dox_trace.js?v=40719b51"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Module Documentation" href="documentation.html" />
+    <link rel="prev" title="Unit Tests" href="unittests.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Eclipse OpenBSW Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Learning</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../learning/overview.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../learning/SysTest/HW_Testing_Guide.html">Hardware Testing Guide</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guidelines</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="conventions/index.html">Coding Conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="practices.html">Coding Practices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="formatting/index.html">Formatting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="unittests.html">Unit Tests</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Module Structure</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#include-src">include/src</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#doc">doc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#mock">mock</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#test">test</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tools">tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-spec">module.spec</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cmakelists-txt">CMakeLists.txt</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#module">&lt;module&gt;</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-test">&lt;module&gt;/test</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-mock">&lt;module&gt;/mock</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="documentation.html">Module Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diagrams.html">Diagrams</a></li>
+<li class="toctree-l1"><a class="reference internal" href="3rdparty.html">Third Party Libraries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="commit_message.html">Commit Message</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pull_request.html">Pull Request</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Platforms</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../platforms/posix/index.html">POSIX</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../platforms/s32k148evb/index.html">S32K148 Evaluation Board</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Features</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../features/storage.html">Persistent Storage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/functional_safety.html">Functional Safety</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Software Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../modules/common.html">Common</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/posix.html">Posix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/s32k1xx.html">S32K1xx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/executables.html">Executables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/mocks.html">Mocks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tools/UdsTool/doc/index.html">UdsTool</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tools/puncover_tool/doc/index.html">Puncover</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Eclipse OpenBSW Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+        <li>Module Structure</li>
+    
+
+    
+
+      <li class="wy-breadcrumbs-aside">
+
+        <!-- DOCUMENT STATUS -->
+
+        
+
+        <!-- DATA CLASSIFICATION -->
+
+        
+
+      </li>
+
+    
+  </ul>
+
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-structure">
+<span id="id1"></span><h1>Module Structure<a class="headerlink" href="#module-structure" title="Link to this heading"></a></h1>
+<p>In the following folder tree, replace <code class="docutils literal notranslate"><span class="pre">&lt;module&gt;</span></code> by the name of the library.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>.
+├── include
+│   └── &lt;module&gt;
+├── src
+│   └── &lt;module&gt;
+├── doc
+│   ├── index.rst
+│   └── [other]
+├── mock
+│   ├── include
+│   │   └── &lt;module&gt;
+│   ├── src
+│   │   └── &lt;module&gt;
+│   └── CMakeLists.txt
+├── test
+│   ├── include
+│   │   └── &lt;module&gt;
+│   ├── src
+│   │   └── &lt;module&gt;
+│   ├── mock
+│   │   ├── include
+│   │   └── src
+│   └── CMakeLists.txt
+├── tools
+│   ├── &lt;tool1&gt;
+│   └── &lt;tool2&gt;
+├── module.spec
+└── CMakeLists.txt
+</pre></div>
+</div>
+<section id="include-src">
+<h2>include/src<a class="headerlink" href="#include-src" title="Link to this heading"></a></h2>
+<p>The header and source files representing the <code class="docutils literal notranslate"><span class="pre">&lt;module&gt;</span></code>. Create a subfolder structure reflecting
+the namespaces used within the respective files.</p>
+</section>
+<section id="doc">
+<h2>doc<a class="headerlink" href="#doc" title="Link to this heading"></a></h2>
+<p>Description of the module, see <a class="reference internal" href="documentation.html#module-documentation"><span class="std std-ref">Module Documentation</span></a>.</p>
+</section>
+<section id="mock">
+<h2>mock<a class="headerlink" href="#mock" title="Link to this heading"></a></h2>
+<p>This optional folder provides <a class="reference internal" href="unittests.html#unittests-mocks"><span class="std std-ref">mocks</span></a> to other unit tests that need this
+library in order to build successfully.</p>
+</section>
+<section id="test">
+<h2>test<a class="headerlink" href="#test" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">include</span></code> and <code class="docutils literal notranslate"><span class="pre">src</span></code> contain the test suites and test cases, see <a class="reference internal" href="unittests.html#unit-tests"><span class="std std-ref">Unit Tests</span></a>.
+If the module really needs private mocks, add a <code class="docutils literal notranslate"><span class="pre">mock</span></code> folder below <code class="docutils literal notranslate"><span class="pre">test</span></code>.</p>
+</section>
+<section id="tools">
+<h2>tools<a class="headerlink" href="#tools" title="Link to this heading"></a></h2>
+<p>Optional folder for tools or scripts related to this module.</p>
+</section>
+<section id="module-spec">
+<span id="id2"></span><h2>module.spec<a class="headerlink" href="#module-spec" title="Link to this heading"></a></h2>
+<p>Every module requires a <code class="docutils literal notranslate"><span class="pre">module.spec</span></code> file which includes the basic settings of a module.
+<code class="docutils literal notranslate"><span class="pre">module.spec</span></code> is a yaml-file which will be read by our build tools.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># VALUE + EXAMPLE           DESCRIPTION                       POSSIBLE VALUES                DEFAULT</span>
+<span class="c1"># ---------------           -----------                       ---------------                -------</span>
+
+<span class="nt">std_c</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">c</span><span class="w">                    </span><span class="c1"># Minimum required c standard.    [c, c99]                       c</span>
+
+<span class="nt">std_cxx</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">c++14</span><span class="w">              </span><span class="c1"># Minimum required c++ standard.  [c++14, c++17, c++20, c++23]   c++14</span>
+
+<span class="nt">architectures</span><span class="p">:</span><span class="w">              </span><span class="c1"># Compatible architectures.       [16bit, 32bit, 64bit]          [32bit, 64bit]</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">32bit</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">64bit</span>
+
+<span class="nt">unsupported_compilers</span><span class="p">:</span><span class="w">      </span><span class="c1"># Module must not be used for     [gcc, diab, tasking, iar,      all compilers are</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">diab</span><span class="w">                  </span><span class="c1"># these compilers.                clang, msvc]                   supported</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">msvc</span>
+
+<span class="nt">endianness</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">little</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">big</span><span class="p p-Indicator">]</span><span class="w">   </span><span class="c1"># Compatible                      [little, big]                  module runs with</span>
+<span class="w">                            </span><span class="c1"># endianness.                                                    both endianness</span>
+
+<span class="nt">safety</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">                </span><span class="c1"># Module is ASIL-D capable.       [true, false]                  false</span>
+<span class="w">                            </span><span class="c1"># Additional safety tests are</span>
+<span class="w">                            </span><span class="c1"># executed on this module.</span>
+
+<span class="nt">security</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">              </span><span class="c1"># Module is security capable.     [true, false]                  false</span>
+<span class="w">                            </span><span class="c1"># Additional security tests are</span>
+<span class="w">                            </span><span class="c1"># executed on this module.</span>
+
+<span class="nt">unit_test</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w">            </span><span class="c1"># Module must have a unit test    [true, false]                  true</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>Only properties differing from their respective default values should be stated in the
+<code class="docutils literal notranslate"><span class="pre">module.spec</span></code> file.</p></li>
+<li><p><strong>If all values match the standard, you still have to create an empty file, as this marks a
+module as such.</strong></p></li>
+<li><p>A module is considered to be compatible with all default values unless explicitly stated
+otherwise in the <code class="docutils literal notranslate"><span class="pre">module.spec</span></code> file.</p></li>
+</ul>
+</div>
+</section>
+<section id="cmakelists-txt">
+<span id="cmakelists"></span><h2>CMakeLists.txt<a class="headerlink" href="#cmakelists-txt" title="Link to this heading"></a></h2>
+<p>Use only standard CMake commands. The typical structure is as follows:</p>
+<section id="module">
+<h3>&lt;module&gt;<a class="headerlink" href="#module" title="Link to this heading"></a></h3>
+<blockquote>
+<div><div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">add_library</span><span class="p">(</span><span class="s">&lt;module&gt;</span><span class="w"> </span><span class="s">src/&lt;module&gt;/...</span><span class="p">)</span>
+<span class="nb">target_include_directories</span><span class="p">(</span><span class="s">&lt;module&gt;</span><span class="w"> </span><span class="s">PUBLIC</span><span class="w"> </span><span class="s">include</span><span class="p">)</span>
+<span class="nb">target_link_libraries</span><span class="p">(</span><span class="s">&lt;module&gt;</span><span class="w"> </span><span class="s">PUBLIC</span><span class="w"> </span><span class="s">...</span><span class="w"> </span><span class="s">PRIVATE</span><span class="w"> </span><span class="s">...</span><span class="p">)</span>
+</pre></div>
+</div>
+</div></blockquote>
+</section>
+<section id="module-test">
+<h3>&lt;module&gt;/test<a class="headerlink" href="#module-test" title="Link to this heading"></a></h3>
+<blockquote>
+<div><div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">add_executable</span><span class="p">(</span><span class="s">&lt;module&gt;Test</span><span class="w"> </span><span class="s">src/...</span><span class="p">)</span>
+<span class="nb">target_include_directories</span><span class="p">(</span><span class="s">&lt;module&gt;Test</span><span class="w"> </span><span class="s">PRIVATE</span><span class="w"> </span><span class="s">...</span><span class="p">)</span>
+<span class="nb">target_link_libraries</span><span class="p">(</span><span class="s">&lt;module&gt;Test</span><span class="w"> </span><span class="s">PRIVATE</span><span class="w"> </span><span class="s">gtest_main</span><span class="w"> </span><span class="s">...</span><span class="p">)</span>
+<span class="nb">gtest_discover_tests</span><span class="p">(</span><span class="s">&lt;module&gt;Test</span><span class="w"> </span><span class="s">PROPERTIES</span><span class="w"> </span><span class="s">LABELS</span><span class="w"> </span><span class="s2">&quot;&lt;module&gt;Test&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div></blockquote>
+</section>
+<section id="module-mock">
+<h3>&lt;module&gt;/mock<a class="headerlink" href="#module-mock" title="Link to this heading"></a></h3>
+<blockquote>
+<div><div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">add_library</span><span class="p">(</span><span class="s">&lt;module&gt;Mock</span><span class="w"> </span><span class="s">src/...</span><span class="p">)</span>
+<span class="nb">target_include_directories</span><span class="p">(</span><span class="s">&lt;module&gt;Mock</span><span class="w"> </span><span class="s">PUBLIC</span><span class="w"> </span><span class="s">include</span><span class="p">)</span>
+<span class="nb">target_link_libraries</span><span class="p">(</span><span class="s">&lt;module&gt;Mock</span><span class="w"> </span><span class="s">PUBLIC</span><span class="w"> </span><span class="s">gmock</span><span class="w"> </span><span class="s">...</span><span class="w"> </span><span class="s">PRIVATE</span><span class="w"> </span><span class="s">...</span><span class="p">)</span>
+</pre></div>
+</div>
+</div></blockquote>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026 Accenture.</p>
+  </div>
+
+  <div role="footer_string">
+    <p>Documentation from 2026-02-24 10:51:52, official build.</p>
+
+    
+      <a href="../../../_sources/doc/dev/guidelines/module.rst.txt" rel="nofollow"> View page source</a>
+    
+
+  </div>
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(false);
+      });
+  </script> 
+
+</body>
+</html>

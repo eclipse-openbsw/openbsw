@@ -1,0 +1,182 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - coverage.info - libs/bsw/doip/include/doip/server/DoIpServerTransportConnection.h</title>
+  <link rel="stylesheet" type="text/css" href="../../../../../../gcov.css">
+</head>
+
+<body>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="title">LCOV - code coverage report</td></tr>
+            <tr><td class="ruler"><img src="../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+            <tr>
+              <td width="100%">
+                <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="10%" class="headerValue"><a href="../../../../../../index.html">top level</a> - <a href="index.html">libs/bsw/doip/include/doip/server</a> - DoIpServerTransportConnection.h<span style="font-size: 80%;"> (source / <a href="DoIpServerTransportConnection.h.func-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="5%"></td>
+            <td width="5%" class="headerCovTableHead">Coverage</td>
+            <td width="5%" class="headerCovTableHead" title="Covered + Uncovered code">Total</td>
+            <td width="5%" class="headerCovTableHead" title="Exercised code only">Hit</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">coverage.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
+            <td class="headerCovTableEntry">8</td>
+            <td class="headerCovTableEntry">8</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test Date:</td>
+            <td class="headerValue">2026-02-24 11:21:15</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
+            <td class="headerCovTableEntry">4</td>
+            <td class="headerCovTableEntry">4</td>
+          </tr>
+                  <tr><td><img src="../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr><td class="ruler"><img src="../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+          </table>
+
+          <table cellpadding=0 cellspacing=0 border=0>
+            <tr>
+              <td><br></td>
+            </tr>
+            <tr>
+              <td>
+<pre class="sourceHeading">            Line data    Source code</pre>
+<pre class="source">
+<span id="L1"><span class="lineNum">       1</span>              : // Copyright 2025 Accenture.</span>
+<span id="L2"><span class="lineNum">       2</span>              : </span>
+<span id="L3"><span class="lineNum">       3</span>              : /**</span>
+<span id="L4"><span class="lineNum">       4</span>              :  * \ingroup doip</span>
+<span id="L5"><span class="lineNum">       5</span>              :  */</span>
+<span id="L6"><span class="lineNum">       6</span>              : #pragma once</span>
+<span id="L7"><span class="lineNum">       7</span>              : </span>
+<span id="L8"><span class="lineNum">       8</span>              : #include &quot;doip/common/DoIpConstants.h&quot;</span>
+<span id="L9"><span class="lineNum">       9</span>              : #include &quot;doip/common/DoIpTcpConnection.h&quot;</span>
+<span id="L10"><span class="lineNum">      10</span>              : #include &quot;doip/server/DoIpServerConnectionHandler.h&quot;</span>
+<span id="L11"><span class="lineNum">      11</span>              : #include &quot;doip/server/DoIpServerTransportMessageHandler.h&quot;</span>
+<span id="L12"><span class="lineNum">      12</span>              : </span>
+<span id="L13"><span class="lineNum">      13</span>              : #include &lt;estd/forward_list.h&gt;</span>
+<span id="L14"><span class="lineNum">      14</span>              : </span>
+<span id="L15"><span class="lineNum">      15</span>              : namespace doip</span>
+<span id="L16"><span class="lineNum">      16</span>              : {</span>
+<span id="L17"><span class="lineNum">      17</span>              : class DoIpServerTransportConnectionConfig;</span>
+<span id="L18"><span class="lineNum">      18</span>              : class IDoIpServerConnectionHandlerCallback;</span>
+<span id="L19"><span class="lineNum">      19</span>              : </span>
+<span id="L20"><span class="lineNum">      20</span>              : /**</span>
+<span id="L21"><span class="lineNum">      21</span>              :  * Class that represents a server transport connection.</span>
+<span id="L22"><span class="lineNum">      22</span>              :  * It is responsible for base connection handling with routing activation and .</span>
+<span id="L23"><span class="lineNum">      23</span>              :  */</span>
+<span id="L24"><span class="lineNum">      24</span>              : // multiple inheritance of interfaces is OK</span>
+<span id="L25"><span class="lineNum">      25</span>              : class DoIpServerTransportConnection</span>
+<span id="L26"><span class="lineNum">      26</span>              : : public DoIpServerConnectionHandler</span>
+<span id="L27"><span class="lineNum">      27</span>              : , public ::estd::forward_list_node&lt;DoIpServerTransportConnection&gt;</span>
+<span id="L28"><span class="lineNum">      28</span>              : {</span>
+<span id="L29"><span class="lineNum">      29</span>              : public:</span>
+<span id="L30"><span class="lineNum">      30</span>              :     /**</span>
+<span id="L31"><span class="lineNum">      31</span>              :      * Constructor.</span>
+<span id="L32"><span class="lineNum">      32</span>              :      * \param protocolVersion doip protocol version used for all communication</span>
+<span id="L33"><span class="lineNum">      33</span>              :      * \param socketGroupId identifier of socket group the connection belongs to</span>
+<span id="L34"><span class="lineNum">      34</span>              :      * \param socket reference to socket</span>
+<span id="L35"><span class="lineNum">      35</span>              :      * \param config reference to config</span>
+<span id="L36"><span class="lineNum">      36</span>              :      * \param diagnosticSendJobBlockPool reference to block pool for transport message send jobs</span>
+<span id="L37"><span class="lineNum">      37</span>              :      * \param protocolSendJobBlockPool reference to block pool for protocol send jobs</span>
+<span id="L38"><span class="lineNum">      38</span>              :      */</span>
+<span id="L39"><span class="lineNum">      39</span>              :     DoIpServerTransportConnection(</span>
+<span id="L40"><span class="lineNum">      40</span>              :         DoIpConstants::ProtocolVersion protocolVersion,</span>
+<span id="L41"><span class="lineNum">      41</span>              :         uint8_t socketGroupId,</span>
+<span id="L42"><span class="lineNum">      42</span>              :         ::tcp::AbstractSocket&amp; socket,</span>
+<span id="L43"><span class="lineNum">      43</span>              :         DoIpServerTransportConnectionConfig const&amp; config,</span>
+<span id="L44"><span class="lineNum">      44</span>              :         ::util::estd::block_pool&amp; diagnosticSendJobBlockPool,</span>
+<span id="L45"><span class="lineNum">      45</span>              :         ::util::estd::block_pool&amp; protocolSendJobBlockPool,</span>
+<span id="L46"><span class="lineNum">      46</span>              :         DoIpTcpConnection::ConnectionType type);</span>
+<span id="L47"><span class="lineNum">      47</span>              : </span>
+<span id="L48"><span class="lineNum">      48</span>              :     /**</span>
+<span id="L49"><span class="lineNum">      49</span>              :      * Get the contained connection.</span>
+<span id="L50"><span class="lineNum">      50</span>              :      * \return reference to connection</span>
+<span id="L51"><span class="lineNum">      51</span>              :      */</span>
+<span id="L52"><span class="lineNum">      52</span>              :     DoIpTcpConnection&amp; getConnection();</span>
+<span id="L53"><span class="lineNum">      53</span>              : </span>
+<span id="L54"><span class="lineNum">      54</span>              :     /**</span>
+<span id="L55"><span class="lineNum">      55</span>              :      * Send a transport message to the tester.</span>
+<span id="L56"><span class="lineNum">      56</span>              :      * \param transportMessage transport message to send</span>
+<span id="L57"><span class="lineNum">      57</span>              :      * \param pNotificationListener listener interface</span>
+<span id="L58"><span class="lineNum">      58</span>              :      * \return true if message has been sent successfully, false otherwise</span>
+<span id="L59"><span class="lineNum">      59</span>              :      */</span>
+<span id="L60"><span class="lineNum">      60</span>              :     bool send(</span>
+<span id="L61"><span class="lineNum">      61</span>              :         ::transport::TransportMessage&amp; transportMessage,</span>
+<span id="L62"><span class="lineNum">      62</span>              :         ::transport::ITransportMessageProcessedListener* pNotificationListener);</span>
+<span id="L63"><span class="lineNum">      63</span>              : </span>
+<span id="L64"><span class="lineNum">      64</span>              :     /**</span>
+<span id="L65"><span class="lineNum">      65</span>              :      * mark the connection for closing.</span>
+<span id="L66"><span class="lineNum">      66</span>              :      * \param closeMode close mode for the TCP connection</span>
+<span id="L67"><span class="lineNum">      67</span>              :      */</span>
+<span id="L68"><span class="lineNum">      68</span>              :     void markForClose(IDoIpTcpConnection::CloseMode closeMode);</span>
+<span id="L69"><span class="lineNum">      69</span>              : </span>
+<span id="L70"><span class="lineNum">      70</span>              :     /**</span>
+<span id="L71"><span class="lineNum">      71</span>              :      * Check whether the connection has been marked for closing.</span>
+<span id="L72"><span class="lineNum">      72</span>              :      * \return true if marked for closing</span>
+<span id="L73"><span class="lineNum">      73</span>              :      */</span>
+<span id="L74"><span class="lineNum">      74</span>              :     bool isMarkedForClose() const;</span>
+<span id="L75"><span class="lineNum">      75</span>              : </span>
+<span id="L76"><span class="lineNum">      76</span>              :     DoIpTcpConnection::ConnectionType type() const;</span>
+<span id="L77"><span class="lineNum">      77</span>              : </span>
+<span id="L78"><span class="lineNum">      78</span>              : private:</span>
+<span id="L79"><span class="lineNum">      79</span>              :     DoIpTcpConnection _connection;</span>
+<span id="L80"><span class="lineNum">      80</span>              :     DoIpServerTransportMessageHandler _transportMessageHandler;</span>
+<span id="L81"><span class="lineNum">      81</span>              :     uint8_t _writeBuffer[DoIpConstants::DOIP_HEADER_LENGTH];</span>
+<span id="L82"><span class="lineNum">      82</span>              :     bool _isMarkedForClose;</span>
+<span id="L83"><span class="lineNum">      83</span>              :     DoIpTcpConnection::ConnectionType _type;</span>
+<span id="L84"><span class="lineNum">      84</span>              : };</span>
+<span id="L85"><span class="lineNum">      85</span>              : </span>
+<span id="L86"><span class="lineNum">      86</span>              : /**</span>
+<span id="L87"><span class="lineNum">      87</span>              :  * Inline implementations.</span>
+<span id="L88"><span class="lineNum">      88</span>              :  */</span>
+<span id="L89"><span class="lineNum">      89</span>              : // connections are managed from the outside</span>
+<span id="L90"><span class="lineNum">      90</span> <span class="tlaGNC tlaBgGNC">          30 : inline DoIpTcpConnection&amp; DoIpServerTransportConnection::getConnection() { return _connection; }</span></span>
+<span id="L91"><span class="lineNum">      91</span>              : </span>
+<span id="L92"><span class="lineNum">      92</span>              : inline void</span>
+<span id="L93"><span class="lineNum">      93</span> <span class="tlaGNC">           5 : DoIpServerTransportConnection::markForClose(IDoIpTcpConnection::CloseMode const closeMode)</span></span>
+<span id="L94"><span class="lineNum">      94</span>              : {</span>
+<span id="L95"><span class="lineNum">      95</span> <span class="tlaGNC">           5 :     _connection.setCloseMode(closeMode);</span></span>
+<span id="L96"><span class="lineNum">      96</span> <span class="tlaGNC">           5 :     _isMarkedForClose = true;</span></span>
+<span id="L97"><span class="lineNum">      97</span> <span class="tlaGNC">           5 : }</span></span>
+<span id="L98"><span class="lineNum">      98</span>              : </span>
+<span id="L99"><span class="lineNum">      99</span> <span class="tlaGNC">          11 : inline bool DoIpServerTransportConnection::isMarkedForClose() const { return _isMarkedForClose; }</span></span>
+<span id="L100"><span class="lineNum">     100</span>              : </span>
+<span id="L101"><span class="lineNum">     101</span> <span class="tlaGNC">          21 : inline DoIpTcpConnection::ConnectionType DoIpServerTransportConnection::type() const</span></span>
+<span id="L102"><span class="lineNum">     102</span>              : {</span>
+<span id="L103"><span class="lineNum">     103</span> <span class="tlaGNC">          21 :     return _type;</span></span>
+<span id="L104"><span class="lineNum">     104</span>              : }</span>
+<span id="L105"><span class="lineNum">     105</span>              : </span>
+<span id="L106"><span class="lineNum">     106</span>              : } // namespace doip</span>
+        </pre>
+              </td>
+            </tr>
+          </table>
+          <br>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="ruler"><img src="../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+            <tr><td class="versionInfo">Generated by: <a href="https://github.com//linux-test-project/lcov" target="_parent">LCOV version 2.0-1</a></td></tr>
+          </table>
+          <br>
+
+</body>
+</html>

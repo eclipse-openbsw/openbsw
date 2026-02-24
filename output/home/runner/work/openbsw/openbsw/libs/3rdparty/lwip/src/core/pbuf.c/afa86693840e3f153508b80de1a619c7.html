@@ -1,0 +1,472 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../../../../../../../../../../static/css/style.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <title>Symbol - puncover</title>
+    
+</head>
+<body>
+    <div class="container" id="content">
+        <div class="page-header">
+            <nav class="navbar navbar-default" role="navigation">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="../../../../../../../../../../../index.html">
+                    Puncover
+                  </a>
+                </div>
+              </div>
+            </nav>
+          
+        </div>
+        <div id="inner_content">
+        
+    
+    <ol class="breadcrumb folders">
+        
+        <li><a href="../../../../../../../../../../../home.html">home</a></li>
+        
+        <li><a href="../../../../../../../../../../runner.html">runner</a></li>
+        
+        <li><a href="../../../../../../../../../work.html">work</a></li>
+        
+        <li><a href="../../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../libs.html">libs</a></li>
+        
+        <li><a href="../../../../../3rdparty.html">3rdparty</a></li>
+        
+        <li><a href="../../../../lwip.html">lwip</a></li>
+        
+        <li><a href="../../../src.html">src</a></li>
+        
+        <li ><a href="../../core.html">core</a>
+            </li>
+
+        
+        <li class="active"><a href="../pbuf.c.html">pbuf.c</a>:857
+            </li>
+        
+    </ol>
+
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <th>Function</th>
+                <td colspan="5">
+                    <span class="icon-function">pbuf_cat</span>
+                </td>
+            </tr>
+
+            <tr>
+                <th rowspan="2"></th>
+                <th>Address</th>
+                <th>Remarks</th>
+                <th>Stack</th>
+                <th>Code</th>
+                <th>Static</th>
+            </tr>
+            <tr>
+                <td>0x0001c80c</td>
+                <td>
+    <span class="label label-success">x-module</span>
+    
+</td>
+                <td>4 (static)</td>
+                <td>64</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th>Callers (3)</th>
+                <td colspan="5">
+                
+                    <a href="../tcp_out.c/b8146a7cc4ce1c798697b5855300e8c3.html">tcp_write (1476)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../../../../../bsw/lwipSocket/src/lwipSocket/tcp/LwipSocket.cpp/9df10003a427130aa0e529e72e161e3b.html">tcp::LwipSocket::receiveCallback(tcp_pcb const*, pbuf*, signed char) (204)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../../../../../bsw/lwipSocket/src/lwipSocket/udp/LwipDatagramSocket.cpp/85bbf4a0a5d7e27176bc7ea1799e1f6d.html">udp::LwipDatagramSocket::udpReceiveListener(void*, udp_pcb*, pbuf*, ip4_addr const*, unsigned short) (172)</a>
+                    
+                
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Callees (1,
+                            <span title="sum of used bytes by all callees">
+                            Σ=52
+                            </span>
+                        )
+                    
+                </th>
+                <td colspan="5">
+                
+                    <a href="../../../../../../executables/referenceApp/application/src/logger/logger.cpp/98866fb3d81ee8db78cbfd1e2dfd931d.html">log_lwipInfo (52)</a>
+                    
+                
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    
+    <pre><a href="./b1e9f5f05fc261ade8a2ac2ca88ae3d4.html">pbuf_ref (28)</a></pre>
+    
+
+    <pre>
+
+    pbuf_cat():
+
+       1c80c:	b1b0      	cbz	r0, 1c83c <<a href="./afa86693840e3f153508b80de1a619c7.html">pbuf_cat</a>+0x30>
+
+       1c80e:	b1a9      	cbz	r1, 1c83c <<a href="./afa86693840e3f153508b80de1a619c7.html">pbuf_cat</a>+0x30>
+
+       1c810:	6802      	ldr	r2, [r0, #0]
+
+       1c812:	b410      	push	{r4}
+
+       1c814:	b90a      	cbnz	r2, 1c81a <<a href="./afa86693840e3f153508b80de1a619c7.html">pbuf_cat</a>+0xe>
+
+       1c816:	e014      	b.n	1c842 <<a href="./afa86693840e3f153508b80de1a619c7.html">pbuf_cat</a>+0x36>
+
+       1c818:	4622      	mov	r2, r4
+
+       1c81a:	8903      	ldrh	r3, [r0, #8]
+
+       1c81c:	f8b1 c008 	ldrh.w	ip, [r1, #8]
+
+       1c820:	6814      	ldr	r4, [r2, #0]
+
+       1c822:	4463      	add	r3, ip
+
+       1c824:	8103      	strh	r3, [r0, #8]
+
+       1c826:	4610      	mov	r0, r2
+
+       1c828:	2c00      	cmp	r4, #0
+
+       1c82a:	d1f5      	bne.n	1c818 <<a href="./afa86693840e3f153508b80de1a619c7.html">pbuf_cat</a>+0xc>
+
+       1c82c:	8908      	ldrh	r0, [r1, #8]
+
+       1c82e:	8913      	ldrh	r3, [r2, #8]
+
+       1c830:	f85d 4b04 	ldr.w	r4, [sp], #4
+
+       1c834:	6011      	str	r1, [r2, #0]
+
+       1c836:	4403      	add	r3, r0
+
+       1c838:	8113      	strh	r3, [r2, #8]
+
+       1c83a:	4770      	bx	lr
+
+       1c83c:	4802      	ldr	r0, [pc, #8]	@ (1c848 <<a href="./afa86693840e3f153508b80de1a619c7.html">pbuf_cat</a>+0x3c>)
+
+       1c83e:	f7eb bef5 	b.w	862c <<a href="../../../../../../executables/referenceApp/application/src/logger/logger.cpp/98866fb3d81ee8db78cbfd1e2dfd931d.html">log_lwipInfo</a>>
+
+       1c842:	4602      	mov	r2, r0
+
+       1c844:	e7f2      	b.n	1c82c <<a href="./afa86693840e3f153508b80de1a619c7.html">pbuf_cat</a>+0x20>
+
+       1c846:	bf00      	nop
+
+       1c848:	0003261c 	.word	0x0003261c
+
+    </pre>
+
+    
+    <pre><a href="./10167fb6905f20490b0e8e5bdc4aa1e0.html">pbuf_chain (84)</a></pre>
+    
+
+    
+        <h1>Stack Worst-Case Scenarios</h1>
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 460</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 3,000</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    460
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                48 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    3,000
+                    
+                    
+                </td>
+                <td class="col_size">160</td>
+                <td><a href="../../../../printf/src/printf/printf.c/aead89a8c09454d3b52c82329b9d6539.html" class="icon-function">out_rev_</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                    
+                    412
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                112 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    2,840
+                    
+                    
+                </td>
+                <td class="col_size">792</td>
+                <td><a href="../../../../printf/src/printf/printf.c/ac6598d6032c1151c802f0c9a9979746.html" class="icon-function">print_integer</a></td>
+            </tr>
+        
+            <tr>
+                <th>3</th>
+                <td class="col_size">
+                    
+                    300
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                88 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    2,048
+                    
+                    
+                </td>
+                <td class="col_size">1,964</td>
+                <td><a href="../../../../printf/src/printf/printf.c/6d7d630ec5529648e33ae989eebb2cb7.html" class="icon-function">_vsnprintf</a></td>
+            </tr>
+        
+            <tr>
+                <th>4</th>
+                <td class="col_size">
+                    
+                    212
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                16 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    84
+                    
+                    
+                </td>
+                <td class="col_size">32</td>
+                <td><a href="../../../../printf/src/printf/printf.c/529535ce0d5bfecabb7841bebeaf251c.html" class="icon-function">vsnprintf_</a></td>
+            </tr>
+        
+            <tr>
+                <th>5</th>
+                <td class="col_size">
+                    
+                    196
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                16 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">52</td>
+                <td><a href="../../../../../../executables/referenceApp/application/src/logger/logger.cpp/98866fb3d81ee8db78cbfd1e2dfd931d.html" class="icon-function">log_lwipInfo</a></td>
+            </tr>
+        
+        </tbody>
+        
+        <tfoot>
+            <tr>
+                <th></th>
+                <th class="col_size">180
+                </th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </tfoot>
+        
+    </table>
+        
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 180</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 1,860</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    180
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                4 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    1,860
+                    
+                    
+                </td>
+                <td class="col_size">64</td>
+                <td><a href="./afa86693840e3f153508b80de1a619c7.html" class="icon-function">pbuf_cat</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                    
+                    176
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                104 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    1,796
+                    
+                    
+                </td>
+                <td class="col_size">1,476</td>
+                <td><a href="../tcp_out.c/b8146a7cc4ce1c798697b5855300e8c3.html" class="icon-function">tcp_write</a></td>
+            </tr>
+        
+            <tr>
+                <th>3</th>
+                <td class="col_size">
+                    
+                    72
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                40 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    320
+                    
+                    
+                </td>
+                <td class="col_size">232</td>
+                <td><a href="../../../../../bsw/lwipSocket/src/lwipSocket/tcp/LwipSocket.cpp/8a60358216542dcb0c2ede2244777968.html" class="icon-function">tcp::LwipSocket::sendPendingData(tcp_pcb*)</a></td>
+            </tr>
+        
+            <tr>
+                <th>4</th>
+                <td class="col_size">
+                </td>
+                <td class="col_size">
+            
+                32 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">88</td>
+                <td><a href="../../../../../bsw/lwipSocket/src/lwipSocket/tcp/LwipSocket.cpp/6230275fb8b0b82b5e92693676499aa3.html" class="icon-function">tcp::LwipSocket::tcpSentListener(void*, tcp_pcb*, unsigned short)</a></td>
+            </tr>
+        
+        </tbody>
+        
+    </table>
+        
+    
+
+
+        </div>
+    <div id="page-footer">
+        <hr>
+        
+            brought to you with 💖
+            by <a href="https://twitter.com/hbehrens">Heiko Behrens</a>
+            <span class="secondary">– MIT license, copyright © 2014-2026</span>
+        
+    </div>
+    </div>
+</body>
+</html>

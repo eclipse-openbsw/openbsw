@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="EclipseOpenBSWDocumentation" name="dox_trace_storage" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CMake &mdash; Eclipse OpenBSW Documentation  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/rtd_theme_overrides.css?v=6fd0d55b" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=eafc0fe6" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/colors.css?v=3cafd8aa" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/colored_table.css?v=34b816d5" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/header.css?v=e632285e" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/dox_util_colors.css?v=dd14b177" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/dox_trace.css?v=60d3f72c" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../../../../_static/copybutton.js?v=f281be69"></script>
+        <script src="../../../../_static/dox_trace.js?v=40719b51"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="Automatic Formatting" href="automatic.html" />
+    <link rel="prev" title="Additional Rules" href="for_c%2B%2B/additional.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Eclipse OpenBSW Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Learning</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../learning/overview.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../learning/SysTest/HW_Testing_Guide.html">Hardware Testing Guide</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guidelines</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../conventions/index.html">Coding Conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../practices.html">Coding Practices</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Formatting</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="for_c%2B%2B/index.html">C++</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">CMake</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#usage">Usage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#configuration">Configuration</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="automatic.html">Automatic Formatting</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../unittests.html">Unit Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../module.html">Module Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../documentation.html">Module Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../diagrams.html">Diagrams</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../3rdparty.html">Third Party Libraries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commit_message.html">Commit Message</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pull_request.html">Pull Request</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Platforms</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../platforms/posix/index.html">POSIX</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../platforms/s32k148evb/index.html">S32K148 Evaluation Board</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Features</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../features/storage.html">Persistent Storage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/functional_safety.html">Functional Safety</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Software Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/common.html">Common</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/posix.html">Posix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/s32k1xx.html">S32K1xx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/executables.html">Executables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/mocks.html">Mocks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tools/UdsTool/doc/index.html">UdsTool</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tools/puncover_tool/doc/index.html">Puncover</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Eclipse OpenBSW Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="index.html">Formatting</a> &raquo;</li>
+        
+        <li>CMake</li>
+    
+
+    
+
+      <li class="wy-breadcrumbs-aside">
+
+        <!-- DOCUMENT STATUS -->
+
+        
+
+        <!-- DATA CLASSIFICATION -->
+
+        
+
+      </li>
+
+    
+  </ul>
+
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="cmake">
+<h1>CMake<a class="headerlink" href="#cmake" title="Link to this heading"></a></h1>
+<p>We use <a class="reference external" href="https://github.com/cheshirekow/cmake_format">cmake-format</a> to format CMake files.</p>
+<section id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Link to this heading"></a></h2>
+<p>Formatting a file:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cmake-format<span class="w"> </span>-style<span class="o">=</span>file<span class="w"> </span>-i<span class="w"> </span>&lt;file_to_check&gt;
+</pre></div>
+</div>
+<p>Formatting several files at once:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cmake-format<span class="w"> </span>-i<span class="w"> </span><span class="k">$(</span>find<span class="w"> </span>.<span class="w"> </span>-name<span class="w"> </span>CMakeLists.txt<span class="w"> </span><span class="p">|</span><span class="w"> </span>sed<span class="w"> </span><span class="s1">&#39;/3rdparty\/.*\/CMakeLists\.txt/d&#39;</span><span class="k">)</span>
+</pre></div>
+</div>
+<p><em>-i</em> edits the files in-place.</p>
+<p>cmake-format is also called by <em>treefmt</em>, see <a class="reference internal" href="automatic.html#automatic-formatting"><span class="std std-ref">Automatic Formatting</span></a>.
+So the easiest way to format all CMake files is using treefmt:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>treefmt
+</pre></div>
+</div>
+</section>
+<section id="configuration">
+<h2>Configuration<a class="headerlink" href="#configuration" title="Link to this heading"></a></h2>
+<p>Configuration is provided in the <cite>.cmake-format</cite> file:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># ----------------------------------</span>
+<span class="c1"># Options affecting listfile parsing</span>
+<span class="c1"># ----------------------------------</span>
+<span class="k">with</span> <span class="n">section</span><span class="p">(</span><span class="s2">&quot;parse&quot;</span><span class="p">):</span>
+
+  <span class="c1"># Specify structure for custom cmake functions</span>
+  <span class="n">additional_commands</span> <span class="o">=</span> <span class="p">{</span> <span class="s1">&#39;foo&#39;</span><span class="p">:</span> <span class="p">{</span> <span class="s1">&#39;flags&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;BAR&#39;</span><span class="p">,</span> <span class="s1">&#39;BAZ&#39;</span><span class="p">],</span>
+             <span class="s1">&#39;kwargs&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;DEPENDS&#39;</span><span class="p">:</span> <span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="s1">&#39;HEADERS&#39;</span><span class="p">:</span> <span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="s1">&#39;SOURCES&#39;</span><span class="p">:</span> <span class="s1">&#39;*&#39;</span><span class="p">}}}</span>
+
+  <span class="c1"># Override configurations per-command where available</span>
+  <span class="n">override_spec</span> <span class="o">=</span> <span class="p">{}</span>
+
+  <span class="c1"># Specify variable tags.</span>
+  <span class="n">vartags</span> <span class="o">=</span> <span class="p">[]</span>
+
+  <span class="c1"># Specify property tags.</span>
+  <span class="n">proptags</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="c1"># -----------------------------</span>
+<span class="c1"># Options affecting formatting.</span>
+<span class="c1"># -----------------------------</span>
+<span class="k">with</span> <span class="n">section</span><span class="p">(</span><span class="s2">&quot;format&quot;</span><span class="p">):</span>
+
+  <span class="c1"># Disable formatting entirely, making cmake-format a no-op</span>
+  <span class="n">disable</span> <span class="o">=</span> <span class="kc">False</span>
+
+  <span class="c1"># How wide to allow formatted cmake files</span>
+  <span class="n">line_width</span> <span class="o">=</span> <span class="mi">80</span>
+
+  <span class="c1"># How many spaces to tab for indent</span>
+  <span class="n">tab_size</span> <span class="o">=</span> <span class="mi">4</span>
+
+  <span class="c1"># If true, lines are indented using tab characters (utf-8 0x09) instead of</span>
+  <span class="c1"># &lt;tab_size&gt; space characters (utf-8 0x20). In cases where the layout would</span>
+  <span class="c1"># require a fractional tab character, the behavior of the  fractional</span>
+  <span class="c1"># indentation is governed by &lt;fractional_tab_policy&gt;</span>
+  <span class="n">use_tabchars</span> <span class="o">=</span> <span class="kc">False</span>
+
+  <span class="c1"># If &lt;use_tabchars&gt; is True, then the value of this variable indicates how</span>
+  <span class="c1"># fractional indentions are handled during whitespace replacement. If set to</span>
+  <span class="c1"># &#39;use-space&#39;, fractional indentation is left as spaces (utf-8 0x20). If set</span>
+  <span class="c1"># to `round-up` fractional indentation is replaced with a single tab character</span>
+  <span class="c1"># (utf-8 0x09) effectively shifting the column to the next tabstop</span>
+  <span class="n">fractional_tab_policy</span> <span class="o">=</span> <span class="s1">&#39;use-space&#39;</span>
+
+  <span class="c1"># If an argument group contains more than this many sub-groups (parg or kwarg</span>
+  <span class="c1"># groups) then force it to a vertical layout.</span>
+  <span class="n">max_subgroups_hwrap</span> <span class="o">=</span> <span class="mi">2</span>
+
+  <span class="c1"># If a positional argument group contains more than this many arguments, then</span>
+  <span class="c1"># force it to a vertical layout.</span>
+  <span class="n">max_pargs_hwrap</span> <span class="o">=</span> <span class="mi">4</span>
+
+  <span class="c1"># If a cmdline positional group consumes more than this many lines without</span>
+  <span class="c1"># nesting, then invalidate the layout (and nest)</span>
+  <span class="n">max_rows_cmdline</span> <span class="o">=</span> <span class="mi">2</span>
+
+  <span class="c1"># If true, separate flow control names from their parentheses with a space</span>
+  <span class="n">separate_ctrl_name_with_space</span> <span class="o">=</span> <span class="kc">True</span>
+
+  <span class="c1"># If true, separate function names from parentheses with a space</span>
+  <span class="n">separate_fn_name_with_space</span> <span class="o">=</span> <span class="kc">False</span>
+
+  <span class="c1"># If a statement is wrapped to more than one line, than dangle the closing</span>
+  <span class="c1"># parenthesis on its own line.</span>
+  <span class="n">dangle_parens</span> <span class="o">=</span> <span class="kc">False</span>
+
+  <span class="c1"># If the trailing parenthesis must be &#39;dangled&#39; on its on line, then align it</span>
+  <span class="c1"># to this reference: `prefix`: the start of the statement,  `prefix-indent`:</span>
+  <span class="c1"># the start of the statement, plus one indentation  level, `child`: align to</span>
+  <span class="c1"># the column of the arguments</span>
+  <span class="n">dangle_align</span> <span class="o">=</span> <span class="s1">&#39;prefix&#39;</span>
+
+  <span class="c1"># If the statement spelling length (including space and parenthesis) is</span>
+  <span class="c1"># smaller than this amount, then force reject nested layouts.</span>
+  <span class="n">min_prefix_chars</span> <span class="o">=</span> <span class="mi">4</span>
+
+  <span class="c1"># If the statement spelling length (including space and parenthesis) is larger</span>
+  <span class="c1"># than the tab width by more than this amount, then force reject un-nested</span>
+  <span class="c1"># layouts.</span>
+  <span class="n">max_prefix_chars</span> <span class="o">=</span> <span class="mi">10</span>
+
+  <span class="c1"># If a candidate layout is wrapped horizontally but it exceeds this many</span>
+  <span class="c1"># lines, then reject the layout.</span>
+  <span class="n">max_lines_hwrap</span> <span class="o">=</span> <span class="mi">2</span>
+
+  <span class="c1"># What style line endings to use in the output.</span>
+  <span class="n">line_ending</span> <span class="o">=</span> <span class="s1">&#39;unix&#39;</span>
+
+  <span class="c1"># Format command names consistently as &#39;lower&#39; or &#39;upper&#39; case</span>
+  <span class="n">command_case</span> <span class="o">=</span> <span class="s1">&#39;canonical&#39;</span>
+
+  <span class="c1"># Format keywords consistently as &#39;lower&#39; or &#39;upper&#39; case</span>
+  <span class="n">keyword_case</span> <span class="o">=</span> <span class="s1">&#39;unchanged&#39;</span>
+
+  <span class="c1"># A list of command names which should always be wrapped</span>
+  <span class="n">always_wrap</span> <span class="o">=</span> <span class="p">[]</span>
+
+  <span class="c1"># If true, the argument lists which are known to be sortable will be sorted</span>
+  <span class="c1"># lexicographicall</span>
+  <span class="n">enable_sort</span> <span class="o">=</span> <span class="kc">True</span>
+
+  <span class="c1"># If true, the parsers may infer whether or not an argument list is sortable</span>
+  <span class="c1"># (without annotation).</span>
+  <span class="n">autosort</span> <span class="o">=</span> <span class="kc">False</span>
+
+  <span class="c1"># By default, if cmake-format cannot successfully fit everything into the</span>
+  <span class="c1"># desired linewidth it will apply the last, most agressive attempt that it</span>
+  <span class="c1"># made. If this flag is True, however, cmake-format will print error, exit</span>
+  <span class="c1"># with non-zero status code, and write-out nothing</span>
+  <span class="n">require_valid_layout</span> <span class="o">=</span> <span class="kc">False</span>
+
+  <span class="c1"># A dictionary mapping layout nodes to a list of wrap decisions. See the</span>
+  <span class="c1"># documentation for more information.</span>
+  <span class="n">layout_passes</span> <span class="o">=</span> <span class="p">{}</span>
+
+<span class="c1"># ------------------------------------------------</span>
+<span class="c1"># Options affecting comment reflow and formatting.</span>
+<span class="c1"># ------------------------------------------------</span>
+<span class="k">with</span> <span class="n">section</span><span class="p">(</span><span class="s2">&quot;markup&quot;</span><span class="p">):</span>
+
+  <span class="c1"># What character to use for bulleted lists</span>
+  <span class="n">bullet_char</span> <span class="o">=</span> <span class="s1">&#39;*&#39;</span>
+
+  <span class="c1"># What character to use as punctuation after numerals in an enumerated list</span>
+  <span class="n">enum_char</span> <span class="o">=</span> <span class="s1">&#39;.&#39;</span>
+
+  <span class="c1"># If comment markup is enabled, don&#39;t reflow the first comment block in each</span>
+  <span class="c1"># listfile. Use this to preserve formatting of your copyright/license</span>
+  <span class="c1"># statements.</span>
+  <span class="n">first_comment_is_literal</span> <span class="o">=</span> <span class="kc">False</span>
+
+  <span class="c1"># If comment markup is enabled, don&#39;t reflow any comment block which matches</span>
+  <span class="c1"># this (regex) pattern. Default is `None` (disabled).</span>
+  <span class="n">literal_comment_pattern</span> <span class="o">=</span> <span class="kc">None</span>
+
+  <span class="c1"># Regular expression to match preformat fences in comments default=</span>
+  <span class="c1"># ``r&#39;^\s*([`~]{3}[`~]*)(.*)$&#39;``</span>
+  <span class="n">fence_pattern</span> <span class="o">=</span> <span class="s1">&#39;^</span><span class="se">\\</span><span class="s1">s*([`~]</span><span class="si">{3}</span><span class="s1">[`~]*)(.*)$&#39;</span>
+
+  <span class="c1"># Regular expression to match rulers in comments default=</span>
+  <span class="c1"># ``r&#39;^\s*[^\w\s]{3}.*[^\w\s]{3}$&#39;``</span>
+  <span class="n">ruler_pattern</span> <span class="o">=</span> <span class="s1">&#39;^</span><span class="se">\\</span><span class="s1">s*[^</span><span class="se">\\</span><span class="s1">w</span><span class="se">\\</span><span class="s1">s]</span><span class="si">{3}</span><span class="s1">.*[^</span><span class="se">\\</span><span class="s1">w</span><span class="se">\\</span><span class="s1">s]</span><span class="si">{3}</span><span class="s1">$&#39;</span>
+
+  <span class="c1"># If a comment line matches starts with this pattern then it is explicitly a</span>
+  <span class="c1"># trailing comment for the preceeding argument. Default is &#39;#&lt;&#39;</span>
+  <span class="n">explicit_trailing_pattern</span> <span class="o">=</span> <span class="s1">&#39;#&lt;&#39;</span>
+
+  <span class="c1"># If a comment line starts with at least this many consecutive hash</span>
+  <span class="c1"># characters, then don&#39;t lstrip() them off. This allows for lazy hash rulers</span>
+  <span class="c1"># where the first hash char is not separated by space</span>
+  <span class="n">hashruler_min_length</span> <span class="o">=</span> <span class="mi">10</span>
+
+  <span class="c1"># If true, then insert a space between the first hash char and remaining hash</span>
+  <span class="c1"># chars in a hash ruler, and normalize its length to fill the column</span>
+  <span class="n">canonicalize_hashrulers</span> <span class="o">=</span> <span class="kc">True</span>
+
+  <span class="c1"># enable comment markup parsing and reflow</span>
+  <span class="n">enable_markup</span> <span class="o">=</span> <span class="kc">True</span>
+
+<span class="c1"># ----------------------------</span>
+<span class="c1"># Options affecting the linter</span>
+<span class="c1"># ----------------------------</span>
+<span class="k">with</span> <span class="n">section</span><span class="p">(</span><span class="s2">&quot;lint&quot;</span><span class="p">):</span>
+
+  <span class="c1"># a list of lint codes to disable</span>
+  <span class="n">disabled_codes</span> <span class="o">=</span> <span class="p">[]</span>
+
+  <span class="c1"># regular expression pattern describing valid function names</span>
+  <span class="n">function_pattern</span> <span class="o">=</span> <span class="s1">&#39;[0-9a-z_]+&#39;</span>
+
+  <span class="c1"># regular expression pattern describing valid macro names</span>
+  <span class="n">macro_pattern</span> <span class="o">=</span> <span class="s1">&#39;[0-9A-Z_]+&#39;</span>
+
+  <span class="c1"># regular expression pattern describing valid names for variables with global</span>
+  <span class="c1"># (cache) scope</span>
+  <span class="n">global_var_pattern</span> <span class="o">=</span> <span class="s1">&#39;[A-Z][0-9A-Z_]+&#39;</span>
+
+  <span class="c1"># regular expression pattern describing valid names for variables with global</span>
+  <span class="c1"># scope (but internal semantic)</span>
+  <span class="n">internal_var_pattern</span> <span class="o">=</span> <span class="s1">&#39;_[A-Z][0-9A-Z_]+&#39;</span>
+
+  <span class="c1"># regular expression pattern describing valid names for variables with local</span>
+  <span class="c1"># scope</span>
+  <span class="n">local_var_pattern</span> <span class="o">=</span> <span class="s1">&#39;[a-z][a-z0-9_]+&#39;</span>
+
+  <span class="c1"># regular expression pattern describing valid names for privatedirectory</span>
+  <span class="c1"># variables</span>
+  <span class="n">private_var_pattern</span> <span class="o">=</span> <span class="s1">&#39;_[0-9a-z_]+&#39;</span>
+
+  <span class="c1"># regular expression pattern describing valid names for public directory</span>
+  <span class="c1"># variables</span>
+  <span class="n">public_var_pattern</span> <span class="o">=</span> <span class="s1">&#39;[A-Z][0-9A-Z_]+&#39;</span>
+
+  <span class="c1"># regular expression pattern describing valid names for function/macro</span>
+  <span class="c1"># arguments and loop variables.</span>
+  <span class="n">argument_var_pattern</span> <span class="o">=</span> <span class="s1">&#39;[a-z][a-z0-9_]+&#39;</span>
+
+  <span class="c1"># regular expression pattern describing valid names for keywords used in</span>
+  <span class="c1"># functions or macros</span>
+  <span class="n">keyword_pattern</span> <span class="o">=</span> <span class="s1">&#39;[A-Z][0-9A-Z_]+&#39;</span>
+
+  <span class="c1"># In the heuristic for C0201, how many conditionals to match within a loop in</span>
+  <span class="c1"># before considering the loop a parser.</span>
+  <span class="n">max_conditionals_custom_parser</span> <span class="o">=</span> <span class="mi">2</span>
+
+  <span class="c1"># Require at least this many newlines between statements</span>
+  <span class="n">min_statement_spacing</span> <span class="o">=</span> <span class="mi">1</span>
+
+  <span class="c1"># Require no more than this many newlines between statements</span>
+  <span class="n">max_statement_spacing</span> <span class="o">=</span> <span class="mi">2</span>
+  <span class="n">max_returns</span> <span class="o">=</span> <span class="mi">6</span>
+  <span class="n">max_branches</span> <span class="o">=</span> <span class="mi">12</span>
+  <span class="n">max_arguments</span> <span class="o">=</span> <span class="mi">5</span>
+  <span class="n">max_localvars</span> <span class="o">=</span> <span class="mi">15</span>
+  <span class="n">max_statements</span> <span class="o">=</span> <span class="mi">50</span>
+
+<span class="c1"># -------------------------------</span>
+<span class="c1"># Options affecting file encoding</span>
+<span class="c1"># -------------------------------</span>
+<span class="k">with</span> <span class="n">section</span><span class="p">(</span><span class="s2">&quot;encode&quot;</span><span class="p">):</span>
+
+  <span class="c1"># If true, emit the unicode byte-order mark (BOM) at the start of the file</span>
+  <span class="n">emit_byteorder_mark</span> <span class="o">=</span> <span class="kc">False</span>
+
+  <span class="c1"># Specify the encoding of the input file. Defaults to utf-8</span>
+  <span class="n">input_encoding</span> <span class="o">=</span> <span class="s1">&#39;utf-8&#39;</span>
+
+  <span class="c1"># Specify the encoding of the output file. Defaults to utf-8. Note that cmake</span>
+  <span class="c1"># only claims to support utf-8 so be careful when using anything else</span>
+  <span class="n">output_encoding</span> <span class="o">=</span> <span class="s1">&#39;utf-8&#39;</span>
+
+<span class="c1"># -------------------------------------</span>
+<span class="c1"># Miscellaneous configurations options.</span>
+<span class="c1"># -------------------------------------</span>
+<span class="k">with</span> <span class="n">section</span><span class="p">(</span><span class="s2">&quot;misc&quot;</span><span class="p">):</span>
+
+  <span class="c1"># A dictionary containing any per-command configuration overrides. Currently</span>
+  <span class="c1"># only `command_case` is supported.</span>
+  <span class="n">per_command</span> <span class="o">=</span> <span class="p">{}</span>
+
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026 Accenture.</p>
+  </div>
+
+  <div role="footer_string">
+    <p>Documentation from 2026-02-24 10:51:52, official build.</p>
+
+    
+      <a href="../../../../_sources/doc/dev/guidelines/formatting/cmake.rst.txt" rel="nofollow"> View page source</a>
+    
+
+  </div>
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(false);
+      });
+  </script> 
+
+</body>
+</html>

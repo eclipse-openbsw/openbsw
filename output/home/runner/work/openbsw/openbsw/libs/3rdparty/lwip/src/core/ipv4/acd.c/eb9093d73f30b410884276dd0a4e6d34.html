@@ -1,0 +1,377 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../../../../../../../../../../../static/css/style.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <title>Symbol - puncover</title>
+    
+</head>
+<body>
+    <div class="container" id="content">
+        <div class="page-header">
+            <nav class="navbar navbar-default" role="navigation">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="../../../../../../../../../../../../index.html">
+                    Puncover
+                  </a>
+                </div>
+              </div>
+            </nav>
+          
+        </div>
+        <div id="inner_content">
+        
+    
+    <ol class="breadcrumb folders">
+        
+        <li><a href="../../../../../../../../../../../../home.html">home</a></li>
+        
+        <li><a href="../../../../../../../../../../../runner.html">runner</a></li>
+        
+        <li><a href="../../../../../../../../../../work.html">work</a></li>
+        
+        <li><a href="../../../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../../libs.html">libs</a></li>
+        
+        <li><a href="../../../../../../3rdparty.html">3rdparty</a></li>
+        
+        <li><a href="../../../../../lwip.html">lwip</a></li>
+        
+        <li><a href="../../../../src.html">src</a></li>
+        
+        <li><a href="../../../core.html">core</a></li>
+        
+        <li ><a href="../../ipv4.html">ipv4</a>
+            </li>
+
+        
+        <li class="active"><a href="../acd.c.html">acd.c</a>:182
+            </li>
+        
+    </ol>
+
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <th>Function</th>
+                <td colspan="5">
+                    <span class="icon-function">acd_start</span>
+                </td>
+            </tr>
+
+            <tr>
+                <th rowspan="2"></th>
+                <th>Address</th>
+                <th>Remarks</th>
+                <th>Stack</th>
+                <th>Code</th>
+                <th>Static</th>
+            </tr>
+            <tr>
+                <td>0x00020b8c</td>
+                <td>
+    <span class="label label-success">x-module</span>
+    
+</td>
+                <td>16 (static)</td>
+                <td>48</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th>Callers (2)</th>
+                <td colspan="5">
+                
+                    <a href="../dhcp.c/37b8a341f2a0e885dc1a42665d508a1b.html">dhcp_recv (1212)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../autoip.c/5c7470e1a598ef7e1cc4696e941ba174.html">autoip_start (172)</a>
+                    
+                
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Callees (1,
+                            <span title="sum of used bytes by all callees">
+                            Σ=88
+                            </span>
+                        )
+                    
+                </th>
+                <td colspan="5">
+                
+                    <a href="../../../../../../../executables/referenceApp/lwipConfiguration/src/rng.cpp/0b84eb5a3a0972a4e12761990cb8693a.html">lwip_rand (88)</a>
+                    
+                
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    
+    <pre><a href="./e1b5303fc18330aa0333cffd463e6a35.html">acd_remove (44)</a></pre>
+    
+
+    <pre>
+
+    acd_start():
+
+       20b8c:	b538      	push	{r3, r4, r5, lr}
+
+       20b8e:	2500      	movs	r5, #0
+
+       20b90:	2301      	movs	r3, #1
+
+       20b92:	604a      	str	r2, [r1, #4]
+
+       20b94:	810b      	strh	r3, [r1, #8]
+
+       20b96:	730d      	strb	r5, [r1, #12]
+
+       20b98:	460c      	mov	r4, r1
+
+       20b9a:	f00c fd93 	bl	2d6c4 <<a href="../../../../../../../executables/referenceApp/lwipConfiguration/src/rng.cpp/0b84eb5a3a0972a4e12761990cb8693a.html">lwip_rand</a>>
+
+       20b9e:	4b06      	ldr	r3, [pc, #24]	@ (20bb8 <<a href="./eb9093d73f30b410884276dd0a4e6d34.html">acd_start</a>+0x2c>)
+
+       20ba0:	fb83 3200 	smull	r3, r2, r3, r0
+
+       20ba4:	17c3      	asrs	r3, r0, #31
+
+       20ba6:	ebc3 03a2 	rsb	r3, r3, r2, asr #2
+
+       20baa:	eb03 0383 	add.w	r3, r3, r3, lsl #2
+
+       20bae:	eba0 0043 	sub.w	r0, r0, r3, lsl #1
+
+       20bb2:	8160      	strh	r0, [r4, #10]
+
+       20bb4:	4628      	mov	r0, r5
+
+       20bb6:	bd38      	pop	{r3, r4, r5, pc}
+
+       20bb8:	66666667 	.word	0x66666667
+
+    </pre>
+
+    
+    <pre><a href="./26f99aa2339397e279790b31bfd58966.html">acd_network_changed_link_down (16)</a></pre>
+    
+
+    
+        <h1>Stack Worst-Case Scenarios</h1>
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 200</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 88</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    200
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                8 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">88</td>
+                <td><a href="../../../../../../../executables/referenceApp/lwipConfiguration/src/rng.cpp/0b84eb5a3a0972a4e12761990cb8693a.html" class="icon-function">lwip_rand</a></td>
+            </tr>
+        
+        </tbody>
+        
+        <tfoot>
+            <tr>
+                <th></th>
+                <th class="col_size">192
+                </th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </tfoot>
+        
+    </table>
+        
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 192</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 1,220</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    192
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                16 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    1,220
+                    
+                    
+                </td>
+                <td class="col_size">48</td>
+                <td><a href="./eb9093d73f30b410884276dd0a4e6d34.html" class="icon-function">acd_start</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                    
+                    176
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                24 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    1,172
+                    
+                    
+                </td>
+                <td class="col_size">172</td>
+                <td><a href="../autoip.c/5c7470e1a598ef7e1cc4696e941ba174.html" class="icon-function">autoip_start</a></td>
+            </tr>
+        
+            <tr>
+                <th>3</th>
+                <td class="col_size">
+                    
+                    152
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                56 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    1,000
+                    
+                    
+                </td>
+                <td class="col_size">336</td>
+                <td><a href="../dhcp.c/8f67080f65f67dc415c23e160e5b6e3d.html" class="icon-function">dhcp_discover</a></td>
+            </tr>
+        
+            <tr>
+                <th>4</th>
+                <td class="col_size">
+                    
+                    96
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                24 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    664
+                    
+                    
+                </td>
+                <td class="col_size">188</td>
+                <td><a href="../dhcp.c/7d1c7091a5300ee38546c4eec2908e12.html" class="icon-function">dhcp_start</a></td>
+            </tr>
+        
+            <tr>
+                <th>5</th>
+                <td class="col_size">
+                </td>
+                <td class="col_size">
+            
+                72 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">476</td>
+                <td><a href="../dhcp.c/625c8433015a8cb580108e0f733b653d.html" class="icon-function">dhcp_coarse_tmr</a></td>
+            </tr>
+        
+        </tbody>
+        
+    </table>
+        
+    
+
+
+        </div>
+    <div id="page-footer">
+        <hr>
+        
+            brought to you with 💖
+            by <a href="https://twitter.com/hbehrens">Heiko Behrens</a>
+            <span class="secondary">– MIT license, copyright © 2014-2026</span>
+        
+    </div>
+    </div>
+</body>
+</html>

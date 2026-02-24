@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="EclipseOpenBSWDocumentation" name="dox_trace_storage" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>io::IReader &mdash; Eclipse OpenBSW Documentation  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/rtd_theme_overrides.css?v=6fd0d55b" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/graphviz.css?v=eafc0fe6" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/colors.css?v=3cafd8aa" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/colored_table.css?v=34b816d5" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/header.css?v=e632285e" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/dox_util_colors.css?v=dd14b177" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/dox_trace.css?v=60d3f72c" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../../../../../_static/copybutton.js?v=f281be69"></script>
+        <script src="../../../../../_static/dox_trace.js?v=40719b51"></script>
+    <script src="../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" />
+    <link rel="next" title="io::JoinReader" href="join_reader.html" />
+    <link rel="prev" title="io::IWriter" href="iwriter.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../doc/dev/index.html" class="icon icon-home">
+            Eclipse OpenBSW Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Learning</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/learning/overview.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/learning/SysTest/HW_Testing_Guide.html">Hardware Testing Guide</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guidelines</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/guidelines/conventions/index.html">Coding Conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/guidelines/practices.html">Coding Practices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/guidelines/formatting/index.html">Formatting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/guidelines/unittests.html">Unit Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/guidelines/module.html">Module Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/guidelines/documentation.html">Module Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/guidelines/diagrams.html">Diagrams</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/guidelines/3rdparty.html">Third Party Libraries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/guidelines/commit_message.html">Commit Message</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/guidelines/pull_request.html">Pull Request</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Platforms</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/platforms/posix/index.html">POSIX</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/platforms/s32k148evb/index.html">S32K148 Evaluation Board</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Features</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/features/storage.html">Persistent Storage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/features/functional_safety.html">Functional Safety</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Software Modules</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../../doc/dev/modules/common.html">Common</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../../../doc/dev/modules/common.html#bsw">BSW</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../../async/doc/index.html">async - Asynchronous Execution Interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../asyncConsole/doc/index.html">asyncConsole - Asynchronous Console</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../asyncFreeRtos/doc/index.html">asyncFreeRtos</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../asyncImpl/doc/index.html">asyncImpl</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../bsp/doc/index.html">bsp</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../common/doc/index.html">common</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cpp2can/doc/index.html">cpp2can - CAN Abstraction Layer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cpp2ethernet/doc/index.html">cpp2ethernet - Ethernet Abstractions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docan/doc/index.html">docan - Diagnostics over CAN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../doip/doc/index.html">doip - Diagnostics Over IP</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../index.html">io - IO Library</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="index.html">User Documentation</a><ul class="current">
+<li class="toctree-l5 current"><a class="reference internal" href="index.html#interfaces">Interfaces</a><ul class="current">
+<li class="toctree-l6"><a class="reference internal" href="iwriter.html">io::IWriter</a></li>
+<li class="toctree-l6 current"><a class="current reference internal" href="#">io::IReader</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="index.html#data-structures">Data Structures</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lifecycle/doc/index.html">lifecycle - App Lifecycle Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../logger/doc/index.html">logger - Logger module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../loggerIntegration/doc/index.html">loggerIntegration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lwipSocket/doc/index.html">lwipSocket - LwIP v2 Socket Abstraction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../middleware/doc/index.html">middleware</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../platform/doc/index.html">platform - Platform Library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../runtime/doc/index.html">runtime</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../stdioConsoleInput/doc/index.html">stdioConsoleInput</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../storage/doc/index.html">storage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../timer/doc/index.html">timer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../transport/doc/index.html">transport - Transport Library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../transportRouterSimple/doc/index.html">transportRouterSimple</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../uds/doc/index.html">uds - Unified Diagnostic Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../util/doc/index.html">util</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../doc/dev/modules/common.html#bsp">BSP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../doc/dev/modules/common.html#safety">Safety</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/modules/posix.html">Posix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/modules/s32k1xx.html">S32K1xx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/modules/executables.html">Executables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/modules/mocks.html">Mocks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tools/UdsTool/doc/index.html">UdsTool</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tools/puncover_tool/doc/index.html">Puncover</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../doc/dev/index.html">Eclipse OpenBSW Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../../doc/dev/index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../../../../doc/dev/modules/common.html">Common</a> &raquo;</li>
+        
+          <li><a href="../index.html">io - IO Library</a> &raquo;</li>
+        
+          <li><a href="index.html">User Documentation</a> &raquo;</li>
+        
+        <li>io::IReader</li>
+    
+
+    
+
+      <li class="wy-breadcrumbs-aside">
+
+        <!-- DOCUMENT STATUS -->
+
+        
+
+        <!-- DATA CLASSIFICATION -->
+
+        
+
+      </li>
+
+    
+  </ul>
+
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="io-ireader">
+<span id="id1"></span><h1>io::IReader<a class="headerlink" href="#io-ireader" title="Link to this heading"></a></h1>
+<p>The interface <code class="docutils literal notranslate"><span class="pre">IReader</span></code> is the counterpart of <a class="reference internal" href="iwriter.html#io-iwriter"><span class="std std-ref">io::IWriter</span></a> and an abstraction to read
+chunks of bytes with variable length from a data channel.</p>
+<section id="public-api">
+<h2>Public API<a class="headerlink" href="#public-api" title="Link to this heading"></a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>/**
+ * Returns the maximum number of bytes that may be read in one peek call
+ */
+virtual size_t maxSize() const = 0;
+
+/**
+ * Returns a slice to the next piece of available data.
+ * \return - Slice of bytes if underlying queue was not empty
+ *         - Empty slice otherwise
+ */
+virtual ::etl::span&lt;uint8_t&gt; peek() const = 0;
+
+/**
+ * Releases the memory that the last peek() call returned.
+ *
+ * Calling release() makes a new call to peek() mandatory! The previously peeked data must not
+ * be used anymore.
+ */
+virtual void release() = 0;
+</pre></div>
+</div>
+</section>
+<section id="usage-of-api">
+<h2>Usage of API<a class="headerlink" href="#usage-of-api" title="Link to this heading"></a></h2>
+<p>The next sequence diagram visualizes the two step <code class="docutils literal notranslate"><span class="pre">peek()</span></code> and <code class="docutils literal notranslate"><span class="pre">release()</span></code> API. After a call to <code class="docutils literal notranslate"><span class="pre">peek()</span></code>
+returns a etl::span of data with size greater than zero, the user can consume this data. A call
+to <code class="docutils literal notranslate"><span class="pre">release()</span></code> frees the data again, also invalidating it for the user.
+<strong>It must not be used</strong> anymore after calling <code class="docutils literal notranslate"><span class="pre">release()</span></code>.</p>
+<p class="plantuml">
+<a href="../../../../../_images/plantuml-c65c0cb14b3e061ebc749dcfe8381373f15e2b2b.png"><img src="../../../../../_images/plantuml-c65c0cb14b3e061ebc749dcfe8381373f15e2b2b.png" alt="actor SW
+SW -&gt; IReader : auto d = peek()
+alt d.size() &gt; 0 case
+    SW -&gt; SW  : consume d
+    SW -&gt; IReader : release()
+end" style="width: 212.0px; height: 312.0px"/></a>
+</p>
+<section id="example">
+<h3>Example<a class="headerlink" href="#example" title="Link to this heading"></a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">/**</span>
+ <span class="o">*</span> <span class="n">Tries</span> <span class="n">to</span> <span class="n">receive</span> <span class="n">a</span> <span class="n">CanFrame</span> <span class="kn">from</span> <span class="nn">a</span> <span class="n">given</span> <span class="n">IReader</span><span class="o">.</span>
+ <span class="o">*</span> \<span class="n">param</span> <span class="n">frame</span> <span class="n">CanFrame</span> <span class="n">to</span> <span class="n">receive</span> <span class="n">to</span><span class="p">,</span> <span class="n">i</span><span class="o">.</span><span class="n">e</span><span class="o">.</span> <span class="n">frame</span> <span class="n">provides</span> <span class="n">memory</span> <span class="n">to</span> <span class="n">copy</span> <span class="n">to</span><span class="o">.</span>
+ <span class="o">*</span> \<span class="n">param</span> <span class="n">reader</span> <span class="n">IReader</span> <span class="n">to</span> <span class="k">try</span> <span class="n">to</span> <span class="n">receive</span> <span class="n">a</span> <span class="n">frame</span> <span class="n">from</span><span class="o">.</span>
+ <span class="o">*</span> \<span class="k">return</span> <span class="n">true</span> <span class="k">if</span> <span class="n">a</span> <span class="n">frame</span> <span class="n">was</span> <span class="n">read</span><span class="p">,</span> <span class="n">false</span> <span class="n">otherwise</span><span class="o">.</span>
+ <span class="o">*/</span>
+<span class="nb">bool</span> <span class="n">receiveCanFrame</span><span class="p">(</span><span class="n">CanFrame</span><span class="o">&amp;</span> <span class="n">frame</span><span class="p">,</span> <span class="p">::</span><span class="n">io</span><span class="p">::</span><span class="n">IReader</span><span class="o">&amp;</span> <span class="n">reader</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">auto</span> <span class="n">data</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="n">peek</span><span class="p">();</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">sizeof</span><span class="p">(</span><span class="n">uint32_t</span><span class="p">))</span>
+    <span class="p">{</span>
+        <span class="o">//</span> <span class="n">No</span> <span class="n">frame</span> <span class="n">available</span> <span class="p">(</span><span class="n">A</span> <span class="n">frame</span> <span class="n">consists</span> <span class="n">of</span> <span class="n">at</span> <span class="n">least</span> <span class="n">uint32_t</span> <span class="nb">id</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">false</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="o">//</span> <span class="n">Copy</span> <span class="n">data</span> <span class="n">to</span> <span class="n">frame</span><span class="o">.</span> <span class="n">We</span> <span class="n">expect</span> <span class="n">a</span> <span class="n">big</span> <span class="n">endian</span> <span class="mi">32</span><span class="n">bit</span> <span class="nb">id</span> <span class="n">followed</span> <span class="n">by</span> <span class="n">the</span> <span class="n">actual</span> <span class="n">data</span><span class="o">.</span>
+    <span class="n">frame</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">etl</span><span class="p">::</span><span class="n">be_uint32_t</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">data</span><span class="p">());</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">advance</span><span class="p">(</span><span class="n">sizeof</span><span class="p">(</span><span class="n">etl</span><span class="p">::</span><span class="n">be_uint32_t</span><span class="p">));</span>
+    <span class="p">::</span><span class="n">etl</span><span class="p">::</span><span class="n">copy</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">frame</span><span class="o">.</span><span class="n">data</span><span class="p">);</span>
+    <span class="n">frame</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">first</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">size</span><span class="p">());</span>
+    <span class="o">//</span> <span class="n">Release</span> <span class="n">data</span> <span class="n">to</span> <span class="n">channel</span><span class="o">.</span>
+    <span class="n">reader</span><span class="o">.</span><span class="n">release</span><span class="p">();</span>
+    <span class="k">return</span> <span class="n">true</span><span class="p">;</span>
+<span class="p">}</span>
+
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026 Accenture.</p>
+  </div>
+
+  <div role="footer_string">
+    <p>Documentation from 2026-02-24 10:51:54, official build.</p>
+
+    
+      <a href="../../../../../_sources/libs/bsw/io/doc/user/ireader.rst.txt" rel="nofollow"> View page source</a>
+    
+
+  </div>
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(false);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,379 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../../../../../../../../../static/css/style.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <title>Symbol - puncover</title>
+    
+</head>
+<body>
+    <div class="container" id="content">
+        <div class="page-header">
+            <nav class="navbar navbar-default" role="navigation">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="../../../../../../../../../../index.html">
+                    Puncover
+                  </a>
+                </div>
+              </div>
+            </nav>
+          
+        </div>
+        <div id="inner_content">
+        
+    
+    <ol class="breadcrumb folders">
+        
+        <li><a href="../../../../../../../../../../home.html">home</a></li>
+        
+        <li><a href="../../../../../../../../../runner.html">runner</a></li>
+        
+        <li><a href="../../../../../../../../work.html">work</a></li>
+        
+        <li><a href="../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../libs.html">libs</a></li>
+        
+        <li><a href="../../../../3rdparty.html">3rdparty</a></li>
+        
+        <li><a href="../../../freeRtos.html">freeRtos</a></li>
+        
+        <li ><a href="../../include.html">include</a>
+            </li>
+
+        
+        <li class="active"><a href="../queue.h.html">queue.h</a>:1746
+            </li>
+        
+    </ol>
+
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <th>Function</th>
+                <td colspan="5">
+                    <span class="icon-function">vQueueWaitForMessageRestricted</span>
+                </td>
+            </tr>
+
+            <tr>
+                <th rowspan="2"></th>
+                <th>Address</th>
+                <th>Remarks</th>
+                <th>Stack</th>
+                <th>Code</th>
+                <th>Static</th>
+            </tr>
+            <tr>
+                <td>0x000132cc</td>
+                <td>
+    <span class="label label-success">x-module</span>
+    
+</td>
+                <td>16 (static)</td>
+                <td>80</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th>Callers (1)</th>
+                <td colspan="5">
+                
+                    <a href="../../src/timers.c/d35f72ab680b9bc7eb2ff3e6cd07ece5.html">prvTimerTask (556)</a>
+                    
+                
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Callees (4,
+                            <span title="sum of used bytes by all callees">
+                            Σ=280
+                            </span>
+                        )
+                    
+                </th>
+                <td colspan="5">
+                
+                    <a href="../../../../../platforms/s32k1xx/3rdparty/freertos_cm4_sysTick/include/portmacro.h/51336e5c21ba34fb49b266dd31e701d5.html">vPortEnterCritical (32)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../../../../../platforms/s32k1xx/3rdparty/freertos_cm4_sysTick/include/portmacro.h/f34360f95022a09e4e4cceffa22ec0c6.html">vPortExitCritical (28)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../../src/queue.c/0a1f39941a68d8e44812aa4a79d3144c.html">prvUnlockQueue (140)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../task.h/ff261e6301291d97229d25f13c19ed10.html">vTaskPlaceOnEventListRestricted (80)</a>
+                    
+                
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    
+    <pre><a href="./2c24014a9b883e91f57e7cd512f03895.html">vQueueAddToRegistry (84)</a></pre>
+    
+
+    <pre>
+
+    vQueueWaitForMessageRestricted():
+
+       132cc:	b570      	push	{r4, r5, r6, lr}
+
+       132ce:	4604      	mov	r4, r0
+
+       132d0:	460e      	mov	r6, r1
+
+       132d2:	4615      	mov	r5, r2
+
+       132d4:	f01a fe96 	bl	2e004 <<a href="../../../../../platforms/s32k1xx/3rdparty/freertos_cm4_sysTick/include/portmacro.h/51336e5c21ba34fb49b266dd31e701d5.html">vPortEnterCritical</a>>
+
+       132d8:	f894 3044 	ldrb.w	r3, [r4, #68]	@ 0x44
+
+       132dc:	2bff      	cmp	r3, #255	@ 0xff
+
+       132de:	bf04      	itt	eq
+
+       132e0:	2300      	moveq	r3, #0
+
+       132e2:	f884 3044 	strbeq.w	r3, [r4, #68]	@ 0x44
+
+       132e6:	f894 3045 	ldrb.w	r3, [r4, #69]	@ 0x45
+
+       132ea:	2bff      	cmp	r3, #255	@ 0xff
+
+       132ec:	bf04      	itt	eq
+
+       132ee:	2300      	moveq	r3, #0
+
+       132f0:	f884 3045 	strbeq.w	r3, [r4, #69]	@ 0x45
+
+       132f4:	f01a fe96 	bl	2e024 <<a href="../../../../../platforms/s32k1xx/3rdparty/freertos_cm4_sysTick/include/portmacro.h/f34360f95022a09e4e4cceffa22ec0c6.html">vPortExitCritical</a>>
+
+       132f8:	6ba3      	ldr	r3, [r4, #56]	@ 0x38
+
+       132fa:	b123      	cbz	r3, 13306 <<a href="./7db3134b2fb4931db01a8567fd79567a.html">vQueueWaitForMessageRestricted</a>+0x3a>
+
+       132fc:	4620      	mov	r0, r4
+
+       132fe:	e8bd 4070 	ldmia.w	sp!, {r4, r5, r6, lr}
+
+       13302:	f7ff be5d 	b.w	12fc0 <<a href="../../src/queue.c/0a1f39941a68d8e44812aa4a79d3144c.html">prvUnlockQueue</a>>
+
+       13306:	f104 0024 	add.w	r0, r4, #36	@ 0x24
+
+       1330a:	462a      	mov	r2, r5
+
+       1330c:	4631      	mov	r1, r6
+
+       1330e:	f7ff f909 	bl	12524 <<a href="../task.h/ff261e6301291d97229d25f13c19ed10.html">vTaskPlaceOnEventListRestricted</a>>
+
+       13312:	4620      	mov	r0, r4
+
+       13314:	e8bd 4070 	ldmia.w	sp!, {r4, r5, r6, lr}
+
+       13318:	f7ff be52 	b.w	12fc0 <<a href="../../src/queue.c/0a1f39941a68d8e44812aa4a79d3144c.html">prvUnlockQueue</a>>
+
+    </pre>
+
+    
+    <pre><a href="../../../../bsw/asyncFreeRtos/src/async/Async.cpp/4dfe65e158466f2f9a73b985dc4b0ecc.html">async::execute(unsigned char, async::IRunnable&amp;) (104)</a></pre>
+    
+
+    
+        <h1>Stack Worst-Case Scenarios</h1>
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 124</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 316</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    124
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                8 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    316
+                    
+                    
+                </td>
+                <td class="col_size">48</td>
+                <td><a href="../list.h/4a1a844861e946c94e3a62dd84492ace.html" class="icon-function">vListInsert</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                    
+                    116
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                24 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    268
+                    
+                    
+                </td>
+                <td class="col_size">188</td>
+                <td><a href="../../src/tasks.c/a2700cf07d00ca1673883a9bd6c17b5a.html" class="icon-function">prvAddCurrentTaskToDelayedList</a></td>
+            </tr>
+        
+            <tr>
+                <th>3</th>
+                <td class="col_size">
+                    
+                    92
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                20 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">80</td>
+                <td><a href="../task.h/ff261e6301291d97229d25f13c19ed10.html" class="icon-function">vTaskPlaceOnEventListRestricted</a></td>
+            </tr>
+        
+        </tbody>
+        
+        <tfoot>
+            <tr>
+                <th></th>
+                <th class="col_size">72
+                </th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </tfoot>
+        
+    </table>
+        
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 72</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 636</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    72
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                16 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    636
+                    
+                    
+                </td>
+                <td class="col_size">80</td>
+                <td><a href="./7db3134b2fb4931db01a8567fd79567a.html" class="icon-function">vQueueWaitForMessageRestricted</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                </td>
+                <td class="col_size">
+            
+                56 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">556</td>
+                <td><a href="../../src/timers.c/d35f72ab680b9bc7eb2ff3e6cd07ece5.html" class="icon-function">prvTimerTask</a></td>
+            </tr>
+        
+        </tbody>
+        
+    </table>
+        
+    
+
+
+        </div>
+    <div id="page-footer">
+        <hr>
+        
+            brought to you with 💖
+            by <a href="https://twitter.com/hbehrens">Heiko Behrens</a>
+            <span class="secondary">– MIT license, copyright © 2014-2026</span>
+        
+    </div>
+    </div>
+</body>
+</html>

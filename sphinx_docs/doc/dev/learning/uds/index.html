@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="EclipseOpenBSWDocumentation" name="dox_trace_storage" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Using UDS &mdash; Eclipse OpenBSW Documentation  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/rtd_theme_overrides.css?v=6fd0d55b" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=eafc0fe6" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/colors.css?v=3cafd8aa" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/colored_table.css?v=34b816d5" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/header.css?v=e632285e" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/dox_util_colors.css?v=dd14b177" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/dox_trace.css?v=60d3f72c" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../../../../_static/copybutton.js?v=f281be69"></script>
+        <script src="../../../../_static/dox_trace.js?v=40719b51"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="Using hardware I/O" href="../hwio/index.html" />
+    <link rel="prev" title="Working with Ethernet" href="../ethernet/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Eclipse OpenBSW Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Learning</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../overview.html">Getting Started</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../setup/index.html">Set up your environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../layout/index.html">Understanding the directory structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../console/index.html">Using the console</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../unit_tests/index.html">Building and Running Unit Tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../lifecycle/index.html">Managing the lifecycle of components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../logging/index.html">Logging to the console</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../commands/index.html">Adding commands to the console</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../can/index.html">Working with CAN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ethernet/index.html">Working with Ethernet</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Using UDS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#uds-over-can">UDS over CAN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#uds-over-ethernet-doip">UDS over Ethernet (DoIP)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../hwio/index.html">Using hardware I/O</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tracing/index.html">Tracing</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../SysTest/HW_Testing_Guide.html">Hardware Testing Guide</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guidelines</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../guidelines/conventions/index.html">Coding Conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guidelines/practices.html">Coding Practices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guidelines/formatting/index.html">Formatting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guidelines/unittests.html">Unit Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guidelines/module.html">Module Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guidelines/documentation.html">Module Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guidelines/diagrams.html">Diagrams</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guidelines/3rdparty.html">Third Party Libraries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guidelines/commit_message.html">Commit Message</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guidelines/pull_request.html">Pull Request</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Platforms</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../platforms/posix/index.html">POSIX</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../platforms/s32k148evb/index.html">S32K148 Evaluation Board</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Features</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../features/storage.html">Persistent Storage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/functional_safety.html">Functional Safety</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Software Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/common.html">Common</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/posix.html">Posix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/s32k1xx.html">S32K1xx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/executables.html">Executables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/mocks.html">Mocks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tools/UdsTool/doc/index.html">UdsTool</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tools/puncover_tool/doc/index.html">Puncover</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Eclipse OpenBSW Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../overview.html">Getting Started</a> &raquo;</li>
+        
+        <li>Using UDS</li>
+    
+
+    
+
+      <li class="wy-breadcrumbs-aside">
+
+        <!-- DOCUMENT STATUS -->
+
+        
+
+        <!-- DATA CLASSIFICATION -->
+
+        
+
+      </li>
+
+    
+  </ul>
+
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="using-uds">
+<span id="learning-uds"></span><h1>Using UDS<a class="headerlink" href="#using-uds" title="Link to this heading"></a></h1>
+<p>Previous: <a class="reference internal" href="../can/index.html#learning-can"><span class="std std-ref">Working with CAN</span></a></p>
+<p>Unified Diagnostic Services (UDS) is a widely used protocol for automotive diagnostics
+that is independent of the transport layer.</p>
+<p>Take a look at the “Systems” set up from levels 4 to 7 in as described in <a class="reference internal" href="../lifecycle/index.html#learning-lifecycle"><span class="std std-ref">Managing the lifecycle of components</span></a>.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head stub"><p>Run Level</p></th>
+<th class="head"><p>Component</p></th>
+<th class="head"><p>Contexts</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><th class="stub"><p>4</p></th>
+<td><p>TransportSystem</p></td>
+<td><p>TASK_UDS</p></td>
+</tr>
+<tr class="row-odd"><th class="stub"><p>5</p></th>
+<td><p>DoCanSystem</p></td>
+<td><p>TASK_CAN</p></td>
+</tr>
+<tr class="row-even"><th class="stub"><p>5</p></th>
+<td><p>EthernetSystem</p></td>
+<td><p>TASK_ETHERNET</p></td>
+</tr>
+<tr class="row-odd"><th class="stub"><p>6</p></th>
+<td><p>DoipServerSystem</p></td>
+<td><p>TASK_ETHERNET</p></td>
+</tr>
+<tr class="row-even"><th class="stub"><p>7</p></th>
+<td><p>UdsSystem</p></td>
+<td><p>TASK_UDS</p></td>
+</tr>
+</tbody>
+</table>
+<p>In this example, CAN and Ethernet provide the transport layer. Note that the separation of UDS from the transport path allows multiple transports to be supported.
+Take time to study these “System” classes and how they interact.</p>
+<section id="uds-over-can">
+<h2>UDS over CAN<a class="headerlink" href="#uds-over-can" title="Link to this heading"></a></h2>
+<p>If you have successfully tested the CAN setup for a POSIX platform as described in <a class="reference internal" href="../can/index.html#learning-can"><span class="std std-ref">Working with CAN</span></a>,
+try some more tests using the same setup in which…</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">vcan0</span></code> is successfully set up</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">app.referenceApp.elf</span></code> is running in shell terminal 1</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">candump</span> <span class="pre">vcan0</span></code> is running in shell terminal 2</p></li>
+</ul>
+<p>In a third shell terminal run…</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cansend<span class="w"> </span>vcan0<span class="w"> </span>02A#0322CF0100000000
+</pre></div>
+</div>
+<p>With this, <code class="docutils literal notranslate"><span class="pre">cansend</span></code> sends a CAN Frame with CAN ID set to <code class="docutils literal notranslate"><span class="pre">0x02A</span></code>.
+If you look in the code for <code class="docutils literal notranslate"><span class="pre">DoCanSystem</span></code> you will see it is set up with <code class="docutils literal notranslate"><span class="pre">0x02A</span></code> as the CAN ID to listen for.
+The payload contains the following parts…</p>
+<ul>
+<li><p>The 1st byte of the payload (with value <code class="docutils literal notranslate"><span class="pre">0x03</span></code>) is the Protocol Control Information (PCI) field for UDS over CAN.
+This breaks down into 2 parts..</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>The first 4 bits indicate the frame type (<code class="docutils literal notranslate"><span class="pre">0</span></code> for Single Frame)</p></li>
+<li><p>The last 4 bits indicate the length of the request (<code class="docutils literal notranslate"><span class="pre">3</span></code> bytes)</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>The 2nd byte is the UDS Service Identifier (SID). Its value <code class="docutils literal notranslate"><span class="pre">0x22</span></code> is the ID for the “Read Data By Identifier” service.</p></li>
+<li><p>The 3rd and 4th bytes make up the UDS Data Identifier (DID) with value <code class="docutils literal notranslate"><span class="pre">0xCF01</span></code> identifies which data should be returned.</p></li>
+</ul>
+<p>The CAN frame sent was actually a UDS over CAN request to “Read” the data identified by <code class="docutils literal notranslate"><span class="pre">0xCF01</span></code> and return that data.</p>
+<p>So what response should be seen?</p>
+<p><code class="docutils literal notranslate"><span class="pre">app.referenceApp.elf</span></code> should print…</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="m">32057178</span>:<span class="w"> </span>RefApp:<span class="w"> </span>CAN:<span class="w"> </span>DEBUG:<span class="w"> </span><span class="o">[</span>SocketCanTransceiver<span class="o">]</span><span class="w"> </span>received<span class="w"> </span>CAN<span class="w"> </span>frame,<span class="w"> </span><span class="nv">id</span><span class="o">=</span>0x2A,<span class="w"> </span><span class="nv">length</span><span class="o">=</span><span class="m">8</span>
+<span class="m">32057178</span>:<span class="w"> </span>RefApp:<span class="w"> </span>TPROUTER:<span class="w"> </span>DEBUG:<span class="w"> </span>TransportRouterSimple::getTransportMessage<span class="w"> </span>:<span class="w"> </span>sourceId<span class="w"> </span>0xf0,<span class="w"> </span>targetId<span class="w"> </span>0x2a
+<span class="m">32057178</span>:<span class="w"> </span>RefApp:<span class="w"> </span>UDS:<span class="w"> </span>DEBUG:<span class="w"> </span>Opening<span class="w"> </span>incoming<span class="w"> </span>connection<span class="w"> </span>0xf0<span class="w"> </span>--&gt;<span class="w"> </span>0x2a,<span class="w"> </span>service<span class="w"> </span>0x22
+<span class="m">32057178</span>:<span class="w"> </span>RefApp:<span class="w"> </span>Accepted<span class="w"> </span>0x22,<span class="w"> </span>current<span class="w"> </span>session:<span class="w"> </span>0x1
+<span class="m">32057178</span>:<span class="w"> </span>RefApp:<span class="w"> </span>UDS:<span class="w"> </span>DEBUG:<span class="w"> </span>Process<span class="w"> </span>diag<span class="w"> </span>job<span class="w"> </span>0x22
+<span class="m">32057178</span>:<span class="w"> </span>RefApp:<span class="w"> </span>Accepted<span class="w"> </span>0x22cf01,<span class="w"> </span>current<span class="w"> </span>session:<span class="w"> </span>0x1
+<span class="m">32057178</span>:<span class="w"> </span>RefApp:<span class="w"> </span>UDS:<span class="w"> </span>DEBUG:<span class="w"> </span>Process<span class="w"> </span>diag<span class="w"> </span>job<span class="w"> </span>0x22CF01
+<span class="m">32057180</span>:<span class="w"> </span>RefApp:<span class="w"> </span>CAN:<span class="w"> </span>INFO:<span class="w"> </span><span class="o">[</span>CanSystem<span class="o">]</span><span class="w"> </span>CAN<span class="w"> </span>frame<span class="w"> </span>sent,<span class="w"> </span><span class="nv">id</span><span class="o">=</span>0xF0,<span class="w"> </span><span class="nv">length</span><span class="o">=</span><span class="m">8</span>
+<span class="m">32058181</span>:<span class="w"> </span>RefApp:<span class="w"> </span>DOCAN:<span class="w"> </span>WARN:<span class="w"> </span>DoCanTransmitter<span class="o">(</span>CAN_0<span class="o">)</span>::cyclicTask<span class="o">(</span>0x2a<span class="w"> </span>-&gt;<span class="w"> </span>0xf0<span class="o">)</span>:<span class="w"> </span>Flow<span class="w"> </span>control<span class="w"> </span>timeout
+<span class="m">32058181</span>:<span class="w"> </span>RefApp:<span class="w"> </span>UDS:<span class="w"> </span>DEBUG:<span class="w"> </span>IncomingDiagConnection::terminate<span class="o">()</span>:<span class="w"> </span>0xf0<span class="w"> </span>--&gt;<span class="w"> </span>0x2a,<span class="w"> </span>service<span class="w"> </span>0x22
+<span class="m">32058182</span>:<span class="w"> </span>RefApp:<span class="w"> </span>UDS:<span class="w"> </span>ERROR:<span class="w"> </span>IncomingDiagConnection::transportMessageSent<span class="o">()</span>:<span class="w"> </span>failed<span class="w"> </span>to<span class="w"> </span>send<span class="w"> </span>message<span class="w"> </span>from<span class="w"> </span>0x2a<span class="w"> </span>to<span class="w"> </span>0xf0
+</pre></div>
+</div>
+<p>In the code for <code class="docutils literal notranslate"><span class="pre">UdsSystem</span></code> you can see that it instantiates <code class="docutils literal notranslate"><span class="pre">ReadIdentifierFromMemory</span> <span class="pre">_read22Cf01</span></code>
+to return <code class="docutils literal notranslate"><span class="pre">responseData22Cf01</span></code> for the DID <code class="docutils literal notranslate"><span class="pre">0xCF01</span></code> as follows…</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">uint8_t</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">responseData22Cf01</span><span class="p">[]</span>
+<span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="mh">0x01</span><span class="p">,</span><span class="w"> </span><span class="mh">0x02</span><span class="p">,</span><span class="w"> </span><span class="mh">0x00</span><span class="p">,</span><span class="w"> </span><span class="mh">0x02</span><span class="p">,</span><span class="w"> </span><span class="mh">0x22</span><span class="p">,</span><span class="w"> </span><span class="mh">0x02</span><span class="p">,</span><span class="w"> </span><span class="mh">0x16</span><span class="p">,</span><span class="w"> </span><span class="mh">0x0F</span><span class="p">,</span><span class="w"> </span><span class="mh">0x01</span><span class="p">,</span><span class="w"> </span><span class="mh">0x00</span><span class="p">,</span><span class="w"> </span><span class="mh">0x00</span><span class="p">,</span><span class="w"> </span><span class="mh">0x6D</span><span class="p">,</span>
+<span class="w">    </span><span class="mh">0x2F</span><span class="p">,</span><span class="w"> </span><span class="mh">0x00</span><span class="p">,</span><span class="w"> </span><span class="mh">0x00</span><span class="p">,</span><span class="w"> </span><span class="mh">0x01</span><span class="p">,</span><span class="w"> </span><span class="mh">0x06</span><span class="p">,</span><span class="w"> </span><span class="mh">0x00</span><span class="p">,</span><span class="w"> </span><span class="mh">0x00</span><span class="p">,</span><span class="w"> </span><span class="mh">0x8F</span><span class="p">,</span><span class="w"> </span><span class="mh">0xE0</span><span class="p">,</span><span class="w"> </span><span class="mh">0x00</span><span class="p">,</span><span class="w"> </span><span class="mh">0x00</span><span class="p">,</span><span class="w"> </span><span class="mh">0x01</span><span class="p">};</span>
+
+<span class="p">...</span>
+
+<span class="p">,</span><span class="w"> </span><span class="n">_read22Cf01</span><span class="p">(</span><span class="mh">0xCF01</span><span class="p">,</span><span class="w"> </span><span class="n">responseData22Cf01</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The log line containing <code class="docutils literal notranslate"><span class="pre">Process</span> <span class="pre">diag</span> <span class="pre">job</span> <span class="pre">0x22CF01</span></code> indicates that the “Read” request was interpreted correctly,
+it found the job <code class="docutils literal notranslate"><span class="pre">_read22Cf01</span></code> that matched the request,
+then the log line containing <code class="docutils literal notranslate"><span class="pre">CAN</span> <span class="pre">frame</span> <span class="pre">sent,</span> <span class="pre">id=0xF0,</span> <span class="pre">length=8</span></code>
+indicates it sent a CAN frame response with CAN ID <code class="docutils literal notranslate"><span class="pre">0x0F0</span></code> which is the ID <code class="docutils literal notranslate"><span class="pre">DoCanSystem</span></code> is set up to send responses with.</p>
+<p>During the above, <code class="docutils literal notranslate"><span class="pre">candump</span> <span class="pre">vcan0</span></code> should have printed…</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>vcan0<span class="w">  </span>02A<span class="w">   </span><span class="o">[</span><span class="m">8</span><span class="o">]</span><span class="w">  </span><span class="m">03</span><span class="w"> </span><span class="m">22</span><span class="w"> </span>CF<span class="w"> </span><span class="m">01</span><span class="w"> </span><span class="m">00</span><span class="w"> </span><span class="m">00</span><span class="w"> </span><span class="m">00</span><span class="w"> </span><span class="m">00</span>
+vcan0<span class="w">  </span>0F0<span class="w">   </span><span class="o">[</span><span class="m">8</span><span class="o">]</span><span class="w">  </span><span class="m">10</span><span class="w"> </span>1B<span class="w"> </span><span class="m">62</span><span class="w"> </span>CF<span class="w"> </span><span class="m">01</span><span class="w"> </span><span class="m">01</span><span class="w"> </span><span class="m">02</span><span class="w"> </span><span class="m">00</span>
+</pre></div>
+</div>
+<p>The first CAN frame is the request being send and the 2nd CAN frame is the response which breaks down as follow…</p>
+<ul>
+<li><p>The PCI is 2 bytes this time, with value <code class="docutils literal notranslate"><span class="pre">0x101B</span></code></p>
+<blockquote>
+<div><ul class="simple">
+<li><p>The first 4 bits indicate the frame type (0x1 indicates it is the 1st frame of a series)</p></li>
+<li><p>The next 12 bits indicate the number of bytes to follow (<code class="docutils literal notranslate"><span class="pre">0x01B</span></code> = 27 bytes). Note this is larger than 1 CAN Frame (max 8 bytes)</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>The 3rd byte is the UDS Response SID. Its value <code class="docutils literal notranslate"><span class="pre">0x62</span></code> is the ID for the response for the “Read Data By Identifier” service.</p></li>
+<li><p>The 4th and 5th bytes hold the same UDS Data Identifier (DID) <code class="docutils literal notranslate"><span class="pre">0xCF01</span></code> as in the request.</p></li>
+<li><p>The remaining bytes <code class="docutils literal notranslate"><span class="pre">0x010200</span></code> are the 1st three bytes <code class="docutils literal notranslate"><span class="pre">responseData22Cf01</span></code>.</p></li>
+</ul>
+<p>After sending the CAN frame response <code class="docutils literal notranslate"><span class="pre">app.referenceApp.elf</span></code> printed…</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="m">32058181</span>:<span class="w"> </span>RefApp:<span class="w"> </span>DOCAN:<span class="w"> </span>WARN:<span class="w"> </span>DoCanTransmitter<span class="o">(</span>CAN_0<span class="o">)</span>::cyclicTask<span class="o">(</span>0x2a<span class="w"> </span>-&gt;<span class="w"> </span>0xf0<span class="o">)</span>:<span class="w"> </span>Flow<span class="w"> </span>control<span class="w"> </span>timeout
+</pre></div>
+</div>
+<p>This indicates it is waiting for the client to request the next CAN Frame of the response.
+<code class="docutils literal notranslate"><span class="pre">cansend</span></code> is a simple tool to send CAN frames, it has no knowledge of UDS and so it did not send the next expected follow-on UDS request.
+What we need is a tool that implements UDS over CAN that is capable of sending the next request expected.</p>
+<p><code class="docutils literal notranslate"><span class="pre">UdsTool</span></code>, which can be found in the subdirectory <code class="docutils literal notranslate"><span class="pre">referenceApp/tools/UdsTool</span></code> implements exactly what we need.
+Assuming you have <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">&gt;=</span> <span class="pre">3.7</span></code> installed, you can install <code class="docutils literal notranslate"><span class="pre">UdsTool</span></code> as instructed in <a class="reference internal" href="../../../../tools/UdsTool/doc/index.html#udstool"><span class="std std-ref">UdsTool</span></a>.
+Using the same setup, with <code class="docutils literal notranslate"><span class="pre">app.referenceApp.elf</span></code> and <code class="docutils literal notranslate"><span class="pre">candump</span> <span class="pre">vcan0</span></code> running in separate shell terminals,
+in a third shell terminal run…</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>udstool<span class="w"> </span><span class="nb">read</span><span class="w"> </span>--can<span class="w"> </span>--channel<span class="w"> </span>vcan0<span class="w"> </span>--txid<span class="w"> </span>2A<span class="w"> </span>--rxid<span class="w"> </span>F0<span class="w"> </span>--did<span class="w"> </span>cf01<span class="w"> </span>--config<span class="w"> </span>tools/UdsTool/app/canConfig.json
+</pre></div>
+</div>
+<p>If it works it should show output like this…</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>62cf01010200022202160f0100006d2f0000010600008fe0000001
+&lt;PositiveResponse:<span class="w"> </span><span class="o">[</span>ReadDataByIdentifier<span class="o">]</span><span class="w"> </span>-<span class="w"> </span><span class="m">26</span><span class="w"> </span>data<span class="w"> </span>bytes<span class="w"> </span>at<span class="w"> </span>0x7d9f586c2530&gt;
+</pre></div>
+</div>
+<p>In that you can see the response contains the data from <code class="docutils literal notranslate"><span class="pre">responseData22Cf01</span></code>.
+Looking at the log output from <code class="docutils literal notranslate"><span class="pre">app.referenceApp.elf</span></code> you can see that this time it received a 2nd CAN Frame with ID <code class="docutils literal notranslate"><span class="pre">0x2A</span></code>
+sent by <code class="docutils literal notranslate"><span class="pre">UdsTool</span></code> after which that remaining data was sent in response in CAN frames with ID <code class="docutils literal notranslate"><span class="pre">0xF0</span></code>.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="m">37907832</span>:<span class="w"> </span>RefApp:<span class="w"> </span>CAN:<span class="w"> </span>DEBUG:<span class="w"> </span><span class="o">[</span>SocketCanTransceiver<span class="o">]</span><span class="w"> </span>received<span class="w"> </span>CAN<span class="w"> </span>frame,<span class="w"> </span><span class="nv">id</span><span class="o">=</span>0x2A,<span class="w"> </span><span class="nv">length</span><span class="o">=</span><span class="m">8</span>
+<span class="m">37907832</span>:<span class="w"> </span>RefApp:<span class="w"> </span>TPROUTER:<span class="w"> </span>DEBUG:<span class="w"> </span>TransportRouterSimple::getTransportMessage<span class="w"> </span>:<span class="w"> </span>sourceId<span class="w"> </span>0xf0,<span class="w"> </span>targetId<span class="w"> </span>0x2a
+<span class="m">37907833</span>:<span class="w"> </span>RefApp:<span class="w"> </span>UDS:<span class="w"> </span>DEBUG:<span class="w"> </span>Opening<span class="w"> </span>incoming<span class="w"> </span>connection<span class="w"> </span>0xf0<span class="w"> </span>--&gt;<span class="w"> </span>0x2a,<span class="w"> </span>service<span class="w"> </span>0x22
+<span class="m">37907833</span>:<span class="w"> </span>RefApp:<span class="w"> </span>Accepted<span class="w"> </span>0x22,<span class="w"> </span>current<span class="w"> </span>session:<span class="w"> </span>0x1
+<span class="m">37907833</span>:<span class="w"> </span>RefApp:<span class="w"> </span>UDS:<span class="w"> </span>DEBUG:<span class="w"> </span>Process<span class="w"> </span>diag<span class="w"> </span>job<span class="w"> </span>0x22
+<span class="m">37907833</span>:<span class="w"> </span>RefApp:<span class="w"> </span>Accepted<span class="w"> </span>0x22cf01,<span class="w"> </span>current<span class="w"> </span>session:<span class="w"> </span>0x1
+<span class="m">37907833</span>:<span class="w"> </span>RefApp:<span class="w"> </span>UDS:<span class="w"> </span>DEBUG:<span class="w"> </span>Process<span class="w"> </span>diag<span class="w"> </span>job<span class="w"> </span>0x22CF01
+<span class="m">37907834</span>:<span class="w"> </span>RefApp:<span class="w"> </span>CAN:<span class="w"> </span>INFO:<span class="w"> </span><span class="o">[</span>CanSystem<span class="o">]</span><span class="w"> </span>CAN<span class="w"> </span>frame<span class="w"> </span>sent,<span class="w"> </span><span class="nv">id</span><span class="o">=</span>0xF0,<span class="w"> </span><span class="nv">length</span><span class="o">=</span><span class="m">8</span>
+<span class="m">37907883</span>:<span class="w"> </span>RefApp:<span class="w"> </span>CAN:<span class="w"> </span>DEBUG:<span class="w"> </span><span class="o">[</span>SocketCanTransceiver<span class="o">]</span><span class="w"> </span>received<span class="w"> </span>CAN<span class="w"> </span>frame,<span class="w"> </span><span class="nv">id</span><span class="o">=</span>0x2A,<span class="w"> </span><span class="nv">length</span><span class="o">=</span><span class="m">8</span>
+<span class="m">37907883</span>:<span class="w"> </span>RefApp:<span class="w"> </span>CAN:<span class="w"> </span>INFO:<span class="w"> </span><span class="o">[</span>CanSystem<span class="o">]</span><span class="w"> </span>CAN<span class="w"> </span>frame<span class="w"> </span>sent,<span class="w"> </span><span class="nv">id</span><span class="o">=</span>0xF0,<span class="w"> </span><span class="nv">length</span><span class="o">=</span><span class="m">8</span>
+<span class="m">37907916</span>:<span class="w"> </span>RefApp:<span class="w"> </span>CAN:<span class="w"> </span>INFO:<span class="w"> </span><span class="o">[</span>CanSystem<span class="o">]</span><span class="w"> </span>CAN<span class="w"> </span>frame<span class="w"> </span>sent,<span class="w"> </span><span class="nv">id</span><span class="o">=</span>0xF0,<span class="w"> </span><span class="nv">length</span><span class="o">=</span><span class="m">8</span>
+<span class="m">37907950</span>:<span class="w"> </span>RefApp:<span class="w"> </span>CAN:<span class="w"> </span>INFO:<span class="w"> </span><span class="o">[</span>CanSystem<span class="o">]</span><span class="w"> </span>CAN<span class="w"> </span>frame<span class="w"> </span>sent,<span class="w"> </span><span class="nv">id</span><span class="o">=</span>0xF0,<span class="w"> </span><span class="nv">length</span><span class="o">=</span><span class="m">8</span>
+<span class="m">37907951</span>:<span class="w"> </span>RefApp:<span class="w"> </span>UDS:<span class="w"> </span>DEBUG:<span class="w"> </span>IncomingDiagConnection::terminate<span class="o">()</span>:<span class="w"> </span>0xf0<span class="w"> </span>--&gt;<span class="w"> </span>0x2a,<span class="w"> </span>service<span class="w"> </span>0x22
+</pre></div>
+</div>
+<p>The output from <code class="docutils literal notranslate"><span class="pre">candump</span> <span class="pre">vcan0</span></code> shows all details of these CAN frames…</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>vcan0<span class="w">  </span>02A<span class="w">   </span><span class="o">[</span><span class="m">8</span><span class="o">]</span><span class="w">  </span><span class="m">03</span><span class="w"> </span><span class="m">22</span><span class="w"> </span>CF<span class="w"> </span><span class="m">01</span><span class="w"> </span><span class="m">00</span><span class="w"> </span><span class="m">00</span><span class="w"> </span><span class="m">00</span><span class="w"> </span><span class="m">00</span>
+vcan0<span class="w">  </span>0F0<span class="w">   </span><span class="o">[</span><span class="m">8</span><span class="o">]</span><span class="w">  </span><span class="m">10</span><span class="w"> </span>1B<span class="w"> </span><span class="m">62</span><span class="w"> </span>CF<span class="w"> </span><span class="m">01</span><span class="w"> </span><span class="m">01</span><span class="w"> </span><span class="m">02</span><span class="w"> </span><span class="m">00</span>
+vcan0<span class="w">  </span>02A<span class="w">   </span><span class="o">[</span><span class="m">8</span><span class="o">]</span><span class="w">  </span><span class="m">30</span><span class="w"> </span><span class="m">08</span><span class="w"> </span><span class="m">20</span><span class="w"> </span><span class="m">00</span><span class="w"> </span><span class="m">00</span><span class="w"> </span><span class="m">00</span><span class="w"> </span><span class="m">00</span><span class="w"> </span><span class="m">00</span>
+vcan0<span class="w">  </span>0F0<span class="w">   </span><span class="o">[</span><span class="m">8</span><span class="o">]</span><span class="w">  </span><span class="m">21</span><span class="w"> </span><span class="m">02</span><span class="w"> </span><span class="m">22</span><span class="w"> </span><span class="m">02</span><span class="w"> </span><span class="m">16</span><span class="w"> </span>0F<span class="w"> </span><span class="m">01</span><span class="w"> </span><span class="m">00</span>
+vcan0<span class="w">  </span>0F0<span class="w">   </span><span class="o">[</span><span class="m">8</span><span class="o">]</span><span class="w">  </span><span class="m">22</span><span class="w"> </span><span class="m">00</span><span class="w"> </span>6D<span class="w"> </span>2F<span class="w"> </span><span class="m">00</span><span class="w"> </span><span class="m">00</span><span class="w"> </span><span class="m">01</span><span class="w"> </span><span class="m">06</span>
+vcan0<span class="w">  </span>0F0<span class="w">   </span><span class="o">[</span><span class="m">8</span><span class="o">]</span><span class="w">  </span><span class="m">23</span><span class="w"> </span><span class="m">00</span><span class="w"> </span><span class="m">00</span><span class="w"> </span>8F<span class="w"> </span>E0<span class="w"> </span><span class="m">00</span><span class="w"> </span><span class="m">00</span><span class="w"> </span><span class="m">01</span>
+</pre></div>
+</div>
+<p>To learn more you can experiment with adding you own services to <code class="docutils literal notranslate"><span class="pre">UdsSystem</span></code>
+similar to <code class="docutils literal notranslate"><span class="pre">ReadIdentifierFromMemory</span> <span class="pre">_read22Cf01</span></code>.</p>
+</section>
+<section id="uds-over-ethernet-doip">
+<h2>UDS over Ethernet (DoIP)<a class="headerlink" href="#uds-over-ethernet-doip" title="Link to this heading"></a></h2>
+<p>The DoIP implementation in the reference app currently uses DoIP version 2 as per ISO 13400-2:2012.</p>
+<p>You can try the same example over Ethernet, provided you have successfully tested the Ethernet setup
+on target as described in <a class="reference internal" href="../ethernet/index.html#learning-ethernet"><span class="std std-ref">Working with Ethernet</span></a>.</p>
+<p>Ensure ethernet interface is successfully set up and Application is running before testing DoIP.</p>
+<p>Refer <a class="reference internal" href="../../../../tools/UdsTool/doc/index.html#udstool"><span class="std std-ref">UdsTool</span></a> for more details on sending request over Ethernet, installation and other
+available commands (Service Requests).</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>Use the target’s IP address in the UDS tool command (see <a class="reference internal" href="../ethernet/index.html#learning-ethernet"><span class="std std-ref">Working with Ethernet</span></a>).</p></li>
+<li><p>Ensure UdsTool version <cite>0.0.3</cite> or later for DoIP-2 support. Check with: <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">show</span> <span class="pre">udstool</span></code>.</p></li>
+</ul>
+</div>
+<p>To run an example request to read <code class="docutils literal notranslate"><span class="pre">0xCF01</span></code> DID, Open a new shell terminal and run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>udstool<span class="w"> </span><span class="nb">read</span><span class="w"> </span>--eth<span class="w"> </span>--host<span class="w"> </span><span class="m">192</span>.168.0.201<span class="w"> </span>--ecu<span class="w"> </span>002a<span class="w"> </span>--source<span class="w"> </span>ef1<span class="w"> </span>--did<span class="w"> </span>cf01
+</pre></div>
+</div>
+<p>Here, <code class="docutils literal notranslate"><span class="pre">--host</span></code> is the IP address of the ECU, and <code class="docutils literal notranslate"><span class="pre">--ecu</span></code> and <code class="docutils literal notranslate"><span class="pre">--source</span></code> are the logical
+addresses of the ECU and the client respectively.</p>
+<p>When you run this command, you should observe output similar to the previous example over CAN:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>62cf01010200022202160f0100006d2f0000010600008fe0000001
+&lt;PositiveResponse:<span class="w"> </span><span class="o">[</span>ReadDataByIdentifier<span class="o">]</span><span class="w"> </span>-<span class="w"> </span><span class="m">26</span><span class="w"> </span>data<span class="w"> </span>bytes<span class="w"> </span>at<span class="w"> </span>0x7d9f586c2530&gt;
+</pre></div>
+</div>
+<p>However, this time you can also see the Ethernet traffic in <cite>Wireshark</cite> as follows:</p>
+<a class="reference internal image-reference" href="../../../../_images/uds_eth_traffic.png"><img alt="UDS over Ethernet traffic in Wireshark" class="align-center" src="../../../../_images/uds_eth_traffic.png" style="width: 100%;" /></a>
+<p>Next: <a class="reference internal" href="../hwio/index.html#learning-hwio"><span class="std std-ref">Using hardware I/O</span></a></p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026 Accenture.</p>
+  </div>
+
+  <div role="footer_string">
+    <p>Documentation from 2026-02-24 10:51:52, official build.</p>
+
+    
+      <a href="../../../../_sources/doc/dev/learning/uds/index.rst.txt" rel="nofollow"> View page source</a>
+    
+
+  </div>
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(false);
+      });
+  </script> 
+
+</body>
+</html>

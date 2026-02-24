@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="EclipseOpenBSWDocumentation" name="dox_trace_storage" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>User Documentation &mdash; Eclipse OpenBSW Documentation  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/rtd_theme_overrides.css?v=6fd0d55b" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/graphviz.css?v=eafc0fe6" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/colors.css?v=3cafd8aa" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/colored_table.css?v=34b816d5" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/header.css?v=e632285e" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/dox_util_colors.css?v=dd14b177" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/dox_trace.css?v=60d3f72c" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../../../../../_static/copybutton.js?v=f281be69"></script>
+        <script src="../../../../../_static/dox_trace.js?v=40719b51"></script>
+    <script src="../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" />
+    <link rel="next" title="doip - Diagnostics Over IP" href="../../../doip/doc/index.html" />
+    <link rel="prev" title="docan - Diagnostics over CAN" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../doc/dev/index.html" class="icon icon-home">
+            Eclipse OpenBSW Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Learning</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/learning/overview.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/learning/SysTest/HW_Testing_Guide.html">Hardware Testing Guide</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guidelines</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/guidelines/conventions/index.html">Coding Conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/guidelines/practices.html">Coding Practices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/guidelines/formatting/index.html">Formatting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/guidelines/unittests.html">Unit Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/guidelines/module.html">Module Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/guidelines/documentation.html">Module Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/guidelines/diagrams.html">Diagrams</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/guidelines/3rdparty.html">Third Party Libraries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/guidelines/commit_message.html">Commit Message</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/guidelines/pull_request.html">Pull Request</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Platforms</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/platforms/posix/index.html">POSIX</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/platforms/s32k148evb/index.html">S32K148 Evaluation Board</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Features</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/features/storage.html">Persistent Storage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/features/functional_safety.html">Functional Safety</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Software Modules</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../../doc/dev/modules/common.html">Common</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../../../doc/dev/modules/common.html#bsw">BSW</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../../async/doc/index.html">async - Asynchronous Execution Interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../asyncConsole/doc/index.html">asyncConsole - Asynchronous Console</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../asyncFreeRtos/doc/index.html">asyncFreeRtos</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../asyncImpl/doc/index.html">asyncImpl</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../bsp/doc/index.html">bsp</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../common/doc/index.html">common</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cpp2can/doc/index.html">cpp2can - CAN Abstraction Layer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cpp2ethernet/doc/index.html">cpp2ethernet - Ethernet Abstractions</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../index.html">docan - Diagnostics over CAN</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">User Documentation</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#can-tp-basics">CAN-TP Basics</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#protocol-specification">Protocol Specification</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#integration-prerequisites">Integration Prerequisites</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#architecture-decisions">Architecture Decisions</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#define-who-needs-can-tp">Define who needs CAN-TP</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#selecting-the-integration-site">Selecting the Integration Site</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#choosing-an-addressing-mode">Choosing an Addressing Mode</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#defining-performance-characteristics">Defining Performance Characteristics</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#integration">Integration</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#instantiating-the-stack">Instantiating the Stack</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#connecting-to-the-transport-system">Connecting to the Transport System</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#running-the-stack">Running the Stack</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#sending-data">Sending Data</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../doip/doc/index.html">doip - Diagnostics Over IP</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../io/doc/index.html">io - IO Library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lifecycle/doc/index.html">lifecycle - App Lifecycle Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../logger/doc/index.html">logger - Logger module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../loggerIntegration/doc/index.html">loggerIntegration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lwipSocket/doc/index.html">lwipSocket - LwIP v2 Socket Abstraction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../middleware/doc/index.html">middleware</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../platform/doc/index.html">platform - Platform Library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../runtime/doc/index.html">runtime</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../stdioConsoleInput/doc/index.html">stdioConsoleInput</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../storage/doc/index.html">storage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../timer/doc/index.html">timer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../transport/doc/index.html">transport - Transport Library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../transportRouterSimple/doc/index.html">transportRouterSimple</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../uds/doc/index.html">uds - Unified Diagnostic Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../util/doc/index.html">util</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../doc/dev/modules/common.html#bsp">BSP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../doc/dev/modules/common.html#safety">Safety</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/modules/posix.html">Posix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/modules/s32k1xx.html">S32K1xx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/modules/executables.html">Executables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/modules/mocks.html">Mocks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tools/UdsTool/doc/index.html">UdsTool</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tools/puncover_tool/doc/index.html">Puncover</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../doc/dev/index.html">Eclipse OpenBSW Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../../doc/dev/index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../../../../doc/dev/modules/common.html">Common</a> &raquo;</li>
+        
+          <li><a href="../index.html">docan - Diagnostics over CAN</a> &raquo;</li>
+        
+        <li>User Documentation</li>
+    
+
+    
+
+      <li class="wy-breadcrumbs-aside">
+
+        <!-- DOCUMENT STATUS -->
+
+        
+
+        <!-- DATA CLASSIFICATION -->
+
+        
+
+      </li>
+
+    
+  </ul>
+
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="user-documentation">
+<h1>User Documentation<a class="headerlink" href="#user-documentation" title="Link to this heading"></a></h1>
+<section id="can-tp-basics">
+<span id="id1"></span><h2>CAN-TP Basics<a class="headerlink" href="#can-tp-basics" title="Link to this heading"></a></h2>
+<p>As the purpose of CAN-TP is to route messages from one component to another, the protocol first
+defines who is the source (transmitter) of a given message and who is the target (receiver) of said
+message. These are encoded via a source ID and a target ID.</p>
+<p>There are four basic frame types defined by ISO 15765-2 to accomplish message transmission:</p>
+<ol class="arabic simple">
+<li><p>Single Frame (SF)
+Used when the message payload fits into just one CAN frame</p></li>
+<li><p>First Frame (FF)
+Used when the message payload must be split into multiple CAN frames. This is the first message
+of that set.</p></li>
+<li><p>Consecutive Frame (CF)
+The subsequent frames following the transmission of a First Frame.</p></li>
+<li><p>Flow Control (FC)
+Used to control the flow/timing of follow-up consecutive frames during a multi-frame
+transmission.</p></li>
+</ol>
+<p>Lastly, there are several ways the protocol specifies that the source and target IDs can be encoded
+into the CAN frames, but we’ll focus only on the two supported by <code class="docutils literal notranslate"><span class="pre">docan</span></code>: normal addressing and
+extended addressing.</p>
+<section id="protocol-specification">
+<h3>Protocol Specification<a class="headerlink" href="#protocol-specification" title="Link to this heading"></a></h3>
+<section id="normal-addressing">
+<h4>Normal Addressing<a class="headerlink" href="#normal-addressing" title="Link to this heading"></a></h4>
+<p>For normal addressing, each CAN frame ID is statically mapped to a pair of source and target IDs.
+Normal addressing is used when the integrator wants to utilize as much of the CAN payload as
+possible for transmitting message payload bytes, at the expense of more CAN frame IDs being reserved
+for source and target ID combinations, and more static memory being used to hold these CAN frame ID
+to source and target ID mappings.</p>
+<p>Example mapping table which must be provided statically by the integrator:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>CAN frame ID</p></th>
+<th class="head"><p>Source, Target IDs</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>400</p></td>
+<td><p>10, 30</p></td>
+</tr>
+<tr class="row-odd"><td><p>401</p></td>
+<td><p>30, 10</p></td>
+</tr>
+<tr class="row-even"><td><p>402</p></td>
+<td><p>10, 31</p></td>
+</tr>
+<tr class="row-odd"><td><p>403</p></td>
+<td><p>31, 10</p></td>
+</tr>
+</tbody>
+</table>
+<p>For example, if component ID 10 would like to send to component ID 30, it would begin to send out
+CAN frames with frame ID 400, and expect response frames from component ID 30 on frame ID 401.</p>
+<p>CAN frame byte specification per frame type:</p>
+<p>Legend:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Initialism</p></th>
+<th class="head"><p>Meaning</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>PL</p></td>
+<td><p>Payload Length</p></td>
+</tr>
+<tr class="row-odd"><td><p>SN</p></td>
+<td><p>Sequence Number</p></td>
+</tr>
+<tr class="row-even"><td><p>FS</p></td>
+<td><p>Flow Status</p></td>
+</tr>
+<tr class="row-odd"><td><p>BS</p></td>
+<td><p>Block Size</p></td>
+</tr>
+<tr class="row-even"><td><p>STmin</p></td>
+<td><p>Minimum Separation Time</p></td>
+</tr>
+</tbody>
+</table>
+<p>ISO 15765-2, Section 9.6.1, Table 9:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Frame Name</p></th>
+<th class="head"><p>0 (7-4b)</p></th>
+<th class="head"><p>…(3-0b)</p></th>
+<th class="head"><p>1</p></th>
+<th class="head"><p>2</p></th>
+<th class="head"><p>3</p></th>
+<th class="head"><p>4</p></th>
+<th class="head"><p>5</p></th>
+<th class="head"><p>6</p></th>
+<th class="head"><p>7</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>SF, PL&lt;=8</p></td>
+<td><p>0000b</p></td>
+<td><p>4-bit PL</p></td>
+<td colspan="7"><p>Payload</p></td>
+</tr>
+<tr class="row-odd"><td><p>SF, PL&gt;8</p></td>
+<td><p>0000b</p></td>
+<td><p>0000b</p></td>
+<td><p>8-bit PL</p></td>
+<td colspan="6"><p>Payload</p></td>
+</tr>
+<tr class="row-even"><td><p>FF, PL&lt;=4095</p></td>
+<td><p>0001b</p></td>
+<td colspan="2"><p>12-bit PL</p></td>
+<td colspan="6"><p>Payload</p></td>
+</tr>
+<tr class="row-odd"><td><p>FF, PL&gt;4095</p></td>
+<td><p>0001b</p></td>
+<td><p>0000b</p></td>
+<td><p>00000000b</p></td>
+<td colspan="4"><p>32-bit PL</p></td>
+<td colspan="2"><p>Payload</p></td>
+</tr>
+<tr class="row-even"><td><p>CF</p></td>
+<td><p>0010b</p></td>
+<td><p>SN</p></td>
+<td colspan="7"><p>Payload</p></td>
+</tr>
+<tr class="row-odd"><td><p>FC Frame</p></td>
+<td><p>0011b</p></td>
+<td><p>FS</p></td>
+<td><p>BS</p></td>
+<td><p>STmin</p></td>
+<td colspan="5"><p>Unused</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="extended-addressing">
+<h4>Extended Addressing<a class="headerlink" href="#extended-addressing" title="Link to this heading"></a></h4>
+<p>For extended addressing, CAN IDs 0x600-0x6FF are used, where the source ID is encoded in the lowest
+8 bits of the CAN frame ID, and the target ID is encoded in the first frame payload byte, shifting
+the CAN-TP frame metadata information back by 1. Extended addressing is used when either the
+integrator would like to minimize CAN frame ID reservations for CAN-TP, or to minimize storage
+utilization in holding mapping tables, or to minimize CPU utilization spent iterating through
+mapping table entries to determine source and target IDs. The cost of using extended addressing is
+the loss of one byte of message payload per frame type, meaning complete payload transmission often
+requires more frames.</p>
+<p>Example (theoretical) mapping table, as extended addressing decodes source &amp; target IDs at runtime
+and needs no static mapping table:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>CAN frame ID</p></th>
+<th class="head"><p>Payload Byte 0</p></th>
+<th class="head"><p>Source, Target IDs</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>610</p></td>
+<td><p>30</p></td>
+<td><p>10, 30</p></td>
+</tr>
+<tr class="row-odd"><td><p>610</p></td>
+<td><p>31</p></td>
+<td><p>10, 31</p></td>
+</tr>
+<tr class="row-even"><td><p>630</p></td>
+<td><p>10</p></td>
+<td><p>30, 10</p></td>
+</tr>
+<tr class="row-odd"><td><p>631</p></td>
+<td><p>10</p></td>
+<td><p>31, 10</p></td>
+</tr>
+</tbody>
+</table>
+<p>CAN frame byte specification per frame type:</p>
+<p>Legend:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Initialism</p></th>
+<th class="head"><p>Meaning</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>TA</p></td>
+<td><p>Target Address (ID)</p></td>
+</tr>
+<tr class="row-odd"><td><p>PL</p></td>
+<td><p>Payload Length</p></td>
+</tr>
+<tr class="row-even"><td><p>SN</p></td>
+<td><p>Sequence Number</p></td>
+</tr>
+<tr class="row-odd"><td><p>FS</p></td>
+<td><p>Flow Status</p></td>
+</tr>
+<tr class="row-even"><td><p>BS</p></td>
+<td><p>Block Size</p></td>
+</tr>
+<tr class="row-odd"><td><p>STmin</p></td>
+<td><p>Minimum Separation Time</p></td>
+</tr>
+</tbody>
+</table>
+<p>ISO 15765-2, Section 9.6.1, Table 9:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Frame Name</p></th>
+<th class="head"><p>0</p></th>
+<th class="head"><p>1 (7-4b)</p></th>
+<th class="head"><p>…(3-0b)</p></th>
+<th class="head"><p>2</p></th>
+<th class="head"><p>3</p></th>
+<th class="head"><p>4</p></th>
+<th class="head"><p>5</p></th>
+<th class="head"><p>6</p></th>
+<th class="head"><p>7</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>SF, PL&lt;=8</p></td>
+<td><p>TA</p></td>
+<td><p>0000b</p></td>
+<td><p>4-bit PL</p></td>
+<td colspan="6"><p>Payload</p></td>
+</tr>
+<tr class="row-odd"><td><p>SF, PL&gt;8</p></td>
+<td><p>TA</p></td>
+<td><p>0000b</p></td>
+<td><p>0000b</p></td>
+<td><p>8-bit PL</p></td>
+<td colspan="5"><p>Payload</p></td>
+</tr>
+<tr class="row-even"><td><p>FF, PL&lt;=4095</p></td>
+<td><p>TA</p></td>
+<td><p>0001b</p></td>
+<td colspan="2"><p>12-bit PL</p></td>
+<td colspan="5"><p>Payload</p></td>
+</tr>
+<tr class="row-odd"><td><p>FF, PL&gt;4095</p></td>
+<td><p>TA</p></td>
+<td><p>0001b</p></td>
+<td><p>0000b</p></td>
+<td><p>00000000b</p></td>
+<td colspan="4"><p>32-bit PL</p></td>
+<td><p>Payload</p></td>
+</tr>
+<tr class="row-even"><td><p>CF</p></td>
+<td><p>TA</p></td>
+<td><p>0010b</p></td>
+<td><p>SN</p></td>
+<td colspan="6"><p>Payload</p></td>
+</tr>
+<tr class="row-odd"><td><p>FC Frame</p></td>
+<td><p>TA</p></td>
+<td><p>0011b</p></td>
+<td><p>FS</p></td>
+<td><p>BS</p></td>
+<td><p>STmin</p></td>
+<td colspan="4"><p>Unused</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+</section>
+<section id="integration-prerequisites">
+<h2>Integration Prerequisites<a class="headerlink" href="#integration-prerequisites" title="Link to this heading"></a></h2>
+<p>The purpose of a CAN-TP stack is to enable communication between ECUs, allowing them to transmit and
+receive payloads of data potentially too large to fit into a single CAN frame. Therefore, the
+details of a given <strong>docan</strong> integration depend entirely on the answers to the following questions:</p>
+<ol class="arabic simple">
+<li><p>Who needs to send/receive data via CAN?</p></li>
+<li><p>On which CAN buses do these ECUs communicate?</p></li>
+<li><p>What are the ECUs’ transport IDs?</p></li>
+<li><p><em>normal addressing</em> or <em>extended addressing</em>?</p></li>
+<li><p>Which CAN message IDs will be reserved for communication? (only if using <em>normal addressing</em>)</p></li>
+<li><p>What timeout values make sense for the project?</p></li>
+<li><p>What are the required performance metrics?</p>
+<ol class="loweralpha simple">
+<li><p>Data transmission speeds</p></li>
+<li><p>Real-time response requirements</p></li>
+<li><p>Number of simultaneous communications</p></li>
+</ol>
+</li>
+</ol>
+<p>An integrator does not need to be able to answer all of these questions before starting integration,
+but they will need to do so to complete it.</p>
+<p>An example integration contained in this documentation will answer and build on these questions,
+showing how they’re relevant to a <strong>docan</strong> integration.</p>
+</section>
+<section id="architecture-decisions">
+<h2>Architecture Decisions<a class="headerlink" href="#architecture-decisions" title="Link to this heading"></a></h2>
+<p>All architecture decisions are ultimately entirely hardware and project-dependent, and can not be
+reduced to any sort of generalized advice. Therefore, each subsection will give details for our
+example integration to illustrate how such decisions may be made.</p>
+<section id="define-who-needs-can-tp">
+<h3>Define who needs CAN-TP<a class="headerlink" href="#define-who-needs-can-tp" title="Link to this heading"></a></h3>
+<p>For our example integration, assume there are 4 ECUs in the system:</p>
+<ul class="simple">
+<li><p>ECU 0</p></li>
+<li><p>ECU 1</p></li>
+<li><p>ECU 2</p></li>
+<li><p>ECU 3</p></li>
+</ul>
+<p>ECU 0 is the main ECU which must communicate with ECUs 1, 2, and 3, none of which talk directly to
+each other. All ECUs are located on CAN_1 (CAN bus 1).</p>
+<p>The CAN hardware will use the classic CAN protocol, so 8 byte payloads with transfer speeds of
+500kbps.</p>
+<p>We’ll focus on ECU 0 for the duration of this example integration, as it has the most CAN-TP work to
+do.</p>
+</section>
+<section id="selecting-the-integration-site">
+<h3>Selecting the Integration Site<a class="headerlink" href="#selecting-the-integration-site" title="Link to this heading"></a></h3>
+<p>Next, an appropriate site for the integration must be selected. This should be determined by
+selecting a core/application which can provide easy access to the <strong>docan</strong> public API for all that
+want to use it.</p>
+<p>For our example integration, assume ECU 0 has 3 CPU cores, but only core 0 has been selected to use
+and drive the CAN hardware, and it contains all of the other applications that need to use CAN-TP to
+communicate with other ECUs on the available CAN buses. Lastly, it has the RAM and available CPU
+time to hold and run the <strong>docan</strong> stack. In this case, it’s obvious that the core 0 application is
+the correct location for integration.</p>
+</section>
+<section id="choosing-an-addressing-mode">
+<h3>Choosing an Addressing Mode<a class="headerlink" href="#choosing-an-addressing-mode" title="Link to this heading"></a></h3>
+<p>For the basic difference between <em>normal addressing</em> and <em>extended addressing</em> at a protocol level,
+please read the summaries and tradeoffs of each in <a class="reference internal" href="#can-tp-basics"><span class="std std-ref">CAN-TP Basics</span></a>.</p>
+<p><em>Normal addressing</em> is normally used when maximum data throughput is of highest importance, and
+therefore minimizing CAN frame payload bytes spent on metadata is of the highest importance, or the
+project wants to ensure that only a subset of possible ECU pairings are allowed. The project must
+have available ~20 bytes of ROM per source/target mapping, as the mapping between every set of ECUs
+that must communicate has to be explicitly hard-coded into the application.</p>
+<p><em>Extended addressing</em> is normally used when a project has a large number of ECUs which all need to
+talk to each other, as <em>extended addressing</em> does not use static source/target mapping tables, so
+there’s no additional ROM cost to having a larger number of mappings between a larger number of
+ECUs.</p>
+<p>For our example integration, <em>normal addressing</em> will be used. A set of example CAN message IDs used
+for CAN-TP communication will be defined later in the integration code examples.</p>
+</section>
+<section id="defining-performance-characteristics">
+<h3>Defining Performance Characteristics<a class="headerlink" href="#defining-performance-characteristics" title="Link to this heading"></a></h3>
+<p>Performance of data transmission via CAN-TP depends on many of the project details:</p>
+<ul class="simple">
+<li><p>CAN payload length</p></li>
+<li><p>CAN transmission speeds</p></li>
+<li><p>CPU/RAM speeds</p></li>
+<li><p>Available CPU time for running the stack</p></li>
+<li><p>Number of simultaneous supported communications</p></li>
+<li><p>Performance requirements by applications which use CAN-TP for their communication</p></li>
+</ul>
+<p>For our example integration, we won’t go too deep into the details of specific performance targets,
+but we can define a few basics:</p>
+<ol class="arabic simple">
+<li><p>Respond within 10ms of receiving data or a request to transmit data</p></li>
+<li><p>Be capable of receiving segmented packets of data every 1ms</p></li>
+<li><p>Be capable of sending segmented packets of data every 1ms</p></li>
+<li><p>Support up to 2 simultaneous communications per CAN bus</p></li>
+<li><p>Have all timeouts set to 1 second</p></li>
+</ol>
+</section>
+</section>
+<section id="integration">
+<h2>Integration<a class="headerlink" href="#integration" title="Link to this heading"></a></h2>
+<p>With the architecture decisions made, an integrator can now proceed with integration.</p>
+<section id="instantiating-the-stack">
+<h3>Instantiating the Stack<a class="headerlink" href="#instantiating-the-stack" title="Link to this heading"></a></h3>
+<p>We must first instantiate the <strong>docan</strong> stack before it can be connected to anything else in the
+system. Here’s everything an integration requires to do so.</p>
+<section id="id2">
+<h4>Normal Addressing<a class="headerlink" href="#id2" title="Link to this heading"></a></h4>
+<p>As the architect has already chosen <em>normal addressing</em> for the example integration, the integrator
+can already select and instantiate the <code class="docutils literal notranslate"><span class="pre">docan::DoCanNormalAddressing</span></code> class.</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="n">Addressing</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="o">::</span><span class="n">docan</span><span class="o">::</span><span class="n">DoCanNormalAddressing</span><span class="o">&lt;&gt;</span><span class="p">;</span>
+<span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="n">DataLinkLayer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Addressing</span><span class="o">::</span><span class="n">DataLinkLayerType</span><span class="p">;</span>
+<span class="w">    </span><span class="n">Addressing</span><span class="w"> </span><span class="n">addressing</span><span class="p">;</span>
+</pre></div>
+</div>
+</section>
+<section id="parameters">
+<h4>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h4>
+<p>The <code class="docutils literal notranslate"><span class="pre">docan::DoCanParameters</span></code> class is used to control all timeouts and retry counts, along with
+the minimum separation time and block size the stack will respond with for segmented data
+receptions. These values are to be set during architecture of the project.</p>
+<p>For our example integration, we’ve set all timeout values to 1 second, and that we must be able to
+receive segmented packets of data every 1ms. Lastly, we’ll set the block size to 0, meaning other
+ECUs which are sending segmented data to us may send all of their data after receiving just one flow
+control frame.</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="w">    </span><span class="kt">uint16_t</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">ALLOCATE_TIMEOUT</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="mi">1000U</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">uint16_t</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">RX_TIMEOUT</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="mi">1000U</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">uint16_t</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">TX_CALLBACK_TIMEOUT</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="mi">1000U</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">uint16_t</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">FLOW_CONTROL_TIMEOUT</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="mi">1000U</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">uint8_t</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">ALLOCATE_RETRY_COUNT</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="mi">1U</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">uint8_t</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">FLOW_CONTROL_WAIT_COUNT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1U</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">uint16_t</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">MIN_SEPARATION_TIME</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="mi">1U</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">uint8_t</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">BLOCK_SIZE</span><span class="w">              </span><span class="o">=</span><span class="w"> </span><span class="mi">0U</span><span class="p">;</span>
+
+<span class="w">    </span><span class="o">::</span><span class="n">docan</span><span class="o">::</span><span class="n">DoCanParameters</span><span class="w"> </span><span class="nf">parameters</span><span class="p">(</span>
+<span class="w">        </span><span class="o">::</span><span class="n">etl</span><span class="o">::</span><span class="n">delegate</span><span class="o">&lt;</span><span class="k">decltype</span><span class="p">(</span><span class="n">systemMicro</span><span class="p">)</span><span class="o">&gt;::</span><span class="n">create</span><span class="o">&lt;&amp;</span><span class="n">systemMicro</span><span class="o">&gt;</span><span class="p">(),</span>
+<span class="w">        </span><span class="n">ALLOCATE_TIMEOUT</span><span class="p">,</span>
+<span class="w">        </span><span class="n">RX_TIMEOUT</span><span class="p">,</span>
+<span class="w">        </span><span class="n">TX_CALLBACK_TIMEOUT</span><span class="p">,</span>
+<span class="w">        </span><span class="n">FLOW_CONTROL_TIMEOUT</span><span class="p">,</span>
+<span class="w">        </span><span class="n">ALLOCATE_RETRY_COUNT</span><span class="p">,</span>
+<span class="w">        </span><span class="n">FLOW_CONTROL_WAIT_COUNT</span><span class="p">,</span>
+<span class="w">        </span><span class="n">MIN_SEPARATION_TIME</span><span class="p">,</span>
+<span class="w">        </span><span class="n">BLOCK_SIZE</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="transport-layer">
+<h4>Transport Layer<a class="headerlink" href="#transport-layer" title="Link to this heading"></a></h4>
+<p>The main class for integration is <code class="docutils literal notranslate"><span class="pre">docan::DoCanTransportLayer</span></code>. A transport layer owns all of the
+internal classes and data structures necessary for performing data transmission and reception, and
+handling error cases along the way.</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="w">    </span><span class="o">::</span><span class="n">docan</span><span class="o">::</span><span class="n">declare</span><span class="o">::</span><span class="n">DoCanTransportLayerConfig</span><span class="o">&lt;</span><span class="n">DataLinkLayer</span><span class="p">,</span><span class="w"> </span><span class="mi">2U</span><span class="p">,</span><span class="w"> </span><span class="mi">2U</span><span class="p">,</span><span class="w"> </span><span class="mi">8U</span><span class="o">&gt;</span><span class="w"> </span><span class="n">transportLayerConfig</span><span class="p">(</span>
+<span class="w">        </span><span class="n">parameters</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>As can be seen, there are many parameters to pass into the transport layer to configure it to work
+correctly for a given project. Defining and instantiating these parameters correctly makes up the
+bulk of the remainder of the integration work.</p>
+</section>
+<section id="can-bus-id">
+<h4>CAN bus ID<a class="headerlink" href="#can-bus-id" title="Link to this heading"></a></h4>
+<p>The ID of the CAN bus on which the transport layer will run. There should only be one transport
+layer per CAN bus, as having two or more transport layers for the same bus will cause data
+duplication and incorrect data handling for that CAN bus, leading to transmission failures and
+broken communication between ECUs.</p>
+</section>
+<section id="async-context">
+<h4>Async Context<a class="headerlink" href="#async-context" title="Link to this heading"></a></h4>
+<p>Select whichever context is appropriate for performing CAN data transmission/reception.</p>
+</section>
+<section id="normal-addressing-filter">
+<h4>Normal Addressing Filter<a class="headerlink" href="#normal-addressing-filter" title="Link to this heading"></a></h4>
+<p>For our example integration, define the following ECU source -&gt; target ID to CAN message ID mapping:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>CAN frame ID</p></th>
+<th class="head"><p>Source, Target IDs</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>100</p></td>
+<td><p>0, 10</p></td>
+</tr>
+<tr class="row-odd"><td><p>101</p></td>
+<td><p>10, 0</p></td>
+</tr>
+<tr class="row-even"><td><p>200</p></td>
+<td><p>0, 20</p></td>
+</tr>
+<tr class="row-odd"><td><p>201</p></td>
+<td><p>20, 0</p></td>
+</tr>
+<tr class="row-even"><td><p>300</p></td>
+<td><p>0, 30</p></td>
+</tr>
+<tr class="row-odd"><td><p>301</p></td>
+<td><p>30, 0</p></td>
+</tr>
+</tbody>
+</table>
+<p>First, we must instantiate an array of <code class="docutils literal notranslate"><span class="pre">docan::DoCanNormalAddressingFilterAddressEntry</span></code>,
+containing all of the mapping information we defined in the table above. Next, we define a mapper,
+along with the codec type corresponding to our CAN hardware: in our case we choose the “optimized
+classic” preset, as our example assumes classic CAN and that no padding is required. Lastly, create
+the <code class="docutils literal notranslate"><span class="pre">docan::DoCanNormalAddressingFilter</span></code> itself by creating slices to the mapping entries and all
+available codecs.</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="w">    </span><span class="k">constexpr</span><span class="w"> </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">Ecu0Id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="k">constexpr</span><span class="w"> </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">Ecu1Id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span><span class="p">;</span>
+<span class="w">    </span><span class="k">constexpr</span><span class="w"> </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">Ecu2Id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">20</span><span class="p">;</span>
+<span class="w">    </span><span class="k">constexpr</span><span class="w"> </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">Ecu3Id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">30</span><span class="p">;</span>
+
+<span class="w">    </span><span class="c1">// CAN reception IDs must be in ascending order</span>
+<span class="w">    </span><span class="k">constexpr</span><span class="w"> </span><span class="o">::</span><span class="n">docan</span><span class="o">::</span><span class="n">DoCanNormalAddressingFilterAddressEntry</span><span class="o">&lt;</span><span class="n">DataLinkLayer</span><span class="o">&gt;</span><span class="w"> </span><span class="n">mappingEntriesCan1</span><span class="p">[]</span>
+<span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="p">{{</span><span class="c1">// CAN reception ID - the CAN message ID used to receive data from the target ECU</span>
+<span class="w">            </span><span class="o">::</span><span class="n">can</span><span class="o">::</span><span class="n">CanId</span><span class="o">::</span><span class="n">Base</span><span class="o">&lt;</span><span class="mi">101</span><span class="o">&gt;::</span><span class="n">value</span><span class="p">,</span>
+<span class="w">            </span><span class="c1">// CAN transmission ID - the CAN message ID used to transmit data to the target ECU</span>
+<span class="w">            </span><span class="o">::</span><span class="n">can</span><span class="o">::</span><span class="n">CanId</span><span class="o">::</span><span class="n">Base</span><span class="o">&lt;</span><span class="mi">100</span><span class="o">&gt;::</span><span class="n">value</span><span class="p">,</span>
+<span class="w">            </span><span class="c1">// Transport source ID</span>
+<span class="w">            </span><span class="n">Ecu1Id</span><span class="p">,</span>
+<span class="w">            </span><span class="c1">// Transport target ID</span>
+<span class="w">            </span><span class="n">Ecu0Id</span><span class="p">,</span>
+<span class="w">            </span><span class="c1">// CAN frame reception codec index - relevant if there are multiple codecs available</span>
+<span class="w">            </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">            </span><span class="c1">// CAN frame transmission codec index - relevant if there are multiple codecs available</span>
+<span class="w">            </span><span class="mi">0</span><span class="p">},</span>
+<span class="w">           </span><span class="p">{</span><span class="o">::</span><span class="n">can</span><span class="o">::</span><span class="n">CanId</span><span class="o">::</span><span class="n">Base</span><span class="o">&lt;</span><span class="mi">201</span><span class="o">&gt;::</span><span class="n">value</span><span class="p">,</span><span class="w"> </span><span class="o">::</span><span class="n">can</span><span class="o">::</span><span class="n">CanId</span><span class="o">::</span><span class="n">Base</span><span class="o">&lt;</span><span class="mi">200</span><span class="o">&gt;::</span><span class="n">value</span><span class="p">,</span><span class="w"> </span><span class="n">Ecu2Id</span><span class="p">,</span><span class="w"> </span><span class="n">Ecu0Id</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">},</span>
+<span class="w">           </span><span class="p">{</span><span class="o">::</span><span class="n">can</span><span class="o">::</span><span class="n">CanId</span><span class="o">::</span><span class="n">Base</span><span class="o">&lt;</span><span class="mi">301</span><span class="o">&gt;::</span><span class="n">value</span><span class="p">,</span><span class="w"> </span><span class="o">::</span><span class="n">can</span><span class="o">::</span><span class="n">CanId</span><span class="o">::</span><span class="n">Base</span><span class="o">&lt;</span><span class="mi">300</span><span class="o">&gt;::</span><span class="n">value</span><span class="p">,</span><span class="w"> </span><span class="n">Ecu3Id</span><span class="p">,</span><span class="w"> </span><span class="n">Ecu0Id</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">}};</span>
+
+<span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="n">FrameCodecType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">::</span><span class="n">docan</span><span class="o">::</span><span class="n">DoCanFrameCodec</span><span class="o">&lt;</span><span class="n">DataLinkLayer</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="n">MapperType</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="o">::</span><span class="n">docan</span><span class="o">::</span><span class="n">DoCanDefaultFrameSizeMapper</span><span class="o">&lt;</span><span class="n">DataLinkLayer</span><span class="o">::</span><span class="n">FrameSizeType</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="n">MapperType</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">mapper</span><span class="p">;</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="n">FrameCodecType</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">codecClassic</span><span class="p">(</span>
+<span class="w">        </span><span class="o">::</span><span class="n">docan</span><span class="o">::</span><span class="n">DoCanFrameCodecConfigPresets</span><span class="o">::</span><span class="n">OPTIMIZED_CLASSIC</span><span class="p">,</span><span class="w"> </span><span class="n">mapper</span><span class="p">);</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="n">FrameCodecType</span><span class="w"> </span><span class="k">const</span><span class="o">*</span><span class="w"> </span><span class="n">codecEntries</span><span class="p">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="o">&amp;</span><span class="n">codecClassic</span><span class="p">};</span>
+
+<span class="w">    </span><span class="o">::</span><span class="n">docan</span><span class="o">::</span><span class="n">DoCanNormalAddressingFilter</span><span class="o">&lt;</span><span class="n">DataLinkLayer</span><span class="o">&gt;</span><span class="w"> </span><span class="n">addressingFilter</span><span class="p">{</span>
+<span class="w">        </span><span class="o">::</span><span class="n">etl</span><span class="o">::</span><span class="n">span</span><span class="o">&lt;::</span><span class="n">docan</span><span class="o">::</span><span class="n">DoCanNormalAddressingFilterAddressEntry</span><span class="o">&lt;</span><span class="n">DataLinkLayer</span><span class="o">&gt;</span><span class="w"> </span><span class="k">const</span><span class="o">&gt;</span><span class="p">(</span>
+<span class="w">            </span><span class="n">mappingEntriesCan1</span><span class="p">),</span>
+<span class="w">        </span><span class="o">::</span><span class="n">etl</span><span class="o">::</span><span class="n">span</span><span class="o">&lt;</span><span class="n">FrameCodecType</span><span class="w"> </span><span class="k">const</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">codecEntries</span><span class="p">)};</span>
+</pre></div>
+</div>
+</section>
+<section id="physical-can-transceiver">
+<h4>Physical CAN Transceiver<a class="headerlink" href="#physical-can-transceiver" title="Link to this heading"></a></h4>
+<p>The <code class="docutils literal notranslate"><span class="pre">docan::DoCanPhysicalCanTransceiver</span></code> is a docan-provided integration class which defines
+default behaviors for how the stack will interact with the CAN transceiver, both for how to handle
+received CAN frames and how to write CAN frames generated by the stack. The default behaviors are to
+attempt to handle any received CAN frame for which we have a defined mapping for <cite>Normal
+Addressing</cite>, or to handle any valid CAN-TP CAN frame for <cite>Extended Addressing</cite>, and to allow only
+one pending CAN frame at a time to be enqueued in the CAN hardware. Further frames will be enqueued
+after confirmation of the sending of the current pending frame.</p>
+<p>If these default behaviors do not suit a given project, then the project is free to define their own
+implementer of <code class="docutils literal notranslate"><span class="pre">docan::IDoCanPhysicalCanTransceiver</span></code>.</p>
+<p>For our example integration, we will be using the provided physical CAN transceiver.</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="w">    </span><span class="o">::</span><span class="n">docan</span><span class="o">::</span><span class="n">DoCanPhysicalCanTransceiver</span><span class="o">&lt;</span><span class="n">Addressing</span><span class="o">&gt;</span><span class="w"> </span><span class="n">transceiver</span><span class="p">(</span>
+<span class="w">        </span><span class="n">canTransceiver</span><span class="p">,</span><span class="w"> </span><span class="n">addressingFilter</span><span class="p">,</span><span class="w"> </span><span class="n">addressingFilter</span><span class="p">,</span><span class="w"> </span><span class="n">addressing</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="tick-generator">
+<h4>Tick Generator<a class="headerlink" href="#tick-generator" title="Link to this heading"></a></h4>
+<p>The <code class="docutils literal notranslate"><span class="pre">docan::IDoCanTickGenerator</span></code> is used to implement the behavior of ticks ticks, which are more
+frequent polls of the stack. Ticks are used when sending consecutive frames for a segmented
+transmission. Their purpose is to allow the stack to guarantee better transmission speeds for
+consecutive frames by ensuring consecutive frames are sent as close to their specified minimum
+separation time as possible, while allowing the stack to otherwise be polled at a lower frequency,
+saving CPU time for other operations when the stack isn’t performing a segmented transmission.</p>
+<p>The integration must create a class which inherits from <code class="docutils literal notranslate"><span class="pre">docan::IDoCanTickGenerator</span></code> and then
+define the correct way to schedule the transport layers to run their <code class="docutils literal notranslate"><span class="pre">tick</span></code> functions at a
+frequent rate. The more frequently <code class="docutils literal notranslate"><span class="pre">tick</span></code> is run, the more accurate consecutive frames will be
+sent in regards to their set minimum separation time, but running <code class="docutils literal notranslate"><span class="pre">tick</span></code> more frequently will also
+require more CPU time.</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">TickGenerator</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="o">::</span><span class="n">docan</span><span class="o">::</span><span class="n">IDoCanTickGenerator</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// Schedule the stack to call the tick function frequently</span>
+<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="nf">tickNeeded</span><span class="p">()</span><span class="w"> </span><span class="k">override</span><span class="w"> </span><span class="p">{}</span>
+<span class="w">    </span><span class="p">};</span>
+
+<span class="w">    </span><span class="n">TickGenerator</span><span class="w"> </span><span class="n">tickGenerator</span><span class="p">;</span>
+</pre></div>
+</div>
+</section>
+<section id="transport-layer-configuration">
+<h4>Transport Layer Configuration<a class="headerlink" href="#transport-layer-configuration" title="Link to this heading"></a></h4>
+<p>Instantiate an instance of <code class="docutils literal notranslate"><span class="pre">docan::DoCanTransportLayerConfig</span></code>. This class allows integrators to
+choose the number of desired simultaneous transmissions and receptions the transport layer can
+handle, and as well requires the maximum CAN frame payload size the CAN bus hardware can support.</p>
+<p>For our example integration, we’ve selected that the transport layer must support up to 2
+simultaneous communications, so we set our reception count and transmission count to 2. Because
+we’re using the classic CAN protocol, we additionally set our max frame size to 8.</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="w">    </span><span class="o">::</span><span class="n">docan</span><span class="o">::</span><span class="n">declare</span><span class="o">::</span><span class="n">DoCanTransportLayerConfig</span><span class="o">&lt;</span><span class="n">DataLinkLayer</span><span class="p">,</span><span class="w"> </span><span class="mi">2U</span><span class="p">,</span><span class="w"> </span><span class="mi">2U</span><span class="p">,</span><span class="w"> </span><span class="mi">8U</span><span class="o">&gt;</span><span class="w"> </span><span class="n">transportLayerConfig</span><span class="p">(</span>
+<span class="w">        </span><span class="n">parameters</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="logger-component">
+<h4>Logger Component<a class="headerlink" href="#logger-component" title="Link to this heading"></a></h4>
+<p>Select whichever logger component is appropriate for CAN-TP log messages.</p>
+</section>
+</section>
+<section id="connecting-to-the-transport-system">
+<h3>Connecting to the Transport System<a class="headerlink" href="#connecting-to-the-transport-system" title="Link to this heading"></a></h3>
+<p>With our transport layers created, we now need to connect them to the project’s transport system,
+which will provide the <strong>docan</strong> stack with transport messages to send, and onto which the stack
+will forward received transport messages.</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="w">    </span><span class="n">transportLayer</span><span class="p">.</span><span class="n">fProvidingListenerHelper</span><span class="p">.</span><span class="n">fpMessageProvider</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&amp;</span><span class="n">messageProvider</span><span class="p">;</span>
+<span class="w">    </span><span class="n">transportLayer</span><span class="p">.</span><span class="n">fProvidingListenerHelper</span><span class="p">.</span><span class="n">fpMessageListener</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&amp;</span><span class="n">messageListener</span><span class="p">;</span>
+</pre></div>
+</div>
+</section>
+<section id="running-the-stack">
+<h3>Running the Stack<a class="headerlink" href="#running-the-stack" title="Link to this heading"></a></h3>
+<p>Lastly, we just have to initialize everything, run it all, and shut it down if the ECU needs to
+turn off.</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="w">    </span><span class="c1">// in initialization code</span>
+<span class="w">    </span><span class="n">transportLayer</span><span class="p">.</span><span class="n">init</span><span class="p">();</span>
+
+<span class="w">    </span><span class="c1">// in normal running mode code - call every 10ms to guarantee 10ms response times</span>
+<span class="w">    </span><span class="n">transportLayer</span><span class="p">.</span><span class="n">cyclicTask</span><span class="p">(</span><span class="n">nowUs</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// in shutdown code</span>
+<span class="w">    </span><span class="n">transportLayer</span><span class="p">.</span><span class="n">shutdown</span><span class="p">(</span><span class="n">shutdownCallback</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="sending-data">
+<h3>Sending Data<a class="headerlink" href="#sending-data" title="Link to this heading"></a></h3>
+<p>If your project already has a transport system that’s set up to send transport messages via the
+<code class="docutils literal notranslate"><span class="pre">transport::AbstractTransportLayer</span></code> interface, then it should already handle routing data to and
+from <strong>docan</strong>, but if you want to send data via the <strong>docan</strong> transport layers yourself, all you
+have to do is call <code class="docutils literal notranslate"><span class="pre">transportLayer.send()</span></code> with the transport layer and notification listener that
+make sense for your transmission.</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="w">    </span><span class="n">transportLayer</span><span class="p">.</span><span class="n">send</span><span class="p">(</span><span class="n">message</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">notificationListener</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026 Accenture.</p>
+  </div>
+
+  <div role="footer_string">
+    <p>Documentation from 2026-02-24 10:51:54, official build.</p>
+
+    
+      <a href="../../../../../_sources/libs/bsw/docan/doc/user/index.rst.txt" rel="nofollow"> View page source</a>
+    
+
+  </div>
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(false);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,381 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - coverage.info - libs/bsw/cpp2can/include/can/transceiver/ICanTransceiver.h</title>
+  <link rel="stylesheet" type="text/css" href="../../../../../../gcov.css">
+</head>
+
+<body>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="title">LCOV - code coverage report</td></tr>
+            <tr><td class="ruler"><img src="../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+            <tr>
+              <td width="100%">
+                <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="10%" class="headerValue"><a href="../../../../../../index.html">top level</a> - <a href="index.html">libs/bsw/cpp2can/include/can/transceiver</a> - ICanTransceiver.h<span style="font-size: 80%;"> (source / <a href="ICanTransceiver.h.func-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="5%"></td>
+            <td width="5%" class="headerCovTableHead">Coverage</td>
+            <td width="5%" class="headerCovTableHead" title="Covered + Uncovered code">Total</td>
+            <td width="5%" class="headerCovTableHead" title="Exercised code only">Hit</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">coverage.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
+            <td class="headerCovTableEntry">1</td>
+            <td class="headerCovTableEntry">1</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test Date:</td>
+            <td class="headerValue">2026-02-24 11:21:15</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
+            <td class="headerCovTableEntry">1</td>
+            <td class="headerCovTableEntry">1</td>
+          </tr>
+                  <tr><td><img src="../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr><td class="ruler"><img src="../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+          </table>
+
+          <table cellpadding=0 cellspacing=0 border=0>
+            <tr>
+              <td><br></td>
+            </tr>
+            <tr>
+              <td>
+<pre class="sourceHeading">            Line data    Source code</pre>
+<pre class="source">
+<span id="L1"><span class="lineNum">       1</span>              : // Copyright 2024 Accenture.</span>
+<span id="L2"><span class="lineNum">       2</span>              : </span>
+<span id="L3"><span class="lineNum">       3</span>              : /**</span>
+<span id="L4"><span class="lineNum">       4</span>              :  * Contains class ICanTransceiver.</span>
+<span id="L5"><span class="lineNum">       5</span>              :  * \file        ICanTransceiver.h</span>
+<span id="L6"><span class="lineNum">       6</span>              :  * \ingroup     transceiver</span>
+<span id="L7"><span class="lineNum">       7</span>              :  */</span>
+<span id="L8"><span class="lineNum">       8</span>              : #pragma once</span>
+<span id="L9"><span class="lineNum">       9</span>              : </span>
+<span id="L10"><span class="lineNum">      10</span>              : #include &quot;can/transceiver/ICANTransceiverStateListener.h&quot;</span>
+<span id="L11"><span class="lineNum">      11</span>              : </span>
+<span id="L12"><span class="lineNum">      12</span>              : #include &lt;platform/estdint.h&gt;</span>
+<span id="L13"><span class="lineNum">      13</span>              : </span>
+<span id="L14"><span class="lineNum">      14</span>              : namespace can</span>
+<span id="L15"><span class="lineNum">      15</span>              : {</span>
+<span id="L16"><span class="lineNum">      16</span>              : class CANFrame;</span>
+<span id="L17"><span class="lineNum">      17</span>              : class CanTransportLayer;</span>
+<span id="L18"><span class="lineNum">      18</span>              : class FrameDispatcher;</span>
+<span id="L19"><span class="lineNum">      19</span>              : class ICANFrameListener;</span>
+<span id="L20"><span class="lineNum">      20</span>              : class ICANFrameSentListener;</span>
+<span id="L21"><span class="lineNum">      21</span>              : class IFilteredCANFrameSentListener;</span>
+<span id="L22"><span class="lineNum">      22</span>              : </span>
+<span id="L23"><span class="lineNum">      23</span>              : /**</span>
+<span id="L24"><span class="lineNum">      24</span>              :  *  Cpp2Can Can Transceiver base interface</span>
+<span id="L25"><span class="lineNum">      25</span>              :  *</span>
+<span id="L26"><span class="lineNum">      26</span>              :  * \see AbstractCANTransceiver for a base HW independent implementation.</span>
+<span id="L27"><span class="lineNum">      27</span>              :  *</span>
+<span id="L28"><span class="lineNum">      28</span>              :  * \section Statemachine</span>
+<span id="L29"><span class="lineNum">      29</span>              :  * A subclass of ICanTransceiver has to implement the following</span>
+<span id="L30"><span class="lineNum">      30</span>              :  * statemachine. Initial state shall be CLOSED.</span>
+<span id="L31"><span class="lineNum">      31</span>              :  *</span>
+<span id="L32"><span class="lineNum">      32</span>              :  * &lt;table border=1 bordercolor=&quot;black&quot;&gt;</span>
+<span id="L33"><span class="lineNum">      33</span>              :  * &lt;tr&gt;</span>
+<span id="L34"><span class="lineNum">      34</span>              :  * &lt;th&gt;state&lt;/th&gt;&lt;th&gt;method called&lt;/th&gt;&lt;th&gt;follow state&lt;/th&gt;</span>
+<span id="L35"><span class="lineNum">      35</span>              :  * &lt;/tr&gt;</span>
+<span id="L36"><span class="lineNum">      36</span>              :  * &lt;tr&gt;</span>
+<span id="L37"><span class="lineNum">      37</span>              :  * &lt;td&gt;CLOSED&lt;/td&gt;&lt;td&gt;init()&lt;/td&gt;&lt;td&gt;INITIALIZED&lt;/td&gt;</span>
+<span id="L38"><span class="lineNum">      38</span>              :  * &lt;/tr&gt;</span>
+<span id="L39"><span class="lineNum">      39</span>              :  * &lt;tr&gt;</span>
+<span id="L40"><span class="lineNum">      40</span>              :  * &lt;td&gt;INITIALIZED&lt;/td&gt;&lt;td&gt;open()&lt;/td&gt;&lt;td&gt;OPEN&lt;/td&gt;</span>
+<span id="L41"><span class="lineNum">      41</span>              :  * &lt;/tr&gt;</span>
+<span id="L42"><span class="lineNum">      42</span>              :  * &lt;tr&gt;</span>
+<span id="L43"><span class="lineNum">      43</span>              :  * &lt;td&gt;OPEN&lt;/td&gt;&lt;td&gt;close()&lt;/td&gt;&lt;td&gt;CLOSED&lt;/td&gt;</span>
+<span id="L44"><span class="lineNum">      44</span>              :  * &lt;/tr&gt;</span>
+<span id="L45"><span class="lineNum">      45</span>              :  * &lt;tr&gt;</span>
+<span id="L46"><span class="lineNum">      46</span>              :  * &lt;td&gt;OPEN&lt;/td&gt;&lt;td&gt;mute()&lt;/td&gt;&lt;td&gt;MUTED&lt;/td&gt;</span>
+<span id="L47"><span class="lineNum">      47</span>              :  * &lt;/tr&gt;</span>
+<span id="L48"><span class="lineNum">      48</span>              :  * &lt;tr&gt;</span>
+<span id="L49"><span class="lineNum">      49</span>              :  * &lt;td&gt;MUTED&lt;/td&gt;&lt;td&gt;unmute()&lt;/td&gt;&lt;td&gt;OPEN&lt;/td&gt;</span>
+<span id="L50"><span class="lineNum">      50</span>              :  * &lt;/tr&gt;</span>
+<span id="L51"><span class="lineNum">      51</span>              :  * &lt;tr&gt;</span>
+<span id="L52"><span class="lineNum">      52</span>              :  * &lt;td&gt;MUTED&lt;/td&gt;&lt;td&gt;close()&lt;/td&gt;&lt;td&gt;CLOSED&lt;/td&gt;</span>
+<span id="L53"><span class="lineNum">      53</span>              :  * &lt;/tr&gt;</span>
+<span id="L54"><span class="lineNum">      54</span>              :  * &lt;/table&gt;</span>
+<span id="L55"><span class="lineNum">      55</span>              :  */</span>
+<span id="L56"><span class="lineNum">      56</span>              : class ICanTransceiver</span>
+<span id="L57"><span class="lineNum">      57</span>              : {</span>
+<span id="L58"><span class="lineNum">      58</span>              : protected:</span>
+<span id="L59"><span class="lineNum">      59</span> <span class="tlaGNC tlaBgGNC">          58 :     ICanTransceiver() = default;</span></span>
+<span id="L60"><span class="lineNum">      60</span>              : </span>
+<span id="L61"><span class="lineNum">      61</span>              : public:</span>
+<span id="L62"><span class="lineNum">      62</span>              :     ICanTransceiver(ICanTransceiver const&amp;)            = delete;</span>
+<span id="L63"><span class="lineNum">      63</span>              :     ICanTransceiver&amp; operator=(ICanTransceiver const&amp;) = delete;</span>
+<span id="L64"><span class="lineNum">      64</span>              : </span>
+<span id="L65"><span class="lineNum">      65</span>              :     /**</span>
+<span id="L66"><span class="lineNum">      66</span>              :      * All ErrorCodes used by CanTransceivers</span>
+<span id="L67"><span class="lineNum">      67</span>              :      */</span>
+<span id="L68"><span class="lineNum">      68</span>              :     enum class ErrorCode : uint8_t</span>
+<span id="L69"><span class="lineNum">      69</span>              :     {</span>
+<span id="L70"><span class="lineNum">      70</span>              :         /** Everything OK */</span>
+<span id="L71"><span class="lineNum">      71</span>              :         CAN_ERR_OK,</span>
+<span id="L72"><span class="lineNum">      72</span>              :         /** Transmission failed */</span>
+<span id="L73"><span class="lineNum">      73</span>              :         CAN_ERR_TX_FAIL,</span>
+<span id="L74"><span class="lineNum">      74</span>              :         /** Hw queue was full */</span>
+<span id="L75"><span class="lineNum">      75</span>              :         CAN_ERR_TX_HW_QUEUE_FULL,</span>
+<span id="L76"><span class="lineNum">      76</span>              :         /** Transceiver was offline when trying to transmit */</span>
+<span id="L77"><span class="lineNum">      77</span>              :         CAN_ERR_TX_OFFLINE,</span>
+<span id="L78"><span class="lineNum">      78</span>              :         /** Transceiver is in an illegal state for the requested operation */</span>
+<span id="L79"><span class="lineNum">      79</span>              :         CAN_ERR_ILLEGAL_STATE,</span>
+<span id="L80"><span class="lineNum">      80</span>              :         /** The list of possible listeners is full */</span>
+<span id="L81"><span class="lineNum">      81</span>              :         CAN_ERR_NO_MORE_LISTENERS_POSSIBLE,</span>
+<span id="L82"><span class="lineNum">      82</span>              :         /** The requested baudrate is not supported */</span>
+<span id="L83"><span class="lineNum">      83</span>              :         CAN_ERR_UNSUPPORTED_BAUDRATE,</span>
+<span id="L84"><span class="lineNum">      84</span>              :         /** Transceiver could not be initialized */</span>
+<span id="L85"><span class="lineNum">      85</span>              :         CAN_ERR_INIT_FAILED</span>
+<span id="L86"><span class="lineNum">      86</span>              :     };</span>
+<span id="L87"><span class="lineNum">      87</span>              : </span>
+<span id="L88"><span class="lineNum">      88</span>              :     /**</span>
+<span id="L89"><span class="lineNum">      89</span>              :      * States used by CanTransceivers</span>
+<span id="L90"><span class="lineNum">      90</span>              :      */</span>
+<span id="L91"><span class="lineNum">      91</span>              :     enum class State : uint8_t</span>
+<span id="L92"><span class="lineNum">      92</span>              :     {</span>
+<span id="L93"><span class="lineNum">      93</span>              :         /** Transceiver is closed */</span>
+<span id="L94"><span class="lineNum">      94</span>              :         CLOSED,</span>
+<span id="L95"><span class="lineNum">      95</span>              :         /** Transceivers hardware is initialized */</span>
+<span id="L96"><span class="lineNum">      96</span>              :         INITIALIZED,</span>
+<span id="L97"><span class="lineNum">      97</span>              :         /** Transceiver is waking up bus participants */</span>
+<span id="L98"><span class="lineNum">      98</span>              :         WAKING,</span>
+<span id="L99"><span class="lineNum">      99</span>              :         /** Transceiver is open */</span>
+<span id="L100"><span class="lineNum">     100</span>              :         OPEN,</span>
+<span id="L101"><span class="lineNum">     101</span>              :         /** Transceiver does not send but receive */</span>
+<span id="L102"><span class="lineNum">     102</span>              :         MUTED</span>
+<span id="L103"><span class="lineNum">     103</span>              :     };</span>
+<span id="L104"><span class="lineNum">     104</span>              : </span>
+<span id="L105"><span class="lineNum">     105</span>              :     enum</span>
+<span id="L106"><span class="lineNum">     106</span>              :     {</span>
+<span id="L107"><span class="lineNum">     107</span>              :         /** Size of receive queue */</span>
+<span id="L108"><span class="lineNum">     108</span>              :         RX_QUEUE_SIZE      = 32,</span>
+<span id="L109"><span class="lineNum">     109</span>              :         /** Lowspeed baudrate is 100 kBit/s */</span>
+<span id="L110"><span class="lineNum">     110</span>              :         BAUDRATE_LOWSPEED  = 100000,</span>
+<span id="L111"><span class="lineNum">     111</span>              :         /** Highspeed baudrate is 500 kBit/s */</span>
+<span id="L112"><span class="lineNum">     112</span>              :         BAUDRATE_HIGHSPEED = 500000,</span>
+<span id="L113"><span class="lineNum">     113</span>              :         INVALID_FRAME_ID   = 0xFFFF</span>
+<span id="L114"><span class="lineNum">     114</span>              :     };</span>
+<span id="L115"><span class="lineNum">     115</span>              : </span>
+<span id="L116"><span class="lineNum">     116</span>              :     /**</span>
+<span id="L117"><span class="lineNum">     117</span>              :      * Initializes the transceivers hardware and enables the transceiver</span>
+<span id="L118"><span class="lineNum">     118</span>              :      * to write CANFrames but not to receive them.</span>
+<span id="L119"><span class="lineNum">     119</span>              :      * \pre     getState() == CLOSED</span>
+<span id="L120"><span class="lineNum">     120</span>              :      * \post    getState() == INITIALIZED</span>
+<span id="L121"><span class="lineNum">     121</span>              :      * \return</span>
+<span id="L122"><span class="lineNum">     122</span>              :      *          - CAN_ERR_OK: transition executed</span>
+<span id="L123"><span class="lineNum">     123</span>              :      *          - CAN_ERR_ILLEGAL_STATE: method was called in wrong state</span>
+<span id="L124"><span class="lineNum">     124</span>              :      */</span>
+<span id="L125"><span class="lineNum">     125</span>              :     virtual ErrorCode init() = 0;</span>
+<span id="L126"><span class="lineNum">     126</span>              : </span>
+<span id="L127"><span class="lineNum">     127</span>              :     /**</span>
+<span id="L128"><span class="lineNum">     128</span>              :      * Called before finally shutting down, used to clean up e.g. pending timeouts.</span>
+<span id="L129"><span class="lineNum">     129</span>              :      */</span>
+<span id="L130"><span class="lineNum">     130</span>              :     virtual void shutdown() = 0;</span>
+<span id="L131"><span class="lineNum">     131</span>              : </span>
+<span id="L132"><span class="lineNum">     132</span>              :     /**</span>
+<span id="L133"><span class="lineNum">     133</span>              :      * Sets the transceiver to a status ready for transmission and reception under the</span>
+<span id="L134"><span class="lineNum">     134</span>              :      * restriction, that no other frame will be sent before frame frame.</span>
+<span id="L135"><span class="lineNum">     135</span>              :      * When the frame is transmitted, the state must be set to OPEN, e.g.</span>
+<span id="L136"><span class="lineNum">     136</span>              :      * in a tx callback function.</span>
+<span id="L137"><span class="lineNum">     137</span>              :      * If this functionality is not required, the function shall assert to inhibit</span>
+<span id="L138"><span class="lineNum">     138</span>              :      * unwanted usage.</span>
+<span id="L139"><span class="lineNum">     139</span>              :      * \param frame frame to transmit during wake up phase</span>
+<span id="L140"><span class="lineNum">     140</span>              :      * \pre     getState() == INITIALIZED</span>
+<span id="L141"><span class="lineNum">     141</span>              :      * \post    getState() == WAKING</span>
+<span id="L142"><span class="lineNum">     142</span>              :      * \return</span>
+<span id="L143"><span class="lineNum">     143</span>              :      *          - CAN_ERR_OK: transition executed</span>
+<span id="L144"><span class="lineNum">     144</span>              :      *          - CAN_ERR_ILLEGAL_STATE: method was called in wrong state</span>
+<span id="L145"><span class="lineNum">     145</span>              :      */</span>
+<span id="L146"><span class="lineNum">     146</span>              :     virtual ErrorCode open(CANFrame const&amp; frame) = 0;</span>
+<span id="L147"><span class="lineNum">     147</span>              : </span>
+<span id="L148"><span class="lineNum">     148</span>              :     /**</span>
+<span id="L149"><span class="lineNum">     149</span>              :      * Sets the transceiver to a status ready for transmission and reception</span>
+<span id="L150"><span class="lineNum">     150</span>              :      * \pre     getState() == INITIALIZED</span>
+<span id="L151"><span class="lineNum">     151</span>              :      * \post    getState() == OPEN</span>
+<span id="L152"><span class="lineNum">     152</span>              :      * \return</span>
+<span id="L153"><span class="lineNum">     153</span>              :      *          - CAN_ERR_OK: transition executed</span>
+<span id="L154"><span class="lineNum">     154</span>              :      *          - CAN_ERR_ILLEGAL_STATE: method was called in wrong state</span>
+<span id="L155"><span class="lineNum">     155</span>              :      */</span>
+<span id="L156"><span class="lineNum">     156</span>              :     virtual ErrorCode open() = 0;</span>
+<span id="L157"><span class="lineNum">     157</span>              : </span>
+<span id="L158"><span class="lineNum">     158</span>              :     /**</span>
+<span id="L159"><span class="lineNum">     159</span>              :      * Stops the transceiver and shuts down hardware disabling both</span>
+<span id="L160"><span class="lineNum">     160</span>              :      * reception and transmission</span>
+<span id="L161"><span class="lineNum">     161</span>              :      * \pre     getState() == OPEN</span>
+<span id="L162"><span class="lineNum">     162</span>              :      * \post    getState() == CLOSED</span>
+<span id="L163"><span class="lineNum">     163</span>              :      * \return</span>
+<span id="L164"><span class="lineNum">     164</span>              :      *          - CAN_ERR_OK: transition executed</span>
+<span id="L165"><span class="lineNum">     165</span>              :      *          - CAN_ERR_ILLEGAL_STATE: method was called in wrong state</span>
+<span id="L166"><span class="lineNum">     166</span>              :      */</span>
+<span id="L167"><span class="lineNum">     167</span>              :     virtual ErrorCode close() = 0;</span>
+<span id="L168"><span class="lineNum">     168</span>              : </span>
+<span id="L169"><span class="lineNum">     169</span>              :     /**</span>
+<span id="L170"><span class="lineNum">     170</span>              :      * Sets the transceiver to a state able to receive CANFrames but</span>
+<span id="L171"><span class="lineNum">     171</span>              :      * unable to transmit</span>
+<span id="L172"><span class="lineNum">     172</span>              :      * \pre     getState() == OPEN</span>
+<span id="L173"><span class="lineNum">     173</span>              :      * \post    getState() == MUTED</span>
+<span id="L174"><span class="lineNum">     174</span>              :      * \return</span>
+<span id="L175"><span class="lineNum">     175</span>              :      *          - CAN_ERR_OK: transition executed</span>
+<span id="L176"><span class="lineNum">     176</span>              :      *          - CAN_ERR_ILLEGAL_STATE: method was called in wrong state</span>
+<span id="L177"><span class="lineNum">     177</span>              :      */</span>
+<span id="L178"><span class="lineNum">     178</span>              :     virtual ErrorCode mute() = 0;</span>
+<span id="L179"><span class="lineNum">     179</span>              : </span>
+<span id="L180"><span class="lineNum">     180</span>              :     /**</span>
+<span id="L181"><span class="lineNum">     181</span>              :      * Enables sending CANFrames again after CANTransceiver has been muted</span>
+<span id="L182"><span class="lineNum">     182</span>              :      * \pre     getState() == MUTED</span>
+<span id="L183"><span class="lineNum">     183</span>              :      * \post    getState() == OPEN</span>
+<span id="L184"><span class="lineNum">     184</span>              :      * \return</span>
+<span id="L185"><span class="lineNum">     185</span>              :      *          - CAN_ERR_OK: transition executed</span>
+<span id="L186"><span class="lineNum">     186</span>              :      *          - CAN_ERR_ILLEGAL_STATE: method was called in wrong state</span>
+<span id="L187"><span class="lineNum">     187</span>              :      */</span>
+<span id="L188"><span class="lineNum">     188</span>              :     virtual ErrorCode unmute() = 0;</span>
+<span id="L189"><span class="lineNum">     189</span>              : </span>
+<span id="L190"><span class="lineNum">     190</span>              :     /**</span>
+<span id="L191"><span class="lineNum">     191</span>              :      * \return  internal state of transceiver</span>
+<span id="L192"><span class="lineNum">     192</span>              :      * \see State</span>
+<span id="L193"><span class="lineNum">     193</span>              :      */</span>
+<span id="L194"><span class="lineNum">     194</span>              :     virtual State getState() const = 0;</span>
+<span id="L195"><span class="lineNum">     195</span>              : </span>
+<span id="L196"><span class="lineNum">     196</span>              :     /**</span>
+<span id="L197"><span class="lineNum">     197</span>              :      * \return  baudrate of transceiver</span>
+<span id="L198"><span class="lineNum">     198</span>              :      */</span>
+<span id="L199"><span class="lineNum">     199</span>              :     virtual uint32_t getBaudrate() const = 0;</span>
+<span id="L200"><span class="lineNum">     200</span>              : </span>
+<span id="L201"><span class="lineNum">     201</span>              :     /**</span>
+<span id="L202"><span class="lineNum">     202</span>              :      * \return  The timeout after which the hw-queue will be empty again.</span>
+<span id="L203"><span class="lineNum">     203</span>              :      * The value is computed from baudrate and queue depth.</span>
+<span id="L204"><span class="lineNum">     204</span>              :      */</span>
+<span id="L205"><span class="lineNum">     205</span>              :     virtual uint16_t getHwQueueTimeout() const = 0;</span>
+<span id="L206"><span class="lineNum">     206</span>              : </span>
+<span id="L207"><span class="lineNum">     207</span>              :     /**</span>
+<span id="L208"><span class="lineNum">     208</span>              :      * Writes a CANFrame to Can bus</span>
+<span id="L209"><span class="lineNum">     209</span>              :      * \param frame frame to transmit</span>
+<span id="L210"><span class="lineNum">     210</span>              :      * \return</span>
+<span id="L211"><span class="lineNum">     211</span>              :      *          - CAN_ERR_OK: transmission was successful</span>
+<span id="L212"><span class="lineNum">     212</span>              :      *          - CAN_ERR_TX_HW_QUEUE_FULL: tx-hardware-queue is full</span>
+<span id="L213"><span class="lineNum">     213</span>              :      *          - CAN_ERR_TX_OFFLINE: transceiver was offline while trying to transmit</span>
+<span id="L214"><span class="lineNum">     214</span>              :      *          - CAN_ERR_TX_FAIL: transmission failed with unspecified error</span>
+<span id="L215"><span class="lineNum">     215</span>              :      *          - CAN_ERR_ILLEGAL_STATE: method was called in wrong state</span>
+<span id="L216"><span class="lineNum">     216</span>              :      *</span>
+<span id="L217"><span class="lineNum">     217</span>              :      * \pre     getState() == INITIALIZED || OPEN</span>
+<span id="L218"><span class="lineNum">     218</span>              :      *</span>
+<span id="L219"><span class="lineNum">     219</span>              :      * \section Timing</span>
+<span id="L220"><span class="lineNum">     220</span>              :      * A call to this method is non-blocking,</span>
+<span id="L221"><span class="lineNum">     221</span>              :      * i.e. it immediately returns an error if e.g. the hw-queue is full</span>
+<span id="L222"><span class="lineNum">     222</span>              :      * and relies on the calling task to retry the transmission.</span>
+<span id="L223"><span class="lineNum">     223</span>              :      */</span>
+<span id="L224"><span class="lineNum">     224</span>              :     virtual ErrorCode write(CANFrame const&amp; frame) = 0;</span>
+<span id="L225"><span class="lineNum">     225</span>              : </span>
+<span id="L226"><span class="lineNum">     226</span>              :     /**</span>
+<span id="L227"><span class="lineNum">     227</span>              :      * As other write() method with additional listener for</span>
+<span id="L228"><span class="lineNum">     228</span>              :      * callbacks once sent.</span>
+<span id="L229"><span class="lineNum">     229</span>              :      */</span>
+<span id="L230"><span class="lineNum">     230</span>              :     virtual ErrorCode write(CANFrame const&amp; frame, ICANFrameSentListener&amp; listener) = 0;</span>
+<span id="L231"><span class="lineNum">     231</span>              : </span>
+<span id="L232"><span class="lineNum">     232</span>              :     /**</span>
+<span id="L233"><span class="lineNum">     233</span>              :      * Adds an ICANFrameListener to listener list</span>
+<span id="L234"><span class="lineNum">     234</span>              :      * \param   canFrameListener    listener to register</span>
+<span id="L235"><span class="lineNum">     235</span>              :      *</span>
+<span id="L236"><span class="lineNum">     236</span>              :      * This method might contains a critical section and uses Suspend-/ResumeOSInterrupts.</span>
+<span id="L237"><span class="lineNum">     237</span>              :      *</span>
+<span id="L238"><span class="lineNum">     238</span>              :      * \attention</span>
+<span id="L239"><span class="lineNum">     239</span>              :      * The filter of canFrameListener shall be merged into the transceivers rx-filter.</span>
+<span id="L240"><span class="lineNum">     240</span>              :      * It must be configured before adding the listener!</span>
+<span id="L241"><span class="lineNum">     241</span>              :      */</span>
+<span id="L242"><span class="lineNum">     242</span>              :     virtual void addCANFrameListener(ICANFrameListener&amp; listener) = 0;</span>
+<span id="L243"><span class="lineNum">     243</span>              : </span>
+<span id="L244"><span class="lineNum">     244</span>              :     /**</span>
+<span id="L245"><span class="lineNum">     245</span>              :      * Adds a listener to the front of the receiver list.</span>
+<span id="L246"><span class="lineNum">     246</span>              :      * \see addCANFrameListener</span>
+<span id="L247"><span class="lineNum">     247</span>              :      * Using this method makes sure that the added listener is notified first</span>
+<span id="L248"><span class="lineNum">     248</span>              :      * of a incoming CANFrame.</span>
+<span id="L249"><span class="lineNum">     249</span>              :      */</span>
+<span id="L250"><span class="lineNum">     250</span>              :     virtual void addVIPCANFrameListener(ICANFrameListener&amp; listener) = 0;</span>
+<span id="L251"><span class="lineNum">     251</span>              : </span>
+<span id="L252"><span class="lineNum">     252</span>              :     /**</span>
+<span id="L253"><span class="lineNum">     253</span>              :      * Removes an ICANFrameListener from listener list</span>
+<span id="L254"><span class="lineNum">     254</span>              :      * \param   canFrameListener    listener to remove</span>
+<span id="L255"><span class="lineNum">     255</span>              :      *</span>
+<span id="L256"><span class="lineNum">     256</span>              :      * This method might contain a critical section and uses Suspend-/ResumeOSInterrupts.</span>
+<span id="L257"><span class="lineNum">     257</span>              :      *</span>
+<span id="L258"><span class="lineNum">     258</span>              :      * \attention</span>
+<span id="L259"><span class="lineNum">     259</span>              :      * The elements of canFrameListeners filter will not be removed from</span>
+<span id="L260"><span class="lineNum">     260</span>              :      * the transceivers rx-filter.</span>
+<span id="L261"><span class="lineNum">     261</span>              :      */</span>
+<span id="L262"><span class="lineNum">     262</span>              :     virtual void removeCANFrameListener(ICANFrameListener&amp; listener) = 0;</span>
+<span id="L263"><span class="lineNum">     263</span>              : </span>
+<span id="L264"><span class="lineNum">     264</span>              :     /**</span>
+<span id="L265"><span class="lineNum">     265</span>              :      * \return  busId of transceiver</span>
+<span id="L266"><span class="lineNum">     266</span>              :      */</span>
+<span id="L267"><span class="lineNum">     267</span>              :     virtual uint8_t getBusId() const = 0;</span>
+<span id="L268"><span class="lineNum">     268</span>              : </span>
+<span id="L269"><span class="lineNum">     269</span>              :     /**</span>
+<span id="L270"><span class="lineNum">     270</span>              :      * adds an addCANFrameSentListener to listener list</span>
+<span id="L271"><span class="lineNum">     271</span>              :      * \param    listener    listener to register</span>
+<span id="L272"><span class="lineNum">     272</span>              :      *</span>
+<span id="L273"><span class="lineNum">     273</span>              :      * \attention</span>
+<span id="L274"><span class="lineNum">     274</span>              :      * The filter of listener is merged into the transceivers rx-filter.</span>
+<span id="L275"><span class="lineNum">     275</span>              :      * It must be configured before adding the listener!</span>
+<span id="L276"><span class="lineNum">     276</span>              :      */</span>
+<span id="L277"><span class="lineNum">     277</span>              :     virtual void addCANFrameSentListener(IFilteredCANFrameSentListener&amp; listener) = 0;</span>
+<span id="L278"><span class="lineNum">     278</span>              : </span>
+<span id="L279"><span class="lineNum">     279</span>              :     /**</span>
+<span id="L280"><span class="lineNum">     280</span>              :      * removes an ICANFrameListener from listener list</span>
+<span id="L281"><span class="lineNum">     281</span>              :      * \param    listener    listener to remove</span>
+<span id="L282"><span class="lineNum">     282</span>              :      *</span>
+<span id="L283"><span class="lineNum">     283</span>              :      * \note</span>
+<span id="L284"><span class="lineNum">     284</span>              :      * The elements of listener filter will not be removed from</span>
+<span id="L285"><span class="lineNum">     285</span>              :      * the transceivers rx-filter.</span>
+<span id="L286"><span class="lineNum">     286</span>              :      */</span>
+<span id="L287"><span class="lineNum">     287</span>              :     virtual void removeCANFrameSentListener(IFilteredCANFrameSentListener&amp; listener) = 0;</span>
+<span id="L288"><span class="lineNum">     288</span>              : </span>
+<span id="L289"><span class="lineNum">     289</span>              :     /**</span>
+<span id="L290"><span class="lineNum">     290</span>              :      * Get the hardware state of the CAN transceiver.</span>
+<span id="L291"><span class="lineNum">     291</span>              :      * \return  state   hardware state of the CAN transceiver</span>
+<span id="L292"><span class="lineNum">     292</span>              :      */</span>
+<span id="L293"><span class="lineNum">     293</span>              :     virtual ICANTransceiverStateListener::CANTransceiverState getCANTransceiverState() const = 0;</span>
+<span id="L294"><span class="lineNum">     294</span>              : </span>
+<span id="L295"><span class="lineNum">     295</span>              :     /**</span>
+<span id="L296"><span class="lineNum">     296</span>              :      * Sets the transceivers ICANTransceiverStateListener.</span>
+<span id="L297"><span class="lineNum">     297</span>              :      * \param   pListener   ICANTransceiverStateListener to notify when an error</span>
+<span id="L298"><span class="lineNum">     298</span>              :      * occurs.</span>
+<span id="L299"><span class="lineNum">     299</span>              :      */</span>
+<span id="L300"><span class="lineNum">     300</span>              :     virtual void setStateListener(ICANTransceiverStateListener&amp; listener) = 0;</span>
+<span id="L301"><span class="lineNum">     301</span>              : </span>
+<span id="L302"><span class="lineNum">     302</span>              :     virtual void removeStateListener() = 0;</span>
+<span id="L303"><span class="lineNum">     303</span>              : };</span>
+<span id="L304"><span class="lineNum">     304</span>              : </span>
+<span id="L305"><span class="lineNum">     305</span>              : } // namespace can</span>
+        </pre>
+              </td>
+            </tr>
+          </table>
+          <br>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="ruler"><img src="../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+            <tr><td class="versionInfo">Generated by: <a href="https://github.com//linux-test-project/lcov" target="_parent">LCOV version 2.0-1</a></td></tr>
+          </table>
+          <br>
+
+</body>
+</html>

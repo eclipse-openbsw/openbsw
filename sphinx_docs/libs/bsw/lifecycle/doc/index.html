@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="EclipseOpenBSWDocumentation" name="dox_trace_storage" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>lifecycle - App Lifecycle Management &mdash; Eclipse OpenBSW Documentation  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/rtd_theme_overrides.css?v=6fd0d55b" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=eafc0fe6" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/colors.css?v=3cafd8aa" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/colored_table.css?v=34b816d5" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/header.css?v=e632285e" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/dox_util_colors.css?v=dd14b177" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/dox_trace.css?v=60d3f72c" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../../../../_static/copybutton.js?v=f281be69"></script>
+        <script src="../../../../_static/dox_trace.js?v=40719b51"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="logger - Logger module" href="../../logger/doc/index.html" />
+    <link rel="prev" title="io::VariantQueue" href="../../io/doc/user/variant_queue.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../doc/dev/index.html" class="icon icon-home">
+            Eclipse OpenBSW Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Learning</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/learning/overview.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/learning/SysTest/HW_Testing_Guide.html">Hardware Testing Guide</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guidelines</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/guidelines/conventions/index.html">Coding Conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/guidelines/practices.html">Coding Practices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/guidelines/formatting/index.html">Formatting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/guidelines/unittests.html">Unit Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/guidelines/module.html">Module Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/guidelines/documentation.html">Module Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/guidelines/diagrams.html">Diagrams</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/guidelines/3rdparty.html">Third Party Libraries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/guidelines/commit_message.html">Commit Message</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/guidelines/pull_request.html">Pull Request</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Platforms</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/platforms/posix/index.html">POSIX</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/platforms/s32k148evb/index.html">S32K148 Evaluation Board</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Features</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/features/storage.html">Persistent Storage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/features/functional_safety.html">Functional Safety</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Software Modules</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../doc/dev/modules/common.html">Common</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../../doc/dev/modules/common.html#bsw">BSW</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../async/doc/index.html">async - Asynchronous Execution Interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../asyncConsole/doc/index.html">asyncConsole - Asynchronous Console</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../asyncFreeRtos/doc/index.html">asyncFreeRtos</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../asyncImpl/doc/index.html">asyncImpl</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../bsp/doc/index.html">bsp</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../common/doc/index.html">common</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cpp2can/doc/index.html">cpp2can - CAN Abstraction Layer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cpp2ethernet/doc/index.html">cpp2ethernet - Ethernet Abstractions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../docan/doc/index.html">docan - Diagnostics over CAN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../doip/doc/index.html">doip - Diagnostics Over IP</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../io/doc/index.html">io - IO Library</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">lifecycle - App Lifecycle Management</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#application-lifecycle">Application Lifecycle</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#asynchronous-state-transitions">Asynchronous State Transitions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lifecycle-manager">Lifecycle Manager</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sleep-wakeup">Sleep/Wakeup</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lifecycle-logger">Lifecycle Logger</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lifecycle-listener">Lifecycle Listener</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#code-example">Code Example</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#simplified-sequence-diagram">Simplified Sequence Diagram</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#detailed-sequence-diagram">Detailed Sequence Diagram</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../logger/doc/index.html">logger - Logger module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../loggerIntegration/doc/index.html">loggerIntegration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lwipSocket/doc/index.html">lwipSocket - LwIP v2 Socket Abstraction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../middleware/doc/index.html">middleware</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../platform/doc/index.html">platform - Platform Library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../runtime/doc/index.html">runtime</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../stdioConsoleInput/doc/index.html">stdioConsoleInput</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../storage/doc/index.html">storage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../timer/doc/index.html">timer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../transport/doc/index.html">transport - Transport Library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../transportRouterSimple/doc/index.html">transportRouterSimple</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../uds/doc/index.html">uds - Unified Diagnostic Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../util/doc/index.html">util</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../doc/dev/modules/common.html#bsp">BSP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../doc/dev/modules/common.html#safety">Safety</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/modules/posix.html">Posix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/modules/s32k1xx.html">S32K1xx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/modules/executables.html">Executables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/modules/mocks.html">Mocks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tools/UdsTool/doc/index.html">UdsTool</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tools/puncover_tool/doc/index.html">Puncover</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../doc/dev/index.html">Eclipse OpenBSW Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../doc/dev/index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../../../doc/dev/modules/common.html">Common</a> &raquo;</li>
+        
+        <li>lifecycle - App Lifecycle Management</li>
+    
+
+    
+
+      <li class="wy-breadcrumbs-aside">
+
+        <!-- DOCUMENT STATUS -->
+
+        
+
+        <!-- DATA CLASSIFICATION -->
+
+        
+
+      </li>
+
+    
+  </ul>
+
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="lifecycle-app-lifecycle-management">
+<span id="lifecycle"></span><h1>lifecycle - App Lifecycle Management<a class="headerlink" href="#lifecycle-app-lifecycle-management" title="Link to this heading"></a></h1>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<p>This module provides classes and interfaces that allow the user to define and execute the lifecycle of an application.</p>
+</section>
+<section id="application-lifecycle">
+<h2>Application Lifecycle<a class="headerlink" href="#application-lifecycle" title="Link to this heading"></a></h2>
+<p>An application running on a core usually depends on several services like an ethernet stack and other buses, a logger, a non volatile storage among others.</p>
+<p>Each of these services as well as the application itself will at some point be initialized, run and eventually shut down. For each service a <code class="docutils literal notranslate"><span class="pre">LifecycleComponent</span></code> can be created that controls this service. The <code class="docutils literal notranslate"><span class="pre">LifecycleManager</span></code> is there to make sure these transitions are performed on the lifecycle components.</p>
+<p>Usually the lifecycle needs to process in a certain order. First the hardware has to be initialized, then logging or networking, and finally the application itself is run.</p>
+<a class="reference internal image-reference" href="../../../../_images/lifecycle.drawio.png"><img alt="Component Stack" src="../../../../_images/lifecycle.drawio.png" style="width: 271px;" /></a>
+<p>In order to model simple dependencies between services each lifecycle component is assigned a runlevel at which it shall be initialized, run, or shut down. During startup the lifecycle manager goes through all runlevels in ascending order. At each runlevel, first all its components are initialized, and then all its components are run. During shutdown components are shut down in reverse, i. e. in descending order of their runlevels. Note that even if a component is shut down and run again by a sequence of calls to <code class="docutils literal notranslate"><span class="pre">transitionToLevel()</span></code>, each component is initialized at most once by the lifecycle manager the first time its run level is reached.</p>
+</section>
+<section id="asynchronous-state-transitions">
+<h2>Asynchronous State Transitions<a class="headerlink" href="#asynchronous-state-transitions" title="Link to this heading"></a></h2>
+<p>A component implementing <code class="docutils literal notranslate"><span class="pre">LifecycleComponent</span></code> must provide implementations for the three state transition functions <code class="docutils literal notranslate"><span class="pre">init()</span></code>, <code class="docutils literal notranslate"><span class="pre">run()</span></code> and <code class="docutils literal notranslate"><span class="pre">shutdown()</span></code>. After registering a lifecycle component to the lifecycle manager, the lifecycle manager will make sure that these are executed at the appropriate time.</p>
+<p>At the end of each state transition implementation the method <code class="docutils literal notranslate"><span class="pre">LifecycleComponent::transitionDone()</span></code> must be called to tell the lifecycle manager that the component has completed its transition. This explicit callback allows the implementation to schedule asynchronous operations from within a transition and return early, as long as the asynchronous operation eventually calls <code class="docutils literal notranslate"><span class="pre">transitionDone()</span></code>.</p>
+<p>All transitions are scheduled asynchronously by the lifecycle manager. For this an implementer of <code class="docutils literal notranslate"><span class="pre">LifecycleComponent</span></code> must also provide an implementation of <code class="docutils literal notranslate"><span class="pre">getTransitionContext()</span></code> that specifies in which async context to execute which transition. For convenience there are several derived classes that should be used as a base for implementing a lifecycle component. They handle the most common use cases and implement <code class="docutils literal notranslate"><span class="pre">getTransitionContext()</span></code> accordingly.</p>
+<p>In the simplest case, e. g. when using the <code class="docutils literal notranslate"><span class="pre">SimpleLifecycleComponent</span></code>, transitions are scheduled in the same context as the lifecycle manager itself.</p>
+<p>The classes <code class="docutils literal notranslate"><span class="pre">SingleContextLifecycle</span></code> in <code class="highlight highlight-source docutils literal notranslate"><span class="pre">include/lifecycle/SingleContextLifecycleComponent.h</span></code> and <code class="docutils literal notranslate"><span class="pre">AsyncLifecycleComponent</span></code> in <code class="highlight highlight-source docutils literal notranslate"><span class="pre">include/lifecycle/AsyncLifecycleComponent.h</span></code> allow the implementer to specify a context in which to schedule the transitions, or even different contexts for each transition type, respectively.</p>
+<p>A small sample lifecycle component could look like this:</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="c1">// #include &lt;lifecycle/SingleContextLifecycleComponent.h&gt;</span>
+<span class="c1">// #include &lt;async/Types.h&gt;</span>
+
+<span class="k">namespace</span><span class="w"> </span><span class="nn">lifecycle</span>
+<span class="p">{</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ComponentA</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="o">::</span><span class="n">lifecycle</span><span class="o">::</span><span class="n">SingleContextLifecycleComponent</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="c1">// Inheriting from `SingleContextLifecycleComponent` makes all transitions be</span>
+<span class="w">    </span><span class="c1">// scheduled within the same `context`.</span>
+<span class="w">    </span><span class="k">explicit</span><span class="w"> </span><span class="n">ComponentA</span><span class="p">(</span><span class="o">::</span><span class="n">async</span><span class="o">::</span><span class="n">ContextType</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">context</span><span class="p">)</span>
+<span class="w">    </span><span class="o">:</span><span class="w"> </span><span class="o">::</span><span class="n">lifecycle</span><span class="o">::</span><span class="n">SingleContextLifecycleComponent</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{}</span>
+
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">init</span><span class="p">()</span><span class="w"> </span><span class="k">override</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// Perform component specific initialization. Will only be called when this component&#39;s</span>
+<span class="w">        </span><span class="c1">// runlevel is first reached.</span>
+
+<span class="w">        </span><span class="n">transitionDone</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">run</span><span class="p">()</span><span class="w"> </span><span class="k">override</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// Perform tasks to run the component.</span>
+
+<span class="w">        </span><span class="n">transitionDone</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">shutdown</span><span class="p">()</span><span class="w"> </span><span class="k">override</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// Perform shutdown sequence of the component.</span>
+
+<span class="w">        </span><span class="n">transitionDone</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</section>
+<section id="lifecycle-manager">
+<h2>Lifecycle Manager<a class="headerlink" href="#lifecycle-manager" title="Link to this heading"></a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">LifecycleManager</span></code> in <code class="highlight highlight-source docutils literal notranslate"><span class="pre">include/lifecycle/LifecycleManager.h</span></code> is the central piece of the lifecycle module. It stores the component registry and triggers initialization, running, and shutdown of these components. It is declared using a <code class="docutils literal notranslate"><span class="pre">declare::LifecycleManager</span></code> with static capacities of components, runlevels, and components per runlevel, and a system time callback.</p>
+<p>Components can be added via <code class="docutils literal notranslate"><span class="pre">addComponent()</span></code>. The function <code class="docutils literal notranslate"><span class="pre">transitionToLevel()</span></code> will initialize and then run all components in each runlevel, up to the target level. Or, if a lower level is targeted for a transition, all components in levels above the target level are shut down, in descending order of their runlevel.</p>
+</section>
+<section id="sleep-wakeup">
+<h2>Sleep/Wakeup<a class="headerlink" href="#sleep-wakeup" title="Link to this heading"></a></h2>
+<p>Sometimes the ECU needs to be suspended, i. e. go to sleep and temporarily cease its function but not be completely shut down. To achieve this, the <code class="docutils literal notranslate"><span class="pre">init()</span></code> and <code class="docutils literal notranslate"><span class="pre">run()</span></code> methods behave differently with respect to <code class="docutils literal notranslate"><span class="pre">transitionToLevel()</span></code>. The <code class="docutils literal notranslate"><span class="pre">init()</span></code> method of a lifecycle component is only ever called once when the lifecycle component’s runlevel is reached from a lower level, whereas <code class="docutils literal notranslate"><span class="pre">run()</span></code> is called every time the lifecycle component’s runlevel is reached from a lower level.</p>
+<p>The lifecycle component can thus implement the <code class="docutils literal notranslate"><span class="pre">run()</span></code> and <code class="docutils literal notranslate"><span class="pre">shutdown()</span></code> methods to be complementary to each other, so as to start and stop the functionality, respectively. The <code class="docutils literal notranslate"><span class="pre">init()</span></code> method however should perform the more fundamental initialization that is not to be redone everytime the lifecycle component is suspended or woken up.</p>
+<p>This also implies that if any sleep/wakeup runlevel transition is desired then <code class="docutils literal notranslate"><span class="pre">shutdown()</span></code> should not undo the work done in <code class="docutils literal notranslate"><span class="pre">init()</span></code>, since <code class="docutils literal notranslate"><span class="pre">init()</span></code> will not be called again.</p>
+</section>
+<section id="lifecycle-logger">
+<h2>Lifecycle Logger<a class="headerlink" href="#lifecycle-logger" title="Link to this heading"></a></h2>
+<p>The logging component <code class="docutils literal notranslate"><span class="pre">::util::logger::LIFECYCLE</span></code> can be used to perform lifecycle transition logging.</p>
+</section>
+<section id="lifecycle-listener">
+<h2>Lifecycle Listener<a class="headerlink" href="#lifecycle-listener" title="Link to this heading"></a></h2>
+<p>In the LifecycleManager there are methods <code class="docutils literal notranslate"><span class="pre">addLifecycleListener()</span></code> and <code class="docutils literal notranslate"><span class="pre">removeLifecycleListener()</span></code> to add and remove listeners implementing <cite>ILifecycleListener</cite> from <code class="highlight highlight-source docutils literal notranslate"><span class="pre">include/lifecycle/ILifecycleListener.h</span></code>. Each listener will be notified when a transition has happened.</p>
+</section>
+<section id="code-example">
+<h2>Code Example<a class="headerlink" href="#code-example" title="Link to this heading"></a></h2>
+<p>An example application lifecycle is demonstrated in the following code snippet. The <code class="docutils literal notranslate"><span class="pre">LifecycleManager</span></code> itself is scheduled within the <code class="docutils literal notranslate"><span class="pre">managerContext</span></code>. There are three lifecycle components. <code class="docutils literal notranslate"><span class="pre">ComponentA</span></code> runs its transitions in the <code class="docutils literal notranslate"><span class="pre">ethernetContext</span></code> and <code class="docutils literal notranslate"><span class="pre">ComponentB</span></code> in the <code class="docutils literal notranslate"><span class="pre">diagnosisContext</span></code>, both are in runlevel 1. There is also <code class="docutils literal notranslate"><span class="pre">ComponentC</span></code> in runlevel 2, its transitions running also in the <code class="docutils literal notranslate"><span class="pre">ethernetcontext</span></code>. The lifecycle first transitions from runlevel 0 to 2, then back to runlevel 1, and then eventually from 2 to 0 again.</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="c1">// #include &lt;lifecycle/LifecycleManager.h&gt;</span>
+<span class="c1">// #include &lt;async/Types.h&gt;</span>
+
+<span class="o">::</span><span class="n">async</span><span class="o">::</span><span class="n">ContextType</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">managerContext</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="o">::</span><span class="n">async</span><span class="o">::</span><span class="n">ContextType</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">ethernetContext</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+<span class="o">::</span><span class="n">async</span><span class="o">::</span><span class="n">ContextType</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">diagnosisContext</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+
+<span class="kt">size_t</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">MAX_NUM_COMPONENTS</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">;</span>
+<span class="kt">size_t</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">MAX_NUM_LEVELS</span><span class="w">               </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
+<span class="kt">size_t</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">MAX_NUM_COMPONENTS_PER_LEVEL</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
+<span class="o">::</span><span class="n">lifecycle</span><span class="o">::</span><span class="n">declare</span><span class="o">::</span>
+<span class="w">    </span><span class="n">LifecycleManager</span><span class="o">&lt;</span><span class="n">MAX_NUM_COMPONENTS</span><span class="p">,</span><span class="w"> </span><span class="n">MAX_NUM_LEVELS</span><span class="p">,</span><span class="w"> </span><span class="n">MAX_NUM_COMPONENTS_PER_LEVEL</span><span class="o">&gt;</span>
+<span class="w">        </span><span class="n">lifecycleManager</span><span class="p">(</span>
+<span class="w">            </span><span class="n">managerContext</span><span class="p">,</span>
+<span class="w">            </span><span class="o">::</span><span class="n">lifecycle</span><span class="o">::</span><span class="n">LifecycleManager</span><span class="o">::</span><span class="n">GetTimestampType</span><span class="o">::</span><span class="n">create</span><span class="o">&lt;&amp;</span><span class="n">getSystemTimeUs32Bit</span><span class="o">&gt;</span><span class="p">());</span>
+
+<span class="c1">// Transitions of components A and C are executed mutually exclusively.</span>
+<span class="n">ComponentA</span><span class="w"> </span><span class="nf">componentA</span><span class="p">(</span><span class="n">ethernetContext</span><span class="p">);</span>
+<span class="n">ComponentB</span><span class="w"> </span><span class="nf">componentB</span><span class="p">(</span><span class="n">diagnosisContext</span><span class="p">);</span>
+<span class="n">ComponentC</span><span class="w"> </span><span class="nf">componentC</span><span class="p">(</span><span class="n">ethernetContext</span><span class="p">);</span>
+
+<span class="c1">// Components A and B are at the same run level.</span>
+<span class="n">lifecycleManager</span><span class="p">.</span><span class="n">addComponent</span><span class="p">(</span><span class="s">&quot;component A&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">componentA</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+<span class="n">lifecycleManager</span><span class="p">.</span><span class="n">addComponent</span><span class="p">(</span><span class="s">&quot;component B&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">componentB</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+<span class="n">lifecycleManager</span><span class="p">.</span><span class="n">addComponent</span><span class="p">(</span><span class="s">&quot;component C&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">componentC</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">);</span>
+
+<span class="n">lifecycleManager</span><span class="p">.</span><span class="n">transitionToLevel</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span><span class="w"> </span><span class="c1">// `init()` then `run()` of all components are called</span>
+<span class="n">lifecycleManager</span><span class="p">.</span><span class="n">transitionToLevel</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span><span class="w"> </span><span class="c1">// `shutdown()` of C is called</span>
+<span class="n">lifecycleManager</span><span class="p">.</span><span class="n">transitionToLevel</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span><span class="w"> </span><span class="c1">// only `run()` of C is called, `init()` already called</span>
+<span class="n">lifecycleManager</span><span class="p">.</span><span class="n">transitionToLevel</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span><span class="w"> </span><span class="c1">// `shutdown()` is called on all components</span>
+</pre></div>
+</div>
+<section id="simplified-sequence-diagram">
+<h3>Simplified Sequence Diagram<a class="headerlink" href="#simplified-sequence-diagram" title="Link to this heading"></a></h3>
+<p>The sequence diagram of its complete lifecycle where most of the asynchronicity is simplified is as follows:</p>
+<p class="plantuml">
+<a href="../../../../_images/plantuml-eb5686f03e27e50cb8101275456b4f0f82b47d95.png"><img src="../../../../_images/plantuml-eb5686f03e27e50cb8101275456b4f0f82b47d95.png" alt="participant App
+participant LifecycleManager as LM
+participant &quot;ComponentA [rl. 1]&quot; as A
+participant &quot;ComponentB [rl. 1]&quot; as B
+participant &quot;ComponentC [rl. 2]&quot; as C
+
+App -&gt;&gt; LM ++ : &lt;font color=blue&gt;&lt;b&gt;transitionToLevel(2)&lt;/b&gt;&lt;/font&gt;
+par
+    LM -&gt; A ++ : init()
+    LM &lt;- A -- : transitionDone()
+    else
+    LM -&gt; B ++ : init()
+    LM &lt;- B -- : transitionDone()
+end
+== All runlevel 1 init() tasks are completed ==
+par
+    LM -&gt; A ++ : run()
+    LM &lt;- A -- : transitionDone()
+    else
+    LM -&gt; B ++ : run()
+    LM &lt;- B -- : transitionDone()
+end
+== All runlevel 1 run() tasks are completed, runlevel 1 reached ==
+LM -&gt; C ++ : init()
+LM &lt;- C -- : transitionDone()
+== All runlevel 2 init() tasks are completed ==
+LM -&gt; C ++ : run()
+LM &lt;- C -- : transitionDone()
+== All runlevel 2 run() tasks are completed, runlevel 2 reached, nothing to be done ==
+App &lt;-[hidden]- LM -- :
+
+App -&gt;&gt; LM ++ : &lt;font color=blue&gt;&lt;b&gt;transitionToLevel(1)&lt;/b&gt;&lt;/font&gt;
+LM -&gt; C ++ : shutdown()
+LM &lt;- C -- : transitionDone()
+== All runlevel 2 shutdown() tasks are completed, runlevel 1 reached, nothing to be done ==
+App &lt;-[hidden]- LM -- :
+
+App -&gt;&gt; LM ++ : &lt;font color=blue&gt;&lt;b&gt;transitionToLevel(2)&lt;/b&gt;&lt;/font&gt;
+== Runlevel 2 has been reached before, no need to call init() again ==
+LM -&gt; C ++ : run()
+LM &lt;- C -- : transitionDone()
+== All runlevel 2 run() tasks are completed, runlevel 2 reached, nothing to be done ==
+App &lt;-[hidden]- LM -- :
+
+App -&gt;&gt; LM ++ : &lt;font color=blue&gt;&lt;b&gt;transitionToLevel(0)&lt;/b&gt;&lt;/font&gt;
+LM -&gt; C ++ : shutdown()
+LM &lt;- C -- : transitionDone()
+== All runlevel 2 shutdown() tasks are completed, runlevel 1 reached ==
+par
+    LM -&gt; A ++ : shutdown()
+    LM &lt;- A -- : transitionDone()
+    else
+    LM -&gt; B ++ : shutdown()
+    LM &lt;- B -- : transitionDone()
+end
+== All runlevel 1 shutdown() tasks are completed, runlevel 0 reached, nothing to be done ==
+App &lt;-[hidden]- LM -- :" style="width: 751.0px; height: 1391.0px"/></a>
+</p>
+</section>
+<section id="detailed-sequence-diagram">
+<h3>Detailed Sequence Diagram<a class="headerlink" href="#detailed-sequence-diagram" title="Link to this heading"></a></h3>
+<p>The detailed sequence diagram for the first <code class="docutils literal notranslate"><span class="pre">init()</span></code> transitions only with asynchronous calls explicitly displayed is as follows:</p>
+<p class="plantuml">
+<a href="../../../../_images/plantuml-8fdd13c1cedaad5c7c4722d7e4980f084b1be771.png"><img src="../../../../_images/plantuml-8fdd13c1cedaad5c7c4722d7e4980f084b1be771.png" alt="participant App
+participant LifecycleManager as LM
+participant Async as AS
+participant &quot;LifecycleManager:managerContext&quot; as MC #yellow
+participant &quot;ComponentA:ethernetContext&quot; as A #lightgreen
+participant &quot;ComponentB:diagnosisContext&quot; as B #pink
+
+activate AS
+
+App -&gt; LM ++ : transitionToLevel(2)
+
+LM -&gt; AS ++ #yellow : schedule(:managerContext, LifecycleManager)
+LM &lt;-- AS -- :
+App &lt;-- LM --
+
+AS -&gt; MC ++ #yellow : run(:managerContext, LifecycleManager)
+== Runlevel 1 init() tasks need to be scheduled ==
+AS &lt;- MC ++ #lightgreen : schedule(:ethernetContext, ComponentA::init())
+AS --&gt; MC -- :
+AS &lt;- MC ++ #pink : schedule(:diagnosisContext, ComponentB::init())
+AS --&gt; MC -- :
+AS &lt;-- MC -- : (run)
+
+par both init() transitions are executed. Since they were scheduled in different contexts they can run concurrently.
+
+    AS -&gt; A ++ #lightgreen : run(:ethernetContext, ComponentA::init())
+    LM &lt;- A ++ : transitionDone()
+    LM -&gt;&gt; AS ++ #yellow : schedule(:managerContext, LifecycleManager)
+    LM &lt;-- AS -- :
+    LM --&gt; A -- :
+    AS &lt;-- A -- : (run)
+
+else
+
+    AS -&gt; B ++ #pink : run(:diagnosisContext, ComponentB::init())
+    LM &lt;- B ++ : transitionDone()
+    LM -&gt;&gt; AS ++ #yellow : schedule(:managerContext, LifecycleManager)
+    LM &lt;-- AS -- :
+    LM --&gt; B -- :
+    AS &lt;-- B -- : (run)
+
+end
+
+AS -&gt; MC ++ #yellow : run(:managerContext, LifecycleManager)
+== All runlevel 1 init() tasks are completed, runlevel 1 run() tasks need to be scheduled next... ==" style="width: 1502.0px; height: 758.0px"/></a>
+</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026 Accenture.</p>
+  </div>
+
+  <div role="footer_string">
+    <p>Documentation from 2026-02-24 10:51:54, official build.</p>
+
+    
+      <a href="../../../../_sources/libs/bsw/lifecycle/doc/index.rst.txt" rel="nofollow"> View page source</a>
+    
+
+  </div>
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(false);
+      });
+  </script> 
+
+</body>
+</html>

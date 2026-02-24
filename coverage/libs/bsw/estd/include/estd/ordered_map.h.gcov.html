@@ -1,0 +1,1147 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - coverage.info - libs/bsw/estd/include/estd/ordered_map.h</title>
+  <link rel="stylesheet" type="text/css" href="../../../../../gcov.css">
+</head>
+
+<body>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="title">LCOV - code coverage report</td></tr>
+            <tr><td class="ruler"><img src="../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+            <tr>
+              <td width="100%">
+                <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="10%" class="headerValue"><a href="../../../../../index.html">top level</a> - <a href="index.html">libs/bsw/estd/include/estd</a> - ordered_map.h<span style="font-size: 80%;"> (source / <a href="ordered_map.h.func-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="5%"></td>
+            <td width="5%" class="headerCovTableHead">Coverage</td>
+            <td width="5%" class="headerCovTableHead" title="Covered + Uncovered code">Total</td>
+            <td width="5%" class="headerCovTableHead" title="Exercised code only">Hit</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">coverage.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntryLo">0.0&nbsp;%</td>
+            <td class="headerCovTableEntry">35</td>
+            <td class="headerCovTableEntry">0</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test Date:</td>
+            <td class="headerValue">2026-02-24 11:21:15</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntryLo">0.0&nbsp;%</td>
+            <td class="headerCovTableEntry">9</td>
+            <td class="headerCovTableEntry">0</td>
+          </tr>
+                  <tr><td><img src="../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr><td class="ruler"><img src="../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+          </table>
+
+          <table cellpadding=0 cellspacing=0 border=0>
+            <tr>
+              <td><br></td>
+            </tr>
+            <tr>
+              <td>
+<pre class="sourceHeading">            Line data    Source code</pre>
+<pre class="source">
+<span id="L1"><span class="lineNum">       1</span>              : // Copyright 2024 Accenture.</span>
+<span id="L2"><span class="lineNum">       2</span>              : </span>
+<span id="L3"><span class="lineNum">       3</span>              : /**</span>
+<span id="L4"><span class="lineNum">       4</span>              :  * Contains estd::ordered_map and estd::declare::ordered_map.</span>
+<span id="L5"><span class="lineNum">       5</span>              :  * \file</span>
+<span id="L6"><span class="lineNum">       6</span>              :  * \ingroup estl_containers</span>
+<span id="L7"><span class="lineNum">       7</span>              :  */</span>
+<span id="L8"><span class="lineNum">       8</span>              : #pragma once</span>
+<span id="L9"><span class="lineNum">       9</span>              : </span>
+<span id="L10"><span class="lineNum">      10</span>              : #include &quot;estd/constructor.h&quot;</span>
+<span id="L11"><span class="lineNum">      11</span>              : #include &quot;estd/vector.h&quot;</span>
+<span id="L12"><span class="lineNum">      12</span>              : #include &quot;util/estd/assert.h&quot;</span>
+<span id="L13"><span class="lineNum">      13</span>              : </span>
+<span id="L14"><span class="lineNum">      14</span>              : #include &lt;platform/estdint.h&gt;</span>
+<span id="L15"><span class="lineNum">      15</span>              : </span>
+<span id="L16"><span class="lineNum">      16</span>              : #include &lt;functional&gt;</span>
+<span id="L17"><span class="lineNum">      17</span>              : #include &lt;utility&gt;</span>
+<span id="L18"><span class="lineNum">      18</span>              : </span>
+<span id="L19"><span class="lineNum">      19</span>              : namespace estd</span>
+<span id="L20"><span class="lineNum">      20</span>              : {</span>
+<span id="L21"><span class="lineNum">      21</span>              : /**</span>
+<span id="L22"><span class="lineNum">      22</span>              :  * A C++ std::map like class implemented using a sorted vector.</span>
+<span id="L23"><span class="lineNum">      23</span>              :  *</span>
+<span id="L24"><span class="lineNum">      24</span>              :  * \section keys</span>
+<span id="L25"><span class="lineNum">      25</span>              :  * Two keys are considered equivalent if Compare returns false reflexively.</span>
+<span id="L26"><span class="lineNum">      26</span>              :  *</span>
+<span id="L27"><span class="lineNum">      27</span>              :  * \tparam  Key Key type of elements in this map.</span>
+<span id="L28"><span class="lineNum">      28</span>              :  * \tparam  T Type of data elements mapped to a key.</span>
+<span id="L29"><span class="lineNum">      29</span>              :  * \tparam  Compare Compare function object for type Key.</span>
+<span id="L30"><span class="lineNum">      30</span>              :  *</span>
+<span id="L31"><span class="lineNum">      31</span>              :  * \section ordered_map_memory_usage Memory Usage</span>
+<span id="L32"><span class="lineNum">      32</span>              :  *</span>
+<span id="L33"><span class="lineNum">      33</span>              :  * The memory usage in bytes for this ordered_map will be:</span>
+<span id="L34"><span class="lineNum">      34</span>              :  *</span>
+<span id="L35"><span class="lineNum">      35</span>              :  * &lt;b&gt;32 bit OS&lt;/b&gt;: N * (sizeof(Key) + sizeof(T)) + 20\n</span>
+<span id="L36"><span class="lineNum">      36</span>              :  * &lt;b&gt;64 bit OS&lt;/b&gt;: N * (sizeof(Key) + sizeof(T)) + 40</span>
+<span id="L37"><span class="lineNum">      37</span>              :  *</span>
+<span id="L38"><span class="lineNum">      38</span>              :  * \note It is possible there will be extra bytes used</span>
+<span id="L39"><span class="lineNum">      39</span>              :  *       for proper memory alignment depending on your compiler settings.</span>
+<span id="L40"><span class="lineNum">      40</span>              :  *</span>
+<span id="L41"><span class="lineNum">      41</span>              :  *</span>
+<span id="L42"><span class="lineNum">      42</span>              :  */</span>
+<span id="L43"><span class="lineNum">      43</span>              : template&lt;class Key, class T, class Compare = std::less&lt;Key&gt;&gt;</span>
+<span id="L44"><span class="lineNum">      44</span>              : class ordered_map</span>
+<span id="L45"><span class="lineNum">      45</span>              : {</span>
+<span id="L46"><span class="lineNum">      46</span>              : public:</span>
+<span id="L47"><span class="lineNum">      47</span>              :     /** The template parameter Key */</span>
+<span id="L48"><span class="lineNum">      48</span>              :     using key_type        = Key;</span>
+<span id="L49"><span class="lineNum">      49</span>              :     /** The template parameter value */</span>
+<span id="L50"><span class="lineNum">      50</span>              :     using mapped_type     = T;</span>
+<span id="L51"><span class="lineNum">      51</span>              :     /** A pair of Key and Value */</span>
+<span id="L52"><span class="lineNum">      52</span>              :     using value_type      = std::pair&lt;Key const, T&gt;;</span>
+<span id="L53"><span class="lineNum">      53</span>              :     /** A function object to compare Key's */</span>
+<span id="L54"><span class="lineNum">      54</span>              :     using key_compare     = Compare;</span>
+<span id="L55"><span class="lineNum">      55</span>              :     /** A reference to a Key and Value */</span>
+<span id="L56"><span class="lineNum">      56</span>              :     using reference       = value_type&amp;;</span>
+<span id="L57"><span class="lineNum">      57</span>              :     /** A const reference to a Key and Value */</span>
+<span id="L58"><span class="lineNum">      58</span>              :     using const_reference = value_type const&amp;;</span>
+<span id="L59"><span class="lineNum">      59</span>              :     /** A pointer to a Key and Value */</span>
+<span id="L60"><span class="lineNum">      60</span>              :     using pointer         = value_type*;</span>
+<span id="L61"><span class="lineNum">      61</span>              :     /** A const pointer to a Key and Value */</span>
+<span id="L62"><span class="lineNum">      62</span>              :     using const_pointer   = value_type const*;</span>
+<span id="L63"><span class="lineNum">      63</span>              :     /** An unsigned integral type for sizes */</span>
+<span id="L64"><span class="lineNum">      64</span>              :     using size_type       = std::size_t;</span>
+<span id="L65"><span class="lineNum">      65</span>              :     /** A signed integral type */</span>
+<span id="L66"><span class="lineNum">      66</span>              :     using difference_type = std::ptrdiff_t;</span>
+<span id="L67"><span class="lineNum">      67</span>              : </span>
+<span id="L68"><span class="lineNum">      68</span>              :     /** A utility class predicate for comparing key and values */</span>
+<span id="L69"><span class="lineNum">      69</span>              :     class value_compare</span>
+<span id="L70"><span class="lineNum">      70</span>              :     {</span>
+<span id="L71"><span class="lineNum">      71</span>              :     private:</span>
+<span id="L72"><span class="lineNum">      72</span>              :         using container_type = ::estd::ordered_map&lt;Key, T, Compare&gt;;</span>
+<span id="L73"><span class="lineNum">      73</span>              : </span>
+<span id="L74"><span class="lineNum">      74</span>              :         Compare _valueComp;</span>
+<span id="L75"><span class="lineNum">      75</span>              : </span>
+<span id="L76"><span class="lineNum">      76</span>              :     public:</span>
+<span id="L77"><span class="lineNum">      77</span>              :         /** Creates a new value_compare class with the specified Compare object */</span>
+<span id="L78"><span class="lineNum">      78</span>              :         explicit value_compare(Compare c);</span>
+<span id="L79"><span class="lineNum">      79</span>              :         /** The return type of the predicate */</span>
+<span id="L80"><span class="lineNum">      80</span>              :         using result_type          = bool;</span>
+<span id="L81"><span class="lineNum">      81</span>              :         /** The first parameter type */</span>
+<span id="L82"><span class="lineNum">      82</span>              :         using first_argument_type  = container_type::value_type;</span>
+<span id="L83"><span class="lineNum">      83</span>              :         /** The second parameter type */</span>
+<span id="L84"><span class="lineNum">      84</span>              :         using second_argument_type = container_type::value_type;</span>
+<span id="L85"><span class="lineNum">      85</span>              : </span>
+<span id="L86"><span class="lineNum">      86</span>              :         /** Function overload, returns the result of the Compare instance */</span>
+<span id="L87"><span class="lineNum">      87</span>              :         bool operator()(first_argument_type const&amp; x, second_argument_type const&amp; y) const;</span>
+<span id="L88"><span class="lineNum">      88</span>              :     };</span>
+<span id="L89"><span class="lineNum">      89</span>              : </span>
+<span id="L90"><span class="lineNum">      90</span>              : private:</span>
+<span id="L91"><span class="lineNum">      91</span>              :     using data_type = vector&lt;value_type&gt;;</span>
+<span id="L92"><span class="lineNum">      92</span>              : </span>
+<span id="L93"><span class="lineNum">      93</span>              : public:</span>
+<span id="L94"><span class="lineNum">      94</span>              :     /** A random access iterator */</span>
+<span id="L95"><span class="lineNum">      95</span>              :     using iterator               = typename data_type::iterator;</span>
+<span id="L96"><span class="lineNum">      96</span>              :     /** A const random access iterator */</span>
+<span id="L97"><span class="lineNum">      97</span>              :     using const_iterator         = typename data_type::const_iterator;</span>
+<span id="L98"><span class="lineNum">      98</span>              :     /** A reverse random access iterator */</span>
+<span id="L99"><span class="lineNum">      99</span>              :     using reverse_iterator       = typename data_type::reverse_iterator;</span>
+<span id="L100"><span class="lineNum">     100</span>              :     /** A const reverse random access iterator */</span>
+<span id="L101"><span class="lineNum">     101</span>              :     using const_reverse_iterator = typename data_type::const_reverse_iterator;</span>
+<span id="L102"><span class="lineNum">     102</span>              : </span>
+<span id="L103"><span class="lineNum">     103</span>              :     ordered_map(ordered_map const&amp; other) = delete;</span>
+<span id="L104"><span class="lineNum">     104</span>              : </span>
+<span id="L105"><span class="lineNum">     105</span>              :     /**</span>
+<span id="L106"><span class="lineNum">     106</span>              :      * A simple destructor. This destructor does not call the contained</span>
+<span id="L107"><span class="lineNum">     107</span>              :      * object destructors. The derived declare class ordered_map will call the</span>
+<span id="L108"><span class="lineNum">     108</span>              :      * destructors.</span>
+<span id="L109"><span class="lineNum">     109</span>              :      *</span>
+<span id="L110"><span class="lineNum">     110</span>              :      * \see estd::declare::ordered_map</span>
+<span id="L111"><span class="lineNum">     111</span>              :      */</span>
+<span id="L112"><span class="lineNum">     112</span>              :     ~ordered_map() = default;</span>
+<span id="L113"><span class="lineNum">     113</span>              : </span>
+<span id="L114"><span class="lineNum">     114</span>              :     /**</span>
+<span id="L115"><span class="lineNum">     115</span>              :      * An assignment operator. Copies the elements from other into</span>
+<span id="L116"><span class="lineNum">     116</span>              :      * this ordered_map.</span>
+<span id="L117"><span class="lineNum">     117</span>              :      *</span>
+<span id="L118"><span class="lineNum">     118</span>              :      * \param other The other ordered map to copy.</span>
+<span id="L119"><span class="lineNum">     119</span>              :      * \return A reference to this.</span>
+<span id="L120"><span class="lineNum">     120</span>              :      */</span>
+<span id="L121"><span class="lineNum">     121</span>              :     ordered_map&amp; operator=(ordered_map const&amp; other);</span>
+<span id="L122"><span class="lineNum">     122</span>              : </span>
+<span id="L123"><span class="lineNum">     123</span>              :     /**</span>
+<span id="L124"><span class="lineNum">     124</span>              :      * Returns whether this container is empty or not.</span>
+<span id="L125"><span class="lineNum">     125</span>              :      */</span>
+<span id="L126"><span class="lineNum">     126</span>              :     bool empty() const;</span>
+<span id="L127"><span class="lineNum">     127</span>              : </span>
+<span id="L128"><span class="lineNum">     128</span>              :     /**</span>
+<span id="L129"><span class="lineNum">     129</span>              :      * Returns whether this container is full or not.</span>
+<span id="L130"><span class="lineNum">     130</span>              :      */</span>
+<span id="L131"><span class="lineNum">     131</span>              :     bool full() const;</span>
+<span id="L132"><span class="lineNum">     132</span>              : </span>
+<span id="L133"><span class="lineNum">     133</span>              :     /**</span>
+<span id="L134"><span class="lineNum">     134</span>              :      * Returns the current number of entries in this map.</span>
+<span id="L135"><span class="lineNum">     135</span>              :      */</span>
+<span id="L136"><span class="lineNum">     136</span>              :     size_type size() const;</span>
+<span id="L137"><span class="lineNum">     137</span>              : </span>
+<span id="L138"><span class="lineNum">     138</span>              :     /**</span>
+<span id="L139"><span class="lineNum">     139</span>              :      * Returns the maximum number of entries this map can hold.</span>
+<span id="L140"><span class="lineNum">     140</span>              :      */</span>
+<span id="L141"><span class="lineNum">     141</span>              :     size_type max_size() const;</span>
+<span id="L142"><span class="lineNum">     142</span>              : </span>
+<span id="L143"><span class="lineNum">     143</span>              :     /**</span>
+<span id="L144"><span class="lineNum">     144</span>              :      * Removes all elements from this ordered_map, destroying them and leaving this ordered_map's</span>
+<span id="L145"><span class="lineNum">     145</span>              :      * size at 0.</span>
+<span id="L146"><span class="lineNum">     146</span>              :      */</span>
+<span id="L147"><span class="lineNum">     147</span>              :     void clear();</span>
+<span id="L148"><span class="lineNum">     148</span>              : </span>
+<span id="L149"><span class="lineNum">     149</span>              :     /**</span>
+<span id="L150"><span class="lineNum">     150</span>              :      * Counts the number of elements with a key equal to a given key.</span>
+<span id="L151"><span class="lineNum">     151</span>              :      * \return  As all elements in this map are unique</span>
+<span id="L152"><span class="lineNum">     152</span>              :      * - 0 if none was found</span>
+<span id="L153"><span class="lineNum">     153</span>              :      * - 1 if one was found</span>
+<span id="L154"><span class="lineNum">     154</span>              :      */</span>
+<span id="L155"><span class="lineNum">     155</span>              :     size_type count(key_type const&amp; key) const;</span>
+<span id="L156"><span class="lineNum">     156</span>              : </span>
+<span id="L157"><span class="lineNum">     157</span>              :     /**</span>
+<span id="L158"><span class="lineNum">     158</span>              :      * Copies a given value to this map increasing the size of this</span>
+<span id="L159"><span class="lineNum">     159</span>              :      * container by one if the value did not exist in the map before.</span>
+<span id="L160"><span class="lineNum">     160</span>              :      *</span>
+<span id="L161"><span class="lineNum">     161</span>              :      * \return  Pair of iterator and bool</span>
+<span id="L162"><span class="lineNum">     162</span>              :      * - &lt;iterator, true&gt; if the element did not exist before, iterator to</span>
+<span id="L163"><span class="lineNum">     163</span>              :      * the inserted element.</span>
+<span id="L164"><span class="lineNum">     164</span>              :      * - &lt;iterator, false&gt; if the element did exist before, iterator to</span>
+<span id="L165"><span class="lineNum">     165</span>              :      * the previously inserted element.</span>
+<span id="L166"><span class="lineNum">     166</span>              :      */</span>
+<span id="L167"><span class="lineNum">     167</span>              :     std::pair&lt;iterator, bool&gt; insert(const_reference value);</span>
+<span id="L168"><span class="lineNum">     168</span>              : </span>
+<span id="L169"><span class="lineNum">     169</span>              :     /**</span>
+<span id="L170"><span class="lineNum">     170</span>              :      * Adds a new key to the map if the key does not already exist. The</span>
+<span id="L171"><span class="lineNum">     171</span>              :      * value is a default constructed T() object.</span>
+<span id="L172"><span class="lineNum">     172</span>              :      *</span>
+<span id="L173"><span class="lineNum">     173</span>              :      * \return  Pair of iterator and bool</span>
+<span id="L174"><span class="lineNum">     174</span>              :      * - &lt;iterator, true&gt; if the element did not exist before, iterator to</span>
+<span id="L175"><span class="lineNum">     175</span>              :      * the inserted element.</span>
+<span id="L176"><span class="lineNum">     176</span>              :      * - &lt;iterator, false&gt; if the element did exist before, iterator to</span>
+<span id="L177"><span class="lineNum">     177</span>              :      * the previously inserted element.</span>
+<span id="L178"><span class="lineNum">     178</span>              :      */</span>
+<span id="L179"><span class="lineNum">     179</span>              :     std::pair&lt;iterator, bool&gt; emplace(key_type const&amp; key);</span>
+<span id="L180"><span class="lineNum">     180</span>              : </span>
+<span id="L181"><span class="lineNum">     181</span>              :     /**</span>
+<span id="L182"><span class="lineNum">     182</span>              :      * Removes an element at a given position destroying it reducing the size of</span>
+<span id="L183"><span class="lineNum">     183</span>              :      * this ordered_map by one.</span>
+<span id="L184"><span class="lineNum">     184</span>              :      * \return  Iterator pointing to the position immediately following the element erased.</span>
+<span id="L185"><span class="lineNum">     185</span>              :      */</span>
+<span id="L186"><span class="lineNum">     186</span>              :     iterator erase(const_iterator position);</span>
+<span id="L187"><span class="lineNum">     187</span>              : </span>
+<span id="L188"><span class="lineNum">     188</span>              :     /**</span>
+<span id="L189"><span class="lineNum">     189</span>              :      * Removes elements with a given key k destroying them reducing the size of this</span>
+<span id="L190"><span class="lineNum">     190</span>              :      * ordered_map by one if an element with k existed.</span>
+<span id="L191"><span class="lineNum">     191</span>              :      * \return  Number of elements removed.</span>
+<span id="L192"><span class="lineNum">     192</span>              :      */</span>
+<span id="L193"><span class="lineNum">     193</span>              :     size_type erase(key_type const&amp; key);</span>
+<span id="L194"><span class="lineNum">     194</span>              : </span>
+<span id="L195"><span class="lineNum">     195</span>              :     /**</span>
+<span id="L196"><span class="lineNum">     196</span>              :      * Removes all elements within a given range [first, last), i.e. all elements including first</span>
+<span id="L197"><span class="lineNum">     197</span>              :      * but excluding last. All removed elements will be destroyed and the size of this ordered_map</span>
+<span id="L198"><span class="lineNum">     198</span>              :      * will be decreased by the number of elements removed. \return  Iterator pointing to the</span>
+<span id="L199"><span class="lineNum">     199</span>              :      * position immediately following the last of the elements erased.</span>
+<span id="L200"><span class="lineNum">     200</span>              :      */</span>
+<span id="L201"><span class="lineNum">     201</span>              :     iterator erase(const_iterator first, const_iterator last);</span>
+<span id="L202"><span class="lineNum">     202</span>              : </span>
+<span id="L203"><span class="lineNum">     203</span>              :     /**</span>
+<span id="L204"><span class="lineNum">     204</span>              :      * If k matches the key of an element in the container, returns a</span>
+<span id="L205"><span class="lineNum">     205</span>              :      * reference to its mapped value.</span>
+<span id="L206"><span class="lineNum">     206</span>              :      * If k does not match any element, inserts a new one with key k and</span>
+<span id="L207"><span class="lineNum">     207</span>              :      * returns a reference to it.</span>
+<span id="L208"><span class="lineNum">     208</span>              :      */</span>
+<span id="L209"><span class="lineNum">     209</span>              :     mapped_type&amp; operator[](key_type const&amp; key);</span>
+<span id="L210"><span class="lineNum">     210</span>              : </span>
+<span id="L211"><span class="lineNum">     211</span>              :     /**</span>
+<span id="L212"><span class="lineNum">     212</span>              :      * Returns a reference to the mapped value of the element identified</span>
+<span id="L213"><span class="lineNum">     213</span>              :      * with 'key'.</span>
+<span id="L214"><span class="lineNum">     214</span>              :      *</span>
+<span id="L215"><span class="lineNum">     215</span>              :      * \assert{if key does not match any element in the container.}</span>
+<span id="L216"><span class="lineNum">     216</span>              :      */</span>
+<span id="L217"><span class="lineNum">     217</span>              :     mapped_type&amp; at(key_type const&amp; key);</span>
+<span id="L218"><span class="lineNum">     218</span>              : </span>
+<span id="L219"><span class="lineNum">     219</span>              :     /**</span>
+<span id="L220"><span class="lineNum">     220</span>              :      * Returns a const reference to the mapped value of the element identified</span>
+<span id="L221"><span class="lineNum">     221</span>              :      * with 'key'.</span>
+<span id="L222"><span class="lineNum">     222</span>              :      *</span>
+<span id="L223"><span class="lineNum">     223</span>              :      * \assert{if key does not match any element in the container.}</span>
+<span id="L224"><span class="lineNum">     224</span>              :      */</span>
+<span id="L225"><span class="lineNum">     225</span>              :     mapped_type const&amp; at(key_type const&amp; key) const;</span>
+<span id="L226"><span class="lineNum">     226</span>              : </span>
+<span id="L227"><span class="lineNum">     227</span>              :     /**</span>
+<span id="L228"><span class="lineNum">     228</span>              :      * Searches this map for an element with a key equivalent to key and</span>
+<span id="L229"><span class="lineNum">     229</span>              :      * returns an iterator to it if found, otherwise it returns end().</span>
+<span id="L230"><span class="lineNum">     230</span>              :      */</span>
+<span id="L231"><span class="lineNum">     231</span>              :     iterator find(key_type const&amp; key);</span>
+<span id="L232"><span class="lineNum">     232</span>              : </span>
+<span id="L233"><span class="lineNum">     233</span>              :     /**</span>
+<span id="L234"><span class="lineNum">     234</span>              :      * Searches this map for an element with a key equivalent to key and</span>
+<span id="L235"><span class="lineNum">     235</span>              :      * returns a const iterator to it if found, otherwise it returns end().</span>
+<span id="L236"><span class="lineNum">     236</span>              :      */</span>
+<span id="L237"><span class="lineNum">     237</span>              :     const_iterator find(key_type const&amp; key) const;</span>
+<span id="L238"><span class="lineNum">     238</span>              : </span>
+<span id="L239"><span class="lineNum">     239</span>              :     /**</span>
+<span id="L240"><span class="lineNum">     240</span>              :      * Returns an iterator pointing to the first element in this map</span>
+<span id="L241"><span class="lineNum">     241</span>              :      * whose key is not considered to go before 'key' (i.e., either it is</span>
+<span id="L242"><span class="lineNum">     242</span>              :      * equivalent or goes after)</span>
+<span id="L243"><span class="lineNum">     243</span>              :      */</span>
+<span id="L244"><span class="lineNum">     244</span>              :     iterator lower_bound(key_type const&amp; key);</span>
+<span id="L245"><span class="lineNum">     245</span>              : </span>
+<span id="L246"><span class="lineNum">     246</span>              :     /**</span>
+<span id="L247"><span class="lineNum">     247</span>              :      * Returns a const iterator pointing to the first element in this map</span>
+<span id="L248"><span class="lineNum">     248</span>              :      * whose key is not considered to go before 'key' (i.e., either it is</span>
+<span id="L249"><span class="lineNum">     249</span>              :      * equivalent or goes after)</span>
+<span id="L250"><span class="lineNum">     250</span>              :      */</span>
+<span id="L251"><span class="lineNum">     251</span>              :     const_iterator lower_bound(key_type const&amp; key) const;</span>
+<span id="L252"><span class="lineNum">     252</span>              : </span>
+<span id="L253"><span class="lineNum">     253</span>              :     /**</span>
+<span id="L254"><span class="lineNum">     254</span>              :      * Returns an iterator pointing to the first element in this map</span>
+<span id="L255"><span class="lineNum">     255</span>              :      * whose key is considered to go after 'key'.</span>
+<span id="L256"><span class="lineNum">     256</span>              :      */</span>
+<span id="L257"><span class="lineNum">     257</span>              :     iterator upper_bound(key_type const&amp; key);</span>
+<span id="L258"><span class="lineNum">     258</span>              : </span>
+<span id="L259"><span class="lineNum">     259</span>              :     /**</span>
+<span id="L260"><span class="lineNum">     260</span>              :      * Returns a const iterator pointing to the first element in this map</span>
+<span id="L261"><span class="lineNum">     261</span>              :      * whose key is considered to go after 'key'.</span>
+<span id="L262"><span class="lineNum">     262</span>              :      */</span>
+<span id="L263"><span class="lineNum">     263</span>              :     const_iterator upper_bound(key_type const&amp; key) const;</span>
+<span id="L264"><span class="lineNum">     264</span>              : </span>
+<span id="L265"><span class="lineNum">     265</span>              :     /**</span>
+<span id="L266"><span class="lineNum">     266</span>              :      * Returns the bounds of a range that includes all the elements in</span>
+<span id="L267"><span class="lineNum">     267</span>              :      * this map which have a key equivalent to key.</span>
+<span id="L268"><span class="lineNum">     268</span>              :      */</span>
+<span id="L269"><span class="lineNum">     269</span>              :     std::pair&lt;iterator, iterator&gt; equal_range(key_type const&amp; key);</span>
+<span id="L270"><span class="lineNum">     270</span>              : </span>
+<span id="L271"><span class="lineNum">     271</span>              :     /**</span>
+<span id="L272"><span class="lineNum">     272</span>              :      * Returns the bounds of a range that includes all the elements in</span>
+<span id="L273"><span class="lineNum">     273</span>              :      * this map which have a key equivalent to key.</span>
+<span id="L274"><span class="lineNum">     274</span>              :      */</span>
+<span id="L275"><span class="lineNum">     275</span>              :     std::pair&lt;const_iterator, const_iterator&gt; equal_range(key_type const&amp; key) const;</span>
+<span id="L276"><span class="lineNum">     276</span>              : </span>
+<span id="L277"><span class="lineNum">     277</span>              :     /**</span>
+<span id="L278"><span class="lineNum">     278</span>              :      * Returns a copy of the key_compare object used by this map.</span>
+<span id="L279"><span class="lineNum">     279</span>              :      */</span>
+<span id="L280"><span class="lineNum">     280</span>              :     key_compare key_comp() const;</span>
+<span id="L281"><span class="lineNum">     281</span>              : </span>
+<span id="L282"><span class="lineNum">     282</span>              :     /**</span>
+<span id="L283"><span class="lineNum">     283</span>              :      * Returns a comparison object that can be used to compare two</span>
+<span id="L284"><span class="lineNum">     284</span>              :      * elements to get whether the key of the first one goes before</span>
+<span id="L285"><span class="lineNum">     285</span>              :      * the second. The arguments taken by this binary function object</span>
+<span id="L286"><span class="lineNum">     286</span>              :      * are of type value_type.</span>
+<span id="L287"><span class="lineNum">     287</span>              :      */</span>
+<span id="L288"><span class="lineNum">     288</span>              :     value_compare value_comp() const;</span>
+<span id="L289"><span class="lineNum">     289</span>              : </span>
+<span id="L290"><span class="lineNum">     290</span>              :     /** Returns an iterator to the beginning of the map */</span>
+<span id="L291"><span class="lineNum">     291</span>              :     iterator begin();</span>
+<span id="L292"><span class="lineNum">     292</span>              : </span>
+<span id="L293"><span class="lineNum">     293</span>              :     /** Returns a const iterator to the beginning of the map */</span>
+<span id="L294"><span class="lineNum">     294</span>              :     const_iterator begin() const;</span>
+<span id="L295"><span class="lineNum">     295</span>              : </span>
+<span id="L296"><span class="lineNum">     296</span>              :     /** Returns a const iterator to the beginning of the map */</span>
+<span id="L297"><span class="lineNum">     297</span>              :     const_iterator cbegin() const;</span>
+<span id="L298"><span class="lineNum">     298</span>              : </span>
+<span id="L299"><span class="lineNum">     299</span>              :     /** Returns an iterator to the end of the map */</span>
+<span id="L300"><span class="lineNum">     300</span>              :     iterator end();</span>
+<span id="L301"><span class="lineNum">     301</span>              : </span>
+<span id="L302"><span class="lineNum">     302</span>              :     /** Returns a const iterator to the end of the map */</span>
+<span id="L303"><span class="lineNum">     303</span>              :     const_iterator end() const;</span>
+<span id="L304"><span class="lineNum">     304</span>              : </span>
+<span id="L305"><span class="lineNum">     305</span>              :     /** Returns a const iterator to the end of the map */</span>
+<span id="L306"><span class="lineNum">     306</span>              :     const_iterator cend() const;</span>
+<span id="L307"><span class="lineNum">     307</span>              : </span>
+<span id="L308"><span class="lineNum">     308</span>              :     /**</span>
+<span id="L309"><span class="lineNum">     309</span>              :      * Returns a reverse iterator pointing to the last element in the map</span>
+<span id="L310"><span class="lineNum">     310</span>              :      * (i.e., its reverse beginning). Reverse iterators iterate backwards.</span>
+<span id="L311"><span class="lineNum">     311</span>              :      */</span>
+<span id="L312"><span class="lineNum">     312</span>              :     reverse_iterator rbegin();</span>
+<span id="L313"><span class="lineNum">     313</span>              : </span>
+<span id="L314"><span class="lineNum">     314</span>              :     /**</span>
+<span id="L315"><span class="lineNum">     315</span>              :      * Returns a reverse iterator pointing to the first element in the map</span>
+<span id="L316"><span class="lineNum">     316</span>              :      * (i.e., its reverse end). Reverse iterators iterate backwards.</span>
+<span id="L317"><span class="lineNum">     317</span>              :      */</span>
+<span id="L318"><span class="lineNum">     318</span>              :     reverse_iterator rend();</span>
+<span id="L319"><span class="lineNum">     319</span>              : </span>
+<span id="L320"><span class="lineNum">     320</span>              :     /**</span>
+<span id="L321"><span class="lineNum">     321</span>              :      * Returns a const reverse iterator pointing to the last element in the map</span>
+<span id="L322"><span class="lineNum">     322</span>              :      * (i.e., its reverse beginning). Reverse iterators iterate backwards.</span>
+<span id="L323"><span class="lineNum">     323</span>              :      */</span>
+<span id="L324"><span class="lineNum">     324</span>              :     const_reverse_iterator rbegin() const;</span>
+<span id="L325"><span class="lineNum">     325</span>              : </span>
+<span id="L326"><span class="lineNum">     326</span>              :     /**</span>
+<span id="L327"><span class="lineNum">     327</span>              :      * Returns a const reverse iterator pointing to the first element in the map</span>
+<span id="L328"><span class="lineNum">     328</span>              :      * (i.e., its reverse end). Reverse iterators iterate backwards.</span>
+<span id="L329"><span class="lineNum">     329</span>              :      */</span>
+<span id="L330"><span class="lineNum">     330</span>              :     const_reverse_iterator rend() const;</span>
+<span id="L331"><span class="lineNum">     331</span>              : </span>
+<span id="L332"><span class="lineNum">     332</span>              :     /**</span>
+<span id="L333"><span class="lineNum">     333</span>              :      * Returns a const reverse iterator pointing to the last element in the map</span>
+<span id="L334"><span class="lineNum">     334</span>              :      * (i.e., its reverse beginning). Reverse iterators iterate backwards.</span>
+<span id="L335"><span class="lineNum">     335</span>              :      */</span>
+<span id="L336"><span class="lineNum">     336</span>              :     const_reverse_iterator crbegin() const;</span>
+<span id="L337"><span class="lineNum">     337</span>              : </span>
+<span id="L338"><span class="lineNum">     338</span>              :     /**</span>
+<span id="L339"><span class="lineNum">     339</span>              :      * Returns a const reverse iterator pointing to the first element in the map</span>
+<span id="L340"><span class="lineNum">     340</span>              :      * (i.e., its reverse end). Reverse iterators iterate backwards.</span>
+<span id="L341"><span class="lineNum">     341</span>              :      */</span>
+<span id="L342"><span class="lineNum">     342</span>              :     const_reverse_iterator crend() const;</span>
+<span id="L343"><span class="lineNum">     343</span>              : </span>
+<span id="L344"><span class="lineNum">     344</span>              : protected:</span>
+<span id="L345"><span class="lineNum">     345</span>              :     /**</span>
+<span id="L346"><span class="lineNum">     346</span>              :      * Constructor to initialize this ordered_map with the actual data necessary.</span>
+<span id="L347"><span class="lineNum">     347</span>              :      * Used by the declare class.</span>
+<span id="L348"><span class="lineNum">     348</span>              :      *</span>
+<span id="L349"><span class="lineNum">     349</span>              :      * \param data The actual data for this ordered_map</span>
+<span id="L350"><span class="lineNum">     350</span>              :      * \param comp The comparison object for comparing keys</span>
+<span id="L351"><span class="lineNum">     351</span>              :      *</span>
+<span id="L352"><span class="lineNum">     352</span>              :      * \see estd::declare::ordered_map</span>
+<span id="L353"><span class="lineNum">     353</span>              :      */</span>
+<span id="L354"><span class="lineNum">     354</span>              :     ordered_map(data_type&amp; data, key_compare const&amp; comp);</span>
+<span id="L355"><span class="lineNum">     355</span>              : </span>
+<span id="L356"><span class="lineNum">     356</span>              : private:</span>
+<span id="L357"><span class="lineNum">     357</span>              :     size_type lower_bound_search(key_type const&amp; key) const;</span>
+<span id="L358"><span class="lineNum">     358</span>              :     size_type upper_bound_search(key_type const&amp; key) const;</span>
+<span id="L359"><span class="lineNum">     359</span>              :     value_type&amp; emplace_uninitialized(iterator pos);</span>
+<span id="L360"><span class="lineNum">     360</span>              :     bool key_eq(key_type const&amp; x, key_type const&amp; y) const;</span>
+<span id="L361"><span class="lineNum">     361</span>              : </span>
+<span id="L362"><span class="lineNum">     362</span>              :     data_type&amp; _values;</span>
+<span id="L363"><span class="lineNum">     363</span>              :     key_compare _comp;</span>
+<span id="L364"><span class="lineNum">     364</span>              : };</span>
+<span id="L365"><span class="lineNum">     365</span>              : </span>
+<span id="L366"><span class="lineNum">     366</span>              : /**</span>
+<span id="L367"><span class="lineNum">     367</span>              :  * Compares two ordered_maps and returns true if they are identical.</span>
+<span id="L368"><span class="lineNum">     368</span>              :  *</span>
+<span id="L369"><span class="lineNum">     369</span>              :  * Requires T to have operator== defined.</span>
+<span id="L370"><span class="lineNum">     370</span>              :  *</span>
+<span id="L371"><span class="lineNum">     371</span>              :  * \param lhs The left-hand side of the equality.</span>
+<span id="L372"><span class="lineNum">     372</span>              :  * \param rhs The right-hand side of the equality.</span>
+<span id="L373"><span class="lineNum">     373</span>              :  * \return</span>
+<span id="L374"><span class="lineNum">     374</span>              :  * - true if the ordered_maps are identical</span>
+<span id="L375"><span class="lineNum">     375</span>              :  * - false otherwise.</span>
+<span id="L376"><span class="lineNum">     376</span>              :  */</span>
+<span id="L377"><span class="lineNum">     377</span>              : template&lt;class Key, class T, class Compare&gt;</span>
+<span id="L378"><span class="lineNum">     378</span>              : bool operator==(ordered_map&lt;Key, T, Compare&gt; const&amp; lhs, ordered_map&lt;Key, T, Compare&gt; const&amp; rhs);</span>
+<span id="L379"><span class="lineNum">     379</span>              : /**</span>
+<span id="L380"><span class="lineNum">     380</span>              :  * Compares two ordered_maps and returns true if they are not identical.</span>
+<span id="L381"><span class="lineNum">     381</span>              :  *</span>
+<span id="L382"><span class="lineNum">     382</span>              :  * Requires T to have operator== defined.</span>
+<span id="L383"><span class="lineNum">     383</span>              :  *</span>
+<span id="L384"><span class="lineNum">     384</span>              :  * \param lhs The left-hand side of the equality.</span>
+<span id="L385"><span class="lineNum">     385</span>              :  * \param rhs The right-hand side of the equality.</span>
+<span id="L386"><span class="lineNum">     386</span>              :  * \return</span>
+<span id="L387"><span class="lineNum">     387</span>              :  * - true if the ordered_maps are not identical</span>
+<span id="L388"><span class="lineNum">     388</span>              :  * - false otherwise.</span>
+<span id="L389"><span class="lineNum">     389</span>              :  */</span>
+<span id="L390"><span class="lineNum">     390</span>              : template&lt;class Key, class T, class Compare&gt;</span>
+<span id="L391"><span class="lineNum">     391</span>              : bool operator!=(ordered_map&lt;Key, T, Compare&gt; const&amp; lhs, ordered_map&lt;Key, T, Compare&gt; const&amp; rhs);</span>
+<span id="L392"><span class="lineNum">     392</span>              : </span>
+<span id="L393"><span class="lineNum">     393</span>              : namespace declare</span>
+<span id="L394"><span class="lineNum">     394</span>              : {</span>
+<span id="L395"><span class="lineNum">     395</span>              : /**</span>
+<span id="L396"><span class="lineNum">     396</span>              :  * Declaring a statically-sized ordered_map object of size N.</span>
+<span id="L397"><span class="lineNum">     397</span>              :  */</span>
+<span id="L398"><span class="lineNum">     398</span>              : template&lt;class Key, class T, std::size_t N, class Compare = std::less&lt;Key&gt;&gt;</span>
+<span id="L399"><span class="lineNum">     399</span>              : class ordered_map : public ::estd::ordered_map&lt;Key, T, Compare&gt;</span>
+<span id="L400"><span class="lineNum">     400</span>              : {</span>
+<span id="L401"><span class="lineNum">     401</span>              : public:</span>
+<span id="L402"><span class="lineNum">     402</span>              :     /** A shortcut to the base class */</span>
+<span id="L403"><span class="lineNum">     403</span>              :     using base      = ::estd::ordered_map&lt;Key, T, Compare&gt;;</span>
+<span id="L404"><span class="lineNum">     404</span>              :     /** A shortcut to this type */</span>
+<span id="L405"><span class="lineNum">     405</span>              :     using this_type = ::estd::declare::ordered_map&lt;Key, T, N, Compare&gt;;</span>
+<span id="L406"><span class="lineNum">     406</span>              : </span>
+<span id="L407"><span class="lineNum">     407</span>              :     /** The template parameter Key */</span>
+<span id="L408"><span class="lineNum">     408</span>              :     using key_type               = typename base::key_type;</span>
+<span id="L409"><span class="lineNum">     409</span>              :     /** The template parameter value */</span>
+<span id="L410"><span class="lineNum">     410</span>              :     using mapped_type            = typename base::mapped_type;</span>
+<span id="L411"><span class="lineNum">     411</span>              :     /** A pair of Key and Value */</span>
+<span id="L412"><span class="lineNum">     412</span>              :     using value_type             = typename base::value_type;</span>
+<span id="L413"><span class="lineNum">     413</span>              :     /** A function object to compare Key's */</span>
+<span id="L414"><span class="lineNum">     414</span>              :     using key_compare            = typename base::key_compare;</span>
+<span id="L415"><span class="lineNum">     415</span>              :     /** A utility class predicate for comparing key and values */</span>
+<span id="L416"><span class="lineNum">     416</span>              :     using value_compare          = typename base::value_compare;</span>
+<span id="L417"><span class="lineNum">     417</span>              :     /** A reference to a Key and Value */</span>
+<span id="L418"><span class="lineNum">     418</span>              :     using reference              = typename base::reference;</span>
+<span id="L419"><span class="lineNum">     419</span>              :     /** A const reference to a Key and Value */</span>
+<span id="L420"><span class="lineNum">     420</span>              :     using const_reference        = typename base::const_reference;</span>
+<span id="L421"><span class="lineNum">     421</span>              :     /** A pointer to a Key and Value */</span>
+<span id="L422"><span class="lineNum">     422</span>              :     using pointer                = typename base::pointer;</span>
+<span id="L423"><span class="lineNum">     423</span>              :     /** A const pointer to a Key and Value */</span>
+<span id="L424"><span class="lineNum">     424</span>              :     using const_pointer          = typename base::const_pointer;</span>
+<span id="L425"><span class="lineNum">     425</span>              :     /** An unsigned integral type for sizes */</span>
+<span id="L426"><span class="lineNum">     426</span>              :     using size_type              = typename base::size_type;</span>
+<span id="L427"><span class="lineNum">     427</span>              :     /** A signed integral type */</span>
+<span id="L428"><span class="lineNum">     428</span>              :     using difference_type        = typename base::difference_type;</span>
+<span id="L429"><span class="lineNum">     429</span>              :     /** A random access iterator */</span>
+<span id="L430"><span class="lineNum">     430</span>              :     using iterator               = typename base::iterator;</span>
+<span id="L431"><span class="lineNum">     431</span>              :     /** A const random access iterator */</span>
+<span id="L432"><span class="lineNum">     432</span>              :     using const_iterator         = typename base::const_iterator;</span>
+<span id="L433"><span class="lineNum">     433</span>              :     /** A reverse random access iterator */</span>
+<span id="L434"><span class="lineNum">     434</span>              :     using reverse_iterator       = typename base::reverse_iterator;</span>
+<span id="L435"><span class="lineNum">     435</span>              :     /** A const reverse random access iterator */</span>
+<span id="L436"><span class="lineNum">     436</span>              :     using const_reverse_iterator = typename base::const_reverse_iterator;</span>
+<span id="L437"><span class="lineNum">     437</span>              : </span>
+<span id="L438"><span class="lineNum">     438</span>              :     /**</span>
+<span id="L439"><span class="lineNum">     439</span>              :      * Constructs an empty ordered_map.</span>
+<span id="L440"><span class="lineNum">     440</span>              :      */</span>
+<span id="L441"><span class="lineNum">     441</span>              :     explicit ordered_map(key_compare const&amp; comp = key_compare());</span>
+<span id="L442"><span class="lineNum">     442</span>              : </span>
+<span id="L443"><span class="lineNum">     443</span>              :     /**</span>
+<span id="L444"><span class="lineNum">     444</span>              :      * Copies the values of the other ordered_map into this ordered_map.</span>
+<span id="L445"><span class="lineNum">     445</span>              :      */</span>
+<span id="L446"><span class="lineNum">     446</span>              :     ordered_map(base const&amp; other);</span>
+<span id="L447"><span class="lineNum">     447</span>              : </span>
+<span id="L448"><span class="lineNum">     448</span>              :     /**</span>
+<span id="L449"><span class="lineNum">     449</span>              :      * Copies the values of the other ordered_map into this ordered_map.</span>
+<span id="L450"><span class="lineNum">     450</span>              :      */</span>
+<span id="L451"><span class="lineNum">     451</span>              :     ordered_map(this_type const&amp; other);</span>
+<span id="L452"><span class="lineNum">     452</span>              : </span>
+<span id="L453"><span class="lineNum">     453</span>              :     /**</span>
+<span id="L454"><span class="lineNum">     454</span>              :      * Calls the destructor on all contained objects.</span>
+<span id="L455"><span class="lineNum">     455</span>              :      */</span>
+<span id="L456"><span class="lineNum">     456</span>              :     ~ordered_map();</span>
+<span id="L457"><span class="lineNum">     457</span>              : </span>
+<span id="L458"><span class="lineNum">     458</span>              :     /**</span>
+<span id="L459"><span class="lineNum">     459</span>              :      * Copies the values of the other ordered_map into this ordered_map.</span>
+<span id="L460"><span class="lineNum">     460</span>              :      */</span>
+<span id="L461"><span class="lineNum">     461</span>              :     this_type&amp; operator=(base const&amp; other);</span>
+<span id="L462"><span class="lineNum">     462</span>              : </span>
+<span id="L463"><span class="lineNum">     463</span>              :     /**</span>
+<span id="L464"><span class="lineNum">     464</span>              :      * Copies the values of the other ordered_map into this ordered_map.</span>
+<span id="L465"><span class="lineNum">     465</span>              :      */</span>
+<span id="L466"><span class="lineNum">     466</span>              :     this_type&amp; operator=(this_type const&amp; other);</span>
+<span id="L467"><span class="lineNum">     467</span>              : </span>
+<span id="L468"><span class="lineNum">     468</span>              : private:</span>
+<span id="L469"><span class="lineNum">     469</span>              :     ::estd::declare::vector&lt;value_type, N&gt; _realValues;</span>
+<span id="L470"><span class="lineNum">     470</span>              : };</span>
+<span id="L471"><span class="lineNum">     471</span>              : </span>
+<span id="L472"><span class="lineNum">     472</span>              : } // namespace declare</span>
+<span id="L473"><span class="lineNum">     473</span>              : </span>
+<span id="L474"><span class="lineNum">     474</span>              : /*</span>
+<span id="L475"><span class="lineNum">     475</span>              :  *</span>
+<span id="L476"><span class="lineNum">     476</span>              :  * Implementation</span>
+<span id="L477"><span class="lineNum">     477</span>              :  *</span>
+<span id="L478"><span class="lineNum">     478</span>              :  */</span>
+<span id="L479"><span class="lineNum">     479</span>              : </span>
+<span id="L480"><span class="lineNum">     480</span>              : template&lt;class Key, class T, class Compare&gt;</span>
+<span id="L481"><span class="lineNum">     481</span>              : inline bool</span>
+<span id="L482"><span class="lineNum">     482</span>              : operator==(ordered_map&lt;Key, T, Compare&gt; const&amp; lhs, ordered_map&lt;Key, T, Compare&gt; const&amp; rhs)</span>
+<span id="L483"><span class="lineNum">     483</span>              : {</span>
+<span id="L484"><span class="lineNum">     484</span>              :     if (lhs.size() != rhs.size())</span>
+<span id="L485"><span class="lineNum">     485</span>              :     {</span>
+<span id="L486"><span class="lineNum">     486</span>              :         return false;</span>
+<span id="L487"><span class="lineNum">     487</span>              :     }</span>
+<span id="L488"><span class="lineNum">     488</span>              :     for (typename ordered_map&lt;Key, T, Compare&gt;::const_iterator itr = lhs.cbegin();</span>
+<span id="L489"><span class="lineNum">     489</span>              :          itr != lhs.cend();</span>
+<span id="L490"><span class="lineNum">     490</span>              :          ++itr)</span>
+<span id="L491"><span class="lineNum">     491</span>              :     {</span>
+<span id="L492"><span class="lineNum">     492</span>              :         if (rhs.count(itr-&gt;first) &gt; 0U)</span>
+<span id="L493"><span class="lineNum">     493</span>              :         {</span>
+<span id="L494"><span class="lineNum">     494</span>              :             if (!(rhs.at(itr-&gt;first) == itr-&gt;second))</span>
+<span id="L495"><span class="lineNum">     495</span>              :             {</span>
+<span id="L496"><span class="lineNum">     496</span>              :                 return false;</span>
+<span id="L497"><span class="lineNum">     497</span>              :             }</span>
+<span id="L498"><span class="lineNum">     498</span>              :         }</span>
+<span id="L499"><span class="lineNum">     499</span>              :         else</span>
+<span id="L500"><span class="lineNum">     500</span>              :         {</span>
+<span id="L501"><span class="lineNum">     501</span>              :             return false;</span>
+<span id="L502"><span class="lineNum">     502</span>              :         }</span>
+<span id="L503"><span class="lineNum">     503</span>              :     }</span>
+<span id="L504"><span class="lineNum">     504</span>              :     return true;</span>
+<span id="L505"><span class="lineNum">     505</span>              : }</span>
+<span id="L506"><span class="lineNum">     506</span>              : </span>
+<span id="L507"><span class="lineNum">     507</span>              : template&lt;class Key, class T, class Compare&gt;</span>
+<span id="L508"><span class="lineNum">     508</span>              : inline bool</span>
+<span id="L509"><span class="lineNum">     509</span>              : operator!=(ordered_map&lt;Key, T, Compare&gt; const&amp; lhs, ordered_map&lt;Key, T, Compare&gt; const&amp; rhs)</span>
+<span id="L510"><span class="lineNum">     510</span>              : {</span>
+<span id="L511"><span class="lineNum">     511</span>              :     return !(lhs == rhs);</span>
+<span id="L512"><span class="lineNum">     512</span>              : }</span>
+<span id="L513"><span class="lineNum">     513</span>              : </span>
+<span id="L514"><span class="lineNum">     514</span>              : /*</span>
+<span id="L515"><span class="lineNum">     515</span>              :  *</span>
+<span id="L516"><span class="lineNum">     516</span>              :  * class ordered_map</span>
+<span id="L517"><span class="lineNum">     517</span>              :  *</span>
+<span id="L518"><span class="lineNum">     518</span>              :  */</span>
+<span id="L519"><span class="lineNum">     519</span>              : // protected</span>
+<span id="L520"><span class="lineNum">     520</span>              : template&lt;class Key, class T, class Compare&gt;</span>
+<span id="L521"><span class="lineNum">     521</span>              : ordered_map&lt;Key, T, Compare&gt;&amp;</span>
+<span id="L522"><span class="lineNum">     522</span>              : ordered_map&lt;Key, T, Compare&gt;::operator=(ordered_map&lt;Key, T, Compare&gt; const&amp; other)</span>
+<span id="L523"><span class="lineNum">     523</span>              : {</span>
+<span id="L524"><span class="lineNum">     524</span>              :     if (&amp;_values == &amp;other._values)</span>
+<span id="L525"><span class="lineNum">     525</span>              :     {</span>
+<span id="L526"><span class="lineNum">     526</span>              :         return *this;</span>
+<span id="L527"><span class="lineNum">     527</span>              :     }</span>
+<span id="L528"><span class="lineNum">     528</span>              : </span>
+<span id="L529"><span class="lineNum">     529</span>              :     clear();</span>
+<span id="L530"><span class="lineNum">     530</span>              : </span>
+<span id="L531"><span class="lineNum">     531</span>              :     for (const_iterator iter = other.begin(); iter != other.end(); ++iter)</span>
+<span id="L532"><span class="lineNum">     532</span>              :     {</span>
+<span id="L533"><span class="lineNum">     533</span>              :         (void)_values.emplace_back().construct(*iter);</span>
+<span id="L534"><span class="lineNum">     534</span>              :     }</span>
+<span id="L535"><span class="lineNum">     535</span>              : </span>
+<span id="L536"><span class="lineNum">     536</span>              :     return *this;</span>
+<span id="L537"><span class="lineNum">     537</span>              : }</span>
+<span id="L538"><span class="lineNum">     538</span>              : </span>
+<span id="L539"><span class="lineNum">     539</span>              : template&lt;class Key, class T, class Compare&gt;</span>
+<span id="L540"><span class="lineNum">     540</span>              : inline ordered_map&lt;Key, T, Compare&gt;::ordered_map(data_type&amp; data, key_compare const&amp; comp)</span>
+<span id="L541"><span class="lineNum">     541</span>              : : _values(data), _comp(comp)</span>
+<span id="L542"><span class="lineNum">     542</span>              : {}</span>
+<span id="L543"><span class="lineNum">     543</span>              : </span>
+<span id="L544"><span class="lineNum">     544</span>              : template&lt;class Key, class T, class Compare&gt;</span>
+<span id="L545"><span class="lineNum">     545</span>              : inline bool ordered_map&lt;Key, T, Compare&gt;::empty() const</span>
+<span id="L546"><span class="lineNum">     546</span>              : {</span>
+<span id="L547"><span class="lineNum">     547</span>              :     return _values.empty();</span>
+<span id="L548"><span class="lineNum">     548</span>              : }</span>
+<span id="L549"><span class="lineNum">     549</span>              : </span>
+<span id="L550"><span class="lineNum">     550</span>              : template&lt;class Key, class T, class Compare&gt;</span>
+<span id="L551"><span class="lineNum">     551</span>              : inline bool ordered_map&lt;Key, T, Compare&gt;::full() const</span>
+<span id="L552"><span class="lineNum">     552</span>              : {</span>
+<span id="L553"><span class="lineNum">     553</span>              :     return _values.full();</span>
+<span id="L554"><span class="lineNum">     554</span>              : }</span>
+<span id="L555"><span class="lineNum">     555</span>              : </span>
+<span id="L556"><span class="lineNum">     556</span>              : template&lt;class Key, class T, class Compare&gt;</span>
+<span id="L557"><span class="lineNum">     557</span>              : inline typename ordered_map&lt;Key, T, Compare&gt;::size_type ordered_map&lt;Key, T, Compare&gt;::size() const</span>
+<span id="L558"><span class="lineNum">     558</span>              : {</span>
+<span id="L559"><span class="lineNum">     559</span>              :     return _values.size();</span>
+<span id="L560"><span class="lineNum">     560</span>              : }</span>
+<span id="L561"><span class="lineNum">     561</span>              : </span>
+<span id="L562"><span class="lineNum">     562</span>              : template&lt;class Key, class T, class Compare&gt;</span>
+<span id="L563"><span class="lineNum">     563</span>              : inline typename ordered_map&lt;Key, T, Compare&gt;::size_type</span>
+<span id="L564"><span class="lineNum">     564</span> <span class="tlaUNC tlaBgUNC">           0 : ordered_map&lt;Key, T, Compare&gt;::max_size() const</span></span>
+<span id="L565"><span class="lineNum">     565</span>              : {</span>
+<span id="L566"><span class="lineNum">     566</span> <span class="tlaUNC">           0 :     return _values.max_size();</span></span>
+<span id="L567"><span class="lineNum">     567</span>              : }</span>
+<span id="L568"><span class="lineNum">     568</span>              : </span>
+<span id="L569"><span class="lineNum">     569</span>              : template&lt;class Key, class T, class Compare&gt;</span>
+<span id="L570"><span class="lineNum">     570</span>              : inline void ordered_map&lt;Key, T, Compare&gt;::clear()</span>
+<span id="L571"><span class="lineNum">     571</span>              : {</span>
+<span id="L572"><span class="lineNum">     572</span>              :     _values.clear();</span>
+<span id="L573"><span class="lineNum">     573</span>              : }</span>
+<span id="L574"><span class="lineNum">     574</span>              : </span>
+<span id="L575"><span class="lineNum">     575</span>              : template&lt;class Key, class T, class Compare&gt;</span>
+<span id="L576"><span class="lineNum">     576</span>              : inline typename ordered_map&lt;Key, T, Compare&gt;::size_type</span>
+<span id="L577"><span class="lineNum">     577</span>              : ordered_map&lt;Key, T, Compare&gt;::count(key_type const&amp; key) const</span>
+<span id="L578"><span class="lineNum">     578</span>              : {</span>
+<span id="L579"><span class="lineNum">     579</span>              :     if (empty())</span>
+<span id="L580"><span class="lineNum">     580</span>              :     {</span>
+<span id="L581"><span class="lineNum">     581</span>              :         return 0U;</span>
+<span id="L582"><span class="lineNum">     582</span>              :     }</span>
+<span id="L583"><span class="lineNum">     583</span>              :     size_type const i = lower_bound_search(key);</span>
+<span id="L584"><span class="lineNum">     584</span>              :     if (i &gt;= max_size())</span>
+<span id="L585"><span class="lineNum">     585</span>              :     {</span>
+<span id="L586"><span class="lineNum">     586</span>              :         return 0U;</span>
+<span id="L587"><span class="lineNum">     587</span>              :     }</span>
+<span id="L588"><span class="lineNum">     588</span>              : </span>
+<span id="L589"><span class="lineNum">     589</span>              :     if (key_eq(_values[i].first, key))</span>
+<span id="L590"><span class="lineNum">     590</span>              :     {</span>
+<span id="L591"><span class="lineNum">     591</span>              :         return 1U;</span>
+<span id="L592"><span class="lineNum">     592</span>              :     }</span>
+<span id="L593"><span class="lineNum">     593</span>              : </span>
+<span id="L594"><span class="lineNum">     594</span>              :     return 0U;</span>
+<span id="L595"><span class="lineNum">     595</span>              : }</span>
+<span id="L596"><span class="lineNum">     596</span>              : </span>
+<span id="L597"><span class="lineNum">     597</span>              : template&lt;class Key, class T, class Compare&gt;</span>
+<span id="L598"><span class="lineNum">     598</span>              : std::pair&lt;typename ordered_map&lt;Key, T, Compare&gt;::iterator, bool&gt;</span>
+<span id="L599"><span class="lineNum">     599</span>              : ordered_map&lt;Key, T, Compare&gt;::insert(const_reference value)</span>
+<span id="L600"><span class="lineNum">     600</span>              : {</span>
+<span id="L601"><span class="lineNum">     601</span>              :     iterator const pos = lower_bound(value.first);</span>
+<span id="L602"><span class="lineNum">     602</span>              :     if ((pos != end()) &amp;&amp; key_eq(pos-&gt;first, value.first))</span>
+<span id="L603"><span class="lineNum">     603</span>              :     {</span>
+<span id="L604"><span class="lineNum">     604</span>              :         return std::make_pair(pos, false);</span>
+<span id="L605"><span class="lineNum">     605</span>              :     }</span>
+<span id="L606"><span class="lineNum">     606</span>              : </span>
+<span id="L607"><span class="lineNum">     607</span>              :     auto&amp; v = emplace_uninitialized(pos);</span>
+<span id="L608"><span class="lineNum">     608</span>              : </span>
+<span id="L609"><span class="lineNum">     609</span>              :     // Constructor needs to be able to modify the memory for placement new.</span>
+<span id="L610"><span class="lineNum">     610</span>              :     // But v.first is a const object so we cast away the const.</span>
+<span id="L611"><span class="lineNum">     611</span>              :     (void)constructor&lt;key_type const&gt;(type_utils&lt;key_type const&gt;::const_cast_to_void(&amp;(v.first)))</span>
+<span id="L612"><span class="lineNum">     612</span>              :         .construct(value.first);</span>
+<span id="L613"><span class="lineNum">     613</span>              :     (void)constructor&lt;mapped_type&gt;(&amp;v.second).construct(value.second);</span>
+<span id="L614"><span class="lineNum">     614</span>              : </span>
+<span id="L615"><span class="lineNum">     615</span>              :     return std::make_pair(pos, true);</span>
+<span id="L616"><span class="lineNum">     616</span>              : }</span>
+<span id="L617"><span class="lineNum">     617</span>              : </span>
+<span id="L618"><span class="lineNum">     618</span>              : template&lt;class Key, class T, class Compare&gt;</span>
+<span id="L619"><span class="lineNum">     619</span>              : std::pair&lt;typename ordered_map&lt;Key, T, Compare&gt;::iterator, bool&gt;</span>
+<span id="L620"><span class="lineNum">     620</span>              : ordered_map&lt;Key, T, Compare&gt;::emplace(key_type const&amp; key)</span>
+<span id="L621"><span class="lineNum">     621</span>              : {</span>
+<span id="L622"><span class="lineNum">     622</span>              :     iterator const pos = lower_bound(key);</span>
+<span id="L623"><span class="lineNum">     623</span>              :     if ((pos != end()) &amp;&amp; key_eq(pos-&gt;first, key))</span>
+<span id="L624"><span class="lineNum">     624</span>              :     {</span>
+<span id="L625"><span class="lineNum">     625</span>              :         return std::make_pair(pos, false);</span>
+<span id="L626"><span class="lineNum">     626</span>              :     }</span>
+<span id="L627"><span class="lineNum">     627</span>              : </span>
+<span id="L628"><span class="lineNum">     628</span>              :     auto&amp; v = emplace_uninitialized(pos);</span>
+<span id="L629"><span class="lineNum">     629</span>              : </span>
+<span id="L630"><span class="lineNum">     630</span>              :     // Constructor needs to be able to modify the memory for placement new.</span>
+<span id="L631"><span class="lineNum">     631</span>              :     // But v.first is a const object so we cast away the const.</span>
+<span id="L632"><span class="lineNum">     632</span>              :     (void)constructor&lt;key_type const&gt;(type_utils&lt;key_type const&gt;::const_cast_to_void(&amp;(v.first)))</span>
+<span id="L633"><span class="lineNum">     633</span>              :         .construct(key);</span>
+<span id="L634"><span class="lineNum">     634</span>              :     (void)constructor&lt;mapped_type&gt;(&amp;v.second).construct();</span>
+<span id="L635"><span class="lineNum">     635</span>              : </span>
+<span id="L636"><span class="lineNum">     636</span>              :     return std::make_pair(pos, true);</span>
+<span id="L637"><span class="lineNum">     637</span>              : }</span>
+<span id="L638"><span class="lineNum">     638</span>              : </span>
+<span id="L639"><span class="lineNum">     639</span>              : template&lt;class Key, class T, class Compare&gt;</span>
+<span id="L640"><span class="lineNum">     640</span>              : typename ordered_map&lt;Key, T, Compare&gt;::iterator</span>
+<span id="L641"><span class="lineNum">     641</span>              : ordered_map&lt;Key, T, Compare&gt;::erase(const_iterator const position)</span>
+<span id="L642"><span class="lineNum">     642</span>              : {</span>
+<span id="L643"><span class="lineNum">     643</span>              :     if (position == end())</span>
+<span id="L644"><span class="lineNum">     644</span>              :     {</span>
+<span id="L645"><span class="lineNum">     645</span>              :         // Strictly speaking, this is undefined behaviour as 'position' must be</span>
+<span id="L646"><span class="lineNum">     646</span>              :         // 'valid and dereferenceable' but 'end()' is not dereferenceable.</span>
+<span id="L647"><span class="lineNum">     647</span>              :         return end();</span>
+<span id="L648"><span class="lineNum">     648</span>              :     }</span>
+<span id="L649"><span class="lineNum">     649</span>              :     return erase(position, position + 1U);</span>
+<span id="L650"><span class="lineNum">     650</span>              : }</span>
+<span id="L651"><span class="lineNum">     651</span>              : </span>
+<span id="L652"><span class="lineNum">     652</span>              : template&lt;class Key, class T, class Compare&gt;</span>
+<span id="L653"><span class="lineNum">     653</span>              : typename ordered_map&lt;Key, T, Compare&gt;::size_type</span>
+<span id="L654"><span class="lineNum">     654</span>              : ordered_map&lt;Key, T, Compare&gt;::erase(key_type const&amp; key)</span>
+<span id="L655"><span class="lineNum">     655</span>              : {</span>
+<span id="L656"><span class="lineNum">     656</span>              :     const_iterator const ci = find(key);</span>
+<span id="L657"><span class="lineNum">     657</span>              :     if (ci == cend())</span>
+<span id="L658"><span class="lineNum">     658</span>              :     {</span>
+<span id="L659"><span class="lineNum">     659</span>              :         return 0U;</span>
+<span id="L660"><span class="lineNum">     660</span>              :     }</span>
+<span id="L661"><span class="lineNum">     661</span>              : </span>
+<span id="L662"><span class="lineNum">     662</span>              :     (void)erase(ci);</span>
+<span id="L663"><span class="lineNum">     663</span>              :     return 1U;</span>
+<span id="L664"><span class="lineNum">     664</span>              : }</span>
+<span id="L665"><span class="lineNum">     665</span>              : </span>
+<span id="L666"><span class="lineNum">     666</span>              : template&lt;class Key, class T, class Compare&gt;</span>
+<span id="L667"><span class="lineNum">     667</span>              : typename ordered_map&lt;Key, T, Compare&gt;::iterator</span>
+<span id="L668"><span class="lineNum">     668</span>              : ordered_map&lt;Key, T, Compare&gt;::erase(const_iterator const first, const_iterator const last)</span>
+<span id="L669"><span class="lineNum">     669</span>              : {</span>
+<span id="L670"><span class="lineNum">     670</span>              :     estd_assert(last &lt;= cend());</span>
+<span id="L671"><span class="lineNum">     671</span>              :     if (last &lt;= first)</span>
+<span id="L672"><span class="lineNum">     672</span>              :     {</span>
+<span id="L673"><span class="lineNum">     673</span>              :         return begin() + (last - cbegin()); // empty range</span>
+<span id="L674"><span class="lineNum">     674</span>              :     }</span>
+<span id="L675"><span class="lineNum">     675</span>              : </span>
+<span id="L676"><span class="lineNum">     676</span>              :     // copy elements after range to front of range</span>
+<span id="L677"><span class="lineNum">     677</span>              :     iterator const returnItem = begin() + (first - cbegin());</span>
+<span id="L678"><span class="lineNum">     678</span>              :     iterator dstIter          = returnItem;</span>
+<span id="L679"><span class="lineNum">     679</span>              :     iterator srcIter          = begin() + (last - cbegin());</span>
+<span id="L680"><span class="lineNum">     680</span>              :     while (srcIter != end())</span>
+<span id="L681"><span class="lineNum">     681</span>              :     {</span>
+<span id="L682"><span class="lineNum">     682</span>              :         dstIter-&gt;~value_type();</span>
+<span id="L683"><span class="lineNum">     683</span>              :         (void)constructor&lt;value_type&gt;(type_utils&lt;value_type&gt;::cast_to_raw(dstIter))</span>
+<span id="L684"><span class="lineNum">     684</span>              :             .construct(::std::move(*srcIter));</span>
+<span id="L685"><span class="lineNum">     685</span>              :         ++dstIter;</span>
+<span id="L686"><span class="lineNum">     686</span>              :         ++srcIter;</span>
+<span id="L687"><span class="lineNum">     687</span>              :     }</span>
+<span id="L688"><span class="lineNum">     688</span>              : </span>
+<span id="L689"><span class="lineNum">     689</span>              :     // destroy excess tail elements</span>
+<span id="L690"><span class="lineNum">     690</span>              :     auto const numToPop = static_cast&lt;size_type&gt;(static_cast&lt;difference_type&gt;(last - first));</span>
+<span id="L691"><span class="lineNum">     691</span>              :     for (size_type i = 0; i &lt; numToPop; ++i)</span>
+<span id="L692"><span class="lineNum">     692</span>              :     {</span>
+<span id="L693"><span class="lineNum">     693</span>              :         _values.pop_back();</span>
+<span id="L694"><span class="lineNum">     694</span>              :     }</span>
+<span id="L695"><span class="lineNum">     695</span>              :     return returnItem;</span>
+<span id="L696"><span class="lineNum">     696</span>              : }</span>
+<span id="L697"><span class="lineNum">     697</span>              : </span>
+<span id="L698"><span class="lineNum">     698</span>              : template&lt;class Key, class T, class Compare&gt;</span>
+<span id="L699"><span class="lineNum">     699</span>              : inline typename ordered_map&lt;Key, T, Compare&gt;::mapped_type&amp;</span>
+<span id="L700"><span class="lineNum">     700</span>              : ordered_map&lt;Key, T, Compare&gt;::operator[](key_type const&amp; key)</span>
+<span id="L701"><span class="lineNum">     701</span>              : {</span>
+<span id="L702"><span class="lineNum">     702</span>              :     iterator const pos = lower_bound(key);</span>
+<span id="L703"><span class="lineNum">     703</span>              :     if ((pos != end()) &amp;&amp; key_eq(pos-&gt;first, key))</span>
+<span id="L704"><span class="lineNum">     704</span>              :     {</span>
+<span id="L705"><span class="lineNum">     705</span>              :         return pos-&gt;second;</span>
+<span id="L706"><span class="lineNum">     706</span>              :     }</span>
+<span id="L707"><span class="lineNum">     707</span>              : </span>
+<span id="L708"><span class="lineNum">     708</span>              :     ordered_map::value_type&amp; v = emplace_uninitialized(pos);</span>
+<span id="L709"><span class="lineNum">     709</span>              : </span>
+<span id="L710"><span class="lineNum">     710</span>              :     // Constructor needs to be able to modify the memory for placement new.</span>
+<span id="L711"><span class="lineNum">     711</span>              :     // But v.first is a const object so we cast away the const.</span>
+<span id="L712"><span class="lineNum">     712</span>              :     (void)constructor&lt;key_type const&gt;(type_utils&lt;key_type const&gt;::const_cast_to_void(&amp;(v.first)))</span>
+<span id="L713"><span class="lineNum">     713</span>              :         .construct(key);</span>
+<span id="L714"><span class="lineNum">     714</span>              :     (void)constructor&lt;mapped_type&gt;(&amp;v.second).construct();</span>
+<span id="L715"><span class="lineNum">     715</span>              : </span>
+<span id="L716"><span class="lineNum">     716</span>              :     return v.second;</span>
+<span id="L717"><span class="lineNum">     717</span>              : }</span>
+<span id="L718"><span class="lineNum">     718</span>              : </span>
+<span id="L719"><span class="lineNum">     719</span>              : template&lt;class Key, class T, class Compare&gt;</span>
+<span id="L720"><span class="lineNum">     720</span>              : inline typename ordered_map&lt;Key, T, Compare&gt;::mapped_type&amp;</span>
+<span id="L721"><span class="lineNum">     721</span>              : ordered_map&lt;Key, T, Compare&gt;::at(key_type const&amp; key)</span>
+<span id="L722"><span class="lineNum">     722</span>              : {</span>
+<span id="L723"><span class="lineNum">     723</span>              :     iterator const pos = lower_bound(key);</span>
+<span id="L724"><span class="lineNum">     724</span>              :     estd_assert((pos != end()) &amp;&amp; key_eq(pos-&gt;first, key));</span>
+<span id="L725"><span class="lineNum">     725</span>              :     return pos-&gt;second;</span>
+<span id="L726"><span class="lineNum">     726</span>              : }</span>
+<span id="L727"><span class="lineNum">     727</span>              : </span>
+<span id="L728"><span class="lineNum">     728</span>              : template&lt;class Key, class T, class Compare&gt;</span>
+<span id="L729"><span class="lineNum">     729</span>              : inline typename ordered_map&lt;Key, T, Compare&gt;::mapped_type const&amp;</span>
+<span id="L730"><span class="lineNum">     730</span>              : ordered_map&lt;Key, T, Compare&gt;::at(key_type const&amp; key) const</span>
+<span id="L731"><span class="lineNum">     731</span>              : {</span>
+<span id="L732"><span class="lineNum">     732</span>              :     const_iterator const pos = lower_bound(key);</span>
+<span id="L733"><span class="lineNum">     733</span>              :     estd_assert((pos != end()) &amp;&amp; key_eq(pos-&gt;first, key));</span>
+<span id="L734"><span class="lineNum">     734</span>              :     return pos-&gt;second;</span>
+<span id="L735"><span class="lineNum">     735</span>              : }</span>
+<span id="L736"><span class="lineNum">     736</span>              : </span>
+<span id="L737"><span class="lineNum">     737</span>              : template&lt;class Key, class T, class Compare&gt;</span>
+<span id="L738"><span class="lineNum">     738</span>              : inline typename ordered_map&lt;Key, T, Compare&gt;::iterator</span>
+<span id="L739"><span class="lineNum">     739</span>              : ordered_map&lt;Key, T, Compare&gt;::find(key_type const&amp; key)</span>
+<span id="L740"><span class="lineNum">     740</span>              : {</span>
+<span id="L741"><span class="lineNum">     741</span>              :     iterator const pos = lower_bound(key);</span>
+<span id="L742"><span class="lineNum">     742</span>              :     if ((pos != end()) &amp;&amp; key_eq(pos-&gt;first, key))</span>
+<span id="L743"><span class="lineNum">     743</span>              :     {</span>
+<span id="L744"><span class="lineNum">     744</span>              :         return pos;</span>
+<span id="L745"><span class="lineNum">     745</span>              :     }</span>
+<span id="L746"><span class="lineNum">     746</span>              : </span>
+<span id="L747"><span class="lineNum">     747</span>              :     return end();</span>
+<span id="L748"><span class="lineNum">     748</span>              : }</span>
+<span id="L749"><span class="lineNum">     749</span>              : </span>
+<span id="L750"><span class="lineNum">     750</span>              : template&lt;class Key, class T, class Compare&gt;</span>
+<span id="L751"><span class="lineNum">     751</span>              : inline typename ordered_map&lt;Key, T, Compare&gt;::const_iterator</span>
+<span id="L752"><span class="lineNum">     752</span> <span class="tlaUNC">           0 : ordered_map&lt;Key, T, Compare&gt;::find(key_type const&amp; key) const</span></span>
+<span id="L753"><span class="lineNum">     753</span>              : {</span>
+<span id="L754"><span class="lineNum">     754</span> <span class="tlaUNC">           0 :     const_iterator const pos = lower_bound(key);</span></span>
+<span id="L755"><span class="lineNum">     755</span> <span class="tlaUNC">           0 :     if ((pos != end()) &amp;&amp; key_eq(pos-&gt;first, key))</span></span>
+<span id="L756"><span class="lineNum">     756</span>              :     {</span>
+<span id="L757"><span class="lineNum">     757</span> <span class="tlaUNC">           0 :         return pos;</span></span>
+<span id="L758"><span class="lineNum">     758</span>              :     }</span>
+<span id="L759"><span class="lineNum">     759</span>              : </span>
+<span id="L760"><span class="lineNum">     760</span> <span class="tlaUNC">           0 :     return end();</span></span>
+<span id="L761"><span class="lineNum">     761</span>              : }</span>
+<span id="L762"><span class="lineNum">     762</span>              : </span>
+<span id="L763"><span class="lineNum">     763</span>              : template&lt;class Key, class T, class Compare&gt;</span>
+<span id="L764"><span class="lineNum">     764</span>              : inline typename ordered_map&lt;Key, T, Compare&gt;::iterator</span>
+<span id="L765"><span class="lineNum">     765</span>              : ordered_map&lt;Key, T, Compare&gt;::lower_bound(key_type const&amp; key)</span>
+<span id="L766"><span class="lineNum">     766</span>              : {</span>
+<span id="L767"><span class="lineNum">     767</span>              :     size_type const pos = lower_bound_search(key);</span>
+<span id="L768"><span class="lineNum">     768</span>              :     if (pos &gt;= max_size())</span>
+<span id="L769"><span class="lineNum">     769</span>              :     {</span>
+<span id="L770"><span class="lineNum">     770</span>              :         return end();</span>
+<span id="L771"><span class="lineNum">     771</span>              :     }</span>
+<span id="L772"><span class="lineNum">     772</span>              :     return begin() + pos;</span>
+<span id="L773"><span class="lineNum">     773</span>              : }</span>
+<span id="L774"><span class="lineNum">     774</span>              : </span>
+<span id="L775"><span class="lineNum">     775</span>              : template&lt;class Key, class T, class Compare&gt;</span>
+<span id="L776"><span class="lineNum">     776</span>              : inline typename ordered_map&lt;Key, T, Compare&gt;::const_iterator</span>
+<span id="L777"><span class="lineNum">     777</span> <span class="tlaUNC">           0 : ordered_map&lt;Key, T, Compare&gt;::lower_bound(key_type const&amp; key) const</span></span>
+<span id="L778"><span class="lineNum">     778</span>              : {</span>
+<span id="L779"><span class="lineNum">     779</span> <span class="tlaUNC">           0 :     size_type const pos = lower_bound_search(key);</span></span>
+<span id="L780"><span class="lineNum">     780</span> <span class="tlaUNC">           0 :     if (pos &gt;= max_size())</span></span>
+<span id="L781"><span class="lineNum">     781</span>              :     {</span>
+<span id="L782"><span class="lineNum">     782</span> <span class="tlaUNC">           0 :         return cend();</span></span>
+<span id="L783"><span class="lineNum">     783</span>              :     }</span>
+<span id="L784"><span class="lineNum">     784</span> <span class="tlaUNC">           0 :     return cbegin() + pos;</span></span>
+<span id="L785"><span class="lineNum">     785</span>              : }</span>
+<span id="L786"><span class="lineNum">     786</span>              : </span>
+<span id="L787"><span class="lineNum">     787</span>              : template&lt;class Key, class T, class Compare&gt;</span>
+<span id="L788"><span class="lineNum">     788</span>              : inline typename ordered_map&lt;Key, T, Compare&gt;::iterator</span>
+<span id="L789"><span class="lineNum">     789</span>              : ordered_map&lt;Key, T, Compare&gt;::upper_bound(key_type const&amp; key)</span>
+<span id="L790"><span class="lineNum">     790</span>              : {</span>
+<span id="L791"><span class="lineNum">     791</span>              :     size_type const pos = upper_bound_search(key);</span>
+<span id="L792"><span class="lineNum">     792</span>              :     if (pos &gt;= max_size())</span>
+<span id="L793"><span class="lineNum">     793</span>              :     {</span>
+<span id="L794"><span class="lineNum">     794</span>              :         return end();</span>
+<span id="L795"><span class="lineNum">     795</span>              :     }</span>
+<span id="L796"><span class="lineNum">     796</span>              : </span>
+<span id="L797"><span class="lineNum">     797</span>              :     return begin() + pos;</span>
+<span id="L798"><span class="lineNum">     798</span>              : }</span>
+<span id="L799"><span class="lineNum">     799</span>              : </span>
+<span id="L800"><span class="lineNum">     800</span>              : template&lt;class Key, class T, class Compare&gt;</span>
+<span id="L801"><span class="lineNum">     801</span>              : inline typename ordered_map&lt;Key, T, Compare&gt;::const_iterator</span>
+<span id="L802"><span class="lineNum">     802</span>              : ordered_map&lt;Key, T, Compare&gt;::upper_bound(key_type const&amp; key) const</span>
+<span id="L803"><span class="lineNum">     803</span>              : {</span>
+<span id="L804"><span class="lineNum">     804</span>              :     size_type const pos = upper_bound_search(key);</span>
+<span id="L805"><span class="lineNum">     805</span>              :     if (pos &gt;= max_size())</span>
+<span id="L806"><span class="lineNum">     806</span>              :     {</span>
+<span id="L807"><span class="lineNum">     807</span>              :         return cend();</span>
+<span id="L808"><span class="lineNum">     808</span>              :     }</span>
+<span id="L809"><span class="lineNum">     809</span>              : </span>
+<span id="L810"><span class="lineNum">     810</span>              :     return cbegin() + pos;</span>
+<span id="L811"><span class="lineNum">     811</span>              : }</span>
+<span id="L812"><span class="lineNum">     812</span>              : </span>
+<span id="L813"><span class="lineNum">     813</span>              : template&lt;class Key, class T, class Compare&gt;</span>
+<span id="L814"><span class="lineNum">     814</span>              : inline std::pair&lt;</span>
+<span id="L815"><span class="lineNum">     815</span>              :     typename ordered_map&lt;Key, T, Compare&gt;::iterator,</span>
+<span id="L816"><span class="lineNum">     816</span>              :     typename ordered_map&lt;Key, T, Compare&gt;::iterator&gt;</span>
+<span id="L817"><span class="lineNum">     817</span>              : ordered_map&lt;Key, T, Compare&gt;::equal_range(key_type const&amp; key)</span>
+<span id="L818"><span class="lineNum">     818</span>              : {</span>
+<span id="L819"><span class="lineNum">     819</span>              :     return std::make_pair(lower_bound(key), upper_bound(key));</span>
+<span id="L820"><span class="lineNum">     820</span>              : }</span>
+<span id="L821"><span class="lineNum">     821</span>              : </span>
+<span id="L822"><span class="lineNum">     822</span>              : template&lt;class Key, class T, class Compare&gt;</span>
+<span id="L823"><span class="lineNum">     823</span>              : inline std::pair&lt;</span>
+<span id="L824"><span class="lineNum">     824</span>              :     typename ordered_map&lt;Key, T, Compare&gt;::const_iterator,</span>
+<span id="L825"><span class="lineNum">     825</span>              :     typename ordered_map&lt;Key, T, Compare&gt;::const_iterator&gt;</span>
+<span id="L826"><span class="lineNum">     826</span>              : ordered_map&lt;Key, T, Compare&gt;::equal_range(key_type const&amp; key) const</span>
+<span id="L827"><span class="lineNum">     827</span>              : {</span>
+<span id="L828"><span class="lineNum">     828</span>              :     return std::make_pair(lower_bound(key), upper_bound(key));</span>
+<span id="L829"><span class="lineNum">     829</span>              : }</span>
+<span id="L830"><span class="lineNum">     830</span>              : </span>
+<span id="L831"><span class="lineNum">     831</span>              : template&lt;class Key, class T, class Compare&gt;</span>
+<span id="L832"><span class="lineNum">     832</span>              : inline typename ordered_map&lt;Key, T, Compare&gt;::key_compare</span>
+<span id="L833"><span class="lineNum">     833</span>              : ordered_map&lt;Key, T, Compare&gt;::key_comp() const</span>
+<span id="L834"><span class="lineNum">     834</span>              : {</span>
+<span id="L835"><span class="lineNum">     835</span>              :     return _comp;</span>
+<span id="L836"><span class="lineNum">     836</span>              : }</span>
+<span id="L837"><span class="lineNum">     837</span>              : </span>
+<span id="L838"><span class="lineNum">     838</span>              : template&lt;class Key, class T, class Compare&gt;</span>
+<span id="L839"><span class="lineNum">     839</span>              : inline typename ordered_map&lt;Key, T, Compare&gt;::value_compare</span>
+<span id="L840"><span class="lineNum">     840</span>              : ordered_map&lt;Key, T, Compare&gt;::value_comp() const</span>
+<span id="L841"><span class="lineNum">     841</span>              : {</span>
+<span id="L842"><span class="lineNum">     842</span>              :     return value_compare(_comp);</span>
+<span id="L843"><span class="lineNum">     843</span>              : }</span>
+<span id="L844"><span class="lineNum">     844</span>              : </span>
+<span id="L845"><span class="lineNum">     845</span>              : // explicit</span>
+<span id="L846"><span class="lineNum">     846</span>              : template&lt;class Key, class T, class Compare&gt;</span>
+<span id="L847"><span class="lineNum">     847</span>              : inline ordered_map&lt;Key, T, Compare&gt;::value_compare::value_compare(Compare const c) : _valueComp(c)</span>
+<span id="L848"><span class="lineNum">     848</span>              : {}</span>
+<span id="L849"><span class="lineNum">     849</span>              : </span>
+<span id="L850"><span class="lineNum">     850</span>              : template&lt;class Key, class T, class Compare&gt;</span>
+<span id="L851"><span class="lineNum">     851</span>              : inline bool ordered_map&lt;Key, T, Compare&gt;::value_compare::operator()(</span>
+<span id="L852"><span class="lineNum">     852</span>              :     first_argument_type const&amp; x, second_argument_type const&amp; y) const</span>
+<span id="L853"><span class="lineNum">     853</span>              : {</span>
+<span id="L854"><span class="lineNum">     854</span>              :     return _valueComp(x.first, y.first);</span>
+<span id="L855"><span class="lineNum">     855</span>              : }</span>
+<span id="L856"><span class="lineNum">     856</span>              : </span>
+<span id="L857"><span class="lineNum">     857</span>              : template&lt;class Key, class T, class Compare&gt;</span>
+<span id="L858"><span class="lineNum">     858</span>              : inline typename ordered_map&lt;Key, T, Compare&gt;::iterator ordered_map&lt;Key, T, Compare&gt;::begin()</span>
+<span id="L859"><span class="lineNum">     859</span>              : {</span>
+<span id="L860"><span class="lineNum">     860</span>              :     return _values.begin();</span>
+<span id="L861"><span class="lineNum">     861</span>              : }</span>
+<span id="L862"><span class="lineNum">     862</span>              : </span>
+<span id="L863"><span class="lineNum">     863</span>              : template&lt;class Key, class T, class Compare&gt;</span>
+<span id="L864"><span class="lineNum">     864</span>              : inline typename ordered_map&lt;Key, T, Compare&gt;::const_iterator</span>
+<span id="L865"><span class="lineNum">     865</span> <span class="tlaUNC">           0 : ordered_map&lt;Key, T, Compare&gt;::begin() const</span></span>
+<span id="L866"><span class="lineNum">     866</span>              : {</span>
+<span id="L867"><span class="lineNum">     867</span> <span class="tlaUNC">           0 :     return _values.begin();</span></span>
+<span id="L868"><span class="lineNum">     868</span>              : }</span>
+<span id="L869"><span class="lineNum">     869</span>              : </span>
+<span id="L870"><span class="lineNum">     870</span>              : template&lt;class Key, class T, class Compare&gt;</span>
+<span id="L871"><span class="lineNum">     871</span>              : inline typename ordered_map&lt;Key, T, Compare&gt;::const_iterator</span>
+<span id="L872"><span class="lineNum">     872</span> <span class="tlaUNC">           0 : ordered_map&lt;Key, T, Compare&gt;::cbegin() const</span></span>
+<span id="L873"><span class="lineNum">     873</span>              : {</span>
+<span id="L874"><span class="lineNum">     874</span> <span class="tlaUNC">           0 :     return begin();</span></span>
+<span id="L875"><span class="lineNum">     875</span>              : }</span>
+<span id="L876"><span class="lineNum">     876</span>              : </span>
+<span id="L877"><span class="lineNum">     877</span>              : template&lt;class Key, class T, class Compare&gt;</span>
+<span id="L878"><span class="lineNum">     878</span>              : inline typename ordered_map&lt;Key, T, Compare&gt;::iterator ordered_map&lt;Key, T, Compare&gt;::end()</span>
+<span id="L879"><span class="lineNum">     879</span>              : {</span>
+<span id="L880"><span class="lineNum">     880</span>              :     return _values.end();</span>
+<span id="L881"><span class="lineNum">     881</span>              : }</span>
+<span id="L882"><span class="lineNum">     882</span>              : </span>
+<span id="L883"><span class="lineNum">     883</span>              : template&lt;class Key, class T, class Compare&gt;</span>
+<span id="L884"><span class="lineNum">     884</span>              : inline typename ordered_map&lt;Key, T, Compare&gt;::const_iterator</span>
+<span id="L885"><span class="lineNum">     885</span> <span class="tlaUNC">           0 : ordered_map&lt;Key, T, Compare&gt;::end() const</span></span>
+<span id="L886"><span class="lineNum">     886</span>              : {</span>
+<span id="L887"><span class="lineNum">     887</span> <span class="tlaUNC">           0 :     return _values.end();</span></span>
+<span id="L888"><span class="lineNum">     888</span>              : }</span>
+<span id="L889"><span class="lineNum">     889</span>              : </span>
+<span id="L890"><span class="lineNum">     890</span>              : template&lt;class Key, class T, class Compare&gt;</span>
+<span id="L891"><span class="lineNum">     891</span>              : inline typename ordered_map&lt;Key, T, Compare&gt;::const_iterator</span>
+<span id="L892"><span class="lineNum">     892</span> <span class="tlaUNC">           0 : ordered_map&lt;Key, T, Compare&gt;::cend() const</span></span>
+<span id="L893"><span class="lineNum">     893</span>              : {</span>
+<span id="L894"><span class="lineNum">     894</span> <span class="tlaUNC">           0 :     return end();</span></span>
+<span id="L895"><span class="lineNum">     895</span>              : }</span>
+<span id="L896"><span class="lineNum">     896</span>              : </span>
+<span id="L897"><span class="lineNum">     897</span>              : template&lt;class Key, class T, class Compare&gt;</span>
+<span id="L898"><span class="lineNum">     898</span>              : inline typename ordered_map&lt;Key, T, Compare&gt;::reverse_iterator</span>
+<span id="L899"><span class="lineNum">     899</span>              : ordered_map&lt;Key, T, Compare&gt;::rbegin()</span>
+<span id="L900"><span class="lineNum">     900</span>              : {</span>
+<span id="L901"><span class="lineNum">     901</span>              :     return _values.rbegin();</span>
+<span id="L902"><span class="lineNum">     902</span>              : }</span>
+<span id="L903"><span class="lineNum">     903</span>              : </span>
+<span id="L904"><span class="lineNum">     904</span>              : template&lt;class Key, class T, class Compare&gt;</span>
+<span id="L905"><span class="lineNum">     905</span>              : inline typename ordered_map&lt;Key, T, Compare&gt;::const_reverse_iterator</span>
+<span id="L906"><span class="lineNum">     906</span>              : ordered_map&lt;Key, T, Compare&gt;::rbegin() const</span>
+<span id="L907"><span class="lineNum">     907</span>              : {</span>
+<span id="L908"><span class="lineNum">     908</span>              :     return _values.rbegin();</span>
+<span id="L909"><span class="lineNum">     909</span>              : }</span>
+<span id="L910"><span class="lineNum">     910</span>              : </span>
+<span id="L911"><span class="lineNum">     911</span>              : template&lt;class Key, class T, class Compare&gt;</span>
+<span id="L912"><span class="lineNum">     912</span>              : inline typename ordered_map&lt;Key, T, Compare&gt;::const_reverse_iterator</span>
+<span id="L913"><span class="lineNum">     913</span>              : ordered_map&lt;Key, T, Compare&gt;::crbegin() const</span>
+<span id="L914"><span class="lineNum">     914</span>              : {</span>
+<span id="L915"><span class="lineNum">     915</span>              :     return _values.crbegin();</span>
+<span id="L916"><span class="lineNum">     916</span>              : }</span>
+<span id="L917"><span class="lineNum">     917</span>              : </span>
+<span id="L918"><span class="lineNum">     918</span>              : template&lt;class Key, class T, class Compare&gt;</span>
+<span id="L919"><span class="lineNum">     919</span>              : inline typename ordered_map&lt;Key, T, Compare&gt;::reverse_iterator ordered_map&lt;Key, T, Compare&gt;::rend()</span>
+<span id="L920"><span class="lineNum">     920</span>              : {</span>
+<span id="L921"><span class="lineNum">     921</span>              :     return _values.rend();</span>
+<span id="L922"><span class="lineNum">     922</span>              : }</span>
+<span id="L923"><span class="lineNum">     923</span>              : </span>
+<span id="L924"><span class="lineNum">     924</span>              : template&lt;class Key, class T, class Compare&gt;</span>
+<span id="L925"><span class="lineNum">     925</span>              : inline typename ordered_map&lt;Key, T, Compare&gt;::const_reverse_iterator</span>
+<span id="L926"><span class="lineNum">     926</span>              : ordered_map&lt;Key, T, Compare&gt;::rend() const</span>
+<span id="L927"><span class="lineNum">     927</span>              : {</span>
+<span id="L928"><span class="lineNum">     928</span>              :     return _values.rend();</span>
+<span id="L929"><span class="lineNum">     929</span>              : }</span>
+<span id="L930"><span class="lineNum">     930</span>              : </span>
+<span id="L931"><span class="lineNum">     931</span>              : template&lt;class Key, class T, class Compare&gt;</span>
+<span id="L932"><span class="lineNum">     932</span>              : inline typename ordered_map&lt;Key, T, Compare&gt;::const_reverse_iterator</span>
+<span id="L933"><span class="lineNum">     933</span>              : ordered_map&lt;Key, T, Compare&gt;::crend() const</span>
+<span id="L934"><span class="lineNum">     934</span>              : {</span>
+<span id="L935"><span class="lineNum">     935</span>              :     return _values.crend();</span>
+<span id="L936"><span class="lineNum">     936</span>              : }</span>
+<span id="L937"><span class="lineNum">     937</span>              : </span>
+<span id="L938"><span class="lineNum">     938</span>              : template&lt;class Key, class T, class Compare&gt;</span>
+<span id="L939"><span class="lineNum">     939</span>              : typename ordered_map&lt;Key, T, Compare&gt;::size_type</span>
+<span id="L940"><span class="lineNum">     940</span> <span class="tlaUNC">           0 : ordered_map&lt;Key, T, Compare&gt;::lower_bound_search(key_type const&amp; key) const</span></span>
+<span id="L941"><span class="lineNum">     941</span>              : {</span>
+<span id="L942"><span class="lineNum">     942</span>              :     size_type pos;</span>
+<span id="L943"><span class="lineNum">     943</span> <span class="tlaUNC">           0 :     size_type first       = 0U;</span></span>
+<span id="L944"><span class="lineNum">     944</span> <span class="tlaUNC">           0 :     difference_type total = static_cast&lt;difference_type&gt;(_values.size());</span></span>
+<span id="L945"><span class="lineNum">     945</span>              :     difference_type step;</span>
+<span id="L946"><span class="lineNum">     946</span>              : </span>
+<span id="L947"><span class="lineNum">     947</span> <span class="tlaUNC">           0 :     while (total &gt; 0)</span></span>
+<span id="L948"><span class="lineNum">     948</span>              :     {</span>
+<span id="L949"><span class="lineNum">     949</span> <span class="tlaUNC">           0 :         pos  = first;</span></span>
+<span id="L950"><span class="lineNum">     950</span> <span class="tlaUNC">           0 :         step = total / 2;</span></span>
+<span id="L951"><span class="lineNum">     951</span> <span class="tlaUNC">           0 :         pos += static_cast&lt;size_type&gt;(step);</span></span>
+<span id="L952"><span class="lineNum">     952</span> <span class="tlaUNC">           0 :         if (_comp(_values[pos].first, key) == true)</span></span>
+<span id="L953"><span class="lineNum">     953</span>              :         {</span>
+<span id="L954"><span class="lineNum">     954</span> <span class="tlaUNC">           0 :             pos++;</span></span>
+<span id="L955"><span class="lineNum">     955</span> <span class="tlaUNC">           0 :             first = pos;</span></span>
+<span id="L956"><span class="lineNum">     956</span> <span class="tlaUNC">           0 :             total -= step + 1;</span></span>
+<span id="L957"><span class="lineNum">     957</span>              :         }</span>
+<span id="L958"><span class="lineNum">     958</span>              :         else</span>
+<span id="L959"><span class="lineNum">     959</span>              :         {</span>
+<span id="L960"><span class="lineNum">     960</span> <span class="tlaUNC">           0 :             total = step;</span></span>
+<span id="L961"><span class="lineNum">     961</span>              :         }</span>
+<span id="L962"><span class="lineNum">     962</span>              :     }</span>
+<span id="L963"><span class="lineNum">     963</span> <span class="tlaUNC">           0 :     return first;</span></span>
+<span id="L964"><span class="lineNum">     964</span>              : }</span>
+<span id="L965"><span class="lineNum">     965</span>              : </span>
+<span id="L966"><span class="lineNum">     966</span>              : template&lt;class Key, class T, class Compare&gt;</span>
+<span id="L967"><span class="lineNum">     967</span>              : typename ordered_map&lt;Key, T, Compare&gt;::size_type</span>
+<span id="L968"><span class="lineNum">     968</span>              : ordered_map&lt;Key, T, Compare&gt;::upper_bound_search(key_type const&amp; key) const</span>
+<span id="L969"><span class="lineNum">     969</span>              : {</span>
+<span id="L970"><span class="lineNum">     970</span>              :     size_type pos;</span>
+<span id="L971"><span class="lineNum">     971</span>              :     size_type first       = 0U;</span>
+<span id="L972"><span class="lineNum">     972</span>              :     difference_type total = static_cast&lt;difference_type&gt;(_values.size());</span>
+<span id="L973"><span class="lineNum">     973</span>              :     difference_type step;</span>
+<span id="L974"><span class="lineNum">     974</span>              : </span>
+<span id="L975"><span class="lineNum">     975</span>              :     while (total &gt; 0)</span>
+<span id="L976"><span class="lineNum">     976</span>              :     {</span>
+<span id="L977"><span class="lineNum">     977</span>              :         pos  = first;</span>
+<span id="L978"><span class="lineNum">     978</span>              :         step = total / 2;</span>
+<span id="L979"><span class="lineNum">     979</span>              :         pos += static_cast&lt;size_type&gt;(step);</span>
+<span id="L980"><span class="lineNum">     980</span>              :         if (_comp(key, _values[pos].first) == false)</span>
+<span id="L981"><span class="lineNum">     981</span>              :         {</span>
+<span id="L982"><span class="lineNum">     982</span>              :             pos++;</span>
+<span id="L983"><span class="lineNum">     983</span>              :             first = pos;</span>
+<span id="L984"><span class="lineNum">     984</span>              :             total -= step + 1;</span>
+<span id="L985"><span class="lineNum">     985</span>              :         }</span>
+<span id="L986"><span class="lineNum">     986</span>              :         else</span>
+<span id="L987"><span class="lineNum">     987</span>              :         {</span>
+<span id="L988"><span class="lineNum">     988</span>              :             total = step;</span>
+<span id="L989"><span class="lineNum">     989</span>              :         }</span>
+<span id="L990"><span class="lineNum">     990</span>              :     }</span>
+<span id="L991"><span class="lineNum">     991</span>              :     return first;</span>
+<span id="L992"><span class="lineNum">     992</span>              : }</span>
+<span id="L993"><span class="lineNum">     993</span>              : </span>
+<span id="L994"><span class="lineNum">     994</span>              : template&lt;class Key, class T, class Compare&gt;</span>
+<span id="L995"><span class="lineNum">     995</span>              : inline typename ordered_map&lt;Key, T, Compare&gt;::value_type&amp;</span>
+<span id="L996"><span class="lineNum">     996</span>              : ordered_map&lt;Key, T, Compare&gt;::emplace_uninitialized(ordered_map::iterator const pos)</span>
+<span id="L997"><span class="lineNum">     997</span>              : {</span>
+<span id="L998"><span class="lineNum">     998</span>              :     estd_assert(!full());</span>
+<span id="L999"><span class="lineNum">     999</span>              :     if (pos == cend())</span>
+<span id="L1000"><span class="lineNum">    1000</span>              :     {</span>
+<span id="L1001"><span class="lineNum">    1001</span>              :         return *(_values.emplace_back().release_uninitialized_as());</span>
+<span id="L1002"><span class="lineNum">    1002</span>              :     }</span>
+<span id="L1003"><span class="lineNum">    1003</span>              : </span>
+<span id="L1004"><span class="lineNum">    1004</span>              :     // move all elements after pos to the back by one</span>
+<span id="L1005"><span class="lineNum">    1005</span>              :     auto dstItr = end() - 1;</span>
+<span id="L1006"><span class="lineNum">    1006</span>              :     auto srcItr = dstItr - 1;</span>
+<span id="L1007"><span class="lineNum">    1007</span>              :     _values.emplace_back().construct(::std::move(*dstItr)); // construct new last element</span>
+<span id="L1008"><span class="lineNum">    1008</span>              :     dstItr-&gt;~value_type();                                  // destroy previous last element</span>
+<span id="L1009"><span class="lineNum">    1009</span>              :     while (dstItr != pos)</span>
+<span id="L1010"><span class="lineNum">    1010</span>              :     {</span>
+<span id="L1011"><span class="lineNum">    1011</span>              :         // move src to dest and destroy src</span>
+<span id="L1012"><span class="lineNum">    1012</span>              :         (void)constructor&lt;ordered_map::value_type&gt;(</span>
+<span id="L1013"><span class="lineNum">    1013</span>              :             type_utils&lt;ordered_map::value_type&gt;::cast_to_raw(dstItr))</span>
+<span id="L1014"><span class="lineNum">    1014</span>              :             .construct(::std::move(*srcItr));</span>
+<span id="L1015"><span class="lineNum">    1015</span>              :         srcItr-&gt;~value_type();</span>
+<span id="L1016"><span class="lineNum">    1016</span>              :         --dstItr;</span>
+<span id="L1017"><span class="lineNum">    1017</span>              :         --srcItr;</span>
+<span id="L1018"><span class="lineNum">    1018</span>              :     }</span>
+<span id="L1019"><span class="lineNum">    1019</span>              :     return *pos;</span>
+<span id="L1020"><span class="lineNum">    1020</span>              : }</span>
+<span id="L1021"><span class="lineNum">    1021</span>              : </span>
+<span id="L1022"><span class="lineNum">    1022</span>              : template&lt;class Key, class T, class Compare&gt;</span>
+<span id="L1023"><span class="lineNum">    1023</span> <span class="tlaUNC">           0 : inline bool ordered_map&lt;Key, T, Compare&gt;::key_eq(key_type const&amp; x, key_type const&amp; y) const</span></span>
+<span id="L1024"><span class="lineNum">    1024</span>              : {</span>
+<span id="L1025"><span class="lineNum">    1025</span> <span class="tlaUNC">           0 :     return (_comp(x, y) == false) &amp;&amp; (_comp(y, x) == false);</span></span>
+<span id="L1026"><span class="lineNum">    1026</span>              : }</span>
+<span id="L1027"><span class="lineNum">    1027</span>              : </span>
+<span id="L1028"><span class="lineNum">    1028</span>              : namespace declare</span>
+<span id="L1029"><span class="lineNum">    1029</span>              : {</span>
+<span id="L1030"><span class="lineNum">    1030</span>              : // explicit</span>
+<span id="L1031"><span class="lineNum">    1031</span>              : template&lt;class Key, class T, std::size_t N, class Compare&gt;</span>
+<span id="L1032"><span class="lineNum">    1032</span>              : ordered_map&lt;Key, T, N, Compare&gt;::ordered_map(key_compare const&amp; comp)</span>
+<span id="L1033"><span class="lineNum">    1033</span>              : : ::estd::ordered_map&lt;Key, T, Compare&gt;(_realValues, comp), _realValues()</span>
+<span id="L1034"><span class="lineNum">    1034</span>              : {}</span>
+<span id="L1035"><span class="lineNum">    1035</span>              : </span>
+<span id="L1036"><span class="lineNum">    1036</span>              : template&lt;class Key, class T, std::size_t N, class Compare&gt;</span>
+<span id="L1037"><span class="lineNum">    1037</span>              : ordered_map&lt;Key, T, N, Compare&gt;::ordered_map(base const&amp; other)</span>
+<span id="L1038"><span class="lineNum">    1038</span>              : : ::estd::ordered_map&lt;Key, T&gt;(_realValues, other.key_comp()), _realValues()</span>
+<span id="L1039"><span class="lineNum">    1039</span>              : {</span>
+<span id="L1040"><span class="lineNum">    1040</span>              :     base::operator=(other);</span>
+<span id="L1041"><span class="lineNum">    1041</span>              : }</span>
+<span id="L1042"><span class="lineNum">    1042</span>              : </span>
+<span id="L1043"><span class="lineNum">    1043</span>              : template&lt;class Key, class T, std::size_t N, class Compare&gt;</span>
+<span id="L1044"><span class="lineNum">    1044</span>              : ordered_map&lt;Key, T, N, Compare&gt;::ordered_map(this_type const&amp; other)</span>
+<span id="L1045"><span class="lineNum">    1045</span>              : : ::estd::ordered_map&lt;Key, T&gt;(_realValues, other.key_comp()), _realValues()</span>
+<span id="L1046"><span class="lineNum">    1046</span>              : {</span>
+<span id="L1047"><span class="lineNum">    1047</span>              :     base::operator=(other);</span>
+<span id="L1048"><span class="lineNum">    1048</span>              : }</span>
+<span id="L1049"><span class="lineNum">    1049</span>              : </span>
+<span id="L1050"><span class="lineNum">    1050</span>              : template&lt;class Key, class T, std::size_t N, class Compare&gt;</span>
+<span id="L1051"><span class="lineNum">    1051</span>              : ordered_map&lt;Key, T, N, Compare&gt;::~ordered_map()</span>
+<span id="L1052"><span class="lineNum">    1052</span>              : {</span>
+<span id="L1053"><span class="lineNum">    1053</span>              :     base::clear();</span>
+<span id="L1054"><span class="lineNum">    1054</span>              : }</span>
+<span id="L1055"><span class="lineNum">    1055</span>              : </span>
+<span id="L1056"><span class="lineNum">    1056</span>              : template&lt;class Key, class T, std::size_t N, class Compare&gt;</span>
+<span id="L1057"><span class="lineNum">    1057</span>              : ordered_map&lt;Key, T, N, Compare&gt;&amp; ordered_map&lt;Key, T, N, Compare&gt;::operator=(base const&amp; other)</span>
+<span id="L1058"><span class="lineNum">    1058</span>              : {</span>
+<span id="L1059"><span class="lineNum">    1059</span>              :     base::operator=(other);</span>
+<span id="L1060"><span class="lineNum">    1060</span>              :     return *this;</span>
+<span id="L1061"><span class="lineNum">    1061</span>              : }</span>
+<span id="L1062"><span class="lineNum">    1062</span>              : </span>
+<span id="L1063"><span class="lineNum">    1063</span>              : template&lt;class Key, class T, std::size_t N, class Compare&gt;</span>
+<span id="L1064"><span class="lineNum">    1064</span>              : ordered_map&lt;Key, T, N, Compare&gt;&amp; ordered_map&lt;Key, T, N, Compare&gt;::operator=(this_type const&amp; other)</span>
+<span id="L1065"><span class="lineNum">    1065</span>              : {</span>
+<span id="L1066"><span class="lineNum">    1066</span>              :     base::operator=(other);</span>
+<span id="L1067"><span class="lineNum">    1067</span>              :     return *this;</span>
+<span id="L1068"><span class="lineNum">    1068</span>              : }</span>
+<span id="L1069"><span class="lineNum">    1069</span>              : </span>
+<span id="L1070"><span class="lineNum">    1070</span>              : } // namespace declare</span>
+<span id="L1071"><span class="lineNum">    1071</span>              : } // namespace estd</span>
+        </pre>
+              </td>
+            </tr>
+          </table>
+          <br>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="ruler"><img src="../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+            <tr><td class="versionInfo">Generated by: <a href="https://github.com//linux-test-project/lcov" target="_parent">LCOV version 2.0-1</a></td></tr>
+          </table>
+          <br>
+
+</body>
+</html>

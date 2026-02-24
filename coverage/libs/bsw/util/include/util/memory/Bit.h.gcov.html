@@ -1,0 +1,148 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - coverage.info - libs/bsw/util/include/util/memory/Bit.h</title>
+  <link rel="stylesheet" type="text/css" href="../../../../../../gcov.css">
+</head>
+
+<body>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="title">LCOV - code coverage report</td></tr>
+            <tr><td class="ruler"><img src="../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+            <tr>
+              <td width="100%">
+                <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="10%" class="headerValue"><a href="../../../../../../index.html">top level</a> - <a href="index.html">libs/bsw/util/include/util/memory</a> - Bit.h<span style="font-size: 80%;"> (source / <a href="Bit.h.func-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="5%"></td>
+            <td width="5%" class="headerCovTableHead">Coverage</td>
+            <td width="5%" class="headerCovTableHead" title="Covered + Uncovered code">Total</td>
+            <td width="5%" class="headerCovTableHead" title="Exercised code only">Hit</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">coverage.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
+            <td class="headerCovTableEntry">26</td>
+            <td class="headerCovTableEntry">26</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test Date:</td>
+            <td class="headerValue">2026-02-24 11:21:15</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
+            <td class="headerCovTableEntry">8</td>
+            <td class="headerCovTableEntry">8</td>
+          </tr>
+                  <tr><td><img src="../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr><td class="ruler"><img src="../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+          </table>
+
+          <table cellpadding=0 cellspacing=0 border=0>
+            <tr>
+              <td><br></td>
+            </tr>
+            <tr>
+              <td>
+<pre class="sourceHeading">            Line data    Source code</pre>
+<pre class="source">
+<span id="L1"><span class="lineNum">       1</span>              : // Copyright 2024 Accenture.</span>
+<span id="L2"><span class="lineNum">       2</span>              : </span>
+<span id="L3"><span class="lineNum">       3</span>              : #pragma once</span>
+<span id="L4"><span class="lineNum">       4</span>              : </span>
+<span id="L5"><span class="lineNum">       5</span>              : #include &lt;cstdint&gt;</span>
+<span id="L6"><span class="lineNum">       6</span>              : </span>
+<span id="L7"><span class="lineNum">       7</span>              : namespace util</span>
+<span id="L8"><span class="lineNum">       8</span>              : {</span>
+<span id="L9"><span class="lineNum">       9</span>              : namespace memory</span>
+<span id="L10"><span class="lineNum">      10</span>              : {</span>
+<span id="L11"><span class="lineNum">      11</span>              : namespace internal</span>
+<span id="L12"><span class="lineNum">      12</span>              : {</span>
+<span id="L13"><span class="lineNum">      13</span>              : // This causes certain types to be handled exactly the same</span>
+<span id="L14"><span class="lineNum">      14</span>              : // clang-format off</span>
+<span id="L15"><span class="lineNum">      15</span>              :     template&lt;typename T&gt; struct TypeMap {};</span>
+<span id="L16"><span class="lineNum">      16</span>              :     template&lt;&gt; struct TypeMap&lt;int8_t&gt;             { using type = uint8_t; };</span>
+<span id="L17"><span class="lineNum">      17</span>              :     template&lt;&gt; struct TypeMap&lt;int16_t&gt;            { using type = uint16_t; };</span>
+<span id="L18"><span class="lineNum">      18</span>              :     template&lt;&gt; struct TypeMap&lt;int32_t&gt;            { using type = uint32_t; };</span>
+<span id="L19"><span class="lineNum">      19</span>              :     template&lt;&gt; struct TypeMap&lt;int64_t&gt;            { using type = uint64_t; };</span>
+<span id="L20"><span class="lineNum">      20</span>              : </span>
+<span id="L21"><span class="lineNum">      21</span>              : // clang-format on</span>
+<span id="L22"><span class="lineNum">      22</span>              : } // namespace internal</span>
+<span id="L23"><span class="lineNum">      23</span>              : </span>
+<span id="L24"><span class="lineNum">      24</span>              : template&lt;typename T&gt;</span>
+<span id="L25"><span class="lineNum">      25</span> <span class="tlaGNC tlaBgGNC">          48 : T reverseBits(T const value)</span></span>
+<span id="L26"><span class="lineNum">      26</span>              : {</span>
+<span id="L27"><span class="lineNum">      27</span>              :     typename internal::TypeMap&lt;T&gt;::type const ret</span>
+<span id="L28"><span class="lineNum">      28</span> <span class="tlaGNC">          48 :         = reverseBits&lt;typename internal::TypeMap&lt;T&gt;::type&gt;(</span></span>
+<span id="L29"><span class="lineNum">      29</span> <span class="tlaGNC">          24 :             static_cast&lt;typename internal::TypeMap&lt;T&gt;::type&gt;(value));</span></span>
+<span id="L30"><span class="lineNum">      30</span> <span class="tlaGNC">          48 :     return static_cast&lt;T&gt;(ret);</span></span>
+<span id="L31"><span class="lineNum">      31</span>              : }</span>
+<span id="L32"><span class="lineNum">      32</span>              : </span>
+<span id="L33"><span class="lineNum">      33</span>              : template&lt;&gt;</span>
+<span id="L34"><span class="lineNum">      34</span> <span class="tlaGNC">         113 : inline uint8_t reverseBits(uint8_t value)</span></span>
+<span id="L35"><span class="lineNum">      35</span>              : {</span>
+<span id="L36"><span class="lineNum">      36</span> <span class="tlaGNC">         113 :     value = ((value &gt;&gt; 1U) &amp; 0x55U) | (static_cast&lt;uint8_t&gt;(value &lt;&lt; 1U) &amp; 0xAAU);</span></span>
+<span id="L37"><span class="lineNum">      37</span> <span class="tlaGNC">         113 :     value = ((value &gt;&gt; 2U) &amp; 0x33U) | (static_cast&lt;uint8_t&gt;(value &lt;&lt; 2U) &amp; 0xCCU);</span></span>
+<span id="L38"><span class="lineNum">      38</span> <span class="tlaGNC">         113 :     return (value &gt;&gt; 4U) | static_cast&lt;uint8_t&gt;(value &lt;&lt; 4U);</span></span>
+<span id="L39"><span class="lineNum">      39</span>              : }</span>
+<span id="L40"><span class="lineNum">      40</span>              : </span>
+<span id="L41"><span class="lineNum">      41</span>              : template&lt;&gt;</span>
+<span id="L42"><span class="lineNum">      42</span> <span class="tlaGNC">          25 : inline uint16_t reverseBits(uint16_t value)</span></span>
+<span id="L43"><span class="lineNum">      43</span>              : {</span>
+<span id="L44"><span class="lineNum">      44</span> <span class="tlaGNC">          25 :     value = ((value &gt;&gt; 1U) &amp; 0x5555U) | (static_cast&lt;uint16_t&gt;(value &lt;&lt; 1U) &amp; 0xAAAAU);</span></span>
+<span id="L45"><span class="lineNum">      45</span> <span class="tlaGNC">          25 :     value = ((value &gt;&gt; 2U) &amp; 0x3333U) | (static_cast&lt;uint16_t&gt;(value &lt;&lt; 2U) &amp; 0xCCCCU);</span></span>
+<span id="L46"><span class="lineNum">      46</span> <span class="tlaGNC">          25 :     value = ((value &gt;&gt; 4U) &amp; 0x0F0FU) | (static_cast&lt;uint16_t&gt;(value &lt;&lt; 4U) &amp; 0xF0F0U);</span></span>
+<span id="L47"><span class="lineNum">      47</span> <span class="tlaGNC">          25 :     return (value &gt;&gt; 8U) | static_cast&lt;uint16_t&gt;(value &lt;&lt; 8U);</span></span>
+<span id="L48"><span class="lineNum">      48</span>              : }</span>
+<span id="L49"><span class="lineNum">      49</span>              : </span>
+<span id="L50"><span class="lineNum">      50</span>              : template&lt;&gt;</span>
+<span id="L51"><span class="lineNum">      51</span> <span class="tlaGNC">          33 : inline uint32_t reverseBits(uint32_t value)</span></span>
+<span id="L52"><span class="lineNum">      52</span>              : {</span>
+<span id="L53"><span class="lineNum">      53</span> <span class="tlaGNC">          33 :     value = ((value &gt;&gt; 1U) &amp; 0x55555555U) | ((value &lt;&lt; 1U) &amp; 0xAAAAAAAAU);</span></span>
+<span id="L54"><span class="lineNum">      54</span> <span class="tlaGNC">          33 :     value = ((value &gt;&gt; 2U) &amp; 0x33333333U) | ((value &lt;&lt; 2U) &amp; 0xCCCCCCCCU);</span></span>
+<span id="L55"><span class="lineNum">      55</span> <span class="tlaGNC">          33 :     value = ((value &gt;&gt; 4U) &amp; 0x0F0F0F0FU) | ((value &lt;&lt; 4U) &amp; 0xF0F0F0F0U);</span></span>
+<span id="L56"><span class="lineNum">      56</span> <span class="tlaGNC">          33 :     value = ((value &gt;&gt; 8U) &amp; 0x00FF00FFU) | ((value &lt;&lt; 8U) &amp; 0xFF00FF00U);</span></span>
+<span id="L57"><span class="lineNum">      57</span> <span class="tlaGNC">          33 :     return (value &gt;&gt; 16U) | (value &lt;&lt; 16U);</span></span>
+<span id="L58"><span class="lineNum">      58</span>              : }</span>
+<span id="L59"><span class="lineNum">      59</span>              : </span>
+<span id="L60"><span class="lineNum">      60</span>              : template&lt;&gt;</span>
+<span id="L61"><span class="lineNum">      61</span> <span class="tlaGNC">          24 : inline uint64_t reverseBits(uint64_t value)</span></span>
+<span id="L62"><span class="lineNum">      62</span>              : {</span>
+<span id="L63"><span class="lineNum">      63</span> <span class="tlaGNC">          24 :     value = ((value &gt;&gt; 1U) &amp; 0x5555555555555555U) | ((value &lt;&lt; 1U) &amp; 0xAAAAAAAAAAAAAAAAU);</span></span>
+<span id="L64"><span class="lineNum">      64</span> <span class="tlaGNC">          24 :     value = ((value &gt;&gt; 2U) &amp; 0x3333333333333333U) | ((value &lt;&lt; 2U) &amp; 0xCCCCCCCCCCCCCCCCU);</span></span>
+<span id="L65"><span class="lineNum">      65</span> <span class="tlaGNC">          24 :     value = ((value &gt;&gt; 4U) &amp; 0x0F0F0F0F0F0F0F0FU) | ((value &lt;&lt; 4U) &amp; 0xF0F0F0F0F0F0F0F0U);</span></span>
+<span id="L66"><span class="lineNum">      66</span> <span class="tlaGNC">          24 :     value = ((value &gt;&gt; 8U) &amp; 0x00FF00FF00FF00FFU) | ((value &lt;&lt; 8U) &amp; 0xFF00FF00FF00FF00U);</span></span>
+<span id="L67"><span class="lineNum">      67</span> <span class="tlaGNC">          24 :     value = ((value &gt;&gt; 16U) &amp; 0x0000FFFF0000FFFFU) | ((value &lt;&lt; 16U) &amp; 0xFFFF0000FFFF0000U);</span></span>
+<span id="L68"><span class="lineNum">      68</span> <span class="tlaGNC">          24 :     return (value &gt;&gt; 32U) | (value &lt;&lt; 32U);</span></span>
+<span id="L69"><span class="lineNum">      69</span>              : }</span>
+<span id="L70"><span class="lineNum">      70</span>              : </span>
+<span id="L71"><span class="lineNum">      71</span>              : } // namespace memory</span>
+<span id="L72"><span class="lineNum">      72</span>              : } // namespace util</span>
+        </pre>
+              </td>
+            </tr>
+          </table>
+          <br>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="ruler"><img src="../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+            <tr><td class="versionInfo">Generated by: <a href="https://github.com//linux-test-project/lcov" target="_parent">LCOV version 2.0-1</a></td></tr>
+          </table>
+          <br>
+
+</body>
+</html>

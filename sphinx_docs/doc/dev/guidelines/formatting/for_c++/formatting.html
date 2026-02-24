@@ -1,0 +1,1126 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="EclipseOpenBSWDocumentation" name="dox_trace_storage" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>clang-format Rules &mdash; Eclipse OpenBSW Documentation  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/rtd_theme_overrides.css?v=6fd0d55b" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/graphviz.css?v=eafc0fe6" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/colors.css?v=3cafd8aa" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/colored_table.css?v=34b816d5" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/header.css?v=e632285e" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/dox_util_colors.css?v=dd14b177" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/dox_trace.css?v=60d3f72c" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../../../../../_static/copybutton.js?v=f281be69"></script>
+        <script src="../../../../../_static/dox_trace.js?v=40719b51"></script>
+    <script src="../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" />
+    <link rel="next" title="clang-format Usage" href="usage.html" />
+    <link rel="prev" title="C++" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Eclipse OpenBSW Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Learning</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../learning/overview.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../learning/SysTest/HW_Testing_Guide.html">Hardware Testing Guide</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guidelines</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../conventions/index.html">Coding Conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../practices.html">Coding Practices</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Formatting</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">C++</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">clang-format Rules</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#indentation">Indentation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#column-width">Column Width</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#line-endings">Line Endings</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#trailing-whitespaces">Trailing Whitespaces</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#comments">Comments</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#empty-lines">Empty Lines</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#namespaces">Namespaces</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pointers">Pointers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#alignments">Alignments</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#spaces">Spaces</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#line-breaks">Line Breaks</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#one-liners">One-Liners</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sorting">Sorting</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qualifier-order">Qualifier Order</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#braces">Braces</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#unnecessary-characters">Unnecessary Characters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#additional-settings-in-clang-format">Additional Settings in clang-format</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#standard">Standard</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#literal-separators">Literal Separators</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#macro-magic-in-clang-format">Macro Magic in clang-format</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#not-enabled-yet">Not Enabled Yet</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#non-c-settings">Non-C++ Settings</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="usage.html">clang-format Usage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="known_issues.html">Known Issues clang-format 17.x</a></li>
+<li class="toctree-l3"><a class="reference internal" href="additional.html">Additional Rules</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../cmake.html">CMake</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../automatic.html">Automatic Formatting</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../unittests.html">Unit Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module.html">Module Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../documentation.html">Module Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../diagrams.html">Diagrams</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../3rdparty.html">Third Party Libraries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../commit_message.html">Commit Message</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../pull_request.html">Pull Request</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Platforms</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../platforms/posix/index.html">POSIX</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../platforms/s32k148evb/index.html">S32K148 Evaluation Board</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Features</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../features/storage.html">Persistent Storage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../features/functional_safety.html">Functional Safety</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Software Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/common.html">Common</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/posix.html">Posix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/s32k1xx.html">S32K1xx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/executables.html">Executables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/mocks.html">Mocks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tools/UdsTool/doc/index.html">UdsTool</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tools/puncover_tool/doc/index.html">Puncover</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Eclipse OpenBSW Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Formatting</a> &raquo;</li>
+        
+          <li><a href="index.html">C++</a> &raquo;</li>
+        
+        <li>clang-format Rules</li>
+    
+
+    
+
+      <li class="wy-breadcrumbs-aside">
+
+        <!-- DOCUMENT STATUS -->
+
+        
+
+        <!-- DATA CLASSIFICATION -->
+
+        
+
+      </li>
+
+    
+  </ul>
+
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="clang-format-rules">
+<h1>clang-format Rules<a class="headerlink" href="#clang-format-rules" title="Link to this heading"></a></h1>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The following chapters explain which clang-format rules apply.
+Rules are marked with a blue background.</p>
+</div>
+<section id="indentation">
+<h2>Indentation<a class="headerlink" href="#indentation" title="Link to this heading"></a></h2>
+<div class="line-block">
+<div class="line"><span class="target" id="format-000"><code class="highlight highlight-rule docutils literal notranslate"><span class="pre">[rule]</span> <a class="reference internal" href="#format-000"><span class="pre">FORMAT-000</span></a></code></span> Use spaces instead of tabs.</div>
+<div class="line"><span class="target" id="format-001"><code class="highlight highlight-rule docutils literal notranslate"><span class="pre">[rule]</span> <a class="reference internal" href="#format-001"><span class="pre">FORMAT-001</span></a></code></span> Use indentation of 4 spaces, also for case-statements.</div>
+<div class="line"><span class="target" id="format-002"><code class="highlight highlight-rule docutils literal notranslate"><span class="pre">[rule]</span> <a class="reference internal" href="#format-002"><span class="pre">FORMAT-002</span></a></code></span> Do not indent namespaces, gotos and preprocessor directives at all.</div>
+<div class="line"><span class="target" id="format-003"><code class="highlight highlight-rule docutils literal notranslate"><span class="pre">[rule]</span> <a class="reference internal" href="#format-003"><span class="pre">FORMAT-003</span></a></code></span> Do not add extra indentation for access modifiers, constructor initializers and
+braces.</div>
+</div>
+<p>The following rule only applies if the return type and the function name are together longer than
+the column limit.</p>
+<p><span class="target" id="format-005"><code class="highlight highlight-rule docutils literal notranslate"><span class="pre">[rule]</span> <a class="reference internal" href="#format-005"><span class="pre">FORMAT-005</span></a></code></span> Do not indent function definitions and declarations if it needs to be wrapped
+after the type.</p>
+<div class="highlight-C++ notranslate"><div class="highlight"><pre><span></span><span class="c1">// good</span>
+<span class="n">LoooooooooooooooooooooooooooooooooooooooongReturnType</span>
+<span class="nf">LoooooooooooooooooooooooooooooooongFunctionDeclaration</span><span class="p">();</span>
+
+<span class="c1">// bad</span>
+<span class="n">LoooooooooooooooooooooooooooooooooooooooongReturnType</span>
+<span class="w">    </span><span class="nf">LoooooooooooooooooooooooooooooooongFunctionDeclaration</span><span class="p">();</span>
+</pre></div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id1">
+<div class="code-block-caption"><span class="caption-text">clang-format settings</span><a class="headerlink" href="#id1" title="Link to this code"></a></div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">AccessModifierOffset</span><span class="p">:</span> <span class="o">-</span><span class="mi">4</span>
+<span class="n">BraceWrapping</span><span class="p">:</span>
+  <span class="n">IndentBraces</span><span class="p">:</span>    <span class="n">false</span>
+<span class="n">EmptyLineAfterAccessModifier</span><span class="p">:</span> <span class="n">Never</span>
+<span class="n">EmptyLineBeforeAccessModifier</span><span class="p">:</span> <span class="n">LogicalBlock</span>
+<span class="n">ConstructorInitializerIndentWidth</span><span class="p">:</span> <span class="mi">0</span>
+<span class="n">ContinuationIndentWidth</span><span class="p">:</span> <span class="mi">4</span>
+<span class="n">IndentAccessModifiers</span><span class="p">:</span> <span class="n">false</span>
+<span class="n">IndentCaseBlocks</span><span class="p">:</span> <span class="n">false</span>
+<span class="n">IndentCaseLabels</span><span class="p">:</span> <span class="n">true</span>
+<span class="n">IndentExternBlock</span><span class="p">:</span> <span class="n">NoIndent</span>
+<span class="n">IndentGotoLabels</span><span class="p">:</span> <span class="n">false</span>
+<span class="n">IndentPPDirectives</span><span class="p">:</span> <span class="kc">None</span>
+<span class="n">IndentRequiresClause</span><span class="p">:</span> <span class="n">false</span>
+<span class="n">IndentWidth</span><span class="p">:</span>     <span class="mi">4</span>
+<span class="n">IndentWrappedFunctionNames</span><span class="p">:</span> <span class="n">false</span>
+<span class="n">LambdaBodyIndentation</span><span class="p">:</span> <span class="n">Signature</span>
+<span class="n">NamespaceIndentation</span><span class="p">:</span> <span class="kc">None</span>
+<span class="n">PPIndentWidth</span><span class="p">:</span>   <span class="o">-</span><span class="mi">1</span>
+<span class="n">RequiresExpressionIndentation</span><span class="p">:</span> <span class="n">OuterScope</span>
+<span class="n">TabWidth</span><span class="p">:</span>        <span class="mi">4</span>
+<span class="n">UseTab</span><span class="p">:</span>          <span class="n">Never</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="column-width">
+<h2>Column Width<a class="headerlink" href="#column-width" title="Link to this heading"></a></h2>
+<p><span class="target" id="format-010"><code class="highlight highlight-rule docutils literal notranslate"><span class="pre">[rule]</span> <a class="reference internal" href="#format-010"><span class="pre">FORMAT-010</span></a></code></span> Do not use more than 100 characters per line.</p>
+<p>Split too long expressions into several lines and if applicable define some
+intermediate variables (which are usually optimized out by the linker).</p>
+<p>We decided to limit the width to 100 (and not more) because:</p>
+<ul class="simple">
+<li><p>It makes comparing and three-way merging of code easier.</p></li>
+<li><p>It helps colleagues who want/need a larger display scaling.</p></li>
+<li><p>It improves readability of complex code.</p></li>
+</ul>
+<p>If you have code with many indention levels and long variable names rethink your code structure.
+However, there might be exceptions, e.g. for very long predefined names. In these cases
+it is accepted to <a class="reference internal" href="usage.html#disable-clang-format-code"><span class="std std-ref">disable the automatic formatting</span></a> for this piece
+of code.</p>
+<div class="literal-block-wrapper docutils container" id="id2">
+<div class="code-block-caption"><span class="caption-text">clang-format settings</span><a class="headerlink" href="#id2" title="Link to this code"></a></div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ColumnLimit</span><span class="p">:</span>     <span class="mi">100</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="line-endings">
+<h2>Line Endings<a class="headerlink" href="#line-endings" title="Link to this heading"></a></h2>
+<p><em>git</em> takes care of the line endings automatically.
+The result depends on the local setup, typically on Windows CRLF or on Linux LF, etc.</p>
+<p><span class="target" id="format-020"><code class="highlight highlight-rule docutils literal notranslate"><span class="pre">[rule]</span> <a class="reference internal" href="#format-020"><span class="pre">FORMAT-020</span></a></code></span> Use the system standard line endings for source files.</p>
+<p>In rare cases some files may need a specific line ending, so it is accepted to specify
+a fixed line ending for these files in <em>.gitattributes</em>.</p>
+<p>clang-format will recognize the line endings and keep it. If the file ending is mixed,
+clang-format will fall-back to LF.</p>
+<div class="literal-block-wrapper docutils container" id="id3">
+<div class="code-block-caption"><span class="caption-text">clang-format settings</span><a class="headerlink" href="#id3" title="Link to this code"></a></div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">LineEnding</span><span class="p">:</span>      <span class="n">DeriveLF</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="trailing-whitespaces">
+<h2>Trailing Whitespaces<a class="headerlink" href="#trailing-whitespaces" title="Link to this heading"></a></h2>
+<p><span class="target" id="format-030"><code class="highlight highlight-rule docutils literal notranslate"><span class="pre">[rule]</span> <a class="reference internal" href="#format-030"><span class="pre">FORMAT-030</span></a></code></span> Remove trailing whitespaces.</p>
+<div class="literal-block-wrapper docutils container" id="id4">
+<div class="code-block-caption"><span class="caption-text">clang-format settings</span><a class="headerlink" href="#id4" title="Link to this code"></a></div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># there is no explicit setting, clang-format does this automatically</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="comments">
+<h2>Comments<a class="headerlink" href="#comments" title="Link to this heading"></a></h2>
+<p>It is recommended to write comments above the associated lines of code. If a comment is really
+short, it may also be written on the same line.</p>
+<p><span class="target" id="format-040"><code class="highlight highlight-rule docutils literal notranslate"><span class="pre">[rule]</span> <a class="reference internal" href="#format-040"><span class="pre">FORMAT-040</span></a></code></span> Align trailing comments. Separate code and comments with at least one space.</p>
+<div class="highlight-C++ notranslate"><div class="highlight"><pre><span></span><span class="c1">// good</span>
+<span class="kt">int8_t</span><span class="w"> </span><span class="n">foo</span><span class="p">;</span><span class="w">     </span><span class="c1">// some comment</span>
+<span class="kt">int8_t</span><span class="w"> </span><span class="n">bar</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span><span class="w"> </span><span class="c1">// more comment</span>
+</pre></div>
+</div>
+<p>Keep in mind: trailing comments also need to fit into the column width as well.</p>
+<p><span class="target" id="format-041"><code class="highlight highlight-rule docutils literal notranslate"><span class="pre">[rule]</span> <a class="reference internal" href="#format-041"><span class="pre">FORMAT-041</span></a></code></span> Comment the ending of namespaces if they consist of more than one line.</p>
+<div class="highlight-C++ notranslate"><div class="highlight"><pre><span></span><span class="c1">// good</span>
+<span class="k">namespace</span><span class="w"> </span><span class="nn">foo</span>
+<span class="p">{</span>
+<span class="p">...</span>
+<span class="p">...</span>
+<span class="p">}</span><span class="w"> </span><span class="c1">// namespace foo</span>
+</pre></div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id5">
+<div class="code-block-caption"><span class="caption-text">clang-format settings</span><a class="headerlink" href="#id5" title="Link to this code"></a></div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">AlignTrailingComments</span><span class="p">:</span>
+  <span class="n">Kind</span><span class="p">:</span>            <span class="n">Always</span>
+  <span class="n">OverEmptyLines</span><span class="p">:</span>  <span class="mi">0</span>
+<span class="n">FixNamespaceComments</span><span class="p">:</span> <span class="n">true</span>
+<span class="n">ReflowComments</span><span class="p">:</span>  <span class="n">true</span>
+<span class="n">SpacesBeforeTrailingComments</span><span class="p">:</span> <span class="mi">1</span>
+<span class="n">ShortNamespaceLines</span><span class="p">:</span> <span class="mi">1</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="empty-lines">
+<h2>Empty Lines<a class="headerlink" href="#empty-lines" title="Link to this heading"></a></h2>
+<p><span class="target" id="format-050"><code class="highlight highlight-rule docutils literal notranslate"><span class="pre">[rule]</span> <a class="reference internal" href="#format-050"><span class="pre">FORMAT-050</span></a></code></span> Do not use more than one consecutive empty line.</p>
+<p><span class="target" id="format-051"><code class="highlight highlight-rule docutils literal notranslate"><span class="pre">[rule]</span> <a class="reference internal" href="#format-051"><span class="pre">FORMAT-051</span></a></code></span> Do not start blocks with an empty line.</p>
+<p><span class="target" id="format-052"><code class="highlight highlight-rule docutils literal notranslate"><span class="pre">[rule]</span> <a class="reference internal" href="#format-052"><span class="pre">FORMAT-052</span></a></code></span> Separate definition blocks, including classes, structs, enums, and functions.</p>
+<p><span class="target" id="format-053"><code class="highlight highlight-rule docutils literal notranslate"><span class="pre">[rule]</span> <a class="reference internal" href="#format-053"><span class="pre">FORMAT-053</span></a></code></span> Write exactly one newline at the end of each file.</p>
+<div class="literal-block-wrapper docutils container" id="id6">
+<div class="code-block-caption"><span class="caption-text">clang-format settings</span><a class="headerlink" href="#id6" title="Link to this code"></a></div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">InsertNewlineAtEOF</span><span class="p">:</span> <span class="n">true</span>
+<span class="n">KeepEmptyLinesAtEOF</span><span class="p">:</span> <span class="n">false</span>
+<span class="n">KeepEmptyLinesAtTheStartOfBlocks</span><span class="p">:</span> <span class="n">false</span>
+<span class="n">MaxEmptyLinesToKeep</span><span class="p">:</span> <span class="mi">1</span>
+<span class="n">SeparateDefinitionBlocks</span><span class="p">:</span> <span class="n">Always</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="namespaces">
+<h2>Namespaces<a class="headerlink" href="#namespaces" title="Link to this heading"></a></h2>
+<p><span class="target" id="format-060"><code class="highlight highlight-rule docutils literal notranslate"><span class="pre">[rule]</span> <a class="reference internal" href="#format-060"><span class="pre">FORMAT-060</span></a></code></span> Do not compact namespaces.</p>
+<div class="highlight-C++ notranslate"><div class="highlight"><pre><span></span><span class="c1">// good</span>
+<span class="k">namespace</span><span class="w"> </span><span class="nn">foo</span>
+<span class="p">{</span>
+<span class="k">namespace</span><span class="w"> </span><span class="nn">bar</span>
+<span class="p">{</span>
+<span class="p">...</span>
+<span class="p">}</span><span class="w"> </span><span class="c1">// namespace bar</span>
+<span class="p">}</span><span class="w"> </span><span class="c1">// namespace foo</span>
+
+<span class="c1">// bad</span>
+<span class="k">namespace</span><span class="w"> </span><span class="nn">foo</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">bar</span><span class="w"> </span><span class="p">{</span>
+<span class="p">}}</span>
+</pre></div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id7">
+<div class="code-block-caption"><span class="caption-text">clang-format settings</span><a class="headerlink" href="#id7" title="Link to this code"></a></div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CompactNamespaces</span><span class="p">:</span> <span class="n">false</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="pointers">
+<h2>Pointers<a class="headerlink" href="#pointers" title="Link to this heading"></a></h2>
+<p><span class="target" id="format-070"><code class="highlight highlight-rule docutils literal notranslate"><span class="pre">[rule]</span> <a class="reference internal" href="#format-070"><span class="pre">FORMAT-070</span></a></code></span> Write the pointer’s * next to the type, not to the variable name.</p>
+<p><span class="target" id="format-071"><code class="highlight highlight-rule docutils literal notranslate"><span class="pre">[rule]</span> <a class="reference internal" href="#format-071"><span class="pre">FORMAT-071</span></a></code></span> Write the reference’s &amp; next to the type, not to the variable name.</p>
+<div class="highlight-C++ notranslate"><div class="highlight"><pre><span></span><span class="c1">// good</span>
+<span class="kt">uint8_t</span><span class="o">*</span><span class="w"> </span><span class="n">buffer</span><span class="p">;</span>
+<span class="kt">uint8_t</span><span class="o">&amp;</span><span class="w"> </span><span class="n">ref</span><span class="p">;</span>
+
+<span class="c1">// bad</span>
+<span class="kt">uint8_t</span><span class="w"> </span><span class="o">*</span><span class="n">buffer</span><span class="p">;</span>
+<span class="kt">uint8_t</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">buffer</span><span class="p">;</span>
+<span class="kt">uint8_t</span><span class="w"> </span><span class="o">&amp;</span><span class="n">ref</span><span class="p">;</span>
+<span class="kt">uint8_t</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">ref</span><span class="p">;</span>
+</pre></div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id8">
+<div class="code-block-caption"><span class="caption-text">clang-format settings</span><a class="headerlink" href="#id8" title="Link to this code"></a></div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">DerivePointerAlignment</span><span class="p">:</span> <span class="n">false</span>
+<span class="n">PointerAlignment</span><span class="p">:</span> <span class="n">Left</span>
+<span class="n">ReferenceAlignment</span><span class="p">:</span> <span class="n">Pointer</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="alignments">
+<h2>Alignments<a class="headerlink" href="#alignments" title="Link to this heading"></a></h2>
+<p><span class="target" id="format-080"><code class="highlight highlight-rule docutils literal notranslate"><span class="pre">[rule]</span> <a class="reference internal" href="#format-080"><span class="pre">FORMAT-080</span></a></code></span> Align consecutive assignments, bitfields and short case macros, but not
+consecutive declarations. Align across comments.</p>
+<div class="highlight-C++ notranslate"><div class="highlight"><pre><span></span><span class="c1">// good</span>
+<span class="n">Configuration</span><span class="w"> </span><span class="n">config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Configuration</span><span class="p">();</span>
+<span class="kt">int8_t</span><span class="w"> </span><span class="n">length</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="mi">123</span><span class="p">;</span>
+</pre></div>
+</div>
+<div class="highlight-C++ notranslate"><div class="highlight"><pre><span></span><span class="c1">// good</span>
+<span class="cp">#define FOO_COUNT     123</span>
+<span class="cp">#define NUMBER_OF_BAR 17</span>
+<span class="cp">#define FOO(x)        (x * x)</span>
+</pre></div>
+</div>
+<div class="highlight-C++ notranslate"><div class="highlight"><pre><span></span><span class="c1">// good</span>
+<span class="kt">uint8_t</span><span class="w"> </span><span class="n">variable</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">;</span>
+<span class="c1">// comment</span>
+<span class="n">uint_16_t</span><span class="w"> </span><span class="n">another_variable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="p">;</span>
+</pre></div>
+</div>
+<p><span class="target" id="format-081"><code class="highlight highlight-rule docutils literal notranslate"><span class="pre">[rule]</span> <a class="reference internal" href="#format-081"><span class="pre">FORMAT-081</span></a></code></span> If a line needs to be wrapped, align operands.</p>
+<div class="highlight-C++ notranslate"><div class="highlight"><pre><span></span><span class="c1">// good</span>
+<span class="kt">int8_t</span><span class="w"> </span><span class="n">length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">123</span>
+<span class="w">                </span><span class="o">+</span><span class="w"> </span><span class="mi">456</span><span class="p">;</span>
+
+<span class="c1">// bad</span>
+<span class="kt">int8_t</span><span class="w"> </span><span class="n">length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">123</span>
+<span class="w">    </span><span class="o">+</span><span class="w"> </span><span class="mi">456</span><span class="p">;</span>
+</pre></div>
+</div>
+<p><span class="target" id="format-082"><code class="highlight highlight-rule docutils literal notranslate"><span class="pre">[rule]</span> <a class="reference internal" href="#format-082"><span class="pre">FORMAT-082</span></a></code></span> Align escaped newlines as far left as possible.</p>
+<div class="highlight-C++ notranslate"><div class="highlight"><pre><span></span><span class="c1">// good</span>
+<span class="cp">#define FOO     \</span>
+<span class="cp">  uint_t bar;   \</span>
+<span class="cp">  uint_t fasel; \</span>
+<span class="cp">  uint_t buh;</span>
+</pre></div>
+</div>
+<p><span class="target" id="format-083"><code class="highlight highlight-rule docutils literal notranslate"><span class="pre">[rule]</span> <a class="reference internal" href="#format-083"><span class="pre">FORMAT-083</span></a></code></span> Align arguments after open brackets, break before the first argument.</p>
+<div class="highlight-C++ notranslate"><div class="highlight"><pre><span></span><span class="c1">// good</span>
+<span class="n">someLongFunction</span><span class="p">(</span>
+<span class="w">    </span><span class="n">argument1</span><span class="p">,</span>
+<span class="w">    </span><span class="n">argument2</span><span class="p">);</span>
+
+<span class="c1">// bad</span>
+<span class="n">someLongFunction</span><span class="p">(</span><span class="n">argument1</span><span class="p">,</span>
+<span class="w">                 </span><span class="n">argument2</span><span class="p">);</span>
+
+<span class="c1">// also bad</span>
+<span class="n">someLongFunction</span><span class="p">(</span><span class="n">argument1</span><span class="p">,</span>
+<span class="w">    </span><span class="n">argument2</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id9">
+<div class="code-block-caption"><span class="caption-text">clang-format settings</span><a class="headerlink" href="#id9" title="Link to this code"></a></div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">AlignAfterOpenBracket</span><span class="p">:</span> <span class="n">AlwaysBreak</span>
+<span class="n">AlignArrayOfStructures</span><span class="p">:</span> <span class="kc">None</span>
+<span class="n">AlignConsecutiveAssignments</span><span class="p">:</span>
+  <span class="n">Enabled</span><span class="p">:</span>         <span class="n">true</span>
+  <span class="n">AcrossEmptyLines</span><span class="p">:</span> <span class="n">false</span>
+  <span class="n">AcrossComments</span><span class="p">:</span>  <span class="n">true</span>
+  <span class="n">AlignCompound</span><span class="p">:</span>   <span class="n">false</span>
+  <span class="n">PadOperators</span><span class="p">:</span>    <span class="n">true</span>
+<span class="n">AlignConsecutiveBitFields</span><span class="p">:</span>
+  <span class="n">Enabled</span><span class="p">:</span>         <span class="n">true</span>
+  <span class="n">AcrossEmptyLines</span><span class="p">:</span> <span class="n">false</span>
+  <span class="n">AcrossComments</span><span class="p">:</span>  <span class="n">true</span>
+  <span class="n">AlignCompound</span><span class="p">:</span>   <span class="n">false</span>
+  <span class="n">PadOperators</span><span class="p">:</span>    <span class="n">true</span>
+<span class="n">AlignConsecutiveDeclarations</span><span class="p">:</span>
+  <span class="n">Enabled</span><span class="p">:</span>         <span class="n">false</span>
+  <span class="n">AcrossEmptyLines</span><span class="p">:</span> <span class="n">false</span>
+  <span class="n">AcrossComments</span><span class="p">:</span>  <span class="n">true</span>
+  <span class="n">AlignCompound</span><span class="p">:</span>   <span class="n">false</span>
+  <span class="n">PadOperators</span><span class="p">:</span>    <span class="n">true</span>
+<span class="n">AlignConsecutiveMacros</span><span class="p">:</span>
+  <span class="n">Enabled</span><span class="p">:</span>         <span class="n">true</span>
+  <span class="n">AcrossEmptyLines</span><span class="p">:</span> <span class="n">false</span>
+  <span class="n">AcrossComments</span><span class="p">:</span>  <span class="n">true</span>
+  <span class="n">AlignCompound</span><span class="p">:</span>   <span class="n">false</span>
+  <span class="n">PadOperators</span><span class="p">:</span>    <span class="n">true</span>
+<span class="n">AlignConsecutiveShortCaseStatements</span><span class="p">:</span>
+  <span class="n">Enabled</span><span class="p">:</span>         <span class="n">true</span>
+  <span class="n">AcrossEmptyLines</span><span class="p">:</span> <span class="n">false</span>
+  <span class="n">AcrossComments</span><span class="p">:</span>  <span class="n">true</span>
+  <span class="n">AlignCaseColons</span><span class="p">:</span> <span class="n">false</span>
+<span class="n">AlignEscapedNewlines</span><span class="p">:</span> <span class="n">Left</span>
+<span class="n">AlignOperands</span><span class="p">:</span>   <span class="n">Align</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="spaces">
+<h2>Spaces<a class="headerlink" href="#spaces" title="Link to this heading"></a></h2>
+<p><span class="target" id="format-090"><code class="highlight highlight-rule docutils literal notranslate"><span class="pre">[rule]</span> <a class="reference internal" href="#format-090"><span class="pre">FORMAT-090</span></a></code></span> Put spaces <em>before</em>:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>assignment operators</p></li>
+<li><p>constructor initializer colons</p></li>
+<li><p>inheritance colons</p></li>
+<li><p>ranged based for-loop colons</p></li>
+<li><p>parentheses of control statements</p></li>
+</ul>
+</div></blockquote>
+<p><span class="target" id="format-091"><code class="highlight highlight-rule docutils literal notranslate"><span class="pre">[rule]</span> <a class="reference internal" href="#format-091"><span class="pre">FORMAT-091</span></a></code></span> Put <strong>no</strong> spaces <em>before</em>:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>C++11 (and later) braces lists</p></li>
+<li><p>square brackets</p></li>
+</ul>
+</div></blockquote>
+<p><span class="target" id="format-092"><code class="highlight highlight-rule docutils literal notranslate"><span class="pre">[rule]</span> <a class="reference internal" href="#format-092"><span class="pre">FORMAT-092</span></a></code></span> Put <strong>no</strong> spaces <em>after</em>:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>c-style casts</p></li>
+<li><p>logical NOTs (<code class="docutils literal notranslate"><span class="pre">!</span></code> operator)</p></li>
+<li><p>template keyword</p></li>
+<li><p>requires keyword</p></li>
+<li><p>function definition name</p></li>
+<li><p>function declaration name</p></li>
+</ul>
+</div></blockquote>
+<p><span class="target" id="format-093"><code class="highlight highlight-rule docutils literal notranslate"><span class="pre">[rule]</span> <a class="reference internal" href="#format-093"><span class="pre">FORMAT-093</span></a></code></span> Put <strong>no</strong> spaces <em>at the beginning and end of</em>:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>(empty) blocks</p></li>
+<li><p>parentheses</p></li>
+<li><p>brackets</p></li>
+<li><p>c-style casts</p></li>
+<li><p>conditional statements</p></li>
+</ul>
+</div></blockquote>
+<div class="highlight-C++ notranslate"><div class="highlight"><pre><span></span><span class="c1">// good</span>
+<span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">uint8_t</span><span class="p">)</span><span class="n">b</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">c</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+</pre></div>
+</div>
+<div class="highlight-C++ notranslate"><div class="highlight"><pre><span></span><span class="c1">// good</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">class</span><span class="w"> </span><span class="nc">T</span><span class="o">&gt;</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">V</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">W</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">V</span><span class="p">()</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">_z</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="w">    </span><span class="p">...</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<div class="highlight-C++ notranslate"><div class="highlight"><pre><span></span><span class="c1">// good</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">a</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">b</span><span class="p">))</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="kt">int8_t</span><span class="p">[</span><span class="mi">3</span><span class="p">]{</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">};</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><span class="target" id="format-094"><code class="highlight highlight-rule docutils literal notranslate"><span class="pre">[rule]</span> <a class="reference internal" href="#format-094"><span class="pre">FORMAT-094</span></a></code></span> Put <strong>no</strong> spaces inside braced lists.</p>
+<div class="highlight-C++ notranslate"><div class="highlight"><pre><span></span><span class="c1">// good</span>
+<span class="n">etl</span><span class="o">::</span><span class="n">example</span><span class="o">&lt;</span><span class="kt">uint8_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">numbers</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">};</span>
+
+<span class="c1">// bad</span>
+<span class="n">etl</span><span class="o">::</span><span class="n">example</span><span class="o">&lt;</span><span class="kt">uint8_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">numbers</span><span class="p">{</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="p">};</span>
+</pre></div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id10">
+<div class="code-block-caption"><span class="caption-text">clang-format settings</span><a class="headerlink" href="#id10" title="Link to this code"></a></div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">BitFieldColonSpacing</span><span class="p">:</span> <span class="n">Both</span>
+<span class="n">Cpp11BracedListStyle</span><span class="p">:</span> <span class="n">true</span>
+<span class="n">SpaceAfterCStyleCast</span><span class="p">:</span> <span class="n">false</span>
+<span class="n">SpaceAfterLogicalNot</span><span class="p">:</span> <span class="n">false</span>
+<span class="n">SpaceAfterTemplateKeyword</span><span class="p">:</span> <span class="n">false</span>
+<span class="n">SpaceAroundPointerQualifiers</span><span class="p">:</span> <span class="n">Default</span>
+<span class="n">SpaceBeforeAssignmentOperators</span><span class="p">:</span> <span class="n">true</span>
+<span class="n">SpaceBeforeCaseColon</span><span class="p">:</span> <span class="n">false</span>
+<span class="n">SpaceBeforeCpp11BracedList</span><span class="p">:</span> <span class="n">false</span>
+<span class="n">SpaceBeforeCtorInitializerColon</span><span class="p">:</span> <span class="n">true</span>
+<span class="n">SpaceBeforeInheritanceColon</span><span class="p">:</span> <span class="n">true</span>
+<span class="n">SpaceBeforeParens</span><span class="p">:</span> <span class="n">Custom</span>
+<span class="n">SpaceBeforeParensOptions</span><span class="p">:</span>
+  <span class="n">AfterControlStatements</span><span class="p">:</span> <span class="n">true</span>
+  <span class="n">AfterForeachMacros</span><span class="p">:</span> <span class="n">true</span>
+  <span class="n">AfterFunctionDefinitionName</span><span class="p">:</span> <span class="n">false</span>
+  <span class="n">AfterFunctionDeclarationName</span><span class="p">:</span> <span class="n">false</span>
+  <span class="n">AfterIfMacros</span><span class="p">:</span>   <span class="n">true</span>
+  <span class="n">AfterOverloadedOperator</span><span class="p">:</span> <span class="n">false</span>
+  <span class="n">AfterRequiresInClause</span><span class="p">:</span> <span class="n">false</span>
+  <span class="n">AfterRequiresInExpression</span><span class="p">:</span> <span class="n">false</span>
+  <span class="n">BeforeNonEmptyParentheses</span><span class="p">:</span> <span class="n">false</span>
+<span class="n">SpaceBeforeRangeBasedForLoopColon</span><span class="p">:</span> <span class="n">true</span>
+<span class="n">SpaceBeforeSquareBrackets</span><span class="p">:</span> <span class="n">false</span>
+<span class="n">SpaceInEmptyBlock</span><span class="p">:</span> <span class="n">false</span>
+<span class="n">SpacesInAngles</span><span class="p">:</span>  <span class="n">Never</span>
+<span class="n">SpacesInContainerLiterals</span><span class="p">:</span> <span class="n">false</span>
+<span class="n">SpacesInLineCommentPrefix</span><span class="p">:</span>
+  <span class="n">Minimum</span><span class="p">:</span>         <span class="mi">1</span>
+  <span class="n">Maximum</span><span class="p">:</span>         <span class="o">-</span><span class="mi">1</span>
+<span class="n">SpacesInParens</span><span class="p">:</span>  <span class="n">Never</span>
+<span class="n">SpacesInParensOptions</span><span class="p">:</span>
+  <span class="n">InCStyleCasts</span><span class="p">:</span>   <span class="n">false</span>
+  <span class="n">InConditionalStatements</span><span class="p">:</span> <span class="n">false</span>
+  <span class="n">InEmptyParentheses</span><span class="p">:</span> <span class="n">false</span>
+  <span class="n">Other</span><span class="p">:</span>           <span class="n">false</span>
+<span class="n">SpacesInSquareBrackets</span><span class="p">:</span> <span class="n">false</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="line-breaks">
+<h2>Line Breaks<a class="headerlink" href="#line-breaks" title="Link to this heading"></a></h2>
+<p><span class="target" id="format-100"><code class="highlight highlight-rule docutils literal notranslate"><span class="pre">[rule]</span> <a class="reference internal" href="#format-100"><span class="pre">FORMAT-100</span></a></code></span> Break after</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>case label</p></li>
+<li><p>class name</p></li>
+<li><p>struct name</p></li>
+<li><p>enum name</p></li>
+<li><p>union name</p></li>
+<li><p>control statements</p></li>
+<li><p>functions</p></li>
+<li><p>template</p></li>
+<li><p>requires</p></li>
+<li><p>namespaces</p></li>
+</ul>
+</div></blockquote>
+<p>and before</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>catch</p></li>
+<li><p>else</p></li>
+</ul>
+</div></blockquote>
+<div class="highlight-C++ notranslate"><div class="highlight"><pre><span></span><span class="c1">// good</span>
+<span class="k">namespace</span><span class="w"> </span><span class="nn">foo</span>
+<span class="p">{</span>
+
+<span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="k">class</span><span class="w"> </span><span class="nc">T</span><span class="o">&gt;</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Bar</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">blah</span><span class="p">()</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">switch</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">case</span><span class="w"> </span><span class="mi">1</span><span class="p">:</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">break</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">            </span><span class="n">d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">else</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
+<span class="w">            </span><span class="n">d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+
+<span class="p">}</span><span class="w"> </span><span class="c1">// namespace foo</span>
+</pre></div>
+</div>
+<p><span class="target" id="format-101"><code class="highlight highlight-rule docutils literal notranslate"><span class="pre">[rule]</span> <a class="reference internal" href="#format-101"><span class="pre">FORMAT-101</span></a></code></span> Break after extern.</p>
+<div class="highlight-C++ notranslate"><div class="highlight"><pre><span></span><span class="c1">// good</span>
+<span class="k">extern</span><span class="w"> </span><span class="s">&quot;C&quot;</span>
+<span class="p">{</span>
+<span class="kt">void</span><span class="w"> </span><span class="nf">foo</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><span class="target" id="format-102"><code class="highlight highlight-rule docutils literal notranslate"><span class="pre">[rule]</span> <a class="reference internal" href="#format-102"><span class="pre">FORMAT-102</span></a></code></span> Do not break after return type.</p>
+<div class="highlight-C++ notranslate"><div class="highlight"><pre><span></span><span class="c1">// good</span>
+<span class="kt">void</span><span class="w"> </span><span class="nf">foo</span><span class="p">();</span>
+
+<span class="c1">// bad</span>
+<span class="kt">void</span>
+<span class="nf">foo</span><span class="p">();</span>
+</pre></div>
+</div>
+<p><span class="target" id="format-103"><code class="highlight highlight-rule docutils literal notranslate"><span class="pre">[rule]</span> <a class="reference internal" href="#format-103"><span class="pre">FORMAT-103</span></a></code></span> If arguments or parameters do not fit into one line, use one line per
+argument or parameter.</p>
+<div class="highlight-C++ notranslate"><div class="highlight"><pre><span></span><span class="c1">// good</span>
+<span class="kt">void</span><span class="w"> </span><span class="nf">someLongFunction</span><span class="p">(</span>
+<span class="w">    </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">i</span><span class="p">,</span>
+<span class="w">    </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">j</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="highlight-C++ notranslate"><div class="highlight"><pre><span></span><span class="c1">// good</span>
+<span class="n">someLongFunction</span><span class="p">(</span>
+<span class="w">    </span><span class="n">argument1</span><span class="p">,</span>
+<span class="w">    </span><span class="n">argument2</span><span class="p">);</span>
+</pre></div>
+</div>
+<p><span class="target" id="format-104"><code class="highlight highlight-rule docutils literal notranslate"><span class="pre">[rule]</span> <a class="reference internal" href="#format-104"><span class="pre">FORMAT-104</span></a></code></span> If a line needs to be wrapped, break before binary and ternary operators.
+So the new lines start with the operators.</p>
+<div class="highlight-C++ notranslate"><div class="highlight"><pre><span></span><span class="c1">// good</span>
+<span class="kt">bool</span><span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">aaaaaaaaaaaaaaaaaaaaaaaa</span>
+<span class="w">                 </span><span class="o">+</span><span class="w"> </span><span class="n">bbbbbbbbbbbbbbbbbbbbbbbb</span>
+<span class="w">                 </span><span class="o">+</span><span class="w"> </span><span class="n">cccccccccccccccccccccccc</span>
+<span class="w">             </span><span class="o">==</span><span class="w"> </span><span class="n">dddddddddddddddddddddd</span><span class="p">;</span>
+</pre></div>
+</div>
+<p><span class="target" id="format-105"><code class="highlight highlight-rule docutils literal notranslate"><span class="pre">[rule]</span> <a class="reference internal" href="#format-105"><span class="pre">FORMAT-105</span></a></code></span> Break string literals which do not fit into one line, but do not break before the
+first string.</p>
+<div class="highlight-C++ notranslate"><div class="highlight"><pre><span></span><span class="c1">// good</span>
+<span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;veryVeryVeryVeryVeryVe&quot;</span>
+<span class="w">                </span><span class="s">&quot;ryVeryVeryVeryVeryVery&quot;</span>
+<span class="w">                </span><span class="s">&quot;VeryLongString&quot;</span><span class="p">;</span>
+</pre></div>
+</div>
+<p><span class="target" id="format-106"><code class="highlight highlight-rule docutils literal notranslate"><span class="pre">[rule]</span> <a class="reference internal" href="#format-106"><span class="pre">FORMAT-106</span></a></code></span> Break constructor initializers and inheritance lists before the comma.</p>
+<p>This makes it easier to comment out/in individual lines.</p>
+<div class="highlight-C++ notranslate"><div class="highlight"><pre><span></span><span class="c1">// good</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Foo</span>
+<span class="o">:</span><span class="w"> </span><span class="n">Base1</span>
+<span class="p">,</span><span class="w"> </span><span class="n">Base2</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="n">Foo</span><span class="p">()</span>
+<span class="w">    </span><span class="o">:</span><span class="w"> </span><span class="n">Base1</span><span class="p">()</span>
+<span class="w">    </span><span class="p">,</span><span class="w"> </span><span class="n">Base2</span><span class="p">()</span>
+<span class="w">    </span><span class="p">,</span><span class="w"> </span><span class="n">_bar</span><span class="p">(</span><span class="mi">0U</span><span class="p">)</span>
+<span class="w">    </span><span class="p">,</span><span class="w"> </span><span class="n">_fasel</span><span class="p">(</span><span class="nb">false</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{}</span>
+<span class="p">...</span>
+</pre></div>
+</div>
+<p>If a complex expression does not fit into one line, it shall be wrapped into several lines.
+There are many possibilities where to break. clang-format uses a heuristic algorithm
+which can be configured. It usually works pretty well, but in case the code
+looks ugly afterwards, feel free to <a class="reference internal" href="usage.html#disable-clang-format-code"><span class="std std-ref">Disable Checks</span></a>.
+See below how clang-format is configured (the penalty options).</p>
+<div class="literal-block-wrapper docutils container" id="id11">
+<div class="code-block-caption"><span class="caption-text">clang-format settings</span><a class="headerlink" href="#id11" title="Link to this code"></a></div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">AlwaysBreakAfterReturnType</span><span class="p">:</span> <span class="kc">None</span>
+<span class="n">AlwaysBreakAfterDefinitionReturnType</span><span class="p">:</span> <span class="kc">None</span>
+<span class="n">AlwaysBreakBeforeMultilineStrings</span><span class="p">:</span> <span class="n">false</span>
+<span class="n">AlwaysBreakTemplateDeclarations</span><span class="p">:</span> <span class="n">Yes</span>
+<span class="n">BinPackArguments</span><span class="p">:</span> <span class="n">false</span>
+<span class="n">BinPackParameters</span><span class="p">:</span> <span class="n">false</span>
+<span class="n">BraceWrapping</span><span class="p">:</span>
+  <span class="n">AfterCaseLabel</span><span class="p">:</span>  <span class="n">true</span>
+  <span class="n">AfterClass</span><span class="p">:</span>      <span class="n">true</span>
+  <span class="n">AfterControlStatement</span><span class="p">:</span> <span class="n">Always</span>
+  <span class="n">AfterEnum</span><span class="p">:</span>       <span class="n">true</span>
+  <span class="n">AfterExternBlock</span><span class="p">:</span> <span class="n">true</span>
+  <span class="n">AfterFunction</span><span class="p">:</span>   <span class="n">true</span>
+  <span class="n">AfterNamespace</span><span class="p">:</span>  <span class="n">true</span>
+  <span class="n">AfterStruct</span><span class="p">:</span>     <span class="n">true</span>
+  <span class="n">AfterUnion</span><span class="p">:</span>      <span class="n">true</span>
+  <span class="n">BeforeCatch</span><span class="p">:</span>     <span class="n">true</span>
+  <span class="n">BeforeElse</span><span class="p">:</span>      <span class="n">true</span>
+  <span class="n">BeforeLambdaBody</span><span class="p">:</span> <span class="n">true</span>
+  <span class="n">BeforeWhile</span><span class="p">:</span>     <span class="n">false</span>
+<span class="n">BreakAfterAttributes</span><span class="p">:</span> <span class="n">Never</span>
+<span class="n">BreakBeforeBinaryOperators</span><span class="p">:</span> <span class="n">All</span>
+<span class="n">BreakBeforeConceptDeclarations</span><span class="p">:</span> <span class="n">Always</span>
+<span class="n">BreakBeforeBraces</span><span class="p">:</span> <span class="n">Custom</span>
+<span class="n">BreakBeforeInlineASMColon</span><span class="p">:</span> <span class="n">OnlyMultiline</span>
+<span class="n">BreakBeforeTernaryOperators</span><span class="p">:</span> <span class="n">true</span>
+<span class="n">BreakConstructorInitializers</span><span class="p">:</span> <span class="n">BeforeComma</span>
+<span class="n">BreakInheritanceList</span><span class="p">:</span> <span class="n">BeforeComma</span>
+<span class="n">BreakStringLiterals</span><span class="p">:</span> <span class="n">true</span>
+<span class="n">ExperimentalAutoDetectBinPacking</span><span class="p">:</span> <span class="n">false</span>
+<span class="n">PenaltyBreakAssignment</span><span class="p">:</span> <span class="mi">0</span>
+<span class="n">PenaltyBreakBeforeFirstCallParameter</span><span class="p">:</span> <span class="mi">0</span>
+<span class="n">PenaltyBreakComment</span><span class="p">:</span> <span class="mi">300</span>
+<span class="n">PenaltyBreakFirstLessLess</span><span class="p">:</span> <span class="mi">120</span>
+<span class="n">PenaltyBreakOpenParenthesis</span><span class="p">:</span> <span class="mi">0</span>
+<span class="n">PenaltyBreakString</span><span class="p">:</span> <span class="mi">1000</span>
+<span class="n">PenaltyBreakTemplateDeclaration</span><span class="p">:</span> <span class="mi">0</span>
+<span class="n">PenaltyExcessCharacter</span><span class="p">:</span> <span class="mi">100000</span>
+<span class="n">PenaltyIndentedWhitespace</span><span class="p">:</span> <span class="mi">0</span>
+<span class="n">PenaltyReturnTypeOnItsOwnLine</span><span class="p">:</span> <span class="mi">60</span>
+<span class="n">RequiresClausePosition</span><span class="p">:</span> <span class="n">OwnLine</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="one-liners">
+<h2>One-Liners<a class="headerlink" href="#one-liners" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt><span class="target" id="format-110"><code class="highlight highlight-rule docutils literal notranslate"><span class="pre">[rule]</span> <a class="reference internal" href="#format-110"><span class="pre">FORMAT-110</span></a></code></span> Do not break a block/function/lambda consisting of zero or one</dt><dd><p>expressions which fits into one line.</p>
+</dd>
+</dl>
+<div class="highlight-C++ notranslate"><div class="highlight"><pre><span></span><span class="c1">// good</span>
+<span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="nb">true</span><span class="p">)</span><span class="w"> </span><span class="p">{}</span>
+<span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="nb">true</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">continue</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="kt">void</span><span class="w"> </span><span class="n">f</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">foo</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+<span class="k">auto</span><span class="w"> </span><span class="n">lambda2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[](</span><span class="kt">int</span><span class="w"> </span><span class="n">a</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">a</span><span class="p">;</span><span class="w"> </span><span class="p">};</span>
+</pre></div>
+</div>
+<p><span class="target" id="format-111"><code class="highlight highlight-rule docutils literal notranslate"><span class="pre">[rule]</span> <a class="reference internal" href="#format-111"><span class="pre">FORMAT-111</span></a></code></span> Do not split braces for empty functions, structs, classes and namespaces.</p>
+<div class="highlight-C++ notranslate"><div class="highlight"><pre><span></span><span class="c1">// good</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Foo</span>
+<span class="p">{};</span>
+<span class="k">namespace</span><span class="w"> </span><span class="nn">bar</span>
+<span class="p">{}</span>
+<span class="kt">uint8_t</span><span class="w"> </span><span class="n">buffer</span><span class="p">[];</span>
+</pre></div>
+</div>
+<p><span class="target" id="format-112"><code class="highlight highlight-rule docutils literal notranslate"><span class="pre">[rule]</span> <a class="reference internal" href="#format-112"><span class="pre">FORMAT-112</span></a></code></span> Do not break if all constructor initializers fit into one line.</p>
+<div class="highlight-C++ notranslate"><div class="highlight"><pre><span></span><span class="c1">// good</span>
+<span class="n">Foo</span><span class="p">()</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">Base</span><span class="p">(),</span><span class="w"> </span><span class="n">_bar</span><span class="p">(</span><span class="mi">0U</span><span class="p">),</span><span class="w"> </span><span class="n">_fasel</span><span class="p">(</span><span class="nb">false</span><span class="p">)</span><span class="w"> </span><span class="p">{}</span>
+</pre></div>
+</div>
+<dl class="simple">
+<dt><span class="target" id="format-113"><code class="highlight highlight-rule docutils literal notranslate"><span class="pre">[rule]</span> <a class="reference internal" href="#format-113"><span class="pre">FORMAT-113</span></a></code></span> If not all arguments, constructor initializers and parameters of a declaration</dt><dd><p>fit into the first line, but into the second line, put them all into the second line.</p>
+</dd>
+</dl>
+<p>The second line can have more space due to reduced indentation.</p>
+<div class="literal-block-wrapper docutils container" id="id12">
+<div class="code-block-caption"><span class="caption-text">clang-format settings</span><a class="headerlink" href="#id12" title="Link to this code"></a></div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">AllowAllArgumentsOnNextLine</span><span class="p">:</span> <span class="n">true</span>
+<span class="n">AllowAllParametersOfDeclarationOnNextLine</span><span class="p">:</span> <span class="n">true</span>
+<span class="n">AllowShortBlocksOnASingleLine</span><span class="p">:</span> <span class="n">Always</span>
+<span class="n">AllowShortCaseLabelsOnASingleLine</span><span class="p">:</span> <span class="n">true</span>
+<span class="n">AllowShortEnumsOnASingleLine</span><span class="p">:</span> <span class="n">true</span>
+<span class="n">AllowShortFunctionsOnASingleLine</span><span class="p">:</span> <span class="n">All</span>
+<span class="n">AllowShortIfStatementsOnASingleLine</span><span class="p">:</span> <span class="n">Never</span>
+<span class="n">AllowShortLambdasOnASingleLine</span><span class="p">:</span> <span class="n">All</span>
+<span class="n">AllowShortLoopsOnASingleLine</span><span class="p">:</span> <span class="n">false</span>
+<span class="n">BraceWrapping</span><span class="p">:</span>
+  <span class="n">SplitEmptyFunction</span><span class="p">:</span> <span class="n">false</span>
+  <span class="n">SplitEmptyRecord</span><span class="p">:</span> <span class="n">false</span>
+  <span class="n">SplitEmptyNamespace</span><span class="p">:</span> <span class="n">false</span>
+<span class="n">PackConstructorInitializers</span><span class="p">:</span> <span class="n">NextLine</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="sorting">
+<h2>Sorting<a class="headerlink" href="#sorting" title="Link to this heading"></a></h2>
+<p><span class="target" id="format-120"><code class="highlight highlight-rule docutils literal notranslate"><span class="pre">[rule]</span> <a class="reference internal" href="#format-120"><span class="pre">FORMAT-120</span></a></code></span> Sort <code class="docutils literal notranslate"><span class="pre">using</span></code> declarations alphabetically.</p>
+<p><span class="target" id="format-121"><code class="highlight highlight-rule docutils literal notranslate"><span class="pre">[rule]</span> <a class="reference internal" href="#format-121"><span class="pre">FORMAT-121</span></a></code></span> Sort <code class="docutils literal notranslate"><span class="pre">include</span></code> s alphabetically and group them with the following priorities:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>own header file</p></li>
+<li><p>files from current module</p></li>
+<li><p>files from other modules except platform, gtest and gmock</p></li>
+<li><p>files from platform</p></li>
+<li><p>files from gtest and gmock</p></li>
+<li><p>compiler includes.</p></li>
+</ol>
+</div></blockquote>
+<div class="highlight-C++ notranslate"><div class="highlight"><pre><span></span><span class="c1">// good, current file is &quot;crc/memory/Ram.cpp&quot;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;crc/memory/Ram.h&quot;</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;crc/memory/Helper.h&quot;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;crc/Types.h&quot;</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;bsp/ram/Manager.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;mcu/mcu.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;reset/softwareSystemReset.h&gt;</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;string&gt;</span>
+</pre></div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id13">
+<div class="code-block-caption"><span class="caption-text">clang-format settings</span><a class="headerlink" href="#id13" title="Link to this code"></a></div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">IncludeBlocks</span><span class="p">:</span>   <span class="n">Regroup</span>
+<span class="n">IncludeCategories</span><span class="p">:</span>
+  <span class="o">-</span> <span class="n">Regex</span><span class="p">:</span>           <span class="s1">&#39;^&lt;(estd|platform)\/.*&#39;</span>
+    <span class="n">Priority</span><span class="p">:</span>        <span class="mi">3</span>
+    <span class="n">SortPriority</span><span class="p">:</span>    <span class="mi">0</span>
+    <span class="n">CaseSensitive</span><span class="p">:</span>   <span class="n">false</span>
+  <span class="o">-</span> <span class="n">Regex</span><span class="p">:</span>           <span class="s1">&#39;^&lt;(gtest|gmock)\/.*&#39;</span>
+    <span class="n">Priority</span><span class="p">:</span>        <span class="mi">4</span>
+    <span class="n">SortPriority</span><span class="p">:</span>    <span class="mi">0</span>
+    <span class="n">CaseSensitive</span><span class="p">:</span>   <span class="n">false</span>
+  <span class="o">-</span> <span class="n">Regex</span><span class="p">:</span>           <span class="s1">&#39;&lt;[[:lower:]._]+&gt;&#39;</span>
+    <span class="n">Priority</span><span class="p">:</span>        <span class="mi">100</span>
+    <span class="n">SortPriority</span><span class="p">:</span>    <span class="mi">0</span>
+    <span class="n">CaseSensitive</span><span class="p">:</span>   <span class="n">false</span>
+  <span class="o">-</span> <span class="n">Regex</span><span class="p">:</span>           <span class="s1">&#39;^&quot;.*&#39;</span>
+    <span class="n">Priority</span><span class="p">:</span>        <span class="mi">1</span>
+    <span class="n">SortPriority</span><span class="p">:</span>    <span class="mi">0</span>
+    <span class="n">CaseSensitive</span><span class="p">:</span>   <span class="n">false</span>
+  <span class="o">-</span> <span class="n">Regex</span><span class="p">:</span>           <span class="s1">&#39;^&lt;.*&#39;</span>
+    <span class="n">Priority</span><span class="p">:</span>        <span class="mi">2</span>
+    <span class="n">SortPriority</span><span class="p">:</span>    <span class="mi">0</span>
+    <span class="n">CaseSensitive</span><span class="p">:</span>   <span class="n">false</span>
+<span class="n">IncludeIsMainRegex</span><span class="p">:</span> <span class="s1">&#39;(_test|Test|Tests)?$&#39;</span>
+<span class="n">IncludeIsMainSourceRegex</span><span class="p">:</span> <span class="s1">&#39;&#39;</span>
+<span class="n">SortIncludes</span><span class="p">:</span>    <span class="n">CaseSensitive</span>
+<span class="n">SortUsingDeclarations</span><span class="p">:</span> <span class="n">LexicographicNumeric</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="qualifier-order">
+<h2>Qualifier Order<a class="headerlink" href="#qualifier-order" title="Link to this heading"></a></h2>
+<p><span class="target" id="format-130"><code class="highlight highlight-rule docutils literal notranslate"><span class="pre">[rule]</span> <a class="reference internal" href="#format-130"><span class="pre">FORMAT-130</span></a></code></span> Use the qualifiers in this order:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>static</p></li>
+<li><p>inline</p></li>
+<li><p>constexpr</p></li>
+<li><p>restrict</p></li>
+<li><p>&lt;type&gt;</p></li>
+<li><p>const</p></li>
+<li><p>volatile</p></li>
+</ul>
+</div></blockquote>
+<p>See also <a class="reference internal" href="../../conventions/constants.html#coding-style-cpp-const-correctness"><span class="std std-ref">Const Correctness</span></a> regarding <em>east-const</em>.</p>
+<div class="highlight-C++ notranslate"><div class="highlight"><pre><span></span><span class="c1">// good</span>
+<span class="k">static</span><span class="w"> </span><span class="kr">inline</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">foo</span><span class="p">(</span><span class="n">uint_8</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">bar</span><span class="p">);</span>
+
+<span class="c1">// bad</span>
+<span class="kt">void</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="kr">inline</span><span class="w"> </span><span class="n">foo</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">uint_8</span><span class="w"> </span><span class="n">bar</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id14">
+<div class="code-block-caption"><span class="caption-text">clang-format settings</span><a class="headerlink" href="#id14" title="Link to this code"></a></div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">QualifierAlignment</span><span class="p">:</span> <span class="n">Custom</span>
+<span class="n">QualifierOrder</span><span class="p">:</span>
+  <span class="o">-</span> <span class="n">static</span>
+  <span class="o">-</span> <span class="n">inline</span>
+  <span class="o">-</span> <span class="n">constexpr</span>
+  <span class="o">-</span> <span class="n">restrict</span>
+  <span class="o">-</span> <span class="nb">type</span>
+  <span class="o">-</span> <span class="n">const</span>
+  <span class="o">-</span> <span class="n">volatile</span>
+</pre></div>
+</div>
+</div>
+<p>Please note a warning regarding <strong>QualifierAlignment</strong> in the clang-format documentation:</p>
+<blockquote>
+<div><p><em>Setting QualifierAlignment to something other than Leave, COULD lead to incorrect code
+formatting due to incorrect decisions made due to clang-formats lack of complete semantic
+information. As such extra care should be taken to review code changes made by the use of this
+option.</em></p>
+</div></blockquote>
+</section>
+<section id="braces">
+<h2>Braces<a class="headerlink" href="#braces" title="Link to this heading"></a></h2>
+<p><span class="target" id="format-140"><code class="highlight highlight-rule docutils literal notranslate"><span class="pre">[rule]</span> <a class="reference internal" href="#format-140"><span class="pre">FORMAT-140</span></a></code></span> Enclose control statements with braces.</p>
+<div class="highlight-C++ notranslate"><div class="highlight"><pre><span></span><span class="c1">// good</span>
+<span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">j</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">i</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// bad</span>
+<span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">j</span><span class="p">)</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">i</span><span class="p">;</span>
+</pre></div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id15">
+<div class="code-block-caption"><span class="caption-text">clang-format settings</span><a class="headerlink" href="#id15" title="Link to this code"></a></div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">InsertBraces</span><span class="p">:</span>    <span class="n">true</span>
+<span class="n">RemoveBracesLLVM</span><span class="p">:</span> <span class="n">false</span>
+</pre></div>
+</div>
+</div>
+<p>Please note a warning regarding <strong>InsertBraces</strong> in the clang-format documentation:</p>
+<blockquote>
+<div><p><em>Setting this option to true could lead to incorrect code formatting due to clang-format’s lack
+of complete semantic information. As such, extra care should be taken to review code changes
+made by this option.</em></p>
+</div></blockquote>
+</section>
+<section id="unnecessary-characters">
+<h2>Unnecessary Characters<a class="headerlink" href="#unnecessary-characters" title="Link to this heading"></a></h2>
+<p><span class="target" id="format-150"><code class="highlight highlight-rule docutils literal notranslate"><span class="pre">[rule]</span> <a class="reference internal" href="#format-150"><span class="pre">FORMAT-150</span></a></code></span> Do not write semicolons after the closing brace of a non-empty function.</p>
+<div class="highlight-C++ notranslate"><div class="highlight"><pre><span></span><span class="c1">// good</span>
+<span class="n">LockType</span><span class="o">::~</span><span class="n">LockType</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="p">...</span>
+<span class="p">}</span>
+
+<span class="c1">// bad</span>
+<span class="n">LockType</span><span class="o">::~</span><span class="n">LockType</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="p">...</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id16">
+<div class="code-block-caption"><span class="caption-text">clang-format settings</span><a class="headerlink" href="#id16" title="Link to this code"></a></div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">RemoveSemicolon</span><span class="p">:</span> <span class="n">true</span>
+</pre></div>
+</div>
+</div>
+<p>Please note a warning regarding <strong>RemoveSemicolon</strong> in the clang-format documentation:</p>
+<blockquote>
+<div><p><em>Setting this option to true could lead to incorrect code formatting due to clang-format’s lack
+of complete semantic information. As such, extra care should be taken to review code changes
+made by this option.</em></p>
+</div></blockquote>
+</section>
+<section id="additional-settings-in-clang-format">
+<h2>Additional Settings in clang-format<a class="headerlink" href="#additional-settings-in-clang-format" title="Link to this heading"></a></h2>
+<section id="standard">
+<h3>Standard<a class="headerlink" href="#standard" title="Link to this heading"></a></h3>
+<p>The software supports C++14 and above, so the <code class="docutils literal notranslate"><span class="pre">Standard</span></code> setting in clang-format is set to <code class="docutils literal notranslate"><span class="pre">c++14</span></code>.</p>
+<div class="literal-block-wrapper docutils container" id="id17">
+<div class="code-block-caption"><span class="caption-text">clang-format settings</span><a class="headerlink" href="#id17" title="Link to this code"></a></div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Language</span><span class="p">:</span>        <span class="n">Cpp</span>
+<span class="n">DisableFormat</span><span class="p">:</span>   <span class="n">false</span>
+<span class="n">Standard</span><span class="p">:</span>        <span class="n">c</span><span class="o">++</span><span class="mi">14</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="literal-separators">
+<h3>Literal Separators<a class="headerlink" href="#literal-separators" title="Link to this heading"></a></h3>
+<p>We do not give any specifications about literal separators (yet). Separators are optional
+and are not evaluated.</p>
+<div class="highlight-C++ notranslate"><div class="highlight"><pre><span></span><span class="c1">// examples</span>
+<span class="n">binary</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="mb">0b100&#39;111&#39;101&#39;101</span><span class="p">;</span>
+<span class="n">decimal</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10&#39;000</span><span class="p">;</span>
+</pre></div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id18">
+<div class="code-block-caption"><span class="caption-text">clang-format settings</span><a class="headerlink" href="#id18" title="Link to this code"></a></div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">IntegerLiteralSeparator</span><span class="p">:</span>
+  <span class="n">Binary</span><span class="p">:</span>          <span class="mi">0</span>
+  <span class="n">BinaryMinDigits</span><span class="p">:</span> <span class="mi">0</span>
+  <span class="n">Decimal</span><span class="p">:</span>         <span class="mi">0</span>
+  <span class="n">DecimalMinDigits</span><span class="p">:</span> <span class="mi">0</span>
+  <span class="n">Hex</span><span class="p">:</span>             <span class="mi">0</span>
+  <span class="n">HexMinDigits</span><span class="p">:</span>    <span class="mi">0</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="macro-magic-in-clang-format">
+<h3>Macro Magic in clang-format<a class="headerlink" href="#macro-magic-in-clang-format" title="Link to this heading"></a></h3>
+<p>We keep the clang-format standard unchanged - even if we do not use all these macros - which is as
+follows:</p>
+<div class="literal-block-wrapper docutils container" id="id19">
+<div class="code-block-caption"><span class="caption-text">clang-format settings</span><a class="headerlink" href="#id19" title="Link to this code"></a></div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">AttributeMacros</span><span class="p">:</span>
+  <span class="o">-</span> <span class="n">__capability</span>
+<span class="n">ForEachMacros</span><span class="p">:</span>
+  <span class="o">-</span> <span class="n">foreach</span>
+  <span class="o">-</span> <span class="n">Q_FOREACH</span>
+  <span class="o">-</span> <span class="n">BOOST_FOREACH</span>
+<span class="n">IfMacros</span><span class="p">:</span>
+  <span class="o">-</span> <span class="n">KJ_IF_MAYBE</span>
+<span class="n">MacroBlockBegin</span><span class="p">:</span> <span class="s1">&#39;&#39;</span>
+<span class="n">MacroBlockEnd</span><span class="p">:</span> <span class="s1">&#39;&#39;</span>
+<span class="n">StatementAttributeLikeMacros</span><span class="p">:</span>
+  <span class="o">-</span> <span class="n">Q_EMIT</span>
+<span class="n">StatementMacros</span><span class="p">:</span>
+  <span class="o">-</span> <span class="n">Q_UNUSED</span>
+  <span class="o">-</span> <span class="n">QT_REQUIRE_VERSION</span>
+<span class="n">WhitespaceSensitiveMacros</span><span class="p">:</span>
+  <span class="o">-</span> <span class="n">BOOST_PP_STRINGIZE</span>
+  <span class="o">-</span> <span class="n">CF_SWIFT_NAME</span>
+  <span class="o">-</span> <span class="n">NS_SWIFT_NAME</span>
+  <span class="o">-</span> <span class="n">PP_STRINGIZE</span>
+  <span class="o">-</span> <span class="n">STRINGIZE</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="not-enabled-yet">
+<h3>Not Enabled Yet<a class="headerlink" href="#not-enabled-yet" title="Link to this heading"></a></h3>
+<p><a class="reference internal" href="known_issues.html#clang-format-remove-parentheses"><span class="std std-ref">Removing Parentheses</span></a> breaks our code in too many places.</p>
+<div class="literal-block-wrapper docutils container" id="id20">
+<div class="code-block-caption"><span class="caption-text">clang-format settings</span><a class="headerlink" href="#id20" title="Link to this code"></a></div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">RemoveParentheses</span><span class="p">:</span> <span class="n">Leave</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="non-c-settings">
+<h3>Non-C++ Settings<a class="headerlink" href="#non-c-settings" title="Link to this heading"></a></h3>
+<p>When switching to a new clang-format version, the settings are dumped with the new version and
+compared with the old .clang-format file. To keep the diff small, we do not remove the non-C++
+settings. Instead, we keep these (default) values.</p>
+<div class="literal-block-wrapper docutils container" id="id21">
+<div class="code-block-caption"><span class="caption-text">clang-format settings</span><a class="headerlink" href="#id21" title="Link to this code"></a></div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Java</span>
+<span class="n">BreakAfterJavaFieldAnnotations</span><span class="p">:</span> <span class="n">false</span>
+<span class="n">SortJavaStaticImport</span><span class="p">:</span> <span class="n">Before</span>
+
+<span class="c1"># JavaScript</span>
+<span class="n">InsertTrailingCommas</span><span class="p">:</span> <span class="kc">None</span>
+<span class="n">JavaScriptQuotes</span><span class="p">:</span> <span class="n">Leave</span>
+<span class="n">JavaScriptWrapImports</span><span class="p">:</span> <span class="n">true</span>
+
+<span class="c1"># JSON</span>
+<span class="n">BreakArrays</span><span class="p">:</span>     <span class="n">true</span>
+<span class="n">SpaceBeforeJsonColon</span><span class="p">:</span> <span class="n">false</span>
+
+<span class="c1"># Objective-C</span>
+<span class="n">BraceWrapping</span><span class="p">:</span>
+  <span class="n">AfterObjCDeclaration</span><span class="p">:</span> <span class="n">true</span>
+<span class="n">ObjCBinPackProtocolList</span><span class="p">:</span> <span class="n">Auto</span>
+<span class="n">ObjCBlockIndentWidth</span><span class="p">:</span> <span class="mi">2</span>
+<span class="n">ObjCBreakBeforeNestedBlockParam</span><span class="p">:</span> <span class="n">true</span>
+<span class="n">ObjCSpaceAfterProperty</span><span class="p">:</span> <span class="n">false</span>
+<span class="n">ObjCSpaceBeforeProtocolList</span><span class="p">:</span> <span class="n">true</span>
+
+<span class="c1"># Verilog</span>
+<span class="n">VerilogBreakBetweenInstancePorts</span><span class="p">:</span> <span class="n">true</span>
+</pre></div>
+</div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026 Accenture.</p>
+  </div>
+
+  <div role="footer_string">
+    <p>Documentation from 2026-02-24 10:51:52, official build.</p>
+
+    
+      <a href="../../../../../_sources/doc/dev/guidelines/formatting/for_c++/formatting.rst.txt" rel="nofollow"> View page source</a>
+    
+
+  </div>
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(false);
+      });
+  </script> 
+
+</body>
+</html>

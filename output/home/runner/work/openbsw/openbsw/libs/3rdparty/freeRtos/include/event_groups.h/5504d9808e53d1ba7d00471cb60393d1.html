@@ -1,0 +1,455 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../../../../../../../../../static/css/style.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <title>Symbol - puncover</title>
+    
+</head>
+<body>
+    <div class="container" id="content">
+        <div class="page-header">
+            <nav class="navbar navbar-default" role="navigation">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="../../../../../../../../../../index.html">
+                    Puncover
+                  </a>
+                </div>
+              </div>
+            </nav>
+          
+        </div>
+        <div id="inner_content">
+        
+    
+    <ol class="breadcrumb folders">
+        
+        <li><a href="../../../../../../../../../../home.html">home</a></li>
+        
+        <li><a href="../../../../../../../../../runner.html">runner</a></li>
+        
+        <li><a href="../../../../../../../../work.html">work</a></li>
+        
+        <li><a href="../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../libs.html">libs</a></li>
+        
+        <li><a href="../../../../3rdparty.html">3rdparty</a></li>
+        
+        <li><a href="../../../freeRtos.html">freeRtos</a></li>
+        
+        <li ><a href="../../include.html">include</a>
+            </li>
+
+        
+        <li class="active"><a href="../event_groups.h.html">event_groups.h</a>:319
+            </li>
+        
+    </ol>
+
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <th>Function</th>
+                <td colspan="5">
+                    <span class="icon-function">xEventGroupWaitBits</span>
+                </td>
+            </tr>
+
+            <tr>
+                <th rowspan="2"></th>
+                <th>Address</th>
+                <th>Remarks</th>
+                <th>Stack</th>
+                <th>Code</th>
+                <th>Static</th>
+            </tr>
+            <tr>
+                <td>0x0002de0c</td>
+                <td>
+    <span class="label label-success">x-module</span>
+    
+</td>
+                <td>24 (static)</td>
+                <td>188</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th>Callers (1)</th>
+                <td colspan="5">
+                
+                    <a href="../../../../bsw/asyncFreeRtos/src/async/FutureSupport.cpp/748682a52e2520d2db38b4eee4f703b8.html">async::FutureSupport::wait() (56)</a>
+                    
+                
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Callees (6,
+                            <span title="sum of used bytes by all callees">
+                            Σ=564
+                            </span>
+                        )
+                    
+                </th>
+                <td colspan="5">
+                
+                    <a href="../task.h/cdbed163a5f55758e0403164ed219209.html">vTaskSuspendAll (16)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../task.h/ddc7566428b7fe6655216ea7af4881f1.html">xTaskResumeAll (396)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../task.h/26c8d7293d280927a5c3536c7c3d612e.html">vTaskPlaceOnUnorderedEventList (68)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../task.h/a32e0330d1518650001552e78a1272aa.html">uxTaskResetEventItemValue (24)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../../../../../platforms/s32k1xx/3rdparty/freertos_cm4_sysTick/include/portmacro.h/51336e5c21ba34fb49b266dd31e701d5.html">vPortEnterCritical (32)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../../../../../platforms/s32k1xx/3rdparty/freertos_cm4_sysTick/include/portmacro.h/f34360f95022a09e4e4cceffa22ec0c6.html">vPortExitCritical (28)</a>
+                    
+                
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    
+    <pre><a href="./786db93ac67f365bbce5dd3eaad1955b.html">xEventGroupCreateStatic (28)</a></pre>
+    
+
+    <pre>
+
+    xEventGroupWaitBits():
+
+       2de0c:	e92d 41f0 	stmdb	sp!, {r4, r5, r6, r7, r8, lr}
+
+       2de10:	4680      	mov	r8, r0
+
+       2de12:	460d      	mov	r5, r1
+
+       2de14:	461e      	mov	r6, r3
+
+       2de16:	4617      	mov	r7, r2
+
+       2de18:	f7e4 f9fc 	bl	12214 <<a href="../task.h/cdbed163a5f55758e0403164ed219209.html">vTaskSuspendAll</a>>
+
+       2de1c:	f8d8 4000 	ldr.w	r4, [r8]
+
+    prvTestWaitCondition():
+
+       2de20:	ea04 0305 	and.w	r3, r4, r5
+
+       2de24:	b956      	cbnz	r6, 2de3c <<a href="./5504d9808e53d1ba7d00471cb60393d1.html">xEventGroupWaitBits</a>+0x30>
+
+       2de26:	b383      	cbz	r3, 2de8a <<a href="./5504d9808e53d1ba7d00471cb60393d1.html">xEventGroupWaitBits</a>+0x7e>
+
+    xEventGroupWaitBits():
+
+       2de28:	b38f      	cbz	r7, 2de8e <<a href="./5504d9808e53d1ba7d00471cb60393d1.html">xEventGroupWaitBits</a>+0x82>
+
+       2de2a:	ea24 0505 	bic.w	r5, r4, r5
+
+       2de2e:	f8c8 5000 	str.w	r5, [r8]
+
+       2de32:	f7e4 f9f7 	bl	12224 <<a href="../task.h/ddc7566428b7fe6655216ea7af4881f1.html">xTaskResumeAll</a>>
+
+       2de36:	4620      	mov	r0, r4
+
+       2de38:	e8bd 81f0 	ldmia.w	sp!, {r4, r5, r6, r7, r8, pc}
+
+    prvTestWaitCondition():
+
+       2de3c:	429d      	cmp	r5, r3
+
+       2de3e:	d0f3      	beq.n	2de28 <<a href="./5504d9808e53d1ba7d00471cb60393d1.html">xEventGroupWaitBits</a>+0x1c>
+
+    xEventGroupWaitBits():
+
+       2de40:	9b06      	ldr	r3, [sp, #24]
+
+       2de42:	b323      	cbz	r3, 2de8e <<a href="./5504d9808e53d1ba7d00471cb60393d1.html">xEventGroupWaitBits</a>+0x82>
+
+       2de44:	1e39      	subs	r1, r7, #0
+
+       2de46:	bf18      	it	ne
+
+       2de48:	2101      	movne	r1, #1
+
+       2de4a:	0609      	lsls	r1, r1, #24
+
+       2de4c:	f041 6180 	orr.w	r1, r1, #67108864	@ 0x4000000
+
+       2de50:	9a06      	ldr	r2, [sp, #24]
+
+       2de52:	4329      	orrs	r1, r5
+
+       2de54:	f108 0004 	add.w	r0, r8, #4
+
+       2de58:	f7e4 fb42 	bl	124e0 <<a href="../task.h/26c8d7293d280927a5c3536c7c3d612e.html">vTaskPlaceOnUnorderedEventList</a>>
+
+       2de5c:	f7e4 f9e2 	bl	12224 <<a href="../task.h/ddc7566428b7fe6655216ea7af4881f1.html">xTaskResumeAll</a>>
+
+       2de60:	b948      	cbnz	r0, 2de76 <<a href="./5504d9808e53d1ba7d00471cb60393d1.html">xEventGroupWaitBits</a>+0x6a>
+
+       2de62:	f04f 23e0 	mov.w	r3, #3758153728	@ 0xe000e000
+
+       2de66:	f04f 5280 	mov.w	r2, #268435456	@ 0x10000000
+
+       2de6a:	f8c3 2d04 	str.w	r2, [r3, #3332]	@ 0xd04
+
+       2de6e:	f3bf 8f4f 	dsb	sy
+
+       2de72:	f3bf 8f6f 	isb	sy
+
+       2de76:	f7e4 fcdd 	bl	12834 <<a href="../task.h/a32e0330d1518650001552e78a1272aa.html">uxTaskResetEventItemValue</a>>
+
+       2de7a:	0183      	lsls	r3, r0, #6
+
+       2de7c:	4604      	mov	r4, r0
+
+       2de7e:	d510      	bpl.n	2dea2 <<a href="./5504d9808e53d1ba7d00471cb60393d1.html">xEventGroupWaitBits</a>+0x96>
+
+       2de80:	f024 447f 	bic.w	r4, r4, #4278190080	@ 0xff000000
+
+       2de84:	4620      	mov	r0, r4
+
+       2de86:	e8bd 81f0 	ldmia.w	sp!, {r4, r5, r6, r7, r8, pc}
+
+       2de8a:	9b06      	ldr	r3, [sp, #24]
+
+       2de8c:	b923      	cbnz	r3, 2de98 <<a href="./5504d9808e53d1ba7d00471cb60393d1.html">xEventGroupWaitBits</a>+0x8c>
+
+       2de8e:	f7e4 f9c9 	bl	12224 <<a href="../task.h/ddc7566428b7fe6655216ea7af4881f1.html">xTaskResumeAll</a>>
+
+       2de92:	4620      	mov	r0, r4
+
+       2de94:	e8bd 81f0 	ldmia.w	sp!, {r4, r5, r6, r7, r8, pc}
+
+       2de98:	1e39      	subs	r1, r7, #0
+
+       2de9a:	bf18      	it	ne
+
+       2de9c:	2101      	movne	r1, #1
+
+       2de9e:	0609      	lsls	r1, r1, #24
+
+       2dea0:	e7d6      	b.n	2de50 <<a href="./5504d9808e53d1ba7d00471cb60393d1.html">xEventGroupWaitBits</a>+0x44>
+
+       2dea2:	f000 f8af 	bl	2e004 <<a href="../../../../../platforms/s32k1xx/3rdparty/freertos_cm4_sysTick/include/portmacro.h/51336e5c21ba34fb49b266dd31e701d5.html">vPortEnterCritical</a>>
+
+       2dea6:	f8d8 4000 	ldr.w	r4, [r8]
+
+    prvTestWaitCondition():
+
+       2deaa:	ea05 0304 	and.w	r3, r5, r4
+
+       2deae:	b946      	cbnz	r6, 2dec2 <<a href="./5504d9808e53d1ba7d00471cb60393d1.html">xEventGroupWaitBits</a>+0xb6>
+
+       2deb0:	b123      	cbz	r3, 2debc <<a href="./5504d9808e53d1ba7d00471cb60393d1.html">xEventGroupWaitBits</a>+0xb0>
+
+    xEventGroupWaitBits():
+
+       2deb2:	b11f      	cbz	r7, 2debc <<a href="./5504d9808e53d1ba7d00471cb60393d1.html">xEventGroupWaitBits</a>+0xb0>
+
+       2deb4:	ea24 0505 	bic.w	r5, r4, r5
+
+       2deb8:	f8c8 5000 	str.w	r5, [r8]
+
+       2debc:	f000 f8b2 	bl	2e024 <<a href="../../../../../platforms/s32k1xx/3rdparty/freertos_cm4_sysTick/include/portmacro.h/f34360f95022a09e4e4cceffa22ec0c6.html">vPortExitCritical</a>>
+
+       2dec0:	e7de      	b.n	2de80 <<a href="./5504d9808e53d1ba7d00471cb60393d1.html">xEventGroupWaitBits</a>+0x74>
+
+    prvTestWaitCondition():
+
+       2dec2:	42ab      	cmp	r3, r5
+
+       2dec4:	d1fa      	bne.n	2debc <<a href="./5504d9808e53d1ba7d00471cb60393d1.html">xEventGroupWaitBits</a>+0xb0>
+
+       2dec6:	e7f4      	b.n	2deb2 <<a href="./5504d9808e53d1ba7d00471cb60393d1.html">xEventGroupWaitBits</a>+0xa6>
+
+    </pre>
+
+    
+    <pre><a href="./0d02d6b166234d99ce8759a75b3ca477.html">xEventGroupSetBits (112)</a></pre>
+    
+
+    
+        <h1>Stack Worst-Case Scenarios</h1>
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 232</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 396</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    232
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                48 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">396</td>
+                <td><a href="../task.h/ddc7566428b7fe6655216ea7af4881f1.html" class="icon-function">xTaskResumeAll</a></td>
+            </tr>
+        
+        </tbody>
+        
+        <tfoot>
+            <tr>
+                <th></th>
+                <th class="col_size">184
+                </th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </tfoot>
+        
+    </table>
+        
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 184</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 1,340</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    184
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                24 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    1,340
+                    
+                    
+                </td>
+                <td class="col_size">188</td>
+                <td><a href="./5504d9808e53d1ba7d00471cb60393d1.html" class="icon-function">xEventGroupWaitBits</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                    
+                    160
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                24 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    1,152
+                    
+                    
+                </td>
+                <td class="col_size">56</td>
+                <td><a href="../../../../bsw/asyncFreeRtos/src/async/FutureSupport.cpp/748682a52e2520d2db38b4eee4f703b8.html" class="icon-function">async::FutureSupport::wait()</a></td>
+            </tr>
+        
+            <tr>
+                <th>3</th>
+                <td class="col_size">
+                </td>
+                <td class="col_size">
+            
+                136 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">1,096</td>
+                <td><a href="../../../../bsw/storage/src/storage/StorageTester.cpp/67fa68a7bcf103a087d72ac11f843f38.html" class="icon-function">storage::StorageTester::executeCommand(util::command::CommandContext&amp;, unsigned char)</a></td>
+            </tr>
+        
+        </tbody>
+        
+    </table>
+        
+    
+
+
+        </div>
+    <div id="page-footer">
+        <hr>
+        
+            brought to you with 💖
+            by <a href="https://twitter.com/hbehrens">Heiko Behrens</a>
+            <span class="secondary">– MIT license, copyright © 2014-2026</span>
+        
+    </div>
+    </div>
+</body>
+</html>

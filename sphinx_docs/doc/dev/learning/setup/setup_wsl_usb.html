@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="EclipseOpenBSWDocumentation" name="dox_trace_storage" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Add USB support to WSL &mdash; Eclipse OpenBSW Documentation  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/rtd_theme_overrides.css?v=6fd0d55b" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=eafc0fe6" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/colors.css?v=3cafd8aa" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/colored_table.css?v=34b816d5" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/header.css?v=e632285e" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/dox_util_colors.css?v=dd14b177" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/dox_trace.css?v=60d3f72c" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../../../../_static/copybutton.js?v=f281be69"></script>
+        <script src="../../../../_static/dox_trace.js?v=40719b51"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="Visual Studio Code installation and setup" href="setup_vscode.html" />
+    <link rel="prev" title="Add SocketCAN support in WSL" href="setup_wsl_socketcan.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Eclipse OpenBSW Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Learning</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../overview.html">Getting Started</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Set up your environment</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="setup_env_host_ubuntu.html">Set up environment on Ubuntu <code class="highlight highlight-prop docutils literal notranslate"><span class="pre">22.04</span></code></a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="setup_env_host_windows.html">Set up environment on Windows with WSL (Windows Subsystem for Linux)</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="setup_windows_wsl.html">Set up Ubuntu <code class="highlight highlight-prop docutils literal notranslate"><span class="pre">22.04</span></code> in WSL</a></li>
+<li class="toctree-l4"><a class="reference internal" href="setup_env_host_windows.html#posix-platform">POSIX platform</a></li>
+<li class="toctree-l4"><a class="reference internal" href="setup_env_host_windows.html#s32k148-platform">S32K148 platform</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="setup_env_host_windows.html#wsl-enhancements">WSL Enhancements</a><ul class="current">
+<li class="toctree-l5"><a class="reference internal" href="setup_wsl_socketcan.html">Add SocketCAN support in WSL</a></li>
+<li class="toctree-l5 current"><a class="current reference internal" href="#">Add USB support to WSL</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="setup_vscode.html">Visual Studio Code installation and setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="index.html#using-the-s32k148-development-board">Using the S32K148 Development Board</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../layout/index.html">Understanding the directory structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../console/index.html">Using the console</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../unit_tests/index.html">Building and Running Unit Tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../lifecycle/index.html">Managing the lifecycle of components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../logging/index.html">Logging to the console</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../commands/index.html">Adding commands to the console</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../can/index.html">Working with CAN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ethernet/index.html">Working with Ethernet</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../uds/index.html">Using UDS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hwio/index.html">Using hardware I/O</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tracing/index.html">Tracing</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../SysTest/HW_Testing_Guide.html">Hardware Testing Guide</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guidelines</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../guidelines/conventions/index.html">Coding Conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guidelines/practices.html">Coding Practices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guidelines/formatting/index.html">Formatting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guidelines/unittests.html">Unit Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guidelines/module.html">Module Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guidelines/documentation.html">Module Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guidelines/diagrams.html">Diagrams</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guidelines/3rdparty.html">Third Party Libraries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guidelines/commit_message.html">Commit Message</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guidelines/pull_request.html">Pull Request</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Platforms</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../platforms/posix/index.html">POSIX</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../platforms/s32k148evb/index.html">S32K148 Evaluation Board</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Features</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../features/storage.html">Persistent Storage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/functional_safety.html">Functional Safety</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Software Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/common.html">Common</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/posix.html">Posix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/s32k1xx.html">S32K1xx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/executables.html">Executables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/mocks.html">Mocks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tools/UdsTool/doc/index.html">UdsTool</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tools/puncover_tool/doc/index.html">Puncover</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Eclipse OpenBSW Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../overview.html">Getting Started</a> &raquo;</li>
+        
+          <li><a href="index.html">Set up your environment</a> &raquo;</li>
+        
+          <li><a href="setup_env_host_windows.html">Set up environment on Windows with WSL (Windows Subsystem for Linux)</a> &raquo;</li>
+        
+        <li>Add USB support to WSL</li>
+    
+
+    
+
+      <li class="wy-breadcrumbs-aside">
+
+        <!-- DOCUMENT STATUS -->
+
+        
+
+        <!-- DATA CLASSIFICATION -->
+
+        
+
+      </li>
+
+    
+  </ul>
+
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="add-usb-support-to-wsl">
+<span id="setup-wsl-usb"></span><h1>Add USB support to WSL<a class="headerlink" href="#add-usb-support-to-wsl" title="Link to this heading"></a></h1>
+<p>Using <a class="reference external" href="https://github.com/dorssel/usbipd-win/">usbipd-win</a>
+you can make USB devices that are connected to your Windows PC/laptop available in WSL.</p>
+<p>As an example, the steps below were used to make a Peak USB-CAN adaptor accessible as a network interface in Ubuntu using <code class="docutils literal notranslate"><span class="pre">SocketCAN</span></code>.
+This assumes you have already successfully followed the steps in <a class="reference internal" href="setup_wsl_socketcan.html#setup-wsl-socketcan"><span class="std std-ref">Add SocketCAN support in WSL</span></a> and your WSL kernel supports USB.
+Recent versions of Windows running WSL kernel <code class="highlight highlight-prop docutils literal notranslate"><span class="pre">5.10.60.1</span></code> or later already include support for many USB scenarios.</p>
+<p>The steps below were performed with WSL up and running - with the CAN kernel modules loaded
+and <code class="docutils literal notranslate"><span class="pre">vcan0</span></code> successfully created as described in <a class="reference internal" href="setup_wsl_socketcan.html#setup-wsl-socketcan"><span class="std std-ref">Add SocketCAN support in WSL</span></a>.</p>
+<p>First, download the latest <a class="reference external" href="https://github.com/dorssel/usbipd-win/">usbipd-win</a> Windows installer and run it (you must have Administrator rights).</p>
+<p>Once installed, in a command prompt with Administrator rights run <code class="docutils literal notranslate"><span class="pre">usbipd</span> <span class="pre">list</span></code></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>C:<span class="se">\&gt;</span>usbipd<span class="w"> </span>list
+Connected:
+BUSID<span class="w">  </span>VID:PID<span class="w">    </span>DEVICE<span class="w">                                                        </span>STATE
+<span class="m">2</span>-3<span class="w">    </span>0c45:6a09<span class="w">  </span>Integrated<span class="w"> </span>Webcam<span class="w">                                             </span>Not<span class="w"> </span>shared
+<span class="m">2</span>-13<span class="w">   </span><span class="m">1357</span>:0089<span class="w">  </span>OpenSDA<span class="w"> </span>-<span class="w"> </span>CDC<span class="w"> </span>Serial<span class="w"> </span>Port<span class="w"> </span><span class="o">(</span>http://www.pemicro.com/opensda...<span class="w">  </span>Not<span class="w"> </span>shared
+<span class="m">2</span>-14<span class="w">   </span><span class="m">8087</span>:0026<span class="w">  </span>Intel<span class="o">(</span>R<span class="o">)</span><span class="w"> </span>Wireless<span class="w"> </span>Bluetooth<span class="o">(</span>R<span class="o">)</span><span class="w">                                </span>Not<span class="w"> </span>shared
+<span class="m">3</span>-2<span class="w">    </span>0c72:000c<span class="w">  </span>PCAN-USB<span class="w">                                                      </span>Not<span class="w"> </span>shared
+<span class="m">3</span>-3<span class="w">    </span>047f:c025<span class="w">  </span>Plantronics<span class="w"> </span>C320-M,<span class="w"> </span>USB<span class="w"> </span>Input<span class="w"> </span>Device<span class="w">                          </span>Not<span class="w"> </span>shared
+<span class="m">4</span>-3<span class="w">    </span>0b95:1790<span class="w">  </span>ASIX<span class="w"> </span>AX88179<span class="w"> </span>USB<span class="w"> </span><span class="m">3</span>.0<span class="w"> </span>to<span class="w"> </span>Gigabit<span class="w"> </span>Ethernet<span class="w"> </span>Adapter<span class="w">              </span>Not<span class="w"> </span>shared
+</pre></div>
+</div>
+<p>You can see in the above list the Peak CAN USB adaptor is listed as <code class="docutils literal notranslate"><span class="pre">PCAN-USB</span></code> with Bus ID = <code class="docutils literal notranslate"><span class="pre">3-2</span></code></p>
+<p>In the same command prompt with Administrator rights run <code class="docutils literal notranslate"><span class="pre">usbipd</span> <span class="pre">bind</span> <span class="pre">--busid</span> <span class="pre">3-2</span></code>.</p>
+<p>Now, when the devices are listed again you can see that the Peak CAN USB adaptor is “Shared”,
+meaning the device is available to WSL.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>C:<span class="se">\&gt;</span>usbipd<span class="w"> </span>list
+Connected:
+BUSID<span class="w">  </span>VID:PID<span class="w">    </span>DEVICE<span class="w">                                                        </span>STATE
+<span class="m">2</span>-3<span class="w">    </span>0c45:6a09<span class="w">  </span>Integrated<span class="w"> </span>Webcam<span class="w">                                             </span>Not<span class="w"> </span>shared
+<span class="m">2</span>-13<span class="w">   </span><span class="m">1357</span>:0089<span class="w">  </span>OpenSDA<span class="w"> </span>-<span class="w"> </span>CDC<span class="w"> </span>Serial<span class="w"> </span>Port<span class="w"> </span><span class="o">(</span>http://www.pemicro.com/opensda...<span class="w">  </span>Not<span class="w"> </span>shared
+<span class="m">2</span>-14<span class="w">   </span><span class="m">8087</span>:0026<span class="w">  </span>Intel<span class="o">(</span>R<span class="o">)</span><span class="w"> </span>Wireless<span class="w"> </span>Bluetooth<span class="o">(</span>R<span class="o">)</span><span class="w">                                </span>Not<span class="w"> </span>shared
+<span class="m">3</span>-2<span class="w">    </span>0c72:000c<span class="w">  </span>PCAN-USB<span class="w">                                                      </span>Shared
+<span class="m">3</span>-3<span class="w">    </span>047f:c025<span class="w">  </span>Plantronics<span class="w"> </span>C320-M,<span class="w"> </span>USB<span class="w"> </span>Input<span class="w"> </span>Device<span class="w">                          </span>Not<span class="w"> </span>shared
+<span class="m">4</span>-3<span class="w">    </span>0b95:1790<span class="w">  </span>ASIX<span class="w"> </span>AX88179<span class="w"> </span>USB<span class="w"> </span><span class="m">3</span>.0<span class="w"> </span>to<span class="w"> </span>Gigabit<span class="w"> </span>Ethernet<span class="w"> </span>Adapter<span class="w">              </span>Not<span class="w"> </span>shared
+</pre></div>
+</div>
+<p>This “Shared” status persists across reboots so you will not need to do this again
+and you won’t need Administrator rights for the remaining commands.</p>
+<p>Once it is “Shared”, a device can be “Attached” to WSL in a normal Windows command prompt (without Administrator rights) as follows…</p>
+<pre class="literal-block">C:\&gt;usbipd attach --wsl --busid 3-2
+usbipd: info: Using WSL distribution 'Ubuntu-22.04' to attach; the device will be available in all WSL 2 distributions.
+usbipd: info: Using IP address 127.0.0.1 to reach the host.</pre>
+<p>The “Attached” status does not persist, you will need to reattach after every time WSL is restarted.
+While “Attached” to WSL, you cannot use the device in Windows.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>C:<span class="se">\&gt;</span>usbipd<span class="w"> </span>list
+Connected:
+BUSID<span class="w">  </span>VID:PID<span class="w">    </span>DEVICE<span class="w">                                                        </span>STATE
+<span class="m">2</span>-3<span class="w">    </span>0c45:6a09<span class="w">  </span>Integrated<span class="w"> </span>Webcam<span class="w">                                             </span>Not<span class="w"> </span>shared
+<span class="m">2</span>-13<span class="w">   </span><span class="m">1357</span>:0089<span class="w">  </span>OpenSDA<span class="w"> </span>-<span class="w"> </span>CDC<span class="w"> </span>Serial<span class="w"> </span>Port<span class="w"> </span><span class="o">(</span>http://www.pemicro.com/opensda...<span class="w">  </span>Not<span class="w"> </span>shared
+<span class="m">2</span>-14<span class="w">   </span><span class="m">8087</span>:0026<span class="w">  </span>Intel<span class="o">(</span>R<span class="o">)</span><span class="w"> </span>Wireless<span class="w"> </span>Bluetooth<span class="o">(</span>R<span class="o">)</span><span class="w">                                </span>Not<span class="w"> </span>shared
+<span class="m">3</span>-2<span class="w">    </span>0c72:000c<span class="w">  </span>PCAN-USB<span class="w">                                                      </span>Attached
+<span class="m">3</span>-3<span class="w">    </span>047f:c025<span class="w">  </span>Plantronics<span class="w"> </span>C320-M,<span class="w"> </span>USB<span class="w"> </span>Input<span class="w"> </span>Device<span class="w">                          </span>Not<span class="w"> </span>shared
+<span class="m">4</span>-3<span class="w">    </span>0b95:1790<span class="w">  </span>ASIX<span class="w"> </span>AX88179<span class="w"> </span>USB<span class="w"> </span><span class="m">3</span>.0<span class="w"> </span>to<span class="w"> </span>Gigabit<span class="w"> </span>Ethernet<span class="w"> </span>Adapter<span class="w">              </span>Not<span class="w"> </span>shared
+</pre></div>
+</div>
+<p>Now, in a Ubuntu shell, you should see the USB device…</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>frank@C11-JQXQXCRB1VG:~$<span class="w"> </span>lsusb
+Bus<span class="w"> </span><span class="m">002</span><span class="w"> </span>Device<span class="w"> </span><span class="m">001</span>:<span class="w"> </span>ID<span class="w"> </span>1d6b:0003<span class="w"> </span>Linux<span class="w"> </span>Foundation<span class="w"> </span><span class="m">3</span>.0<span class="w"> </span>root<span class="w"> </span>hub
+Bus<span class="w"> </span><span class="m">001</span><span class="w"> </span>Device<span class="w"> </span><span class="m">002</span>:<span class="w"> </span>ID<span class="w"> </span>0c72:000c<span class="w"> </span>PEAK<span class="w"> </span>System<span class="w"> </span>PCAN-USB
+Bus<span class="w"> </span><span class="m">001</span><span class="w"> </span>Device<span class="w"> </span><span class="m">001</span>:<span class="w"> </span>ID<span class="w"> </span>1d6b:0002<span class="w"> </span>Linux<span class="w"> </span>Foundation<span class="w"> </span><span class="m">2</span>.0<span class="w"> </span>root<span class="w"> </span>hub
+frank@C11-JQXQXCRB1VG:~$
+</pre></div>
+</div>
+<p>Next, create the file <code class="docutils literal notranslate"><span class="pre">/etc/systemd/network/80-can.network</span></code> containing…</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">[</span>Match<span class="o">]</span>
+<span class="nv">Name</span><span class="o">=</span>can*
+
+<span class="o">[</span>CAN<span class="o">]</span>
+<span class="nv">BitRate</span><span class="o">=</span><span class="m">500000</span>
+</pre></div>
+</div>
+<p>Then enable and start <code class="docutils literal notranslate"><span class="pre">systemd-networkd</span></code>…</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>systemd-networkd
+sudo<span class="w"> </span>systemctl<span class="w"> </span>start<span class="w"> </span>systemd-networkd
+</pre></div>
+</div>
+<p>If this is successful, a new network interface called <code class="docutils literal notranslate"><span class="pre">can0</span></code> should be created.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>frank@C11-JQXQXCRB1VG:~$<span class="w"> </span>ifconfig
+can0:<span class="w"> </span><span class="nv">flags</span><span class="o">=</span><span class="m">193</span>&lt;UP,RUNNING,NOARP&gt;<span class="w">  </span>mtu<span class="w"> </span><span class="m">16</span>
+<span class="w">        </span>unspec<span class="w"> </span><span class="m">00</span>-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00<span class="w">  </span>txqueuelen<span class="w"> </span><span class="m">10</span><span class="w">  </span><span class="o">(</span>UNSPEC<span class="o">)</span>
+<span class="w">        </span>RX<span class="w"> </span>packets<span class="w"> </span><span class="m">23</span><span class="w">  </span>bytes<span class="w"> </span><span class="m">184</span><span class="w"> </span><span class="o">(</span><span class="m">184</span>.0<span class="w"> </span>B<span class="o">)</span>
+<span class="w">        </span>RX<span class="w"> </span>errors<span class="w"> </span><span class="m">0</span><span class="w">  </span>dropped<span class="w"> </span><span class="m">0</span><span class="w">  </span>overruns<span class="w"> </span><span class="m">0</span><span class="w">  </span>frame<span class="w"> </span><span class="m">0</span>
+<span class="w">        </span>TX<span class="w"> </span>packets<span class="w"> </span><span class="m">0</span><span class="w">  </span>bytes<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="o">(</span><span class="m">0</span>.0<span class="w"> </span>B<span class="o">)</span>
+<span class="w">        </span>TX<span class="w"> </span>errors<span class="w"> </span><span class="m">0</span><span class="w">  </span>dropped<span class="w"> </span><span class="m">0</span><span class="w"> </span>overruns<span class="w"> </span><span class="m">0</span><span class="w">  </span>carrier<span class="w"> </span><span class="m">0</span><span class="w">  </span>collisions<span class="w"> </span><span class="m">0</span>
+</pre></div>
+</div>
+<p>After reboots, once the <code class="docutils literal notranslate"><span class="pre">PCAN-USB</span></code> is again “Attached” in a Windows command prompt,
+and once the CAN modules are loaded in Ubuntu,
+then the same <code class="docutils literal notranslate"><span class="pre">can0</span></code> interface will be recreated.</p>
+<p>You can use the utilities <code class="docutils literal notranslate"><span class="pre">candump</span></code> and <code class="docutils literal notranslate"><span class="pre">cansend</span></code> with <code class="docutils literal notranslate"><span class="pre">can0</span></code>, just as you did with <code class="docutils literal notranslate"><span class="pre">vcan0</span></code> in <a class="reference internal" href="setup_wsl_socketcan.html#setup-wsl-socketcan"><span class="std std-ref">Add SocketCAN support in WSL</span></a>
+but in this case the CAN messages sent/received should be using the Peak CAN USB adaptor.
+If you have a S32K148 Development Board attached to the Peak CAN USB adaptor
+then using <code class="docutils literal notranslate"><span class="pre">candump</span></code> you should see CAN messages sent from an image running on that board.</p>
+<p>Also, you can change the POSIX platform’s code so that it attaches to <code class="docutils literal notranslate"><span class="pre">can0</span></code> instead of <code class="docutils literal notranslate"><span class="pre">vcan0</span></code>,
+then the POSIX build can communicate with the S32K148 Development Board over the Peak CAN USB adaptor.</p>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026 Accenture.</p>
+  </div>
+
+  <div role="footer_string">
+    <p>Documentation from 2026-02-24 10:51:52, official build.</p>
+
+    
+      <a href="../../../../_sources/doc/dev/learning/setup/setup_wsl_usb.rst.txt" rel="nofollow"> View page source</a>
+    
+
+  </div>
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(false);
+      });
+  </script> 
+
+</body>
+</html>

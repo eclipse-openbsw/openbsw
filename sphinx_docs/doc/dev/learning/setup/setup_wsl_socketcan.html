@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="EclipseOpenBSWDocumentation" name="dox_trace_storage" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Add SocketCAN support in WSL &mdash; Eclipse OpenBSW Documentation  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/rtd_theme_overrides.css?v=6fd0d55b" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=eafc0fe6" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/colors.css?v=3cafd8aa" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/colored_table.css?v=34b816d5" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/header.css?v=e632285e" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/dox_util_colors.css?v=dd14b177" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/dox_trace.css?v=60d3f72c" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../../../../_static/copybutton.js?v=f281be69"></script>
+        <script src="../../../../_static/dox_trace.js?v=40719b51"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="Add USB support to WSL" href="setup_wsl_usb.html" />
+    <link rel="prev" title="Flash, debug and test serial console on Windows" href="setup_s32k148_win_nxpide.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Eclipse OpenBSW Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Learning</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../overview.html">Getting Started</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Set up your environment</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="setup_env_host_ubuntu.html">Set up environment on Ubuntu <code class="highlight highlight-prop docutils literal notranslate"><span class="pre">22.04</span></code></a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="setup_env_host_windows.html">Set up environment on Windows with WSL (Windows Subsystem for Linux)</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="setup_windows_wsl.html">Set up Ubuntu <code class="highlight highlight-prop docutils literal notranslate"><span class="pre">22.04</span></code> in WSL</a></li>
+<li class="toctree-l4"><a class="reference internal" href="setup_env_host_windows.html#posix-platform">POSIX platform</a></li>
+<li class="toctree-l4"><a class="reference internal" href="setup_env_host_windows.html#s32k148-platform">S32K148 platform</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="setup_env_host_windows.html#wsl-enhancements">WSL Enhancements</a><ul class="current">
+<li class="toctree-l5 current"><a class="current reference internal" href="#">Add SocketCAN support in WSL</a></li>
+<li class="toctree-l5"><a class="reference internal" href="setup_wsl_usb.html">Add USB support to WSL</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="setup_vscode.html">Visual Studio Code installation and setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="index.html#using-the-s32k148-development-board">Using the S32K148 Development Board</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../layout/index.html">Understanding the directory structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../console/index.html">Using the console</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../unit_tests/index.html">Building and Running Unit Tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../lifecycle/index.html">Managing the lifecycle of components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../logging/index.html">Logging to the console</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../commands/index.html">Adding commands to the console</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../can/index.html">Working with CAN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ethernet/index.html">Working with Ethernet</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../uds/index.html">Using UDS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hwio/index.html">Using hardware I/O</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tracing/index.html">Tracing</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../SysTest/HW_Testing_Guide.html">Hardware Testing Guide</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guidelines</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../guidelines/conventions/index.html">Coding Conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guidelines/practices.html">Coding Practices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guidelines/formatting/index.html">Formatting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guidelines/unittests.html">Unit Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guidelines/module.html">Module Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guidelines/documentation.html">Module Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guidelines/diagrams.html">Diagrams</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guidelines/3rdparty.html">Third Party Libraries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guidelines/commit_message.html">Commit Message</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guidelines/pull_request.html">Pull Request</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Platforms</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../platforms/posix/index.html">POSIX</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../platforms/s32k148evb/index.html">S32K148 Evaluation Board</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Features</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../features/storage.html">Persistent Storage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/functional_safety.html">Functional Safety</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Software Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/common.html">Common</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/posix.html">Posix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/s32k1xx.html">S32K1xx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/executables.html">Executables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/mocks.html">Mocks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tools/UdsTool/doc/index.html">UdsTool</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tools/puncover_tool/doc/index.html">Puncover</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Eclipse OpenBSW Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../overview.html">Getting Started</a> &raquo;</li>
+        
+          <li><a href="index.html">Set up your environment</a> &raquo;</li>
+        
+          <li><a href="setup_env_host_windows.html">Set up environment on Windows with WSL (Windows Subsystem for Linux)</a> &raquo;</li>
+        
+        <li>Add SocketCAN support in WSL</li>
+    
+
+    
+
+      <li class="wy-breadcrumbs-aside">
+
+        <!-- DOCUMENT STATUS -->
+
+        
+
+        <!-- DATA CLASSIFICATION -->
+
+        
+
+      </li>
+
+    
+  </ul>
+
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="add-socketcan-support-in-wsl">
+<span id="setup-wsl-socketcan"></span><h1>Add SocketCAN support in WSL<a class="headerlink" href="#add-socketcan-support-in-wsl" title="Link to this heading"></a></h1>
+<p>If you have followed the steps in <a class="reference internal" href="setup_posix_build.html"><span class="doc">Set up build environment for POSIX platform on Ubuntu 22.04 or Windows</span></a>
+then you should now have an environment in which you can build and run the POSIX platform executable
+and this enables experimentation and learning through making your own changes to the codebase.</p>
+<p>But note that by default, the linux kernel used in WSL does not support CAN.
+If you wish to develop some CAN based functionality while working in WSL
+then you need to enable CAN support in the kernel used by WSL.
+Linux also supports Virtual CAN adapters (<code class="docutils literal notranslate"><span class="pre">vcan</span></code>) which allow CAN applications to be developed without CAN hardware
+and the POSIX build will use this if supported by the host platform.</p>
+<p>Below are instructions to enable this functionality in WSL.</p>
+<p>Before attempting this, in a Windows command shell with administrator rights
+confirm WSL2 as default version…</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>wsl<span class="w"> </span>--set-default-version<span class="w"> </span><span class="m">2</span>
+</pre></div>
+</div>
+<p>The steps below assume you have WSL2 and Ubuntu <code class="highlight highlight-prop docutils literal notranslate"><span class="pre">22.04</span></code> set up as described in <a class="reference internal" href="setup_windows_wsl.html#setup-windows-01-wsl"><span class="std std-ref">Set up Ubuntu 22.04 in WSL</span></a>.</p>
+<p>Update your existing Ubuntu distribution and install the tools needed to configure and build the kernel…</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt<span class="w"> </span>update
+sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>build-essential<span class="w"> </span>flex<span class="w"> </span>bison<span class="w"> </span>libssl-dev<span class="w"> </span>libelf-dev<span class="w"> </span>libncurses-dev<span class="w"> </span>pkg-config<span class="w"> </span>bc<span class="w"> </span>dwarves
+</pre></div>
+</div>
+<p>Just for background information, note that WSL uses a single linux kernel
+and if you have multiple distributions (eg. Ubuntu-18.04, Ubuntu- <code class="highlight highlight-prop docutils literal notranslate"><span class="pre">22.04</span></code>, Debian, etc.)
+they will all use the same kernel provided by WSL.
+In the instructions below you will not be replacing your existing Ubuntu- <code class="highlight highlight-prop docutils literal notranslate"><span class="pre">22.04</span></code> distribution,
+you will be replacing the kernel it is using with a custom kernel that you will build.
+The distribution and the kernel need to be compatible,
+so the first thing you need to do is check what version of linux kernel is currently running by executing <code class="docutils literal notranslate"><span class="pre">uname</span> <span class="pre">-r</span></code>…</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>frank@C11-JQXQXCRB1VG:~$<span class="w"> </span>uname<span class="w"> </span>-r
+<span class="m">5</span>.15.153.1-microsoft-standard-WSL2
+</pre></div>
+</div>
+<p>In the <a class="reference external" href="https://github.com/microsoft/WSL2-Linux-Kernel">WSL2-Linux-Kernel project in github</a>
+find the branch name that matches the first two numbers of your kernel.
+For the case above, the matching branch is <code class="docutils literal notranslate"><span class="pre">linux-msft-wsl-5.15.y</span></code>.</p>
+<p>Clone the WSL kernel repo and checkout the matching branch…</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/microsoft/WSL2-Linux-Kernel
+<span class="nb">cd</span><span class="w"> </span>WSL2-Linux-Kernel
+git<span class="w"> </span>checkout<span class="w"> </span>linux-msft-wsl-5.15.y
+</pre></div>
+</div>
+<p>You need to configure the kernel before building it.
+You can take the current kernel’s configuration as the starting point…</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cat<span class="w"> </span>/proc/config.gz<span class="w"> </span><span class="p">|</span><span class="w"> </span>gunzip<span class="w"> </span>&gt;<span class="w"> </span>.config
+</pre></div>
+</div>
+<p>The following command instructs the build system to prepare the kernel source tree (<code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">prepare</span></code>)
+and prepare it for building external modules (<code class="docutils literal notranslate"><span class="pre">modules_prepare</span></code>)…</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make<span class="w"> </span>prepare<span class="w"> </span>modules_prepare
+</pre></div>
+</div>
+<p>Next, launch the configuration interface so that you can choose the CAN-related features needed…</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make<span class="w"> </span>menuconfig
+</pre></div>
+</div>
+<p>Navigate to <code class="docutils literal notranslate"><span class="pre">Networking</span> <span class="pre">Support</span></code> as shown below…</p>
+<a class="reference internal image-reference" href="../../../../_images/kernel_menuconfig_1.png"><img alt="../../../../_images/kernel_menuconfig_1.png" class="align-center" src="../../../../_images/kernel_menuconfig_1.png" style="width: 80%;" /></a>
+<p>Press <code class="docutils literal notranslate"><span class="pre">Enter</span></code> to enter its sub-menu, then navigate to <code class="docutils literal notranslate"><span class="pre">CAN</span> <span class="pre">bus</span> <span class="pre">subsystem</span> <span class="pre">support</span></code>
+which is empty by default - press <code class="docutils literal notranslate"><span class="pre">M</span></code> to select it.</p>
+<a class="reference internal image-reference" href="../../../../_images/kernel_menuconfig_2.png"><img alt="../../../../_images/kernel_menuconfig_2.png" class="align-center" src="../../../../_images/kernel_menuconfig_2.png" style="width: 80%;" /></a>
+<p>Then, while still on <code class="docutils literal notranslate"><span class="pre">CAN</span> <span class="pre">bus</span> <span class="pre">subsystem</span> <span class="pre">support</span></code> press <code class="docutils literal notranslate"><span class="pre">Enter</span></code> to enter its sub-menu.
+You can press <code class="docutils literal notranslate"><span class="pre">M</span></code> on each item listed to include them all as shown below,
+then navigate to <code class="docutils literal notranslate"><span class="pre">CAN</span> <span class="pre">Device</span> <span class="pre">Drivers</span></code>…</p>
+<a class="reference internal image-reference" href="../../../../_images/kernel_menuconfig_3.png"><img alt="../../../../_images/kernel_menuconfig_3.png" class="align-center" src="../../../../_images/kernel_menuconfig_3.png" style="width: 80%;" /></a>
+<p>and press <code class="docutils literal notranslate"><span class="pre">Enter</span></code> to enter its sub-menu and press <code class="docutils literal notranslate"><span class="pre">M</span></code> for each of the items shown as selected below
+and set <code class="docutils literal notranslate"><span class="pre">CAN</span> <span class="pre">bit-timing</span> <span class="pre">calculation</span></code> to <code class="docutils literal notranslate"><span class="pre">*</span></code>…</p>
+<a class="reference internal image-reference" href="../../../../_images/kernel_menuconfig_4.png"><img alt="../../../../_images/kernel_menuconfig_4.png" class="align-center" src="../../../../_images/kernel_menuconfig_4.png" style="width: 80%;" /></a>
+<p>When finished making configuration changes, Save and Exit. This will write a new <code class="docutils literal notranslate"><span class="pre">.config</span></code> file.</p>
+<p>Now you can build your custom kernel and modules…</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make<span class="w"> </span>-j4
+make<span class="w"> </span>modules
+sudo<span class="w"> </span>make<span class="w"> </span>modules_install
+</pre></div>
+</div>
+<p>The newly built kernel should be found in the current directory (at the base of the WSL kernel git repo clone) as a file named <code class="docutils literal notranslate"><span class="pre">vmlinux</span></code>.
+You need to put this file in a Windows directory and tell WSL to use it at startup.
+eg. Make a directory in your <code class="docutils literal notranslate"><span class="pre">C:</span></code> drive named <code class="docutils literal notranslate"><span class="pre">wsl_custom</span></code> and from Ubuntu copy the built kernel there…</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cp<span class="w"> </span>vmlinux<span class="w"> </span>/mnt/c/wsl_custom/
+</pre></div>
+</div>
+<p>Create a file named <code class="docutils literal notranslate"><span class="pre">.wslconfig</span></code> in your Windows user directory (eg. <code class="docutils literal notranslate"><span class="pre">C:\Users\username\.wslconfig</span></code>) containing…</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">[</span>wsl2<span class="o">]</span>
+<span class="nv">kernel</span><span class="o">=</span>C:<span class="se">\\</span>wsl_custom<span class="se">\\</span>vmlinux
+</pre></div>
+</div>
+<p>To use the new kernel you need to restart WSL (by running <code class="docutils literal notranslate"><span class="pre">wsl</span> <span class="pre">--shutdown</span></code> or restarting you laptop and starting Ubuntu again).
+After this, every time WSL starts it will load your custom kernel.</p>
+<p>Each time WSL starts you will need to load the CAN kernel modules…</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>modprobe<span class="w"> </span>can
+sudo<span class="w"> </span>modprobe<span class="w"> </span>can-raw
+sudo<span class="w"> </span>modprobe<span class="w"> </span>vcan
+</pre></div>
+</div>
+<p>Then you can create a virtual CAN device as follows…</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>ip<span class="w"> </span>link<span class="w"> </span>add<span class="w"> </span>dev<span class="w"> </span>vcan0<span class="w"> </span><span class="nb">type</span><span class="w"> </span>vcan
+sudo<span class="w"> </span>ip<span class="w"> </span>link<span class="w"> </span><span class="nb">set</span><span class="w"> </span>vcan0<span class="w"> </span>mtu<span class="w"> </span><span class="m">16</span>
+sudo<span class="w"> </span>ip<span class="w"> </span>link<span class="w"> </span><span class="nb">set</span><span class="w"> </span>up<span class="w"> </span>vcan0
+</pre></div>
+</div>
+<p>If this all works you should see <code class="docutils literal notranslate"><span class="pre">vcan0</span></code> listed as a network interface. For example, <code class="docutils literal notranslate"><span class="pre">ifconfig</span></code> should show…</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>vcan0:<span class="w"> </span><span class="nv">flags</span><span class="o">=</span><span class="m">193</span>&lt;UP,RUNNING,NOARP&gt;<span class="w">  </span>mtu<span class="w"> </span><span class="m">16</span>
+<span class="w">        </span>unspec<span class="w"> </span><span class="m">00</span>-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00<span class="w">  </span>txqueuelen<span class="w"> </span><span class="m">1000</span><span class="w">  </span><span class="o">(</span>UNSPEC<span class="o">)</span>
+<span class="w">        </span>RX<span class="w"> </span>packets<span class="w"> </span><span class="m">0</span><span class="w">  </span>bytes<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="o">(</span><span class="m">0</span>.0<span class="w"> </span>B<span class="o">)</span>
+<span class="w">        </span>RX<span class="w"> </span>errors<span class="w"> </span><span class="m">0</span><span class="w">  </span>dropped<span class="w"> </span><span class="m">0</span><span class="w">  </span>overruns<span class="w"> </span><span class="m">0</span><span class="w">  </span>frame<span class="w"> </span><span class="m">0</span>
+<span class="w">        </span>TX<span class="w"> </span>packets<span class="w"> </span><span class="m">0</span><span class="w">  </span>bytes<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="o">(</span><span class="m">0</span>.0<span class="w"> </span>B<span class="o">)</span>
+<span class="w">        </span>TX<span class="w"> </span>errors<span class="w"> </span><span class="m">0</span><span class="w">  </span>dropped<span class="w"> </span><span class="m">0</span><span class="w"> </span>overruns<span class="w"> </span><span class="m">0</span><span class="w">  </span>carrier<span class="w"> </span><span class="m">0</span><span class="w">  </span>collisions<span class="w"> </span><span class="m">0</span>
+</pre></div>
+</div>
+<p>You can install <code class="docutils literal notranslate"><span class="pre">SocketCAN</span></code> utilities…</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>can-utils
+</pre></div>
+</div>
+<p>and then use the Virtual CAN interface <code class="docutils literal notranslate"><span class="pre">vcan0</span></code> with these. eg. In one Ubuntu shell run…</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>candump<span class="w"> </span>vcan0
+</pre></div>
+</div>
+<p>and at the same time, in another Ubuntu shell run…</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cansend<span class="w"> </span>vcan0<span class="w"> </span><span class="m">321</span><span class="c1">#AABBCCDDEEFF</span>
+</pre></div>
+</div>
+<p>The above command sends a CAN Frame with ID = <code class="docutils literal notranslate"><span class="pre">0x321</span></code> and 6 bytes of data <code class="docutils literal notranslate"><span class="pre">0xAABBCCDDEEFF</span></code> to <code class="docutils literal notranslate"><span class="pre">vcan0</span></code>.
+You should see it in the output from <code class="docutils literal notranslate"><span class="pre">candump</span> <span class="pre">vcan0</span></code> like this…</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>vcan0<span class="w">  </span><span class="m">321</span><span class="w">   </span><span class="o">[</span><span class="m">6</span><span class="o">]</span><span class="w">  </span>AA<span class="w"> </span>BB<span class="w"> </span>CC<span class="w"> </span>DD<span class="w"> </span>EE<span class="w"> </span>FF
+</pre></div>
+</div>
+<p>For a description of how to use your POSIX platform build with a Virtual CAN interface, see <a class="reference internal" href="../can/index.html#learning-can"><span class="std std-ref">Working with CAN</span></a>.</p>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026 Accenture.</p>
+  </div>
+
+  <div role="footer_string">
+    <p>Documentation from 2026-02-24 10:51:52, official build.</p>
+
+    
+      <a href="../../../../_sources/doc/dev/learning/setup/setup_wsl_socketcan.rst.txt" rel="nofollow"> View page source</a>
+    
+
+  </div>
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(false);
+      });
+  </script> 
+
+</body>
+</html>

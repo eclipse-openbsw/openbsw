@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="EclipseOpenBSWDocumentation" name="dox_trace_storage" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>transport - Transport Library &mdash; Eclipse OpenBSW Documentation  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/rtd_theme_overrides.css?v=6fd0d55b" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=eafc0fe6" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/colors.css?v=3cafd8aa" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/colored_table.css?v=34b816d5" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/header.css?v=e632285e" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/dox_util_colors.css?v=dd14b177" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/dox_trace.css?v=60d3f72c" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../../../../_static/copybutton.js?v=f281be69"></script>
+        <script src="../../../../_static/dox_trace.js?v=40719b51"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="LogicalAddress helper functions" href="helpers/LogicalAddress.html" />
+    <link rel="prev" title="User Documentation" href="../../timer/doc/user/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../doc/dev/index.html" class="icon icon-home">
+            Eclipse OpenBSW Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Learning</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/learning/overview.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/learning/SysTest/HW_Testing_Guide.html">Hardware Testing Guide</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guidelines</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/guidelines/conventions/index.html">Coding Conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/guidelines/practices.html">Coding Practices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/guidelines/formatting/index.html">Formatting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/guidelines/unittests.html">Unit Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/guidelines/module.html">Module Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/guidelines/documentation.html">Module Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/guidelines/diagrams.html">Diagrams</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/guidelines/3rdparty.html">Third Party Libraries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/guidelines/commit_message.html">Commit Message</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/guidelines/pull_request.html">Pull Request</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Platforms</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/platforms/posix/index.html">POSIX</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/platforms/s32k148evb/index.html">S32K148 Evaluation Board</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Features</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/features/storage.html">Persistent Storage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/features/functional_safety.html">Functional Safety</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Software Modules</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../doc/dev/modules/common.html">Common</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../../doc/dev/modules/common.html#bsw">BSW</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../async/doc/index.html">async - Asynchronous Execution Interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../asyncConsole/doc/index.html">asyncConsole - Asynchronous Console</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../asyncFreeRtos/doc/index.html">asyncFreeRtos</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../asyncImpl/doc/index.html">asyncImpl</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../bsp/doc/index.html">bsp</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../common/doc/index.html">common</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cpp2can/doc/index.html">cpp2can - CAN Abstraction Layer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cpp2ethernet/doc/index.html">cpp2ethernet - Ethernet Abstractions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../docan/doc/index.html">docan - Diagnostics over CAN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../doip/doc/index.html">doip - Diagnostics Over IP</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../io/doc/index.html">io - IO Library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lifecycle/doc/index.html">lifecycle - App Lifecycle Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../logger/doc/index.html">logger - Logger module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../loggerIntegration/doc/index.html">loggerIntegration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lwipSocket/doc/index.html">lwipSocket - LwIP v2 Socket Abstraction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../middleware/doc/index.html">middleware</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../platform/doc/index.html">platform - Platform Library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../runtime/doc/index.html">runtime</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../stdioConsoleInput/doc/index.html">stdioConsoleInput</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../storage/doc/index.html">storage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../timer/doc/index.html">timer</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">transport - Transport Library</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#architecture">Architecture</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tprouting-example">TpRouting Example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#memory-management">Memory Management</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#example">Example</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#implementing-a-transport-layer">Implementing a transport layer</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#transmitting-data">Transmitting data</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#tx-example">TX Example</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#receiving-data">Receiving data</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#rx-example">RX example</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#helper-functions">Helper functions</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="helpers/LogicalAddress.html">LogicalAddress helper functions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../transportRouterSimple/doc/index.html">transportRouterSimple</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../uds/doc/index.html">uds - Unified Diagnostic Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../util/doc/index.html">util</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../doc/dev/modules/common.html#bsp">BSP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../doc/dev/modules/common.html#safety">Safety</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/modules/posix.html">Posix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/modules/s32k1xx.html">S32K1xx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/modules/executables.html">Executables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/modules/mocks.html">Mocks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tools/UdsTool/doc/index.html">UdsTool</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tools/puncover_tool/doc/index.html">Puncover</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../doc/dev/index.html">Eclipse OpenBSW Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../doc/dev/index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../../../doc/dev/modules/common.html">Common</a> &raquo;</li>
+        
+        <li>transport - Transport Library</li>
+    
+
+    
+
+      <li class="wy-breadcrumbs-aside">
+
+        <!-- DOCUMENT STATUS -->
+
+        
+
+        <!-- DATA CLASSIFICATION -->
+
+        
+
+      </li>
+
+    
+  </ul>
+
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="transport-transport-library">
+<span id="transport"></span><h1>transport - Transport Library<a class="headerlink" href="#transport-transport-library" title="Link to this heading"></a></h1>
+<p>The module <code class="docutils literal notranslate"><span class="pre">transport</span></code> provides classes that deal with bus independent large messages.
+On a bus like CAN these messages need to be split into small frames and this is done by a so called
+transport protocol. So in general a transport protocol assembles bus specific frames with a limited
+payload into larger chunks of data. A typical use case is UDS requests and responses where large
+messages are sent to an ECU e.g. during flashing.</p>
+<section id="architecture">
+<h2>Architecture<a class="headerlink" href="#architecture" title="Link to this heading"></a></h2>
+<p>There are only a few interfaces that need an implementation to start sending and receiving of a
+<code class="docutils literal notranslate"><span class="pre">TransportMessage</span></code>.</p>
+<figure class="align-center">
+<p class="plantuml">
+<a href="../../../../_images/plantuml-afed638d16581b9cf688933b9bf444b66d1c5ca6.png"><img src="../../../../_images/plantuml-afed638d16581b9cf688933b9bf444b66d1c5ca6.png" alt="[transport] --&gt; ITransportMessageListener
+[transport] --&gt; AbstractTransportLayer
+[transport] --&gt; ITransportMessageProvider
+[transport] --&gt; ITransportMessageProcessedListener" style="width: 968.0px; height: 179.0px"/></a>
+</p>
+</figure>
+</section>
+<section id="tprouting-example">
+<h2>TpRouting Example<a class="headerlink" href="#tprouting-example" title="Link to this heading"></a></h2>
+<p>The following sequence diagram provides an overview of how a routing from one bus to another works:</p>
+<figure class="align-center">
+<p class="plantuml">
+<a href="../../../../_images/plantuml-8f113131a63947d8aa514b20ab9e756981e7d41c.png"><img src="../../../../_images/plantuml-8f113131a63947d8aa514b20ab9e756981e7d41c.png" alt="actor RxBus
+participant &quot;__**TpLayer1**__\nAbstractTransportLayer&quot; as TpLayer1
+participant &quot;__**TpRouter**__\nITransportMessageListener\nITransportMessageProcessedListener\nITransportMessageProvider&quot; as TpRouter
+participant &quot;__**TpLayer2**__\nAbstractTransportLayer&quot; as TpLayer2
+actor TxBus
+
+RxBus -&gt;  TpLayer1: received BusMessage
+          TpLayer1 -&gt; TpRouter: getTransportMessage()
+alt TP_OK
+          TpLayer1 &lt;-- TpRouter: TP_OK
+          TpLayer1 -&gt;  TpLayer1: receive message
+          TpLayer1 -&gt;  TpRouter: messageReceived()
+                       TpRouter -&gt; TpRouter: routeMessage()
+                       activate TpRouter
+                       TpRouter -&gt; TpLayer2: send()
+                       deactivate TpRouter
+                                   TpLayer2 -&gt; TxBus: transmit message
+                       TpRouter &lt;- TpLayer2: transportMessageProcessed()
+          TpLayer1 &lt;-  TpRouter: transportMessageProcessed()
+          TpLayer1 -&gt;  TpRouter: releaseTransportMessage()
+else Failure
+          TpLayer1 &lt;-- TpRouter: ErrorCode
+          TpLayer1 -&gt;  TpLayer1: discard BusMessage
+end" style="width: 850.0px; height: 652.0px"/></a>
+</p>
+</figure>
+</section>
+<section id="memory-management">
+<h2>Memory Management<a class="headerlink" href="#memory-management" title="Link to this heading"></a></h2>
+<p>A <code class="docutils literal notranslate"><span class="pre">TransportMessage</span></code> needs a considerable amount of memory and in most cases it is impractical to
+provide this memory in the instances of the TransportLayers. As dynamic memory allocation is not
+allowed the interface <code class="docutils literal notranslate"><span class="pre">ITransportMessageProvider</span></code> provides functions to encapsulate the management
+of the TransportMessages.</p>
+<p>There is a clear design rule: The instance that calls <code class="docutils literal notranslate"><span class="pre">getTransportMessage()</span></code> also has to call
+<code class="docutils literal notranslate"><span class="pre">releaseTransportMessage()</span></code>. This is also true in case any error occurs, when a
+<code class="docutils literal notranslate"><span class="pre">TransportMessage</span></code> gets passed around. This can be tricky because we do not use exceptions.
+So you need to make sure the instance that initially requests the <code class="docutils literal notranslate"><span class="pre">TransportMessage</span></code> is always
+notified to release it.</p>
+<section id="example">
+<h3>Example<a class="headerlink" href="#example" title="Link to this heading"></a></h3>
+<figure class="align-center">
+<p class="plantuml">
+<a href="../../../../_images/plantuml-eb436615890d053e105205a8df95faf79daf5fe0.png"><img src="../../../../_images/plantuml-eb436615890d053e105205a8df95faf79daf5fe0.png" alt="MyTpLayer -&gt; ITransportMessageProvider: getTransportMessage()
+== Handling of TransportMessage ==
+MyTpLayer -&gt; ITransportMessageProvider: releaseTransportMessage()" style="width: 365.0px; height: 191.0px"/></a>
+</p>
+</figure>
+</section>
+</section>
+<section id="implementing-a-transport-layer">
+<h2>Implementing a transport layer<a class="headerlink" href="#implementing-a-transport-layer" title="Link to this heading"></a></h2>
+<p>The base class for all transport layer implementations is <code class="docutils literal notranslate"><span class="pre">::transport::AbstractTransportLayer</span></code>.
+A transport layer encapsulates the bus specific handling of frames to accumulate a larger message.
+It is therefore associated with a <code class="docutils literal notranslate"><span class="pre">::common::busid::BusId</span></code> which is a required constructor
+argument.</p>
+<section id="transmitting-data">
+<h3>Transmitting data<a class="headerlink" href="#transmitting-data" title="Link to this heading"></a></h3>
+<figure class="align-center">
+<p class="plantuml">
+<a href="../../../../_images/plantuml-781272dfb6059c1aa261e73096a52eb0518a6119.png"><img src="../../../../_images/plantuml-781272dfb6059c1aa261e73096a52eb0518a6119.png" alt="Application -- (Send TransportMessage)
+(Send TransportMessage) -up- TransportLayer
+(Send TransportMessage) -- ITransportMessageProcessedListener" style="width: 272.0px; height: 324.0px"/></a>
+</p>
+</figure>
+<p>The only pure virtual function in <code class="docutils literal notranslate"><span class="pre">AbstractTransportLayer</span></code> that needs to be implemented
+is <code class="docutils literal notranslate"><span class="pre">send()</span></code> which shall transmit the data provided in the first argument’s <code class="docutils literal notranslate"><span class="pre">TransportMessage</span></code>
+to the underlying bus system.</p>
+<figure class="align-center">
+<p class="plantuml">
+<a href="../../../../_images/plantuml-00c1dc55f2301523169533055c2dcc1348ad7917.png"><img src="../../../../_images/plantuml-00c1dc55f2301523169533055c2dcc1348ad7917.png" alt="class AbstractTransportLayer {
+  {abstract} +send(TransportMessage&amp;, ITransportMessageProcessedListener*)
+}
+class MyTransportLayer {
+  +send(TransportMessage&amp;, ITransportMessageProcessedListener*)
+}
+AbstractTransportLayer &lt;|-- MyTransportLayer" style="width: 500.0px; height: 201.0px"/></a>
+</p>
+</figure>
+<p>As sending such a message normally is an asynchronous process, the second argument of type
+<code class="docutils literal notranslate"><span class="pre">ITransportMessageProcessedListener</span></code> can be used to notify the sending instance that the data
+has been transmitted. Errors that happen while sending the data can be reported by either
+synchronously returning the appropriate <code class="docutils literal notranslate"><span class="pre">AbstractTransportLayer::ErrorCode</span></code> or asynchronously
+through the <code class="docutils literal notranslate"><span class="pre">transportMessageProcessed()</span></code> function.</p>
+<section id="tx-example">
+<h4>TX Example<a class="headerlink" href="#tx-example" title="Link to this heading"></a></h4>
+<p>Here’s an example of how classes interact when a message is sent:</p>
+<figure class="align-center">
+<p class="plantuml">
+<a href="../../../../_images/plantuml-90401d092d2cdfcce3c42b405a4d33e797038cf6.png"><img src="../../../../_images/plantuml-90401d092d2cdfcce3c42b405a4d33e797038cf6.png" alt="actor Application
+participant &quot;__**MyTransportLayer**__\nAbstractTransportLayer&quot; as TpLayer
+participant &quot;__**pProcessedListener**__\nITransportMessageProcessedListener&quot; as ProcessedListener
+
+
+Application -&gt; TpLayer: send(transportMessage, pProcessedListener)
+               TpLayer -&gt;  TpLayer: send message
+               TpLayer -&gt; ProcessedListener: transportMessageProcessed(transportMessage, ErrorCode)" style="width: 914.0px; height: 281.0px"/></a>
+</p>
+</figure>
+</section>
+</section>
+<section id="receiving-data">
+<h3>Receiving data<a class="headerlink" href="#receiving-data" title="Link to this heading"></a></h3>
+<figure class="align-center">
+<p class="plantuml">
+<a href="../../../../_images/plantuml-e1780a0f853cfb1ff9dfabb4e6c6ceeda86e7c43.png"><img src="../../../../_images/plantuml-e1780a0f853cfb1ff9dfabb4e6c6ceeda86e7c43.png" alt="ITransportMessageProvider -- (Memory Management)
+AbstractTransportLayer -- (Memory Management)
+AbstractTransportLayer -- (Receive TransportMessage)
+ITransportMessageListener -- (Receive TransportMessage)" style="width: 629.0px; height: 193.0px"/></a>
+</p>
+</figure>
+<p>Typically a transport protocol on a frame based bus consists of different frame types. Standards
+like ISO-15765 (CAN TP) define how these frames are built. They also define the maximum amount of
+data that can be transported in one segmented message, in case of CAN TP this is 4095 bytes.
+A first frame (FF), as the name suggests, first frame of a large message, includes the information
+how long the total frame will be. This allows a transport layer to allocate the required
+amount of memory after receiving only one frame and not to waste memory by requiring the whole 4095
+to be reserved. Normally transport protocols also provide a way of flow control. This means putting
+a sender on hold while no memory for receiving more data is available. In CAN TP this is done via
+flow control frames (FC). The remaining data is then transmitted in so called consecutive
+frames (CF).</p>
+<p>As learned above, the memory management is done by an instance of <code class="docutils literal notranslate"><span class="pre">ITransportMessageProvider</span></code>.
+This allows a CAN TP layer to handle N parallel receptions with the static memory of just
+N * sizeof(FF).</p>
+<section id="rx-example">
+<h4>RX example<a class="headerlink" href="#rx-example" title="Link to this heading"></a></h4>
+<p>Here’s an example of how classes interact when a message is received:</p>
+<figure class="align-center">
+<p class="plantuml">
+<a href="../../../../_images/plantuml-f84b1b46c2c8216efe1fe2a26bf2a8fca7f48ad8.png"><img src="../../../../_images/plantuml-f84b1b46c2c8216efe1fe2a26bf2a8fca7f48ad8.png" alt="actor RxBus
+participant &quot;__**MyTransportLayer**__\nAbstractTransportLayer&quot; as TpLayer
+
+RxBus -&gt;  TpLayer: received FF
+          TpLayer -&gt;  ITransportMessageProvider: getTransportMessage()
+          TpLayer &lt;-- ITransportMessageProvider: TP_OK
+RxBus &lt;-  TpLayer: send FC
+loop x times
+    RxBus -&gt;  TpLayer: send CF
+          TpLayer -&gt;  TpLayer: assemble message
+end
+          TpLayer -&gt;  ITransportMessageListener: messageReceived(transportMessage, this)
+                      ITransportMessageListener -&gt; ITransportMessageListener: handleMessage()
+          TpLayer &lt;-  ITransportMessageListener: transportMessageProcessed()
+          TpLayer -&gt;  ITransportMessageProvider: releaseTransportMessage()" style="width: 710.0px; height: 529.0px"/></a>
+</p>
+</figure>
+</section>
+</section>
+</section>
+<section id="helper-functions">
+<h2>Helper functions<a class="headerlink" href="#helper-functions" title="Link to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="helpers/LogicalAddress.html">LogicalAddress helper functions</a></li>
+</ul>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026 Accenture.</p>
+  </div>
+
+  <div role="footer_string">
+    <p>Documentation from 2026-02-24 10:51:54, official build.</p>
+
+    
+      <a href="../../../../_sources/libs/bsw/transport/doc/index.rst.txt" rel="nofollow"> View page source</a>
+    
+
+  </div>
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(false);
+      });
+  </script> 
+
+</body>
+</html>

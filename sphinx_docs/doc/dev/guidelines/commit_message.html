@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="EclipseOpenBSWDocumentation" name="dox_trace_storage" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Commit Message &mdash; Eclipse OpenBSW Documentation  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/rtd_theme_overrides.css?v=6fd0d55b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=eafc0fe6" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/colors.css?v=3cafd8aa" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/colored_table.css?v=34b816d5" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/header.css?v=e632285e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/dox_util_colors.css?v=dd14b177" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/dox_trace.css?v=60d3f72c" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../../../_static/copybutton.js?v=f281be69"></script>
+        <script src="../../../_static/dox_trace.js?v=40719b51"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Pull Request" href="pull_request.html" />
+    <link rel="prev" title="Third Party Libraries" href="3rdparty.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Eclipse OpenBSW Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Learning</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../learning/overview.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../learning/SysTest/HW_Testing_Guide.html">Hardware Testing Guide</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guidelines</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="conventions/index.html">Coding Conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="practices.html">Coding Practices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="formatting/index.html">Formatting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="unittests.html">Unit Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module.html">Module Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="documentation.html">Module Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diagrams.html">Diagrams</a></li>
+<li class="toctree-l1"><a class="reference internal" href="3rdparty.html">Third Party Libraries</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Commit Message</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#rules">Rules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#use-a-subject-line-and-a-body">Use a Subject Line and a Body</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#stick-to-plain-text-in-the-subject">Stick to Plain Text in the Subject</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#limit-all-lines-to-72-characters">Limit All Lines to 72 Characters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#start-the-subject-line-with-a-capital-letter">Start the Subject Line With a Capital Letter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#omit-trailing-period">Omit Trailing Period</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#write-subject-lines-in-imperative-form">Write Subject Lines in Imperative Form</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#explain-what-and-why-the-commit-is-made">Explain What and Why the Commit is Made</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#do-not-mix-cleanup-and-features">Do Not Mix Cleanup and Features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#avoid-overly-generic-commit-messages">Avoid Overly Generic Commit Messages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mark-bugs">Mark Bugs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#use-natural-language">Use Natural Language</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#reference-tickets">Reference Tickets</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#use-names-and-acronyms-with-the-correct-notation">Use Names and Acronyms With the Correct Notation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#good-example-for-a-commit-message">Good Example for a Commit Message</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#references">References</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pull_request.html">Pull Request</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Platforms</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../platforms/posix/index.html">POSIX</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../platforms/s32k148evb/index.html">S32K148 Evaluation Board</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Features</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../features/storage.html">Persistent Storage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/functional_safety.html">Functional Safety</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Software Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../modules/common.html">Common</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/posix.html">Posix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/s32k1xx.html">S32K1xx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/executables.html">Executables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/mocks.html">Mocks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tools/UdsTool/doc/index.html">UdsTool</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tools/puncover_tool/doc/index.html">Puncover</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Eclipse OpenBSW Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+        <li>Commit Message</li>
+    
+
+    
+
+      <li class="wy-breadcrumbs-aside">
+
+        <!-- DOCUMENT STATUS -->
+
+        
+
+        <!-- DATA CLASSIFICATION -->
+
+        
+
+      </li>
+
+    
+  </ul>
+
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="commit-message">
+<span id="id1"></span><h1>Commit Message<a class="headerlink" href="#commit-message" title="Link to this heading"></a></h1>
+<p>Our commit messages are read by many people, e.g.:</p>
+<ul class="simple">
+<li><p>experienced developers with deep knowledge about basis software</p></li>
+<li><p>inexperienced developers or developers from other domains</p></li>
+<li><p>project managers, problem managers, quality managers, etc.</p></li>
+<li><p>you</p></li>
+</ul>
+<p>A consistent style makes it easier for all of them to read and understand the commits.</p>
+<section id="rules">
+<h2>Rules<a class="headerlink" href="#rules" title="Link to this heading"></a></h2>
+<nav class="contents local" id="contents">
+<ul class="simple">
+<li><p><a class="reference internal" href="#use-a-subject-line-and-a-body" id="id2">Use a Subject Line and a Body</a></p></li>
+<li><p><a class="reference internal" href="#stick-to-plain-text-in-the-subject" id="id3">Stick to Plain Text in the Subject</a></p></li>
+<li><p><a class="reference internal" href="#limit-all-lines-to-72-characters" id="id4">Limit All Lines to 72 Characters</a></p></li>
+<li><p><a class="reference internal" href="#start-the-subject-line-with-a-capital-letter" id="id5">Start the Subject Line With a Capital Letter</a></p></li>
+<li><p><a class="reference internal" href="#omit-trailing-period" id="id6">Omit Trailing Period</a></p></li>
+<li><p><a class="reference internal" href="#write-subject-lines-in-imperative-form" id="id7">Write Subject Lines in Imperative Form</a></p></li>
+<li><p><a class="reference internal" href="#explain-what-and-why-the-commit-is-made" id="id8">Explain What and Why the Commit is Made</a></p></li>
+<li><p><a class="reference internal" href="#do-not-mix-cleanup-and-features" id="id9">Do Not Mix Cleanup and Features</a></p></li>
+<li><p><a class="reference internal" href="#avoid-overly-generic-commit-messages" id="id10">Avoid Overly Generic Commit Messages</a></p></li>
+<li><p><a class="reference internal" href="#mark-bugs" id="id11">Mark Bugs</a></p></li>
+<li><p><a class="reference internal" href="#use-natural-language" id="id12">Use Natural Language</a></p></li>
+<li><p><a class="reference internal" href="#reference-tickets" id="id13">Reference Tickets</a></p></li>
+<li><p><a class="reference internal" href="#use-names-and-acronyms-with-the-correct-notation" id="id14">Use Names and Acronyms With the Correct Notation</a></p></li>
+</ul>
+</nav>
+<section id="use-a-subject-line-and-a-body">
+<h3><a class="toc-backref" href="#id2" role="doc-backlink">Use a Subject Line and a Body</a><a class="headerlink" href="#use-a-subject-line-and-a-body" title="Link to this heading"></a></h3>
+<p>A well-formed commit message consists of</p>
+<ul class="simple">
+<li><p>a brief summary line,</p></li>
+<li><p>followed by a blank line,</p></li>
+<li><p>and an optional detailed description.</p></li>
+</ul>
+<p>Git treats everything before the first blank line as the title,
+which appears in logs, history views, and other tools.</p>
+<p>The format is as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">single</span> <span class="n">subject</span> <span class="n">line</span><span class="o">&gt;</span>
+
+<span class="o">&lt;</span><span class="n">optional</span> <span class="n">body</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">which</span> <span class="n">may</span> <span class="n">span</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">multiple</span> <span class="n">lines</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>For straightforward changes, the body may be omitted entirely.</p>
+<p>Example:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Fix typos in ethernet driver documentation&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="stick-to-plain-text-in-the-subject">
+<h3><a class="toc-backref" href="#id3" role="doc-backlink">Stick to Plain Text in the Subject</a><a class="headerlink" href="#stick-to-plain-text-in-the-subject" title="Link to this heading"></a></h3>
+<p>Subject lines should be as consistent as possible, giving only the utmost important information
+to the reader. To help keep consistency in titles, stick to plain text only - no markup syntax
+allowed.</p>
+<p>Commit message bodies vary much more in comparison, so the following list of text styling choices
+are fine:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;subject - plain text only!&gt;
+
+Allowed body description styling:
+
+&quot;Quotes&quot;
+
+- Bullet point lists
+- Written using either &#39;*&#39; or &#39;-&#39;
+* But don&#39;t mix the two in the same list level!
+    * Switching between them for sub levels is fine though
+
+1. Numbered Lists
+
+`Backticks` (for identifiers, e.g. `etl`)
+
+    Indented code blocks
+    e.g. for code examples
+    indent by 4 spaces
+
+    baz foo(bar b)
+    {
+        // ...
+    }
+
+*bold* and _italic_ emphasis, but only if the author believes such
+*emphasis* is _truly_ necessary. Even marginal overuse of emphasis
+can be more distracting and obnoxious than useful, resulting in less
+readable descriptions, or cause readers to only read the emphasized
+words/sentences, ignoring everything else.
+</pre></div>
+</div>
+</section>
+<section id="limit-all-lines-to-72-characters">
+<h3><a class="toc-backref" href="#id4" role="doc-backlink">Limit All Lines to 72 Characters</a><a class="headerlink" href="#limit-all-lines-to-72-characters" title="Link to this heading"></a></h3>
+<p>Reviewing commit messages is a common task in software development.
+Carefully consider which information is most important to include in the subject line to keep it
+clear and free of unnecessary details.</p>
+<p>Keeping the body within 72 characters ensures readability,
+particularly when commit messages are displayed in terminals or tools that wrap text.</p>
+</section>
+<section id="start-the-subject-line-with-a-capital-letter">
+<h3><a class="toc-backref" href="#id5" role="doc-backlink">Start the Subject Line With a Capital Letter</a><a class="headerlink" href="#start-the-subject-line-with-a-capital-letter" title="Link to this heading"></a></h3>
+<p>Always capitalize the first word of the subject line.</p>
+</section>
+<section id="omit-trailing-period">
+<h3><a class="toc-backref" href="#id6" role="doc-backlink">Omit Trailing Period</a><a class="headerlink" href="#omit-trailing-period" title="Link to this heading"></a></h3>
+<p>Subject lines should not end with punctuation marks.</p>
+</section>
+<section id="write-subject-lines-in-imperative-form">
+<h3><a class="toc-backref" href="#id7" role="doc-backlink">Write Subject Lines in Imperative Form</a><a class="headerlink" href="#write-subject-lines-in-imperative-form" title="Link to this heading"></a></h3>
+<p>A lot of articles, blog posts, and guides suggest writing subject lines in the <em>imperative mood</em>.
+This means phrasing the subject as if giving a command, such as:</p>
+<ul class="simple">
+<li><p>Configure the system parameters</p></li>
+<li><p>Remove deprecated interfaces</p></li>
+<li><p>Update documentation files</p></li>
+</ul>
+<p>Test your subject line by completing this sentence:</p>
+<ul class="simple">
+<li><p>If applied, this commit will &lt;subject line&gt;.</p></li>
+</ul>
+</section>
+<section id="explain-what-and-why-the-commit-is-made">
+<h3><a class="toc-backref" href="#id8" role="doc-backlink">Explain What and Why the Commit is Made</a><a class="headerlink" href="#explain-what-and-why-the-commit-is-made" title="Link to this heading"></a></h3>
+<p>How the commit is done can be seen by looking at the code diff. But often, the reasoning behind
+the change is not obvious. Therefore, the commit message body should provide additional context.</p>
+<p>Summarize <em>what</em> was changed and <em>why</em> it was changed.</p>
+<p>If that is omitted, future readers (including yourself) may struggle to understand
+the purpose of the change.</p>
+</section>
+<section id="do-not-mix-cleanup-and-features">
+<h3><a class="toc-backref" href="#id9" role="doc-backlink">Do Not Mix Cleanup and Features</a><a class="headerlink" href="#do-not-mix-cleanup-and-features" title="Link to this heading"></a></h3>
+<p>Cleanup commits like fixing formatting or typos should be separated from commits that actually add
+new features. A commit should have a single purpose so the reviewer should focus on that new feature
+and not be distracted by other stuff. Also reformatting might alter a lot of code and the real
+change is only about a few lines, which makes it hard for the reviewer to focus.</p>
+</section>
+<section id="avoid-overly-generic-commit-messages">
+<h3><a class="toc-backref" href="#id10" role="doc-backlink">Avoid Overly Generic Commit Messages</a><a class="headerlink" href="#avoid-overly-generic-commit-messages" title="Link to this heading"></a></h3>
+<p>When e.g. fixing warnings from static code analysis tools, don’t write only:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>Fix<span class="w"> </span>warnings
+</pre></div>
+</div>
+<p>Specify where the changes are made:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>Fix<span class="w"> </span>&lt;ruleset&gt;<span class="w"> </span>warnings<span class="w"> </span><span class="k">in</span><span class="w"> </span>&lt;module&gt;
+</pre></div>
+</div>
+<p>Even better, expose more details about your change to make it less generic:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>Fix<span class="w"> </span>implicit<span class="w"> </span><span class="nb">type</span><span class="w"> </span>casts<span class="w"> </span><span class="k">in</span><span class="w"> </span>&lt;module&gt;
+
+Fixes<span class="w"> </span>&lt;ruleset&gt;<span class="w"> </span>&lt;rule<span class="w"> </span>number&gt;.
+</pre></div>
+</div>
+</section>
+<section id="mark-bugs">
+<h3><a class="toc-backref" href="#id11" role="doc-backlink">Mark Bugs</a><a class="headerlink" href="#mark-bugs" title="Link to this heading"></a></h3>
+<p>Bugfixes must be marked with one of the following keywords (case insensitive):</p>
+<ul class="simple">
+<li><p>(bug)fix</p></li>
+<li><p>(bug)fixes</p></li>
+<li><p>(bug)fixed</p></li>
+<li><p>(bug)fixing</p></li>
+</ul>
+<p>The prefix <code class="docutils literal notranslate"><span class="pre">bug</span></code> is optional.</p>
+<p>A project based on OpenBSW can grep for these commits and evaluate,
+if they need to synchronize the corresponding modules.</p>
+<p>Beside for bugs there are no other keywords specified. The audiences and use cases differ way too
+far to decide which keywords should be highlighted.</p>
+</section>
+<section id="use-natural-language">
+<h3><a class="toc-backref" href="#id12" role="doc-backlink">Use Natural Language</a><a class="headerlink" href="#use-natural-language" title="Link to this heading"></a></h3>
+<p>To make it easy to read the commit messages use simple natural words instead of inventing a funny
+description of what you did.</p>
+<p>Avoid e.g.:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>Make<span class="w"> </span>&lt;tool&gt;<span class="w"> </span>happy<span class="w"> </span>with<span class="w"> </span>this<span class="w"> </span>great<span class="w"> </span>&lt;module&gt;
+</pre></div>
+</div>
+<p>Instead write:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>Fix<span class="w"> </span>&lt;ruleset&gt;<span class="w"> </span>warnings<span class="w"> </span><span class="k">in</span><span class="w"> </span>&lt;module&gt;
+</pre></div>
+</div>
+<p>Write the commit messages in English as it is the primary language in software development and is
+widely understood by developers worldwide.</p>
+</section>
+<section id="reference-tickets">
+<h3><a class="toc-backref" href="#id13" role="doc-backlink">Reference Tickets</a><a class="headerlink" href="#reference-tickets" title="Link to this heading"></a></h3>
+<p>Reference all tickets in the commit message on which your commit is based on.
+This helps to understand why the change was made. But please do not create dummy tickets for trivial
+commits like fixing a typo or ad-hoc changes.</p>
+<p>Add the ticket IDs to the message body. Use the limited space in the subject line for more valuable
+information.</p>
+<p>Reference the tickets with a <code class="docutils literal notranslate"><span class="pre">#</span></code> followed by the issue number, e.g. <code class="docutils literal notranslate"><span class="pre">#1234</span></code>.</p>
+</section>
+<section id="use-names-and-acronyms-with-the-correct-notation">
+<h3><a class="toc-backref" href="#id14" role="doc-backlink">Use Names and Acronyms With the Correct Notation</a><a class="headerlink" href="#use-names-and-acronyms-with-the-correct-notation" title="Link to this heading"></a></h3>
+<p>Examples:</p>
+<ul class="simple">
+<li><p>Correct: <code class="docutils literal notranslate"><span class="pre">BSW</span></code>, <code class="docutils literal notranslate"><span class="pre">TCP/IP</span></code>, <code class="docutils literal notranslate"><span class="pre">Eclipse</span></code></p></li>
+<li><p>Wrong: <code class="docutils literal notranslate"><span class="pre">bsw</span></code>, <code class="docutils literal notranslate"><span class="pre">tcpip</span></code>, <code class="docutils literal notranslate"><span class="pre">ECL</span></code></p></li>
+</ul>
+</section>
+</section>
+<section id="good-example-for-a-commit-message">
+<span id="commit-message-good-example"></span><h2>Good Example for a Commit Message<a class="headerlink" href="#good-example-for-a-commit-message" title="Link to this heading"></a></h2>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Summarize changes in around 72 characters or less
+
+Leave an empty line after the summary.
+Afterwards you can add additional context information.
+What has been done and why.
+After this paragraph keep an empty line and put the following fields
+(Resolves, See also) if you have tickets related to the change.
+
+* Some bullet point
+* Another bullet point
+  - Sub1
+  - Sub2
+
+Resolves:
+#1234: Short description of the issue being resolved
+
+See also:
+#1010: Short description of a related issue
+#1011: Another description
+</pre></div>
+</div>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading"></a></h2>
+<p>The commit message rules reflect widely accepted best practices in the community, shaped by
+extensive discussions and influential blog posts like <a class="reference external" href="https://chris.beams.io/posts/git-commit/">https://chris.beams.io/posts/git-commit/</a>.
+Feel free to navigate to that post to find more detailed information there.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026 Accenture.</p>
+  </div>
+
+  <div role="footer_string">
+    <p>Documentation from 2026-02-24 10:51:51, official build.</p>
+
+    
+      <a href="../../../_sources/doc/dev/guidelines/commit_message.rst.txt" rel="nofollow"> View page source</a>
+    
+
+  </div>
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(false);
+      });
+  </script> 
+
+</body>
+</html>

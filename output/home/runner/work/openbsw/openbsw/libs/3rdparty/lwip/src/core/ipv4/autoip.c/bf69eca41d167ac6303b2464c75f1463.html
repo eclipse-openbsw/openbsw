@@ -1,0 +1,659 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../../../../../../../../../../../static/css/style.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <title>Symbol - puncover</title>
+    
+</head>
+<body>
+    <div class="container" id="content">
+        <div class="page-header">
+            <nav class="navbar navbar-default" role="navigation">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="../../../../../../../../../../../../index.html">
+                    Puncover
+                  </a>
+                </div>
+              </div>
+            </nav>
+          
+        </div>
+        <div id="inner_content">
+        
+    
+    <ol class="breadcrumb folders">
+        
+        <li><a href="../../../../../../../../../../../../home.html">home</a></li>
+        
+        <li><a href="../../../../../../../../../../../runner.html">runner</a></li>
+        
+        <li><a href="../../../../../../../../../../work.html">work</a></li>
+        
+        <li><a href="../../../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../../libs.html">libs</a></li>
+        
+        <li><a href="../../../../../../3rdparty.html">3rdparty</a></li>
+        
+        <li><a href="../../../../../lwip.html">lwip</a></li>
+        
+        <li><a href="../../../../src.html">src</a></li>
+        
+        <li><a href="../../../core.html">core</a></li>
+        
+        <li ><a href="../../ipv4.html">ipv4</a>
+            </li>
+
+        
+        <li class="active"><a href="../autoip.c.html">autoip.c</a>:214
+            </li>
+        
+    </ol>
+
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <th>Function</th>
+                <td colspan="5">
+                    <span class="icon-function">autoip_conflict_callback</span>
+                </td>
+            </tr>
+
+            <tr>
+                <th rowspan="2"></th>
+                <th>Address</th>
+                <th>Remarks</th>
+                <th>Stack</th>
+                <th>Code</th>
+                <th>Static</th>
+            </tr>
+            <tr>
+                <td>0x00020eb8</td>
+                <td>
+    
+    
+</td>
+                <td>16 (static)</td>
+                <td>96</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th>No Callers</th>
+                <td colspan="5">
+                
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Callees (2,
+                            <span title="sum of used bytes by all callees">
+                            Σ=356
+                            </span>
+                        )
+                    
+                </th>
+                <td colspan="5">
+                
+                    <a href="../../netif.c/7d4b6ac49a1bb495f62582300a5d9e4a.html">netif_set_addr (184)</a>
+                    
+                        ,
+                    
+                
+                    <a href="./5c7470e1a598ef7e1cc4696e941ba174.html">autoip_start (172)</a>
+                    
+                
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    
+    <pre><a href="./5c7470e1a598ef7e1cc4696e941ba174.html">autoip_start (172)</a></pre>
+    
+
+    <pre>
+
+    autoip_conflict_callback():
+
+       20eb8:	b510      	push	{r4, lr}
+
+       20eba:	460c      	mov	r4, r1
+
+       20ebc:	2c01      	cmp	r4, #1
+
+       20ebe:	6ac1      	ldr	r1, [r0, #44]	@ 0x2c
+
+       20ec0:	b082      	sub	sp, #8
+
+       20ec2:	d01e      	beq.n	20f02 <<a href="./bf69eca41d167ac6303b2464c75f1463.html">autoip_conflict_callback</a>+0x4a>
+
+       20ec4:	2c02      	cmp	r4, #2
+
+       20ec6:	d00c      	beq.n	20ee2 <<a href="./bf69eca41d167ac6303b2464c75f1463.html">autoip_conflict_callback</a>+0x2a>
+
+       20ec8:	b94c      	cbnz	r4, 20ede <<a href="./bf69eca41d167ac6303b2464c75f1463.html">autoip_conflict_callback</a>+0x26>
+
+    autoip_bind():
+
+       20eca:	2202      	movs	r2, #2
+
+       20ecc:	f64f 73ff 	movw	r3, #65535	@ 0xffff
+
+       20ed0:	710a      	strb	r2, [r1, #4]
+
+       20ed2:	9300      	str	r3, [sp, #0]
+
+       20ed4:	466a      	mov	r2, sp
+
+       20ed6:	ab01      	add	r3, sp, #4
+
+       20ed8:	9401      	str	r4, [sp, #4]
+
+       20eda:	f7fb f8c9 	bl	1c070 <<a href="../../netif.c/7d4b6ac49a1bb495f62582300a5d9e4a.html">netif_set_addr</a>>
+
+    autoip_conflict_callback():
+
+       20ede:	b002      	add	sp, #8
+
+       20ee0:	bd10      	pop	{r4, pc}
+
+       20ee2:	2200      	movs	r2, #0
+
+       20ee4:	600a      	str	r2, [r1, #0]
+
+    autoip_stop():
+
+       20ee6:	710a      	strb	r2, [r1, #4]
+
+       20ee8:	8882      	ldrh	r2, [r0, #4]
+
+       20eea:	f64f 63a9 	movw	r3, #65193	@ 0xfea9
+
+       20eee:	429a      	cmp	r2, r3
+
+       20ef0:	d1f5      	bne.n	20ede <<a href="./bf69eca41d167ac6303b2464c75f1463.html">autoip_conflict_callback</a>+0x26>
+
+       20ef2:	4b08      	ldr	r3, [pc, #32]	@ (20f14 <<a href="./bf69eca41d167ac6303b2464c75f1463.html">autoip_conflict_callback</a>+0x5c>)
+
+       20ef4:	461a      	mov	r2, r3
+
+       20ef6:	4619      	mov	r1, r3
+
+    autoip_conflict_callback():
+
+       20ef8:	b002      	add	sp, #8
+
+       20efa:	e8bd 4010 	ldmia.w	sp!, {r4, lr}
+
+    autoip_stop():
+
+       20efe:	f7fb b8b7 	b.w	1c070 <<a href="../../netif.c/7d4b6ac49a1bb495f62582300a5d9e4a.html">netif_set_addr</a>>
+
+    autoip_restart():
+
+       20f02:	794b      	ldrb	r3, [r1, #5]
+
+       20f04:	3301      	adds	r3, #1
+
+       20f06:	714b      	strb	r3, [r1, #5]
+
+    autoip_conflict_callback():
+
+       20f08:	b002      	add	sp, #8
+
+       20f0a:	e8bd 4010 	ldmia.w	sp!, {r4, lr}
+
+    autoip_restart():
+
+       20f0e:	f7ff bf7d 	b.w	20e0c <<a href="./5c7470e1a598ef7e1cc4696e941ba174.html">autoip_start</a>>
+
+       20f12:	bf00      	nop
+
+       20f14:	00035d04 	.word	0x00035d04
+
+    </pre>
+
+    
+    <pre><a href="./7ebcdb15e288647c9c042a84a16ffb23.html">autoip_network_changed_link_up (4)</a></pre>
+    
+
+    
+        <h1>Stack Worst-Case Scenarios</h1>
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 632</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 5,636</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    632
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                48 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    5,636
+                    
+                    
+                </td>
+                <td class="col_size">160</td>
+                <td><a href="../../../../../printf/src/printf/printf.c/aead89a8c09454d3b52c82329b9d6539.html" class="icon-function">out_rev_</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                    
+                    584
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                112 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    5,476
+                    
+                    
+                </td>
+                <td class="col_size">792</td>
+                <td><a href="../../../../../printf/src/printf/printf.c/ac6598d6032c1151c802f0c9a9979746.html" class="icon-function">print_integer</a></td>
+            </tr>
+        
+            <tr>
+                <th>3</th>
+                <td class="col_size">
+                    
+                    472
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                88 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    4,684
+                    
+                    
+                </td>
+                <td class="col_size">1,964</td>
+                <td><a href="../../../../../printf/src/printf/printf.c/6d7d630ec5529648e33ae989eebb2cb7.html" class="icon-function">_vsnprintf</a></td>
+            </tr>
+        
+            <tr>
+                <th>4</th>
+                <td class="col_size">
+                    
+                    384
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                16 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    2,720
+                    
+                    
+                </td>
+                <td class="col_size">32</td>
+                <td><a href="../../../../../printf/src/printf/printf.c/529535ce0d5bfecabb7841bebeaf251c.html" class="icon-function">vsnprintf_</a></td>
+            </tr>
+        
+            <tr>
+                <th>5</th>
+                <td class="col_size">
+                    
+                    368
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                16 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    2,688
+                    
+                    
+                </td>
+                <td class="col_size">52</td>
+                <td><a href="../../../../../../../executables/referenceApp/application/src/logger/logger.cpp/98866fb3d81ee8db78cbfd1e2dfd931d.html" class="icon-function">log_lwipInfo</a></td>
+            </tr>
+        
+            <tr>
+                <th>6</th>
+                <td class="col_size">
+                    
+                    352
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                16 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    2,636
+                    
+                    
+                </td>
+                <td class="col_size">60</td>
+                <td><a href="../../memp.c/39d50c52143357af896630c36b8c515f.html" class="icon-function">memp_free</a></td>
+            </tr>
+        
+            <tr>
+                <th>7</th>
+                <td class="col_size">
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    2,576
+                    
+                    
+                </td>
+                <td class="col_size">112</td>
+                <td><a href="../../pbuf.c/9b6fd2596874539050b4147be9634d35.html" class="icon-function">pbuf_free</a></td>
+            </tr>
+        
+            <tr>
+                <th>8</th>
+                <td class="col_size">
+                    
+                    336
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                32 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    2,464
+                    
+                    
+                </td>
+                <td class="col_size">264</td>
+                <td><a href="../../pbuf.c/00f9d6c635a80626d607c18477d3504a.html" class="icon-function">pbuf_alloc</a></td>
+            </tr>
+        
+            <tr>
+                <th>9</th>
+                <td class="col_size">
+                    
+                    304
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                32 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    2,200
+                    
+                    
+                </td>
+                <td class="col_size">172</td>
+                <td><a href="../../tcp_out.c/4c45a821c89299dd22544f20511fc68d.html" class="icon-function">tcp_output_alloc_header_common</a></td>
+            </tr>
+        
+            <tr>
+                <th>10</th>
+                <td class="col_size">
+                    
+                    272
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                24 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    2,028
+                    
+                    
+                </td>
+                <td class="col_size">100</td>
+                <td><a href="../../tcp_out.c/750286e53faf5e6c6518b73dc75330b6.html" class="icon-function">tcp_send_empty_ack</a></td>
+            </tr>
+        
+            <tr>
+                <th>11</th>
+                <td class="col_size">
+                    
+                    248
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                64 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    1,928
+                    
+                    
+                </td>
+                <td class="col_size">1,040</td>
+                <td><a href="../../tcp_out.c/65142df0c7be77da97e3dbbc90844f1a.html" class="icon-function">tcp_output</a></td>
+            </tr>
+        
+            <tr>
+                <th>12</th>
+                <td class="col_size">
+                    
+                    184
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                8 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    888
+                    
+                    
+                </td>
+                <td class="col_size">92</td>
+                <td><a href="../../tcp.c/b9fce7e0b1692c774e7c7904cc0c9f1e.html" class="icon-function">tcp_pcb_remove</a></td>
+            </tr>
+        
+            <tr>
+                <th>13</th>
+                <td class="col_size">
+                    
+                    176
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                64 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    796
+                    
+                    
+                </td>
+                <td class="col_size">308</td>
+                <td><a href="../../tcp.c/65bf4b4d1cd8c2ab7ef11aba4b48c88a.html" class="icon-function">tcp_abandon</a></td>
+            </tr>
+        
+            <tr>
+                <th>14</th>
+                <td class="col_size">
+                    
+                    112
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                24 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    488
+                    
+                    
+                </td>
+                <td class="col_size">188</td>
+                <td><a href="../../tcp.c/df26d4b78a28ebef470fd1ef7233d047.html" class="icon-function">tcp_netif_ip_addr_changed</a></td>
+            </tr>
+        
+            <tr>
+                <th>15</th>
+                <td class="col_size">
+                    
+                    88
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                24 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    300
+                    
+                    
+                </td>
+                <td class="col_size">116</td>
+                <td><a href="../../netif.c/02ca1881b5a0fcf35803d50c5cd5a9a6.html" class="icon-function">netif_do_set_ipaddr</a></td>
+            </tr>
+        
+            <tr>
+                <th>16</th>
+                <td class="col_size">
+                    
+                    64
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                48 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">184</td>
+                <td><a href="../../netif.c/7d4b6ac49a1bb495f62582300a5d9e4a.html" class="icon-function">netif_set_addr</a></td>
+            </tr>
+        
+        </tbody>
+        
+        <tfoot>
+            <tr>
+                <th></th>
+                <th class="col_size">16
+                </th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </tfoot>
+        
+    </table>
+        
+        
+            <p>No callers for this function.</p>
+        
+    
+
+
+        </div>
+    <div id="page-footer">
+        <hr>
+        
+            brought to you with 💖
+            by <a href="https://twitter.com/hbehrens">Heiko Behrens</a>
+            <span class="secondary">– MIT license, copyright © 2014-2026</span>
+        
+    </div>
+    </div>
+</body>
+</html>

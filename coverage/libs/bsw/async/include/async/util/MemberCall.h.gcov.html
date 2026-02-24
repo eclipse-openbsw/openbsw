@@ -1,0 +1,110 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - coverage.info - libs/bsw/async/include/async/util/MemberCall.h</title>
+  <link rel="stylesheet" type="text/css" href="../../../../../../gcov.css">
+</head>
+
+<body>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="title">LCOV - code coverage report</td></tr>
+            <tr><td class="ruler"><img src="../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+            <tr>
+              <td width="100%">
+                <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="10%" class="headerValue"><a href="../../../../../../index.html">top level</a> - <a href="index.html">libs/bsw/async/include/async/util</a> - MemberCall.h<span style="font-size: 80%;"> (source / <a href="MemberCall.h.func-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="5%"></td>
+            <td width="5%" class="headerCovTableHead">Coverage</td>
+            <td width="5%" class="headerCovTableHead" title="Covered + Uncovered code">Total</td>
+            <td width="5%" class="headerCovTableHead" title="Exercised code only">Hit</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">coverage.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
+            <td class="headerCovTableEntry">2</td>
+            <td class="headerCovTableEntry">2</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test Date:</td>
+            <td class="headerValue">2026-02-24 11:21:15</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntryMed">77.8&nbsp;%</td>
+            <td class="headerCovTableEntry">18</td>
+            <td class="headerCovTableEntry">14</td>
+          </tr>
+                  <tr><td><img src="../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr><td class="ruler"><img src="../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+          </table>
+
+          <table cellpadding=0 cellspacing=0 border=0>
+            <tr>
+              <td><br></td>
+            </tr>
+            <tr>
+              <td>
+<pre class="sourceHeading">            Line data    Source code</pre>
+<pre class="source">
+<span id="L1"><span class="lineNum">       1</span>              : // Copyright 2024 Accenture.</span>
+<span id="L2"><span class="lineNum">       2</span>              : </span>
+<span id="L3"><span class="lineNum">       3</span>              : #pragma once</span>
+<span id="L4"><span class="lineNum">       4</span>              : </span>
+<span id="L5"><span class="lineNum">       5</span>              : #include &quot;async/Types.h&quot;</span>
+<span id="L6"><span class="lineNum">       6</span>              : </span>
+<span id="L7"><span class="lineNum">       7</span>              : namespace async</span>
+<span id="L8"><span class="lineNum">       8</span>              : {</span>
+<span id="L9"><span class="lineNum">       9</span>              : /**</span>
+<span id="L10"><span class="lineNum">      10</span>              :  * A template class that lets specify member function</span>
+<span id="L11"><span class="lineNum">      11</span>              :  * of eventually non-runnable class to be called as result of</span>
+<span id="L12"><span class="lineNum">      12</span>              :  * async::execute(), async::schedule() or async::scheduleAtFixedRate(),</span>
+<span id="L13"><span class="lineNum">      13</span>              :  * this way mimicking non-runnable class to act as runnable.</span>
+<span id="L14"><span class="lineNum">      14</span>              :  *</span>
+<span id="L15"><span class="lineNum">      15</span>              :  * \tparam Handler The type of (non-runnable) class.</span>
+<span id="L16"><span class="lineNum">      16</span>              :  * \tparam handleFunc The member function to be called.</span>
+<span id="L17"><span class="lineNum">      17</span>              :  */</span>
+<span id="L18"><span class="lineNum">      18</span>              : template&lt;typename Handler, void (Handler::*handleFunc)()&gt;</span>
+<span id="L19"><span class="lineNum">      19</span>              : class MemberCall : public RunnableType</span>
+<span id="L20"><span class="lineNum">      20</span>              : {</span>
+<span id="L21"><span class="lineNum">      21</span>              : public:</span>
+<span id="L22"><span class="lineNum">      22</span>              :     /**</span>
+<span id="L23"><span class="lineNum">      23</span>              :      * Constructor.</span>
+<span id="L24"><span class="lineNum">      24</span>              :      * \param handler Reference to the handler object.</span>
+<span id="L25"><span class="lineNum">      25</span>              :      */</span>
+<span id="L26"><span class="lineNum">      26</span> <span class="tlaGNC tlaBgGNC">          63 :     MemberCall(Handler&amp; handler) : _handler(handler) {}</span></span>
+<span id="L27"><span class="lineNum">      27</span>              : </span>
+<span id="L28"><span class="lineNum">      28</span>              : private:</span>
+<span id="L29"><span class="lineNum">      29</span> <span class="tlaGNC">          71 :     void execute() override { (_handler.*handleFunc)(); }</span></span>
+<span id="L30"><span class="lineNum">      30</span>              : </span>
+<span id="L31"><span class="lineNum">      31</span>              : private:</span>
+<span id="L32"><span class="lineNum">      32</span>              :     Handler&amp; _handler;</span>
+<span id="L33"><span class="lineNum">      33</span>              : };</span>
+<span id="L34"><span class="lineNum">      34</span>              : } // namespace async</span>
+        </pre>
+              </td>
+            </tr>
+          </table>
+          <br>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="ruler"><img src="../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+            <tr><td class="versionInfo">Generated by: <a href="https://github.com//linux-test-project/lcov" target="_parent">LCOV version 2.0-1</a></td></tr>
+          </table>
+          <br>
+
+</body>
+</html>

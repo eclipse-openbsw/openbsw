@@ -1,0 +1,205 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - coverage.info - libs/bsw/estd/include/estd/constructor.h</title>
+  <link rel="stylesheet" type="text/css" href="../../../../../gcov.css">
+</head>
+
+<body>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="title">LCOV - code coverage report</td></tr>
+            <tr><td class="ruler"><img src="../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+            <tr>
+              <td width="100%">
+                <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="10%" class="headerValue"><a href="../../../../../index.html">top level</a> - <a href="index.html">libs/bsw/estd/include/estd</a> - constructor.h<span style="font-size: 80%;"> (source / <a href="constructor.h.func-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="5%"></td>
+            <td width="5%" class="headerCovTableHead">Coverage</td>
+            <td width="5%" class="headerCovTableHead" title="Covered + Uncovered code">Total</td>
+            <td width="5%" class="headerCovTableHead" title="Exercised code only">Hit</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">coverage.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
+            <td class="headerCovTableEntry">8</td>
+            <td class="headerCovTableEntry">8</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test Date:</td>
+            <td class="headerValue">2026-02-24 11:21:15</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntryHi">98.0&nbsp;%</td>
+            <td class="headerCovTableEntry">50</td>
+            <td class="headerCovTableEntry">49</td>
+          </tr>
+                  <tr><td><img src="../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr><td class="ruler"><img src="../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+          </table>
+
+          <table cellpadding=0 cellspacing=0 border=0>
+            <tr>
+              <td><br></td>
+            </tr>
+            <tr>
+              <td>
+<pre class="sourceHeading">            Line data    Source code</pre>
+<pre class="source">
+<span id="L1"><span class="lineNum">       1</span>              : // Copyright 2024 Accenture.</span>
+<span id="L2"><span class="lineNum">       2</span>              : </span>
+<span id="L3"><span class="lineNum">       3</span>              : /**</span>
+<span id="L4"><span class="lineNum">       4</span>              :  * Contains estd::constructor.</span>
+<span id="L5"><span class="lineNum">       5</span>              :  * \file</span>
+<span id="L6"><span class="lineNum">       6</span>              :  * \ingroup estl_utils</span>
+<span id="L7"><span class="lineNum">       7</span>              :  */</span>
+<span id="L8"><span class="lineNum">       8</span>              : #pragma once</span>
+<span id="L9"><span class="lineNum">       9</span>              : </span>
+<span id="L10"><span class="lineNum">      10</span>              : #include &lt;platform/estdint.h&gt;</span>
+<span id="L11"><span class="lineNum">      11</span>              : </span>
+<span id="L12"><span class="lineNum">      12</span>              : #include &lt;new&gt;</span>
+<span id="L13"><span class="lineNum">      13</span>              : #include &lt;utility&gt;</span>
+<span id="L14"><span class="lineNum">      14</span>              : </span>
+<span id="L15"><span class="lineNum">      15</span>              : namespace estd</span>
+<span id="L16"><span class="lineNum">      16</span>              : {</span>
+<span id="L17"><span class="lineNum">      17</span>              : namespace internal</span>
+<span id="L18"><span class="lineNum">      18</span>              : {</span>
+<span id="L19"><span class="lineNum">      19</span>              : template&lt;class T&gt;</span>
+<span id="L20"><span class="lineNum">      20</span>              : class by_ref_wrapper</span>
+<span id="L21"><span class="lineNum">      21</span>              : {</span>
+<span id="L22"><span class="lineNum">      22</span>              : public:</span>
+<span id="L23"><span class="lineNum">      23</span> <span class="tlaGNC tlaBgGNC">          35 :     inline explicit by_ref_wrapper(T&amp; obj) : _ref(obj) {}</span></span>
+<span id="L24"><span class="lineNum">      24</span>              : </span>
+<span id="L25"><span class="lineNum">      25</span> <span class="tlaGNC">          35 :     inline operator T&amp;() const { return _ref; } // NOLINT(google-explicit-constructor)</span></span>
+<span id="L26"><span class="lineNum">      26</span>              : </span>
+<span id="L27"><span class="lineNum">      27</span>              : private:</span>
+<span id="L28"><span class="lineNum">      28</span>              :     T&amp; _ref;</span>
+<span id="L29"><span class="lineNum">      29</span>              : };</span>
+<span id="L30"><span class="lineNum">      30</span>              : </span>
+<span id="L31"><span class="lineNum">      31</span>              : } // namespace internal</span>
+<span id="L32"><span class="lineNum">      32</span>              : </span>
+<span id="L33"><span class="lineNum">      33</span>              : template&lt;class T&gt;</span>
+<span id="L34"><span class="lineNum">      34</span> <span class="tlaGNC">          35 : inline internal::by_ref_wrapper&lt;T&gt; by_ref(T&amp; obj)</span></span>
+<span id="L35"><span class="lineNum">      35</span>              : {</span>
+<span id="L36"><span class="lineNum">      36</span> <span class="tlaGNC">          35 :     return internal::by_ref_wrapper&lt;T&gt;(obj);</span></span>
+<span id="L37"><span class="lineNum">      37</span>              : }</span>
+<span id="L38"><span class="lineNum">      38</span>              : </span>
+<span id="L39"><span class="lineNum">      39</span>              : /**</span>
+<span id="L40"><span class="lineNum">      40</span>              :  * A template class that provides a portable way to construct</span>
+<span id="L41"><span class="lineNum">      41</span>              :  * objects from memory that is owned by a fixed-size container.</span>
+<span id="L42"><span class="lineNum">      42</span>              :  * This class makes it possible to add objects that do not have</span>
+<span id="L43"><span class="lineNum">      43</span>              :  * default constructors. It is used for all of the emplace methods.</span>
+<span id="L44"><span class="lineNum">      44</span>              :  *</span>
+<span id="L45"><span class="lineNum">      45</span>              :  * \tparam T The type of object to construct.</span>
+<span id="L46"><span class="lineNum">      46</span>              :  *</span>
+<span id="L47"><span class="lineNum">      47</span>              :  * \section constructor_vector_example Vector Example</span>
+<span id="L48"><span class="lineNum">      48</span>              :  * \code{.cpp}</span>
+<span id="L49"><span class="lineNum">      49</span>              :  * class MyClass</span>
+<span id="L50"><span class="lineNum">      50</span>              :  * {</span>
+<span id="L51"><span class="lineNum">      51</span>              :  *     public:</span>
+<span id="L52"><span class="lineNum">      52</span>              :  *         MyClass(int i);</span>
+<span id="L53"><span class="lineNum">      53</span>              :  * };</span>
+<span id="L54"><span class="lineNum">      54</span>              :  *</span>
+<span id="L55"><span class="lineNum">      55</span>              :  * void emplaceExample(estd::vector&lt;MyClass&gt;&amp; v)</span>
+<span id="L56"><span class="lineNum">      56</span>              :  * {</span>
+<span id="L57"><span class="lineNum">      57</span>              :  *     for(int i = 0; i &lt; 10; ++i)</span>
+<span id="L58"><span class="lineNum">      58</span>              :  *     {</span>
+<span id="L59"><span class="lineNum">      59</span>              :  *         // call the MyClass(int) constructor</span>
+<span id="L60"><span class="lineNum">      60</span>              :  *         v.emplace_back().construct(i);</span>
+<span id="L61"><span class="lineNum">      61</span>              :  *     }</span>
+<span id="L62"><span class="lineNum">      62</span>              :  * }</span>
+<span id="L63"><span class="lineNum">      63</span>              :  * \endcode</span>
+<span id="L64"><span class="lineNum">      64</span>              :  *</span>
+<span id="L65"><span class="lineNum">      65</span>              :  * \warning</span>
+<span id="L66"><span class="lineNum">      66</span>              :  * Be careful using this constructor class. It does not support</span>
+<span id="L67"><span class="lineNum">      67</span>              :  * any kind of move semantics, i.e. when copying an instance of</span>
+<span id="L68"><span class="lineNum">      68</span>              :  * constructor you will end up having two instances pointing to</span>
+<span id="L69"><span class="lineNum">      69</span>              :  * the same memory region. This is a compromise to have still</span>
+<span id="L70"><span class="lineNum">      70</span>              :  * efficient runtime.</span>
+<span id="L71"><span class="lineNum">      71</span>              :  */</span>
+<span id="L72"><span class="lineNum">      72</span>              : template&lt;class T&gt;</span>
+<span id="L73"><span class="lineNum">      73</span>              : class constructor</span>
+<span id="L74"><span class="lineNum">      74</span>              : {</span>
+<span id="L75"><span class="lineNum">      75</span>              : public:</span>
+<span id="L76"><span class="lineNum">      76</span>              :     /**</span>
+<span id="L77"><span class="lineNum">      77</span>              :      * Initializes this constructor object with the specified</span>
+<span id="L78"><span class="lineNum">      78</span>              :      * memory address.</span>
+<span id="L79"><span class="lineNum">      79</span>              :      */</span>
+<span id="L80"><span class="lineNum">      80</span> <span class="tlaGNC">         409 :     explicit constructor(void* const mem) : _memory(mem) {}</span></span>
+<span id="L81"><span class="lineNum">      81</span>              : </span>
+<span id="L82"><span class="lineNum">      82</span>              :     /**</span>
+<span id="L83"><span class="lineNum">      83</span>              :      * Initializes this constructor object with the specified</span>
+<span id="L84"><span class="lineNum">      84</span>              :      * memory address.</span>
+<span id="L85"><span class="lineNum">      85</span>              :      *</span>
+<span id="L86"><span class="lineNum">      86</span>              :      * \param idx The offset in T's to the requested memory location.</span>
+<span id="L87"><span class="lineNum">      87</span>              :      *</span>
+<span id="L88"><span class="lineNum">      88</span>              :      */</span>
+<span id="L89"><span class="lineNum">      89</span> <span class="tlaGNC">         120 :     constructor(uint8_t* const mem, size_t const idx) : constructor(mem + (idx * sizeof(T))) {}</span></span>
+<span id="L90"><span class="lineNum">      90</span>              : </span>
+<span id="L91"><span class="lineNum">      91</span>              :     /**</span>
+<span id="L92"><span class="lineNum">      92</span>              :      * Constructs an object of type T, using the constructor appropriate for the provided argument</span>
+<span id="L93"><span class="lineNum">      93</span>              :      * list. Uses placement new to construct the object into the memory passed in the constructor.</span>
+<span id="L94"><span class="lineNum">      94</span>              :      *</span>
+<span id="L95"><span class="lineNum">      95</span>              :      * \return A reference to the newly created object.</span>
+<span id="L96"><span class="lineNum">      96</span>              :      */</span>
+<span id="L97"><span class="lineNum">      97</span>              :     template&lt;typename... Args&gt;</span>
+<span id="L98"><span class="lineNum">      98</span> <span class="tlaGNC">         409 :     T&amp; construct(Args&amp;&amp;... args)</span></span>
+<span id="L99"><span class="lineNum">      99</span>              :     {</span>
+<span id="L100"><span class="lineNum">     100</span> <span class="tlaGNC">         413 :         return *new (_memory) T(::std::forward&lt;Args&gt;(args)...);</span></span>
+<span id="L101"><span class="lineNum">     101</span>              :     }</span>
+<span id="L102"><span class="lineNum">     102</span>              : </span>
+<span id="L103"><span class="lineNum">     103</span>              :     /**</span>
+<span id="L104"><span class="lineNum">     104</span>              :      * Returns underlying pointer.</span>
+<span id="L105"><span class="lineNum">     105</span>              :      *</span>
+<span id="L106"><span class="lineNum">     106</span>              :      * This can be used to provide custom placement</span>
+<span id="L107"><span class="lineNum">     107</span>              :      * new constructor calls if necessary.</span>
+<span id="L108"><span class="lineNum">     108</span>              :      */</span>
+<span id="L109"><span class="lineNum">     109</span>              :     // NOLINTNEXTLINE(google-explicit-constructor)</span>
+<span id="L110"><span class="lineNum">     110</span>              :     operator uint8_t*() { return reinterpret_cast&lt;uint8_t*&gt;(_memory); }</span>
+<span id="L111"><span class="lineNum">     111</span>              : </span>
+<span id="L112"><span class="lineNum">     112</span>              :     /**</span>
+<span id="L113"><span class="lineNum">     113</span>              :      * Returns underlying memory.</span>
+<span id="L114"><span class="lineNum">     114</span>              :      * \deprecated</span>
+<span id="L115"><span class="lineNum">     115</span>              :      */</span>
+<span id="L116"><span class="lineNum">     116</span>              :     uint8_t* release() { return reinterpret_cast&lt;uint8_t*&gt;(_memory); }</span>
+<span id="L117"><span class="lineNum">     117</span>              : </span>
+<span id="L118"><span class="lineNum">     118</span>              :     T* release_uninitialized_as() { return reinterpret_cast&lt;T*&gt;(_memory); }</span>
+<span id="L119"><span class="lineNum">     119</span>              : </span>
+<span id="L120"><span class="lineNum">     120</span>              :     /**</span>
+<span id="L121"><span class="lineNum">     121</span>              :      * Function to check if has memory to safely call construct.</span>
+<span id="L122"><span class="lineNum">     122</span>              :      */</span>
+<span id="L123"><span class="lineNum">     123</span>              :     bool has_memory() const { return _memory != nullptr; }</span>
+<span id="L124"><span class="lineNum">     124</span>              : </span>
+<span id="L125"><span class="lineNum">     125</span>              : private:</span>
+<span id="L126"><span class="lineNum">     126</span>              :     mutable void* _memory;</span>
+<span id="L127"><span class="lineNum">     127</span>              : };</span>
+<span id="L128"><span class="lineNum">     128</span>              : </span>
+<span id="L129"><span class="lineNum">     129</span>              : } // namespace estd</span>
+        </pre>
+              </td>
+            </tr>
+          </table>
+          <br>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="ruler"><img src="../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+            <tr><td class="versionInfo">Generated by: <a href="https://github.com//linux-test-project/lcov" target="_parent">LCOV version 2.0-1</a></td></tr>
+          </table>
+          <br>
+
+</body>
+</html>

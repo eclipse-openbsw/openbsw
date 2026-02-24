@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="EclipseOpenBSWDocumentation" name="dox_trace_storage" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Working with Ethernet &mdash; Eclipse OpenBSW Documentation  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/rtd_theme_overrides.css?v=6fd0d55b" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=eafc0fe6" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/colors.css?v=3cafd8aa" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/colored_table.css?v=34b816d5" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/header.css?v=e632285e" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/dox_util_colors.css?v=dd14b177" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/dox_trace.css?v=60d3f72c" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../../../../_static/copybutton.js?v=f281be69"></script>
+        <script src="../../../../_static/dox_trace.js?v=40719b51"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="Using UDS" href="../uds/index.html" />
+    <link rel="prev" title="Working with CAN" href="../can/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Eclipse OpenBSW Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Learning</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../overview.html">Getting Started</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../setup/index.html">Set up your environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../layout/index.html">Understanding the directory structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../console/index.html">Using the console</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../unit_tests/index.html">Building and Running Unit Tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../lifecycle/index.html">Managing the lifecycle of components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../logging/index.html">Logging to the console</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../commands/index.html">Adding commands to the console</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../can/index.html">Working with CAN</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Working with Ethernet</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#set-up-environment">Set-up Environment</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#posix">POSIX</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#s32k148">S32K148</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#ping-test">Ping Test</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#test-with-ncat-telnet">Test with ncat/telnet</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#test-with-iperf">Test with Iperf</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#test-with-pytest">Test with Pytest</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../uds/index.html">Using UDS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hwio/index.html">Using hardware I/O</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tracing/index.html">Tracing</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../SysTest/HW_Testing_Guide.html">Hardware Testing Guide</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guidelines</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../guidelines/conventions/index.html">Coding Conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guidelines/practices.html">Coding Practices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guidelines/formatting/index.html">Formatting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guidelines/unittests.html">Unit Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guidelines/module.html">Module Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guidelines/documentation.html">Module Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guidelines/diagrams.html">Diagrams</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guidelines/3rdparty.html">Third Party Libraries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guidelines/commit_message.html">Commit Message</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guidelines/pull_request.html">Pull Request</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Platforms</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../platforms/posix/index.html">POSIX</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../platforms/s32k148evb/index.html">S32K148 Evaluation Board</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Features</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../features/storage.html">Persistent Storage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/functional_safety.html">Functional Safety</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Software Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/common.html">Common</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/posix.html">Posix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/s32k1xx.html">S32K1xx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/executables.html">Executables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/mocks.html">Mocks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tools/UdsTool/doc/index.html">UdsTool</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tools/puncover_tool/doc/index.html">Puncover</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Eclipse OpenBSW Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../overview.html">Getting Started</a> &raquo;</li>
+        
+        <li>Working with Ethernet</li>
+    
+
+    
+
+      <li class="wy-breadcrumbs-aside">
+
+        <!-- DOCUMENT STATUS -->
+
+        
+
+        <!-- DATA CLASSIFICATION -->
+
+        
+
+      </li>
+
+    
+  </ul>
+
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="working-with-ethernet">
+<span id="learning-ethernet"></span><h1>Working with Ethernet<a class="headerlink" href="#working-with-ethernet" title="Link to this heading"></a></h1>
+<p>Both the POSIX and S32K148 builds support Ethernet functionality, but they do so using different
+configurations.</p>
+<dl class="simple">
+<dt>Ethernet Setup:</dt><dd><ul class="simple">
+<li><p>S32K148 uses a development board in combination with the TJA1101 Automotive Ethernet PHY
+transceiver daughter board. This provides a physical Ethernet interface suitable for
+automotive applications.</p></li>
+<li><p>POSIX employs a TAP (Network TUN/TAP) Ethernet module, which provides a virtual Ethernet
+interface for simulation and testing.</p></li>
+</ul>
+</dd>
+</dl>
+<p>Refer <a class="reference internal" href="../../../../executables/referenceApp/application/doc/systems/EthernetSystem.html#application-ethernetsystem"><span class="std std-ref">EthernetSystem</span></a> for more details on the Ethernet application system.</p>
+<section id="set-up-environment">
+<h2>Set-up Environment<a class="headerlink" href="#set-up-environment" title="Link to this heading"></a></h2>
+<p>Before proceeding with the Ethernet setup, ensure you have built the openBsw project for the
+respective platform.</p>
+<dl class="simple">
+<dt>Reference for instructions:</dt><dd><ul class="simple">
+<li><p>For POSIX Build: <a class="reference internal" href="../setup/setup_posix_build.html#setup-posix-build"><span class="std std-ref">Ubuntu</span></a>.</p></li>
+<li><p>For S32K148 Build: <a class="reference internal" href="../setup/setup_s32k148_ubuntu_build.html#setup-s32k148-ubuntu-build"><span class="std std-ref">Ubuntu</span></a> or
+<a class="reference internal" href="../setup/setup_s32k148_win_build.html#setup-s32k148-win-build"><span class="std std-ref">Windows</span></a>.</p></li>
+</ul>
+</dd>
+</dl>
+<p>You can also install <cite>Wireshark</cite> to monitor the Ethernet traffic, which can be useful for debugging.
+<cite>Wireshark</cite> can be installed on Ubuntu <code class="highlight highlight-prop docutils literal notranslate"><span class="pre">22.04</span></code> as follows…</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>wireshark
+</pre></div>
+</div>
+<p>Then run <cite>Wireshark</cite> and open the appropriate interface to monitor the traffic.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The static IP configured for individual targets in the <cite>netif</cite> module are:</p>
+<ul class="simple">
+<li><p>S32K148: <code class="docutils literal notranslate"><span class="pre">192.168.0.200</span></code></p></li>
+<li><p>POSIX: <code class="docutils literal notranslate"><span class="pre">192.168.0.201</span></code></p></li>
+</ul>
+</div>
+<section id="posix">
+<h3>POSIX<a class="headerlink" href="#posix" title="Link to this heading"></a></h3>
+<p>A <code class="docutils literal notranslate"><span class="pre">tap0</span></code> interface is needed for virtual Ethernet. The <cite>bring-up-ethernet.sh</cite> script will set it up.
+While running this script in the terminal, you need sudo permission.</p>
+<dl class="simple">
+<dt>Setup in Testing PC:</dt><dd><ul class="simple">
+<li><p>Navigate to the openBsw root directory.</p></li>
+<li><p>Run the script to set up the tap interface: <code class="docutils literal notranslate"><span class="pre">./tools/enet/bring-up-ethernet.sh</span></code></p></li>
+<li><p>Run the application on POSIX with the below command in the terminal:
+<code class="docutils literal notranslate"><span class="pre">build/posix/executables/referenceApp/application/Release/app.referenceApp.elf</span></code></p></li>
+</ul>
+</dd>
+</dl>
+</section>
+<section id="s32k148">
+<h3>S32K148<a class="headerlink" href="#s32k148" title="Link to this heading"></a></h3>
+<dl>
+<dt>Hardware Connection:</dt><dd><ul>
+<li><p>Connect the S32K148 development board to the TJA1101 daughter board.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Ensure the TJA1101 board is configured as master mode (Remove the jumper).</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>You need a media converter (automotive Ethernet to standard Ethernet) to test on a PC,
+since TJA1101 has automotive Ethernet as output.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Connect the TJA1101 daughter board (100Base-T1) to the media converter using a twisted pair cable.</p></li>
+<li><p>Connect the media converter to the PC using a standard Ethernet cable.</p></li>
+<li><p>If master/slave mode is available in the media converter, ensure it is configured as slave mode.</p></li>
+<li><p>If an external power supply is required for the media converter, 12v is available from the
+S32K148 development board itself (J3-3 pin).</p></li>
+</ul>
+<a class="reference internal image-reference" href="../../../../_images/tja1101.jpg"><img alt="../../../../_images/tja1101.jpg" class="align-center" src="../../../../_images/tja1101.jpg" style="width: 40%;" /></a>
+</div></blockquote>
+</li>
+</ul>
+</dd>
+<dt>Setup in Testing PC:</dt><dd><ul>
+<li><p>Set the <code class="docutils literal notranslate"><span class="pre">IP</span></code> of the Ethernet port in the testing PC to <code class="docutils literal notranslate"><span class="pre">192.168.0.1</span></code> (Static IP)</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>In Windows, changing IP assignment to manual can be done from: <code class="docutils literal notranslate"><span class="pre">Control</span> <span class="pre">Panel</span> <span class="pre">-&gt;</span>
+<span class="pre">Network</span> <span class="pre">and</span> <span class="pre">Internet</span> <span class="pre">-&gt;</span> <span class="pre">Ethernet</span></code>.</p></li>
+<li><p>IPv4 subnet mask can be configured as <code class="docutils literal notranslate"><span class="pre">255.255.255.0</span></code></p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Flash the application to the S32K148 board as instructed in
+<a class="reference internal" href="../setup/setup_s32k148_win_nxpide.html#setup-s32k148-win-nxpide"><span class="std std-ref">Using NXP S32DS</span></a> or <a class="reference internal" href="../setup/setup_s32k148_gdbserver.html#s32k148-gdb-via-usb"><span class="std std-ref">Using GDB Debugger</span></a>.</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If the <code class="docutils literal notranslate"><span class="pre">tap0</span></code> interface added for POSIX is still active, it needs to be removed
+before testing on the S32K148. You can use the below command in the terminal:
+<code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">ip</span> <span class="pre">tuntap</span> <span class="pre">del</span> <span class="pre">dev</span> <span class="pre">tap0</span> <span class="pre">mode</span> <span class="pre">tap</span></code></p>
+</div>
+</section>
+</section>
+<section id="ping-test">
+<h2>Ping Test<a class="headerlink" href="#ping-test" title="Link to this heading"></a></h2>
+<p>To verify the Ethernet connection, you can perform a ping test.</p>
+<p>Open a terminal and run:</p>
+<ul class="simple">
+<li><p>For S32K148: <code class="docutils literal notranslate"><span class="pre">ping</span> <span class="pre">192.168.0.200</span></code></p></li>
+<li><p>For POSIX: <code class="docutils literal notranslate"><span class="pre">ping</span> <span class="pre">192.168.0.201</span></code></p></li>
+</ul>
+<p>This should show a response indicating that the Ethernet connection is working correctly.</p>
+</section>
+<section id="test-with-ncat-telnet">
+<h2>Test with ncat/telnet<a class="headerlink" href="#test-with-ncat-telnet" title="Link to this heading"></a></h2>
+<p>To test the Ethernet functionality, you can use <cite>ncat</cite> or <cite>telnet</cite> for simple TCP/UDP communication.
+Since our demo application has echo server functionality implemented in <cite>EthernetSystems</cite>, you
+can send messages and receive them back as an echo.</p>
+<p>Ensure you have <cite>ncat</cite> and <cite>telnet</cite> installed on your system.</p>
+<ul>
+<li><dl class="simple">
+<dt>UDP:</dt><dd><ul class="simple">
+<li><p>POSIX: <code class="docutils literal notranslate"><span class="pre">ncat</span> <span class="pre">-u</span> <span class="pre">192.168.0.201</span> <span class="pre">49444</span></code></p></li>
+<li><p>S32K148: <code class="docutils literal notranslate"><span class="pre">ncat</span> <span class="pre">-u</span> <span class="pre">192.168.0.200</span> <span class="pre">49444</span></code></p></li>
+</ul>
+</dd>
+</dl>
+<p>Once the connection is established, type your message and press <code class="docutils literal notranslate"><span class="pre">enter</span></code>, the echo will
+be printed back. To exit from ncat: <code class="docutils literal notranslate"><span class="pre">ctrl</span> <span class="pre">+</span> <span class="pre">C</span></code>.</p>
+</li>
+<li><dl class="simple">
+<dt>TCP:</dt><dd><ul class="simple">
+<li><p>POSIX: <code class="docutils literal notranslate"><span class="pre">telnet</span> <span class="pre">192.168.0.201</span> <span class="pre">49555</span></code></p></li>
+<li><p>S32K148: <code class="docutils literal notranslate"><span class="pre">telnet</span> <span class="pre">192.168.0.200</span> <span class="pre">49555</span></code></p></li>
+</ul>
+</dd>
+</dl>
+<p>Once the connection is established, type your message and press <code class="docutils literal notranslate"><span class="pre">enter</span></code>, the echo will
+be printed back. To exit from telnet: <code class="docutils literal notranslate"><span class="pre">ctrl</span> <span class="pre">+</span> <span class="pre">]</span></code> and type <code class="docutils literal notranslate"><span class="pre">quit</span></code>.</p>
+</li>
+</ul>
+</section>
+<section id="test-with-iperf">
+<h2>Test with Iperf<a class="headerlink" href="#test-with-iperf" title="Link to this heading"></a></h2>
+<p>Iperf is a tool for measuring the maximum TCP and UDP bandwidth performance. We have implemented
+iperf basic server functionality in the <cite>EthernetSystems</cite> application, allowing you to test the
+network performance using the iperf client.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Ensure that the <cite>iperf2</cite> tool is installed on your system before running the commands below.
+In Ubuntu, you can install it using: <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">apt</span> <span class="pre">install</span> <span class="pre">iperf</span></code>. We tested with <cite>version 2.1.5</cite>.</p>
+</div>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Test Ethernet on POSIX:</dt><dd><ul>
+<li><p>TCP: <code class="docutils literal notranslate"><span class="pre">iperf</span> <span class="pre">-c</span> <span class="pre">192.168.0.201</span> <span class="pre">-w</span> <span class="pre">2739</span> <span class="pre">-l</span> <span class="pre">1459</span> <span class="pre">-t</span> <span class="pre">5</span></code></p></li>
+<li><p>UDP: <code class="docutils literal notranslate"><span class="pre">iperf</span> <span class="pre">-c</span> <span class="pre">192.168.0.201</span> <span class="pre">-u</span> <span class="pre">-l</span> <span class="pre">1000</span> <span class="pre">-b</span> <span class="pre">10M</span> <span class="pre">-t</span> <span class="pre">5</span></code></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Test Ethernet on S32K148:</dt><dd><ul>
+<li><p>TCP: <code class="docutils literal notranslate"><span class="pre">iperf</span> <span class="pre">-c</span> <span class="pre">192.168.0.200</span> <span class="pre">-w</span> <span class="pre">2739</span> <span class="pre">-l</span> <span class="pre">1459</span> <span class="pre">-t</span> <span class="pre">5</span></code></p></li>
+<li><p>UDP: <code class="docutils literal notranslate"><span class="pre">iperf</span> <span class="pre">-c</span> <span class="pre">192.168.0.200</span> <span class="pre">-u</span> <span class="pre">-l</span> <span class="pre">1000</span> <span class="pre">-b</span> <span class="pre">10M</span> <span class="pre">-t</span> <span class="pre">5</span></code></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</section>
+<section id="test-with-pytest">
+<h2>Test with Pytest<a class="headerlink" href="#test-with-pytest" title="Link to this heading"></a></h2>
+<p>Functional testing of the Ethernet application is done using Pytest.
+The Pytest script is placed under <code class="docutils literal notranslate"><span class="pre">test/pyTest/enet/test_ethernet.py</span></code>.
+Refer to <code class="docutils literal notranslate"><span class="pre">test/pyTest/README.md</span></code> for instructions on how to run the Pytest script.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026 Accenture.</p>
+  </div>
+
+  <div role="footer_string">
+    <p>Documentation from 2026-02-24 10:51:52, official build.</p>
+
+    
+      <a href="../../../../_sources/doc/dev/learning/ethernet/index.rst.txt" rel="nofollow"> View page source</a>
+    
+
+  </div>
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(false);
+      });
+  </script> 
+
+</body>
+</html>

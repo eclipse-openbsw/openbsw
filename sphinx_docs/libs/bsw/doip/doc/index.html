@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="EclipseOpenBSWDocumentation" name="dox_trace_storage" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>doip - Diagnostics Over IP &mdash; Eclipse OpenBSW Documentation  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/rtd_theme_overrides.css?v=6fd0d55b" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=eafc0fe6" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/colors.css?v=3cafd8aa" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/colored_table.css?v=34b816d5" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/header.css?v=e632285e" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/dox_util_colors.css?v=dd14b177" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/dox_trace.css?v=60d3f72c" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../../../../_static/copybutton.js?v=f281be69"></script>
+        <script src="../../../../_static/dox_trace.js?v=40719b51"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="io - IO Library" href="../../io/doc/index.html" />
+    <link rel="prev" title="User Documentation" href="../../docan/doc/user/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../doc/dev/index.html" class="icon icon-home">
+            Eclipse OpenBSW Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Learning</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/learning/overview.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/learning/SysTest/HW_Testing_Guide.html">Hardware Testing Guide</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guidelines</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/guidelines/conventions/index.html">Coding Conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/guidelines/practices.html">Coding Practices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/guidelines/formatting/index.html">Formatting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/guidelines/unittests.html">Unit Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/guidelines/module.html">Module Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/guidelines/documentation.html">Module Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/guidelines/diagrams.html">Diagrams</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/guidelines/3rdparty.html">Third Party Libraries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/guidelines/commit_message.html">Commit Message</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/guidelines/pull_request.html">Pull Request</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Platforms</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/platforms/posix/index.html">POSIX</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/platforms/s32k148evb/index.html">S32K148 Evaluation Board</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Features</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/features/storage.html">Persistent Storage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/features/functional_safety.html">Functional Safety</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Software Modules</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../doc/dev/modules/common.html">Common</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../../doc/dev/modules/common.html#bsw">BSW</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../async/doc/index.html">async - Asynchronous Execution Interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../asyncConsole/doc/index.html">asyncConsole - Asynchronous Console</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../asyncFreeRtos/doc/index.html">asyncFreeRtos</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../asyncImpl/doc/index.html">asyncImpl</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../bsp/doc/index.html">bsp</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../common/doc/index.html">common</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cpp2can/doc/index.html">cpp2can - CAN Abstraction Layer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cpp2ethernet/doc/index.html">cpp2ethernet - Ethernet Abstractions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../docan/doc/index.html">docan - Diagnostics over CAN</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">doip - Diagnostics Over IP</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#features">Features</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#architecture">Architecture</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#establishing-a-server-connection">Establishing a Server Connection</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#interface-to-the-transport-router">Interface to the Transport Router</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../io/doc/index.html">io - IO Library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lifecycle/doc/index.html">lifecycle - App Lifecycle Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../logger/doc/index.html">logger - Logger module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../loggerIntegration/doc/index.html">loggerIntegration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lwipSocket/doc/index.html">lwipSocket - LwIP v2 Socket Abstraction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../middleware/doc/index.html">middleware</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../platform/doc/index.html">platform - Platform Library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../runtime/doc/index.html">runtime</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../stdioConsoleInput/doc/index.html">stdioConsoleInput</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../storage/doc/index.html">storage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../timer/doc/index.html">timer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../transport/doc/index.html">transport - Transport Library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../transportRouterSimple/doc/index.html">transportRouterSimple</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../uds/doc/index.html">uds - Unified Diagnostic Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../util/doc/index.html">util</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../doc/dev/modules/common.html#bsp">BSP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../doc/dev/modules/common.html#safety">Safety</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/modules/posix.html">Posix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/modules/s32k1xx.html">S32K1xx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/modules/executables.html">Executables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/modules/mocks.html">Mocks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tools/UdsTool/doc/index.html">UdsTool</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tools/puncover_tool/doc/index.html">Puncover</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../doc/dev/index.html">Eclipse OpenBSW Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../doc/dev/index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../../../doc/dev/modules/common.html">Common</a> &raquo;</li>
+        
+        <li>doip - Diagnostics Over IP</li>
+    
+
+    
+
+      <li class="wy-breadcrumbs-aside">
+
+        <!-- DOCUMENT STATUS -->
+
+        
+
+        <!-- DATA CLASSIFICATION -->
+
+        
+
+      </li>
+
+    
+  </ul>
+
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="doip-diagnostics-over-ip">
+<h1>doip - Diagnostics Over IP<a class="headerlink" href="#doip-diagnostics-over-ip" title="Link to this heading"></a></h1>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<p>Diagnostics over IP (DoIP) serves as a transport protocol for diagnostic services, e. g. for <em>Unified
+Diagnostics Services</em> (UDS). It is used to transport UDS messages over IP networks in a
+standardized way. DoIP is specified in ISO 13400-2. This abstracts the actual transport layer and
+allows the usage of logical diagnostic addresses instead to communicate with different entities.
+For security, DoIP can be used on top of TLS.</p>
+</section>
+<section id="features">
+<h2>Features<a class="headerlink" href="#features" title="Link to this heading"></a></h2>
+<p>The module currently provides a DoIP server implementing DoIP version 2 as per ISO 13400-2:2012.</p>
+</section>
+<section id="architecture">
+<h2>Architecture<a class="headerlink" href="#architecture" title="Link to this heading"></a></h2>
+<p>The module provides a DoIP server implementation for discovery and transport of UDS
+messages over IP networks. The server functionality can be found in the
+<code class="docutils literal notranslate"><span class="pre">server</span></code> subdirectory. Functionality that is common across the module is found in the
+<code class="docutils literal notranslate"><span class="pre">common</span></code> subdirectory.</p>
+<p>The server implements DoIP discovery by offering classes to receive Vehicle Identification Requests
+and send Vehicle Identification Responses back to clients as well as broadcast Vehicle Announcement
+Messages. The class handling this is <code class="docutils literal notranslate"><span class="pre">DoIpServerVehicleIdentificationService</span></code>.</p>
+<p>Complete class diagram (DoIP server, identification part):</p>
+<p class="plantuml">
+<a href="../../../../_images/plantuml-6f3a20e49dd3867fb3c3b26ee24103f9ce822ecb.png"><img src="../../../../_images/plantuml-6f3a20e49dd3867fb3c3b26ee24103f9ce822ecb.png" alt="&#64;startuml
+
+class DoIpServerSystem
+class DoIpServerVehicleIdentificationService
+interface IDoIpServerEntityStatusCallback
+class DoIpServerVehicleIdentificationParameters
+class DoIpServerVehicleIdentification
+class DoIpConcreteOemMessageHandler
+
+class DoIpServerVehicleIdentificationSocketHandler
+class DoIpServerVehicleIdentificationRequest
+class DoIpServerVehicleIdentificationConfig
+
+interface IDoIpServerVehicleAnnouncementParameterProvider
+interface IDoIpServerVehicleIdentificationCallback
+interface IDoIpUdpOemMessageHandler
+
+DoIpServerSystem o-- DoIpServerVehicleIdentificationService
+DoIpServerSystem --|&gt; IDoIpServerEntityStatusCallback
+DoIpServerSystem o-- DoIpServerVehicleIdentificationParameters
+DoIpServerSystem o-- DoIpServerVehicleIdentification
+DoIpServerSystem o-- DoIpConcreteOemMessageHandler
+
+DoIpServerVehicleIdentificationService o-- DoIpServerVehicleIdentificationSocketHandler
+DoIpServerVehicleIdentificationService o-- DoIpServerVehicleIdentificationRequest
+DoIpServerVehicleIdentificationService o-- DoIpServerVehicleIdentificationConfig
+
+DoIpServerVehicleIdentificationSocketHandler o-  DoIpServerVehicleIdentificationRequest
+DoIpServerVehicleIdentificationConfig        o- DoIpServerVehicleIdentificationRequest
+
+DoIpServerVehicleIdentificationParameters       --|&gt; IDoIpServerVehicleAnnouncementParameterProvider
+DoIpServerVehicleIdentification                 --|&gt; IDoIpServerVehicleIdentificationCallback
+IDoIpServerEntityStatusCallback                 ..   DoIpServerVehicleIdentificationConfig
+IDoIpServerVehicleAnnouncementParameterProvider ..   DoIpServerVehicleIdentificationConfig
+IDoIpServerVehicleIdentificationCallback        ..   DoIpServerVehicleIdentificationConfig
+DoIpServerVehicleIdentification                 ..   IDoIpUdpOemMessageHandler
+DoIpConcreteOemMessageHandler                   --|&gt; IDoIpUdpOemMessageHandler
+
+DoIpServerVehicleIdentificationConfig .. DoIpServerVehicleIdentificationSocketHandler
+IDoIpUdpOemMessageHandler             .. DoIpServerVehicleIdentificationSocketHandler
+
+package &quot;common&quot; {
+
+interface IDoIpConnectionHandler
+interface IDoIpVehicleAnnouncementListener
+
+DoIpServerVehicleIdentificationSocketHandler --|&gt; IDoIpConnectionHandler
+DoIpServerVehicleIdentificationSocketHandler ..   IDoIpVehicleAnnouncementListener
+
+}
+
+&#64;enduml
+" style="width: 1471.0px; height: 617.0px"/></a>
+</p>
+<p>Complete class diagram (DoIP server, transport part):</p>
+<p class="plantuml">
+<a href="../../../../_images/plantuml-05f22ad2cec78c1edfa7811700f09d35a3bf27d1.png"><img src="../../../../_images/plantuml-05f22ad2cec78c1edfa7811700f09d35a3bf27d1.png" alt="&#64;startuml
+
+class DoIpServerLogger
+
+class DoIpServerTransportConnectionPool
+class DoIpServerTransportConnection
+
+interface IDoIpServerTransportConnectionCreator
+interface IDoIpServerTransportConnectionPool
+class DoIpServerTransportMessageHandler
+class DoIpTcpConnection
+
+class DoIpServerTransportConnectionProvider
+class DoIpServerConnectionHandler
+class DoIpServerTransportLayerParameters
+class DoIpServerTransportConnectionConfig
+class DoIpServerTransportLayer
+interface IDoIpServerTransportConnectionProviderCallback
+interface IDoIpServerConnectionHandlerCallback
+interface IDoIpConnectionHandler
+interface IDoIpSendJob
+interface IDoIpServerConnection
+interface IDoIpServerMessageHandler
+interface IDoIpSendJobCallback
+interface IDoIpTransportMessageProvidingListener
+
+class DoIpTransportMessageProvidingListenerHelper
+interface IDoIpServerTransportLayerCallback
+
+interface IDoIpServerSocketHandler
+interface IDoIpServerSocketHandlerListener
+class DoIpServerSocketHandler
+class Socket
+class SocketHandler
+
+class DoIpServerTransportMessageHandler
+
+DoIpServerTransportConnectionPool ..   IDoIpServerTransportConnectionCreator
+DoIpServerTransportConnectionPool --|&gt; IDoIpServerTransportConnectionPool
+DoIpServerTransportConnectionPool o--  DoIpServerTransportMessageHandler
+DoIpServerTransportConnection o-- DoIpServerTransportMessageHandler
+DoIpServerTransportConnection o-- DoIpTcpConnection
+
+IDoIpServerTransportConnectionPool .. DoIpServerTransportConnectionProvider
+DoIpServerTransportConnection      .. DoIpServerTransportConnectionProvider
+DoIpServerTransportConnection    --|&gt; DoIpServerConnectionHandler
+
+IDoIpSendJob          .. DoIpServerTransportMessageHandler
+IDoIpServerConnection .. DoIpServerTransportMessageHandler
+DoIpServerTransportMessageHandler --|&gt; IDoIpServerMessageHandler
+DoIpServerTransportMessageHandler --|&gt; IDoIpSendJobCallback
+
+DoIpServerTransportConnectionProvider ..   IDoIpServerSocketHandler
+DoIpServerTransportConnectionProvider --|&gt; IDoIpServerSocketHandlerListener
+IDoIpServerSocketHandlerListener .. DoIpServerSocketHandler
+DoIpServerSocketHandler -|&gt; IDoIpServerSocketHandler
+DoIpServerSocketHandler o-- Socket
+DoIpServerSocketHandler o-- SocketHandler
+
+DoIpServerTransportConnectionProvider .. DoIpServerTransportConnectionConfig
+DoIpServerTransportConnectionConfig   .. IDoIpTransportMessageProvidingListener
+DoIpServerTransportConnectionConfig   .. DoIpServerTransportLayerParameters
+
+DoIpServerTransportConnectionProvider .. IDoIpServerTransportConnectionProviderCallback
+DoIpServerConnectionHandler ..   IDoIpServerConnectionHandlerCallback
+DoIpServerConnectionHandler ..   IDoIpConnectionHandler
+DoIpServerConnectionHandler ..   IDoIpSendJob
+DoIpServerConnectionHandler --|&gt;  IDoIpServerConnection
+DoIpServerConnectionHandler ..   IDoIpServerMessageHandler
+DoIpServerConnectionHandler ..   DoIpServerTransportLayerParameters
+
+DoIpServerTransportLayer -|&gt; IDoIpServerTransportConnectionProviderCallback
+DoIpServerTransportLayer -|&gt; IDoIpServerConnectionHandlerCallback
+DoIpServerTransportLayer o-- DoIpServerTransportConnectionProvider
+DoIpServerTransportLayer o-- DoIpServerTransportConnectionConfig
+DoIpServerTransportLayer o- DoIpTransportMessageProvidingListenerHelper
+IDoIpServerTransportLayerCallback .. DoIpServerTransportLayer
+
+
+&#64;enduml
+" style="width: 2628.0px; height: 709.0px"/></a>
+</p>
+</section>
+<section id="establishing-a-server-connection">
+<h2>Establishing a Server Connection<a class="headerlink" href="#establishing-a-server-connection" title="Link to this heading"></a></h2>
+<p>Details establishment of server connections as seen in the unit test
+DoIpServerTransportLayerTest.TestSendWithConnection.</p>
+<p class="plantuml">
+<a href="../../../../_images/plantuml-e8deee6b3b57f4986d1489bd61456ff6872046b4.png"><img src="../../../../_images/plantuml-e8deee6b3b57f4986d1489bd61456ff6872046b4.png" alt="&#64;startuml DoIpServerTransportLayer.TestSendWithConnection.Sequence
+
+participant App as App
+participant DoIpServerTransportLayer as STL
+participant DoIpServerTransportConnectionProvider as STConnProv
+participant IDoIpServerSocketHandler as SSH
+participant IDoIpServerTransportConnectionPool as STConnPool
+participant DoIpServerTransportConnection as STConn
+
+App -&gt; STL ++ : init()
+STL -&gt; STConnProv ++ : start()
+STConnProv -&gt; SSH ++ : start()
+SSH -&gt; SSH : connectionAcceptanceProcess
+SSH --&gt; STConnProv -- :
+STConnProv --&gt; STL -- :
+App &lt;-- STL -- :
+SSH -&gt; STConnProv ++ : callback:connectionAccepted()
+STConnProv -&gt; STL ++ : getSocketGroupId()
+STL --&gt; STConnProv --:
+STConnProv -&gt; STConnPool ++ : createConnection(socketGroupId, socket)
+STConnPool -&gt; STConn ++ : DoIpServerTransportConnection()
+STConnPool &lt;-- STConn -- : instance:DoIpServerTransportConnection
+STConnPool --&gt; STConnProv -- : connection
+STConnProv -&gt; STL ++ : connectionAccepted()
+STL -&gt; STL : store connection
+STL -&gt; STConn ++ : start()
+STConn -&gt; STConn ++ : init()
+STConn --
+STConn -&gt; STConn ++ : sendConnectionOpened()
+STConn --
+STConn -&gt; STConn ++ : scheduleRoutingActivationRequest()
+STConn --
+STConn --&gt; STL -- :
+STL --&gt; STConnProv -- :
+STConnProv --
+STConn --
+STConn -&gt; STConn ++ : routingActivationRequestReceived()
+STConn -&gt; STL ++ : checkRoutingActivation()
+STL -&gt; STL ++ : RoutingActivationCheckResult()
+STL --
+STL --&gt; STConn -- : RoutingActivationCheckResult()
+STConn -&gt; STL ++ : handleRoutingActivationRequest()
+STL -&gt; STL ++ : startAliveCheck()
+STL -&gt; STConn ++ : routingActivationCompleted()
+STConn -&gt; STConn ++ : sendRoutingActivationResponse()
+STConn --
+STConn -&gt; STL ++ : routingActive()
+STL -&gt; App ++ : routingActive()
+STL &lt;-- App -- :
+STConn &lt;-- STL -- :
+STConn --
+STConn --
+STL --
+STL --
+
+App -&gt; STL ++ : send()
+STL -&gt; STConn ++ : send()
+STConn -&gt; STConn ++ : sendMessage()
+STConn --
+STConn --&gt; STL --
+App &lt;-- STL -- :
+
+&#64;enduml
+" style="width: 1481.0px; height: 1385.0px"/></a>
+</p>
+</section>
+<section id="interface-to-the-transport-router">
+<h2>Interface to the Transport Router<a class="headerlink" href="#interface-to-the-transport-router" title="Link to this heading"></a></h2>
+<p>A <code class="docutils literal notranslate"><span class="pre">DoIpServerTransportConnection</span></code> inherits from <code class="docutils literal notranslate"><span class="pre">DoIpServerConnectionHandler</span></code>
+in order to process DoIP protocol messages and it owns one (or several)
+<code class="docutils literal notranslate"><span class="pre">DoIpServerTransportMessageHandler</span></code>s. A <code class="docutils literal notranslate"><span class="pre">DoIpServerTransportMessageHandler</span></code> is
+responsible for sending and receiving diagnostic messages, to and from a DoIP
+TCP connection and acts as an interface with a <code class="docutils literal notranslate"><span class="pre">TransportRouter</span></code>. It references
+an <code class="docutils literal notranslate"><span class="pre">IDoIpTransportMessageProvidingListener</span></code> as well as an
+<code class="docutils literal notranslate"><span class="pre">ITransportMessageProcessedListener</span></code>. The <code class="docutils literal notranslate"><span class="pre">TransportRouter</span></code> only implements the
+<code class="docutils literal notranslate"><span class="pre">ITransportMessageProvidingListener</span></code>. The class
+<code class="docutils literal notranslate"><span class="pre">DoIpTransportMessageProvidingListenerHelper</span></code> implements the
+<code class="docutils literal notranslate"><span class="pre">IDoIpTransportMessageProvidingListener</span></code> interface and helps connecting the
+<code class="docutils literal notranslate"><span class="pre">DoIpServerTransportMessageHandler</span></code> to the <code class="docutils literal notranslate"><span class="pre">TransportRouter</span></code> and translating
+between <code class="docutils literal notranslate"><span class="pre">transport</span></code> return values and DoIP ACK/NACK codes. Optionally, if there
+is a transport router available that can handle the doip specific
+<code class="docutils literal notranslate"><span class="pre">IDoIpTransportMessageProvidingListener</span></code>, this can also be registered in the
+Helper and then this class will be used directly without translation of return
+codes.</p>
+<p>For sending, the <code class="docutils literal notranslate"><span class="pre">DoIpTransportMessageHandler</span></code> passes the data on to the
+<code class="docutils literal notranslate"><span class="pre">DoIpTcpConnection</span></code>. Once the data is consumed by the TCP stack, the
+<code class="docutils literal notranslate"><span class="pre">ITransportMessageProcessedListener::transportMessageProcessed()</span></code> callback is
+called to signal that the transport message is no longer accessed.</p>
+<p class="plantuml">
+<a href="../../../../_images/plantuml-780e8fdb8f0c7be378a58c8b7e0b765c4f1be8a5.png"><img src="../../../../_images/plantuml-780e8fdb8f0c7be378a58c8b7e0b765c4f1be8a5.png" alt="&#64;startuml
+
+participant DoIpTcpConnection as TcpC
+participant DoIpServerConnectionHandler as SCH
+participant DoIpServerTransportMessageHandler as STMH
+participant DoIpTransportMessageProvidingListenerHelper as TMPLH
+participant TransportRouter as TR
+participant DoIpServerTransportLayer as TL
+
+alt protocol message
+TcpC -&gt; SCH ++ : headerReceived()
+SCH -&gt; SCH ++ : (handle sending directly)
+deactivate SCH
+TcpC &lt;-- SCH -- :
+else diagnostic message
+    TcpC -&gt; SCH ++ : headerReceived()
+    SCH -&gt; STMH ++ : headerReceived()
+    TcpC &lt;- STMH ++ : [async] receivePayload()
+    TcpC --&gt; STMH -- :
+    SCH &lt;-- STMH -- :
+    TcpC &lt;-- SCH -- :
+    TcpC -&gt; STMH ++ : diagnosticMessageLogicalAddressInfoReceived()
+    STMH -&gt; TMPLH ++ : getTransportMessage()
+    TMPLH -&gt; TR ++ : getTransportMessage()
+    TMPLH &lt;-- TR -- :
+    STMH &lt;-- TMPLH -- :
+    TcpC &lt;- STMH ++ : [async] receivePayload()
+    TcpC --&gt; STMH -- :
+    TcpC &lt;-- STMH -- :
+    TcpC -&gt; STMH ++ : diagnosticMessageUserDataReceived()
+    STMH -&gt; TMPLH ++ : messageReceived()
+    TMPLH -&gt; TR ++ : messageReceived()
+    TMPLH &lt;-- TR -- :
+    STMH &lt;-- TMPLH -- :
+    TcpC &lt;-- STMH -- :
+end
+
+STMH &lt;- TL ++ : send()
+TcpC &lt;- STMH ++ : [async] sendMessage()
+TcpC --&gt; STMH -- :
+STMH --&gt; TL -- :
+TcpC -&gt; TL ++ : ITransportMessageProcessedListener::transportMessageProcessed()
+TcpC &lt;-- TL -- :
+&#64;enduml
+" style="width: 1400.0px; height: 812.0px"/></a>
+</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026 Accenture.</p>
+  </div>
+
+  <div role="footer_string">
+    <p>Documentation from 2026-02-24 10:51:54, official build.</p>
+
+    
+      <a href="../../../../_sources/libs/bsw/doip/doc/index.rst.txt" rel="nofollow"> View page source</a>
+    
+
+  </div>
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(false);
+      });
+  </script> 
+
+</body>
+</html>

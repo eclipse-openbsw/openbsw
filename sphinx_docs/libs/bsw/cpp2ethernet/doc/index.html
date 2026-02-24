@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="EclipseOpenBSWDocumentation" name="dox_trace_storage" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>cpp2ethernet - Ethernet Abstractions &mdash; Eclipse OpenBSW Documentation  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/rtd_theme_overrides.css?v=6fd0d55b" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=eafc0fe6" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/colors.css?v=3cafd8aa" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/colored_table.css?v=34b816d5" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/header.css?v=e632285e" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/dox_util_colors.css?v=dd14b177" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/dox_trace.css?v=60d3f72c" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../../../../_static/copybutton.js?v=f281be69"></script>
+        <script src="../../../../_static/dox_trace.js?v=40719b51"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="docan - Diagnostics over CAN" href="../../docan/doc/index.html" />
+    <link rel="prev" title="User documentation" href="../../cpp2can/doc/user/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../doc/dev/index.html" class="icon icon-home">
+            Eclipse OpenBSW Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Learning</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/learning/overview.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/learning/SysTest/HW_Testing_Guide.html">Hardware Testing Guide</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guidelines</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/guidelines/conventions/index.html">Coding Conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/guidelines/practices.html">Coding Practices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/guidelines/formatting/index.html">Formatting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/guidelines/unittests.html">Unit Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/guidelines/module.html">Module Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/guidelines/documentation.html">Module Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/guidelines/diagrams.html">Diagrams</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/guidelines/3rdparty.html">Third Party Libraries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/guidelines/commit_message.html">Commit Message</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/guidelines/pull_request.html">Pull Request</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Platforms</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/platforms/posix/index.html">POSIX</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/platforms/s32k148evb/index.html">S32K148 Evaluation Board</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Features</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/features/storage.html">Persistent Storage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/features/functional_safety.html">Functional Safety</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Software Modules</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../doc/dev/modules/common.html">Common</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../../doc/dev/modules/common.html#bsw">BSW</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../async/doc/index.html">async - Asynchronous Execution Interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../asyncConsole/doc/index.html">asyncConsole - Asynchronous Console</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../asyncFreeRtos/doc/index.html">asyncFreeRtos</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../asyncImpl/doc/index.html">asyncImpl</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../bsp/doc/index.html">bsp</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../common/doc/index.html">common</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cpp2can/doc/index.html">cpp2can - CAN Abstraction Layer</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">cpp2ethernet - Ethernet Abstractions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#public-api">Public API</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#udp">UDP</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#abstractdatagramsocket">AbstractDatagramSocket</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#datagrampacket">DatagramPacket</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#idatalistener">IDataListener</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#tcp">TCP</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#abstractserversocket">AbstractServerSocket</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#abstractsocket">AbstractSocket</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#isocketprovidingconnectionlistener">ISocketProvidingConnectionListener</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../docan/doc/index.html">docan - Diagnostics over CAN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../doip/doc/index.html">doip - Diagnostics Over IP</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../io/doc/index.html">io - IO Library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lifecycle/doc/index.html">lifecycle - App Lifecycle Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../logger/doc/index.html">logger - Logger module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../loggerIntegration/doc/index.html">loggerIntegration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lwipSocket/doc/index.html">lwipSocket - LwIP v2 Socket Abstraction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../middleware/doc/index.html">middleware</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../platform/doc/index.html">platform - Platform Library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../runtime/doc/index.html">runtime</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../stdioConsoleInput/doc/index.html">stdioConsoleInput</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../storage/doc/index.html">storage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../timer/doc/index.html">timer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../transport/doc/index.html">transport - Transport Library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../transportRouterSimple/doc/index.html">transportRouterSimple</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../uds/doc/index.html">uds - Unified Diagnostic Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../util/doc/index.html">util</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../doc/dev/modules/common.html#bsp">BSP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../doc/dev/modules/common.html#safety">Safety</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/modules/posix.html">Posix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/modules/s32k1xx.html">S32K1xx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/modules/executables.html">Executables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/modules/mocks.html">Mocks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tools/UdsTool/doc/index.html">UdsTool</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tools/puncover_tool/doc/index.html">Puncover</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../doc/dev/index.html">Eclipse OpenBSW Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../doc/dev/index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../../../doc/dev/modules/common.html">Common</a> &raquo;</li>
+        
+        <li>cpp2ethernet - Ethernet Abstractions</li>
+    
+
+    
+
+      <li class="wy-breadcrumbs-aside">
+
+        <!-- DOCUMENT STATUS -->
+
+        
+
+        <!-- DATA CLASSIFICATION -->
+
+        
+
+      </li>
+
+    
+  </ul>
+
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="cpp2ethernet-ethernet-abstractions">
+<span id="cpp2ethernet"></span><h1>cpp2ethernet - Ethernet Abstractions<a class="headerlink" href="#cpp2ethernet-ethernet-abstractions" title="Link to this heading"></a></h1>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">cpp2ethernet</span></code> provides functionality to send and receive data through sockets. Also it contains features that help in managing network interfaces.</p>
+<p>This module contains following features:</p>
+<ul class="simple">
+<li><p>API for UDP and TCP socket handling</p></li>
+<li><p>Wrapper for IP addresses</p></li>
+<li><p>Registry for network interface handling</p></li>
+</ul>
+<p>This module has the following dependencies:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../platform/doc/index.html#platform"><span class="std std-ref">platform - Platform Library</span></a></p></li>
+<li><p><a class="reference internal" href="../../util/doc/index.html#util"><span class="std std-ref">util</span></a></p></li>
+<li><p>common</p></li>
+</ul>
+</section>
+<section id="public-api">
+<h2>Public API<a class="headerlink" href="#public-api" title="Link to this heading"></a></h2>
+<section id="udp">
+<h3>UDP<a class="headerlink" href="#udp" title="Link to this heading"></a></h3>
+<section id="abstractdatagramsocket">
+<h4>AbstractDatagramSocket<a class="headerlink" href="#abstractdatagramsocket" title="Link to this heading"></a></h4>
+<blockquote>
+<div><p>The <code class="docutils literal notranslate"><span class="pre">AbstractDatagramSocket</span></code> is used to setup a UDP connection, reading data and sending data.</p>
+<ul>
+<li><p><strong>Receive</strong>:
+An application that is using an <code class="docutils literal notranslate"><span class="pre">AbstractDatagramSocket</span></code> and wants to receive UDP data shall implement the <code class="docutils literal notranslate"><span class="pre">IDataListener</span></code> interface.
+Additionally, <code class="docutils literal notranslate"><span class="pre">setDataListener()</span></code> has to be set with the implemented <code class="docutils literal notranslate"><span class="pre">IDataListener</span></code> object. Also a connection has to be properly set up by
+calling <code class="docutils literal notranslate"><span class="pre">bind()</span></code> or <code class="docutils literal notranslate"><span class="pre">connect()</span></code>.
+Once the UDP data is received, the <code class="docutils literal notranslate"><span class="pre">dataReceived()</span></code> function will be called. The application is then responsible to read the data with <code class="docutils literal notranslate"><span class="pre">read()</span></code>.</p>
+<p>It is also possible to receive multicasts by joining a multicast group with <code class="docutils literal notranslate"><span class="pre">join()</span></code>.</p>
+</li>
+<li><p><strong>Send</strong>:
+In order to send UDP data, there are two options.</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">connect()</span></code> and <code class="docutils literal notranslate"><span class="pre">send(slice&lt;uint8_t&amp;</span> <span class="pre">data)</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">send(DatagramPacket&amp;</span> <span class="pre">packet)</span></code></p></li>
+</ol>
+</li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="n">enum</span>
+    <span class="p">{</span>
+        <span class="n">INVALID_PORT</span> <span class="o">=</span> <span class="mh">0xFFFF</span>
+    <span class="p">};</span>
+
+    <span class="o">/**</span>
+     <span class="o">*</span> <span class="nb">all</span> <span class="n">ErrorCodes</span> <span class="n">used</span> <span class="n">by</span> <span class="n">socket</span>
+     <span class="o">*</span> \<span class="n">enum</span>  <span class="n">ErrorCode</span>
+     <span class="o">*/</span>
+    <span class="n">enum</span> <span class="k">class</span> <span class="nc">ErrorCode</span> <span class="p">:</span> <span class="n">uint8_t</span>
+    <span class="p">{</span>
+        <span class="o">/**</span> <span class="n">everything</span> <span class="n">ok</span> <span class="o">*/</span>
+        <span class="n">UDP_SOCKET_OK</span><span class="p">,</span>
+        <span class="o">/**</span> <span class="n">an</span> <span class="n">error</span> <span class="n">occurred</span> <span class="o">*/</span>
+        <span class="n">UDP_SOCKET_NOT_OK</span><span class="p">,</span>
+        <span class="o">/**</span> <span class="n">no</span> <span class="n">IDataListener</span> <span class="n">registerd</span> <span class="o">*/</span>
+        <span class="n">UDP_SOCKET_NO_DATA_LISTENER</span>
+    <span class="p">};</span>
+
+    <span class="n">AbstractDatagramSocket</span><span class="p">();</span>
+    <span class="n">AbstractDatagramSocket</span><span class="p">(</span><span class="n">AbstractDatagramSocket</span> <span class="n">const</span><span class="o">&amp;</span><span class="p">)</span>            <span class="o">=</span> <span class="n">delete</span><span class="p">;</span>
+    <span class="n">AbstractDatagramSocket</span><span class="o">&amp;</span> <span class="n">operator</span><span class="o">=</span><span class="p">(</span><span class="n">AbstractDatagramSocket</span> <span class="n">const</span><span class="o">&amp;</span><span class="p">)</span> <span class="o">=</span> <span class="n">delete</span><span class="p">;</span>
+
+    <span class="o">/**</span>
+     <span class="o">*</span> <span class="n">Binds</span> <span class="n">this</span> <span class="n">UDPSocket</span> <span class="n">to</span> <span class="n">a</span> <span class="n">specific</span> <span class="n">port</span> <span class="o">&amp;</span> <span class="n">local</span> <span class="n">address</span>
+     <span class="o">*</span> \<span class="n">param</span> <span class="n">port</span>  <span class="n">local</span> <span class="n">port</span>
+     <span class="o">*</span> \<span class="k">return</span>  <span class="n">status</span> <span class="n">of</span> <span class="n">method</span>
+     <span class="o">*</span>          <span class="o">-</span> <span class="n">UDP_SOCKET_OK</span> <span class="n">when</span> <span class="n">everything</span> <span class="n">was</span> <span class="n">fine</span>
+     <span class="o">*</span>          <span class="o">-</span> <span class="n">UDP_SOCKET_NOT_OK</span> <span class="n">when</span> <span class="n">something</span> <span class="n">went</span> <span class="n">wrong</span>
+     <span class="o">*/</span>
+    <span class="n">virtual</span> <span class="n">ErrorCode</span> <span class="n">bind</span><span class="p">(</span><span class="n">ip</span><span class="p">::</span><span class="n">IPAddress</span> <span class="n">const</span><span class="o">*</span> <span class="n">pIpAddress</span><span class="p">,</span> <span class="n">uint16_t</span> <span class="n">port</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="n">virtual</span> <span class="n">ErrorCode</span> <span class="n">join</span><span class="p">(</span><span class="n">ip</span><span class="p">::</span><span class="n">IPAddress</span> <span class="n">const</span><span class="o">&amp;</span> <span class="n">groupAddr</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="o">/**</span>
+     <span class="o">*</span> <span class="n">Returns</span> <span class="n">the</span> <span class="n">binding</span> <span class="n">state</span> <span class="n">of</span> <span class="n">the</span> <span class="n">socket</span><span class="o">.</span>
+     <span class="o">*</span> \<span class="k">return</span>  <span class="n">binding</span> <span class="n">state</span> <span class="n">of</span> <span class="n">the</span> <span class="n">socket</span>
+     <span class="o">*</span>          <span class="o">-</span> <span class="n">false</span><span class="p">:</span> <span class="ow">not</span> <span class="n">bound</span>
+     <span class="o">*</span>          <span class="o">-</span> <span class="n">true</span><span class="p">:</span> <span class="n">bound</span>
+     <span class="o">*/</span>
+    <span class="n">virtual</span> <span class="nb">bool</span> <span class="n">isBound</span><span class="p">()</span> <span class="n">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="n">virtual</span> <span class="n">void</span> <span class="n">close</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="o">/**</span>
+     <span class="o">*</span> <span class="n">Returns</span> <span class="n">whether</span> <span class="n">the</span> <span class="n">socket</span> <span class="ow">is</span> <span class="n">closed</span> <span class="ow">or</span> <span class="ow">not</span><span class="o">.</span>
+     <span class="o">*</span> \<span class="k">return</span>  <span class="n">state</span> <span class="n">of</span> <span class="n">the</span> <span class="n">socket</span>
+     <span class="o">*</span>          <span class="o">-</span> <span class="n">false</span><span class="p">:</span> <span class="ow">not</span> <span class="n">closed</span>
+     <span class="o">*</span>          <span class="o">-</span> <span class="n">true</span><span class="p">:</span> <span class="n">closed</span>
+     <span class="o">*/</span>
+    <span class="n">virtual</span> <span class="nb">bool</span> <span class="n">isClosed</span><span class="p">()</span> <span class="n">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="o">/**</span>
+     <span class="o">*</span> <span class="n">Connects</span> <span class="n">the</span> <span class="n">socket</span> <span class="n">to</span> <span class="n">a</span> <span class="n">remote</span> <span class="n">address</span> <span class="k">for</span> <span class="n">this</span> <span class="n">socket</span><span class="o">.</span>
+     <span class="o">*</span> \<span class="n">param</span>   <span class="n">address</span>  <span class="n">remote</span> <span class="n">IPAddress</span>
+     <span class="o">*</span> \<span class="n">param</span>   <span class="n">port</span>     <span class="n">remote</span> <span class="n">port</span>
+     <span class="o">*</span> \<span class="k">return</span>  <span class="n">status</span> <span class="n">of</span> <span class="n">method</span>
+     <span class="o">*</span>          <span class="o">-</span> <span class="n">UDP_SOCKET_OK</span> <span class="n">when</span> <span class="n">everything</span> <span class="n">was</span> <span class="n">fine</span>
+     <span class="o">*</span>          <span class="o">-</span> <span class="n">UDP_SOCKET_NOT_OK</span> <span class="n">when</span> <span class="n">something</span> <span class="n">went</span> <span class="n">wrong</span>
+     <span class="o">*/</span>
+    <span class="n">virtual</span> <span class="n">ErrorCode</span>
+    <span class="n">connect</span><span class="p">(</span><span class="n">ip</span><span class="p">::</span><span class="n">IPAddress</span> <span class="n">const</span><span class="o">&amp;</span> <span class="n">address</span><span class="p">,</span> <span class="n">uint16_t</span> <span class="n">port</span><span class="p">,</span> <span class="n">ip</span><span class="p">::</span><span class="n">IPAddress</span><span class="o">*</span> <span class="n">pLocalAddress</span><span class="p">)</span>
+        <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="o">/**</span>
+     <span class="o">*</span> <span class="n">Disconnects</span> <span class="n">the</span> <span class="n">socket</span>
+     <span class="o">*/</span>
+    <span class="n">virtual</span> <span class="n">void</span> <span class="n">disconnect</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="o">/**</span>
+     <span class="o">*</span> <span class="n">Returns</span> <span class="n">the</span> <span class="n">connection</span> <span class="n">state</span> <span class="n">of</span> <span class="n">the</span> <span class="n">socket</span><span class="o">.</span>
+     <span class="o">*</span> \<span class="k">return</span>  <span class="n">connection</span> <span class="n">state</span> <span class="n">of</span> <span class="n">the</span> <span class="n">socket</span>
+     <span class="o">*</span>          <span class="o">-</span> <span class="n">false</span><span class="p">:</span> <span class="ow">not</span> <span class="n">connected</span>
+     <span class="o">*</span>          <span class="o">-</span> <span class="n">true</span><span class="p">:</span> <span class="n">connected</span>
+     <span class="o">*/</span>
+    <span class="n">virtual</span> <span class="nb">bool</span> <span class="n">isConnected</span><span class="p">()</span> <span class="n">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="o">/**</span>
+     <span class="o">*</span> <span class="n">reads</span> <span class="n">a</span> <span class="n">given</span> <span class="n">number</span> <span class="n">of</span> <span class="nb">bytes</span> <span class="kn">from</span> <span class="nn">the</span> <span class="n">socket</span>
+     <span class="o">*</span> \<span class="n">param</span>  <span class="n">buffer</span>   <span class="n">buffer</span> <span class="n">to</span> <span class="n">receive</span> <span class="n">data</span> <span class="n">to</span><span class="o">.</span> <span class="n">If</span> <span class="mi">0</span><span class="n">L</span> <span class="ow">is</span> <span class="n">passed</span> <span class="n">the</span> <span class="n">n</span>
+     <span class="o">*</span> <span class="nb">bytes</span> <span class="n">should</span> <span class="n">be</span> <span class="n">skipped</span><span class="p">,</span> <span class="n">i</span><span class="o">.</span><span class="n">e</span><span class="o">.</span> <span class="n">the</span> <span class="nb">input</span> <span class="n">stream</span> <span class="n">has</span> <span class="n">to</span> <span class="n">advance</span> <span class="n">by</span>
+     <span class="o">*</span> <span class="n">n</span> <span class="nb">bytes</span><span class="o">.</span>
+     <span class="o">*</span> \<span class="n">param</span>   <span class="n">n</span>   <span class="nb">max</span> <span class="n">number</span> <span class="n">of</span> <span class="nb">bytes</span> <span class="n">to</span> <span class="n">receive</span>
+     <span class="o">*</span> \<span class="k">return</span>  <span class="n">number</span> <span class="n">of</span> <span class="nb">bytes</span> <span class="n">really</span> <span class="n">read</span>
+     <span class="o">*</span>          <span class="o">-</span> <span class="mi">0</span><span class="p">:</span> <span class="n">an</span> <span class="n">error</span> <span class="n">occurred</span> <span class="n">reading</span> <span class="kn">from</span> <span class="nn">the</span> <span class="n">socket</span>
+     <span class="o">*</span>          <span class="o">-</span> <span class="k">else</span><span class="p">:</span> <span class="nb">bytes</span> <span class="n">read</span>
+     <span class="o">*/</span>
+    <span class="n">virtual</span> <span class="n">size_t</span> <span class="n">read</span><span class="p">(</span><span class="n">uint8_t</span><span class="o">*</span> <span class="n">buffer</span><span class="p">,</span> <span class="n">size_t</span> <span class="n">n</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="o">/**</span>
+     <span class="o">*</span> <span class="n">sends</span> <span class="n">an</span> <span class="n">amount</span> <span class="n">of</span> <span class="n">data</span>
+     <span class="o">*</span> \<span class="n">param</span>  <span class="n">data</span>   <span class="n">data</span> <span class="n">to</span> <span class="n">send</span>
+     <span class="o">*</span> \<span class="k">return</span>  <span class="n">status</span> <span class="n">of</span> <span class="n">transmission</span>
+     <span class="o">*</span>          <span class="o">-</span> <span class="n">UDP_SOCKET_OK</span> <span class="n">when</span> <span class="n">data</span> <span class="n">was</span> <span class="n">sent</span> <span class="n">to</span> <span class="n">UDP</span> <span class="n">stack</span>
+     <span class="o">*</span>          <span class="o">-</span> <span class="n">UDP_SOCKET_NOT_OK</span> <span class="n">when</span> <span class="n">socket</span> <span class="n">has</span> <span class="ow">not</span> <span class="n">been</span> <span class="n">opened</span>
+     <span class="o">*</span> \<span class="n">note</span>
+     <span class="o">*</span> <span class="n">sending</span> <span class="n">the</span> <span class="n">data</span> <span class="n">may</span> <span class="n">be</span> <span class="n">asynchronous</span><span class="o">.</span> <span class="k">for</span> <span class="n">this</span> <span class="n">reason</span> <span class="n">the</span>
+     <span class="o">*</span> <span class="n">IDataSendNotificationListener</span> <span class="n">has</span> <span class="n">a</span> <span class="n">appropriate</span> <span class="n">callback</span><span class="o">.</span>
+     <span class="o">*/</span>
+    <span class="n">virtual</span> <span class="n">ErrorCode</span> <span class="n">send</span><span class="p">(::</span><span class="n">etl</span><span class="p">::</span><span class="n">span</span><span class="o">&lt;</span><span class="n">uint8_t</span> <span class="n">const</span><span class="o">&gt;</span> <span class="n">const</span><span class="o">&amp;</span> <span class="n">data</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="o">/**</span>
+     <span class="o">*</span> <span class="n">Sends</span> <span class="n">a</span> <span class="n">DatagramPacket</span><span class="o">.</span>
+     <span class="o">*</span> \<span class="k">return</span>  <span class="n">status</span> <span class="n">of</span> <span class="n">transmission</span>
+     <span class="o">*</span>          <span class="o">-</span> <span class="n">UDP_SOCKET_OK</span> <span class="n">when</span> <span class="n">data</span> <span class="n">was</span> <span class="n">sent</span> <span class="n">to</span> <span class="n">UDP</span> <span class="n">stack</span>
+     <span class="o">*</span>          <span class="o">-</span> <span class="n">UDP_SOCKET_NOT_OK</span> <span class="n">when</span> <span class="n">socket</span> <span class="n">has</span> <span class="ow">not</span> <span class="n">been</span> <span class="n">opened</span>
+     <span class="o">*/</span>
+    <span class="n">virtual</span> <span class="n">ErrorCode</span> <span class="n">send</span><span class="p">(</span><span class="n">DatagramPacket</span> <span class="n">const</span><span class="o">&amp;</span> <span class="n">packet</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="o">/**</span>
+     <span class="o">*</span> <span class="n">sets</span> <span class="n">the</span> <span class="n">listener</span> <span class="n">to</span> <span class="n">this</span> <span class="n">socket</span> <span class="n">instance</span>
+     <span class="o">*</span> \<span class="n">param</span>  <span class="n">pListener</span>  <span class="n">IDataListener</span> <span class="n">to</span> <span class="n">attach</span>
+     <span class="o">*/</span>
+    <span class="n">void</span> <span class="n">setDataListener</span><span class="p">(</span><span class="n">IDataListener</span><span class="o">*</span> <span class="n">pListener</span><span class="p">);</span>
+
+    <span class="n">void</span> <span class="n">setDataSentListener</span><span class="p">(</span><span class="n">IDataSentListener</span><span class="o">*</span> <span class="n">pListener</span><span class="p">);</span>
+
+    <span class="o">/**</span>
+     <span class="o">*</span> \<span class="k">return</span>  <span class="n">Local</span> <span class="n">IPAddress</span><span class="p">,</span> <span class="mi">0</span><span class="n">L</span> <span class="k">if</span> <span class="n">this</span> <span class="n">operation</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">allowed</span>
+     <span class="o">*/</span>
+    <span class="n">virtual</span> <span class="n">ip</span><span class="p">::</span><span class="n">IPAddress</span> <span class="n">const</span><span class="o">*</span> <span class="n">getIPAddress</span><span class="p">()</span> <span class="n">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="n">virtual</span> <span class="n">ip</span><span class="p">::</span><span class="n">IPAddress</span> <span class="n">const</span><span class="o">*</span> <span class="n">getLocalIPAddress</span><span class="p">()</span> <span class="n">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="o">/**</span>
+     <span class="o">*</span> <span class="n">Returns</span> <span class="n">remote</span> <span class="n">port</span> <span class="k">if</span> <span class="n">connected</span><span class="p">,</span> <span class="n">INVALID_PORT</span> <span class="n">otherwise</span>
+     <span class="o">*/</span>
+    <span class="n">virtual</span> <span class="n">uint16_t</span> <span class="n">getPort</span><span class="p">()</span> <span class="n">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="n">virtual</span> <span class="n">uint16_t</span> <span class="n">getLocalPort</span><span class="p">()</span> <span class="n">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+</pre></div>
+</div>
+</div></blockquote>
+</section>
+<section id="datagrampacket">
+<h4>DatagramPacket<a class="headerlink" href="#datagrampacket" title="Link to this heading"></a></h4>
+<blockquote>
+<div><p>A <code class="docutils literal notranslate"><span class="pre">DatagramPacket</span></code> is a wrapper for UDP payload and its destination IP and destination port. Using a <code class="docutils literal notranslate"><span class="pre">DatagramPacket</span></code> allows to send data over a <code class="docutils literal notranslate"><span class="pre">AbstractDatagramSocket</span></code> without using <code class="docutils literal notranslate"><span class="pre">connect()</span></code>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="o">/**</span>
+     <span class="o">*</span> <span class="n">Constructs</span> <span class="n">a</span> <span class="n">UDP</span> <span class="n">datagram</span> <span class="n">packet</span><span class="o">.</span>
+     <span class="o">*</span> \<span class="n">param</span>  <span class="n">data</span>     <span class="n">array</span> <span class="n">of</span> <span class="n">data</span>
+     <span class="o">*</span> \<span class="n">param</span>  <span class="n">length</span>   <span class="n">length</span> <span class="n">of</span> <span class="n">data</span>
+     <span class="o">*</span> \<span class="n">param</span>  <span class="n">address</span>  <span class="n">target</span> <span class="n">IPAddress</span>
+     <span class="o">*</span> \<span class="n">param</span>  <span class="n">port</span>     <span class="n">target</span> <span class="n">port</span>
+     <span class="o">*/</span>
+    <span class="n">DatagramPacket</span><span class="p">(</span><span class="n">uint8_t</span> <span class="n">const</span> <span class="n">data</span><span class="p">[],</span> <span class="n">uint16_t</span> <span class="n">length</span><span class="p">,</span> <span class="p">::</span><span class="n">ip</span><span class="p">::</span><span class="n">IPAddress</span> <span class="n">address</span><span class="p">,</span> <span class="n">uint16_t</span> <span class="n">port</span><span class="p">);</span>
+    <span class="n">DatagramPacket</span><span class="p">(</span><span class="n">uint8_t</span> <span class="n">const</span> <span class="n">data</span><span class="p">[],</span> <span class="n">uint16_t</span> <span class="n">length</span><span class="p">,</span> <span class="p">::</span><span class="n">ip</span><span class="p">::</span><span class="n">IPEndpoint</span> <span class="n">const</span><span class="o">&amp;</span> <span class="n">endpoint</span><span class="p">);</span>
+    <span class="n">DatagramPacket</span><span class="p">(</span><span class="n">DatagramPacket</span> <span class="n">const</span><span class="o">&amp;</span><span class="p">)</span>            <span class="o">=</span> <span class="n">delete</span><span class="p">;</span>
+    <span class="n">DatagramPacket</span><span class="o">&amp;</span> <span class="n">operator</span><span class="o">=</span><span class="p">(</span><span class="n">DatagramPacket</span> <span class="n">const</span><span class="o">&amp;</span><span class="p">)</span> <span class="o">=</span> <span class="n">delete</span><span class="p">;</span>
+
+    <span class="n">uint8_t</span> <span class="n">const</span><span class="o">*</span> <span class="n">getData</span><span class="p">()</span> <span class="n">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_data</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="n">uint16_t</span> <span class="n">getLength</span><span class="p">()</span> <span class="n">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_length</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="p">::</span><span class="n">ip</span><span class="p">::</span><span class="n">IPEndpoint</span> <span class="n">getEndpoint</span><span class="p">()</span> <span class="n">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_endpoint</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="p">::</span><span class="n">ip</span><span class="p">::</span><span class="n">IPAddress</span> <span class="n">getAddress</span><span class="p">()</span> <span class="n">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_endpoint</span><span class="o">.</span><span class="n">getAddress</span><span class="p">();</span> <span class="p">}</span>
+
+    <span class="n">uint16_t</span> <span class="n">getPort</span><span class="p">()</span> <span class="n">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_endpoint</span><span class="o">.</span><span class="n">getPort</span><span class="p">();</span> <span class="p">}</span>
+
+    <span class="nb">bool</span> <span class="n">operator</span><span class="o">==</span><span class="p">(</span><span class="n">DatagramPacket</span> <span class="n">const</span><span class="o">&amp;</span> <span class="n">other</span><span class="p">)</span> <span class="n">const</span><span class="p">;</span>
+</pre></div>
+</div>
+</div></blockquote>
+</section>
+<section id="idatalistener">
+<h4>IDataListener<a class="headerlink" href="#idatalistener" title="Link to this heading"></a></h4>
+<blockquote>
+<div><p>This interface shall be used in order to receive UDP data. <code class="docutils literal notranslate"><span class="pre">dataReceived()</span></code> will be called once Data has arrived for the listening Socket.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">dataReceived()</span></code> is called, the application is responsible to read the data. Depending on the Ethernet Driver implementation, not reading all data, which is received, could lead to packet drops, because of unfreed packets in the driver.</p>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="o">/**</span>
+     <span class="o">*</span> <span class="n">callback</span> <span class="n">that</span> <span class="n">gets</span> <span class="n">called</span> <span class="n">when</span> <span class="n">data</span> <span class="n">has</span> <span class="n">been</span> <span class="n">received</span>
+     <span class="o">*</span> \<span class="n">param</span>  <span class="n">length</span>  <span class="n">number</span> <span class="n">of</span> <span class="nb">bytes</span> <span class="n">received</span>
+     <span class="o">*</span>
+     <span class="o">*</span> \<span class="n">note</span>
+     <span class="o">*</span> <span class="n">It</span> <span class="ow">is</span> <span class="n">expected</span> <span class="n">that</span> <span class="n">the</span> <span class="n">data</span> <span class="ow">is</span> <span class="n">read</span> <span class="kn">from</span> <span class="nn">the</span> <span class="n">AbstractSocket</span> <span class="n">within</span> <span class="n">this</span>
+     <span class="o">*</span> <span class="n">callback</span><span class="o">.</span> <span class="n">The</span> <span class="n">AbstractSocket</span> <span class="n">may</span> <span class="n">overwrite</span> <span class="n">its</span> <span class="n">internal</span> <span class="n">buffers</span> <span class="n">after</span>
+     <span class="o">*</span> <span class="n">this</span> <span class="n">callback</span> <span class="ow">is</span> <span class="n">done</span><span class="o">.</span>
+     <span class="o">*/</span>
+    <span class="n">virtual</span> <span class="n">void</span> <span class="n">dataReceived</span><span class="p">(</span>
+        <span class="n">AbstractDatagramSocket</span><span class="o">&amp;</span> <span class="n">socket</span><span class="p">,</span>
+        <span class="p">::</span><span class="n">ip</span><span class="p">::</span><span class="n">IPAddress</span> <span class="n">sourceAddress</span><span class="p">,</span>
+        <span class="n">uint16_t</span> <span class="n">sourcePort</span><span class="p">,</span>
+        <span class="p">::</span><span class="n">ip</span><span class="p">::</span><span class="n">IPAddress</span> <span class="n">destinationAddress</span><span class="p">,</span>
+        <span class="n">uint16_t</span> <span class="n">length</span><span class="p">)</span>
+        <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</pre></div>
+</div>
+</div></blockquote>
+</section>
+</section>
+<section id="tcp">
+<h3>TCP<a class="headerlink" href="#tcp" title="Link to this heading"></a></h3>
+<section id="abstractserversocket">
+<h4>AbstractServerSocket<a class="headerlink" href="#abstractserversocket" title="Link to this heading"></a></h4>
+<blockquote>
+<div><p>An <code class="docutils literal notranslate"><span class="pre">AbstractServerSocket</span></code> is the base class for server sockets that may
+open a specific port. To accept incoming connections the <code class="docutils literal notranslate"><span class="pre">AbstractServerSocket</span></code>
+needs a <code class="docutils literal notranslate"><span class="pre">ISocketProvidingConnectionListener</span></code>. On an incoming connection request
+the <code class="docutils literal notranslate"><span class="pre">AbstractServerSocket</span></code> requests an <code class="docutils literal notranslate"><span class="pre">AbstractSocket</span></code> object from the
+<code class="docutils literal notranslate"><span class="pre">ISocketProvidingConnectionListener</span></code> to bind the connection to via its
+<code class="docutils literal notranslate"><span class="pre">getSocket()</span></code> method. In case of success the listeners <code class="docutils literal notranslate"><span class="pre">connectionAccepted()</span></code> method is called passing the bound <code class="docutils literal notranslate"><span class="pre">AbstractSocket</span></code> to the application.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="o">/**</span>
+     <span class="o">*</span> <span class="n">constructor</span> <span class="n">taking</span> <span class="n">the</span> <span class="n">AbstractServerSockets</span> <span class="n">port</span>
+     <span class="o">*</span> \<span class="n">param</span>   <span class="n">port</span>   <span class="n">port</span> <span class="n">of</span> <span class="n">socket</span>
+     <span class="o">*</span> \<span class="n">param</span>   <span class="n">providingListener</span>  <span class="n">ISocketProvidingConnectionListener</span> <span class="n">which</span>
+     <span class="o">*</span>          <span class="n">provides</span> <span class="n">the</span> <span class="n">AbstractServerSocket</span> <span class="k">with</span> <span class="n">AbstractSocket</span> <span class="n">objects</span>
+     <span class="o">*</span>          <span class="ow">and</span> <span class="n">gets</span> <span class="n">notified</span> <span class="n">when</span> <span class="n">a</span> <span class="n">connection</span> <span class="ow">is</span> <span class="n">successfully</span> <span class="n">established</span>
+     <span class="o">*</span>
+     <span class="o">*</span> <span class="n">As</span> <span class="n">long</span> <span class="k">as</span> <span class="n">the</span> <span class="n">ISocketProvidingConnectionListener</span> <span class="n">returns</span> <span class="n">valid</span> <span class="n">pointers</span>
+     <span class="o">*</span> <span class="n">to</span> <span class="n">AbstractSocket</span> <span class="n">objects</span> <span class="n">connections</span> <span class="n">are</span> <span class="n">accpeted</span> <span class="ow">and</span> <span class="n">delegated</span> <span class="n">to</span> <span class="n">the</span>
+     <span class="o">*</span> <span class="n">ISocketProvidingConnectionListener</span><span class="o">.</span> <span class="n">When</span> <span class="n">NULL</span> <span class="ow">is</span> <span class="n">returned</span><span class="p">,</span> <span class="n">the</span> <span class="n">connection</span>
+     <span class="o">*</span> <span class="ow">is</span> <span class="n">refused</span><span class="o">.</span>
+     <span class="o">*/</span>
+    <span class="n">AbstractServerSocket</span><span class="p">(</span><span class="n">uint16_t</span> <span class="n">port</span><span class="p">,</span> <span class="n">ISocketProvidingConnectionListener</span><span class="o">&amp;</span> <span class="n">providingListener</span><span class="p">);</span>
+
+    <span class="o">/**</span>
+     <span class="o">*</span> \<span class="k">return</span>  <span class="n">port</span> <span class="n">the</span> <span class="n">AbstractServerSocket</span> <span class="ow">is</span> <span class="n">listening</span> <span class="k">for</span>
+     <span class="o">*/</span>
+    <span class="n">uint16_t</span> <span class="n">getLocalPort</span><span class="p">()</span> <span class="n">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_port</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="n">void</span> <span class="n">setPort</span><span class="p">(</span><span class="n">uint16_t</span> <span class="n">const</span> <span class="n">port</span><span class="p">)</span> <span class="p">{</span> <span class="n">_port</span> <span class="o">=</span> <span class="n">port</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="o">/**</span>
+     <span class="o">*</span> <span class="n">accepts</span> <span class="n">a</span> <span class="n">connection</span> <span class="n">to</span> <span class="n">the</span> <span class="n">AbstractServerSockets</span> <span class="n">port</span>
+     <span class="o">*/</span>
+    <span class="n">virtual</span> <span class="nb">bool</span> <span class="n">accept</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="o">/**</span>
+     <span class="o">*</span> <span class="n">Binds</span> <span class="n">this</span> <span class="n">server</span> <span class="n">socket</span> <span class="n">to</span> <span class="n">a</span> <span class="n">given</span> <span class="n">netif</span><span class="o">.</span>
+     <span class="o">*/</span>
+    <span class="n">virtual</span> <span class="nb">bool</span> <span class="n">bind</span><span class="p">(</span><span class="n">ip</span><span class="p">::</span><span class="n">IPAddress</span> <span class="n">const</span><span class="o">&amp;</span> <span class="n">localIpAddress</span><span class="p">,</span> <span class="n">uint16_t</span> <span class="n">port</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="o">/**</span>
+     <span class="o">*</span> <span class="n">closes</span> <span class="n">the</span> <span class="n">accepted</span> <span class="n">port</span>
+     <span class="o">*/</span>
+    <span class="n">virtual</span> <span class="n">void</span> <span class="n">close</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="n">virtual</span> <span class="nb">bool</span> <span class="n">isClosed</span><span class="p">()</span> <span class="n">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+</pre></div>
+</div>
+</div></blockquote>
+</section>
+<section id="abstractsocket">
+<h4>AbstractSocket<a class="headerlink" href="#abstractsocket" title="Link to this heading"></a></h4>
+<blockquote>
+<div><p>The <code class="docutils literal notranslate"><span class="pre">AbstractSocket</span></code> is designed to be a socket abstraction to a TCP stack.
+The socket class can be used to connect to a remote system. It is also
+returned to an ISocketConnectionListener by <code class="docutils literal notranslate"><span class="pre">AbstractServerSocket</span></code>
+(using its <code class="docutils literal notranslate"><span class="pre">ISocketProvider</span></code>) once a connection from a remote system
+is accepted. An active socket is used to receive data from and transmit data to a remote system.</p>
+<ul class="simple">
+<li><p><strong>Receive</strong>:
+The application that wants to receive data from a socket has to register
+through the <code class="docutils literal notranslate"><span class="pre">setDataListener</span></code> method as an <code class="docutils literal notranslate"><span class="pre">IDataListener</span></code>.
+After that the application is notified through its <code class="docutils literal notranslate"><span class="pre">dataReceived</span></code>
+method.</p></li>
+<li><p><strong>Send</strong>:
+Sending data through a socket is usually asynchronous. Because of that
+it is possible to register an <code class="docutils literal notranslate"><span class="pre">IDataSendNotificationListener</span></code> who is
+notified when the data passed to the send method is written to the
+TCP-stack.</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This is not the time when the ACK package from the remote
+system is received!</p>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="o">/**</span>
+     <span class="o">*</span> <span class="nb">all</span> <span class="n">ErrorCodes</span> <span class="n">used</span> <span class="n">by</span> <span class="n">socket</span>
+     <span class="o">*</span> \<span class="n">enum</span>   <span class="n">ErrorCode</span>
+     <span class="o">*/</span>
+    <span class="n">enum</span> <span class="k">class</span> <span class="nc">ErrorCode</span> <span class="p">:</span> <span class="n">uint8_t</span>
+    <span class="p">{</span>
+        <span class="o">/**</span> <span class="n">everything</span> <span class="n">ok</span> <span class="o">*/</span>
+        <span class="n">SOCKET_ERR_OK</span><span class="p">,</span>
+        <span class="o">/**</span> <span class="n">an</span> <span class="n">error</span> <span class="n">occurred</span> <span class="o">*/</span>
+        <span class="n">SOCKET_ERR_NOT_OK</span><span class="p">,</span>
+        <span class="o">/**</span> <span class="n">socket</span> <span class="ow">not</span> <span class="nb">open</span> <span class="n">to</span> <span class="n">send</span> <span class="o">*/</span>
+        <span class="n">SOCKET_ERR_NOT_OPEN</span><span class="p">,</span>
+        <span class="o">/**</span> <span class="n">no</span> <span class="n">more</span> <span class="n">outgoing</span> <span class="n">buffer</span> <span class="n">available</span> <span class="o">*/</span>
+        <span class="n">SOCKET_ERR_NO_MORE_BUFFER</span><span class="p">,</span>
+        <span class="o">/**</span> <span class="n">socket</span> <span class="ow">is</span> <span class="n">full</span><span class="p">,</span> <span class="n">flush</span> <span class="n">before</span> <span class="n">continuing</span> <span class="o">*/</span>
+        <span class="n">SOCKET_FLUSH</span>
+    <span class="p">};</span>
+
+    <span class="n">using</span> <span class="n">ConnectedDelegate</span> <span class="o">=</span> <span class="p">::</span><span class="n">etl</span><span class="p">::</span><span class="n">delegate</span><span class="o">&lt;</span><span class="n">void</span><span class="p">(</span><span class="n">ErrorCode</span><span class="p">)</span><span class="o">&gt;</span><span class="p">;</span>
+
+    <span class="o">/**</span>
+     <span class="o">*</span> <span class="n">constructor</span>
+     <span class="o">*</span> \<span class="n">post</span>    <span class="n">fpDataListener</span> <span class="o">==</span> <span class="mi">0</span><span class="n">L</span>
+     <span class="o">*</span> \<span class="n">post</span>    <span class="n">fpSendNotificationListener</span> <span class="o">==</span> <span class="mi">0</span><span class="n">L</span>
+     <span class="o">*/</span>
+    <span class="n">AbstractSocket</span><span class="p">();</span>
+
+    <span class="n">AbstractSocket</span><span class="p">(</span><span class="n">AbstractSocket</span> <span class="n">const</span><span class="o">&amp;</span><span class="p">)</span>            <span class="o">=</span> <span class="n">delete</span><span class="p">;</span>
+    <span class="n">AbstractSocket</span><span class="o">&amp;</span> <span class="n">operator</span><span class="o">=</span><span class="p">(</span><span class="n">AbstractSocket</span> <span class="n">const</span><span class="o">&amp;</span><span class="p">)</span> <span class="o">=</span> <span class="n">delete</span><span class="p">;</span>
+
+    <span class="o">/**</span>
+     <span class="o">*</span> <span class="n">binds</span> <span class="n">to</span> <span class="n">a</span> <span class="n">local</span> <span class="n">address</span> <span class="ow">and</span> <span class="n">port</span>
+     <span class="o">*</span> \<span class="n">param</span>   <span class="n">ipAddr</span>  <span class="n">local</span> <span class="n">ip</span> <span class="n">address</span>
+     <span class="o">*</span> \<span class="n">param</span>   <span class="n">port</span>    <span class="n">local</span> <span class="n">port</span>
+     <span class="o">*/</span>
+    <span class="n">virtual</span> <span class="n">ErrorCode</span> <span class="n">bind</span><span class="p">(</span><span class="n">ip</span><span class="p">::</span><span class="n">IPAddress</span> <span class="n">const</span><span class="o">&amp;</span> <span class="n">ipAddr</span><span class="p">,</span> <span class="n">uint16_t</span> <span class="n">port</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="o">/**</span>
+     <span class="o">*</span> <span class="n">connects</span> <span class="n">to</span> <span class="n">a</span> <span class="n">remote</span> <span class="n">host</span>
+     <span class="o">*</span> \<span class="n">param</span>   <span class="n">ipAddr</span>  <span class="n">remote</span> <span class="n">ip</span> <span class="n">address</span>
+     <span class="o">*</span> \<span class="n">param</span>   <span class="n">port</span>    <span class="n">remote</span> <span class="n">port</span>
+     <span class="o">*/</span>
+    <span class="n">virtual</span> <span class="n">ErrorCode</span>
+    <span class="n">connect</span><span class="p">(</span><span class="n">ip</span><span class="p">::</span><span class="n">IPAddress</span> <span class="n">const</span><span class="o">&amp;</span> <span class="n">ipAddr</span><span class="p">,</span> <span class="n">uint16_t</span> <span class="n">port</span><span class="p">,</span> <span class="n">ConnectedDelegate</span> <span class="n">delegate</span><span class="p">)</span>
+        <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="o">/**</span>
+     <span class="o">*</span> <span class="n">closes</span> <span class="n">the</span> <span class="n">socket</span> <span class="n">by</span> <span class="n">sending</span> <span class="n">a</span> <span class="n">FIN</span> <span class="n">packet</span>
+     <span class="o">*/</span>
+    <span class="n">virtual</span> <span class="n">ErrorCode</span> <span class="n">close</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="o">/**</span>
+     <span class="o">*</span> <span class="n">aborts</span> <span class="n">the</span> <span class="n">socket</span> <span class="n">by</span> <span class="n">sending</span> <span class="n">a</span> <span class="n">RST</span> <span class="n">packet</span>
+     <span class="o">*/</span>
+    <span class="n">virtual</span> <span class="n">void</span> <span class="n">abort</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="o">/**</span>
+     <span class="o">*</span> <span class="n">flushes</span> <span class="n">enqueued</span> <span class="n">data</span>
+     <span class="o">*/</span>
+    <span class="n">virtual</span> <span class="n">ErrorCode</span> <span class="n">flush</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="o">/**</span>
+     <span class="o">*</span> <span class="n">discards</span> <span class="nb">any</span> <span class="n">received</span> <span class="n">data</span> <span class="n">without</span> <span class="n">ack</span>
+     <span class="o">*/</span>
+    <span class="n">virtual</span> <span class="n">void</span> <span class="n">discardData</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="o">/**</span>
+     <span class="o">*</span> \<span class="k">return</span>  <span class="n">number</span> <span class="n">of</span> <span class="nb">bytes</span> <span class="n">available</span> <span class="ow">in</span> <span class="n">outgoing</span> <span class="n">buffer</span>
+     <span class="o">*/</span>
+    <span class="n">virtual</span> <span class="n">size_t</span> <span class="n">available</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="o">/**</span>
+     <span class="o">*</span> <span class="n">reads</span> <span class="n">a</span> <span class="n">single</span> <span class="n">byte</span>
+     <span class="o">*</span> \<span class="n">param</span>   <span class="n">byte</span>   <span class="n">byte</span> <span class="n">to</span> <span class="n">read</span>
+     <span class="o">*</span> \<span class="k">return</span>  <span class="n">number</span> <span class="n">of</span> <span class="nb">bytes</span> <span class="n">read</span>
+     <span class="o">*</span>          <span class="o">-</span> <span class="mi">0</span><span class="p">:</span> <span class="n">an</span> <span class="n">error</span> <span class="n">occurred</span> <span class="n">reading</span> <span class="kn">from</span> <span class="nn">the</span> <span class="n">socket</span>
+     <span class="o">*</span>          <span class="o">-</span> <span class="mi">1</span><span class="p">:</span> <span class="n">byte</span> <span class="n">read</span>
+     <span class="o">*/</span>
+    <span class="n">virtual</span> <span class="n">uint8_t</span> <span class="n">read</span><span class="p">(</span><span class="n">uint8_t</span><span class="o">&amp;</span> <span class="n">byte</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="o">/**</span>
+     <span class="o">*</span> <span class="n">reads</span> <span class="n">a</span> <span class="n">given</span> <span class="n">number</span> <span class="n">of</span> <span class="nb">bytes</span> <span class="kn">from</span> <span class="nn">the</span> <span class="n">socket</span>
+     <span class="o">*</span> \<span class="n">param</span>   <span class="n">buffer</span>  <span class="n">buffer</span> <span class="n">to</span> <span class="n">receive</span> <span class="n">data</span> <span class="n">to</span><span class="o">.</span> <span class="n">If</span> <span class="mi">0</span><span class="n">L</span> <span class="ow">is</span> <span class="n">passed</span> <span class="n">the</span> <span class="n">n</span>
+     <span class="o">*</span> <span class="nb">bytes</span> <span class="n">should</span> <span class="n">be</span> <span class="n">skipped</span><span class="p">,</span> <span class="n">i</span><span class="o">.</span><span class="n">e</span><span class="o">.</span> <span class="n">the</span> <span class="nb">input</span> <span class="n">stream</span> <span class="n">has</span> <span class="n">to</span> <span class="n">advance</span> <span class="n">by</span>
+     <span class="o">*</span> <span class="n">n</span> <span class="nb">bytes</span><span class="o">.</span>
+     <span class="o">*</span> \<span class="n">param</span>   <span class="n">n</span>    <span class="n">number</span> <span class="n">of</span> <span class="nb">bytes</span> <span class="n">to</span> <span class="n">receive</span>
+     <span class="o">*</span> \<span class="k">return</span>  <span class="n">number</span> <span class="n">of</span> <span class="nb">bytes</span> <span class="n">really</span> <span class="n">read</span>
+     <span class="o">*</span>          <span class="o">-</span> <span class="mi">0</span><span class="p">:</span> <span class="n">an</span> <span class="n">error</span> <span class="n">occurred</span> <span class="n">reading</span> <span class="kn">from</span> <span class="nn">the</span> <span class="n">socket</span>
+     <span class="o">*</span>          <span class="o">-</span> <span class="k">else</span><span class="p">:</span> <span class="nb">bytes</span> <span class="n">read</span>
+     <span class="o">*/</span>
+    <span class="n">virtual</span> <span class="n">size_t</span> <span class="n">read</span><span class="p">(</span><span class="n">uint8_t</span><span class="o">*</span> <span class="n">buffer</span><span class="p">,</span> <span class="n">size_t</span> <span class="n">n</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="o">/**</span>
+     <span class="o">*</span> <span class="n">sends</span> <span class="n">an</span> <span class="n">amount</span> <span class="n">of</span> <span class="n">data</span>
+     <span class="o">*</span> \<span class="n">param</span>   <span class="n">data</span>  <span class="n">data</span> <span class="n">to</span> <span class="n">send</span>
+     <span class="o">*</span> \<span class="k">return</span>  <span class="n">status</span> <span class="n">of</span> <span class="n">transmission</span>
+     <span class="o">*</span>          <span class="o">-</span> <span class="n">SOCKET_OK</span> <span class="n">when</span> <span class="n">data</span> <span class="n">was</span> <span class="n">sent</span> <span class="n">to</span> <span class="n">TCP</span> <span class="n">stack</span>
+     <span class="o">*</span>          <span class="o">-</span> <span class="n">SOCKET_CLOSED</span> <span class="n">when</span> <span class="n">socket</span> <span class="n">has</span> <span class="ow">not</span> <span class="n">been</span> <span class="n">opened</span>
+     <span class="o">*</span> \<span class="n">note</span>
+     <span class="o">*</span> <span class="n">Sending</span> <span class="n">the</span> <span class="n">data</span> <span class="n">may</span> <span class="n">be</span> <span class="n">asynchronous</span><span class="o">.</span> <span class="n">For</span> <span class="n">this</span> <span class="n">reason</span> <span class="n">the</span>
+     <span class="o">*</span> <span class="n">IDataSendNotificationListener</span> <span class="n">has</span> <span class="n">an</span> <span class="n">appropriate</span> <span class="n">callback</span><span class="o">.</span>
+     <span class="o">*/</span>
+    <span class="n">virtual</span> <span class="n">ErrorCode</span> <span class="n">send</span><span class="p">(::</span><span class="n">etl</span><span class="p">::</span><span class="n">span</span><span class="o">&lt;</span><span class="n">uint8_t</span> <span class="n">const</span><span class="o">&gt;</span> <span class="n">const</span><span class="o">&amp;</span> <span class="n">data</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="o">/**</span>
+     <span class="o">*</span> <span class="n">sets</span> <span class="n">the</span> <span class="n">listener</span> <span class="n">to</span> <span class="n">this</span> <span class="n">socket</span> <span class="n">instance</span>
+     <span class="o">*</span> \<span class="n">param</span>  <span class="n">pListener</span>  <span class="n">IDataListener</span> <span class="n">to</span> <span class="n">attach</span>
+     <span class="o">*/</span>
+    <span class="n">void</span> <span class="n">setDataListener</span><span class="p">(</span><span class="n">IDataListener</span><span class="o">*</span> <span class="n">pListener</span><span class="p">);</span>
+
+    <span class="n">IDataListener</span><span class="o">*</span> <span class="n">getDataListener</span><span class="p">()</span> <span class="n">const</span><span class="p">;</span>
+
+    <span class="o">/**</span>
+     <span class="o">*</span> <span class="n">sets</span> <span class="n">the</span> <span class="n">IDataSendNotificationListener</span> <span class="n">of</span> <span class="n">this</span> <span class="n">socket</span>
+     <span class="o">*</span> \<span class="n">param</span>  <span class="n">pListener</span>   <span class="n">listener</span> <span class="n">that</span> <span class="n">gets</span> <span class="n">notified</span> <span class="n">when</span> <span class="n">data</span> <span class="n">has</span> <span class="n">been</span>
+     <span class="o">*</span> <span class="n">copied</span> <span class="n">completely</span> <span class="n">to</span> <span class="n">TCP</span> <span class="n">stack</span>
+     <span class="o">*/</span>
+    <span class="n">void</span> <span class="n">setSendNotificationListener</span><span class="p">(</span><span class="n">IDataSendNotificationListener</span><span class="o">*</span> <span class="n">pListener</span><span class="p">);</span>
+
+    <span class="n">IDataSendNotificationListener</span><span class="o">*</span> <span class="n">getSendNotificationListener</span><span class="p">()</span> <span class="n">const</span><span class="p">;</span>
+
+    <span class="n">virtual</span> <span class="n">ip</span><span class="p">::</span><span class="n">IPAddress</span> <span class="n">getRemoteIPAddress</span><span class="p">()</span> <span class="n">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="n">virtual</span> <span class="n">ip</span><span class="p">::</span><span class="n">IPAddress</span> <span class="n">getLocalIPAddress</span><span class="p">()</span> <span class="n">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="n">virtual</span> <span class="n">uint16_t</span> <span class="n">getRemotePort</span><span class="p">()</span> <span class="n">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="n">virtual</span> <span class="n">uint16_t</span> <span class="n">getLocalPort</span><span class="p">()</span> <span class="n">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="n">virtual</span> <span class="nb">bool</span> <span class="n">isClosed</span><span class="p">()</span> <span class="n">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="n">virtual</span> <span class="nb">bool</span> <span class="n">isEstablished</span><span class="p">()</span> <span class="n">const</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="o">/**</span>
+     <span class="o">*</span> <span class="n">Permanently</span> <span class="n">disables</span> <span class="n">NAGLE</span> <span class="n">algorithm</span> <span class="k">for</span> <span class="n">this</span> <span class="n">socket</span><span class="o">.</span>
+     <span class="o">*/</span>
+    <span class="n">virtual</span> <span class="n">void</span> <span class="n">disableNagleAlgorithm</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="o">/**</span>
+     <span class="o">*</span> <span class="n">Enables</span> <span class="n">TCP</span> <span class="n">keepalive</span> <span class="k">for</span> <span class="n">this</span> <span class="n">socket</span><span class="o">.</span>
+     <span class="o">*</span> \<span class="n">param</span> <span class="n">idle</span> <span class="n">the</span> <span class="n">length</span> <span class="n">of</span> <span class="n">time</span> <span class="n">to</span> <span class="n">keep</span> <span class="n">an</span> <span class="n">idle</span> <span class="n">TCP</span> <span class="n">connection</span> <span class="n">active</span>
+     <span class="o">*</span> \<span class="n">param</span> <span class="n">interval</span> <span class="n">the</span> <span class="n">interval</span> <span class="n">between</span> <span class="n">packets</span> <span class="n">sent</span> <span class="n">to</span> <span class="n">validate</span> <span class="n">the</span> <span class="n">TCP</span> <span class="n">connection</span>
+     <span class="o">*</span> \<span class="n">param</span> <span class="n">probes</span> <span class="n">the</span> <span class="n">number</span> <span class="n">of</span> <span class="n">keepalive</span> <span class="n">probes</span> <span class="n">to</span> <span class="n">be</span> <span class="n">sent</span> <span class="n">before</span> <span class="n">terminating</span> <span class="n">the</span> <span class="n">connection</span>
+     <span class="o">*/</span>
+    <span class="n">virtual</span> <span class="n">void</span> <span class="n">enableKeepAlive</span><span class="p">(</span><span class="n">uint32_t</span> <span class="n">idle</span><span class="p">,</span> <span class="n">uint32_t</span> <span class="n">interval</span><span class="p">,</span> <span class="n">uint32_t</span> <span class="n">probes</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="o">/**</span>
+     <span class="o">*</span> <span class="n">Disables</span> <span class="n">TCP</span> <span class="n">keepalive</span> <span class="k">for</span> <span class="n">this</span> <span class="n">socket</span><span class="o">.</span>
+     <span class="o">*/</span>
+    <span class="n">virtual</span> <span class="n">void</span> <span class="n">disableKeepAlive</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</pre></div>
+</div>
+</div></blockquote>
+</section>
+<section id="isocketprovidingconnectionlistener">
+<h4>ISocketProvidingConnectionListener<a class="headerlink" href="#isocketprovidingconnectionlistener" title="Link to this heading"></a></h4>
+<blockquote>
+<div><p>Incoming connection requests for an <code class="docutils literal notranslate"><span class="pre">AbstractServerSocket</span></code> will need
+a preallocated socket from the application. It can be provided by the <code class="docutils literal notranslate"><span class="pre">getSocket()</span></code> method. The connection request can be rejected, because of e.g. no more available sockets in the application, with a return of a nullptr.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="o">/**</span>
+     <span class="o">*</span> <span class="n">returns</span> <span class="n">a</span> <span class="n">pointer</span> <span class="n">to</span> <span class="n">a</span> <span class="n">AbstractSocket</span> <span class="nb">object</span>
+     <span class="o">*</span> \<span class="n">param</span> <span class="n">ipAddr</span> <span class="n">Ip</span> <span class="n">address</span> <span class="n">of</span> <span class="n">client</span> <span class="n">which</span> <span class="n">tries</span> <span class="n">to</span> <span class="n">connect</span><span class="o">.</span>
+     <span class="o">*</span> \<span class="n">param</span> <span class="n">port</span> <span class="n">Port</span> <span class="n">of</span> <span class="n">client</span> <span class="kn">from</span> <span class="nn">which</span> <span class="n">it</span> <span class="n">tries</span> <span class="n">to</span> <span class="n">connect</span><span class="o">.</span>
+     <span class="o">*</span> \<span class="k">return</span>
+     <span class="o">*</span>          <span class="o">-</span> <span class="n">pointer</span> <span class="n">to</span> <span class="n">AbstractSocket</span>
+     <span class="o">*</span>          <span class="o">-</span> <span class="n">NULL</span> <span class="k">if</span> <span class="n">no</span> <span class="n">more</span> <span class="n">sockets</span> <span class="n">are</span> <span class="n">available</span>
+     <span class="o">*/</span>
+    <span class="n">virtual</span> <span class="n">AbstractSocket</span><span class="o">*</span> <span class="n">getSocket</span><span class="p">(</span><span class="n">ip</span><span class="p">::</span><span class="n">IPAddress</span> <span class="n">const</span><span class="o">&amp;</span> <span class="n">ipAddr</span><span class="p">,</span> <span class="n">uint16_t</span> <span class="n">port</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="o">/**</span>
+     <span class="o">*</span> <span class="n">callback</span> <span class="n">being</span> <span class="n">called</span> <span class="n">when</span> <span class="n">a</span> <span class="n">TCP</span> <span class="n">connection</span> <span class="n">gets</span> <span class="n">accepted</span>
+     <span class="o">*</span> \<span class="n">param</span>  <span class="n">socket</span>  <span class="n">the</span> <span class="n">AbstractSocket</span> <span class="n">representing</span> <span class="n">the</span> <span class="n">connection</span>
+     <span class="o">*</span>
+     <span class="o">*</span> <span class="n">Usually</span> <span class="n">the</span> <span class="n">ISocketConnectionListener</span> <span class="n">sets</span> <span class="n">an</span> <span class="n">IDataListener</span> <span class="n">to</span> <span class="n">the</span>
+     <span class="o">*</span> <span class="n">socket</span> <span class="n">when</span> <span class="n">the</span> <span class="n">connection</span> <span class="ow">is</span> <span class="n">established</span><span class="o">.</span>
+     <span class="o">*/</span>
+    <span class="n">virtual</span> <span class="n">void</span> <span class="n">connectionAccepted</span><span class="p">(</span><span class="n">AbstractSocket</span><span class="o">&amp;</span> <span class="n">socket</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</pre></div>
+</div>
+</div></blockquote>
+</section>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026 Accenture.</p>
+  </div>
+
+  <div role="footer_string">
+    <p>Documentation from 2026-02-24 10:51:54, official build.</p>
+
+    
+      <a href="../../../../_sources/libs/bsw/cpp2ethernet/doc/index.rst.txt" rel="nofollow"> View page source</a>
+    
+
+  </div>
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(false);
+      });
+  </script> 
+
+</body>
+</html>

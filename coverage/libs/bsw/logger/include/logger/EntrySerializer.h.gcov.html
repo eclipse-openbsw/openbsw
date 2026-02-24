@@ -1,0 +1,555 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - coverage.info - libs/bsw/logger/include/logger/EntrySerializer.h</title>
+  <link rel="stylesheet" type="text/css" href="../../../../../gcov.css">
+</head>
+
+<body>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="title">LCOV - code coverage report</td></tr>
+            <tr><td class="ruler"><img src="../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+            <tr>
+              <td width="100%">
+                <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="10%" class="headerValue"><a href="../../../../../index.html">top level</a> - <a href="index.html">libs/bsw/logger/include/logger</a> - EntrySerializer.h<span style="font-size: 80%;"> (source / <a href="EntrySerializer.h.func-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="5%"></td>
+            <td width="5%" class="headerCovTableHead">Coverage</td>
+            <td width="5%" class="headerCovTableHead" title="Covered + Uncovered code">Total</td>
+            <td width="5%" class="headerCovTableHead" title="Exercised code only">Hit</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">coverage.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
+            <td class="headerCovTableEntry">171</td>
+            <td class="headerCovTableEntry">171</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test Date:</td>
+            <td class="headerValue">2026-02-24 11:21:15</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
+            <td class="headerCovTableEntry">18</td>
+            <td class="headerCovTableEntry">18</td>
+          </tr>
+                  <tr><td><img src="../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr><td class="ruler"><img src="../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+          </table>
+
+          <table cellpadding=0 cellspacing=0 border=0>
+            <tr>
+              <td><br></td>
+            </tr>
+            <tr>
+              <td>
+<pre class="sourceHeading">            Line data    Source code</pre>
+<pre class="source">
+<span id="L1"><span class="lineNum">       1</span>              : // Copyright 2024 Accenture.</span>
+<span id="L2"><span class="lineNum">       2</span>              : </span>
+<span id="L3"><span class="lineNum">       3</span>              : #pragma once</span>
+<span id="L4"><span class="lineNum">       4</span>              : </span>
+<span id="L5"><span class="lineNum">       5</span>              : #include &lt;etl/char_traits.h&gt;</span>
+<span id="L6"><span class="lineNum">       6</span>              : #include &lt;etl/span.h&gt;</span>
+<span id="L7"><span class="lineNum">       7</span>              : #include &lt;etl/uncopyable.h&gt;</span>
+<span id="L8"><span class="lineNum">       8</span>              : #include &lt;util/format/IPrintfArgumentReader.h&gt;</span>
+<span id="L9"><span class="lineNum">       9</span>              : #include &lt;util/format/PrintfArgumentReader.h&gt;</span>
+<span id="L10"><span class="lineNum">      10</span>              : #include &lt;util/format/PrintfFormatScanner.h&gt;</span>
+<span id="L11"><span class="lineNum">      11</span>              : #include &lt;util/logger/Logger.h&gt;</span>
+<span id="L12"><span class="lineNum">      12</span>              : </span>
+<span id="L13"><span class="lineNum">      13</span>              : #include &lt;cstring&gt;</span>
+<span id="L14"><span class="lineNum">      14</span>              : </span>
+<span id="L15"><span class="lineNum">      15</span>              : namespace logger</span>
+<span id="L16"><span class="lineNum">      16</span>              : {</span>
+<span id="L17"><span class="lineNum">      17</span>              : class SectionPredicate;</span>
+<span id="L18"><span class="lineNum">      18</span>              : </span>
+<span id="L19"><span class="lineNum">      19</span>              : template&lt;class Timestamp = uint32_t&gt;</span>
+<span id="L20"><span class="lineNum">      20</span>              : class IEntrySerializerCallback : private ::etl::uncopyable</span>
+<span id="L21"><span class="lineNum">      21</span>              : {</span>
+<span id="L22"><span class="lineNum">      22</span>              : public:</span>
+<span id="L23"><span class="lineNum">      23</span>              :     IEntrySerializerCallback();</span>
+<span id="L24"><span class="lineNum">      24</span>              : </span>
+<span id="L25"><span class="lineNum">      25</span>              :     virtual void onEntry(</span>
+<span id="L26"><span class="lineNum">      26</span>              :         Timestamp timestamp,</span>
+<span id="L27"><span class="lineNum">      27</span>              :         uint8_t componentIndex,</span>
+<span id="L28"><span class="lineNum">      28</span>              :         ::util::logger::Level level,</span>
+<span id="L29"><span class="lineNum">      29</span>              :         char const* str,</span>
+<span id="L30"><span class="lineNum">      30</span>              :         ::util::format::IPrintfArgumentReader&amp; argReader)</span>
+<span id="L31"><span class="lineNum">      31</span>              :         = 0;</span>
+<span id="L32"><span class="lineNum">      32</span>              : };</span>
+<span id="L33"><span class="lineNum">      33</span>              : </span>
+<span id="L34"><span class="lineNum">      34</span>              : template&lt;class T = uint16_t, class Timestamp = uint32_t, class ReadOnlyPredicate = SectionPredicate&gt;</span>
+<span id="L35"><span class="lineNum">      35</span>              : class EntrySerializer</span>
+<span id="L36"><span class="lineNum">      36</span>              : {</span>
+<span id="L37"><span class="lineNum">      37</span>              : public:</span>
+<span id="L38"><span class="lineNum">      38</span>              :     explicit EntrySerializer(ReadOnlyPredicate readOnlyPredicate = ReadOnlyPredicate());</span>
+<span id="L39"><span class="lineNum">      39</span>              : </span>
+<span id="L40"><span class="lineNum">      40</span>              :     T serialize(</span>
+<span id="L41"><span class="lineNum">      41</span>              :         ::etl::span&lt;uint8_t&gt; const&amp; destBuffer,</span>
+<span id="L42"><span class="lineNum">      42</span>              :         Timestamp timestamp,</span>
+<span id="L43"><span class="lineNum">      43</span>              :         uint8_t componentIndex,</span>
+<span id="L44"><span class="lineNum">      44</span>              :         ::util::logger::Level level,</span>
+<span id="L45"><span class="lineNum">      45</span>              :         char const* formatString,</span>
+<span id="L46"><span class="lineNum">      46</span>              :         va_list ap) const;</span>
+<span id="L47"><span class="lineNum">      47</span>              :     static void deserialize(</span>
+<span id="L48"><span class="lineNum">      48</span>              :         ::etl::span&lt;uint8_t const&gt; const&amp; srcBuffer, IEntrySerializerCallback&lt;Timestamp&gt;&amp; callback);</span>
+<span id="L49"><span class="lineNum">      49</span>              : </span>
+<span id="L50"><span class="lineNum">      50</span>              : private:</span>
+<span id="L51"><span class="lineNum">      51</span>              :     enum</span>
+<span id="L52"><span class="lineNum">      52</span>              :     {</span>
+<span id="L53"><span class="lineNum">      53</span>              :         DATATYPE_UINT8        = static_cast&lt;uint8_t&gt;(::util::format::ParamDatatype::UINT8),</span>
+<span id="L54"><span class="lineNum">      54</span>              :         DATATYPE_SINT16       = static_cast&lt;uint8_t&gt;(::util::format::ParamDatatype::SINT16),</span>
+<span id="L55"><span class="lineNum">      55</span>              :         DATATYPE_UINT16       = static_cast&lt;uint8_t&gt;(::util::format::ParamDatatype::UINT16),</span>
+<span id="L56"><span class="lineNum">      56</span>              :         DATATYPE_SINT32       = static_cast&lt;uint8_t&gt;(::util::format::ParamDatatype::SINT32),</span>
+<span id="L57"><span class="lineNum">      57</span>              :         DATATYPE_UINT32       = static_cast&lt;uint8_t&gt;(::util::format::ParamDatatype::UINT32),</span>
+<span id="L58"><span class="lineNum">      58</span>              :         DATATYPE_SINT64       = static_cast&lt;uint8_t&gt;(::util::format::ParamDatatype::SINT64),</span>
+<span id="L59"><span class="lineNum">      59</span>              :         DATATYPE_UINT64       = static_cast&lt;uint8_t&gt;(::util::format::ParamDatatype::UINT64),</span>
+<span id="L60"><span class="lineNum">      60</span>              :         DATATYPE_VOIDPTR      = static_cast&lt;uint8_t&gt;(::util::format::ParamDatatype::VOIDPTR),</span>
+<span id="L61"><span class="lineNum">      61</span>              :         DATATYPE_CHARPTR      = static_cast&lt;uint8_t&gt;(::util::format::ParamDatatype::CHARPTR),</span>
+<span id="L62"><span class="lineNum">      62</span>              :         DATATYPE_SIZEDCHARPTR = static_cast&lt;uint8_t&gt;(::util::format::ParamDatatype::SIZEDCHARPTR),</span>
+<span id="L63"><span class="lineNum">      63</span>              :         DATATYPE_CHARARRAY    = static_cast&lt;uint8_t&gt;(::util::format::ParamDatatype::COUNT),</span>
+<span id="L64"><span class="lineNum">      64</span>              :         DATATYPE_NONE         = 0xff</span>
+<span id="L65"><span class="lineNum">      65</span>              :     };</span>
+<span id="L66"><span class="lineNum">      66</span>              : </span>
+<span id="L67"><span class="lineNum">      67</span>              :     class EntryWriter</span>
+<span id="L68"><span class="lineNum">      68</span>              :     {</span>
+<span id="L69"><span class="lineNum">      69</span>              :     public:</span>
+<span id="L70"><span class="lineNum">      70</span>              :         EntryWriter(</span>
+<span id="L71"><span class="lineNum">      71</span>              :             uint8_t* bufferStart, uint8_t* bufferEnd, ReadOnlyPredicate const&amp; readOnlyPredicate);</span>
+<span id="L72"><span class="lineNum">      72</span>              :         T getSize() const;</span>
+<span id="L73"><span class="lineNum">      73</span>              : </span>
+<span id="L74"><span class="lineNum">      74</span>              :         void copyParamVariant(</span>
+<span id="L75"><span class="lineNum">      75</span>              :             ::util::format::PrintfArgumentReader&amp; reader, ::util::format::ParamDatatype datatype);</span>
+<span id="L76"><span class="lineNum">      76</span>              :         void writeParamVariant(</span>
+<span id="L77"><span class="lineNum">      77</span>              :             ::util::format::ParamDatatype datatype, ::util::format::ParamVariant const&amp; variant);</span>
+<span id="L78"><span class="lineNum">      78</span>              :         void writeString(char const* source);</span>
+<span id="L79"><span class="lineNum">      79</span>              :         void writeString(uint8_t typeByte, char const* source, T length);</span>
+<span id="L80"><span class="lineNum">      80</span>              :         void writeData(uint8_t datatype, void const* source, T size);</span>
+<span id="L81"><span class="lineNum">      81</span>              :         void writeBytes(void const* source, T size);</span>
+<span id="L82"><span class="lineNum">      82</span>              : </span>
+<span id="L83"><span class="lineNum">      83</span>              :     private:</span>
+<span id="L84"><span class="lineNum">      84</span>              :         uint8_t* _bufferStart;</span>
+<span id="L85"><span class="lineNum">      85</span>              :         uint8_t* _bufferEnd;</span>
+<span id="L86"><span class="lineNum">      86</span>              :         uint8_t* _write;</span>
+<span id="L87"><span class="lineNum">      87</span>              :         ReadOnlyPredicate const&amp; _parentPredicate;</span>
+<span id="L88"><span class="lineNum">      88</span>              :     };</span>
+<span id="L89"><span class="lineNum">      89</span>              : </span>
+<span id="L90"><span class="lineNum">      90</span>              :     class EntryReader : public ::util::format::IPrintfArgumentReader</span>
+<span id="L91"><span class="lineNum">      91</span>              :     {</span>
+<span id="L92"><span class="lineNum">      92</span>              :     public:</span>
+<span id="L93"><span class="lineNum">      93</span>              :         EntryReader(uint8_t const* bufferStart, uint8_t const* bufferEnd);</span>
+<span id="L94"><span class="lineNum">      94</span>              : </span>
+<span id="L95"><span class="lineNum">      95</span>              :         ::util::format::ParamVariant const*</span>
+<span id="L96"><span class="lineNum">      96</span>              :         readArgument(::util::format::ParamDatatype datatype) override;</span>
+<span id="L97"><span class="lineNum">      97</span>              : </span>
+<span id="L98"><span class="lineNum">      98</span>              :         void readBytes(void* dest, T size);</span>
+<span id="L99"><span class="lineNum">      99</span>              : </span>
+<span id="L100"><span class="lineNum">     100</span>              :     private:</span>
+<span id="L101"><span class="lineNum">     101</span>              :         void readParamVariant();</span>
+<span id="L102"><span class="lineNum">     102</span>              :         char const* readCharArray();</span>
+<span id="L103"><span class="lineNum">     103</span>              : </span>
+<span id="L104"><span class="lineNum">     104</span>              :     private:</span>
+<span id="L105"><span class="lineNum">     105</span>              :         uint8_t const* _bufferStart;</span>
+<span id="L106"><span class="lineNum">     106</span>              :         uint8_t const* _bufferEnd;</span>
+<span id="L107"><span class="lineNum">     107</span>              :         uint8_t const* _read;</span>
+<span id="L108"><span class="lineNum">     108</span>              :         ::util::format::ParamVariant _variant;</span>
+<span id="L109"><span class="lineNum">     109</span>              :         ::util::string::PlainSizedString _plainSizedString;</span>
+<span id="L110"><span class="lineNum">     110</span>              :     };</span>
+<span id="L111"><span class="lineNum">     111</span>              : </span>
+<span id="L112"><span class="lineNum">     112</span>              :     ReadOnlyPredicate _readOnlyPredicate;</span>
+<span id="L113"><span class="lineNum">     113</span>              : };</span>
+<span id="L114"><span class="lineNum">     114</span>              : </span>
+<span id="L115"><span class="lineNum">     115</span>              : class SectionPredicate</span>
+<span id="L116"><span class="lineNum">     116</span>              : {</span>
+<span id="L117"><span class="lineNum">     117</span>              : public:</span>
+<span id="L118"><span class="lineNum">     118</span>              :     explicit SectionPredicate(void const* sectionStart = nullptr, void const* sectionEnd = nullptr);</span>
+<span id="L119"><span class="lineNum">     119</span>              : </span>
+<span id="L120"><span class="lineNum">     120</span>              :     inline bool operator()(void const* p) const;</span>
+<span id="L121"><span class="lineNum">     121</span>              : </span>
+<span id="L122"><span class="lineNum">     122</span>              : private:</span>
+<span id="L123"><span class="lineNum">     123</span>              :     void const* _sectionStart;</span>
+<span id="L124"><span class="lineNum">     124</span>              :     void const* _sectionEnd;</span>
+<span id="L125"><span class="lineNum">     125</span>              : };</span>
+<span id="L126"><span class="lineNum">     126</span>              : </span>
+<span id="L127"><span class="lineNum">     127</span>              : template&lt;class T, class Timestamp, class ReadOnlyPredicate&gt;</span>
+<span id="L128"><span class="lineNum">     128</span> <span class="tlaGNC tlaBgGNC">          35 : EntrySerializer&lt;T, Timestamp, ReadOnlyPredicate&gt;::EntrySerializer(</span></span>
+<span id="L129"><span class="lineNum">     129</span>              :     ReadOnlyPredicate const readOnlyPredicate)</span>
+<span id="L130"><span class="lineNum">     130</span> <span class="tlaGNC">          35 : : _readOnlyPredicate(readOnlyPredicate)</span></span>
+<span id="L131"><span class="lineNum">     131</span> <span class="tlaGNC">          35 : {}</span></span>
+<span id="L132"><span class="lineNum">     132</span>              : </span>
+<span id="L133"><span class="lineNum">     133</span>              : template&lt;class T, class Timestamp, class ReadOnlyPredicate&gt;</span>
+<span id="L134"><span class="lineNum">     134</span> <span class="tlaGNC">          35 : T EntrySerializer&lt;T, Timestamp, ReadOnlyPredicate&gt;::serialize(</span></span>
+<span id="L135"><span class="lineNum">     135</span>              :     ::etl::span&lt;uint8_t&gt; const&amp; destBuffer,</span>
+<span id="L136"><span class="lineNum">     136</span>              :     Timestamp const timestamp,</span>
+<span id="L137"><span class="lineNum">     137</span>              :     uint8_t const componentIndex,</span>
+<span id="L138"><span class="lineNum">     138</span>              :     ::util::logger::Level const level,</span>
+<span id="L139"><span class="lineNum">     139</span>              :     char const* const formatString,</span>
+<span id="L140"><span class="lineNum">     140</span>              :     va_list ap) const</span>
+<span id="L141"><span class="lineNum">     141</span>              : {</span>
+<span id="L142"><span class="lineNum">     142</span>              :     using ::util::format::PrintfArgumentReader;</span>
+<span id="L143"><span class="lineNum">     143</span>              :     using ::util::format::PrintfFormatScanner;</span>
+<span id="L144"><span class="lineNum">     144</span> <span class="tlaGNC">          35 :     uint8_t* const dest = destBuffer.data();</span></span>
+<span id="L145"><span class="lineNum">     145</span>              : </span>
+<span id="L146"><span class="lineNum">     146</span> <span class="tlaGNC">          35 :     EntryWriter writer(dest, dest + destBuffer.size(), _readOnlyPredicate);</span></span>
+<span id="L147"><span class="lineNum">     147</span> <span class="tlaGNC">          35 :     writer.writeBytes(&amp;timestamp, static_cast&lt;T&gt;(sizeof(timestamp)));</span></span>
+<span id="L148"><span class="lineNum">     148</span> <span class="tlaGNC">          35 :     writer.writeBytes(&amp;componentIndex, static_cast&lt;T&gt;(sizeof(componentIndex)));</span></span>
+<span id="L149"><span class="lineNum">     149</span> <span class="tlaGNC">          35 :     uint8_t const levelByte = static_cast&lt;uint8_t&gt;(level);</span></span>
+<span id="L150"><span class="lineNum">     150</span> <span class="tlaGNC">          35 :     writer.writeBytes(&amp;levelByte, static_cast&lt;T&gt;(sizeof(levelByte)));</span></span>
+<span id="L151"><span class="lineNum">     151</span> <span class="tlaGNC">          35 :     writer.writeString(formatString);</span></span>
+<span id="L152"><span class="lineNum">     152</span> <span class="tlaGNC">          35 :     PrintfArgumentReader argReader(ap);</span></span>
+<span id="L153"><span class="lineNum">     153</span>              : </span>
+<span id="L154"><span class="lineNum">     154</span> <span class="tlaGNC">         133 :     for (PrintfFormatScanner scanner(formatString); scanner.hasToken(); scanner.nextToken())</span></span>
+<span id="L155"><span class="lineNum">     155</span>              :     {</span>
+<span id="L156"><span class="lineNum">     156</span> <span class="tlaGNC">          98 :         if (scanner.getTokenType() == ::util::format::TokenType::PARAM)</span></span>
+<span id="L157"><span class="lineNum">     157</span>              :         {</span>
+<span id="L158"><span class="lineNum">     158</span> <span class="tlaGNC">          38 :             if (scanner.getParamInfo()._width == ::util::format::ParamWidthOrPrecision::PARAM)</span></span>
+<span id="L159"><span class="lineNum">     159</span>              :             {</span>
+<span id="L160"><span class="lineNum">     160</span> <span class="tlaGNC">           1 :                 writer.copyParamVariant(argReader, ::util::format::ParamDatatype::SINT32);</span></span>
+<span id="L161"><span class="lineNum">     161</span>              :             }</span>
+<span id="L162"><span class="lineNum">     162</span> <span class="tlaGNC">          38 :             if (scanner.getParamInfo()._precision == ::util::format::ParamWidthOrPrecision::PARAM)</span></span>
+<span id="L163"><span class="lineNum">     163</span>              :             {</span>
+<span id="L164"><span class="lineNum">     164</span> <span class="tlaGNC">           1 :                 writer.copyParamVariant(argReader, ::util::format::ParamDatatype::SINT32);</span></span>
+<span id="L165"><span class="lineNum">     165</span>              :             }</span>
+<span id="L166"><span class="lineNum">     166</span>              : </span>
+<span id="L167"><span class="lineNum">     167</span> <span class="tlaGNC">          38 :             writer.copyParamVariant(argReader, scanner.getParamInfo()._datatype);</span></span>
+<span id="L168"><span class="lineNum">     168</span>              :         }</span>
+<span id="L169"><span class="lineNum">     169</span>              :     }</span>
+<span id="L170"><span class="lineNum">     170</span> <span class="tlaGNC">          70 :     return writer.getSize();</span></span>
+<span id="L171"><span class="lineNum">     171</span>              : }</span>
+<span id="L172"><span class="lineNum">     172</span>              : </span>
+<span id="L173"><span class="lineNum">     173</span>              : template&lt;class T, class Timestamp, class ReadOnlyPredicate&gt;</span>
+<span id="L174"><span class="lineNum">     174</span> <span class="tlaGNC">          35 : void EntrySerializer&lt;T, Timestamp, ReadOnlyPredicate&gt;::deserialize(</span></span>
+<span id="L175"><span class="lineNum">     175</span>              :     ::etl::span&lt;uint8_t const&gt; const&amp; srcBuffer, IEntrySerializerCallback&lt;Timestamp&gt;&amp; callback)</span>
+<span id="L176"><span class="lineNum">     176</span>              : {</span>
+<span id="L177"><span class="lineNum">     177</span> <span class="tlaGNC">          35 :     EntryReader reader(srcBuffer.data(), srcBuffer.data() + srcBuffer.size());</span></span>
+<span id="L178"><span class="lineNum">     178</span>              :     Timestamp timestamp;</span>
+<span id="L179"><span class="lineNum">     179</span>              :     uint8_t componentIdx;</span>
+<span id="L180"><span class="lineNum">     180</span>              :     uint8_t level;</span>
+<span id="L181"><span class="lineNum">     181</span> <span class="tlaGNC">          35 :     reader.readBytes(&amp;timestamp, static_cast&lt;T&gt;(sizeof(timestamp)));</span></span>
+<span id="L182"><span class="lineNum">     182</span> <span class="tlaGNC">          35 :     reader.readBytes(&amp;componentIdx, static_cast&lt;T&gt;(sizeof(componentIdx)));</span></span>
+<span id="L183"><span class="lineNum">     183</span> <span class="tlaGNC">          35 :     reader.readBytes(&amp;level, static_cast&lt;T&gt;(sizeof(level)));</span></span>
+<span id="L184"><span class="lineNum">     184</span>              :     ::util::format::ParamVariant const* const formatArg</span>
+<span id="L185"><span class="lineNum">     185</span> <span class="tlaGNC">          35 :         = reader.readArgument(::util::format::ParamDatatype::CHARPTR);</span></span>
+<span id="L186"><span class="lineNum">     186</span> <span class="tlaGNC">          35 :     if (formatArg != nullptr)</span></span>
+<span id="L187"><span class="lineNum">     187</span>              :     {</span>
+<span id="L188"><span class="lineNum">     188</span> <span class="tlaGNC">          32 :         callback.onEntry(</span></span>
+<span id="L189"><span class="lineNum">     189</span>              :             timestamp,</span>
+<span id="L190"><span class="lineNum">     190</span>              :             componentIdx,</span>
+<span id="L191"><span class="lineNum">     191</span>              :             static_cast&lt;::util::logger::Level&gt;(level),</span>
+<span id="L192"><span class="lineNum">     192</span> <span class="tlaGNC">          32 :             formatArg-&gt;_charPtrValue,</span></span>
+<span id="L193"><span class="lineNum">     193</span>              :             reader);</span>
+<span id="L194"><span class="lineNum">     194</span>              :     }</span>
+<span id="L195"><span class="lineNum">     195</span> <span class="tlaGNC">          35 : }</span></span>
+<span id="L196"><span class="lineNum">     196</span>              : </span>
+<span id="L197"><span class="lineNum">     197</span>              : template&lt;class T, class Timestamp, class ReadOnlyPredicate&gt;</span>
+<span id="L198"><span class="lineNum">     198</span> <span class="tlaGNC">          35 : EntrySerializer&lt;T, Timestamp, ReadOnlyPredicate&gt;::EntryWriter::EntryWriter(</span></span>
+<span id="L199"><span class="lineNum">     199</span>              :     uint8_t* const bufferStart,</span>
+<span id="L200"><span class="lineNum">     200</span>              :     uint8_t* const bufferEnd,</span>
+<span id="L201"><span class="lineNum">     201</span>              :     ReadOnlyPredicate const&amp; readOnlyPredicate)</span>
+<span id="L202"><span class="lineNum">     202</span> <span class="tlaGNC">          35 : : _bufferStart(bufferStart)</span></span>
+<span id="L203"><span class="lineNum">     203</span> <span class="tlaGNC">          35 : , _bufferEnd(bufferEnd)</span></span>
+<span id="L204"><span class="lineNum">     204</span> <span class="tlaGNC">          35 : , _write(bufferStart)</span></span>
+<span id="L205"><span class="lineNum">     205</span> <span class="tlaGNC">          35 : , _parentPredicate(readOnlyPredicate)</span></span>
+<span id="L206"><span class="lineNum">     206</span> <span class="tlaGNC">          35 : {}</span></span>
+<span id="L207"><span class="lineNum">     207</span>              : </span>
+<span id="L208"><span class="lineNum">     208</span>              : template&lt;class T, class Timestamp, class ReadOnlyPredicate&gt;</span>
+<span id="L209"><span class="lineNum">     209</span> <span class="tlaGNC">          35 : T EntrySerializer&lt;T, Timestamp, ReadOnlyPredicate&gt;::EntryWriter::getSize() const</span></span>
+<span id="L210"><span class="lineNum">     210</span>              : {</span>
+<span id="L211"><span class="lineNum">     211</span> <span class="tlaGNC">          35 :     return static_cast&lt;T&gt;(_write - _bufferStart);</span></span>
+<span id="L212"><span class="lineNum">     212</span>              : }</span>
+<span id="L213"><span class="lineNum">     213</span>              : </span>
+<span id="L214"><span class="lineNum">     214</span>              : template&lt;class T, class Timestamp, class ReadOnlyPredicate&gt;</span>
+<span id="L215"><span class="lineNum">     215</span> <span class="tlaGNC">          40 : void EntrySerializer&lt;T, Timestamp, ReadOnlyPredicate&gt;::EntryWriter::copyParamVariant(</span></span>
+<span id="L216"><span class="lineNum">     216</span>              :     ::util::format::PrintfArgumentReader&amp; reader, ::util::format::ParamDatatype const datatype)</span>
+<span id="L217"><span class="lineNum">     217</span>              : {</span>
+<span id="L218"><span class="lineNum">     218</span> <span class="tlaGNC">          40 :     writeParamVariant(datatype, *reader.readArgument(datatype));</span></span>
+<span id="L219"><span class="lineNum">     219</span> <span class="tlaGNC">          40 : }</span></span>
+<span id="L220"><span class="lineNum">     220</span>              : </span>
+<span id="L221"><span class="lineNum">     221</span>              : template&lt;class T, class Timestamp, class ReadOnlyPredicate&gt;</span>
+<span id="L222"><span class="lineNum">     222</span> <span class="tlaGNC">          40 : void EntrySerializer&lt;T, Timestamp, ReadOnlyPredicate&gt;::EntryWriter::writeParamVariant(</span></span>
+<span id="L223"><span class="lineNum">     223</span>              :     ::util::format::ParamDatatype const datatype, ::util::format::ParamVariant const&amp; variant)</span>
+<span id="L224"><span class="lineNum">     224</span>              : {</span>
+<span id="L225"><span class="lineNum">     225</span> <span class="tlaGNC">          40 :     switch (datatype)</span></span>
+<span id="L226"><span class="lineNum">     226</span>              :     {</span>
+<span id="L227"><span class="lineNum">     227</span> <span class="tlaGNC">           4 :         case ::util::format::ParamDatatype::UINT8:</span></span>
+<span id="L228"><span class="lineNum">     228</span>              :         {</span>
+<span id="L229"><span class="lineNum">     229</span> <span class="tlaGNC">           4 :             writeData(</span></span>
+<span id="L230"><span class="lineNum">     230</span>              :                 static_cast&lt;uint8_t&gt;(datatype),</span>
+<span id="L231"><span class="lineNum">     231</span> <span class="tlaGNC">           4 :                 &amp;variant._uint8Value,</span></span>
+<span id="L232"><span class="lineNum">     232</span>              :                 static_cast&lt;T&gt;(sizeof(variant._uint8Value)));</span>
+<span id="L233"><span class="lineNum">     233</span> <span class="tlaGNC">           4 :             break;</span></span>
+<span id="L234"><span class="lineNum">     234</span>              :         }</span>
+<span id="L235"><span class="lineNum">     235</span> <span class="tlaGNC">           2 :         case ::util::format::ParamDatatype::SINT16:</span></span>
+<span id="L236"><span class="lineNum">     236</span>              :         case ::util::format::ParamDatatype::UINT16:</span>
+<span id="L237"><span class="lineNum">     237</span>              :         {</span>
+<span id="L238"><span class="lineNum">     238</span> <span class="tlaGNC">           2 :             writeData(</span></span>
+<span id="L239"><span class="lineNum">     239</span>              :                 static_cast&lt;uint8_t&gt;(datatype),</span>
+<span id="L240"><span class="lineNum">     240</span> <span class="tlaGNC">           2 :                 &amp;variant._uint16Value,</span></span>
+<span id="L241"><span class="lineNum">     241</span>              :                 static_cast&lt;T&gt;(sizeof(variant._uint16Value)));</span>
+<span id="L242"><span class="lineNum">     242</span> <span class="tlaGNC">           2 :             break;</span></span>
+<span id="L243"><span class="lineNum">     243</span>              :         }</span>
+<span id="L244"><span class="lineNum">     244</span> <span class="tlaGNC">           9 :         case ::util::format::ParamDatatype::SINT32:</span></span>
+<span id="L245"><span class="lineNum">     245</span>              :         case ::util::format::ParamDatatype::UINT32:</span>
+<span id="L246"><span class="lineNum">     246</span>              :         {</span>
+<span id="L247"><span class="lineNum">     247</span> <span class="tlaGNC">           9 :             writeData(</span></span>
+<span id="L248"><span class="lineNum">     248</span>              :                 static_cast&lt;uint8_t&gt;(datatype),</span>
+<span id="L249"><span class="lineNum">     249</span> <span class="tlaGNC">           9 :                 &amp;variant._uint32Value,</span></span>
+<span id="L250"><span class="lineNum">     250</span>              :                 static_cast&lt;T&gt;(sizeof(variant._uint32Value)));</span>
+<span id="L251"><span class="lineNum">     251</span> <span class="tlaGNC">           9 :             break;</span></span>
+<span id="L252"><span class="lineNum">     252</span>              :         }</span>
+<span id="L253"><span class="lineNum">     253</span> <span class="tlaGNC">           2 :         case ::util::format::ParamDatatype::SINT64:</span></span>
+<span id="L254"><span class="lineNum">     254</span>              :         case ::util::format::ParamDatatype::UINT64:</span>
+<span id="L255"><span class="lineNum">     255</span>              :         {</span>
+<span id="L256"><span class="lineNum">     256</span> <span class="tlaGNC">           2 :             writeData(</span></span>
+<span id="L257"><span class="lineNum">     257</span>              :                 static_cast&lt;uint8_t&gt;(datatype),</span>
+<span id="L258"><span class="lineNum">     258</span> <span class="tlaGNC">           2 :                 &amp;variant._uint64Value,</span></span>
+<span id="L259"><span class="lineNum">     259</span>              :                 static_cast&lt;T&gt;(sizeof(variant._uint64Value)));</span>
+<span id="L260"><span class="lineNum">     260</span> <span class="tlaGNC">           2 :             break;</span></span>
+<span id="L261"><span class="lineNum">     261</span>              :         }</span>
+<span id="L262"><span class="lineNum">     262</span> <span class="tlaGNC">           1 :         case ::util::format::ParamDatatype::VOIDPTR:</span></span>
+<span id="L263"><span class="lineNum">     263</span>              :         {</span>
+<span id="L264"><span class="lineNum">     264</span> <span class="tlaGNC">           1 :             writeData(</span></span>
+<span id="L265"><span class="lineNum">     265</span>              :                 static_cast&lt;uint8_t&gt;(datatype),</span>
+<span id="L266"><span class="lineNum">     266</span> <span class="tlaGNC">           1 :                 &amp;variant._voidPtrValue,</span></span>
+<span id="L267"><span class="lineNum">     267</span>              :                 static_cast&lt;T&gt;(sizeof(variant._voidPtrValue)));</span>
+<span id="L268"><span class="lineNum">     268</span> <span class="tlaGNC">           1 :             break;</span></span>
+<span id="L269"><span class="lineNum">     269</span>              :         }</span>
+<span id="L270"><span class="lineNum">     270</span> <span class="tlaGNC">          17 :         case ::util::format::ParamDatatype::CHARPTR:</span></span>
+<span id="L271"><span class="lineNum">     271</span>              :         {</span>
+<span id="L272"><span class="lineNum">     272</span> <span class="tlaGNC">          17 :             writeString(variant._charPtrValue);</span></span>
+<span id="L273"><span class="lineNum">     273</span> <span class="tlaGNC">          17 :             break;</span></span>
+<span id="L274"><span class="lineNum">     274</span>              :         }</span>
+<span id="L275"><span class="lineNum">     275</span> <span class="tlaGNC">           4 :         case ::util::format::ParamDatatype::SIZEDCHARPTR:</span></span>
+<span id="L276"><span class="lineNum">     276</span>              :         {</span>
+<span id="L277"><span class="lineNum">     277</span> <span class="tlaGNC">           4 :             writeString(</span></span>
+<span id="L278"><span class="lineNum">     278</span>              :                 static_cast&lt;uint8_t&gt;(::util::format::ParamDatatype::SIZEDCHARPTR),</span>
+<span id="L279"><span class="lineNum">     279</span> <span class="tlaGNC">           4 :                 variant._sizedCharPtrValue-&gt;_data,</span></span>
+<span id="L280"><span class="lineNum">     280</span> <span class="tlaGNC">           4 :                 static_cast&lt;T&gt;(variant._sizedCharPtrValue-&gt;_length));</span></span>
+<span id="L281"><span class="lineNum">     281</span> <span class="tlaGNC">           4 :             break;</span></span>
+<span id="L282"><span class="lineNum">     282</span>              :         }</span>
+<span id="L283"><span class="lineNum">     283</span> <span class="tlaGNC">           1 :         default:</span></span>
+<span id="L284"><span class="lineNum">     284</span>              :         {</span>
+<span id="L285"><span class="lineNum">     285</span> <span class="tlaGNC">           1 :             writeData(static_cast&lt;uint8_t&gt;(datatype), nullptr, 0U);</span></span>
+<span id="L286"><span class="lineNum">     286</span> <span class="tlaGNC">           1 :             break;</span></span>
+<span id="L287"><span class="lineNum">     287</span>              :         }</span>
+<span id="L288"><span class="lineNum">     288</span>              :     }</span>
+<span id="L289"><span class="lineNum">     289</span> <span class="tlaGNC">          40 : }</span></span>
+<span id="L290"><span class="lineNum">     290</span>              : </span>
+<span id="L291"><span class="lineNum">     291</span>              : template&lt;class T, class Timestamp, class ReadOnlyPredicate&gt;</span>
+<span id="L292"><span class="lineNum">     292</span> <span class="tlaGNC">          52 : void EntrySerializer&lt;T, Timestamp, ReadOnlyPredicate&gt;::EntryWriter::writeString(</span></span>
+<span id="L293"><span class="lineNum">     293</span>              :     char const* const source)</span>
+<span id="L294"><span class="lineNum">     294</span>              : {</span>
+<span id="L295"><span class="lineNum">     295</span> <span class="tlaGNC">          52 :     if ((source == nullptr) || (_parentPredicate(source)))</span></span>
+<span id="L296"><span class="lineNum">     296</span>              :     {</span>
+<span id="L297"><span class="lineNum">     297</span> <span class="tlaGNC">           6 :         writeData(</span></span>
+<span id="L298"><span class="lineNum">     298</span>              :             static_cast&lt;uint8_t&gt;(::util::format::ParamDatatype::CHARPTR),</span>
+<span id="L299"><span class="lineNum">     299</span>              :             &amp;source,</span>
+<span id="L300"><span class="lineNum">     300</span>              :             static_cast&lt;T&gt;(sizeof(source)));</span>
+<span id="L301"><span class="lineNum">     301</span>              :     }</span>
+<span id="L302"><span class="lineNum">     302</span>              :     else</span>
+<span id="L303"><span class="lineNum">     303</span>              :     {</span>
+<span id="L304"><span class="lineNum">     304</span> <span class="tlaGNC">          46 :         writeString(</span></span>
+<span id="L305"><span class="lineNum">     305</span>              :             static_cast&lt;uint8_t&gt;(DATATYPE_CHARARRAY),</span>
+<span id="L306"><span class="lineNum">     306</span>              :             source,</span>
+<span id="L307"><span class="lineNum">     307</span> <span class="tlaGNC">          46 :             static_cast&lt;T&gt;(::etl::strlen(source)));</span></span>
+<span id="L308"><span class="lineNum">     308</span>              :     }</span>
+<span id="L309"><span class="lineNum">     309</span> <span class="tlaGNC">          52 : }</span></span>
+<span id="L310"><span class="lineNum">     310</span>              : </span>
+<span id="L311"><span class="lineNum">     311</span>              : template&lt;class T, class Timestamp, class ReadOnlyPredicate&gt;</span>
+<span id="L312"><span class="lineNum">     312</span> <span class="tlaGNC">          50 : void EntrySerializer&lt;T, Timestamp, ReadOnlyPredicate&gt;::EntryWriter::writeString(</span></span>
+<span id="L313"><span class="lineNum">     313</span>              :     uint8_t const typeByte, char const* const source, T length)</span>
+<span id="L314"><span class="lineNum">     314</span>              : {</span>
+<span id="L315"><span class="lineNum">     315</span> <span class="tlaGNC">          50 :     writeBytes(&amp;typeByte, static_cast&lt;T&gt;(sizeof(typeByte)));</span></span>
+<span id="L316"><span class="lineNum">     316</span> <span class="tlaGNC">          50 :     T const completeLength = length + 1U;</span></span>
+<span id="L317"><span class="lineNum">     317</span> <span class="tlaGNC">          50 :     T const headerLength   = static_cast&lt;T&gt;(sizeof(T));</span></span>
+<span id="L318"><span class="lineNum">     318</span>              : </span>
+<span id="L319"><span class="lineNum">     319</span> <span class="tlaGNC">          50 :     if ((_write + (headerLength + completeLength)) &gt; _bufferEnd)</span></span>
+<span id="L320"><span class="lineNum">     320</span>              :     {</span>
+<span id="L321"><span class="lineNum">     321</span>              :         // Add a constant length zero-terminated string to indicate overflow (&quot;&lt;?&gt;&quot; = 4 bytes)</span>
+<span id="L322"><span class="lineNum">     322</span> <span class="tlaGNC">          17 :         if ((_write + (headerLength + 5U)) &lt;= _bufferEnd)</span></span>
+<span id="L323"><span class="lineNum">     323</span>              :         {</span>
+<span id="L324"><span class="lineNum">     324</span> <span class="tlaGNC">          11 :             length = static_cast&lt;T&gt;(_bufferEnd - _write) - static_cast&lt;T&gt;(headerLength + 4U);</span></span>
+<span id="L325"><span class="lineNum">     325</span> <span class="tlaGNC">          11 :             writeBytes(&amp;length, static_cast&lt;T&gt;(sizeof(length)));</span></span>
+<span id="L326"><span class="lineNum">     326</span> <span class="tlaGNC">          11 :             writeBytes(source, length);</span></span>
+<span id="L327"><span class="lineNum">     327</span> <span class="tlaGNC">          11 :             writeBytes(&quot;&lt;?&gt;&quot;, 4U);</span></span>
+<span id="L328"><span class="lineNum">     328</span> <span class="tlaGNC">          11 :             return;</span></span>
+<span id="L329"><span class="lineNum">     329</span>              :         }</span>
+<span id="L330"><span class="lineNum">     330</span>              :     }</span>
+<span id="L331"><span class="lineNum">     331</span> <span class="tlaGNC">          39 :     writeBytes(&amp;completeLength, static_cast&lt;T&gt;(sizeof(completeLength)));</span></span>
+<span id="L332"><span class="lineNum">     332</span> <span class="tlaGNC">          39 :     writeBytes(source, length);</span></span>
+<span id="L333"><span class="lineNum">     333</span> <span class="tlaGNC">          39 :     uint8_t const zeroByte = 0U;</span></span>
+<span id="L334"><span class="lineNum">     334</span> <span class="tlaGNC">          39 :     writeBytes(&amp;zeroByte, static_cast&lt;T&gt;(sizeof(zeroByte)));</span></span>
+<span id="L335"><span class="lineNum">     335</span>              : }</span>
+<span id="L336"><span class="lineNum">     336</span>              : </span>
+<span id="L337"><span class="lineNum">     337</span>              : template&lt;class T, class Timestamp, class ReadOnlyPredicate&gt;</span>
+<span id="L338"><span class="lineNum">     338</span> <span class="tlaGNC">          25 : void EntrySerializer&lt;T, Timestamp, ReadOnlyPredicate&gt;::EntryWriter::writeData(</span></span>
+<span id="L339"><span class="lineNum">     339</span>              :     uint8_t const datatype, void const* const source, T const size)</span>
+<span id="L340"><span class="lineNum">     340</span>              : {</span>
+<span id="L341"><span class="lineNum">     341</span> <span class="tlaGNC">          25 :     writeBytes(&amp;datatype, static_cast&lt;T&gt;(sizeof(uint8_t)));</span></span>
+<span id="L342"><span class="lineNum">     342</span> <span class="tlaGNC">          25 :     writeBytes(source, size);</span></span>
+<span id="L343"><span class="lineNum">     343</span> <span class="tlaGNC">          25 : }</span></span>
+<span id="L344"><span class="lineNum">     344</span>              : </span>
+<span id="L345"><span class="lineNum">     345</span>              : template&lt;class T, class Timestamp, class ReadOnlyPredicate&gt;</span>
+<span id="L346"><span class="lineNum">     346</span> <span class="tlaGNC">         355 : void EntrySerializer&lt;T, Timestamp, ReadOnlyPredicate&gt;::EntryWriter::writeBytes(</span></span>
+<span id="L347"><span class="lineNum">     347</span>              :     void const* const source, T const size)</span>
+<span id="L348"><span class="lineNum">     348</span>              : {</span>
+<span id="L349"><span class="lineNum">     349</span> <span class="tlaGNC">         355 :     if (source == nullptr)</span></span>
+<span id="L350"><span class="lineNum">     350</span>              :     {</span>
+<span id="L351"><span class="lineNum">     351</span> <span class="tlaGNC">           3 :         return;</span></span>
+<span id="L352"><span class="lineNum">     352</span>              :     }</span>
+<span id="L353"><span class="lineNum">     353</span> <span class="tlaGNC">         352 :     if (_write &lt; _bufferEnd)</span></span>
+<span id="L354"><span class="lineNum">     354</span>              :     {</span>
+<span id="L355"><span class="lineNum">     355</span> <span class="tlaGNC">         325 :         (void)memcpy(</span></span>
+<span id="L356"><span class="lineNum">     356</span> <span class="tlaGNC">         332 :             _write,</span></span>
+<span id="L357"><span class="lineNum">     357</span>              :             source,</span>
+<span id="L358"><span class="lineNum">     358</span> <span class="tlaGNC">         332 :             ((_write + size) &lt;= _bufferEnd) ? static_cast&lt;size_t&gt;(size) : _bufferEnd - _write);</span></span>
+<span id="L359"><span class="lineNum">     359</span>              :     }</span>
+<span id="L360"><span class="lineNum">     360</span> <span class="tlaGNC">         352 :     _write += size;</span></span>
+<span id="L361"><span class="lineNum">     361</span>              : }</span>
+<span id="L362"><span class="lineNum">     362</span>              : </span>
+<span id="L363"><span class="lineNum">     363</span>              : template&lt;class T, class Timestamp, class ReadOnlyPredicate&gt;</span>
+<span id="L364"><span class="lineNum">     364</span> <span class="tlaGNC">          35 : EntrySerializer&lt;T, Timestamp, ReadOnlyPredicate&gt;::EntryReader::EntryReader(</span></span>
+<span id="L365"><span class="lineNum">     365</span>              :     uint8_t const* const bufferStart, uint8_t const* const bufferEnd)</span>
+<span id="L366"><span class="lineNum">     366</span>              : : ::util::format::IPrintfArgumentReader()</span>
+<span id="L367"><span class="lineNum">     367</span> <span class="tlaGNC">          35 : , _bufferStart(bufferStart)</span></span>
+<span id="L368"><span class="lineNum">     368</span> <span class="tlaGNC">          35 : , _bufferEnd(bufferEnd)</span></span>
+<span id="L369"><span class="lineNum">     369</span> <span class="tlaGNC">          35 : , _read(bufferStart)</span></span>
+<span id="L370"><span class="lineNum">     370</span> <span class="tlaGNC">          35 : , _variant()</span></span>
+<span id="L371"><span class="lineNum">     371</span> <span class="tlaGNC">          35 : , _plainSizedString()</span></span>
+<span id="L372"><span class="lineNum">     372</span> <span class="tlaGNC">          35 : {}</span></span>
+<span id="L373"><span class="lineNum">     373</span>              : </span>
+<span id="L374"><span class="lineNum">     374</span>              : template&lt;class T, class Timestamp, class ReadOnlyPredicate&gt;</span>
+<span id="L375"><span class="lineNum">     375</span>              : ::util::format::ParamVariant const*</span>
+<span id="L376"><span class="lineNum">     376</span> <span class="tlaGNC">          75 :     EntrySerializer&lt;T, Timestamp, ReadOnlyPredicate&gt;::EntryReader::readArgument(</span></span>
+<span id="L377"><span class="lineNum">     377</span>              :         ::util::format::ParamDatatype /*datatype*/)</span>
+<span id="L378"><span class="lineNum">     378</span>              : {</span>
+<span id="L379"><span class="lineNum">     379</span> <span class="tlaGNC">          75 :     readParamVariant();</span></span>
+<span id="L380"><span class="lineNum">     380</span> <span class="tlaGNC">          75 :     return (_read &lt;= _bufferEnd) ? &amp;_variant : nullptr;</span></span>
+<span id="L381"><span class="lineNum">     381</span>              : }</span>
+<span id="L382"><span class="lineNum">     382</span>              : </span>
+<span id="L383"><span class="lineNum">     383</span>              : template&lt;class T, class Timestamp, class ReadOnlyPredicate&gt;</span>
+<span id="L384"><span class="lineNum">     384</span> <span class="tlaGNC">         251 : void EntrySerializer&lt;T, Timestamp, ReadOnlyPredicate&gt;::EntryReader::readBytes(</span></span>
+<span id="L385"><span class="lineNum">     385</span>              :     void* const dest, T const size)</span>
+<span id="L386"><span class="lineNum">     386</span>              : {</span>
+<span id="L387"><span class="lineNum">     387</span> <span class="tlaGNC">         251 :     if (_read &lt; _bufferEnd)</span></span>
+<span id="L388"><span class="lineNum">     388</span>              :     {</span>
+<span id="L389"><span class="lineNum">     389</span> <span class="tlaGNC">         238 :         (void)memcpy(</span></span>
+<span id="L390"><span class="lineNum">     390</span>              :             dest,</span>
+<span id="L391"><span class="lineNum">     391</span> <span class="tlaGNC">         242 :             _read,</span></span>
+<span id="L392"><span class="lineNum">     392</span> <span class="tlaGNC">         242 :             ((_read + size) &lt;= _bufferEnd) ? static_cast&lt;size_t&gt;(size) : _bufferEnd - _read);</span></span>
+<span id="L393"><span class="lineNum">     393</span>              :     }</span>
+<span id="L394"><span class="lineNum">     394</span> <span class="tlaGNC">         251 :     _read += size;</span></span>
+<span id="L395"><span class="lineNum">     395</span> <span class="tlaGNC">         251 : }</span></span>
+<span id="L396"><span class="lineNum">     396</span>              : </span>
+<span id="L397"><span class="lineNum">     397</span>              : template&lt;class T, class Timestamp, class ReadOnlyPredicate&gt;</span>
+<span id="L398"><span class="lineNum">     398</span> <span class="tlaGNC">          75 : void EntrySerializer&lt;T, Timestamp, ReadOnlyPredicate&gt;::EntryReader::readParamVariant()</span></span>
+<span id="L399"><span class="lineNum">     399</span>              : {</span>
+<span id="L400"><span class="lineNum">     400</span> <span class="tlaGNC">          75 :     uint8_t datatype = static_cast&lt;uint8_t&gt;(DATATYPE_NONE);</span></span>
+<span id="L401"><span class="lineNum">     401</span> <span class="tlaGNC">          75 :     readBytes(&amp;datatype, static_cast&lt;T&gt;(sizeof(datatype)));</span></span>
+<span id="L402"><span class="lineNum">     402</span>              : </span>
+<span id="L403"><span class="lineNum">     403</span> <span class="tlaGNC">          75 :     switch (datatype)</span></span>
+<span id="L404"><span class="lineNum">     404</span>              :     {</span>
+<span id="L405"><span class="lineNum">     405</span> <span class="tlaGNC">           3 :         case DATATYPE_UINT8:</span></span>
+<span id="L406"><span class="lineNum">     406</span>              :         {</span>
+<span id="L407"><span class="lineNum">     407</span> <span class="tlaGNC">           3 :             readBytes(&amp;_variant._uint8Value, static_cast&lt;T&gt;(sizeof(_variant._uint8Value)));</span></span>
+<span id="L408"><span class="lineNum">     408</span> <span class="tlaGNC">           3 :             break;</span></span>
+<span id="L409"><span class="lineNum">     409</span>              :         }</span>
+<span id="L410"><span class="lineNum">     410</span> <span class="tlaGNC">           2 :         case DATATYPE_SINT16:</span></span>
+<span id="L411"><span class="lineNum">     411</span>              :         case DATATYPE_UINT16:</span>
+<span id="L412"><span class="lineNum">     412</span>              :         {</span>
+<span id="L413"><span class="lineNum">     413</span> <span class="tlaGNC">           2 :             readBytes(&amp;_variant._uint16Value, static_cast&lt;T&gt;(sizeof(_variant._uint16Value)));</span></span>
+<span id="L414"><span class="lineNum">     414</span> <span class="tlaGNC">           2 :             break;</span></span>
+<span id="L415"><span class="lineNum">     415</span>              :         }</span>
+<span id="L416"><span class="lineNum">     416</span> <span class="tlaGNC">           9 :         case DATATYPE_SINT32:</span></span>
+<span id="L417"><span class="lineNum">     417</span>              :         case DATATYPE_UINT32:</span>
+<span id="L418"><span class="lineNum">     418</span>              :         {</span>
+<span id="L419"><span class="lineNum">     419</span> <span class="tlaGNC">           9 :             readBytes(&amp;_variant._uint32Value, static_cast&lt;T&gt;(sizeof(_variant._uint32Value)));</span></span>
+<span id="L420"><span class="lineNum">     420</span> <span class="tlaGNC">           9 :             break;</span></span>
+<span id="L421"><span class="lineNum">     421</span>              :         }</span>
+<span id="L422"><span class="lineNum">     422</span> <span class="tlaGNC">           2 :         case DATATYPE_SINT64:</span></span>
+<span id="L423"><span class="lineNum">     423</span>              :         case DATATYPE_UINT64:</span>
+<span id="L424"><span class="lineNum">     424</span>              :         {</span>
+<span id="L425"><span class="lineNum">     425</span> <span class="tlaGNC">           2 :             readBytes(&amp;_variant._uint64Value, static_cast&lt;T&gt;(sizeof(_variant._uint64Value)));</span></span>
+<span id="L426"><span class="lineNum">     426</span> <span class="tlaGNC">           2 :             break;</span></span>
+<span id="L427"><span class="lineNum">     427</span>              :         }</span>
+<span id="L428"><span class="lineNum">     428</span> <span class="tlaGNC">           1 :         case DATATYPE_VOIDPTR:</span></span>
+<span id="L429"><span class="lineNum">     429</span>              :         {</span>
+<span id="L430"><span class="lineNum">     430</span> <span class="tlaGNC">           1 :             readBytes(&amp;_variant._voidPtrValue, static_cast&lt;T&gt;(sizeof(_variant._voidPtrValue)));</span></span>
+<span id="L431"><span class="lineNum">     431</span> <span class="tlaGNC">           1 :             break;</span></span>
+<span id="L432"><span class="lineNum">     432</span>              :         }</span>
+<span id="L433"><span class="lineNum">     433</span> <span class="tlaGNC">           6 :         case DATATYPE_CHARPTR:</span></span>
+<span id="L434"><span class="lineNum">     434</span>              :         {</span>
+<span id="L435"><span class="lineNum">     435</span> <span class="tlaGNC">           6 :             readBytes(&amp;_variant._charPtrValue, static_cast&lt;T&gt;(sizeof(_variant._charPtrValue)));</span></span>
+<span id="L436"><span class="lineNum">     436</span> <span class="tlaGNC">           6 :             break;</span></span>
+<span id="L437"><span class="lineNum">     437</span>              :         }</span>
+<span id="L438"><span class="lineNum">     438</span> <span class="tlaGNC">          44 :         case DATATYPE_CHARARRAY:</span></span>
+<span id="L439"><span class="lineNum">     439</span>              :         {</span>
+<span id="L440"><span class="lineNum">     440</span> <span class="tlaGNC">          44 :             _variant._charPtrValue = readCharArray();</span></span>
+<span id="L441"><span class="lineNum">     441</span> <span class="tlaGNC">          44 :             break;</span></span>
+<span id="L442"><span class="lineNum">     442</span>              :         }</span>
+<span id="L443"><span class="lineNum">     443</span> <span class="tlaGNC">           4 :         case DATATYPE_SIZEDCHARPTR:</span></span>
+<span id="L444"><span class="lineNum">     444</span>              :         {</span>
+<span id="L445"><span class="lineNum">     445</span> <span class="tlaGNC">           4 :             _variant._sizedCharPtrValue = &amp;_plainSizedString;</span></span>
+<span id="L446"><span class="lineNum">     446</span> <span class="tlaGNC">           4 :             _plainSizedString._data     = readCharArray();</span></span>
+<span id="L447"><span class="lineNum">     447</span> <span class="tlaGNC">           4 :             size_t const limit          = static_cast&lt;size_t&gt;(</span></span>
+<span id="L448"><span class="lineNum">     448</span> <span class="tlaGNC">           4 :                 _bufferEnd - reinterpret_cast&lt;uint8_t const*&gt;(_plainSizedString._data));</span></span>
+<span id="L449"><span class="lineNum">     449</span> <span class="tlaGNC">           4 :             _plainSizedString._length = ::etl::strlen(_plainSizedString._data, limit);</span></span>
+<span id="L450"><span class="lineNum">     450</span> <span class="tlaGNC">           4 :             break;</span></span>
+<span id="L451"><span class="lineNum">     451</span>              :         }</span>
+<span id="L452"><span class="lineNum">     452</span> <span class="tlaGNC">           4 :         default:</span></span>
+<span id="L453"><span class="lineNum">     453</span>              :         {</span>
+<span id="L454"><span class="lineNum">     454</span> <span class="tlaGNC">           4 :             _variant._voidPtrValue = nullptr;</span></span>
+<span id="L455"><span class="lineNum">     455</span> <span class="tlaGNC">           4 :             break;</span></span>
+<span id="L456"><span class="lineNum">     456</span>              :         }</span>
+<span id="L457"><span class="lineNum">     457</span>              :     }</span>
+<span id="L458"><span class="lineNum">     458</span> <span class="tlaGNC">          75 : }</span></span>
+<span id="L459"><span class="lineNum">     459</span>              : </span>
+<span id="L460"><span class="lineNum">     460</span>              : template&lt;class T, class Timestamp, class ReadOnlyPredicate&gt;</span>
+<span id="L461"><span class="lineNum">     461</span> <span class="tlaGNC">          48 : char const* EntrySerializer&lt;T, Timestamp, ReadOnlyPredicate&gt;::EntryReader::readCharArray()</span></span>
+<span id="L462"><span class="lineNum">     462</span>              : {</span>
+<span id="L463"><span class="lineNum">     463</span> <span class="tlaGNC">          48 :     T length = 0U;</span></span>
+<span id="L464"><span class="lineNum">     464</span> <span class="tlaGNC">          48 :     readBytes(&amp;length, static_cast&lt;T&gt;(sizeof(length)));</span></span>
+<span id="L465"><span class="lineNum">     465</span> <span class="tlaGNC">          48 :     char const* const string = reinterpret_cast&lt;char const*&gt;(_read);</span></span>
+<span id="L466"><span class="lineNum">     466</span> <span class="tlaGNC">          48 :     _read += length;</span></span>
+<span id="L467"><span class="lineNum">     467</span> <span class="tlaGNC">          48 :     return string;</span></span>
+<span id="L468"><span class="lineNum">     468</span>              : }</span>
+<span id="L469"><span class="lineNum">     469</span>              : </span>
+<span id="L470"><span class="lineNum">     470</span>              : template&lt;class Timestamp&gt;</span>
+<span id="L471"><span class="lineNum">     471</span> <span class="tlaGNC">          11 : IEntrySerializerCallback&lt;Timestamp&gt;::IEntrySerializerCallback() : ::etl::uncopyable()</span></span>
+<span id="L472"><span class="lineNum">     472</span> <span class="tlaGNC">          11 : {}</span></span>
+<span id="L473"><span class="lineNum">     473</span>              : </span>
+<span id="L474"><span class="lineNum">     474</span> <span class="tlaGNC">          51 : inline bool SectionPredicate::operator()(void const* const p) const</span></span>
+<span id="L475"><span class="lineNum">     475</span>              : {</span>
+<span id="L476"><span class="lineNum">     476</span> <span class="tlaGNC">          51 :     return (p &gt;= _sectionStart) &amp;&amp; (p &lt; _sectionEnd);</span></span>
+<span id="L477"><span class="lineNum">     477</span>              : }</span>
+<span id="L478"><span class="lineNum">     478</span>              : </span>
+<span id="L479"><span class="lineNum">     479</span>              : } // namespace logger</span>
+        </pre>
+              </td>
+            </tr>
+          </table>
+          <br>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="ruler"><img src="../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+            <tr><td class="versionInfo">Generated by: <a href="https://github.com//linux-test-project/lcov" target="_parent">LCOV version 2.0-1</a></td></tr>
+          </table>
+          <br>
+
+</body>
+</html>

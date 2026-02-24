@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="EclipseOpenBSWDocumentation" name="dox_trace_storage" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>util::crc &mdash; Eclipse OpenBSW Documentation  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/rtd_theme_overrides.css?v=6fd0d55b" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/graphviz.css?v=eafc0fe6" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/colors.css?v=3cafd8aa" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/colored_table.css?v=34b816d5" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/header.css?v=e632285e" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/dox_util_colors.css?v=dd14b177" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/dox_trace.css?v=60d3f72c" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../../../../../_static/copybutton.js?v=f281be69"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+        <script src="../../../../../_static/dox_trace.js?v=40719b51"></script>
+    <script src="../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" />
+    <link rel="next" title="util::format" href="format.html" />
+    <link rel="prev" title="util::command" href="command.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../doc/dev/index.html" class="icon icon-home">
+            Eclipse OpenBSW Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Learning</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/learning/overview.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/learning/SysTest/HW_Testing_Guide.html">Hardware Testing Guide</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guidelines</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/guidelines/conventions/index.html">Coding Conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/guidelines/practices.html">Coding Practices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/guidelines/formatting/index.html">Formatting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/guidelines/unittests.html">Unit Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/guidelines/module.html">Module Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/guidelines/documentation.html">Module Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/guidelines/diagrams.html">Diagrams</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/guidelines/3rdparty.html">Third Party Libraries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/guidelines/commit_message.html">Commit Message</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/guidelines/pull_request.html">Pull Request</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Platforms</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/platforms/posix/index.html">POSIX</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/platforms/s32k148evb/index.html">S32K148 Evaluation Board</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Features</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/features/storage.html">Persistent Storage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/features/functional_safety.html">Functional Safety</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Software Modules</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../../doc/dev/modules/common.html">Common</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../../../doc/dev/modules/common.html#bsw">BSW</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../../async/doc/index.html">async - Asynchronous Execution Interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../asyncConsole/doc/index.html">asyncConsole - Asynchronous Console</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../asyncFreeRtos/doc/index.html">asyncFreeRtos</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../asyncImpl/doc/index.html">asyncImpl</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../bsp/doc/index.html">bsp</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../common/doc/index.html">common</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cpp2can/doc/index.html">cpp2can - CAN Abstraction Layer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cpp2ethernet/doc/index.html">cpp2ethernet - Ethernet Abstractions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docan/doc/index.html">docan - Diagnostics over CAN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../doip/doc/index.html">doip - Diagnostics Over IP</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../io/doc/index.html">io - IO Library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lifecycle/doc/index.html">lifecycle - App Lifecycle Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../logger/doc/index.html">logger - Logger module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../loggerIntegration/doc/index.html">loggerIntegration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lwipSocket/doc/index.html">lwipSocket - LwIP v2 Socket Abstraction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../middleware/doc/index.html">middleware</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../platform/doc/index.html">platform - Platform Library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../runtime/doc/index.html">runtime</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../stdioConsoleInput/doc/index.html">stdioConsoleInput</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../storage/doc/index.html">storage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../timer/doc/index.html">timer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../transport/doc/index.html">transport - Transport Library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../transportRouterSimple/doc/index.html">transportRouterSimple</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../uds/doc/index.html">uds - Unified Diagnostic Services</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../index.html">util</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="index.html">User Documentation</a><ul class="current">
+<li class="toctree-l5"><a class="reference internal" href="index.html#overview">Overview</a></li>
+<li class="toctree-l5 current"><a class="reference internal" href="index.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l6"><a class="reference internal" href="command.html">command</a></li>
+<li class="toctree-l6 current"><a class="current reference internal" href="#">crc</a></li>
+<li class="toctree-l6"><a class="reference internal" href="format.html">format</a></li>
+<li class="toctree-l6"><a class="reference internal" href="defer.html">defer</a></li>
+<li class="toctree-l6"><a class="reference internal" href="logger.html">logger</a></li>
+<li class="toctree-l6"><a class="reference internal" href="memory.html">memory</a></li>
+<li class="toctree-l6"><a class="reference internal" href="meta.html">meta</a></li>
+<li class="toctree-l6"><a class="reference internal" href="stream.html">stream</a></li>
+<li class="toctree-l6"><a class="reference internal" href="string.html">string</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../doc/dev/modules/common.html#bsp">BSP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../doc/dev/modules/common.html#safety">Safety</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/modules/posix.html">Posix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/modules/s32k1xx.html">S32K1xx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/modules/executables.html">Executables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/modules/mocks.html">Mocks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tools/UdsTool/doc/index.html">UdsTool</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tools/puncover_tool/doc/index.html">Puncover</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../doc/dev/index.html">Eclipse OpenBSW Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../../doc/dev/index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../../../../doc/dev/modules/common.html">Common</a> &raquo;</li>
+        
+          <li><a href="../index.html">util</a> &raquo;</li>
+        
+          <li><a href="index.html">User Documentation</a> &raquo;</li>
+        
+        <li><cite>util::crc</cite></li>
+    
+
+    
+
+      <li class="wy-breadcrumbs-aside">
+
+        <!-- DOCUMENT STATUS -->
+
+        
+
+        <!-- DATA CLASSIFICATION -->
+
+        
+
+      </li>
+
+    
+  </ul>
+
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="util-crc">
+<span id="id1"></span><h1><cite>util::crc</cite><a class="headerlink" href="#util-crc" title="Link to this heading"></a></h1>
+<p><strong>CRC</strong> (Cyclic Redundancy Check) codes are a class of error-detecting codes, which are a subset of
+cyclic codes and, in turn, a subset of linear block codes. The primary purpose of CRC codes is to
+detect accidental changes in data, such as during transmission. This is achieved by adding redundancy
+in the form of a checksum to the transmitted data. If the checksum of the received data matches
+the calculated checksum, it is assumed that no errors occurred during
+transmission. However, this assumption is not always valid, as certain errors divisible by
+the generator polynomial cannot be detected.</p>
+<section id="theory-behind-crc-calculations">
+<h2>Theory behind CRC calculations<a class="headerlink" href="#theory-behind-crc-calculations" title="Link to this heading"></a></h2>
+<p>The redundancy is added by performing a polynomial division over the Galois Field <em>GF(2)</em>.
+In order to be able to calculate this redundancy, a so called <strong>generator polynomial</strong> <em>g(x)</em> is
+needed.
+This polynomial is the <em>divisor</em> in this polynomial division, which takes the data as the
+<em>dividend</em> and in which the <em>quotient</em> is discarded and the <em>remainder</em> becomes the result.
+The generator polynomial should also be chosen to maximize the error-detection while minimizing the
+collision probability.
+The most important property of this generator polynomial is its length, which is determined by the
+degree of the polynomial. This property also influences the length of the computed checksum,
+i.e. the remainder of the polynomial division.
+Examples how this polynomial division is performed can be seen here
+<a class="reference external" href="https://en.wikipedia.org/wiki/Computation_of_cyclic_redundancy_checks">https://en.wikipedia.org/wiki/Computation_of_cyclic_redundancy_checks</a>.</p>
+<p>Commonly used polynomial lengths are:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Length</p></th>
+<th class="head"><p>CRC width</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>9 bits</p></td>
+<td><p>CRC-8</p></td>
+</tr>
+<tr class="row-odd"><td><p>17 bits</p></td>
+<td><p>CRC-16</p></td>
+</tr>
+<tr class="row-even"><td><p>33 bits</p></td>
+<td><p>CRC-32</p></td>
+</tr>
+</tbody>
+</table>
+<p>Therefore an <em>n</em> bit CRC can calculate an <em>n</em> bit checksum and the polynomial has degree <em>n</em>
+with a length of <em>n</em> +1. It seems that the polynomial would not fit into a primitive data type
+(<cite>uint8_t</cite>, etc.), but it can, as there are two coefficients which are always one, the highest ==
+<span class="math notranslate nohighlight">\(x^{n}\)</span>, and the lowest == <span class="math notranslate nohighlight">\(x^{0}\)</span> == 1 positions.
+Following this, there are four different ways how a generator polynomial can be written.
+In the “normal” representation the highest coefficient is set as the implicit one. For example if
+the generator polynomial is <span class="math notranslate nohighlight">\(x^{3} + x + 1\)</span>, it could be represented as <cite>0x103</cite>, but as the
+highest coefficient is always one, it is sufficient to write <cite>0x03</cite>. Please have a look at the
+Wikipedia article for the other notations.</p>
+</section>
+<section id="selecting-an-appropriate-crc-width">
+<h2>Selecting an appropriate CRC width<a class="headerlink" href="#selecting-an-appropriate-crc-width" title="Link to this heading"></a></h2>
+<p>The error detection effectiveness depends on several factors, including:</p>
+<ul class="simple">
+<li><p>the size of the data to be protected,</p></li>
+<li><p>messages per time frame,</p></li>
+<li><p>the types of errors to be expected,</p></li>
+<li><p>the smallest number of bit errors that are undetectable by the CRC code (Hamming Distance [HD]).</p></li>
+</ul>
+<p>Therefore no one-size fits all approach can be used. Given the requirements, a CRC should be chosen
+which fits these best. A starting point can be the <a class="reference external" href="https://users.ece.cmu.edu/~koopman/crc/index.html">overview of the “best” CRC sizes</a> (assumption: low constant random independent
+bit error rate (BER)) together with the Hamming Distance [HD].
+For example, a CRC-8 is needed which detects 3-bit errors. HD=4 is chosen, as this means, that all
+1, 2, …, n-1 bit errors will be detected. According to the table the generator polynomial 0x83,
+in normal notation 0x107 (without highest coefficient: 0x07), is the best polynomial for HD=4 and
+for word length up to 119 bits. Above that size, there will be codewords which will be undetectable.</p>
+<p>An example which highlights the above factors on error detection (from Dr. Koopman):
+Assume 72000 messages/hour with each message consisting of 64 bytes.
+The packet error ratio (PER) can be calculated with:
+<span class="math notranslate nohighlight">\(1 - (1 - 10^{-8})^{64*8} = 5,12*10^{-6}\)</span> errors/message
+where <span class="math notranslate nohighlight">\(10^{-8}\)</span> is the bit error probability.
+Applying this value again in the PER gives:
+<span class="math notranslate nohighlight">\(1 - (1 - 5,12*10^{-6})^{72000} = 0,3083\)</span> errors/hour.
+So if for example the requirement says that the packet error rate should be below <span class="math notranslate nohighlight">\(10^{-9}\)</span>,
+then a suitable CRC should be applied:</p>
+<ul class="simple">
+<li><p>CRC-16 with HD=1: <span class="math notranslate nohighlight">\(1 - (1 - (5,12*10^{-6} * 2^{-16}))^{72000} = 5,625*10^{-6}\)</span> still not good enough.</p></li>
+<li><p>CRC-32 with HD=1: <span class="math notranslate nohighlight">\(1 - (1 - (5,12*10^{-6} * 2^{-32}))^{72000} = 8,792*10^{-11}\)</span> this should suffice.</p></li>
+</ul>
+</section>
+<section id="select-a-crc-implementation">
+<h2>Select a CRC implementation<a class="headerlink" href="#select-a-crc-implementation" title="Link to this heading"></a></h2>
+<p>There are three possibilities how CRCs can be calculated:</p>
+<ol class="arabic simple">
+<li><p>Table based calculation: Fast, but bigger memory consumption (RAM/ROM)</p></li>
+<li><p>Runtime calculation: Less memory consumption (RAM/ROM), but slower</p></li>
+<li><p>Hardware supported calculation (device specific): Fastest method</p></li>
+</ol>
+<p>This module implements the table based approach with pre-calculated tables. Therefore the RAM usage
+is lower, but the ROM usage is increased.</p>
+</section>
+<section id="security-considerations">
+<h2>Security considerations<a class="headerlink" href="#security-considerations" title="Link to this heading"></a></h2>
+<p>The security goal of CRCs is to have an easy and fast way to check the <strong>integrity</strong> of messages.
+CRCs provide <strong>no</strong> security methods for <strong>confidentiality</strong> or <strong>authenticity</strong>. An attacker could
+change the message and the checksum without notice. For stronger security requirements other
+ways should be considered, for example stream-ciphers with hash calculations (AEAD).</p>
+</section>
+<section id="overview-crc-module">
+<h2>Overview CRC Module<a class="headerlink" href="#overview-crc-module" title="Link to this heading"></a></h2>
+<section id="crc-configurations">
+<h3>CRC configurations<a class="headerlink" href="#crc-configurations" title="Link to this heading"></a></h3>
+<p>The CRC template class has six different parameters which can be used to implement a CRC.
+The parameters are:</p>
+<ol class="arabic simple">
+<li><p>CRC width (<code class="docutils literal notranslate"><span class="pre">uint8_t</span></code>, <code class="docutils literal notranslate"><span class="pre">uint16_t</span></code>, <code class="docutils literal notranslate"><span class="pre">uint32_t</span></code>)</p></li>
+<li><p>the generator polynomial (<cite>hex</cite>)</p></li>
+<li><p>the initial value of the remainder (<cite>hex</cite>)</p></li>
+<li><p>if the input is reflected (<code class="docutils literal notranslate"><span class="pre">bool</span></code>)</p></li>
+<li><p>if the output is reflected (<code class="docutils literal notranslate"><span class="pre">bool</span></code>)</p></li>
+<li><p>value of the final XOR (<cite>hex</cite>)</p></li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The values for parameters two, three and six can also be given in decimal or octal, but
+hexadecimal is the preferred way.</p>
+</div>
+<p>Parameter one sets the width of the CRC calculation and parameter two specifies the generator
+polynomial. The generator polynomial is set in the “normal” representation, i.e. if
+<span class="math notranslate nohighlight">\(x^{3} + x + 1\)</span> is the polynomial, then <cite>0x3</cite> is the representation in hex
+(without the highest coefficient,
+as it always equals to one).
+Some applications have a different bit ordering, i.e. the bits are reversed from
+Most-Significant-Bit (MSB) to Least-Significant-Bit (LSB) or vice versa. Therefore parameters four
+and five can be used to match these requirements for input or output data. Additionally, some
+standards set an initial value for the remainder and apply some final value which is XORed with the
+CRC calculation. Parameters three and six can be used to apply these values.</p>
+</section>
+<section id="how-to-calculate-a-crc-checksum">
+<h3>How to calculate a CRC checksum<a class="headerlink" href="#how-to-calculate-a-crc-checksum" title="Link to this heading"></a></h3>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>It is very important that the exact same CRC configuration is used for the CRC calculation and
+the CRC verification.</p>
+</div>
+<p>There are already some CRC configurations for different sizes in the header files. If the needed
+CRC configuration is not available, see the next subsection on how to add a new configuration.
+The usage is as follows: Define an instance of the needed CRC. Call the <code class="docutils literal notranslate"><span class="pre">.init()</span></code> method. Feed
+the data into the <code class="docutils literal notranslate"><span class="pre">.update()</span></code> method and retrieve the checksum with <code class="docutils literal notranslate"><span class="pre">.digest()</span></code>.</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;util/crc/Crc8.h&quot;</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;etl/span.h&gt;</span>
+
+<span class="k">namespace</span>
+<span class="p">{</span>
+<span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="o">::</span><span class="nn">util</span><span class="o">::</span><span class="nn">crc</span><span class="p">;</span>
+<span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="o">::</span><span class="nn">util</span><span class="p">;</span>
+
+<span class="kt">uint8_t</span><span class="w"> </span><span class="nf">calculateCrc8H2F</span><span class="p">(</span><span class="o">::</span><span class="n">etl</span><span class="o">::</span><span class="n">span</span><span class="o">&lt;</span><span class="kt">uint8_t</span><span class="w"> </span><span class="k">const</span><span class="o">&gt;</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">data</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="c1">// initialize CRC</span>
+<span class="w">    </span><span class="n">Crc8</span><span class="o">::</span><span class="n">Crc8H2F</span><span class="w"> </span><span class="n">crc8</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">crc8</span><span class="p">.</span><span class="n">init</span><span class="p">();</span><span class="w"> </span><span class="c1">// only necessary if the register will be reused (constructor initializes also)</span>
+<span class="w">    </span><span class="n">crc8</span><span class="p">.</span><span class="n">update</span><span class="p">(</span><span class="n">data</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// return the CRC checksum</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">crc8</span><span class="p">.</span><span class="n">digest</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">array</span><span class="p">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="mh">0x01</span><span class="p">,</span><span class="w"> </span><span class="mh">0x02</span><span class="p">,</span><span class="w"> </span><span class="mh">0x03</span><span class="p">,</span><span class="w"> </span><span class="mh">0x04</span><span class="p">,</span><span class="w"> </span><span class="mh">0x05</span><span class="p">,</span><span class="w"> </span><span class="mh">0x06</span><span class="p">,</span><span class="w"> </span><span class="mh">0x07</span><span class="p">,</span><span class="w"> </span><span class="mh">0x08</span><span class="p">,</span><span class="w"> </span><span class="mh">0x09</span><span class="p">};</span>
+<span class="w">    </span><span class="o">::</span><span class="n">etl</span><span class="o">::</span><span class="n">span</span><span class="o">&lt;</span><span class="kt">uint8_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">data</span><span class="p">(</span><span class="n">array</span><span class="p">);</span>
+
+<span class="w">    </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">crcResult</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">calculateCrc8H2F</span><span class="p">(</span><span class="n">data</span><span class="p">);</span>
+<span class="w">    </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;CRC-8H2F: 0x%02x</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">crcResult</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="p">}</span><span class="w"> </span><span class="c1">// namespace</span>
+</pre></div>
+</div>
+</section>
+<section id="how-to-add-a-new-crc-configuration">
+<h3>How to add a new CRC configuration<a class="headerlink" href="#how-to-add-a-new-crc-configuration" title="Link to this heading"></a></h3>
+<p>At first the necessary configuration information (generator polynomial, input/output reflected, etc.
+) of the CRC which should be implemented must be retrieved. A good starting point is the
+CRC-Catalogue
+(see below at <a class="reference internal" href="#crc-further-resources"><span class="std std-ref">Further Resources</span></a>).</p>
+<p>There are three possibilities how new CRC configurations can be added:</p>
+<section id="permanently-add-a-new-crc-configuration-luts-available">
+<h4>1. Permanently add a new CRC configuration, LUTs available<a class="headerlink" href="#permanently-add-a-new-crc-configuration-luts-available" title="Link to this heading"></a></h4>
+<p>If the generator polynomial and the corresponding Look-Up-Tables are available (look under
+<cite>src/util/crc/LookupTable_0x&lt;polynomial&gt;.cpp</cite>), then just a new CRC configuration to the struct
+can be added. See for example the <cite>Rohc</cite> entry in the <cite>Crc8.h</cite> header file.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span><span class="w"> </span><span class="nc">Crc8</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="n">Ccitt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">CrcRegister</span><span class="o">&lt;</span><span class="kt">uint8_t</span><span class="p">,</span><span class="w"> </span><span class="mh">0x07</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="n">Rohc</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">CrcRegister</span><span class="o">&lt;</span><span class="kt">uint8_t</span><span class="p">,</span><span class="w"> </span><span class="mh">0x07</span><span class="p">,</span><span class="w"> </span><span class="mh">0xff</span><span class="p">,</span><span class="w"> </span><span class="nb">true</span><span class="p">,</span><span class="w"> </span><span class="nb">true</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">    </span><span class="c1">// ...</span>
+<span class="w">    </span><span class="c1">// Other CRC-8 configurations</span>
+<span class="w">    </span><span class="c1">// ...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="permanently-add-a-new-crc-configuration-no-luts-available">
+<h4>2. Permanently add a new CRC configuration, no LUTs available<a class="headerlink" href="#permanently-add-a-new-crc-configuration-no-luts-available" title="Link to this heading"></a></h4>
+<p>If the generator polynomial and the LUTs are not there, a new entry in the specific header files,
+i.e. for 8, 16, or 32 bit CRCs and the necessary Look-Up-Table (LUT) must be added.
+Pre-calculate the entries for the LUT and add them in a new file under
+<cite>src/util/crc/LookupTable_0x&lt;polynomial&gt;.cpp</cite>. Add also an entry to the corresponding header file.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span><span class="w"> </span><span class="nc">Crc8</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="c1">// ...</span>
+<span class="w">    </span><span class="c1">// Other CRC-8 configurations</span>
+<span class="w">    </span><span class="c1">// ...</span>
+<span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="n">Crc8F_3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">CrcRegister</span><span class="o">&lt;</span><span class="kt">uint8_t</span><span class="p">,</span><span class="w"> </span><span class="mh">0xCF</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="temporarily-use-a-new-crc-configuration-luts-must-be-available">
+<h4>3. Temporarily use a new CRC configuration, LUTs must be available<a class="headerlink" href="#temporarily-use-a-new-crc-configuration-luts-must-be-available" title="Link to this heading"></a></h4>
+<p>Directly use the template class and create a new instance if it is just another configuration for
+an already available polynomial. Just include the <cite>util/crc/Crc.h</cite> header file and use it as
+follows:</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="w">    </span><span class="n">CrcRegister</span><span class="o">&lt;</span><span class="kt">uint8_t</span><span class="p">,</span><span class="w"> </span><span class="mh">0x07</span><span class="p">,</span><span class="w"> </span><span class="mh">0xff</span><span class="p">,</span><span class="w"> </span><span class="nb">true</span><span class="p">,</span><span class="w"> </span><span class="nb">true</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="o">&gt;</span><span class="w"> </span><span class="n">oneshotCrcRohc</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">oneshotCrcRohc</span><span class="p">.</span><span class="n">init</span><span class="p">();</span>
+<span class="w">    </span><span class="n">oneshotCrcRohc</span><span class="p">.</span><span class="n">update</span><span class="p">(</span><span class="n">_one_byte</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">_one_byte</span><span class="p">));</span>
+<span class="w">    </span><span class="n">ASSERT_EQ</span><span class="p">(</span><span class="n">oneshotCrcRohc</span><span class="p">.</span><span class="n">digest</span><span class="p">(),</span><span class="w"> </span><span class="mh">0x7AU</span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">oneshotCrcRohc</span><span class="p">.</span><span class="n">init</span><span class="p">();</span>
+<span class="w">    </span><span class="n">oneshotCrcRohc</span><span class="p">.</span><span class="n">update</span><span class="p">(</span><span class="n">_one_zero_byte</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">_one_zero_byte</span><span class="p">));</span>
+<span class="w">    </span><span class="n">ASSERT_EQ</span><span class="p">(</span><span class="n">oneshotCrcRohc</span><span class="p">.</span><span class="n">digest</span><span class="p">(),</span><span class="w"> </span><span class="mh">0xCFU</span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">oneshotCrcRohc</span><span class="p">.</span><span class="n">init</span><span class="p">();</span>
+<span class="w">    </span><span class="n">oneshotCrcRohc</span><span class="p">.</span><span class="n">update</span><span class="p">(</span><span class="n">_multiple_bytes</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">_multiple_bytes</span><span class="p">));</span>
+<span class="w">    </span><span class="n">ASSERT_EQ</span><span class="p">(</span><span class="n">oneshotCrcRohc</span><span class="p">.</span><span class="n">digest</span><span class="p">(),</span><span class="w"> </span><span class="mh">0xD0U</span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">oneshotCrcRohc</span><span class="p">.</span><span class="n">init</span><span class="p">();</span>
+<span class="w">    </span><span class="n">oneshotCrcRohc</span><span class="p">.</span><span class="n">update</span><span class="p">(</span><span class="n">_multiple_zero_bytes</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">_multiple_zero_bytes</span><span class="p">));</span>
+<span class="w">    </span><span class="n">ASSERT_EQ</span><span class="p">(</span><span class="n">oneshotCrcRohc</span><span class="p">.</span><span class="n">digest</span><span class="p">(),</span><span class="w"> </span><span class="mh">0xF0U</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+<section id="faq">
+<h2>FAQ<a class="headerlink" href="#faq" title="Link to this heading"></a></h2>
+<p><strong>Is a specific CRC check sequence of a specified width always the same for other CRC check
+sequences of the same width?</strong></p>
+<p>No it is not. There are many different configurations for e.g. 8-bit CRCs. It mainly depends on
+the generator polynomial, but also on other criteria, i.e. if the input/output is
+reflected, or a final XOR value is applied.</p>
+</section>
+<section id="further-resources">
+<span id="crc-further-resources"></span><h2>Further Resources<a class="headerlink" href="#further-resources" title="Link to this heading"></a></h2>
+<blockquote>
+<div><ul class="simple">
+<li><p><a class="reference external" href="http://checksumcrc.blogspot.com/2020/06/crc-information-quick-start.html">CRC Quick Information by Dr. Koopman</a></p></li>
+<li><p><a class="reference external" href="http://www.zlib.net/crc_v3.txt">A painless guide to crc error detection algorithms</a></p></li>
+<li><p><a class="reference external" href="http://en.wikipedia.org/wiki/Cyclic_redundancy_check">CRC on Wikipedia</a></p></li>
+<li><p><a class="reference external" href="http://www.sunshine2k.de/coding/javascript/crc/crc_js.html">Online CRC-Calculator</a></p></li>
+<li><p><a class="reference external" href="https://crccalc.com/">Online CRC-Calculator for 8, 16, and 32 bit lengths</a></p></li>
+<li><p><a class="reference external" href="https://reveng.sourceforge.io/crc-catalogue/all.htm">CRC-Catalogue</a></p></li>
+<li><p><a class="reference external" href="http://www.barrgroup.com/Embedded-Systems/How-To/CRC-Calculation-C-Code">Good CRC Tutorial</a></p></li>
+</ul>
+</div></blockquote>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026 Accenture.</p>
+  </div>
+
+  <div role="footer_string">
+    <p>Documentation from 2026-02-24 10:51:54, official build.</p>
+
+    
+      <a href="../../../../../_sources/libs/bsw/util/doc/user/crc.rst.txt" rel="nofollow"> View page source</a>
+    
+
+  </div>
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(false);
+      });
+  </script> 
+
+</body>
+</html>

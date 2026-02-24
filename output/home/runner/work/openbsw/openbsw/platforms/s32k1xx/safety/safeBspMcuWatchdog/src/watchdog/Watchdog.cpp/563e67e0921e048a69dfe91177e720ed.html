@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../../../../../../../../../../../static/css/style.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <title>Symbol - puncover</title>
+    
+</head>
+<body>
+    <div class="container" id="content">
+        <div class="page-header">
+            <nav class="navbar navbar-default" role="navigation">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="../../../../../../../../../../../../index.html">
+                    Puncover
+                  </a>
+                </div>
+              </div>
+            </nav>
+          
+        </div>
+        <div id="inner_content">
+        
+    
+    <ol class="breadcrumb folders">
+        
+        <li><a href="../../../../../../../../../../../../home.html">home</a></li>
+        
+        <li><a href="../../../../../../../../../../../runner.html">runner</a></li>
+        
+        <li><a href="../../../../../../../../../../work.html">work</a></li>
+        
+        <li><a href="../../../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../../platforms.html">platforms</a></li>
+        
+        <li><a href="../../../../../../s32k1xx.html">s32k1xx</a></li>
+        
+        <li><a href="../../../../../safety.html">safety</a></li>
+        
+        <li><a href="../../../../safeBspMcuWatchdog.html">safeBspMcuWatchdog</a></li>
+        
+        <li><a href="../../../src.html">src</a></li>
+        
+        <li ><a href="../../watchdog.html">watchdog</a>
+            </li>
+
+        
+        <li class="active"><a href="../Watchdog.cpp.html">Watchdog.cpp</a>:49
+            </li>
+        
+    </ol>
+
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <th>Function</th>
+                <td colspan="5">
+                    <span class="icon-function">safety::bsp::Watchdog::disableWatchdog()</span>
+                </td>
+            </tr>
+
+            <tr>
+                <th rowspan="2"></th>
+                <th>Address</th>
+                <th>Remarks</th>
+                <th>Stack</th>
+                <th>Code</th>
+                <th>Static</th>
+            </tr>
+            <tr>
+                <td>0x0002b318</td>
+                <td>
+    <span class="label label-success">x-module</span>
+    
+</td>
+                <td>0 (static)</td>
+                <td>48</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th>Callers (2)</th>
+                <td colspan="5">
+                
+                    <a href="../../../../../../../executables/referenceApp/application/src/systems/SafetySystem.cpp/a6ff1042ae105baff226f20bf8432e75.html">systems::SafetySystem::shutdown() (24)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../../../../../../../executables/referenceApp/platforms/s32k148evb/main/src/main.cpp/e1601aa9c9101f5167f5233c773d1a54.html">boardInit (20)</a>
+                    
+                
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    No Callees
+                    
+                </th>
+                <td colspan="5">
+                
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    
+    <pre><a href="./170a06262c012a9e0c7d2625a40f19e9.html">safety::bsp::Watchdog::enableWatchdog(unsigned long, bool, unsigned long) (108)</a></pre>
+    
+
+    <pre>
+
+    safety::bsp::Watchdog::disableWatchdog():
+
+       2b318:	f3ef 8110 	mrs	r1, PRIMASK
+
+       2b31c:	b672      	cpsid	i
+
+       2b31e:	4a08      	ldr	r2, [pc, #32]	@ (2b340 <<a href="./563e67e0921e048a69dfe91177e720ed.html">safety::bsp::Watchdog::disableWatchdog()</a>+0x28>)
+
+       2b320:	4b08      	ldr	r3, [pc, #32]	@ (2b344 <<a href="./563e67e0921e048a69dfe91177e720ed.html">safety::bsp::Watchdog::disableWatchdog()</a>+0x2c>)
+
+       2b322:	6053      	str	r3, [r2, #4]
+
+       2b324:	6813      	ldr	r3, [r2, #0]
+
+       2b326:	f003 0318 	and.w	r3, r3, #24
+
+       2b32a:	f443 5324 	orr.w	r3, r3, #10496	@ 0x2900
+
+       2b32e:	f64f 70ff 	movw	r0, #65535	@ 0xffff
+
+       2b332:	f043 0324 	orr.w	r3, r3, #36	@ 0x24
+
+       2b336:	6013      	str	r3, [r2, #0]
+
+       2b338:	6090      	str	r0, [r2, #8]
+
+       2b33a:	f381 8810 	msr	PRIMASK, r1
+
+       2b33e:	4770      	bx	lr
+
+       2b340:	40052000 	.word	0x40052000
+
+       2b344:	d928c520 	.word	0xd928c520
+
+    </pre>
+
+    
+    <pre><a href="./f3e9afe9623cc3b5bc58c6f206747388.html">safety::bsp::Watchdog::serviceWatchdog() (44)</a></pre>
+    
+
+    
+        <h1>Stack Worst-Case Scenarios</h1>
+        
+            <p>No callees for this function.</p>
+        
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 8</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 72</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    72
+                    
+                    
+                </td>
+                <td class="col_size">48</td>
+                <td><a href="./563e67e0921e048a69dfe91177e720ed.html" class="icon-function">safety::bsp::Watchdog::disableWatchdog()</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                </td>
+                <td class="col_size">
+            
+                8 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">24</td>
+                <td><a href="../../../../../../../executables/referenceApp/application/src/systems/SafetySystem.cpp/a6ff1042ae105baff226f20bf8432e75.html" class="icon-function">systems::SafetySystem::shutdown()</a></td>
+            </tr>
+        
+        </tbody>
+        
+    </table>
+        
+    
+
+
+        </div>
+    <div id="page-footer">
+        <hr>
+        
+            brought to you with 💖
+            by <a href="https://twitter.com/hbehrens">Heiko Behrens</a>
+            <span class="secondary">– MIT license, copyright © 2014-2026</span>
+        
+    </div>
+    </div>
+</body>
+</html>

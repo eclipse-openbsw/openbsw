@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="EclipseOpenBSWDocumentation" name="dox_trace_storage" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hardware Testing Guide &mdash; Eclipse OpenBSW Documentation  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/rtd_theme_overrides.css?v=6fd0d55b" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=eafc0fe6" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/colors.css?v=3cafd8aa" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/colored_table.css?v=34b816d5" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/header.css?v=e632285e" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/dox_util_colors.css?v=dd14b177" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/dox_trace.css?v=60d3f72c" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../../../../_static/copybutton.js?v=f281be69"></script>
+        <script src="../../../../_static/dox_trace.js?v=40719b51"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="Coding Conventions" href="../../guidelines/conventions/index.html" />
+    <link rel="prev" title="Tracing" href="../tracing/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Eclipse OpenBSW Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Learning</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../overview.html">Getting Started</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Hardware Testing Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#referenceapp-test-guide">ReferenceApp Test Guide</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guidelines</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../guidelines/conventions/index.html">Coding Conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guidelines/practices.html">Coding Practices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guidelines/formatting/index.html">Formatting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guidelines/unittests.html">Unit Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guidelines/module.html">Module Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guidelines/documentation.html">Module Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guidelines/diagrams.html">Diagrams</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guidelines/3rdparty.html">Third Party Libraries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guidelines/commit_message.html">Commit Message</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guidelines/pull_request.html">Pull Request</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Platforms</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../platforms/posix/index.html">POSIX</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../platforms/s32k148evb/index.html">S32K148 Evaluation Board</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Features</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../features/storage.html">Persistent Storage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/functional_safety.html">Functional Safety</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Software Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/common.html">Common</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/posix.html">Posix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/s32k1xx.html">S32K1xx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/executables.html">Executables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/mocks.html">Mocks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tools/UdsTool/doc/index.html">UdsTool</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tools/puncover_tool/doc/index.html">Puncover</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Eclipse OpenBSW Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+        <li>Hardware Testing Guide</li>
+    
+
+    
+
+      <li class="wy-breadcrumbs-aside">
+
+        <!-- DOCUMENT STATUS -->
+
+        
+
+        <!-- DATA CLASSIFICATION -->
+
+        
+
+      </li>
+
+    
+  </ul>
+
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="hardware-testing-guide">
+<h1>Hardware Testing Guide<a class="headerlink" href="#hardware-testing-guide" title="Link to this heading"></a></h1>
+<section id="referenceapp-test-guide">
+<h2>ReferenceApp Test Guide<a class="headerlink" href="#referenceapp-test-guide" title="Link to this heading"></a></h2>
+<ol class="arabic">
+<li><p><strong>Hardware Set Up</strong></p>
+<ol class="loweralpha">
+<li><p>Hardware Required</p>
+<ul class="simple">
+<li><p>common</p>
+<ul>
+<li><p>S32K148 Evaluation Board (EVB)</p></li>
+<li><p>USB micro-B</p></li>
+<li><p>12 V power supply</p></li>
+</ul>
+</li>
+<li><p>Testing CAN:</p>
+<ul>
+<li><p>PEAK CAN USB Dongle and cable</p></li>
+</ul>
+</li>
+<li><p>Testing ADC:</p>
+<ul>
+<li><p>Variable Power Supply – 0 to 5v</p></li>
+</ul>
+</li>
+<li><p>Testing PWM:</p>
+<ul>
+<li><p>Digital Oscilloscope</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Physical Connection</p>
+<ul>
+<li><p>Common</p>
+<ul class="simple">
+<li><p>Connect USB micro-B cable between Evaluation Board and Laptop</p></li>
+<li><p>Connect 12-volt power supply to EVB.</p></li>
+</ul>
+</li>
+<li><p>Testing CAN:</p>
+<ul>
+<li><p>Connect EVB CAN Header Pin to the PEAK CAN Device as below.</p>
+<blockquote>
+<div><table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Header Pin in EVB</p></th>
+<th class="head"><p>D Port in PEAK CAN</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>CAN L</p></td>
+<td><p>Pin 2</p></td>
+</tr>
+<tr class="row-odd"><td><p>CAN H</p></td>
+<td><p>Pin 7</p></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</li>
+<li><p>Connect PEAK CAN USB cable to Laptop.</p></li>
+</ul>
+</li>
+<li><p>Testing ADC:</p>
+<ul>
+<li><p>Connect Variable Power Supply to ADC Input.</p>
+<blockquote>
+<div><table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p>Variable Power</p></td>
+<td><p>TP in EVB</p></td>
+</tr>
+<tr class="row-even"><td><p>+ve Connector</p></td>
+<td><p>TS9</p></td>
+</tr>
+<tr class="row-odd"><td><p>Gnd Connector</p></td>
+<td><p>GND</p></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<div><ul>
+<li><p>Testing PWM:</p>
+<ul>
+<li><p>Connect DSO probe to PWM output pin</p>
+<blockquote>
+<div><table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td rowspan="2"><p>LED</p></td>
+<td><p>Blue</p></td>
+<td><p>PTE23</p></td>
+<td><p>J5-5</p></td>
+<td colspan="2"><p>Channel - 3</p></td>
+</tr>
+<tr class="row-even"><td><p>Green</p></td>
+<td><p>PTE22</p></td>
+<td><p>J5-3</p></td>
+<td colspan="2"><p>Channel - 2</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p>DSO</p></td>
+<td><p>TP in EVB</p></td>
+</tr>
+<tr class="row-even"><td><p>+ve Connector</p></td>
+<td><p>Any channel</p></td>
+</tr>
+<tr class="row-odd"><td><p>Gnd Connector</p></td>
+<td><p>GND</p></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</li>
+</ul>
+</li>
+<li><p>Testing IO:</p>
+<ul>
+<li><dl>
+<dt>Connect LED to IO pin</dt><dd><table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p>LED</p></td>
+<td><p>Red</p></td>
+<td><p>PTE21</p></td>
+<td><p>J5-1</p></td>
+<td colspan="2"><p>Channel - 1</p></td>
+</tr>
+</tbody>
+</table>
+</dd>
+</dl>
+</li>
+</ul>
+</li>
+</ul>
+</div></blockquote>
+</li>
+</ol>
+</li>
+<li><p><strong>Flash the Software</strong></p>
+<ol class="loweralpha">
+<li><p>Launch S32 Design Studio (We tested on S32 Design Studio for ARM Version <code class="highlight highlight-prop docutils literal notranslate"><span class="pre">2.2</span></code>).</p>
+<figure class="align-center">
+<a class="reference internal image-reference" href="../../../../_images/pic1.png"><img alt="../../../../_images/pic1.png" src="../../../../_images/pic1.png" style="width: 400.0px; height: 500.0px;" /></a>
+</figure>
+</li>
+<li><p>Select Debug Configuration</p>
+<figure class="align-center">
+<a class="reference internal image-reference" href="../../../../_images/pic2.png"><img alt="../../../../_images/pic2.png" src="../../../../_images/pic2.png" style="width: 400.0px; height: 500.0px;" /></a>
+</figure>
+</li>
+<li><p>Under Debugger tab, select the proper Interface and device: S32k148</p>
+<figure class="align-center">
+<a class="reference internal image-reference" href="../../../../_images/pic3.png"><img alt="../../../../_images/pic3.png" src="../../../../_images/pic3.png" style="width: 400.0px; height: 500.0px;" /></a>
+</figure>
+</li>
+<li><p>Under Main tab, browse and select the elf file to flash on target</p></li>
+</ol>
+<p>For more information, refer to this link
+<a class="reference internal" href="../setup/setup_s32k148_win_nxpide.html#setup-s32k148-win-nxpide"><span class="std std-ref">Flash, debug and test serial console on Windows</span></a></p>
+</li>
+<li><p><strong>Configure Tera Term for Serial Debug</strong></p>
+<ol class="loweralpha">
+<li><p>Start Tera Term.</p></li>
+<li><p>Select the radio button labeled “Serial.”</p></li>
+<li><p>Choose the COM port from the drop-down menu for the device you want to connect to and
+click “OK.”</p>
+<figure class="align-center">
+<a class="reference internal image-reference" href="../../../../_images/pic4.png"><img alt="../../../../_images/pic4.png" src="../../../../_images/pic4.png" style="width: 400.0px; height: 500.0px;" /></a>
+</figure>
+</li>
+<li><p>Click on “Setup” in the menu bar and select “Serial Port.”</p></li>
+<li><p>In the Serial Port Setup menu, configure the protocols as follows:</p></li>
+<li><p>Tera Term should now be properly configured for serial communication with EVB.</p>
+<figure class="align-center">
+<a class="reference internal image-reference" href="../../../../_images/pic5.png"><img alt="../../../../_images/pic5.png" src="../../../../_images/pic5.png" style="width: 400.0px; height: 500.0px;" /></a>
+</figure>
+</li>
+</ol>
+</li>
+<li><p><strong>Testing Sequence: ADC</strong></p>
+<ul>
+<li><p>Open Tera Term console.</p></li>
+<li><p>Give command “adc get 0” in Tera Term to read ADC Channel 0 (which is connected to Variable
+Power Supply. Adc Raw value and mV Scaled value will print.</p></li>
+<li><p>Vary the voltage using Variable power supply (Range: 0 – 5v) and ensure the values
+are matching.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>adc<span class="w"> </span>get<span class="w"> </span><span class="m">0</span>
+Adc<span class="w"> </span>Channel<span class="w"> </span><span class="m">0</span>:<span class="w"> </span>AiEval_Poti_ADC<span class="w"> </span>-&gt;<span class="w"> </span>:<span class="w"> </span><span class="m">1064</span><span class="w"> </span><span class="o">(</span>raw<span class="o">)</span><span class="w"> </span><span class="m">1299</span><span class="w"> </span>mv<span class="w"> </span><span class="o">(</span>scaled<span class="o">)</span>
+ok
+<span class="m">412993</span>:<span class="w"> </span>RefApp:<span class="w"> </span>CONSOLE:<span class="w"> </span>INFO:<span class="w"> </span>Received<span class="w"> </span>console<span class="w"> </span><span class="nb">command</span><span class="w"> </span><span class="s2">&quot;adc get 0&quot;</span>
+<span class="m">413000</span>:<span class="w"> </span>RefApp:<span class="w"> </span>CONSOLE:<span class="w"> </span>INFO:<span class="w"> </span>console<span class="w"> </span><span class="nb">command</span><span class="w"> </span>Succeeded
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+<li><p><strong>Testing Sequence: PWM</strong></p>
+<p>Duty Cycle of PWM can be changed using 2 ways: through potentiometer or
+through console command.</p>
+<ol class="loweralpha">
+<li><p>Changing PWM Duty cycle through potentiometer: <span class="raw-html"></br></span>
+By changing the position of potentiometer, the duty cycle of PWM can be changed.</p></li>
+<li><p>Changing PWM Duty cycle through console command:</p>
+<ol class="lowerroman">
+<li><p>Stop DemoSystem lifecycle using command <strong>lc level 7</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>lc<span class="w"> </span>level<span class="w"> </span><span class="m">7</span>
+<span class="w"> </span>ok
+<span class="m">10133</span>:<span class="w"> </span>RefApp:<span class="w"> </span>CONSOLE:<span class="w"> </span>INFO:<span class="w"> </span>Received<span class="w"> </span>console<span class="w"> </span><span class="nb">command</span><span class="w"> </span><span class="s2">&quot;lc level 7&quot;</span>
+<span class="m">10134</span>:<span class="w"> </span>RefApp:<span class="w"> </span>CONSOLE:<span class="w"> </span>INFO:<span class="w"> </span>console<span class="w"> </span><span class="nb">command</span><span class="w"> </span>Succeeded
+<span class="m">10135</span>:<span class="w"> </span>RefApp:<span class="w"> </span>LIFECYCLE:<span class="w"> </span>INFO:<span class="w"> </span>Shutdown<span class="w"> </span>level<span class="w"> </span><span class="m">8</span>
+<span class="m">10135</span>:<span class="w"> </span>RefApp:<span class="w"> </span>LIFECYCLE:<span class="w"> </span>INFO:<span class="w"> </span>Shutdown<span class="w"> </span>demo
+<span class="m">10136</span>:<span class="w"> </span>RefApp:<span class="w"> </span>LIFECYCLE:<span class="w"> </span>DEBUG:<span class="w"> </span>Shutdown<span class="w"> </span>demo<span class="w"> </span><span class="k">done</span>
+<span class="m">10136</span>:<span class="w"> </span>RefApp:<span class="w"> </span>LIFECYCLE:<span class="w"> </span>DEBUG:<span class="w"> </span>Shutdown<span class="w"> </span>level<span class="w"> </span><span class="m">8</span><span class="w"> </span><span class="k">done</span>
+</pre></div>
+</div>
+</li>
+<li><p>Through tera term change duty cycle to 20 % using command</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">help</span>
+<span class="w"> </span>ok
+<span class="m">6937</span>:<span class="w"> </span>RefApp:<span class="w"> </span>CONSOLE:<span class="w"> </span>INFO:<span class="w"> </span>Received<span class="w"> </span>console<span class="w"> </span><span class="nb">command</span><span class="w"> </span><span class="s2">&quot;help&quot;</span>
+<span class="m">7036</span>:<span class="w"> </span>RefApp:<span class="w"> </span>CONSOLE:<span class="w"> </span>INFO:<span class="w"> </span>console<span class="w"> </span><span class="nb">command</span><span class="w"> </span>Succeeded
+pwm<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">2000</span>
+
+PWM<span class="w"> </span>channel<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="o">(</span>eval_led_green_pwm<span class="o">)</span><span class="w"> </span><span class="nb">set</span><span class="w"> </span>to<span class="w"> </span>0x7d0<span class="w"> </span>%<span class="w"> </span>On
+
+<span class="m">19355</span>:<span class="w"> </span>RefApp:<span class="w"> </span>CONSOLE:<span class="w"> </span>INFO:<span class="w"> </span>Received<span class="w"> </span>console<span class="w"> </span><span class="nb">command</span><span class="w"> </span><span class="s2">&quot;pwm set 2 2000&quot;</span>
+<span class="m">19360</span>:<span class="w"> </span>RefApp:<span class="w"> </span>CONSOLE:<span class="w"> </span>INFO:<span class="w"> </span>console<span class="w"> </span><span class="nb">command</span><span class="w"> </span>Succeeded
+</pre></div>
+</div>
+<p>pwm set channel # value from 0-10000 <span class="raw-html"></br></span>
+pwm set 1 2000</p>
+</li>
+</ol>
+</li>
+</ol>
+<ul>
+<li><p>For 50% duty cycle use command:
+pwm set 1 5000</p></li>
+<li><p>This command can be used to change the duty cycle for all available channels (currently - 3).
+Duty cycle can be changed from 0-100 % using values from 0 – 10000.</p></li>
+<li><p>The following are the screenshots saved from DSO for 20, 50 and 80% duty cycle.</p>
+<figure class="align-center" id="id1">
+<a class="reference internal image-reference" href="../../../../_images/pic9.png"><img alt="../../../../_images/pic9.png" src="../../../../_images/pic9.png" style="width: 400.0px; height: 500.0px;" /></a>
+<figcaption>
+<p><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">20%</span> <span class="pre">duty</span> <span class="pre">cycle</span></code></span><a class="headerlink" href="#id1" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="id2">
+<a class="reference internal image-reference" href="../../../../_images/pic10.png"><img alt="../../../../_images/pic10.png" src="../../../../_images/pic10.png" style="width: 400.0px; height: 500.0px;" /></a>
+<figcaption>
+<p><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">50%</span> <span class="pre">duty</span> <span class="pre">cycle</span></code></span><a class="headerlink" href="#id2" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="id3">
+<a class="reference internal image-reference" href="../../../../_images/pic11.png"><img alt="../../../../_images/pic11.png" src="../../../../_images/pic11.png" style="width: 400.0px; height: 500.0px;" /></a>
+<figcaption>
+<p><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">80%</span> <span class="pre">duty</span> <span class="pre">cycle</span></code></span><a class="headerlink" href="#id3" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+</li>
+</ul>
+</li>
+<li><p><strong>Testing Sequence: CAN</strong></p>
+<ol class="lowerroman">
+<li><p>Sending CAN messages using vcan.</p>
+<ol class="loweralpha">
+<li><p>Send command</p>
+<ul class="simple">
+<li><p>On the terminal stop DemoSystem lifecycle using command <strong>lc level 7</strong></p></li>
+<li><p>CAN frames sent can be seen as shown below.</p></li>
+</ul>
+<p>The CAN send command allows you to send a frame with a specified ID and data bytes.
+Upon successful execution, the console will return an ok message, confirming that the frame
+has been sent:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>can<span class="w"> </span>send<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="m">4</span><span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="m">6</span><span class="w"> </span><span class="m">7</span><span class="w"> </span><span class="m">8</span>
+ok
+RefApp:<span class="w"> </span>CONSOLE:<span class="w"> </span>INFO:<span class="w"> </span>Received<span class="w"> </span>console<span class="w"> </span><span class="nb">command</span><span class="w"> </span><span class="s2">&quot;can send 1 2 3 4 5 6 7 8&quot;</span>
+RefApp:<span class="w"> </span>CONSOLE:<span class="w"> </span>INFO:<span class="w"> </span>Console<span class="w"> </span><span class="nb">command</span><span class="w"> </span>succeeded
+</pre></div>
+</div>
+</li>
+<li><p>Info command</p>
+<ul class="simple">
+<li><p>CAN info command provides information about the CAN bus.</p></li>
+<li><p>This command retrieves and displays the current CAN bus information.</p></li>
+</ul>
+<p>Upon successful execution, the console will return the number of CAN buses:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>can<span class="w"> </span>info
+CanBus<span class="w"> </span>:<span class="w"> </span><span class="m">2</span>
+ok
+RefApp:<span class="w"> </span>CONSOLE:<span class="w"> </span>INFO:<span class="w"> </span>Received<span class="w"> </span>console<span class="w"> </span><span class="nb">command</span><span class="w"> </span><span class="s2">&quot;can info&quot;</span>
+RefApp:<span class="w"> </span>CONSOLE:<span class="w"> </span>INFO:<span class="w"> </span>Console<span class="w"> </span><span class="nb">command</span><span class="w"> </span>succeeded
+</pre></div>
+</div>
+</li>
+</ol>
+</li>
+<li><p>Sending CAN messages using EVB and PEAK CAN</p>
+<ol class="loweralpha">
+<li><p>Open Tera Term console.</p></li>
+<li><p>CAN frames sent can be seen as below.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="m">71022</span>:<span class="w"> </span>RefApp:<span class="w"> </span>DEMO:<span class="w"> </span>DEBUG:<span class="w"> </span>Sending<span class="w"> </span>frame<span class="w"> </span><span class="m">1</span>
+<span class="m">72022</span>:<span class="w"> </span>RefApp:<span class="w"> </span>DEMO:<span class="w"> </span>DEBUG:<span class="w"> </span>Sending<span class="w"> </span>frame<span class="w"> </span><span class="m">2</span>
+<span class="m">73022</span>:<span class="w"> </span>RefApp:<span class="w"> </span>DEMO:<span class="w"> </span>DEBUG:<span class="w"> </span>Sending<span class="w"> </span>frame<span class="w"> </span><span class="m">3</span>
+<span class="m">74022</span>:<span class="w"> </span>RefApp:<span class="w"> </span>DEMO:<span class="w"> </span>DEBUG:<span class="w"> </span>Sending<span class="w"> </span>frame<span class="w"> </span><span class="m">4</span>
+<span class="m">75022</span>:<span class="w"> </span>RefApp:<span class="w"> </span>DEMO:<span class="w"> </span>DEBUG:<span class="w"> </span>Sending<span class="w"> </span>frame<span class="w"> </span><span class="m">5</span>
+</pre></div>
+</div>
+</li>
+<li><p>Open PCAN viewer. Configure Bitrate and other parameters as shown below</p>
+<figure class="align-center">
+<a class="reference internal image-reference" href="../../../../_images/pic13.png"><img alt="../../../../_images/pic13.png" src="../../../../_images/pic13.png" style="width: 400.0px; height: 500.0px;" /></a>
+</figure>
+</li>
+<li><p>CAN frames sent can also be seen in the PCAN viewer as shown</p>
+<figure class="align-center">
+<a class="reference internal image-reference" href="../../../../_images/pic14.png"><img alt="../../../../_images/pic14.png" src="../../../../_images/pic14.png" style="width: 400.0px; height: 500.0px;" /></a>
+</figure>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+<li><p><strong>Testing Sequence: IO</strong></p>
+<p>IO can be verified using 2 ways: through pressing the switch button sw3 on EVB
+or through console command.</p>
+<ol class="loweralpha">
+<li><p>By pressing the switch button sw3 on EVB, the RED LED can be turned on. Here sw3 acts as
+input and RED LED as output.</p></li>
+<li><p>Changing the IO through console command:</p>
+<p>out set 1 1</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">help</span>
+<span class="w"> </span>ok
+out<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">1</span>
+<span class="w"> </span><span class="m">1</span><span class="w"> </span>:<span class="w"> </span>EVAL_LED_RED<span class="w"> </span>-&gt;<span class="w"> </span>ok
+<span class="w"> </span>ok
+
+<span class="m">330162</span>:<span class="w"> </span>RefApp:<span class="w"> </span>CONSOLE:<span class="w"> </span>INFO:<span class="w"> </span>Received<span class="w"> </span>console<span class="w"> </span><span class="nb">command</span><span class="w"> </span><span class="s2">&quot;out set 1 1&quot;</span>
+<span class="m">330166</span>:<span class="w"> </span>RefApp:<span class="w"> </span>CONSOLE:<span class="w"> </span>INFO:<span class="w"> </span>console<span class="w"> </span><span class="nb">command</span><span class="w"> </span>Succeeded
+</pre></div>
+</div>
+</li>
+</ol>
+</li>
+</ol>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026 Accenture.</p>
+  </div>
+
+  <div role="footer_string">
+    <p>Documentation from 2026-02-24 10:51:52, official build.</p>
+
+    
+      <a href="../../../../_sources/doc/dev/learning/SysTest/HW_Testing_Guide.rst.txt" rel="nofollow"> View page source</a>
+    
+
+  </div>
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(false);
+      });
+  </script> 
+
+</body>
+</html>

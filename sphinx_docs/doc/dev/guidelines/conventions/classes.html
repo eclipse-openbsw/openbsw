@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="EclipseOpenBSWDocumentation" name="dox_trace_storage" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Classes &mdash; Eclipse OpenBSW Documentation  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/rtd_theme_overrides.css?v=6fd0d55b" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=eafc0fe6" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/colors.css?v=3cafd8aa" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/colored_table.css?v=34b816d5" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/header.css?v=e632285e" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/dox_util_colors.css?v=dd14b177" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/dox_trace.css?v=60d3f72c" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../../../../_static/copybutton.js?v=f281be69"></script>
+        <script src="../../../../_static/dox_trace.js?v=40719b51"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="Comments" href="comments.html" />
+    <link rel="prev" title="Coding Conventions" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Eclipse OpenBSW Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Learning</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../learning/overview.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../learning/SysTest/HW_Testing_Guide.html">Hardware Testing Guide</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guidelines</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Coding Conventions</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Classes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#constructor">Constructor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#destructor">Destructor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#getters-setters-attribute-functions">Getters, Setters, Attribute Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#boolean-member-functions">Boolean Member Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-invariant">Class Invariant</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#uncopyable">Uncopyable</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#indestructible">Indestructible</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#avoid-protected-data">Avoid Protected Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#prefer-concrete-types-over-class-hierarchies">Prefer Concrete Types Over Class Hierarchies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#use-default-and-delete-wherever-possible">Use =default and =delete Wherever Possible</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#virtual-functions-should-specify-exactly-one-of-virtual-override-or-final">Virtual Functions Should Specify Exactly one of Virtual, Override, or Final</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ordering">Ordering</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="comments.html">Comments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="constants.html">Constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="disallowed.html">Disallowed Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="enumerations.html">Enumerations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="files.html">Files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="functions.html">Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="initialization.html">Initialization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interfaces.html">Low Level Interfaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="namespaces.html">Namespaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="naming.html">Naming Conventions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="statements.html">Statements and Expressions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../practices.html">Coding Practices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../formatting/index.html">Formatting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../unittests.html">Unit Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../module.html">Module Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../documentation.html">Module Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../diagrams.html">Diagrams</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../3rdparty.html">Third Party Libraries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commit_message.html">Commit Message</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pull_request.html">Pull Request</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Platforms</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../platforms/posix/index.html">POSIX</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../platforms/s32k148evb/index.html">S32K148 Evaluation Board</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Features</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../features/storage.html">Persistent Storage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/functional_safety.html">Functional Safety</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Software Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/common.html">Common</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/posix.html">Posix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/s32k1xx.html">S32K1xx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/executables.html">Executables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/mocks.html">Mocks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tools/UdsTool/doc/index.html">UdsTool</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tools/puncover_tool/doc/index.html">Puncover</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Eclipse OpenBSW Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="index.html">Coding Conventions</a> &raquo;</li>
+        
+        <li>Classes</li>
+    
+
+    
+
+      <li class="wy-breadcrumbs-aside">
+
+        <!-- DOCUMENT STATUS -->
+
+        
+
+        <!-- DATA CLASSIFICATION -->
+
+        
+
+      </li>
+
+    
+  </ul>
+
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="classes">
+<h1>Classes<a class="headerlink" href="#classes" title="Link to this heading"></a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<section id="constructor">
+<h2>Constructor<a class="headerlink" href="#constructor" title="Link to this heading"></a></h2>
+<p>Constructors must have empty bodies. Class members and parent classes must be initialized in
+the initialization list of a constructor.</p>
+<p><strong>Rationale:</strong> While it might seem tempting to put initialization logic in constructors,
+this significantly increases the effort of checking if the logic failed. In embedded systems
+exceptions are typically either disabled or not allowed, thus to handle an error which
+occurred during object construction it is necessary to save information about the failure
+and check for such information after the object has been constructed.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// good</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">TcpConnection</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="k">enum</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">ReturnCode</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="kt">uint8_t</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">TCP_OK</span><span class="p">,</span>
+<span class="w">        </span><span class="n">TCP_HANDSHAKE_FAILED</span><span class="p">,</span>
+<span class="w">        </span><span class="n">TCP_CONNECTION_LOST</span><span class="p">,</span>
+<span class="w">        </span><span class="p">...</span>
+<span class="w">    </span><span class="p">};</span>
+
+<span class="w">    </span><span class="n">TcpConnection</span><span class="p">(</span><span class="n">ip</span><span class="w"> </span><span class="k">const</span><span class="o">&amp;</span><span class="w"> </span><span class="n">addr</span><span class="p">,</span><span class="w"> </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">port</span><span class="p">);</span>
+<span class="w">    </span><span class="n">ReturnCode</span><span class="w"> </span><span class="nf">init</span><span class="p">();</span>
+
+<span class="k">private</span><span class="o">:</span>
+<span class="w">    </span><span class="n">ip</span><span class="w">       </span><span class="n">_addr</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">_port</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="n">TcpConnection</span><span class="o">::</span><span class="n">TcpConnection</span><span class="p">(</span><span class="n">ip</span><span class="w"> </span><span class="n">addr</span><span class="p">,</span><span class="w"> </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">port</span><span class="p">)</span>
+<span class="o">:</span><span class="w"> </span><span class="n">_addr</span><span class="p">(</span><span class="n">addr</span><span class="p">)</span>
+<span class="p">,</span><span class="w"> </span><span class="n">_port</span><span class="p">(</span><span class="n">port</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="c1">// do nothing</span>
+<span class="p">}</span>
+
+<span class="n">TcpConnection</span><span class="o">::</span><span class="n">ReturnCode</span><span class="w"> </span><span class="n">TcpConnection</span><span class="o">::</span><span class="n">init</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">establishConnection</span><span class="p">(</span><span class="n">addr</span><span class="p">,</span><span class="w"> </span><span class="n">port</span><span class="p">))</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">TcpConnection</span><span class="o">::</span><span class="n">ReturnCode</span><span class="o">::</span><span class="n">TCP_CONNECTION_LOST</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">performHandshake</span><span class="p">(</span><span class="n">addr</span><span class="p">,</span><span class="w"> </span><span class="n">port</span><span class="p">))</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">TcpConnection</span><span class="o">::</span><span class="n">ReturnCode</span><span class="o">::</span><span class="n">TCP_HANDSHAKE_FAILED</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="p">...</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">TcpConnection</span><span class="o">::</span><span class="n">ReturnCode</span><span class="o">::</span><span class="n">TCP_OK</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="n">main</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">TcpConnection</span><span class="w"> </span><span class="nf">tcpConnection</span><span class="p">(</span><span class="n">ip</span><span class="p">(</span><span class="mf">127.0.0.1</span><span class="p">),</span><span class="w"> </span><span class="mi">30501</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// good - action and getting its result are done in the same line</span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">rc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tcpConnection</span><span class="p">.</span><span class="n">init</span><span class="p">();</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">rc</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">TcpConnection</span><span class="o">::</span><span class="n">ReturnCode</span><span class="o">::</span><span class="n">TCP_OK</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// handle the error</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="p">...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>as opposed to</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// bad</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">TcpConnection</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="k">enum</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">ReturnCode</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="kt">uint8_t</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">TCP_OK</span><span class="p">,</span>
+<span class="w">        </span><span class="n">TCP_HANDSHAKE_FAILED</span><span class="p">,</span>
+<span class="w">        </span><span class="n">TCP_CONNECTION_LOST</span><span class="p">,</span>
+<span class="w">        </span><span class="p">...</span>
+<span class="w">    </span><span class="p">};</span>
+
+<span class="w">    </span><span class="n">TcpConnection</span><span class="p">(</span><span class="n">ip</span><span class="w"> </span><span class="k">const</span><span class="o">&amp;</span><span class="w"> </span><span class="n">addr</span><span class="p">,</span><span class="w"> </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">port</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// bad: additional getter function to retrieve a return code</span>
+<span class="w">    </span><span class="n">ReturnCode</span><span class="w"> </span><span class="nf">getLastReturnCode</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="p">;</span>
+
+<span class="k">private</span><span class="o">:</span>
+<span class="w">    </span><span class="n">ip</span><span class="w">         </span><span class="n">_addr</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">uint16_t</span><span class="w">   </span><span class="n">_port</span><span class="p">;</span>
+<span class="w">    </span><span class="n">ReturnCode</span><span class="w"> </span><span class="n">_lastRc</span><span class="p">;</span><span class="w"> </span><span class="c1">// bad: additional data member to store a return code</span>
+<span class="p">};</span>
+
+<span class="n">TcpConnection</span><span class="o">::</span><span class="n">TcpConnection</span><span class="p">(</span><span class="n">ip</span><span class="w"> </span><span class="n">addr</span><span class="p">,</span><span class="w"> </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">port</span><span class="p">)</span>
+<span class="o">:</span><span class="w"> </span><span class="n">_addr</span><span class="p">(</span><span class="n">addr</span><span class="p">)</span>
+<span class="p">,</span><span class="w"> </span><span class="n">_port</span><span class="p">(</span><span class="n">port</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">establishConnection</span><span class="p">(</span><span class="n">_addr</span><span class="p">,</span><span class="w"> </span><span class="n">_port</span><span class="p">))</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">_lastRc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">TcpConnection</span><span class="o">::</span><span class="n">ReturnCode</span><span class="o">::</span><span class="n">TCP_CONNECTION_LOST</span><span class="p">;</span>
+<span class="w">        </span><span class="k">return</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">performHandshake</span><span class="p">(</span><span class="n">_addr</span><span class="p">,</span><span class="w"> </span><span class="n">_port</span><span class="p">))</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">_lastRc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">TcpConnection</span><span class="o">::</span><span class="n">ReturnCode</span><span class="o">::</span><span class="n">TCP_HANDSHAKE_FAILED</span><span class="p">;</span>
+<span class="w">        </span><span class="k">return</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="p">...</span>
+
+<span class="w">    </span><span class="n">_lastRc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">TcpConnection</span><span class="o">::</span><span class="n">ReturnCode</span><span class="o">::</span><span class="n">TCP_OK</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">TcpConnection</span><span class="o">::</span><span class="n">ReturnCode</span><span class="w"> </span><span class="n">TcpConnection</span><span class="o">::</span><span class="n">getLastReturnCode</span><span class="p">()</span><span class="w"> </span><span class="k">const</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">_lastRc</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="n">main</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="c1">// bad - the action is performed during the construction of an object</span>
+<span class="w">    </span><span class="n">TcpConnection</span><span class="w"> </span><span class="nf">tcpConnection</span><span class="p">(</span><span class="n">ip</span><span class="p">(</span><span class="mf">127.0.0.1</span><span class="p">),</span><span class="w"> </span><span class="mi">30501</span><span class="p">);</span>
+
+<span class="w">    </span><span class="p">...</span><span class="w"> </span><span class="c1">// do whatever we want while program execution is potentially in a state of failure</span>
+
+<span class="w">    </span><span class="c1">// ... and retrieving the result happens on a separate line</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">tcpConnection</span><span class="p">.</span><span class="n">getLastReturnCode</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">TcpConnection</span><span class="o">::</span><span class="n">ReturnCode</span><span class="o">::</span><span class="n">TCP_OK</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// handle the error</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="p">...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>Exception:</strong> Having logic in constructors is allowed in the RAII idiom as it’s implied by design.</p>
+</section>
+<section id="destructor">
+<h2>Destructor<a class="headerlink" href="#destructor" title="Link to this heading"></a></h2>
+<div class="line-block">
+<div class="line"><em>A base class destructor should be either public and virtual, or protected and non-virtual.</em></div>
+<div class="line">(Herb Sutter in the  C/C++ Users Journal, September 2001)</div>
+</div>
+<p>In embedded systems with static memory allocation, there is never a use case for deleting objects
+through a pointer to a base class. Since a virtual destructor adds to the vtable of a class, it
+might add a considerable amount of ROM usage to an applications binary, especially if a class
+is subclassed very often (e.g. <code class="docutils literal notranslate"><span class="pre">::async::IRunnable</span></code>).</p>
+<dl class="simple">
+<dt><span class="target" id="cpp-024"><code class="highlight highlight-rule docutils literal notranslate"><span class="pre">[rule]</span> <a class="reference internal" href="#cpp-024"><span class="pre">CPP-024</span></a></code></span> The destructor of an C++ interface should be protected non virtual.</dt><dd><p>This makes sure that code, which would delete an object through a pointer to an interface
+will not compile.</p>
+</dd>
+</dl>
+<p><span class="target" id="cpp-025"><code class="highlight highlight-rule docutils literal notranslate"><span class="pre">[rule]</span> <a class="reference internal" href="#cpp-025"><span class="pre">CPP-025</span></a></code></span> A class, which is not intended to be subclassed should be declared final and have
+public non-virtual destructor.</p>
+<blockquote>
+<div><p>This makes it clear to users of the code that a class is not designed to be a base class.
+This is the default in our embedded applications. In other words: if no subclass exists in the
+code base, a class should most likely be declared final.</p>
+</div></blockquote>
+<p>Example (Interface):</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">IDemo</span>
+<span class="p">{</span>
+<span class="k">protected</span><span class="o">:</span>
+<span class="w">    </span><span class="o">~</span><span class="n">IDemo</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">default</span><span class="p">;</span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="k">virtual</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">foo</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="p">...</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>Example (Non-base class):</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">template</span><span class="o">&lt;</span><span class="k">class</span><span class="w"> </span><span class="nc">T</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">N</span><span class="o">&gt;</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">vector</span><span class="w"> </span><span class="k">final</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">vector</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="o">~</span><span class="n">vector</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">default</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">size_type</span><span class="w"> </span><span class="nf">size</span><span class="p">();</span>
+<span class="w">    </span><span class="p">...</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>For more information and examples see <a class="reference external" href="https://wiki.sei.cmu.edu/confluence/display/cplusplus/OOP52-CPP.+Do+not+delete+a+polymorphic+object+without+a+virtual+destructor">CERT rule OOP52</a>.</p>
+</section>
+<section id="getters-setters-attribute-functions">
+<h2>Getters, Setters, Attribute Functions<a class="headerlink" href="#getters-setters-attribute-functions" title="Link to this heading"></a></h2>
+<p>In general <code class="docutils literal notranslate"><span class="pre">set</span></code> functions should be avoided, when possible. Instead, classes
+should be initialized when calling their constructor. To read properties of a
+class, also avoid <code class="docutils literal notranslate"><span class="pre">get</span></code> functions. Instead use <code class="docutils literal notranslate"><span class="pre">const</span></code> attribute style
+functions.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">CanTransceiver</span><span class="w">    </span><span class="c1">// good</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="n">CanTransceiver</span><span class="p">(</span><span class="n">BusId</span><span class="w"> </span><span class="n">id</span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">BusId</span><span class="w"> </span><span class="nf">busId</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">CanTransceiver</span><span class="w">    </span><span class="c1">//  bad</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">setBusId</span><span class="p">(</span><span class="n">BusId</span><span class="w"> </span><span class="n">id</span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">BusId</span><span class="w"> </span><span class="nf">getBusId</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</section>
+<section id="boolean-member-functions">
+<h2>Boolean Member Functions<a class="headerlink" href="#boolean-member-functions" title="Link to this heading"></a></h2>
+<p>Boolean member functions tend to be <cite>const</cite>.</p>
+<blockquote>
+<div><div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">CanTransceiver</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">hasWakeupOccurred</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div></blockquote>
+</section>
+<section id="class-invariant">
+<h2>Class Invariant<a class="headerlink" href="#class-invariant" title="Link to this heading"></a></h2>
+<p>Use <code class="docutils literal notranslate"><span class="pre">class</span></code> if the class has an invariant, use <code class="docutils literal notranslate"><span class="pre">struct</span></code> if the data members
+can vary independently.</p>
+<p>Readability, ease of comprehension, the use of class alerts the programmer to
+the need for an invariant.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>An invariant is a logical condition for the members of an object that a
+constructor must establish for the public member functions to assume.
+After the invariant is established (typically by a constructor) every
+member function can be called for the object. An invariant can be stated
+informally (e.g., in a comment) or more formally using Expects.</p>
+<p>If all data members can vary independently of each other, no invariant is
+possible.</p>
+</div>
+<p>The following example shows a definition with independent member variables,
+hence <code class="docutils literal notranslate"><span class="pre">struct</span></code> is used</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span><span class="w"> </span><span class="nc">Pair</span><span class="w">  </span><span class="c1">// members can vary independently</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">string</span><span class="w"> </span><span class="n">name</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">volume</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>but in contrast</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Date</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="c1">// validate that {yy, mm, dd} is a valid date</span>
+<span class="w">    </span><span class="n">Date</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">yy</span><span class="p">,</span><span class="w"> </span><span class="n">Month</span><span class="w"> </span><span class="n">mm</span><span class="p">,</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="n">dd</span><span class="p">);</span>
+
+<span class="k">private</span><span class="o">:</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">_year</span><span class="p">;</span>
+<span class="w">    </span><span class="n">Month</span><span class="w"> </span><span class="n">_month</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">char</span><span class="w"> </span><span class="n">_day</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>contains an invariant, thus it should be a <code class="docutils literal notranslate"><span class="pre">class</span></code> definition.</p>
+<p>This rule quotes directly <a class="reference external" href="https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md#user-content-c2-use-class-if-the-class-has-an-invariant-use-struct-if-the-data-members-can-vary-independently">rule C.2 of the C++ Core Guidelines</a>.</p>
+</section>
+<section id="uncopyable">
+<h2>Uncopyable<a class="headerlink" href="#uncopyable" title="Link to this heading"></a></h2>
+<p>To prevent objects of a certain type from being copied, explicitly mark its copy constructor and
+assignment operator as deleted:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Example</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="n">Example</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">default</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">Example</span><span class="p">(</span><span class="n">Example</span><span class="w"> </span><span class="k">const</span><span class="o">&amp;</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">delete</span><span class="p">;</span>
+<span class="w">    </span><span class="n">Example</span><span class="o">&amp;</span><span class="w"> </span><span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="n">Example</span><span class="w"> </span><span class="k">const</span><span class="o">&amp;</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">delete</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>Making a type uncopyable should be a conscious decision and have a good justification - it is not
+the default choice. You should also consider if the type can be movable or not, and if needed
+also disable move construction:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">Example</span><span class="p">(</span><span class="n">Example</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">delete</span><span class="p">;</span>
+<span class="n">Example</span><span class="o">&amp;</span><span class="w"> </span><span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="n">Example</span><span class="o">&amp;&amp;</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">delete</span><span class="p">;</span>
+</pre></div>
+</div>
+</section>
+<section id="indestructible">
+<h2>Indestructible<a class="headerlink" href="#indestructible" title="Link to this heading"></a></h2>
+<p>To avoid destruction of objects, use the <code class="docutils literal notranslate"><span class="pre">etl::typed_storage</span></code> wrapper. The type will
+become <a class="reference external" href="http://www.cplusplus.com/reference/type_traits/is_trivially_destructible/">trivially destructible</a>.</p>
+<p>In the following example the object of type <cite>YourType</cite> will be constructed with placement-new,
+but never destructed even when <cite>wrapper</cite> gets destructed. The destructor of <cite>YourType</cite> will never be
+called, except if you call destroy() explicitly:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">etl</span><span class="o">::</span><span class="n">typed_storage</span><span class="o">&lt;</span><span class="n">YourType</span><span class="o">&gt;</span><span class="w"> </span><span class="n">wrapper</span><span class="p">;</span>
+<span class="n">wrapper</span><span class="p">.</span><span class="n">create</span><span class="p">();</span>
+</pre></div>
+</div>
+</section>
+<section id="avoid-protected-data">
+<h2>Avoid Protected Data<a class="headerlink" href="#avoid-protected-data" title="Link to this heading"></a></h2>
+<p>Protected data is a source of complexity and errors. Protected data complicates the statement of
+invariants. Protected data inherently violates the guidance against putting data in base classes,
+which usually leads to having to deal with virtual inheritance as well.</p>
+<p>However, protected member functions can be just fine.</p>
+</section>
+<section id="prefer-concrete-types-over-class-hierarchies">
+<span id="class-hierarchies-are-bad"></span><h2>Prefer Concrete Types Over Class Hierarchies<a class="headerlink" href="#prefer-concrete-types-over-class-hierarchies" title="Link to this heading"></a></h2>
+<p>A concrete type is fundamentally simpler than a hierarchy: easier to design, easier to implement,
+easier to use, easier to reason about, smaller, and faster. You need a reason (use cases) for using
+a hierarchy.</p>
+<p>If a class can be part of a hierarchy, it encourages manipulation of its objects through pointers
+or references. That implies more memory and run-time overhead to perform the resulting indirections.</p>
+<p><strong>Do not use inheritance when simply having a data member will do.</strong> Usually this means that the
+derived type would need to override a base virtual function or needs access to a protected member.</p>
+<p>This rule quotes directly <a class="reference external" href="https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md#user-content-c10-prefer-concrete-types-over-class-hierarchies">rule C.10 of the C++ Core Guidelines</a>.</p>
+</section>
+<section id="use-default-and-delete-wherever-possible">
+<h2>Use =default and =delete Wherever Possible<a class="headerlink" href="#use-default-and-delete-wherever-possible" title="Link to this heading"></a></h2>
+<p>Since C++11 constructors, destructors, and certain operators can be marked <code class="docutils literal notranslate"><span class="pre">=default</span></code> or
+<code class="docutils literal notranslate"><span class="pre">=delete</span></code> - which expresses choosing the default, compiler-generated implementation, or blocking
+the default behavior.</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">=default</span></code> if you want to be explicit about using the default semantics. This method is
+preferred over defining e.g. empty constructors/destructors or trivial assignment operators.
+The compiler is more likely to get the default semantics right and you cannot implement these
+functions better than the compiler.</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">=delete</span></code> when you want to disable default behavior (without wanting an alternative), like
+e.g. blocking copy construction. Note that deleted functions should be public.</p>
+<p>This rule quotes <a class="reference external" href="https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md#user-content-c80-use-default-if-you-have-to-be-explicit-about-using-the-default-semantics">rules C.80 and C.81 of the C++ Core Guidelines</a>.</p>
+</section>
+<section id="virtual-functions-should-specify-exactly-one-of-virtual-override-or-final">
+<h2>Virtual Functions Should Specify Exactly one of Virtual, Override, or Final<a class="headerlink" href="#virtual-functions-should-specify-exactly-one-of-virtual-override-or-final" title="Link to this heading"></a></h2>
+<p>Virtual functions should be used with caution and only when necessary - as they introduce a layer
+of indirection in the function call. They have drawbacks both for humans (making it harder to reason
+about the code execution flow) and for machines (enforcing indirect function call, taking space for
+<code class="docutils literal notranslate"><span class="pre">vtable</span></code>, prohibiting the compiler from optimizing your code, etc.).</p>
+<p>Whenever declaring a virtual function, <strong>one</strong> of the following keywords should be used:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">virtual</span></code> means exactly and only “this is a new virtual function.”</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">override</span></code> means exactly and only “this is a non-final overrider.”</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">final</span></code> means exactly and only “this is a final overrider.”</p></li>
+</ul>
+<p>Functions marked <code class="docutils literal notranslate"><span class="pre">virtual</span></code>, should be pure virtual (marked with <code class="docutils literal notranslate"><span class="pre">=</span> <span class="pre">0</span></code>). Providing default
+implementations and creating complex class hierarchies goes against
+<a class="reference internal" href="#class-hierarchies-are-bad"><span class="std std-ref">the previous rule</span></a>.</p>
+</section>
+<section id="ordering">
+<h2>Ordering<a class="headerlink" href="#ordering" title="Link to this heading"></a></h2>
+<p>A conventional order of members improves readability. When declaring a class
+use the following order:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>types: classes, enums, and aliases (using, typedef)</p></li>
+<li><p>constructors, assignments, destructor</p></li>
+<li><p>functions</p></li>
+<li><p>data</p></li>
+</ol>
+</div></blockquote>
+<p>Use the <code class="docutils literal notranslate"><span class="pre">public</span></code> before <code class="docutils literal notranslate"><span class="pre">protected</span></code> before <code class="docutils literal notranslate"><span class="pre">private</span></code> order.</p>
+<div class="literal-block-wrapper docutils container" id="id1">
+<div class="code-block-caption"><span class="caption-text">example (shortened)</span><a class="headerlink" href="#id1" title="Link to this code"></a></div>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">FrameProvider</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="k">enum</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">ErrorCode</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="kt">uint8_t</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">PROVIDER_ERR_FRAME_SENT</span><span class="p">,</span>
+<span class="w">        </span><span class="n">PROVIDER_ERR_FRAME_NOT_SENT</span>
+<span class="w">    </span><span class="p">};</span>
+
+<span class="w">    </span><span class="n">FrameProvider</span><span class="p">();</span>
+
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">init</span><span class="p">(</span><span class="n">FrameProviderContainer</span><span class="o">&amp;</span><span class="w"> </span><span class="n">container</span><span class="p">);</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">shutdown</span><span class="p">();</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">cyclicTask</span><span class="p">();</span>
+<span class="w">    </span><span class="c1">// ...</span>
+
+<span class="k">private</span><span class="o">:</span>
+<span class="w">    </span><span class="k">friend</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">FrameProviderContainer</span><span class="p">;</span><span class="w"> </span><span class="c1">// friend classes should not be used</span>
+
+<span class="w">    </span><span class="k">enum</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">ProviderState</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="kt">uint8_t</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">EMPTY</span><span class="p">,</span>
+<span class="w">        </span><span class="n">INITIALIZED</span><span class="p">,</span>
+<span class="w">        </span><span class="n">WAITING_FOR_FLOW_CONTROL</span><span class="p">,</span>
+<span class="w">        </span><span class="n">READY_FOR_CONSEC_FRAMES</span><span class="p">,</span>
+<span class="w">        </span><span class="n">WAITING_FOR_TX_CALLBACK</span><span class="p">,</span>
+<span class="w">        </span><span class="n">NO_MORE_FRAMES_AVAILABLE</span>
+<span class="w">    </span><span class="p">};</span>
+
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">unlock</span><span class="p">(</span><span class="n">ProcessingResult</span><span class="w"> </span><span class="n">status</span><span class="p">);</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">asyncUnlock</span><span class="p">(</span><span class="n">ProcessingResult</span><span class="w"> </span><span class="n">status</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// ...</span>
+<span class="w">    </span><span class="n">CANFrame</span><span class="w"> </span><span class="n">_txFrame</span><span class="p">;</span>
+<span class="w">    </span><span class="n">ProviderState</span><span class="w"> </span><span class="n">_state</span><span class="p">;</span>
+<span class="w">    </span><span class="c1">// ...</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026 Accenture.</p>
+  </div>
+
+  <div role="footer_string">
+    <p>Documentation from 2026-02-24 10:51:51, official build.</p>
+
+    
+      <a href="../../../../_sources/doc/dev/guidelines/conventions/classes.rst.txt" rel="nofollow"> View page source</a>
+    
+
+  </div>
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(false);
+      });
+  </script> 
+
+</body>
+</html>

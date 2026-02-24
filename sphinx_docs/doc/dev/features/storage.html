@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="EclipseOpenBSWDocumentation" name="dox_trace_storage" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Persistent Storage &mdash; Eclipse OpenBSW Documentation  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/rtd_theme_overrides.css?v=6fd0d55b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=eafc0fe6" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/colors.css?v=3cafd8aa" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/colored_table.css?v=34b816d5" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/header.css?v=e632285e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/dox_util_colors.css?v=dd14b177" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/dox_trace.css?v=60d3f72c" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../../../_static/copybutton.js?v=f281be69"></script>
+        <script src="../../../_static/dox_trace.js?v=40719b51"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Functional Safety" href="functional_safety.html" />
+    <link rel="prev" title="S32K148 Evaluation Board" href="../platforms/s32k148evb/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Eclipse OpenBSW Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Learning</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../learning/overview.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../learning/SysTest/HW_Testing_Guide.html">Hardware Testing Guide</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guidelines</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guidelines/conventions/index.html">Coding Conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guidelines/practices.html">Coding Practices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guidelines/formatting/index.html">Formatting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guidelines/unittests.html">Unit Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guidelines/module.html">Module Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guidelines/documentation.html">Module Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guidelines/diagrams.html">Diagrams</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guidelines/3rdparty.html">Third Party Libraries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guidelines/commit_message.html">Commit Message</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guidelines/pull_request.html">Pull Request</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Platforms</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../platforms/posix/index.html">POSIX</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../platforms/s32k148evb/index.html">S32K148 Evaluation Board</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Features</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Persistent Storage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#features">Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#design">Design</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#basics">Basics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#preparing-a-job">Preparing a job</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#providing-the-ram-buffers">Providing the RAM buffers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sending-a-job-to-the-mapper">Sending a job to the mapper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#receiving-a-response">Receiving a response</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#thread-safety">Thread safety</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#advanced-mapper-internals">Advanced: mapper internals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#advanced-rearranging-the-storages">Advanced: rearranging the storages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#advanced-custom-storages">Advanced: custom storages</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#integration-example">Integration example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#example-jobs">Example jobs</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="functional_safety.html">Functional Safety</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Software Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../modules/common.html">Common</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/posix.html">Posix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/s32k1xx.html">S32K1xx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/executables.html">Executables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/mocks.html">Mocks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tools/UdsTool/doc/index.html">UdsTool</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tools/puncover_tool/doc/index.html">Puncover</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Eclipse OpenBSW Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+        <li>Persistent Storage</li>
+    
+
+    
+
+      <li class="wy-breadcrumbs-aside">
+
+        <!-- DOCUMENT STATUS -->
+
+        
+
+        <!-- DATA CLASSIFICATION -->
+
+        
+
+      </li>
+
+    
+  </ul>
+
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="persistent-storage">
+<span id="feature-storage"></span><h1>Persistent Storage<a class="headerlink" href="#persistent-storage" title="Link to this heading"></a></h1>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<p><a class="reference internal" href="../../../libs/bsw/storage/doc/index.html#storage"><span class="std std-ref">storage</span></a> is a module for storing blocks of data persistently at runtime. This data may
+include individual configuration parameters written once after a software update, or runtime data
+updated throughout the device lifetime by user applications or by other OpenBSW modules. The data
+can be stored to various kinds of storage devices such as flash or EEPROM.</p>
+<p>Plain flash memory can typically only be written after being erased first and both the write
+and the erase operations work at a certain granularity (e.g. 512 byte pages for writing and 4096
+byte sectors for erasing). In contrast to that, EEPROM supports writing without erasing and
+allows writing individual bytes.</p>
+<p>When only flash is available in a microcontroller, the behavior of an EEPROM can be emulated in
+software while in the end storing on flash (“flash-EEPROM emulation”). The simplest way to do
+this safely is to allocate two flash sectors for each data block and alternating (“swapping”)
+between the two on each write. Flash endurance has to be kept in mind though, in order to not
+run out of erase cycles too quickly.</p>
+<p>The storage API should take care of most of this complexity by providing a unified interface
+for storing to different storage devices. Additionally, it ensures safe sharing of physical
+storage devices between users by preventing race conditions and data layout overlaps.</p>
+<p>It’s most suitable for use cases where data should be copied (“mirrored”) to RAM for modification.
+It might not be ideal for loading read-only, memory-mapped data or in case copying must be avoided
+to save memory or for performance reasons.</p>
+</section>
+<section id="features">
+<h2>Features<a class="headerlink" href="#features" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>reading/writing a block of data, identified by a unique ID</p></li>
+<li><p>maximum size for each block configured in a header file</p></li>
+<li><p>partial reading/writing with variable starting offset and length</p></li>
+<li><p>optional error detection (supported also when reading partially)</p></li>
+<li><p>can read to or write from multiple, separate RAM buffers at once</p></li>
+<li><p>support for various physical storages: <code class="docutils literal notranslate"><span class="pre">EepStorage</span></code> for EEPROM-like storage devices and
+<code class="docutils literal notranslate"><span class="pre">FeeStorage</span></code> for (SW-based) flash-EEPROM-emulation, and more to be added</p></li>
+</ul>
+</section>
+<section id="design">
+<h2>Design<a class="headerlink" href="#design" title="Link to this heading"></a></h2>
+<section id="basics">
+<h3>Basics<a class="headerlink" href="#basics" title="Link to this heading"></a></h3>
+<p>Data classes:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">StorageJob</span></code>: represents a read/write operation and holds the job details (block ID, buffers,
+offset, callback, result); passed around from one storage to another</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">LinkedBuffer</span></code>: holds a buffer (an <code class="docutils literal notranslate"><span class="pre">etl::span</span></code> associated with a C-array) for reading or
+writing, can be linked together with other buffers</p></li>
+</ul>
+<p>Grouping the job details into a data object provides flexibility and code reuse by having a
+single interface that operates on the data. Jobs can be put into linked lists, making it easy to
+maintain internal lists for queuing and bookkeeping. By allowing the buffers to be linked together
+also, they are easy to pass around in variable numbers while keeping the interface concise.</p>
+<p>Storage classes:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">IStorage</span></code>: interface implemented by the “storages”; it has only one abstract method:
+<code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">process(StorageJob&amp;</span> <span class="pre">job)</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MappingStorage</span></code>: delegates incoming jobs to “outgoing” storages, maps incoming block IDs to
+outgoing block IDs used by the delegates</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">QueuingStorage</span></code>: when called, switches to the specified task context and then forwards the
+job to a delegate storage; also takes care of queuing when the delegate is busy</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">EepStorage</span></code>, <code class="docutils literal notranslate"><span class="pre">FeeStorage</span></code>: low-level storages that take care of managing the data layout and
+error detection; might use platform-specific drivers for the actual device access</p></li>
+</ul>
+<p>When the <code class="docutils literal notranslate"><span class="pre">process()</span></code> method is called, the corresponding storage will execute the job and finally
+deliver the result by running the provided callback. There can be a tree of storage classes where
+one storage passes the job down to a delegate, and one of them eventually finishes it by running
+the callback.</p>
+<p>Storages are kind of plugins that can be added, removed or rearranged depending on the project
+needs. The “storage system” setup should stay fixed after startup and not change during normal
+runtime. This document discusses mainly the “demo” setup shown in the diagram below. Whenever other
+setups are discussed, it will be mentioned specifically.</p>
+<p class="plantuml">
+<a href="../../../_images/plantuml-185e11a7a1213199a559d822c57119c807a21ccd.png"><img src="../../../_images/plantuml-185e11a7a1213199a559d822c57119c807a21ccd.png" alt="component User
+component MappingStorage
+component [QueuingStorage] as EepQueuingStorage
+component [QueuingStorage] as FeeQueuingStorage
+component EepStorage
+component FeeStorage
+
+User --&gt; MappingStorage
+MappingStorage --&gt; EepQueuingStorage
+MappingStorage --&gt; FeeQueuingStorage
+EepQueuingStorage --&gt; EepStorage : In driver context
+FeeQueuingStorage --&gt; FeeStorage : In driver context" style="width: 388.0px; height: 395.0px"/></a>
+</p>
+<p>Note that both <code class="docutils literal notranslate"><span class="pre">QueuingStorage</span></code> objects run their delegates in the same task context (referred
+to as “driver context”), but each could be configured with a different context as well if needed.</p>
+</section>
+<section id="preparing-a-job">
+<h3>Preparing a job<a class="headerlink" href="#preparing-a-job" title="Link to this heading"></a></h3>
+<p>In order to read or write data, users need to:</p>
+<ul class="simple">
+<li><p>allocate a <code class="docutils literal notranslate"><span class="pre">StorageJob</span></code> object</p></li>
+<li><p>initialize it with the desired parameters: the job type (read or write), the block ID, the RAM
+buffers to use, and the asynchronous callback that should be run in the end</p></li>
+<li><p>optionally specify a read/write offset for partial access</p></li>
+<li><p>pass the job to <code class="docutils literal notranslate"><span class="pre">IStorage::process()</span></code> and wait for the callback</p></li>
+</ul>
+<p>Things to consider:</p>
+<ul class="simple">
+<li><p>the callback must be of type <code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">callback(StorageJob&amp;</span> <span class="pre">job)</span></code>, where <code class="docutils literal notranslate"><span class="pre">job</span></code> is the original
+job provided by the user, with the job result available via <code class="docutils literal notranslate"><span class="pre">job.getResult()</span></code> or
+<code class="docutils literal notranslate"><span class="pre">job.hasResult()</span></code></p></li>
+<li><p>the job object or the associated <code class="docutils literal notranslate"><span class="pre">LinkedBuffer</span></code> object(s) must not get deleted (e.g. go out of
+scope) until after the callback has returned</p></li>
+<li><p>it’s forbidden to modify a job or the associated read/write buffers while the job is ongoing</p></li>
+<li><p>it’s forbidden to call <code class="docutils literal notranslate"><span class="pre">process()</span></code> again for an already ongoing job</p></li>
+<li><p>an ongoing job cannot be cancelled</p></li>
+<li><p>there’s no upper limit on how long the processing can take; in case the application cannot wait
+longer than a certain period of time, it needs to go into an error state and <strong>not</strong> do a retry</p></li>
+<li><p>in a multi-user system it should be assumed that the callback won’t be run in the user
+context, meaning that potential race conditions need to be considered</p></li>
+<li><p>if multiple jobs are ongoing at once, users shouldn’t expect them to finish in any specific
+order: even though FIFO order is most likely, it’s not guaranteed because errors and
+different task priorities can affect the order</p></li>
+<li><p>when <code class="docutils literal notranslate"><span class="pre">process()</span></code> returns, it’s possible that the callback was already run directly in
+the same task context (or in a higher priority task), so if a flag is needed to maintain the job
+state, it’s important to set it before calling <code class="docutils literal notranslate"><span class="pre">process()</span></code> and not after, otherwise a flag
+value set inside the callback might immediately get overwritten</p></li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>An additional limitation present in restricted, single-user systems is that users might not
+be able to trigger a lot of follow-up jobs directly inside the callback, even if sending just one
+job after another. When users call a low-level storage such as <code class="docutils literal notranslate"><span class="pre">EepStorage</span></code> directly without a
+context switch, then the callback function is also run in the user context. In this case, when
+triggering another job inside the callback, it doesn’t return immediately but recurses deeper
+until reaching a “base case” in which no more jobs are sent. If the recursion is too deep, stack
+memory will eventually run out and cause a crash. In multi-user systems this isn’t a concern
+because the library protects against such recursion with internal asynchronous calls.</p>
+</div>
+</section>
+<section id="providing-the-ram-buffers">
+<h3>Providing the RAM buffers<a class="headerlink" href="#providing-the-ram-buffers" title="Link to this heading"></a></h3>
+<p>RAM buffers to copy to/from must be provided as <code class="docutils literal notranslate"><span class="pre">LinkedBuffer</span></code> objects, each with
+an <code class="docutils literal notranslate"><span class="pre">etl::span</span></code> inside. Buffers can be linked together using <code class="docutils literal notranslate"><span class="pre">LinkedBuffer::setNext</span></code> method
+to form a list of buffers, each associated with a separate RAM-area. This provides flexibility in
+choosing which RAM location should correspond to which part of the block, in effect dividing the
+block into parts. Storages may also use this mechanism internally to attach headers or footers
+before or after the actual data.</p>
+</section>
+<section id="sending-a-job-to-the-mapper">
+<h3>Sending a job to the mapper<a class="headerlink" href="#sending-a-job-to-the-mapper" title="Link to this heading"></a></h3>
+<p>When <code class="docutils literal notranslate"><span class="pre">MappingStorage::process()</span></code> gets called, <code class="docutils literal notranslate"><span class="pre">MappingStorage</span></code> (also called “mapper”) checks
+the provided block ID (<code class="docutils literal notranslate"><span class="pre">StorageJob::getId()</span></code>) and uses this to find the correct entry in the
+<code class="docutils literal notranslate"><span class="pre">MappingConfig</span></code> table, which contains all available IDs and the corresponding outgoing storages.
+It then uses the configured <code class="docutils literal notranslate"><span class="pre">outgoingIdx</span></code> to find out which storage is assigned for the block and
+passes the job to it.</p>
+</section>
+<section id="receiving-a-response">
+<h3>Receiving a response<a class="headerlink" href="#receiving-a-response" title="Link to this heading"></a></h3>
+<p>After one of the storages has processed the job (i.e. it has read or written the data and checked
+for errors), it will run the user-provided callback. It will do this directly in its own task
+context (different from the user context in the demo setup), so users need to be aware of race
+conditions in case there’s any data shared between the user context and the driver context. In the
+callback the job result, type, block ID and the read size (if reading) can be checked and handled
+accordingly. This can mean, for example, setting some internal state variables to control the
+application logic: in case of success, continue to the next step, otherwise go into an error state.</p>
+<p>In case of error (i.e. <code class="docutils literal notranslate"><span class="pre">StorageJob::hasResult&lt;StorageJob::Result::Error&gt;()</span></code> returns true),
+triggering a retry should not be necessary. An error is usually caused by mistakes in the
+configuration, integration code, application code or inside the storage module itself. This means
+that retries will probably fail too and just cause unnecessary system load. Or it might eventually
+succeed but make it harder to detect and analyze the original problem. An error could also indicate
+hardware failure, but in that case a retry might cause further data loss, so it’s preferable to go
+into an error state instead. In the end though it’s up to the user to decide what to do in case of
+error.</p>
+</section>
+<section id="thread-safety">
+<h3>Thread safety<a class="headerlink" href="#thread-safety" title="Link to this heading"></a></h3>
+<p>As already mentioned, users are responsible for handling any race conditions in the asynchronous
+callback. They can be run in different task contexts: most commonly in the user or the “driver”
+context, but it depends on the storage setup and could be any context. <code class="docutils literal notranslate"><span class="pre">MappingStorage</span></code> and
+<code class="docutils literal notranslate"><span class="pre">QueuingStorage</span></code> are thread-safe, meaning that users from different tasks can share them without
+having to worry about race conditions. <code class="docutils literal notranslate"><span class="pre">StorageJob</span></code> is partially thread-safe, excluding the
+methods <code class="docutils literal notranslate"><span class="pre">init()</span></code>, <code class="docutils literal notranslate"><span class="pre">initRead()</span></code> and <code class="docutils literal notranslate"><span class="pre">initWrite()</span></code> that are supposed to be called by only one
+user in one task context when preparing the job. The low-level storages <code class="docutils literal notranslate"><span class="pre">EepStorage</span></code> and
+<code class="docutils literal notranslate"><span class="pre">FeeStorage</span></code> provide no thread safety at all when called directly.</p>
+</section>
+<section id="advanced-mapper-internals">
+<h3>Advanced: mapper internals<a class="headerlink" href="#advanced-mapper-internals" title="Link to this heading"></a></h3>
+<p>As mentioned before, when <code class="docutils literal notranslate"><span class="pre">MappingStorage::process()</span></code> gets called, the mapper first validates
+the job, then looks up an entry in the <code class="docutils literal notranslate"><span class="pre">MappingConfig</span></code> table that corresponds to the job and
+forwards it to the specified outgoing storage (a <code class="docutils literal notranslate"><span class="pre">QueuingStorage</span></code> object in the demo).
+Before forwarding it though, the incoming ID (<code class="docutils literal notranslate"><span class="pre">MappingConfig::blockId</span></code>) needs to be mapped to an
+outgoing block ID (<code class="docutils literal notranslate"><span class="pre">MappingConfig::outgoingBlockId</span></code>), which then gets assigned to a temporary
+(outgoing) job. A temporary job is needed to avoid modifying the original one. Outgoing jobs are
+configured with an “intermediate” callback implemented by the mapper. When an outgoing storage
+eventually calls the intermediate callback, mapper then looks up the original job object from an
+internal array and runs the user-provided callback.</p>
+<p>Only a limited (but configurable) number of temporary job “slots” are available internally, so
+only a limited number of jobs can be delegated at once. If all outgoing jobs are already in use and
+another job is received, it will be added to a “waiting list”. As soon as one of the ongoing jobs
+finishes (i.e. the intermediate callback gets called), another job from the waiting list (if there
+are any) will be taken for processing in FIFO order.</p>
+<p>There is also another internal list, used for storing jobs that have failed the validation in the
+beginning of <code class="docutils literal notranslate"><span class="pre">process()</span></code> method. This list is needed because the user-provided callbacks need to
+be called asynchronously and the corresponding jobs need to be remembered while this indirection
+(an <code class="docutils literal notranslate"><span class="pre">async::execute</span></code> call) takes place. Running the callbacks directly instead could lead to
+running out of stack memory if the user triggers additional jobs inside the callback.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Besides the mapper, also <code class="docutils literal notranslate"><span class="pre">QueuingStorage</span></code> does internal queuing, so that additional jobs can
+be received while the delegate storage is busy. In the demo setup, mapper can send as many jobs
+as it has available slots, regardless if the <code class="docutils literal notranslate"><span class="pre">QueuingStorage</span></code> is already processing a job or
+not. It’s important to keep in mind that since intrusive linked lists are used, each job object
+can only appear in one list at a time (and only once in that list). This is one of the reasons
+why sending the same job multiple times is forbidden: trying to queue it more than once wouldn’t
+work.</p>
+</div>
+<p>To illustrate how jobs are processed, a sequence diagram of a successful read or write job is shown
+below:</p>
+<p class="plantuml">
+<a href="../../../_images/plantuml-bd96fe01d3313377d5219edc8f7cba1ec033aed2.png"><img src="../../../_images/plantuml-bd96fe01d3313377d5219edc8f7cba1ec033aed2.png" alt="participant User
+participant MappingStorage
+participant QueuingStorage
+participant EepStorage
+participant &quot;EEPROM driver&quot; as Eeprom
+
+== In user context ==
+User -&gt; MappingStorage ++ : process(job)
+MappingStorage -&gt; MappingStorage : find delegate, map ID, enqueue job if slots taken
+MappingStorage -&gt; QueuingStorage ++ : process(outgoingJob)
+QueuingStorage --&gt; QueuingStorage : enqueue for async processing
+QueuingStorage --&gt; MappingStorage -- : void
+MappingStorage --&gt; User -- : void
+QueuingStorage -&gt; QueuingStorage : switch to driver context
+== In driver context ==
+QueuingStorage -&gt; EepStorage ++ : process(outgoingJob)
+EepStorage -&gt; Eeprom ++ : read/write
+Eeprom --&gt; EepStorage -- : BSP_OK
+EepStorage -&gt; MappingStorage ++ : callback(outgoingJob)
+MappingStorage -&gt; MappingStorage : look up the original job
+MappingStorage --&gt; User ++ : callback(job)
+User --&gt; MappingStorage -- : void
+MappingStorage -&gt; MappingStorage : process queued jobs if any
+MappingStorage --&gt; EepStorage -- : void
+EepStorage --&gt; QueuingStorage -- : void" style="width: 908.0px; height: 737.0px"/></a>
+</p>
+<p><span class="raw-html"></br></span></p>
+</section>
+<section id="advanced-rearranging-the-storages">
+<h3>Advanced: rearranging the storages<a class="headerlink" href="#advanced-rearranging-the-storages" title="Link to this heading"></a></h3>
+<p>The purpose of the common <code class="docutils literal notranslate"><span class="pre">IStorage</span></code> interface is to make it easier to support new use cases by
+just rearranging the storages. For example, in single-user systems, thread safety is not a
+concern, so there’s no need to switch to another context before calling a low-level storage. This
+means that <code class="docutils literal notranslate"><span class="pre">QueuingStorage</span></code> can be left out and have the mapper call the storages directly
+instead, so that everything (including the asynchronous callback) will be run in the same context.
+This could also make sense on a very low-end hardware where applications must share resources and
+work sequentially in order to save memory.</p>
+<p>In case the mapper has only one delegate, it’s possible to leave the mapper out and have users call
+a queuing storage instead (in a multi-user system) or the underlying storage directly (in a
+single-user system).</p>
+<p>In case all storages can run in the same task context (but not in the user context directly), it’s
+also possible to have just one queuing storage and make the mapper act as its delegate rather than
+vice versa (remember, in the demo setup the queuing storages are delegates of the mapper). A
+diagram of this kind of setup is shown below:</p>
+<p class="plantuml">
+<a href="../../../_images/plantuml-a4434051480f16b2a5a37b49f29f80b2708becbb.png"><img src="../../../_images/plantuml-a4434051480f16b2a5a37b49f29f80b2708becbb.png" alt="component User
+component QueuingStorage
+component MappingStorage
+component EepStorage
+component FeeStorage
+
+User --&gt; QueuingStorage
+QueuingStorage --&gt; MappingStorage : In driver context
+MappingStorage --&gt; EepStorage
+MappingStorage --&gt; FeeStorage" style="width: 288.0px; height: 395.0px"/></a>
+</p>
+<p><span class="raw-html"></br></span></p>
+</section>
+<section id="advanced-custom-storages">
+<h3>Advanced: custom storages<a class="headerlink" href="#advanced-custom-storages" title="Link to this heading"></a></h3>
+<p>Additional storages can also be implemented, for example:</p>
+<ul class="simple">
+<li><p>storages for further physical device types (such as non-initialized RAM to retain data
+between restarts, or storing into a file if a file system is available)</p></li>
+<li><p>an alternative storage implementation that defers writes until later (until sleep or shutdown,
+for example)</p></li>
+<li><p>an alternative storage that uses less RAM for buffering but is slower, or vice versa</p></li>
+<li><p>a storage that encrypts the data before storing it</p></li>
+<li><p>a “safe storage” that holds the read data in an internal buffer, so that users can copy it in a
+safety-compatible way</p></li>
+<li><p>a “proxy storage” that forwards jobs to another core, CPU or over the network</p></li>
+<li><p>an adapter that translates storage API calls to a legacy API</p></li>
+<li><p>an alternative mapper that provides extra functionality like write-rate control, where too
+frequent writes to the same block get delayed artificially</p></li>
+</ul>
+<p>In case a storage should reuse some functionality of another one, using composition (delegates)
+should be favored over inheritance, in order to avoid coupling subclasses with one specific base
+class.</p>
+<p>It’s worth noting that the purpose of the storage API is to make it easy for users to write robust
+application code, meaning that exposing users to new pitfalls or limitations should be avoided if
+possible. For example, during <code class="docutils literal notranslate"><span class="pre">process()</span></code>, storages should keep the job object intact, so that
+users can still recognize it in the callback and reuse it without extra effort. Also, all resources
+needed for maintaining internal state should be statically allocated in advance, so that any
+sporadic “out-of-resources” errors can be avoided.</p>
+<p>If the storage access is inherently unreliable, for instance if a storage forwards requests over a
+network, then it must also implement an internal retry to avoid any sporadic errors. This might
+mean that in the worst case jobs can take quite long to finish (say, a few seconds or more). Such
+delays can happen with any storage though due to reasons beyond their control, like high CPU load
+caused by other, higher priority tasks. In any case, it’s important to keep applications robust
+against severe delays.</p>
+<p>A proxy storage forwarding requests over the network:</p>
+<p class="plantuml">
+<a href="../../../_images/plantuml-905f3db3af7e5bb1fbcfc6679416c064f67f8171.png"><img src="../../../_images/plantuml-905f3db3af7e5bb1fbcfc6679416c064f67f8171.png" alt="component User
+component MappingStorage
+component EepStorage
+component ProxyStorage
+component Server as [Remote server]
+
+User --&gt; MappingStorage
+MappingStorage --&gt; EepStorage
+MappingStorage --&gt; ProxyStorage
+ProxyStorage --&gt; Server : Over the network" style="width: 352.0px; height: 395.0px"/></a>
+</p>
+<p><span class="raw-html"></br></span></p>
+</section>
+</section>
+<section id="integration-example">
+<h2>Integration example<a class="headerlink" href="#integration-example" title="Link to this heading"></a></h2>
+<p>This chapter shows an example configuration with some data blocks and two underlying storages:
+<code class="docutils literal notranslate"><span class="pre">EepStorage</span></code> and <code class="docutils literal notranslate"><span class="pre">FeeStorage</span></code>. The first one uses an EEPROM driver (i.e. an implementation of
+<code class="docutils literal notranslate"><span class="pre">IEepromDriver</span></code>) for storing. The second one is still not implemented and will not actually
+store any data for now.</p>
+<p>Storage-related objects are bundled in a lifecycle system called <code class="docutils literal notranslate"><span class="pre">StorageSystem</span></code>. Since most
+applications using the storage API are located in other systems, they can get access to
+the API via <code class="docutils literal notranslate"><span class="pre">StorageSystem::getStorage()</span></code>, which returns a reference to the mapper object.</p>
+<p>The snippet below shows the block configuration defined inside <code class="docutils literal notranslate"><span class="pre">StorageSystem</span></code> (copied from
+<code class="docutils literal notranslate"><span class="pre">executables/referenceApp/application/include/systems/StorageSystem.h</span></code>):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>static constexpr uint8_t EEP_STORAGE_ID = 0;
+static constexpr uint8_t FEE_STORAGE_ID = 1;
+
+static constexpr ::storage::MappingConfig MAPPING_CONFIG[] = {
+    {
+        0xa01,          /* block ID (uint32_t) */
+        0,              /* outgoing block ID (uint32_t) */
+        EEP_STORAGE_ID  /* outgoing storage index (uint8_t) */
+    },
+    {
+        0xa02,
+        1,
+        EEP_STORAGE_ID
+    },
+    {
+        0xb01,
+        2,
+        EEP_STORAGE_ID
+    },
+    {
+        0xb02,
+        0,
+        FEE_STORAGE_ID
+    },
+};
+
+static constexpr ::storage::EepBlockConfig EEP_BLOCK_CONFIG[] = {
+    {
+        10,   /* EEPROM address (uint32_t) */
+        8,    /* size in bytes (uint16_t; without the 4-byte header) */
+        true  /* error detection enabled? (bool) */
+    },
+    {
+        22,
+        1,
+        false
+    },
+    {
+        23,
+        5,
+        false
+    },
+};
+</pre></div>
+</div>
+<p>The mapper is configured with four blocks, each with a unique block ID. Entries must be sorted from
+smaller to bigger block IDs. These IDs will be needed later when initializing the job object.</p>
+<p>The “outgoing block IDs” need to match the order of entries in the second table, where additional
+details like the EEPROM address and data size are configured. When configuring the address, make
+sure it doesn’t overlap with the previous block: it cannot be smaller than the address + data
+size + header size of the previous block. For blocks with error detection, the header size is 4
+bytes, for others zero.</p>
+<p>Note: even though it makes sense to keep <code class="docutils literal notranslate"><span class="pre">EEP_BLOCK_CONFIG</span></code> ordered from smaller to bigger EEPROM
+addresses, this isn’t strictly necessary and the blocks can be in any order, as long as the
+outgoing block IDs in the first table refer to correct indices.</p>
+<p><code class="docutils literal notranslate"><span class="pre">FeeStorage</span></code> is still not implemented and doesn’t have its own config yet.</p>
+<p>Next, the various storage objects need to be declared. This is shown below:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="p">::</span><span class="n">eeprom</span><span class="p">::</span><span class="n">IEepromDriver</span><span class="o">&amp;</span> <span class="n">_eepDriver</span><span class="p">;</span>
+
+    <span class="n">static</span> <span class="n">constexpr</span> <span class="n">size_t</span> <span class="n">EEP_CONFIG_SIZE</span>
+        <span class="o">=</span> <span class="n">sizeof</span><span class="p">(</span><span class="n">EEP_BLOCK_CONFIG</span><span class="p">)</span> <span class="o">/</span> <span class="n">sizeof</span><span class="p">(::</span><span class="n">storage</span><span class="p">::</span><span class="n">EepBlockConfig</span><span class="p">);</span>
+
+    <span class="n">static</span> <span class="n">constexpr</span> <span class="n">size_t</span> <span class="n">MAX_DATA_SIZE</span> <span class="o">=</span> <span class="mi">8</span><span class="p">;</span> <span class="o">//</span> <span class="n">largest</span> <span class="n">size</span> <span class="n">defined</span> <span class="ow">in</span> <span class="n">EEP_BLOCK_CONFIG</span>
+
+    <span class="p">::</span><span class="n">storage</span><span class="p">::</span><span class="n">declare</span><span class="p">::</span><span class="n">EepStorage</span><span class="o">&lt;</span><span class="n">EEP_CONFIG_SIZE</span><span class="p">,</span> <span class="n">MAX_DATA_SIZE</span><span class="o">&gt;</span> <span class="n">_eepStorage</span><span class="p">;</span>
+    <span class="p">::</span><span class="n">storage</span><span class="p">::</span><span class="n">FeeStorage</span> <span class="n">_feeStorage</span><span class="p">;</span>
+
+    <span class="p">::</span><span class="n">storage</span><span class="p">::</span><span class="n">QueuingStorage</span> <span class="n">_eepQueuingStorage</span><span class="p">;</span>
+    <span class="p">::</span><span class="n">storage</span><span class="p">::</span><span class="n">QueuingStorage</span> <span class="n">_feeQueuingStorage</span><span class="p">;</span>
+
+    <span class="n">static</span> <span class="n">constexpr</span> <span class="n">size_t</span> <span class="n">MAPPING_CONFIG_SIZE</span>
+        <span class="o">=</span> <span class="n">sizeof</span><span class="p">(</span><span class="n">MAPPING_CONFIG</span><span class="p">)</span> <span class="o">/</span> <span class="n">sizeof</span><span class="p">(::</span><span class="n">storage</span><span class="p">::</span><span class="n">MappingConfig</span><span class="p">);</span>
+
+    <span class="p">::</span><span class="n">storage</span><span class="p">::</span><span class="n">declare</span><span class="p">::</span><span class="n">MappingStorage</span><span class="o">&lt;</span>
+        <span class="n">MAPPING_CONFIG_SIZE</span><span class="p">,</span>
+        <span class="mi">2</span> <span class="o">/*</span> <span class="n">number</span> <span class="n">of</span> <span class="n">delegate</span> <span class="n">storages</span> <span class="o">*/</span><span class="p">,</span>
+        <span class="mi">2</span> <span class="o">/*</span> <span class="nb">max</span> <span class="n">simultaneous</span> <span class="n">jobs</span> <span class="o">*/&gt;</span>
+        <span class="n">_mappingStorage</span><span class="p">;</span>
+
+    <span class="p">::</span><span class="n">storage</span><span class="p">::</span><span class="n">declare</span><span class="p">::</span><span class="n">StorageTester</span><span class="o">&lt;</span><span class="n">MAX_DATA_SIZE</span><span class="o">&gt;</span> <span class="n">_storageTester</span><span class="p">;</span>
+    <span class="p">::</span><span class="n">console</span><span class="p">::</span><span class="n">AsyncCommandWrapper</span> <span class="n">_asyncStorageTester</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Note that the sizes of the block configs need to be calculated and passed to the respective
+storages as template parameters.</p>
+<p>The next snippet shows the construction of these objects (copied from
+<code class="docutils literal notranslate"><span class="pre">executables/referenceApp/application/src/systems/StorageSystem.cpp</span></code>):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">StorageSystem</span><span class="p">::</span><span class="n">StorageSystem</span><span class="p">(</span>
+    <span class="p">::</span><span class="k">async</span><span class="p">::</span><span class="n">ContextType</span> <span class="n">const</span> <span class="n">driverContext</span><span class="p">,</span>
+    <span class="p">::</span><span class="k">async</span><span class="p">::</span><span class="n">ContextType</span> <span class="n">const</span> <span class="n">userContext</span><span class="p">,</span>
+    <span class="p">::</span><span class="n">eeprom</span><span class="p">::</span><span class="n">IEepromDriver</span><span class="o">&amp;</span> <span class="n">eepDriver</span><span class="p">)</span>
+<span class="p">:</span> <span class="n">_eepDriver</span><span class="p">(</span><span class="n">eepDriver</span><span class="p">)</span>
+<span class="p">,</span> <span class="n">_eepStorage</span><span class="p">(</span><span class="n">EEP_BLOCK_CONFIG</span><span class="p">,</span> <span class="n">_eepDriver</span><span class="p">)</span>
+<span class="p">,</span> <span class="n">_feeStorage</span><span class="p">()</span>
+<span class="p">,</span> <span class="n">_eepQueuingStorage</span><span class="p">(</span><span class="n">_eepStorage</span><span class="p">,</span> <span class="n">driverContext</span><span class="p">)</span>
+<span class="p">,</span> <span class="n">_feeQueuingStorage</span><span class="p">(</span><span class="n">_feeStorage</span><span class="p">,</span> <span class="n">driverContext</span><span class="p">)</span>
+<span class="p">,</span> <span class="n">_mappingStorage</span><span class="p">(</span><span class="n">MAPPING_CONFIG</span><span class="p">,</span> <span class="n">driverContext</span><span class="p">,</span> <span class="n">_eepQueuingStorage</span><span class="p">,</span> <span class="n">_feeQueuingStorage</span><span class="p">)</span>
+<span class="p">,</span> <span class="n">_storageTester</span><span class="p">(</span><span class="n">_mappingStorage</span><span class="p">,</span> <span class="n">driverContext</span><span class="p">)</span>
+<span class="p">,</span> <span class="n">_asyncStorageTester</span><span class="p">(</span><span class="n">_storageTester</span><span class="p">,</span> <span class="n">userContext</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">setTransitionContext</span><span class="p">(</span><span class="n">driverContext</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">void</span> <span class="n">StorageSystem</span><span class="p">::</span><span class="n">init</span><span class="p">()</span> <span class="p">{</span> <span class="n">transitionDone</span><span class="p">();</span> <span class="p">}</span>
+
+<span class="n">void</span> <span class="n">StorageSystem</span><span class="p">::</span><span class="n">run</span><span class="p">()</span> <span class="p">{</span> <span class="n">transitionDone</span><span class="p">();</span> <span class="p">}</span>
+
+</pre></div>
+</div>
+<p>Here, <code class="docutils literal notranslate"><span class="pre">_eepStorage</span></code> gets associated with <code class="docutils literal notranslate"><span class="pre">EEP_BLOCK_CONFIG</span></code> (a global constant) and the
+EEPROM driver. The queuing storages get associated with the corresponding low-level storages and
+the task context where those storages should run. Mapper gets associated with its own block config,
+an “error context” and the outgoing storages (please pay attention to the order, more details in
+the warning below). The error context means the context where to run user-provided callbacks in
+case the job or the configuration is invalid. If possible, use the same context that is used for
+callbacks of successful jobs also, i.e. the one that was passed to the queuing storages.</p>
+<p>After transitioning to the “run” state, the storage system is ready to receive jobs from users.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The order of outgoing storages passed to the mapper is crucial and must match the outgoing
+storage indices used in <code class="docutils literal notranslate"><span class="pre">MAPPING_CONFIG</span></code>. In this case it means that <code class="docutils literal notranslate"><span class="pre">_eepQueuingStorage</span></code>
+(storage index 0) must be passed before <code class="docutils literal notranslate"><span class="pre">_feeQueuingStorage</span></code> (storage index 1).</p>
+</div>
+</section>
+<section id="example-jobs">
+<h2>Example jobs<a class="headerlink" href="#example-jobs" title="Link to this heading"></a></h2>
+<p>This chapter shows a small demo application where a block is loaded into RAM at startup, updated
+and then partially written back into EEPROM. If no existing data is found when reading, the RAM
+buffer will be initialized with zeros.</p>
+<p>The demo code is located in the <code class="docutils literal notranslate"><span class="pre">DemoSystem</span></code>, which contains examples for other OpenBSW APIs
+also. The read job is triggered in a cyclic call (<code class="docutils literal notranslate"><span class="pre">DemoSystem::cyclic()</span></code>) that is being called
+every 10 milliseconds, and the write job is triggered in the provided callback after reading is
+done. Please see the full code in
+<code class="docutils literal notranslate"><span class="pre">executables/referenceApp/application/src/systems/DemoSystem.cpp</span></code>.</p>
+<p>When <code class="docutils literal notranslate"><span class="pre">DemoSystem::cyclic()</span></code> gets called for the first time, a read job will be triggered like
+this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>        <span class="n">_storageJob</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="mh">0xa01</span> <span class="o">/*</span> <span class="n">block</span> <span class="n">ID</span> <span class="o">*/</span><span class="p">,</span> <span class="n">_jobDoneCallback</span><span class="p">);</span>
+        <span class="n">_storageJob</span><span class="o">.</span><span class="n">initRead</span><span class="p">(</span><span class="n">_storageReadBuf</span><span class="p">,</span> <span class="mi">0</span> <span class="o">/*</span> <span class="n">start</span> <span class="n">offset</span> <span class="o">*/</span><span class="p">);</span>
+        <span class="n">_storage</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">_storageJob</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Note that block ID <code class="docutils literal notranslate"><span class="pre">0xa01</span></code> corresponds to one of the block entries in <code class="docutils literal notranslate"><span class="pre">MAPPING_CONFIG</span></code> from
+before. Additionally, we specify the callback to be run in the end, the read buffer to read into
+and the starting offset. Using offset 0 means that reading will start from the beginning of the
+block, i.e. from EEPROM address 10 in this case.</p>
+<p>The job is then sent for processing and eventually the callback will be run. The demo uses the
+following callback:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">void</span> <span class="n">DemoSystem</span><span class="p">::</span><span class="n">storageJobDone</span><span class="p">(::</span><span class="n">storage</span><span class="p">::</span><span class="n">StorageJob</span><span class="o">&amp;</span> <span class="n">job</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">job</span><span class="o">.</span><span class="ow">is</span><span class="o">&lt;</span><span class="p">::</span><span class="n">storage</span><span class="p">::</span><span class="n">StorageJob</span><span class="p">::</span><span class="n">Type</span><span class="p">::</span><span class="n">Read</span><span class="o">&gt;</span><span class="p">())</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">job</span><span class="o">.</span><span class="n">hasResult</span><span class="o">&lt;</span><span class="p">::</span><span class="n">storage</span><span class="p">::</span><span class="n">StorageJob</span><span class="p">::</span><span class="n">Result</span><span class="p">::</span><span class="n">DataLoss</span><span class="o">&gt;</span><span class="p">())</span>
+        <span class="p">{</span>
+            <span class="o">//</span> <span class="n">data</span> <span class="n">uninitialized</span> <span class="ow">or</span> <span class="n">corrupt</span><span class="p">,</span> <span class="n">initialize</span>
+            <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="n">memset</span><span class="p">(</span><span class="o">&amp;</span><span class="n">_storageData</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">sizeof</span><span class="p">(</span><span class="n">_storageData</span><span class="p">));</span>
+        <span class="p">}</span>
+        <span class="n">Logger</span><span class="p">::</span><span class="n">debug</span><span class="p">(</span>
+            <span class="n">DEMO</span><span class="p">,</span>
+            <span class="s2">&quot;Storage read done, result=</span><span class="si">%d</span><span class="s2">, size=</span><span class="si">%d</span><span class="s2">, charParam0=0x</span><span class="si">%X</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="p">(</span><span class="nb">int</span><span class="p">)</span><span class="n">job</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span><span class="o">.</span><span class="n">index</span><span class="p">(),</span>
+            <span class="p">(</span><span class="nb">int</span><span class="p">)</span><span class="n">job</span><span class="o">.</span><span class="n">getRead</span><span class="p">()</span><span class="o">.</span><span class="n">getReadSize</span><span class="p">(),</span>
+            <span class="n">_storageData</span><span class="o">.</span><span class="n">charParam0</span><span class="p">);</span>
+
+        <span class="o">//</span> <span class="n">update</span> <span class="n">the</span> <span class="n">data</span> <span class="ow">and</span> <span class="n">trigger</span> <span class="n">a</span> <span class="n">write</span> <span class="n">job</span>
+        <span class="o">++</span><span class="n">_storageData</span><span class="o">.</span><span class="n">charParam0</span><span class="p">;</span>
+        <span class="n">job</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="mh">0xa01</span><span class="p">,</span> <span class="n">_jobDoneCallback</span><span class="p">);</span>
+        <span class="n">job</span><span class="o">.</span><span class="n">initWrite</span><span class="p">(</span><span class="n">_storageWriteBuf</span><span class="p">,</span> <span class="mi">4</span> <span class="o">/*</span> <span class="n">start</span> <span class="n">offset</span> <span class="o">*/</span><span class="p">);</span>
+        <span class="n">_storage</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">job</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">else</span>
+    <span class="p">{</span>
+        <span class="n">Logger</span><span class="p">::</span><span class="n">debug</span><span class="p">(</span><span class="n">DEMO</span><span class="p">,</span> <span class="s2">&quot;Storage write done, result=</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">)</span><span class="n">job</span><span class="o">.</span><span class="n">getResult</span><span class="p">()</span><span class="o">.</span><span class="n">index</span><span class="p">());</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+</pre></div>
+</div>
+<p>The callback:</p>
+<ul class="simple">
+<li><p>checks the job type and result</p></li>
+<li><p>initializes the RAM data if the result indicates missing data (<code class="docutils literal notranslate"><span class="pre">Result::DataLoss</span></code>)</p></li>
+<li><p>prints debug output about the read result</p></li>
+<li><p>updates a variable inside the data</p></li>
+<li><p>reinitializes the finished job as a write job and sends it for processing</p></li>
+<li><p>finally, when the callback is run the second time, it prints another debug output</p></li>
+</ul>
+<p>After this no more jobs will be triggered until the next startup. Note that the callback receives
+the same job object as a parameter that was originally sent for processing (i.e. <code class="docutils literal notranslate"><span class="pre">_storageJob</span></code> in
+this case). It’s also worth mentioning that even though <code class="docutils literal notranslate"><span class="pre">job.init()</span></code> is called here for
+completeness, it could be skipped as well because the specified block ID and callback are the same
+as for reading.</p>
+<p>What’s different between reading and writing though are the used buffers and offsets. Even though
+the whole block is read, only one byte is written back into the offset 4 (i.e. into the 5th byte).
+This offset corresponds to the <code class="docutils literal notranslate"><span class="pre">charParam0</span></code> variable. This is apparent when looking at the data
+type of <code class="docutils literal notranslate"><span class="pre">_storageData</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="n">struct</span> <span class="n">StorageData</span>
+    <span class="p">{</span>
+        <span class="n">uint32_t</span> <span class="n">intParam</span><span class="p">;</span>
+        <span class="n">uint8_t</span> <span class="n">charParam0</span><span class="p">;</span>
+        <span class="n">uint8_t</span> <span class="n">charParam1</span><span class="p">;</span>
+        <span class="n">uint16_t</span> <span class="n">reserved</span><span class="p">;</span>
+    <span class="p">};</span>
+
+</pre></div>
+</div>
+<p>Buffers with varying start addresses and sizes can be created as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">,</span> <span class="n">_storageReadBuf</span><span class="p">(</span>
+      <span class="p">::</span><span class="n">etl</span><span class="p">::</span><span class="n">span</span><span class="o">&lt;</span><span class="n">uint8_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">reinterpret_cast</span><span class="o">&lt;</span><span class="n">uint8_t</span><span class="o">*&gt;</span><span class="p">(</span><span class="o">&amp;</span><span class="n">_storageData</span><span class="p">),</span> <span class="n">sizeof</span><span class="p">(</span><span class="n">_storageData</span><span class="p">)))</span>
+<span class="p">,</span> <span class="n">_storageWriteBuf</span><span class="p">(</span>
+      <span class="p">::</span><span class="n">etl</span><span class="p">::</span><span class="n">span</span><span class="o">&lt;</span><span class="n">uint8_t</span> <span class="n">const</span><span class="o">&gt;</span><span class="p">(</span><span class="n">reinterpret_cast</span><span class="o">&lt;</span><span class="n">uint8_t</span> <span class="n">const</span><span class="o">*&gt;</span><span class="p">(</span><span class="o">&amp;</span><span class="n">_storageData</span><span class="o">.</span><span class="n">charParam0</span><span class="p">),</span> <span class="mi">1</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>The read buffer (<code class="docutils literal notranslate"><span class="pre">_storageReadBuf</span></code>) is initialized with an <code class="docutils literal notranslate"><span class="pre">etl::span</span></code> covering the complete
+<code class="docutils literal notranslate"><span class="pre">_storageData</span></code>. The write buffer, however, is initialized with a span associated with only one
+byte. Notice also how <code class="docutils literal notranslate"><span class="pre">uint8_t</span> <span class="pre">const</span></code> is used as the write buffer data type because unlike the
+read data, the write data won’t be modified by the storage module.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026 Accenture.</p>
+  </div>
+
+  <div role="footer_string">
+    <p>Documentation from 2026-02-24 10:51:51, official build.</p>
+
+    
+      <a href="../../../_sources/doc/dev/features/storage.rst.txt" rel="nofollow"> View page source</a>
+    
+
+  </div>
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(false);
+      });
+  </script> 
+
+</body>
+</html>

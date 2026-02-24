@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="EclipseOpenBSWDocumentation" name="dox_trace_storage" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>safeMonitor - System Integrity Classes &mdash; Eclipse OpenBSW Documentation  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/rtd_theme_overrides.css?v=6fd0d55b" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=eafc0fe6" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/colors.css?v=3cafd8aa" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/colored_table.css?v=34b816d5" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/header.css?v=e632285e" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/dox_util_colors.css?v=dd14b177" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/dox_trace.css?v=60d3f72c" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../../../../_static/copybutton.js?v=f281be69"></script>
+        <script src="../../../../_static/dox_trace.js?v=40719b51"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="safeUtils" href="../../safeUtils/doc/index.html" />
+    <link rel="prev" title="bspOutputPwm - Output PWM driver" href="../../../bsp/bspOutputPwm/doc/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../doc/dev/index.html" class="icon icon-home">
+            Eclipse OpenBSW Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Learning</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/learning/overview.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/learning/SysTest/HW_Testing_Guide.html">Hardware Testing Guide</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guidelines</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/guidelines/conventions/index.html">Coding Conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/guidelines/practices.html">Coding Practices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/guidelines/formatting/index.html">Formatting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/guidelines/unittests.html">Unit Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/guidelines/module.html">Module Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/guidelines/documentation.html">Module Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/guidelines/diagrams.html">Diagrams</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/guidelines/3rdparty.html">Third Party Libraries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/guidelines/commit_message.html">Commit Message</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/guidelines/pull_request.html">Pull Request</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Platforms</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/platforms/posix/index.html">POSIX</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/platforms/s32k148evb/index.html">S32K148 Evaluation Board</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Features</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/features/storage.html">Persistent Storage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/features/functional_safety.html">Functional Safety</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Software Modules</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../doc/dev/modules/common.html">Common</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../../../doc/dev/modules/common.html#bsw">BSW</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../doc/dev/modules/common.html#bsp">BSP</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../../../../doc/dev/modules/common.html#safety">Safety</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">safeMonitor - System Integrity Classes</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#design-goals-assumptions">Design goals &amp; assumptions</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#as-little-code-as-possible">As little code as possible</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#no-inheritance">No inheritance</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#as-few-dependencies-as-possible">As few dependencies as possible</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#asil-partition">ASIL partition</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#usage">Usage</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#general">General</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#examples">Examples</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#register">Register</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#sequence">Sequence</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#trigger">Trigger</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#value">Value</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#watchdog">Watchdog</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#memory-boundaries">Memory boundaries</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#additional-context">Additional context</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../safeUtils/doc/index.html">safeUtils</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/modules/posix.html">Posix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/modules/s32k1xx.html">S32K1xx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/modules/executables.html">Executables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/modules/mocks.html">Mocks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tools/UdsTool/doc/index.html">UdsTool</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tools/puncover_tool/doc/index.html">Puncover</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../doc/dev/index.html">Eclipse OpenBSW Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../doc/dev/index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../../../doc/dev/modules/common.html">Common</a> &raquo;</li>
+        
+        <li>safeMonitor - System Integrity Classes</li>
+    
+
+    
+
+      <li class="wy-breadcrumbs-aside">
+
+        <!-- DOCUMENT STATUS -->
+
+        
+
+        <!-- DATA CLASSIFICATION -->
+
+        
+
+      </li>
+
+    
+  </ul>
+
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="safemonitor-system-integrity-classes">
+<span id="safemonitor"></span><h1>safeMonitor - System Integrity Classes<a class="headerlink" href="#safemonitor-system-integrity-classes" title="Link to this heading"></a></h1>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<p>The safeMonitor module is a collection of templated classes which formalize a condition, its check
+and the reporting channel if the condition isn’t met.</p>
+</section>
+<section id="design-goals-assumptions">
+<h2>Design goals &amp; assumptions<a class="headerlink" href="#design-goals-assumptions" title="Link to this heading"></a></h2>
+<p>The monitors are subject to be used in safety relevant environments. Therefore certain design goals
+are applied, which (not exclusively) are the following.</p>
+<section id="as-little-code-as-possible">
+<h3>As little code as possible<a class="headerlink" href="#as-little-code-as-possible" title="Link to this heading"></a></h3>
+<p>Safety relevant code has to be reviewed. Less code means less to review. So keep that in mind if
+you’d like to extend the monitor’s functionality! Keep it simple and don’t unnecessarily bloat the
+functional scope.</p>
+</section>
+<section id="no-inheritance">
+<h3>No inheritance<a class="headerlink" href="#no-inheritance" title="Link to this heading"></a></h3>
+<p>Since it is not defined by the standard how inheritance and virtual function calls are to be
+implemented by the compiler vendor, it’s easier to avoid them entirely.</p>
+</section>
+<section id="as-few-dependencies-as-possible">
+<h3>As few dependencies as possible<a class="headerlink" href="#as-few-dependencies-as-possible" title="Link to this heading"></a></h3>
+<p>Every dependency which gets introduced has to be reviewed from a safety point of view as well. So
+it’s better to avoid dependencies as much as possible.</p>
+</section>
+<section id="asil-partition">
+<h3>ASIL partition<a class="headerlink" href="#asil-partition" title="Link to this heading"></a></h3>
+<p>It is assumed that the monitors live within an ASIL partition which is protected by a MPU in order
+to ensure freedom from interference. If a monitor has to be triggered/called from outside this
+partition, the ScopedMutex might be used to “open” the MPU.</p>
+</section>
+</section>
+<section id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Link to this heading"></a></h2>
+<section id="general">
+<h3>General<a class="headerlink" href="#general" title="Link to this heading"></a></h3>
+<p>All monitors have in common that they need at least the following things:</p>
+<ol class="arabic">
+<li><p>An event type that can be reported</p>
+<div class="highlight-C++ notranslate"><div class="highlight"><pre><span></span><span class="k">enum</span><span class="w"> </span><span class="nc">MyEvent</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">MY_EVENT_A</span><span class="p">,</span>
+<span class="w">    </span><span class="n">MY_EVENT_B</span><span class="p">,</span>
+<span class="w">    </span><span class="c1">// and any other event needed ...</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</li>
+<li><p>A class or struct that provides a handle method</p>
+<div class="highlight-C++ notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">MyHandler</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">handle</span><span class="p">(</span><span class="n">MyEvent</span><span class="w"> </span><span class="k">const</span><span class="o">&amp;</span><span class="w"> </span><span class="n">event</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">case</span><span class="w"> </span><span class="no">MY_EVENT_A</span><span class="p">:</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="c1">// do something ...</span>
+<span class="w">                </span><span class="k">break</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">case</span><span class="w"> </span><span class="no">MY_EVENT_B</span><span class="p">:</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="c1">// do something else</span>
+<span class="w">                </span><span class="k">break</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="c1">// ...</span>
+<span class="w">            </span><span class="c1">// handle other events</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
+<section id="examples">
+<h3>Examples<a class="headerlink" href="#examples" title="Link to this heading"></a></h3>
+<section id="register">
+<h4>Register<a class="headerlink" href="#register" title="Link to this heading"></a></h4>
+<p>The register monitor can be used to monitor an arbitrary set of registers. Despite the name, it
+actually can monitor any addressable piece of memory. It does so by comparing entry by entry with an
+expected value.</p>
+<div class="highlight-C++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;safeMonitor/Register.h&gt;</span>
+
+<span class="k">using</span><span class="w"> </span><span class="n">MyRegisterMonitor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">::</span><span class="n">safeMonitor</span><span class="o">::</span><span class="n">Register</span><span class="o">&lt;</span><span class="n">MyHandler</span><span class="p">,</span><span class="w"> </span><span class="n">MyEvent</span><span class="p">,</span><span class="w"> </span><span class="kt">uint32_t</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="k">const</span><span class="w"> </span><span class="n">MyRegisterMonitor</span><span class="o">::</span><span class="n">Entry</span><span class="w"> </span><span class="n">registers</span><span class="p">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="p">{</span><span class="mh">0xDEADBEEF</span><span class="p">,</span><span class="w"> </span><span class="mh">0xFF00FF00</span><span class="p">,</span><span class="w"> </span><span class="mh">0xAB00BA00</span><span class="p">},</span><span class="w"> </span><span class="c1">// Byte 4 expected to be 0xAB, Byte 2 expected to be 0xBA</span>
+<span class="w">    </span><span class="p">{</span><span class="mh">0xB00000B5</span><span class="p">,</span><span class="w"> </span><span class="mh">0xFFFFFFFF</span><span class="p">,</span><span class="w"> </span><span class="mh">0x00000000</span><span class="p">},</span><span class="w"> </span><span class="c1">// None of the 32 bits at address 0xB00000B5 expected to be set</span>
+<span class="w">    </span><span class="p">{</span><span class="mh">0xBADA5555</span><span class="p">,</span><span class="w"> </span><span class="mh">0x80000001</span><span class="p">,</span><span class="w"> </span><span class="mh">0x80000001</span><span class="p">}</span><span class="w">  </span><span class="c1">// MSB and LSB of memory at address 0xBADA5555 expected to be set</span>
+<span class="p">};</span>
+
+<span class="n">MyHandler</span><span class="w"> </span><span class="n">handler</span><span class="p">;</span>
+<span class="n">MyRegisterMonitor</span><span class="w"> </span><span class="nf">registerMonitor</span><span class="p">(</span><span class="n">handler</span><span class="p">,</span><span class="w"> </span><span class="n">MyEvent</span><span class="o">::</span><span class="n">REGISTER_MISMATCH</span><span class="p">,</span><span class="w"> </span><span class="n">registers</span><span class="p">);</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">cyclic</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="c1">// Will call the handler if one of the entries does not match its expected value</span>
+<span class="w">    </span><span class="n">registerMonitor</span><span class="p">.</span><span class="n">check</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="sequence">
+<h4>Sequence<a class="headerlink" href="#sequence" title="Link to this heading"></a></h4>
+<p>Sequence objects can be used to monitor the execution sequence. Deviations from the predefined
+sequence are reported by calling a special method of a handler object. See hit() for more details.</p>
+<div class="highlight-C++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;safeMonitor/Sequence.h&gt;</span>
+
+<span class="k">enum</span><span class="w"> </span><span class="nc">MyCheckpoint</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">ALPHA</span><span class="p">,</span>
+<span class="w">    </span><span class="n">BETA</span><span class="p">,</span>
+<span class="w">    </span><span class="n">CHARLIE</span><span class="p">,</span>
+<span class="w">    </span><span class="n">DELTA</span><span class="p">,</span>
+<span class="p">};</span>
+
+<span class="k">using</span><span class="w"> </span><span class="n">MySequence</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">::</span><span class="n">safeMonitor</span><span class="o">::</span><span class="n">Sequence</span><span class="o">&lt;</span><span class="n">MyHandler</span><span class="p">,</span><span class="w"> </span><span class="n">MyEvent</span><span class="p">,</span><span class="w"> </span><span class="n">MyCheckpoint</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="n">MyHandler</span><span class="w"> </span><span class="n">handler</span><span class="p">;</span>
+<span class="n">MySequence</span><span class="w"> </span><span class="nf">s</span><span class="p">(</span><span class="n">handler</span><span class="p">,</span><span class="w"> </span><span class="n">MyEvent</span><span class="o">::</span><span class="n">DEVIATION_FROM_SEQUENCE</span><span class="p">,</span><span class="w"> </span><span class="n">MyCheckpoint</span><span class="o">::</span><span class="n">ALPHA</span><span class="p">,</span><span class="w"> </span><span class="n">MyCheckpoint</span><span class="o">::</span><span class="n">DELTA</span><span class="p">);</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">someTask</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">s</span><span class="p">.</span><span class="n">hit</span><span class="p">(</span><span class="n">MyCheckpoint</span><span class="o">::</span><span class="n">ALPHA</span><span class="p">);</span><span class="w"> </span><span class="c1">// ok</span>
+<span class="w">    </span><span class="n">s</span><span class="p">.</span><span class="n">hit</span><span class="p">(</span><span class="n">MyCheckpoint</span><span class="o">::</span><span class="n">BETA</span><span class="p">);</span><span class="w">  </span><span class="c1">// ok</span>
+<span class="w">    </span><span class="n">s</span><span class="p">.</span><span class="n">hit</span><span class="p">(</span><span class="n">MyCheckpoint</span><span class="o">::</span><span class="n">CHARLIE</span><span class="p">);</span><span class="w">   </span><span class="c1">// ok</span>
+<span class="w">    </span><span class="n">s</span><span class="p">.</span><span class="n">hit</span><span class="p">(</span><span class="n">MyCheckpoint</span><span class="o">::</span><span class="n">DELTA</span><span class="p">);</span><span class="w">     </span><span class="c1">// ok</span>
+<span class="w">    </span><span class="n">s</span><span class="p">.</span><span class="n">hit</span><span class="p">(</span><span class="n">MyCheckpoint</span><span class="o">::</span><span class="n">ALPHA</span><span class="p">);</span><span class="w"> </span><span class="c1">// wrap to beginning -&gt; ok</span>
+<span class="w">    </span><span class="n">s</span><span class="p">.</span><span class="n">hit</span><span class="p">(</span><span class="n">MyCheckpoint</span><span class="o">::</span><span class="n">CHARLIE</span><span class="p">);</span><span class="w">   </span><span class="c1">// deviation -&gt; handler gets called</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="trigger">
+<h4>Trigger<a class="headerlink" href="#trigger" title="Link to this heading"></a></h4>
+<p>Triggers can be used to immediately trigger the event handler.</p>
+<div class="highlight-C++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;safeMonitor/Trigger.h&gt;</span>
+
+<span class="k">using</span><span class="w"> </span><span class="n">MyError</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">::</span><span class="n">safeMonitor</span><span class="o">::</span><span class="n">Trigger</span><span class="o">&lt;</span><span class="n">MyHandler</span><span class="p">,</span><span class="w"> </span><span class="n">MyEvent</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="n">MyHandler</span><span class="w"> </span><span class="n">handler</span><span class="p">;</span>
+<span class="n">MyError</span><span class="w"> </span><span class="nf">stackOverflow</span><span class="p">(</span><span class="n">handler</span><span class="p">,</span><span class="w"> </span><span class="n">MyEvent</span><span class="o">::</span><span class="n">STACK_OVERFLOW</span><span class="p">);</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">vApplicationStackOverflowHook</span><span class="p">(</span><span class="n">xTaskHandle</span><span class="w"> </span><span class="o">*</span><span class="n">pxTask</span><span class="p">,</span><span class="w"> </span><span class="kt">signed</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">pcTaskName</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">stackOverflow</span><span class="p">.</span><span class="n">trigger</span><span class="p">();</span><span class="w"> </span><span class="c1">// will call handler with event MyEvent::STACK_OVERFLOW</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="value">
+<h4>Value<a class="headerlink" href="#value" title="Link to this heading"></a></h4>
+<p>Value monitors can be used for checking if a given value matches an expected one. Mismatches are
+reported by calling the handle method of the handler object.</p>
+<div class="highlight-C++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;safeMonitor/Value.h&gt;</span>
+
+<span class="k">using</span><span class="w"> </span><span class="n">MyValueMonitor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">::</span><span class="n">safeMonitor</span><span class="o">::</span><span class="n">Value</span><span class="o">&lt;</span><span class="n">MyHandler</span><span class="p">,</span><span class="w"> </span><span class="n">MyEvent</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="n">MyHandler</span><span class="w"> </span><span class="n">handler</span><span class="p">;</span>
+<span class="n">MyValueMonitor</span><span class="w"> </span><span class="nf">mpuClosed</span><span class="p">(</span><span class="n">handler</span><span class="p">,</span><span class="w"> </span><span class="n">MyEvent</span><span class="o">::</span><span class="n">MPU_NOT_CLOSED</span><span class="p">,</span><span class="w"> </span><span class="nb">true</span><span class="p">);</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">someTask</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="c1">// ...</span>
+<span class="w">    </span><span class="n">mpuClosed</span><span class="p">.</span><span class="n">check</span><span class="p">(</span><span class="n">mpu</span><span class="p">.</span><span class="n">isClosed</span><span class="p">());</span><span class="w"> </span><span class="c1">// will call handler if &quot;mpu.isClosed()&quot; returns false</span>
+<span class="w">    </span><span class="c1">// ...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="watchdog">
+<h4>Watchdog<a class="headerlink" href="#watchdog" title="Link to this heading"></a></h4>
+<p>Watchdog monitors can be used to monitor algorithms or similar in terms of timeouts. Deadline
+violations are reported by calling the handle method of the handler object. See service() for more
+information.</p>
+<div class="highlight-C++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;safeMonitor/Sequence.h&gt;</span>
+
+<span class="k">using</span><span class="w"> </span><span class="n">MyWatchdogMonitor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">::</span><span class="n">monitor</span><span class="o">::</span><span class="n">Watchdog</span><span class="o">&lt;</span><span class="n">MyHandler</span><span class="p">,</span><span class="w"> </span><span class="n">MyEvent</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="n">MyHandler</span><span class="w"> </span><span class="n">handler</span><span class="p">;</span>
+<span class="n">MyWatchdogMonitor</span><span class="w"> </span><span class="nf">snoopy</span><span class="p">(</span><span class="n">handler</span><span class="p">,</span><span class="w"> </span><span class="n">MyEvent</span><span class="o">::</span><span class="n">TIMEOUT</span><span class="p">,</span><span class="w"> </span><span class="mi">100U</span><span class="p">);</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">cyclic5ms</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">snoopy</span><span class="p">.</span><span class="n">service</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">someTaskToMonitor</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="nb">true</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// ...</span>
+<span class="w">        </span><span class="n">snoopy</span><span class="p">.</span><span class="n">kick</span><span class="p">();</span><span class="w"> </span><span class="c1">// has to be called within 500ms, otherwise a timeout will occur</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="memory-boundaries">
+<h3>Memory boundaries<a class="headerlink" href="#memory-boundaries" title="Link to this heading"></a></h3>
+<p>The monitors can be understood as a formal event channel. If used in a functional safety context,
+the monitor objects themselves most likely live in a special memory region (partition), protected by
+the MPU. Now if the monitored code lives in another partition, one does not simply communicate over
+this memory boundary. The monitors provide a RAII based mechanism to solve this issue. All you have
+to do is to pass another type into your template instantiation.</p>
+<div class="highlight-C++ notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span><span class="w"> </span><span class="nc">ScopedMpuOpener</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">ScopedMpuOpener</span><span class="p">()</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// check if memory is protected and open if necessary</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="o">~</span><span class="n">ScopedMpuOpener</span><span class="p">()</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// restore previous protection state</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+
+<span class="c1">// note the ScopedMpuOpener being passed as template argument</span>
+<span class="k">using</span><span class="w"> </span><span class="n">MyWatchdogMonitor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">::</span><span class="n">monitor</span><span class="o">::</span><span class="n">Watchdog</span><span class="o">&lt;</span><span class="n">MyHandler</span><span class="p">,</span><span class="w"> </span><span class="n">MyEvent</span><span class="p">,</span><span class="w"> </span><span class="n">ScopedMpuOpener</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="c1">// assume the following two objects live in a safety partition...</span>
+<span class="n">MyHandler</span><span class="w"> </span><span class="n">handler</span><span class="p">;</span>
+<span class="n">MyWatchdogMonitor</span><span class="w"> </span><span class="nf">snoopy</span><span class="p">(</span><span class="n">handler</span><span class="p">,</span><span class="w"> </span><span class="n">MyEvent</span><span class="o">::</span><span class="n">TIMEOUT</span><span class="p">,</span><span class="w"> </span><span class="mi">100U</span><span class="p">);</span>
+
+<span class="c1">// ...and this is a task running in QM</span>
+<span class="kt">void</span><span class="w"> </span><span class="nf">someTaskToMonitor</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="nb">true</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">snoopy</span><span class="p">.</span><span class="n">kick</span><span class="p">();</span><span class="w"> </span><span class="c1">// Mpu is being opened/closed accordingly</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The above example shows what the monitors are all about. The caller doesn’t need to know anything
+about the odd functional safety driven implementation details. This also inverts the dependency and
+makes it easy to implement the functional safety bits and pieces in a centralized manner.</p>
+</section>
+<section id="additional-context">
+<h3>Additional context<a class="headerlink" href="#additional-context" title="Link to this heading"></a></h3>
+<p>Sometimes, in addition to the event itself, more information is required for processing. For this
+reason we can pass a context object into most monitor check functions. Let’s take the trigger
+example from above. It shows how one can trigger the handler method in case of a stack overflow.
+But how could we forward the task number to the handler? Like in the memory boundary example above,
+all we have to do is to pass yet another custom type into your template instance.</p>
+<div class="highlight-C++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;safeMonitor/Trigger.h&gt;</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">StackOverflowContext</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">taskNumber</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="c1">// note the StackOverflowContext type being passed at the end</span>
+<span class="k">using</span><span class="w"> </span><span class="n">MyError</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">::</span><span class="n">safeMonitor</span><span class="o">::</span><span class="n">Trigger</span><span class="o">&lt;</span>
+<span class="w">    </span><span class="n">MyHandler</span><span class="p">,</span><span class="w"> </span><span class="n">MyEvent</span><span class="p">,</span><span class="w"> </span><span class="o">::</span><span class="n">safeMonitor</span><span class="o">::</span><span class="n">DefaultMutex</span><span class="p">,</span><span class="w"> </span><span class="n">StackOverflowContext</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="n">MyHandler</span><span class="w"> </span><span class="n">handler</span><span class="p">;</span>
+<span class="n">MyError</span><span class="w"> </span><span class="nf">stackOverflow</span><span class="p">(</span><span class="n">handler</span><span class="p">,</span><span class="w"> </span><span class="n">MyEvent</span><span class="o">::</span><span class="n">STACK_OVERFLOW</span><span class="p">);</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">vApplicationStackOverflowHook</span><span class="p">(</span><span class="n">xTaskHandle</span><span class="w"> </span><span class="o">*</span><span class="n">pxTask</span><span class="p">,</span><span class="w"> </span><span class="kt">signed</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">pcTaskName</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="c1">// This will copy the given context into the stackOverflow object and call the handler</span>
+<span class="w">    </span><span class="n">stackOverflow</span><span class="p">.</span><span class="n">trigger</span><span class="p">({</span>
+<span class="w">        </span><span class="p">.</span><span class="n">taskNumber</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pxTask</span><span class="o">-&gt;</span><span class="n">uxTaskNumber</span><span class="p">;</span>
+<span class="w">    </span><span class="p">});</span>
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">MyHandler::handle</span><span class="p">(</span><span class="n">MyEvent</span><span class="w"> </span><span class="k">const</span><span class="o">&amp;</span><span class="w"> </span><span class="n">e</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="no">MyEvent</span><span class="o">::</span><span class="no">STACK_OVERFLOW</span><span class="p">:</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">auto</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">ctx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">stackOverflow</span><span class="p">.</span><span class="n">getContext</span><span class="p">();</span>
+<span class="w">            </span><span class="c1">// do something with ctx.taskNumber</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>This example also works in combination with the memory boundaries example above since the context
+object gets copied into the corresponding safeMonitor object. The context type can be arbitrarily
+complex, as long as it is default constructible.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026 Accenture.</p>
+  </div>
+
+  <div role="footer_string">
+    <p>Documentation from 2026-02-24 10:51:54, official build.</p>
+
+    
+      <a href="../../../../_sources/libs/safety/safeMonitor/doc/index.rst.txt" rel="nofollow"> View page source</a>
+    
+
+  </div>
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(false);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="EclipseOpenBSWDocumentation" name="dox_trace_storage" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Functional Safety &mdash; Eclipse OpenBSW Documentation  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/rtd_theme_overrides.css?v=6fd0d55b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=eafc0fe6" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/colors.css?v=3cafd8aa" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/colored_table.css?v=34b816d5" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/header.css?v=e632285e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/dox_util_colors.css?v=dd14b177" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/dox_trace.css?v=60d3f72c" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../../../_static/copybutton.js?v=f281be69"></script>
+        <script src="../../../_static/dox_trace.js?v=40719b51"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Common" href="../modules/common.html" />
+    <link rel="prev" title="Persistent Storage" href="storage.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Eclipse OpenBSW Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Learning</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../learning/overview.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../learning/SysTest/HW_Testing_Guide.html">Hardware Testing Guide</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guidelines</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guidelines/conventions/index.html">Coding Conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guidelines/practices.html">Coding Practices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guidelines/formatting/index.html">Formatting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guidelines/unittests.html">Unit Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guidelines/module.html">Module Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guidelines/documentation.html">Module Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guidelines/diagrams.html">Diagrams</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guidelines/3rdparty.html">Third Party Libraries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guidelines/commit_message.html">Commit Message</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guidelines/pull_request.html">Pull Request</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Platforms</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../platforms/posix/index.html">POSIX</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../platforms/s32k148evb/index.html">S32K148 Evaluation Board</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Features</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="storage.html">Persistent Storage</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Functional Safety</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#supported-platforms">Supported Platforms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#code-partition">Code Partition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#safety-modules">Safety Modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#watchdog-test">Watchdog Test</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#initialization-and-usage">Initialization and Usage</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#safetymanager">SafetyManager</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#watchdog">Watchdog</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#memory-protection-unit">Memory Protection Unit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ios">IOs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rom-check">ROM Check</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#future-additions">Future Additions</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Software Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../modules/common.html">Common</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/posix.html">Posix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/s32k1xx.html">S32K1xx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/executables.html">Executables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/mocks.html">Mocks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tools/UdsTool/doc/index.html">UdsTool</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tools/puncover_tool/doc/index.html">Puncover</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Eclipse OpenBSW Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+        <li>Functional Safety</li>
+    
+
+    
+
+      <li class="wy-breadcrumbs-aside">
+
+        <!-- DOCUMENT STATUS -->
+
+        
+
+        <!-- DATA CLASSIFICATION -->
+
+        
+
+      </li>
+
+    
+  </ul>
+
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="functional-safety">
+<h1>Functional Safety<a class="headerlink" href="#functional-safety" title="Link to this heading"></a></h1>
+<p>OpenBSW provides several mechanisms to support compliance with functional safety according to
+ISO 26262. These mechanisms are demonstrated in the ReferenceApp.</p>
+<p>The implementation includes the following features:</p>
+<ul class="simple">
+<li><p>Watchdog, including startup test to verify the correct operation of watchdog</p></li>
+<li><p>MPU configuration to protect the safety RAM and stack memory regions</p></li>
+<li><p>ECC for RAM and flash memory</p></li>
+<li><p>CRC calculations for specific ROM memory regions</p></li>
+<li><p>Monitoring IO configuration</p></li>
+<li><p>Event handling for safety related events. For instance, if the watchdog startup test fails
+(indicates the watchdog is not functioning properly), the watchdog startup check monitor will
+be triggered with a test failure event, this event will be handled by the safeSupervisor’s event
+handling method, which logs the error message and causes the software system reset.</p></li>
+</ul>
+<section id="supported-platforms">
+<h2>Supported Platforms<a class="headerlink" href="#supported-platforms" title="Link to this heading"></a></h2>
+<p>The generic modules can be used on any platform, but functional safety always depends on platform
+specific features and must be developed according to the safety manual of the controller, project
+requirements and stakeholder needs.</p>
+<p>The implementation of e.g. MPU, ECC or watchdog in ReferenceApp is specific to S32K1XX platform.</p>
+</section>
+<section id="code-partition">
+<h2>Code Partition<a class="headerlink" href="#code-partition" title="Link to this heading"></a></h2>
+<p>It is recommended to split the safety code into following sections as shown in the ReferenceApp:</p>
+<table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p>Generic section</p></td>
+<td><p>The safety code which is not specific to a project or platform is placed in generic folder
+<cite>libs/safety</cite>.</p></td>
+</tr>
+<tr class="row-even"><td><p>Platform specific section</p></td>
+<td><p>The safety code which is specific to a platform is placed in
+<cite>platforms/&lt;platform_name&gt;/safety</cite>.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Project specific but platform independent</p></td>
+<td><p>The safety code which is specific to a project but not specific to any platform is placed
+in the project specific folder in the following path <cite>executables/referenceApp/safety</cite>.</p></td>
+</tr>
+<tr class="row-even"><td><p>Project and platform specific section</p></td>
+<td><p>The safety code which is specific to a project and also specific to a platform is placed in
+<cite>executables/referenceApp/platforms/&lt;platform_name&gt;/safety</cite>.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="safety-modules">
+<h2>Safety Modules<a class="headerlink" href="#safety-modules" title="Link to this heading"></a></h2>
+<p>The safety implementation consists of following modules:</p>
+<table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="../../../executables/referenceApp/platforms/s32k148evb/safety/safeMemory/doc/index.html#safememory"><span class="std std-ref">safeMemory</span></a></p></td>
+<td><p>Implements the MPU, defines the access rights for safety RAM and stack memory regions using
+MPU. Provides ECC support for RAM and flash memory and includes a ROM check
+that calculates the CRC for specific ROM regions.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../../../executables/referenceApp/platforms/s32k148evb/safety/safeLifecycle/doc/index.html#safelifecycle"><span class="std std-ref">safeLifecycle</span></a></p></td>
+<td><p>This is the central point where all the initialization and function calls of the safety
+relevant components happen.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../../../executables/referenceApp/safety/safeSupervisor/doc/index.html#safesupervisor"><span class="std std-ref">safeSupervisor</span></a></p></td>
+<td><p>Implements the handling of safety-related events.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../../../executables/referenceApp/safety/safeWatchdog/doc/index.html#safewatchdog"><span class="std std-ref">safeWatchdog</span></a></p></td>
+<td><p>Manages the watchdog and provides the safety checks.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../../../executables/referenceApp/platforms/s32k148evb/safety/safeIo/doc/index.html#safeio"><span class="std std-ref">safeIo</span></a></p></td>
+<td><p>Monitors the configuration registers of safety relevant IOs and provides methods to
+enter and leave a safe state for IOs.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../../../libs/safety/safeMonitor/doc/index.html#safemonitor"><span class="std std-ref">safeMonitor - System Integrity Classes</span></a></p></td>
+<td><p>A collection of templated classes which formalize a condition, its check and the reporting
+event if the condition isn’t met.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../../../libs/safety/safeUtils/doc/index.html#safeutils"><span class="std std-ref">safeUtils</span></a></p></td>
+<td><p>Provides helper classes like the declaration for the logger component.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="watchdog-test">
+<h2>Watchdog Test<a class="headerlink" href="#watchdog-test" title="Link to this heading"></a></h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This test resets the system twice, so if you notice two watchdog resets after the control
+reaches the main function of S32K1XX platform, then that is because of watchdog fast test.</p>
+</div>
+<p>Before using the watchdog in application code it is required to verify that it is functioning
+correctly, this verification is performed by the Watchdog Fast Test, which is implemented in
+<a class="reference internal" href="../../../platforms/s32k1xx/safety/safeBspMcuWatchdog/doc/index.html#safebspmcuwatchdog"><span class="std std-ref">safeBspMcuWatchdog</span></a> module for S32K148 platform and at the very beginning as soon as
+possible to minimize the startup delay.</p>
+<p>The <cite>executeFastTest</cite> method of <cite>Watchdog</cite> class executes the watchdog test. The following
+pseudocode demonstrates how this method is used in the main function:</p>
+<div class="highlight-C++ notranslate"><div class="highlight"><pre><span></span><span class="c1">// enters the limp home mode</span>
+<span class="n">enterLimpHome</span><span class="p">();</span>
+<span class="kt">bool</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">testResult</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">executeFastTest</span><span class="p">(</span><span class="n">timeout_delay</span><span class="p">);</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">testResult</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">   </span><span class="c1">// test is successful, so logs the test success message and leaves the limp home mode</span>
+<span class="w">    </span><span class="n">leaveLimpHome</span><span class="p">();</span>
+<span class="p">}</span>
+<span class="k">else</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="c1">// triggers the watchdog startup check monitor which causes the reset</span>
+<span class="w">    </span><span class="n">watchdogStartupCheckMonitor</span><span class="p">.</span><span class="n">trigger</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="initialization-and-usage">
+<h2>Initialization and Usage<a class="headerlink" href="#initialization-and-usage" title="Link to this heading"></a></h2>
+<p>ReferenceApp serves as a demonstration and the following things have to be adjusted accordingly by
+the user of OpenBSW. The project specific parts must be added by the user.</p>
+<section id="safetymanager">
+<h3>SafetyManager<a class="headerlink" href="#safetymanager" title="Link to this heading"></a></h3>
+<p>SafetyManager is the central point of safety application and the features. Centralize all
+init/cyclic calls here. The SafetyManager is called from safety task.</p>
+</section>
+<section id="watchdog">
+<h3>Watchdog<a class="headerlink" href="#watchdog" title="Link to this heading"></a></h3>
+<p>Initialize safeWatchdog as early as possible and service the watchdog at regular intervals, choose
+the watchdog timeout value and service time according to the project requirements. For demonstration
+purposes, in ReferenceApp, 250 milliseconds is used as the watchdog timeout value and 80
+milliseconds is chosen as the watchdog service time. Depending on the project, the watchdog
+is always active or can be disabled in certain situations like software update or shutdown.
+In ReferenceApp, the watchdog is disabled during shutdown of the safety task.</p>
+</section>
+<section id="memory-protection-unit">
+<h3>Memory Protection Unit<a class="headerlink" href="#memory-protection-unit" title="Link to this heading"></a></h3>
+<p>The memory regions are project specific. In ReferenceApp, the initialized safety relevant data is
+mapped to .mpu_data/.mpu_rodata section and uninitialized data relevant to safety is mapped
+to .mpu_bss section in the linkerscript.
+The linkerscript asserts that both .mpu_data and .mpu_rodata are empty. Since data should not be
+initialized/assigned before mpu is enabled. All mpu-related global variables are placed in
+.mpu_bss and explicitly initialized/assigned while mpu is enabled.</p>
+<p>The memory is divided into several sections, which are configured by the MPU.
+Among these sections, the protected RAM and safety task stack contain safety-relevant data. All
+sections are always readable and writeable, but the protected RAM is writeable only from safety
+context and safety task stack is not writeable when an ISR interrupts the safety context. As ISRs
+can interrupt safety context, they are wrapped with the pre and post ISR hooks. These hooks revoke
+write access to the protected RAM and safety stack regions before the execution of ISR and re-enable
+write access to these regions after the ISR execution is complete. Every data written into those
+sections before MPU is enabled, is not reliable. So, initialization of safety applications must be
+done after MPU init.</p>
+</section>
+<section id="ios">
+<h3>IOs<a class="headerlink" href="#ios" title="Link to this heading"></a></h3>
+<p>The values of inputs cannot be validated without context, e.g. depending on the system state,
+only certain values are valid. Appropriate checks must be implemented in application specifics
+software components.</p>
+<p>On a generic level, the configuration of IOs can be monitored. The easiest way is to lock the
+configuration registers at startup. Afterwards they must be checked once to ensure that
+the right configuration is locked. Configuration registers, which cannot be locked, must be checked
+cyclically.</p>
+</section>
+<section id="rom-check">
+<h3>ROM Check<a class="headerlink" href="#rom-check" title="Link to this heading"></a></h3>
+<p>In ReferenceApp, The ROM check feature performs a single runtime CRC calculation over the memory
+regions which contain safety relevant data or code. The ROM check is initialized from SafetyManager
+and is performed when the system is in an idle state, ensuring minimal impact on system performance
+and avoiding any increase in startup time.</p>
+</section>
+</section>
+<section id="future-additions">
+<h2>Future Additions<a class="headerlink" href="#future-additions" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>In future, no-init RAM will be incorporated. No-init RAM is a region of memory that is not
+initialized during the startup process. Usually, RAM is zeroed out at the start except this
+section to retain data that remains available after a reset. So, currently error handling is done
+by simply logging an error message followed by software reset, later logging will be replaced with
+writing the event to no-init RAM. In future, a more sophisticated error handling will be added,
+like writing an error entry to non-volatile memory after the reset.</p></li>
+<li><p>MPU startup test will be added, after incorporating no-init RAM.</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026 Accenture.</p>
+  </div>
+
+  <div role="footer_string">
+    <p>Documentation from 2026-02-24 10:51:51, official build.</p>
+
+    
+      <a href="../../../_sources/doc/dev/features/functional_safety.rst.txt" rel="nofollow"> View page source</a>
+    
+
+  </div>
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(false);
+      });
+  </script> 
+
+</body>
+</html>

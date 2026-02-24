@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="EclipseOpenBSWDocumentation" name="dox_trace_storage" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>io::MemoryQueue &mdash; Eclipse OpenBSW Documentation  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/rtd_theme_overrides.css?v=6fd0d55b" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/graphviz.css?v=eafc0fe6" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/colors.css?v=3cafd8aa" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/colored_table.css?v=34b816d5" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/header.css?v=e632285e" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/dox_util_colors.css?v=dd14b177" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/dox_trace.css?v=60d3f72c" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../../../../../_static/copybutton.js?v=f281be69"></script>
+        <script src="../../../../../_static/dox_trace.js?v=40719b51"></script>
+    <script src="../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" />
+    <link rel="next" title="io::VariantQueue" href="variant_queue.html" />
+    <link rel="prev" title="io::SplitWriter" href="split_writer.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../doc/dev/index.html" class="icon icon-home">
+            Eclipse OpenBSW Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Learning</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/learning/overview.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/learning/SysTest/HW_Testing_Guide.html">Hardware Testing Guide</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guidelines</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/guidelines/conventions/index.html">Coding Conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/guidelines/practices.html">Coding Practices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/guidelines/formatting/index.html">Formatting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/guidelines/unittests.html">Unit Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/guidelines/module.html">Module Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/guidelines/documentation.html">Module Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/guidelines/diagrams.html">Diagrams</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/guidelines/3rdparty.html">Third Party Libraries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/guidelines/commit_message.html">Commit Message</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/guidelines/pull_request.html">Pull Request</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Platforms</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/platforms/posix/index.html">POSIX</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/platforms/s32k148evb/index.html">S32K148 Evaluation Board</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Features</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/features/storage.html">Persistent Storage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/features/functional_safety.html">Functional Safety</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Software Modules</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../../doc/dev/modules/common.html">Common</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../../../doc/dev/modules/common.html#bsw">BSW</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../../async/doc/index.html">async - Asynchronous Execution Interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../asyncConsole/doc/index.html">asyncConsole - Asynchronous Console</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../asyncFreeRtos/doc/index.html">asyncFreeRtos</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../asyncImpl/doc/index.html">asyncImpl</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../bsp/doc/index.html">bsp</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../common/doc/index.html">common</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cpp2can/doc/index.html">cpp2can - CAN Abstraction Layer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cpp2ethernet/doc/index.html">cpp2ethernet - Ethernet Abstractions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docan/doc/index.html">docan - Diagnostics over CAN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../doip/doc/index.html">doip - Diagnostics Over IP</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../index.html">io - IO Library</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="index.html">User Documentation</a><ul class="current">
+<li class="toctree-l5"><a class="reference internal" href="index.html#interfaces">Interfaces</a></li>
+<li class="toctree-l5 current"><a class="reference internal" href="index.html#data-structures">Data Structures</a><ul class="current">
+<li class="toctree-l6"><a class="reference internal" href="join_reader.html">io::JoinReader</a></li>
+<li class="toctree-l6"><a class="reference internal" href="forwarding_reader.html">io::ForwardingReader</a></li>
+<li class="toctree-l6"><a class="reference internal" href="buffered_writer.html">io::BufferedWriter</a></li>
+<li class="toctree-l6"><a class="reference internal" href="split_writer.html">io::SplitWriter</a></li>
+<li class="toctree-l6 current"><a class="current reference internal" href="#">io::MemoryQueue</a></li>
+<li class="toctree-l6"><a class="reference internal" href="variant_queue.html">io::VariantQueue</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lifecycle/doc/index.html">lifecycle - App Lifecycle Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../logger/doc/index.html">logger - Logger module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../loggerIntegration/doc/index.html">loggerIntegration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lwipSocket/doc/index.html">lwipSocket - LwIP v2 Socket Abstraction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../middleware/doc/index.html">middleware</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../platform/doc/index.html">platform - Platform Library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../runtime/doc/index.html">runtime</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../stdioConsoleInput/doc/index.html">stdioConsoleInput</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../storage/doc/index.html">storage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../timer/doc/index.html">timer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../transport/doc/index.html">transport - Transport Library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../transportRouterSimple/doc/index.html">transportRouterSimple</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../uds/doc/index.html">uds - Unified Diagnostic Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../util/doc/index.html">util</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../doc/dev/modules/common.html#bsp">BSP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../doc/dev/modules/common.html#safety">Safety</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/modules/posix.html">Posix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/modules/s32k1xx.html">S32K1xx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/modules/executables.html">Executables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/modules/mocks.html">Mocks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tools/UdsTool/doc/index.html">UdsTool</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tools/puncover_tool/doc/index.html">Puncover</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../doc/dev/index.html">Eclipse OpenBSW Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../../doc/dev/index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../../../../doc/dev/modules/common.html">Common</a> &raquo;</li>
+        
+          <li><a href="../index.html">io - IO Library</a> &raquo;</li>
+        
+          <li><a href="index.html">User Documentation</a> &raquo;</li>
+        
+        <li>io::MemoryQueue</li>
+    
+
+    
+
+      <li class="wy-breadcrumbs-aside">
+
+        <!-- DOCUMENT STATUS -->
+
+        
+
+        <!-- DATA CLASSIFICATION -->
+
+        
+
+      </li>
+
+    
+  </ul>
+
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="io-memoryqueue">
+<span id="id1"></span><h1>io::MemoryQueue<a class="headerlink" href="#io-memoryqueue" title="Link to this heading"></a></h1>
+<p>A <code class="docutils literal notranslate"><span class="pre">MemoryQueue</span></code> is a lock free, single producer single consumer queue intended for communication
+between software components that share access to the same memory. It provides much better average
+case memory usage for use cases where the data elements transported through the queue vary in size.
+It’s nested classes <a class="reference internal" href="#io-memoryqueue-writer"><span class="std std-ref">io::MemoryQueue::Writer</span></a> and <a class="reference internal" href="#io-memoryqueue-reader"><span class="std std-ref">io::MemoryQueue::Reader</span></a> provide access
+to the queue.</p>
+<section id="properties">
+<h2>Properties<a class="headerlink" href="#properties" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Lock free, single producer single consumer queue which provides implementations of
+<a class="reference internal" href="iwriter.html#io-iwriter"><span class="std std-ref">io::IWriter</span></a> and <a class="reference internal" href="ireader.html#io-ireader"><span class="std std-ref">io::IReader</span></a> through the adapters <a class="reference internal" href="#io-memoryqueuewriter"><span class="std std-ref">io::MemoryQueueWriter</span></a>
+and <a class="reference internal" href="#io-memoryqueuereader"><span class="std std-ref">io::MemoryQueueReader</span></a>.</p></li>
+<li><p>Any successful allocation will always return a contiguous region of memory.</p></li>
+<li><p>A <code class="docutils literal notranslate"><span class="pre">MemoryQueue</span></code> is full, if not <code class="docutils literal notranslate"><span class="pre">MAX_ELEMENT_SIZE</span></code> bytes can be allocated.</p></li>
+<li><p>An allocation can provide between <code class="docutils literal notranslate"><span class="pre">1</span></code> and <code class="docutils literal notranslate"><span class="pre">MAX_ELEMENT_SIZE</span></code> bytes and will consume
+an extra <code class="docutils literal notranslate"><span class="pre">sizeof(SIZE_TYPE)</span></code> bytes to store the allocation size.</p></li>
+<li><p><strong>Memory consumption</strong>: ~ <code class="docutils literal notranslate"><span class="pre">CAPACITY</span> <span class="pre">+</span> <span class="pre">3</span> <span class="pre">*</span> <span class="pre">sizeof(size_t)</span></code></p></li>
+</ul>
+</section>
+<section id="differences-to-other-queues">
+<h2>Differences to Other Queues<a class="headerlink" href="#differences-to-other-queues" title="Link to this heading"></a></h2>
+<p>A typical lock free, single producer single consumer (SPSC) queue class template would provide a
+type like <code class="docutils literal notranslate"><span class="pre">template&lt;class</span> <span class="pre">T,</span> <span class="pre">size_t</span> <span class="pre">N&gt;class</span> <span class="pre">Queue;</span></code> where <code class="docutils literal notranslate"><span class="pre">T</span></code> is the type of elements the queue
+can handle and <code class="docutils literal notranslate"><span class="pre">N</span></code> is the number of elements the <code class="docutils literal notranslate"><span class="pre">Queue</span></code> holds. As an example let’s look at a
+queue of CAN-FD frames, that consist of a 32bit <em>id</em> and up to 64 bytes of <em>payload</em> so a total of
+<strong>68 bytes per frame</strong> at most.</p>
+<p>A <code class="docutils literal notranslate"><span class="pre">Queue&lt;CanFdFrame,</span> <span class="pre">100&gt;</span></code> would use about 6800 bytes of RAM. Now, the 64 bytes maximum payload
+length are a worst case, i.e. it can happen and will happen but it’s not the average case. If the
+average frame only had 12 bytes of payload a full queue could still only hold 100 frames and only
+use 1600 bytes from the total of 6800 bytes. This is a actual <strong>payload rate of roughly 24 percent</strong>
+- or in other words <strong>76 percent of RAM are wasted</strong> in the average case.</p>
+<p>If we compare this to a <code class="docutils literal notranslate"><span class="pre">MemoryQueue&lt;6800,</span> <span class="pre">68&gt;</span></code> this queue can hold at most
+<code class="docutils literal notranslate"><span class="pre">6800</span> <span class="pre">/</span> <span class="pre">(68</span> <span class="pre">+</span> <span class="pre">2)</span> <span class="pre">==</span> <span class="pre">97</span></code> full frames but in the average case it can hold <code class="docutils literal notranslate"><span class="pre">6800</span> <span class="pre">/</span> <span class="pre">(16</span> <span class="pre">+</span> <span class="pre">2)</span> <span class="pre">==</span> <span class="pre">377</span></code>
+frames with 12 bytes of payload and not waste any memory.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">MemoryQueue</span></code> provides chunks of bytes represented as <code class="docutils literal notranslate"><span class="pre">::etl::span&lt;uint8_t&gt;</span></code> and the user
+has to take care about serializing and deserializing the transferred data.</p>
+</section>
+<section id="memory-placement-cache">
+<h2>Memory Placement / Cache<a class="headerlink" href="#memory-placement-cache" title="Link to this heading"></a></h2>
+<section id="single-core">
+<h3>Single-Core<a class="headerlink" href="#single-core" title="Link to this heading"></a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">MemoryQueue</span></code> can be used for interaction between tasks on the same core. In this case it just
+needs to be placed in a memory region both tasks can access. As they are on the same core, no
+caching effects can occur.</p>
+</section>
+<section id="multi-core">
+<h3>Multi-Core<a class="headerlink" href="#multi-core" title="Link to this heading"></a></h3>
+<p>If the <code class="docutils literal notranslate"><span class="pre">MemoryQueue</span></code> is used for interaction between two cores, it needs to be placed in
+<strong>non-cached RAM</strong> to avoid caching-effects on the other end of the queue, if the data cache is
+enabled on at least one of the using cores.</p>
+<p>It has to be ensured that all binaries accessing the queue use the same physical memory location for
+the queue, but only one core must initialize the memory and call the constructor.</p>
+<p>It is recommended to construct the queue on the main core before all other cores are started. This
+prevents accessing the queue too early by design:</p>
+<p class="plantuml">
+<a href="../../../../../_images/plantuml-d089b649fc2f432bb6483a36d18661d22626d1ad.png"><img src="../../../../../_images/plantuml-d089b649fc2f432bb6483a36d18661d22626d1ad.png" alt="participant core0 order 0
+participant MemoryQueue order 1
+participant core1 order 2
+
+note over core0, core1: Access to MemoryQueue not allowed yet
+
+core0 -&gt; MemoryQueue: Placement new
+
+note over core0, core1: Access allowed from core0
+
+core0 -&gt; core1: Start core
+core1 -&gt; MemoryQueue: Reinterpret memory region
+
+note over core0, core1: Access allowed from both cores
+
+core0 -&gt; MemoryQueue: Access
+core1 -&gt; MemoryQueue: Access" style="width: 389.0px; height: 341.0px"/></a>
+</p>
+</section>
+</section>
+<section id="instantiation">
+<h2>Instantiation<a class="headerlink" href="#instantiation" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">MemoryQueue</span></code> is a <strong>class template</strong> with the following parameters:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span> * \tparam CAPACITY Number of bytes that this MemoryQueue shall provide.
+ * \tparam MAX_ELEMENT_SIZE Maximum size of one allocation
+ * \tparam SIZE_TYPE Type used to store size of allocation internally
+</pre></div>
+</div>
+<p>It can only be <strong>constructed</strong> using it’s default constructor.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">/**</span>
+ <span class="o">*</span> <span class="n">Returns</span> <span class="n">the</span> <span class="n">capacity</span> <span class="n">of</span> <span class="n">the</span> <span class="n">underlying</span> <span class="n">array</span> <span class="n">of</span> <span class="n">data</span> <span class="n">managed</span> <span class="n">by</span> <span class="n">this</span> <span class="n">MemoryQueue</span><span class="o">.</span>
+ <span class="o">*/</span>
+<span class="n">static</span> <span class="n">constexpr</span> <span class="n">size_t</span> <span class="n">capacity</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">CAPACITY</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="o">/**</span>
+ <span class="o">*</span> <span class="n">Returns</span> <span class="n">the</span> <span class="n">maximum</span> <span class="n">size</span> <span class="n">of</span> <span class="n">one</span> <span class="n">allocation</span><span class="o">.</span>
+ <span class="o">*/</span>
+<span class="n">static</span> <span class="n">constexpr</span> <span class="n">size_t</span> <span class="n">maxElementSize</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">MAX_ELEMENT_SIZE</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="o">/**</span>
+ <span class="o">*</span> <span class="n">Constructs</span> <span class="n">a</span> <span class="n">MemoryQueue</span> <span class="n">of</span> <span class="n">CAPACITY</span> <span class="nb">bytes</span><span class="o">.</span>
+ <span class="o">*/</span>
+<span class="n">MemoryQueue</span><span class="p">()</span> <span class="o">=</span> <span class="n">default</span><span class="p">;</span>
+
+</pre></div>
+</div>
+</section>
+<section id="access-through-generic-interfaces">
+<h2>Access Through Generic Interfaces<a class="headerlink" href="#access-through-generic-interfaces" title="Link to this heading"></a></h2>
+<p>The generic way of accessing a <code class="docutils literal notranslate"><span class="pre">MemoryQueue</span></code> is using the adapter classes
+<a class="reference internal" href="#io-memoryqueuereader"><span class="std std-ref">io::MemoryQueueReader</span></a> and <a class="reference internal" href="#io-memoryqueuewriter"><span class="std std-ref">io::MemoryQueueWriter</span></a>.
+They are based on the <a class="reference internal" href="ireader.html#io-ireader"><span class="std std-ref">io::IReader</span></a> and <a class="reference internal" href="iwriter.html#io-iwriter"><span class="std std-ref">io::IWriter</span></a> interfaces with <strong>virtual</strong>
+functions, which means that the exact type of the queue does not have to be known.</p>
+<p>For intercore communication an instance of <a class="reference internal" href="#io-memoryqueue"><span class="std std-ref">io::MemoryQueue</span></a> is placed into non-cached shared
+memory. Two software components placed on different cores can communicate via the queue using
+the interfaces <a class="reference internal" href="ireader.html#io-ireader"><span class="std std-ref">io::IReader</span></a> and <a class="reference internal" href="iwriter.html#io-iwriter"><span class="std std-ref">io::IWriter</span></a> by creating instances of
+<a class="reference internal" href="#io-memoryqueuereader"><span class="std std-ref">io::MemoryQueueReader</span></a> and <a class="reference internal" href="#io-memoryqueuewriter"><span class="std std-ref">io::MemoryQueueWriter</span></a>.</p>
+<p class="plantuml">
+<a href="../../../../../_images/plantuml-86e3d1ec45c9a8f4e2ab80ccd6eed417de75f703.png"><img src="../../../../../_images/plantuml-86e3d1ec45c9a8f4e2ab80ccd6eed417de75f703.png" alt="top to bottom direction
+
+frame core0 {
+    actor SWC1
+    interface IReader as IReaderC0
+    interface IWriter as IWriterC0
+    agent MemoryQueueReader as MQRC0
+    agent MemoryQueueWriter as MQWC0
+}
+cloud SharedMemory {
+    queue MemoryQueue1 as MQ1
+    queue MemoryQueue2 as MQ2
+}
+note bottom of SharedMemory : non-cached
+frame core1 {
+    actor SWC2
+    interface IReader as IReaderC1
+    interface IWriter as IWriterC1
+    agent MemoryQueueReader as MQRC1
+    agent MemoryQueueWriter as MQWC1
+}
+
+core0 -[hidden] SharedMemory
+
+MQ2 - MQWC0
+MQ1 - MQWC1
+MQ1 - MQRC0
+MQ2 - MQRC1
+
+SWC1 -d-( IReaderC0
+MQRC0 -u- IReaderC0
+SWC1 -u-( IWriterC0
+MQWC0 -- IWriterC0
+
+SWC2 -d-( IReaderC1
+MQRC1 -u- IReaderC1
+SWC2 -u-( IWriterC1
+MQWC1 -- IWriterC1" style="width: 901.0px; height: 665.0px"/></a>
+</p>
+<section id="io-memoryqueuewriter">
+<span id="id2"></span><h3>io::MemoryQueueWriter<a class="headerlink" href="#io-memoryqueuewriter" title="Link to this heading"></a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">MemoryQueueWriter</span></code> is an implementation of <a class="reference internal" href="iwriter.html#io-iwriter"><span class="std std-ref">io::IWriter</span></a> providing write access to a
+<code class="docutils literal notranslate"><span class="pre">MemoryQueue</span></code>. It is a class template with the queue type as parameter:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span> * \tparam Queue Type of queue to write data to.
+</pre></div>
+</div>
+<p>The public API of <code class="docutils literal notranslate"><span class="pre">MemoryQueueWriter</span></code> is the same as for <a class="reference internal" href="iwriter.html#io-iwriter"><span class="std std-ref">io::IWriter</span></a>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">/**</span>
+ <span class="o">*</span> <span class="n">Constructs</span> <span class="n">a</span> <span class="n">MemoryQueueWriter</span> <span class="kn">from</span> <span class="nn">given</span> <span class="n">queue</span><span class="o">.</span>
+ <span class="o">*/</span>
+<span class="n">explicit</span> <span class="n">MemoryQueueWriter</span><span class="p">(</span><span class="n">Queue</span><span class="o">&amp;</span> <span class="n">queue</span><span class="p">);</span>
+
+<span class="o">/**</span> \<span class="n">see</span> <span class="n">IWriter</span><span class="p">::</span><span class="n">maxSize</span><span class="p">()</span> <span class="o">*/</span>
+<span class="n">size_t</span> <span class="n">maxSize</span><span class="p">()</span> <span class="n">const</span> <span class="n">override</span><span class="p">;</span>
+
+<span class="o">/**</span> \<span class="n">see</span> <span class="n">IWriter</span><span class="p">::</span><span class="n">allocate</span><span class="p">()</span> <span class="o">*/</span>
+<span class="p">::</span><span class="n">etl</span><span class="p">::</span><span class="n">span</span><span class="o">&lt;</span><span class="n">uint8_t</span><span class="o">&gt;</span> <span class="n">allocate</span><span class="p">(</span><span class="n">size_t</span> <span class="n">size</span><span class="p">)</span> <span class="n">override</span><span class="p">;</span>
+
+<span class="o">/**</span> \<span class="n">see</span> <span class="n">IWriter</span><span class="p">::</span><span class="n">commit</span><span class="p">()</span> <span class="o">*/</span>
+<span class="n">void</span> <span class="n">commit</span><span class="p">()</span> <span class="n">override</span><span class="p">;</span>
+
+<span class="o">/**</span> \<span class="n">see</span> <span class="n">IWriter</span><span class="p">::</span><span class="n">flush</span><span class="p">()</span> <span class="o">*/</span>
+<span class="n">void</span> <span class="n">flush</span><span class="p">()</span> <span class="n">override</span><span class="p">;</span>
+
+<span class="o">/**</span> \<span class="n">see</span> <span class="n">Queue</span><span class="p">::</span><span class="n">Writer</span><span class="p">::</span><span class="n">available</span><span class="p">()</span> <span class="o">*/</span>
+<span class="n">size_t</span> <span class="n">available</span><span class="p">()</span> <span class="n">const</span><span class="p">;</span>
+
+<span class="o">/**</span> \<span class="n">see</span> <span class="n">Queue</span><span class="p">::</span><span class="n">Writer</span><span class="p">::</span><span class="n">minAvailable</span><span class="p">()</span> <span class="o">*/</span>
+<span class="n">size_t</span> <span class="n">minAvailable</span><span class="p">()</span> <span class="n">const</span><span class="p">;</span>
+
+<span class="o">/**</span> \<span class="n">see</span> <span class="n">Queue</span><span class="p">::</span><span class="n">Writer</span><span class="p">::</span><span class="n">resetMinAvailable</span><span class="p">()</span> <span class="o">*/</span>
+<span class="n">void</span> <span class="n">resetMinAvailable</span><span class="p">();</span>
+</pre></div>
+</div>
+<section id="statistics">
+<h4>Statistics<a class="headerlink" href="#statistics" title="Link to this heading"></a></h4>
+<p><code class="docutils literal notranslate"><span class="pre">MemoryQueueWriter`</span></code> provides an <cite>minAvailable()</cite> and <cite>resetMinAvailable()</cite> as a way to gather
+statistics about the queue’s usage.</p>
+<p><cite>minAvailable()</cite> returns the smallest amount of bytes which were available during a call to
+<cite>allocate()</cite>.</p>
+<p><cite>resetMinAvailable()</cite> resets this value to the current <cite>available()</cite> value.</p>
+<p>Together, these can be used in projects to adapt the queue sizes based on runtime data.</p>
+</section>
+</section>
+<section id="io-memoryqueuereader">
+<span id="id3"></span><h3>io::MemoryQueueReader<a class="headerlink" href="#io-memoryqueuereader" title="Link to this heading"></a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">MemoryQueueReader</span></code> is an implementation of <a class="reference internal" href="ireader.html#io-ireader"><span class="std std-ref">io::IReader</span></a> providing read access to a
+<code class="docutils literal notranslate"><span class="pre">MemoryQueue</span></code>. It is a class template with the queue type as parameter:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span> * \tparam Queue Type of queue to read data from.
+</pre></div>
+</div>
+<p>The public API of <code class="docutils literal notranslate"><span class="pre">MemoryQueueReader</span></code> is the same as for <a class="reference internal" href="ireader.html#io-ireader"><span class="std std-ref">io::IReader</span></a></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">/**</span>
+ <span class="o">*</span> <span class="n">Constructs</span> <span class="n">a</span> <span class="n">MemoryQueueReader</span> <span class="kn">from</span> <span class="nn">a</span> <span class="n">given</span> <span class="n">queue</span><span class="o">.</span>
+ <span class="o">*/</span>
+<span class="n">explicit</span> <span class="n">MemoryQueueReader</span><span class="p">(</span><span class="n">Queue</span><span class="o">&amp;</span> <span class="n">queue</span><span class="p">);</span>
+
+<span class="o">/**</span> \<span class="n">see</span> <span class="n">MemoryQueueReader</span><span class="p">::</span><span class="n">maxSize</span><span class="p">()</span> <span class="o">*/</span>
+<span class="n">size_t</span> <span class="n">maxSize</span><span class="p">()</span> <span class="n">const</span> <span class="n">override</span><span class="p">;</span>
+
+<span class="o">/**</span> \<span class="n">see</span> <span class="n">MemoryQueueReader</span><span class="p">::</span><span class="n">peek</span><span class="p">()</span> <span class="o">*/</span>
+<span class="p">::</span><span class="n">etl</span><span class="p">::</span><span class="n">span</span><span class="o">&lt;</span><span class="n">uint8_t</span><span class="o">&gt;</span> <span class="n">peek</span><span class="p">()</span> <span class="n">const</span> <span class="n">override</span><span class="p">;</span>
+
+<span class="o">/**</span> \<span class="n">see</span> <span class="n">MemoryQueueReader</span><span class="p">::</span><span class="n">release</span><span class="p">()</span> <span class="o">*/</span>
+<span class="n">void</span> <span class="n">release</span><span class="p">()</span> <span class="n">override</span><span class="p">;</span>
+
+<span class="o">/**</span> \<span class="n">see</span> <span class="n">Queue</span><span class="p">::</span><span class="n">Reader</span><span class="p">::</span><span class="n">available</span><span class="p">()</span> <span class="o">*/</span>
+<span class="n">size_t</span> <span class="n">available</span><span class="p">()</span> <span class="n">const</span><span class="p">;</span>
+</pre></div>
+</div>
+</section>
+<section id="usage-example">
+<h3>Usage Example<a class="headerlink" href="#usage-example" title="Link to this heading"></a></h3>
+<p>The above example using <code class="docutils literal notranslate"><span class="pre">MemoryQueueWriter</span></code> and <code class="docutils literal notranslate"><span class="pre">MemoryQueueReader</span></code> would look like this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="o">/**</span>
+<span class="linenos"> 2</span> <span class="o">*</span> <span class="n">Forwards</span> <span class="n">data</span> <span class="kn">from</span> <span class="nn">an</span> <span class="n">IReader</span> <span class="n">to</span> <span class="n">a</span> <span class="n">IWriter</span><span class="o">.</span>
+<span class="linenos"> 3</span> <span class="o">*</span> \<span class="n">param</span> <span class="n">source</span>    <span class="n">IReader</span> <span class="n">that</span> <span class="n">acts</span> <span class="k">as</span> <span class="n">source</span> <span class="n">of</span> <span class="n">data</span>
+<span class="linenos"> 4</span> <span class="o">*</span> \<span class="n">param</span> <span class="n">destination</span>   <span class="n">IWriter</span> <span class="n">that</span> <span class="n">acts</span> <span class="k">as</span> <span class="n">sink</span> <span class="n">of</span> <span class="n">data</span>
+<span class="linenos"> 5</span> <span class="o">*</span> \<span class="k">return</span> <span class="n">true</span> <span class="k">if</span> <span class="n">data</span> <span class="n">has</span> <span class="n">been</span> <span class="n">forwarded</span><span class="p">,</span> <span class="n">false</span> <span class="n">otherwise</span><span class="o">.</span>
+<span class="linenos"> 6</span> <span class="o">*/</span>
+<span class="hll"><span class="linenos"> 7</span><span class="nb">bool</span> <span class="n">forwardData</span><span class="p">(::</span><span class="n">io</span><span class="p">::</span><span class="n">IReader</span><span class="o">&amp;</span> <span class="n">source</span><span class="p">,</span> <span class="p">::</span><span class="n">io</span><span class="p">::</span><span class="n">IWriter</span><span class="o">&amp;</span> <span class="n">destination</span><span class="p">)</span>
+</span><span class="linenos"> 8</span><span class="p">{</span>
+<span class="linenos"> 9</span>    <span class="n">auto</span> <span class="n">srcData</span> <span class="o">=</span> <span class="n">source</span><span class="o">.</span><span class="n">peek</span><span class="p">();</span>
+<span class="linenos">10</span>    <span class="k">if</span> <span class="p">(</span><span class="n">srcData</span><span class="o">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+<span class="linenos">11</span>    <span class="p">{</span>
+<span class="linenos">12</span>        <span class="o">//</span> <span class="n">No</span> <span class="n">data</span> <span class="n">available</span><span class="o">.</span>
+<span class="linenos">13</span>        <span class="k">return</span> <span class="n">false</span><span class="p">;</span>
+<span class="linenos">14</span>    <span class="p">}</span>
+<span class="linenos">15</span>    <span class="o">//</span> <span class="n">Allocate</span> <span class="n">space</span> <span class="ow">in</span> <span class="n">destination</span>
+<span class="linenos">16</span>    <span class="n">auto</span> <span class="n">dstData</span> <span class="o">=</span> <span class="n">destination</span><span class="o">.</span><span class="n">allocate</span><span class="p">(</span><span class="n">srcData</span><span class="o">.</span><span class="n">size</span><span class="p">());</span>
+<span class="linenos">17</span>    <span class="k">if</span> <span class="p">(</span><span class="n">dstData</span><span class="o">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+<span class="linenos">18</span>    <span class="p">{</span>
+<span class="linenos">19</span>        <span class="o">//</span> <span class="n">Destination</span> <span class="ow">is</span> <span class="n">full</span><span class="o">.</span>
+<span class="linenos">20</span>        <span class="k">return</span> <span class="n">false</span><span class="p">;</span>
+<span class="linenos">21</span>    <span class="p">}</span>
+<span class="linenos">22</span>    <span class="p">(</span><span class="n">void</span><span class="p">)::</span><span class="n">etl</span><span class="p">::</span><span class="n">copy</span><span class="p">(</span><span class="n">srcData</span><span class="p">,</span> <span class="n">dstData</span><span class="p">);</span>
+<span class="linenos">23</span>    <span class="n">destination</span><span class="o">.</span><span class="n">commit</span><span class="p">();</span>
+<span class="linenos">24</span>    <span class="n">source</span><span class="o">.</span><span class="n">release</span><span class="p">();</span>
+<span class="linenos">25</span>    <span class="k">return</span> <span class="n">true</span><span class="p">;</span>
+<span class="linenos">26</span><span class="p">}</span>
+<span class="linenos">27</span>
+</pre></div>
+</div>
+<p>And the setup code could look like this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span>    <span class="n">using</span> <span class="n">DataStream</span>       <span class="o">=</span> <span class="p">::</span><span class="n">io</span><span class="p">::</span><span class="n">MemoryQueue</span><span class="o">&lt;</span><span class="mi">1024</span><span class="p">,</span> <span class="mi">12</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="hll"><span class="linenos"> 2</span>    <span class="n">using</span> <span class="n">DataStreamWriter</span> <span class="o">=</span> <span class="p">::</span><span class="n">io</span><span class="p">::</span><span class="n">MemoryQueueWriter</span><span class="o">&lt;</span><span class="n">DataStream</span><span class="o">&gt;</span><span class="p">;</span>
+</span><span class="hll"><span class="linenos"> 3</span>    <span class="n">using</span> <span class="n">DataStreamReader</span> <span class="o">=</span> <span class="p">::</span><span class="n">io</span><span class="p">::</span><span class="n">MemoryQueueReader</span><span class="o">&lt;</span><span class="n">DataStream</span><span class="o">&gt;</span><span class="p">;</span>
+</span><span class="linenos"> 4</span>
+<span class="linenos"> 5</span>    <span class="n">DataStream</span> <span class="n">source</span><span class="p">,</span> <span class="n">destination</span><span class="p">;</span>
+<span class="hll"><span class="linenos"> 6</span>    <span class="n">auto</span> <span class="n">srcWriter</span> <span class="o">=</span> <span class="n">DataStreamWriter</span><span class="p">{</span><span class="n">source</span><span class="p">};</span>
+</span><span class="hll"><span class="linenos"> 7</span>    <span class="n">auto</span> <span class="n">srcReader</span> <span class="o">=</span> <span class="n">DataStreamReader</span><span class="p">{</span><span class="n">source</span><span class="p">};</span>
+</span><span class="hll"><span class="linenos"> 8</span>    <span class="n">auto</span> <span class="n">dstWriter</span> <span class="o">=</span> <span class="n">DataStreamWriter</span><span class="p">{</span><span class="n">destination</span><span class="p">};</span>
+</span><span class="hll"><span class="linenos"> 9</span>    <span class="n">auto</span> <span class="n">dstReader</span> <span class="o">=</span> <span class="n">DataStreamReader</span><span class="p">{</span><span class="n">destination</span><span class="p">};</span>
+</span><span class="linenos">10</span>
+<span class="linenos">11</span>    <span class="p">{</span>
+<span class="linenos">12</span>        <span class="n">auto</span> <span class="n">d</span> <span class="o">=</span> <span class="n">srcWriter</span><span class="o">.</span><span class="n">allocate</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+<span class="linenos">13</span>        <span class="n">ASSERT_EQ</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">d</span><span class="o">.</span><span class="n">size</span><span class="p">());</span>
+<span class="linenos">14</span>        <span class="p">::</span><span class="n">etl</span><span class="p">::</span><span class="n">be_uint32_ext_t</span><span class="p">{</span><span class="n">d</span><span class="o">.</span><span class="n">data</span><span class="p">()}</span> <span class="o">=</span> <span class="mh">0x1234</span><span class="p">;</span>
+<span class="linenos">15</span>        <span class="n">srcWriter</span><span class="o">.</span><span class="n">commit</span><span class="p">();</span>
+<span class="linenos">16</span>    <span class="p">}</span>
+<span class="linenos">17</span>
+<span class="hll"><span class="linenos">18</span>    <span class="n">ASSERT_TRUE</span><span class="p">(</span><span class="n">forwardData</span><span class="p">(</span><span class="n">srcReader</span><span class="p">,</span> <span class="n">dstWriter</span><span class="p">));</span>
+</span><span class="linenos">19</span>
+<span class="linenos">20</span>    <span class="p">{</span>
+<span class="linenos">21</span>        <span class="n">auto</span> <span class="n">d</span> <span class="o">=</span> <span class="n">dstReader</span><span class="o">.</span><span class="n">peek</span><span class="p">();</span>
+<span class="linenos">22</span>        <span class="n">ASSERT_EQ</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">d</span><span class="o">.</span><span class="n">size</span><span class="p">());</span>
+<span class="linenos">23</span>        <span class="n">ASSERT_EQ</span><span class="p">(</span><span class="mh">0x1234</span><span class="p">,</span> <span class="p">::</span><span class="n">etl</span><span class="p">::</span><span class="n">be_uint32_t</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">data</span><span class="p">()));</span>
+<span class="linenos">24</span>    <span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="access-through-nested-classes">
+<h2>Access Through Nested Classes<a class="headerlink" href="#access-through-nested-classes" title="Link to this heading"></a></h2>
+<p>If performance matters, the <code class="docutils literal notranslate"><span class="pre">MemoryQueue</span></code> can also be accessed directly using it’s
+<strong>nested classes</strong> <a class="reference internal" href="#io-memoryqueue-reader"><span class="std std-ref">io::MemoryQueue::Reader</span></a> and <a class="reference internal" href="#io-memoryqueue-writer"><span class="std std-ref">io::MemoryQueue::Writer</span></a>. This
+avoids the virtual functions from the interfaces mentioned above, but the exact type of the queue
+has to be known.</p>
+<p>For intercore communication an instance of <a class="reference internal" href="#io-memoryqueue"><span class="std std-ref">io::MemoryQueue</span></a> is placed into non-cached shared
+memory. Two software components placed on different cores can communicate via the queue by creating
+instances of <a class="reference internal" href="#io-memoryqueue-reader"><span class="std std-ref">io::MemoryQueue::Reader</span></a> and <a class="reference internal" href="#io-memoryqueue-writer"><span class="std std-ref">io::MemoryQueue::Writer</span></a> using the non-virtual
+API.</p>
+<p class="plantuml">
+<a href="../../../../../_images/plantuml-1a6f409a36e862f1e99593b91064736b19bfe906.png"><img src="../../../../../_images/plantuml-1a6f409a36e862f1e99593b91064736b19bfe906.png" alt="top to bottom direction
+
+frame core0 {
+    actor SWC1
+    agent &quot;MemoryQueue::Reader&quot; as MQRC0
+    agent &quot;MemoryQueue::Writer&quot; as MQWC0
+}
+cloud SharedMemory {
+    queue MemoryQueue1 as MQ1
+    queue MemoryQueue2 as MQ2
+}
+note bottom of SharedMemory : non-cached
+frame core1 {
+    actor SWC2
+    agent &quot;MemoryQueue::Reader&quot; as MQRC1
+    agent &quot;MemoryQueue::Writer&quot; as MQWC1
+}
+
+core0 -[hidden] SharedMemory
+
+MQ2 - MQWC0
+MQ1 - MQWC1
+MQ1 - MQRC0
+MQ2 - MQRC1
+
+SWC1 -d- MQRC0
+SWC1 -u- MQWC0
+
+SWC2 -d- MQRC1
+SWC2 -u- MQWC1" style="width: 921.0px; height: 432.0px"/></a>
+</p>
+<section id="io-memoryqueue-writer">
+<span id="id4"></span><h3>io::MemoryQueue::Writer<a class="headerlink" href="#io-memoryqueue-writer" title="Link to this heading"></a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">MemoryQueue::Writer</span></code> provides an API without virtual functions to write data into a
+<code class="docutils literal notranslate"><span class="pre">MemoryQueue</span></code>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">/**</span>
+ <span class="o">*</span> <span class="n">Constructs</span> <span class="n">a</span> <span class="n">Writer</span> <span class="n">to</span> <span class="n">a</span> <span class="n">given</span> <span class="n">queue</span><span class="o">.</span>
+ <span class="o">*/</span>
+<span class="n">explicit</span> <span class="n">Writer</span><span class="p">(</span><span class="n">MemoryQueue</span><span class="o">&amp;</span> <span class="n">queue</span><span class="p">);</span>
+
+<span class="o">/**</span>
+ <span class="o">*</span> <span class="n">Allocates</span> <span class="n">a</span> <span class="n">requested</span> <span class="n">number</span> <span class="n">of</span> <span class="nb">bytes</span> <span class="ow">and</span> <span class="n">returns</span> <span class="n">them</span> <span class="k">as</span> <span class="n">a</span> <span class="nb">slice</span><span class="o">.</span> <span class="n">This</span> <span class="n">function</span> <span class="n">can</span> <span class="n">be</span>
+ <span class="o">*</span> <span class="n">called</span> <span class="n">multiple</span> <span class="n">times</span> <span class="n">before</span> <span class="n">calling</span> <span class="n">commit</span><span class="p">()</span> <span class="n">allowing</span> <span class="n">to</span> <span class="n">first</span> <span class="n">allocate</span> <span class="n">a</span> <span class="n">worst</span> <span class="n">case</span>
+ <span class="o">*</span> <span class="n">size</span> <span class="nb">slice</span> <span class="ow">and</span> <span class="n">then</span> <span class="n">trimming</span> <span class="n">it</span> <span class="n">before</span> <span class="n">calling</span> <span class="n">commit</span><span class="o">.</span>
+ <span class="o">*</span>
+ <span class="o">*</span> \<span class="n">param</span> <span class="n">size</span>  <span class="n">Number</span> <span class="n">of</span> <span class="nb">bytes</span> <span class="n">to</span> <span class="n">allocate</span> <span class="kn">from</span> <span class="nn">this</span> <span class="n">MemoryQueue</span><span class="o">.</span>
+ <span class="o">*</span> \<span class="k">return</span>  <span class="o">-</span> <span class="n">Empty</span> <span class="nb">slice</span><span class="p">,</span> <span class="k">if</span> <span class="n">requested</span> <span class="n">size</span> <span class="n">was</span> <span class="n">greater</span> <span class="k">as</span> <span class="n">MAX_ELEMENT_SIZE</span> <span class="ow">or</span> <span class="n">no</span> <span class="n">memory</span>
+ <span class="o">*</span>            <span class="ow">is</span> <span class="n">available</span>
+ <span class="o">*</span>          <span class="o">-</span> <span class="n">Slice</span> <span class="n">of</span> <span class="n">size</span> <span class="nb">bytes</span> <span class="n">otherwise</span><span class="o">.</span>
+ <span class="o">*/</span>
+<span class="p">::</span><span class="n">etl</span><span class="p">::</span><span class="n">span</span><span class="o">&lt;</span><span class="n">uint8_t</span><span class="o">&gt;</span> <span class="n">allocate</span><span class="p">(</span><span class="n">size_t</span> <span class="n">size</span><span class="p">)</span> <span class="n">const</span><span class="p">;</span>
+
+<span class="o">/**</span>
+ <span class="o">*</span> <span class="n">Makes</span> <span class="n">the</span> <span class="n">previously</span> <span class="n">allocated</span> <span class="n">data</span> <span class="n">available</span> <span class="k">for</span> <span class="n">the</span> <span class="n">Reader</span><span class="o">.</span>
+ <span class="o">*/</span>
+<span class="n">void</span> <span class="n">commit</span><span class="p">();</span>
+
+<span class="o">/**</span>
+ <span class="o">*</span> <span class="n">Returns</span> <span class="n">the</span> <span class="n">number</span> <span class="n">of</span> <span class="n">contiguous</span> <span class="nb">bytes</span> <span class="n">that</span> <span class="n">can</span> <span class="n">be</span> <span class="n">allocated</span> <span class="nb">next</span><span class="o">.</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="n">The</span> <span class="n">calculation</span> <span class="n">of</span> <span class="n">used</span> <span class="ow">and</span> <span class="n">free</span> <span class="nb">bytes</span> <span class="n">relies</span> <span class="n">on</span> <span class="n">the</span> <span class="n">fact</span> <span class="n">that</span> <span class="n">sent</span> <span class="ow">and</span> <span class="n">received</span> <span class="n">always</span>
+ <span class="o">*</span> <span class="n">point</span> <span class="n">to</span> <span class="n">valid</span> <span class="n">indices</span><span class="o">.</span> <span class="n">That</span> <span class="n">means</span><span class="p">,</span> <span class="n">they</span> <span class="n">will</span> <span class="n">never</span> <span class="n">point</span> <span class="n">to</span> <span class="n">an</span> <span class="n">index</span> <span class="n">where</span> <span class="ow">not</span> <span class="n">at</span> <span class="n">least</span>
+ <span class="o">*</span> <span class="n">MAX_ELEMENT_SIZE</span> <span class="o">+</span> <span class="n">sizeof</span><span class="p">(</span><span class="n">SIZE_TYPE</span><span class="p">)</span> <span class="nb">bytes</span> <span class="n">are</span> <span class="n">the</span> <span class="n">difference</span> <span class="n">to</span> <span class="n">the</span> <span class="n">end</span> <span class="n">of</span> <span class="n">the</span> <span class="n">data</span>
+ <span class="o">*</span> <span class="n">array</span><span class="o">.</span>
+ <span class="o">*/</span>
+<span class="n">size_t</span> <span class="n">available</span><span class="p">()</span> <span class="n">const</span><span class="p">;</span>
+
+<span class="o">/**</span>
+ <span class="o">*</span> <span class="n">Returns</span> <span class="n">the</span> <span class="n">minimum</span> <span class="n">number</span> <span class="n">of</span> <span class="n">available</span> <span class="nb">bytes</span> <span class="n">at</span> <span class="n">the</span> <span class="n">time</span> <span class="n">of</span> <span class="n">an</span> <span class="n">allocate</span> <span class="n">call</span> <span class="n">since</span> <span class="n">the</span>
+ <span class="o">*</span> <span class="n">last</span> <span class="n">reset</span> <span class="n">using</span> <span class="n">resetMinAvailable</span><span class="p">()</span><span class="o">.</span>
+ <span class="o">*/</span>
+<span class="n">size_t</span> <span class="n">minAvailable</span><span class="p">()</span> <span class="n">const</span><span class="p">;</span>
+
+<span class="o">/**</span>
+ <span class="o">*</span> <span class="n">Resets</span> <span class="n">the</span> <span class="n">minimum</span> <span class="n">number</span> <span class="n">of</span> <span class="n">available</span> <span class="nb">bytes</span> <span class="n">to</span> <span class="n">the</span> <span class="n">current</span> <span class="n">number</span> <span class="n">of</span> <span class="n">available</span> <span class="nb">bytes</span><span class="o">.</span>
+ <span class="o">*/</span>
+<span class="n">void</span> <span class="n">resetMinAvailable</span><span class="p">();</span>
+
+<span class="o">/**</span>
+ <span class="o">*</span> <span class="n">The</span> <span class="n">MemoryQueue</span> <span class="ow">is</span> <span class="n">considered</span> <span class="n">full</span> <span class="k">if</span> <span class="n">less</span> <span class="n">than</span> <span class="n">MAX_ELEMENT_SIZE</span> <span class="o">+</span> <span class="n">sizeof</span><span class="p">(</span><span class="n">SIZE_TYPE</span><span class="p">)</span>
+ <span class="o">*</span> <span class="nb">bytes</span> <span class="n">are</span> <span class="n">available</span> <span class="k">as</span> <span class="n">a</span> <span class="n">contiguous</span> <span class="n">piece</span> <span class="n">of</span> <span class="n">memory</span><span class="o">.</span>
+ <span class="o">*/</span>
+<span class="nb">bool</span> <span class="n">full</span><span class="p">()</span> <span class="n">const</span><span class="p">;</span>
+
+<span class="o">/**</span>
+ <span class="o">*</span> <span class="n">Returns</span> <span class="n">the</span> <span class="n">maximum</span> <span class="n">size</span> <span class="n">of</span> <span class="n">which</span> <span class="n">a</span> <span class="nb">slice</span> <span class="n">of</span> <span class="nb">bytes</span> <span class="n">can</span> <span class="n">be</span> <span class="n">allocated</span><span class="o">.</span>
+ <span class="o">*/</span>
+<span class="n">size_t</span> <span class="n">maxSize</span><span class="p">()</span> <span class="n">const</span><span class="p">;</span>
+</pre></div>
+</div>
+</section>
+<section id="io-memoryqueue-reader">
+<span id="id5"></span><h3>io::MemoryQueue::Reader<a class="headerlink" href="#io-memoryqueue-reader" title="Link to this heading"></a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">MemoryQueue::Reader</span></code> provides an API without virtual functions to read data from a
+<code class="docutils literal notranslate"><span class="pre">MemoryQueue</span></code>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">/**</span>
+ <span class="o">*</span> <span class="n">Constructs</span> <span class="n">a</span> <span class="n">Reader</span> <span class="kn">from</span> <span class="nn">a</span> <span class="n">given</span> <span class="n">queue</span><span class="o">.</span>
+ <span class="o">*/</span>
+<span class="n">explicit</span> <span class="n">Reader</span><span class="p">(</span><span class="n">MemoryQueue</span><span class="o">&amp;</span> <span class="n">queue</span><span class="p">);</span>
+
+<span class="o">/**</span>
+ <span class="o">*</span> <span class="n">Returns</span> <span class="n">true</span> <span class="k">if</span> <span class="n">no</span> <span class="n">data</span> <span class="ow">is</span> <span class="n">available</span><span class="o">.</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="n">Calling</span> <span class="n">peek</span><span class="p">()</span> <span class="n">on</span> <span class="n">an</span> <span class="n">empty</span> <span class="n">queue</span> <span class="n">will</span> <span class="k">return</span> <span class="n">an</span> <span class="n">empty</span> <span class="nb">slice</span><span class="o">.</span>
+ <span class="o">*/</span>
+<span class="nb">bool</span> <span class="n">empty</span><span class="p">()</span> <span class="n">const</span><span class="p">;</span>
+
+<span class="o">/**</span>
+ <span class="o">*</span> <span class="n">Returns</span> <span class="n">a</span> <span class="nb">slice</span> <span class="n">of</span> <span class="nb">bytes</span> <span class="n">pointing</span> <span class="n">to</span> <span class="n">the</span> <span class="nb">next</span> <span class="n">memory</span> <span class="n">chunk</span> <span class="n">of</span> <span class="n">the</span> <span class="n">MemoryQueue</span><span class="p">,</span> <span class="k">if</span>
+ <span class="o">*</span> <span class="n">available</span><span class="o">.</span> <span class="n">Calling</span> <span class="n">peek</span> <span class="n">on</span> <span class="n">an</span> <span class="n">empty</span> <span class="n">MemoryQueue</span> <span class="n">will</span> <span class="k">return</span> <span class="n">an</span> <span class="n">empty</span> <span class="nb">slice</span><span class="o">.</span>
+ <span class="o">*/</span>
+<span class="p">::</span><span class="n">etl</span><span class="p">::</span><span class="n">span</span><span class="o">&lt;</span><span class="n">uint8_t</span><span class="o">&gt;</span> <span class="n">peek</span><span class="p">()</span> <span class="n">const</span><span class="p">;</span>
+
+<span class="o">/**</span>
+ <span class="o">*</span> <span class="n">Releases</span> <span class="n">the</span> <span class="n">first</span> <span class="n">allocated</span> <span class="n">chunk</span> <span class="n">of</span> <span class="n">memory</span><span class="o">.</span> <span class="n">If</span> <span class="n">the</span> <span class="n">Reader</span> <span class="ow">is</span> <span class="n">empty</span><span class="p">,</span> <span class="n">calling</span> <span class="n">this</span>
+ <span class="o">*</span> <span class="n">function</span> <span class="n">has</span> <span class="n">no</span> <span class="n">effect</span><span class="o">.</span>
+ <span class="o">*/</span>
+<span class="n">void</span> <span class="n">release</span><span class="p">()</span> <span class="n">const</span><span class="p">;</span>
+
+<span class="o">/**</span>
+ <span class="o">*</span> <span class="n">Releases</span> <span class="nb">all</span> <span class="n">entries</span> <span class="n">until</span> <span class="n">empty</span><span class="p">()</span> <span class="n">returns</span> <span class="n">true</span><span class="o">.</span>
+ <span class="o">*/</span>
+<span class="n">void</span> <span class="n">clear</span><span class="p">()</span> <span class="n">const</span><span class="p">;</span>
+
+<span class="o">/**</span>
+ <span class="o">*</span> <span class="n">Returns</span> <span class="n">the</span> <span class="n">maximum</span> <span class="n">size</span> <span class="n">of</span> <span class="n">which</span> <span class="n">a</span> <span class="nb">slice</span> <span class="n">of</span> <span class="nb">bytes</span> <span class="n">can</span> <span class="n">be</span> <span class="n">read</span><span class="o">.</span>
+ <span class="o">*/</span>
+<span class="n">size_t</span> <span class="n">maxSize</span><span class="p">()</span> <span class="n">const</span><span class="p">;</span>
+
+<span class="o">/**</span>
+ <span class="o">*</span> <span class="n">Returns</span> <span class="n">the</span> <span class="n">number</span> <span class="n">of</span> <span class="n">contiguous</span> <span class="nb">bytes</span> <span class="n">that</span> <span class="n">can</span> <span class="n">be</span> <span class="n">allocated</span> <span class="nb">next</span><span class="o">.</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="n">The</span> <span class="n">calculation</span> <span class="n">of</span> <span class="n">used</span> <span class="ow">and</span> <span class="n">free</span> <span class="nb">bytes</span> <span class="n">relies</span> <span class="n">on</span> <span class="n">the</span> <span class="n">fact</span> <span class="n">that</span> <span class="n">sent</span> <span class="ow">and</span> <span class="n">received</span> <span class="n">always</span>
+ <span class="o">*</span> <span class="n">point</span> <span class="n">to</span> <span class="n">valid</span> <span class="n">indices</span><span class="o">.</span> <span class="n">That</span> <span class="n">means</span><span class="p">,</span> <span class="n">they</span> <span class="n">will</span> <span class="n">never</span> <span class="n">point</span> <span class="n">to</span> <span class="n">an</span> <span class="n">index</span> <span class="n">where</span> <span class="ow">not</span> <span class="n">at</span> <span class="n">least</span>
+ <span class="o">*</span> <span class="n">MAX_ELEMENT_SIZE</span> <span class="o">+</span> <span class="n">sizeof</span><span class="p">(</span><span class="n">SIZE_TYPE</span><span class="p">)</span> <span class="nb">bytes</span> <span class="n">are</span> <span class="n">the</span> <span class="n">difference</span> <span class="n">to</span> <span class="n">the</span> <span class="n">end</span> <span class="n">of</span> <span class="n">the</span> <span class="n">data</span>
+ <span class="o">*</span> <span class="n">array</span><span class="o">.</span>
+ <span class="o">*/</span>
+<span class="n">size_t</span> <span class="n">available</span><span class="p">()</span> <span class="n">const</span><span class="p">;</span>
+</pre></div>
+</div>
+</section>
+<section id="id6">
+<h3>Usage Example<a class="headerlink" href="#id6" title="Link to this heading"></a></h3>
+<p>As <code class="docutils literal notranslate"><span class="pre">MemoryQueue</span></code> is a class template, user code might also become templated code as shown in the
+following example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="o">/**</span>
+<span class="linenos"> 2</span> <span class="o">*</span> <span class="n">Forwards</span> <span class="n">data</span> <span class="kn">from</span> <span class="nn">a</span> <span class="n">reader</span> <span class="n">of</span> <span class="n">a</span> <span class="n">MemoryQueue</span> <span class="n">to</span> <span class="n">a</span> <span class="n">writer</span> <span class="n">of</span> <span class="n">another</span> <span class="n">MemoryQueue</span>
+<span class="linenos"> 3</span> <span class="o">*</span> \<span class="n">param</span> <span class="n">source</span>    <span class="n">Reader</span> <span class="n">of</span> <span class="n">the</span> <span class="n">MemoryQueue</span> <span class="n">that</span> <span class="n">acts</span> <span class="k">as</span> <span class="n">source</span> <span class="n">of</span> <span class="n">data</span>
+<span class="linenos"> 4</span> <span class="o">*</span> \<span class="n">param</span> <span class="n">destination</span>   <span class="n">Writer</span> <span class="n">of</span> <span class="n">the</span> <span class="n">MemoryQueue</span> <span class="n">that</span> <span class="n">acts</span> <span class="k">as</span> <span class="n">sink</span> <span class="n">of</span> <span class="n">data</span>
+<span class="linenos"> 5</span> <span class="o">*</span> \<span class="k">return</span> <span class="n">true</span> <span class="k">if</span> <span class="n">data</span> <span class="n">has</span> <span class="n">been</span> <span class="n">forwarded</span><span class="p">,</span> <span class="n">false</span> <span class="n">otherwise</span><span class="o">.</span>
+<span class="linenos"> 6</span> <span class="o">*/</span>
+<span class="hll"><span class="linenos"> 7</span><span class="n">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">Queue</span><span class="o">&gt;</span>
+</span><span class="hll"><span class="linenos"> 8</span><span class="nb">bool</span> <span class="n">forwardData</span><span class="p">(</span><span class="n">typename</span> <span class="n">Queue</span><span class="p">::</span><span class="n">Reader</span><span class="o">&amp;</span> <span class="n">source</span><span class="p">,</span> <span class="n">typename</span> <span class="n">Queue</span><span class="p">::</span><span class="n">Writer</span><span class="o">&amp;</span> <span class="n">destination</span><span class="p">)</span>
+</span><span class="linenos"> 9</span><span class="p">{</span>
+<span class="linenos">10</span>    <span class="n">auto</span> <span class="n">srcData</span> <span class="o">=</span> <span class="n">source</span><span class="o">.</span><span class="n">peek</span><span class="p">();</span>
+<span class="linenos">11</span>    <span class="k">if</span> <span class="p">(</span><span class="n">srcData</span><span class="o">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+<span class="linenos">12</span>    <span class="p">{</span>
+<span class="linenos">13</span>        <span class="o">//</span> <span class="n">No</span> <span class="n">data</span> <span class="n">available</span><span class="o">.</span>
+<span class="linenos">14</span>        <span class="k">return</span> <span class="n">false</span><span class="p">;</span>
+<span class="linenos">15</span>    <span class="p">}</span>
+<span class="linenos">16</span>    <span class="o">//</span> <span class="n">Allocate</span> <span class="n">space</span> <span class="ow">in</span> <span class="n">destination</span>
+<span class="linenos">17</span>    <span class="n">auto</span> <span class="n">dstData</span> <span class="o">=</span> <span class="n">destination</span><span class="o">.</span><span class="n">allocate</span><span class="p">(</span><span class="n">srcData</span><span class="o">.</span><span class="n">size</span><span class="p">());</span>
+<span class="linenos">18</span>    <span class="k">if</span> <span class="p">(</span><span class="n">dstData</span><span class="o">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+<span class="linenos">19</span>    <span class="p">{</span>
+<span class="linenos">20</span>        <span class="o">//</span> <span class="n">Destination</span> <span class="ow">is</span> <span class="n">full</span><span class="o">.</span>
+<span class="linenos">21</span>        <span class="k">return</span> <span class="n">false</span><span class="p">;</span>
+<span class="linenos">22</span>    <span class="p">}</span>
+<span class="linenos">23</span>    <span class="p">(</span><span class="n">void</span><span class="p">)::</span><span class="n">etl</span><span class="p">::</span><span class="n">mem_copy</span><span class="p">(</span><span class="n">srcData</span><span class="o">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">srcData</span><span class="o">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">dstData</span><span class="o">.</span><span class="n">begin</span><span class="p">());</span>
+<span class="linenos">24</span>    <span class="n">destination</span><span class="o">.</span><span class="n">commit</span><span class="p">();</span>
+<span class="linenos">25</span>    <span class="n">source</span><span class="o">.</span><span class="n">release</span><span class="p">();</span>
+<span class="linenos">26</span>    <span class="k">return</span> <span class="n">true</span><span class="p">;</span>
+<span class="linenos">27</span><span class="p">}</span>
+<span class="linenos">28</span>
+</pre></div>
+</div>
+<p>The code instantiating reader and writer could look like this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span>    <span class="n">using</span> <span class="n">DataStream</span>       <span class="o">=</span> <span class="p">::</span><span class="n">io</span><span class="p">::</span><span class="n">MemoryQueue</span><span class="o">&lt;</span><span class="mi">1024</span><span class="p">,</span> <span class="mi">12</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="hll"><span class="linenos"> 2</span>    <span class="n">using</span> <span class="n">DataStreamWriter</span> <span class="o">=</span> <span class="n">DataStream</span><span class="p">::</span><span class="n">Writer</span><span class="p">;</span>
+</span><span class="hll"><span class="linenos"> 3</span>    <span class="n">using</span> <span class="n">DataStreamReader</span> <span class="o">=</span> <span class="n">DataStream</span><span class="p">::</span><span class="n">Reader</span><span class="p">;</span>
+</span><span class="linenos"> 4</span>
+<span class="linenos"> 5</span>    <span class="n">DataStream</span> <span class="n">source</span><span class="p">,</span> <span class="n">destination</span><span class="p">;</span>
+<span class="hll"><span class="linenos"> 6</span>    <span class="n">auto</span> <span class="n">srcWriter</span> <span class="o">=</span> <span class="n">DataStreamWriter</span><span class="p">{</span><span class="n">source</span><span class="p">};</span>
+</span><span class="hll"><span class="linenos"> 7</span>    <span class="n">auto</span> <span class="n">srcReader</span> <span class="o">=</span> <span class="n">DataStreamReader</span><span class="p">{</span><span class="n">source</span><span class="p">};</span>
+</span><span class="hll"><span class="linenos"> 8</span>    <span class="n">auto</span> <span class="n">dstWriter</span> <span class="o">=</span> <span class="n">DataStreamWriter</span><span class="p">{</span><span class="n">destination</span><span class="p">};</span>
+</span><span class="hll"><span class="linenos"> 9</span>    <span class="n">auto</span> <span class="n">dstReader</span> <span class="o">=</span> <span class="n">DataStreamReader</span><span class="p">{</span><span class="n">destination</span><span class="p">};</span>
+</span><span class="linenos">10</span>
+<span class="linenos">11</span>    <span class="p">{</span>
+<span class="linenos">12</span>        <span class="n">auto</span> <span class="n">d</span> <span class="o">=</span> <span class="n">srcWriter</span><span class="o">.</span><span class="n">allocate</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+<span class="linenos">13</span>        <span class="n">ASSERT_EQ</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">d</span><span class="o">.</span><span class="n">size</span><span class="p">());</span>
+<span class="linenos">14</span>        <span class="p">::</span><span class="n">etl</span><span class="p">::</span><span class="n">be_uint32_ext_t</span><span class="p">{</span><span class="n">d</span><span class="o">.</span><span class="n">data</span><span class="p">()}</span> <span class="o">=</span> <span class="mh">0x1234</span><span class="p">;</span>
+<span class="linenos">15</span>        <span class="n">srcWriter</span><span class="o">.</span><span class="n">commit</span><span class="p">();</span>
+<span class="linenos">16</span>    <span class="p">}</span>
+<span class="linenos">17</span>
+<span class="hll"><span class="linenos">18</span>    <span class="n">ASSERT_TRUE</span><span class="p">(</span><span class="n">forwardData</span><span class="o">&lt;</span><span class="n">DataStream</span><span class="o">&gt;</span><span class="p">(</span><span class="n">srcReader</span><span class="p">,</span> <span class="n">dstWriter</span><span class="p">));</span>
+</span><span class="linenos">19</span>
+<span class="linenos">20</span>    <span class="p">{</span>
+<span class="linenos">21</span>        <span class="n">auto</span> <span class="n">d</span> <span class="o">=</span> <span class="n">dstReader</span><span class="o">.</span><span class="n">peek</span><span class="p">();</span>
+<span class="linenos">22</span>        <span class="n">ASSERT_EQ</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">d</span><span class="o">.</span><span class="n">size</span><span class="p">());</span>
+<span class="linenos">23</span>        <span class="n">ASSERT_EQ</span><span class="p">(</span><span class="mh">0x1234</span><span class="p">,</span> <span class="p">::</span><span class="n">etl</span><span class="p">::</span><span class="n">be_uint32_t</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">data</span><span class="p">()));</span>
+<span class="linenos">24</span>    <span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026 Accenture.</p>
+  </div>
+
+  <div role="footer_string">
+    <p>Documentation from 2026-02-24 10:51:54, official build.</p>
+
+    
+      <a href="../../../../../_sources/libs/bsw/io/doc/user/memory_queue.rst.txt" rel="nofollow"> View page source</a>
+    
+
+  </div>
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(false);
+      });
+  </script> 
+
+</body>
+</html>

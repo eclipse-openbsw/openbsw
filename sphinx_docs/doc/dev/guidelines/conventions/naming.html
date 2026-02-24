@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="EclipseOpenBSWDocumentation" name="dox_trace_storage" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Naming Conventions &mdash; Eclipse OpenBSW Documentation  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/rtd_theme_overrides.css?v=6fd0d55b" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=eafc0fe6" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/colors.css?v=3cafd8aa" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/colored_table.css?v=34b816d5" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/header.css?v=e632285e" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/dox_util_colors.css?v=dd14b177" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/dox_trace.css?v=60d3f72c" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../../../../_static/copybutton.js?v=f281be69"></script>
+        <script src="../../../../_static/dox_trace.js?v=40719b51"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="Statements and Expressions" href="statements.html" />
+    <link rel="prev" title="Namespaces" href="namespaces.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Eclipse OpenBSW Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Learning</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../learning/overview.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../learning/SysTest/HW_Testing_Guide.html">Hardware Testing Guide</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guidelines</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Coding Conventions</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="classes.html">Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="comments.html">Comments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="constants.html">Constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="disallowed.html">Disallowed Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="enumerations.html">Enumerations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="files.html">Files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="functions.html">Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="initialization.html">Initialization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interfaces.html">Low Level Interfaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="namespaces.html">Namespaces</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Naming Conventions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#general-naming-rules">General Naming Rules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#type-names">Type Names</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#variable-names">Variable Names</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#constant-names">Constant Names</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-names">Function Names</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#classes">Classes</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#class-names">Class Names</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#member-variable-names">Member Variable Names</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#namespace-names">Namespace Names</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#file-names">File Names</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-names">Module Names</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#special-cases">Special Cases</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#abbreviations-in-names">Abbreviations in Names</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#boolean-variables-and-functions">Boolean Variables and Functions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#plural-forms-should-be-used-on-names-representing-a-collection-of-objects">Plural Forms Should Be Used on Names Representing a Collection of Objects</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="statements.html">Statements and Expressions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../practices.html">Coding Practices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../formatting/index.html">Formatting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../unittests.html">Unit Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../module.html">Module Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../documentation.html">Module Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../diagrams.html">Diagrams</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../3rdparty.html">Third Party Libraries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commit_message.html">Commit Message</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pull_request.html">Pull Request</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Platforms</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../platforms/posix/index.html">POSIX</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../platforms/s32k148evb/index.html">S32K148 Evaluation Board</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Features</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../features/storage.html">Persistent Storage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/functional_safety.html">Functional Safety</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Software Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/common.html">Common</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/posix.html">Posix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/s32k1xx.html">S32K1xx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/executables.html">Executables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/mocks.html">Mocks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tools/UdsTool/doc/index.html">UdsTool</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tools/puncover_tool/doc/index.html">Puncover</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Eclipse OpenBSW Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="index.html">Coding Conventions</a> &raquo;</li>
+        
+        <li>Naming Conventions</li>
+    
+
+    
+
+      <li class="wy-breadcrumbs-aside">
+
+        <!-- DOCUMENT STATUS -->
+
+        
+
+        <!-- DATA CLASSIFICATION -->
+
+        
+
+      </li>
+
+    
+  </ul>
+
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="naming-conventions">
+<span id="style-naming-conventions"></span><h1>Naming Conventions<a class="headerlink" href="#naming-conventions" title="Link to this heading"></a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<section id="general-naming-rules">
+<h2>General Naming Rules<a class="headerlink" href="#general-naming-rules" title="Link to this heading"></a></h2>
+<dl>
+<dt><span class="target" id="cpp-001"><code class="highlight highlight-rule docutils literal notranslate"><span class="pre">[rule]</span> <a class="reference internal" href="#cpp-001"><span class="pre">CPP-001</span></a></code></span> All names should be in English</dt><dd><p>The single exception to this rule is if there is a necessity to use names
+originating from non-English documentation.</p>
+</dd>
+<dt><span class="target" id="cpp-002"><code class="highlight highlight-rule docutils literal notranslate"><span class="pre">[rule]</span> <a class="reference internal" href="#cpp-002"><span class="pre">CPP-002</span></a></code></span> Use intention-revealing names</dt><dd><p>The name of a variable, type or function should intuitively imply <strong>why it
+exists and what it does</strong>. Spending a considerable amount of time finding
+good names saves future time for everyone (including yourself) wanting to
+read and understand the code.</p>
+</dd>
+<dt><span class="target" id="cpp-003"><code class="highlight highlight-rule docutils literal notranslate"><span class="pre">[rule]</span> <a class="reference internal" href="#cpp-003"><span class="pre">CPP-003</span></a></code></span> As long as necessary - as short as possible</dt><dd><p>When choosing names, aim for improving readability of the code. Names should
+be descriptive, but at the same time as short as possible.</p>
+<p>Adding meaningful context can help to better/faster understand your code.
+For example a variable named <code class="docutils literal notranslate"><span class="pre">address</span></code> is probably considered rather
+ambiguous. Adding more context to its name, e.g.  <code class="docutils literal notranslate"><span class="pre">ipAddress</span></code> or
+<code class="docutils literal notranslate"><span class="pre">postalAddress</span></code> makes it much easier to reason about this variable without
+even knowing which software module it is in.  On the other hand, overly
+complicated names and gratuitous context (e.g.
+<code class="docutils literal notranslate"><span class="pre">BspEthernetControllerInstanceManager</span></code>) are hard to read and remember, and
+only increase the mental overhead in understanding the code. Also, keep in
+mind that type of the variable, the usage of well-known idioms (like naming
+a loop-counter variable <code class="docutils literal notranslate"><span class="pre">i</span></code>), etc. also contribute to the context and help
+the reader.</p>
+</dd>
+</dl>
+</section>
+<section id="type-names">
+<h2>Type Names<a class="headerlink" href="#type-names" title="Link to this heading"></a></h2>
+<p><span class="target" id="cpp-004"><code class="highlight highlight-rule docutils literal notranslate"><span class="pre">[rule]</span> <a class="reference internal" href="#cpp-004"><span class="pre">CPP-004</span></a></code></span> Names representing types must be written in <a class="reference external" href="https://en.wikipedia.org/wiki/Camel_case">UpperCamelCase</a>.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">using</span><span class="w"> </span><span class="n">TcpipEventManager</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">::</span><span class="n">os</span><span class="o">::</span><span class="n">EventManager</span><span class="o">&lt;</span><span class="n">task_tcpip</span><span class="o">&gt;</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Any exceptions to this rule need to have a reasonable justification and in that
+case should be applied consistently within a module (e.g. <code class="docutils literal notranslate"><span class="pre">etl</span></code> types use
+<em>snake_case</em> notation in order to match with their STL counterpart). In general
+those exceptions should be rare!</p>
+</section>
+<section id="variable-names">
+<span id="id1"></span><h2>Variable Names<a class="headerlink" href="#variable-names" title="Link to this heading"></a></h2>
+<p><span class="target" id="cpp-005"><code class="highlight highlight-rule docutils literal notranslate"><span class="pre">[rule]</span> <a class="reference internal" href="#cpp-005"><span class="pre">CPP-005</span></a></code></span> Variable names must be written in <a class="reference external" href="https://en.wikipedia.org/wiki/Camel_case">lowerCamelCase</a> and should not carry any
+prefix (except <a class="reference internal" href="#class-member-variables"><span class="std std-ref">Member Variable Names</span></a>)</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">Particle</span><span class="w"> </span><span class="n">higgsBoson</span><span class="p">;</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>We <em>do not</em> use <a class="reference external" href="https://en.wikipedia.org/wiki/Hungarian_notation">Hungarian Notation</a>.</p>
+</div>
+</section>
+<section id="constant-names">
+<h2>Constant Names<a class="headerlink" href="#constant-names" title="Link to this heading"></a></h2>
+<p><span class="target" id="cpp-006"><code class="highlight highlight-rule docutils literal notranslate"><span class="pre">[rule]</span> <a class="reference internal" href="#cpp-006"><span class="pre">CPP-006</span></a></code></span> Constants with static storage duration, e.g. global <code class="docutils literal notranslate"><span class="pre">const</span></code>, <code class="docutils literal notranslate"><span class="pre">constexpr</span></code> or
+local <code class="docutils literal notranslate"><span class="pre">static</span> <span class="pre">const</span></code>, are named using <code class="docutils literal notranslate"><span class="pre">ALL_CAPITAL_LETTERS</span></code> interleaved with underscores.</p>
+<p><span class="target" id="cpp-007"><code class="highlight highlight-rule docutils literal notranslate"><span class="pre">[rule]</span> <a class="reference internal" href="#cpp-007"><span class="pre">CPP-007</span></a></code></span> All other constants, e.g. local non-static, follow the usual <a class="reference internal" href="#variable-names"><span class="std std-ref">Variable Names</span></a>
+convention.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">SOME_GLOBAL_CONSTANT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1337</span><span class="p">;</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Life</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">MEANING</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">42</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="nf">halfTheTruth</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">value</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">half</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">half</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</section>
+<section id="function-names">
+<h2>Function Names<a class="headerlink" href="#function-names" title="Link to this heading"></a></h2>
+<p><span class="target" id="cpp-008"><code class="highlight highlight-rule docutils literal notranslate"><span class="pre">[rule]</span> <a class="reference internal" href="#cpp-008"><span class="pre">CPP-008</span></a></code></span> Choose expressive names for (member-)functions and format them using
+<a class="reference external" href="https://en.wikipedia.org/wiki/Camel_case">lowerCamelCase</a>.</p>
+<p>Usually function names contain verbs reflecting what they are actually doing.
+Thereby, choose one word per concept, e.g. do not mix <code class="docutils literal notranslate"><span class="pre">fetch</span></code>, <code class="docutils literal notranslate"><span class="pre">retrieve</span></code>
+and <code class="docutils literal notranslate"><span class="pre">get</span></code> within the same context.</p>
+<p>The type name of the object is implicit, and should be avoided in a method name.
+Try to be precise without repeating yourself.  For example if you provide a
+function to send a <code class="docutils literal notranslate"><span class="pre">CanFrame</span></code> just call it <code class="docutils literal notranslate"><span class="pre">send</span></code> instead of
+<code class="docutils literal notranslate"><span class="pre">sendCanFrame</span></code>. The function signature already tells the user that this
+function sends a <code class="docutils literal notranslate"><span class="pre">CanFrame</span></code>.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// good</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CanTransceiver</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="n">ErrorCode</span><span class="w"> </span><span class="n">send</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">CanFrame</span><span class="o">&amp;</span><span class="w"> </span><span class="n">frame</span><span class="p">);</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="nf">addGlobalListener</span><span class="p">(</span><span class="n">ICanFrameListener</span><span class="o">&amp;</span><span class="w"> </span><span class="n">listener</span><span class="p">);</span>
+<span class="p">};</span>
+
+<span class="c1">// bad</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CanTransceiver</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="n">ErrorCode</span><span class="w"> </span><span class="n">SendFrame</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">CanFrame</span><span class="o">&amp;</span><span class="w"> </span><span class="n">frame</span><span class="p">);</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="nf">AddGlobalListener</span><span class="p">(</span><span class="n">ICanFrameListener</span><span class="o">&amp;</span><span class="w"> </span><span class="n">listener</span><span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</section>
+<section id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Link to this heading"></a></h2>
+<section id="class-names">
+<span id="id2"></span><h3>Class Names<a class="headerlink" href="#class-names" title="Link to this heading"></a></h3>
+<p><span class="target" id="cpp-009"><code class="highlight highlight-rule docutils literal notranslate"><span class="pre">[rule]</span> <a class="reference internal" href="#cpp-009"><span class="pre">CPP-009</span></a></code></span> <strong>Class names</strong> are written in <a class="reference external" href="https://en.wikipedia.org/wiki/Camel_case">UpperCamelCase</a>.</p>
+<blockquote>
+<div><p>Also abbreviations like <code class="docutils literal notranslate"><span class="pre">CAN</span></code> are camel cased to <code class="docutils literal notranslate"><span class="pre">Can</span></code> .</p>
+</div></blockquote>
+<p><span class="target" id="cpp-010"><code class="highlight highlight-rule docutils literal notranslate"><span class="pre">[rule]</span> <a class="reference internal" href="#cpp-010"><span class="pre">CPP-010</span></a></code></span> <strong>Interface names</strong> start prefixed with a capital <code class="docutils literal notranslate"><span class="pre">I</span></code>.</p>
+<p><span class="target" id="cpp-011"><code class="highlight highlight-rule docutils literal notranslate"><span class="pre">[rule]</span> <a class="reference internal" href="#cpp-011"><span class="pre">CPP-011</span></a></code></span> Names of <strong>abstract classes</strong> are not treated specially any
+more, we used to prefix them with <code class="docutils literal notranslate"><span class="pre">Abstract</span></code>.</p>
+<p><span class="target" id="cpp-012"><code class="highlight highlight-rule docutils literal notranslate"><span class="pre">[rule]</span> <a class="reference internal" href="#cpp-012"><span class="pre">CPP-012</span></a></code></span> In unit tests, when writing a <strong>mock</strong>, the class name is usually
+postfixed with <cite>Mock</cite>.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// good</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CanTransceiver</span><span class="p">;</span><span class="w">             </span><span class="c1">// regular class</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CanTransceiverMock</span><span class="p">;</span><span class="w">         </span><span class="c1">// according mock class</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ITransportMessageProvider</span><span class="p">;</span><span class="w">  </span><span class="c1">// interface</span>
+
+<span class="c1">// bad</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CANTransceiver</span><span class="p">;</span><span class="w">             </span><span class="c1">// abbreviation not camel case</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">filteredLinFrameListener</span><span class="p">;</span><span class="w">   </span><span class="c1">// wrong capitalization</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">AbstractDiagJob</span><span class="p">;</span><span class="w">            </span><span class="c1">// Abstract prefix is deprecated</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p>Global naming conventions in <a class="reference internal" href="#style-naming-conventions"><span class="std std-ref">Naming Conventions</span></a></p>
+</div>
+</section>
+<section id="member-variable-names">
+<span id="class-member-variables"></span><h3>Member Variable Names<a class="headerlink" href="#member-variable-names" title="Link to this heading"></a></h3>
+<p><span class="target" id="cpp-013"><code class="highlight highlight-rule docutils literal notranslate"><span class="pre">[rule]</span> <a class="reference internal" href="#cpp-013"><span class="pre">CPP-013</span></a></code></span> Member variables of a <code class="docutils literal notranslate"><span class="pre">class</span></code>, <code class="docutils literal notranslate"><span class="pre">struct</span></code> or <code class="docutils literal notranslate"><span class="pre">union</span></code> shall be prefixed with
+an <code class="docutils literal notranslate"><span class="pre">_</span></code> (underscore) in order to distinguish them easily from local variables.</p>
+<p><span class="target" id="cpp-014"><code class="highlight highlight-rule docutils literal notranslate"><span class="pre">[rule]</span> <a class="reference internal" href="#cpp-014"><span class="pre">CPP-014</span></a></code></span> If a <code class="docutils literal notranslate"><span class="pre">struct</span></code> or <code class="docutils literal notranslate"><span class="pre">union</span></code> is a <a class="reference external" href="https://en.cppreference.com/w/cpp/named_req/PODType">POD</a>, i.e. all members are public and it
+does not provide any functions, you can omit the prefix.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In <strong>legacy code</strong> you will find the prefix <code class="docutils literal notranslate"><span class="pre">f</span></code> a lot but also <code class="docutils literal notranslate"><span class="pre">m</span></code> or
+<code class="docutils literal notranslate"><span class="pre">_</span></code>. You can keep these prefixes as long as you stay consistent within
+your legacy module. <span class="target" id="cpp-015"><code class="highlight highlight-rule docutils literal notranslate"><span class="pre">[rule]</span> <a class="reference internal" href="#cpp-015"><span class="pre">CPP-015</span></a></code></span> <strong>Never mix styles!</strong></p>
+</div>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">CanTransceiver</span><span class="w">    </span><span class="c1">// good</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="o">::</span><span class="n">etl</span><span class="o">::</span><span class="n">intrusive_forward_list</span><span class="o">&lt;</span><span class="n">ICanFrameListener</span><span class="p">,</span><span class="w"> </span><span class="o">::</span><span class="n">etl</span><span class="o">::</span><span class="n">forward_link</span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">_listeners</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">Result</span><span class="w">           </span><span class="c1">// good</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="o">::</span><span class="n">bsp</span><span class="o">::</span><span class="n">ErrorCode</span><span class="w"> </span><span class="n">status</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">value</span><span class="p">;</span>
+<span class="p">};</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">CanTransceiver</span><span class="w">    </span><span class="c1">// bad, no member prefix</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="o">::</span><span class="n">etl</span><span class="o">::</span><span class="n">intrusive_forward_list</span><span class="o">&lt;</span><span class="n">ICanFrameListener</span><span class="p">,</span><span class="w"> </span><span class="o">::</span><span class="n">etl</span><span class="o">::</span><span class="n">forward_link</span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">listeners</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">Result</span><span class="w">           </span><span class="c1">// bad, suffix and mixed style</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="o">::</span><span class="n">bsp</span><span class="o">::</span><span class="n">ErrorCode</span><span class="w"> </span><span class="n">Status</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">value_</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="namespace-names">
+<h2>Namespace Names<a class="headerlink" href="#namespace-names" title="Link to this heading"></a></h2>
+<p><span class="target" id="cpp-016"><code class="highlight highlight-rule docutils literal notranslate"><span class="pre">[rule]</span> <a class="reference internal" href="#cpp-016"><span class="pre">CPP-016</span></a></code></span> Names representing namespaces should be all lowercase.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">model</span><span class="o">::</span><span class="n">analyzer</span>
+<span class="n">io</span><span class="o">::</span><span class="n">iomanager</span>
+<span class="n">common</span><span class="o">::</span><span class="n">math</span><span class="o">::</span><span class="n">geometry</span>
+</pre></div>
+</div>
+</section>
+<section id="file-names">
+<h2>File Names<a class="headerlink" href="#file-names" title="Link to this heading"></a></h2>
+<p><span class="target" id="cpp-017"><code class="highlight highlight-rule docutils literal notranslate"><span class="pre">[rule]</span> <a class="reference internal" href="#cpp-017"><span class="pre">CPP-017</span></a></code></span> Files containing classes should only contain a single class. The header and
+source file are named according to that class in <em>PascalCase</em>, e.g. <code class="file docutils literal notranslate"><span class="pre">MyClass.h</span></code> and
+<code class="file docutils literal notranslate"><span class="pre">MyClass.cpp</span></code>.</p>
+<p><span class="target" id="cpp-018"><code class="highlight highlight-rule docutils literal notranslate"><span class="pre">[rule]</span> <a class="reference internal" href="#cpp-018"><span class="pre">CPP-018</span></a></code></span> The <strong>extension</strong> for C++ source files is <code class="file docutils literal notranslate"><span class="pre">.cpp</span></code>, the extension for C
+source files is <code class="file docutils literal notranslate"><span class="pre">.c</span></code>, the extension for assembly files is <code class="file docutils literal notranslate"><span class="pre">.s</span></code>.
+Header files have the extension <code class="file docutils literal notranslate"><span class="pre">.h</span></code> no matter which content.</p>
+<p><span class="target" id="cpp-022"><code class="highlight highlight-rule docutils literal notranslate"><span class="pre">[rule]</span> <a class="reference internal" href="#cpp-022"><span class="pre">CPP-022</span></a></code></span> If a file contains no class but only free function declarations it should
+have a meaningful name in <em>camelCase</em>, e.g. <code class="file docutils literal notranslate"><span class="pre">routingAddons.h</span></code>.</p>
+</section>
+<section id="module-names">
+<h2>Module Names<a class="headerlink" href="#module-names" title="Link to this heading"></a></h2>
+<p><span class="target" id="cpp-023"><code class="highlight highlight-rule docutils literal notranslate"><span class="pre">[rule]</span> <a class="reference internal" href="#cpp-023"><span class="pre">CPP-023</span></a></code></span> Module names must be written in <a class="reference external" href="https://en.wikipedia.org/wiki/Camel_case">lowerCamelCase</a>.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// good</span>
+<span class="n">doip</span>
+<span class="n">cpp2Crypto</span>
+<span class="n">osUtils</span>
+<span class="n">noInitRam</span>
+
+<span class="c1">// bad</span>
+<span class="n">cpp2can</span>
+<span class="n">state_machine</span>
+<span class="n">mymodule</span>
+<span class="n">YourModule</span>
+</pre></div>
+</div>
+</section>
+<section id="special-cases">
+<h2>Special Cases<a class="headerlink" href="#special-cases" title="Link to this heading"></a></h2>
+<section id="abbreviations-in-names">
+<h3>Abbreviations in Names<a class="headerlink" href="#abbreviations-in-names" title="Link to this heading"></a></h3>
+<p><span class="target" id="cpp-019"><code class="highlight highlight-rule docutils literal notranslate"><span class="pre">[rule]</span> <a class="reference internal" href="#cpp-019"><span class="pre">CPP-019</span></a></code></span> Abbreviations in code should be written to match the appropriate contextual
+casing style to maintain style consistency and code readability.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">CANReader</span><span class="w">                  </span><span class="c1">// bad, not using UpperCamelCase</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="kt">uint32_t</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">can_bus</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span><span class="p">;</span><span class="w"> </span><span class="c1">// bad, not using UPPER_SNAKE_CASE</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">initCAN</span><span class="p">();</span><span class="w">              </span><span class="c1">// bad, not using lowerCamelCase</span>
+<span class="p">};</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">CanReader</span><span class="w">                  </span><span class="c1">// good</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="kt">uint32_t</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">CAN_BUS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span><span class="p">;</span><span class="w"> </span><span class="c1">// good</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">initCan</span><span class="p">();</span><span class="w">              </span><span class="c1">// good</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</section>
+<section id="boolean-variables-and-functions">
+<h3>Boolean Variables and Functions<a class="headerlink" href="#boolean-variables-and-functions" title="Link to this heading"></a></h3>
+<ul>
+<li><p><span class="target" id="cpp-020"><code class="highlight highlight-rule docutils literal notranslate"><span class="pre">[rule]</span> <a class="reference internal" href="#cpp-020"><span class="pre">CPP-020</span></a></code></span> Boolean variable and function names shall start with <code class="docutils literal notranslate"><span class="pre">is</span></code> or <code class="docutils literal notranslate"><span class="pre">has</span></code>.
+Likewise, a function prefixed with <code class="docutils literal notranslate"><span class="pre">has</span></code> or <code class="docutils literal notranslate"><span class="pre">is</span></code> shall return a boolean.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">bool</span><span class="w"> </span><span class="n">isTerminated</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">connection</span><span class="p">.</span><span class="n">terminate</span><span class="p">();</span><span class="w">   </span><span class="c1">// good</span>
+<span class="kt">bool</span><span class="w"> </span><span class="n">terminated</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">connection</span><span class="p">.</span><span class="n">terminate</span><span class="p">();</span><span class="w">     </span><span class="c1">// bad</span>
+
+<span class="kt">bool</span><span class="w"> </span><span class="nf">hasValidPayload</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">}</span><span class="w">     </span><span class="c1">// good</span>
+<span class="kt">bool</span><span class="w"> </span><span class="nf">checkPayload</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">}</span><span class="w">              </span><span class="c1">// bad</span>
+</pre></div>
+</div>
+</li>
+<li><p><span class="target" id="cpp-021"><code class="highlight highlight-rule docutils literal notranslate"><span class="pre">[rule]</span> <a class="reference internal" href="#cpp-021"><span class="pre">CPP-021</span></a></code></span> Negated boolean variable names must be avoided.</p>
+<p>The problem arises when such a name is used in conjunction with the logical
+negation operator as this results in a double negative. It is not immediately
+apparent what <code class="docutils literal notranslate"><span class="pre">!isNotFound</span></code> means.</p>
+</li>
+<li><p>Try to find short and precise names for the variables or functions. It often depends on the
+context, e.g. a variable within a <cite>Connection</cite> class can be named <code class="docutils literal notranslate"><span class="pre">isTerminated</span></code>, but in a
+broader context it might be good to name it <code class="docutils literal notranslate"><span class="pre">isConnectionTerminated</span></code>.</p>
+<p>Generally, avoid misunderstandings about the meaning. Does it indicate that an error happened?
+Or that everything is good to go? If it’s still unclear, document the variable or return value.</p>
+</li>
+<li><p>An alternative is using an <cite>enum</cite>.</p>
+<p>Pros:</p>
+<ul class="simple">
+<li><p>more expressive</p></li>
+<li><p>can be extended</p></li>
+</ul>
+<p>Cons:</p>
+<ul class="simple">
+<li><p>needs more typing</p></li>
+<li><p>extending an enum can be dangerous if not handled properly by the callers of the function</p></li>
+<li><p>might need conversion if propagated to higher levels</p></li>
+</ul>
+<p>Other rarely used types are <cite>bitfields</cite> and <cite>ranges</cite>. For return values of functions it is
+worth to look at <code class="docutils literal notranslate"><span class="pre">::etl::expected</span></code> class which combines data and error status in one object.</p>
+<p>In most cases using a boolean is the best choice to keep it simple.</p>
+</li>
+</ul>
+</section>
+<section id="plural-forms-should-be-used-on-names-representing-a-collection-of-objects">
+<h3>Plural Forms Should Be Used on Names Representing a Collection of Objects<a class="headerlink" href="#plural-forms-should-be-used-on-names-representing-a-collection-of-objects" title="Link to this heading"></a></h3>
+<p>Enhances readability since the name gives the user an immediate clue of the
+type of the variable and the operations that can be performed on its elements.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">using</span><span class="w"> </span><span class="n">ReceiverList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">::</span><span class="n">etl</span><span class="o">::</span><span class="n">intrusive_forward_list</span><span class="o">&lt;</span><span class="n">Receiver</span><span class="p">,</span><span class="w"> </span><span class="o">::</span><span class="n">etl</span><span class="o">::</span><span class="n">forward_link</span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;&gt;</span><span class="p">;</span>
+
+<span class="n">vector</span><span class="o">&lt;</span><span class="n">Point</span><span class="o">&gt;</span><span class="w">  </span><span class="n">points</span><span class="p">;</span>
+<span class="kt">int</span><span class="w">            </span><span class="n">values</span><span class="p">[];</span>
+</pre></div>
+</div>
+<p>Be careful not to lie with names, i.e. do not name a collection of <code class="docutils literal notranslate"><span class="pre">Point</span></code>
+objects <code class="docutils literal notranslate"><span class="pre">pointList</span></code> unless it’s actually a <code class="docutils literal notranslate"><span class="pre">List</span></code>-type.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026 Accenture.</p>
+  </div>
+
+  <div role="footer_string">
+    <p>Documentation from 2026-02-24 10:51:51, official build.</p>
+
+    
+      <a href="../../../../_sources/doc/dev/guidelines/conventions/naming.rst.txt" rel="nofollow"> View page source</a>
+    
+
+  </div>
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(false);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="EclipseOpenBSWDocumentation" name="dox_trace_storage" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Statements and Expressions &mdash; Eclipse OpenBSW Documentation  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/rtd_theme_overrides.css?v=6fd0d55b" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=eafc0fe6" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/colors.css?v=3cafd8aa" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/colored_table.css?v=34b816d5" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/header.css?v=e632285e" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/dox_util_colors.css?v=dd14b177" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/dox_trace.css?v=60d3f72c" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../../../../_static/copybutton.js?v=f281be69"></script>
+        <script src="../../../../_static/dox_trace.js?v=40719b51"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="Coding Practices" href="../practices.html" />
+    <link rel="prev" title="Naming Conventions" href="naming.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Eclipse OpenBSW Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Learning</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../learning/overview.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../learning/SysTest/HW_Testing_Guide.html">Hardware Testing Guide</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guidelines</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Coding Conventions</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="classes.html">Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="comments.html">Comments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="constants.html">Constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="disallowed.html">Disallowed Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="enumerations.html">Enumerations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="files.html">Files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="functions.html">Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="initialization.html">Initialization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interfaces.html">Low Level Interfaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="namespaces.html">Namespaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="naming.html">Naming Conventions</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Statements and Expressions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#expressions-with-booleans">Expressions with Booleans</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#trivial-if-else">Trivial if-else</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#avoid-magic-constants">Avoid Magic Constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#null-pointer">Null Pointer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#order-of-evaluation">Order of Evaluation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#asserts">Asserts</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#forward-declarations">Forward Declarations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#prefer-using-over-typedef-for-defining-aliases">Prefer Using Over typedef for Defining Aliases</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#os-specific-code">OS Specific Code</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#critical-sections">Critical Sections</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#buffers">Buffers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#delays">Delays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#retries">Retries</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../practices.html">Coding Practices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../formatting/index.html">Formatting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../unittests.html">Unit Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../module.html">Module Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../documentation.html">Module Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../diagrams.html">Diagrams</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../3rdparty.html">Third Party Libraries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commit_message.html">Commit Message</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pull_request.html">Pull Request</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Platforms</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../platforms/posix/index.html">POSIX</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../platforms/s32k148evb/index.html">S32K148 Evaluation Board</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Features</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../features/storage.html">Persistent Storage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/functional_safety.html">Functional Safety</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Software Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/common.html">Common</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/posix.html">Posix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/s32k1xx.html">S32K1xx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/executables.html">Executables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/mocks.html">Mocks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tools/UdsTool/doc/index.html">UdsTool</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tools/puncover_tool/doc/index.html">Puncover</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Eclipse OpenBSW Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="index.html">Coding Conventions</a> &raquo;</li>
+        
+        <li>Statements and Expressions</li>
+    
+
+    
+
+      <li class="wy-breadcrumbs-aside">
+
+        <!-- DOCUMENT STATUS -->
+
+        
+
+        <!-- DATA CLASSIFICATION -->
+
+        
+
+      </li>
+
+    
+  </ul>
+
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="statements-and-expressions">
+<h1>Statements and Expressions<a class="headerlink" href="#statements-and-expressions" title="Link to this heading"></a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<section id="expressions-with-booleans">
+<h2>Expressions with Booleans<a class="headerlink" href="#expressions-with-booleans" title="Link to this heading"></a></h2>
+<p>Never use the constants <code class="docutils literal notranslate"><span class="pre">true</span></code> or <code class="docutils literal notranslate"><span class="pre">false</span></code> as operands to the operators
+<code class="docutils literal notranslate"><span class="pre">==</span></code> or <code class="docutils literal notranslate"><span class="pre">!=</span></code>. It makes the expressions unnecessarily long and hard to read.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// good</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">hasSomething</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">isGood</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="c1">// ...</span>
+<span class="p">}</span>
+
+<span class="c1">// bad</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">true</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="p">((</span><span class="nb">true</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">hasSomething</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="nb">false</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">isGood</span><span class="p">)))</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="c1">// ...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="trivial-if-else">
+<h2>Trivial if-else<a class="headerlink" href="#trivial-if-else" title="Link to this heading"></a></h2>
+<p>Just don’t do this, you are not paid per lines of code produced.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">return</span><span class="w"> </span><span class="n">isGood</span><span class="p">;</span><span class="w">    </span><span class="c1">// good</span>
+
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">isGood</span><span class="p">)</span><span class="w">       </span><span class="c1">// bad</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="k">else</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="avoid-magic-constants">
+<h2>Avoid Magic Constants<a class="headerlink" href="#avoid-magic-constants" title="Link to this heading"></a></h2>
+<p>Unnamed constants embedded in expressions are easily overlooked and often hard
+to understand.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">constexpr</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">first_month</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="k">constexpr</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">last_month</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="mi">12</span><span class="p">;</span>
+<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">first_month</span><span class="p">;</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">last_month</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">m</span><span class="p">)</span><span class="w">   </span><span class="c1">// good, constants are named</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">month</span><span class="p">[</span><span class="n">m</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="sc">&#39;\n&#39;</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mi">12</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">m</span><span class="p">)</span><span class="w">   </span><span class="c1">// bad, magic constants 1 and 12</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">month</span><span class="p">[</span><span class="n">m</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="sc">&#39;\n&#39;</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="null-pointer">
+<h2>Null Pointer<a class="headerlink" href="#null-pointer" title="Link to this heading"></a></h2>
+<p><strong>Don’t use zero integer literal.</strong></p>
+<p><code class="docutils literal notranslate"><span class="pre">0</span></code> is a suboptimal way to represent a null pointer constant for multiple reasons. Firstly, it is
+an integer literal, which is most commonly used to represent the numerical value zero rather than
+an address. Its duality introduces cognitive overhead to source code readers.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="c1">// Unclear whether foo accepts an integer or address</span>
+<span class="w">    </span><span class="n">something</span><span class="o">::</span><span class="n">foo</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Another problem lies in overload resolution. Overloading a function accepting int* with one
+accepting int might silently change the meaning of existing code:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// before overloading</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">foo</span><span class="p">(</span><span class="kt">int</span><span class="o">*</span><span class="p">);</span><span class="w">   </span><span class="c1">// (0)</span>
+<span class="c1">// void foo(int);    // (1)</span>
+<span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">foo</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span><span class="w">       </span><span class="c1">// Calls (0)</span>
+<span class="p">}</span>
+
+<span class="c1">// after overloading</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">foo</span><span class="p">(</span><span class="kt">int</span><span class="o">*</span><span class="p">);</span><span class="w">   </span><span class="c1">// (0)</span>
+<span class="kt">void</span><span class="w"> </span><span class="nf">foo</span><span class="p">(</span><span class="kt">int</span><span class="p">);</span><span class="w">    </span><span class="c1">// (1)</span>
+<span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">foo</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span><span class="w">       </span><span class="c1">// Calls (1)</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>Don’t use the NULL macro.</strong></p>
+<p>The <code class="docutils literal notranslate"><span class="pre">NULL</span></code> macro is defined as “an implementation-defined null pointer constant”. This gives
+implementations the freedom to implement NULL as any zero integral literal (e.g. <code class="docutils literal notranslate"><span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">0L</span></code>) or
+as <code class="docutils literal notranslate"><span class="pre">nullptr</span></code>. Similarly to the overload resolution situation described above, this definition can
+cause problems when new overloads are added to an existing overload set.</p>
+<p>Imagine adding a function accepting either <code class="docutils literal notranslate"><span class="pre">std::nullptr_t</span></code>, <code class="docutils literal notranslate"><span class="pre">long</span></code>, <code class="docutils literal notranslate"><span class="pre">int</span></code>, or <code class="docutils literal notranslate"><span class="pre">int*</span></code> to an
+existing overload set that is being invoked with <code class="docutils literal notranslate"><span class="pre">NULL</span></code>: the behavior is now hard to predict
+and may vary depending on the standard library implementation being used.</p>
+<p>Additionally, C and C++ code can interpret NULL differently which leads to incompatibilities.</p>
+<p><strong>Use nullptr!</strong></p>
+<p>Modern code should use <code class="docutils literal notranslate"><span class="pre">nullptr</span></code> instead of <code class="docutils literal notranslate"><span class="pre">0</span></code> or <code class="docutils literal notranslate"><span class="pre">NULL</span></code> to maximize readability and
+prevent surprising overload resolution outcomes between pointer and integral types.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">foo</span><span class="p">(</span><span class="kt">int</span><span class="o">*</span><span class="p">);</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">foo</span><span class="p">(</span><span class="k">nullptr</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>See also:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2020/p2048r0.html">http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2020/p2048r0.html</a></p></li>
+<li><p><a class="reference external" href="https://en.cppreference.com/w/cpp/types/NULL">https://en.cppreference.com/w/cpp/types/NULL</a></p></li>
+<li><p><a class="reference external" href="https://en.cppreference.com/w/cpp/language/nullptr">https://en.cppreference.com/w/cpp/language/nullptr</a></p></li>
+</ul>
+</section>
+<section id="order-of-evaluation">
+<h2>Order of Evaluation<a class="headerlink" href="#order-of-evaluation" title="Link to this heading"></a></h2>
+<div class="line-block">
+<div class="line">Do not depend on the order of the evaluation of expressions.</div>
+<div class="line">Examples:</div>
+</div>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// undefined behaviour, i is evaluated more than once in an unsequenced manner</span>
+<span class="kt">uint32_t</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">b</span><span class="p">[</span><span class="o">++</span><span class="n">i</span><span class="p">];</span>
+
+<span class="c1">// correct code</span>
+<span class="o">++</span><span class="n">i</span><span class="p">;</span>
+<span class="kt">uint32_t</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+</pre></div>
+</div>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// undefined behaviour, the order of evaluation for function arguments is unspecified</span>
+<span class="n">func</span><span class="p">(</span><span class="n">a</span><span class="p">(),</span><span class="w"> </span><span class="n">b</span><span class="p">());</span>
+
+<span class="c1">// correct code</span>
+<span class="n">a_val</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="p">();</span>
+<span class="n">b_val</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">b</span><span class="p">();</span>
+<span class="n">func</span><span class="p">(</span><span class="n">a_val</span><span class="p">,</span><span class="w"> </span><span class="n">b_val</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>For more information and examples see <a class="reference external" href="https://wiki.sei.cmu.edu/confluence/display/cplusplus/EXP50-CPP.+Do+not+depend+on+the+order+of+evaluation+for+side+effects">CERT rule EXP50</a>.</p>
+</section>
+<section id="asserts">
+<h2>Asserts<a class="headerlink" href="#asserts" title="Link to this heading"></a></h2>
+<p>To control the behavior of asserts on ECUs, use the <code class="docutils literal notranslate"><span class="pre">ETL_ASSERT</span></code> macro from the ETL library
+instead of the regular <code class="docutils literal notranslate"><span class="pre">assert</span></code> from the standard <em>cassert</em> header. For documentation on this
+have a look into the ETL documentation.</p>
+<p>In contrast to a <em>PC</em> program where asserts are ignored in release builds, an <code class="docutils literal notranslate"><span class="pre">ETL_ASSERT</span></code>
+will be present in release code causing an ECU reset and most likely a customer noticeable event.
+We usually do not distinguish between debug and release builds.</p>
+<p>Therefore, an <code class="docutils literal notranslate"><span class="pre">ETL_ASSERT</span></code> shall only be used if continuing execution is impossible, e.g. because
+memory got corrupted (out of bounds access through operator[]). Comment the usage with a
+justification.</p>
+<p>Summary:</p>
+<ul class="simple">
+<li><p>Prefer proper error handling over asserts</p></li>
+<li><p>For production code asserts, use <code class="docutils literal notranslate"><span class="pre">ETL_ASSERT</span></code> and comment the usage with a justification</p></li>
+</ul>
+</section>
+<section id="forward-declarations">
+<h2>Forward Declarations<a class="headerlink" href="#forward-declarations" title="Link to this heading"></a></h2>
+<p>Use explicit forward declarations for:</p>
+<ul class="simple">
+<li><p>Faster (incremental) builds</p></li>
+<li><p>Better testable code</p></li>
+</ul>
+</section>
+<section id="prefer-using-over-typedef-for-defining-aliases">
+<h2>Prefer Using Over typedef for Defining Aliases<a class="headerlink" href="#prefer-using-over-typedef-for-defining-aliases" title="Link to this heading"></a></h2>
+<p>With <code class="docutils literal notranslate"><span class="pre">using</span></code>, the new name comes first rather than being embedded somewhere in a declaration,
+which improves readability. Additionally, <code class="docutils literal notranslate"><span class="pre">using</span></code> can be used for template aliases, whereas
+<code class="docutils literal notranslate"><span class="pre">typedef</span></code> s can’t easily be templates.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">using</span><span class="w"> </span><span class="n">MyArray</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">::</span><span class="n">etl</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;::</span><span class="n">some</span><span class="o">::</span><span class="n">other</span><span class="o">::</span><span class="n">Type</span><span class="p">,</span><span class="w"> </span><span class="mi">199</span><span class="o">&gt;</span><span class="p">;</span><span class="w"> </span><span class="c1">// good - new name comes first</span>
+
+<span class="k">typedef</span><span class="w"> </span><span class="o">::</span><span class="n">etl</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;::</span><span class="n">some</span><span class="o">::</span><span class="n">other</span><span class="o">::</span><span class="n">Type</span><span class="p">,</span><span class="w"> </span><span class="mi">199</span><span class="o">&gt;</span><span class="w"> </span><span class="n">MyArray</span><span class="p">;</span><span class="w"> </span><span class="c1">// bad - new name at the end</span>
+
+<span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">T</span><span class="o">&gt;</span>
+<span class="k">using</span><span class="w"> </span><span class="n">ArrayOf5</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">::</span><span class="n">etl</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="o">&gt;</span><span class="p">;</span><span class="w"> </span><span class="c1">// template alias - impossible with typedef</span>
+</pre></div>
+</div>
+</section>
+<section id="os-specific-code">
+<h2>OS Specific Code<a class="headerlink" href="#os-specific-code" title="Link to this heading"></a></h2>
+<p>Try to avoid OS specific code. This makes your software hardly portable and difficult to test. Use
+an abstraction layer, e.g. the <code class="docutils literal notranslate"><span class="pre">async</span></code> library.</p>
+</section>
+<section id="critical-sections">
+<h2>Critical Sections<a class="headerlink" href="#critical-sections" title="Link to this heading"></a></h2>
+<div class="line-block">
+<div class="line">Avoid critical sections if possible by design. Sometimes this is not feasible, e.g. when accessing
+shared HW resources.</div>
+<div class="line">In these cases use a lock mechanism with the RAII pattern:</div>
+</div>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="p">...</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">ESR_UNUSED</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">interrupts</span><span class="o">::</span><span class="n">SuspendResumeAllInterruptsScopedLock</span><span class="w"> </span><span class="n">lock</span><span class="p">;</span>
+
+<span class="w">    </span><span class="c1">// Critical section here</span>
+<span class="p">}</span>
+<span class="p">...</span>
+</pre></div>
+</div>
+</section>
+<section id="buffers">
+<h2>Buffers<a class="headerlink" href="#buffers" title="Link to this heading"></a></h2>
+<p>If buffers are used in the code, ensure that they are protected against under- and overflow.
+This can be done implicitly by design or by range checks. If you decide not to implement such a
+check, e.g. due to performance reasons, document that behaviour.</p>
+<p>A missing check might be unacceptable, e.g. in security or safety relevant code.</p>
+</section>
+<section id="delays">
+<h2>Delays<a class="headerlink" href="#delays" title="Link to this heading"></a></h2>
+<p>It is often hard to understand the values of delays. Explain the chosen values in a comment.</p>
+</section>
+<section id="retries">
+<h2>Retries<a class="headerlink" href="#retries" title="Link to this heading"></a></h2>
+<p>Document retries in the code or make it obvious by designing a clear API.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026 Accenture.</p>
+  </div>
+
+  <div role="footer_string">
+    <p>Documentation from 2026-02-24 10:51:51, official build.</p>
+
+    
+      <a href="../../../../_sources/doc/dev/guidelines/conventions/statements.rst.txt" rel="nofollow"> View page source</a>
+    
+
+  </div>
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(false);
+      });
+  </script> 
+
+</body>
+</html>

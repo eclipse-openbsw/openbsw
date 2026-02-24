@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="EclipseOpenBSWDocumentation" name="dox_trace_storage" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Using GDB with the S32K148EVB board via USB &mdash; Eclipse OpenBSW Documentation  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/rtd_theme_overrides.css?v=6fd0d55b" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=eafc0fe6" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/colors.css?v=3cafd8aa" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/colored_table.css?v=34b816d5" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/header.css?v=e632285e" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/dox_util_colors.css?v=dd14b177" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/dox_trace.css?v=60d3f72c" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../../../../_static/copybutton.js?v=f281be69"></script>
+        <script src="../../../../_static/dox_trace.js?v=40719b51"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="Set up environment on Windows with WSL (Windows Subsystem for Linux)" href="setup_env_host_windows.html" />
+    <link rel="prev" title="Flash, debug and test serial console on Ubuntu 22.04" href="setup_s32k148_ubuntu_nxpide.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Eclipse OpenBSW Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Learning</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../overview.html">Getting Started</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Set up your environment</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="setup_env_host_ubuntu.html">Set up environment on Ubuntu <code class="highlight highlight-prop docutils literal notranslate"><span class="pre">22.04</span></code></a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="setup_env_host_ubuntu.html#posix-platform">POSIX platform</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="setup_env_host_ubuntu.html#s32k148-platform">S32K148 platform</a><ul class="current">
+<li class="toctree-l5"><a class="reference internal" href="setup_s32k148_ubuntu_build.html">Set up build for S32K148 platform on Ubuntu <code class="highlight highlight-prop docutils literal notranslate"><span class="pre">22.04</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="setup_s32k148_ubuntu_nxpide.html">Flash, debug and test serial console on Ubuntu <code class="highlight highlight-prop docutils literal notranslate"><span class="pre">22.04</span></code></a></li>
+<li class="toctree-l5 current"><a class="current reference internal" href="#">Using GDB with the S32K148EVB board via USB</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#get-p-e-micro-s-gdb-server-from-nxp-s-s32-design-studio-installation">Get P&amp;E Micro’s gdb server from NXP’s S32 Design Studio installation</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#get-p-e-micro-s-gdb-server-from-their-website">Get P&amp;E Micro’s gdb server from their website</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#p-e-micro-s-opensda-usb-driver">P&amp;E Micro’s OpenSDA USB Driver</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#running-gdb-server">Running gdb server</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#running-gdb">Running gdb</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#flash-the-board-on-command-line">Flash the board on command-line</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#reset-the-board-on-command-line">Reset the board on command-line</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="setup_env_host_windows.html">Set up environment on Windows with WSL (Windows Subsystem for Linux)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="setup_vscode.html">Visual Studio Code installation and setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="index.html#using-the-s32k148-development-board">Using the S32K148 Development Board</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../layout/index.html">Understanding the directory structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../console/index.html">Using the console</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../unit_tests/index.html">Building and Running Unit Tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../lifecycle/index.html">Managing the lifecycle of components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../logging/index.html">Logging to the console</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../commands/index.html">Adding commands to the console</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../can/index.html">Working with CAN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ethernet/index.html">Working with Ethernet</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../uds/index.html">Using UDS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hwio/index.html">Using hardware I/O</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tracing/index.html">Tracing</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../SysTest/HW_Testing_Guide.html">Hardware Testing Guide</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guidelines</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../guidelines/conventions/index.html">Coding Conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guidelines/practices.html">Coding Practices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guidelines/formatting/index.html">Formatting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guidelines/unittests.html">Unit Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guidelines/module.html">Module Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guidelines/documentation.html">Module Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guidelines/diagrams.html">Diagrams</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guidelines/3rdparty.html">Third Party Libraries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guidelines/commit_message.html">Commit Message</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guidelines/pull_request.html">Pull Request</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Platforms</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../platforms/posix/index.html">POSIX</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../platforms/s32k148evb/index.html">S32K148 Evaluation Board</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Features</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../features/storage.html">Persistent Storage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/functional_safety.html">Functional Safety</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Software Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/common.html">Common</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/posix.html">Posix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/s32k1xx.html">S32K1xx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/executables.html">Executables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules/mocks.html">Mocks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tools/UdsTool/doc/index.html">UdsTool</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tools/puncover_tool/doc/index.html">Puncover</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Eclipse OpenBSW Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../overview.html">Getting Started</a> &raquo;</li>
+        
+          <li><a href="index.html">Set up your environment</a> &raquo;</li>
+        
+          <li><a href="setup_env_host_ubuntu.html">Set up environment on Ubuntu <code class="highlight highlight-prop docutils literal notranslate"><span class="pre">22.04</span></code></a> &raquo;</li>
+        
+        <li>Using GDB with the S32K148EVB board via USB</li>
+    
+
+    
+
+      <li class="wy-breadcrumbs-aside">
+
+        <!-- DOCUMENT STATUS -->
+
+        
+
+        <!-- DATA CLASSIFICATION -->
+
+        
+
+      </li>
+
+    
+  </ul>
+
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="using-gdb-with-the-s32k148evb-board-via-usb">
+<span id="s32k148-gdb-via-usb"></span><h1>Using GDB with the S32K148EVB board via USB<a class="headerlink" href="#using-gdb-with-the-s32k148evb-board-via-usb" title="Link to this heading"></a></h1>
+<p>The <a class="reference external" href="https://www.nxp.com/design/design-center/development-boards/automotive-development-platforms/s32k-mcu-platforms/s32k148-q176-evaluation-board-for-automotive-general-purpose:S32K148EVB">S32K148 development board</a>
+provides several ways to flash and debug images, one of which is via the USB / OpenSDA interface.
+i.e. you can debug over a USB cable connected between the board and your computer.
+This interface is implemented on the board by <a class="reference external" href="https://www.pemicro.com">P&amp;E Micro</a>
+along with a matching Eclipse plugin which contains their implementation of gdb server.</p>
+<p>P&amp;E Micro’s Eclipse plugin is included in NXP’s IDE for the board (S32 Design Studio).
+The instructions below set up the gdb server it contains to be used without S32 Design Studio.
+This opens up the option of using your preferred IDE to debug on the board via USB.
+For example see <a class="reference internal" href="setup_vscode.html#setup-s32k148-gdb-vscode"><span class="std std-ref">Using GDB with the S32K148EVB via USB from Visual Studio Code</span></a>.</p>
+<p>Note that P&amp;E Micro’s implementation of gdb server must be used to debug the board via P&amp;E Micro’s implementation of the USB / OpenSDA interface.
+P&amp;E Micro provide three pre-built executables for three different host platforms - Linux, Windows and OS X.
+The instructions on this page are focused on setting this up on Linux hosts, including on WSL (Windows Subsystem for Linux).</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Please refer to <a class="reference internal" href="index.html#known-issues-with-s32k148-board"><span class="std std-ref">Known Issues with the S32K148 board</span></a>.</p>
+</div>
+<section id="get-p-e-micro-s-gdb-server-from-nxp-s-s32-design-studio-installation">
+<h2>Get P&amp;E Micro’s gdb server from NXP’s S32 Design Studio installation<a class="headerlink" href="#get-p-e-micro-s-gdb-server-from-nxp-s-s32-design-studio-installation" title="Link to this heading"></a></h2>
+<p>If you have already installed NXP’s S32 Design Studio for the S32K148EVB board
+then you already have P&amp;E Micro’s Eclipse Plug-in.
+Check the subfolders of the S32 Design Studio installation for a folder named…</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>eclipse/plugins/com.pemicro.debug.gdbjtag.pne_<span class="o">[</span>version<span class="o">]</span>/
+</pre></div>
+</div>
+<p>which contains …</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>lin/pegdbserver_console
+win32/pegdbserver_console.exe
+osx/pegdbserver_console
+</pre></div>
+</div>
+<p>These are P&amp;E Micro’s gdb server executables built for Linux, Windows and OS X.</p>
+</section>
+<section id="get-p-e-micro-s-gdb-server-from-their-website">
+<h2>Get P&amp;E Micro’s gdb server from their website<a class="headerlink" href="#get-p-e-micro-s-gdb-server-from-their-website" title="Link to this heading"></a></h2>
+<p>If you have not installed NXP’s S32 Design Studio,
+(or if you want the latest version)
+the <a class="reference external" href="https://www.pemicro.com/products/product_viewDetails.cfm?product_id=15320151&amp;productTab=1000000">GDB Server Plug-In for Eclipse-based ARM IDEs</a>
+is free to download (you just need to <a class="reference external" href="https://www.pemicro.com/login_new_user_form.cfm?mode=newUser">create an account</a>).</p>
+<p>The downloaded file will be named <code class="docutils literal notranslate"><span class="pre">com.pemicro.debug.gdbjtag.pne.updatesite-[VERSION].zip</span></code>.</p>
+<p>Unzip it…</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>unzip<span class="w"> </span>com.pemicro.debug.gdbjtag.pne.updatesite-<span class="o">[</span>VERSION<span class="o">]</span>.zip
+</pre></div>
+</div>
+<p>Once unzipped, in the <code class="docutils literal notranslate"><span class="pre">plugins/</span></code> folder, find the file named <code class="docutils literal notranslate"><span class="pre">com.pemicro.debug.gdbjtag.pne_[VERSION].jar</span></code>.
+You can unpack this using <code class="docutils literal notranslate"><span class="pre">jar</span></code>. If you do not have <code class="docutils literal notranslate"><span class="pre">jar</span></code>, install it…</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>fastjar
+</pre></div>
+</div>
+<p>Unpack the jar file…</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>jar<span class="w"> </span>-xf<span class="w"> </span>com.pemicro.debug.gdbjtag.pne_<span class="o">[</span>VERSION<span class="o">]</span>.jar
+</pre></div>
+</div>
+<p>This produces the directory tree containing the three versions of <code class="docutils literal notranslate"><span class="pre">pegdbserver_console</span></code>
+for different host platforms, as shown above.
+You will need to make <code class="docutils literal notranslate"><span class="pre">pegdbserver_console</span></code> executable for your host platform. eg.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>chmod<span class="w"> </span>a+x<span class="w"> </span>lin/pegdbserver_console
+</pre></div>
+</div>
+</section>
+<section id="p-e-micro-s-opensda-usb-driver">
+<h2>P&amp;E Micro’s OpenSDA USB Driver<a class="headerlink" href="#p-e-micro-s-opensda-usb-driver" title="Link to this heading"></a></h2>
+<p>P&amp;E Micro’s gdb server requires P&amp;E Micro’s OpenSDA USB driver to be installed.
+If you have already installed NXP’s S32 Design Studio then you should already have this driver installed.
+If not, you can download it for free from <a class="reference external" href="https://www.pemicro.com/opensda/">P&amp;E Micro OpenSDA Support</a>.</p>
+<p>Note that if you have installed NXP’s S32 Design Studio on Windows but wish to set up gdb server in
+WSL (Windows Subsystem for Linux) then you will need to attach the OpenSDA USB device to WSL
+using <code class="docutils literal notranslate"><span class="pre">usbipd</span></code> as described in <a class="reference internal" href="setup_wsl_usb.html#setup-wsl-usb"><span class="std std-ref">Add USB support to WSL</span></a>
+and install the Linux USB Driver for OpenSDA in WSL.</p>
+<p>The downloaded OpenSDA driver for Linux will be in a file named <code class="docutils literal notranslate"><span class="pre">pemicro-other-[VERSION].zip.tar.gz</span></code>.
+Unpack this…</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>tar<span class="w"> </span>-xzf<span class="w"> </span>pemicro-other-<span class="o">[</span>VERSION<span class="o">]</span>.zip.tar.gz
+</pre></div>
+</div>
+<p>and follow the instructions in <code class="docutils literal notranslate"><span class="pre">pemicro-other-[VERSION]/drivers/PemicroLinuxDriversReadme.pdf</span></code>.
+Note from <a class="reference external" href="https://community.nxp.com/t5/S32K/OpenSDA-s32k144evb-Linux-Ubuntu-20-04-port-not-found/td-p/1050057">this issue</a>
+that you may need to copy <code class="docutils literal notranslate"><span class="pre">libp64-0.1.so.4</span></code> to <code class="docutils literal notranslate"><span class="pre">/usr/lib/</span></code> if the installation script put it in <code class="docutils literal notranslate"><span class="pre">/usr/lib64/</span></code>.
+Also note from <a class="reference external" href="https://askubuntu.com/a/1011218/1801515">this answer</a>,
+on some systems installing <code class="docutils literal notranslate"><span class="pre">libusb-dev</span></code> satisfies the requirement to have the 32-bit version of <code class="docutils literal notranslate"><span class="pre">libusb-0.1.so.4</span></code>.
+On 64-bit Ubuntu <code class="highlight highlight-prop docutils literal notranslate"><span class="pre">22.04</span></code> the following successfully installs P&amp;E Micro’s OpenSDA USB driver…</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>libusb-dev
+<span class="nb">cd</span><span class="w"> </span>pemicro-other-20181128/drivers/libusb_64_32/libusb_64_32/
+sudo<span class="w"> </span>./setup.sh
+</pre></div>
+</div>
+</section>
+<section id="running-gdb-server">
+<h2>Running gdb server<a class="headerlink" href="#running-gdb-server" title="Link to this heading"></a></h2>
+<p>Assuming you have the S32K148EVB board connected to you computer via USB and have set up your computer as described above,
+you should be able to run the gdb server as follows…</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>./pegdbserver_console<span class="w"> </span>-startserver<span class="w"> </span>-device<span class="o">=</span>NXP_S32K1xx_S32K148F2M0M11
+</pre></div>
+</div>
+<p>and if it successfully connects to you board you should see output like this…</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>P<span class="p">&amp;</span>E<span class="w"> </span>GDB<span class="w"> </span>Server<span class="w"> </span><span class="k">for</span><span class="w"> </span>Arm<span class="o">(</span>R<span class="o">)</span><span class="w"> </span>devices,<span class="w"> </span>Version<span class="w"> </span><span class="m">9</span>.45.00.00
+Copyright<span class="w"> </span><span class="m">2018</span>,<span class="w"> </span>P<span class="p">&amp;</span>E<span class="w"> </span>Microcomputer<span class="w"> </span>Systems<span class="w"> </span>Inc,<span class="w"> </span>All<span class="w"> </span>rights<span class="w"> </span>reserved
+
+Loading<span class="w"> </span>library<span class="w"> </span>/home/username/temp/pemicro/com.pemicro.debug.gdbjtag.pne_5.7.8.202404031741/lin/gdi/unit_ngs_arm_internal.so<span class="w"> </span>...<span class="w"> </span>Done.
+
+Command<span class="w"> </span>line<span class="w"> </span>arguments:<span class="w"> </span>-startserver<span class="w"> </span>-device<span class="o">=</span>NXP_S32K1xx_S32K148F2M0M11
+Device<span class="w"> </span>selected<span class="w"> </span>is<span class="w"> </span>NXP_S32K1xx_S32K148F2M0M11
+HW<span class="w"> </span>Auto-Selected<span class="w"> </span>:<span class="w"> </span><span class="nv">Interface</span><span class="o">=</span>OPENSDA<span class="w"> </span><span class="nv">Port</span><span class="o">=</span>9988CE09<span class="w">   </span><span class="p">;</span><span class="w"> </span>USB1<span class="w"> </span>:<span class="w"> </span>OpenSDA<span class="w"> </span><span class="o">(</span>9988CE09<span class="o">)</span>
+Connecting<span class="w"> </span>to<span class="w"> </span>target.
+OpenSDA<span class="w"> </span>detected<span class="w"> </span>-<span class="w"> </span>Flash<span class="w"> </span>Version<span class="w"> </span><span class="m">1</span>.21
+Device<span class="w"> </span>is<span class="w"> </span>NXP_S32K1xx_S32K148F2M0M11.
+Mode<span class="w"> </span>is<span class="w"> </span>In-Circuit<span class="w"> </span>Debug.
+
+<span class="o">(</span>C<span class="o">)</span>opyright<span class="w"> </span><span class="m">2012</span>,<span class="w"> </span>P<span class="p">&amp;</span>E<span class="w"> </span>Microcomputer<span class="w"> </span>Systems,<span class="w"> </span>Inc.<span class="w"> </span><span class="o">(</span>www.pemicro.com<span class="o">)</span>
+API<span class="w"> </span>version<span class="w"> </span>is<span class="w"> </span><span class="m">101</span>
+
+TARGET<span class="w"> </span>XML<span class="w"> </span>PATH<span class="w"> </span>is<span class="w"> </span>/home/username/temp/pemicro/com.pemicro.debug.gdbjtag.pne_5.7.8.202404031741/supportFiles_ARM/target_v7m_vfp.xml
+Server<span class="w"> </span><span class="m">1</span><span class="w"> </span>running<span class="w"> </span>on<span class="w"> </span><span class="m">127</span>.0.0.1:7224
+Server<span class="w"> </span><span class="m">2</span><span class="w"> </span>running<span class="w"> </span>on<span class="w"> </span><span class="m">127</span>.0.0.1:7226
+Server<span class="w"> </span><span class="m">3</span><span class="w"> </span>running<span class="w"> </span>on<span class="w"> </span><span class="m">127</span>.0.0.1:7228
+Server<span class="w"> </span><span class="m">4</span><span class="w"> </span>running<span class="w"> </span>on<span class="w"> </span><span class="m">127</span>.0.0.1:7230
+Server<span class="w"> </span><span class="m">5</span><span class="w"> </span>running<span class="w"> </span>on<span class="w"> </span><span class="m">127</span>.0.0.1:7232
+Server<span class="w"> </span><span class="m">6</span><span class="w"> </span>running<span class="w"> </span>on<span class="w"> </span><span class="m">127</span>.0.0.1:7234
+Server<span class="w"> </span><span class="m">7</span><span class="w"> </span>running<span class="w"> </span>on<span class="w"> </span><span class="m">127</span>.0.0.1:7236
+Server<span class="w"> </span><span class="m">8</span><span class="w"> </span>running<span class="w"> </span>on<span class="w"> </span><span class="m">127</span>.0.0.1:7238
+Server<span class="w"> </span><span class="m">9</span><span class="w"> </span>running<span class="w"> </span>on<span class="w"> </span><span class="m">127</span>.0.0.1:7240
+Server<span class="w"> </span><span class="m">10</span><span class="w"> </span>running<span class="w"> </span>on<span class="w"> </span><span class="m">127</span>.0.0.1:7242
+All<span class="w"> </span>Servers<span class="w"> </span>Running
+</pre></div>
+</div>
+<p>Note that by default it uses localhost (<code class="docutils literal notranslate"><span class="pre">127.0.0.1</span></code>) and the ports listed (<code class="docutils literal notranslate"><span class="pre">7224</span></code>, <code class="docutils literal notranslate"><span class="pre">7226</span></code>, … <code class="docutils literal notranslate"><span class="pre">7242</span></code>).
+You can change this using the options <code class="docutils literal notranslate"><span class="pre">-serverip</span></code> and <code class="docutils literal notranslate"><span class="pre">-serverport</span></code> to make the gdb server available to other machines via ethernet.
+Run <code class="docutils literal notranslate"><span class="pre">pegdbserver_console</span> <span class="pre">-h</span></code> to see the full list of options.</p>
+</section>
+<section id="running-gdb">
+<h2>Running gdb<a class="headerlink" href="#running-gdb" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">arm-none-eabi-gdb</span></code> is the gdb client for ARM.
+If you have already set up your environment to build for the <code class="docutils literal notranslate"><span class="pre">s32k148</span></code> target
+then you will have downloaded GCC for ARM toolchain and
+added its <code class="docutils literal notranslate"><span class="pre">bin</span></code> directory to your <code class="docutils literal notranslate"><span class="pre">PATH</span></code> environment variable.
+If so, then you should already have <code class="docutils literal notranslate"><span class="pre">arm-none-eabi-gdb</span></code> on your <code class="docutils literal notranslate"><span class="pre">PATH</span></code>.</p>
+<p>To run <code class="docutils literal notranslate"><span class="pre">arm-none-eabi-gdb</span></code> and connect to the board for a debugging session
+check the following…</p>
+<ol class="arabic">
+<li><p>gdb server should be running as described above and successfully connecting to the board via USB</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">arm-none-eabi-gdb</span></code> depends on the shared library <code class="docutils literal notranslate"><span class="pre">libncurses.so.5</span></code>
+so you may need to install that…</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>libncurses5
+</pre></div>
+</div>
+</li>
+<li><p>You need to have built for the s32k148 target, such that the elf file is found at…</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>build/s32k148-gcc/executables/referenceApp/application/RelWithDebInfo/gapp.referenceApp.elf
+</pre></div>
+</div>
+</li>
+</ol>
+<p>Then, in the root folder you can run the gdb client to start an interactive debug session…</p>
+<blockquote>
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>arm-none-eabi-gdb<span class="w"> </span>-x<span class="w"> </span>tools/gdb/pegdbserver.gdb<span class="w"> </span>build/s32k148-gcc/executables/referenceApp/application/RelWithDebInfo/gapp.referenceApp.elf
+</pre></div>
+</div>
+</div></blockquote>
+</section>
+<section id="flash-the-board-on-command-line">
+<h2>Flash the board on command-line<a class="headerlink" href="#flash-the-board-on-command-line" title="Link to this heading"></a></h2>
+<p>With the gdb server running as described above,
+instead of flashing the elf file via S32 Design Studio,
+it may be more convenient to flash it in a single command as follows…</p>
+<blockquote>
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>arm-none-eabi-gdb<span class="w"> </span>-batch<span class="w"> </span>-x<span class="w"> </span>test/pyTest/flash.gdb<span class="w"> </span>build/s32k148-gcc/executables/referenceApp/application/RelWithDebInfo/gapp.referenceApp.elf
+</pre></div>
+</div>
+</div></blockquote>
+</section>
+<section id="reset-the-board-on-command-line">
+<h2>Reset the board on command-line<a class="headerlink" href="#reset-the-board-on-command-line" title="Link to this heading"></a></h2>
+<p>You can reset the board in a single command as follows…</p>
+<blockquote>
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>arm-none-eabi-gdb<span class="w"> </span>-batch<span class="w"> </span>-x<span class="w"> </span>test/pyTest/reset.gdb<span class="w"> </span>build/s32k148-gcc/executables/referenceApp/application/RelWithDebInfo/gapp.referenceApp.elf
+</pre></div>
+</div>
+</div></blockquote>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026 Accenture.</p>
+  </div>
+
+  <div role="footer_string">
+    <p>Documentation from 2026-02-24 10:51:52, official build.</p>
+
+    
+      <a href="../../../../_sources/doc/dev/learning/setup/setup_s32k148_gdbserver.rst.txt" rel="nofollow"> View page source</a>
+    
+
+  </div>
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(false);
+      });
+  </script> 
+
+</body>
+</html>
