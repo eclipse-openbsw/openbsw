@@ -50,21 +50,19 @@ void platformLifecycleAdd(::lifecycle::LifecycleManager& lifecycleManager, uint8
     }
 }
 
-} // namespace platform
+namespace systems
+{
 
 #ifdef PLATFORM_SUPPORT_CAN
-namespace systems
-{
 ::can::ICanSystem& getCanSystem() { return *::platform::canSystem; }
-} // namespace systems
 #endif // PLATFORM_SUPPORT_CAN
-
 #ifdef PLATFORM_SUPPORT_ETHERNET
-namespace systems
-{
-::ethernet::IEthernetDriverSystem& getEthernetSystem() { return *::platform::tapEthernetSystem; }
-} // namespace systems
+::ethernet::IEthernetSystem& getEthernetSystem() { return *::platform::tapEthernetSystem; }
 #endif // PLATFORM_SUPPORT_ETHERNET
+
+} // namespace systems
+
+} // namespace platform
 
 extern "C"
 {
