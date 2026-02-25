@@ -222,6 +222,7 @@ void run()
     etl::print("hello\r\n");
 #ifdef BUILD_RUST
     etl::print("Hello Rust!\r\n");
+    rust_hello_world();
     etl::print("Rust add(3, 4) = {}\r\n", static_cast<unsigned int>(rust_add(3U, 4U)));
 #endif
     idleHandler.init();

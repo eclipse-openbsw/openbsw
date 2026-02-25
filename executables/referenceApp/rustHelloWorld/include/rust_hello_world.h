@@ -17,6 +17,9 @@ extern "C"
 /// \return The sum of a and b
 uint32_t rust_add(uint32_t a, uint32_t b);
 
+/// Prints "Hello from Rust!" to BSP stdout.
+void rust_hello_world(void);
+
 #ifdef __cplusplus
 }
 #endif

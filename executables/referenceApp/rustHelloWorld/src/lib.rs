@@ -23,7 +23,17 @@
 
 #![no_std]
 
+extern crate openbsw_console_out;
 extern crate openbsw_panic_handler;
+
+use core::fmt::Write;
+use openbsw_console_out::Console;
+
+/// Prints "Hello from Rust!" to BSP stdout via putByteToStdout.
+#[unsafe(no_mangle)]
+pub extern "C" fn rust_hello_world() {
+    write!(Console, "Hello from Rust!\r\n").ok();
+}
 
 /// Adds two numbers and returns the result.
 ///
