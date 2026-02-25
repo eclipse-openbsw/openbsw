@@ -23,13 +23,7 @@
 
 #![no_std]
 
-/// Panic handler for no_std environments.
-#[panic_handler]
-fn panic(_info: &core::panic::PanicInfo) -> ! {
-    loop {}
-}
-
-
+extern crate openbsw_panic_handler;
 
 /// Adds two numbers and returns the result.
 ///
