@@ -1,7 +1,7 @@
 from serial import Serial
 from threading import Thread, Event, Timer
 import queue
-import time
+import time, os
 from target_info import TargetInfo
 from pty_forwarder import PtyForwarder
 from os import symlink, unlink
@@ -11,7 +11,7 @@ capture_serial_by_name = {}
 
 
 class CaptureSerial(Serial):
-    """ Capture bytes received from the target
+    """Capture bytes received from the target
     and make it easy to check content against expected.
 
     This derives from pyserial's Serial class and accepts
@@ -31,6 +31,7 @@ class CaptureSerial(Serial):
         if "name" in kwargs:
             self._target_name = kwargs["name"]
             del kwargs["name"]
+        self._on_line = kwargs.pop("on_line", None)
         self._boot_started_bytes = None
         self._boot_complete_bytes = None
         self._max_boot_time = None
@@ -43,13 +44,17 @@ class CaptureSerial(Serial):
 
         self._pty_forwarder = None
         self._pty_ext_link = None
-        if "port" in kwargs and \
-                kwargs["port"] == PtyForwarder.PTY_SLAVE_A_ALIAS:
+        if "port" in kwargs and kwargs["port"] == PtyForwarder.PTY_SLAVE_A_ALIAS:
             self._pty_ext_link = kwargs["ext_link"]
             del kwargs["ext_link"]
             self._pty_forwarder = PtyForwarder()
             self._pty_forwarder.start()
             kwargs["port"] = self._pty_forwarder.slave_a_path
+            try:
+                if os.path.lexists(self._pty_ext_link):
+                    unlink(self._pty_ext_link)
+            except Exception:
+                pass
             symlink(self._pty_forwarder.slave_b_path, self._pty_ext_link)
 
         self._write_byte_delay = None
@@ -59,8 +64,7 @@ class CaptureSerial(Serial):
 
         self._send_command_expected_bytes = None
         if "send_command_expected" in kwargs:
-            self._send_command_expected_bytes = \
-                kwargs["send_command_expected"].encode()
+            self._send_command_expected_bytes = kwargs["send_command_expected"].encode()
             del kwargs["send_command_expected"]
 
         self._send_command_timeout = None
@@ -102,18 +106,16 @@ class CaptureSerial(Serial):
             write_count = 0
             for i in range(len(data)):
                 time.sleep(write_byte_delay)
-                ret = super().write(data[i:i+1])
+                ret = super().write(data[i : i + 1])
                 if isinstance(ret, int):
                     write_count = write_count + ret
             return write_count
         else:
             return super().write(data)
 
-    def send_command(self, data,
-                     expected=None,
-                     timeout=None,
-                     max_retries=None,
-                     write_byte_delay=None):
+    def send_command(
+        self, data, expected=None, timeout=None, max_retries=None, write_byte_delay=None
+    ):
         """Send a command and wait for expected bytes that confirm success.
         Arguments passed override target configuration file settings.
         """
@@ -124,16 +126,17 @@ class CaptureSerial(Serial):
         if max_retries is None:
             max_retries = self._send_command_max_retries
 
-        if not isinstance(expected, (bytes, bytearray)) \
-            or not isinstance(timeout, (float, int)) \
-                or not isinstance(max_retries, int):
-            raise ValueError(
-                "Valid settings are required to use this method")
+        if (
+            not isinstance(expected, (bytes, bytearray))
+            or not isinstance(timeout, (float, int))
+            or not isinstance(max_retries, int)
+        ):
+            raise ValueError("Valid settings are required to use this method")
 
         success = False
         self._command_successful_expected = expected
         self._command_successful_event.clear()
-        for _ in range(max_retries+1):
+        for _ in range(max_retries + 1):
             self.write(data, write_byte_delay=write_byte_delay)
             success = self._command_successful_event.wait(timeout=timeout)
             if success:
@@ -147,9 +150,14 @@ class CaptureSerial(Serial):
         self.reset_output_buffer()
         self._received_lines_queue = queue.Queue()
 
-    def add_boot_info(self, started_str, complete_str, max_time,
-                      wait_time_after_complete=0.0,
-                      assume_booted_at_start=False):
+    def add_boot_info(
+        self,
+        started_str,
+        complete_str,
+        max_time,
+        wait_time_after_complete=0.0,
+        assume_booted_at_start=False,
+    ):
         """Set config data used in monitoring boot status"""
         self._boot_started_bytes = started_str.encode()
         self._boot_complete_bytes = complete_str.encode()
@@ -173,7 +181,7 @@ class CaptureSerial(Serial):
 
     def seconds_since_booted(self):
         if self._booted_event.is_set():
-            return time.time()-self._last_booted_time
+            return time.time() - self._last_booted_time
         return 0.0
 
     def wait_for_boot_complete(self):
@@ -189,15 +197,18 @@ class CaptureSerial(Serial):
         return booted
 
     def _check_line(self, line):
-        if self._command_successful_expected and \
-                self._command_successful_expected in line:
+        if (
+            self._command_successful_expected
+            and self._command_successful_expected in line
+        ):
             self._command_successful_event.set()
         if self._boot_started_bytes and self._boot_started_bytes in line:
             self.mark_not_booted()
         elif self._boot_complete_bytes and self._boot_complete_bytes in line:
             if self._wait_time_after_complete:
                 self._boot_complete_wait_timer = Timer(
-                    self._wait_time_after_complete, self.mark_booted)
+                    self._wait_time_after_complete, self.mark_booted
+                )
                 self._boot_complete_wait_timer.start()
             else:
                 self.mark_booted()
@@ -208,10 +219,16 @@ class CaptureSerial(Serial):
             try:
                 for b in super().read():
                     line.append(b)
-                    if b in b'\n':
+                    if b in b"\n":
                         # print(f"[{self._target_name}] In: {line.decode()}")
                         self._check_line(line)
                         self._received_lines_queue.put(line)
+                        if self._on_line is not None:
+                            try:
+                                self._on_line(bytes(line))
+                            except Exception:
+                                pass
+
                         line = bytearray()
             except Exception:
                 pass
@@ -296,12 +313,13 @@ class CaptureSerial(Serial):
         while True:
             try:
                 received_line = self._received_lines_queue.get(
-                    block=True if timeout else False, timeout=timeout)
+                    block=True if timeout else False, timeout=timeout
+                )
                 # print("Out:"+received_line.decode())
                 received_lines.append(received_line)
                 for e in expected_found_at_i:
                     if expected_found_at_i[e] is None and e in received_line:
-                        expected_found_at_i[e] = len(received_lines)-1
+                        expected_found_at_i[e] = len(received_lines) - 1
             except queue.Empty:
                 break
             if timeout and time.time() - start_time > timeout:
@@ -312,22 +330,26 @@ class CaptureSerial(Serial):
                     success = True
                     break
             else:
-                if list(expected_found_at_i.values()).count(None) \
-                        < len(expected_found_at_i):
+                if list(expected_found_at_i.values()).count(None) < len(
+                    expected_found_at_i
+                ):
                     success = True
                     break
 
         return success, received_lines, expected_found_at_i
 
 
-def start_capture_serial():
+def start_capture_serial(on_line_factory=None):
     """Create a CaptureSerial object for each target"""
     for name, target_info in TargetInfo.by_name.items():
         serial_info = target_info.serial
         serial_info["name"] = name
         if serial_info["port"] == PtyForwarder.PTY_SLAVE_A_ALIAS:
             serial_info["ext_link"] = target_info.pty_forwarder["ext_link"]
-        capture_serial = CaptureSerial(**serial_info)
+
+        on_line = on_line_factory(name) if on_line_factory else None
+        capture_serial = CaptureSerial(**serial_info, on_line=on_line)
+
         if target_info.boot:
             capture_serial.add_boot_info(**target_info.boot)
         capture_serial_by_name[name] = capture_serial
