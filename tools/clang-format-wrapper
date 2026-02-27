@@ -17,14 +17,15 @@ def get_correct_clang_format():
     )
     version = result.stdout.strip().split()[-1]
     if version.split(".")[0] != "17":
-        raise Exception(f"clang-format version 17 required. Found ${version}")
+        raise Exception(f"clang-format version 17 required. Found {version}")
 
     return "clang-format"
 
 
 def main():
     clang_format = get_correct_clang_format()
-    subprocess.run([clang_format] + sys.argv[1:])
+    completed = subprocess.run([clang_format] + sys.argv[1:])
+    sys.exit(completed.returncode)
 
 
 if __name__ == "__main__":
