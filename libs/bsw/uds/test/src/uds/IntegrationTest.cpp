@@ -79,7 +79,7 @@ public:
     }
 
     uds::DiagReturnCode::Type process(
-        uds::IncomingDiagConnection& connection,
+        uds::IIncomingDiagConnection& connection,
         uint8_t const /* request */[],
         uint16_t /* requestLength */) override
     {

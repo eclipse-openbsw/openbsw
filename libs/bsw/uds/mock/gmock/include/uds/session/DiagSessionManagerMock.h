@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "uds/connection/IIncomingDiagConnection.h"
 #include "uds/connection/IncomingDiagConnection.h"
 #include "uds/session/IDiagSessionChangedListener.h"
 #include "uds/session/IDiagSessionManager.h"
@@ -23,7 +24,7 @@ public:
     MOCK_METHOD(
         DiagReturnCode::Type,
         acceptedJob,
-        (IncomingDiagConnection&, AbstractDiagJob const&, uint8_t const[], uint16_t),
+        (IIncomingDiagConnection&, AbstractDiagJob const&, uint8_t const[], uint16_t),
         (override));
     MOCK_METHOD(
         void,

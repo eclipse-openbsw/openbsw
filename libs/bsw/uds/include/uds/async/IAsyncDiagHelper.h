@@ -8,7 +8,7 @@
 namespace uds
 {
 class AbstractDiagJob;
-class IncomingDiagConnection;
+class IIncomingDiagConnection;
 
 /**
  * Interface for storing/processing requests
@@ -20,14 +20,14 @@ public:
     {
     public:
         StoredRequest(
-            IncomingDiagConnection& connection, uint8_t const* request, uint16_t requestLength);
+            IIncomingDiagConnection& connection, uint8_t const* request, uint16_t requestLength);
 
-        IncomingDiagConnection& getConnection() const;
+        IIncomingDiagConnection& getConnection() const;
         uint8_t const* getRequest() const;
         uint16_t getRequestLength() const;
 
     private:
-        IncomingDiagConnection* fConnection;
+        IIncomingDiagConnection* fConnection;
         uint8_t const* fRequest;
         uint16_t fRequestLength;
     };
@@ -46,7 +46,7 @@ public:
      * \param requestLength requestLength as received in AbstractDiagJob::process
      */
     virtual StoredRequest* allocateRequest(
-        IncomingDiagConnection& connection, uint8_t const* request, uint16_t requestLength)
+        IIncomingDiagConnection& connection, uint8_t const* request, uint16_t requestLength)
         = 0;
 
     /**
@@ -62,11 +62,11 @@ public:
  * Inline implementation
  */
 inline IAsyncDiagHelper::StoredRequest::StoredRequest(
-    IncomingDiagConnection& connection, uint8_t const* const request, uint16_t const requestLength)
+    IIncomingDiagConnection& connection, uint8_t const* const request, uint16_t const requestLength)
 : fConnection(&connection), fRequest(request), fRequestLength(requestLength)
 {}
 
-inline IncomingDiagConnection& IAsyncDiagHelper::StoredRequest::getConnection() const
+inline IIncomingDiagConnection& IAsyncDiagHelper::StoredRequest::getConnection() const
 {
     return *fConnection;
 }

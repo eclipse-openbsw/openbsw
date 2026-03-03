@@ -11,7 +11,7 @@
 namespace uds
 {
 class AbstractDiagJob;
-class IncomingDiagConnection;
+class IIncomingDiagConnection;
 
 /**
  * Helper class for handling nested diagnostic requests
@@ -39,7 +39,7 @@ public:
      * Note: Call this function only if hasPendingAsyncRequest() returns true
      * \return Reference to connection bound to this request
      */
-    IncomingDiagConnection& getPendingConnection() const;
+    IIncomingDiagConnection& getPendingConnection() const;
 
     /**
      * Try to enqueue a request.
@@ -47,13 +47,13 @@ public:
      * \return Result of enqueuing
      */
     DiagReturnCode::Type enqueueRequest(
-        IncomingDiagConnection& connection, uint8_t const* request, uint16_t requestLength);
+        IIncomingDiagConnection& connection, uint8_t const* request, uint16_t requestLength);
 
     /**
      * Start processing an async request.
      * \param connection Reference to connection bound to this request
      */
-    void startAsyncRequest(IncomingDiagConnection& connection);
+    void startAsyncRequest(IIncomingDiagConnection& connection);
 
     /**
      * End processing an async request. This call will retrigger processing of
@@ -66,7 +66,7 @@ private:
 
     IAsyncDiagHelper& fAsyncHelper;
     AbstractDiagJob& fJob;
-    IncomingDiagConnection* fPendingAsyncConnection;
+    IIncomingDiagConnection* fPendingAsyncConnection;
     ::etl::intrusive_list<IAsyncDiagHelper::StoredRequest, ::etl::bidirectional_link<0>>
         fPendingRequests;
     ::async::Function fTriggerNextRequests;

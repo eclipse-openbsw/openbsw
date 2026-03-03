@@ -40,7 +40,7 @@ public:
     MOCK_METHOD(
         DiagReturnCode::Type,
         processNestedRequest,
-        (IncomingDiagConnection&, uint8_t const[], uint16_t));
+        (IIncomingDiagConnection&, uint8_t const[], uint16_t));
     MOCK_METHOD(void, handleNestedResponseCode, (DiagReturnCode::Type));
     MOCK_METHOD(void, handleOverflow, ());
 
@@ -91,7 +91,7 @@ public:
 protected:
     MOCK_METHOD(DiagReturnCode::Type, verify, (uint8_t const[], uint16_t));
     MOCK_METHOD(
-        DiagReturnCode::Type, process, (IncomingDiagConnection&, uint8_t const[], uint16_t));
+        DiagReturnCode::Type, process, (IIncomingDiagConnection&, uint8_t const[], uint16_t));
 };
 
 class IncomingDiagConnectionMock : public IncomingDiagConnection

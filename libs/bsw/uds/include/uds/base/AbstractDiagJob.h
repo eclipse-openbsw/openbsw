@@ -22,6 +22,7 @@ class UdsController;
 namespace uds
 {
 class IncomingDiagConnection;
+class IIncomingDiagConnection;
 class IDiagAuthenticator;
 class IDiagSessionManager;
 class DiagSubSession;
@@ -188,7 +189,7 @@ public:
      * \see     process()
      */
     DiagReturnCode::Type
-    execute(IncomingDiagConnection& connection, uint8_t const request[], uint16_t requestLength);
+    execute(IIncomingDiagConnection& connection, uint8_t const request[], uint16_t requestLength);
 
     /**
      * Adds an AbstractDiagJob as child node
@@ -305,7 +306,7 @@ protected:
      * \see     IncomingDiagConnection
      */
     virtual DiagReturnCode::Type process(
-        IncomingDiagConnection& connection, uint8_t const* const request, uint16_t requestLength);
+        IIncomingDiagConnection& connection, uint8_t const* const request, uint16_t requestLength);
 
     /**
      * Compares two byte arrays.
@@ -404,12 +405,12 @@ private:
     static DiagJobRoot* sfpDiagJobRoot;
 
     void acceptJob(
-        IncomingDiagConnection& connection, uint8_t const request[], uint16_t const requestLength);
+        IIncomingDiagConnection& connection, uint8_t const request[], uint16_t const requestLength);
     /**
      * Does suppress positive response bit handling
      */
     void checkSuppressPositiveResponseBit(
-        IncomingDiagConnection& connection, uint8_t const request[]) const;
+        IIncomingDiagConnection& connection, uint8_t const request[]) const;
 
     /** Array containing the request implemented by this job */
     uint8_t const* const fpImplementedRequest;

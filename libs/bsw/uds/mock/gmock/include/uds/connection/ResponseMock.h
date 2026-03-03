@@ -15,13 +15,13 @@ class PositiveResponseMockHelper
 , public PositiveResponse
 {
 public:
-    PositiveResponseMockHelper(IncomingDiagConnection& /* connection */) : StubMock() {}
+    PositiveResponseMockHelper(IIncomingDiagConnection& /* connection */) : StubMock() {}
 
     MOCK_METHOD(size_t, appendData, (uint8_t const[], size_t));
     MOCK_METHOD(uint8_t*, getData, ());
     MOCK_METHOD(::uds::ErrorCode, send, (AbstractDiagJob&));
 
-    static PositiveResponseMockHelper& instance(IncomingDiagConnection& connection)
+    static PositiveResponseMockHelper& instance(IIncomingDiagConnection& connection)
     {
         static PositiveResponseMockHelper instance(connection);
         return instance;

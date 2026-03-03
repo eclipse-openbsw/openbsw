@@ -21,7 +21,7 @@ private:
     static uint16_t const RESET_TIME = 1000U; // ms
 
     DiagReturnCode::Type process(
-        IncomingDiagConnection& connection,
+        IIncomingDiagConnection& connection,
         uint8_t const request[],
         uint16_t requestLength) override;
 

@@ -3,7 +3,7 @@
 #pragma once
 
 #include "uds/base/AbstractDiagJob.h"
-#include "uds/connection/IncomingDiagConnection.h"
+#include "uds/connection/IIncomingDiagConnection.h"
 
 #include <gmock/gmock.h>
 
@@ -40,7 +40,7 @@ public:
     MOCK_METHOD(
         DiagReturnCode::Type,
         process,
-        (IncomingDiagConnection&, uint8_t const[], uint16_t),
+        (IIncomingDiagConnection&, uint8_t const[], uint16_t),
         (override));
 };
 

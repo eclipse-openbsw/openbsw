@@ -27,7 +27,7 @@ private:
     DiagReturnCode::Type verify(uint8_t const request[], uint16_t requestLength) override;
 
     DiagReturnCode::Type process(
-        IncomingDiagConnection& connection,
+        IIncomingDiagConnection& connection,
         uint8_t const request[],
         uint16_t requestLength) override;
 

@@ -2,7 +2,7 @@
 
 #include "uds/jobs/RoutineControlJob.h"
 
-#include "uds/connection/IncomingDiagConnection.h"
+#include "uds/connection/IIncomingDiagConnection.h"
 
 #include <etl/error_handler.h>
 
@@ -36,7 +36,7 @@ RoutineControlJob::verify(uint8_t const* const request, uint16_t const /* reques
 }
 
 DiagReturnCode::Type RoutineControlJob::process(
-    IncomingDiagConnection& connection, uint8_t const* const request, uint16_t const requestLength)
+    IIncomingDiagConnection& connection, uint8_t const* const request, uint16_t const requestLength)
 {
     switch (connection.getIdentifier(1U))
     {
@@ -80,7 +80,7 @@ DiagReturnCode::Type RoutineControlJob::RoutineControlJobNode::verify(
 }
 
 DiagReturnCode::Type RoutineControlJob::RoutineControlJobNode::process(
-    IncomingDiagConnection& connection, uint8_t const* const request, uint16_t const requestLength)
+    IIncomingDiagConnection& connection, uint8_t const* const request, uint16_t const requestLength)
 {
     return fRoutineControlJob.process(connection, request, requestLength);
 }

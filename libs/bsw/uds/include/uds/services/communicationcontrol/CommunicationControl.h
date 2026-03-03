@@ -79,7 +79,7 @@ protected:
     static uint8_t const VMS_CONTROL_TYPE_HI              = 0x5FU;
 
     DiagReturnCode::Type process(
-        IncomingDiagConnection& connection,
+        IIncomingDiagConnection& connection,
         uint8_t const request[],
         uint16_t requestLength) override;
 

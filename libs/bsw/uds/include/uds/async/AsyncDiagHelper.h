@@ -26,7 +26,7 @@ public:
 
     ::async::ContextType getDiagContext() const override;
     StoredRequest* allocateRequest(
-        IncomingDiagConnection& connection,
+        IIncomingDiagConnection& connection,
         uint8_t const* request,
         uint16_t requestLength) override;
     void processAndReleaseRequest(AbstractDiagJob& job, StoredRequest& request) override;

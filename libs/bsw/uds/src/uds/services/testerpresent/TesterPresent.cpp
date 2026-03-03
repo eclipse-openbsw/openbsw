@@ -26,7 +26,7 @@ TesterPresent::TesterPresent()
 }
 
 DiagReturnCode::Type TesterPresent::process(
-    IncomingDiagConnection& connection,
+    IIncomingDiagConnection& connection,
     uint8_t const* const request,
     uint16_t const /* requestLength */)
 {

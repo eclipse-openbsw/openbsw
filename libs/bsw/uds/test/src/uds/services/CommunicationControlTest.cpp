@@ -26,7 +26,7 @@ class TestCommunicationControl : public CommunicationControl
 {
 public:
     virtual DiagReturnCode::Type
-    process(IncomingDiagConnection& connection, uint8_t const request[], uint16_t requestLength)
+    process(IIncomingDiagConnection& connection, uint8_t const request[], uint16_t requestLength)
     {
         return CommunicationControl::process(connection, request, requestLength);
     }

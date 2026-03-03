@@ -2,7 +2,7 @@
 
 #include "uds/jobs/WriteIdentifierToMemory.h"
 
-#include "uds/connection/IncomingDiagConnection.h"
+#include "uds/connection/IIncomingDiagConnection.h"
 
 #include <etl/memory.h>
 
@@ -36,7 +36,7 @@ WriteIdentifierToMemory::verify(uint8_t const* const request, uint16_t const req
 }
 
 DiagReturnCode::Type WriteIdentifierToMemory::process(
-    IncomingDiagConnection& connection, uint8_t const* const request, uint16_t const requestLength)
+    IIncomingDiagConnection& connection, uint8_t const* const request, uint16_t const requestLength)
 {
     (void)connection.releaseRequestGetResponse();
     (void)::etl::copy(

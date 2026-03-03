@@ -22,7 +22,7 @@ private:
     static uint8_t const sfImplementedRequest[2];
 
     DiagReturnCode::Type process(
-        IncomingDiagConnection& connection,
+        IIncomingDiagConnection& connection,
         uint8_t const request[],
         uint16_t requestLength) override;
 

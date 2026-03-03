@@ -2,6 +2,8 @@
 
 #include "uds/connection/NestedDiagRequest.h"
 
+#include "uds/connection/IIncomingDiagConnection.h"
+
 #include <etl/memory.h>
 #include <etl/span.h>
 
@@ -53,7 +55,7 @@ bool NestedDiagRequest::prepareNextRequest()
     return (responseCode == DiagReturnCode::OK) && (_nestedRequest.size() > 0U);
 }
 
-DiagReturnCode::Type NestedDiagRequest::processNextRequest(IncomingDiagConnection& connection)
+DiagReturnCode::Type NestedDiagRequest::processNextRequest(IIncomingDiagConnection& connection)
 {
     _numIdentifiers       = 0U;
     _numPrefixIdentifiers = 0U;

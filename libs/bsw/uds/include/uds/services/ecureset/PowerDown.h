@@ -16,7 +16,7 @@ private:
     static uint8_t const sfImplementedRequest[2];
 
     virtual DiagReturnCode::Type process(
-        IncomingDiagConnection& connection, uint8_t const request[], uint16_t requestLength) final;
+        IIncomingDiagConnection& connection, uint8_t const request[], uint16_t requestLength) final;
     virtual void responseSent(IncomingDiagConnection& connection, ResponseSendResult result) final;
 
     IUdsLifecycleConnector& fUdsLifecycleConnector;

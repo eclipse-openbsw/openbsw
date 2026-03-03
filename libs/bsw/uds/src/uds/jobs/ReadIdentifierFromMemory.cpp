@@ -2,7 +2,7 @@
 
 #include "uds/jobs/ReadIdentifierFromMemory.h"
 
-#include "uds/connection/IncomingDiagConnection.h"
+#include "uds/connection/IIncomingDiagConnection.h"
 
 namespace uds
 {
@@ -27,7 +27,7 @@ ReadIdentifierFromMemory::ReadIdentifierFromMemory(
 }
 
 DiagReturnCode::Type ReadIdentifierFromMemory::process(
-    IncomingDiagConnection& connection,
+    IIncomingDiagConnection& connection,
     uint8_t const* const /* request */,
     uint16_t const /* requestLength */)
 {

@@ -102,7 +102,7 @@ void CommunicationControl::resetCommunicationSubState()
 
 // METRIC STCYC 25 // The method is already in use as is
 DiagReturnCode::Type CommunicationControl::process(
-    IncomingDiagConnection& connection, uint8_t const* const request, uint16_t const requestLength)
+    IIncomingDiagConnection& connection, uint8_t const* const request, uint16_t const requestLength)
 {
     DiagReturnCode::Type ret = sessionAccepted();
     if (DiagReturnCode::OK != ret)

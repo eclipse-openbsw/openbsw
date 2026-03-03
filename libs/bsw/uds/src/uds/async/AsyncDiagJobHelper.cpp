@@ -21,13 +21,13 @@ bool AsyncDiagJobHelper::hasPendingAsyncRequest() const
     return fPendingAsyncConnection != nullptr;
 }
 
-IncomingDiagConnection& AsyncDiagJobHelper::getPendingConnection() const
+IIncomingDiagConnection& AsyncDiagJobHelper::getPendingConnection() const
 {
     return *fPendingAsyncConnection;
 }
 
 DiagReturnCode::Type AsyncDiagJobHelper::enqueueRequest(
-    IncomingDiagConnection& connection, uint8_t const* const request, uint16_t const requestLength)
+    IIncomingDiagConnection& connection, uint8_t const* const request, uint16_t const requestLength)
 {
     IAsyncDiagHelper::StoredRequest* const storedRequest
         = fAsyncHelper.allocateRequest(connection, request, requestLength);
@@ -40,7 +40,7 @@ DiagReturnCode::Type AsyncDiagJobHelper::enqueueRequest(
     return DiagReturnCode::ISO_BUSY_REPEAT_REQUEST;
 }
 
-void AsyncDiagJobHelper::startAsyncRequest(IncomingDiagConnection& connection)
+void AsyncDiagJobHelper::startAsyncRequest(IIncomingDiagConnection& connection)
 {
     fPendingAsyncConnection = &connection;
 }
