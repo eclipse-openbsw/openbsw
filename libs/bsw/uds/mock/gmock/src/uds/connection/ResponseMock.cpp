@@ -1,21 +1,20 @@
 // Copyright 2024 Accenture.
 
 #include "uds/connection/ResponseMock.h"
-
-#include "uds/connection/IncomingDiagConnectionMock.h"
-
 #include <etl/unaligned_type.h>
+
+class PositiveResponse;
 
 namespace uds
 {
 
 size_t PositiveResponse::appendData(uint8_t const data[], size_t length)
 {
-    if (PositiveResponseMockHelper::instance(IncomingDiagConnectionMockHelper::instance()).isStub())
+    if (PositiveResponseMockHelper::instance().isStub())
     {
         return length;
     }
-    return PositiveResponseMockHelper::instance(IncomingDiagConnectionMockHelper::instance())
+    return PositiveResponseMockHelper::instance()
         .appendData(data, length);
 }
 
@@ -41,23 +40,22 @@ bool PositiveResponse::appendUint32(uint32_t const data)
 
 uint8_t* PositiveResponse::getData()
 {
-    if (PositiveResponseMockHelper::instance(IncomingDiagConnectionMockHelper::instance()).isStub())
+    if (PositiveResponseMockHelper::instance().isStub())
     {
         static uint8_t rspbuf[256];
         return rspbuf;
     }
-    return PositiveResponseMockHelper::instance(IncomingDiagConnectionMockHelper::instance())
+    return PositiveResponseMockHelper::instance()
         .getData();
 }
 
-::uds::ErrorCode PositiveResponse::send(AbstractDiagJob& sender)
+size_t PositiveResponse::getLength() const
 {
-    if (PositiveResponseMockHelper::instance(IncomingDiagConnectionMockHelper::instance()).isStub())
+    if (PositiveResponseMockHelper::instance().isStub())
     {
-        return ::uds::ErrorCode::OK;
+        return PositiveResponseMockHelper::instance().getLength();
     }
-    return PositiveResponseMockHelper::instance(IncomingDiagConnectionMockHelper::instance())
-        .send(sender);
+    return 0;
 }
 
 void PositiveResponse::init(uint8_t buffer[], size_t maximumLength) { fIsOverflow = false; }
