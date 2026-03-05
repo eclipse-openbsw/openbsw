@@ -314,19 +314,6 @@ Reset_Handler:
 
     str r2, [r0,#4]!            /* NVIC_ICER - clear enable IRQ register 0x1c */
     str r2, [r1,#4]!            /* NVIC_ICPR - clear pending IRQ register 0x1c */
-/* ISR reloction */
-    ISB
-    DSB
-    DMB
-    ldr r0, =_NVIC_VTOR
-    ldr r1, =__isr_vector
-    str r1, [r0]
-    ldr r0, [r1]
-    mov sp, r0
-    ldr r0, [r1, #4]
-    ISB
-    DSB
-    DMB
 
     /* enable fpu */
     ldr r0, = _CPACR
