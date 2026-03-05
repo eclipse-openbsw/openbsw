@@ -8,7 +8,7 @@
 #include "outputPwm/OutputPwm.h"
 #endif
 
-#include "uds/connection/IncomingDiagConnection.h"
+#include "uds/connection/IIncomingDiagConnection.h"
 
 namespace uds
 {
@@ -29,7 +29,7 @@ ReadIdentifierPot::ReadIdentifierPot(DiagSessionMask const sessionMask)
 }
 
 DiagReturnCode::Type ReadIdentifierPot::process(
-    IncomingDiagConnection& connection,
+    IIncomingDiagConnection& connection,
     uint8_t const* const /* request */,
     uint16_t const /* requestLength */)
 {

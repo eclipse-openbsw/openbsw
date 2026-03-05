@@ -42,17 +42,17 @@ public:
     MOCK_METHOD(
         DiagReturnCode::Type,
         doProcess,
-        (IncomingDiagConnection & connection, uint8_t const request[], uint16_t requestLength));
+        (IIncomingDiagConnection & connection, uint8_t const request[], uint16_t requestLength));
 
     DiagReturnCode::Type
-    callProcess(IncomingDiagConnection& connection, uint8_t const request[], uint16_t requestLength)
+    callProcess(IIncomingDiagConnection& connection, uint8_t const request[], uint16_t requestLength)
     {
         return process(connection, request, requestLength);
     }
 
 protected:
     DiagReturnCode::Type process(
-        IncomingDiagConnection& connection,
+        IIncomingDiagConnection& connection,
         uint8_t const request[],
         uint16_t requestLength) override
     {

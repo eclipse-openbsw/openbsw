@@ -81,7 +81,7 @@ MultipleReadDataByIdentifier::verify(uint8_t const* const request, uint16_t cons
 }
 
 DiagReturnCode::Type MultipleReadDataByIdentifier::process(
-    IncomingDiagConnection& connection, uint8_t const* const request, uint16_t const requestLength)
+    IIncomingDiagConnection& connection, uint8_t const* const request, uint16_t const requestLength)
 {
     if (requestLength == 2U)
     {
@@ -90,7 +90,9 @@ DiagReturnCode::Type MultipleReadDataByIdentifier::process(
 
     if (fGetDidLimit.is_valid())
     {
-        uint8_t const didLimit = fGetDidLimit(*connection.requestMessage);
+        // Main issue in the separation of concern of IIncomingDiagConnection with transport.
+        uint8_t const didLimit = fGetDidLimit(
+            *static_cast<IncomingDiagConnection&>(connection).getRequestMessage());
         if ((didLimit > 0U) && ((requestLength / 2U) > didLimit))
         {
             return DiagReturnCode::ISO_INVALID_FORMAT;
@@ -129,7 +131,7 @@ MultipleReadDataByIdentifier::prepareNestedRequest(::etl::span<uint8_t const> co
 }
 
 DiagReturnCode::Type MultipleReadDataByIdentifier::processNestedRequest(
-    IncomingDiagConnection& connection, uint8_t const* const request, uint16_t const requestLength)
+    IIncomingDiagConnection& connection, uint8_t const* const request, uint16_t const requestLength)
 {
     DiagReturnCode::Type responseCode = DiagReturnCode::NOT_RESPONSIBLE;
     AbstractDiagJob* currentJob       = &fFirstJob;

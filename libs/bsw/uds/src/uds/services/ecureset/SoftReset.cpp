@@ -27,7 +27,7 @@ SoftReset::SoftReset(IUdsLifecycleConnector& udsLifecycleConnector, DiagDispatch
 {}
 
 DiagReturnCode::Type SoftReset::process(
-    IncomingDiagConnection& connection,
+    IIncomingDiagConnection& connection,
     uint8_t const* const /* request */,
     uint16_t const /* requestLength */)
 {

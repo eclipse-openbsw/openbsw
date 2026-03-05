@@ -699,7 +699,7 @@ void IncomingDiagConnection::terminate()
     }
     _connectionTerminationIsPending = false;
     _sender                         = nullptr;
-    diagDispatcher->diagConnectionTerminated(*this);
+    diagDispatcher->diagConnectionTerminated(static_cast<IncomingDiagConnection&>(*this));
 }
 
 } // namespace uds

@@ -47,11 +47,11 @@ public:
     {}
 
     virtual DiagReturnCode::Type
-    start(IncomingDiagConnection& connection, uint8_t const* const request, uint16_t requestLength)
+    start(IIncomingDiagConnection& connection, uint8_t const* const request, uint16_t requestLength)
         = 0;
 
     virtual DiagReturnCode::Type stop(
-        IncomingDiagConnection& /* connection */,
+        IIncomingDiagConnection& /* connection */,
         uint8_t const* const /* request */,
         uint16_t const /* requestLength */)
     {
@@ -59,7 +59,7 @@ public:
     }
 
     virtual DiagReturnCode::Type requestResults(
-        IncomingDiagConnection& /* connection */,
+        IIncomingDiagConnection& /* connection */,
         uint8_t const* const /* request */,
         uint16_t const /* requestLength */)
     {
@@ -93,7 +93,7 @@ protected:
         RoutineControlJob& fRoutineControlJob;
 
         DiagReturnCode::Type process(
-            IncomingDiagConnection& connection,
+            IIncomingDiagConnection& connection,
             uint8_t const* const request,
             uint16_t requestLength) override;
     };
@@ -101,7 +101,7 @@ protected:
     DiagReturnCode::Type verify(uint8_t const* const request, uint16_t requestLength) override;
 
     DiagReturnCode::Type process(
-        IncomingDiagConnection& connection,
+        IIncomingDiagConnection& connection,
         uint8_t const* const request,
         uint16_t requestLength) override;
 

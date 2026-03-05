@@ -76,7 +76,7 @@ public:
     void resetToDefaultSession() override;
 
     DiagReturnCode::Type acceptedJob(
-        IncomingDiagConnection& connection,
+        IIncomingDiagConnection& connection,
         AbstractDiagJob const& job,
         uint8_t const request[],
         uint16_t requestLength) override;
@@ -126,7 +126,7 @@ protected:
     static uint16_t const EXTENDED_DIAG_RESPONSE_PENDING  = 3000U;  // 10ms
 
     DiagReturnCode::Type process(
-        IncomingDiagConnection& connection,
+        IIncomingDiagConnection& connection,
         uint8_t const request[],
         uint16_t requestLength) override;
 
@@ -137,7 +137,7 @@ protected:
     void startTimeout();
 
     DiagReturnCode::Type acceptedJob_ext(
-        IncomingDiagConnection const& connection,
+        IIncomingDiagConnection const& connection,
         AbstractDiagJob const& job,
         uint8_t const request[],
         uint16_t requestLength);

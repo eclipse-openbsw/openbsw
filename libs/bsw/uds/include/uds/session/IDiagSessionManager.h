@@ -69,7 +69,7 @@ public:
     virtual bool persistAndRestoreSession() { return false; }
 
     virtual DiagReturnCode::Type acceptedJob(
-        IncomingDiagConnection& connection,
+        IIncomingDiagConnection& connection,
         AbstractDiagJob const& job,
         uint8_t const request[],
         uint16_t requestLength)

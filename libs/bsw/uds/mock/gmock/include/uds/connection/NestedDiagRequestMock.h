@@ -33,7 +33,7 @@ public:
     MOCK_METHOD(
         DiagReturnCode::Type,
         processNestedRequest,
-        (IncomingDiagConnection & connection, uint8_t const request[], uint16_t requestLength),
+        (IIncomingDiagConnection & connection, uint8_t const request[], uint16_t requestLength),
         (override));
     MOCK_METHOD(void, handleNestedResponseCode, (DiagReturnCode::Type responseCode), (override));
     MOCK_METHOD(void, handleOverflow, (), (override));

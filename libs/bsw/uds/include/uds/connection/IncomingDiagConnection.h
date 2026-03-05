@@ -9,6 +9,7 @@
 #include "uds/DiagReturnCode.h"
 #include "uds/connection/ErrorCode.h"
 #include "uds/connection/PositiveResponse.h"
+#include "uds/connection/IIncomingDiagConnection.h"
 
 #include <etl/closure.h>
 #include <etl/uncopyable.h>
@@ -43,12 +44,11 @@ class DiagDispatcher;
  * \see     transport::ITransportMessageProcessedListener
  */
 class IncomingDiagConnection
-: public transport::ITransportMessageProcessedListener
+: public IIncomingDiagConnection
+, public transport::ITransportMessageProcessedListener
 , public etl::uncopyable
 {
 public:
-    virtual ~IncomingDiagConnection() = default;
-
     void open(bool activatePending);
 
 public:
@@ -217,6 +217,48 @@ public:
     ::uds::ErrorCode sendResponse();
 
     bool terminateNestedRequest();
+
+    /**
+     * Returns the service ID of the diagnostic request.
+     */
+    uint8_t getServiceId() const { return serviceId; }
+
+    /**
+     * Returns the target address of the diagnostic connection.
+     */
+    uint16_t getTargetAddress() const { return targetAddress; }
+
+    /**
+     * Returns the source address of the diagnostic connection.
+     */
+    uint16_t getSourceAddress() const { return sourceAddress; }
+
+    // void setRequestNotificationListener(
+    //     transport::ITransportMessageProcessedListener* listener) override
+    // {
+    //     requestNotificationListener = listener;
+    // }
+
+    void setDiagSessionManager(IDiagSessionManager* sessionManager) override
+    {
+        diagSessionManager = sessionManager;
+    }
+
+    /**
+     * Gets the request message.
+     */
+    transport::TransportMessage* getRequestMessage() { return requestMessage; }
+
+    void setSourceAddress(uint16_t address) override { sourceAddress = address; }
+
+    void setTargetAddress(uint16_t address) override { targetAddress = address; }
+
+    void setResponseSourceAddress(uint16_t address) override
+    {
+        responseSourceAddress = address;
+    }
+
+    void setServiceId(uint8_t id) override { serviceId = id; }
 
 public:
     static uint8_t const MAXIMUM_NUMBER_OF_IDENTIFIERS  = 6U;

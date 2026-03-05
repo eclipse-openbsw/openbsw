@@ -39,7 +39,7 @@ void AbstractDiagJob::setDefaultDiagSessionManager(IDiagSessionManager& sessionM
 }
 
 DiagReturnCode::Type AbstractDiagJob::execute(
-    IncomingDiagConnection& connection, uint8_t const* const request, uint16_t const requestLength)
+    IIncomingDiagConnection& connection, uint8_t const* const request, uint16_t const requestLength)
 {
     DiagReturnCode::Type status = verify(request, requestLength);
     DiagJobRoot* jobRoot        = getDiagJobRoot();
@@ -50,7 +50,7 @@ DiagReturnCode::Type AbstractDiagJob::execute(
             acceptJob(connection, request, requestLength);
             return DiagReturnCode::ISO_REQUEST_OUT_OF_RANGE;
         }
-        if (!getDiagAuthenticator().isAuthenticated(connection.sourceAddress))
+        if (!getDiagAuthenticator().isAuthenticated(connection.getSourceAddress()))
         {
             acceptJob(connection, request, requestLength);
             return getDiagAuthenticator().getNotAuthenticatedReturnCode();
@@ -290,7 +290,7 @@ bool AbstractDiagJob::isChild(uint8_t const* const prefix, uint16_t const length
 }
 
 DiagReturnCode::Type AbstractDiagJob::process(
-    IncomingDiagConnection& connection, uint8_t const* const request, uint16_t const requestLength)
+    IIncomingDiagConnection& connection, uint8_t const* const request, uint16_t const requestLength)
 {
     DiagReturnCode::Type result  = DiagReturnCode::NOT_RESPONSIBLE;
     AbstractDiagJob* pCurrentJob = fpFirstChild;
@@ -337,7 +337,7 @@ DiagSession const& AbstractDiagJob::getSession() const
 }
 
 void AbstractDiagJob::acceptJob(
-    IncomingDiagConnection& connection, uint8_t const* const request, uint16_t const requestLength)
+    IIncomingDiagConnection& connection, uint8_t const* const request, uint16_t const requestLength)
 {
     if (fRequestLength > 0U)
     {
@@ -346,7 +346,7 @@ void AbstractDiagJob::acceptJob(
 }
 
 void AbstractDiagJob::checkSuppressPositiveResponseBit(
-    IncomingDiagConnection& connection, uint8_t const* const request) const
+    IIncomingDiagConnection& connection, uint8_t const* const request) const
 {
     if (fSuppressPositiveResponseBitEnabled)
     {

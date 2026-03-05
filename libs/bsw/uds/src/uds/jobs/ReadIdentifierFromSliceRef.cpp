@@ -2,7 +2,7 @@
 
 #include "uds/jobs/ReadIdentifierFromSliceRef.h"
 
-#include "uds/connection/IncomingDiagConnection.h"
+#include "uds/connection/IIncomingDiagConnection.h"
 
 namespace uds
 {
@@ -18,7 +18,7 @@ ReadIdentifierFromSliceRef::ReadIdentifierFromSliceRef(
 }
 
 DiagReturnCode::Type ReadIdentifierFromSliceRef::process(
-    IncomingDiagConnection& connection,
+    IIncomingDiagConnection& connection,
     uint8_t const* const /* request */,
     uint16_t const /* requestLength */)
 {

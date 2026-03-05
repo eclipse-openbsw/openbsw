@@ -44,15 +44,15 @@ public:
 
 protected:
     DiagReturnCode::Type process(
-        IncomingDiagConnection& connection,
+        IIncomingDiagConnection& connection,
         uint8_t const request[],
         uint16_t requestLength) override;
 
 private:
     void asyncProcess(
-        IncomingDiagConnection* connection, uint8_t const request[], uint16_t requestLength);
+        IIncomingDiagConnection* connection, uint8_t const request[], uint16_t requestLength);
     using ProcessClosureType
-        = ::async::Call<::etl::closure<void(IncomingDiagConnection*, uint8_t const*, uint16_t)>>;
+        = ::async::Call<::etl::closure<void(IIncomingDiagConnection*, uint8_t const*, uint16_t)>>;
 
     AsyncDiagJobHelper fAsyncJobHelper;
     ProcessClosureType fProcess;
@@ -87,7 +87,7 @@ void AsyncDiagJob<T>::responseSent(
 
 template<class T>
 DiagReturnCode::Type AsyncDiagJob<T>::process(
-    IncomingDiagConnection& connection, uint8_t const request[], uint16_t const requestLength)
+    IIncomingDiagConnection& connection, uint8_t const request[], uint16_t const requestLength)
 {
     if (fAsyncJobHelper.hasPendingAsyncRequest())
     {
@@ -108,7 +108,7 @@ DiagReturnCode::Type AsyncDiagJob<T>::process(
 
 template<class T>
 void AsyncDiagJob<T>::asyncProcess(
-    IncomingDiagConnection* connection, uint8_t const request[], uint16_t const requestLength)
+    IIncomingDiagConnection* connection, uint8_t const request[], uint16_t const requestLength)
 {
     DiagReturnCode::Type responseCode = T::process(*connection, request, requestLength);
     if (responseCode != DiagReturnCode::OK)

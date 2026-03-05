@@ -88,7 +88,7 @@ void DiagnosticSessionControl::responseSent(
 }
 
 DiagReturnCode::Type DiagnosticSessionControl::process(
-    IncomingDiagConnection& connection, uint8_t const* const request, uint16_t const requestLength)
+    IIncomingDiagConnection& connection, uint8_t const* const request, uint16_t const requestLength)
 {
     if ((fpCurrentSession == nullptr) || (requestLength != 1U))
     {
@@ -157,7 +157,7 @@ void DiagnosticSessionControl::resetToDefaultSession()
 }
 
 DiagReturnCode::Type DiagnosticSessionControl::acceptedJob(
-    IncomingDiagConnection& connection,
+    IIncomingDiagConnection& connection,
     AbstractDiagJob const& job,
     uint8_t const* const request,
     uint16_t const requestLength)
@@ -166,7 +166,7 @@ DiagReturnCode::Type DiagnosticSessionControl::acceptedJob(
 }
 
 DiagReturnCode::Type DiagnosticSessionControl::acceptedJob_ext(
-    IncomingDiagConnection const& /* connection */,
+    IIncomingDiagConnection const& /* connection */,
     AbstractDiagJob const& job,
     uint8_t const* const /* request */,
     uint16_t const /* requestLength */)
