@@ -17,6 +17,7 @@ DECLARE_LOGGER_COMPONENT(GLOBAL)
 
 namespace uds
 {
+// NOLINTBEGIN(cppcoreguidelines-pro-type-vararg): Logger API uses C-style varargs.
 using ::transport::AbstractTransportLayer;
 using ::transport::ITransportMessageListener;
 using ::transport::ITransportMessageProvider;
@@ -296,12 +297,16 @@ ESR_NO_INLINE AbstractTransportLayer::ErrorCode DiagDispatcher::send(
         return AbstractTransportLayer::ErrorCode::TP_SEND_FAIL;
     }
 
-    // FIXME: This reinterpret_cast works for now but is somewhat fragile
+    // Compare listener identity through the concrete connection type to avoid reinterpret_cast.
     auto connection = etl::find_if(
         _incomingDiagConnectionPool.begin(),
         _incomingDiagConnectionPool.end(),
         [pNotificationListener](void* const conn) -> bool
-        { return reinterpret_cast<void*>(pNotificationListener) == conn; });
+        {
+            return static_cast<transport::ITransportMessageProcessedListener*>(
+                       static_cast<IncomingDiagConnection*>(conn))
+                   == pNotificationListener;
+        });
 
     if (connection != _incomingDiagConnectionPool.end())
     {
@@ -503,4 +508,5 @@ void DiagDispatcher::transportMessageProcessed(
     fProvidingListenerHelper.releaseTransportMessage(transportMessage);
 }
 
+// NOLINTEND(cppcoreguidelines-pro-type-vararg)
 } // namespace uds

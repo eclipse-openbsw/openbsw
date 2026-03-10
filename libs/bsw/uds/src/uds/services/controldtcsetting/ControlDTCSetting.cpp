@@ -10,6 +10,7 @@
 
 namespace uds
 {
+// NOLINTBEGIN(cppcoreguidelines-pro-type-vararg): Logger API uses C-style varargs.
 using ::util::logger::Logger;
 using ::util::logger::UDS;
 
@@ -54,4 +55,5 @@ DiagReturnCode::Type ControlDTCSetting::process(
     return DiagReturnCode::OK;
 }
 
+// NOLINTEND(cppcoreguidelines-pro-type-vararg)
 } // namespace uds

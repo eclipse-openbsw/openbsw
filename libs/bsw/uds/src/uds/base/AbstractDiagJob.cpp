@@ -15,6 +15,7 @@
 
 namespace uds
 {
+// NOLINTBEGIN(cppcoreguidelines-pro-type-vararg): Logger API uses C-style varargs.
 using ::util::logger::Logger;
 using ::util::logger::UDS;
 
@@ -359,4 +360,5 @@ void AbstractDiagJob::checkSuppressPositiveResponseBit(
     }
 }
 
+// NOLINTEND(cppcoreguidelines-pro-type-vararg)
 } // namespace uds

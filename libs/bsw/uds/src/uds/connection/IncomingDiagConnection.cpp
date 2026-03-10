@@ -27,6 +27,7 @@ using ::util::logger::UDS;
 
 namespace uds
 {
+// NOLINTBEGIN(cppcoreguidelines-pro-type-vararg): Logger API uses C-style varargs.
 
 void buildResponsePendingTransportMessage(
     ::transport::TransportMessage& pendingMessage,
@@ -702,4 +703,5 @@ void IncomingDiagConnection::terminate()
     diagDispatcher->diagConnectionTerminated(*this);
 }
 
+// NOLINTEND(cppcoreguidelines-pro-type-vararg)
 } // namespace uds
