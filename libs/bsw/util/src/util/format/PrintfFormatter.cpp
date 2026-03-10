@@ -18,6 +18,7 @@ PrintfFormatter::PrintfFormatter(IOutputStream& strm, bool const writeParam)
 // NOLINTNEXTLINE(cert-dcl50-cpp): va_list usage only for printing functionalities.
 void PrintfFormatter::format(char const* const formatString, ...)
 {
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg): required adapter for printf-style API
     va_list ap;
     va_start(ap, formatString);
     format(formatString, ap);
@@ -79,11 +80,14 @@ void PrintfFormatter::formatText(char const* const text, size_t const length)
 
 void PrintfFormatter::formatParam(ParamInfo const& paramInfo, ParamVariant const& variant)
 {
+    // NOLINTBEGIN(cppcoreguidelines-pro-type-union-access): active member selected by
+    // ParamInfo::datatype
     switch (paramInfo._type)
     {
         case ParamType::CHAR:
         {
-            formatStringParam(paramInfo, reinterpret_cast<char const*>(&variant._uint8Value), 1U);
+            char const charValue = static_cast<char>(variant._uint8Value);
+            formatStringParam(paramInfo, &charValue, 1U);
             break;
         }
         case ParamType::STRING:
@@ -124,6 +128,7 @@ void PrintfFormatter::formatParam(ParamInfo const& paramInfo, ParamVariant const
             break;
         }
     }
+    // NOLINTEND(cppcoreguidelines-pro-type-union-access)
 }
 
 void PrintfFormatter::formatStringParam(ParamInfo const& paramInfo, char const* str)
@@ -196,6 +201,7 @@ void PrintfFormatter::formatIntParam(ParamInfo const& paramInfo, ParamVariant co
 char* PrintfFormatter::formatIntDatatype(
     char* const pBufferEnd, ParamInfo const& paramInfo, ParamVariant const& value, int8_t& sign)
 {
+    // NOLINTBEGIN(cppcoreguidelines-pro-type-union-access): active member selected by ParamDatatype
     char const* const pDigits = ((paramInfo._flags & ParamFlags::FLAG_UPPER) > 0U)
                                     ? "0123456789ABCDEF"
                                     : "0123456789abcdef";
@@ -248,17 +254,29 @@ char* PrintfFormatter::formatIntDatatype(
         }
         case ParamDatatype::VOIDPTR:
         {
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
+            uintptr_t const pointerValue = reinterpret_cast<uintptr_t>(value._voidPtrValue);
             if (sizeof(void const*) == 4)
             {
                 uint32_t const baseValue = static_cast<uint32_t>(paramInfo._base);
                 ret                      = formatIntDigits<uint32_t>(
-                    pBufferEnd, pDigits, value._uint32Value, false, baseValue, sign);
+                    pBufferEnd,
+                    pDigits,
+                    static_cast<uint32_t>(pointerValue),
+                    false,
+                    baseValue,
+                    sign);
             }
             else
             {
                 uint64_t const baseValue = static_cast<uint64_t>(paramInfo._base);
                 ret                      = formatIntDigits<uint64_t>(
-                    pBufferEnd, pDigits, value._uint64Value, false, baseValue, sign);
+                    pBufferEnd,
+                    pDigits,
+                    static_cast<uint64_t>(pointerValue),
+                    false,
+                    baseValue,
+                    sign);
             }
             break;
         }
@@ -269,6 +287,7 @@ char* PrintfFormatter::formatIntDatatype(
         }
     }
 
+    // NOLINTEND(cppcoreguidelines-pro-type-union-access)
     return ret;
 }
 

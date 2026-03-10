@@ -68,6 +68,8 @@ ComponentInfo TestConsoleLogger::getComponentInfo(uint8_t componentIndex) const
                                    : ComponentInfo();
 }
 
+// NOLINTBEGIN(cppcoreguidelines-pro-type-vararg): test logger intentionally forwards and prints
+// varargs
 void TestConsoleLogger::logOutput(
     ComponentInfo const& componentInfo, LevelInfo const& levelInfo, char const* str, va_list ap)
 {
@@ -75,6 +77,8 @@ void TestConsoleLogger::logOutput(
     vprintf(str, ap);
     printf("\n");
 }
+
+// NOLINTEND(cppcoreguidelines-pro-type-vararg)
 
 void TestConsoleLogger::applyMapping()
 {

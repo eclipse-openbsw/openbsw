@@ -32,7 +32,7 @@ class TestConsoleLogger
 {
 public:
     TestConsoleLogger(etl::span<LoggerComponentInfo> firstComponentInfo);
-    ~TestConsoleLogger();
+    virtual ~TestConsoleLogger();
 
     static void init();
     static void shutdown();
@@ -42,6 +42,8 @@ public:
     LevelInfo getLevelInfo(Level level) const override;
     ComponentInfo getComponentInfo(uint8_t componentIndex) const override;
 
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg): interface requires va_list for logger
+    // output forwarding
     void logOutput(
         ComponentInfo const& componentInfo,
         LevelInfo const& levelInfo,

@@ -29,6 +29,8 @@ public:
     void endLine(IOutputStream& strm);
 
 private:
+    void writeByte(IOutputStream& strm, uint8_t data);
+
     char const* _prefix;
     char const* _suffix;
     bool _lineStart;

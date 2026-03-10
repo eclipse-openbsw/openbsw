@@ -48,6 +48,7 @@ StringWriter& StringWriter::write(ConstString const& str)
 // NOLINTNEXTLINE(cert-dcl50-cpp): va_list usage only for printing functionalities.
 StringWriter& StringWriter::printf(char const* const formatString, ...)
 {
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg): required adapter for printf-style API
     va_list ap;
     va_start(ap, formatString);
     PrintfArgumentReader argReader(ap);

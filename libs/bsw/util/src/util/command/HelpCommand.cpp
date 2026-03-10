@@ -12,6 +12,18 @@ namespace command
 {
 using ::util::string::ConstString;
 
+namespace
+{
+void writeSpaces(format::StringWriter& writer, uint32_t count)
+{
+    while (count > 0U)
+    {
+        static_cast<void>(writer.write(' '));
+        --count;
+    }
+}
+} // namespace
+
 HelpCommand::HelpCommand(ICommand& cmd, uint32_t const idColumnWidth)
 : HelpCommand(
     cmd,
@@ -75,8 +87,10 @@ void HelpCommand::CallbackHelper::startCommand(
                                + static_cast<uint32_t>(ConstString(id).length());
         if (_writer != nullptr)
         {
-            static_cast<void>(
-                _writer->printf("%*s%s%*s - ", _depth * 2, "", id, _idColumnWidth - width, ""));
+            writeSpaces(*_writer, static_cast<uint32_t>(_depth) * 2U);
+            static_cast<void>(_writer->write(id));
+            writeSpaces(*_writer, _idColumnWidth - width);
+            static_cast<void>(_writer->write(" - "));
             printDescription(description);
         }
         else
@@ -101,7 +115,7 @@ void HelpCommand::CallbackHelper::printDescription(char const* const description
         if ((*current == 0) || isCrLf(*current))
         {
             (void)_writer->write(ConstString(start, static_cast<size_t>(current - start)));
-            (void)_writer->printf("\n");
+            static_cast<void>(_writer->write('\n'));
             while (isCrLf(*current))
             {
                 ++current;
@@ -115,7 +129,7 @@ void HelpCommand::CallbackHelper::printDescription(char const* const description
             {
                 break;
             }
-            (void)_writer->printf("%*s", _idColumnWidth + 3U, "");
+            writeSpaces(*_writer, _idColumnWidth + 3U);
             start = current;
         }
         else

@@ -15,7 +15,8 @@ namespace format
 class IPrintfArgumentReader
 {
 public:
-    IPrintfArgumentReader() = default;
+    IPrintfArgumentReader()          = default;
+    virtual ~IPrintfArgumentReader() = default;
 
     IPrintfArgumentReader(IPrintfArgumentReader const&)            = delete;
     IPrintfArgumentReader& operator=(IPrintfArgumentReader const&) = delete;
@@ -23,7 +24,7 @@ public:
     /**
      * Get the next argument value. The expected datatype is provided.
      * \param datatype expected datatype of the argument.
-     * \return Pointer the the parameter value if existing. The provided value
+     * \return Pointer to the parameter value if existing. The provided value
      * is only valid up to the next call to readArgument, 0 otherwise
      */
     virtual ParamVariant const* readArgument(ParamDatatype datatype) = 0;

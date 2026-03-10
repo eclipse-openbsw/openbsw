@@ -114,8 +114,10 @@ struct ParamInfo
 
 /**
  * Simple union that allows compact and typed storage of argument values needed for printf.
- * The enum ParamDatatype defines a value for each of the possible data fields
+ * The enum ParamDatatype defines a value for each of the possible data fields.
  */
+// NOLINTNEXTLINE(cppcoreguidelines-pro-type-union-access): compact ABI-stable variant storage for
+// printf internals
 union ParamVariant
 {
     /// DATATYPE_UINT8
