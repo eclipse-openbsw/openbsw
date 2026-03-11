@@ -16,7 +16,7 @@ public:
     MOCK_METHOD(
         StoredRequest*,
         allocateRequest,
-        (IncomingDiagConnection & connection, uint8_t const* request, uint16_t requestLength),
+        (IIncomingDiagConnection & connection, uint8_t const* request, uint16_t requestLength),
         (override));
 
     MOCK_METHOD(

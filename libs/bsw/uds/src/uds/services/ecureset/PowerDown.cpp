@@ -23,7 +23,7 @@ PowerDown::PowerDown(IUdsLifecycleConnector& udsLifecycleConnector)
 {}
 
 DiagReturnCode::Type PowerDown::process(
-    IncomingDiagConnection& connection,
+    IIncomingDiagConnection& connection,
     uint8_t const* const /* request */,
     uint16_t const /* requestLength */)
 {

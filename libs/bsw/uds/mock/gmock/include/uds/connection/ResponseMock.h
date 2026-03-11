@@ -3,7 +3,6 @@
 #pragma once
 
 #include "StubMock.h"
-#include "uds/base/AbstractDiagJob.h"
 #include "uds/connection/PositiveResponse.h"
 
 #include <gmock/gmock.h>
@@ -15,15 +14,15 @@ class PositiveResponseMockHelper
 , public PositiveResponse
 {
 public:
-    PositiveResponseMockHelper(IncomingDiagConnection& /* connection */) : StubMock() {}
+    PositiveResponseMockHelper() : StubMock() {}
 
     MOCK_METHOD(size_t, appendData, (uint8_t const[], size_t));
     MOCK_METHOD(uint8_t*, getData, ());
-    MOCK_METHOD(::uds::ErrorCode, send, (AbstractDiagJob&));
+    MOCK_METHOD(size_t, getLength, ());
 
-    static PositiveResponseMockHelper& instance(IncomingDiagConnection& connection)
+    static PositiveResponseMockHelper& instance()
     {
-        static PositiveResponseMockHelper instance(connection);
+        static PositiveResponseMockHelper instance;
         return instance;
     }
 };

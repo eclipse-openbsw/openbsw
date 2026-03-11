@@ -7,6 +7,7 @@
 #include "transport/TransportConfiguration.h"
 #include "uds/DiagCodes.h"
 #include "uds/UdsLogger.h"
+#include "uds/connection/IIncomingDiagConnection.h"
 #include "uds/connection/IncomingDiagConnection.h"
 #include "uds/session/IDiagSessionManager.h"
 
@@ -296,12 +297,14 @@ ESR_NO_INLINE AbstractTransportLayer::ErrorCode DiagDispatcher::send(
         return AbstractTransportLayer::ErrorCode::TP_SEND_FAIL;
     }
 
-    // FIXME: This reinterpret_cast works for now but is somewhat fragile
     auto connection = etl::find_if(
         _incomingDiagConnectionPool.begin(),
         _incomingDiagConnectionPool.end(),
-        [pNotificationListener](void* const conn) -> bool
-        { return reinterpret_cast<void*>(pNotificationListener) == conn; });
+        [pNotificationListener](void* const conn) -> bool {
+            return static_cast<ITransportMessageProcessedListener*>(
+                       static_cast<IncomingDiagConnection*>(conn))
+                   == pNotificationListener;
+        });
 
     if (connection != _incomingDiagConnectionPool.end())
     {

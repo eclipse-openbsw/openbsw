@@ -2,7 +2,6 @@
 
 #pragma once
 
-#include "ResponseMock.h"
 #include "StubMock.h"
 #include "uds/base/AbstractDiagJob.h"
 #include "uds/connection/IncomingDiagConnection.h"
@@ -15,6 +14,8 @@
 
 namespace uds
 {
+class PositiveResponse;
+
 class IncomingDiagConnectionMock : public IncomingDiagConnection
 {
 public:

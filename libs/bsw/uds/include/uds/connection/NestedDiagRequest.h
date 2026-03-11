@@ -11,7 +11,7 @@
 namespace uds
 {
 class AbstractDiagJob;
-class IncomingDiagConnection;
+class IIncomingDiagConnection;
 
 /**
  * Helper class for handling nested diagnostic requests.
@@ -51,7 +51,7 @@ public:
      * \param connection Connection for executing
      * \result Result of processing
      */
-    DiagReturnCode::Type processNextRequest(IncomingDiagConnection& connection);
+    DiagReturnCode::Type processNextRequest(IIncomingDiagConnection& connection);
 
     /**
      * Get buffer for response
@@ -130,7 +130,7 @@ protected:
      * \result Result of processing
      */
     virtual DiagReturnCode::Type processNestedRequest(
-        IncomingDiagConnection& connection, uint8_t const request[], uint16_t requestLength)
+        IIncomingDiagConnection& connection, uint8_t const request[], uint16_t requestLength)
         = 0;
     /**
      * Adjust response code of nested request

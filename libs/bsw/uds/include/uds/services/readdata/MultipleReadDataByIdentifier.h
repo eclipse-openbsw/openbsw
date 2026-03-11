@@ -74,7 +74,7 @@ protected:
      * \see AbstractDiagJob::process();
      */
     DiagReturnCode::Type process(
-        IncomingDiagConnection& connection,
+        IIncomingDiagConnection& connection,
         uint8_t const request[],
         uint16_t requestLength) override;
 
@@ -93,7 +93,7 @@ private:
      * \see NestedDiagRequest::processNestedRequest()
      */
     DiagReturnCode::Type processNestedRequest(
-        IncomingDiagConnection& connection,
+        IIncomingDiagConnection& connection,
         uint8_t const request[],
         uint16_t requestLength) override;
     /**

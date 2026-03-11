@@ -22,7 +22,7 @@ HardReset::HardReset(IUdsLifecycleConnector& udsLifecycleConnector, DiagDispatch
 {}
 
 DiagReturnCode::Type HardReset::process(
-    IncomingDiagConnection& connection,
+    IIncomingDiagConnection& connection,
     uint8_t const* const /* request */,
     uint16_t const /* requestLength */)
 {

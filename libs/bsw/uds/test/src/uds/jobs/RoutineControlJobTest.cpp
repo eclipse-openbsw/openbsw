@@ -46,7 +46,7 @@ public:
     {}
 
     DiagReturnCode::Type start(
-        IncomingDiagConnection& /* connection */,
+        IIncomingDiagConnection& /* connection */,
         uint8_t const /* request */[],
         uint16_t /* requestLength */) override
     {
@@ -104,7 +104,7 @@ public:
     MOCK_METHOD(
         DiagReturnCode::Type,
         stop,
-        (IncomingDiagConnection & connection,
+        (IIncomingDiagConnection & connection,
          uint8_t const* const request,
          uint16_t const requestLength),
         (override));

@@ -17,7 +17,7 @@ private:
     static uint8_t const RESPONSE_LENGTH         = 1U;
 
     DiagReturnCode::Type process(
-        IncomingDiagConnection& connection,
+        IIncomingDiagConnection& connection,
         uint8_t const request[],
         uint16_t requestLength) override;
 };

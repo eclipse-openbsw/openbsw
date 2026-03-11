@@ -10,6 +10,7 @@ class ApplicationExtendedSession : public DiagSession
 {
 public:
     ApplicationExtendedSession() : DiagSession(EXTENDED, 0x03U) {}
+    ~ApplicationExtendedSession() = default;
 
     DiagReturnCode::Type isTransitionPossible(DiagSession::SessionType targetSession) override;
 

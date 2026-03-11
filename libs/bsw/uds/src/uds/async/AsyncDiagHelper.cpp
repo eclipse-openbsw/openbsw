@@ -2,7 +2,7 @@
 
 #include "uds/async/AsyncDiagHelper.h"
 
-#include "uds/connection/IncomingDiagConnection.h"
+#include "uds/connection/IIncomingDiagConnection.h"
 
 #include <transport/TransportMessage.h>
 
@@ -25,13 +25,13 @@ AsyncDiagHelper::verify(uint8_t const* const /* request */, uint16_t const /* re
 ::async::ContextType AsyncDiagHelper::getDiagContext() const { return fDiagContext; }
 
 AsyncDiagHelper::StoredRequest* AsyncDiagHelper::allocateRequest(
-    IncomingDiagConnection& connection, uint8_t const* request, uint16_t requestLength)
+    IIncomingDiagConnection& connection, uint8_t const* request, uint16_t requestLength)
 {
     if (!fStoredRequestPool.full())
     {
         return fStoredRequestPool.template create<
             AsyncDiagHelper::StoredRequest,
-            IncomingDiagConnection&,
+            IIncomingDiagConnection&,
             uint8_t const*,
             uint16_t>(connection, etl::move(request), etl::move(requestLength));
     }
@@ -41,7 +41,7 @@ AsyncDiagHelper::StoredRequest* AsyncDiagHelper::allocateRequest(
 
 void AsyncDiagHelper::processAndReleaseRequest(AbstractDiagJob& job, StoredRequest& request)
 {
-    IncomingDiagConnection& connection = request.getConnection();
+    IIncomingDiagConnection& connection = request.getConnection();
     DiagReturnCode::Type const responseCode
         = job.process(connection, request.getRequest(), request.getRequestLength());
     fStoredRequestPool.destroy(&request);

@@ -10,6 +10,7 @@ class ApplicationDefaultSession : public DiagSession
 {
 public:
     ApplicationDefaultSession() : DiagSession(DEFAULT, 0x01U) {}
+    ~ApplicationDefaultSession() = default;
 
     DiagReturnCode::Type isTransitionPossible(DiagSession::SessionType targetSession) override;
 
