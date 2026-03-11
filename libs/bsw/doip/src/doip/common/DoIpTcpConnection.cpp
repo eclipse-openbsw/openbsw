@@ -14,6 +14,7 @@
 
 namespace doip
 {
+// NOLINTBEGIN(cppcoreguidelines-pro-type-vararg): Logger API uses C-style varargs.
 using ::estd::slice;
 using ::tcp::AbstractSocket;
 using ::util::logger::DOIP_COMMON;
@@ -528,4 +529,6 @@ void DoIpTcpConnection::resumeSending()
 }
 
 void DoIpTcpConnection::shutdown() { (void)_sendTimeout.cancel(); }
+
+// NOLINTEND(cppcoreguidelines-pro-type-vararg)
 } // namespace doip
