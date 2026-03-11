@@ -20,6 +20,7 @@
 
 namespace doip
 {
+// NOLINTBEGIN(cppcoreguidelines-pro-type-vararg): Logger API uses C-style varargs.
 using ::transport::ITransportMessageListener;
 using ::transport::ITransportMessageProcessedListener;
 using ::transport::ITransportMessageProvider;
@@ -438,4 +439,5 @@ void DoIpServerTransportMessageHandler::releaseSendJob(
     pool.release(sendJob);
 }
 
+// NOLINTEND(cppcoreguidelines-pro-type-vararg)
 } // namespace doip

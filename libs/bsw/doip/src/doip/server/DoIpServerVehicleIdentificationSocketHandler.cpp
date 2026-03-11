@@ -570,10 +570,10 @@ DoIpServerVehicleIdentificationSocketHandler::createResponseIdentification()
 {
     auto& sendJob = allocateSendJob(DoIpConstants::PayloadTypes::VEHICLE_ANNOUNCEMENT_MESSAGE, 32U);
     ::estd::slice<uint8_t> payloadBuffer = sendJob.accessPayloadBuffer();
-    // cast uint8_t* -> char* is safe
+    uint8_t vin[17];
     _config.getVehicleIdentificationCallback().getVin(
-        IDoIpServerVehicleIdentificationCallback::VinType::from_pointer(
-            reinterpret_cast<char*>(payloadBuffer.data())));
+        ::estd::make_static_slice(vin).reinterpret_as<char>());
+    (void)::estd::memory::copy(payloadBuffer.subslice(17U), ::estd::make_slice(vin));
     payloadBuffer.advance(17U);
     ::estd::memory::take<::estd::be_uint16_t>(payloadBuffer) = _config.getLogicalEntityAddress();
     _config.getVehicleIdentificationCallback().getEid(

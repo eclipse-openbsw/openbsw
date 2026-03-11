@@ -16,6 +16,7 @@
 
 namespace doip
 {
+// NOLINTBEGIN(cppcoreguidelines-pro-type-vararg): Logger API uses C-style varargs.
 using ::util::logger::DOIP;
 using ::util::logger::Logger;
 
@@ -111,4 +112,5 @@ uint8_t DoIpServerTransportConnectionProvider::getSocketGroupId(
         serverSocketId, ::ip::IPEndpoint(remoteIpAddress, remotePort));
 }
 
+// NOLINTEND(cppcoreguidelines-pro-type-vararg)
 } // namespace doip

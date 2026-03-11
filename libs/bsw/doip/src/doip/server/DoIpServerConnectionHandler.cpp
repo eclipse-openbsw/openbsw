@@ -18,6 +18,7 @@
 
 namespace doip
 {
+// NOLINTBEGIN(cppcoreguidelines-pro-type-vararg): Logger API uses C-style varargs.
 using ::util::logger::DOIP;
 using ::util::logger::Logger;
 
@@ -588,4 +589,6 @@ void DoIpServerConnectionHandler::suspendSending() { return _connection.suspendS
 void DoIpServerConnectionHandler::resumeSending() { _connection.resumeSending(); }
 
 void DoIpServerConnectionHandler::shutdown() { (void)_timerTimeout.cancel(); }
+
+// NOLINTEND(cppcoreguidelines-pro-type-vararg)
 } // namespace doip
