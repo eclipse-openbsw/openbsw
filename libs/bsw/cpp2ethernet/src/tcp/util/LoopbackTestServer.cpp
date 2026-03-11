@@ -7,6 +7,8 @@
 
 #include <etl/span.h>
 
+// Logger API uses printf-style varargs for fixed diagnostic messages in this module.
+// NOLINTBEGIN(cppcoreguidelines-pro-type-vararg)
 namespace tcp
 {
 using ::util::logger::Logger;
@@ -113,3 +115,5 @@ void LoopbackTestServer::dataReceived(uint16_t const length)
 void LoopbackTestServer::connectionClosed(ErrorCode /* status */) { _locked = false; }
 
 } // namespace tcp
+
+// NOLINTEND(cppcoreguidelines-pro-type-vararg)

@@ -8,6 +8,8 @@
 #include <etl/math.h>
 #include <etl/unaligned_type.h>
 
+// Logger API uses printf-style varargs for fixed diagnostic messages in this module.
+// NOLINTBEGIN(cppcoreguidelines-pro-type-vararg)
 namespace udp
 {
 
@@ -145,14 +147,15 @@ void UdpIperf2Server::dataReceived(
             _totalBytes  = 0U;
 
             // Send report
-            (void)_socket.send(::udp::DatagramPacket(
-                reinterpret_cast<uint8_t const*>(&response),
-                sizeof(response),
-                sourceAddress,
-                sourcePort));
+            uint8_t const* const responseBytes
+                = static_cast<uint8_t const*>(static_cast<void const*>(&response));
+            (void)_socket.send(
+                ::udp::DatagramPacket(responseBytes, sizeof(response), sourceAddress, sourcePort));
             Logger::debug(UDP, "Iperf Server Response send: %x bytes.", sizeof(response));
         }
     }
 }
 
 } // namespace udp
+
+// NOLINTEND(cppcoreguidelines-pro-type-vararg)
