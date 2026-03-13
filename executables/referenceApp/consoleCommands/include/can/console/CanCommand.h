@@ -33,3 +33,5 @@ private:
 };
 
 } // namespace can
+
+// CI scenario S01: header-only change for clang-tidy scope validation.
