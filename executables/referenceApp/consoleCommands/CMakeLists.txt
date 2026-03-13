@@ -3,7 +3,7 @@ list(
     APPEND
     consoleCommands_SOURCES
     src/lifecycle/console/LifecycleControlCommand.cpp
-    src/lifecycle/console/StatisticsCommand.cpp
+    src/lifecycle/console/StatisticsCommandScenarioRename.cpp
     src/can/console/CanCommand.cpp)
 
 if (PLATFORM_SUPPORT_IO)
