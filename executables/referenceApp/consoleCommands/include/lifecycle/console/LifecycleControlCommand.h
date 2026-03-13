@@ -26,3 +26,5 @@ private:
 };
 
 } // namespace lifecycle
+
+// CI scenario S02: header + source change for clang-tidy scope validation.

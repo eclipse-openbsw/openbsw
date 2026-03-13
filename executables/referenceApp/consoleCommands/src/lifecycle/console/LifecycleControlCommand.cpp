@@ -91,3 +91,5 @@ void LifecycleControlCommand::executeCommand(::util::command::CommandContext& co
 }
 
 } // namespace lifecycle
+
+// CI scenario S02: source-side companion change.
