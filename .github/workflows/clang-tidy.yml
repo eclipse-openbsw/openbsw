@@ -1,6 +1,9 @@
 name: Clang-tidy check
 
-on: [ merge_group, push, pull_request ]
+on:
+  merge_group:
+  push:
+  pull_request:
 
 jobs:
   clang-tidy:
@@ -22,10 +25,40 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Fetch clang-tidy diff refs
+        if: ${{ github.event_name == 'pull_request' || github.event_name == 'merge_group' }}
+        run: |
+          set -euo pipefail
+
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            base_sha=$(python3 -c 'import json, os; print(json.load(open(os.environ["GITHUB_EVENT_PATH"], "r", encoding="utf-8"))["pull_request"]["base"]["sha"])')
+            head_sha=$(python3 -c 'import json, os; print(json.load(open(os.environ["GITHUB_EVENT_PATH"], "r", encoding="utf-8"))["pull_request"]["head"]["sha"])')
+
+            git fetch --no-tags origin \
+              "${base_sha}" \
+              "${head_sha}"
+          else
+            base_sha=$(python3 -c 'import json, os; print(json.load(open(os.environ["GITHUB_EVENT_PATH"], "r", encoding="utf-8")).get("merge_group", {}).get("base_sha", ""))')
+
+            git fetch --no-tags origin \
+              "${base_sha}" \
+              "${{ github.sha }}"
+          fi
+
+      - name: Determine clang-tidy scope
+        id: scope
+        run: >-
+          python3 .ci/determine-clang-tidy-scope.py --event-name "${{ github.event_name }}"
+          --ref-name "${{ github.ref_name }}" --sha "${{ github.sha }}"
+          --event-path "${GITHUB_EVENT_PATH}" --output-file .clang-tidy-diff-files.txt
+          --github-output "${GITHUB_OUTPUT}"
+
       - name: Set up Docker Buildx
+        if: ${{ steps.scope.outputs.mode == 'full' || steps.scope.outputs.has_changes == 'true' }}
         uses: docker/setup-buildx-action@v3
 
       - name: Build development Image
+        if: ${{ steps.scope.outputs.mode == 'full' || steps.scope.outputs.has_changes == 'true' }}
         id: build-docker-development
         uses: docker/build-push-action@v6
         with:
@@ -37,15 +70,36 @@ jobs:
           cache-to: type=gha,mode=max,ignore-error=true
 
       - name: Run the ${{ matrix.platform }} ${{ matrix.config }} build inside the docker container
+        if: ${{ steps.scope.outputs.mode == 'full' || steps.scope.outputs.has_changes == 'true' }}
         run: >-
           DOCKER_UID=$(id -u) DOCKER_GID=$(id -g) DOCKER_HISTORY=/dev/null docker compose run --rm development
           python3 .ci/build.py --preset ${{ matrix.preset }} --platform "linux" --cxxid "clang" --cxxstd "14" --config "${{ matrix.config }}"
 
-      - name: Run the clang-tidy.py inside the docker container
-        id: clang-tidy
+      - name: Resolve changed translation units for clang-tidy
+        if: ${{ steps.scope.outputs.mode == 'changed' && steps.scope.outputs.has_changes == 'true' }}
         run: >-
           DOCKER_UID=$(id -u) DOCKER_GID=$(id -g) DOCKER_HISTORY=/dev/null docker compose run --rm development
-          python3 .ci/clang-tidy.py --build_directory=build/tests/${{ matrix.platform }}/${{ matrix.config }} --output_file=ct-findings.yaml --exclude="3rdparty" --ignore-checks="clang-diagnostic-error"
+          python3 .ci/resolve-clang-tidy-translation-units.py --build-directory=build/tests/${{ matrix.platform }}/${{ matrix.config }} --changed-files=.clang-tidy-diff-files.txt --output-file=.clang-tidy-changed-files.txt
+
+      - name: Run the clang-tidy.py inside the docker container
+        if: ${{ steps.scope.outputs.mode == 'full' || steps.scope.outputs.has_changes == 'true' }}
+        id: clang_tidy
+        env:
+          CLANG_TIDY_MODE: ${{ steps.scope.outputs.mode }}
+        run: |
+          set -euo pipefail
+
+          if [[ "${CLANG_TIDY_MODE}" == "full" ]]; then
+            DOCKER_UID=$(id -u) DOCKER_GID=$(id -g) DOCKER_HISTORY=/dev/null docker compose run --rm development \
+              python3 .ci/clang-tidy.py --build_directory=build/tests/${{ matrix.platform }}/${{ matrix.config }} --output_file=ct-findings.yaml --exclude="3rdparty" --ignore-checks="clang-diagnostic-error"
+          else
+            DOCKER_UID=$(id -u) DOCKER_GID=$(id -g) DOCKER_HISTORY=/dev/null docker compose run --rm development \
+              python3 .ci/clang-tidy.py --build_directory=build/tests/${{ matrix.platform }}/${{ matrix.config }} --output_file=ct-findings.yaml --exclude="3rdparty" --ignore-checks="clang-diagnostic-error" --file-list=.clang-tidy-changed-files.txt
+          fi
+
+      - name: Skip clang-tidy because no C/C++ files changed
+        if: ${{ steps.scope.outputs.mode == 'changed' && steps.scope.outputs.has_changes != 'true' }}
+        run: echo "Skipping clang-tidy because the diff does not contain modified C/C++ files."
 
       - name: Upload clang-tidy findings
         if: ${{ steps.clang_tidy.outcome == 'failure' }}

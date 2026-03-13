@@ -11,6 +11,7 @@ The script exits with:
 """
 
 import argparse
+import re
 import subprocess
 import sys
 import yaml
@@ -65,6 +66,12 @@ Examples:
         help="Comma-separated list of diagnostic names to ignore (e.g., 'clang-diagnostic-error,clang-diagnostic-warning')",
     )
 
+    parser.add_argument(
+        "--file-list",
+        type=Path,
+        help="Path to a newline-separated list of source files to analyze",
+    )
+
     output_group = parser.add_mutually_exclusive_group()
     output_group.add_argument(
         "--quiet",
@@ -91,7 +98,36 @@ Examples:
             f"compile_commands.json not found in build directory: {args.build_directory}"
         )
 
+    if args.file_list is not None and not args.file_list.exists():
+        parser.error(f"File list does not exist: {args.file_list}")
+
     return args
+
+
+def create_file_pattern(file_list: Path) -> str:
+    """
+    Create a regular expression that only matches the requested source files.
+
+    Args:
+        file_list: Path to a file containing one source path per line
+
+    Returns:
+        Regular expression fragment matching the selected files
+    """
+
+    file_patterns = []
+    for line in file_list.read_text().splitlines():
+        source = line.strip()
+        if not source:
+            continue
+
+        resolved_source = (Path.cwd() / source).resolve(strict=False)
+        file_patterns.append(re.escape(str(resolved_source)))
+
+    if not file_patterns:
+        return ""
+
+    return "(?:" + "|".join(file_patterns) + ")"
 
 
 def count_findings(file_name: Path, ignored_checks: list = []) -> int:
@@ -107,7 +143,7 @@ def count_findings(file_name: Path, ignored_checks: list = []) -> int:
     """
 
     with open(file_name, "r") as f:
-        data = yaml.safe_load(f)
+        data = yaml.safe_load(f) or {}
 
         # Count findings per diagnostic name
         counter = Counter()
@@ -155,7 +191,11 @@ def count_findings(file_name: Path, ignored_checks: list = []) -> int:
 
 
 def run_clang_tidy(
-    build_dir: Path, output_file: Path, exclude_pattern: str, quiet: bool
+    build_dir: Path,
+    output_file: Path,
+    exclude_pattern: str,
+    quiet: bool,
+    include_pattern: str,
 ) -> int:
     """
     Run clang-tidy on the build directory.
@@ -165,13 +205,16 @@ def run_clang_tidy(
         output_file: Path to the output YAML file
         exclude_pattern: Regular expression pattern to exclude files
         quiet: Whether to suppress run-clang-tidy output
+        include_pattern: Regular expression fragment matching files to analyze
 
     Returns:
         Return code from run-clang-tidy
     """
-    # Convert the exclusion pattern to a negative lookahead pattern
-    # This makes run-clang-tidy check files that DO NOT match the exclude pattern
-    negated_pattern = f"^(?!.*({exclude_pattern})).*"
+    target_pattern = include_pattern or ".*"
+    if exclude_pattern:
+        target_pattern = f"^(?!.*(?:{exclude_pattern})){target_pattern}$"
+    else:
+        target_pattern = f"^{target_pattern}$"
 
     cmd = [
         "run-clang-tidy-17.py",
@@ -179,7 +222,7 @@ def run_clang_tidy(
         str(build_dir),
         "-export-fixes",
         str(output_file),
-        negated_pattern,
+        target_pattern,
     ]
 
     if quiet:
@@ -201,10 +244,19 @@ def run_clang_tidy(
 
 if __name__ == "__main__":
     args = parse_arguments()
+    include_pattern = ""
+
+    if args.file_list is not None:
+        include_pattern = create_file_pattern(args.file_list)
+        if not include_pattern:
+            print("No source files selected for clang-tidy.")
+            sys.exit(0)
 
     print(f"Running clang-tidy on build directory: {args.build_directory}")
     print(f"Output file: {args.output_file}")
     print(f"Exclude pattern: {args.exclude}")
+    if args.file_list is not None:
+        print(f"File list: {args.file_list}")
     print("-" * 60)
 
     # Run clang-tidy
@@ -213,6 +265,7 @@ if __name__ == "__main__":
         args.output_file,
         args.exclude,
         not args.verbose,  # quiet mode is default unless --verbose is specified
+        include_pattern,
     )
 
     # Parse ignored checks
