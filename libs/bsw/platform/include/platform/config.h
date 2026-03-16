@@ -1,5 +1,7 @@
 // Copyright 2024 Accenture.
 
+// S07 side-change marker for merge-history scenario.
+
 #pragma once
 
 // clang-format off
