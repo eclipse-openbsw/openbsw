@@ -1,10 +1,7 @@
 set(consoleCommands_SOURCES)
-list(
-    APPEND
-    consoleCommands_SOURCES
-    src/lifecycle/console/LifecycleControlCommand.cpp
-    src/lifecycle/console/StatisticsCommand.cpp
-    src/can/console/CanCommand.cpp)
+list(APPEND consoleCommands_SOURCES
+     src/lifecycle/console/LifecycleControlCommand.cpp
+     src/can/console/CanCommand.cpp)
 
 if (PLATFORM_SUPPORT_IO)
     list(APPEND consoleCommands_SOURCES src/safety/console/SafetyCommand.cpp)
