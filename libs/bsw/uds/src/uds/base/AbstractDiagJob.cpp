@@ -187,6 +187,9 @@ AbstractDiagJob::ErrorCode AbstractDiagJob::addAbstractDiagJob(AbstractDiagJob& 
         }
         job.fpNextJob    = nullptr;
         job.fpFirstChild = nullptr;
+
+        Logger::debug(UDS, "Add diag job successfully 0x%X", job.getRequestId());
+
         return JOB_ADDED;
     }
     if (job.isFamily(fpImplementedRequest, static_cast<uint16_t>(fRequestLength)))
@@ -215,6 +218,8 @@ void AbstractDiagJob::removeAbstractDiagJob(AbstractDiagJob& job)
     if (&job == fpFirstChild)
     { // we remove our first child
         fpFirstChild = job.getNextJob();
+
+        Logger::debug(UDS, "Remove diag job successfully 0x%X", job.getRequestId());
         return;
     }
 
