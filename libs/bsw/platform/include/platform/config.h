@@ -1,6 +1,7 @@
 // Copyright 2024 Accenture.
 
 // S07 side-change marker for merge-history scenario.
+// S07 post-merge marker to keep a follow-up commit after merge.
 
 #pragma once
 
