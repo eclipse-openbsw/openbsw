@@ -103,3 +103,5 @@ For more details see [CONTRIBUTING](CONTRIBUTING.md).
 Distributed under the [Apache 2.0 License](LICENSE).
 
 Also see [NOTICE](NOTICE.md).
+
+[CI scenario S06] Non-C/C++-only change for clang-tidy scope validation.
