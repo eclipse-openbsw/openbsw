@@ -1,5 +1,7 @@
 // Copyright 2024 Accenture.
 
+// CI scenario: intentional no-op header touch to validate changed-scope resolution.
+
 #pragma once
 
 // clang-format off
