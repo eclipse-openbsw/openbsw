@@ -1,6 +1,6 @@
 // Copyright 2024 Accenture.
 
-#include "lifecycle/console/LifecycleControlCommand.h"
+#include "lifecycle/console/LifecycleControlCommandScenarioRename.h"
 
 #include <async/Async.h>
 #include <lifecycle/ILifecycleManager.h>
