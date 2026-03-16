@@ -16,8 +16,8 @@ namespace core
 {
 
 /**
- * \brief Message object that is used for communication between proxies and skeletons.
- * \details This object has 32 bytes in total which are distributed between its private members.
+ * Message object that is used for communication between proxies and skeletons.
+ * This object has 32 bytes in total which are distributed between its private members.
  * These consist of the following members:
  * - header, which is similar to the SOME/IP's message ID and request ID members;
  * - Additionally the header has some dispatching information like the source cluster from where the
@@ -32,7 +32,7 @@ public:
     static constexpr size_t MAX_PAYLOAD_SIZE = 32U;
 
     /**
-     * \brief The message's header.
+     * The message's header.
      *
      */
     struct Header
@@ -48,8 +48,8 @@ public:
     };
 
     /**
-     * \brief An object that contains information to where the data is stored.
-     * \details This object will be one of the possible types of the payload union. Whenever the
+     * An object that contains information to where the data is stored.
+     * This object will be one of the possible types of the payload union. Whenever the
      * data that needs to be sent is biffer than MAX_PAYLOAD_SIZE, the data must be allocated
      * externally and the message's payload set to this object. This object has an offset from
      * the beginning of the memory section where the data was stored, and the size of the data.
@@ -57,21 +57,24 @@ public:
      */
     struct ExternalHandle
     {
-        ptrdiff_t offset; ///< The offset, from the beginning of the memory region dedicated for
-                          ///< storing middleware data, where the message's payload is stored.
-        size_t size;      ///< The size of the payload that is stored.
+        /** The offset, from the beginning of the memory region dedicated for storing middleware
+         * data, where the message's payload is stored. */
+        ptrdiff_t offset;
+        /** The size of the payload that is stored. */
+        size_t size;
     };
 
     union PayloadType
     {
         constexpr PayloadType() : internalBuffer() {}
 
-        etl::array<uint8_t, MAX_PAYLOAD_SIZE>
-            internalBuffer;            ///< A buffer that can store some data in place.
-        ExternalHandle externalHandle; ///< An object that contains information to where the data is
-                                       ///< located in memory.
-        ErrorState error; ///< An error value, which gives information of what error might have
-                          ///< occurred during the communication.
+        /** A buffer that can store some data in place. */
+        etl::array<uint8_t, MAX_PAYLOAD_SIZE> internalBuffer;
+        /** An object that contains information to where the data is located in memory. */
+        ExternalHandle externalHandle;
+        /** An error value, which gives information of what error might have occurred during the
+         * communication. */
+        ErrorState error;
     };
 
     ~Message()                                 = default;
@@ -80,16 +83,12 @@ public:
     Message(Message&& other)                   = default;
     Message& operator=(Message&& other) &      = default;
 
-    /**
-     * \brief Get a constant reference to the message's header.
-     *
-     * \return const Header&
-     */
+    /** Returns a const reference to the message header. */
     Header const& getHeader() const { return _header; }
 
     /**
-     * \brief Set the target cluster id.
-     * \details This method can be useful to send the same message to several recipients,
+     * Set the target cluster id.
+     * This method can be useful to send the same message to several recipients,
      * by just changing the target cluster id.
      *
      * \param clusterId
@@ -97,7 +96,7 @@ public:
     void setTargetClusterId(uint8_t const clusterId) { _header.tgtClusterId = clusterId; }
 
     /**
-     * \brief Create a request message that originates from a proxy and is targetted to a specific
+     * Create a request message that originates from a proxy and is targetted to a specific
      * skeleton.
      *
      * \param header reference to the message header
@@ -126,7 +125,7 @@ public:
     }
 
     /**
-     * \brief Create a fireAndForget request message that originates from a proxy and is targetted
+     * Create a fireAndForget request message that originates from a proxy and is targetted
      * to a specific skeleton.
      *
      * \param serviceId service ID
@@ -157,7 +156,7 @@ public:
     }
 
     /**
-     * \brief Create a response message that originates from a skeleton and is targetted to a unique
+     * Create a response message that originates from a skeleton and is targetted to a unique
      * proxy.
      *
      * \param header reference to the message header
@@ -186,7 +185,7 @@ public:
     }
 
     /**
-     * \brief Create an event message without source cluster and target cluster IDs set.
+     * Create an event message without source cluster and target cluster IDs set.
      * \remark After calling this method, you need to manually set the target cluster ID. This
      * allows to use the same message to be sent to several clusters by just adapting the cluster
      * ID.
@@ -216,7 +215,7 @@ public:
     }
 
     /**
-     * \brief Create an error response message that originates from a skeleton and is targetted to a
+     * Create an error response message that originates from a skeleton and is targetted to a
      * unique proxy, and sets the payload with value \param error.
      *
      * \param header reference to the message header
@@ -249,61 +248,28 @@ public:
         return msg;
     }
 
-    /**
-     * \brief Check if message is a request.
-     *
-     * \return true if Flags::Request is active, otherwise returns false.
-     */
+    /** Returns true if the Request flag is active. */
     bool isRequest() const { return hasActiveFlag(Flags::Request); }
 
-    /**
-     * \brief Check if message is a fire and forget request.
-     *
-     * \return true if Flags::FireAndForgetRequest is active, otherwise returns false.
-     */
+    /** Returns true if the FireAndForgetRequest flag is active. */
     bool isFireAndForgetRequest() const { return hasActiveFlag(Flags::FireAndForgetRequest); }
 
-    /**
-     * \brief Check if message is a response.
-     *
-     * \return true if Flags::Response is active, otherwise returns false.
-     */
+    /** Returns true if the Response flag is active. */
     bool isResponse() const { return hasActiveFlag(Flags::Response); }
 
-    /**
-     * \brief Check if message contains an error.
-     *
-     * \return true if Flags::Error is active, otherwise returns false.
-     */
+    /** Returns true if the Error flag is active. */
     bool isError() const { return hasActiveFlag(Flags::Error); }
 
-    /**
-     * \brief Check if message is an event.
-     *
-     * \return true if Flags::Event is active, otherwise returns false.
-     */
+    /** Returns true if the Event flag is active. */
     bool isEvent() const { return hasActiveFlag(Flags::Event); }
 
-    /**
-     * \brief Check if message contains a reference to a unique external payload.
-     *
-     * \return true if Flags::UniqueExternalPayload is active, otherwise returns false.
-     */
+    /** Returns true if the UniqueExternalPayload flag is active. */
     bool hasUniqueExternalPayload() const { return hasActiveFlag(Flags::UniqueExternalPayload); }
 
-    /**
-     * \brief Check if message contains a reference to a shared external payload.
-     *
-     * \return true if Flags::SharedExternalPayload is active, otherwise returns false.
-     */
+    /** Returns true if the SharedExternalPayload flag is active. */
     bool hasSharedExternalPayload() const { return hasActiveFlag(Flags::SharedExternalPayload); }
 
-    /**
-     * \brief Get the ErrorState value of the message.
-     *
-     * \return the current ErrorState value if message has error, otherwise returns
-     * ErrorState::NoError.
-     */
+    /** Returns the ErrorState if the message has an error, otherwise ErrorState::NoError. */
     ErrorState getErrorState() const { return isError() ? _payload.error : ErrorState::NoError; }
 
 private:
@@ -323,7 +289,7 @@ private:
     };
 
     /**
-     * \brief Gets a constant reference of the object that is stored inside the payload's internal
+     * Gets a constant reference of the object that is stored inside the payload's internal
      * buffer. \remark This method assumes that the user has checked that the message contains the
      * payload in its internal buffer, and not an ExternalHandle object or an error value.
      *
@@ -344,7 +310,7 @@ private:
     }
 
     /**
-     * \brief Constructs a copy of \param obj inside the payload's internal buffer.
+     * Constructs a copy of \param obj inside the payload's internal buffer.
      *
      * \tparam T the generic type which must be trivially copyable and have a size less than the
      * internal payload's size. \param obj
@@ -363,7 +329,7 @@ private:
     }
 
     /**
-     * \brief Gets a constant reference to the ExternalHandle object that is stored inside the
+     * Gets a constant reference to the ExternalHandle object that is stored inside the
      * message's payload. \remark This method assumes that the user has checked that the message
      * contains an ExternalHandle object, and not an error value or the actual payload stored inside
      * the internal buffer.
@@ -373,7 +339,7 @@ private:
     ExternalHandle const& getExternalHandle() const { return _payload.externalHandle; }
 
     /**
-     * \brief Set the payload as an ExternalHandle type which will contain information to where the
+     * Set the payload as an ExternalHandle type which will contain information to where the
      * actual message's payload is stored.
      *
      * \param offset
@@ -387,36 +353,23 @@ private:
             &_payload.externalHandle, ExternalHandle{offset, size});
     }
 
-    /**
-     * \brief Checks if a flag is currently active in the flags bitmask.
-     *
-     * \param flag
-     * \return true if \param flag is active, otherwise false.
-     */
+    /** Returns true if \p flag is active in the flags bitmask. */
     constexpr bool hasActiveFlag(Flags const flag) const
     {
         return (_header.flags & static_cast<uint8_t>(flag)) == static_cast<uint8_t>(flag);
     }
 
-    /**
-     * \brief Sets the \param flag to active in the flags bitmask.
-     *
-     * \param flag
-     */
+    /** Sets \p flag to active in the flags bitmask. */
     constexpr void setFlag(Flags const flag) { _header.flags |= static_cast<uint8_t>(flag); }
 
-    /**
-     * \brief Unsets the \param flag to active in the flags bitmask.
-     *
-     * \param flag
-     */
+    /** Unsets \p flag in the flags bitmask. */
     constexpr void unsetFlag(Flags const& flag) { _header.flags &= ~static_cast<uint8_t>(flag); }
 
-    Header
-        _header; ///< The message header containing the service, method, request and instance ids.
-    PayloadType _payload; ///< The message payload which can either store some data
-                          ///< constructed in place, and external handle pointing to the
-                          ///< place where the actual data is stored or an error value.
+    /** The message header containing the service, method, request and instance ids. */
+    Header _header;
+    /** The message payload which can either store some data constructed in place, an external
+     * handle pointing to where the actual data is stored, or an error value. */
+    PayloadType _payload;
 };
 
 } // namespace core

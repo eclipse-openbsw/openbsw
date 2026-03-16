@@ -13,7 +13,7 @@ namespace queue
 {
 
 /**
- * \brief A struct that aggregates a series of statistics values related to queues.
+ * A struct that aggregates a series of statistics values related to queues.
  *
  */
 struct QueueStats
@@ -31,8 +31,8 @@ struct QueueStats
 };
 
 /**
- * \brief Base class for a multi-producer single-consumer queue, that is based on a circular buffer
- * implementation. \details This class contains a sent_ and received_ attributes which represent
+ * Base class for a multi-producer single-consumer queue, that is based on a circular buffer
+ * implementation. This class contains a sent_ and received_ attributes which represent
  * writing and reading cursors, which will always be in the range [0, 2*maxSize[, where maxSize is
  * an attribute that is initialized by the init method, that represents the queue's maximum number
  * of elements. This way there are two distinct constellations where sent_ and received_ point to
@@ -44,32 +44,20 @@ struct QueueStats
 class QueueBase
 {
 public:
-    /**
-     * \brief Get a constant reference to the current queue statistics.
-     *
-     * \return const QueueStats&
-     */
+    /** Returns a const reference to the queue statistics. */
     QueueStats const& getStats() const { return _stats; }
 
-    /**
-     * \brief Get a reference to the current queue statistics.
-     *
-     * \return QueueStats&
-     */
+    /** Returns a reference to the queue statistics. */
     QueueStats& getStats() { return _stats; }
 
     /**
-     * \brief Resets the queues statistics.
+     * Resets the queues statistics.
      * \remark Must be protected with ECU mutex from caller, to ensure concistency.
      *
      */
     void resetStats() { _stats = QueueStats(); }
 
-    /**
-     * \brief Get the current size of the queue.
-     *
-     * \return constexpr uint32_t
-     */
+    /** Returns the current number of elements in the queue. */
     uint32_t size() const
     {
         // Volatile is needed to to make sure the read is not optimized away when new elements have
@@ -78,11 +66,7 @@ public:
         return (txPos >= _received) ? (txPos - _received) : (txPos + (2U * _maxSize)) - _received;
     }
 
-    /**
-     * \brief Check if the queue is full.
-     *
-     * \return true if full, otherwise false.
-     */
+    /** Returns true if the queue is full, false otherwise. */
     bool isFull() const
     {
         // Volatile is needed to make sure the read is not optimized away when full() is called in a
@@ -92,11 +76,7 @@ public:
             == ((static_cast<uint32_t const volatile&>(_received) + _maxSize) % (2U * _maxSize)));
     }
 
-    /**
-     * \brief Check if the queue is empty.
-     *
-     * \return true if empty, otherwise false.
-     */
+    /** Returns true if the queue is empty, false otherwise. */
     bool isEmpty() const
     {
         // Volatile is needed to prevent `isEmpty()` from returning `true` when in fact new elements
@@ -105,8 +85,8 @@ public:
     }
 
     /**
-     * \brief Update some of the statistic values of the queue, like the max fill rate and the
-     * processingCounter. \details This method is useful to be called before processing the queue
+     * Update some of the statistic values of the queue, like the max fill rate and the
+     * processingCounter. This method is useful to be called before processing the queue
      * elements (reading and advancing). \remark A mutex is not needed here, since this will only be
      * called by a unique consumer.
      *
@@ -144,7 +124,7 @@ protected:
     QueueBase() {}
 
     /**
-     * \brief Init method which needs to be called before doing any work with the queue.
+     * Init method which needs to be called before doing any work with the queue.
      *
      *
      * \param maxSize the maximum number of elements inside the queue.
@@ -166,24 +146,13 @@ protected:
         _stats.maxFillRate           = 0U;
     }
 
-    /**
-     * \brief Get the value of received_ attribute.
-     *
-     * \return uint32_t the value of the reading cursor.
-     */
+    /** Returns the value of the reading cursor. */
     uint32_t getReceived() const { return _received; }
 
-    /**
-     * \brief Get the value of sent_ attribute
-     *
-     * \return uint32_t the value of the writing cursor
-     */
+    /** Returns the value of the writing cursor. */
     uint32_t getSent() const { return _sent; }
 
-    /**
-     * \brief Advance the reading cursor.
-     *
-     */
+    /** Advances the reading cursor. */
     void advanceReceived()
     {
         _received = (_received + 1U) % (2U * _maxSize);
@@ -191,7 +160,7 @@ protected:
     }
 
     /**
-     * \brief Updates the writing cursor to the next element in the buffer.
+     * Updates the writing cursor to the next element in the buffer.
      *
      * \return etl::optional<size_t>
      */
