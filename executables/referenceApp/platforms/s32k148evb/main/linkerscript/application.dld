@@ -1,38 +1,43 @@
-/* Linker file for GNU C Compiler */
+/* Linker file for GNU C Compiler - S32K148 */
 
 /* Entry Point */
 ENTRY(Reset_Handler)
 
-HEAP_SIZE = DEFINED(__heap_size__) ? __heap_size__ : 0x00000200;
+/* Heap and Stack Configuration */
+HEAP_SIZE  = DEFINED(__heap_size__)  ? __heap_size__  : 0x00000200;
 STACK_SIZE = DEFINED(__stack_size__) ? __stack_size__ : 0x00000400;
 
-/* Memory boundaries of S32K148 */
-FLASH_START =  0x00000000;
-FLASH_END =    0x0017FFFF;
+/* Memory Boundaries of S32K148 */
+FLASH_START  = 0x00000000;
+FLASH_END    = 0x0017FFFF;
 SRAM_L_START = 0x1FFE0000;
-SRAM_L_END =   0x1FFFFFFF;
+SRAM_L_END   = 0x1FFFFFFF;
 SRAM_U_START = 0x20000000;
-SRAM_U_END =   0x2001EFFF;
+SRAM_U_END   = 0x2001EFFF;
 
-/* Memory areas */
+/* Memory Regions */
 MEMORY
 {
-  /* Flash */
-  Isr (RX) : ORIGIN = FLASH_START, LENGTH = 0x00000400
-  FlashConfigField (RX) : ORIGIN = FLASH_START + 0x00000400, LENGTH = 0x00000010
-  ApplicationStartUpCode (RX) : ORIGIN = FLASH_START + 0x410, LENGTH = 0x20
-  Application (RX) : ORIGIN = FLASH_START + 0x430, LENGTH = FLASH_END + 1 - FLASH_START - 0x430 - 64
-  CrcMeta (RX) : ORIGIN = FLASH_END + 1 - 64,  LENGTH = 64
-  /* SRAM_L */
-  Data (RW) : ORIGIN = SRAM_L_START, LENGTH = SRAM_L_END + 1 - SRAM_L_START
-  /* SRAM_U */
-  ApplicationRAM (RX) : ORIGIN = SRAM_U_START, LENGTH = 0x100
-  NoInit (RW) : ORIGIN = SRAM_U_END + 1 - 0x400, LENGTH = 0x400
+  /* Flash Memory */
+  Isr                    (RX) : ORIGIN = FLASH_START,              LENGTH = 0x00000400
+  FlashConfigField       (RX) : ORIGIN = FLASH_START + 0x00000400, LENGTH = 0x00000010
+  ApplicationStartUpCode (RX) : ORIGIN = FLASH_START + 0x410,      LENGTH = 0x20
+  Application            (RX) : ORIGIN = FLASH_START + 0x430,      LENGTH = FLASH_END + 1 - FLASH_START - 0x430 - 64
+  CrcMeta                (RX) : ORIGIN = FLASH_END + 1 - 64,       LENGTH = 64
+
+  /* SRAM_L Memory - RAM functions and hot data */
+  RAMFunctions           (RW) : ORIGIN = SRAM_L_START,            LENGTH = 0x1000
+  HotData                (RW) : ORIGIN = SRAM_L_START + 0x1000,   LENGTH = SRAM_L_END + 1 - SRAM_L_START - 0x1000
+
+  /* SRAM_U Memory - Stack, heap, BSS, and large buffers */
+  MainRAM                (RW) : ORIGIN = SRAM_U_START,            LENGTH = SRAM_U_END + 1 - SRAM_U_START - 0x400
+  NoInit                 (RW) : ORIGIN = SRAM_U_END + 1 - 0x400,  LENGTH = 0x400
 }
 
-/* Output sections */
+/* Output Sections */
 SECTIONS
 {
+  /* Interrupt Vector Table */
   .interrupts :
   {
     __VECTOR_TABLE = .;
@@ -40,6 +45,7 @@ SECTIONS
     KEEP(*(.isr_vector))
   } > Isr
 
+  /* First section with glue code, frame handlers, and critical functions */
   .first :
   {
     __ROM_CRC_START = .;
@@ -48,6 +54,8 @@ SECTIONS
     *(.eh_frame)
     KEEP (*(.init))
     KEEP (*(.fini))
+
+    /* Constructors */
     . = ALIGN(0x4);
     KEEP (*ecrti.o(.ctors))
     KEEP (*crtbegin.o(.ctors))
@@ -55,6 +63,8 @@ SECTIONS
     KEEP (*(SORT(.ctors.*)))
     KEEP (*crtend.o(.ctors))
     KEEP (*ecrtn.o(.ctors))
+
+    /* Destructors */
     . = ALIGN(0x4);
     KEEP (*ecrti.o(.dtors))
     KEEP (*crtbegin.o(.dtors))
@@ -62,6 +72,8 @@ SECTIONS
     KEEP (*(SORT(.dtors.*)))
     KEEP (*crtend.o(.dtors))
     KEEP (*ecrtn.o(.dtors))
+
+    /* Read-only data and critical system functions */
     *(.rodata)
     *(.text.__assert_func)
     *(.text.__exec_ctors)
@@ -78,24 +90,23 @@ SECTIONS
     *(.text.memset)
     *(.text.raise)
     . = ALIGN(32);
-  }
-  > Application = 0xffffffff
+  } > Application = 0xffffffff
 
+  /* Flash Configuration Field (FCF) */
   .FlashConfigField :
   {
     . = ALIGN(4);
-    KEEP(*(.FlashConfig)) /* Flash Configuration Field (FCF) */
+    KEEP(*(.FlashConfig))
     . = ALIGN(4);
   } > FlashConfigField
 
+  /* Application Startup Code */
   .__startUpSection :
   {
     KEEP(*(.__startUpSection))
-  }
-  > ApplicationStartUpCode
+  } > ApplicationStartUpCode
 
-  /* Program code */
-
+  /* Program Code and Read-Only Data */
   .text :
   {
     *(.text._kill_r)
@@ -108,26 +119,23 @@ SECTIONS
     *(.rodata)
     *(.rodata*)
     . = ALIGN(4);
-  }
-  > Application = 0xffffffff
+  } > Application = 0xffffffff
 
+  /* ARM Exception Tables */
   .ARM.extab :
   {
     *(.ARM.extab* .gnu.linkonce.armextab.*)
-  }
-  > Application = 0xffffffff
+  } > Application = 0xffffffff
 
   .ARM :
   {
     __exidx_start = .;
     *(.ARM.exidx*)
     __exidx_end = .;
-  }
-  > Application = 0xffffffff
+  } > Application = 0xffffffff
 
-  /* Constructors and destructors */
-
- .ctors :
+  /* C++ Constructors */
+  .ctors :
   {
     __CTOR_LIST__ = .;
     KEEP (*crtbegin.o(.ctors))
@@ -136,9 +144,9 @@ SECTIONS
     KEEP (*(SORT(.ctors.*)))
     KEEP (*(.ctors))
     __CTOR_END__ = .;
-  }
-  > Application = 0xffffffff
+  } > Application = 0xffffffff
 
+  /* C++ Destructors */
   .dtors :
   {
     __DTOR_LIST__ = .;
@@ -148,26 +156,26 @@ SECTIONS
     KEEP (*(SORT(.dtors.*)))
     KEEP (*(.dtors))
     __DTOR_END__ = .;
-  }
-  > Application = 0xffffffff
+  } > Application = 0xffffffff
 
+  /* Pre-initialization Array */
   .preinit_array :
   {
     PROVIDE_HIDDEN (__preinit_array_start = .);
     KEEP (*(.preinit_array*))
     PROVIDE_HIDDEN (__preinit_array_end = .);
-  }
-  > Application = 0xffffffff
+  } > Application = 0xffffffff
 
+  /* Initialization Array */
   .init_array :
   {
     PROVIDE_HIDDEN (__init_array_start = .);
     KEEP (*(SORT(.init_array.*)))
     KEEP (*(.init_array*))
     PROVIDE_HIDDEN (__init_array_end = .);
-  }
-  > Application = 0xffffffff
+  } > Application = 0xffffffff
 
+  /* Finalization Array */
   .fini_array :
   {
     PROVIDE_HIDDEN (__fini_array_start = .);
@@ -176,12 +184,13 @@ SECTIONS
     PROVIDE_HIDDEN (__fini_array_end = .);
     . = ALIGN(4);
     __ROM_CRC_END = .;
-  }
-  > Application = 0xffffffff
+  } > Application = 0xffffffff
 
-  __etext = .;    /* end of code */
+  /* End of Code Section */
+  __etext = .;
   __DATA_ROM = .;
 
+  /* MPU Protected Data Section (Hot Data in SRAM_L) */
   .mpu_data :
   {
     . = ALIGN(32);
@@ -190,8 +199,9 @@ SECTIONS
     KEEP("*libsafe*:*"(.data*))
     . = ALIGN(32);
     __MPU_DATA_END = .;
-  } > Data
+  } > HotData
 
+  /* MPU Protected Read-Only Data Section (Hot Data in SRAM_L) */
   .mpu_rodata :
   {
     . = ALIGN(32);
@@ -200,8 +210,9 @@ SECTIONS
     KEEP("*libsafe*:*"(.rodata*))
     . = ALIGN(32);
     __MPU_RODATA_END = .;
-  } > Data
+  } > HotData
 
+  /* MPU Protected BSS Section (SRAM_L - Hot/Safety Critical) */
   .mpu_bss :
   {
     . = ALIGN(32);
@@ -210,26 +221,45 @@ SECTIONS
     "*libsafe*:*"(.bss*)
     . = ALIGN(32);
     __MPU_BSS_END = .;
-  } > Data
+  } > HotData
 
-   /* Initialized data */
-
-  .data : AT(__DATA_ROM)
+  /* Hot Communication Components Data (SRAM_L) */
+  .hot_data : AT(__DATA_ROM)
   {
     . = ALIGN(4);
     __DATA_RAM = .;
     __data_start__ = .;
-    *(.data)
-    *(.data*)
+    /* Communication-related components */
+    *app.o(.data .data*)
+    *TransportSystem.o(.data .data*)
+    *DoCanSystem.o(.data .data*)
+    *DoIpServerSystem.o(.data .data*)
+    *UdsSystem.o(.data .data*)
+    *EthernetSystem.o(.data .data*)
+    *LifecycleManager.o(.data .data*)
+    *RuntimeSystem.o(.data .data*)
+    *AsyncBinding.o(.data .data*)
+    /* Large communication libraries */
+    *liblwipcore.a:*(.data .data*)
+    *libtransport.a:*(.data .data*)
+    *libcom.a:*(.data .data*)
+    *librte.a:*(.data .data*)
+    *libdocan.a:*(.data .data*)
+    *libuds.a:*(.data .data*)
+    *libcpp2can.a:*(.data .data*)
+    *libcpp2ethernet.a:*(.data .data*)
+    /* Explicit hot data section */
+    *(.hot_data)
+    *(.hot_data*)
     KEEP(*(.jcr*))
     . = ALIGN(4);
     __data_end__ = .;
-  } > Data
+  } > HotData
 
-  /* Compute start of executable code in ROM, necessary to be executed
-   * from RAM */
+  /* Compute start of executable code in ROM, necessary to be executed from RAM */
   __DATA_ROM_RX = __DATA_ROM + (__data_end__ - __data_start__);
 
+  /* RAM Executable Code Section (SRAM_L) */
   .launchFromRAM : AT(__DATA_ROM_RX)
   {
     . = ALIGN(4);
@@ -238,42 +268,184 @@ SECTIONS
     KEEP(*(.launchFromRAM*))
     . = ALIGN(4);
     __LAUNCH_FROM_RAM_END = .;
-  }
-  > ApplicationRAM = 0xffffffff
+  } > RAMFunctions = 0xffffffff
 
-  ___data_size = __data_end__ - __data_start__;
+  /* Hot Communication Components BSS (SRAM_L) */
+  .hot_bss (NOLOAD) :
+  {
+    . = ALIGN(4);
+    __HOT_BSS_START = .;
+    /* Communication-related components */
+    *app.o(.bss .bss* COMMON)
+    *TransportSystem.o(.bss .bss* COMMON)
+    *DoCanSystem.o(.bss .bss* COMMON)
+    *DoIpServerSystem.o(.bss .bss* COMMON)
+    *UdsSystem.o(.bss .bss* COMMON)
+    *EthernetSystem.o(.bss .bss* COMMON)
+    *LifecycleManager.o(.bss .bss* COMMON)
+    *RuntimeSystem.o(.bss .bss* COMMON)
+    *AsyncBinding.o(.bss .bss* COMMON)
+    /* Large communication libraries */
+    *liblwipcore.a:*(.bss .bss* COMMON)
+    *libtransport.a:*(.bss .bss* COMMON)
+    *libcom.a:*(.bss .bss* COMMON)
+    *librte.a:*(.bss .bss* COMMON)
+    *libdocan.a:*(.bss .bss* COMMON)
+    *libuds.a:*(.bss .bss* COMMON)
+    *libcpp2can.a:*(.bss .bss* COMMON)
+    *libcpp2ethernet.a:*(.bss .bss* COMMON)
+    /* Explicit hot bss section */
+    *(.hot_bss)
+    *(.hot_bss*)
+    . = ALIGN(4);
+    __HOT_BSS_END = .;
+  } > HotData
+
+  /* Data Size Calculations */
+  ___data_size    = __data_end__ - __data_start__;
   ___data_rx_size = __LAUNCH_FROM_RAM_END - __LAUNCH_FROM_RAM_START;
 
   __DATA_ROM_START = __DATA_ROM;
-  __DATA_ROM_END = __DATA_ROM + ___data_size + ___data_rx_size;
+  __DATA_ROM_END   = __DATA_ROM + ___data_size + ___data_rx_size;
   __USED_FLASH_END = __DATA_ROM_END;
 
-  /* Uninitialized data */
+  /* Compute start of general data in ROM */
+  __DATA_ROM_GENERAL = __DATA_ROM_END;
 
+  /* General Initialized Data Section (SRAM_U) */
+  .data_general : AT(__DATA_ROM_GENERAL)
+  {
+    . = ALIGN(4);
+    __data_general_start__ = .;
+    *(EXCLUDE_FILE(
+      *app.o
+      *TransportSystem.o
+      *DoCanSystem.o
+      *DoIpServerSystem.o
+      *UdsSystem.o
+      *EthernetSystem.o
+      *LifecycleManager.o
+      *RuntimeSystem.o
+      *AsyncBinding.o
+      *liblwipcore.a:*
+      *libtransport.a:*
+      *libcom.a:*
+      *librte.a:*
+      *libdocan.a:*
+      *libuds.a:*
+      *libcpp2can.a:*
+      *libcpp2ethernet.a:*
+    ) .data)
+    *(EXCLUDE_FILE(
+      *app.o
+      *TransportSystem.o
+      *DoCanSystem.o
+      *DoIpServerSystem.o
+      *UdsSystem.o
+      *EthernetSystem.o
+      *LifecycleManager.o
+      *RuntimeSystem.o
+      *AsyncBinding.o
+      *liblwipcore.a:*
+      *libtransport.a:*
+      *libcom.a:*
+      *librte.a:*
+      *libdocan.a:*
+      *libuds.a:*
+      *libcpp2can.a:*
+      *libcpp2ethernet.a:*
+    ) .data*)
+    . = ALIGN(4);
+    __data_general_end__ = .;
+  } > MainRAM
+
+  /* Update flash usage to include general data */
+  ___data_general_size = __data_general_end__ - __data_general_start__;
+  __DATA_ROM_GENERAL_END = __DATA_ROM_GENERAL + ___data_general_size;
+  __USED_FLASH_END_TOTAL = __DATA_ROM_GENERAL_END;
+
+  /* Uninitialized Data Section - BSS (SRAM_U) */
   .bss :
   {
     . = ALIGN(4);
     __START_BSS = .;
     __bss_start__ = .;
-    *(.bss)
-    *(.bss*)
-    *(COMMON)
+    *(EXCLUDE_FILE(
+      *app.o
+      *TransportSystem.o
+      *DoCanSystem.o
+      *DoIpServerSystem.o
+      *UdsSystem.o
+      *EthernetSystem.o
+      *LifecycleManager.o
+      *RuntimeSystem.o
+      *AsyncBinding.o
+      *liblwipcore.a:*
+      *libtransport.a:*
+      *libcom.a:*
+      *librte.a:*
+      *libdocan.a:*
+      *libuds.a:*
+      *libcpp2can.a:*
+      *libcpp2ethernet.a:*
+    ) .bss)
+    *(EXCLUDE_FILE(
+      *app.o
+      *TransportSystem.o
+      *DoCanSystem.o
+      *DoIpServerSystem.o
+      *UdsSystem.o
+      *EthernetSystem.o
+      *LifecycleManager.o
+      *RuntimeSystem.o
+      *AsyncBinding.o
+      *liblwipcore.a:*
+      *libtransport.a:*
+      *libcom.a:*
+      *librte.a:*
+      *libdocan.a:*
+      *libuds.a:*
+      *libcpp2can.a:*
+      *libcpp2ethernet.a:*
+    ) .bss*)
+    *(EXCLUDE_FILE(
+      *app.o
+      *TransportSystem.o
+      *DoCanSystem.o
+      *DoIpServerSystem.o
+      *UdsSystem.o
+      *EthernetSystem.o
+      *LifecycleManager.o
+      *RuntimeSystem.o
+      *AsyncBinding.o
+      *liblwipcore.a:*
+      *libtransport.a:*
+      *libcom.a:*
+      *librte.a:*
+      *libdocan.a:*
+      *libuds.a:*
+      *libcpp2can.a:*
+      *libcpp2ethernet.a:*
+    ) COMMON)
     . = ALIGN(4);
     __bss_end__ = .;
     __END_BSS = .;
-  } > Data
+  } > MainRAM
 
-  __CRC_IVT_START   = ADDR(.interrupts);
-  __CRC_IVT_END     = ADDR(.interrupts) + SIZEOF(.interrupts);
-  __CRC_APP_START   = __ROM_CRC_START;
-  __CRC_APP_END     = __ROM_CRC_END;
+  /* CRC Checksum Area Definitions */
+  __CRC_IVT_START      = ADDR(.interrupts);
+  __CRC_IVT_END        = ADDR(.interrupts) + SIZEOF(.interrupts);
+  __CRC_APP_START      = __ROM_CRC_START;
+  __CRC_APP_END        = __ROM_CRC_END;
   __CRC_DATA_ROM_START = __DATA_ROM_START;
-  __CRC_DATA_ROM_END = __DATA_ROM_END;
+  __CRC_DATA_ROM_END   = __DATA_ROM_END;
+
+  /* CRC Checksum Metadata */
   .checksum :
   {
     . = ALIGN(4);
     __checksum_list_start = .;
-    LONG(3) /* Number of Areas */
+    LONG(3)                      /* Number of Areas */
     LONG(__CRC_IVT_START)
     LONG(__CRC_IVT_END)
     LONG(__CRC_APP_START)
@@ -285,8 +457,7 @@ SECTIONS
     LONG(0x12345678)
   } > CrcMeta
 
-  /* Heap */
-
+  /* Heap Section (SRAM_U) */
   .heap :
   {
     . = ALIGN(8);
@@ -296,37 +467,38 @@ SECTIONS
     __HeapBase = .;
     . += HEAP_SIZE;
     __HeapLimit = .;
-  } > Data
+  } > MainRAM
 
-  /* Stack */
-
+  /* Stack Section (SRAM_U) */
   .stack :
   {
     . = ALIGN(8);
     . += STACK_SIZE;
     __StackTop = .;
-  } > Data
+  } > MainRAM
 
-  /* No-init RAM */
-
-  .NoInit (NOLOAD):
+  /* No-Init RAM Section */
+  .NoInit (NOLOAD) :
   {
-    __DATA_RAM_END = .;   /* RAM initialization is done until __DATA_RAM_END */
+    __DATA_RAM_END = .;  /* RAM initialization is done until __DATA_RAM_END */
     __NOINIT_DATA = .;
   } > NoInit
 
+  /* Stack Limit and Pointer */
   __StackLimit = __StackTop - STACK_SIZE;
   PROVIDE(__stack = __StackTop);
+
+  /* ARM Attributes */
   .ARM.attributes 0 : { *(.ARM.attributes) }
 }
 
-/* Informational symbols */
+/* Informational Symbols for Flash Memory Usage */
+__FLASH_START         = FLASH_START;
+__FLASH_END           = FLASH_END;
+__USED_FLASH_SIZE     = __USED_FLASH_END_TOTAL - __FLASH_START;
+__FREE_FLASH_SIZE     = __FLASH_END - __USED_FLASH_END_TOTAL;
+__FLASH_OVERFLOW_SIZE = __USED_FLASH_END_TOTAL - __FLASH_END;
 
-__FLASH_START = FLASH_START;
-__FLASH_END = FLASH_END;
-__USED_FLASH_SIZE = __USED_FLASH_END - __FLASH_START;
-__FREE_FLASH_SIZE = __FLASH_END - __USED_FLASH_END;
-__FLASH_OVERFLOW_SIZE = __USED_FLASH_END - __FLASH_END;
-
+/* Safety Assertions */
 ASSERT(__MPU_DATA_START == __MPU_DATA_END, "safety code must not have preinitialized data");
 ASSERT(__MPU_RODATA_START == __MPU_RODATA_END, "safety code must not have preinitialized rodata");
