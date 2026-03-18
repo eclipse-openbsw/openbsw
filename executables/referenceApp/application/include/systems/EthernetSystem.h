@@ -11,7 +11,7 @@
 #include <async/util/Call.h>
 #include <etl/array.h>
 #include <lifecycle/AsyncLifecycleComponent.h>
-#include <systems/IEthernetDriverSystem.h>
+#include <systems/IEthernetSystem.h>
 
 namespace systems
 {
@@ -46,7 +46,7 @@ class EthernetSystem
 {
 public:
     explicit EthernetSystem(
-        ::async::ContextType context, ::ethernet::IEthernetDriverSystem& ethernetSystem);
+        ::async::ContextType context, ::ethernet::IEthernetSystem& ethernetSystem);
 
     EthernetSystem(EthernetSystem const&)            = delete;
     EthernetSystem& operator=(EthernetSystem const&) = delete;
@@ -57,7 +57,7 @@ public:
 
     void execute() override;
 
-    ::ethernet::IEthernetDriverSystem& ethernetDriverSystem;
+    ::ethernet::IEthernetSystem& ethernetDriverSystem;
     Netifs<::ethX::NUM_NETIFS> netifs;
     ::ip::NetworkInterfaceConfigRegistry netifConfigRegistry{
         netifs.busIds, netifs.networkInterfaceConfigsIp4};
