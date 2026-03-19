@@ -74,7 +74,8 @@ int SerialLogger_getc()
 void SerialLogger_Idle()
 {
     etl::span<uint8_t const> const data(
-        reinterpret_cast<uint8_t const*>(LoggerBuffer.data()), SerialLogger_bufferInd);
+        static_cast<uint8_t const*>(static_cast<void const*>(LoggerBuffer.data())),
+        SerialLogger_bufferInd);
     getUart().write(data);
     SerialLogger_bufferInd = 0;
 }
