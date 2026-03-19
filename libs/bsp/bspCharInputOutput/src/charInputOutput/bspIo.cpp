@@ -46,6 +46,8 @@ int vsnprintf(char* buf, size_t const maxsize, char const* fmt, va_list args)
 
 int vsprintf(char* buf, char const* fmt, va_list args) { return vsprintf_(buf, fmt, args); }
 
+// C standard library compatibility wrappers — variadic signatures required by API contract.
+// NOLINTBEGIN(cppcoreguidelines-pro-type-vararg)
 int snprintf(char* buf, size_t maxsize, char const* fmt, ...)
 {
     va_list args;
@@ -87,6 +89,8 @@ uint8_t debug_printf(char const* format, ...)
 
     return 0;
 }
+
+// NOLINTEND(cppcoreguidelines-pro-type-vararg)
 
 #include "charInputOutput/printfPragma.hpp"
 

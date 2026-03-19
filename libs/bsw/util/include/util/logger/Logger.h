@@ -183,6 +183,8 @@ inline bool Logger::isEnabled(uint8_t const componentIndex, Level const level)
                                           : false;
 }
 
+// Logger API is intentionally variadic; type-safe alternatives are tracked as a future issue.
+// NOLINTBEGIN(cppcoreguidelines-pro-type-vararg)
 inline void Logger::info(uint8_t const componentIndex, char const* const str, ...)
 {
     LOGGER_DOLOG(LEVEL_INFO)
@@ -221,6 +223,8 @@ Logger::log(uint8_t const componentIndex, Level const level, char const* const s
         doLog(componentIndex, level, str, ap);
     }
 }
+
+// NOLINTEND(cppcoreguidelines-pro-type-vararg)
 
 } // namespace logger
 } // namespace util
