@@ -1,5 +1,7 @@
 // Copyright 2024 Accenture.
 
+// NOLINTBEGIN(cppcoreguidelines-pro-type-vararg): Logger/StringWriter API is variadic by design.
+
 #include "eeprom/EepromDriver.h"
 
 #include "bsp/Bsp.h"
@@ -133,3 +135,5 @@ EepromDriver::~EepromDriver()
 }
 
 } // namespace eeprom
+
+// NOLINTEND(cppcoreguidelines-pro-type-vararg)

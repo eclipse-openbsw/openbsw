@@ -1,5 +1,7 @@
 // Copyright 2024 Accenture.
 
+// NOLINTBEGIN(cppcoreguidelines-pro-type-vararg): Logger/StringWriter API is variadic by design.
+
 #include "outputManager/OutputTester.h"
 
 #include "outputManager/Output.h"
@@ -91,3 +93,5 @@ void OutputTester::executeCommand(::util::command::CommandContext& context, uint
 }
 
 } /* namespace bios */
+
+// NOLINTEND(cppcoreguidelines-pro-type-vararg)

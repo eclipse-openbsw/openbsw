@@ -1,5 +1,7 @@
 // Copyright 2025 Accenture.
 
+// NOLINTBEGIN(cppcoreguidelines-pro-type-vararg): Logger/StringWriter API is variadic by design.
+
 #include "lwipSocket/udp/LwipDatagramSocket.h"
 
 #include "lwipSocket/utils/LwipHelper.h"
@@ -551,3 +553,5 @@ void LwipDatagramSocket::noChksum(bool value)
 }
 
 } // namespace udp
+
+// NOLINTEND(cppcoreguidelines-pro-type-vararg)

@@ -1,5 +1,7 @@
 // Copyright 2024 Accenture.
 
+// NOLINTBEGIN(cppcoreguidelines-pro-type-vararg): Logger/StringWriter API is variadic by design.
+
 #include "can/SocketCanTransceiver.h"
 
 #include <can/CanLogger.h>
@@ -211,6 +213,7 @@ void SocketCanTransceiver::guardedOpen()
     ::std::memset(&addr, 0, sizeof(addr));
     addr.can_family  = AF_CAN;
     addr.can_ifindex = ifr.ifr_ifindex;
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast): POSIX bind() requires sockaddr*
     error            = bind(fd, reinterpret_cast<sockaddr*>(&addr), sizeof(addr));
     if (error < 0)
     {
@@ -248,12 +251,16 @@ void SocketCanTransceiver::guardedRun(int maxSentPerRun, int maxReceivedPerRun)
         _txReader.release();
         can_frame socketCanFrame;
         ::std::memset(&socketCanFrame, 0, sizeof(socketCanFrame));
+        // NOLINTBEGIN(cppcoreguidelines-pro-type-union-access): can_frame is a Linux kernel C
+        // struct
         socketCanFrame.can_id  = canFrame.getId();
         int length             = canFrame.getPayloadLength();
         socketCanFrame.can_dlc = length;
         ::std::memcpy(socketCanFrame.data, canFrame.getPayload(), length);
         ::std::memset(socketCanFrame.data + length, 0, sizeof(socketCanFrame.data) - length);
+        // NOLINTEND(cppcoreguidelines-pro-type-union-access)
         ssize_t const bytesWritten
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast): POSIX write()
             = ::write(_fileDescriptor, reinterpret_cast<char*>(&socketCanFrame), CAN_MTU);
         if (bytesWritten != CAN_MTU)
         {
@@ -269,6 +276,7 @@ void SocketCanTransceiver::guardedRun(int maxSentPerRun, int maxReceivedPerRun)
     for (int count = 0; count < maxReceivedPerRun; ++count)
     {
         alignas(can_frame) uint8_t buffer[CANFD_MTU];
+        // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast): POSIX read()
         ssize_t const length = read(_fileDescriptor, reinterpret_cast<char*>(buffer), CANFD_MTU);
         if (length < 0)
         {
@@ -276,16 +284,19 @@ void SocketCanTransceiver::guardedRun(int maxSentPerRun, int maxReceivedPerRun)
         }
         if (length == CAN_MTU)
         {
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
             can_frame const& socketCanFrame = *reinterpret_cast<can_frame const*>(buffer);
             Logger::debug(
                 CAN,
                 "[SocketCanTransceiver] received CAN frame, id=0x%X, length=%d",
+                // NOLINTBEGIN(cppcoreguidelines-pro-type-union-access): can_frame C struct
                 static_cast<int>(socketCanFrame.can_id),
                 static_cast<int>(socketCanFrame.can_dlc));
             CANFrame canFrame;
             canFrame.setId(socketCanFrame.can_id);
             canFrame.setPayload(socketCanFrame.data, socketCanFrame.can_dlc);
             canFrame.setPayloadLength(socketCanFrame.can_dlc);
+            // NOLINTEND(cppcoreguidelines-pro-type-union-access)
             canFrame.setTimestamp(0);
 
             notifyListeners(canFrame);
@@ -294,3 +305,5 @@ void SocketCanTransceiver::guardedRun(int maxSentPerRun, int maxReceivedPerRun)
 }
 
 } // namespace can
+
+// NOLINTEND(cppcoreguidelines-pro-type-vararg)
