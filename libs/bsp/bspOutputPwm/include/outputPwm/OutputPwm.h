@@ -30,6 +30,8 @@ public:
     class IDynamicPwmClient
     {
     public:
+        virtual ~IDynamicPwmClient() = default;
+
         virtual bsp::BspReturnCode setDuty(uint16_t chan, uint16_t duty, bool immediateUpdate) = 0;
         virtual bsp::BspReturnCode setPeriod(uint16_t chan, uint16_t period)                   = 0;
     };

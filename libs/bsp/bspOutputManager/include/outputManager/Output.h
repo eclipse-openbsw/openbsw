@@ -31,6 +31,7 @@ public:
     {
     public:
         IDynamicOutputClient& operator=(IDynamicOutputClient const&) = delete;
+        virtual ~IDynamicOutputClient()                              = default;
 
         virtual bsp::BspReturnCode set(uint16_t chan, uint8_t vol, bool latch) = 0;
         virtual bsp::BspReturnCode get(uint16_t chan, bool& result)            = 0;

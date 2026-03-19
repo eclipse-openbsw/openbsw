@@ -39,6 +39,8 @@ public:
         IDynamicInputClient& operator=(IDynamicInputClient const&);
 
     public:
+        virtual ~IDynamicInputClient() = default;
+
         virtual bsp::BspReturnCode get(uint16_t chan, bool& result) = 0;
     };
 

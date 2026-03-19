@@ -6,7 +6,6 @@
 
 #include <lifecycle/LifecycleLogger.h>
 #include <logger/ConsoleLogger.h>
-#include <printf/printf.h>
 #include <safeUtils/SafetyLogger.h>
 #ifdef PLATFORM_SUPPORT_TRANSPORT
 #include <transport/TpRouterLogger.h>
@@ -119,20 +118,17 @@ void flush()
 using ::util::logger::Logger;
 using ::util::logger::LWIP;
 
+// lwIP requires a C-style variadic callback; delegate to Logger's va_list overload.
+// NOLINTBEGIN(cppcoreguidelines-pro-type-vararg)
 extern "C" void log_lwipInfo(char const* message, ...)
 {
-    // to print variable argument list
-    // ToDo: use StringWriter or PrintfFormatter available in util
-
-    static char buffer[100];
     va_list ap;
-    /* get the varargs */
     va_start(ap, message);
-    vsnprintf_(buffer, sizeof(buffer), message, ap);
+    Logger::log(LWIP, ::util::logger::LEVEL_INFO, message, ap);
     va_end(ap);
-
-    Logger::info(LWIP, buffer);
 }
+
+// NOLINTEND(cppcoreguidelines-pro-type-vararg)
 
 extern "C" void log_lwipError(char const* message) { Logger::error(LWIP, message); }
 
