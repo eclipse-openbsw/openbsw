@@ -21,6 +21,8 @@ public:
     : ::lifecycle::SingleContextLifecycleComponent(context)
     {}
 
+    virtual ~ComponentA() = default;
+
     void init() override
     {
         // Perform component specific initialization. Will only be called when this component's
@@ -53,6 +55,8 @@ public:
     : ::lifecycle::SingleContextLifecycleComponent(context)
     {}
 
+    virtual ~ComponentB() = default;
+
     void init() override { transitionDone(); }
 
     void run() override { transitionDone(); }
@@ -66,6 +70,8 @@ public:
     explicit ComponentC(::async::ContextType const context)
     : ::lifecycle::SingleContextLifecycleComponent(context)
     {}
+
+    virtual ~ComponentC() = default;
 
     void init() override { transitionDone(); }
 
