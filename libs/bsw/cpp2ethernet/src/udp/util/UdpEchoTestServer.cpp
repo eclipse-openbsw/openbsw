@@ -25,13 +25,13 @@ bool UdpEchoTestServer::start()
     Logger::info(UDP, "UDP echo test server initialisation");
 
     _socket.setDataListener(this);
+
     if (_socket.bind(&_ipAddr, _rxPort) != ::udp::AbstractDatagramSocket::ErrorCode::UDP_SOCKET_OK)
     {
         Logger::error(UDP, "UDP socket bind failed");
         return false;
     }
 
-    _socket.setDataListener(this);
     Logger::info(UDP, "Listening on port %d.", _rxPort);
 
     if (_socket.join(_multicastAddr) != ::udp::AbstractDatagramSocket::ErrorCode::UDP_SOCKET_OK)
