@@ -38,8 +38,6 @@ bool UdpEchoTestServer::start()
     {
         Logger::error(UDP, "Multicast join failed");
         return false;
-        Logger::info(UDP, "Joined multicast group");
-        return true;
     }
 
     Logger::info(UDP, "Joined multicast group");
