@@ -1,7 +1,5 @@
 // Copyright 2025 Accenture.
 
-// NOLINTBEGIN(cppcoreguidelines-pro-type-vararg): Logger/StringWriter API is variadic by design.
-
 #include "lwipSocket/udp/LwipDatagramSocket.h"
 
 #include "lwipSocket/utils/LwipHelper.h"
@@ -71,6 +69,7 @@ bool LwipDatagramSocket::isClosed() const { return (!(isBound() && isConnected()
 AbstractDatagramSocket::ErrorCode
 LwipDatagramSocket::bind(ip::IPAddress const* pIpAddress, uint16_t port)
 {
+    // NOLINTBEGIN(cppcoreguidelines-pro-type-vararg): Logger API is variadic by design.
     lwiputils::TASK_ASSERT_HOOK();
 
     if (_dataListener == nullptr)
@@ -110,11 +109,13 @@ LwipDatagramSocket::bind(ip::IPAddress const* pIpAddress, uint16_t port)
     }
     udp_recv(fpRxPcb, &udpReceiveListener, static_cast<void*>(this));
     logger::Logger::info(logger::UDP, "DatagramSocket bound to UDP port %d", getLocalPort());
+    // NOLINTEND(cppcoreguidelines-pro-type-vararg)
     return AbstractDatagramSocket::ErrorCode::UDP_SOCKET_OK;
 }
 
 AbstractDatagramSocket::ErrorCode LwipDatagramSocket::join(ip::IPAddress const& groupAddr)
 {
+    // NOLINTBEGIN(cppcoreguidelines-pro-type-vararg): Logger API is variadic by design.
     lwiputils::TASK_ASSERT_HOOK();
 
     if (ip::isIp4Address(groupAddr))
@@ -187,6 +188,7 @@ AbstractDatagramSocket::ErrorCode LwipDatagramSocket::join(ip::IPAddress const& 
 #endif // LWIP_IPV6
     }
 
+    // NOLINTEND(cppcoreguidelines-pro-type-vararg)
     return AbstractDatagramSocket::ErrorCode::UDP_SOCKET_OK;
 }
 
@@ -211,6 +213,7 @@ void LwipDatagramSocket::udpReceiveListener(
     ip_addr_t const* const src_ip,
     uint16_t const src_port)
 {
+    // NOLINTBEGIN(cppcoreguidelines-pro-type-vararg): Logger API is variadic by design.
     if (arg == nullptr)
     {
         logger::Logger::error(
@@ -220,6 +223,7 @@ void LwipDatagramSocket::udpReceiveListener(
 
     LwipDatagramSocket* const pSocket = static_cast<LwipDatagramSocket*>(arg);
     if (pSocket->_dataListener != nullptr)
+    // NOLINTEND(cppcoreguidelines-pro-type-vararg)
     {
         pbuf_ref(p);
         if (pSocket->fpPBufHead != nullptr)
@@ -287,6 +291,7 @@ size_t LwipDatagramSocket::read(uint8_t* buffer, size_t n)
 AbstractDatagramSocket::ErrorCode LwipDatagramSocket::connect(
     ip::IPAddress const& address, uint16_t port, ip::IPAddress* pLocalAddress)
 {
+    // NOLINTBEGIN(cppcoreguidelines-pro-type-vararg): Logger API is variadic by design.
     lwiputils::TASK_ASSERT_HOOK();
 
     if (fpTxPcb != nullptr)
@@ -357,11 +362,13 @@ AbstractDatagramSocket::ErrorCode LwipDatagramSocket::connect(
         "DatagramSocket connecting to %s:%d",
         ip::to_str(address, ipAddrBuffer).data(),
         port);
+    // NOLINTEND(cppcoreguidelines-pro-type-vararg)
     return AbstractDatagramSocket::ErrorCode::UDP_SOCKET_OK;
 }
 
 void LwipDatagramSocket::disconnect()
 {
+    // NOLINTBEGIN(cppcoreguidelines-pro-type-vararg): Logger API is variadic by design.
     lwiputils::TASK_ASSERT_HOOK();
 
     if (fpTxPcb != nullptr)
@@ -378,6 +385,7 @@ void LwipDatagramSocket::disconnect()
         udp_remove(fpTxPcb);
         fpTxPcb = nullptr;
     }
+    // NOLINTEND(cppcoreguidelines-pro-type-vararg)
 }
 
 err_t LwipDatagramSocket::udpWrite(udp_pcb* const pcb, void const* const data, size_t const size)
@@ -396,6 +404,7 @@ err_t LwipDatagramSocket::udpWrite(udp_pcb* const pcb, void const* const data, s
 
 AbstractDatagramSocket::ErrorCode LwipDatagramSocket::send(::etl::span<uint8_t const> const& data)
 {
+    // NOLINTBEGIN(cppcoreguidelines-pro-type-vararg): Logger API is variadic by design.
     lwiputils::TASK_ASSERT_HOOK();
 
     if (fpTxPcb != nullptr)
@@ -409,11 +418,13 @@ AbstractDatagramSocket::ErrorCode LwipDatagramSocket::send(::etl::span<uint8_t c
         }
         return AbstractDatagramSocket::ErrorCode::UDP_SOCKET_OK;
     }
+    // NOLINTEND(cppcoreguidelines-pro-type-vararg)
     return AbstractDatagramSocket::ErrorCode::UDP_SOCKET_NOT_OK;
 }
 
 LwipDatagramSocket::ErrorCode LwipDatagramSocket::send(DatagramPacket const& packet)
 {
+    // NOLINTBEGIN(cppcoreguidelines-pro-type-vararg): Logger API is variadic by design.
     lwiputils::TASK_ASSERT_HOOK();
 
     netif* pNetif         = nullptr;
@@ -465,11 +476,13 @@ LwipDatagramSocket::ErrorCode LwipDatagramSocket::send(DatagramPacket const& pac
         }
     }
 
+    // NOLINTEND(cppcoreguidelines-pro-type-vararg)
     return AbstractDatagramSocket::ErrorCode::UDP_SOCKET_OK;
 }
 
 void LwipDatagramSocket::close()
 {
+    // NOLINTBEGIN(cppcoreguidelines-pro-type-vararg): Logger API is variadic by design.
     lwiputils::TASK_ASSERT_HOOK();
 
     if (fpRxPcb != nullptr)
@@ -483,6 +496,7 @@ void LwipDatagramSocket::close()
         udp_remove(*it);
     }
     fMulticastPcbs.clear();
+    // NOLINTEND(cppcoreguidelines-pro-type-vararg)
 }
 
 uint16_t LwipDatagramSocket::getLocalPort() const
@@ -553,5 +567,3 @@ void LwipDatagramSocket::noChksum(bool value)
 }
 
 } // namespace udp
-
-// NOLINTEND(cppcoreguidelines-pro-type-vararg)

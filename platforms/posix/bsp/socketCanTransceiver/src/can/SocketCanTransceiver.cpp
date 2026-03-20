@@ -253,11 +253,16 @@ void SocketCanTransceiver::guardedRun(int maxSentPerRun, int maxReceivedPerRun)
         ::std::memset(&socketCanFrame, 0, sizeof(socketCanFrame));
         // NOLINTBEGIN(cppcoreguidelines-pro-type-union-access): can_frame is a Linux kernel C
         // struct
-        socketCanFrame.can_id  = canFrame.getId();
-        int length             = canFrame.getPayloadLength();
-        socketCanFrame.can_dlc = length;
-        ::std::memcpy(socketCanFrame.data, canFrame.getPayload(), length);
-        ::std::memset(socketCanFrame.data + length, 0, sizeof(socketCanFrame.data) - length);
+        socketCanFrame.can_id = canFrame.getId();
+        size_t payloadLength  = canFrame.getPayloadLength();
+        if (payloadLength > sizeof(socketCanFrame.data))
+        {
+            payloadLength = sizeof(socketCanFrame.data);
+        }
+        socketCanFrame.can_dlc = static_cast<decltype(socketCanFrame.can_dlc)>(payloadLength);
+        ::std::memcpy(socketCanFrame.data, canFrame.getPayload(), payloadLength);
+        ::std::memset(
+            socketCanFrame.data + payloadLength, 0, sizeof(socketCanFrame.data) - payloadLength);
         // NOLINTEND(cppcoreguidelines-pro-type-union-access)
         ssize_t const bytesWritten
             // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast): POSIX write()
@@ -290,7 +295,7 @@ void SocketCanTransceiver::guardedRun(int maxSentPerRun, int maxReceivedPerRun)
                 CAN,
                 "[SocketCanTransceiver] received CAN frame, id=0x%X, length=%d",
                 // NOLINTBEGIN(cppcoreguidelines-pro-type-union-access): can_frame C struct
-                static_cast<int>(socketCanFrame.can_id),
+                static_cast<unsigned int>(socketCanFrame.can_id),
                 static_cast<int>(socketCanFrame.can_dlc));
             CANFrame canFrame;
             canFrame.setId(socketCanFrame.can_id);
