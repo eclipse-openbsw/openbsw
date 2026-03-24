@@ -22,9 +22,11 @@ public:
      */
     virtual void updateTimeouts() = 0;
 
-    virtual ~ITimeoutHandler()                         = default;
     ITimeoutHandler& operator=(ITimeoutHandler const&) = delete;
     ITimeoutHandler& operator=(ITimeoutHandler&&)      = delete;
+
+protected:
+    ~ITimeoutHandler() = default;
 };
 } // namespace core
 } // namespace middleware

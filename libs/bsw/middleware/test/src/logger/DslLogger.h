@@ -52,7 +52,7 @@ public:
     template<typename... Args>
     void EXPECT_EVENT_LOG(LogLevel const level, Error const error, Args... args)
     {
-        static etl::array<uint8_t, sizeof(uint32_t) + sizeof(Error) + count_bytes<Args...>::VALUE>
+        static etl::array<uint8_t, sizeof(uint32_t) + sizeof(Error) + CountBytes<Args...>::VALUE>
             buffer{};
 
         uint32_t const messageId = logger::getMessageId(error);
@@ -62,14 +62,14 @@ public:
         copy_to_buffer(buffer.data(), index, error);
         copy_to_buffer(buffer.data(), index, args...);
 
-        EXPECT_CALL(_mock, log_binary(level, ElementsAreArray(buffer)))
+        EXPECT_CALL(_mock, logBinary(level, ElementsAreArray(buffer)))
             .Times(Exactly(1U))
             .WillRepeatedly(Return());
     }
 
     void EXPECT_NO_LOG() { EXPECT_CALL(_mock, log(_, _, _)).Times(0); }
 
-    void EXPECT_NO_BINARY_LOG() { EXPECT_CALL(_mock, log_binary(_, _)).Times(0); }
+    void EXPECT_NO_BINARY_LOG() { EXPECT_CALL(_mock, logBinary(_, _)).Times(0); }
 
     void EXPECT_NO_LOGGING()
     {

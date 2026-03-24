@@ -69,8 +69,8 @@ public:
     /** Returns true if the queue is full, false otherwise. */
     bool isFull() const
     {
-        // Volatile is needed to make sure the read is not optimized away when full() is called in a
-        // loop like `while(sender.full()){}`.
+        // Volatile is needed to make sure the read is not optimized away when isFull() is called
+        // in a loop like `while(sender.isFull()){}`.
         return (
             _sent
             == ((static_cast<uint32_t const volatile&>(_received) + _maxSize) % (2U * _maxSize)));

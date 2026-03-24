@@ -2,12 +2,6 @@
 
 #include "middleware/core/SkeletonBase.h"
 
-#include <cstddef>
-#include <cstdint>
-
-#include <etl/algorithm.h>
-#include <etl/span.h>
-
 #include "middleware/concurrency/LockStrategies.h"
 #include "middleware/core/IClusterConnection.h"
 #include "middleware/core/InstancesDatabase.h"
@@ -16,6 +10,12 @@
 #include "middleware/core/types.h"
 #include "middleware/logger/Logger.h"
 #include "middleware/os/TaskIdProvider.h"
+
+#include <etl/algorithm.h>
+#include <etl/span.h>
+
+#include <cstddef>
+#include <cstdint>
 
 namespace middleware
 {
@@ -27,8 +27,8 @@ SkeletonBase::sendMessage(Message& msg) const
 {
     HRESULT res        = HRESULT::ClusterIdNotFoundOrTransceiverNotRegistered;
     auto const* sender = etl::find_if(
-        connections_.begin(),
-        connections_.end(),
+        _connections.begin(),
+        _connections.end(),
         [&msg](IClusterConnection const* const clusConn)
         {
             if (clusConn != nullptr)
@@ -38,7 +38,7 @@ SkeletonBase::sendMessage(Message& msg) const
             return false;
         });
 
-    if (sender != connections_.end())
+    if (sender != _connections.end())
     {
         res = (*sender)->sendMessage(msg);
     }
@@ -54,14 +54,14 @@ SkeletonBase::sendMessage(Message& msg) const
 uint8_t SkeletonBase::getSourceClusterId() const
 {
     auto clusterId = static_cast<uint8_t>(INVALID_CLUSTER_ID);
-    if (!connections_.empty())
+    if (!_connections.empty())
     {
         auto const* it = etl::find_if(
-            connections_.begin(),
-            connections_.end(),
+            _connections.begin(),
+            _connections.end(),
             [](IClusterConnection const* const clusConn) { return (clusConn != nullptr); });
 
-        if (it != connections_.end())
+        if (it != _connections.end())
         {
             clusterId = (*it)->getSourceClusterId();
         }
@@ -71,9 +71,9 @@ uint8_t SkeletonBase::getSourceClusterId() const
 
 void SkeletonBase::unsubscribe(uint16_t const serviceId)
 {
-    if (nullptr != connections_.data())
+    if (nullptr != _connections.data())
     {
-        for (auto* const connection : connections_)
+        for (auto* const connection : _connections)
         {
             if (connection != nullptr)
             {
@@ -81,15 +81,15 @@ void SkeletonBase::unsubscribe(uint16_t const serviceId)
             }
         }
     }
-    connections_ = etl::span<IClusterConnection*>();
+    _connections = etl::span<IClusterConnection*>();
 }
 
 etl::span<IClusterConnection* const> const& SkeletonBase::getClusterConnections() const
 {
-    return connections_;
+    return _connections;
 }
 
-bool SkeletonBase::isInitialized() const { return (!connections_.empty()); }
+bool SkeletonBase::isInitialized() const { return (!_connections.empty()); }
 
 HRESULT
 SkeletonBase::initFromInstancesDatabase(
@@ -102,7 +102,7 @@ SkeletonBase::initFromInstancesDatabase(
         [instanceId](IInstanceDatabase const* const dataBase) -> bool
         {
             auto const instances = dataBase->getInstanceIdsRange();
-            const auto* instanceIdIt
+            auto const* instanceIdIt
                 = etl::lower_bound(instances.begin(), instances.end(), instanceId);
             return ((instanceIdIt != instances.end()) && ((*instanceIdIt) == instanceId));
         });
@@ -112,7 +112,7 @@ SkeletonBase::initFromInstancesDatabase(
         auto skeletonCc = (*it)->getSkeletonConnectionsRange();
         if (skeletonCc.empty())
         {
-            instanceId_ = INVALID_INSTANCE_ID;
+            _instanceId = INVALID_INSTANCE_ID;
             ret         = HRESULT::NoClientsAvailable;
         }
         else
@@ -134,12 +134,12 @@ SkeletonBase::initFromInstancesDatabase(
             }
             if (isRegistered)
             {
-                connections_ = skeletonCc;
+                _connections = skeletonCc;
             }
             else
             {
                 unsubscribe(getServiceId());
-                instanceId_ = INVALID_INSTANCE_ID;
+                _instanceId = INVALID_INSTANCE_ID;
                 ret         = HRESULT::TransceiverInitializationFailed;
             }
         }

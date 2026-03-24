@@ -2,13 +2,13 @@
 
 #pragma once
 
-#include <cstdint>
-
-#include <etl/platform.h>
-
 #include "middleware/core/Message.h"
 #include "middleware/core/types.h"
 #include "middleware/logger/Logger.h"
+
+#include <etl/platform.h>
+
+#include <cstdint>
 
 namespace middleware
 {
@@ -33,14 +33,14 @@ ETL_INLINE_VAR constexpr uint8_t CROSS_THREAD_VIOLATION_LOG_SIZE = 18U;
  * \tparam Args variadic template parameter pack of types to count
  */
 template<typename... Args>
-struct count_bytes;
+struct CountBytes;
 
 /**
  * Specialization for a single type.
  * \tparam T the type to count bytes for
  */
 template<typename T>
-struct count_bytes<T>
+struct CountBytes<T>
 {
     /** The size of type T in bytes. */
     static constexpr size_t VALUE = sizeof(T);
@@ -52,7 +52,7 @@ struct count_bytes<T>
  * srcClusterId, tgtClusterId, serviceId, serviceInstanceId, memberId, requestId.
  */
 template<>
-struct count_bytes<core::Message>
+struct CountBytes<core::Message>
 {
     using Header = core::Message::Header;
     static constexpr size_t VALUE
@@ -67,10 +67,10 @@ struct count_bytes<core::Message>
  * \tparam Args the remaining types
  */
 template<typename T, typename... Args>
-struct count_bytes<T, Args...>
+struct CountBytes<T, Args...>
 {
     /** Sum of all type sizes. */
-    static constexpr size_t VALUE = count_bytes<T>::VALUE + count_bytes<Args...>::VALUE;
+    static constexpr size_t VALUE = CountBytes<T>::VALUE + CountBytes<Args...>::VALUE;
 };
 
 /**

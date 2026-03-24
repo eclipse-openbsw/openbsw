@@ -21,7 +21,7 @@ class TransceiverBase
 {
 public:
     /** Returns the service instance ID. */
-    uint16_t getInstanceId() const { return instanceId_; }
+    uint16_t getInstanceId() const { return _instanceId; }
 
     /** Returns the service ID. */
     virtual uint16_t getServiceId() const = 0;
@@ -40,7 +40,7 @@ public:
     virtual HRESULT onNewMessageReceived(Message const& msg) = 0;
 
     /** Sets the service instance ID to \p instanceId. */
-    void setInstanceId(uint16_t const instanceId) { instanceId_ = instanceId; }
+    void setInstanceId(uint16_t const instanceId) { _instanceId = instanceId; }
 
     /** Sets the address ID to \p addressId. */
     virtual void setAddressId(uint8_t addressId) = 0;
@@ -74,10 +74,10 @@ public:
 
 protected:
     /** The service instance ID for this transceiver. */
-    uint16_t instanceId_;
+    uint16_t _instanceId;
 
     constexpr explicit TransceiverBase(uint16_t const instanceId = INVALID_INSTANCE_ID)
-    : instanceId_(instanceId)
+    : _instanceId(instanceId)
     {}
 
     virtual ~TransceiverBase() = default;

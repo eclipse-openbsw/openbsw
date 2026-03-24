@@ -2,16 +2,16 @@
 
 #include "middleware/core/IClusterConnectionConfigurationBase.h"
 
-#include <etl/algorithm.h>
-#include <etl/iterator.h>
-#include <etl/vector.h>
-
 #include "middleware/concurrency/LockStrategies.h"
 #include "middleware/core/DatabaseManipulator.h"
 #include "middleware/core/ITimeoutHandler.h"
 #include "middleware/core/Message.h"
 #include "middleware/core/TransceiverBase.h"
 #include "middleware/core/types.h"
+
+#include <etl/algorithm.h>
+#include <etl/iterator.h>
+#include <etl/vector.h>
 
 namespace middleware
 {
@@ -35,12 +35,10 @@ void ITimeoutConfiguration::registerTimeoutTransceiver(
 void ITimeoutConfiguration::unregisterTimeoutTransceiver(
     ITimeoutHandler& transceiver, ::etl::ivector<ITimeoutHandler*>& timeoutTransceivers)
 {
-    using ETL_OR_STD::swap;
-
     auto* it = etl::find(timeoutTransceivers.begin(), timeoutTransceivers.end(), &transceiver);
-    if (it != timeoutTransceivers.cend())
+    if (it != timeoutTransceivers.end())
     {
-        swap(*it, timeoutTransceivers.back());
+        etl::swap(*it, timeoutTransceivers.back());
         timeoutTransceivers.pop_back();
     }
 }

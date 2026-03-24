@@ -2,14 +2,14 @@
 
 #pragma once
 
-#include <cstdint>
+#include "middleware/core/TransceiverBase.h"
+#include "middleware/core/TransceiverContainer.h"
+#include "middleware/core/types.h"
 
 #include <etl/utility.h>
 #include <etl/vector.h>
 
-#include "middleware/core/TransceiverBase.h"
-#include "middleware/core/TransceiverContainer.h"
-#include "middleware/core/types.h"
+#include <cstdint>
 
 namespace middleware
 {
@@ -34,37 +34,37 @@ struct DummyTransceiver final : public TransceiverBase
     using Base = TransceiverBase;
 
     /** No-op: always returns HRESULT::Ok. */
-    virtual HRESULT onNewMessageReceived(Message const&) override { return HRESULT::Ok; }
+    HRESULT onNewMessageReceived(Message const&) override { return HRESULT::Ok; }
 
     /** Returns INVALID_SERVICE_ID. */
-    virtual uint16_t getServiceId() const override { return INVALID_SERVICE_ID; }
+    uint16_t getServiceId() const override { return INVALID_SERVICE_ID; }
 
     /** Returns 0xFF. */
-    virtual uint8_t getSourceClusterId() const override { return static_cast<uint8_t>(0xFFU); }
+    uint8_t getSourceClusterId() const override { return static_cast<uint8_t>(0xFFU); }
 
     /** Returns false always. */
-    virtual bool isInitialized() const override { return false; }
+    bool isInitialized() const override { return false; }
 
     /** No-op: always returns HRESULT::Ok. */
-    virtual HRESULT sendMessage(Message&) const override { return HRESULT::Ok; }
+    HRESULT sendMessage(Message&) const override { return HRESULT::Ok; }
 
     /** \see TransceiverBase::getAddressId() */
-    virtual uint8_t getAddressId() const override { return fAddressId; }
+    uint8_t getAddressId() const override { return _addressId; }
 
     /** \see TransceiverBase::setAddressId() */
-    virtual void setAddressId(uint8_t const addressId) override { fAddressId = addressId; }
+    void setAddressId(uint8_t const addressId) override { _addressId = addressId; }
 
     /** Constructs with \p instanceId and optional \p addressId. */
     explicit DummyTransceiver(
         uint16_t const instanceId, uint8_t const addressId = INVALID_ADDRESS_ID)
-    : Base(instanceId), fAddressId(addressId)
+    : Base(instanceId), _addressId(addressId)
     {}
 
-    virtual ~DummyTransceiver() = default;
+    ~DummyTransceiver() = default;
 
 private:
     /** The address ID of the dummy transceiver. */
-    uint8_t fAddressId;
+    uint8_t _addressId;
 };
 
 } // namespace internal

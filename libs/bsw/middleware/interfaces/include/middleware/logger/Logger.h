@@ -2,9 +2,9 @@
 
 #pragma once
 
-#include <cstdint>
-
 #include <etl/span.h>
+
+#include <cstdint>
 
 namespace middleware
 {
@@ -52,7 +52,7 @@ enum class Error : uint8_t
  * \param f the format string (printf-style)
  * \param ... variadic arguments for the format string
  */
-extern void log(LogLevel const level, char const* const f, ...);
+extern void log(LogLevel level, char const* f, ...);
 
 /**
  * Generic logging function for binary data.
@@ -63,7 +63,7 @@ extern void log(LogLevel const level, char const* const f, ...);
  * \param level the log level for this data
  * \param data span containing the binary data to log
  */
-extern void log_binary(LogLevel const level, etl::span<uint8_t const> const data);
+extern void logBinary(LogLevel level, etl::span<uint8_t const> data);
 
 /**
  * Get the message ID associated with an error type.
@@ -74,7 +74,7 @@ extern void log_binary(LogLevel const level, etl::span<uint8_t const> const data
  * \param id the error type
  * \return the message ID associated with the error
  */
-extern uint32_t getMessageId(Error const id);
+extern uint32_t getMessageId(Error id);
 
 } // namespace logger
 } // namespace middleware

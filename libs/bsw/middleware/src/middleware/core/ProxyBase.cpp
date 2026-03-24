@@ -2,11 +2,6 @@
 
 #include "middleware/core/ProxyBase.h"
 
-#include <cstdint>
-
-#include <etl/algorithm.h>
-#include <etl/span.h>
-
 #include "middleware/concurrency/LockStrategies.h"
 #include "middleware/core/IClusterConnection.h"
 #include "middleware/core/InstancesDatabase.h"
@@ -15,6 +10,11 @@
 #include "middleware/core/types.h"
 #include "middleware/logger/Logger.h"
 #include "middleware/os/TaskIdProvider.h"
+
+#include <etl/algorithm.h>
+#include <etl/span.h>
+
+#include <cstdint>
 
 namespace middleware
 {
@@ -25,9 +25,9 @@ HRESULT
 ProxyBase::sendMessage(Message& msg) const
 {
     HRESULT res = HRESULT::NotRegistered;
-    if (fConnection != nullptr)
+    if (_connection != nullptr)
     {
-        res = fConnection->sendMessage(msg);
+        res = _connection->sendMessage(msg);
     }
 
     return res;
@@ -36,9 +36,9 @@ ProxyBase::sendMessage(Message& msg) const
 uint8_t ProxyBase::getSourceClusterId() const
 {
     auto clusterId = static_cast<uint8_t>(INVALID_CLUSTER_ID);
-    if (fConnection != nullptr)
+    if (_connection != nullptr)
     {
-        clusterId = fConnection->getSourceClusterId();
+        clusterId = _connection->getSourceClusterId();
     }
     return clusterId;
 }
@@ -57,7 +57,7 @@ ProxyBase::initFromInstancesDatabase(
         [instanceId](IInstanceDatabase const* const dataBase) -> bool
         {
             auto const instances = dataBase->getInstanceIdsRange();
-            const auto* instanceIdIt
+            auto const* instanceIdIt
                 = etl::lower_bound(instances.begin(), instances.end(), instanceId);
             return ((instanceIdIt != instances.end()) && ((*instanceIdIt) == instanceId));
         });
@@ -80,7 +80,7 @@ ProxyBase::initFromInstancesDatabase(
             ret = (*ccIt)->subscribe(*this, instanceId);
             if ((HRESULT::Ok == ret) || (HRESULT::InstanceAlreadyRegistered == ret))
             {
-                fConnection = (*ccIt);
+                _connection = (*ccIt);
             }
         }
     }
@@ -100,10 +100,10 @@ ProxyBase::initFromInstancesDatabase(
 
 void ProxyBase::unsubscribe(uint16_t const serviceId)
 {
-    if (fConnection != nullptr)
+    if (_connection != nullptr)
     {
-        fConnection->unsubscribe(*this, serviceId);
-        fConnection = nullptr;
+        _connection->unsubscribe(*this, serviceId);
+        _connection = nullptr;
     }
 }
 
@@ -116,23 +116,23 @@ Message ProxyBase::generateMessageHeader(uint16_t const memberId, uint16_t const
             memberId,
             requestId,
             getInstanceId(),
-            fConnection->getSourceClusterId(),
-            fConnection->getTargetClusterId(),
+            _connection->getSourceClusterId(),
+            _connection->getTargetClusterId(),
             getAddressId());
     }
     return Message::createFireAndForgetRequest(
         getServiceId(),
         memberId,
         getInstanceId(),
-        fConnection->getSourceClusterId(),
-        fConnection->getTargetClusterId());
+        _connection->getSourceClusterId(),
+        _connection->getTargetClusterId());
 }
 
-uint8_t ProxyBase::getAddressId() const { return addressId_; }
+uint8_t ProxyBase::getAddressId() const { return _addressId; }
 
-bool ProxyBase::isInitialized() const { return (fConnection != nullptr); }
+bool ProxyBase::isInitialized() const { return (_connection != nullptr); }
 
-void ProxyBase::setAddressId(uint8_t const addressId) { addressId_ = addressId; }
+void ProxyBase::setAddressId(uint8_t const addressId) { _addressId = addressId; }
 
 void ProxyBase::checkCrossThreadError(uint32_t const initId) const
 {

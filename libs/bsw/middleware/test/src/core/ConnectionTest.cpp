@@ -2,6 +2,9 @@
 
 #include <etl/optional.h>
 
+#include "InstancesDatabase.h"
+#include "Proxy.h"
+#include "Skeleton.h"
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
 #include "logger/DslLogger.h"
@@ -12,9 +15,6 @@
 #include "middleware/core/SkeletonBase.h"
 #include "middleware/core/TransceiverContainer.h"
 #include "middleware/core/types.h"
-#include "middleware_instances_database.h"
-#include "proxy.h"
-#include "skeleton.h"
 
 using testing::Exactly;
 using testing::NiceMock;
@@ -69,11 +69,11 @@ private:
     mutable etl::optional<::middleware::core::Message> messageReceived;
 };
 
-struct ProxyMockWithTimeout
-: public ProxyMock
+struct ProxyWithTimeout
+: public Proxy
 , public ::middleware::core::ITimeoutHandler
 {
-    using ProxyMock::ProxyMock;
+    using Proxy::Proxy;
 
     void updateTimeouts() override {}
 };
@@ -352,11 +352,11 @@ struct ClusterConnectionConfigurationBidirectionalTimeoutMock
 class ConnectionBaseTest : public ::testing::Test
 {
 public:
-    void SetUp() override { logger_mock_.setup(); }
+    void SetUp() override { _loggerMock.setup(); }
 
-    void TearDown() override { logger_mock_.teardown(); }
+    void TearDown() override { _loggerMock.teardown(); }
 
-    middleware::logger::test::DslLogger logger_mock_{};
+    middleware::logger::test::DslLogger _loggerMock{};
 };
 
 /* Testing final method implementations, implemented in the base classes,
@@ -366,8 +366,8 @@ public:
  */
 TEST_F(ConnectionBaseTest, ConnectionsNotImplemented)
 {
-    ProxyMock proxyInstance(1, 2, 4);
-    SkeletonMock skeletonInstance(1, 2);
+    Proxy proxyInstance(1, 2, 4);
+    Skeleton skeletonInstance(1, 2);
 
     ClusterConnectionConfigurationProxyOnlyMock confProxyOnly;
     ClusterConnectionNoTimeoutProxyOnly connectionProxyOnly(confProxyOnly);
@@ -400,7 +400,7 @@ TEST_F(ConnectionBaseTest, ConnectionsNotImplemented)
 
 TEST_F(ConnectionBaseTest, SubscribeUnsubscribeProxyOnly)
 {
-    ProxyMock proxyInstance(1, 2, 4);
+    Proxy proxyInstance(1, 2, 4);
     ClusterConnectionConfigurationProxyOnlyMock confProxyOnly;
 
     ClusterConnectionNoTimeoutProxyOnly connectionProxyOnly(confProxyOnly);
@@ -410,7 +410,7 @@ TEST_F(ConnectionBaseTest, SubscribeUnsubscribeProxyOnly)
 
 TEST_F(ConnectionBaseTest, SubscribeUnsubscribeSkeletonOnly)
 {
-    SkeletonMock skeletonInstance(1, 2);
+    Skeleton skeletonInstance(1, 2);
     ClusterConnectionConfigurationSkeletonOnlyMock confSkeletonOnly;
 
     ClusterConnectionNoTimeoutSkeletonOnly connectionSkeletonOnly(confSkeletonOnly);
@@ -421,8 +421,8 @@ TEST_F(ConnectionBaseTest, SubscribeUnsubscribeSkeletonOnly)
 
 TEST_F(ConnectionBaseTest, SubscribeUnsubscribeBidirectional)
 {
-    ProxyMock proxyInstance(1, 2, 4);
-    SkeletonMock skeletonInstance(1, 2);
+    Proxy proxyInstance(1, 2, 4);
+    Skeleton skeletonInstance(1, 2);
     ClusterConnectionConfigurationBidirectionalMock confBidirectional;
 
     ClusterConnectionNoTimeoutBidirectional connectionBidirectional(confBidirectional);
@@ -435,7 +435,7 @@ TEST_F(ConnectionBaseTest, SubscribeUnsubscribeBidirectional)
 
 TEST_F(ConnectionBaseTest, SubscribeUnsubscribeProxyOnlyWithTimeout)
 {
-    ProxyMock proxyInstance(1, 2, 4);
+    Proxy proxyInstance(1, 2, 4);
     ClusterConnectionConfigurationProxyOnlyTimeoutMock confProxyOnlyTimeout;
 
     ClusterConnectionProxyOnlyWithTimeout connectionProxyOnly(confProxyOnlyTimeout);
@@ -445,7 +445,7 @@ TEST_F(ConnectionBaseTest, SubscribeUnsubscribeProxyOnlyWithTimeout)
 
 TEST_F(ConnectionBaseTest, SubscribeUnsubscribeSkeletonOnlyWithTimeout)
 {
-    SkeletonMock skeletonInstance(1, 2);
+    Skeleton skeletonInstance(1, 2);
     ClusterConnectionConfigurationSkeletonOnlyTimeoutMock confSkeletonOnlyTimeout;
 
     ClusterConnectionSkeletonOnlyWithTimeout connectionSkeletonOnly(confSkeletonOnlyTimeout);
@@ -456,8 +456,8 @@ TEST_F(ConnectionBaseTest, SubscribeUnsubscribeSkeletonOnlyWithTimeout)
 
 TEST_F(ConnectionBaseTest, SubscribeUnsubscribeBidirectionalWithTimeout)
 {
-    ProxyMock proxyInstance(1, 2, 4);
-    SkeletonMock skeletonInstance(1, 2);
+    Proxy proxyInstance(1, 2, 4);
+    Skeleton skeletonInstance(1, 2);
     ClusterConnectionConfigurationBidirectionalTimeoutMock confBidirectionalTimeout;
 
     ClusterConnectionBidirectionalWithTimeout connectionBidirectional(confBidirectionalTimeout);
@@ -479,7 +479,7 @@ TEST_F(ConnectionBaseTest, SendMessageSameClusterNoError)
         ClusterConfigurationMockBase::sourceClusterId,
         4);
 
-    SkeletonMock skeletonInstance(1, 2);
+    Skeleton skeletonInstance(1, 2);
     ClusterConnectionConfigurationSkeletonOnlyMock confSkeletonOnly;
     ::middleware::core::ClusterConnectionTypeSelector<
         ClusterConnectionConfigurationSkeletonOnlyMock>::type actualConnection(confSkeletonOnly);
@@ -502,7 +502,7 @@ TEST_F(ConnectionBaseTest, SendMessageClusterToClusterNoError)
         ClusterConfigurationMockBase::targetClusterId,
         4);
 
-    SkeletonMock skeletonInstance(1, 2);
+    Skeleton skeletonInstance(1, 2);
     ClusterConnectionConfigurationSkeletonOnlyMock confSkeletonOnly;
     ::middleware::core::ClusterConnectionTypeSelector<
         ClusterConnectionConfigurationSkeletonOnlyMock>::type actualConnection(confSkeletonOnly);
@@ -525,7 +525,7 @@ TEST_F(ConnectionBaseTest, SendMessageClusterToClusterFailed)
         ClusterConfigurationMockBase::targetClusterId,
         4);
 
-    SkeletonMock skeletonInstance(1, 2);
+    Skeleton skeletonInstance(1, 2);
     ClusterConnectionConfigurationSkeletonOnlyMock confSkeletonOnly;
     ::middleware::core::ClusterConnectionTypeSelector<
         ClusterConnectionConfigurationSkeletonOnlyMock>::type actualConnection(confSkeletonOnly);
@@ -538,7 +538,7 @@ TEST_F(ConnectionBaseTest, SendMessageClusterToClusterFailed)
     // next invocation of write() on the cluster connection config will return false
     confSkeletonOnly.setNextWriteResult(false);
 
-    logger_mock_.EXPECT_EVENT_LOG(
+    _loggerMock.EXPECT_EVENT_LOG(
         logger::LogLevel::Error,
         logger::Error::SendMessage,
         HRESULT::QueueFull,
@@ -564,7 +564,7 @@ TEST_F(ConnectionBaseTest, SendMessageSameClusterServiceNotFound)
         ClusterConfigurationMockBase::sourceClusterId,
         4);
 
-    SkeletonMock skeletonInstance(1, 2);
+    Skeleton skeletonInstance(1, 2);
     ClusterConnectionConfigurationSkeletonOnlyMock confSkeletonOnly;
     ::middleware::core::ClusterConnectionTypeSelector<
         ClusterConnectionConfigurationSkeletonOnlyMock>::type actualConnection(confSkeletonOnly);
@@ -578,7 +578,7 @@ TEST_F(ConnectionBaseTest, SendMessageSameClusterServiceNotFound)
     // fall back to OK when sending back the error
     confSkeletonOnly.setNextHRESULT(::middleware::core::HRESULT::ServiceNotFound, 1);
 
-    logger_mock_.EXPECT_EVENT_LOG(
+    _loggerMock.EXPECT_EVENT_LOG(
         logger::LogLevel::Error,
         logger::Error::DispatchMessage,
         HRESULT::ServiceNotFound,
@@ -606,7 +606,7 @@ TEST_F(ConnectionBaseTest, SendMessageSameClusterServiceBusy)
         ClusterConfigurationMockBase::sourceClusterId,
         4);
 
-    SkeletonMock skeletonInstance(1, 2);
+    Skeleton skeletonInstance(1, 2);
     ClusterConnectionConfigurationSkeletonOnlyMock confSkeletonOnly;
     ::middleware::core::ClusterConnectionTypeSelector<
         ClusterConnectionConfigurationSkeletonOnlyMock>::type actualConnection(confSkeletonOnly);
@@ -620,7 +620,7 @@ TEST_F(ConnectionBaseTest, SendMessageSameClusterServiceBusy)
     // fall back to OK when sending back the error
     confSkeletonOnly.setNextHRESULT(::middleware::core::HRESULT::ServiceBusy, 1);
 
-    logger_mock_.EXPECT_EVENT_LOG(
+    _loggerMock.EXPECT_EVENT_LOG(
         logger::LogLevel::Error,
         logger::Error::DispatchMessage,
         HRESULT::ServiceBusy,
@@ -648,7 +648,7 @@ TEST_F(ConnectionBaseTest, SendMessageSameClusterServiceBusyFireAndForget)
         ClusterConfigurationMockBase::sourceClusterId,
         4);
 
-    SkeletonMock skeletonInstance(1, 2);
+    Skeleton skeletonInstance(1, 2);
     ClusterConnectionConfigurationSkeletonOnlyMock confSkeletonOnly;
     ::middleware::core::ClusterConnectionTypeSelector<
         ClusterConnectionConfigurationSkeletonOnlyMock>::type actualConnection(confSkeletonOnly);
@@ -676,7 +676,7 @@ TEST_F(ConnectionBaseTest, processMessageFromReceivingSide)
         ClusterConfigurationMockBase::sourceClusterId,
         4);
 
-    SkeletonMock skeletonInstance(1, 2);
+    Skeleton skeletonInstance(1, 2);
     ClusterConnectionConfigurationSkeletonOnlyMock confSkeletonOnly;
     ::middleware::core::ClusterConnectionTypeSelector<
         ClusterConnectionConfigurationSkeletonOnlyMock>::type actualConnection(confSkeletonOnly);
@@ -693,7 +693,7 @@ TEST_F(ConnectionBaseTest, processMessageFromReceivingSide)
 
 TEST_F(ConnectionBaseTest, ProxyRegistersAsTimeoutTransceiver)
 {
-    ProxyMockWithTimeout proxyInstance(1, 2);
+    ProxyWithTimeout proxyInstance(1, 2);
     ClusterConnectionConfigurationSkeletonOnlyTimeoutMock confSkeletonOnly;
     ::middleware::core::ClusterConnectionTypeSelector<
         ClusterConnectionConfigurationSkeletonOnlyTimeoutMock>::type

@@ -2,13 +2,13 @@
 
 #pragma once
 
-#include <cstdint>
-
-#include <etl/span.h>
-
 #include "IClusterConnection.h"
 #include "InstancesDatabase.h"
 #include "TransceiverBase.h"
+
+#include <etl/span.h>
+
+#include <cstdint>
 
 namespace middleware
 {
@@ -69,7 +69,7 @@ public:
     [[nodiscard]] HRESULT sendMessage(Message& msg) const override;
 
 protected:
-    constexpr ProxyBase() : TransceiverBase(), addressId_(INVALID_ADDRESS_ID) {}
+    constexpr ProxyBase() : TransceiverBase(), _addressId(INVALID_ADDRESS_ID) {}
 
     virtual ~ProxyBase() = default;
 
@@ -104,11 +104,11 @@ protected:
         etl::span<IInstanceDatabase const* const> const& dbRange);
 
     /** Pointer to the cluster connection for this proxy. */
-    IClusterConnection* fConnection{nullptr};
+    IClusterConnection* _connection{nullptr};
 
 private:
     /** The unique address ID for this proxy instance. */
-    uint8_t addressId_;
+    uint8_t _addressId;
 };
 
 } // namespace core

@@ -70,7 +70,7 @@ void log(LogLevel const level, char const* const format, ...) // NOLINT(cert-dcl
     va_end(ap);
 }
 
-void log_binary(LogLevel const level, etl::span<uint8_t const> const data)
+void logBinary(LogLevel const level, etl::span<uint8_t const> const data)
 {
     for (size_t i = 0; i < data.size(); ++i)
     {
@@ -80,7 +80,7 @@ void log_binary(LogLevel const level, etl::span<uint8_t const> const data)
 
     if (test::mock::_loggerMockPtr != nullptr)
     {
-        test::mock::_loggerMockPtr->log_binary(level, data);
+        test::mock::_loggerMockPtr->logBinary(level, data);
     }
 }
 

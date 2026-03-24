@@ -1,10 +1,13 @@
-#include <stdint.h>
+#include <cstdint>
 
 #include <etl/array.h>
 #include <etl/limits.h>
 #include <etl/optional.h>
 #include <etl/span.h>
 
+#include "InstancesDatabase.h"
+#include "Proxy.h"
+#include "Skeleton.h"
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
 #include "middleware/core/ClusterConnection.h"
@@ -14,9 +17,6 @@
 #include "middleware/core/SkeletonBase.h"
 #include "middleware/core/TransceiverContainer.h"
 #include "middleware/core/types.h"
-#include "middleware_instances_database.h"
-#include "proxy.h"
-#include "skeleton.h"
 
 using testing::Exactly;
 using testing::NiceMock;
@@ -43,7 +43,9 @@ struct MiddlewareMessageComparator
                && msgHeader.serviceInstanceId == otherHeader.serviceInstanceId
                && msgHeader.addressId == otherHeader.addressId
                && msgHeader.requestId == otherHeader.requestId
-               && msgHeader.flags == otherHeader.flags && _msg.value().isError() == other.isError()
+               && msgHeader.messageType == otherHeader.messageType
+               && msgHeader.hasExternalPayload == otherHeader.hasExternalPayload
+               && _msg.value().isError() == other.isError()
                && _msg.value().isEvent() == other.isEvent()
                && _msg.value().isRequest() == other.isRequest()
                && _msg.value().isResponse() == other.isResponse()
@@ -63,11 +65,11 @@ private:
     ::middleware::core::HRESULT _ret{::middleware::core::HRESULT::Ok};
 };
 
-struct ProxyMockStoredMessage
-: public ProxyMock
+struct ProxyStoredMessage
+: public Proxy
 , MiddlewareMessageComparator
 {
-    using ProxyMock::ProxyMock;
+    using Proxy::Proxy;
 
     ::middleware::core::HRESULT
     onNewMessageReceived(::middleware::core::Message const& msg) override
@@ -76,11 +78,11 @@ struct ProxyMockStoredMessage
     }
 };
 
-struct SkeletonMockStoredMessage
-: public SkeletonMock
+struct SkeletonStoredMessage
+: public Skeleton
 , MiddlewareMessageComparator
 {
-    using SkeletonMock::SkeletonMock;
+    using Skeleton::Skeleton;
 
     ::middleware::core::HRESULT
     onNewMessageReceived(::middleware::core::Message const& msg) override
@@ -110,19 +112,19 @@ struct ClusterConfigurationNoTimeout : public IClusterConnectionConfigurationBas
     ClusterConfigurationNoTimeout()
     {
         // setup proxies
-        (_proxyTransceivers[0]).fContainer->emplace_back(&_proxy);
+        (_proxyTransceivers[0])._container->emplace_back(&_proxy);
 
         etl::sort(
-            _proxyTransceivers[0].fContainer->begin(),
-            _proxyTransceivers[0].fContainer->end(),
+            _proxyTransceivers[0]._container->begin(),
+            _proxyTransceivers[0]._container->end(),
             meta::TransceiverContainer::TransceiverComparator());
 
         // setup skeletons
-        _skeletonTransceivers[0].fContainer->emplace_back(&_skeleton);
+        _skeletonTransceivers[0]._container->emplace_back(&_skeleton);
 
         etl::sort(
-            _skeletonTransceivers[0].fContainer->begin(),
-            _skeletonTransceivers[0].fContainer->end(),
+            _skeletonTransceivers[0]._container->begin(),
+            _skeletonTransceivers[0]._container->end(),
             meta::TransceiverContainer::TransceiverComparator());
     }
 
@@ -158,9 +160,9 @@ struct ClusterConfigurationNoTimeout : public IClusterConnectionConfigurationBas
             std::begin(_skeletonTransceivers), std::end(_skeletonTransceivers), msg);
     }
 
-    ProxyMockStoredMessage& getProxy() { return _proxy; }
+    ProxyStoredMessage& getProxy() { return _proxy; }
 
-    SkeletonMockStoredMessage& getSkeleton() { return _skeleton; }
+    SkeletonStoredMessage& getSkeleton() { return _skeleton; }
 
 private:
     etl::vector<::middleware::core::TransceiverBase*, 1U> _proxyTransceiversAlloc{};
@@ -177,11 +179,11 @@ private:
         {&_iSkeletonTransceivers, ClusterConfigurationNoTimeout::serviceId, 0U}};
 
 protected:
-    ProxyMockStoredMessage _proxy{
+    ProxyStoredMessage _proxy{
         ClusterConfigurationNoTimeout::serviceId,
         ClusterConfigurationNoTimeout::instanceId,
         ClusterConfigurationNoTimeout::addressId};
-    SkeletonMockStoredMessage _skeleton{
+    SkeletonStoredMessage _skeleton{
         ClusterConfigurationNoTimeout::serviceId, ClusterConfigurationNoTimeout::instanceId};
 };
 
@@ -301,7 +303,6 @@ public:
             memberId,
             ClusterConfigurationNoTimeout::instanceId,
             ClusterConfigurationNoTimeout::sourceClusterId);
-        msg.setTargetClusterId(ClusterConfigurationNoTimeout::targetClusterId);
 
         return msg;
     }

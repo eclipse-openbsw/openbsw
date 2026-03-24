@@ -1,10 +1,17 @@
 #include <etl/array.h>
 #include <etl/vector.h>
 
+#include "Proxy.h"
+#include "Skeleton.h"
 #include "gtest/gtest.h"
 #include "middleware/core/DatabaseManipulator.h"
-#include "proxy.h"
-#include "skeleton.h"
+
+namespace middleware
+{
+namespace core
+{
+namespace test
+{
 
 using ::middleware::core::HRESULT;
 using ::middleware::core::TransceiverBase;
@@ -17,36 +24,36 @@ public:
     void SetUp() override
     {
         // setup proxies
-        (_proxyTransceivers[0]).fContainer->emplace_back(&_proxy1);
-        (_proxyTransceivers[0]).fContainer->emplace_back(&_proxy2);
-        (_proxyTransceivers[1]).fContainer->emplace_back(&_proxy3);
+        (_proxyTransceivers[0])._container->emplace_back(&_proxy1);
+        (_proxyTransceivers[0])._container->emplace_back(&_proxy2);
+        (_proxyTransceivers[1])._container->emplace_back(&_proxy3);
 
         etl::sort(
-            _proxyTransceivers[0].fContainer->begin(),
-            _proxyTransceivers[0].fContainer->end(),
+            _proxyTransceivers[0]._container->begin(),
+            _proxyTransceivers[0]._container->end(),
             TransceiverContainer::TransceiverComparator());
         etl::sort(
-            _proxyTransceivers[1].fContainer->begin(),
-            _proxyTransceivers[1].fContainer->end(),
+            _proxyTransceivers[1]._container->begin(),
+            _proxyTransceivers[1]._container->end(),
             TransceiverContainer::TransceiverComparator());
 
         // setup skeletons
-        _skeletonTransceivers[0].fContainer->emplace_back(&_skeleton1);
+        _skeletonTransceivers[0]._container->emplace_back(&_skeleton1);
 
         etl::sort(
-            _skeletonTransceivers[1].fContainer->begin(),
-            _skeletonTransceivers[1].fContainer->end(),
+            _skeletonTransceivers[1]._container->begin(),
+            _skeletonTransceivers[1]._container->end(),
             TransceiverContainer::TransceiverComparator());
     }
 
     void TearDown() override
     {
         // cleanup proxies
-        _proxyTransceivers[0].fContainer->clear();
-        _proxyTransceivers[1].fContainer->clear();
+        _proxyTransceivers[0]._container->clear();
+        _proxyTransceivers[1]._container->clear();
         // cleanup skeletons
-        _skeletonTransceivers[0].fContainer->clear();
-        _skeletonTransceivers[1].fContainer->clear();
+        _skeletonTransceivers[0]._container->clear();
+        _skeletonTransceivers[1]._container->clear();
     }
 
 private:
@@ -61,10 +68,10 @@ private:
     etl::ivector<TransceiverBase*>& _iSkeletonTransceivers54{_skeletonTransceivers54};
 
 protected:
-    ProxyMock _proxy1{0x41, 0x01, 0x01};
-    ProxyMock _proxy2{0x41, 0x01, 0x02};
-    ProxyMock _proxy3{0x54, 0x02, 0x03};
-    SkeletonMock _skeleton1{0x41, 0x01};
+    Proxy _proxy1{0x41, 0x01, 0x01};
+    Proxy _proxy2{0x41, 0x01, 0x02};
+    Proxy _proxy3{0x54, 0x02, 0x03};
+    Skeleton _skeleton1{0x41, 0x01};
 
     etl::array<TransceiverContainer, 2U> _proxyTransceivers{
         {{&_iProxyTransceivers41, 0x41, 0U}, {&_iProxyTransceivers54, 0x54, 0U}}};
@@ -77,7 +84,7 @@ TEST_F(DbManipulatorTest, TestSubscribeNewProxy)
 {
     // ARRANGE
     uint16_t const instanceId = 0x01;
-    ProxyMock proxy(0x41, instanceId, 0x04);
+    Proxy proxy(0x41, instanceId, 0x04);
 
     // ACT
     const HRESULT res = DbManipulator::subscribe(
@@ -96,7 +103,7 @@ TEST_F(DbManipulatorTest, TestSubscribeNewSkeleton)
 {
     // ARRANGE
     uint16_t const instanceId = 0x02;
-    SkeletonMock skeleton(0x54, instanceId);
+    Skeleton skeleton(0x54, instanceId);
 
     // ACT
     const HRESULT res = DbManipulator::subscribe(
@@ -115,7 +122,7 @@ TEST_F(DbManipulatorTest, TestSubscribeProxyWithOutOfRangeServiceId)
 {
     // ARRANGE
     uint16_t const instanceId = 0x01;
-    ProxyMock proxy(0x40, instanceId, 0x01);
+    Proxy proxy(0x40, instanceId, 0x01);
 
     // ACT
     const HRESULT res = DbManipulator::subscribe(
@@ -130,7 +137,7 @@ TEST_F(DbManipulatorTest, TestSubscribeProxyWithUnknownServiceId)
 {
     // ARRANGE
     uint16_t const instanceId = 0x01;
-    ProxyMock proxy(0x40, instanceId, 0x01);
+    Proxy proxy(0x40, instanceId, 0x01);
 
     // ACT
     const HRESULT res = DbManipulator::subscribe(
@@ -149,7 +156,7 @@ TEST_F(DbManipulatorTest, TestSubscribeSkeletonWithOutOfRangeServiceId)
 {
     // ARRANGE
     uint16_t const instanceId = 0x01;
-    SkeletonMock skeleton(0x40, instanceId);
+    Skeleton skeleton(0x40, instanceId);
 
     // ACT
     const HRESULT res = DbManipulator::subscribe(
@@ -164,7 +171,7 @@ TEST_F(DbManipulatorTest, TestSubscribeSkeletonWithUnknownServiceId)
 {
     // ARRANGE
     uint16_t const instanceId = 0x01;
-    SkeletonMock skeleton(0x40, instanceId);
+    Skeleton skeleton(0x40, instanceId);
 
     // ACT
     const HRESULT res = DbManipulator::subscribe(
@@ -183,7 +190,7 @@ TEST_F(DbManipulatorTest, TestSubscribeProxyWithTransceiverAlreadyRegistered)
 {
     // ARRANGE
     uint16_t const instanceId = 0x01;
-    ProxyMock proxy(0x41, instanceId, 0x01);
+    Proxy proxy(0x41, instanceId, 0x01);
 
     // ACT
     const HRESULT resProxy = DbManipulator::subscribe(
@@ -202,7 +209,7 @@ TEST_F(DbManipulatorTest, TestSubscribeSkeletonWithTransceiverAlreadyRegistered)
 {
     // ARRANGE
     uint16_t const instanceId = 0x01;
-    SkeletonMock skeleton(0x41, instanceId);
+    Skeleton skeleton(0x41, instanceId);
 
     // ACT
     const HRESULT resSkeleton = DbManipulator::subscribe(
@@ -221,8 +228,8 @@ TEST_F(DbManipulatorTest, TestProxySubscribeWithFullContainer)
 {
     // ARRANGE
     uint16_t const instanceId = 0x01;
-    ProxyMock proxy1(0x41, instanceId, 0x04);
-    ProxyMock proxy2(0x41, instanceId, 0x05);
+    Proxy proxy1(0x41, instanceId, 0x04);
+    Proxy proxy2(0x41, instanceId, 0x05);
 
     // ACT
     const HRESULT resProxy1 = DbManipulator::subscribe(
@@ -247,7 +254,7 @@ TEST_F(DbManipulatorTest, TestSkeletonSubscribeWithFullContainer)
 {
     // ARRANGE
     uint16_t const instanceId = 0x02;
-    SkeletonMock skeleton(0x41, instanceId);
+    Skeleton skeleton(0x41, instanceId);
 
     // ACT
     const HRESULT resSkeleton = DbManipulator::subscribe(
@@ -268,33 +275,33 @@ TEST_F(DbManipulatorTest, TestProxyUnsubscribe)
     // ACT && ASSERT
 
     // container 0
-    EXPECT_EQ(_proxyTransceivers[0].fContainer->size(), 2U);
+    EXPECT_EQ(_proxyTransceivers[0]._container->size(), 2U);
 
     DbManipulator::unsubscribe(
         _proxyTransceivers.begin(), _proxyTransceivers.end(), _proxy1, _proxy1.getServiceId());
-    EXPECT_EQ(_proxyTransceivers[0].fContainer->size(), 1U);
+    EXPECT_EQ(_proxyTransceivers[0]._container->size(), 1U);
 
     DbManipulator::unsubscribe(
         _proxyTransceivers.begin(), _proxyTransceivers.end(), _proxy2, _proxy2.getServiceId());
-    EXPECT_EQ(_proxyTransceivers[0].fContainer->size(), 0U);
+    EXPECT_EQ(_proxyTransceivers[0]._container->size(), 0U);
 
     // nothing happens, unsubscribe was already done
     DbManipulator::unsubscribe(
         _proxyTransceivers.begin(), _proxyTransceivers.end(), _proxy1, _proxy1.getServiceId());
     DbManipulator::unsubscribe(
         _proxyTransceivers.begin(), _proxyTransceivers.end(), _proxy2, _proxy2.getServiceId());
-    EXPECT_EQ(_proxyTransceivers[0].fContainer->size(), 0U);
+    EXPECT_EQ(_proxyTransceivers[0]._container->size(), 0U);
 
     // container 1
-    EXPECT_EQ(_proxyTransceivers[1].fContainer->size(), 1U);
+    EXPECT_EQ(_proxyTransceivers[1]._container->size(), 1U);
     DbManipulator::unsubscribe(
         _proxyTransceivers.begin(), _proxyTransceivers.end(), _proxy3, _proxy3.getServiceId());
-    EXPECT_EQ(_proxyTransceivers[1].fContainer->size(), 0U);
+    EXPECT_EQ(_proxyTransceivers[1]._container->size(), 0U);
 
     // nothing happens, unsubscribe was already done
     DbManipulator::unsubscribe(
         _proxyTransceivers.begin(), _proxyTransceivers.end(), _proxy3, _proxy3.getServiceId());
-    EXPECT_EQ(_proxyTransceivers[1].fContainer->size(), 0U);
+    EXPECT_EQ(_proxyTransceivers[1]._container->size(), 0U);
 }
 
 TEST_F(DbManipulatorTest, TestUnknownProxyUnsubscribe)
@@ -302,18 +309,18 @@ TEST_F(DbManipulatorTest, TestUnknownProxyUnsubscribe)
     // ARRANGE
     uint16_t const instanceId = 0x01;
     uint16_t const addressId  = etl::numeric_limits<uint8_t>::max();
-    ProxyMock proxy(0xFF, instanceId, addressId);
+    Proxy proxy(0xFF, instanceId, addressId);
 
     // ACT && ASSERT
-    EXPECT_EQ(_proxyTransceivers[0].fContainer->size(), 2U);
-    EXPECT_EQ(_proxyTransceivers[1].fContainer->size(), 1U);
+    EXPECT_EQ(_proxyTransceivers[0]._container->size(), 2U);
+    EXPECT_EQ(_proxyTransceivers[1]._container->size(), 1U);
     DbManipulator::unsubscribe(
         _proxyTransceivers.begin(),
         _proxyTransceivers.end(),
         proxy,
         proxy.getServiceId()); // nothing happens
-    EXPECT_EQ(_proxyTransceivers[0].fContainer->size(), 2U);
-    EXPECT_EQ(_proxyTransceivers[1].fContainer->size(), 1U);
+    EXPECT_EQ(_proxyTransceivers[0]._container->size(), 2U);
+    EXPECT_EQ(_proxyTransceivers[1]._container->size(), 1U);
 }
 
 TEST_F(DbManipulatorTest, TestSkeletonUnsubscribe)
@@ -323,13 +330,13 @@ TEST_F(DbManipulatorTest, TestSkeletonUnsubscribe)
     // ACT && ASSERT
 
     // container 0
-    EXPECT_EQ(_skeletonTransceivers[0].fContainer->size(), 1U);
+    EXPECT_EQ(_skeletonTransceivers[0]._container->size(), 1U);
     DbManipulator::unsubscribe(
         _skeletonTransceivers.begin(),
         _skeletonTransceivers.end(),
         _skeleton1,
         _skeleton1.getServiceId());
-    EXPECT_EQ(_skeletonTransceivers[0].fContainer->size(), 0U);
+    EXPECT_EQ(_skeletonTransceivers[0]._container->size(), 0U);
 
     // nothing happens, unsubscribe was already done
     DbManipulator::unsubscribe(
@@ -344,18 +351,18 @@ TEST_F(DbManipulatorTest, TestUnknownSkeletonUnsubscribe)
     // ARRANGE
     uint16_t const service    = etl::numeric_limits<uint16_t>::max();
     uint16_t const instanceId = 0x01;
-    SkeletonMock skeleton(service, instanceId);
+    Skeleton skeleton(service, instanceId);
 
     // ACT && ASSERT
-    EXPECT_EQ(_skeletonTransceivers[0].fContainer->size(), 1U);
-    EXPECT_EQ(_skeletonTransceivers[1].fContainer->size(), 0U);
+    EXPECT_EQ(_skeletonTransceivers[0]._container->size(), 1U);
+    EXPECT_EQ(_skeletonTransceivers[1]._container->size(), 0U);
     DbManipulator::unsubscribe(
         _skeletonTransceivers.begin(),
         _skeletonTransceivers.end(),
         skeleton,
         skeleton.getServiceId()); // nothing happens
-    EXPECT_EQ(_skeletonTransceivers[0].fContainer->size(), 1U);
-    EXPECT_EQ(_skeletonTransceivers[1].fContainer->size(), 0U);
+    EXPECT_EQ(_skeletonTransceivers[0]._container->size(), 1U);
+    EXPECT_EQ(_skeletonTransceivers[1]._container->size(), 0U);
 }
 
 TEST_F(DbManipulatorTest, TestSkeletonValidSearchByServiceIdAndInstanceId)
@@ -559,3 +566,7 @@ TEST_F(DbManipulatorTest, TestRegisteredSkeletonTransceiverCount)
     EXPECT_EQ(skeletonCount2, 0U);
     EXPECT_EQ(skeletonCount3, 0U);
 }
+
+} // namespace test
+} // namespace core
+} // namespace middleware

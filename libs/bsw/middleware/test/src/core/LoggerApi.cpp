@@ -15,12 +15,12 @@ namespace test
 class LoggerApiTest : public ::testing::Test
 {
 public:
-    void SetUp() override { logger_mock_.setup(); }
+    void SetUp() override { _loggerMock.setup(); }
 
-    void TearDown() override { logger_mock_.teardown(); }
+    void TearDown() override { _loggerMock.teardown(); }
 
 protected:
-    middleware::logger::test::DslLogger logger_mock_{};
+    middleware::logger::test::DslLogger _loggerMock{};
 };
 
 TEST_F(LoggerApiTest, TestLogAllocationFailure)
@@ -33,7 +33,7 @@ TEST_F(LoggerApiTest, TestLogAllocationFailure)
         = core::Message::createRequest(0x1000U, 0x2000U, 0x3000U, 0x4000U, 1U, 2U, 3U);
 
     // ACT && ASSERT
-    logger_mock_.EXPECT_LOG(
+    _loggerMock.EXPECT_LOG(
         level,
         "e:%d r:%d SC:%d TC:%d S:%d I:%d M:%d R:%d s:%d",
         error,
@@ -45,7 +45,7 @@ TEST_F(LoggerApiTest, TestLogAllocationFailure)
         msg.getHeader().memberId,
         msg.getHeader().requestId,
         static_cast<uint32_t>(sizeof(msg)));
-    logger_mock_.EXPECT_EVENT_LOG(
+    _loggerMock.EXPECT_EVENT_LOG(
         logger::LogLevel::Error,
         error,
         res,
@@ -70,7 +70,7 @@ TEST_F(LoggerApiTest, TestLogInitFailure)
     uint8_t const sourceCluster      = etl::numeric_limits<uint8_t>::max();
 
     // ACT && ASSERT
-    logger_mock_.EXPECT_LOG(
+    _loggerMock.EXPECT_LOG(
         level,
         "e:%d r:%d SC:%d S:%d I:%d",
         error,
@@ -78,7 +78,7 @@ TEST_F(LoggerApiTest, TestLogInitFailure)
         sourceCluster,
         serviceId,
         serviceInstanceId);
-    logger_mock_.EXPECT_EVENT_LOG(level, error, res, sourceCluster, serviceId, serviceInstanceId);
+    _loggerMock.EXPECT_EVENT_LOG(level, error, res, sourceCluster, serviceId, serviceInstanceId);
     middleware::logger::logInitFailure(
         level, error, res, serviceId, serviceInstanceId, sourceCluster);
 }
@@ -93,7 +93,7 @@ TEST_F(LoggerApiTest, TestLogMessageSendingFailure)
         = core::Message::createRequest(0x1000U, 0x2000U, 0x3000U, 0x4000U, 1U, 2U, 3U);
 
     // ACT && ASSERT
-    logger_mock_.EXPECT_LOG(
+    _loggerMock.EXPECT_LOG(
         level,
         "e:%d r:%d SC:%d TC:%d S:%d I:%d M:%d R:%d",
         error,
@@ -104,7 +104,7 @@ TEST_F(LoggerApiTest, TestLogMessageSendingFailure)
         msg.getHeader().serviceInstanceId,
         msg.getHeader().memberId,
         msg.getHeader().requestId);
-    logger_mock_.EXPECT_EVENT_LOG(
+    _loggerMock.EXPECT_EVENT_LOG(
         logger::LogLevel::Error,
         error,
         res,
@@ -129,7 +129,7 @@ TEST_F(LoggerApiTest, TestLogCrossThreadViolation)
     uint32_t const currentTaskId     = etl::numeric_limits<uint32_t>::max();
 
     // ACT && ASSERT
-    logger_mock_.EXPECT_LOG(
+    _loggerMock.EXPECT_LOG(
         level,
         "e:%d SC:%d S:%d I:%d T0:%d T1:%d",
         error,
@@ -138,7 +138,7 @@ TEST_F(LoggerApiTest, TestLogCrossThreadViolation)
         serviceInstanceId,
         initId,
         currentTaskId);
-    logger_mock_.EXPECT_EVENT_LOG(
+    _loggerMock.EXPECT_EVENT_LOG(
         level, error, sourceCluster, serviceId, serviceInstanceId, initId, currentTaskId);
     middleware::logger::logCrossThreadViolation(
         level, error, sourceCluster, serviceId, serviceInstanceId, initId, currentTaskId);

@@ -2,15 +2,15 @@
 
 #include "middleware/core/LoggerApi.h"
 
-#include <cstddef>
-#include <cstdint>
+#include "middleware/core/Message.h"
+#include "middleware/core/types.h"
+#include "middleware/logger/Logger.h"
 
 #include <etl/array.h>
 #include <etl/byte_stream.h>
 
-#include "middleware/core/Message.h"
-#include "middleware/core/types.h"
-#include "middleware/logger/Logger.h"
+#include <cstddef>
+#include <cstdint>
 
 namespace middleware
 {
@@ -38,7 +38,7 @@ void serialize(etl::byte_stream_writer& writer, core::Message const& value)
 {
     // NOLINTNEXTLINE(cppcoreguidelines-avoid-magic-numbers)
     static_assert(
-        count_bytes<core::Message>::VALUE == 10U, "Message log size in bytes exceeds the payload");
+        CountBytes<core::Message>::VALUE == 10U, "Message log size in bytes exceeds the payload");
 
     writer.write_unchecked(value.getHeader().srcClusterId);
     writer.write_unchecked(value.getHeader().tgtClusterId);
@@ -59,7 +59,7 @@ template<uint32_t MAX_SIZE, typename... Values>
 void serialize(etl::byte_stream_writer& writer, Values... values)
 {
     static_assert(
-        count_bytes<Values...>::VALUE == MAX_SIZE, "Total size in bytes exceeds the payload");
+        CountBytes<Values...>::VALUE == MAX_SIZE, "Total size in bytes exceeds the payload");
 
     serialize(writer, values...);
 }
@@ -88,8 +88,8 @@ void logAllocationFailure(
     middleware::logger::log(
         level,
         kformat,
-        error,
-        res,
+        static_cast<unsigned int>(error),
+        static_cast<unsigned int>(res),
         msg.getHeader().srcClusterId,
         msg.getHeader().tgtClusterId,
         msg.getHeader().serviceId,
@@ -97,7 +97,7 @@ void logAllocationFailure(
         msg.getHeader().memberId,
         msg.getHeader().requestId,
         size);
-    middleware::logger::log_binary(level, temp);
+    middleware::logger::logBinary(level, temp);
 }
 
 void logInitFailure(
@@ -124,8 +124,14 @@ void logInitFailure(
 
     // NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg)
     middleware::logger::log(
-        level, kformat, error, res, sourceCluster, serviceId, serviceInstanceId);
-    middleware::logger::log_binary(level, temp);
+        level,
+        kformat,
+        static_cast<unsigned int>(error),
+        static_cast<unsigned int>(res),
+        sourceCluster,
+        serviceId,
+        serviceInstanceId);
+    middleware::logger::logBinary(level, temp);
 }
 
 void logMessageSendingFailure(
@@ -143,15 +149,15 @@ void logMessageSendingFailure(
     middleware::logger::log(
         level,
         kformat,
-        error,
-        res,
+        static_cast<unsigned int>(error),
+        static_cast<unsigned int>(res),
         msg.getHeader().srcClusterId,
         msg.getHeader().tgtClusterId,
         msg.getHeader().serviceId,
         msg.getHeader().serviceInstanceId,
         msg.getHeader().memberId,
         msg.getHeader().requestId);
-    middleware::logger::log_binary(level, temp);
+    middleware::logger::logBinary(level, temp);
 }
 
 void logCrossThreadViolation(
@@ -180,8 +186,15 @@ void logCrossThreadViolation(
 
     // NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg)
     middleware::logger::log(
-        level, kformat, error, sourceCluster, serviceId, serviceInstanceId, initId, currentTaskId);
-    middleware::logger::log_binary(level, temp);
+        level,
+        kformat,
+        static_cast<unsigned int>(error),
+        sourceCluster,
+        serviceId,
+        serviceInstanceId,
+        initId,
+        currentTaskId);
+    middleware::logger::logBinary(level, temp);
 }
 
 } // namespace logger

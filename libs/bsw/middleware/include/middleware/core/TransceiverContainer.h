@@ -2,13 +2,13 @@
 
 #pragma once
 
-#include <cstdint>
+#include "middleware/core/TransceiverBase.h"
+#include "middleware/core/types.h"
 
 #include <etl/utility.h>
 #include <etl/vector.h>
 
-#include "middleware/core/TransceiverBase.h"
-#include "middleware/core/types.h"
+#include <cstdint>
 
 namespace middleware
 {
@@ -42,8 +42,7 @@ struct TransceiverContainer
          * \param rhs const pointer to the right-hand transceiver
          * \return true if lhs < rhs, false otherwise
          */
-        inline bool
-        operator()(TransceiverBase const* const lhs, TransceiverBase const* const rhs) const
+        bool operator()(TransceiverBase const* const lhs, TransceiverBase const* const rhs) const
         {
             return (
                 etl::make_pair(lhs->getInstanceId(), lhs->getAddressId())
@@ -68,8 +67,7 @@ struct TransceiverContainer
          * \param rhs const pointer to the right-hand transceiver
          * \return true if lhs instance ID < rhs instance ID, false otherwise
          */
-        inline bool
-        operator()(TransceiverBase const* const lhs, TransceiverBase const* const rhs) const
+        bool operator()(TransceiverBase const* const lhs, TransceiverBase const* const rhs) const
         {
             return (lhs->getInstanceId() < rhs->getInstanceId());
         }
@@ -80,7 +78,7 @@ struct TransceiverContainer
 
     constexpr TransceiverContainer(
         etl::ivector<TransceiverBase*>* container, uint16_t serviceid, uint16_t actualAddress)
-    : fContainer(container), fServiceid(serviceid), fActualAddress(actualAddress)
+    : _container(container), _serviceId(serviceid), _actualAddress(actualAddress)
     {}
 
     TransceiverContainer(TransceiverContainer const&)            = delete;
@@ -89,11 +87,11 @@ struct TransceiverContainer
     TransceiverContainer& operator=(TransceiverContainer&&)      = delete;
 
     /** Pointer to the vector holding transceiver pointers. */
-    etl::ivector<TransceiverBase*>* const fContainer{};
+    etl::ivector<TransceiverBase*>* const _container{};
     /** The service ID associated with this container. */
-    uint16_t const fServiceid;
+    uint16_t const _serviceId;
     /** The current/next available address ID for proxies. */
-    uint16_t fActualAddress;
+    uint16_t _actualAddress;
 };
 
 } // namespace meta

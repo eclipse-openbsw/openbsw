@@ -2,16 +2,16 @@
 
 #include "middleware/core/ClusterConnectionBase.h"
 
-#include <cstddef>
-#include <cstdio>
-
 #include "middleware/core/IClusterConnectionConfigurationBase.h"
 #include "middleware/core/ITimeoutHandler.h"
 #include "middleware/core/LoggerApi.h"
 #include "middleware/core/Message.h"
-// #include "middleware/core/MessageAllocator.h"
+#include "middleware/core/MessagePayloadBuilder.h"
 #include "middleware/core/types.h"
 #include "middleware/logger/Logger.h"
+
+#include <cstddef>
+#include <cstdio>
 
 namespace middleware
 {
@@ -19,13 +19,13 @@ namespace core
 {
 
 ClusterConnectionBase::ClusterConnectionBase(IClusterConnectionConfigurationBase& configuration)
-: fConfiguration(configuration)
+: _configuration(configuration)
 {}
 
 void ClusterConnectionBase::processMessage(Message const& msg) const
 {
     static_cast<void>(dispatchMessage(msg));
-    // MessageAllocator::deallocate(msg);
+    MessagePayloadBuilder::deallocate(msg);
 }
 
 void ClusterConnectionBase::respondWithError(ErrorState const error, Message const& msg) const
@@ -39,9 +39,9 @@ void ClusterConnectionBase::respondWithError(ErrorState const error, Message con
             header.memberId,
             header.requestId,
             header.serviceInstanceId,
-            msg.getHeader().tgtClusterId,
-            msg.getHeader().srcClusterId,
-            msg.getHeader().addressId,
+            header.tgtClusterId,
+            header.srcClusterId,
+            header.addressId,
             error);
         static_cast<void>(sendMessage(errorResponse));
     }
@@ -53,11 +53,11 @@ HRESULT ClusterConnectionBase::sendMessage(Message const& msg) const
     if ((msg.getHeader().srcClusterId == msg.getHeader().tgtClusterId))
     {
         res = dispatchMessage(msg);
-        // MessageAllocator::deallocate(msg);
+        MessagePayloadBuilder::deallocate(msg);
     }
     else
     {
-        if (fConfiguration.write(msg))
+        if (_configuration.write(msg))
         {
             res = HRESULT::Ok;
         }
@@ -73,7 +73,7 @@ HRESULT ClusterConnectionBase::sendMessage(Message const& msg) const
 
 HRESULT ClusterConnectionBase::dispatchMessage(Message const& msg) const
 {
-    auto const res = fConfiguration.dispatchMessage(msg);
+    auto const res = _configuration.dispatchMessage(msg);
     if (HRESULT::Ok != res)
     {
         if (HRESULT::ServiceBusy == res)

@@ -2,19 +2,19 @@
 
 #include "middleware/core/DatabaseManipulator.h"
 
-#include <cstddef>
-#include <cstdint>
-
-#include <etl/algorithm.h>
-#include <etl/utility.h>
-#include <etl/vector.h>
-
 #include "middleware/concurrency/LockStrategies.h"
 #include "middleware/core/ProxyBase.h"
 #include "middleware/core/SkeletonBase.h"
 #include "middleware/core/TransceiverBase.h"
 #include "middleware/core/TransceiverContainer.h"
 #include "middleware/core/types.h"
+
+#include <etl/algorithm.h>
+#include <etl/utility.h>
+#include <etl/vector.h>
+
+#include <cstddef>
+#include <cstdint>
 
 namespace middleware
 {
@@ -42,7 +42,7 @@ DbManipulator::subscribe(
         auto* containerIt    = getTransceiversByServiceId(start, end, serviceId);
         if (containerIt != end)
         {
-            auto& container = *containerIt->fContainer;
+            auto& container = *containerIt->_container;
             auto* it        = DbManipulator::findTransceiver(&proxy, container);
             if (it != container.end())
             {
@@ -74,16 +74,16 @@ DbManipulator::subscribe(
                             range.first,
                             range.second,
                             [&containerIt](TransceiverBase const* const itrx)
-                            { return (itrx->getAddressId() == containerIt->fActualAddress); });
+                            { return (itrx->getAddressId() == containerIt->_actualAddress); });
                         if (it == range.second)
                         {
                             addressNotFound = false;
-                            proxy.setAddressId(containerIt->fActualAddress);
-                            containerIt->fActualAddress++;
+                            proxy.setAddressId(containerIt->_actualAddress);
+                            containerIt->_actualAddress++;
                         }
                         else
                         {
-                            ++containerIt->fActualAddress;
+                            ++containerIt->_actualAddress;
                         }
                     }
                     proxy.setInstanceId(instanceId);
@@ -113,7 +113,7 @@ void DbManipulator::unsubscribe(
     auto* containerIt = getTransceiversByServiceId(start, end, serviceId);
     if (containerIt != end)
     {
-        auto& container  = *containerIt->fContainer;
+        auto& container  = *containerIt->_container;
         auto const range = etl::equal_range(
             container.cbegin(),
             container.cend(),
@@ -151,7 +151,7 @@ DbManipulator::subscribe(
         auto* containerIt    = getTransceiversByServiceId(start, end, serviceId);
         if (containerIt != end)
         {
-            auto& container = *containerIt->fContainer;
+            auto& container = *containerIt->_container;
             auto* it        = DbManipulator::findTransceiver(&skeleton, container);
             if (it != container.end())
             {
@@ -223,8 +223,8 @@ TransceiverContainer const* DbManipulator::getTransceiversByServiceId(
         end,
         TransceiverContainer{nullptr, serviceId, 0U},
         [](TransceiverContainer const& lhs, TransceiverContainer const& rhs) -> bool
-        { return lhs.fServiceid < rhs.fServiceid; });
-    if ((it != end) && (it->fServiceid == serviceId))
+        { return lhs._serviceId < rhs._serviceId; });
+    if ((it != end) && (it->_serviceId == serviceId))
     {
         return it;
     }
@@ -246,13 +246,13 @@ DbManipulator::getTransceiversByServiceIdAndServiceInstanceId(
     {
         internal::DummyTransceiver const dummy(instanceId);
         return etl::equal_range(
-            transceiversById->fContainer->cbegin(),
-            transceiversById->fContainer->cend(),
+            transceiversById->_container->cbegin(),
+            transceiversById->_container->cend(),
             &dummy,
             TransceiverContainer::TransceiverComparatorNoAddressId());
     }
 
-    return etl::make_pair(start->fContainer->cbegin(), start->fContainer->cbegin());
+    return etl::make_pair(start->_container->cbegin(), start->_container->cbegin());
 }
 
 TransceiverBase* DbManipulator::getSkeletonByServiceIdAndServiceInstanceId(
@@ -266,8 +266,8 @@ TransceiverBase* DbManipulator::getSkeletonByServiceIdAndServiceInstanceId(
     {
         internal::DummyTransceiver const dummy(instanceId);
         auto const range = etl::equal_range(
-            transceiversById->fContainer->cbegin(),
-            transceiversById->fContainer->cend(),
+            transceiversById->_container->cbegin(),
+            transceiversById->_container->cend(),
             &dummy,
             TransceiverContainer::TransceiverComparator());
         // there can be only a single skeleton with the same instanceId
@@ -321,11 +321,11 @@ TransceiverBase* DbManipulator::getTransceiver(
     {
         internal::DummyTransceiver const dummy(instanceId, addressId);
         auto const* it = etl::lower_bound(
-            containerIt->fContainer->cbegin(),
-            containerIt->fContainer->cend(),
+            containerIt->_container->cbegin(),
+            containerIt->_container->cend(),
             &dummy,
             TransceiverContainer::TransceiverComparator());
-        if ((it != containerIt->fContainer->cend())
+        if ((it != containerIt->_container->cend())
             && (!TransceiverContainer::TransceiverComparator()(&dummy, *it)))
         {
             return *it;
@@ -342,7 +342,7 @@ size_t DbManipulator::registeredTransceiversCount(
     auto const* containerIt = getTransceiversByServiceId(start, end, serviceId);
     if (containerIt != end)
     {
-        return containerIt->fContainer->size();
+        return containerIt->_container->size();
     }
     return 0U;
 }

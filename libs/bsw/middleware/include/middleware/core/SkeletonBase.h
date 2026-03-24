@@ -2,14 +2,14 @@
 
 #pragma once
 
-#include <cstdint>
-
-#include <etl/span.h>
-
 #include "middleware/core/IClusterConnection.h"
 #include "middleware/core/InstancesDatabase.h"
 #include "middleware/core/TransceiverBase.h"
 #include "middleware/core/types.h"
+
+#include <etl/span.h>
+
+#include <cstdint>
 
 namespace middleware
 {
@@ -83,7 +83,7 @@ protected:
         uint16_t instanceId, etl::span<IInstanceDatabase const* const> const& dbRange);
 
     /** Span of cluster connections for this skeleton. */
-    etl::span<IClusterConnection* const> connections_;
+    etl::span<IClusterConnection* const> _connections;
 
 private:
     /** Returns INVALID_ADDRESS_ID (skeletons do not use address IDs). */

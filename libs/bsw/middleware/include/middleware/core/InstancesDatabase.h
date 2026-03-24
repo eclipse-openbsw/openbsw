@@ -2,10 +2,10 @@
 
 #pragma once
 
-#include <etl/span.h>
-
 #include "IClusterConnection.h"
 #include "middleware/core/types.h"
+
+#include <etl/span.h>
 
 namespace middleware
 {
@@ -32,6 +32,9 @@ struct IInstanceDatabase
 
     IInstanceDatabase& operator=(IInstanceDatabase const&) = delete;
     IInstanceDatabase& operator=(IInstanceDatabase&&)      = delete;
+
+protected:
+    ~IInstanceDatabase() = default;
 };
 
 } // namespace core

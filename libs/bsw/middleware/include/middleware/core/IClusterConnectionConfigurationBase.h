@@ -2,12 +2,12 @@
 
 #pragma once
 
-#include <etl/vector.h>
-
 #include "middleware/core/ITimeoutHandler.h"
 #include "middleware/core/Message.h"
 #include "middleware/core/TransceiverBase.h"
 #include "middleware/core/types.h"
+
+#include <etl/vector.h>
 
 namespace middleware
 {

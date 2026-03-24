@@ -2,11 +2,11 @@
 
 #pragma once
 
-#include <etl/type_traits.h>
-
 #include "middleware/core/ClusterConnectionBase.h"
 #include "middleware/core/IClusterConnectionConfigurationBase.h"
 #include "middleware/core/Message.h"
+
+#include <etl/type_traits.h>
 
 namespace middleware
 {

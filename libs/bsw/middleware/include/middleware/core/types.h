@@ -5,6 +5,7 @@
 #include <etl/limits.h>
 #include <etl/platform.h>
 
+#include <cmath>
 #include <cstdint>
 
 namespace middleware
@@ -65,6 +66,24 @@ enum class HRESULT : uint8_t
     DebouncedValueNotSent                       = 0xE3U,
     TimingValueNotSent                          = 0xE2U,
     Ok                                          = 0x00U
+};
+
+/**
+ * Functor for floating-point equality comparison using absolute tolerance.
+ * Compares two floating-point values and returns true if their absolute
+ * difference is within the smallest positive normalized value for the type.
+ */
+struct AbsoluteToleranceEqual
+{
+    constexpr bool operator()(double const x, double const y) const
+    {
+        return std::fabs(x - y) <= etl::numeric_limits<double>::min();
+    }
+
+    constexpr bool operator()(float const x, float const y) const
+    {
+        return std::fabs(x - y) <= etl::numeric_limits<float>::min();
+    }
 };
 
 } // namespace core

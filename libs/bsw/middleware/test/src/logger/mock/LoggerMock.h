@@ -22,7 +22,7 @@ public:
     ~LoggerMock();
 
     MOCK_METHOD(void, log, (LogLevel const, char const* const, std::vector<uint32_t> const&));
-    MOCK_METHOD(void, log_binary, (LogLevel const, etl::span<uint8_t const> const));
+    MOCK_METHOD(void, logBinary, (LogLevel const, etl::span<uint8_t const> const));
     MOCK_METHOD(uint32_t, getMessageId, (Error const));
 };
 

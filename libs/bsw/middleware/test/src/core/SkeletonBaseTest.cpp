@@ -1,7 +1,8 @@
-#include <stdint.h>
+#include <cstdint>
 
 #include <etl/span.h>
 
+#include "InstancesDatabase.h"
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
 #include "logger/DslLogger.h"
@@ -9,7 +10,6 @@
 #include "middleware/core/Message.h"
 #include "middleware/core/SkeletonBase.h"
 #include "middleware/core/types.h"
-#include "middleware_instances_database.h"
 
 using testing::Exactly;
 using testing::NiceMock;
@@ -50,12 +50,12 @@ public:
         return SkeletonBase::checkCrossThreadError(initId);
     }
 
-    uint16_t getServiceId() const override { return serviceId_; }
+    uint16_t getServiceId() const override { return _serviceId; }
 
     HRESULT onNewMessageReceived(Message const&) override { return HRESULT::NotImplemented; }
 
 private:
-    uint16_t serviceId_{0x10U};
+    uint16_t _serviceId{0x10U};
 };
 
 class SkeletonBaseTest : public ::testing::Test
@@ -63,21 +63,21 @@ class SkeletonBaseTest : public ::testing::Test
 public:
     void SetUp() override
     {
-        logger_mock_.setup();
+        _loggerMock.setup();
 
-        const HRESULT res = skeleton_.init(kValidinstanceid);
+        const HRESULT res = _skeleton.init(kValidinstanceid);
         EXPECT_EQ(res, HRESULT::Ok);
-        EXPECT_TRUE(skeleton_.isInitialized());
+        EXPECT_TRUE(_skeleton.isInitialized());
     }
 
-    void TearDown() override { logger_mock_.teardown(); }
+    void TearDown() override { _loggerMock.teardown(); }
 
 protected:
     uint16_t const kValidinstanceid{1U};
     uint16_t const kInvalidinstanceid{100U};
 
-    Skeleton skeleton_;
-    middleware::logger::test::DslLogger logger_mock_{};
+    Skeleton _skeleton;
+    middleware::logger::test::DslLogger _loggerMock{};
 };
 
 using SkeletonBaseDeathTest = SkeletonBaseTest;
@@ -96,7 +96,7 @@ TEST_F(SkeletonBaseTest, TestInitFromDatabase)
 {
     // ARRANGE
     Skeleton skeleton;
-    logger_mock_.EXPECT_NO_LOGGING();
+    _loggerMock.EXPECT_NO_LOGGING();
 
     // ACT & ASSERT
     HRESULT res = skeleton.init(kValidinstanceid);
@@ -113,7 +113,7 @@ TEST_F(SkeletonBaseTest, TestInitFromDatabaseWithInvalidInstanceId)
     // ARRANGE
     Skeleton skeleton;
 
-    logger_mock_.EXPECT_EVENT_LOG(
+    _loggerMock.EXPECT_EVENT_LOG(
         logger::LogLevel::Critical,
         logger::Error::SkeletonInitialization,
         HRESULT::InstanceNotFound,
@@ -133,7 +133,7 @@ TEST_F(SkeletonBaseTest, TestInitWithEmptyDatabase)
     // ARRANGE
     Skeleton skeleton;
 
-    logger_mock_.EXPECT_EVENT_LOG(
+    _loggerMock.EXPECT_EVENT_LOG(
         logger::LogLevel::Critical,
         logger::Error::SkeletonInitialization,
         HRESULT::NoClientsAvailable,
@@ -153,7 +153,7 @@ TEST_F(SkeletonBaseTest, TestInitFromWrongDatabase)
     // ARRANGE
     Skeleton skeleton;
 
-    logger_mock_.EXPECT_EVENT_LOG(
+    _loggerMock.EXPECT_EVENT_LOG(
         logger::LogLevel::Critical,
         logger::Error::SkeletonInitialization,
         HRESULT::TransceiverInitializationFailed,
@@ -180,18 +180,18 @@ TEST_F(SkeletonBaseTest, TestSendMessage)
     // ARRANGE
     auto const tgtClusterId = static_cast<uint8_t>(2U);
     Message validMsg        = Message::createResponse(
-        skeleton_.getServiceId(),
+        _skeleton.getServiceId(),
         0x8001,
         INVALID_REQUEST_ID,
-        skeleton_.getInstanceId(),
-        skeleton_.getSourceClusterId(),
+        _skeleton.getInstanceId(),
+        _skeleton.getSourceClusterId(),
         tgtClusterId,
         INVALID_ADDRESS_ID);
 
-    logger_mock_.EXPECT_NO_LOGGING();
+    _loggerMock.EXPECT_NO_LOGGING();
 
     // ACT & ASSERT
-    const HRESULT res = skeleton_.sendMessage(validMsg);
+    const HRESULT res = _skeleton.sendMessage(validMsg);
     EXPECT_EQ(res, HRESULT::Ok);
 }
 
@@ -200,15 +200,15 @@ TEST_F(SkeletonBaseTest, TestSendInvalidMessage)
     // ARRANGE
     const HRESULT expectedResult = HRESULT::ClusterIdNotFoundOrTransceiverNotRegistered;
     Message invalidMsg           = Message::createResponse(
-        skeleton_.getServiceId(),
+        _skeleton.getServiceId(),
         0x8001,
         INVALID_REQUEST_ID,
-        skeleton_.getInstanceId(),
-        skeleton_.getSourceClusterId(),
-        skeleton_.getSourceClusterId(),
+        _skeleton.getInstanceId(),
+        _skeleton.getSourceClusterId(),
+        _skeleton.getSourceClusterId(),
         INVALID_ADDRESS_ID);
 
-    logger_mock_.EXPECT_EVENT_LOG(
+    _loggerMock.EXPECT_EVENT_LOG(
         logger::LogLevel::Error,
         logger::Error::SendMessage,
         expectedResult,
@@ -220,7 +220,7 @@ TEST_F(SkeletonBaseTest, TestSendInvalidMessage)
         invalidMsg.getHeader().requestId);
 
     // ACT & ASSERT
-    const HRESULT res = skeleton_.sendMessage(invalidMsg);
+    const HRESULT res = _skeleton.sendMessage(invalidMsg);
     EXPECT_EQ(res, expectedResult);
 }
 
@@ -231,15 +231,15 @@ TEST_F(SkeletonBaseTest, TestSendMessageFromUnknownSkeleton)
     Skeleton skeleton;
     uint8_t const tgtClusterId = static_cast<uint8_t>(2U);
     Message validMsg           = Message::createResponse(
-        skeleton_.getServiceId(),
+        _skeleton.getServiceId(),
         0x8001,
         INVALID_REQUEST_ID,
-        skeleton_.getInstanceId(),
-        skeleton_.getSourceClusterId(),
+        _skeleton.getInstanceId(),
+        _skeleton.getSourceClusterId(),
         tgtClusterId,
         INVALID_ADDRESS_ID);
 
-    logger_mock_.EXPECT_EVENT_LOG(
+    _loggerMock.EXPECT_EVENT_LOG(
         logger::LogLevel::Error,
         logger::Error::SendMessage,
         expectedResult,
@@ -268,7 +268,7 @@ TEST_F(SkeletonBaseTest, TestGetSourceClusterId)
     // ARRANGE
 
     // ACT
-    uint8_t const clusterId = skeleton_.getSourceClusterId();
+    uint8_t const clusterId = _skeleton.getSourceClusterId();
 
     // ASSERT
     EXPECT_EQ(clusterId, static_cast<uint8_t>(1U));
@@ -298,10 +298,10 @@ TEST_F(SkeletonBaseDeathTest, TestCheckCrossThreadError)
 {
     // ARRANGE
     uint32_t const goodProcess = 0U;
-    logger_mock_.EXPECT_NO_LOGGING();
+    _loggerMock.EXPECT_NO_LOGGING();
 
     // ACT & ASSERT
-    skeleton_.checkCrossThreadError(goodProcess);
+    _skeleton.checkCrossThreadError(goodProcess);
 }
 
 TEST_F(SkeletonBaseDeathTest, TestCheckCrossThreadErrorWithNotInitSkeleton)
@@ -309,7 +309,7 @@ TEST_F(SkeletonBaseDeathTest, TestCheckCrossThreadErrorWithNotInitSkeleton)
     // ARRANGE
     Skeleton skeleton;
     uint32_t const goodProcess = 0U;
-    logger_mock_.EXPECT_NO_LOGGING();
+    _loggerMock.EXPECT_NO_LOGGING();
 
     // ACT & ASSERT
     skeleton.checkCrossThreadError(goodProcess);
@@ -322,15 +322,15 @@ TEST_F(SkeletonBaseDeathTest, TestCheckCrossThreadErrorAssert)
 
     // ACT & ASSERT
     EXPECT_ANY_THROW({
-        logger_mock_.EXPECT_EVENT_LOG(
+        _loggerMock.EXPECT_EVENT_LOG(
             logger::LogLevel::Critical,
             logger::Error::SkeletonCrossThreadViolation,
-            skeleton_.getSourceClusterId(),
-            skeleton_.getServiceId(),
-            skeleton_.getInstanceId(),
+            _skeleton.getSourceClusterId(),
+            _skeleton.getServiceId(),
+            _skeleton.getInstanceId(),
             wrongProcess,
             0U);
-        skeleton_.checkCrossThreadError(wrongProcess);
+        _skeleton.checkCrossThreadError(wrongProcess);
     });
 }
 
@@ -344,7 +344,7 @@ TEST_F(SkeletonBaseTest, TestGetClusterConnections)
 {
     // ARRANGE
     // ACT & ASSERT
-    EXPECT_FALSE(skeleton_.getClusterConnections().empty());
+    EXPECT_FALSE(_skeleton.getClusterConnections().empty());
 }
 
 TEST_F(SkeletonBaseTest, TestGetClusterConnectionsFromNotInitSkeleton)
