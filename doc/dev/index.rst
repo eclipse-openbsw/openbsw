@@ -5,7 +5,7 @@ This project provides a SDK to build professional, high quality embedded softwar
 This is a software stack specifically designed and developed for automotive purpose.
 
 This repository describes the complete environment required for building and testing the target,
-including support for both POSIX and the S32K148EVB platform. It provides the service layer,
+including support for POSIX, S32K148EVB and STM32 platforms. It provides the service layer,
 driver code and configuration files, along with detailed user documentation.
 
 If you are new to this, take a look at :ref:`learning_overview`.
@@ -150,6 +150,7 @@ Eclipse OpenBSW is a trademark of the Eclipse Foundation.
 
     platforms/posix/index
     platforms/s32k148evb/index
+    platforms/stm32/index
 
 .. toctree::
     :maxdepth: 1
@@ -167,6 +168,7 @@ Eclipse OpenBSW is a trademark of the Eclipse Foundation.
     modules/common
     modules/posix
     modules/s32k1xx
+    modules/stm32
     modules/executables
     modules/mocks
 
