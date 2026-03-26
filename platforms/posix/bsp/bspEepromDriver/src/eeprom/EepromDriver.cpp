@@ -14,6 +14,13 @@
 namespace eeprom
 {
 
+namespace
+{
+
+constexpr mode_t EEPROM_FILE_MODE = S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP;
+
+} // namespace
+
 EepromDriver::EepromDriver() : eepromFd(-1)
 {
     bool fileExisted = false;
@@ -29,13 +36,14 @@ EepromDriver::EepromDriver() : eepromFd(-1)
     else
     {
         // If opening fails, try creating it
+        // Keep the EEPROM file writable only by owner and group.
         // POSIX open uses an optional mode argument.
         // NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg)
-        eepromFd = open(eepromFilePath.c_str(), O_RDWR | O_CREAT, 0666);
+        eepromFd = open(eepromFilePath.c_str(), O_RDWR | O_CREAT, EEPROM_FILE_MODE);
 
         if (eepromFd != -1)
         {
-            chmod(eepromFilePath.c_str(), 0666);
+            (void)chmod(eepromFilePath.c_str(), EEPROM_FILE_MODE);
         }
     }
 

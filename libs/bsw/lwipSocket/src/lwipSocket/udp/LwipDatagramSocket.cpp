@@ -213,17 +213,17 @@ void LwipDatagramSocket::udpReceiveListener(
     ip_addr_t const* const src_ip,
     uint16_t const src_port)
 {
-    // NOLINTBEGIN(cppcoreguidelines-pro-type-vararg): Logger API is variadic by design.
     if (arg == nullptr)
     {
+        // NOLINTBEGIN(cppcoreguidelines-pro-type-vararg): Logger API is variadic by design.
         logger::Logger::error(
             logger::UDP, "LwipDatagramSocket::udpReceiveListener(): arg is NULL!");
+        // NOLINTEND(cppcoreguidelines-pro-type-vararg)
         return;
     }
 
     LwipDatagramSocket* const pSocket = static_cast<LwipDatagramSocket*>(arg);
     if (pSocket->_dataListener != nullptr)
-    // NOLINTEND(cppcoreguidelines-pro-type-vararg)
     {
         pbuf_ref(p);
         if (pSocket->fpPBufHead != nullptr)
