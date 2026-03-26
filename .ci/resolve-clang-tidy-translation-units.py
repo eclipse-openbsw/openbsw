@@ -13,7 +13,8 @@ Inputs:
 - --output-file: Destination file for resolved translation units.
 
 Behavior:
-- Changed source files (.c/.cc/.cpp) are kept directly.
+- Changed source files (.c/.cc/.cpp) are kept only when their object targets
+    are present in the built Ninja dependency graph.
 - Changed headers (.h/.hh/.hpp/.hxx) are mapped to translation units by parsing
     `ninja -t deps` output and joining dependency targets with compile_commands
     output mappings.
@@ -207,7 +208,12 @@ def resolve_translation_units(
     deps_by_target: dict[str, set[Path]],
 ) -> set[Path]:
     """Resolve final source files by expanding changed headers to owning TUs."""
-    resolved_sources = set(changed_sources)
+    built_sources = {
+        source
+        for target, source in output_to_source.items()
+        if target in deps_by_target
+    }
+    resolved_sources = changed_sources.intersection(built_sources)
     if not changed_headers:
         return resolved_sources
 
@@ -249,7 +255,7 @@ def main(argv: list[str] | None = None) -> int:
 
     try:
         output_to_source = build_output_to_source_map(args.build_directory, repo_root)
-        deps_by_target = parse_ninja_deps(args.build_directory) if changed_headers else {}
+        deps_by_target = parse_ninja_deps(args.build_directory)
     except RuntimeError as exc:
         print(exc, file=sys.stderr)
         return 1

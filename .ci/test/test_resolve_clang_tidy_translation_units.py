@@ -67,10 +67,12 @@ class TestResolveClangTidyTranslationUnits(unittest.TestCase):
         changed_header = Path("/repo/include/common.hpp")
 
         output_to_source = {
+            "obj/direct.o": Path("/repo/src/direct.cpp"),
             "obj/a.o": Path("/repo/src/a.cpp"),
             "obj/b.o": Path("/repo/src/b.cpp"),
         }
         deps_by_target = {
+            "obj/direct.o": {Path("/repo/src/direct.cpp")},
             "obj/a.o": {changed_header},
             "obj/b.o": {Path("/repo/include/unrelated.hpp")},
         }
@@ -86,6 +88,16 @@ class TestResolveClangTidyTranslationUnits(unittest.TestCase):
             resolved,
             {Path("/repo/src/direct.cpp"), Path("/repo/src/a.cpp")},
         )
+
+    def test_resolve_translation_units_drops_unbuilt_changed_sources(self):
+        resolved = self.module.resolve_translation_units(
+            {Path("/repo/src/direct.cpp")},
+            set(),
+            {"obj/a.o": Path("/repo/src/a.cpp")},
+            {"obj/a.o": {Path("/repo/src/a.cpp")}},
+        )
+
+        self.assertEqual(resolved, set())
 
     def test_parse_ninja_deps_parses_targets_and_dependencies(self):
         with tempfile.TemporaryDirectory() as tmp:
