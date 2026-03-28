@@ -13,7 +13,13 @@ if (PLATFORM_SUPPORT_TRANSPORT)
     target_sources(app.referenceApp PRIVATE src/systems/TransportSystem.cpp)
     if (PLATFORM_SUPPORT_UDS)
         target_sources(app.referenceApp PRIVATE src/systems/UdsSystem.cpp
-                                                src/uds/ReadIdentifierPot.cpp)
+                                                src/uds/ReadIdentifierPot.cpp
+                                                src/uds/Stm32ClearDtc.cpp
+                                                src/uds/Stm32ControlDtcSetting.cpp
+                                                src/uds/Stm32DemoRoutine.cpp
+                                                src/uds/Stm32DtcManager.cpp
+                                                src/uds/Stm32ReadDtcInfo.cpp
+                                                src/uds/Stm32SecurityAccess.cpp)
     endif ()
 endif ()
 

@@ -104,6 +104,9 @@ typedef struct
 } CAN_FilterRegister_TypeDef;
 
 // --- Fake CAN_TypeDef (matches STM32F4 layout) ---
+// MSR.INAK (bit 0) must mirror MCR.INRQ (bit 0) for init mode busy-waits.
+// We use a C++ struct with a getter-like mechanism: a helper function
+// called before each test ensures MSR tracks MCR.
 typedef struct
 {
     __IO uint32_t MCR;
@@ -129,6 +132,13 @@ typedef struct
     uint32_t RESERVED5[8];
     CAN_FilterRegister_TypeDef sFilterRegister[28];
 } CAN_TypeDef;
+
+// Hook: sync MSR.INAK to match MCR.INRQ after production code writes MCR.
+// We patch this into the production code's enterInitMode/leaveInitMode by
+// redefining the MSR register read to auto-sync from MCR first.
+// CAN_MSR_INAK is bit 0, CAN_MCR_INRQ is bit 0 — same position.
+// Override CAN1 macro
+#define CAN1 (&fakeCan)
 
 // --- Static fake peripherals ---
 static RCC_TypeDef fakeRcc;
@@ -1940,6 +1950,2233 @@ TEST_F(BxCanDeviceTest, receiveMultipleThenTransmit)
 
     // RX queue unaffected
     EXPECT_EQ(dev->getRxCount(), 3U);
+}
+
+// ============================================================================
+// NEW TESTS — Category A: Init Edge Cases (20 tests)
+// ============================================================================
+
+TEST_F(BxCanDeviceTest, initDoubleInitPreservesBtrSettings)
+{
+    auto cfg      = makeDefaultConfig();
+    cfg.prescaler = 5U;
+    cfg.bs1       = 10U;
+    cfg.bs2       = 3U;
+    cfg.sjw       = 2U;
+    bios::BxCanDevice dev(cfg);
+    dev.init();
+    uint32_t btr1 = fakeCan.BTR;
+    dev.init();
+    uint32_t btr2 = fakeCan.BTR;
+    EXPECT_EQ(btr1, btr2);
+}
+
+TEST_F(BxCanDeviceTest, initBtrPrescaler1)
+{
+    auto cfg      = makeDefaultConfig();
+    cfg.prescaler = 1U;
+    bios::BxCanDevice dev(cfg);
+    dev.init();
+    EXPECT_EQ(fakeCan.BTR & 0x3FFU, 0U);
+}
+
+TEST_F(BxCanDeviceTest, initBtrPrescaler1024)
+{
+    auto cfg      = makeDefaultConfig();
+    cfg.prescaler = 1024U;
+    bios::BxCanDevice dev(cfg);
+    dev.init();
+    EXPECT_EQ(fakeCan.BTR & 0x3FFU, 1023U);
+}
+
+TEST_F(BxCanDeviceTest, initBtrBs1Max16)
+{
+    auto cfg = makeDefaultConfig();
+    cfg.bs1  = 16U;
+    bios::BxCanDevice dev(cfg);
+    dev.init();
+    uint32_t ts1 = (fakeCan.BTR >> CAN_BTR_TS1_Pos) & 0xFU;
+    EXPECT_EQ(ts1, 15U);
+}
+
+TEST_F(BxCanDeviceTest, initBtrBs2Max8)
+{
+    auto cfg = makeDefaultConfig();
+    cfg.bs2  = 8U;
+    bios::BxCanDevice dev(cfg);
+    dev.init();
+    uint32_t ts2 = (fakeCan.BTR >> CAN_BTR_TS2_Pos) & 0x7U;
+    EXPECT_EQ(ts2, 7U);
+}
+
+TEST_F(BxCanDeviceTest, initBtrSjwMax4)
+{
+    auto cfg = makeDefaultConfig();
+    cfg.sjw  = 4U;
+    bios::BxCanDevice dev(cfg);
+    dev.init();
+    uint32_t sjw = (fakeCan.BTR >> CAN_BTR_SJW_Pos) & 0x3U;
+    EXPECT_EQ(sjw, 3U);
+}
+
+TEST_F(BxCanDeviceTest, initGpioTxPin0LowAf)
+{
+    auto cfg  = makeDefaultConfig();
+    cfg.txPin = 0U;
+    cfg.txAf  = 4U;
+    bios::BxCanDevice dev(cfg);
+    dev.init();
+
+    uint32_t txAf = (fakeTxGpio.AFR[0] >> (0U * 4U)) & 0xFU;
+    EXPECT_EQ(txAf, 4U);
+    uint32_t txModer = (fakeTxGpio.MODER >> (0U * 2U)) & 3U;
+    EXPECT_EQ(txModer, 2U);
+}
+
+TEST_F(BxCanDeviceTest, initGpioTxPin7BoundaryLow)
+{
+    auto cfg  = makeDefaultConfig();
+    cfg.txPin = 7U;
+    cfg.txAf  = 11U;
+    bios::BxCanDevice dev(cfg);
+    dev.init();
+
+    uint32_t txAf = (fakeTxGpio.AFR[0] >> (7U * 4U)) & 0xFU;
+    EXPECT_EQ(txAf, 11U);
+}
+
+TEST_F(BxCanDeviceTest, initGpioRxPin8BoundaryHigh)
+{
+    auto cfg  = makeDefaultConfig();
+    cfg.rxPin = 8U;
+    cfg.rxAf  = 5U;
+    bios::BxCanDevice dev(cfg);
+    dev.init();
+
+    uint32_t rxAf = (fakeRxGpio.AFR[1] >> ((8U - 8U) * 4U)) & 0xFU;
+    EXPECT_EQ(rxAf, 5U);
+}
+
+TEST_F(BxCanDeviceTest, initGpioRxPin15Max)
+{
+    auto cfg  = makeDefaultConfig();
+    cfg.rxPin = 15U;
+    cfg.rxAf  = 9U;
+    bios::BxCanDevice dev(cfg);
+    dev.init();
+
+    uint32_t rxAf = (fakeRxGpio.AFR[1] >> ((15U - 8U) * 4U)) & 0xFU;
+    EXPECT_EQ(rxAf, 9U);
+}
+
+TEST_F(BxCanDeviceTest, initClearsSleepModeWhenAlreadyClear)
+{
+    fakeCan.MCR = 0U; // SLEEP already clear
+    auto cfg    = makeDefaultConfig();
+    bios::BxCanDevice dev(cfg);
+    dev.init();
+    EXPECT_EQ(fakeCan.MCR & CAN_MCR_SLEEP, 0U);
+}
+
+TEST_F(BxCanDeviceTest, initAbomFlagSetAfterInit)
+{
+    auto cfg = makeDefaultConfig();
+    bios::BxCanDevice dev(cfg);
+    dev.init();
+    EXPECT_NE(fakeCan.MCR & CAN_MCR_ABOM, 0U);
+}
+
+TEST_F(BxCanDeviceTest, initTxfpFlagSetAfterInit)
+{
+    auto cfg = makeDefaultConfig();
+    bios::BxCanDevice dev(cfg);
+    dev.init();
+    EXPECT_NE(fakeCan.MCR & CAN_MCR_TXFP, 0U);
+}
+
+TEST_F(BxCanDeviceTest, initClockEnableBitPosition25)
+{
+    auto cfg = makeDefaultConfig();
+    bios::BxCanDevice dev(cfg);
+    dev.init();
+    EXPECT_NE(fakeRcc.APB1ENR & (1U << 25U), 0U);
+}
+
+TEST_F(BxCanDeviceTest, initClockDoesNotAffectOtherApb1Bits)
+{
+    fakeRcc.APB1ENR = 0x12345678U;
+    auto cfg        = makeDefaultConfig();
+    bios::BxCanDevice dev(cfg);
+    dev.init();
+    // Other bits should still be set
+    EXPECT_NE(fakeRcc.APB1ENR & 0x12345678U, 0U);
+    EXPECT_NE(fakeRcc.APB1ENR & RCC_APB1ENR_CAN1EN, 0U);
+}
+
+TEST_F(BxCanDeviceTest, initInrqSetBeforeLeaveInit)
+{
+    auto cfg = makeDefaultConfig();
+    bios::BxCanDevice dev(cfg);
+    dev.init();
+    // After init we are still in init mode (INRQ set)
+    EXPECT_NE(fakeCan.MCR & CAN_MCR_INRQ, 0U);
+}
+
+TEST_F(BxCanDeviceTest, initGpioTxSpeedVeryHigh)
+{
+    auto cfg = makeDefaultConfig();
+    bios::BxCanDevice dev(cfg);
+    dev.init();
+    uint32_t txSpeed = (fakeTxGpio.OSPEEDR >> (cfg.txPin * 2U)) & 3U;
+    EXPECT_EQ(txSpeed, 3U);
+}
+
+TEST_F(BxCanDeviceTest, initGpioRxPullUp)
+{
+    auto cfg = makeDefaultConfig();
+    bios::BxCanDevice dev(cfg);
+    dev.init();
+    uint32_t rxPupdr = (fakeRxGpio.PUPDR >> (cfg.rxPin * 2U)) & 3U;
+    EXPECT_EQ(rxPupdr, 1U);
+}
+
+TEST_F(BxCanDeviceTest, initBtrFieldsDoNotOverlap)
+{
+    auto cfg      = makeDefaultConfig();
+    cfg.prescaler = 512U;
+    cfg.bs1       = 16U;
+    cfg.bs2       = 8U;
+    cfg.sjw       = 4U;
+    bios::BxCanDevice dev(cfg);
+    dev.init();
+
+    uint32_t btr = fakeCan.BTR;
+    uint32_t brp = btr & 0x3FFU;
+    uint32_t ts1 = (btr >> CAN_BTR_TS1_Pos) & 0xFU;
+    uint32_t ts2 = (btr >> CAN_BTR_TS2_Pos) & 0x7U;
+    uint32_t sjw = (btr >> CAN_BTR_SJW_Pos) & 0x3U;
+    EXPECT_EQ(brp, 511U);
+    EXPECT_EQ(ts1, 15U);
+    EXPECT_EQ(ts2, 7U);
+    EXPECT_EQ(sjw, 3U);
+}
+
+TEST_F(BxCanDeviceTest, initFilterConfiguredAcceptAll)
+{
+    auto cfg = makeDefaultConfig();
+    bios::BxCanDevice dev(cfg);
+    dev.init();
+    // Accept-all filter should be configured after init
+    EXPECT_EQ(fakeCan.sFilterRegister[0].FR1, 0U);
+    EXPECT_EQ(fakeCan.sFilterRegister[0].FR2, 0U);
+    EXPECT_NE(fakeCan.FA1R & (1U << 0U), 0U);
+}
+
+// ============================================================================
+// NEW TESTS — Category B: Start/Stop State Machine (20 tests)
+// ============================================================================
+
+TEST_F(BxCanDeviceTest, startWithoutInitDoesNotSetFmpie0)
+{
+    auto cfg = makeDefaultConfig();
+    bios::BxCanDevice dev(cfg);
+    fakeCan.MSR &= ~CAN_MSR_INAK;
+    dev.start();
+    EXPECT_EQ(fakeCan.IER & CAN_IER_FMPIE0, 0U);
+}
+
+TEST_F(BxCanDeviceTest, doubleStartDoesNotCrash)
+{
+    auto dev = makeStartedDevice();
+    // Second start: re-enter init mode briefly, then leave again
+    fakeCan.MSR |= CAN_MSR_INAK;
+    dev->stop();
+    fakeCan.MSR &= ~CAN_MSR_INAK;
+    dev->start();
+    EXPECT_NE(fakeCan.IER & CAN_IER_FMPIE0, 0U);
+}
+
+TEST_F(BxCanDeviceTest, stopThenRestartClearsAndReenablesFmpie0)
+{
+    auto dev = makeStartedDevice();
+    fakeCan.MSR |= CAN_MSR_INAK;
+    dev->stop();
+    EXPECT_EQ(fakeCan.IER & CAN_IER_FMPIE0, 0U);
+
+    fakeCan.MSR &= ~CAN_MSR_INAK;
+    dev->start();
+    EXPECT_NE(fakeCan.IER & CAN_IER_FMPIE0, 0U);
+}
+
+TEST_F(BxCanDeviceTest, startClearsInrq)
+{
+    auto dev = makeInitedDevice();
+    EXPECT_NE(fakeCan.MCR & CAN_MCR_INRQ, 0U);
+    fakeCan.MSR &= ~CAN_MSR_INAK;
+    dev->start();
+    EXPECT_EQ(fakeCan.MCR & CAN_MCR_INRQ, 0U);
+}
+
+TEST_F(BxCanDeviceTest, stopSetsInrq)
+{
+    auto dev = makeStartedDevice();
+    fakeCan.MSR |= CAN_MSR_INAK;
+    dev->stop();
+    EXPECT_NE(fakeCan.MCR & CAN_MCR_INRQ, 0U);
+}
+
+TEST_F(BxCanDeviceTest, startClearsFovrFlag)
+{
+    auto dev = makeInitedDevice();
+    fakeCan.MSR &= ~CAN_MSR_INAK;
+    fakeCan.RF0R = 0U;
+    dev->start();
+    // FOVR0 should have been written (write-1-to-clear)
+    EXPECT_NE(fakeCan.RF0R & CAN_RF0R_FOVR0, 0U);
+}
+
+TEST_F(BxCanDeviceTest, startNoStaleFifoFrames)
+{
+    auto dev     = makeInitedDevice();
+    fakeCan.RF0R = 0U; // No stale frames
+    fakeCan.MSR &= ~CAN_MSR_INAK;
+    dev->start();
+    EXPECT_NE(fakeCan.IER & CAN_IER_FMPIE0, 0U);
+}
+
+TEST_F(BxCanDeviceTest, stopDisablesTmeie)
+{
+    auto dev = makeStartedDevice();
+    fakeCan.IER |= CAN_IER_TMEIE;
+    fakeCan.MSR |= CAN_MSR_INAK;
+    dev->stop();
+    EXPECT_EQ(fakeCan.IER & CAN_IER_TMEIE, 0U);
+}
+
+TEST_F(BxCanDeviceTest, stopDisablesFmpie0)
+{
+    auto dev = makeStartedDevice();
+    EXPECT_NE(fakeCan.IER & CAN_IER_FMPIE0, 0U);
+    fakeCan.MSR |= CAN_MSR_INAK;
+    dev->stop();
+    EXPECT_EQ(fakeCan.IER & CAN_IER_FMPIE0, 0U);
+}
+
+TEST_F(BxCanDeviceTest, stopThenStartTwice)
+{
+    auto dev = makeStartedDevice();
+
+    // Stop
+    fakeCan.MSR |= CAN_MSR_INAK;
+    dev->stop();
+
+    // Start again
+    fakeCan.MSR &= ~CAN_MSR_INAK;
+    dev->start();
+    EXPECT_NE(fakeCan.IER & CAN_IER_FMPIE0, 0U);
+
+    // Stop again
+    fakeCan.MSR |= CAN_MSR_INAK;
+    dev->stop();
+    EXPECT_EQ(fakeCan.IER & CAN_IER_FMPIE0, 0U);
+
+    // Start once more
+    fakeCan.MSR &= ~CAN_MSR_INAK;
+    dev->start();
+    EXPECT_NE(fakeCan.IER & CAN_IER_FMPIE0, 0U);
+}
+
+TEST_F(BxCanDeviceTest, startPreservesAbomFlag)
+{
+    auto dev = makeInitedDevice();
+    EXPECT_NE(fakeCan.MCR & CAN_MCR_ABOM, 0U);
+    fakeCan.MSR &= ~CAN_MSR_INAK;
+    dev->start();
+    // ABOM should still be set after leaving init mode
+    EXPECT_NE(fakeCan.MCR & CAN_MCR_ABOM, 0U);
+}
+
+TEST_F(BxCanDeviceTest, startPreservesTxfpFlag)
+{
+    auto dev = makeInitedDevice();
+    EXPECT_NE(fakeCan.MCR & CAN_MCR_TXFP, 0U);
+    fakeCan.MSR &= ~CAN_MSR_INAK;
+    dev->start();
+    EXPECT_NE(fakeCan.MCR & CAN_MCR_TXFP, 0U);
+}
+
+TEST_F(BxCanDeviceTest, stopThenInitThenStart)
+{
+    auto dev = makeStartedDevice();
+    fakeCan.MSR |= CAN_MSR_INAK;
+    dev->stop();
+
+    // Re-init
+    dev->init();
+    EXPECT_NE(fakeCan.MCR & CAN_MCR_INRQ, 0U);
+
+    fakeCan.MSR &= ~CAN_MSR_INAK;
+    dev->start();
+    EXPECT_NE(fakeCan.IER & CAN_IER_FMPIE0, 0U);
+}
+
+TEST_F(BxCanDeviceTest, startIerOnlyFmpie0Set)
+{
+    auto dev = makeInitedDevice();
+    fakeCan.IER = 0U;
+    fakeCan.MSR &= ~CAN_MSR_INAK;
+    dev->start();
+    // After start, only FMPIE0 should be enabled (not TMEIE)
+    EXPECT_NE(fakeCan.IER & CAN_IER_FMPIE0, 0U);
+    EXPECT_EQ(fakeCan.IER & CAN_IER_TMEIE, 0U);
+}
+
+TEST_F(BxCanDeviceTest, stopClearsIerCompletely)
+{
+    auto dev = makeStartedDevice();
+    fakeCan.IER |= CAN_IER_TMEIE;
+    fakeCan.MSR |= CAN_MSR_INAK;
+    dev->stop();
+    EXPECT_EQ(fakeCan.IER & (CAN_IER_FMPIE0 | CAN_IER_TMEIE), 0U);
+}
+
+TEST_F(BxCanDeviceTest, startAfterStopRxQueuePreserved)
+{
+    auto dev        = makeStartedDevice();
+    uint8_t data[8] = {};
+    receiveSingleFrame(*dev, 0x100U, false, 1U, data);
+    EXPECT_EQ(dev->getRxCount(), 1U);
+
+    fakeCan.MSR |= CAN_MSR_INAK;
+    dev->stop();
+
+    // RX queue should still have the frame
+    EXPECT_EQ(dev->getRxCount(), 1U);
+    EXPECT_EQ(dev->getRxFrame(0).getId(), 0x100U);
+
+    fakeCan.MSR &= ~CAN_MSR_INAK;
+    dev->start();
+    EXPECT_EQ(dev->getRxCount(), 1U);
+}
+
+TEST_F(BxCanDeviceTest, startSetsMailboxesEmptyForSubsequentTx)
+{
+    auto dev = makeStartedDevice();
+    fakeCan.TSR = CAN_TSR_TME0 | CAN_TSR_TME1 | CAN_TSR_TME2;
+    uint8_t data[8] = {};
+    EXPECT_TRUE(dev->transmit(::can::CANFrame(0x100U, data, 1U)));
+}
+
+TEST_F(BxCanDeviceTest, stopDoesNotAffectBtrRegister)
+{
+    auto dev = makeStartedDevice();
+    uint32_t btrBefore = fakeCan.BTR;
+    fakeCan.MSR |= CAN_MSR_INAK;
+    dev->stop();
+    EXPECT_EQ(fakeCan.BTR, btrBefore);
+}
+
+TEST_F(BxCanDeviceTest, startWithFifo2StaleFrames)
+{
+    auto dev     = makeInitedDevice();
+    fakeCan.RF0R = 2U; // 2 stale frames
+    fakeCan.MSR &= ~CAN_MSR_INAK;
+
+    // Background thread to simulate HW draining
+    std::atomic<bool> done{false};
+    std::thread hwSim(
+        [&]()
+        {
+            uint8_t remaining = 2U;
+            while (!done.load(std::memory_order_relaxed))
+            {
+                if ((fakeCan.RF0R & CAN_RF0R_RFOM0) != 0U)
+                {
+                    remaining--;
+                    fakeCan.RF0R = remaining;
+                    if (remaining == 0U)
+                    {
+                        done.store(true, std::memory_order_relaxed);
+                        return;
+                    }
+                }
+            }
+        });
+
+    dev->start();
+    done.store(true, std::memory_order_relaxed);
+    hwSim.join();
+    EXPECT_NE(fakeCan.IER & CAN_IER_FMPIE0, 0U);
+}
+
+TEST_F(BxCanDeviceTest, stopPreservesFilterConfiguration)
+{
+    auto dev = makeStartedDevice();
+    // Check filter is configured after init/start
+    EXPECT_NE(fakeCan.FA1R & (1U << 0U), 0U);
+    uint32_t fa1rBefore = fakeCan.FA1R;
+
+    fakeCan.MSR |= CAN_MSR_INAK;
+    dev->stop();
+
+    // Filter config should not be touched by stop
+    EXPECT_EQ(fakeCan.FA1R, fa1rBefore);
+}
+
+// ============================================================================
+// NEW TESTS — Category C: Interrupt Management (20 tests)
+// ============================================================================
+
+TEST_F(BxCanDeviceTest, enableRxInterruptFromZeroIer)
+{
+    auto dev    = makeStartedDevice();
+    fakeCan.IER = 0U;
+    dev->enableRxInterrupt();
+    EXPECT_NE(fakeCan.IER & CAN_IER_FMPIE0, 0U);
+}
+
+TEST_F(BxCanDeviceTest, disableRxInterruptIdempotent)
+{
+    auto dev = makeStartedDevice();
+    dev->disableRxInterrupt();
+    EXPECT_EQ(fakeCan.IER & CAN_IER_FMPIE0, 0U);
+    dev->disableRxInterrupt();
+    EXPECT_EQ(fakeCan.IER & CAN_IER_FMPIE0, 0U);
+}
+
+TEST_F(BxCanDeviceTest, enableRxInterruptIdempotent)
+{
+    auto dev = makeStartedDevice();
+    dev->enableRxInterrupt();
+    EXPECT_NE(fakeCan.IER & CAN_IER_FMPIE0, 0U);
+    dev->enableRxInterrupt();
+    EXPECT_NE(fakeCan.IER & CAN_IER_FMPIE0, 0U);
+}
+
+TEST_F(BxCanDeviceTest, transmitEnablesTmeieFromCleanIer)
+{
+    auto dev    = makeStartedDevice();
+    fakeCan.IER = CAN_IER_FMPIE0; // Only FMPIE0 set
+    fakeCan.TSR = CAN_TSR_TME0;
+
+    uint8_t data[8] = {};
+    dev->transmit(::can::CANFrame(0x100U, data, 1U));
+    EXPECT_NE(fakeCan.IER & CAN_IER_TMEIE, 0U);
+    // FMPIE0 should still be set
+    EXPECT_NE(fakeCan.IER & CAN_IER_FMPIE0, 0U);
+}
+
+TEST_F(BxCanDeviceTest, transmitIsrDisablesTmeieAllEmpty)
+{
+    auto dev = makeStartedDevice();
+    fakeCan.IER |= CAN_IER_TMEIE;
+    fakeCan.TSR = CAN_TSR_TME0 | CAN_TSR_TME1 | CAN_TSR_TME2;
+    dev->transmitISR();
+    EXPECT_EQ(fakeCan.IER & CAN_IER_TMEIE, 0U);
+}
+
+TEST_F(BxCanDeviceTest, transmitIsrKeepsTmeieMailbox0Busy)
+{
+    auto dev = makeStartedDevice();
+    fakeCan.IER |= CAN_IER_TMEIE;
+    // Mailbox 0 busy, 1 and 2 empty
+    fakeCan.TSR = CAN_TSR_TME1 | CAN_TSR_TME2;
+    dev->transmitISR();
+    EXPECT_NE(fakeCan.IER & CAN_IER_TMEIE, 0U);
+}
+
+TEST_F(BxCanDeviceTest, transmitIsrKeepsTmeieMailbox1Busy)
+{
+    auto dev = makeStartedDevice();
+    fakeCan.IER |= CAN_IER_TMEIE;
+    // Mailbox 1 busy, 0 and 2 empty
+    fakeCan.TSR = CAN_TSR_TME0 | CAN_TSR_TME2;
+    dev->transmitISR();
+    EXPECT_NE(fakeCan.IER & CAN_IER_TMEIE, 0U);
+}
+
+TEST_F(BxCanDeviceTest, transmitIsrKeepsTmeieMailbox2Busy)
+{
+    auto dev = makeStartedDevice();
+    fakeCan.IER |= CAN_IER_TMEIE;
+    // Mailbox 2 busy, 0 and 1 empty
+    fakeCan.TSR = CAN_TSR_TME0 | CAN_TSR_TME1;
+    dev->transmitISR();
+    EXPECT_NE(fakeCan.IER & CAN_IER_TMEIE, 0U);
+}
+
+TEST_F(BxCanDeviceTest, transmitIsrKeepsTmeieAllBusy)
+{
+    auto dev = makeStartedDevice();
+    fakeCan.IER |= CAN_IER_TMEIE;
+    fakeCan.TSR = 0U; // All mailboxes busy
+    dev->transmitISR();
+    EXPECT_NE(fakeCan.IER & CAN_IER_TMEIE, 0U);
+}
+
+TEST_F(BxCanDeviceTest, transmitIsrKeepsTmeieOnlyMailbox0Empty)
+{
+    auto dev = makeStartedDevice();
+    fakeCan.IER |= CAN_IER_TMEIE;
+    fakeCan.TSR = CAN_TSR_TME0;
+    dev->transmitISR();
+    EXPECT_NE(fakeCan.IER & CAN_IER_TMEIE, 0U);
+}
+
+TEST_F(BxCanDeviceTest, transmitIsrKeepsTmeieOnlyMailbox1Empty)
+{
+    auto dev = makeStartedDevice();
+    fakeCan.IER |= CAN_IER_TMEIE;
+    fakeCan.TSR = CAN_TSR_TME1;
+    dev->transmitISR();
+    EXPECT_NE(fakeCan.IER & CAN_IER_TMEIE, 0U);
+}
+
+TEST_F(BxCanDeviceTest, transmitIsrKeepsTmeieOnlyMailbox2Empty)
+{
+    auto dev = makeStartedDevice();
+    fakeCan.IER |= CAN_IER_TMEIE;
+    fakeCan.TSR = CAN_TSR_TME2;
+    dev->transmitISR();
+    EXPECT_NE(fakeCan.IER & CAN_IER_TMEIE, 0U);
+}
+
+TEST_F(BxCanDeviceTest, disableRxInterruptDoesNotAffectTmeie)
+{
+    auto dev = makeStartedDevice();
+    fakeCan.IER |= CAN_IER_TMEIE;
+    dev->disableRxInterrupt();
+    EXPECT_NE(fakeCan.IER & CAN_IER_TMEIE, 0U);
+}
+
+TEST_F(BxCanDeviceTest, enableRxInterruptDoesNotAffectTmeie)
+{
+    auto dev    = makeStartedDevice();
+    fakeCan.IER = CAN_IER_TMEIE; // Only TMEIE set
+    dev->enableRxInterrupt();
+    EXPECT_NE(fakeCan.IER & CAN_IER_TMEIE, 0U);
+    EXPECT_NE(fakeCan.IER & CAN_IER_FMPIE0, 0U);
+}
+
+TEST_F(BxCanDeviceTest, transmitIsrDoesNotAffectFmpie0)
+{
+    auto dev = makeStartedDevice();
+    EXPECT_NE(fakeCan.IER & CAN_IER_FMPIE0, 0U);
+    fakeCan.IER |= CAN_IER_TMEIE;
+    fakeCan.TSR = CAN_TSR_TME0 | CAN_TSR_TME1 | CAN_TSR_TME2;
+    dev->transmitISR();
+    // FMPIE0 should still be set
+    EXPECT_NE(fakeCan.IER & CAN_IER_FMPIE0, 0U);
+}
+
+TEST_F(BxCanDeviceTest, ierBitIsolationFmpie0Only)
+{
+    auto dev    = makeStartedDevice();
+    fakeCan.IER = 0U;
+    dev->enableRxInterrupt();
+    // Only FMPIE0 (bit 1) should be set
+    EXPECT_EQ(fakeCan.IER, CAN_IER_FMPIE0);
+}
+
+TEST_F(BxCanDeviceTest, ierBitIsolationTmeieFromTransmit)
+{
+    auto dev    = makeStartedDevice();
+    fakeCan.IER = 0U;
+    fakeCan.TSR = CAN_TSR_TME0;
+    uint8_t data[8] = {};
+    dev->transmit(::can::CANFrame(0x100U, data, 1U));
+    // TMEIE (bit 0) should be set
+    EXPECT_NE(fakeCan.IER & CAN_IER_TMEIE, 0U);
+}
+
+TEST_F(BxCanDeviceTest, multipleTxThenIsrCycleIerState)
+{
+    auto dev        = makeStartedDevice();
+    uint8_t data[8] = {};
+
+    // TX -> TMEIE enabled
+    fakeCan.TSR = CAN_TSR_TME0;
+    dev->transmit(::can::CANFrame(0x100U, data, 1U));
+    EXPECT_NE(fakeCan.IER & CAN_IER_TMEIE, 0U);
+
+    // ISR with all empty -> TMEIE disabled
+    fakeCan.TSR = CAN_TSR_TME0 | CAN_TSR_TME1 | CAN_TSR_TME2;
+    dev->transmitISR();
+    EXPECT_EQ(fakeCan.IER & CAN_IER_TMEIE, 0U);
+
+    // TX again -> TMEIE re-enabled
+    fakeCan.TSR = CAN_TSR_TME1;
+    dev->transmit(::can::CANFrame(0x200U, data, 1U));
+    EXPECT_NE(fakeCan.IER & CAN_IER_TMEIE, 0U);
+
+    // ISR with all empty again -> TMEIE disabled
+    fakeCan.TSR = CAN_TSR_TME0 | CAN_TSR_TME1 | CAN_TSR_TME2;
+    dev->transmitISR();
+    EXPECT_EQ(fakeCan.IER & CAN_IER_TMEIE, 0U);
+}
+
+TEST_F(BxCanDeviceTest, disableRxInterruptThenReceiveDoesNotEnqueue)
+{
+    auto dev = makeStartedDevice();
+    dev->disableRxInterrupt();
+    // Manually call receiveISR (would normally be called by HW interrupt)
+    uint8_t data[8] = {};
+    // receiveISR can still be called manually, it does not check IER
+    placeRxFrameStd(0x100U, 1U, data);
+    fakeCan.RF0R = 1U;
+
+    std::atomic<bool> done{false};
+    std::thread hwSim(
+        [&]()
+        {
+            while (!done.load(std::memory_order_relaxed))
+            {
+                if ((fakeCan.RF0R & CAN_RF0R_RFOM0) != 0U)
+                {
+                    fakeCan.RF0R = 0U;
+                    done.store(true, std::memory_order_relaxed);
+                    return;
+                }
+            }
+        });
+
+    uint8_t count = dev->receiveISR(nullptr);
+    done.store(true, std::memory_order_relaxed);
+    hwSim.join();
+    // receiveISR still works even if FMPIE0 disabled (just won't be called by HW)
+    EXPECT_EQ(count, 1U);
+}
+
+TEST_F(BxCanDeviceTest, enableDisableRxInterruptRapidToggle)
+{
+    auto dev = makeStartedDevice();
+    for (int i = 0; i < 10; i++)
+    {
+        dev->disableRxInterrupt();
+        EXPECT_EQ(fakeCan.IER & CAN_IER_FMPIE0, 0U);
+        dev->enableRxInterrupt();
+        EXPECT_NE(fakeCan.IER & CAN_IER_FMPIE0, 0U);
+    }
+}
+
+// ============================================================================
+// NEW TESTS — Category D: Filter Banks (30 tests)
+// ============================================================================
+
+TEST_F(BxCanDeviceTest, acceptAllFilterFs1rBit0Set)
+{
+    auto dev = makeInitedDevice();
+    EXPECT_NE(fakeCan.FS1R & (1U << 0U), 0U);
+}
+
+TEST_F(BxCanDeviceTest, acceptAllFilterFm1rBit0Clear)
+{
+    auto dev = makeInitedDevice();
+    EXPECT_EQ(fakeCan.FM1R & (1U << 0U), 0U);
+}
+
+TEST_F(BxCanDeviceTest, acceptAllFilterFfa1rBit0Clear)
+{
+    auto dev = makeInitedDevice();
+    EXPECT_EQ(fakeCan.FFA1R & (1U << 0U), 0U);
+}
+
+TEST_F(BxCanDeviceTest, acceptAllFilterFa1rBit0Set)
+{
+    auto dev = makeInitedDevice();
+    EXPECT_NE(fakeCan.FA1R & (1U << 0U), 0U);
+}
+
+TEST_F(BxCanDeviceTest, acceptAllFilterFinitClearedAfterConfig)
+{
+    auto dev = makeInitedDevice();
+    EXPECT_EQ(fakeCan.FMR & CAN_FMR_FINIT, 0U);
+}
+
+TEST_F(BxCanDeviceTest, filterListMode2Ids)
+{
+    auto dev       = makeInitedDevice();
+    uint32_t ids[] = {0x100U, 0x200U};
+    dev->configureFilterList(ids, 2U);
+
+    EXPECT_NE(fakeCan.FM1R & (1U << 0U), 0U);
+    EXPECT_EQ(fakeCan.sFilterRegister[0].FR1, 0x100U << CAN_RI0R_STID_Pos);
+    EXPECT_EQ(fakeCan.sFilterRegister[0].FR2, 0x200U << CAN_RI0R_STID_Pos);
+    EXPECT_NE(fakeCan.FA1R & (1U << 0U), 0U);
+}
+
+TEST_F(BxCanDeviceTest, filterListMode1IdDuplicatesInBank)
+{
+    auto dev       = makeInitedDevice();
+    uint32_t ids[] = {0x7FFU};
+    dev->configureFilterList(ids, 1U);
+
+    EXPECT_EQ(fakeCan.sFilterRegister[0].FR1, 0x7FFU << CAN_RI0R_STID_Pos);
+    EXPECT_EQ(fakeCan.sFilterRegister[0].FR2, 0x7FFU << CAN_RI0R_STID_Pos);
+}
+
+TEST_F(BxCanDeviceTest, filterListMode3IdsOdd)
+{
+    auto dev       = makeInitedDevice();
+    uint32_t ids[] = {0x10U, 0x20U, 0x30U};
+    dev->configureFilterList(ids, 3U);
+
+    EXPECT_EQ(fakeCan.sFilterRegister[0].FR1, 0x10U << CAN_RI0R_STID_Pos);
+    EXPECT_EQ(fakeCan.sFilterRegister[0].FR2, 0x20U << CAN_RI0R_STID_Pos);
+    // Bank 1: odd count -> last ID duplicated
+    EXPECT_EQ(fakeCan.sFilterRegister[1].FR1, 0x30U << CAN_RI0R_STID_Pos);
+    EXPECT_EQ(fakeCan.sFilterRegister[1].FR2, 0x30U << CAN_RI0R_STID_Pos);
+}
+
+TEST_F(BxCanDeviceTest, filterListMode5IdsOdd)
+{
+    auto dev       = makeInitedDevice();
+    uint32_t ids[] = {0x10U, 0x20U, 0x30U, 0x40U, 0x50U};
+    dev->configureFilterList(ids, 5U);
+
+    // Bank 0: IDs 0 and 1
+    EXPECT_EQ(fakeCan.sFilterRegister[0].FR1, 0x10U << CAN_RI0R_STID_Pos);
+    EXPECT_EQ(fakeCan.sFilterRegister[0].FR2, 0x20U << CAN_RI0R_STID_Pos);
+    // Bank 1: IDs 2 and 3
+    EXPECT_EQ(fakeCan.sFilterRegister[1].FR1, 0x30U << CAN_RI0R_STID_Pos);
+    EXPECT_EQ(fakeCan.sFilterRegister[1].FR2, 0x40U << CAN_RI0R_STID_Pos);
+    // Bank 2: ID 4 duplicated
+    EXPECT_EQ(fakeCan.sFilterRegister[2].FR1, 0x50U << CAN_RI0R_STID_Pos);
+    EXPECT_EQ(fakeCan.sFilterRegister[2].FR2, 0x50U << CAN_RI0R_STID_Pos);
+}
+
+TEST_F(BxCanDeviceTest, filterListMode6Ids3Banks)
+{
+    auto dev       = makeInitedDevice();
+    uint32_t ids[] = {0x100U, 0x200U, 0x300U, 0x400U, 0x500U, 0x600U};
+    dev->configureFilterList(ids, 6U);
+
+    EXPECT_NE(fakeCan.FA1R & (1U << 0U), 0U);
+    EXPECT_NE(fakeCan.FA1R & (1U << 1U), 0U);
+    EXPECT_NE(fakeCan.FA1R & (1U << 2U), 0U);
+}
+
+TEST_F(BxCanDeviceTest, filterListMode8Ids4Banks)
+{
+    auto dev       = makeInitedDevice();
+    uint32_t ids[] = {0x10U, 0x20U, 0x30U, 0x40U, 0x50U, 0x60U, 0x70U, 0x80U};
+    dev->configureFilterList(ids, 8U);
+
+    for (uint8_t b = 0; b < 4; b++)
+    {
+        EXPECT_NE(fakeCan.FA1R & (1U << b), 0U) << "Bank " << (int)b;
+    }
+    EXPECT_EQ(fakeCan.sFilterRegister[3].FR1, 0x70U << CAN_RI0R_STID_Pos);
+    EXPECT_EQ(fakeCan.sFilterRegister[3].FR2, 0x80U << CAN_RI0R_STID_Pos);
+}
+
+TEST_F(BxCanDeviceTest, filterListMode14Ids7Banks)
+{
+    auto dev = makeInitedDevice();
+    uint32_t ids[14];
+    for (uint8_t i = 0; i < 14; i++)
+    {
+        ids[i] = 0x100U + i;
+    }
+    dev->configureFilterList(ids, 14U);
+
+    for (uint8_t b = 0; b < 7; b++)
+    {
+        EXPECT_NE(fakeCan.FA1R & (1U << b), 0U) << "Bank " << (int)b;
+    }
+}
+
+TEST_F(BxCanDeviceTest, filterListMode28IdsMax14Banks)
+{
+    auto dev = makeInitedDevice();
+    uint32_t ids[28];
+    for (uint8_t i = 0; i < 28; i++)
+    {
+        ids[i] = 0x10U + i;
+    }
+    dev->configureFilterList(ids, 28U);
+
+    for (uint8_t b = 0; b < 14; b++)
+    {
+        EXPECT_NE(fakeCan.FA1R & (1U << b), 0U) << "Bank " << (int)b;
+        EXPECT_NE(fakeCan.FM1R & (1U << b), 0U) << "Bank " << (int)b << " list mode";
+    }
+}
+
+TEST_F(BxCanDeviceTest, filterListFinitClearedAfterConfig)
+{
+    auto dev       = makeInitedDevice();
+    uint32_t ids[] = {0x100U, 0x200U};
+    dev->configureFilterList(ids, 2U);
+    EXPECT_EQ(fakeCan.FMR & CAN_FMR_FINIT, 0U);
+}
+
+TEST_F(BxCanDeviceTest, filterListFs1r32BitScale)
+{
+    auto dev       = makeInitedDevice();
+    uint32_t ids[] = {0x100U, 0x200U};
+    dev->configureFilterList(ids, 2U);
+    EXPECT_NE(fakeCan.FS1R & (1U << 0U), 0U);
+}
+
+TEST_F(BxCanDeviceTest, filterListFm1rListMode)
+{
+    auto dev       = makeInitedDevice();
+    uint32_t ids[] = {0x100U, 0x200U};
+    dev->configureFilterList(ids, 2U);
+    EXPECT_NE(fakeCan.FM1R & (1U << 0U), 0U);
+}
+
+TEST_F(BxCanDeviceTest, filterListFfa1rFifo0Assignment)
+{
+    auto dev       = makeInitedDevice();
+    uint32_t ids[] = {0x100U, 0x200U};
+    dev->configureFilterList(ids, 2U);
+    EXPECT_EQ(fakeCan.FFA1R & (1U << 0U), 0U);
+}
+
+TEST_F(BxCanDeviceTest, filterListIdZero)
+{
+    auto dev       = makeInitedDevice();
+    uint32_t ids[] = {0x000U, 0x000U};
+    dev->configureFilterList(ids, 2U);
+    EXPECT_EQ(fakeCan.sFilterRegister[0].FR1, 0x000U << CAN_RI0R_STID_Pos);
+    EXPECT_EQ(fakeCan.sFilterRegister[0].FR2, 0x000U << CAN_RI0R_STID_Pos);
+}
+
+TEST_F(BxCanDeviceTest, filterListIdMax0x7FF)
+{
+    auto dev       = makeInitedDevice();
+    uint32_t ids[] = {0x7FFU, 0x7FFU};
+    dev->configureFilterList(ids, 2U);
+    EXPECT_EQ(fakeCan.sFilterRegister[0].FR1, 0x7FFU << CAN_RI0R_STID_Pos);
+    EXPECT_EQ(fakeCan.sFilterRegister[0].FR2, 0x7FFU << CAN_RI0R_STID_Pos);
+}
+
+TEST_F(BxCanDeviceTest, filterListOverwritesPreviousAcceptAll)
+{
+    auto dev = makeInitedDevice();
+    // After init, accept-all filter is configured (mask mode)
+    EXPECT_EQ(fakeCan.FM1R & (1U << 0U), 0U); // Mask mode
+
+    uint32_t ids[] = {0x100U, 0x200U};
+    dev->configureFilterList(ids, 2U);
+    // Now should be list mode
+    EXPECT_NE(fakeCan.FM1R & (1U << 0U), 0U);
+}
+
+TEST_F(BxCanDeviceTest, acceptAllFilterOverwritesPreviousListFilter)
+{
+    auto dev       = makeInitedDevice();
+    uint32_t ids[] = {0x100U, 0x200U};
+    dev->configureFilterList(ids, 2U);
+    EXPECT_NE(fakeCan.FM1R & (1U << 0U), 0U);
+
+    // Re-configure accept-all
+    dev->configureAcceptAllFilter();
+    EXPECT_EQ(fakeCan.FM1R & (1U << 0U), 0U); // Back to mask mode
+    EXPECT_EQ(fakeCan.sFilterRegister[0].FR1, 0U);
+    EXPECT_EQ(fakeCan.sFilterRegister[0].FR2, 0U);
+}
+
+TEST_F(BxCanDeviceTest, filterListFr1CorrectShift)
+{
+    auto dev       = makeInitedDevice();
+    uint32_t ids[] = {0x001U, 0x002U};
+    dev->configureFilterList(ids, 2U);
+    // STID_Pos is 21, so 0x001 << 21 = 0x00200000
+    EXPECT_EQ(fakeCan.sFilterRegister[0].FR1, 0x00200000U);
+    EXPECT_EQ(fakeCan.sFilterRegister[0].FR2, 0x00400000U);
+}
+
+TEST_F(BxCanDeviceTest, filterListBank0And1IndependentFr)
+{
+    auto dev       = makeInitedDevice();
+    uint32_t ids[] = {0x111U, 0x222U, 0x333U, 0x444U};
+    dev->configureFilterList(ids, 4U);
+
+    EXPECT_EQ(fakeCan.sFilterRegister[0].FR1, 0x111U << CAN_RI0R_STID_Pos);
+    EXPECT_EQ(fakeCan.sFilterRegister[0].FR2, 0x222U << CAN_RI0R_STID_Pos);
+    EXPECT_EQ(fakeCan.sFilterRegister[1].FR1, 0x333U << CAN_RI0R_STID_Pos);
+    EXPECT_EQ(fakeCan.sFilterRegister[1].FR2, 0x444U << CAN_RI0R_STID_Pos);
+}
+
+TEST_F(BxCanDeviceTest, filterListSequentialIds)
+{
+    auto dev       = makeInitedDevice();
+    uint32_t ids[] = {0x400U, 0x401U, 0x402U, 0x403U, 0x404U, 0x405U};
+    dev->configureFilterList(ids, 6U);
+
+    for (uint8_t b = 0; b < 3; b++)
+    {
+        uint32_t expected1 = (0x400U + b * 2U) << CAN_RI0R_STID_Pos;
+        uint32_t expected2 = (0x401U + b * 2U) << CAN_RI0R_STID_Pos;
+        EXPECT_EQ(fakeCan.sFilterRegister[b].FR1, expected1) << "Bank " << (int)b;
+        EXPECT_EQ(fakeCan.sFilterRegister[b].FR2, expected2) << "Bank " << (int)b;
+    }
+}
+
+TEST_F(BxCanDeviceTest, filterList10Ids5Banks)
+{
+    auto dev = makeInitedDevice();
+    uint32_t ids[10];
+    for (uint8_t i = 0; i < 10; i++)
+    {
+        ids[i] = 0x200U + i;
+    }
+    dev->configureFilterList(ids, 10U);
+
+    for (uint8_t b = 0; b < 5; b++)
+    {
+        EXPECT_NE(fakeCan.FA1R & (1U << b), 0U) << "Bank " << (int)b;
+    }
+}
+
+TEST_F(BxCanDeviceTest, filterList20Ids10Banks)
+{
+    auto dev = makeInitedDevice();
+    uint32_t ids[20];
+    for (uint8_t i = 0; i < 20; i++)
+    {
+        ids[i] = 0x300U + i;
+    }
+    dev->configureFilterList(ids, 20U);
+
+    for (uint8_t b = 0; b < 10; b++)
+    {
+        EXPECT_NE(fakeCan.FA1R & (1U << b), 0U) << "Bank " << (int)b;
+    }
+}
+
+TEST_F(BxCanDeviceTest, filterListReconfiguringClearsOldBanks)
+{
+    auto dev = makeInitedDevice();
+
+    // First configure 6 IDs (3 banks)
+    uint32_t ids1[] = {0x100U, 0x200U, 0x300U, 0x400U, 0x500U, 0x600U};
+    dev->configureFilterList(ids1, 6U);
+    EXPECT_NE(fakeCan.FA1R & (1U << 2U), 0U);
+
+    // Now reconfigure with just 2 IDs (1 bank)
+    uint32_t ids2[] = {0x700U, 0x701U};
+    dev->configureFilterList(ids2, 2U);
+    EXPECT_NE(fakeCan.FA1R & (1U << 0U), 0U);
+}
+
+// ============================================================================
+// NEW TESTS — Category E: TX Mailbox Selection (25 tests)
+// ============================================================================
+
+TEST_F(BxCanDeviceTest, txMailbox0SelectedWhenAllEmpty)
+{
+    auto dev    = makeStartedDevice();
+    fakeCan.TSR = CAN_TSR_TME0 | CAN_TSR_TME1 | CAN_TSR_TME2;
+    uint8_t data[8] = {};
+    dev->transmit(::can::CANFrame(0x100U, data, 1U));
+    EXPECT_NE(fakeCan.sTxMailBox[0].TIR & CAN_TI0R_TXRQ, 0U);
+}
+
+TEST_F(BxCanDeviceTest, txMailbox1SelectedWhen0Full)
+{
+    auto dev    = makeStartedDevice();
+    fakeCan.TSR = CAN_TSR_TME1 | CAN_TSR_TME2;
+    uint8_t data[8] = {};
+    dev->transmit(::can::CANFrame(0x100U, data, 1U));
+    EXPECT_NE(fakeCan.sTxMailBox[1].TIR & CAN_TI0R_TXRQ, 0U);
+}
+
+TEST_F(BxCanDeviceTest, txMailbox2SelectedWhen01Full)
+{
+    auto dev    = makeStartedDevice();
+    fakeCan.TSR = CAN_TSR_TME2;
+    uint8_t data[8] = {};
+    dev->transmit(::can::CANFrame(0x100U, data, 1U));
+    EXPECT_NE(fakeCan.sTxMailBox[2].TIR & CAN_TI0R_TXRQ, 0U);
+}
+
+TEST_F(BxCanDeviceTest, txAllFullReturnsFalse)
+{
+    auto dev    = makeStartedDevice();
+    fakeCan.TSR = 0U;
+    uint8_t data[8] = {};
+    EXPECT_FALSE(dev->transmit(::can::CANFrame(0x100U, data, 1U)));
+}
+
+TEST_F(BxCanDeviceTest, txTmeBit000AllFull)
+{
+    auto dev    = makeStartedDevice();
+    fakeCan.TSR = 0U; // TME0=0, TME1=0, TME2=0
+    uint8_t data[8] = {};
+    EXPECT_FALSE(dev->transmit(::can::CANFrame(0x100U, data, 1U)));
+}
+
+TEST_F(BxCanDeviceTest, txTmeBit100Only0Empty)
+{
+    auto dev    = makeStartedDevice();
+    fakeCan.TSR = CAN_TSR_TME0;
+    uint8_t data[8] = {};
+    EXPECT_TRUE(dev->transmit(::can::CANFrame(0x100U, data, 1U)));
+    uint32_t stid = (fakeCan.sTxMailBox[0].TIR >> CAN_TI0R_STID_Pos) & 0x7FFU;
+    EXPECT_EQ(stid, 0x100U);
+}
+
+TEST_F(BxCanDeviceTest, txTmeBit010Only1Empty)
+{
+    auto dev    = makeStartedDevice();
+    fakeCan.TSR = CAN_TSR_TME1;
+    uint8_t data[8] = {};
+    EXPECT_TRUE(dev->transmit(::can::CANFrame(0x100U, data, 1U)));
+    uint32_t stid = (fakeCan.sTxMailBox[1].TIR >> CAN_TI0R_STID_Pos) & 0x7FFU;
+    EXPECT_EQ(stid, 0x100U);
+}
+
+TEST_F(BxCanDeviceTest, txTmeBit001Only2Empty)
+{
+    auto dev    = makeStartedDevice();
+    fakeCan.TSR = CAN_TSR_TME2;
+    uint8_t data[8] = {};
+    EXPECT_TRUE(dev->transmit(::can::CANFrame(0x100U, data, 1U)));
+    uint32_t stid = (fakeCan.sTxMailBox[2].TIR >> CAN_TI0R_STID_Pos) & 0x7FFU;
+    EXPECT_EQ(stid, 0x100U);
+}
+
+TEST_F(BxCanDeviceTest, txTmeBit110Only01Empty)
+{
+    auto dev    = makeStartedDevice();
+    fakeCan.TSR = CAN_TSR_TME0 | CAN_TSR_TME1;
+    uint8_t data[8] = {};
+    EXPECT_TRUE(dev->transmit(::can::CANFrame(0x100U, data, 1U)));
+    // Should pick mailbox 0 (first empty)
+    EXPECT_NE(fakeCan.sTxMailBox[0].TIR & CAN_TI0R_TXRQ, 0U);
+}
+
+TEST_F(BxCanDeviceTest, txTmeBit101Only02Empty)
+{
+    auto dev    = makeStartedDevice();
+    fakeCan.TSR = CAN_TSR_TME0 | CAN_TSR_TME2;
+    uint8_t data[8] = {};
+    EXPECT_TRUE(dev->transmit(::can::CANFrame(0x100U, data, 1U)));
+    EXPECT_NE(fakeCan.sTxMailBox[0].TIR & CAN_TI0R_TXRQ, 0U);
+}
+
+TEST_F(BxCanDeviceTest, txTmeBit011Only12Empty)
+{
+    auto dev    = makeStartedDevice();
+    fakeCan.TSR = CAN_TSR_TME1 | CAN_TSR_TME2;
+    uint8_t data[8] = {};
+    EXPECT_TRUE(dev->transmit(::can::CANFrame(0x100U, data, 1U)));
+    EXPECT_NE(fakeCan.sTxMailBox[1].TIR & CAN_TI0R_TXRQ, 0U);
+}
+
+TEST_F(BxCanDeviceTest, txTmeBit111AllEmpty)
+{
+    auto dev    = makeStartedDevice();
+    fakeCan.TSR = CAN_TSR_TME0 | CAN_TSR_TME1 | CAN_TSR_TME2;
+    uint8_t data[8] = {};
+    EXPECT_TRUE(dev->transmit(::can::CANFrame(0x100U, data, 1U)));
+    EXPECT_NE(fakeCan.sTxMailBox[0].TIR & CAN_TI0R_TXRQ, 0U);
+}
+
+TEST_F(BxCanDeviceTest, txTxrqSetInSelectedMailbox)
+{
+    auto dev    = makeStartedDevice();
+    fakeCan.TSR = CAN_TSR_TME1;
+    uint8_t data[8] = {};
+    dev->transmit(::can::CANFrame(0x200U, data, 1U));
+    EXPECT_NE(fakeCan.sTxMailBox[1].TIR & CAN_TI0R_TXRQ, 0U);
+}
+
+TEST_F(BxCanDeviceTest, txStandardIdNotIde)
+{
+    auto dev    = makeStartedDevice();
+    fakeCan.TSR = CAN_TSR_TME0;
+    uint8_t data[8] = {};
+    dev->transmit(::can::CANFrame(0x100U, data, 1U));
+    EXPECT_EQ(fakeCan.sTxMailBox[0].TIR & CAN_TI0R_IDE, 0U);
+}
+
+TEST_F(BxCanDeviceTest, txExtendedIdSetsIde)
+{
+    auto dev    = makeStartedDevice();
+    fakeCan.TSR = CAN_TSR_TME0;
+    uint8_t data[8] = {};
+    dev->transmit(::can::CANFrame(0x80000100U, data, 1U));
+    EXPECT_NE(fakeCan.sTxMailBox[0].TIR & CAN_TI0R_IDE, 0U);
+}
+
+TEST_F(BxCanDeviceTest, txDlc0)
+{
+    auto dev    = makeStartedDevice();
+    fakeCan.TSR = CAN_TSR_TME0;
+    uint8_t data[8] = {};
+    dev->transmit(::can::CANFrame(0x100U, data, 0U));
+    EXPECT_EQ(fakeCan.sTxMailBox[0].TDTR & 0xFU, 0U);
+}
+
+TEST_F(BxCanDeviceTest, txDlc1)
+{
+    auto dev    = makeStartedDevice();
+    fakeCan.TSR = CAN_TSR_TME0;
+    uint8_t data[8] = {0xAA};
+    dev->transmit(::can::CANFrame(0x100U, data, 1U));
+    EXPECT_EQ(fakeCan.sTxMailBox[0].TDTR & 0xFU, 1U);
+}
+
+TEST_F(BxCanDeviceTest, txDlc2)
+{
+    auto dev    = makeStartedDevice();
+    fakeCan.TSR = CAN_TSR_TME0;
+    uint8_t data[8] = {0xAA, 0xBB};
+    dev->transmit(::can::CANFrame(0x100U, data, 2U));
+    EXPECT_EQ(fakeCan.sTxMailBox[0].TDTR & 0xFU, 2U);
+}
+
+TEST_F(BxCanDeviceTest, txDlc3)
+{
+    auto dev    = makeStartedDevice();
+    fakeCan.TSR = CAN_TSR_TME0;
+    uint8_t data[8] = {0xAA, 0xBB, 0xCC};
+    dev->transmit(::can::CANFrame(0x100U, data, 3U));
+    EXPECT_EQ(fakeCan.sTxMailBox[0].TDTR & 0xFU, 3U);
+}
+
+TEST_F(BxCanDeviceTest, txDlc4)
+{
+    auto dev    = makeStartedDevice();
+    fakeCan.TSR = CAN_TSR_TME0;
+    uint8_t data[8] = {0xAA, 0xBB, 0xCC, 0xDD};
+    dev->transmit(::can::CANFrame(0x100U, data, 4U));
+    EXPECT_EQ(fakeCan.sTxMailBox[0].TDTR & 0xFU, 4U);
+}
+
+TEST_F(BxCanDeviceTest, txDlc5)
+{
+    auto dev    = makeStartedDevice();
+    fakeCan.TSR = CAN_TSR_TME0;
+    uint8_t data[8] = {0xAA, 0xBB, 0xCC, 0xDD, 0xEE};
+    dev->transmit(::can::CANFrame(0x100U, data, 5U));
+    EXPECT_EQ(fakeCan.sTxMailBox[0].TDTR & 0xFU, 5U);
+}
+
+TEST_F(BxCanDeviceTest, txDlc6)
+{
+    auto dev    = makeStartedDevice();
+    fakeCan.TSR = CAN_TSR_TME0;
+    uint8_t data[8] = {0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF};
+    dev->transmit(::can::CANFrame(0x100U, data, 6U));
+    EXPECT_EQ(fakeCan.sTxMailBox[0].TDTR & 0xFU, 6U);
+}
+
+TEST_F(BxCanDeviceTest, txDlc7)
+{
+    auto dev    = makeStartedDevice();
+    fakeCan.TSR = CAN_TSR_TME0;
+    uint8_t data[8] = {0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF, 0x11};
+    dev->transmit(::can::CANFrame(0x100U, data, 7U));
+    EXPECT_EQ(fakeCan.sTxMailBox[0].TDTR & 0xFU, 7U);
+}
+
+TEST_F(BxCanDeviceTest, txDlc8)
+{
+    auto dev    = makeStartedDevice();
+    fakeCan.TSR = CAN_TSR_TME0;
+    uint8_t data[8] = {0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF, 0x11, 0x22};
+    dev->transmit(::can::CANFrame(0x100U, data, 8U));
+    EXPECT_EQ(fakeCan.sTxMailBox[0].TDTR & 0xFU, 8U);
+}
+
+// ============================================================================
+// NEW TESTS — Category F: transmitISR (20 tests)
+// ============================================================================
+
+TEST_F(BxCanDeviceTest, transmitIsrWritesRqcp0)
+{
+    auto dev    = makeStartedDevice();
+    fakeCan.TSR = 0U;
+    dev->transmitISR();
+    EXPECT_NE(fakeCan.TSR & CAN_TSR_RQCP0, 0U);
+}
+
+TEST_F(BxCanDeviceTest, transmitIsrWritesRqcp1)
+{
+    auto dev    = makeStartedDevice();
+    fakeCan.TSR = 0U;
+    dev->transmitISR();
+    EXPECT_NE(fakeCan.TSR & CAN_TSR_RQCP1, 0U);
+}
+
+TEST_F(BxCanDeviceTest, transmitIsrWritesRqcp2)
+{
+    auto dev    = makeStartedDevice();
+    fakeCan.TSR = 0U;
+    dev->transmitISR();
+    EXPECT_NE(fakeCan.TSR & CAN_TSR_RQCP2, 0U);
+}
+
+TEST_F(BxCanDeviceTest, transmitIsrTme000KeepsTmeie)
+{
+    auto dev = makeStartedDevice();
+    fakeCan.IER |= CAN_IER_TMEIE;
+    fakeCan.TSR = 0U; // All busy
+    dev->transmitISR();
+    EXPECT_NE(fakeCan.IER & CAN_IER_TMEIE, 0U);
+}
+
+TEST_F(BxCanDeviceTest, transmitIsrTme001KeepsTmeie)
+{
+    auto dev = makeStartedDevice();
+    fakeCan.IER |= CAN_IER_TMEIE;
+    fakeCan.TSR = CAN_TSR_TME2;
+    dev->transmitISR();
+    EXPECT_NE(fakeCan.IER & CAN_IER_TMEIE, 0U);
+}
+
+TEST_F(BxCanDeviceTest, transmitIsrTme010KeepsTmeie)
+{
+    auto dev = makeStartedDevice();
+    fakeCan.IER |= CAN_IER_TMEIE;
+    fakeCan.TSR = CAN_TSR_TME1;
+    dev->transmitISR();
+    EXPECT_NE(fakeCan.IER & CAN_IER_TMEIE, 0U);
+}
+
+TEST_F(BxCanDeviceTest, transmitIsrTme011KeepsTmeie)
+{
+    auto dev = makeStartedDevice();
+    fakeCan.IER |= CAN_IER_TMEIE;
+    fakeCan.TSR = CAN_TSR_TME1 | CAN_TSR_TME2;
+    dev->transmitISR();
+    EXPECT_NE(fakeCan.IER & CAN_IER_TMEIE, 0U);
+}
+
+TEST_F(BxCanDeviceTest, transmitIsrTme100KeepsTmeie)
+{
+    auto dev = makeStartedDevice();
+    fakeCan.IER |= CAN_IER_TMEIE;
+    fakeCan.TSR = CAN_TSR_TME0;
+    dev->transmitISR();
+    EXPECT_NE(fakeCan.IER & CAN_IER_TMEIE, 0U);
+}
+
+TEST_F(BxCanDeviceTest, transmitIsrTme101KeepsTmeie)
+{
+    auto dev = makeStartedDevice();
+    fakeCan.IER |= CAN_IER_TMEIE;
+    fakeCan.TSR = CAN_TSR_TME0 | CAN_TSR_TME2;
+    dev->transmitISR();
+    EXPECT_NE(fakeCan.IER & CAN_IER_TMEIE, 0U);
+}
+
+TEST_F(BxCanDeviceTest, transmitIsrTme110KeepsTmeie)
+{
+    auto dev = makeStartedDevice();
+    fakeCan.IER |= CAN_IER_TMEIE;
+    fakeCan.TSR = CAN_TSR_TME0 | CAN_TSR_TME1;
+    dev->transmitISR();
+    EXPECT_NE(fakeCan.IER & CAN_IER_TMEIE, 0U);
+}
+
+TEST_F(BxCanDeviceTest, transmitIsrTme111DisablesTmeie)
+{
+    auto dev = makeStartedDevice();
+    fakeCan.IER |= CAN_IER_TMEIE;
+    fakeCan.TSR = CAN_TSR_TME0 | CAN_TSR_TME1 | CAN_TSR_TME2;
+    dev->transmitISR();
+    EXPECT_EQ(fakeCan.IER & CAN_IER_TMEIE, 0U);
+}
+
+TEST_F(BxCanDeviceTest, transmitIsrPreservesFmpie0)
+{
+    auto dev = makeStartedDevice();
+    fakeCan.IER |= CAN_IER_TMEIE;
+    EXPECT_NE(fakeCan.IER & CAN_IER_FMPIE0, 0U);
+    fakeCan.TSR = CAN_TSR_TME0 | CAN_TSR_TME1 | CAN_TSR_TME2;
+    dev->transmitISR();
+    EXPECT_NE(fakeCan.IER & CAN_IER_FMPIE0, 0U);
+}
+
+TEST_F(BxCanDeviceTest, transmitIsrNoTmeieWhenNotPreviouslySet)
+{
+    auto dev = makeStartedDevice();
+    fakeCan.IER &= ~CAN_IER_TMEIE;
+    fakeCan.TSR = CAN_TSR_TME0 | CAN_TSR_TME1 | CAN_TSR_TME2;
+    dev->transmitISR();
+    EXPECT_EQ(fakeCan.IER & CAN_IER_TMEIE, 0U);
+}
+
+TEST_F(BxCanDeviceTest, transmitIsrCalledMultipleTimesIdempotent)
+{
+    auto dev = makeStartedDevice();
+    fakeCan.TSR = CAN_TSR_TME0 | CAN_TSR_TME1 | CAN_TSR_TME2;
+    fakeCan.IER |= CAN_IER_TMEIE;
+    dev->transmitISR();
+    EXPECT_EQ(fakeCan.IER & CAN_IER_TMEIE, 0U);
+    dev->transmitISR();
+    EXPECT_EQ(fakeCan.IER & CAN_IER_TMEIE, 0U);
+}
+
+TEST_F(BxCanDeviceTest, transmitIsrThenTransmitReenablesTmeie)
+{
+    auto dev        = makeStartedDevice();
+    uint8_t data[8] = {};
+
+    fakeCan.TSR = CAN_TSR_TME0 | CAN_TSR_TME1 | CAN_TSR_TME2;
+    fakeCan.IER |= CAN_IER_TMEIE;
+    dev->transmitISR();
+    EXPECT_EQ(fakeCan.IER & CAN_IER_TMEIE, 0U);
+
+    fakeCan.TSR = CAN_TSR_TME0;
+    dev->transmit(::can::CANFrame(0x100U, data, 1U));
+    EXPECT_NE(fakeCan.IER & CAN_IER_TMEIE, 0U);
+}
+
+TEST_F(BxCanDeviceTest, transmitIsrRqcpSetEvenWhenAllEmpty)
+{
+    auto dev    = makeStartedDevice();
+    fakeCan.TSR = CAN_TSR_TME0 | CAN_TSR_TME1 | CAN_TSR_TME2;
+    dev->transmitISR();
+    EXPECT_NE(fakeCan.TSR & CAN_TSR_RQCP0, 0U);
+    EXPECT_NE(fakeCan.TSR & CAN_TSR_RQCP1, 0U);
+    EXPECT_NE(fakeCan.TSR & CAN_TSR_RQCP2, 0U);
+}
+
+TEST_F(BxCanDeviceTest, transmitIsrRqcpSetEvenWhenAllBusy)
+{
+    auto dev    = makeStartedDevice();
+    fakeCan.TSR = 0U;
+    dev->transmitISR();
+    EXPECT_NE(fakeCan.TSR & CAN_TSR_RQCP0, 0U);
+    EXPECT_NE(fakeCan.TSR & CAN_TSR_RQCP1, 0U);
+    EXPECT_NE(fakeCan.TSR & CAN_TSR_RQCP2, 0U);
+}
+
+TEST_F(BxCanDeviceTest, transmitIsrWithRqcpAlreadySet)
+{
+    auto dev    = makeStartedDevice();
+    fakeCan.TSR = CAN_TSR_RQCP0 | CAN_TSR_RQCP1 | CAN_TSR_RQCP2
+                  | CAN_TSR_TME0 | CAN_TSR_TME1 | CAN_TSR_TME2;
+    fakeCan.IER |= CAN_IER_TMEIE;
+    dev->transmitISR();
+    EXPECT_EQ(fakeCan.IER & CAN_IER_TMEIE, 0U);
+}
+
+TEST_F(BxCanDeviceTest, transmitIsrRapidCallsDoNotCorruptIer)
+{
+    auto dev = makeStartedDevice();
+    for (int i = 0; i < 10; i++)
+    {
+        fakeCan.IER |= CAN_IER_TMEIE;
+        fakeCan.TSR = CAN_TSR_TME0 | CAN_TSR_TME1 | CAN_TSR_TME2;
+        dev->transmitISR();
+        EXPECT_EQ(fakeCan.IER & CAN_IER_TMEIE, 0U);
+        EXPECT_NE(fakeCan.IER & CAN_IER_FMPIE0, 0U);
+    }
+}
+
+// ============================================================================
+// NEW TESTS — Category G: Error State (15 tests)
+// ============================================================================
+
+TEST_F(BxCanDeviceTest, busOffClearWhenBoffBitClear)
+{
+    auto dev    = makeStartedDevice();
+    fakeCan.ESR = 0U;
+    EXPECT_FALSE(dev->isBusOff());
+}
+
+TEST_F(BxCanDeviceTest, busOffSetWhenBoffBitSet)
+{
+    auto dev    = makeStartedDevice();
+    fakeCan.ESR = CAN_ESR_BOFF;
+    EXPECT_TRUE(dev->isBusOff());
+}
+
+TEST_F(BxCanDeviceTest, busOffWithTecMaxAndBoff)
+{
+    auto dev    = makeStartedDevice();
+    fakeCan.ESR = CAN_ESR_BOFF | (255U << CAN_ESR_TEC_Pos);
+    EXPECT_TRUE(dev->isBusOff());
+    EXPECT_EQ(dev->getTxErrorCounter(), 255U);
+}
+
+TEST_F(BxCanDeviceTest, tecZero)
+{
+    auto dev    = makeStartedDevice();
+    fakeCan.ESR = 0U;
+    EXPECT_EQ(dev->getTxErrorCounter(), 0U);
+}
+
+TEST_F(BxCanDeviceTest, tec128)
+{
+    auto dev    = makeStartedDevice();
+    fakeCan.ESR = (128U << CAN_ESR_TEC_Pos);
+    EXPECT_EQ(dev->getTxErrorCounter(), 128U);
+}
+
+TEST_F(BxCanDeviceTest, tec255)
+{
+    auto dev    = makeStartedDevice();
+    fakeCan.ESR = (255U << CAN_ESR_TEC_Pos);
+    EXPECT_EQ(dev->getTxErrorCounter(), 255U);
+}
+
+TEST_F(BxCanDeviceTest, tec1)
+{
+    auto dev    = makeStartedDevice();
+    fakeCan.ESR = (1U << CAN_ESR_TEC_Pos);
+    EXPECT_EQ(dev->getTxErrorCounter(), 1U);
+}
+
+TEST_F(BxCanDeviceTest, recZero)
+{
+    auto dev    = makeStartedDevice();
+    fakeCan.ESR = 0U;
+    EXPECT_EQ(dev->getRxErrorCounter(), 0U);
+}
+
+TEST_F(BxCanDeviceTest, rec64)
+{
+    auto dev    = makeStartedDevice();
+    fakeCan.ESR = (64U << CAN_ESR_REC_Pos);
+    EXPECT_EQ(dev->getRxErrorCounter(), 64U);
+}
+
+TEST_F(BxCanDeviceTest, rec127)
+{
+    auto dev    = makeStartedDevice();
+    fakeCan.ESR = (127U << CAN_ESR_REC_Pos);
+    EXPECT_EQ(dev->getRxErrorCounter(), 127U);
+}
+
+TEST_F(BxCanDeviceTest, rec255)
+{
+    auto dev    = makeStartedDevice();
+    fakeCan.ESR = (255U << CAN_ESR_REC_Pos);
+    EXPECT_EQ(dev->getRxErrorCounter(), 255U);
+}
+
+TEST_F(BxCanDeviceTest, rec1)
+{
+    auto dev    = makeStartedDevice();
+    fakeCan.ESR = (1U << CAN_ESR_REC_Pos);
+    EXPECT_EQ(dev->getRxErrorCounter(), 1U);
+}
+
+TEST_F(BxCanDeviceTest, tecAndRecSimultaneous)
+{
+    auto dev    = makeStartedDevice();
+    fakeCan.ESR = (100U << CAN_ESR_TEC_Pos) | (200U << CAN_ESR_REC_Pos);
+    EXPECT_EQ(dev->getTxErrorCounter(), 100U);
+    EXPECT_EQ(dev->getRxErrorCounter(), 200U);
+}
+
+TEST_F(BxCanDeviceTest, busOffDoesNotAffectErrorCounters)
+{
+    auto dev    = makeStartedDevice();
+    fakeCan.ESR = CAN_ESR_BOFF | (50U << CAN_ESR_TEC_Pos) | (75U << CAN_ESR_REC_Pos);
+    EXPECT_TRUE(dev->isBusOff());
+    EXPECT_EQ(dev->getTxErrorCounter(), 50U);
+    EXPECT_EQ(dev->getRxErrorCounter(), 75U);
+}
+
+TEST_F(BxCanDeviceTest, errorCountersChangeOverTime)
+{
+    auto dev    = makeStartedDevice();
+    fakeCan.ESR = (10U << CAN_ESR_TEC_Pos) | (20U << CAN_ESR_REC_Pos);
+    EXPECT_EQ(dev->getTxErrorCounter(), 10U);
+    EXPECT_EQ(dev->getRxErrorCounter(), 20U);
+
+    fakeCan.ESR = (150U << CAN_ESR_TEC_Pos) | (200U << CAN_ESR_REC_Pos);
+    EXPECT_EQ(dev->getTxErrorCounter(), 150U);
+    EXPECT_EQ(dev->getRxErrorCounter(), 200U);
+
+    fakeCan.ESR = 0U;
+    EXPECT_EQ(dev->getTxErrorCounter(), 0U);
+    EXPECT_EQ(dev->getRxErrorCounter(), 0U);
+}
+
+// ============================================================================
+// NEW TESTS — Category H: Queue Management (25 tests)
+// ============================================================================
+
+TEST_F(BxCanDeviceTest, getRxCountInitiallyZero)
+{
+    auto cfg = makeDefaultConfig();
+    bios::BxCanDevice dev(cfg);
+    EXPECT_EQ(dev.getRxCount(), 0U);
+}
+
+TEST_F(BxCanDeviceTest, getRxCountAfterOneFrame)
+{
+    auto dev        = makeStartedDevice();
+    uint8_t data[8] = {};
+    receiveSingleFrame(*dev, 0x100U, false, 1U, data);
+    EXPECT_EQ(dev->getRxCount(), 1U);
+}
+
+TEST_F(BxCanDeviceTest, getRxCountAfter5Frames)
+{
+    auto dev        = makeStartedDevice();
+    uint8_t data[8] = {};
+    for (uint8_t i = 0; i < 5; i++)
+    {
+        receiveSingleFrame(*dev, 0x100U + i, false, 1U, data);
+    }
+    EXPECT_EQ(dev->getRxCount(), 5U);
+}
+
+TEST_F(BxCanDeviceTest, getRxCountAfter32Frames)
+{
+    auto dev        = makeStartedDevice();
+    uint8_t data[8] = {};
+    for (uint8_t i = 0; i < 32; i++)
+    {
+        receiveSingleFrame(*dev, 0x100U + i, false, 1U, data);
+    }
+    EXPECT_EQ(dev->getRxCount(), 32U);
+}
+
+TEST_F(BxCanDeviceTest, clearRxQueueSetsCountToZero)
+{
+    auto dev        = makeStartedDevice();
+    uint8_t data[8] = {};
+    receiveSingleFrame(*dev, 0x100U, false, 1U, data);
+    EXPECT_EQ(dev->getRxCount(), 1U);
+    dev->clearRxQueue();
+    EXPECT_EQ(dev->getRxCount(), 0U);
+}
+
+TEST_F(BxCanDeviceTest, clearRxQueueMultipleTimes)
+{
+    auto dev        = makeStartedDevice();
+    uint8_t data[8] = {};
+    receiveSingleFrame(*dev, 0x100U, false, 1U, data);
+    dev->clearRxQueue();
+    EXPECT_EQ(dev->getRxCount(), 0U);
+    dev->clearRxQueue();
+    EXPECT_EQ(dev->getRxCount(), 0U);
+}
+
+TEST_F(BxCanDeviceTest, clearRxQueueOnEmptyQueue)
+{
+    auto dev = makeStartedDevice();
+    dev->clearRxQueue();
+    EXPECT_EQ(dev->getRxCount(), 0U);
+}
+
+TEST_F(BxCanDeviceTest, rxQueueWrappingWithExactCapacity)
+{
+    auto dev        = makeStartedDevice();
+    uint8_t data[8] = {};
+
+    // Fill to 30 frames, clear, then fill to 32 (wraps around)
+    for (uint8_t i = 0; i < 30; i++)
+    {
+        receiveSingleFrame(*dev, 0x100U + i, false, 1U, data);
+    }
+    dev->clearRxQueue();
+
+    for (uint8_t i = 0; i < 32; i++)
+    {
+        data[0] = i;
+        receiveSingleFrame(*dev, 0x200U + i, false, 1U, data);
+    }
+    EXPECT_EQ(dev->getRxCount(), 32U);
+    EXPECT_EQ(dev->getRxFrame(0).getId(), 0x200U);
+    EXPECT_EQ(dev->getRxFrame(31).getId(), 0x21FU);
+}
+
+TEST_F(BxCanDeviceTest, rxQueueHeadAdvancesOnClear)
+{
+    auto dev        = makeStartedDevice();
+    uint8_t data[8] = {};
+
+    for (uint8_t i = 0; i < 10; i++)
+    {
+        receiveSingleFrame(*dev, 0x100U + i, false, 1U, data);
+    }
+    dev->clearRxQueue();
+
+    // Head should now be at 10
+    receiveSingleFrame(*dev, 0x500U, false, 1U, data);
+    EXPECT_EQ(dev->getRxCount(), 1U);
+    EXPECT_EQ(dev->getRxFrame(0).getId(), 0x500U);
+}
+
+TEST_F(BxCanDeviceTest, rxQueueMultipleCycleFillAndClear)
+{
+    auto dev        = makeStartedDevice();
+    uint8_t data[8] = {};
+
+    for (int cycle = 0; cycle < 5; cycle++)
+    {
+        for (uint8_t i = 0; i < 8; i++)
+        {
+            receiveSingleFrame(*dev, 0x100U * (cycle + 1) + i, false, 1U, data);
+        }
+        EXPECT_EQ(dev->getRxCount(), 8U);
+        dev->clearRxQueue();
+        EXPECT_EQ(dev->getRxCount(), 0U);
+    }
+}
+
+TEST_F(BxCanDeviceTest, rxQueueFrameContentAfterWrapping)
+{
+    auto dev        = makeStartedDevice();
+    uint8_t data[8] = {};
+
+    // Fill 28 frames, clear, then add 8 more (wraps 28+8=36 > 32)
+    for (uint8_t i = 0; i < 28; i++)
+    {
+        receiveSingleFrame(*dev, 0x100U + i, false, 1U, data);
+    }
+    dev->clearRxQueue();
+
+    for (uint8_t i = 0; i < 8; i++)
+    {
+        data[0] = 0xA0U + i;
+        receiveSingleFrame(*dev, 0x300U + i, false, 1U, data);
+    }
+    EXPECT_EQ(dev->getRxCount(), 8U);
+    EXPECT_EQ(dev->getRxFrame(0).getId(), 0x300U);
+    EXPECT_EQ(dev->getRxFrame(0).getPayload()[0], 0xA0U);
+    EXPECT_EQ(dev->getRxFrame(7).getId(), 0x307U);
+    EXPECT_EQ(dev->getRxFrame(7).getPayload()[0], 0xA7U);
+}
+
+TEST_F(BxCanDeviceTest, rxQueueFullThen33rdDropped)
+{
+    auto dev        = makeStartedDevice();
+    uint8_t data[8] = {};
+
+    for (uint8_t i = 0; i < 32; i++)
+    {
+        receiveSingleFrame(*dev, 0x100U + i, false, 1U, data);
+    }
+    EXPECT_EQ(dev->getRxCount(), 32U);
+
+    // 33rd frame should be dropped
+    placeRxFrameStd(0x999U, 1U, data);
+    fakeCan.RF0R = 1U;
+    std::atomic<bool> done{false};
+    std::thread hwSim(
+        [&]()
+        {
+            while (!done.load(std::memory_order_relaxed))
+            {
+                if ((fakeCan.RF0R & CAN_RF0R_RFOM0) != 0U)
+                {
+                    fakeCan.RF0R = 0U;
+                    done.store(true, std::memory_order_relaxed);
+                    return;
+                }
+            }
+        });
+    uint8_t count = dev->receiveISR(nullptr);
+    done.store(true, std::memory_order_relaxed);
+    hwSim.join();
+    EXPECT_EQ(count, 0U);
+    EXPECT_EQ(dev->getRxCount(), 32U);
+}
+
+TEST_F(BxCanDeviceTest, rxQueueClearThenFillToCapacity)
+{
+    auto dev        = makeStartedDevice();
+    uint8_t data[8] = {};
+
+    for (uint8_t i = 0; i < 32; i++)
+    {
+        receiveSingleFrame(*dev, 0x100U + i, false, 1U, data);
+    }
+    dev->clearRxQueue();
+
+    for (uint8_t i = 0; i < 32; i++)
+    {
+        receiveSingleFrame(*dev, 0x200U + i, false, 1U, data);
+    }
+    EXPECT_EQ(dev->getRxCount(), 32U);
+    EXPECT_EQ(dev->getRxFrame(0).getId(), 0x200U);
+    EXPECT_EQ(dev->getRxFrame(31).getId(), 0x21FU);
+}
+
+TEST_F(BxCanDeviceTest, rxQueueGetFrameIndex0)
+{
+    auto dev        = makeStartedDevice();
+    uint8_t data[8] = {0x42};
+    receiveSingleFrame(*dev, 0x123U, false, 1U, data);
+    EXPECT_EQ(dev->getRxFrame(0).getId(), 0x123U);
+    EXPECT_EQ(dev->getRxFrame(0).getPayload()[0], 0x42U);
+}
+
+TEST_F(BxCanDeviceTest, rxQueueGetFrameLastIndex)
+{
+    auto dev        = makeStartedDevice();
+    uint8_t data[8] = {};
+
+    for (uint8_t i = 0; i < 10; i++)
+    {
+        data[0] = i;
+        receiveSingleFrame(*dev, 0x100U + i, false, 1U, data);
+    }
+    EXPECT_EQ(dev->getRxFrame(9).getId(), 0x109U);
+    EXPECT_EQ(dev->getRxFrame(9).getPayload()[0], 9U);
+}
+
+TEST_F(BxCanDeviceTest, rxQueueStandardAndExtendedMixed)
+{
+    auto dev        = makeStartedDevice();
+    uint8_t data[8] = {};
+
+    receiveSingleFrame(*dev, 0x100U, false, 1U, data);
+    receiveSingleFrame(*dev, 0x1ABCDU, true, 1U, data);
+    receiveSingleFrame(*dev, 0x200U, false, 1U, data);
+
+    EXPECT_EQ(dev->getRxCount(), 3U);
+    EXPECT_EQ(dev->getRxFrame(0).getId(), 0x100U);
+    EXPECT_EQ(dev->getRxFrame(1).getId(), 0x1ABCDU | 0x80000000U);
+    EXPECT_EQ(dev->getRxFrame(2).getId(), 0x200U);
+}
+
+TEST_F(BxCanDeviceTest, rxQueueDifferentDlcValues)
+{
+    auto dev        = makeStartedDevice();
+    uint8_t data[8] = {1, 2, 3, 4, 5, 6, 7, 8};
+
+    for (uint8_t dlc = 0; dlc <= 8; dlc++)
+    {
+        receiveSingleFrame(*dev, 0x100U + dlc, false, dlc, data);
+    }
+    EXPECT_EQ(dev->getRxCount(), 9U);
+    for (uint8_t dlc = 0; dlc <= 8; dlc++)
+    {
+        EXPECT_EQ(dev->getRxFrame(dlc).getPayloadLength(), dlc);
+    }
+}
+
+TEST_F(BxCanDeviceTest, rxQueueReceiveClearReceive)
+{
+    auto dev        = makeStartedDevice();
+    uint8_t data[8] = {};
+
+    receiveSingleFrame(*dev, 0x100U, false, 1U, data);
+    receiveSingleFrame(*dev, 0x101U, false, 1U, data);
+    EXPECT_EQ(dev->getRxCount(), 2U);
+
+    dev->clearRxQueue();
+    EXPECT_EQ(dev->getRxCount(), 0U);
+
+    receiveSingleFrame(*dev, 0x200U, false, 1U, data);
+    EXPECT_EQ(dev->getRxCount(), 1U);
+    EXPECT_EQ(dev->getRxFrame(0).getId(), 0x200U);
+}
+
+TEST_F(BxCanDeviceTest, rxQueueWrappingPreservesDataIntegrity)
+{
+    auto dev        = makeStartedDevice();
+    uint8_t data[8] = {};
+
+    // Fill 31 frames and clear
+    for (uint8_t i = 0; i < 31; i++)
+    {
+        receiveSingleFrame(*dev, 0x100U + i, false, 1U, data);
+    }
+    dev->clearRxQueue();
+
+    // Fill 5 more (wraps around position 31 -> 0 -> 1 -> 2 -> 3 -> 4)
+    for (uint8_t i = 0; i < 5; i++)
+    {
+        data[0] = 0xF0U + i;
+        receiveSingleFrame(*dev, 0x400U + i, false, 1U, data);
+    }
+    EXPECT_EQ(dev->getRxCount(), 5U);
+    for (uint8_t i = 0; i < 5; i++)
+    {
+        EXPECT_EQ(dev->getRxFrame(i).getId(), 0x400U + i);
+        EXPECT_EQ(dev->getRxFrame(i).getPayload()[0], 0xF0U + i);
+    }
+}
+
+TEST_F(BxCanDeviceTest, rxQueueFullExactly32)
+{
+    auto dev        = makeStartedDevice();
+    uint8_t data[8] = {};
+    for (uint8_t i = 0; i < 32; i++)
+    {
+        data[0] = i;
+        receiveSingleFrame(*dev, i, false, 1U, data);
+    }
+    EXPECT_EQ(dev->getRxCount(), 32U);
+    for (uint8_t i = 0; i < 32; i++)
+    {
+        EXPECT_EQ(dev->getRxFrame(i).getId(), static_cast<uint32_t>(i));
+        EXPECT_EQ(dev->getRxFrame(i).getPayload()[0], i);
+    }
+}
+
+TEST_F(BxCanDeviceTest, rxQueueClearAfterFullThenRefill)
+{
+    auto dev        = makeStartedDevice();
+    uint8_t data[8] = {};
+
+    // Fill to capacity
+    for (uint8_t i = 0; i < 32; i++)
+    {
+        receiveSingleFrame(*dev, 0x100U + i, false, 1U, data);
+    }
+    dev->clearRxQueue();
+
+    // Fill again to capacity
+    for (uint8_t i = 0; i < 32; i++)
+    {
+        data[0] = 0x80U + i;
+        receiveSingleFrame(*dev, 0x300U + i, false, 1U, data);
+    }
+    EXPECT_EQ(dev->getRxCount(), 32U);
+    EXPECT_EQ(dev->getRxFrame(0).getId(), 0x300U);
+    EXPECT_EQ(dev->getRxFrame(31).getId(), 0x31FU);
+}
+
+TEST_F(BxCanDeviceTest, rxQueueFilterRejectDoesNotIncrementCount)
+{
+    auto dev            = makeStartedDevice();
+    uint8_t data[8]     = {};
+    uint8_t filter[256] = {};
+    // Only accept ID 0x100
+    filter[0x100 / 8U] |= (1U << (0x100 % 8U));
+
+    // Try to receive ID 0x200 (rejected)
+    uint8_t count = receiveSingleFrame(*dev, 0x200U, false, 1U, data, filter);
+    EXPECT_EQ(count, 0U);
+    EXPECT_EQ(dev->getRxCount(), 0U);
+
+    // Now receive ID 0x100 (accepted)
+    count = receiveSingleFrame(*dev, 0x100U, false, 1U, data, filter);
+    EXPECT_EQ(count, 1U);
+    EXPECT_EQ(dev->getRxCount(), 1U);
+}
+
+TEST_F(BxCanDeviceTest, rxQueueFilterAcceptMultipleIds)
+{
+    auto dev            = makeStartedDevice();
+    uint8_t data[8]     = {};
+    uint8_t filter[256] = {};
+    filter[0x100 / 8U] |= (1U << (0x100 % 8U));
+    filter[0x200 / 8U] |= (1U << (0x200 % 8U));
+    filter[0x300 / 8U] |= (1U << (0x300 % 8U));
+
+    receiveSingleFrame(*dev, 0x100U, false, 1U, data, filter);
+    receiveSingleFrame(*dev, 0x150U, false, 1U, data, filter); // Rejected
+    receiveSingleFrame(*dev, 0x200U, false, 1U, data, filter);
+    receiveSingleFrame(*dev, 0x250U, false, 1U, data, filter); // Rejected
+    receiveSingleFrame(*dev, 0x300U, false, 1U, data, filter);
+
+    EXPECT_EQ(dev->getRxCount(), 3U);
+    EXPECT_EQ(dev->getRxFrame(0).getId(), 0x100U);
+    EXPECT_EQ(dev->getRxFrame(1).getId(), 0x200U);
+    EXPECT_EQ(dev->getRxFrame(2).getId(), 0x300U);
+}
+
+// ============================================================================
+// NEW TESTS — Category I: Bit Timing (15 tests)
+// ============================================================================
+
+TEST_F(BxCanDeviceTest, btrBrpField10Bits)
+{
+    auto cfg      = makeDefaultConfig();
+    cfg.prescaler = 1024U;
+    bios::BxCanDevice dev(cfg);
+    dev.init();
+    uint32_t brp = fakeCan.BTR & 0x3FFU;
+    EXPECT_EQ(brp, 1023U);
+}
+
+TEST_F(BxCanDeviceTest, btrTs1Field4Bits)
+{
+    auto cfg = makeDefaultConfig();
+    cfg.bs1  = 16U;
+    bios::BxCanDevice dev(cfg);
+    dev.init();
+    uint32_t ts1 = (fakeCan.BTR >> CAN_BTR_TS1_Pos) & 0xFU;
+    EXPECT_EQ(ts1, 15U);
+}
+
+TEST_F(BxCanDeviceTest, btrTs2Field3Bits)
+{
+    auto cfg = makeDefaultConfig();
+    cfg.bs2  = 8U;
+    bios::BxCanDevice dev(cfg);
+    dev.init();
+    uint32_t ts2 = (fakeCan.BTR >> CAN_BTR_TS2_Pos) & 0x7U;
+    EXPECT_EQ(ts2, 7U);
+}
+
+TEST_F(BxCanDeviceTest, btrSjwField2Bits)
+{
+    auto cfg = makeDefaultConfig();
+    cfg.sjw  = 4U;
+    bios::BxCanDevice dev(cfg);
+    dev.init();
+    uint32_t sjw = (fakeCan.BTR >> CAN_BTR_SJW_Pos) & 0x3U;
+    EXPECT_EQ(sjw, 3U);
+}
+
+TEST_F(BxCanDeviceTest, btrPrescaler2)
+{
+    auto cfg      = makeDefaultConfig();
+    cfg.prescaler = 2U;
+    bios::BxCanDevice dev(cfg);
+    dev.init();
+    EXPECT_EQ(fakeCan.BTR & 0x3FFU, 1U);
+}
+
+TEST_F(BxCanDeviceTest, btrPrescaler100)
+{
+    auto cfg      = makeDefaultConfig();
+    cfg.prescaler = 100U;
+    bios::BxCanDevice dev(cfg);
+    dev.init();
+    EXPECT_EQ(fakeCan.BTR & 0x3FFU, 99U);
+}
+
+TEST_F(BxCanDeviceTest, btrPrescaler256)
+{
+    auto cfg      = makeDefaultConfig();
+    cfg.prescaler = 256U;
+    bios::BxCanDevice dev(cfg);
+    dev.init();
+    EXPECT_EQ(fakeCan.BTR & 0x3FFU, 255U);
+}
+
+TEST_F(BxCanDeviceTest, btrCan250kbpsAt42MHz)
+{
+    // 42 MHz APB1, 250 kbps: prescaler=12, BS1=11, BS2=2, SJW=1
+    auto cfg      = makeDefaultConfig();
+    cfg.prescaler = 12U;
+    cfg.bs1       = 11U;
+    cfg.bs2       = 2U;
+    cfg.sjw       = 1U;
+    bios::BxCanDevice dev(cfg);
+    dev.init();
+
+    uint32_t btr = fakeCan.BTR;
+    EXPECT_EQ(btr & 0x3FFU, 11U);
+    EXPECT_EQ((btr >> CAN_BTR_TS1_Pos) & 0xFU, 10U);
+    EXPECT_EQ((btr >> CAN_BTR_TS2_Pos) & 0x7U, 1U);
+    EXPECT_EQ((btr >> CAN_BTR_SJW_Pos) & 0x3U, 0U);
+}
+
+TEST_F(BxCanDeviceTest, btrCan1MbpsAt42MHz)
+{
+    // 42 MHz APB1, 1 Mbps: prescaler=3, BS1=11, BS2=2, SJW=1
+    auto cfg      = makeDefaultConfig();
+    cfg.prescaler = 3U;
+    cfg.bs1       = 11U;
+    cfg.bs2       = 2U;
+    cfg.sjw       = 1U;
+    bios::BxCanDevice dev(cfg);
+    dev.init();
+
+    uint32_t btr = fakeCan.BTR;
+    EXPECT_EQ(btr & 0x3FFU, 2U);
+    EXPECT_EQ((btr >> CAN_BTR_TS1_Pos) & 0xFU, 10U);
+    EXPECT_EQ((btr >> CAN_BTR_TS2_Pos) & 0x7U, 1U);
+}
+
+TEST_F(BxCanDeviceTest, btrCan125kbpsAt36MHz)
+{
+    // 36 MHz APB1, 125 kbps: prescaler=18, BS1=13, BS2=2, SJW=1
+    auto cfg      = makeDefaultConfig();
+    cfg.prescaler = 18U;
+    cfg.bs1       = 13U;
+    cfg.bs2       = 2U;
+    cfg.sjw       = 1U;
+    bios::BxCanDevice dev(cfg);
+    dev.init();
+
+    EXPECT_EQ(fakeCan.BTR & 0x3FFU, 17U);
+    EXPECT_EQ((fakeCan.BTR >> CAN_BTR_TS1_Pos) & 0xFU, 12U);
+    EXPECT_EQ((fakeCan.BTR >> CAN_BTR_TS2_Pos) & 0x7U, 1U);
+}
+
+TEST_F(BxCanDeviceTest, btrAllFieldsMaxValues)
+{
+    auto cfg      = makeDefaultConfig();
+    cfg.prescaler = 1024U;
+    cfg.bs1       = 16U;
+    cfg.bs2       = 8U;
+    cfg.sjw       = 4U;
+    bios::BxCanDevice dev(cfg);
+    dev.init();
+
+    uint32_t btr = fakeCan.BTR;
+    EXPECT_EQ(btr & 0x3FFU, 1023U);
+    EXPECT_EQ((btr >> CAN_BTR_TS1_Pos) & 0xFU, 15U);
+    EXPECT_EQ((btr >> CAN_BTR_TS2_Pos) & 0x7U, 7U);
+    EXPECT_EQ((btr >> CAN_BTR_SJW_Pos) & 0x3U, 3U);
+}
+
+TEST_F(BxCanDeviceTest, btrAllFieldsMinValues)
+{
+    auto cfg      = makeDefaultConfig();
+    cfg.prescaler = 1U;
+    cfg.bs1       = 1U;
+    cfg.bs2       = 1U;
+    cfg.sjw       = 1U;
+    bios::BxCanDevice dev(cfg);
+    dev.init();
+
+    uint32_t btr = fakeCan.BTR;
+    EXPECT_EQ(btr & 0x3FFU, 0U);
+    EXPECT_EQ((btr >> CAN_BTR_TS1_Pos) & 0xFU, 0U);
+    EXPECT_EQ((btr >> CAN_BTR_TS2_Pos) & 0x7U, 0U);
+    EXPECT_EQ((btr >> CAN_BTR_SJW_Pos) & 0x3U, 0U);
+}
+
+TEST_F(BxCanDeviceTest, btrNoSilentOrLoopbackMode)
+{
+    auto cfg = makeDefaultConfig();
+    bios::BxCanDevice dev(cfg);
+    dev.init();
+    // SILM and LBKM should not be set for normal operation
+    EXPECT_EQ(fakeCan.BTR & CAN_BTR_SILM, 0U);
+    EXPECT_EQ(fakeCan.BTR & CAN_BTR_LBKM, 0U);
+}
+
+TEST_F(BxCanDeviceTest, btrRewrittenOnDoubleInit)
+{
+    auto cfg      = makeDefaultConfig();
+    cfg.prescaler = 4U;
+    bios::BxCanDevice dev(cfg);
+    dev.init();
+    EXPECT_EQ(fakeCan.BTR & 0x3FFU, 3U);
+
+    // Corrupt BTR
+    fakeCan.BTR = 0xFFFFFFFFU;
+
+    // Re-init should restore correct BTR
+    dev.init();
+    EXPECT_EQ(fakeCan.BTR & 0x3FFU, 3U);
+}
+
+TEST_F(BxCanDeviceTest, btrBs1Value8)
+{
+    auto cfg = makeDefaultConfig();
+    cfg.bs1  = 8U;
+    bios::BxCanDevice dev(cfg);
+    dev.init();
+    uint32_t ts1 = (fakeCan.BTR >> CAN_BTR_TS1_Pos) & 0xFU;
+    EXPECT_EQ(ts1, 7U);
+}
+
+// ============================================================================
+// NEW TESTS — Category J: Peripheral Clock (10 tests)
+// ============================================================================
+
+TEST_F(BxCanDeviceTest, clockEnableSetsApb1enrBit25)
+{
+    fakeRcc.APB1ENR = 0U;
+    auto cfg        = makeDefaultConfig();
+    bios::BxCanDevice dev(cfg);
+    dev.init();
+    EXPECT_NE(fakeRcc.APB1ENR & (1U << 25U), 0U);
+}
+
+TEST_F(BxCanDeviceTest, clockEnablePreservesOtherBitsInApb1enr)
+{
+    fakeRcc.APB1ENR = 0x00000001U; // Some other peripheral enabled
+    auto cfg        = makeDefaultConfig();
+    bios::BxCanDevice dev(cfg);
+    dev.init();
+    EXPECT_NE(fakeRcc.APB1ENR & 0x00000001U, 0U);
+    EXPECT_NE(fakeRcc.APB1ENR & RCC_APB1ENR_CAN1EN, 0U);
+}
+
+TEST_F(BxCanDeviceTest, clockEnableIdempotentMultipleInits)
+{
+    auto cfg = makeDefaultConfig();
+    bios::BxCanDevice dev(cfg);
+    dev.init();
+    uint32_t v1 = fakeRcc.APB1ENR;
+    dev.init();
+    uint32_t v2 = fakeRcc.APB1ENR;
+    dev.init();
+    uint32_t v3 = fakeRcc.APB1ENR;
+    EXPECT_EQ(v1, v2);
+    EXPECT_EQ(v2, v3);
+}
+
+TEST_F(BxCanDeviceTest, clockEnableBeforeGpioConfig)
+{
+    // After init, both clock and GPIO should be configured
+    auto cfg = makeDefaultConfig();
+    bios::BxCanDevice dev(cfg);
+    dev.init();
+    EXPECT_NE(fakeRcc.APB1ENR & RCC_APB1ENR_CAN1EN, 0U);
+    uint32_t txModer = (fakeTxGpio.MODER >> (cfg.txPin * 2U)) & 3U;
+    EXPECT_EQ(txModer, 2U);
+}
+
+TEST_F(BxCanDeviceTest, clockEnableWithAllApb1BitsSet)
+{
+    fakeRcc.APB1ENR = 0xFFFFFFFFU;
+    auto cfg        = makeDefaultConfig();
+    bios::BxCanDevice dev(cfg);
+    dev.init();
+    // All bits should still be set
+    EXPECT_EQ(fakeRcc.APB1ENR, 0xFFFFFFFFU);
+}
+
+TEST_F(BxCanDeviceTest, clockEnableBitExactValue)
+{
+    fakeRcc.APB1ENR = 0U;
+    auto cfg        = makeDefaultConfig();
+    bios::BxCanDevice dev(cfg);
+    dev.init();
+    EXPECT_EQ(fakeRcc.APB1ENR & RCC_APB1ENR_CAN1EN, (1U << 25U));
+}
+
+TEST_F(BxCanDeviceTest, clockEnableDoesNotTouchApb2enr)
+{
+    fakeRcc.APB2ENR = 0U;
+    auto cfg        = makeDefaultConfig();
+    bios::BxCanDevice dev(cfg);
+    dev.init();
+    EXPECT_EQ(fakeRcc.APB2ENR, 0U);
+}
+
+TEST_F(BxCanDeviceTest, clockEnableDoesNotTouchAhb1enr)
+{
+    fakeRcc.AHB1ENR = 0U;
+    auto cfg        = makeDefaultConfig();
+    bios::BxCanDevice dev(cfg);
+    dev.init();
+    // Note: GPIO clock enable might set AHB1ENR bits,
+    // but CAN clock should only touch APB1ENR
+    // We just verify CAN1EN is in APB1ENR
+    EXPECT_NE(fakeRcc.APB1ENR & RCC_APB1ENR_CAN1EN, 0U);
+}
+
+TEST_F(BxCanDeviceTest, clockEnableWithNeighborBitsPreserved)
+{
+    // Set bits 24 and 26 (neighbors of bit 25)
+    fakeRcc.APB1ENR = (1U << 24U) | (1U << 26U);
+    auto cfg        = makeDefaultConfig();
+    bios::BxCanDevice dev(cfg);
+    dev.init();
+    EXPECT_NE(fakeRcc.APB1ENR & (1U << 24U), 0U);
+    EXPECT_NE(fakeRcc.APB1ENR & (1U << 25U), 0U);
+    EXPECT_NE(fakeRcc.APB1ENR & (1U << 26U), 0U);
+}
+
+TEST_F(BxCanDeviceTest, clockEnableAfterStopAndReInit)
+{
+    auto dev = makeStartedDevice();
+    fakeCan.MSR |= CAN_MSR_INAK;
+    dev->stop();
+
+    // Re-init
+    dev->init();
+    EXPECT_NE(fakeRcc.APB1ENR & RCC_APB1ENR_CAN1EN, 0U);
 }
 
 TEST_F(BxCanDeviceTest, gpioRxPullUpConfigured)

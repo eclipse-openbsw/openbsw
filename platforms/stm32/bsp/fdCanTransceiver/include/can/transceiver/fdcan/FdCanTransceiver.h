@@ -62,6 +62,7 @@ public:
     static void transmitInterrupt(uint8_t transceiverIndex);
     static void disableRxInterrupt(uint8_t transceiverIndex);
     static void enableRxInterrupt(uint8_t transceiverIndex);
+    static void pollTxCallback(uint8_t transceiverIndex);
 
     void cyclicTask();
     void receiveTask();

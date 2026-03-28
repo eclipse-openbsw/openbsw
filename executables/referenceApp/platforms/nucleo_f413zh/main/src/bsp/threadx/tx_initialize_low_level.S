@@ -17,7 +17,7 @@
     .global     _tx_initialize_unused_memory
     .global     _tx_timer_interrupt
     .global     __main
-    .global     __isr_vector
+    .global     g_pfnVectors
     .global     __tx_SysTickHandler
     .extern     setupApplicationsIsr
 
@@ -37,12 +37,12 @@ _tx_initialize_low_level:
 
     @ Setup Vector Table Offset Register
     MOV     r0, #0xE000E000
-    LDR     r1, =__isr_vector
+    LDR     r1, =g_pfnVectors
     STR     r1, [r0, #0xD08]
 
     @ Set system stack pointer from vector value
     LDR     r0, =_tx_thread_system_stack_ptr
-    LDR     r1, =__isr_vector
+    LDR     r1, =g_pfnVectors
     LDR     r1, [r1]
     STR     r1, [r0]
 
@@ -92,4 +92,5 @@ SysTick_Handler:
     .global SVC_Handler
     .thumb_func
 SVC_Handler:
-    b DefaultISR
+    ldr r0, =Default_Handler
+    bx  r0

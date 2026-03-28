@@ -111,9 +111,23 @@ private:
         bool _enabled;
     };
 
+    class CanTxRunnable : public ::async::RunnableType
+    {
+    public:
+        explicit CanTxRunnable(CanSystem& parent) : _parent(parent) {}
+        void execute() override;
+    private:
+        CanSystem& _parent;
+    };
+
     ::async::ContextType _context;
     ::bios::FdCanTransceiver _transceiver0;
     CanRxRunnable _canRxRunnable;
+    CanTxRunnable _canTxRunnable;
+    ::async::TimeoutType _canTxTimeout;
+
+public:
+    void dispatchTxTask();
 };
 
 } // namespace systems

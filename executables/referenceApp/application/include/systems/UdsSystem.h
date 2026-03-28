@@ -14,7 +14,15 @@
 #include <uds/async/AsyncDiagJob.h>
 #include <uds/jobs/ReadIdentifierFromMemory.h>
 #include <uds/jobs/WriteIdentifierToMemory.h>
+#include <uds/Stm32ClearDtc.h>
+#include <uds/Stm32ControlDtcSetting.h>
+#include <uds/Stm32DtcManager.h>
+#include <uds/Stm32ReadDtcInfo.h>
+#include <uds/Stm32DemoRoutine.h>
+#include <uds/Stm32SecurityAccess.h>
 #include <uds/services/communicationcontrol/CommunicationControl.h>
+#include <uds/services/ecureset/ECUReset.h>
+#include <uds/services/ecureset/HardReset.h>
 #include <uds/services/readdata/ReadDataByIdentifier.h>
 #include <uds/services/routinecontrol/RequestRoutineResults.h>
 #include <uds/services/routinecontrol/RoutineControl.h>
@@ -93,7 +101,24 @@ private:
     ReadIdentifierFromMemory _read22Cf01;
     ReadIdentifierPot _read22Cf02;
     WriteIdentifierToMemory _write2eCf03;
+    ReadIdentifierFromMemory _readF190;
+    WriteIdentifierToMemory _writeF190;
+    ReadIdentifierFromMemory _readF195;
+    ReadIdentifierFromMemory _readF18C;
+    ReadIdentifierFromMemory _readF193;
+    ReadIdentifierFromMemory _readF18A;
+    ReadIdentifierFromMemory _readF180;
     TesterPresent _testerPresent;
+    ECUReset _ecuReset;
+    HardReset _hardReset;
+    Stm32SecurityAccess _securityAccess;
+    Stm32DtcManager _dtcManager;
+    Stm32ClearDtc _clearDtc;
+    Stm32ReadDtcInfo _readDtcInfo;
+    Stm32ControlDtcSetting _controlDtcSetting;
+    Stm32DemoRoutine _routineFF00;
+    Stm32DemoRoutine _routineFF01;
+    Stm32DemoRoutine _routineFF02;
 
     ::async::ContextType _context;
     ::async::TimeoutType _timeout;

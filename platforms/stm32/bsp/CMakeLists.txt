@@ -17,6 +17,9 @@ else ()
     add_subdirectory(bspUart)
     add_subdirectory(bspCan)
     add_subdirectory(bspTimer)
+    add_subdirectory(bspIo)
+    add_subdirectory(bspAdc)
+    add_subdirectory(bspEepromDriver)
 
     # CAN transceiver — selected by chip family
     if (CAN_TYPE STREQUAL "BXCAN")
@@ -31,6 +34,7 @@ else ()
         socBsp
         INTERFACE bspClock
                   bspInterruptsImpl
+                  bspIo
                   bspMcu
                   bspTimer
                   bspUart)

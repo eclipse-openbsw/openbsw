@@ -17,6 +17,7 @@
 #include "async/Hook.h"
 #include "busid/BusId.h"
 #include "mcu/mcu.h"
+#include <cstdio>
 
 namespace
 {
@@ -47,6 +48,7 @@ CanSystem::CanSystem(::async::ContextType context)
 , _context(context)
 , _transceiver0(context, ::busid::CAN_0, fdcan1Config)
 , _canRxRunnable(*this)
+, _canTxRunnable(*this)
 {}
 
 void CanSystem::init() { transitionDone(); }
@@ -58,6 +60,8 @@ void CanSystem::run()
     (void)_transceiver0.init();
     (void)_transceiver0.open();
 
+    // Accept-all filter (set during init). No HW filter override.
+
     // Enable FDCAN IRQs after transceiver is open (not in setupApplicationsIsr,
     // because the async framework must be ready before ISRs fire)
     // Priority must be >= configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY (5)
@@ -65,7 +69,7 @@ void CanSystem::run()
     // Priority 8 (0x80) is masked by BASEPRI during FreeRTOS scheduling.
     // Force IE register — FdCanDevice::start() should set this, but
     // verify it persists after leaving init mode.
-    FDCAN1->IE  = FDCAN_IE_RF0NE | FDCAN_IE_TEFNE;
+    FDCAN1->IE  = FDCAN_IE_RF0NE | FDCAN_IE_TCE;
     FDCAN1->ILS = 0U;
     FDCAN1->ILE = FDCAN_ILE_EINT0;
 
@@ -75,6 +79,14 @@ void CanSystem::run()
     NVIC_ClearPendingIRQ(FDCAN1_IT1_IRQn);
     SYS_EnableIRQ(FDCAN1_IT0_IRQn);
     SYS_EnableIRQ(FDCAN1_IT1_IRQn);
+
+    // Schedule periodic TX callback poll (every 5ms) to check if DoCAN TX
+    // response needs confirmation. This avoids async dispatch dedup issues
+    // that prevent the ISR-based callback from reaching the DoCAN layer.
+    // TX callback poll at 50ms — fast enough for DoCAN 1000ms timeout,
+    // slow enough to not starve TASK_CAN (1ms poll killed ALL RX).
+    ::async::scheduleAtFixedRate(
+        _context, _canTxRunnable, _canTxTimeout, 50U, ::async::TimeUnit::MILLISECONDS);
 
     transitionDone();
 }
@@ -100,7 +112,44 @@ void CanSystem::shutdown()
 
 void CanSystem::dispatchRxTask() { ::async::execute(_context, _canRxRunnable); }
 
+void CanSystem::dispatchTxTask() { ::async::execute(_context, _canTxRunnable); }
+
+} // close namespace systems temporarily
+
+extern volatile uint32_t g_rxIsrCount;
+extern volatile uint32_t g_rxIsrCalls;
+extern volatile uint32_t g_rxTaskCount;
+extern volatile uint32_t g_rxDispatch;
+extern volatile uint32_t g_txIsrCount;
+static uint32_t s_pollCounter = 0U;
+
+namespace systems { // reopen
+
+void CanSystem::CanTxRunnable::execute()
+{
+    ::bios::FdCanTransceiver::pollTxCallback(::busid::CAN_0);
+
+    // Dump pipeline counters every 5 seconds via raw UART
+    if (++s_pollCounter >= 5000U)
+    {
+        s_pollCounter = 0U;
+        // Write directly to USART2 TDR (blocking, ~8ms for 100 chars at 115200)
+        char buf[100];
+        int n = snprintf(buf, sizeof(buf),
+            "\r\nPIPE:%lu,%lu,%lu,%lu,%lu\r\n",
+            g_rxIsrCalls, g_rxIsrCount, g_rxDispatch, g_rxTaskCount, g_txIsrCount);
+        uint32_t volatile* usart2 = reinterpret_cast<uint32_t volatile*>(0x40004400U);
+        for (int i = 0; i < n; i++)
+        {
+            while ((usart2[0x1C / 4] & (1U << 7)) == 0U) {} // Wait TXE
+            usart2[0x28 / 4] = static_cast<uint32_t>(buf[i]);
+        }
+    }
+}
+
 CanSystem::CanRxRunnable::CanRxRunnable(CanSystem& parent) : _parent(parent), _enabled(false) {}
+
+static uint32_t s_rxRunCount = 0U;
 
 void CanSystem::CanRxRunnable::execute()
 {
@@ -108,9 +157,29 @@ void CanSystem::CanRxRunnable::execute()
     {
         _parent._transceiver0.receiveTask();
     }
+    // Dump counters every 100 RX runnable calls (~every 100 CAN frames)
+    if (++s_rxRunCount % 10U == 0U)
+    {
+        char buf[80];
+        int n = snprintf(buf, sizeof(buf), "\r\nPIPE:%lu,%lu,%lu,%lu,%lu\r\n",
+            g_rxIsrCalls, g_rxIsrCount, g_rxDispatch, g_rxTaskCount, g_txIsrCount);
+        uint32_t volatile* usart2 = reinterpret_cast<uint32_t volatile*>(0x40004400U);
+        for (int i = 0; i < n; i++)
+        {
+            while ((usart2[0x1C / 4] & (1U << 7)) == 0U) {}
+            usart2[0x28 / 4] = static_cast<uint32_t>(buf[i]);
+        }
+    }
 }
 
 } // namespace systems
+
+// Pipeline counters for diagnosing frame loss (volatile, readable via debugger)
+volatile uint32_t g_rxIsrCount    = 0U; // Frames drained from HW FIFO by receiveISR
+volatile uint32_t g_rxIsrCalls    = 0U; // Times RF0N ISR path entered
+volatile uint32_t g_rxTaskCount   = 0U; // Frames processed by receiveTask
+volatile uint32_t g_rxDispatch    = 0U; // Times dispatchRxTask called
+volatile uint32_t g_txIsrCount    = 0U; // Times TC ISR path entered
 
 extern "C"
 {
@@ -140,28 +209,32 @@ void call_can_isr_RX()
 
     if ((ir & 0x01U) != 0U) // RF0N — RX FIFO 0 new message
     {
+        g_rxIsrCalls++;
         uint8_t framesReceived;
         {
             ::async::LockType const lock;
             framesReceived = ::bios::FdCanTransceiver::receiveInterrupt(::busid::CAN_0);
         }
+        g_rxIsrCount += framesReceived;
 
         if (framesReceived > 0)
         {
+            g_rxDispatch++;
             ::systems::CanSystem::instance().dispatchRxTask();
         }
     }
 
-    if ((ir & 0x400U) != 0U) // TEFN (bit 10) — TX Event FIFO New Entry
+    if ((ir & 0x80U) != 0U) // TC (bit 7) — Transmission Complete
     {
+        g_txIsrCount++;
         ::bios::FdCanTransceiver::transmitInterrupt(::busid::CAN_0);
     }
 
     // Defensive: restore IE if it got corrupted
     uint32_t volatile* fdcan_ie = reinterpret_cast<uint32_t volatile*>(0x40006454U);
-    if ((*fdcan_ie & 0x401U) != 0x401U) // RF0NE(bit0) + TEFNE(bit10)
+    if ((*fdcan_ie & 0x81U) != 0x81U) // RF0NE(bit0) + TCE(bit7)
     {
-        *fdcan_ie |= 0x401U;
+        *fdcan_ie |= 0x81U;
     }
 
     ::asyncLeaveIsrGroup(ISR_GROUP_CAN);

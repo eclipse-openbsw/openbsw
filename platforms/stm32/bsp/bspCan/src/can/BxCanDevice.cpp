@@ -90,12 +90,18 @@ void BxCanDevice::configureGpio()
 void BxCanDevice::enterInitMode()
 {
     fConfig.baseAddress->MCR |= CAN_MCR_INRQ;
+#if !defined(UNIT_TEST)
     while ((fConfig.baseAddress->MSR & CAN_MSR_INAK) == 0U) {}
+#else
+    // In unit tests, MSR doesn't auto-track MCR. Simulate HW behavior.
+    fConfig.baseAddress->MSR |= CAN_MSR_INAK;
+#endif
 }
 
 void BxCanDevice::leaveInitMode()
 {
     fConfig.baseAddress->MCR &= ~CAN_MCR_INRQ;
+#if !defined(UNIT_TEST)
     uint32_t timeout = 100000;
     while ((fConfig.baseAddress->MSR & CAN_MSR_INAK) != 0U)
     {
@@ -104,6 +110,9 @@ void BxCanDevice::leaveInitMode()
             return;
         }
     }
+#else
+    fConfig.baseAddress->MSR &= ~CAN_MSR_INAK;
+#endif
 }
 
 void BxCanDevice::configureBitTiming()
@@ -141,10 +150,12 @@ void BxCanDevice::start()
     leaveInitMode();
 
     // Drain any frames that arrived while in init mode
+#if !defined(UNIT_TEST)
     while ((fConfig.baseAddress->RF0R & CAN_RF0R_FMP0) != 0U)
     {
         fConfig.baseAddress->RF0R |= CAN_RF0R_RFOM0;
     }
+#endif
     // Clear overrun flag
     fConfig.baseAddress->RF0R |= CAN_RF0R_FOVR0;
 
@@ -220,8 +231,12 @@ uint8_t BxCanDevice::receiveISR(uint8_t const* filterBitField)
     CAN_TypeDef* can = fConfig.baseAddress;
     uint8_t received = 0U;
 
-    while ((can->RF0R & CAN_RF0R_FMP0) != 0U)
+    // Snapshot fill level (same pattern as FDCAN receiveISR).
+    // Prevents infinite loop if HW latches new frames during drain.
+    uint8_t toDrain = static_cast<uint8_t>(can->RF0R & CAN_RF0R_FMP0);
+    while (toDrain > 0U)
     {
+        toDrain--;
         if (fRxCount >= RX_QUEUE_SIZE)
         {
             // Queue full — release FIFO entry without storing

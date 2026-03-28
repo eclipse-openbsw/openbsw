@@ -61,8 +61,12 @@ void CanSystem::run()
 
     // Enable CAN IRQs after transceiver is open (not in setupApplicationsIsr,
     // because the async framework must be ready before ISRs fire)
-    SYS_SetPriority(CAN1_RX0_IRQn, 8);
-    SYS_SetPriority(CAN1_TX_IRQn, 8);
+    // Priority must equal configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY (6)
+    // so BASEPRI (0x60) masks the ISR during FreeRTOS critical sections.
+    // Original priority 8 was ALWAYS masked. Priority 5 is NEVER masked.
+    // Priority 6 = threshold = correctly managed by FreeRTOS.
+    SYS_SetPriority(CAN1_RX0_IRQn, 6);
+    SYS_SetPriority(CAN1_TX_IRQn, 6);
     NVIC_ClearPendingIRQ(CAN1_RX0_IRQn);
     NVIC_ClearPendingIRQ(CAN1_TX_IRQn);
     SYS_EnableIRQ(CAN1_RX0_IRQn);

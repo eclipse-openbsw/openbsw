@@ -197,6 +197,8 @@ void FdCanTransceiver::transmitInterrupt(uint8_t transceiverIndex)
         FdCanTransceiver* self = fpTransceivers[transceiverIndex];
         self->fDevice.transmitISR();
 
+        // Dispatch async callback ONLY when DoCAN queue has a pending frame.
+        // Demo TC events (queue empty) do NOT dispatch — no stale dispatch.
         if (!self->fTxQueue.empty())
         {
             self->canFrameSentCallback();
@@ -248,6 +250,20 @@ void FdCanTransceiver::canFrameSentAsyncCallback()
     }
 }
 
+void FdCanTransceiver::pollTxCallback(uint8_t transceiverIndex)
+{
+    if (transceiverIndex < 3U && fpTransceivers[transceiverIndex] != nullptr)
+    {
+        FdCanTransceiver* self = fpTransceivers[transceiverIndex];
+        if (!self->fTxQueue.empty())
+        {
+            // Fire the DoCAN TX callback directly in task context.
+            // This is safe because we're in TASK_CAN, same as the DoCAN cyclic.
+            self->canFrameSentAsyncCallback();
+        }
+    }
+}
+
 void FdCanTransceiver::disableRxInterrupt(uint8_t transceiverIndex)
 {
     if (transceiverIndex < 3U && fpTransceivers[transceiverIndex] != nullptr)
@@ -279,9 +295,14 @@ void FdCanTransceiver::cyclicTask()
     }
 }
 
+} // close bios namespace temporarily
+extern volatile uint32_t g_rxTaskCount;
+namespace bios { // reopen
+
 void FdCanTransceiver::receiveTask()
 {
     uint8_t count = fDevice.getRxCount();
+    ::g_rxTaskCount += count;
     for (uint8_t i = 0U; i < count; i++)
     {
         notifyListeners(fDevice.getRxFrame(i));

@@ -76,6 +76,46 @@
             }
         },
         {
+            "name": "nucleo-f413zh-threadx-gcc",
+            "generator": "Ninja Multi-Config",
+            "displayName": "NUCLEO-F413ZH ThreadX configuration (GCC)",
+            "description": "Configure for NUCLEO-F413ZH platform with ThreadX using ARM GCC toolchain",
+            "inherits": "_config-base",
+            "toolchainFile": "${sourceDir}/cmake/toolchains/ArmNoneEabi-gcc.cmake",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "BUILD_EXECUTABLE": "referenceApp",
+                "BUILD_TARGET_PLATFORM": "NUCLEO_F413ZH",
+                "BUILD_TARGET_RTOS": "THREADX",
+                "STM32_CHIP": "STM32F413ZH",
+                "CMAKE_ASM_FLAGS_RELWITHDEBINFO": "-g3",
+                "CMAKE_CONFIGURATION_TYPES": "RelWithDebInfo;Debug;Release",
+                "CMAKE_C_FLAGS_RELWITHDEBINFO": "-g3 -O2 -DNDEBUG",
+                "CMAKE_CXX_FLAGS_RELWITHDEBINFO": "-g3 -O2 -DNDEBUG",
+                "CMAKE_DEFAULT_BUILD_TYPE": "RelWithDebInfo"
+            }
+        },
+        {
+            "name": "nucleo-g474re-threadx-gcc",
+            "generator": "Ninja Multi-Config",
+            "displayName": "NUCLEO-G474RE ThreadX configuration (GCC)",
+            "description": "Configure for NUCLEO-G474RE platform with ThreadX using ARM GCC toolchain",
+            "inherits": "_config-base",
+            "toolchainFile": "${sourceDir}/cmake/toolchains/ArmNoneEabi-gcc.cmake",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "BUILD_EXECUTABLE": "referenceApp",
+                "BUILD_TARGET_PLATFORM": "NUCLEO_G474RE",
+                "BUILD_TARGET_RTOS": "THREADX",
+                "STM32_CHIP": "STM32G474RE",
+                "CMAKE_ASM_FLAGS_RELWITHDEBINFO": "-g3",
+                "CMAKE_CONFIGURATION_TYPES": "RelWithDebInfo;Debug;Release",
+                "CMAKE_C_FLAGS_RELWITHDEBINFO": "-g3 -O2 -DNDEBUG",
+                "CMAKE_CXX_FLAGS_RELWITHDEBINFO": "-g3 -O2 -DNDEBUG",
+                "CMAKE_DEFAULT_BUILD_TYPE": "RelWithDebInfo"
+            }
+        },
+        {
             "name": "tests-posix-release",
             "displayName": "Configure for testing POSIX and generic modules (release)",
             "description": "Configure for testing POSIX and generic modules (release)",
@@ -271,6 +311,18 @@
             "displayName": "NUCLEO-G474RE FreeRTOS build (GCC)",
             "description": "Build reference application for NUCLEO-G474RE platform with GCC",
             "configurePreset": "nucleo-g474re-freertos-gcc"
+        },
+        {
+            "name": "nucleo-f413zh-threadx-gcc",
+            "displayName": "NUCLEO-F413ZH ThreadX build (GCC)",
+            "description": "Build reference application for NUCLEO-F413ZH platform with ThreadX using GCC",
+            "configurePreset": "nucleo-f413zh-threadx-gcc"
+        },
+        {
+            "name": "nucleo-g474re-threadx-gcc",
+            "displayName": "NUCLEO-G474RE ThreadX build (GCC)",
+            "description": "Build reference application for NUCLEO-G474RE platform with ThreadX using GCC",
+            "configurePreset": "nucleo-g474re-threadx-gcc"
         },
         {
             "name": "tests-posix-debug",

@@ -6,7 +6,10 @@
 
 #include "platform/estdint.h"
 
-typedef int32_t OldIntEnabledStatusValueType;
+static inline __attribute__((always_inline)) void setThreadXInitialized() {};
+
+typedef uint32_t OldIntEnabledStatusValueType;
+
 #define getOldIntEnabledStatusValueAndSuspendAllInterrupts \
     getMachineStateRegisterValueAndSuspendAllInterrupts
 
@@ -20,6 +23,7 @@ uint32_t getMachineStateRegisterValueAndSuspendAllInterrupts(void)
                    : "=r" (_PRIMASK));
     return(_PRIMASK);
 }
+
 static inline __attribute__((always_inline))
 void resumeAllInterrupts(uint32_t oldMachineStateRegisterValue)
 {
@@ -27,5 +31,4 @@ void resumeAllInterrupts(uint32_t oldMachineStateRegisterValue)
                     ::[Input] "r" (oldMachineStateRegisterValue)
                   );
 }
-
 // clang-format on

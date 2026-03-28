@@ -199,17 +199,17 @@ void FdCanDevice::start()
     }
 
     // Write IE in init mode (may or may not persist on STM32G4)
-    fConfig.baseAddress->IE     = FDCAN_IE_RF0NE | FDCAN_IE_TEFNE;
+    // Use TCE (Transmission Complete Enable) not TEFNE — TC fires for every
+    // completed TX regardless of EFC bit, per ST HAL pattern (RM0440 §44.4.14).
+    fConfig.baseAddress->IE     = FDCAN_IE_RF0NE | FDCAN_IE_TCE;
     fConfig.baseAddress->ILS    = 0U;
     fConfig.baseAddress->ILE    = FDCAN_ILE_EINT0;
-    fConfig.baseAddress->TXBTIE = 0x7U;
+    fConfig.baseAddress->TXBTIE = 0x7U; // Enable TC for all 3 TX buffers
 
     leaveInitMode();
 
     // Write IE again AFTER leaving init mode.
-    // On STM32G4, IE may only take effect outside init mode.
-    // The HAL (stm32g4xx_hal_fdcan.c:2787) also writes IE after Start().
-    fConfig.baseAddress->IE = FDCAN_IE_RF0NE | FDCAN_IE_TEFNE;
+    fConfig.baseAddress->IE = FDCAN_IE_RF0NE | FDCAN_IE_TCE;
 }
 
 void FdCanDevice::stop()
@@ -352,8 +352,20 @@ uint8_t FdCanDevice::receiveISR(uint8_t const* filterBitField)
 
 void FdCanDevice::transmitISR()
 {
-    // Clear TX complete flags
-    fConfig.baseAddress->IR = FDCAN_IR_TC;
+    FDCAN_GlobalTypeDef* fdcan = fConfig.baseAddress;
+
+    // Drain TX Event FIFO — prevent FIFO full condition that blocks TEFN.
+    uint8_t toDrain
+        = static_cast<uint8_t>((fdcan->TXEFS & FDCAN_TXEFS_EFFL) >> FDCAN_TXEFS_EFFL_Pos);
+    while (toDrain > 0U)
+    {
+        toDrain--;
+        uint32_t getIdx = (fdcan->TXEFS & FDCAN_TXEFS_EFGI) >> FDCAN_TXEFS_EFGI_Pos;
+        fdcan->TXEFA    = getIdx;
+    }
+
+    // Only clear TC, NOT TEFN. TEFN is handled by the ISR dispatcher.
+    fdcan->IR = FDCAN_IR_TC;
 }
 
 bool FdCanDevice::isBusOff() const { return (fConfig.baseAddress->PSR & FDCAN_PSR_BO) != 0U; }
