@@ -5,6 +5,7 @@
 #pragma once
 
 #include <can/canframes/CANFrame.h>
+#include <etl/delegate.h>
 #include <stdint.h>
 
 #include <gmock/gmock.h>
@@ -40,10 +41,13 @@ public:
 
     explicit FdCanDevice(Config const& /* config */) {}
 
+    FdCanDevice(Config const& /* config */, ::etl::delegate<void()> /* callback */) {}
+
     MOCK_METHOD(void, init, ());
     MOCK_METHOD(void, start, ());
     MOCK_METHOD(void, stop, ());
     MOCK_METHOD(bool, transmit, (::can::CANFrame const& frame));
+    MOCK_METHOD(bool, transmit, (::can::CANFrame const& frame, bool txInterruptNeeded));
     MOCK_METHOD(uint8_t, receiveISR, (uint8_t const* filterBitField));
     MOCK_METHOD(void, transmitISR, ());
     MOCK_METHOD(bool, isBusOff, (), (const));
@@ -57,7 +61,6 @@ public:
     MOCK_METHOD(void, disableRxInterrupt, ());
     MOCK_METHOD(void, enableRxInterrupt, ());
 
-    bool fTxEventEnabled{false}; ///< Mirrors real FdCanDevice for transceiver access
 };
 
 } // namespace bios
