@@ -33,7 +33,10 @@ FdCanTransceiver* FdCanTransceiver::fpTransceivers[3] = {nullptr, nullptr, nullp
 FdCanTransceiver::FdCanTransceiver(
     ::async::ContextType context, uint8_t busId, FdCanDevice::Config const& devConfig)
 : AbstractCANTransceiver(busId)
-, fDevice(devConfig)
+, fDevice(
+      devConfig,
+      ::etl::delegate<void()>::create<FdCanTransceiver, &FdCanTransceiver::canFrameSentCallback>(
+          *this))
 , fContext(context)
 , fCyclicTimeout()
 , _canFrameSent(::async::Function::CallType::
@@ -128,7 +131,8 @@ void FdCanTransceiver::shutdown() { close(); }
         return ErrorCode::CAN_ERR_TX_OFFLINE;
     }
 
-    if (!fDevice.transmit(frame))
+    // Fire-and-forget: no TX interrupt needed
+    if (!fDevice.transmit(frame, false))
     {
         return ErrorCode::CAN_ERR_TX_HW_QUEUE_FULL;
     }
@@ -159,17 +163,15 @@ FdCanTransceiver::write(::can::CANFrame const& frame, ::can::ICANFrameSentListen
         return ErrorCode::CAN_ERR_OK;
     }
 
-    // We are the first sender — transmit with TX event enabled.
-    fDevice.fTxEventEnabled = true;
-    if (!fDevice.transmit(frame))
+    // First sender — transmit with TX interrupt enabled (match S32K pattern).
+    // Device enables TCE, ISR will fire on completion and invoke callback delegate.
+    if (!fDevice.transmit(frame, true))
     {
-        fDevice.fTxEventEnabled = false;
         fTxQueue.pop_front();
         return ErrorCode::CAN_ERR_TX_HW_QUEUE_FULL;
     }
-    fDevice.fTxEventEnabled = false;
 
-    // Wait until TX interrupt triggers canFrameSentCallback().
+    // Wait until TX ISR → fFrameSentCallback → canFrameSentCallback().
     return ErrorCode::CAN_ERR_OK;
 }
 
@@ -204,19 +206,10 @@ void FdCanTransceiver::transmitInterrupt(uint8_t transceiverIndex)
 {
     if (transceiverIndex < 3U && fpTransceivers[transceiverIndex] != nullptr)
     {
-        FdCanTransceiver* self = fpTransceivers[transceiverIndex];
-        self->fDevice.transmitISR();
-
-        // Always dispatch callback when the TX queue has a pending frame.
-        // CRITICAL: Check fTxQueue EVERY TIME TC fires, not just once.
-        // When the demo sends 0x558 (no listener) and DoCAN sends 0x7E8 (with listener)
-        // near-simultaneously, both completions produce TC. If the demo's TC fires first,
-        // fTxQueue might already have the DoCAN frame waiting. We must dispatch.
-        // The 50ms poll provides a safety net, but the ISR dispatch gives <1ms latency.
-        if (!self->fTxQueue.empty())
-        {
-            self->canFrameSentCallback();
-        }
+        // Device's transmitISR() disables TCE, clears TC, and invokes the
+        // callback delegate (bound to canFrameSentCallback) — matching S32K's
+        // FlexCANDevice::transmitISR() pattern. No queue check needed here.
+        fpTransceivers[transceiverIndex]->fDevice.transmitISR();
     }
 }
 
@@ -254,12 +247,11 @@ void FdCanTransceiver::canFrameSentAsyncCallback()
         if (sendAgain)
         {
             ::can::CANFrame const& frame = fTxQueue.front()._frame;
-            fDevice.fTxEventEnabled      = true;
-            if (!fDevice.transmit(frame))
+            // Transmit next queued frame with TX interrupt (match S32K pattern)
+            if (!fDevice.transmit(frame, true))
             {
                 fTxQueue.clear();
             }
-            fDevice.fTxEventEnabled = false;
         }
     }
 }
