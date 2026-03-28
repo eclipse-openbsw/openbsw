@@ -54,6 +54,10 @@ public:
     /// Maximum number of frames buffered in the software RX queue.
     static constexpr uint32_t RX_QUEUE_SIZE = 32U;
 
+    /// HW filter ID list (set before open/start, nullptr = accept all)
+    uint32_t const* fFilterIds = nullptr;
+    uint8_t fFilterCount       = 0U;
+
     /**
      * \brief Construct an FdCanDevice from a hardware configuration.
      * \param config  Peripheral base address, bit timing, and GPIO pin map.
@@ -175,6 +179,9 @@ public:
      * \brief Unmask the RF0NE interrupt (RX FIFO 0 new element).
      */
     void enableRxInterrupt();
+
+    /// Returns the number of pending frames in the hardware RX FIFO0.
+    uint32_t getHwFifoFillLevel() const;
 
 private:
     Config const fConfig;                    ///< Immutable hardware configuration snapshot

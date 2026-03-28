@@ -13,6 +13,8 @@
 #pragma once
 
 #include <async/Async.h>
+#include <can/filter/BitFieldFilter.h>
+#include <can/framemgmt/ICANFrameListener.h>
 #include <can/transceiver/fdcan/FdCanTransceiver.h>
 #include <etl/singleton_base.h>
 #include <lifecycle/SingleContextLifecycleComponent.h>
@@ -120,11 +122,26 @@ private:
         CanSystem& _parent;
     };
 
+    /**
+     * Diagnostic CAN listener that counts 0x7E0 frames after filter matching.
+     * Proves whether frames survive notifyListeners() filter check.
+     */
+    class DiagListener : public ::can::ICANFrameListener
+    {
+    public:
+        DiagListener();
+        void frameReceived(::can::CANFrame const& canFrame) override;
+        ::can::IFilter& getFilter() override;
+    private:
+        ::can::BitFieldFilter _filter;
+    };
+
     ::async::ContextType _context;
     ::bios::FdCanTransceiver _transceiver0;
     CanRxRunnable _canRxRunnable;
     CanTxRunnable _canTxRunnable;
     ::async::TimeoutType _canTxTimeout;
+    DiagListener _diagListener;
 
 public:
     void dispatchTxTask();

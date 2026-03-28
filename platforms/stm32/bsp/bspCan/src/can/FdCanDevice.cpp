@@ -198,6 +198,16 @@ void FdCanDevice::start()
         return;
     }
 
+    // Configure HW filter in init mode (before leaveInitMode)
+    if (fFilterIds != nullptr && fFilterCount > 0U)
+    {
+        configureFilterList(fFilterIds, fFilterCount);
+    }
+    else
+    {
+        configureAcceptAllFilter();
+    }
+
     // Write IE in init mode (may or may not persist on STM32G4)
     // Use TCE (Transmission Complete Enable) not TEFNE — TC fires for every
     // completed TX regardless of EFC bit, per ST HAL pattern (RM0440 §44.4.14).
@@ -263,15 +273,25 @@ bool FdCanDevice::transmit(::can::CANFrame const& frame)
     return true;
 }
 
+} // namespace bios — temporarily close for extern
+extern volatile uint32_t g_isrStored;
+extern volatile uint32_t g_isrSkipped;
+extern volatile uint32_t g_isrId0;
+namespace bios { // reopen
+
 uint8_t FdCanDevice::receiveISR(uint8_t const* filterBitField)
 {
     FDCAN_GlobalTypeDef* fdcan = fConfig.baseAddress;
     uint32_t ramBase           = getInstanceRamBase(fdcan);
     uint8_t received           = 0U;
 
-    // Snapshot fill level — drain only what's here now. FDCAN hardware
-    // keeps receiving even with RF0NE disabled, so polling F0FL in the
-    // loop condition would spin forever on a busy bus.
+    // Count FIFO message-lost events BEFORE clearing
+    if ((fdcan->IR & FDCAN_IR_RF0L) != 0U) { ++g_isrSkipped; }
+
+    // Clear RF0N BEFORE reading F0FL so late arrivals re-trigger ISR.
+    fdcan->IR = FDCAN_IR_RF0N | FDCAN_IR_RF0F | FDCAN_IR_RF0L;
+
+    // Snapshot fill level — drain only what's here now.
     uint8_t toDrain
         = static_cast<uint8_t>((fdcan->RXF0S & FDCAN_RXF0S_F0FL) >> FDCAN_RXF0S_F0FL_Pos);
 
@@ -305,7 +325,6 @@ uint8_t FdCanDevice::receiveISR(uint8_t const* filterBitField)
             id = (r0 >> 18U) & 0x7FFU; // Standard
         }
 
-        // Filter check
         if (filterBitField != nullptr)
         {
             uint32_t byteIndex = id / 8U;
@@ -334,19 +353,23 @@ uint8_t FdCanDevice::receiveISR(uint8_t const* filterBitField)
         data[6] = static_cast<uint8_t>(d1 >> 16U);
         data[7] = static_cast<uint8_t>(d1 >> 24U);
 
+        // Track ID=0 frames in the HW FIFO
+        if (id == 0U) { ++g_isrId0; }
+
         // Store in queue
         uint8_t idx   = (fRxHead + fRxCount) % RX_QUEUE_SIZE;
         fRxQueue[idx] = ::can::CANFrame(id, data, dlc);
         fRxCount++;
+        ++g_isrStored;
         received++;
 
         // Acknowledge
         fdcan->RXF0A = getIdx;
     }
 
-    // Clear RX FIFO 0 interrupt flags (RF0N, RF0F, RF0L) — write-1-to-clear
-    fdcan->IR = FDCAN_IR_RF0N | FDCAN_IR_RF0F | FDCAN_IR_RF0L;
-
+    // RF0N was already cleared at entry — no need to clear again here.
+    // Any frame arriving during the drain loop will re-set RF0N and
+    // trigger a new ISR after we return.
     return received;
 }
 
@@ -402,12 +425,13 @@ void FdCanDevice::configureFilterList(uint32_t const* idList, uint8_t count)
 
     for (uint8_t i = 0U; i < count && i < 28U; i++)
     {
-        // Standard filter element: SFID1 = target ID, SFID2 = 0x7FF (exact match)
-        // SFT = 01 (dual ID), SFEC = 001 (store in RX FIFO0)
-        filterRam[i] = (1U << 30U)                     // SFT = dual ID filter
+        // Standard filter element: classic filter (ID + mask) for exact match
+        // SFT = 10 (classic), SFEC = 001 (store in RX FIFO0)
+        // SFID1 = target ID, SFID2 = 0x7FF (all 11 bits must match)
+        filterRam[i] = (2U << 30U)                     // SFT = 10 (classic filter)
                        | (1U << 27U)                   // SFEC = store in FIFO0
-                       | ((idList[i] & 0x7FFU) << 16U) // SFID1
-                       | (idList[i] & 0x7FFU);         // SFID2 (exact match)
+                       | ((idList[i] & 0x7FFU) << 16U) // SFID1 = filter ID
+                       | 0x7FFU;                       // SFID2 = mask (exact match)
     }
 }
 
@@ -426,6 +450,14 @@ void FdCanDevice::clearRxQueue()
 
 void FdCanDevice::disableRxInterrupt() { fConfig.baseAddress->IE &= ~FDCAN_IE_RF0NE; }
 
-void FdCanDevice::enableRxInterrupt() { fConfig.baseAddress->IE |= FDCAN_IE_RF0NE; }
+void FdCanDevice::enableRxInterrupt()
+{
+    fConfig.baseAddress->IE |= FDCAN_IE_RF0NE;
+}
+
+uint32_t FdCanDevice::getHwFifoFillLevel() const
+{
+    return (fConfig.baseAddress->RXF0S & FDCAN_RXF0S_F0FL) >> FDCAN_RXF0S_F0FL_Pos;
+}
 
 } // namespace bios

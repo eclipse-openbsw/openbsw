@@ -33,6 +33,13 @@
 
 #define TX_NO_FILEX_POINTER
 
+/* Timer thread stack — default 1024 is too small when dispatching multiple
+ * runnables from the timer callback. 8192 is production-proven on G474RE.
+ * See taktflow-production lessons-learned: threadx-os-port.md rule #11. */
+#ifndef TX_TIMER_THREAD_STACK_SIZE
+#define TX_TIMER_THREAD_STACK_SIZE (8192U)
+#endif
+
 #define TX_TIMER_TICKS_PER_SECOND (1000000U / ASYNC_CONFIG_TICK_IN_US)
 
 #define TX_ENABLE_EXECUTION_CHANGE_NOTIFY

@@ -51,16 +51,44 @@ CanSystem::CanSystem(::async::ContextType context)
 , _canTxRunnable(*this)
 {}
 
+} // namespace systems (temporarily close for extern)
+
+extern volatile uint32_t g_rx7E0PostFilter;
+
+namespace systems { // reopen
+
+// --- DiagListener: counts 0x7E0 frames that pass through notifyListeners filter ---
+CanSystem::DiagListener::DiagListener() : _filter()
+{
+    _filter.add(0x7E0U);
+}
+
+void CanSystem::DiagListener::frameReceived(::can::CANFrame const& /* canFrame */)
+{
+    ::g_rx7E0PostFilter++;
+}
+
+::can::IFilter& CanSystem::DiagListener::getFilter() { return _filter; }
+
 void CanSystem::init() { transitionDone(); }
 
 void CanSystem::run()
 {
     _canRxRunnable.setEnabled(true);
 
+    // HW filter: accept ONLY 0x7E0. Combined with SW ISR filter as backup.
+    // The 3-deep RX FIFO overflows with accept-all when other ECUs (0x201, 0x220,
+    // 0x301, 0x302) flood the bus. HW filter prevents non-diagnostic frames from
+    // entering the FIFO, reserving all 3 slots for 0x7E0.
+    static uint32_t const diagIds[] = {0x7E0U};
+    _transceiver0.fDevice.fFilterIds   = diagIds;
+    _transceiver0.fDevice.fFilterCount = 1U;
+
     (void)_transceiver0.init();
     (void)_transceiver0.open();
 
-    // Accept-all filter (set during init). No HW filter override.
+    // Register diagnostic listener BEFORE DoCAN to count 0x7E0 after filter match
+    _transceiver0.addCANFrameListener(_diagListener);
 
     // Enable FDCAN IRQs after transceiver is open (not in setupApplicationsIsr,
     // because the async framework must be ready before ISRs fire)
@@ -121,6 +149,26 @@ extern volatile uint32_t g_rxIsrCalls;
 extern volatile uint32_t g_rxTaskCount;
 extern volatile uint32_t g_rxDispatch;
 extern volatile uint32_t g_txIsrCount;
+extern volatile uint32_t g_rx7E0PreNotify;
+extern volatile uint32_t g_docanFirstData;
+extern volatile uint32_t g_docanBlocked;
+extern volatile uint32_t g_docanAllocOk;
+extern volatile uint32_t g_docanAllocFail;
+extern volatile uint32_t g_docanPoolFull;
+extern volatile uint32_t g_docanRecvListSz;
+extern volatile uint32_t g_docanLastErr;
+extern volatile uint32_t g_docanMsgProcessed;
+extern volatile uint32_t g_docanMsgDelivered;
+extern volatile uint32_t g_rxNon7E0;
+extern volatile uint32_t g_rxLastNon7E0Id;
+extern volatile uint32_t g_docanTxSendCalled;
+extern volatile uint32_t g_docanTxSendOk;
+extern volatile uint32_t g_docanTxFrameSent;
+extern volatile uint32_t g_tpBufLock;
+extern volatile uint32_t g_tpBufUnlock;
+extern volatile uint32_t g_tpBufNoMsg;
+extern volatile uint32_t g_tpBufLockedNow;
+volatile uint32_t g_rx7E0PostFilter = 0U;
 static uint32_t s_pollCounter = 0U;
 
 namespace systems { // reopen
@@ -129,19 +177,19 @@ void CanSystem::CanTxRunnable::execute()
 {
     ::bios::FdCanTransceiver::pollTxCallback(::busid::CAN_0);
 
-    // Dump pipeline counters every 5 seconds via raw UART
-    if (++s_pollCounter >= 5000U)
+    // Compact diag every 30s (600 polls @ 50ms)
+    if (++s_pollCounter >= 600U)
     {
         s_pollCounter = 0U;
-        // Write directly to USART2 TDR (blocking, ~8ms for 100 chars at 115200)
-        char buf[100];
+        char buf[64];
         int n = snprintf(buf, sizeof(buf),
-            "\r\nPIPE:%lu,%lu,%lu,%lu,%lu\r\n",
-            g_rxIsrCalls, g_rxIsrCount, g_rxDispatch, g_rxTaskCount, g_txIsrCount);
+            "T%lu/%lu R%lu/%lu\r\n",
+            g_docanTxSendOk, g_docanTxSendCalled,
+            g_docanMsgDelivered, g_docanFirstData);
         uint32_t volatile* usart2 = reinterpret_cast<uint32_t volatile*>(0x40004400U);
         for (int i = 0; i < n; i++)
         {
-            while ((usart2[0x1C / 4] & (1U << 7)) == 0U) {} // Wait TXE
+            while ((usart2[0x1C / 4] & (1U << 7)) == 0U) {}
             usart2[0x28 / 4] = static_cast<uint32_t>(buf[i]);
         }
     }
@@ -157,12 +205,11 @@ void CanSystem::CanRxRunnable::execute()
     {
         _parent._transceiver0.receiveTask();
     }
-    // Dump counters every 100 RX runnable calls (~every 100 CAN frames)
-    if (++s_rxRunCount % 10U == 0U)
+    // Compact RX diag every 100 calls
+    if (++s_rxRunCount % 100U == 0U)
     {
-        char buf[80];
-        int n = snprintf(buf, sizeof(buf), "\r\nPIPE:%lu,%lu,%lu,%lu,%lu\r\n",
-            g_rxIsrCalls, g_rxIsrCount, g_rxDispatch, g_rxTaskCount, g_txIsrCount);
+        char buf[32];
+        int n = snprintf(buf, sizeof(buf), "r%lu\r\n", g_rxTaskCount);
         uint32_t volatile* usart2 = reinterpret_cast<uint32_t volatile*>(0x40004400U);
         for (int i = 0; i < n; i++)
         {
@@ -175,11 +222,37 @@ void CanSystem::CanRxRunnable::execute()
 } // namespace systems
 
 // Pipeline counters for diagnosing frame loss (volatile, readable via debugger)
-volatile uint32_t g_rxIsrCount    = 0U; // Frames drained from HW FIFO by receiveISR
-volatile uint32_t g_rxIsrCalls    = 0U; // Times RF0N ISR path entered
-volatile uint32_t g_rxTaskCount   = 0U; // Frames processed by receiveTask
-volatile uint32_t g_rxDispatch    = 0U; // Times dispatchRxTask called
-volatile uint32_t g_txIsrCount    = 0U; // Times TC ISR path entered
+volatile uint32_t g_rxIsrCount      = 0U; // Frames drained from HW FIFO by receiveISR
+volatile uint32_t g_rxIsrCalls      = 0U; // Times RF0N ISR path entered
+volatile uint32_t g_rxTaskCount     = 0U; // Frames processed by receiveTask
+volatile uint32_t g_rxDispatch      = 0U; // Times dispatchRxTask called
+volatile uint32_t g_txIsrCount      = 0U; // Times TC ISR path entered
+volatile uint32_t g_rx7E0PreNotify  = 0U; // 0x7E0 frames entering notifyListeners
+// DoCAN diagnostic counters (defined in DoCanReceiver.h, instantiated here)
+volatile uint32_t g_docanFirstData  = 0U; // firstDataFrameReceived calls
+volatile uint32_t g_docanBlocked    = 0U; // handlePendingMessageReceivers blocked
+volatile uint32_t g_docanAllocOk    = 0U; // allocation success
+volatile uint32_t g_docanAllocFail  = 0U; // allocation fail
+volatile uint32_t g_docanPoolFull   = 0U; // receiver pool full
+volatile uint32_t g_docanRecvListSz = 0U; // current _messageReceivers list size
+volatile uint32_t g_docanLastErr    = 0U; // last getTransportMessage error code
+volatile uint32_t g_docanMsgProcessed = 0U; // transportMessageProcessed count
+volatile uint32_t g_docanMsgDelivered = 0U; // startProcessingTransportMessage count
+volatile uint32_t g_rxNon7E0       = 0U;   // non-0x7E0 frames in receiveTask
+volatile uint32_t g_rxLastNon7E0Id = 0U;   // last non-0x7E0 CAN ID
+volatile uint32_t g_docanTxSendCalled = 0U; // DoCanTransmitter::send() called
+volatile uint32_t g_docanTxSendOk    = 0U; // DoCanTransmitter::send() returned OK
+volatile uint32_t g_docanTxSendFail  = 0U; // DoCanTransmitter::send() failed
+volatile uint32_t g_docanTxFrameSent = 0U; // canFrameSent callback (frame on wire)
+volatile uint32_t g_isrStored  = 0U;     // frames stored in SW queue by ISR
+volatile uint32_t g_rawTxAttempt = 0U;
+volatile uint32_t g_rawTxOk     = 0U;
+volatile uint32_t g_isrSkipped = 0U;     // frames skipped by ISR (queue full)
+volatile uint32_t g_isrId0     = 0U;     // frames with ID=0 seen in HW FIFO
+volatile uint32_t g_tpBufLock      = 0U;
+volatile uint32_t g_tpBufUnlock    = 0U;
+volatile uint32_t g_tpBufNoMsg     = 0U;
+volatile uint32_t g_tpBufLockedNow = 0U;
 
 extern "C"
 {

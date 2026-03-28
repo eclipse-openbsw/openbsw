@@ -4,31 +4,25 @@
 
 #pragma once
 
-#include "platform/estdint.h"
+#include <platform/estdint.h>
+
+#include <tx_api.h>
 
 static inline __attribute__((always_inline)) void setThreadXInitialized() {};
 
 typedef uint32_t OldIntEnabledStatusValueType;
 
-#define getOldIntEnabledStatusValueAndSuspendAllInterrupts \
-    getMachineStateRegisterValueAndSuspendAllInterrupts
+#define getMachineStateRegisterValueAndSuspendAllInterrupts \
+    getOldIntEnabledStatusValueAndSuspendAllInterrupts
 
-// clang-format off
-static inline __attribute__((always_inline))
-uint32_t getMachineStateRegisterValueAndSuspendAllInterrupts(void)
+static inline __attribute__((always_inline)) OldIntEnabledStatusValueType
+getOldIntEnabledStatusValueAndSuspendAllInterrupts(void)
 {
-   uint32_t _PRIMASK;
-   __asm volatile ("    mrs     %0, PRIMASK\n"
-                   "    cpsid   i\n"
-                   : "=r" (_PRIMASK));
-    return(_PRIMASK);
+    return tx_interrupt_control(TX_INT_DISABLE);
 }
 
-static inline __attribute__((always_inline))
-void resumeAllInterrupts(uint32_t oldMachineStateRegisterValue)
+static inline __attribute__((always_inline)) void
+resumeAllInterrupts(OldIntEnabledStatusValueType const oldIntEnabledStatusValue)
 {
-    __asm volatile ("      msr     PRIMASK,%[Input]\n"
-                    ::[Input] "r" (oldMachineStateRegisterValue)
-                  );
+    tx_interrupt_control(oldIntEnabledStatusValue);
 }
-// clang-format on
