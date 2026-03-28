@@ -3981,3 +3981,117 @@ TEST_F(FdCanDeviceTest, initCCIPRUpperBitsUnaffected)
     // Bits 26-31 should still be set
     EXPECT_EQ(fakeRcc.CCIPR & 0xFC000000U, 0xFC000000U);
 }
+
+// ============================================================================
+// Phase 1a — TX callback delegate (match FlexCANDevice::transmitISR)
+//
+// FlexCANDevice::transmitISR() calls fFrameSentCallback() directly.
+// FdCanDevice::transmitISR() should do the same when constructed with a delegate.
+// ============================================================================
+
+TEST_F(FdCanDeviceTest, transmitISRInvokesCallbackDelegate)
+{
+    bool callbackFired = false;
+    auto callback      = ::etl::delegate<void()>::create([&callbackFired]() { callbackFired = true; });
+
+    auto cfg = makeDefaultConfig();
+    bios::FdCanDevice dev(cfg, callback);
+    fakeFdcan.CCCR |= FDCAN_CCCR_INIT;
+    dev.init();
+    dev.start();
+    fakeFdcan.TXEFS = 0U;
+
+    dev.transmitISR();
+    EXPECT_TRUE(callbackFired);
+}
+
+TEST_F(FdCanDeviceTest, transmitISRWithoutDelegateDoesNotCrash)
+{
+    // Construct without callback — existing API, should still work
+    auto dev = makeStartedDevice();
+    fakeFdcan.TXEFS = 0U;
+
+    dev->transmitISR(); // Must not crash
+    EXPECT_EQ(fakeFdcan.IR, (FDCAN_IR_TEFN | FDCAN_IR_TC));
+}
+
+// ============================================================================
+// Phase 1b — Selective TX interrupt (match FlexCANDevice enable/disable pattern)
+//
+// S32K: transmit(frame, bufIdx, true) enables TX interrupt for that buffer.
+//       transmit(frame, bufIdx, false) does not.
+//       transmitISR() disables the TX interrupt.
+// G4:   transmit(frame, true) should enable TCE.
+//       transmit(frame, false) should NOT enable TCE.
+//       transmitISR() should disable TCE.
+// ============================================================================
+
+TEST_F(FdCanDeviceTest, transmitWithInterruptEnablesTCE)
+{
+    auto dev = makeStartedDevice();
+    // Clear IE to known state (start() may have set it)
+    fakeFdcan.IE = FDCAN_IE_RF0NE; // Only RX enabled, no TCE
+    // TX FIFO has space
+    fakeFdcan.TXFQS = 0x3U; // TFFL=3
+
+    ::can::CANFrame frame(0x100U, nullptr, 0U);
+    bool ok = dev->transmit(frame, true);
+    EXPECT_TRUE(ok);
+    // TCE should now be set
+    EXPECT_NE(fakeFdcan.IE & FDCAN_IE_TCE, 0U);
+}
+
+TEST_F(FdCanDeviceTest, transmitWithoutInterruptDoesNotEnableTCE)
+{
+    auto dev = makeStartedDevice();
+    fakeFdcan.IE = FDCAN_IE_RF0NE; // Only RX, no TCE
+    fakeFdcan.TXFQS = 0x3U;
+
+    ::can::CANFrame frame(0x100U, nullptr, 0U);
+    bool ok = dev->transmit(frame, false);
+    EXPECT_TRUE(ok);
+    // TCE should NOT be set
+    EXPECT_EQ(fakeFdcan.IE & FDCAN_IE_TCE, 0U);
+}
+
+TEST_F(FdCanDeviceTest, transmitISRDisablesTCE)
+{
+    auto dev = makeStartedDevice();
+    fakeFdcan.IE    = FDCAN_IE_RF0NE | FDCAN_IE_TCE; // Both enabled
+    fakeFdcan.TXEFS = 0U;
+
+    dev->transmitISR();
+    // TCE should be cleared after ISR (match S32K disableTransmitInterrupt)
+    EXPECT_EQ(fakeFdcan.IE & FDCAN_IE_TCE, 0U);
+    // RF0NE should still be set
+    EXPECT_NE(fakeFdcan.IE & FDCAN_IE_RF0NE, 0U);
+}
+
+// ============================================================================
+// Phase 1c — RF0NE disable in receiveISR
+//
+// The existing comment in CanSystem.cpp claims RF0NE is disabled during ISR
+// processing. The code does NOT do this. Fix: receiveISR should disable RF0NE
+// to prevent re-entry. enableRxInterrupt() re-enables it in receiveTask().
+// ============================================================================
+
+TEST_F(FdCanDeviceTest, receiveISRDisablesRF0NE)
+{
+    auto dev = makeStartedDevice();
+    // Enable RF0NE
+    fakeFdcan.IE = FDCAN_IE_RF0NE | FDCAN_IE_TCE;
+    // Put one frame in RX FIFO
+    fakeFdcan.RXF0S = (1U << FDCAN_RXF0S_F0FL_Pos); // F0FL=1
+    fakeFdcan.IR    = FDCAN_IR_RF0N;
+
+    // Place a valid frame in message RAM at RX FIFO0 index 0
+    uint8_t data[8] = {0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88};
+    placeRxFrame(0, 0x100, false, 8, data);
+
+    dev->receiveISR(nullptr);
+
+    // RF0NE should be CLEARED after receiveISR (prevent re-entry)
+    EXPECT_EQ(fakeFdcan.IE & FDCAN_IE_RF0NE, 0U);
+    // TCE should be unaffected
+    EXPECT_NE(fakeFdcan.IE & FDCAN_IE_TCE, 0U);
+}

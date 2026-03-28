@@ -90,7 +90,16 @@ static constexpr uint32_t RX_FIFO0_OFFSET   = 0x0B0U;
 static constexpr uint32_t TX_BUFFER_OFFSET  = 0x278U;
 
 FdCanDevice::FdCanDevice(Config const& config)
-: fConfig(config), fRxQueue{}, fRxHead(0U), fRxCount(0U), fInitialized(false)
+: fConfig(config), fRxQueue{}, fRxHead(0U), fRxCount(0U), fInitialized(false), fFrameSentCallback()
+{}
+
+FdCanDevice::FdCanDevice(Config const& config, ::etl::delegate<void()> frameSentCallback)
+: fConfig(config)
+, fRxQueue{}
+, fRxHead(0U)
+, fRxCount(0U)
+, fInitialized(false)
+, fFrameSentCallback(frameSentCallback)
 {}
 
 void FdCanDevice::enablePeripheralClock()
@@ -273,6 +282,16 @@ bool FdCanDevice::transmit(::can::CANFrame const& frame)
     return true;
 }
 
+bool FdCanDevice::transmit(::can::CANFrame const& frame, bool txInterruptNeeded)
+{
+    if (txInterruptNeeded)
+    {
+        // Enable TCE before TX (match S32K enableTransmitInterrupt)
+        fConfig.baseAddress->IE |= FDCAN_IE_TCE;
+    }
+    return transmit(frame);
+}
+
 } // namespace bios — temporarily close for extern
 extern volatile uint32_t g_isrStored;
 extern volatile uint32_t g_isrSkipped;
@@ -285,10 +304,15 @@ uint8_t FdCanDevice::receiveISR(uint8_t const* filterBitField)
     uint32_t ramBase           = getInstanceRamBase(fdcan);
     uint8_t received           = 0U;
 
+    // Disable RF0NE to prevent ISR re-entry during drain.
+    // Re-enabled by enableRxInterrupt() in receiveTask().
+    fdcan->IE &= ~FDCAN_IE_RF0NE;
+
     // Count FIFO message-lost events BEFORE clearing
     if ((fdcan->IR & FDCAN_IR_RF0L) != 0U) { ++g_isrSkipped; }
 
-    // Clear RF0N BEFORE reading F0FL so late arrivals re-trigger ISR.
+    // Clear RF0N BEFORE reading F0FL so late arrivals re-trigger ISR
+    // (once RF0NE is re-enabled by receiveTask).
     fdcan->IR = FDCAN_IR_RF0N | FDCAN_IR_RF0F | FDCAN_IR_RF0L;
 
     // Snapshot fill level — drain only what's here now.
@@ -377,18 +401,17 @@ void FdCanDevice::transmitISR()
 {
     FDCAN_GlobalTypeDef* fdcan = fConfig.baseAddress;
 
-    // Drain TX Event FIFO — prevent FIFO full condition that blocks TEFN.
-    uint8_t toDrain
-        = static_cast<uint8_t>((fdcan->TXEFS & FDCAN_TXEFS_EFFL) >> FDCAN_TXEFS_EFFL_Pos);
-    while (toDrain > 0U)
-    {
-        toDrain--;
-        uint32_t getIdx = (fdcan->TXEFS & FDCAN_TXEFS_EFGI) >> FDCAN_TXEFS_EFGI_Pos;
-        fdcan->TXEFA    = getIdx;
-    }
+    // Disable TCE (match S32K disableTransmitInterrupt pattern)
+    fdcan->IE &= ~FDCAN_IE_TCE;
 
-    // Only clear TC, NOT TEFN. TEFN is handled by the ISR dispatcher.
+    // Clear TC flag
     fdcan->IR = FDCAN_IR_TC;
+
+    // Invoke callback delegate if set (match FlexCANDevice::transmitISR)
+    if (fFrameSentCallback.is_valid())
+    {
+        fFrameSentCallback();
+    }
 }
 
 bool FdCanDevice::isBusOff() const { return (fConfig.baseAddress->PSR & FDCAN_PSR_BO) != 0U; }

@@ -14,6 +14,7 @@
 #pragma once
 
 #include <can/canframes/CANFrame.h>
+#include <etl/delegate.h>
 #include <mcu/mcu.h>
 #include <stdint.h>
 
@@ -65,6 +66,13 @@ public:
     explicit FdCanDevice(Config const& config);
 
     /**
+     * \brief Construct with a TX-complete callback delegate (matches FlexCANDevice pattern).
+     * \param config            Hardware configuration.
+     * \param frameSentCallback Delegate invoked from transmitISR() when a listener TX completes.
+     */
+    FdCanDevice(Config const& config, ::etl::delegate<void()> frameSentCallback);
+
+    /**
      * \brief Initialise the FDCAN peripheral (clock, GPIO, bit timing, message RAM).
      *
      * Leaves the peripheral in init mode; call start() to begin bus communication.
@@ -95,6 +103,16 @@ public:
      *       asynchronously; transmitISR() clears the completion flag.
      */
     bool transmit(::can::CANFrame const& frame);
+
+    /**
+     * \brief Queue a CAN frame with optional TX-complete interrupt control.
+     * \param frame              Classic CAN frame to transmit.
+     * \param txInterruptNeeded  If true, enable TCE before TX (for listener callback).
+     *                           If false, do not enable TCE (fire-and-forget).
+     * \return true if queued, false if FIFO full.
+     * \note Matches FlexCANDevice::transmit(frame, bufIdx, txInterruptNeeded) contract.
+     */
+    bool transmit(::can::CANFrame const& frame, bool txInterruptNeeded);
 
     /**
      * \brief Drain RX FIFO 0 into the software queue.  Called from the RX ISR.
@@ -189,6 +207,7 @@ private:
     uint8_t fRxHead;                         ///< Index of the oldest unread frame
     uint8_t fRxCount;                        ///< Number of frames currently in the queue
     bool fInitialized;                       ///< Set true after init() completes
+    ::etl::delegate<void()> fFrameSentCallback; ///< TX-complete callback (like FlexCANDevice)
 
 public:
     bool fTxEventEnabled{false}; ///< When true, TX buffer sets EFC=1 for TX Event FIFO
