@@ -217,18 +217,18 @@ void FdCanDevice::start()
         configureAcceptAllFilter();
     }
 
-    // Write IE in init mode (may or may not persist on STM32G4)
-    // Use TCE (Transmission Complete Enable) not TEFNE — TC fires for every
-    // completed TX regardless of EFC bit, per ST HAL pattern (RM0440 §44.4.14).
-    fConfig.baseAddress->IE     = FDCAN_IE_RF0NE | FDCAN_IE_TCE;
+    // Enable RX interrupt only at startup. TCE is managed per-TX by
+    // transmit(frame, true) and disabled by transmitISR() — matching S32K's
+    // selective per-buffer interrupt enable/disable pattern.
+    fConfig.baseAddress->IE     = FDCAN_IE_RF0NE;
     fConfig.baseAddress->ILS    = 0U;
     fConfig.baseAddress->ILE    = FDCAN_ILE_EINT0;
-    fConfig.baseAddress->TXBTIE = 0x7U; // Enable TC for all 3 TX buffers
+    fConfig.baseAddress->TXBTIE = 0x7U; // Required for TC generation per RM0440
 
     leaveInitMode();
 
-    // Write IE again AFTER leaving init mode.
-    fConfig.baseAddress->IE = FDCAN_IE_RF0NE | FDCAN_IE_TCE;
+    // Write IE again after leaving init mode (persistence workaround).
+    fConfig.baseAddress->IE = FDCAN_IE_RF0NE;
 }
 
 void FdCanDevice::stop()

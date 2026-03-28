@@ -83,9 +83,10 @@ public:
     /**
      * \brief Configure interrupts and leave init mode to start bus communication.
      *
-     * Enables RF0NE (RX FIFO 0 new element) and TCE (TX complete) interrupts,
-     * routes TX events to interrupt line 1 via FDCAN_ILS_SMSG, then clears
-     * the INIT bit to join the bus.
+     * Enables RF0NE (RX FIFO 0 new element) interrupt at startup. TCE (TX
+     * complete) is managed per-TX by transmit(frame, true) and disabled by
+     * transmitISR(), matching S32K's selective interrupt pattern. All
+     * interrupts route to line 0 (ILS=0). Clears INIT to join the bus.
      * \note Must be called after init().
      */
     void start();
@@ -129,8 +130,9 @@ public:
     uint8_t receiveISR(uint8_t const* filterBitField);
 
     /**
-     * \brief Clear the TX-complete interrupt flag.  Called from the TX ISR.
-     * \note ISR context only (interrupt line 1, routed via FDCAN_ILS_SMSG).
+     * \brief Handle TX-complete interrupt: disable TCE, clear TC flag, invoke
+     *        callback delegate.  Matches FlexCANDevice::transmitISR() contract.
+     * \note ISR context only (interrupt line 0, ILS=0).
      */
     void transmitISR();
 
@@ -208,9 +210,6 @@ private:
     uint8_t fRxCount;                        ///< Number of frames currently in the queue
     bool fInitialized;                       ///< Set true after init() completes
     ::etl::delegate<void()> fFrameSentCallback; ///< TX-complete callback (like FlexCANDevice)
-
-public:
-    bool fTxEventEnabled{false}; ///< When true, TX buffer sets EFC=1 for TX Event FIFO
 
     void enterInitMode();
     void leaveInitMode();

@@ -95,9 +95,9 @@ void CanSystem::run()
     // Priority must be >= configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY (5)
     // for FreeRTOS API safety, and <= 5 so BASEPRI (0x50) doesn't mask it.
     // Priority 8 (0x80) is masked by BASEPRI during FreeRTOS scheduling.
-    // Force IE register — FdCanDevice::start() should set this, but
-    // verify it persists after leaving init mode.
-    FDCAN1->IE  = FDCAN_IE_RF0NE | FDCAN_IE_TCE;
+    // Enable RX interrupt only. TCE is managed by FdCanDevice per-TX
+    // (enabled before listener TX, disabled by transmitISR).
+    FDCAN1->IE  = FDCAN_IE_RF0NE;
     FDCAN1->ILS = 0U;
     FDCAN1->ILE = FDCAN_ILE_EINT0;
 
@@ -303,12 +303,9 @@ void call_can_isr_RX()
         ::bios::FdCanTransceiver::transmitInterrupt(::busid::CAN_0);
     }
 
-    // Defensive: restore IE if it got corrupted
-    uint32_t volatile* fdcan_ie = reinterpret_cast<uint32_t volatile*>(0x40006454U);
-    if ((*fdcan_ie & 0x81U) != 0x81U) // RF0NE(bit0) + TCE(bit7)
-    {
-        *fdcan_ie |= 0x81U;
-    }
+    // NOTE: No defensive IE restore. TCE is now managed by FdCanDevice
+    // (enabled before listener TX, disabled by transmitISR). RF0NE is
+    // disabled by receiveISR, re-enabled by enableRxInterrupt in receiveTask.
 
     ::asyncLeaveIsrGroup(ISR_GROUP_CAN);
 }
