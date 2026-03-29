@@ -87,32 +87,41 @@ void BxCanDevice::configureGpio()
     }
 }
 
-void BxCanDevice::enterInitMode()
+bool BxCanDevice::enterInitMode()
 {
     fConfig.baseAddress->MCR |= CAN_MCR_INRQ;
 #if !defined(UNIT_TEST)
-    while ((fConfig.baseAddress->MSR & CAN_MSR_INAK) == 0U) {}
+    uint32_t timeout = 100000U;
+    while ((fConfig.baseAddress->MSR & CAN_MSR_INAK) == 0U)
+    {
+        if (--timeout == 0U)
+        {
+            return false;
+        }
+    }
 #else
     // In unit tests, MSR doesn't auto-track MCR. Simulate HW behavior.
     fConfig.baseAddress->MSR |= CAN_MSR_INAK;
 #endif
+    return true;
 }
 
-void BxCanDevice::leaveInitMode()
+bool BxCanDevice::leaveInitMode()
 {
     fConfig.baseAddress->MCR &= ~CAN_MCR_INRQ;
 #if !defined(UNIT_TEST)
-    uint32_t timeout = 100000;
+    uint32_t timeout = 100000U;
     while ((fConfig.baseAddress->MSR & CAN_MSR_INAK) != 0U)
     {
-        if (--timeout == 0)
+        if (--timeout == 0U)
         {
-            return;
+            return false;
         }
     }
 #else
     fConfig.baseAddress->MSR &= ~CAN_MSR_INAK;
 #endif
+    return true;
 }
 
 void BxCanDevice::configureBitTiming()

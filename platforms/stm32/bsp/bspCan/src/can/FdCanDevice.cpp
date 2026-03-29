@@ -149,18 +149,36 @@ void FdCanDevice::configureGpio()
     }
 }
 
-void FdCanDevice::enterInitMode()
+static constexpr uint32_t INIT_TIMEOUT_CYCLES = 100000U;
+
+bool FdCanDevice::enterInitMode()
 {
     fConfig.baseAddress->CCCR |= FDCAN_CCCR_INIT;
-    while ((fConfig.baseAddress->CCCR & FDCAN_CCCR_INIT) == 0U) {}
+    uint32_t timeout = INIT_TIMEOUT_CYCLES;
+    while ((fConfig.baseAddress->CCCR & FDCAN_CCCR_INIT) == 0U)
+    {
+        if (--timeout == 0U)
+        {
+            return false;
+        }
+    }
     // Enable configuration change
     fConfig.baseAddress->CCCR |= FDCAN_CCCR_CCE;
+    return true;
 }
 
-void FdCanDevice::leaveInitMode()
+bool FdCanDevice::leaveInitMode()
 {
     fConfig.baseAddress->CCCR &= ~FDCAN_CCCR_INIT;
-    while ((fConfig.baseAddress->CCCR & FDCAN_CCCR_INIT) != 0U) {}
+    uint32_t timeout = INIT_TIMEOUT_CYCLES;
+    while ((fConfig.baseAddress->CCCR & FDCAN_CCCR_INIT) != 0U)
+    {
+        if (--timeout == 0U)
+        {
+            return false;
+        }
+    }
+    return true;
 }
 
 void FdCanDevice::configureBitTiming()
@@ -298,10 +316,7 @@ bool FdCanDevice::transmit(::can::CANFrame const& frame, bool txInterruptNeeded)
     return transmit(frame);
 }
 
-} // namespace bios — temporarily close for extern
-extern volatile uint32_t g_isrStored;
-extern volatile uint32_t g_isrSkipped;
-extern volatile uint32_t g_isrId0;
+} // namespace bios — temporarily close
 namespace bios { // reopen
 
 uint8_t FdCanDevice::receiveISR(uint8_t const* filterBitField)
@@ -314,8 +329,8 @@ uint8_t FdCanDevice::receiveISR(uint8_t const* filterBitField)
     // Disabling here is unsafe because receiveTask() may not run if the
     // async dispatch is dedup-dropped, permanently blocking all RX.
 
-    // Count FIFO message-lost events BEFORE clearing
-    if ((fdcan->IR & FDCAN_IR_RF0L) != 0U) { ++g_isrSkipped; }
+    // NOTE: RF0L (message lost) is cleared below with RF0N and RF0F.
+    // Production code could increment an overrun counter here if needed.
 
     // Clear RF0N BEFORE reading F0FL so late arrivals re-trigger ISR
     // (once RF0NE is re-enabled by receiveTask).
@@ -383,14 +398,10 @@ uint8_t FdCanDevice::receiveISR(uint8_t const* filterBitField)
         data[6] = static_cast<uint8_t>(d1 >> 16U);
         data[7] = static_cast<uint8_t>(d1 >> 24U);
 
-        // Track ID=0 frames in the HW FIFO
-        if (id == 0U) { ++g_isrId0; }
-
         // Store in queue
         uint8_t idx   = (fRxHead + fRxCount) % RX_QUEUE_SIZE;
         fRxQueue[idx] = ::can::CANFrame(id, data, dlc);
         fRxCount++;
-        ++g_isrStored;
         received++;
 
         // Acknowledge

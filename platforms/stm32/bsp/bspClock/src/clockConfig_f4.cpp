@@ -25,11 +25,17 @@ uint32_t SystemCoreClock = 16000000U; // Default HSI, updated by configurePll()
  * \note Called from the startup code before main(). Must not use any
  *       RTOS primitives or BSW services.
  */
+// Clock stabilization timeout (~100 ms at 16 MHz HSI = 1.6M cycles).
+static constexpr uint32_t CLK_TIMEOUT = 1600000U;
+
 extern "C" void configurePll()
 {
     // Enable HSE bypass (8 MHz from ST-LINK)
     RCC->CR |= RCC_CR_HSEBYP | RCC_CR_HSEON;
-    while ((RCC->CR & RCC_CR_HSERDY) == 0U) {}
+    {
+        uint32_t t = CLK_TIMEOUT;
+        while ((RCC->CR & RCC_CR_HSERDY) == 0U) { if (--t == 0U) { return; } }
+    }
 
     // Configure PLL: HSE / M=8 * N=384 / P=4 = 96 MHz
     RCC->PLLCFGR = (8U << RCC_PLLCFGR_PLLM_Pos)     // M = 8 -> VCO input = 1 MHz
@@ -38,14 +44,20 @@ extern "C" void configurePll()
                    | RCC_PLLCFGR_PLLSRC_HSE;
 
     RCC->CR |= RCC_CR_PLLON;
-    while ((RCC->CR & RCC_CR_PLLRDY) == 0U) {}
+    {
+        uint32_t t = CLK_TIMEOUT;
+        while ((RCC->CR & RCC_CR_PLLRDY) == 0U) { if (--t == 0U) { return; } }
+    }
 
     // Flash latency 3 WS for 96 MHz @ 3.3V
     FLASH->ACR = FLASH_ACR_LATENCY_3WS | FLASH_ACR_PRFTEN | FLASH_ACR_ICEN | FLASH_ACR_DCEN;
 
     // AHB = SYSCLK, APB1 = SYSCLK/2, APB2 = SYSCLK
     RCC->CFGR = RCC_CFGR_PPRE1_DIV2 | RCC_CFGR_SW_PLL;
-    while ((RCC->CFGR & RCC_CFGR_SWS) != RCC_CFGR_SWS_PLL) {}
+    {
+        uint32_t t = CLK_TIMEOUT;
+        while ((RCC->CFGR & RCC_CFGR_SWS) != RCC_CFGR_SWS_PLL) { if (--t == 0U) { return; } }
+    }
 
     SystemCoreClock = 96000000U;
 }

@@ -25,26 +25,32 @@ void SystemInit()
 {
     configurePll();
 
-    // LED ON: PA5 = LD2
+    // LED ON: PA5 = LD2 (output push-pull)
+    static constexpr uint8_t LED_PIN = 5U;
     RCC->AHB2ENR |= RCC_AHB2ENR_GPIOAEN;
-    GPIOA->MODER &= ~(3U << (5U * 2U));
-    GPIOA->MODER |= (1U << (5U * 2U));
-    GPIOA->BSRR = (1U << 5U);
+    GPIOA->MODER &= ~(3U << (LED_PIN * 2U));
+    GPIOA->MODER |= (1U << (LED_PIN * 2U)); // GPIO output mode
+    GPIOA->BSRR = (1U << LED_PIN);
 
     // Early USART2 for pre-main boot messages (PA2 AF7, 115200 @ 170 MHz)
+    // BRR = 170 000 000 / 115 200 = 1475.69 → 1476
+    static constexpr uint8_t USART_TX_PIN = 2U;
+    static constexpr uint8_t USART_TX_AF  = 7U; // AF7 = USART2_TX on PA2
+    static constexpr uint32_t USART_BRR_115200_170MHZ = 1476U;
+
     RCC->APB1ENR1 |= RCC_APB1ENR1_USART2EN;
+    (void)RCC->APB1ENR1; // Read-back for clock propagation
     (void)RCC->APB1ENR1;
-    (void)RCC->APB1ENR1;
-    GPIOA->MODER &= ~(3U << (2U * 2U));
-    GPIOA->MODER |= (2U << (2U * 2U));
-    GPIOA->AFR[0] &= ~(0xFU << (2U * 4U));
-    GPIOA->AFR[0] |= (7U << (2U * 4U));
+    GPIOA->MODER &= ~(3U << (USART_TX_PIN * 2U));
+    GPIOA->MODER |= (2U << (USART_TX_PIN * 2U)); // Alternate function mode
+    GPIOA->AFR[0] &= ~(0xFU << (USART_TX_PIN * 4U));
+    GPIOA->AFR[0] |= (static_cast<uint32_t>(USART_TX_AF) << (USART_TX_PIN * 4U));
     USART2->CR1 = 0;
     USART2->CR2 = 0;
     USART2->CR3 = 0;
-    USART2->BRR = 1476U;
+    USART2->BRR = USART_BRR_115200_170MHZ;
     USART2->CR1 = USART_CR1_TE | USART_CR1_UE;
-    while ((USART2->ISR & USART_ISR_TEACK) == 0) {}
+    while ((USART2->ISR & USART_ISR_TEACK) == 0) {} // Wait for TX enable ack
 }
 
 // HardFault handler — dumps faulting PC/LR/CFSR on USART2

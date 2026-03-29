@@ -210,8 +210,8 @@ private:
     uint8_t fRxCount;                        ///< Number of frames currently in the queue
     bool fInitialized;                       ///< Set true after init() completes
 
-    void enterInitMode();
-    void leaveInitMode();
+    bool enterInitMode();
+    bool leaveInitMode();
     void configureBitTiming();
     void configureGpio();
     void enablePeripheralClock();

@@ -179,25 +179,13 @@ uint32_t FdCanTransceiver::getBaudrate() const { return 500000U; }
 
 uint16_t FdCanTransceiver::getHwQueueTimeout() const { return 10U; }
 
-// Software ISR filter bitmap: accept only CAN IDs matching registered listeners.
-// 256 bytes = 2048 bits covers all standard 11-bit CAN IDs (0x000-0x7FF).
-// Bit set = accept, bit clear = reject.
-static uint8_t sIsrFilterBitField[256] = {};
-static bool sIsrFilterInitialized = false;
-
 uint8_t FdCanTransceiver::receiveInterrupt(uint8_t transceiverIndex)
 {
     if (transceiverIndex < 3U && fpTransceivers[transceiverIndex] != nullptr)
     {
-        // Initialize filter bitmap once: accept 0x7E0 (diagnostic request)
-        if (!sIsrFilterInitialized)
-        {
-            // Set bit for 0x7E0: byte 252, bit 0
-            uint32_t const id = 0x7E0U;
-            sIsrFilterBitField[id / 8U] |= (1U << (id % 8U));
-            sIsrFilterInitialized = true;
-        }
-        return fpTransceivers[transceiverIndex]->fDevice.receiveISR(sIsrFilterBitField);
+        // Accept all frames at ISR level. Per-listener filtering happens in
+        // notifyListeners() during receiveTask() — matching S32K contract.
+        return fpTransceivers[transceiverIndex]->fDevice.receiveISR(nullptr);
     }
     return 0U;
 }
@@ -299,35 +287,12 @@ void FdCanTransceiver::cyclicTask()
     }
 }
 
-} // close bios namespace temporarily
-extern volatile uint32_t g_rxTaskCount;
-extern volatile uint32_t g_rx7E0PreNotify;
-extern volatile uint32_t g_rxNon7E0;
-extern volatile uint32_t g_rxLastNon7E0Id;
-// Store first 16 non-0x7E0 IDs for debugging
-volatile uint32_t g_rxBadIds[16] = {};
-volatile uint8_t  g_rxBadIdIdx = 0U;
-namespace bios { // reopen
-
 void FdCanTransceiver::receiveTask()
 {
     uint8_t count = fDevice.getRxCount();
-    ::g_rxTaskCount += count;
     for (uint8_t i = 0U; i < count; i++)
     {
-        ::can::CANFrame const& frame = fDevice.getRxFrame(i);
-        uint32_t id = frame.getId();
-        if (id == 0x7E0U)
-        {
-            ::g_rx7E0PreNotify++;
-        }
-        else
-        {
-            ::g_rxNon7E0++;
-            ::g_rxLastNon7E0Id = id;
-            if (g_rxBadIdIdx < 16U) { g_rxBadIds[g_rxBadIdIdx++] = id; }
-        }
-        notifyListeners(frame);
+        notifyListeners(fDevice.getRxFrame(i));
     }
     fDevice.clearRxQueue();
     // Re-enable RX FIFO interrupt after draining software queue

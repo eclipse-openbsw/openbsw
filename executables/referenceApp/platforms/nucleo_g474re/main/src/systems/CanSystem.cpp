@@ -17,7 +17,6 @@
 #include "async/Hook.h"
 #include "busid/BusId.h"
 #include "mcu/mcu.h"
-#include <cstdio>
 
 namespace
 {
@@ -51,22 +50,13 @@ CanSystem::CanSystem(::async::ContextType context)
 , _canTxRunnable(*this)
 {}
 
-} // namespace systems (temporarily close for extern)
-
-extern volatile uint32_t g_rx7E0PostFilter;
-
-namespace systems { // reopen
-
 // --- DiagListener: counts 0x7E0 frames that pass through notifyListeners filter ---
 CanSystem::DiagListener::DiagListener() : _filter()
 {
     _filter.add(0x7E0U);
 }
 
-void CanSystem::DiagListener::frameReceived(::can::CANFrame const& /* canFrame */)
-{
-    ::g_rx7E0PostFilter++;
-}
+void CanSystem::DiagListener::frameReceived(::can::CANFrame const& /* canFrame */) {}
 
 ::can::IFilter& CanSystem::DiagListener::getFilter() { return _filter; }
 
@@ -89,9 +79,6 @@ void CanSystem::run()
 
     // Enable FDCAN IRQs after transceiver is open (not in setupApplicationsIsr,
     // because the async framework must be ready before ISRs fire)
-    // Priority must be >= configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY (5)
-    // for FreeRTOS API safety, and <= 5 so BASEPRI (0x50) doesn't mask it.
-    // Priority 8 (0x80) is masked by BASEPRI during FreeRTOS scheduling.
     // Enable RX interrupt only. TCE is managed by FdCanDevice per-TX
     // (enabled before listener TX, disabled by transmitISR).
     FDCAN1->IE  = FDCAN_IE_RF0NE;
@@ -100,7 +87,7 @@ void CanSystem::run()
 
     // Priority must be >= configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY (6)
     // for FreeRTOS API safety. Priority 5 is ABOVE the threshold — unsafe
-    // for xTaskNotifyFromISR. S32K uses the correct range by default.
+    // for xTaskNotifyFromISR.
     SYS_SetPriority(FDCAN1_IT0_IRQn, 6);
     SYS_SetPriority(FDCAN1_IT1_IRQn, 6);
     NVIC_ClearPendingIRQ(FDCAN1_IT0_IRQn);
@@ -108,11 +95,11 @@ void CanSystem::run()
     SYS_EnableIRQ(FDCAN1_IT0_IRQn);
     SYS_EnableIRQ(FDCAN1_IT1_IRQn);
 
-    // Schedule periodic TX callback poll (every 5ms) to check if DoCAN TX
-    // response needs confirmation. This avoids async dispatch dedup issues
-    // that prevent the ISR-based callback from reaching the DoCAN layer.
-    // TX callback poll at 50ms — fast enough for DoCAN 1000ms timeout,
-    // slow enough to not starve TASK_CAN (1ms poll killed ALL RX).
+    // Schedule periodic TX callback poll (every 50ms) to handle DoCAN TX
+    // confirmation. The ISR-based callback via async::execute is subject to
+    // dispatch dedup when the same Function object is already queued. This
+    // poll ensures the DoCAN transport layer gets TX confirmation within its
+    // 1000ms timeout window.
     ::async::scheduleAtFixedRate(
         _context, _canTxRunnable, _canTxTimeout, 50U, ::async::TimeUnit::MILLISECONDS);
 
@@ -142,62 +129,12 @@ void CanSystem::dispatchRxTask() { ::async::execute(_context, _canRxRunnable); }
 
 void CanSystem::dispatchTxTask() { ::async::execute(_context, _canTxRunnable); }
 
-} // close namespace systems temporarily
-
-extern volatile uint32_t g_rxIsrCount;
-extern volatile uint32_t g_rxIsrCalls;
-extern volatile uint32_t g_rxTaskCount;
-extern volatile uint32_t g_rxDispatch;
-extern volatile uint32_t g_txIsrCount;
-extern volatile uint32_t g_rx7E0PreNotify;
-extern volatile uint32_t g_docanFirstData;
-extern volatile uint32_t g_docanBlocked;
-extern volatile uint32_t g_docanAllocOk;
-extern volatile uint32_t g_docanAllocFail;
-extern volatile uint32_t g_docanPoolFull;
-extern volatile uint32_t g_docanRecvListSz;
-extern volatile uint32_t g_docanLastErr;
-extern volatile uint32_t g_docanMsgProcessed;
-extern volatile uint32_t g_docanMsgDelivered;
-extern volatile uint32_t g_rxNon7E0;
-extern volatile uint32_t g_rxLastNon7E0Id;
-extern volatile uint32_t g_docanTxSendCalled;
-extern volatile uint32_t g_docanTxSendOk;
-extern volatile uint32_t g_docanTxFrameSent;
-extern volatile uint32_t g_tpBufLock;
-extern volatile uint32_t g_tpBufUnlock;
-extern volatile uint32_t g_tpBufNoMsg;
-extern volatile uint32_t g_tpBufLockedNow;
-volatile uint32_t g_rx7E0PostFilter = 0U;
-static uint32_t s_pollCounter = 0U;
-
-namespace systems { // reopen
-
 void CanSystem::CanTxRunnable::execute()
 {
     ::bios::FdCanTransceiver::pollTxCallback(::busid::CAN_0);
-
-    // Compact diag every 30s (600 polls @ 50ms)
-    if (++s_pollCounter >= 600U)
-    {
-        s_pollCounter = 0U;
-        char buf[64];
-        int n = snprintf(buf, sizeof(buf),
-            "T%lu/%lu R%lu/%lu\r\n",
-            g_docanTxSendOk, g_docanTxSendCalled,
-            g_docanMsgDelivered, g_docanFirstData);
-        uint32_t volatile* usart2 = reinterpret_cast<uint32_t volatile*>(0x40004400U);
-        for (int i = 0; i < n; i++)
-        {
-            while ((usart2[0x1C / 4] & (1U << 7)) == 0U) {}
-            usart2[0x28 / 4] = static_cast<uint32_t>(buf[i]);
-        }
-    }
 }
 
 CanSystem::CanRxRunnable::CanRxRunnable(CanSystem& parent) : _parent(parent), _enabled(false) {}
-
-static uint32_t s_rxRunCount = 0U;
 
 void CanSystem::CanRxRunnable::execute()
 {
@@ -205,69 +142,12 @@ void CanSystem::CanRxRunnable::execute()
     {
         _parent._transceiver0.receiveTask();
     }
-    // Compact RX diag every 100 calls
-    if (++s_rxRunCount % 100U == 0U)
-    {
-        char buf[32];
-        int n = snprintf(buf, sizeof(buf), "r%lu\r\n", g_rxTaskCount);
-        uint32_t volatile* usart2 = reinterpret_cast<uint32_t volatile*>(0x40004400U);
-        for (int i = 0; i < n; i++)
-        {
-            while ((usart2[0x1C / 4] & (1U << 7)) == 0U) {}
-            usart2[0x28 / 4] = static_cast<uint32_t>(buf[i]);
-        }
-    }
 }
 
 } // namespace systems
 
-// Pipeline counters for diagnosing frame loss (volatile, readable via debugger)
-volatile uint32_t g_rxIsrCount      = 0U; // Frames drained from HW FIFO by receiveISR
-volatile uint32_t g_rxIsrCalls      = 0U; // Times RF0N ISR path entered
-volatile uint32_t g_rxTaskCount     = 0U; // Frames processed by receiveTask
-volatile uint32_t g_rxDispatch      = 0U; // Times dispatchRxTask called
-volatile uint32_t g_txIsrCount      = 0U; // Times TC ISR path entered
-volatile uint32_t g_rx7E0PreNotify  = 0U; // 0x7E0 frames entering notifyListeners
-// DoCAN diagnostic counters (defined in DoCanReceiver.h, instantiated here)
-volatile uint32_t g_docanFirstData  = 0U; // firstDataFrameReceived calls
-volatile uint32_t g_docanBlocked    = 0U; // handlePendingMessageReceivers blocked
-volatile uint32_t g_docanAllocOk    = 0U; // allocation success
-volatile uint32_t g_docanAllocFail  = 0U; // allocation fail
-volatile uint32_t g_docanPoolFull   = 0U; // receiver pool full
-volatile uint32_t g_docanRecvListSz = 0U; // current _messageReceivers list size
-volatile uint32_t g_docanLastErr    = 0U; // last getTransportMessage error code
-volatile uint32_t g_docanMsgProcessed = 0U; // transportMessageProcessed count
-volatile uint32_t g_docanMsgDelivered = 0U; // startProcessingTransportMessage count
-volatile uint32_t g_rxNon7E0       = 0U;   // non-0x7E0 frames in receiveTask
-volatile uint32_t g_rxLastNon7E0Id = 0U;   // last non-0x7E0 CAN ID
-volatile uint32_t g_docanTxSendCalled = 0U; // DoCanTransmitter::send() called
-volatile uint32_t g_docanTxSendOk    = 0U; // DoCanTransmitter::send() returned OK
-volatile uint32_t g_docanTxSendFail  = 0U; // DoCanTransmitter::send() failed
-volatile uint32_t g_docanTxFrameSent = 0U; // canFrameSent callback (frame on wire)
-volatile uint32_t g_isrStored  = 0U;     // frames stored in SW queue by ISR
-volatile uint32_t g_rawTxAttempt = 0U;
-volatile uint32_t g_rawTxOk     = 0U;
-volatile uint32_t g_isrSkipped = 0U;     // frames skipped by ISR (queue full)
-volatile uint32_t g_isrId0     = 0U;     // frames with ID=0 seen in HW FIFO
-volatile uint32_t g_tpBufLock      = 0U;
-volatile uint32_t g_tpBufUnlock    = 0U;
-volatile uint32_t g_tpBufNoMsg     = 0U;
-volatile uint32_t g_tpBufLockedNow = 0U;
-
 extern "C"
 {
-/**
- * CAN receive interrupt service routine trampoline for FDCAN1.
- *
- * Disables the RX FIFO interrupt (RF0NE) to prevent re-entry while the 3-deep
- * hardware FIFO refills, reads pending frames under an async lock, and dispatches
- * the CanRxRunnable to drain the software queue. The RX interrupt is re-enabled
- * in receiveTask() after processing completes.
- *
- * \note ISR context — must not call blocking APIs or allocate memory.
- * \note RF0NE is disabled at entry and re-enabled either here (no frames) or
- *       in receiveTask() (frames dispatched) to prevent ISR storm.
- */
 /**
  * Combined RX + TX ISR — all FDCAN1 interrupts routed to IT0.
  * Checks IR register to determine if RX, TX, or both occurred.
@@ -276,36 +156,24 @@ void call_can_isr_RX()
 {
     ::asyncEnterIsrGroup(ISR_GROUP_CAN);
 
-    // Check for RX (RF0NE)
-    uint32_t volatile* fdcan = reinterpret_cast<uint32_t volatile*>(0x40006400U);
-    uint32_t ir              = fdcan[0x50 / 4]; // IR register
+    uint32_t const ir = FDCAN1->IR;
 
-    if ((ir & 0x01U) != 0U) // RF0N — RX FIFO 0 new message
+    if ((ir & FDCAN_IR_RF0N) != 0U)
     {
-        g_rxIsrCalls++;
-        uint8_t framesReceived;
-        {
-            ::async::LockType const lock;
-            framesReceived = ::bios::FdCanTransceiver::receiveInterrupt(::busid::CAN_0);
-        }
-        g_rxIsrCount += framesReceived;
+        ::async::LockType const lock;
+        uint8_t framesReceived
+            = ::bios::FdCanTransceiver::receiveInterrupt(::busid::CAN_0);
 
         if (framesReceived > 0)
         {
-            g_rxDispatch++;
             ::systems::CanSystem::instance().dispatchRxTask();
         }
     }
 
-    if ((ir & 0x80U) != 0U) // TC (bit 7) — Transmission Complete
+    if ((ir & FDCAN_IR_TC) != 0U)
     {
-        g_txIsrCount++;
         ::bios::FdCanTransceiver::transmitInterrupt(::busid::CAN_0);
     }
-
-    // NOTE: No defensive IE restore. TCE is now managed by FdCanDevice
-    // (enabled before listener TX, disabled by transmitISR). RF0NE is
-    // disabled by receiveISR, re-enabled by enableRxInterrupt in receiveTask.
 
     ::asyncLeaveIsrGroup(ISR_GROUP_CAN);
 }

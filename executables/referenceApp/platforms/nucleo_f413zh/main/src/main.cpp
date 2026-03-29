@@ -45,30 +45,36 @@ void SystemInit()
     configurePll();
 
     // LED ON: PB0 = LD1 (green) on NUCLEO-F413ZH
+    static constexpr uint8_t LED_PIN = 0U;
     RCC->AHB1ENR |= RCC_AHB1ENR_GPIOBEN;
-    (void)RCC->AHB1ENR;
-    GPIOB->MODER &= ~(3U << (0U * 2U));
-    GPIOB->MODER |= (1U << (0U * 2U));
-    GPIOB->BSRR = (1U << 0U);
+    (void)RCC->AHB1ENR; // Read-back for clock propagation
+    GPIOB->MODER &= ~(3U << (LED_PIN * 2U));
+    GPIOB->MODER |= (1U << (LED_PIN * 2U)); // GPIO output mode
+    GPIOB->BSRR = (1U << LED_PIN);
 
     // Early USART3 for pre-main boot messages (PD8 AF7, 115200 @ 48 MHz APB1)
+    // BRR = 48 000 000 / 115 200 = 416.67 → 417
+    static constexpr uint8_t USART_TX_PIN = 8U;
+    static constexpr uint8_t USART_TX_AF  = 7U; // AF7 = USART3_TX on PD8
+    static constexpr uint32_t USART_BRR_115200_48MHZ = 417U;
+
     RCC->AHB1ENR |= RCC_AHB1ENR_GPIODEN;
     (void)RCC->AHB1ENR;
     RCC->APB1ENR |= RCC_APB1ENR_USART3EN;
     (void)RCC->APB1ENR;
 
-    // PD8 = AF7 (USART3_TX)
-    GPIOD->MODER &= ~(3U << (8U * 2U));
-    GPIOD->MODER |= (2U << (8U * 2U));
-    GPIOD->AFR[1] &= ~(0xFU << ((8U - 8U) * 4U));
-    GPIOD->AFR[1] |= (7U << ((8U - 8U) * 4U));
+    // PD8 = AF7 (USART3_TX) — pin 8 uses AFR[1], index = pin - 8 = 0
+    GPIOD->MODER &= ~(3U << (USART_TX_PIN * 2U));
+    GPIOD->MODER |= (2U << (USART_TX_PIN * 2U)); // Alternate function mode
+    GPIOD->AFR[1] &= ~(0xFU << ((USART_TX_PIN - 8U) * 4U));
+    GPIOD->AFR[1] |= (static_cast<uint32_t>(USART_TX_AF) << ((USART_TX_PIN - 8U) * 4U));
 
     USART3->CR1 = 0;
     USART3->CR2 = 0;
     USART3->CR3 = 0;
-    USART3->BRR = 417U; // 48 MHz / 115200 = 416.67
+    USART3->BRR = USART_BRR_115200_48MHZ;
     USART3->CR1 = USART_CR1_TE | USART_CR1_UE;
-    while ((USART3->SR & USART_SR_TC) == 0) {}
+    while ((USART3->SR & USART_SR_TC) == 0) {} // Wait for TX complete
 
     // Print reset cause from RCC->CSR (using correct ST defines)
     {

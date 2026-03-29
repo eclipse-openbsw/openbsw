@@ -211,8 +211,8 @@ private:
     bool fInitialized;                       ///< Set true after init() completes
     ::etl::delegate<void()> fFrameSentCallback; ///< TX-complete callback (like FlexCANDevice)
 
-    void enterInitMode();
-    void leaveInitMode();
+    bool enterInitMode();
+    bool leaveInitMode();
     void configureBitTiming();
     void configureMessageRam();
     void configureGpio();

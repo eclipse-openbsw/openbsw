@@ -39,6 +39,12 @@ uint32_t SystemCoreClock = 16000000U; // Default HSI, updated by configurePll()
  * \note Called from startup code before main(). Must not use any
  *       RTOS primitives or BSW services.
  */
+// Clock stabilization timeout (~100 ms at 16 MHz HSI = 1.6M cycles).
+// If any oscillator or PLL fails to lock within this window, the system
+// stays on HSI 16 MHz and SystemCoreClock is NOT updated — a clear
+// indicator to downstream code that PLL init failed.
+static constexpr uint32_t CLK_TIMEOUT = 1600000U;
+
 extern "C" void configurePll()
 {
     // Enable power interface clock
@@ -50,7 +56,10 @@ extern "C" void configurePll()
     // Then enable boost mode (required for >150 MHz)
     PWR->CR5 &= ~PWR_CR5_R1MODE;
     // Wait for voltage scaling to stabilize
-    while ((PWR->SR2 & PWR_SR2_VOSF) != 0U) {}
+    {
+        uint32_t t = CLK_TIMEOUT;
+        while ((PWR->SR2 & PWR_SR2_VOSF) != 0U) { if (--t == 0U) { return; } }
+    }
 
     // Configure PLL: HSI / M=4 * N=85 / R=2 = 170 MHz
     // VCO input = 16/4 = 4 MHz, VCO output = 4*85 = 340 MHz, PLLCLK = 340/2 = 170 MHz
@@ -60,7 +69,10 @@ extern "C" void configurePll()
                    | RCC_PLLCFGR_PLLREN; // Enable PLL R output (SYSCLK source)
 
     RCC->CR |= RCC_CR_PLLON;
-    while ((RCC->CR & RCC_CR_PLLRDY) == 0U) {}
+    {
+        uint32_t t = CLK_TIMEOUT;
+        while ((RCC->CR & RCC_CR_PLLRDY) == 0U) { if (--t == 0U) { return; } }
+    }
 
     // Flash latency 4 WS for 170 MHz @ 3.3V boost mode
     // Preserve DBG_SWEN (bit 18) - clearing it kills SWD debug flash access
@@ -71,11 +83,17 @@ extern "C" void configurePll()
         FLASH->ACR = acr;
     }
     // Verify flash latency readback before switching clock (RM0440 section 3.3.3)
-    while ((FLASH->ACR & FLASH_ACR_LATENCY) != FLASH_ACR_LATENCY_4WS) {}
+    {
+        uint32_t t = CLK_TIMEOUT;
+        while ((FLASH->ACR & FLASH_ACR_LATENCY) != FLASH_ACR_LATENCY_4WS) { if (--t == 0U) { return; } }
+    }
 
     // Boost-mode >150 MHz transition: set AHB prescaler /2 before clock switch
     RCC->CFGR = RCC_CFGR_HPRE_DIV2 | RCC_CFGR_SW_PLL;
-    while ((RCC->CFGR & RCC_CFGR_SWS) != RCC_CFGR_SWS_PLL) {}
+    {
+        uint32_t t = CLK_TIMEOUT;
+        while ((RCC->CFGR & RCC_CFGR_SWS) != RCC_CFGR_SWS_PLL) { if (--t == 0U) { return; } }
+    }
 
     // Wait >= 1 us for voltage regulator to settle at new frequency
     // At 170/2 = 85 MHz, 100 cycles > 1 us
