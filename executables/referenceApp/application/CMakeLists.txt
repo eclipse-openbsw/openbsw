@@ -19,7 +19,8 @@ if (PLATFORM_SUPPORT_TRANSPORT)
                                                 src/uds/Stm32DemoRoutine.cpp
                                                 src/uds/Stm32DtcManager.cpp
                                                 src/uds/Stm32ReadDtcInfo.cpp
-                                                src/uds/Stm32SecurityAccess.cpp)
+                                                src/uds/Stm32SecurityAccess.cpp
+                                                src/uds/Stm32WriteVin.cpp)
     endif ()
 endif ()
 

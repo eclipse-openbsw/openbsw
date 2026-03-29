@@ -14,6 +14,7 @@
 #include <uds/async/AsyncDiagJob.h>
 #include <uds/jobs/ReadIdentifierFromMemory.h>
 #include <uds/jobs/WriteIdentifierToMemory.h>
+#include <uds/Stm32WriteVin.h>
 #include <uds/Stm32ClearDtc.h>
 #include <uds/Stm32ControlDtcSetting.h>
 #include <uds/Stm32DtcManager.h>
@@ -102,7 +103,7 @@ private:
     ReadIdentifierPot _read22Cf02;
     WriteIdentifierToMemory _write2eCf03;
     ReadIdentifierFromMemory _readF190;
-    WriteIdentifierToMemory _writeF190;
+    Stm32WriteVin _writeF190;
     ReadIdentifierFromMemory _readF195;
     ReadIdentifierFromMemory _readF18C;
     ReadIdentifierFromMemory _readF193;

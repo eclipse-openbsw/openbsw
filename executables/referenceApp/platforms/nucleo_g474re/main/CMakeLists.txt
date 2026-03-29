@@ -29,6 +29,25 @@ add_library(
 
 target_include_directories(main PUBLIC include)
 
+# Embed git hash in firmware for version identification
+execute_process(
+    COMMAND git rev-parse --short=8 HEAD
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    OUTPUT_VARIABLE GIT_HASH
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+    ERROR_QUIET)
+execute_process(
+    COMMAND git diff --quiet
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    RESULT_VARIABLE GIT_DIRTY)
+if(GIT_DIRTY)
+    set(GIT_HASH "${GIT_HASH}-dirty")
+endif()
+if(NOT GIT_HASH)
+    set(GIT_HASH "unknown")
+endif()
+target_compile_definitions(main PRIVATE FIRMWARE_GIT_HASH="${GIT_HASH}")
+
 # fdCanTransceiver — the STM32G474RE has an FDCAN peripheral (not bxCAN).
 # This selects the FDCAN driver used by CanSystem for 500 kbit/s CAN.
 target_link_libraries(

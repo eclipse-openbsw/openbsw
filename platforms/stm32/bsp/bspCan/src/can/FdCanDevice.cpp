@@ -269,8 +269,12 @@ bool FdCanDevice::transmit(::can::CANFrame const& frame)
     uint32_t putIdx = (fdcan->TXFQS & FDCAN_TXFQS_TFQPI) >> FDCAN_TXFQS_TFQPI_Pos;
 
     // Calculate TX buffer element address in message RAM
+    // STM32G4 FDCAN uses 18-word (72-byte) element spacing in message RAM,
+    // regardless of configured data field size (TXESC). Section boundaries
+    // are fixed at max element size.
+    static constexpr uint32_t TX_ELEMENT_SIZE = 72U; // 18 words × 4 bytes
     uint32_t ramBase = getInstanceRamBase(fdcan);
-    uint32_t* txBuf  = reinterpret_cast<uint32_t*>(ramBase + TX_BUFFER_OFFSET + (putIdx * 16U));
+    uint32_t* txBuf  = reinterpret_cast<uint32_t*>(ramBase + TX_BUFFER_OFFSET + (putIdx * TX_ELEMENT_SIZE));
 
     // Word 0: ID
     uint32_t id = frame.getId();
@@ -355,8 +359,10 @@ uint8_t FdCanDevice::receiveISR(uint8_t const* filterBitField)
         uint32_t getIdx = (fdcan->RXF0S & FDCAN_RXF0S_F0GI) >> FDCAN_RXF0S_F0GI_Pos;
 
         // Read RX FIFO element from message RAM
+        // STM32G4 FDCAN uses 18-word (72-byte) element spacing in message RAM.
+        static constexpr uint32_t RX_ELEMENT_SIZE = 72U; // 18 words × 4 bytes
         uint32_t const* rxBuf
-            = reinterpret_cast<uint32_t const*>(ramBase + RX_FIFO0_OFFSET + (getIdx * 16U));
+            = reinterpret_cast<uint32_t const*>(ramBase + RX_FIFO0_OFFSET + (getIdx * RX_ELEMENT_SIZE));
 
         // Word 0: ID
         uint32_t r0 = rxBuf[0];

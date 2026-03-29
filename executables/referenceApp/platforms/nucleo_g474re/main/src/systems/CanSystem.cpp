@@ -66,10 +66,10 @@ void CanSystem::run()
 {
     _canRxRunnable.setEnabled(true);
 
-    // HW filter: accept ONLY 0x7E0 (UDS diagnostic requests).
-    static uint32_t const diagIds[] = {0x7E0U};
-    _transceiver0.fDevice.fFilterIds   = diagIds;
-    _transceiver0.fDevice.fFilterCount = 1U;
+    // Accept all CAN frames (no HW filter). fFilterIds/fFilterCount are
+    // uninitialized in FdCanDevice — must explicitly set to accept-all.
+    _transceiver0.fDevice.fFilterIds   = nullptr;
+    _transceiver0.fDevice.fFilterCount = 0U;
 
     (void)_transceiver0.init();
     (void)_transceiver0.open();
@@ -95,11 +95,10 @@ void CanSystem::run()
     SYS_EnableIRQ(FDCAN1_IT0_IRQn);
     SYS_EnableIRQ(FDCAN1_IT1_IRQn);
 
-    // Schedule periodic TX callback poll (every 50ms) to handle DoCAN TX
-    // confirmation. The ISR-based callback via async::execute is subject to
-    // dispatch dedup when the same Function object is already queued. This
-    // poll ensures the DoCAN transport layer gets TX confirmation within its
-    // 1000ms timeout window.
+    // Schedule periodic TX callback poll. The ISR dispatches canTxRunnable
+    // via async::execute, but dedup drops repeated dispatches when the
+    // runnable is already queued. The periodic timer ensures pollTxCallback
+    // runs within 50ms regardless of dedup.
     ::async::scheduleAtFixedRate(
         _context, _canTxRunnable, _canTxTimeout, 50U, ::async::TimeUnit::MILLISECONDS);
 
@@ -131,6 +130,9 @@ void CanSystem::dispatchTxTask() { ::async::execute(_context, _canTxRunnable); }
 
 void CanSystem::CanTxRunnable::execute()
 {
+    // Process TX completion in task context. ISR dispatches here via
+    // async::execute after TC fires. pollTxCallback checks the TX queue
+    // and invokes DoCAN's canFrameSentAsyncCallback for each completed frame.
     ::bios::FdCanTransceiver::pollTxCallback(::busid::CAN_0);
 }
 

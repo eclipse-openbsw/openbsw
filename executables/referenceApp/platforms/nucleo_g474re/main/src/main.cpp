@@ -51,6 +51,18 @@ void SystemInit()
     USART2->BRR = USART_BRR_115200_170MHZ;
     USART2->CR1 = USART_CR1_TE | USART_CR1_UE;
     while ((USART2->ISR & USART_ISR_TEACK) == 0) {} // Wait for TX enable ack
+
+    // Print firmware version at boot — always know what's running
+    auto boot_putc = [](char c) {
+        while ((USART2->ISR & USART_ISR_TXE_TXFNF) == 0) {}
+        USART2->TDR = static_cast<uint32_t>(c);
+    };
+    auto boot_puts = [&](char const* s) { for (; *s; ++s) { boot_putc(*s); } };
+#ifdef FIRMWARE_GIT_HASH
+    boot_puts("\r\nOpenBSW G474RE | git:" FIRMWARE_GIT_HASH " | " __DATE__ " " __TIME__ "\r\n");
+#else
+    boot_puts("\r\nOpenBSW G474RE | git:unknown\r\n");
+#endif
 }
 
 // HardFault handler — dumps faulting PC/LR/CFSR on USART2
