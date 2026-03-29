@@ -186,7 +186,7 @@ TEST_F(InitedFdCanTransceiverTest, writeWhenOpen)
 {
     CANFrame frame;
 
-    EXPECT_CALL(fFct.fDevice, transmit(_)).WillOnce(Return(true));
+    EXPECT_CALL(fFct.fDevice, transmit(_, _)).WillOnce(Return(true));
 
     EXPECT_EQ(ICanTransceiver::ErrorCode::CAN_ERR_OK, fFct.open());
     EXPECT_EQ(ICanTransceiver::ErrorCode::CAN_ERR_OK, fFct.write(frame));
@@ -207,7 +207,7 @@ TEST_F(InitedFdCanTransceiverTest, writeWhenFifoFull)
 {
     CANFrame frame;
 
-    EXPECT_CALL(fFct.fDevice, transmit(_)).WillOnce(Return(false));
+    EXPECT_CALL(fFct.fDevice, transmit(_, _)).WillOnce(Return(false));
 
     EXPECT_EQ(ICanTransceiver::ErrorCode::CAN_ERR_OK, fFct.open());
     EXPECT_EQ(ICanTransceiver::ErrorCode::CAN_ERR_TX_HW_QUEUE_FULL, fFct.write(frame));
@@ -254,7 +254,7 @@ TEST_F(InitedFdCanTransceiverTest, cyclicTaskBusRecovery)
     fFct.cyclicTask(); // bus-off -> MUTED
     fFct.cyclicTask(); // bus-on -> OPEN
 
-    EXPECT_CALL(fFct.fDevice, transmit(_)).WillOnce(Return(true));
+    EXPECT_CALL(fFct.fDevice, transmit(_, _)).WillOnce(Return(true));
     CANFrame frame;
     EXPECT_EQ(ICanTransceiver::ErrorCode::CAN_ERR_OK, fFct.write(frame));
 }
@@ -296,7 +296,7 @@ TEST_F(InitedFdCanTransceiverTest, write2rOk)
     CANFrame frame;
     MockCANFrameSentListener listener;
 
-    EXPECT_CALL(fFct.fDevice, transmit(_)).WillOnce(Return(true));
+    EXPECT_CALL(fFct.fDevice, transmit(_, _)).WillOnce(Return(true));
 
     EXPECT_EQ(ICanTransceiver::ErrorCode::CAN_ERR_OK, fFct.open());
     EXPECT_EQ(ICanTransceiver::ErrorCode::CAN_ERR_OK, fFct.write(frame, listener));
@@ -308,7 +308,7 @@ TEST_F(InitedFdCanTransceiverTest, write2rFail)
     CANFrame frame;
     MockCANFrameSentListener listener;
 
-    EXPECT_CALL(fFct.fDevice, transmit(_)).WillOnce(Return(false));
+    EXPECT_CALL(fFct.fDevice, transmit(_, _)).WillOnce(Return(false));
 
     EXPECT_EQ(ICanTransceiver::ErrorCode::CAN_ERR_OK, fFct.open());
     EXPECT_EQ(ICanTransceiver::ErrorCode::CAN_ERR_TX_HW_QUEUE_FULL, fFct.write(frame, listener));
@@ -331,7 +331,7 @@ TEST_F(InitedFdCanTransceiverTest, write2rDoesNotCallListenerSynchronously)
     CANFrame frame;
     StrictMock<MockCANFrameSentListener> listener;
 
-    EXPECT_CALL(fFct.fDevice, transmit(_)).WillOnce(Return(true));
+    EXPECT_CALL(fFct.fDevice, transmit(_, _)).WillOnce(Return(true));
     // StrictMock: any call to canFrameSent during write() will FAIL
     EXPECT_CALL(listener, canFrameSent(_)).Times(0);
 
@@ -359,7 +359,7 @@ TEST_F(InitedFdCanTransceiverTest, writeOverFillQueue)
 
     EXPECT_EQ(ICanTransceiver::ErrorCode::CAN_ERR_OK, fFct.open());
 
-    EXPECT_CALL(fFct.fDevice, transmit(_)).WillRepeatedly(Return(true));
+    EXPECT_CALL(fFct.fDevice, transmit(_, _)).WillRepeatedly(Return(true));
 
     // Queue capacity is 3; items are popped only in canFrameSentAsyncCallback,
     // which we never trigger here to simulate queue-full.
@@ -379,7 +379,7 @@ TEST_F(ManualAsyncFdCanTransceiverTest, writeSecondFrameNotTransmittedImmediatel
     EXPECT_EQ(ICanTransceiver::ErrorCode::CAN_ERR_OK, fFct.open());
 
     // Only ONE transmit call expected from the first write()
-    EXPECT_CALL(fFct.fDevice, transmit(_)).WillOnce(Return(true));
+    EXPECT_CALL(fFct.fDevice, transmit(_, _)).WillOnce(Return(true));
 
     EXPECT_EQ(ICanTransceiver::ErrorCode::CAN_ERR_OK, fFct.write(frame1, listener));
     EXPECT_EQ(ICanTransceiver::ErrorCode::CAN_ERR_OK, fFct.write(frame2, listener));
@@ -389,7 +389,7 @@ TEST_F(ManualAsyncFdCanTransceiverTest, writeSecondFrameNotTransmittedImmediatel
 
     // Now simulate TX ISR for frame1 — this should transmit frame2
     EXPECT_CALL(fFct.fDevice, transmitISR());
-    EXPECT_CALL(fFct.fDevice, transmit(_)).WillOnce(Return(true));
+    EXPECT_CALL(fFct.fDevice, transmit(_, _)).WillOnce(Return(true));
     EXPECT_CALL(listener, canFrameSent(_)).Times(1);
 
     FdCanTransceiver::transmitInterrupt(fBusId);
@@ -407,7 +407,7 @@ TEST_F(InitedFdCanTransceiverTest, canFrameSentCallbackWithOneFrame)
     CANFrame frame;
     MockCANFrameSentListener listener;
 
-    EXPECT_CALL(fFct.fDevice, transmit(_)).WillOnce(Return(true));
+    EXPECT_CALL(fFct.fDevice, transmit(_, _)).WillOnce(Return(true));
 
     EXPECT_EQ(ICanTransceiver::ErrorCode::CAN_ERR_OK, fFct.open());
     EXPECT_EQ(ICanTransceiver::ErrorCode::CAN_ERR_OK, fFct.write(frame, listener));
@@ -427,7 +427,7 @@ TEST_F(InitedFdCanTransceiverTest, canFrameSentCallbackWithTwoFramesChained)
     CANFrame frame2;
 
     EXPECT_EQ(ICanTransceiver::ErrorCode::CAN_ERR_OK, fFct.open());
-    EXPECT_CALL(fFct.fDevice, transmit(_)).WillRepeatedly(Return(true));
+    EXPECT_CALL(fFct.fDevice, transmit(_, _)).WillRepeatedly(Return(true));
 
     EXPECT_EQ(ICanTransceiver::ErrorCode::CAN_ERR_OK, fFct.write(frame1, listener));
     EXPECT_EQ(ICanTransceiver::ErrorCode::CAN_ERR_OK, fFct.write(frame2, listener));
@@ -447,7 +447,7 @@ TEST_F(InitedFdCanTransceiverTest, canFrameSentCallbackWithTwoFramesInStateOpen)
 
     EXPECT_EQ(ICanTransceiver::ErrorCode::CAN_ERR_OK, fFct.open());
 
-    EXPECT_CALL(fFct.fDevice, transmit(_)).WillRepeatedly(Return(true));
+    EXPECT_CALL(fFct.fDevice, transmit(_, _)).WillRepeatedly(Return(true));
 
     EXPECT_EQ(ICanTransceiver::ErrorCode::CAN_ERR_OK, fFct.write(frame1, listener));
     EXPECT_EQ(ICanTransceiver::ErrorCode::CAN_ERR_OK, fFct.write(frame2, listener));
@@ -466,7 +466,7 @@ TEST_F(InitedFdCanTransceiverTest, canFrameSentCallbackWithTwoFramesIsAbortedWhe
 
     EXPECT_EQ(ICanTransceiver::ErrorCode::CAN_ERR_OK, fFct.open());
 
-    EXPECT_CALL(fFct.fDevice, transmit(_)).WillOnce(Return(true));
+    EXPECT_CALL(fFct.fDevice, transmit(_, _)).WillOnce(Return(true));
 
     EXPECT_EQ(ICanTransceiver::ErrorCode::CAN_ERR_OK, fFct.write(frame1, listener));
     EXPECT_EQ(ICanTransceiver::ErrorCode::CAN_ERR_OK, fFct.write(frame2, listener));
@@ -487,7 +487,7 @@ TEST_F(InitedFdCanTransceiverTest, canFrameSentCallbackWithTwoFramesFailure)
     CANFrame frame1;
     CANFrame frame2;
 
-    EXPECT_CALL(fFct.fDevice, transmit(_)).WillOnce(Return(false)).WillOnce(Return(true));
+    EXPECT_CALL(fFct.fDevice, transmit(_, _)).WillOnce(Return(false)).WillOnce(Return(true));
 
     EXPECT_EQ(ICanTransceiver::ErrorCode::CAN_ERR_OK, fFct.open());
 
@@ -508,7 +508,7 @@ TEST_F(InitedFdCanTransceiverTest, canFrameSentCallbackWithTwoFramesIsAbortedWhe
     CANFrame frame1;
     CANFrame frame2;
 
-    EXPECT_CALL(fFct.fDevice, transmit(_)).WillOnce(Return(true)).WillOnce(Return(false));
+    EXPECT_CALL(fFct.fDevice, transmit(_, _)).WillOnce(Return(true)).WillOnce(Return(false));
 
     EXPECT_EQ(ICanTransceiver::ErrorCode::CAN_ERR_OK, fFct.open());
 
@@ -530,7 +530,7 @@ TEST_F(ManualAsyncFdCanTransceiverTest, canFrameSentCallbackUsesAsyncExecute)
 
     EXPECT_EQ(ICanTransceiver::ErrorCode::CAN_ERR_OK, fFct.open());
 
-    EXPECT_CALL(fFct.fDevice, transmit(_)).WillOnce(Return(true));
+    EXPECT_CALL(fFct.fDevice, transmit(_, _)).WillOnce(Return(true));
     EXPECT_EQ(ICanTransceiver::ErrorCode::CAN_ERR_OK, fFct.write(frame, listener));
 
     // TX ISR fires — should call async::execute, NOT call listener directly
@@ -557,7 +557,7 @@ TEST_F(ManualAsyncFdCanTransceiverTest, canFrameSentCallbackRunsInTaskContext)
 
     EXPECT_EQ(ICanTransceiver::ErrorCode::CAN_ERR_OK, fFct.open());
 
-    EXPECT_CALL(fFct.fDevice, transmit(_)).WillOnce(Return(true));
+    EXPECT_CALL(fFct.fDevice, transmit(_, _)).WillOnce(Return(true));
     EXPECT_EQ(ICanTransceiver::ErrorCode::CAN_ERR_OK, fFct.write(frame, listener));
 
     // TX ISR fires
@@ -639,7 +639,7 @@ TEST_F(InitedFdCanTransceiverTest, notifyRegisteredSentListenerMatch)
 {
     CANFrame frame;
 
-    EXPECT_CALL(fFct.fDevice, transmit(_)).WillOnce(Return(true));
+    EXPECT_CALL(fFct.fDevice, transmit(_, _)).WillOnce(Return(true));
 
     EXPECT_EQ(ICanTransceiver::ErrorCode::CAN_ERR_OK, fFct.open());
     EXPECT_EQ(ICanTransceiver::ErrorCode::CAN_ERR_OK, fFct.write(frame));
@@ -651,7 +651,7 @@ TEST_F(InitedFdCanTransceiverTest, notifyRegisteredSentListenerFromCallback)
     CANFrame frame;
     MockCANFrameSentListener listener;
 
-    EXPECT_CALL(fFct.fDevice, transmit(_)).WillOnce(Return(true));
+    EXPECT_CALL(fFct.fDevice, transmit(_, _)).WillOnce(Return(true));
 
     EXPECT_EQ(ICanTransceiver::ErrorCode::CAN_ERR_OK, fFct.open());
     EXPECT_EQ(ICanTransceiver::ErrorCode::CAN_ERR_OK, fFct.write(frame, listener));
@@ -676,7 +676,7 @@ TEST_F(
 
     EXPECT_EQ(ICanTransceiver::ErrorCode::CAN_ERR_OK, fFct.open());
 
-    EXPECT_CALL(fFct.fDevice, transmit(_)).WillOnce(Return(true));
+    EXPECT_CALL(fFct.fDevice, transmit(_, _)).WillOnce(Return(true));
     EXPECT_EQ(ICanTransceiver::ErrorCode::CAN_ERR_OK, fFct.write(frame, listener));
 
     // Step 1: TX ISR fires — defers to task context
@@ -701,7 +701,7 @@ TEST_F(ManualAsyncFdCanTransceiverTest, multipleWriteWithListenerProcessedSerial
 
     EXPECT_EQ(ICanTransceiver::ErrorCode::CAN_ERR_OK, fFct.open());
 
-    EXPECT_CALL(fFct.fDevice, transmit(_))
+    EXPECT_CALL(fFct.fDevice, transmit(_, _))
         .WillOnce(Return(true))  // frame1
         .WillOnce(Return(true)); // frame2 (from callback chain)
 
@@ -770,7 +770,7 @@ TEST_F(InitedFdCanTransceiverTest, closeWithPendingTxQueue)
 
     EXPECT_EQ(ICanTransceiver::ErrorCode::CAN_ERR_OK, fFct.open());
 
-    EXPECT_CALL(fFct.fDevice, transmit(_)).WillOnce(Return(true));
+    EXPECT_CALL(fFct.fDevice, transmit(_, _)).WillOnce(Return(true));
     EXPECT_EQ(ICanTransceiver::ErrorCode::CAN_ERR_OK, fFct.write(frame, listener));
 
     // Close with a pending TX job — should not crash
@@ -788,7 +788,7 @@ TEST_F(InitedFdCanTransceiverTest, muteWithPendingTxQueue)
 
     EXPECT_EQ(ICanTransceiver::ErrorCode::CAN_ERR_OK, fFct.open());
 
-    EXPECT_CALL(fFct.fDevice, transmit(_)).WillOnce(Return(true));
+    EXPECT_CALL(fFct.fDevice, transmit(_, _)).WillOnce(Return(true));
     EXPECT_EQ(ICanTransceiver::ErrorCode::CAN_ERR_OK, fFct.write(frame, listener));
 
     // Mute with a pending TX job — should not crash
@@ -945,7 +945,7 @@ TEST_F(InitedFdCanTransceiverTest, busOffDuringPendingTxClearsQueue)
 
     EXPECT_EQ(ICanTransceiver::ErrorCode::CAN_ERR_OK, fFct.open());
 
-    EXPECT_CALL(fFct.fDevice, transmit(_)).WillOnce(Return(true));
+    EXPECT_CALL(fFct.fDevice, transmit(_, _)).WillOnce(Return(true));
     EXPECT_EQ(ICanTransceiver::ErrorCode::CAN_ERR_OK, fFct.write(frame, listener));
 
     // Bus-off detected by cyclicTask
@@ -964,7 +964,7 @@ TEST_F(InitedFdCanTransceiverTest, busRecoveryAfterQueueClear)
 
     EXPECT_EQ(ICanTransceiver::ErrorCode::CAN_ERR_OK, fFct.open());
 
-    EXPECT_CALL(fFct.fDevice, transmit(_)).WillRepeatedly(Return(true));
+    EXPECT_CALL(fFct.fDevice, transmit(_, _)).WillRepeatedly(Return(true));
     EXPECT_EQ(ICanTransceiver::ErrorCode::CAN_ERR_OK, fFct.write(frame, listener));
 
     // Bus-off
@@ -991,7 +991,7 @@ TEST_F(InitedFdCanTransceiverTest, receiveTaskWhileTxPending)
 
     EXPECT_EQ(ICanTransceiver::ErrorCode::CAN_ERR_OK, fFct.open());
 
-    EXPECT_CALL(fFct.fDevice, transmit(_)).WillOnce(Return(true));
+    EXPECT_CALL(fFct.fDevice, transmit(_, _)).WillOnce(Return(true));
     EXPECT_EQ(ICanTransceiver::ErrorCode::CAN_ERR_OK, fFct.write(txFrame, listener));
 
     // RX task runs while TX is pending — should work independently
@@ -1015,7 +1015,7 @@ TEST_F(InitedFdCanTransceiverTest, transmitInterruptDuringReceiveTask)
 
     EXPECT_EQ(ICanTransceiver::ErrorCode::CAN_ERR_OK, fFct.open());
 
-    EXPECT_CALL(fFct.fDevice, transmit(_)).WillOnce(Return(true));
+    EXPECT_CALL(fFct.fDevice, transmit(_, _)).WillOnce(Return(true));
     EXPECT_EQ(ICanTransceiver::ErrorCode::CAN_ERR_OK, fFct.write(txFrame, listener));
 
     // TX ISR fires
