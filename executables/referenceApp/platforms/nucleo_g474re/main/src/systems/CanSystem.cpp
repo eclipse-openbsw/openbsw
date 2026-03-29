@@ -76,9 +76,10 @@ void CanSystem::run()
 {
     _canRxRunnable.setEnabled(true);
 
-    // Accept all frames (temporary — debug RX path)
-    _transceiver0.fDevice.fFilterIds   = nullptr;
-    _transceiver0.fDevice.fFilterCount = 0U;
+    // HW filter: accept ONLY 0x7E0 (UDS diagnostic requests).
+    static uint32_t const diagIds[] = {0x7E0U};
+    _transceiver0.fDevice.fFilterIds   = diagIds;
+    _transceiver0.fDevice.fFilterCount = 1U;
 
     (void)_transceiver0.init();
     (void)_transceiver0.open();
@@ -97,8 +98,11 @@ void CanSystem::run()
     FDCAN1->ILS = 0U;
     FDCAN1->ILE = FDCAN_ILE_EINT0;
 
-    SYS_SetPriority(FDCAN1_IT0_IRQn, 5);
-    SYS_SetPriority(FDCAN1_IT1_IRQn, 5);
+    // Priority must be >= configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY (6)
+    // for FreeRTOS API safety. Priority 5 is ABOVE the threshold — unsafe
+    // for xTaskNotifyFromISR. S32K uses the correct range by default.
+    SYS_SetPriority(FDCAN1_IT0_IRQn, 6);
+    SYS_SetPriority(FDCAN1_IT1_IRQn, 6);
     NVIC_ClearPendingIRQ(FDCAN1_IT0_IRQn);
     NVIC_ClearPendingIRQ(FDCAN1_IT1_IRQn);
     SYS_EnableIRQ(FDCAN1_IT0_IRQn);

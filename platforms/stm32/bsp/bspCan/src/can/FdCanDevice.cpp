@@ -286,11 +286,15 @@ bool FdCanDevice::transmit(::can::CANFrame const& frame, bool txInterruptNeeded)
 {
     if (txInterruptNeeded)
     {
-        // Clear stale TC flag THEN enable TCE — prevents immediate ISR
-        // from a previous fire-and-forget TX completion that left TC set.
-        fConfig.baseAddress->IR = FDCAN_IR_TC;  // write-1-to-clear
-        fConfig.baseAddress->IE |= FDCAN_IE_TCE;
+        // Match S32K enableTransmitInterrupt(): clear flag first, then enable mask.
+        // FlexCANDevice.h:132-136:
+        //   fpDevice->IFLAG1 = fTxInterruptMask0;  // clear flag
+        //   fpDevice->IMASK1 |= fTxInterruptMask0; // enable mask
+        fConfig.baseAddress->IR = FDCAN_IR_TC;   // clear stale TC flag
+        fConfig.baseAddress->IE |= FDCAN_IE_TCE; // enable TC interrupt
     }
+    // S32K: enableTransmitInterrupt() called BEFORE CODE=TRANSMIT.
+    // Here: TCE enabled BEFORE TXBAR write (inside transmit()).
     return transmit(frame);
 }
 
