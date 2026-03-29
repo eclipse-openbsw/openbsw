@@ -10,6 +10,12 @@
 
 #include <gtest/gtest.h>
 
+// Stub debug counters referenced by FdCanTransceiver.cpp (defined in CanSystem.cpp at runtime)
+volatile uint32_t g_rxTaskCount     = 0U;
+volatile uint32_t g_rx7E0PreNotify  = 0U;
+volatile uint32_t g_rxNon7E0        = 0U;
+volatile uint32_t g_rxLastNon7E0Id  = 0U;
+
 namespace
 {
 using namespace ::can;
