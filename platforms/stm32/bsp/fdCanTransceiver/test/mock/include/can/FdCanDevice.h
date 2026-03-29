@@ -52,13 +52,18 @@ public:
     MOCK_METHOD(bool, transmit, (::can::CANFrame const& frame, bool txInterruptNeeded));
     MOCK_METHOD(uint8_t, receiveISR, (uint8_t const* filterBitField));
 
-    // transmitISR invokes the stored callback delegate (matching real FdCanDevice)
-    void transmitISR()
+    // Mock transmitISR — tests can set expectations on it.
+    // Default action invokes the stored callback delegate (matching real FdCanDevice).
+    MOCK_METHOD(void, transmitISR, ());
+
+    void setupDefaultTransmitISR()
     {
-        if (fFrameSentCallback.is_valid())
-        {
-            fFrameSentCallback();
-        }
+        ON_CALL(*this, transmitISR()).WillByDefault([this]() {
+            if (fFrameSentCallback.is_valid())
+            {
+                fFrameSentCallback();
+            }
+        });
     }
     MOCK_METHOD(bool, isBusOff, (), (const));
     MOCK_METHOD(uint8_t, getTxErrorCounter, (), (const));

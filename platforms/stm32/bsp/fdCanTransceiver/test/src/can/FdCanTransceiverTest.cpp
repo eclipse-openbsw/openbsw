@@ -51,6 +51,7 @@ class InitedFdCanTransceiverTest : public FdCanTransceiverTest
 public:
     InitedFdCanTransceiverTest() : fFct(fAsyncContext, fBusId, fDevConfig)
     {
+        fFct.fDevice.setupDefaultTransmitISR();
         EXPECT_CALL(fFct.fDevice, init()).Times(AnyNumber());
         EXPECT_CALL(fFct.fDevice, start()).Times(AnyNumber());
         EXPECT_CALL(fFct.fDevice, stop()).Times(AnyNumber());
@@ -73,6 +74,7 @@ class ManualAsyncFdCanTransceiverTest : public FdCanTransceiverTest
 public:
     ManualAsyncFdCanTransceiverTest() : fFct(fAsyncContext, fBusId, fDevConfig)
     {
+        fFct.fDevice.setupDefaultTransmitISR();
         EXPECT_CALL(fFct.fDevice, init()).Times(AnyNumber());
         EXPECT_CALL(fFct.fDevice, start()).Times(AnyNumber());
         EXPECT_CALL(fFct.fDevice, stop()).Times(AnyNumber());
