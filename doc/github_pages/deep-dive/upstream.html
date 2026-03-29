@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Upstream (main) — Eclipse OpenBSW</title>
+  <link rel="stylesheet" href="../style.css" />
+</head>
+<body>
+<nav>
+  <div class="nav-inner">
+    <a href="../index.html" class="nav-brand">OpenBSW</a>
+    <div class="nav-links">
+      <a href="../index.html">Home</a>
+      <a href="architecture.html">Architecture</a>
+      <a href="upstream.html" class="active">Upstream</a>
+      <a href="../pr408/overview.html">PR #408</a>
+      <a href="../pr408/issues.html">Issues</a>
+      <a href="../roadmap/index.html">Roadmap</a>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+<header>
+  <h1>Upstream — main branch</h1>
+  <p class="subtitle">What's merged and shipping in <code>eclipse-openbsw/openbsw</code> today</p>
+  <div class="badges">
+    <span class="badge b-green">2 platforms</span>
+    <span class="badge b-green">26 BSW modules</span>
+    <span class="badge b-green">1470 POSIX tests</span>
+  </div>
+</header>
+
+<main>
+
+<!-- POSIX -->
+<h2><span class="dot" style="background:var(--green)"></span> Platform: POSIX (Linux / WSL)</h2>
+<div class="prose">
+<p>Simulation platform requiring no hardware. Runs the full lifecycle, CAN (via SocketCAN), Ethernet (lwIP), UDS, and all application-level systems on a desktop Linux or WSL environment. Primary platform for development and CI.</p>
+</div>
+
+<div class="grid">
+  <div class="card">
+    <div class="card-title">Features</div>
+    <ul>
+      <li class="done">Full lifecycle manager (9 run levels)</li>
+      <li class="done">CAN via SocketCAN</li>
+      <li class="done">Ethernet / lwIP / DoIP</li>
+      <li class="done">UDS / DoCAN diagnostics</li>
+      <li class="done">Console subsystem (stdio)</li>
+      <li class="done">Logger, Tracing</li>
+      <li class="done">Storage subsystem</li>
+      <li class="done">FreeRTOS POSIX port</li>
+    </ul>
+  </div>
+  <div class="card">
+    <div class="card-title">Testing</div>
+    <ul>
+      <li class="done">1470 unit tests passing</li>
+      <li class="done">LCOV code coverage</li>
+      <li class="done">Puncover size analysis</li>
+      <li class="done">CI: clang-tidy, clang-format</li>
+    </ul>
+  </div>
+</div>
+
+<!-- S32K -->
+<h2 style="margin-top:2rem"><span class="dot" style="background:var(--green)"></span> Platform: NXP S32K148EVB</h2>
+<div class="prose">
+<p>Primary hardware platform. ARM Cortex-M4F @ 112 MHz, FlexCAN (CAN FD), Ethernet (ENET + TJA1101 PHY), FTM PWM, ADC, FlexNVM EEPROM. Full safety support (MPU, ECC, watchdog).</p>
+</div>
+
+<div class="grid">
+  <div class="card">
+    <div class="card-title">BSP Modules (14)</div>
+    <ul>
+      <li class="done">bspFlexCan — FlexCAN CAN FD driver</li>
+      <li class="done">canflex2Transceiver — AbstractCANTransceiver</li>
+      <li class="done">bspAdc — ADC0 driver</li>
+      <li class="done">bspFtm — FTM timer</li>
+      <li class="done">bspFtmPwm — FTM-based PWM</li>
+      <li class="done">bspGpio — GPIO (PTC)</li>
+      <li class="done">bspEthernet — ENET MAC driver</li>
+      <li class="done">bspTja1101 — Ethernet PHY</li>
+      <li class="done">bspEepromEmulation — FlexNVM EEPROM</li>
+      <li class="done">bspClock — PLL configuration</li>
+      <li class="done">bspUart — LPUART driver</li>
+      <li class="done">bspMcu — CMSIS, linker, startup</li>
+      <li class="done">bspCore — Core config (MPU, cache)</li>
+      <li class="done">bspInterruptsImpl — Interrupt masking</li>
+    </ul>
+  </div>
+  <div class="card">
+    <div class="card-title">Application Features</div>
+    <ul>
+      <li class="done">UDS / DoCAN (full diagnostic stack)</li>
+      <li class="done">Ethernet + DoIP</li>
+      <li class="done">FreeRTOS Cortex-M4F port</li>
+      <li class="done">Safety: MPU, ECC, ROM check, Watchdog</li>
+      <li class="done">GDB server debugging</li>
+      <li class="done">NXP IDE support (Ubuntu + Windows)</li>
+      <li class="done">DemoSystem with ADC/PWM/GPIO showcase</li>
+    </ul>
+  </div>
+</div>
+
+<!-- BSW Modules -->
+<h2 style="margin-top:2rem"><span class="dot" style="background:var(--cyan)"></span> BSW Modules (libs/bsw/ — 26 modules)</h2>
+
+<div class="grid">
+  <div class="card">
+    <div class="card-title">Core Infrastructure</div>
+    <ul>
+      <li class="done">async — Async execution framework</li>
+      <li class="done">asyncFreeRtos — FreeRTOS adapter</li>
+      <li class="done">asyncThreadX — ThreadX adapter</li>
+      <li class="done">asyncImpl — Shared async implementation</li>
+      <li class="done">lifecycle — LifecycleManager</li>
+      <li class="done">runtime — Runtime system</li>
+      <li class="done">timer — Software timers</li>
+    </ul>
+  </div>
+  <div class="card">
+    <div class="card-title">Communication</div>
+    <ul>
+      <li class="done">cpp2can — CAN abstraction</li>
+      <li class="done">cpp2ethernet — Ethernet abstraction</li>
+      <li class="done">docan — DoCAN (ISO 15765)</li>
+      <li class="done">doip — DoIP (ISO 13400)</li>
+      <li class="done">transport — Transport layer</li>
+      <li class="done">transportRouterSimple — Routing</li>
+      <li class="done">uds — UDS (ISO 14229)</li>
+      <li class="done">lwipSocket — lwIP socket wrapper</li>
+    </ul>
+  </div>
+  <div class="card">
+    <div class="card-title">Services</div>
+    <ul>
+      <li class="done">logger — Logging framework</li>
+      <li class="done">loggerIntegration — Logger wiring</li>
+      <li class="done">storage — Persistent storage</li>
+      <li class="done">console — Console commands</li>
+      <li class="done">stdioConsoleInput — stdio adapter</li>
+      <li class="done">io — I/O abstraction</li>
+      <li class="done">middleware — Middleware proxy</li>
+    </ul>
+  </div>
+  <div class="card">
+    <div class="card-title">Foundation</div>
+    <ul>
+      <li class="done">estd — Embedded STL subset</li>
+      <li class="done">util — Utilities</li>
+      <li class="done">common — Common types</li>
+      <li class="done">platform — Platform abstraction</li>
+      <li class="done">bsp — Generic BSP interfaces</li>
+    </ul>
+  </div>
+</div>
+
+<!-- Documentation -->
+<h2 style="margin-top:2rem"><span class="dot" style="background:var(--purple)"></span> Documentation (85 RST pages)</h2>
+
+<div class="grid">
+  <div class="card">
+    <div class="card-title">Learning (14 guides)</div>
+    <ul>
+      <li class="done">Overview, Project Layout</li>
+      <li class="done">CAN, Ethernet, UDS, HW I/O</li>
+      <li class="done">Console (6 sub-pages: ADC, I/O, PWM, LC, Logger, CPU)</li>
+      <li class="done">Commands, Logging, Tracing</li>
+      <li class="done">Unit Tests, Lifecycle, HW Testing</li>
+    </ul>
+  </div>
+  <div class="card">
+    <div class="card-title">Setup (13 guides)</div>
+    <ul>
+      <li class="done">Ubuntu Host, Windows Host</li>
+      <li class="done">WSL Setup, USB Passthrough, SocketCAN</li>
+      <li class="done">POSIX Build, VS Code</li>
+      <li class="done">S32K148: Ubuntu/Windows build, NXP IDE, GDB</li>
+    </ul>
+  </div>
+  <div class="card">
+    <div class="card-title">Guidelines (26 pages)</div>
+    <ul>
+      <li class="done">12 coding conventions (naming, classes, functions...)</li>
+      <li class="done">5 formatting (C++, CMake, auto-format)</li>
+      <li class="done">9 diagram types (class, sequence, component...)</li>
+      <li class="done">Practices, Unit Tests, Module Structure</li>
+      <li class="done">Documentation, Commit Messages, Pull Requests</li>
+    </ul>
+  </div>
+  <div class="card">
+    <div class="card-title">Features &amp; Build Artifacts</div>
+    <ul>
+      <li class="done">Storage subsystem docs</li>
+      <li class="done">Functional Safety docs</li>
+      <li class="done">Sphinx HTML output</li>
+      <li class="done">Doxygen API reference</li>
+      <li class="done">LCOV coverage reports</li>
+      <li class="done">Puncover firmware analysis</li>
+    </ul>
+  </div>
+</div>
+
+<!-- Open Upstream PRs -->
+<h2 style="margin-top:2rem"><span class="dot" style="background:var(--amber)"></span> Other Open Upstream PRs</h2>
+<table>
+  <tr><th>#</th><th>Title</th><th>Author</th><th>Date</th></tr>
+  <tr><td>412</td><td>Fix ENET ISR race during Ethernet driver initialization</td><td>esrlabs</td><td>Mar 26</td></tr>
+  <tr><td>411</td><td>Keep lwIP netif persistent across lifecycle transitions</td><td>esrlabs</td><td>Mar 26</td></tr>
+  <tr><td>410</td><td>Enable CT-P1 clang-tidy checks</td><td>simon-d-bmw</td><td>Mar 26</td></tr>
+  <tr><td>409</td><td>Add console_out Rust crate</td><td>esrlabs</td><td>Mar 25</td></tr>
+  <tr><td>406</td><td>Smaller fixes for UdpEchoTestServer</td><td>christophruethingbmw</td><td>Mar 19</td></tr>
+  <tr><td>402</td><td>Refactor linker script to use SRAM_U</td><td>vladyslavmarkov</td><td>Mar 17</td></tr>
+  <tr><td>389</td><td>Create separate application for integration tests</td><td>esrlabs</td><td>Mar 12</td></tr>
+  <tr><td>383</td><td>Improve incomingDiagConnection interfacing</td><td>guillaumeaub-ctw</td><td>Mar 3</td></tr>
+</table>
+
+</main>
+</div>
+
+<footer>
+  Eclipse OpenBSW &mdash; Private Documentation Hub &mdash; Last updated 2026-03-29
+</footer>
+</body>
+</html>
