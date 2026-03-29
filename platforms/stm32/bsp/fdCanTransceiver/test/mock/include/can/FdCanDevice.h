@@ -41,7 +41,9 @@ public:
 
     explicit FdCanDevice(Config const& /* config */) {}
 
-    FdCanDevice(Config const& /* config */, ::etl::delegate<void()> /* callback */) {}
+    FdCanDevice(Config const& /* config */, ::etl::delegate<void()> callback)
+    : fFrameSentCallback(callback)
+    {}
 
     MOCK_METHOD(void, init, ());
     MOCK_METHOD(void, start, ());
@@ -49,7 +51,15 @@ public:
     MOCK_METHOD(bool, transmit, (::can::CANFrame const& frame));
     MOCK_METHOD(bool, transmit, (::can::CANFrame const& frame, bool txInterruptNeeded));
     MOCK_METHOD(uint8_t, receiveISR, (uint8_t const* filterBitField));
-    MOCK_METHOD(void, transmitISR, ());
+
+    // transmitISR invokes the stored callback delegate (matching real FdCanDevice)
+    void transmitISR()
+    {
+        if (fFrameSentCallback.is_valid())
+        {
+            fFrameSentCallback();
+        }
+    }
     MOCK_METHOD(bool, isBusOff, (), (const));
     MOCK_METHOD(uint8_t, getTxErrorCounter, (), (const));
     MOCK_METHOD(uint8_t, getRxErrorCounter, (), (const));
@@ -61,6 +71,7 @@ public:
     MOCK_METHOD(void, disableRxInterrupt, ());
     MOCK_METHOD(void, enableRxInterrupt, ());
 
+    ::etl::delegate<void()> fFrameSentCallback;
 };
 
 } // namespace bios
