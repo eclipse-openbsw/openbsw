@@ -56,10 +56,6 @@ Setup in Testing PC:
 S32K148
 +++++++
 
-.. note::
-   On some boards, Ethernet does not work by default and a resistor needs to be depopulated first.
-   See :ref:`known_issues_with_s32k148_board`.
-
 Hardware Connection:
    - Connect the S32K148 development board to the TJA1101 daughter board.
 

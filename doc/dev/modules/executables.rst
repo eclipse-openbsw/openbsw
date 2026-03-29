@@ -36,24 +36,6 @@ S32K148EVB
 
     ../../../executables/referenceApp/platforms/s32k148evb/**/doc/index
 
-NUCLEO-F413ZH
-+++++++++++++
-
-.. toctree::
-    :maxdepth: 1
-    :glob:
-
-    ../../../executables/referenceApp/platforms/nucleo_f413zh/**/doc/index
-
-NUCLEO-G474RE
-+++++++++++++
-
-.. toctree::
-    :maxdepth: 1
-    :glob:
-
-    ../../../executables/referenceApp/platforms/nucleo_g474re/**/doc/index
-
 Safety
 ++++++
 
