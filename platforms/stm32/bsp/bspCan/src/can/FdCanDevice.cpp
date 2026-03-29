@@ -286,7 +286,9 @@ bool FdCanDevice::transmit(::can::CANFrame const& frame, bool txInterruptNeeded)
 {
     if (txInterruptNeeded)
     {
-        // Enable TCE before TX (match S32K enableTransmitInterrupt)
+        // Clear stale TC flag THEN enable TCE — prevents immediate ISR
+        // from a previous fire-and-forget TX completion that left TC set.
+        fConfig.baseAddress->IR = FDCAN_IR_TC;  // write-1-to-clear
         fConfig.baseAddress->IE |= FDCAN_IE_TCE;
     }
     return transmit(frame);
@@ -304,9 +306,9 @@ uint8_t FdCanDevice::receiveISR(uint8_t const* filterBitField)
     uint32_t ramBase           = getInstanceRamBase(fdcan);
     uint8_t received           = 0U;
 
-    // Disable RF0NE to prevent ISR re-entry during drain.
-    // Re-enabled by enableRxInterrupt() in receiveTask().
-    fdcan->IE &= ~FDCAN_IE_RF0NE;
+    // NOTE: RF0NE disable moved to CanSystem ISR trampoline (if needed).
+    // Disabling here is unsafe because receiveTask() may not run if the
+    // async dispatch is dedup-dropped, permanently blocking all RX.
 
     // Count FIFO message-lost events BEFORE clearing
     if ((fdcan->IR & FDCAN_IR_RF0L) != 0U) { ++g_isrSkipped; }

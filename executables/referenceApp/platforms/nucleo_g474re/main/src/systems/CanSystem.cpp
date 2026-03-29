@@ -76,13 +76,9 @@ void CanSystem::run()
 {
     _canRxRunnable.setEnabled(true);
 
-    // HW filter: accept ONLY 0x7E0. Combined with SW ISR filter as backup.
-    // The 3-deep RX FIFO overflows with accept-all when other ECUs (0x201, 0x220,
-    // 0x301, 0x302) flood the bus. HW filter prevents non-diagnostic frames from
-    // entering the FIFO, reserving all 3 slots for 0x7E0.
-    static uint32_t const diagIds[] = {0x7E0U};
-    _transceiver0.fDevice.fFilterIds   = diagIds;
-    _transceiver0.fDevice.fFilterCount = 1U;
+    // Accept all frames (temporary — debug RX path)
+    _transceiver0.fDevice.fFilterIds   = nullptr;
+    _transceiver0.fDevice.fFilterCount = 0U;
 
     (void)_transceiver0.init();
     (void)_transceiver0.open();
