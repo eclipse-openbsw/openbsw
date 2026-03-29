@@ -61,20 +61,20 @@ public:
      * Enables the APB1 clock, configures TX/RX GPIO pins, enters init mode,
      * programs bit timing, and installs an accept-all hardware filter.
      * Must be called before start().
-     *
+     * \return true on success, false if hardware timeout.
      * \note Thread context only — not safe to call from ISR.
      */
-    void init();
+    bool init();
 
     /**
      * \brief Leave init mode and begin normal CAN operation.
      *
      * Drains any stale FIFO0 frames, clears the overrun flag, and enables
      * the FMPIE0 (FIFO-message-pending) RX interrupt.
-     *
-     * \note Requires a preceding init() call; silently returns if not initialised.
+     * \return true on success, false if hardware timeout.
+     * \note Requires a preceding init() call; returns false if not initialised.
      */
-    void start();
+    bool start();
 
     /**
      * \brief Disable CAN interrupts and re-enter init mode.

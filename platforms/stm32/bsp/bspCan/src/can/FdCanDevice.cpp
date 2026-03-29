@@ -201,11 +201,15 @@ void FdCanDevice::configureMessageRam()
     fConfig.baseAddress->TXBC = 0U; // FIFO mode (TFQM=0)
 }
 
-void FdCanDevice::init()
+bool FdCanDevice::init()
 {
     enablePeripheralClock();
     configureGpio();
-    enterInitMode();
+
+    if (!enterInitMode())
+    {
+        return false;
+    }
 
     // Classic CAN mode (no FD), auto retransmission disabled
     fConfig.baseAddress->CCCR &= ~FDCAN_CCCR_FDOE;
@@ -216,13 +220,14 @@ void FdCanDevice::init()
     configureAcceptAllFilter();
 
     fInitialized = true;
+    return true;
 }
 
-void FdCanDevice::start()
+bool FdCanDevice::start()
 {
     if (!fInitialized)
     {
-        return;
+        return false;
     }
 
     // Configure HW filter in init mode (before leaveInitMode)
@@ -243,10 +248,14 @@ void FdCanDevice::start()
     fConfig.baseAddress->ILE    = FDCAN_ILE_EINT0;
     fConfig.baseAddress->TXBTIE = 0x7U; // Required for TC generation per RM0440
 
-    leaveInitMode();
+    if (!leaveInitMode())
+    {
+        return false;
+    }
 
     // Write IE again after leaving init mode (persistence workaround).
     fConfig.baseAddress->IE = FDCAN_IE_RF0NE;
+    return true;
 }
 
 void FdCanDevice::stop()

@@ -58,6 +58,9 @@ public:
     uint32_t getBaudrate() const override;
     uint16_t getHwQueueTimeout() const override;
 
+    /// Number of TX frames dropped due to HW queue full or TX listener queue full.
+    uint32_t getOverrunCount() const { return fOverrunCount; }
+
     static uint8_t receiveInterrupt(uint8_t transceiverIndex);
     static void transmitInterrupt(uint8_t transceiverIndex);
     static void disableRxInterrupt(uint8_t transceiverIndex);
@@ -98,8 +101,10 @@ private:
 
     ::async::ContextType fContext;
     ::async::TimeoutType fCyclicTimeout;
+    ::async::Function _cyclicTaskRunner;
     ::async::Function _canFrameSent;
     TxQueue fTxQueue;
+    uint32_t fOverrunCount;
     bool fMuted;
 };
 

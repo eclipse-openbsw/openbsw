@@ -39,9 +39,12 @@ BxCanTransceiver::BxCanTransceiver(
 , fDevice(devConfig)
 , fContext(context)
 , fCyclicTimeout()
+, _cyclicTaskRunner(
+      ::async::Function::CallType::create<BxCanTransceiver, &BxCanTransceiver::cyclicTask>(*this))
 , _canFrameSent(::async::Function::CallType::
                     create<BxCanTransceiver, &BxCanTransceiver::canFrameSentAsyncCallback>(*this))
 , fTxQueue()
+, fOverrunCount(0U)
 , fMuted(false)
 {
     if (busId < 3U)
@@ -57,7 +60,10 @@ BxCanTransceiver::BxCanTransceiver(
         return ErrorCode::CAN_ERR_ILLEGAL_STATE;
     }
 
-    fDevice.init();
+    if (!fDevice.init())
+    {
+        return ErrorCode::CAN_ERR_INIT_FAILED;
+    }
     setState(State::INITIALIZED);
     return ErrorCode::CAN_ERR_OK;
 }
@@ -72,12 +78,23 @@ BxCanTransceiver::BxCanTransceiver(
 
     if (state == State::CLOSED)
     {
-        fDevice.init();
+        if (!fDevice.init())
+        {
+            return ErrorCode::CAN_ERR_INIT_FAILED;
+        }
     }
 
-    fDevice.start();
+    if (!fDevice.start())
+    {
+        return ErrorCode::CAN_ERR_ILLEGAL_STATE;
+    }
     setState(State::OPEN);
     fMuted = false;
+
+    // Auto-schedule bus-off polling (matching S32K scheduleAtFixedRate pattern)
+    ::async::scheduleAtFixedRate(
+        fContext, _cyclicTaskRunner, fCyclicTimeout, 10U, ::async::TimeUnit::MILLISECONDS);
+
     return ErrorCode::CAN_ERR_OK;
 }
 
@@ -94,6 +111,7 @@ BxCanTransceiver::BxCanTransceiver(
         return ErrorCode::CAN_ERR_OK;
     }
 
+    fCyclicTimeout.cancel();
     fDevice.stop();
     fTxQueue.clear();
     setState(State::CLOSED);
@@ -136,6 +154,7 @@ void BxCanTransceiver::shutdown() { close(); }
 
     if (!fDevice.transmit(frame))
     {
+        fOverrunCount++;
         return ErrorCode::CAN_ERR_TX_HW_QUEUE_FULL;
     }
 
@@ -153,6 +172,8 @@ BxCanTransceiver::write(::can::CANFrame const& frame, ::can::ICANFrameSentListen
 
     if (fTxQueue.full())
     {
+        fOverrunCount++;
+        notifyRegisteredSentListener(frame);
         return ErrorCode::CAN_ERR_TX_HW_QUEUE_FULL;
     }
 
@@ -169,6 +190,8 @@ BxCanTransceiver::write(::can::CANFrame const& frame, ::can::ICANFrameSentListen
     if (!fDevice.transmit(frame))
     {
         fTxQueue.pop_front();
+        fOverrunCount++;
+        notifyRegisteredSentListener(frame);
         return ErrorCode::CAN_ERR_TX_HW_QUEUE_FULL;
     }
 

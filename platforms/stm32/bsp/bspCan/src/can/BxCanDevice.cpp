@@ -132,11 +132,15 @@ void BxCanDevice::configureBitTiming()
                                | ((fConfig.bs1 - 1U) << CAN_BTR_TS1_Pos) | (fConfig.prescaler - 1U);
 }
 
-void BxCanDevice::init()
+bool BxCanDevice::init()
 {
     enablePeripheralClock();
     configureGpio();
-    enterInitMode();
+
+    if (!enterInitMode())
+    {
+        return false;
+    }
 
     // Exit sleep mode
     fConfig.baseAddress->MCR &= ~CAN_MCR_SLEEP;
@@ -148,15 +152,20 @@ void BxCanDevice::init()
     configureAcceptAllFilter();
 
     fInitialized = true;
+    return true;
 }
 
-void BxCanDevice::start()
+bool BxCanDevice::start()
 {
     if (!fInitialized)
     {
-        return;
+        return false;
     }
-    leaveInitMode();
+
+    if (!leaveInitMode())
+    {
+        return false;
+    }
 
     // Drain any frames that arrived while in init mode
 #if !defined(UNIT_TEST)
@@ -169,6 +178,7 @@ void BxCanDevice::start()
     fConfig.baseAddress->RF0R |= CAN_RF0R_FOVR0;
 
     fConfig.baseAddress->IER |= CAN_IER_FMPIE0;
+    return true;
 }
 
 void BxCanDevice::stop()

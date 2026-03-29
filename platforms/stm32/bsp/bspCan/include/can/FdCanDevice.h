@@ -76,9 +76,10 @@ public:
      * \brief Initialise the FDCAN peripheral (clock, GPIO, bit timing, message RAM).
      *
      * Leaves the peripheral in init mode; call start() to begin bus communication.
+     * \return true on success, false if hardware timeout (e.g. init mode not entered).
      * \note Must be called from thread context before any other method.
      */
-    void init();
+    bool init();
 
     /**
      * \brief Configure interrupts and leave init mode to start bus communication.
@@ -87,9 +88,10 @@ public:
      * complete) is managed per-TX by transmit(frame, true) and disabled by
      * transmitISR(), matching S32K's selective interrupt pattern. All
      * interrupts route to line 0 (ILS=0). Clears INIT to join the bus.
+     * \return true on success, false if hardware timeout.
      * \note Must be called after init().
      */
-    void start();
+    bool start();
 
     /**
      * \brief Disable CAN interrupts and re-enter init mode, detaching from the bus.
