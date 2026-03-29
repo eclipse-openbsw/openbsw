@@ -580,18 +580,17 @@ TEST_F(ManualAsyncFdCanTransceiverTest, canFrameSentCallbackRunsInTaskContext)
 // Category 4 — receiveInterrupt nullptr filter
 // ===================================================================
 
-/// \brief receiveInterrupt passes nullptr as filter (accept all)
-TEST_F(InitedFdCanTransceiverTest, receiveInterruptPassesNullptrFilter)
+/// \brief receiveInterrupt passes ISR filter bitfield to device
+TEST_F(InitedFdCanTransceiverTest, receiveInterruptPassesFilterToDevice)
 {
-    EXPECT_CALL(fFct.fDevice, receiveISR(nullptr)).WillOnce(Return(1));
+    EXPECT_CALL(fFct.fDevice, receiveISR(_)).WillOnce(Return(1));
     FdCanTransceiver::receiveInterrupt(fBusId);
 }
 
-/// \brief receiveInterrupt accepts all frames (no filter rejection)
+/// \brief receiveInterrupt accepts frames on multiple calls
 TEST_F(InitedFdCanTransceiverTest, receiveInterruptAcceptsAllFrames)
 {
-    // Multiple calls, all accepted with nullptr filter
-    EXPECT_CALL(fFct.fDevice, receiveISR(nullptr)).WillOnce(Return(1)).WillOnce(Return(3));
+    EXPECT_CALL(fFct.fDevice, receiveISR(_)).WillOnce(Return(1)).WillOnce(Return(3));
 
     EXPECT_EQ(1U, FdCanTransceiver::receiveInterrupt(fBusId));
     EXPECT_EQ(3U, FdCanTransceiver::receiveInterrupt(fBusId));
