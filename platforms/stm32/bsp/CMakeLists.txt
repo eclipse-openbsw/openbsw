@@ -4,22 +4,35 @@
 
 # BSP modules for STM32 platform
 
-add_subdirectory(bspMcu)
-add_subdirectory(bspClock)
-add_subdirectory(bspInterruptsImpl)
-add_subdirectory(bspUart)
-add_subdirectory(bspTimer)
-add_subdirectory(bspIo)
-add_subdirectory(bspAdc)
-add_subdirectory(bspEepromDriver)
+if (BUILD_EXECUTABLE STREQUAL "unitTest")
+    # Unit test builds: only compile transceivers (with mock devices).
+    # Skip hardware-dependent modules (bspMcu, bspClock, bspCan, etc.).
+    add_subdirectory(bxCanTransceiver)
+    add_subdirectory(bspUart)
+else ()
+    add_subdirectory(bspMcu)
+    add_subdirectory(bspClock)
+    add_subdirectory(bspInterruptsImpl)
+    add_subdirectory(bspUart)
+    add_subdirectory(bspTimer)
+    add_subdirectory(bspIo)
+    add_subdirectory(bspAdc)
+    add_subdirectory(bspEepromDriver)
+    add_subdirectory(bspCan)
 
-# Aggregated BSP target
-add_library(socBsp INTERFACE)
-target_link_libraries(
-    socBsp
-    INTERFACE bspClock
-              bspInterruptsImpl
-              bspIo
-              bspMcu
-              bspTimer
-              bspUart)
+    # CAN transceiver — selected by chip family
+    if (CAN_TYPE STREQUAL "BXCAN")
+        add_subdirectory(bxCanTransceiver)
+    endif ()
+
+    # Aggregated BSP target
+    add_library(socBsp INTERFACE)
+    target_link_libraries(
+        socBsp
+        INTERFACE bspClock
+                  bspInterruptsImpl
+                  bspIo
+                  bspMcu
+                  bspTimer
+                  bspUart)
+endif ()
