@@ -8,6 +8,7 @@ if (BUILD_EXECUTABLE STREQUAL "unitTest")
     # Unit test builds: only compile transceivers (with mock devices).
     # Skip hardware-dependent modules (bspMcu, bspClock, bspCan, etc.).
     add_subdirectory(bxCanTransceiver)
+    add_subdirectory(fdCanTransceiver)
     add_subdirectory(bspUart)
 else ()
     add_subdirectory(bspMcu)
@@ -21,8 +22,11 @@ else ()
     add_subdirectory(bspCan)
 
     # CAN transceiver — selected by chip family
+    # CAN transceiver — selected by chip family
     if (CAN_TYPE STREQUAL "BXCAN")
         add_subdirectory(bxCanTransceiver)
+    elseif (CAN_TYPE STREQUAL "FDCAN")
+        add_subdirectory(fdCanTransceiver)
     endif ()
 
     # Aggregated BSP target
