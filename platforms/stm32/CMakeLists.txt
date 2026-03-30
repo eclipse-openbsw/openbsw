@@ -19,6 +19,11 @@ if (NOT BUILD_EXECUTABLE STREQUAL "unitTest")
         message(FATAL_ERROR "Unsupported STM32_CHIP: ${STM32_CHIP}. Supported: STM32F413ZH, STM32G474RE")
     endif ()
 
+    # 3rdparty modules — RTOS
+    if (BUILD_TARGET_RTOS STREQUAL "FREERTOS")
+        add_subdirectory(3rdparty/freertos_cm4_sysTick)
+    endif ()
+
     # BSP modules
     add_subdirectory(bsp)
 
