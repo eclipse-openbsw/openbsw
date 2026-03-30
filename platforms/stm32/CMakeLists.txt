@@ -20,8 +20,11 @@ if (NOT BUILD_EXECUTABLE STREQUAL "unitTest")
     endif ()
 
     # 3rdparty modules — RTOS
+    # 3rdparty modules — RTOS
     if (BUILD_TARGET_RTOS STREQUAL "FREERTOS")
         add_subdirectory(3rdparty/freertos_cm4_sysTick)
+    elseif (BUILD_TARGET_RTOS STREQUAL "THREADX")
+        add_subdirectory(3rdparty/threadx)
     endif ()
 
     # BSP modules
