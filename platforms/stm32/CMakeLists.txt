@@ -24,4 +24,10 @@ if (NOT BUILD_EXECUTABLE STREQUAL "unitTest")
 
     # ETL implementation
     add_subdirectory(etlImpl)
+
+    # Safety modules
+    add_subdirectory(safety)
+
+    # Other modules
+    add_subdirectory(hardFaultHandler)
 endif ()
