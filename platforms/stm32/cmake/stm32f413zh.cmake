@@ -10,17 +10,9 @@ set(STM32_DEVICE "stm32f413xx" CACHE STRING "STM32 device define" FORCE)
 set(STM32_DEVICE_UPPER "STM32F413xx" CACHE STRING "STM32 device define (upper)" FORCE)
 set(CAN_TYPE "BXCAN" CACHE STRING "CAN peripheral type" FORCE)
 
-set(STM32_FLASH_SIZE  "0x180000" CACHE STRING "Flash size in bytes (1.5 MB)" FORCE)
-set(STM32_SRAM_SIZE   "0x50000"  CACHE STRING "SRAM size in bytes (320 KB)" FORCE)
-set(STM32_CPU_CLOCK_HZ "96000000" CACHE STRING "CPU clock frequency" FORCE)
-
 add_compile_definitions(STM32F413xx)
 add_compile_definitions(STM32_FAMILY_F4)
 add_compile_definitions(CAN_TYPE_BXCAN)
-
-set(STM32_LINKER_SCRIPT
-    "${CMAKE_CURRENT_LIST_DIR}/../bsp/bspMcu/linker/STM32F413ZHxx_FLASH.ld"
-    CACHE STRING "Linker script" FORCE)
 
 set(STM32_STARTUP_ASM
     "${CMAKE_CURRENT_LIST_DIR}/../bsp/bspMcu/startup/startup_stm32f413xx.s"

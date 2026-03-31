@@ -75,41 +75,15 @@ Both files share the same structure:
 Linker Scripts
 --------------
 
-Device-specific linker scripts reside in ``linker/``:
+Board-specific linker scripts are maintained alongside each board's
+``referenceApp`` platform entry point, not in ``bspMcu``:
 
-**STM32F413ZHxx_FLASH.ld**
+- ``executables/referenceApp/platforms/nucleo_g474re/main/linkerscript/application.ld``
+- ``executables/referenceApp/platforms/nucleo_f413zh/main/linkerscript/application.ld``
 
-    =========  ==============  ============
-    Region     Origin          Size
-    =========  ==============  ============
-    FLASH      ``0x08000000``  1536 KB
-    RAM        ``0x20000000``  320 KB
-    =========  ==============  ============
-
-**STM32G474RExx_FLASH.ld**
-
-    =========  ==============  ============
-    Region     Origin          Size
-    =========  ==============  ============
-    FLASH      ``0x08000000``  512 KB
-    RAM        ``0x20000000``  128 KB
-    =========  ==============  ============
-
-Both linker scripts share the same section layout:
-
-- ``.isr_vector`` -- interrupt vector table (Flash, ``KEEP``)
-- ``.text`` -- code, ARM glue sections, ``.init`` / ``.fini`` (Flash)
-- ``.rodata`` -- read-only data (Flash)
-- ``.ARM.extab`` / ``.ARM`` -- C++ exception unwinding tables (Flash)
-- ``.preinit_array`` / ``.init_array`` / ``.fini_array`` -- C++ constructor and
-  destructor tables (Flash)
-- ``.data`` -- initialised data (loaded from Flash into RAM at startup)
-- ``.bss`` -- zero-initialised data (RAM)
-- ``._user_heap_stack`` -- reserved space for heap (512 bytes min) and stack
-  (1024 bytes min)
-
-Entry point is ``Reset_Handler``. Stack grows downward from top of RAM
-(``_estack = ORIGIN(RAM) + LENGTH(RAM)``).
+They are wired to the final ELF via the ``PROP_LINKER_SCRIPT`` property on the
+``startUp`` INTERFACE library.  See each board's ``main/CMakeLists.txt`` for
+details.
 
 Software Reset (``softwareSystemReset``)
 ----------------------------------------

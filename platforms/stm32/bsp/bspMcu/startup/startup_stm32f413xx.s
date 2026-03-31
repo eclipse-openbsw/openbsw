@@ -10,7 +10,7 @@
 
   .syntax unified
   .cpu cortex-m4
-  .fpu softvfp
+  .fpu fpv4-sp-d16
   .thumb
 
 .global g_pfnVectors
@@ -58,6 +58,15 @@ FillZerobss:
 LoopFillZerobss:
   cmp r2, r4
   bcc FillZerobss
+
+/* Enable FPU: set CP10/CP11 full access (required for ThreadX — FreeRTOS
+   enables this in port.c, but ThreadX does not) */
+  ldr r0, =0xE000ED88
+  ldr r1, [r0]
+  orr r1, r1, #(0xF << 20)
+  str r1, [r0]
+  dsb
+  isb
 
 /* Call SystemInit, C++ constructors, and main */
   bl SystemInit
