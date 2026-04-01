@@ -3,6 +3,7 @@ resolver = "3"
 
 members = [
     "executables/referenceApp/rustHelloWorld",
+    "libs/bsw/logger/rust",
     "libs/rust/panic_handler",
     "libs/rust/console_out",
 ]
@@ -13,7 +14,14 @@ documentation = "https://eclipse-openbsw.github.io/openbsw/"
 
 # Workspace dependencies - add new Rust crates here as they are developed
 [workspace.dependencies]
+# External crates
+cbindgen = "0.29.2"
+log = "0.4"
+paste = "1"
+
+# openbsw-internal crates
 openbsw_console_out = { path = "libs/rust/console_out" }
+openbsw-logger = { path = "libs/bsw/logger/rust" }
 openbsw_panic_handler = { path = "libs/rust/panic_handler" }
 
 # Similar to C++ we always build optimized (matching C++ -O2)

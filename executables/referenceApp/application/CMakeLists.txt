@@ -116,7 +116,8 @@ endif ()
 if (BUILD_RUST)
     target_compile_definitions(app.referenceApp PRIVATE BUILD_RUST)
     # Link against Rust static library(should be only one static library)
-    target_link_libraries(app.referenceApp PRIVATE rust_hello_world)
+    target_link_libraries(app.referenceApp PRIVATE openbsw_logger
+                                                   rust_hello_world)
     # Add include directory for Rust C/C++ headers
     target_include_directories(
         app.referenceApp

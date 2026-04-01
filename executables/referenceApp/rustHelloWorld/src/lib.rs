@@ -28,11 +28,21 @@ extern crate openbsw_panic_handler;
 
 use core::fmt::Write;
 use openbsw_console_out::Console;
+use openbsw_logger::{bsw_debug, bsw_info, declare_logger_component};
 
-/// Prints "Hello from Rust!" to BSP stdout via putByteToStdout.
+use log::info;
+
+declare_logger_component!(DEMO);
+
+/// Prints "Hello from Rust!" to BSP stdout via putByteToStdout. Also prints some rust log messages,
+/// mapped to the DEMO logging component.
 #[unsafe(no_mangle)]
 pub extern "C" fn rust_hello_world() {
+    bsw_debug!(DEMO, "Rust FFI called");
     write!(Console, "Hello from Rust!\r\n").ok();
+    bsw_info!(DEMO, "Rust FFI completed");
+    // Plain log::info! routes through the default component (e. g. RUST) configured from C++.
+    info!("Hello from rust crate without logger mapping");
 }
 
 /// Adds two numbers and returns the result.
