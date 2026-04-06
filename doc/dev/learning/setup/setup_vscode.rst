@@ -116,14 +116,14 @@ the generated ``compile_commands.json`` files.
             {
                 "name": "posix",
                 "cStandard": "c99",
-                "cppStandard": "c++14",
+                "cppStandard": "c++17",
                 "intelliSenseMode": "linux-gcc-x64",
                 "compileCommands": "${workspaceFolder}/build/posix/compile_commands.json"
             },
             {
                 "name": "s32k148",
                 "cStandard": "c99",
-                "cppStandard": "c++14",
+                "cppStandard": "c++17",
                 "intelliSenseMode": "gcc-arm",
                 "compileCommands": "${workspaceFolder}/build/s32k148-gcc/compile_commands.json"
             }

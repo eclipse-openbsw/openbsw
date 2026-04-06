@@ -72,7 +72,7 @@ jobs:
         if: ${{ steps.scope.outputs.mode == 'full' || steps.scope.outputs.has_changes == 'true' }}
         run: >-
           DOCKER_UID=$(id -u) DOCKER_GID=$(id -g) DOCKER_HISTORY=/dev/null docker compose run --rm development
-          python3 .ci/build.py --preset ${{ matrix.preset }} --platform "linux" --cxxid "clang" --cxxstd "14" --config "${{ matrix.config }}"
+          python3 .ci/build.py --preset ${{ matrix.preset }} --platform "linux" --cxxid "clang" --cxxstd "17" --config "${{ matrix.config }}"
 
       - name: Resolve changed translation units for clang-tidy
         if: ${{ steps.scope.outputs.mode == 'changed' && steps.scope.outputs.has_changes == 'true' }}

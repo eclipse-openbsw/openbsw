@@ -12,7 +12,7 @@ jobs:
         platform: [ "arm", "linux" ]
         config: [ "Debug", "Release", "RelWithDebInfo" ]
         cxxid: ["gcc", "clang"]
-        cxxstd: [ 14, 17, 20, 23 ]
+        cxxstd: [ 17, 20, 23 ]
         exclude:
           - preset: "tests-posix-debug"
             platform: "arm"
@@ -104,7 +104,7 @@ jobs:
           python3 .ci/build.py --preset ${{ matrix.preset }} --platform ${{ matrix.platform }} --cxxid ${{ matrix.cxxid }} --cxxstd ${{ matrix.cxxstd }} --config ${{ matrix.config }}
 
       - name: Run custom CMake build for elf-analyzer
-        if: matrix.platform == 'arm' && matrix.cxxid == 'gcc' && matrix.cxxstd == '14' && matrix.config != ''
+        if: matrix.platform == 'arm' && matrix.cxxid == 'gcc' && matrix.cxxstd == '17' && matrix.config != ''
         run: >-
           DOCKER_UID=$(id -u) DOCKER_GID=$(id -g) DOCKER_HISTORY=/dev/null docker compose run --rm development
           bash -c "
@@ -113,20 +113,20 @@ jobs:
           "
 
       - name: Set commit hash and metadata
-        if: matrix.platform == 'arm' && matrix.cxxid == 'gcc' && matrix.cxxstd == '14' && matrix.config != ''
+        if: matrix.platform == 'arm' && matrix.cxxid == 'gcc' && matrix.cxxstd == '17' && matrix.config != ''
         id: vars
         run: |
           echo "COMMIT_HASH=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
           echo "ARTIFACT_NAME=elf-${{ matrix.preset }}-${{ matrix.cxxstd }}-${{ matrix.config }}-gdwarf4-${GITHUB_SHA::7}" >> $GITHUB_ENV
 
       - name: Find ELF files
-        if: matrix.platform == 'arm' && matrix.cxxid == 'gcc' && matrix.cxxstd == '14' && matrix.config != ''
+        if: matrix.platform == 'arm' && matrix.cxxid == 'gcc' && matrix.cxxstd == '17' && matrix.config != ''
         run: |
           mkdir -p elf-artifacts
           cp elf-analyzer-artifacts/${{matrix.preset}}/executables/referenceApp/application/${{ matrix.config }}/app.referenceApp.elf elf-artifacts/
 
       - name: Upload ELF as GitHub Artifact
-        if: matrix.platform == 'arm'  && matrix.cxxid == 'gcc' && matrix.cxxstd == '14' && matrix.config != ''
+        if: matrix.platform == 'arm'  && matrix.cxxid == 'gcc' && matrix.cxxstd == '17' && matrix.config != ''
         uses: actions/upload-artifact@v4
         with:
           name: ${{ env.ARTIFACT_NAME }}

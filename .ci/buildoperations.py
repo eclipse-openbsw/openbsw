@@ -76,7 +76,7 @@ def show_environment(env: dict):
 
 
 class Allowed:
-    CXXSTDS: Final[tuple[int]] = [14, 17, 20, 23]
+    CXXSTDS: Final[tuple[int]] = [17, 20, 23]
     CONFIGS: Final[tuple[str]] = ["Debug", "Release", "RelWithDebInfo"]
     PLATFORMS: Final[tuple[str]] = ["linux", "arm"]
     CXXIDS: Final[tuple[str]] = ["gcc", "clang"]

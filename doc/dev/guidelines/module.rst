@@ -79,7 +79,7 @@ Every module requires a ``module.spec`` file which includes the basic settings o
 
     std_c: c                    # Minimum required c standard.    [c, c99]                       c
 
-    std_cxx: c++14              # Minimum required c++ standard.  [c++14, c++17, c++20, c++23]   c++14
+    std_cxx: c++17              # Minimum required c++ standard.  [c++17, c++20, c++23]   c++17
 
     architectures:              # Compatible architectures.       [16bit, 32bit, 64bit]          [32bit, 64bit]
         - 32bit

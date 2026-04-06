@@ -9,7 +9,7 @@ def run_cmd(cmd, cwd=None):
 def main():
     target = "s32k148"
     toolchain = "gcc"
-    cxxstd = "14"
+    cxxstd = "17"
     matrix = [
         {"app": "freertos", "preset": "s32k148-freertos-gcc"},
         {"app": "threadx",  "preset": "s32k148-threadx-gcc"},

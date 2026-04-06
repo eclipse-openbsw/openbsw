@@ -32,13 +32,13 @@ jobs:
         uses: actions/cache@v4
         with:
             path: build/s32k148-gcc
-            key: ${{ runner.os }}-${{ steps.build-docker-development.outputs.digest }}-cmake-s32k148-freertos-gcc-RelWithDebInfo-arm-gcc-14-${{ hashFiles('**/*.cpp', '**/*.h',  '**/*.cmake', '**/*.txt', '**/*.c', '**/*.s', '**/*.S') }}
+            key: ${{ runner.os }}-${{ steps.build-docker-development.outputs.digest }}-cmake-s32k148-freertos-gcc-RelWithDebInfo-arm-gcc-17-${{ hashFiles('**/*.cpp', '**/*.h',  '**/*.cmake', '**/*.txt', '**/*.c', '**/*.s', '**/*.S') }}
 
       - name: Run the build.py inside the docker container
         if: steps.cache-cmake.outputs.cache-hit != 'true'
         run: >-
           DOCKER_UID=$(id -u) DOCKER_GID=$(id -g) DOCKER_HISTORY=/dev/null docker compose run --rm development
-          python3 .ci/build.py --preset s32k148-freertos-gcc --platform arm --cxxid gcc --cxxstd 14 --config RelWithDebInfo
+          python3 .ci/build.py --preset s32k148-freertos-gcc --platform arm --cxxid gcc --cxxstd 17 --config RelWithDebInfo
 
       - name: Generate report inside the docker container
         run: >-

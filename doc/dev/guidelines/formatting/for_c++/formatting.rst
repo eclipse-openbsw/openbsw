@@ -839,14 +839,14 @@ Additional Settings in clang-format
 Standard
 ++++++++
 
-The software supports C++14 and above, so the ``Standard`` setting in clang-format is set to ``c++14``.
+The software supports C++17 and above, so the ``Standard`` setting in clang-format is set to ``c++17``.
 
 .. code-block::
     :caption: clang-format settings
 
     Language:        Cpp
     DisableFormat:   false
-    Standard:        c++14
+    Standard:        c++17
 
 Literal Separators
 ++++++++++++++++++
