@@ -35,7 +35,7 @@ We recommend to read their licenses, as their terms may differ from the terms de
 | Project                   | Version | License   | Path                                                                 |
 |---------------------------|---------|-----------|----------------------------------------------------------------------|
 | Corrosion                 | 0.6     | MIT       | ``libs/3rdparty/corrosion/LICENSE``                                  |
-| ETL                       | 20.46.2 | MIT       | ``libs/3rdparty/etl/LICENSE``                                        |
+| ETL                       | 20.47.1 | MIT       | ``libs/3rdparty/etl/LICENSE``                                        |
 | LwIP                      | 2.2.1   | BSD-3     | ``libs/3rdparty/lwip/COPYING``                                       |
 | googletest                | 1.12.1  | BSD-3     | ``libs/3rdparty/googletest/LICENSE``                                 |
 | printf                    | 5.2.0   | MIT       | ``libs/3rdparty/printf/LICENSE``                                     |
