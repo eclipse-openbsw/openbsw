@@ -140,7 +140,7 @@ TEST_F(DoIpTcpConnectionTest, IgnoreMessage)
         .WillOnce(Return(IDoIpConnectionHandler::HeaderReceivedContinuation{
             IDoIpConnection::PayloadDiscardedCallbackType{}}));
     EXPECT_CALL(fSocketMock, read(_, 8U))
-        .WillOnce(Invoke(ReadBytesFrom(::estd::make_slice(data).subslice(8))));
+        .WillOnce(Invoke(ReadBytesFrom(::etl::span<uint8_t const>(data).first(8))));
     EXPECT_CALL(fSocketMock, read(nullptr, 3U)).WillOnce(Return(3U));
     fSocketMock.getDataListener()->dataReceived(11U);
     // end receive message
@@ -165,7 +165,7 @@ TEST_F(DoIpTcpConnectionTest, EndReceiveMessage)
         .WillOnce(Return(IDoIpConnectionHandler::HeaderReceivedContinuation{
             IDoIpConnectionHandler::HandledByThisHandler{}}));
     EXPECT_CALL(fSocketMock, read(_, 8U))
-        .WillOnce(Invoke(ReadBytesFrom(::estd::make_slice(data).subslice(8))));
+        .WillOnce(Invoke(ReadBytesFrom(::etl::span<uint8_t const>(data).first(8))));
     fSocketMock.getDataListener()->dataReceived(15U);
     // end receive message immediately
     EXPECT_CALL(fSocketMock, read(nullptr, 7U)).WillOnce(Return(7U));
@@ -177,18 +177,18 @@ TEST_F(DoIpTcpConnectionTest, EndReceiveMessage)
         .WillOnce(Return(IDoIpConnectionHandler::HeaderReceivedContinuation{
             IDoIpConnectionHandler::HandledByThisHandler{}}));
     EXPECT_CALL(fSocketMock, read(_, 8U))
-        .WillOnce(Invoke(ReadBytesFrom(::estd::make_slice(data2).subslice(8))));
+        .WillOnce(Invoke(ReadBytesFrom(::etl::span<uint8_t const>(data2).first(8))));
     fSocketMock.getDataListener()->dataReceived(11U);
     // read some payload
     ::estd::array<uint8_t, 4U> payloadBuffer;
     EXPECT_CALL(fSocketMock, read(_, 3U))
-        .WillOnce(Invoke(ReadBytesFrom(::estd::make_slice(data2).offset(8).subslice(3))));
+        .WillOnce(Invoke(ReadBytesFrom(::etl::span<uint8_t const>(data2).subspan(8, 3))));
     cut.receivePayload(payloadBuffer, fPayloadReceivedCallback);
     EXPECT_CALL(fSocketMock, read(_, 1U))
-        .WillOnce(Invoke(ReadBytesFrom(::estd::make_slice(data2).offset(11).subslice(1))));
+        .WillOnce(Invoke(ReadBytesFrom(::etl::span<uint8_t const>(data2).subspan(11, 1))));
     EXPECT_CALL(
         *this,
-        payloadReceivedCallback(BytesAreSlice(::estd::make_slice(data2).offset(8).subslice(4))));
+        payloadReceivedCallback(BytesAreSlice(::etl::span<uint8_t const>(data2).subspan(8, 4))));
 
     fSocketMock.getDataListener()->dataReceived(5U);
     // end receive message
@@ -455,16 +455,16 @@ TEST_F(DoIpTcpConnectionTest, SimpleLifecycleWithMessageReception)
            0x99};
     EXPECT_CALL(fConnectionHandlerMock, headerReceived(_)).Times(0);
     EXPECT_CALL(fSocketMock, read(_, 6U))
-        .WillOnce(Invoke(ReadBytesFrom(::estd::make_slice(input).subslice(6))));
+        .WillOnce(Invoke(ReadBytesFrom(::etl::span<uint8_t const>(input).first(6))));
     fSocketMock.getDataListener()->dataReceived(6U);
     EXPECT_CALL(fSocketMock, read(_, _))
-        .WillOnce(Invoke(ReadBytesFrom(::estd::make_slice(input).offset(6).subslice(2))));
+        .WillOnce(Invoke(ReadBytesFrom(::etl::span<uint8_t const>(input).subspan(6, 2))));
     EXPECT_CALL(fConnectionHandlerMock, headerReceived(IsDoIpHeader(input)))
         .WillOnce(Return(IDoIpConnectionHandler::HeaderReceivedContinuation{
             IDoIpConnectionHandler::HandledByThisHandler{}}));
     fSocketMock.getDataListener()->dataReceived(17U);
     EXPECT_CALL(fSocketMock, read(_, _))
-        .WillOnce(Invoke(ReadBytesFrom(::estd::slice<uint8_t const>::from_pointer(input + 8, 9U))));
+        .WillOnce(Invoke(ReadBytesFrom(::etl::span<uint8_t const>(input).subspan(8, 9U))));
     uint8_t readInput[9];
     EXPECT_CALL(
         *this,

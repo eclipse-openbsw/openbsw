@@ -94,13 +94,13 @@ struct DoIpServerVehicleIdentificationSocketHandlerTest : Test
     void receiveRequest(
         ::ip::NetworkInterfaceConfig& config,
         ::ip::IPEndpoint& remoteEndpoint,
-        ::estd::slice<uint8_t const> const& request,
+        ::etl::span<uint8_t const> const& request,
         uint32_t epochTime,
         Sequence* seq = nullptr);
     void requestInvalid(
         ::ip::NetworkInterfaceConfig& config,
         ::ip::IPEndpoint& remoteEndpoint,
-        ::estd::slice<uint8_t const> const& request);
+        ::etl::span<uint8_t const> const& request);
 
     ::estd::slice<uint8_t> allocateBuffer(uint32_t size)
     {
@@ -660,11 +660,11 @@ TEST_F(DoIpServerVehicleIdentificationSocketHandlerTest, VehicleAnnouncementMess
         EXPECT_CALL(*fSocketMock, getLocalPort())
             .WillOnce(Return(DoIpConstants::Ports::UDP_DISCOVERY));
         EXPECT_CALL(*fSocketMock, read(NotNull(), 8U))
-            .WillOnce(Invoke(
-                ReadBytesFrom(::estd::slice<uint8_t const>::from_pointer(validRequest, 8U))));
+            .WillOnce(
+                Invoke(ReadBytesFrom(::etl::span<uint8_t const>(validRequest).subspan(0U, 8U))));
         EXPECT_CALL(*fSocketMock, read(NotNull(), 19U))
-            .WillOnce(Invoke(
-                ReadBytesFrom(::estd::slice<uint8_t const>::from_pointer(validRequest + 8, 19U))));
+            .WillOnce(
+                Invoke(ReadBytesFrom(::etl::span<uint8_t const>(validRequest).subspan(8U, 19U))));
         EXPECT_CALL(*fSocketMock, read(0, 13U)).WillOnce(Return(13U));
         EXPECT_CALL(fVehicleAnnouncementListenerMock, vehicleAnnouncementReceived(0x3456, _, _));
         fSocketMock->getDataListener()->dataReceived(
@@ -1285,7 +1285,7 @@ void DoIpServerVehicleIdentificationSocketHandlerTest::tick(uint32_t epochTime)
 void DoIpServerVehicleIdentificationSocketHandlerTest::receiveRequest(
     ::ip::NetworkInterfaceConfig& config,
     ::ip::IPEndpoint& remoteEndpoint,
-    ::estd::slice<uint8_t const> const& request,
+    ::etl::span<uint8_t const> const& request,
     uint32_t epochTime,
     Sequence* seq)
 {
@@ -1298,13 +1298,13 @@ void DoIpServerVehicleIdentificationSocketHandlerTest::receiveRequest(
     }
     EXPECT_CALL(*fSocketMock, read(NotNull(), 8))
         .InSequence(*seq)
-        .WillOnce(Invoke(ReadBytesFrom(request.subslice(8))));
+        .WillOnce(Invoke(ReadBytesFrom(request.first(8))));
     // payload
     if (request.size() > 8)
     {
         EXPECT_CALL(*fSocketMock, read(NotNull(), request.size() - 8))
             .InSequence(*seq)
-            .WillOnce(Invoke(ReadBytesFrom(request.offset(8))));
+            .WillOnce(Invoke(ReadBytesFrom(request.subspan(8))));
     }
     fSocketMock->getDataListener()->dataReceived(
         *fSocketMock,
@@ -1317,17 +1317,16 @@ void DoIpServerVehicleIdentificationSocketHandlerTest::receiveRequest(
 void DoIpServerVehicleIdentificationSocketHandlerTest::requestInvalid(
     ::ip::NetworkInterfaceConfig& config,
     ::ip::IPEndpoint& remoteEndpoint,
-    ::estd::slice<uint8_t const> const& request)
+    ::etl::span<uint8_t const> const& request)
 {
     EXPECT_CALL(*fSocketMock, getLocalPort()).WillOnce(Return(DoIpConstants::Ports::UDP_DISCOVERY));
     // header
-    EXPECT_CALL(*fSocketMock, read(NotNull(), 8))
-        .WillOnce(Invoke(ReadBytesFrom(request.subslice(8))));
+    EXPECT_CALL(*fSocketMock, read(NotNull(), 8)).WillOnce(Invoke(ReadBytesFrom(request.first(8))));
     // payload
     if (request.size() > 8)
     {
         EXPECT_CALL(*fSocketMock, read(NotNull(), request.size() - 8))
-            .WillOnce(Invoke(ReadBytesFrom(request.offset(8))));
+            .WillOnce(Invoke(ReadBytesFrom(request.subspan(8))));
     }
     expectNoResponse(remoteEndpoint);
     fSocketMock->getDataListener()->dataReceived(
@@ -1380,7 +1379,7 @@ TEST_F(DoIpServerVehicleIdentificationSocketHandlerTest, TestOemRequests)
     EXPECT_CALL(*fSocketMock, getLocalPort()).WillOnce(Return(DoIpConstants::Ports::UDP_DISCOVERY));
     // the payload will be discarded
     EXPECT_CALL(*fSocketMock, read(NotNull(), 8))
-        .WillOnce(Invoke(ReadBytesFrom(::estd::slice<uint8_t const, 8>(request))));
+        .WillOnce(Invoke(ReadBytesFrom(::etl::span<uint8_t const>(request).first(8))));
     fSocketMock->getDataListener()->dataReceived(
         *fSocketMock,
         remoteEndpoint.getAddress(),
@@ -1429,7 +1428,7 @@ TEST_F(DoIpServerVehicleIdentificationSocketHandlerTest, TestOemRequests)
     EXPECT_CALL(*fSocketMock, getLocalPort()).WillOnce(Return(DoIpConstants::Ports::UDP_DISCOVERY));
     // the payload will be discarded
     EXPECT_CALL(*fSocketMock, read(NotNull(), 8))
-        .WillOnce(Invoke(ReadBytesFrom(::estd::slice<uint8_t const, 8>(requestWithPayload))));
+        .WillOnce(Invoke(ReadBytesFrom(::etl::span<uint8_t const>(requestWithPayload).first(8))));
     fSocketMock->getDataListener()->dataReceived(
         *fSocketMock,
         remoteEndpoint.getAddress(),

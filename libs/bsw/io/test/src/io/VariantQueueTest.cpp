@@ -177,8 +177,7 @@ TEST(VariantQueue, manually_allocate_payload)
 
     auto a_payload = abc_queue::alloc_payload(writer, A{{9, 8, 7, 6, 5}}, sizeof(payload));
     ASSERT_NE(0, a_payload.size());
-    ::etl::copy<uint8_t const, 3, uint8_t, 3>(
-        etl::span<uint8_t const>(payload), etl::span<uint8_t>(a_payload));
+    ::etl::copy(etl::span<uint8_t const>(payload), etl::span<uint8_t>(a_payload));
     writer.commit();
 
     ASSERT_EQ(15U, abc_queue::alloc_payload(writer, C{}, 15).size());

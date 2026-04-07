@@ -130,10 +130,10 @@ struct DoIpServerTransportLayerTest : Test
 
     void setupReadMessage(Sequence seq, uint8_t const* diagnosticMessage, size_t length);
 
-    ::estd::slice<uint8_t> allocateBuffer(size_t size)
+    ::etl::span<uint8_t> allocateBuffer(size_t size)
     {
-        ::estd::slice<uint8_t> buffer = fPersistentBuffer.subslice(size);
-        fPersistentBuffer             = fPersistentBuffer.offset(size);
+        ::etl::span<uint8_t> buffer = fPersistentBuffer.first(size);
+        fPersistentBuffer           = fPersistentBuffer.subspan(size);
         return buffer;
     }
 
@@ -163,7 +163,7 @@ struct DoIpServerTransportLayerTest : Test
         block_pool<4, DoIpServerTransportMessageHandler::MIN_PROTOCOL_SENDJOB_SIZE>
             fProtocolSendJobBlockPool;
     uint8_t fBuffer[200];
-    ::estd::slice<uint8_t> fPersistentBuffer;
+    ::etl::span<uint8_t> fPersistentBuffer;
     ::ip::IPEndpoint fLocalEndpoint1;
     ::ip::IPEndpoint fLocalEndpoint2;
     ::ip::IPEndpoint fLocalEndpoint3;
@@ -748,12 +748,12 @@ TEST_F(DoIpServerTransportLayerTest, TestReceiveMessage)
     EXPECT_CALL(fSocketMock1, send(Slice(NotNull(), 8U)))
         .InSequence(seq)
         .WillOnce(Invoke(WriteBytesTo(
-            ::estd::make_slice(diagnosticAck).subslice(8),
+            ::etl::span<uint8_t>(diagnosticAck).subspan(0, 8),
             ::tcp::AbstractSocket::ErrorCode::SOCKET_ERR_OK)));
     EXPECT_CALL(fSocketMock1, send(Slice(NotNull(), 8U)))
         .InSequence(seq)
         .WillOnce(Invoke(WriteBytesTo(
-            ::estd::make_slice(diagnosticAck).offset(8).subslice(8),
+            ::etl::span<uint8_t>(diagnosticAck).subspan(8, 8),
             ::tcp::AbstractSocket::ErrorCode::SOCKET_ERR_OK)));
     EXPECT_CALL(fSocketMock1, flush())
         .InSequence(seq)
@@ -866,11 +866,11 @@ TEST_F(DoIpServerTransportLayerTest, TestReceiveMessageFollowedByInvalidTargetAd
             InSequence s;
             EXPECT_CALL(fSocketMock1, send(Slice(NotNull(), 8U)))
                 .WillOnce(Invoke(WriteBytesTo(
-                    ::estd::slice<uint8_t>::from_pointer(diagnosticAck, 8),
+                    ::etl::span<uint8_t>(diagnosticAck).subspan(0, 8),
                     ::tcp::AbstractSocket::ErrorCode::SOCKET_ERR_OK)));
             EXPECT_CALL(fSocketMock1, send(Slice(NotNull(), 8U)))
                 .WillOnce(Invoke(WriteBytesTo(
-                    ::estd::slice<uint8_t>::from_pointer(diagnosticAck + 8, 8),
+                    ::etl::span<uint8_t>(diagnosticAck).subspan(8, 8),
                     ::tcp::AbstractSocket::ErrorCode::SOCKET_ERR_OK)));
         }
         EXPECT_CALL(fSocketMock1, flush())
@@ -940,12 +940,12 @@ TEST_F(DoIpServerTransportLayerTest, TestReceiveMessageFollowedByInvalidTargetAd
         uint8_t diagnosticNack[18];
         EXPECT_CALL(fSocketMock1, send(Slice(NotNull(), 8U)))
             .WillOnce(Invoke(WriteBytesTo(
-                ::estd::slice<uint8_t>::from_pointer(diagnosticNack, 8),
+                ::etl::span<uint8_t>(diagnosticNack).subspan(0, 8),
                 ::tcp::AbstractSocket::ErrorCode::SOCKET_ERR_OK)));
 
         EXPECT_CALL(fSocketMock1, send(Slice(NotNull(), 10U)))
             .WillOnce(Invoke(WriteBytesTo(
-                ::estd::slice<uint8_t>::from_pointer(diagnosticNack + 8, 10),
+                ::etl::span<uint8_t>(diagnosticNack).subspan(8, 10),
                 ::tcp::AbstractSocket::ErrorCode::SOCKET_ERR_OK)));
         EXPECT_CALL(fSocketMock1, flush())
             .WillOnce(Return(::tcp::AbstractSocket::ErrorCode::SOCKET_ERR_OK));
@@ -1018,12 +1018,12 @@ TEST_F(DoIpServerTransportLayerTest, TestReceiveMessageFollowedByInvalidTargetAd
         EXPECT_CALL(fSocketMock1, send(Slice(NotNull(), 8U)))
             .InSequence(seq)
             .WillOnce(Invoke(WriteBytesTo(
-                ::estd::slice<uint8_t>::from_pointer(diagnosticAck, 8),
+                ::etl::span<uint8_t>(diagnosticAck).subspan(0, 8),
                 ::tcp::AbstractSocket::ErrorCode::SOCKET_ERR_OK)));
         EXPECT_CALL(fSocketMock1, send(Slice(NotNull(), 8U)))
             .InSequence(seq)
             .WillOnce(Invoke(WriteBytesTo(
-                ::estd::make_slice(diagnosticAck).offset(8).subslice(8),
+                ::etl::span<uint8_t>(diagnosticAck).subspan(8, 8),
                 ::tcp::AbstractSocket::ErrorCode::SOCKET_ERR_OK)));
         EXPECT_CALL(fSocketMock1, flush())
             .InSequence(seq)
@@ -1173,93 +1173,81 @@ TEST_F(
         };
 
         // handle first valid message
-        uint8_t const* messagePtr = diagnosticMessage;
+        auto message = ::etl::span<uint8_t const>(diagnosticMessage);
 
         Sequence seq;
 
         // read header
         EXPECT_CALL(fSocketMock1, read(NotNull(), 8U))
             .InSequence(seq)
-            .WillOnce(
-                Invoke(ReadBytesFrom(::estd::slice<uint8_t const>::from_pointer(messagePtr, 8))));
-        messagePtr += 8;
+            .WillOnce(Invoke(ReadBytesFrom(message.first(8))));
+        message.advance(8);
         // read source/target IDs
         EXPECT_CALL(fSocketMock1, read(NotNull(), 4U))
             .InSequence(seq)
-            .WillOnce(
-                Invoke(ReadBytesFrom(::estd::slice<uint8_t const>::from_pointer(messagePtr, 4))));
-        messagePtr += 4;
+            .WillOnce(Invoke(ReadBytesFrom(message.first(4))));
+        message.advance(4);
         // read payload (peek of size 3 bytes)
         EXPECT_CALL(fSocketMock1, read(NotNull(), 3U))
             .InSequence(seq)
-            .WillOnce(
-                Invoke(ReadBytesFrom(::estd::slice<uint8_t const>::from_pointer(messagePtr, 3U))));
-        messagePtr += 3;
+            .WillOnce(Invoke(ReadBytesFrom(message.first(3U))));
+        message.advance(3);
 
         // Now handle invalid target ID
         // read header
         EXPECT_CALL(fSocketMock1, read(NotNull(), 8U))
             .InSequence(seq)
-            .WillOnce(
-                Invoke(ReadBytesFrom(::estd::slice<uint8_t const>::from_pointer(messagePtr, 8))));
-        messagePtr += 8;
+            .WillOnce(Invoke(ReadBytesFrom(message.first(8))));
+        message.advance(8);
         // read source/target IDs
         EXPECT_CALL(fSocketMock1, read(NotNull(), 4U))
             .InSequence(seq)
-            .WillOnce(
-                Invoke(ReadBytesFrom(::estd::slice<uint8_t const>::from_pointer(messagePtr, 4))));
-        messagePtr += 4;
+            .WillOnce(Invoke(ReadBytesFrom(message.first(4))));
+        message.advance(4);
         // read payload (peek of size 4 bytes)
         EXPECT_CALL(fSocketMock1, read(NotNull(), 4U))
             .InSequence(seq)
-            .WillOnce(
-                Invoke(ReadBytesFrom(::estd::slice<uint8_t const>::from_pointer(messagePtr, 4U))));
-        messagePtr += 4;
+            .WillOnce(Invoke(ReadBytesFrom(message.first(4U))));
+        message.advance(4);
         // // skip rest of payload
         // EXPECT_CALL(fSocketMock1, read(nullptr, 5U)).InSequence(seq).WillOnce(Return(5U));
-        // messagePtr += 5;
+        // message.advance(5);
 
         // Now handle invalid target ID
         // read header
         EXPECT_CALL(fSocketMock1, read(NotNull(), 8U))
             .InSequence(seq)
-            .WillOnce(
-                Invoke(ReadBytesFrom(::estd::slice<uint8_t const>::from_pointer(messagePtr, 8))));
-        messagePtr += 8;
+            .WillOnce(Invoke(ReadBytesFrom(message.first(8))));
+        message.advance(8);
         // read source/target IDs
         EXPECT_CALL(fSocketMock1, read(NotNull(), 4U))
             .InSequence(seq)
-            .WillOnce(
-                Invoke(ReadBytesFrom(::estd::slice<uint8_t const>::from_pointer(messagePtr, 4))));
-        messagePtr += 4;
+            .WillOnce(Invoke(ReadBytesFrom(message.first(4))));
+        message.advance(4);
         // read the full peek of 5 bytes (4 bytes for peek + 1 byte for possible nack)
         EXPECT_CALL(fSocketMock1, read(NotNull(), 5U))
             .InSequence(seq)
-            .WillOnce(
-                Invoke(ReadBytesFrom(::estd::slice<uint8_t const>::from_pointer(messagePtr, 5U))));
-        messagePtr += 5;
+            .WillOnce(Invoke(ReadBytesFrom(message.first(5U))));
+        message.advance(5);
         // skip rest of payload
         EXPECT_CALL(fSocketMock1, read(nullptr, 4U)).InSequence(seq).WillOnce(Return(4U));
-        messagePtr += 4;
+        message.advance(4);
 
         // now valid message
         // read header
         EXPECT_CALL(fSocketMock1, read(NotNull(), 8U))
             .InSequence(seq)
-            .WillOnce(
-                Invoke(ReadBytesFrom(::estd::slice<uint8_t const>::from_pointer(messagePtr, 8))));
-        messagePtr += 8;
+            .WillOnce(Invoke(ReadBytesFrom(message.first(8))));
+        message.advance(8);
         // read source/target IDs
         EXPECT_CALL(fSocketMock1, read(NotNull(), 4U))
             .InSequence(seq)
-            .WillOnce(
-                Invoke(ReadBytesFrom(::estd::slice<uint8_t const>::from_pointer(messagePtr, 4))));
-        messagePtr += 4;
+            .WillOnce(Invoke(ReadBytesFrom(message.first(4))));
+        message.advance(4);
         // read payload (full peek of 4 bytes)
         EXPECT_CALL(fSocketMock1, read(NotNull(), 4U))
             .InSequence(seq)
-            .WillOnce(
-                Invoke(ReadBytesFrom(::estd::slice<uint8_t const>::from_pointer(messagePtr, 4U))));
+            .WillOnce(Invoke(ReadBytesFrom(message.first(4U))));
 
         EXPECT_CALL(
             fMessageProvidingListenerMock, getTransportMessage(fBusId, 0x1234, 0x1519, 3, _, _))
@@ -1300,79 +1288,72 @@ TEST_F(
                     ITransportMessageListener::ReceiveResult::RECEIVED_NO_ERROR))));
 
         // expect diagnostic ack
-        uint8_t diagnosticAckValid[16];
-        uint8_t* targetMessagePtr = diagnosticAckValid;
+        uint8_t diagnosticAckValidRaw[16];
+        auto diagnosticAckValid = ::etl::span<uint8_t>(diagnosticAckValidRaw);
 
         EXPECT_CALL(fSocketMock1, send(Slice(NotNull(), 8U)))
             .InSequence(seq)
             .WillOnce(Invoke(WriteBytesTo(
-                ::estd::slice<uint8_t>::from_pointer(targetMessagePtr, 8),
-                ::tcp::AbstractSocket::ErrorCode::SOCKET_ERR_OK)));
-        targetMessagePtr += 8;
+                diagnosticAckValid.first(8), ::tcp::AbstractSocket::ErrorCode::SOCKET_ERR_OK)));
+        diagnosticAckValid.advance(8);
         EXPECT_CALL(fSocketMock1, send(Slice(NotNull(), 8U)))
             .InSequence(seq)
             .WillOnce(Invoke(WriteBytesTo(
-                ::estd::slice<uint8_t>::from_pointer(targetMessagePtr, 8),
-                ::tcp::AbstractSocket::ErrorCode::SOCKET_ERR_OK)));
+                diagnosticAckValid.first(8), ::tcp::AbstractSocket::ErrorCode::SOCKET_ERR_OK)));
         EXPECT_CALL(fSocketMock1, flush())
             .InSequence(seq)
             .WillRepeatedly(Return(::tcp::AbstractSocket::ErrorCode::SOCKET_ERR_OK));
 
         // expect invalid ACK
-        uint8_t diagnosticAckInvalid[17];
-        targetMessagePtr = diagnosticAckInvalid;
+        uint8_t diagnosticAckInvalidRaw[17];
+        auto diagnosticAckInvalid = ::etl::span<uint8_t>(diagnosticAckInvalidRaw);
 
         EXPECT_CALL(fSocketMock1, send(Slice(NotNull(), 8U)))
             .InSequence(seq)
             .WillOnce(Invoke(WriteBytesTo(
-                ::estd::slice<uint8_t>::from_pointer(targetMessagePtr, 8),
-                ::tcp::AbstractSocket::ErrorCode::SOCKET_ERR_OK)));
-        targetMessagePtr += 8;
+                diagnosticAckInvalid.first(8), ::tcp::AbstractSocket::ErrorCode::SOCKET_ERR_OK)));
+        diagnosticAckInvalid.advance(8);
 
         EXPECT_CALL(fSocketMock1, send(Slice(NotNull(), 9U)))
             .InSequence(seq)
             .WillOnce(Invoke(WriteBytesTo(
-                ::estd::slice<uint8_t>::from_pointer(targetMessagePtr, 9),
-                ::tcp::AbstractSocket::ErrorCode::SOCKET_ERR_OK)));
+                diagnosticAckInvalid.first(9), ::tcp::AbstractSocket::ErrorCode::SOCKET_ERR_OK)));
         EXPECT_CALL(fSocketMock1, flush())
             .InSequence(seq)
             .WillRepeatedly(Return(::tcp::AbstractSocket::ErrorCode::SOCKET_ERR_OK));
 
         // expect invalid ACK
-        uint8_t diagnosticNackInvalid2[18];
-        targetMessagePtr = diagnosticNackInvalid2;
+        uint8_t diagnosticNackInvalid2Raw[18];
+        auto diagnosticNackInvalid2 = ::etl::span<uint8_t>(diagnosticNackInvalid2Raw);
 
         EXPECT_CALL(fSocketMock1, send(Slice(NotNull(), 8U)))
             .InSequence(seq)
             .WillOnce(Invoke(WriteBytesTo(
-                ::estd::slice<uint8_t>::from_pointer(targetMessagePtr, 8),
-                ::tcp::AbstractSocket::ErrorCode::SOCKET_ERR_OK)));
-        targetMessagePtr += 8;
+                diagnosticNackInvalid2.first(8), ::tcp::AbstractSocket::ErrorCode::SOCKET_ERR_OK)));
+        diagnosticNackInvalid2.advance(8);
 
         EXPECT_CALL(fSocketMock1, send(Slice(NotNull(), 10U)))
             .InSequence(seq)
             .WillOnce(Invoke(WriteBytesTo(
-                ::estd::slice<uint8_t>::from_pointer(targetMessagePtr, 10),
+                diagnosticNackInvalid2.first(10),
                 ::tcp::AbstractSocket::ErrorCode::SOCKET_ERR_OK)));
         EXPECT_CALL(fSocketMock1, flush())
             .InSequence(seq)
             .WillRepeatedly(Return(::tcp::AbstractSocket::ErrorCode::SOCKET_ERR_OK));
 
         // expect valid ACK
-        uint8_t diagnosticAckValid2[17];
-        targetMessagePtr = diagnosticAckValid2;
+        uint8_t diagnosticAckValid2Raw[17];
+        auto diagnosticAckValid2 = ::etl::span<uint8_t>(diagnosticAckValid2Raw);
 
         EXPECT_CALL(fSocketMock1, send(Slice(NotNull(), 8U)))
             .InSequence(seq)
             .WillOnce(Invoke(WriteBytesTo(
-                ::estd::slice<uint8_t>::from_pointer(targetMessagePtr, 8),
-                ::tcp::AbstractSocket::ErrorCode::SOCKET_ERR_OK)));
-        targetMessagePtr += 8;
+                diagnosticAckValid2.first(8), ::tcp::AbstractSocket::ErrorCode::SOCKET_ERR_OK)));
+        diagnosticAckValid2.advance(8);
         EXPECT_CALL(fSocketMock1, send(Slice(NotNull(), 9U)))
             .InSequence(seq)
             .WillOnce(Invoke(WriteBytesTo(
-                ::estd::slice<uint8_t>::from_pointer(targetMessagePtr, 9),
-                ::tcp::AbstractSocket::ErrorCode::SOCKET_ERR_OK)));
+                diagnosticAckValid2.first(9), ::tcp::AbstractSocket::ErrorCode::SOCKET_ERR_OK)));
         EXPECT_CALL(fSocketMock1, flush())
             .InSequence(seq)
             .WillRepeatedly(Return(::tcp::AbstractSocket::ErrorCode::SOCKET_ERR_OK));
@@ -1459,22 +1440,22 @@ TEST_F(
             0x60,
         };
         EXPECT_THAT(
-            diagnosticAckValid,
+            diagnosticAckValidRaw,
             ::testing::ElementsAreArray(
                 expectedDiagnosticAckValid, sizeof(expectedDiagnosticAckValid)));
 
         EXPECT_THAT(
-            diagnosticAckInvalid,
+            diagnosticAckInvalidRaw,
             ::testing::ElementsAreArray(
                 expectedDiagnosticAckInvalid, sizeof(expectedDiagnosticAckInvalid)));
 
         EXPECT_THAT(
-            diagnosticNackInvalid2,
+            diagnosticNackInvalid2Raw,
             ::testing::ElementsAreArray(
                 expectedDiagnosticNackInvalid2, sizeof(expectedDiagnosticNackInvalid2)));
 
         EXPECT_THAT(
-            diagnosticAckValid2,
+            diagnosticAckValid2Raw,
             ::testing::ElementsAreArray(
                 expectedDiagnosticAckValid2, sizeof(expectedDiagnosticAckValid2)));
 
@@ -2012,14 +1993,14 @@ TEST_F(DoIpServerTransportLayerTest, TestAliveCheckResponseWithoutAliveCheck)
 void DoIpServerTransportLayerTest::setupReadMessage(
     Sequence seq, uint8_t const* diagnosticMessage, size_t length)
 {
-    auto diagMessage = ::estd::slice<uint8_t const>::from_pointer(diagnosticMessage, length);
+    auto diagMessage = ::etl::span<uint8_t const>(diagnosticMessage, length);
     EXPECT_CALL(fSocketMock1, read(NotNull(), 8U))
         .InSequence(seq)
-        .WillOnce(Invoke(ReadBytesFrom(diagMessage.subslice(8U))));
+        .WillOnce(Invoke(ReadBytesFrom(diagMessage.first(8U))));
     diagMessage.advance(8U);
     EXPECT_CALL(fSocketMock1, read(NotNull(), 4U))
         .InSequence(seq)
-        .WillOnce(Invoke(ReadBytesFrom(diagMessage.subslice(4U))));
+        .WillOnce(Invoke(ReadBytesFrom(diagMessage.first(4U))));
     diagMessage.advance(4U);
     if (diagMessage.size() == 0)
     {
@@ -2029,14 +2010,14 @@ void DoIpServerTransportLayerTest::setupReadMessage(
     size_t peekSize      = std::min(remainingSize, static_cast<size_t>(5U));
     EXPECT_CALL(fSocketMock1, read(NotNull(), peekSize))
         .InSequence(seq)
-        .WillOnce(Invoke(ReadBytesFrom(diagMessage.subslice(peekSize))));
+        .WillOnce(Invoke(ReadBytesFrom(diagMessage.first(peekSize))));
     if (remainingSize > peekSize)
     {
         diagMessage.advance(peekSize);
         remainingSize -= peekSize;
         EXPECT_CALL(fSocketMock1, read(NotNull(), remainingSize))
             .InSequence(seq)
-            .WillOnce(Invoke(ReadBytesFrom(diagMessage.subslice(remainingSize))));
+            .WillOnce(Invoke(ReadBytesFrom(diagMessage.first(remainingSize))));
     }
 }
 
@@ -2063,16 +2044,16 @@ void DoIpServerTransportLayerTest::prepareSocketGroup(
 ::estd::slice<uint8_t> DoIpServerTransportLayerTest::prepareRoutingActivationResponse(
     ::tcp::AbstractSocketMock& socketMock)
 {
-    ::estd::slice<uint8_t> responseBuffer = allocateBuffer(17U);
+    ::etl::span<uint8_t> responseBuffer = allocateBuffer(17U);
     Sequence seq;
     EXPECT_CALL(socketMock, send(Slice(NotNull(), 8U)))
         .InSequence(seq)
         .WillOnce(Invoke(WriteBytesTo(
-            responseBuffer.subslice(8), ::tcp::AbstractSocket::ErrorCode::SOCKET_ERR_OK)));
+            responseBuffer.first(8), ::tcp::AbstractSocket::ErrorCode::SOCKET_ERR_OK)));
     EXPECT_CALL(socketMock, send(Slice(NotNull(), responseBuffer.size() - 8)))
         .InSequence(seq)
         .WillOnce(Invoke(WriteBytesTo(
-            responseBuffer.offset(8), ::tcp::AbstractSocket::ErrorCode::SOCKET_ERR_OK)));
+            responseBuffer.subspan(8), ::tcp::AbstractSocket::ErrorCode::SOCKET_ERR_OK)));
     EXPECT_CALL(socketMock, flush())
         .InSequence(seq)
         .WillOnce(Return(::tcp::AbstractSocket::ErrorCode::SOCKET_ERR_OK));
@@ -2102,16 +2083,16 @@ void DoIpServerTransportLayerTest::expectRoutingActivationRequest(
            0x00,
            0x00,
            0x00};
-    ::estd::slice<uint8_t> request = allocateBuffer(sizeof(requestData));
-    ::estd::memory::copy(request, requestData);
+
+    auto request = ::etl::span<uint8_t const>(requestData);
 
     Sequence seq;
     EXPECT_CALL(socketMock, read(NotNull(), 8U))
         .InSequence(seq)
-        .WillOnce(Invoke(ReadBytesFrom(request.subslice(8))));
+        .WillOnce(Invoke(ReadBytesFrom(request.first(8))));
     EXPECT_CALL(socketMock, read(NotNull(), 7U))
         .InSequence(seq)
-        .WillOnce(Invoke(ReadBytesFrom(request.offset(8).subslice(7))));
+        .WillOnce(Invoke(ReadBytesFrom(request.subspan(8, 7))));
     EXPECT_CALL(socketMock, getLocalPort()).WillRepeatedly(Return(localEndpoint.getPort()));
     EXPECT_CALL(socketMock, getLocalIPAddress()).WillRepeatedly(Return(localEndpoint.getAddress()));
     EXPECT_CALL(socketMock, getRemotePort()).WillRepeatedly(Return(remoteEndpoint.getPort()));
@@ -2132,8 +2113,8 @@ void DoIpServerTransportLayerTest::endRoutingActivationResponse(
 
 void DoIpServerTransportLayerTest::prepareAliveCheckRequest(::tcp::AbstractSocketMock& socketMock)
 {
-    uint8_t const requestData[]    = {0x02, 0xfd, 0x00, 0x07, 0x00, 0x00, 0x00, 0x00};
-    ::estd::slice<uint8_t> request = allocateBuffer(sizeof(requestData));
+    uint8_t const requestData[]  = {0x02, 0xfd, 0x00, 0x07, 0x00, 0x00, 0x00, 0x00};
+    ::etl::span<uint8_t> request = allocateBuffer(sizeof(requestData));
     Sequence seq;
     EXPECT_CALL(socketMock, send(Slice(NotNull(), Eq(8U))))
         .InSequence(seq)
@@ -2157,16 +2138,16 @@ void DoIpServerTransportLayerTest::expectAliveCheckResponse(
            0x02,
            static_cast<uint8_t>((sourceAddress >> 8) & 0xff),
            static_cast<uint8_t>(sourceAddress & 0xff)};
-    ::estd::slice<uint8_t> response = allocateBuffer(sizeof(responseData));
-    ::estd::memory::copy(response, responseData);
+
+    auto response = ::etl::span<uint8_t const>(responseData);
 
     Sequence seq;
     EXPECT_CALL(socketMock, read(NotNull(), 8U))
         .InSequence(seq)
-        .WillOnce(Invoke(ReadBytesFrom(response.subslice(8))));
+        .WillOnce(Invoke(ReadBytesFrom(response.first(8))));
     EXPECT_CALL(socketMock, read(NotNull(), 2U))
         .InSequence(seq)
-        .WillOnce(Invoke(ReadBytesFrom(response.offset(8))));
+        .WillOnce(Invoke(ReadBytesFrom(response.subspan(8))));
 
     socketMock.getDataListener()->dataReceived(response.size());
 

@@ -51,8 +51,7 @@ DoIpExpectReadHelper& DoIpExpectReadHelper::read(uint32_t size)
     EXPECT_TRUE(size <= _unreadSize);
     EXPECT_CALL(_socketMock, read(NotNull(), size))
         .InSequence(_seq)
-        .WillOnce(
-            Invoke(ReadBytesFrom(::estd::slice<uint8_t const>::from_pointer(_message, size))));
+        .WillOnce(Invoke(ReadBytesFrom(::etl::span<uint8_t const>(_message, size))));
     _message += size;
     _unreadSize -= size;
     return *this;
