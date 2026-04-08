@@ -1,0 +1,19 @@
+# PWM output driver abstraction.
+
+cc_library(
+    name = "bspOutputPwm",
+    srcs = [
+        "src/outputPwm/OutputPwm.cpp",
+        "src/outputPwm/OutputPwmTester.cpp",
+    ],
+    hdrs = glob(["include/**"]),
+    includes = ["include"],
+    tags = ["manual"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//libs/3rdparty/etl",
+        "//libs/bsp/bspDynamicClient",
+        "//libs/bsw/io",
+        "//libs/bsw/util",
+    ],
+)

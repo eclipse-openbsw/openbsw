@@ -1,0 +1,37 @@
+# FreeRTOS kernel - portable real-time operating system.
+#
+# The core kernel sources are platform-independent. Platform-specific ports
+# (freeRtosPort, freeRtosPortImpl) are defined in platforms/.
+
+cc_library(
+    name = "freeRtos",
+    srcs = [
+        "src/croutine.c",
+        "src/event_groups.c",
+        "src/list.c",
+        "src/queue.c",
+        "src/stream_buffer.c",
+        "src/tasks.c",
+        "src/timers.c",
+    ],
+    hdrs = glob(["include/**/*.h"]),
+    copts = ["-Wno-unused-variable"],
+    includes = ["include"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//bazel/app_config:freertos_port",
+        "//libs/bsw/asyncFreeRtos:freeRtosConfiguration",
+        "//libs/bsw/platform",
+    ],
+)
+
+# Mock target for unit testing
+cc_library(
+    name = "freeRtosMock",
+    hdrs = glob(["mock/include/**/*.h"]),
+    includes = ["mock/include"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//libs/3rdparty/googletest:gtest",
+    ],
+)

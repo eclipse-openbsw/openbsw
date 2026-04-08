@@ -1,0 +1,37 @@
+# Persistent storage abstraction.
+
+cc_library(
+    name = "storage",
+    srcs = [
+        "src/storage/EepStorage.cpp",
+        "src/storage/MappingStorage.cpp",
+        "src/storage/QueuingStorage.cpp",
+    ] + select({
+        "//bazel/configs:unit_test": [],
+        "//conditions:default": ["src/storage/StorageTester.cpp"],
+    }),
+    hdrs = glob(["include/**"]),
+    includes = ["include"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//libs/3rdparty/etl",
+        "//libs/bsw/async",
+        "//libs/bsw/bsp",
+        "//libs/bsw/util",
+    ] + select({
+        "//bazel/configs:freertos": ["//libs/bsw/asyncFreeRtos:asyncFreeRtosImpl"],
+        "//bazel/configs:threadx": ["//libs/bsw/asyncThreadX:asyncThreadXImpl"],
+    }),
+)
+
+# Mock target for unit testing
+cc_library(
+    name = "storageMock",
+    hdrs = glob(["mock/include/**"]),
+    includes = ["mock/include"],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":storage",
+        "//libs/3rdparty/googletest:gtest",
+    ],
+)

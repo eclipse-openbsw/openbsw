@@ -1,0 +1,184 @@
+# Configurable dependency aliases for OpenBSW.
+#
+# Libraries that depend on application-provided configuration headers use
+# these aliases. The actual target is selected based on the executable type
+# (referenceApp vs unitTest) and RTOS choice.
+
+package(default_visibility = ["//visibility:public"])
+
+# --- Application configuration headers ---
+
+alias(
+    name = "configuration",
+    actual = select({
+        "//bazel/configs:unit_test": "//executables/unitTest/configuration",
+        "//conditions:default": "//executables/referenceApp/configuration",
+    }),
+)
+
+alias(
+    name = "common_impl",
+    actual = select({
+        "//bazel/configs:unit_test": "//executables/unitTest/configuration:commonImpl",
+        "//conditions:default": "//executables/referenceApp/configuration:commonImpl",
+    }),
+)
+
+alias(
+    name = "transport_configuration",
+    actual = select({
+        "//bazel/configs:unit_test": "//executables/unitTest/transportConfiguration",
+        "//conditions:default": "//executables/referenceApp/transportConfiguration",
+    }),
+)
+
+alias(
+    name = "uds_configuration",
+    actual = select({
+        "//bazel/configs:unit_test": "//executables/unitTest/udsConfiguration",
+        "//conditions:default": "//executables/referenceApp/udsConfiguration",
+    }),
+)
+
+alias(
+    name = "async_binding",
+    actual = select({
+        "//bazel/configs:unit_test": "//executables/unitTest:async_binding",
+        "//conditions:default": "//executables/referenceApp/asyncBinding",
+    }),
+)
+
+# RTOS core configuration (task counts, ISR groups, tick interval).
+# Uses the referenceApp config for all modes — unit tests don't override these
+# values (CMake unit-test mode simply never compiles FreeRTOS; Bazel builds
+# everything so it needs valid RTOS config).
+alias(
+    name = "async_core_configuration",
+    actual = "//executables/referenceApp/asyncCoreConfiguration",
+)
+
+alias(
+    name = "bsp_configuration",
+    actual = select({
+        "//bazel/configs:unit_test": "//executables/unitTest/bsp/bspConfiguration",
+        "//conditions:default": "//executables/referenceApp:bsp_configuration",
+    }),
+)
+
+alias(
+    name = "lwip_configuration",
+    actual = select({
+        "//bazel/configs:unit_test": "//executables/unitTest/lwipConfiguration",
+        "//conditions:default": "//executables/referenceApp/lwipConfiguration",
+    }),
+)
+
+# --- ETL profile (platform/app-specific ETL configuration header) ---
+
+alias(
+    name = "etl_profile",
+    actual = select({
+        "//bazel/configs:unit_test": "//executables/unitTest/etl_profile",
+        "//conditions:default": "//executables/referenceApp/etl_profile",
+    }),
+)
+
+# --- RTOS aliases ---
+
+alias(
+    name = "freertos_core_configuration",
+    actual = select({
+        "//bazel/configs:s32k148": "//executables/referenceApp/platforms/s32k148evb:freeRtosCoreConfiguration",
+        "//conditions:default": "//executables/referenceApp/platforms/posix:freeRtosCoreConfiguration",
+    }),
+)
+
+alias(
+    name = "threadx_core_configuration",
+    actual = select({
+        "//bazel/configs:posix": "//executables/referenceApp/platforms/posix:threadXCoreConfiguration",
+        "//bazel/configs:s32k148": "//executables/referenceApp/platforms/s32k148evb:threadXCoreConfiguration",
+    }),
+)
+
+alias(
+    name = "async_platform",
+    actual = select({
+        "//bazel/configs:freertos": "//libs/bsw/asyncFreeRtos",
+        "//bazel/configs:threadx": "//libs/bsw/asyncThreadX",
+    }),
+)
+
+alias(
+    name = "os_rtos",
+    actual = select({
+        "//bazel/configs:freertos": "//libs/3rdparty/freeRtos",
+        "//bazel/configs:threadx": "//libs/3rdparty/threadx:threadX",
+    }),
+)
+
+alias(
+    name = "async_rtos_impl",
+    actual = select({
+        "//bazel/configs:freertos": "//libs/bsw/asyncFreeRtos:asyncFreeRtosImpl",
+        "//bazel/configs:threadx": "//libs/bsw/asyncThreadX:asyncThreadXImpl",
+    }),
+)
+
+# --- Platform-specific BSP aliases ---
+
+alias(
+    name = "bsp_interrupts_impl",
+    actual = select({
+        "//bazel/configs:s32k148": "//platforms/s32k1xx/bsp:bspInterruptsImpl",
+        "//conditions:default": "//platforms/posix/bsp:bspInterruptsImpl",
+    }),
+)
+
+alias(
+    name = "freertos_port",
+    actual = select({
+        "//bazel/configs:posix": "//platforms/posix/3rdparty/freeRtosPosix:freeRtosPosixPort",
+        "//bazel/configs:s32k148": "//platforms/s32k1xx/3rdparty:freeRtosCm4SysTickPort",
+    }),
+)
+
+alias(
+    name = "freertos_port_impl",
+    actual = select({
+        "//bazel/configs:posix": "//platforms/posix/3rdparty/freeRtosPosix",
+        "//bazel/configs:s32k148": "//platforms/s32k1xx/3rdparty:freeRtosCm4SysTick",
+    }),
+)
+
+alias(
+    name = "threadx_port",
+    actual = select({
+        "//bazel/configs:posix": "//platforms/posix/3rdparty/threadx:threadXLinuxPort",
+        "//bazel/configs:s32k148": "//platforms/s32k1xx/3rdparty:threadXCortexM4Port",
+    }),
+)
+
+alias(
+    name = "threadx_port_impl",
+    actual = select({
+        "//bazel/configs:posix": "//platforms/posix/3rdparty/threadx:threadXLinux",
+        "//bazel/configs:s32k148": "//platforms/s32k1xx/3rdparty:threadXCortexM4",
+    }),
+)
+
+alias(
+    name = "etl_impl",
+    actual = select({
+        "//bazel/configs:posix": "//platforms/posix/etlImpl",
+        "//bazel/configs:s32k148": "//platforms/s32k1xx/etlImpl",
+    }),
+)
+
+alias(
+    name = "soc_bsp",
+    actual = select({
+        "//bazel/configs:posix": "//platforms/posix/bsp:socBsp",
+        "//bazel/configs:s32k148": "//platforms/s32k1xx/bsp:socBsp",
+    }),
+)

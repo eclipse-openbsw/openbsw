@@ -1,0 +1,95 @@
+# ARM bare-metal cross-compilation toolchains for Cortex-M4.
+#
+# GCC: arm-gnu-toolchain 14.3 at /opt/arm-gnu-toolchain/
+# Clang: LLVM Embedded Toolchain for Arm 19.1.1 at /opt/llvm-et-arm/
+# (see docker/development/Dockerfile)
+
+load("@rules_cc//cc:defs.bzl", "cc_toolchain", "cc_toolchain_suite")
+load(":arm_none_eabi.bzl", "arm_none_eabi_toolchain_config")
+load(":arm_none_eabi_clang.bzl", "arm_none_eabi_clang_toolchain_config")
+
+package(default_visibility = ["//visibility:public"])
+
+filegroup(name = "empty")
+
+# ===========================
+# ARM GCC toolchain
+# ===========================
+
+arm_none_eabi_toolchain_config(
+    name = "arm_none_eabi_gcc_config",
+)
+
+cc_toolchain(
+    name = "arm_none_eabi_gcc_cc_toolchain",
+    all_files = ":empty",
+    compiler_files = ":empty",
+    dwp_files = ":empty",
+    linker_files = ":empty",
+    objcopy_files = ":empty",
+    strip_files = ":empty",
+    toolchain_config = ":arm_none_eabi_gcc_config",
+)
+
+cc_toolchain_suite(
+    name = "arm_none_eabi_gcc",
+    tags = ["manual"],
+    toolchains = {
+        "armv7e-m": ":arm_none_eabi_gcc_cc_toolchain",
+    },
+)
+
+toolchain(
+    name = "arm_none_eabi_gcc_toolchain",
+    exec_compatible_with = [
+        "@platforms//os:linux",
+        "@platforms//cpu:x86_64",
+    ],
+    target_compatible_with = [
+        "@platforms//os:none",
+        "@platforms//cpu:armv7e-m",
+    ],
+    toolchain = ":arm_none_eabi_gcc_cc_toolchain",
+    toolchain_type = "@rules_cc//cc:toolchain_type",
+)
+
+# ===========================
+# ARM Clang toolchain
+# ===========================
+
+arm_none_eabi_clang_toolchain_config(
+    name = "arm_none_eabi_clang_config",
+)
+
+cc_toolchain(
+    name = "arm_none_eabi_clang_cc_toolchain",
+    all_files = ":empty",
+    compiler_files = ":empty",
+    dwp_files = ":empty",
+    linker_files = ":empty",
+    objcopy_files = ":empty",
+    strip_files = ":empty",
+    toolchain_config = ":arm_none_eabi_clang_config",
+)
+
+cc_toolchain_suite(
+    name = "arm_none_eabi_clang",
+    tags = ["manual"],
+    toolchains = {
+        "armv7e-m": ":arm_none_eabi_clang_cc_toolchain",
+    },
+)
+
+toolchain(
+    name = "arm_none_eabi_clang_toolchain",
+    exec_compatible_with = [
+        "@platforms//os:linux",
+        "@platforms//cpu:x86_64",
+    ],
+    target_compatible_with = [
+        "@platforms//os:none",
+        "@platforms//cpu:armv7e-m",
+    ],
+    toolchain = ":arm_none_eabi_clang_cc_toolchain",
+    toolchain_type = "@rules_cc//cc:toolchain_type",
+)

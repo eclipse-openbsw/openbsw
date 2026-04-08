@@ -1,0 +1,21 @@
+# Output manager - digital output abstraction.
+
+cc_library(
+    name = "bspOutputManager",
+    srcs = [
+        "src/outputManager/Output.cpp",
+        "src/outputManager/OutputTester.cpp",
+    ],
+    hdrs = glob(["include/**"]),
+    includes = ["include"],
+    tags = ["manual"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//bazel/app_config:bsp_configuration",
+        "//libs/3rdparty/etl",
+        "//libs/bsp/bspDynamicClient",
+        "//libs/bsp/bspInterrupts",
+        "//libs/bsw/io",
+        "//libs/bsw/util",
+    ],
+)

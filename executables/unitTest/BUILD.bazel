@@ -1,0 +1,21 @@
+# Unit test executable - configuration targets and mock aliases.
+#
+# Build & run with: bazel test --config=unit-test //...
+
+package(default_visibility = ["//visibility:public"])
+
+# Mock async binding for unit tests.
+# In CMake unit-test mode this is an INTERFACE lib pointing to test/mock/include.
+# Individual cc_test targets pull in the real mock deps they need.
+cc_library(
+    name = "async_binding",
+    hdrs = glob(["common/include/**"]),
+    includes = ["common/include"],
+)
+
+# Mock async core configuration for unit tests
+cc_library(
+    name = "async_core_configuration",
+    hdrs = glob(["common/include/**"]),
+    includes = ["common/include"],
+)

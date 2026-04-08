@@ -1,0 +1,20 @@
+# ThreadX RTOS kernel.
+#
+# Platform-specific ports (threadXPort, threadXPortImpl) are defined in platforms/.
+
+cc_library(
+    name = "threadX",
+    srcs = glob(["common/src/**/*.c"]),
+    hdrs = glob(["common/inc/**/*.h"]),
+    copts = [
+        "-Wno-unused-parameter",
+        "-DTX_INCLUDE_USER_DEFINE_FILE",
+    ],
+    includes = ["common/inc"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//bazel/app_config:threadx_core_configuration",
+        "//bazel/app_config:threadx_port",
+        "//libs/bsw/platform",
+    ],
+)

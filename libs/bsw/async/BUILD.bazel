@@ -1,0 +1,27 @@
+# Async execution framework - header-only interface.
+#
+# Note: async_binding is NOT listed here to avoid a dependency cycle
+# (async -> asyncBinding -> runtime -> async). The application binary
+# must link //bazel/app_config:async_binding directly.
+
+cc_library(
+    name = "async",
+    hdrs = glob(["include/**"]),
+    includes = ["include"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//bazel/app_config:async_platform",
+    ],
+)
+
+# Mock target for unit testing
+cc_library(
+    name = "asyncMock",
+    hdrs = glob(["mock/include/**"]),
+    includes = ["mock/include"],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":async",
+        "//libs/3rdparty/googletest:gtest",
+    ],
+)

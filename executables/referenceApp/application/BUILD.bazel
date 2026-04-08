@@ -1,0 +1,94 @@
+# Reference Application - main executable target.
+#
+# Build with: bazel build --config=posix-freertos //executables/referenceApp/application:app
+
+cc_library(
+    name = "app_hdrs",
+    hdrs = glob(["include/**"]),
+    includes = ["include"],
+    visibility = ["//visibility:private"],
+)
+
+cc_binary(
+    name = "app",
+    srcs = [
+        "src/app/app.cpp",
+        "src/console/console.cpp",
+        "src/logger/logger.cpp",
+        "src/main.cpp",
+        "src/systems/DemoSystem.cpp",
+        "src/systems/RuntimeSystem.cpp",
+        "src/systems/SafetySystem.cpp",
+        "src/systems/SysAdminSystem.cpp",
+    ] + select({
+        "//bazel/configs:posix": [
+            "src/systems/TransportSystem.cpp",
+            "src/systems/UdsSystem.cpp",
+            "src/uds/ReadIdentifierPot.cpp",
+            "src/systems/EthernetSystem.cpp",
+            "src/systems/DoIpServerSystem.cpp",
+            "src/app/CanDemoListener.cpp",
+            "src/systems/DoCanSystem.cpp",
+            "src/systems/StorageSystem.cpp",
+        ],
+        "//conditions:default": [],
+    }),
+    linkopts = select({
+        "//bazel/configs:posix": ["-lpthread"],
+        "//conditions:default": [],
+    }),
+    target_compatible_with = select({
+        "//bazel/configs:unit_test": ["//bazel/configs:referenceapp_only"],
+        "//conditions:default": [],
+    }),
+    visibility = ["//visibility:public"],
+    deps = [
+        ":app_hdrs",
+        "//bazel/app_config:async_binding",
+        "//bazel/app_config:async_rtos_impl",
+        "//bazel/app_config:bsp_configuration",
+        "//bazel/app_config:bsp_interrupts_impl",
+        "//bazel/app_config:common_impl",
+        "//bazel/app_config:configuration",
+        "//bazel/app_config:etl_impl",
+        "//bazel/app_config:os_rtos",
+        "//bazel/app_config:soc_bsp",
+        "//executables/referenceApp/consoleCommands",
+        "//executables/referenceApp/safety:safeLifecycle",
+        "//executables/referenceApp/safety:safeWatchdog",
+        "//libs/3rdparty/etl",
+        "//libs/3rdparty/printf",
+        "//libs/bsw/asyncConsole",
+        "//libs/bsw/lifecycle",
+        "//libs/bsw/logger",
+        "//libs/bsw/loggerIntegration",
+        "//libs/bsw/runtime",
+        "//libs/bsw/stdioConsoleInput",
+        "//libs/bsw/util",
+        "//libs/safety/safeUtils",
+    ] + select({
+        "//bazel/configs:freertos": ["//bazel/app_config:freertos_port_impl"],
+        "//bazel/configs:threadx": ["//bazel/app_config:threadx_port_impl"],
+    }) + select({
+        "//bazel/configs:posix": [
+            "//executables/referenceApp/platforms/posix:main",
+            "//executables/referenceApp/udsConfiguration:udsConfigurationImpl",
+            "//libs/bsw/cpp2can",
+            "//libs/bsw/cpp2ethernet",
+            "//libs/bsw/docan",
+            "//libs/bsw/doip",
+            "//libs/bsw/lwipSocket",
+            "//libs/bsw/storage",
+            "//libs/bsw/transport",
+            "//libs/bsw/transportRouterSimple",
+            "//libs/bsw/uds",
+            "//platforms/posix/bsp:bspMcu",
+            "//platforms/posix/bsp:bspStdio",
+            "//platforms/posix/bsp:bspSystemTime",
+            "//platforms/posix/bsp:bspUart",
+            "//platforms/posix/bsp:socketCanTransceiver",
+            "//platforms/posix/bsp:tapEthernetDriver",
+        ],
+        "//conditions:default": [],
+    }),
+)

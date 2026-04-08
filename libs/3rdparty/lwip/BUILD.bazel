@@ -1,0 +1,40 @@
+# lwIP - Lightweight TCP/IP stack.
+#
+# Sources are organized by the upstream Filelists.cmake structure.
+
+cc_library(
+    name = "lwipcore",
+    srcs = glob(
+        [
+            "src/core/**/*.c",
+            "src/api/**/*.c",
+            "src/netif/**/*.c",
+        ],
+        exclude = [
+            "src/netif/ppp/**",
+        ],
+    ),
+    hdrs = glob([
+        "src/include/**/*.h",
+    ]),
+    copts = ["-Wno-address"],
+    includes = ["src/include"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//bazel/app_config:lwip_configuration",
+    ],
+)
+
+cc_library(
+    name = "lwip_ipv4",
+    srcs = glob(["src/core/ipv4/**/*.c"]),
+    visibility = ["//visibility:public"],
+    deps = [":lwipcore"],
+)
+
+cc_library(
+    name = "lwip_ipv6",
+    srcs = glob(["src/core/ipv6/**/*.c"]),
+    visibility = ["//visibility:public"],
+    deps = [":lwipcore"],
+)

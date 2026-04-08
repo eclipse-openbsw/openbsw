@@ -1,0 +1,25 @@
+# BSP (Board Support Package) abstractions - header-only interfaces.
+
+cc_library(
+    name = "bsp",
+    hdrs = glob(["include/**"]),
+    includes = ["include"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//libs/3rdparty/etl",
+        "//libs/bsw/common",
+        "//libs/bsw/platform",
+    ],
+)
+
+# Mock target for unit testing
+cc_library(
+    name = "bspMock",
+    hdrs = glob(["mock/include/**"]),
+    includes = ["mock/include"],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":bsp",
+        "//libs/3rdparty/googletest:gtest",
+    ],
+)

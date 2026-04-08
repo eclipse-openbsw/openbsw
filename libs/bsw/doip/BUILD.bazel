@@ -1,0 +1,50 @@
+# DoIP (Diagnostics over IP) transport layer.
+
+cc_library(
+    name = "doip",
+    srcs = [
+        "src/doip/common/DoIpCommonLogger.cpp",
+        "src/doip/common/DoIpCyclicTaskGenerator.cpp",
+        "src/doip/common/DoIpSendJobHelper.cpp",
+        "src/doip/common/DoIpSimplePayloadSendJob.cpp",
+        "src/doip/common/DoIpStaticPayloadSendJob.cpp",
+        "src/doip/common/DoIpTcpConnection.cpp",
+        "src/doip/common/DoIpTransportMessageProvidingListenerAdapter.cpp",
+        "src/doip/common/DoIpTransportMessageProvidingListenerHelper.cpp",
+        "src/doip/common/DoIpTransportMessageSendJob.cpp",
+        "src/doip/common/DoIpUdpConnection.cpp",
+        "src/doip/common/DoIpVehicleIdentificationRequestSendJob.cpp",
+        "src/doip/server/DoIpServerConnectionHandler.cpp",
+        "src/doip/server/DoIpServerLogger.cpp",
+        "src/doip/server/DoIpServerTransportConnection.cpp",
+        "src/doip/server/DoIpServerTransportConnectionProvider.cpp",
+        "src/doip/server/DoIpServerTransportLayer.cpp",
+        "src/doip/server/DoIpServerTransportMessageHandler.cpp",
+        "src/doip/server/DoIpServerVehicleIdentification.cpp",
+        "src/doip/server/DoIpServerVehicleIdentificationSocketHandler.cpp",
+    ],
+    hdrs = glob(["include/**"]),
+    includes = ["include"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//libs/bsw/async",
+        "//libs/bsw/common",
+        "//libs/bsw/cpp2ethernet",
+        "//libs/bsw/estd",
+        "//libs/bsw/platform",
+        "//libs/bsw/transport",
+        "//libs/bsw/util",
+    ],
+)
+
+# Mock target for unit testing
+cc_library(
+    name = "doipMock",
+    hdrs = glob(["mock/include/**"]),
+    includes = ["mock/include"],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":doip",
+        "//libs/3rdparty/googletest:gtest",
+    ],
+)
