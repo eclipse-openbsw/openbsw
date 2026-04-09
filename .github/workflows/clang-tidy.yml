@@ -101,7 +101,7 @@ jobs:
         run: echo "Skipping clang-tidy because the diff does not contain modified C/C++ files."
 
       - name: Upload clang-tidy findings
-        if: ${{ steps.clang_tidy.outcome == 'failure' }}
+        if: ${{ always() && steps.clang_tidy.outcome == 'failure' }}
         uses: actions/upload-artifact@v4
         with:
           name: ct-findings-${{ matrix.platform }}-${{ matrix.config }}

@@ -13,7 +13,8 @@ Inputs:
 - --output-file: Destination file for resolved translation units.
 
 Behavior:
-- Changed source files (.c/.cc/.cpp) are kept directly.
+- Changed source files (.c/.cc/.cpp) are kept only when they are present in the
+    current build's compile_commands.json.
 - Changed headers (.h/.hh/.hpp/.hxx) are mapped to translation units by parsing
     `ninja -t deps` output and joining dependency targets with compile_commands
     output mappings.
@@ -200,6 +201,14 @@ def parse_ninja_deps(build_directory: Path) -> dict[str, set[Path]]:
     return deps_by_target
 
 
+def filter_built_sources(
+    changed_sources: set[Path], output_to_source: dict[str, Path]
+) -> tuple[set[Path], set[Path]]:
+    """Split changed sources into built and skipped sets for this build."""
+    built_sources = set(output_to_source.values())
+    return changed_sources.intersection(built_sources), changed_sources.difference(built_sources)
+
+
 def resolve_translation_units(
     changed_sources: set[Path],
     changed_headers: set[Path],
@@ -207,7 +216,7 @@ def resolve_translation_units(
     deps_by_target: dict[str, set[Path]],
 ) -> set[Path]:
     """Resolve final source files by expanding changed headers to owning TUs."""
-    resolved_sources = set(changed_sources)
+    resolved_sources, _ = filter_built_sources(changed_sources, output_to_source)
     if not changed_headers:
         return resolved_sources
 
@@ -254,6 +263,21 @@ def main(argv: list[str] | None = None) -> int:
         print(exc, file=sys.stderr)
         return 1
 
+    built_changed_sources, skipped_changed_sources = filter_built_sources(
+        changed_sources, output_to_source
+    )
+    if skipped_changed_sources:
+        print(
+            f"Warning: changed source files not present in compile_commands for {args.build_directory} were skipped:",
+            file=sys.stderr,
+        )
+        for source in sorted(skipped_changed_sources):
+            try:
+                source_display = source.relative_to(repo_root)
+            except ValueError:
+                source_display = source
+            print(f"  {source_display}", file=sys.stderr)
+
     if changed_headers and not output_to_source:
         print(
             "No compile command entries were available to map changed headers to translation units.",
@@ -269,7 +293,7 @@ def main(argv: list[str] | None = None) -> int:
         return 1
 
     resolved_sources = resolve_translation_units(
-        changed_sources, changed_headers, output_to_source, deps_by_target
+        built_changed_sources, changed_headers, output_to_source, deps_by_target
     )
 
     write_sources(args.output_file, repo_root, resolved_sources)
