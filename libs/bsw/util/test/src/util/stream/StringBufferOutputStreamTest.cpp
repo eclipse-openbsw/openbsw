@@ -133,6 +133,20 @@ TEST(StringBufferOutputStream, testGetBufferIfFull)
     ASSERT_EQ(9U, cut.getBuffer().size());
 }
 
+TEST(StringBufferOutputStream, testDestructorFinalizesBuffer)
+{
+    char buffer[10];
+    memset(buffer, 0x17, 10);
+
+    {
+        stream::StringBufferOutputStream cut(::etl::span<char>(buffer).first(9), "\n", "..");
+        cut.write_string_view(::etl::string_view("abcdef1234"));
+    }
+
+    ASSERT_EQ(0, strcmp("abcde..\n", buffer));
+    ASSERT_EQ(0x17, buffer[9]);
+}
+
 TEST(StringBufferOutputStream, testMixedUsage)
 {
     stream::declare::StringBufferOutputStream<20> cut("E");

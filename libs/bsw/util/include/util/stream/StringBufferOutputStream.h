@@ -20,7 +20,7 @@ class StringBufferOutputStream : public IOutputStream
 public:
     explicit StringBufferOutputStream(
         ::etl::span<char> buf, char const* endOfString = nullptr, char const* ellipsis = nullptr);
-    ~StringBufferOutputStream();
+    ~StringBufferOutputStream() noexcept;
 
     bool isEof() const override;
     void write(uint8_t data) override;

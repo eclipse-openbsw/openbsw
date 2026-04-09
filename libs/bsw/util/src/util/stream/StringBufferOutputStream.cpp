@@ -24,7 +24,22 @@ StringBufferOutputStream::StringBufferOutputStream(
 , _overflow(false)
 {}
 
-StringBufferOutputStream::~StringBufferOutputStream() { (void)getString(); }
+StringBufferOutputStream::~StringBufferOutputStream() noexcept
+{
+    try
+    {
+        (void)getString();
+    }
+    catch (...)
+    {
+        if (_buffer.size() > 0U)
+        {
+            _buffer[0] = '\0';
+        }
+        _currentIndex = 0U;
+        _overflow     = false;
+    }
+}
 
 bool StringBufferOutputStream::isEof() const { return (_currentIndex + 1U) >= _buffer.size(); }
 
