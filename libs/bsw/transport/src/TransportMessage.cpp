@@ -1,5 +1,7 @@
 // Copyright 2024 Accenture.
 
+// NOLINTBEGIN(cppcoreguidelines-pro-type-vararg): Logger/StringWriter API is variadic by design.
+
 #include "transport/TransportMessage.h"
 
 #include "transport/TransportLogger.h"
@@ -136,3 +138,5 @@ bool TransportMessage::operator==(TransportMessage const& rhs) const
 }
 
 } // namespace transport
+
+// NOLINTEND(cppcoreguidelines-pro-type-vararg)

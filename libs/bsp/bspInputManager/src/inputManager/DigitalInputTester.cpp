@@ -1,5 +1,7 @@
 // Copyright 2024 Accenture.
 
+// NOLINTBEGIN(cppcoreguidelines-pro-type-vararg): Logger/StringWriter API is variadic by design.
+
 #include "inputManager/DigitalInputTester.h"
 
 #include "inputManager/DigitalInput.h"
@@ -92,3 +94,5 @@ void DigitalInputTester::executeCommand(::util::command::CommandContext& context
 }
 
 } /* namespace bios */
+
+// NOLINTEND(cppcoreguidelines-pro-type-vararg)

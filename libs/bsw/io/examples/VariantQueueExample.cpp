@@ -68,9 +68,9 @@ void read_no_payload()
     // EXAMPLE_START read_no_payload
     struct Visit
     {
-        void operator()(A const& /* a */) { printf("received A"); }
+        void operator()(A const& /* a */) { (void)fputs("received A", stdout); }
 
-        void operator()(B const& /* b */) { printf("received B"); }
+        void operator()(B const& /* b */) { (void)fputs("received B", stdout); }
     };
 
     MyQueue queue;
@@ -92,12 +92,12 @@ void read_with_payload()
     {
         void operator()(A const& /* a */, ::etl::span<uint8_t const> /* payload */)
         {
-            printf("received A");
+            (void)fputs("received A", stdout);
         }
 
         void operator()(B const& /* b */, ::etl::span<uint8_t const> /* payload */)
         {
-            printf("received B");
+            (void)fputs("received B", stdout);
         }
     };
 

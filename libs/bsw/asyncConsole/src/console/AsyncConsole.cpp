@@ -1,5 +1,7 @@
 // Copyright 2024 Accenture.
 
+// NOLINTBEGIN(cppcoreguidelines-pro-type-vararg): Logger/StringWriter API is variadic by design.
+
 #include "console/AsyncConsole.h"
 
 #include "console/SyncCommandWrapper.h"
@@ -99,3 +101,5 @@ void AsyncConsole::terminate(::util::command::ICommand::ExecuteResult result)
 }
 
 } /* namespace console */
+
+// NOLINTEND(cppcoreguidelines-pro-type-vararg)

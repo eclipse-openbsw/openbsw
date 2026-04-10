@@ -25,32 +25,32 @@ AsyncImplExample::AsyncImplExample()
 void AsyncImplExample::printBitmask(async::EventMaskType const eventMask)
 {
     size_t const bits = 8;
-    printf("0b");
+    (void)fputs("0b", stdout);
     for (size_t i = bits - 1; i > 0; i--)
     {
-        printf("%d", (eventMask >> (i - 1)) & 1);
+        putchar(static_cast<int>('0' + ((eventMask >> (i - 1)) & 1)));
     }
 }
 
 void AsyncImplExample::execute(async::RunnableType& runnable)
 {
-    printf("AsyncImplExample::execute() called, Runnable is prepared for execution\n");
+    puts("AsyncImplExample::execute() called, Runnable is prepared for execution");
     _runnableExecutor.enqueue(runnable);
 }
 
-void AsyncImplExample::handlerEventA() { printf("AsyncImplExample::handlerEventA() is called.\n"); }
+void AsyncImplExample::handlerEventA() { puts("AsyncImplExample::handlerEventA() is called."); }
 
-void AsyncImplExample::handlerEventB() { printf("AsyncImplExample::handlerEventB() is called.\n"); }
+void AsyncImplExample::handlerEventB() { puts("AsyncImplExample::handlerEventB() is called."); }
 
 void AsyncImplExample::setEventA()
 {
-    printf("AsyncImplExample::setEventA() is called.\n");
+    puts("AsyncImplExample::setEventA() is called.");
     _eventPolicyA.setEvent();
 }
 
 void AsyncImplExample::setEventB()
 {
-    printf("AsyncImplExample::setEventB() is called.\n");
+    puts("AsyncImplExample::setEventB() is called.");
     _eventPolicyB.setEvent();
 }
 
@@ -63,11 +63,11 @@ void AsyncImplExample::setEvents(async::EventMaskType const eventMask)
 {
     _eventMask |= eventMask;
 
-    printf("AsyncImplExample::setEvents() is called with eventMask:");
+    (void)fputs("AsyncImplExample::setEvents() is called with eventMask:", stdout);
     printBitmask(eventMask);
-    printf(" new eventMask:");
+    (void)fputs(" new eventMask:", stdout);
     printBitmask(_eventMask);
-    printf("\n");
+    putchar('\n');
 }
 
 /**
@@ -76,22 +76,22 @@ void AsyncImplExample::setEvents(async::EventMaskType const eventMask)
  */
 void AsyncImplExample::dispatch()
 {
-    printf("AsyncImplExample::dispatch() is called, eventMask:");
+    (void)fputs("AsyncImplExample::dispatch() is called, eventMask:", stdout);
     printBitmask(_eventMask);
-    printf("\n");
+    putchar('\n');
 
     handleEvents(_eventMask);
     _eventMask = 0;
 
-    printf("AsyncImplExample::dispatch() reset eventMask, eventMask:");
+    (void)fputs("AsyncImplExample::dispatch() reset eventMask, eventMask:", stdout);
     printBitmask(_eventMask);
-    printf("\n");
+    putchar('\n');
 }
 } // namespace asyncNewPlatform
 
-void exampleRunnableA() { printf("exampleRunnableA is called.\n"); }
+void exampleRunnableA() { puts("exampleRunnableA is called."); }
 
-void exampleRunnableB() { printf("exampleRunnableB is called.\n"); }
+void exampleRunnableB() { puts("exampleRunnableB is called."); }
 
 // NOLINTBEGIN(bugprone-exception-escape): This is just for testing purposes.
 int main()

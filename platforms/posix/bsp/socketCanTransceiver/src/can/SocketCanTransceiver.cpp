@@ -1,5 +1,7 @@
 // Copyright 2024 Accenture.
 
+// NOLINTBEGIN(cppcoreguidelines-pro-type-vararg): Logger/StringWriter API is variadic by design.
+
 #include "can/SocketCanTransceiver.h"
 
 #include <can/CanLogger.h>
@@ -294,3 +296,5 @@ void SocketCanTransceiver::guardedRun(int maxSentPerRun, int maxReceivedPerRun)
 }
 
 } // namespace can
+
+// NOLINTEND(cppcoreguidelines-pro-type-vararg)

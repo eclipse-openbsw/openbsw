@@ -1,5 +1,7 @@
 // Copyright 2025 Accenture.
 
+// NOLINTBEGIN(cppcoreguidelines-pro-type-vararg): Logger/StringWriter API is variadic by design.
+
 #include "lwipSocket/netif/LwipNetworkInterface.h"
 
 #include "lwipSocket/utils/LwipHelper.h"
@@ -203,3 +205,5 @@ void onLinkStatusChanged(bool const isLinkUp, netif& ni)
 }
 
 } // namespace lwipnetif
+
+// NOLINTEND(cppcoreguidelines-pro-type-vararg)

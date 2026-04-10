@@ -1,3 +1,5 @@
+
+// NOLINTBEGIN(cppcoreguidelines-pro-type-vararg): Logger/StringWriter API is variadic by design.
 #include <bsp/Uart.h>
 #include <bsp/uart/UartConfig.h>
 
@@ -90,3 +92,5 @@ bsp::Uart& Uart::getInstance(Id id)
 bool Uart::isInitialized() const { return _initialized; }
 
 bool Uart::waitForTxReady() { return true; }
+
+// NOLINTEND(cppcoreguidelines-pro-type-vararg)

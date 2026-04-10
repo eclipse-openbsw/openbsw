@@ -1,5 +1,7 @@
 // Copyright 2024 Accenture.
 
+// NOLINTBEGIN(cppcoreguidelines-pro-type-vararg): Logger/StringWriter API is variadic by design.
+
 #include "runtime/StatisticsWriter.h"
 
 #include "bsp/timer/SystemTimer.h"
@@ -148,3 +150,5 @@ bool StatisticsWriter::handleDefaultMode(
 }
 
 } // namespace runtime
+
+// NOLINTEND(cppcoreguidelines-pro-type-vararg)

@@ -4,9 +4,7 @@
 
 #include <etl/chrono.h>
 #include <etl/span.h>
-#include <util/format/StringWriter.h>
 
-#include <cstdio>
 #include <ctime>
 
 namespace
@@ -31,8 +29,6 @@ int64_t LoggerTime::getTimestamp() const
 void LoggerTime::formatTimestamp(
     ::util::stream::IOutputStream& stream, int64_t const& timestamp) const
 {
-    ::util::format::StringWriter writer(stream);
-
     ::std::time_t seconds   = static_cast<::std::time_t>(timestamp / 1000);
     uint32_t const mSeconds = timestamp % 1000;
 
@@ -54,13 +50,16 @@ void LoggerTime::formatTimestamp(
 
     if (timestampLength > 0)
     {
-        int n = snprintf(
-            timestampBuffer + timestampLength,
-            static_cast<uint32_t>(timestampBufferSize),
-            ".%03u",
-            static_cast<unsigned int>(mSeconds));
         stream.write(::etl::span<uint8_t const>(
-            reinterpret_cast<uint8_t const*>(timestampBuffer), timestampLength + n));
+            static_cast<uint8_t const*>(static_cast<void const*>(timestampBuffer)),
+            timestampLength));
+        // Append milliseconds (always 3 digits, zero-padded)
+        uint8_t const msStr[]
+            = {static_cast<uint8_t>('.'),
+               static_cast<uint8_t>('0' + (mSeconds / 100U) % 10U),
+               static_cast<uint8_t>('0' + (mSeconds / 10U) % 10U),
+               static_cast<uint8_t>('0' + mSeconds % 10U)};
+        stream.write(::etl::span<uint8_t const>(msStr, sizeof(msStr)));
     }
 }
 

@@ -1,5 +1,7 @@
 // Copyright 2024 Accenture.
 
+// NOLINTBEGIN(cppcoreguidelines-pro-type-vararg): Logger/StringWriter API is variadic by design.
+
 #include "outputPwm/OutputPwmTester.h"
 
 #include "outputPwm/OutputPwm.h"
@@ -126,3 +128,5 @@ void OutputPwmTester::executeCommand(CommandContext& context, uint8_t idx)
 }
 
 } // namespace bios
+
+// NOLINTEND(cppcoreguidelines-pro-type-vararg)

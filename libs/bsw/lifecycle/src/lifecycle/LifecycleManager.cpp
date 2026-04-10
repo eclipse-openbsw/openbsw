@@ -1,5 +1,7 @@
 // Copyright 2024 Accenture.
 
+// NOLINTBEGIN(cppcoreguidelines-pro-type-vararg): Logger/StringWriter API is variadic by design.
+
 #include "lifecycle/LifecycleManager.h"
 
 #include "lifecycle/LifecycleLogger.h"
@@ -218,3 +220,5 @@ void LifecycleManager::ComponentTransitionExecutor::execute()
 }
 
 } // namespace lifecycle
+
+// NOLINTEND(cppcoreguidelines-pro-type-vararg)

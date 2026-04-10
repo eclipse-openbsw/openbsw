@@ -1,5 +1,7 @@
 // Copyright 2025 Accenture.
 
+// NOLINTBEGIN(cppcoreguidelines-pro-type-vararg): Logger/StringWriter API is variadic by design.
+
 #include "TapEthernetDriver.h"
 
 #include "lwip/arch.h"
@@ -142,3 +144,5 @@ bool TapEthernetDriver::writeFrame(pbuf* const buf) const
 }
 
 } // namespace ethernet
+
+// NOLINTEND(cppcoreguidelines-pro-type-vararg)

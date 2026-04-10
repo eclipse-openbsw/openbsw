@@ -86,6 +86,8 @@ CanFlex2Transceiver::write(::can::CANFrame const& frame, ::can::ICANFrameSentLis
 {
     if (State::MUTED == _state)
     {
+        // Logger API is variadic by design.
+        // NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg)
         logger::Logger::warn(
             logger::CAN,
             "Write Id 0x%x to muted %s",

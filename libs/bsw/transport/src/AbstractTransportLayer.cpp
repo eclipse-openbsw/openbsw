@@ -1,5 +1,7 @@
 // Copyright 2024 Accenture.
 
+// NOLINTBEGIN(cppcoreguidelines-pro-type-vararg): Logger/StringWriter API is variadic by design.
+
 #include "transport/AbstractTransportLayer.h"
 
 #include "common/busid/BusId.h"
@@ -96,3 +98,5 @@ void AbstractTransportLayer::TransportMessageProvidingListenerHelper::dump()
 }
 
 } // namespace transport
+
+// NOLINTEND(cppcoreguidelines-pro-type-vararg)
