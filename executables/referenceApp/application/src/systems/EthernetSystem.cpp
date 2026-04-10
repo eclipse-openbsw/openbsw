@@ -17,8 +17,8 @@ int32_t vlanForNetif(void const* const vlwipNi)
 {
     ETL_ASSERT(vlwipNi != nullptr, ETL_ERROR_GENERIC("netif must not be null"));
 
-    auto const lwipNi         = reinterpret_cast<netif const*>(vlwipNi);
-    auto const ethernetSystem = reinterpret_cast<::systems::EthernetSystem*>(lwipNi->state);
+    auto const lwipNi         = static_cast<netif const*>(vlwipNi);
+    auto const ethernetSystem = static_cast<::systems::EthernetSystem*>(lwipNi->state);
 
     ETL_ASSERT(
         lwipNi >= ethernetSystem->netifs.netifs.begin()
@@ -38,7 +38,7 @@ int32_t vlanForNetif(void const* const vlwipNi)
 
 static err_t linkoutput(netif* const aNetif, struct pbuf* const buf)
 {
-    auto const ethernetSystem = reinterpret_cast<::systems::EthernetSystem*>(aNetif->state);
+    auto const ethernetSystem = static_cast<::systems::EthernetSystem*>(aNetif->state);
     if ((aNetif->flags & NETIF_FLAG_LINK_UP) == 0)
     {
         return ERR_VAL;
@@ -64,7 +64,7 @@ static err_t joinMulticastGroupIpV4(
     }
     if (action == NETIF_ADD_MAC_FILTER)
     {
-        auto const ethernetSystem = reinterpret_cast<::systems::EthernetSystem*>(aNetif->state);
+        auto const ethernetSystem = static_cast<::systems::EthernetSystem*>(aNetif->state);
         ::etl::array<uint8_t, 6> groupAddress
             = {LL_IP4_MULTICAST_ADDR_0,
                LL_IP4_MULTICAST_ADDR_1,

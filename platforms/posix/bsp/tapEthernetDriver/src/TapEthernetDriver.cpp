@@ -122,7 +122,9 @@ void TapEthernetDriver::readFrame()
     {
         // We can "upcast" here since the initial allocation was made as RxCustimPbuf
         // The pbuf is embedded as the first memeber so the address stays the same.
+        // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast): lwIP pbuf container-of
         auto* driverPbuf = reinterpret_cast<::lwiputils::RxCustomPbuf*>(p);
+        // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast): freeing original uint8_t[]
         delete[] reinterpret_cast<uint8_t*>(driverPbuf->slot);
         delete driverPbuf;
     };

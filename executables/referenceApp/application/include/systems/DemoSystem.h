@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include <cstddef>
+
 #include <async/Async.h>
 #include <async/IRunnable.h>
 #include <lifecycle/AsyncLifecycleComponent.h>
@@ -106,6 +108,10 @@ private:
         uint8_t charParam1;
         uint16_t reserved;
     };
+
+    static_assert(
+        offsetof(StorageData, charParam0) == sizeof(uint32_t),
+        "StorageData layout must keep charParam0 immediately after intParam");
 
     // END storage data
 

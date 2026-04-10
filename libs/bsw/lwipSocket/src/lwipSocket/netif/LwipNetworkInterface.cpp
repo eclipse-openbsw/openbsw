@@ -45,15 +45,21 @@ bool initNetifIp4(
         ::etl::copy(
             ip::packed(networkInterfaceConfig.ipAddress()),
             ::etl::span<uint8_t>(
-                reinterpret_cast<uint8_t*>(&ipAddress.addr), sizeof(ipAddress.addr)));
+                // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast): lwIP ip4_addr struct
+                reinterpret_cast<uint8_t*>(&ipAddress.addr),
+                sizeof(ipAddress.addr)));
         ::etl::copy(
             ip::packed(networkInterfaceConfig.networkMask()),
             ::etl::span<uint8_t>(
-                reinterpret_cast<uint8_t*>(&networkMask.addr), sizeof(networkMask.addr)));
+                // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast): lwIP ip4_addr struct
+                reinterpret_cast<uint8_t*>(&networkMask.addr),
+                sizeof(networkMask.addr)));
         ::etl::copy(
             ip::packed(networkInterfaceConfig.defaultGateway()),
             ::etl::span<uint8_t>(
-                reinterpret_cast<uint8_t*>(&defaultGateway.addr), sizeof(defaultGateway.addr)));
+                // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast): lwIP ip4_addr struct
+                reinterpret_cast<uint8_t*>(&defaultGateway.addr),
+                sizeof(defaultGateway.addr)));
     }
 
     auto const isInitialized

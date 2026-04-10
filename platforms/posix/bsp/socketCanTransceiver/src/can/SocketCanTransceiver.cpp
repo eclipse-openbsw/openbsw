@@ -212,6 +212,7 @@ void SocketCanTransceiver::guardedOpen()
     ::std::memset(&addr, 0, sizeof(addr));
     addr.can_family  = AF_CAN;
     addr.can_ifindex = ifr.ifr_ifindex;
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast): POSIX bind() requires sockaddr*
     error            = bind(fd, reinterpret_cast<sockaddr*>(&addr), sizeof(addr));
     if (error < 0)
     {
@@ -255,8 +256,7 @@ void SocketCanTransceiver::guardedRun(int maxSentPerRun, int maxReceivedPerRun)
         socketCanFrame.can_dlc = length;
         ::std::memcpy(socketCanFrame.data, canFrame.getPayload(), length);
         ::std::memset(socketCanFrame.data + length, 0, sizeof(socketCanFrame.data) - length);
-        ssize_t const bytesWritten
-            = ::write(_fileDescriptor, reinterpret_cast<char*>(&socketCanFrame), CAN_MTU);
+        ssize_t const bytesWritten = ::write(_fileDescriptor, &socketCanFrame, CAN_MTU);
         if (bytesWritten != CAN_MTU)
         {
             break;
@@ -271,13 +271,14 @@ void SocketCanTransceiver::guardedRun(int maxSentPerRun, int maxReceivedPerRun)
     for (int count = 0; count < maxReceivedPerRun; ++count)
     {
         alignas(can_frame) uint8_t buffer[CANFD_MTU];
-        ssize_t const length = read(_fileDescriptor, reinterpret_cast<char*>(buffer), CANFD_MTU);
+        ssize_t const length = read(_fileDescriptor, buffer, CANFD_MTU);
         if (length < 0)
         {
             break;
         }
         if (length == CAN_MTU)
         {
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
             can_frame const& socketCanFrame = *reinterpret_cast<can_frame const*>(buffer);
             // NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg): Logger API is variadic by design.
             Logger::debug(

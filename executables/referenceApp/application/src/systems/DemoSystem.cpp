@@ -80,10 +80,8 @@ DemoSystem::DemoSystem(
 #ifdef PLATFORM_SUPPORT_STORAGE
 , _storage(storage)
 // BEGIN storage buffers
-, _storageReadBuf(
-      ::etl::span<uint8_t>(reinterpret_cast<uint8_t*>(&_storageData), sizeof(_storageData)))
-, _storageWriteBuf(
-      ::etl::span<uint8_t const>(reinterpret_cast<uint8_t const*>(&_storageData.charParam0), 1))
+, _storageReadBuf(::etl::span<StorageData, 1>(&_storageData, 1).reinterpret_as<uint8_t>())
+, _storageWriteBuf(::etl::span<uint8_t const>(&_storageData.charParam0, 1))
 // END storage buffers
 , _jobDoneCallback(
       ::storage::StorageJob::JobDoneCallback::create<DemoSystem, &DemoSystem::storageJobDone>(
