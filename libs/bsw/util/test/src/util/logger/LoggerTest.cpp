@@ -11,6 +11,8 @@ using namespace ::util::format;
 
 namespace
 {
+// Exercises the legacy logger API, which is variadic by design.
+// NOLINTBEGIN(cppcoreguidelines-pro-type-vararg)
 // NOLINTNEXTLINE(cert-dcl50-cpp): va_list usage only for printing functionalities.
 void callLog(uint8_t index, Level level, char const* formatString, ...)
 {
@@ -182,3 +184,5 @@ TEST_F(LoggerTest, testUninitializedUsage)
     callLog(6, LEVEL_DEBUG, "abc", 1, 2, 3);
     ASSERT_EQ(LEVEL_NONE, Logger::getLevel(0));
 }
+
+// NOLINTEND(cppcoreguidelines-pro-type-vararg)

@@ -26,7 +26,7 @@ void AsyncImplExample::printBitmask(async::EventMaskType const eventMask)
 {
     size_t const bits = 8;
     (void)fputs("0b", stdout);
-    for (size_t i = bits - 1; i > 0; i--)
+    for (size_t i = bits; i > 0U; --i)
     {
         putchar(static_cast<int>('0' + ((eventMask >> (i - 1)) & 1)));
     }

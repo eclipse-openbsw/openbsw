@@ -25,6 +25,8 @@ namespace
 using namespace logger;
 using namespace ::util;
 
+// Exercises the buffered logger output's variadic formatting path.
+// NOLINTBEGIN(cppcoreguidelines-pro-type-vararg)
 uint32_t _totalLockCount;
 
 struct TestLock
@@ -154,5 +156,7 @@ TEST_F(BufferedLoggerOutputTest, testConstructorWithPredicate)
     cut.outputEntry(*this, entryRef);
     ASSERT_TRUE(checkAndResetEntry("1 2348 1 0 ver<?>"));
 }
+
+// NOLINTEND(cppcoreguidelines-pro-type-vararg)
 
 } // namespace

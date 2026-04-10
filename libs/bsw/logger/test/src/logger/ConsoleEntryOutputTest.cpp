@@ -17,6 +17,8 @@ using namespace ::logger;
 
 namespace
 {
+// Exercises the console entry formatter's printf-style writer path.
+// NOLINTBEGIN(cppcoreguidelines-pro-type-vararg)
 struct ConsoleEntryOutputTest
 : ::testing::Test
 , IEntryFormatter<uint32_t, uint32_t>
@@ -74,5 +76,7 @@ TEST_F(ConsoleEntryOutputTest, testAll)
         "15 15343 16 Level_Name Format string 83743 String\r\n",
         std::string(stdIo.out.begin(), stdIo.out.end()));
 }
+
+// NOLINTEND(cppcoreguidelines-pro-type-vararg)
 
 } // namespace

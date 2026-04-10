@@ -1,7 +1,5 @@
 // Copyright 2024 Accenture.
 
-// NOLINTBEGIN(cppcoreguidelines-pro-type-vararg): Logger/StringWriter API is variadic by design.
-
 #include "can/SocketCanTransceiver.h"
 
 #include <can/CanLogger.h>
@@ -166,6 +164,7 @@ void SocketCanTransceiver::run(int maxSentPerRun, int maxReceivedPerRun)
 
 void SocketCanTransceiver::guardedOpen()
 {
+    // NOLINTBEGIN(cppcoreguidelines-pro-type-vararg): Logger API is variadic by design.
     char const* const name = _config.name;
     int error              = 0;
     int const fd           = socket(PF_CAN, SOCK_RAW, CAN_RAW);
@@ -222,6 +221,7 @@ void SocketCanTransceiver::guardedOpen()
     }
 
     _fileDescriptor = fd;
+    // NOLINTEND(cppcoreguidelines-pro-type-vararg)
 }
 
 void SocketCanTransceiver::guardedClose()
@@ -279,6 +279,7 @@ void SocketCanTransceiver::guardedRun(int maxSentPerRun, int maxReceivedPerRun)
         if (length == CAN_MTU)
         {
             can_frame const& socketCanFrame = *reinterpret_cast<can_frame const*>(buffer);
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg): Logger API is variadic by design.
             Logger::debug(
                 CAN,
                 "[SocketCanTransceiver] received CAN frame, id=0x%X, length=%d",
@@ -296,5 +297,3 @@ void SocketCanTransceiver::guardedRun(int maxSentPerRun, int maxReceivedPerRun)
 }
 
 } // namespace can
-
-// NOLINTEND(cppcoreguidelines-pro-type-vararg)

@@ -20,7 +20,8 @@ EepromDriver::EepromDriver() : eepromFd(-1)
     bool fileExisted = false;
 
     // Try opening existing file first
-    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg): POSIX open uses an optional mode argument.
+    // POSIX open uses an optional mode argument.
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg)
     eepromFd = open(eepromFilePath.c_str(), O_RDWR);
 
     if (eepromFd != -1)
@@ -32,12 +33,7 @@ EepromDriver::EepromDriver() : eepromFd(-1)
         // If opening fails, try creating it
         // POSIX open uses an optional mode argument.
         // NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg)
-        eepromFd = open(eepromFilePath.c_str(), O_RDWR | O_CREAT, 0666);
-
-        if (eepromFd != -1)
-        {
-            chmod(eepromFilePath.c_str(), 0666);
-        }
+        eepromFd = open(eepromFilePath.c_str(), O_RDWR | O_CREAT, 0600);
     }
 
     // Initialize only for newly created files
@@ -104,9 +100,7 @@ EepromDriver::write(uint32_t const address, uint8_t const* const buffer, uint32_
 
     if (!success)
     {
-        // POSIX EEPROM driver reports errors via printf.
-        // NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg)
-        printf("Failed to write to EEPROM file\r\n");
+        (void)std::fputs("Failed to write to EEPROM file\r\n", stderr);
         return ::bsp::BSP_ERROR;
     }
     return ::bsp::BSP_OK;
@@ -123,9 +117,7 @@ EepromDriver::read(uint32_t const address, uint8_t* const buffer, uint32_t const
 
     if (!success)
     {
-        // POSIX EEPROM driver reports errors via printf.
-        // NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg)
-        printf("Failed to read from EEPROM file\r\n");
+        (void)std::fputs("Failed to read from EEPROM file\r\n", stderr);
         return ::bsp::BSP_ERROR;
     }
     return ::bsp::BSP_OK;

@@ -1,7 +1,5 @@
 // Copyright 2025 Accenture.
 
-// NOLINTBEGIN(cppcoreguidelines-pro-type-vararg): Logger/StringWriter API is variadic by design.
-
 #include "lwipSocket/tcp/LwipSocket.h"
 
 #include "lwipSocket/utils/LwipHelper.h"
@@ -54,6 +52,7 @@ LwipSocket::LwipSocket()
 
 void LwipSocket::setForceCopy(bool const forceCopy) { fForceCopy = forceCopy; }
 
+// NOLINTBEGIN(cppcoreguidelines-pro-type-vararg): Logger API is variadic by design.
 AbstractSocket::ErrorCode LwipSocket::send(::etl::span<uint8_t const> const& data)
 {
     lwiputils::TASK_ASSERT_HOOK();
@@ -250,6 +249,8 @@ err_t LwipSocket::receiveCallback(tcp_pcb const* const pcb, pbuf* const p, err_t
     return checkResult(result);
 }
 
+// NOLINTEND(cppcoreguidelines-pro-type-vararg)
+
 err_t LwipSocket::tcpConnectedListener(void* const arg, tcp_pcb* const pcb, err_t const result)
 {
     if (arg == nullptr)
@@ -263,6 +264,7 @@ err_t LwipSocket::tcpConnectedListener(void* const arg, tcp_pcb* const pcb, err_
     return pSocket->connectCallback(pcb, result);
 }
 
+// NOLINTBEGIN(cppcoreguidelines-pro-type-vararg): Logger API is variadic by design.
 err_t LwipSocket::connectCallback(tcp_pcb const* const /*pcb*/, err_t const result)
 {
     logger::Logger::debug(logger::TCP, "LwipSocket::tcpConnectedListener(%d)", result);
@@ -342,6 +344,8 @@ LwipSocket::connect(IPAddress const& ipAddr, uint16_t const port, ConnectedDeleg
     return AbstractSocket::ErrorCode::SOCKET_ERR_OK;
 }
 
+// NOLINTEND(cppcoreguidelines-pro-type-vararg)
+
 size_t LwipSocket::available()
 {
     if (!isEstablished())
@@ -386,6 +390,7 @@ void LwipSocket::open(tcp_pcb* const handle)
     }
     else
     {
+        // NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg): Logger API is variadic by design.
         logger::Logger::error(logger::TCP, "LwipSocket::open() called in illegal state != CLOSED");
     }
 }
@@ -552,6 +557,7 @@ err_t LwipSocket::tcpPollListener(void* const arg, tcp_pcb* const pcb)
     return ERR_OK;
 }
 
+// NOLINTBEGIN(cppcoreguidelines-pro-type-vararg): Logger API is variadic by design.
 void LwipSocket::tcpErrorListener(void* const arg, err_t const result)
 {
     if (arg == nullptr)
@@ -608,6 +614,8 @@ void LwipSocket::errorCallback(err_t const result)
     }
     discardData();
 }
+
+// NOLINTEND(cppcoreguidelines-pro-type-vararg)
 
 void LwipSocket::setNagle(bool const enable)
 {
@@ -750,5 +758,3 @@ void LwipSocket::setKeepAlive()
 #endif
 
 } // namespace tcp
-
-// NOLINTEND(cppcoreguidelines-pro-type-vararg)

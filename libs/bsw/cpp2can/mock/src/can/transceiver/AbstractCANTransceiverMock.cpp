@@ -24,6 +24,8 @@ AbstractCANTransceiverMock::AbstractCANTransceiverMock(uint8_t busId)
 
 void AbstractCANTransceiverMock::inject(CANFrame const& frame)
 {
+    // Mock trace output keeps the existing variadic logger API.
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg)
     Logger::debug(
         CAN,
         "AbstractCANTransceiverMock::inject(0x%x (%d): <0x%x, 0x%x, 0x%x, 0x%x, 0x%x, 0x%x, 0x%x, "
@@ -69,6 +71,8 @@ ICanTransceiver::ErrorCode AbstractCANTransceiverMock::openImplementation()
 
 ICanTransceiver::ErrorCode AbstractCANTransceiverMock::writeImplementation(CANFrame const& frame)
 {
+    // Mock trace output keeps the existing variadic logger API.
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg)
     Logger::debug(
         CAN,
         "AbstractCANTransceiverMock::write(0x%x (%d): <0x%x, 0x%x, 0x%x, 0x%x, 0x%x, 0x%x, 0x%x, "
@@ -89,6 +93,8 @@ ICanTransceiver::ErrorCode AbstractCANTransceiverMock::writeImplementation(CANFr
 ICanTransceiver::ErrorCode AbstractCANTransceiverMock::writeImplementation2(
     CANFrame const& frame, ICANFrameSentListener& listener)
 {
+    // Mock trace output keeps the existing variadic logger API.
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg)
     Logger::debug(
         CAN,
         "AbstractCANTransceiverMock::write(0x%x (%d): <0x%x, 0x%x, 0x%x, 0x%x, 0x%x, 0x%x, 0x%x, "

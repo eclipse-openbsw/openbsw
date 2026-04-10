@@ -57,6 +57,8 @@ MATCHER_P(SameAddress, n, "")
  * Implementation of MyReadDataByIdentifier
  *
  */
+// Test helper traces intentionally use the current variadic logger API.
+// NOLINTBEGIN(cppcoreguidelines-pro-type-vararg)
 class MyReadDataByIdentifier : public uds::AbstractDiagJob
 {
 public:
@@ -95,6 +97,8 @@ public:
 private:
     static uint8_t const IMPLEMENTED_REQUEST[3];
 };
+
+// NOLINTEND(cppcoreguidelines-pro-type-vararg)
 
 uint8_t const MyReadDataByIdentifier::IMPLEMENTED_REQUEST[3] = {0x22, 0x01, 0x01};
 

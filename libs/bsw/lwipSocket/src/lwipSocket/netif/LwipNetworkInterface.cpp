@@ -1,7 +1,5 @@
 // Copyright 2025 Accenture.
 
-// NOLINTBEGIN(cppcoreguidelines-pro-type-vararg): Logger/StringWriter API is variadic by design.
-
 #include "lwipSocket/netif/LwipNetworkInterface.h"
 
 #include "lwipSocket/utils/LwipHelper.h"
@@ -83,6 +81,7 @@ bool initNetifWithStaticIp6Address(
         lwipNetif.flags = 0U;
         if (!(isInitialized && (!_isStarted)))
         {
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg): Logger API is variadic by design.
             ::util::logger::Logger::error(
                 ::util::logger::TCP, "set static IP address called in wrong state");
         }
@@ -125,6 +124,7 @@ void start(netif& ni, ::ip::Ip4Config const& config)
     if (config.useDhcp)
     {
 #if LWIP_DHCP == 1
+        // NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg): Logger API is variadic by design.
         ::util::logger::Logger::info(::util::logger::TCP, "dhcp_start");
         (void)dhcp_start(&ni
 
@@ -132,6 +132,7 @@ void start(netif& ni, ::ip::Ip4Config const& config)
         );
 #endif
 #if (LWIP_AUTOIP == 1) && (LWIP_DHCP_AUTOIP_COOP == 0)
+        // NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg): Logger API is variadic by design.
         logger::Logger::info(logger::TCP, "autoip_start");
         autoip_start(&_netif);
 #endif
@@ -140,6 +141,7 @@ void start(netif& ni, ::ip::Ip4Config const& config)
 #if LWIP_IPV6_DHCP6 == 1
     if (!_hasStaticIp6Address)
     {
+        // NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg): Logger API is variadic by design.
         logger::Logger::info(logger::TCP, "dhcp6_start");
         dhcp6_start(&_netif, &lwiputils::LwipDhcpVendorOptionProvider::dhcp6OptionsReceived);
     }
@@ -192,6 +194,7 @@ void createIp6Address()
 
 void onLinkStatusChanged(bool const isLinkUp, netif& ni)
 {
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg): Logger API is variadic by design.
     ::util::logger::Logger::info(
         ::util::logger::ETHERNET, "linkStatusChanged(%s)", (isLinkUp ? "UP" : "DOWN"));
     if (isLinkUp)
@@ -205,5 +208,3 @@ void onLinkStatusChanged(bool const isLinkUp, netif& ni)
 }
 
 } // namespace lwipnetif
-
-// NOLINTEND(cppcoreguidelines-pro-type-vararg)

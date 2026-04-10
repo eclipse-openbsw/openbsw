@@ -1,7 +1,5 @@
 // Copyright 2024 Accenture.
 
-// NOLINTBEGIN(cppcoreguidelines-pro-type-vararg): Logger/StringWriter API is variadic by design.
-
 #include "runtime/StatisticsWriter.h"
 
 #include "bsp/timer/SystemTimer.h"
@@ -38,6 +36,7 @@ void StatisticsWriter::writeEol()
     _isLineStart = true;
 }
 
+// NOLINTBEGIN(cppcoreguidelines-pro-type-vararg): StringWriter::printf is variadic by design.
 void StatisticsWriter::writeText(
     char const* const title, uint32_t const minWidth, char const* const text)
 {
@@ -149,6 +148,6 @@ bool StatisticsWriter::handleDefaultMode(
     return true;
 }
 
-} // namespace runtime
-
 // NOLINTEND(cppcoreguidelines-pro-type-vararg)
+
+} // namespace runtime

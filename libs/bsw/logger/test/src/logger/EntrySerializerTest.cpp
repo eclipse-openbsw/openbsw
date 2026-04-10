@@ -11,6 +11,8 @@ using namespace ::logger;
 
 using namespace ::util::logger;
 
+// Exercises the serializer's variadic log entry interface.
+// NOLINTBEGIN(cppcoreguidelines-pro-type-vararg)
 struct EntrySerializerTest
 : ::testing::Test
 , private IEntrySerializerCallback<uint32_t>
@@ -207,3 +209,5 @@ TEST_F(EntrySerializerTest, testPrintfDatatypes)
     ASSERT_EQ("124:2:3:", serializeAndDeserialize(300, 124, 2, 3, "%n", 0));
     ASSERT_EQ("124:2:3:    0017", serializeAndDeserialize(300, 124, 2, 3, "%*.*d", 8, 4, 17));
 }
+
+// NOLINTEND(cppcoreguidelines-pro-type-vararg)

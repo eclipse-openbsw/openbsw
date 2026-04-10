@@ -1,7 +1,5 @@
 // Copyright 2025 Accenture.
 
-// NOLINTBEGIN(cppcoreguidelines-pro-type-vararg): Logger/StringWriter API is variadic by design.
-
 #include "lwipSocket/tcp/LwipServerSocket.h"
 
 #include "lwipSocket/tcp/LwipSocket.h"
@@ -40,11 +38,13 @@ bool LwipServerSocket::accept()
         return false;
     }
 
+    // NOLINTBEGIN(cppcoreguidelines-pro-type-vararg): Logger API is variadic by design.
     if (fpPCB == nullptr)
     {
         fpPCB = tcp_new_ip_type(IPADDR_TYPE_ANY);
         if (fpPCB == nullptr)
         {
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg): Logger API is variadic by design.
             logger::Logger::error(logger::TCP, "LwipServerSocket::bind(): tcp_new() failed");
             return false;
         }
@@ -68,6 +68,7 @@ bool LwipServerSocket::accept()
     tcp_arg(fpPCB, this);
     tcp_accept(fpPCB, &tcpAcceptListener);
     logger::Logger::info(logger::TCP, "Socket prepared at port %d", _port);
+    // NOLINTEND(cppcoreguidelines-pro-type-vararg)
     return true;
 }
 
@@ -101,12 +102,14 @@ bool LwipServerSocket::bind(IPAddress const& localIpAddress, uint16_t port)
         status = tcp_bind(fpPCB, IP4_ADDR_ANY, _port);
     }
 
+    // NOLINTBEGIN(cppcoreguidelines-pro-type-vararg): Logger API is variadic by design.
     if (status != ERR_OK)
     {
         logger::Logger::error(logger::TCP, "LwipServerSocket::bind(): tcp_bind() failed");
         // Do not call tcp_close here - bind can be retried in accept function
         return false;
     }
+    // NOLINTEND(cppcoreguidelines-pro-type-vararg)
     return true;
 }
 
@@ -114,6 +117,7 @@ void LwipServerSocket::close()
 {
     if (fpPCB != nullptr)
     {
+        // NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg): Logger API is variadic by design.
         logger::Logger::info(logger::TCP, "Socket at port %d closed", _port);
         (void)tcp_close(fpPCB);
         fpPCB = nullptr;
@@ -124,6 +128,7 @@ bool LwipServerSocket::isClosed() const { return (fpPCB == nullptr); }
 
 err_t LwipServerSocket::tcpAcceptListener(void* const arg, tcp_pcb* const pcb, err_t const result)
 {
+    // NOLINTBEGIN(cppcoreguidelines-pro-type-vararg): Logger API is variadic by design.
     if (result != ERR_OK)
     {
         logger::Logger::error(
@@ -168,9 +173,8 @@ err_t LwipServerSocket::tcpAcceptListener(void* const arg, tcp_pcb* const pcb, e
     tcp_poll(pcb, &LwipSocket::tcpPollListener, 1);
 
     pServerSocket->_socketProvidingConnectionListener->connectionAccepted(*pSocket);
+    // NOLINTEND(cppcoreguidelines-pro-type-vararg)
     return ERR_OK;
 }
 
 } /*namespace tcp*/
-
-// NOLINTEND(cppcoreguidelines-pro-type-vararg)

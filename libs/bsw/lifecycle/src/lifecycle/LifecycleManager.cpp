@@ -1,7 +1,5 @@
 // Copyright 2024 Accenture.
 
-// NOLINTBEGIN(cppcoreguidelines-pro-type-vararg): Logger/StringWriter API is variadic by design.
-
 #include "lifecycle/LifecycleManager.h"
 
 #include "lifecycle/LifecycleLogger.h"
@@ -89,6 +87,7 @@ void LifecycleManager::transitionDone(ILifecycleComponent& component)
             componentInfo._isTransitionPending = false;
             componentInfo._transitionTimes[static_cast<uint8_t>(executor._transition)]
                 = _getTimestamp() - _transitionStartTimestamp;
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg): Logger API is variadic by design.
             Logger::debug(
                 LIFECYCLE,
                 "%s %s done",
@@ -127,6 +126,7 @@ void LifecycleManager::execute()
     }
     _isTransitionPending      = true;
     _transitionStartTimestamp = _getTimestamp();
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg): Logger API is variadic by design.
     Logger::info(LIFECYCLE, "%s level %d", getTransitionString(_transition), _transitionLevel);
     for (uint8_t componentIndex = _levelIndices[static_cast<size_t>(_transitionLevel) - 1U];
          componentIndex < _levelIndices[static_cast<size_t>(_transitionLevel)];
@@ -144,6 +144,7 @@ void LifecycleManager::execute()
         {
             transitionContext = _transitionContext;
         }
+        // NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg): Logger API is variadic by design.
         Logger::info(LIFECYCLE, "%s %s", getTransitionString(_transition), componentInfo._name);
         ::async::execute(transitionContext, transitionExecutor);
     }
@@ -168,6 +169,7 @@ bool LifecycleManager::checkLevelTransitionDone()
         }
     }
     _isTransitionPending = false;
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg): Logger API is variadic by design.
     Logger::debug(
         LIFECYCLE, "%s level %d done", getTransitionString(_transition), _transitionLevel);
     _componentTransitionExecutors.clear();
@@ -220,5 +222,3 @@ void LifecycleManager::ComponentTransitionExecutor::execute()
 }
 
 } // namespace lifecycle
-
-// NOLINTEND(cppcoreguidelines-pro-type-vararg)

@@ -1,7 +1,5 @@
 // Copyright 2024 Accenture.
 
-// NOLINTBEGIN(cppcoreguidelines-pro-type-vararg): Logger/StringWriter API is variadic by design.
-
 #include "transport/TransportMessage.h"
 
 #include "transport/TransportLogger.h"
@@ -31,6 +29,7 @@ TransportMessage::TransportMessage(uint8_t* const buffer, uint32_t const bufferL
 , _validBytes(0U)
 {}
 
+// NOLINTBEGIN(cppcoreguidelines-pro-type-vararg): Logger API is variadic by design.
 void TransportMessage::init(uint8_t* const buffer, uint32_t const bufferLength)
 {
     if ((buffer == nullptr) && (bufferLength > 0U))
@@ -78,6 +77,8 @@ void TransportMessage::setPayloadLength(uint16_t const length)
     }
     _payloadLength = length;
 }
+
+// NOLINTEND(cppcoreguidelines-pro-type-vararg)
 
 TransportMessage::ErrorCode
 TransportMessage::append(uint8_t const* const data, uint16_t const length)
@@ -138,5 +139,3 @@ bool TransportMessage::operator==(TransportMessage const& rhs) const
 }
 
 } // namespace transport
-
-// NOLINTEND(cppcoreguidelines-pro-type-vararg)

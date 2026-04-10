@@ -19,6 +19,8 @@ using namespace ::logger;
 
 namespace
 {
+// Exercises the shared stream entry formatter's printf-style writer path.
+// NOLINTBEGIN(cppcoreguidelines-pro-type-vararg)
 class SharedOutputStreamMock : public ISharedOutputStream
 {
 public:
@@ -95,5 +97,7 @@ TEST_F(SharedStreamEntryOutputTest, testAll)
         "15 15343 16 Level_Name Format string 83743 String",
         std::string(streamMock.getStream().getString()));
 }
+
+// NOLINTEND(cppcoreguidelines-pro-type-vararg)
 
 } // namespace
