@@ -14,6 +14,19 @@ namespace util
 {
 namespace stream
 {
+namespace
+{
+size_t boundedStringLength(char const* const value, size_t const maxLength) noexcept
+{
+    size_t length = 0U;
+    while ((length < maxLength) && (value[length] != '\0'))
+    {
+        ++length;
+    }
+    return length;
+}
+} // namespace
+
 StringBufferOutputStream::StringBufferOutputStream(
     ::etl::span<char> const buf, char const* const endOfString, char const* const ellipsis)
 : IOutputStream()
@@ -24,22 +37,7 @@ StringBufferOutputStream::StringBufferOutputStream(
 , _overflow(false)
 {}
 
-StringBufferOutputStream::~StringBufferOutputStream() noexcept
-{
-    try
-    {
-        (void)getString();
-    }
-    catch (...)
-    {
-        if (_buffer.size() > 0U)
-        {
-            _buffer[0] = '\0';
-        }
-        _currentIndex = 0U;
-        _overflow     = false;
-    }
-}
+StringBufferOutputStream::~StringBufferOutputStream() noexcept { finalizeBuffer(); }
 
 bool StringBufferOutputStream::isEof() const { return (_currentIndex + 1U) >= _buffer.size(); }
 
@@ -80,22 +78,44 @@ void StringBufferOutputStream::reset()
     _overflow     = false;
 }
 
+void StringBufferOutputStream::finalizeBuffer() noexcept
+{
+    size_t const bufferSize = _buffer.size();
+    if (bufferSize == 0U)
+    {
+        return;
+    }
+
+    size_t const endOfStringLen = boundedStringLength(_endOfString, bufferSize - 1U);
+    size_t const requiredSuffix = endOfStringLen + 1U;
+    size_t writeIndex           = _currentIndex;
+
+    if (_overflow || ((writeIndex + requiredSuffix) > bufferSize))
+    {
+        size_t const availableForEllipsis = bufferSize - requiredSuffix;
+        size_t const ellipsisLen          = boundedStringLength(_ellipsis, availableForEllipsis);
+        writeIndex                        = availableForEllipsis - ellipsisLen;
+
+        if (ellipsisLen > 0U)
+        {
+            (void)::etl::mem_copy(_ellipsis, ellipsisLen, _buffer.data() + writeIndex);
+            writeIndex += ellipsisLen;
+        }
+
+        _currentIndex = writeIndex;
+    }
+
+    if (endOfStringLen > 0U)
+    {
+        (void)::etl::mem_copy(_endOfString, endOfStringLen, _buffer.data() + writeIndex);
+    }
+
+    _buffer[writeIndex + endOfStringLen] = '\0';
+}
+
 char const* StringBufferOutputStream::getString()
 {
-    auto const dataBuffer = _buffer.reinterpret_as<uint8_t>();
-    size_t const eolLen   = ::etl::strlen(_endOfString, _buffer.size()) + 1U;
-    if (_overflow || ((eolLen + _currentIndex) > _buffer.size()))
-    {
-        size_t const ellipsisLen = ::etl::strlen(_ellipsis, _buffer.size());
-        _currentIndex            = _buffer.size() - (eolLen + ellipsisLen);
-        (void)::etl::copy(
-            ::etl::span<char const>(_ellipsis, ellipsisLen).reinterpret_as<uint8_t const>(),
-            dataBuffer.subspan(_currentIndex, ellipsisLen));
-        _currentIndex += ellipsisLen;
-    }
-    (void)::etl::copy(
-        ::etl::span<char const>(_endOfString, eolLen).reinterpret_as<uint8_t const>(),
-        dataBuffer.subspan(_currentIndex, eolLen));
+    finalizeBuffer();
     return _buffer.data();
 }
 

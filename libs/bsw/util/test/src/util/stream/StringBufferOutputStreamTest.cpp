@@ -133,6 +133,63 @@ TEST(StringBufferOutputStream, testGetBufferIfFull)
     ASSERT_EQ(9U, cut.getBuffer().size());
 }
 
+TEST(StringBufferOutputStream, testGetStringWithEmptyBufferLeavesStorageUntouched)
+{
+    char buffer[1];
+    buffer[0] = 0x17;
+
+    {
+        stream::StringBufferOutputStream cut(::etl::span<char>(buffer).first(0), "\n", "..");
+        ASSERT_EQ(buffer, cut.getString());
+    }
+
+    ASSERT_EQ(0x17, buffer[0]);
+}
+
+TEST(StringBufferOutputStream, testEndOfStringIsTruncatedToFit)
+{
+    char buffer[5];
+    memset(buffer, 0x17, 5);
+
+    stream::StringBufferOutputStream cut(::etl::span<char>(buffer).first(4), "ABCDE");
+
+    ASSERT_EQ(0, strcmp("ABC", cut.getString()));
+    ASSERT_EQ(0x17, buffer[4]);
+}
+
+TEST(StringBufferOutputStream, testEllipsisIsTruncatedToFit)
+{
+    char buffer[7];
+    memset(buffer, 0x17, 7);
+
+    stream::StringBufferOutputStream cut(buffer, "\n", "......");
+    cut.write_string_view(::etl::string_view("abcdefgh"));
+
+    ASSERT_EQ(0, strcmp(".....\n", cut.getString()));
+}
+
+TEST(StringBufferOutputStream, testEllipsisIsOmittedIfNoSpaceIsAvailable)
+{
+    char buffer[2];
+    memset(buffer, 0x17, 2);
+
+    stream::StringBufferOutputStream cut(buffer, "\n", "..");
+    cut.write_string_view(::etl::string_view("ab"));
+
+    ASSERT_EQ(0, strcmp("\n", cut.getString()));
+}
+
+TEST(StringBufferOutputStream, testSuffixCanTriggerTruncationWithoutWriteOverflow)
+{
+    char buffer[6];
+    memset(buffer, 0x17, 6);
+
+    stream::StringBufferOutputStream cut(buffer, "\n", "..");
+    cut.write_string_view(::etl::string_view("abcde"));
+
+    ASSERT_EQ(0, strcmp("ab..\n", cut.getString()));
+}
+
 TEST(StringBufferOutputStream, testDestructorFinalizesBuffer)
 {
     char buffer[10];

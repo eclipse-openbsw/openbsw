@@ -32,6 +32,8 @@ public:
     char const* getString();
 
 private:
+    void finalizeBuffer() noexcept;
+
     ::etl::span<char> _buffer;
     char const* _endOfString;
     char const* _ellipsis;
