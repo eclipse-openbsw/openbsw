@@ -3,12 +3,43 @@
 #include "logger/LoggerTime.h"
 
 #include <etl/chrono.h>
+#include <etl/format.h>
 #include <etl/span.h>
 
 #include <ctime>
 
 namespace
 {
+class OutputStreamIterator
+{
+public:
+    explicit OutputStreamIterator(::util::stream::IOutputStream& stream) : _stream(&stream) {}
+
+    class Proxy
+    {
+    public:
+        explicit Proxy(::util::stream::IOutputStream& stream) : _stream(&stream) {}
+
+        Proxy& operator=(char const value)
+        {
+            _stream->write(static_cast<uint8_t>(value));
+            return *this;
+        }
+
+    private:
+        ::util::stream::IOutputStream* _stream;
+    };
+
+    Proxy operator*() { return Proxy(*_stream); }
+
+    OutputStreamIterator& operator++() { return *this; }
+
+    OutputStreamIterator operator++(int) { return *this; }
+
+private:
+    ::util::stream::IOutputStream* _stream;
+};
+
 int64_t const NO_INIT_BOUNDARY
     = ::etl::chrono::duration_cast<::etl::chrono::milliseconds>(::etl::chrono::hours(1)).count();
 
@@ -53,13 +84,7 @@ void LoggerTime::formatTimestamp(
         stream.write(::etl::span<uint8_t const>(
             static_cast<uint8_t const*>(static_cast<void const*>(timestampBuffer)),
             timestampLength));
-        // Append milliseconds (always 3 digits, zero-padded)
-        uint8_t const msStr[]
-            = {static_cast<uint8_t>('.'),
-               static_cast<uint8_t>('0' + (mSeconds / 100U) % 10U),
-               static_cast<uint8_t>('0' + (mSeconds / 10U) % 10U),
-               static_cast<uint8_t>('0' + mSeconds % 10U)};
-        stream.write(::etl::span<uint8_t const>(msStr, sizeof(msStr)));
+        (void)::etl::format_to(OutputStreamIterator(stream), ".{:03}", mSeconds);
     }
 }
 

@@ -6,8 +6,11 @@
 #include "async/util/Call.h"
 
 #include <etl/delegate.h>
+#include <etl/print.h>
 
 #include <cstdio>
+
+extern "C" void etl_putchar(int c) { std::putchar(c); }
 
 namespace asyncNewPlatform
 {
@@ -25,32 +28,38 @@ AsyncImplExample::AsyncImplExample()
 void AsyncImplExample::printBitmask(async::EventMaskType const eventMask)
 {
     size_t const bits = 8;
-    (void)fputs("0b", stdout);
+    ::etl::print("0b");
     for (size_t i = bits; i > 0U; --i)
     {
-        putchar(static_cast<int>('0' + ((eventMask >> (i - 1)) & 1)));
+        ::etl::print("{}", static_cast<unsigned int>((eventMask >> (i - 1U)) & 1U));
     }
 }
 
 void AsyncImplExample::execute(async::RunnableType& runnable)
 {
-    puts("AsyncImplExample::execute() called, Runnable is prepared for execution");
+    ::etl::println("AsyncImplExample::execute() called, Runnable is prepared for execution");
     _runnableExecutor.enqueue(runnable);
 }
 
-void AsyncImplExample::handlerEventA() { puts("AsyncImplExample::handlerEventA() is called."); }
+void AsyncImplExample::handlerEventA()
+{
+    ::etl::println("AsyncImplExample::handlerEventA() is called.");
+}
 
-void AsyncImplExample::handlerEventB() { puts("AsyncImplExample::handlerEventB() is called."); }
+void AsyncImplExample::handlerEventB()
+{
+    ::etl::println("AsyncImplExample::handlerEventB() is called.");
+}
 
 void AsyncImplExample::setEventA()
 {
-    puts("AsyncImplExample::setEventA() is called.");
+    ::etl::println("AsyncImplExample::setEventA() is called.");
     _eventPolicyA.setEvent();
 }
 
 void AsyncImplExample::setEventB()
 {
-    puts("AsyncImplExample::setEventB() is called.");
+    ::etl::println("AsyncImplExample::setEventB() is called.");
     _eventPolicyB.setEvent();
 }
 
@@ -63,11 +72,11 @@ void AsyncImplExample::setEvents(async::EventMaskType const eventMask)
 {
     _eventMask |= eventMask;
 
-    (void)fputs("AsyncImplExample::setEvents() is called with eventMask:", stdout);
+    ::etl::print("AsyncImplExample::setEvents() is called with eventMask:");
     printBitmask(eventMask);
-    (void)fputs(" new eventMask:", stdout);
+    ::etl::print(" new eventMask:");
     printBitmask(_eventMask);
-    putchar('\n');
+    ::etl::println();
 }
 
 /**
@@ -76,22 +85,22 @@ void AsyncImplExample::setEvents(async::EventMaskType const eventMask)
  */
 void AsyncImplExample::dispatch()
 {
-    (void)fputs("AsyncImplExample::dispatch() is called, eventMask:", stdout);
+    ::etl::print("AsyncImplExample::dispatch() is called, eventMask:");
     printBitmask(_eventMask);
-    putchar('\n');
+    ::etl::println();
 
     handleEvents(_eventMask);
     _eventMask = 0;
 
-    (void)fputs("AsyncImplExample::dispatch() reset eventMask, eventMask:", stdout);
+    ::etl::print("AsyncImplExample::dispatch() reset eventMask, eventMask:");
     printBitmask(_eventMask);
-    putchar('\n');
+    ::etl::println();
 }
 } // namespace asyncNewPlatform
 
-void exampleRunnableA() { puts("exampleRunnableA is called."); }
+void exampleRunnableA() { ::etl::println("exampleRunnableA is called."); }
 
-void exampleRunnableB() { puts("exampleRunnableB is called."); }
+void exampleRunnableB() { ::etl::println("exampleRunnableB is called."); }
 
 // NOLINTBEGIN(bugprone-exception-escape): This is just for testing purposes.
 int main()
