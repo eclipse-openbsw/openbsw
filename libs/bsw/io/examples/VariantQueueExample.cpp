@@ -1,12 +1,15 @@
 // Copyright 2024 Accenture.
 
 #include <etl/algorithm.h>
+#include <etl/print.h>
 #include <etl/unaligned_type.h>
 #include <io/VariantQueue.h>
 
 #include <gtest/gtest.h>
 
 #include <cstdio>
+
+extern "C" void etl_putchar(int c) { std::putchar(c); }
 
 namespace
 {
@@ -68,9 +71,9 @@ void read_no_payload()
     // EXAMPLE_START read_no_payload
     struct Visit
     {
-        void operator()(A const& /* a */) { (void)fputs("received A", stdout); }
+        void operator()(A const& /* a */) { ::etl::print("received A"); }
 
-        void operator()(B const& /* b */) { (void)fputs("received B", stdout); }
+        void operator()(B const& /* b */) { ::etl::print("received B"); }
     };
 
     MyQueue queue;
@@ -92,12 +95,12 @@ void read_with_payload()
     {
         void operator()(A const& /* a */, ::etl::span<uint8_t const> /* payload */)
         {
-            (void)fputs("received A", stdout);
+            ::etl::print("received A");
         }
 
         void operator()(B const& /* b */, ::etl::span<uint8_t const> /* payload */)
         {
-            (void)fputs("received B", stdout);
+            ::etl::print("received B");
         }
     };
 
