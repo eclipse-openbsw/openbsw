@@ -20,6 +20,8 @@ Tja1101Tester::Tja1101Tester(Tja1101& ethernetPhyTja1101) : _ethernetPhyTja1101(
 
 void Tja1101Tester::executeCommand(::util::command::CommandContext& context, uint8_t const idx)
 {
+    // SharedStringWriter::printf is variadic by design.
+    // NOLINTBEGIN(cppcoreguidelines-pro-type-vararg)
     ::util::format::SharedStringWriter writer(context);
     switch (idx)
     {
@@ -66,6 +68,7 @@ void Tja1101Tester::executeCommand(::util::command::CommandContext& context, uin
             break;
         }
     }
+    // NOLINTEND(cppcoreguidelines-pro-type-vararg)
 }
 
 } // namespace enetphy

@@ -84,6 +84,8 @@ void RxBuffers::init()
 
 void RxBuffers::interrupt()
 {
+    // Logger API is variadic by design.
+    // NOLINTBEGIN(cppcoreguidelines-pro-type-vararg)
     struct pbuf* buf;
     netif* pNetif;
 
@@ -116,10 +118,13 @@ void RxBuffers::interrupt()
             }
         }
     } while (buf != nullptr);
+    // NOLINTEND(cppcoreguidelines-pro-type-vararg)
 }
 
 static bool isErrornousBuffer(ENET_ERXD const& descriptor)
 {
+    // Logger API is variadic by design.
+    // NOLINTBEGIN(cppcoreguidelines-pro-type-vararg)
     if ((descriptor.status1 & ENET_ERXD_STATUS1_TR(1)) != 0U)
     { // frame truncated, ignore other error-flags
         Logger::log(ETHERNET, _WARN, "Frame truncated");
@@ -152,6 +157,7 @@ static bool isErrornousBuffer(ENET_ERXD const& descriptor)
     }
 
     return false;
+    // NOLINTEND(cppcoreguidelines-pro-type-vararg)
 }
 
 pbuf* RxBuffers::getCurrentBuffer()

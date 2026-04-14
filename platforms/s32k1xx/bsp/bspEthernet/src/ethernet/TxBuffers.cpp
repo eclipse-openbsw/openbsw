@@ -99,6 +99,8 @@ bool TxBuffers::writeBuffer(
     ::etl::span<uint8_t const> const data,
     bool const lastBufferInFrame)
 {
+    // Logger API is variadic by design.
+    // NOLINTBEGIN(cppcoreguidelines-pro-type-vararg)
     // sanity checks
     ETL_ASSERT(
         txDescriptorIndex < _descriptors.size(),
@@ -126,10 +128,13 @@ bool TxBuffers::writeBuffer(
     }
 
     return true;
+    // NOLINTEND(cppcoreguidelines-pro-type-vararg)
 }
 
 bool TxBuffers::writeFrame(uint16_t const vlanId, const struct pbuf* const buf)
 {
+    // Logger API is variadic by design.
+    // NOLINTBEGIN(cppcoreguidelines-pro-type-vararg)
     struct pbuf* const p = const_cast<struct pbuf*>(buf);
 
     auto const txBufferDescriptorCount = pbuf_clen(p);
@@ -251,6 +256,7 @@ bool TxBuffers::writeFrame(uint16_t const vlanId, const struct pbuf* const buf)
         Logger::log(ETHERNET, _ERROR, "ENET tx fifo is full");
     }
     return false;
+    // NOLINTEND(cppcoreguidelines-pro-type-vararg)
 }
 
 bool TxBuffers::getNextDescriptorIndex(uint8_t const n, ::etl::span<uint8_t> const indexes)

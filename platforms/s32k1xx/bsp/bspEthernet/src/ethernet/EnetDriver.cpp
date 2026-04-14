@@ -152,6 +152,8 @@ uint8_t initDevice(
 
 uint8_t EnetDriver::init()
 {
+    // Logger API is variadic by design.
+    // NOLINTBEGIN(cppcoreguidelines-pro-type-vararg)
     _rxBuffers.init();
     _txBuffers.init();
 
@@ -169,6 +171,7 @@ uint8_t EnetDriver::init()
     }
 
     return result;
+    // NOLINTEND(cppcoreguidelines-pro-type-vararg)
 }
 
 void EnetDriver::enableVlanTagging()

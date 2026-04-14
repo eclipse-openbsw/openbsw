@@ -21,6 +21,8 @@ DEFINE_COMMAND_GROUP_GET_INFO_END;
 
 void AnalogTester::executeCommand(CommandContext& context, uint8_t const idx)
 {
+    // SharedStringWriter::printf is variadic by design.
+    // NOLINTBEGIN(cppcoreguidelines-pro-type-vararg)
     switch (idx)
     {
         case 1: // "all"
@@ -110,6 +112,7 @@ void AnalogTester::executeCommand(CommandContext& context, uint8_t const idx)
             break;
         }
     }
+    // NOLINTEND(cppcoreguidelines-pro-type-vararg)
 }
 
 } // namespace bios

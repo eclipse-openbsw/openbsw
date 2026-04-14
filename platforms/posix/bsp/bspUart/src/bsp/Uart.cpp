@@ -60,6 +60,7 @@ void Uart::init()
 
         // Set the file descriptor to non-blocking
         oldflags = fcntl(STDIN_FILENO, F_GETFL, 0);
+        // NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg): POSIX fcntl arg type depends on cmd.
         fcntl(STDIN_FILENO, F_SETFL, oldflags | O_NONBLOCK);
         _initialized = true;
     }
