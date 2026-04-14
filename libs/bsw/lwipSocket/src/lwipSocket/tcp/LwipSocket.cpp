@@ -255,6 +255,7 @@ err_t LwipSocket::tcpConnectedListener(void* const arg, tcp_pcb* const pcb, err_
 {
     if (arg == nullptr)
     {
+        // NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg): Logger API is variadic by design.
         logger::Logger::critical(
             logger::TCP, "LwipSocket::tcpReceiveListener(): arg must not be NULL!");
         return ERR_ARG;

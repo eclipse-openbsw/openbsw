@@ -34,7 +34,7 @@ public:
 
     OutputStreamIterator& operator++() { return *this; }
 
-    OutputStreamIterator operator++(int) { return *this; }
+    OutputStreamIterator const operator++(int) { return *this; }
 
 private:
     ::util::stream::IOutputStream* _stream;

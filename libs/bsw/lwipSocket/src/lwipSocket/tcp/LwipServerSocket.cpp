@@ -84,6 +84,7 @@ bool LwipServerSocket::bind(IPAddress const& localIpAddress, uint16_t port)
         fpPCB = tcp_new_ip_type(IPADDR_TYPE_ANY);
         if (fpPCB == nullptr)
         {
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg): Logger API is variadic by design.
             logger::Logger::error(logger::TCP, "LwipServerSocket::bind(): tcp_new() failed");
             return false;
         }
