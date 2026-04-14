@@ -59,10 +59,13 @@ void Uart::init()
         (void)tcsetattr(_std_out_fd, TCSANOW, &tmp);
 
         // Set the file descriptor to non-blocking
-        oldflags = fcntl(STDIN_FILENO, F_GETFL, 0);
         // NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg): POSIX fcntl arg type depends on cmd.
-        fcntl(STDIN_FILENO, F_SETFL, oldflags | O_NONBLOCK);
-        _initialized = true;
+        oldflags = fcntl(_std_in_fd, F_GETFL, 0);
+        // NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg): POSIX fcntl arg type depends on cmd.
+        if ((oldflags != -1) && (fcntl(_std_in_fd, F_SETFL, oldflags | O_NONBLOCK) != -1))
+        {
+            _initialized = true;
+        }
     }
 }
 
