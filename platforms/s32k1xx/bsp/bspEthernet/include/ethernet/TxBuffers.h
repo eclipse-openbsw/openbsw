@@ -62,6 +62,8 @@ public:
 
     void interrupt();
 
+    // Pointer-to-integer for ENet DMA descriptor base address register.
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
     uint32_t descriptorAddress() const { return reinterpret_cast<uint32_t>(_descriptors.data()); }
 
     bool _enableVlanTagging;

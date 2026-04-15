@@ -179,6 +179,8 @@ EepromDriver::write(uint32_t const address, uint8_t const* const buffer, uint32_
         return bsp::BSP_ERROR;
     }
 
+    // MMIO base address arithmetic yields hardware-mapped pointer.
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
     auto* const target = reinterpret_cast<uint8_t*>(address + _configuration.fBaseAddress);
     for (uint32_t i = 0U; i < length; ++i)
     {
@@ -206,6 +208,8 @@ EepromDriver::read(uint32_t const address, uint8_t* const buffer, uint32_t const
         return bsp::BSP_ERROR;
     }
 
+    // MMIO base address arithmetic yields hardware-mapped pointer.
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
     auto* const source = reinterpret_cast<uint8_t*>(address + _configuration.fBaseAddress);
     for (uint32_t i = 0U; i < length; ++i)
     {

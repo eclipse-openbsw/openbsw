@@ -164,7 +164,7 @@ bool TxBuffers::writeFrame(uint16_t const vlanId, const struct pbuf* const buf)
 
             if (nextPbuf != 0L)
             {
-                payload  = reinterpret_cast<uint8_t*>(nextPbuf->payload);
+                payload  = static_cast<uint8_t*>(nextPbuf->payload);
                 length   = nextPbuf->len;
                 nextPbuf = nextPbuf->next;
             }
