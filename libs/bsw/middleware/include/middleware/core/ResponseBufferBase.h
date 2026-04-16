@@ -10,9 +10,7 @@
 
 #include <cstdint>
 
-namespace middleware
-{
-namespace core
+namespace middleware::core
 {
 
 /**
@@ -87,5 +85,4 @@ private:
     etl::ivector<SkeletonResponseInfo>& _responses;
 };
 
-} // namespace core
-} // namespace middleware
+} // namespace middleware::core

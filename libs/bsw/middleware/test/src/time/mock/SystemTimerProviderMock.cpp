@@ -4,9 +4,7 @@
 
 #include "middleware/time/SystemTimerProvider.h"
 
-namespace middleware
-{
-namespace time
+namespace middleware::time
 {
 
 namespace
@@ -46,5 +44,4 @@ uint32_t getCurrentTimeInUs()
     ETL_ASSERT_FAIL("SystemTimerProviderMock is not set.");
 }
 
-} // namespace time
-} // namespace middleware
+} // namespace middleware::time

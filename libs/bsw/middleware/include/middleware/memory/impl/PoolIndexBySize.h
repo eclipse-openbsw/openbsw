@@ -8,11 +8,7 @@
 
 #include <cstdint>
 
-namespace middleware
-{
-namespace memory
-{
-namespace impl
+namespace middleware::memory::impl
 {
 
 template<uint32_t N, int32_t I, typename Tuple>
@@ -39,6 +35,4 @@ struct PoolIndexBySize
               : 0;
 };
 
-} // namespace impl
-} // namespace memory
-} // namespace middleware
+} // namespace middleware::memory::impl

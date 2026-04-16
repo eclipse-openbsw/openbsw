@@ -16,9 +16,7 @@
 
 #include <cstdint>
 
-namespace middleware
-{
-namespace core
+namespace middleware::core
 {
 
 HRESULT
@@ -157,5 +155,4 @@ void ProxyBase::checkCrossThreadError(uint32_t const initId) const
     }
 }
 
-} // namespace core
-} // namespace middleware
+} // namespace middleware::core

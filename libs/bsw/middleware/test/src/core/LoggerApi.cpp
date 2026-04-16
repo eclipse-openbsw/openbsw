@@ -5,11 +5,7 @@
 #include "logger/DslLogger.h"
 #include "middleware/core/LoggerApi.h"
 
-namespace middleware
-{
-namespace core
-{
-namespace test
+namespace middleware::core::test
 {
 
 class LoggerApiTest : public ::testing::Test
@@ -144,6 +140,4 @@ TEST_F(LoggerApiTest, TestLogCrossThreadViolation)
         level, error, sourceCluster, serviceId, serviceInstanceId, initId, currentTaskId);
 }
 
-} // namespace test
-} // namespace core
-} // namespace middleware
+} // namespace middleware::core::test

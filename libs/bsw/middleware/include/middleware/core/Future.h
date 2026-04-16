@@ -6,9 +6,7 @@
 
 #include <cstdint>
 
-namespace middleware
-{
-namespace core
+namespace middleware::core
 {
 
 /**
@@ -42,5 +40,4 @@ struct Future
     State state;
 };
 
-} // namespace core
-} // namespace middleware
+} // namespace middleware::core

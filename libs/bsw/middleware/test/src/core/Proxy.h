@@ -2,11 +2,7 @@
 #include "middleware/core/ProxyBase.h"
 #include "middleware/core/types.h"
 
-namespace middleware
-{
-namespace core
-{
-namespace test
+namespace middleware::core::test
 {
 
 class Proxy : public ::middleware::core::ProxyBase
@@ -33,6 +29,4 @@ private:
     uint16_t _serviceId;
 };
 
-} // namespace test
-} // namespace core
-} // namespace middleware
+} // namespace middleware::core::test

@@ -2,12 +2,9 @@
 
 #include "middleware/os/TaskIdProvider.h"
 
-namespace middleware
-{
-namespace os
+namespace middleware::os
 {
 
 uint32_t getProcessId() { return 0; }
 
-} // namespace os
-} // namespace middleware
+} // namespace middleware::os

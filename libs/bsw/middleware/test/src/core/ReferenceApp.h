@@ -5,11 +5,7 @@
 
 #include "middleware/core/Future.h"
 
-namespace middleware
-{
-namespace core
-{
-namespace test
+namespace middleware::core::test
 {
 
 template<typename ArgType>
@@ -20,6 +16,4 @@ public:
     MOCK_METHOD(void, eventCallback, (ArgType const&));
 };
 
-} // namespace test
-} // namespace core
-} // namespace middleware
+} // namespace middleware::core::test

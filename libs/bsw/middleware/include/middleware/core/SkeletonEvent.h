@@ -12,9 +12,7 @@
 
 #include <cstdint>
 
-namespace middleware
-{
-namespace core
+namespace middleware::core
 {
 
 /**
@@ -70,5 +68,4 @@ private:
     EventSender _eventSender;
 };
 
-} // namespace core
-} // namespace middleware
+} // namespace middleware::core

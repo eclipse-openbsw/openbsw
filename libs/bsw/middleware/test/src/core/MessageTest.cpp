@@ -13,11 +13,7 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
-namespace middleware
-{
-namespace core
-{
-namespace test
+namespace middleware::core::test
 {
 
 struct SmallUserType
@@ -41,9 +37,7 @@ struct BigUserType
     uint64_t i{};
 };
 
-} // namespace test
-} // namespace core
-} // namespace middleware
+} // namespace middleware::core::test
 
 namespace etl
 {
@@ -56,11 +50,7 @@ struct is_trivially_copyable<middleware::core::test::BigUserType> : public etl::
 {};
 } // namespace etl
 
-namespace middleware
-{
-namespace core
-{
-namespace test
+namespace middleware::core::test
 {
 
 MATCHER_P(CheckMsgHeader, expected, "Message headers did not match")
@@ -351,6 +341,4 @@ TEST_F(MiddlewareMessageTest, TestSetExternalPayload)
     EXPECT_EQ(obj.i, storedObj.i);
 }
 
-} // namespace test
-} // namespace core
-} // namespace middleware
+} // namespace middleware::core::test

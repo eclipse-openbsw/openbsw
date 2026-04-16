@@ -7,9 +7,7 @@
 #include "middleware/core/TransceiverBase.h"
 #include "middleware/core/types.h"
 
-namespace middleware
-{
-namespace core
+namespace middleware::core
 {
 
 class SkeletonBase;
@@ -99,5 +97,4 @@ protected:
     IClusterConnection() = default;
 };
 
-} // namespace core
-} // namespace middleware
+} // namespace middleware::core

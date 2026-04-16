@@ -10,9 +10,7 @@
 #include <climits>
 #include <cstdint>
 
-namespace middleware
-{
-namespace memory
+namespace middleware::memory
 {
 
 template<size_t N, size_t ChunkSize>
@@ -75,5 +73,4 @@ public:
     friend bool operator==(Pool const& lhs, Pool const& rhs) { return &lhs == &rhs; }
 };
 
-} // namespace memory
-} // namespace middleware
+} // namespace middleware::memory

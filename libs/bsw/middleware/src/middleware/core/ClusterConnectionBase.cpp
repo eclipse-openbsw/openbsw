@@ -13,9 +13,7 @@
 #include <cstddef>
 #include <cstdio>
 
-namespace middleware
-{
-namespace core
+namespace middleware::core
 {
 
 ClusterConnectionBase::ClusterConnectionBase(IClusterConnectionConfigurationBase& configuration)
@@ -121,5 +119,4 @@ void ClusterConnectionTimeoutBase::updateTimeouts()
         .updateTimeouts();
 }
 
-} // namespace core
-} // namespace middleware
+} // namespace middleware::core

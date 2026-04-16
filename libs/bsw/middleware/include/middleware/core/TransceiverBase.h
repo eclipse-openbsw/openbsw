@@ -5,9 +5,7 @@
 #include "middleware/core/Message.h"
 #include "middleware/core/types.h"
 
-namespace middleware
-{
-namespace core
+namespace middleware::core
 {
 
 /**
@@ -83,5 +81,4 @@ protected:
     virtual ~TransceiverBase() = default;
 };
 
-} // namespace core
-} // namespace middleware
+} // namespace middleware::core

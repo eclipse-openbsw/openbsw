@@ -14,11 +14,7 @@ using testing::Invoke;
 using testing::NiceMock;
 using testing::Return;
 
-namespace middleware
-{
-namespace core
-{
-namespace test
+namespace middleware::core::test
 {
 
 using ReferenceApp = RefApp<ArgType>;
@@ -300,6 +296,4 @@ TYPED_TEST(ProxyAttributesEventTest, FullyFeaturedMethodSetEvent)
     EXPECT_EQ(okReceiveRes, HRESULT::Ok);
 }
 
-} // namespace test
-} // namespace core
-} // namespace middleware
+} // namespace middleware::core::test

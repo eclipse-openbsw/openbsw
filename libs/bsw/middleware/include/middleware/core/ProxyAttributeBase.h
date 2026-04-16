@@ -14,9 +14,7 @@
 
 #include <cstdint>
 
-namespace middleware
-{
-namespace core
+namespace middleware::core
 {
 
 /**
@@ -126,5 +124,4 @@ protected:
     ProxyBase* _proxy = nullptr;
 };
 
-} // namespace core
-} // namespace middleware
+} // namespace middleware::core

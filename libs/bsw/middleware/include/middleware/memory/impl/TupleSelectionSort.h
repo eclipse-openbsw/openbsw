@@ -7,9 +7,7 @@
 
 #include <cstddef>
 
-namespace middleware
-{
-namespace impl
+namespace middleware::impl
 {
 
 template<size_t i, size_t j, class Tuple>
@@ -70,5 +68,4 @@ struct Ascending
     static_assert(U::chunkSize() != T::chunkSize(), "Pools of same sizes are not allowed");
 };
 
-} // namespace impl
-} // namespace middleware
+} // namespace middleware::impl

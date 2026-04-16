@@ -15,9 +15,7 @@
 #include <cstdint>
 #include <cstring>
 
-namespace middleware
-{
-namespace core
+namespace middleware::core
 {
 
 MessagePayloadBuilder MessagePayloadBuilder::_instance{};
@@ -120,5 +118,4 @@ void MessagePayloadBuilder::deallocate(Message const& msg)
     }
 }
 
-} // namespace core
-} // namespace middleware
+} // namespace middleware::core

@@ -10,9 +10,7 @@
 
 #include <cstdint>
 
-namespace middleware
-{
-namespace core
+namespace middleware::core
 {
 
 /**
@@ -111,5 +109,4 @@ private:
     uint8_t _addressId;
 };
 
-} // namespace core
-} // namespace middleware
+} // namespace middleware::core

@@ -8,9 +8,7 @@
 #include <cmath>
 #include <cstdint>
 
-namespace middleware
-{
-namespace core
+namespace middleware::core
 {
 
 ETL_INLINE_VAR constexpr uint16_t MAX_METHOD_ID       = 128U;
@@ -86,5 +84,4 @@ struct AbsoluteToleranceEqual
     }
 };
 
-} // namespace core
-} // namespace middleware
+} // namespace middleware::core

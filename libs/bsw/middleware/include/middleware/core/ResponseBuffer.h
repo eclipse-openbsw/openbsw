@@ -13,9 +13,7 @@
 
 #include <cstdint>
 
-namespace middleware
-{
-namespace core
+namespace middleware::core
 {
 
 /**
@@ -86,5 +84,4 @@ private:
     ResponseContainer _responses;
 };
 
-} // namespace core
-} // namespace middleware
+} // namespace middleware::core

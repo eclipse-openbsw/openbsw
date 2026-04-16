@@ -14,11 +14,7 @@
 #include "middleware/core/MessagePayloadBuilder.h"
 #include "middleware/core/types.h"
 
-namespace middleware
-{
-namespace core
-{
-namespace test
+namespace middleware::core::test
 {
 
 struct SmallTrivialType
@@ -42,9 +38,7 @@ struct BigTrivialType
     uint64_t i;
 };
 
-} // namespace test
-} // namespace core
-} // namespace middleware
+} // namespace middleware::core::test
 
 /// ETL user-defined type-traits specializations for trivially copyable test types.
 /// Required because OpenBSW ETL is configured with ETL_USER_DEFINED_TYPE_TRAITS,
@@ -68,11 +62,7 @@ struct is_trivially_copyable<etl::array<uint8_t, N> const> : public etl::true_ty
 {};
 } // namespace etl
 
-namespace middleware
-{
-namespace core
-{
-namespace test
+namespace middleware::core::test
 {
 
 namespace
@@ -584,6 +574,4 @@ TEST_F(TestMessagePayloadBuilder, TestFailedAllocationForNonTrivialType)
     MessagePayloadBuilder::deallocate(msg3);
 }
 
-} // namespace test
-} // namespace core
-} // namespace middleware
+} // namespace middleware::core::test

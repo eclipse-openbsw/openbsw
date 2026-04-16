@@ -13,9 +13,7 @@
 #include <etl/iterator.h>
 #include <etl/vector.h>
 
-namespace middleware
-{
-namespace core
+namespace middleware::core
 {
 
 void ITimeoutConfiguration::registerTimeoutTransceiver(
@@ -139,5 +137,4 @@ HRESULT IClusterConnectionConfigurationBase::dispatchMessage(
     return result;
 }
 
-} // namespace core
-} // namespace middleware
+} // namespace middleware::core

@@ -9,9 +9,7 @@
 
 #include <etl/vector.h>
 
-namespace middleware
-{
-namespace core
+namespace middleware::core
 {
 class ProxyBase;
 class SkeletonBase;
@@ -347,5 +345,4 @@ protected:
     IClusterConnectionConfigurationSkeletonOnlyWithTimeout()          = default;
 };
 
-} // namespace core
-} // namespace middleware
+} // namespace middleware::core

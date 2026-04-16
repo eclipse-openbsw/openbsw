@@ -7,11 +7,7 @@
 
 #include "middleware/core/AllocatorBase.h"
 
-namespace middleware
-{
-namespace memory
-{
-namespace test
+namespace middleware::memory::test
 {
 
 class AllocatorMock : public core::AllocatorBase<AllocatorMock>
@@ -46,6 +42,4 @@ private:
     static etl::array<uint8_t, MAX_STORAGE> _storage;
 };
 
-} // namespace test
-} // namespace memory
-} // namespace middleware
+} // namespace middleware::memory::test

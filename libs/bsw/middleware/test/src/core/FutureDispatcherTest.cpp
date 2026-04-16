@@ -15,11 +15,7 @@
 #include "middleware/core/types.h"
 #include "time/mock/SystemTimerProviderMock.h"
 
-namespace middleware
-{
-namespace core
-{
-namespace test
+namespace middleware::core::test
 {
 
 template<uint32_t TIMEOUT, uint8_t LIMIT>
@@ -296,6 +292,4 @@ TYPED_TEST(FutureDispatcherTestSuite, TestRequestIdWraparound)
     }
 }
 
-} // namespace test
-} // namespace core
-} // namespace middleware
+} // namespace middleware::core::test

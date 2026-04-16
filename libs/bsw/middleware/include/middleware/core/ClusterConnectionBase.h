@@ -11,9 +11,7 @@
 #include "middleware/core/SkeletonBase.h"
 #include "middleware/core/types.h"
 
-namespace middleware
-{
-namespace core
+namespace middleware::core
 {
 /**
  * Base class for cluster connection implementations.
@@ -107,5 +105,4 @@ protected:
     explicit ClusterConnectionTimeoutBase(ITimeoutConfiguration& configuration);
 };
 
-} // namespace core
-} // namespace middleware
+} // namespace middleware::core

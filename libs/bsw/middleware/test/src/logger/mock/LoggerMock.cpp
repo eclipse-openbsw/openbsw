@@ -7,13 +7,7 @@
 
 #include "middleware/logger/Logger.h"
 
-namespace middleware
-{
-namespace logger
-{
-namespace test
-{
-namespace mock
+namespace middleware::logger::test::mock
 {
 namespace
 {
@@ -24,14 +18,9 @@ LoggerMock::LoggerMock() { _loggerMockPtr = this; }
 
 LoggerMock::~LoggerMock() { _loggerMockPtr = nullptr; }
 
-} // namespace mock
-} // namespace test
-} // namespace logger
-} // namespace middleware
+} // namespace middleware::logger::test::mock
 
-namespace middleware
-{
-namespace logger
+namespace middleware::logger
 {
 
 void log(LogLevel const level, char const* const format, ...) // NOLINT(cert-dcl50-cpp)
@@ -94,5 +83,4 @@ uint32_t getMessageId(Error const id)
     return etl::numeric_limits<uint32_t>::max();
 }
 
-} // namespace logger
-} // namespace middleware
+} // namespace middleware::logger

@@ -4,11 +4,7 @@
 
 #include <gmock/gmock.h>
 
-namespace middleware
-{
-namespace time
-{
-namespace test
+namespace middleware::time::test
 {
 
 class SystemTimerProviderMock
@@ -21,6 +17,4 @@ public:
 void setSystemTimerProviderMock(SystemTimerProviderMock* const ptr);
 void unsetSystemTimerProviderMock();
 
-} // namespace test
-} // namespace time
-} // namespace middleware
+} // namespace middleware::time::test

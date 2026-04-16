@@ -2,9 +2,7 @@
 
 #pragma once
 
-namespace middleware
-{
-namespace shm
+namespace middleware::shm
 {
 
 /// Definition is generated code
@@ -20,5 +18,4 @@ inline void initializeShm(bool const mainCore)
     initializeQueues(mainCore);
 }
 
-} // namespace shm
-} // namespace middleware
+} // namespace middleware::shm

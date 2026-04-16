@@ -8,9 +8,7 @@
 #include <etl/delegate.h>
 #include <etl/type_traits.h>
 
-namespace middleware
-{
-namespace core
+namespace middleware::core
 {
 
 /**
@@ -89,5 +87,4 @@ private:
     OnFieldChangedCallback _cbk;
 };
 
-} // namespace core
-} // namespace middleware
+} // namespace middleware::core

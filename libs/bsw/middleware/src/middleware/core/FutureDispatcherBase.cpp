@@ -13,9 +13,7 @@
 
 #include <cstdint>
 
-namespace middleware
-{
-namespace core
+namespace middleware::core
 {
 
 void FutureDispatcherBase::freeAll()
@@ -123,5 +121,4 @@ void FutureDispatcherBase::updateTimeouts(uint32_t const now, uint32_t const tim
     }
 }
 
-} // namespace core
-} // namespace middleware
+} // namespace middleware::core

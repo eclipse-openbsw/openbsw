@@ -12,9 +12,7 @@
 
 #include <cstdint>
 
-namespace middleware
-{
-namespace memory
+namespace middleware::memory
 {
 
 /**
@@ -212,5 +210,4 @@ public:
     }
 };
 
-} // namespace memory
-} // namespace middleware
+} // namespace middleware::memory

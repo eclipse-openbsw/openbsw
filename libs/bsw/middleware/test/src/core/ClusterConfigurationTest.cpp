@@ -21,11 +21,7 @@
 using testing::Exactly;
 using testing::NiceMock;
 
-namespace middleware
-{
-namespace core
-{
-namespace test
+namespace middleware::core::test
 {
 
 struct MiddlewareMessageComparator
@@ -522,6 +518,4 @@ TEST_F(ConfigurationBaseTest, TimeoutTransceiverTriggerTest)
     EXPECT_TRUE(rec2.hasBeenTriggered());
 }
 
-} // namespace test
-} // namespace core
-} // namespace middleware
+} // namespace middleware::core::test

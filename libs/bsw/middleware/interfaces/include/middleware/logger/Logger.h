@@ -6,9 +6,7 @@
 
 #include <cstdint>
 
-namespace middleware
-{
-namespace logger
+namespace middleware::logger
 {
 
 enum class LogLevel : uint8_t
@@ -76,5 +74,4 @@ extern void logBinary(LogLevel level, etl::span<uint8_t const> data);
  */
 extern uint32_t getMessageId(Error id);
 
-} // namespace logger
-} // namespace middleware
+} // namespace middleware::logger

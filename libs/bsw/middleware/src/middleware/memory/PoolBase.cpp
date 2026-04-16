@@ -12,9 +12,7 @@
 #include <cstdint>
 #include <cstring>
 
-namespace middleware
-{
-namespace memory
+namespace middleware::memory
 {
 
 PoolBase::PoolBase(
@@ -175,5 +173,4 @@ etl::tuple<size_t, size_t, double> PoolBase::getProfile() const
              : 0.0));
 }
 
-} // namespace memory
-} // namespace middleware
+} // namespace middleware::memory

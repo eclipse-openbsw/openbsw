@@ -5,11 +5,7 @@
 
 #include "middleware/core/AllocatorBase.h"
 
-namespace middleware
-{
-namespace core
-{
-namespace test
+namespace middleware::core::test
 {
 
 class TestAllocatorBase : public ::testing::Test
@@ -140,6 +136,4 @@ TEST_F(TestAllocatorBase, TestFailedDeallocateShared)
     EXPECT_EQ(_impl.getStats().unknownPtrsError, 1U);
 }
 
-} // namespace test
-} // namespace core
-} // namespace middleware
+} // namespace middleware::core::test

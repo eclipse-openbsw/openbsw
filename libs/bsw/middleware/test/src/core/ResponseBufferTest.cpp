@@ -12,11 +12,7 @@
 #include "middleware/core/ResponseBufferBase.h"
 #include "middleware/core/types.h"
 
-namespace middleware
-{
-namespace core
-{
-namespace test
+namespace middleware::core::test
 {
 
 class SkeletonResponseMock : public SkeletonBase
@@ -194,6 +190,4 @@ TEST_F(ResponseBufferTestSuite, TestGetAvailableResponseExhaustion)
     EXPECT_EQ(this->doGetAvailableResponse(addressId, requestId), nullptr);
 }
 
-} // namespace test
-} // namespace core
-} // namespace middleware
+} // namespace middleware::core::test

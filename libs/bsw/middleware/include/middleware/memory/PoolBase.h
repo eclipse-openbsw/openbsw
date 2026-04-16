@@ -6,9 +6,7 @@
 
 #include <cstdint>
 
-namespace middleware
-{
-namespace memory
+namespace middleware::memory
 {
 
 struct PoolStats
@@ -120,5 +118,4 @@ private:
     PoolStats _stats;
 };
 
-} // namespace memory
-} // namespace middleware
+} // namespace middleware::memory

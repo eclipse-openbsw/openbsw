@@ -6,13 +6,7 @@
 
 #include "middleware/logger/Logger.h"
 
-namespace middleware
-{
-namespace logger
-{
-namespace test
-{
-namespace mock
+namespace middleware::logger::test::mock
 {
 
 class LoggerMock
@@ -26,7 +20,4 @@ public:
     MOCK_METHOD(uint32_t, getMessageId, (Error const));
 };
 
-} // namespace mock
-} // namespace test
-} // namespace logger
-} // namespace middleware
+} // namespace middleware::logger::test::mock

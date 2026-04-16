@@ -10,9 +10,7 @@
 
 #include <cstdint>
 
-namespace middleware
-{
-namespace core
+namespace middleware::core
 {
 
 struct AllocatorStatistics
@@ -192,5 +190,4 @@ AllocatorStatistics const& AllocatorBase<TAllocatorImpl>::getStats()
     return _stats;
 }
 
-} // namespace core
-} // namespace middleware
+} // namespace middleware::core

@@ -4,11 +4,8 @@
 #include "middleware/core/types.h"
 #include "middleware/memory/AllocatorSelector.h"
 
-namespace middleware
+namespace middleware::memory
 {
-namespace memory
-{
-
 namespace test
 {
 
@@ -99,5 +96,4 @@ PointerValidationFunction getPtrValidationFunction(uint16_t /*unused*/)
         allocatorMock);
 }
 
-} // namespace memory
-} // namespace middleware
+} // namespace middleware::memory

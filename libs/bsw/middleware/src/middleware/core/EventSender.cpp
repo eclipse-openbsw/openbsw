@@ -8,9 +8,7 @@
 #include "middleware/core/SkeletonBase.h"
 #include "middleware/core/types.h"
 
-namespace middleware
-{
-namespace core
+namespace middleware::core
 {
 
 HRESULT EventSender::send(uint16_t const memberId) const
@@ -46,5 +44,4 @@ HRESULT EventSender::sendToClusters(Message& msg) const
     return ret;
 }
 
-} // namespace core
-} // namespace middleware
+} // namespace middleware::core

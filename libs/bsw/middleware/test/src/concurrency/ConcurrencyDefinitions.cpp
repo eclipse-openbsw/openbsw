@@ -1,8 +1,6 @@
 #include "middleware/concurrency/LockStrategies.h"
 
-namespace middleware
-{
-namespace concurrency
+namespace middleware::concurrency
 {
 
 void suspendAllInterrupts() {}
@@ -15,5 +13,4 @@ ScopedECULock::ScopedECULock(uint8_t volatile*) {}
 
 ScopedECULock::~ScopedECULock() {}
 
-} // namespace concurrency
-} // namespace middleware
+} // namespace middleware::concurrency

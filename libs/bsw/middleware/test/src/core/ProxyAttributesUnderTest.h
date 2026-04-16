@@ -5,11 +5,7 @@
 #include "middleware/core/types.h"
 #include "mock/ProxyMock.h"
 
-namespace middleware
-{
-namespace core
-{
-namespace test
+namespace middleware::core::test
 {
 
 namespace internal
@@ -147,6 +143,4 @@ struct DerivedReadOnlyNoSubscriptionAttribute final : public ReadOnlyNoSubscript
     explicit DerivedReadOnlyNoSubscriptionAttribute(ProxyBase& proxy) : Base(proxy) {}
 };
 
-} // namespace test
-} // namespace core
-} // namespace middleware
+} // namespace middleware::core::test

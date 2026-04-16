@@ -12,9 +12,7 @@
 #include <cstddef>
 #include <cstdint>
 
-namespace middleware
-{
-namespace logger
+namespace middleware::logger
 {
 namespace
 {
@@ -197,5 +195,4 @@ void logCrossThreadViolation(
     middleware::logger::logBinary(level, temp);
 }
 
-} // namespace logger
-} // namespace middleware
+} // namespace middleware::logger

@@ -19,11 +19,7 @@
 using testing::Exactly;
 using testing::NiceMock;
 
-namespace middleware
-{
-namespace core
-{
-namespace test
+namespace middleware::core::test
 {
 
 struct ClusterConfigurationMockBase
@@ -723,6 +719,4 @@ TEST_F(ConnectionBaseTest, SyntheticClusterIdGetter)
     EXPECT_EQ(ptrToBase->getTargetClusterId(), confSkeletonOnly.getTargetClusterId());
 }
 
-} // namespace test
-} // namespace core
-} // namespace middleware
+} // namespace middleware::core::test

@@ -7,9 +7,7 @@
 #include <cstdint>
 #include <cstring>
 
-namespace middleware
-{
-namespace queue
+namespace middleware::queue
 {
 
 /**
@@ -195,5 +193,4 @@ private:
     QueueStats _stats;
 };
 
-} // namespace queue
-} // namespace middleware
+} // namespace middleware::queue

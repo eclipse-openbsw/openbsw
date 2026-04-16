@@ -9,9 +9,7 @@
 #include <etl/optional.h>
 #include <etl/type_traits.h>
 
-namespace middleware
-{
-namespace queue
+namespace middleware::queue
 {
 
 /**
@@ -324,5 +322,4 @@ static_assert(
     (sizeof(Queue<QueueTraits<etl::array<uint8_t, 32U>, 5U>>) % sizeof(uint32_t)) == 0U,
     "Performance penalty due to misaligned queue!");
 
-} // namespace queue
-} // namespace middleware
+} // namespace middleware::queue

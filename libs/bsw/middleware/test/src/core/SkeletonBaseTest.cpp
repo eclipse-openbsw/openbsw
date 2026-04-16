@@ -14,11 +14,7 @@
 using testing::Exactly;
 using testing::NiceMock;
 
-namespace middleware
-{
-namespace core
-{
-namespace test
+namespace middleware::core::test
 {
 
 class Skeleton : public SkeletonBase
@@ -355,6 +351,4 @@ TEST_F(SkeletonBaseTest, TestGetClusterConnectionsFromNotInitSkeleton)
     EXPECT_TRUE(skeleton.getClusterConnections().empty());
 }
 
-} // namespace test
-} // namespace core
-} // namespace middleware
+} // namespace middleware::core::test

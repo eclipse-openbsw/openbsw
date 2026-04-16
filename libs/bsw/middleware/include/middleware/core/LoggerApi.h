@@ -10,9 +10,7 @@
 
 #include <cstdint>
 
-namespace middleware
-{
-namespace logger
+namespace middleware::logger
 {
 
 /** Log buffer size for allocation failures. */
@@ -147,5 +145,4 @@ void logCrossThreadViolation(
     uint32_t initId,
     uint32_t currentTaskId);
 
-} // namespace logger
-} // namespace middleware
+} // namespace middleware::logger

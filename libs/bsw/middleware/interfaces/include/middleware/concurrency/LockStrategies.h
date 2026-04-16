@@ -4,9 +4,7 @@
 
 #include <cstdint>
 
-namespace middleware
-{
-namespace concurrency
+namespace middleware::concurrency
 {
 
 /**
@@ -57,5 +55,4 @@ struct ScopedECULock
     ScopedECULock& operator=(ScopedECULock const&) = delete;
 };
 
-} // namespace concurrency
-} // namespace middleware
+} // namespace middleware::concurrency

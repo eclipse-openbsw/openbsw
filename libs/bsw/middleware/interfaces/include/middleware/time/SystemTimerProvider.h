@@ -4,9 +4,7 @@
 
 #include <cstdint>
 
-namespace middleware
-{
-namespace time
+namespace middleware::time
 {
 /**
  * Get the current system time in milliseconds.
@@ -30,5 +28,4 @@ extern uint32_t getCurrentTimeInMs();
  */
 extern uint32_t getCurrentTimeInUs();
 
-} // namespace time
-} // namespace middleware
+} // namespace middleware::time

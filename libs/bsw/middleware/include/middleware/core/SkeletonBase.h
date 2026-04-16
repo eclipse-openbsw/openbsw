@@ -11,9 +11,7 @@
 
 #include <cstdint>
 
-namespace middleware
-{
-namespace core
+namespace middleware::core
 {
 
 class EventSender;
@@ -96,5 +94,4 @@ private:
     virtual uint32_t getProcessId() const { return INVALID_TASK_ID; }
 };
 
-} // namespace core
-} // namespace middleware
+} // namespace middleware::core

@@ -14,11 +14,7 @@
 #include "middleware/logger/Logger.h"
 #include "mock/LoggerMock.h"
 
-namespace middleware
-{
-namespace logger
-{
-namespace test
+namespace middleware::logger::test
 {
 
 using ::testing::_;
@@ -107,6 +103,4 @@ private:
     }
 };
 
-} // namespace test
-} // namespace logger
-} // namespace middleware
+} // namespace middleware::logger::test

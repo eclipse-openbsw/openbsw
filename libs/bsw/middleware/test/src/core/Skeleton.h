@@ -2,11 +2,7 @@
 #include "middleware/core/SkeletonBase.h"
 #include "middleware/core/types.h"
 
-namespace middleware
-{
-namespace core
-{
-namespace test
+namespace middleware::core::test
 {
 
 class Skeleton : public ::middleware::core::SkeletonBase
@@ -29,6 +25,4 @@ private:
     uint16_t _serviceId;
 };
 
-} // namespace test
-} // namespace core
-} // namespace middleware
+} // namespace middleware::core::test

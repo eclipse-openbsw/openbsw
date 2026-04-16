@@ -13,9 +13,7 @@
 
 #include <cstdint>
 
-namespace middleware
-{
-namespace core
+namespace middleware::core
 {
 
 /// Helper to combine multiple base classes via inheritance.
@@ -350,5 +348,4 @@ private:
     FutureDispatcher<SetterTraits, REQUEST_LIMIT> _setDispatcher;
 };
 
-} // namespace core
-} // namespace middleware
+} // namespace middleware::core

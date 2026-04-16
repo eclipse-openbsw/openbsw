@@ -4,11 +4,7 @@
 
 #include <cstdint>
 
-namespace middleware
-{
-namespace memory
-{
-namespace alloc
+namespace middleware::memory::alloc
 {
 
 /**
@@ -36,6 +32,4 @@ private:
     static TSuper* _instance;
 };
 
-} // namespace alloc
-} // namespace memory
-} // namespace middleware
+} // namespace middleware::memory::alloc

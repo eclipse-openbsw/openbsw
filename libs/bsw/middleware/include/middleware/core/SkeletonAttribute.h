@@ -10,9 +10,7 @@
 
 #include <cstdint>
 
-namespace middleware
-{
-namespace core
+namespace middleware::core
 {
 
 /**
@@ -80,5 +78,4 @@ private:
     AttributeType _attributeValue{};
 };
 
-} // namespace core
-} // namespace middleware
+} // namespace middleware::core

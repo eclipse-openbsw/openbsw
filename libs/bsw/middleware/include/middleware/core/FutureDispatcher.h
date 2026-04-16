@@ -16,9 +16,7 @@
 
 #include <cstdint>
 
-namespace middleware
-{
-namespace core
+namespace middleware::core
 {
 
 /**
@@ -224,5 +222,4 @@ private:
     etl::array<Callback, REQUEST_LIMIT> _callbacks;
 };
 
-} // namespace core
-} // namespace middleware
+} // namespace middleware::core

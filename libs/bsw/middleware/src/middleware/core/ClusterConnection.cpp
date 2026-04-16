@@ -5,9 +5,7 @@
 #include "middleware/core/IClusterConnectionConfigurationBase.h"
 #include "middleware/core/types.h"
 
-namespace middleware
-{
-namespace core
+namespace middleware::core
 {
 
 ClusterConnectionNoTimeoutProxyOnly::ClusterConnectionNoTimeoutProxyOnly(
@@ -154,5 +152,4 @@ void ClusterConnectionSkeletonOnlyWithTimeout::unsubscribe(
         .unsubscribe(skeleton, serviceId);
 }
 
-} // namespace core
-} // namespace middleware
+} // namespace middleware::core

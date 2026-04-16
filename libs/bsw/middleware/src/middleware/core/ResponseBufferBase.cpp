@@ -10,9 +10,7 @@
 #include <etl/algorithm.h>
 #include <etl/vector.h>
 
-namespace middleware
-{
-namespace core
+namespace middleware::core
 {
 
 ResponseBufferBase::ResponseBufferBase(
@@ -80,5 +78,4 @@ HRESULT ResponseBufferBase::sendResponse(
     return res;
 }
 
-} // namespace core
-} // namespace middleware
+} // namespace middleware::core

@@ -6,11 +6,7 @@
 #include "gtest/gtest.h"
 #include "middleware/core/DatabaseManipulator.h"
 
-namespace middleware
-{
-namespace core
-{
-namespace test
+namespace middleware::core::test
 {
 
 using ::middleware::core::HRESULT;
@@ -567,6 +563,4 @@ TEST_F(DbManipulatorTest, TestRegisteredSkeletonTransceiverCount)
     EXPECT_EQ(skeletonCount3, 0U);
 }
 
-} // namespace test
-} // namespace core
-} // namespace middleware
+} // namespace middleware::core::test

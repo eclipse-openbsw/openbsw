@@ -8,9 +8,7 @@
 
 #include <etl/type_traits.h>
 
-namespace middleware
-{
-namespace core
+namespace middleware::core
 {
 class ProxyBase;
 class SkeletonBase;
@@ -280,5 +278,4 @@ struct ClusterConnectionTypeSelector<
     using type = ClusterConnectionBidirectionalWithTimeout;
 };
 
-} // namespace core
-} // namespace middleware
+} // namespace middleware::core

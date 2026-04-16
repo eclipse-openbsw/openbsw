@@ -10,11 +10,7 @@
 
 #include <cstdint>
 
-namespace middleware
-{
-namespace core
-{
-namespace meta
+namespace middleware::core::meta
 {
 /**
  * Container for managing transceiver collections.
@@ -94,6 +90,4 @@ struct TransceiverContainer
     uint16_t _actualAddress;
 };
 
-} // namespace meta
-} // namespace core
-} // namespace middleware
+} // namespace middleware::core::meta

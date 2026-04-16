@@ -8,11 +8,7 @@
 #include "middleware/core/SkeletonBase.h"
 #include "middleware/core/types.h"
 
-namespace middleware
-{
-namespace core
-{
-namespace test
+namespace middleware::core::test
 {
 
 namespace internal
@@ -53,6 +49,4 @@ TEST_F(SkeletonAttributeTest, SendPayload)
     EXPECT_EQ(skeleton.attribute.send(), HRESULT::NotRegistered);
 }
 
-} // namespace test
-} // namespace core
-} // namespace middleware
+} // namespace middleware::core::test

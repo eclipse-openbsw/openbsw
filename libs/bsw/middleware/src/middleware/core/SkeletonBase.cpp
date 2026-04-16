@@ -17,9 +17,7 @@
 #include <cstddef>
 #include <cstdint>
 
-namespace middleware
-{
-namespace core
+namespace middleware::core
 {
 
 HRESULT
@@ -187,5 +185,4 @@ void SkeletonBase::checkCrossThreadError(uint32_t const initId) const
     }
 }
 
-} // namespace core
-} // namespace middleware
+} // namespace middleware::core

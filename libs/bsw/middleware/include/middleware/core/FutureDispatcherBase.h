@@ -14,9 +14,7 @@
 #include <cstddef>
 #include <cstdint>
 
-namespace middleware
-{
-namespace core
+namespace middleware::core
 {
 
 /**
@@ -88,5 +86,4 @@ private:
     uint16_t _currentRequestId;
 };
 
-} // namespace core
-} // namespace middleware
+} // namespace middleware::core

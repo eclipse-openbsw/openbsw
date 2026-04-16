@@ -4,11 +4,7 @@
 
 #include <gtest/gtest.h>
 
-namespace middleware
-{
-namespace queue
-{
-namespace test
+namespace middleware::queue::test
 {
 
 struct FakeLock
@@ -200,6 +196,4 @@ TEST(TestQueue, ExternalMutexTest)
     writer.write(100U);
 }
 
-} // namespace test
-} // namespace queue
-} // namespace middleware
+} // namespace middleware::queue::test

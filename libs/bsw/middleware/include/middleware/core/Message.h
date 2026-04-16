@@ -12,9 +12,7 @@
 #include <cstddef>
 #include <cstdint>
 
-namespace middleware
-{
-namespace core
+namespace middleware::core
 {
 
 /**
@@ -353,5 +351,4 @@ static_assert(
     Message::MAX_MESSAGE_SIZE == sizeof(Message),
     "size of middleware::core::Message must be the same as cache line alignment!");
 
-} // namespace core
-} // namespace middleware
+} // namespace middleware::core

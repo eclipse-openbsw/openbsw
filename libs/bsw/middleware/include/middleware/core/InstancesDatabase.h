@@ -7,9 +7,7 @@
 
 #include <etl/span.h>
 
-namespace middleware
-{
-namespace core
+namespace middleware::core
 {
 
 /**
@@ -37,5 +35,4 @@ protected:
     ~IInstanceDatabase() = default;
 };
 
-} // namespace core
-} // namespace middleware
+} // namespace middleware::core

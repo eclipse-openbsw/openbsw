@@ -11,9 +11,7 @@
 
 #include <cstdint>
 
-namespace middleware
-{
-namespace core
+namespace middleware::core
 {
 class ProxyBase;
 class SkeletonBase;
@@ -207,5 +205,4 @@ public:
         uint16_t serviceId);
 };
 } // namespace meta
-} // namespace core
-} // namespace middleware
+} // namespace middleware::core

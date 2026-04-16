@@ -2,9 +2,7 @@
 
 #pragma once
 
-namespace middleware
-{
-namespace core
+namespace middleware::core
 {
 /**
  * Abstract base class for timeout handling.
@@ -28,5 +26,4 @@ public:
 protected:
     ~ITimeoutHandler() = default;
 };
-} // namespace core
-} // namespace middleware
+} // namespace middleware::core

@@ -4,9 +4,7 @@
 
 #include <cstdint>
 
-namespace middleware
-{
-namespace os
+namespace middleware::os
 {
 
 /**
@@ -20,5 +18,4 @@ namespace os
  */
 extern uint32_t getProcessId();
 
-} // namespace os
-} // namespace middleware
+} // namespace middleware::os

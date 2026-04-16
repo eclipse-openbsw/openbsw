@@ -16,11 +16,7 @@
 using testing::Exactly;
 using testing::NiceMock;
 
-namespace middleware
-{
-namespace core
-{
-namespace test
+namespace middleware::core::test
 {
 
 class Proxy : public ProxyBase
@@ -245,6 +241,4 @@ TEST_F(ProxyBaseDeathTest, TestCheckCrossThreadErrorAbort)
     });
 }
 
-} // namespace test
-} // namespace core
-} // namespace middleware
+} // namespace middleware::core::test

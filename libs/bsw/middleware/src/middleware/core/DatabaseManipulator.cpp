@@ -16,11 +16,7 @@
 #include <cstddef>
 #include <cstdint>
 
-namespace middleware
-{
-namespace core
-{
-namespace meta
+namespace middleware::core::meta
 {
 
 HRESULT
@@ -347,6 +343,4 @@ size_t DbManipulator::registeredTransceiversCount(
     return 0U;
 }
 
-} // namespace meta
-} // namespace core
-} // namespace middleware
+} // namespace middleware::core::meta

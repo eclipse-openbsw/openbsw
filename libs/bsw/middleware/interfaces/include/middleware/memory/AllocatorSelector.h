@@ -6,9 +6,7 @@
 
 #include <cstdint>
 
-namespace middleware
-{
-namespace memory
+namespace middleware::memory
 {
 
 using AllocateFunction          = etl::delegate<uint8_t*(uint32_t)>;
@@ -36,5 +34,4 @@ RegionStartFunction getRegionStartFunction(uint16_t sid);
 /** Returns a function to validate a pointer for a service ID */
 PointerValidationFunction getPtrValidationFunction(uint16_t sid);
 
-} // namespace memory
-} // namespace middleware
+} // namespace middleware::memory

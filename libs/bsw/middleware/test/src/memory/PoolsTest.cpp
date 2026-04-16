@@ -6,11 +6,7 @@
 
 #include "middleware/memory/Pool.h"
 
-namespace middleware
-{
-namespace memory
-{
-namespace test
+namespace middleware::memory::test
 {
 
 class TestPool : public ::testing::Test
@@ -106,6 +102,5 @@ TEST_F(TestPool, WhenDeallocateWithPtrNotInUseThenFailDeallocationExpectValidPtr
     uint8_t* nextValidPtr = begin + ALIGNED_CHUNK_SIZE;
     EXPECT_FALSE(_testPool.isValidPointer(nextValidPtr));
 }
-} // namespace test
-} // namespace memory
-} // namespace middleware
+
+} // namespace middleware::memory::test

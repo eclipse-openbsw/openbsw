@@ -11,9 +11,7 @@
 
 #include <cstdint>
 
-namespace middleware
-{
-namespace core
+namespace middleware::core
 {
 
 /**
@@ -77,5 +75,4 @@ private:
     SkeletonBase& _skeleton;
 };
 
-} // namespace core
-} // namespace middleware
+} // namespace middleware::core
