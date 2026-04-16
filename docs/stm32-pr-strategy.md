@@ -56,22 +56,55 @@ broken references.
 s32k1xx and STM32 can use them. Pure refactor — zero new functionality, zero
 behavior change.
 
+#### Background
+
+Both s32k1xx (NXP S32K148) and the STM32 chips are Cortex-M4F. CMSIS-Core
+headers (`core_cm4.h`, `cmsis_gcc.h`, etc.) are ARM-defined, not
+vendor-specific — they describe the Cortex-M4 core itself. Both platform
+copies are CMSIS 6.1.0: 6 of 9 files are byte-identical, 3 files differ only
+in Doxygen comment style (`@file` vs `\file`). No functional difference.
+
+`libs/3rdparty/` already hosts shared dependencies (etl, freeRtos, googletest,
+lwip, printf, threadx). Adding `libs/3rdparty/cmsis/` follows the existing
+pattern.
+
 #### Scope
 
 | Area | What |
 |------|------|
-| Move CMSIS | `platforms/s32k1xx/bsp/bspMcu/include/3rdparty/cmsis/` -> `libs/3rdparty/cmsis/` |
-| Normalize | Fix trivial Doxygen style diffs (`@file` vs `\file`) across the 3 affected files |
-| Update s32k1xx | Change include paths in `platforms/s32k1xx/bsp/bspMcu/CMakeLists.txt` to point to `libs/3rdparty/cmsis/` |
-| Update s32k1xx module.spec | If applicable, update module.spec references |
-| NOTICE.md | Single CMSIS entry instead of per-platform entries |
-| LICENSE | Single `libs/3rdparty/cmsis/LICENSE` |
+| Move CMSIS | `platforms/s32k1xx/bsp/bspMcu/include/3rdparty/cmsis/` -> `libs/3rdparty/cmsis/` (9 files) |
+| Normalize | Fix trivial Doxygen style diffs (`@file` vs `\file`) across 3 files: `cmsis_clang.h`, `cmsis_gcc.h`, `core_cm4.h` |
+| Delete STM32 copy | Remove `platforms/stm32/bsp/bspMcu/include/3rdparty/cmsis/` (duplicate) |
+| NOTICE.md | Two CMSIS entries (lines 48-49) -> single entry pointing to `libs/3rdparty/cmsis/LICENSE` |
+
+#### Impact analysis (6 files touched, all in s32k1xx or build config)
+
+| File | Change | Why |
+|------|--------|-----|
+| `platforms/s32k1xx/bsp/bspMcu/CMakeLists.txt` | Add `${CMAKE_SOURCE_DIR}/libs/3rdparty/cmsis` and `${CMAKE_SOURCE_DIR}/libs/3rdparty/cmsis/m-profile` to `target_include_directories` | CMSIS headers are no longer under this module's `include/` tree |
+| `platforms/s32k1xx/bsp/bspMcu/include/mcu/mcu.h:10` | `#include "3rdparty/cmsis/core_cm4.h"` -> `#include "core_cm4.h"` | Hardcoded relative path no longer resolves; bare include resolves via new include path |
+| `platforms/s32k1xx/bsp/bspMcu/include/mcu/mcu.h:14` | Remove dead `#include "mcu/core_cm4.h"` code path | No such file exists anywhere in the repo; dead branch |
+| `platforms/s32k1xx/bsp/bspMcu/module.spec` | Update `format_check_exclude` and `sca_exclude` globs | CMSIS files are no longer under `include/3rdparty/cmsis/` |
+| `platforms/stm32/bsp/bspMcu/CMakeLists.txt` | Change include path from `include/3rdparty/cmsis` to `${CMAKE_SOURCE_DIR}/libs/3rdparty/cmsis` | Point to shared location |
+| `NOTICE.md` | Consolidate two CMSIS entries to one | Single shared copy, single license path |
+
+#### What does NOT change
+
+- STM32 device headers (`stm32g474xx.h`, `stm32f413xx.h`) use bare
+  `#include "core_cm4.h"` — resolved via include path, no code change
+- All CMSIS internal includes are relative within the directory — moving
+  the directory as a unit preserves them
+- Nothing outside `platforms/` uses CMSIS-Core (`libs/3rdparty/etl/` has
+  `cmsis_os2.h` which is CMSIS-RTOS2, unrelated)
+- The s32k1xx `mcu.h` MPU workaround (`#undef __MPU_PRESENT`) is in
+  platform code, not in the CMSIS files — unaffected
 
 #### Explicitly excluded
 
 - No new platform code
-- No STM32 files
+- No STM32-specific files (beyond deleting the duplicate copy)
 - No new cmake targets
+- No behavioral changes to any platform
 
 #### Test gate
 
@@ -79,7 +112,11 @@ behavior change.
 |-------|---------|----------|
 | s32k1xx tests pass | `ctest --preset tests-s32k1xx-debug` | All existing tests pass (zero regressions) |
 | s32k1xx FreeRTOS build | `cmake --preset s32k148-freertos-gcc && build` | Cross-compile succeeds |
+| s32k1xx ThreadX build | `cmake --preset s32k148-threadx-gcc && build` | Cross-compile succeeds |
 | Formatting | `treefmt` | Clean |
+
+If any include path is wrong, the build fails immediately at configure or
+compile time — not a subtle bug.
 
 #### Why separate
 
