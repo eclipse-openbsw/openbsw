@@ -2,8 +2,6 @@
 
 #pragma once
 
-#include <estd/memory.h>
-
 #include <etl/memory.h>
 #include <etl/span.h>
 

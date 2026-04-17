@@ -198,6 +198,24 @@ void createIp6Address()
 
 #endif
 
+bool onStatusChangedIp4(
+    ::lwipnetif::State const state, netif& netif, ::ip::NetworkInterfaceConfig& config)
+{
+    ::ip::NetworkInterfaceConfig value;
+    if (state == ::lwipnetif::State::Started)
+    {
+        bool const isLinkUp = (1U == netif_is_link_up(&netif));
+        if (isLinkUp && IP_IS_V4(&netif.ip_addr) && !ip4_addr_isany(ip_2_ip4(&netif.ip_addr)))
+        {
+            value = ::ip::NetworkInterfaceConfig(
+                PP_NTOHL(ip_2_ip4(&netif.ip_addr)->addr),
+                PP_NTOHL(ip_2_ip4(&netif.netmask)->addr),
+                PP_NTOHL(ip_2_ip4(&netif.gw)->addr));
+        }
+    }
+    return ::ip::updateConfig(config, value);
+}
+
 void onLinkStatusChanged(bool const isLinkUp, netif& ni)
 {
     // NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg): Logger API is variadic by design.

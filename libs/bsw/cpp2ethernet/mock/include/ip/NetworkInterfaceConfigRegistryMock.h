@@ -8,9 +8,10 @@
 
 namespace ip
 {
-struct NetworkInterfaceConfigRegistryMock : public ::ip::NetworkInterfaceConfigRegistry
+struct NetworkInterfaceConfigRegistryMock : public ::ip::declare::NetworkInterfaceConfigRegistry<2>
 {
-    NetworkInterfaceConfigRegistryMock() : ::ip::NetworkInterfaceConfigRegistry({}, {}) {}
+    NetworkInterfaceConfigRegistryMock() : ::ip::declare::NetworkInterfaceConfigRegistry<2>({}, {})
+    {}
 
     MOCK_METHOD(::ip::NetworkInterfaceConfig, getConfig, (uint8_t), (const, override));
 };

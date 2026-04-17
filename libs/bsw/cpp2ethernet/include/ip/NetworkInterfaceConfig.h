@@ -5,7 +5,9 @@
 #include "ip/IPAddress.h"
 
 #include <etl/array.h>
-#include <util/estd/signal.h>
+#include <etl/delegate.h>
+#include <etl/signal.h>
+#include <etl/span.h>
 
 namespace ip
 {
@@ -129,20 +131,33 @@ inline bool operator!=(NetworkInterfaceConfig const& lhs, NetworkInterfaceConfig
 
 using NetworkInterfaceConfigKey = uint8_t;
 
+using ConfigChangedSlotType = ::etl::delegate<void(uint8_t, NetworkInterfaceConfig const&)>;
+
+inline bool updateConfig(NetworkInterfaceConfig& config, NetworkInterfaceConfig const& newConfig)
+{
+    auto const change = config != newConfig;
+    config            = newConfig;
+    return change;
+}
+
+/**
+ * Interface for updating and retrieving IP address configurations of network interfaces.
+ *
+ * IP addresses are typically assigned dynamically to network interfaces. Therefore components
+ * need to get notified about changes of assigned network addresses. This can be done by
+ * registering as a listener to config changes.
+ */
 struct NetworkInterfaceConfigRegistry
 {
-    using ConfigChangedSignal
-        = ::util::estd::signal<::estd::function<void(uint8_t, NetworkInterfaceConfig const&)>>;
-
     NetworkInterfaceConfigRegistry(
         ::etl::span<uint8_t const> busIds, ::etl::span<NetworkInterfaceConfig const> configs)
     : busIds(busIds), configs(configs)
     {}
 
+    virtual ~NetworkInterfaceConfigRegistry() = default;
+
     ::etl::span<uint8_t const> busIds;
     ::etl::span<NetworkInterfaceConfig const> configs;
-
-    ConfigChangedSignal configChangedSignal;
 
     virtual NetworkInterfaceConfig getConfig(uint8_t const busId) const
     {
@@ -155,5 +170,39 @@ struct NetworkInterfaceConfigRegistry
         }
         return {};
     }
+
+    virtual bool connect(ConfigChangedSlotType const& slot)    = 0;
+    virtual void disconnect(ConfigChangedSlotType const& slot) = 0;
 };
+
+namespace declare
+{
+/**
+ * Concrete NetworkInterfaceConfigRegistry that owns an etl::signal sized for a given
+ * number of listener slots.
+ */
+template<size_t SlotCapacity>
+struct NetworkInterfaceConfigRegistry : public ::ip::NetworkInterfaceConfigRegistry
+{
+    using ConfigChangedSignal
+        = ::etl::signal<void(uint8_t, NetworkInterfaceConfig const&), SlotCapacity>;
+
+    NetworkInterfaceConfigRegistry(
+        ::etl::span<uint8_t const> busIds, ::etl::span<NetworkInterfaceConfig const> configs)
+    : ::ip::NetworkInterfaceConfigRegistry(busIds, configs)
+    {}
+
+    ConfigChangedSignal configChangedSignal;
+
+    bool connect(ConfigChangedSlotType const& slot) override
+    {
+        return configChangedSignal.connect(slot);
+    }
+
+    void disconnect(ConfigChangedSlotType const& slot) override
+    {
+        configChangedSignal.disconnect(slot);
+    }
+};
+} // namespace declare
 } // namespace ip

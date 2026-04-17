@@ -46,8 +46,8 @@ INSTANTIATE_TEST_SUITE_P(
 
 TEST_F(DoIpServerSocketHandlerTest, AcquireSocket)
 {
-    declare::DoIpServerSocketHandler<AbstractServerSocketMock, AbstractSocketMock, 1, 2, 0> cut(
-        fNetworkInterfaceConfigRegistryMock);
+    ::doip::declare::DoIpServerSocketHandler<AbstractServerSocketMock, AbstractSocketMock, 1, 2, 0>
+        cut(fNetworkInterfaceConfigRegistryMock);
 
     AbstractSocket* firstSocket = cut.acquireSocket();
     EXPECT_THAT(firstSocket, NotNull());
@@ -68,8 +68,8 @@ TEST_F(DoIpServerSocketHandlerTest, AcquireSocket)
 
 TEST_P(DoIpServerSocketHandlerTest, SimpleServerLifecycle)
 {
-    declare::DoIpServerSocketHandler<AbstractServerSocketMock, AbstractSocketMock, 2, 1, 1> cut(
-        fNetworkInterfaceConfigRegistryMock);
+    ::doip::declare::DoIpServerSocketHandler<AbstractServerSocketMock, AbstractSocketMock, 2, 1, 1>
+        cut(fNetworkInterfaceConfigRegistryMock);
 
     NetworkInterfaceConfigKey key1(0U);
     NetworkInterfaceConfig config1(0x12389U, 0x2384923U, 0x23894U);
@@ -136,8 +136,8 @@ TEST_P(DoIpServerSocketHandlerTest, SimpleServerLifecycle)
 
 TEST_P(DoIpServerSocketHandlerTest, GetSocketLifecycle)
 {
-    declare::DoIpServerSocketHandler<AbstractServerSocketMock, AbstractSocketMock, 1, 2, 2> cut(
-        fNetworkInterfaceConfigRegistryMock);
+    ::doip::declare::DoIpServerSocketHandler<AbstractServerSocketMock, AbstractSocketMock, 1, 2, 2>
+        cut(fNetworkInterfaceConfigRegistryMock);
 
     NetworkInterfaceConfigKey key(0U);
     NetworkInterfaceConfig config(0x12389U, 0x2384923U, 0x23894U);

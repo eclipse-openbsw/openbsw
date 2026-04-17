@@ -40,7 +40,7 @@ protected:
     DoIpVehicleAnnouncementListenerMock fVehicleAnnouncementListenerMock;
     ::ip::NetworkInterfaceConfigRegistryMock fNetworkInterfaceConfigRegistryMock;
     ::testing::StrictMock<DoIpServerVehicleAnnouncementParameterProviderMock> fParametersMock;
-    ::ip::NetworkInterfaceConfigRegistry::ConfigChangedSignal fConfigChangedSignal;
+    ::ip::declare::NetworkInterfaceConfigRegistry<2>::ConfigChangedSignal fConfigChangedSignal;
     ::testing::StrictMock<SystemTimerMock> timerMock;
 };
 

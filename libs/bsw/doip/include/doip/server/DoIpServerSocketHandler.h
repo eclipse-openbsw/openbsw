@@ -9,7 +9,7 @@
 
 #include <etl/pool.h>
 #include <etl/vector.h>
-#include <ip/INetworkInterfaceConfigRegistry.h>
+#include <ip/NetworkInterfaceConfig.h>
 #include <tcp/socket/ISocketProvidingConnectionListener.h>
 #include <util/logger/Logger.h>
 
@@ -102,7 +102,7 @@ private:
 
     ::etl::vector<SocketHandler, NUM_SERVER_SOCKETS> _socketHandlers;
     ::etl::pool<Socket, NUM_PLAIN_SOCKETS> _sockets;
-    ::ip::NetworkInterfaceConfigRegistry::ConfigChangedSignal::slot _configChangedSlot;
+    ::ip::ConfigChangedSlotType _configChangedSlot;
     ::ip::NetworkInterfaceConfigRegistry& _networkInterfaceConfigRegistry;
     ::doip::IDoIpServerSocketHandlerListener* _listener;
 };
@@ -125,7 +125,7 @@ DoIpServerSocketHandler<
                                                   networkInterfaceConfigRegistry)
 : IDoIpServerSocketHandler()
 , _configChangedSlot(
-      ::ip::NetworkInterfaceConfigRegistry::ConfigChangedSignal::slot_function::
+      ::ip::ConfigChangedSlotType::
           create<DoIpServerSocketHandler, &DoIpServerSocketHandler::configChanged>(*this))
 , _networkInterfaceConfigRegistry(networkInterfaceConfigRegistry)
 , _listener(nullptr)
@@ -172,7 +172,7 @@ void DoIpServerSocketHandler<
             socketHandler.getNetworkInterfaceConfigKey()));
     }
 
-    _networkInterfaceConfigRegistry.configChangedSignal.connect(_configChangedSlot);
+    _networkInterfaceConfigRegistry.connect(_configChangedSlot);
 }
 
 template<
@@ -188,7 +188,7 @@ void DoIpServerSocketHandler<
     NUM_PLAIN_SOCKETS,
     NUM_TLS_SOCKETS>::stop()
 {
-    _networkInterfaceConfigRegistry.configChangedSignal.disconnect(_configChangedSlot);
+    _networkInterfaceConfigRegistry.disconnect(_configChangedSlot);
     for (auto& socketHandler : _socketHandlers)
     {
         socketHandler.updateSocket(::ip::NetworkInterfaceConfig());

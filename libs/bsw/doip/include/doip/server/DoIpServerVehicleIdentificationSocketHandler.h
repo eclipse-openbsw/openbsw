@@ -13,7 +13,6 @@
 #include <async/Types.h>
 #include <async/util/Call.h>
 #include <etl/intrusive_links.h>
-#include <ip/INetworkInterfaceConfigRegistry.h>
 #include <ip/NetworkInterfaceConfig.h>
 
 #include <etl/bitset.h>
@@ -171,7 +170,7 @@ private:
     IDoIpVehicleAnnouncementListener* _vehicleAnnouncementListener;
     ::async::Function _enqueueInitialBroadcastsUnicastAsync;
     ::async::Function _configChangedContinuationAsync;
-    ::ip::ConfigChangedSignal::slot _configChangedSlot;
+    ::ip::ConfigChangedSlotType _configChangedSlot;
     ::async::TimeoutType _timeoutTimeout;
     ::etl::intrusive_forward_list<DoIpServerVehicleIdentificationRequest, ::etl::forward_link<0>>
         _pendingRequests;

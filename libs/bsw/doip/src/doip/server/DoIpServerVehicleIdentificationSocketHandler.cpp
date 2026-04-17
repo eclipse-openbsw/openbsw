@@ -11,6 +11,7 @@
 #include "doip/server/IDoIpServerVehicleIdentificationCallback.h"
 
 #include <bsp/timer/SystemTimer.h>
+#include <etl/algorithm.h>
 #include <etl/intrusive_forward_list.h>
 #include <etl/intrusive_links.h>
 #include <etl/memory.h>
@@ -45,10 +46,9 @@ DoIpServerVehicleIdentificationSocketHandler::DoIpServerVehicleIdentificationSoc
       ::async::Function::CallType::create<
           DoIpServerVehicleIdentificationSocketHandler,
           &DoIpServerVehicleIdentificationSocketHandler::configChangedContinuationAsync>(*this))
-, _configChangedSlot(
-      ::ip::NetworkInterfaceConfigRegistry::ConfigChangedSignal::slot_function::create<
-          DoIpServerVehicleIdentificationSocketHandler,
-          &DoIpServerVehicleIdentificationSocketHandler::configChanged>(*this))
+, _configChangedSlot(::ip::ConfigChangedSlotType::create<
+                     DoIpServerVehicleIdentificationSocketHandler,
+                     &DoIpServerVehicleIdentificationSocketHandler::configChanged>(*this))
 , _unicastAddresses(unicastAddresses)
 , _sendJob()
 , _protocolVersion(protocolVersion)
@@ -77,7 +77,7 @@ void DoIpServerVehicleIdentificationSocketHandler::updateUnicastAddresses(
             {
                 (void)_newUnicastAddresses.set(
                     idx,
-                    std::find(prevAddresses.begin(), prevAddresses.end(), unicastAddresses[idx])
+                    ::etl::find(prevAddresses.begin(), prevAddresses.end(), unicastAddresses[idx])
                         == prevAddresses.end());
             }
 
@@ -106,7 +106,7 @@ void DoIpServerVehicleIdentificationSocketHandler::sendAnnouncement()
 
 void DoIpServerVehicleIdentificationSocketHandler::start()
 {
-    _config.getNetworkInterfaceConfigRegistry().configChangedSignal.connect(_configChangedSlot);
+    _config.getNetworkInterfaceConfigRegistry().connect(_configChangedSlot);
     configChanged(
         _networkInterfaceConfigKey,
         _config.getNetworkInterfaceConfigRegistry().getConfig(_networkInterfaceConfigKey));
@@ -115,7 +115,7 @@ void DoIpServerVehicleIdentificationSocketHandler::start()
 void DoIpServerVehicleIdentificationSocketHandler::shutdown()
 {
     _timeoutTimeout.cancel();
-    _config.getNetworkInterfaceConfigRegistry().configChangedSignal.disconnect(_configChangedSlot);
+    _config.getNetworkInterfaceConfigRegistry().disconnect(_configChangedSlot);
     configChanged(_networkInterfaceConfigKey, ::ip::NetworkInterfaceConfig());
 }
 

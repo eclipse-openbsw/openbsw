@@ -21,7 +21,6 @@ target_link_libraries(
     cpp2ethernet
     PUBLIC common
            bsp
-           estd
            etl
            util
            async)

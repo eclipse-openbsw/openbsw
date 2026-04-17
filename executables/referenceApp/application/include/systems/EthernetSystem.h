@@ -57,10 +57,14 @@ public:
 
     void execute() override;
 
+    static constexpr size_t NUM_CONFIG_CHANGE_LISTENERS = 2;
+
     ::ethernet::IEthernetDriverSystem& ethernetDriverSystem;
     Netifs<::ethX::NUM_NETIFS> netifs;
-    ::ip::NetworkInterfaceConfigRegistry netifConfigRegistry{
+    ::ip::declare::NetworkInterfaceConfigRegistry<NUM_CONFIG_CHANGE_LISTENERS> netifConfigRegistry{
         netifs.busIds, netifs.networkInterfaceConfigsIp4};
+
+    void onNetifStatusChanged(size_t i);
 
 private:
     ::async::ContextType const _context;

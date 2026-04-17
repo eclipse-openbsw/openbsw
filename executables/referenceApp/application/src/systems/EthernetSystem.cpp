@@ -36,6 +36,17 @@ int32_t vlanForNetif(void const* const vlwipNi)
 }
 }
 
+static void netifStatusCallback(netif* const lwipNi)
+{
+    ETL_ASSERT(lwipNi != nullptr, ETL_ERROR_GENERIC("netif must not be null"));
+    auto* const sys = reinterpret_cast<::systems::EthernetSystem*>(lwipNi->state);
+    ETL_ASSERT(
+        lwipNi >= sys->netifs.netifs.begin() && lwipNi < sys->netifs.netifs.end(),
+        ETL_ERROR_GENERIC("netif must be part of this system"));
+    auto const idx = static_cast<size_t>(lwipNi - sys->netifs.netifs.begin());
+    sys->onNetifStatusChanged(idx);
+}
+
 static err_t linkoutput(netif* const aNetif, struct pbuf* const buf)
 {
     auto const ethernetSystem = static_cast<::systems::EthernetSystem*>(aNetif->state);
@@ -118,6 +129,7 @@ void EthernetSystem::init()
 #if LWIP_IGMP
         netif_set_igmp_mac_filter(lwipNetif, joinMulticastGroupIpV4);
 #endif
+        netif_set_status_callback(lwipNetif, &netifStatusCallback);
         netif_set_up(lwipNetif);
     }
     transitionDone();
@@ -148,6 +160,16 @@ void EthernetSystem::shutdown()
     transitionDone();
 }
 
+void EthernetSystem::onNetifStatusChanged(size_t const i)
+{
+    if (::lwipnetif::onStatusChangedIp4(
+            netifs.netifStates[i].state, netifs.netifs[i], netifs.networkInterfaceConfigsIp4[i]))
+    {
+        netifConfigRegistry.configChangedSignal(
+            netifs.busIds[i], netifs.networkInterfaceConfigsIp4[i]);
+    }
+}
+
 void EthernetSystem::execute()
 {
     // Call processPbufQueue every millisecond.
@@ -162,11 +184,8 @@ void EthernetSystem::execute()
             if (link != netifs.linkStatus[i])
             {
                 netifs.linkStatus[i] = link;
-
-                auto& linkStatus = netifs.linkStatus[i];
-                auto& netif      = netifs.netifs[i];
-
-                ::lwipnetif::onLinkStatusChanged(linkStatus, netif);
+                ::lwipnetif::onLinkStatusChanged(link, netifs.netifs[i]);
+                onNetifStatusChanged(i);
             }
         }
     }
