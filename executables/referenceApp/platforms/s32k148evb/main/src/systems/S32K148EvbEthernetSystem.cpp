@@ -112,7 +112,6 @@ S32K148EvbEthernetSystem::S32K148EvbEthernetSystem(
 void S32K148EvbEthernetSystem::init()
 {
     _tja1101LinkStatus = false;
-    pEnetDriver        = &_driver;
     configureEnetPins();
     _driver.init();
     _tja1101.start();
@@ -122,6 +121,7 @@ void S32K148EvbEthernetSystem::init()
 void S32K148EvbEthernetSystem::run()
 {
     _driver.start();
+    pEnetDriver = &_driver;
     ::async::scheduleAtFixedRate(
         _context, *this, _timeout, ETHERNET_CYCLE_TIME, ::async::TimeUnit::MILLISECONDS);
     _tja1101LinkStatus = _tja1101.isLinkUp();
