@@ -1,0 +1,129 @@
+# POSIX BSP (Board Support Package) implementations.
+
+package(default_visibility = ["//visibility:public"])
+
+_POSIX_COMPAT = ["@platforms//os:linux"]
+
+# Aggregate SoC BSP target (POSIX platform)
+cc_library(
+    name = "socBsp",
+    target_compatible_with = _POSIX_COMPAT,
+    deps = [
+        ":bspInterruptsImpl",
+        ":bspMcu",
+        ":bspStdio",
+        ":bspSystemTime",
+    ],
+)
+
+# POSIX interrupt implementation (FreeRTOS variant)
+cc_library(
+    name = "bspInterruptsImpl",
+    srcs = select({
+        "//bazel/configs:freertos": ["bspInterruptsImpl/freertos/src/interrupts/suspendResumeAllInterrupts.cpp"],
+        "//bazel/configs:threadx": ["bspInterruptsImpl/threadx/src/interrupts/suspendResumeAllInterrupts.cpp"],
+    }),
+    hdrs = select({
+        "//bazel/configs:freertos": glob(["bspInterruptsImpl/freertos/include/**"]),
+        "//bazel/configs:threadx": glob(["bspInterruptsImpl/threadx/include/**"]),
+    }),
+    includes = select({
+        "//bazel/configs:freertos": ["bspInterruptsImpl/freertos/include"],
+        "//bazel/configs:threadx": ["bspInterruptsImpl/threadx/include"],
+    }),
+    target_compatible_with = _POSIX_COMPAT,
+    deps = [
+        "//libs/bsw/platform",
+    ] + select({
+        "//bazel/configs:freertos": ["//libs/3rdparty/freeRtos"],
+        "//bazel/configs:threadx": ["//libs/3rdparty/threadx:threadX"],
+    }),
+)
+
+# MCU reset support (POSIX - software reset)
+cc_library(
+    name = "bspMcu",
+    srcs = ["bspMcu/src/reset/softwareSystemReset.cpp"],
+    hdrs = glob(["bspMcu/include/**"]),
+    includes = ["bspMcu/include"],
+    target_compatible_with = _POSIX_COMPAT,
+)
+
+# Standard I/O BSP
+cc_library(
+    name = "bspStdio",
+    srcs = ["bspStdio/src/bsp/stdIo/stdIo.cpp"],
+    target_compatible_with = _POSIX_COMPAT,
+    deps = [
+        "//bazel/app_config:bsp_configuration",
+        "//libs/bsw/bsp",
+        "//libs/bsw/platform",
+        "//platforms/posix/bsp:bspUart",
+    ],
+)
+
+# System time provider
+cc_library(
+    name = "bspSystemTime",
+    srcs = ["bspSystemTime/src/bsp/time/systemTimer.cpp"],
+    target_compatible_with = _POSIX_COMPAT,
+    deps = [
+        "//bazel/app_config:async_core_configuration",
+        "//libs/bsw/bsp",
+        "//libs/bsw/platform",
+    ],
+)
+
+# UART driver (POSIX terminal I/O)
+cc_library(
+    name = "bspUart",
+    srcs = ["bspUart/src/bsp/Uart.cpp"],
+    hdrs = glob(["bspUart/include/**"]),
+    includes = ["bspUart/include"],
+    target_compatible_with = _POSIX_COMPAT,
+    deps = [
+        "//bazel/app_config:bsp_configuration",
+        "//libs/bsw/bsp",
+        "//libs/bsw/platform",
+    ],
+)
+
+# EEPROM driver (POSIX file-based)
+cc_library(
+    name = "bspEepromDriver",
+    srcs = ["bspEepromDriver/src/eeprom/EepromDriver.cpp"],
+    hdrs = glob(["bspEepromDriver/include/**"]),
+    includes = ["bspEepromDriver/include"],
+    target_compatible_with = _POSIX_COMPAT,
+    deps = [
+        "//bazel/app_config:bsp_configuration",
+        "//libs/bsw/bsp",
+    ],
+)
+
+# SocketCAN transceiver (Linux CAN support)
+cc_library(
+    name = "socketCanTransceiver",
+    srcs = ["socketCanTransceiver/src/can/SocketCanTransceiver.cpp"],
+    hdrs = glob(["socketCanTransceiver/include/**"]),
+    includes = ["socketCanTransceiver/include"],
+    target_compatible_with = _POSIX_COMPAT,
+    deps = [
+        "//libs/bsw/cpp2can",
+        "//libs/bsw/io",
+    ],
+)
+
+# TAP Ethernet driver (POSIX virtual network interface)
+cc_library(
+    name = "tapEthernetDriver",
+    srcs = ["tapEthernetDriver/src/TapEthernetDriver.cpp"],
+    hdrs = glob(["tapEthernetDriver/include/**"]),
+    includes = ["tapEthernetDriver/include"],
+    target_compatible_with = _POSIX_COMPAT,
+    deps = [
+        "//libs/bsw/async",
+        "//libs/bsw/lwipSocket",
+        "//libs/bsw/util",
+    ],
+)

@@ -1,0 +1,18 @@
+# Async console - console command wrappers for the async framework.
+
+cc_library(
+    name = "asyncConsole",
+    srcs = [
+        "src/console/AsyncCommandWrapper.cpp",
+        "src/console/AsyncConsole.cpp",
+        "src/console/SyncCommandWrapper.cpp",
+        "src/logger/ConsoleLogger.cpp",
+    ],
+    hdrs = glob(["include/**"]),
+    includes = ["include"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//libs/bsw/async",
+        "//libs/bsw/util",
+    ],
+)

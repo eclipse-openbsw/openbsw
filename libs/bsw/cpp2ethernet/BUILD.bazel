@@ -1,0 +1,44 @@
+# Ethernet protocol abstraction layer (TCP/UDP sockets).
+
+cc_library(
+    name = "cpp2ethernet",
+    srcs = [
+        "src/ethernet/EthernetLogger.cpp",
+        "src/ip/NetworkInterfaceConfig.cpp",
+        "src/ip/to_str.cpp",
+        "src/tcp/TcpLogger.cpp",
+        "src/tcp/socket/AbstractServerSocket.cpp",
+        "src/tcp/socket/AbstractSocket.cpp",
+        "src/tcp/util/BandwidthTestSocket.cpp",
+        "src/tcp/util/LoopbackTestServer.cpp",
+        "src/tcp/util/TcpIperf2Server.cpp",
+        "src/udp/DatagramPacket.cpp",
+        "src/udp/UdpLogger.cpp",
+        "src/udp/socket/AbstractDatagramSocket.cpp",
+        "src/udp/util/UdpEchoTestServer.cpp",
+        "src/udp/util/UdpIperf2Server.cpp",
+    ],
+    hdrs = glob(["include/**"]),
+    includes = ["include"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//libs/3rdparty/etl",
+        "//libs/bsw/async",
+        "//libs/bsw/bsp",
+        "//libs/bsw/common",
+        "//libs/bsw/estd",
+        "//libs/bsw/util",
+    ],
+)
+
+# Mock target for unit testing
+cc_library(
+    name = "cpp2ethernetMock",
+    hdrs = glob(["mock/include/**"]),
+    includes = ["mock/include"],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":cpp2ethernet",
+        "//libs/3rdparty/googletest:gtest",
+    ],
+)

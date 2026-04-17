@@ -42,6 +42,11 @@ config_setting(
 )
 
 config_setting(
+    name = "none_os",
+    constraint_values = ["@platforms//os:none"],
+)
+
+config_setting(
     name = "windows",
     constraint_values = ["@platforms//os:windows"],
 )
@@ -99,6 +104,7 @@ cc_library(
         "googlemock/include/gmock/*.h",
     ]),
     copts = select({
+        ":none_os": [],
         ":qnx": [],
         ":windows": [],
         "//conditions:default": ["-pthread"],
@@ -117,8 +123,7 @@ cc_library(
         "googletest",
         "googletest/include",
     ],
-    linkopts = select({
-        ":qnx": ["-lregex"],
+    linkopts = select({        ":none_os": [],        ":qnx": ["-lregex"],
         ":windows": [],
         ":freebsd": [
             "-lm",
@@ -130,6 +135,7 @@ cc_library(
         ],
         "//conditions:default": ["-pthread"],
     }),
+    target_compatible_with = ["@platforms//os:linux"],
     deps = select({
         ":has_absl": [
             "@com_google_absl//absl/debugging:failure_signal_handler",

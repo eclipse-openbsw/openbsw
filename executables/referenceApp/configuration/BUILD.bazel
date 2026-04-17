@@ -1,0 +1,23 @@
+# Application configuration - common implementations and bus configuration.
+
+package(default_visibility = ["//visibility:public"])
+
+# Configuration headers (INTERFACE equivalent)
+cc_library(
+    name = "configuration",
+    hdrs = glob(["include/**"]),
+    includes = ["include"],
+    deps = ["//libs/bsw/common"],
+)
+
+# Common implementation (BusId etc.)
+cc_library(
+    name = "commonImpl",
+    srcs = ["common/src/busid/BusId.cpp"],
+    hdrs = glob(["common/include/**"]),
+    includes = ["common/include"],
+    deps = [
+        ":configuration",
+        "//libs/bsw/async",
+    ],
+)

@@ -1,0 +1,38 @@
+# FreeRTOS POSIX port - runs FreeRTOS on Linux using pthreads.
+
+package(default_visibility = ["//visibility:public"])
+
+_POSIX_COMPAT = ["@platforms//os:linux"]
+
+# Port interface (header-only, provides FreeRTOS port headers)
+cc_library(
+    name = "freeRtosPosixPort",
+    hdrs = glob(["include/**"]),
+    includes = ["include"],
+    target_compatible_with = _POSIX_COMPAT,
+    deps = ["//libs/bsw/platform"],
+)
+
+# Port implementation (compiled library)
+# alwayslink ensures port symbols are available to the FreeRTOS kernel
+# which references them but appears later in the link order.
+cc_library(
+    name = "freeRtosPosix",
+    srcs = [
+        "src/port.c",
+        "src/utils/wait_for_event.c",
+        "src/utils/wait_for_event.h",
+    ],
+    alwayslink = True,
+    copts = [
+        "-D_POSIX_C_SOURCE=200112L",
+        "-Iplatforms/posix/3rdparty/freeRtosPosix/src/utils",
+    ],
+    linkopts = ["-lpthread"],
+    target_compatible_with = _POSIX_COMPAT,
+    deps = [
+        ":freeRtosPosixPort",
+        "//libs/3rdparty/freeRtos",
+        "//libs/bsp/bspInterrupts",
+    ],
+)

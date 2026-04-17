@@ -1,0 +1,24 @@
+# Safety monitor - watchdog and integrity monitoring (header-only).
+
+cc_library(
+    name = "safeMonitor",
+    hdrs = glob(["include/**"]),
+    includes = ["include"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//libs/bsw/common",
+        "//libs/bsw/platform",
+    ],
+)
+
+# Mock target for unit testing
+cc_library(
+    name = "safeMonitorMock",
+    hdrs = glob(["mock/include/**"]),
+    includes = ["mock/include"],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":safeMonitor",
+        "//libs/3rdparty/googletest:gtest",
+    ],
+)

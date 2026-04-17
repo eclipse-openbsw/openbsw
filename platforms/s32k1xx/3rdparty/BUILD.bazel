@@ -1,0 +1,48 @@
+# S32K1xx 3rdparty RTOS ports.
+
+package(default_visibility = ["//visibility:public"])
+
+_ARM_COMPAT = ["@platforms//os:none"]
+
+cc_library(
+    name = "freeRtosCm4SysTickPort",
+    hdrs = glob(["freertos_cm4_sysTick/include/**"]),
+    includes = ["freertos_cm4_sysTick/include"],
+    target_compatible_with = _ARM_COMPAT,
+    deps = ["//libs/bsw/platform"],
+)
+
+cc_library(
+    name = "freeRtosCm4SysTick",
+    srcs = glob(["freertos_cm4_sysTick/src/**/*.c"]),
+    alwayslink = True,
+    target_compatible_with = _ARM_COMPAT,
+    deps = [
+        ":freeRtosCm4SysTickPort",
+        "//libs/3rdparty/freeRtos",
+        "//libs/bsp/bspInterrupts",
+    ],
+)
+
+cc_library(
+    name = "threadXCortexM4Port",
+    hdrs = glob(["threadx/ports/cortex_m4/gnu/inc/**"]),
+    includes = ["threadx/ports/cortex_m4/gnu/inc"],
+    target_compatible_with = _ARM_COMPAT,
+    deps = ["//libs/bsw/platform"],
+)
+
+cc_library(
+    name = "threadXCortexM4",
+    srcs = glob([
+        "threadx/ports/cortex_m4/gnu/src/**/*.c",
+        "threadx/ports/cortex_m4/gnu/src/**/*.S",
+    ]),
+    alwayslink = True,
+    target_compatible_with = _ARM_COMPAT,
+    deps = [
+        ":threadXCortexM4Port",
+        "//libs/3rdparty/threadx:threadX",
+        "//libs/bsp/bspInterrupts",
+    ],
+)

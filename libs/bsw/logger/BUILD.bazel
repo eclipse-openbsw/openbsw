@@ -1,0 +1,25 @@
+# Logger framework.
+
+cc_library(
+    name = "logger",
+    srcs = [
+        "src/logger/DefaultLoggerCommand.cpp",
+        "src/logger/EntrySerializer.cpp",
+    ],
+    hdrs = glob(["include/**"]),
+    includes = ["include"],
+    visibility = ["//visibility:public"],
+    deps = ["//libs/bsw/util"],
+)
+
+# Mock target for unit testing
+cc_library(
+    name = "loggerMock",
+    hdrs = glob(["mock/include/**"]),
+    includes = ["mock/include"],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":logger",
+        "//libs/3rdparty/googletest:gtest",
+    ],
+)
