@@ -1,0 +1,602 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../../../../../../../../../static/css/style.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <title>Symbol - puncover</title>
+    
+</head>
+<body>
+    <div class="container" id="content">
+        <div class="page-header">
+            <nav class="navbar navbar-default" role="navigation">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="../../../../../../../../../../index.html">
+                    Puncover
+                  </a>
+                </div>
+              </div>
+            </nav>
+          
+        </div>
+        <div id="inner_content">
+        
+    
+    <ol class="breadcrumb folders">
+        
+        <li><a href="../../../../../../../../../../home.html">home</a></li>
+        
+        <li><a href="../../../../../../../../../runner.html">runner</a></li>
+        
+        <li><a href="../../../../../../../../work.html">work</a></li>
+        
+        <li><a href="../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../libs.html">libs</a></li>
+        
+        <li><a href="../../../../3rdparty.html">3rdparty</a></li>
+        
+        <li><a href="../../../freeRtos.html">freeRtos</a></li>
+        
+        <li ><a href="../../include.html">include</a>
+            </li>
+
+        
+        <li class="active"><a href="../task.h.html">task.h</a>:1431
+            </li>
+        
+    </ol>
+
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <th>Function</th>
+                <td colspan="5">
+                    <span class="icon-function">xTaskResumeAll</span>
+                </td>
+            </tr>
+
+            <tr>
+                <th rowspan="2"></th>
+                <th>Address</th>
+                <th>Remarks</th>
+                <th>Stack</th>
+                <th>Code</th>
+                <th>Static</th>
+            </tr>
+            <tr>
+                <td>0x0001160c</td>
+                <td>
+    <span class="label label-success">x-module</span>
+    
+</td>
+                <td>48 (static)</td>
+                <td>396</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th>Callers (4)</th>
+                <td colspan="5">
+                
+                    <a href="../../src/timers.c/d35f72ab680b9bc7eb2ff3e6cd07ece5.html">prvTimerTask (556)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../queue.h/e175bc34f19fb5ab84d573af67f2b746.html">xQueueReceive (284)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../event_groups.h/5504d9808e53d1ba7d00471cb60393d1.html">xEventGroupWaitBits (188)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../event_groups.h/0d02d6b166234d99ce8759a75b3ca477.html">xEventGroupSetBits (112)</a>
+                    
+                
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Callees (3,
+                            <span title="sum of used bytes by all callees">
+                            Σ=488
+                            </span>
+                        )
+                    
+                </th>
+                <td colspan="5">
+                
+                    <a href="../../../../../platforms/s32k1xx/3rdparty/freertos_cm4_sysTick/include/portmacro.h/51336e5c21ba34fb49b266dd31e701d5.html">vPortEnterCritical (32)</a>
+                    
+                        ,
+                    
+                
+                    <a href="./8ad4f985dd50983ba2bb37f1c4c561c8.html">xTaskIncrementTick (428)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../../../../../platforms/s32k1xx/3rdparty/freertos_cm4_sysTick/include/portmacro.h/f34360f95022a09e4e4cceffa22ec0c6.html">vPortExitCritical (28)</a>
+                    
+                
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    
+    <pre><a href="./cdbed163a5f55758e0403164ed219209.html">vTaskSuspendAll (16)</a></pre>
+    
+
+    <pre>
+
+    xTaskResumeAll():
+
+       1160c:	e92d 4ff0 	stmdb	sp!, {r4, r5, r6, r7, r8, r9, sl, fp, lr}
+
+       11610:	4c57      	ldr	r4, [pc, #348]	@ (11770 <<a href="./ddc7566428b7fe6655216ea7af4881f1.html">xTaskResumeAll</a>+0x164>)
+
+       11612:	b083      	sub	sp, #12
+
+       11614:	f01d fbde 	bl	2edd4 <<a href="../../../../../platforms/s32k1xx/3rdparty/freertos_cm4_sysTick/include/portmacro.h/51336e5c21ba34fb49b266dd31e701d5.html">vPortEnterCritical</a>>
+
+       11618:	6823      	ldr	r3, [r4, #0]
+
+       1161a:	3b01      	subs	r3, #1
+
+       1161c:	6023      	str	r3, [r4, #0]
+
+       1161e:	6827      	ldr	r7, [r4, #0]
+
+       11620:	2f00      	cmp	r7, #0
+
+       11622:	f040 8095 	bne.w	11750 <<a href="./ddc7566428b7fe6655216ea7af4881f1.html">xTaskResumeAll</a>+0x144>
+
+       11626:	4b53      	ldr	r3, [pc, #332]	@ (11774 <<a href="./ddc7566428b7fe6655216ea7af4881f1.html">xTaskResumeAll</a>+0x168>)
+
+       11628:	681b      	ldr	r3, [r3, #0]
+
+       1162a:	2b00      	cmp	r3, #0
+
+       1162c:	f000 8090 	beq.w	11750 <<a href="./ddc7566428b7fe6655216ea7af4881f1.html">xTaskResumeAll</a>+0x144>
+
+       11630:	4d51      	ldr	r5, [pc, #324]	@ (11778 <<a href="./ddc7566428b7fe6655216ea7af4881f1.html">xTaskResumeAll</a>+0x16c>)
+
+       11632:	682b      	ldr	r3, [r5, #0]
+
+       11634:	2b00      	cmp	r3, #0
+
+       11636:	f000 8097 	beq.w	11768 <<a href="./ddc7566428b7fe6655216ea7af4881f1.html">xTaskResumeAll</a>+0x15c>
+
+       1163a:	4b50      	ldr	r3, [pc, #320]	@ (1177c <<a href="./ddc7566428b7fe6655216ea7af4881f1.html">xTaskResumeAll</a>+0x170>)
+
+       1163c:	4e50      	ldr	r6, [pc, #320]	@ (11780 <<a href="./ddc7566428b7fe6655216ea7af4881f1.html">xTaskResumeAll</a>+0x174>)
+
+       1163e:	4851      	ldr	r0, [pc, #324]	@ (11784 <<a href="./ddc7566428b7fe6655216ea7af4881f1.html">xTaskResumeAll</a>+0x178>)
+
+       11640:	f8df e150 	ldr.w	lr, [pc, #336]	@ 11794 <<a href="./ddc7566428b7fe6655216ea7af4881f1.html">xTaskResumeAll</a>+0x188>
+
+       11644:	9301      	str	r3, [sp, #4]
+
+       11646:	f04f 0c01 	mov.w	ip, #1
+
+       1164a:	46bb      	mov	fp, r7
+
+       1164c:	68eb      	ldr	r3, [r5, #12]
+
+       1164e:	68db      	ldr	r3, [r3, #12]
+
+       11650:	69da      	ldr	r2, [r3, #28]
+
+       11652:	6a1f      	ldr	r7, [r3, #32]
+
+       11654:	6a99      	ldr	r1, [r3, #40]	@ 0x28
+
+       11656:	6097      	str	r7, [r2, #8]
+
+       11658:	69da      	ldr	r2, [r3, #28]
+
+       1165a:	607a      	str	r2, [r7, #4]
+
+       1165c:	684a      	ldr	r2, [r1, #4]
+
+       1165e:	f103 0718 	add.w	r7, r3, #24
+
+       11662:	42ba      	cmp	r2, r7
+
+       11664:	bf04      	itt	eq
+
+       11666:	6a1a      	ldreq	r2, [r3, #32]
+
+       11668:	604a      	streq	r2, [r1, #4]
+
+       1166a:	680a      	ldr	r2, [r1, #0]
+
+       1166c:	f8c3 b028 	str.w	fp, [r3, #40]	@ 0x28
+
+       11670:	3a01      	subs	r2, #1
+
+       11672:	600a      	str	r2, [r1, #0]
+
+       11674:	689a      	ldr	r2, [r3, #8]
+
+       11676:	68df      	ldr	r7, [r3, #12]
+
+       11678:	6959      	ldr	r1, [r3, #20]
+
+       1167a:	6097      	str	r7, [r2, #8]
+
+       1167c:	689a      	ldr	r2, [r3, #8]
+
+       1167e:	607a      	str	r2, [r7, #4]
+
+       11680:	684a      	ldr	r2, [r1, #4]
+
+       11682:	f103 0804 	add.w	r8, r3, #4
+
+       11686:	4542      	cmp	r2, r8
+
+       11688:	bf04      	itt	eq
+
+       1168a:	68da      	ldreq	r2, [r3, #12]
+
+       1168c:	604a      	streq	r2, [r1, #4]
+
+       1168e:	680a      	ldr	r2, [r1, #0]
+
+       11690:	3a01      	subs	r2, #1
+
+       11692:	600a      	str	r2, [r1, #0]
+
+       11694:	6ad9      	ldr	r1, [r3, #44]	@ 0x2c
+
+       11696:	6837      	ldr	r7, [r6, #0]
+
+       11698:	eb01 0281 	add.w	r2, r1, r1, lsl #2
+
+       1169c:	eb00 0982 	add.w	r9, r0, r2, lsl #2
+
+       116a0:	fa0c f101 	lsl.w	r1, ip, r1
+
+       116a4:	4339      	orrs	r1, r7
+
+       116a6:	6031      	str	r1, [r6, #0]
+
+       116a8:	f8d9 7004 	ldr.w	r7, [r9, #4]
+
+       116ac:	f850 1022 	ldr.w	r1, [r0, r2, lsl #2]
+
+       116b0:	609f      	str	r7, [r3, #8]
+
+       116b2:	f8d7 a008 	ldr.w	sl, [r7, #8]
+
+       116b6:	f8c3 a00c 	str.w	sl, [r3, #12]
+
+       116ba:	3101      	adds	r1, #1
+
+       116bc:	f8ca 8004 	str.w	r8, [sl, #4]
+
+       116c0:	f8c7 8008 	str.w	r8, [r7, #8]
+
+       116c4:	f8c3 9014 	str.w	r9, [r3, #20]
+
+       116c8:	f840 1022 	str.w	r1, [r0, r2, lsl #2]
+
+       116cc:	f8de 1000 	ldr.w	r1, [lr]
+
+       116d0:	6ada      	ldr	r2, [r3, #44]	@ 0x2c
+
+       116d2:	6acb      	ldr	r3, [r1, #44]	@ 0x2c
+
+       116d4:	429a      	cmp	r2, r3
+
+       116d6:	bf84      	itt	hi
+
+       116d8:	9b01      	ldrhi	r3, [sp, #4]
+
+       116da:	f8c3 c000 	strhi.w	ip, [r3]
+
+       116de:	682b      	ldr	r3, [r5, #0]
+
+       116e0:	2b00      	cmp	r3, #0
+
+       116e2:	d1b3      	bne.n	1164c <<a href="./ddc7566428b7fe6655216ea7af4881f1.html">xTaskResumeAll</a>+0x40>
+
+    prvResetNextTaskUnblockTime():
+
+       116e4:	4b28      	ldr	r3, [pc, #160]	@ (11788 <<a href="./ddc7566428b7fe6655216ea7af4881f1.html">xTaskResumeAll</a>+0x17c>)
+
+       116e6:	681a      	ldr	r2, [r3, #0]
+
+       116e8:	6812      	ldr	r2, [r2, #0]
+
+       116ea:	2a00      	cmp	r2, #0
+
+       116ec:	d037      	beq.n	1175e <<a href="./ddc7566428b7fe6655216ea7af4881f1.html">xTaskResumeAll</a>+0x152>
+
+       116ee:	681a      	ldr	r2, [r3, #0]
+
+       116f0:	4b26      	ldr	r3, [pc, #152]	@ (1178c <<a href="./ddc7566428b7fe6655216ea7af4881f1.html">xTaskResumeAll</a>+0x180>)
+
+       116f2:	68d2      	ldr	r2, [r2, #12]
+
+       116f4:	6812      	ldr	r2, [r2, #0]
+
+       116f6:	601a      	str	r2, [r3, #0]
+
+    xTaskResumeAll():
+
+       116f8:	4e25      	ldr	r6, [pc, #148]	@ (11790 <<a href="./ddc7566428b7fe6655216ea7af4881f1.html">xTaskResumeAll</a>+0x184>)
+
+       116fa:	6835      	ldr	r5, [r6, #0]
+
+       116fc:	b1a5      	cbz	r5, 11728 <<a href="./ddc7566428b7fe6655216ea7af4881f1.html">xTaskResumeAll</a>+0x11c>
+
+       116fe:	f8dd 8004 	ldr.w	r8, [sp, #4]
+
+       11702:	2701      	movs	r7, #1
+
+       11704:	e006      	b.n	11714 <<a href="./ddc7566428b7fe6655216ea7af4881f1.html">xTaskResumeAll</a>+0x108>
+
+    xTaskIncrementTick():
+
+       11706:	f7ff fd6b 	bl	111e0 <<a href="./8ad4f985dd50983ba2bb37f1c4c561c8.html">xTaskIncrementTick</a>.part.0>
+
+    xTaskResumeAll():
+
+       1170a:	b108      	cbz	r0, 11710 <<a href="./ddc7566428b7fe6655216ea7af4881f1.html">xTaskResumeAll</a>+0x104>
+
+       1170c:	f8c8 7000 	str.w	r7, [r8]
+
+       11710:	3d01      	subs	r5, #1
+
+       11712:	d008      	beq.n	11726 <<a href="./ddc7566428b7fe6655216ea7af4881f1.html">xTaskResumeAll</a>+0x11a>
+
+    xTaskIncrementTick():
+
+       11714:	6823      	ldr	r3, [r4, #0]
+
+       11716:	2b00      	cmp	r3, #0
+
+       11718:	d0f5      	beq.n	11706 <<a href="./ddc7566428b7fe6655216ea7af4881f1.html">xTaskResumeAll</a>+0xfa>
+
+       1171a:	6833      	ldr	r3, [r6, #0]
+
+    xTaskResumeAll():
+
+       1171c:	3d01      	subs	r5, #1
+
+    xTaskIncrementTick():
+
+       1171e:	f103 0301 	add.w	r3, r3, #1
+
+       11722:	6033      	str	r3, [r6, #0]
+
+    xTaskResumeAll():
+
+       11724:	d1f6      	bne.n	11714 <<a href="./ddc7566428b7fe6655216ea7af4881f1.html">xTaskResumeAll</a>+0x108>
+
+       11726:	6035      	str	r5, [r6, #0]
+
+       11728:	9b01      	ldr	r3, [sp, #4]
+
+       1172a:	681b      	ldr	r3, [r3, #0]
+
+       1172c:	b183      	cbz	r3, 11750 <<a href="./ddc7566428b7fe6655216ea7af4881f1.html">xTaskResumeAll</a>+0x144>
+
+       1172e:	f04f 23e0 	mov.w	r3, #3758153728	@ 0xe000e000
+
+       11732:	f04f 5280 	mov.w	r2, #268435456	@ 0x10000000
+
+       11736:	f8c3 2d04 	str.w	r2, [r3, #3332]	@ 0xd04
+
+       1173a:	f3bf 8f4f 	dsb	sy
+
+       1173e:	f3bf 8f6f 	isb	sy
+
+       11742:	f01d fb57 	bl	2edf4 <<a href="../../../../../platforms/s32k1xx/3rdparty/freertos_cm4_sysTick/include/portmacro.h/f34360f95022a09e4e4cceffa22ec0c6.html">vPortExitCritical</a>>
+
+       11746:	2401      	movs	r4, #1
+
+       11748:	4620      	mov	r0, r4
+
+       1174a:	b003      	add	sp, #12
+
+       1174c:	e8bd 8ff0 	ldmia.w	sp!, {r4, r5, r6, r7, r8, r9, sl, fp, pc}
+
+       11750:	f01d fb50 	bl	2edf4 <<a href="../../../../../platforms/s32k1xx/3rdparty/freertos_cm4_sysTick/include/portmacro.h/f34360f95022a09e4e4cceffa22ec0c6.html">vPortExitCritical</a>>
+
+       11754:	2400      	movs	r4, #0
+
+       11756:	4620      	mov	r0, r4
+
+       11758:	b003      	add	sp, #12
+
+       1175a:	e8bd 8ff0 	ldmia.w	sp!, {r4, r5, r6, r7, r8, r9, sl, fp, pc}
+
+    prvResetNextTaskUnblockTime():
+
+       1175e:	4b0b      	ldr	r3, [pc, #44]	@ (1178c <<a href="./ddc7566428b7fe6655216ea7af4881f1.html">xTaskResumeAll</a>+0x180>)
+
+       11760:	f04f 32ff 	mov.w	r2, #4294967295	@ 0xffffffff
+
+       11764:	601a      	str	r2, [r3, #0]
+
+       11766:	e7c7      	b.n	116f8 <<a href="./ddc7566428b7fe6655216ea7af4881f1.html">xTaskResumeAll</a>+0xec>
+
+       11768:	4b04      	ldr	r3, [pc, #16]	@ (1177c <<a href="./ddc7566428b7fe6655216ea7af4881f1.html">xTaskResumeAll</a>+0x170>)
+
+       1176a:	9301      	str	r3, [sp, #4]
+
+       1176c:	e7c4      	b.n	116f8 <<a href="./ddc7566428b7fe6655216ea7af4881f1.html">xTaskResumeAll</a>+0xec>
+
+       1176e:	bf00      	nop
+
+       11770:	1fff37cc 	.word	0x1fff37cc
+
+       11774:	1fff37f4 	.word	0x1fff37f4
+
+       11778:	1fff3824 	.word	0x1fff3824
+
+       1177c:	1fff37e0 	.word	0x1fff37e0
+
+       11780:	1fff37ec 	.word	0x1fff37ec
+
+       11784:	1fff3868 	.word	0x1fff3868
+
+       11788:	1fff383c 	.word	0x1fff383c
+
+       1178c:	1fff37d4 	.word	0x1fff37d4
+
+       11790:	1fff37e4 	.word	0x1fff37e4
+
+       11794:	1fff3930 	.word	0x1fff3930
+
+    </pre>
+
+    
+    <pre><a href="./159ed2222516e91cda4b0af6b5a8fd7f.html">xTaskGetTickCount (12)</a></pre>
+    
+
+    
+        <h1>Stack Worst-Case Scenarios</h1>
+        
+            <p>No callees for this function.</p>
+        
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 232</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 1,892</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    232
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                48 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    1,892
+                    
+                    
+                </td>
+                <td class="col_size">396</td>
+                <td><a href="./ddc7566428b7fe6655216ea7af4881f1.html" class="icon-function">xTaskResumeAll</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                    
+                    184
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                24 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    1,496
+                    
+                    
+                </td>
+                <td class="col_size">188</td>
+                <td><a href="../event_groups.h/5504d9808e53d1ba7d00471cb60393d1.html" class="icon-function">xEventGroupWaitBits</a></td>
+            </tr>
+        
+            <tr>
+                <th>3</th>
+                <td class="col_size">
+                    
+                    160
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                24 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    1,308
+                    
+                    
+                </td>
+                <td class="col_size">56</td>
+                <td><a href="../../../../bsw/asyncFreeRtos/src/async/FutureSupport.cpp/748682a52e2520d2db38b4eee4f703b8.html" class="icon-function">async::FutureSupport::wait()</a></td>
+            </tr>
+        
+            <tr>
+                <th>4</th>
+                <td class="col_size">
+                </td>
+                <td class="col_size">
+            
+                136 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">1,252</td>
+                <td><a href="../../../../bsw/storage/src/storage/StorageTester.cpp/67fa68a7bcf103a087d72ac11f843f38.html" class="icon-function">storage::StorageTester::executeCommand(util::command::CommandContext&amp;, unsigned char)</a></td>
+            </tr>
+        
+        </tbody>
+        
+    </table>
+        
+    
+
+
+        </div>
+    <div id="page-footer">
+        <hr>
+        
+            brought to you with 💖
+            by <a href="https://twitter.com/hbehrens">Heiko Behrens</a>
+            <span class="secondary">– MIT license, copyright © 2014-2026</span>
+        
+    </div>
+    </div>
+</body>
+</html>

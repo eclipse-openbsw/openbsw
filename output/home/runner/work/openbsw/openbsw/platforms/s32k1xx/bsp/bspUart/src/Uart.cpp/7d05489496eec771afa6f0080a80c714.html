@@ -1,0 +1,416 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../../../../../../../../../../static/css/style.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <title>Symbol - puncover</title>
+    
+</head>
+<body>
+    <div class="container" id="content">
+        <div class="page-header">
+            <nav class="navbar navbar-default" role="navigation">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="../../../../../../../../../../../index.html">
+                    Puncover
+                  </a>
+                </div>
+              </div>
+            </nav>
+          
+        </div>
+        <div id="inner_content">
+        
+    
+    <ol class="breadcrumb folders">
+        
+        <li><a href="../../../../../../../../../../../home.html">home</a></li>
+        
+        <li><a href="../../../../../../../../../../runner.html">runner</a></li>
+        
+        <li><a href="../../../../../../../../../work.html">work</a></li>
+        
+        <li><a href="../../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../platforms.html">platforms</a></li>
+        
+        <li><a href="../../../../../s32k1xx.html">s32k1xx</a></li>
+        
+        <li><a href="../../../../bsp.html">bsp</a></li>
+        
+        <li><a href="../../../bspUart.html">bspUart</a></li>
+        
+        <li ><a href="../../src.html">src</a>
+            </li>
+
+        
+        <li class="active"><a href="../Uart.cpp.html">Uart.cpp</a>:102
+            </li>
+        
+    </ol>
+
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <th>Function</th>
+                <td colspan="5">
+                    <span class="icon-function">bsp::Uart::waitForTxReady()</span>
+                </td>
+            </tr>
+
+            <tr>
+                <th rowspan="2"></th>
+                <th>Address</th>
+                <th>Remarks</th>
+                <th>Stack</th>
+                <th>Code</th>
+                <th>Static</th>
+            </tr>
+            <tr>
+                <td>0x000152e0</td>
+                <td>
+    <span class="label label-success">x-module</span>
+    
+</td>
+                <td>8 (static)</td>
+                <td>68</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th>Callers (1)</th>
+                <td colspan="5">
+                
+                    <a href="../../../../../../executables/referenceApp/application/src/app/app.cpp/f0c3e37b78904f0cb22bd585a8fa9842.html">app::run() (1412)</a>
+                    
+                
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Callees (1,
+                            <span title="sum of used bytes by all callees">
+                            Σ=60
+                            </span>
+                        )
+                    
+                </th>
+                <td colspan="5">
+                
+                    <a href="./a6995270dd7b2ce4a3dc535f548e1353.html">bsp::Uart::init() (60)</a>
+                    
+                
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    
+    <pre><a href="./8fb35d9db0e006c3e4dd05aaf3ec8368.html">bsp::Uart::isInitialized() const (20)</a></pre>
+    
+
+    <pre>
+
+       152e0:	6803      	ldr	r3, [r0, #0]
+
+       152e2:	681a      	ldr	r2, [r3, #0]
+
+       152e4:	6993      	ldr	r3, [r2, #24]
+
+    bsp::Uart::waitForTxReady():
+
+       152e6:	f413 2f40 	tst.w	r3, #786432	@ 0xc0000
+
+       152ea:	d008      	beq.n	152fe <<a href="./7d05489496eec771afa6f0080a80c714.html">bsp::Uart::waitForTxReady()</a>+0x1e>
+
+       152ec:	480c      	ldr	r0, [pc, #48]	@ (15320 <<a href="./7d05489496eec771afa6f0080a80c714.html">bsp::Uart::waitForTxReady()</a>+0x40>)
+
+       152ee:	e001      	b.n	152f4 <<a href="./7d05489496eec771afa6f0080a80c714.html">bsp::Uart::waitForTxReady()</a>+0x14>
+
+       152f0:	3801      	subs	r0, #1
+
+       152f2:	d013      	beq.n	1531c <<a href="./7d05489496eec771afa6f0080a80c714.html">bsp::Uart::waitForTxReady()</a>+0x3c>
+
+       152f4:	6953      	ldr	r3, [r2, #20]
+
+       152f6:	021b      	lsls	r3, r3, #8
+
+       152f8:	d5fa      	bpl.n	152f0 <<a href="./7d05489496eec771afa6f0080a80c714.html">bsp::Uart::waitForTxReady()</a>+0x10>
+
+       152fa:	2001      	movs	r0, #1
+
+       152fc:	4770      	bx	lr
+
+       152fe:	b510      	push	{r4, lr}
+
+       15300:	4604      	mov	r4, r0
+
+       15302:	f7ff ff77 	bl	151f4 <<a href="./a6995270dd7b2ce4a3dc535f548e1353.html">bsp::Uart::init()</a>>
+
+       15306:	6823      	ldr	r3, [r4, #0]
+
+       15308:	4805      	ldr	r0, [pc, #20]	@ (15320 <<a href="./7d05489496eec771afa6f0080a80c714.html">bsp::Uart::waitForTxReady()</a>+0x40>)
+
+       1530a:	681a      	ldr	r2, [r3, #0]
+
+       1530c:	e001      	b.n	15312 <<a href="./7d05489496eec771afa6f0080a80c714.html">bsp::Uart::waitForTxReady()</a>+0x32>
+
+       1530e:	3801      	subs	r0, #1
+
+       15310:	d003      	beq.n	1531a <<a href="./7d05489496eec771afa6f0080a80c714.html">bsp::Uart::waitForTxReady()</a>+0x3a>
+
+    isTxActive():
+
+       15312:	6953      	ldr	r3, [r2, #20]
+
+    bsp::Uart::waitForTxReady():
+
+       15314:	0219      	lsls	r1, r3, #8
+
+       15316:	d5fa      	bpl.n	1530e <<a href="./7d05489496eec771afa6f0080a80c714.html">bsp::Uart::waitForTxReady()</a>+0x2e>
+
+       15318:	2001      	movs	r0, #1
+
+       1531a:	bd10      	pop	{r4, pc}
+
+       1531c:	4770      	bx	lr
+
+       1531e:	bf00      	nop
+
+       15320:	000186a1 	.word	0x000186a1
+
+    </pre>
+
+    
+    <pre><a href="../../../../../../libs/bsw/transport/src/AbstractTransportLayer.cpp/65c06fe0970e06afc858e42fcb02ad62.html">transport::AbstractTransportLayer::init() (4)</a></pre>
+    
+
+    
+        <h1>Stack Worst-Case Scenarios</h1>
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 256</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 312</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    256
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                8 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    312
+                    
+                    
+                </td>
+                <td class="col_size">228</td>
+                <td><a href="../../../bspIo/src/io/Io.cpp/4d2b35f004d57c9527b81a1790cf7eec.html" class="icon-function">bios::Io::setConfiguration(unsigned short, bios::Io::PinConfiguration const&amp;)</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    84
+                    
+                    
+                </td>
+                <td class="col_size">24</td>
+                <td><a href="../../../bspIo/src/io/Io.cpp/cec6484b130ee51f1f05d1885b5b84f0.html" class="icon-function">bios::Io::setDefaultConfiguration(unsigned short)</a></td>
+            </tr>
+        
+            <tr>
+                <th>3</th>
+                <td class="col_size">
+                    
+                    248
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                16 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">60</td>
+                <td><a href="./a6995270dd7b2ce4a3dc535f548e1353.html" class="icon-function">bsp::Uart::init()</a></td>
+            </tr>
+        
+        </tbody>
+        
+        <tfoot>
+            <tr>
+                <th></th>
+                <th class="col_size">232
+                </th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </tfoot>
+        
+    </table>
+        
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 232</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 1,632</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    232
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                8 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    1,632
+                    
+                    
+                </td>
+                <td class="col_size">68</td>
+                <td><a href="./7d05489496eec771afa6f0080a80c714.html" class="icon-function">bsp::Uart::waitForTxReady()</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                    
+                    224
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                208 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    1,564
+                    
+                    
+                </td>
+                <td class="col_size">1,412</td>
+                <td><a href="../../../../../../executables/referenceApp/application/src/app/app.cpp/f0c3e37b78904f0cb22bd585a8fa9842.html" class="icon-function">app::run()</a></td>
+            </tr>
+        
+            <tr>
+                <th>3</th>
+                <td class="col_size">
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    152
+                    
+                    
+                </td>
+                <td class="col_size">20</td>
+                <td><a href="../../../../../../executables/referenceApp/application/src/main.cpp/5ca4565b9d11184b1d3b82aa1ebe323f.html" class="icon-function">app_main()</a></td>
+            </tr>
+        
+            <tr>
+                <th>4</th>
+                <td class="col_size">
+                </td>
+                <td class="col_size">
+            
+                16 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">132</td>
+                <td><a href="../../../../../../executables/referenceApp/platforms/s32k148evb/main/src/main.cpp/fad58de7366495db4650cfefac2fcd61.html" class="icon-function">main</a></td>
+            </tr>
+        
+        </tbody>
+        
+    </table>
+        
+    
+
+
+        </div>
+    <div id="page-footer">
+        <hr>
+        
+            brought to you with 💖
+            by <a href="https://twitter.com/hbehrens">Heiko Behrens</a>
+            <span class="secondary">– MIT license, copyright © 2014-2026</span>
+        
+    </div>
+    </div>
+</body>
+</html>

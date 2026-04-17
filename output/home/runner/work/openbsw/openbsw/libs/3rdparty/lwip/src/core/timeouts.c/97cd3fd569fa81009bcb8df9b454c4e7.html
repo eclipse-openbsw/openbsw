@@ -1,0 +1,373 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../../../../../../../../../../static/css/style.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <title>Symbol - puncover</title>
+    
+</head>
+<body>
+    <div class="container" id="content">
+        <div class="page-header">
+            <nav class="navbar navbar-default" role="navigation">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="../../../../../../../../../../../index.html">
+                    Puncover
+                  </a>
+                </div>
+              </div>
+            </nav>
+          
+        </div>
+        <div id="inner_content">
+        
+    
+    <ol class="breadcrumb folders">
+        
+        <li><a href="../../../../../../../../../../../home.html">home</a></li>
+        
+        <li><a href="../../../../../../../../../../runner.html">runner</a></li>
+        
+        <li><a href="../../../../../../../../../work.html">work</a></li>
+        
+        <li><a href="../../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../libs.html">libs</a></li>
+        
+        <li><a href="../../../../../3rdparty.html">3rdparty</a></li>
+        
+        <li><a href="../../../../lwip.html">lwip</a></li>
+        
+        <li><a href="../../../src.html">src</a></li>
+        
+        <li ><a href="../../core.html">core</a>
+            </li>
+
+        
+        <li class="active"><a href="../timeouts.c.html">timeouts.c</a>:352
+            </li>
+        
+    </ol>
+
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <th>Function</th>
+                <td colspan="5">
+                    <span class="icon-function">sys_check_timeouts</span>
+                </td>
+            </tr>
+
+            <tr>
+                <th rowspan="2"></th>
+                <th>Address</th>
+                <th>Remarks</th>
+                <th>Stack</th>
+                <th>Code</th>
+                <th>Static</th>
+            </tr>
+            <tr>
+                <td>0x0001f88c</td>
+                <td>
+    <span class="label label-success">x-module</span>
+    
+</td>
+                <td>32 (static)</td>
+                <td>80</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th>Callers (1)</th>
+                <td colspan="5">
+                
+                    <a href="../../../../../../executables/referenceApp/application/src/systems/EthernetSystem.cpp/7f6d534a67d8880422173a75039c028b.html">systems::EthernetSystem::execute() (180)</a>
+                    
+                
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Callees (2,
+                            <span title="sum of used bytes by all callees">
+                            Σ=64
+                            </span>
+                        )
+                    
+                </th>
+                <td colspan="5">
+                
+                    <a href="../../../../../../platforms/s32k1xx/lwipSysArch/src/arch/sys_arch.cpp/d026b8b455878f8212d3984c68f908fe.html">sys_now (4)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../memp.c/39d50c52143357af896630c36b8c515f.html">memp_free (60)</a>
+                    
+                
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    
+    <pre><a href="./edec685b64660b1fa86f84b9732c3acb.html">sys_timeouts_init (40)</a></pre>
+    
+
+    <pre>
+
+    sys_check_timeouts():
+
+       1f88c:	e92d 43f8 	stmdb	sp!, {r3, r4, r5, r6, r7, r8, r9, lr}
+
+       1f890:	f00e fe36 	bl	2e500 <<a href="../../../../../../platforms/s32k1xx/lwipSysArch/src/arch/sys_arch.cpp/d026b8b455878f8212d3984c68f908fe.html">sys_now</a>>
+
+       1f894:	4c0f      	ldr	r4, [pc, #60]	@ (1f8d4 <<a href="./97cd3fd569fa81009bcb8df9b454c4e7.html">sys_check_timeouts</a>+0x48>)
+
+       1f896:	f8df 8040 	ldr.w	r8, [pc, #64]	@ 1f8d8 <<a href="./97cd3fd569fa81009bcb8df9b454c4e7.html">sys_check_timeouts</a>+0x4c>
+
+       1f89a:	4607      	mov	r7, r0
+
+       1f89c:	e00f      	b.n	1f8be <<a href="./97cd3fd569fa81009bcb8df9b454c4e7.html">sys_check_timeouts</a>+0x32>
+
+       1f89e:	685a      	ldr	r2, [r3, #4]
+
+       1f8a0:	eba7 0c02 	sub.w	ip, r7, r2
+
+       1f8a4:	f1bc 0f00 	cmp.w	ip, #0
+
+       1f8a8:	db0e      	blt.n	1f8c8 <<a href="./97cd3fd569fa81009bcb8df9b454c4e7.html">sys_check_timeouts</a>+0x3c>
+
+       1f8aa:	689d      	ldr	r5, [r3, #8]
+
+       1f8ac:	681e      	ldr	r6, [r3, #0]
+
+       1f8ae:	f8d3 900c 	ldr.w	r9, [r3, #12]
+
+       1f8b2:	6026      	str	r6, [r4, #0]
+
+       1f8b4:	f8c8 2000 	str.w	r2, [r8]
+
+       1f8b8:	f7fb fdfc 	bl	1b4b4 <<a href="../memp.c/39d50c52143357af896630c36b8c515f.html">memp_free</a>>
+
+       1f8bc:	b935      	cbnz	r5, 1f8cc <<a href="./97cd3fd569fa81009bcb8df9b454c4e7.html">sys_check_timeouts</a>+0x40>
+
+       1f8be:	6823      	ldr	r3, [r4, #0]
+
+       1f8c0:	2007      	movs	r0, #7
+
+       1f8c2:	4619      	mov	r1, r3
+
+       1f8c4:	2b00      	cmp	r3, #0
+
+       1f8c6:	d1ea      	bne.n	1f89e <<a href="./97cd3fd569fa81009bcb8df9b454c4e7.html">sys_check_timeouts</a>+0x12>
+
+       1f8c8:	e8bd 83f8 	ldmia.w	sp!, {r3, r4, r5, r6, r7, r8, r9, pc}
+
+       1f8cc:	4648      	mov	r0, r9
+
+       1f8ce:	47a8      	blx	r5
+
+       1f8d0:	e7f5      	b.n	1f8be <<a href="./97cd3fd569fa81009bcb8df9b454c4e7.html">sys_check_timeouts</a>+0x32>
+
+       1f8d2:	bf00      	nop
+
+       1f8d4:	1fff73e8 	.word	0x1fff73e8
+
+       1f8d8:	1fff73e4 	.word	0x1fff73e4
+
+    </pre>
+
+    
+    <pre><a href="../udp.c/9aa6c5bd1e37d1d2df7dd9c28e33d6d4.html">udp_init (24)</a></pre>
+    
+
+    
+        <h1>Stack Worst-Case Scenarios</h1>
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 168</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 228</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    168
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                48 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    228
+                    
+                    
+                </td>
+                <td class="col_size">68</td>
+                <td><a href="../../../../../bsw/util/src/util/logger/Logger.cpp/d658d7c78dcca1ca01e61ef198b3eeaa.html" class="icon-function">util::logger::Logger::doLog(unsigned char, util::logger::Level, char const*, std::__va_list)</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                    
+                    120
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                24 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    160
+                    
+                    
+                </td>
+                <td class="col_size">100</td>
+                <td><a href="../../../../../../executables/referenceApp/application/src/logger/logger.cpp/98866fb3d81ee8db78cbfd1e2dfd931d.html" class="icon-function">log_lwipInfo</a></td>
+            </tr>
+        
+            <tr>
+                <th>3</th>
+                <td class="col_size">
+                    
+                    96
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                16 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">60</td>
+                <td><a href="../memp.c/39d50c52143357af896630c36b8c515f.html" class="icon-function">memp_free</a></td>
+            </tr>
+        
+        </tbody>
+        
+        <tfoot>
+            <tr>
+                <th></th>
+                <th class="col_size">80
+                </th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </tfoot>
+        
+    </table>
+        
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 80</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 260</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    80
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                32 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    260
+                    
+                    
+                </td>
+                <td class="col_size">80</td>
+                <td><a href="./97cd3fd569fa81009bcb8df9b454c4e7.html" class="icon-function">sys_check_timeouts</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                </td>
+                <td class="col_size">
+            
+                48 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">180</td>
+                <td><a href="../../../../../../executables/referenceApp/application/src/systems/EthernetSystem.cpp/7f6d534a67d8880422173a75039c028b.html" class="icon-function">systems::EthernetSystem::execute()</a></td>
+            </tr>
+        
+        </tbody>
+        
+    </table>
+        
+    
+
+
+        </div>
+    <div id="page-footer">
+        <hr>
+        
+            brought to you with 💖
+            by <a href="https://twitter.com/hbehrens">Heiko Behrens</a>
+            <span class="secondary">– MIT license, copyright © 2014-2026</span>
+        
+    </div>
+    </div>
+</body>
+</html>

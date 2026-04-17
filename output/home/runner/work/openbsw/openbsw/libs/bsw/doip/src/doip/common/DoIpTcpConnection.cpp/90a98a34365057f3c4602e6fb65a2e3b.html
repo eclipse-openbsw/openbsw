@@ -1,0 +1,454 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../../../../../../../../../../../static/css/style.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <title>Symbol - puncover</title>
+    
+</head>
+<body>
+    <div class="container" id="content">
+        <div class="page-header">
+            <nav class="navbar navbar-default" role="navigation">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="../../../../../../../../../../../../index.html">
+                    Puncover
+                  </a>
+                </div>
+              </div>
+            </nav>
+          
+        </div>
+        <div id="inner_content">
+        
+    
+    <ol class="breadcrumb folders">
+        
+        <li><a href="../../../../../../../../../../../../home.html">home</a></li>
+        
+        <li><a href="../../../../../../../../../../../runner.html">runner</a></li>
+        
+        <li><a href="../../../../../../../../../../work.html">work</a></li>
+        
+        <li><a href="../../../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../../libs.html">libs</a></li>
+        
+        <li><a href="../../../../../../bsw.html">bsw</a></li>
+        
+        <li><a href="../../../../../doip.html">doip</a></li>
+        
+        <li><a href="../../../../src.html">src</a></li>
+        
+        <li><a href="../../../doip.html">doip</a></li>
+        
+        <li ><a href="../../common.html">common</a>
+            </li>
+
+        
+        <li class="active"><a href="../DoIpTcpConnection.cpp.html">DoIpTcpConnection.cpp</a>:388
+            </li>
+        
+    </ol>
+
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <th>Function</th>
+                <td colspan="5">
+                    <span class="icon-function">doip::DoIpTcpConnection::tryReceive()</span>
+                </td>
+            </tr>
+
+            <tr>
+                <th rowspan="2"></th>
+                <th>Address</th>
+                <th>Remarks</th>
+                <th>Stack</th>
+                <th>Code</th>
+                <th>Static</th>
+            </tr>
+            <tr>
+                <td>0x00026a04</td>
+                <td>
+    <span class="label label-success">x-module</span>
+    
+</td>
+                <td>16 (static)</td>
+                <td>124</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th>Callers (4)</th>
+                <td colspan="5">
+                
+                    <a href="./aa9b372690281a9d495abc218917d677.html">doip::DoIpTcpConnection::endReceiveMessage(etl::delegate&lt;void ()&gt;) (116)</a>
+                    
+                        ,
+                    
+                
+                    <a href="./6c91dc6310e0c6566ab1066107ca82a2.html">doip::DoIpTcpConnection::receivePayload(etl::span&lt;unsigned char, 4294967295u&gt;, etl::delegate&lt;void (etl::span&lt;unsigned char const, 4294967295u&gt;)&gt;) (76)</a>
+                    
+                        ,
+                    
+                
+                    <a href="./ede44b9eeb9efcdbc12ffa056c21fe73.html">doip::DoIpTcpConnection::dataReceived(unsigned short) (8)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../../../../include/doip/common/DoIpTcpConnection.h/f5eddbe89aaecdb579c602bf31d6bb3f.html">non-virtual thunk to doip::DoIpTcpConnection::dataReceived(unsigned short) (8)</a>
+                    
+                
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Callees (2,
+                            <span title="sum of used bytes by all callees">
+                            Σ=416
+                            </span>
+                        )
+                    
+                </th>
+                <td colspan="5">
+                
+                    <a href="./f13e4baf74a081bd791725273d4097e5.html">doip::DoIpTcpConnection::processNextReadChunk(unsigned int) (248)</a>
+                    
+                        ,
+                    
+                
+                    <a href="./e5529b9f7ac7a00fca5f64ccdabc7446.html">doip::DoIpTcpConnection::closeConnection(doip::DoIpTcpConnection::ConnectionState, bool, bool) (168)</a>
+                    
+                
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    
+    <pre><a href="./d5db12730cce1f53c3c98eac01d18a68.html">doip::DoIpTcpConnection::connectionClosed(tcp::IDataListener::ErrorCode) (64)</a></pre>
+    
+
+    <pre>
+
+    doip::DoIpTcpConnection::tryReceive():
+
+       26a04:	f890 309a 	ldrb.w	r3, [r0, #154]	@ 0x9a
+
+       26a08:	2b00      	cmp	r3, #0
+
+       26a0a:	d138      	bne.n	26a7e <<a href="./90a98a34365057f3c4602e6fb65a2e3b.html">doip::DoIpTcpConnection::tryReceive()</a>+0x7a>
+
+       26a0c:	b570      	push	{r4, r5, r6, lr}
+
+       26a0e:	4604      	mov	r4, r0
+
+       26a10:	e00c      	b.n	26a2c <<a href="./90a98a34365057f3c4602e6fb65a2e3b.html">doip::DoIpTcpConnection::tryReceive()</a>+0x28>
+
+    _ZNK3etl4spanIhLj4294967295EE7subspanEjj():
+
+       26a12:	4431      	add	r1, r6
+
+    doip::DoIpTcpConnection::tryReceive():
+
+       26a14:	462a      	mov	r2, r5
+
+       26a16:	4798      	blx	r3
+
+       26a18:	4603      	mov	r3, r0
+
+       26a1a:	42ab      	cmp	r3, r5
+
+       26a1c:	4629      	mov	r1, r5
+
+       26a1e:	4620      	mov	r0, r4
+
+       26a20:	d125      	bne.n	26a6e <<a href="./90a98a34365057f3c4602e6fb65a2e3b.html">doip::DoIpTcpConnection::tryReceive()</a>+0x6a>
+
+       26a22:	f7ff fe8b 	bl	2673c <<a href="./f13e4baf74a081bd791725273d4097e5.html">doip::DoIpTcpConnection::processNextReadChunk(unsigned int)</a>>
+
+       26a26:	f894 309a 	ldrb.w	r3, [r4, #154]	@ 0x9a
+
+       26a2a:	bb3b      	cbnz	r3, 26a7c <<a href="./90a98a34365057f3c4602e6fb65a2e3b.html">doip::DoIpTcpConnection::tryReceive()</a>+0x78>
+
+       26a2c:	f894 3095 	ldrb.w	r3, [r4, #149]	@ 0x95
+
+       26a30:	2b01      	cmp	r3, #1
+
+       26a32:	d123      	bne.n	26a7c <<a href="./90a98a34365057f3c4602e6fb65a2e3b.html">doip::DoIpTcpConnection::tryReceive()</a>+0x78>
+
+    _ZNK3etl4spanIhLj4294967295EE4sizeEv():
+
+       26a34:	69a1      	ldr	r1, [r4, #24]
+
+       26a36:	69e3      	ldr	r3, [r4, #28]
+
+    doip::DoIpTcpConnection::tryReceive():
+
+       26a38:	428b      	cmp	r3, r1
+
+    _ZNK3etl4spanIhLj4294967295EE4sizeEv():
+
+       26a3a:	eba3 0501 	sub.w	r5, r3, r1
+
+    doip::DoIpTcpConnection::tryReceive():
+
+       26a3e:	d01d      	beq.n	26a7c <<a href="./90a98a34365057f3c4602e6fb65a2e3b.html">doip::DoIpTcpConnection::tryReceive()</a>+0x78>
+
+       26a40:	6ee3      	ldr	r3, [r4, #108]	@ 0x6c
+
+       26a42:	b1db      	cbz	r3, 26a7c <<a href="./90a98a34365057f3c4602e6fb65a2e3b.html">doip::DoIpTcpConnection::tryReceive()</a>+0x78>
+
+       26a44:	6ea6      	ldr	r6, [r4, #104]	@ 0x68
+
+       26a46:	6960      	ldr	r0, [r4, #20]
+
+       26a48:	f894 c096 	ldrb.w	ip, [r4, #150]	@ 0x96
+
+       26a4c:	6802      	ldr	r2, [r0, #0]
+
+       26a4e:	1bad      	subs	r5, r5, r6
+
+    _ZN3etl3minIjNS_4lessIjEEEERKT_S5_S5_T0_():
+
+       26a50:	429d      	cmp	r5, r3
+
+       26a52:	bf28      	it	cs
+
+       26a54:	461d      	movcs	r5, r3
+
+    doip::DoIpTcpConnection::tryReceive():
+
+       26a56:	f1bc 0f02 	cmp.w	ip, #2
+
+       26a5a:	6a13      	ldr	r3, [r2, #32]
+
+       26a5c:	d1d9      	bne.n	26a12 <<a href="./90a98a34365057f3c4602e6fb65a2e3b.html">doip::DoIpTcpConnection::tryReceive()</a>+0xe>
+
+       26a5e:	2100      	movs	r1, #0
+
+       26a60:	462a      	mov	r2, r5
+
+       26a62:	4798      	blx	r3
+
+       26a64:	4603      	mov	r3, r0
+
+       26a66:	42ab      	cmp	r3, r5
+
+       26a68:	4629      	mov	r1, r5
+
+       26a6a:	4620      	mov	r0, r4
+
+       26a6c:	d0d9      	beq.n	26a22 <<a href="./90a98a34365057f3c4602e6fb65a2e3b.html">doip::DoIpTcpConnection::tryReceive()</a>+0x1e>
+
+       26a6e:	e8bd 4070 	ldmia.w	sp!, {r4, r5, r6, lr}
+
+       26a72:	2301      	movs	r3, #1
+
+       26a74:	2200      	movs	r2, #0
+
+       26a76:	2103      	movs	r1, #3
+
+       26a78:	f7ff bf1c 	b.w	268b4 <<a href="./e5529b9f7ac7a00fca5f64ccdabc7446.html">doip::DoIpTcpConnection::closeConnection(doip::DoIpTcpConnection::ConnectionState, bool, bool)</a>>
+
+       26a7c:	bd70      	pop	{r4, r5, r6, pc}
+
+       26a7e:	4770      	bx	lr
+
+    </pre>
+
+    
+    <pre><a href="./6c91dc6310e0c6566ab1066107ca82a2.html">doip::DoIpTcpConnection::receivePayload(etl::span&lt;unsigned char, 4294967295u&gt;, etl::delegate&lt;void (etl::span&lt;unsigned char const, 4294967295u&gt;)&gt;) (76)</a></pre>
+    
+
+    
+        <h1>Stack Worst-Case Scenarios</h1>
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 164</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 292</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    164
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                48 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    292
+                    
+                    
+                </td>
+                <td class="col_size">68</td>
+                <td><a href="../../../../../util/src/util/logger/Logger.cpp/d658d7c78dcca1ca01e61ef198b3eeaa.html" class="icon-function">util::logger::Logger::doLog(unsigned char, util::logger::Level, char const*, std::__va_list)</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                    
+                    116
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                20 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    224
+                    
+                    
+                </td>
+                <td class="col_size">56</td>
+                <td><a href="../../../../../util/include/util/logger/Logger.h/36d1ae1365862a45a74fa55e9d725fcd.html" class="icon-function">util::logger::Logger::debug(unsigned char, char const*, ...)</a></td>
+            </tr>
+        
+            <tr>
+                <th>3</th>
+                <td class="col_size">
+                    
+                    96
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                48 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">168</td>
+                <td><a href="./e5529b9f7ac7a00fca5f64ccdabc7446.html" class="icon-function">doip::DoIpTcpConnection::closeConnection(doip::DoIpTcpConnection::ConnectionState, bool, bool)</a></td>
+            </tr>
+        
+        </tbody>
+        
+        <tfoot>
+            <tr>
+                <th></th>
+                <th class="col_size">48
+                </th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </tfoot>
+        
+    </table>
+        
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 48</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 200</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    48
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                16 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    200
+                    
+                    
+                </td>
+                <td class="col_size">124</td>
+                <td><a href="./90a98a34365057f3c4602e6fb65a2e3b.html" class="icon-function">doip::DoIpTcpConnection::tryReceive()</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                </td>
+                <td class="col_size">
+            
+                32 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">76</td>
+                <td><a href="./6c91dc6310e0c6566ab1066107ca82a2.html" class="icon-function">doip::DoIpTcpConnection::receivePayload(etl::span&lt;unsigned char, 4294967295u&gt;, etl::delegate&lt;void (etl::span&lt;unsigned char const, 4294967295u&gt;)&gt;)</a></td>
+            </tr>
+        
+        </tbody>
+        
+    </table>
+        
+    
+
+
+        </div>
+    <div id="page-footer">
+        <hr>
+        
+            brought to you with 💖
+            by <a href="https://twitter.com/hbehrens">Heiko Behrens</a>
+            <span class="secondary">– MIT license, copyright © 2014-2026</span>
+        
+    </div>
+    </div>
+</body>
+</html>

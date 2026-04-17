@@ -1,0 +1,252 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - coverage.info - libs/bsw/middleware/src/middleware/memory/PoolBase.cpp</title>
+  <link rel="stylesheet" type="text/css" href="../../../../../../gcov.css">
+</head>
+
+<body>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="title">LCOV - code coverage report</td></tr>
+            <tr><td class="ruler"><img src="../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+            <tr>
+              <td width="100%">
+                <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="10%" class="headerValue"><a href="../../../../../../index.html">top level</a> - <a href="index.html">libs/bsw/middleware/src/middleware/memory</a> - PoolBase.cpp<span style="font-size: 80%;"> (source / <a href="PoolBase.cpp.func-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="5%"></td>
+            <td width="5%" class="headerCovTableHead">Coverage</td>
+            <td width="5%" class="headerCovTableHead" title="Covered + Uncovered code">Total</td>
+            <td width="5%" class="headerCovTableHead" title="Exercised code only">Hit</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">coverage.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntryHi">99.0&nbsp;%</td>
+            <td class="headerCovTableEntry">97</td>
+            <td class="headerCovTableEntry">96</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test Date:</td>
+            <td class="headerValue">2026-04-17 15:51:44</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
+            <td class="headerCovTableEntry">16</td>
+            <td class="headerCovTableEntry">16</td>
+          </tr>
+                  <tr><td><img src="../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr><td class="ruler"><img src="../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+          </table>
+
+          <table cellpadding=0 cellspacing=0 border=0>
+            <tr>
+              <td><br></td>
+            </tr>
+            <tr>
+              <td>
+<pre class="sourceHeading">            Line data    Source code</pre>
+<pre class="source">
+<span id="L1"><span class="lineNum">       1</span>              : // Copyright 2025 BMW AG</span>
+<span id="L2"><span class="lineNum">       2</span>              : </span>
+<span id="L3"><span class="lineNum">       3</span>              : #include &quot;middleware/memory/PoolBase.h&quot;</span>
+<span id="L4"><span class="lineNum">       4</span>              : </span>
+<span id="L5"><span class="lineNum">       5</span>              : #include &lt;etl/algorithm.h&gt;</span>
+<span id="L6"><span class="lineNum">       6</span>              : #include &lt;etl/iterator.h&gt;</span>
+<span id="L7"><span class="lineNum">       7</span>              : #include &lt;etl/memory.h&gt;</span>
+<span id="L8"><span class="lineNum">       8</span>              : #include &lt;etl/tuple.h&gt;</span>
+<span id="L9"><span class="lineNum">       9</span>              : </span>
+<span id="L10"><span class="lineNum">      10</span>              : #include &lt;climits&gt;</span>
+<span id="L11"><span class="lineNum">      11</span>              : #include &lt;cstddef&gt;</span>
+<span id="L12"><span class="lineNum">      12</span>              : #include &lt;cstdint&gt;</span>
+<span id="L13"><span class="lineNum">      13</span>              : #include &lt;cstring&gt;</span>
+<span id="L14"><span class="lineNum">      14</span>              : </span>
+<span id="L15"><span class="lineNum">      15</span>              : namespace middleware::memory</span>
+<span id="L16"><span class="lineNum">      16</span>              : {</span>
+<span id="L17"><span class="lineNum">      17</span>              : </span>
+<span id="L18"><span class="lineNum">      18</span> <span class="tlaGNC tlaBgGNC">          81 : PoolBase::PoolBase(</span></span>
+<span id="L19"><span class="lineNum">      19</span>              :     uint8_t* const buff,</span>
+<span id="L20"><span class="lineNum">      20</span>              :     size_t const elementSize,</span>
+<span id="L21"><span class="lineNum">      21</span>              :     size_t const elementAlignedSize,</span>
+<span id="L22"><span class="lineNum">      22</span>              :     size_t const elementCount,</span>
+<span id="L23"><span class="lineNum">      23</span> <span class="tlaGNC">          81 :     uint8_t* const flagsBuff)</span></span>
+<span id="L24"><span class="lineNum">      24</span> <span class="tlaGNC">          81 : : _buffer(buff)</span></span>
+<span id="L25"><span class="lineNum">      25</span> <span class="tlaGNC">          81 : , _elementSize(elementSize)</span></span>
+<span id="L26"><span class="lineNum">      26</span> <span class="tlaGNC">          81 : , _elementAlignedSize(elementAlignedSize)</span></span>
+<span id="L27"><span class="lineNum">      27</span> <span class="tlaGNC">          81 : , _elementCount(elementCount)</span></span>
+<span id="L28"><span class="lineNum">      28</span> <span class="tlaGNC">          81 : , _flags(flagsBuff)</span></span>
+<span id="L29"><span class="lineNum">      29</span> <span class="tlaGNC">          81 : {}</span></span>
+<span id="L30"><span class="lineNum">      30</span>              : </span>
+<span id="L31"><span class="lineNum">      31</span> <span class="tlaGNC">          81 : void PoolBase::initialize()</span></span>
+<span id="L32"><span class="lineNum">      32</span>              : {</span>
+<span id="L33"><span class="lineNum">      33</span> <span class="tlaGNC">          81 :     resetStats();</span></span>
+<span id="L34"><span class="lineNum">      34</span> <span class="tlaGNC">          81 :     etl::mem_set(_buffer, _elementAlignedSize * _elementCount, static_cast&lt;uint8_t&gt;(0));</span></span>
+<span id="L35"><span class="lineNum">      35</span> <span class="tlaGNC">         162 :     size_t const flagsSize = ((_elementCount % static_cast&lt;size_t&gt;(CHAR_BIT)) == 0U)</span></span>
+<span id="L36"><span class="lineNum">      36</span> <span class="tlaGNC">          81 :                                  ? (_elementCount / static_cast&lt;size_t&gt;(CHAR_BIT))</span></span>
+<span id="L37"><span class="lineNum">      37</span> <span class="tlaGNC">          54 :                                  : (_elementCount / static_cast&lt;size_t&gt;(CHAR_BIT)) + 1U;</span></span>
+<span id="L38"><span class="lineNum">      38</span> <span class="tlaGNC">          81 :     etl::mem_set(_flags, flagsSize, static_cast&lt;uint8_t&gt;(0));</span></span>
+<span id="L39"><span class="lineNum">      39</span>              : </span>
+<span id="L40"><span class="lineNum">      40</span> <span class="tlaGNC">          81 :     uint8_t* tempBuff = _buffer;</span></span>
+<span id="L41"><span class="lineNum">      41</span> <span class="tlaGNC">        6957 :     for (size_t i = 0U; i &lt; (_elementCount - 1U); ++i)</span></span>
+<span id="L42"><span class="lineNum">      42</span>              :     {</span>
+<span id="L43"><span class="lineNum">      43</span> <span class="tlaGNC">        6876 :         uint8_t* const tempNext                = offsetAddress(tempBuff, _elementAlignedSize);</span></span>
+<span id="L44"><span class="lineNum">      44</span>              :         // Write the address of tempNext in the memory pointed to by tempBuff</span>
+<span id="L45"><span class="lineNum">      45</span> <span class="tlaGNC">        6876 :         *reinterpret_cast&lt;uint8_t**&gt;(tempBuff) = tempNext; // NOLINT</span></span>
+<span id="L46"><span class="lineNum">      46</span> <span class="tlaGNC">        6876 :         tempBuff                               = tempNext;</span></span>
+<span id="L47"><span class="lineNum">      47</span>              :     }</span>
+<span id="L48"><span class="lineNum">      48</span>              :     // Last chunk: next pointer is nullptr</span>
+<span id="L49"><span class="lineNum">      49</span> <span class="tlaGNC">          81 :     *reinterpret_cast&lt;uint8_t**&gt;(tempBuff) = nullptr; // NOLINT</span></span>
+<span id="L50"><span class="lineNum">      50</span> <span class="tlaGNC">          81 :     _nextChunk                             = _buffer;</span></span>
+<span id="L51"><span class="lineNum">      51</span> <span class="tlaGNC">          81 :     _available                             = _elementCount;</span></span>
+<span id="L52"><span class="lineNum">      52</span> <span class="tlaGNC">          81 : }</span></span>
+<span id="L53"><span class="lineNum">      53</span>              : </span>
+<span id="L54"><span class="lineNum">      54</span> <span class="tlaGNC">        1630 : uint8_t* PoolBase::allocate(size_t const size)</span></span>
+<span id="L55"><span class="lineNum">      55</span>              : {</span>
+<span id="L56"><span class="lineNum">      56</span> <span class="tlaGNC">        1630 :     uint8_t* ret = nullptr;</span></span>
+<span id="L57"><span class="lineNum">      57</span>              : </span>
+<span id="L58"><span class="lineNum">      58</span> <span class="tlaGNC">        1630 :     if ((size &lt;= _elementSize) &amp;&amp; (!isFull()))</span></span>
+<span id="L59"><span class="lineNum">      59</span>              :     {</span>
+<span id="L60"><span class="lineNum">      60</span> <span class="tlaGNC">         499 :         ret        = _nextChunk;</span></span>
+<span id="L61"><span class="lineNum">      61</span> <span class="tlaGNC">         499 :         _nextChunk = *reinterpret_cast&lt;uint8_t**&gt;(_nextChunk); // NOLINT</span></span>
+<span id="L62"><span class="lineNum">      62</span> <span class="tlaGNC">         499 :         --_available;</span></span>
+<span id="L63"><span class="lineNum">      63</span> <span class="tlaGNC">         499 :         _stats.internalFragmentation += static_cast&lt;uint32_t&gt;(_elementSize - size);</span></span>
+<span id="L64"><span class="lineNum">      64</span> <span class="tlaGNC">         499 :         ++_stats.successfulAllocations;</span></span>
+<span id="L65"><span class="lineNum">      65</span> <span class="tlaGNC">         998 :         _stats.maxLoad = etl::max(</span></span>
+<span id="L66"><span class="lineNum">      66</span> <span class="tlaGNC">         499 :             _stats.maxLoad, static_cast&lt;decltype(PoolStats::maxLoad)&gt;(_elementCount - _available));</span></span>
+<span id="L67"><span class="lineNum">      67</span>              : </span>
+<span id="L68"><span class="lineNum">      68</span> <span class="tlaGNC">         499 :         ptrdiff_t const distance = etl::distance(_buffer, ret);</span></span>
+<span id="L69"><span class="lineNum">      69</span> <span class="tlaGNC">         499 :         size_t const ptrPosition = static_cast&lt;size_t&gt;(distance) / _elementAlignedSize;</span></span>
+<span id="L70"><span class="lineNum">      70</span> <span class="tlaGNC">         499 :         updatePtrFlag(ptrPosition, true);</span></span>
+<span id="L71"><span class="lineNum">      71</span>              :     }</span>
+<span id="L72"><span class="lineNum">      72</span>              : </span>
+<span id="L73"><span class="lineNum">      73</span> <span class="tlaGNC">        1630 :     return ret;</span></span>
+<span id="L74"><span class="lineNum">      74</span>              : }</span>
+<span id="L75"><span class="lineNum">      75</span>              : </span>
+<span id="L76"><span class="lineNum">      76</span> <span class="tlaGNC">          68 : bool PoolBase::deallocate(void* const ptr)</span></span>
+<span id="L77"><span class="lineNum">      77</span>              : {</span>
+<span id="L78"><span class="lineNum">      78</span> <span class="tlaGNC">          68 :     bool ret              = false;</span></span>
+<span id="L79"><span class="lineNum">      79</span> <span class="tlaGNC">          68 :     auto* const ptrObject = static_cast&lt;uint8_t*&gt;(ptr);</span></span>
+<span id="L80"><span class="lineNum">      80</span> <span class="tlaGNC">          68 :     if (isValidPointer(ptrObject))</span></span>
+<span id="L81"><span class="lineNum">      81</span>              :     {</span>
+<span id="L82"><span class="lineNum">      82</span>              :         *reinterpret_cast&lt;uintptr_t*&gt;(ptrObject)                                    // NOLINT</span>
+<span id="L83"><span class="lineNum">      83</span> <span class="tlaGNC">          60 :             = _nextChunk != nullptr ? reinterpret_cast&lt;uintptr_t&gt;(_nextChunk) : 0U; // NOLINT</span></span>
+<span id="L84"><span class="lineNum">      84</span>              : </span>
+<span id="L85"><span class="lineNum">      85</span> <span class="tlaGNC">          60 :         ptrdiff_t const distance = etl::distance(_buffer, ptrObject);</span></span>
+<span id="L86"><span class="lineNum">      86</span> <span class="tlaGNC">          60 :         size_t const ptrPosition = static_cast&lt;size_t&gt;(distance) / _elementAlignedSize;</span></span>
+<span id="L87"><span class="lineNum">      87</span> <span class="tlaGNC">          60 :         updatePtrFlag(ptrPosition, false);</span></span>
+<span id="L88"><span class="lineNum">      88</span> <span class="tlaGNC">          60 :         ++_available;</span></span>
+<span id="L89"><span class="lineNum">      89</span> <span class="tlaGNC">          60 :         _nextChunk = ptrObject;</span></span>
+<span id="L90"><span class="lineNum">      90</span> <span class="tlaGNC">          60 :         ret        = true;</span></span>
+<span id="L91"><span class="lineNum">      91</span>              :     }</span>
+<span id="L92"><span class="lineNum">      92</span>              : </span>
+<span id="L93"><span class="lineNum">      93</span> <span class="tlaGNC">          68 :     return ret;</span></span>
+<span id="L94"><span class="lineNum">      94</span>              : }</span>
+<span id="L95"><span class="lineNum">      95</span>              : </span>
+<span id="L96"><span class="lineNum">      96</span> <span class="tlaGNC">           1 : bool PoolBase::isEmpty() const { return _available == _elementCount; }</span></span>
+<span id="L97"><span class="lineNum">      97</span>              : </span>
+<span id="L98"><span class="lineNum">      98</span> <span class="tlaGNC">         655 : bool PoolBase::isFull() const { return _available == 0U; }</span></span>
+<span id="L99"><span class="lineNum">      99</span>              : </span>
+<span id="L100"><span class="lineNum">     100</span> <span class="tlaGNC">           1 : size_t PoolBase::available() const { return _available; }</span></span>
+<span id="L101"><span class="lineNum">     101</span>              : </span>
+<span id="L102"><span class="lineNum">     102</span> <span class="tlaGNC">           1 : size_t PoolBase::size() const { return _elementCount - _available; }</span></span>
+<span id="L103"><span class="lineNum">     103</span>              : </span>
+<span id="L104"><span class="lineNum">     104</span> <span class="tlaGNC">           1 : size_t PoolBase::maxSize() const { return _elementCount; }</span></span>
+<span id="L105"><span class="lineNum">     105</span>              : </span>
+<span id="L106"><span class="lineNum">     106</span> <span class="tlaGNC">        7585 : uint8_t* PoolBase::offsetAddress(uint8_t* ptr, size_t const offset)</span></span>
+<span id="L107"><span class="lineNum">     107</span>              : {</span>
+<span id="L108"><span class="lineNum">     108</span> <span class="tlaGNC">        7585 :     etl::advance(ptr, offset);</span></span>
+<span id="L109"><span class="lineNum">     109</span> <span class="tlaGNC">        7585 :     return ptr;</span></span>
+<span id="L110"><span class="lineNum">     110</span>              : }</span>
+<span id="L111"><span class="lineNum">     111</span>              : </span>
+<span id="L112"><span class="lineNum">     112</span> <span class="tlaGNC">          85 : bool PoolBase::isValidPointer(uint8_t const* const ptr) const</span></span>
+<span id="L113"><span class="lineNum">     113</span>              : {</span>
+<span id="L114"><span class="lineNum">     114</span> <span class="tlaGNC">          85 :     bool res = false;</span></span>
+<span id="L115"><span class="lineNum">     115</span>              : </span>
+<span id="L116"><span class="lineNum">     116</span> <span class="tlaGNC">          85 :     auto const ptrValue = reinterpret_cast&lt;uintptr_t&gt;(ptr);     // NOLINT</span></span>
+<span id="L117"><span class="lineNum">     117</span> <span class="tlaGNC">          85 :     auto const start    = reinterpret_cast&lt;uintptr_t&gt;(_buffer); // NOLINT</span></span>
+<span id="L118"><span class="lineNum">     118</span>              :     auto const end      = reinterpret_cast&lt;uintptr_t&gt;(          // NOLINT</span>
+<span id="L119"><span class="lineNum">     119</span> <span class="tlaGNC">          85 :         offsetAddress(_buffer, _elementCount * _elementAlignedSize));</span></span>
+<span id="L120"><span class="lineNum">     120</span>              : </span>
+<span id="L121"><span class="lineNum">     121</span> <span class="tlaGNC">          85 :     bool const isInRange  = (ptrValue &gt;= start) &amp;&amp; (ptrValue &lt;= (end - _elementAlignedSize));</span></span>
+<span id="L122"><span class="lineNum">     122</span> <span class="tlaGNC">          85 :     bool const isMultiple = ((ptrValue - start) % _elementAlignedSize) == 0U;</span></span>
+<span id="L123"><span class="lineNum">     123</span> <span class="tlaGNC">          85 :     if (isInRange &amp;&amp; isMultiple)</span></span>
+<span id="L124"><span class="lineNum">     124</span>              :     {</span>
+<span id="L125"><span class="lineNum">     125</span> <span class="tlaGNC">          65 :         ptrdiff_t const distance = etl::distance(static_cast&lt;uint8_t const*&gt;(_buffer), ptr);</span></span>
+<span id="L126"><span class="lineNum">     126</span> <span class="tlaGNC">          65 :         size_t const ptrPosition = static_cast&lt;size_t&gt;(distance) / _elementAlignedSize;</span></span>
+<span id="L127"><span class="lineNum">     127</span> <span class="tlaGNC">          65 :         res                      = checkPtrFlag(ptrPosition);</span></span>
+<span id="L128"><span class="lineNum">     128</span>              :     }</span>
+<span id="L129"><span class="lineNum">     129</span>              : </span>
+<span id="L130"><span class="lineNum">     130</span> <span class="tlaGNC">          85 :     return res;</span></span>
+<span id="L131"><span class="lineNum">     131</span>              : }</span>
+<span id="L132"><span class="lineNum">     132</span>              : </span>
+<span id="L133"><span class="lineNum">     133</span> <span class="tlaGNC">         559 : void PoolBase::updatePtrFlag(size_t const position, bool const ptrBusy)</span></span>
+<span id="L134"><span class="lineNum">     134</span>              : {</span>
+<span id="L135"><span class="lineNum">     135</span> <span class="tlaGNC">         559 :     size_t const index          = position / static_cast&lt;size_t&gt;(CHAR_BIT);</span></span>
+<span id="L136"><span class="lineNum">     136</span> <span class="tlaGNC">         559 :     size_t const indexRemainder = position % static_cast&lt;size_t&gt;(CHAR_BIT);</span></span>
+<span id="L137"><span class="lineNum">     137</span> <span class="tlaGNC">         559 :     if (ptrBusy)</span></span>
+<span id="L138"><span class="lineNum">     138</span>              :     {</span>
+<span id="L139"><span class="lineNum">     139</span> <span class="tlaGNC">         499 :         *(offsetAddress(_flags, index)) |= static_cast&lt;uint8_t&gt;(1U &lt;&lt; indexRemainder);</span></span>
+<span id="L140"><span class="lineNum">     140</span>              :     }</span>
+<span id="L141"><span class="lineNum">     141</span>              :     else</span>
+<span id="L142"><span class="lineNum">     142</span>              :     {</span>
+<span id="L143"><span class="lineNum">     143</span> <span class="tlaGNC">          60 :         uint32_t const mask = ~(static_cast&lt;size_t&gt;(1U) &lt;&lt; indexRemainder);</span></span>
+<span id="L144"><span class="lineNum">     144</span> <span class="tlaGNC">          60 :         *(offsetAddress(_flags, index)) &amp;= static_cast&lt;uint8_t&gt;(mask);</span></span>
+<span id="L145"><span class="lineNum">     145</span>              :     }</span>
+<span id="L146"><span class="lineNum">     146</span> <span class="tlaGNC">         559 : }</span></span>
+<span id="L147"><span class="lineNum">     147</span>              : </span>
+<span id="L148"><span class="lineNum">     148</span> <span class="tlaGNC">          65 : bool PoolBase::checkPtrFlag(size_t const position) const</span></span>
+<span id="L149"><span class="lineNum">     149</span>              : {</span>
+<span id="L150"><span class="lineNum">     150</span> <span class="tlaGNC">          65 :     size_t const index          = position / static_cast&lt;size_t&gt;(CHAR_BIT);</span></span>
+<span id="L151"><span class="lineNum">     151</span> <span class="tlaGNC">          65 :     size_t const indexRemainder = position % static_cast&lt;size_t&gt;(CHAR_BIT);</span></span>
+<span id="L152"><span class="lineNum">     152</span> <span class="tlaGNC">          65 :     auto const bitFlag          = static_cast&lt;uint8_t&gt;(1U &lt;&lt; indexRemainder);</span></span>
+<span id="L153"><span class="lineNum">     153</span> <span class="tlaGNC">          65 :     return static_cast&lt;bool&gt;(*(offsetAddress(_flags, index)) &amp; bitFlag);</span></span>
+<span id="L154"><span class="lineNum">     154</span>              : }</span>
+<span id="L155"><span class="lineNum">     155</span>              : </span>
+<span id="L156"><span class="lineNum">     156</span> <span class="tlaGNC">          96 : PoolStats&amp; PoolBase::getPoolStats() { return _stats; }</span></span>
+<span id="L157"><span class="lineNum">     157</span>              : </span>
+<span id="L158"><span class="lineNum">     158</span> <span class="tlaGNC">          83 : void PoolBase::resetStats()</span></span>
+<span id="L159"><span class="lineNum">     159</span>              : {</span>
+<span id="L160"><span class="lineNum">     160</span> <span class="tlaGNC">          83 :     _stats.init();</span></span>
+<span id="L161"><span class="lineNum">     161</span> <span class="tlaGNC">          83 :     _stats.chunkSize = static_cast&lt;uint32_t&gt;(_elementSize);</span></span>
+<span id="L162"><span class="lineNum">     162</span> <span class="tlaGNC">          83 :     _stats.capacity  = static_cast&lt;uint32_t&gt;(_elementCount);</span></span>
+<span id="L163"><span class="lineNum">     163</span> <span class="tlaGNC">          83 : }</span></span>
+<span id="L164"><span class="lineNum">     164</span>              : </span>
+<span id="L165"><span class="lineNum">     165</span> <span class="tlaGNC">         222 : etl::tuple&lt;size_t, size_t, double&gt; PoolBase::getProfile() const</span></span>
+<span id="L166"><span class="lineNum">     166</span>              : {</span>
+<span id="L167"><span class="lineNum">     167</span> <span class="tlaUNC tlaBgUNC">           0 :     return etl::make_tuple(</span></span>
+<span id="L168"><span class="lineNum">     168</span> <span class="tlaGNC tlaBgGNC">         222 :         _available,</span></span>
+<span id="L169"><span class="lineNum">     169</span> <span class="tlaGNC">         222 :         _stats.maxLoad,</span></span>
+<span id="L170"><span class="lineNum">     170</span> <span class="tlaGNC">         222 :         ((_stats.successfulAllocations &gt; 0U)</span></span>
+<span id="L171"><span class="lineNum">     171</span> <span class="tlaGNC">         656 :              ? static_cast&lt;double&gt;(_stats.internalFragmentation)</span></span>
+<span id="L172"><span class="lineNum">     172</span> <span class="tlaGNC">         212 :                    / static_cast&lt;double&gt;(_stats.successfulAllocations)</span></span>
+<span id="L173"><span class="lineNum">     173</span> <span class="tlaGNC">         444 :              : 0.0));</span></span>
+<span id="L174"><span class="lineNum">     174</span>              : }</span>
+<span id="L175"><span class="lineNum">     175</span>              : </span>
+<span id="L176"><span class="lineNum">     176</span>              : } // namespace middleware::memory</span>
+        </pre>
+              </td>
+            </tr>
+          </table>
+          <br>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="ruler"><img src="../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+            <tr><td class="versionInfo">Generated by: <a href="https://github.com//linux-test-project/lcov" target="_parent">LCOV version 2.0-1</a></td></tr>
+          </table>
+          <br>
+
+</body>
+</html>

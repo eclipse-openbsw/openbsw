@@ -1,0 +1,419 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../../../../../../../../../../../static/css/style.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <title>Symbol - puncover</title>
+    
+</head>
+<body>
+    <div class="container" id="content">
+        <div class="page-header">
+            <nav class="navbar navbar-default" role="navigation">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="../../../../../../../../../../../../index.html">
+                    Puncover
+                  </a>
+                </div>
+              </div>
+            </nav>
+          
+        </div>
+        <div id="inner_content">
+        
+    
+    <ol class="breadcrumb folders">
+        
+        <li><a href="../../../../../../../../../../../../home.html">home</a></li>
+        
+        <li><a href="../../../../../../../../../../../runner.html">runner</a></li>
+        
+        <li><a href="../../../../../../../../../../work.html">work</a></li>
+        
+        <li><a href="../../../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../../platforms.html">platforms</a></li>
+        
+        <li><a href="../../../../../../s32k1xx.html">s32k1xx</a></li>
+        
+        <li><a href="../../../../../bsp.html">bsp</a></li>
+        
+        <li><a href="../../../../bspFlexCan.html">bspFlexCan</a></li>
+        
+        <li><a href="../../../src.html">src</a></li>
+        
+        <li ><a href="../../can.html">can</a>
+            </li>
+
+        
+        <li class="active"><a href="../FlexCANDevice.cpp.html">FlexCANDevice.cpp</a>:297
+            </li>
+        
+    </ol>
+
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <th>Function</th>
+                <td colspan="5">
+                    <span class="icon-function">bios::FlexCANDevice::getTransmitBuffer(can::CANFrame const&amp;, bool)</span>
+                </td>
+            </tr>
+
+            <tr>
+                <th rowspan="2"></th>
+                <th>Address</th>
+                <th>Remarks</th>
+                <th>Stack</th>
+                <th>Code</th>
+                <th>Static</th>
+            </tr>
+            <tr>
+                <td>0x0002a110</td>
+                <td>
+    <span class="label label-success">x-module</span>
+    
+</td>
+                <td>16 (static)</td>
+                <td>228</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th>Callers (2)</th>
+                <td colspan="5">
+                
+                    <a href="../../../../canflex2Transceiver/src/can/transceiver/canflex2/CanFlex2Transceiver.cpp/537dbf596df5800a6b33f0c709df28a1.html">bios::CanFlex2Transceiver::write(can::CANFrame const&amp;, can::ICANFrameSentListener*) (372)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../../../../canflex2Transceiver/src/can/transceiver/canflex2/CanFlex2Transceiver.cpp/5d2aa3f64ba53bd613f115759777d3c7.html">bios::CanFlex2Transceiver::canFrameSentAsyncCallback() (284)</a>
+                    
+                
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    No Callees
+                    
+                </th>
+                <td colspan="5">
+                
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    
+    <pre><a href="./ff02cfb39aa4a100acd272e9a929e36a.html">bios::FlexCANDevice::receiveISR(unsigned char const*) (196)</a></pre>
+    
+
+    <pre>
+
+    bios::FlexCANDevice::getTransmitBuffer(can::CANFrame const&, bool):
+
+       2a110:	b570      	push	{r4, r5, r6, lr}
+
+       2a112:	4605      	mov	r5, r0
+
+       2a114:	b142      	cbz	r2, 2a128 <<a href="./72ef0647a5d920be2f28554d857f39e1.html">bios::FlexCANDevice::getTransmitBuffer(can::CANFrame const&, bool)</a>+0x18>
+
+    _ZN4bios13FlexCANDevice13messageBufferEh():
+
+       2a116:	6883      	ldr	r3, [r0, #8]
+
+    bios::FlexCANDevice::getTransmitBuffer(can::CANFrame const&, bool):
+
+       2a118:	f8d3 3270 	ldr.w	r3, [r3, #624]	@ 0x270
+
+       2a11c:	f3c3 6303 	ubfx	r3, r3, #24, #4
+
+       2a120:	2b08      	cmp	r3, #8
+
+       2a122:	d056      	beq.n	2a1d2 <<a href="./72ef0647a5d920be2f28554d857f39e1.html">bios::FlexCANDevice::getTransmitBuffer(can::CANFrame const&, bool)</a>+0xc2>
+
+       2a124:	20ff      	movs	r0, #255	@ 0xff
+
+       2a126:	bd70      	pop	{r4, r5, r6, pc}
+
+       2a128:	68c3      	ldr	r3, [r0, #12]
+
+    _ZN3can5CanId5rawIdEm():
+
+       2a12a:	6808      	ldr	r0, [r1, #0]
+
+    bios::FlexCANDevice::getTransmitBuffer(can::CANFrame const&, bool):
+
+       2a12c:	b2da      	uxtb	r2, r3
+
+       2a12e:	2a0f      	cmp	r2, #15
+
+    _ZN3can5CanId5rawIdEm():
+
+       2a130:	f020 4e20 	bic.w	lr, r0, #2684354560	@ 0xa0000000
+
+    bios::FlexCANDevice::getTransmitBuffer(can::CANFrame const&, bool):
+
+       2a134:	d937      	bls.n	2a1a6 <<a href="./72ef0647a5d920be2f28554d857f39e1.html">bios::FlexCANDevice::getTransmitBuffer(can::CANFrame const&, bool)</a>+0x96>
+
+       2a136:	f102 0308 	add.w	r3, r2, #8
+
+       2a13a:	68a8      	ldr	r0, [r5, #8]
+
+       2a13c:	011c      	lsls	r4, r3, #4
+
+       2a13e:	eb00 1303 	add.w	r3, r0, r3, lsl #4
+
+       2a142:	5900      	ldr	r0, [r0, r4]
+
+       2a144:	f3c0 6003 	ubfx	r0, r0, #24, #4
+
+       2a148:	2808      	cmp	r0, #8
+
+       2a14a:	d044      	beq.n	2a1d6 <<a href="./72ef0647a5d920be2f28554d857f39e1.html">bios::FlexCANDevice::getTransmitBuffer(can::CANFrame const&, bool)</a>+0xc6>
+
+       2a14c:	20ff      	movs	r0, #255	@ 0xff
+
+       2a14e:	681c      	ldr	r4, [r3, #0]
+
+       2a150:	f414 1f00 	tst.w	r4, #2097152	@ 0x200000
+
+       2a154:	f3c4 5c40 	ubfx	ip, r4, #21, #1
+
+       2a158:	685c      	ldr	r4, [r3, #4]
+
+       2a15a:	bf08      	it	eq
+
+       2a15c:	f3c4 448a 	ubfxeq	r4, r4, #18, #11
+
+       2a160:	4574      	cmp	r4, lr
+
+       2a162:	d029      	beq.n	2a1b8 <<a href="./72ef0647a5d920be2f28554d857f39e1.html">bios::FlexCANDevice::getTransmitBuffer(can::CANFrame const&, bool)</a>+0xa8>
+
+       2a164:	3a01      	subs	r2, #1
+
+       2a166:	2a0f      	cmp	r2, #15
+
+       2a168:	f1a3 0310 	sub.w	r3, r3, #16
+
+       2a16c:	d018      	beq.n	2a1a0 <<a href="./72ef0647a5d920be2f28554d857f39e1.html">bios::FlexCANDevice::getTransmitBuffer(can::CANFrame const&, bool)</a>+0x90>
+
+       2a16e:	681c      	ldr	r4, [r3, #0]
+
+       2a170:	f3c4 6403 	ubfx	r4, r4, #24, #4
+
+       2a174:	2c08      	cmp	r4, #8
+
+       2a176:	d1ea      	bne.n	2a14e <<a href="./72ef0647a5d920be2f28554d857f39e1.html">bios::FlexCANDevice::getTransmitBuffer(can::CANFrame const&, bool)</a>+0x3e>
+
+       2a178:	b2d0      	uxtb	r0, r2
+
+       2a17a:	3a01      	subs	r2, #1
+
+       2a17c:	2a0f      	cmp	r2, #15
+
+       2a17e:	f1a3 0310 	sub.w	r3, r3, #16
+
+       2a182:	b2d6      	uxtb	r6, r2
+
+       2a184:	d00c      	beq.n	2a1a0 <<a href="./72ef0647a5d920be2f28554d857f39e1.html">bios::FlexCANDevice::getTransmitBuffer(can::CANFrame const&, bool)</a>+0x90>
+
+       2a186:	681c      	ldr	r4, [r3, #0]
+
+       2a188:	f3c4 6c03 	ubfx	ip, r4, #24, #4
+
+       2a18c:	f1bc 0f08 	cmp.w	ip, #8
+
+       2a190:	d1dd      	bne.n	2a14e <<a href="./72ef0647a5d920be2f28554d857f39e1.html">bios::FlexCANDevice::getTransmitBuffer(can::CANFrame const&, bool)</a>+0x3e>
+
+       2a192:	3a01      	subs	r2, #1
+
+       2a194:	2a0f      	cmp	r2, #15
+
+       2a196:	4630      	mov	r0, r6
+
+       2a198:	f1a3 0310 	sub.w	r3, r3, #16
+
+       2a19c:	b2d6      	uxtb	r6, r2
+
+       2a19e:	d1f2      	bne.n	2a186 <<a href="./72ef0647a5d920be2f28554d857f39e1.html">bios::FlexCANDevice::getTransmitBuffer(can::CANFrame const&, bool)</a>+0x76>
+
+       2a1a0:	28ff      	cmp	r0, #255	@ 0xff
+
+       2a1a2:	d1c0      	bne.n	2a126 <<a href="./72ef0647a5d920be2f28554d857f39e1.html">bios::FlexCANDevice::getTransmitBuffer(can::CANFrame const&, bool)</a>+0x16>
+
+       2a1a4:	68eb      	ldr	r3, [r5, #12]
+
+       2a1a6:	682a      	ldr	r2, [r5, #0]
+
+       2a1a8:	7c92      	ldrb	r2, [r2, #18]
+
+       2a1aa:	320f      	adds	r2, #15
+
+       2a1ac:	429a      	cmp	r2, r3
+
+       2a1ae:	d9b9      	bls.n	2a124 <<a href="./72ef0647a5d920be2f28554d857f39e1.html">bios::FlexCANDevice::getTransmitBuffer(can::CANFrame const&, bool)</a>+0x14>
+
+       2a1b0:	3301      	adds	r3, #1
+
+       2a1b2:	60eb      	str	r3, [r5, #12]
+
+       2a1b4:	b2d8      	uxtb	r0, r3
+
+       2a1b6:	bd70      	pop	{r4, r5, r6, pc}
+
+    _ZN3can5CanId10isExtendedEm():
+
+       2a1b8:	680c      	ldr	r4, [r1, #0]
+
+    bios::FlexCANDevice::getTransmitBuffer(can::CANFrame const&, bool):
+
+       2a1ba:	ebbc 7fd4 	cmp.w	ip, r4, lsr #31
+
+       2a1be:	d1d1      	bne.n	2a164 <<a href="./72ef0647a5d920be2f28554d857f39e1.html">bios::FlexCANDevice::getTransmitBuffer(can::CANFrame const&, bool)</a>+0x54>
+
+       2a1c0:	28ff      	cmp	r0, #255	@ 0xff
+
+       2a1c2:	d1b0      	bne.n	2a126 <<a href="./72ef0647a5d920be2f28554d857f39e1.html">bios::FlexCANDevice::getTransmitBuffer(can::CANFrame const&, bool)</a>+0x16>
+
+       2a1c4:	682a      	ldr	r2, [r5, #0]
+
+       2a1c6:	68eb      	ldr	r3, [r5, #12]
+
+       2a1c8:	7c92      	ldrb	r2, [r2, #18]
+
+       2a1ca:	320f      	adds	r2, #15
+
+       2a1cc:	4293      	cmp	r3, r2
+
+       2a1ce:	d2a9      	bcs.n	2a124 <<a href="./72ef0647a5d920be2f28554d857f39e1.html">bios::FlexCANDevice::getTransmitBuffer(can::CANFrame const&, bool)</a>+0x14>
+
+       2a1d0:	e7ee      	b.n	2a1b0 <<a href="./72ef0647a5d920be2f28554d857f39e1.html">bios::FlexCANDevice::getTransmitBuffer(can::CANFrame const&, bool)</a>+0xa0>
+
+       2a1d2:	201f      	movs	r0, #31
+
+       2a1d4:	bd70      	pop	{r4, r5, r6, pc}
+
+       2a1d6:	4610      	mov	r0, r2
+
+       2a1d8:	60ea      	str	r2, [r5, #12]
+
+       2a1da:	3a01      	subs	r2, #1
+
+       2a1dc:	2a0f      	cmp	r2, #15
+
+       2a1de:	f1a3 0310 	sub.w	r3, r3, #16
+
+       2a1e2:	b2d6      	uxtb	r6, r2
+
+       2a1e4:	d0dc      	beq.n	2a1a0 <<a href="./72ef0647a5d920be2f28554d857f39e1.html">bios::FlexCANDevice::getTransmitBuffer(can::CANFrame const&, bool)</a>+0x90>
+
+       2a1e6:	681c      	ldr	r4, [r3, #0]
+
+       2a1e8:	f3c4 6403 	ubfx	r4, r4, #24, #4
+
+       2a1ec:	2c08      	cmp	r4, #8
+
+       2a1ee:	d1ae      	bne.n	2a14e <<a href="./72ef0647a5d920be2f28554d857f39e1.html">bios::FlexCANDevice::getTransmitBuffer(can::CANFrame const&, bool)</a>+0x3e>
+
+       2a1f0:	4630      	mov	r0, r6
+
+       2a1f2:	e7f1      	b.n	2a1d8 <<a href="./72ef0647a5d920be2f28554d857f39e1.html">bios::FlexCANDevice::getTransmitBuffer(can::CANFrame const&, bool)</a>+0xc8>
+
+    </pre>
+
+    
+    <pre><a href="./de9afb3f00ea1ccea1910cd447de9d33.html">bios::FlexCANDevice::transmit(can::CANFrame const&amp;, unsigned char, bool) (240)</a></pre>
+    
+
+    
+        <h1>Stack Worst-Case Scenarios</h1>
+        
+            <p>No callees for this function.</p>
+        
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 40</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 600</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    40
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                16 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    600
+                    
+                    
+                </td>
+                <td class="col_size">228</td>
+                <td><a href="./72ef0647a5d920be2f28554d857f39e1.html" class="icon-function">bios::FlexCANDevice::getTransmitBuffer(can::CANFrame const&amp;, bool)</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                </td>
+                <td class="col_size">
+            
+                24 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">372</td>
+                <td><a href="../../../../canflex2Transceiver/src/can/transceiver/canflex2/CanFlex2Transceiver.cpp/537dbf596df5800a6b33f0c709df28a1.html" class="icon-function">bios::CanFlex2Transceiver::write(can::CANFrame const&amp;, can::ICANFrameSentListener*)</a></td>
+            </tr>
+        
+        </tbody>
+        
+    </table>
+        
+    
+
+
+        </div>
+    <div id="page-footer">
+        <hr>
+        
+            brought to you with 💖
+            by <a href="https://twitter.com/hbehrens">Heiko Behrens</a>
+            <span class="secondary">– MIT license, copyright © 2014-2026</span>
+        
+    </div>
+    </div>
+</body>
+</html>

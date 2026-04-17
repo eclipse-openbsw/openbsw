@@ -1,0 +1,444 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../../../../../../../../../static/css/style.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <title>Symbol - puncover</title>
+    
+</head>
+<body>
+    <div class="container" id="content">
+        <div class="page-header">
+            <nav class="navbar navbar-default" role="navigation">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="../../../../../../../../../../index.html">
+                    Puncover
+                  </a>
+                </div>
+              </div>
+            </nav>
+          
+        </div>
+        <div id="inner_content">
+        
+    
+    <ol class="breadcrumb folders">
+        
+        <li><a href="../../../../../../../../../../home.html">home</a></li>
+        
+        <li><a href="../../../../../../../../../runner.html">runner</a></li>
+        
+        <li><a href="../../../../../../../../work.html">work</a></li>
+        
+        <li><a href="../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../libs.html">libs</a></li>
+        
+        <li><a href="../../../../3rdparty.html">3rdparty</a></li>
+        
+        <li><a href="../../../freeRtos.html">freeRtos</a></li>
+        
+        <li ><a href="../../include.html">include</a>
+            </li>
+
+        
+        <li class="active"><a href="../task.h.html">task.h</a>:3090
+            </li>
+        
+    </ol>
+
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <th>Function</th>
+                <td colspan="5">
+                    <span class="icon-function">xTaskRemoveFromEventList</span>
+                </td>
+            </tr>
+
+            <tr>
+                <th rowspan="2"></th>
+                <th>Address</th>
+                <th>Remarks</th>
+                <th>Stack</th>
+                <th>Code</th>
+                <th>Static</th>
+            </tr>
+            <tr>
+                <td>0x0001195c</td>
+                <td>
+    <span class="label label-success">x-module</span>
+    
+</td>
+                <td>16 (static)</td>
+                <td>208</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th>Callers (3)</th>
+                <td colspan="5">
+                
+                    <a href="../queue.h/e175bc34f19fb5ab84d573af67f2b746.html">xQueueReceive (284)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../../src/queue.c/0a1f39941a68d8e44812aa4a79d3144c.html">prvUnlockQueue (140)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../queue.h/3a5a3780600ed210406b45b13f3ae577.html">xQueueGenericSendFromISR (136)</a>
+                    
+                
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    No Callees
+                    
+                </th>
+                <td colspan="5">
+                
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    
+    <pre><a href="./ff261e6301291d97229d25f13c19ed10.html">vTaskPlaceOnEventListRestricted (80)</a></pre>
+    
+
+    <pre>
+
+    xTaskRemoveFromEventList():
+
+       1195c:	68c3      	ldr	r3, [r0, #12]
+
+       1195e:	68db      	ldr	r3, [r3, #12]
+
+       11960:	69d8      	ldr	r0, [r3, #28]
+
+       11962:	6a9a      	ldr	r2, [r3, #40]	@ 0x28
+
+       11964:	6a19      	ldr	r1, [r3, #32]
+
+       11966:	b4f0      	push	{r4, r5, r6, r7}
+
+       11968:	6081      	str	r1, [r0, #8]
+
+       1196a:	6854      	ldr	r4, [r2, #4]
+
+       1196c:	69d8      	ldr	r0, [r3, #28]
+
+       1196e:	6048      	str	r0, [r1, #4]
+
+       11970:	f103 0018 	add.w	r0, r3, #24
+
+       11974:	4284      	cmp	r4, r0
+
+       11976:	bf04      	itt	eq
+
+       11978:	6a19      	ldreq	r1, [r3, #32]
+
+       1197a:	6051      	streq	r1, [r2, #4]
+
+       1197c:	6811      	ldr	r1, [r2, #0]
+
+       1197e:	4c25      	ldr	r4, [pc, #148]	@ (11a14 <<a href="./743b1e332b78e221e06478f6fa7578e0.html">xTaskRemoveFromEventList</a>+0xb8>)
+
+       11980:	2500      	movs	r5, #0
+
+       11982:	3901      	subs	r1, #1
+
+       11984:	629d      	str	r5, [r3, #40]	@ 0x28
+
+       11986:	6011      	str	r1, [r2, #0]
+
+       11988:	6822      	ldr	r2, [r4, #0]
+
+       1198a:	2a00      	cmp	r2, #0
+
+       1198c:	d135      	bne.n	119fa <<a href="./743b1e332b78e221e06478f6fa7578e0.html">xTaskRemoveFromEventList</a>+0x9e>
+
+       1198e:	695a      	ldr	r2, [r3, #20]
+
+       11990:	6898      	ldr	r0, [r3, #8]
+
+       11992:	68d9      	ldr	r1, [r3, #12]
+
+       11994:	6081      	str	r1, [r0, #8]
+
+       11996:	6850      	ldr	r0, [r2, #4]
+
+       11998:	689c      	ldr	r4, [r3, #8]
+
+       1199a:	604c      	str	r4, [r1, #4]
+
+       1199c:	1d1d      	adds	r5, r3, #4
+
+       1199e:	42a8      	cmp	r0, r5
+
+       119a0:	bf04      	itt	eq
+
+       119a2:	68d9      	ldreq	r1, [r3, #12]
+
+       119a4:	6051      	streq	r1, [r2, #4]
+
+       119a6:	6811      	ldr	r1, [r2, #0]
+
+       119a8:	4e1b      	ldr	r6, [pc, #108]	@ (11a18 <<a href="./743b1e332b78e221e06478f6fa7578e0.html">xTaskRemoveFromEventList</a>+0xbc>)
+
+       119aa:	481c      	ldr	r0, [pc, #112]	@ (11a1c <<a href="./743b1e332b78e221e06478f6fa7578e0.html">xTaskRemoveFromEventList</a>+0xc0>)
+
+       119ac:	3901      	subs	r1, #1
+
+       119ae:	6011      	str	r1, [r2, #0]
+
+       119b0:	6adc      	ldr	r4, [r3, #44]	@ 0x2c
+
+       119b2:	6837      	ldr	r7, [r6, #0]
+
+       119b4:	eb04 0284 	add.w	r2, r4, r4, lsl #2
+
+       119b8:	2101      	movs	r1, #1
+
+       119ba:	ea4f 0c82 	mov.w	ip, r2, lsl #2
+
+       119be:	40a1      	lsls	r1, r4
+
+       119c0:	eb00 0282 	add.w	r2, r0, r2, lsl #2
+
+       119c4:	4339      	orrs	r1, r7
+
+       119c6:	6854      	ldr	r4, [r2, #4]
+
+       119c8:	6031      	str	r1, [r6, #0]
+
+       119ca:	f850 100c 	ldr.w	r1, [r0, ip]
+
+       119ce:	609c      	str	r4, [r3, #8]
+
+       119d0:	68a6      	ldr	r6, [r4, #8]
+
+       119d2:	60de      	str	r6, [r3, #12]
+
+       119d4:	3101      	adds	r1, #1
+
+       119d6:	6075      	str	r5, [r6, #4]
+
+       119d8:	60a5      	str	r5, [r4, #8]
+
+       119da:	615a      	str	r2, [r3, #20]
+
+       119dc:	f840 100c 	str.w	r1, [r0, ip]
+
+       119e0:	490f      	ldr	r1, [pc, #60]	@ (11a20 <<a href="./743b1e332b78e221e06478f6fa7578e0.html">xTaskRemoveFromEventList</a>+0xc4>)
+
+       119e2:	6ada      	ldr	r2, [r3, #44]	@ 0x2c
+
+       119e4:	680b      	ldr	r3, [r1, #0]
+
+       119e6:	6adb      	ldr	r3, [r3, #44]	@ 0x2c
+
+       119e8:	429a      	cmp	r2, r3
+
+       119ea:	bf86      	itte	hi
+
+       119ec:	4b0d      	ldrhi	r3, [pc, #52]	@ (11a24 <<a href="./743b1e332b78e221e06478f6fa7578e0.html">xTaskRemoveFromEventList</a>+0xc8>)
+
+       119ee:	2001      	movhi	r0, #1
+
+       119f0:	2000      	movls	r0, #0
+
+       119f2:	bcf0      	pop	{r4, r5, r6, r7}
+
+       119f4:	bf88      	it	hi
+
+       119f6:	6018      	strhi	r0, [r3, #0]
+
+       119f8:	4770      	bx	lr
+
+       119fa:	4a0b      	ldr	r2, [pc, #44]	@ (11a28 <<a href="./743b1e332b78e221e06478f6fa7578e0.html">xTaskRemoveFromEventList</a>+0xcc>)
+
+       119fc:	6854      	ldr	r4, [r2, #4]
+
+       119fe:	61dc      	str	r4, [r3, #28]
+
+       11a00:	68a1      	ldr	r1, [r4, #8]
+
+       11a02:	6219      	str	r1, [r3, #32]
+
+       11a04:	6048      	str	r0, [r1, #4]
+
+       11a06:	6811      	ldr	r1, [r2, #0]
+
+       11a08:	60a0      	str	r0, [r4, #8]
+
+       11a0a:	3101      	adds	r1, #1
+
+       11a0c:	629a      	str	r2, [r3, #40]	@ 0x28
+
+       11a0e:	6011      	str	r1, [r2, #0]
+
+       11a10:	e7e6      	b.n	119e0 <<a href="./743b1e332b78e221e06478f6fa7578e0.html">xTaskRemoveFromEventList</a>+0x84>
+
+       11a12:	bf00      	nop
+
+       11a14:	1fff37cc 	.word	0x1fff37cc
+
+       11a18:	1fff37ec 	.word	0x1fff37ec
+
+       11a1c:	1fff3868 	.word	0x1fff3868
+
+       11a20:	1fff3930 	.word	0x1fff3930
+
+       11a24:	1fff37e0 	.word	0x1fff37e0
+
+       11a28:	1fff3824 	.word	0x1fff3824
+
+    </pre>
+
+    
+    <pre><a href="./f306b73e83775a4127dfb3ddd20778ef.html">vTaskRemoveFromUnorderedEventList (160)</a></pre>
+    
+
+    
+        <h1>Stack Worst-Case Scenarios</h1>
+        
+            <p>No callees for this function.</p>
+        
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 128</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 1,188</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    128
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                16 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    1,188
+                    
+                    
+                </td>
+                <td class="col_size">208</td>
+                <td><a href="./743b1e332b78e221e06478f6fa7578e0.html" class="icon-function">xTaskRemoveFromEventList</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                    
+                    112
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                16 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    980
+                    
+                    
+                </td>
+                <td class="col_size">140</td>
+                <td><a href="../../src/queue.c/0a1f39941a68d8e44812aa4a79d3144c.html" class="icon-function">prvUnlockQueue</a></td>
+            </tr>
+        
+            <tr>
+                <th>3</th>
+                <td class="col_size">
+                    
+                    96
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                40 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    840
+                    
+                    
+                </td>
+                <td class="col_size">284</td>
+                <td><a href="../queue.h/e175bc34f19fb5ab84d573af67f2b746.html" class="icon-function">xQueueReceive</a></td>
+            </tr>
+        
+            <tr>
+                <th>4</th>
+                <td class="col_size">
+                </td>
+                <td class="col_size">
+            
+                56 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">556</td>
+                <td><a href="../../src/timers.c/d35f72ab680b9bc7eb2ff3e6cd07ece5.html" class="icon-function">prvTimerTask</a></td>
+            </tr>
+        
+        </tbody>
+        
+    </table>
+        
+    
+
+
+        </div>
+    <div id="page-footer">
+        <hr>
+        
+            brought to you with 💖
+            by <a href="https://twitter.com/hbehrens">Heiko Behrens</a>
+            <span class="secondary">– MIT license, copyright © 2014-2026</span>
+        
+    </div>
+    </div>
+</body>
+</html>
