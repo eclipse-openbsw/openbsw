@@ -69,19 +69,18 @@ public:
     void unsetReceiveHandler() noexcept { _cbk = OnFieldChangedCallback(); }
 
 private:
-    template<typename E = EventType, typename etl::enable_if<etl::is_void<E>::value, int>::type = 0>
-    void setEvent_(Message const& /* msg */) const
+    void setEvent_([[maybe_unused]] Message const& msg) const
     {
-        _cbk.call_if();
-    }
-
-    template<
-        typename E                                                  = EventType,
-        typename etl::enable_if<!etl::is_void<E>::value, int>::type = 0>
-    void setEvent_(Message const& msg) const
-    {
-        E const& data = MessagePayloadBuilder::getInstance().template readPayload<E>(msg);
-        _cbk.call_if(data);
+        if constexpr (etl::is_void_v<EventType>)
+        {
+            _cbk.call_if();
+        }
+        else
+        {
+            EventType const& data
+                = MessagePayloadBuilder::getInstance().readPayload<EventType>(msg);
+            _cbk.call_if(data);
+        }
     }
 
     OnFieldChangedCallback _cbk;

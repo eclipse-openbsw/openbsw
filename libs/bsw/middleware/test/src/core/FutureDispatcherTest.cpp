@@ -253,7 +253,7 @@ void callUpdateTimeouts(Dispatcher&, long)
 TYPED_TEST(FutureDispatcherTestSuite, TestTimeoutDispatching)
 {
     using TraitsUnderTest = typename TypeParam::TraitsUnderTest;
-    if (TraitsUnderTest::TIMEOUT_VALUE > 0U)
+    if constexpr (TraitsUnderTest::TIMEOUT_VALUE > 0U)
     {
         using RefApp = typename TestFixture::RefApp;
         etl::optional<uint16_t> requestId{};
@@ -275,6 +275,11 @@ TYPED_TEST(FutureDispatcherTestSuite, TestTimeoutDispatching)
         {
             callUpdateTimeouts(*this, 0);
         }
+    }
+    else
+    {
+        GTEST_SKIP() << "Test should only run for dispatchers that contain future objects with "
+                        "timeouts bigger than 0.";
     }
 }
 

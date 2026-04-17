@@ -41,71 +41,40 @@ public:
      * \param numberOfReferences Number of references sharing this payload (1 = unique)
      * \return HRESULT indicating success or failure
      */
-    /// Non-trivially copyable types: externally allocated + serialized.
-    template<
-        typename T,
-        typename etl::enable_if<!etl::is_trivially_copyable<T>::value, int>::type = 0>
+    template<typename T>
     [[nodiscard]] HRESULT
     allocate(T const& obj, Message& msg, uint8_t const numberOfReferences = 1U)
     {
-        HRESULT ret = HRESULT::CannotAllocatePayload;
-
-        size_t const payloadSize = T::AllocationPolicy::getNeededSize(obj);
-        etl::optional<etl::span<uint8_t>> buffer
-            = allocateNonTrivialType(payloadSize, msg, numberOfReferences);
-        if (buffer.has_value())
+        if constexpr (!etl::is_trivially_copyable_v<T>)
         {
-            T::AllocationPolicy::serialize(obj, buffer.value());
-            ret = HRESULT::Ok;
+            HRESULT ret = HRESULT::CannotAllocatePayload;
+
+            size_t const payloadSize = T::AllocationPolicy::getNeededSize(obj);
+            etl::optional<etl::span<uint8_t>> buffer
+                = allocateNonTrivialType(payloadSize, msg, numberOfReferences);
+            if (buffer.has_value())
+            {
+                T::AllocationPolicy::serialize(obj, buffer.value());
+                ret = HRESULT::Ok;
+            }
+
+            return ret;
         }
-
-        return ret;
-    }
-
-    /// Small trivially copyable types: stored in internal buffer.
-    template<
-        typename T,
-        typename etl::enable_if<
-            etl::is_trivially_copyable<T>::value && (sizeof(T) <= Message::MAX_PAYLOAD_SIZE),
-            int>::type
-        = 0>
-    [[nodiscard]] HRESULT allocate(T const& obj, Message& msg, uint8_t const = 1U)
-    {
-        msg.constructObjectAtPayload(obj);
-        return HRESULT::Ok;
-    }
-
-    /// Large trivially copyable types: externally allocated.
-    template<
-        typename T,
-        typename etl::enable_if<
-            etl::is_trivially_copyable<T>::value && (sizeof(T) > Message::MAX_PAYLOAD_SIZE),
-            int>::type
-        = 0>
-    [[nodiscard]] HRESULT
-    allocate(T const& obj, Message& msg, uint8_t const numberOfReferences = 1U)
-    {
-        return allocateTrivialType(&obj, sizeof(obj), msg, numberOfReferences);
+        else if constexpr (sizeof(T) <= Message::MAX_PAYLOAD_SIZE)
+        {
+            msg.constructObjectAtPayload(obj);
+            return HRESULT::Ok;
+        }
+        else
+        {
+            return allocateTrivialType(&obj, sizeof(obj), msg, numberOfReferences);
+        }
     }
 
     /**
      * Specialization for byte spans to copy the span's data contents.
      *
      * \param span Span of bytes to copy into the message
-     * \param msg The message to store the payload in
-     * \param numberOfReferences Number of shared references
-     * \return HRESULT indicating success or failure
-     */
-    [[nodiscard]] HRESULT
-    allocate(etl::span<uint8_t> const span, Message& msg, uint8_t const numberOfReferences = 1U)
-    {
-        return allocate(static_cast<etl::span<uint8_t const>>(span), msg, numberOfReferences);
-    }
-
-    /**
-     * Specialization for const byte spans to copy the span's data contents.
-     *
-     * \param span Span of const bytes to copy into the message
      * \param msg The message to store the payload in
      * \param numberOfReferences Number of shared references
      * \return HRESULT indicating success or failure
@@ -118,10 +87,7 @@ public:
             msg.copyRawBytesToPayload(span);
             return HRESULT::Ok;
         }
-        else
-        {
-            return allocateTrivialType(span.data(), span.size_bytes(), msg, numberOfReferences);
-        }
+        return allocateTrivialType(span.data(), span.size_bytes(), msg, numberOfReferences);
     }
 
     /**
@@ -131,41 +97,25 @@ public:
      * \param msg The message containing the payload
      * \return The deserialized object
      */
-    /// Non-trivially copyable types: deserialize from external allocation.
-    template<
-        typename T,
-        typename etl::enable_if<!etl::is_trivially_copyable<T>::value, int>::type = 0>
+    template<typename T>
     T readPayload(Message const& msg)
     {
-        uint8_t* ptr = getAllocatorPointerFromMessage(msg);
-        T obj = T::AllocationPolicy::deserialize(etl::span<uint8_t>(ptr, msg.getPayloadSize()));
+        if constexpr (!etl::is_trivially_copyable_v<T>)
+        {
+            uint8_t* ptr = getAllocatorPointerFromMessage(msg);
+            T obj = T::AllocationPolicy::deserialize(etl::span<uint8_t>(ptr, msg.getPayloadSize()));
 
-        return obj;
-    }
-
-    /// Small trivially copyable types: read from internal buffer.
-    template<
-        typename T,
-        typename etl::enable_if<
-            etl::is_trivially_copyable<T>::value && (sizeof(T) <= Message::MAX_PAYLOAD_SIZE),
-            int>::type
-        = 0>
-    T readPayload(Message const& msg)
-    {
-        return msg.getObjectStoredInPayload<T>();
-    }
-
-    /// Large trivially copyable types: read from external allocation.
-    template<
-        typename T,
-        typename etl::enable_if<
-            etl::is_trivially_copyable<T>::value && (sizeof(T) > Message::MAX_PAYLOAD_SIZE),
-            int>::type
-        = 0>
-    T readPayload(Message const& msg)
-    {
-        uint8_t* ptr = getAllocatorPointerFromMessage(msg);
-        return etl::get_object_at<T>(ptr);
+            return obj;
+        }
+        else if constexpr (sizeof(T) <= Message::MAX_PAYLOAD_SIZE)
+        {
+            return msg.getObjectStoredInPayload<T>();
+        }
+        else
+        {
+            uint8_t* ptr = getAllocatorPointerFromMessage(msg);
+            return etl::get_object_at<T>(ptr);
+        }
     }
 
     /**
