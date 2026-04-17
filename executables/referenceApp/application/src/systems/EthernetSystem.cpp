@@ -101,25 +101,6 @@ EthernetSystem::EthernetSystem(
 void EthernetSystem::init()
 {
     lwip_init();
-
-    for (size_t i = 0; i < netifs.netifs.size(); ++i)
-    {
-        if (!lwipnetif::initNetifIp4(
-                netifs.netifs[i], netifs.ip4Configs[i], netifs.networkInterfaceConfigsIp4[i], this))
-        {
-            continue;
-        }
-        netifs.netifStates[i].state = ::lwipnetif::State::Initialised;
-        netifs.netifs[i].linkoutput = &linkoutput;
-
-        ::lwiputils::initNetifDriverParameters(::ethX::MAC_ADDRESS, netifs.netifs[i]);
-
-        auto const lwipNetif = &netifs.netifs[i];
-#if LWIP_IGMP
-        netif_set_igmp_mac_filter(lwipNetif, joinMulticastGroupIpV4);
-#endif
-        netif_set_up(lwipNetif);
-    }
     transitionDone();
 }
 
@@ -127,11 +108,44 @@ void EthernetSystem::run()
 {
     for (size_t i = 0; i < netifs.netifStates.size(); ++i)
     {
-        if (netifs.netifStates[i].state == ::lwipnetif::State::Initialised)
+        auto& state = netifs.netifStates[i].state;
+        auto& netif = netifs.netifs[i];
+
+        if (state == ::lwipnetif::State::Uninitialised)
         {
-            ::lwipnetif::start(netifs.netifs[i], netifs.ip4Configs[i]);
-            netifs.netifStates[i].state = ::lwipnetif::State::Started;
+            if (!lwipnetif::initNetifIp4(
+                    netif, netifs.ip4Configs[i], netifs.networkInterfaceConfigsIp4[i], this))
+            {
+                continue;
+            }
+
+            netif.linkoutput = &linkoutput;
+            ::lwiputils::initNetifDriverParameters(::ethX::MAC_ADDRESS, netif);
+#if LWIP_IGMP
+            netif_set_igmp_mac_filter(&netif, joinMulticastGroupIpV4);
+#endif
+
+            state = ::lwipnetif::State::Initialised;
         }
+
+        if (state == ::lwipnetif::State::Initialised)
+        {
+            ::lwipnetif::start(netif, netifs.ip4Configs[i]);
+            state = ::lwipnetif::State::Started;
+        }
+
+        bool phyLink         = ethernetDriverSystem.getLinkStatus(netifs.ports[i]);
+        netifs.linkStatus[i] = phyLink;
+
+        if (phyLink)
+        {
+            netif_set_link_up(&netif);
+        }
+        else
+        {
+            netif_set_link_down(&netif);
+        }
+        netif_set_up(&netif);
     }
 
     ::async::scheduleAtFixedRate(_context, *this, _timeout, 1, ::async::TimeUnit::MILLISECONDS);
