@@ -1,6 +1,5 @@
 add_library(
     util
-    src/util/estd/assert.cpp
     src/util/logger/ComponentInfo.cpp
     src/util/logger/Logger.cpp
     src/util/logger/LevelInfo.cpp
