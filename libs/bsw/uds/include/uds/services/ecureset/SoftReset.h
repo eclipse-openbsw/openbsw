@@ -1,4 +1,5 @@
 // Copyright 2024 Accenture.
+// Copyright 2026 BMW AG
 
 #pragma once
 
@@ -18,7 +19,6 @@ public:
     void responseSent(IncomingDiagConnection& connection, ResponseSendResult result) override;
 
 private:
-    static uint16_t const RESET_TIME = 1000U; // ms
     static uint8_t const sfImplementedRequest[2];
 
     DiagReturnCode::Type process(

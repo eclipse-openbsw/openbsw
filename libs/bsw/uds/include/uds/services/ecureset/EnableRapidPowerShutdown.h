@@ -1,4 +1,5 @@
 // Copyright 2024 Accenture.
+// Copyright 2026 BMW AG
 
 #pragma once
 
@@ -16,7 +17,6 @@ public:
 private:
     static uint8_t const sfImplementedRequest[2];
     static uint8_t const RESPONSE_LENGTH = 1U;
-    static uint8_t const ShutDownTime    = 10U; // power down time
 
     virtual DiagReturnCode::Type process(
         IncomingDiagConnection& connection, uint8_t const request[], uint16_t requestLength) final;

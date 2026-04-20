@@ -1,8 +1,10 @@
 // Copyright 2024 Accenture.
+// Copyright 2026 BMW AG
 
 #include "uds/services/ecureset/HardReset.h"
 
 #include "uds/DiagDispatcher.h"
+#include "uds/UdsConfig.h"
 #include "uds/connection/IncomingDiagConnection.h"
 #include "uds/session/DiagSession.h"
 #include "uds/session/IDiagSessionManager.h"
@@ -40,7 +42,8 @@ void HardReset::responseSent(
     IncomingDiagConnection& connection, ResponseSendResult const /* result */)
 {
     connection.terminate();
-    if (!fUdsLifecycleConnector.requestShutdown(IUdsLifecycleConnector::HARD_RESET, RESET_TIME))
+    if (!fUdsLifecycleConnector.requestShutdown(
+            IUdsLifecycleConnector::HARD_RESET, UdsConstants::RESET_TIME_HARD))
     {
         fDiagDispatcher.fEnabled = true;
     }
