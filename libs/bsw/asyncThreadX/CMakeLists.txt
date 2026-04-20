@@ -32,7 +32,6 @@ target_link_libraries(
     asyncThreadXImpl
     PRIVATE asyncThreadX
             asyncBinding
-            asyncCoreConfiguration
             threadXConfiguration
             etl
             util)
