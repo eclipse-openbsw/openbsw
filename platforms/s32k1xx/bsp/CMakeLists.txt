@@ -1,4 +1,4 @@
-if (BUILD_EXECUTABLE STREQUAL "referenceApp")
+if (NOT BUILD_EXECUTABLE STREQUAL "unitTest")
     add_subdirectory(bspAdc)
     add_subdirectory(bspClock)
     add_subdirectory(bspCore)
@@ -18,7 +18,7 @@ add_subdirectory(canflex2Transceiver)
 
 add_library(socBsp INTERFACE)
 
-if (BUILD_EXECUTABLE STREQUAL "referenceApp")
+if (NOT BUILD_EXECUTABLE STREQUAL "unitTest")
     target_link_libraries(
         socBsp
         INTERFACE bspIo
