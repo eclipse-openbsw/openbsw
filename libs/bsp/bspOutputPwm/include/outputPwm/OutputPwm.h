@@ -2,9 +2,8 @@
 
 #pragma once
 
+#include "bsp/Bsp.h"
 #include "io/DynamicClientCfg.h"
-#include "io/Io.h"
-#include "mcu/mcu.h"
 #include "platform/estdint.h"
 
 #include <etl/uncopyable.h>

@@ -3,6 +3,8 @@
 #include "mdio/MdioTja1101.h"
 
 #include "bsp/timer/SystemTimer.h"
+#include "io/Io.h"
+#include "outputManager/Output.h"
 
 namespace
 {
