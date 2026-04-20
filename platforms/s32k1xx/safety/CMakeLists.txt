@@ -1,1 +1,3 @@
-add_subdirectory(safeBspMcuWatchdog)
+if (BUILD_EXECUTABLE STREQUAL "referenceApp")
+    add_subdirectory(safeBspMcuWatchdog)
+endif ()

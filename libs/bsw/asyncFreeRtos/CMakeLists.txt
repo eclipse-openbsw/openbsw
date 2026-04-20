@@ -44,7 +44,7 @@ if (BUILD_EXECUTABLE STREQUAL "unitTest")
     # These compile definitions apply to all unit test
     add_library(asyncBinding INTERFACE)
 
-    target_include_directories(asyncBinding INTERFACE test/mock/include)
+    target_include_directories(asyncBinding INTERFACE include test/mock/include)
 
     add_library(asyncCoreConfiguration INTERFACE)
 

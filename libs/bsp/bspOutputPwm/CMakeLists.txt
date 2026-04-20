@@ -6,6 +6,7 @@ target_include_directories(bspOutputPwm PUBLIC include)
 target_link_libraries(
     bspOutputPwm
     bspDynamicClient
+    bspInterrupts
     bspIo
     etl
     util)

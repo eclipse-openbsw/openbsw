@@ -17,5 +17,7 @@ add_subdirectory(safety)
 add_subdirectory(etlImpl)
 
 # Other modules
-add_subdirectory(hardFaultHandler)
+if (BUILD_EXECUTABLE STREQUAL "referenceApp")
+    add_subdirectory(hardFaultHandler)
+endif ()
 add_subdirectory(lwipSysArch)
