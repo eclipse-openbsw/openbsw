@@ -121,7 +121,6 @@ void HardFault_Handler(void)
 void setupApplicationsIsr(void)
 {
     // FDCAN IRQs are enabled later in CanSystem::run() after transceiver init
-    ENABLE_INTERRUPTS();
 }
 } // extern "C"
 
