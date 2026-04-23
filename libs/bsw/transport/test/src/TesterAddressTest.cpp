@@ -35,21 +35,21 @@ TEST(LogicalAddress, TestConverter)
 
 TEST(LogicalAddress, TestFind)
 {
+    EXPECT_TRUE(addressfinder::isDoipAddressIn(
+        0xF1F2U, TransportConfiguration::TESTER_ADDRESS_RANGE_ETHERNET));
     EXPECT_TRUE(
-        addressfinder::isDoipAddressIn(0xF1F2U, TransportConfiguration::INTERNAL_ADDRESS_RANGE));
+        addressfinder::isDoipAddressIn(0xDF01U, TransportConfiguration::TESTER_ADDRESS_RANGE_CAN));
+    EXPECT_FALSE(addressfinder::isDoipAddressIn(
+        0xDF01U, TransportConfiguration::TESTER_ADDRESS_RANGE_ETHERNET));
+    EXPECT_FALSE(
+        addressfinder::isDoipAddressIn(0xF1F2U, TransportConfiguration::TESTER_ADDRESS_RANGE_CAN));
+    EXPECT_TRUE(addressfinder::is8BitAddressIn(
+        0x0012U, TransportConfiguration::TESTER_ADDRESS_RANGE_ETHERNET));
     EXPECT_TRUE(
-        addressfinder::isDoipAddressIn(0xDF01U, TransportConfiguration::EXTERNAL_ADDRESS_RANGE));
+        addressfinder::is8BitAddressIn(0x0001U, TransportConfiguration::TESTER_ADDRESS_RANGE_CAN));
+    EXPECT_FALSE(addressfinder::is8BitAddressIn(
+        0x0001U, TransportConfiguration::TESTER_ADDRESS_RANGE_ETHERNET));
     EXPECT_FALSE(
-        addressfinder::isDoipAddressIn(0xDF01U, TransportConfiguration::INTERNAL_ADDRESS_RANGE));
-    EXPECT_FALSE(
-        addressfinder::isDoipAddressIn(0xF1F2U, TransportConfiguration::EXTERNAL_ADDRESS_RANGE));
-    EXPECT_TRUE(
-        addressfinder::is8BitAddressIn(0x0012U, TransportConfiguration::INTERNAL_ADDRESS_RANGE));
-    EXPECT_TRUE(
-        addressfinder::is8BitAddressIn(0x0001U, TransportConfiguration::EXTERNAL_ADDRESS_RANGE));
-    EXPECT_FALSE(
-        addressfinder::is8BitAddressIn(0x0001U, TransportConfiguration::INTERNAL_ADDRESS_RANGE));
-    EXPECT_FALSE(
-        addressfinder::is8BitAddressIn(0x1200U, TransportConfiguration::EXTERNAL_ADDRESS_RANGE));
+        addressfinder::is8BitAddressIn(0x1200U, TransportConfiguration::TESTER_ADDRESS_RANGE_CAN));
 }
 } // namespace
