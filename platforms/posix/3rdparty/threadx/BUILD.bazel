@@ -1,0 +1,34 @@
+# ThreadX Linux port.
+
+package(default_visibility = ["//visibility:public"])
+
+_POSIX_COMPAT = ["@platforms//os:linux"]
+
+# Port interface (header-only)
+cc_library(
+    name = "threadXLinuxPort",
+    hdrs = glob(["ports/linux/gnu/inc/**"]),
+    includes = ["ports/linux/gnu/inc"],
+    target_compatible_with = _POSIX_COMPAT,
+    deps = ["//libs/bsw/platform"],
+)
+
+# Port implementation
+# alwayslink ensures port symbols are available to the ThreadX kernel.
+cc_library(
+    name = "threadXLinux",
+    srcs = glob(["ports/linux/gnu/src/**/*.c"]),
+    hdrs = glob(["ports/linux/gnu/inc/**"]),
+    alwayslink = True,
+    copts = ["-DTX_INCLUDE_USER_DEFINE_FILE"],
+    includes = ["ports/linux/gnu/inc"],
+    linkopts = ["-lpthread"],
+    target_compatible_with = _POSIX_COMPAT,
+    deps = [
+        ":threadXLinuxPort",
+        "//bazel/app_config:async_core_configuration",
+        "//bazel/app_config:threadx_core_configuration",
+        "//libs/3rdparty/threadx:threadX",
+        "//libs/bsp/bspInterrupts",
+    ],
+)

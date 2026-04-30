@@ -1,0 +1,46 @@
+# Reference application S32K148 platform configurations.
+
+package(default_visibility = ["//visibility:public"])
+
+_ARM_COMPAT = ["@platforms//os:none"]
+
+cc_library(
+    name = "freeRtosCoreConfiguration",
+    hdrs = glob(["freeRtosCoreConfiguration/include/**"]),
+    includes = ["freeRtosCoreConfiguration/include"],
+    target_compatible_with = _ARM_COMPAT,
+    deps = [
+        "//libs/bsw/bsp",
+        "//platforms/s32k1xx/bsp:bspMcu",
+    ],
+)
+
+cc_library(
+    name = "threadXCoreConfiguration",
+    hdrs = glob(["threadXCoreConfiguration/include/**"]),
+    includes = ["threadXCoreConfiguration/include"],
+    target_compatible_with = _ARM_COMPAT,
+    deps = ["//executables/referenceApp/asyncCoreConfiguration"],
+)
+
+cc_library(
+    name = "bspConfiguration",
+    hdrs = glob(["bspConfiguration/include/**"]),
+    includes = ["bspConfiguration/include"],
+    target_compatible_with = _ARM_COMPAT,
+)
+
+# Platform-specific safety lifecycle
+cc_library(
+    name = "safeLifecycle",
+    srcs = glob(["safety/safeLifecycle/src/**/*.cpp"]),
+    hdrs = glob(["safety/safeLifecycle/include/**"]),
+    includes = ["safety/safeLifecycle/include"],
+    tags = ["manual"],
+    target_compatible_with = _ARM_COMPAT,
+    deps = [
+        "//executables/referenceApp/safety:safeWatchdog",
+        "//libs/bsw/lifecycle",
+        "//libs/bsw/platform",
+    ],
+)

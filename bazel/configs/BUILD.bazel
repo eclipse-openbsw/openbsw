@@ -1,0 +1,91 @@
+# Build configuration settings for OpenBSW.
+#
+# Usage: --define key=value on the command line or in .bazelrc configs.
+
+package(default_visibility = ["//visibility:public"])
+
+# --- RTOS selection ---
+
+config_setting(
+    name = "freertos",
+    define_values = {"rtos": "freertos"},
+)
+
+config_setting(
+    name = "threadx",
+    define_values = {"rtos": "threadx"},
+)
+
+# --- Platform selection ---
+
+config_setting(
+    name = "posix",
+    define_values = {"platform": "posix"},
+)
+
+config_setting(
+    name = "s32k148",
+    define_values = {"platform": "s32k148"},
+)
+
+# --- Executable type ---
+
+config_setting(
+    name = "unit_test",
+    define_values = {"executable": "unittest"},
+)
+
+config_setting(
+    name = "reference_app",
+    define_values = {"executable": "referenceapp"},
+)
+
+# --- Feature flags ---
+
+config_setting(
+    name = "tracing_enabled",
+    define_values = {"tracing": "on"},
+)
+
+# --- Compound config settings (POSIX + RTOS) ---
+
+config_setting(
+    name = "posix_freertos",
+    define_values = {
+        "platform": "posix",
+        "rtos": "freertos",
+    },
+)
+
+config_setting(
+    name = "posix_threadx",
+    define_values = {
+        "platform": "posix",
+        "rtos": "threadx",
+    },
+)
+
+config_setting(
+    name = "s32k148_freertos",
+    define_values = {
+        "platform": "s32k148",
+        "rtos": "freertos",
+    },
+)
+
+config_setting(
+    name = "s32k148_threadx",
+    define_values = {
+        "platform": "s32k148",
+        "rtos": "threadx",
+    },
+)
+
+# Constraint for marking targets that should only build when executable=referenceapp.
+# No platform declares this constraint, so any target requiring it becomes incompatible.
+constraint_setting(name = "executable_type")
+
+constraint_value(
+    name = "referenceapp_only",
+    constraint_setting = ":executable_type",
+)

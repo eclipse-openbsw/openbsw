@@ -1,0 +1,34 @@
+# DoCAN (Diagnostics over CAN) transport layer.
+
+cc_library(
+    name = "docan",
+    srcs = [
+        "src/docan/common/DoCanLogger.cpp",
+        "src/docan/datalink/DoCanFrameCodecConfigPresets.cpp",
+    ],
+    hdrs = glob(["include/**"]),
+    includes = ["include"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//libs/3rdparty/etl",
+        "//libs/bsp/bspInterrupts",
+        "//libs/bsw/async",
+        "//libs/bsw/common",
+        "//libs/bsw/cpp2can",
+        "//libs/bsw/platform",
+        "//libs/bsw/transport",
+        "//libs/bsw/util",
+    ],
+)
+
+# Mock target for unit testing
+cc_library(
+    name = "docanMock",
+    hdrs = glob(["mock/include/**"]),
+    includes = ["mock/include"],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":docan",
+        "//libs/3rdparty/googletest:gtest",
+    ],
+)

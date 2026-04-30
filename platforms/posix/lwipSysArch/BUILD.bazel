@@ -1,0 +1,11 @@
+# lwIP system architecture layer for POSIX.
+
+cc_library(
+    name = "lwipSysArch",
+    srcs = ["src/arch/sys_arch.cpp"],
+    hdrs = glob(["include/**"]),
+    includes = ["include"],
+    target_compatible_with = ["@platforms//os:linux"],
+    visibility = ["//visibility:public"],
+    deps = ["//libs/bsw/bsp"],
+)

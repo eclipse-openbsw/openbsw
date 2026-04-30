@@ -1,0 +1,72 @@
+# S32K1xx BSP implementations.
+#
+# TODO: Add individual driver targets matching the CMake structure.
+# Each driver needs platform-specific source files for S32K148 hardware.
+
+package(default_visibility = ["//visibility:public"])
+
+_ARM_COMPAT = ["@platforms//os:none"]
+
+# Aggregate SoC BSP target (S32K1xx platform)
+# TODO: Expand with actual S32K1xx driver targets:
+#   bspAdc, bspClock, bspCore, bspEeprom, bspEthernet, bspFlexCan,
+#   bspFtm, bspFtmPwm, bspInterruptsImpl, bspIo, bspMcu, bspUart,
+#   bspTja1101
+cc_library(
+    name = "socBsp",
+    tags = ["manual"],
+    target_compatible_with = _ARM_COMPAT,
+    visibility = ["//visibility:public"],
+    deps = [
+        ":bspInterruptsImpl",
+        ":bspMcu",
+    ],
+)
+
+cc_library(
+    name = "bspInterruptsImpl",
+    srcs = glob(["bspInterruptsImpl/src/**/*.c", "bspInterruptsImpl/src/**/*.cpp"]),
+    hdrs = glob(["bspInterruptsImpl/include/**"]) + select({
+        "//bazel/configs:freertos": glob(["bspInterruptsImpl/freertos/include/**"]),
+        "//bazel/configs:threadx": glob(["bspInterruptsImpl/threadx/include/**"]),
+        "//conditions:default": [],
+    }),
+    includes = ["bspInterruptsImpl/include"] + select({
+        "//bazel/configs:freertos": ["bspInterruptsImpl/freertos/include"],
+        "//bazel/configs:threadx": ["bspInterruptsImpl/threadx/include"],
+        "//conditions:default": [],
+    }),
+    target_compatible_with = _ARM_COMPAT,
+    deps = [
+        "//libs/bsw/platform",
+        "//platforms/s32k1xx/bsp:bspMcu",
+    ] + select({
+        "//bazel/configs:freertos": [],
+        "//bazel/configs:threadx": ["//libs/3rdparty/threadx:threadX"],
+        "//conditions:default": [],
+    }),
+)
+
+cc_library(
+    name = "bspMcu",
+    srcs = glob(["bspMcu/src/**/*.cpp"]),
+    hdrs = glob(["bspMcu/include/**"]),
+    includes = ["bspMcu/include"],
+    tags = ["manual"],
+    target_compatible_with = _ARM_COMPAT,
+    deps = ["//libs/bsw/bsp"],
+)
+
+cc_library(
+    name = "bspIo",
+    srcs = glob(["bspIo/src/**/*.cpp"]),
+    hdrs = glob(["bspIo/include/**"]),
+    includes = ["bspIo/include"],
+    target_compatible_with = _ARM_COMPAT,
+    deps = [
+        ":bspMcu",
+        "//bazel/app_config:bsp_configuration",
+        "//libs/bsw/bsp",
+        "//libs/bsw/platform",
+    ],
+)

@@ -1,0 +1,84 @@
+# OpenBSW Bazel Configuration
+# ===========================
+
+# Common C/C++ standards
+build --cxxopt=-std=c++14
+build --conlyopt=-std=c99
+build --host_cxxopt=-std=c++14
+build --host_conlyopt=-std=c99
+
+# Strict action environment for reproducibility
+build --incompatible_strict_action_env
+
+# Enable platform-based toolchain resolution
+build --incompatible_enable_cc_toolchain_resolution
+
+# ===========================
+# Platform configurations
+# ===========================
+
+# POSIX + FreeRTOS (default development config)
+build:posix-freertos --define platform=posix
+build:posix-freertos --define rtos=freertos
+build:posix-freertos --define executable=referenceapp
+build:posix-freertos --copt=-DSUPPORT_FREERTOS
+build:posix-freertos --copt=-DPLATFORM_SUPPORT_CAN
+build:posix-freertos --copt=-DPLATFORM_SUPPORT_ETHERNET
+build:posix-freertos --copt=-DPLATFORM_SUPPORT_TRANSPORT
+build:posix-freertos --copt=-DPLATFORM_SUPPORT_STORAGE
+
+# POSIX + ThreadX
+build:posix-threadx --define platform=posix
+build:posix-threadx --define rtos=threadx
+build:posix-threadx --define executable=referenceapp
+build:posix-threadx --copt=-DSUPPORT_THREADX
+build:posix-threadx --copt=-DPLATFORM_SUPPORT_CAN
+build:posix-threadx --copt=-DPLATFORM_SUPPORT_ETHERNET
+build:posix-threadx --copt=-DPLATFORM_SUPPORT_TRANSPORT
+build:posix-threadx --copt=-DPLATFORM_SUPPORT_STORAGE
+
+# S32K148 + FreeRTOS (ARM cross-compilation)
+build:s32k148-freertos --define platform=s32k148
+build:s32k148-freertos --define rtos=freertos
+build:s32k148-freertos --define executable=referenceapp
+build:s32k148-freertos --platforms=//bazel/platforms:s32k148
+build:s32k148-freertos --copt=-DSUPPORT_FREERTOS
+build:s32k148-freertos --copt=-mcpu=cortex-m4
+build:s32k148-freertos --copt=-mthumb
+build:s32k148-freertos --copt=-mfloat-abi=hard
+build:s32k148-freertos --copt=-mfpu=fpv4-sp-d16
+
+# S32K148 + ThreadX (ARM cross-compilation)
+build:s32k148-threadx --define platform=s32k148
+build:s32k148-threadx --define rtos=threadx
+build:s32k148-threadx --define executable=referenceapp
+build:s32k148-threadx --platforms=//bazel/platforms:s32k148
+build:s32k148-threadx --copt=-DSUPPORT_THREADX
+build:s32k148-threadx --copt=-mcpu=cortex-m4
+build:s32k148-threadx --copt=-mthumb
+build:s32k148-threadx --copt=-mfloat-abi=hard
+build:s32k148-threadx --copt=-mfpu=fpv4-sp-d16
+
+# ===========================
+# Unit test configuration
+# ===========================
+
+build:unit-test --define platform=posix
+build:unit-test --define rtos=freertos
+build:unit-test --define executable=unittest
+build:unit-test --copt=-DSUPPORT_FREERTOS
+test:unit-test --test_output=errors
+
+# ===========================
+# Feature flags
+# ===========================
+
+# Enable tracing support
+build:tracing --define tracing=on
+
+# ===========================
+# Convenience aliases
+# ===========================
+
+# Try importing a user-specific .bazelrc (optional, not checked in)
+try-import %workspace%/user.bazelrc

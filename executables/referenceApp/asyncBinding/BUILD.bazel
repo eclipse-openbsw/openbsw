@@ -1,0 +1,24 @@
+# Async binding configuration for the reference application.
+#
+# Depends on runtime_hdrs (not runtime) to break the cycle:
+# asyncBinding -> runtime -> async -> asyncFreeRtosImpl -> asyncBinding.
+#
+# Uses RTOS-specific _hdrs targets (not full impl) to break the cycle:
+# asyncBinding -> asyncFreeRtos -> asyncFreeRtosImpl -> asyncBinding.
+
+cc_library(
+    name = "asyncBinding",
+    hdrs = glob(["include/**"]),
+    includes = ["include"],
+    visibility = ["//visibility:public"],
+    # NOTE: Does NOT depend on //libs/bsw/async to avoid cycle. Consumers must
+    # ensure async is in the dep graph (which it is — async_binding is used by
+    # asyncFreeRtosImpl/asyncThreadXImpl which depend on async transitively).
+    deps = [
+        "//libs/bsw/platform",
+        "//libs/bsw/runtime:runtime_hdrs",
+    ] + select({
+        "//bazel/configs:freertos": ["//libs/bsw/asyncFreeRtos:asyncFreeRtos_hdrs"],
+        "//bazel/configs:threadx": ["//libs/bsw/asyncThreadX:asyncThreadX_hdrs"],
+    }),
+)

@@ -1,0 +1,15 @@
+# S32K1xx ETL platform implementation.
+
+cc_library(
+    name = "etlImpl",
+    srcs = glob(["src/**/*.cpp"]),
+    hdrs = glob(["include/**"]),
+    includes = ["include"],
+    target_compatible_with = ["@platforms//os:none"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//libs/3rdparty/etl",
+        "//libs/bsw/bsp",
+        "//libs/bsw/util",
+    ],
+)
