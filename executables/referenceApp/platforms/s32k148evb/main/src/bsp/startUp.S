@@ -397,6 +397,24 @@ Reset_Handler:
     bgt    .LC1
 .LC0:
 
+/*     Loop to copy general data from read only memory to MainRAM (SRAM_U).
+ *      __DATA_ROM_GENERAL: Start of general data in ROM
+ *      __data_general_start__/__data_general_end__: RAM address range in MainRAM */
+
+    ldr    r1, =__DATA_ROM_GENERAL
+    ldr    r2, =__data_general_start__
+    ldr    r3, =__data_general_end__
+
+    subs    r3, r2
+    ble     .LC0_GEN
+
+.LC1_GEN:
+    subs    r3, 4
+    ldr    r0, [r1,r3]
+    str    r0, [r2,r3]
+    bgt    .LC1_GEN
+.LC0_GEN:
+
 /*     Loop to copy code from read only memory to RAM. The ranges
  *      of copy from/to are specified by following symbols evaluated in
  *      linker script.
