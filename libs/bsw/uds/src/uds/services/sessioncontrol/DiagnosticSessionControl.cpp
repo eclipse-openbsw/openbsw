@@ -1,4 +1,5 @@
 // Copyright 2024 Accenture.
+// Copyright 2026 BMW AG
 
 #include "uds/services/sessioncontrol/DiagnosticSessionControl.h"
 
@@ -126,14 +127,14 @@ DiagReturnCode::Type DiagnosticSessionControl::process(
 
     if (requestedSession == DiagSession::PROGRAMMING)
     {
-        (void)response.appendUint16(DEFAULT_DIAG_RESPONSE_TIME);
-        (void)response.appendUint16(EXTENDED_DIAG_RESPONSE_PENDING);
+        (void)response.appendUint16(UdsConstants::PROGRAMMING_DIAG_RESPONSE_TIME);
+        (void)response.appendUint16(UdsConstants::PROGRAMMING_DIAG_RESPONSE_PENDING);
         Logger::debug(UDS, "EXTENDED TIMEOUTS");
     }
     else
     {
-        (void)response.appendUint16(DEFAULT_DIAG_RESPONSE_TIME);
-        (void)response.appendUint16(DEFAULT_DIAG_RESPONSE_PENDING);
+        (void)response.appendUint16(UdsConstants::DEFAULT_DIAG_RESPONSE_TIME);
+        (void)response.appendUint16(UdsConstants::DEFAULT_DIAG_RESPONSE_PENDING);
         Logger::debug(UDS, "DEFAULT SESSION TIMEOUTS");
     }
 
@@ -352,7 +353,7 @@ void DiagnosticSessionControl::sessionWritten(bool const successful)
     else
     {
         (void)fUdsLifecycleConnector.requestShutdown(
-            IUdsLifecycleConnector::HARD_RESET, RESET_TIME);
+            IUdsLifecycleConnector::HARD_RESET, UdsConstants::RESET_TIME_HARD);
     }
 }
 

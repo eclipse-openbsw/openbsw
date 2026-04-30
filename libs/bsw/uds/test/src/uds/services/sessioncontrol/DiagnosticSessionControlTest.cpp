@@ -1,4 +1,5 @@
 // Copyright 2024 Accenture.
+// Copyright 2026 BMW AG
 
 #include "uds/services/sessioncontrol/DiagnosticSessionControl.h"
 
@@ -72,8 +73,6 @@ public:
 
     /* do not implement that */
     bool persistAndRestoreSession() override { return false; }
-
-    using DiagnosticSessionControl::RESET_TIME;
 };
 
 struct DiagnosticSessionControlTest : ::testing::Test
@@ -632,7 +631,7 @@ TEST_F(
 {
     EXPECT_CALL(
         fUdsLifecycleConnector,
-        requestShutdown(IUdsLifecycleConnector::HARD_RESET, fDiagnosticSessionControl.RESET_TIME))
+        requestShutdown(IUdsLifecycleConnector::HARD_RESET, UdsConstants::RESET_TIME_HARD))
         .WillOnce(Return(true));
     fDiagnosticSessionControl.sessionWritten(true);
 }

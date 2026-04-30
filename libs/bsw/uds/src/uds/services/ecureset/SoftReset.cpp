@@ -1,8 +1,10 @@
 // Copyright 2024 Accenture.
+// Copyright 2026 BMW AG
 
 #include "uds/services/ecureset/SoftReset.h"
 
 #include "uds/DiagDispatcher.h"
+#include "uds/UdsConfig.h"
 #include "uds/connection/IncomingDiagConnection.h"
 #include "uds/session/ApplicationDefaultSession.h"
 #include "uds/session/ApplicationExtendedSession.h"
@@ -44,7 +46,8 @@ void SoftReset::responseSent(
     IncomingDiagConnection& connection, ResponseSendResult const /* result */)
 {
     connection.terminate();
-    if (!fUdsLifecycleConnector.requestShutdown(IUdsLifecycleConnector::SOFT_RESET, RESET_TIME))
+    if (!fUdsLifecycleConnector.requestShutdown(
+            IUdsLifecycleConnector::SOFT_RESET, UdsConstants::RESET_TIME_SOFT))
     {
         fDiagDispatcher.fEnabled = true;
     }
