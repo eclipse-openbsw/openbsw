@@ -46,7 +46,17 @@ jobs:
         run: |
           sudo tools/enet/bring-up-ethernet.sh
 
-      - name: Run the pytest inside the docker container
+      - name: Run the pytest integration tests inside the docker container
         run: >-
           DOCKER_UID=$(id -u) DOCKER_GID=$(id -g) DOCKER_HISTORY=/dev/null docker compose run --rm development-sil
           python3 .ci/posix_pytest.py
+
+      - name: Run the cram integration tests for freertos inside the docker container
+        run: >-
+          DOCKER_UID=$(id -u) DOCKER_GID=$(id -g) DOCKER_HISTORY=/dev/null docker compose run --rm development-sil
+          bash -lc 'cd tests/cli && REFAPP="$PWD/../../build/posix-freertos/executables/referenceApp/application/Release/app.referenceApp.elf" bash run.sh'
+
+      - name: Run the cram integration tests for threadx inside the docker container
+        run: >-
+          DOCKER_UID=$(id -u) DOCKER_GID=$(id -g) DOCKER_HISTORY=/dev/null docker compose run --rm development-sil
+          bash -lc 'cd tests/cli && REFAPP="$PWD/../../build/posix-threadx/executables/referenceApp/application/Release/app.referenceApp.elf" bash run.sh'
