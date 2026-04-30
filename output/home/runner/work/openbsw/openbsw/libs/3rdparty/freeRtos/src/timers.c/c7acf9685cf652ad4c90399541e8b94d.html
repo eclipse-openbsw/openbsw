@@ -1,0 +1,399 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../../../../../../../../../static/css/style.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <title>Symbol - puncover</title>
+    
+</head>
+<body>
+    <div class="container" id="content">
+        <div class="page-header">
+            <nav class="navbar navbar-default" role="navigation">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="../../../../../../../../../../index.html">
+                    Puncover
+                  </a>
+                </div>
+              </div>
+            </nav>
+          
+        </div>
+        <div id="inner_content">
+        
+    
+    <ol class="breadcrumb folders">
+        
+        <li><a href="../../../../../../../../../../home.html">home</a></li>
+        
+        <li><a href="../../../../../../../../../runner.html">runner</a></li>
+        
+        <li><a href="../../../../../../../../work.html">work</a></li>
+        
+        <li><a href="../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../libs.html">libs</a></li>
+        
+        <li><a href="../../../../3rdparty.html">3rdparty</a></li>
+        
+        <li><a href="../../../freeRtos.html">freeRtos</a></li>
+        
+        <li ><a href="../../src.html">src</a>
+            </li>
+
+        
+        <li class="active"><a href="../timers.c.html">timers.c</a>:565
+            </li>
+        
+    </ol>
+
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <th>Function</th>
+                <td colspan="5">
+                    <span class="icon-function">prvProcessExpiredTimer</span>
+                </td>
+            </tr>
+
+            <tr>
+                <th rowspan="2"></th>
+                <th>Address</th>
+                <th>Remarks</th>
+                <th>Stack</th>
+                <th>Code</th>
+                <th>Static</th>
+            </tr>
+            <tr>
+                <td>0x00012118</td>
+                <td>
+    
+    
+</td>
+                <td>32 (static)</td>
+                <td>148</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th>Callers (1)</th>
+                <td colspan="5">
+                
+                    <a href="./d35f72ab680b9bc7eb2ff3e6cd07ece5.html">prvTimerTask (556)</a>
+                    
+                
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Callees (2,
+                            <span title="sum of used bytes by all callees">
+                            Σ=88
+                            </span>
+                        )
+                    
+                </th>
+                <td colspan="5">
+                
+                    <a href="../../include/list.h/1abc5ae8b61049fbb0433232e839935f.html">uxListRemove (40)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../../include/list.h/4a1a844861e946c94e3a62dd84492ace.html">vListInsert (48)</a>
+                    
+                
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    
+    <pre><a href="./25fd83c3d905940072a19718ff477a03.html">prvCheckForValidListAndQueue (108)</a></pre>
+    
+
+    <pre>
+
+    prvProcessExpiredTimer():
+
+       12118:	e92d 47f0 	stmdb	sp!, {r4, r5, r6, r7, r8, r9, sl, lr}
+
+       1211c:	f8df 8088 	ldr.w	r8, [pc, #136]	@ 121a8 <<a href="./c7acf9685cf652ad4c90399541e8b94d.html">prvProcessExpiredTimer</a>+0x90>
+
+       12120:	f8d8 3000 	ldr.w	r3, [r8]
+
+       12124:	68db      	ldr	r3, [r3, #12]
+
+       12126:	68dc      	ldr	r4, [r3, #12]
+
+       12128:	f104 0904 	add.w	r9, r4, #4
+
+       1212c:	4605      	mov	r5, r0
+
+       1212e:	4648      	mov	r0, r9
+
+       12130:	460f      	mov	r7, r1
+
+       12132:	f000 f9bd 	bl	124b0 <<a href="../../include/list.h/1abc5ae8b61049fbb0433232e839935f.html">uxListRemove</a>>
+
+       12136:	f894 3028 	ldrb.w	r3, [r4, #40]	@ 0x28
+
+       1213a:	075a      	lsls	r2, r3, #29
+
+       1213c:	d40d      	bmi.n	1215a <<a href="./c7acf9685cf652ad4c90399541e8b94d.html">prvProcessExpiredTimer</a>+0x42>
+
+       1213e:	f023 0301 	bic.w	r3, r3, #1
+
+       12142:	f884 3028 	strb.w	r3, [r4, #40]	@ 0x28
+
+       12146:	4620      	mov	r0, r4
+
+       12148:	6a23      	ldr	r3, [r4, #32]
+
+       1214a:	e8bd 47f0 	ldmia.w	sp!, {r4, r5, r6, r7, r8, r9, sl, lr}
+
+       1214e:	4718      	bx	r3
+
+    prvInsertTimerInActiveList():
+
+       12150:	4293      	cmp	r3, r2
+
+       12152:	d81c      	bhi.n	1218e <<a href="./c7acf9685cf652ad4c90399541e8b94d.html">prvProcessExpiredTimer</a>+0x76>
+
+    prvReloadTimer():
+
+       12154:	6a23      	ldr	r3, [r4, #32]
+
+       12156:	4798      	blx	r3
+
+       12158:	4635      	mov	r5, r6
+
+       1215a:	69a3      	ldr	r3, [r4, #24]
+
+    prvInsertTimerInActiveList():
+
+       1215c:	6124      	str	r4, [r4, #16]
+
+       1215e:	18ee      	adds	r6, r5, r3
+
+    prvReloadTimer():
+
+       12160:	bf2c      	ite	cs
+
+       12162:	2101      	movcs	r1, #1
+
+       12164:	2100      	movcc	r1, #0
+
+    prvInsertTimerInActiveList():
+
+       12166:	42b7      	cmp	r7, r6
+
+    prvReloadTimer():
+
+       12168:	4620      	mov	r0, r4
+
+    prvInsertTimerInActiveList():
+
+       1216a:	eba7 0205 	sub.w	r2, r7, r5
+
+       1216e:	6066      	str	r6, [r4, #4]
+
+       12170:	d2ee      	bcs.n	12150 <<a href="./c7acf9685cf652ad4c90399541e8b94d.html">prvProcessExpiredTimer</a>+0x38>
+
+       12172:	42af      	cmp	r7, r5
+
+       12174:	d201      	bcs.n	1217a <<a href="./c7acf9685cf652ad4c90399541e8b94d.html">prvProcessExpiredTimer</a>+0x62>
+
+       12176:	2900      	cmp	r1, #0
+
+       12178:	d0ec      	beq.n	12154 <<a href="./c7acf9685cf652ad4c90399541e8b94d.html">prvProcessExpiredTimer</a>+0x3c>
+
+       1217a:	f8d8 0000 	ldr.w	r0, [r8]
+
+       1217e:	4649      	mov	r1, r9
+
+       12180:	f000 f97e 	bl	12480 <<a href="../../include/list.h/4a1a844861e946c94e3a62dd84492ace.html">vListInsert</a>>
+
+    prvProcessExpiredTimer():
+
+       12184:	6a23      	ldr	r3, [r4, #32]
+
+       12186:	4620      	mov	r0, r4
+
+       12188:	e8bd 47f0 	ldmia.w	sp!, {r4, r5, r6, r7, r8, r9, sl, lr}
+
+       1218c:	4718      	bx	r3
+
+    prvInsertTimerInActiveList():
+
+       1218e:	4b05      	ldr	r3, [pc, #20]	@ (121a4 <<a href="./c7acf9685cf652ad4c90399541e8b94d.html">prvProcessExpiredTimer</a>+0x8c>)
+
+       12190:	4649      	mov	r1, r9
+
+       12192:	6818      	ldr	r0, [r3, #0]
+
+       12194:	f000 f974 	bl	12480 <<a href="../../include/list.h/4a1a844861e946c94e3a62dd84492ace.html">vListInsert</a>>
+
+    prvProcessExpiredTimer():
+
+       12198:	6a23      	ldr	r3, [r4, #32]
+
+       1219a:	4620      	mov	r0, r4
+
+       1219c:	e8bd 47f0 	ldmia.w	sp!, {r4, r5, r6, r7, r8, r9, sl, lr}
+
+       121a0:	4718      	bx	r3
+
+       121a2:	bf00      	nop
+
+       121a4:	1fff3b70 	.word	0x1fff3b70
+
+       121a8:	1fff3b74 	.word	0x1fff3b74
+
+    </pre>
+
+    
+    <pre><a href="./d35f72ab680b9bc7eb2ff3e6cd07ece5.html">prvTimerTask (556)</a></pre>
+    
+
+    
+        <h1>Stack Worst-Case Scenarios</h1>
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 96</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 48</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    96
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                8 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">48</td>
+                <td><a href="../../include/list.h/4a1a844861e946c94e3a62dd84492ace.html" class="icon-function">vListInsert</a></td>
+            </tr>
+        
+        </tbody>
+        
+        <tfoot>
+            <tr>
+                <th></th>
+                <th class="col_size">88
+                </th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </tfoot>
+        
+    </table>
+        
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 88</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 704</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    88
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                32 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    704
+                    
+                    
+                </td>
+                <td class="col_size">148</td>
+                <td><a href="./c7acf9685cf652ad4c90399541e8b94d.html" class="icon-function">prvProcessExpiredTimer</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                </td>
+                <td class="col_size">
+            
+                56 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">556</td>
+                <td><a href="./d35f72ab680b9bc7eb2ff3e6cd07ece5.html" class="icon-function">prvTimerTask</a></td>
+            </tr>
+        
+        </tbody>
+        
+    </table>
+        
+    
+
+
+        </div>
+    <div id="page-footer">
+        <hr>
+        
+            brought to you with 💖
+            by <a href="https://twitter.com/hbehrens">Heiko Behrens</a>
+            <span class="secondary">– MIT license, copyright © 2014-2026</span>
+        
+    </div>
+    </div>
+</body>
+</html>

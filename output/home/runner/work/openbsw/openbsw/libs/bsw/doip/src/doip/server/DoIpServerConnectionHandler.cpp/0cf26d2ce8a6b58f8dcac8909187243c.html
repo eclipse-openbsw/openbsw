@@ -1,0 +1,482 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../../../../../../../../../../../static/css/style.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <title>Symbol - puncover</title>
+    
+</head>
+<body>
+    <div class="container" id="content">
+        <div class="page-header">
+            <nav class="navbar navbar-default" role="navigation">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="../../../../../../../../../../../../index.html">
+                    Puncover
+                  </a>
+                </div>
+              </div>
+            </nav>
+          
+        </div>
+        <div id="inner_content">
+        
+    
+    <ol class="breadcrumb folders">
+        
+        <li><a href="../../../../../../../../../../../../home.html">home</a></li>
+        
+        <li><a href="../../../../../../../../../../../runner.html">runner</a></li>
+        
+        <li><a href="../../../../../../../../../../work.html">work</a></li>
+        
+        <li><a href="../../../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../../libs.html">libs</a></li>
+        
+        <li><a href="../../../../../../bsw.html">bsw</a></li>
+        
+        <li><a href="../../../../../doip.html">doip</a></li>
+        
+        <li><a href="../../../../src.html">src</a></li>
+        
+        <li><a href="../../../doip.html">doip</a></li>
+        
+        <li ><a href="../../server.html">server</a>
+            </li>
+
+        
+        <li class="active"><a href="../DoIpServerConnectionHandler.cpp.html">DoIpServerConnectionHandler.cpp</a>:134
+            </li>
+        
+    </ol>
+
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <th>Function</th>
+                <td colspan="5">
+                    <span class="icon-function">doip::DoIpServerConnectionHandler::startAliveCheck()</span>
+                </td>
+            </tr>
+
+            <tr>
+                <th rowspan="2"></th>
+                <th>Address</th>
+                <th>Remarks</th>
+                <th>Stack</th>
+                <th>Code</th>
+                <th>Static</th>
+            </tr>
+            <tr>
+                <td>0x00028250</td>
+                <td>
+    <span class="label label-success">x-module</span>
+    
+</td>
+                <td>32 (static)</td>
+                <td>152</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th>Callers (1)</th>
+                <td colspan="5">
+                
+                    <a href="../DoIpServerTransportLayer.cpp/4e8e825d8c9794946e545402259539c3.html">doip::DoIpServerTransportLayer::startAliveCheck(doip::DoIpServerTransportConnection&amp;, doip::DoIpServerTransportConnection*) (324)</a>
+                    
+                
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Callees (5,
+                            <span title="sum of used bytes by all callees">
+                            Σ=624
+                            </span>
+                        )
+                    
+                </th>
+                <td colspan="5">
+                
+                    <a href="../../../../../util/include/util/logger/Logger.h/0ab01804358606b880086539418bdb3a.html">util::logger::Logger::info(unsigned char, char const*, ...) (56)</a>
+                    
+                        ,
+                    
+                
+                    <a href="./566d69af2b2d641570d8e604a5c66719.html">doip::DoIpServerConnectionHandler::allocateSendJob(unsigned short, unsigned short, bool) (244)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../../../../../asyncFreeRtos/src/async/Types.cpp/3decd3b646058460a8725450b13ebf07.html">async::TimeoutType::cancel() (120)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../../../../../asyncFreeRtos/src/async/Async.cpp/5aa4f4e4ce0ff8166656d629d7628e7e.html">async::schedule(unsigned char, async::IRunnable&amp;, async::TimeoutType&amp;, unsigned long, async::TimeUnit::Type) (128)</a>
+                    
+                        ,
+                    
+                
+                    <a href="./f7e594b3cd3ba678835d6e889207ec26.html">doip::DoIpServerConnectionHandler::sendOrReleaseMessage(doip::DoIpStaticPayloadSendJob&amp;) (76)</a>
+                    
+                
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    
+    <pre><a href="./f7e594b3cd3ba678835d6e889207ec26.html">doip::DoIpServerConnectionHandler::sendOrReleaseMessage(doip::DoIpStaticPayloadSendJob&amp;) (76)</a></pre>
+    
+
+    <pre>
+
+    doip::DoIpServerConnectionHandler::startAliveCheck():
+
+       28250:	b5f0      	push	{r4, r5, r6, r7, lr}
+
+       28252:	f890 30c8 	ldrb.w	r3, [r0, #200]	@ 0xc8
+
+       28256:	2b02      	cmp	r3, #2
+
+       28258:	b083      	sub	sp, #12
+
+       2825a:	4604      	mov	r4, r0
+
+       2825c:	d00b      	beq.n	28276 <<a href="./0cf26d2ce8a6b58f8dcac8909187243c.html">doip::DoIpServerConnectionHandler::startAliveCheck()</a>+0x26>
+
+       2825e:	6900      	ldr	r0, [r0, #16]
+
+       28260:	b138      	cbz	r0, 28272 <<a href="./0cf26d2ce8a6b58f8dcac8909187243c.html">doip::DoIpServerConnectionHandler::startAliveCheck()</a>+0x22>
+
+       28262:	6803      	ldr	r3, [r0, #0]
+
+       28264:	68db      	ldr	r3, [r3, #12]
+
+       28266:	2200      	movs	r2, #0
+
+       28268:	4621      	mov	r1, r4
+
+       2826a:	b003      	add	sp, #12
+
+       2826c:	e8bd 40f0 	ldmia.w	sp!, {r4, r5, r6, r7, lr}
+
+       28270:	4718      	bx	r3
+
+       28272:	b003      	add	sp, #12
+
+       28274:	bdf0      	pop	{r4, r5, r6, r7, pc}
+
+       28276:	481a      	ldr	r0, [pc, #104]	@ (282e0 <<a href="./0cf26d2ce8a6b58f8dcac8909187243c.html">doip::DoIpServerConnectionHandler::startAliveCheck()</a>+0x90>)
+
+       28278:	f894 10d5 	ldrb.w	r1, [r4, #213]	@ 0xd5
+
+       2827c:	f8b4 20c2 	ldrh.w	r2, [r4, #194]	@ 0xc2
+
+       28280:	7800      	ldrb	r0, [r0, #0]
+
+       28282:	9100      	str	r1, [sp, #0]
+
+       28284:	4917      	ldr	r1, [pc, #92]	@ (282e4 <<a href="./0cf26d2ce8a6b58f8dcac8909187243c.html">doip::DoIpServerConnectionHandler::startAliveCheck()</a>+0x94>)
+
+       28286:	f7da fd03 	bl	2c90 <<a href="../../../../../util/include/util/logger/Logger.h/0ab01804358606b880086539418bdb3a.html">util::logger::Logger::info(unsigned char, char const*, ...)</a>>
+
+       2828a:	2201      	movs	r2, #1
+
+       2828c:	2300      	movs	r3, #0
+
+       2828e:	f884 20d5 	strb.w	r2, [r4, #213]	@ 0xd5
+
+       28292:	2107      	movs	r1, #7
+
+       28294:	461a      	mov	r2, r3
+
+       28296:	4620      	mov	r0, r4
+
+       28298:	f7ff ff02 	bl	280a0 <<a href="./566d69af2b2d641570d8e604a5c66719.html">doip::DoIpServerConnectionHandler::allocateSendJob(unsigned short, unsigned short, bool)</a>>
+
+       2829c:	4605      	mov	r5, r0
+
+       2829e:	b1c0      	cbz	r0, 282d2 <<a href="./0cf26d2ce8a6b58f8dcac8909187243c.html">doip::DoIpServerConnectionHandler::startAliveCheck()</a>+0x82>
+
+    _ZNK4doip34DoIpServerTransportLayerParameters20getAliveCheckTimeoutEv():
+
+       282a0:	69a3      	ldr	r3, [r4, #24]
+
+    _ZN4doip27DoIpServerConnectionHandler8setTimerEm():
+
+       282a2:	f104 061c 	add.w	r6, r4, #28
+
+       282a6:	4630      	mov	r0, r6
+
+    doip::DoIpServerConnectionHandler::startAliveCheck():
+
+       282a8:	88df      	ldrh	r7, [r3, #6]
+
+    _ZN4doip27DoIpServerConnectionHandler8setTimerEm():
+
+       282aa:	f7ea fe47 	bl	12f3c <<a href="../../../../../asyncFreeRtos/src/async/Types.cpp/3decd3b646058460a8725450b13ebf07.html">async::TimeoutType::cancel()</a>>
+
+       282ae:	f44f 737a 	mov.w	r3, #1000	@ 0x3e8
+
+       282b2:	9300      	str	r3, [sp, #0]
+
+       282b4:	f894 00c7 	ldrb.w	r0, [r4, #199]	@ 0xc7
+
+       282b8:	f104 0108 	add.w	r1, r4, #8
+
+       282bc:	463b      	mov	r3, r7
+
+       282be:	4632      	mov	r2, r6
+
+       282c0:	f7ea fbc8 	bl	12a54 <<a href="../../../../../asyncFreeRtos/src/async/Async.cpp/5aa4f4e4ce0ff8166656d629d7628e7e.html">async::schedule(unsigned char, async::IRunnable&, async::TimeoutType&, unsigned long, async::TimeUnit::Type)</a>>
+
+    doip::DoIpServerConnectionHandler::startAliveCheck():
+
+       282c4:	4629      	mov	r1, r5
+
+       282c6:	4620      	mov	r0, r4
+
+       282c8:	b003      	add	sp, #12
+
+       282ca:	e8bd 40f0 	ldmia.w	sp!, {r4, r5, r6, r7, lr}
+
+       282ce:	f7ff bf99 	b.w	28204 <<a href="./f7e594b3cd3ba678835d6e889207ec26.html">doip::DoIpServerConnectionHandler::sendOrReleaseMessage(doip::DoIpStaticPayloadSendJob&)</a>>
+
+       282d2:	6823      	ldr	r3, [r4, #0]
+
+       282d4:	6a1b      	ldr	r3, [r3, #32]
+
+       282d6:	4620      	mov	r0, r4
+
+       282d8:	b003      	add	sp, #12
+
+       282da:	e8bd 40f0 	ldmia.w	sp!, {r4, r5, r6, r7, lr}
+
+       282de:	4718      	bx	r3
+
+       282e0:	1ffe0126 	.word	0x1ffe0126
+
+       282e4:	00034700 	.word	0x00034700
+
+    </pre>
+
+    
+    <pre><a href="./57956a735bce4058fbfe5be7327afa7c.html">doip::DoIpServerConnectionHandler::sendRoutingActivationResponse(unsigned short, unsigned char, bool) (216)</a></pre>
+    
+
+    
+        <h1>Stack Worst-Case Scenarios</h1>
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 208</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 308</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    208
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                24 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    308
+                    
+                    
+                </td>
+                <td class="col_size">64</td>
+                <td><a href="../../common/DoIpStaticPayloadSendJob.cpp/e99af0c0a1ecc093801cea24b5bd7b70.html" class="icon-function">doip::DoIpStaticPayloadSendJob::DoIpStaticPayloadSendJob(unsigned char, unsigned short, etl::span&lt;unsigned char const, 4294967295u&gt;, etl::delegate&lt;void (doip::DoIpStaticPayloadSendJob&amp;, bool)&gt;)</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                    
+                    184
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                72 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">244</td>
+                <td><a href="./566d69af2b2d641570d8e604a5c66719.html" class="icon-function">doip::DoIpServerConnectionHandler::allocateSendJob(unsigned short, unsigned short, bool)</a></td>
+            </tr>
+        
+        </tbody>
+        
+        <tfoot>
+            <tr>
+                <th></th>
+                <th class="col_size">112
+                </th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </tfoot>
+        
+    </table>
+        
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 112</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 748</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    112
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                32 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    748
+                    
+                    
+                </td>
+                <td class="col_size">152</td>
+                <td><a href="./0cf26d2ce8a6b58f8dcac8909187243c.html" class="icon-function">doip::DoIpServerConnectionHandler::startAliveCheck()</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                    
+                    80
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                40 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    596
+                    
+                    
+                </td>
+                <td class="col_size">324</td>
+                <td><a href="../DoIpServerTransportLayer.cpp/4e8e825d8c9794946e545402259539c3.html" class="icon-function">doip::DoIpServerTransportLayer::startAliveCheck(doip::DoIpServerTransportConnection&amp;, doip::DoIpServerTransportConnection*)</a></td>
+            </tr>
+        
+            <tr>
+                <th>3</th>
+                <td class="col_size">
+                    
+                    40
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                24 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    272
+                    
+                    
+                </td>
+                <td class="col_size">216</td>
+                <td><a href="../DoIpServerTransportLayer.cpp/ff128e78678eb812d7e7289c6af6a1c6.html" class="icon-function">doip::DoIpServerTransportLayer::startAliveCheck()</a></td>
+            </tr>
+        
+            <tr>
+                <th>4</th>
+                <td class="col_size">
+                </td>
+                <td class="col_size">
+            
+                16 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">56</td>
+                <td><a href="../DoIpServerTransportLayer.cpp/160108bef46cc70001bfbef291d595d0.html" class="icon-function">doip::DoIpServerTransportLayer::aliveCheckResponseReceived(doip::DoIpServerConnectionHandler&amp;, bool)</a></td>
+            </tr>
+        
+        </tbody>
+        
+    </table>
+        
+    
+
+
+        </div>
+    <div id="page-footer">
+        <hr>
+        
+            brought to you with 💖
+            by <a href="https://twitter.com/hbehrens">Heiko Behrens</a>
+            <span class="secondary">– MIT license, copyright © 2014-2026</span>
+        
+    </div>
+    </div>
+</body>
+</html>
