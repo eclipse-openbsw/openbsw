@@ -13,25 +13,52 @@ send_command_max_retries = 2
 [eth]
 ip_address = "192.168.0.200"
 
-[freertos.per_run_process]
+[refApp_freertos.per_run_process]
 command_line = "arm-none-eabi-gdb -batch -x flash.gdb ../../build/s32k148-freertos-gcc/executables/referenceApp/application/RelWithDebInfo/app.referenceApp.elf > /dev/null 2>&1"
+test_set = "testconfig/refApp_tests.toml"
 wait_for_exit = true
 
-[freertos.target_process]
+[refApp_freertos.target_process]
 command_line = "arm-none-eabi-gdb -batch -x reset.gdb ../../build/s32k148-freertos-gcc/executables/referenceApp/application/RelWithDebInfo/app.referenceApp.elf > /dev/null 2>&1"
+wait_for_exit = true
+
+[refApp_threadx.per_run_process]
+command_line = "arm-none-eabi-gdb -batch -x flash.gdb ../../build/s32k148-threadx-gcc/executables/referenceApp/application/RelWithDebInfo/app.referenceApp.elf > /dev/null 2>&1"
+test_set = "testconfig/refApp_tests.toml"
 wait_for_exit = true
 skip_first = true
 
-[boot]
+[refApp_threadx.target_process]
+command_line = "arm-none-eabi-gdb -batch -x reset.gdb ../../build/s32k148-threadx-gcc/executables/referenceApp/application/RelWithDebInfo/app.referenceApp.elf > /dev/null 2>&1"
+wait_for_exit = true
+skip_first = true
+
+[refApp.boot]
 started_str = "INFO: Run level 1"
 complete_str = "DEBUG: Run level 9 done"
 max_time = 1.5
 
-[threadx.per_run_process]
-command_line = "arm-none-eabi-gdb -batch -x flash.gdb ../../build/s32k148-threadx-gcc/executables/referenceApp/application/RelWithDebInfo/app.referenceApp.elf > /dev/null 2>&1"
+[intTestApp_freertos.per_run_process]
+command_line = "arm-none-eabi-gdb -batch -x flash.gdb ../../build/integrationtest-s32k148-freertos-gcc/executables/integrationTest/application/RelWithDebInfo/app.integrationTest.elf > /dev/null 2>&1"
+test_set = "testconfig/intTestApp_tests.toml"
 wait_for_exit = true
 
-[threadx.target_process]
-command_line = "arm-none-eabi-gdb -batch -x reset.gdb ../../build/s32k148-threadx-gcc/executables/referenceApp/application/RelWithDebInfo/app.referenceApp.elf > /dev/null 2>&1"
+[intTestApp_freertos.target_process]
+command_line = "arm-none-eabi-gdb -batch -x reset.gdb ../../build/integrationtest-s32k148-freertos-gcc/executables/integrationTest/application/RelWithDebInfo/app.integrationTest.elf > /dev/null 2>&1"
+wait_for_exit = true
+
+[intTestApp_threadx.per_run_process]
+command_line = "arm-none-eabi-gdb -batch -x flash.gdb ../../build/integrationtest-s32k148-threadx-gcc/executables/integrationTest/application/RelWithDebInfo/app.integrationTest.elf > /dev/null 2>&1"
+test_set = "testconfig/intTestApp_tests.toml"
 wait_for_exit = true
 skip_first = true
+
+[intTestApp_threadx.target_process]
+command_line = "arm-none-eabi-gdb -batch -x reset.gdb ../../build/integrationtest-s32k148-threadx-gcc/executables/integrationTest/application/RelWithDebInfo/app.integrationTest.elf > /dev/null 2>&1"
+wait_for_exit = true
+skip_first = true
+
+[intTestApp.boot]
+started_str = "INFO: Run level 1"
+complete_str = "DEBUG: Run level 5 done"
+max_time = 1.0

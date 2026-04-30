@@ -104,7 +104,37 @@ commands = {
         platforms=["arm"],
         cxxids=["clang"],
         build_dir="build/s32k148-threadx-clang",
-    )
+    ),
+    "integrationtest-posix-freertos": BuildOpTpl(
+        config_cmd="cmake --preset integrationtest-posix-freertos",
+        build_cmd="cmake --build --preset integrationtest-posix-freertos",
+        configs=["Debug", "Release"],
+        platforms=["linux"],
+        build_dir="build/integrationtest-posix-freertos",
+    ),
+    "integrationtest-posix-threadx": BuildOpTpl(
+        config_cmd="cmake --preset integrationtest-posix-threadx",
+        build_cmd="cmake --build --preset integrationtest-posix-threadx",
+        configs=["Debug", "Release"],
+        platforms=["linux"],
+        build_dir="build/integrationtest-posix-threadx",
+    ),
+    "integrationtest-s32k148-freertos-gcc": BuildOpTpl(
+        config_cmd="cmake --preset integrationtest-s32k148-freertos-gcc",
+        build_cmd="cmake --build --preset integrationtest-s32k148-freertos-gcc",
+        configs=["Debug", "Release", "RelWithDebInfo"],
+        platforms=["arm"],
+        cxxids=["gcc"],
+        build_dir="build/integrationtest-s32k148-freertos-gcc",
+    ),
+    "integrationtest-s32k148-threadx-gcc": BuildOpTpl(
+        config_cmd="cmake --preset integrationtest-s32k148-threadx-gcc",
+        build_cmd="cmake --build --preset integrationtest-s32k148-threadx-gcc",
+        configs=["Debug", "Release", "RelWithDebInfo"],
+        platforms=["arm"],
+        cxxids=["gcc"],
+        build_dir="build/integrationtest-s32k148-threadx-gcc",
+    ),
 }
 
 
