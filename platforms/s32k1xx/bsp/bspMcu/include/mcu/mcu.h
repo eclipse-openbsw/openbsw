@@ -7,7 +7,7 @@
 // NXP has their own MPU, so we must not use the cmsis one.
 #undef __MPU_PRESENT
 #define INCLUDE_CORE_CM4_IN_MCU_H
-#include "3rdparty/cmsis/core_cm4.h"
+#include "core_cm4.h"
 #undef INCLUDE_CORE_CM4_IN_MCU_H
 #define __MPU_PRESENT 1
 #else
