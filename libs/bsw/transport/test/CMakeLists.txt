@@ -4,14 +4,12 @@ add_executable(
     src/IncludeTest.cpp
     src/TesterAddressTest.cpp
     src/TransportMessageTest.cpp
-    src/TransportConfiguration.cpp
     src/Logger.cpp)
-
-target_include_directories(transportTest PRIVATE include)
 
 target_link_libraries(
     transportTest
     PRIVATE transport
+            transportConfiguration
             asyncMockImpl
             gmock_main
             transportMock
