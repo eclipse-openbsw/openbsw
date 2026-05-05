@@ -1,4 +1,5 @@
 // Copyright 2024 Accenture.
+// Copyright 2026 BMW AG
 
 #pragma once
 
@@ -110,20 +111,6 @@ protected:
     void addDiagSessionListener_local(IDiagSessionChangedListener&);
     void removeDiagSessionListener_local(IDiagSessionChangedListener&);
     void expired_local();
-
-    static uint16_t const RESET_TIME                      = 1000U; // ms
-    /**
-     * This is an extended timeout which is used when the programming
-     * session in bootloader is entered. This is due to the fact that
-     * a tester that is connected via ethernet may need more time
-     * to reconnect (e.g. slow DHCP server)
-     *
-     * 60s no longer needed, changed to required 10s
-     */
-    static uint32_t const TESTER_PRESENT_EXTENDED_TIMEOUT = 10000U; // ms
-    static uint16_t const DEFAULT_DIAG_RESPONSE_TIME      = 50U;    // ms
-    static uint16_t const DEFAULT_DIAG_RESPONSE_PENDING   = 500U;   // 10ms
-    static uint16_t const EXTENDED_DIAG_RESPONSE_PENDING  = 3000U;  // 10ms
 
     DiagReturnCode::Type process(
         IncomingDiagConnection& connection,

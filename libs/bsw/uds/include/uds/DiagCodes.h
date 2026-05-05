@@ -1,4 +1,5 @@
 // Copyright 2024 Accenture.
+// Copyright 2026 BMW AG
 
 #pragma once
 
@@ -9,11 +10,6 @@ namespace uds
 class DiagCodes
 {
 public:
-    static uint8_t const FINGERPRINT_SIZE_INDEX   = 0x03U;
-    static uint8_t const FLAG_LONG_FINGERPRINT_13 = 0x08U;
-    static uint8_t const SIZE_FINGERPRINT_LONG_13 = 0x0DU;
-    static uint8_t const SIZE_FINGERPRINT_SHORT_4 = 0x04U;
-
     static uint8_t const POSITIVE_RESPONSE                        = 0x00U;
     static uint8_t const POSITIVE_RESPONSE_WAIT_FOR_EEPROM_FINISH = 0x00U;
     static uint8_t const MIN_DIAG_MESSAGE_LENGTH                  = 3U;
@@ -27,18 +23,9 @@ public:
     static uint8_t const ID_ROUTINE_CONTROL_STOP_ROUTINE       = 0x02U;
     static uint8_t const ID_ROUTINE_CONTROL_GET_ROUTINE_RESULT = 0x03U;
 
-    static uint16_t const REQUEST_ROUTINE_ID_TESTERASSISTENT = 0x0F0BU;
-
     // Functional addressing
     static uint8_t const FUNCTIONAL_ID_ALL_KWP2000_ECUS  = 0xEFU;
     static uint8_t const FUNCTIONAL_ID_ALL_ISO14229_ECUS = 0xDFU;
-
-    static uint8_t const ERASE_MEMORY_ACTIVATION_CODE = 0x06U;
-
-    // StandardCoreVersion
-    static uint16_t const STANDARD_CORE_VERSION = 0x0BB8U;
-
-    // Max blocklength for data transfer
 
     static uint8_t const SERVICE_ID_LENGTH     = 1U;
     static uint8_t const SUBFUNCTION_ID_LENGTH = 1U;
