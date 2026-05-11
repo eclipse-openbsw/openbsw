@@ -42,7 +42,11 @@
 #include "systems/DoIpServerSystem.h"
 #endif // PLATFORM_SUPPORT_TRANSPORT
 #endif // PLATFORM_SUPPORT_ETHERNET
-       //
+
+#if defined(PLATFORM_SUPPORT_ETHERNET) && defined(PLATFORM_SUPPORT_CAN)
+#include "systems/RoutingSystem.h"
+#endif // defined(PLATFORM_SUPPORT_ETHERNET) && defined(PLATFORM_SUPPORT_CAN)
+
 #if defined(PLATFORM_SUPPORT_CAN) && defined(PLATFORM_SUPPORT_TRANSPORT)
 #include "systems/DoCanSystem.h"
 #endif // defined(PLATFORM_SUPPORT_CAN) && defined(PLATFORM_SUPPORT_TRANSPORT)
@@ -132,6 +136,10 @@ LifecycleManager lifecycleManager{
 #ifdef PLATFORM_SUPPORT_ETHERNET
 ::etl::typed_storage<::systems::EthernetSystem> ethernetSystem;
 #endif // PLATFORM_SUPPORT_ETHERNET
+
+#if defined(PLATFORM_SUPPORT_ETHERNET) && defined(PLATFORM_SUPPORT_CAN)
+::etl::typed_storage<::systems::RoutingSystem> routingSystem;
+#endif // defined(PLATFORM_SUPPORT_ETHERNET) && defined(PLATFORM_SUPPORT_CAN)
 
 #ifdef PLATFORM_SUPPORT_TRANSPORT
 ::etl::typed_storage<::transport::TransportSystem> transportSystem;
@@ -295,7 +303,12 @@ void startApp()
         6U);
 #endif
 
-    /* runlevel 7 */
+#if defined(PLATFORM_SUPPORT_ETHERNET) && defined(PLATFORM_SUPPORT_CAN)
+    lifecycleManager.addComponent(
+        "routing", routingSystem.create(TASK_ETHERNET, ::systems::getCanSystem()), 6U);
+#endif
+
+/* runlevel 7 */
 #if defined(PLATFORM_SUPPORT_TRANSPORT) && defined(PLATFORM_SUPPORT_UDS)
     lifecycleManager.addComponent(
         "uds", udsSystem.create(lifecycleManager, *transportSystem, TASK_UDS, LOGICAL_ADDRESS), 7U);
