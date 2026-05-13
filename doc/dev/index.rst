@@ -167,6 +167,7 @@ Eclipse OpenBSW is a trademark of the Eclipse Foundation.
     modules/common
     modules/posix
     modules/s32k1xx
+    modules/stm32
     modules/executables
     modules/mocks
 
