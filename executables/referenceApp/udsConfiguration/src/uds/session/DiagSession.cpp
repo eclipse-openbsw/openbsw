@@ -9,6 +9,38 @@
 
 namespace uds
 {
+
+// Application-level programming session that avoids the BSW bootloader
+// behavior (which disables the UDS dispatcher on programming-session entry).
+// Uses SessionType=PROGRAMMING (0x02) for correct response byte, but index
+// 0x02 instead of ProgrammingSession's 0x04 so switchSession()'s equality
+// check against PROGRAMMING_SESSION() is false.
+class AppProgrammingSession : public DiagSession
+{
+public:
+    AppProgrammingSession() : DiagSession(PROGRAMMING, 0x02U) {}
+
+    DiagReturnCode::Type isTransitionPossible(SessionType const target) override
+    {
+        switch (target)
+        {
+            case DEFAULT:
+            case EXTENDED:
+            case PROGRAMMING:
+                return DiagReturnCode::OK;
+            default:
+                return DiagReturnCode::ISO_SUBFUNCTION_NOT_SUPPORTED;
+        }
+    }
+
+    DiagSession& getTransitionResult(SessionType target) override;
+};
+
+static AppProgrammingSession& appProgrammingSession()
+{
+    static AppProgrammingSession s;
+    return s;
+}
 ApplicationDefaultSession& DiagSession::APPLICATION_DEFAULT_SESSION()
 {
     static ApplicationDefaultSession applicationDefaultSession;
@@ -55,12 +87,9 @@ ApplicationDefaultSession::isTransitionPossible(DiagSession::SessionType const t
     {
         case DiagSession::DEFAULT:
         case DiagSession::EXTENDED:
-        {
-            return DiagReturnCode::OK;
-        }
         case DiagSession::PROGRAMMING:
         {
-            return DiagReturnCode::ISO_SUBFUNCTION_NOT_SUPPORTED_IN_ACTIVE_SESSION;
+            return DiagReturnCode::OK;
         }
         default:
         {
@@ -77,6 +106,10 @@ ApplicationDefaultSession::getTransitionResult(DiagSession::SessionType const ta
         case DiagSession::EXTENDED:
         {
             return DiagSession::APPLICATION_EXTENDED_SESSION();
+        }
+        case DiagSession::PROGRAMMING:
+        {
+            return appProgrammingSession();
         }
         default:
         {
@@ -116,7 +149,7 @@ ApplicationExtendedSession::getTransitionResult(DiagSession::SessionType const t
         }
         case DiagSession::PROGRAMMING:
         {
-            return DiagSession::PROGRAMMING_SESSION();
+            return appProgrammingSession();
         }
         default:
         {
@@ -133,6 +166,7 @@ ProgrammingSession::isTransitionPossible(DiagSession::SessionType const targetSe
     switch (targetSession)
     {
         case DiagSession::DEFAULT:
+        case DiagSession::EXTENDED:
         case DiagSession::PROGRAMMING:
         {
             return DiagReturnCode::OK;
@@ -151,6 +185,30 @@ DiagSession& ProgrammingSession::getTransitionResult(DiagSession::SessionType co
         case DiagSession::DEFAULT:
         {
             return DiagSession::APPLICATION_DEFAULT_SESSION();
+        }
+        case DiagSession::EXTENDED:
+        {
+            return DiagSession::APPLICATION_EXTENDED_SESSION();
+        }
+        default:
+        {
+            return appProgrammingSession();
+        }
+    }
+}
+
+// AppProgrammingSession transition results
+DiagSession& AppProgrammingSession::getTransitionResult(DiagSession::SessionType const targetSession)
+{
+    switch (targetSession)
+    {
+        case DiagSession::DEFAULT:
+        {
+            return DiagSession::APPLICATION_DEFAULT_SESSION();
+        }
+        case DiagSession::EXTENDED:
+        {
+            return DiagSession::APPLICATION_EXTENDED_SESSION();
         }
         default:
         {

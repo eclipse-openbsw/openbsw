@@ -33,7 +33,7 @@ namespace docan
 {
 
 DoCanSystem::AddressingFilterType::AddressEntryType DoCanSystem::_addresses[]
-    = {{0x02A, 0x0F0U, 0x0F0U, LOGICAL_ADDRESS, 0, 0}};
+    = {{0x7E0U, 0x7E8U, 0x7E8U, LOGICAL_ADDRESS, 0, 0}};
 
 DoCanSystem::DoCanSystem(
     ::transport::ITransportSystem& transportSystem,
