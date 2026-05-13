@@ -53,18 +53,13 @@ target_link_libraries(
            bsp
            configuration
            transport
+           transportConfiguration
            udsConfiguration)
 
 if (BUILD_EXECUTABLE STREQUAL "unitTest")
 
     add_subdirectory(mock)
 
-    target_include_directories(uds PUBLIC test/mock/include)
-
     target_link_libraries(uds PUBLIC udsMock)
-
-else ()
-
-    target_link_libraries(uds PUBLIC transportConfiguration)
 
 endif ()
