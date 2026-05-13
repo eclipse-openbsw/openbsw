@@ -14,19 +14,30 @@ ip_address = "192.168.0.201"
 [pty_forwarder]
 ext_link = "/tmp/pty_forwarder"
 
-[freertos.target_process]
+[refApp_freertos.target_process]
 command_line = "../../build/posix-freertos/executables/referenceApp/application/Release/app.referenceApp.elf < /tmp/pty_forwarder > /tmp/pty_forwarder"
+test_set = "testconfig/refApp_tests.toml"
 restart_if_exited = true
 kill_at_end = true
 
-[boot]
+[refApp_threadx.target_process]
+command_line = "../../build/posix-threadx/executables/referenceApp/application/Release/app.referenceApp.elf < /tmp/pty_forwarder > /tmp/pty_forwarder"
+test_set = "testconfig/refApp_tests.toml"
+restart_if_exited = true
+kill_at_end = true
+
+[refApp.boot]
 started_str = "INFO: Run level 1"
 complete_str = "DEBUG: Run level 9 done"
 max_time = 0.5
 
-[threadx.target_process]
-command_line = "../../build/posix-threadx/executables/referenceApp/application/Release/app.referenceApp.elf < /tmp/pty_forwarder > /tmp/pty_forwarder"
+[intTestApp_freertos.target_process]
+command_line = "../../build/integrationtest-posix-freertos/executables/integrationTest/application/Release/app.integrationTest.elf < /tmp/pty_forwarder > /tmp/pty_forwarder"
+test_set = "testconfig/intTestApp_tests.toml"
 restart_if_exited = true
 kill_at_end = true
 
-
+[intTestApp.boot]
+started_str = "INFO: Run level 1"
+complete_str = "DEBUG: Run level 5 done"
+max_time = 0.5

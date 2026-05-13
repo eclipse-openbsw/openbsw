@@ -18,6 +18,7 @@ from capture_serial import (
     capture_serial_by_name,
     CaptureSerial,
 )
+from pathlib import Path
 from serial_minilog import start_minilog, stop_minilog, on_line as minilog_on_line
 import functools
 from datetime import datetime
@@ -181,8 +182,8 @@ def pytest_addoption(parser):
     parser.addoption(
         "--app",
         action="store",
-        default="freertos",
-        help="Select which software (app) configuration to flash, e.g., threadx or freertos based application",
+        default="refApp_freertos",
+        help="Select which software (app) configuration to flash, e.g., intTestApp_freertos or refApp_threadx based application",
     )
 
 
@@ -264,3 +265,23 @@ def pytest_runtest_setup(item):
         context = {"target": target, "app": app}
         if eval(condition, {}, context):
             pytest.skip(f"Skipped because condition '{condition}' matched")
+
+
+def pytest_collection_modifyitems(config, items):
+    for name, target in TargetInfo.by_name.items():
+        enabled_tests, reason = TargetInfo.load_enabled_tests(target, config.option.app)
+    if enabled_tests is None:
+        for item in items:
+            if reason is not None:
+                pytest.skip(reason)
+            else:
+                pytest.skip(
+                    f"No test_list configuration is assigned to the target under the application '{config.option.app}'"
+                )
+    for item in items:
+        if item.path not in enabled_tests:
+            item.add_marker(
+                pytest.mark.skip(
+                    reason="Test not enabled under enabled_tests in test config"
+                )
+            )

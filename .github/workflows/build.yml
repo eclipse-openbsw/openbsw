@@ -8,7 +8,7 @@ jobs:
     strategy:
     #   max-parallel: 1
       matrix:
-        preset: [ "tests-posix-debug", "tests-posix-release", "tests-s32k1xx-debug", "tests-s32k1xx-release", "posix-freertos", "posix-threadx", "posix-freertos-with-tracing", "posix-rust", "s32k148-freertos-gcc", "s32k148-threadx-gcc", "s32k148-freertos-clang", "s32k148-threadx-clang", "s32k148-rust-gcc" ]
+        preset: [ "tests-posix-debug", "tests-posix-release", "tests-s32k1xx-debug", "tests-s32k1xx-release", "posix-freertos", "posix-threadx", "posix-freertos-with-tracing", "posix-rust", "s32k148-freertos-gcc", "s32k148-threadx-gcc", "s32k148-freertos-clang", "s32k148-threadx-clang", "s32k148-rust-gcc" , "integrationtest-posix-freertos", "integrationtest-posix-threadx", "integrationtest-s32k148-freertos-gcc", "integrationtest-s32k148-threadx-gcc"]
         platform: [ "arm", "linux" ]
         config: [ "Debug", "Release", "RelWithDebInfo" ]
         cxxid: ["gcc", "clang"]
@@ -79,6 +79,24 @@ jobs:
             cxxid: "gcc"
           - preset: "s32k148-threadx-clang"
             cxxid: "gcc"
+
+          - preset: "integrationtest-posix-freertos"
+            platform: "arm"
+          - preset: "integrationtest-posix-threadx"
+            platform: "arm"
+          - preset: "integrationtest-posix-freertos"
+            cxxid: "clang"
+          - preset: "integrationtest-posix-threadx"
+            cxxid: "clang"
+
+          - preset: "integrationtest-s32k148-freertos-gcc"
+            platform: "linux"
+          - preset: "integrationtest-s32k148-threadx-gcc"
+            platform: "linux"
+          - preset: "integrationtest-s32k148-freertos-gcc"
+            cxxid: "clang"
+          - preset: "integrationtest-s32k148-threadx-gcc"
+            cxxid: "clang"
 
     steps:
       - name: Checkout repository

@@ -2,7 +2,7 @@ import pytest
 from time import sleep
 
 
-@pytest.mark.skip_if("target==['posix'] and app=='threadx'")
+@pytest.mark.skip_if("target==['posix'] and 'threadx' in app")
 def test_console_stats_cpu(target_session):
     capserial = target_session.capserial()
     assert capserial.wait_for_boot_complete()
@@ -20,7 +20,7 @@ def test_console_stats_cpu(target_session):
     assert success
 
 
-@pytest.mark.skip_if("target==['posix'] and app=='threadx'")
+@pytest.mark.skip_if("target==['posix'] and 'threadx' in app")
 def test_console_cpu_health(target_session):
 
     capserial = target_session.capserial()

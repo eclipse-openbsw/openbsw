@@ -26,12 +26,15 @@ set(BUILD_TARGET_RTOS
 
 set(BUILD_EXECUTABLE
     ""
-    CACHE STRING "Which build to enable: referenceApp, unitTest")
+    CACHE STRING
+          "Which build to enable: referenceApp, unitTest, integrationTest")
 
 if (BUILD_EXECUTABLE STREQUAL "referenceApp")
     # no action for referenceApp build
 elseif (BUILD_EXECUTABLE STREQUAL "unitTest")
     add_compile_definitions(UNIT_TEST=1)
+elseif (BUILD_EXECUTABLE STREQUAL "integrationTest")
+    add_compile_definitions(INTEGRATION_TEST=1)
 endif ()
 
 # Convert target name to lower case to match directory name
@@ -39,6 +42,9 @@ string(TOLOWER "${BUILD_TARGET_PLATFORM}" OPENBSW_TARGET)
 
 if (BUILD_EXECUTABLE STREQUAL "referenceApp")
     include(executables/referenceApp/platforms/${OPENBSW_TARGET}/Options.cmake)
+elseif (BUILD_EXECUTABLE STREQUAL "integrationTest")
+    include(
+        executables/integrationTest/platforms/${OPENBSW_TARGET}/Options.cmake)
 endif ()
 
 # Configure async and Rtos libs depending on target rtos.
@@ -117,6 +123,16 @@ endif ()
 
 if (BUILD_EXECUTABLE STREQUAL "referenceApp")
     set(OPENBSW_APP_DIR "${CMAKE_CURRENT_LIST_DIR}/executables/referenceApp")
+    if (BUILD_TARGET_PLATFORM STREQUAL "S32K148EVB")
+        set(OPENBSW_PLATFORM_DIR
+            "${CMAKE_CURRENT_SOURCE_DIR}/platforms/s32k1xx")
+    else ()
+        set(OPENBSW_PLATFORM_DIR "${CMAKE_CURRENT_SOURCE_DIR}/platforms/posix")
+    endif ()
+endif ()
+
+if (BUILD_EXECUTABLE STREQUAL "integrationTest")
+    set(OPENBSW_APP_DIR "${CMAKE_CURRENT_LIST_DIR}/executables/integrationTest")
     if (BUILD_TARGET_PLATFORM STREQUAL "S32K148EVB")
         set(OPENBSW_PLATFORM_DIR
             "${CMAKE_CURRENT_SOURCE_DIR}/platforms/s32k1xx")
@@ -206,4 +222,9 @@ elseif (BUILD_EXECUTABLE STREQUAL "referenceApp")
     target_include_directories(etl BEFORE
                                INTERFACE executables/referenceApp/etl_profile)
     add_subdirectory(executables/referenceApp)
+elseif (BUILD_EXECUTABLE STREQUAL "integrationTest")
+    target_include_directories(
+        etl BEFORE INTERFACE executables/integrationTest/etl_profile)
+    add_subdirectory(executables/integrationTest)
+
 endif ()

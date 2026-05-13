@@ -48,11 +48,13 @@ Custom options:
                         Default="posix".
   --no-restart          Skip restart of target(s) before each test
   --app                 To choose the freertos based or threadx based elf file.
-                        Usage example is --app=threadx
-                        Default="freertos"
+                        Usage examples are --app=refApp_threadx or --app=intTestApp_freertos or --app=intTestApp_threadx. 
+                        Default="refApp_freertos"
 ```
 The `--target` option allows you to choose the target to run tests with.
 Each target's TOML file defines its details (see format description below).
+
+The tests are grouped based on `--app`. The folder`/testconfig` has currently two toml files, each of  which contain the list of tests applicable for each application (currently supported applications are refApp and intTestApp). 
 
 By default, each target is started before running each test and stopped at the end of each test,
 but you can override that using the `--no-restart` option so that it will
@@ -121,6 +123,9 @@ the `s32k148` board must be set up with an external hardware testing board
 which has been configured for serial communication in `target_s32k148_with_hwtester.toml`
 under `[hw_tester_serial]`.
 Tests with the fixture `hw_tester` will be only be run if `[hw_tester_serial]` is present.
+
+### Running `pytest` with `--target=s32k148 --app=intTest_freertos or threadx`
+For this option, RC filter needs to be connected in between PWM output pin and ADC input
 
 ### Fixtures in tests
 

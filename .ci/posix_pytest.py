@@ -19,8 +19,8 @@ def build_reference_app():
 
 def run_pytest():
     os.chdir("./test/pyTest")
-    subprocess.run(["pytest", "-s", "-v", "--target=posix", "--app=freertos"], check=True)
-    subprocess.run(["pytest", "-s", "-v", "--target=posix", "--app=threadx"], check=True)
+    subprocess.run(["pytest", "-s", "-v", "--target=posix", "--app=refApp_freertos"], check=True)
+    subprocess.run(["pytest", "-s", "-v", "--target=posix", "--app=refApp_threadx"], check=True)
 
 if __name__ == "__main__":
     try:
