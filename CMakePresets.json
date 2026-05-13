@@ -23,6 +23,99 @@
             }
         },
         {
+            "name": "tests-stm32-debug",
+            "displayName": "Configure for testing STM32 modules (debug)",
+            "description": "Configure for testing STM32 modules (debug)",
+            "inherits": "_config-base",
+            "binaryDir": "${sourceDir}/build/tests/stm32/Debug",
+            "cacheVariables": {
+                "CMAKE_DEFAULT_BUILD_TYPE": "Debug",
+                "CMAKE_CONFIGURATION_TYPES": "Debug",
+                "BUILD_EXECUTABLE": "unitTest",
+                "OPENBSW_PLATFORM": "stm32"
+            }
+        },
+        {
+            "name": "nucleo-f413zh-freertos-gcc",
+            "generator": "Ninja Multi-Config",
+            "displayName": "NUCLEO-F413ZH FreeRTOS configuration (GCC)",
+            "description": "Configure for NUCLEO-F413ZH platform using ARM GCC toolchain",
+            "inherits": "_config-base",
+            "toolchainFile": "${sourceDir}/cmake/toolchains/ArmNoneEabi-gcc.cmake",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "BUILD_EXECUTABLE": "referenceApp",
+                "BUILD_TARGET_PLATFORM": "NUCLEO_F413ZH",
+                "BUILD_TARGET_RTOS": "FREERTOS",
+                "STM32_CHIP": "STM32F413ZH",
+                "CMAKE_ASM_FLAGS_RELWITHDEBINFO": "-g3",
+                "CMAKE_CONFIGURATION_TYPES": "RelWithDebInfo;Debug;Release",
+                "CMAKE_C_FLAGS_RELWITHDEBINFO": "-g3 -O2 -DNDEBUG",
+                "CMAKE_CXX_FLAGS_RELWITHDEBINFO": "-g3 -O2 -DNDEBUG",
+                "CMAKE_DEFAULT_BUILD_TYPE": "RelWithDebInfo"
+            }
+        },
+        {
+            "name": "nucleo-g474re-freertos-gcc",
+            "generator": "Ninja Multi-Config",
+            "displayName": "NUCLEO-G474RE FreeRTOS configuration (GCC)",
+            "description": "Configure for NUCLEO-G474RE platform using ARM GCC toolchain",
+            "inherits": "_config-base",
+            "toolchainFile": "${sourceDir}/cmake/toolchains/ArmNoneEabi-gcc.cmake",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "BUILD_EXECUTABLE": "referenceApp",
+                "BUILD_TARGET_PLATFORM": "NUCLEO_G474RE",
+                "BUILD_TARGET_RTOS": "FREERTOS",
+                "STM32_CHIP": "STM32G474RE",
+                "CMAKE_ASM_FLAGS_RELWITHDEBINFO": "-g3",
+                "CMAKE_CONFIGURATION_TYPES": "RelWithDebInfo;Debug;Release",
+                "CMAKE_C_FLAGS_RELWITHDEBINFO": "-g3 -O2 -DNDEBUG",
+                "CMAKE_CXX_FLAGS_RELWITHDEBINFO": "-g3 -O2 -DNDEBUG",
+                "CMAKE_DEFAULT_BUILD_TYPE": "RelWithDebInfo"
+            }
+        },
+        {
+            "name": "nucleo-f413zh-threadx-gcc",
+            "generator": "Ninja Multi-Config",
+            "displayName": "NUCLEO-F413ZH ThreadX configuration (GCC)",
+            "description": "Configure for NUCLEO-F413ZH platform with ThreadX using ARM GCC toolchain",
+            "inherits": "_config-base",
+            "toolchainFile": "${sourceDir}/cmake/toolchains/ArmNoneEabi-gcc.cmake",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "BUILD_EXECUTABLE": "referenceApp",
+                "BUILD_TARGET_PLATFORM": "NUCLEO_F413ZH",
+                "BUILD_TARGET_RTOS": "THREADX",
+                "STM32_CHIP": "STM32F413ZH",
+                "CMAKE_ASM_FLAGS_RELWITHDEBINFO": "-g3",
+                "CMAKE_CONFIGURATION_TYPES": "RelWithDebInfo;Debug;Release",
+                "CMAKE_C_FLAGS_RELWITHDEBINFO": "-g3 -O2 -DNDEBUG",
+                "CMAKE_CXX_FLAGS_RELWITHDEBINFO": "-g3 -O2 -DNDEBUG",
+                "CMAKE_DEFAULT_BUILD_TYPE": "RelWithDebInfo"
+            }
+        },
+        {
+            "name": "nucleo-g474re-threadx-gcc",
+            "generator": "Ninja Multi-Config",
+            "displayName": "NUCLEO-G474RE ThreadX configuration (GCC)",
+            "description": "Configure for NUCLEO-G474RE platform with ThreadX using ARM GCC toolchain",
+            "inherits": "_config-base",
+            "toolchainFile": "${sourceDir}/cmake/toolchains/ArmNoneEabi-gcc.cmake",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "BUILD_EXECUTABLE": "referenceApp",
+                "BUILD_TARGET_PLATFORM": "NUCLEO_G474RE",
+                "BUILD_TARGET_RTOS": "THREADX",
+                "STM32_CHIP": "STM32G474RE",
+                "CMAKE_ASM_FLAGS_RELWITHDEBINFO": "-g3",
+                "CMAKE_CONFIGURATION_TYPES": "RelWithDebInfo;Debug;Release",
+                "CMAKE_C_FLAGS_RELWITHDEBINFO": "-g3 -O2 -DNDEBUG",
+                "CMAKE_CXX_FLAGS_RELWITHDEBINFO": "-g3 -O2 -DNDEBUG",
+                "CMAKE_DEFAULT_BUILD_TYPE": "RelWithDebInfo"
+            }
+        },
+        {
             "name": "tests-posix-release",
             "displayName": "Configure for testing POSIX and generic modules (release)",
             "description": "Configure for testing POSIX and generic modules (release)",
@@ -201,6 +294,37 @@
     ],
     "buildPresets": [
         {
+            "name": "tests-stm32-debug",
+            "displayName": "Build tests of STM32 modules (debug)",
+            "description": "Build tests of STM32 modules (debug)",
+            "configurePreset": "tests-stm32-debug",
+            "configuration": "Debug"
+        },
+        {
+            "name": "nucleo-f413zh-freertos-gcc",
+            "displayName": "NUCLEO-F413ZH FreeRTOS build (GCC)",
+            "description": "Build reference application for NUCLEO-F413ZH platform with GCC",
+            "configurePreset": "nucleo-f413zh-freertos-gcc"
+        },
+        {
+            "name": "nucleo-g474re-freertos-gcc",
+            "displayName": "NUCLEO-G474RE FreeRTOS build (GCC)",
+            "description": "Build reference application for NUCLEO-G474RE platform with GCC",
+            "configurePreset": "nucleo-g474re-freertos-gcc"
+        },
+        {
+            "name": "nucleo-f413zh-threadx-gcc",
+            "displayName": "NUCLEO-F413ZH ThreadX build (GCC)",
+            "description": "Build reference application for NUCLEO-F413ZH platform with ThreadX using GCC",
+            "configurePreset": "nucleo-f413zh-threadx-gcc"
+        },
+        {
+            "name": "nucleo-g474re-threadx-gcc",
+            "displayName": "NUCLEO-G474RE ThreadX build (GCC)",
+            "description": "Build reference application for NUCLEO-G474RE platform with ThreadX using GCC",
+            "configurePreset": "nucleo-g474re-threadx-gcc"
+        },
+        {
             "name": "tests-posix-debug",
             "displayName": "Build tests of POSIX and generic modules (debug)",
             "description": "Build tests of POSIX and generic modules (debug)",
@@ -278,6 +402,13 @@
         }
     ],
     "testPresets": [
+        {
+            "name": "tests-stm32-debug",
+            "displayName": "Run tests of STM32 modules (debug)",
+            "description": "Run tests of STM32 modules (debug)",
+            "configuration": "Debug",
+            "configurePreset": "tests-stm32-debug"
+        },
         {
             "name": "tests-posix-debug",
             "displayName": "Run tests of POSIX and generic modules (debug)",
