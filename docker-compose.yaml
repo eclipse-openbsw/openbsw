@@ -39,6 +39,17 @@ services:
         target: /home/build/.bash_history
         bind:
           create_host_path: false
+      - type: bind
+        source: ${BAZEL_CACHE_DIR:-${XDG_CACHE_HOME:-${HOME}/.cache}/bazel}
+        target: /home/build/.cache/bazel
+        bind:
+          create_host_path: true
+      - type: bind
+        source: ${BAZELISK_CACHE_DIR:-${XDG_CACHE_HOME:-${HOME}/.cache}/bazelisk}
+        target: /home/build/.cache/bazelisk
+        bind:
+          create_host_path: true
+
   development-sil:
     image: openbsw-development:local
     build:
@@ -84,6 +95,17 @@ services:
         target: /lib/modules
         bind:
           create_host_path: false
+      - type: bind
+        source: ${BAZEL_CACHE_DIR:-${XDG_CACHE_HOME:-${HOME}/.cache}/bazel}
+        target: /home/build/.cache/bazel
+        bind:
+          create_host_path: true
+      - type: bind
+        source: ${BAZELISK_CACHE_DIR:-${XDG_CACHE_HOME:-${HOME}/.cache}/bazelisk}
+        target: /home/build/.cache/bazelisk
+        bind:
+          create_host_path: true
+
     devices:
       - /dev/net/tun:/dev/net/tun
     cap_add:

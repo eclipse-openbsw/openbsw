@@ -13,6 +13,9 @@ RUN echo "f659c625302f6d3fb50f040f748206f6fd6bb1fc7e398057dd2deaf1c1f5e8d1 clang
 RUN wget -O treefmt.tar.gz https://github.com/numtide/treefmt/releases/download/v2.1.0/treefmt_2.1.0_linux_amd64.tar.gz
 RUN echo "ce0863a3a9d73707eb8cb9887c7f97ad3fd4ed506ad0429a6ab67a6290905966 treefmt.tar.gz" | sha256sum -c
 
+RUN wget -O bazelisk https://github.com/bazelbuild/bazelisk/releases/download/v1.29.0/bazelisk-linux-amd64
+RUN echo "5a408715e932c0250d28bd84555f12edbf70117de42f9181691c736eacc4a992 bazelisk" | sha256sum -c
+
 FROM base-image AS arm64-downloads
 RUN apt-get update && apt-get install -y wget
 
@@ -24,6 +27,9 @@ RUN echo "0172cf1768072a398572cb1fc0bb42551d60181b3280f12c19401d94ca5162e6 clang
 
 RUN wget -O treefmt.tar.gz https://github.com/numtide/treefmt/releases/download/v2.1.0/treefmt_2.1.0_linux_arm64.tar.gz
 RUN echo "7c00ea14f69a95782063e8f86e143bede29c8a6757fea9075ffdfdb6590aa934 treefmt.tar.gz" | sha256sum -c
+
+RUN wget -O bazelisk https://github.com/bazelbuild/bazelisk/releases/download/v1.29.0/bazelisk-linux-arm64
+RUN echo "e20e8b0f4f240091b7a55bf17b9398bd4f40ee70ae0208dff95dd4c445fb4010 bazelisk" | sha256sum -c
 
 # Use TARGETARCH (docker built-in variable) to decide what external binary files to use
 ARG TARGETARCH
@@ -71,6 +77,11 @@ RUN tar -xf treefmt.tar.gz \
     && install -m 755 treefmt /usr/bin/treefmt \
     && rm LICENSE README.md treefmt treefmt.tar.gz
 
+COPY --from=external-downloads /bazelisk /bazelisk
+RUN install -m 755 bazelisk /usr/bin/bazelisk \
+    && ln -s bazelisk /usr/bin/bazel \
+    && rm bazelisk
+
 RUN gem install esr-rim
 
 
@@ -87,6 +98,7 @@ RUN --mount=type=bind,source=files/requirements.lock,target=/tmp/requirements.lo
 
 RUN useradd build
 RUN install -d /home/build --mode 0777 --owner build --group build
+RUN install -d /home/build/.cache --mode 0777 --owner build --group build
 COPY --chown=build:build --chmod=0666 files/.bashrc /home/build/.bashrc
 COPY --chown=build:build --chmod=0666 files/.bash_profile /home/build/.bash_profile
 
