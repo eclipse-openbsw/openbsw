@@ -1,0 +1,25 @@
+# Middleware framework (service-oriented communication).
+
+cc_library(
+    name = "middlewareHeaders",
+    hdrs = glob(["include/**"]),
+    includes = ["include"],
+    visibility = ["//visibility:public"],
+    deps = ["//libs/3rdparty/etl"],
+)
+
+cc_library(
+    name = "middleware",
+    srcs = [
+        "src/middleware/core/ClusterConnection.cpp",
+        "src/middleware/core/ClusterConnectionBase.cpp",
+        "src/middleware/core/DatabaseManipulator.cpp",
+        "src/middleware/core/IClusterConnectionConfigurationBase.cpp",
+        "src/middleware/core/LoggerApi.cpp",
+        "src/middleware/core/ProxyBase.cpp",
+        "src/middleware/core/SkeletonBase.cpp",
+    ],
+    tags = ["manual"],
+    visibility = ["//visibility:public"],
+    deps = [":middlewareHeaders"],
+)

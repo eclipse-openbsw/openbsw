@@ -1,0 +1,91 @@
+# Reference application platform-specific configurations.
+
+package(default_visibility = ["//visibility:public"])
+
+_POSIX_COMPAT = ["@platforms//os:linux"]
+
+# FreeRTOS core configuration (platform-specific FreeRTOSConfig overrides)
+cc_library(
+    name = "freeRtosCoreConfiguration",
+    hdrs = glob(["freeRtosCoreConfiguration/include/**"]),
+    includes = ["freeRtosCoreConfiguration/include"],
+    target_compatible_with = _POSIX_COMPAT,
+)
+
+# ThreadX core configuration
+cc_library(
+    name = "threadXCoreConfiguration",
+    hdrs = glob(["threadXCoreConfiguration/include/**"]),
+    includes = ["threadXCoreConfiguration/include"],
+    target_compatible_with = _POSIX_COMPAT,
+    deps = ["//executables/referenceApp/asyncCoreConfiguration"],
+)
+
+# BSP configuration headers
+cc_library(
+    name = "bspConfiguration",
+    hdrs = glob(["bspConfiguration/include/**"]),
+    includes = ["bspConfiguration/include"],
+    target_compatible_with = _POSIX_COMPAT,
+)
+
+# Main entry point (POSIX platform)
+# alwayslink ensures osHooks callbacks are available to the RTOS kernel.
+cc_library(
+    name = "main",
+    srcs = [
+        "main/src/lifecycle/StaticBsp.cpp",
+        "main/src/main.cpp",
+        "main/src/systems/CanSystem.cpp",
+        "main/src/systems/TapEthernetSystem.cpp",
+    ] + select({
+        "//bazel/configs:freertos": ["main/src/osHooks/freertos/osHooks.cpp"],
+        "//bazel/configs:threadx": ["main/src/osHooks/threadx/osHooks.cpp"],
+    }),
+    hdrs = glob(["main/include/**"]),
+    alwayslink = True,
+    includes = ["main/include"],
+    target_compatible_with = select({
+        "//bazel/configs:unit_test": ["//bazel/configs:referenceapp_only"],
+        "//conditions:default": _POSIX_COMPAT,
+    }),
+    deps = [
+        ":bspConfiguration",
+        ":ethConfiguration",
+        "//bazel/app_config:async_binding",
+        "//bazel/app_config:configuration",
+        "//executables/referenceApp/safety:safeSupervisor",
+        "//libs/bsw/async",
+        "//libs/bsw/lifecycle",
+        "//libs/bsw/lwipSocket",
+        "//platforms/posix/bsp:bspEepromDriver",
+        "//platforms/posix/bsp:bspUart",
+        "//platforms/posix/bsp:socketCanTransceiver",
+        "//platforms/posix/bsp:tapEthernetDriver",
+    ] + select({
+        "//bazel/configs:freertos": ["//libs/3rdparty/freeRtos"],
+        "//bazel/configs:threadx": ["//libs/3rdparty/threadx:threadX"],
+    }),
+)
+
+# Ethernet configuration
+cc_library(
+    name = "ethConfiguration",
+    hdrs = glob(["ethConfiguration/include/**"]),
+    includes = ["ethConfiguration/include"],
+    target_compatible_with = _POSIX_COMPAT,
+)
+
+# Platform-specific safety lifecycle
+cc_library(
+    name = "safeLifecycle",
+    srcs = glob(["safety/safeLifecycle/src/**/*.cpp"]),
+    hdrs = glob(["safety/safeLifecycle/include/**"]),
+    includes = ["safety/safeLifecycle/include"],
+    target_compatible_with = _POSIX_COMPAT,
+    deps = [
+        "//executables/referenceApp/safety:safeWatchdog",
+        "//libs/bsw/lifecycle",
+        "//libs/bsw/platform",
+    ],
+)

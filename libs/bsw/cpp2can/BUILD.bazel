@@ -1,0 +1,36 @@
+# CAN protocol abstraction layer.
+
+cc_library(
+    name = "cpp2can",
+    srcs = [
+        "src/can/CanLogger.cpp",
+        "src/can/canframes/CANFrame.cpp",
+        "src/can/filter/AbstractStaticBitFieldFilter.cpp",
+        "src/can/filter/BitFieldFilter.cpp",
+        "src/can/filter/IntervalFilter.cpp",
+        "src/can/transceiver/AbstractCANTransceiver.cpp",
+    ],
+    hdrs = glob(["include/**"]),
+    includes = ["include"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//libs/3rdparty/etl",
+        "//libs/bsp/bspInterrupts",
+        "//libs/bsw/bsp",
+        "//libs/bsw/common",
+        "//libs/bsw/util",
+    ],
+)
+
+# Mock target for unit testing
+cc_library(
+    name = "cpp2canMock",
+    srcs = glob(["mock/src/**/*.cpp"]),
+    hdrs = glob(["mock/include/**"]),
+    includes = ["mock/include"],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":cpp2can",
+        "//libs/3rdparty/googletest:gtest",
+    ],
+)

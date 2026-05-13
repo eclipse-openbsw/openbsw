@@ -1,0 +1,24 @@
+# Input manager - digital input abstraction.
+
+cc_library(
+    name = "bspInputManager",
+    srcs = [
+        "src/inputManager/AlternativeDigitalInput.cpp",
+        "src/inputManager/DigitalInput.cpp",
+        "src/inputManager/DigitalInputTester.cpp",
+    ],
+    hdrs = glob(["include/**"]),
+    includes = ["include"],
+    tags = ["manual"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//bazel/app_config:bsp_configuration",
+        "//libs/3rdparty/etl",
+        "//libs/bsp/bspDynamicClient",
+        "//libs/bsp/bspInterrupts",
+        "//libs/bsw/bsp",
+        "//libs/bsw/io",
+        "//libs/bsw/platform",
+        "//libs/bsw/util",
+    ],
+)

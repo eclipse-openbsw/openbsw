@@ -1,0 +1,12 @@
+# Reference Application - configuration targets and platform aliases.
+
+package(default_visibility = ["//visibility:public"])
+
+# Platform-specific BSP configuration
+alias(
+    name = "bsp_configuration",
+    actual = select({
+        "//bazel/configs:posix": "//executables/referenceApp/platforms/posix:bspConfiguration",
+        "//bazel/configs:s32k148": "//executables/referenceApp/platforms/s32k148evb:bspConfiguration",
+    }),
+)

@@ -1,0 +1,21 @@
+# Extended STL (estd) - header-only containers and utilities.
+
+cc_library(
+    name = "estd",
+    hdrs = glob(["include/**"]),
+    includes = ["include"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//libs/bsw/platform",
+        "//libs/bsw/util",
+    ],
+)
+
+# Mock target for unit testing
+cc_library(
+    name = "estdMock",
+    hdrs = glob(["mock/include/**"]),
+    includes = ["mock/include"],
+    visibility = ["//visibility:public"],
+    deps = [":estd"],
+)

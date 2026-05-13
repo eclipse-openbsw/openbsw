@@ -1,0 +1,28 @@
+# Runtime statistics and tracing.
+
+# Header-only target for dependents that just need the runtime headers
+# without pulling in async (to break cycles).
+cc_library(
+    name = "runtime_hdrs",
+    hdrs = glob(["include/**"]),
+    includes = ["include"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//libs/3rdparty/etl",
+        "//libs/bsw/bsp",
+        "//libs/bsw/util",
+    ],
+)
+
+cc_library(
+    name = "runtime",
+    srcs = ["src/runtime/StatisticsWriter.cpp"] + select({
+        "//bazel/configs:tracing_enabled": ["src/runtime/Tracer.cpp"],
+        "//conditions:default": [],
+    }),
+    visibility = ["//visibility:public"],
+    deps = [
+        ":runtime_hdrs",
+        "//libs/bsw/async",
+    ],
+)

@@ -1,0 +1,17 @@
+# Simple transport router.
+
+cc_library(
+    name = "transportRouterSimple",
+    srcs = [
+        "src/transport/TpRouterLogger.cpp",
+        "src/transport/routing/TransportRouterSimple.cpp",
+    ],
+    hdrs = glob(["include/**"]),
+    includes = ["include"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//bazel/app_config:configuration",
+        "//bazel/app_config:transport_configuration",
+        "//libs/bsw/transport",
+    ],
+)

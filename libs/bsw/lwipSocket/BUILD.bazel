@@ -1,0 +1,24 @@
+# LwIP socket abstraction layer.
+
+cc_library(
+    name = "lwipSocket",
+    srcs = [
+        "src/lwipSocket/netif/LwipNetworkInterface.cpp",
+        "src/lwipSocket/tcp/LwipServerSocket.cpp",
+        "src/lwipSocket/tcp/LwipSocket.cpp",
+        "src/lwipSocket/udp/LwipDatagramSocket.cpp",
+        "src/lwipSocket/utils/FilterFrame.cpp",
+        "src/lwipSocket/utils/TaskAssert.cpp",
+    ],
+    hdrs = glob(["include/**"]),
+    includes = ["include"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//libs/3rdparty/etl",
+        "//libs/3rdparty/lwip:lwipcore",
+        "//libs/bsw/async",
+        "//libs/bsw/common",
+        "//libs/bsw/cpp2ethernet",
+        "//libs/bsw/util",
+    ],
+)

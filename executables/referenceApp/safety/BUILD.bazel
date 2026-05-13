@@ -1,0 +1,39 @@
+# Safety components for the reference application.
+
+package(default_visibility = ["//visibility:public"])
+
+cc_library(
+    name = "safeSupervisor",
+    srcs = ["safeSupervisor/src/safeSupervisor/SafeSupervisor.cpp"],
+    hdrs = glob(["safeSupervisor/include/**"]),
+    includes = ["safeSupervisor/include"],
+    deps = [
+        "//libs/bsp/bspInterrupts",
+        "//libs/bsw/common",
+        "//libs/bsw/platform",
+        "//libs/safety/safeMonitor",
+        "//libs/safety/safeUtils",
+        "//platforms/posix/bsp:bspMcu",
+    ],
+)
+
+cc_library(
+    name = "safeWatchdog",
+    srcs = ["safeWatchdog/src/safeWatchdog/SafeWatchdog.cpp"],
+    hdrs = glob(["safeWatchdog/include/**"]),
+    includes = ["safeWatchdog/include"],
+    deps = [
+        ":safeSupervisor",
+        "//libs/bsw/platform",
+        "//libs/safety/safeUtils",
+    ],
+)
+
+# Lifecycle integration for safety (platform-specific)
+alias(
+    name = "safeLifecycle",
+    actual = select({
+        "//bazel/configs:posix": "//executables/referenceApp/platforms/posix:safeLifecycle",
+        "//bazel/configs:s32k148": "//executables/referenceApp/platforms/s32k148evb:safeLifecycle",
+    }),
+)

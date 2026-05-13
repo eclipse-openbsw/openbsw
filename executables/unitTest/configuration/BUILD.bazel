@@ -1,0 +1,20 @@
+# Unit test configuration - mock implementations.
+
+package(default_visibility = ["//visibility:public"])
+
+# Empty configuration for unit tests (matches CMake's INTERFACE library).
+cc_library(
+    name = "configuration",
+    hdrs = glob(["include/**"]),
+    includes = ["include"],
+)
+
+cc_library(
+    name = "commonImpl",
+    srcs = ["common/src/common/mock/busid/BusId.cpp"],
+    hdrs = glob(["common/include/**"]),
+    includes = ["common/include"],
+    deps = [
+        "//libs/bsw/common",
+    ],
+)

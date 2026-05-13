@@ -1,0 +1,18 @@
+# ETL platform implementation for POSIX.
+
+cc_library(
+    name = "etlImpl",
+    srcs = [
+        "src/clocks.cpp",
+        "src/print.cpp",
+    ],
+    hdrs = glob(["include/**"]),
+    includes = ["include"],
+    target_compatible_with = ["@platforms//os:linux"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//libs/3rdparty/etl",
+        "//libs/bsw/bsp",
+        "//libs/bsw/util",
+    ],
+)

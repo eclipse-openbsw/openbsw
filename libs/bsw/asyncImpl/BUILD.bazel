@@ -1,0 +1,24 @@
+# Async implementation interfaces - header-only.
+
+cc_library(
+    name = "asyncImpl",
+    hdrs = glob(["include/**"]),
+    includes = ["include"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//libs/3rdparty/etl",
+        "//libs/bsw/platform",
+    ],
+)
+
+# Mock target for unit testing
+cc_library(
+    name = "asyncImplMock",
+    hdrs = glob(["mock/include/**"]),
+    includes = ["mock/include"],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":asyncImpl",
+        "//libs/3rdparty/googletest:gtest",
+    ],
+)

@@ -1,0 +1,18 @@
+# UDS configuration for the reference application.
+
+package(default_visibility = ["//visibility:public"])
+
+cc_library(
+    name = "udsConfiguration",
+    hdrs = glob(["include/**"]),
+    includes = ["include"],
+)
+
+cc_library(
+    name = "udsConfigurationImpl",
+    srcs = ["src/uds/session/DiagSession.cpp"],
+    deps = [
+        ":udsConfiguration",
+        "//libs/bsw/uds",
+    ],
+)

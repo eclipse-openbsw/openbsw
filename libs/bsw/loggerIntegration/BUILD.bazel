@@ -1,0 +1,18 @@
+# Logger integration - platform-specific logger composition.
+
+cc_library(
+    name = "loggerIntegration",
+    srcs = [
+        "src/logger/LoggerComposition.cpp",
+        "src/logger/LoggerTime.cpp",
+    ],
+    hdrs = glob(["include/**"]),
+    includes = ["include"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//bazel/app_config:etl_impl",
+        "//libs/3rdparty/etl",
+        "//libs/bsp/bspInterrupts",
+        "//libs/bsw/logger",
+    ],
+)

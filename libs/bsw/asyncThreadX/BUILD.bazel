@@ -1,0 +1,72 @@
+# Async ThreadX implementation.
+
+# Header-only target: provides ThreadXAdapter.h etc. without pulling in asyncThreadXImpl.
+# NOTE: Does NOT depend on //libs/bsw/async to avoid cycle. Consumers must ensure async is in the dep graph.
+cc_library(
+    name = "asyncThreadX_hdrs",
+    hdrs = glob([
+        "include/**",
+        "threadXConfiguration/**",
+    ]),
+    includes = [
+        "include",
+        "threadXConfiguration",
+    ],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//libs/3rdparty/etl",
+        "//libs/3rdparty/threadx:threadX",
+        "//libs/bsw/bsp",
+        "//libs/bsw/platform",
+        "//libs/bsw/timer",
+    ],
+)
+
+cc_library(
+    name = "asyncThreadX",
+    hdrs = glob(["include/**"]),
+    includes = [
+        "include",
+        "threadXConfiguration",
+    ],
+    tags = ["manual"],
+    visibility = ["//visibility:public"],
+    deps = [":asyncThreadXImpl"],
+)
+
+cc_library(
+    name = "asyncThreadXImpl",
+    srcs = [
+        "src/async/Async.cpp",
+        "src/async/FutureSupport.cpp",
+        "src/async/Hook.cpp",
+        "src/async/Types.cpp",
+    ],
+    hdrs = glob([
+        "include/**",
+        "threadXConfiguration/**",
+    ]),
+    alwayslink = True,
+    includes = [
+        "include",
+        "threadXConfiguration",
+    ],
+    tags = ["manual"],
+    target_compatible_with = select({
+        "//bazel/configs:unit_test": ["//bazel/configs:referenceapp_only"],
+        "//conditions:default": [],
+    }),
+    visibility = ["//visibility:public"],
+    deps = [
+        "//bazel/app_config:async_binding",
+        "//bazel/app_config:async_core_configuration",
+        "//libs/3rdparty/etl",
+        "//libs/3rdparty/threadx:threadX",
+        "//libs/bsp/bspInterrupts",
+        "//libs/bsw/asyncImpl",
+        "//libs/bsw/bsp",
+        "//libs/bsw/common",
+        "//libs/bsw/platform",
+        "//libs/bsw/timer",
+    ],
+)

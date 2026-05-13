@@ -1,0 +1,21 @@
+# Interrupt controller abstraction - header-only interface.
+
+cc_library(
+    name = "bspInterrupts",
+    hdrs = glob(["include/**"]),
+    includes = ["include"],
+    visibility = ["//visibility:public"],
+    deps = ["//bazel/app_config:bsp_interrupts_impl"],
+)
+
+# Mock target for unit testing
+cc_library(
+    name = "bspInterruptsMock",
+    hdrs = glob(["mock/include/**"]),
+    includes = ["mock/include"],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":bspInterrupts",
+        "//libs/3rdparty/googletest:gtest",
+    ],
+)

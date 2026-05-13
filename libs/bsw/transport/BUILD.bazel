@@ -1,0 +1,32 @@
+# Transport layer abstraction.
+
+cc_library(
+    name = "transport",
+    srcs = [
+        "src/AbstractTransportLayer.cpp",
+        "src/LogicalAddress.cpp",
+        "src/TransportLogger.cpp",
+        "src/TransportMessage.cpp",
+    ],
+    hdrs = glob(["include/**"]),
+    includes = ["include"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//libs/3rdparty/etl",
+        "//libs/bsw/async",
+        "//libs/bsw/common",
+        "//libs/bsw/util",
+    ],
+)
+
+# Mock target for unit testing
+cc_library(
+    name = "transportMock",
+    hdrs = glob(["mock/include/**"]),
+    includes = ["mock/include"],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":transport",
+        "//libs/3rdparty/googletest:gtest",
+    ],
+)

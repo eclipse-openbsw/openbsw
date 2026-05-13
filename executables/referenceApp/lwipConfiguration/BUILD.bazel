@@ -1,0 +1,14 @@
+# lwIP configuration for the reference application.
+
+cc_library(
+    name = "lwipConfiguration",
+    srcs = ["src/rng.cpp"],
+    hdrs = glob(["include/**"]),
+    includes = ["include"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//libs/3rdparty/etl",
+        "//libs/bsw/platform",
+        "//platforms/posix/lwipSysArch",
+    ],
+)

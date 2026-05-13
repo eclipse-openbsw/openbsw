@@ -1,0 +1,34 @@
+# Lifecycle management framework.
+
+cc_library(
+    name = "lifecycle",
+    srcs = [
+        "src/lifecycle/AsyncLifecycleComponent.cpp",
+        "src/lifecycle/LifecycleComponent.cpp",
+        "src/lifecycle/LifecycleLogger.cpp",
+        "src/lifecycle/LifecycleManager.cpp",
+        "src/lifecycle/LifecycleManagerForwarder.cpp",
+        "src/lifecycle/SimpleLifecycleComponent.cpp",
+        "src/lifecycle/SingleContextLifecycleComponent.cpp",
+    ],
+    hdrs = glob(["include/**"]),
+    includes = ["include"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//libs/3rdparty/etl",
+        "//libs/bsw/async",
+        "//libs/bsw/util",
+    ],
+)
+
+# Mock target for unit testing
+cc_library(
+    name = "lifecycleMock",
+    hdrs = glob(["mock/include/**"]),
+    includes = ["mock/include"],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":lifecycle",
+        "//libs/3rdparty/googletest:gtest",
+    ],
+)

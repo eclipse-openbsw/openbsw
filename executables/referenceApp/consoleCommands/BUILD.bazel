@@ -1,0 +1,33 @@
+# Console commands for the reference application.
+# SafetyCommand.cpp requires PLATFORM_SUPPORT_IO (only s32k1xx platforms have bspIo).
+
+cc_library(
+    name = "consoleCommands",
+    srcs = [
+        "src/can/console/CanCommand.cpp",
+        "src/lifecycle/console/LifecycleControlCommand.cpp",
+        "src/lifecycle/console/StatisticsCommand.cpp",
+    ] + select({
+        "//bazel/configs:s32k148": ["src/safety/console/SafetyCommand.cpp"],
+        "//conditions:default": [],
+    }),
+    hdrs = glob(["include/**"]),
+    includes = ["include"],
+    target_compatible_with = select({
+        "//bazel/configs:unit_test": ["//bazel/configs:referenceapp_only"],
+        "//conditions:default": [],
+    }),
+    visibility = ["//visibility:public"],
+    deps = [
+        "//bazel/app_config:async_binding",
+        "//bazel/app_config:async_core_configuration",
+        "//bazel/app_config:configuration",
+        "//libs/bsw/cpp2can",
+        "//libs/bsw/lifecycle",
+        "//libs/bsw/runtime",
+        "//libs/safety/safeUtils",
+    ] + select({
+        "//bazel/configs:s32k148": ["//platforms/s32k1xx/bsp:bspIo"],
+        "//conditions:default": [],
+    }),
+)
