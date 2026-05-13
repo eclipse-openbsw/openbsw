@@ -93,6 +93,11 @@ if (BUILD_RUST)
         set(Rust_CARGO_TARGET
             "thumbv7em-none-eabihf"
             CACHE STRING "Rust target triple")
+    elseif (BUILD_TARGET_PLATFORM STREQUAL "NUCLEO_F413ZH"
+            OR BUILD_TARGET_PLATFORM STREQUAL "NUCLEO_G474RE")
+        set(Rust_CARGO_TARGET
+            "thumbv7em-none-eabihf"
+            CACHE STRING "Rust target triple")
     endif ()
 
     add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/libs/3rdparty/corrosion)
@@ -120,6 +125,10 @@ if (BUILD_EXECUTABLE STREQUAL "referenceApp")
     if (BUILD_TARGET_PLATFORM STREQUAL "S32K148EVB")
         set(OPENBSW_PLATFORM_DIR
             "${CMAKE_CURRENT_SOURCE_DIR}/platforms/s32k1xx")
+    elseif (BUILD_TARGET_PLATFORM STREQUAL "NUCLEO_F413ZH"
+            OR BUILD_TARGET_PLATFORM STREQUAL "NUCLEO_G474RE")
+        set(OPENBSW_PLATFORM_DIR
+            "${CMAKE_CURRENT_SOURCE_DIR}/platforms/stm32")
     else ()
         set(OPENBSW_PLATFORM_DIR "${CMAKE_CURRENT_SOURCE_DIR}/platforms/posix")
     endif ()
@@ -185,6 +194,13 @@ if (BUILD_EXECUTABLE STREQUAL "unitTest")
 
         add_subdirectory(platforms/posix/bsp/bspEepromDriver/test)
         add_subdirectory(platforms/posix/bsp/socketCanTransceiver/test)
+
+    elseif (OPENBSW_PLATFORM STREQUAL "stm32")
+
+        add_subdirectory(platforms/stm32/unitTest EXCLUDE_FROM_ALL)
+
+        add_subdirectory(platforms/stm32/bsp/bxCanTransceiver/test)
+        add_subdirectory(platforms/stm32/bsp/bspUart/test)
 
     elseif (OPENBSW_PLATFORM STREQUAL "s32k1xx")
 
