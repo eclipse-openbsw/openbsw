@@ -1,0 +1,4 @@
+var structmiddleware_1_1core_1_1ClusterConnectionTypeSelector_3_01T_00_01typename_01etl_1_1enable__ia9cd0c30ca3830b320da601d350d48bc =
+[
+    [ "type", "dd/d24/structmiddleware_1_1core_1_1ClusterConnectionTypeSelector_3_01T_00_01typename_01etl_1_1enable__ia9cd0c30ca3830b320da601d350d48bc.html#ae7de5d8365e9225ba72cfb3835972912", null ]
+];

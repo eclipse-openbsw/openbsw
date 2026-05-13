@@ -1,0 +1,76 @@
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    {% block breadcrumbs %}
+      <li><a href="{{ pathto(master_doc) }}" class="icon icon-home"></a> &raquo;</li>
+        {% for doc in parents %}
+          <li><a href="{{ doc.link|e }}">{{ doc.title }}</a> &raquo;</li>
+        {% endfor %}
+        <li>{{ title }}</li>
+    {% endblock %}
+
+    {% block breadcrumbs_aside %}
+
+      <li class="wy-breadcrumbs-aside">
+
+        <!-- DOCUMENT STATUS -->
+
+        {% if document_status_default is defined %}
+            {% set document_status_key = 'created' %}
+
+            {% if meta is defined and meta is not none and 'document_status' in meta %}
+                {% set document_status_key = meta.get('document_status').split('\n')[0] %}
+            {% else %}
+                {% set document_status_key = document_status_default %}
+            {% endif %}
+
+            {% set document_status_key = document_status_key.lower() %}
+
+            {% if document_status_key == 'raw' %}
+                {% set document_status_key = 'created' %}
+            {% elif document_status_key == 'valid' %}
+                {% set document_status_key = 'released' %}
+            {% endif %}
+
+            {% set document_status_value = document_status_key.title() %}
+            {% set document_status_key = document_status_key.replace(' ', '') %}
+
+            {% if document_status_key not in ['created', 'draft', 'verified', 'released'] %}
+                {% set document_status_key = 'created' %}
+                {% set document_status_value = 'Invalid document status: ' + document_status_value %}
+            {% endif %}
+
+            <span class={{ '\"header-label document-status-' + document_status_key + '\"' }}>
+              {{ document_status_value }}</span>
+        {% endif %}
+
+        <!-- DATA CLASSIFICATION -->
+
+        {% if data_classification_default is defined and data_classification_default is not none %}
+            {% set data_classification_key = 'restricted' %}
+
+            {% if meta is defined and meta is not none and 'data_classification' in meta %}
+                {% set data_classification_key = meta.get('data_classification').split('\n')[0] %}
+            {% else %}
+                {% set data_classification_key = data_classification_default %}
+            {% endif %}
+
+            {% set data_classification_value = data_classification_key.title() %}
+            {% set data_classification_key = data_classification_key.lower().replace(' ', '') %}
+
+            {% if data_classification_key not in ['confidential', 'highlyconfidential', 'unrestricted', 'restricted'] %}
+                {% set data_classification_key = 'restricted' %}
+                {% set data_classification_value = 'Invalid data classification: ' + data_classification_value %}
+            {% endif %}
+
+            <span class={{ '\"header-label data-classification-' + data_classification_key + '\"' }}>
+                {{ data_classification_value }}</span>
+        {% endif %}
+
+      </li>
+
+    {% endblock %}
+  </ul>
+
+  <hr/>
+</div>
