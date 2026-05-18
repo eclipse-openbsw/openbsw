@@ -86,15 +86,13 @@ public:
      * \param end pointer to the end of the transceiver container range
      * \param proxy reference to the proxy to subscribe
      * \param instanceId the service instance ID for the subscription
-     * \param maxServiceId the maximum service ID in the database
      * \return HRESULT indicating success or failure of the subscription
      */
     static HRESULT subscribe(
         middleware::core::meta::TransceiverContainer* const start,
         middleware::core::meta::TransceiverContainer* const end,
         ProxyBase& proxy,
-        uint16_t instanceId,
-        uint16_t maxServiceId);
+        uint16_t instanceId);
 
     /**
      * Subscribe a skeleton to the transceiver database.
@@ -105,15 +103,13 @@ public:
      * \param end pointer to the end of the transceiver container range
      * \param skeleton reference to the skeleton to subscribe
      * \param instanceId the service instance ID for the subscription
-     * \param maxServiceId the maximum service ID in the database
      * \return HRESULT indicating success or failure of the subscription
      */
     static HRESULT subscribe(
         middleware::core::meta::TransceiverContainer* const start,
         middleware::core::meta::TransceiverContainer* const end,
         SkeletonBase& skeleton,
-        uint16_t instanceId,
-        uint16_t maxServiceId);
+        uint16_t instanceId);
 
     /**
      * Unsubscribe a transceiver from the database.

@@ -84,11 +84,7 @@ TEST_F(DbManipulatorTest, TestSubscribeNewProxy)
 
     // ACT
     const HRESULT res = DbManipulator::subscribe(
-        _proxyTransceivers.begin(),
-        _proxyTransceivers.end(),
-        proxy,
-        instanceId,
-        etl::numeric_limits<uint16_t>::max());
+        _proxyTransceivers.begin(), _proxyTransceivers.end(), proxy, instanceId);
 
     // ASSERT
     EXPECT_EQ(res, HRESULT::Ok);
@@ -103,30 +99,11 @@ TEST_F(DbManipulatorTest, TestSubscribeNewSkeleton)
 
     // ACT
     const HRESULT res = DbManipulator::subscribe(
-        _skeletonTransceivers.begin(),
-        _skeletonTransceivers.end(),
-        skeleton,
-        instanceId,
-        etl::numeric_limits<uint16_t>::max());
+        _skeletonTransceivers.begin(), _skeletonTransceivers.end(), skeleton, instanceId);
 
     // ASSERT
     EXPECT_EQ(res, HRESULT::Ok);
     EXPECT_EQ(skeleton.getInstanceId(), instanceId);
-}
-
-TEST_F(DbManipulatorTest, TestSubscribeProxyWithOutOfRangeServiceId)
-{
-    // ARRANGE
-    uint16_t const instanceId = 0x01;
-    Proxy proxy(0x40, instanceId, 0x01);
-
-    // ACT
-    const HRESULT res = DbManipulator::subscribe(
-        _proxyTransceivers.begin(), _proxyTransceivers.end(), proxy, instanceId, 0);
-
-    // ASSERT
-    EXPECT_EQ(res, HRESULT::ServiceIdOutOfRange);
-    EXPECT_EQ(proxy.getInstanceId(), ::middleware::core::INVALID_INSTANCE_ID);
 }
 
 TEST_F(DbManipulatorTest, TestSubscribeProxyWithUnknownServiceId)
@@ -137,30 +114,11 @@ TEST_F(DbManipulatorTest, TestSubscribeProxyWithUnknownServiceId)
 
     // ACT
     const HRESULT res = DbManipulator::subscribe(
-        _proxyTransceivers.begin(),
-        _proxyTransceivers.end(),
-        proxy,
-        instanceId,
-        etl::numeric_limits<uint16_t>::max());
+        _proxyTransceivers.begin(), _proxyTransceivers.end(), proxy, instanceId);
 
     // ASSERT
     EXPECT_EQ(res, HRESULT::ServiceNotFound);
     EXPECT_EQ(proxy.getInstanceId(), ::middleware::core::INVALID_INSTANCE_ID);
-}
-
-TEST_F(DbManipulatorTest, TestSubscribeSkeletonWithOutOfRangeServiceId)
-{
-    // ARRANGE
-    uint16_t const instanceId = 0x01;
-    Skeleton skeleton(0x40, instanceId);
-
-    // ACT
-    const HRESULT res = DbManipulator::subscribe(
-        _skeletonTransceivers.begin(), _skeletonTransceivers.end(), skeleton, instanceId, 0);
-
-    // ASSERT
-    EXPECT_EQ(res, HRESULT::ServiceIdOutOfRange);
-    EXPECT_EQ(skeleton.getInstanceId(), ::middleware::core::INVALID_INSTANCE_ID);
 }
 
 TEST_F(DbManipulatorTest, TestSubscribeSkeletonWithUnknownServiceId)
@@ -171,11 +129,7 @@ TEST_F(DbManipulatorTest, TestSubscribeSkeletonWithUnknownServiceId)
 
     // ACT
     const HRESULT res = DbManipulator::subscribe(
-        _skeletonTransceivers.begin(),
-        _skeletonTransceivers.end(),
-        skeleton,
-        instanceId,
-        etl::numeric_limits<uint16_t>::max());
+        _skeletonTransceivers.begin(), _skeletonTransceivers.end(), skeleton, instanceId);
 
     // ASSERT
     EXPECT_EQ(res, HRESULT::ServiceNotFound);
@@ -190,11 +144,7 @@ TEST_F(DbManipulatorTest, TestSubscribeProxyWithTransceiverAlreadyRegistered)
 
     // ACT
     const HRESULT resProxy = DbManipulator::subscribe(
-        _proxyTransceivers.begin(),
-        _proxyTransceivers.end(),
-        proxy,
-        instanceId,
-        etl::numeric_limits<uint16_t>::max());
+        _proxyTransceivers.begin(), _proxyTransceivers.end(), proxy, instanceId);
 
     // ASSERT
     EXPECT_EQ(resProxy, HRESULT::Ok);
@@ -209,11 +159,7 @@ TEST_F(DbManipulatorTest, TestSubscribeSkeletonWithTransceiverAlreadyRegistered)
 
     // ACT
     const HRESULT resSkeleton = DbManipulator::subscribe(
-        _skeletonTransceivers.begin(),
-        _skeletonTransceivers.end(),
-        skeleton,
-        instanceId,
-        etl::numeric_limits<uint16_t>::max());
+        _skeletonTransceivers.begin(), _skeletonTransceivers.end(), skeleton, instanceId);
 
     // ASSERT
     EXPECT_EQ(resSkeleton, HRESULT::InstanceAlreadyRegistered);
@@ -229,17 +175,9 @@ TEST_F(DbManipulatorTest, TestProxySubscribeWithFullContainer)
 
     // ACT
     const HRESULT resProxy1 = DbManipulator::subscribe(
-        _proxyTransceivers.begin(),
-        _proxyTransceivers.end(),
-        proxy1,
-        instanceId,
-        etl::numeric_limits<uint16_t>::max());
+        _proxyTransceivers.begin(), _proxyTransceivers.end(), proxy1, instanceId);
     const HRESULT resProxy2 = DbManipulator::subscribe(
-        _proxyTransceivers.begin(),
-        _proxyTransceivers.end(),
-        proxy2,
-        instanceId,
-        etl::numeric_limits<uint16_t>::max());
+        _proxyTransceivers.begin(), _proxyTransceivers.end(), proxy2, instanceId);
 
     // ASSERT
     EXPECT_EQ(resProxy1, HRESULT::Ok);
@@ -254,11 +192,7 @@ TEST_F(DbManipulatorTest, TestSkeletonSubscribeWithFullContainer)
 
     // ACT
     const HRESULT resSkeleton = DbManipulator::subscribe(
-        _skeletonTransceivers.begin(),
-        _skeletonTransceivers.end(),
-        skeleton,
-        instanceId,
-        etl::numeric_limits<uint16_t>::max());
+        _skeletonTransceivers.begin(), _skeletonTransceivers.end(), skeleton, instanceId);
 
     // ASSERT
     EXPECT_EQ(resSkeleton, HRESULT::TransceiverInitializationFailed);
