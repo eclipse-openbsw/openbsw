@@ -1,8 +1,7 @@
 // Copyright 2024 Accenture.
 // Copyright 2025 BMW AG
 
-#include <bsp/UartParams.h>
-#include <bsp/uart/UartConfig.h>
+#include <bsp/UartPrivate.h>
 #include <etl/error_handler.h>
 
 namespace bsp

@@ -1,6 +1,6 @@
 // Copyright 2024 Accenture.
 
-#include "bsp/uart/UartConfig.h"
+#include "bsp/Uart.h"
 #include "charInputOutput/charIoSerial.h"
 #include "platform/estdint.h"
 

@@ -1,7 +1,4 @@
-#include "bsp/Uart.h"
-
-#include <io/Io.h>
-#include <mcu/mcu.h>
+#pragma once
 
 namespace bsp
 {

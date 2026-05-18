@@ -54,7 +54,6 @@ public:
      */
     static Uart& getInstance(Id id);
 
-    struct UartConfig;
     Uart(Uart::Id id);
 
 private:
@@ -66,6 +65,7 @@ private:
     bool writeByte(uint8_t data);
 
 private:
+    struct UartConfig;
     UartConfig const& _uartConfig;
     static UartConfig const _uartConfigs[];
 };
@@ -73,3 +73,5 @@ private:
 BSP_UART_CONCEPT_CHECKER(Uart)
 
 } // namespace bsp
+
+#include "bsp/uart/UartConfig.h"

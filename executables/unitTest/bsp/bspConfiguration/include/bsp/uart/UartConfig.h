@@ -2,10 +2,6 @@
 
 #pragma once
 
-#include "bsp/Uart.h"
-#include <cstddef>
-#include <cstdint>
-
 namespace bsp
 {
 
