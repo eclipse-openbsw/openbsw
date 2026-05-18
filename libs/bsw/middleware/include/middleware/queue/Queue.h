@@ -73,7 +73,7 @@ public:
     {
         ETL_ASSERT(
             initialValue != nullptr,
-            "Pointer to mutex variable needs to be different than nullptr.");
+            ETL_ERROR_GENERIC("Pointer to mutex variable needs to be different than nullptr."));
         _mutex  = initialValue;
         *_mutex = 0U;
     }

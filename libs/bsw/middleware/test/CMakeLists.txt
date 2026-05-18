@@ -1,7 +1,6 @@
 add_executable(
     middlewareTest
     src/concurrency/ConcurrencyDefinitions.cpp
-    src/core/AllocatorBaseTest.cpp
     src/core/ClusterConfigurationTest.cpp
     src/core/ConnectionTest.cpp
     src/core/DbManipulatorTest.cpp
@@ -15,6 +14,7 @@ add_executable(
     src/core/SkeletonAttributeTest.cpp
     src/core/SkeletonBaseTest.cpp
     src/logger/mock/LoggerMock.cpp
+    src/memory/AllocatorBaseTest.cpp
     src/memory/mock/AllocatorMock.cpp
     src/memory/AggregatorTest.cpp
     src/memory/PoolsTest.cpp
