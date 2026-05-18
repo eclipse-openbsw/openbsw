@@ -328,9 +328,7 @@ TEST_F(ConfigurationBaseTest, ProxyTargetRoutedFailed)
 {
     Message prxyTrgtMsg = createInvalidResponseMessage(123, 321);
 
-    // expectation: Fall through, returning HRESULT::Ok if adressing params can't be matched to a
-    // registered proxy
-    EXPECT_EQ(::middleware::core::HRESULT::Ok, _clusterConf.dispatchMessage(prxyTrgtMsg));
+    EXPECT_EQ(::middleware::core::HRESULT::RoutingError, _clusterConf.dispatchMessage(prxyTrgtMsg));
 }
 
 TEST_F(ConfigurationBaseTest, ProxySkeletonWrongEndpoint)
