@@ -24,27 +24,55 @@ DbManipulator::subscribe(
     middleware::core::meta::TransceiverContainer* const start,
     middleware::core::meta::TransceiverContainer* const end,
     ProxyBase& proxy,
-    uint16_t const instanceId,
-    uint16_t const maxServiceId)
+    uint16_t const instanceId)
 {
-    auto res = HRESULT::ServiceNotFound;
-    if (proxy.getServiceId() > maxServiceId)
+    auto res             = HRESULT::ServiceNotFound;
+    auto const serviceId = proxy.getServiceId();
+    auto* containerIt    = getTransceiversByServiceId(start, end, serviceId);
+    if (containerIt != end)
     {
-        res = HRESULT::ServiceIdOutOfRange;
-    }
-    else
-    {
-        auto const serviceId = proxy.getServiceId();
-        auto* containerIt    = getTransceiversByServiceId(start, end, serviceId);
-        if (containerIt != end)
+        auto& container = *containerIt->_container;
+        auto* it        = DbManipulator::findTransceiver(&proxy, container);
+        if (it != container.end())
         {
-            auto& container = *containerIt->_container;
-            auto* it        = DbManipulator::findTransceiver(&proxy, container);
-            if (it != container.end())
+            // order is important - vector must be reordered with new instance id!
+            container.erase(it);
+            // update instance id
+            proxy.setInstanceId(instanceId);
+            static_cast<void>(container.emplace_back(&proxy));
+            etl::sort(
+                container.begin(), container.end(), TransceiverContainer::TransceiverComparator());
+            res = HRESULT::Ok;
+        }
+        else
+        {
+            if (container.full())
             {
-                // order is important - vector must be reordered with new instance id!
-                container.erase(it);
-                // update instance id
+                res = HRESULT::TransceiverInitializationFailed;
+            }
+            else
+            {
+                auto const range = getTransceiversByServiceIdAndServiceInstanceId(
+                    start, end, serviceId, instanceId);
+                bool addressNotFound = true;
+                while (addressNotFound)
+                {
+                    auto const* it = etl::find_if(
+                        range.first,
+                        range.second,
+                        [&containerIt](TransceiverBase const* const itrx)
+                        { return (itrx->getAddressId() == containerIt->_actualAddress); });
+                    if (it == range.second)
+                    {
+                        addressNotFound = false;
+                        proxy.setAddressId(containerIt->_actualAddress);
+                        containerIt->_actualAddress++;
+                    }
+                    else
+                    {
+                        ++containerIt->_actualAddress;
+                    }
+                }
                 proxy.setInstanceId(instanceId);
                 static_cast<void>(container.emplace_back(&proxy));
                 etl::sort(
@@ -52,44 +80,6 @@ DbManipulator::subscribe(
                     container.end(),
                     TransceiverContainer::TransceiverComparator());
                 res = HRESULT::Ok;
-            }
-            else
-            {
-                if (container.full())
-                {
-                    res = HRESULT::TransceiverInitializationFailed;
-                }
-                else
-                {
-                    auto const range = getTransceiversByServiceIdAndServiceInstanceId(
-                        start, end, serviceId, instanceId);
-                    bool addressNotFound = true;
-                    while (addressNotFound)
-                    {
-                        auto const* it = etl::find_if(
-                            range.first,
-                            range.second,
-                            [&containerIt](TransceiverBase const* const itrx)
-                            { return (itrx->getAddressId() == containerIt->_actualAddress); });
-                        if (it == range.second)
-                        {
-                            addressNotFound = false;
-                            proxy.setAddressId(containerIt->_actualAddress);
-                            containerIt->_actualAddress++;
-                        }
-                        else
-                        {
-                            ++containerIt->_actualAddress;
-                        }
-                    }
-                    proxy.setInstanceId(instanceId);
-                    static_cast<void>(container.emplace_back(&proxy));
-                    etl::sort(
-                        container.begin(),
-                        container.end(),
-                        TransceiverContainer::TransceiverComparator());
-                    res = HRESULT::Ok;
-                }
             }
         }
     }
@@ -133,58 +123,48 @@ DbManipulator::subscribe(
     middleware::core::meta::TransceiverContainer* const start,
     middleware::core::meta::TransceiverContainer* const end,
     SkeletonBase& skeleton,
-    uint16_t const instanceId,
-    uint16_t const maxServiceId)
+    uint16_t const instanceId)
 {
-    auto res = HRESULT::ServiceNotFound;
-    if (skeleton.getServiceId() > maxServiceId)
+    auto res             = HRESULT::ServiceNotFound;
+    auto const serviceId = skeleton.getServiceId();
+    auto* containerIt    = getTransceiversByServiceId(start, end, serviceId);
+    if (containerIt != end)
     {
-        res = HRESULT::ServiceIdOutOfRange;
-    }
-    else
-    {
-        auto const serviceId = skeleton.getServiceId();
-        auto* containerIt    = getTransceiversByServiceId(start, end, serviceId);
-        if (containerIt != end)
+        auto& container = *containerIt->_container;
+        auto* it        = DbManipulator::findTransceiver(&skeleton, container);
+        if (it != container.end())
         {
-            auto& container = *containerIt->_container;
-            auto* it        = DbManipulator::findTransceiver(&skeleton, container);
-            if (it != container.end())
+            // order is important - vector must be reordered with new instance id!
+            container.erase(it);
+            // update instance id
+            skeleton.setInstanceId(instanceId);
+            static_cast<void>(container.emplace_back(&skeleton));
+            etl::sort(
+                container.begin(), container.end(), TransceiverContainer::TransceiverComparator());
+            res = HRESULT::InstanceAlreadyRegistered;
+        }
+        else
+        {
+            // if another skeleton with this serviceInstandId is registered fail
+            if (isSkeletonWithServiceInstanceIdRegistered(container, instanceId))
             {
-                // order is important - vector must be reordered with new instance id!
-                container.erase(it);
-                // update instance id
-                skeleton.setInstanceId(instanceId);
-                static_cast<void>(container.emplace_back(&skeleton));
-                etl::sort(
-                    container.begin(),
-                    container.end(),
-                    TransceiverContainer::TransceiverComparator());
-                res = HRESULT::InstanceAlreadyRegistered;
+                res = HRESULT::SkeletonWithThisServiceIdAlreadyRegistered;
             }
             else
             {
-                // if another skeleton with this serviceInstandId is registered fail
-                if (isSkeletonWithServiceInstanceIdRegistered(container, instanceId))
+                if (container.full())
                 {
-                    res = HRESULT::SkeletonWithThisServiceIdAlreadyRegistered;
+                    res = HRESULT::TransceiverInitializationFailed;
                 }
                 else
                 {
-                    if (container.full())
-                    {
-                        res = HRESULT::TransceiverInitializationFailed;
-                    }
-                    else
-                    {
-                        skeleton.setInstanceId(instanceId);
-                        static_cast<void>(container.emplace_back(&skeleton));
-                        etl::sort(
-                            container.begin(),
-                            container.end(),
-                            TransceiverContainer::TransceiverComparator());
-                        res = HRESULT::Ok;
-                    }
+                    skeleton.setInstanceId(instanceId);
+                    static_cast<void>(container.emplace_back(&skeleton));
+                    etl::sort(
+                        container.begin(),
+                        container.end(),
+                        TransceiverContainer::TransceiverComparator());
+                    res = HRESULT::Ok;
                 }
             }
         }
