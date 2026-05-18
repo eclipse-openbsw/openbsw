@@ -5,15 +5,15 @@
 #include <etl/array.h>
 #include <gmock/gmock.h>
 
-#include "middleware/core/AllocatorBase.h"
+#include "middleware/memory/AllocatorBase.h"
 
 namespace middleware::memory::test
 {
 
-class AllocatorMock : public core::AllocatorBase<AllocatorMock>
+class AllocatorMock : public memory::AllocatorBase<AllocatorMock>
 {
 public:
-    using Base                          = core::AllocatorBase<AllocatorMock>;
+    using Base                          = memory::AllocatorBase<AllocatorMock>;
     static constexpr size_t MAX_STORAGE = 4096U;
 
     AllocatorMock(AllocatorMock const& other)            = delete;
