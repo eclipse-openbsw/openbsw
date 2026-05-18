@@ -1,7 +1,7 @@
 #include "AllocatorMock.h"
 
-#include "middleware/core/AllocatorBase.h"
 #include "middleware/core/types.h"
+#include "middleware/memory/AllocatorBase.h"
 #include "middleware/memory/AllocatorSelector.h"
 
 namespace middleware::memory

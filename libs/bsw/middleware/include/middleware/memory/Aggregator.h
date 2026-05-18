@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "middleware/core/AllocatorBase.h"
+#include "middleware/memory/AllocatorBase.h"
 #include "middleware/memory/Pool.h"
 #include "middleware/memory/impl/PoolIndexBySize.h"
 #include "middleware/memory/impl/TupleSelectionSort.h"
@@ -21,7 +21,7 @@ namespace middleware::memory
  * \tparam T Types of memory pools to aggregate.
  */
 template<typename... T>
-class Aggregator : public core::AllocatorBase<Aggregator<T...>>
+class Aggregator : public memory::AllocatorBase<Aggregator<T...>>
 {
     using TupleType = typename ::middleware::impl::
         TupleSelectionSort<::middleware::impl::Ascending, etl::tuple<T...>>::type;
@@ -133,7 +133,7 @@ class Aggregator : public core::AllocatorBase<Aggregator<T...>>
     Aggregator& operator=(Aggregator&&)      = delete;
 
 public:
-    using Base = core::AllocatorBase<Aggregator<T...>>;
+    using Base = memory::AllocatorBase<Aggregator<T...>>;
 
     /** Returns the number of pools aggregated. */
     static constexpr size_t size() { return TUPLE_SIZE; }

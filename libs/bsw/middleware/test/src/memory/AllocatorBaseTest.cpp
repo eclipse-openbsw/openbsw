@@ -3,18 +3,18 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
-#include "middleware/core/AllocatorBase.h"
+#include "middleware/memory/AllocatorBase.h"
 
-namespace middleware::core::test
+namespace middleware::memory::test
 {
 
 class TestAllocatorBase : public ::testing::Test
 {
 public:
-    class AllocatorImpl : public core::AllocatorBase<AllocatorImpl>
+    class AllocatorImpl : public memory::AllocatorBase<AllocatorImpl>
     {
     public:
-        AllocatorImpl() : core::AllocatorBase<AllocatorImpl>(_mutex) {}
+        AllocatorImpl() : memory::AllocatorBase<AllocatorImpl>(_mutex) {}
 
         MOCK_METHOD(uint8_t*, allocateImpl, (uint32_t const));
         MOCK_METHOD(void, deallocateImpl, (void*));
@@ -136,4 +136,4 @@ TEST_F(TestAllocatorBase, TestFailedDeallocateShared)
     EXPECT_EQ(_impl.getStats().unknownPtrsError, 1U);
 }
 
-} // namespace middleware::core::test
+} // namespace middleware::memory::test
