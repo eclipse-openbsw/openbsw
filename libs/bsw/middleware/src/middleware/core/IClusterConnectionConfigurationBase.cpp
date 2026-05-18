@@ -76,6 +76,10 @@ IClusterConnectionConfigurationBase::dispatchMessageToProxy(
         {
             result = transceiver->onNewMessageReceived(msg);
         }
+        else
+        {
+            result = HRESULT::RoutingError;
+        }
     }
     else
     {
