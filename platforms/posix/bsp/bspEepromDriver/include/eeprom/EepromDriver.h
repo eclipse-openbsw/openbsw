@@ -27,8 +27,7 @@ public:
     bsp::BspReturnCode read(uint32_t address, uint8_t* buffer, uint32_t length) override;
 
 private:
-    static constexpr size_t EEPROM_SIZE = 4096; // 4KB
-    std::string const eepromFilePath    = EEPROM_FILEPATH;
+    std::string const eepromFilePath = EEPROM_FILEPATH;
     int eepromFd;
 };
 } // namespace eeprom
