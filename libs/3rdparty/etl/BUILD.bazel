@@ -1,12 +1,24 @@
+# *******************************************************************************
+# Copyright (c) 2026 Accenture
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
 
 alias(
     name = "etl_profile_default",
-    actual = select({
-        "//bazel/config/executable_config:reference_app": "//executables/referenceApp/etl_profile",
-        "//bazel/config/executable_config:unit_test": "//executables/unitTest/etl_profile",
-        "//conditions:default": "//executables/referenceApp/etl_profile",
-    }),
+    actual = select(
+        {
+            "//bazel/config/executable_config:reference_app": "//executables/referenceApp/etl_profile",
+            "//bazel/config/executable_config:unit_test": "//executables/unitTest/etl_profile",
+        },
+        no_match_error = "Please set executable_config to either 'reference_app' or 'unit_test'",
+    ),
 )
 
 label_flag(
@@ -18,7 +30,7 @@ label_flag(
 cc_library(
     name = "etl",
     hdrs = glob(["include/**/*.h"]),
-    strip_include_prefix = "include",
+    includes = ["include"],
     visibility = ["//visibility:public"],
     deps = [
         ":etl_profile",
