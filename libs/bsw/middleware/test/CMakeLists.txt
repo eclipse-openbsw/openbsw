@@ -24,6 +24,9 @@ add_executable(
 
 target_include_directories(middlewareTest PUBLIC src)
 
+target_include_directories(middleware
+                           PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+
 target_link_libraries(middlewareTest PRIVATE middleware gmock gtest_main)
 
 gtest_discover_tests(middlewareTest PROPERTIES LABELS "middlewareTest")
