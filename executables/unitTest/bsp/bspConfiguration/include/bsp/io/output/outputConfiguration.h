@@ -8,7 +8,6 @@
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
 
-
 #if (BSPOUTPUTCONFIG == 1)
 
 Output::OutputConfig const Output::sfOutputConfigurations[][Output::NUMBER_OF_INTERNAL_OUTPUTS] = {

@@ -8,7 +8,6 @@
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
 
-
 #include <etl/print.h>
 #include <util/stream/BspStubs.h>
 

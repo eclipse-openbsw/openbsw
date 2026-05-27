@@ -8,7 +8,6 @@
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
 
-
 #include <bsp/timer/SystemTimer.h>
 #include <etl/chrono.h>
 
