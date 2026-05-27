@@ -139,8 +139,6 @@ void ProxyBase::checkCrossThreadError(uint32_t const initId) const
         auto const currentTaskId = ::middleware::os::getProcessId();
         if (initId != currentTaskId)
         {
-            ::middleware::concurrency::suspendAllInterrupts();
-
             logger::logCrossThreadViolation(
                 logger::LogLevel::Critical,
                 logger::Error::ProxyCrossThreadViolation,

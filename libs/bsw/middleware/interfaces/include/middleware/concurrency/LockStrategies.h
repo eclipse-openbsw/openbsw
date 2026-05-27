@@ -10,11 +10,6 @@
 namespace middleware::concurrency
 {
 
-/**
- * \brief Suspends all interrupts for the current core
- */
-extern void suspendAllInterrupts();
-
 using ScopedCoreLock = ::middleware::concurrency::integration::ScopedCoreLock;
 using ScopedECULock  = ::middleware::concurrency::integration::ScopedECULock;
 

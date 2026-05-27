@@ -1,6 +1,5 @@
 add_executable(
     middlewareTest
-    src/concurrency/ConcurrencyDefinitions.cpp
     src/core/ClusterConfigurationTest.cpp
     src/core/ConnectionTest.cpp
     src/core/DbManipulatorTest.cpp
