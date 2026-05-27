@@ -22,21 +22,12 @@ excludes = [
   "*.gif",
   "*.gitignore",
   "*.html",
-  "*.ini",
   "*.josh",
   "*.json",
-  "*.md",
   "*.png",
-  "*.puml",
-  "*.py",
   "*.rb",
-  "*.rst",
   "*.s",
-  "*.sh",
   "*.spec",
-  "*.toml",
-  "*.yaml",
-  "*.yml",
   "LICENSE",
   "admin/cmake/CodeCoverage.cmake",
   "docker/**",
@@ -70,4 +61,21 @@ includes = [
   "REPO.bazel",
   "WORKSPACE",
   "WORKSPACE.bazel",
+]
+
+[formatter.copyright]
+command = "python3"
+options = [
+  "tools/cr_checker/cr_checker.py",
+  "-t", "tools/cr_checker/templates.ini",
+  "-c", "tools/cr_checker/config.json",
+  "--exclusion-file", "tools/cr_checker/exclusions.txt",
+  "--fix",
+]
+includes = [
+  "*.c", "*.cc", "*.cpp", "*.h", "*.hh", "*.hpp",
+  "*.cmake", "**/CMakeLists.txt",
+  "*.py", "*.sh",
+  "*.toml", "*.yml", "*.yaml", "*.ini",
+  "*.rst", "*.md", "*.puml",
 ]
