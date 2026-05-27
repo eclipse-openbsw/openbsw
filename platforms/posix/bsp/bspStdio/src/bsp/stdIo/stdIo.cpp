@@ -23,8 +23,8 @@ extern "C" int32_t getByteFromStdin()
     static Uart& uart = Uart::getInstance(Uart::Id::TERMINAL);
     uint8_t data_byte = 0;
     etl::span<uint8_t> data(&data_byte, 1U);
-    uart.read(data);
-    if (data.size() == 0)
+    size_t const bytes_read = uart.read(data);
+    if (bytes_read == 0)
     {
         return -1;
     }

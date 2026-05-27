@@ -29,12 +29,15 @@ size_t Uart::write(::etl::span<uint8_t const> const data)
 
 size_t Uart::read(::etl::span<uint8_t> data)
 {
-    size_t bytes_read = 0;
     if (_initialized)
     {
-        bytes_read = ::read(_std_in_fd, data.data(), data.size());
+        ssize_t const result = ::read(_std_in_fd, data.data(), data.size());
+        if (result > 0)
+        {
+            return static_cast<size_t>(result);
+        }
     }
-    return bytes_read;
+    return 0U;
 }
 
 void Uart::init()
