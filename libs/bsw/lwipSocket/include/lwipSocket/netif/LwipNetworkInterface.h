@@ -10,11 +10,13 @@
 
 #pragma once
 
+#include "ethernet/NetworkInterface.h"
 #include "ip/NetworkInterfaceConfig.h"
 
 #include <etl/functional.h>
 #include <etl/optional.h>
 #include <etl/span.h>
+#include <shed/move_op.h>
 
 extern "C"
 {
@@ -23,18 +25,6 @@ extern "C"
 
 namespace lwipnetif
 {
-enum class State
-{
-    Uninitialised,
-    Initialised,
-    Started
-};
-
-struct NetifState
-{
-    State state = State::Uninitialised;
-};
-
 #if LWIP_IPV4 && LWIP_IPV6
 enum
 {
@@ -52,13 +42,44 @@ bool initNetifIp4(
     void* state);
 
 bool onStatusChangedIp4(
-    ::lwipnetif::State state, netif& netif, ::ip::NetworkInterfaceConfig& config);
+    ::ethernet::NetifState state, netif& netif, ::ip::NetworkInterfaceConfig& config);
 #endif
 
-void start(netif& ni, ::ip::Ip4Config const& config);
-void stop(netif& ni, ::lwipnetif::NetifState& state, ::ip::Ip4Config& config);
+::shed::move_op startNetif(::ethernet::NetifState& state, netif& ni, ::ip::Ip4Config const& config);
+::shed::move_op stopNetif(netif& ni, ::ethernet::NetifState& state, ::ip::Ip4Config& config);
+::shed::move_op downNetif(netif& ni);
 
 void onLinkStatusChanged(bool const isLinkUp, netif& ni);
+
+template<::ethernet::LinkStatus ExpectedLinkStatus, typename ConfigRegistry, typename BusId>
+::shed::move_op checkNetif(
+    ConfigRegistry& netifConfigRegistry,
+    ::ethernet::LinkStatus const& linkStatus,
+    netif& ni,
+    BusId const& busId,
+    ::ip::NetworkInterfaceConfig& config)
+{
+    if (linkStatus != ExpectedLinkStatus)
+    {
+        return ::shed::move_op::SKIP;
+    }
+
+    if constexpr (ExpectedLinkStatus == ::ethernet::LinkStatus::Up)
+    {
+        onLinkStatusChanged(true, ni);
+        netif_set_up(&ni);
+    }
+    else
+    {
+        onLinkStatusChanged(false, ni);
+        netif_set_down(&ni);
+    }
+    if (onStatusChangedIp4(::ethernet::NetifState::Started, ni, config))
+    {
+        netifConfigRegistry.configChangedSignal(busId, config);
+    }
+    return ::shed::move_op::MOVE;
+}
 
 #if LWIP_IPV6
 void createIp6Address();

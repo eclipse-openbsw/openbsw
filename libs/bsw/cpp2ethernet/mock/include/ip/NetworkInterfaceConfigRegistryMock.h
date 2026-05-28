@@ -16,10 +16,20 @@
 
 namespace ip
 {
-struct NetworkInterfaceConfigRegistryMock : public ::ip::declare::NetworkInterfaceConfigRegistry<2>
+struct NetworkInterfaceConfigRegistryMock : public ::ip::NetworkInterfaceConfigRegistry
 {
-    NetworkInterfaceConfigRegistryMock() : ::ip::declare::NetworkInterfaceConfigRegistry<2>({}, {})
-    {}
+    using Signal = ::etl::signal<void(uint8_t, ::ip::NetworkInterfaceConfig const&), 4>;
+    Signal configChangedSignal;
+
+    bool connect(ConfigChangedSlotType const& slot) override
+    {
+        return configChangedSignal.connect(slot);
+    }
+
+    void disconnect(ConfigChangedSlotType const& slot) override
+    {
+        configChangedSignal.disconnect(slot);
+    }
 
     MOCK_METHOD(::ip::NetworkInterfaceConfig, getConfig, (uint8_t), (const, override));
 };

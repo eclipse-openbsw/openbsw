@@ -133,7 +133,7 @@ bool initNetifWithStaticIp6Address(
 }
 #endif
 
-void start(netif& ni, ::ip::Ip4Config const& config)
+::shed::move_op startNetif(::ethernet::NetifState& state, netif& ni, ::ip::Ip4Config const& config)
 {
     if (config.useDhcp)
     {
@@ -160,13 +160,15 @@ void start(netif& ni, ::ip::Ip4Config const& config)
         dhcp6_start(&_netif, &lwiputils::LwipDhcpVendorOptionProvider::dhcp6OptionsReceived);
     }
 #endif
+    state = ::ethernet::NetifState::Started;
+    return ::shed::move_op::MOVE;
 }
 
-void stop(netif& ni, ::lwipnetif::NetifState& state, ::ip::Ip4Config& config)
+::shed::move_op stopNetif(netif& ni, ::ethernet::NetifState& state, ::ip::Ip4Config& config)
 {
-    if (state.state != State::Started)
+    if (state != ::ethernet::NetifState::Started)
     {
-        return;
+        return ::shed::move_op::MOVE;
     }
 
 #if LWIP_DHCP == 1
@@ -186,8 +188,15 @@ void stop(netif& ni, ::lwipnetif::NetifState& state, ::ip::Ip4Config& config)
 #endif
 
     netif_set_down(&ni);
-    netif_remove(&ni);
-    state.state = State::Uninitialised;
+    state = ::ethernet::NetifState::Uninitialised;
+    return ::shed::move_op::MOVE;
+}
+
+::shed::move_op downNetif(netif& ni)
+{
+    onLinkStatusChanged(false, ni);
+    netif_set_down(&ni);
+    return ::shed::move_op::MOVE;
 }
 
 #if LWIP_IPV6
@@ -207,10 +216,10 @@ void createIp6Address()
 #endif
 
 bool onStatusChangedIp4(
-    ::lwipnetif::State const state, netif& netif, ::ip::NetworkInterfaceConfig& config)
+    ::ethernet::NetifState const state, netif& netif, ::ip::NetworkInterfaceConfig& config)
 {
     ::ip::NetworkInterfaceConfig value;
-    if (state == ::lwipnetif::State::Started)
+    if (state == ::ethernet::NetifState::Started)
     {
         bool const isLinkUp = (1U == netif_is_link_up(&netif));
         if (isLinkUp && IP_IS_V4(&netif.ip_addr) && !ip4_addr_isany(ip_2_ip4(&netif.ip_addr)))

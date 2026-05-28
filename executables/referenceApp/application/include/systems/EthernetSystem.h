@@ -17,35 +17,41 @@
 #include <async/Async.h>
 #include <async/IRunnable.h>
 #include <async/util/Call.h>
+#include <ethernet/NetworkInterface.h>
 #include <etl/array.h>
 #include <lifecycle/AsyncLifecycleComponent.h>
+#include <shed/ops.h>
+#include <shed/table.h>
 #include <systems/IEthernetDriverSystem.h>
 
 namespace systems
 {
 
-template<size_t N>
-struct Netifs
+struct NetifsSchema;
+using Netifs                                              = ::shed::table<NetifsSchema>;
+static constexpr size_t NUM_NETIF_CONFIG_CHANGE_LISTENERS = 2U;
+using NetifConfigRegistry = ::ip::declare::NetworkInterfaceConfigRegistry<
+    NUM_NETIF_CONFIG_CHANGE_LISTENERS,
+    Netifs,
+    ::ethernet::NetifBusId>;
+
+struct NetifsSchema
 {
-    ::etl::array<uint8_t, N> busIds{::busid::ETH_0, ::busid::ETH_1};
-    // Mapping of netif to physical port (for link status handling).
-    ::etl::array<uint8_t, N> ports{0, 0};
-    ::etl::array<::ip::Ip4Config, N> ip4Configs;
-    ::etl::array<uint16_t, N> vlanIds{::ethX::VLAN_UNTAGGED, 160};
-    ::etl::array<::ip::NetworkInterfaceConfig, N> networkInterfaceConfigsIp4{
-        ::ip::NetworkInterfaceConfig(
-            ::ip::ip4_to_u32(::eth0::IP_ADDRESS),
-            ::ip::ip4_to_u32(::eth0::NETWORK_MASK),
-            ::ip::ip4_to_u32(::eth0::DEFAULT_GATEWAY)),
-        ::ip::NetworkInterfaceConfig(
-            ::ip::ip4_to_u32(::eth1::IP_ADDRESS),
-            ::ip::ip4_to_u32(::eth1::NETWORK_MASK),
-            ::ip::ip4_to_u32(::eth1::DEFAULT_GATEWAY)),
-    };
-    // ::etl::array<::ip::NetworkInterfaceConfig, N> configsIp6; // TODO
-    ::etl::array<::lwipnetif::NetifState, N> netifStates;
-    ::etl::array<bool, N> linkStatus{false};
-    ::etl::array<netif, N> netifs;
+    using states = ::shed::states<
+        ::ethernet::NETIF_CONFIGURED,
+        ::ethernet::NETIF_INITIALISED,
+        ::ethernet::NETIF_STARTED,
+        ::ethernet::NETIF_UP>;
+    using columns = ::shed::columns<
+        ::shed::column<::ethernet::NetifBusId>,
+        ::shed::column<::ethernet::NetifPort>,
+        ::shed::column<::ip::Ip4Config>,
+        ::shed::column<::ethernet::NetifVlanId>,
+        ::shed::column<::ip::NetworkInterfaceConfig>,
+        ::shed::column<::ethernet::NetifState>,
+        ::shed::column<::ethernet::LinkStatus>,
+        ::shed::column<netif>,
+        ::shed::shared<NetifConfigRegistry>>;
 };
 
 class EthernetSystem
@@ -65,12 +71,8 @@ public:
 
     void execute() override;
 
-    static constexpr size_t NUM_CONFIG_CHANGE_LISTENERS = 2;
-
     ::ethernet::IEthernetDriverSystem& ethernetDriverSystem;
-    Netifs<::ethX::NUM_NETIFS> netifs;
-    ::ip::declare::NetworkInterfaceConfigRegistry<NUM_CONFIG_CHANGE_LISTENERS> netifConfigRegistry{
-        netifs.busIds, netifs.networkInterfaceConfigsIp4};
+    Netifs netifs;
 
     void onNetifStatusChanged(size_t i);
 
@@ -78,6 +80,7 @@ private:
     ::async::ContextType const _context;
     ::async::TimeoutType _timeout;
     std::size_t _executeCounter;
+    ::etl::array<uint8_t, Netifs::memory_for(::ethX::NUM_NETIFS)> _netifsMem;
 };
 
 } // namespace systems

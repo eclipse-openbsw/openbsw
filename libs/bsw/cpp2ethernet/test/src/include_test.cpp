@@ -9,6 +9,7 @@
  ********************************************************************************/
 
 #include "ethernet/EthernetLogger.h"
+#include "ethernet/NetworkInterface.h"
 #include "ip/IPAddress.h"
 #include "ip/IPEndpoint.h"
 #include "ip/NetworkInterfaceConfig.h"

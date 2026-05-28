@@ -27,14 +27,14 @@ int32_t vlanForNetif(void const* const vlwipNi)
     auto const lwipNi         = static_cast<netif const*>(vlwipNi);
     auto const ethernetSystem = static_cast<::systems::EthernetSystem*>(lwipNi->state);
 
+    auto const netifSpan = ::shed::get<netif>(ethernetSystem->netifs).data();
     ETL_ASSERT(
-        lwipNi >= ethernetSystem->netifs.netifs.begin()
-            && lwipNi < ethernetSystem->netifs.netifs.end(),
+        lwipNi >= netifSpan.begin() && lwipNi < netifSpan.end(),
         ETL_ERROR_GENERIC("netif must be part of this system"));
 
-    auto const i = lwipNi - ethernetSystem->netifs.netifs.begin();
+    auto const i = lwipNi - netifSpan.begin();
 
-    auto const vlanid = ethernetSystem->netifs.vlanIds[i];
+    auto const vlanid = ::shed::get<::ethernet::NetifVlanId>(ethernetSystem->netifs)[i].value;
     if (vlanid == ::ethX::VLAN_UNTAGGED)
     {
         return -1; // Any value < 0 means no vlan tag
@@ -46,11 +46,12 @@ int32_t vlanForNetif(void const* const vlwipNi)
 static void netifStatusCallback(netif* const lwipNi)
 {
     ETL_ASSERT(lwipNi != nullptr, ETL_ERROR_GENERIC("netif must not be null"));
-    auto* const sys = reinterpret_cast<::systems::EthernetSystem*>(lwipNi->state);
+    auto* const sys      = reinterpret_cast<::systems::EthernetSystem*>(lwipNi->state);
+    auto const netifSpan = ::shed::get<netif>(sys->netifs).data();
     ETL_ASSERT(
-        lwipNi >= sys->netifs.netifs.begin() && lwipNi < sys->netifs.netifs.end(),
+        lwipNi >= netifSpan.begin() && lwipNi < netifSpan.end(),
         ETL_ERROR_GENERIC("netif must be part of this system"));
-    auto const idx = static_cast<size_t>(lwipNi - sys->netifs.netifs.begin());
+    auto const idx = static_cast<size_t>(lwipNi - netifSpan.begin());
     sys->onNetifStatusChanged(idx);
 }
 
@@ -96,76 +97,101 @@ static err_t joinMulticastGroupIpV4(
 }
 #endif
 
+static ::systems::EthernetSystem& ethernetSystemFor(::netif& lnetif)
+{
+    ETL_ASSERT(lnetif.state != nullptr, ETL_ERROR_GENERIC("netif must have an owner"));
+    return *static_cast<::systems::EthernetSystem*>(lnetif.state);
+}
+
+static ::shed::move_op initNetif(::ethernet::NetifState& state, ::netif& lnetif)
+{
+    lnetif.linkoutput = &linkoutput;
+    ::lwiputils::initNetifDriverParameters(::ethX::MAC_ADDRESS, lnetif);
+    netif_set_status_callback(&lnetif, &netifStatusCallback);
+#if LWIP_IGMP
+    netif_set_igmp_mac_filter(&lnetif, joinMulticastGroupIpV4);
+#endif
+
+    state = ::ethernet::NetifState::Initialised;
+    return ::shed::move_op::MOVE;
+}
+
+static void refreshNetifLinkStatus(
+    ::ethernet::NetifPort& port, ::ethernet::LinkStatus& linkStatus, ::netif& lnetif)
+{
+    linkStatus = ethernetSystemFor(lnetif).ethernetDriverSystem.getLinkStatus(port.value)
+                     ? ::ethernet::LinkStatus::Up
+                     : ::ethernet::LinkStatus::Down;
+}
+
 namespace systems
 {
 
 EthernetSystem::EthernetSystem(
     ::async::ContextType const context, ::ethernet::IEthernetDriverSystem& ethernetSystem)
-: ethernetDriverSystem(ethernetSystem), _context(context), _executeCounter(0)
+: ethernetDriverSystem(ethernetSystem)
+, netifs(::shed::shared<NetifConfigRegistry>(netifs))
+, _context(context)
+, _executeCounter(0)
 {
-#if LWIP_NETIF_SPECIFIC_TTL
-    for (auto& netif : netifs)
-    {
-        netif._netif.ttl = IP_DEFAULT_TTL;
-    }
-#endif
-    for (auto& netif : netifs.netifs)
-    {
-        netif.name[0] = 0;
-    }
+    netifs.init(::etl::span<uint8_t>(_netifsMem), ::ethX::NUM_NETIFS);
+
+    ::shed::insert<::ethernet::NETIF_CONFIGURED>(
+        netifs,
+        [](::ethernet::NetifBusId& busId,
+           ::ethernet::NetifVlanId& vlanId,
+           ::ip::NetworkInterfaceConfig& config)
+        {
+            busId.value  = ::busid::ETH_0;
+            vlanId.value = ::ethX::VLAN_UNTAGGED;
+            config       = ::ip::NetworkInterfaceConfig(
+                ::ip::ip4_to_u32(::eth0::IP_ADDRESS),
+                ::ip::ip4_to_u32(::eth0::NETWORK_MASK),
+                ::ip::ip4_to_u32(::eth0::DEFAULT_GATEWAY));
+        });
+
+    ::shed::insert<::ethernet::NETIF_CONFIGURED>(
+        netifs,
+        [](::ethernet::NetifBusId& busId,
+           ::ethernet::NetifVlanId& vlanId,
+           ::ip::NetworkInterfaceConfig& config)
+        {
+            busId.value  = ::busid::ETH_1;
+            vlanId.value = 160U;
+            config       = ::ip::NetworkInterfaceConfig(
+                ::ip::ip4_to_u32(::eth1::IP_ADDRESS),
+                ::ip::ip4_to_u32(::eth1::NETWORK_MASK),
+                ::ip::ip4_to_u32(::eth1::DEFAULT_GATEWAY));
+        });
+
     setTransitionContext(context);
 }
 
 void EthernetSystem::init()
 {
     lwip_init();
+    ::shed::for_each(
+        netifs,
+        [this](::netif& lnetif, ::ip::Ip4Config& ip4, ::ip::NetworkInterfaceConfig& config)
+        {
+            lnetif.state   = this;
+            lnetif.name[0] = 0;
+#if LWIP_NETIF_SPECIFIC_TTL
+            lnetif.ttl = IP_DEFAULT_TTL;
+#endif
+            ETL_ASSERT(
+                ::lwipnetif::initNetifIp4(lnetif, ip4, config, lnetif.state),
+                ETL_ERROR_GENERIC("netif_add failed"));
+        });
     transitionDone();
 }
 
 void EthernetSystem::run()
 {
-    for (size_t i = 0; i < netifs.netifStates.size(); ++i)
-    {
-        auto& state = netifs.netifStates[i].state;
-        auto& netif = netifs.netifs[i];
-
-        if (state == ::lwipnetif::State::Uninitialised)
-        {
-            if (!lwipnetif::initNetifIp4(
-                    netif, netifs.ip4Configs[i], netifs.networkInterfaceConfigsIp4[i], this))
-            {
-                continue;
-            }
-
-            netif.linkoutput = &linkoutput;
-            ::lwiputils::initNetifDriverParameters(::ethX::MAC_ADDRESS, netif);
-#if LWIP_IGMP
-            netif_set_igmp_mac_filter(&netif, joinMulticastGroupIpV4);
-#endif
-
-            state = ::lwipnetif::State::Initialised;
-        }
-
-        if (state == ::lwipnetif::State::Initialised)
-        {
-            ::lwipnetif::start(netif, netifs.ip4Configs[i]);
-            state = ::lwipnetif::State::Started;
-        }
-
-        bool phyLink         = ethernetDriverSystem.getLinkStatus(netifs.ports[i]);
-        netifs.linkStatus[i] = phyLink;
-
-        if (phyLink)
-        {
-            netif_set_link_up(&netif);
-        }
-        else
-        {
-            netif_set_link_down(&netif);
-        }
-        netif_set_status_callback(&netif, &netifStatusCallback);
-        netif_set_up(&netif);
-    }
+    ::shed::move_to<::ethernet::NETIF_INITIALISED>::from<::ethernet::NETIF_CONFIGURED>(
+        netifs, &initNetif);
+    ::shed::move_to<::ethernet::NETIF_STARTED>::from<::ethernet::NETIF_INITIALISED>(
+        netifs, &::lwipnetif::startNetif);
 
     ::async::scheduleAtFixedRate(_context, *this, _timeout, 1, ::async::TimeUnit::MILLISECONDS);
     transitionDone();
@@ -174,41 +200,51 @@ void EthernetSystem::run()
 void EthernetSystem::shutdown()
 {
     _timeout.cancel();
-    for (size_t i = 0; i < netifs.netifs.size(); ++i)
-    {
-        ::lwipnetif::stop(netifs.netifs[i], netifs.netifStates[i], netifs.ip4Configs[i]);
-    }
+    ::shed::move_to<::ethernet::NETIF_STARTED>::from<::ethernet::NETIF_UP>(
+        netifs, &::lwipnetif::downNetif);
+    ::shed::move_to<::ethernet::NETIF_CONFIGURED>::from<::ethernet::NETIF_STARTED>(
+        netifs, &::lwipnetif::stopNetif);
     transitionDone();
 }
 
 void EthernetSystem::onNetifStatusChanged(size_t const i)
 {
     if (::lwipnetif::onStatusChangedIp4(
-            netifs.netifStates[i].state, netifs.netifs[i], netifs.networkInterfaceConfigsIp4[i]))
+            ::shed::get<::ethernet::NetifState>(netifs)[i],
+            ::shed::get<netif>(netifs)[i],
+            ::shed::get<::ip::NetworkInterfaceConfig>(netifs)[i]))
     {
-        netifConfigRegistry.configChangedSignal(
-            netifs.busIds[i], netifs.networkInterfaceConfigsIp4[i]);
+        ::shed::get<NetifConfigRegistry>(netifs).value.configChangedSignal(
+            ::shed::get<::ethernet::NetifBusId>(netifs)[i],
+            ::shed::get<::ip::NetworkInterfaceConfig>(netifs)[i]);
     }
 }
 
 void EthernetSystem::execute()
 {
     // Call processPbufQueue every millisecond.
-    ::lwiputils::processPbufQueue(ethernetDriverSystem.getRx(), netifs.netifs, netifs.vlanIds);
+    ::lwiputils::processPbufQueue(
+        ethernetDriverSystem.getRx(),
+        ::shed::get<netif>(netifs).data(),
+        ::shed::get<::ethernet::NetifVlanId>(netifs).data());
 
     if (_executeCounter % 10 == 0)
     {
         // Perform link status checks every 10 ms.
-        for (size_t i = 0; i < netifs.netifStates.size(); ++i)
-        {
-            bool const link = ethernetDriverSystem.getLinkStatus(netifs.ports[i]);
-            if (link != netifs.linkStatus[i])
-            {
-                netifs.linkStatus[i] = link;
-                ::lwipnetif::onLinkStatusChanged(link, netifs.netifs[i]);
-                onNetifStatusChanged(i);
-            }
-        }
+        ::shed::for_each<::ethernet::NETIF_UP>(netifs, &refreshNetifLinkStatus);
+        ::shed::for_each<::ethernet::NETIF_STARTED>(netifs, &refreshNetifLinkStatus);
+        ::shed::move_to<::ethernet::NETIF_STARTED>::from<::ethernet::NETIF_UP>(
+            netifs,
+            &::lwipnetif::checkNetif<
+                ::ethernet::LinkStatus::Down,
+                NetifConfigRegistry,
+                ::ethernet::NetifBusId>);
+        ::shed::move_to<::ethernet::NETIF_UP>::from<::ethernet::NETIF_STARTED>(
+            netifs,
+            &::lwipnetif::checkNetif<
+                ::ethernet::LinkStatus::Up,
+                NetifConfigRegistry,
+                ::ethernet::NetifBusId>);
     }
     if (_executeCounter % 50 == 0)
     {

@@ -48,7 +48,7 @@ protected:
     DoIpVehicleAnnouncementListenerMock fVehicleAnnouncementListenerMock;
     ::ip::NetworkInterfaceConfigRegistryMock fNetworkInterfaceConfigRegistryMock;
     ::testing::StrictMock<DoIpServerVehicleAnnouncementParameterProviderMock> fParametersMock;
-    ::ip::declare::NetworkInterfaceConfigRegistry<2>::ConfigChangedSignal fConfigChangedSignal;
+    ::etl::signal<void(uint8_t, ::ip::NetworkInterfaceConfig const&), 2> fConfigChangedSignal;
     ::testing::StrictMock<SystemTimerMock> timerMock;
 };
 
