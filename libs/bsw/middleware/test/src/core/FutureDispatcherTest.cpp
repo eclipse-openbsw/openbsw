@@ -13,7 +13,7 @@
 #include "middleware/core/FutureDispatcher.h"
 #include "middleware/core/Message.h"
 #include "middleware/core/types.h"
-#include "time/mock/SystemTimerProviderMock.h"
+#include "time/stub/etl_chrono_stub.h"
 
 namespace middleware::core::test
 {
@@ -43,22 +43,18 @@ public:
 
     void SetUp() override
     {
-        time::test::setSystemTimerProviderMock(&_timerMock);
-        ON_CALL(_timerMock, getCurrentTimeInMs)
-            .WillByDefault([this] { return this->_timerCounter++; });
+        time::test::resetTestClock();
         _loggerMock.setup();
     }
 
     void TearDown() override
     {
         this->freeAll();
-        time::test::unsetSystemTimerProviderMock();
+        time::test::resetTestClock();
         _loggerMock.teardown();
     }
 
 protected:
-    uint32_t _timerCounter{};
-    testing::NiceMock<time::test::SystemTimerProviderMock> _timerMock{};
     middleware::logger::test::DslLogger _loggerMock{};
 };
 

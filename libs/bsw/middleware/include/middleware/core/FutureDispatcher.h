@@ -5,8 +5,8 @@
 #include "middleware/core/Future.h"
 #include "middleware/core/FutureDispatcherBase.h"
 #include "middleware/core/MessagePayloadBuilder.h"
+#include "middleware/core/time.h"
 #include "middleware/core/types.h"
-#include "middleware/time/SystemTimerProvider.h"
 
 #include <etl/array.h>
 #include <etl/delegate.h>
@@ -176,7 +176,7 @@ public:
         if (ret.has_value())
         {
             setCallback(etl::distance(_futuresArray.begin(), ret.value()), callback);
-            auto const now               = ::middleware::time::getCurrentTimeInMs();
+            auto const now               = Time::getCurrentTimeInMs();
             ret.value()->callerTimestamp = now;
             return ret.value()->requestId;
         }
@@ -190,7 +190,7 @@ public:
     template<uint32_t TIMEOUT = Traits::TIMEOUT_VALUE>
     typename etl::enable_if_t<(TIMEOUT > 0U)> updateTimeouts()
     {
-        auto const now = ::middleware::time::getCurrentTimeInMs();
+        auto const now = Time::getCurrentTimeInMs();
         Base::updateTimeouts(now, Traits::TIMEOUT_VALUE);
     }
 
