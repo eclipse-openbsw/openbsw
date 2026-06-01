@@ -12,5 +12,7 @@ paste.workspace = true
 # openbsw-internal crates
 openbsw_console_out.workspace = true
 
-[build-dependencies]
-cbindgen.workspace = true
+# NOTE: The C header (include/BswLogger.h) is generated from this crate's FFI
+# with cbindgen, but cbindgen is NOT a build dependency: vendoring its large
+# dependency tree would bloat the repo. The header is a checked-in artifact;
+# regenerate it with `python3 .ci/cbindgen.py` after changing the FFI surface.

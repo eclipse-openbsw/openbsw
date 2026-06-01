@@ -102,7 +102,7 @@ ENV PATH=/opt/cargo/bin:${PATH}
 # them world-accessible so the runtime UID injected via DOCKER_UID can use them.
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain 1.90.0 --profile minimal \
     && rustup target add thumbv7em-none-eabihf \
-    && cargo install cbindgen --version 0.27.0 --locked \
+    && cargo install cbindgen --version 0.29.2 --locked \
     && chmod -R a+rwX /opt/cargo /opt/rustup
 
 RUN python3 -m venv /opt/venv
