@@ -27,8 +27,8 @@
 #define ETL_MINIMAL_ERRORS
 #define ETL_USE_ASSERT_FUNCTION
 
-#define ETL_CHRONO_HIGH_RESOLUTION_CLOCK_DURATION etl::chrono::nanoseconds
+#define ETL_CHRONO_HIGH_RESOLUTION_CLOCK_DURATION etl::chrono::microseconds
 #define ETL_CHRONO_SYSTEM_CLOCK_DURATION          etl::chrono::microseconds
-#define ETL_CHRONO_STEADY_CLOCK_DURATION          etl::chrono::seconds
+#define ETL_CHRONO_STEADY_CLOCK_DURATION          etl::chrono::microseconds
 
 #endif // ETL_PROFILE_H
