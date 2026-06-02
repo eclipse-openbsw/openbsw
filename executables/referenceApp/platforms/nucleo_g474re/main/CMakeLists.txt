@@ -30,6 +30,10 @@ target_link_libraries(
 
 if (BUILD_TARGET_RTOS STREQUAL "FREERTOS")
     target_link_libraries(main PRIVATE freeRtosCm4SysTick)
+elseif (BUILD_TARGET_RTOS STREQUAL "THREADX")
+    target_sources(startUp INTERFACE src/bsp/threadx/tx_initialize_low_level.S
+                                     src/bsp/threadx/tx_execution_initialize.c)
+    target_link_libraries(main PRIVATE threadXCortexM4)
 endif ()
 
 # --whole-archive forces the linker to include ALL object files from the main
@@ -59,5 +63,9 @@ set_target_properties(
 if (BUILD_TARGET_RTOS STREQUAL "FREERTOS")
     add_library(osHooks src/osHooks/freertos/osHooks.cpp)
     target_link_libraries(osHooks PRIVATE common freeRtosCm4SysTick)
+elseif (BUILD_TARGET_RTOS STREQUAL "THREADX")
+    add_library(osHooks src/osHooks/threadx/osHooks.cpp)
+    target_link_libraries(osHooks PRIVATE common threadXCortexM4 asyncThreadX
+                                          threadXConfiguration)
 endif ()
 target_include_directories(osHooks PRIVATE include)

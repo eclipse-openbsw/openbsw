@@ -45,6 +45,7 @@ We recommend to read their licenses, as their terms may differ from the terms de
 | FreeRTOS Real Time Kernel | 10.6.2  | MIT       | ``platforms/stm32/3rdparty/freertos_cm4_sysTick/LICENSE.md``         |
 | ThreadX Kernel            | 6.4.3   | MIT       | ``libs/3rdparty/threadx/LICENSE.md``                                 |
 | ThreadX Cortex M4 Port    | 6.4.3   | MIT       | ``platforms/s32k1xx/3rdparty/threadx/LICENSE.md``                    |
+| ThreadX Cortex M4 Port    | 6.4.3   | MIT       | ``platforms/stm32/3rdparty/threadx/LICENSE.md``                      |
 | ThreadX Linux Port        | 6.4.3   | MIT       | ``platforms/posix/3rdparty/threadx/LICENSE.md``                      |
 | CMSIS                     | 6.1.0   | Apache v2 | ``libs/3rdparty/cmsis/LICENSE``                                      |
 | NXP S32K148 Headers       | 1.1a    | BSD-3     | ``platforms/s32k1xx/bsp/bspMcu/include/3rdparty/nxp/*.h``            |
