@@ -14,6 +14,17 @@ if (PLATFORM_SUPPORT_TRANSPORT)
     if (PLATFORM_SUPPORT_UDS)
         target_sources(app.referenceApp PRIVATE src/systems/UdsSystem.cpp
                                                 src/uds/ReadIdentifierPot.cpp)
+        if (PLATFORM_SUPPORT_UDS_DEMO_SERVICES)
+            target_sources(
+                app.referenceApp
+                PRIVATE src/uds/DemoClearDtc.cpp
+                        src/uds/DemoControlDtcSetting.cpp
+                        src/uds/DemoRoutine.cpp
+                        src/uds/DemoDtcManager.cpp
+                        src/uds/DemoReadDtcInfo.cpp
+                        src/uds/DemoSecurityAccess.cpp
+                        src/uds/DemoWriteVin.cpp)
+        endif ()
     endif ()
 endif ()
 

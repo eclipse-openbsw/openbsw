@@ -1,5 +1,6 @@
 /********************************************************************************
  * Copyright (c) 2024 Accenture
+ * Copyright (c) 2026 An Dao
  *
  * This program and the accompanying materials are made available under the
  * terms of the Apache License Version 2.0 which is available at
@@ -23,6 +24,19 @@
 #include <uds/jobs/ReadIdentifierFromMemory.h>
 #include <uds/jobs/WriteIdentifierToMemory.h>
 #include <uds/services/cleardiagnosticinformation/ClearDiagnosticInformation.h>
+
+#ifdef PLATFORM_SUPPORT_UDS_DEMO_SERVICES
+#include <uds/DemoClearDtc.h>
+#include <uds/DemoControlDtcSetting.h>
+#include <uds/DemoDtcManager.h>
+#include <uds/DemoReadDtcInfo.h>
+#include <uds/DemoRoutine.h>
+#include <uds/DemoSecurityAccess.h>
+#include <uds/DemoWriteVin.h>
+#include <uds/services/ecureset/ECUReset.h>
+#include <uds/services/ecureset/HardReset.h>
+#endif
+
 #include <uds/services/communicationcontrol/CommunicationControl.h>
 #include <uds/services/readdata/ReadDataByIdentifier.h>
 #include <uds/services/readdtcinformation/ReadDTCInformation.h>
@@ -104,8 +118,29 @@ private:
     ReadIdentifierFromMemory _read22Cf01;
     ReadIdentifierPot _read22Cf02;
     WriteIdentifierToMemory _write2eCf03;
+#ifdef PLATFORM_SUPPORT_UDS_DEMO_SERVICES
+    ReadIdentifierFromMemory _readF190;
+    DemoWriteVin _writeF190;
+    ReadIdentifierFromMemory _readF195;
+    ReadIdentifierFromMemory _readF18C;
+    ReadIdentifierFromMemory _readF193;
+    ReadIdentifierFromMemory _readF18A;
+    ReadIdentifierFromMemory _readF180;
+#endif
     TesterPresent _testerPresent;
     ReadDTCInformation _readDTCInformation;
+#ifdef PLATFORM_SUPPORT_UDS_DEMO_SERVICES
+    ECUReset _ecuReset;
+    HardReset _hardReset;
+    DemoSecurityAccess _securityAccess;
+    DemoDtcManager _dtcManager;
+    DemoClearDtc _clearDtc;
+    DemoReadDtcInfo _readDtcInfo;
+    DemoControlDtcSetting _controlDtcSetting;
+    DemoRoutine _routineFF00;
+    DemoRoutine _routineFF01;
+    DemoRoutine _routineFF02;
+#endif
 
     ::async::ContextType _context;
     ::async::TimeoutType _timeout;

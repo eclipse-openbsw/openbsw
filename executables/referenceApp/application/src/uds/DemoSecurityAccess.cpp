@@ -1,0 +1,139 @@
+/********************************************************************************
+ * Copyright (c) 2026 An Dao
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Apache License Version 2.0 which is available at
+ * https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ ********************************************************************************/
+
+#include "uds/DemoSecurityAccess.h"
+
+#include "uds/UdsConstants.h"
+#include "uds/connection/IncomingDiagConnection.h"
+#include "uds/session/DiagSession.h"
+
+namespace uds
+{
+
+static uint8_t const SF_REQUEST_SEED = 0x01U;
+static uint8_t const SF_SEND_KEY     = 0x02U;
+
+DemoSecurityAccess::DemoSecurityAccess()
+: Service(ServiceId::SECURITY_ACCESS, DiagSession::ALL_SESSIONS())
+, _seed(0x12345678U)
+, _seedIssued(false)
+, _unlocked(false)
+, _failedAttempts(0U)
+, _lockedUntilReset(false)
+{}
+
+uint32_t DemoSecurityAccess::nextSeed()
+{
+    _seed = (_seed * LCG_A + LCG_C) | 0x00000001U;
+    return _seed;
+}
+
+DiagReturnCode::Type DemoSecurityAccess::process(
+    IncomingDiagConnection& connection, uint8_t const* const request, uint16_t const requestLength)
+{
+    if (requestLength < 1U)
+    {
+        return DiagReturnCode::ISO_INVALID_FORMAT;
+    }
+
+    uint8_t const subFunction = request[0];
+
+    if (subFunction == SF_REQUEST_SEED)
+    {
+        return handleRequestSeed(connection);
+    }
+    else if (subFunction == SF_SEND_KEY)
+    {
+        return handleSendKey(connection, request, requestLength);
+    }
+
+    return DiagReturnCode::ISO_SUBFUNCTION_NOT_SUPPORTED;
+}
+
+DiagReturnCode::Type DemoSecurityAccess::handleRequestSeed(IncomingDiagConnection& connection)
+{
+    if (_lockedUntilReset)
+    {
+        return DiagReturnCode::ISO_EXCEEDED_NUMS_OF_ATTEMPTS;
+    }
+
+    PositiveResponse& response = connection.releaseRequestGetResponse();
+    (void)response.appendUint8(SF_REQUEST_SEED); // echo subfunction
+
+    if (_unlocked)
+    {
+        // Already unlocked - return 4-byte zero seed per ISO 14229.
+        (void)response.appendUint8(0x00U);
+        (void)response.appendUint8(0x00U);
+        (void)response.appendUint8(0x00U);
+        (void)response.appendUint8(0x00U);
+    }
+    else
+    {
+        uint32_t const seed = nextSeed();
+        _seedIssued         = true;
+        // 4-byte big-endian seed.
+        (void)response.appendUint8(static_cast<uint8_t>((seed >> 24U) & 0xFFU));
+        (void)response.appendUint8(static_cast<uint8_t>((seed >> 16U) & 0xFFU));
+        (void)response.appendUint8(static_cast<uint8_t>((seed >> 8U) & 0xFFU));
+        (void)response.appendUint8(static_cast<uint8_t>(seed & 0xFFU));
+    }
+
+    (void)connection.sendPositiveResponseInternal(response.getLength(), *this);
+    return DiagReturnCode::OK;
+}
+
+DiagReturnCode::Type DemoSecurityAccess::handleSendKey(
+    IncomingDiagConnection& connection, uint8_t const* const request, uint16_t const requestLength)
+{
+    if (_lockedUntilReset)
+    {
+        return DiagReturnCode::ISO_EXCEEDED_NUMS_OF_ATTEMPTS;
+    }
+
+    if (!_seedIssued)
+    {
+        return DiagReturnCode::ISO_REQUEST_SEQUENCE_ERROR;
+    }
+
+    if (requestLength < 3U)
+    {
+        return DiagReturnCode::ISO_INVALID_FORMAT;
+    }
+
+    uint16_t const receivedKey
+        = (static_cast<uint16_t>(request[1]) << 8U) | static_cast<uint16_t>(request[2]);
+    uint16_t const expectedKey = static_cast<uint16_t>(_seed ^ XOR_SECRET);
+
+    if (receivedKey == expectedKey)
+    {
+        _unlocked       = true;
+        _seedIssued     = false;
+        _failedAttempts = 0U;
+
+        PositiveResponse& response = connection.releaseRequestGetResponse();
+        (void)response.appendUint8(SF_SEND_KEY); // echo subfunction
+        (void)connection.sendPositiveResponseInternal(response.getLength(), *this);
+        return DiagReturnCode::OK;
+    }
+
+    _failedAttempts++;
+    _seedIssued = false;
+
+    if (_failedAttempts >= MAX_FAILED_ATTEMPTS)
+    {
+        _lockedUntilReset = true;
+        return DiagReturnCode::ISO_EXCEEDED_NUMS_OF_ATTEMPTS;
+    }
+
+    return DiagReturnCode::ISO_INVALID_KEY;
+}
+
+} // namespace uds
