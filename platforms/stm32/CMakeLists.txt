@@ -20,4 +20,7 @@ if (NOT BUILD_EXECUTABLE STREQUAL "unitTest")
 
     # ETL implementation
     add_subdirectory(etlImpl)
+else ()
+    # Unit-test builds compile the transceivers against mock devices.
+    add_subdirectory(bsp)
 endif ()
