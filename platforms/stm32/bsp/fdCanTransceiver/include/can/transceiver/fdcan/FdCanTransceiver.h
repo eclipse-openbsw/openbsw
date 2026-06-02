@@ -33,6 +33,8 @@ namespace bios
 class FdCanTransceiver : public ::can::AbstractCANTransceiver
 {
 public:
+    /// Maximum number of FDCAN instances (FDCAN1/FDCAN2/FDCAN3) addressable by busId.
+    static constexpr size_t NUMBER_OF_TRANSCEIVERS = 3U;
     FdCanTransceiver(
         ::async::ContextType context, uint8_t busId, FdCanDevice::Config const& devConfig);
 
@@ -61,6 +63,7 @@ public:
     static void transmitInterrupt(uint8_t transceiverIndex);
     static void disableRxInterrupt(uint8_t transceiverIndex);
     static void enableRxInterrupt(uint8_t transceiverIndex);
+    static void pollTxCallback(size_t transceiverIndex);
 
     void cyclicTask();
     void receiveTask();
@@ -95,7 +98,7 @@ private:
 
     void notifyRegisteredSentListener(::can::CANFrame const& frame) { notifySentListeners(frame); }
 
-    static FdCanTransceiver* fpTransceivers[3];
+    static FdCanTransceiver* fpTransceivers[NUMBER_OF_TRANSCEIVERS];
 
     ::async::ContextType fContext;
     ::async::TimeoutType fCyclicTimeout;

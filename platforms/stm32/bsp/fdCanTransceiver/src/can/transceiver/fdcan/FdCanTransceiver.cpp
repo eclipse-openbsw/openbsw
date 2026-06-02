@@ -15,7 +15,8 @@
 namespace bios
 {
 
-FdCanTransceiver* FdCanTransceiver::fpTransceivers[3] = {nullptr, nullptr, nullptr};
+FdCanTransceiver* FdCanTransceiver::fpTransceivers[NUMBER_OF_TRANSCEIVERS]
+    = {nullptr, nullptr, nullptr};
 
 FdCanTransceiver::FdCanTransceiver(
     ::async::ContextType context, uint8_t busId, FdCanDevice::Config const& devConfig)
@@ -34,7 +35,7 @@ FdCanTransceiver::FdCanTransceiver(
 , fOverrunCount(0U)
 , fMuted(false)
 {
-    if (busId < 3U)
+    if (busId < NUMBER_OF_TRANSCEIVERS)
     {
         fpTransceivers[busId] = this;
     }
@@ -200,7 +201,7 @@ uint16_t FdCanTransceiver::getHwQueueTimeout() const
 
 uint8_t FdCanTransceiver::receiveInterrupt(uint8_t transceiverIndex)
 {
-    if (transceiverIndex < 3U && fpTransceivers[transceiverIndex] != nullptr)
+    if (transceiverIndex < NUMBER_OF_TRANSCEIVERS && fpTransceivers[transceiverIndex] != nullptr)
     {
         // Accept all frames at ISR level. Per-listener filtering happens in
         // notifyListeners() during receiveTask().
@@ -211,7 +212,7 @@ uint8_t FdCanTransceiver::receiveInterrupt(uint8_t transceiverIndex)
 
 void FdCanTransceiver::transmitInterrupt(uint8_t transceiverIndex)
 {
-    if (transceiverIndex < 3U && fpTransceivers[transceiverIndex] != nullptr)
+    if (transceiverIndex < NUMBER_OF_TRANSCEIVERS && fpTransceivers[transceiverIndex] != nullptr)
     {
         // Device's transmitISR() disables TCE, clears TC, and invokes the
         // callback delegate (bound to canFrameSentCallback).
@@ -264,7 +265,7 @@ void FdCanTransceiver::canFrameSentAsyncCallback()
 
 void FdCanTransceiver::disableRxInterrupt(uint8_t transceiverIndex)
 {
-    if (transceiverIndex < 3U && fpTransceivers[transceiverIndex] != nullptr)
+    if (transceiverIndex < NUMBER_OF_TRANSCEIVERS && fpTransceivers[transceiverIndex] != nullptr)
     {
         fpTransceivers[transceiverIndex]->fDevice.disableRxInterrupt();
     }
@@ -272,7 +273,7 @@ void FdCanTransceiver::disableRxInterrupt(uint8_t transceiverIndex)
 
 void FdCanTransceiver::enableRxInterrupt(uint8_t transceiverIndex)
 {
-    if (transceiverIndex < 3U && fpTransceivers[transceiverIndex] != nullptr)
+    if (transceiverIndex < NUMBER_OF_TRANSCEIVERS && fpTransceivers[transceiverIndex] != nullptr)
     {
         fpTransceivers[transceiverIndex]->fDevice.enableRxInterrupt();
     }
@@ -290,6 +291,18 @@ void FdCanTransceiver::cyclicTask()
     else if (getState() == State::MUTED && !fMuted)
     {
         setState(State::OPEN);
+    }
+}
+
+void FdCanTransceiver::pollTxCallback(size_t transceiverIndex)
+{
+    if (transceiverIndex < NUMBER_OF_TRANSCEIVERS && fpTransceivers[transceiverIndex] != nullptr)
+    {
+        FdCanTransceiver* self = fpTransceivers[transceiverIndex];
+        if (!self->fTxQueue.empty())
+        {
+            self->canFrameSentAsyncCallback();
+        }
     }
 }
 

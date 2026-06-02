@@ -9,5 +9,8 @@ else ()
     # bspMcu must be PUBLIC: the public header bsp/UartParams.h includes
     # mcu/mcu.h and uses device types, so consumers need bspMcu's include paths
     # and device-macro compile definitions.
-    target_link_libraries(bspUart PUBLIC bsp bspMcu)
+    target_link_libraries(
+        bspUart
+        PUBLIC bsp bspMcu
+        PRIVATE bspConfiguration)
 endif ()
