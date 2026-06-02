@@ -193,6 +193,7 @@ if (BUILD_EXECUTABLE STREQUAL "unitTest")
 
         add_subdirectory(platforms/stm32/bsp/bspCan/test)
         add_subdirectory(platforms/stm32/bsp/bxCanTransceiver/test)
+        add_subdirectory(platforms/stm32/bsp/fdCanTransceiver/test)
 
     elseif (OPENBSW_PLATFORM STREQUAL "s32k1xx")
 
