@@ -1,0 +1,80 @@
+/********************************************************************************
+ * Copyright (c) 2026 An Dao
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Apache License Version 2.0 which is available at
+ * https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ ********************************************************************************/
+
+#pragma once
+
+#include <can/canframes/CANFrame.h>
+#include <etl/span.h>
+#include <stdint.h>
+
+#include <gmock/gmock.h>
+
+namespace bios
+{
+
+// GMock replacement for the register-level BxCanDevice.
+class BxCanDevice
+{
+public:
+    // Mirrors the real BxCanDevice::Config, except that the CAN_TypeDef* /
+    // GPIO_TypeDef* pointer fields are substituted by uint32_t so the mock
+    // compiles on the host without any STM32 register headers.
+    struct Config
+    {
+        uint32_t baseAddress;
+        uint32_t prescaler;
+        uint32_t bs1;
+        uint32_t bs2;
+        uint32_t sjw;
+        uint32_t baudrate;
+        uint32_t rxGpioPort;
+        uint8_t rxPin;
+        uint8_t rxAf;
+        uint32_t txGpioPort;
+        uint8_t txPin;
+        uint8_t txAf;
+    };
+
+    static constexpr uint32_t RX_QUEUE_SIZE = 32U;
+
+    /// Number of bxCAN filter banks; each bank holds 2 IDs in 32-bit list mode.
+    static constexpr size_t FILTER_BANK_COUNT = 14U;
+
+    explicit BxCanDevice(Config const& config) : fConfig(config)
+    {
+        ON_CALL(*this, init()).WillByDefault(::testing::Return(true));
+        ON_CALL(*this, start()).WillByDefault(::testing::Return(true));
+    }
+
+    // Plain accessor like the real device - not mocked.
+    uint32_t getBaudrate() const { return fConfig.baudrate; }
+
+    MOCK_METHOD(bool, init, ());
+    MOCK_METHOD(bool, start, ());
+    MOCK_METHOD(void, stop, ());
+    MOCK_METHOD(bool, transmit, (::can::CANFrame const& frame));
+    MOCK_METHOD(uint8_t, receiveISR, (uint8_t const* filterBitField));
+    MOCK_METHOD(void, transmitISR, ());
+    MOCK_METHOD(bool, isBusOff, (), (const));
+    MOCK_METHOD(uint8_t, getTxErrorCounter, (), (const));
+    MOCK_METHOD(uint8_t, getRxErrorCounter, (), (const));
+    MOCK_METHOD(void, configureAcceptAllFilter, ());
+    MOCK_METHOD(void, configureFilterList, (::etl::span<uint32_t const> idList));
+    MOCK_METHOD(::can::CANFrame const&, getRxFrame, (uint8_t index), (const));
+    MOCK_METHOD(uint8_t, getRxCount, (), (const));
+    MOCK_METHOD(void, clearRxQueue, ());
+    MOCK_METHOD(void, disableRxInterrupt, ());
+    MOCK_METHOD(void, enableRxInterrupt, ());
+
+private:
+    Config const fConfig;
+};
+
+} // namespace bios
