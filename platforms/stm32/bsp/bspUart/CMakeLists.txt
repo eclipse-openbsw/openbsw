@@ -9,5 +9,5 @@ else ()
     target_link_libraries(
         bspUart
         PUBLIC bsp
-        PRIVATE bspMcu)
+        PRIVATE bspConfiguration bspMcu)
 endif ()

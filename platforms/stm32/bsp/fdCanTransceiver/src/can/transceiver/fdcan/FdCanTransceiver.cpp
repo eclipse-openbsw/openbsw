@@ -284,6 +284,18 @@ void FdCanTransceiver::cyclicTask()
     }
 }
 
+void FdCanTransceiver::pollTxCallback(uint8_t transceiverIndex)
+{
+    if (transceiverIndex < 3U && fpTransceivers[transceiverIndex] != nullptr)
+    {
+        FdCanTransceiver* self = fpTransceivers[transceiverIndex];
+        if (!self->fTxQueue.empty())
+        {
+            self->canFrameSentAsyncCallback();
+        }
+    }
+}
+
 void FdCanTransceiver::receiveTask()
 {
     uint8_t count = fDevice.getRxCount();

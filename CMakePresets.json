@@ -88,6 +88,26 @@
             }
         },
         {
+            "name": "nucleo-g474re-freertos-gcc",
+            "generator": "Ninja Multi-Config",
+            "displayName": "NUCLEO-G474RE FreeRTOS configuration (GCC)",
+            "description": "Configure for NUCLEO-G474RE platform using ARM GCC toolchain",
+            "inherits": "_config-base",
+            "toolchainFile": "${sourceDir}/cmake/toolchains/ArmNoneEabi-gcc.cmake",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "BUILD_EXECUTABLE": "referenceApp",
+                "BUILD_TARGET_PLATFORM": "NUCLEO_G474RE",
+                "BUILD_TARGET_RTOS": "FREERTOS",
+                "STM32_CHIP": "STM32G474RE",
+                "CMAKE_ASM_FLAGS_RELWITHDEBINFO": "-g3",
+                "CMAKE_CONFIGURATION_TYPES": "RelWithDebInfo;Debug;Release",
+                "CMAKE_C_FLAGS_RELWITHDEBINFO": "-g3 -O2 -DNDEBUG",
+                "CMAKE_CXX_FLAGS_RELWITHDEBINFO": "-g3 -O2 -DNDEBUG",
+                "CMAKE_DEFAULT_BUILD_TYPE": "RelWithDebInfo"
+            }
+        },
+        {
             "name": "posix-freertos",
             "displayName": "POSIX-FREERTOS compliant configuration",
             "description": "Configure for POSIX-compliant environment",
@@ -267,6 +287,12 @@
             "description": "Build tests of STM32 modules (release)",
             "configurePreset": "tests-stm32-release",
             "configuration": "Release"
+        },
+        {
+            "name": "nucleo-g474re-freertos-gcc",
+            "displayName": "NUCLEO-G474RE FreeRTOS build (GCC)",
+            "description": "Build reference application for NUCLEO-G474RE platform with GCC",
+            "configurePreset": "nucleo-g474re-freertos-gcc"
         },
         {
             "name": "posix-freertos",

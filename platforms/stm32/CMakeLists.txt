@@ -16,6 +16,11 @@ if (NOT BUILD_EXECUTABLE STREQUAL "unitTest")
         )
     endif ()
 
+    # 3rdparty modules - RTOS
+    if (BUILD_TARGET_RTOS STREQUAL "FREERTOS")
+        add_subdirectory(3rdparty/freertos_cm4_sysTick)
+    endif ()
+
     add_subdirectory(bsp)
 
     # ETL implementation

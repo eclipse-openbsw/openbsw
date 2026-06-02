@@ -42,6 +42,7 @@ We recommend to read their licenses, as their terms may differ from the terms de
 | FreeRTOS Real Time Kernel | 10.6.2  | MIT       | ``platforms/posix/3rdparty/freeRtosPosix/LICENSE.md``                |
 | FreeRTOS Real Time Kernel | 10.6.2  | MIT       | ``platforms/s32k1xx/3rdparty/freertos_cm4_sysTick/LICENSE.md``       |
 | FreeRTOS Real Time Kernel | 10.6.2  | MIT       | ``libs/3rdparty/freeRtos/LICENSE.md``                                |
+| FreeRTOS Real Time Kernel | 10.6.2  | MIT       | ``platforms/stm32/3rdparty/freertos_cm4_sysTick/LICENSE.md``         |
 | ThreadX Kernel            | 6.4.3   | MIT       | ``libs/3rdparty/threadx/LICENSE.md``                                 |
 | ThreadX Cortex M4 Port    | 6.4.3   | MIT       | ``platforms/s32k1xx/3rdparty/threadx/LICENSE.md``                    |
 | ThreadX Linux Port        | 6.4.3   | MIT       | ``platforms/posix/3rdparty/threadx/LICENSE.md``                      |

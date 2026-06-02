@@ -41,3 +41,5 @@ private:
 BSP_UART_CONCEPT_CHECKER(Uart)
 
 } // namespace bsp
+
+#include <bsp/uart/UartConfig.h>
