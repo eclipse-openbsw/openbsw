@@ -1,5 +1,6 @@
 /********************************************************************************
  * Copyright (c) 2024 Accenture
+ * Copyright (c) 2026 An Dao
  *
  * This program and the accompanying materials are made available under the
  * terms of the Apache License Version 2.0 which is available at
@@ -22,6 +23,19 @@
 #include <uds/async/AsyncDiagJob.h>
 #include <uds/jobs/ReadIdentifierFromMemory.h>
 #include <uds/jobs/WriteIdentifierToMemory.h>
+
+#ifdef PLATFORM_SUPPORT_UDS_DEMO_SERVICES
+#include <uds/Stm32ClearDtc.h>
+#include <uds/Stm32ControlDtcSetting.h>
+#include <uds/Stm32DemoRoutine.h>
+#include <uds/Stm32DtcManager.h>
+#include <uds/Stm32ReadDtcInfo.h>
+#include <uds/Stm32SecurityAccess.h>
+#include <uds/Stm32WriteVin.h>
+#include <uds/services/ecureset/ECUReset.h>
+#include <uds/services/ecureset/HardReset.h>
+#endif
+
 #include <uds/services/communicationcontrol/CommunicationControl.h>
 #include <uds/services/readdata/ReadDataByIdentifier.h>
 #include <uds/services/routinecontrol/RequestRoutineResults.h>
@@ -101,7 +115,28 @@ private:
     ReadIdentifierFromMemory _read22Cf01;
     ReadIdentifierPot _read22Cf02;
     WriteIdentifierToMemory _write2eCf03;
+#ifdef PLATFORM_SUPPORT_UDS_DEMO_SERVICES
+    ReadIdentifierFromMemory _readF190;
+    Stm32WriteVin _writeF190;
+    ReadIdentifierFromMemory _readF195;
+    ReadIdentifierFromMemory _readF18C;
+    ReadIdentifierFromMemory _readF193;
+    ReadIdentifierFromMemory _readF18A;
+    ReadIdentifierFromMemory _readF180;
+#endif
     TesterPresent _testerPresent;
+#ifdef PLATFORM_SUPPORT_UDS_DEMO_SERVICES
+    ECUReset _ecuReset;
+    HardReset _hardReset;
+    Stm32SecurityAccess _securityAccess;
+    Stm32DtcManager _dtcManager;
+    Stm32ClearDtc _clearDtc;
+    Stm32ReadDtcInfo _readDtcInfo;
+    Stm32ControlDtcSetting _controlDtcSetting;
+    Stm32DemoRoutine _routineFF00;
+    Stm32DemoRoutine _routineFF01;
+    Stm32DemoRoutine _routineFF02;
+#endif
 
     ::async::ContextType _context;
     ::async::TimeoutType _timeout;
