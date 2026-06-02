@@ -17,4 +17,7 @@ if (NOT BUILD_EXECUTABLE STREQUAL "unitTest")
     endif ()
 
     add_subdirectory(bsp)
+
+    # ETL implementation
+    add_subdirectory(etlImpl)
 endif ()
