@@ -19,4 +19,4 @@ BSP
     :maxdepth: 1
     :glob:
 
-    ../../../platforms/stm32/bsp/**/doc/index
+    ../../../platforms/stm32/**/doc/index
