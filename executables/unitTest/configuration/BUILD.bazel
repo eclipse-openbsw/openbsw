@@ -1,0 +1,28 @@
+# *******************************************************************************
+# Copyright (c) 2026 Accenture
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+
+load("@rules_cc//cc:cc_library.bzl", "cc_library")
+
+cc_library(
+    name = "common_impl",
+    srcs = ["common/src/busid/BusId.cpp"],
+    hdrs = ["common/include/busid/BusId.h"],
+    strip_include_prefix = "common/include",
+    visibility = ["//libs/bsw/common:__pkg__"],
+    deps = [
+        "//libs/bsw/common:common_headers",
+    ],
+)
+
+# Empty dummy lib for unit tests (matches CMake)
+cc_library(
+    name = "configuration",
+    visibility = ["//visibility:public"],
+)
