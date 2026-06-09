@@ -19,7 +19,7 @@ add_executable(
     src/memory/PoolsTest.cpp
     src/os/OsDefinitions.cpp
     src/queue/QueueTest.cpp
-    src/time/mock/SystemTimerProviderMock.cpp)
+    src/time/stub/etl_chrono_stub.cpp)
 
 target_include_directories(middlewareTest PUBLIC src)
 

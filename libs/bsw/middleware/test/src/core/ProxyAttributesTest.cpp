@@ -7,7 +7,7 @@
 #include "core/ReferenceApp.h"
 #include "core/mock/ProxyMock.h"
 #include "middleware/core/types.h"
-#include "time/mock/SystemTimerProviderMock.h"
+#include "time/stub/etl_chrono_stub.h"
 
 using testing::Exactly;
 using testing::Invoke;
@@ -27,9 +27,7 @@ public:
 
     void SetUp() override
     {
-        time::test::setSystemTimerProviderMock(&_timerMock);
-        ON_CALL(_timerMock, getCurrentTimeInMs)
-            .WillByDefault([this] { return this->_timerCounter++; });
+        time::test::resetTestClock();
         ON_CALL(this->proxy, isInitialized()).WillByDefault(Return(true));
         callback = AttributeUnderTest::GetterCallback::
             template create<ReferenceApp, &ReferenceApp::methodCallback>(appMock);
@@ -37,7 +35,7 @@ public:
 
     void TearDown() override
     {
-        time::test::unsetSystemTimerProviderMock();
+        time::test::resetTestClock();
         attribute.freeAll();
     }
 
@@ -77,8 +75,6 @@ public:
 protected:
     NiceMock<ProxyMock> proxy{};
     AttributeUnderTest attribute;
-    uint32_t _timerCounter{};
-    NiceMock<time::test::SystemTimerProviderMock> _timerMock{};
     NiceMock<ReferenceApp> appMock{};
     typename AttributeUnderTest::GetterCallback callback{};
 };
