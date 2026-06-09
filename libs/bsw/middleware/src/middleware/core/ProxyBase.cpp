@@ -148,7 +148,7 @@ void ProxyBase::checkCrossThreadError(uint32_t const initId) const
                 initId,
                 currentTaskId);
 
-            ETL_ASSERT_FAIL("Proxy cross thread violation detected.");
+            ETL_ASSERT_FAIL(ETL_ERROR_GENERIC("Proxy cross thread violation detected."));
         }
     }
 }

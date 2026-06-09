@@ -31,7 +31,7 @@ uint32_t getCurrentTimeInMs()
         return gSystemTimerProviderMockPtr->getCurrentTimeInMs();
     }
 
-    ETL_ASSERT_FAIL("SystemTimerProviderMock is not set.");
+    ETL_ASSERT_FAIL(ETL_ERROR_GENERIC("SystemTimerProviderMock is not set."));
 }
 
 uint32_t getCurrentTimeInUs()
@@ -41,7 +41,7 @@ uint32_t getCurrentTimeInUs()
         return gSystemTimerProviderMockPtr->getCurrentTimeInUs();
     }
 
-    ETL_ASSERT_FAIL("SystemTimerProviderMock is not set.");
+    ETL_ASSERT_FAIL(ETL_ERROR_GENERIC("SystemTimerProviderMock is not set."));
 }
 
 } // namespace middleware::time
