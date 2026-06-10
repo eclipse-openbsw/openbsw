@@ -749,7 +749,7 @@ def process_files(
                     item, encoding, effective_offset
                 )
                 if not ext_year:
-                    ext_year = "2024"
+                    ext_year = str(datetime.now().year)
                 if not ext_author:
                     ext_author = get_author_from_config(config)
                 actual_remove = remove_offset if remove_offset else old_header_len
