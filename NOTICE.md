@@ -47,6 +47,8 @@ We recommend to read their licenses, as their terms may differ from the terms de
 | ThreadX Linux Port        | 6.4.3   | MIT       | ``platforms/posix/3rdparty/threadx/LICENSE.md``                      |
 | CMSIS                     | 6.1.0   | Apache v2 | ``libs/3rdparty/cmsis/LICENSE``                                      |
 | NXP S32K148 Headers       | 1.1a    | BSD-3     | ``platforms/s32k1xx/bsp/bspMcu/include/3rdparty/nxp/*.h``            |
+| ST STM32F4 Device Headers | 2.6.11  | Apache v2 | ``platforms/stm32/bsp/bspMcu/include/3rdparty/st/LICENSE``           |
+| ST STM32G4 Device Headers | 1.2.6   | Apache v2 | ``platforms/stm32/bsp/bspMcu/include/3rdparty/st/LICENSE``           |
 | CodeCoverage              |         | BSD-3     | ``cmake/modules/CodeCoverage.cmake``                                 |
 
 ## MISRA
