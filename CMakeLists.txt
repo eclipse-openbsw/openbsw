@@ -187,6 +187,15 @@ if (BUILD_EXECUTABLE STREQUAL "unitTest")
         add_subdirectory(platforms/posix/bsp/bspEepromDriver/test)
         add_subdirectory(platforms/posix/bsp/socketCanTransceiver/test)
 
+    elseif (OPENBSW_PLATFORM STREQUAL "stm32")
+
+        add_subdirectory(platforms/stm32/unitTest EXCLUDE_FROM_ALL)
+
+        add_subdirectory(platforms/stm32/bsp/bspCan/test)
+        add_subdirectory(platforms/stm32/bsp/bxCanTransceiver/test)
+        add_subdirectory(platforms/stm32/bsp/fdCanTransceiver/test)
+        add_subdirectory(platforms/stm32/safety/safeBspMcuWatchdog/test)
+
     elseif (OPENBSW_PLATFORM STREQUAL "s32k1xx")
 
         add_subdirectory(platforms/s32k1xx/unitTest EXCLUDE_FROM_ALL)
