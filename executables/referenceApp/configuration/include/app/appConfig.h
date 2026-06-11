@@ -13,7 +13,11 @@
 #include <async/TaskInitializer.h>
 
 #ifdef PLATFORM_SUPPORT_TRANSPORT
+#ifdef PLATFORM_SUPPORT_OBD_UDS_ADDRESSING
+static constexpr uint16_t LOGICAL_ADDRESS = 0x0600U;
+#else
 static constexpr uint16_t LOGICAL_ADDRESS = 0x002AU;
+#endif
 #endif // PLATFORM_SUPPORT_TRANSPORT
 
 #define safety_task_stackSize 2048U
