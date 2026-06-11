@@ -20,6 +20,11 @@ uint64_t getSystemTimeNs()
     return duration_cast<nanoseconds>(steady_clock::now() - startTime).count();
 }
 
+uint64_t getSystemTimeUs()
+{
+    return duration_cast<microseconds>(steady_clock::now() - startTime).count();
+}
+
 uint32_t getSystemTimeUs32Bit(void)
 {
     auto elapsed = duration_cast<microseconds>(steady_clock::now() - startTime).count();
