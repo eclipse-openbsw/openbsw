@@ -31,6 +31,50 @@ label_flag(
 )
 
 cc_library(
+    name = "async_free_rtos",
+    hdrs = [
+        "include/async/EventManager.h",
+        "include/async/FreeRtosAdapter.h",
+        "include/async/FutureSupport.h",
+        "include/async/Lock.h",
+        "include/async/ModifiableLock.h",
+        "include/async/StaticContextHook.h",
+        "include/async/StaticRunnable.h",
+        "include/async/TaskContext.h",
+        "include/async/TaskInitializer.h",
+        "include/async/Types.h",
+    ],
+    strip_include_prefix = "include",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//libs/3rdparty/freeRtos:free_rtos",
+        "//libs/bsp/bspInterrupts:bsp_interrupts",
+        "//libs/bsw/asyncImpl:async_impl",
+        "//libs/bsw/bsp",
+        "//libs/bsw/common",
+        "//libs/bsw/timer",
+    ],
+)
+
+cc_library(
+    name = "async_free_rtos_impl",
+    srcs = [
+        "src/async/Async.cpp",
+        "src/async/FutureSupport.cpp",
+        "src/async/Hook.cpp",
+        "src/async/Types.cpp",
+    ],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":async_free_rtos",
+        "//executables/referenceApp/asyncBinding:async_binding",
+        "//executables/referenceApp/asyncCoreConfiguration:async_core_configuration",
+        "//libs/3rdparty/etl",
+        "//libs/bsw/util",
+    ],
+)
+
+cc_library(
     name = "freertos_configuration",
     hdrs = [
         "freeRtosConfiguration/FreeRTOSConfig.h",

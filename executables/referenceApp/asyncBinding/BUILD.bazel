@@ -1,0 +1,42 @@
+# *******************************************************************************
+# Copyright (c) 2026 Accenture
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+
+load("@rules_cc//cc:cc_library.bzl", "cc_library")
+
+cc_library(
+    name = "async_binding_headers",
+    hdrs = ["include/async/AsyncBinding.h"],
+    strip_include_prefix = "include",
+    visibility = ["//visibility:public"],
+    deps = ["//libs/bsw/runtime"],
+)
+
+cc_library(
+    name = "async_binding_freertos",
+    defines = ["SUPPORT_FREERTOS"],
+    visibility = ["//visibility:public"],
+    deps = [":async_binding_headers"],
+)
+
+cc_library(
+    name = "async_binding_threadx",
+    defines = ["SUPPORT_THREADX"],
+    visibility = ["//visibility:public"],
+    deps = [":async_binding_headers"],
+)
+
+alias(
+    name = "async_binding",
+    actual = select({
+        "//bazel/config/rtos:support_freertos": ":async_binding_freertos",
+        "//bazel/config/rtos:support_threadx": ":async_binding_threadx",
+    }),
+    visibility = ["//visibility:public"],
+)
