@@ -62,6 +62,32 @@
             }
         },
         {
+            "name": "tests-stm32-debug",
+            "displayName": "Configure for testing STM32 modules (debug)",
+            "description": "Configure for testing STM32 modules (debug)",
+            "inherits": "_config-base",
+            "binaryDir": "${sourceDir}/build/tests/stm32/Debug",
+            "cacheVariables": {
+                "CMAKE_DEFAULT_BUILD_TYPE": "Debug",
+                "CMAKE_CONFIGURATION_TYPES": "Debug",
+                "BUILD_EXECUTABLE": "unitTest",
+                "OPENBSW_PLATFORM": "stm32"
+            }
+        },
+        {
+            "name": "tests-stm32-release",
+            "displayName": "Configure for testing STM32 modules (release)",
+            "description": "Configure for testing STM32 modules (release)",
+            "inherits": "_config-base",
+            "binaryDir": "${sourceDir}/build/tests/stm32/Release",
+            "cacheVariables": {
+                "CMAKE_DEFAULT_BUILD_TYPE": "Release",
+                "CMAKE_CONFIGURATION_TYPES": "Release",
+                "BUILD_EXECUTABLE": "unitTest",
+                "OPENBSW_PLATFORM": "stm32"
+            }
+        },
+        {
             "name": "posix-freertos",
             "displayName": "POSIX-FREERTOS compliant configuration",
             "description": "Configure for POSIX-compliant environment",
@@ -229,6 +255,20 @@
             "configuration": "Release"
         },
         {
+            "name": "tests-stm32-debug",
+            "displayName": "Build tests of STM32 modules (debug)",
+            "description": "Build tests of STM32 modules (debug)",
+            "configurePreset": "tests-stm32-debug",
+            "configuration": "Debug"
+        },
+        {
+            "name": "tests-stm32-release",
+            "displayName": "Build tests of STM32 modules (release)",
+            "description": "Build tests of STM32 modules (release)",
+            "configurePreset": "tests-stm32-release",
+            "configuration": "Release"
+        },
+        {
             "name": "posix-freertos",
             "displayName": "build POSIX-FREERTOS",
             "description": "Build reference application for POSIX-compliant environment (Release by default; for Debug use --config Debug)",
@@ -305,6 +345,20 @@
             "description": "Run tests of S32K1XX modules (release)",
             "configuration": "Release",
             "configurePreset": "tests-s32k1xx-release"
+        },
+        {
+            "name": "tests-stm32-debug",
+            "displayName": "Run tests of STM32 modules (debug)",
+            "description": "Run tests of STM32 modules (debug)",
+            "configuration": "Debug",
+            "configurePreset": "tests-stm32-debug"
+        },
+        {
+            "name": "tests-stm32-release",
+            "displayName": "Run tests of STM32 modules (release)",
+            "description": "Run tests of STM32 modules (release)",
+            "configuration": "Release",
+            "configurePreset": "tests-stm32-release"
         }
     ]
 }
