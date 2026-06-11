@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../../../../../../../../../../static/css/style.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <title>Symbol - puncover</title>
+    
+</head>
+<body>
+    <div class="container" id="content">
+        <div class="page-header">
+            <nav class="navbar navbar-default" role="navigation">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="../../../../../../../../../../../index.html">
+                    Puncover
+                  </a>
+                </div>
+              </div>
+            </nav>
+          
+        </div>
+        <div id="inner_content">
+        
+    
+    <ol class="breadcrumb folders">
+        
+        <li><a href="../../../../../../../../../../../home.html">home</a></li>
+        
+        <li><a href="../../../../../../../../../../runner.html">runner</a></li>
+        
+        <li><a href="../../../../../../../../../work.html">work</a></li>
+        
+        <li><a href="../../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../libs.html">libs</a></li>
+        
+        <li><a href="../../../../../3rdparty.html">3rdparty</a></li>
+        
+        <li><a href="../../../../lwip.html">lwip</a></li>
+        
+        <li><a href="../../../src.html">src</a></li>
+        
+        <li ><a href="../../core.html">core</a>
+            </li>
+
+        
+        <li class="active"><a href="../netif.c.html">netif.c</a>:871
+            </li>
+        
+    </ol>
+
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <th>Function</th>
+                <td colspan="5">
+                    <span class="icon-function">netif_set_up</span>
+                </td>
+            </tr>
+
+            <tr>
+                <th rowspan="2"></th>
+                <th>Address</th>
+                <th>Remarks</th>
+                <th>Stack</th>
+                <th>Code</th>
+                <th>Static</th>
+            </tr>
+            <tr>
+                <td>0x0001bbac</td>
+                <td>
+    <span class="label label-success">x-module</span>
+    
+</td>
+                <td>8 (static)</td>
+                <td>72</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th>Callers (1)</th>
+                <td colspan="5">
+                
+                    <a href="../../../../../../executables/referenceApp/application/src/systems/EthernetSystem.cpp/5b12771969dc07b02f951af08c34750c.html">systems::EthernetSystem::run() (208)</a>
+                    
+                
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Callees (2,
+                            <span title="sum of used bytes by all callees">
+                            Σ=188
+                            </span>
+                        )
+                    
+                </th>
+                <td colspan="5">
+                
+                    <a href="../ipv4/igmp.c/294a82ce28c752320afaa8590334c56f.html">igmp_report_groups (88)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../../../../../../executables/referenceApp/application/src/logger/logger.cpp/98866fb3d81ee8db78cbfd1e2dfd931d.html">log_lwipInfo (100)</a>
+                    
+                
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    
+    <pre><a href="./b62d0ab7a8c4d67293a6d9788778b9e7.html">netif_add (416)</a></pre>
+    
+
+    <pre>
+
+    netif_set_up():
+
+       1bbac:	b1e8      	cbz	r0, 1bbea <<a href="./e9c8c49bb4f693e8eec915e6a3e697e0.html">netif_set_up</a>+0x3e>
+
+       1bbae:	b510      	push	{r4, lr}
+
+       1bbb0:	f890 3045 	ldrb.w	r3, [r0, #69]	@ 0x45
+
+       1bbb4:	07da      	lsls	r2, r3, #31
+
+       1bbb6:	4604      	mov	r4, r0
+
+       1bbb8:	d40c      	bmi.n	1bbd4 <<a href="./e9c8c49bb4f693e8eec915e6a3e697e0.html">netif_set_up</a>+0x28>
+
+       1bbba:	69c2      	ldr	r2, [r0, #28]
+
+       1bbbc:	f043 0301 	orr.w	r3, r3, #1
+
+       1bbc0:	f880 3045 	strb.w	r3, [r0, #69]	@ 0x45
+
+       1bbc4:	b112      	cbz	r2, 1bbcc <<a href="./e9c8c49bb4f693e8eec915e6a3e697e0.html">netif_set_up</a>+0x20>
+
+       1bbc6:	4790      	blx	r2
+
+    netif_issue_reports():
+
+       1bbc8:	f894 3045 	ldrb.w	r3, [r4, #69]	@ 0x45
+
+       1bbcc:	f003 0205 	and.w	r2, r3, #5
+
+       1bbd0:	2a05      	cmp	r2, #5
+
+       1bbd2:	d000      	beq.n	1bbd6 <<a href="./e9c8c49bb4f693e8eec915e6a3e697e0.html">netif_set_up</a>+0x2a>
+
+    netif_set_up():
+
+       1bbd4:	bd10      	pop	{r4, pc}
+
+    netif_issue_reports():
+
+       1bbd6:	6862      	ldr	r2, [r4, #4]
+
+       1bbd8:	2a00      	cmp	r2, #0
+
+       1bbda:	d0fb      	beq.n	1bbd4 <<a href="./e9c8c49bb4f693e8eec915e6a3e697e0.html">netif_set_up</a>+0x28>
+
+       1bbdc:	069b      	lsls	r3, r3, #26
+
+       1bbde:	d5f9      	bpl.n	1bbd4 <<a href="./e9c8c49bb4f693e8eec915e6a3e697e0.html">netif_set_up</a>+0x28>
+
+       1bbe0:	4620      	mov	r0, r4
+
+    netif_set_up():
+
+       1bbe2:	e8bd 4010 	ldmia.w	sp!, {r4, lr}
+
+    netif_issue_reports():
+
+       1bbe6:	f006 bef9 	b.w	229dc <<a href="../ipv4/igmp.c/294a82ce28c752320afaa8590334c56f.html">igmp_report_groups</a>>
+
+    netif_set_up():
+
+       1bbea:	4801      	ldr	r0, [pc, #4]	@ (1bbf0 <<a href="./e9c8c49bb4f693e8eec915e6a3e697e0.html">netif_set_up</a>+0x44>)
+
+       1bbec:	f7ec bd22 	b.w	8634 <<a href="../../../../../../executables/referenceApp/application/src/logger/logger.cpp/98866fb3d81ee8db78cbfd1e2dfd931d.html">log_lwipInfo</a>>
+
+       1bbf0:	00033720 	.word	0x00033720
+
+    </pre>
+
+    
+    <pre><a href="./95a0f59b985852984be6cfb9b8c3bdba.html">netif_set_down (56)</a></pre>
+    
+
+    
+        <h1>Stack Worst-Case Scenarios</h1>
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 128</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 168</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    128
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                48 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    168
+                    
+                    
+                </td>
+                <td class="col_size">68</td>
+                <td><a href="../../../../../bsw/util/src/util/logger/Logger.cpp/d658d7c78dcca1ca01e61ef198b3eeaa.html" class="icon-function">util::logger::Logger::doLog(unsigned char, util::logger::Level, char const*, std::__va_list)</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                    
+                    80
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                24 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">100</td>
+                <td><a href="../../../../../../executables/referenceApp/application/src/logger/logger.cpp/98866fb3d81ee8db78cbfd1e2dfd931d.html" class="icon-function">log_lwipInfo</a></td>
+            </tr>
+        
+        </tbody>
+        
+        <tfoot>
+            <tr>
+                <th></th>
+                <th class="col_size">56
+                </th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </tfoot>
+        
+    </table>
+        
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 56</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 280</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    56
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                8 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    280
+                    
+                    
+                </td>
+                <td class="col_size">72</td>
+                <td><a href="./e9c8c49bb4f693e8eec915e6a3e697e0.html" class="icon-function">netif_set_up</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                </td>
+                <td class="col_size">
+            
+                48 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">208</td>
+                <td><a href="../../../../../../executables/referenceApp/application/src/systems/EthernetSystem.cpp/5b12771969dc07b02f951af08c34750c.html" class="icon-function">systems::EthernetSystem::run()</a></td>
+            </tr>
+        
+        </tbody>
+        
+    </table>
+        
+    
+
+
+        </div>
+    <div id="page-footer">
+        <hr>
+        
+            brought to you with 💖
+            by <a href="https://twitter.com/hbehrens">Heiko Behrens</a>
+            <span class="secondary">– MIT license, copyright © 2014-2026</span>
+        
+    </div>
+    </div>
+</body>
+</html>
