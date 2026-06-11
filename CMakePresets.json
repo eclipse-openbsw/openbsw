@@ -197,6 +197,68 @@
                 "CMAKE_CXX_FLAGS_RELWITHDEBINFO": "-g3 -Os -DNDEBUG",
                 "CMAKE_DEFAULT_BUILD_TYPE": "RelWithDebInfo"
             }
+        },
+        {
+            "name": "integrationtest-posix-freertos",
+            "displayName": "Integrationtest POSIX-FREERTOS compliant configuration",
+            "description": "Configure for POSIX-FREERTOS compliant environment",
+            "inherits": "_config-base",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "BUILD_EXECUTABLE": "integrationTest",
+                "BUILD_TARGET_PLATFORM": "POSIX",
+                "BUILD_TARGET_RTOS": "FREERTOS"
+            }
+        },
+        {
+            "name": "integrationtest-posix-threadx",
+            "displayName": "Integrationtest POSIX-THREADX compliant configuration",
+            "description": "Configure for POSIX-THREADX compliant environment",
+            "inherits": "_config-base",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "BUILD_EXECUTABLE": "integrationTest",
+                "BUILD_TARGET_PLATFORM": "POSIX",
+                "BUILD_TARGET_RTOS": "THREADX"
+            }
+        },
+        {
+            "name": "integrationtest-s32k148-freertos-gcc",
+            "generator": "Ninja Multi-Config",
+            "displayName": "Integrationtest S32K148-FREERTOS configuration (GCC)",
+            "description": "Configure Integrationtest for S32K148-FREERTOS platform using ARM GCC toolchain",
+            "inherits": "_config-base",
+            "toolchainFile": "${sourceDir}/cmake/toolchains/ArmNoneEabi-gcc.cmake",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "BUILD_EXECUTABLE": "integrationTest",
+                "BUILD_TARGET_PLATFORM": "S32K148EVB",
+                "BUILD_TARGET_RTOS": "FREERTOS",
+                "CMAKE_ASM_FLAGS_RELWITHDEBINFO": "-g3",
+                "CMAKE_CONFIGURATION_TYPES": "RelWithDebInfo;Debug;Release",
+                "CMAKE_C_FLAGS_RELWITHDEBINFO": "-g3 -O2 -DNDEBUG",
+                "CMAKE_CXX_FLAGS_RELWITHDEBINFO": "-g3 -O2 -DNDEBUG",
+                "CMAKE_DEFAULT_BUILD_TYPE": "RelWithDebInfo"
+            }
+        },
+        {
+            "name": "integrationtest-s32k148-threadx-gcc",
+            "generator": "Ninja Multi-Config",
+            "displayName": "Integrationtest S32K148-THREADX configuration (GCC)",
+            "description": "Configure Integrationtest for S32K148-THREADX platform using ARM GCC toolchain",
+            "inherits": "_config-base",
+            "toolchainFile": "${sourceDir}/cmake/toolchains/ArmNoneEabi-gcc.cmake",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "BUILD_EXECUTABLE": "integrationTest",
+                "BUILD_TARGET_PLATFORM": "S32K148EVB",
+                "BUILD_TARGET_RTOS": "THREADX",
+                "CMAKE_ASM_FLAGS_RELWITHDEBINFO": "-g3",
+                "CMAKE_CONFIGURATION_TYPES": "RelWithDebInfo;Debug;Release",
+                "CMAKE_C_FLAGS_RELWITHDEBINFO": "-g3 -O2 -DNDEBUG",
+                "CMAKE_CXX_FLAGS_RELWITHDEBINFO": "-g3 -O2 -DNDEBUG",
+                "CMAKE_DEFAULT_BUILD_TYPE": "RelWithDebInfo"
+            }
         }
     ],
     "buildPresets": [
@@ -275,6 +337,30 @@
             "displayName": "S32K148 ThreadX build (Clang)",
             "description": "Build reference application for S32K148 platform with Clang (Release by default; for Debug use --config Debug)",
             "configurePreset": "s32k148-threadx-clang"
+        },
+        {
+            "name": "integrationtest-posix-freertos",
+            "displayName": "build integration test for POSIX-FREERTOS",
+            "description": "Build integration test application for POSIX-compliant environment (Release by default; for Debug use --config Debug)",
+            "configurePreset": "integrationtest-posix-freertos"
+        },
+        {
+            "name": "integrationtest-posix-threadx",
+            "displayName": "build integration test for POSIX-THREADX",
+            "description": "Build integration test application for POSIX-compliant environment (Release by default; for Debug use --config Debug)",
+            "configurePreset": "integrationtest-posix-threadx"
+        },
+        {
+            "name": "integrationtest-s32k148-freertos-gcc",
+            "displayName": "Build integration test for S32K148-FREERTOS build (GCC)",
+            "description": "Build integrationtest application for S32K148 platform with GCC (Release by default; for Debug use --config Debug)",
+            "configurePreset": "integrationtest-s32k148-freertos-gcc"
+        },
+        {
+            "name": "integrationtest-s32k148-threadx-gcc",
+            "displayName": "Build integration test for S32K148-THREADX build (GCC)",
+            "description": "Build integrationtest application for S32K148 platform with GCC (Release by default; for Debug use --config Debug)",
+            "configurePreset": "integrationtest-s32k148-threadx-gcc"
         }
     ],
     "testPresets": [
