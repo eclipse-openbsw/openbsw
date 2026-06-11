@@ -292,7 +292,7 @@ void SocketCanTransceiver::guardedRun(int maxSentPerRun, int maxReceivedPerRun)
             Logger::debug(
                 CAN,
                 "[SocketCanTransceiver] received CAN frame, id=0x%X, length=%d",
-                static_cast<int>(socketCanFrame.can_id),
+                static_cast<int>(::can::CanId::rawId(socketCanFrame.can_id)),
                 static_cast<int>(socketCanFrame.can_dlc));
             CANFrame canFrame;
             canFrame.setId(socketCanFrame.can_id);
