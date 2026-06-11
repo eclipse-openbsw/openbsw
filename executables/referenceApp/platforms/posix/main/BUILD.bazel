@@ -8,11 +8,12 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 
-platform(
-    name = "s32k148",
-    constraint_values = [
-        "@platforms//cpu:armv7e-m",
-        "@platforms//os:none",
-        "//bazel/platform/constraints:s32k148",
-    ],
+load("@rules_cc//cc:cc_library.bzl", "cc_library")
+
+cc_library(
+    name = "freertos_os_hooks",
+    srcs = ["src/osHooks/freertos/osHooks.cpp"],
+    target_compatible_with = ["@platforms//os:linux"],
+    visibility = ["//libs/3rdparty/freeRtos:__pkg__"],
+    deps = ["//libs/3rdparty/freeRtos:free_rtos_headers"],
 )

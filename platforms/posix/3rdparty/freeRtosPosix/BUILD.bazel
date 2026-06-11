@@ -1,0 +1,30 @@
+load("@rules_cc//cc:cc_library.bzl", "cc_library")
+
+cc_library(
+    name = "freertos_posix_port",
+    hdrs = ["include/portmacro.h"],
+    strip_include_prefix = "include",
+    target_compatible_with = ["@platforms//os:linux"],
+    visibility = ["//visibility:public"],
+)
+
+# Uses free_rtos_headers (not free_rtos) to avoid the circular dependency:
+#   free_rtos -> freertos_port_impl -> free_rtos_headers
+cc_library(
+    name = "freertos_posix",
+    srcs = [
+        "src/port.c",
+        "src/utils/wait_for_event.c",
+        "src/utils/wait_for_event.h",
+    ],
+    linkopts = ["-lpthread"],
+    local_defines = ["_POSIX_C_SOURCE=200112L"],
+    target_compatible_with = ["@platforms//os:linux"],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":freertos_posix_port",
+        "//libs/3rdparty/freeRtos:free_rtos_headers",
+        "//libs/bsp/bspInterrupts:bsp_interrupts",
+        "//libs/bsw/platform",
+    ],
+)

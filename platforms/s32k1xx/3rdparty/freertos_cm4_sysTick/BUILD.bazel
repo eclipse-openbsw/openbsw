@@ -1,0 +1,24 @@
+load("@rules_cc//cc:cc_library.bzl", "cc_library")
+
+cc_library(
+    name = "freertos_cm4_sys_tick_port",
+    hdrs = ["include/portmacro.h"],
+    strip_include_prefix = "include",
+    target_compatible_with = ["//bazel/platform/constraints:s32k148"],
+    visibility = ["//visibility:public"],
+)
+
+# Circular dependency present on the CMake side: freeRtos -> freeRtosCm4SysTick -> freeRtos
+# Split off free_rtos_headers to break the circular dependency for Bazel
+cc_library(
+    name = "freertos_cm4_sys_tick",
+    srcs = ["src/port.c"],
+    copts = ["-Wno-unused-but-set-variable"],
+    target_compatible_with = ["//bazel/platform/constraints:s32k148"],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":freertos_cm4_sys_tick_port",
+        "//libs/3rdparty/freeRtos:free_rtos_headers",
+        "//libs/bsp/bspInterrupts:bsp_interrupts",
+    ],
+)
