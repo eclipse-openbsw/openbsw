@@ -35,13 +35,6 @@ using MessageAllocator = Aggregator<
     Pool<50U, 200U>,
     Pool<10U, 4096U + 2U + 2U>>;
 
-template<>
-SimpleAllocator* SimpleAllocator::_instance = nullptr;
-template<>
-SingleByteAllocator* SingleByteAllocator::_instance = nullptr;
-template<>
-MessageAllocator* MessageAllocator::_instance = nullptr;
-
 namespace test
 {
 
@@ -63,10 +56,6 @@ public:
 protected:
     void SetUp() override
     {
-        SimpleAllocator::initialize(_simpleAllocator);
-        SingleByteAllocator::initialize(_singleByteAllocator);
-        MessageAllocator::initialize(_messageAllocator);
-
         _failedAllocations     = 0U;
         _successfulAllocations = 0U;
     }
@@ -88,7 +77,7 @@ TEST_F(AggregatorTest, SingleByteAllocator)
     auto const collectorFcn  = etl::delegate<void(
         uint64_t, memory::PoolStats)>::create<AggregatorTest, &AggregatorTest::collector>(*this);
     auto* pool = reinterpret_cast<typename SingleByteAllocator::PoolByType<int32_t*>::type*>(
-        SingleByteAllocator::getPool<chunkSize>());
+        _singleByteAllocator.getPool<chunkSize>());
     EXPECT_TRUE(static_cast<bool>(pool));
     EXPECT_EQ(etl::get<0>(pool->getProfile()), 1U);
 
@@ -101,14 +90,14 @@ TEST_F(AggregatorTest, SingleByteAllocator)
     EXPECT_EQ(*secondIntPtr, 9);
     EXPECT_EQ(etl::get<0>(pool->getProfile()), 0U);
 
-    SingleByteAllocator::collectStats(collectorFcn);
+    _singleByteAllocator.collectStats(collectorFcn);
     EXPECT_EQ(_successfulAllocations, 1U);
     EXPECT_EQ(_failedAllocations, 0U);
 
     EXPECT_EQ(_singleByteAllocator.allocateImpl(sizeof(uint8_t)), nullptr);
     EXPECT_EQ(etl::get<0>(pool->getProfile()), 0U);
 
-    SingleByteAllocator::collectStats(collectorFcn);
+    _singleByteAllocator.collectStats(collectorFcn);
     EXPECT_EQ(_successfulAllocations, 0U);
     EXPECT_EQ(_failedAllocations, 1U);
 
@@ -129,7 +118,7 @@ TEST_F(AggregatorTest, SingleByteAllocatorMultipleAllocations)
     for (unsigned i = 0U; i < 50U; ++i)
     {
         auto* pool = reinterpret_cast<typename SingleByteAllocator::PoolByType<int32_t*>::type*>(
-            SingleByteAllocator::getPool<chunkSize>());
+            _singleByteAllocator.getPool<chunkSize>());
         EXPECT_TRUE(static_cast<bool>(pool));
         EXPECT_EQ(etl::get<0>(pool->getProfile()), 1U);
 
@@ -165,7 +154,7 @@ TEST_F(AggregatorTest, SimpleAllocator)
     // ARRANGE
     uint32_t const chunkSize = sizeof(int32_t);
     auto* pool = reinterpret_cast<typename SimpleAllocator::PoolByType<int32_t*>::type*>(
-        SimpleAllocator::getPool<chunkSize>());
+        _simpleAllocator.getPool<chunkSize>());
     EXPECT_TRUE(static_cast<bool>(pool));
     EXPECT_EQ(etl::get<0>(pool->getProfile()), 2U);
 
@@ -196,7 +185,7 @@ TEST_F(AggregatorTest, InvalidDeallocations)
     // ARRANGE
     uint32_t const chunkSize = sizeof(int32_t);
     auto* pool = reinterpret_cast<typename SimpleAllocator::PoolByType<int32_t*>::type*>(
-        SimpleAllocator::getPool<chunkSize>());
+        _simpleAllocator.getPool<chunkSize>());
     EXPECT_TRUE(static_cast<bool>(pool));
     EXPECT_EQ(etl::get<0>(pool->getProfile()), 2U);
 
@@ -224,7 +213,7 @@ TEST_F(AggregatorTest, InvalidDeallocations)
     EXPECT_FALSE(_singleByteAllocator.isPtrValidImpl(nullptr));
     EXPECT_FALSE(_singleByteAllocator.isPtrValidImpl(reinterpret_cast<void*>(intPtr_2)));
     auto* simplePool = reinterpret_cast<typename SimpleAllocator::PoolByType<void*>::type*>(
-        SimpleAllocator::getPool<chunkSize>());
+        _simpleAllocator.getPool<chunkSize>());
     auto* poolBegin = simplePool->allocate(chunkSize);
     EXPECT_FALSE(_singleByteAllocator.isPtrValidImpl(
         reinterpret_cast<void*>(reinterpret_cast<size_t>(poolBegin) - 1U)));
@@ -235,9 +224,8 @@ TEST_F(AggregatorTest, AllocateInLargerChunkIfNecessary)
     // ARRANGE
     size_t const len = sizeof(etl::array<uint8_t, 40>);
 
-    auto* p = reinterpret_cast<memory::Pool<200, 40>*>(MessageAllocator::instance().getPool<len>());
-    auto* p2
-        = reinterpret_cast<memory::Pool<200, 80>*>(MessageAllocator::instance().getPool<len + 1>());
+    auto* p  = reinterpret_cast<memory::Pool<200, 40>*>(_messageAllocator.getPool<len>());
+    auto* p2 = reinterpret_cast<memory::Pool<200, 80>*>(_messageAllocator.getPool<len + 1>());
     EXPECT_NE(reinterpret_cast<void*>(p), reinterpret_cast<void*>(p2));
 
     // ACT AND ASSERT
@@ -256,7 +244,7 @@ TEST_F(AggregatorTest, AllocateInLargerChunkIfNecessary)
     EXPECT_EQ(p2->getPoolStats().delegatedAllocations, 0U);
 
     auto* pSmaller = reinterpret_cast<memory::Pool<200, 20>*>(
-        MessageAllocator::instance().getPool<sizeof(etl::array<uint8_t, 20>)>());
+        _messageAllocator.getPool<sizeof(etl::array<uint8_t, 20>)>());
     EXPECT_EQ(pSmaller->getPoolStats().delegatedAllocations, 0U);
 }
 
@@ -270,10 +258,10 @@ TEST_F(AggregatorTest, FailedAllocationStats)
     size_t const len = sizeof(etl::array<uint8_t, 200>);
 
     Pool100T* pool100 = reinterpret_cast<Pool100T*>(
-        MessageAllocator::instance().getPool<sizeof(etl::array<uint8_t, 100>)>());
-    Pool200T* pool200   = reinterpret_cast<Pool200T*>(MessageAllocator::instance().getPool<len>());
+        _messageAllocator.getPool<sizeof(etl::array<uint8_t, 100>)>());
+    Pool200T* pool200   = reinterpret_cast<Pool200T*>(_messageAllocator.getPool<len>());
     Pool4010T* pool4010 = reinterpret_cast<Pool4010T*>(
-        MessageAllocator::instance().getPool<sizeof(etl::array<uint8_t, 4096 + 2 + 2>)>());
+        _messageAllocator.getPool<sizeof(etl::array<uint8_t, 4096 + 2 + 2>)>());
 
     // ACT AND ASSERT
     for (int i = 0; i < 50; i++)
@@ -329,7 +317,7 @@ TEST_F(AggregatorTest, TwistedDeallocation)
     // ARRANGE
     uint32_t const chunkSize = sizeof(int32_t);
     auto* pool               = reinterpret_cast<typename SimpleAllocator::PoolByType<void*>::type*>(
-        SimpleAllocator::getPool<chunkSize>());
+        _simpleAllocator.getPool<chunkSize>());
     EXPECT_TRUE(static_cast<bool>(pool));
     EXPECT_EQ(etl::get<0>(pool->getProfile()), 2U);
 
@@ -349,7 +337,7 @@ TEST_F(AggregatorTest, WhenASmallerPoolIsFullStatisticsAreUpdatedForRelevantPool
     size_t const smallerSize = 100U;
     size_t const goodFitSize = 200U;
 
-    auto* const pool200 = MessageAllocator::instance().getPool<goodFitSize>();
+    auto* const pool200 = _messageAllocator.getPool<goodFitSize>();
 
     for (size_t i = 0; i < numOfSmallerSizePools; i++)
     {

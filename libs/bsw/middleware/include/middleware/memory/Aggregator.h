@@ -36,8 +36,6 @@ class Aggregator : public memory::AllocatorBase<Aggregator<T...>>
 
     static size_t const TUPLE_SIZE = etl::tuple_size<TupleType>::value;
 
-    static Aggregator* _instance;
-
     TupleType _pools;
 
     /**
@@ -146,9 +144,20 @@ public:
     /** Returns the number of pools aggregated. */
     static constexpr size_t size() { return TUPLE_SIZE; }
 
-    // Constructor intentionally leaves pool members uninitialised.
-    // Shared-RAM pools are constructed asynchronously by all cores.
-    explicit Aggregator(uint8_t volatile* const pLockElement) : Base(*pLockElement) {}
+    /**
+     * Constructor which initializes the aggregator.
+     *
+     * This ensures pools are always initialized when an `Aggregator` is constructed,
+     * eliminating the risk of using an uninitialized instance in multicore systems,
+     * construction must complete on one core before others access the aggregator.
+     * The external lock element and all pools must be fully initialized before any allocation.
+     *
+     * \param pLockElement pointer to the external lock element used by the base allocator
+     */
+    explicit Aggregator(uint8_t volatile* const pLockElement) : Base(*pLockElement)
+    {
+        TryDo<TupleType, 0>(_pools).initialize();
+    }
 
     /** Allocates memory from the appropriate memory pool. */
     uint8_t* allocateImpl(uint32_t const size)
@@ -177,16 +186,6 @@ public:
             etl::addressof(etl::get<0U>(_pools)));
     }
 
-    /** Registers the singleton instance used by static helpers. */
-    static void setInstance(Aggregator& inst) { _instance = &inst; }
-
-    /** Initialises all aggregated pools and registers the instance. */
-    static void initialize(Aggregator& inst)
-    {
-        _instance = &inst;
-        TryDo<TupleType, 0>(_instance->_pools).initialize();
-    }
-
     /** Finds the best-fitting pool by object type. */
     template<typename U>
     struct PoolByType
@@ -198,23 +197,15 @@ public:
 
     /** Returns the pool selected for allocations of size S. */
     template<uint32_t S>
-    static PoolBase* getPool()
+    PoolBase* getPool()
     {
-        return &(
-            etl::get<impl::PoolIndexBySize<S, TupleType>::value>((Aggregator::instance())._pools));
+        return &(etl::get<impl::PoolIndexBySize<S, TupleType>::value>(_pools));
     }
 
     /** Collects and resets statistics from all pools. */
-    static void collectStats(etl::delegate<void(size_t const, PoolStats const)> const& collector)
+    void collectStats(etl::delegate<void(size_t const, PoolStats const)> const& collector)
     {
-        TryDo<TupleType, 0>((instance())._pools).collectStats(collector);
-    }
-
-    /** Returns the registered singleton instance. */
-    static Aggregator& instance()
-    {
-        ETL_ASSERT(_instance != nullptr, ETL_ERROR_GENERIC("Aggregator instance not set."));
-        return *_instance;
+        TryDo<TupleType, 0>(_pools).collectStats(collector);
     }
 };
 
