@@ -11,13 +11,26 @@
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
 
 cc_library(
-    name = "util",
-    srcs = glob(["src/util/**/*.cpp"]),
-    hdrs = glob(["include/**/*.h"]),
+    name = "configuration",
+    hdrs = [
+        "include/app/appConfig.h",
+        "include/busid/BusId.h",
+        "include/systems/ICanSystem.h",
+        "include/systems/IEthernetDriverSystem.h",
+    ],
     strip_include_prefix = "include",
     visibility = ["//visibility:public"],
     deps = [
-        "//libs/3rdparty/etl",
-        "//libs/bsw/platform",
+        "//libs/bsw/common:common_headers",
+    ],
+)
+
+cc_library(
+    name = "common_impl",
+    srcs = ["common/src/busid/BusId.cpp"],
+    visibility = ["//libs/bsw/common:__pkg__"],
+    deps = [
+        ":configuration",
+        # TODO: add the async target dependency here once it is ready.
     ],
 )

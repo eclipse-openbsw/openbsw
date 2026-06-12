@@ -10,14 +10,18 @@
 
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
 
+# Posix FreeRTOS interrupt suspension implementation.
+# Depends on free_rtos_headers (not free_rtos) to break the circular dep:
+#   free_rtos -> freertos_port_impl (freertos_posix) -> bsp_interrupts
+#             -> bsp_interrupts_impl -> free_rtos_headers
 cc_library(
-    name = "util",
-    srcs = glob(["src/util/**/*.cpp"]),
-    hdrs = glob(["include/**/*.h"]),
-    strip_include_prefix = "include",
+    name = "bsp_interrupts_impl",
+    srcs = ["freertos/src/interrupts/suspendResumeAllInterrupts.cpp"],
+    hdrs = ["freertos/include/interrupts/suspendResumeAllInterrupts.h"],
+    strip_include_prefix = "freertos/include",
     visibility = ["//visibility:public"],
     deps = [
-        "//libs/3rdparty/etl",
+        "//libs/3rdparty/freeRtos:free_rtos_headers",
         "//libs/bsw/platform",
     ],
 )

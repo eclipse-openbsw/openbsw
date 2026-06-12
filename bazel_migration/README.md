@@ -1,6 +1,6 @@
 <!--
  *******************************************************************************
-  Copyright (c) 2024 Accenture
+  Copyright (c) 2026 Accenture
 
   This program and the accompanying materials are made available under the
   terms of the Apache License Version 2.0 which is available at
@@ -32,23 +32,42 @@ Open:
 
 ```
 OpenBSW Bazel migration
-├── bazel/ ✅ (toolchain arm-none-eabi-gcc for s32k148)
+├── bazel/ ✅ (toolchain + s32k148 platform/constraints + rtos config)
 ├── cmake/ ⬛
 ├── doc/ ⬛
 ├── docker/ ⬛
 ├── executables/
 │   ├── referenceApp/ 🔲
+│   │   ├── asyncCoreConfiguration ✅
+│   │   ├── configuration ✅
+│   │   └── platforms/
+│   │       ├── posix/ ✅ (freeRtosCoreConfiguration, osHooks)
+│   │       └── s32k148evb/ ✅ (freeRtosCoreConfiguration, osHooks)
 │   └── unitTest/ 🔲
+│       └── configuration ✅
 ├── libs/
 │   ├── 3rdparty/
-│   │   └── etl ✅
+│   │   ├── cmsis ✅
+│   │   ├── etl ✅
+│   │   └── freeRtos ✅
+│   ├── bsp/
+│   │   └── bspInterrupts ✅
 │   ├── bsw/
+│   │   ├── asyncFreeRtos 🔲 (freertos_configuration only)
+│   │   ├── asyncImpl ✅
+│   │   ├── bsp ✅
+│   │   ├── common ✅
+│   │   ├── io ✅
+│   │   ├── logger ✅
+│   │   ├── middleware ✅
 │   │   ├── platform ✅
+│   │   ├── stdioConsoleInput ✅
+│   │   ├── timer ✅
 │   │   └── util ✅
 │   └── (remaining) 🔲
 ├── platforms/
-│   ├── posix/ 🔲
-│   └── s32k1xx/ 🔲
+│   ├── posix/ ✅ (freeRtosPosix, bspInterruptsImpl)
+│   └── s32k1xx/ ✅ (freertos_cm4_sysTick, bspMcu, bspInterruptsImpl)
 ├── test/ Scope of Bazel support TBD
 └── tools/ Scope of Bazel support TBD
 

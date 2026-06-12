@@ -8,11 +8,19 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 
-platform(
+constraint_setting(
+    name = "target_platform_constraint",
+    visibility = ["//visibility:public"],
+)
+
+constraint_value(
     name = "s32k148",
-    constraint_values = [
-        "@platforms//cpu:armv7e-m",
-        "@platforms//os:none",
-        "//bazel/platform/constraints:s32k148",
-    ],
+    constraint_setting = ":target_platform_constraint",
+    visibility = ["//visibility:public"],
+)
+
+config_setting(
+    name = "is_s32k148",
+    constraint_values = [":s32k148"],
+    visibility = ["//visibility:public"],
 )

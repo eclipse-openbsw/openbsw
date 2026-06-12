@@ -11,9 +11,15 @@
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
 
 cc_library(
-    name = "util",
-    srcs = glob(["src/util/**/*.cpp"]),
-    hdrs = glob(["include/**/*.h"]),
+    name = "async_impl",
+    hdrs = [
+        "include/async/EventDispatcher.h",
+        "include/async/EventPolicy.h",
+        "include/async/IRunnable.h",
+        "include/async/Queue.h",
+        "include/async/QueueNode.h",
+        "include/async/RunnableExecutor.h",
+    ],
     strip_include_prefix = "include",
     visibility = ["//visibility:public"],
     deps = [

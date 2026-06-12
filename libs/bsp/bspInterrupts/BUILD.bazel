@@ -1,0 +1,44 @@
+# *******************************************************************************
+# Copyright (c) 2026 Accenture
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+
+load("@rules_cc//cc:cc_library.bzl", "cc_library")
+
+alias(
+    name = "bsp_interrupts_impl_default",
+    actual = select(
+        {
+            "//bazel/platform/constraints:s32k148": "//platforms/s32k1xx/bsp/bspInterruptsImpl:bsp_interrupts_impl",
+            "@platforms//os:linux": "//platforms/posix/bsp/bspInterruptsImpl:bsp_interrupts_impl",
+        },
+        no_match_error = "No interrupt-lock implementation for this platform. Override --//libs/bsp/bspInterrupts:bsp_interrupts_impl with your own implementation target.",
+    ),
+)
+
+# Interrupt-lock implementation
+#   Default:  select based on the target platform (S32K148, POSIX)
+#   Override: --//libs/bsp/bspInterrupts:bsp_interrupts_impl=//path/to:your_impl
+label_flag(
+    name = "bsp_interrupts_impl",
+    build_setting_default = ":bsp_interrupts_impl_default",
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "bsp_interrupts",
+    hdrs = [
+        "include/interrupts/SuspendResumeAllInterruptsLock.h",
+        "include/interrupts/SuspendResumeAllInterruptsScopedLock.h",
+    ],
+    strip_include_prefix = "include",
+    visibility = ["//visibility:public"],
+    deps = [
+        ":bsp_interrupts_impl",
+    ],
+)

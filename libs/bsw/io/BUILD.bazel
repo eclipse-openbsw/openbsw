@@ -11,13 +11,25 @@
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
 
 cc_library(
-    name = "util",
-    srcs = glob(["src/util/**/*.cpp"]),
-    hdrs = glob(["include/**/*.h"]),
+    name = "io",
+    srcs = [
+        "src/io/BufferedWriter.cpp",
+    ],
+    hdrs = [
+        "include/io/BufferedWriter.h",
+        "include/io/ForwardingReader.h",
+        "include/io/IReader.h",
+        "include/io/IWriter.h",
+        "include/io/JoinReader.h",
+        "include/io/MemoryQueue.h",
+        "include/io/SplitWriter.h",
+        "include/io/VariantQueue.h",
+    ],
     strip_include_prefix = "include",
     visibility = ["//visibility:public"],
     deps = [
         "//libs/3rdparty/etl",
         "//libs/bsw/platform",
+        "//libs/bsw/util",
     ],
 )
