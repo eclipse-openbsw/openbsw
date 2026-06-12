@@ -25,6 +25,7 @@ add_library(
     src/uds/resume/ResumableResetDriver.cpp
     src/uds/services/controldtcsetting/ControlDTCSetting.cpp
     src/uds/services/communicationcontrol/CommunicationControl.cpp
+    src/uds/services/readdtcinformation/ReadDTCInformation.cpp
     src/uds/services/ecureset/ECUReset.cpp
     src/uds/services/ecureset/EnableRapidPowerShutdown.cpp
     src/uds/services/ecureset/HardReset.cpp

@@ -133,6 +133,7 @@ void UdsSystem::addDiagJobs()
     (void)_jobRoot.addAbstractDiagJob(_testerPresent);
     (void)_jobRoot.addAbstractDiagJob(_diagnosticSessionControl);
     (void)_jobRoot.addAbstractDiagJob(_communicationControl);
+    (void)_jobRoot.addAbstractDiagJob(_readDTCInformation);
 }
 
 void UdsSystem::removeDiagJobs()
@@ -156,6 +157,7 @@ void UdsSystem::removeDiagJobs()
     _jobRoot.removeAbstractDiagJob(_testerPresent);
     _jobRoot.removeAbstractDiagJob(_diagnosticSessionControl);
     _jobRoot.removeAbstractDiagJob(_communicationControl);
+    _jobRoot.removeAbstractDiagJob(_readDTCInformation);
 }
 
 void UdsSystem::execute() {}
