@@ -24,6 +24,7 @@
 #include <uds/jobs/WriteIdentifierToMemory.h>
 #include <uds/services/communicationcontrol/CommunicationControl.h>
 #include <uds/services/readdata/ReadDataByIdentifier.h>
+#include <uds/services/readdtcinformation/ReadDTCInformation.h>
 #include <uds/services/routinecontrol/RequestRoutineResults.h>
 #include <uds/services/routinecontrol/RoutineControl.h>
 #include <uds/services/routinecontrol/StartRoutine.h>
@@ -102,6 +103,7 @@ private:
     ReadIdentifierPot _read22Cf02;
     WriteIdentifierToMemory _write2eCf03;
     TesterPresent _testerPresent;
+    ReadDTCInformation _readDTCInformation;
 
     ::async::ContextType _context;
     ::async::TimeoutType _timeout;
