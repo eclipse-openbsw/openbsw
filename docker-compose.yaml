@@ -15,9 +15,9 @@ services:
       context: docker/development
       network: host
       args:
-        http_proxy: ${http_proxy}
-        https_proxy: ${https_proxy}
-        no_proxy: ${no_proxy}
+        http_proxy: ${http_proxy:-}
+        https_proxy: ${https_proxy:-}
+        no_proxy: ${no_proxy:-}
       cache_from:
         - type=gha
       cache_to:
@@ -35,9 +35,9 @@ services:
       - source: shadow
         target: /etc/shadow
     environment:
-      http_proxy: ${http_proxy}
-      https_proxy: ${https_proxy}
-      no_proxy: ${no_proxy}
+      http_proxy: ${http_proxy:-}
+      https_proxy: ${https_proxy:-}
+      no_proxy: ${no_proxy:-}
     volumes:
       - type: bind
         source: ${PWD}
@@ -66,9 +66,9 @@ services:
       context: docker/development
       network: host
       args:
-        http_proxy: ${http_proxy}
-        https_proxy: ${https_proxy}
-        no_proxy: ${no_proxy}
+        http_proxy: ${http_proxy:-}
+        https_proxy: ${https_proxy:-}
+        no_proxy: ${no_proxy:-}
       cache_from:
         - type=gha
       cache_to:
@@ -86,9 +86,9 @@ services:
       - source: shadow
         target: /etc/shadow
     environment:
-      http_proxy: ${http_proxy}
-      https_proxy: ${https_proxy}
-      no_proxy: ${no_proxy}
+      http_proxy: ${http_proxy:-}
+      https_proxy: ${https_proxy:-}
+      no_proxy: ${no_proxy:-}
     volumes:
       - type: bind
         source: ${PWD}
