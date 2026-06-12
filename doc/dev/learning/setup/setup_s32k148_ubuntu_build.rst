@@ -126,11 +126,11 @@ To build OpenBSW with Rust components for the S32K148 platform, you need:
 1. The GCC toolchain set up as described in `Using the GCC toolchain`_ above (including CC and CXX environment variables)
 2. The Rust compiler with the ARM cross-compilation target
 
-Install Rust 1.90.0 to be compatible with the CI builds and add the ARM target:
+Install Rust 1.96.0 to be compatible with the CI builds and add the ARM target:
 
 .. code-block:: bash
 
-    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --default-toolchain 1.90.0
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --default-toolchain 1.96.0
     rustup target add thumbv7em-none-eabihf
 
 Then, with the GCC toolchain environment variables set, build using the Rust preset:

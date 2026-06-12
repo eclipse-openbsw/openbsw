@@ -1,0 +1,13 @@
+# Use vendored crate sources so the Rust build works fully offline.
+# Run `cargo vendor libs/3rdparty/cargo-vendor` to regenerate the directory
+# after changing dependencies or Cargo.lock.
+[source.crates-io]
+replace-with = "vendored"
+
+[source.vendored]
+directory = "libs/3rdparty/cargo-vendor"
+
+# Force all cargo invocations (including those driven by corrosion/CMake)
+# to build without network access.
+[net]
+offline = true

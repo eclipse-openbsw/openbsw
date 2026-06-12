@@ -50,6 +50,15 @@ Level Logger::getLevel(uint8_t const componentIndex)
                                           : LEVEL_NONE;
 }
 
+extern "C" void
+bsw_cpp_logger_log(uint8_t const componentIndex, Level const level, char const* const str)
+{
+    // `str` is a message already formatted on the Rust side, not a printf format string.
+    // Route it through a literal "%s" so any '%' it contains is treated as data, not a
+    // conversion specifier (which would read from an empty va_list -> UB / crash).
+    Logger::log(componentIndex, level, "%s", str);
+}
+
 } /* namespace logger */
 } /* namespace util */
 

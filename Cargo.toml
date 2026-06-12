@@ -13,6 +13,7 @@ resolver = "3"
 
 members = [
     "executables/referenceApp/rustHelloWorld",
+    "libs/bsw/logger/rust",
     "libs/rust/panic_handler",
     "libs/rust/console_out",
 ]
@@ -23,7 +24,17 @@ documentation = "https://eclipse-openbsw.github.io/openbsw/"
 
 # Workspace dependencies - add new Rust crates here as they are developed
 [workspace.dependencies]
+# External crates
+log = "0.4"
+paste = "1"
+# NOTE: cbindgen is intentionally NOT a dependency here. C headers are generated
+# out-of-band via the cbindgen CLI (see .ci/cbindgen.py); keeping it out of the
+# build graph keeps the vendored dependency tree (libs/3rdparty/cargo-vendor)
+# tiny. The cbindgen CLI version lives in docker/development/Dockerfile.
+
+# openbsw-internal crates
 openbsw_console_out = { path = "libs/rust/console_out" }
+openbsw-logger = { path = "libs/bsw/logger/rust" }
 openbsw_panic_handler = { path = "libs/rust/panic_handler" }
 
 # Similar to C++ we always build optimized (matching C++ -O2)

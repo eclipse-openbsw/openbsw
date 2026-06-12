@@ -95,11 +95,11 @@ To build OpenBSW with Rust components for the POSIX platform, you need:
 1. The build tools set up as described above (gcc, cmake, make)
 2. The Rust compiler
 
-Install Rust 1.90.0 to be compatible with the CI builds:
+Install Rust 1.96.0 to be compatible with the CI builds:
 
 .. code-block:: bash
 
-    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --default-toolchain 1.90.0
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --default-toolchain 1.96.0
 
 Then build using the Rust preset:
 

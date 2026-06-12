@@ -1,0 +1,8 @@
+# All third-party imports: exclude from GitHub language statistics so the
+# language bar reflects OpenBSW's own code rather than its dependencies.
+libs/3rdparty/** linguist-vendored
+
+# The cargo vendor bundle is machine-generated and never hand-edited, so also
+# collapse it in diffs/PRs. (The C++ libs above are patched in place, so their
+# diffs stay visible.)
+libs/3rdparty/cargo-vendor/** -diff

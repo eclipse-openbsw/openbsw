@@ -62,6 +62,9 @@
 #include <cstdio>
 
 #ifdef BUILD_RUST
+#include "app/DemoLogger.h"
+
+#include <BswLogger.h>
 #include <rust_hello_world.h>
 #endif
 
@@ -183,6 +186,15 @@ public:
 
         ::console::init();
         ::console::enable();
+
+#ifdef BUILD_RUST
+        // Route any `log::*!` calls (e.g. from third-party Rust crates that use the
+        // `log` facade) to the RUST component. First-party Rust code uses the
+        // `bsw_*!` macros and resolves its component index directly via the C++
+        // `bsw_logger_component_<NAME>()` getter emitted by DEFINE_LOGGER_COMPONENT.
+        ::logger::set_default_component(::util::logger::RUST);
+        ::logger::install_rust_logging();
+#endif
     }
 
     void start() { ::async::execute(AsyncAdapter::TASK_IDLE, *this); }
@@ -228,12 +240,14 @@ void run()
 {
     staticInit();
     etl::print("hello\r\n");
+
+    idleHandler.init();
 #ifdef BUILD_RUST
     etl::print("Hello Rust!\r\n");
     rust_hello_world();
     etl::print("Rust add(3, 4) = {}\r\n", static_cast<unsigned int>(rust_add(3U, 4U)));
 #endif
-    idleHandler.init();
+
     AsyncAdapter::run(AsyncAdapter::StartAppFunctionType::create<&startApp>());
 }
 

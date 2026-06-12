@@ -29,17 +29,22 @@
     {                                         \
     extern uint8_t _uniqueName;               \
     }                                         \
-    }
+    }                                         \
+    extern "C" uint8_t bsw_logger_component_##_uniqueName(void);
 #endif // DECLARE_LOGGER_COMPONENT
 
 #ifndef DEFINE_LOGGER_COMPONENT
-#define DEFINE_LOGGER_COMPONENT(_uniqueName)              \
-    namespace util                                        \
-    {                                                     \
-    namespace logger                                      \
-    {                                                     \
-    uint8_t _uniqueName = ::util::logger::COMPONENT_NONE; \
-    }                                                     \
+#define DEFINE_LOGGER_COMPONENT(_uniqueName)                    \
+    namespace util                                              \
+    {                                                           \
+    namespace logger                                            \
+    {                                                           \
+    uint8_t _uniqueName = ::util::logger::COMPONENT_NONE;       \
+    }                                                           \
+    }                                                           \
+    extern "C" uint8_t bsw_logger_component_##_uniqueName(void) \
+    {                                                           \
+        return ::util::logger::_uniqueName;                     \
     }
 #endif // DEFINE_LOGGER_COMPONENT
 
