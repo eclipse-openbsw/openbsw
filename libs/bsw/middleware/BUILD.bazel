@@ -1,0 +1,57 @@
+# *******************************************************************************
+# Copyright (c) 2026 Accenture
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+
+load("@rules_cc//cc:cc_library.bzl", "cc_library")
+
+cc_library(
+    name = "middleware_lock_types_test_stub",
+    hdrs = ["test/include/middleware/concurrency/lock_types.h"],
+    strip_include_prefix = "test/include",
+)
+
+alias(
+    name = "middleware_lock_types",
+    actual = select(
+        {
+            # TODO: Use test lock_types.h stub since it is the only existing implementation.
+            "//bazel/config/executable_config:reference_app": ":middleware_lock_types_test_stub",
+            "//bazel/config/executable_config:unit_test": ":middleware_lock_types_test_stub",
+        },
+        no_match_error = "Please set executable_config to either 'reference_app' or 'unit_test'",
+    ),
+)
+
+cc_library(
+    name = "middleware_interfaces",
+    hdrs = [
+        "interfaces/include/middleware/concurrency/LockStrategies.h",
+        "interfaces/include/middleware/logger/Logger.h",
+        "interfaces/include/middleware/os/TaskIdProvider.h",
+        "interfaces/include/middleware/time/SystemTimerProvider.h",
+    ],
+    strip_include_prefix = "interfaces/include",
+    visibility = ["//visibility:public"],
+    deps = [
+        ":middleware_lock_types",
+        "//libs/3rdparty/etl",
+    ],
+)
+
+cc_library(
+    name = "middleware",
+    srcs = glob(["src/**/*.cpp"]),
+    hdrs = glob(["include/**/*.h"]),
+    strip_include_prefix = "include",
+    visibility = ["//visibility:public"],
+    deps = [
+        ":middleware_interfaces",
+        "//libs/3rdparty/etl",
+    ],
+)

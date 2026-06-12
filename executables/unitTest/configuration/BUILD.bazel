@@ -11,13 +11,18 @@
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
 
 cc_library(
-    name = "util",
-    srcs = glob(["src/util/**/*.cpp"]),
-    hdrs = glob(["include/**/*.h"]),
-    strip_include_prefix = "include",
-    visibility = ["//visibility:public"],
+    name = "common_impl",
+    srcs = ["common/src/busid/BusId.cpp"],
+    hdrs = ["common/include/busid/BusId.h"],
+    strip_include_prefix = "common/include",
+    visibility = ["//libs/bsw/common:__pkg__"],
     deps = [
-        "//libs/3rdparty/etl",
-        "//libs/bsw/platform",
+        "//libs/bsw/common:common_headers",
     ],
+)
+
+# Empty dummy lib for unit tests (matches CMake)
+cc_library(
+    name = "configuration",
+    visibility = ["//visibility:public"],
 )

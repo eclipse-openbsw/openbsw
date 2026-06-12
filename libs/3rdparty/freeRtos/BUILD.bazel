@@ -1,0 +1,95 @@
+load("@rules_cc//cc:cc_library.bzl", "cc_library")
+
+alias(
+    name = "freertos_port_default",
+    actual = select(
+        {
+            "//bazel/platform/constraints:s32k148": "//platforms/s32k1xx/3rdparty/freertos_cm4_sysTick:freertos_cm4_sys_tick_port",
+            "@platforms//os:linux": "//platforms/posix/3rdparty/freeRtosPosix:freertos_posix_port",
+        },
+        no_match_error = "No FreeRTOS port for this platform. Override --//libs/3rdparty/freeRtos:freertos_port with your own port target.",
+    ),
+)
+
+# FreeRTOS port (portmacro.h).
+#   Default:  select based on the target platform (S32K148, POSIX)
+#   Override: --//libs/3rdparty/freeRtos:freertos_port=//path/to:your_port
+label_flag(
+    name = "freertos_port",
+    build_setting_default = ":freertos_port_default",
+    visibility = ["//visibility:public"],
+)
+
+alias(
+    name = "freertos_port_impl_default",
+    actual = select(
+        {
+            "//bazel/platform/constraints:s32k148": "//platforms/s32k1xx/3rdparty/freertos_cm4_sysTick:freertos_cm4_sys_tick",
+            "@platforms//os:linux": "//platforms/posix/3rdparty/freeRtosPosix:freertos_posix",
+        },
+        no_match_error = "No FreeRTOS port implementation for this platform. Override --//libs/3rdparty/freeRtos:freertos_port_impl with your own port target.",
+    ),
+)
+
+# FreeRTOS port implementation
+#   Default:  select based on the target platform (S32K148, POSIX)
+#   Override: --//libs/3rdparty/freeRtos:freertos_port_impl=//path/to:your_port_impl
+label_flag(
+    name = "freertos_port_impl",
+    build_setting_default = ":freertos_port_impl_default",
+    visibility = ["//visibility:public"],
+)
+
+alias(
+    name = "free_rtos_os_hooks_default",
+    actual = select(
+        {
+            "//bazel/platform/constraints:s32k148": "//executables/referenceApp/platforms/s32k148evb/main:freertos_os_hooks",
+            "@platforms//os:linux": "//executables/referenceApp/platforms/posix/main:freertos_os_hooks",
+        },
+        no_match_error = "No FreeRTOS OS hooks for this platform. Override --//libs/3rdparty/freeRtos:free_rtos_os_hooks with your own hooks target.",
+    ),
+)
+
+# FreeRTOS OS hooks
+#   Default:  select based on the target platform (S32K148, POSIX)
+#   Override: --//libs/3rdparty/freeRtos:free_rtos_os_hooks=//path/to:your_os_hooks
+label_flag(
+    name = "free_rtos_os_hooks",
+    build_setting_default = ":free_rtos_os_hooks_default",
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "free_rtos_headers",
+    hdrs = glob(["include/**/*.h"]),
+    strip_include_prefix = "include",
+    visibility = ["//visibility:public"],
+    deps = [
+        ":freertos_port",
+        "//libs/bsw/asyncFreeRtos:freertos_configuration",
+    ],
+)
+
+# Circular dependency present on the CMake side: free_rtos -> freeRtosPortImpl -> freeRtos
+# Split off free_rtos_headers and freertos_port_impl to break the circular dependency for Bazel
+cc_library(
+    name = "free_rtos",
+    srcs = [
+        "src/croutine.c",
+        "src/event_groups.c",
+        "src/list.c",
+        "src/queue.c",
+        "src/stream_buffer.c",
+        "src/tasks.c",
+        "src/timers.c",
+    ],
+    copts = ["-Wno-unused-variable"],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":free_rtos_headers",
+        ":free_rtos_os_hooks",
+        ":freertos_port_impl",
+        "//libs/bsw/platform",
+    ],
+)

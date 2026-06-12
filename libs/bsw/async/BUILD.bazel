@@ -1,0 +1,70 @@
+# *******************************************************************************
+# Copyright (c) 2026 Accenture
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+
+load("@rules_cc//cc:cc_library.bzl", "cc_library")
+
+alias(
+    name = "async_platform",
+    actual = select(
+        {
+            "//bazel/config/rtos:support_freertos": "//libs/bsw/asyncFreeRtos:async_free_rtos",
+            # TODO: Add  threadX support here once libs/3rdparty/threadx has been migrated
+        },
+        no_match_error = "async: only the FREERTOS asyncPlatform is migrated; build with --//bazel/config/rtos=freertos (ThreadX deferred).",
+    ),
+    visibility = ["//visibility:public"],
+)
+
+alias(
+    name = "async_binding_default",
+    actual = select(
+        {
+            "//bazel/config/executable_config:reference_app": "//executables/referenceApp/asyncBinding:async_binding",
+            # TODO: Add unit_test asyncBinding here once the unitTest build has been migrated
+        },
+        no_match_error = "No async binding for this config. Override --//libs/bsw/async:async_binding=//<your>:binding",
+    ),
+)
+
+# Async binding (provides the RTOS-support define and runtime binding for the async layer).
+#   Default:  select async_binding based on //bazel/config/executable_config
+#   Override: --//libs/bsw/async:async_binding=//path/to:your_binding
+label_flag(
+    name = "async_binding",
+    build_setting_default = ":async_binding_default",
+    visibility = ["//visibility:public"],
+)
+
+# Circular dependency present on the CMake side: async -> asyncBinding -> runtime -> async
+# Split off async_headers (async's headers + async_platform, without async_binding) to break the
+# circular dependency for Bazel.
+cc_library(
+    name = "async_headers",
+    hdrs = [
+        "include/async/Async.h",
+        "include/async/util/Call.h",
+        "include/async/util/MemberCall.h",
+    ],
+    strip_include_prefix = "include",
+    visibility = ["//visibility:public"],
+    deps = [
+        ":async_platform",
+        "//libs/3rdparty/etl",
+    ],
+)
+
+cc_library(
+    name = "async",
+    visibility = ["//visibility:public"],
+    deps = [
+        ":async_binding",
+        ":async_headers",
+    ],
+)

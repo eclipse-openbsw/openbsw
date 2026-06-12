@@ -8,11 +8,16 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 
-platform(
-    name = "s32k148",
-    constraint_values = [
-        "@platforms//cpu:armv7e-m",
-        "@platforms//os:none",
-        "//bazel/platform/constraints:s32k148",
+load("@rules_cc//cc:cc_library.bzl", "cc_library")
+
+cc_library(
+    name = "freertos_core_configuration",
+    hdrs = ["include/os/FreeRtosPlatformConfig.h"],
+    strip_include_prefix = "include",
+    target_compatible_with = ["//bazel/platform/constraints:s32k148"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//libs/bsw/bsp",
+        "//platforms/s32k1xx/bsp/bspMcu:bsp_mcu",
     ],
 )

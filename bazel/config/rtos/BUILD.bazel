@@ -9,35 +9,33 @@
 # *******************************************************************************
 
 """
-Build configuration flag for selecting between application build variants.
-This allows targets to define variable dependencies/headers/sources based on the
-active build variant (reference_app or unit_test).
+RTOS related configuration parameters
 
-- Set via --//bazel/config/executable_config=<value>
-- Defaults to "reference_app"
-- Overridden to "unit_test" for bazel test commands in .bazelrc
+The rtos string flag controls which RTOS implementation is compiled into the build
+- Set it via --//bazel/config/rtos=<value>
+- Defaults to "freertos"
 """
 
 load("@bazel_skylib//rules:common_settings.bzl", "string_flag")
 
 string_flag(
-    name = "executable_config",
-    build_setting_default = "reference_app",
+    name = "rtos",
+    build_setting_default = "freertos",
     values = [
-        "reference_app",
-        "unit_test",
+        "freertos",
+        "threadx",
     ],
     visibility = ["//visibility:public"],
 )
 
 config_setting(
-    name = "reference_app",
-    flag_values = {":executable_config": "reference_app"},
+    name = "support_freertos",
+    flag_values = {":rtos": "freertos"},
     visibility = ["//visibility:public"],
 )
 
 config_setting(
-    name = "unit_test",
-    flag_values = {":executable_config": "unit_test"},
+    name = "support_threadx",
+    flag_values = {":rtos": "threadx"},
     visibility = ["//visibility:public"],
 )

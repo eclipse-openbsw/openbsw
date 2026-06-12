@@ -1,0 +1,91 @@
+# *******************************************************************************
+# Copyright (c) 2026 Accenture
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+
+load("@rules_cc//cc:cc_library.bzl", "cc_library")
+
+alias(
+    name = "freertos_core_configuration_default",
+    actual = select(
+        {
+            "//bazel/platform/constraints:s32k148": "//executables/referenceApp/platforms/s32k148evb/freeRtosCoreConfiguration:freertos_core_configuration",
+            "@platforms//os:linux": "//executables/referenceApp/platforms/posix/freeRtosCoreConfiguration:freertos_core_configuration",
+        },
+        no_match_error = "No FreeRTOS core configuration for this platform. Override --//libs/bsw/asyncFreeRtos:freertos_core_configuration with your own configuration target.",
+    ),
+)
+
+# FreeRTOS core configuration (FreeRtosPlatformConfig.h and platform wiring).
+#   Default:  select based on the target platform (S32K148, POSIX)
+#   Override: --//libs/bsw/asyncFreeRtos:freertos_core_configuration=//path/to:your_config
+label_flag(
+    name = "freertos_core_configuration",
+    build_setting_default = ":freertos_core_configuration_default",
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "async_free_rtos",
+    hdrs = [
+        "include/async/EventManager.h",
+        "include/async/FreeRtosAdapter.h",
+        "include/async/FutureSupport.h",
+        "include/async/Lock.h",
+        "include/async/ModifiableLock.h",
+        "include/async/StaticContextHook.h",
+        "include/async/StaticRunnable.h",
+        "include/async/TaskContext.h",
+        "include/async/TaskInitializer.h",
+        "include/async/Types.h",
+    ],
+    strip_include_prefix = "include",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//libs/3rdparty/freeRtos:free_rtos",
+        "//libs/bsp/bspInterrupts:bsp_interrupts",
+        "//libs/bsw/asyncImpl:async_impl",
+        "//libs/bsw/bsp",
+        "//libs/bsw/common",
+        "//libs/bsw/timer",
+    ],
+)
+
+cc_library(
+    name = "async_free_rtos_impl",
+    srcs = [
+        "src/async/Async.cpp",
+        "src/async/FutureSupport.cpp",
+        "src/async/Hook.cpp",
+        "src/async/Types.cpp",
+    ],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":async_free_rtos",
+        "//executables/referenceApp/asyncBinding:async_binding",
+        "//executables/referenceApp/asyncCoreConfiguration:async_core_configuration",
+        "//libs/3rdparty/etl",
+        "//libs/bsw/util",
+    ],
+)
+
+cc_library(
+    name = "freertos_configuration",
+    hdrs = [
+        "freeRtosConfiguration/FreeRTOSConfig.h",
+        "freeRtosConfiguration/async/Hook.h",
+        "freeRtosConfiguration/freertos_tasks_c_additions.h",
+    ],
+    strip_include_prefix = "freeRtosConfiguration",
+    visibility = ["//visibility:public"],
+    deps = [
+        ":freertos_core_configuration",
+        "//executables/referenceApp/asyncCoreConfiguration:async_core_configuration",
+        "//libs/bsw/platform",
+    ],
+)

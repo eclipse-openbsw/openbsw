@@ -1,0 +1,49 @@
+# *******************************************************************************
+# Copyright (c) 2026 Accenture
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+
+load("@rules_cc//cc:cc_library.bzl", "cc_library")
+
+# Circular dependency present on the CMake side: common -> commonImpl -> configuration -> common
+# Split off common_headers to break the circular dependency for Bazel
+cc_library(
+    name = "common_headers",
+    hdrs = [
+        "include/common/busid/BusId.h",
+        "include/util/Mask.h",
+        "include/util/concurrent/IFutureSupport.h",
+        "include/util/timeout/ITimeoutManager2.h",
+    ],
+    strip_include_prefix = "include",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//libs/3rdparty/etl",
+        "//libs/bsw/platform",
+    ],
+)
+
+alias(
+    name = "common_impl",
+    actual = select(
+        {
+            "//bazel/config/executable_config:reference_app": "//executables/referenceApp/configuration:common_impl",
+            "//bazel/config/executable_config:unit_test": "//executables/unitTest/configuration:common_impl",
+        },
+        no_match_error = "Please set executable_config to either 'reference_app' or 'unit_test'",
+    ),
+)
+
+cc_library(
+    name = "common",
+    visibility = ["//visibility:public"],
+    deps = [
+        ":common_headers",
+        ":common_impl",
+    ],
+)

@@ -1,0 +1,52 @@
+# *******************************************************************************
+# Copyright (c) 2026 Accenture
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+
+load("@rules_cc//cc:cc_library.bzl", "cc_library")
+
+# This module exposes two public header roots with different prefixes:
+# "include/" (the common interrupt API) and "freertos/include/" (the
+# RTOS-specific header). A cc_library can strip only one include prefix,
+# so the RTOS header root lives in its own small library and is re-exported
+# through bsp_interrupts_impl below. Consumers still include it as
+# "interrupts/suspendResumeAllInterrupts.h".
+cc_library(
+    name = "bsp_interrupts_impl_freertos_hdrs",
+    hdrs = ["freertos/include/interrupts/suspendResumeAllInterrupts.h"],
+    strip_include_prefix = "freertos/include",
+    target_compatible_with = ["//bazel/platform/constraints:s32k148"],
+)
+
+alias(
+    name = "bsp_interrupts_impl_rtos_hdrs",
+    actual = select(
+        {
+            "//bazel/config/rtos:support_freertos": ":bsp_interrupts_impl_freertos_hdrs",
+            # TODO: add a "//bazel/config/rtos:support_threadx" branch once ThreadX is migrated.
+        },
+        no_match_error = "s32k1xx bsp_interrupts_impl supports only --//bazel/config/rtos=freertos; ThreadX is not yet migrated.",
+    ),
+)
+
+cc_library(
+    name = "bsp_interrupts_impl",
+    srcs = ["src/interrupt_manager.c"],
+    hdrs = [
+        "include/interrupt_manager.h",
+        "include/interrupts/disableEnableAllInterrupts.h",
+    ],
+    strip_include_prefix = "include",
+    target_compatible_with = ["//bazel/platform/constraints:s32k148"],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":bsp_interrupts_impl_rtos_hdrs",
+        "//libs/bsw/platform",
+        "//platforms/s32k1xx/bsp/bspMcu:bsp_mcu",
+    ],
+)
