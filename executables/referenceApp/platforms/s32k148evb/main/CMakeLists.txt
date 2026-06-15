@@ -70,11 +70,29 @@ elseif (BUILD_TARGET_RTOS STREQUAL "THREADX")
                                           threadXConfiguration)
 endif ()
 
-set_target_properties(
-    startUp
-    PROPERTIES PROP_LINKER_SCRIPT
-               "${CMAKE_CURRENT_SOURCE_DIR}/linkerscript/application.dld")
+set(LINKERSCRIPT_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/linkerscript")
+set(LINKERSCRIPT_BINARY_DIR "${CMAKE_CURRENT_BINARY_DIR}/linkerscript")
+set(GENERATED_LINKER_SCRIPT "${LINKERSCRIPT_BINARY_DIR}/application.dld")
+set(HOT_FILE_LIST "${LINKERSCRIPT_SOURCE_DIR}/hot-files.inc")
+
+add_custom_command(
+    OUTPUT "${GENERATED_LINKER_SCRIPT}"
+    COMMAND ${CMAKE_COMMAND} -E make_directory "${LINKERSCRIPT_BINARY_DIR}"
+    COMMAND
+        ${CMAKE_C_COMPILER} -E -P -x c -I "${LINKERSCRIPT_SOURCE_DIR}"
+        "${LINKERSCRIPT_SOURCE_DIR}/application.dld.in" -o
+        "${GENERATED_LINKER_SCRIPT}"
+    DEPENDS "${LINKERSCRIPT_SOURCE_DIR}/application.dld.in" "${HOT_FILE_LIST}"
+    VERBATIM)
+
+add_custom_target(generateStartUpLinkerScript
+                  DEPENDS "${GENERATED_LINKER_SCRIPT}")
+
+add_dependencies(startUp generateStartUpLinkerScript)
+
+set_target_properties(startUp PROPERTIES PROP_LINKER_SCRIPT
+                                         "${GENERATED_LINKER_SCRIPT}")
 set_target_properties(
     startUp
     PROPERTIES LINK_DEPENDS
-               "${CMAKE_CURRENT_SOURCE_DIR}/linkerscript/application.dld")
+               "${GENERATED_LINKER_SCRIPT};${GENERATED_LINKER_FRAGMENTS}")
