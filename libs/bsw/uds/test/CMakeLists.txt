@@ -25,6 +25,7 @@ add_executable(
     src/uds/jobs/RoutineControlJobTest.cpp
     src/uds/jobs/WritedentifierToMemoryJobTest.cpp
     src/uds/resume/ResumableResetDriverTest.cpp
+    src/uds/services/cleardiagnosticinformation/ClearDiagnosticInformationTest.cpp
     src/uds/services/controldtcsetting/ControlDTCSettingTest.cpp
     src/uds/services/readdtcinformation/ReadDTCInformationTest.cpp
     src/uds/services/readdata/MultipleReadDataByIdentifierTest.cpp

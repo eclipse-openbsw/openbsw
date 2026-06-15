@@ -22,6 +22,7 @@
 #include <uds/async/AsyncDiagJob.h>
 #include <uds/jobs/ReadIdentifierFromMemory.h>
 #include <uds/jobs/WriteIdentifierToMemory.h>
+#include <uds/services/cleardiagnosticinformation/ClearDiagnosticInformation.h>
 #include <uds/services/communicationcontrol/CommunicationControl.h>
 #include <uds/services/readdata/ReadDataByIdentifier.h>
 #include <uds/services/readdtcinformation/ReadDTCInformation.h>
@@ -86,6 +87,7 @@ private:
 
     DiagJobRoot _jobRoot;
     DiagnosticSessionControl _diagnosticSessionControl;
+    ClearDiagnosticInformation _clearDiagnosticInformation;
     CommunicationControl _communicationControl;
     DiagnosisConfiguration _udsConfiguration;
     ::etl::pool<IncomingDiagConnection, 5> _connectionPool;

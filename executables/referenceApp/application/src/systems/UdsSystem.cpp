@@ -114,6 +114,9 @@ ReadDataByIdentifier& UdsSystem::getReadDataByIdentifier() { return _readDataByI
 
 void UdsSystem::addDiagJobs()
 {
+    // 14 - ClearDiagnosticInformation
+    (void)_jobRoot.addAbstractDiagJob(_clearDiagnosticInformation);
+
     // 22 - ReadDataByIdentifier
     (void)_jobRoot.addAbstractDiagJob(_readDataByIdentifier);
     (void)_jobRoot.addAbstractDiagJob(_read22Cf01);
@@ -138,6 +141,9 @@ void UdsSystem::addDiagJobs()
 
 void UdsSystem::removeDiagJobs()
 {
+    // 14 - ClearDiagnosticInformation
+    _jobRoot.removeAbstractDiagJob(_clearDiagnosticInformation);
+
     // 22 - ReadDataByIdentifier
     _jobRoot.removeAbstractDiagJob(_readDataByIdentifier);
     _jobRoot.removeAbstractDiagJob(_read22Cf01);

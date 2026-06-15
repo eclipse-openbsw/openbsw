@@ -23,6 +23,7 @@ add_library(
     src/uds/jobs/RoutineControlJob.cpp
     src/uds/jobs/WriteIdentifierToMemory.cpp
     src/uds/resume/ResumableResetDriver.cpp
+    src/uds/services/cleardiagnosticinformation/ClearDiagnosticInformation.cpp
     src/uds/services/controldtcsetting/ControlDTCSetting.cpp
     src/uds/services/communicationcontrol/CommunicationControl.cpp
     src/uds/services/readdtcinformation/ReadDTCInformation.cpp
