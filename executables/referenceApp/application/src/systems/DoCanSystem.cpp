@@ -41,7 +41,11 @@ namespace docan
 {
 
 DoCanSystem::AddressingFilterType::AddressEntryType DoCanSystem::_addresses[]
-    = {{0x02A, 0x0F0U, 0x0F0U, LOGICAL_ADDRESS, 0, 0}};
+#ifdef PLATFORM_SUPPORT_OBD_UDS_ADDRESSING
+    = {{0x7E0U, 0x7E8U, 0x7E8U, LOGICAL_ADDRESS, 0, 0}};
+#else
+    = {{0x02AU, 0x0F0U, 0x0F0U, LOGICAL_ADDRESS, 0, 0}};
+#endif
 
 DoCanSystem::DoCanSystem(
     ::transport::ITransportSystem& transportSystem,
