@@ -263,33 +263,31 @@ void callUpdateTimeouts(Dispatcher&, long)
 TYPED_TEST(FutureDispatcherTestSuite, TestTimeoutDispatching)
 {
     using TraitsUnderTest = typename TypeParam::TraitsUnderTest;
-    if constexpr (TraitsUnderTest::TIMEOUT_VALUE > 0U)
+    using RefApp          = typename TestFixture::RefApp;
+
+    // Test should only run for dispatchers that contain future objects with timeouts bigger than 0.
+    if constexpr (TraitsUnderTest::TIMEOUT_VALUE == 0U)
     {
-        using RefApp = typename TestFixture::RefApp;
-        etl::optional<uint16_t> requestId{};
-        testing::NiceMock<RefApp> appMock{};
-        auto const callback = internal::CallbackHelper<typename TraitsUnderTest::ArgumentType>::
-            Callback::template create<RefApp, &RefApp::receiveFutureData>(appMock);
-
-        requestId = this->obtainRequestId(callback);
-
-        EXPECT_CALL(
-            appMock,
-            receiveFutureData(testing::Truly(
-                [](etl::expected<typename TraitsUnderTest::ArgumentType, Future::State> const& exp)
-                { return exp.error() == Future::State::Timeout; })))
-            .Times(1U);
-
-        for (size_t timeCounter = 0U; timeCounter <= (TraitsUnderTest::TIMEOUT_VALUE);
-             ++timeCounter)
-        {
-            callUpdateTimeouts(*this, 0);
-        }
+        return;
     }
-    else
+
+    etl::optional<uint16_t> requestId{};
+    testing::NiceMock<RefApp> appMock{};
+    auto const callback = internal::CallbackHelper<typename TraitsUnderTest::ArgumentType>::
+        Callback::template create<RefApp, &RefApp::receiveFutureData>(appMock);
+
+    requestId = this->obtainRequestId(callback);
+
+    EXPECT_CALL(
+        appMock,
+        receiveFutureData(testing::Truly(
+            [](etl::expected<typename TraitsUnderTest::ArgumentType, Future::State> const& exp)
+            { return exp.error() == Future::State::Timeout; })))
+        .Times(1U);
+
+    for (size_t timeCounter = 0U; timeCounter <= (TraitsUnderTest::TIMEOUT_VALUE); ++timeCounter)
     {
-        GTEST_SKIP() << "Test should only run for dispatchers that contain future objects with "
-                        "timeouts bigger than 0.";
+        callUpdateTimeouts(*this, 0);
     }
 }
 
