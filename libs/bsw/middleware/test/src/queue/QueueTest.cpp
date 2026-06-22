@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2025 BMW AG
+ * Copyright (c) 2025, 2026 BMW AG
  *
  * This program and the accompanying materials are made available under the
  * terms of the Apache License Version 2.0 which is available at
@@ -20,43 +20,28 @@ struct FakeLock
     FakeLock(void volatile*) {}
 };
 
-using TestQueue
-    = ::middleware::queue::Queue<::middleware::queue::QueueTraits<uint32_t, 100U, test::FakeLock>>;
-using TestQueueExternalMutex = ::middleware::queue::Queue<
-    ::middleware::queue::QueueTraits<uint32_t, 100U, test::FakeLock, uint8_t*>>;
-using TestQueueNoLockSpecialization
-    = ::middleware::queue::Queue<::middleware::queue::QueueTraits<uint32_t, 100U>>;
+using QUEUE_ELEMENT_TYPE     = uint32_t;
+constexpr uint8_t QUEUE_SIZE = 100U;
 
-TEST(TestQueue, EmptyConstructor)
-{
-    TestQueue queue{};
-    queue.init();
-    TestQueue::Sender(queue).write(0U);
-    EXPECT_EQ(queue.size(), 1U);
-    new (&queue) TestQueue();
-    EXPECT_EQ(queue.size(), 1U);
+using InternalMutexTraits
+    = ::middleware::queue::QueueTraits<QUEUE_ELEMENT_TYPE, QUEUE_SIZE, test::FakeLock>;
+using ExternalMutexTraits
+    = ::middleware::queue::QueueTraits<QUEUE_ELEMENT_TYPE, QUEUE_SIZE, test::FakeLock, uint8_t*>;
+using NoMutexTraits = ::middleware::queue::QueueTraits<QUEUE_ELEMENT_TYPE, QUEUE_SIZE>;
 
-    static_cast<void>(TestQueue::Receiver(queue).peek());
-    TestQueue::Receiver(queue).advance();
-    EXPECT_EQ(queue.getStats().processedMessages, 1U);
-    new (&queue) TestQueue();
-    EXPECT_EQ(queue.getStats().processedMessages, 1U);
-
-    TestQueue queue2 = queue;
-    EXPECT_EQ(queue2.getStats().processedMessages, 1U);
-}
+using TestQueue                     = ::middleware::queue::Queue<InternalMutexTraits>;
+using TestQueueExternalMutex        = ::middleware::queue::Queue<ExternalMutexTraits>;
+using TestQueueNoLockSpecialization = ::middleware::queue::Queue<NoMutexTraits>;
 
 TEST(TestQueue, GetInitialSize)
 {
     TestQueue t;
-    t.init();
     EXPECT_EQ(t.size(), 0U);
 }
 
 TEST(TestQueue, IsFullTest)
 {
     TestQueue t;
-    t.init();
     EXPECT_FALSE(t.isFull());
 }
 
@@ -64,7 +49,6 @@ TEST(TestQueue, InsertTest)
 {
     TestQueue t;
 
-    t.init();
     EXPECT_FALSE(t.isFull());
 
     TestQueue::Sender writer(t);
@@ -76,14 +60,12 @@ TEST(TestQueue, InsertTest)
 TEST(TestQueue, GetInitialSizeNoLockSpecialization)
 {
     TestQueueNoLockSpecialization t;
-    t.init();
     EXPECT_EQ(t.size(), 0U);
 }
 
 TEST(TestQueue, IsFullTestNoLockSpecialization)
 {
     TestQueueNoLockSpecialization t;
-    t.init();
     EXPECT_FALSE(t.isFull());
 }
 
@@ -91,7 +73,6 @@ TEST(TestQueue, InsertTestNoLockSpecialization)
 {
     TestQueueNoLockSpecialization t;
 
-    t.init();
     EXPECT_FALSE(t.isFull());
 
     TestQueueNoLockSpecialization::Sender writer(t);
@@ -104,7 +85,6 @@ TEST(TestQueue, MaxLoadTestNoLockSpecialization)
 {
     TestQueueNoLockSpecialization t;
 
-    t.init();
     EXPECT_FALSE(t.isFull());
 
     TestQueueNoLockSpecialization::Sender writer(t);
@@ -131,7 +111,6 @@ TEST(TestQueue, WritteMessagesTestNoLockSpecialization)
 {
     TestQueueNoLockSpecialization t;
 
-    t.init();
     EXPECT_FALSE(t.isFull());
 
     TestQueueNoLockSpecialization::Sender writer(t);
@@ -157,7 +136,6 @@ TEST(TestQueue, LostMessagesTestNoLockSpecialization)
 {
     TestQueueNoLockSpecialization t;
 
-    t.init();
     EXPECT_FALSE(t.isFull());
 
     TestQueueNoLockSpecialization::Sender writer(t);
@@ -191,17 +169,11 @@ TEST(TestQueue, LostMessagesTestNoLockSpecialization)
     }
 }
 
-TEST(TestQueue, ExternalMutexTest)
+TEST(TestExternalMutexTraits, ExternalMutexTest)
 {
-    uint8_t volatile queue_mutex{
-        0xFFU}; // on init method of queue this value should be initialized to 0
-    TestQueueExternalMutex testingQueue{};
-
-    // This init method should exist for this TestQueueExternalMutex type
-    testingQueue.init("", &queue_mutex);
-    EXPECT_EQ(queue_mutex, 0U);
-    TestQueueExternalMutex::Sender writer(testingQueue);
-    writer.write(100U);
+    uint8_t volatile mutex{0xFFU};
+    QueueMutex<ExternalMutexTraits::MutexType> testingMutex{&mutex};
+    EXPECT_EQ(*testingMutex.get(), 0xFFU);
 }
 
 } // namespace middleware::queue::test

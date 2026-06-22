@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2025 BMW AG
+ * Copyright (c) 2025, 2026 BMW AG
  *
  * This program and the accompanying materials are made available under the
  * terms of the Apache License Version 2.0 which is available at
@@ -24,16 +24,16 @@ namespace middleware::queue
  */
 struct QueueStats
 {
-    uint32_t processedMessages;
-    uint32_t lostMessages;
-    uint16_t loadSnapshot;
-    uint16_t processingCounter;
-    uint16_t realLoadSnapshot;
-    uint16_t realProcessingCounter;
-    uint8_t maxLoad;
-    uint8_t startupLoad;
-    uint8_t previousSnapshot;
-    uint8_t maxFillRate;
+    uint32_t processedMessages{0U};
+    uint32_t lostMessages{0U};
+    uint16_t loadSnapshot{0U};
+    uint16_t processingCounter{0U};
+    uint16_t realLoadSnapshot{0U};
+    uint16_t realProcessingCounter{0U};
+    uint8_t maxLoad{0U};
+    uint8_t startupLoad{0U};
+    uint8_t previousSnapshot{0U};
+    uint8_t maxFillRate{0U};
 };
 
 /**
@@ -127,30 +127,9 @@ public:
     }
 
 protected:
-    QueueBase() {}
-
-    /**
-     * Init method which needs to be called before doing any work with the queue.
-     *
-     *
-     * \param maxSize the maximum number of elements inside the queue.
-     */
-    void init(uint32_t const maxSize)
-    {
-        _maxSize                     = maxSize;
-        _sent                        = 0U;
-        _received                    = 0U;
-        _stats.processedMessages     = 0U;
-        _stats.lostMessages          = 0U;
-        _stats.loadSnapshot          = 0U;
-        _stats.processingCounter     = 0U;
-        _stats.realLoadSnapshot      = 0U;
-        _stats.realProcessingCounter = 0U;
-        _stats.maxLoad               = 0U;
-        _stats.startupLoad           = 0U;
-        _stats.previousSnapshot      = 0U;
-        _stats.maxFillRate           = 0U;
-    }
+    constexpr explicit QueueBase(uint32_t const maxSize)
+    : _maxSize(maxSize), _sent(0U), _received(0U), _stats()
+    {}
 
     /** Returns the value of the reading cursor. */
     uint32_t getReceived() const { return _received; }

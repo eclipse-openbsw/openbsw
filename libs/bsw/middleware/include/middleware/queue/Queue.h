@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2025 BMW AG
+ * Copyright (c) 2025, 2026 BMW AG
  *
  * This program and the accompanying materials are made available under the
  * terms of the Apache License Version 2.0 which is available at
@@ -43,14 +43,13 @@ class QueueMutex<T, typename etl::enable_if_t<etl::is_integral<T>::value>>
 public:
     using mutex_t = etl::add_volatile_t<T>;
 
-    /** Initializes the mutex to \p initialValue. */
-    void init(mutex_t initialValue = 0U) { _mutex = initialValue; }
+    constexpr explicit QueueMutex(mutex_t initialValue = 0U) : _mutex(initialValue) {}
 
     /** Returns a pointer to the mutex variable. */
     mutex_t* get() { return &_mutex; }
 
 private:
-    mutex_t _mutex{0U};
+    mutex_t _mutex;
 };
 
 /**
@@ -67,24 +66,12 @@ class QueueMutex<T, typename etl::enable_if_t<etl::is_pointer<T>::value>>
 public:
     using mutex_t = etl::add_pointer_t<etl::add_volatile_t<etl::remove_pointer_t<T>>>;
 
-    constexpr QueueMutex()
-    {
-        // For now we are only accepting pointers to integral types
-        static_assert(
-            etl::is_pointer<T>::value
-                && etl::is_integral<typename etl::remove_pointer<T>::type>::value,
-            "Pointer's underlying type must be an integral");
-    }
+    // For now we are only accepting pointers to integral types
+    static_assert(
+        etl::is_pointer<T>::value && etl::is_integral<typename etl::remove_pointer<T>::type>::value,
+        "Pointer's underlying type must be an integral");
 
-    /** Initializes the mutex to \p initialValue. */
-    void init(mutex_t initialValue = 0U)
-    {
-        ETL_ASSERT(
-            initialValue != nullptr,
-            ETL_ERROR_GENERIC("Pointer to mutex variable needs to be different than nullptr."));
-        _mutex  = initialValue;
-        *_mutex = 0U;
-    }
+    constexpr explicit QueueMutex(mutex_t initialValue) : _mutex(initialValue) {}
 
     /** Returns a pointer to the mutex variable. */
     mutex_t get() { return _mutex; }
@@ -140,23 +127,20 @@ public:
     static constexpr size_t MAX_SIZE = Traits::ELEMENT_COUNT;
 
     /**
-     * Default constructor is intentionally empty, since queues will be placed in shared RAM
-     * and they will be asynchronously initialized by all cores.
+     * Constructor which initializes the queue.
      *
-     */
-    constexpr Queue() : Base() {}
-
-    /**
-     * Init method which needs to be called before doing any work with the queue.
+     * With an integral mutex (the default), this constructor is constexpr and the
+     * queue receives compile-time initialization when declared as a global or
+     * static object, guaranteeing a known-good state before any core starts executing.
+     * With a pointer mutex (external mutex), compile-time initialization only applies if the
+     * pointer is a compile-time constant; otherwise dynamic initialization still occurs
+     * and the pointed-to variable must be valid before the first Sender::write() call.
      *
      * \param pmutex
      */
-    void init(char const* const = nullptr, typename MutexType::mutex_t pmutex = 0U)
-    {
-        _mutex.init(pmutex);
-        Base::init(MAX_SIZE);
-        _buffer.fill(QueueItem{});
-    }
+    constexpr explicit Queue(typename MutexType::mutex_t pmutex = 0U)
+    : Base(MAX_SIZE), _buffer(), _mutex(pmutex)
+    {}
 
     /**
      * Nested class to read elements from the queue.
@@ -244,22 +228,14 @@ public:
     static constexpr size_t MAX_SIZE = Traits::ELEMENT_COUNT;
 
     /**
-     * Default constructor is intentionally empty, since queues will be placed in shared RAM
-     * and they will be asynchronously initialized by all cores.
+     * Constructor which initializes the queue.
      *
+     * The constexpr constructor enables compile-time initialization when the
+     * queue is a global or static object, placing it in .bss/.data with a known-good
+     * state before any core starts executing. This avoids initialization-order races
+     * in multicore systems where cores may begin running at different times.
      */
-    constexpr Queue() : Base() {}
-
-    /**
-     * Init method which needs to be called before doing any work with the queue.
-     *
-     * \param pmutex
-     */
-    void init(char const* const = nullptr)
-    {
-        Base::init(MAX_SIZE);
-        _buffer.fill(QueueItem{});
-    }
+    constexpr explicit Queue() : Base(MAX_SIZE), _buffer() {}
 
     /**
      * Nested class to read elements from the queue.
