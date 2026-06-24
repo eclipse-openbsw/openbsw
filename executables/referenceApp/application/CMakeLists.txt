@@ -23,6 +23,10 @@ if (PLATFORM_SUPPORT_ETHERNET)
         target_sources(app.referenceApp
                        PRIVATE src/systems/DoIpServerSystem.cpp)
     endif ()
+
+    if (PLATFORM_SUPPORT_CAN)
+        target_sources(app.referenceApp PRIVATE src/systems/RoutingSystem.cpp)
+    endif ()
 endif ()
 
 if (PLATFORM_SUPPORT_CAN)
@@ -103,6 +107,10 @@ if (PLATFORM_SUPPORT_ETHERNET)
                                                    lwipcore ethConfiguration)
     if (PLATFORM_SUPPORT_TRANSPORT)
         target_link_libraries(app.referenceApp PRIVATE doip)
+    endif ()
+
+    if (PLATFORM_SUPPORT_CAN)
+        target_link_libraries(app.referenceApp PRIVATE blob routing)
     endif ()
 endif ()
 
