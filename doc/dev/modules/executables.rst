@@ -47,6 +47,15 @@ S32K148EVB
 
     ../../../executables/referenceApp/platforms/s32k148evb/**/doc/index
 
+STM32 Nucleo
+++++++++++++
+
+.. toctree::
+    :maxdepth: 1
+    :glob:
+
+    ../../../executables/referenceApp/platforms/nucleo_*/**/doc/index
+
 Safety
 ++++++
 
