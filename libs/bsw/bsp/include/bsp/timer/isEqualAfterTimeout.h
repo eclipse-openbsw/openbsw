@@ -29,9 +29,9 @@ namespace bsp
 template<typename T>
 bool isEqualAfterTimeout(T const* const ptr, T const mask, T const value, uint32_t const timeout)
 {
-    uint64_t const endTime = getSystemTimeUs() + timeout;
+    uint64_t const endTime = getSystemTimeUs64Bit() + timeout;
 
-    while (((*ptr & mask) == (value & mask)) && (getSystemTimeUs() <= endTime)) {}
+    while (((*ptr & mask) == (value & mask)) && (getSystemTimeUs64Bit() <= endTime)) {}
     return (*ptr & mask) == (value & mask);
 }
 

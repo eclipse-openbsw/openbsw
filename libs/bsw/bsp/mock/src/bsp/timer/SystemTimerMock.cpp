@@ -28,9 +28,9 @@ uint32_t getSystemTicks32Bit(void) { return SystemTimerMock::instance().getSyste
 
 uint64_t getSystemTimeNs(void) { return SystemTimerMock::instance().getSystemTimeNs(); }
 
-uint64_t getSystemTimeUs(void) { return SystemTimerMock::instance().getSystemTimeUs(); }
+uint64_t getSystemTimeUs64Bit(void) { return SystemTimerMock::instance().getSystemTimeUs64Bit(); }
 
-uint64_t getSystemTimeMs(void) { return SystemTimerMock::instance().getSystemTimeMs(); }
+uint64_t getSystemTimeMs64Bit(void) { return SystemTimerMock::instance().getSystemTimeMs64Bit(); }
 
 uint64_t systemTicksToTimeUs(uint64_t ticks)
 {

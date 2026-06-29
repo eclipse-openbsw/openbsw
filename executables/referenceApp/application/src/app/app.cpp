@@ -58,6 +58,7 @@
 #include <async/AsyncBinding.h>
 #include <lifecycle/LifecycleLogger.h>
 #include <lifecycle/LifecycleManager.h>
+#include <time/TimestampProvider.h>
 
 #include <cstdio>
 
@@ -126,7 +127,8 @@ AsyncRuntimeMonitor runtimeMonitor{
 
 LifecycleManager lifecycleManager{
     TASK_SYSADMIN,
-    ::lifecycle::LifecycleManager::GetTimestampType::create<&getSystemTimeUs32Bit>()};
+    ::lifecycle::LifecycleManager::GetTimestampType::create<
+        &::bsw::time::TimestampProvider::getTimestampUs32Bit>()};
 
 ::etl::typed_storage<::systems::RuntimeSystem> runtimeSystem;
 ::etl::typed_storage<::systems::SysAdminSystem> sysAdminSystem;

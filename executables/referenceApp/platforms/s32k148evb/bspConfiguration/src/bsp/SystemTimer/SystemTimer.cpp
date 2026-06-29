@@ -87,11 +87,11 @@ uint32_t getSystemTicks32Bit(void) { return static_cast<uint32_t>(updateTicks())
 
 uint64_t getSystemTimeNs(void) { return updateTicks() * 1000U / TICK_FREQ_MHZ; }
 
-uint64_t getSystemTimeUs(void) { return updateTicks() / TICK_FREQ_MHZ; }
+uint64_t getSystemTimeUs64Bit(void) { return updateTicks() / TICK_FREQ_MHZ; }
 
 uint32_t getSystemTimeUs32Bit(void) { return static_cast<uint32_t>(updateTicks() / TICK_FREQ_MHZ); }
 
-uint64_t getSystemTimeMs(void) { return updateTicks() / TICK_FREQ_MHZ / 1000U; }
+uint64_t getSystemTimeMs64Bit(void) { return updateTicks() / TICK_FREQ_MHZ / 1000U; }
 
 uint32_t getSystemTimeMs32Bit(void)
 {
@@ -112,8 +112,10 @@ uint32_t getFastTicksPerSecond(void)
 
 void sysDelayUs(uint32_t const delay)
 {
-    uint64_t const start = getSystemTimeUs();
-    while (getSystemTimeUs() < start + delay) {}
+    uint32_t const start = getSystemTimeUs32Bit();
+    // Use unsigned wraparound: (now - start) yields the elapsed microseconds modulo 2^32, which is
+    // correct as long as the real elapsed time is < 2^32 us (~71.6 min) and we poll often enough.
+    while ((getSystemTimeUs32Bit() - start) < delay) {}
 }
 
 } // extern "C"

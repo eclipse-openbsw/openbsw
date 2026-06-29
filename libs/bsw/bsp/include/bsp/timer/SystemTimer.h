@@ -54,13 +54,13 @@ uint64_t getSystemTimeNs(void);
  * Returns the Time in Us since startup of the CPU.
  * \return Systemtime in Us.
  */
-uint64_t getSystemTimeUs(void);
+uint64_t getSystemTimeUs64Bit(void);
 
 /**
  * Returns the Time in Ms since startup of the CPU.
  * \return Systemtime in Ms.
  */
-uint64_t getSystemTimeMs(void);
+uint64_t getSystemTimeMs64Bit(void);
 
 /**
  * Returns the converted value in Us from a given value in system ticks.

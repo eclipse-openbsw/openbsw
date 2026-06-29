@@ -18,7 +18,7 @@
 #include "app/CanDemoListener.h"
 #include "app/DemoLogger.h"
 
-#include <bsp/SystemTime.h>
+#include <time/TimestampProvider.h>
 #ifdef TRACING
 #include "runtime/Tracer.h"
 #endif
@@ -163,9 +163,9 @@ void DemoSystem::cyclic()
 #endif
 
 #ifdef PLATFORM_SUPPORT_CAN
-    static uint32_t previousSentTime = getSystemTimeMs32Bit();
+    static uint32_t previousSentTime = ::bsw::time::TimestampProvider::getTimestampMs32Bit();
     static uint32_t canSentCount     = 0;
-    uint32_t const now               = getSystemTimeMs32Bit();
+    uint32_t const now               = ::bsw::time::TimestampProvider::getTimestampMs32Bit();
     uint32_t const deltaTimeMs       = now - previousSentTime;
     // Send a CAN frame every second.
     if (deltaTimeMs >= 1000)

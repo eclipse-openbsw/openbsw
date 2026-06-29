@@ -75,6 +75,7 @@ target_link_libraries(
             osRtos
             asyncRtosImpl
             util
+            time
             runtime
             safeLifecycle
             safeUtils

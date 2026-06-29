@@ -20,11 +20,11 @@ etl::chrono::high_resolution_clock::rep etl_get_high_resolution_clock()
 
 etl::chrono::system_clock::rep etl_get_system_clock()
 {
-    return etl::chrono::system_clock::rep(static_cast<int64_t>(getSystemTimeUs()));
+    return etl::chrono::system_clock::rep(static_cast<int64_t>(getSystemTimeUs64Bit()));
 }
 
 etl::chrono::steady_clock::rep etl_get_steady_clock()
 {
-    return etl::chrono::steady_clock::rep(static_cast<int64_t>(getSystemTimeMs() / 1000));
+    return etl::chrono::steady_clock::rep(static_cast<int64_t>(getSystemTimeMs64Bit() / 1000));
 }
 }

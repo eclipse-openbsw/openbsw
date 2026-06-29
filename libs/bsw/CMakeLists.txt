@@ -29,6 +29,7 @@ add_subdirectory(lifecycle)
 add_subdirectory(logger)
 add_subdirectory(platform)
 add_subdirectory(stdioConsoleInput)
+add_subdirectory(time)
 add_subdirectory(timer)
 add_subdirectory(util)
 

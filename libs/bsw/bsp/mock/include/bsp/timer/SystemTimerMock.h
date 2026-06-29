@@ -68,14 +68,14 @@ public:
     MOCK_METHOD(uint64_t, getSystemTimeNs, ());
 
     /**
-     * \see getSystemTimeUs(void)
+     * \see getSystemTimeUs64Bit(void)
      */
-    MOCK_METHOD(uint64_t, getSystemTimeUs, ());
+    MOCK_METHOD(uint64_t, getSystemTimeUs64Bit, ());
 
     /**
-     * \see getSystemTimeMs(void)
+     * \see getSystemTimeMs64Bit(void)
      */
-    MOCK_METHOD(uint64_t, getSystemTimeMs, ());
+    MOCK_METHOD(uint64_t, getSystemTimeMs64Bit, ());
 
     /**
      * \see systemTicksToTimeUs(uint64_t ticks)

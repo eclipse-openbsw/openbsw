@@ -14,11 +14,11 @@
 #include "transport/ITransportSystem.h"
 
 #include <app/appConfig.h>
-#include <bsp/timer/SystemTimer.h>
 #include <docan/common/DoCanLogger.h>
 #include <docan/datalink/DoCanFrameCodecConfigPresets.h>
 #include <etl/delegate.h>
 #include <etl/span.h>
+#include <time/TimestampProvider.h>
 
 namespace
 {
@@ -33,7 +33,7 @@ uint8_t const FLOW_CONTROL_WAIT_COUNT = 15U;
 uint16_t const MIN_SEPARATION_TIME    = 200U;
 uint8_t const BLOCK_SIZE              = 15U;
 
-uint32_t systemUs() { return getSystemTimeUs32Bit(); }
+uint32_t systemUs() { return ::bsw::time::TimestampProvider::getTimestampUs32Bit(); }
 
 } // namespace
 

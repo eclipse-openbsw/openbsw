@@ -20,7 +20,7 @@ uint64_t getSystemTimeNs()
     return duration_cast<nanoseconds>(steady_clock::now() - startTime).count();
 }
 
-uint64_t getSystemTimeUs()
+uint64_t getSystemTimeUs64Bit()
 {
     return duration_cast<microseconds>(steady_clock::now() - startTime).count();
 }
@@ -35,6 +35,12 @@ uint32_t getSystemTimeMs32Bit(void)
 {
     auto elapsed = duration_cast<milliseconds>(steady_clock::now() - startTime).count();
     return static_cast<uint32_t>(elapsed & 0xFFFFFFFF); // wrap naturally
+}
+
+uint64_t getSystemTimeMs64Bit(void)
+{
+    return static_cast<uint64_t>(
+        duration_cast<milliseconds>(steady_clock::now() - startTime).count());
 }
 
 void sysDelayUs(uint32_t const delay)

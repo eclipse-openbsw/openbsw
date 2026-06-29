@@ -10,7 +10,6 @@
 
 #include "systems/EthernetSystem.h"
 
-#include <bsp/SystemTime.h>
 #include <ethernet/EthernetLogger.h>
 #include <lwip/init.h>
 #include <lwip/prot/ethernet.h>
