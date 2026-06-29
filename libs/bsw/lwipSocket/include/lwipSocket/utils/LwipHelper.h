@@ -10,9 +10,9 @@
 
 #pragma once
 
+#include <etl/queue_spsc_atomic.h>
 #include <etl/span.h>
 #include <ip/IPAddress.h>
-#include <util/spsc/Queue.h>
 
 extern "C"
 {
@@ -33,7 +33,7 @@ struct RxCustomPbuf
     void* slot;
 };
 
-using PbufQueue = ::util::spsc::Queue<pbuf*, 10>;
+using PbufQueue = ::etl::queue_spsc_atomic<pbuf*, 10>;
 
 err_t initNetifDriverParameters(::etl::span<uint8_t const, 6> const macAddr, netif& lwipNetif);
 ::ip::IPAddress from_lwipIp(ip_addr_t const& lwipIp);
@@ -47,7 +47,7 @@ inline ip_addr_t to_lwipIp(::ip::IPAddress const& ip)
 }
 
 bool processPbufQueue(
-    ::lwiputils::PbufQueue::Receiver receiver,
+    ::lwiputils::PbufQueue& receiver,
     ::etl::span<netif> lwnetifs,
     ::etl::span<uint16_t const> vlanIds);
 } // namespace lwiputils

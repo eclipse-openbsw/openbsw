@@ -50,10 +50,7 @@ public:
         return _driver.writeFrame(aNetif, buf);
     }
 
-    ::lwiputils::PbufQueue::Receiver getRx() override
-    {
-        return ::lwiputils::PbufQueue::Receiver(_driver._rxBuffers._queue);
-    }
+    ::lwiputils::PbufQueue& getRx() override { return _driver._rxBuffers._queue; }
 
     ::async::ContextType const _context;
     ::async::TimeoutType _timeout;

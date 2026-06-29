@@ -100,8 +100,7 @@ void TapEthernetDriver::stop()
 
 void TapEthernetDriver::readFrame()
 {
-    auto sender = ::lwiputils::PbufQueue::Sender(_queue);
-    if (sender.full())
+    if (_queue.full())
     {
         // TODO: increment queue full stat counter
         return;
@@ -137,7 +136,7 @@ void TapEthernetDriver::readFrame()
         delete driverPbuf;
     };
 
-    sender.write(&frameBuf->buf.pbuf);
+    _queue.push(&frameBuf->buf.pbuf);
 }
 
 bool TapEthernetDriver::writeFrame(pbuf* const buf) const

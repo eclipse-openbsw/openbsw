@@ -11,9 +11,9 @@
 #pragma once
 
 #include "etl/array.h"
+#include "etl/queue_spsc_atomic.h"
 #include "lwipSocket/netif/LwipNetworkInterface.h"
 #include "lwipSocket/utils/LwipHelper.h"
-#include "util/spsc/Queue.h"
 
 #include <cstdint>
 

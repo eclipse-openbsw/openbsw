@@ -41,10 +41,7 @@ public:
 
     bool writeFrame(netif* ni, pbuf* pb) override;
 
-    ::lwiputils::PbufQueue::Receiver getRx() override
-    {
-        return ::lwiputils::PbufQueue::Receiver(_driver._queue);
-    }
+    ::lwiputils::PbufQueue& getRx() override { return _driver._queue; }
 
     ::async::ContextType _context;
     ::async::TimeoutType _rxTimeout;

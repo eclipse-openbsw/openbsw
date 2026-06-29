@@ -103,14 +103,13 @@ void RxBuffers::interrupt()
     struct pbuf* buf;
     netif* pNetif;
 
-    auto sender = ::lwiputils::PbufQueue::Sender(_queue);
     do
     {
         buf = readFrame(pNetif);
         if (buf != nullptr)
         {
             // frame transfer was successful
-            if (sender.full())
+            if (_queue.full())
             {
                 // enqueue failed
                 static bool once = false;
@@ -125,8 +124,7 @@ void RxBuffers::interrupt()
             {
                 // allocation was successful
 
-                sender.next() = buf;
-                sender.write_next();
+                _queue.push(buf);
                 // frame has been successfully enqueued
                 // TODO: notify TCPIP task by setting event
             }

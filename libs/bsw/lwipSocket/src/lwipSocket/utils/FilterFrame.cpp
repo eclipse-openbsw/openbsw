@@ -91,7 +91,7 @@ netif* filterETHFrames(
  * Input all pbufs to their respective interfaces
  */
 bool processPbufQueue(
-    ::lwiputils::PbufQueue::Receiver receiver,
+    ::lwiputils::PbufQueue& receiver,
     ::etl::span<netif> const lwnetifs,
     ::etl::span<uint16_t const> const vlanIds)
 {
@@ -101,7 +101,8 @@ bool processPbufQueue(
     auto const queued = receiver.size();
     for (size_t i = 0; i < queued; ++i)
     {
-        auto* const p      = receiver.read();
+        pbuf* p = nullptr;
+        receiver.pop(p);
         auto* const pNetIf = filterETHFrames(p, lwnetifs, vlanIds);
         if ((pNetIf != nullptr) && (pNetIf->input != nullptr))
         {
