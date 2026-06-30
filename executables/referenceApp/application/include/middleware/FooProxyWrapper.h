@@ -38,8 +38,9 @@ public:
     {
         using namespace org::test::foo::Foo;
 
-        using GetterCb = etl::delegate<void(
-            etl::expected<FooStruct, ::middleware::core::Future::State> const&)>;
+        using GetterCb = ::etl::delegate<void(::etl::expected<
+                                              ::etl::reference_wrapper<FooStruct const>,
+                                              ::middleware::core::Future::State> const&)>;
 
         auto const cb = GetterCb::create<FooProxyWrapper, &FooProxyWrapper::onGetResponse>(*this);
 
@@ -56,15 +57,16 @@ private:
     }
 
     void onGetResponse(
-        etl::expected<org::test::foo::Foo::FooStruct, ::middleware::core::Future::State> const&
-            result)
+        ::etl::expected<
+            ::etl::reference_wrapper<org::test::foo::Foo::FooStruct const>,
+            ::middleware::core::Future::State> const& result)
     {
         if (result.has_value())
         {
             ::util::logger::Logger::info(
                 ::util::logger::DEMO,
                 "[Middleware] Foo get response, fooValue=%u",
-                result.value().fooValue);
+                result.value().get().fooValue);
         }
     }
 

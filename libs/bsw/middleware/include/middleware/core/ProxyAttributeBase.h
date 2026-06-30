@@ -37,7 +37,8 @@ class ProxyAttributeBase
 {
 public:
     using AttributeType  = typename DispatcherTraits::ArgumentType;
-    using GetterCallback = etl::delegate<void(etl::expected<AttributeType, Future::State> const&)>;
+    using GetterResult   = typename FutureDispatcher<DispatcherTraits, REQUEST_LIMIT>::Result;
+    using GetterCallback = typename FutureDispatcher<DispatcherTraits, REQUEST_LIMIT>::Callback;
 
     explicit ProxyAttributeBase(ProxyBase& proxy) : _proxy(&proxy) {}
 

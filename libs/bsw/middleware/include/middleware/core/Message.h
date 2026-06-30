@@ -199,8 +199,8 @@ public:
     }
 
     /**
-     * Create an error response message that originates from a skeleton and is targetted to a
-     * unique proxy, and sets the payload with value \param error.
+     * Create an error response message that originates from a skeleton and is targeted to a
+     * unique proxy, and sets the payload with \param error value.
      */
     static constexpr Message createErrorResponse(
         uint16_t const serviceId,

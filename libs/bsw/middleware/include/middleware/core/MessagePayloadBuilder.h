@@ -10,12 +10,13 @@
 
 #pragma once
 
+#include "middleware/core/LoggerApi.h"
 #include "middleware/core/Message.h"
 #include "middleware/core/types.h"
+#include "middleware/memory/AllocatorSelector.h"
 
 #include <etl/iterator.h>
 #include <etl/memory.h>
-#include <etl/optional.h>
 #include <etl/span.h>
 #include <etl/type_traits.h>
 
@@ -40,10 +41,10 @@ public:
 
     /**
      * Allocates space for \p obj in the message payload.
-     * Chooses internal or external allocation based on whether T is trivially copyable
-     * and whether it fits in the internal buffer.
+     * Stores \p obj in the message's internal buffer when it fits, otherwise copy-constructs
+     * it into externally allocated memory.
      *
-     * \tparam T Payload type
+     * \tparam T Payload type (must be copy-constructible)
      * \param obj The object to allocate
      * \param msg The message to store the payload in
      * \param numberOfReferences Number of references sharing this payload (1 = unique)
@@ -53,76 +54,54 @@ public:
     [[nodiscard]] HRESULT
     allocate(T const& obj, Message& msg, uint8_t const numberOfReferences = 1U)
     {
-        if constexpr (!etl::is_trivially_copyable_v<T>)
-        {
-            HRESULT ret = HRESULT::CannotAllocatePayload;
+        static_assert(etl::is_copy_constructible_v<T>, "T must be copy-constructible");
+        static_assert(!etl::is_span_v<T>, "Use the span overload to allocate bytes");
 
-            size_t const payloadSize = T::AllocationPolicy::getNeededSize(obj);
-            etl::optional<etl::span<uint8_t>> buffer
-                = allocateNonTrivialType(payloadSize, msg, numberOfReferences);
-            if (buffer.has_value())
-            {
-                T::AllocationPolicy::serialize(obj, buffer.value());
-                ret = HRESULT::Ok;
-            }
-
-            return ret;
-        }
-        else if constexpr (sizeof(T) <= Message::MAX_PAYLOAD_SIZE)
+        if constexpr (sizeof(T) <= Message::MAX_PAYLOAD_SIZE)
         {
             msg.constructObjectAtPayload(obj);
             return HRESULT::Ok;
         }
         else
         {
-            return allocateTrivialType(&obj, sizeof(obj), msg, numberOfReferences);
+            return emplaceExternalPayload(obj, msg, numberOfReferences);
         }
     }
 
     /**
      * Specialization for byte spans to copy the span's data contents.
      *
-     * \param span Span of bytes to copy into the message
+     * \param src Span of bytes to copy into the message
      * \param msg The message to store the payload in
      * \param numberOfReferences Number of shared references
      * \return HRESULT indicating success or failure
      */
-    [[nodiscard]] HRESULT allocate(
-        etl::span<uint8_t const> const span, Message& msg, uint8_t const numberOfReferences = 1U)
-    {
-        if (span.size_bytes() <= Message::MAX_PAYLOAD_SIZE)
-        {
-            msg.copyRawBytesToPayload(span);
-            return HRESULT::Ok;
-        }
-        return allocateTrivialType(span.data(), span.size_bytes(), msg, numberOfReferences);
-    }
+    [[nodiscard]] static HRESULT
+    allocate(etl::span<uint8_t const> src, Message& msg, uint8_t numberOfReferences = 1U);
 
     /**
      * Reads an object of type T from the content of \p msg.
      *
+     * Returns a const reference directly into the middleware-managed buffer. The caller must
+     * consume the reference before the message is deallocated, as the middleware reclaims the
+     * buffer immediately after dispatch.
+     *
      * \tparam T The payload type to read
      * \param msg The message containing the payload
-     * \return The deserialized object
+     * \return A const reference to the object stored in the payload
      */
     template<typename T>
-    T readPayload(Message const& msg)
+    static T const& readPayload(Message const& msg)
     {
-        if constexpr (!etl::is_trivially_copyable_v<T>)
-        {
-            uint8_t* ptr = getAllocatorPointerFromMessage(msg);
-            T obj = T::AllocationPolicy::deserialize(etl::span<uint8_t>(ptr, msg.getPayloadSize()));
+        static_assert(!etl::is_span_v<T>, "Use readRawPayload() to read bytes");
 
-            return obj;
-        }
-        else if constexpr (sizeof(T) <= Message::MAX_PAYLOAD_SIZE)
+        if constexpr (sizeof(T) <= Message::MAX_PAYLOAD_SIZE)
         {
             return msg.getObjectStoredInPayload<T>();
         }
         else
         {
-            uint8_t* ptr = getAllocatorPointerFromMessage(msg);
-            return etl::get_object_at<T>(ptr);
+            return etl::get_object_at<T const>(getAllocatorPointerFromMessage(msg));
         }
     }
 
@@ -165,13 +144,61 @@ public:
     static MessagePayloadBuilder& getInstance() { return _instance; }
 
 private:
-    static HRESULT allocateTrivialType(
-        void const* objPtr, size_t objSize, Message& msg, uint8_t numberOfReferences);
-
-    static etl::optional<etl::span<uint8_t>>
-    allocateNonTrivialType(size_t payloadSize, Message& msg, uint8_t numberOfReferences);
+    /**
+     * Allocates space on the middleware allocators for a byte span by copying bytes.
+     *
+     * \param src Span of bytes to copy
+     * \param msg Reference to the middleware message
+     * \param numberOfReferences Number of references to the allocation
+     * \return HRESULT
+     */
+    static HRESULT allocAndCopyBytesToExternalPayload(
+        etl::span<uint8_t const> src, Message& msg, uint8_t numberOfReferences);
 
     static uint8_t* getAllocatorPointerFromMessage(Message const& msg);
+
+    /**
+     * Emplaces an object of type T into externally allocated memory using placement new.
+     *
+     * \tparam T Must be copy-constructible
+     * \param obj Object to copy-construct into the allocation
+     * \param msg Reference to the middleware message
+     * \param numberOfReferences Number of shared references
+     * \return HRESULT
+     */
+    template<typename T>
+    [[nodiscard]] HRESULT
+    emplaceExternalPayload(T const& obj, Message& msg, uint8_t const numberOfReferences)
+    {
+        static_assert(etl::is_copy_constructible<T>::value, "T must have a copy constructor!");
+
+        HRESULT ret = HRESULT::CannotAllocatePayload;
+
+        uint16_t const sid = msg.getHeader().serviceId;
+        uint8_t* const buffer
+            = msg.isEvent() ? memory::getAllocSharedFunction(sid)(sizeof(T), numberOfReferences)
+                            : memory::getAllocFunction(sid)(sizeof(T));
+
+        if (buffer != nullptr)
+        {
+            etl::construct_object_at(buffer, obj);
+            auto const offset = static_cast<ptrdiff_t>(
+                etl::distance(memory::getRegionStartFunction(sid)(), buffer));
+            msg.setExternalPayload(offset, static_cast<uint32_t>(sizeof(T)));
+            ret = HRESULT::Ok;
+        }
+        else
+        {
+            logger::logAllocationFailure(
+                logger::LogLevel::Error,
+                logger::Error::Allocation,
+                ret,
+                msg,
+                static_cast<uint32_t>(sizeof(T)));
+        }
+
+        return ret;
+    }
 
     MessagePayloadBuilder() = default;
 
