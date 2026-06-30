@@ -19,7 +19,7 @@
 #include <etl/array.h>
 #include <etl/delegate.h>
 #include <etl/expected.h>
-#include <etl/tuple.h>
+#include <etl/functional.h>
 #include <etl/vector.h>
 
 #include <cstdint>
@@ -57,7 +57,8 @@ struct CallbackHelper;
 template<typename ArgumentType>
 struct CallbackHelper<ArgumentType, etl::enable_if_t<(etl::is_void<ArgumentType>::value == false)>>
 {
-    using Callback = ::etl::delegate<void(etl::expected<ArgumentType, Future::State> const&)>;
+    using Result   = ::etl::expected<etl::reference_wrapper<ArgumentType const>, Future::State>;
+    using Callback = ::etl::delegate<void(Result const&)>;
 
     static void call(Callback const& callback, Message const& msg, Future::State const state)
     {
@@ -67,9 +68,9 @@ struct CallbackHelper<ArgumentType, etl::enable_if_t<(etl::is_void<ArgumentType>
         }
         else
         {
-            callback.call_if(etl::expected<ArgumentType, Future::State>(
+            callback.call_if(Result(
                 etl::in_place_t{},
-                MessagePayloadBuilder::getInstance().readPayload<ArgumentType>(msg)));
+                etl::cref(MessagePayloadBuilder::getInstance().readPayload<ArgumentType>(msg))));
         }
     }
 };
@@ -80,7 +81,8 @@ struct CallbackHelper<ArgumentType, etl::enable_if_t<(etl::is_void<ArgumentType>
 template<typename ArgumentType>
 struct CallbackHelper<ArgumentType, etl::enable_if_t<etl::is_void<ArgumentType>::value>>
 {
-    using Callback = ::etl::delegate<void(etl::expected<void, Future::State> const&&)>;
+    using Result   = etl::expected<void, Future::State>;
+    using Callback = ::etl::delegate<void(Result const&)>;
 
     static void call(Callback const& callback, Message const& /* msg */, Future::State const state)
     {
@@ -113,6 +115,7 @@ public:
     using Base         = FutureDispatcherBase;
     using ArgumentType = typename DispatcherTraits::ArgumentType;
     using Traits       = DispatcherTraits;
+    using Result       = typename internal::CallbackHelper<ArgumentType>::Result;
     using Callback     = typename internal::CallbackHelper<ArgumentType>::Callback;
 
     FutureDispatcher()

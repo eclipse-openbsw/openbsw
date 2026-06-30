@@ -210,6 +210,7 @@ public:
     using SetterArgumentType     = typename SetterTraits::ArgumentType;
     using SetterCallback         = typename FutureDispatcher<SetterTraits, REQUEST_LIMIT>::Callback;
     using GetterDispatcherTraits = GetterTraits;
+    using GetterResult           = typename Base::GetterResult;
     using GetterCallback         = typename Base::GetterCallback;
 
     explicit ProxyAttribute(ProxyBase& proxy) : Base(proxy) {}

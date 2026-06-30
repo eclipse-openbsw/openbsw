@@ -10,8 +10,8 @@
 
 #include <cstdint>
 
-#include <etl/byte_stream.h>
 #include <etl/memory.h>
+#include <etl/type_traits.h>
 #include <etl/vector.h>
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
@@ -24,142 +24,90 @@
 
 namespace middleware::core::test
 {
-
-struct SmallTrivialType
+template<typename T>
+struct IntegralWrapper
 {
-    uint32_t a;
-    uint32_t b;
-    uint32_t c;
-    uint32_t d;
+    static_assert(etl::is_integral_v<T>, "IntegralWrapper requires an integral type");
+    T value;
+
+    bool operator==(IntegralWrapper const& rhs) const { return value == rhs.value; }
+
+    static IntegralWrapper make() { return {static_cast<T>(~T{0})}; }
 };
 
-struct BigTrivialType
+template<typename T, size_t SIZE>
+struct ArrayWrapper
 {
-    uint64_t a;
-    uint64_t b;
-    uint64_t c;
-    uint64_t d;
-    uint64_t e;
-    uint64_t f;
-    uint64_t g;
-    uint64_t h;
-    uint64_t i;
-};
+    etl::array<T, SIZE> buffer;
 
-} // namespace middleware::core::test
+    bool operator==(ArrayWrapper const& rhs) const { return buffer == rhs.buffer; }
 
-/// ETL user-defined type-traits specializations for trivially copyable test types.
-/// Required because OpenBSW ETL is configured with ETL_USER_DEFINED_TYPE_TRAITS,
-/// which only recognises arithmetic and pointer types as trivially copyable by default.
-namespace etl
-{
-template<>
-struct is_trivially_copyable<middleware::core::test::SmallTrivialType> : public etl::true_type
-{};
-
-template<>
-struct is_trivially_copyable<middleware::core::test::BigTrivialType> : public etl::true_type
-{};
-
-template<size_t N>
-struct is_trivially_copyable<etl::array<uint8_t, N>> : public etl::true_type
-{};
-
-template<size_t N>
-struct is_trivially_copyable<etl::array<uint8_t, N> const> : public etl::true_type
-{};
-} // namespace etl
-
-namespace middleware::core::test
-{
-
-namespace
-{
-/// Helper to create a default/empty message for allocator tests.
-/// Message has no public default constructor, so we use the factory with dummy values.
-Message makeEmptyMessage() { return Message::createRequest(0U, 0U, 0U, 0U, 0U, 0U, 0U); }
-} // namespace
-
-struct SmallNonTrivialType
-{
-    etl::vector<uint8_t, sizeof(SmallTrivialType)> data{};
-
-    struct AllocationPolicy
+    static ArrayWrapper make()
     {
-        static void serialize(SmallNonTrivialType const& obj, etl::span<uint8_t>& buffer)
-        {
-            etl::byte_stream_writer writer{buffer, etl::endian::native};
-            writer.write_unchecked(static_cast<uint32_t>(obj.data.size()));
-            for (auto element : obj.data)
-            {
-                writer.write_unchecked(element);
-            }
-        }
-
-        static size_t getNeededSize(SmallNonTrivialType const& obj)
-        {
-            return sizeof(uint32_t) + (obj.data.size() * sizeof(decltype(obj.data)::value_type));
-        }
-
-        static SmallNonTrivialType deserialize(etl::span<uint8_t> const& serializedBuffer)
-        {
-            etl::byte_stream_reader reader{
-                serializedBuffer.begin(), serializedBuffer.end(), etl::endian::native};
-            SmallNonTrivialType obj{};
-            uint32_t const size = reader.read_unchecked<uint32_t>();
-            for (uint32_t idx = 0U; idx < size; ++idx)
-            {
-                obj.data.push_back(reader.read_unchecked<decltype(obj.data)::value_type>());
-            }
-
-            return obj;
-        }
-    };
+        ArrayWrapper obj{};
+        obj.buffer.fill(static_cast<T>(~T{0}));
+        return obj;
+    }
 };
 
-struct BigNonTrivialType
+template<typename T, size_t SIZE>
+struct VectorWrapper
 {
-    uint32_t a;
-    uint32_t b;
-    etl::vector<uint8_t, Message::MAX_PAYLOAD_SIZE> data{};
+    etl::vector<T, SIZE> buffer;
 
-    struct AllocationPolicy
+    bool operator==(VectorWrapper const& rhs) const { return buffer == rhs.buffer; }
+
+    static VectorWrapper make()
     {
-        static void serialize(BigNonTrivialType const& obj, etl::span<uint8_t>& buffer)
+        VectorWrapper obj{};
+        for (size_t i = 0U; i < SIZE; ++i)
         {
-            etl::byte_stream_writer writer{buffer, etl::endian::native};
-            writer.write_unchecked(static_cast<uint32_t>(obj.a));
-            writer.write_unchecked(static_cast<uint32_t>(obj.b));
-            writer.write_unchecked(static_cast<uint32_t>(obj.data.size()));
-            for (auto element : obj.data)
-            {
-                writer.write_unchecked(element);
-            }
+            obj.buffer.push_back(static_cast<T>(~T{0}));
         }
-
-        static size_t getNeededSize(BigNonTrivialType const& obj)
-        {
-            return sizeof(obj.a) + sizeof(obj.b) + sizeof(uint32_t)
-                   + (obj.data.size() * sizeof(decltype(obj.data)::value_type));
-        }
-
-        static BigNonTrivialType deserialize(etl::span<uint8_t> const& serializedBuffer)
-        {
-            etl::byte_stream_reader reader{
-                serializedBuffer.begin(), serializedBuffer.end(), etl::endian::native};
-            BigNonTrivialType obj{};
-            obj.a               = reader.read_unchecked<decltype(obj.a)>();
-            obj.b               = reader.read_unchecked<decltype(obj.b)>();
-            uint32_t const size = reader.read_unchecked<uint32_t>();
-            for (uint32_t idx = 0U; idx < size; ++idx)
-            {
-                obj.data.push_back(reader.read_unchecked<decltype(obj.data)::value_type>());
-            }
-
-            return obj;
-        }
-    };
+        return obj;
+    }
 };
+
+using SmallTypes = ::testing::Types<
+    IntegralWrapper<uint8_t>,
+    IntegralWrapper<uint16_t>,
+    IntegralWrapper<uint32_t>,
+    IntegralWrapper<uint64_t>,
+    ArrayWrapper<uint8_t, 1U>,
+    ArrayWrapper<uint16_t, 1U>,
+    ArrayWrapper<uint32_t, 1U>,
+    ArrayWrapper<uint64_t, 1U>,
+    VectorWrapper<uint8_t, 1U>,
+    VectorWrapper<uint16_t, 1U>,
+    VectorWrapper<uint32_t, 1U>,
+    VectorWrapper<uint64_t, 1U>>;
+
+using BigTypes = ::testing::Types<
+    ArrayWrapper<uint8_t, Message::MAX_PAYLOAD_SIZE + 1U>,
+    ArrayWrapper<uint16_t, Message::MAX_PAYLOAD_SIZE + 1U>,
+    ArrayWrapper<uint32_t, Message::MAX_PAYLOAD_SIZE + 1U>,
+    ArrayWrapper<uint64_t, Message::MAX_PAYLOAD_SIZE + 1U>,
+    VectorWrapper<uint8_t, Message::MAX_PAYLOAD_SIZE + 1U>,
+    VectorWrapper<uint16_t, Message::MAX_PAYLOAD_SIZE + 1U>,
+    VectorWrapper<uint32_t, Message::MAX_PAYLOAD_SIZE + 1U>,
+    VectorWrapper<uint64_t, Message::MAX_PAYLOAD_SIZE + 1U>>;
+
+using SmallBuffers = ::testing::Types<
+    etl::array<uint8_t, 1U>,
+    etl::array<uint8_t, 2U>,
+    etl::array<uint8_t, 4U>,
+    etl::array<uint8_t, 8U>,
+    etl::array<uint8_t, 16U>,
+    etl::array<uint8_t, 32U>,
+    etl::array<uint8_t, Message::MAX_PAYLOAD_SIZE - 1U>,
+    etl::array<uint8_t, Message::MAX_PAYLOAD_SIZE>>;
+
+using BigBuffers = ::testing::Types<
+    etl::array<uint8_t, Message::MAX_PAYLOAD_SIZE + 1U>,
+    etl::array<uint8_t, 64U>,
+    etl::array<uint8_t, 128U>,
+    etl::array<uint8_t, 256U>,
+    etl::array<uint8_t, 511U>>;
 
 class AllocatorImpl
 {
@@ -173,13 +121,6 @@ public:
 
     template<size_t MAX_COUNT, size_t MAX_SIZE>
     using Storage = etl::vector<etl::array<uint8_t, MAX_SIZE>, MAX_COUNT>;
-
-    enum class PoolId : uint8_t
-    {
-        Pool128 = 0U,
-        Pool256,
-        Pool512
-    };
 
     uint8_t* allocate(uint32_t const size)
     {
@@ -208,44 +149,31 @@ public:
             {
                 _pool128.at(0).fill(0U);
                 _pool128.clear();
+                return;
             }
         }
-        else if (!_pool256.empty())
+        if (!_pool256.empty())
         {
             if (reinterpret_cast<decltype(_pool256)::iterator>(ptr) == _pool256.data())
             {
                 _pool256.at(0).fill(0U);
                 _pool256.clear();
+                return;
             }
         }
-        else if (!_pool512.empty())
+        if (!_pool512.empty())
         {
             if (reinterpret_cast<decltype(_pool512)::iterator>(ptr) == _pool512.data())
             {
                 _pool512.at(0).fill(0U);
                 _pool512.clear();
+                return;
             }
         }
-        else
-        {
-            FAIL() << "Pointer does not belong to any pool.";
-        }
+        FAIL() << "Pointer does not belong to any pool.";
     }
 
-    bool isAllocatorPoolFull(PoolId const poolId) const
-    {
-        bool ret = false;
-
-        switch (poolId)
-        {
-            case PoolId::Pool128: ret = _pool128.full(); break;
-            case PoolId::Pool256: ret = _pool256.full(); break;
-            case PoolId::Pool512: ret = _pool512.full(); break;
-            default:              break;
-        }
-
-        return ret;
-    }
+    bool isAnyPoolFull() const { return _pool128.full() || _pool256.full() || _pool512.full(); }
 
     uint8_t* regionStart() { return reinterpret_cast<uint8_t*>(_pool128.data()); }
 
@@ -289,227 +217,209 @@ protected:
     AllocatorImpl _allocator{};
 };
 
-TEST_F(TestMessagePayloadBuilder, TestSmallTrivialType)
+namespace
 {
+/// Helper to create a default/empty message for allocator tests.
+/// Message has no public default constructor, so we use the factory with dummy values.
+Message makeEmptyMessage() { return Message::createRequest(0U, 0U, 0U, 0U, 0U, 0U, 0U); }
+} // namespace
+
+template<typename T>
+class TestMessagePayloadBuilderSmallUserDefinedType : public TestMessagePayloadBuilder
+{};
+
+TYPED_TEST_SUITE(TestMessagePayloadBuilderSmallUserDefinedType, SmallTypes);
+
+TYPED_TEST(TestMessagePayloadBuilderSmallUserDefinedType, AllocateInternal)
+{
+    static_assert(
+        sizeof(TypeParam) <= Message::MAX_PAYLOAD_SIZE,
+        "TypeParam must fit in internal payload, this is a test logic error");
+
     // ARRANGE
-    SmallTrivialType const obj{
-        0xF1359EA0U,
-        0x51314BA1U,
-        0x1289CEA2U,
-        0x902C37FFU,
-    };
-    Message msg = makeEmptyMessage();
+    auto const obj = TypeParam::make();
+    Message msg    = makeEmptyMessage();
 
     // ACT
-    core::HRESULT ret    = MessagePayloadBuilder::getInstance().allocate(obj, msg);
-    auto const storedObj = MessagePayloadBuilder::getInstance().readPayload<SmallTrivialType>(msg);
-    MessagePayloadBuilder::deallocate(msg);
+    core::HRESULT ret     = MessagePayloadBuilder::getInstance().allocate(obj, msg);
+    auto const& storedObj = MessagePayloadBuilder::getInstance().readPayload<TypeParam>(msg);
 
     // ASSERT
     EXPECT_EQ(ret, core::HRESULT::Ok);
-    EXPECT_EQ(obj.a, storedObj.a);
-    EXPECT_EQ(obj.b, storedObj.b);
-    EXPECT_EQ(obj.c, storedObj.c);
-    EXPECT_EQ(obj.d, storedObj.d);
-}
-
-TEST_F(TestMessagePayloadBuilder, TestSmallSpan)
-{
-    // ARRANGE
-    etl::array<uint8_t, 8U> const buffer_{0x0DU, 0x0EU, 0x0AU, 0x0DU, 0x0BU, 0x0EU, 0x0EU, 0x0FU};
-    etl::span<uint8_t const> const obj{buffer_};
-    Message msg = makeEmptyMessage();
-
-    // ACT
-    core::HRESULT ret    = MessagePayloadBuilder::getInstance().allocate(obj, msg);
-    auto const storedObj = MessagePayloadBuilder::getInstance().readPayload<decltype(buffer_)>(msg);
-
-    // ASSERT
     EXPECT_FALSE(msg.hasExternalPayload());
-    EXPECT_EQ(ret, core::HRESULT::Ok);
-    EXPECT_TRUE(etl::equal(obj.begin(), obj.end(), storedObj.begin(), storedObj.end()));
+    EXPECT_EQ(obj, storedObj);
 
     // ACT
     MessagePayloadBuilder::deallocate(msg);
 }
 
-TEST_F(TestMessagePayloadBuilder, TestBigSpan)
+template<typename T>
+class TestMessagePayloadBuilderBigUserDefinedType : public TestMessagePayloadBuilder
+{};
+
+TYPED_TEST_SUITE(TestMessagePayloadBuilderBigUserDefinedType, BigTypes);
+
+TYPED_TEST(TestMessagePayloadBuilderBigUserDefinedType, AllocateExternal)
 {
+    static_assert(
+        sizeof(TypeParam) > Message::MAX_PAYLOAD_SIZE,
+        "TypeParam must NOT fit in internal payload, this is a test logic error");
+
     // ARRANGE
-    etl::array<uint8_t, Message::MAX_PAYLOAD_SIZE + 1U> buffer_{};
-    etl::fill(buffer_.begin(), buffer_.end(), 0x00U);
-    etl::span<uint8_t const> const obj{buffer_};
-    Message msg = makeEmptyMessage();
+    auto const obj = TypeParam::make();
+    Message msg    = makeEmptyMessage();
 
     // ACT
-    core::HRESULT ret    = MessagePayloadBuilder::getInstance().allocate(obj, msg);
-    auto const storedObj = MessagePayloadBuilder::getInstance().readPayload<decltype(buffer_)>(msg);
+    core::HRESULT ret     = MessagePayloadBuilder::getInstance().allocate(obj, msg);
+    auto const& storedObj = MessagePayloadBuilder::getInstance().readPayload<TypeParam>(msg);
 
     // ASSERT
+    EXPECT_EQ(ret, core::HRESULT::Ok);
     EXPECT_TRUE(msg.hasExternalPayload());
-    EXPECT_EQ(ret, core::HRESULT::Ok);
-    EXPECT_TRUE(etl::equal(obj.begin(), obj.end(), storedObj.begin(), storedObj.end()));
+    EXPECT_EQ(obj, storedObj);
 
     // ACT
     MessagePayloadBuilder::deallocate(msg);
 }
 
-TEST_F(TestMessagePayloadBuilder, TestBigTrivialType)
+TYPED_TEST(TestMessagePayloadBuilderBigUserDefinedType, AllocateExternalShared)
 {
+    static_assert(
+        sizeof(TypeParam) > Message::MAX_PAYLOAD_SIZE,
+        "TypeParam must NOT fit in internal payload, this is a test logic error");
+
     // ARRANGE
-    BigTrivialType const obj{
-        0xF1359EA0221A3749U,
-        0x51314BA1F17BCD21U,
-        0x1289CEA256BD29A4U,
-        0x1289CEA256BD29A4U,
-        0x1289CEA256BD29A4U,
-        0x1289CEA256BD29A4U,
-        0x1289CEA256BD29A4U,
-        0xA1B2C3D4E5F60718U,
-        0x0918273645546372U};
-    Message msg = makeEmptyMessage();
-
-    // ACT
-    core::HRESULT ret    = MessagePayloadBuilder::getInstance().allocate(obj, msg);
-    auto const storedObj = MessagePayloadBuilder::getInstance().readPayload<BigTrivialType>(msg);
-    MessagePayloadBuilder::deallocate(msg);
-
-    // ASSERT
-    EXPECT_EQ(ret, core::HRESULT::Ok);
-    EXPECT_EQ(obj.a, storedObj.a);
-    EXPECT_EQ(obj.b, storedObj.b);
-    EXPECT_EQ(obj.c, storedObj.c);
-}
-
-TEST_F(TestMessagePayloadBuilder, TestSmallNonTrivialType)
-{
-    // ARRANGE
-    SmallNonTrivialType obj{};
-    obj.data.push_back(0x31U);
-    obj.data.push_back(0x27U);
-    obj.data.push_back(0x99U);
-    obj.data.push_back(0x50U);
-    Message msg = makeEmptyMessage();
-
-    // ACT
-    core::HRESULT ret = MessagePayloadBuilder::getInstance().allocate(obj, msg);
-    auto const storedObj
-        = MessagePayloadBuilder::getInstance().readPayload<SmallNonTrivialType>(msg);
-    MessagePayloadBuilder::deallocate(msg);
-
-    // ASSERT
-    EXPECT_EQ(ret, core::HRESULT::Ok);
-    EXPECT_EQ(obj.data, storedObj.data);
-}
-
-TEST_F(TestMessagePayloadBuilder, BigNonTrivialType)
-{
-    // ARRANGE
-    BigNonTrivialType obj{};
-    obj.a = 0xF131125CU;
-    obj.b = 0x5DC09EA0U;
-    for (size_t i = 0x00U; i < obj.data.max_size(); i++)
-    {
-        obj.data.push_back(i);
-    }
-    Message msg = makeEmptyMessage();
-
-    // ACT
-    core::HRESULT ret    = MessagePayloadBuilder::getInstance().allocate(obj, msg);
-    auto const storedObj = MessagePayloadBuilder::getInstance().readPayload<BigNonTrivialType>(msg);
-    MessagePayloadBuilder::deallocate(msg);
-
-    // ASSERT
-    EXPECT_EQ(ret, core::HRESULT::Ok);
-    EXPECT_EQ(obj.a, storedObj.a);
-    EXPECT_EQ(obj.b, storedObj.b);
-    EXPECT_EQ(obj.data, storedObj.data);
-}
-
-TEST_F(TestMessagePayloadBuilder, TestBigTrivialTypeWithMultipleReferenceCounter)
-{
-    // ARRANGE
-    BigTrivialType const obj{
-        0xF1359EA0221A3749U,
-        0x51314BA1F17BCD21U,
-        0x1289CEA256BD29A4U,
-        0x1289CEA256BD29A4U,
-        0x1289CEA256BD29A4U,
-        0x1289CEA256BD29A4U,
-        0x1289CEA256BD29A4U,
-        0xA1B2C3D4E5F60718U,
-        0x0918273645546372U};
+    auto const obj                   = TypeParam::make();
     Message msg                      = Message::createEvent(123U, 128U, 1U, 0U);
     uint8_t const numberOfReferences = 5U;
 
     // ACT
-    EXPECT_EQ(
-        MessagePayloadBuilder::getInstance().allocate(obj, msg, numberOfReferences),
-        core::HRESULT::Ok);
+    core::HRESULT ret = MessagePayloadBuilder::getInstance().allocate(obj, msg, numberOfReferences);
 
     // ASSERT
-    for (size_t readings = 0U; readings < numberOfReferences; readings++)
+    EXPECT_EQ(ret, core::HRESULT::Ok);
+    EXPECT_TRUE(msg.hasExternalPayload());
+
+    for (size_t readings = 0U; readings < numberOfReferences; ++readings)
     {
-        EXPECT_TRUE(getAllocatorImpl().isAllocatorPoolFull(AllocatorImpl::PoolId::Pool128));
-        auto const storedObj
-            = MessagePayloadBuilder::getInstance().readPayload<BigTrivialType>(msg);
-        EXPECT_EQ(obj.a, storedObj.a);
-        EXPECT_EQ(obj.b, storedObj.b);
-        EXPECT_EQ(obj.c, storedObj.c);
+        EXPECT_TRUE(this->getAllocatorImpl().isAnyPoolFull());
+        auto const& storedObj = MessagePayloadBuilder::getInstance().readPayload<TypeParam>(msg);
+        EXPECT_EQ(obj, storedObj);
         MessagePayloadBuilder::deallocate(msg);
     }
-    EXPECT_FALSE(getAllocatorImpl().isAllocatorPoolFull(AllocatorImpl::PoolId::Pool128));
+    EXPECT_FALSE(this->getAllocatorImpl().isAnyPoolFull());
 }
 
-TEST_F(TestMessagePayloadBuilder, TestBigNonTrivialTypeWithMultipleReferenceCounter)
+template<typename T>
+class TestMessagePayloadBuilderSmallSpan : public TestMessagePayloadBuilder
+{};
+
+TYPED_TEST_SUITE(TestMessagePayloadBuilderSmallSpan, SmallBuffers);
+
+TYPED_TEST(TestMessagePayloadBuilderSmallSpan, AllocateInternal)
 {
+    using value_type = typename TypeParam::value_type;
+    static_assert(
+        sizeof(TypeParam) <= Message::MAX_PAYLOAD_SIZE,
+        "TypeParam must fit in internal payload, this is a test logic error");
+
     // ARRANGE
-    BigNonTrivialType obj{};
-    obj.a = 0xF131125CU;
-    obj.b = 0x5DC09EA0U;
-    for (size_t i = 0x00U; i < obj.data.max_size(); i++)
-    {
-        obj.data.push_back(i);
-    }
+    TypeParam obj;
+    obj.fill(static_cast<value_type>(~value_type{0U}));
+
+    etl::span<uint8_t const> const bytes{obj};
+    Message msg = makeEmptyMessage();
+
+    // ACT
+    core::HRESULT ret = MessagePayloadBuilder::getInstance().allocate(bytes, msg);
+    etl::span<uint8_t const> const storedBytes
+        = MessagePayloadBuilder::getInstance().readRawPayload(msg);
+
+    // ASSERT
+    EXPECT_EQ(ret, core::HRESULT::Ok);
+    EXPECT_FALSE(msg.hasExternalPayload());
+    EXPECT_TRUE(etl::equal(bytes.begin(), bytes.end(), storedBytes.begin(), storedBytes.end()));
+
+    // ACT
+    MessagePayloadBuilder::deallocate(msg);
+}
+
+template<typename T>
+class TestMessagePayloadBuilderBigSpan : public TestMessagePayloadBuilder
+{};
+
+TYPED_TEST_SUITE(TestMessagePayloadBuilderBigSpan, BigBuffers);
+
+TYPED_TEST(TestMessagePayloadBuilderBigSpan, AllocateExternal)
+{
+    using value_type = typename TypeParam::value_type;
+    static_assert(
+        sizeof(TypeParam) > Message::MAX_PAYLOAD_SIZE,
+        "TypeParam must NOT fit in internal payload, this is a test logic error");
+
+    // ARRANGE
+    TypeParam obj;
+    obj.fill(static_cast<value_type>(~value_type{0U}));
+
+    etl::span<uint8_t const> const bytes{obj};
+    Message msg = makeEmptyMessage();
+
+    // ACT
+    core::HRESULT ret = MessagePayloadBuilder::getInstance().allocate(bytes, msg);
+    etl::span<uint8_t const> const storedBytes
+        = MessagePayloadBuilder::getInstance().readRawPayload(msg);
+
+    // ASSERT
+    EXPECT_EQ(ret, core::HRESULT::Ok);
+    EXPECT_TRUE(msg.hasExternalPayload());
+    EXPECT_TRUE(etl::equal(bytes.begin(), bytes.end(), storedBytes.begin(), storedBytes.end()));
+
+    // ACT
+    MessagePayloadBuilder::deallocate(msg);
+}
+
+TYPED_TEST(TestMessagePayloadBuilderBigSpan, AllocateExternalShared)
+{
+    using value_type = typename TypeParam::value_type;
+    static_assert(
+        sizeof(TypeParam) > Message::MAX_PAYLOAD_SIZE,
+        "TypeParam must NOT fit in internal payload, this is a test logic error");
+
+    // ARRANGE
+    TypeParam obj;
+    obj.fill(static_cast<value_type>(~value_type{0U}));
+
+    etl::span<uint8_t const> const bytes{obj};
     Message msg                      = Message::createEvent(123U, 128U, 1U, 0U);
     uint8_t const numberOfReferences = 5U;
 
     // ACT
-    EXPECT_EQ(
-        MessagePayloadBuilder::getInstance().allocate(obj, msg, numberOfReferences),
-        core::HRESULT::Ok);
+    core::HRESULT ret
+        = MessagePayloadBuilder::getInstance().allocate(bytes, msg, numberOfReferences);
 
     // ASSERT
-    for (size_t readings = 0U; readings < numberOfReferences; readings++)
+    EXPECT_EQ(ret, core::HRESULT::Ok);
+    EXPECT_TRUE(msg.hasExternalPayload());
+
+    for (size_t readings = 0U; readings < numberOfReferences; ++readings)
     {
-        EXPECT_TRUE(getAllocatorImpl().isAllocatorPoolFull(AllocatorImpl::PoolId::Pool128));
-        auto const storedObj
-            = MessagePayloadBuilder::getInstance().readPayload<BigNonTrivialType>(msg);
-        EXPECT_EQ(obj.a, storedObj.a);
-        EXPECT_EQ(obj.b, storedObj.b);
-        EXPECT_EQ(obj.data, storedObj.data);
+        EXPECT_TRUE(this->getAllocatorImpl().isAnyPoolFull());
+        etl::span<uint8_t const> const storedBytes
+            = MessagePayloadBuilder::getInstance().readRawPayload(msg);
+        EXPECT_TRUE(etl::equal(bytes.begin(), bytes.end(), storedBytes.begin(), storedBytes.end()));
         MessagePayloadBuilder::deallocate(msg);
     }
-    EXPECT_FALSE(getAllocatorImpl().isAllocatorPoolFull(AllocatorImpl::PoolId::Pool128));
+    EXPECT_FALSE(this->getAllocatorImpl().isAnyPoolFull());
 }
 
-TEST_F(TestMessagePayloadBuilder, TestFailedAllocationForTrivialType)
+TEST_F(TestMessagePayloadBuilder, AllocateExternalFailsForObject)
 {
     // ARRANGE
-    BigTrivialType const obj{
-        0xF1359EA0221A3749U,
-        0x51314BA1F17BCD21U,
-        0x1289CEA256BD29A4U,
-        0x1289CEA256BD29A4U,
-        0x1289CEA256BD29A4U,
-        0x1289CEA256BD29A4U,
-        0x1289CEA256BD29A4U,
-        0xA1B2C3D4E5F60718U,
-        0x0918273645546372U};
-    Message msg1 = makeEmptyMessage();
-    Message msg2 = makeEmptyMessage();
-    Message msg3 = makeEmptyMessage();
-    Message msg4 = makeEmptyMessage();
+    auto const obj = ArrayWrapper<uint8_t, Message::MAX_PAYLOAD_SIZE + 1U>::make();
+    Message msg1   = makeEmptyMessage();
+    Message msg2   = makeEmptyMessage();
+    Message msg3   = makeEmptyMessage();
+    Message msg4   = makeEmptyMessage();
 
     // ACT
     core::HRESULT firstAllocationResult  = MessagePayloadBuilder::getInstance().allocate(obj, msg1);
@@ -539,16 +449,49 @@ TEST_F(TestMessagePayloadBuilder, TestFailedAllocationForTrivialType)
     MessagePayloadBuilder::deallocate(msg3);
 }
 
-TEST_F(TestMessagePayloadBuilder, TestFailedAllocationForNonTrivialType)
+TEST_F(TestMessagePayloadBuilder, AllocateExternalSharedFailsForObject)
 {
     // ARRANGE
-    BigNonTrivialType obj{};
-    obj.a = 0xF131125CU;
-    obj.b = 0x5DC09EA0U;
-    for (size_t i = 0x00U; i < obj.data.max_size(); i++)
-    {
-        obj.data.push_back(i);
-    }
+    auto const obj = ArrayWrapper<uint8_t, Message::MAX_PAYLOAD_SIZE + 1U>::make();
+    Message msg1   = makeEmptyMessage();
+    Message msg2   = makeEmptyMessage();
+    Message msg3   = makeEmptyMessage();
+    Message msg4   = Message::createEvent(123U, 128U, 1U, 0U);
+
+    // ACT
+    core::HRESULT firstAllocationResult  = MessagePayloadBuilder::getInstance().allocate(obj, msg1);
+    core::HRESULT secondAllocationResult = MessagePayloadBuilder::getInstance().allocate(obj, msg2);
+    core::HRESULT thirdAllocationResult  = MessagePayloadBuilder::getInstance().allocate(obj, msg3);
+
+    _loggerMock.EXPECT_EVENT_LOG(
+        logger::LogLevel::Error,
+        logger::Error::Allocation,
+        HRESULT::CannotAllocatePayload,
+        msg4.getHeader().srcClusterId,
+        msg4.getHeader().tgtClusterId,
+        msg4.getHeader().serviceId,
+        msg4.getHeader().serviceInstanceId,
+        msg4.getHeader().memberId,
+        msg4.getHeader().requestId,
+        static_cast<uint32_t>(sizeof(obj)));
+    core::HRESULT fourthAllocationResult = MessagePayloadBuilder::getInstance().allocate(obj, msg4);
+
+    // ASSERT
+    EXPECT_EQ(firstAllocationResult, core::HRESULT::Ok);
+    EXPECT_EQ(secondAllocationResult, core::HRESULT::Ok);
+    EXPECT_EQ(thirdAllocationResult, core::HRESULT::Ok);
+    EXPECT_EQ(fourthAllocationResult, core::HRESULT::CannotAllocatePayload);
+    MessagePayloadBuilder::deallocate(msg1);
+    MessagePayloadBuilder::deallocate(msg2);
+    MessagePayloadBuilder::deallocate(msg3);
+}
+
+TEST_F(TestMessagePayloadBuilder, AllocateExternalFailsForSpan)
+{
+    // ARRANGE
+    etl::array<uint8_t, Message::MAX_PAYLOAD_SIZE + 1U> buffer{};
+    buffer.fill(0xFFU);
+    etl::span<uint8_t const> const obj{buffer};
     Message msg1 = makeEmptyMessage();
     Message msg2 = makeEmptyMessage();
     Message msg3 = makeEmptyMessage();
@@ -569,7 +512,46 @@ TEST_F(TestMessagePayloadBuilder, TestFailedAllocationForNonTrivialType)
         msg4.getHeader().serviceInstanceId,
         msg4.getHeader().memberId,
         msg4.getHeader().requestId,
-        static_cast<uint32_t>(BigNonTrivialType::AllocationPolicy::getNeededSize(obj)));
+        static_cast<uint32_t>(obj.size_bytes()));
+    core::HRESULT fourthAllocationResult = MessagePayloadBuilder::getInstance().allocate(obj, msg4);
+
+    // ASSERT
+    EXPECT_EQ(firstAllocationResult, core::HRESULT::Ok);
+    EXPECT_EQ(secondAllocationResult, core::HRESULT::Ok);
+    EXPECT_EQ(thirdAllocationResult, core::HRESULT::Ok);
+    EXPECT_EQ(fourthAllocationResult, core::HRESULT::CannotAllocatePayload);
+    MessagePayloadBuilder::deallocate(msg1);
+    MessagePayloadBuilder::deallocate(msg2);
+    MessagePayloadBuilder::deallocate(msg3);
+}
+
+TEST_F(TestMessagePayloadBuilder, AllocateExternalSharedFailsForSpan)
+{
+    // ARRANGE
+    etl::array<uint8_t, Message::MAX_PAYLOAD_SIZE + 1U> buffer{};
+    buffer.fill(0xFFU);
+    etl::span<uint8_t const> const obj{buffer};
+    Message msg1 = makeEmptyMessage();
+    Message msg2 = makeEmptyMessage();
+    Message msg3 = makeEmptyMessage();
+    Message msg4 = Message::createEvent(123U, 128U, 1U, 0U);
+
+    // ACT
+    core::HRESULT firstAllocationResult  = MessagePayloadBuilder::getInstance().allocate(obj, msg1);
+    core::HRESULT secondAllocationResult = MessagePayloadBuilder::getInstance().allocate(obj, msg2);
+    core::HRESULT thirdAllocationResult  = MessagePayloadBuilder::getInstance().allocate(obj, msg3);
+
+    _loggerMock.EXPECT_EVENT_LOG(
+        logger::LogLevel::Error,
+        logger::Error::Allocation,
+        HRESULT::CannotAllocatePayload,
+        msg4.getHeader().srcClusterId,
+        msg4.getHeader().tgtClusterId,
+        msg4.getHeader().serviceId,
+        msg4.getHeader().serviceInstanceId,
+        msg4.getHeader().memberId,
+        msg4.getHeader().requestId,
+        static_cast<uint32_t>(obj.size_bytes()));
     core::HRESULT fourthAllocationResult = MessagePayloadBuilder::getInstance().allocate(obj, msg4);
 
     // ASSERT

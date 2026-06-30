@@ -13,6 +13,7 @@
 #include <etl/array.h>
 #include <etl/delegate.h>
 #include <etl/expected.h>
+#include <etl/functional.h>
 #include <etl/type_traits.h>
 #include <etl/utility.h>
 #include <gmock/gmock.h>
@@ -47,8 +48,9 @@ public:
         MOCK_METHOD(
             void,
             receiveFutureData,
-            ((etl::
-                  expected<typename Config::TraitsUnderTest::ArgumentType, Future::State> const&)));
+            ((etl::expected<
+                etl::reference_wrapper<typename Config::TraitsUnderTest::ArgumentType const>,
+                Future::State> const&)));
     };
 
     void SetUp() override
@@ -87,8 +89,9 @@ TYPED_TEST_SUITE(FutureDispatcherTestSuite, TestConfigs);
 TYPED_TEST(FutureDispatcherTestSuite, TestObtainRequestId)
 {
     etl::optional<uint16_t> reqId{1U};
-    auto const callback = [](etl::expected<int, Future::State> const&) {};
-    reqId               = this->obtainRequestId(callback);
+    auto const callback
+        = [](etl::expected<etl::reference_wrapper<int const>, Future::State> const&) {};
+    reqId = this->obtainRequestId(callback);
     EXPECT_EQ(reqId.value(), 0U);
 }
 
@@ -96,8 +99,9 @@ TYPED_TEST(FutureDispatcherTestSuite, TestObtainRequestIdTwice)
 {
     etl::optional<uint16_t> reqId1{};
     etl::optional<uint16_t> reqId2{};
-    auto const callback = [](etl::expected<int, Future::State> const&) {};
-    reqId1              = this->obtainRequestId(callback);
+    auto const callback
+        = [](etl::expected<etl::reference_wrapper<int const>, Future::State> const&) {};
+    reqId1 = this->obtainRequestId(callback);
     this->cancelRequest(reqId1.value());
     reqId2 = this->obtainRequestId(callback);
     this->cancelRequest(reqId2.value());
@@ -110,7 +114,8 @@ TYPED_TEST(FutureDispatcherTestSuite, TestObtainRequestIdAboveDispatcherLimit)
     static constexpr uint8_t REQ_LIMIT = TypeParam::REQUEST_LIMIT;
     etl::optional<uint16_t> reqId{};
     etl::array<etl::optional<uint16_t>, REQ_LIMIT> reqIdArray{};
-    auto const callback = [](etl::expected<int, Future::State> const&) {};
+    auto const callback
+        = [](etl::expected<etl::reference_wrapper<int const>, Future::State> const&) {};
     for (auto& r : reqIdArray)
     {
         r = this->obtainRequestId(callback);
@@ -121,7 +126,8 @@ TYPED_TEST(FutureDispatcherTestSuite, TestObtainRequestIdAboveDispatcherLimit)
 
 TYPED_TEST(FutureDispatcherTestSuite, TestFutureMatchingRequestId)
 {
-    auto const callback                     = [](etl::expected<int, Future::State> const&) {};
+    auto const callback
+        = [](etl::expected<etl::reference_wrapper<int const>, Future::State> const&) {};
     etl::optional<uint16_t> const requestId = this->obtainRequestId(callback);
     Message msg = Message::createResponse(0U, 0U, requestId.value(), 0U, 0U, 0U, 0U);
 
@@ -134,7 +140,8 @@ TYPED_TEST(FutureDispatcherTestSuite, TestFutureMatchingRequestIdMultipleActiveR
 {
     etl::array<etl::optional<uint16_t>, TypeParam::REQUEST_LIMIT> requestIdArray{};
     etl::vector<Message, TypeParam::REQUEST_LIMIT> msgArray{};
-    auto const callback = [](etl::expected<int, Future::State> const&) {};
+    auto const callback
+        = [](etl::expected<etl::reference_wrapper<int const>, Future::State> const&) {};
 
     for (auto& reqId : requestIdArray)
     {
@@ -153,8 +160,9 @@ TYPED_TEST(FutureDispatcherTestSuite, TestFutureMatchingRequestIdMultipleActiveR
 TYPED_TEST(FutureDispatcherTestSuite, TestFutureMatchingRequestIdForInvalidRequest)
 {
     etl::optional<uint16_t> requestId{};
-    auto const callback = [](etl::expected<int, Future::State> const&) {};
-    requestId           = this->obtainRequestId(callback);
+    auto const callback
+        = [](etl::expected<etl::reference_wrapper<int const>, Future::State> const&) {};
+    requestId = this->obtainRequestId(callback);
 
     Message msg = Message::createResponse(0U, 0U, INVALID_REQUEST_ID, 0U, 0U, 0U, 0U);
 
@@ -176,8 +184,9 @@ TYPED_TEST(FutureDispatcherTestSuite, TestFutureMatchingRequestIdForInvalidReque
 TYPED_TEST(FutureDispatcherTestSuite, TestCancelRequestForActiveRequest)
 {
     etl::optional<uint16_t> requestId{};
-    auto const callback = [](etl::expected<int, Future::State> const&) {};
-    requestId           = this->obtainRequestId(callback);
+    auto const callback
+        = [](etl::expected<etl::reference_wrapper<int const>, Future::State> const&) {};
+    requestId = this->obtainRequestId(callback);
 
     Message msg = Message::createResponse(0U, 0U, requestId.value(), 0U, 0U, 0U, 0U);
 
@@ -197,8 +206,9 @@ TYPED_TEST(FutureDispatcherTestSuite, TestCancelRequestWithInvalidRequest)
 TYPED_TEST(FutureDispatcherTestSuite, TestFreeAll)
 {
     etl::optional<uint16_t> requestId{};
-    auto const callback = [](etl::expected<int, Future::State> const&) {};
-    requestId           = this->obtainRequestId(callback);
+    auto const callback
+        = [](etl::expected<etl::reference_wrapper<int const>, Future::State> const&) {};
+    requestId = this->obtainRequestId(callback);
     this->freeAll();
     requestId = this->obtainRequestId(callback);
     EXPECT_EQ(requestId, 0U);
@@ -208,7 +218,8 @@ TYPED_TEST(FutureDispatcherTestSuite, TestFreeAllWhenSeveralRequestsAreActive)
 {
     static constexpr uint8_t REQ_LIMIT = TypeParam::REQUEST_LIMIT;
     etl::array<etl::optional<uint16_t>, REQ_LIMIT> requestIdArray{};
-    auto const callback = [](etl::expected<int, Future::State> const&) {};
+    auto const callback
+        = [](etl::expected<etl::reference_wrapper<int const>, Future::State> const&) {};
 
     for (auto& reqId : requestIdArray)
     {
@@ -233,7 +244,8 @@ TYPED_TEST(FutureDispatcherTestSuite, TestFutureMatchingRequestIdForMessageWithE
         etl::make_pair(ErrorState::DeserializationError, Future::State::DeserializationError),
         etl::make_pair(ErrorState::QueueFullError, Future::State::CouldNotDeliverError));
     etl::optional<uint16_t> requestId{};
-    auto const callback = [](etl::expected<int, Future::State> const&) {};
+    auto const callback
+        = [](etl::expected<etl::reference_wrapper<int const>, Future::State> const&) {};
 
     for (auto& pair : expectedValues)
     {
@@ -281,8 +293,9 @@ TYPED_TEST(FutureDispatcherTestSuite, TestTimeoutDispatching)
     EXPECT_CALL(
         appMock,
         receiveFutureData(testing::Truly(
-            [](etl::expected<typename TraitsUnderTest::ArgumentType, Future::State> const& exp)
-            { return exp.error() == Future::State::Timeout; })))
+            [](etl::expected<
+                etl::reference_wrapper<typename TraitsUnderTest::ArgumentType const>,
+                Future::State> const& exp) { return exp.error() == Future::State::Timeout; })))
         .Times(1U);
 
     for (size_t timeCounter = 0U; timeCounter <= (TraitsUnderTest::TIMEOUT_VALUE); ++timeCounter)
@@ -294,7 +307,8 @@ TYPED_TEST(FutureDispatcherTestSuite, TestTimeoutDispatching)
 TYPED_TEST(FutureDispatcherTestSuite, TestRequestIdWraparound)
 {
     etl::optional<uint16_t> requestId{};
-    auto const callback = [](etl::expected<int, Future::State> const&) {};
+    auto const callback
+        = [](etl::expected<etl::reference_wrapper<int const>, Future::State> const&) {};
 
     for (size_t i = 0U; i <= INVALID_REQUEST_ID; ++i)
     {
