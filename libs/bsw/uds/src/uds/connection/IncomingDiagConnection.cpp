@@ -148,7 +148,7 @@ IncomingDiagConnection::sendPositiveResponseInternal(uint16_t const length, Abst
     ++_numPendingMessageProcessedCallbacks;
 
     _sendPositiveResponseClosure = SendPositiveResponseClosure::CallType(
-        SendPositiveResponseClosure::CallType::delegate_type::
+        SendPositiveResponseClosure::CallType::callback_type::
             create<IncomingDiagConnection, &IncomingDiagConnection::asyncSendPositiveResponse>(
                 *this),
         length,
@@ -320,7 +320,7 @@ IncomingDiagConnection::sendNegativeResponse(uint8_t const responseCode, Abstrac
     ++_numPendingMessageProcessedCallbacks;
 
     _sendNegativeResponseClosure = SendNegativeResponseClosure::CallType(
-        SendNegativeResponseClosure::CallType::delegate_type::
+        SendNegativeResponseClosure::CallType::callback_type::
             create<IncomingDiagConnection, &IncomingDiagConnection::asyncSendNegativeResponse>(
                 *this),
         responseCode,
@@ -471,7 +471,7 @@ void IncomingDiagConnection::transportMessageProcessed(
     transport::TransportMessage& transportMessage, ProcessingResult const result)
 {
     _transportMessageProcessedClosure = TransportMessageClosure::CallType(
-        TransportMessageClosure::CallType::delegate_type::
+        TransportMessageClosure::CallType::callback_type::
             create<IncomingDiagConnection, &IncomingDiagConnection::asyncTransportMessageProcessed>(
                 *this),
         &transportMessage,

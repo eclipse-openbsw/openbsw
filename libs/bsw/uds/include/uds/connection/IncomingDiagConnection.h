@@ -67,19 +67,19 @@ public:
     : _responsePendingTimeout(*this)
     , _globalPendingTimeout(*this)
     , _transportMessageProcessedClosure(TransportMessageClosure::CallType(
-          TransportMessageClosure::CallType::delegate_type::create<
+          TransportMessageClosure::CallType::callback_type::create<
               IncomingDiagConnection,
               &IncomingDiagConnection::asyncTransportMessageProcessed>(*this),
           nullptr,
           ProcessingResult::PROCESSED_ERROR))
     , _sendPositiveResponseClosure(SendPositiveResponseClosure::CallType(
-          SendPositiveResponseClosure::CallType::delegate_type::
+          SendPositiveResponseClosure::CallType::callback_type::
               create<IncomingDiagConnection, &IncomingDiagConnection::asyncSendPositiveResponse>(
                   *this),
           0U,
           nullptr))
     , _sendNegativeResponseClosure(SendNegativeResponseClosure::CallType(
-          SendNegativeResponseClosure::CallType::delegate_type::
+          SendNegativeResponseClosure::CallType::callback_type::
               create<IncomingDiagConnection, &IncomingDiagConnection::asyncSendNegativeResponse>(
                   *this),
           0U,

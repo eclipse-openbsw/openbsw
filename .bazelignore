@@ -3,3 +3,11 @@
 # A fixed version exists on the central Bazel registry that can be used on the Bazel side:
 # https://registry.bazel.build/modules/googletest/1.11.0
 libs/3rdparty/googletest
+
+# The vendored ETL library ships its own upstream Bazel test tree (test/**) which
+# references the library via root-relative labels (//:etl, //test/UnitTest++:...).
+# Those labels only resolve when ETL is the workspace root (i.e. consumed as the
+# @etl Bazel module). Vendored as source under this repo they do not resolve, so
+# exclude ETL's own test packages from OpenBSW's Bazel build. ETL is built via
+# libs/3rdparty/etl/BUILD.bazel (OpenBSW-owned, preserved through RIM 'ignores').
+libs/3rdparty/etl/test

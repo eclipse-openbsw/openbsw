@@ -77,7 +77,7 @@ AsyncDiagJob<T>::AsyncDiagJob(
 : T(::etl::forward<Args>(args)...)
 , fAsyncJobHelper(asyncHelper, *this)
 , fProcess(ProcessClosureType::CallType(
-      ProcessClosureType::CallType::delegate_type::
+      ProcessClosureType::CallType::callback_type::
           create<AsyncDiagJob<T>, &AsyncDiagJob<T>::asyncProcess>(*this),
       nullptr,
       nullptr,
@@ -103,7 +103,7 @@ DiagReturnCode::Type AsyncDiagJob<T>::process(
     }
     fAsyncJobHelper.startAsyncRequest(connection);
     fProcess = ProcessClosureType::CallType(
-        ProcessClosureType::CallType::delegate_type::
+        ProcessClosureType::CallType::callback_type::
             create<AsyncDiagJob<T>, &AsyncDiagJob<T>::asyncProcess>(*this),
         &connection,
         request,
