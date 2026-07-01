@@ -12,8 +12,9 @@
 
 #include "logger/PersistenceManagerMock.h"
 
+#include <etl/crc8_ccitt.h>
+#include <etl/crc8_j1850_zero.h>
 #include <etl/memory.h>
-#include <util/crc/Crc8.h>
 #include <util/logger/ILoggerOutput.h>
 #include <util/logger/Logger.h>
 
@@ -111,8 +112,8 @@ DEFINE_LOGGER_COMPONENT_MAPPING(
 
 TEST_F(PersistentComponentConfigTest, testNoLevelIsSetOnInitialization)
 {
-    PersistentComponentConfig<::mapping1::TestMappingType::MappingSize, ::util::crc::Crc8::Ccitt>
-        cut(mapping1::testMapping, _persistenceManagerMock);
+    PersistentComponentConfig<::mapping1::TestMappingType::MappingSize, ::etl::crc8_ccitt> cut(
+        mapping1::testMapping, _persistenceManagerMock);
     EXPECT_CALL(_persistenceManagerMock, readMapping(_))
         .WillOnce(Return(::etl::span<uint8_t const>{}));
     cut.start(*this);
@@ -125,10 +126,8 @@ TEST_F(PersistentComponentConfigTest, testWrittenLevelsAreReadSuccessfullyIfComp
     uint8_t storageBuffer[3];
     ::etl::span<uint8_t> storage(storageBuffer);
     {
-        PersistentComponentConfig<
-            ::mapping1::TestMappingType::MappingSize,
-            ::util::crc::Crc8::Ccitt>
-            cut(mapping1::testMapping, _persistenceManagerMock);
+        PersistentComponentConfig<::mapping1::TestMappingType::MappingSize, ::etl::crc8_ccitt> cut(
+            mapping1::testMapping, _persistenceManagerMock);
         EXPECT_CALL(_persistenceManagerMock, readMapping(_))
             .WillOnce(Return(::etl::span<uint8_t const>()));
         cut.start(*this);
@@ -156,10 +155,8 @@ TEST_F(PersistentComponentConfigTest, testWrittenLevelsAreReadSuccessfullyIfComp
     }
     // backward compatible order
     {
-        PersistentComponentConfig<
-            ::mapping2::TestMappingType::MappingSize,
-            ::util::crc::Crc8::Ccitt>
-            cut(mapping2::testMapping, _persistenceManagerMock);
+        PersistentComponentConfig<::mapping2::TestMappingType::MappingSize, ::etl::crc8_ccitt> cut(
+            mapping2::testMapping, _persistenceManagerMock);
         EXPECT_CALL(_persistenceManagerMock, readMapping(_)).WillOnce(Return(storage));
         cut.start(*this);
         Mock::VerifyAndClearExpectations(&_persistenceManagerMock);
@@ -174,9 +171,7 @@ TEST_F(PersistentComponentConfigTest, testWrittenLevelsAreReadSuccessfullyIfComp
 
     // different Crc8
     {
-        PersistentComponentConfig<
-            ::mapping2::TestMappingType::MappingSize,
-            ::util::crc::Crc8::Saej1850>
+        PersistentComponentConfig<::mapping2::TestMappingType::MappingSize, ::etl::crc8_j1850_zero>
             cut(mapping2::testMapping, _persistenceManagerMock);
         EXPECT_CALL(_persistenceManagerMock, readMapping(_)).WillOnce(Return(storage));
         cut.start(*this);
@@ -187,10 +182,8 @@ TEST_F(PersistentComponentConfigTest, testWrittenLevelsAreReadSuccessfullyIfComp
     }
     // different order of components
     {
-        PersistentComponentConfig<
-            ::mapping3::TestMappingType::MappingSize,
-            ::util::crc::Crc8::Ccitt>
-            cut(mapping3::testMapping, _persistenceManagerMock);
+        PersistentComponentConfig<::mapping3::TestMappingType::MappingSize, ::etl::crc8_ccitt> cut(
+            mapping3::testMapping, _persistenceManagerMock);
         EXPECT_CALL(_persistenceManagerMock, readMapping(_)).WillOnce(Return(storage));
         cut.start(*this);
         Mock::VerifyAndClearExpectations(&_persistenceManagerMock);
@@ -200,10 +193,8 @@ TEST_F(PersistentComponentConfigTest, testWrittenLevelsAreReadSuccessfullyIfComp
     }
     // less components than expected
     {
-        PersistentComponentConfig<
-            ::mapping4::TestMappingType::MappingSize,
-            ::util::crc::Crc8::Ccitt>
-            cut(mapping4::testMapping, _persistenceManagerMock);
+        PersistentComponentConfig<::mapping4::TestMappingType::MappingSize, ::etl::crc8_ccitt> cut(
+            mapping4::testMapping, _persistenceManagerMock);
         EXPECT_CALL(_persistenceManagerMock, readMapping(_)).WillOnce(Return(storage));
         cut.start(*this);
         Mock::VerifyAndClearExpectations(&_persistenceManagerMock);

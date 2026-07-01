@@ -14,14 +14,6 @@ add_library(
     src/util/stream/NullOutputStream.cpp
     src/util/stream/SharedOutputStream.cpp
     src/util/stream/TaggedOutputStream.cpp
-    src/util/crc/LookupTable_0x1D.cpp
-    src/util/crc/LookupTable_0x07.cpp
-    src/util/crc/LookupTable_0x1021.cpp
-    src/util/crc/LookupTable_0xF4ACFB13.cpp
-    src/util/crc/LookupTable_0x4C11DB7.cpp
-    src/util/crc/LookupTable_0xCF.cpp
-    src/util/crc/LookupTable_0x31.cpp
-    src/util/crc/LookupTable_0x2F.cpp
     src/util/format/Vt100AttributedStringFormatter.cpp
     src/util/format/PrintfFormatter.cpp
     src/util/format/StringWriter.cpp

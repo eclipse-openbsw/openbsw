@@ -15,14 +15,6 @@ add_executable(
     src/util/command/SimpleCommandTest.cpp
     src/util/command/ICommandTest.cpp
     src/util/command/CommandContextTest.cpp
-    src/util/crc/Crc8Test.cpp
-    src/util/crc/LookupTableTest.cpp
-    src/util/crc/CrcTest.cpp
-    src/util/crc/XorTest.cpp
-    src/util/crc/Crc32Test.cpp
-    src/util/crc/CrcRegisterTest.cpp
-    src/util/crc/ReflectTest.cpp
-    src/util/crc/Crc16Test.cpp
     src/util/math/MovingAverageTest.cpp
     src/util/stream/TaggedSharedOutputStreamTest.cpp
     src/util/stream/SharedOutputStreamTest.cpp

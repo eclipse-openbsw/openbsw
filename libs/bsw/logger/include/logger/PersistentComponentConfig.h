@@ -90,9 +90,10 @@ uint8_t PersistentComponentConfig<IndexUpperBound, Crc8>::getComponentCrc(
     {
         ::util::logger::ComponentInfo const componentInfo = this->getComponentInfo(idx);
         ::util::string::ConstString const name(componentInfo.getName().getString());
-        (void)crc.update(reinterpret_cast<uint8_t const*>(name.data()), name.length());
+        uint8_t const* const bytes = reinterpret_cast<uint8_t const*>(name.data());
+        crc.add(bytes, bytes + name.length());
     }
-    return crc.digest();
+    return crc.value();
 }
 
 } // namespace logger

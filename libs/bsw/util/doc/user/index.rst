@@ -18,7 +18,6 @@ Overview
 The **util** module is a collection of various utilities and ready-to-use
 solutions that may be directly integrated in the client code as **util**
 library, including :ref:`commands <util_command>` for terminal,
-:ref:`CRC <util_crc>` algorithms,
 :ref:`logging commands <util_logger>`, :ref:`memory manipulation
 <util_memory>`, user managed memory, :ref:`streaming utilities
 <util_stream>`, and :ref:`string wrapper <util_string>`. The **util**
@@ -29,7 +28,6 @@ Submodules
 ----------
 
 -  :ref:`util::command <util_command>` - command framework
--  :ref:`util::crc <util_crc>` - cyclic redundancy check
 -  :ref:`util::format <util_format>` - `printf`-like string formatting
 -  :ref:`util::defere <util_defer>` - deferred function execution
 -  :ref:`util::logger <util_logger>` - logging functionality
@@ -42,7 +40,6 @@ Submodules
    :hidden:
 
    command <command>
-   crc <crc>
    format <format>
    defer <defer>
    logger <logger>
