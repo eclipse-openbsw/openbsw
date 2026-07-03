@@ -1,0 +1,16 @@
+{#- Transmission mode rendering macros for PDU-based COM services -#}
+
+{%- macro render_transmission_mode(strategies) -%}
+    {%- if strategies|length == 0 -%}
+        ::middleware::com::NoTransmission
+    {%- else -%}
+        {%- for strategy in strategies -%}
+            {%- if strategy.cyclic -%}
+                ::middleware::com::CyclicTransmission<{{ strategy.cyclic.ms }}U>
+            {%- elif strategy.event -%}
+                ::middleware::com::EventTransmission<{{ strategy.event.debounce_ms }}U, {{ strategy.event.repetition_cycle }}U, {{ strategy.event.repetitions }}U>
+            {%- endif -%}
+            {{- ", " if not loop.last -}}
+        {%- endfor -%}
+    {%- endif -%}
+{%- endmacro -%}

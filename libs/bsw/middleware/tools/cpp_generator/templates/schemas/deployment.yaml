@@ -1,0 +1,571 @@
+# *******************************************************************************
+# Copyright (c) 2026 BMW AG
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+
+$schema: "http://json-schema.org/draft-07/schema#"
+title: "Unified Clusters Configuration"
+description: >-
+  Schema for the unified deployment.yaml file that defines the middleware
+  deployment including clusters, services, and connections.
+
+type: object
+additionalProperties: false
+required:
+  - clusters
+  - services
+  - connections
+  - allocators
+properties:
+  clusters:
+    type: array
+    description: "List of compute clusters in the deployment"
+    items:
+      $ref: "#/definitions/cluster"
+
+  allocators:
+    type: array
+    description: "List of memory allocators for middleware infrastructure"
+    items:
+      $ref: "#/definitions/allocator"
+
+  services:
+    type: array
+    description: "List of middleware services"
+    items:
+      $ref: "#/definitions/service"
+
+  connections:
+    type: array
+    description: "Inter-cluster connections configuration"
+    items:
+      $ref: "#/definitions/connection"
+
+  cores:
+    type: array
+    description: "Optional core-specific configurations"
+    items:
+      $ref: "#/definitions/core"
+
+definitions:
+  cluster:
+    type: object
+    additionalProperties: false
+    required:
+      - name
+      - id
+      - queue_size
+    properties:
+      name:
+        type: string
+        description: "Cluster name (e.g., Core0, Core1, Core2)"
+        pattern: "^[A-Za-z][A-Za-z0-9]*$"
+      id:
+        type: integer
+        description: "Unique cluster identifier (uint8_t range; 255 is reserved for InvalidId)"
+        minimum: 0
+        maximum: 254
+      queue_size:
+        type: integer
+        description: "Queue capacity for inter-cluster communication"
+        minimum: 1
+
+  allocator:
+    type: object
+    additionalProperties: false
+    required:
+      - name
+    properties:
+      name:
+        type: string
+        description: "Allocator name (e.g., default, custom)"
+        pattern: "^[A-Za-z][A-Za-z0-9]*$"
+
+  enum_parameter:
+    type: object
+    additionalProperties: false
+    required:
+      - name
+      - value
+    properties:
+      name:
+        type: string
+      value:
+        type: integer
+
+  enum_definition:
+    type: object
+    additionalProperties: false
+    required:
+      - name
+      - type
+      - parameters
+    properties:
+      name:
+        type: string
+        pattern: "^[A-Za-z][A-Za-z0-9]*$"
+      type:
+        type: string
+      parameters:
+        type: array
+        items:
+          $ref: "#/definitions/enum_parameter"
+
+  typed_parameter:
+    type: object
+    additionalProperties: false
+    required:
+      - name
+      - type
+    properties:
+      name:
+        type: string
+      type:
+        type: string
+
+  typedef_definition:
+    type: object
+    additionalProperties: false
+    required:
+      - name
+      - type
+    properties:
+      name:
+        type: string
+        pattern: "^[A-Za-z][A-Za-z0-9]*$"
+      type:
+        type: string
+
+  event_descriptor:
+    type: object
+    additionalProperties: false
+    required:
+      - id
+    properties:
+      id:
+        type: integer
+        minimum: 0
+
+  getter_descriptor:
+    type: object
+    additionalProperties: false
+    required:
+      - id
+      - timeout
+    properties:
+      id:
+        type: integer
+        minimum: 0
+      timeout:
+        type: integer
+        minimum: 0
+
+  setter_descriptor:
+    type: object
+    additionalProperties: false
+    required:
+      - id
+      - timeout
+    properties:
+      id:
+        type: integer
+        minimum: 0
+      timeout:
+        type: integer
+        minimum: 0
+
+  attribute:
+    type: object
+    additionalProperties: false
+    required:
+      - name
+      - variable
+      - type
+    properties:
+      name:
+        type: string
+      variable:
+        type: string
+      type:
+        type: string
+      mode:
+        type: string
+      readonly:
+        type: boolean
+        default: false
+      noSubscriptions:
+        type: boolean
+        default: false
+      setAsMethod:
+        type: boolean
+        default: false
+      event:
+        $ref: "#/definitions/event_descriptor"
+      getter:
+        $ref: "#/definitions/getter_descriptor"
+      setter:
+        $ref: "#/definitions/setter_descriptor"
+      consumer_request_limit:
+        type: integer
+        minimum: 1
+        default: 1
+      provider_request_limit:
+        type: integer
+        minimum: 1
+        default: 1
+
+  input_output_param:
+    type: object
+    additionalProperties: false
+    required:
+      - name
+      - type
+    properties:
+      name:
+        type: string
+      type:
+        type: string
+
+  nullable_input_output_param:
+    type:
+      - object
+      - "null"
+    additionalProperties: false
+    required:
+      - name
+      - type
+    properties:
+      name:
+        type: string
+      type:
+        type: string
+
+  method:
+    type: object
+    additionalProperties: false
+    required:
+      - name
+      - variable
+      - id
+      - consumer_request_limit
+      - provider_request_limit
+    properties:
+      name:
+        type: string
+      variable:
+        type: string
+      id:
+        type: integer
+        minimum: 0
+      timeout:
+        type: integer
+        minimum: 0
+      consumer_request_limit:
+        type: integer
+        minimum: 1
+      provider_request_limit:
+        type: integer
+        minimum: 1
+      input_param:
+        $ref: "#/definitions/input_output_param"
+      output_param:
+        $ref: "#/definitions/nullable_input_output_param"
+      fire_and_forget:
+        type: boolean
+        default: false
+
+  event_definition:
+    type: object
+    additionalProperties: false
+    required:
+      - name
+      - variable
+      - id
+      - type
+    properties:
+      name:
+        type: string
+      variable:
+        type: string
+      id:
+        type: integer
+        minimum: 0
+      type:
+        type: string
+
+  headers:
+    type: object
+    additionalProperties: false
+    required:
+      - common
+      - proxy
+      - skeleton
+    properties:
+      common:
+        type: string
+      proxy:
+        type: string
+      skeleton:
+        type: string
+
+  providers:
+    type: object
+    additionalProperties: false
+    required:
+      - instance_ids
+    properties:
+      instance_ids:
+        type: array
+        description: "List of provider instance IDs"
+        items:
+          type: integer
+          minimum: 1
+
+  deployment_cluster:
+    type: object
+    additionalProperties: false
+    required:
+      - cluster
+      - consumers
+      - providers
+    properties:
+      cluster:
+        $ref: "#/definitions/cluster"
+      consumers:
+        type: integer
+        description: "Number of service consumers on this cluster"
+        minimum: 0
+        default: 0
+      providers:
+        $ref: "#/definitions/providers"
+
+  deployment:
+    type: object
+    additionalProperties: false
+    required:
+      - clusters
+      - instance_ids
+    properties:
+      clusters:
+        type: array
+        description: "Service deployment per cluster"
+        items:
+          $ref: "#/definitions/deployment_cluster"
+      instance_ids:
+        type: array
+        items:
+          type: integer
+          minimum: 1
+
+  service:
+    type: object
+    additionalProperties: false
+    required:
+      - namespace
+      - name
+      - id
+      - headers
+      - deployment
+    properties:
+      namespace:
+        type: string
+        description: "C++ namespace for the service"
+      name:
+        type: string
+        description: "Service class name"
+        pattern: "^[A-Za-z][A-Za-z0-9]*$"
+      filename:
+        type: string
+        description: "Optional filename override for generated files"
+      id:
+        type: integer
+        description: "Unique service identifier"
+        minimum: 0
+      allocator:
+        $ref: "#/definitions/allocator"
+      allocator_func:
+        type: string
+        description: "Custom allocator function name (deprecated, use allocator)"
+      enums:
+        type: array
+        description: "Enum type definitions"
+        items:
+          $ref: "#/definitions/enum_definition"
+      datatypes:
+        type: array
+        description: "Struct/datatype definitions"
+        items:
+          type: object
+          additionalProperties: false
+          required:
+            - name
+            - parameters
+          properties:
+            name:
+              type: string
+              pattern: "^[A-Za-z][A-Za-z0-9]*$"
+            type:
+              type: string
+            parameters:
+              type: array
+              items:
+                $ref: "#/definitions/typed_parameter"
+      typedefs:
+        type: array
+        items:
+          $ref: "#/definitions/typedef_definition"
+      attributes:
+        type: array
+        description: "Service attributes"
+        items:
+          $ref: "#/definitions/attribute"
+      methods:
+        type: array
+        description: "Service methods"
+        items:
+          $ref: "#/definitions/method"
+      methods_fire_and_forget:
+        type: array
+        items:
+          $ref: "#/definitions/method"
+      events:
+        type: array
+        items:
+          $ref: "#/definitions/event_definition"
+      headers:
+        $ref: "#/definitions/headers"
+      deployment:
+        $ref: "#/definitions/deployment"
+
+  connection_endpoint:
+    type: object
+    additionalProperties: false
+    required:
+      - name
+      - max_instances
+    properties:
+      namespace:
+        type: string
+      name:
+        type: string
+        pattern: "^[A-Za-z][A-Za-z0-9]*$"
+      filename:
+        type: string
+      id:
+        type: integer
+        minimum: 0
+      allocator:
+        $ref: "#/definitions/allocator"
+      allocator_func:
+        type: string
+      enums:
+        type: array
+        items:
+          $ref: "#/definitions/enum_definition"
+      datatypes:
+        type: array
+        items:
+          type: object
+          additionalProperties: false
+          required:
+            - name
+            - parameters
+          properties:
+            name:
+              type: string
+              pattern: "^[A-Za-z][A-Za-z0-9]*$"
+            type:
+              type: string
+            parameters:
+              type: array
+              items:
+                $ref: "#/definitions/typed_parameter"
+      typedefs:
+        type: array
+        items:
+          $ref: "#/definitions/typedef_definition"
+      attributes:
+        type: array
+        items:
+          $ref: "#/definitions/attribute"
+      methods:
+        type: array
+        items:
+          $ref: "#/definitions/method"
+      methods_fire_and_forget:
+        type: array
+        items:
+          $ref: "#/definitions/method"
+      events:
+        type: array
+        items:
+          $ref: "#/definitions/event_definition"
+      headers:
+        $ref: "#/definitions/headers"
+      deployment:
+        $ref: "#/definitions/deployment"
+      max_instances:
+        type: integer
+        minimum: 1
+        default: 1
+
+  connection:
+    type: object
+    additionalProperties: false
+    required:
+      - source_cluster
+      - target_cluster
+      - connection_type
+      - has_timeouts
+      - proxies
+      - skeletons
+    properties:
+      source_cluster:
+        $ref: "#/definitions/cluster"
+      target_cluster:
+        $ref: "#/definitions/cluster"
+      connection_type:
+        type: string
+        description: "Type of connection"
+        enum:
+          - "ProxyOnly"
+          - "SkeletonOnly"
+          - "ProxyOnlyWithTimeout"
+          - "SkeletonOnlyWithTimeout"
+          - "Bidirectional"
+          - "BidirectionalWithTimeout"
+      has_timeouts:
+        type: boolean
+        description: "Whether this connection supports timeouts"
+      proxies:
+        type: array
+        description: "Services consumed over this connection"
+        items:
+          $ref: "#/definitions/connection_endpoint"
+      skeletons:
+        type: array
+        description: "Services provided over this connection"
+        items:
+          $ref: "#/definitions/connection_endpoint"
+
+  core:
+    type: object
+    additionalProperties: false
+    required:
+      - name
+      - clusters
+    properties:
+      id:
+        type: integer
+        minimum: 0
+      name:
+        type: string
+      clusters:
+        type: array
+        items:
+          $ref: "#/definitions/cluster"

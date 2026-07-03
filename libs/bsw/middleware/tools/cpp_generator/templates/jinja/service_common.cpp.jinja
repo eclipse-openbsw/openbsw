@@ -1,0 +1,143 @@
+/********************************************************************************
+ * Copyright (c) 2026 BMW AG
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Apache License Version 2.0 which is available at
+ * https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ ********************************************************************************/
+/**
+  *
+  *  __  __ _     _     _ _
+  * |  \/  (_) __| | __| | | _____      ____ _ _ __ ___
+  * | |\/| | |/ _` |/ _` | |/ _ \ \ /\ / / _` | '__/ _ \
+  * | |  | | | (_| | (_| | |  __/\ V  V / (_| | | |  __/
+  * |_|  |_|_|\__,_|\__,_|_|\___| \_/\_/ \__,_|_|  \___|
+  *
+  * WARNING!
+  * This file is generated. Do not edit manually.
+  *
+  */
+#include "{{ service.headers.common }}"
+
+#include <etl/array.h>
+
+{% for cluster_deployment in service.deployment.clusters %}
+#include "middleware/Cluster{{cluster_deployment.cluster.name}}.h"
+{% endfor %}
+#include "middleware/core/InstancesDatabase.h"
+
+namespace {{ service.namespace }}::{{ service.name }}
+{
+
+namespace internal
+{
+{# For simulation mode: Generate only merged InstancesDatabase (individual cluster databases removed) #}
+
+{# Create merged InstancesDatabase for simulation (all cores together) #}
+{% set clusters_with_instances = service.deployment.clusters | selectattr('providers.instance_ids') | list %}
+{# Collect all instance IDs from all provider clusters #}
+{%- set all_instance_ids = [] -%}
+{%- for cluster_deployment in clusters_with_instances -%}
+  {%- for instance_id in cluster_deployment.providers.instance_ids -%}
+    {%- set _ = all_instance_ids.append(instance_id) -%}
+  {%- endfor -%}
+{%- endfor -%}
+
+{# Collect all connections for this service across ALL clusters (simulation mode) #}
+{%- set all_skeleton_connections = [] -%}
+{%- set all_proxy_connections = [] -%}
+
+{# Find all skeleton connections (provider connections) #}
+{%- for connection in connections -%}
+  {%- for skeleton in connection.skeletons if connection.skeletons -%}
+    {%- if skeleton.name == service.name -%}
+      {%- set _ = all_skeleton_connections.append(connection) -%}
+    {%- endif -%}
+  {%- endfor -%}
+{%- endfor -%}
+
+{# Find all proxy connections (consumer connections) #}
+{%- for connection in connections -%}
+  {%- for proxy in connection.proxies if connection.proxies -%}
+    {%- if proxy.name == service.name -%}
+      {%- set _ = all_proxy_connections.append(connection) -%}
+    {%- endif -%}
+  {%- endfor -%}
+{%- endfor -%}
+
+{# Generate merged InstancesDatabase for simulation #}
+class InstancesDatabase_Merged : public ::middleware::core::IInstanceDatabase
+{
+  public:
+    constexpr InstancesDatabase_Merged() = default;
+    ::etl::span<::middleware::core::IClusterConnection* const> getSkeletonConnectionsRange() const override
+    {
+        {% if all_skeleton_connections %}
+        return ::etl::make_span(fSkeletonConnections);
+        {% else %}
+        return ::etl::span<::middleware::core::IClusterConnection* const>();
+        {% endif %}
+    }
+
+    ::etl::span<::middleware::core::IClusterConnection* const> getProxyConnectionsRange() const override
+    {
+        {% if all_proxy_connections %}
+        return ::etl::make_span(fProxyConnections);
+        {% else %}
+        return ::etl::span<::middleware::core::IClusterConnection* const>();
+        {% endif %}
+    }
+
+    ::etl::span<const uint16_t> getInstanceIdsRange() const override
+    {
+        return ::etl::make_span(fInstanceIds);
+    }
+
+  private:
+    static constexpr etl::array<const uint16_t, {{all_instance_ids | length}}U> fInstanceIds = {% if all_instance_ids -%}{ {{all_instance_ids | join('U, ')}}U }{%- else -%}{  }{%- endif %};
+    {% if all_proxy_connections %}
+    static constexpr etl::array<::middleware::core::IClusterConnection* const, {{all_proxy_connections | length}}U> fProxyConnections = {
+        {
+        {%- for connection in all_proxy_connections %}
+        &::middleware::ClusterConnection{{ connection.source_cluster.name }}To{{ connection.target_cluster.name }}{{ "," if not loop.last }}
+
+        {%- endfor %}
+        }
+        };
+    {% endif %}
+    {% if all_skeleton_connections %}
+    static constexpr etl::array<::middleware::core::IClusterConnection* const, {{all_skeleton_connections | length}}U> fSkeletonConnections = {
+        {
+        {%- for connection in all_skeleton_connections %}
+        &::middleware::ClusterConnection{{ connection.source_cluster.name }}To{{ connection.target_cluster.name }}{{ "," if not loop.last }}
+
+        {%- endfor %}
+        }
+        };
+    {% endif %}
+};
+
+{% if all_proxy_connections %}
+constexpr etl::array<::middleware::core::IClusterConnection* const, {{all_proxy_connections | length}}U> InstancesDatabase_Merged::fProxyConnections;
+{% endif %}
+{% if all_skeleton_connections %}
+constexpr etl::array<::middleware::core::IClusterConnection* const, {{all_skeleton_connections | length}}U> InstancesDatabase_Merged::fSkeletonConnections;
+{% endif %}
+constexpr etl::array<const uint16_t, {{all_instance_ids | length}}U> InstancesDatabase_Merged::fInstanceIds;
+
+constexpr InstancesDatabase_Merged _InstancesDatabase_Merged;
+
+constexpr etl::array<const ::middleware::core::IInstanceDatabase* const, 1U> instancesDatabase{
+    &_InstancesDatabase_Merged
+};
+
+::etl::span<const ::middleware::core::IInstanceDatabase* const> getClusterConnectionsDb()
+{
+    return ::etl::make_span(instancesDatabase);
+}
+
+}  // namespace internal
+
+}  // namespace {{ service.namespace }}::{{ service.name }}

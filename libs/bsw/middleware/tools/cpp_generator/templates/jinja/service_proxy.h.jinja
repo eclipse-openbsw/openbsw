@@ -1,0 +1,145 @@
+/********************************************************************************
+ * Copyright (c) 2026 BMW AG
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Apache License Version 2.0 which is available at
+ * https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ ********************************************************************************/
+/**
+  *
+  *  __  __ _     _     _ _
+  * |  \/  (_) __| | __| | | _____      ____ _ _ __ ___
+  * | |\/| | |/ _` |/ _` | |/ _ \ \ /\ / / _` | '__/ _ \
+  * | |  | | | (_| | (_| | |  __/\ V  V / (_| | | |  __/
+  * |_|  |_|_|\__,_|\__,_|_|\___| \_/\_/ \__,_|_|  \___|
+  *
+  * WARNING!
+  * This file is generated. Do not edit manually.
+  *
+  */
+#pragma once
+
+#include <etl/delegate.h>
+
+#include "{{ service.headers.common }}"
+
+namespace {{ service.namespace }}::{{ service.name }}::proxy
+{
+
+class {{ service.name }}Proxy;
+
+// EVENTS
+{% for event in service.events if service.events %}
+using {{ event.name }}Event = middleware::core::ProxyEventBase<{{ service.name }}Proxy, {{ event.type }}>;
+{% endfor %}
+
+// METHODS
+{% for method in service.methods if service.methods %}
+using {{ method.name }}DispatcherTraits =
+  middleware::core::DispatcherTraits<{{ method.output_param.type | default('void') }}, internal::{{ method.variable }}_id, false, {{ method.timeout }}U>;
+{% endfor %}
+
+// ATTRIBUTES
+{% for attribute in service.attributes if service.attributes %}
+using {{ attribute.name }}GetterDispatcherTraits = middleware::core::DispatcherTraits<{{ attribute.type }}, internal::get_{{ attribute.name }}_id, false, {{attribute.getter.timeout}}U>;
+{% if attribute.setter %}
+using {{ attribute.name }}SetterDispatcherTraits = middleware::core::DispatcherTraits<{{ attribute.type }}, internal::set_{{ attribute.name }}_id, false, {{attribute.setter.timeout}}U>;
+{% else %}
+using {{ attribute.name }}SetterDispatcherTraits = void;
+{% endif %}
+
+{%- set attribute_type = "FullyFeatured" %}
+{%- if attribute.readonly and attribute.noSubscriptions %}
+  {%- set attribute_type = "ReadOnly_NoSubscription" %}
+{%- elif attribute.readonly %}
+  {%- set attribute_type = "ReadOnly" %}
+{%- elif attribute.noSubscriptions and attribute.setAsMethod %}
+  {%- set attribute_type = "NoSubscriptions_SetAsMethod" %}
+{%- elif attribute.noSubscriptions %}
+  {%- set attribute_type = "NoSubscriptions" %}
+{%- elif attribute.setAsMethod %}
+  {%- set attribute_type = "FullyFeatured_SetAsMethod" %}
+{%- endif %}
+
+using {{ attribute.name }}Attribute = ::middleware::core::ProxyAttribute<{{ service.name }}Proxy,
+                                                            {{ attribute.name }}GetterDispatcherTraits,
+                                                            {{ attribute.consumer_request_limit }}U,
+                                                            {{ attribute.name }}SetterDispatcherTraits,
+                                                            middleware::core::AttributeType::{{ attribute_type }},
+                                                            {{ attribute.type }}>;
+
+{% endfor %}
+
+class {{ service.name }}Proxy : public middleware::core::ProxyBase, public middleware::core::ITimeoutHandler
+{
+    // METHODS
+{% for method in service.methods if service.methods %}
+    using {{ method.name }}Dispatcher = middleware::core::FutureDispatcher<{{ method.name }}DispatcherTraits, {{ method.consumer_request_limit }}U>;
+{% endfor %}
+
+  public:
+    using Base = middleware::core::ProxyBase;
+
+    // METHODS
+{% for method in service.methods if service.methods %}
+    using {{ method.name }}Result   = {{ method.name }}Dispatcher::Result;
+    using {{ method.name }}Callback = {{ method.name }}Dispatcher::Callback;
+{% endfor %}
+
+    {{ service.name }}Proxy();
+    ~{{ service.name }}Proxy() override;
+
+    {{ service.name }}Proxy(const {{ service.name }}Proxy& other) = delete;
+    {{ service.name }}Proxy({{ service.name }}Proxy&& other) = delete;
+    {{ service.name }}Proxy& operator=(const {{ service.name }}Proxy& other) = delete;
+    {{ service.name }}Proxy& operator=({{ service.name }}Proxy&& other) = delete;
+
+
+    middleware::core::HRESULT init(const internal::InstanceId instanceId,
+                                   ::middleware::core::ClusterId const sourceCluster);
+    void deInit();
+    uint16_t getServiceId() const override;
+
+    // METHODS FIRE_AND_FORGET
+{% for method in service.methods_fire_and_forget if service.methods_fire_and_forget %}
+    etl::expected<uint16_t, middleware::core::HRESULT> {{ method.variable }}({% if method.input_param %}const {{ method.input_param.type }}& {{ method.input_param.name }}{% endif %});
+{% endfor %}
+
+    // METHODS
+{% for method in service.methods if service.methods %}
+    etl::expected<uint16_t, middleware::core::HRESULT> {{ method.variable }}(
+    {% if method.input_param %}const {{ method.input_param.type }}& {{ method.input_param.name }}, {% endif %}
+        const {{ method.name }}Callback& methodCb);
+
+    void cancel{{ method.name }}Request(uint16_t requestId);
+{% endfor %}
+
+    // ATTRIBUTES
+{% for attribute in service.attributes if service.attributes %}
+    {{ attribute.name }}Attribute {{ attribute.variable }};
+{% endfor %}
+
+    // EVENTS
+    {% for event in service.events if service.events %}
+    {{ event.name }}Event {{ event.variable }};
+    {% endfor %}
+
+  protected:
+    uint32_t fProcessId;
+    middleware::core::HRESULT onNewMessageReceived(::middleware::core::Message const& msg) override;
+
+  private:
+    void futureDispatcherDeinitialization();
+    void updateTimeouts() override;
+    void doUpdateTimeouts();
+    middleware::core::HRESULT sendMessage(::middleware::core::Message& msg) const final;
+
+    // METHODS
+{% for method in service.methods if service.methods %}
+    {{ method.name }}Dispatcher {{ method.variable}}FutureDispatcher_;
+{% endfor %}
+};
+
+}  // namespace {{ service.namespace }}::{{ service.name }}::proxy

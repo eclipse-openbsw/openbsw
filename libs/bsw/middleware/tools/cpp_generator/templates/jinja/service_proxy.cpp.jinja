@@ -1,0 +1,255 @@
+/********************************************************************************
+ * Copyright (c) 2026 BMW AG
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Apache License Version 2.0 which is available at
+ * https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ ********************************************************************************/
+/**
+  * 
+  *  __  __ _     _     _ _                             
+  * |  \/  (_) __| | __| | | _____      ____ _ _ __ ___ 
+  * | |\/| | |/ _` |/ _` | |/ _ \ \ /\ / / _` | '__/ _ \
+  * | |  | | | (_| | (_| | |  __/\ V  V / (_| | | |  __/
+  * |_|  |_|_|\__,_|\__,_|_|\___| \_/\_/ \__,_|_|  \___|
+  *                                                      
+  * WARNING! 
+  * This file is generated. Do not edit manually.
+  *
+  */
+#include "{{ service.headers.proxy }}"
+
+#include <etl/delegate.h>
+#include <etl/expected.h>
+#include <etl/utility.h>
+#include <middleware/os/TaskIdProvider.h>
+
+#include "middleware/core/Future.h"
+#include "middleware/core/Message.h"
+#include "middleware/core/MessagePayloadBuilder.h"
+#include "middleware/core/types.h"
+
+namespace {{ service.namespace }}::{{ service.name }}::proxy
+{
+
+{{ service.name }}Proxy::{{ service.name }}Proxy()
+    : Base(),
+      // ATTRIBUTES
+{% for attribute in service.attributes if service.attributes %}
+      {{ attribute.variable }}(*this),
+{% endfor %}
+      // EVENTS
+{% for event in service.events if service.events %}
+      {{ event.variable }}(*this),
+{% endfor %}
+      fProcessId(::middleware::core::INVALID_TASK_ID)
+{
+}
+
+{{ service.name }}Proxy::~{{ service.name }}Proxy()
+{
+    deInit();
+}
+
+uint16_t {{ service.name }}Proxy::getServiceId() const
+{
+    return internal::SERVICE_ID;
+}
+
+::middleware::core::HRESULT {{ service.name }}Proxy::init(const internal::InstanceId instanceId,
+                                           ::middleware::core::ClusterId const sourceCluster)
+{
+    auto const database = internal::getClusterConnectionsDb();
+    auto const ret = Base::initFromInstancesDatabase(
+        static_cast<uint16_t>(instanceId), etl::to_underlying(sourceCluster), database);
+    if ((::middleware::core::HRESULT::Ok == ret) || (::middleware::core::HRESULT::InstanceAlreadyRegistered == ret))
+    {
+        static_cast<middleware::core::ITimeoutClusterConnection*>(_connection)->registerTimeoutTransceiver(*this);
+    }
+    if ({{ service.name }}Proxy::isInitialized())
+    {
+        fProcessId = ::middleware::os::getProcessId();
+        if (::middleware::core::HRESULT::Ok == ret)
+        {
+            futureDispatcherDeinitialization();
+        }
+    }
+    return ret;
+}
+
+void {{ service.name }}Proxy::deInit()
+{
+    checkCrossThreadError(fProcessId);
+    futureDispatcherDeinitialization();
+    if ({{ service.name }}Proxy::isInitialized())
+    {
+        static_cast<middleware::core::ITimeoutClusterConnection*>(_connection)->unregisterTimeoutTransceiver(*this);
+    }
+    Base::unsubscribe(internal::SERVICE_ID);
+}
+
+// METHODS
+{% for method in service.methods if service.methods %}
+void {{ service.name }}Proxy::cancel{{ method.name }}Request(uint16_t requestId)
+{
+    checkCrossThreadError(fProcessId);
+    static_cast<void>({{ method.variable }}FutureDispatcher_.cancelRequest(requestId));
+}
+{% endfor %}
+
+::middleware::core::HRESULT {{ service.name }}Proxy::onNewMessageReceived(::middleware::core::Message const& msg)
+{
+    ::middleware::core::HRESULT ret = ::middleware::core::HRESULT::Ok;
+    checkCrossThreadError(fProcessId);
+    switch (msg.getHeader().memberId)
+    {
+        // ATTRIBUTES
+{% for attribute in service.attributes if service.attributes %}
+  {% if attribute.getter %}
+        case internal::get_{{ attribute.name }}_id: {
+            {{ attribute.variable }}.answerGetterRequest(msg);
+            break;
+        }
+  {% endif %}
+  {% if attribute.setAsMethod and attribute.setter %}
+        case internal::set_{{ attribute.name }}_id: {
+            {{ attribute.variable }}.answerSetterRequest(msg);
+            break;
+        }
+  {% endif %}
+  {% if attribute.event %}
+        case internal::event_{{ attribute.name }}_id: {
+            {{ attribute.variable }}.setEvent_(msg);
+            break;
+        }
+  {% endif %}
+{% endfor %}
+        // EVENTS
+{% for event in service.events if service.events %}
+        case internal::event_{{ event.name }}_id: {
+            {{ event.variable }}.setEvent_(msg);
+            break;
+        }
+{% endfor %}
+        // METHODS
+{% for method in service.methods if service.methods %}
+        case internal::{{ method.variable }}_id: {
+            {{ method.variable }}FutureDispatcher_.answerRequest(msg);
+            break;
+        }
+{% endfor %}
+        default: {
+            ret = ::middleware::core::HRESULT::ServiceMemberIdNotFound;
+            break;
+        }
+    }
+    return ret;
+}
+
+void {{ service.name }}Proxy::futureDispatcherDeinitialization()
+{
+    checkCrossThreadError(fProcessId);
+    // ATTRIBUTES
+{% for attribute in service.attributes if service.attributes %}
+    {{ attribute.variable }}.freeAll();
+{% endfor %}
+    // METHODS
+{% for method in service.methods if service.methods %}
+    {{ method.variable }}FutureDispatcher_.freeAll();
+{% endfor %}
+}
+
+void {{ service.name }}Proxy::updateTimeouts()
+{
+    doUpdateTimeouts();
+}
+
+void {{ service.name }}Proxy::doUpdateTimeouts()
+{
+    checkCrossThreadError(fProcessId);
+    // ATTRIBUTES
+{% for attribute in service.attributes if service.attributes %}
+  {% if (attribute.getter and attribute.getter.timeout > 0) or (attribute.setter and attribute.setter.timeout > 0) %}
+    {{ attribute.variable }}.updateTimeouts();
+  {% endif %}
+{% endfor %}
+    // METHODS
+{% for method in service.methods if service.methods %}
+  {% if (method.timeout > 0) %}
+    {{ method.variable }}FutureDispatcher_.updateTimeouts();
+  {% endif %}
+{% endfor %}
+}
+
+// METHODS
+{% for method in service.methods if service.methods %}
+etl::expected<uint16_t, middleware::core::HRESULT> {{ service.name }}Proxy::{{ method.variable }}(
+    {% if method.input_param %}const {{ method.input_param.type }}& {{ method.input_param.name }}, {% endif %}
+    const {{ method.name }}Callback& methodCb)
+{
+    checkCrossThreadError(fProcessId);
+    middleware::core::HRESULT ret = middleware::core::HRESULT::NotRegistered;
+    etl::optional<uint16_t> requestId = {{ method.variable }}FutureDispatcher_.obtainRequestId(methodCb);
+    if (!requestId.has_value())
+    {
+        return etl::unexpected<middleware::core::HRESULT>(etl::in_place,
+                                                          middleware::core::HRESULT::RequestPoolDepleted);
+    }
+
+    middleware::core::Message msg =
+        Base::generateMessageHeader(internal::{{ method.variable }}_id, requestId.value());
+{% if method.input_param %}
+    ret = middleware::core::MessagePayloadBuilder::getInstance().allocate({{ method.input_param.name }}, msg);
+    if (ret != middleware::core::HRESULT::Ok)
+    {
+        static_cast<void>({{ method.variable }}FutureDispatcher_.cancelRequest(requestId.value()));
+        return etl::unexpected<middleware::core::HRESULT>(etl::in_place, ret);
+    }
+{% endif %}
+    ret = Base::sendMessage(msg);
+    if (ret != middleware::core::HRESULT::Ok)
+    {
+{% if method.input_param %} middleware::core::MessagePayloadBuilder::deallocate(msg); {% endif %}
+				static_cast<void>({{ method.variable }}FutureDispatcher_.cancelRequest(requestId.value()));
+        return etl::unexpected<middleware::core::HRESULT>(etl::in_place, ret);
+    }
+
+    return requestId.value();
+}
+{% endfor %}
+
+// METHODS FIRE_AND_FORGET
+{% for method in service.methods_fire_and_forget if service.methods_fire_and_forget %}
+etl::expected<uint16_t, middleware::core::HRESULT> {{ service.name }}Proxy::{{ method.variable }}(
+    {% if method.input_param %}const {{ method.input_param.type }}& {{ method.input_param.name }}{% endif %})
+{
+    checkCrossThreadError(fProcessId);
+    middleware::core::Message msg = Base::generateMessageHeader(internal::{{ method.variable }}_id);
+    middleware::core::HRESULT ret = middleware::core::HRESULT::Ok;
+{% if method.input_param %}
+    ret = middleware::core::MessagePayloadBuilder::getInstance().allocate({{ method.input_param.name }}, msg);
+    if (ret != middleware::core::HRESULT::Ok)
+    {
+        return etl::unexpected<middleware::core::HRESULT>(etl::in_place, ret);
+    }
+{% endif %}
+    ret = Base::sendMessage(msg);
+    if (ret != middleware::core::HRESULT::Ok)
+    {
+{% if method.input_param %} middleware::core::MessagePayloadBuilder::deallocate(msg); {% endif %}
+        return etl::unexpected<middleware::core::HRESULT>(etl::in_place, ret);
+    }
+
+    return msg.getHeader().requestId;
+}
+{% endfor %}
+
+::middleware::core::HRESULT {{ service.name }}Proxy::sendMessage(::middleware::core::Message& msg) const
+{
+    checkCrossThreadError(fProcessId);
+    return Base::sendMessage(msg);
+}
+
+}  // namespace {{ service.namespace }}::{{ service.name }}::proxy

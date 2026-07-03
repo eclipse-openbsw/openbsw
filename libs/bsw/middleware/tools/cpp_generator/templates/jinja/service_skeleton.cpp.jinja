@@ -1,0 +1,332 @@
+/********************************************************************************
+ * Copyright (c) 2026 BMW AG
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Apache License Version 2.0 which is available at
+ * https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ ********************************************************************************/
+/**
+  *
+  *  __  __ _     _     _ _
+  * |  \/  (_) __| | __| | | _____      ____ _ _ __ ___
+  * | |\/| | |/ _` |/ _` | |/ _ \ \ /\ / / _` | '__/ _ \
+  * | |  | | | (_| | (_| | |  __/\ V  V / (_| | | |  __/
+  * |_|  |_|_|\__,_|\__,_|_|\___| \_/\_/ \__,_|_|  \___|
+  *
+  * WARNING!
+  * This file is generated. Do not edit manually.
+  *
+  */
+#include "{{ service.headers.skeleton }}"
+
+#include <middleware/logger/Logger.h>
+#include <middleware/os/TaskIdProvider.h>
+
+#include "middleware/core/LoggerApi.h"
+#include "middleware/core/Message.h"
+#include "middleware/core/MessagePayloadBuilder.h"
+#include "middleware/core/ResponseBufferBase.h"
+#include "middleware/core/types.h"
+
+namespace {{ service.namespace }}::{{ service.name }}::skeleton
+{
+
+// METHODS FIRE_AND_FORGET
+  {% for method in service.methods_fire_and_forget if service.methods_fire_and_forget %}
+middleware::core::HRESULT {{service.name}}Skeleton::{{ method.variable }}OnNewMessageReceived(const middleware::core::Message& msg)
+{
+    {% if method.input_param %}
+    const auto& payload = middleware::core::MessagePayloadBuilder::getInstance().readPayload<{{ method.input_param.type }}>(msg);
+    {{ method.variable }}(payload);
+    {% else %}
+    static_cast<void>(msg);
+    {{ method.variable }}();
+    {% endif %}
+
+    return middleware::core::HRESULT::Ok;
+}
+  {% endfor %}
+
+// ATTRIBUTES
+  {% for attribute in service.attributes if service.attributes %}
+      {% if attribute.getter %}
+middleware::core::HRESULT {{service.name}}Skeleton::get_{{attribute.name}}AttributeOnNewMessageReceived(
+    const middleware::core::Message& msg)
+{
+    middleware::core::HRESULT ret = middleware::core::HRESULT::ServiceBusy;
+
+    const auto response = fGet_{{attribute.name}}AttributeResponseBuffer.getAvailableResponse(
+        msg.getHeader().addressId, msg.getHeader().srcClusterId, msg.getHeader().requestId);
+    if (response != nullptr)
+    {
+        get_{{attribute.name}}Attribute(*response);
+        ret = middleware::core::HRESULT::Ok;
+    }
+
+    return ret;
+}
+      {% endif %}
+      {% if attribute.setter%}
+
+        {% if attribute.setAsMethod and attribute.setter%}
+middleware::core::HRESULT {{service.name}}Skeleton::set_{{attribute.name}}AttributeOnNewMessageReceived(
+    const middleware::core::Message& msg)
+{
+    middleware::core::HRESULT ret = middleware::core::HRESULT::ServiceBusy;
+
+    const auto response = fSet_{{attribute.name}}AttributeResponseBuffer.getAvailableResponse(
+        msg.getHeader().addressId, msg.getHeader().srcClusterId, msg.getHeader().requestId);
+    if (response != nullptr)
+    {
+        const auto& payload = middleware::core::MessagePayloadBuilder::getInstance().readPayload<{{ attribute.type }}>(msg);
+        set_{{attribute.name}}Attribute(payload, *response);
+        ret = middleware::core::HRESULT::Ok;
+    }
+
+    return ret;
+}
+        {% else %}
+middleware::core::HRESULT {{service.name}}Skeleton::set_{{attribute.name}}AttributeOnNewMessageReceived(
+    const middleware::core::Message& msg)
+{
+    const auto& payload = middleware::core::MessagePayloadBuilder::getInstance().readPayload<{{attribute.type}}>(msg);
+    set_{{attribute.name}}Attribute(payload);
+
+    return middleware::core::HRESULT::Ok;
+}
+        {% endif %}
+      {% endif %}
+
+    {% endfor %}
+
+// METHODS
+  {% for method in service.methods if service.methods %}
+middleware::core::HRESULT {{service.name}}Skeleton::{{ method.variable }}OnNewMessageReceived(const middleware::core::Message& msg)
+{
+    middleware::core::HRESULT ret = middleware::core::HRESULT::ServiceBusy;
+
+    middleware::core::ResponseBufferBase::SkeletonResponseInfo* response =
+        f{{ method.variable }}ResponseBuffer.getAvailableResponse(
+            msg.getHeader().addressId, msg.getHeader().srcClusterId, msg.getHeader().requestId);
+
+    if (response != nullptr)
+    {
+        {% if method.input_param %}
+        const auto& payload = middleware::core::MessagePayloadBuilder::getInstance().readPayload<{{ method.input_param.type }}>(msg);
+        {{ method.variable }}(payload, *response);
+        {% else %}
+        {{ method.variable }}(*response);
+        {% endif %}
+        ret = middleware::core::HRESULT::Ok;
+    }
+
+    return ret;
+}
+  {% endfor %}
+
+{{service.name}}Skeleton::{{service.name}}Skeleton()
+    : Base(),
+      // ATTRIBUTES
+  {% for attribute in service.attributes  if service.attributes%}
+      {{ attribute.variable }}(*this),
+  {% endfor %}
+      // EVENTS
+  {% for event in service.events if service.events %}
+      {{ event.variable }}(*this),
+  {% endfor %}
+      // ATTRIBUTES
+  {% for attribute in service.attributes if service.attributes %}
+      {% if attribute.getter %}
+      fGet_{{ attribute.name }}AttributeResponseBuffer(*this),
+      {% endif %}
+      {% if attribute.setAsMethod and attribute.setter%}
+      fSet_{{ attribute.name }}AttributeResponseBuffer(*this),
+      {% endif %}
+  {% endfor %}
+      // METHODS
+  {% for method in service.methods if service.methods %}
+      f{{ method.variable }}ResponseBuffer(*this),
+  {% endfor %}
+      fProcessId(middleware::core::INVALID_TASK_ID)
+{
+}
+
+{{service.name}}Skeleton::~{{service.name}}Skeleton()
+{
+    deInit();
+}
+
+middleware::core::HRESULT {{service.name}}Skeleton::init(uint16_t const instanceId)
+{
+    auto const db = internal::getClusterConnectionsDb();
+    const auto ret = Base::initFromInstancesDatabase(static_cast<uint16_t>(instanceId), db);
+    if (Base::isInitialized())
+    {
+        fProcessId = middleware::os::getProcessId();
+    }
+
+    return ret;
+}
+
+void {{service.name}}Skeleton::deInit()
+{
+    Base::checkCrossThreadError(fProcessId);
+    Base::unsubscribe(internal::SERVICE_ID);
+}
+
+uint16_t {{service.name}}Skeleton::getServiceId() const
+{
+    return internal::SERVICE_ID;
+}
+
+middleware::core::HRESULT {{service.name}}Skeleton::onNewMessageReceived(middleware::core::Message const& msg)
+{
+    middleware::core::HRESULT ret = middleware::core::HRESULT::ServiceMemberIdNotFound;
+    Base::checkCrossThreadError(fProcessId);
+    switch (msg.getHeader().memberId)
+    {
+        // METHODS FIRE_AND_FORGET
+  {% for method in service.methods_fire_and_forget if service.methods_fire_and_forget %}
+        case internal::{{ method.variable }}_id: {
+            ret = {{ method.variable }}OnNewMessageReceived(msg);
+            break;
+        }
+  {% endfor %}
+        // ATTRIBUTES
+  {% for attribute in service.attributes if service.attributes %}
+    {% if attribute.getter %}
+        case internal::get_{{ attribute.name }}_id: {
+            ret = get_{{ attribute.name }}AttributeOnNewMessageReceived(msg);
+            break;
+        }
+    {% endif %}
+    {% if attribute.setter %}
+        case internal::set_{{ attribute.name }}_id: {
+            ret = set_{{ attribute.name }}AttributeOnNewMessageReceived(msg);
+            break;
+        }
+    {% endif %}
+  {% endfor %}
+        // METHODS
+  {% for method in service.methods if service.methods %}
+        case internal::{{ method.variable }}_id: {
+            ret = {{ method.variable }}OnNewMessageReceived(msg);
+            break;
+        }
+  {% endfor %}
+        default: {
+            if (msg.isError() && msg.isEvent())
+            {
+                middleware::logger::logMessageSendingFailure(
+                    middleware::logger::LogLevel::Error, middleware::logger::Error::DispatchMessage, ret, msg);
+                ret = middleware::core::HRESULT::Ok;
+            }
+            break;
+        }
+    }
+    return ret;
+}
+
+// METHODS
+{% for method in service.methods if service.methods %}
+middleware::core::HRESULT {{service.name}}Skeleton::respond(middleware::core::ResponseBufferBase::SkeletonResponseInfo& response,
+                                               {% if method.output_param %}const {{  method.output_param.type }}& {{  method.output_param.name }}, {% endif %}const bool handleResponseFailure)
+{
+    return f{{method.variable}}ResponseBuffer.respond(response, {{  method.output_param.name | default('0U') }}, handleResponseFailure);
+}
+{% endfor %}
+
+// ATTRIBUTES
+  {% for attribute in service.attributes if service.attributes %}
+    {% if attribute.getter %}
+middleware::core::HRESULT {{service.name}}Skeleton::respond(middleware::core::ResponseBufferBase::SkeletonResponseInfo& response,
+                                               const {{ attribute.type }}& result,
+                                               const bool handleResponseFailure)
+{
+    return fGet_{{ attribute.name }}AttributeResponseBuffer.respond(response, result, handleResponseFailure);
+}
+    {% endif %}
+    {% if attribute.setAsMethod and attribute.setter %}
+
+middleware::core::HRESULT {{service.name}}Skeleton::respond(middleware::core::ResponseBufferBase::SkeletonResponseInfo& response,
+                                               const {{ attribute.type }}& result,
+                                               const bool handleResponseFailure)
+{
+    return fSet_{{ attribute.name }}AttributeResponseBuffer.respond(response, result, handleResponseFailure);
+}
+    {% endif %}
+
+  {% endfor %}
+
+  {% for attribute in service.attributes if service.attributes %}
+    {% if attribute.getter %}
+middleware::core::HRESULT {{service.name}}Skeleton::cancelGet_{{ attribute.name }}AttributeResponse(
+    middleware::core::ResponseBufferBase::SkeletonResponseInfo& response)
+{
+    return fGet_{{ attribute.name }}AttributeResponseBuffer.cancelResponse(response);
+}
+   {% endif %}
+   {% if attribute.setAsMethod and attribute.setter %}
+
+middleware::core::HRESULT {{service.name}}Skeleton::cancelSet_{{ attribute.name }}AttributeResponse(
+    middleware::core::ResponseBufferBase::SkeletonResponseInfo& response)
+{
+    return fSet_{{ attribute.name }}AttributeResponseBuffer.cancelResponse(response);
+}
+   {% endif %}
+
+  {% endfor %}
+
+// METHODS
+  {% for method in service.methods if service.methods %}
+middleware::core::HRESULT {{service.name}}Skeleton::cancel{{ method.name }}Response(
+    middleware::core::ResponseBufferBase::SkeletonResponseInfo& response)
+{
+    return f{{ method.variable }}ResponseBuffer.cancelResponse(response);
+}
+
+  {% endfor %}
+
+// ATTRIBUTES
+  {% for attribute in service.attributes if service.attributes %}
+    {% if attribute.getter %}
+void {{service.name}}Skeleton::get_{{ attribute.name }}Attribute(middleware::core::ResponseBufferBase::SkeletonResponseInfo& response)
+{
+    const auto& val = {{ attribute.variable }}.get();
+    static_cast<void>(respond(response, val));
+}
+    {% endif %}
+
+    {% if attribute.setter %}
+      {%if attribute.setAsMethod %}
+void {{service.name}}Skeleton::set_{{ attribute.name }}Attribute(const {{ attribute.type }}& arg,
+                                             middleware::core::ResponseBufferBase::SkeletonResponseInfo& response)
+{
+    {{ attribute.variable }}.set(arg);
+    const auto& val = {{ attribute.variable }}.get();
+    static_cast<void>(respond(response, val));
+}
+      {% else %}
+void {{service.name}}Skeleton::set_{{ attribute.name }}Attribute(const {{ attribute.type }}& arg)
+{
+    {{ attribute.variable }}.set(arg);
+}
+      {% endif %}
+    {% endif %}
+
+  {% endfor %}
+
+middleware::core::HRESULT {{service.name}}Skeleton::sendMessage(middleware::core::Message& msg) const
+{
+    Base::checkCrossThreadError(fProcessId);
+    return Base::sendMessage(msg);
+}
+
+uint32_t {{service.name}}Skeleton::getProcessId() const
+{
+    return fProcessId;
+}
+
+}  // namespace {{ service.namespace }}::{{ service.name }}::skeleton

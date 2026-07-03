@@ -1,0 +1,101 @@
+/********************************************************************************
+ * Copyright (c) 2026 BMW AG
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Apache License Version 2.0 which is available at
+ * https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ ********************************************************************************/
+/**
+  *
+  *  __  __ _     _     _ _
+  * |  \/  (_) __| | __| | | _____      ____ _ _ __ ___
+  * | |\/| | |/ _` |/ _` | |/ _ \ \ /\ / / _` | '__/ _ \
+  * | |  | | | (_| | (_| | |  __/\ V  V / (_| | | |  __/
+  * |_|  |_|_|\__,_|\__,_|_|\___| \_/\_/ \__,_|_|  \___|
+  *
+  * WARNING!
+  * This file is generated. Do not edit manually.
+  *
+  */
+#pragma once
+
+#include <etl/array.h>
+#include <etl/span.h>
+#include <etl/vector.h>
+
+#include "middleware/ClusterId.h"
+#include "middleware/core/ITimeoutHandler.h"
+#include "middleware/core/ProxyAttribute.h"
+#include "middleware/core/ProxyBase.h"
+#include "middleware/core/ProxyEventBase.h"
+#include "middleware/core/ResponseBuffer.h"
+#include "middleware/core/SkeletonAttribute.h"
+#include "middleware/core/SkeletonBase.h"
+#include "middleware/core/SkeletonEvent.h"
+#include "shm/AllocatorsDefinitions.h"
+
+namespace {{ service.namespace }}::{{ service.name }}
+{
+
+{% for alias in service.typedefs if service.typedefs %}
+using {{alias.name}} = {{alias.type}};
+{% endfor -%}
+
+{% for enum_type in service.enums if service.enums %}
+enum class {{ enum_type.name }} : {{ enum_type.type }}
+{
+    {% for value in enum_type.parameters %}
+    {{ value.name }} = {{ value.value }},
+    {% endfor %}
+};
+{% endfor %}
+
+{% for data_type in service.datatypes if service.datatypes %}
+{{ data_type.type }} {{ data_type.name }}
+{
+    {% for value in data_type.parameters %}
+    {{ value.type }} {{ value.name }};
+    {% endfor %}
+};
+{% endfor %}
+
+namespace internal
+{
+constexpr uint16_t SERVICE_ID = {{ service.id }}U;
+
+{% for method in service.methods_fire_and_forget if service.methods_fire_and_forget %}
+constexpr uint16_t {{method.variable}}_id = {{ method.id }}U;
+{% endfor %}
+
+{% for attribute in service.attributes if service.attributes %}
+{% if attribute.getter %}constexpr uint16_t get_{{ attribute.name }}_id = {{ attribute.getter.id }}U;
+{% endif %}
+{% if attribute.setter %}constexpr uint16_t set_{{ attribute.name }}_id = {{ attribute.setter.id }}U;
+{% endif %}
+{% if attribute.event %}constexpr uint16_t event_{{ attribute.name }}_id = {{ attribute.event.id }}U;
+{% endif %}
+{% endfor %}
+
+{% for event in service.events if service.events %}
+constexpr uint16_t event_{{event.name}}_id = {{ event.id }}U;
+{% endfor %}
+
+{% for method in service.methods if service.methods %}
+constexpr uint16_t {{method.variable}}_id = {{ method.id }}U;
+{% endfor %}
+
+enum InstanceId : uint8_t
+{
+{% for cluster_deployment in service.deployment.clusters %}
+  {% for instance_id in cluster_deployment.providers.instance_ids %}
+    InstanceId_{{ instance_id }} = {{ instance_id }}U,
+  {% endfor %}
+{% endfor %}
+};
+
+::etl::span<const middleware::core::IInstanceDatabase* const> getClusterConnectionsDb();
+}  // namespace internal
+
+}  // namespace {{ service.namespace }}::{{ service.name }}

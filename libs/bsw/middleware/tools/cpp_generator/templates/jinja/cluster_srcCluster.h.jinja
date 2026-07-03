@@ -1,0 +1,43 @@
+/********************************************************************************
+ * Copyright (c) 2026 BMW AG
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Apache License Version 2.0 which is available at
+ * https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ ********************************************************************************/
+/**
+  *
+  *  __  __ _     _     _ _
+  * |  \/  (_) __| | __| | | _____      ____ _ _ __ ___
+  * | |\/| | |/ _` |/ _` | |/ _ \ \ /\ / / _` | '__/ _ \
+  * | |  | | | (_| | (_| | |  __/\ V  V / (_| | | |  __/
+  * |_|  |_|_|\__,_|\__,_|_|\___| \_/\_/ \__,_|_|  \___|
+  *
+  * WARNING!
+  * This file is generated. Do not edit manually.
+  *
+  */
+#pragma once
+
+#include <etl/delegate.h>
+
+{% for connection in connections if connection.source_cluster.name == cluster.name %}
+#include "middleware/ClusterConnections{{connection.source_cluster.name}}{{connection.target_cluster.name}}.h"
+{% endfor %}
+#include "middleware/core/ClusterConnection.h"
+
+namespace middleware
+{
+
+{% for connection in connections if connection.source_cluster.name == cluster.name %}
+extern core::ClusterConnectionTypeSelector<meta::ClusterConnection{{connection.source_cluster.name}}To{{connection.target_cluster.name}}Meta>::type ClusterConnection{{connection.source_cluster.name}}To{{connection.target_cluster.name}};
+{% endfor %}
+
+void initialize{{cluster.name}}ClusterConnection();
+void process{{cluster.name}}Cluster(::size_t messages = 0U, bool updateTimeouts = true);
+void update{{cluster.name}}ClusterTimeouts();
+
+
+}  // namespace middleware

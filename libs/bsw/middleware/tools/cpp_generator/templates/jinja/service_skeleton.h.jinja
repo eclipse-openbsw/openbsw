@@ -1,0 +1,184 @@
+/********************************************************************************
+ * Copyright (c) 2026 BMW AG
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Apache License Version 2.0 which is available at
+ * https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ ********************************************************************************/
+/**
+  * 
+  *  __  __ _     _     _ _                             
+  * |  \/  (_) __| | __| | | _____      ____ _ _ __ ___ 
+  * | |\/| | |/ _` |/ _` | |/ _ \ \ /\ / / _` | '__/ _ \
+  * | |  | | | (_| | (_| | |  __/\ V  V / (_| | | |  __/
+  * |_|  |_|_|\__,_|\__,_|_|\___| \_/\_/ \__,_|_|  \___|
+  *                                                      
+  * WARNING! 
+  * This file is generated. Do not edit manually.
+  *
+  */
+#pragma once
+
+#include "{{ service.headers.common }}"
+
+namespace {{ service.namespace }}::{{ service.name }}::skeleton
+{
+
+// ATTRIBUTES
+{% for attribute in service.attributes if service.attributes %}
+{% if attribute.event %}
+using {{attribute.name}}Attribute = ::middleware::core::SkeletonAttribute<{{ attribute.type }}, internal::event_{{ attribute.name }}_id, true>;
+{% else %}
+using {{attribute.name}}Attribute = ::middleware::core::SkeletonAttribute<{{ attribute.type }}, 0, false>;
+{% endif %}
+{% if attribute.getter %}
+using {{ attribute.name }}GetterResponsePolicy =
+    ::middleware::core::ResponseTraits<{{ attribute.name }}Attribute::AttributeType, internal::get_{{ attribute.name }}_id>;
+{% endif %}
+{% if attribute.setAsMethod and attribute.setter %}
+using {{ attribute.name }}SetterResponsePolicy =
+    ::middleware::core::ResponseTraits<{{ attribute.name }}Attribute::AttributeType, internal::set_{{ attribute.name }}_id>;
+{% endif %}
+
+{% endfor %}
+
+// EVENTS
+{% for event in service.events if service.events %}
+using {{ event.name }}Event = ::middleware::core::SkeletonEvent<{{ event.type }}, internal::event_{{ event.name }}_id>;
+{% endfor %}
+
+class {{service.name}}Skeleton : public ::middleware::core::SkeletonBase
+{
+  public:
+    using Base = ::middleware::core::SkeletonBase;
+    // METHODS
+    {% for method in service.methods %}
+    using {{ method.variable }}Response =
+      ::middleware::core::ResponseBuffer<::middleware::core::ResponseTraits<{{ method.output_param.type | default('uint8_t') }}, internal::{{ method.variable }}_id>, {{ method.provider_request_limit }}U>;
+    {% endfor %}
+
+    {{service.name}}Skeleton();
+    ~{{service.name}}Skeleton() override;
+
+    {{ service.name }}Skeleton(const {{ service.name }}Skeleton& other) = delete;
+    {{ service.name }}Skeleton({{ service.name }}Skeleton&& other) = delete;
+    {{ service.name }}Skeleton& operator=(const {{ service.name }}Skeleton& other) = delete;
+    {{ service.name }}Skeleton& operator=({{ service.name }}Skeleton&& other) = delete;
+
+    ::middleware::core::HRESULT init(uint16_t const instanceId);
+    void deInit();
+
+    uint16_t getServiceId() const override;
+
+    // METHODS FIRE_AND_FORGET
+    {% for method in service.methods_fire_and_forget if service.methods_fire_and_forget %}
+    virtual void {{ method.variable }}({% if method.input_param %}const {{ method.input_param.type }}& {{ method.input_param.name }}{% endif %}) = 0;
+    {% endfor %}
+
+    // METHODS
+    {% for method in service.methods if service.methods %}
+    virtual void {{ method.variable }}({% if method.input_param %}const {{ method.input_param.type }}& {{ method.input_param.name }}, {% endif %}
+                               ::middleware::core::ResponseBufferBase::SkeletonResponseInfo& response) = 0;
+
+    {% if method.output_param %}
+    ::middleware::core::HRESULT respond(::middleware::core::ResponseBufferBase::SkeletonResponseInfo& response,
+                                        const {{  method.output_param.type }}& {{  method.output_param.name }},
+                                        const bool handleResponseFailure = true);
+    {% else %}
+    ::middleware::core::HRESULT respond(::middleware::core::ResponseBufferBase::SkeletonResponseInfo& response,
+                      const bool handleResponseFailure = true);
+    {% endif %}
+
+    ::middleware::core::HRESULT cancel{{ method.name }}Response(
+        ::middleware::core::ResponseBufferBase::SkeletonResponseInfo& response);
+    {% endfor %}
+
+    // ATTRIBUTES
+    {% for attribute in service.attributes if service.attributes %}
+    // {{ attribute.name }} ATTRIBUTE
+    {% if attribute.getter %}
+    virtual void get_{{ attribute.name }}Attribute(::middleware::core::ResponseBufferBase::SkeletonResponseInfo& response);
+    ::middleware::core::HRESULT cancelGet_{{ attribute.name }}AttributeResponse(
+        ::middleware::core::ResponseBufferBase::SkeletonResponseInfo& response);
+    {% endif %}
+
+    {% if attribute.setter %}
+      {% if attribute.setAsMethod %}
+    virtual void set_{{ attribute.name }}Attribute(const {{ attribute.type }}& {{ attribute.variable }},
+                                             ::middleware::core::ResponseBufferBase::SkeletonResponseInfo& response);
+    ::middleware::core::HRESULT cancelSet_{{ attribute.name }}AttributeResponse(
+        ::middleware::core::ResponseBufferBase::SkeletonResponseInfo& response);
+      {% else %}
+    virtual void set_{{ attribute.name }}Attribute(const {{ attribute.type }}& {{ attribute.variable }});
+      {% endif %}
+    {% endif %}
+
+    {% endfor %}
+
+    // ATTRIBUTES
+    {% for attribute in service.attributes if service.attributes %}
+    ::middleware::core::HRESULT respond(::middleware::core::ResponseBufferBase::SkeletonResponseInfo& response,
+                                        const {{ attribute.type }}& result,
+                                        const bool handleResponseFailure = true);
+    {% endfor %}
+
+    // ATTRIBUTES
+    {% for attribute in service.attributes if service.attributes %}
+    {{ attribute.name }}Attribute {{ attribute.variable }};
+    {% endfor %}
+
+    // EVENTS
+    {% for event in service.events if service.events %}
+    {{ event.name }}Event {{ event.variable }};
+    {% endfor %}
+
+  protected:
+    uint32_t getProcessId() const override;
+    ::middleware::core::HRESULT onNewMessageReceived(::middleware::core::Message const& msg) override;
+
+  private:
+    ::middleware::core::HRESULT sendMessage(::middleware::core::Message& msg) const final;
+
+    // ATTRIBUTES
+    {% for attribute in service.attributes if service.attributes %}
+      {% if attribute.getter %}
+    ::middleware::core::ResponseBuffer<{{ attribute.name }}GetterResponsePolicy, {{ attribute.provider_request_limit }}U> fGet_{{ attribute.name }}AttributeResponseBuffer;
+      {% endif %}
+      {% if attribute.setAsMethod and attribute.setter %}
+    ::middleware::core::ResponseBuffer<{{ attribute.name }}SetterResponsePolicy, {{ attribute.provider_request_limit }}U> fSet_{{ attribute.name }}AttributeResponseBuffer;
+      {% endif %}
+    {% endfor %}
+
+    // METHODS
+    {% for method in service.methods if service.methods %}
+    {{ method.variable }}Response f{{ method.variable }}ResponseBuffer;
+    {% endfor %}
+
+    uint32_t fProcessId;
+
+    // METHODS
+    {% for method in service.methods if service.methods %}
+    ::middleware::core::HRESULT {{ method.variable }}OnNewMessageReceived(const ::middleware::core::Message& msg);
+    {% endfor %}
+
+    // METHODS FIRE_AND_FORGET
+    {% for method in service.methods_fire_and_forget if service.methods_fire_and_forget %}
+    ::middleware::core::HRESULT {{ method.variable }}OnNewMessageReceived(const ::middleware::core::Message& msg);
+    {% endfor %}
+
+    // ATTRIBUTES
+    {% for attribute in service.attributes if service.attributes %}
+      {% if attribute.getter %}
+    ::middleware::core::HRESULT get_{{ attribute.name }}AttributeOnNewMessageReceived(
+        const ::middleware::core::Message& msg);
+      {% endif %}
+      {% if attribute.setter %}
+    ::middleware::core::HRESULT set_{{ attribute.name }}AttributeOnNewMessageReceived(
+        const ::middleware::core::Message& msg);
+      {% endif %}
+    {% endfor %}
+};
+
+}  // namespace {{ service.namespace }}::{{ service.name }}::skeleton

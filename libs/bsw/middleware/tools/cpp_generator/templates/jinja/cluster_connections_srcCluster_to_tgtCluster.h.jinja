@@ -1,0 +1,193 @@
+/********************************************************************************
+ * Copyright (c) 2026 BMW AG
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Apache License Version 2.0 which is available at
+ * https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ ********************************************************************************/
+/**
+  *
+  *  __  __ _     _     _ _
+  * |  \/  (_) __| | __| | | _____      ____ _ _ __ ___
+  * | |\/| | |/ _` |/ _` | |/ _ \ \ /\ / / _` | '__/ _ \
+  * | |  | | | (_| | (_| | |  __/\ V  V / (_| | | |  __/
+  * |_|  |_|_|\__,_|\__,_|_|\___| \_/\_/ \__,_|_|  \___|
+  *
+  * WARNING!
+  * This file is generated. Do not edit manually.
+  *
+  */
+#pragma once
+
+#include <etl/array.h>
+#include <etl/iterator.h>
+#include <etl/type_traits.h>
+#include <etl/utility.h>
+#include <etl/vector.h>
+
+#include "middleware/ClusterId.h"
+#include "middleware/core/ClusterConnection.h"
+#include "middleware/core/DatabaseManipulator.h"
+#include "middleware/core/IClusterConnectionConfigurationBase.h"
+#include "middleware/core/Message.h"
+#include "middleware/core/TransceiverContainer.h"
+#include "middleware/core/types.h"
+#include "shm/QueueDefinitions.h"
+{% for proxy in connection.proxies %}
+#include "{{proxy.headers.common}}"
+{% endfor %}
+{% if connection.source_cluster.name != connection.target_cluster.name %}
+{% for skeleton in connection.skeletons %}
+#include "{{skeleton.headers.common}}"
+{% endfor %}
+{% endif %}
+
+namespace middleware::meta
+{
+
+class ClusterConnection{{connection.source_cluster.name}}To{{connection.target_cluster.name}}Meta : public core::IClusterConnectionConfiguration{{connection.connection_type}}
+{
+public:
+    using Base = core::IClusterConnectionConfiguration{{connection.connection_type}};
+
+    ClusterConnection{{connection.source_cluster.name}}To{{connection.target_cluster.name}}Meta()
+{% if (connection.proxies|length > 0) and (connection.skeletons|length > 0) %}
+    : proxyTransceivers_{{'{{'}}
+    {% for proxy in connection.proxies %}
+                {&{{proxy.namespace|replace("::", "")}}{{proxy.name}}ProxyTransceivers_, {{proxy.namespace}}::{{proxy.name}}::internal::SERVICE_ID, 0U}{{ "," if not loop.last }}
+    {% endfor %}
+      {{'}}'}},
+      skeletonTransceivers_{{'{{'}}
+    {% for skeleton in connection.skeletons %}
+                {&{{skeleton.namespace|replace("::", "")}}{{skeleton.name}}SkeletonTransceivers_, {{skeleton.namespace}}::{{skeleton.name}}::internal::SERVICE_ID, 0U}{{ "," if not loop.last }}
+    {% endfor %}
+      {{'}}'}}
+{% elif connection.proxies|length > 0 %}
+    : proxyTransceivers_{{'{{'}}
+    {% for proxy in connection.proxies %}
+                {&{{proxy.namespace|replace("::", "")}}{{proxy.name}}ProxyTransceivers_, {{proxy.namespace}}::{{proxy.name}}::internal::SERVICE_ID, 0U}{{ "," if not loop.last }}
+    {% endfor %}
+      {{'}}'}}
+{% else %}
+    : skeletonTransceivers_{{'{{'}}
+    {% for skeleton in connection.skeletons %}
+                {&{{skeleton.namespace|replace("::", "")}}{{skeleton.name}}SkeletonTransceivers_, {{skeleton.namespace}}::{{skeleton.name}}::internal::SERVICE_ID, 0U}{{ "," if not loop.last }}
+    {% endfor %}
+      {{'}}'}}
+{% endif %}
+    {
+    }
+
+    ClusterConnection{{connection.source_cluster.name}}To{{connection.target_cluster.name}}Meta(const ClusterConnection{{connection.source_cluster.name}}To{{connection.target_cluster.name}}Meta&) = delete;
+    ClusterConnection{{connection.source_cluster.name}}To{{connection.target_cluster.name}}Meta& operator=(const ClusterConnection{{connection.source_cluster.name}}To{{connection.target_cluster.name}}Meta&) = delete;
+    ClusterConnection{{connection.source_cluster.name}}To{{connection.target_cluster.name}}Meta& operator=(ClusterConnection{{connection.source_cluster.name}}To{{connection.target_cluster.name}}Meta&&) = delete;
+    ClusterConnection{{connection.source_cluster.name}}To{{connection.target_cluster.name}}Meta(ClusterConnection{{connection.source_cluster.name}}To{{connection.target_cluster.name}}Meta&&) = delete;
+
+    [[nodiscard]] uint8_t getSourceClusterId() const final { return etl::to_underlying(core::ClusterId::{{connection.source_cluster.name}}); }
+
+    [[nodiscard]] uint8_t getTargetClusterId() const final { return etl::to_underlying(core::ClusterId::{{connection.target_cluster.name}}); }
+
+    [[nodiscard]] bool write(const core::Message& msg) const final
+    {
+        etl::remove_pointer<decltype(::middleware::shm::getQueueTo{{connection.target_cluster.name}}())>::type::Sender sender(*::middleware::shm::getQueueTo{{connection.target_cluster.name}}());
+        return sender.write(msg);
+    }
+
+    [[nodiscard]] size_t registeredTransceiversCount(uint16_t serviceId) const final
+    {
+{% if (connection.proxies|length > 0) and (connection.skeletons|length > 0) %}
+        return core::meta::DbManipulator::registeredTransceiversCount(
+                   proxyTransceivers_.begin(), proxyTransceivers_.end(), serviceId) +
+               core::meta::DbManipulator::registeredTransceiversCount(
+                   skeletonTransceivers_.begin(), skeletonTransceivers_.end(), serviceId);
+{% elif connection.proxies|length > 0 %}
+        return core::meta::DbManipulator::registeredTransceiversCount(
+            proxyTransceivers_.begin(), proxyTransceivers_.end(), serviceId);
+{% else %}
+        return core::meta::DbManipulator::registeredTransceiversCount(
+            skeletonTransceivers_.begin(), skeletonTransceivers_.end(), serviceId);
+{% endif %}
+    }
+
+    [[nodiscard]] core::HRESULT dispatchMessage(const core::Message& msg) const final
+    {
+{% if (connection.proxies|length > 0) and (connection.skeletons|length > 0) %}
+        return IClusterConnectionConfigurationBase::dispatchMessage(proxyTransceivers_.begin(),
+                                        proxyTransceivers_.end(),
+                                        skeletonTransceivers_.begin(),
+                                        skeletonTransceivers_.end(),
+                                                                    msg);
+{% elif connection.proxies|length > 0 %}
+        return IClusterConnectionConfigurationBase::dispatchMessageToProxy(
+            proxyTransceivers_.begin(), proxyTransceivers_.end(), msg);
+{% else %}
+        return IClusterConnectionConfigurationBase::dispatchMessageToSkeleton(
+            skeletonTransceivers_.begin(), skeletonTransceivers_.end(), msg);
+{% endif %}
+    }
+
+{% if connection.has_timeouts %}
+    void registerTimeoutTransceiver(core::ITimeoutHandler& transceiver) final
+    {
+        core::ITimeoutConfiguration::registerTimeoutTransceiver(transceiver, timeoutTransceivers_);
+    }
+
+    void unregisterTimeoutTransceiver(core::ITimeoutHandler& transceiver) final
+    {
+        core::ITimeoutConfiguration::unregisterTimeoutTransceiver(transceiver, timeoutTransceivers_);
+    }
+
+    void updateTimeouts() final { core::ITimeoutConfiguration::updateTimeouts(timeoutTransceivers_); }
+
+{% endif %}
+{% if connection.proxies|length > 0 %}
+    [[nodiscard]] core::HRESULT subscribe(core::ProxyBase& proxy, uint16_t serviceInstanceId) final
+    {
+        return core::meta::DbManipulator::subscribe(
+            proxyTransceivers_.begin(), proxyTransceivers_.end(), proxy, serviceInstanceId);
+    }
+
+    void unsubscribe(core::ProxyBase& proxy, uint16_t serviceId) final
+    {
+        core::meta::DbManipulator::unsubscribe(
+            proxyTransceivers_.begin(), proxyTransceivers_.end(), proxy, serviceId);
+    }
+
+{% endif %}
+{% if connection.skeletons|length > 0 %}
+    [[nodiscard]] core::HRESULT subscribe(core::SkeletonBase& skeleton, uint16_t serviceInstanceId) final
+    {
+        return core::meta::DbManipulator::subscribe(
+            skeletonTransceivers_.begin(), skeletonTransceivers_.end(), skeleton, serviceInstanceId);
+    }
+
+    void unsubscribe(core::SkeletonBase& skeleton, uint16_t serviceId) final
+    {
+        core::meta::DbManipulator::unsubscribe(
+            skeletonTransceivers_.begin(), skeletonTransceivers_.end(), skeleton, serviceId);
+    }
+
+{% endif %}
+    ~ClusterConnection{{connection.source_cluster.name}}To{{connection.target_cluster.name}}Meta() = default;
+
+  private:
+    {% for proxy in connection.proxies %}
+    etl::vector<core::TransceiverBase*, {{proxy.max_instances}}U> {{proxy.namespace|replace("::", "")}}{{proxy.name}}ProxyTransceivers_;
+    {% endfor %}
+    {% for skeleton in connection.skeletons %}
+    etl::vector<core::TransceiverBase*, {{skeleton.max_instances}}U> {{skeleton.namespace|replace("::", "")}}{{skeleton.name}}SkeletonTransceivers_;
+    {% endfor %}
+    {% if connection.has_timeouts %}
+    etl::vector<core::ITimeoutHandler*, {{connection.proxies|length}}U> timeoutTransceivers_;
+    {% endif %}
+    {% if connection.proxies|length > 0 %}
+    etl::array<core::meta::TransceiverContainer, {{connection.proxies|length}}U> proxyTransceivers_;
+    {% endif %}
+    {% if connection.skeletons|length > 0 %}
+    etl::array<core::meta::TransceiverContainer, {{connection.skeletons|length}}U> skeletonTransceivers_;
+    {% endif %}
+};
+
+}  // namespace middleware::meta
