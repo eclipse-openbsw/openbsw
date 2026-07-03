@@ -6,25 +6,59 @@ find_package(Python3 REQUIRED COMPONENTS Interpreter)
 find_package(Threads REQUIRED)
 
 # -----------------------------------------------------------------------
+# Code generation via jinja2cpp.py
+# -----------------------------------------------------------------------
+set(_GEN_SCRIPT
+    ${CMAKE_SOURCE_DIR}/libs/bsw/middleware/tools/cpp_generator/jinja2cpp.py)
+set(_GEN_INPUT ${CMAKE_SOURCE_DIR}/libs/bsw/middleware/tools/cpp_generator)
+set(_DEPLOYMENT_YAML ${CMAKE_CURRENT_SOURCE_DIR}/model/deployment-test.yaml)
+set(_SCHEMA_YAML ${_GEN_INPUT}/templates/schemas/deployment.yaml)
+
+file(GLOB_RECURSE _JINJA_TEMPLATES CONFIGURE_DEPENDS
+     ${_GEN_INPUT}/templates/jinja/*.jinja)
+
+set(_GEN_DIR ${CMAKE_CURRENT_BINARY_DIR})
+set(_GEN_INC ${_GEN_DIR}/include/generated_code)
+set(_GEN_SRC ${_GEN_DIR}/src/generated_code)
+
+set(_GENERATED_HEADERS
+    ${_GEN_INC}/middleware/ClusterId.h
+    ${_GEN_INC}/middleware/ClusterCore0.h
+    ${_GEN_INC}/middleware/ClusterCore1.h
+    ${_GEN_INC}/middleware/ClusterConnectionsCore0Core1.h
+    ${_GEN_INC}/middleware/ClusterConnectionsCore1Core0.h
+    ${_GEN_INC}/middleware/shm/Config.h
+    ${_GEN_INC}/shm/AllocatorsDefinitions.h
+    ${_GEN_INC}/shm/QueueDefinitions.h
+    ${_GEN_INC}/org/test/foo/FooCommon.h
+    ${_GEN_INC}/org/test/foo/FooProxy.h
+    ${_GEN_INC}/org/test/foo/FooSkeleton.h)
+
+set(GENERATED_SRCS
+    ${_GEN_SRC}/AllocatorSelectorDefinitions.cpp
+    ${_GEN_SRC}/ClusterCore0.cpp
+    ${_GEN_SRC}/ClusterCore1.cpp
+    ${_GEN_SRC}/shm/Config.cpp
+    ${_GEN_SRC}/org/test/foo/FooCommon.cpp
+    ${_GEN_SRC}/org/test/foo/FooProxy.cpp
+    ${_GEN_SRC}/org/test/foo/FooSkeleton.cpp)
+
+add_custom_command(
+    OUTPUT ${_GENERATED_HEADERS} ${GENERATED_SRCS}
+    COMMAND ${Python3_EXECUTABLE} ${_GEN_SCRIPT} --input ${_GEN_INPUT} --output
+            ${_GEN_DIR} --deployment-yaml ${_DEPLOYMENT_YAML} --no-clean
+    DEPENDS ${_GEN_SCRIPT} ${_DEPLOYMENT_YAML} ${_SCHEMA_YAML}
+            ${_JINJA_TEMPLATES}
+    COMMENT "Generating middleware C++ code from deployment-test.yaml"
+    VERBATIM)
+
+# -----------------------------------------------------------------------
 # Platform integration sources (concurrency / logger / OS / time stubs)
 # -----------------------------------------------------------------------
 set(PLATFORM_INTEGRATION_SRCS
     platform_integration/logger/src/LoggerImpl.cpp
     platform_integration/os/src/OsDefinitions.cpp
     platform_integration/time/src/SystemTimeProvider.cpp)
-
-# -----------------------------------------------------------------------
-# Generated code sources (produced by jinja2cpp.py from
-# model/deployment-test.yaml)
-# -----------------------------------------------------------------------
-set(GENERATED_SRCS
-    src/generated_code/AllocatorSelectorDefinitions.cpp
-    src/generated_code/ClusterCore0.cpp
-    src/generated_code/ClusterCore1.cpp
-    src/generated_code/shm/Config.cpp
-    src/generated_code/org/test/foo/FooCommon.cpp
-    src/generated_code/org/test/foo/FooProxy.cpp
-    src/generated_code/org/test/foo/FooSkeleton.cpp)
 
 # -----------------------------------------------------------------------
 # Simulation application
@@ -41,15 +75,9 @@ add_executable(
 
 target_include_directories(
     middlewareSimulation
-    PRIVATE # Simulation-specific headers (logger.h, wrappers, etc.)
-            ${CMAKE_CURRENT_SOURCE_DIR}/include
-            # Generated headers (middleware/cluster_*.h, shm/*.h,
-            # org/test/foo/*.h, etc.)
-            ${CMAKE_CURRENT_SOURCE_DIR}/include/generated_code
-            # Custom allocator ("allocator.h" is included bare by generated
-            # code)
+    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include
+            ${_GEN_DIR}/include/generated_code
             ${CMAKE_CURRENT_SOURCE_DIR}/include/allocator
-            # Platform concurrency stubs
             ${CMAKE_CURRENT_SOURCE_DIR}/platform_integration/concurrency/include
 )
 
@@ -61,16 +89,10 @@ target_include_directories(
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/platform_integration/concurrency/include
 )
 
-# Expose the platform concurrency stubs to the middleware library itself
-# (middleware/interfaces/include/middleware/concurrency/LockStrategies.h
-# includes <middleware/concurrency/lock_types.h> which lives in
-# platform_integration).
 target_include_directories(
     middleware
     PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/platform_integration/concurrency/include)
 
-# Optionally build with process-based concurrency instead of threads: cmake
-# -DSIMULATION_USE_PROCESSES=ON ...
 option(SIMULATION_USE_PROCESSES
        "Run each simulated core in a separate OS process (default: threads)"
        OFF)
