@@ -41,3 +41,6 @@ set(PLATFORM_SUPPORT_TRANSPORT
 set(PLATFORM_SUPPORT_UDS
     ON
     CACHE BOOL "Turn UDS support on or off" FORCE)
+set(PLATFORM_SUPPORT_MIDDLEWARE
+    ON
+    CACHE BOOL "Turn middleware service demo support on or off" FORCE)

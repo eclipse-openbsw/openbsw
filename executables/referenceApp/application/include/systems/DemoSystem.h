@@ -42,6 +42,13 @@
 #include <udp/util/UdpIperf2Server.h>
 #endif
 
+#ifdef PLATFORM_SUPPORT_MIDDLEWARE
+#include "middleware/ClusterCore0.h"
+#include "middleware/ClusterCore1.h"
+#include "middleware/FooProxyWrapper.h"
+#include "middleware/FooSkeletonWrapper.h"
+#endif
+
 namespace systems
 {
 
@@ -124,6 +131,12 @@ private:
     // END storage data
 
     StorageData _storageData;
+#endif
+
+#ifdef PLATFORM_SUPPORT_MIDDLEWARE
+    FooSkeletonWrapper _fooSkeletonWrapper;
+    FooProxyWrapper _fooProxyWrapper;
+    uint32_t _middlewareCycleCount{0U};
 #endif
 };
 

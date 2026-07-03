@@ -1,0 +1,101 @@
+# *******************************************************************************
+# Copyright (c) 2026 BMW AG
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+
+clusters:
+  - &core0
+    name: Core0
+    id: 0
+    queue_size: 10
+  - &core1
+    name: Core1
+    id: 1
+    queue_size: 10
+
+# Infrastructure allocators for memory management
+allocators:
+  - &default_allocator
+    name: default
+
+services:
+  - &foo
+    namespace: org::test::foo
+    name: Foo
+    id: 1
+    datatypes:
+      - name: FooStruct
+        type: struct
+        parameters:
+          - name: fooValue
+            type: uint32_t
+    attributes:
+      # Default behavior: setter + getter + subscriptions allowed
+      - name: FooDefault
+        variable: fooDefault
+        type: FooStruct
+        readonly: false
+        noSubscriptions: false
+        setAsMethod: false
+        event:
+          id: 128
+        getter:
+          id: 1
+          timeout: 5000
+        setter:
+          id: 2
+          timeout: 0
+        consumer_request_limit: 1
+        provider_request_limit: 1
+
+    headers:
+      common: org/test/foo/FooCommon.h
+      proxy: org/test/foo/FooProxy.h
+      skeleton: org/test/foo/FooSkeleton.h
+
+    deployment:
+      instance_ids: [1]
+      clusters:
+        - cluster: *core0
+          consumers: 0
+          providers:
+            instance_ids: [1]
+        - cluster: *core1
+          consumers: 1
+          providers:
+            instance_ids: []
+
+connections:
+  - &core0_core1
+    source_cluster: *core0
+    target_cluster: *core1
+    connection_type: SkeletonOnly
+    has_timeouts: False
+    proxies: []
+    skeletons:
+      - <<: *foo
+        max_instances: 1
+  - &core1_core0
+    source_cluster: *core1
+    target_cluster: *core0
+    connection_type: ProxyOnly
+    has_timeouts: False
+    proxies:
+      - <<: *foo
+        max_instances: 1
+    skeletons: []
+
+cores:
+  - &c0
+    name: C0
+    clusters:
+      - *core0
+  - &c1
+    name: C1
+    clusters:
+      - *core1

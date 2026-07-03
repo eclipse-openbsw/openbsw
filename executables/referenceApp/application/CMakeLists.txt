@@ -122,6 +122,15 @@ if (PLATFORM_SUPPORT_ROM_CHECK)
     target_link_libraries(app.referenceApp PRIVATE safeMemory)
 endif ()
 
+if (PLATFORM_SUPPORT_MIDDLEWARE)
+    # --whole-archive is required because AllocatorSelectorDefinitions.cpp
+    # registers allocator callbacks into middleware::memory that are not
+    # directly referenced by app.referenceApp symbols.
+    target_link_libraries(
+        app.referenceApp PRIVATE -Wl,--whole-archive middlewareConfiguration
+                                 -Wl,--no-whole-archive)
+endif ()
+
 if (BUILD_RUST)
     target_compile_definitions(app.referenceApp PRIVATE BUILD_RUST)
     # Link against Rust static library(should be only one static library)

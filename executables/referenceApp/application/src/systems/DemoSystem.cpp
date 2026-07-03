@@ -99,7 +99,16 @@ DemoSystem::DemoSystem(
     setTransitionContext(context);
 }
 
-void DemoSystem::init() { transitionDone(); }
+void DemoSystem::init()
+{
+#ifdef PLATFORM_SUPPORT_MIDDLEWARE
+    ::middleware::initializeCore0ClusterConnection();
+    ::middleware::initializeCore1ClusterConnection();
+    _fooSkeletonWrapper.init();
+    _fooProxyWrapper.init();
+#endif
+    transitionDone();
+}
 
 void DemoSystem::run()
 {
@@ -120,6 +129,7 @@ void DemoSystem::run()
 
 void DemoSystem::shutdown()
 {
+    _timeout.cancel();
 #ifdef PLATFORM_SUPPORT_CAN
     _canDemoListener.shutdown();
 #endif
@@ -129,7 +139,10 @@ void DemoSystem::shutdown()
     _loopbackServer.close();
     _iperfServer.close();
 #endif
-    _timeout.cancel();
+#ifdef PLATFORM_SUPPORT_MIDDLEWARE
+    _fooProxyWrapper.deInit();
+    _fooSkeletonWrapper.deInit();
+#endif
     transitionDone();
 }
 
@@ -186,6 +199,22 @@ void DemoSystem::cyclic()
 
 #if TRACING
     runtime::Tracer::traceUser(42);
+#endif
+
+#ifdef PLATFORM_SUPPORT_MIDDLEWARE
+    ++_middlewareCycleCount;
+    // Send a broadcast every 1 s (cyclic at 10 ms -> 100 cycles)
+    if (_middlewareCycleCount % 100U == 0U)
+    {
+        _fooSkeletonWrapper.sendBroadcast();
+    }
+    // Issue a getter request every 2 s (200 cycles)
+    if (_middlewareCycleCount % 200U == 0U)
+    {
+        _fooProxyWrapper.requestGet();
+    }
+    ::middleware::processCore0Cluster();
+    ::middleware::processCore1Cluster();
 #endif
 
 #ifdef PLATFORM_SUPPORT_STORAGE

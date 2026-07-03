@@ -16,6 +16,8 @@ elseif (BUILD_TARGET_RTOS STREQUAL "THREADX")
     add_library(asyncRtosImpl ALIAS asyncThreadXImpl)
 endif ()
 
+add_subdirectory(middlewareConfiguration)
+
 # Injections
 add_subdirectory(application)
 add_subdirectory(asyncBinding)

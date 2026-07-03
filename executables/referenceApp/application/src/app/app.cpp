@@ -73,6 +73,10 @@
 #include <rust_hello_world.h>
 #endif
 
+#ifdef PLATFORM_SUPPORT_MIDDLEWARE
+#include "MemoryLayout.h"
+#endif
+
 alignas(32)::async::internal::Stack<safety_task_stackSize> safetyStack;
 
 #ifdef PLATFORM_SUPPORT_CAN
@@ -263,6 +267,10 @@ void run()
 
 void startApp()
 {
+#ifdef PLATFORM_SUPPORT_MIDDLEWARE
+    ::middleware::shm::createMemoryLayout();
+#endif
+
 #if TRACING
     runtime::Tracer::init();
     runtime::Tracer::start();

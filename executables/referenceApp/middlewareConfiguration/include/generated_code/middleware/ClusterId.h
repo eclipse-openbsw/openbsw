@@ -1,0 +1,38 @@
+/********************************************************************************
+ * Copyright (c) 2026 BMW AG
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Apache License Version 2.0 which is available at
+ * https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ ********************************************************************************/
+/**
+  * 
+  *  __  __ _     _     _ _                             
+  * |  \/  (_) __| | __| | | _____      ____ _ _ __ ___ 
+  * | |\/| | |/ _` |/ _` | |/ _ \ \ /\ / / _` | '__/ _ \
+  * | |  | | | (_| | (_| | |  __/\ V  V / (_| | | |  __/
+  * |_|  |_|_|\__,_|\__,_|_|\___| \_/\_/ \__,_|_|  \___|
+  *                                                      
+  * WARNING! 
+  * This file is generated. Do not edit manually.
+  *
+  */
+#pragma once
+
+#include <cstdint>
+
+#include "middleware/core/types.h"
+
+namespace middleware::core
+{
+
+enum class ClusterId : uint8_t
+{
+    Core0 = 0U,
+    Core1 = 1U,
+    InvalidId = 255U
+};
+
+}  // namespace middleware::core
