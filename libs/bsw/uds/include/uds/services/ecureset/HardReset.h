@@ -14,6 +14,7 @@
 #include "uds/lifecycle/IUdsLifecycleConnector.h"
 
 #include <cstdint>
+#include <etl/array.h>
 
 namespace uds
 {
@@ -35,7 +36,7 @@ private:
     IUdsLifecycleConnector& fUdsLifecycleConnector;
     DiagDispatcher& fDiagDispatcher;
 
-    static uint8_t const sfImplementedRequest[2];
+    static ::etl::array<uint8_t, 2U> const sfImplementedRequest;
 };
 
 } // namespace uds

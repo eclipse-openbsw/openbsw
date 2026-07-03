@@ -16,16 +16,20 @@
 
 namespace uds
 {
+namespace
+{
+::etl::array<uint8_t, 1U> makeImplementedRequest(uint8_t const service) { return {{service}}; }
+} // namespace
+
 Service::Service(uint8_t const service, DiagSession::DiagSessionMask const sessionMask)
 : AbstractDiagJob(
-    fService,
-    1U,
+    makeImplementedRequest(service),
     0U,
     AbstractDiagJob::VARIABLE_REQUEST_LENGTH,
     AbstractDiagJob::VARIABLE_RESPONSE_LENGTH,
     sessionMask)
 {
-    init(service);
+    init();
 }
 
 Service::Service(
@@ -33,21 +37,19 @@ Service::Service(
     uint8_t const requestPayloadLength,
     uint8_t const responseLength,
     DiagSession::DiagSessionMask const sessionMask)
-: AbstractDiagJob(fService, 1U, 0U, requestPayloadLength, responseLength, sessionMask)
+: AbstractDiagJob(
+    makeImplementedRequest(service), 0U, requestPayloadLength, responseLength, sessionMask)
 {
-    init(service);
+    init();
 }
 
-void Service::init(uint8_t const service)
-{
-    fService[0] = service;
-    setDefaultDiagReturnCode(DiagReturnCode::ISO_SUBFUNCTION_NOT_SUPPORTED);
-}
+void Service::init() { setDefaultDiagReturnCode(DiagReturnCode::ISO_SUBFUNCTION_NOT_SUPPORTED); }
 
 DiagReturnCode::Type
 Service::verify(uint8_t const* const request, uint16_t const /* requestLength */)
 {
-    if (request[0] != fpImplementedRequest[0])
+    ::etl::span<uint8_t const> const requestView(request, 1U);
+    if (requestView[0U] != getImplementedRequestView()[0U])
     {
         return DiagReturnCode::NOT_RESPONSIBLE;
     }

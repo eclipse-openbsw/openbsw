@@ -37,7 +37,8 @@ DiagReturnCode::Type ControlDTCSetting::process(
     uint8_t const* const request,
     uint16_t const /* requestLength */)
 {
-    uint8_t const dtcSettingType = request[0];
+    ::etl::span<uint8_t const> const requestView(request, 1U);
+    uint8_t const dtcSettingType = requestView[0U];
     Logger::debug(UDS, "ControlDTCSetting %d", dtcSettingType);
     switch (dtcSettingType)
     {
