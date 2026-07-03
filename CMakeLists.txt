@@ -214,4 +214,8 @@ elseif (BUILD_EXECUTABLE STREQUAL "referenceApp")
     target_include_directories(etl BEFORE
                                INTERFACE executables/referenceApp/etl_profile)
     add_subdirectory(executables/referenceApp)
+elseif (BUILD_EXECUTABLE STREQUAL "middlewareSimulation")
+    target_include_directories(etl BEFORE
+                               INTERFACE libs/bsw/middleware/simulation/include)
+    add_subdirectory(libs/bsw/middleware/simulation)
 endif ()
