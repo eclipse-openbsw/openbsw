@@ -57,7 +57,8 @@ public:
         static_assert(::etl::is_copy_constructible_v<T>, "T must be copy-constructible");
         static_assert(!::etl::is_span_v<T>, "Use the span overload to allocate bytes");
 
-        if constexpr (sizeof(T) <= Message::MAX_PAYLOAD_SIZE)
+        if constexpr (
+            sizeof(T) <= Message::MAX_PAYLOAD_SIZE && ::etl::is_trivially_copyable<T>::value)
         {
             msg.constructObjectAtPayload(obj);
             return HRESULT::Ok;
@@ -95,7 +96,8 @@ public:
     {
         static_assert(!::etl::is_span_v<T>, "Use readRawPayload() to read bytes");
 
-        if constexpr (sizeof(T) <= Message::MAX_PAYLOAD_SIZE)
+        if constexpr (
+            sizeof(T) <= Message::MAX_PAYLOAD_SIZE && ::etl::is_trivially_copyable<T>::value)
         {
             return msg.getObjectStoredInPayload<T>();
         }

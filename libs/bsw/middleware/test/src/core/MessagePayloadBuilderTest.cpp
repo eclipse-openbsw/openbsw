@@ -76,11 +76,20 @@ using SmallTypes = ::testing::Types<
     ArrayWrapper<uint8_t, 1U>,
     ArrayWrapper<uint16_t, 1U>,
     ArrayWrapper<uint32_t, 1U>,
-    ArrayWrapper<uint64_t, 1U>,
+    ArrayWrapper<uint64_t, 1U>>;
+
+// Non-trivially-copyable types that fit in the internal buffer by size but must
+// be routed to external allocation to survive Message relocation.
+using SmallNonTrivialTypes = ::testing::Types<
     VectorWrapper<uint8_t, 1U>,
     VectorWrapper<uint16_t, 1U>,
     VectorWrapper<uint32_t, 1U>,
     VectorWrapper<uint64_t, 1U>>;
+
+// One trivial (internal buffer path) and one non-trivial (external path) to
+// cover both allocation strategies in copy-construction tests.
+using CopyConstructionTypes
+    = ::testing::Types<IntegralWrapper<uint32_t>, VectorWrapper<uint64_t, 1U>>;
 
 using BigTypes = ::testing::Types<
     ArrayWrapper<uint8_t, Message::MAX_PAYLOAD_SIZE + 1U>,
@@ -251,6 +260,64 @@ TYPED_TEST(TestMessagePayloadBuilderSmallUserDefinedType, AllocateInternal)
 
     // ACT
     MessagePayloadBuilder::deallocate(msg);
+}
+
+template<typename T>
+class TestMessagePayloadBuilderSmallNonTrivialType : public TestMessagePayloadBuilder
+{};
+
+TYPED_TEST_SUITE(TestMessagePayloadBuilderSmallNonTrivialType, SmallNonTrivialTypes);
+
+// Non-trivially-copyable types must use external allocation even when sizeof(T)
+// fits in the internal buffer, so that byte-copying a Message does not leave
+// dangling internal pointers in the relocated copy.
+TYPED_TEST(TestMessagePayloadBuilderSmallNonTrivialType, AllocateExternal)
+{
+    static_assert(
+        sizeof(TypeParam) <= Message::MAX_PAYLOAD_SIZE,
+        "TypeParam must fit in internal payload by size, this is a test logic error");
+    static_assert(
+        !::etl::is_trivially_copyable<TypeParam>::value,
+        "TypeParam must NOT be trivially copyable, this is a test logic error");
+
+    // ARRANGE
+    auto const obj = TypeParam::make();
+    Message msg    = makeEmptyMessage();
+
+    // ACT
+    core::HRESULT ret     = MessagePayloadBuilder::getInstance().allocate(obj, msg);
+    auto const& storedObj = MessagePayloadBuilder::getInstance().readPayload<TypeParam>(msg);
+
+    // ASSERT
+    EXPECT_EQ(ret, core::HRESULT::Ok);
+    EXPECT_TRUE(msg.hasExternalPayload());
+    EXPECT_EQ(obj, storedObj);
+
+    // ACT
+    MessagePayloadBuilder::deallocate(msg);
+}
+
+template<typename T>
+class TestMessagePayloadBuilderCopyConstruction : public TestMessagePayloadBuilder
+{};
+
+TYPED_TEST_SUITE(TestMessagePayloadBuilderCopyConstruction, CopyConstructionTypes);
+
+TYPED_TEST(TestMessagePayloadBuilderCopyConstruction, PayloadIsValidAfterMessageCopyConstruction)
+{
+    // ARRANGE
+    auto const obj = TypeParam::make();
+    Message source = makeEmptyMessage();
+    ASSERT_EQ(MessagePayloadBuilder::getInstance().allocate(obj, source), core::HRESULT::Ok);
+
+    // ACT: copy-construct, as a queue does on push.
+    Message const copy = source;
+
+    // ASSERT: consumer reads from the copy.
+    auto const& stored = MessagePayloadBuilder::getInstance().readPayload<TypeParam>(copy);
+    EXPECT_EQ(obj, stored);
+
+    MessagePayloadBuilder::deallocate(copy);
 }
 
 template<typename T>
