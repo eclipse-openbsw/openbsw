@@ -37,7 +37,7 @@ void FutureDispatcherBase::freeAll()
 HRESULT FutureDispatcherBase::cancelRequest(uint16_t const requestId)
 {
     HRESULT ret          = HRESULT::InstanceNotFound;
-    Future* activeFuture = etl::find_if(
+    Future* activeFuture = ::etl::find_if(
         _futures.begin(),
         _futures.end(),
         [requestId](Future& future) { return future.requestId == requestId; });
@@ -53,10 +53,10 @@ HRESULT FutureDispatcherBase::cancelRequest(uint16_t const requestId)
     return ret;
 }
 
-etl::optional<Future*> FutureDispatcherBase::obtainRequestId(uint16_t& requestId)
+::etl::optional<Future*> FutureDispatcherBase::obtainRequestId(uint16_t& requestId)
 {
-    etl::optional<Future*> ret{};
-    Future* const future = etl::find_if(
+    ::etl::optional<Future*> ret{};
+    Future* const future = ::etl::find_if(
         _futures.begin(),
         _futures.end(),
         [](Future& fut) { return fut.state == Future::State::Invalid; });
@@ -64,7 +64,7 @@ etl::optional<Future*> FutureDispatcherBase::obtainRequestId(uint16_t& requestId
     if (future == _futures.end())
     {
         requestId = INVALID_REQUEST_ID;
-        ret       = etl::nullopt;
+        ret       = ::etl::nullopt;
     }
     else
     {
@@ -89,7 +89,7 @@ uint16_t FutureDispatcherBase::getRequestId()
 Future* FutureDispatcherBase::futureMatchingRequestId(Message const& msg)
 {
     uint16_t const reqId = msg.getHeader().requestId;
-    Future* future       = etl::find_if(
+    Future* future       = ::etl::find_if(
         _futures.begin(),
         _futures.end(),
         [reqId](Future& future)

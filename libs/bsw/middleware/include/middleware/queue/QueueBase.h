@@ -147,11 +147,11 @@ protected:
     /**
      * Updates the writing cursor to the next element in the buffer.
      *
-     * \return etl::optional<size_t>
+     * \return ::etl::optional<size_t>
      */
-    etl::optional<size_t> writeNext()
+    ::etl::optional<size_t> writeNext()
     {
-        etl::optional<size_t> writableIndex{};
+        ::etl::optional<size_t> writableIndex{};
         if (isFull())
         {
             ++_stats.lostMessages;

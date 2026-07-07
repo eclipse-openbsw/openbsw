@@ -28,7 +28,7 @@ public:
         proxy_.init(internal::InstanceId::InstanceId_1, ::middleware::core::ClusterId::Core1);
 
         proxy_.fooDefault.setReceiveHandler(
-            etl::delegate<void(FooStruct const&)>::
+            ::etl::delegate<void(FooStruct const&)>::
                 create<FooProxyWrapper, &FooProxyWrapper::onFooDefaultChanged>(*this));
     }
 
@@ -56,10 +56,9 @@ private:
             value.fooValue);
     }
 
-    void onGetResponse(
-        ::etl::expected<
-            ::etl::reference_wrapper<org::test::foo::Foo::FooStruct const>,
-            ::middleware::core::Future::State> const& result)
+    void onGetResponse(::etl::expected<
+                       ::etl::reference_wrapper<org::test::foo::Foo::FooStruct const>,
+                       ::middleware::core::Future::State> const& result)
     {
         if (result.has_value())
         {

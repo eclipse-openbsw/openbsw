@@ -71,9 +71,9 @@ TEST_F(LoggerApiTest, TestLogInitFailure)
     logger::LogLevel const level     = logger::LogLevel::Critical;
     logger::Error const error        = logger::Error::ProxyInitialization;
     const HRESULT res                = HRESULT::TransceiverInitializationFailed;
-    uint16_t const serviceId         = etl::numeric_limits<uint16_t>::max();
-    uint16_t const serviceInstanceId = etl::numeric_limits<uint16_t>::max();
-    uint8_t const sourceCluster      = etl::numeric_limits<uint8_t>::max();
+    uint16_t const serviceId         = ::etl::numeric_limits<uint16_t>::max();
+    uint16_t const serviceInstanceId = ::etl::numeric_limits<uint16_t>::max();
+    uint8_t const sourceCluster      = ::etl::numeric_limits<uint8_t>::max();
 
     // ACT && ASSERT
     _loggerMock.EXPECT_LOG(
@@ -128,11 +128,11 @@ TEST_F(LoggerApiTest, TestLogCrossThreadViolation)
     // ARRANGE
     logger::LogLevel const level     = logger::LogLevel::Critical;
     logger::Error const error        = logger::Error::ProxyCrossThreadViolation;
-    uint16_t const serviceId         = etl::numeric_limits<uint16_t>::max();
-    uint16_t const serviceInstanceId = etl::numeric_limits<uint16_t>::max();
-    uint8_t const sourceCluster      = etl::numeric_limits<uint8_t>::max();
-    uint32_t const initId            = etl::numeric_limits<uint32_t>::max();
-    uint32_t const currentTaskId     = etl::numeric_limits<uint32_t>::max();
+    uint16_t const serviceId         = ::etl::numeric_limits<uint16_t>::max();
+    uint16_t const serviceInstanceId = ::etl::numeric_limits<uint16_t>::max();
+    uint8_t const sourceCluster      = ::etl::numeric_limits<uint8_t>::max();
+    uint32_t const initId            = ::etl::numeric_limits<uint32_t>::max();
+    uint32_t const currentTaskId     = ::etl::numeric_limits<uint32_t>::max();
 
     // ACT && ASSERT
     _loggerMock.EXPECT_LOG(

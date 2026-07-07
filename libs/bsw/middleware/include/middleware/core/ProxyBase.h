@@ -107,7 +107,7 @@ protected:
     HRESULT initFromInstancesDatabase(
         uint16_t instanceId,
         uint8_t sourceCluster,
-        etl::span<IInstanceDatabase const* const> const& dbRange);
+        ::etl::span<IInstanceDatabase const* const> const& dbRange);
 
     /** Pointer to the cluster connection for this proxy. */
     IClusterConnection* _connection{nullptr};

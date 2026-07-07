@@ -29,7 +29,7 @@ static constexpr uint32_t TIMEOUT_VALUE = 5000U;
 static constexpr uint32_t REQUEST_LIMIT = 1U;
 
 using ArgType        = uint32_t;
-using RequestResult  = etl::expected<uint16_t, HRESULT>;
+using RequestResult  = ::etl::expected<uint16_t, HRESULT>;
 using GetterPolicy   = DispatcherTraits<ArgType, internal::get_id, false, TIMEOUT_VALUE>;
 using SetterPolicy   = DispatcherTraits<ArgType, internal::set_id, false, TIMEOUT_VALUE>;
 using NoSetterPolicy = void;

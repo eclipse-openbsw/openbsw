@@ -35,7 +35,7 @@ public:
         proxy_.init(internal::InstanceId::InstanceId_1, CLUSTER_ID);
 
         proxy_.fooDefault.setReceiveHandler(
-            etl::delegate<void(FooStruct const&)>::
+            ::etl::delegate<void(FooStruct const&)>::
                 create<FooProxyWrapper, &FooProxyWrapper::onFooDefaultChanged>(*this));
     }
 
@@ -61,10 +61,9 @@ private:
             static_cast<uint8_t>(CLUSTER_ID), "Foo attribute changed, fooValue=", value.fooValue);
     }
 
-    void onGetResponse(
-        ::etl::expected<
-            ::etl::reference_wrapper<org::test::foo::Foo::FooStruct const>,
-            ::middleware::core::Future::State> const& result)
+    void onGetResponse(::etl::expected<
+                       ::etl::reference_wrapper<org::test::foo::Foo::FooStruct const>,
+                       ::middleware::core::Future::State> const& result)
     {
         if (result.has_value())
         {

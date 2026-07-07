@@ -26,7 +26,7 @@ public:
     MOCK_METHOD(
         void,
         methodCallback,
-        ((etl::expected<etl::reference_wrapper<ArgType const>, Future::State> const&)));
+        ((::etl::expected<::etl::reference_wrapper<ArgType const>, Future::State> const&)));
     MOCK_METHOD(void, eventCallback, (ArgType const&));
 };
 

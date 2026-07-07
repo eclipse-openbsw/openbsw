@@ -39,11 +39,11 @@ PoolBase::PoolBase(
 void PoolBase::initialize()
 {
     resetStats();
-    etl::mem_set(_buffer, _elementAlignedSize * _elementCount, static_cast<uint8_t>(0));
+    ::etl::mem_set(_buffer, _elementAlignedSize * _elementCount, static_cast<uint8_t>(0));
     size_t const flagsSize = ((_elementCount % static_cast<size_t>(CHAR_BIT)) == 0U)
                                  ? (_elementCount / static_cast<size_t>(CHAR_BIT))
                                  : (_elementCount / static_cast<size_t>(CHAR_BIT)) + 1U;
-    etl::mem_set(_flags, flagsSize, static_cast<uint8_t>(0));
+    ::etl::mem_set(_flags, flagsSize, static_cast<uint8_t>(0));
 
     uint8_t* tempBuff = _buffer;
     for (size_t i = 0U; i < (_elementCount - 1U); ++i)
@@ -70,10 +70,10 @@ uint8_t* PoolBase::allocate(size_t const size)
         --_available;
         _stats.internalFragmentation += static_cast<uint32_t>(_elementSize - size);
         ++_stats.successfulAllocations;
-        _stats.maxLoad = etl::max(
+        _stats.maxLoad = ::etl::max(
             _stats.maxLoad, static_cast<decltype(PoolStats::maxLoad)>(_elementCount - _available));
 
-        ptrdiff_t const distance = etl::distance(_buffer, ret);
+        ptrdiff_t const distance = ::etl::distance(_buffer, ret);
         size_t const ptrPosition = static_cast<size_t>(distance) / _elementAlignedSize;
         updatePtrFlag(ptrPosition, true);
     }
@@ -90,7 +90,7 @@ bool PoolBase::deallocate(void* const ptr)
         *reinterpret_cast<uintptr_t*>(ptrObject)                                    // NOLINT
             = _nextChunk != nullptr ? reinterpret_cast<uintptr_t>(_nextChunk) : 0U; // NOLINT
 
-        ptrdiff_t const distance = etl::distance(_buffer, ptrObject);
+        ptrdiff_t const distance = ::etl::distance(_buffer, ptrObject);
         size_t const ptrPosition = static_cast<size_t>(distance) / _elementAlignedSize;
         updatePtrFlag(ptrPosition, false);
         ++_available;
@@ -113,7 +113,7 @@ size_t PoolBase::maxSize() const { return _elementCount; }
 
 uint8_t* PoolBase::offsetAddress(uint8_t* ptr, size_t const offset)
 {
-    etl::advance(ptr, offset);
+    ::etl::advance(ptr, offset);
     return ptr;
 }
 
@@ -130,7 +130,7 @@ bool PoolBase::isValidPointer(uint8_t const* const ptr) const
     bool const isMultiple = ((ptrValue - start) % _elementAlignedSize) == 0U;
     if (isInRange && isMultiple)
     {
-        ptrdiff_t const distance = etl::distance(static_cast<uint8_t const*>(_buffer), ptr);
+        ptrdiff_t const distance = ::etl::distance(static_cast<uint8_t const*>(_buffer), ptr);
         size_t const ptrPosition = static_cast<size_t>(distance) / _elementAlignedSize;
         res                      = checkPtrFlag(ptrPosition);
     }
@@ -170,9 +170,9 @@ void PoolBase::resetStats()
     _stats.capacity  = static_cast<uint32_t>(_elementCount);
 }
 
-etl::tuple<size_t, size_t, double> PoolBase::getProfile() const
+::etl::tuple<size_t, size_t, double> PoolBase::getProfile() const
 {
-    return etl::make_tuple(
+    return ::etl::make_tuple(
         _available,
         _stats.maxLoad,
         ((_stats.successfulAllocations > 0U)

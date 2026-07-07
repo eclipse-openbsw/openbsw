@@ -109,7 +109,7 @@ public:
      * Returns a tuple showing the profile of the pool.
      * Elements: <available, maxLoad, fragmentation / successfulAllocations>.
      */
-    etl::tuple<size_t, size_t, double> getProfile() const;
+    ::etl::tuple<size_t, size_t, double> getProfile() const;
 
 private:
     void updatePtrFlag(size_t position, bool ptrBusy);

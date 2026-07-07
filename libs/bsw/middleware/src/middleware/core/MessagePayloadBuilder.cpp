@@ -28,7 +28,7 @@ namespace middleware::core
 MessagePayloadBuilder MessagePayloadBuilder::_instance{};
 
 HRESULT MessagePayloadBuilder::allocAndCopyBytesToExternalPayload(
-    etl::span<uint8_t const> const src, Message& msg, uint8_t const numberOfReferences)
+    ::etl::span<uint8_t const> const src, Message& msg, uint8_t const numberOfReferences)
 {
     uint16_t const sid  = msg.getHeader().serviceId;
     uint8_t* const dest = msg.isEvent()
@@ -46,9 +46,9 @@ HRESULT MessagePayloadBuilder::allocAndCopyBytesToExternalPayload(
         return HRESULT::CannotAllocatePayload;
     }
 
-    etl::mem_copy(src.data(), src.size(), dest);
+    ::etl::mem_copy(src.data(), src.size(), dest);
     auto const offset
-        = static_cast<ptrdiff_t>(etl::distance(memory::getRegionStartFunction(sid)(), dest));
+        = static_cast<ptrdiff_t>(::etl::distance(memory::getRegionStartFunction(sid)(), dest));
     msg.setExternalPayload(offset, static_cast<uint32_t>(src.size()));
 
     return HRESULT::Ok;
@@ -58,13 +58,13 @@ uint8_t* MessagePayloadBuilder::getAllocatorPointerFromMessage(Message const& ms
 {
     uint16_t const sid               = msg.getHeader().serviceId;
     ptrdiff_t const offset           = msg.getExternalPayload().first;
-    uint8_t* const externalBufferPtr = etl::next(memory::getRegionStartFunction(sid)(), offset);
+    uint8_t* const externalBufferPtr = ::etl::next(memory::getRegionStartFunction(sid)(), offset);
 
     return externalBufferPtr;
 }
 
 HRESULT MessagePayloadBuilder::allocate(
-    etl::span<uint8_t const> const src, Message& msg, uint8_t const numberOfReferences)
+    ::etl::span<uint8_t const> const src, Message& msg, uint8_t const numberOfReferences)
 {
     if (src.size_bytes() <= Message::MAX_PAYLOAD_SIZE)
     {

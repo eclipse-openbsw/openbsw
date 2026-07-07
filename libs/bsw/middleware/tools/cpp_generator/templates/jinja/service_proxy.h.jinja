@@ -104,12 +104,12 @@ class {{ service.name }}Proxy : public middleware::core::ProxyBase, public middl
 
     // METHODS FIRE_AND_FORGET
 {% for method in service.methods_fire_and_forget if service.methods_fire_and_forget %}
-    etl::expected<uint16_t, middleware::core::HRESULT> {{ method.variable }}({% if method.input_param %}const {{ method.input_param.type }}& {{ method.input_param.name }}{% endif %});
+    ::etl::expected<uint16_t, middleware::core::HRESULT> {{ method.variable }}({% if method.input_param %}const {{ method.input_param.type }}& {{ method.input_param.name }}{% endif %});
 {% endfor %}
 
     // METHODS
 {% for method in service.methods if service.methods %}
-    etl::expected<uint16_t, middleware::core::HRESULT> {{ method.variable }}(
+    ::etl::expected<uint16_t, middleware::core::HRESULT> {{ method.variable }}(
     {% if method.input_param %}const {{ method.input_param.type }}& {{ method.input_param.name }}, {% endif %}
         const {{ method.name }}Callback& methodCb);
 

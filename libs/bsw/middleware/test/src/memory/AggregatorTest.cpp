@@ -74,28 +74,28 @@ TEST_F(AggregatorTest, SingleByteAllocator)
 {
     // ARRANGE
     uint32_t const chunkSize = sizeof(int32_t);
-    auto const collectorFcn  = etl::delegate<void(
+    auto const collectorFcn  = ::etl::delegate<void(
         uint64_t, memory::PoolStats)>::create<AggregatorTest, &AggregatorTest::collector>(*this);
     auto* pool = reinterpret_cast<typename SingleByteAllocator::PoolByType<int32_t*>::type*>(
         _singleByteAllocator.getPool<chunkSize>());
     EXPECT_TRUE(static_cast<bool>(pool));
-    EXPECT_EQ(etl::get<0>(pool->getProfile()), 1U);
+    EXPECT_EQ(::etl::get<0>(pool->getProfile()), 1U);
 
     // ACT AND ASSERT
     EXPECT_EQ(_singleByteAllocator.allocateImpl(sizeof(int32_t)), nullptr);
-    EXPECT_EQ(etl::get<0>(pool->getProfile()), 1U);
+    EXPECT_EQ(::etl::get<0>(pool->getProfile()), 1U);
 
     auto* secondIntPtr = static_cast<uint8_t*>(_singleByteAllocator.allocateImpl(sizeof(uint8_t)));
     *secondIntPtr      = 9U;
     EXPECT_EQ(*secondIntPtr, 9);
-    EXPECT_EQ(etl::get<0>(pool->getProfile()), 0U);
+    EXPECT_EQ(::etl::get<0>(pool->getProfile()), 0U);
 
     _singleByteAllocator.collectStats(collectorFcn);
     EXPECT_EQ(_successfulAllocations, 1U);
     EXPECT_EQ(_failedAllocations, 0U);
 
     EXPECT_EQ(_singleByteAllocator.allocateImpl(sizeof(uint8_t)), nullptr);
-    EXPECT_EQ(etl::get<0>(pool->getProfile()), 0U);
+    EXPECT_EQ(::etl::get<0>(pool->getProfile()), 0U);
 
     _singleByteAllocator.collectStats(collectorFcn);
     EXPECT_EQ(_successfulAllocations, 0U);
@@ -120,10 +120,10 @@ TEST_F(AggregatorTest, SingleByteAllocatorMultipleAllocations)
         auto* pool = reinterpret_cast<typename SingleByteAllocator::PoolByType<int32_t*>::type*>(
             _singleByteAllocator.getPool<chunkSize>());
         EXPECT_TRUE(static_cast<bool>(pool));
-        EXPECT_EQ(etl::get<0>(pool->getProfile()), 1U);
+        EXPECT_EQ(::etl::get<0>(pool->getProfile()), 1U);
 
         EXPECT_EQ(_singleByteAllocator.allocateImpl(sizeof(int32_t)), nullptr);
-        EXPECT_EQ(etl::get<0>(pool->getProfile()), 1U);
+        EXPECT_EQ(::etl::get<0>(pool->getProfile()), 1U);
 
         auto* secondIntPtr
             = static_cast<uint8_t*>(_singleByteAllocator.allocateImpl(sizeof(uint8_t)));
@@ -138,10 +138,10 @@ TEST_F(AggregatorTest, SingleByteAllocatorMultipleAllocations)
 
         *secondIntPtr = 9U;
         EXPECT_EQ(*secondIntPtr, 9);
-        EXPECT_EQ(etl::get<0>(pool->getProfile()), 0U);
+        EXPECT_EQ(::etl::get<0>(pool->getProfile()), 0U);
 
         EXPECT_EQ(_singleByteAllocator.allocateImpl(sizeof(uint8_t)), nullptr);
-        EXPECT_EQ(etl::get<0>(pool->getProfile()), 0U);
+        EXPECT_EQ(::etl::get<0>(pool->getProfile()), 0U);
 
         EXPECT_TRUE(static_cast<bool>(secondIntPtr));
 
@@ -156,23 +156,23 @@ TEST_F(AggregatorTest, SimpleAllocator)
     auto* pool = reinterpret_cast<typename SimpleAllocator::PoolByType<int32_t*>::type*>(
         _simpleAllocator.getPool<chunkSize>());
     EXPECT_TRUE(static_cast<bool>(pool));
-    EXPECT_EQ(etl::get<0>(pool->getProfile()), 2U);
+    EXPECT_EQ(::etl::get<0>(pool->getProfile()), 2U);
 
     // ACT AND ASSERT
     auto* intPtr
         = static_cast<int32_t*>(static_cast<void*>(_simpleAllocator.allocateImpl(sizeof(int32_t))));
     *intPtr = 5;
     EXPECT_EQ(*intPtr, 5);
-    EXPECT_EQ(etl::get<0>(pool->getProfile()), 1U);
+    EXPECT_EQ(::etl::get<0>(pool->getProfile()), 1U);
 
     auto* secondIntPtr
         = static_cast<int32_t*>(static_cast<void*>(_simpleAllocator.allocateImpl(sizeof(int32_t))));
     *secondIntPtr = 9;
     EXPECT_EQ(*secondIntPtr, 9);
-    EXPECT_EQ(etl::get<0>(pool->getProfile()), 0U);
+    EXPECT_EQ(::etl::get<0>(pool->getProfile()), 0U);
 
     EXPECT_EQ(_simpleAllocator.allocateImpl(sizeof(int32_t)), nullptr);
-    EXPECT_EQ(etl::get<0>(pool->getProfile()), 0U);
+    EXPECT_EQ(::etl::get<0>(pool->getProfile()), 0U);
 
     EXPECT_EQ(_simpleAllocator.allocateImpl(0U), nullptr);
 
@@ -187,26 +187,26 @@ TEST_F(AggregatorTest, InvalidDeallocations)
     auto* pool = reinterpret_cast<typename SimpleAllocator::PoolByType<int32_t*>::type*>(
         _simpleAllocator.getPool<chunkSize>());
     EXPECT_TRUE(static_cast<bool>(pool));
-    EXPECT_EQ(etl::get<0>(pool->getProfile()), 2U);
+    EXPECT_EQ(::etl::get<0>(pool->getProfile()), 2U);
 
     // ACT AND ASSERT
     auto* intPtr
         = static_cast<int32_t*>(static_cast<void*>(_simpleAllocator.allocateImpl(sizeof(int32_t))));
-    EXPECT_EQ(etl::get<0>(pool->getProfile()), 1U);
+    EXPECT_EQ(::etl::get<0>(pool->getProfile()), 1U);
     EXPECT_NE(intPtr, nullptr);
 
     auto* intPtr_2
         = static_cast<int32_t*>(static_cast<void*>(_simpleAllocator.allocateImpl(sizeof(int32_t))));
-    EXPECT_EQ(etl::get<0>(pool->getProfile()), 0U);
+    EXPECT_EQ(::etl::get<0>(pool->getProfile()), 0U);
     EXPECT_NE(intPtr_2, nullptr);
 
     auto* intPtrNull
         = static_cast<int32_t*>(static_cast<void*>(_simpleAllocator.allocateImpl(sizeof(int32_t))));
-    EXPECT_EQ(etl::get<0>(pool->getProfile()), 0U);
+    EXPECT_EQ(::etl::get<0>(pool->getProfile()), 0U);
     EXPECT_EQ(intPtrNull, nullptr);
 
     _simpleAllocator.deallocateImpl(reinterpret_cast<void*>(intPtr));
-    EXPECT_EQ(etl::get<0>(pool->getProfile()), 1U);
+    EXPECT_EQ(::etl::get<0>(pool->getProfile()), 1U);
     EXPECT_FALSE(_simpleAllocator.isPtrValidImpl(reinterpret_cast<void*>(intPtr)));
 
     EXPECT_FALSE(_simpleAllocator.isPtrValidImpl(nullptr));
@@ -222,7 +222,7 @@ TEST_F(AggregatorTest, InvalidDeallocations)
 TEST_F(AggregatorTest, AllocateInLargerChunkIfNecessary)
 {
     // ARRANGE
-    size_t const len = sizeof(etl::array<uint8_t, 40>);
+    size_t const len = sizeof(::etl::array<uint8_t, 40>);
 
     auto* p  = reinterpret_cast<memory::Pool<200, 40>*>(_messageAllocator.getPool<len>());
     auto* p2 = reinterpret_cast<memory::Pool<200, 80>*>(_messageAllocator.getPool<len + 1>());
@@ -233,18 +233,18 @@ TEST_F(AggregatorTest, AllocateInLargerChunkIfNecessary)
     {
         EXPECT_NE(_messageAllocator.allocateImpl(len), nullptr);
     }
-    EXPECT_EQ(etl::get<0>(p->getProfile()), 0U);
-    EXPECT_EQ(etl::get<0>(p2->getProfile()), 200U);
+    EXPECT_EQ(::etl::get<0>(p->getProfile()), 0U);
+    EXPECT_EQ(::etl::get<0>(p2->getProfile()), 200U);
 
     EXPECT_NE(_messageAllocator.allocateImpl(len), nullptr);
-    EXPECT_EQ(etl::get<0>(p->getProfile()), 0U);
-    EXPECT_EQ(etl::get<0>(p2->getProfile()), 199U);
+    EXPECT_EQ(::etl::get<0>(p->getProfile()), 0U);
+    EXPECT_EQ(::etl::get<0>(p2->getProfile()), 199U);
 
     EXPECT_EQ(p->getPoolStats().delegatedAllocations, 1U);
     EXPECT_EQ(p2->getPoolStats().delegatedAllocations, 0U);
 
     auto* pSmaller = reinterpret_cast<memory::Pool<200, 20>*>(
-        _messageAllocator.getPool<sizeof(etl::array<uint8_t, 20>)>());
+        _messageAllocator.getPool<sizeof(::etl::array<uint8_t, 20>)>());
     EXPECT_EQ(pSmaller->getPoolStats().delegatedAllocations, 0U);
 }
 
@@ -255,21 +255,21 @@ TEST_F(AggregatorTest, FailedAllocationStats)
     using Pool200T  = memory::Pool<50, 200>;
     using Pool4010T = memory::Pool<10, 4096 + 2 + 2>;
 
-    size_t const len = sizeof(etl::array<uint8_t, 200>);
+    size_t const len = sizeof(::etl::array<uint8_t, 200>);
 
     Pool100T* pool100 = reinterpret_cast<Pool100T*>(
-        _messageAllocator.getPool<sizeof(etl::array<uint8_t, 100>)>());
+        _messageAllocator.getPool<sizeof(::etl::array<uint8_t, 100>)>());
     Pool200T* pool200   = reinterpret_cast<Pool200T*>(_messageAllocator.getPool<len>());
     Pool4010T* pool4010 = reinterpret_cast<Pool4010T*>(
-        _messageAllocator.getPool<sizeof(etl::array<uint8_t, 4096 + 2 + 2>)>());
+        _messageAllocator.getPool<sizeof(::etl::array<uint8_t, 4096 + 2 + 2>)>());
 
     // ACT AND ASSERT
     for (int i = 0; i < 50; i++)
     {
         EXPECT_NE(_messageAllocator.allocateImpl(len), nullptr);
     }
-    EXPECT_EQ(etl::get<0>(pool200->getProfile()), 0U);
-    EXPECT_EQ(etl::get<0>(pool4010->getProfile()), 10U);
+    EXPECT_EQ(::etl::get<0>(pool200->getProfile()), 0U);
+    EXPECT_EQ(::etl::get<0>(pool4010->getProfile()), 10U);
 
     EXPECT_EQ(pool100->getPoolStats().delegatedAllocations, 0U);
     EXPECT_EQ(pool200->getPoolStats().delegatedAllocations, 0U);
@@ -279,8 +279,8 @@ TEST_F(AggregatorTest, FailedAllocationStats)
     {
         EXPECT_NE(_messageAllocator.allocateImpl(len), nullptr);
     }
-    EXPECT_EQ(etl::get<0>(pool200->getProfile()), 0U);
-    EXPECT_EQ(etl::get<0>(pool4010->getProfile()), 0U);
+    EXPECT_EQ(::etl::get<0>(pool200->getProfile()), 0U);
+    EXPECT_EQ(::etl::get<0>(pool4010->getProfile()), 0U);
 
     EXPECT_EQ(pool100->getPoolStats().delegatedAllocations, 0U);
     EXPECT_EQ(pool200->getPoolStats().delegatedAllocations, 10U);
@@ -300,8 +300,8 @@ TEST_F(AggregatorTest, FailedAllocationStats)
 TEST_F(AggregatorTest, InvalidDeallocationsMessageAllocator)
 {
     // ARRANGE
-    using BadArgs  = etl::array<uint8_t, 4101>;
-    using GoodArgs = etl::array<uint8_t, 4096>;
+    using BadArgs  = ::etl::array<uint8_t, 4101>;
+    using GoodArgs = ::etl::array<uint8_t, 4096>;
 
     // ACT AND ASSERT
     EXPECT_EQ(_messageAllocator.allocateImpl(sizeof(BadArgs)), nullptr);
@@ -319,7 +319,7 @@ TEST_F(AggregatorTest, TwistedDeallocation)
     auto* pool               = reinterpret_cast<typename SimpleAllocator::PoolByType<void*>::type*>(
         _simpleAllocator.getPool<chunkSize>());
     EXPECT_TRUE(static_cast<bool>(pool));
-    EXPECT_EQ(etl::get<0>(pool->getProfile()), 2U);
+    EXPECT_EQ(::etl::get<0>(pool->getProfile()), 2U);
 
     // ACT AND ASSERT
     auto* intPtr = _simpleAllocator.allocateImpl(sizeof(int32_t));

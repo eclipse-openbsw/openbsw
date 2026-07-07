@@ -49,8 +49,8 @@ struct TransceiverContainer
         bool operator()(TransceiverBase const* const lhs, TransceiverBase const* const rhs) const
         {
             return (
-                etl::make_pair(lhs->getInstanceId(), lhs->getAddressId())
-                < etl::make_pair(rhs->getInstanceId(), rhs->getAddressId()));
+                ::etl::make_pair(lhs->getInstanceId(), lhs->getAddressId())
+                < ::etl::make_pair(rhs->getInstanceId(), rhs->getAddressId()));
         }
     };
 
@@ -81,7 +81,7 @@ struct TransceiverContainer
     ~TransceiverContainer() = default;
 
     constexpr TransceiverContainer(
-        etl::ivector<TransceiverBase*>* container, uint16_t serviceid, uint16_t actualAddress)
+        ::etl::ivector<TransceiverBase*>* container, uint16_t serviceid, uint16_t actualAddress)
     : _container(container), _serviceId(serviceid), _actualAddress(actualAddress)
     {}
 
@@ -91,7 +91,7 @@ struct TransceiverContainer
     TransceiverContainer& operator=(TransceiverContainer&&)      = delete;
 
     /** Pointer to the vector holding transceiver pointers. */
-    etl::ivector<TransceiverBase*>* const _container{};
+    ::etl::ivector<TransceiverBase*>* const _container{};
     /** The service ID associated with this container. */
     uint16_t const _serviceId;
     /** The current/next available address ID for proxies. */

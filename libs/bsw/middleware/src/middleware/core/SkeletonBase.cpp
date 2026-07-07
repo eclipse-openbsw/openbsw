@@ -32,7 +32,7 @@ HRESULT
 SkeletonBase::sendMessage(Message& msg) const
 {
     HRESULT res        = HRESULT::ClusterIdNotFoundOrTransceiverNotRegistered;
-    auto const* sender = etl::find_if(
+    auto const* sender = ::etl::find_if(
         _connections.begin(),
         _connections.end(),
         [&msg](IClusterConnection const* const clusConn)
@@ -62,7 +62,7 @@ uint8_t SkeletonBase::getSourceClusterId() const
     auto clusterId = static_cast<uint8_t>(INVALID_CLUSTER_ID);
     if (!_connections.empty())
     {
-        auto const* it = etl::find_if(
+        auto const* it = ::etl::find_if(
             _connections.begin(),
             _connections.end(),
             [](IClusterConnection const* const clusConn) { return (clusConn != nullptr); });
@@ -87,10 +87,10 @@ void SkeletonBase::unsubscribe(uint16_t const serviceId)
             }
         }
     }
-    _connections = etl::span<IClusterConnection*>();
+    _connections = ::etl::span<IClusterConnection*>();
 }
 
-etl::span<IClusterConnection* const> const& SkeletonBase::getClusterConnections() const
+::etl::span<IClusterConnection* const> const& SkeletonBase::getClusterConnections() const
 {
     return _connections;
 }
@@ -99,17 +99,17 @@ bool SkeletonBase::isInitialized() const { return (!_connections.empty()); }
 
 HRESULT
 SkeletonBase::initFromInstancesDatabase(
-    uint16_t const instanceId, etl::span<IInstanceDatabase const* const> const& dbRange)
+    uint16_t const instanceId, ::etl::span<IInstanceDatabase const* const> const& dbRange)
 {
     unsubscribe(getServiceId());
-    auto const* it = etl::find_if(
+    auto const* it = ::etl::find_if(
         dbRange.begin(),
         dbRange.end(),
         [instanceId](IInstanceDatabase const* const dataBase) -> bool
         {
             auto const instances = dataBase->getInstanceIdsRange();
             auto const* instanceIdIt
-                = etl::lower_bound(instances.begin(), instances.end(), instanceId);
+                = ::etl::lower_bound(instances.begin(), instances.end(), instanceId);
             return ((instanceIdIt != instances.end()) && ((*instanceIdIt) == instanceId));
         });
     HRESULT ret = HRESULT::TransceiverInitializationFailed;

@@ -41,7 +41,8 @@ public:
      * \param skeleton Reference to the skeleton instance
      * \param responses Vector for storing pending response information
      */
-    ResponseBufferBase(SkeletonBase const& skeleton, etl::ivector<SkeletonResponseInfo>& responses);
+    ResponseBufferBase(
+        SkeletonBase const& skeleton, ::etl::ivector<SkeletonResponseInfo>& responses);
 
     /**
      * Allocates a new response slot if capacity is available.
@@ -90,7 +91,7 @@ protected:
 
 private:
     SkeletonBase const& _skeleton;
-    etl::ivector<SkeletonResponseInfo>& _responses;
+    ::etl::ivector<SkeletonResponseInfo>& _responses;
 };
 
 } // namespace middleware::core

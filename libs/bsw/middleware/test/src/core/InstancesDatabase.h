@@ -75,26 +75,27 @@ class InstancesDatabase : public ::IInstanceDatabase
 public:
     constexpr InstancesDatabase() = default;
 
-    etl::span<IClusterConnection* const> getSkeletonConnectionsRange() const override
+    ::etl::span<IClusterConnection* const> getSkeletonConnectionsRange() const override
     {
-        return etl::span<IClusterConnection* const>(fSkeletonConnections);
+        return ::etl::span<IClusterConnection* const>(fSkeletonConnections);
     }
 
-    etl::span<IClusterConnection* const> getProxyConnectionsRange() const override
+    ::etl::span<IClusterConnection* const> getProxyConnectionsRange() const override
     {
-        return etl::span<IClusterConnection* const>(fProxyConnections);
+        return ::etl::span<IClusterConnection* const>(fProxyConnections);
     }
 
-    etl::span<::uint16_t const> getInstanceIdsRange() const override
+    ::etl::span<::uint16_t const> getInstanceIdsRange() const override
     {
-        return etl::span<uint16_t const>(_instanceIds);
+        return ::etl::span<uint16_t const>(_instanceIds);
     }
 
 private:
-    etl::array<uint16_t const, 1U> const _instanceIds = {{1}};
+    ::etl::array<uint16_t const, 1U> const _instanceIds = {{1}};
     ClusterConnection _clustConn;
-    etl::array<IClusterConnection* const, 2U> const fProxyConnections    = {{&_clustConn, nullptr}};
-    etl::array<IClusterConnection* const, 2U> const fSkeletonConnections = {{&_clustConn, nullptr}};
+    ::etl::array<IClusterConnection* const, 2U> const fProxyConnections = {{&_clustConn, nullptr}};
+    ::etl::array<IClusterConnection* const, 2U> const fSkeletonConnections
+        = {{&_clustConn, nullptr}};
 };
 
 class BadInstancesDatabase : public ::IInstanceDatabase
@@ -102,26 +103,27 @@ class BadInstancesDatabase : public ::IInstanceDatabase
 public:
     constexpr BadInstancesDatabase() = default;
 
-    etl::span<IClusterConnection* const> getSkeletonConnectionsRange() const override
+    ::etl::span<IClusterConnection* const> getSkeletonConnectionsRange() const override
     {
-        return etl::span<IClusterConnection* const>(fSkeletonConnections);
+        return ::etl::span<IClusterConnection* const>(fSkeletonConnections);
     }
 
-    etl::span<IClusterConnection* const> getProxyConnectionsRange() const override
+    ::etl::span<IClusterConnection* const> getProxyConnectionsRange() const override
     {
-        return etl::span<IClusterConnection* const>(fProxyConnections);
+        return ::etl::span<IClusterConnection* const>(fProxyConnections);
     }
 
-    etl::span<::uint16_t const> getInstanceIdsRange() const override
+    ::etl::span<::uint16_t const> getInstanceIdsRange() const override
     {
-        return etl::span<uint16_t const>(_instanceIds);
+        return ::etl::span<uint16_t const>(_instanceIds);
     }
 
 private:
-    etl::array<uint16_t const, 1U> const _instanceIds = {{1}};
+    ::etl::array<uint16_t const, 1U> const _instanceIds = {{1}};
     BadClusterConnection _clustConn;
-    etl::array<IClusterConnection* const, 2U> const fProxyConnections    = {{&_clustConn, nullptr}};
-    etl::array<IClusterConnection* const, 2U> const fSkeletonConnections = {{&_clustConn, nullptr}};
+    ::etl::array<IClusterConnection* const, 2U> const fProxyConnections = {{&_clustConn, nullptr}};
+    ::etl::array<IClusterConnection* const, 2U> const fSkeletonConnections
+        = {{&_clustConn, nullptr}};
 };
 
 class EmptyInstancesDatabase : public ::IInstanceDatabase
@@ -129,34 +131,34 @@ class EmptyInstancesDatabase : public ::IInstanceDatabase
 public:
     constexpr EmptyInstancesDatabase() = default;
 
-    etl::span<IClusterConnection* const> getSkeletonConnectionsRange() const override
+    ::etl::span<IClusterConnection* const> getSkeletonConnectionsRange() const override
     {
-        return etl::span<IClusterConnection* const>(fSkeletonConnections);
+        return ::etl::span<IClusterConnection* const>(fSkeletonConnections);
     }
 
-    etl::span<IClusterConnection* const> getProxyConnectionsRange() const override
+    ::etl::span<IClusterConnection* const> getProxyConnectionsRange() const override
     {
-        return etl::span<IClusterConnection* const>(fProxyConnections);
+        return ::etl::span<IClusterConnection* const>(fProxyConnections);
     }
 
-    etl::span<::uint16_t const> getInstanceIdsRange() const override
+    ::etl::span<::uint16_t const> getInstanceIdsRange() const override
     {
-        return etl::span<uint16_t const>(_instanceIds);
+        return ::etl::span<uint16_t const>(_instanceIds);
     }
 
 private:
-    etl::array<uint16_t const, 1U> const _instanceIds = {{1}};
+    ::etl::array<uint16_t const, 1U> const _instanceIds = {{1}};
     ClusterConnection _clustConn;
-    etl::array<IClusterConnection* const, 0U> const fProxyConnections{};
-    etl::array<IClusterConnection* const, 0U> const fSkeletonConnections{};
+    ::etl::array<IClusterConnection* const, 0U> const fProxyConnections{};
+    ::etl::array<IClusterConnection* const, 0U> const fSkeletonConnections{};
 };
 
 constexpr InstancesDatabase _InstancesDatabase;
 constexpr EmptyInstancesDatabase _EmptyInstancesDatabase;
 constexpr BadInstancesDatabase _BadInstancesDatabase;
 
-constexpr etl::array<::IInstanceDatabase const* const, 1U> INSTANCESDATABASE{&_InstancesDatabase};
-constexpr etl::array<::IInstanceDatabase const* const, 1U> EMPTYINSTANCESDATABASE{
+constexpr ::etl::array<::IInstanceDatabase const* const, 1U> INSTANCESDATABASE{&_InstancesDatabase};
+constexpr ::etl::array<::IInstanceDatabase const* const, 1U> EMPTYINSTANCESDATABASE{
     &_EmptyInstancesDatabase};
-constexpr etl::array<::IInstanceDatabase const* const, 1U> BADINSTANCESDATABASE{
+constexpr ::etl::array<::IInstanceDatabase const* const, 1U> BADINSTANCESDATABASE{
     &_BadInstancesDatabase};

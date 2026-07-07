@@ -34,7 +34,7 @@ void process{{cluster.name}}Cluster(size_t messages, const bool updateTimeouts)
 {
     auto* queue = shm::getQueueTo{{cluster.name}}();
     auto {{cluster.name|lower}}Receiver =
-        etl::remove_pointer<decltype(queue)>::type::Receiver(*queue);
+        ::etl::remove_pointer<decltype(queue)>::type::Receiver(*queue);
     queue->takeSnapshot();
     if (messages == 0U)
     {

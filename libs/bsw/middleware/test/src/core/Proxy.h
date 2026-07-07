@@ -21,7 +21,7 @@ public:
     Proxy(
         uint16_t serviceId,
         uint16_t instanceId,
-        uint16_t addressId = etl::numeric_limits<uint16_t>::max())
+        uint16_t addressId = ::etl::numeric_limits<uint16_t>::max())
     : ::middleware::core::ProxyBase(), _serviceId(serviceId)
     {
         this->setAddressId(addressId);

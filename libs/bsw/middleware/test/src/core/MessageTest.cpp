@@ -50,11 +50,11 @@ struct BigUserType
 namespace etl
 {
 template<>
-struct is_trivially_copyable<middleware::core::test::SmallUserType> : public etl::true_type
+struct is_trivially_copyable<middleware::core::test::SmallUserType> : public ::etl::true_type
 {};
 
 template<>
-struct is_trivially_copyable<middleware::core::test::BigUserType> : public etl::true_type
+struct is_trivially_copyable<middleware::core::test::BigUserType> : public ::etl::true_type
 {};
 } // namespace etl
 

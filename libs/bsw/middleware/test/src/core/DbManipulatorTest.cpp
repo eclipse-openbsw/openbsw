@@ -34,11 +34,11 @@ public:
         (_proxyTransceivers[0])._container->emplace_back(&_proxy2);
         (_proxyTransceivers[1])._container->emplace_back(&_proxy3);
 
-        etl::sort(
+        ::etl::sort(
             _proxyTransceivers[0]._container->begin(),
             _proxyTransceivers[0]._container->end(),
             TransceiverContainer::TransceiverComparator());
-        etl::sort(
+        ::etl::sort(
             _proxyTransceivers[1]._container->begin(),
             _proxyTransceivers[1]._container->end(),
             TransceiverContainer::TransceiverComparator());
@@ -46,7 +46,7 @@ public:
         // setup skeletons
         _skeletonTransceivers[0]._container->emplace_back(&_skeleton1);
 
-        etl::sort(
+        ::etl::sort(
             _skeletonTransceivers[1]._container->begin(),
             _skeletonTransceivers[1]._container->end(),
             TransceiverContainer::TransceiverComparator());
@@ -63,15 +63,15 @@ public:
     }
 
 private:
-    etl::vector<TransceiverBase*, 3U> _proxyTransceivers41{};
-    etl::vector<TransceiverBase*, 1U> _proxyTransceivers54{};
-    etl::ivector<TransceiverBase*>& _iProxyTransceivers41{_proxyTransceivers41};
-    etl::ivector<TransceiverBase*>& _iProxyTransceivers54{_proxyTransceivers54};
+    ::etl::vector<TransceiverBase*, 3U> _proxyTransceivers41{};
+    ::etl::vector<TransceiverBase*, 1U> _proxyTransceivers54{};
+    ::etl::ivector<TransceiverBase*>& _iProxyTransceivers41{_proxyTransceivers41};
+    ::etl::ivector<TransceiverBase*>& _iProxyTransceivers54{_proxyTransceivers54};
 
-    etl::vector<TransceiverBase*, 1U> _skeletonTransceivers41{};
-    etl::vector<TransceiverBase*, 1U> _skeletonTransceivers54{};
-    etl::ivector<TransceiverBase*>& _iSkeletonTransceivers41{_skeletonTransceivers41};
-    etl::ivector<TransceiverBase*>& _iSkeletonTransceivers54{_skeletonTransceivers54};
+    ::etl::vector<TransceiverBase*, 1U> _skeletonTransceivers41{};
+    ::etl::vector<TransceiverBase*, 1U> _skeletonTransceivers54{};
+    ::etl::ivector<TransceiverBase*>& _iSkeletonTransceivers41{_skeletonTransceivers41};
+    ::etl::ivector<TransceiverBase*>& _iSkeletonTransceivers54{_skeletonTransceivers54};
 
 protected:
     Proxy _proxy1{0x41, 0x01, 0x01};
@@ -79,10 +79,10 @@ protected:
     Proxy _proxy3{0x54, 0x02, 0x03};
     Skeleton _skeleton1{0x41, 0x01};
 
-    etl::array<TransceiverContainer, 2U> _proxyTransceivers{
+    ::etl::array<TransceiverContainer, 2U> _proxyTransceivers{
         {{&_iProxyTransceivers41, 0x41, 0U}, {&_iProxyTransceivers54, 0x54, 0U}}};
 
-    etl::array<TransceiverContainer, 2U> _skeletonTransceivers{
+    ::etl::array<TransceiverContainer, 2U> _skeletonTransceivers{
         {{&_iSkeletonTransceivers41, 0x41, 0U}, {&_iSkeletonTransceivers54, 0x54, 0U}}};
 };
 
@@ -248,7 +248,7 @@ TEST_F(DbManipulatorTest, TestUnknownProxyUnsubscribe)
 {
     // ARRANGE
     uint16_t const instanceId = 0x01;
-    uint16_t const addressId  = etl::numeric_limits<uint8_t>::max();
+    uint16_t const addressId  = ::etl::numeric_limits<uint8_t>::max();
     Proxy proxy(0xFF, instanceId, addressId);
 
     // ACT && ASSERT
@@ -289,7 +289,7 @@ TEST_F(DbManipulatorTest, TestSkeletonUnsubscribe)
 TEST_F(DbManipulatorTest, TestUnknownSkeletonUnsubscribe)
 {
     // ARRANGE
-    uint16_t const service    = etl::numeric_limits<uint16_t>::max();
+    uint16_t const service    = ::etl::numeric_limits<uint16_t>::max();
     uint16_t const instanceId = 0x01;
     Skeleton skeleton(service, instanceId);
 
@@ -324,7 +324,7 @@ TEST_F(DbManipulatorTest, TestSkeletonSearchWithUnkownServiceId)
 {
     // ARRANGE
     uint16_t const service
-        = etl::numeric_limits<uint16_t>::max(); // unknown service id to the database
+        = ::etl::numeric_limits<uint16_t>::max(); // unknown service id to the database
     uint16_t const instanceId = 0x1U;
 
     // ACT && ASSERT
@@ -339,7 +339,7 @@ TEST_F(DbManipulatorTest, TestSkeletonSearchWithUnkownInstanceId)
 {
     // ARRANGE
     uint16_t const service    = 0x41U;
-    uint16_t const instanceId = etl::numeric_limits<uint16_t>::max();
+    uint16_t const instanceId = ::etl::numeric_limits<uint16_t>::max();
 
     // ACT && ASSERT
     TransceiverBase const* const transceiver
@@ -368,7 +368,7 @@ TEST_F(DbManipulatorTest, TestProxyTranceiverSearchWithUnkownServiceId)
 {
     // ARRANGE
     uint16_t const service
-        = etl::numeric_limits<uint16_t>::max(); // unknown service id to the database
+        = ::etl::numeric_limits<uint16_t>::max(); // unknown service id to the database
     uint16_t const instanceId = 0x1U;
     uint16_t const addressId  = 0x1U;
 
@@ -384,7 +384,7 @@ TEST_F(DbManipulatorTest, TestProxyTranceiverSearchWithUnkownInstanceId)
     // ARRANGE
     uint16_t const service = 0x41U;
     uint16_t const instanceId
-        = etl::numeric_limits<uint16_t>::max(); // unknown instance id to the database
+        = ::etl::numeric_limits<uint16_t>::max(); // unknown instance id to the database
     uint16_t const addressId = 0x1U;
 
     // ACT && ASSERT
@@ -400,7 +400,7 @@ TEST_F(DbManipulatorTest, TestProxyTranceiverSearchWithUnkownAddressId)
     uint16_t const service    = 0x41U;
     uint16_t const instanceId = 0x1U;
     uint16_t const addressId
-        = etl::numeric_limits<uint8_t>::max(); // unknown address id to the database
+        = ::etl::numeric_limits<uint8_t>::max(); // unknown address id to the database
 
     // ACT && ASSERT
     TransceiverBase const* const transceiver = DbManipulator::getTransceiver(
@@ -414,7 +414,7 @@ TEST_F(DbManipulatorTest, TestSkeletonTransceiverValidSearch)
     // ARRANGE
     uint16_t const service    = 0x41U;
     uint16_t const instanceId = 0x1U;
-    uint16_t const addressId  = etl::numeric_limits<uint8_t>::max();
+    uint16_t const addressId  = ::etl::numeric_limits<uint8_t>::max();
 
     // ACT && ASSERT
     TransceiverBase const* const transceiver = DbManipulator::getTransceiver(
@@ -428,9 +428,9 @@ TEST_F(DbManipulatorTest, TestSkeletonTranceiverSearchWithUnkownServiceId)
 {
     // ARRANGE
     uint16_t const service
-        = etl::numeric_limits<uint16_t>::max(); // unknown service id to the database
+        = ::etl::numeric_limits<uint16_t>::max(); // unknown service id to the database
     uint16_t const instanceId = 0x1U;
-    uint16_t const addressId  = etl::numeric_limits<uint8_t>::max();
+    uint16_t const addressId  = ::etl::numeric_limits<uint8_t>::max();
 
     // ACT && ASSERT
     TransceiverBase const* const transceiver = DbManipulator::getTransceiver(
@@ -444,7 +444,7 @@ TEST_F(DbManipulatorTest, TestSkeletonTranceiverSearchWithUnkownInstanceId)
     // ARRANGE
     uint16_t const service    = 0x41U;
     uint16_t const instanceId = 0xFFFFU; // unknown instance id to the database
-    uint16_t const addressId  = etl::numeric_limits<uint8_t>::max();
+    uint16_t const addressId  = ::etl::numeric_limits<uint8_t>::max();
 
     // ACT && ASSERT
     TransceiverBase const* const transceiver = DbManipulator::getTransceiver(

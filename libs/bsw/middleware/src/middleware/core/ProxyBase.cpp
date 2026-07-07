@@ -53,24 +53,24 @@ HRESULT
 ProxyBase::initFromInstancesDatabase(
     uint16_t const instanceId,
     uint8_t const sourceCluster,
-    etl::span<IInstanceDatabase const* const> const& dbRange)
+    ::etl::span<IInstanceDatabase const* const> const& dbRange)
 {
     HRESULT ret = HRESULT::TransceiverInitializationFailed;
     unsubscribe(getServiceId());
-    auto const* it = etl::find_if(
+    auto const* it = ::etl::find_if(
         dbRange.begin(),
         dbRange.end(),
         [instanceId](IInstanceDatabase const* const dataBase) -> bool
         {
             auto const instances = dataBase->getInstanceIdsRange();
             auto const* instanceIdIt
-                = etl::lower_bound(instances.begin(), instances.end(), instanceId);
+                = ::etl::lower_bound(instances.begin(), instances.end(), instanceId);
             return ((instanceIdIt != instances.end()) && ((*instanceIdIt) == instanceId));
         });
     if (it != dbRange.end())
     {
         auto const proxyCc = (*it)->getProxyConnectionsRange();
-        auto const* ccIt   = etl::find_if(
+        auto const* ccIt   = ::etl::find_if(
             proxyCc.begin(),
             proxyCc.end(),
             [sourceCluster](IClusterConnection const* const clusConn)

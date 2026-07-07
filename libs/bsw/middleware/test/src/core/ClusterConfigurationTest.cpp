@@ -67,7 +67,7 @@ struct MiddlewareMessageComparator
     }
 
 private:
-    etl::optional<MsgType> _msg;
+    ::etl::optional<MsgType> _msg;
     ::middleware::core::HRESULT _ret{::middleware::core::HRESULT::Ok};
 };
 
@@ -120,7 +120,7 @@ struct ClusterConfigurationNoTimeout : public IClusterConnectionConfigurationBas
         // setup proxies
         (_proxyTransceivers[0])._container->emplace_back(&_proxy);
 
-        etl::sort(
+        ::etl::sort(
             _proxyTransceivers[0]._container->begin(),
             _proxyTransceivers[0]._container->end(),
             meta::TransceiverContainer::TransceiverComparator());
@@ -128,7 +128,7 @@ struct ClusterConfigurationNoTimeout : public IClusterConnectionConfigurationBas
         // setup skeletons
         _skeletonTransceivers[0]._container->emplace_back(&_skeleton);
 
-        etl::sort(
+        ::etl::sort(
             _skeletonTransceivers[0]._container->begin(),
             _skeletonTransceivers[0]._container->end(),
             meta::TransceiverContainer::TransceiverComparator());
@@ -171,12 +171,12 @@ struct ClusterConfigurationNoTimeout : public IClusterConnectionConfigurationBas
     SkeletonStoredMessage& getSkeleton() { return _skeleton; }
 
 private:
-    etl::vector<::middleware::core::TransceiverBase*, 1U> _proxyTransceiversAlloc{};
-    etl::ivector<::middleware::core::TransceiverBase*>& _iProxyTransceivers{
+    ::etl::vector<::middleware::core::TransceiverBase*, 1U> _proxyTransceiversAlloc{};
+    ::etl::ivector<::middleware::core::TransceiverBase*>& _iProxyTransceivers{
         _proxyTransceiversAlloc};
 
-    etl::vector<::middleware::core::TransceiverBase*, 1U> _skeletonTransceiversAlloc{};
-    etl::ivector<::middleware::core::TransceiverBase*>& _iSkeletonTransceivers{
+    ::etl::vector<::middleware::core::TransceiverBase*, 1U> _skeletonTransceiversAlloc{};
+    ::etl::ivector<::middleware::core::TransceiverBase*>& _iSkeletonTransceivers{
         _skeletonTransceiversAlloc};
 
     ::middleware::core::meta::TransceiverContainer _proxyTransceivers[1]{
@@ -229,13 +229,14 @@ struct ClusterConfigurationTimeout : ITimeoutConfiguration
     bool containsTransceiver(ITimeoutHandler const& transceiver)
     {
         return _timeoutTransceiver.cend()
-               != etl::find(_timeoutTransceiver.cbegin(), _timeoutTransceiver.cend(), &transceiver);
+               != ::etl::find(
+                   _timeoutTransceiver.cbegin(), _timeoutTransceiver.cend(), &transceiver);
     }
 
 private:
-    etl::vector<::middleware::core::ITimeoutHandler*, MAX_TIMEOUT_RECEIVERS>
+    ::etl::vector<::middleware::core::ITimeoutHandler*, MAX_TIMEOUT_RECEIVERS>
         _timeoutTransceiverAlloc{};
-    etl::ivector<::middleware::core::ITimeoutHandler*>& _timeoutTransceiver{
+    ::etl::ivector<::middleware::core::ITimeoutHandler*>& _timeoutTransceiver{
         _timeoutTransceiverAlloc};
 };
 

@@ -38,12 +38,12 @@ AllocateFunction getAllocFunction(uint16_t sid)
     {
         {% for service in services if service.allocator %}
         case ::{{ service.namespace }}::{{ service.name }}::internal::SERVICE_ID: {
-            using Base = etl::remove_reference_t<decltype(shm::get{{ service.allocator.name | capitalize }}Allocator())>::Base;
+            using Base = ::etl::remove_reference_t<decltype(shm::get{{ service.allocator.name | capitalize }}Allocator())>::Base;
             return AllocateFunction::create<Base, &Base::allocate>(shm::get{{ service.allocator.name | capitalize }}Allocator());
         }
         {% endfor %}
         default: {
-            using Base = etl::remove_reference_t<decltype(shm::getDefaultAllocator())>::Base;
+            using Base = ::etl::remove_reference_t<decltype(shm::getDefaultAllocator())>::Base;
             return AllocateFunction::create<Base, &Base::allocate>(shm::getDefaultAllocator());
         }
     }
@@ -55,12 +55,12 @@ AllocateSharedFunction getAllocSharedFunction(uint16_t sid)
     {
         {% for service in services if service.allocator %}
         case ::{{ service.namespace }}::{{ service.name }}::internal::SERVICE_ID: {
-            using Base = etl::remove_reference_t<decltype(shm::get{{ service.allocator.name | capitalize }}Allocator())>::Base;
+            using Base = ::etl::remove_reference_t<decltype(shm::get{{ service.allocator.name | capitalize }}Allocator())>::Base;
             return AllocateSharedFunction::create<Base, &Base::allocateShared>(shm::get{{ service.allocator.name | capitalize }}Allocator());
         }
         {% endfor %}
         default: {
-            using Base = etl::remove_reference_t<decltype(shm::getDefaultAllocator())>::Base;
+            using Base = ::etl::remove_reference_t<decltype(shm::getDefaultAllocator())>::Base;
             return AllocateSharedFunction::create<Base, &Base::allocateShared>(shm::getDefaultAllocator());
         }
     }
@@ -72,12 +72,12 @@ DeallocateFunction getDeallocFunction(uint16_t sid)
     {
         {% for service in services if service.allocator %}
         case ::{{ service.namespace }}::{{ service.name }}::internal::SERVICE_ID: {
-            using Base = etl::remove_reference_t<decltype(shm::get{{ service.allocator.name | capitalize }}Allocator())>::Base;
+            using Base = ::etl::remove_reference_t<decltype(shm::get{{ service.allocator.name | capitalize }}Allocator())>::Base;
             return DeallocateFunction::create<Base, &Base::deallocate>(shm::get{{ service.allocator.name | capitalize }}Allocator());
         }
         {% endfor %}
         default: {
-            using Base = etl::remove_reference_t<decltype(shm::getDefaultAllocator())>::Base;
+            using Base = ::etl::remove_reference_t<decltype(shm::getDefaultAllocator())>::Base;
             return DeallocateFunction::create<Base, &Base::deallocate>(shm::getDefaultAllocator());
         }
     }
@@ -89,12 +89,12 @@ DeallocateSharedFunction getDeallocSharedFunction(uint16_t sid)
     {
         {% for service in services if service.allocator %}
         case ::{{ service.namespace }}::{{ service.name }}::internal::SERVICE_ID: {
-            using Base = etl::remove_reference_t<decltype(shm::get{{ service.allocator.name | capitalize }}Allocator())>::Base;
+            using Base = ::etl::remove_reference_t<decltype(shm::get{{ service.allocator.name | capitalize }}Allocator())>::Base;
             return DeallocateSharedFunction::create<Base, &Base::deallocateShared>(shm::get{{ service.allocator.name | capitalize }}Allocator());
         }
         {% endfor %}
         default: {
-            using Base = etl::remove_reference_t<decltype(shm::getDefaultAllocator())>::Base;
+            using Base = ::etl::remove_reference_t<decltype(shm::getDefaultAllocator())>::Base;
             return DeallocateSharedFunction::create<Base, &Base::deallocateShared>(shm::getDefaultAllocator());
         }
     }
@@ -106,12 +106,12 @@ RegionStartFunction getRegionStartFunction(uint16_t sid)
     {
         {% for service in services if service.allocator %}
         case ::{{ service.namespace }}::{{ service.name }}::internal::SERVICE_ID: {
-            using Base = etl::remove_reference_t<decltype(shm::get{{ service.allocator.name | capitalize }}Allocator())>::Base;
+            using Base = ::etl::remove_reference_t<decltype(shm::get{{ service.allocator.name | capitalize }}Allocator())>::Base;
             return RegionStartFunction::create<Base, &Base::regionStart>(shm::get{{ service.allocator.name | capitalize }}Allocator());
         }
         {% endfor %}
         default: {
-            using Base = etl::remove_reference_t<decltype(shm::getDefaultAllocator())>::Base;
+            using Base = ::etl::remove_reference_t<decltype(shm::getDefaultAllocator())>::Base;
             return RegionStartFunction::create<Base, &Base::regionStart>(shm::getDefaultAllocator());
         }
     }
@@ -123,12 +123,12 @@ PointerValidationFunction getPtrValidationFunction(uint16_t sid)
     {
         {% for service in services if service.allocator %}
         case ::{{ service.namespace }}::{{ service.name }}::internal::SERVICE_ID: {
-            using Base = etl::remove_reference_t<decltype(shm::get{{ service.allocator.name | capitalize }}Allocator())>::Base;
+            using Base = ::etl::remove_reference_t<decltype(shm::get{{ service.allocator.name | capitalize }}Allocator())>::Base;
             return PointerValidationFunction::create<Base, &Base::isPtrValid>(shm::get{{ service.allocator.name | capitalize }}Allocator());
         }
         {% endfor %}
         default: {
-            using Base = etl::remove_reference_t<decltype(shm::getDefaultAllocator())>::Base;
+            using Base = ::etl::remove_reference_t<decltype(shm::getDefaultAllocator())>::Base;
             return PointerValidationFunction::create<Base, &Base::isPtrValid>(shm::getDefaultAllocator());
         }
     }

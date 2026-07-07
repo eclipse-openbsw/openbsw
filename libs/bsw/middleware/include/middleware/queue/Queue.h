@@ -38,10 +38,10 @@ class QueueMutex;
  * \tparam T
  */
 template<typename T>
-class QueueMutex<T, typename etl::enable_if_t<etl::is_integral<T>::value>>
+class QueueMutex<T, typename ::etl::enable_if_t<::etl::is_integral<T>::value>>
 {
 public:
-    using mutex_t = etl::add_volatile_t<T>;
+    using mutex_t = ::etl::add_volatile_t<T>;
 
     constexpr explicit QueueMutex(mutex_t initialValue = 0U) : _mutex(initialValue) {}
 
@@ -61,14 +61,15 @@ private:
  * \tparam T
  */
 template<typename T>
-class QueueMutex<T, typename etl::enable_if_t<etl::is_pointer<T>::value>>
+class QueueMutex<T, typename ::etl::enable_if_t<::etl::is_pointer<T>::value>>
 {
 public:
-    using mutex_t = etl::add_pointer_t<etl::add_volatile_t<etl::remove_pointer_t<T>>>;
+    using mutex_t = ::etl::add_pointer_t<::etl::add_volatile_t<::etl::remove_pointer_t<T>>>;
 
     // For now we are only accepting pointers to integral types
     static_assert(
-        etl::is_pointer<T>::value && etl::is_integral<typename etl::remove_pointer<T>::type>::value,
+        ::etl::is_pointer<T>::value
+            && ::etl::is_integral<typename ::etl::remove_pointer<T>::type>::value,
         "Pointer's underlying type must be an integral");
 
     constexpr explicit QueueMutex(mutex_t initialValue) : _mutex(initialValue) {}
@@ -116,7 +117,9 @@ class Queue;
  * \tparam Traits which will be of QueueTraits type.
  */
 template<typename Traits>
-class Queue<Traits, typename etl::enable_if_t<!etl::is_void<typename Traits::LockStrategy>::value>>
+class Queue<
+    Traits,
+    typename ::etl::enable_if_t<!::etl::is_void<typename Traits::LockStrategy>::value>>
     final : public QueueBase
 {
 public:
@@ -190,8 +193,8 @@ public:
         bool write(QueueItem const& value)
         {
             LockStrategy const lock(_queue._mutex.get());
-            etl::optional<size_t> index = _queue.writeNext();
-            bool res                    = index.has_value();
+            ::etl::optional<size_t> index = _queue.writeNext();
+            bool res                      = index.has_value();
             if (res)
             {
                 _queue._buffer[index.value()] = value;
@@ -205,7 +208,7 @@ public:
     };
 
 private:
-    etl::array<QueueItem, MAX_SIZE> _buffer;
+    ::etl::array<QueueItem, MAX_SIZE> _buffer;
     MutexType _mutex __attribute__((aligned(4)));
 };
 
@@ -218,7 +221,7 @@ private:
 template<typename Traits>
 class Queue<
     Traits,
-    typename etl::enable_if<etl::is_void<typename Traits::LockStrategy>::value>::type>
+    typename ::etl::enable_if<::etl::is_void<typename Traits::LockStrategy>::value>::type>
 : public QueueBase
 {
 public:
@@ -284,8 +287,8 @@ public:
         /** Appends \p value to the queue, returns true on success. */
         bool write(QueueItem const& value)
         {
-            etl::optional<size_t> index = _queue.writeNext();
-            bool const res              = index.has_value();
+            ::etl::optional<size_t> index = _queue.writeNext();
+            bool const res                = index.has_value();
             if (res)
             {
                 _queue._buffer[index.value()] = value;
@@ -299,11 +302,11 @@ public:
     };
 
 private:
-    etl::array<QueueItem, MAX_SIZE> _buffer;
+    ::etl::array<QueueItem, MAX_SIZE> _buffer;
 };
 
 static_assert(
-    (sizeof(Queue<QueueTraits<etl::array<uint8_t, 32U>, 5U>>) % sizeof(uint32_t)) == 0U,
+    (sizeof(Queue<QueueTraits<::etl::array<uint8_t, 32U>, 5U>>) % sizeof(uint32_t)) == 0U,
     "Performance penalty due to misaligned queue!");
 
 } // namespace middleware::queue

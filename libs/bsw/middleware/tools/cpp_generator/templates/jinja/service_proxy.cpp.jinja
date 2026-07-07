@@ -63,7 +63,7 @@ uint16_t {{ service.name }}Proxy::getServiceId() const
 {
     auto const database = internal::getClusterConnectionsDb();
     auto const ret = Base::initFromInstancesDatabase(
-        static_cast<uint16_t>(instanceId), etl::to_underlying(sourceCluster), database);
+        static_cast<uint16_t>(instanceId), ::etl::to_underlying(sourceCluster), database);
     if ((::middleware::core::HRESULT::Ok == ret) || (::middleware::core::HRESULT::InstanceAlreadyRegistered == ret))
     {
         static_cast<middleware::core::ITimeoutClusterConnection*>(_connection)->registerTimeoutTransceiver(*this);
@@ -185,16 +185,16 @@ void {{ service.name }}Proxy::doUpdateTimeouts()
 
 // METHODS
 {% for method in service.methods if service.methods %}
-etl::expected<uint16_t, middleware::core::HRESULT> {{ service.name }}Proxy::{{ method.variable }}(
+::etl::expected<uint16_t, middleware::core::HRESULT> {{ service.name }}Proxy::{{ method.variable }}(
     {% if method.input_param %}const {{ method.input_param.type }}& {{ method.input_param.name }}, {% endif %}
     const {{ method.name }}Callback& methodCb)
 {
     checkCrossThreadError(fProcessId);
     middleware::core::HRESULT ret = middleware::core::HRESULT::NotRegistered;
-    etl::optional<uint16_t> requestId = {{ method.variable }}FutureDispatcher_.obtainRequestId(methodCb);
+    ::etl::optional<uint16_t> requestId = {{ method.variable }}FutureDispatcher_.obtainRequestId(methodCb);
     if (!requestId.has_value())
     {
-        return etl::unexpected<middleware::core::HRESULT>(etl::in_place,
+        return ::etl::unexpected<middleware::core::HRESULT>(::etl::in_place,
                                                           middleware::core::HRESULT::RequestPoolDepleted);
     }
 
@@ -205,7 +205,7 @@ etl::expected<uint16_t, middleware::core::HRESULT> {{ service.name }}Proxy::{{ m
     if (ret != middleware::core::HRESULT::Ok)
     {
         static_cast<void>({{ method.variable }}FutureDispatcher_.cancelRequest(requestId.value()));
-        return etl::unexpected<middleware::core::HRESULT>(etl::in_place, ret);
+        return ::etl::unexpected<middleware::core::HRESULT>(::etl::in_place, ret);
     }
 {% endif %}
     ret = Base::sendMessage(msg);
@@ -213,7 +213,7 @@ etl::expected<uint16_t, middleware::core::HRESULT> {{ service.name }}Proxy::{{ m
     {
 {% if method.input_param %} middleware::core::MessagePayloadBuilder::deallocate(msg); {% endif %}
 				static_cast<void>({{ method.variable }}FutureDispatcher_.cancelRequest(requestId.value()));
-        return etl::unexpected<middleware::core::HRESULT>(etl::in_place, ret);
+        return ::etl::unexpected<middleware::core::HRESULT>(::etl::in_place, ret);
     }
 
     return requestId.value();
@@ -222,7 +222,7 @@ etl::expected<uint16_t, middleware::core::HRESULT> {{ service.name }}Proxy::{{ m
 
 // METHODS FIRE_AND_FORGET
 {% for method in service.methods_fire_and_forget if service.methods_fire_and_forget %}
-etl::expected<uint16_t, middleware::core::HRESULT> {{ service.name }}Proxy::{{ method.variable }}(
+::etl::expected<uint16_t, middleware::core::HRESULT> {{ service.name }}Proxy::{{ method.variable }}(
     {% if method.input_param %}const {{ method.input_param.type }}& {{ method.input_param.name }}{% endif %})
 {
     checkCrossThreadError(fProcessId);
@@ -232,14 +232,14 @@ etl::expected<uint16_t, middleware::core::HRESULT> {{ service.name }}Proxy::{{ m
     ret = middleware::core::MessagePayloadBuilder::getInstance().allocate({{ method.input_param.name }}, msg);
     if (ret != middleware::core::HRESULT::Ok)
     {
-        return etl::unexpected<middleware::core::HRESULT>(etl::in_place, ret);
+        return ::etl::unexpected<middleware::core::HRESULT>(::etl::in_place, ret);
     }
 {% endif %}
     ret = Base::sendMessage(msg);
     if (ret != middleware::core::HRESULT::Ok)
     {
 {% if method.input_param %} middleware::core::MessagePayloadBuilder::deallocate(msg); {% endif %}
-        return etl::unexpected<middleware::core::HRESULT>(etl::in_place, ret);
+        return ::etl::unexpected<middleware::core::HRESULT>(::etl::in_place, ret);
     }
 
     return msg.getHeader().requestId;

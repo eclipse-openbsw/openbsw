@@ -31,22 +31,22 @@ class Pool : public PoolBase
 
     struct ElementType
     {
-        etl::array<uint8_t, ChunkSize> chunk;
+        ::etl::array<uint8_t, ChunkSize> chunk;
     };
 
     // Ensure alignment is suitable for storing pointers in freed chunks.
     struct alignas(alignof(uint8_t*)) AlignedElementType : ElementType
     {};
 
-    etl::array<AlignedElementType, N> _storage;
-    etl::array<uint8_t, STORAGE_FLAGS_SIZE> _storageFlags;
+    ::etl::array<AlignedElementType, N> _storage;
+    ::etl::array<uint8_t, STORAGE_FLAGS_SIZE> _storageFlags;
 
-    static uint8_t* getStorage(etl::array<AlignedElementType, N>& storage)
+    static uint8_t* getStorage(::etl::array<AlignedElementType, N>& storage)
     {
         return storage.data()->chunk.data();
     }
 
-    static uint8_t* getFlags(etl::array<uint8_t, STORAGE_FLAGS_SIZE>& flags)
+    static uint8_t* getFlags(::etl::array<uint8_t, STORAGE_FLAGS_SIZE>& flags)
     {
         return flags.data();
     }

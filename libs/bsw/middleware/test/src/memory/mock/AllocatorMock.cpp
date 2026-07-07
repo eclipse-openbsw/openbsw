@@ -20,7 +20,7 @@ namespace test
 {
 
 AllocatorMock* AllocatorMock::_instance{nullptr};
-etl::array<uint8_t, AllocatorMock::MAX_STORAGE> AllocatorMock::_storage{};
+::etl::array<uint8_t, AllocatorMock::MAX_STORAGE> AllocatorMock::_storage{};
 
 AllocatorMock& AllocatorMock::getInstance()
 {

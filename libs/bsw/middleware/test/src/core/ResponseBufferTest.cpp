@@ -34,7 +34,7 @@ public:
     {
         Base::setInstanceId(instanceId);
         return Base::initFromInstancesDatabase(
-            instanceId, etl::span<IInstanceDatabase const* const>(INSTANCESDATABASE));
+            instanceId, ::etl::span<IInstanceDatabase const* const>(INSTANCESDATABASE));
     }
 
     MOCK_METHOD(uint16_t, getServiceId, (), (const, final));
@@ -186,7 +186,7 @@ TEST_F(ResponseBufferTestSuite, TestRespondWithInvalidsendResponseResult)
 
 TEST_F(ResponseBufferTestSuite, TestGetAvailableResponseExhaustion)
 {
-    etl::vector<ResponseBufferBase::SkeletonResponseInfo*, RESPONSE_LIMIT> responses{};
+    ::etl::vector<ResponseBufferBase::SkeletonResponseInfo*, RESPONSE_LIMIT> responses{};
     uint8_t addressId{0U};
     uint16_t requestId{0U};
 

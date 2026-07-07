@@ -17,12 +17,12 @@
 namespace middleware::memory
 {
 
-using AllocateFunction          = etl::delegate<uint8_t*(uint32_t)>;
-using AllocateSharedFunction    = etl::delegate<uint8_t*(uint32_t, uint8_t)>;
-using DeallocateFunction        = etl::delegate<bool(uint8_t*)>;
-using DeallocateSharedFunction  = etl::delegate<bool(uint8_t*, uint32_t)>;
-using RegionStartFunction       = etl::delegate<uint8_t*()>;
-using PointerValidationFunction = etl::delegate<bool(uint8_t const*)>;
+using AllocateFunction          = ::etl::delegate<uint8_t*(uint32_t)>;
+using AllocateSharedFunction    = ::etl::delegate<uint8_t*(uint32_t, uint8_t)>;
+using DeallocateFunction        = ::etl::delegate<bool(uint8_t*)>;
+using DeallocateSharedFunction  = ::etl::delegate<bool(uint8_t*, uint32_t)>;
+using RegionStartFunction       = ::etl::delegate<uint8_t*()>;
+using PointerValidationFunction = ::etl::delegate<bool(uint8_t const*)>;
 
 /** Returns a function to allocate data for a service ID */
 AllocateFunction getAllocFunction(uint16_t sid);

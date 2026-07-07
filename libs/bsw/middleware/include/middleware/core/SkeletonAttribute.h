@@ -62,7 +62,7 @@ public:
      * \param attribute New attribute value to store and broadcast
      * \return HRESULT Result code
      */
-    template<bool B = AllowsSubscriptions, typename = etl::enable_if_t<B>>
+    template<bool B = AllowsSubscriptions, typename = ::etl::enable_if_t<B>>
     [[nodiscard]] HRESULT send(AttributeType const& attribute)
     {
         set(attribute);
@@ -75,7 +75,7 @@ public:
      *
      * \return HRESULT Result code
      */
-    template<bool B = AllowsSubscriptions, typename = etl::enable_if_t<B>>
+    template<bool B = AllowsSubscriptions, typename = ::etl::enable_if_t<B>>
     [[nodiscard]] HRESULT send() const
     {
         return _eventSender.send(get(), MEMBER_ID);

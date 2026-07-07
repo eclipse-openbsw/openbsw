@@ -130,7 +130,8 @@ uint8_t* AllocatorBase<TAllocatorImpl>::allocateShared(
     if (externalPtr != nullptr)
     {
         _stats.allocations++;
-        etl::construct_object_at<uint8_t>(etl::next(externalPtr, payloadSize), referenceCounter);
+        ::etl::construct_object_at<uint8_t>(
+            ::etl::next(externalPtr, payloadSize), referenceCounter);
     }
 
     return externalPtr;
@@ -161,7 +162,7 @@ bool AllocatorBase<TAllocatorImpl>::deallocateShared(uint8_t* const ptr, uint32_
     bool res = true;
     if (isPtrValid(ptr))
     {
-        auto& referenceCounter = etl::get_object_at<uint8_t>(etl::next(ptr, payloadSize));
+        auto& referenceCounter = ::etl::get_object_at<uint8_t>(::etl::next(ptr, payloadSize));
         if (referenceCounter > 1U)
         {
             referenceCounter--;

@@ -27,7 +27,7 @@ namespace middleware::core::test
 template<typename T>
 struct IntegralWrapper
 {
-    static_assert(etl::is_integral_v<T>, "IntegralWrapper requires an integral type");
+    static_assert(::etl::is_integral_v<T>, "IntegralWrapper requires an integral type");
     T value;
 
     bool operator==(IntegralWrapper const& rhs) const { return value == rhs.value; }
@@ -38,7 +38,7 @@ struct IntegralWrapper
 template<typename T, size_t SIZE>
 struct ArrayWrapper
 {
-    etl::array<T, SIZE> buffer;
+    ::etl::array<T, SIZE> buffer;
 
     bool operator==(ArrayWrapper const& rhs) const { return buffer == rhs.buffer; }
 
@@ -53,7 +53,7 @@ struct ArrayWrapper
 template<typename T, size_t SIZE>
 struct VectorWrapper
 {
-    etl::vector<T, SIZE> buffer;
+    ::etl::vector<T, SIZE> buffer;
 
     bool operator==(VectorWrapper const& rhs) const { return buffer == rhs.buffer; }
 
@@ -93,21 +93,21 @@ using BigTypes = ::testing::Types<
     VectorWrapper<uint64_t, Message::MAX_PAYLOAD_SIZE + 1U>>;
 
 using SmallBuffers = ::testing::Types<
-    etl::array<uint8_t, 1U>,
-    etl::array<uint8_t, 2U>,
-    etl::array<uint8_t, 4U>,
-    etl::array<uint8_t, 8U>,
-    etl::array<uint8_t, 16U>,
-    etl::array<uint8_t, 32U>,
-    etl::array<uint8_t, Message::MAX_PAYLOAD_SIZE - 1U>,
-    etl::array<uint8_t, Message::MAX_PAYLOAD_SIZE>>;
+    ::etl::array<uint8_t, 1U>,
+    ::etl::array<uint8_t, 2U>,
+    ::etl::array<uint8_t, 4U>,
+    ::etl::array<uint8_t, 8U>,
+    ::etl::array<uint8_t, 16U>,
+    ::etl::array<uint8_t, 32U>,
+    ::etl::array<uint8_t, Message::MAX_PAYLOAD_SIZE - 1U>,
+    ::etl::array<uint8_t, Message::MAX_PAYLOAD_SIZE>>;
 
 using BigBuffers = ::testing::Types<
-    etl::array<uint8_t, Message::MAX_PAYLOAD_SIZE + 1U>,
-    etl::array<uint8_t, 64U>,
-    etl::array<uint8_t, 128U>,
-    etl::array<uint8_t, 256U>,
-    etl::array<uint8_t, 511U>>;
+    ::etl::array<uint8_t, Message::MAX_PAYLOAD_SIZE + 1U>,
+    ::etl::array<uint8_t, 64U>,
+    ::etl::array<uint8_t, 128U>,
+    ::etl::array<uint8_t, 256U>,
+    ::etl::array<uint8_t, 511U>>;
 
 class AllocatorImpl
 {
@@ -120,7 +120,7 @@ public:
     AllocatorImpl& operator=(AllocatorImpl&& other)      = delete;
 
     template<size_t MAX_COUNT, size_t MAX_SIZE>
-    using Storage = etl::vector<etl::array<uint8_t, MAX_SIZE>, MAX_COUNT>;
+    using Storage = ::etl::vector<::etl::array<uint8_t, MAX_SIZE>, MAX_COUNT>;
 
     uint8_t* allocate(uint32_t const size)
     {
@@ -327,18 +327,18 @@ TYPED_TEST(TestMessagePayloadBuilderSmallSpan, AllocateInternal)
     TypeParam obj;
     obj.fill(static_cast<value_type>(~value_type{0U}));
 
-    etl::span<uint8_t const> const bytes{obj};
+    ::etl::span<uint8_t const> const bytes{obj};
     Message msg = makeEmptyMessage();
 
     // ACT
     core::HRESULT ret = MessagePayloadBuilder::getInstance().allocate(bytes, msg);
-    etl::span<uint8_t const> const storedBytes
+    ::etl::span<uint8_t const> const storedBytes
         = MessagePayloadBuilder::getInstance().readRawPayload(msg);
 
     // ASSERT
     EXPECT_EQ(ret, core::HRESULT::Ok);
     EXPECT_FALSE(msg.hasExternalPayload());
-    EXPECT_TRUE(etl::equal(bytes.begin(), bytes.end(), storedBytes.begin(), storedBytes.end()));
+    EXPECT_TRUE(::etl::equal(bytes.begin(), bytes.end(), storedBytes.begin(), storedBytes.end()));
 
     // ACT
     MessagePayloadBuilder::deallocate(msg);
@@ -361,18 +361,18 @@ TYPED_TEST(TestMessagePayloadBuilderBigSpan, AllocateExternal)
     TypeParam obj;
     obj.fill(static_cast<value_type>(~value_type{0U}));
 
-    etl::span<uint8_t const> const bytes{obj};
+    ::etl::span<uint8_t const> const bytes{obj};
     Message msg = makeEmptyMessage();
 
     // ACT
     core::HRESULT ret = MessagePayloadBuilder::getInstance().allocate(bytes, msg);
-    etl::span<uint8_t const> const storedBytes
+    ::etl::span<uint8_t const> const storedBytes
         = MessagePayloadBuilder::getInstance().readRawPayload(msg);
 
     // ASSERT
     EXPECT_EQ(ret, core::HRESULT::Ok);
     EXPECT_TRUE(msg.hasExternalPayload());
-    EXPECT_TRUE(etl::equal(bytes.begin(), bytes.end(), storedBytes.begin(), storedBytes.end()));
+    EXPECT_TRUE(::etl::equal(bytes.begin(), bytes.end(), storedBytes.begin(), storedBytes.end()));
 
     // ACT
     MessagePayloadBuilder::deallocate(msg);
@@ -389,7 +389,7 @@ TYPED_TEST(TestMessagePayloadBuilderBigSpan, AllocateExternalShared)
     TypeParam obj;
     obj.fill(static_cast<value_type>(~value_type{0U}));
 
-    etl::span<uint8_t const> const bytes{obj};
+    ::etl::span<uint8_t const> const bytes{obj};
     Message msg                      = Message::createEvent(123U, 128U, 1U, 0U);
     uint8_t const numberOfReferences = 5U;
 
@@ -404,9 +404,10 @@ TYPED_TEST(TestMessagePayloadBuilderBigSpan, AllocateExternalShared)
     for (size_t readings = 0U; readings < numberOfReferences; ++readings)
     {
         EXPECT_TRUE(this->getAllocatorImpl().isAnyPoolFull());
-        etl::span<uint8_t const> const storedBytes
+        ::etl::span<uint8_t const> const storedBytes
             = MessagePayloadBuilder::getInstance().readRawPayload(msg);
-        EXPECT_TRUE(etl::equal(bytes.begin(), bytes.end(), storedBytes.begin(), storedBytes.end()));
+        EXPECT_TRUE(
+            ::etl::equal(bytes.begin(), bytes.end(), storedBytes.begin(), storedBytes.end()));
         MessagePayloadBuilder::deallocate(msg);
     }
     EXPECT_FALSE(this->getAllocatorImpl().isAnyPoolFull());
@@ -489,9 +490,9 @@ TEST_F(TestMessagePayloadBuilder, AllocateExternalSharedFailsForObject)
 TEST_F(TestMessagePayloadBuilder, AllocateExternalFailsForSpan)
 {
     // ARRANGE
-    etl::array<uint8_t, Message::MAX_PAYLOAD_SIZE + 1U> buffer{};
+    ::etl::array<uint8_t, Message::MAX_PAYLOAD_SIZE + 1U> buffer{};
     buffer.fill(0xFFU);
-    etl::span<uint8_t const> const obj{buffer};
+    ::etl::span<uint8_t const> const obj{buffer};
     Message msg1 = makeEmptyMessage();
     Message msg2 = makeEmptyMessage();
     Message msg3 = makeEmptyMessage();
@@ -528,9 +529,9 @@ TEST_F(TestMessagePayloadBuilder, AllocateExternalFailsForSpan)
 TEST_F(TestMessagePayloadBuilder, AllocateExternalSharedFailsForSpan)
 {
     // ARRANGE
-    etl::array<uint8_t, Message::MAX_PAYLOAD_SIZE + 1U> buffer{};
+    ::etl::array<uint8_t, Message::MAX_PAYLOAD_SIZE + 1U> buffer{};
     buffer.fill(0xFFU);
-    etl::span<uint8_t const> const obj{buffer};
+    ::etl::span<uint8_t const> const obj{buffer};
     Message msg1 = makeEmptyMessage();
     Message msg2 = makeEmptyMessage();
     Message msg3 = makeEmptyMessage();

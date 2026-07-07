@@ -45,7 +45,10 @@ struct ClusterConfigurationMockBase
 
     void setNextWriteResult(bool ret) { returnWrite = ret; }
 
-    etl::optional<::middleware::core::Message> getLastReceivedMessage() { return messageReceived; }
+    ::etl::optional<::middleware::core::Message> getLastReceivedMessage()
+    {
+        return messageReceived;
+    }
 
     HRESULT dispatchMessage(::middleware::core::Message const& msg) const
     {
@@ -72,7 +75,7 @@ private:
     ::middleware::core::HRESULT returnHRESULT{::middleware::core::HRESULT::Ok};
     mutable std::uint8_t _mockReturnCounter{1};
     bool returnWrite{true};
-    mutable etl::optional<::middleware::core::Message> messageReceived;
+    mutable ::etl::optional<::middleware::core::Message> messageReceived;
 };
 
 struct ProxyWithTimeout

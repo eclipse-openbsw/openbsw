@@ -48,7 +48,7 @@ DbManipulator::subscribe(
             // update instance id
             proxy.setInstanceId(instanceId);
             static_cast<void>(container.emplace_back(&proxy));
-            etl::sort(
+            ::etl::sort(
                 container.begin(), container.end(), TransceiverContainer::TransceiverComparator());
             res = HRESULT::Ok;
         }
@@ -65,7 +65,7 @@ DbManipulator::subscribe(
                 bool addressNotFound = true;
                 while (addressNotFound)
                 {
-                    auto const* it = etl::find_if(
+                    auto const* it = ::etl::find_if(
                         range.first,
                         range.second,
                         [&containerIt](TransceiverBase const* const itrx)
@@ -83,7 +83,7 @@ DbManipulator::subscribe(
                 }
                 proxy.setInstanceId(instanceId);
                 static_cast<void>(container.emplace_back(&proxy));
-                etl::sort(
+                ::etl::sort(
                     container.begin(),
                     container.end(),
                     TransceiverContainer::TransceiverComparator());
@@ -108,12 +108,12 @@ void DbManipulator::unsubscribe(
     if (containerIt != end)
     {
         auto& container  = *containerIt->_container;
-        auto const range = etl::equal_range(
+        auto const range = ::etl::equal_range(
             container.cbegin(),
             container.cend(),
             &transceiver,
             TransceiverContainer::TransceiverComparator());
-        auto const* it = etl::find_if(
+        auto const* it = ::etl::find_if(
             range.first,
             range.second,
             [&transceiver](TransceiverBase const* const itrx)
@@ -147,7 +147,7 @@ DbManipulator::subscribe(
             // update instance id
             skeleton.setInstanceId(instanceId);
             static_cast<void>(container.emplace_back(&skeleton));
-            etl::sort(
+            ::etl::sort(
                 container.begin(), container.end(), TransceiverContainer::TransceiverComparator());
             res = HRESULT::InstanceAlreadyRegistered;
         }
@@ -168,7 +168,7 @@ DbManipulator::subscribe(
                 {
                     skeleton.setInstanceId(instanceId);
                     static_cast<void>(container.emplace_back(&skeleton));
-                    etl::sort(
+                    ::etl::sort(
                         container.begin(),
                         container.end(),
                         TransceiverContainer::TransceiverComparator());
@@ -202,7 +202,7 @@ TransceiverContainer const* DbManipulator::getTransceiversByServiceId(
     middleware::core::meta::TransceiverContainer const* const end,
     uint16_t const serviceId)
 {
-    auto const* it = etl::lower_bound(
+    auto const* it = ::etl::lower_bound(
         start,
         end,
         TransceiverContainer{nullptr, serviceId, 0U},
@@ -216,9 +216,9 @@ TransceiverContainer const* DbManipulator::getTransceiversByServiceId(
     return end;
 }
 
-etl::pair<
-    etl::ivector<TransceiverBase*>::const_iterator,
-    etl::ivector<TransceiverBase*>::const_iterator>
+::etl::pair<
+    ::etl::ivector<TransceiverBase*>::const_iterator,
+    ::etl::ivector<TransceiverBase*>::const_iterator>
 DbManipulator::getTransceiversByServiceIdAndServiceInstanceId(
     middleware::core::meta::TransceiverContainer const* const start,
     middleware::core::meta::TransceiverContainer const* const end,
@@ -229,14 +229,14 @@ DbManipulator::getTransceiversByServiceIdAndServiceInstanceId(
     if (transceiversById != end)
     {
         internal::DummyTransceiver const dummy(instanceId);
-        return etl::equal_range(
+        return ::etl::equal_range(
             transceiversById->_container->cbegin(),
             transceiversById->_container->cend(),
             &dummy,
             TransceiverContainer::TransceiverComparatorNoAddressId());
     }
 
-    return etl::make_pair(start->_container->cbegin(), start->_container->cbegin());
+    return ::etl::make_pair(start->_container->cbegin(), start->_container->cbegin());
 }
 
 TransceiverBase* DbManipulator::getSkeletonByServiceIdAndServiceInstanceId(
@@ -249,7 +249,7 @@ TransceiverBase* DbManipulator::getSkeletonByServiceIdAndServiceInstanceId(
     if (transceiversById != end)
     {
         internal::DummyTransceiver const dummy(instanceId);
-        auto const range = etl::equal_range(
+        auto const range = ::etl::equal_range(
             transceiversById->_container->cbegin(),
             transceiversById->_container->cend(),
             &dummy,
@@ -263,10 +263,10 @@ TransceiverBase* DbManipulator::getSkeletonByServiceIdAndServiceInstanceId(
     return nullptr;
 }
 
-etl::ivector<TransceiverBase*>::iterator DbManipulator::findTransceiver(
-    TransceiverBase* const& transceiver, etl::ivector<TransceiverBase*>& container)
+::etl::ivector<TransceiverBase*>::iterator DbManipulator::findTransceiver(
+    TransceiverBase* const& transceiver, ::etl::ivector<TransceiverBase*>& container)
 {
-    auto* it = etl::lower_bound(
+    auto* it = ::etl::lower_bound(
         container.begin(),
         container.end(),
         transceiver,
@@ -282,10 +282,10 @@ etl::ivector<TransceiverBase*>::iterator DbManipulator::findTransceiver(
 }
 
 bool DbManipulator::isSkeletonWithServiceInstanceIdRegistered(
-    etl::ivector<TransceiverBase*> const& container, uint16_t const instanceId)
+    ::etl::ivector<TransceiverBase*> const& container, uint16_t const instanceId)
 {
     internal::DummyTransceiver const dummy(instanceId);
-    auto const range = etl::equal_range(
+    auto const range = ::etl::equal_range(
         container.cbegin(),
         container.cend(),
         &dummy,
@@ -304,7 +304,7 @@ TransceiverBase* DbManipulator::getTransceiver(
     if (containerIt != end)
     {
         internal::DummyTransceiver const dummy(instanceId, addressId);
-        auto const* it = etl::lower_bound(
+        auto const* it = ::etl::lower_bound(
             containerIt->_container->cbegin(),
             containerIt->_container->cend(),
             &dummy,

@@ -55,22 +55,24 @@ struct CallbackHelper;
  * Partial specialization of CallbackHelper with non-void ArgumentType.
  */
 template<typename ArgumentType>
-struct CallbackHelper<ArgumentType, etl::enable_if_t<(etl::is_void<ArgumentType>::value == false)>>
+struct CallbackHelper<
+    ArgumentType,
+    ::etl::enable_if_t<(::etl::is_void<ArgumentType>::value == false)>>
 {
-    using Result   = ::etl::expected<etl::reference_wrapper<ArgumentType const>, Future::State>;
+    using Result   = ::etl::expected<::etl::reference_wrapper<ArgumentType const>, Future::State>;
     using Callback = ::etl::delegate<void(Result const&)>;
 
     static void call(Callback const& callback, Message const& msg, Future::State const state)
     {
         if (state != Future::State::Ready)
         {
-            callback.call_if(etl::unexpected<Future::State>(etl::in_place_t{}, state));
+            callback.call_if(::etl::unexpected<Future::State>(::etl::in_place_t{}, state));
         }
         else
         {
             callback.call_if(Result(
-                etl::in_place_t{},
-                etl::cref(MessagePayloadBuilder::getInstance().readPayload<ArgumentType>(msg))));
+                ::etl::in_place_t{},
+                ::etl::cref(MessagePayloadBuilder::getInstance().readPayload<ArgumentType>(msg))));
         }
     }
 };
@@ -79,20 +81,20 @@ struct CallbackHelper<ArgumentType, etl::enable_if_t<(etl::is_void<ArgumentType>
  * Partial specialization of CallbackHelper with void ArgumentType.
  */
 template<typename ArgumentType>
-struct CallbackHelper<ArgumentType, etl::enable_if_t<etl::is_void<ArgumentType>::value>>
+struct CallbackHelper<ArgumentType, ::etl::enable_if_t<::etl::is_void<ArgumentType>::value>>
 {
-    using Result   = etl::expected<void, Future::State>;
+    using Result   = ::etl::expected<void, Future::State>;
     using Callback = ::etl::delegate<void(Result const&)>;
 
     static void call(Callback const& callback, Message const& /* msg */, Future::State const state)
     {
         if (state != Future::State::Ready)
         {
-            callback.call_if(etl::unexpected<Future::State>(etl::in_place_t{}, state));
+            callback.call_if(::etl::unexpected<Future::State>(::etl::in_place_t{}, state));
         }
         else
         {
-            callback.call_if(etl::expected<void, Future::State>());
+            callback.call_if(::etl::expected<void, Future::State>());
         }
     }
 };
@@ -134,7 +136,7 @@ public:
      */
     void registerDefaultCallback(Callback const& cbk)
     {
-        etl::fill(_callbacks.begin(), _callbacks.end(), cbk);
+        ::etl::fill(_callbacks.begin(), _callbacks.end(), cbk);
     }
 
     /**
@@ -145,7 +147,7 @@ public:
      */
     void triggerCallback(Message const& msg, Future& future)
     {
-        Callback const& cbk = _callbacks[etl::distance(_futuresArray.begin(), &future)];
+        Callback const& cbk = _callbacks[::etl::distance(_futuresArray.begin(), &future)];
         internal::CallbackHelper<ArgumentType>::call(cbk, msg, future.state);
     }
 
@@ -154,20 +156,20 @@ public:
      * Only enabled when TIMEOUT_VALUE == 0.
      *
      * \param callback User callback to invoke when the response arrives or an error occurs
-     * \return RequestId on success, or etl::nullopt if no futures are available
+     * \return RequestId on success, or ::etl::nullopt if no futures are available
      */
     template<uint32_t TIMEOUT = Traits::TIMEOUT_VALUE>
-    typename etl::enable_if_t<TIMEOUT == 0U, etl::optional<uint16_t>>
+    typename ::etl::enable_if_t<TIMEOUT == 0U, ::etl::optional<uint16_t>>
     obtainRequestId(Callback const& callback)
     {
         uint16_t requestId{};
-        etl::optional<Future*> const ret = Base::obtainRequestId(requestId);
+        ::etl::optional<Future*> const ret = Base::obtainRequestId(requestId);
         if (ret.has_value())
         {
-            setCallback(etl::distance(_futuresArray.begin(), ret.value()), callback);
+            setCallback(::etl::distance(_futuresArray.begin(), ret.value()), callback);
             return ret.value()->requestId;
         }
-        return etl::nullopt;
+        return ::etl::nullopt;
     }
 
     /**
@@ -176,22 +178,22 @@ public:
      *
      * \param callback User callback to invoke when the response arrives, timeout occurs, or an
      *                 error happens
-     * \return RequestId on success, or etl::nullopt if no futures are available
+     * \return RequestId on success, or ::etl::nullopt if no futures are available
      */
     template<uint32_t TIMEOUT = Traits::TIMEOUT_VALUE>
-    typename etl::enable_if_t<(TIMEOUT > 0U), etl::optional<uint16_t>>
+    typename ::etl::enable_if_t<(TIMEOUT > 0U), ::etl::optional<uint16_t>>
     obtainRequestId(Callback const& callback)
     {
         uint16_t requestId{};
-        etl::optional<Future*> const ret = Base::obtainRequestId(requestId);
+        ::etl::optional<Future*> const ret = Base::obtainRequestId(requestId);
         if (ret.has_value())
         {
-            setCallback(etl::distance(_futuresArray.begin(), ret.value()), callback);
+            setCallback(::etl::distance(_futuresArray.begin(), ret.value()), callback);
             auto const now               = ::middleware::time::getCurrentTimeInMs();
             ret.value()->callerTimestamp = now;
             return ret.value()->requestId;
         }
-        return etl::nullopt;
+        return ::etl::nullopt;
     }
 
     /**
@@ -199,7 +201,7 @@ public:
      * Only enabled when TIMEOUT_VALUE > 0.
      */
     template<uint32_t TIMEOUT = Traits::TIMEOUT_VALUE>
-    typename etl::enable_if_t<(TIMEOUT > 0U)> updateTimeouts()
+    typename ::etl::enable_if_t<(TIMEOUT > 0U)> updateTimeouts()
     {
         auto const now = ::middleware::time::getCurrentTimeInMs();
         Base::updateTimeouts(now, Traits::TIMEOUT_VALUE);
@@ -216,7 +218,7 @@ public:
         if (future != nullptr)
         {
             internal::CallbackHelper<ArgumentType>::call(
-                _callbacks[etl::distance(_futuresArray.begin(), future)], msg, future->state);
+                _callbacks[::etl::distance(_futuresArray.begin(), future)], msg, future->state);
             future->state = Future::State::Invalid;
         }
     }
@@ -229,8 +231,8 @@ protected:
     void setCallback(uint8_t const index, Callback const callback) { _callbacks[index] = callback; }
 
 private:
-    etl::array<Future, REQUEST_LIMIT> _futuresArray;
-    etl::array<Callback, REQUEST_LIMIT> _callbacks;
+    ::etl::array<Future, REQUEST_LIMIT> _futuresArray;
+    ::etl::array<Callback, REQUEST_LIMIT> _callbacks;
 };
 
 } // namespace middleware::core

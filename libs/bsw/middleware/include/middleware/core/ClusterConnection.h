@@ -209,8 +209,8 @@ struct ClusterConnectionTypeSelector;
 template<typename T>
 struct ClusterConnectionTypeSelector<
     T,
-    typename etl::enable_if<
-        etl::is_base_of<IClusterConnectionConfigurationProxyOnly, T>::value>::type>
+    typename ::etl::enable_if<
+        ::etl::is_base_of<IClusterConnectionConfigurationProxyOnly, T>::value>::type>
 {
     /** The selected cluster connection type. */
     using type = ClusterConnectionNoTimeoutProxyOnly;
@@ -223,8 +223,8 @@ struct ClusterConnectionTypeSelector<
 template<typename T>
 struct ClusterConnectionTypeSelector<
     T,
-    typename etl::enable_if<
-        etl::is_base_of<IClusterConnectionConfigurationSkeletonOnly, T>::value>::type>
+    typename ::etl::enable_if<
+        ::etl::is_base_of<IClusterConnectionConfigurationSkeletonOnly, T>::value>::type>
 {
     /** The selected cluster connection type. */
     using type = ClusterConnectionNoTimeoutSkeletonOnly;
@@ -237,8 +237,8 @@ struct ClusterConnectionTypeSelector<
 template<typename T>
 struct ClusterConnectionTypeSelector<
     T,
-    typename etl::enable_if<
-        etl::is_base_of<IClusterConnectionConfigurationBidirectional, T>::value>::type>
+    typename ::etl::enable_if<
+        ::etl::is_base_of<IClusterConnectionConfigurationBidirectional, T>::value>::type>
 {
     /** The selected cluster connection type. */
     using type = ClusterConnectionNoTimeoutBidirectional;
@@ -251,8 +251,8 @@ struct ClusterConnectionTypeSelector<
 template<typename T>
 struct ClusterConnectionTypeSelector<
     T,
-    typename etl::enable_if<
-        etl::is_base_of<IClusterConnectionConfigurationProxyOnlyWithTimeout, T>::value>::type>
+    typename ::etl::enable_if<
+        ::etl::is_base_of<IClusterConnectionConfigurationProxyOnlyWithTimeout, T>::value>::type>
 {
     /** The selected cluster connection type. */
     using type = ClusterConnectionProxyOnlyWithTimeout;
@@ -265,8 +265,8 @@ struct ClusterConnectionTypeSelector<
 template<typename T>
 struct ClusterConnectionTypeSelector<
     T,
-    typename etl::enable_if<
-        etl::is_base_of<IClusterConnectionConfigurationSkeletonOnlyWithTimeout, T>::value>::type>
+    typename ::etl::enable_if<
+        ::etl::is_base_of<IClusterConnectionConfigurationSkeletonOnlyWithTimeout, T>::value>::type>
 {
     /** The selected cluster connection type. */
     using type = ClusterConnectionSkeletonOnlyWithTimeout;
@@ -279,8 +279,8 @@ struct ClusterConnectionTypeSelector<
 template<typename T>
 struct ClusterConnectionTypeSelector<
     T,
-    typename etl::enable_if<
-        etl::is_base_of<IClusterConnectionConfigurationBidirectionalWithTimeout, T>::value>::type>
+    typename ::etl::enable_if<
+        ::etl::is_base_of<IClusterConnectionConfigurationBidirectionalWithTimeout, T>::value>::type>
 {
     /** The selected cluster connection type. */
     using type = ClusterConnectionBidirectionalWithTimeout;

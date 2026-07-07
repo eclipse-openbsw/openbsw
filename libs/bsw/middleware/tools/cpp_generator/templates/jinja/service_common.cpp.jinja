@@ -96,9 +96,9 @@ class InstancesDatabase_Merged : public ::middleware::core::IInstanceDatabase
     }
 
   private:
-    static constexpr etl::array<const uint16_t, {{all_instance_ids | length}}U> fInstanceIds = {% if all_instance_ids -%}{ {{all_instance_ids | join('U, ')}}U }{%- else -%}{  }{%- endif %};
+    static constexpr ::etl::array<const uint16_t, {{all_instance_ids | length}}U> fInstanceIds = {% if all_instance_ids -%}{ {{all_instance_ids | join('U, ')}}U }{%- else -%}{  }{%- endif %};
     {% if all_proxy_connections %}
-    static constexpr etl::array<::middleware::core::IClusterConnection* const, {{all_proxy_connections | length}}U> fProxyConnections = {
+    static constexpr ::etl::array<::middleware::core::IClusterConnection* const, {{all_proxy_connections | length}}U> fProxyConnections = {
         {
         {%- for connection in all_proxy_connections %}
         &::middleware::ClusterConnection{{ connection.source_cluster.name }}To{{ connection.target_cluster.name }}{{ "," if not loop.last }}
@@ -108,7 +108,7 @@ class InstancesDatabase_Merged : public ::middleware::core::IInstanceDatabase
         };
     {% endif %}
     {% if all_skeleton_connections %}
-    static constexpr etl::array<::middleware::core::IClusterConnection* const, {{all_skeleton_connections | length}}U> fSkeletonConnections = {
+    static constexpr ::etl::array<::middleware::core::IClusterConnection* const, {{all_skeleton_connections | length}}U> fSkeletonConnections = {
         {
         {%- for connection in all_skeleton_connections %}
         &::middleware::ClusterConnection{{ connection.source_cluster.name }}To{{ connection.target_cluster.name }}{{ "," if not loop.last }}
@@ -120,16 +120,16 @@ class InstancesDatabase_Merged : public ::middleware::core::IInstanceDatabase
 };
 
 {% if all_proxy_connections %}
-constexpr etl::array<::middleware::core::IClusterConnection* const, {{all_proxy_connections | length}}U> InstancesDatabase_Merged::fProxyConnections;
+constexpr ::etl::array<::middleware::core::IClusterConnection* const, {{all_proxy_connections | length}}U> InstancesDatabase_Merged::fProxyConnections;
 {% endif %}
 {% if all_skeleton_connections %}
-constexpr etl::array<::middleware::core::IClusterConnection* const, {{all_skeleton_connections | length}}U> InstancesDatabase_Merged::fSkeletonConnections;
+constexpr ::etl::array<::middleware::core::IClusterConnection* const, {{all_skeleton_connections | length}}U> InstancesDatabase_Merged::fSkeletonConnections;
 {% endif %}
-constexpr etl::array<const uint16_t, {{all_instance_ids | length}}U> InstancesDatabase_Merged::fInstanceIds;
+constexpr ::etl::array<const uint16_t, {{all_instance_ids | length}}U> InstancesDatabase_Merged::fInstanceIds;
 
 constexpr InstancesDatabase_Merged _InstancesDatabase_Merged;
 
-constexpr etl::array<const ::middleware::core::IInstanceDatabase* const, 1U> instancesDatabase{
+constexpr ::etl::array<const ::middleware::core::IInstanceDatabase* const, 1U> instancesDatabase{
     &_InstancesDatabase_Merged
 };
 

@@ -69,7 +69,7 @@ extern void log(LogLevel level, char const* f, ...);
  * \param level the log level for this data
  * \param data span containing the binary data to log
  */
-extern void logBinary(LogLevel level, etl::span<uint8_t const> data);
+extern void logBinary(LogLevel level, ::etl::span<uint8_t const> data);
 
 /**
  * Get the message ID associated with an error type.

@@ -28,7 +28,7 @@ namespace middleware::core
 template<typename... T>
 struct InheritanceDelegate : T...
 {
-    InheritanceDelegate(ProxyBase& proxy) : T(proxy)... {};
+    InheritanceDelegate(ProxyBase& proxy) : T(proxy)... {}
 };
 
 /// Enumeration of attribute configurations for proxy attributes.
@@ -72,7 +72,7 @@ struct ProxyAttributeBaseSelector<
     ValueType,
     GetterTraits,
     REQUEST_LIMIT,
-    typename etl::enable_if<
+    typename ::etl::enable_if<
         (Type == AttributeType::ReadOnly_NoSubscription) || (Type == AttributeType::NoSubscriptions)
         || (Type == AttributeType::NoSubscriptions_SetAsMethod)>::type>
 {
@@ -91,7 +91,7 @@ struct ProxyAttributeBaseSelector<
     ValueType,
     GetterTraits,
     REQUEST_LIMIT,
-    typename etl::enable_if<
+    typename ::etl::enable_if<
         (Type == AttributeType::ReadOnly) || (Type == AttributeType::FullyFeatured)
         || (Type == AttributeType::FullyFeatured_SetAsMethod)>::type>
 {
@@ -130,7 +130,7 @@ class ProxyAttribute<
     SetterTraits,
     Type,
     ValueType,
-    typename etl::enable_if<
+    typename ::etl::enable_if<
         (Type == AttributeType::ReadOnly_NoSubscription) || (Type == AttributeType::ReadOnly)
         || (Type == AttributeType::NoSubscriptions)
         || (Type == AttributeType::FullyFeatured)>::type>
@@ -152,9 +152,9 @@ public:
      * \return RequestId on success, or HRESULT on failure
      */
     template<AttributeType T = Type>
-    typename etl::enable_if<
+    typename ::etl::enable_if<
         (T == AttributeType::NoSubscriptions) || (T == AttributeType::FullyFeatured),
-        etl::expected<uint16_t, HRESULT>>::type
+        ::etl::expected<uint16_t, HRESULT>>::type
     set(ValueType const& payload)
     {
         HRESULT ret = HRESULT::NotRegistered;
@@ -168,13 +168,13 @@ public:
                 if (ret != HRESULT::Ok)
                 {
                     MessagePayloadBuilder::deallocate(msg);
-                    return etl::unexpected<HRESULT>(etl::in_place_t{}, ret);
+                    return ::etl::unexpected<HRESULT>(::etl::in_place_t{}, ret);
                 }
                 return msg.getHeader().requestId;
             }
         }
 
-        return etl::unexpected<HRESULT>(etl::in_place_t{}, ret);
+        return ::etl::unexpected<HRESULT>(::etl::in_place_t{}, ret);
     }
 };
 
@@ -198,7 +198,7 @@ class ProxyAttribute<
     SetterTraits,
     Type,
     ValueType,
-    typename etl::enable_if<
+    typename ::etl::enable_if<
         (Type == AttributeType::NoSubscriptions_SetAsMethod)
         || (Type == AttributeType::FullyFeatured_SetAsMethod)>::type>
 : public ProxyAttributeBaseSelector<Proxy, Type, ValueType, GetterTraits, REQUEST_LIMIT>::type
@@ -218,7 +218,7 @@ public:
     /**
      * Dispatches an incoming getter response message to the getter dispatcher.
      */
-    typename etl::enable_if<!etl::is_void<GetterTraits>::value, void>::type
+    typename ::etl::enable_if<!::etl::is_void<GetterTraits>::value, void>::type
     answerGetterRequest(Message const& msg)
     {
         Base::answerGetterRequest(msg);
@@ -232,7 +232,7 @@ public:
     /**
      * Cancels an in-flight getter request.
      */
-    typename etl::enable_if<!etl::is_void<GetterTraits>::value, HRESULT>::type
+    typename ::etl::enable_if<!::etl::is_void<GetterTraits>::value, HRESULT>::type
     cancelGetterRequest(uint16_t const requestId)
     {
         return Base::cancelGetterRequest(requestId);
@@ -250,7 +250,7 @@ public:
      * Cancels an in-flight setter request when no getter interface is present.
      */
     template<typename T = GetterTraits>
-    typename etl::enable_if<etl::is_void<T>::value, HRESULT>::type
+    typename ::etl::enable_if<::etl::is_void<T>::value, HRESULT>::type
     cancelRequest(uint16_t const reqId)
     {
         return _setDispatcher.cancelRequest(reqId);
@@ -260,8 +260,8 @@ public:
      * Updates timeout tracking for setter and getter dispatchers when enabled.
      */
     template<typename T = GetterTraits>
-    typename etl::
-        enable_if<(!etl::is_void<T>::value) && (SetterTraits::TIMEOUT_VALUE != 0U), void>::type
+    typename ::etl::
+        enable_if<(!::etl::is_void<T>::value) && (SetterTraits::TIMEOUT_VALUE != 0U), void>::type
         updateTimeouts()
     {
         _setDispatcher.updateTimeouts();
@@ -272,8 +272,8 @@ public:
      * Updates timeout tracking for setter dispatcher only when enabled.
      */
     template<typename T = GetterTraits>
-    typename etl::enable_if<(etl::is_void<T>::value) && (SetterTraits::TIMEOUT_VALUE != 0U), void>::
-        type
+    typename ::etl::
+        enable_if<(::etl::is_void<T>::value) && (SetterTraits::TIMEOUT_VALUE != 0U), void>::type
         updateTimeouts()
     {
         _setDispatcher.updateTimeouts();
@@ -283,7 +283,7 @@ public:
      * Releases all in-flight setter and getter requests.
      */
     template<typename T = GetterTraits>
-    typename etl::enable_if<!etl::is_void<T>::value, void>::type freeAll()
+    typename ::etl::enable_if<!::etl::is_void<T>::value, void>::type freeAll()
     {
         _setDispatcher.freeAll();
         Base::freeAll();
@@ -293,7 +293,7 @@ public:
      * Releases all in-flight setter requests when no getter interface is present.
      */
     template<typename T = GetterTraits>
-    typename etl::enable_if<etl::is_void<T>::value, void>::type freeAll()
+    typename ::etl::enable_if<::etl::is_void<T>::value, void>::type freeAll()
     {
         _setDispatcher.freeAll();
     }
@@ -305,15 +305,15 @@ public:
      * \param cbk Callback invoked when the response is received or fails
      * \return RequestId on success, or HRESULT on failure
      */
-    etl::expected<uint16_t, HRESULT>
+    ::etl::expected<uint16_t, HRESULT>
     set(SetterArgumentType const& payload, SetterCallback const& cbk)
     {
-        etl::expected<uint16_t, HRESULT> result
-            = etl::unexpected<HRESULT>(etl::in_place_t{}, HRESULT::NotRegistered);
+        ::etl::expected<uint16_t, HRESULT> result
+            = ::etl::unexpected<HRESULT>(::etl::in_place_t{}, HRESULT::NotRegistered);
 
         if (Base::_proxy->isInitialized())
         {
-            etl::optional<uint16_t> reqId = _setDispatcher.obtainRequestId(cbk);
+            ::etl::optional<uint16_t> reqId = _setDispatcher.obtainRequestId(cbk);
             if (reqId.has_value())
             {
                 Message msg = Base::_proxy->generateMessageHeader(
@@ -331,12 +331,12 @@ public:
                         MessagePayloadBuilder::deallocate(msg);
                         logger::logMessageSendingFailure(
                             logger::LogLevel::Error, logger::Error::SendMessage, res, msg);
-                        result = etl::unexpected<HRESULT>(etl::in_place_t{}, res);
+                        result = ::etl::unexpected<HRESULT>(::etl::in_place_t{}, res);
                     }
                 }
                 else
                 {
-                    result = etl::unexpected<HRESULT>(etl::in_place_t{}, res);
+                    result = ::etl::unexpected<HRESULT>(::etl::in_place_t{}, res);
                 }
 
                 if (!result.has_value())
@@ -346,7 +346,8 @@ public:
             }
             else
             {
-                result = etl::unexpected<HRESULT>(etl::in_place_t{}, HRESULT::RequestPoolDepleted);
+                result
+                    = ::etl::unexpected<HRESULT>(::etl::in_place_t{}, HRESULT::RequestPoolDepleted);
             }
         }
 

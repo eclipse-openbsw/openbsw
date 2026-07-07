@@ -46,7 +46,7 @@ void log(LogLevel const level, char const* const f, ...)
     }
 }
 
-void logBinary(LogLevel const level, etl::span<uint8_t const> const data)
+void logBinary(LogLevel const level, ::etl::span<uint8_t const> const data)
 {
     (void)level;
     (void)data;

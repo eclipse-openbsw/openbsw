@@ -48,13 +48,13 @@ public:
      * \param attrCb Callback invoked with either the attribute value or an error state
      * \return RequestId on success, or HRESULT on failure
      */
-    etl::expected<uint16_t, HRESULT> get(GetterCallback const& attrCb) noexcept
+    ::etl::expected<uint16_t, HRESULT> get(GetterCallback const& attrCb) noexcept
     {
-        etl::expected<uint16_t, HRESULT> ret{etl::unexpected<HRESULT>{HRESULT::NotRegistered}};
+        ::etl::expected<uint16_t, HRESULT> ret{::etl::unexpected<HRESULT>{HRESULT::NotRegistered}};
 
         if (_proxy->isInitialized())
         {
-            etl::optional<uint16_t> const reqId = _getDispatcher.obtainRequestId(attrCb);
+            ::etl::optional<uint16_t> const reqId = _getDispatcher.obtainRequestId(attrCb);
             if (reqId.has_value())
             {
                 Message msg = _proxy->generateMessageHeader(
@@ -67,14 +67,14 @@ public:
                 else
                 {
                     static_cast<void>(_getDispatcher.cancelRequest(reqId.value()));
-                    ret = etl::unexpected<HRESULT>{sendResult};
+                    ret = ::etl::unexpected<HRESULT>{sendResult};
                     logger::logMessageSendingFailure(
                         logger::LogLevel::Error, logger::Error::SendMessage, ret.error(), msg);
                 }
             }
             else
             {
-                ret = etl::unexpected<HRESULT>{HRESULT::RequestPoolDepleted};
+                ret = ::etl::unexpected<HRESULT>{HRESULT::RequestPoolDepleted};
             }
         }
         return ret;
@@ -90,7 +90,7 @@ public:
      * Only enabled when TIMEOUT_VALUE > 0.
      */
     template<typename T = DispatcherTraits>
-    typename etl::enable_if<(T::TIMEOUT_VALUE > 0U), void>::type updateTimeouts()
+    typename ::etl::enable_if<(T::TIMEOUT_VALUE > 0U), void>::type updateTimeouts()
     {
         _getDispatcher.updateTimeouts();
     }

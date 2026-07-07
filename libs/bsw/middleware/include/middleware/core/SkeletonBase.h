@@ -59,7 +59,7 @@ public:
     uint8_t getSourceClusterId() const final;
 
     /** Returns the span of cluster connections for this skeleton. */
-    etl::span<IClusterConnection* const> const& getClusterConnections() const;
+    ::etl::span<IClusterConnection* const> const& getClusterConnections() const;
 
 protected:
     virtual ~SkeletonBase();
@@ -86,10 +86,10 @@ protected:
      * \return HRESULT indicating success or failure of the initialization
      */
     HRESULT initFromInstancesDatabase(
-        uint16_t instanceId, etl::span<IInstanceDatabase const* const> const& dbRange);
+        uint16_t instanceId, ::etl::span<IInstanceDatabase const* const> const& dbRange);
 
     /** Span of cluster connections for this skeleton. */
-    etl::span<IClusterConnection* const> _connections;
+    ::etl::span<IClusterConnection* const> _connections;
 
 private:
     /** Returns INVALID_ADDRESS_ID (skeletons do not use address IDs). */

@@ -35,7 +35,7 @@ public:
     HRESULT init(uint16_t instanceId, uint8_t clusterId)
     {
         return ProxyBase::initFromInstancesDatabase(
-            instanceId, clusterId, etl::span<IInstanceDatabase const* const>(INSTANCESDATABASE));
+            instanceId, clusterId, ::etl::span<IInstanceDatabase const* const>(INSTANCESDATABASE));
     }
 
     uint8_t getProxySourceClusterId() { return ProxyBase::getSourceClusterId(); }

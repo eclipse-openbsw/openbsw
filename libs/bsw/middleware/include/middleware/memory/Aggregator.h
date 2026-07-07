@@ -32,9 +32,9 @@ template<typename... T>
 class Aggregator : public memory::AllocatorBase<Aggregator<T...>>
 {
     using TupleType = typename ::middleware::impl::
-        TupleSelectionSort<::middleware::impl::Ascending, etl::tuple<T...>>::type;
+        TupleSelectionSort<::middleware::impl::Ascending, ::etl::tuple<T...>>::type;
 
-    static size_t const TUPLE_SIZE = etl::tuple_size<TupleType>::value;
+    static size_t const TUPLE_SIZE = ::etl::tuple_size<TupleType>::value;
 
     TupleType _pools;
 
@@ -51,7 +51,7 @@ class Aggregator : public memory::AllocatorBase<Aggregator<T...>>
 
         uint8_t* allocate(uint32_t const size, PoolStats* poolStats = nullptr)
         {
-            auto& currentPool  = etl::get<I>(_tuplePools);
+            auto& currentPool  = ::etl::get<I>(_tuplePools);
             uint8_t* const ptr = currentPool.allocate(size);
             if (ptr != nullptr)
             {
@@ -70,7 +70,7 @@ class Aggregator : public memory::AllocatorBase<Aggregator<T...>>
 
         void deallocate(void* const ptr)
         {
-            auto& pool = etl::get<I>(_tuplePools);
+            auto& pool = ::etl::get<I>(_tuplePools);
             if (pool.deallocate(ptr))
             {
                 return;
@@ -80,7 +80,7 @@ class Aggregator : public memory::AllocatorBase<Aggregator<T...>>
 
         bool isPtrValid(void const* const ptr)
         {
-            auto& pool                     = etl::get<I>(_tuplePools);
+            auto& pool                     = ::etl::get<I>(_tuplePools);
             uint8_t const* const bufferPtr = reinterpret_cast<uint8_t const*>(ptr); // NOLINT
             if (pool.isValidPointer(bufferPtr))
             {
@@ -89,9 +89,9 @@ class Aggregator : public memory::AllocatorBase<Aggregator<T...>>
             return TryDo<Tuple, I + 1U>(_tuplePools).isPtrValid(ptr);
         }
 
-        void collectStats(etl::delegate<void(size_t const, PoolStats const)> const& collector)
+        void collectStats(::etl::delegate<void(size_t const, PoolStats const)> const& collector)
         {
-            auto& pool            = etl::get<I>(_tuplePools);
+            auto& pool            = ::etl::get<I>(_tuplePools);
             PoolStats const stats = pool.getPoolStats();
             collector(I, stats);
             pool.resetStats();
@@ -100,7 +100,7 @@ class Aggregator : public memory::AllocatorBase<Aggregator<T...>>
 
         void initialize()
         {
-            auto& pool = etl::get<I>(_tuplePools);
+            auto& pool = ::etl::get<I>(_tuplePools);
             pool.initialize();
             TryDo<Tuple, I + 1U>(_tuplePools).initialize();
         }
@@ -128,7 +128,7 @@ class Aggregator : public memory::AllocatorBase<Aggregator<T...>>
 
         bool isPtrValid(void const* const) { return false; }
 
-        void collectStats(etl::delegate<void(size_t const, PoolStats const)> const&) {}
+        void collectStats(::etl::delegate<void(size_t const, PoolStats const)> const&) {}
 
         void initialize() {}
     };
@@ -183,14 +183,14 @@ public:
     uint8_t* regionStartImpl()
     {
         return reinterpret_cast<uint8_t*>( // NOLINT
-            etl::addressof(etl::get<0U>(_pools)));
+            ::etl::addressof(::etl::get<0U>(_pools)));
     }
 
     /** Finds the best-fitting pool by object type. */
     template<typename U>
     struct PoolByType
     {
-        using type = typename etl::tuple_element<
+        using type = typename ::etl::tuple_element<
             impl::PoolIndexBySize<static_cast<uint32_t>(sizeof(U)), TupleType>::value,
             TupleType>::type;
     };
@@ -199,11 +199,11 @@ public:
     template<uint32_t S>
     PoolBase* getPool()
     {
-        return &(etl::get<impl::PoolIndexBySize<S, TupleType>::value>(_pools));
+        return &(::etl::get<impl::PoolIndexBySize<S, TupleType>::value>(_pools));
     }
 
     /** Collects and resets statistics from all pools. */
-    void collectStats(etl::delegate<void(size_t const, PoolStats const)> const& collector)
+    void collectStats(::etl::delegate<void(size_t const, PoolStats const)> const& collector)
     {
         TryDo<TupleType, 0>(_pools).collectStats(collector);
     }

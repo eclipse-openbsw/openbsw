@@ -70,7 +70,7 @@ public:
      */
     union PayloadType
     {
-        etl::array<uint8_t, MAX_PAYLOAD_SIZE> internalBuffer{};
+        ::etl::array<uint8_t, MAX_PAYLOAD_SIZE> internalBuffer{};
         ptrdiff_t offset;
         ErrorState error;
     };
@@ -279,9 +279,9 @@ public:
         static_assert(
             sizeof(T) <= MAX_PAYLOAD_SIZE,
             "Size of type T must be less than or equal to MAX_PAYLOAD_SIZE");
-        static_assert(etl::is_copy_constructible<T>::value, "T must have a copy constructor!");
+        static_assert(::etl::is_copy_constructible<T>::value, "T must have a copy constructor!");
 
-        return etl::get_object_at<T const>(_payload.internalBuffer.data());
+        return ::etl::get_object_at<T const>(_payload.internalBuffer.data());
     }
 
     /**
@@ -296,10 +296,10 @@ public:
     {
         static_assert(
             sizeof(T) <= MAX_PAYLOAD_SIZE, "Size of type T must be smaller than MAX_PAYLOAD_SIZE!");
-        static_assert(etl::is_copy_constructible<T>::value, "T must have a copy constructor!");
+        static_assert(::etl::is_copy_constructible<T>::value, "T must have a copy constructor!");
 
         _header.hasExternalPayload = false;
-        etl::construct_object_at(_payload.internalBuffer.data(), obj);
+        ::etl::construct_object_at(_payload.internalBuffer.data(), obj);
         _size = sizeof(T);
     }
 
@@ -308,12 +308,12 @@ public:
      *
      * \param span Span of const bytes to copy
      */
-    void copyRawBytesToPayload(etl::span<uint8_t const> const span)
+    void copyRawBytesToPayload(::etl::span<uint8_t const> const span)
     {
         _header.hasExternalPayload = false;
         size_t const dataSize
             = span.size_bytes() < MAX_PAYLOAD_SIZE ? span.size_bytes() : MAX_PAYLOAD_SIZE;
-        etl::mem_copy(span.data(), dataSize, _payload.internalBuffer.data());
+        ::etl::mem_copy(span.data(), dataSize, _payload.internalBuffer.data());
         _size = static_cast<uint32_t>(dataSize);
     }
 
@@ -322,11 +322,11 @@ public:
      * \remark This method assumes that the user has checked that the message
      * contains an external payload.
      *
-     * \return etl::pair<ptrdiff_t, uint32_t>  offset and size
+     * \return ::etl::pair<ptrdiff_t, uint32_t>  offset and size
      */
-    etl::pair<ptrdiff_t, uint32_t> getExternalPayload() const
+    ::etl::pair<ptrdiff_t, uint32_t> getExternalPayload() const
     {
-        return etl::make_pair(_payload.offset, _size);
+        return ::etl::make_pair(_payload.offset, _size);
     }
 
     /**
@@ -339,7 +339,7 @@ public:
     void setExternalPayload(ptrdiff_t const offset, uint32_t const size)
     {
         _header.hasExternalPayload = true;
-        etl::construct_object_at<ptrdiff_t>(&_payload.offset, offset);
+        ::etl::construct_object_at<ptrdiff_t>(&_payload.offset, offset);
         _size = size;
     }
 

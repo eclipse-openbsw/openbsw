@@ -85,13 +85,13 @@ public:
     ClusterConnection{{connection.source_cluster.name}}To{{connection.target_cluster.name}}Meta& operator=(ClusterConnection{{connection.source_cluster.name}}To{{connection.target_cluster.name}}Meta&&) = delete;
     ClusterConnection{{connection.source_cluster.name}}To{{connection.target_cluster.name}}Meta(ClusterConnection{{connection.source_cluster.name}}To{{connection.target_cluster.name}}Meta&&) = delete;
 
-    [[nodiscard]] uint8_t getSourceClusterId() const final { return etl::to_underlying(core::ClusterId::{{connection.source_cluster.name}}); }
+    [[nodiscard]] uint8_t getSourceClusterId() const final { return ::etl::to_underlying(core::ClusterId::{{connection.source_cluster.name}}); }
 
-    [[nodiscard]] uint8_t getTargetClusterId() const final { return etl::to_underlying(core::ClusterId::{{connection.target_cluster.name}}); }
+    [[nodiscard]] uint8_t getTargetClusterId() const final { return ::etl::to_underlying(core::ClusterId::{{connection.target_cluster.name}}); }
 
     [[nodiscard]] bool write(const core::Message& msg) const final
     {
-        etl::remove_pointer<decltype(::middleware::shm::getQueueTo{{connection.target_cluster.name}}())>::type::Sender sender(*::middleware::shm::getQueueTo{{connection.target_cluster.name}}());
+        ::etl::remove_pointer<decltype(::middleware::shm::getQueueTo{{connection.target_cluster.name}}())>::type::Sender sender(*::middleware::shm::getQueueTo{{connection.target_cluster.name}}());
         return sender.write(msg);
     }
 
@@ -174,19 +174,19 @@ public:
 
   private:
     {% for proxy in connection.proxies %}
-    etl::vector<core::TransceiverBase*, {{proxy.max_instances}}U> {{proxy.namespace|replace("::", "")}}{{proxy.name}}ProxyTransceivers_;
+    ::etl::vector<core::TransceiverBase*, {{proxy.max_instances}}U> {{proxy.namespace|replace("::", "")}}{{proxy.name}}ProxyTransceivers_;
     {% endfor %}
     {% for skeleton in connection.skeletons %}
-    etl::vector<core::TransceiverBase*, {{skeleton.max_instances}}U> {{skeleton.namespace|replace("::", "")}}{{skeleton.name}}SkeletonTransceivers_;
+    ::etl::vector<core::TransceiverBase*, {{skeleton.max_instances}}U> {{skeleton.namespace|replace("::", "")}}{{skeleton.name}}SkeletonTransceivers_;
     {% endfor %}
     {% if connection.has_timeouts %}
-    etl::vector<core::ITimeoutHandler*, {{connection.proxies|length}}U> timeoutTransceivers_;
+    ::etl::vector<core::ITimeoutHandler*, {{connection.proxies|length}}U> timeoutTransceivers_;
     {% endif %}
     {% if connection.proxies|length > 0 %}
-    etl::array<core::meta::TransceiverContainer, {{connection.proxies|length}}U> proxyTransceivers_;
+    ::etl::array<core::meta::TransceiverContainer, {{connection.proxies|length}}U> proxyTransceivers_;
     {% endif %}
     {% if connection.skeletons|length > 0 %}
-    etl::array<core::meta::TransceiverContainer, {{connection.skeletons|length}}U> skeletonTransceivers_;
+    ::etl::array<core::meta::TransceiverContainer, {{connection.skeletons|length}}U> skeletonTransceivers_;
     {% endif %}
 };
 

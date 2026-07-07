@@ -49,7 +49,7 @@ private:
     uint8_t volatile _dummyMutex{};
 
     static AllocatorMock* _instance;
-    static etl::array<uint8_t, MAX_STORAGE> _storage;
+    static ::etl::array<uint8_t, MAX_STORAGE> _storage;
 };
 
 } // namespace middleware::memory::test

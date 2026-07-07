@@ -56,7 +56,7 @@ public:
     using Base               = ResponseBufferBase;
     using ResponseTraitsType = Traits;
     using ResponseType       = typename Traits::ResponseType;
-    using ResponseContainer  = etl::vector<Base::SkeletonResponseInfo, RESPONSE_LIMIT>;
+    using ResponseContainer  = ::etl::vector<Base::SkeletonResponseInfo, RESPONSE_LIMIT>;
 
     ResponseBuffer(SkeletonBase const& skeleton) : Base(skeleton, _responses) {}
 

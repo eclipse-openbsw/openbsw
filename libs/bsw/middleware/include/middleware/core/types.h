@@ -20,15 +20,15 @@ namespace middleware::core
 {
 
 ETL_INLINE_VAR constexpr uint16_t MAX_METHOD_ID       = 128U;
-ETL_INLINE_VAR constexpr uint8_t INVALID_CLUSTER_ID   = etl::numeric_limits<uint8_t>::max();
-ETL_INLINE_VAR constexpr uint16_t INVALID_SERVICE_ID  = etl::numeric_limits<uint16_t>::max();
-ETL_INLINE_VAR constexpr uint16_t INVALID_INSTANCE_ID = etl::numeric_limits<uint16_t>::max();
-ETL_INLINE_VAR constexpr uint16_t INVALID_REQUEST_ID  = etl::numeric_limits<uint16_t>::max();
-ETL_INLINE_VAR constexpr uint8_t INVALID_ADDRESS_ID   = etl::numeric_limits<uint8_t>::max();
+ETL_INLINE_VAR constexpr uint8_t INVALID_CLUSTER_ID   = ::etl::numeric_limits<uint8_t>::max();
+ETL_INLINE_VAR constexpr uint16_t INVALID_SERVICE_ID  = ::etl::numeric_limits<uint16_t>::max();
+ETL_INLINE_VAR constexpr uint16_t INVALID_INSTANCE_ID = ::etl::numeric_limits<uint16_t>::max();
+ETL_INLINE_VAR constexpr uint16_t INVALID_REQUEST_ID  = ::etl::numeric_limits<uint16_t>::max();
+ETL_INLINE_VAR constexpr uint8_t INVALID_ADDRESS_ID   = ::etl::numeric_limits<uint8_t>::max();
 ETL_INLINE_VAR constexpr uint16_t FUTURE_DISPATCHER_OFFSET
     = static_cast<uint16_t>(sizeof(uint32_t) * 8U);
-ETL_INLINE_VAR constexpr uint32_t INVALID_TASK_ID   = etl::numeric_limits<uint32_t>::max();
-ETL_INLINE_VAR constexpr uint16_t INVALID_MEMBER_ID = etl::numeric_limits<uint16_t>::max();
+ETL_INLINE_VAR constexpr uint32_t INVALID_TASK_ID   = ::etl::numeric_limits<uint32_t>::max();
+ETL_INLINE_VAR constexpr uint16_t INVALID_MEMBER_ID = ::etl::numeric_limits<uint16_t>::max();
 
 enum class ErrorState : uint8_t
 {
@@ -83,12 +83,12 @@ struct AbsoluteToleranceEqual
 {
     constexpr bool operator()(double const x, double const y) const
     {
-        return std::fabs(x - y) <= etl::numeric_limits<double>::min();
+        return std::fabs(x - y) <= ::etl::numeric_limits<double>::min();
     }
 
     constexpr bool operator()(float const x, float const y) const
     {
-        return std::fabs(x - y) <= etl::numeric_limits<float>::min();
+        return std::fabs(x - y) <= ::etl::numeric_limits<float>::min();
     }
 };
 

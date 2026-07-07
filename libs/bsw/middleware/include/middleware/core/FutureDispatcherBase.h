@@ -62,17 +62,17 @@ public:
     void freeAll();
 
 protected:
-    using CallbackDispatcher = etl::delegate<void(Message const&, Future&)>;
+    using CallbackDispatcher = ::etl::delegate<void(Message const&, Future&)>;
 
     /**
      * Allocates a future and generates a unique request ID.
      *
      * \param requestId Output parameter receiving the allocated request ID
-     * \return etl::optional containing pointer to allocated future, or etl::nullopt
+     * \return ::etl::optional containing pointer to allocated future, or ::etl::nullopt
      */
-    etl::optional<Future*> obtainRequestId(uint16_t& requestId);
+    ::etl::optional<Future*> obtainRequestId(uint16_t& requestId);
 
-    FutureDispatcherBase(etl::span<Future> const futures, CallbackDispatcher const cbk)
+    FutureDispatcherBase(::etl::span<Future> const futures, CallbackDispatcher const cbk)
     : _futures(futures), _callback(cbk), _currentRequestId(INVALID_REQUEST_ID)
     {}
 
@@ -89,7 +89,7 @@ protected:
 private:
     uint16_t getRequestId();
 
-    etl::span<Future> _futures;
+    ::etl::span<Future> _futures;
     CallbackDispatcher _callback;
     uint16_t _currentRequestId;
 };

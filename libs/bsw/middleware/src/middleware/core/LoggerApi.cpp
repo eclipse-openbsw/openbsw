@@ -25,22 +25,22 @@ namespace middleware::logger
 namespace
 {
 
-void serialize(etl::byte_stream_writer& writer, uint8_t const value)
+void serialize(::etl::byte_stream_writer& writer, uint8_t const value)
 {
     writer.write_unchecked(value);
 }
 
-void serialize(etl::byte_stream_writer& writer, uint16_t const value)
+void serialize(::etl::byte_stream_writer& writer, uint16_t const value)
 {
     writer.write_unchecked(value);
 }
 
-void serialize(etl::byte_stream_writer& writer, uint32_t const value)
+void serialize(::etl::byte_stream_writer& writer, uint32_t const value)
 {
     writer.write_unchecked(value);
 }
 
-void serialize(etl::byte_stream_writer& writer, core::Message const& value)
+void serialize(::etl::byte_stream_writer& writer, core::Message const& value)
 {
     // NOLINTNEXTLINE(cppcoreguidelines-avoid-magic-numbers)
     static_assert(
@@ -55,14 +55,14 @@ void serialize(etl::byte_stream_writer& writer, core::Message const& value)
 }
 
 template<typename Value, typename... Values>
-void serialize(etl::byte_stream_writer& writer, Value value, Values... values)
+void serialize(::etl::byte_stream_writer& writer, Value value, Values... values)
 {
     serialize(writer, value);
     serialize(writer, values...);
 }
 
 template<uint32_t MAX_SIZE, typename... Values>
-void serialize(etl::byte_stream_writer& writer, Values... values)
+void serialize(::etl::byte_stream_writer& writer, Values... values)
 {
     static_assert(
         CountBytes<Values...>::VALUE == MAX_SIZE, "Total size in bytes exceeds the payload");
@@ -80,8 +80,8 @@ void logAllocationFailure(
 {
     static char const* const kformat = "e:%d r:%d SC:%d TC:%d S:%d I:%d M:%d R:%d s:%d";
 
-    etl::array<uint8_t, ALLOCATION_FAILURE_LOG_SIZE> temp{};
-    etl::byte_stream_writer writer{temp, etl::endian::native};
+    ::etl::array<uint8_t, ALLOCATION_FAILURE_LOG_SIZE> temp{};
+    ::etl::byte_stream_writer writer{temp, ::etl::endian::native};
     serialize<ALLOCATION_FAILURE_LOG_SIZE>(
         writer,
         getMessageId(error),
@@ -116,9 +116,9 @@ void logInitFailure(
 {
     static char const* const kformat = "e:%d r:%d SC:%d S:%d I:%d";
 
-    etl::array<uint8_t, INIT_FAILURE_LOG_SIZE>
+    ::etl::array<uint8_t, INIT_FAILURE_LOG_SIZE>
         temp{}; // NOLINT(cppcoreguidelines-avoid-magic-numbers)
-    etl::byte_stream_writer writer{temp, etl::endian::native};
+    ::etl::byte_stream_writer writer{temp, ::etl::endian::native};
     serialize<INIT_FAILURE_LOG_SIZE>(
         writer,
         getMessageId(error),
@@ -145,9 +145,9 @@ void logMessageSendingFailure(
 {
     static char const* const kformat = "e:%d r:%d SC:%d TC:%d S:%d I:%d M:%d R:%d";
 
-    etl::array<uint8_t, MSG_SEND_FAILURE_LOG_SIZE>
+    ::etl::array<uint8_t, MSG_SEND_FAILURE_LOG_SIZE>
         temp{}; // NOLINT(cppcoreguidelines-avoid-magic-numbers)
-    etl::byte_stream_writer writer{temp, etl::endian::native};
+    ::etl::byte_stream_writer writer{temp, ::etl::endian::native};
     serialize<MSG_SEND_FAILURE_LOG_SIZE>(
         writer, getMessageId(error), static_cast<uint8_t>(error), static_cast<uint8_t>(res), msg);
 
@@ -177,9 +177,9 @@ void logCrossThreadViolation(
 {
     static char const* const kformat = "e:%d SC:%d S:%d I:%d T0:%d T1:%d";
 
-    etl::array<uint8_t, CROSS_THREAD_VIOLATION_LOG_SIZE>
+    ::etl::array<uint8_t, CROSS_THREAD_VIOLATION_LOG_SIZE>
         temp{}; // NOLINT(cppcoreguidelines-avoid-magic-numbers)
-    etl::byte_stream_writer writer{temp, etl::endian::native};
+    ::etl::byte_stream_writer writer{temp, ::etl::endian::native};
     serialize<CROSS_THREAD_VIOLATION_LOG_SIZE>(
         writer,
         getMessageId(error),

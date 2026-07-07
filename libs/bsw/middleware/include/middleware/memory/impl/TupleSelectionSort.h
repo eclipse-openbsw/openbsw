@@ -25,16 +25,16 @@ class TupleElementSwap
     struct TupleElementSwapImpl;
 
     template<size_t... indices>
-    struct TupleElementSwapImpl<etl::index_sequence<indices...>>
+    struct TupleElementSwapImpl<::etl::index_sequence<indices...>>
     {
-        using type = etl::tuple<typename etl::tuple_element<
+        using type = ::etl::tuple<typename ::etl::tuple_element<
             (indices != i) && (indices != j) ? indices : ((indices == i) ? j : i),
             Tuple>::type...>;
     };
 
 public:
     using type = typename TupleElementSwapImpl<
-        etl::make_index_sequence<etl::tuple_size<Tuple>::value>>::type;
+        ::etl::make_index_sequence<::etl::tuple_size<Tuple>::value>>::type;
 };
 
 template<template<typename, typename> class Comparator, typename Tuple>
@@ -43,10 +43,10 @@ class TupleSelectionSort
     template<size_t I, size_t J, size_t TupleSize, class LoopTuple>
     struct TupleSelectionSortImpl
     {
-        using tuple_type = typename etl::conditional<
+        using tuple_type = typename ::etl::conditional<
             Comparator<
-                typename etl::tuple_element<I, LoopTuple>::type,
-                typename etl::tuple_element<J, LoopTuple>::type>::value,
+                typename ::etl::tuple_element<I, LoopTuple>::type,
+                typename ::etl::tuple_element<J, LoopTuple>::type>::value,
             typename TupleElementSwap<I, J, LoopTuple>::type,
             LoopTuple>::type;
 
@@ -66,12 +66,13 @@ class TupleSelectionSort
     };
 
 public:
-    using type = typename TupleSelectionSortImpl<0, 1, etl::tuple_size<Tuple>::value, Tuple>::type;
+    using type =
+        typename TupleSelectionSortImpl<0, 1, ::etl::tuple_size<Tuple>::value, Tuple>::type;
 };
 
 template<typename T, typename U>
 struct Ascending
-: etl::conditional<(U::chunkSize() < T::chunkSize()), etl::true_type, etl::false_type>::type
+: ::etl::conditional<(U::chunkSize() < T::chunkSize()), ::etl::true_type, ::etl::false_type>::type
 {
     static_assert(U::chunkSize() != T::chunkSize(), "Pools of same sizes are not allowed");
 };

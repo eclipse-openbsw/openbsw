@@ -79,7 +79,7 @@ public:
 private:
     void setEvent_([[maybe_unused]] Message const& msg) const
     {
-        if constexpr (etl::is_void_v<EventType>)
+        if constexpr (::etl::is_void_v<EventType>)
         {
             _cbk.call_if();
         }

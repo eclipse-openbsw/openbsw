@@ -34,21 +34,21 @@ public:
     {
         return SkeletonBase::initFromInstancesDatabase(
             instanceId,
-            etl::span<middleware::core::IInstanceDatabase const* const>(INSTANCESDATABASE));
+            ::etl::span<middleware::core::IInstanceDatabase const* const>(INSTANCESDATABASE));
     }
 
     HRESULT initEmptyDatabase(uint16_t instanceId)
     {
         return SkeletonBase::initFromInstancesDatabase(
             instanceId,
-            etl::span<middleware::core::IInstanceDatabase const* const>(EMPTYINSTANCESDATABASE));
+            ::etl::span<middleware::core::IInstanceDatabase const* const>(EMPTYINSTANCESDATABASE));
     }
 
     HRESULT initBadDatabase(uint16_t instanceId)
     {
         return SkeletonBase::initFromInstancesDatabase(
             instanceId,
-            etl::span<middleware::core::IInstanceDatabase const* const>(BADINSTANCESDATABASE));
+            ::etl::span<middleware::core::IInstanceDatabase const* const>(BADINSTANCESDATABASE));
     }
 
     void checkCrossThreadError(uint32_t const initId)

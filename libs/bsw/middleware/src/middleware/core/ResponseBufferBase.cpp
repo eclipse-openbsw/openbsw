@@ -22,7 +22,7 @@ namespace middleware::core
 {
 
 ResponseBufferBase::ResponseBufferBase(
-    SkeletonBase const& skeleton, etl::ivector<SkeletonResponseInfo>& responses)
+    SkeletonBase const& skeleton, ::etl::ivector<SkeletonResponseInfo>& responses)
 : _skeleton(skeleton), _responses(responses)
 {}
 
@@ -58,7 +58,7 @@ HRESULT ResponseBufferBase::cancelResponse(SkeletonResponseInfo& response)
 
 bool ResponseBufferBase::isResponseIteratorValid(SkeletonResponseInfo* const iterator) const
 {
-    SkeletonResponseInfo* ret = etl::find_if(
+    SkeletonResponseInfo* ret = ::etl::find_if(
         _responses.begin(),
         _responses.end(),
         [&iterator](SkeletonResponseInfo const& response) { return &response == iterator; });

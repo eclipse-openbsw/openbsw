@@ -159,9 +159,9 @@ public:
      * \param instanceId the service instance ID to query
      * \return pair of const iterators representing the begin and end of the matching range
      */
-    static etl::pair<
-        etl::ivector<TransceiverBase*>::const_iterator,
-        etl::ivector<TransceiverBase*>::const_iterator>
+    static ::etl::pair<
+        ::etl::ivector<TransceiverBase*>::const_iterator,
+        ::etl::ivector<TransceiverBase*>::const_iterator>
     getTransceiversByServiceIdAndServiceInstanceId(
         middleware::core::meta::TransceiverContainer const* const start,
         middleware::core::meta::TransceiverContainer const* const end,
@@ -176,12 +176,12 @@ public:
         uint16_t instanceId);
 
     /** Returns an iterator to \p transceiver in \p container, or end() if not found. */
-    static etl::ivector<TransceiverBase*>::iterator
-    findTransceiver(TransceiverBase* const& transceiver, etl::ivector<TransceiverBase*>& container);
+    static ::etl::ivector<TransceiverBase*>::iterator findTransceiver(
+        TransceiverBase* const& transceiver, ::etl::ivector<TransceiverBase*>& container);
 
     /** Returns true if a skeleton with \p instanceId is registered in \p container. */
     static bool isSkeletonWithServiceInstanceIdRegistered(
-        etl::ivector<TransceiverBase*> const& container, uint16_t instanceId);
+        ::etl::ivector<TransceiverBase*> const& container, uint16_t instanceId);
 
     /**
      * Get a transceiver by service ID, instance ID, and address ID.

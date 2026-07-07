@@ -54,8 +54,8 @@ public:
     [[nodiscard]] HRESULT
     allocate(T const& obj, Message& msg, uint8_t const numberOfReferences = 1U)
     {
-        static_assert(etl::is_copy_constructible_v<T>, "T must be copy-constructible");
-        static_assert(!etl::is_span_v<T>, "Use the span overload to allocate bytes");
+        static_assert(::etl::is_copy_constructible_v<T>, "T must be copy-constructible");
+        static_assert(!::etl::is_span_v<T>, "Use the span overload to allocate bytes");
 
         if constexpr (sizeof(T) <= Message::MAX_PAYLOAD_SIZE)
         {
@@ -77,7 +77,7 @@ public:
      * \return HRESULT indicating success or failure
      */
     [[nodiscard]] static HRESULT
-    allocate(etl::span<uint8_t const> src, Message& msg, uint8_t numberOfReferences = 1U);
+    allocate(::etl::span<uint8_t const> src, Message& msg, uint8_t numberOfReferences = 1U);
 
     /**
      * Reads an object of type T from the content of \p msg.
@@ -93,7 +93,7 @@ public:
     template<typename T>
     static T const& readPayload(Message const& msg)
     {
-        static_assert(!etl::is_span_v<T>, "Use readRawPayload() to read bytes");
+        static_assert(!::etl::is_span_v<T>, "Use readRawPayload() to read bytes");
 
         if constexpr (sizeof(T) <= Message::MAX_PAYLOAD_SIZE)
         {
@@ -101,7 +101,7 @@ public:
         }
         else
         {
-            return etl::get_object_at<T const>(getAllocatorPointerFromMessage(msg));
+            return ::etl::get_object_at<T const>(getAllocatorPointerFromMessage(msg));
         }
     }
 
@@ -111,18 +111,18 @@ public:
      * \param msg The message containing the payload
      * \return A const span providing read-only access to the payload bytes
      */
-    static etl::span<uint8_t const> readRawPayload(Message const& msg)
+    static ::etl::span<uint8_t const> readRawPayload(Message const& msg)
     {
-        etl::span<uint8_t const> rawPayload;
+        ::etl::span<uint8_t const> rawPayload;
 
         if (!msg.hasExternalPayload())
         {
-            rawPayload = etl::span<uint8_t const>(
+            rawPayload = ::etl::span<uint8_t const>(
                 &msg.getObjectStoredInPayload<uint8_t>(), msg.getPayloadSize());
         }
         else
         {
-            rawPayload = etl::span<uint8_t const>(
+            rawPayload = ::etl::span<uint8_t const>(
                 getAllocatorPointerFromMessage(msg), msg.getPayloadSize());
         }
 
@@ -153,7 +153,7 @@ private:
      * \return HRESULT
      */
     static HRESULT allocAndCopyBytesToExternalPayload(
-        etl::span<uint8_t const> src, Message& msg, uint8_t numberOfReferences);
+        ::etl::span<uint8_t const> src, Message& msg, uint8_t numberOfReferences);
 
     static uint8_t* getAllocatorPointerFromMessage(Message const& msg);
 
@@ -170,7 +170,7 @@ private:
     [[nodiscard]] HRESULT
     emplaceExternalPayload(T const& obj, Message& msg, uint8_t const numberOfReferences)
     {
-        static_assert(etl::is_copy_constructible<T>::value, "T must have a copy constructor!");
+        static_assert(::etl::is_copy_constructible<T>::value, "T must have a copy constructor!");
 
         HRESULT ret = HRESULT::CannotAllocatePayload;
 
@@ -181,9 +181,9 @@ private:
 
         if (buffer != nullptr)
         {
-            etl::construct_object_at(buffer, obj);
+            ::etl::construct_object_at(buffer, obj);
             auto const offset = static_cast<ptrdiff_t>(
-                etl::distance(memory::getRegionStartFunction(sid)(), buffer));
+                ::etl::distance(memory::getRegionStartFunction(sid)(), buffer));
             msg.setExternalPayload(offset, static_cast<uint32_t>(sizeof(T)));
             ret = HRESULT::Ok;
         }

@@ -69,7 +69,7 @@ void log(LogLevel const level, char const* const format, ...) // NOLINT(cert-dcl
     va_end(ap);
 }
 
-void logBinary(LogLevel const level, etl::span<uint8_t const> const data)
+void logBinary(LogLevel const level, ::etl::span<uint8_t const> const data)
 {
     for (size_t i = 0; i < data.size(); ++i)
     {
@@ -90,7 +90,7 @@ uint32_t getMessageId(Error const id)
         return test::mock::_loggerMockPtr->getMessageId(id);
     }
 
-    return etl::numeric_limits<uint32_t>::max();
+    return ::etl::numeric_limits<uint32_t>::max();
 }
 
 } // namespace middleware::logger

@@ -53,7 +53,7 @@ public:
 
 protected:
     testing::NiceMock<AllocatorImpl> _impl;
-    etl::array<uint8_t, 32U> _storage;
+    ::etl::array<uint8_t, 32U> _storage;
 };
 
 TEST_F(TestAllocatorBase, TestSuccessAllocate)
@@ -79,7 +79,7 @@ TEST_F(TestAllocatorBase, TestAllocateShared)
     uint8_t* externalPtr           = _impl.allocateShared(size, referenceCounter);
     EXPECT_EQ(externalPtr, _storage.begin());
     EXPECT_EQ(_impl.getStats().allocations, 1U);
-    EXPECT_EQ(etl::get_object_at<uint8_t>(etl::next(_storage.data(), size)), 5U);
+    EXPECT_EQ(::etl::get_object_at<uint8_t>(::etl::next(_storage.data(), size)), 5U);
 }
 
 TEST_F(TestAllocatorBase, TestFailedAllocateShared)
@@ -125,7 +125,7 @@ TEST_F(TestAllocatorBase, TestDeallocateShared)
         EXPECT_EQ(_impl.getStats().deallocations, 0U);
         EXPECT_EQ(_impl.getStats().unknownPtrsError, 0U);
         EXPECT_EQ(
-            etl::get_object_at<uint8_t>(etl::next(_storage.data(), size)),
+            ::etl::get_object_at<uint8_t>(::etl::next(_storage.data(), size)),
             referenceCounter - counter);
     }
 
