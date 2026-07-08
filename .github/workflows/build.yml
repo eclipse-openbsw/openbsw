@@ -8,7 +8,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 
-name: Build S32k and posix platform
+name: Build S32k, STM32 and posix platform
 
 on: [workflow_call, push, pull_request]
 
@@ -18,7 +18,7 @@ jobs:
     strategy:
     #   max-parallel: 1
       matrix:
-        preset: [ "tests-posix-debug", "tests-posix-release", "tests-s32k1xx-debug", "tests-s32k1xx-release", "posix-freertos", "posix-threadx", "posix-freertos-with-tracing", "posix-rust", "s32k148-freertos-gcc", "s32k148-threadx-gcc", "s32k148-freertos-clang", "s32k148-threadx-clang", "s32k148-rust-gcc" ]
+        preset: [ "tests-posix-debug", "tests-posix-release", "tests-s32k1xx-debug", "tests-s32k1xx-release", "tests-stm32-debug", "tests-stm32-release", "posix-freertos", "posix-threadx", "posix-freertos-with-tracing", "posix-rust", "s32k148-freertos-gcc", "s32k148-threadx-gcc", "s32k148-freertos-clang", "s32k148-threadx-clang", "s32k148-rust-gcc" ]
         platform: [ "arm", "linux" ]
         config: [ "Debug", "Release", "RelWithDebInfo" ]
         cxxid: ["gcc", "clang"]
@@ -49,6 +49,34 @@ jobs:
             config: "Debug"
           - preset: "tests-s32k1xx-release"
             config: "RelWithDebInfo"
+
+          # STM32 unit-test builds: minimal initial set (linux, gcc, C++17) -
+          # one Debug and one Release variant. Follow-up: extend to clang and
+          # C++20/23 to match the grid run by the posix and s32k1xx presets.
+          - preset: "tests-stm32-debug"
+            platform: "arm"
+          - preset: "tests-stm32-debug"
+            config: "Release"
+          - preset: "tests-stm32-debug"
+            config: "RelWithDebInfo"
+          - preset: "tests-stm32-debug"
+            cxxid: "clang"
+          - preset: "tests-stm32-debug"
+            cxxstd: 20
+          - preset: "tests-stm32-debug"
+            cxxstd: 23
+          - preset: "tests-stm32-release"
+            platform: "arm"
+          - preset: "tests-stm32-release"
+            config: "Debug"
+          - preset: "tests-stm32-release"
+            config: "RelWithDebInfo"
+          - preset: "tests-stm32-release"
+            cxxid: "clang"
+          - preset: "tests-stm32-release"
+            cxxstd: 20
+          - preset: "tests-stm32-release"
+            cxxstd: 23
 
           - preset: "posix-freertos"
             platform: "arm"
