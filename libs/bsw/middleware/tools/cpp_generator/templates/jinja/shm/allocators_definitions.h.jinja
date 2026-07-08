@@ -21,16 +21,18 @@
   */
 #pragma once
 
-#include "Allocator.h"
+#include <middleware/memory/Aggregator.h>
+#include <middleware/memory/Pool.h>
 
 namespace middleware::shm
 {
 
-using memory::message_allocator;
 
 {% for allocator in allocators %}
-message_allocator& get{{allocator.name | capitalize}}Allocator();
-volatile uint8_t* get{{allocator.name | capitalize}}AllocatorMutex();
+using {{ allocator.name | capitalize }}Allocator = memory::Aggregator<{% for pool in allocator.pools %}memory::Pool<{{ pool.elements }}, {{ pool.chunk_sizes }}>{% if not loop.last %}, {% endif %}{% endfor %}>;
+
+{{ allocator.name | capitalize }}Allocator& get{{ allocator.name | capitalize }}Allocator();
+volatile uint8_t* get{{ allocator.name | capitalize }}AllocatorMutex();
 
 {% endfor %}
 }  // namespace middleware::shm

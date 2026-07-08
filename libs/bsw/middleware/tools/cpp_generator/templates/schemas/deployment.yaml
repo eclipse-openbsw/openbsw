@@ -80,11 +80,17 @@ definitions:
     additionalProperties: false
     required:
       - name
+      - pools
     properties:
       name:
         type: string
         description: "Allocator name (e.g., default, custom)"
         pattern: "^[A-Za-z][A-Za-z0-9]*$"
+      pools:
+        type: array
+        description: "List of memory pools for the allocator"
+        items:
+          $ref: "#/definitions/pool"
 
   enum_parameter:
     type: object
@@ -569,3 +575,17 @@ definitions:
         type: array
         items:
           $ref: "#/definitions/cluster"
+
+  pool:
+    type: object
+    additionalProperties: false
+    required:
+      - chunk_sizes
+      - elements
+    properties:
+      chunk_sizes:
+        type: integer
+        minimum: 1
+      elements:
+        type: integer
+        minimum: 1

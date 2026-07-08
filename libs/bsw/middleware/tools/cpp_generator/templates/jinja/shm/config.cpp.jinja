@@ -22,7 +22,6 @@
 #include <cstdint>
 
 
-#include "Allocator.h"
 #include "middleware/shm/Config.h"
 #include "shm/AllocatorsDefinitions.h"
 #include "shm/QueueDefinitions.h"
@@ -31,7 +30,7 @@ namespace middleware::shm
 {
 
 {% for allocator in allocators %}
-message_allocator& get{{ allocator.name | capitalize }}Allocator()
+{{ allocator.name | capitalize }}Allocator& get{{ allocator.name | capitalize }}Allocator()
 {
     MemoryLayout& layout = getMemoryLayout();
     return layout.{{ allocator.name }}Allocator;

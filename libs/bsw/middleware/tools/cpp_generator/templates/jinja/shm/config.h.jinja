@@ -23,7 +23,6 @@
 
 #include <cstdint>
 
-#include "Allocator.h"
 #include "shm/AllocatorsDefinitions.h"
 #include "shm/QueueDefinitions.h"
 
@@ -45,7 +44,7 @@ struct MemoryLayout
     MiddlewareQueue<QUEUE_TO_{{ cluster.name | upper }}_SIZE> queueTo{{ cluster.name }}{&queueTo{{ cluster.name }}Mutex};
 {% endfor %}
 {% for allocator in allocators %}
-    message_allocator {{ allocator.name }}Allocator{&{{ allocator.name }}AllocatorMutex};
+    {{ allocator.name | capitalize }}Allocator {{ allocator.name }}Allocator{&{{ allocator.name }}AllocatorMutex};
 {% endfor %}
 };
 
