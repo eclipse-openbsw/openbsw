@@ -111,6 +111,11 @@ private:
 
         ::etl::span<uint8_t> allocate(size_t size)
         {
+            if (size > maxSize())
+            {
+                _currentFrame = {};
+                return {};
+            }
             _currentFrame = ::etl::make_span(_data).first(size);
             return _currentFrame;
         }
@@ -119,6 +124,12 @@ private:
         {
             if (_currentFrame.empty())
             {
+                return;
+            }
+
+            if (_currentFrame.size() < (2U * sizeof(::etl::be_uint32_t)))
+            {
+                _currentFrame = {};
                 return;
             }
 

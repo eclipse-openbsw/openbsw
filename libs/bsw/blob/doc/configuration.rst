@@ -69,10 +69,11 @@ identifies how the payload should be interpreted.
      - ``size``
      - Configuration payload, optionally padded, ending with a 4-byte CRC.
 
-The last four bytes of every configuration ``data`` hold a big-endian CRC computed over the preceding
-payload bytes. The CRC is verified by ``checkCrc()``, which re-computes a 32-bit CRC over the preceding
-payload bytes using ``etl::crc32`` (standard CRC-32). The payload is padded with ``0xFF`` bytes so that
-its length is a multiple of four before the CRC is appended.
+The last four bytes of every configuration ``data`` hold a big-endian CRC computed over the full
+configuration entry bytes except these final CRC bytes. In other words, the CRC input starts at
+``type`` and includes ``reserved``, ``size``, and the payload bytes. The CRC is verified by
+``checkCrc()``, which re-computes a 32-bit CRC using ``etl::crc32`` (standard CRC-32). The payload
+is padded with ``0xFF`` bytes so that its length is a multiple of four before the CRC is appended.
 
 Configuration types
 -------------------

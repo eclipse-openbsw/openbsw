@@ -53,4 +53,23 @@ determines the payload length and the PDU offset within it.
    :end-before: TX_ADAPTER_TABLE_END
    :language: cpp
 
+Routing example
+---------------
+
+The diagram below shows a concrete routing path through the tables. A message arriving on
+``PDU_TRANSPORT0`` with ID 18 is routed to ``CAN0`` (outgoing ID 1), which in turn routes to
+``PDU_TRANSPORT1`` (outgoing ID 4096), which loops back to ``PDU_TRANSPORT0`` (outgoing ID 256).
+This illustrates how the routing module chains multi-hop routes across CAN and PDU transport
+channels using only ID-based table lookups.
+
+The diagram is generated with:
+
+.. code-block:: console
+
+   cd tools
+   python -m blob.routing visualize --channel PDU_TRANSPORT0 --id 18 \
+       libs/bsw/routing/test/routing.jsonl
+
+.. graphviz:: resources/routing_example.dot
+
 

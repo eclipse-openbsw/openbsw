@@ -8,6 +8,8 @@
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
 
+// This is a generated file. Please do not edit it.
+
 #pragma once
 
 namespace routing

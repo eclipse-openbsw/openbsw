@@ -213,10 +213,24 @@ class Cli:
     def data_header(args):
         with open(sys.stdin.fileno(), mode="rb") if args.input is None else args.input as input:
             blob_data = input.read()
+        bytes_per_row = 16
+        rows = [
+            ", ".join(f"0x{byte:02X}" for byte in blob_data[i:i + bytes_per_row])
+            for i in range(0, len(blob_data), bytes_per_row)
+        ]
+        content = ",\n    ".join(rows)
         header_file = (
             inspect.cleandoc(
                 """
-                    // Copyright {year} BMW AG
+                    /********************************************************************************
+                     * Copyright (c) {year} BMW AG
+                     *
+                     * This program and the accompanying materials are made available under the
+                     * terms of the Apache License Version 2.0 which is available at
+                     * https://www.apache.org/licenses/LICENSE-2.0
+                     *
+                     * SPDX-License-Identifier: Apache-2.0
+                     ********************************************************************************/
 
                     // This is a generated file. Please do not edit it.
 
@@ -224,15 +238,15 @@ class Cli:
 
                     #include <platform/estdint.h>
 
-                    namespace {name_space} {{
+                    namespace {name_space}
+                    {{
                     uint8_t const {name}[{size}] = {{
-                    {content}
-                    }};
+                        {content}}};
                     }} // namespace {name_space}
                 """
             ).format(
                 year=dt.now().year,
-                content=", ".join([f"0x{byte:02X}" for byte in blob_data]),
+                content=content,
                 name_space="blob",
                 name=args.name,
                 size=len(blob_data),
@@ -246,10 +260,21 @@ class Cli:
     @staticmethod
     def config_type_header(args):
         config_types = {re.sub(r"(?<!^)(?=[A-Z])", "_", e.name).upper(): e.value for e in ConfigType}
+        max_key_len = max(len(k) for k in config_types.keys())
+        entries_list = [f"    {k:<{max_key_len}} = 0x{v:02X}" for k, v in config_types.items()]
+        entries = ",\n".join(entries_list)
         header_file = (
             inspect.cleandoc(
                 """
-                   // Copyright {year} BMW AG
+                   /********************************************************************************
+                    * Copyright (c) {year} BMW AG
+                    *
+                    * This program and the accompanying materials are made available under the
+                    * terms of the Apache License Version 2.0 which is available at
+                    * https://www.apache.org/licenses/LICENSE-2.0
+                    *
+                    * SPDX-License-Identifier: Apache-2.0
+                    ********************************************************************************/
 
                    // This is a generated file. Please do not edit it.
 
@@ -268,7 +293,7 @@ class Cli:
             ).format(
                 year=dt.now().year,
                 name=args.name,
-                entries=",\n".join([f"{k} = 0x{v:02X}" for k, v in config_types.items()]),
+                entries=entries,
             )
             + "\n"
         )
@@ -288,7 +313,15 @@ class Cli:
         header_file = (
             inspect.cleandoc(
                 """
-                   // Copyright {year} BMW AG
+                   /********************************************************************************
+                    * Copyright (c) {year} BMW AG
+                    *
+                    * This program and the accompanying materials are made available under the
+                    * terms of the Apache License Version 2.0 which is available at
+                    * https://www.apache.org/licenses/LICENSE-2.0
+                    *
+                    * SPDX-License-Identifier: Apache-2.0
+                    ********************************************************************************/
 
                    // This is a generated file. Please do not edit it.
 
@@ -310,7 +343,7 @@ class Cli:
             ).format(
                 year=dt.now().year,
                 name=args.name,
-                entries=",\n".join([f"{k} = {v}" for k, v in metadata_enum.items()]),
+                entries=",\n".join([f"    {k} = {v}" for k, v in metadata_enum.items()]),
             )
             + "\n"
         )

@@ -21,6 +21,17 @@ a ready-to-go implementation of the instantiation of the routing components.
 The ``Integration`` class uses the ``blob`` module to access configurations, which can be loaded
 from memory using the ``load`` functions.
 
+Getting started
++++++++++++++++
+
+1. Generate routing-related blob artifacts with the blob generator tool.
+2. Load the generated blob bytes in your application and pass them to ``PduTransportIntegration::init()``
+   and ``Integration::init()``.
+3. Provide bus and socket endpoints (CAN/FlexRay readers and writers, UDP sockets) to these ``init()``
+   calls.
+4. In the main loop, call ``checkTransmissionTimeouts()`` and ``sendUdpFrames()`` on
+   ``PduTransportIntegration`` and run the routing pipeline normally.
+
 Here is the structure of this class, with regard to the ``Routing`` components (note that
 ``CHANNELS = PDU_TRANSPORT_CHANNELS + CAN_CHANNELS + FLEXRAY_CHANNELS``):
 
@@ -33,7 +44,7 @@ Here is the structure of this class, with regard to the ``Routing`` components (
        hide members
    }
    namespace routing {
-        class Integration<PDU_TRANSPORT_CHANNELS, CAN_CHANNELS, FLEXRAY_CHANNELS> {}
+       class Integration<MAX_NUM_PDU_TRANSPORT_CHANNELS, NUM_CAN_CHANNELS, NUM_FLEXRAY_CHANNELS, MAX_PDU_TRANSPORT_CHANNEL_ELEMENT_SIZE, MAX_CAN_CHANNEL_ELEMENT_SIZE, MAX_FLEXRAY_CHANNEL_ELEMENT_SIZE> {}
         class Router<N> {}
         class RxAdapter {}
         class TxAdapter {}
@@ -72,7 +83,7 @@ socket transmission:
 * ``checkTransmissionTimeouts()`` evaluates whether buffered frames must be committed to TX queues because
   of configured timeouts
 * ``sendUdpFrames()`` begins the actual UDP transmission by reading frames from the TX queue and sending
-  them through sockets
+  up to 10 frames per channel per call through sockets
 
 As a result, data already written to TX queues may still not have been sent out. Data is written to the TX queue when
 the next message would no longer fit into the current frame buffer or the configured transmission timeout expires.
@@ -101,7 +112,7 @@ The structure of this class is the following:
        hide members
    }
    namespace routing {
-        class PduTransportIntegration<PDU_TRANSPORT_CHANNELS> {}
+       class PduTransportIntegration<MAX_NUM_CHANNELS, MAX_ELEMENT_SIZE> {}
 
         PduTransportIntegration -r-> blob.Blob : "uses"
         PduTransportIntegration -r-> PduTransportConfig : "uses"
