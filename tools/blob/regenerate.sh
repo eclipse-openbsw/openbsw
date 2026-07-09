@@ -26,22 +26,28 @@
 #
 # Environment variables:
 #   PYTHON           Python interpreter to use (default: python3).
-#                    Must have the 'crc' package installed (see requirements.txt).
+#                    If crc package is not available, a venv will be
+#                    automatically created at ~/.cache/openbsw/blob-venv
 #
-# Prerequisites (one of):
-#   a) Run inside the openbsw-development Docker container — all dependencies
-#      are already available via /opt/venv.
-#   b) Create a venv on the host (once):
-#        python3 -m venv tools/.venv
-#        tools/.venv/bin/pip install -r tools/blob/requirements.txt
-#      Then pass the interpreter:
-#        PYTHON=tools/.venv/bin/python3 tools/blob/regenerate.sh ...
+# Prerequisites:
+#   - python3 and python3-venv (or equivalent for your distro)
+#   - clang-format (optional, for automatic formatting)
+#
+# The script will automatically:
+#   1. Check if the crc package is available
+#   2. If not, create a venv in ~/.cache/openbsw/blob-venv
+#   3. Install dependencies from tools/blob/requirements.txt
+#   4. Run the blob generator
+#   5. Format the output with clang-format (if available)
 #
 # Example (referenceApp, run from the project root):
 #   tools/blob/regenerate.sh \
 #       executables/referenceApp/configuration/routing.jsonl \
 #       executables/referenceApp/configuration/include/blob \
 #       executables/referenceApp/configuration/include/routing
+#
+# Or with a custom Python interpreter:
+#   PYTHON=/path/to/python3 tools/blob/regenerate.sh ...
 
 set -euo pipefail
 
@@ -63,30 +69,48 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TOOLS_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
 
 PYTHON="${PYTHON:-python3}"
-# Resolve to absolute path now, before we cd into TOOLS_DIR later.
-# Bare names (no slash) are looked up in PATH; relative paths are made absolute
-# without following symlinks (following symlinks through a venv breaks site-packages).
-if [[ "${PYTHON}" != */* ]]; then
-    PYTHON="$(command -v "${PYTHON}")"
-elif [[ "${PYTHON}" != /* ]]; then
-    PYTHON="$(cd "$(dirname "${PYTHON}")" && pwd)/$(basename "${PYTHON}")"
+REQUIREMENTS="${TOOLS_DIR}/blob/requirements.txt"
+
+# Set up venv automatically if crc is not available
+if ! "${PYTHON}" -c "import crc" >/dev/null 2>&1; then
+    VENV_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/openbsw/blob-venv"
+    if [[ ! -x "${VENV_DIR}/bin/python" ]]; then
+        echo "Setting up Python environment in ${VENV_DIR} ..."
+        
+        # Try to create venv, capture stderr for error detection
+        VENV_ERROR=$("${PYTHON}" -m venv "${VENV_DIR}" 2>&1 || echo "FAILED")
+        if echo "${VENV_ERROR}" | grep -q "ensurepip"; then
+            # Venv creation failed due to missing ensurepip; try to install python3-venv
+            PYTHON_VERSION=$("${PYTHON}" -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')")
+            VENV_PKG="python${PYTHON_VERSION}-venv"
+            echo "Installing ${VENV_PKG} ..."
+            if sudo apt-get install -y "${VENV_PKG}"; then
+                # Clean up the partial venv and retry
+                echo "Retrying venv creation..."
+                rm -rf "${VENV_DIR}"
+                "${PYTHON}" -m venv "${VENV_DIR}" || {
+                    echo "ERROR: Failed to create venv after installing ${VENV_PKG}." >&2
+                    exit 1
+                }
+            else
+                echo "ERROR: Failed to install ${VENV_PKG}. Please install it manually and try again." >&2
+                exit 1
+            fi
+        elif echo "${VENV_ERROR}" | grep -q "FAILED"; then
+            echo "ERROR: Failed to create venv: ${VENV_ERROR}" >&2
+            exit 1
+        fi
+    fi
+    PYTHON="${VENV_DIR}/bin/python"
+    "${PYTHON}" -m pip install --quiet --disable-pip-version-check -r "${REQUIREMENTS}"
 fi
+export PYTHONPATH="${TOOLS_DIR}${PYTHONPATH:+:$PYTHONPATH}"
 
 # ---------------------------------------------------------------------------
 # Preflight checks
 # ---------------------------------------------------------------------------
 if [[ ! -f "${JSONL}" ]]; then
     echo "ERROR: JSONL_FILE not found: ${JSONL}" >&2
-    exit 1
-fi
-
-if ! "${PYTHON}" -c "import crc" 2>/dev/null; then
-    echo "ERROR: 'crc' package not found for '${PYTHON}'." >&2
-    echo "  Option A: run inside the openbsw-development Docker container." >&2
-    echo "  Option B: set up a venv:" >&2
-    echo "    python3 -m venv tools/.venv" >&2
-    echo "    tools/.venv/bin/pip install -r tools/blob/requirements.txt" >&2
-    echo "    PYTHON=tools/.venv/bin/python3 $0 ..." >&2
     exit 1
 fi
 
@@ -98,9 +122,8 @@ echo "Output blob/:      ${OUT_BLOB}"
 echo "Output routing/:   ${OUT_ROUTING}"
 
 # ---------------------------------------------------------------------------
-# Generation — must run from TOOLS_DIR so 'import blob' resolves correctly
+# Generation — import blob module via PYTHONPATH
 # ---------------------------------------------------------------------------
-cd "${TOOLS_DIR}"
 
 # include/blob/configuration.h — binary blob embedded as a uint8_t array
 "${PYTHON}" -m blob binary \
