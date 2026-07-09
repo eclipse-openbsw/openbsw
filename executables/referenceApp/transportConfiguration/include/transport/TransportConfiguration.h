@@ -10,6 +10,8 @@
 
 #pragma once
 
+#include "busid/BusId.h"
+
 #include <transport/LogicalAddress.h>
 #include <transport/TransportMessage.h>
 
@@ -88,6 +90,9 @@ public:
 
     static bool isTesterAddress(uint16_t address);
 
+    /// True if the bus uses 1-byte diagnostic addresses (i.e. not a DoIP bus).
+    static bool is1ByteDiagAddressBus(uint8_t busId);
+
     static uint16_t convert2ByteAddressTo1Byte(uint16_t address);
 
     static uint16_t convert1ByteAddressTo2Byte(uint16_t address);
@@ -103,6 +108,12 @@ public:
 inline bool TransportConfiguration::isFunctionalAddress(uint16_t const address)
 {
     return (FUNCTIONAL_ALL_ISO14229 == address);
+}
+
+inline bool TransportConfiguration::is1ByteDiagAddressBus(uint8_t const busId)
+{
+    // Only the Ethernet/DoIP buses use 2-byte diagnostic addresses.
+    return (busId != ::busid::ETH_0) && (busId != ::busid::ETH_1);
 }
 
 /**

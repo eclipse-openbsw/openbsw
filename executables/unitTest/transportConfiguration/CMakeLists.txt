@@ -9,4 +9,4 @@ add_library(transportConfiguration src/transport/TransportConfiguration.cpp)
 
 target_include_directories(transportConfiguration PUBLIC include)
 
-target_link_libraries(transportConfiguration PUBLIC transport etl)
+target_link_libraries(transportConfiguration PUBLIC transport etl configuration)

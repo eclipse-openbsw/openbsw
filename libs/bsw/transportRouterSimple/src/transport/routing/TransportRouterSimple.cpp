@@ -23,14 +23,6 @@ namespace transport
 using ::util::logger::Logger;
 using ::util::logger::TPROUTER;
 
-namespace
-{
-bool is1ByteDiagAddressBus(uint8_t const busId)
-{
-    return (busId != ::busid::ETH_0) && (busId != ::busid::ETH_1);
-}
-} // namespace
-
 TransportRouterSimple::TransportRouterSimple() : _transportLayers()
 {
     for (uint8_t i = 0U; i < NUM_BUFFERS; i++)
@@ -67,7 +59,7 @@ ITransportMessageProvidingListener::ErrorCode TransportRouterSimple::getTranspor
 
     ::async::LockType const lockGuard;
     uint16_t const targetId2Byte
-        = is1ByteDiagAddressBus(srcBusId)
+        = TransportConfiguration::is1ByteDiagAddressBus(srcBusId)
               ? TransportConfiguration::convert1ByteAddressTo2Byte(targetId)
               : targetId;
 
@@ -135,7 +127,7 @@ ITransportMessageProvidingListener::ReceiveResult TransportRouterSimple::message
 {
     AbstractTransportLayer::ErrorCode result(AbstractTransportLayer::ErrorCode::TP_OK);
 
-    if (is1ByteDiagAddressBus(sourceBusId))
+    if (TransportConfiguration::is1ByteDiagAddressBus(sourceBusId))
     {
         transportMessage.setSourceAddress(
             TransportConfiguration::convert1ByteAddressTo2Byte(transportMessage.getSourceId()));
@@ -209,7 +201,7 @@ void TransportRouterSimple::forwardMessageToTransportLayer(
     ITransportMessageProcessedListener* const pNotificationListener,
     AbstractTransportLayer::ErrorCode& result)
 {
-    if (is1ByteDiagAddressBus(destBusId))
+    if (TransportConfiguration::is1ByteDiagAddressBus(destBusId))
     {
         transportMessage.setSourceAddress(
             TransportConfiguration::convert2ByteAddressTo1Byte(transportMessage.getSourceId()));
