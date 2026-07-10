@@ -17,23 +17,23 @@ namespace enetphy
 using namespace ::util::logger;
 
 uint8_t const Tja1101::cRegisterAccess[] = {
-    REGISTER_0,
-    REGISTER_1,
-    REGISTER_2,
-    REGISTER_3,
-    REGISTER_15,
-    REGISTER_17,
-    REGISTER_18,
-    REGISTER_19,
-    REGISTER_20,
-    REGISTER_21,
-    REGISTER_22,
-    REGISTER_23,
-    REGISTER_24,
-    REGISTER_25,
-    REGISTER_26,
-    REGISTER_27,
-    REGISTER_28,
+    REG_BCR,
+    REG_BSR,
+    REG_PHYIDR1,
+    REG_PHYIDR2,
+    REG_ESR,
+    REG_ECR,
+    REG_CFG1,
+    REG_CFG2,
+    REG_SYM_ERR_CNT,
+    REG_INTSRC,
+    REG_22,
+    REG_GENSTAT,
+    REG_24,
+    REG_EXTS,
+    REG_LINK_FAIL_CNT,
+    REG_CCFG,
+    REG_28,
 };
 
 uint8_t const Tja1101::NUMBER_OF_SMI_REGISTERS
@@ -50,13 +50,13 @@ Tja1101::Tja1101(MdioTja1101& mdio, uint8_t const phyAddressOfAttachedPort = 0U)
 void Tja1101::cableTest()
 {
     uint16_t value = 0U;
-    writeMiimRegister(REGISTER_17, 0x1824U); // forces TDR-based cable test
+    writeMiimRegister(REG_ECR, 0x1824U); // forces TDR-based cable test
 
-    _mdio.miimRead(_phyAddress, REGISTER_23, value);
+    _mdio.miimRead(_phyAddress, REG_GENSTAT, value);
     if (CABLE_TEST == (0x07U & value))
     {
         _state = INITIALIZING;
-        _mdio.miimRead(_phyAddress, REGISTER_25, value);
+        _mdio.miimRead(_phyAddress, REG_EXTS, value);
         if (((value & SHORT_DETECT) != 0U) && ((value & OPEN_DETECT) != 0U))
         {
             _errorStatus &= ~ERROR_SHORT;
@@ -94,8 +94,8 @@ bool Tja1101::up()
 bool Tja1101::isLinkUp()
 {
     uint16_t tmpValue = 0U;
-    readMiimRegister(REGISTER_1, tmpValue);
-    if ((tmpValue & 0x4U) != 0U)
+    readMiimRegister(REG_BSR, tmpValue);
+    if ((tmpValue & BSR_LINK_STATUS_MASK) == BSR_LINK_STATUS(LinkStatus::UP))
     {
         _errorStatus = 0U;
         if (DOWN == _linkStatus)
@@ -106,8 +106,8 @@ bool Tja1101::isLinkUp()
         return true;
     }
     tmpValue = 0U;
-    readMiimRegister(REGISTER_21, tmpValue);
-    if ((tmpValue & 0x200U) != 0U)
+    readMiimRegister(REG_INTSRC, tmpValue);
+    if ((tmpValue & INTSRC_LINK_STATUS_UP_MASK) == INTSRC_LINK_STATUS_UP(LinkStatus::UP))
     {
         _errorStatus = 0U;
         if (DOWN == _linkStatus)
@@ -128,7 +128,7 @@ bool Tja1101::isLinkUp()
 void Tja1101::down()
 {
     // Set PowerMode to SleepRequestMode
-    writeMiimRegister(REGISTER_17, 0x5800U);
+    writeMiimRegister(REG_ECR, 0x5800U);
 }
 
 void Tja1101::stop()

@@ -18,6 +18,7 @@ Output::OutputConfig const Output::sfOutputConfigurations[1][Output::NUMBER_OF_I
         /*  1 */ {Io::EVAL_LED_RED, Io::HIGH, Io::HIGH_ACTIVE},
         /*  2 */ {Io::TJA_MDIO, Io::HIGH, Io::HIGH_ACTIVE},
         /*  3 */ {Io::TJA_MDC, Io::HIGH, Io::HIGH_ACTIVE},
+        /*  4 */ {Io::ENETSW_RESET, Io::LOW, Io::LOW_ACTIVE},
     }};
 
 Output::OutputConfig const* Output::getConfiguration(uint8_t /* hardwareVersion */)
@@ -33,6 +34,7 @@ enum OutputId
     /*  1 */ EVAL_LED_RED,
     /*  2 */ TJA_MDIO,
     /*  3 */ TJA_MDC,
+    /*  4 */ ENETSW_RESET,
 
     /* xx */ NUMBER_OF_INTERNAL_OUTPUTS,
 

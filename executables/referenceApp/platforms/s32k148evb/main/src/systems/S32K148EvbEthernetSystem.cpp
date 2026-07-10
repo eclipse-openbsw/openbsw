@@ -117,12 +117,91 @@ S32K148EvbEthernetSystem::S32K148EvbEthernetSystem(
     setTransitionContext(context);
 }
 
+/**
+ * Configures the Tja1101 to use RMII. This is done because we faced issues with the
+ * strapping pin configuration on multiple S32K148EVB boards.
+ * \param tja1101 Instance of ::enetphy::Tja1101 to configure
+ * \return  bool in case configuration was successful, false otherwise.
+ */
+static bool configureTja1101(::enetphy::Tja1101& tja1101)
+{
+    uint16_t regValue = 0;
+    // Set CONFIG_EN to 1 to allow custom configuration
+    if (!tja1101.readMiimRegister(::enetphy::Tja1101::REG_ECR, regValue))
+    {
+        return false;
+    }
+    regValue = regValue | ECR_CONFIG_EN(1);
+    if (!tja1101.writeMiimRegister(::enetphy::Tja1101::REG_ECR, regValue))
+    {
+        return false;
+    }
+
+    // Set AUTO_OP to 0
+    if (!tja1101.readMiimRegister(::enetphy::Tja1101::REG_CCFG, regValue))
+    {
+        return false;
+    }
+    regValue &= ~CCFG_AUTO_OP(1);
+    if (!tja1101.writeMiimRegister(::enetphy::Tja1101::REG_CCFG, regValue))
+    {
+        return false;
+    }
+
+    // Enable RMII mode
+    if (!tja1101.readMiimRegister(::enetphy::Tja1101::REG_CFG1, regValue))
+    {
+        return false;
+    }
+    regValue &= ~CFG1_MII_MODE_MASK;
+    regValue |= CFG1_MII_MODE(::enetphy::Tja1101::MII_Mode::RMII_MODE_50MHz_OUT);
+    if (!tja1101.writeMiimRegister(::enetphy::Tja1101::REG_CFG1, regValue))
+    {
+        return false;
+    }
+
+    // Set AUTO_OP to 1
+    if (!tja1101.readMiimRegister(::enetphy::Tja1101::REG_CCFG, regValue))
+    {
+        return false;
+    }
+    regValue |= CCFG_AUTO_OP(1);
+    if (!tja1101.writeMiimRegister(::enetphy::Tja1101::REG_CCFG, regValue))
+    {
+        return false;
+    }
+
+    // Set CONFIG_EN to 0
+    if (!tja1101.readMiimRegister(::enetphy::Tja1101::REG_ECR, regValue))
+    {
+        return false;
+    }
+    regValue &= ~ECR_CONFIG_EN(1);
+    if (!tja1101.writeMiimRegister(::enetphy::Tja1101::REG_ECR, regValue))
+    {
+        return false;
+    }
+    return true;
+}
+
 void S32K148EvbEthernetSystem::init()
 {
     _tja1101LinkStatus = false;
+    // Reset Tja1101
+    Output::set(Output::ENETSW_RESET, 1U);
+    sysDelayUs(1000);
+    Output::set(Output::ENETSW_RESET, 0U);
+    sysDelayUs(1000);
+    _tja1101.start();
+    auto const configureResult = configureTja1101(_tja1101);
+    if (!configureResult)
+    {
+        Logger::error(ETHERNET, "Failed to configure Tja1101");
+    }
+
     configureEnetPins();
     _driver.init();
-    _tja1101.start();
+
     transitionDone();
 }
 

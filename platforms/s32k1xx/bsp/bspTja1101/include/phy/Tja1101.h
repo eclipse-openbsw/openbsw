@@ -14,7 +14,7 @@
 
 namespace enetphy
 {
-/* BCR - Basic Control Register - Reg0*/
+/* REG_BCR - Basic Control Register - Reg0*/
 
 #define BCR_SPEED_SELECT_LSB_MASK  (0x2000U)
 #define BCR_SPEED_SELECT_LSB_SHIFT (13U)
@@ -28,7 +28,15 @@ namespace enetphy
 #define BCR_DUPLEX_MODE(x) \
     (((uint32_t)(((uint32_t)(x)) << BCR_DUPLEX_MODE_SHIFT)) & BCR_DUPLEX_MODE_MASK)
 
-/* ECR - Extended Control Register - Reg17 */
+/* REG_BSR - Basic Status Register - Reg1 */
+
+#define BSR_LINK_STATUS_MASK  (0x4U)
+#define BSR_LINK_STATUS_SHIFT (2U)
+#define BSR_LINK_STATUS_WIDTH (1U)
+#define BSR_LINK_STATUS(x) \
+    (((uint32_t)(((uint32_t)(x)) << BSR_LINK_STATUS_SHIFT)) & BSR_LINK_STATUS_MASK)
+
+/* REG_ECR - Extended Control Register - Reg17 */
 
 #define ECR_POWER_MODE_MASK  (0x7800U)
 #define ECR_POWER_MODE_SHIFT (11U)
@@ -47,7 +55,7 @@ namespace enetphy
 #define ECR_LINK_CONTROL(x) \
     (((uint32_t)(((uint32_t)(x)) << ECR_LINK_CONTROL_SHIFT)) & ECR_LINK_CONTROL_MASK)
 
-/* CFG1 - Configuration 1 Register - Reg18 */
+/* REG_CFG1 - Configuration 1 Register - Reg18 */
 
 #define CFG1_MII_MODE_MASK  (0x300U)
 #define CFG1_MII_MODE_SHIFT (8U)
@@ -65,7 +73,7 @@ namespace enetphy
 #define CFG1_MASTER_SLAVE(x) \
     (((uint32_t)(((uint32_t)(x)) << CFG1_MASTER_SLAVE_SHIFT)) & CFG1_MASTER_SLAVE_MASK)
 
-/* CCFG - Common Configuration Register - Reg27*/
+/* REG_CCFG - Common Configuration Register - Reg27*/
 
 #define CCFG_AUTO_OP_MASK  (0x8000U)
 #define CCFG_AUTO_OP_SHIFT (15U)
@@ -78,6 +86,14 @@ namespace enetphy
 #define CCFG_CONFIG_INH(x) \
     (((uint32_t)(((uint32_t)(x)) << CCFG_CONFIG_INH_SHIFT)) & CCFG_CONFIG_INH_MASK)
 
+/* REG_INTSRC - Interrupt Source Register - Reg21 */
+
+#define INTSRC_LINK_STATUS_UP_MASK  (0x200U)
+#define INTSRC_LINK_STATUS_UP_SHIFT (9U)
+#define INTSRC_LINK_STATUS_UP_WIDTH (1U)
+#define INTSRC_LINK_STATUS_UP(x) \
+    (((uint32_t)(((uint32_t)(x)) << INTSRC_LINK_STATUS_UP_SHIFT)) & INTSRC_LINK_STATUS_UP_MASK)
+
 /**
  * Driver for TJA1101 Ethernet phy.
  */
@@ -86,24 +102,24 @@ class Tja1101
 public:
     enum SmiRegisters
     {
-        REGISTER_0  = 0U,
-        REGISTER_1  = 1U,
-        REGISTER_2  = 2U,
-        REGISTER_3  = 3U,
-        REGISTER_15 = 15U,
-        REGISTER_16 = 16U,
-        REGISTER_17 = 17U,
-        REGISTER_18 = 18U,
-        REGISTER_19 = 19U,
-        REGISTER_20 = 20U,
-        REGISTER_21 = 21U,
-        REGISTER_22 = 22U,
-        REGISTER_23 = 23U,
-        REGISTER_24 = 24U,
-        REGISTER_25 = 25U,
-        REGISTER_26 = 26U,
-        REGISTER_27 = 27U,
-        REGISTER_28 = 28U,
+        REG_BCR           = 0U,  ///< Basic Control Register (IEEE 802.3)
+        REG_BSR           = 1U,  ///< Basic Status Register (IEEE 802.3)
+        REG_PHYIDR1       = 2U,  ///< PHY Identifier 1 (IEEE 802.3)
+        REG_PHYIDR2       = 3U,  ///< PHY Identifier 2 (IEEE 802.3)
+        REG_ESR           = 15U, ///< Extended Status Register (IEEE 802.3)
+        REG_16            = 16U,
+        REG_ECR           = 17U, ///< Extended Control Register
+        REG_CFG1          = 18U, ///< Configuration Register 1
+        REG_CFG2          = 19U, ///< Configuration Register 2
+        REG_SYM_ERR_CNT   = 20U, ///< Symbol Error Counter
+        REG_INTSRC        = 21U, ///< Interrupt Source Register
+        REG_22            = 22U,
+        REG_GENSTAT       = 23U, ///< General Status Register (contains PHY_STATE)
+        REG_24            = 24U,
+        REG_EXTS          = 25U, ///< External Status Register
+        REG_LINK_FAIL_CNT = 26U, ///< Link Fail Counter
+        REG_CCFG          = 27U, ///< Common Configuration Register
+        REG_28            = 28U,
     };
 
     enum ErrorCode
@@ -146,7 +162,7 @@ public:
     enum LinkStatus
     {
         DOWN = 0,
-        UP,
+        UP   = 1
     };
 
     // Register 23 - PHY_STATE [2:0]

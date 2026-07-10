@@ -60,46 +60,50 @@ uint16_t MdioTja1101::getDataPin() const
 
 ::bsp::BspReturnCode MdioTja1101::transfer(uint32_t* const frame, bool const read) const
 {
-    // Get Mdio Pin Configuration
+    // Clause 22 frame: PRE(32) | ST(01) | OP(10/01) | PHYAD(5) | REGAD(5) | TA(2) | DATA(16)
     Io::PinConfiguration mdioPinConf;
     Io::getConfiguration(tja1101config.mdioPin, mdioPinConf);
 
-    // MDIO - Make Output Pin
     mdioPinConf.dir = Io::Direction::_OUT;
     Io::setConfiguration(tja1101config.mdioPin, mdioPinConf);
 
+    // PRE: 32 ones
     Output::set(_config.dataPin, 1U);
-    // write preamble
     for (uint8_t i = 0; i < 32; ++i)
     {
         Output::set(_config.clockPin, 0U);
+        sysDelayUs(CLOCK_DELAY_TICKS);
         Output::set(_config.clockPin, 1U);
+        sysDelayUs(CLOCK_DELAY_TICKS);
     }
-    // transfer first part of frame (header)
-    uint16_t data = *frame >> 16;
 
+    // ST + OP + PHYAD + REGAD (14 bits, MSB first)
+    uint16_t data = *frame >> 16;
     for (uint8_t i = 0; i < 14; ++i)
     {
         Output::set(_config.clockPin, 0U);
         Output::set(_config.dataPin, ((data & 0x8000) > 0));
         sysDelayUs(CLOCK_DELAY_TICKS);
         Output::set(_config.clockPin, 1U);
+        sysDelayUs(CLOCK_DELAY_TICKS);
         data <<= 1;
     }
-    Output::set(_config.clockPin, 0U);
-    Output::set(_config.dataPin, 1U);
-    sysDelayUs(CLOCK_DELAY_TICKS);
-    Output::set(_config.clockPin, 1U);
-    Output::set(_config.clockPin, 0U);
 
     if (read)
     {
-        // MDIO - Make Input Pin
+        // TA: release bus (Z) for TA[1], PHY drives 0 for TA[0]
+        Output::set(_config.clockPin, 0U);
+        sysDelayUs(CLOCK_DELAY_TICKS);
         mdioPinConf.dir = Io::Direction::_IN;
         Io::setConfiguration(tja1101config.mdioPin, mdioPinConf);
+        Output::set(_config.clockPin, 1U); // TA[1]: Z
+        sysDelayUs(CLOCK_DELAY_TICKS);
+        Output::set(_config.clockPin, 0U);
+        sysDelayUs(CLOCK_DELAY_TICKS);
+        Output::set(_config.clockPin, 1U); // TA[0]: PHY drives 0
+        sysDelayUs(CLOCK_DELAY_TICKS);
 
-        // transfer second part of frame (read data)
-        Output::set(_config.clockPin, 1U);
+        // DATA: 16 bits driven by PHY, sampled on rising edge
         data = 0;
         for (int8_t i = 15; i >= 0; --i)
         {
@@ -107,9 +111,9 @@ uint16_t MdioTja1101::getDataPin() const
             sysDelayUs(CLOCK_DELAY_TICKS);
             data |= (getDataPin() << i);
             Output::set(_config.clockPin, 1U);
+            sysDelayUs(CLOCK_DELAY_TICKS);
         }
 
-        // MDIO - Make Output Pin
         mdioPinConf.dir = Io::Direction::_OUT;
         Io::setConfiguration(tja1101config.mdioPin, mdioPinConf);
 
@@ -117,10 +121,19 @@ uint16_t MdioTja1101::getDataPin() const
     }
     else
     {
-        Output::set(_config.dataPin, 0U);
+        // TA: controller drives 1 for TA[1], 0 for TA[0]
+        Output::set(_config.clockPin, 0U);
+        Output::set(_config.dataPin, 1U); // TA[1] = 1
         sysDelayUs(CLOCK_DELAY_TICKS);
         Output::set(_config.clockPin, 1U);
-        // transfer second part of frame (write data)
+        sysDelayUs(CLOCK_DELAY_TICKS);
+        Output::set(_config.clockPin, 0U);
+        Output::set(_config.dataPin, 0U); // TA[0] = 0
+        sysDelayUs(CLOCK_DELAY_TICKS);
+        Output::set(_config.clockPin, 1U);
+        sysDelayUs(CLOCK_DELAY_TICKS);
+
+        // DATA: 16 bits driven by controller, MSB first
         data = *frame & 0xffff;
         for (uint8_t i = 0; i < 16; i++)
         {
@@ -129,13 +142,14 @@ uint16_t MdioTja1101::getDataPin() const
             data <<= 1;
             sysDelayUs(CLOCK_DELAY_TICKS);
             Output::set(_config.clockPin, 1U);
+            sysDelayUs(CLOCK_DELAY_TICKS);
         }
     }
-    sysDelayUs(CLOCK_DELAY_TICKS);
+
+    // Return bus to idle (CLK low, MDIO high-Z)
     Output::set(_config.clockPin, 0U);
     Output::set(_config.dataPin, 1U);
-
-    // MDIO - Make Input Pin
+    sysDelayUs(CLOCK_DELAY_TICKS);
     mdioPinConf.dir = Io::Direction::_IN;
     Io::setConfiguration(tja1101config.mdioPin, mdioPinConf);
 

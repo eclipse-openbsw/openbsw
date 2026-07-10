@@ -15,6 +15,7 @@ char const* const outputConfigurationStrings[] = {
     /*  1 */ "EVAL_LED_RED",
     /*  2 */ "TJA_MDIO",
     /*  3 */ "TJA_MDC",
+    /*  4 */ "ENETSW_RESET",
 
     "lastStatic",
 };
