@@ -36,8 +36,8 @@ Two logical cores are simulated:
 
 | Core  | Role                | Service Role |
 |-------|---------------------|-------------|
-| Core0 | Provider / Server   | `FooSkeleton` — provides the `Foo` service |
-| Core1 | Consumer / Client   | `FooProxy`   — consumes the `Foo` service  |
+| Cluster0 | Provider / Server   | `FooSkeleton` — provides the `Foo` service |
+| Cluster1 | Consumer / Client   | `FooProxy`   — consumes the `Foo` service  |
 
 At startup a shared memory segment is created and the `MemoryLayout` (queues and
 allocator pools) is constructed in it via placement new. Both cores are then
@@ -64,27 +64,27 @@ option).
 ```mermaid
 graph LR
     subgraph ECU
-        subgraph Core0[Core0 - Provider]
+        subgraph Cluster0[Cluster0 - Provider]
             FooSkeleton
         end
 
-        subgraph Core1[Core1 - Consumer]
+        subgraph Cluster1[Cluster1 - Consumer]
             FooProxy
         end
 
-        Core0 -- SHM queue --> Core1
-        Core1 -- SHM queue --> Core0
+        Cluster0 -- SHM queue --> Cluster1
+        Cluster1 -- SHM queue --> Cluster0
     end
 ```
 
 The deployment model (`model/deployment-test.yaml`) describes:
 
-- **Two clusters**: `Core0` (id 0) and `Core1` (id 1).
+- **Two clusters**: `Cluster0` (id 0) and `Cluster1` (id 1).
 - **One service**: `Foo` (namespace `org::test::foo`, id 1) with a single
   read/write attribute `FooDefault` of type `FooStruct { uint32_t fooValue }`.
 - **Two connections**:
-  - `Core0 -> Core1` skeleton-only: Core0 provides `FooSkeleton`.
-  - `Core1 -> Core0` proxy-only: Core1 consumes `FooProxy`.
+  - `Cluster0 -> Cluster1` skeleton-only: Cluster0 provides `FooSkeleton`.
+  - `Cluster1 -> Cluster0` proxy-only: Cluster1 consumes `FooProxy`.
 
 ---
 
@@ -99,10 +99,10 @@ libs/bsw/middleware/simulation/
 |   |   +-- Allocator.h             # Allocator type alias (Pool<10, 64>)
 |   +-- etl_profile.h               # ETL config for host
 |   +-- foo/
-|   |   +-- FooSkeletonWrapper.h    # FooSkeleton concrete impl (Core0)
-|   |   +-- FooProxyWrapper.h       # FooProxy wrapper (Core1)
+|   |   +-- FooSkeletonWrapper.h    # FooSkeleton concrete impl (Cluster0)
+|   |   +-- FooProxyWrapper.h       # FooProxy wrapper (Cluster1)
 |   +-- generated_code/             # Output of jinja2cpp.py (tracked in VCS)
-|   |   +-- middleware/             # ClusterCore0.h / ClusterCore1.h etc.
+|   |   +-- middleware/             # ClusterCluster0.h / ClusterCluster1.h etc.
 |   |   +-- org/test/foo/           # FooCommon.h / FooSkeleton.h / FooProxy.h
 |   |   +-- shm/                    # Config.h, QueueDefinitions.h
 |   +-- Logger.h                    # Thread-safe simulation logger
@@ -115,8 +115,8 @@ libs/bsw/middleware/simulation/
 +-- src/
 |   +-- generated_code/             # .cpp files produced by jinja2cpp.py
 |   +-- Logger.cpp
-|   +-- MainCore0.cpp               # Core0 entry point (FooSkeleton provider loop)
-|   +-- MainCore1.cpp               # Core1 entry point (FooProxy consumer loop)
+|   +-- MainCluster0.cpp               # Cluster0 entry point (FooSkeleton provider loop)
+|   +-- MainCluster1.cpp               # Cluster1 entry point (FooProxy consumer loop)
 |   +-- Sample.cpp                  # main(): creates SHM, spawns cores
 |   +-- ShmWrapper.cpp
 +-- docs/
@@ -132,25 +132,25 @@ libs/bsw/middleware/simulation/
 main()
   +- ShmWrapper::init()          -- opens / creates the POSIX SHM segment
   +- createMemoryLayout()        -- placement-new of queues + pools in SHM
-  +- [thread|fork] Core0         -- run_main_core0()
-  +- [thread|fork] Core1         -- run_main_core1()
+  +- [thread|fork] Cluster0         -- run_main_cluster0()
+  +- [thread|fork] Cluster1         -- run_main_cluster1()
 ```
 
-**Core0 startup** (`run_main_core0`):
+**Cluster0 startup** (`run_main_cluster0`):
 
-1. `middleware::initializeCore0ClusterConnection()` — wires the Core0-side
+1. `middleware::initializeCluster0ClusterConnection()` — wires the Cluster0-side
    cluster to its SHM queues.
-2. `FooSkeletonWrapper::init()` — registers the `Foo` service on Core0 with
+2. `FooSkeletonWrapper::init()` — registers the `Foo` service on Cluster0 with
    `InstanceId_1`.
 3. Main loop: calls `sendBroadcast()` every 5 s, processes incoming messages,
    logs stats every 15 s, exits after 60 s.
 
-**Core1 startup** (`run_main_core1`):
+**Cluster1 startup** (`run_main_cluster1`):
 
-1. `middleware::initializeCore1ClusterConnection()` — wires Core1 to its SHM
+1. `middleware::initializeCluster1ClusterConnection()` — wires Cluster1 to its SHM
    queues.
 2. `FooProxyWrapper::init()` — registers a change-notification callback on
-   `fooDefault` and initialises the `FooProxy` on Core1.
+   `fooDefault` and initialises the `FooProxy` on Cluster1.
 3. Main loop: calls `requestGet()` every 6 s, processes incoming messages, logs
    stats every 15 s, exits after 60 s.
 
@@ -168,8 +168,8 @@ main()
 | Attribute      | `FooDefault` -- `FooStruct { uint32_t fooValue }` |
 | Access         | read / write / subscribe |
 
-The `FooSkeletonWrapper` (Core0) increments `fooValue` on every broadcast.
-The `FooProxyWrapper<Core1>` receives broadcasts via a registered callback and
+The `FooSkeletonWrapper` (Cluster0) increments `fooValue` on every broadcast.
+The `FooProxyWrapper<Cluster1>` receives broadcasts via a registered callback and
 also issues explicit getter requests.
 
 ---
@@ -184,10 +184,10 @@ mechanism delivers it to the change-notification callback registered via
 `fooDefault.setReceiveHandler(...)` on the proxy side.
 
 ```
-Core0 FooSkeleton::fooDefault.send(data)
+Cluster0 FooSkeleton::fooDefault.send(data)
          |
-         v   SHM queue (Core0 -> Core1)
-Core1 FooProxy::onFooDefaultChanged(val)  <- setReceiveHandler callback
+         v   SHM queue (Cluster0 -> Cluster1)
+Cluster1 FooProxy::onFooDefaultChanged(val)  <- setReceiveHandler callback
 ```
 
 ### Attribute Get
@@ -197,13 +197,13 @@ The skeleton's `get_FooDefaultAttribute()` override is called, and the response
 is routed back to `onGetResponse()` on the proxy side.
 
 ```
-Core1 fooDefault.get(cb)
+Cluster1 fooDefault.get(cb)
          |
-         v   SHM queue (Core1 -> Core0)
-Core0 FooSkeleton::get_FooDefaultAttribute(response)
+         v   SHM queue (Cluster1 -> Cluster0)
+Cluster0 FooSkeleton::get_FooDefaultAttribute(response)
          |
-         v   SHM queue (Core0 -> Core1)
-Core1 onGetResponse(val)
+         v   SHM queue (Cluster0 -> Cluster1)
+Cluster1 onGetResponse(val)
 ```
 
 ---

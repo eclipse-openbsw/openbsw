@@ -22,10 +22,10 @@ set(_GEN_SRC ${_GEN_DIR}/src/generated_code)
 
 set(_GENERATED_HEADERS
     ${_GEN_INC}/middleware/ClusterId.h
-    ${_GEN_INC}/middleware/ClusterCore0.h
-    ${_GEN_INC}/middleware/ClusterCore1.h
-    ${_GEN_INC}/middleware/ClusterConnectionsCore0Core1.h
-    ${_GEN_INC}/middleware/ClusterConnectionsCore1Core0.h
+    ${_GEN_INC}/middleware/ClusterCluster0.h
+    ${_GEN_INC}/middleware/ClusterCluster1.h
+    ${_GEN_INC}/middleware/ClusterConnectionsCluster0Cluster1.h
+    ${_GEN_INC}/middleware/ClusterConnectionsCluster1Cluster0.h
     ${_GEN_INC}/middleware/shm/Config.h
     ${_GEN_INC}/shm/AllocatorsDefinitions.h
     ${_GEN_INC}/shm/QueueDefinitions.h
@@ -35,8 +35,8 @@ set(_GENERATED_HEADERS
 
 set(GENERATED_SRCS
     ${_GEN_SRC}/AllocatorSelectorDefinitions.cpp
-    ${_GEN_SRC}/ClusterCore0.cpp
-    ${_GEN_SRC}/ClusterCore1.cpp
+    ${_GEN_SRC}/ClusterCluster0.cpp
+    ${_GEN_SRC}/ClusterCluster1.cpp
     ${_GEN_SRC}/shm/Config.cpp
     ${_GEN_SRC}/org/test/foo/FooCommon.cpp
     ${_GEN_SRC}/org/test/foo/FooProxy.cpp
@@ -45,7 +45,7 @@ set(GENERATED_SRCS
 add_custom_command(
     OUTPUT ${_GENERATED_HEADERS} ${GENERATED_SRCS}
     COMMAND ${Python3_EXECUTABLE} ${_GEN_SCRIPT} --input ${_GEN_INPUT} --output
-            ${_GEN_DIR} --deployment-yaml ${_DEPLOYMENT_YAML} --no-clean
+            ${_GEN_DIR} --deployment-yaml ${_DEPLOYMENT_YAML}
     DEPENDS ${_GEN_SCRIPT} ${_DEPLOYMENT_YAML} ${_SCHEMA_YAML}
             ${_JINJA_TEMPLATES}
     COMMENT "Generating middleware C++ code from deployment.yaml"

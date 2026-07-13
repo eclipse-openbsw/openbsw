@@ -48,7 +48,7 @@ def _extract_foo_value(line: bytes) -> int | None:
 
 
 def test_foo_broadcast_sent(target_session):
-    """Core0 FooSkeleton sends at least one Foo broadcast after boot."""
+    """Cluster0 FooSkeleton sends at least one Foo broadcast after boot."""
     capserial = target_session.capserial()
     assert capserial.wait_for_boot_complete()
     capserial.clear()
@@ -60,7 +60,7 @@ def test_foo_broadcast_sent(target_session):
 
 
 def test_foo_attribute_notification(target_session):
-    """Core1 FooProxy receives a change notification right after a broadcast."""
+    """Cluster1 FooProxy receives a change notification right after a broadcast."""
     capserial = target_session.capserial()
     assert capserial.wait_for_boot_complete()
     capserial.clear()
@@ -77,7 +77,7 @@ def test_foo_attribute_notification(target_session):
 
 
 def test_foo_getter_response(target_session):
-    """Core1 FooProxy getter round-trip returns a response within expected time."""
+    """Cluster1 FooProxy getter round-trip returns a response within expected time."""
     capserial = target_session.capserial()
     assert capserial.wait_for_boot_complete()
     capserial.clear()

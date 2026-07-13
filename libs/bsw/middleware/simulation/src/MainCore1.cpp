@@ -12,14 +12,14 @@
 
 #include "Logger.h"
 #include "foo/FooProxyWrapper.h"
-#include "middleware/ClusterCore1.h"
+#include "middleware/ClusterCluster1.h"
 #include "shm/QueueDefinitions.h"
 
 void run_main_core1()
 {
-    middleware::initializeCore1ClusterConnection();
+    middleware::initializeCluster1ClusterConnection();
 
-    FooProxyWrapper<middleware::core::ClusterId::Core1> foo_consumer{};
+    FooProxyWrapper<middleware::core::ClusterId::Cluster1> foo_consumer{};
     foo_consumer.init();
 
     size_t counter = 0U;
@@ -38,9 +38,9 @@ void run_main_core1()
 
         if (counter % 150 == 0)
         {
-            auto const stats = middleware::shm::getQueueToCore1()->getStats();
+            auto const stats = middleware::shm::getQueueToCluster1()->getStats();
             simulation::Logger::logStats(
-                static_cast<uint8_t>(::middleware::core::ClusterId::Core1),
+                static_cast<uint8_t>(::middleware::core::ClusterId::Cluster1),
                 "Messages [ Written:",
                 stats.processedMessages,
                 ", Lost: ",
@@ -50,7 +50,7 @@ void run_main_core1()
 
         counter++;
 
-        middleware::processCore1Cluster(10);
+        middleware::processCluster1Cluster(10);
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
 

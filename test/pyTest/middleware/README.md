@@ -19,8 +19,8 @@ These tests verify the middleware Foo service integration in the referenceApp
 
 | Test | Description |
 |------|-------------|
-| `test_foo_broadcast_sent` | Core0 FooSkeleton sends a broadcast within 1 s of boot |
-| `test_foo_attribute_notification` | Core1 FooProxy receives the change notification immediately after a broadcast |
+| `test_foo_broadcast_sent` | Cluster0 FooSkeleton sends a broadcast within 1 s of boot |
+| `test_foo_attribute_notification` | Cluster1 FooProxy receives the change notification immediately after a broadcast |
 | `test_foo_getter_response` | Core1 FooProxy getter round-trip completes within 2 s |
 | `test_foo_value_increments` | `fooValue` is strictly incremented across consecutive broadcasts |
 

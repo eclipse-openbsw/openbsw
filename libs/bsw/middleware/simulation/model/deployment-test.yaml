@@ -9,12 +9,12 @@
 # *******************************************************************************
 
 clusters:
-  - &core0
-    name: Core0
+  - &cluster0
+    name: Cluster0
     id: 0
     queue_size: 10
-  - &core1
-    name: Core1
+  - &cluster1
+    name: Cluster1
     id: 1
     queue_size: 10
 
@@ -64,28 +64,28 @@ services:
     deployment:
       instance_ids: [1]
       clusters:
-        - cluster: *core0
+        - cluster: *cluster0
           consumers: 0
           providers:
             instance_ids: [1]
-        - cluster: *core1
+        - cluster: *cluster1
           consumers: 1
           providers:
             instance_ids: []
 
 connections:
-  - &core0_core1
-    source_cluster: *core0
-    target_cluster: *core1
+  - &cluster0_cluster1
+    source_cluster: *cluster0
+    target_cluster: *cluster1
     connection_type: SkeletonOnly
     has_timeouts: False
     proxies: []
     skeletons:
       - <<: *foo
         max_instances: 1
-  - &core1_core0
-    source_cluster: *core1
-    target_cluster: *core0
+  - &cluster1_cluster0
+    source_cluster: *cluster1
+    target_cluster: *cluster0
     connection_type: ProxyOnly
     has_timeouts: False
     proxies:
@@ -97,8 +97,8 @@ cores:
   - &c0
     name: C0
     clusters:
-      - *core0
+      - *cluster0
   - &c1
     name: C1
     clusters:
-      - *core1
+      - *cluster1

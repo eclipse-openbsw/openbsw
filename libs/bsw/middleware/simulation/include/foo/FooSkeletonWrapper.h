@@ -13,7 +13,7 @@
 #include "org/test/foo/FooSkeleton.h"
 
 /**
- * Concrete FooSkeleton implementation for the simulation Core0 provider.
+ * Concrete FooSkeleton implementation for the simulation Cluster0 provider.
  *
  * Stores a FooStruct value and handles get/set requests.
  * On every set, the new value is broadcast to all subscribed proxies.
@@ -30,7 +30,7 @@ public:
         if (result == ::middleware::core::HRESULT::Ok)
         {
             simulation::Logger::log(
-                static_cast<uint8_t>(::middleware::core::ClusterId::Core0),
+                static_cast<uint8_t>(::middleware::core::ClusterId::Cluster0),
                 "Foo broadcast sent, fooValue=",
                 data_.fooValue);
         }
@@ -47,7 +47,7 @@ public:
         data_ = value;
         (void)fooDefault.send(data_);
         simulation::Logger::log(
-            static_cast<uint8_t>(::middleware::core::ClusterId::Core0),
+            static_cast<uint8_t>(::middleware::core::ClusterId::Cluster0),
             "Foo set received, fooValue=",
             data_.fooValue);
     }

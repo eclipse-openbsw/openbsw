@@ -17,7 +17,7 @@
 #include "org/test/foo/FooProxy.h"
 
 /**
- * FooProxy wrapper for the simulation Core1 consumer.
+ * FooProxy wrapper for the simulation Cluster1 consumer.
  *
  * Registers a change-notification callback on the fooDefault attribute and
  * provides a helper to fire an asynchronous getter request.

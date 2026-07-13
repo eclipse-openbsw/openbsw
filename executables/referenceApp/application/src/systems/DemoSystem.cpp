@@ -102,8 +102,8 @@ DemoSystem::DemoSystem(
 void DemoSystem::init()
 {
 #ifdef PLATFORM_SUPPORT_MIDDLEWARE
-    ::middleware::initializeCore0ClusterConnection();
-    ::middleware::initializeCore1ClusterConnection();
+    ::middleware::initializeCluster0ClusterConnection();
+    ::middleware::initializeCluster1ClusterConnection();
     _fooSkeletonWrapper.init();
     _fooProxyWrapper.init();
 #endif
@@ -213,8 +213,8 @@ void DemoSystem::cyclic()
     {
         _fooProxyWrapper.requestGet();
     }
-    ::middleware::processCore0Cluster();
-    ::middleware::processCore1Cluster();
+    ::middleware::processCluster0Cluster();
+    ::middleware::processCluster1Cluster();
 #endif
 
 #ifdef PLATFORM_SUPPORT_STORAGE

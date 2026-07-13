@@ -12,12 +12,12 @@
 
 #include "Logger.h"
 #include "foo/FooSkeletonWrapper.h"
-#include "middleware/ClusterCore0.h"
+#include "middleware/ClusterCluster0.h"
 #include "shm/QueueDefinitions.h"
 
 void run_main_core0()
 {
-    middleware::initializeCore0ClusterConnection();
+    middleware::initializeCluster0ClusterConnection();
 
     FooSkeletonWrapper foo_provider{};
     foo_provider.init();
@@ -38,9 +38,9 @@ void run_main_core0()
 
         if (counter % 150 == 0)
         {
-            auto const stats = middleware::shm::getQueueToCore0()->getStats();
+            auto const stats = middleware::shm::getQueueToCluster0()->getStats();
             simulation::Logger::logStats(
-                static_cast<uint8_t>(::middleware::core::ClusterId::Core0),
+                static_cast<uint8_t>(::middleware::core::ClusterId::Cluster0),
                 "Messages [ Written:",
                 stats.processedMessages,
                 ", Lost: ",
@@ -50,7 +50,7 @@ void run_main_core0()
 
         counter++;
 
-        middleware::processCore0Cluster(10);
+        middleware::processCluster0Cluster(10);
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
 }
