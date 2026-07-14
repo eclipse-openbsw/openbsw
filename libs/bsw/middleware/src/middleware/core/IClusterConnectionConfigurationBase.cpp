@@ -44,7 +44,7 @@ void ITimeoutConfiguration::unregisterTimeoutTransceiver(
     auto* it = ::etl::find(timeoutTransceivers.begin(), timeoutTransceivers.end(), &transceiver);
     if (it != timeoutTransceivers.end())
     {
-        ::etl::swap(*it, timeoutTransceivers.back());
+        *it = timeoutTransceivers.back();
         timeoutTransceivers.pop_back();
     }
 }
