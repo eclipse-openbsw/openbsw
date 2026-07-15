@@ -21,6 +21,7 @@
   */
 #pragma once
 
+#include <etl/alignment.h>
 #include <etl/delegate.h>
 
 {% for connection in connections if connection.source_cluster.name == cluster.name %}
@@ -32,7 +33,7 @@ namespace middleware
 {
 
 {% for connection in connections if connection.source_cluster.name == cluster.name %}
-extern core::ClusterConnectionTypeSelector<meta::ClusterConnection{{connection.source_cluster.name}}To{{connection.target_cluster.name}}Meta>::type ClusterConnection{{connection.source_cluster.name}}To{{connection.target_cluster.name}};
+extern ::etl::typed_storage<core::ClusterConnectionTypeSelector<meta::ClusterConnection{{connection.source_cluster.name}}To{{connection.target_cluster.name}}Meta>::type> ClusterConnection{{connection.source_cluster.name}}To{{connection.target_cluster.name}};
 {% endfor %}
 
 void initialize{{cluster.name}}ClusterConnection();

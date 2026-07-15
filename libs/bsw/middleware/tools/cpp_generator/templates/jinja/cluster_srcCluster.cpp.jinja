@@ -22,6 +22,7 @@
 #include "middleware/Cluster{{cluster.name}}.h"
 
 #include <etl/algorithm.h>
+#include <etl/alignment.h>
 #include <etl/type_traits.h>
 
 #include "middleware/ClusterId.h"
@@ -49,7 +50,7 @@ void process{{cluster.name}}Cluster(size_t messages, const bool updateTimeouts)
         {
 {% for connection in connections if connection.source_cluster.name == cluster.name %}
             case core::ClusterId::{{connection.target_cluster.name}}: {
-                ClusterConnection{{cluster.name}}To{{connection.target_cluster.name}}.processMessage(msg);
+                (*ClusterConnection{{cluster.name}}To{{connection.target_cluster.name}}).processMessage(msg);
                 break;
             }
 {% endfor %}
@@ -71,24 +72,22 @@ void process{{cluster.name}}Cluster(size_t messages, const bool updateTimeouts)
 void update{{cluster.name}}ClusterTimeouts()
 {
 {% for connection in connections if connection.source_cluster.name == cluster.name and connection.has_timeouts %}
-    ClusterConnection{{cluster.name}}To{{connection.target_cluster.name}}.updateTimeouts();
+    (*ClusterConnection{{cluster.name}}To{{connection.target_cluster.name}}).updateTimeouts();
 {% endfor %}
 }
 
 // ***************************** {{cluster.name}} *****************************
 {% for connection in connections if connection.source_cluster.name == cluster.name %}
-meta::ClusterConnection{{cluster.name}}To{{connection.target_cluster.name}}Meta ClusterConnection{{cluster.name}}To{{connection.target_cluster.name}}Config;
-core::ClusterConnectionTypeSelector<meta::ClusterConnection{{cluster.name}}To{{connection.target_cluster.name}}Meta>::type ClusterConnection{{cluster.name}}To{{connection.target_cluster.name}}(
-    ClusterConnection{{cluster.name}}To{{connection.target_cluster.name}}Config);
+::etl::typed_storage<meta::ClusterConnection{{cluster.name}}To{{connection.target_cluster.name}}Meta> ClusterConnection{{cluster.name}}To{{connection.target_cluster.name}}Config;
+::etl::typed_storage<core::ClusterConnectionTypeSelector<meta::ClusterConnection{{cluster.name}}To{{connection.target_cluster.name}}Meta>::type> ClusterConnection{{cluster.name}}To{{connection.target_cluster.name}};
 {% endfor %}
 
 void initialize{{cluster.name}}ClusterConnection()
 {
 {% for connection in connections if connection.source_cluster.name == cluster.name %}
-    static_cast<void>(new (&ClusterConnection{{cluster.name}}To{{connection.target_cluster.name}}Config) decltype(ClusterConnection{{cluster.name}}To{{connection.target_cluster.name}}Config)());
-    static_cast<void>(new (&ClusterConnection{{cluster.name}}To{{connection.target_cluster.name}})
-        decltype(ClusterConnection{{cluster.name}}To{{connection.target_cluster.name}})(
-            ClusterConnection{{cluster.name}}To{{connection.target_cluster.name}}Config));
+    ClusterConnection{{cluster.name}}To{{connection.target_cluster.name}}Config.create();
+    ClusterConnection{{cluster.name}}To{{connection.target_cluster.name}}.create(
+        *ClusterConnection{{cluster.name}}To{{connection.target_cluster.name}}Config);
 {% endfor %}
 }
 
