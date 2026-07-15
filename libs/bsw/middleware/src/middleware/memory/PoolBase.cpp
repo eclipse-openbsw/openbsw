@@ -11,6 +11,7 @@
 #include "middleware/memory/PoolBase.h"
 
 #include <etl/algorithm.h>
+#include <etl/bit.h>
 #include <etl/iterator.h>
 #include <etl/memory.h>
 #include <etl/tuple.h>
@@ -48,15 +49,16 @@ void PoolBase::initialize()
     uint8_t* tempBuff = _buffer;
     for (size_t i = 0U; i < (_elementCount - 1U); ++i)
     {
-        uint8_t* const tempNext                = offsetAddress(tempBuff, _elementAlignedSize);
-        // Write the address of tempNext in the memory pointed to by tempBuff
-        *reinterpret_cast<uint8_t**>(tempBuff) = tempNext; // NOLINT
-        tempBuff                               = tempNext;
+        uint8_t* const tempNext = offsetAddress(tempBuff, _elementAlignedSize);
+        // Write the address of tempNext into the bytes pointed to by tempBuff
+        ::etl::mem_copy(reinterpret_cast<uint8_t const*>(&tempNext), sizeof(uint8_t*), tempBuff);
+        tempBuff = tempNext;
     }
     // Last chunk: next pointer is nullptr
-    *reinterpret_cast<uint8_t**>(tempBuff) = nullptr; // NOLINT
-    _nextChunk                             = _buffer;
-    _available                             = _elementCount;
+    uint8_t* const null_ptr = nullptr;
+    ::etl::mem_copy(reinterpret_cast<uint8_t const*>(&null_ptr), sizeof(uint8_t*), tempBuff);
+    _nextChunk = _buffer;
+    _available = _elementCount;
 }
 
 uint8_t* PoolBase::allocate(size_t const size)
@@ -65,8 +67,8 @@ uint8_t* PoolBase::allocate(size_t const size)
 
     if ((size <= _elementSize) && (!isFull()))
     {
-        ret        = _nextChunk;
-        _nextChunk = *reinterpret_cast<uint8_t**>(_nextChunk); // NOLINT
+        ret = _nextChunk;
+        ::etl::mem_copy(ret, sizeof(uint8_t*), reinterpret_cast<uint8_t*>(&_nextChunk));
         --_available;
         _stats.internalFragmentation += static_cast<uint32_t>(_elementSize - size);
         ++_stats.successfulAllocations;
@@ -87,8 +89,7 @@ bool PoolBase::deallocate(void* const ptr)
     auto* const ptrObject = static_cast<uint8_t*>(ptr);
     if (isValidPointer(ptrObject))
     {
-        *reinterpret_cast<uintptr_t*>(ptrObject)                                    // NOLINT
-            = _nextChunk != nullptr ? reinterpret_cast<uintptr_t>(_nextChunk) : 0U; // NOLINT
+        ::etl::mem_copy(reinterpret_cast<uint8_t const*>(&_nextChunk), sizeof(uint8_t*), ptrObject);
 
         ptrdiff_t const distance = ::etl::distance(_buffer, ptrObject);
         size_t const ptrPosition = static_cast<size_t>(distance) / _elementAlignedSize;
