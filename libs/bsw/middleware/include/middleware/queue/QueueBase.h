@@ -66,28 +66,23 @@ public:
     /** Returns the current number of elements in the queue. */
     uint32_t size() const
     {
-        // Volatile is needed to to make sure the read is not optimized away when new elements have
-        // been added to the queue by the other core.
-        uint32_t const txPos = static_cast<uint32_t const volatile&>(_sent);
+        // _sent is volatile; read is not optimised away when the other core writes it.
+        uint32_t const txPos = _sent;
         return (txPos >= _received) ? (txPos - _received) : (txPos + (2U * _maxSize)) - _received;
     }
 
     /** Returns true if the queue is full, false otherwise. */
     bool isFull() const
     {
-        // Volatile is needed to make sure the read is not optimized away when isFull() is called
-        // in a loop like `while(sender.isFull()){}`.
-        return (
-            _sent
-            == ((static_cast<uint32_t const volatile&>(_received) + _maxSize) % (2U * _maxSize)));
+        // _received is volatile; read is not optimised away when called in a busy-wait loop.
+        return _sent == ((_received + _maxSize) % (2U * _maxSize));
     }
 
     /** Returns true if the queue is empty, false otherwise. */
     bool isEmpty() const
     {
-        // Volatile is needed to prevent `isEmpty()` from returning `true` when in fact new elements
-        // have been added to the queue by the other core.
-        return static_cast<uint32_t const volatile&>(_sent) == _received;
+        // _sent is volatile; read is not optimised away when the other core adds elements.
+        return _sent == _received;
     }
 
     /**
@@ -175,8 +170,8 @@ protected:
 
 private:
     uint32_t _maxSize;
-    uint32_t _sent;
-    uint32_t _received;
+    uint32_t volatile _sent;
+    uint32_t volatile _received;
     QueueStats _stats;
 };
 
