@@ -50,7 +50,7 @@ void process{{cluster.name}}Cluster(size_t messages, const bool updateTimeouts)
         {
 {% for connection in connections if connection.source_cluster.name == cluster.name %}
             case core::ClusterId::{{connection.target_cluster.name}}: {
-                (*ClusterConnection{{cluster.name}}To{{connection.target_cluster.name}}).processMessage(msg);
+                ClusterConnection{{cluster.name}}To{{connection.target_cluster.name}}->processMessage(msg);
                 break;
             }
 {% endfor %}
@@ -72,7 +72,7 @@ void process{{cluster.name}}Cluster(size_t messages, const bool updateTimeouts)
 void update{{cluster.name}}ClusterTimeouts()
 {
 {% for connection in connections if connection.source_cluster.name == cluster.name and connection.has_timeouts %}
-    (*ClusterConnection{{cluster.name}}To{{connection.target_cluster.name}}).updateTimeouts();
+    ClusterConnection{{cluster.name}}To{{connection.target_cluster.name}}->updateTimeouts();
 {% endfor %}
 }
 

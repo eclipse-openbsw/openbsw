@@ -75,7 +75,16 @@ class InstancesDatabase_Merged : public ::middleware::core::IInstanceDatabase
     ::etl::span<::middleware::core::IClusterConnection* const> getSkeletonConnectionsRange() const override
     {
         {% if all_skeleton_connections %}
-        return ::etl::make_span(fSkeletonConnections);
+        // Function-local static: initialised on first call, which is always after
+        // initializeXClusterConnection() has called typed_storage::create().
+        static ::etl::array<::middleware::core::IClusterConnection* const, {{all_skeleton_connections | length}}U> connections = {
+            {
+            {%- for connection in all_skeleton_connections %}
+            ::middleware::ClusterConnection{{ connection.source_cluster.name }}To{{ connection.target_cluster.name }}.operator->(){{ "," if not loop.last }}
+            {%- endfor %}
+            }
+        };
+        return ::etl::make_span(connections);
         {% else %}
         return ::etl::span<::middleware::core::IClusterConnection* const>();
         {% endif %}
@@ -84,7 +93,14 @@ class InstancesDatabase_Merged : public ::middleware::core::IInstanceDatabase
     ::etl::span<::middleware::core::IClusterConnection* const> getProxyConnectionsRange() const override
     {
         {% if all_proxy_connections %}
-        return ::etl::make_span(fProxyConnections);
+        static ::etl::array<::middleware::core::IClusterConnection* const, {{all_proxy_connections | length}}U> connections = {
+            {
+            {%- for connection in all_proxy_connections %}
+            ::middleware::ClusterConnection{{ connection.source_cluster.name }}To{{ connection.target_cluster.name }}.operator->(){{ "," if not loop.last }}
+            {%- endfor %}
+            }
+        };
+        return ::etl::make_span(connections);
         {% else %}
         return ::etl::span<::middleware::core::IClusterConnection* const>();
         {% endif %}
@@ -97,26 +113,6 @@ class InstancesDatabase_Merged : public ::middleware::core::IInstanceDatabase
 
   private:
     static constexpr ::etl::array<const uint16_t, {{all_instance_ids | length}}U> fInstanceIds = {% if all_instance_ids -%}{ {{all_instance_ids | join('U, ')}}U }{%- else -%}{  }{%- endif %};
-    {% if all_proxy_connections %}
-    inline static ::etl::array<::middleware::core::IClusterConnection* const, {{all_proxy_connections | length}}U> fProxyConnections = {
-        {
-        {%- for connection in all_proxy_connections %}
-        ::middleware::ClusterConnection{{ connection.source_cluster.name }}To{{ connection.target_cluster.name }}.operator->(){{ "," if not loop.last }}
-
-        {%- endfor %}
-        }
-        };
-    {% endif %}
-    {% if all_skeleton_connections %}
-    inline static ::etl::array<::middleware::core::IClusterConnection* const, {{all_skeleton_connections | length}}U> fSkeletonConnections = {
-        {
-        {%- for connection in all_skeleton_connections %}
-        ::middleware::ClusterConnection{{ connection.source_cluster.name }}To{{ connection.target_cluster.name }}.operator->(){{ "," if not loop.last }}
-
-        {%- endfor %}
-        }
-        };
-    {% endif %}
 };
 
 constexpr ::etl::array<const uint16_t, {{all_instance_ids | length}}U> InstancesDatabase_Merged::fInstanceIds;
