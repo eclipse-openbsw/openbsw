@@ -10,6 +10,7 @@
 
 #pragma once
 
+#include <etl/atomic.h>
 #include <etl/optional.h>
 
 #include <cstdint>
@@ -66,23 +67,25 @@ public:
     /** Returns the current number of elements in the queue. */
     uint32_t size() const
     {
-        // _sent is volatile; read is not optimised away when the other core writes it.
-        uint32_t const txPos = _sent;
-        return (txPos >= _received) ? (txPos - _received) : (txPos + (2U * _maxSize)) - _received;
+        // Snapshot both cursors once to avoid a race between the comparison
+        // and the subtraction in the ternary expression below.
+        uint32_t const txPos = _sent.load(::etl::memory_order_relaxed);
+        uint32_t const rxPos = _received.load(::etl::memory_order_relaxed);
+        return (txPos >= rxPos) ? (txPos - rxPos) : (txPos + (2U * _maxSize)) - rxPos;
     }
 
     /** Returns true if the queue is full, false otherwise. */
     bool isFull() const
     {
-        // _received is volatile; read is not optimised away when called in a busy-wait loop.
-        return _sent == ((_received + _maxSize) % (2U * _maxSize));
+        uint32_t const rxPos = _received.load(::etl::memory_order_relaxed);
+        return _sent.load(::etl::memory_order_relaxed) == ((rxPos + _maxSize) % (2U * _maxSize));
     }
 
     /** Returns true if the queue is empty, false otherwise. */
     bool isEmpty() const
     {
-        // _sent is volatile; read is not optimised away when the other core adds elements.
-        return _sent == _received;
+        return _sent.load(::etl::memory_order_relaxed)
+               == _received.load(::etl::memory_order_relaxed);
     }
 
     /**
@@ -127,15 +130,16 @@ protected:
     {}
 
     /** Returns the value of the reading cursor. */
-    uint32_t getReceived() const { return _received; }
+    uint32_t getReceived() const { return _received.load(::etl::memory_order_relaxed); }
 
     /** Returns the value of the writing cursor. */
-    uint32_t getSent() const { return _sent; }
+    uint32_t getSent() const { return _sent.load(::etl::memory_order_relaxed); }
 
     /** Advances the reading cursor. */
     void advanceReceived()
     {
-        _received = (_received + 1U) % (2U * _maxSize);
+        uint32_t const next = (_received.load(::etl::memory_order_relaxed) + 1U) % (2U * _maxSize);
+        _received.store(next, ::etl::memory_order_relaxed);
         ++_stats.processedMessages;
     }
 
@@ -153,8 +157,9 @@ protected:
         }
         else
         {
-            writableIndex.emplace(_sent % _maxSize);
-            _sent = (_sent + 1U) % (2U * _maxSize);
+            uint32_t const sentVal = _sent.load(::etl::memory_order_relaxed);
+            writableIndex.emplace(sentVal % _maxSize);
+            _sent.store((sentVal + 1U) % (2U * _maxSize), ::etl::memory_order_relaxed);
             if (size() > _stats.maxLoad)
             {
                 _stats.maxLoad = static_cast<uint8_t>(size());
@@ -170,8 +175,8 @@ protected:
 
 private:
     uint32_t _maxSize;
-    uint32_t volatile _sent;
-    uint32_t volatile _received;
+    ::etl::atomic<uint32_t> _sent;
+    ::etl::atomic<uint32_t> _received;
     QueueStats _stats;
 };
 
