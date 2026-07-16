@@ -179,13 +179,13 @@ static uint32_t fakeMessageRam[212];
 
 // --- FDCAN register bit definitions (from stm32g474xx.h) ---
 #define FDCAN_CCCR_INIT_Pos (0U)
-#define FDCAN_CCCR_INIT     (0x1UL << FDCAN_CCCR_INIT_Pos)
+#define FDCAN_CCCR_INIT     (0x1U << FDCAN_CCCR_INIT_Pos)
 #define FDCAN_CCCR_CCE_Pos  (1U)
-#define FDCAN_CCCR_CCE      (0x1UL << FDCAN_CCCR_CCE_Pos)
+#define FDCAN_CCCR_CCE      (0x1U << FDCAN_CCCR_CCE_Pos)
 #define FDCAN_CCCR_FDOE_Pos (8U)
-#define FDCAN_CCCR_FDOE     (0x1UL << FDCAN_CCCR_FDOE_Pos)
+#define FDCAN_CCCR_FDOE     (0x1U << FDCAN_CCCR_FDOE_Pos)
 #define FDCAN_CCCR_BRSE_Pos (9U)
-#define FDCAN_CCCR_BRSE     (0x1UL << FDCAN_CCCR_BRSE_Pos)
+#define FDCAN_CCCR_BRSE     (0x1U << FDCAN_CCCR_BRSE_Pos)
 
 #define FDCAN_NBTP_NTSEG2_Pos (0U)
 #define FDCAN_NBTP_NTSEG1_Pos (8U)
@@ -196,48 +196,48 @@ static uint32_t fakeMessageRam[212];
 #define FDCAN_ECR_REC_Pos (8U)
 
 #define FDCAN_PSR_BO_Pos (7U)
-#define FDCAN_PSR_BO     (0x1UL << FDCAN_PSR_BO_Pos)
+#define FDCAN_PSR_BO     (0x1U << FDCAN_PSR_BO_Pos)
 
 #define FDCAN_IR_RF0N_Pos (0U)
-#define FDCAN_IR_RF0N     (0x1UL << FDCAN_IR_RF0N_Pos)
+#define FDCAN_IR_RF0N     (0x1U << FDCAN_IR_RF0N_Pos)
 #define FDCAN_IR_RF0F_Pos (1U)
-#define FDCAN_IR_RF0F     (0x1UL << FDCAN_IR_RF0F_Pos)
+#define FDCAN_IR_RF0F     (0x1U << FDCAN_IR_RF0F_Pos)
 #define FDCAN_IR_RF0L_Pos (2U)
-#define FDCAN_IR_RF0L     (0x1UL << FDCAN_IR_RF0L_Pos)
+#define FDCAN_IR_RF0L     (0x1U << FDCAN_IR_RF0L_Pos)
 #define FDCAN_IR_TC_Pos   (7U)
-#define FDCAN_IR_TC       (0x1UL << FDCAN_IR_TC_Pos)
+#define FDCAN_IR_TC       (0x1U << FDCAN_IR_TC_Pos)
 
 #define FDCAN_IE_RF0NE_Pos (0U)
-#define FDCAN_IE_RF0NE     (0x1UL << FDCAN_IE_RF0NE_Pos)
+#define FDCAN_IE_RF0NE     (0x1U << FDCAN_IE_RF0NE_Pos)
 #define FDCAN_IE_TCE_Pos   (7U)
-#define FDCAN_IE_TCE       (0x1UL << FDCAN_IE_TCE_Pos)
+#define FDCAN_IE_TCE       (0x1U << FDCAN_IE_TCE_Pos)
 #define FDCAN_IE_TEFNE_Pos (12U)
-#define FDCAN_IE_TEFNE     (0x1UL << FDCAN_IE_TEFNE_Pos)
+#define FDCAN_IE_TEFNE     (0x1U << FDCAN_IE_TEFNE_Pos)
 
 #define FDCAN_IR_TEFN_Pos (12U)
-#define FDCAN_IR_TEFN     (0x1UL << FDCAN_IR_TEFN_Pos)
+#define FDCAN_IR_TEFN     (0x1U << FDCAN_IR_TEFN_Pos)
 
 #define FDCAN_TXEFS_EFFL_Pos (0U)
-#define FDCAN_TXEFS_EFFL     (0x7UL << FDCAN_TXEFS_EFFL_Pos)
+#define FDCAN_TXEFS_EFFL     (0x7U << FDCAN_TXEFS_EFFL_Pos)
 #define FDCAN_TXEFS_EFGI_Pos (8U)
-#define FDCAN_TXEFS_EFGI     (0x3UL << FDCAN_TXEFS_EFGI_Pos)
+#define FDCAN_TXEFS_EFGI     (0x3U << FDCAN_TXEFS_EFGI_Pos)
 
 #define FDCAN_DBTP_DSJW_Pos   (0U)
 #define FDCAN_DBTP_DTSEG2_Pos (4U)
 #define FDCAN_DBTP_DTSEG1_Pos (8U)
 #define FDCAN_DBTP_DBRP_Pos   (16U)
 #define FDCAN_DBTP_TDC_Pos    (23U)
-#define FDCAN_DBTP_TDC        (0x1UL << FDCAN_DBTP_TDC_Pos)
+#define FDCAN_DBTP_TDC        (0x1U << FDCAN_DBTP_TDC_Pos)
 
 #define FDCAN_TDCR_TDCO_Pos (8U)
 
 #define FDCAN_ILS_SMSG_Pos (2U)
-#define FDCAN_ILS_SMSG     (0x1UL << FDCAN_ILS_SMSG_Pos)
+#define FDCAN_ILS_SMSG     (0x1U << FDCAN_ILS_SMSG_Pos)
 
 #define FDCAN_ILE_EINT0_Pos (0U)
-#define FDCAN_ILE_EINT0     (0x1UL << FDCAN_ILE_EINT0_Pos)
+#define FDCAN_ILE_EINT0     (0x1U << FDCAN_ILE_EINT0_Pos)
 #define FDCAN_ILE_EINT1_Pos (1U)
-#define FDCAN_ILE_EINT1     (0x1UL << FDCAN_ILE_EINT1_Pos)
+#define FDCAN_ILE_EINT1     (0x1U << FDCAN_ILE_EINT1_Pos)
 
 #define FDCAN_RXGFC_ANFE_Pos (2U)
 #define FDCAN_RXGFC_ANFS_Pos (4U)
@@ -245,21 +245,21 @@ static uint32_t fakeMessageRam[212];
 #define FDCAN_RXGFC_LSE_Pos  (20U)
 
 #define FDCAN_RXF0S_F0FL_Pos (0U)
-#define FDCAN_RXF0S_F0FL     (0xFUL << FDCAN_RXF0S_F0FL_Pos)
+#define FDCAN_RXF0S_F0FL     (0xFU << FDCAN_RXF0S_F0FL_Pos)
 #define FDCAN_RXF0S_F0GI_Pos (8U)
-#define FDCAN_RXF0S_F0GI     (0x3UL << FDCAN_RXF0S_F0GI_Pos)
+#define FDCAN_RXF0S_F0GI     (0x3U << FDCAN_RXF0S_F0GI_Pos)
 
 #define FDCAN_TXFQS_TFFL_Pos  (0U)
-#define FDCAN_TXFQS_TFFL      (0x7UL << FDCAN_TXFQS_TFFL_Pos)
+#define FDCAN_TXFQS_TFFL      (0x7U << FDCAN_TXFQS_TFFL_Pos)
 #define FDCAN_TXFQS_TFQPI_Pos (16U)
-#define FDCAN_TXFQS_TFQPI     (0x3UL << FDCAN_TXFQS_TFQPI_Pos)
+#define FDCAN_TXFQS_TFQPI     (0x3U << FDCAN_TXFQS_TFQPI_Pos)
 
 #define RCC_APB1ENR1_FDCANEN_Pos (25U)
-#define RCC_APB1ENR1_FDCANEN     (0x1UL << RCC_APB1ENR1_FDCANEN_Pos)
+#define RCC_APB1ENR1_FDCANEN     (0x1U << RCC_APB1ENR1_FDCANEN_Pos)
 
 #define RCC_CCIPR_FDCANSEL_Pos (24U)
-#define RCC_CCIPR_FDCANSEL     (0x3UL << RCC_CCIPR_FDCANSEL_Pos)
-#define RCC_CCIPR_FDCANSEL_1   (0x2UL << RCC_CCIPR_FDCANSEL_Pos)
+#define RCC_CCIPR_FDCANSEL     (0x3U << RCC_CCIPR_FDCANSEL_Pos)
+#define RCC_CCIPR_FDCANSEL_1   (0x2U << RCC_CCIPR_FDCANSEL_Pos)
 
 // Prevent the real mcu.h from being included (it would pull in stm32g474xx.h)
 #define MCU_MCU_H
@@ -289,7 +289,9 @@ protected:
     {
         // Zero all fake peripherals and message RAM
         memset(&fakeRcc, 0, sizeof(fakeRcc));
-        memset(&fakeFdcan, 0, sizeof(fakeFdcan));
+        // Cast to void*: FakeCccrReg's volatile operators make the struct
+        // non-trivially-assignable, which -Wclass-memaccess rejects otherwise.
+        memset(static_cast<void*>(&fakeFdcan), 0, sizeof(fakeFdcan));
         memset(&fakeTxGpio, 0, sizeof(fakeTxGpio));
         memset(&fakeRxGpio, 0, sizeof(fakeRxGpio));
         memset(fakeMessageRam, 0, sizeof(fakeMessageRam));
@@ -3637,7 +3639,10 @@ TEST_F(FdCanDeviceTest, initCCIPRUpperBitsUnaffected)
 TEST_F(FdCanDeviceTest, transmitISRInvokesCallbackDelegate)
 {
     bool callbackFired = false;
-    auto callback = ::etl::delegate<void()>::create([&callbackFired]() { callbackFired = true; });
+    // The lambda must outlive the delegate: etl::delegate stores a pointer to
+    // the functor object, so a temporary would dangle.
+    auto onFrameSent   = [&callbackFired]() { callbackFired = true; };
+    auto callback      = ::etl::delegate<void()>::create(onFrameSent);
 
     auto cfg = makeDefaultConfig();
     bios::FdCanDevice dev(cfg, callback);
@@ -4025,12 +4030,14 @@ TEST_F(FdCanDeviceTest, transmitISRCallbackObservesTceDisabledAndTcCleared)
 {
     uint32_t ieAtCallback = 0xFFFFFFFFU;
     uint32_t irAtCallback = 0U;
-    auto callback         = ::etl::delegate<void()>::create(
-        [&]()
-        {
-            ieAtCallback = fakeFdcan.IE;
-            irAtCallback = fakeFdcan.IR;
-        });
+    // Named lambda: the delegate stores a pointer to it, so it must outlive
+    // the delegate (a temporary would dangle).
+    auto onFrameSent      = [&]()
+    {
+        ieAtCallback = fakeFdcan.IE;
+        irAtCallback = fakeFdcan.IR;
+    };
+    auto callback = ::etl::delegate<void()>::create(onFrameSent);
 
     auto cfg = makeDefaultConfig();
     bios::FdCanDevice dev(cfg, callback);
@@ -4049,7 +4056,10 @@ TEST_F(FdCanDeviceTest, transmitISRCallbackObservesTceDisabledAndTcCleared)
 TEST_F(FdCanDeviceTest, transmitISRCallbackInvokedOnEveryCall)
 {
     uint32_t callCount = 0U;
-    auto callback      = ::etl::delegate<void()>::create([&]() { callCount++; });
+    // Named lambda: the delegate stores a pointer to it, so it must outlive
+    // the delegate (a temporary would dangle).
+    auto onFrameSent   = [&]() { callCount++; };
+    auto callback      = ::etl::delegate<void()>::create(onFrameSent);
 
     auto cfg = makeDefaultConfig();
     bios::FdCanDevice dev(cfg, callback);
