@@ -300,11 +300,6 @@ ESR_NO_INLINE AbstractTransportLayer::ErrorCode DiagDispatcher::send(
     TransportMessage& transportMessage,
     ITransportMessageProcessedListener* const pNotificationListener)
 {
-    if (!fEnabled)
-    {
-        return AbstractTransportLayer::ErrorCode::TP_SEND_FAIL;
-    }
-
     // Compare listener identity through the concrete connection type to avoid reinterpret_cast.
     auto connection = etl::find_if(
         _incomingDiagConnectionPool.begin(),
@@ -328,6 +323,14 @@ ESR_NO_INLINE AbstractTransportLayer::ErrorCode DiagDispatcher::send(
 
         return AbstractTransportLayer::ErrorCode::TP_SEND_FAIL;
     }
+
+    // Existing incoming connections can still send responses, but new requests are blocked
+    // once the dispatcher is disabled.
+    if (!fEnabled)
+    {
+        return AbstractTransportLayer::ErrorCode::TP_SEND_FAIL;
+    }
+
     if ((transportMessage.getTargetId() != _configuration.DiagAddress)
         && ((_configuration.BroadcastAddress != TransportMessage::INVALID_ADDRESS)
             && (transportMessage.getTargetId() != _configuration.BroadcastAddress)))

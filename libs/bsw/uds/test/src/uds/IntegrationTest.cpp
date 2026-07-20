@@ -461,7 +461,9 @@ TEST_F(
         _udsDispatcher.send(*pRequest, &_messageProcessedListener));
 }
 
-TEST_F(UdsIntegration, send_calls_enqueueMessage_and_return_TP_SEND_FAIL_if_isEnabled_return_false)
+TEST_F(
+    UdsIntegration,
+    send_does_not_call_enqueueMessage_and_returns_TP_SEND_FAIL_if_isEnabled_return_false)
 {
     uint8_t buffer[]           = {0x22U, 0x01U, 0x01U};
     uint8_t expectedResponse[] = {0x62U, 0x01U, 0x01U, 0x01U, 0x02U, 0x03U};
@@ -473,6 +475,31 @@ TEST_F(UdsIntegration, send_calls_enqueueMessage_and_return_TP_SEND_FAIL_if_isEn
     EXPECT_EQ(
         transport::AbstractTransportLayer::ErrorCode::TP_SEND_FAIL,
         _udsDispatcher.send(*pRequest, &_messageProcessedListener));
+
+    EXPECT_TRUE(_sendJobQueue.empty());
+}
+
+TEST_F(
+    UdsIntegration,
+    send_allows_existing_connection_response_if_isEnabled_return_false)
+{
+    uint8_t responseBuffer[] = {0x62U, 0x01U, 0x01U, 0x01U, 0x02U, 0x03U};
+    TransportMessageWithBuffer pResponse(0x10U, 0xF1U, responseBuffer);
+
+    IncomingDiagConnection* const pConnection
+        = acquireIncomingDiagConnection(_connectionPool, ::etl::move(fContext));
+    ASSERT_NE(pConnection, nullptr);
+
+    _udsDispatcher.fEnabled = false;
+
+    EXPECT_CALL(_messageListener, messageReceived(Eq(0u), Eq(ByRef(*pResponse)), Eq(pConnection)))
+        .WillOnce(Return(transport::ITransportMessageListener::ReceiveResult::RECEIVED_NO_ERROR));
+
+    EXPECT_EQ(
+        transport::AbstractTransportLayer::ErrorCode::TP_OK,
+        _udsDispatcher.send(*pResponse, pConnection));
+
+    _connectionPool.destroy(pConnection);
 }
 
 TEST_F(
