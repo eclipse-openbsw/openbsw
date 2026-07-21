@@ -268,9 +268,13 @@ def pytest_runtest_setup(item):
     skip_marker = item.get_closest_marker("skip_if")
     if skip_marker:
         condition = skip_marker.args[0]
+        reason = skip_marker.args[1] if len(skip_marker.args) > 1 else None
         target = item.config.getoption("target")
         app = item.config.getoption("app")
 
         context = {"target": target, "app": app}
         if eval(condition, {}, context):
-            pytest.skip(f"Skipped because condition '{condition}' matched")
+            if reason:
+                pytest.skip(reason)
+            else:
+                pytest.skip(f"Skipped because condition '{condition}' matched")
