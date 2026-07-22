@@ -193,14 +193,13 @@ public:
         bool write(QueueItem const& value)
         {
             LockStrategy const lock(_queue._mutex.get());
-            ::etl::optional<size_t> index = _queue.writeNext();
-            bool res                      = index.has_value();
-            if (res)
+            ::etl::optional<WriteToken> const token = _queue.reserveSlot();
+            if (token.has_value())
             {
-                _queue._buffer[index.value()] = value;
+                _queue._buffer[token->slotIndex] = value;
+                _queue.publishSlot(*token);
             }
-
-            return res;
+            return token.has_value();
         }
 
     private:
@@ -287,14 +286,13 @@ public:
         /** Appends \p value to the queue, returns true on success. */
         bool write(QueueItem const& value)
         {
-            ::etl::optional<size_t> index = _queue.writeNext();
-            bool const res                = index.has_value();
-            if (res)
+            ::etl::optional<WriteToken> const token = _queue.reserveSlot();
+            if (token.has_value())
             {
-                _queue._buffer[index.value()] = value;
+                _queue._buffer[token->slotIndex] = value;
+                _queue.publishSlot(*token);
             }
-
-            return res;
+            return token.has_value();
         }
 
     private:

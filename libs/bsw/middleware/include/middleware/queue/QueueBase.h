@@ -69,7 +69,9 @@ public:
     {
         // Snapshot both cursors once to avoid a race between the comparison
         // and the subtraction in the ternary expression below.
-        uint32_t const txPos = _sent.load(::etl::memory_order_relaxed);
+        // acquire on _sent synchronises with the release in publishSlot() so that
+        // the payload written before publishSlot() is visible before peek().
+        uint32_t const txPos = _sent.load(::etl::memory_order_acquire);
         uint32_t const rxPos = _received.load(::etl::memory_order_relaxed);
         return (txPos >= rxPos) ? (txPos - rxPos) : (txPos + (2U * _maxSize)) - rxPos;
     }
@@ -84,7 +86,8 @@ public:
     /** Returns true if the queue is empty, false otherwise. */
     bool isEmpty() const
     {
-        return _sent.load(::etl::memory_order_relaxed)
+        // acquire on _sent: see size() comment.
+        return _sent.load(::etl::memory_order_acquire)
                == _received.load(::etl::memory_order_relaxed);
     }
 
@@ -144,33 +147,57 @@ protected:
     }
 
     /**
-     * Updates the writing cursor to the next element in the buffer.
-     *
-     * \return ::etl::optional<size_t>
+     * Token returned by reserveSlot() carrying the slot index and the
+     * next-sent value to pass to publishSlot() after writing the payload.
      */
-    ::etl::optional<size_t> writeNext()
+    struct WriteToken
     {
-        ::etl::optional<size_t> writableIndex{};
+        size_t slotIndex;
+        uint32_t nextSent;
+    };
+
+    /**
+     * Reserves the next writable slot without publishing the cursor.
+     * The caller must write the payload into _buffer[token.slotIndex] and then
+     * call publishSlot() to make the slot visible to the consumer.
+     *
+     * \return A WriteToken on success, or an empty optional if the queue is full.
+     */
+    ::etl::optional<WriteToken> reserveSlot()
+    {
+        ::etl::optional<WriteToken> token{};
         if (isFull())
         {
             ++_stats.lostMessages;
         }
         else
         {
-            uint32_t const sentVal = _sent.load(::etl::memory_order_relaxed);
-            writableIndex.emplace(sentVal % _maxSize);
-            _sent.store((sentVal + 1U) % (2U * _maxSize), ::etl::memory_order_relaxed);
-            if (size() > _stats.maxLoad)
-            {
-                _stats.maxLoad = static_cast<uint8_t>(size());
-            }
+            uint32_t const sentVal  = _sent.load(::etl::memory_order_relaxed);
+            uint32_t const nextSent = (sentVal + 1U) % (2U * _maxSize);
             if (0U == _received.load(::etl::memory_order_relaxed))
             {
                 ++_stats.startupLoad;
             }
+            token.emplace(WriteToken{sentVal % _maxSize, nextSent});
         }
+        return token;
+    }
 
-        return writableIndex;
+    /**
+     * Publishes the slot reserved by reserveSlot(), making it visible to
+     * the consumer. Must be called after the payload has been written.
+     * Uses memory_order_release so the payload write is visible before
+     * the consumer sees the updated cursor via size()/isEmpty()/peek().
+     *
+     * \param token  The WriteToken returned by the matching reserveSlot() call.
+     */
+    void publishSlot(WriteToken const& token)
+    {
+        _sent.store(token.nextSent, ::etl::memory_order_release);
+        if (size() > _stats.maxLoad)
+        {
+            _stats.maxLoad = static_cast<uint8_t>(size());
+        }
     }
 
 private:
