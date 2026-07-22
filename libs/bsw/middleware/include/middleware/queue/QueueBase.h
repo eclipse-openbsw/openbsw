@@ -164,7 +164,7 @@ protected:
             {
                 _stats.maxLoad = static_cast<uint8_t>(size());
             }
-            if (0U == _stats.processedMessages)
+            if (0U == _received.load(::etl::memory_order_relaxed))
             {
                 ++_stats.startupLoad;
             }

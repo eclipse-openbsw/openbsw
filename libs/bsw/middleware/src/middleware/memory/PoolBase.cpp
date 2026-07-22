@@ -89,6 +89,10 @@ bool PoolBase::deallocate(void* const ptr)
     auto* const ptrObject = static_cast<uint8_t*>(ptr);
     if (isValidPointer(ptrObject))
     {
+        // Copies the raw bytes of _nextChunk (which may be nullptr) into the freed slot.
+        // This relies on the null pointer being represented as all-zero bytes, which holds
+        // on every supported target (ARM Cortex-M, x86/x86-64 POSIX) but is
+        // implementation-defined by the C++ standard.
         ::etl::mem_copy(reinterpret_cast<uint8_t const*>(&_nextChunk), sizeof(uint8_t*), ptrObject);
 
         ptrdiff_t const distance = ::etl::distance(_buffer, ptrObject);
