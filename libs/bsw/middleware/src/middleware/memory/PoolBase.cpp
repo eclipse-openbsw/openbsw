@@ -51,12 +51,14 @@ void PoolBase::initialize()
     {
         uint8_t* const tempNext = offsetAddress(tempBuff, _elementAlignedSize);
         // Write the address of tempNext into the bytes pointed to by tempBuff
-        ::etl::mem_copy(reinterpret_cast<uint8_t const*>(&tempNext), sizeof(uint8_t*), tempBuff);
+        ::etl::mem_copy(
+            reinterpret_cast<uint8_t const*>(&tempNext), sizeof(uint8_t*), tempBuff); // NOLINT
         tempBuff = tempNext;
     }
     // Last chunk: next pointer is nullptr
     uint8_t* const null_ptr = nullptr;
-    ::etl::mem_copy(reinterpret_cast<uint8_t const*>(&null_ptr), sizeof(uint8_t*), tempBuff);
+    ::etl::mem_copy(
+        reinterpret_cast<uint8_t const*>(&null_ptr), sizeof(uint8_t*), tempBuff); // NOLINT
     _nextChunk = _buffer;
     _available = _elementCount;
 }
@@ -68,7 +70,7 @@ uint8_t* PoolBase::allocate(size_t const size)
     if ((size <= _elementSize) && (!isFull()))
     {
         ret = _nextChunk;
-        ::etl::mem_copy(ret, sizeof(uint8_t*), reinterpret_cast<uint8_t*>(&_nextChunk));
+        ::etl::mem_copy(ret, sizeof(uint8_t*), reinterpret_cast<uint8_t*>(&_nextChunk)); // NOLINT
         --_available;
         _stats.internalFragmentation += static_cast<uint32_t>(_elementSize - size);
         ++_stats.successfulAllocations;
@@ -93,7 +95,8 @@ bool PoolBase::deallocate(void* const ptr)
         // This relies on the null pointer being represented as all-zero bytes, which holds
         // on every supported target (ARM Cortex-M, x86/x86-64 POSIX) but is
         // implementation-defined by the C++ standard.
-        ::etl::mem_copy(reinterpret_cast<uint8_t const*>(&_nextChunk), sizeof(uint8_t*), ptrObject);
+        ::etl::mem_copy(
+            reinterpret_cast<uint8_t const*>(&_nextChunk), sizeof(uint8_t*), ptrObject); // NOLINT
 
         ptrdiff_t const distance = ::etl::distance(_buffer, ptrObject);
         size_t const ptrPosition = static_cast<size_t>(distance) / _elementAlignedSize;
