@@ -153,8 +153,10 @@ void PoolBase::updatePtrFlag(size_t const position, bool const ptrBusy)
     }
     else
     {
-        uint32_t const mask = ~(static_cast<size_t>(1U) << indexRemainder);
-        *(offsetAddress(_flags, index)) &= static_cast<uint8_t>(mask);
+        // Keep the mask at uint8_t width: 1U << indexRemainder is at most 128 (indexRemainder
+        // is in [0, CHAR_BIT-1]), so the cast is lossless on any platform.
+        uint8_t const mask = static_cast<uint8_t>(~(1U << indexRemainder));
+        *(offsetAddress(_flags, index)) &= mask;
     }
 }
 
