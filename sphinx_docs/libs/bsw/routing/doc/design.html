@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="EclipseOpenBSWDocumentation" name="dox_trace_storage" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Routing detailed design &mdash; Eclipse OpenBSW Documentation  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/rtd_theme_overrides.css?v=6fd0d55b" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=eafc0fe6" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/colors.css?v=3cafd8aa" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/colored_table.css?v=34b816d5" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/header.css?v=e632285e" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/dox_util_colors.css?v=dd14b177" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/dox_trace.css?v=60d3f72c" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../../../../_static/copybutton.js?v=f281be69"></script>
+        <script src="../../../../_static/dox_trace.js?v=40719b51"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="runtime" href="../../runtime/doc/index.html" />
+    <link rel="prev" title="Routing Integration" href="integration.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../doc/dev/index.html" class="icon icon-home">
+            Eclipse OpenBSW Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Learning</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/learning/overview.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/learning/SysTest/HW_Testing_Guide.html">Hardware Testing Guide</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guidelines</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/guidelines/conventions/index.html">Coding Conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/guidelines/practices.html">Coding Practices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/guidelines/formatting/index.html">Formatting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/guidelines/unittests.html">Unit Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/guidelines/module.html">Module Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/guidelines/documentation.html">Module Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/guidelines/diagrams.html">Diagrams</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/guidelines/3rdparty.html">Third Party Libraries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/guidelines/commit_message.html">Commit Message</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/guidelines/pull_request.html">Pull Request</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Platforms</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/platforms/posix/index.html">POSIX</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/platforms/s32k148evb/index.html">S32K148 Evaluation Board</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Features</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/features/storage.html">Persistent Storage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/features/functional_safety.html">Functional Safety</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Software Modules</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../doc/dev/modules/common.html">Common</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../../doc/dev/modules/common.html#bsw">BSW</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../async/doc/index.html">async - Asynchronous Execution Interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../asyncConsole/doc/index.html">asyncConsole - Asynchronous Console</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../asyncFreeRtos/doc/index.html">asyncFreeRtos</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../asyncImpl/doc/index.html">asyncImpl</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../blob/doc/index.html">blob</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../bsp/doc/index.html">bsp</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../common/doc/index.html">common</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cpp2can/doc/index.html">cpp2can - CAN Abstraction Layer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cpp2ethernet/doc/index.html">cpp2ethernet - Ethernet Abstractions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../docan/doc/index.html">docan - Diagnostics over CAN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../doip/doc/index.html">doip - Diagnostics Over IP</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../io/doc/index.html">io - IO Library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lifecycle/doc/index.html">lifecycle - App Lifecycle Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../logger/doc/index.html">logger - Logger module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../loggerIntegration/doc/index.html">loggerIntegration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lwipSocket/doc/index.html">lwipSocket - LwIP v2 Socket Abstraction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../middleware/doc/index.html">middleware</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../platform/doc/index.html">platform - Platform Library</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="index.html">routing - PDU routing across channels</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="interface.html">Routing Interface</a></li>
+<li class="toctree-l4"><a class="reference internal" href="integration.html">Routing Integration</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Routing detailed design</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#routing-example">Routing example</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../runtime/doc/index.html">runtime</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../stdioConsoleInput/doc/index.html">stdioConsoleInput</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../storage/doc/index.html">storage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../timer/doc/index.html">timer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../transport/doc/index.html">transport - Transport Library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../transportRouterSimple/doc/index.html">transportRouterSimple</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../uds/doc/index.html">uds - Unified Diagnostic Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../util/doc/index.html">util</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../doc/dev/modules/common.html#bsp">BSP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../doc/dev/modules/common.html#safety">Safety</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/modules/posix.html">Posix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/modules/s32k1xx.html">S32K1xx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/modules/stm32.html">STM32</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/modules/executables.html">Executables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/modules/mocks.html">Mocks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tools/UdsTool/doc/index.html">UdsTool</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tools/puncover_tool/doc/index.html">Puncover</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../doc/dev/index.html">Eclipse OpenBSW Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../doc/dev/index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../../../doc/dev/modules/common.html">Common</a> &raquo;</li>
+        
+          <li><a href="index.html">routing - PDU routing across channels</a> &raquo;</li>
+        
+        <li>Routing detailed design</li>
+    
+
+    
+
+      <li class="wy-breadcrumbs-aside">
+
+        <!-- DOCUMENT STATUS -->
+
+        
+
+        <!-- DATA CLASSIFICATION -->
+
+        
+
+      </li>
+
+    
+  </ul>
+
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="routing-detailed-design">
+<h1>Routing detailed design<a class="headerlink" href="#routing-detailed-design" title="Link to this heading"></a></h1>
+<p>Each routing message uses an 8-byte header followed by its payload:</p>
+<ul class="simple">
+<li><p>4 bytes: message ID (big endian)</p></li>
+<li><p>4 bytes: payload length in bytes (big endian)</p></li>
+<li><p>N bytes: payload</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">RxAdapter</span></code> or <code class="docutils literal notranslate"><span class="pre">PduTransportRxAdapter</span></code> extracts PDU(s) from a payload according to its
+<code class="docutils literal notranslate"><span class="pre">RxAdapterTable</span></code> and implements the <code class="docutils literal notranslate"><span class="pre">IReader</span></code> interface. The <code class="docutils literal notranslate"><span class="pre">RxAdapterTable</span></code> determines
+which PDUs a payload contains with the message ID and the payload length. For each PDU,
+it defines a length and an offset in bytes, i.e., the position of the PDU in the payload.</p>
+<div class="highlight-cpp notranslate" id="rxadaptertable"><div class="highlight"><pre><span></span><span class="c1">// The sizes below are expressed as a function of:</span>
+<span class="c1">//  - N: the number of known PDUs (&gt;= P)</span>
+<span class="c1">//  - P: the number of known messages</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">RxAdapterTable</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="c1">// the first internal PDU ID of this channel. All other PDU IDs are derived from it.</span>
+<span class="w">    </span><span class="o">::</span><span class="n">etl</span><span class="o">::</span><span class="n">be_uint32_t</span><span class="w"> </span><span class="n">firstId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{};</span>
+<span class="w">    </span><span class="c1">// The message IDs that can be received.</span>
+<span class="w">    </span><span class="c1">// The index is called messageIndex. It is shared with messageLengths and pduLengthsOffsets.</span>
+<span class="w">    </span><span class="c1">// size: P</span>
+<span class="w">    </span><span class="o">::</span><span class="n">etl</span><span class="o">::</span><span class="n">span</span><span class="o">&lt;::</span><span class="n">etl</span><span class="o">::</span><span class="n">be_uint32_t</span><span class="w"> </span><span class="k">const</span><span class="o">&gt;</span><span class="w"> </span><span class="n">messageIds</span><span class="p">;</span>
+<span class="w">    </span><span class="c1">// The lengths of the messages that can be received. If the length of a message</span>
+<span class="w">    </span><span class="c1">// does not match the expected one, no PDU is extracted. If empty, it is ignored.</span>
+<span class="w">    </span><span class="c1">// size: P</span>
+<span class="w">    </span><span class="o">::</span><span class="n">etl</span><span class="o">::</span><span class="n">span</span><span class="o">&lt;::</span><span class="n">etl</span><span class="o">::</span><span class="n">be_uint32_t</span><span class="w"> </span><span class="k">const</span><span class="o">&gt;</span><span class="w"> </span><span class="n">messageLengths</span><span class="p">;</span>
+<span class="w">    </span><span class="c1">// A pointer into the PDULengths and PDUOffsets tables.</span>
+<span class="w">    </span><span class="c1">// size: P + 1</span>
+<span class="w">    </span><span class="o">::</span><span class="n">etl</span><span class="o">::</span><span class="n">span</span><span class="o">&lt;::</span><span class="n">etl</span><span class="o">::</span><span class="n">be_uint32_t</span><span class="w"> </span><span class="k">const</span><span class="o">&gt;</span><span class="w"> </span><span class="n">pduLengthsOffsets</span><span class="p">;</span>
+<span class="w">    </span><span class="c1">// The length of each PDU in each frame.</span>
+<span class="w">    </span><span class="c1">// The index is called channelSpecificPduId. It is shared with pduOffsets and</span>
+<span class="w">    </span><span class="c1">// used to derive the internal PDU ID by adding it to firstId.</span>
+<span class="w">    </span><span class="c1">// size: N</span>
+<span class="w">    </span><span class="o">::</span><span class="n">etl</span><span class="o">::</span><span class="n">span</span><span class="o">&lt;::</span><span class="n">etl</span><span class="o">::</span><span class="n">be_uint32_t</span><span class="w"> </span><span class="k">const</span><span class="o">&gt;</span><span class="w"> </span><span class="n">pduLengths</span><span class="p">;</span>
+<span class="w">    </span><span class="c1">// The offset in each frame of each PDU.</span>
+<span class="w">    </span><span class="c1">// size: N</span>
+<span class="w">    </span><span class="o">::</span><span class="n">etl</span><span class="o">::</span><span class="n">span</span><span class="o">&lt;::</span><span class="n">etl</span><span class="o">::</span><span class="n">be_uint32_t</span><span class="w"> </span><span class="k">const</span><span class="o">&gt;</span><span class="w"> </span><span class="n">pduOffsets</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">Router</span></code> reads PDUs from channels using <code class="docutils literal notranslate"><span class="pre">IReader</span></code> interfaces and writes them to channels using
+<code class="docutils literal notranslate"><span class="pre">IWriter</span></code> interfaces. Its <code class="docutils literal notranslate"><span class="pre">PduRoutingTable</span></code> specifies to which channel(s) a PDU should be
+forwarded as well as the outgoing message ID.</p>
+<div class="highlight-c++ notranslate" id="pduroutingtable"><div class="highlight"><pre><span></span><span class="cm">/**</span>
+<span class="cm"> * The input of the routing is the output of the adapters, i.e. Internal PDU IDs.</span>
+<span class="cm"> *</span>
+<span class="cm"> * The routing table consists of two parts:</span>
+<span class="cm"> *</span>
+<span class="cm"> * 1) Routing to destinations.</span>
+<span class="cm"> *    The internal PDU ID is used as index into destinationOffsets. The range</span>
+<span class="cm"> *    destinations[destinationOffsets[pduId], destinationOffsets[pduId + 1][ are the</span>
+<span class="cm"> *    destination channel indices to which the PDU is routed.</span>
+<span class="cm"> *</span>
+<span class="cm"> * 2) Translation from internal PDU ID to destination channel specific addressing.</span>
+<span class="cm"> *    The index of a routing in the destinations table is also used in the outputMessageIds table.</span>
+<span class="cm"> *    This contains the message ID to output on the channel for this message.</span>
+<span class="cm"> *</span>
+<span class="cm"> * The sizes of the spans are expressed according to:</span>
+<span class="cm"> *  - N: the number of known PDUs</span>
+<span class="cm"> *  - M: the number of channels</span>
+<span class="cm"> */</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">PduRoutingTable</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="c1">// size: [N,(M*N)]</span>
+<span class="w">    </span><span class="o">::</span><span class="n">etl</span><span class="o">::</span><span class="n">span</span><span class="o">&lt;</span><span class="kt">uint8_t</span><span class="w"> </span><span class="k">const</span><span class="o">&gt;</span><span class="w"> </span><span class="n">destinations</span><span class="p">;</span>
+
+<span class="w">    </span><span class="c1">// size: N+1</span>
+<span class="w">    </span><span class="o">::</span><span class="n">etl</span><span class="o">::</span><span class="n">span</span><span class="o">&lt;::</span><span class="n">etl</span><span class="o">::</span><span class="n">be_uint32_t</span><span class="w"> </span><span class="k">const</span><span class="o">&gt;</span><span class="w"> </span><span class="n">destinationOffsets</span><span class="p">;</span>
+
+<span class="w">    </span><span class="c1">// size: [N, (M*N)]</span>
+<span class="w">    </span><span class="o">::</span><span class="n">etl</span><span class="o">::</span><span class="n">span</span><span class="o">&lt;::</span><span class="n">etl</span><span class="o">::</span><span class="n">be_uint32_t</span><span class="w"> </span><span class="k">const</span><span class="o">&gt;</span><span class="w"> </span><span class="n">outputMessageIds</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">LegacyTxAdapter</span></code> or <code class="docutils literal notranslate"><span class="pre">PduTransportTxAdapter</span></code> creates outgoing messages out of PDUs according to its
+<code class="docutils literal notranslate"><span class="pre">TxAdapterTable</span></code> and implements the <code class="docutils literal notranslate"><span class="pre">IWriter</span></code> interface. For each message, the <code class="docutils literal notranslate"><span class="pre">TxAdapterTable</span></code>
+determines the payload length and the PDU offset within it.</p>
+<div class="highlight-cpp notranslate" id="txadaptertable"><div class="highlight"><pre><span></span><span class="c1">// The sizes below are expresed as a function of:</span>
+<span class="c1">//  - N: the number of known PDUs</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">TxAdapterTable</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="c1">// The message IDs which can be sent by this adapter</span>
+<span class="w">    </span><span class="c1">// size: N</span>
+<span class="w">    </span><span class="o">::</span><span class="n">etl</span><span class="o">::</span><span class="n">span</span><span class="o">&lt;::</span><span class="n">etl</span><span class="o">::</span><span class="n">be_uint32_t</span><span class="w"> </span><span class="k">const</span><span class="o">&gt;</span><span class="w"> </span><span class="n">messageIds</span><span class="p">;</span>
+<span class="w">    </span><span class="c1">// The length of each message to be sent, achieved using padding with 0xFF.</span>
+<span class="w">    </span><span class="c1">// size: N</span>
+<span class="w">    </span><span class="o">::</span><span class="n">etl</span><span class="o">::</span><span class="n">span</span><span class="o">&lt;::</span><span class="n">etl</span><span class="o">::</span><span class="n">be_uint32_t</span><span class="w"> </span><span class="k">const</span><span class="o">&gt;</span><span class="w"> </span><span class="n">messageLengths</span><span class="p">;</span>
+<span class="w">    </span><span class="c1">// The offset of the PDU to be sent in the message.</span>
+<span class="w">    </span><span class="c1">// size: N</span>
+<span class="w">    </span><span class="o">::</span><span class="n">etl</span><span class="o">::</span><span class="n">span</span><span class="o">&lt;::</span><span class="n">etl</span><span class="o">::</span><span class="n">be_uint32_t</span><span class="w"> </span><span class="k">const</span><span class="o">&gt;</span><span class="w"> </span><span class="n">pduOffsets</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<section id="routing-example">
+<h2>Routing example<a class="headerlink" href="#routing-example" title="Link to this heading"></a></h2>
+<p>The diagram below shows a concrete routing path through the tables. A message arriving on
+<code class="docutils literal notranslate"><span class="pre">PDU_TRANSPORT0</span></code> with ID 18 is routed to <code class="docutils literal notranslate"><span class="pre">CAN0</span></code> (outgoing ID 1), which in turn routes to
+<code class="docutils literal notranslate"><span class="pre">PDU_TRANSPORT1</span></code> (outgoing ID 4096), which loops back to <code class="docutils literal notranslate"><span class="pre">PDU_TRANSPORT0</span></code> (outgoing ID 256).
+This illustrates how the routing module chains multi-hop routes across CAN and PDU transport
+channels using only ID-based table lookups.</p>
+<p>The diagram is generated with:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">cd tools</span>
+<span class="go">python -m blob.routing visualize --channel PDU_TRANSPORT0 --id 18 \</span>
+<span class="go">    libs/bsw/routing/test/routing.jsonl</span>
+</pre></div>
+</div>
+<div class="graphviz"><img src="../../../../_images/graphviz-34ef2b7370d35182597c9def868f8b4cd6618504.png" alt="digraph Routing {
+  graph[fontname=&quot;Arial&quot; fontsize=&quot;10&quot; ranksep=1.0 nodesep=1.0 label=&quot;routing graph for input of Id: 18 on Channel: PDU_TRANSPORT0&quot;]
+    &quot;Input&quot; -&gt; &quot;PDU_TRANSPORT0&quot; [label = &quot;Id: 18&quot;]
+    &quot;PDU_TRANSPORT0&quot; -&gt; &quot;CAN0&quot; [label = &quot;Id: 1&quot;]
+    &quot;CAN0&quot; -&gt; &quot;PDU_TRANSPORT1&quot; [label = &quot;Id: 4096&quot;]
+    &quot;PDU_TRANSPORT1&quot; -&gt; &quot;PDU_TRANSPORT0&quot; [label = &quot;Id: 256&quot;]
+}" class="graphviz" /></div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026 Accenture.</p>
+  </div>
+
+  <div role="footer_string">
+    <p>Documentation from 2026-07-23 16:15:28, official build.</p>
+
+    
+      <a href="../../../../_sources/libs/bsw/routing/doc/design.rst.txt" rel="nofollow"> View page source</a>
+    
+
+  </div>
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(false);
+      });
+  </script> 
+
+</body>
+</html>

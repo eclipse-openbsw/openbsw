@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="EclipseOpenBSWDocumentation" name="dox_trace_storage" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>bspInterruptsImpl &mdash; Eclipse OpenBSW Documentation  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/rtd_theme_overrides.css?v=6fd0d55b" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/graphviz.css?v=eafc0fe6" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/colors.css?v=3cafd8aa" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/colored_table.css?v=34b816d5" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/header.css?v=e632285e" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/dox_util_colors.css?v=dd14b177" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/dox_trace.css?v=60d3f72c" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../../../../../_static/copybutton.js?v=f281be69"></script>
+        <script src="../../../../../_static/dox_trace.js?v=40719b51"></script>
+    <script src="../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" />
+    <link rel="next" title="bspIo Driver" href="../../bspIo/doc/index.html" />
+    <link rel="prev" title="bspClock" href="../../bspClock/doc/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../doc/dev/index.html" class="icon icon-home">
+            Eclipse OpenBSW Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Learning</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/learning/overview.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/learning/SysTest/HW_Testing_Guide.html">Hardware Testing Guide</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guidelines</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/guidelines/conventions/index.html">Coding Conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/guidelines/practices.html">Coding Practices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/guidelines/formatting/index.html">Formatting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/guidelines/unittests.html">Unit Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/guidelines/module.html">Module Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/guidelines/documentation.html">Module Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/guidelines/diagrams.html">Diagrams</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/guidelines/3rdparty.html">Third Party Libraries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/guidelines/commit_message.html">Commit Message</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/guidelines/pull_request.html">Pull Request</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Platforms</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/platforms/posix/index.html">POSIX</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/platforms/s32k148evb/index.html">S32K148 Evaluation Board</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Features</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/features/storage.html">Persistent Storage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/features/functional_safety.html">Functional Safety</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Software Modules</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/modules/common.html">Common</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/modules/posix.html">Posix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/modules/s32k1xx.html">S32K1xx</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../../doc/dev/modules/stm32.html">STM32</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../../../doc/dev/modules/stm32.html#bsp">BSP</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../bspCan/doc/index.html">bspCan</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../bspClock/doc/index.html">bspClock</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">bspInterruptsImpl</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#global-interrupt-disable-enable">Global Interrupt Disable / Enable</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#primask-vs-basepri">PRIMASK vs BASEPRI</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#nvic-priority-configuration">NVIC Priority Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#scoped-lock">Scoped Lock</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dependencies">Dependencies</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../bspIo/doc/index.html">bspIo Driver</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../bspMcu/doc/index.html">bspMcu</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../bspTimer/doc/index.html">bspTimer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../bspUart/doc/index.html">bspUart Driver</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../bxCanTransceiver/doc/index.html">bxCanTransceiver</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../fdCanTransceiver/doc/index.html">fdCanTransceiver</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/modules/executables.html">Executables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/modules/mocks.html">Mocks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tools/UdsTool/doc/index.html">UdsTool</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tools/puncover_tool/doc/index.html">Puncover</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../doc/dev/index.html">Eclipse OpenBSW Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../../doc/dev/index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../../../../doc/dev/modules/stm32.html">STM32</a> &raquo;</li>
+        
+        <li>bspInterruptsImpl</li>
+    
+
+    
+
+      <li class="wy-breadcrumbs-aside">
+
+        <!-- DOCUMENT STATUS -->
+
+        
+
+        <!-- DATA CLASSIFICATION -->
+
+        
+
+      </li>
+
+    
+  </ul>
+
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="bspinterruptsimpl">
+<h1>bspInterruptsImpl<a class="headerlink" href="#bspinterruptsimpl" title="Link to this heading"></a></h1>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">bspInterruptsImpl</span></code> module provides interrupt management for STM32
+Cortex-M4 targets. It implements global interrupt disable/enable primitives and
+integrates with FreeRTOS for context-safe critical sections.</p>
+</section>
+<section id="global-interrupt-disable-enable">
+<h2>Global Interrupt Disable / Enable<a class="headerlink" href="#global-interrupt-disable-enable" title="Link to this heading"></a></h2>
+<p>The header <code class="docutils literal notranslate"><span class="pre">interrupts/disableEnableAllInterrupts.h</span></code> provides two inline
+assembly functions:</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">disableAllInterrupts()</span></code></dt><dd><p>Executes <code class="docutils literal notranslate"><span class="pre">CPSID</span> <span class="pre">I</span></code> to set the <code class="docutils literal notranslate"><span class="pre">PRIMASK</span></code> register, masking all
+interrupts except NMI and HardFault. Followed by <code class="docutils literal notranslate"><span class="pre">ISB</span></code>, <code class="docutils literal notranslate"><span class="pre">DSB</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">DMB</span></code> barrier instructions to ensure the mask takes effect before any
+subsequent memory access or instruction fetch.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">enableAllInterrupts()</span></code></dt><dd><p>Executes <code class="docutils literal notranslate"><span class="pre">ISB</span></code>, <code class="docutils literal notranslate"><span class="pre">DSB</span></code>, and <code class="docutils literal notranslate"><span class="pre">DMB</span></code> barriers first, then <code class="docutils literal notranslate"><span class="pre">CPSIE</span> <span class="pre">I</span></code> to
+clear <code class="docutils literal notranslate"><span class="pre">PRIMASK</span></code> and re-enable interrupts. The barrier-before-enable
+ordering ensures all pending memory operations complete before interrupts
+can fire.</p>
+</dd>
+</dl>
+<p>Both functions are declared <code class="docutils literal notranslate"><span class="pre">static</span> <span class="pre">inline</span></code> with
+<code class="docutils literal notranslate"><span class="pre">__attribute__((always_inline))</span></code> to guarantee zero-overhead inlining at every
+call site.</p>
+</section>
+<section id="primask-vs-basepri">
+<h2>PRIMASK vs BASEPRI<a class="headerlink" href="#primask-vs-basepri" title="Link to this heading"></a></h2>
+<p>The Cortex-M4 offers two mechanisms for interrupt masking:</p>
+<dl>
+<dt><strong>PRIMASK (bare-metal variant)</strong></dt><dd><p>Setting PRIMASK to 1 disables all configurable interrupts (priority levels
+0–15). Only NMI (priority -2) and HardFault (priority -1) remain active.
+This is the approach used by <code class="docutils literal notranslate"><span class="pre">disableAllInterrupts()</span></code> /
+<code class="docutils literal notranslate"><span class="pre">enableAllInterrupts()</span></code> and is suitable for bare-metal critical sections
+where no RTOS is running.</p>
+</dd>
+<dt><strong>BASEPRI (FreeRTOS variant)</strong></dt><dd><p>FreeRTOS uses <code class="docutils literal notranslate"><span class="pre">BASEPRI</span></code> instead of <code class="docutils literal notranslate"><span class="pre">PRIMASK</span></code> for its critical sections.
+Setting <code class="docutils literal notranslate"><span class="pre">BASEPRI</span></code> to <code class="docutils literal notranslate"><span class="pre">configMAX_SYSCALL_INTERRUPT_PRIORITY</span></code> masks only
+interrupts at or below that priority threshold, leaving higher-priority
+(lower numeric value) interrupts unmasked. This allows time-critical ISRs
+(e.g., motor control, safety watchdog) to preempt FreeRTOS critical
+sections.</p>
+<p>FreeRTOS-aware critical section macros (<code class="docutils literal notranslate"><span class="pre">taskENTER_CRITICAL</span></code> /
+<code class="docutils literal notranslate"><span class="pre">taskEXIT_CRITICAL</span></code>) use this BASEPRI approach internally. The
+<code class="docutils literal notranslate"><span class="pre">bspInterruptsImpl</span></code> module provides the <code class="docutils literal notranslate"><span class="pre">SuspendResumeAllInterruptsScopedLock</span></code>
+RAII wrapper for C++ code that needs interrupt-safe sections compatible with
+both variants.</p>
+</dd>
+</dl>
+</section>
+<section id="nvic-priority-configuration">
+<h2>NVIC Priority Configuration<a class="headerlink" href="#nvic-priority-configuration" title="Link to this heading"></a></h2>
+<p>The STM32 Cortex-M4 implements 4-bit priority grouping (<code class="docutils literal notranslate"><span class="pre">__NVIC_PRIO_BITS</span> <span class="pre">=</span> <span class="pre">4</span></code>
+from the CMSIS device header), yielding 16 priority levels (0 = highest,
+15 = lowest).</p>
+<p>Priority assignment guidelines:</p>
+<ul class="simple">
+<li><p>Priorities 0–3: Reserved for time-critical hardware ISRs that must not be
+blocked by FreeRTOS critical sections (above
+<code class="docutils literal notranslate"><span class="pre">configMAX_SYSCALL_INTERRUPT_PRIORITY</span></code>).</p></li>
+<li><p>Priorities 4–15: Available for ISRs that may call FreeRTOS API functions
+(<code class="docutils literal notranslate"><span class="pre">xSemaphoreGiveFromISR</span></code>, <code class="docutils literal notranslate"><span class="pre">xQueueSendFromISR</span></code>, etc.).</p></li>
+</ul>
+<p>The FreeRTOS Cortex-M4 port layer uses the CMSIS <code class="docutils literal notranslate"><span class="pre">__enable_irq()</span></code> /
+<code class="docutils literal notranslate"><span class="pre">__disable_irq()</span></code> intrinsics directly for global interrupt control.</p>
+</section>
+<section id="scoped-lock">
+<h2>Scoped Lock<a class="headerlink" href="#scoped-lock" title="Link to this heading"></a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">SuspendResumeAllInterruptsScopedLock</span></code> class (from the <code class="docutils literal notranslate"><span class="pre">interrupts</span></code>
+namespace) provides RAII-style interrupt locking:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="n">ESR_UNUSED</span><span class="w"> </span><span class="n">interrupts</span><span class="o">::</span><span class="n">SuspendResumeAllInterruptsScopedLock</span><span class="w"> </span><span class="n">lock</span><span class="p">;</span>
+<span class="w">    </span><span class="c1">// Critical section -- interrupts disabled</span>
+<span class="p">}</span>
+<span class="c1">// Interrupts restored to previous state</span>
+</pre></div>
+</div>
+<p>This pattern is used throughout the BSP (e.g., <code class="docutils literal notranslate"><span class="pre">bspTimer</span></code> tick accumulation)
+to ensure interrupt state is always restored, even if an early return or
+exception occurs.</p>
+</section>
+<section id="dependencies">
+<h2>Dependencies<a class="headerlink" href="#dependencies" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>ARM Cortex-M4 <code class="docutils literal notranslate"><span class="pre">PRIMASK</span></code> and <code class="docutils literal notranslate"><span class="pre">BASEPRI</span></code> special registers</p></li>
+<li><p>CMSIS <code class="docutils literal notranslate"><span class="pre">__enable_irq()</span></code> / <code class="docutils literal notranslate"><span class="pre">__disable_irq()</span></code> intrinsics</p></li>
+<li><p>FreeRTOS <code class="docutils literal notranslate"><span class="pre">configMAX_SYSCALL_INTERRUPT_PRIORITY</span></code> (when FreeRTOS is active)</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026 Accenture.</p>
+  </div>
+
+  <div role="footer_string">
+    <p>Documentation from 2026-07-23 16:15:28, official build.</p>
+
+    
+      <a href="../../../../../_sources/platforms/stm32/bsp/bspInterruptsImpl/doc/index.rst.txt" rel="nofollow"> View page source</a>
+    
+
+  </div>
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(false);
+      });
+  </script> 
+
+</body>
+</html>

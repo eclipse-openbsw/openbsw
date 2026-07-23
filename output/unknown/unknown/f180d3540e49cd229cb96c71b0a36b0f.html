@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../static/css/style.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <title>Symbol - puncover</title>
+    
+</head>
+<body>
+    <div class="container" id="content">
+        <div class="page-header">
+            <nav class="navbar navbar-default" role="navigation">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="../../index.html">
+                    Puncover
+                  </a>
+                </div>
+              </div>
+            </nav>
+          
+        </div>
+        <div id="inner_content">
+        
+    
+    <ol class="breadcrumb folders">
+        
+        <li class="active"><a href="../../unknown.html">&lt;unknown&gt;</a>
+            </li>
+
+        
+        <li class="active">&lt;unknown&gt;
+            </li>
+        
+    </ol>
+
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <th>Function</th>
+                <td colspan="5">
+                    <span class="icon-function">floorf</span>
+                </td>
+            </tr>
+
+            <tr>
+                <th rowspan="2"></th>
+                <th>Address</th>
+                <th>Remarks</th>
+                <th>Stack</th>
+                <th>Code</th>
+                <th>Static</th>
+            </tr>
+            <tr>
+                <td>0x000342c0</td>
+                <td>
+    <span class="label label-success">x-module</span>
+    
+</td>
+                <td></td>
+                <td>148</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th>Callers (2)</th>
+                <td colspan="5">
+                
+                    <a href="../../home/runner/work/openbsw/openbsw/libs/3rdparty/etl/include/etl/format.h/136699ea7b8b264c27bb76fd1e5c3ba3.html">void etl::private_format::format_floating_e&lt;etl::private_print::print_iterator, float&gt;(etl::private_print::print_iterator&amp;, float, etl::private_format::format_spec_t const&amp;) (428)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../../home/runner/work/openbsw/openbsw/libs/3rdparty/etl/include/etl/format.h/b89a7042a7545abe33791189b29a6463.html">void etl::private_format::format_floating_e&lt;etl::private_format::counter_iterator, float&gt;(etl::private_format::counter_iterator&amp;, float, etl::private_format::format_spec_t const&amp;) (400)</a>
+                    
+                
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    No Callees
+                    
+                </th>
+                <td colspan="5">
+                
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    
+    <pre><a href="./9bbd993d9da7df60b3fd4a4ed721b082.html">round (160)</a></pre>
+    
+
+    <pre>
+
+    floorf():
+
+       342c0:	ee10 2a10 	vmov	r2, s0
+
+       342c4:	f3c2 53c7 	ubfx	r3, r2, #23, #8
+
+       342c8:	3b7f      	subs	r3, #127	@ 0x7f
+
+       342ca:	2b16      	cmp	r3, #22
+
+       342cc:	f022 4100 	bic.w	r1, r2, #2147483648	@ 0x80000000
+
+       342d0:	dc1b      	bgt.n	3430a <<a href="./f180d3540e49cd229cb96c71b0a36b0f.html">floorf</a>+0x4a>
+
+       342d2:	2b00      	cmp	r3, #0
+
+       342d4:	4610      	mov	r0, r2
+
+       342d6:	db1e      	blt.n	34316 <<a href="./f180d3540e49cd229cb96c71b0a36b0f.html">floorf</a>+0x56>
+
+       342d8:	491a      	ldr	r1, [pc, #104]	@ (34344 <<a href="./f180d3540e49cd229cb96c71b0a36b0f.html">floorf</a>+0x84>)
+
+       342da:	4119      	asrs	r1, r3
+
+       342dc:	420a      	tst	r2, r1
+
+       342de:	d023      	beq.n	34328 <<a href="./f180d3540e49cd229cb96c71b0a36b0f.html">floorf</a>+0x68>
+
+       342e0:	eddf 7a19 	vldr	s15, [pc, #100]	@ 34348 <<a href="./f180d3540e49cd229cb96c71b0a36b0f.html">floorf</a>+0x88>
+
+       342e4:	ee70 7a27 	vadd.f32	s15, s0, s15
+
+       342e8:	eef5 7ac0 	vcmpe.f32	s15, #0.0
+
+       342ec:	eef1 fa10 	vmrs	APSR_nzcv, fpscr
+
+       342f0:	dd1a      	ble.n	34328 <<a href="./f180d3540e49cd229cb96c71b0a36b0f.html">floorf</a>+0x68>
+
+       342f2:	2a00      	cmp	r2, #0
+
+       342f4:	da04      	bge.n	34300 <<a href="./f180d3540e49cd229cb96c71b0a36b0f.html">floorf</a>+0x40>
+
+       342f6:	f44f 0200 	mov.w	r2, #8388608	@ 0x800000
+
+       342fa:	fa42 f303 	asr.w	r3, r2, r3
+
+       342fe:	4418      	add	r0, r3
+
+       34300:	ea20 0301 	bic.w	r3, r0, r1
+
+       34304:	ee00 3a10 	vmov	s0, r3
+
+       34308:	4770      	bx	lr
+
+       3430a:	f1b1 4fff 	cmp.w	r1, #2139095040	@ 0x7f800000
+
+       3430e:	d30b      	bcc.n	34328 <<a href="./f180d3540e49cd229cb96c71b0a36b0f.html">floorf</a>+0x68>
+
+       34310:	ee30 0a00 	vadd.f32	s0, s0, s0
+
+       34314:	4770      	bx	lr
+
+       34316:	eddf 7a0c 	vldr	s15, [pc, #48]	@ 34348 <<a href="./f180d3540e49cd229cb96c71b0a36b0f.html">floorf</a>+0x88>
+
+       3431a:	ee70 7a27 	vadd.f32	s15, s0, s15
+
+       3431e:	eef5 7ac0 	vcmpe.f32	s15, #0.0
+
+       34322:	eef1 fa10 	vmrs	APSR_nzcv, fpscr
+
+       34326:	dc00      	bgt.n	3432a <<a href="./f180d3540e49cd229cb96c71b0a36b0f.html">floorf</a>+0x6a>
+
+       34328:	4770      	bx	lr
+
+       3432a:	2a00      	cmp	r2, #0
+
+       3432c:	db02      	blt.n	34334 <<a href="./f180d3540e49cd229cb96c71b0a36b0f.html">floorf</a>+0x74>
+
+       3432e:	ed9f 0a07 	vldr	s0, [pc, #28]	@ 3434c <<a href="./f180d3540e49cd229cb96c71b0a36b0f.html">floorf</a>+0x8c>
+
+       34332:	4770      	bx	lr
+
+       34334:	b911      	cbnz	r1, 3433c <<a href="./f180d3540e49cd229cb96c71b0a36b0f.html">floorf</a>+0x7c>
+
+       34336:	ed9f 0a06 	vldr	s0, [pc, #24]	@ 34350 <<a href="./f180d3540e49cd229cb96c71b0a36b0f.html">floorf</a>+0x90>
+
+       3433a:	4770      	bx	lr
+
+       3433c:	eebf 0a00 	vmov.f32	s0, #240	@ 0xbf800000 -1.0
+
+       34340:	e7f2      	b.n	34328 <<a href="./f180d3540e49cd229cb96c71b0a36b0f.html">floorf</a>+0x68>
+
+       34342:	bf00      	nop
+
+       34344:	007fffff 	.word	0x007fffff
+
+       34348:	7149f2ca 	.word	0x7149f2ca
+
+       3434c:	00000000 	.word	0x00000000
+
+       34350:	80000000 	.word	0x80000000
+
+    </pre>
+
+    
+    <pre><a href="./bd19547b602dd13481be74c905a74397.html">roundf (76)</a></pre>
+    
+
+    
+        <h1>Stack Worst-Case Scenarios</h1>
+        
+            <p>No callees for this function.</p>
+        
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 120</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 1,928</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    1,928
+                    
+                    
+                </td>
+                <td class="col_size">148</td>
+                <td><a href="./f180d3540e49cd229cb96c71b0a36b0f.html" class="icon-function">floorf</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                    
+                    120
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                80 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    1,780
+                    
+                    
+                </td>
+                <td class="col_size">428</td>
+                <td><a href="../../home/runner/work/openbsw/openbsw/libs/3rdparty/etl/include/etl/format.h/136699ea7b8b264c27bb76fd1e5c3ba3.html" class="icon-function">void etl::private_format::format_floating_e&lt;etl::private_print::print_iterator, float&gt;(etl::private_print::print_iterator&amp;, float, etl::private_format::format_spec_t const&amp;)</a></td>
+            </tr>
+        
+            <tr>
+                <th>3</th>
+                <td class="col_size">
+                </td>
+                <td class="col_size">
+            
+                40 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">1,352</td>
+                <td><a href="../../home/runner/work/openbsw/openbsw/libs/3rdparty/etl/include/etl/format.h/4f59be99fc14e6b0549c33e4b93cb113.html" class="icon-function">void etl::private_format::format_floating&lt;etl::private_print::print_iterator, float&gt;(etl::private_print::print_iterator&amp;, float, etl::private_format::format_spec_t const&amp;)</a></td>
+            </tr>
+        
+        </tbody>
+        
+    </table>
+        
+    
+
+
+        </div>
+    <div id="page-footer">
+        <hr>
+        
+            brought to you with 💖
+            by <a href="https://twitter.com/hbehrens">Heiko Behrens</a>
+            <span class="secondary">– MIT license, copyright © 2014-2026</span>
+        
+    </div>
+    </div>
+</body>
+</html>

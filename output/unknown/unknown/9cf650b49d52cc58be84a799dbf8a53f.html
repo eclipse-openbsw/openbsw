@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../static/css/style.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <title>Symbol - puncover</title>
+    
+</head>
+<body>
+    <div class="container" id="content">
+        <div class="page-header">
+            <nav class="navbar navbar-default" role="navigation">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="../../index.html">
+                    Puncover
+                  </a>
+                </div>
+              </div>
+            </nav>
+          
+        </div>
+        <div id="inner_content">
+        
+    
+    <ol class="breadcrumb folders">
+        
+        <li class="active"><a href="../../unknown.html">&lt;unknown&gt;</a>
+            </li>
+
+        
+        <li class="active">&lt;unknown&gt;
+            </li>
+        
+    </ol>
+
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <th>Function</th>
+                <td colspan="5">
+                    <span class="icon-function">log10f</span>
+                </td>
+            </tr>
+
+            <tr>
+                <th rowspan="2"></th>
+                <th>Address</th>
+                <th>Remarks</th>
+                <th>Stack</th>
+                <th>Code</th>
+                <th>Static</th>
+            </tr>
+            <tr>
+                <td>0x00033de8</td>
+                <td>
+    <span class="label label-success">x-module</span>
+    
+</td>
+                <td></td>
+                <td>96</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th>Callers (2)</th>
+                <td colspan="5">
+                
+                    <a href="../../home/runner/work/openbsw/openbsw/libs/3rdparty/etl/include/etl/format.h/136699ea7b8b264c27bb76fd1e5c3ba3.html">void etl::private_format::format_floating_e&lt;etl::private_print::print_iterator, float&gt;(etl::private_print::print_iterator&amp;, float, etl::private_format::format_spec_t const&amp;) (428)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../../home/runner/work/openbsw/openbsw/libs/3rdparty/etl/include/etl/format.h/b89a7042a7545abe33791189b29a6463.html">void etl::private_format::format_floating_e&lt;etl::private_format::counter_iterator, float&gt;(etl::private_format::counter_iterator&amp;, float, etl::private_format::format_spec_t const&amp;) (400)</a>
+                    
+                
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Callees (3,
+                            <span title="sum of used bytes by all callees">
+                            Σ=220
+                            </span>
+                        )
+                    
+                </th>
+                <td colspan="5">
+                
+                    <a href="./d267a9307f362db65277fcacb4af8730.html">__ieee754_log10f (196)</a>
+                    
+                        ,
+                    
+                
+                    <a href="./0ab70b0573c3c4a685f7d4c19d713396.html">__errno (12)</a>
+                    
+                        ,
+                    
+                
+                    <a href="./260168fbdc8c0a0735c8ef327e45dad8.html">nanf (12)</a>
+                    
+                
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    
+    <pre><a href="./30d7e0494351def45591fccb21d3510b.html">pow (240)</a></pre>
+    
+
+    <pre>
+
+    log10f():
+
+       33de8:	b508      	push	{r3, lr}
+
+       33dea:	ed2d 8b02 	vpush	{d8}
+
+       33dee:	eeb0 8a40 	vmov.f32	s16, s0
+
+       33df2:	f001 f9b7 	bl	35164 <<a href="./d267a9307f362db65277fcacb4af8730.html">__ieee754_log10f</a>>
+
+       33df6:	eeb4 8a48 	vcmp.f32	s16, s16
+
+       33dfa:	eef1 fa10 	vmrs	APSR_nzcv, fpscr
+
+       33dfe:	d60f      	bvs.n	33e20 <<a href="./9cf650b49d52cc58be84a799dbf8a53f.html">log10f</a>+0x38>
+
+       33e00:	eeb5 8ac0 	vcmpe.f32	s16, #0.0
+
+       33e04:	eef1 fa10 	vmrs	APSR_nzcv, fpscr
+
+       33e08:	d80a      	bhi.n	33e20 <<a href="./9cf650b49d52cc58be84a799dbf8a53f.html">log10f</a>+0x38>
+
+       33e0a:	eeb5 8a40 	vcmp.f32	s16, #0.0
+
+       33e0e:	eef1 fa10 	vmrs	APSR_nzcv, fpscr
+
+       33e12:	d108      	bne.n	33e26 <<a href="./9cf650b49d52cc58be84a799dbf8a53f.html">log10f</a>+0x3e>
+
+       33e14:	f002 fd82 	bl	3691c <<a href="./0ab70b0573c3c4a685f7d4c19d713396.html">__errno</a>>
+
+       33e18:	2322      	movs	r3, #34	@ 0x22
+
+       33e1a:	ed9f 0a09 	vldr	s0, [pc, #36]	@ 33e40 <<a href="./9cf650b49d52cc58be84a799dbf8a53f.html">log10f</a>+0x58>
+
+       33e1e:	6003      	str	r3, [r0, #0]
+
+       33e20:	ecbd 8b02 	vpop	{d8}
+
+       33e24:	bd08      	pop	{r3, pc}
+
+       33e26:	f002 fd79 	bl	3691c <<a href="./0ab70b0573c3c4a685f7d4c19d713396.html">__errno</a>>
+
+       33e2a:	ecbd 8b02 	vpop	{d8}
+
+       33e2e:	4603      	mov	r3, r0
+
+       33e30:	2221      	movs	r2, #33	@ 0x21
+
+       33e32:	601a      	str	r2, [r3, #0]
+
+       33e34:	4803      	ldr	r0, [pc, #12]	@ (33e44 <<a href="./9cf650b49d52cc58be84a799dbf8a53f.html">log10f</a>+0x5c>)
+
+       33e36:	e8bd 4008 	ldmia.w	sp!, {r3, lr}
+
+       33e3a:	f000 b93f 	b.w	340bc <<a href="./260168fbdc8c0a0735c8ef327e45dad8.html">nanf</a>>
+
+       33e3e:	bf00      	nop
+
+       33e40:	ff800000 	.word	0xff800000
+
+       33e44:	0003b2f8 	.word	0x0003b2f8
+
+    </pre>
+
+    
+    <pre><a href="./612c7c664f86a40eabd0f8a8c53d50d1.html">powf (188)</a></pre>
+    
+
+    
+        <h1>Stack Worst-Case Scenarios</h1>
+        
+            <p>No callees for this function.</p>
+        
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 120</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 1,876</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    1,876
+                    
+                    
+                </td>
+                <td class="col_size">96</td>
+                <td><a href="./9cf650b49d52cc58be84a799dbf8a53f.html" class="icon-function">log10f</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                    
+                    120
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                80 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    1,780
+                    
+                    
+                </td>
+                <td class="col_size">428</td>
+                <td><a href="../../home/runner/work/openbsw/openbsw/libs/3rdparty/etl/include/etl/format.h/136699ea7b8b264c27bb76fd1e5c3ba3.html" class="icon-function">void etl::private_format::format_floating_e&lt;etl::private_print::print_iterator, float&gt;(etl::private_print::print_iterator&amp;, float, etl::private_format::format_spec_t const&amp;)</a></td>
+            </tr>
+        
+            <tr>
+                <th>3</th>
+                <td class="col_size">
+                </td>
+                <td class="col_size">
+            
+                40 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">1,352</td>
+                <td><a href="../../home/runner/work/openbsw/openbsw/libs/3rdparty/etl/include/etl/format.h/4f59be99fc14e6b0549c33e4b93cb113.html" class="icon-function">void etl::private_format::format_floating&lt;etl::private_print::print_iterator, float&gt;(etl::private_print::print_iterator&amp;, float, etl::private_format::format_spec_t const&amp;)</a></td>
+            </tr>
+        
+        </tbody>
+        
+    </table>
+        
+    
+
+
+        </div>
+    <div id="page-footer">
+        <hr>
+        
+            brought to you with 💖
+            by <a href="https://twitter.com/hbehrens">Heiko Behrens</a>
+            <span class="secondary">– MIT license, copyright © 2014-2026</span>
+        
+    </div>
+    </div>
+</body>
+</html>

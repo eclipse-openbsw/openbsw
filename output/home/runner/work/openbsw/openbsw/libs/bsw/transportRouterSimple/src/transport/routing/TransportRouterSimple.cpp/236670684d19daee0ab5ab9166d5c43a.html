@@ -1,0 +1,432 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../../../../../../../../../../../static/css/style.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <title>Symbol - puncover</title>
+    
+</head>
+<body>
+    <div class="container" id="content">
+        <div class="page-header">
+            <nav class="navbar navbar-default" role="navigation">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="../../../../../../../../../../../../index.html">
+                    Puncover
+                  </a>
+                </div>
+              </div>
+            </nav>
+          
+        </div>
+        <div id="inner_content">
+        
+    
+    <ol class="breadcrumb folders">
+        
+        <li><a href="../../../../../../../../../../../../home.html">home</a></li>
+        
+        <li><a href="../../../../../../../../../../../runner.html">runner</a></li>
+        
+        <li><a href="../../../../../../../../../../work.html">work</a></li>
+        
+        <li><a href="../../../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../../libs.html">libs</a></li>
+        
+        <li><a href="../../../../../../bsw.html">bsw</a></li>
+        
+        <li><a href="../../../../../transportRouterSimple.html">transportRouterSimple</a></li>
+        
+        <li><a href="../../../../src.html">src</a></li>
+        
+        <li><a href="../../../transport.html">transport</a></li>
+        
+        <li ><a href="../../routing.html">routing</a>
+            </li>
+
+        
+        <li class="active"><a href="../TransportRouterSimple.cpp.html">TransportRouterSimple.cpp</a>:198
+            </li>
+        
+    </ol>
+
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <th>Function</th>
+                <td colspan="5">
+                    <span class="icon-function">transport::TransportRouterSimple::forwardMessageToTransportLayer(transport::TransportMessage&amp;, unsigned char, transport::ITransportMessageProcessedListener*, transport::AbstractTransportLayer::ErrorCode&amp;)</span>
+                </td>
+            </tr>
+
+            <tr>
+                <th rowspan="2"></th>
+                <th>Address</th>
+                <th>Remarks</th>
+                <th>Stack</th>
+                <th>Code</th>
+                <th>Static</th>
+            </tr>
+            <tr>
+                <td>0x00018cac</td>
+                <td>
+    
+    
+</td>
+                <td>32 (static)</td>
+                <td>180</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th>Callers (1)</th>
+                <td colspan="5">
+                
+                    <a href="./18df4eecf80f770260851c78963a117e.html">transport::TransportRouterSimple::messageReceived(unsigned char, transport::TransportMessage&amp;, transport::ITransportMessageProcessedListener*) (200)</a>
+                    
+                
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Callees (1,
+                            <span title="sum of used bytes by all callees">
+                            Σ=56
+                            </span>
+                        )
+                    
+                </th>
+                <td colspan="5">
+                
+                    <a href="../../../../../transport/src/LogicalAddress.cpp/8219771edccbfaca4c1a15937311e21c.html">transport::addressfinder::findBy2ByteAddress(etl::span&lt;transport::LogicalAddress const, 4294967295u&gt; const&amp;, unsigned short) (56)</a>
+                    
+                
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    
+    <pre><a href="./20e6c2cf42c7855fd44900f0e0e1accb.html">transport::TransportRouterSimple::removeTransportLayer(transport::AbstractTransportLayer&amp;) (88)</a></pre>
+    
+
+    <pre>
+
+    transport::TransportRouterSimple::forwardMessageToTransportLayer(transport::TransportMessage&, unsigned char, transport::ITransportMessageProcessedListener*, transport::AbstractTransportLayer::ErrorCode&):
+
+       18cac:	e92d 41f0 	stmdb	sp!, {r4, r5, r6, r7, r8, lr}
+
+       18cb0:	f1a2 0c03 	sub.w	ip, r2, #3
+
+       18cb4:	f1bc 0f01 	cmp.w	ip, #1
+
+       18cb8:	b082      	sub	sp, #8
+
+       18cba:	4615      	mov	r5, r2
+
+       18cbc:	4604      	mov	r4, r0
+
+       18cbe:	460e      	mov	r6, r1
+
+       18cc0:	461f      	mov	r7, r3
+
+       18cc2:	d911      	bls.n	18ce8 <<a href="./236670684d19daee0ab5ab9166d5c43a.html">transport::TransportRouterSimple::forwardMessageToTransportLayer(transport::TransportMessage&, unsigned char, transport::ITransportMessageProcessedListener*, transport::AbstractTransportLayer::ErrorCode&)</a>+0x3c>
+
+    _ZNK9transport16TransportMessage13sourceAddressEv():
+
+       18cc4:	f8b1 8008 	ldrh.w	r8, [r1, #8]
+
+    _ZN9transport22TransportConfiguration26convert2ByteAddressTo1ByteEt():
+
+       18cc8:	f408 437f 	and.w	r3, r8, #65280	@ 0xff00
+
+       18ccc:	f5b3 6f60 	cmp.w	r3, #3584	@ 0xe00
+
+       18cd0:	d035      	beq.n	18d3e <<a href="./236670684d19daee0ab5ab9166d5c43a.html">transport::TransportRouterSimple::forwardMessageToTransportLayer(transport::TransportMessage&, unsigned char, transport::ITransportMessageProcessedListener*, transport::AbstractTransportLayer::ErrorCode&)</a>+0x92>
+
+    _ZN9transport16TransportMessage16setSourceAddressEt():
+
+       18cd2:	f8a6 8008 	strh.w	r8, [r6, #8]
+
+    _ZNK9transport16TransportMessage13targetAddressEv():
+
+       18cd6:	f8b6 800a 	ldrh.w	r8, [r6, #10]
+
+    _ZN9transport22TransportConfiguration26convert2ByteAddressTo1ByteEt():
+
+       18cda:	f408 437f 	and.w	r3, r8, #65280	@ 0xff00
+
+       18cde:	f5b3 6f60 	cmp.w	r3, #3584	@ 0xe00
+
+       18ce2:	d020      	beq.n	18d26 <<a href="./236670684d19daee0ab5ab9166d5c43a.html">transport::TransportRouterSimple::forwardMessageToTransportLayer(transport::TransportMessage&, unsigned char, transport::ITransportMessageProcessedListener*, transport::AbstractTransportLayer::ErrorCode&)</a>+0x7a>
+
+    _ZN9transport16TransportMessage16setTargetAddressEt():
+
+       18ce4:	f8a6 800a 	strh.w	r8, [r6, #10]
+
+    _ZN3etl19intrusive_list_baseINS_18bidirectional_linkILj0EEEE8get_headEv():
+
+       18ce8:	f504 5040 	add.w	r0, r4, #12288	@ 0x3000
+
+    _ZN3etl14intrusive_listIN9transport22AbstractTransportLayerENS_18bidirectional_linkILj0EEEE3endEv():
+
+       18cec:	f504 5e44 	add.w	lr, r4, #12544	@ 0x3100
+
+    _ZN3etl19intrusive_list_baseINS_18bidirectional_linkILj0EEEE8get_headEv():
+
+       18cf0:	f8d0 0104 	ldr.w	r0, [r0, #260]	@ 0x104
+
+    transport::TransportRouterSimple::forwardMessageToTransportLayer(transport::TransportMessage&, unsigned char, transport::ITransportMessageProcessedListener*, transport::AbstractTransportLayer::ErrorCode&):
+
+       18cf4:	4570      	cmp	r0, lr
+
+       18cf6:	d007      	beq.n	18d08 <<a href="./236670684d19daee0ab5ab9166d5c43a.html">transport::TransportRouterSimple::forwardMessageToTransportLayer(transport::TransportMessage&, unsigned char, transport::ITransportMessageProcessedListener*, transport::AbstractTransportLayer::ErrorCode&)</a>+0x5c>
+
+    _ZNK3etl14intrusive_listIN9transport22AbstractTransportLayerENS_18bidirectional_linkILj0EEEE8iteratorptEv():
+
+       18cf8:	b368      	cbz	r0, 18d56 <<a href="./236670684d19daee0ab5ab9166d5c43a.html">transport::TransportRouterSimple::forwardMessageToTransportLayer(transport::TransportMessage&, unsigned char, transport::ITransportMessageProcessedListener*, transport::AbstractTransportLayer::ErrorCode&)</a>+0xaa>
+
+    transport::TransportRouterSimple::forwardMessageToTransportLayer(transport::TransportMessage&, unsigned char, transport::ITransportMessageProcessedListener*, transport::AbstractTransportLayer::ErrorCode&):
+
+       18cfa:	f890 c008 	ldrb.w	ip, [r0, #8]
+
+       18cfe:	45ac      	cmp	ip, r5
+
+       18d00:	d005      	beq.n	18d0e <<a href="./236670684d19daee0ab5ab9166d5c43a.html">transport::TransportRouterSimple::forwardMessageToTransportLayer(transport::TransportMessage&, unsigned char, transport::ITransportMessageProcessedListener*, transport::AbstractTransportLayer::ErrorCode&)</a>+0x62>
+
+    _ZN3etl14intrusive_listIN9transport22AbstractTransportLayerENS_18bidirectional_linkILj0EEEE8iteratorppEv():
+
+       18d02:	6840      	ldr	r0, [r0, #4]
+
+    transport::TransportRouterSimple::forwardMessageToTransportLayer(transport::TransportMessage&, unsigned char, transport::ITransportMessageProcessedListener*, transport::AbstractTransportLayer::ErrorCode&):
+
+       18d04:	4570      	cmp	r0, lr
+
+       18d06:	d1f7      	bne.n	18cf8 <<a href="./236670684d19daee0ab5ab9166d5c43a.html">transport::TransportRouterSimple::forwardMessageToTransportLayer(transport::TransportMessage&, unsigned char, transport::ITransportMessageProcessedListener*, transport::AbstractTransportLayer::ErrorCode&)</a>+0x4c>
+
+       18d08:	b002      	add	sp, #8
+
+       18d0a:	e8bd 81f0 	ldmia.w	sp!, {r4, r5, r6, r7, r8, pc}
+
+       18d0e:	f850 3c04 	ldr.w	r3, [r0, #-4]
+
+       18d12:	463a      	mov	r2, r7
+
+       18d14:	689b      	ldr	r3, [r3, #8]
+
+       18d16:	4631      	mov	r1, r6
+
+       18d18:	3804      	subs	r0, #4
+
+       18d1a:	4798      	blx	r3
+
+       18d1c:	9b08      	ldr	r3, [sp, #32]
+
+       18d1e:	7018      	strb	r0, [r3, #0]
+
+       18d20:	b002      	add	sp, #8
+
+       18d22:	e8bd 81f0 	ldmia.w	sp!, {r4, r5, r6, r7, r8, pc}
+
+    _ZN9transport23LogicalAddressConverterILj1EE26convert2ByteAddressTo1ByteEt():
+
+       18d26:	490d      	ldr	r1, [pc, #52]	@ (18d5c <<a href="./236670684d19daee0ab5ab9166d5c43a.html">transport::TransportRouterSimple::forwardMessageToTransportLayer(transport::TransportMessage&, unsigned char, transport::ITransportMessageProcessedListener*, transport::AbstractTransportLayer::ErrorCode&)</a>+0xb0>)
+
+       18d28:	4642      	mov	r2, r8
+
+       18d2a:	4668      	mov	r0, sp
+
+       18d2c:	f7ff fcde 	bl	186ec <<a href="../../../../../transport/src/LogicalAddress.cpp/8219771edccbfaca4c1a15937311e21c.html">transport::addressfinder::findBy2ByteAddress(etl::span<transport::LogicalAddress const, 4294967295u> const&, unsigned short)</a>>
+
+       18d30:	f89d 3004 	ldrb.w	r3, [sp, #4]
+
+       18d34:	2b00      	cmp	r3, #0
+
+       18d36:	d0d5      	beq.n	18ce4 <<a href="./236670684d19daee0ab5ab9166d5c43a.html">transport::TransportRouterSimple::forwardMessageToTransportLayer(transport::TransportMessage&, unsigned char, transport::ITransportMessageProcessedListener*, transport::AbstractTransportLayer::ErrorCode&)</a>+0x38>
+
+       18d38:	f8bd 8002 	ldrh.w	r8, [sp, #2]
+
+    _ZN3etl16private_optional13optional_implIN9transport14LogicalAddressELb0EE12storage_type10union_typeD4Ev():
+
+       18d3c:	e7d2      	b.n	18ce4 <<a href="./236670684d19daee0ab5ab9166d5c43a.html">transport::TransportRouterSimple::forwardMessageToTransportLayer(transport::TransportMessage&, unsigned char, transport::ITransportMessageProcessedListener*, transport::AbstractTransportLayer::ErrorCode&)</a>+0x38>
+
+    _ZN9transport23LogicalAddressConverterILj1EE26convert2ByteAddressTo1ByteEt():
+
+       18d3e:	4907      	ldr	r1, [pc, #28]	@ (18d5c <<a href="./236670684d19daee0ab5ab9166d5c43a.html">transport::TransportRouterSimple::forwardMessageToTransportLayer(transport::TransportMessage&, unsigned char, transport::ITransportMessageProcessedListener*, transport::AbstractTransportLayer::ErrorCode&)</a>+0xb0>)
+
+       18d40:	4642      	mov	r2, r8
+
+       18d42:	4668      	mov	r0, sp
+
+       18d44:	f7ff fcd2 	bl	186ec <<a href="../../../../../transport/src/LogicalAddress.cpp/8219771edccbfaca4c1a15937311e21c.html">transport::addressfinder::findBy2ByteAddress(etl::span<transport::LogicalAddress const, 4294967295u> const&, unsigned short)</a>>
+
+       18d48:	f89d 3004 	ldrb.w	r3, [sp, #4]
+
+       18d4c:	2b00      	cmp	r3, #0
+
+       18d4e:	d0c0      	beq.n	18cd2 <<a href="./236670684d19daee0ab5ab9166d5c43a.html">transport::TransportRouterSimple::forwardMessageToTransportLayer(transport::TransportMessage&, unsigned char, transport::ITransportMessageProcessedListener*, transport::AbstractTransportLayer::ErrorCode&)</a>+0x26>
+
+       18d50:	f8bd 8002 	ldrh.w	r8, [sp, #2]
+
+    _ZN3etl16private_optional13optional_implIN9transport14LogicalAddressELb0EE12storage_type10union_typeD4Ev():
+
+       18d54:	e7bd      	b.n	18cd2 <<a href="./236670684d19daee0ab5ab9166d5c43a.html">transport::TransportRouterSimple::forwardMessageToTransportLayer(transport::TransportMessage&, unsigned char, transport::ITransportMessageProcessedListener*, transport::AbstractTransportLayer::ErrorCode&)</a>+0x26>
+
+    _ZNK9transport22AbstractTransportLayer8getBusIdEv():
+
+       18d56:	7b03      	ldrb	r3, [r0, #12]
+
+       18d58:	deff      	udf	#255	@ 0xff
+
+       18d5a:	bf00      	nop
+
+       18d5c:	0003e70c 	.word	0x0003e70c
+
+    </pre>
+
+    
+    <pre><a href="./18df4eecf80f770260851c78963a117e.html">transport::TransportRouterSimple::messageReceived(unsigned char, transport::TransportMessage&amp;, transport::ITransportMessageProcessedListener*) (200)</a></pre>
+    
+
+    
+        <h1>Stack Worst-Case Scenarios</h1>
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 96</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 56</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    96
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                16 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">56</td>
+                <td><a href="../../../../../transport/src/LogicalAddress.cpp/8219771edccbfaca4c1a15937311e21c.html" class="icon-function">transport::addressfinder::findBy2ByteAddress(etl::span&lt;transport::LogicalAddress const, 4294967295u&gt; const&amp;, unsigned short)</a></td>
+            </tr>
+        
+        </tbody>
+        
+        <tfoot>
+            <tr>
+                <th></th>
+                <th class="col_size">80
+                </th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </tfoot>
+        
+    </table>
+        
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 80</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 380</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    80
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                32 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    380
+                    
+                    
+                </td>
+                <td class="col_size">180</td>
+                <td><a href="./236670684d19daee0ab5ab9166d5c43a.html" class="icon-function">transport::TransportRouterSimple::forwardMessageToTransportLayer(transport::TransportMessage&amp;, unsigned char, transport::ITransportMessageProcessedListener*, transport::AbstractTransportLayer::ErrorCode&amp;)</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                </td>
+                <td class="col_size">
+            
+                48 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">200</td>
+                <td><a href="./18df4eecf80f770260851c78963a117e.html" class="icon-function">transport::TransportRouterSimple::messageReceived(unsigned char, transport::TransportMessage&amp;, transport::ITransportMessageProcessedListener*)</a></td>
+            </tr>
+        
+        </tbody>
+        
+    </table>
+        
+    
+
+
+        </div>
+    <div id="page-footer">
+        <hr>
+        
+            brought to you with 💖
+            by <a href="https://twitter.com/hbehrens">Heiko Behrens</a>
+            <span class="secondary">– MIT license, copyright © 2014-2026</span>
+        
+    </div>
+    </div>
+</body>
+</html>
