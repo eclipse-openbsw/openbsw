@@ -194,9 +194,10 @@ protected:
     void publishSlot(WriteToken const& token)
     {
         _sent.store(token.nextSent, ::etl::memory_order_release);
-        if (size() > _stats.maxLoad)
+        uint32_t const currentSize = size();
+        if (currentSize > _stats.maxLoad)
         {
-            _stats.maxLoad = static_cast<uint8_t>(size());
+            _stats.maxLoad = static_cast<uint8_t>(currentSize);
         }
     }
 
