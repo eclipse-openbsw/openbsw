@@ -155,19 +155,44 @@ inline bool updateConfig(NetworkInterfaceConfig& config, NetworkInterfaceConfig 
  * need to get notified about changes of assigned network addresses. This can be done by
  * registering as a listener to config changes.
  */
-struct NetworkInterfaceConfigRegistry
+class NetworkInterfaceConfigRegistry
 {
+public:
+    virtual NetworkInterfaceConfig getConfig(uint8_t busId) const = 0;
+    virtual bool connect(ConfigChangedSlotType const& slot)       = 0;
+    virtual void disconnect(ConfigChangedSlotType const& slot)    = 0;
+
+protected:
+    NetworkInterfaceConfigRegistry()                                                 = default;
+    ~NetworkInterfaceConfigRegistry()                                                = default;
+    NetworkInterfaceConfigRegistry(NetworkInterfaceConfigRegistry const&)            = delete;
+    NetworkInterfaceConfigRegistry& operator=(NetworkInterfaceConfigRegistry const&) = delete;
+};
+
+namespace declare
+{
+/**
+ * Concrete NetworkInterfaceConfigRegistry that owns an etl::signal sized for a given
+ * number of listener slots.
+ */
+template<size_t SlotCapacity>
+class NetworkInterfaceConfigRegistry : public ::ip::NetworkInterfaceConfigRegistry
+{
+public:
+    using ConfigChangedSignal
+        = ::etl::signal<void(uint8_t, NetworkInterfaceConfig const&), SlotCapacity>;
+
     NetworkInterfaceConfigRegistry(
         ::etl::span<uint8_t const> busIds, ::etl::span<NetworkInterfaceConfig const> configs)
     : busIds(busIds), configs(configs)
     {}
 
-    virtual ~NetworkInterfaceConfigRegistry() = default;
-
     ::etl::span<uint8_t const> busIds;
     ::etl::span<NetworkInterfaceConfig const> configs;
 
-    virtual NetworkInterfaceConfig getConfig(uint8_t const busId) const
+    ConfigChangedSignal configChangedSignal;
+
+    NetworkInterfaceConfig getConfig(uint8_t const busId) const override
     {
         for (size_t i = 0; i < busIds.size(); ++i)
         {
@@ -178,29 +203,6 @@ struct NetworkInterfaceConfigRegistry
         }
         return {};
     }
-
-    virtual bool connect(ConfigChangedSlotType const& slot)    = 0;
-    virtual void disconnect(ConfigChangedSlotType const& slot) = 0;
-};
-
-namespace declare
-{
-/**
- * Concrete NetworkInterfaceConfigRegistry that owns an etl::signal sized for a given
- * number of listener slots.
- */
-template<size_t SlotCapacity>
-struct NetworkInterfaceConfigRegistry : public ::ip::NetworkInterfaceConfigRegistry
-{
-    using ConfigChangedSignal
-        = ::etl::signal<void(uint8_t, NetworkInterfaceConfig const&), SlotCapacity>;
-
-    NetworkInterfaceConfigRegistry(
-        ::etl::span<uint8_t const> busIds, ::etl::span<NetworkInterfaceConfig const> configs)
-    : ::ip::NetworkInterfaceConfigRegistry(busIds, configs)
-    {}
-
-    ConfigChangedSignal configChangedSignal;
 
     bool connect(ConfigChangedSlotType const& slot) override
     {
