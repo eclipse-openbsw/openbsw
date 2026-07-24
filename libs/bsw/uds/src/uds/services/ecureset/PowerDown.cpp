@@ -18,11 +18,11 @@
 
 namespace uds
 {
-uint8_t const PowerDown::sfImplementedRequest[2] = {ServiceId::ECU_RESET, 0x41U};
+::etl::array<uint8_t, 2U> const PowerDown::sfImplementedRequest = {ServiceId::ECU_RESET, 0x41U};
 
 PowerDown::PowerDown(IUdsLifecycleConnector& udsLifecycleConnector)
 : Subfunction(
-    &sfImplementedRequest[0],
+    sfImplementedRequest.data(),
     AbstractDiagJob::EMPTY_REQUEST,
     AbstractDiagJob::EMPTY_RESPONSE,
     DiagSessionMask::getInstance() << DiagSession::APPLICATION_DEFAULT_SESSION()

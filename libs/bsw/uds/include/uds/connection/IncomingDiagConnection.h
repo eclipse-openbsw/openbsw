@@ -18,6 +18,7 @@
 #include "uds/connection/ErrorCode.h"
 #include "uds/connection/PositiveResponse.h"
 
+#include <etl/array.h>
 #include <etl/closure.h>
 #include <etl/uncopyable.h>
 #include <etl/vector.h>
@@ -287,8 +288,9 @@ private:
     transport::TransportMessage _pendingMessage  = {};
     transport::TransportMessage _responseMessage = {};
     PositiveResponse _positiveResponse;
-    uint8_t _pendingMessageBuffer[PENDING_MESSAGE_BUFFER_LENGTH]                     = {};
-    uint8_t _negativeResponseTempBuffer[DiagCodes::NEGATIVE_RESPONSE_MESSAGE_LENGTH] = {};
+    ::etl::array<uint8_t, PENDING_MESSAGE_BUFFER_LENGTH> _pendingMessageBuffer{};
+    ::etl::array<uint8_t, DiagCodes::NEGATIVE_RESPONSE_MESSAGE_LENGTH>
+        _negativeResponseTempBuffer{};
     ::etl::vector<uint8_t, MAXIMUM_NUMBER_OF_IDENTIFIERS> _identifiers;
     uint32_t _pendingTimeOut          = DEFAULT_PENDING_TIMEOUT_MS;
     NestedDiagRequest* _nestedRequest = nullptr;
