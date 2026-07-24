@@ -1,7 +1,7 @@
-# The vendored instance of googletest v1.11.0 is not supported by current Bazel version.
-# It will cause errors in Bazel if not ignored
-# A fixed version exists on the central Bazel registry that can be used on the Bazel side:
-# https://registry.bazel.build/modules/googletest/1.11.0
+# The vendored googletest contains BUILD.bazel files referencing @rules_python and
+# @com_google_absl, which are not in this Bzlmod graph. Without this entry,
+# bazel query //... crawls into the directory and fails. The module is exposed to
+# Bazel via local_path_override in MODULE.bazel instead.
 libs/3rdparty/googletest
 
 # The vendored ETL library ships its own upstream Bazel test tree (test/**) which
