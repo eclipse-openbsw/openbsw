@@ -300,11 +300,6 @@ ESR_NO_INLINE AbstractTransportLayer::ErrorCode DiagDispatcher::send(
     TransportMessage& transportMessage,
     ITransportMessageProcessedListener* const pNotificationListener)
 {
-    if (!fEnabled)
-    {
-        return AbstractTransportLayer::ErrorCode::TP_SEND_FAIL;
-    }
-
     // Compare listener identity through the concrete connection type to avoid reinterpret_cast.
     auto connection = etl::find_if(
         _incomingDiagConnectionPool.begin(),
@@ -337,6 +332,13 @@ ESR_NO_INLINE AbstractTransportLayer::ErrorCode DiagDispatcher::send(
             "DiagDispatcher::send(): invalid target 0x%x, expected 0x%x",
             transportMessage.getTargetId(),
             _configuration.DiagAddress);
+        return AbstractTransportLayer::ErrorCode::TP_SEND_FAIL;
+    }
+
+    // Placed here so existing incoming connections can still send responses, but new requests are
+    // not queued when disabled.
+    if (!fEnabled)
+    {
         return AbstractTransportLayer::ErrorCode::TP_SEND_FAIL;
     }
 
