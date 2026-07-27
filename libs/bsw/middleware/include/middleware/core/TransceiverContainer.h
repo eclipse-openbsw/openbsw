@@ -91,9 +91,9 @@ struct TransceiverContainer
     TransceiverContainer& operator=(TransceiverContainer&&)      = delete;
 
     /** Pointer to the vector holding transceiver pointers. */
-    ::etl::ivector<TransceiverBase*>* const _container{};
+    ::etl::ivector<TransceiverBase*>* _container{};
     /** The service ID associated with this container. */
-    uint16_t const _serviceId;
+    uint16_t _serviceId;
     /** The current/next available address ID for proxies. */
     uint16_t _actualAddress;
 };

@@ -75,12 +75,10 @@ class InstancesDatabase_Merged : public ::middleware::core::IInstanceDatabase
     ::etl::span<::middleware::core::IClusterConnection* const> getSkeletonConnectionsRange() const override
     {
         {% if all_skeleton_connections %}
-        // Function-local static: initialised on first call, which is always after
-        // initializeXClusterConnection() has called typed_storage::create().
-        static ::etl::array<::middleware::core::IClusterConnection* const, {{all_skeleton_connections | length}}U> connections = {
+        static constexpr ::etl::array<::middleware::core::IClusterConnection* const, {{all_skeleton_connections | length}}U> connections = {
             {
             {%- for connection in all_skeleton_connections %}
-            ::middleware::ClusterConnection{{ connection.source_cluster.name }}To{{ connection.target_cluster.name }}.operator->(){{ "," if not loop.last }}
+            &::middleware::ClusterConnection{{ connection.source_cluster.name }}To{{ connection.target_cluster.name }}{{ "," if not loop.last }}
             {%- endfor %}
             }
         };
@@ -93,10 +91,10 @@ class InstancesDatabase_Merged : public ::middleware::core::IInstanceDatabase
     ::etl::span<::middleware::core::IClusterConnection* const> getProxyConnectionsRange() const override
     {
         {% if all_proxy_connections %}
-        static ::etl::array<::middleware::core::IClusterConnection* const, {{all_proxy_connections | length}}U> connections = {
+        static constexpr ::etl::array<::middleware::core::IClusterConnection* const, {{all_proxy_connections | length}}U> connections = {
             {
             {%- for connection in all_proxy_connections %}
-            ::middleware::ClusterConnection{{ connection.source_cluster.name }}To{{ connection.target_cluster.name }}.operator->(){{ "," if not loop.last }}
+            &::middleware::ClusterConnection{{ connection.source_cluster.name }}To{{ connection.target_cluster.name }}{{ "," if not loop.last }}
             {%- endfor %}
             }
         };
