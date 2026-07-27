@@ -10,6 +10,8 @@
 
 #include "shed/multi_list.h"
 
+#include <etl/alignment.h>
+
 #include <cstdint>
 
 namespace shed
@@ -38,12 +40,12 @@ multi_list* multi_list::make(size_t const n, size_t const buckets, ::etl::span<u
     {
         return nullptr;
     }
-    // If the provided memory isn't aligned to the requirements of idx_type, don't continue
-    if ((reinterpret_cast<uintptr_t>(mem.data()) % static_cast<uintptr_t>(sizeof(idx_type))) != 0)
+    // If the provided memory isn't aligned to the requirements of multi_list, don't continue
+    if (!::etl::is_aligned<multi_list>(mem.data()))
     {
         return nullptr;
     }
-    auto const self = new (mem.data()) multi_list(n, buckets);
+    auto* const self = new (mem.data()) multi_list(n, buckets);
     mem.advance(memory_for(n, buckets));
     return self;
 }

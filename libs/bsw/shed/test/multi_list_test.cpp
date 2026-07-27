@@ -16,7 +16,7 @@
 
 using namespace testing;
 
-alignas(alignof(::shed::internal::multi_list::idx_type)) static uint8_t
+alignas(alignof(::shed::internal::multi_list)) static uint8_t
     ml_mem[::shed::internal::multi_list::memory_for(10, 3)];
 
 using Ids = std::vector<size_t>;
