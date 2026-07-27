@@ -56,7 +56,7 @@ class {{service.name}}Skeleton : public ::middleware::core::SkeletonBase
     // METHODS
     {% for method in service.methods %}
     using {{ method.variable }}Response =
-      ::middleware::core::ResponseBuffer<::middleware::core::ResponseTraits<{{ method.output_param.type | default('uint8_t') }}, internal::{{ method.variable }}_id>, {{ method.provider_request_limit }}U>;
+      ::middleware::core::ResponseBuffer<::middleware::core::ResponseTraits<{{ method.output_param.type | default('void') }}, internal::{{ method.variable }}_id>, {{ method.provider_request_limit }}U>;
     {% endfor %}
 
     {{service.name}}Skeleton();

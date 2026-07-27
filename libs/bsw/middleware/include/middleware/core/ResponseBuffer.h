@@ -68,9 +68,10 @@ public:
      * \param handleResponseFailure True to cancel the response on send failure
      * \return HRESULT Result code
      */
-    HRESULT respond(
+    template<typename T = ResponseType>
+    ::etl::enable_if_t<!::etl::is_void<T>::value, HRESULT> respond(
         SkeletonResponseInfo& response,
-        ResponseType const& result,
+        T const& result,
         bool const handleResponseFailure = true)
     {
         auto ret = HRESULT::ResponseBufferFutureNotFound;
@@ -83,6 +84,28 @@ public:
             {
                 ret = Base::sendResponse(msg, response, handleResponseFailure);
             }
+        }
+
+        return ret;
+    }
+
+    /**
+     * Sends a void response (header only) for a previously allocated response slot.
+     *
+     * \param response Response slot info
+     * \param handleResponseFailure True to cancel the response on send failure
+     * \return HRESULT Result code
+     */
+    template<typename T = ResponseType>
+    ::etl::enable_if_t<::etl::is_void<T>::value, HRESULT>
+    respond(SkeletonResponseInfo& response, bool const handleResponseFailure = true)
+    {
+        auto ret = HRESULT::ResponseBufferFutureNotFound;
+
+        if (Base::isResponseIteratorValid(&response))
+        {
+            Message msg = Base::generateResponseMessageHeader(response, Traits::METHOD_MEMBER_ID);
+            ret         = Base::sendResponse(msg, response, handleResponseFailure);
         }
 
         return ret;

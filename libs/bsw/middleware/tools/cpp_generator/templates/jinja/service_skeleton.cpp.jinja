@@ -230,11 +230,19 @@ middleware::core::HRESULT {{service.name}}Skeleton::onNewMessageReceived(middlew
 
 // METHODS
 {% for method in service.methods if service.methods %}
+{% if method.output_param %}
 middleware::core::HRESULT {{service.name}}Skeleton::respond(middleware::core::ResponseBufferBase::SkeletonResponseInfo& response,
-                                               {% if method.output_param %}const {{  method.output_param.type }}& {{  method.output_param.name }}, {% endif %}const bool handleResponseFailure)
+                                                const {{  method.output_param.type }}& {{  method.output_param.name }}, const bool handleResponseFailure)
 {
-    return f{{method.variable}}ResponseBuffer.respond(response, {{  method.output_param.name | default('0U') }}, handleResponseFailure);
+    return f{{method.variable}}ResponseBuffer.respond(response, {{ method.output_param.name }}, handleResponseFailure);
 }
+{% else %}
+middleware::core::HRESULT {{service.name}}Skeleton::respond(middleware::core::ResponseBufferBase::SkeletonResponseInfo& response,
+                                                const bool handleResponseFailure)
+{
+    return f{{method.variable}}ResponseBuffer.respond(response, handleResponseFailure);
+}
+{% endif %}
 {% endfor %}
 
 // ATTRIBUTES
