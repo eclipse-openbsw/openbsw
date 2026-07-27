@@ -8,14 +8,15 @@ add_library(
     src/middleware/core/ClusterConnectionBase.cpp
     src/middleware/core/DatabaseManipulator.cpp
     src/middleware/core/EventSender.cpp
-    src/middleware/core/FutureDispatcherBase.cpp
     src/middleware/core/IClusterConnectionConfigurationBase.cpp
     src/middleware/core/LoggerApi.cpp
     src/middleware/core/MessagePayloadBuilder.cpp
     src/middleware/core/ProxyBase.cpp
     src/middleware/core/ResponseBufferBase.cpp
     src/middleware/core/SkeletonBase.cpp
-    src/middleware/memory/PoolBase.cpp)
+    src/middleware/memory/PoolBase.cpp
+    src/middleware/rpc/ProxyFireAndForgetMethod.cpp
+    src/middleware/rpc/ProxyMethodImpl.cpp)
 
 target_include_directories(middleware PUBLIC include)
 target_include_directories(middleware PRIVATE interfaces/include)

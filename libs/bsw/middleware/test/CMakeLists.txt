@@ -3,7 +3,6 @@ add_executable(
     src/core/ClusterConfigurationTest.cpp
     src/core/ConnectionTest.cpp
     src/core/DbManipulatorTest.cpp
-    src/core/FutureDispatcherTest.cpp
     src/core/LoggerApi.cpp
     src/core/MessagePayloadBuilderTest.cpp
     src/core/MessageTest.cpp
@@ -19,6 +18,8 @@ add_executable(
     src/memory/PoolsTest.cpp
     src/os/OsDefinitions.cpp
     src/queue/QueueTest.cpp
+    src/rpc/ProxyFireAndForgetMethodTest.cpp
+    src/rpc/ProxyMethodTest.cpp
     src/time/mock/SystemTimerProviderMock.cpp)
 
 target_include_directories(middlewareTest PUBLIC src)

@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2024 Accenture
+ * Copyright (c) 2025, 2026 BMW AG
  *
  * This program and the accompanying materials are made available under the
  * terms of the Apache License Version 2.0 which is available at
@@ -138,7 +138,7 @@ TYPED_TEST_SUITE(ProxyAttributesEventTest, AttributesUnderTest_Event);
 TYPED_TEST(ProxyAttributesGetTest, WHEN_ProxyIsUnregistered_THEN_GetAttributeGivesError)
 {
     ON_CALL(this->proxy, isInitialized()).WillByDefault(Return(false));
-    RequestResult const notRegisteredRes = this->attribute.get(this->callback);
+    RequestResult const notRegisteredRes = this->attribute.get(internal::get_id, this->callback);
     ASSERT_FALSE(notRegisteredRes.has_value());
     EXPECT_EQ(notRegisteredRes.error(), HRESULT::NotRegistered);
 }
@@ -147,9 +147,10 @@ TYPED_TEST(ProxyAttributesGetTest, WHEN_RequestPoolIsDepleted_THEN_ResponseGives
 {
     for (uint8_t i = 0; i < REQUEST_LIMIT; ++i)
     {
-        this->attribute.get(this->callback);
+        this->attribute.get(internal::get_id, this->callback);
     }
-    RequestResult const requestPoolDepletedResult = this->attribute.get(this->callback);
+    RequestResult const requestPoolDepletedResult
+        = this->attribute.get(internal::get_id, this->callback);
     ASSERT_FALSE(requestPoolDepletedResult.has_value());
     EXPECT_EQ(requestPoolDepletedResult.error(), HRESULT::RequestPoolDepleted);
 }
@@ -160,7 +161,7 @@ TYPED_TEST(ProxyAttributesGetTest, WHEN_GetAttributeIsCalled_THEN_RequestIdIsRet
     EXPECT_CALL(this->appMock, methodCallback(testing::_)).Times(Exactly(1U));
     this->ON_CALL_NEW_MSG_RCVD_CALLS_ANSWER_GETTER_REQUEST();
 
-    RequestResult const okGetRes = this->attribute.get(this->callback);
+    RequestResult const okGetRes = this->attribute.get(internal::get_id, this->callback);
     uint16_t const getRequestId  = okGetRes.value();
     HRESULT const okReceivedRes  = this->proxy.onNewMessageReceived(msg);
 
@@ -177,7 +178,7 @@ TYPED_TEST(
     EXPECT_CALL(this->appMock, methodCallback(testing::_)).Times(Exactly(0U));
     this->ON_CALL_NEW_MSG_RCVD_CALLS_ANSWER_GETTER_REQUEST();
 
-    RequestResult const okGetRes  = this->attribute.get(this->callback);
+    RequestResult const okGetRes  = this->attribute.get(internal::get_id, this->callback);
     uint16_t const getRequestId   = okGetRes.value();
     HRESULT const okInvalidateRes = this->attribute.cancelGetterRequest(getRequestId);
     HRESULT const okReceiveRes    = this->proxy.onNewMessageReceived(msg);
@@ -194,7 +195,8 @@ TYPED_TEST(ProxyAttributesSetTest, WHEN_ProxyIsUnregistered_THEN_SetAttributeWit
 {
     ArgType const payload = 0xFFFFFFFFU;
     ON_CALL(this->proxy, isInitialized()).WillByDefault(Return(false));
-    RequestResult const notRegisteredResult = this->attribute.set(payload, this->callback);
+    RequestResult const notRegisteredResult
+        = this->attribute.set(payload, internal::set_id, this->callback);
     ASSERT_FALSE(notRegisteredResult.has_value());
     EXPECT_EQ(notRegisteredResult.error(), HRESULT::NotRegistered);
 }
@@ -203,7 +205,8 @@ TYPED_TEST(ProxyAttributesSetTest, WHEN_SendMessageFails_THEN_ResponseGivesError
 {
     ArgType const payload = 0xFFFFFFFFU;
     ON_CALL(this->proxy, sendMessage(testing::_)).WillByDefault(Return(HRESULT::QueueFull));
-    RequestResult const queueFullResult = this->attribute.set(payload, this->callback);
+    RequestResult const queueFullResult
+        = this->attribute.set(payload, internal::set_id, this->callback);
     ASSERT_FALSE(queueFullResult.has_value());
     EXPECT_EQ(queueFullResult.error(), HRESULT::QueueFull);
 }
@@ -213,9 +216,10 @@ TYPED_TEST(ProxyAttributesSetTest, WHEN_RequestPoolIsDepleted_THEN_ResponseGives
     ArgType const payload = 0xFFFFFFFFU;
     for (uint8_t i = 0; i < REQUEST_LIMIT; ++i)
     {
-        this->attribute.set(payload, this->callback);
+        this->attribute.set(payload, internal::set_id, this->callback);
     }
-    RequestResult const requestPoolDepletedResult = this->attribute.set(payload, this->callback);
+    RequestResult const requestPoolDepletedResult
+        = this->attribute.set(payload, internal::set_id, this->callback);
     ASSERT_FALSE(requestPoolDepletedResult.has_value());
     EXPECT_EQ(requestPoolDepletedResult.error(), HRESULT::RequestPoolDepleted);
 }
@@ -227,7 +231,7 @@ TYPED_TEST(ProxyAttributesSetTest, WHEN_SetAttributeIsCalled_THEN_RequestIdIsRet
     EXPECT_CALL(this->appMock, methodCallback(testing::_)).Times(Exactly(1U));
     this->ON_CALL_NEW_MSG_RCVD_CALLS_ANSWER_SETTER_REQUEST();
 
-    RequestResult const okSetRes = this->attribute.set(payload, this->callback);
+    RequestResult const okSetRes = this->attribute.set(payload, internal::set_id, this->callback);
     uint16_t const setRequestId  = okSetRes.value();
     HRESULT const okReceivedRes  = this->proxy.onNewMessageReceived(msg);
     this->attribute.updateTimeouts();
@@ -246,7 +250,7 @@ TYPED_TEST(
     this->ON_CALL_NEW_MSG_RCVD_CALLS_ANSWER_SETTER_REQUEST();
     EXPECT_CALL(this->appMock, methodCallback(testing::_)).Times(Exactly(0U));
 
-    RequestResult const okSetRes  = this->attribute.set(payload, this->callback);
+    RequestResult const okSetRes  = this->attribute.set(payload, internal::set_id, this->callback);
     uint16_t const setRequestId   = okSetRes.value();
     HRESULT const okInvalidateRes = this->attribute.cancelSetterRequest(setRequestId);
     HRESULT const okReceiveRes    = this->proxy.onNewMessageReceived(msg);
@@ -265,7 +269,7 @@ TYPED_TEST(
 {
     ON_CALL(this->proxy, isInitialized()).WillByDefault(Return(false));
     ArgType const payload                = 0xFFFFFFFFU;
-    RequestResult const notRegisteredRes = this->attribute.set(payload);
+    RequestResult const notRegisteredRes = this->attribute.set(payload, internal::set_id);
     ASSERT_FALSE(notRegisteredRes.has_value());
     EXPECT_EQ(notRegisteredRes.error(), HRESULT::NotRegistered);
 }
@@ -274,7 +278,7 @@ TYPED_TEST(ProxyAttributesSetFireAndForgetTest, WHEN_SendMessageFails_THEN_Respo
 {
     ArgType const payload = 0xFFFFFFFFU;
     ON_CALL(this->proxy, sendMessage(testing::_)).WillByDefault(Return(HRESULT::QueueFull));
-    RequestResult const queueFullResult = this->attribute.set(payload);
+    RequestResult const queueFullResult = this->attribute.set(payload, internal::set_id);
     ASSERT_FALSE(queueFullResult.has_value());
     EXPECT_EQ(queueFullResult.error(), HRESULT::QueueFull);
 }
@@ -284,7 +288,7 @@ TYPED_TEST(
     WHEN_SetFnFAttributeIsCalled_THEN_ReturnedRequestIdIsInvalid)
 {
     ArgType const payload        = 0xFFFFFFFFU;
-    RequestResult const okSetRes = this->attribute.set(payload);
+    RequestResult const okSetRes = this->attribute.set(payload, internal::set_id);
     ASSERT_TRUE(okSetRes.has_value());
     EXPECT_EQ(okSetRes.value(), INVALID_REQUEST_ID);
 }

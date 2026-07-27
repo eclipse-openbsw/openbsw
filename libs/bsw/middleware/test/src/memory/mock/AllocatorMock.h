@@ -38,6 +38,7 @@ public:
 
     static void setAllocatorMock(AllocatorMock& mock);
     static void unsetAllocatorMock();
+    static void resetAllocatorMockBehaviour(AllocatorMock& mock);
     static AllocatorMock& getInstance();
 
 private:

@@ -22,8 +22,10 @@
 #pragma once
 
 #include <etl/delegate.h>
+#include <etl/expected.h>
 
 #include "{{ service.headers.common }}"
+#include "middleware/rpc/ProxyMethod.h"
 
 namespace {{ service.namespace }}::{{ service.name }}::proxy
 {
@@ -32,43 +34,97 @@ class {{ service.name }}Proxy;
 
 // EVENTS
 {% for event in service.events if service.events %}
-using {{ event.name }}Event = middleware::core::ProxyEventBase<{{ service.name }}Proxy, {{ event.type }}>;
-{% endfor %}
+class {{ event.name }}Event
+{
+    using Impl = ::middleware::core::ProxyEventBase<{{ service.name }}Proxy, {{ event.type }}>;
 
-// METHODS
-{% for method in service.methods if service.methods %}
-using {{ method.name }}DispatcherTraits =
-  middleware::core::DispatcherTraits<{{ method.output_param.type | default('void') }}, internal::{{ method.variable }}_id, false, {{ method.timeout }}U>;
+  public:
+    using EventType = {{ event.type }};
+    using OnFieldChangedCallback = typename Impl::OnFieldChangedCallback;
+
+    explicit {{ event.name }}Event(::middleware::core::ProxyBase& proxy);
+    ~{{ event.name }}Event() = default;
+    {{ event.name }}Event(const {{ event.name }}Event&) = delete;
+    {{ event.name }}Event({{ event.name }}Event&&) = delete;
+    {{ event.name }}Event& operator=(const {{ event.name }}Event&) = delete;
+    {{ event.name }}Event& operator=({{ event.name }}Event&&) = delete;
+
+    void setReceiveHandler(OnFieldChangedCallback callback);
+    void unsetReceiveHandler();
+
+  private:
+    friend class {{ service.name }}Proxy;
+
+    Impl impl_;
+};
 {% endfor %}
 
 // ATTRIBUTES
 {% for attribute in service.attributes if service.attributes %}
-using {{ attribute.name }}GetterDispatcherTraits = middleware::core::DispatcherTraits<{{ attribute.type }}, internal::get_{{ attribute.name }}_id, false, {{attribute.getter.timeout}}U>;
-{% if attribute.setter %}
-using {{ attribute.name }}SetterDispatcherTraits = middleware::core::DispatcherTraits<{{ attribute.type }}, internal::set_{{ attribute.name }}_id, false, {{attribute.setter.timeout}}U>;
-{% else %}
-using {{ attribute.name }}SetterDispatcherTraits = void;
-{% endif %}
-
-{%- set attribute_type = "FullyFeatured" %}
-{%- if attribute.readonly and attribute.noSubscriptions %}
-  {%- set attribute_type = "ReadOnly_NoSubscription" %}
-{%- elif attribute.readonly %}
-  {%- set attribute_type = "ReadOnly" %}
-{%- elif attribute.noSubscriptions and attribute.setAsMethod %}
-  {%- set attribute_type = "NoSubscriptions_SetAsMethod" %}
-{%- elif attribute.noSubscriptions %}
-  {%- set attribute_type = "NoSubscriptions" %}
-{%- elif attribute.setAsMethod %}
-  {%- set attribute_type = "FullyFeatured_SetAsMethod" %}
+{%- set has_subscription = not attribute.noSubscriptions %}
+{%- set has_setter = not attribute.readonly %}
+{%- set set_as_method = attribute.setAsMethod and not attribute.readonly %}
+{%- if attribute.readonly and attribute.noSubscriptions %}{% set attribute_type = "ReadOnly_NoSubscription" %}
+{%- elif attribute.readonly %}{% set attribute_type = "ReadOnly" %}
+{%- elif attribute.noSubscriptions and attribute.setAsMethod %}{% set attribute_type = "NoSubscriptions_SetAsMethod" %}
+{%- elif attribute.noSubscriptions %}{% set attribute_type = "NoSubscriptions" %}
+{%- elif attribute.setAsMethod %}{% set attribute_type = "FullyFeatured_SetAsMethod" %}
+{%- else %}{% set attribute_type = "FullyFeatured" %}
 {%- endif %}
 
-using {{ attribute.name }}Attribute = ::middleware::core::ProxyAttribute<{{ service.name }}Proxy,
-                                                            {{ attribute.name }}GetterDispatcherTraits,
-                                                            {{ attribute.consumer_request_limit }}U,
-                                                            {{ attribute.name }}SetterDispatcherTraits,
-                                                            middleware::core::AttributeType::{{ attribute_type }},
-                                                            {{ attribute.type }}>;
+class {{ attribute.name }}Attribute
+{
+    using GetterTraits =
+        middleware::rpc::MethodTraits<void, {{ attribute.type }}, {{ attribute.getter.timeout }}U>;
+{% if attribute.setter %}
+    using SetterTraits =
+        middleware::rpc::MethodTraits<{{ attribute.type }}, {{ attribute.type }}, {{ attribute.setter.timeout }}U>;
+{% else %}
+    using SetterTraits = void;
+{% endif %}
+    using Impl = ::middleware::core::ProxyAttribute<{{ service.name }}Proxy,
+                                                    GetterTraits,
+                                                    SetterTraits,
+                                                    ::middleware::core::AttributeType::{{ attribute_type }},
+                                                    {{ attribute.type }}>;
+
+  public:
+    using AttributeType = {{ attribute.type }};
+    using GetterResult = typename Impl::GetterResult;
+    using GetterCallback = typename Impl::GetterCallback;
+{%- if has_subscription %}
+    using OnFieldChangedCallback = typename Impl::OnFieldChangedCallback;
+{%- endif %}
+{%- if set_as_method %}
+    using SetterResult = typename Impl::SetterResult;
+    using SetterCallback = typename Impl::SetterCallback;
+{%- endif %}
+
+    explicit {{ attribute.name }}Attribute(::middleware::core::ProxyBase& proxy);
+    ~{{ attribute.name }}Attribute() = default;
+    {{ attribute.name }}Attribute(const {{ attribute.name }}Attribute&) = delete;
+    {{ attribute.name }}Attribute({{ attribute.name }}Attribute&&) = delete;
+    {{ attribute.name }}Attribute& operator=(const {{ attribute.name }}Attribute&) = delete;
+    {{ attribute.name }}Attribute& operator=({{ attribute.name }}Attribute&&) = delete;
+
+    ::etl::expected<uint16_t, ::middleware::core::HRESULT> get(const GetterCallback attrCb);
+    ::middleware::core::HRESULT cancelGetterRequest(uint16_t requestId);
+{%- if set_as_method %}
+    ::etl::expected<uint16_t, ::middleware::core::HRESULT> set(AttributeType const& payload, const SetterCallback cbk);
+    ::middleware::core::HRESULT cancelSetterRequest(uint16_t requestId);
+{%- elif has_setter %}
+    ::etl::expected<uint16_t, ::middleware::core::HRESULT> set(AttributeType const& payload);
+{%- endif %}
+{%- if has_subscription %}
+    void setReceiveHandler(OnFieldChangedCallback callback);
+    void unsetReceiveHandler();
+{%- endif %}
+
+  private:
+    friend class {{ service.name }}Proxy;
+
+    Impl impl_;
+};
 
 {% endfor %}
 
@@ -76,7 +132,9 @@ class {{ service.name }}Proxy : public middleware::core::ProxyBase, public middl
 {
     // METHODS
 {% for method in service.methods if service.methods %}
-    using {{ method.name }}Dispatcher = middleware::core::FutureDispatcher<{{ method.name }}DispatcherTraits, {{ method.consumer_request_limit }}U>;
+    using {{ method.name }}MethodTraits =
+      middleware::rpc::MethodTraits<{{ method.input_param.type | default('void') }}, {{ method.output_param.type | default('void') }}, {{ method.timeout }}U>;
+    using {{ method.name }}Method = middleware::rpc::ProxyMethod<{{ method.name }}MethodTraits, {{ method.consumer_request_limit }}U>;
 {% endfor %}
 
   public:
@@ -84,8 +142,8 @@ class {{ service.name }}Proxy : public middleware::core::ProxyBase, public middl
 
     // METHODS
 {% for method in service.methods if service.methods %}
-    using {{ method.name }}Result   = {{ method.name }}Dispatcher::Result;
-    using {{ method.name }}Callback = {{ method.name }}Dispatcher::Callback;
+    using {{ method.name }}Result   = {{ method.name }}Method::Result;
+    using {{ method.name }}Callback = {{ method.name }}Method::Callback;
 {% endfor %}
 
     {{ service.name }}Proxy();
@@ -111,7 +169,7 @@ class {{ service.name }}Proxy : public middleware::core::ProxyBase, public middl
 {% for method in service.methods if service.methods %}
     ::etl::expected<uint16_t, middleware::core::HRESULT> {{ method.variable }}(
     {% if method.input_param %}const {{ method.input_param.type }}& {{ method.input_param.name }}, {% endif %}
-        const {{ method.name }}Callback& methodCb);
+        const {{ method.name }}Callback methodCb);
 
     void cancel{{ method.name }}Request(uint16_t requestId);
 {% endfor %}
@@ -138,7 +196,7 @@ class {{ service.name }}Proxy : public middleware::core::ProxyBase, public middl
 
     // METHODS
 {% for method in service.methods if service.methods %}
-    {{ method.name }}Dispatcher {{ method.variable}}FutureDispatcher_;
+    {{ method.name }}Method {{ method.variable}}Method_;
 {% endfor %}
 };
 

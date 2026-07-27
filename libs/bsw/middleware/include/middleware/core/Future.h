@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2025 BMW AG
+ * Copyright (c) 2026 BMW AG
  *
  * This program and the accompanying materials are made available under the
  * terms of the Apache License Version 2.0 which is available at
@@ -43,9 +43,9 @@ struct Future
         CouldNotDeliverError = 9U  //!< Transport layer failed (queue full, network unreachable)
     };
 
-    uint32_t callerTimestamp;
-    uint16_t requestId;
-    State state;
+    uint32_t callerTimestamp{0U};
+    uint16_t requestId{INVALID_REQUEST_ID};
+    State state{State::Invalid};
 };
 
 } // namespace middleware::core

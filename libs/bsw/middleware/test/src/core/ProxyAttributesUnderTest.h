@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2024 Accenture
+ * Copyright (c) 2024 Accenture, 2026 BMW AG
  *
  * This program and the accompanying materials are made available under the
  * terms of the Apache License Version 2.0 which is available at
@@ -13,6 +13,7 @@
 #include "middleware/core/ProxyAttribute.h"
 #include "middleware/core/ProxyBase.h"
 #include "middleware/core/types.h"
+#include "middleware/rpc/ProxyMethod.h"
 #include "mock/ProxyMock.h"
 
 namespace middleware::core::test
@@ -30,22 +31,16 @@ static constexpr uint32_t REQUEST_LIMIT = 1U;
 
 using ArgType        = uint32_t;
 using RequestResult  = ::etl::expected<uint16_t, HRESULT>;
-using GetterPolicy   = DispatcherTraits<ArgType, internal::get_id, false, TIMEOUT_VALUE>;
-using SetterPolicy   = DispatcherTraits<ArgType, internal::set_id, false, TIMEOUT_VALUE>;
+using GetterPolicy   = rpc::MethodTraits<void, ArgType, TIMEOUT_VALUE>;
+using SetterPolicy   = rpc::MethodTraits<ArgType, ArgType, TIMEOUT_VALUE>;
 using NoSetterPolicy = void;
 
-using FullyFeaturedAttribute = ProxyAttribute<
-    ProxyMock,
-    GetterPolicy,
-    REQUEST_LIMIT,
-    SetterPolicy,
-    AttributeType::FullyFeatured,
-    ArgType>;
+using FullyFeaturedAttribute
+    = ProxyAttribute<ProxyMock, GetterPolicy, SetterPolicy, AttributeType::FullyFeatured, ArgType>;
 
 using FullyFeaturedSetAsMethodAttribute = ProxyAttribute<
     ProxyMock,
     GetterPolicy,
-    REQUEST_LIMIT,
     SetterPolicy,
     AttributeType::FullyFeatured_SetAsMethod,
     ArgType>;
@@ -53,7 +48,6 @@ using FullyFeaturedSetAsMethodAttribute = ProxyAttribute<
 using NoSubscriptionsAttribute = ProxyAttribute<
     ProxyMock,
     GetterPolicy,
-    REQUEST_LIMIT,
     SetterPolicy,
     AttributeType::NoSubscriptions,
     ArgType>;
@@ -61,23 +55,16 @@ using NoSubscriptionsAttribute = ProxyAttribute<
 using NoSubscriptionsSetAsMethodAttribute = ProxyAttribute<
     ProxyMock,
     GetterPolicy,
-    REQUEST_LIMIT,
     SetterPolicy,
     AttributeType::NoSubscriptions_SetAsMethod,
     ArgType>;
 
-using ReadOnlyAttribute = ProxyAttribute<
-    ProxyMock,
-    GetterPolicy,
-    REQUEST_LIMIT,
-    NoSetterPolicy,
-    AttributeType::ReadOnly,
-    ArgType>;
+using ReadOnlyAttribute
+    = ProxyAttribute<ProxyMock, GetterPolicy, NoSetterPolicy, AttributeType::ReadOnly, ArgType>;
 
 using ReadOnlyNoSubscriptionAttribute = ProxyAttribute<
     ProxyMock,
     GetterPolicy,
-    REQUEST_LIMIT,
     NoSetterPolicy,
     AttributeType::ReadOnly_NoSubscription,
     ArgType>;
@@ -89,7 +76,6 @@ struct DerivedFullyFeaturedAttribute final : public FullyFeaturedAttribute
     using AttributeType          = ArgType;
     using Base                   = FullyFeaturedAttribute;
     using OnFieldChangedCallback = Base::OnFieldChangedCallback;
-    using GetterFuture           = GetterPolicy;
 
     explicit DerivedFullyFeaturedAttribute(ProxyBase& proxy) : Base(proxy) {}
 };
@@ -101,8 +87,6 @@ struct DerivedFullyFeaturedSetAsMethodAttribute final : public FullyFeaturedSetA
     using AttributeType          = ArgType;
     using Base                   = FullyFeaturedSetAsMethodAttribute;
     using OnFieldChangedCallback = Base::OnFieldChangedCallback;
-    using GetterFuture           = GetterPolicy;
-    using SetterFuture           = SetterPolicy;
 
     explicit DerivedFullyFeaturedSetAsMethodAttribute(ProxyBase& proxy) : Base(proxy) {}
 };
@@ -113,7 +97,6 @@ struct DerivedNoSubscriptionsAttribute final : public NoSubscriptionsAttribute
         = middleware::core::AttributeType::NoSubscriptions;
     using AttributeType = ArgType;
     using Base          = NoSubscriptionsAttribute;
-    using GetterFuture  = GetterPolicy;
 
     explicit DerivedNoSubscriptionsAttribute(ProxyBase& proxy) : Base(proxy) {}
 };
@@ -124,7 +107,6 @@ struct DerivedNoSubscriptionsSetAsMethodAttribute final : public NoSubscriptions
         = middleware::core::AttributeType::NoSubscriptions_SetAsMethod;
     using AttributeType = ArgType;
     using Base          = NoSubscriptionsSetAsMethodAttribute;
-    using SetterFuture  = SetterPolicy;
 
     explicit DerivedNoSubscriptionsSetAsMethodAttribute(ProxyBase& proxy) : Base(proxy) {}
 };
@@ -136,8 +118,6 @@ struct DerivedReadOnlyAttribute final : public ReadOnlyAttribute
     using AttributeType          = ArgType;
     using Base                   = ReadOnlyAttribute;
     using OnFieldChangedCallback = Base::OnFieldChangedCallback;
-    using GetterFuture           = GetterPolicy;
-    using GetterCallback         = Base::GetterCallback;
 
     explicit DerivedReadOnlyAttribute(ProxyBase& proxy) : Base(proxy) {}
 };
@@ -148,7 +128,6 @@ struct DerivedReadOnlyNoSubscriptionAttribute final : public ReadOnlyNoSubscript
         = middleware::core::AttributeType::ReadOnly_NoSubscription;
     using AttributeType = ArgType;
     using Base          = ReadOnlyNoSubscriptionAttribute;
-    using GetterFuture  = GetterPolicy;
 
     explicit DerivedReadOnlyNoSubscriptionAttribute(ProxyBase& proxy) : Base(proxy) {}
 };

@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2024 Accenture
+ * Copyright (c) 2025, 2026 BMW AG
  *
  * This program and the accompanying materials are made available under the
  * terms of the Apache License Version 2.0 which is available at
@@ -13,7 +13,6 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
-#include "middleware/core/FutureDispatcher.h"
 #include "middleware/core/SkeletonAttribute.h"
 #include "middleware/core/SkeletonBase.h"
 #include "middleware/core/types.h"
@@ -26,8 +25,7 @@ namespace internal
 constexpr uint16_t event_id = 0U;
 } // namespace internal
 
-using ArgType                  = uint8_t;
-using GetterFutureTraitsPolicy = DispatcherTraits<ArgType, 0U, false>;
+using ArgType = uint8_t;
 
 class DerivedSkeleton : public ::middleware::core::SkeletonBase
 {

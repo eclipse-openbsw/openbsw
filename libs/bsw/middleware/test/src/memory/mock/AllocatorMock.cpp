@@ -31,7 +31,14 @@ AllocatorMock& AllocatorMock::getInstance()
 void AllocatorMock::setAllocatorMock(AllocatorMock& mock)
 {
     _instance = &mock;
-    ON_CALL(*_instance, allocateImpl(::testing::_))
+    resetAllocatorMockBehaviour(mock);
+}
+
+void AllocatorMock::unsetAllocatorMock() { _instance = nullptr; }
+
+void AllocatorMock::resetAllocatorMockBehaviour(AllocatorMock& mock)
+{
+    ON_CALL(mock, allocateImpl(::testing::_))
         .WillByDefault(
             [](uint32_t const size) -> uint8_t*
             {
@@ -40,20 +47,18 @@ void AllocatorMock::setAllocatorMock(AllocatorMock& mock)
                     ETL_ERROR_GENERIC("Allocation size exceeds maximum storage size."));
                 return _storage.data();
             });
-    ON_CALL(*_instance, deallocateImpl(::testing::_))
+    ON_CALL(mock, deallocateImpl(::testing::_))
         .WillByDefault(
             [](void* ptr) -> void
             {
                 ETL_ASSERT(ptr == _storage.data(), ETL_ERROR_GENERIC("Pointer is not valid."));
                 _storage.fill(0U);
             });
-    ON_CALL(*_instance, regionStartImpl())
+    ON_CALL(mock, regionStartImpl())
         .WillByDefault([](void) -> uint8_t* { return _storage.data(); });
-    ON_CALL(*_instance, isPtrValidImpl(::testing::_))
+    ON_CALL(mock, isPtrValidImpl(::testing::_))
         .WillByDefault([](void const* const ptr) -> bool { return ptr == _storage.data(); });
 }
-
-void AllocatorMock::unsetAllocatorMock() { _instance = nullptr; }
 
 AllocatorMock::AllocatorMock() : Base(_dummyMutex) {}
 
