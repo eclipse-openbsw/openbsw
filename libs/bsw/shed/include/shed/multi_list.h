@@ -56,7 +56,9 @@ struct multi_list
     using idx_type = uint16_t;
 
     static constexpr bool is_size_valid(size_t const n, size_t const buckets)
-    { return (n + buckets) <= std::numeric_limits<idx_type>::max(); }
+    {
+        return (n + buckets) <= std::numeric_limits<idx_type>::max();
+    }
 
     static constexpr size_t memory_for(size_t const n, size_t const buckets)
     {
@@ -140,7 +142,9 @@ struct multi_list
     NotInBucket not_in_bucket(size_t const bucket) const { return NotInBucket(this, bucket); }
 
     NotInBuckets not_in_buckets(size_t const bucket0, size_t const bucket1) const
-    { return NotInBuckets(this, bucket0, bucket1); }
+    {
+        return NotInBuckets(this, bucket0, bucket1);
+    }
 
     template<typename F>
     size_t move_if(size_t src, size_t dst, F&& f)
@@ -186,7 +190,9 @@ struct multi_list
     }
 
     static multi_list* get(::etl::span<uint8_t> const mem)
-    { return mem.reinterpret_as<multi_list>().data(); }
+    {
+        return mem.reinterpret_as<multi_list>().data();
+    }
 
     static multi_list* make(size_t n, size_t buckets, ::etl::span<uint8_t>& mem);
 

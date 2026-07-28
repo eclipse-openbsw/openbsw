@@ -19,7 +19,9 @@ namespace shed
 {
 template<typename Src, typename Table, typename F>
 void for_each(Table& table, F* f)
-{ return internal::SelectColumns<F>::for_each(table, f, internal::state_id<Src, Table>()); }
+{
+    return internal::SelectColumns<F>::for_each(table, f, internal::state_id<Src, Table>());
+}
 
 template<typename Src, typename Table, typename F>
 void for_each(Table& table, F const& f)
@@ -172,7 +174,7 @@ struct move_to
             constexpr auto src = internal::state_id<internal::FREE, Table>();
             constexpr auto dst = internal::state_id<Dst, Table>();
             auto const it      = static_cast<typename Table::state_data*>(&table.columns)
-                                     ->ml->not_in_buckets(src, dst);
+                                ->ml->not_in_buckets(src, dst);
             internal::SelectColumns<F>::template move_while<::etl::type_list<Cmp...>>(
                 table, f, dst, it);
         }
@@ -183,7 +185,7 @@ struct move_to
             constexpr auto src = internal::state_id<internal::FREE, Table>();
             constexpr auto dst = internal::state_id<Dst, Table>();
             auto const it      = static_cast<typename Table::state_data*>(&table.columns)
-                                     ->ml->not_in_buckets(src, dst);
+                                ->ml->not_in_buckets(src, dst);
             internal::SelectColumns<decltype(&F::operator())>::template move_while<
                 ::etl::type_list<Cmp...>>(table, f, dst, it);
         }
@@ -296,11 +298,15 @@ typename internal::multi_list::InBucket all(Table const& table)
 
 template<typename T, typename Table>
 internal::column<T, Table>& get(Table& table)
-{ return *static_cast<internal::column<T, Table>*>(&table.columns); }
+{
+    return *static_cast<internal::column<T, Table>*>(&table.columns);
+}
 
 template<typename T, typename Table>
 internal::column<T, Table> const& get(Table const& table)
-{ return *static_cast<internal::column<T, Table> const*>(&table.columns); }
+{
+    return *static_cast<internal::column<T, Table> const*>(&table.columns);
+}
 
 template<typename T, typename Table>
 id id_of(Table const& table, T const* ptr)

@@ -114,13 +114,17 @@ using column = typename internal::
 
 template<typename State, typename Table>
 constexpr size_t state_id()
-{ return ::etl::type_list_index_of_type<typename Table::state_list::TL_type, State>::value; }
+{
+    return ::etl::type_list_index_of_type<typename Table::state_list::TL_type, State>::value;
+}
 
 inline bool all_args_set() { return true; }
 
 template<typename T, typename... Args>
 bool all_args_set(T const v, Args... args)
-{ return v && all_args_set(args...); }
+{
+    return v && all_args_set(args...);
+}
 
 inline bool all_args_cmp() { return false; }
 
@@ -143,21 +147,29 @@ struct ParamConvert
 {
     template<typename T>
     static T& to_param_type(T& t)
-    { return t; }
+    {
+        return t;
+    }
 
     static inline id to_param_type(id const t) { return t; }
 
     template<typename T>
     static T& to_param_type(T* const t)
-    { return *t; }
+    {
+        return *t;
+    }
 
     template<typename T>
     static bool is_set(T const&)
-    { return true; }
+    {
+        return true;
+    }
 
     template<typename T>
     static bool is_set(T* const t)
-    { return t != nullptr; }
+    {
+        return t != nullptr;
+    }
 };
 
 template<typename ParamT>
@@ -165,11 +177,15 @@ struct ParamConvert<ParamT**>
 {
     template<typename T>
     static T** to_param_type(T*& t)
-    { return &t; }
+    {
+        return &t;
+    }
 
     template<typename T>
     static bool is_set(T* const)
-    { return true; }
+    {
+        return true;
+    }
 };
 
 template<typename ParamT>
@@ -236,11 +252,15 @@ struct type_list_recurse<::etl::type_list<>>
 {
     template<typename Table>
     static bool all_set(Table const&, size_t const)
-    { return true; }
+    {
+        return true;
+    }
 
     template<typename Table>
     static bool less_than(Table const&, size_t const, size_t const)
-    { return false; }
+    {
+        return false;
+    }
 };
 
 template<typename R, typename F, typename Table, typename... Args>
@@ -371,8 +391,7 @@ struct SelectColumns
             ->ml->move_if(
                 src,
                 dst,
-                [&q, &table](size_t const i) -> move_op
-                {
+                [&q, &table](size_t const i) -> move_op {
                     return call_system_func_ret<::shed::move_op, Q, Table, size_t, Args...>(
                         q, table, i);
                 });
@@ -427,7 +446,9 @@ struct SelectColumns
 
     template<typename Table, typename Q>
     static void for_one(Table& table, Q& q, size_t const i)
-    { (void)system_func<R, Q, Table, Args...>::call(q, table, i); }
+    {
+        (void)system_func<R, Q, Table, Args...>::call(q, table, i);
+    }
 };
 
 template<typename R, typename... Args>
@@ -456,7 +477,9 @@ struct reset_row
 
     template<typename T>
     void operator()(::shed::column<T>& v) const
-    { v[idx].~T(); }
+    {
+        v[idx].~T();
+    }
 };
 
 struct init_row
@@ -465,7 +488,9 @@ struct init_row
 
     template<typename T>
     void operator()(::shed::column<T>& v) const
-    { new (&v[idx]) T(); }
+    {
+        new (&v[idx]) T();
+    }
 
     template<typename T>
     void operator()(::shed::shared<T>&)
