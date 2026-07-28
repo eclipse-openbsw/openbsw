@@ -49,9 +49,8 @@ struct table
             return false;
         }
         auto const addr = reinterpret_cast<uintptr_t>(mem.data());
-        auto const pad
-            = (internal::COLUMN_ALIGNMENT - addr % internal::COLUMN_ALIGNMENT)
-              % internal::COLUMN_ALIGNMENT;
+        auto const pad  = (internal::COLUMN_ALIGNMENT - addr % internal::COLUMN_ALIGNMENT)
+                          % internal::COLUMN_ALIGNMENT;
         mem.advance(pad);
         pos = 0;
         n   = size;

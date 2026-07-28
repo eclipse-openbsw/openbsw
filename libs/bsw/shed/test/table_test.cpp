@@ -107,9 +107,7 @@ void sum_uses_value_by_const_ref(ValueColumn const& v) { global_for_io += v.valu
 void assign_uses_value_by_ref(ValueColumn& v) { v.value = global_for_io; }
 
 move_op is_even_by_const_ref(ValueColumn const& v)
-{
-    return ((v.value % 2) == 0) ? move_op::MOVE : move_op::SKIP;
-}
+{ return ((v.value % 2) == 0) ? move_op::MOVE : move_op::SKIP; }
 
 TEST_F(TableTest, default_initialization)
 {
@@ -673,9 +671,7 @@ struct ByPointerColumn
     using value_type = PointerColumn;
 
     bool operator()(PointerColumn const& a, PointerColumn const& b) const
-    {
-        return a.value < b.value;
-    }
+    { return a.value < b.value; }
 };
 
 TEST_F(TableTest, move_while_in_order_pointer_column)

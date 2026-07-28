@@ -85,15 +85,11 @@ void* ignore_return(F&& f, T&& t)
 
 template<typename F, typename... Types>
 void ft_for_each(flat_tuple<Types...>& args, F&& f)
-{
-    do_nothing(ignore_return(std::forward<F>(f), *static_cast<Types*>(&args))...);
-}
+{ do_nothing(ignore_return(std::forward<F>(f), *static_cast<Types*>(&args))...); }
 
 template<typename F, typename... Types>
 void ft_for_each(flat_tuple<Types...> const& args, F&& f)
-{
-    do_nothing(ignore_return(std::forward<F>(f), *static_cast<Types*>(&args))...);
-}
+{ do_nothing(ignore_return(std::forward<F>(f), *static_cast<Types*>(&args))...); }
 
 struct FREE
 {};
@@ -123,14 +119,10 @@ struct state_data
     using value_type = id;
 
     id operator[](size_t const i) const
-    {
-        return id(static_cast<decltype(id::idx)>(i), generations[i]);
-    }
+    { return id(static_cast<decltype(id::idx)>(i), generations[i]); }
 
     static constexpr size_t memory_for(size_t const n)
-    {
-        return multi_list::memory_for(n, types::size) + n * sizeof(decltype(id::generation));
-    }
+    { return multi_list::memory_for(n, types::size) + n * sizeof(decltype(id::generation)); }
 
     void init(size_t const n, ::etl::span<uint8_t>& ml_mem)
     {
