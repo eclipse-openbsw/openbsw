@@ -26,7 +26,12 @@ void move_while_impl(
     ::etl::delegate<bool(size_t, size_t)> const pred,
     ::etl::delegate<move_op(size_t)> const csfr)
 {
-    ETL_ASSERT(begin != nullptr && end >= begin, ETL_ERROR_GENERIC("shed: invalid range"));
+    ETL_ASSERT(end >= begin, ETL_ERROR_GENERIC("shed: invalid range"));
+    if (begin == end)
+    {
+        return;
+    }
+    ETL_ASSERT(begin != nullptr, ETL_ERROR_GENERIC("shed: invalid range"));
     std::make_heap(begin, end, pred);
 
     ETL_ASSERT(ml != nullptr, ETL_ERROR_GENERIC("shed: null multi_list"));

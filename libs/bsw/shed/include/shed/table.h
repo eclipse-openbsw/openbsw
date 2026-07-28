@@ -48,6 +48,10 @@ struct table
         {
             return false;
         }
+        if (!internal::multi_list::is_size_valid(size, state_list::size))
+        {
+            return false;
+        }
         auto const addr = reinterpret_cast<uintptr_t>(mem.data());
         auto const pad  = (internal::COLUMN_ALIGNMENT - addr % internal::COLUMN_ALIGNMENT)
                          % internal::COLUMN_ALIGNMENT;
