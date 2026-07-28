@@ -18,6 +18,7 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <type_traits>
 #include <utility>
 
 namespace shed
@@ -43,7 +44,7 @@ template<typename... Types>
 struct flat_tuple : Types...
 {
     template<typename... Args>
-    explicit flat_tuple(Args&&... args) : Args(std::forward<Args>(args))...
+    explicit flat_tuple(Args&&... args) : std::remove_reference_t<Args>(std::forward<Args>(args))...
     {}
 
     flat_tuple(flat_tuple const&) = default;

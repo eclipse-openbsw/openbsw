@@ -48,7 +48,13 @@ struct table
         {
             return false;
         }
-        n = size;
+        auto const addr = reinterpret_cast<uintptr_t>(mem.data());
+        auto const pad
+            = (internal::COLUMN_ALIGNMENT - addr % internal::COLUMN_ALIGNMENT)
+              % internal::COLUMN_ALIGNMENT;
+        mem.advance(pad);
+        pos = 0;
+        n   = size;
         _scratch_arrays
             = mem.reinterpret_as<::etl::span<internal::multi_list::idx_type>>().first(stack_depth);
         mem.advance(stack_depth * sizeof(::etl::span<internal::multi_list::idx_type>));

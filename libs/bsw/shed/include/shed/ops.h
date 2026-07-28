@@ -278,6 +278,7 @@ template<typename Table>
 bool valid(Table const& table, id const i)
 {
     return (i.generation != 0)
+           && (i.idx < table.size())
            && (i.generation
                == static_cast<typename Table::state_data const*>(&table.columns)->generations[i]);
 }

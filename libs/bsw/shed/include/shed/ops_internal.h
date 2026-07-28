@@ -77,7 +77,7 @@ struct find_container<StateData, T const, shared<T>, _Types...>
 template<typename StateData, typename T, typename... _Types>
 struct find_container<StateData, T const, shared<T*>, _Types...>
 {
-    using type = shared<T>;
+    using type = shared<T*>;
 };
 
 template<typename StateData, typename T, typename... _Types>

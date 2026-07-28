@@ -21,7 +21,7 @@ alignas(alignof(::shed::internal::multi_list)) static uint8_t
 
 using Ids = std::vector<size_t>;
 
-TEST(A_multi_list, can_conditinally_transfer_indicies_between_buckets)
+TEST(A_multi_list, can_conditionally_transfer_indices_between_buckets)
 {
     ::etl::span<uint8_t> mem         = ::etl::span{ml_mem};
     ::shed::internal::multi_list& ms = *::shed::internal::multi_list::make(10, 3, mem);

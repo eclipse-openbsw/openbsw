@@ -20,7 +20,7 @@
 #include <limits>
 
 // multi_list is a data structure to maintain membership information for N elements in M sets.
-// The items are always the numbers 0..N-1, indended to be used as indicies into anther data
+// The items are always the numbers 0..N-1, intended to be used as indices into another data
 // structure on the side (in case of shed, multiple other arrays)
 //
 // Invariants:
@@ -32,17 +32,17 @@
 //  - Iteration of members of any set is O(Nx), with Nx being the number of elements in the given
 //    set
 //  - Iteration of members not in a set is O(N)
-//  - Transfering of any number of elements from set A to set B is O(Na)
+//  - Transferring of any number of elements from set A to set B is O(Na)
 //  - Operations on empty sets are always O(1)
-//  - All operations use seqential memory access patterns with high locality
+//  - All operations use sequential memory access patterns with high locality
 //  - All operations are done in place and don't require extra memory
 //
 // Implementation:
 //  The idea is to use M linked lists interleaved inside one shared array.
-//  By using idicies instead of pointers a smaller type (uint16_t) than pointer size can be used
+//  By using indices instead of pointers a smaller type (uint16_t) than pointer size can be used
 //  to save memory and increase locality.
 //  To make set transfers faster, the lists are doubly-linked, with the backwards links stored
-//  in a seperate array on the side to make forward iteration faster by not polluting the cpu cache
+//  in a separate array on the side to make forward iteration faster by not polluting the cpu cache
 //  with backward links not needed for forward iteration.
 //  The index of any element serves as it's address, but also as it's associated value/"payload"
 //  Therefore no extra memory for "payload" is required.

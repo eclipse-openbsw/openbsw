@@ -138,7 +138,7 @@ TEST_F(TableTest, default_initialization)
     EXPECT_THAT(collect<Ids>(all(table)), ElementsAre());
 }
 
-TEST_F(TableTest, initialization_mem_to_small)
+TEST_F(TableTest, initialization_mem_too_small)
 {
     Table table;
     EXPECT_FALSE(table.init(mem, 50));
