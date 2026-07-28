@@ -137,6 +137,10 @@ struct state_data
         ml          = multi_list::make(n, types::size, ml_mem);
         generations = ml_mem.reinterpret_as<decltype(id::generation)>().first(n);
         ml_mem.advance(n * sizeof(decltype(id::generation)));
+        for (auto& g : generations)
+        {
+            g = 0;
+        }
     }
 
     multi_list* ml = nullptr;
