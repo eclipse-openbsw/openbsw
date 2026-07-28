@@ -36,6 +36,10 @@ size_t multi_list::move_node(size_t const s, size_t dst)
 
 multi_list* multi_list::make(size_t const n, size_t const buckets, ::etl::span<uint8_t>& mem)
 {
+    if (!is_size_valid(n, buckets))
+    {
+        return nullptr;
+    }
     if (mem.size() < memory_for(n, buckets))
     {
         return nullptr;

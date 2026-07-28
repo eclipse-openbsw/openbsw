@@ -69,13 +69,17 @@ struct ConstPointerColumn
     bool operator==(ConstPointerColumn const& other) const { return value == other.value; }
 };
 
-using STATE_A = enum StateA {};
+struct STATE_A
+{};
 
-using STATE_B = enum StateB {};
+struct STATE_B
+{};
 
-using STATE_C = enum StateC {};
+struct STATE_C
+{};
 
-using STATE_D = enum StateD {};
+struct STATE_D
+{};
 
 struct Schema
 {

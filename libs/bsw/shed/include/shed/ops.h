@@ -195,6 +195,10 @@ struct move_to
 template<typename Table>
 void drop(Table& table, id i)
 {
+    if (!valid(table, i))
+    {
+        return;
+    }
     ft_for_each(table.columns, internal::reset_row{i});
     static_cast<typename Table::state_data*>(&table.columns)->generations[i] = 0;
     static_cast<typename Table::state_data*>(&table.columns)
