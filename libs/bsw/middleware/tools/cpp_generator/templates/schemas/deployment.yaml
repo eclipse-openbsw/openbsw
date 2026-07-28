@@ -310,13 +310,14 @@ definitions:
     required:
       - common
       - proxy
-      - skeleton
     properties:
       common:
         type: string
       proxy:
         type: string
       skeleton:
+        type: string
+      proxy_mock:
         type: string
 
   providers:
@@ -388,6 +389,13 @@ definitions:
       filename:
         type: string
         description: "Optional filename override for generated files"
+      generation_mode:
+        type: string
+        description: "Service interface generation mode"
+        enum:
+          - normal
+          - mock
+        default: normal
       id:
         type: integer
         description: "Unique service identifier"
@@ -447,6 +455,29 @@ definitions:
         $ref: "#/definitions/headers"
       deployment:
         $ref: "#/definitions/deployment"
+    allOf:
+      - if:
+          required:
+            - generation_mode
+          properties:
+            generation_mode:
+              const: normal
+        then:
+          properties:
+            headers:
+              required:
+                - skeleton
+      - if:
+          required:
+            - generation_mode
+          properties:
+            generation_mode:
+              const: mock
+        then:
+          properties:
+            headers:
+              required:
+                - proxy_mock
 
   connection_endpoint:
     type: object

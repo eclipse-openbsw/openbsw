@@ -45,7 +45,8 @@ python3 jinja2cpp.py \
   --output <output-base-dir> \
   --deployment-yaml <path-to-deployment.yaml> \
   [--clang-format-config <path-to-.clang-format>] \
-  [--no-clean]
+  [--no-clean] \
+  [--generation-mode {normal,mock}]
 ```
 
 ### Arguments
@@ -57,6 +58,7 @@ python3 jinja2cpp.py \
 | `--deployment-yaml` | Yes | Path to the deployment YAML file |
 | `--clang-format-config` | No | Path to a `.clang-format` config file; auto-detected from repo root if omitted |
 | `--no-clean` | No | Skip deleting the output directories before generation |
+| `--generation-mode` | No | Default generation mode: `normal` (full generation) or `mock` (interface-only for testing). Default: `normal` |
 
 ## Quick test with the bundled test deployment
 
@@ -85,6 +87,7 @@ include/generated_code/
   <namespace-path>/
     <service>_common.h        # one set per service
     <service>_proxy.h
+    <service>_proxy_mock.h    # mock header (skipped in normal mode)
     <service>_skeleton.h
 
 src/generated_code/
@@ -97,6 +100,18 @@ src/generated_code/
     <service>_proxy.cpp
     <service>_skeleton.cpp
 ```
+
+## Mock generation mode
+
+When `--generation-mode mock` is passed (or `generation_mode: mock` is set on a
+service in the deployment YAML), the generator produces only the interface files
+needed for unit-test mocking:
+
+- Global: only `cluster_id.h` and `shm/allocators_definitions.h`
+- Per-service: `*_common.h`, `*_proxy.h`, `*_proxy_mock.h`, and
+  `*_proxy_mock.cpp` (delegating to a GMock singleton via RAII auto-registration)
+
+Cluster, connection, skeleton, and COM templates are skipped in this mode.
 
 ## Input structure
 

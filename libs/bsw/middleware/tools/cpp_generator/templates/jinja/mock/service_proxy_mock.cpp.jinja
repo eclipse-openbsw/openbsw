@@ -1,0 +1,210 @@
+/********************************************************************************
+ * Copyright (c) 2026 BMW AG
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Apache License Version 2.0 which is available at
+ * https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ ********************************************************************************/
+/**
+  *
+  *  __  __ _     _     _ _
+  * |  \/  (_) __| | __| | | _____      ____ _ _ __ ___
+  * | |\/| | |/ _` |/ _` | |/ _ \ \ /\ / / _` | '__/ _ \
+  * | |  | | | (_| | (_| | |  __/\ V  V / (_| | | |  __/
+  * |_|  |_|_|\__,_|\__,_|_|\___| \_/\_/ \__,_|_|  \___|
+  *
+  * WARNING!
+  * This file is generated. Do not edit manually.
+  *
+  */
+#include "{{ service.headers.proxy }}"
+#include "{{ service.headers.proxy_mock | default(service.namespace.replace('::', '/') | lower + '/' + (service.filename | default(service.name | lower)) + '_proxy_mock.h') }}"
+
+#include <middleware/core/Message.h>
+#include <middleware/core/types.h>
+#include <middleware/os/TaskIdProvider.h>
+
+namespace {{ service.namespace }}::{{ service.name }}::proxy
+{
+
+// EVENTS
+{% for event in service.events if service.events %}
+{{ event.name }}Event::{{ event.name }}Event(::middleware::core::ProxyBase& proxy) : impl_(proxy)
+{
+}
+
+void {{ event.name }}Event::setReceiveHandler(const OnFieldChangedCallback callback)
+{
+    auto* mock = {{ service.name }}ProxyMock::getMock();
+    mock->{{ event.variable }}.setReceiveHandler(callback);
+}
+
+void {{ event.name }}Event::unsetReceiveHandler()
+{
+    auto* mock = {{ service.name }}ProxyMock::getMock();
+    mock->{{ event.variable }}.unsetReceiveHandler();
+}
+{% endfor %}
+
+// ATTRIBUTES
+{% for attribute in service.attributes if service.attributes %}
+{%- set has_subscription = not attribute.noSubscriptions %}
+{%- set has_setter = not attribute.readonly %}
+{%- set set_as_method = attribute.setAsMethod and not attribute.readonly %}
+{{ attribute.name }}Attribute::{{ attribute.name }}Attribute(::middleware::core::ProxyBase& proxy) : impl_(proxy)
+{
+}
+
+etl::expected<uint16_t, ::middleware::core::HRESULT> {{ attribute.name }}Attribute::get(const GetterCallback attrCb)
+{
+    auto* mock = {{ service.name }}ProxyMock::getMock();
+    return mock->{{ attribute.variable }}.get(attrCb);
+}
+
+::middleware::core::HRESULT {{ attribute.name }}Attribute::cancelGetterRequest(uint16_t requestId)
+{
+    auto* mock = {{ service.name }}ProxyMock::getMock();
+    return mock->{{ attribute.variable }}.cancelGetterRequest(requestId);
+}
+{%- if set_as_method %}
+
+etl::expected<uint16_t, ::middleware::core::HRESULT> {{ attribute.name }}Attribute::set(const AttributeType& payload,
+                                                                                       const SetterCallback cbk)
+{
+    auto* mock = {{ service.name }}ProxyMock::getMock();
+    return mock->{{ attribute.variable }}.set(payload, cbk);
+}
+
+::middleware::core::HRESULT {{ attribute.name }}Attribute::cancelSetterRequest(uint16_t requestId)
+{
+    auto* mock = {{ service.name }}ProxyMock::getMock();
+    return mock->{{ attribute.variable }}.cancelSetterRequest(requestId);
+}
+{%- elif has_setter %}
+
+etl::expected<uint16_t, ::middleware::core::HRESULT> {{ attribute.name }}Attribute::set(const AttributeType& payload)
+{
+    auto* mock = {{ service.name }}ProxyMock::getMock();
+    return mock->{{ attribute.variable }}.set(payload);
+}
+{%- endif %}
+{%- if has_subscription %}
+
+void {{ attribute.name }}Attribute::setReceiveHandler(const OnFieldChangedCallback callback)
+{
+    auto* mock = {{ service.name }}ProxyMock::getMock();
+    mock->{{ attribute.variable }}.setReceiveHandler(callback);
+}
+
+void {{ attribute.name }}Attribute::unsetReceiveHandler()
+{
+    auto* mock = {{ service.name }}ProxyMock::getMock();
+    mock->{{ attribute.variable }}.unsetReceiveHandler();
+}
+
+{% endif %}
+{% endfor %}
+
+{{ service.name }}Proxy::{{ service.name }}Proxy()
+    : Base(),
+      // ATTRIBUTES
+{% for attribute in service.attributes if service.attributes %}
+      {{ attribute.variable }}(*this),
+{% endfor %}
+      // EVENTS
+{% for event in service.events if service.events %}
+      {{ event.variable }}(*this),
+{% endfor %}
+      fProcessId(::middleware::core::INVALID_TASK_ID)
+{
+}
+
+{{ service.name }}Proxy::~{{ service.name }}Proxy()
+{
+    deInit();
+}
+
+middleware::core::HRESULT {{ service.name }}Proxy::init(const internal::InstanceId instanceId,
+                                                        ::middleware::core::ClusterId const sourceCluster)
+{
+    auto* mock = {{ service.name }}ProxyMock::getMock();
+    return mock->init(instanceId, sourceCluster);
+}
+
+void {{ service.name }}Proxy::deInit()
+{
+    auto* mock = {{ service.name }}ProxyMock::getMock();
+    mock->deInit();
+}
+
+uint16_t {{ service.name }}Proxy::getServiceId() const
+{
+    auto* mock = {{ service.name }}ProxyMock::getMock();
+    return mock->getServiceId();
+}
+
+// METHODS
+{% for method in service.methods if service.methods %}
+void {{ service.name }}Proxy::cancel{{ method.name }}Request(uint16_t requestId)
+{
+    auto* mock = {{ service.name }}ProxyMock::getMock();
+    mock->cancel{{ method.name }}Request(requestId);
+}
+{% endfor %}
+
+::middleware::core::HRESULT {{ service.name }}Proxy::onNewMessageReceived(::middleware::core::Message const&)
+{
+    return ::middleware::core::HRESULT::Ok;
+}
+
+void {{ service.name }}Proxy::futureDispatcherDeinitialization()
+{
+}
+
+void {{ service.name }}Proxy::updateTimeouts()
+{
+    doUpdateTimeouts();
+}
+
+void {{ service.name }}Proxy::doUpdateTimeouts()
+{
+}
+
+// METHODS
+{% for method in service.methods if service.methods %}
+etl::expected<uint16_t, middleware::core::HRESULT> {{ service.name }}Proxy::{{ method.variable }}(
+    {% if method.input_param %}const {{ method.input_param.type }}& {{ method.input_param.name }}, {% endif %}
+    const {{ method.name }}Callback& methodCb)
+{
+    auto* mock = {{ service.name }}ProxyMock::getMock();
+{% if method.input_param %}
+    return mock->{{ method.variable }}({{ method.input_param.name }}, methodCb);
+{% else %}
+    return mock->{{ method.variable }}(methodCb);
+{% endif %}
+}
+
+{% endfor %}
+
+// METHODS FIRE_AND_FORGET
+{% for method in service.methods_fire_and_forget if service.methods_fire_and_forget %}
+etl::expected<uint16_t, middleware::core::HRESULT> {{ service.name }}Proxy::{{ method.variable }}({% if method.input_param %}const {{ method.input_param.type }}& {{ method.input_param.name }}{% endif %})
+{
+    auto* mock = {{ service.name }}ProxyMock::getMock();
+{% if method.input_param %}
+    return mock->{{ method.variable }}({{ method.input_param.name }});
+{% else %}
+    return mock->{{ method.variable }}();
+{% endif %}
+}
+
+{% endfor %}
+
+::middleware::core::HRESULT {{ service.name }}Proxy::sendMessage(::middleware::core::Message&) const
+{
+    return ::middleware::core::HRESULT::NotRegistered;
+}
+
+}  // namespace {{ service.namespace }}::{{ service.name }}::proxy

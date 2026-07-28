@@ -24,10 +24,11 @@
 #include <etl/alignment.h>
 #include <etl/delegate.h>
 
+#include <middleware/core/ClusterConnection.h>
+
 {% for connection in connections if connection.source_cluster.name == cluster.name %}
 #include "middleware/ClusterConnections{{connection.source_cluster.name}}{{connection.target_cluster.name}}.h"
 {% endfor %}
-#include "middleware/core/ClusterConnection.h"
 
 namespace middleware
 {

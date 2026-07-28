@@ -81,7 +81,9 @@ def load_yaml(yaml_path: Path) -> dict:
     with open(yaml_path, "r") as fh:
         data = yaml.safe_load(fh)
     if not isinstance(data, dict):
-        raise ValueError(f"Expected a YAML mapping at the top level, got {type(data).__name__}")
+        raise ValueError(
+            f"Expected a YAML mapping at the top level, got {type(data).__name__}"
+        )
     return _to_dot_dict(data)
 
 
@@ -98,7 +100,9 @@ def validate_data(data: dict, schema_path: Path) -> list[str]:
         validate(instance=dict(data), schema=schema)
         print(f" ✓ Schema validation passed: {schema_path.name}")
     except ValidationError as exc:
-        errors.append(f"{schema_path.name}: {exc.message} (path: {list(exc.absolute_path)})")
+        errors.append(
+            f"{schema_path.name}: {exc.message} (path: {list(exc.absolute_path)})"
+        )
     return errors
 
 
@@ -125,7 +129,9 @@ def load_input_data(input_base: Path, deployment_yaml: Path | None = None) -> di
         raise RuntimeError(f"Error loading deployment.yaml: {e}")
 
 
-def render_template_with_context(template_path: Path, context: dict, output_path: Path) -> None:
+def render_template_with_context(
+    template_path: Path, context: dict, output_path: Path
+) -> None:
     """Render a single template with the given context and write to output path."""
     env = Environment(
         loader=FileSystemLoader(searchpath=str(template_path.parent)),
@@ -150,15 +156,31 @@ def render_template_with_context(template_path: Path, context: dict, output_path
 # Template generation configuration
 TEMPLATE_CONFIG = {
     "global": [
-        ("allocator_selector_definitions.cpp.jinja", "AllocatorSelectorDefinitions.cpp", "src/generated_code"),
+        (
+            "allocator_selector_definitions.cpp.jinja",
+            "AllocatorSelectorDefinitions.cpp",
+            "src/generated_code",
+        ),
         ("cluster_id.h.jinja", "ClusterId.h", "include/generated_code/middleware"),
-        ("shm/allocators_definitions.h.jinja", "AllocatorsDefinitions.h", "include/generated_code/shm"),
+        (
+            "shm/allocators_definitions.h.jinja",
+            "AllocatorsDefinitions.h",
+            "include/generated_code/shm",
+        ),
         ("shm/config.h.jinja", "Config.h", "include/generated_code/middleware/shm"),
         ("shm/config.cpp.jinja", "Config.cpp", "src/generated_code/shm"),
-        ("shm/queue_definitions.h.jinja", "QueueDefinitions.h", "include/generated_code/shm"),
+        (
+            "shm/queue_definitions.h.jinja",
+            "QueueDefinitions.h",
+            "include/generated_code/shm",
+        ),
     ],
     "per_cluster": [
-        ("cluster_srcCluster.h.jinja", "Cluster{}.h", "include/generated_code/middleware"),
+        (
+            "cluster_srcCluster.h.jinja",
+            "Cluster{}.h",
+            "include/generated_code/middleware",
+        ),
         ("cluster_srcCluster.cpp.jinja", "Cluster{}.cpp", "src/generated_code"),
     ],
     "per_connection": [
@@ -171,12 +193,59 @@ TEMPLATE_CONFIG = {
     "per_service": [
         ("service_common.h.jinja", "{}Common.h", "include/generated_code/{}"),
         ("service_proxy.h.jinja", "{}Proxy.h", "include/generated_code/{}"),
+        (
+            "mock/service_proxy_mock.h.jinja",
+            "{}ProxyMock.h",
+            "include/generated_code/{}",
+        ),
         ("service_skeleton.h.jinja", "{}Skeleton.h", "include/generated_code/{}"),
         ("service_common.cpp.jinja", "{}Common.cpp", "src/generated_code/{}"),
         ("service_proxy.cpp.jinja", "{}Proxy.cpp", "src/generated_code/{}"),
         ("service_skeleton.cpp.jinja", "{}Skeleton.cpp", "src/generated_code/{}"),
     ],
 }
+
+
+# In mock generation mode a normal per-service template is replaced by its
+# `mock/<name>_mock` variant while keeping the same output filename. The variant
+# delegates the generated implementation to the mock singleton (the *.cpp
+# entries). Proxy attributes/events are concrete classes whose method bodies are
+# swapped at link time, so no header swap is required.
+MOCK_TEMPLATE_OVERRIDES = {
+    "service_common.h.jinja": "service_common.h.jinja",
+    "service_proxy.h.jinja": "service_proxy.h.jinja",
+    "mock/service_proxy_mock.h.jinja": "mock/service_proxy_mock.h.jinja",
+    "service_proxy.cpp.jinja": "mock/service_proxy_mock.cpp.jinja",
+    "service_skeleton.cpp.jinja": "mock/service_skeleton_mock.cpp.jinja",
+}
+
+# Global templates that are also generated in mock mode.
+MOCK_GLOBAL_TEMPLATES = {
+    "cluster_id.h.jinja",
+    "shm/allocators_definitions.h.jinja",
+}
+
+
+def _service_generation_mode(service) -> str:
+    """Return generation mode for a service.
+
+    Supported modes:
+    - normal: generate regular proxy + skeleton files
+    - mock: generate only templates under templates/jinja/mock
+    """
+    mode = str(getattr(service, "generation_mode", "")).strip().lower()
+    if mode in {"normal", "mock"}:
+        return mode
+
+    return "normal"
+
+
+def _has_mock_mode_service(input_data) -> bool:
+    """Return True if at least one service requests mock generation mode."""
+    return any(
+        _service_generation_mode(service) == "mock"
+        for service in getattr(input_data, "services", [])
+    )
 
 
 def build_context(input_data: dict, **additional) -> dict:
@@ -193,7 +262,12 @@ def build_context(input_data: dict, **additional) -> dict:
 
 
 def generate_files(
-    template_type: str, input_data: dict, input_base: Path, output_base: Path, items=None, item_key: str = None
+    template_type: str,
+    input_data: dict,
+    input_base: Path,
+    output_base: Path,
+    items=None,
+    item_key: str = None,
 ) -> None:
     """Unified file generation function for all template types."""
     print(f"Generating {template_type.replace('_', '-')} files...")
@@ -213,7 +287,27 @@ def generate_files(
                 print(f"  Processing {item_key}: {item.name}")
 
         for template_name, output_pattern, output_dir_pattern in mappings:
-            template_path = template_base / template_name
+            resolved_template_name = template_name
+
+            if template_type == "global" and _has_mock_mode_service(input_data):
+                if template_name not in MOCK_GLOBAL_TEMPLATES:
+                    continue
+
+            if template_type == "per_service":
+                service_mode = _service_generation_mode(item)
+
+                # normal: full regular service file set
+                # mock: generate only templates that live under templates/jinja/mock
+                if (
+                    service_mode == "normal"
+                    and template_name == "mock/service_proxy_mock.h.jinja"
+                ):
+                    continue
+                if service_mode == "mock":
+                    if template_name not in MOCK_TEMPLATE_OVERRIDES:
+                        continue
+                    resolved_template_name = MOCK_TEMPLATE_OVERRIDES[template_name]
+            template_path = template_base / resolved_template_name
 
             if not template_path.exists():
                 print(f"  Skipping template (not found): {template_name}")
@@ -233,15 +327,16 @@ def generate_files(
                 output_dir = output_base / output_dir_pattern
             elif template_type == "per_service":
                 service_name = getattr(item, "filename", item.name)
-                namespace_path = item.namespace.replace("::", "/").lower() if hasattr(item, "namespace") else ""
+                namespace_path = (
+                    item.namespace.replace("::", "/").lower()
+                    if hasattr(item, "namespace")
+                    else ""
+                )
                 output_filename = output_pattern.format(service_name)
                 output_dir = output_base / output_dir_pattern.format(namespace_path)
 
             output_path = output_dir / output_filename
             render_template_with_context(template_path, context, output_path)
-
-
-# These functions are now replaced by the unified generate_files() function above
 
 
 def clean_previous_generated_files(output_base: Path) -> None:
@@ -283,7 +378,10 @@ def format_cpp_files(output_base: Path, clang_format_config: Path = None) -> Non
         else:
             # Find the repository root (where .clang-format should be located)
             repo_root = Path(__file__).resolve()
-            while repo_root.parent != repo_root and not (repo_root / ".clang-format").exists():
+            while (
+                repo_root.parent != repo_root
+                and not (repo_root / ".clang-format").exists()
+            ):
                 repo_root = repo_root.parent
 
             clang_format_path = repo_root / ".clang-format"
@@ -300,7 +398,10 @@ def format_cpp_files(output_base: Path, clang_format_config: Path = None) -> Non
         if e.stderr:
             print(f"  Error output: {e.stderr.strip()}", file=sys.stderr)
     except FileNotFoundError:
-        print("Warning: clang-format not found in PATH, skipping formatting", file=sys.stderr)
+        print(
+            "Warning: clang-format not found in PATH, skipping formatting",
+            file=sys.stderr,
+        )
         print("  Install with: sudo apt install clang-format", file=sys.stderr)
         print("  Or ensure clang-format is available in your PATH", file=sys.stderr)
 
@@ -337,6 +438,12 @@ def parse_args(argv=None) -> argparse.Namespace:
         action="store_true",
         help="Preserve existing generated files and skip deleting include/generated_code and src/generated_code before generation.",
     )
+    parser.add_argument(
+        "--generation-mode",
+        choices=["normal", "mock"],
+        default="normal",
+        help="Default generation mode. Set to 'normal' for full service generation, or 'mock' to generate only templates from templates/jinja/mock (default: normal).",
+    )
     return parser.parse_args(argv)
 
 
@@ -362,6 +469,11 @@ def main(argv=None) -> int:
         print(f"error: {e}", file=sys.stderr)
         return 1
 
+    # Apply CLI generation-mode override to services that don't have explicit generation_mode set
+    for service in getattr(input_data, "services", []):
+        if not hasattr(service, "generation_mode") or not service.generation_mode:
+            service["generation_mode"] = args.generation_mode
+
     # Validate the input data against schema
     schema_path = input_base / "templates/schemas/deployment.yaml"
     if schema_path.exists():
@@ -376,20 +488,41 @@ def main(argv=None) -> int:
 
     # Generate all file types using the unified clusters.yaml data
     try:
+        has_mock_mode_service = _has_mock_mode_service(input_data)
+
         if args.no_clean:
             print("Skipping cleanup of previously generated files (--no-clean).")
         else:
             clean_previous_generated_files(output_base)
 
-        generate_files("global", input_data, input_base, output_base)
+        if has_mock_mode_service:
+            print("Mock generation mode detected: generating interface files only.")
+            generate_files("global", input_data, input_base, output_base)
+        else:
+            generate_files("global", input_data, input_base, output_base)
+            generate_files(
+                "per_cluster",
+                input_data,
+                input_base,
+                output_base,
+                items=input_data.clusters,
+                item_key="cluster",
+            )
+            generate_files(
+                "per_connection",
+                input_data,
+                input_base,
+                output_base,
+                items=input_data.connections,
+                item_key="connection",
+            )
         generate_files(
-            "per_cluster", input_data, input_base, output_base, items=input_data.clusters, item_key="cluster"
-        )
-        generate_files(
-            "per_connection", input_data, input_base, output_base, items=input_data.connections, item_key="connection"
-        )
-        generate_files(
-            "per_service", input_data, input_base, output_base, items=input_data.services, item_key="service"
+            "per_service",
+            input_data,
+            input_base,
+            output_base,
+            items=input_data.services,
+            item_key="service",
         )
 
         # Format all generated C++ files with clang-format

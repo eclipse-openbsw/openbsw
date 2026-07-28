@@ -1,0 +1,139 @@
+/********************************************************************************
+ * Copyright (c) 2026 BMW AG
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Apache License Version 2.0 which is available at
+ * https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ ********************************************************************************/
+/**
+  *
+  *  __  __ _     _     _ _
+  * |  \/  (_) __| | __| | | _____      ____ _ _ __ ___
+  * | |\/| | |/ _` |/ _` | |/ _ \ \ /\ / / _` | '__/ _ \
+  * | |  | | | (_| | (_| | |  __/\ V  V / (_| | | |  __/
+  * |_|  |_|_|\__,_|\__,_|_|\___| \_/\_/ \__,_|_|  \___|
+  *
+  * WARNING!
+  * This file is generated. Do not edit manually.
+  *
+  */
+#pragma once
+
+#include <etl/expected.h>
+#include <etl/functional.h>
+
+#include <gmock/gmock.h>
+
+#include <middleware/core/Future.h>
+#include <middleware/core/FutureDispatcher.h>
+#include <middleware/core/ProxyEventBase.h>
+
+#include "{{ service.headers.common }}"
+#include "{{ service.headers.proxy }}"
+#include "util/crtp_mock.h"
+
+namespace {{ service.namespace }}::{{ service.name }}::proxy
+{
+
+{% for event in service.events if service.events %}
+/// \brief GMock target for {{ event.name }}Event; the concrete proxy event forwards here.
+class {{ event.name }}EventMock
+{
+  public:
+    using EventType = {{ event.type }};
+    using OnFieldChangedCallback = middleware::core::EventCallbackTypeSelector<EventType>::Callback;
+
+    MOCK_METHOD(void, setReceiveHandler, (const OnFieldChangedCallback callback));
+    MOCK_METHOD(void, unsetReceiveHandler, ());
+};
+{% endfor %}
+
+{% for attribute in service.attributes if service.attributes %}
+{%- set has_subscription = not attribute.noSubscriptions %}
+{%- set has_setter = not attribute.readonly %}
+{%- set set_as_method = attribute.setAsMethod and not attribute.readonly %}
+/// \brief GMock target for {{ attribute.name }}Attribute; the concrete proxy attribute forwards here.
+class {{ attribute.name }}AttributeMock
+{
+  public:
+    using AttributeType = {{ attribute.name }}Attribute::AttributeType;
+    using GetterCallback = {{ attribute.name }}Attribute::GetterCallback;
+{%- if set_as_method %}
+    using SetterCallback = {{ attribute.name }}Attribute::SetterCallback;
+{%- endif %}
+{%- if has_subscription %}
+    using OnFieldChangedCallback = {{ attribute.name }}Attribute::OnFieldChangedCallback;
+{%- endif %}
+
+    MOCK_METHOD((etl::expected<uint16_t, middleware::core::HRESULT>), get, (const GetterCallback attrCb));
+    MOCK_METHOD(middleware::core::HRESULT, cancelGetterRequest, (uint16_t requestId));
+{%- if set_as_method %}
+    MOCK_METHOD((etl::expected<uint16_t, middleware::core::HRESULT>),
+                set,
+                (const AttributeType& payload, const SetterCallback cbk));
+    MOCK_METHOD(middleware::core::HRESULT, cancelSetterRequest, (uint16_t requestId));
+{%- elif has_setter %}
+    MOCK_METHOD((etl::expected<uint16_t, middleware::core::HRESULT>), set, (const AttributeType& payload));
+{%- endif %}
+{%- if has_subscription %}
+
+    MOCK_METHOD(void, setReceiveHandler, (const OnFieldChangedCallback callback));
+    MOCK_METHOD(void, unsetReceiveHandler, ());
+{%- endif %}
+};
+{% endfor %}
+
+class {{ service.name }}ProxyMock : public middleware::util::CrtpMock<{{ service.name }}ProxyMock>
+{
+  public:
+    {{ service.name }}ProxyMock() = default;
+    ~{{ service.name }}ProxyMock() = default;
+
+    MOCK_METHOD(middleware::core::HRESULT,
+                init,
+                (const internal::InstanceId instanceId, const middleware::core::ClusterId sourceCluster));
+    MOCK_METHOD(void, deInit, ());
+    MOCK_METHOD(uint16_t, getServiceId, (), (const));
+    MOCK_METHOD(bool, isInitialized, (), (const));
+
+    // METHODS
+{% for method in service.methods %}
+{% if method.input_param %}
+    MOCK_METHOD((etl::expected<uint16_t, middleware::core::HRESULT>),
+                {{ method.variable }},
+                (const {{ method.input_param.type }}& {{ method.input_param.name }},
+                 const {{ service.name }}Proxy::{{ method.name }}Callback& methodCb));
+{% else %}
+    MOCK_METHOD((etl::expected<uint16_t, middleware::core::HRESULT>),
+                {{ method.variable }},
+                (const {{ service.name }}Proxy::{{ method.name }}Callback& methodCb));
+{% endif %}
+    MOCK_METHOD(void, cancel{{ method.name }}Request, (uint16_t requestId));
+
+{% endfor %}
+
+    // METHODS FIRE_AND_FORGET
+{% for method in service.methods_fire_and_forget %}
+{% if method.input_param %}
+    MOCK_METHOD((etl::expected<uint16_t, middleware::core::HRESULT>),
+                {{ method.variable }},
+                (const {{ method.input_param.type }}& {{ method.input_param.name }}));
+{% else %}
+    MOCK_METHOD((etl::expected<uint16_t, middleware::core::HRESULT>), {{ method.variable }}, ());
+{% endif %}
+{% endfor %}
+
+    // EVENTS
+{% for event in service.events if service.events %}
+    ::testing::NiceMock<{{ event.name }}EventMock> {{ event.variable }};
+{% endfor %}
+
+    // ATTRIBUTES
+{% for attribute in service.attributes if service.attributes %}
+    ::testing::NiceMock<{{ attribute.name }}AttributeMock> {{ attribute.variable }};
+{% endfor %}
+};
+
+}  // namespace {{ service.namespace }}::{{ service.name }}::proxy

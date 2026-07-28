@@ -479,9 +479,7 @@ TEST_F(
     EXPECT_TRUE(_sendJobQueue.empty());
 }
 
-TEST_F(
-    UdsIntegration,
-    send_allows_existing_connection_response_if_isEnabled_return_false)
+TEST_F(UdsIntegration, send_allows_existing_connection_response_if_isEnabled_return_false)
 {
     uint8_t responseBuffer[] = {0x62U, 0x01U, 0x01U, 0x01U, 0x02U, 0x03U};
     TransportMessageWithBuffer pResponse(0x10U, 0xF1U, responseBuffer);

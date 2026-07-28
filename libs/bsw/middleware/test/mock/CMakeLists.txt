@@ -1,0 +1,3 @@
+add_library(middlewareMock INTERFACE)
+target_include_directories(middlewareMock INTERFACE include)
+target_link_libraries(middlewareMock INTERFACE etl)
