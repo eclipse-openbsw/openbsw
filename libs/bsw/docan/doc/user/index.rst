@@ -504,3 +504,16 @@ values transmitted on them is sufficient to resolve both directions of a connect
    :start-after: EXAMPLE_START DoCanExtendedAddressingFilter
    :end-before: EXAMPLE_END DoCanExtendedAddressingFilter
 
+Range Extended Addressing
++++++++++++++++++++++++++
+
+Where a contiguous range of CAN identifiers maps arithmetically onto a contiguous range of
+transport addresses (transportId = canId - baseCanId), ``docan::DoCanRangeExtendedAddressingFilter``
+can be used instead of an explicit lookup table, avoiding the per-mapping ROM cost of the table-based
+filter above.
+
+.. sourceinclude:: test/src/docan/integration/DoCanReadVinIntegrationTestEARange.cpp
+   :language: c++
+   :start-after: EXAMPLE_START DoCanRangeExtendedAddressingFilter
+   :end-before: EXAMPLE_END DoCanRangeExtendedAddressingFilter
+
