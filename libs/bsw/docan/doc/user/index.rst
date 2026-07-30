@@ -85,7 +85,8 @@ Legend:
 | STmin      | Minimum Separation Time |
 +------------+-------------------------+
 
-ISO 15765-2, Section 9.6.1, Table 9:
+The following summarizes the byte layout ``docan`` uses for each frame type, based on the frame
+types defined in ISO 15765-2:
 
 +--------------+----------+-----------+-----------+-----------+--------+---+---+---------+---+
 | Frame Name   | 0 (7-4b) | ...(3-0b) | 1         | 2         | 3      | 4 | 5 | 6       | 7 |
@@ -150,7 +151,8 @@ Legend:
 | STmin      | Minimum Separation Time |
 +------------+-------------------------+
 
-ISO 15765-2, Section 9.6.1, Table 9:
+The following summarizes the byte layout ``docan`` uses for each frame type when extended
+addressing is used, based on the frame types defined in ISO 15765-2:
 
 +--------------+----+----------+-----------+-----------+-----------+--------+---+---+---------+
 | Frame Name   | 0  | 1 (7-4b) | ...(3-0b) | 2         | 3         | 4      | 5 | 6 | 7       |
@@ -473,4 +475,32 @@ make sense for your transmission.
    :language: c++
    :start-after: EXAMPLE_START SendingData
    :end-before: EXAMPLE_END SendingData
+
+Other Addressing Schemes
+------------------------
+
+The example integration above uses *normal addressing*, but ``docan`` also supports *extended
+addressing* (in both a per-participant lookup table and an arithmetic range-based variant) and
+*normal fixed addressing*. Everything covered above - ``docan::DoCanParameters``,
+``docan::DoCanPhysicalCanTransceiver``, ``docan::DoCanTransportLayer`` and so on - stays the same;
+only the addressing class and its filter differ, as shown below. Each subsection is taken from a
+standalone, self-contained example test showing a single-frame UDS ReadDataByIdentifier (VIN)
+request being received and a segmented response being sent back.
+
+Extended Addressing
++++++++++++++++++++
+
+With *extended addressing*, the address extension byte (N_TA) in front of every frame's payload
+identifies the target of that frame, so a lookup table mapping CAN identifiers to the raw N_SA/N_TA
+values transmitted on them is sufficient to resolve both directions of a connection.
+
+.. sourceinclude:: test/src/docan/integration/DoCanReadVinIntegrationTestEA.cpp
+   :language: c++
+   :start-after: EXAMPLE_START DoCanExtendedAddressing
+   :end-before: EXAMPLE_END DoCanExtendedAddressing
+
+.. sourceinclude:: test/src/docan/integration/DoCanReadVinIntegrationTestEA.cpp
+   :language: c++
+   :start-after: EXAMPLE_START DoCanExtendedAddressingFilter
+   :end-before: EXAMPLE_END DoCanExtendedAddressingFilter
 

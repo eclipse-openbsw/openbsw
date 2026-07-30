@@ -70,8 +70,10 @@ public:
     /// invalid identifier.
     static constexpr uint32_t INVALID_ID                 = 0xffffffffU;
 
+    /// number of bits used to represent a base (11 bit) CAN identifier.
+    static constexpr uint32_t BASE_ID_BITS        = 11U;
     /// maximum value for a base identifier (11 bits).
-    static constexpr uint32_t MAX_RAW_BASE_ID     = 0x000007ffU;
+    static constexpr uint32_t MAX_RAW_BASE_ID     = (1U << BASE_ID_BITS) - 1U;
     /// maximum value for an extended identifier (29 bits).
     static constexpr uint32_t MAX_RAW_EXTENDED_ID = 0x1fffffffU;
 

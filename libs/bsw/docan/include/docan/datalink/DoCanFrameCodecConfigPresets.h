@@ -27,5 +27,13 @@ struct DoCanFrameCodecConfigPresets
     static DoCanFrameCodecConfig<uint8_t> const PADDED_FD;
     static DoCanFrameCodecConfig<uint8_t> const OPTIMIZED_CLASSIC;
     static DoCanFrameCodecConfig<uint8_t> const OPTIMIZED_FD;
+
+    // presets for ISO 15765-2 extended addressing, which reserves 1 byte at the start of the
+    // payload for the address extension byte (N_TA); otherwise identical to their non-EA
+    // counterparts above.
+    static DoCanFrameCodecConfig<uint8_t> const EA_PADDED_CLASSIC;
+    static DoCanFrameCodecConfig<uint8_t> const EA_PADDED_FD;
+    static DoCanFrameCodecConfig<uint8_t> const EA_OPTIMIZED_CLASSIC;
+    static DoCanFrameCodecConfig<uint8_t> const EA_OPTIMIZED_FD;
 };
 } // namespace docan
