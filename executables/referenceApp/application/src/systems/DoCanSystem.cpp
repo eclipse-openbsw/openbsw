@@ -35,8 +35,13 @@ uint8_t const FLOW_CONTROL_WAIT_COUNT = 15U;
 uint16_t const MIN_SEPARATION_TIME    = 200U;
 uint8_t const BLOCK_SIZE              = 15U;
 
-// tester address distinguishing Normal Addressing's own connections.
-uint16_t const NORMAL_ADDRESSING_TESTER_ID = 0x0F1U;
+// Tester addresses distinguishing the four addressing schemes showcased side by side; see
+// ::can::DoCanMultiAddressingTransportLayer for how these are used to dispatch outbound
+// messages to the correct inner transport layer.
+uint16_t const NORMAL_ADDRESSING_TESTER_ID   = 0x0F1U;
+// uint16_t const RANGE_EXTENDED_ADDRESSING_TESTER_ID = 0x0F2U;
+// uint16_t const NORMAL_FIXED_ADDRESSING_TESTER_ID   = 0x0F3U;
+uint16_t const EXTENDED_ADDRESSING_TESTER_ID = 0x0F4U;
 
 // legislative (ISO 15765-4) normal addressing CAN identifiers for the first ECU, plus the
 // legislative OBD functional (broadcast) request identifier, which every OBD-compliant ECU must
@@ -45,12 +50,28 @@ uint32_t const NORMAL_ADDRESSING_REQUEST_CAN_ID    = 0x7E0U;
 uint32_t const NORMAL_ADDRESSING_RESPONSE_CAN_ID   = 0x7E8U;
 uint32_t const NORMAL_ADDRESSING_FUNCTIONAL_CAN_ID = 0x7DFU;
 
-uint32_t systemUs() { return ::bsw::time::TimestampProvider::getTimestampUs32Bit(); }
+// explicit (table-based) ISO 15765-2 extended addressing CAN identifiers, chosen clear of the
+// legislative Normal Addressing identifiers above and the Range Extended Addressing range below.
+// Functional (broadcast) requests are sent on the same EXTENDED_ADDRESSING_REQUEST_CAN_ID, just
+// with the target extension byte set to FUNCTIONAL_ALL_ISO14229 instead of the ECU's own
+// address, since with extended addressing the CAN identifier identifies the sender, not whether
+// a request is physical or functional.
+uint32_t const EXTENDED_ADDRESSING_REQUEST_CAN_ID  = 0x600U;
+uint32_t const EXTENDED_ADDRESSING_RESPONSE_CAN_ID = 0x601U;
 
-} // namespace
+// base CAN identifier of the range 0x680-0x77F, arithmetically mapped onto the full 256 transport
+// addresses 0x00-0xFF (see ::docan::DoCanRangeExtendedAddressingFilter). Anchored at 0x680 rather
+// than 0x700 so the range ends at 0x77F, staying clear of the legislative Normal Addressing
+// identifiers 0x7E0/0x7E8/0x7DF above while still supporting the full address space.
+uint32_t const RANGE_EXTENDED_ADDRESSING_BASE_CAN_ID       = 0x680U;
+uint16_t const RANGE_EXTENDED_ADDRESSING_BASE_TRANSPORT_ID = 0x000U;
+uint16_t const RANGE_EXTENDED_ADDRESSING_COUNT             = 0x100U;
 
-namespace docan
-{
+using DataLinkLayerType            = ::docan::DoCanSystem::DataLinkLayerType;
+using NormalAddressingFilterType   = ::docan::DoCanNormalAddressingFilter<DataLinkLayerType>;
+using ExtendedAddressingFilterType = ::docan::DoCanExtendedAddressingFilter<DataLinkLayerType>;
+using RangeExtendedAddressingFilterType
+    = ::docan::DoCanRangeExtendedAddressingFilter<DataLinkLayerType>;
 
 // PLATFORM_SUPPORT_OBD_UDS_ADDRESSING and PLATFORM_SUPPORT_PROGRAMMING_SESSION
 // are platform options (see the platforms' Options.cmake).
@@ -62,7 +83,7 @@ namespace docan
 // adds an application-level UDS programming session (see
 // udsConfiguration/src/uds/session/DiagSession.cpp) that keeps the UDS
 // dispatcher alive instead of handing over to a bootloader.
-DoCanSystem::AddressingFilterType::AddressEntryType DoCanSystem::_addresses[]
+NormalAddressingFilterType::AddressEntryType const NORMAL_ADDRESSING_ADDRESSES[]
 #ifdef PLATFORM_SUPPORT_OBD_UDS_ADDRESSING
     = {{0x7E0U, 0x7E8U, 0x7E8U, LOGICAL_ADDRESS, 0, 0}};
 #else
@@ -86,6 +107,44 @@ DoCanSystem::AddressingFilterType::AddressEntryType DoCanSystem::_addresses[]
         0}};
 #endif
 
+// mapping of each participant's raw CAN identifier to its own transport address, as needed by
+// DoCanExtendedAddressingFilter. Entries must be ordered ascending by CAN identifier (duplicates
+// allowed). The third entry deliberately reuses EXTENDED_ADDRESSING_RESPONSE_CAN_ID - the ECU's
+// own, real response identifier - rather than introducing a separate (and therefore incorrect)
+// one, so that even a (relatively unusual) multi-frame functional request would still cause any
+// Flow Control frame to go out on the right CAN identifier, addressed back to the true sender.
+ExtendedAddressingFilterType::AddressEntryType const EXTENDED_ADDRESSING_ADDRESSES[] = {
+    {::can::CanId::Base<EXTENDED_ADDRESSING_REQUEST_CAN_ID>::value, EXTENDED_ADDRESSING_TESTER_ID},
+    {::can::CanId::Base<EXTENDED_ADDRESSING_RESPONSE_CAN_ID>::value, LOGICAL_ADDRESS},
+    {::can::CanId::Base<EXTENDED_ADDRESSING_RESPONSE_CAN_ID>::value,
+     ::transport::TransportConfiguration::FUNCTIONAL_ALL_ISO14229}};
+
+// functional (broadcast) addresses valid for extended addressing. Stored as a file-local static
+// (rather than a local variable) since DoCanExtendedAddressingFilter::init() only stores a
+// non-owning span over this data - a local/stack variable would dangle after init() returns.
+uint16_t const EXTENDED_ADDRESSING_FUNCTIONAL_ADDRESSES[]
+    = {::transport::TransportConfiguration::FUNCTIONAL_ALL_ISO14229};
+
+// functional (broadcast) addresses valid for range extended addressing. Stored as a file-local
+// static (rather than a local variable) since DoCanRangeExtendedAddressingFilter::init() only
+// stores a non-owning span over this data - a local/stack variable would dangle after init()
+// returns.
+uint16_t const RANGE_EXTENDED_ADDRESSING_FUNCTIONAL_ADDRESSES[]
+    = {::transport::TransportConfiguration::FUNCTIONAL_ALL_ISO14229};
+
+// functional (group) addresses valid for normal fixed addressing. Stored as a file-local static
+// (rather than a local variable) since DoCanNormalFixedAddressingFilter::init() only stores a
+// non-owning span over this data - a local/stack variable would dangle after init() returns.
+uint8_t const NORMAL_FIXED_ADDRESSING_FUNCTIONAL_ADDRESSES[]
+    = {::can::DoCanMultiAddressingTransportLayer::NORMAL_FIXED_ADDRESSING_FUNCTIONAL_ADDRESS};
+
+uint32_t systemUs() { return ::bsw::time::TimestampProvider::getTimestampUs32Bit(); }
+
+} // namespace
+
+namespace docan
+{
+
 DoCanSystem::DoCanSystem(
     ::transport::ITransportSystem& transportSystem,
     ::can::ICanSystem& canSystem,
@@ -94,10 +153,18 @@ DoCanSystem::DoCanSystem(
 , _cyclicTimeout()
 , _canSystem(canSystem)
 , _transportSystem(transportSystem)
-, _addressing()
 , _frameSizeMapper()
 , _classicCodec(::docan::DoCanFrameCodecConfigPresets::PADDED_CLASSIC, _frameSizeMapper)
-, _classicAddressingFilter()
+, _extendedAddressingClassicCodec(
+      ::docan::DoCanFrameCodecConfigPresets::EA_PADDED_CLASSIC, _frameSizeMapper)
+, _normalAddressing()
+, _extendedAddressing()
+, _rangeExtendedAddressing()
+, _normalFixedAddressing()
+, _normalAddressingFilter()
+, _extendedAddressingFilter()
+, _rangeExtendedAddressingFilter()
+, _normalFixedAddressingFilter()
 , _parameters(
       ::etl::delegate<decltype(systemUs)>::create<&systemUs>(),
       ALLOCATE_TIMEOUT,
@@ -109,9 +176,13 @@ DoCanSystem::DoCanSystem(
       MIN_SEPARATION_TIME,
       BLOCK_SIZE)
 , _transportLayerConfig(_parameters)
-, _physicalTransceivers()
+, _normalAddressingTransceiver()
+, _extendedAddressingTransceiver()
+, _rangeExtendedAddressingTransceiver()
+, _normalFixedAddressingTransceiver()
 , _transportLayers()
 , _tickGenerator(asyncContext, _transportLayers)
+, _multiAddressingTransportLayer(::busid::CAN_0)
 , _codecs{&_classicCodec}
 {
     setTransitionContext(asyncContext);
@@ -124,26 +195,92 @@ void DoCanSystem::initLayer()
 {
     auto& transceiver = *_canSystem.getCanTransceiver(::busid::CAN_0);
 
-    ::docan::DoCanPhysicalCanTransceiver<AddressingType>& doCanTransceiver
-        = _physicalTransceivers.emplace_back(
-            ::etl::ref(transceiver),
-            ::etl::ref(_classicAddressingFilter),
-            ::etl::ref(_classicAddressingFilter),
-            ::etl::ref(_addressing));
+    auto& normalAddressingTransceiver = _normalAddressingTransceiver.emplace(
+        ::etl::ref(transceiver),
+        ::etl::ref(_normalAddressingFilter),
+        ::etl::ref(_normalAddressingFilter),
+        ::etl::ref(_normalAddressing));
 
-    _transportLayers.emplace_back(
+    auto& extendedAddressingTransceiver = _extendedAddressingTransceiver.emplace(
+        ::etl::ref(transceiver),
+        ::etl::ref(_extendedAddressingFilter),
+        ::etl::ref(_extendedAddressingFilter),
+        ::etl::ref(_extendedAddressing));
+
+    auto& rangeExtendedAddressingTransceiver = _rangeExtendedAddressingTransceiver.emplace(
+        ::etl::ref(transceiver),
+        ::etl::ref(_rangeExtendedAddressingFilter),
+        ::etl::ref(_rangeExtendedAddressingFilter),
+        ::etl::ref(_rangeExtendedAddressing));
+
+    auto& normalFixedAddressingTransceiver = _normalFixedAddressingTransceiver.emplace(
+        ::etl::ref(transceiver),
+        ::etl::ref(_normalFixedAddressingFilter),
+        ::etl::ref(_normalFixedAddressingFilter),
+        ::etl::ref(_normalFixedAddressing));
+
+    auto& normalAddressingLayer = _transportLayers.emplace_back(
         ::busid::CAN_0,
         ::etl::ref(_context),
-        ::etl::ref(_classicAddressingFilter),
-        ::etl::ref(doCanTransceiver),
+        ::etl::ref(_normalAddressingFilter),
+        ::etl::ref(normalAddressingTransceiver),
         ::etl::ref(_tickGenerator),
         ::etl::ref(_transportLayerConfig),
         ::util::logger::DOCAN);
+
+    auto& extendedAddressingLayer = _transportLayers.emplace_back(
+        ::busid::CAN_0,
+        ::etl::ref(_context),
+        ::etl::ref(_extendedAddressingFilter),
+        ::etl::ref(extendedAddressingTransceiver),
+        ::etl::ref(_tickGenerator),
+        ::etl::ref(_transportLayerConfig),
+        ::util::logger::DOCAN);
+
+    auto& rangeExtendedAddressingLayer = _transportLayers.emplace_back(
+        ::busid::CAN_0,
+        ::etl::ref(_context),
+        ::etl::ref(_rangeExtendedAddressingFilter),
+        ::etl::ref(rangeExtendedAddressingTransceiver),
+        ::etl::ref(_tickGenerator),
+        ::etl::ref(_transportLayerConfig),
+        ::util::logger::DOCAN);
+
+    auto& normalFixedAddressingLayer = _transportLayers.emplace_back(
+        ::busid::CAN_0,
+        ::etl::ref(_context),
+        ::etl::ref(_normalFixedAddressingFilter),
+        ::etl::ref(normalFixedAddressingTransceiver),
+        ::etl::ref(_tickGenerator),
+        ::etl::ref(_transportLayerConfig),
+        ::util::logger::DOCAN);
+
+    _multiAddressingTransportLayer.bind(
+        normalAddressingLayer,
+        extendedAddressingLayer,
+        rangeExtendedAddressingLayer,
+        normalFixedAddressingLayer);
 }
 
 void DoCanSystem::init()
 {
-    _classicAddressingFilter.init(::etl::make_span(_addresses), ::etl::make_span(_codecs));
+    _normalAddressingFilter.init(
+        ::etl::make_span(NORMAL_ADDRESSING_ADDRESSES), ::etl::make_span(_codecs));
+
+    _extendedAddressingFilter.init(
+        ::etl::make_span(EXTENDED_ADDRESSING_ADDRESSES),
+        ::etl::make_span(EXTENDED_ADDRESSING_FUNCTIONAL_ADDRESSES),
+        _extendedAddressingClassicCodec);
+
+    _rangeExtendedAddressingFilter.init(
+        RANGE_EXTENDED_ADDRESSING_BASE_CAN_ID,
+        RANGE_EXTENDED_ADDRESSING_BASE_TRANSPORT_ID,
+        RANGE_EXTENDED_ADDRESSING_COUNT,
+        ::etl::make_span(RANGE_EXTENDED_ADDRESSING_FUNCTIONAL_ADDRESSES),
+        _extendedAddressingClassicCodec);
+
+    _normalFixedAddressingFilter.init(
+        ::etl::make_span(NORMAL_FIXED_ADDRESSING_FUNCTIONAL_ADDRESSES), _classicCodec);
 
     initLayer();
 
@@ -151,14 +288,15 @@ void DoCanSystem::init()
 }
 
 /**
- * Adds transport layers as a routing target into interface transport system
+ * Adds the multi-addressing transport layer as the single routing target into the interface
+ * transport system for CAN_0, then propagates its provider/listener wiring to the individual
+ * inner (per-addressing-scheme) transport layers.
  */
 void DoCanSystem::run()
 {
-    for (auto& layer : _transportLayers.getTransportLayers())
-    {
-        _transportSystem.addTransportLayer(layer);
-    }
+    _transportSystem.addTransportLayer(_multiAddressingTransportLayer);
+    _multiAddressingTransportLayer.propagateProvidingListener();
+
     _transportLayers.init();
 
     ::async::scheduleAtFixedRate(
@@ -168,16 +306,13 @@ void DoCanSystem::run()
 }
 
 /**
- * Removes the transport layers and stops running the docan stack
+ * Removes the multi-addressing transport layer and stops running the docan stack
  */
 void DoCanSystem::shutdown()
 {
     _cyclicTimeout.cancel();
 
-    for (auto& layer : _transportLayers.getTransportLayers())
-    {
-        _transportSystem.removeTransportLayer(layer);
-    }
+    _transportSystem.removeTransportLayer(_multiAddressingTransportLayer);
 
     transitionDone();
 }

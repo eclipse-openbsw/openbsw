@@ -43,7 +43,10 @@ endif ()
 if (PLATFORM_SUPPORT_CAN)
     target_sources(app.referenceApp PRIVATE src/app/CanDemoListener.cpp)
     if (PLATFORM_SUPPORT_TRANSPORT)
-        target_sources(app.referenceApp PRIVATE src/systems/DoCanSystem.cpp)
+        target_sources(
+            app.referenceApp
+            PRIVATE src/systems/DoCanSystem.cpp
+                    src/can/DoCanMultiAddressingTransportLayer.cpp)
     endif ()
 endif ()
 
