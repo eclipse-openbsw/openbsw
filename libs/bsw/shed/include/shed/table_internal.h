@@ -18,6 +18,7 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <cstring>
 #include <type_traits>
 #include <utility>
 
@@ -137,10 +138,7 @@ struct state_data
         ml          = multi_list::make(n, types::size, ml_mem);
         generations = ml_mem.reinterpret_as<decltype(id::generation)>().first(n);
         ml_mem.advance(n * sizeof(decltype(id::generation)));
-        for (auto& g : generations)
-        {
-            g = 0;
-        }
+        ::std::memset(generations.data(), 0, n * sizeof(decltype(id::generation)));
     }
 
     multi_list* ml = nullptr;
