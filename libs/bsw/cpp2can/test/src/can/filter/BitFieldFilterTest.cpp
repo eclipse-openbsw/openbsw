@@ -189,6 +189,29 @@ TEST_F(BitFieldFilterTest, MergeWithIntervalFilter)
     fFilter.mergeWithInterval(intervalFilter);
 }
 
+TEST_F(BitFieldFilterTest, MergeWithMaskFilter)
+{
+    uint16_t const id1 = 0x123;
+    fFilter.add(id1);
+
+    // merge a mask filter matching only ids ending in 0x0FF (within the base id range)
+    MaskFilter maskFilter;
+    maskFilter.add(0x0FFU);
+    fFilter.mergeWithMask(maskFilter);
+
+    ASSERT_TRUE(fFilter.match(id1));
+    ASSERT_TRUE(fFilter.match(0x0FFU));
+    ASSERT_FALSE(fFilter.match(0x100U));
+
+    // open filter fully
+    maskFilter.open();
+    fFilter.mergeWithMask(maskFilter);
+    for (uint16_t i = 0x0; i <= CANFrame::MAX_FRAME_ID; ++i)
+    {
+        ASSERT_TRUE(fFilter.match(i));
+    }
+}
+
 /**
  * \desc
  * Verification of method clear()

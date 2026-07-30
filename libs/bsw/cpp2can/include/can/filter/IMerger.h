@@ -20,6 +20,7 @@ namespace can
 class BitFieldFilter;
 class AbstractStaticBitFieldFilter;
 class IntervalFilter;
+class MaskFilter;
 
 /**
  * interface for class that are able to merge with other filter classes
@@ -29,6 +30,7 @@ class IntervalFilter;
  * \see BitFieldFilter
  * \see AbstractStaticBitFieldFilter
  * \see IntervalFilter
+ * \see MaskFilter
  */
 class IMerger
 {
@@ -54,6 +56,12 @@ public:
      * \param filter    IntervalFilter to merge with
      */
     virtual void mergeWithInterval(IntervalFilter const& filter) = 0;
+
+    /**
+     * merges with a MaskFilter
+     * \param filter    MaskFilter to merge with
+     */
+    virtual void mergeWithMask(MaskFilter const& filter) = 0;
 };
 
 } // namespace can

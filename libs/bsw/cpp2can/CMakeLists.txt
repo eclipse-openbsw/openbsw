@@ -5,6 +5,7 @@ add_library(
     src/can/filter/AbstractStaticBitFieldFilter.cpp
     src/can/filter/BitFieldFilter.cpp
     src/can/filter/IntervalFilter.cpp
+    src/can/filter/MaskFilter.cpp
     src/can/transceiver/AbstractCANTransceiver.cpp)
 
 target_include_directories(cpp2can PUBLIC include)

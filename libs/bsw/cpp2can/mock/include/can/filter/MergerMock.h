@@ -27,6 +27,7 @@ struct MergerMock : public IMerger
     MOCK_METHOD(void, mergeWithBitField, (BitFieldFilter&), (override));
     MOCK_METHOD(void, mergeWithStaticBitField, (AbstractStaticBitFieldFilter&), (override));
     MOCK_METHOD(void, mergeWithInterval, (IntervalFilter&), (override));
+    MOCK_METHOD(void, mergeWithMask, (MaskFilter&), (override));
 };
 
 } // namespace can

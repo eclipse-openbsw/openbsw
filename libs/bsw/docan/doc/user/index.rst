@@ -517,3 +517,25 @@ filter above.
    :start-after: EXAMPLE_START DoCanRangeExtendedAddressingFilter
    :end-before: EXAMPLE_END DoCanRangeExtendedAddressingFilter
 
+Normal Fixed Addressing
++++++++++++++++++++++++
+
+With *normal fixed addressing* (ISO 15765-2, as legislated for emissions-related diagnostics by
+ISO 15765-4), the complete network address information - addressing format (physical/functional),
+target and source address - is encoded directly into a 29 bit (extended) CAN identifier. No address
+extension payload byte and no lookup table are required; the filter merely extracts the source and
+target address bytes from the identifier, which also means it does not need to know its "own"
+address, making it equally suitable for a gateway routing between buses. A functional (1:n) request
+is only accepted if its target address is one of the configured functional addresses; the reported
+transport target address is always the raw address byte taken from the wire, unmodified.
+
+.. sourceinclude:: test/src/docan/integration/DoCanReadVinIntegrationTestNFA.cpp
+   :language: c++
+   :start-after: EXAMPLE_START DoCanNormalFixedAddressing
+   :end-before: EXAMPLE_END DoCanNormalFixedAddressing
+
+.. sourceinclude:: test/src/docan/integration/DoCanReadVinIntegrationTestNFA.cpp
+   :language: c++
+   :start-after: EXAMPLE_START DoCanNormalFixedAddressingFilter
+   :end-before: EXAMPLE_END DoCanNormalFixedAddressingFilter
+

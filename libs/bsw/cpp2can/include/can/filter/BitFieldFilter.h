@@ -20,6 +20,7 @@
 #include "can/filter/IFilter.h"
 #include "can/filter/IMerger.h"
 #include "can/filter/IntervalFilter.h"
+#include "can/filter/MaskFilter.h"
 
 #include <platform/estdint.h>
 
@@ -133,6 +134,24 @@ public:
             uint32_t const toId
                 = (filter.getUpperBound() <= MAX_ID) ? filter.getUpperBound() : MAX_ID;
             add(filter.getLowerBound(), toId);
+        }
+    }
+
+    /**
+     * merges with a MaskFilter
+     * \param    filter    MaskFilter to merge with
+     *
+     * Since a BitFieldFilter only ever covers the base (11 bit) CAN id range, only ids in that
+     * range that match the mask filter are added.
+     */
+    void mergeWithMask(MaskFilter const& filter) override
+    {
+        for (uint32_t i = 0U; i <= MAX_ID; ++i)
+        {
+            if (filter.match(i))
+            {
+                add(i);
+            }
         }
     }
 

@@ -4,6 +4,8 @@ add_executable(
     src/docan/addressing/DoCanExtendedAddressingTest.cpp
     src/docan/addressing/DoCanNormalAddressingFilterTest.cpp
     src/docan/addressing/DoCanNormalAddressingTest.cpp
+    src/docan/addressing/DoCanNormalFixedAddressingFilterTest.cpp
+    src/docan/addressing/DoCanNormalFixedAddressingTest.cpp
     src/docan/addressing/DoCanRangeExtendedAddressingFilterTest.cpp
     src/docan/can/DoCanPhysicalCanTransceiverContainerTest.cpp
     src/docan/can/DoCanPhysicalCanTransceiverTest.cpp
@@ -26,7 +28,8 @@ add_executable(
     src/docan/integration/DemoTest.cpp
     src/docan/integration/DoCanReadVinIntegrationTestEA.cpp
     src/docan/integration/DoCanReadVinIntegrationTestEARange.cpp
-    src/docan/integration/DoCanReadVinIntegrationTestNA.cpp)
+    src/docan/integration/DoCanReadVinIntegrationTestNA.cpp
+    src/docan/integration/DoCanReadVinIntegrationTestNFA.cpp)
 
 target_include_directories(docanTest PRIVATE include)
 
