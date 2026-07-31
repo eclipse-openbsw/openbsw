@@ -74,6 +74,19 @@ TEST(A_multi_list, can_conditionally_transfer_indices_between_buckets)
         ::shed::collect<Ids>(ms.not_in_bucket(2)), UnorderedElementsAre(0, 1, 3, 5, 6, 7, 9));
 }
 
+TEST(A_multi_list, can_iterate_when_first_excluded_bucket_is_empty_or_exhausted)
+{
+    ::etl::span<uint8_t> mem         = ::etl::span{ml_mem};
+    ::shed::internal::multi_list& ms = *::shed::internal::multi_list::make(10, 3, mem);
+
+    ms.move_if(0, 1, [](size_t) { return ::shed::move_op::MOVE; });
+    EXPECT_THAT(::shed::collect<Ids>(ms.not_in_buckets(0, 1)), IsEmpty());
+
+    ms.move_idx(0, 2);
+    ms.move_idx(9, 0);
+    EXPECT_THAT(::shed::collect<Ids>(ms.not_in_buckets(0, 1)), ElementsAre(0));
+}
+
 TEST(A_multi_list, can_iterate_items_that_are_not_in_a_bucket)
 {
     ::etl::span<uint8_t> mem         = ::etl::span{ml_mem};

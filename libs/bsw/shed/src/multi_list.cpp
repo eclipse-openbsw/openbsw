@@ -78,18 +78,24 @@ void multi_list::NotInBuckets::iter(::etl::delegate<bool(size_t)> const f) const
     size_t const n              = self->_n;
     idx_type const* const items = self->items();
     size_t pos[2]               = {items[n + buckets[0]], items[n + buckets[1]]};
-    size_t i                    = 0;
 
-    do
+    for (size_t i = n; i > 0;)
     {
-        ++i;
-        while (((n - i) == pos[0]) || ((n - i) == pos[1]))
+        --i;
+        bool excluded = false;
+        for (auto& bucket_pos : pos)
         {
-            ++i;
-            auto const j = ((pos[0] < pos[1]) && (pos[1] < n)) ? 1U : 0U;
-            pos[j]       = items[pos[j]];
+            if (i == bucket_pos)
+            {
+                bucket_pos = items[bucket_pos];
+                excluded   = true;
+            }
         }
-    } while ((i < n + 1) && f(n - i));
+        if (!excluded && !f(i))
+        {
+            break;
+        }
+    }
 }
 } // namespace internal
 } // namespace shed
