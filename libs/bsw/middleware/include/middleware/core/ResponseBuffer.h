@@ -70,9 +70,7 @@ public:
      */
     template<typename T = ResponseType>
     ::etl::enable_if_t<!::etl::is_void<T>::value, HRESULT> respond(
-        SkeletonResponseInfo& response,
-        T const& result,
-        bool const handleResponseFailure = true)
+        SkeletonResponseInfo& response, T const& result, bool const handleResponseFailure = true)
     {
         auto ret = HRESULT::ResponseBufferFutureNotFound;
 
