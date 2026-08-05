@@ -78,6 +78,7 @@ TEST(PduTransportConfigTest, pdu_transport_config)
 /**
  * \desc: Loading PDU transport config with address family IPv6 gives the correct values.
  */
+#ifndef OPENBSW_NO_IPV6
 TEST(PduTransportConfigTest, ipv6_pdu_transport_config)
 {
     constexpr ip::IPAddress IP_ADDRESS               = ip::make_ip6(0x0, 0x0, 0x0, 0xEFC0FFFD);
@@ -112,6 +113,7 @@ TEST(PduTransportConfigTest, ipv6_pdu_transport_config)
     EXPECT_EQ(TRANSMISSION_TIMEOUT, pduTransportConfig.transmissionTimeout);
     EXPECT_THAT(pduTransportConfig.remoteIpAddresses, ElementsAreArray(REMOTE_IP_ADDRESSES));
 }
+#endif
 
 /**
  * \desc: Loading from a corrupted config returns a default-constructed config.

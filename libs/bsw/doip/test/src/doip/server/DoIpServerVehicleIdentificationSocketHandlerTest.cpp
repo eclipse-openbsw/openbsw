@@ -204,6 +204,7 @@ TEST_F(
     testContext.expireAndExecute();
 }
 
+#ifndef OPENBSW_NO_IPV6
 TEST_F(DoIpServerVehicleIdentificationSocketHandlerTest, JoinMulticastGroupIfIPv6Configured)
 {
     EXPECT_CALL(fVehicleIdentificationCallbackMock, getVin(_))
@@ -249,6 +250,7 @@ TEST_F(DoIpServerVehicleIdentificationSocketHandlerTest, JoinMulticastGroupIfIPv
 
     testContext.expireAndExecute();
 }
+#endif
 
 TEST_F(DoIpServerVehicleIdentificationSocketHandlerTest, IgnoreUnknownNetworkConfig)
 {
