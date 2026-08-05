@@ -272,6 +272,9 @@ TEST(IPAddressTest, equality)
 
     IPAddress ip3 = make_ip4(++addr);
     EXPECT_NE(ip1, ip3);
+
+    IPAddress ip4 = make_ip4(0xABCDFF01);
+    EXPECT_NE(ip1, ip4);
 }
 
 #ifndef OPENBSW_NO_IPV6

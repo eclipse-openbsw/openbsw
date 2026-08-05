@@ -392,7 +392,7 @@ inline bool operator==(IPAddress const& ip1, IPAddress const& ip2)
         && (ip1.be_uint32_at(1) == ip2.be_uint32_at(1))
         && (ip1.be_uint32_at(0) == ip2.be_uint32_at(0)));
 #else
-    return (ip1.raw[0] == ip2.raw[0]);
+    return (ip1.be_uint32_at(0) == ip2.be_uint32_at(0));
 #endif
 }
 
