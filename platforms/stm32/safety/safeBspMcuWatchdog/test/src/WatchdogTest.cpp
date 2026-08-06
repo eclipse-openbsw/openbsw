@@ -401,7 +401,7 @@ TEST_F(WatchdogTest, serviceWatchdog_KRAlwaysKickValue)
 TEST_F(WatchdogTest, serviceWatchdog_TenKicks)
 {
     uint32_t before = Watchdog::getWatchdogServiceCounter();
-    for (int i = 0; i < 10; i++)
+    for (size_t i = 0; i < 10; i++)
     {
         Watchdog::serviceWatchdog();
     }
@@ -575,7 +575,7 @@ TEST_F(WatchdogTest, getWatchdogServiceCounter_EnableAlsoKicks)
 TEST_F(WatchdogTest, getWatchdogServiceCounter_ConsistentAfterMultipleCalls)
 {
     uint32_t prev = Watchdog::getWatchdogServiceCounter();
-    for (uint32_t i = 0; i < 20; i++)
+    for (size_t i = 0; i < 20; i++)
     {
         Watchdog::serviceWatchdog();
     }

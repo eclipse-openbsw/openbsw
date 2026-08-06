@@ -39,7 +39,7 @@ void Watchdog::computePrescalerAndReload(
 
     static uint16_t const dividers[] = {4, 8, 16, 32, 64, 128, 256};
 
-    for (uint8_t code = 0U; code < 7U; code++)
+    for (size_t code = 0U; code < sizeof(dividers) / sizeof(dividers[0]); code++)
     {
         uint32_t ticks = (timeoutMs * (clockHz / 1000U)) / dividers[code];
         if (ticks == 0U)
@@ -48,7 +48,7 @@ void Watchdog::computePrescalerAndReload(
         }
         if (ticks <= 4096U)
         {
-            prescalerCode = code;
+            prescalerCode = static_cast<uint8_t>(code);
             reload        = static_cast<uint16_t>(ticks - 1U);
             return;
         }
