@@ -150,4 +150,137 @@ TEST_F(LoggerApiTest, TestLogCrossThreadViolation)
         level, error, sourceCluster, serviceId, serviceInstanceId, initId, currentTaskId);
 }
 
+TEST_F(LoggerApiTest, TestLogFrameIdUnknown)
+{
+    // ARRANGE
+    logger::LogLevel const level = logger::LogLevel::Error;
+    logger::Error const error    = logger::Error::FrameIdUnknown;
+    uint32_t const frameId       = ::etl::numeric_limits<uint32_t>::max();
+
+    // ACT && ASSERT
+    _loggerMock.EXPECT_LOG(level, "e:%d ID:0x%x", error, frameId);
+    _loggerMock.EXPECT_EVENT_LOG(level, error, frameId);
+    middleware::logger::logFrameFailure(level, error, frameId);
+}
+
+TEST_F(LoggerApiTest, TestLogCanConversionFailureForFrameToPdu)
+{
+    // ARRANGE
+    logger::LogLevel const level = logger::LogLevel::Error;
+    logger::Error const error    = logger::Error::FrameToPduConversion;
+    uint32_t const frameId       = ::etl::numeric_limits<uint32_t>::max();
+
+    // ACT && ASSERT
+    _loggerMock.EXPECT_LOG(level, "e:%d ID:0x%x", error, frameId);
+    _loggerMock.EXPECT_EVENT_LOG(level, error, frameId);
+    middleware::logger::logFrameFailure(level, error, frameId);
+}
+
+TEST_F(LoggerApiTest, TestLogPduFailureForFrameSlotOutOfBounds)
+{
+    // ARRANGE
+    logger::LogLevel const level = logger::LogLevel::Error;
+    logger::Error const error    = logger::Error::FrameSlotOutOfBounds;
+    uint32_t const pduId         = ::etl::numeric_limits<uint32_t>::max();
+
+    // ACT && ASSERT
+    _loggerMock.EXPECT_LOG(level, "e:%d ID:0x%x", error, pduId);
+    _loggerMock.EXPECT_EVENT_LOG(level, error, pduId);
+    middleware::logger::logPduFailure(level, error, pduId);
+}
+
+TEST_F(LoggerApiTest, TestLogCanConversionFailureForPduToFrame)
+{
+    // ARRANGE
+    logger::LogLevel const level = logger::LogLevel::Error;
+    logger::Error const error    = logger::Error::PduToFrameConversion;
+    uint32_t const pduId         = ::etl::numeric_limits<uint32_t>::max();
+
+    // ACT && ASSERT
+    _loggerMock.EXPECT_LOG(level, "e:%d ID:0x%x", error, pduId);
+    _loggerMock.EXPECT_EVENT_LOG(level, error, pduId);
+    middleware::logger::logPduFailure(level, error, pduId);
+}
+
+TEST_F(LoggerApiTest, TestLogPduFailureForRouteUnknown)
+{
+    // ARRANGE
+    logger::LogLevel const level = logger::LogLevel::Error;
+    logger::Error const error    = logger::Error::PduRouteUnknown;
+    uint32_t const pduId         = ::etl::numeric_limits<uint32_t>::max();
+
+    // ACT && ASSERT
+    _loggerMock.EXPECT_LOG(level, "e:%d ID:%u", error, pduId);
+    _loggerMock.EXPECT_EVENT_LOG(level, error, pduId);
+    middleware::logger::logPduFailure(level, error, pduId);
+}
+
+TEST_F(LoggerApiTest, TestLogPduFailureForPayloadAllocation)
+{
+    // ARRANGE
+    logger::LogLevel const level = logger::LogLevel::Error;
+    logger::Error const error    = logger::Error::PduPayloadAllocation;
+    uint32_t const pduId         = ::etl::numeric_limits<uint32_t>::max();
+
+    // ACT && ASSERT
+    _loggerMock.EXPECT_LOG(level, "e:%d ID:%u", error, pduId);
+    _loggerMock.EXPECT_EVENT_LOG(level, error, pduId);
+    middleware::logger::logPduFailure(level, error, pduId);
+}
+
+TEST_F(LoggerApiTest, TestLogPduBroadcastFailure)
+{
+    // ARRANGE
+    logger::LogLevel const level = logger::LogLevel::Info;
+    logger::Error const error    = logger::Error::PduBroadcast;
+    uint32_t const pduId         = ::etl::numeric_limits<uint32_t>::max();
+    uint8_t const clusterId      = ::etl::numeric_limits<uint8_t>::max();
+
+    // ACT && ASSERT
+    _loggerMock.EXPECT_LOG(level, "e:%d ID:%u C:%u", error, pduId, clusterId);
+    _loggerMock.EXPECT_EVENT_LOG(level, error, pduId, clusterId);
+    middleware::logger::logPduBroadcastFailure(level, error, pduId, clusterId);
+}
+
+TEST_F(LoggerApiTest, TestLogServiceMemberMappingNotFound)
+{
+    // ARRANGE
+    logger::LogLevel const level = logger::LogLevel::Warning;
+    logger::Error const error    = logger::Error::ServiceMemberMappingNotFound;
+    uint16_t const serviceId     = ::etl::numeric_limits<uint16_t>::max();
+    uint16_t const memberId      = ::etl::numeric_limits<uint16_t>::max();
+
+    // ACT && ASSERT
+    _loggerMock.EXPECT_LOG(level, "e:%d S:%u M:%u", error, serviceId, memberId);
+    _loggerMock.EXPECT_EVENT_LOG(level, error, serviceId, memberId);
+    middleware::logger::logServiceMemberMappingNotFound(level, error, serviceId, memberId);
+}
+
+TEST_F(LoggerApiTest, TestLogPduFailureForOffsetOutOfBounds)
+{
+    // ARRANGE
+    logger::LogLevel const level = logger::LogLevel::Error;
+    logger::Error const error    = logger::Error::PduOffsetOutOfBounds;
+    uint32_t const pduId         = ::etl::numeric_limits<uint32_t>::max();
+
+    // ACT && ASSERT
+    _loggerMock.EXPECT_LOG(level, "e:%d ID:0x%x", error, pduId);
+    _loggerMock.EXPECT_EVENT_LOG(level, error, pduId);
+    middleware::logger::logPduFailure(level, error, pduId);
+}
+
+TEST_F(LoggerApiTest, TestLogPduPayloadOutOfBounds)
+{
+    // ARRANGE
+    logger::LogLevel const level = logger::LogLevel::Error;
+    logger::Error const error    = logger::Error::PduPayloadOutOfBounds;
+    uint32_t const pduId         = ::etl::numeric_limits<uint32_t>::max();
+    uint32_t const maxBytes      = ::etl::numeric_limits<uint32_t>::max();
+
+    // ACT && ASSERT
+    _loggerMock.EXPECT_LOG(level, "e:%d ID:%u MAX:%u", error, pduId, maxBytes);
+    _loggerMock.EXPECT_EVENT_LOG(level, error, pduId, maxBytes);
+    middleware::logger::logPduPayloadOutOfBounds(level, error, pduId, maxBytes);
+}
+
 } // namespace middleware::core::test

@@ -52,6 +52,7 @@ void log(LogLevel const level, char const* const format, ...) // NOLINT(cert-dcl
                 {
                     case 'd': args.push_back(static_cast<uint32_t>(va_arg(ap, int))); continue;
                     case 'u':
+                    case 'x':
                         args.push_back(static_cast<uint32_t>(va_arg(ap, unsigned int)));
                         continue;
                     default: break;

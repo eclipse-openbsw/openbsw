@@ -46,6 +46,26 @@ enum class Error : uint8_t
     ProxyCrossThreadViolation    = 6U,
     /** Skeleton cross-thread access violation. */
     SkeletonCrossThreadViolation = 7U,
+    /** Unknown CAN frame ID encountered. */
+    FrameIdUnknown               = 8U,
+    /** CAN frame to PDU conversion failure. */
+    FrameToPduConversion         = 9U,
+    /** PDU slot exceeds frame payload length. */
+    FrameSlotOutOfBounds         = 10U,
+    /** PDU to CAN frame conversion failure. */
+    PduToFrameConversion         = 11U,
+    /** No route found for a PDU ID. */
+    PduRouteUnknown              = 12U,
+    /** Memory allocation failure for a PDU payload. */
+    PduPayloadAllocation         = 13U,
+    /** PDU broadcast failure. */
+    PduBroadcast                 = 14U,
+    /** Service/member mapping not found for a PDU. */
+    ServiceMemberMappingNotFound = 15U,
+    /** PDU offset exceeds frame capacity. */
+    PduOffsetOutOfBounds         = 16U,
+    /** PDU payload exceeds frame capacity. */
+    PduPayloadOutOfBounds        = 17U,
 };
 
 /**

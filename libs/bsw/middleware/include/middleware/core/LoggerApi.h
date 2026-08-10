@@ -22,13 +22,23 @@ namespace middleware::logger
 {
 
 /** Log buffer size for allocation failures. */
-ETL_INLINE_VAR constexpr uint8_t ALLOCATION_FAILURE_LOG_SIZE     = 20U;
+ETL_INLINE_VAR constexpr uint8_t ALLOCATION_FAILURE_LOG_SIZE               = 20U;
 /** Log buffer size for initialization failures. */
-ETL_INLINE_VAR constexpr uint8_t INIT_FAILURE_LOG_SIZE           = 11U;
+ETL_INLINE_VAR constexpr uint8_t INIT_FAILURE_LOG_SIZE                     = 11U;
 /** Log buffer size for message sending failures. */
-ETL_INLINE_VAR constexpr uint8_t MSG_SEND_FAILURE_LOG_SIZE       = 16U;
+ETL_INLINE_VAR constexpr uint8_t MSG_SEND_FAILURE_LOG_SIZE                 = 16U;
 /** Log buffer size for cross-thread violations. */
-ETL_INLINE_VAR constexpr uint8_t CROSS_THREAD_VIOLATION_LOG_SIZE = 18U;
+ETL_INLINE_VAR constexpr uint8_t CROSS_THREAD_VIOLATION_LOG_SIZE           = 18U;
+/** Log buffer size for frame-related failures. */
+ETL_INLINE_VAR constexpr uint8_t FRAME_FAILURE_LOG_SIZE                    = 9U;
+/** Log buffer size for PDU-related failures. */
+ETL_INLINE_VAR constexpr uint8_t PDU_FAILURE_LOG_SIZE                      = 9U;
+/** Log buffer size for failures when broadcasting a PDU to a cluster. */
+ETL_INLINE_VAR constexpr uint8_t PDU_BROADCAST_FAILURE_LOG_SIZE            = 10U;
+/** Log buffer size for missing service/member mapping. */
+ETL_INLINE_VAR constexpr uint8_t SERVICE_MEMBER_MAPPING_NOT_FOUND_LOG_SIZE = 9U;
+/** Log buffer size for PDU payload exceeding frame capacity. */
+ETL_INLINE_VAR constexpr uint8_t PDU_PAYLOAD_OUT_OF_BOUNDS_LOG_SIZE        = 13U;
 
 /**
  * Helper template to count the total size of types in bytes.
@@ -152,5 +162,49 @@ void logCrossThreadViolation(
     uint16_t serviceInstanceId,
     uint32_t initId,
     uint32_t currentTaskId);
+
+/**
+ * Logs a frame-related failure.
+ * \param level the severity level of the log message
+ * \param error the specific error indicating the type of frame failure
+ * \param frameId the unrecognised frame ID
+ */
+void logFrameFailure(LogLevel level, Error error, uint32_t frameId);
+
+/**
+ * Logs a PDU-related failure.
+ * \param level the severity level of the log message
+ * \param error the specific error encountered during the PDU operation
+ * \param pduId the PDU ID associated with the failure
+ */
+void logPduFailure(LogLevel level, Error error, uint32_t pduId);
+
+/**
+ * Logs a failure when broadcasting a PDU to a cluster.
+ * \param level the severity level of the log message
+ * \param error the specific error/event code when broadcasting a PDU
+ * \param pduId the PDU ID being broadcasted
+ * \param clusterId the destination cluster ID
+ */
+void logPduBroadcastFailure(LogLevel level, Error error, uint32_t pduId, uint8_t clusterId);
+
+/**
+ * Logs a missing service/member mapping for a PDU.
+ * \param level the severity level of the log message
+ * \param error the specific error indicating mapping lookup failure
+ * \param serviceId the service ID
+ * \param memberId the member ID
+ */
+void logServiceMemberMappingNotFound(
+    LogLevel level, Error error, uint16_t serviceId, uint16_t memberId);
+
+/**
+ * Logs a PDU payload that exceeds the frame capacity.
+ * \param level the severity level of the log message
+ * \param error the specific error indicating payload bounds violation
+ * \param pduId the PDU ID whose payload is too large
+ * \param maxBytes the maximum number of bytes the frame can hold
+ */
+void logPduPayloadOutOfBounds(LogLevel level, Error error, uint32_t pduId, uint32_t maxBytes);
 
 } // namespace middleware::logger

@@ -69,6 +69,15 @@ void serialize(::etl::byte_stream_writer& writer, Values... values)
 
     serialize(writer, values...);
 }
+
+template<uint32_t Size, typename... Args>
+void logBinaryRecord(LogLevel const level, Args const&... args)
+{
+    ::etl::array<uint8_t, Size> temp{};
+    ::etl::byte_stream_writer writer{temp, ::etl::endian::native};
+    serialize<Size>(writer, args...);
+    middleware::logger::logBinary(level, temp);
+}
 } // namespace
 
 void logAllocationFailure(
@@ -79,16 +88,6 @@ void logAllocationFailure(
     uint32_t const size)
 {
     static char const* const kformat = "e:%d r:%d SC:%d TC:%d S:%d I:%d M:%d R:%d s:%d";
-
-    ::etl::array<uint8_t, ALLOCATION_FAILURE_LOG_SIZE> temp{};
-    ::etl::byte_stream_writer writer{temp, ::etl::endian::native};
-    serialize<ALLOCATION_FAILURE_LOG_SIZE>(
-        writer,
-        getMessageId(error),
-        static_cast<uint8_t>(error),
-        static_cast<uint8_t>(res),
-        msg,
-        size);
 
     // NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg)
     middleware::logger::log(
@@ -103,7 +102,14 @@ void logAllocationFailure(
         msg.getHeader().memberId,
         msg.getHeader().requestId,
         size);
-    middleware::logger::logBinary(level, temp);
+
+    logBinaryRecord<ALLOCATION_FAILURE_LOG_SIZE>(
+        level,
+        getMessageId(error),
+        static_cast<uint8_t>(error),
+        static_cast<uint8_t>(res),
+        msg,
+        size);
 }
 
 void logInitFailure(
@@ -116,18 +122,6 @@ void logInitFailure(
 {
     static char const* const kformat = "e:%d r:%d SC:%d S:%d I:%d";
 
-    ::etl::array<uint8_t, INIT_FAILURE_LOG_SIZE>
-        temp{}; // NOLINT(cppcoreguidelines-avoid-magic-numbers)
-    ::etl::byte_stream_writer writer{temp, ::etl::endian::native};
-    serialize<INIT_FAILURE_LOG_SIZE>(
-        writer,
-        getMessageId(error),
-        static_cast<uint8_t>(error),
-        static_cast<uint8_t>(res),
-        static_cast<uint8_t>(sourceCluster),
-        static_cast<uint16_t>(serviceId),
-        static_cast<uint16_t>(serviceInstanceId));
-
     // NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg)
     middleware::logger::log(
         level,
@@ -137,19 +131,21 @@ void logInitFailure(
         sourceCluster,
         serviceId,
         serviceInstanceId);
-    middleware::logger::logBinary(level, temp);
+
+    logBinaryRecord<INIT_FAILURE_LOG_SIZE>(
+        level,
+        getMessageId(error),
+        static_cast<uint8_t>(error),
+        static_cast<uint8_t>(res),
+        static_cast<uint8_t>(sourceCluster),
+        static_cast<uint16_t>(serviceId),
+        static_cast<uint16_t>(serviceInstanceId));
 }
 
 void logMessageSendingFailure(
     LogLevel const level, Error const error, core::HRESULT const res, core::Message const& msg)
 {
     static char const* const kformat = "e:%d r:%d SC:%d TC:%d S:%d I:%d M:%d R:%d";
-
-    ::etl::array<uint8_t, MSG_SEND_FAILURE_LOG_SIZE>
-        temp{}; // NOLINT(cppcoreguidelines-avoid-magic-numbers)
-    ::etl::byte_stream_writer writer{temp, ::etl::endian::native};
-    serialize<MSG_SEND_FAILURE_LOG_SIZE>(
-        writer, getMessageId(error), static_cast<uint8_t>(error), static_cast<uint8_t>(res), msg);
 
     // NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg)
     middleware::logger::log(
@@ -163,7 +159,9 @@ void logMessageSendingFailure(
         msg.getHeader().serviceInstanceId,
         msg.getHeader().memberId,
         msg.getHeader().requestId);
-    middleware::logger::logBinary(level, temp);
+
+    logBinaryRecord<MSG_SEND_FAILURE_LOG_SIZE>(
+        level, getMessageId(error), static_cast<uint8_t>(error), static_cast<uint8_t>(res), msg);
 }
 
 void logCrossThreadViolation(
@@ -177,19 +175,6 @@ void logCrossThreadViolation(
 {
     static char const* const kformat = "e:%d SC:%d S:%d I:%d T0:%d T1:%d";
 
-    ::etl::array<uint8_t, CROSS_THREAD_VIOLATION_LOG_SIZE>
-        temp{}; // NOLINT(cppcoreguidelines-avoid-magic-numbers)
-    ::etl::byte_stream_writer writer{temp, ::etl::endian::native};
-    serialize<CROSS_THREAD_VIOLATION_LOG_SIZE>(
-        writer,
-        getMessageId(error),
-        static_cast<uint8_t>(error),
-        static_cast<uint8_t>(sourceCluster),
-        static_cast<uint16_t>(serviceId),
-        static_cast<uint16_t>(serviceInstanceId),
-        static_cast<uint32_t>(initId),
-        static_cast<uint32_t>(currentTaskId));
-
     // NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg)
     middleware::logger::log(
         level,
@@ -200,7 +185,85 @@ void logCrossThreadViolation(
         serviceInstanceId,
         initId,
         currentTaskId);
-    middleware::logger::logBinary(level, temp);
+
+    logBinaryRecord<CROSS_THREAD_VIOLATION_LOG_SIZE>(
+        level,
+        getMessageId(error),
+        static_cast<uint8_t>(error),
+        static_cast<uint8_t>(sourceCluster),
+        static_cast<uint16_t>(serviceId),
+        static_cast<uint16_t>(serviceInstanceId),
+        static_cast<uint32_t>(initId),
+        static_cast<uint32_t>(currentTaskId));
+}
+
+void logFrameFailure(LogLevel const level, Error const error, uint32_t const frameId)
+{
+    static char const* const kformat = "e:%d ID:0x%x";
+
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg)
+    middleware::logger::log(level, kformat, static_cast<unsigned int>(error), frameId);
+    logBinaryRecord<FRAME_FAILURE_LOG_SIZE>(
+        level, getMessageId(error), static_cast<uint8_t>(error), static_cast<uint32_t>(frameId));
+}
+
+void logPduFailure(LogLevel const level, Error const error, uint32_t const pduId)
+{
+    static constexpr char kdecimalFormat[] = "e:%d ID:%u";
+    static constexpr char khexFormat[]     = "e:%d ID:0x%x";
+    char const* const kformat
+        = (error == Error::PduRouteUnknown || error == Error::PduPayloadAllocation) ? kdecimalFormat
+                                                                                    : khexFormat;
+
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg)
+    middleware::logger::log(level, kformat, static_cast<unsigned int>(error), pduId);
+    logBinaryRecord<PDU_FAILURE_LOG_SIZE>(
+        level, getMessageId(error), static_cast<uint8_t>(error), static_cast<uint32_t>(pduId));
+}
+
+void logPduBroadcastFailure(
+    LogLevel const level, Error const error, uint32_t const pduId, uint8_t const clusterId)
+{
+    static char const* const kformat = "e:%d ID:%u C:%u";
+
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg)
+    middleware::logger::log(level, kformat, static_cast<unsigned int>(error), pduId, clusterId);
+    logBinaryRecord<PDU_BROADCAST_FAILURE_LOG_SIZE>(
+        level,
+        getMessageId(error),
+        static_cast<uint8_t>(error),
+        static_cast<uint32_t>(pduId),
+        static_cast<uint8_t>(clusterId));
+}
+
+void logServiceMemberMappingNotFound(
+    LogLevel const level, Error const error, uint16_t const serviceId, uint16_t const memberId)
+{
+    static char const* const kformat = "e:%d S:%u M:%u";
+
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg)
+    middleware::logger::log(level, kformat, static_cast<unsigned int>(error), serviceId, memberId);
+    logBinaryRecord<SERVICE_MEMBER_MAPPING_NOT_FOUND_LOG_SIZE>(
+        level,
+        getMessageId(error),
+        static_cast<uint8_t>(error),
+        static_cast<uint16_t>(serviceId),
+        static_cast<uint16_t>(memberId));
+}
+
+void logPduPayloadOutOfBounds(
+    LogLevel const level, Error const error, uint32_t const pduId, uint32_t const maxBytes)
+{
+    static char const* const kformat = "e:%d ID:%u MAX:%u";
+
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg)
+    middleware::logger::log(level, kformat, static_cast<unsigned int>(error), pduId, maxBytes);
+    logBinaryRecord<PDU_PAYLOAD_OUT_OF_BOUNDS_LOG_SIZE>(
+        level,
+        getMessageId(error),
+        static_cast<uint8_t>(error),
+        static_cast<uint32_t>(pduId),
+        static_cast<uint32_t>(maxBytes));
 }
 
 } // namespace middleware::logger
