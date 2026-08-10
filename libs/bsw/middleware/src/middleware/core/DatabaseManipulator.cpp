@@ -10,7 +10,6 @@
 
 #include "middleware/core/DatabaseManipulator.h"
 
-#include "middleware/concurrency/LockStrategies.h"
 #include "middleware/core/ProxyBase.h"
 #include "middleware/core/SkeletonBase.h"
 #include "middleware/core/TransceiverBase.h"

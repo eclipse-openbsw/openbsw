@@ -10,7 +10,6 @@
 
 #include "middleware/core/ProxyBase.h"
 
-#include "middleware/concurrency/LockStrategies.h"
 #include "middleware/core/IClusterConnection.h"
 #include "middleware/core/InstancesDatabase.h"
 #include "middleware/core/LoggerApi.h"

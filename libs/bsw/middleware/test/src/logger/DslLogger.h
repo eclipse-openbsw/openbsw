@@ -20,7 +20,6 @@
 #include <etl/vector.h>
 #include <gmock/gmock.h>
 
-#include "middleware/core/LoggerApi.h"
 #include "middleware/logger/Logger.h"
 #include "mock/LoggerMock.h"
 
@@ -84,6 +83,21 @@ public:
     }
 
 private:
+    template<typename... Args>
+    struct CountBytes;
+
+    template<typename T>
+    struct CountBytes<T>
+    {
+        static constexpr size_t VALUE = sizeof(T);
+    };
+
+    template<typename T, typename... Args>
+    struct CountBytes<T, Args...>
+    {
+        static constexpr size_t VALUE = CountBytes<T>::VALUE + CountBytes<Args...>::VALUE;
+    };
+
     template<typename T>
     void push_all(::etl::ivector<uint32_t>& vec, T arg)
     {

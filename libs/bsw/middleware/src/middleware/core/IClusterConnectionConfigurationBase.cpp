@@ -10,7 +10,6 @@
 
 #include "middleware/core/IClusterConnectionConfigurationBase.h"
 
-#include "middleware/concurrency/LockStrategies.h"
 #include "middleware/core/DatabaseManipulator.h"
 #include "middleware/core/ITimeoutHandler.h"
 #include "middleware/core/Message.h"
