@@ -32,6 +32,9 @@ set(PLATFORM_SUPPORT_ROM_CHECK
 set(PLATFORM_SUPPORT_ETHERNET
     ON
     CACHE BOOL "Turn ethernet support on or off" FORCE)
+set(PLATFORM_SUPPORT_IPV6
+    OFF
+    CACHE BOOL "Turn IPv6 support on or off" FORCE)
 set(PLATFORM_SUPPORT_STORAGE
     ON
     CACHE BOOL "Turn persistent storage on or off" FORCE)

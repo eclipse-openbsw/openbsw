@@ -19,6 +19,9 @@ set(PLATFORM_SUPPORT_CAN
 set(PLATFORM_SUPPORT_ETHERNET
     ON
     CACHE BOOL "Turn ethernet support on or off" FORCE)
+set(PLATFORM_SUPPORT_IPV6
+    OFF
+    CACHE BOOL "Turn IPv6 support on or off" FORCE)
 set(PLATFORM_SUPPORT_TRANSPORT
     ON
     CACHE BOOL "Turn TRANSPORT support on or off" FORCE)
