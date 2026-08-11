@@ -17,4 +17,4 @@ elseif (BUILD_TARGET_RTOS STREQUAL "THREADX")
     target_link_libraries(${bspInterruptsImplName} PUBLIC threadX)
 endif ()
 
-target_link_libraries(${bspInterruptsImplName} PRIVATE bspMcu platform)
+target_link_libraries(${bspInterruptsImplName} PRIVATE bspMcu)

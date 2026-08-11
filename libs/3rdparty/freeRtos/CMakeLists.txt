@@ -12,7 +12,7 @@ target_include_directories(freeRtos PUBLIC include)
 
 target_link_libraries(
     freeRtos
-    PUBLIC platform freeRtosConfiguration freeRtosPort
+    PUBLIC freeRtosConfiguration freeRtosPort
     PRIVATE freeRtosPortImpl osHooks)
 
 target_compile_options(freeRtos PRIVATE -Wno-unused-variable)

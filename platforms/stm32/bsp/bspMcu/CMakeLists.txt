@@ -14,5 +14,3 @@ endif ()
 target_compile_definitions(
     bspMcu PUBLIC ${STM32_DEVICE_UPPER} STM32_FAMILY_${STM32_FAMILY}
                   CAN_TYPE_${CAN_TYPE})
-
-target_link_libraries(bspMcu PUBLIC platform)

@@ -38,7 +38,7 @@ target_include_directories(freeRtosConfiguration
 
 target_link_libraries(
     freeRtosConfiguration INTERFACE asyncCoreConfiguration
-                                    freeRtosCoreConfiguration platform)
+                                    freeRtosCoreConfiguration)
 
 if (BUILD_EXECUTABLE STREQUAL "unitTest")
     # These compile definitions apply to all unit test
