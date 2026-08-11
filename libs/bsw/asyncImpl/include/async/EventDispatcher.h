@@ -19,8 +19,6 @@
 #include <etl/delegate.h>
 #include <etl/platform.h>
 
-#include <platform/config.h>
-
 namespace async
 {
 /**

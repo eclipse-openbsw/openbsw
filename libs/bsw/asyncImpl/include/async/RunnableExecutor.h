@@ -15,8 +15,6 @@
 
 #include "async/Queue.h"
 
-#include <platform/config.h>
-
 #include <etl/platform.h>
 
 namespace async

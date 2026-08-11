@@ -13,8 +13,6 @@
 #include "util/command/CommandContext.h"
 #include "util/stream/ISharedOutputStream.h"
 
-#include <platform/config.h>
-
 namespace util
 {
 namespace command
