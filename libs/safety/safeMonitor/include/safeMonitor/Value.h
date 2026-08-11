@@ -14,6 +14,8 @@
 
 #include <platform/config.h>
 
+#include <etl/platform.h>
+
 namespace safeMonitor
 {
 /**
@@ -62,7 +64,7 @@ public:
      */
     void check(Type const& value, Context const& context = DEFAULT_CONTEXT)
     {
-        ESR_UNUSED const ScopedMutex m;
+        ETL_MAYBE_UNUSED const ScopedMutex m;
 
         _context = context;
 
