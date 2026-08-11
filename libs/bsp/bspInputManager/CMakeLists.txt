@@ -13,5 +13,4 @@ target_link_libraries(
            bspConfiguration
            bspIo
            etl
-           platform
            util)

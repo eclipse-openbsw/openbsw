@@ -1,2 +1,0 @@
-maturity: production
-oss: true

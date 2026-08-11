@@ -25,6 +25,5 @@ target_link_libraries(
            etl
            io
            lwipSocket
-           platform
            routingConfiguration
            util)

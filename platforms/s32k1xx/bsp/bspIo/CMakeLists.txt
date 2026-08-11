@@ -7,8 +7,7 @@ target_link_libraries(
     PUBLIC bsp
            bspConfiguration # TODO: should this be split to ioConfiguration?
            bspMcu
-           etl
-           platform)
+           etl)
 
 if (BUILD_EXECUTABLE STREQUAL "unitTest")
     add_library(bspIoMock mock/gmock/src/IoMock.cpp)

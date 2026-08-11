@@ -7,7 +7,6 @@ target_include_directories(safeLifecycle PUBLIC include)
 
 target_link_libraries(
     safeLifecycle
-    PUBLIC platform
     PRIVATE safeSupervisor
             safeSystem
             safeIo

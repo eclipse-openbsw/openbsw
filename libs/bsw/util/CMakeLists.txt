@@ -30,7 +30,7 @@ add_library(
 
 target_include_directories(util PUBLIC include)
 
-target_link_libraries(util PUBLIC etl platform)
+target_link_libraries(util PUBLIC etl)
 
 if (BUILD_EXECUTABLE STREQUAL "unitTest")
     add_library(utilMock mock/gmock/src/util/StdIoMock.cpp

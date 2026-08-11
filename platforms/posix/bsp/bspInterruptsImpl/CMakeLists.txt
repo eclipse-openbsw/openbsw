@@ -17,5 +17,3 @@ elseif (BUILD_TARGET_RTOS STREQUAL "THREADX")
     target_include_directories(${bspInterruptsImplName} PUBLIC threadx/include)
     target_link_libraries(${bspInterruptsImplName} PRIVATE threadX)
 endif ()
-
-target_link_libraries(${bspInterruptsImplName} PUBLIC platform)

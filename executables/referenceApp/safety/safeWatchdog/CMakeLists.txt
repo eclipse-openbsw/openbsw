@@ -4,7 +4,6 @@ target_include_directories(safeWatchdog PUBLIC include)
 
 target_link_libraries(
     safeWatchdog
-    PUBLIC platform
     PRIVATE safeSupervisor safeUtils)
 
 if (PLATFORM_SUPPORT_WATCHDOG)

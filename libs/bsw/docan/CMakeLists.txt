@@ -10,7 +10,6 @@ target_link_libraries(
            common
            cpp2can
            etl
-           platform
            transport
            util)
 

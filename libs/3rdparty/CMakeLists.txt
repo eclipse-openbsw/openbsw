@@ -51,8 +51,7 @@ set(LWIP_INCLUDE_DIRS
     "${LWIP_DIR}/src/include"
     "${LWIP_DIR}/contrib"
     "${OPENBSW_APP_DIR}/lwipConfiguration/include"
-    "${OPENBSW_PLATFORM_DIR}/lwipSysArch/include"
-    "${OPENBSW_DIR}/libs/bsw/platform/include")
+    "${OPENBSW_PLATFORM_DIR}/lwipSysArch/include")
 include(lwip/src/Filelists.cmake)
 
 target_include_directories(
