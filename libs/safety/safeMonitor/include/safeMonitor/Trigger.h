@@ -14,6 +14,8 @@
 
 #include <platform/config.h>
 
+#include <etl/platform.h>
+
 namespace safeMonitor
 {
 /**
@@ -51,7 +53,7 @@ public:
      */
     void trigger(Context const& context = DEFAULT_CONTEXT)
     {
-        ESR_UNUSED const ScopedMutex m;
+        ETL_MAYBE_UNUSED const ScopedMutex m;
         _context = context;
         _handler.handle(_event);
     }

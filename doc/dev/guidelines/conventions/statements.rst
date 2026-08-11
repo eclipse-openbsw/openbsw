@@ -241,7 +241,7 @@ Critical Sections
 
     ...
     {
-        ESR_UNUSED const interrupts::SuspendResumeAllInterruptsScopedLock lock;
+        ETL_MAYBE_UNUSED const interrupts::SuspendResumeAllInterruptsScopedLock lock;
 
         // Critical section here
     }
