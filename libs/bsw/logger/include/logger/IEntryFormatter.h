@@ -12,7 +12,7 @@
 
 #include <etl/uncopyable.h>
 
-#include <platform/estdint.h>
+#include <cstdint>
 
 namespace util
 {

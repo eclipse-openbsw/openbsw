@@ -12,7 +12,7 @@
 
 #include <etl/intrusive_list.h>
 
-#include <platform/estdint.h>
+#include <cstdint>
 
 namespace uds
 {

@@ -17,7 +17,7 @@
 
 #include "can/transceiver/ICANTransceiverStateListener.h"
 
-#include <platform/estdint.h>
+#include <cstdint>
 
 namespace can
 {

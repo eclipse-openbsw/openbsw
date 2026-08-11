@@ -19,7 +19,7 @@
 #include <transport/ITransportMessageProcessedListener.h>
 #include <transport/TransportMessage.h>
 
-#include <platform/estdint.h>
+#include <cstdint>
 
 namespace docan
 {

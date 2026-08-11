@@ -15,7 +15,7 @@
 
 #include <doip/server/IDoIpServerVehicleAnnouncementParameterProvider.h>
 
-#include <platform/estdint.h>
+#include <cstdint>
 
 namespace doip
 {

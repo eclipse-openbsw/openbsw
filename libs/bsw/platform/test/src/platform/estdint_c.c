@@ -11,7 +11,7 @@
 /*
  * This file is a C-File to make sure, estdint.h can be included in C-sources as well.
  */
-#include "platform/estdint.h"
+#include "cstdint"
 
 // clang-format off
 size_t get_size_uint8_t()  { return sizeof(uint8_t);  }

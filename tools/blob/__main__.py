@@ -236,7 +236,7 @@ class Cli:
 
                     #pragma once
 
-                    #include <platform/estdint.h>
+                    #include <cstdint>
 
                     namespace {name_space}
                     {{
@@ -280,7 +280,7 @@ class Cli:
 
                    #pragma once
 
-                   #include <platform/estdint.h>
+                   #include <cstdint>
 
                    namespace blob
                    {{
@@ -327,7 +327,7 @@ class Cli:
 
                    #pragma once
 
-                   #include <platform/estdint.h>
+                   #include <cstdint>
 
                    namespace blob
                    {{

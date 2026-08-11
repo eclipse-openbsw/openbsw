@@ -10,7 +10,6 @@
 
 #pragma once
 
-#include "platform/estdint.h"
 #include "uds/UdsConfig.h"
 #include "uds/connection/IncomingDiagConnection.h"
 
@@ -19,6 +18,8 @@
 #include <etl/pool.h>
 #include <etl/queue.h>
 #include <etl/utility.h>
+
+#include <cstdint>
 
 namespace uds
 {

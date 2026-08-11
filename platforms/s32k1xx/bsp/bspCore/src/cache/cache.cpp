@@ -9,7 +9,8 @@
  ********************************************************************************/
 
 #include "mcu/mcu.h"
-#include "platform/estdint.h"
+
+#include <cstdint>
 
 extern "C"
 {

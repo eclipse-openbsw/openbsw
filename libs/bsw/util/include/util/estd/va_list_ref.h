@@ -15,8 +15,7 @@
  */
 #pragma once
 
-#include <platform/estdint.h>
-
+#include <cstdint>
 #include <cstdarg>
 
 namespace estd

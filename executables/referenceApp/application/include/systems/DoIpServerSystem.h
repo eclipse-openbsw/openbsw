@@ -30,7 +30,8 @@
 #include <lwipSocket/tcp/LwipSocket.h>
 #include <lwipSocket/udp/LwipDatagramSocket.h>
 #include <transport/ITransportSystem.h>
-#include <platform/estdint.h>
+
+#include <cstdint>
 
 namespace doip
 {

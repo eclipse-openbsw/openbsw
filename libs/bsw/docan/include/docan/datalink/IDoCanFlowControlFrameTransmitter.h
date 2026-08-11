@@ -12,7 +12,7 @@
 
 #include "docan/common/DoCanConstants.h"
 
-#include <platform/estdint.h>
+#include <cstdint>
 
 namespace docan
 {

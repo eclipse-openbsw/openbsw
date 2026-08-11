@@ -19,8 +19,7 @@
 #include "can/filter/IFilter.h"
 #include "can/filter/IMerger.h"
 
-#include <platform/estdint.h>
-
+#include <cstdint>
 #include <cstring>
 
 namespace can

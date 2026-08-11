@@ -21,7 +21,7 @@
 #include "mcu/mcu.h"
 #include "outputManager/Output.h"
 
-#include <platform/estdint.h>
+#include <cstdint>
 
 namespace bios
 {

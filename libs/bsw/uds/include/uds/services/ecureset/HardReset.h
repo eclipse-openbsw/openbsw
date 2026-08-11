@@ -10,9 +10,10 @@
 
 #pragma once
 
-#include "platform/estdint.h"
 #include "uds/base/Subfunction.h"
 #include "uds/lifecycle/IUdsLifecycleConnector.h"
+
+#include <cstdint>
 
 namespace uds
 {

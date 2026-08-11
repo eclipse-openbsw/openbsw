@@ -13,9 +13,10 @@
 #include "common.h"
 
 #include <platform/config.h>
-#include <platform/estdint.h>
 
 #include <etl/platform.h>
+
+#include <cstdint>
 
 namespace safeMonitor
 {

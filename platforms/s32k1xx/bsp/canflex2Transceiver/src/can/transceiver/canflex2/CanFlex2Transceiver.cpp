@@ -16,10 +16,11 @@
 #include <common/busid/BusId.h>
 
 #include <platform/config.h>
-#include <platform/estdint.h>
 
 #include <etl/delegate.h>
 #include <etl/error_handler.h>
+
+#include <cstdint>
 
 namespace logger = ::util::logger;
 

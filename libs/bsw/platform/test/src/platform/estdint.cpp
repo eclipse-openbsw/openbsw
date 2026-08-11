@@ -8,7 +8,7 @@
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
 
-#include "platform/estdint.h"
+#include "cstdint"
 
 #include <gtest/gtest.h>
 

@@ -22,4 +22,4 @@ The headers provided by ``platform`` module are described in the following pages
 .. csv-table::
    :widths: 20,100
 
-   :ref:`estdint <platform_estdint>`, "<platform/estdint.h>"
+   :ref:`estdint <platform_estdint>`, "<cstdint>"

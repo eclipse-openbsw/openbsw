@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include <platform/estdint.h>
+#include <cstdint>
 
 typedef uint32_t OldIntEnabledStatusValueType;
 

@@ -21,7 +21,7 @@
 #include <etl/span.h>
 #include <io/IReader.h>
 
-#include <platform/estdint.h>
+#include <cstdint>
 
 namespace routing
 {

@@ -29,7 +29,8 @@
 #include <etl/limits.h>
 #include <etl/singleton_base.h>
 #include <etl/vector.h>
-#include <platform/estdint.h>
+
+#include <cstdint>
 
 namespace systems
 {

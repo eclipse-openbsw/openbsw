@@ -16,10 +16,11 @@
 #include "bsp/Bsp.h"
 #include "bsp/SystemTime.h"
 #include "mcu/mcu.h"
-#include "platform/estdint.h"
 
 #include <etl/uncopyable.h>
 #include <etl/platform.h>
+
+#include <cstdint>
 
 namespace bios
 {

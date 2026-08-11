@@ -12,7 +12,8 @@
 
 #include "bsp/Bsp.h"
 #include "bsp/phy/phyConfiguration.h"
-#include "platform/estdint.h"
+
+#include <cstdint>
 
 namespace enetphy
 {
