@@ -62,7 +62,7 @@ bool load(::etl::span<uint8_t const> mem, PduTransportConfig& config)
     }
     auto const ipVersion = static_cast<::ip::IPAddress::Family>(ipVersionValue);
     bool const isIpV4    = ipVersion == ::ip::IPAddress::Family::IPV4;
-#ifdef OPENBSW_NO_IPV6
+#ifndef PLATFORM_SUPPORT_IPV6
     if (!isIpV4 || (mem.size() < ::ip::IPAddress::IP4LENGTH))
     {
         return false;

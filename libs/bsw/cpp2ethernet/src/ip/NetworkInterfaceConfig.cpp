@@ -45,7 +45,7 @@ IPAddress NetworkInterfaceConfig::ipAddress() const
     {
         return make_ip4(_config[IPADDRESS_INDEX]);
     }
-#ifndef OPENBSW_NO_IPV6
+#ifdef PLATFORM_SUPPORT_IPV6
     if (_family == IPAddress::IPV6)
     {
         return make_ip6(&_config[0U]);

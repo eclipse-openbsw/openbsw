@@ -15,7 +15,7 @@
 using namespace ::testing;
 using namespace ::ip;
 
-#ifndef OPENBSW_NO_IPV6
+#ifdef PLATFORM_SUPPORT_IPV6
 TEST(IPAddressTest, defaults_to_ipv6)
 {
     IPAddress ip = {{0}};
@@ -32,7 +32,7 @@ TEST(IPAddressTest, zero_ip_address_ip4)
     EXPECT_TRUE(isUnspecified(ip));
 }
 
-#ifndef OPENBSW_NO_IPV6
+#ifdef PLATFORM_SUPPORT_IPV6
 TEST(IPAddressTest, zero_ip_address_ip6)
 {
     constexpr uint32_t addr[] = {0U, 0U, 0U, 0U};
@@ -82,7 +82,7 @@ TEST(IPAddressTest, factory_make_ip4_slice)
     EXPECT_THROW({ make_ip4(bytes_wrong_length); }, ::etl::exception);
 }
 
-#ifndef OPENBSW_NO_IPV6
+#ifdef PLATFORM_SUPPORT_IPV6
 TEST(IPAddressTest, factory_make_ip6_array)
 {
     constexpr uint32_t addr[] = {0x11223344, 0x55667788, 0x99AABBCC, 0xDDEEFF00};
@@ -96,7 +96,7 @@ TEST(IPAddressTest, factory_make_ip6_array)
 }
 #endif
 
-#ifndef OPENBSW_NO_IPV6
+#ifdef PLATFORM_SUPPORT_IPV6
 TEST(IPAddressTest, factory_make_ip6_integers)
 {
     constexpr IPAddress ip = make_ip6(0x11223344U, 0x55667788U, 0x99AABBCCU, 0xDDEEFF00U);
@@ -109,7 +109,7 @@ TEST(IPAddressTest, factory_make_ip6_integers)
 }
 #endif
 
-#ifndef OPENBSW_NO_IPV6
+#ifdef PLATFORM_SUPPORT_IPV6
 TEST(IPAddressTest, factory_make_ip6_slice)
 {
     // clang-format off
@@ -154,7 +154,7 @@ TEST(IPAddressTest, ip4_as_bytes)
     EXPECT_EQ(0x01, ip_bytes[3]);
 }
 
-#ifndef OPENBSW_NO_IPV6
+#ifdef PLATFORM_SUPPORT_IPV6
 TEST(IPAddressTest, ip6_as_bytes)
 {
     uint32_t const addr[] = {0x11223344, 0x55667788, 0x99AABBCC, 0xDDEEFF00};
@@ -195,7 +195,7 @@ TEST(IPAddressTest, ip4_packed)
     EXPECT_EQ(0x01, ip_bytes[3]);
 }
 
-#ifndef OPENBSW_NO_IPV6
+#ifdef PLATFORM_SUPPORT_IPV6
 TEST(IPAddressTest, ip6_packed)
 {
     uint32_t const addr[] = {0x11223344, 0x55667788, 0x99AABBCC, 0xDDEEFF00};
@@ -223,7 +223,7 @@ TEST(IPAddressTest, ip6_packed)
 }
 #endif
 
-#ifndef OPENBSW_NO_IPV6
+#ifdef PLATFORM_SUPPORT_IPV6
 TEST(IPAddressTest, ip_address_type)
 {
     constexpr uint32_t addr4   = 0xABCDEF01;
@@ -246,7 +246,7 @@ TEST(IPAddressTest, ip4_to_u32)
     EXPECT_EQ(addr, ip4_to_u32(ip));
 }
 
-#ifndef OPENBSW_NO_IPV6
+#ifdef PLATFORM_SUPPORT_IPV6
 TEST(IPAddressTest, ip6_to_u32)
 {
     uint32_t const addr[] = {0x11223344, 0x55667788, 0x99AABBCC, 0xDDEEFF00};
@@ -277,7 +277,7 @@ TEST(IPAddressTest, equality)
     EXPECT_NE(ip1, ip4);
 }
 
-#ifndef OPENBSW_NO_IPV6
+#ifdef PLATFORM_SUPPORT_IPV6
 TEST(IPAddressTest, inequality_ip4_ip6)
 {
     uint32_t const ip6_addr[] = {0x11223344, 0x55667788, 0x99AABBCC, 0xDDEEFF00};
@@ -301,7 +301,7 @@ TEST(IPAddressTest, isMulticastAddress_ip4)
     EXPECT_TRUE(isMulticastAddress(ip2));
 }
 
-#ifndef OPENBSW_NO_IPV6
+#ifdef PLATFORM_SUPPORT_IPV6
 TEST(IPAddressTest, isMulticastAddress_ip6)
 {
     uint32_t const addr[] = {0x11223344, 0x55667788, 0x99AABBCC, 0xDDEEFF00};
@@ -324,7 +324,7 @@ TEST(IPAddressTest, isLinkLocalAddress_ip4)
     EXPECT_TRUE(isLinkLocalAddress(make_ip4(addr)));
 }
 
-#ifndef OPENBSW_NO_IPV6
+#ifdef PLATFORM_SUPPORT_IPV6
 TEST(IPAddressTest, isLinkLocalAddress_ip6)
 {
     // clang-format off
@@ -360,7 +360,7 @@ TEST(IPAddressTest, isLoopbackAddress_ip4)
     }
 }
 
-#ifndef OPENBSW_NO_IPV6
+#ifdef PLATFORM_SUPPORT_IPV6
 TEST(IPAddressTest, isLoopbackAddress_ip6)
 {
     IPAddress ip6        = {};
@@ -403,7 +403,7 @@ TEST(IPAddressTest, isNetworkLocal_ip4)
     EXPECT_FALSE(isNetworkLocal(ip41, ip43, 24));
 }
 
-#ifndef OPENBSW_NO_IPV6
+#ifdef PLATFORM_SUPPORT_IPV6
 TEST(IPAddressTest, isNetworkLocal_ip6)
 {
     IPAddress emptyIp = {};
@@ -439,7 +439,7 @@ TEST(IPAddressTest, isNetworkLocal_ip6)
 }
 #endif
 
-#ifndef OPENBSW_NO_IPV6
+#ifdef PLATFORM_SUPPORT_IPV6
 TEST(IPAddressTest, isNetworkLocal_mixed)
 {
     IPAddress ip41 = make_ip4(0x01020304);
@@ -470,7 +470,7 @@ TEST(IPAddressDefaultCompareTest, compare_ip4)
     EXPECT_FALSE(compare(ip2, ip1));
 }
 
-#ifndef OPENBSW_NO_IPV6
+#ifdef PLATFORM_SUPPORT_IPV6
 TEST(IPAddressDefaultCompareTest, compare_ip6)
 {
     IPAddressCompareLess const compare;
@@ -487,7 +487,7 @@ TEST(IPAddressDefaultCompareTest, compare_ip6)
 }
 #endif
 
-#ifndef OPENBSW_NO_IPV6
+#ifdef PLATFORM_SUPPORT_IPV6
 TEST(IPAddressTest, OrderIPv4IPv6)
 {
     IPAddressCompareLess const compare;

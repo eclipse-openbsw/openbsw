@@ -78,7 +78,7 @@ TEST(PduTransportConfigTest, pdu_transport_config)
 /**
  * \desc: Loading PDU transport config with address family IPv6 gives the correct values.
  */
-#ifndef OPENBSW_NO_IPV6
+#ifdef PLATFORM_SUPPORT_IPV6
 TEST(PduTransportConfigTest, ipv6_pdu_transport_config)
 {
     constexpr ip::IPAddress IP_ADDRESS               = ip::make_ip6(0x0, 0x0, 0x0, 0xEFC0FFFD);

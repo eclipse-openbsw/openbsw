@@ -26,7 +26,7 @@ TEST(StringConversion, to_str_ip4)
     EXPECT_EQ(0U, to_str(ip, smallBuffer).size());
 }
 
-#ifndef OPENBSW_NO_IPV6
+#ifdef PLATFORM_SUPPORT_IPV6
 TEST(StringConversion, to_str_ip6)
 {
     // clang-format off
@@ -62,7 +62,7 @@ TEST(StringConversion, to_str_ip4_endpoint)
     EXPECT_EQ(0U, to_str(endpoint, smallBuffer).size());
 }
 
-#ifndef OPENBSW_NO_IPV6
+#ifdef PLATFORM_SUPPORT_IPV6
 TEST(StringConversion, to_str_ip6_endpoint)
 {
     // clang-format off

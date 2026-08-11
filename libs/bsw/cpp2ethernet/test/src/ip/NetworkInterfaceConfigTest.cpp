@@ -18,7 +18,7 @@ using namespace ip;
 
 namespace
 {
-#ifndef OPENBSW_NO_IPV6
+#ifdef PLATFORM_SUPPORT_IPV6
 static uint32_t nonConstIp6Address[]   = {2348U, 234U, 232U, 345743U};
 static uint32_t const ip6Address1[]    = {0x123U, 0x1232U, 0x23839U, 0x23492U};
 static uint32_t const ip6Address2[]    = {0x12433U, 0x133232U, 0x2383439U, 0x2492342U};
@@ -81,7 +81,7 @@ cut = *&cut;
     EXPECT_EQ(make_ip4(0x33229U), assign.defaultGateway());
     EXPECT_EQ(make_ip4(0xc0afffffU), assign.broadcastAddress());
 }
-#ifndef OPENBSW_NO_IPV6
+#ifdef PLATFORM_SUPPORT_IPV6
 {
     // IPv6 config
     NetworkInterfaceConfig cut(ip6Address1);
@@ -128,7 +128,7 @@ TEST(NetworkInterfaceConfigTest, Compare)
         // operator==
         EXPECT_TRUE(NetworkInterfaceConfig() == NetworkInterfaceConfig());
         EXPECT_FALSE(NetworkInterfaceConfig() == NetworkInterfaceConfig(0U, 0U, 0U));
-#ifndef OPENBSW_NO_IPV6
+#ifdef PLATFORM_SUPPORT_IPV6
         EXPECT_FALSE(NetworkInterfaceConfig() == NetworkInterfaceConfig(ip6AddressNull));
 #endif
         EXPECT_TRUE(
@@ -143,7 +143,7 @@ TEST(NetworkInterfaceConfigTest, Compare)
         EXPECT_FALSE(
             NetworkInterfaceConfig(0x2347U, 0x23748U, 0x4434U)
             == NetworkInterfaceConfig(0x2347U, 0x23748U, 0x454U));
-#ifndef OPENBSW_NO_IPV6
+#ifdef PLATFORM_SUPPORT_IPV6
         EXPECT_TRUE(
             NetworkInterfaceConfig(ip6AddressNull) == NetworkInterfaceConfig(ip6AddressNull));
         EXPECT_FALSE(NetworkInterfaceConfig(ip6AddressNull) == NetworkInterfaceConfig(ip6Address1));
@@ -155,7 +155,7 @@ TEST(NetworkInterfaceConfigTest, Compare)
         // operator!=
         EXPECT_FALSE(NetworkInterfaceConfig() != NetworkInterfaceConfig());
         EXPECT_TRUE(NetworkInterfaceConfig() != NetworkInterfaceConfig(0U, 0U, 0U));
-#ifndef OPENBSW_NO_IPV6
+#ifdef PLATFORM_SUPPORT_IPV6
         EXPECT_TRUE(NetworkInterfaceConfig() != NetworkInterfaceConfig(ip6AddressNull));
 #endif
         EXPECT_FALSE(
@@ -170,7 +170,7 @@ TEST(NetworkInterfaceConfigTest, Compare)
         EXPECT_TRUE(
             NetworkInterfaceConfig(0x2347U, 0x23748U, 0x4434U)
             != NetworkInterfaceConfig(0x2347U, 0x23748U, 0x454U));
-#ifndef OPENBSW_NO_IPV6
+#ifdef PLATFORM_SUPPORT_IPV6
         EXPECT_FALSE(
             NetworkInterfaceConfig(ip6AddressNull) != NetworkInterfaceConfig(ip6AddressNull));
         EXPECT_TRUE(NetworkInterfaceConfig(ip6AddressNull) != NetworkInterfaceConfig(ip6Address1));

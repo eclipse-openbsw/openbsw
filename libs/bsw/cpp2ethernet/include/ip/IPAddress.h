@@ -32,7 +32,7 @@ struct IPAddress
     static constexpr uint8_t IP4LENGTH = 4U;
     static constexpr uint8_t IP6LENGTH = 16U;
 
-#ifndef OPENBSW_NO_IPV6
+#ifdef PLATFORM_SUPPORT_IPV6
     static constexpr size_t MAX_IP_LENGTH = IP6LENGTH;
 #else
     static constexpr size_t MAX_IP_LENGTH = IP4LENGTH;
@@ -55,7 +55,7 @@ constexpr IPAddress make_ip4(uint32_t ip4addr);
 
 IPAddress make_ip4(::etl::span<uint8_t const> const& ip4addr);
 
-#ifndef OPENBSW_NO_IPV6
+#ifdef PLATFORM_SUPPORT_IPV6
 constexpr IPAddress make_ip6(uint32_t addr0, uint32_t addr1, uint32_t addr2, uint32_t addr3);
 
 constexpr IPAddress make_ip6(uint32_t const ip6addr[IPAddress::IP6LENGTH / sizeof(uint32_t)]);
@@ -70,7 +70,7 @@ constexpr IPAddress make_ip4(uint8_t byte0, uint8_t byte1, uint8_t byte2, uint8_
 
 uint32_t ip4_to_u32(IPAddress const& ipAddr);
 
-#ifndef OPENBSW_NO_IPV6
+#ifdef PLATFORM_SUPPORT_IPV6
 uint32_t ip6_to_u32(IPAddress const& ipAddr, size_t offset);
 #endif
 
@@ -112,7 +112,7 @@ inline constexpr IPAddress make_ip4(uint32_t const ip4addr)
 {
     // clang-format off
     return {{
-#ifndef OPENBSW_NO_IPV6
+#ifdef PLATFORM_SUPPORT_IPV6
         0x00U, 0x00U, 0x00U, 0x00U,
         0x00U, 0x00U, 0x00U, 0x00U,
         0x00U, 0x00U, 0xFFU, 0xFFU,
@@ -129,7 +129,7 @@ make_ip4(uint8_t const byte0, uint8_t const byte1, uint8_t const byte2, uint8_t 
 {
     // clang-format off
     return {{
-#ifndef OPENBSW_NO_IPV6
+#ifdef PLATFORM_SUPPORT_IPV6
         0x00U, 0x00U, 0x00U, 0x00U,
         0x00U, 0x00U, 0x00U, 0x00U,
         0x00U, 0x00U, 0xFFU, 0xFFU,
@@ -146,7 +146,7 @@ inline IPAddress make_ip4(::etl::span<uint8_t const> const& ip4addr)
 
     // clang-format off
     IPAddress const newAddr = {{
-#ifndef OPENBSW_NO_IPV6
+#ifdef PLATFORM_SUPPORT_IPV6
         0x00U, 0x00U, 0x00U, 0x00U,
         0x00U, 0x00U, 0x00U, 0x00U,
         0x00U, 0x00U, 0xFFU, 0xFFU,
@@ -158,7 +158,7 @@ inline IPAddress make_ip4(::etl::span<uint8_t const> const& ip4addr)
     return newAddr;
 }
 
-#ifndef OPENBSW_NO_IPV6
+#ifdef PLATFORM_SUPPORT_IPV6
 inline constexpr IPAddress
 make_ip6(uint32_t const addr0, uint32_t const addr1, uint32_t const addr2, uint32_t const addr3)
 {
@@ -239,7 +239,7 @@ inline uint32_t ip4_to_u32(IPAddress const& ipAddr)
     return ipAddr.be_uint32_at(internal::IP4_IDX);
 }
 
-#ifndef OPENBSW_NO_IPV6
+#ifdef PLATFORM_SUPPORT_IPV6
 inline uint32_t ip6_to_u32(IPAddress const& ipAddr, size_t const offset)
 {
     ETL_ASSERT(offset <= 3U, ETL_ERROR_GENERIC("offset must be smaller than 3"));
@@ -371,7 +371,7 @@ isNetworkLocal(IPAddress const& ipAddr1, IPAddress const& ipAddr2, uint8_t const
 
 inline IPAddress::Family addressFamilyOf(IPAddress const& ipAddr)
 {
-#ifndef OPENBSW_NO_IPV6
+#ifdef PLATFORM_SUPPORT_IPV6
     uint32_t const IP4_PREFIX[] = {0U, 0U, 0xFFFFU};
 
     bool const isIp4MappedIp6 = (IP4_PREFIX[0U] == ipAddr.be_uint32_at(0U))
@@ -386,7 +386,7 @@ inline IPAddress::Family addressFamilyOf(IPAddress const& ipAddr)
 
 inline bool operator==(IPAddress const& ip1, IPAddress const& ip2)
 {
-#ifndef OPENBSW_NO_IPV6
+#ifdef PLATFORM_SUPPORT_IPV6
     return (
         (ip1.be_uint32_at(3) == ip2.be_uint32_at(3)) && (ip1.be_uint32_at(2) == ip2.be_uint32_at(2))
         && (ip1.be_uint32_at(1) == ip2.be_uint32_at(1))
