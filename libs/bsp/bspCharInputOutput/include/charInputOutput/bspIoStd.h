@@ -10,8 +10,6 @@
 
 #pragma once
 
-#include "platform/config.h"
-
 #include <etl/platform.h>
 
 #include <cstddef>

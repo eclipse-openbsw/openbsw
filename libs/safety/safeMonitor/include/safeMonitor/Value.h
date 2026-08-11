@@ -12,8 +12,6 @@
 
 #include "common.h"
 
-#include <platform/config.h>
-
 #include <etl/platform.h>
 
 namespace safeMonitor

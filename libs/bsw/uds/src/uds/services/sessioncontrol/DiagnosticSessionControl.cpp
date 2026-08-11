@@ -23,8 +23,6 @@
 
 #include <async/Async.h>
 
-#include <platform/config.h>
-
 namespace uds
 {
 // NOLINTBEGIN(cppcoreguidelines-pro-type-vararg): Logger API uses C-style varargs.

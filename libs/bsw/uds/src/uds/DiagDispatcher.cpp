@@ -10,7 +10,6 @@
 
 #include "uds/DiagDispatcher.h"
 
-#include "platform/config.h"
 #include "transport/ITransportMessageProvider.h"
 #include "transport/TransportConfiguration.h"
 #include "uds/DiagCodes.h"

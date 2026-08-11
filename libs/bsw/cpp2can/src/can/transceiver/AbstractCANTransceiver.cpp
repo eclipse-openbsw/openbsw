@@ -13,8 +13,6 @@
 #include <bsp/timer/SystemTimer.h>
 #include <interrupts/SuspendResumeAllInterruptsScopedLock.h>
 
-#include <platform/config.h>
-
 #include <etl/platform.h>
 
 #include <cstring>

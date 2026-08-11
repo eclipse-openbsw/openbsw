@@ -17,8 +17,6 @@
 
 #include <etl/unaligned_type.h>
 
-#include <platform/config.h>
-
 namespace uds
 {
 using ::util::logger::Logger;
