@@ -15,7 +15,8 @@
 
 #include <etl/intrusive_links.h>
 #include <transport/TransportMessage.h>
-#include <platform/estdint.h>
+
+#include <cstdint>
 
 namespace transport
 {

@@ -40,7 +40,7 @@
 #include <lwipSocket/udp/LwipDatagramSocket.h>
 #include <udp/socket/AbstractDatagramSocket.h>
 
-#include <platform/estdint.h>
+#include <cstdint>
 
 namespace routing
 {

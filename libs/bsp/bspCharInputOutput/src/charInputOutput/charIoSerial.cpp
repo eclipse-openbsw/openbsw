@@ -12,9 +12,9 @@
 
 #include "bsp/Uart.h"
 #include "charInputOutput/CharIOSerialCfg.h"
-#include "platform/estdint.h"
 #include <etl/span.h>
 
+#include <cstdint>
 #include <stdio.h>
 
 using bsp::Uart;

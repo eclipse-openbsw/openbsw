@@ -15,8 +15,7 @@
  */
 #pragma once
 
-#include <platform/estdint.h>
-
+#include <cstdint>
 #include <type_traits>
 
 namespace common

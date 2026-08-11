@@ -9,7 +9,8 @@
  ********************************************************************************/
 
 #pragma once
-#include "platform/estdint.h"
+
+#include <cstdint>
 
 namespace uds
 {

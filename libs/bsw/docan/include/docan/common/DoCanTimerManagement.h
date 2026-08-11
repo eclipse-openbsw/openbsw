@@ -10,9 +10,9 @@
 
 #pragma once
 
-#include <platform/estdint.h>
-
 #include <etl/limits.h>
+
+#include <cstdint>
 
 namespace docan
 {

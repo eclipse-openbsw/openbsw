@@ -11,7 +11,7 @@
 #pragma once
 
 // #include <interrupts/suspendResumeAllInterrupts.h>
-#include <platform/estdint.h>
+#include <stdint.h>
 
 #ifdef __cplusplus
 extern "C"

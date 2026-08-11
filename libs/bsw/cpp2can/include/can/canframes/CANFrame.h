@@ -19,8 +19,7 @@
 
 #include <etl/error_handler.h>
 
-#include <platform/estdint.h>
-
+#include <cstdint>
 #include <cstring>
 
 namespace can

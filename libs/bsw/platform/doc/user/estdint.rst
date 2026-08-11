@@ -24,7 +24,7 @@ standards but is not available for C++98.
 Usage
 -----
 
-If you include ``<platform/estdint.h>`` this will provide on all supported platforms the same types
+If you include ``<cstdint>`` this will provide on all supported platforms the same types
 and constants to your program as if you were including
 `stdint.h <https://en.cppreference.com/w/cpp/header/cstdint>`_ and
 `stddef.h <https://en.cppreference.com/w/cpp/header/cstddef>`_ on a C++11

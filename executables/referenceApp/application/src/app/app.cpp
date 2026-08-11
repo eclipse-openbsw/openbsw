@@ -98,7 +98,7 @@ extern ::ethernet::IEthernetDriverSystem& getEthernetSystem();
 } // namespace systems
 #endif
 
-#include <platform/estdint.h>
+#include <cstdint>
 
 #ifdef PLATFORM_SUPPORT_ROM_CHECK
 ::safety::RomCheck RomCheck;

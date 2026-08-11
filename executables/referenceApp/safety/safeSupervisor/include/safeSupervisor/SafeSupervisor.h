@@ -16,7 +16,7 @@
 #include <safeMonitor/Trigger.h>
 #include <safeMonitor/Value.h>
 
-#include <platform/estdint.h>
+#include <cstdint>
 
 namespace safety
 {

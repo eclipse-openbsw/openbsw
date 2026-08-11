@@ -12,7 +12,7 @@
 
 #include <app/appConfig.h>
 
-#include <platform/estdint.h>
+#include <cstdint>
 
 // #include <portmacro.h>
 

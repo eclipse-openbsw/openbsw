@@ -12,7 +12,7 @@
 
 #include <lifecycle/ILifecycleManager.h>
 
-#include <platform/estdint.h>
+#include <cstdint>
 
 namespace transport
 {

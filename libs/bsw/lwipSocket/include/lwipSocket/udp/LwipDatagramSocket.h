@@ -15,7 +15,7 @@
 #include <ip/IPAddress.h>
 #include <udp/socket/AbstractDatagramSocket.h>
 
-#include <platform/estdint.h>
+#include <cstdint>
 
 extern "C"
 {

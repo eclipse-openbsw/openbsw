@@ -15,7 +15,8 @@
 
 #include <etl/type_traits.h>
 #include <util/types/Enum.h>
-#include <platform/estdint.h>
+
+#include <cstdint>
 
 namespace doip
 {

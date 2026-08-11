@@ -10,10 +10,10 @@
 
 #pragma once
 
-#include "platform/estdint.h"
-
 #include <etl/array.h>
 #include <etl/span.h>
+
+#include <cstdint>
 
 namespace uds
 {

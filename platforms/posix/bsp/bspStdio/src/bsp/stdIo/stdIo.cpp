@@ -10,7 +10,7 @@
 
 #include <bsp/Uart.h>
 
-#include <platform/estdint.h>
+#include <cstdint>
 
 #include <errno.h>
 #include <stdio.h>

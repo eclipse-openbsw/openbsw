@@ -20,7 +20,7 @@
 
 #include <array>
 
-#include <platform/estdint.h>
+#include <cstdint>
 
 namespace transport
 {

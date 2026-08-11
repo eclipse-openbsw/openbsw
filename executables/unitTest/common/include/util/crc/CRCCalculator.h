@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include <platform/estdint.h>
+#include <cstdint>
 
 // This class is in the global scope for backwards compatibility
 class CRCCalculator

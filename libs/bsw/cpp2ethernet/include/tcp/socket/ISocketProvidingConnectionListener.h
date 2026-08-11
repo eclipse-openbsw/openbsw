@@ -13,7 +13,7 @@
 #include "ip/IPAddress.h"
 #include "tcp/socket/AbstractSocket.h"
 
-#include <platform/estdint.h>
+#include <cstdint>
 
 namespace tcp
 {

@@ -16,7 +16,7 @@
 #include <bsp/clock/boardClock.h>
 // clang-format on
 
-#include <platform/estdint.h>
+#include <cstdint>
 
 #include <etl/infinite_loop.h>
 

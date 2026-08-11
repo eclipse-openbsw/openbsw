@@ -12,7 +12,7 @@
 
 #include "FreeRTOSConfig.h"
 
-#include <platform/estdint.h>
+#include <cstdint>
 
 namespace runtime
 {

@@ -12,7 +12,7 @@
 
 #include <bsp/timer/SystemTimer.h>
 
-#include <platform/estdint.h>
+#include <cstdint>
 
 namespace bsp
 {

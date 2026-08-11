@@ -22,8 +22,7 @@
 #include "can/filter/IntervalFilter.h"
 #include "can/filter/MaskFilter.h"
 
-#include <platform/estdint.h>
-
+#include <cstdint>
 #include <cstring>
 
 namespace can

@@ -13,7 +13,7 @@
 #include <bsp/Bsp.h>
 #include <etl/singleton_base.h>
 
-#include <platform/estdint.h>
+#include <cstdint>
 
 #include <gmock/gmock.h>
 

@@ -30,7 +30,7 @@
 #include <io/Io.h>
 #include <lifecycle/AsyncLifecycleComponent.h>
 
-#include <platform/estdint.h>
+#include <cstdint>
 
 namespace bios
 {

@@ -10,7 +10,8 @@
 
 #include "bsp/uart/UartConfig.h"
 #include "mcu/mcu.h"
-#include "platform/estdint.h"
+
+#include <cstdint>
 
 namespace
 {

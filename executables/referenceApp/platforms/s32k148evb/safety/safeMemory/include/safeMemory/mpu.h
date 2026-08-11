@@ -12,7 +12,8 @@
 
 #include <mcu/mcu.h>
 
-#include <platform/estdint.h>
+#include <cstddef>
+#include <cstdint>
 
 namespace safety
 {

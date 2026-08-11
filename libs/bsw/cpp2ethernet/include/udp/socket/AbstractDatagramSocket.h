@@ -17,7 +17,7 @@
 
 #include <etl/span.h>
 
-#include <platform/estdint.h>
+#include <cstdint>
 
 namespace udp
 {

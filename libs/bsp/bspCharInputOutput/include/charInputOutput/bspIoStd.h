@@ -11,11 +11,11 @@
 #pragma once
 
 #include "platform/config.h"
-#include "platform/estdint.h"
 
 #include <etl/platform.h>
 
 #include <cstddef>
+#include <cstdint>
 #include <stdarg.h>
 
 #ifdef __cplusplus

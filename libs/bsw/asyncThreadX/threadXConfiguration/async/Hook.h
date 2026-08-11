@@ -13,8 +13,6 @@
  */
 #pragma once
 
-#include <platform/estdint.h>
-
 #ifdef __cplusplus
 extern "C"
 {

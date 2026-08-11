@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include <platform/estdint.h>
+#include <cstdint>
 
 #define ENET_ETXD_STATUS1_R_SHIFT (15U)
 #define ENET_ETXD_STATUS1_R_MASK  (0b1 << ENET_ETXD_STATUS1_R_SHIFT)

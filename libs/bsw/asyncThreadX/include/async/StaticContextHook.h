@@ -13,9 +13,9 @@
  */
 #pragma once
 
-#include "platform/estdint.h"
-
 #include <etl/singleton_base.h>
+
+#include <cstddef>
 
 namespace async
 {

@@ -12,7 +12,7 @@
 
 #include "ip/IPEndpoint.h"
 
-#include <platform/estdint.h>
+#include <cstdint>
 
 namespace udp
 {

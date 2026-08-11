@@ -17,7 +17,7 @@
 #include <tcp/IDataListener.h>
 #include <tcp/socket/AbstractSocket.h>
 
-#include <platform/estdint.h>
+#include <cstdint>
 
 extern "C"
 {

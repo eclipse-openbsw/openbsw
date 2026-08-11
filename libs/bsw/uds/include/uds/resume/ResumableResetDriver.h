@@ -10,13 +10,14 @@
 
 #pragma once
 
-#include "platform/estdint.h"
 #include "transport/BufferedTransportMessage.h"
 #include "uds/IDiagDispatcher.h"
 #include "uds/lifecycle/IUdsLifecycleConnector.h"
 
 #include <async/Async.h>
 #include <etl/uncopyable.h>
+
+#include <cstdint>
 
 namespace uds
 {

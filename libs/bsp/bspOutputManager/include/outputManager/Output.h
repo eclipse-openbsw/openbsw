@@ -12,9 +12,10 @@
 
 #include "io/DynamicClientCfg.h"
 #include "io/Io.h"
-#include "platform/estdint.h"
 
 #include <etl/uncopyable.h>
+
+#include <cstdint>
 
 namespace bios
 {

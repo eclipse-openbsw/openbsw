@@ -15,7 +15,7 @@
 #include <etl/delegate.h>
 #include <etl/error_handler.h>
 
-#include <platform/estdint.h>
+#include <cstdint>
 
 namespace docan
 {

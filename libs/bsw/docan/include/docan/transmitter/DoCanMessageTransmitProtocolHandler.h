@@ -14,7 +14,7 @@
 
 #include <etl/bitset.h>
 
-#include <platform/estdint.h>
+#include <cstdint>
 
 namespace docan
 {

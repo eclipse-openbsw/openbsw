@@ -10,8 +10,9 @@
 
 #pragma once
 
-#include "platform/estdint.h"
 #include "uds/jobs/DataIdentifierJob.h"
+
+#include <cstdint>
 
 namespace uds
 {

@@ -10,10 +10,10 @@
 
 #pragma once
 
-#include <platform/estdint.h>
-
 #include <tx_api.h>
 #include <unistd.h>
+
+#include <cstdint>
 
 static inline __attribute__((always_inline)) void setThreadXInitialized(){};
 

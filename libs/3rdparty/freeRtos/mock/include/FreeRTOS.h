@@ -1,7 +1,7 @@
 #ifndef _FREERTOS_H_
 #define _FREERTOS_H_
 
-#include <platform/estdint.h>
+#include <cstdint>
 
 typedef uint64_t StackType_t;
 typedef int32_t BaseType_t;

@@ -11,7 +11,7 @@
 #pragma once
 #include "async/IRunnable.h"
 
-#include <platform/estdint.h>
+#include <cstdint>
 
 namespace async
 {

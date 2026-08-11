@@ -13,7 +13,7 @@
 #include <etl/uncopyable.h>
 #include <util/stream/IOutputStream.h>
 
-#include <platform/estdint.h>
+#include <cstdint>
 
 namespace logger
 {

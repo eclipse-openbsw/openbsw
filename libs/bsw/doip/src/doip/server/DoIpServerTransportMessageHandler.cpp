@@ -27,7 +27,8 @@
 #include <etl/unaligned_type.h>
 #include <transport/ITransportMessageProcessedListener.h>
 #include <transport/TransportMessage.h>
-#include <platform/estdint.h>
+
+#include <cstdint>
 
 namespace doip
 {

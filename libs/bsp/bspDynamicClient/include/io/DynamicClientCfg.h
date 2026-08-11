@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include "platform/estdint.h"
+#include <cstdint>
 
 /**
  * This data type provides an abstract runtime mapping between a common shared I/O and

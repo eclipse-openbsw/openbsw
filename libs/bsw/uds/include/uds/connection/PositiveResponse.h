@@ -10,11 +10,12 @@
 
 #pragma once
 
-#include "platform/estdint.h"
 #include "uds/connection/ErrorCode.h"
 
 #include <etl/span.h>
 #include <etl/uncopyable.h>
+
+#include <cstdint>
 
 namespace uds
 {

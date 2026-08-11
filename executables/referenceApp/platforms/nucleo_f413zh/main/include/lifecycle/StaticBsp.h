@@ -10,8 +10,6 @@
 
 #pragma once
 
-#include <platform/estdint.h>
-
 namespace platform
 {
 
