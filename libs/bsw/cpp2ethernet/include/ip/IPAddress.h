@@ -369,7 +369,7 @@ isNetworkLocal(IPAddress const& ipAddr1, IPAddress const& ipAddr2, uint8_t const
     return ((ipAddr1.raw[netMaskFullBytes] & mask) == (ipAddr2.raw[netMaskFullBytes] & mask));
 }
 
-inline IPAddress::Family addressFamilyOf(IPAddress const& ipAddr)
+inline IPAddress::Family addressFamilyOf([[maybe_unused]] IPAddress const& ipAddr)
 {
 #ifdef PLATFORM_SUPPORT_IPV6
     uint32_t const IP4_PREFIX[] = {0U, 0U, 0xFFFFU};

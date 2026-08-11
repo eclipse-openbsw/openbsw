@@ -34,6 +34,7 @@ namespace ip
             ipAddr.raw[internal::RAW_IP4_IDX + 2U],
             ipAddr.raw[internal::RAW_IP4_IDX + 3U]);
     }
+#ifdef PLATFORM_SUPPORT_IPV6
     else if ((IPAddress::IPV6 == family) && (bufferSize >= IP6_MAX_STRING_LENGTH))
     {
         printfResult = ::std::snprintf(
@@ -57,6 +58,7 @@ namespace ip
             ipAddr.raw[14U],
             ipAddr.raw[15U]);
     }
+#endif
     else
     {
         return {};
@@ -87,6 +89,7 @@ namespace ip
             ipAddr.raw[internal::RAW_IP4_IDX + 3U],
             endp.getPort());
     }
+#ifdef PLATFORM_SUPPORT_IPV6
     else if ((IPAddress::IPV6 == family) && (bufferSize >= IP6_ENDPOINT_MAX_STRING_LENGTH))
     {
         printfResult = ::std::snprintf(
@@ -111,6 +114,7 @@ namespace ip
             ipAddr.raw[15U],
             endp.getPort());
     }
+#endif
     else
     {
         return {};
