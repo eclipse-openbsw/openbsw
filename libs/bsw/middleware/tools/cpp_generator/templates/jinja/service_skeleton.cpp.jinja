@@ -325,6 +325,34 @@ void {{service.name}}Skeleton::set_{{ attribute.name }}Attribute(const {{ attrib
 
   {% endfor %}
 
+// ATTRIBUTE / EVENT TRANSPORT (send forwards to Impl)
+{% for attribute in service.attributes if attribute.event %}
+middleware::core::HRESULT {{ attribute.name }}Attribute::send(const AttributeType& value)
+{
+    return impl_.send(value);
+}
+
+middleware::core::HRESULT {{ attribute.name }}Attribute::send()
+{
+    return impl_.send();
+}
+
+{% endfor %}
+{% for event in service.events if service.events %}
+{% if event.type and event.type != 'void' %}
+middleware::core::HRESULT {{ event.name }}Event::send(const EventType& data)
+{
+    return impl_.send(data);
+}
+{% else %}
+middleware::core::HRESULT {{ event.name }}Event::send()
+{
+    return impl_.send();
+}
+{% endif %}
+
+{% endfor %}
+
 middleware::core::HRESULT {{service.name}}Skeleton::sendMessage(middleware::core::Message& msg) const
 {
     Base::checkCrossThreadError(fProcessId);

@@ -1,0 +1,124 @@
+/********************************************************************************
+ * Copyright (c) 2026 BMW AG
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Apache License Version 2.0 which is available at
+ * https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ ********************************************************************************/
+/**
+  *
+  *  __  __ _     _     _ _
+  * |  \/  (_) __| | __| | | _____      ____ _ _ __ ___
+  * | |\/| | |/ _` |/ _` | |/ _ \ \ /\ / / _` | '__/ _ \
+  * | |  | | | (_| | (_| | |  __/\ V  V / (_| | | |  __/
+  * |_|  |_|_|\__,_|\__,_|_|\___| \_/\_/ \__,_|_|  \___|
+  *
+  * WARNING!
+  * This file is generated. Do not edit manually.
+  *
+  */
+#pragma once
+
+#include <gmock/gmock.h>
+
+#include "{{ service.headers.common }}"
+#include <middleware/core/ResponseBufferBase.h>
+#include "middleware/core/types.h"
+#include "util/crtp_mock.h"
+
+namespace {{ service.namespace }}::{{ service.name }}::skeleton
+{
+
+class {{ service.name }}SkeletonMock : public middleware::util::CrtpMock<{{ service.name }}SkeletonMock>
+{
+  public:
+    using SkeletonResponseInfo = ::middleware::core::ResponseBufferBase::SkeletonResponseInfo;
+
+    {{ service.name }}SkeletonMock() = default;
+    virtual ~{{ service.name }}SkeletonMock() = default;
+
+    MOCK_METHOD(middleware::core::HRESULT, init, (uint16_t instanceId));
+    MOCK_METHOD(void, deInit, ());
+    MOCK_METHOD(uint16_t, getServiceId, (), (const));
+
+    // METHODS
+{% for method in service.methods %}
+{% if method.input_param %}
+    MOCK_METHOD(void, {{ method.variable }}, (const {{ method.input_param.type }}& {{ method.input_param.name }}, SkeletonResponseInfo& response));
+{% else %}
+    MOCK_METHOD(void, {{ method.variable }}, (SkeletonResponseInfo & response));
+{% endif %}
+{% if method.output_param %}
+    MOCK_METHOD(middleware::core::HRESULT,
+                respond,
+                (SkeletonResponseInfo & response, const {{ method.output_param.type }}& result, const bool handleResponseFailure));
+{% else %}
+    MOCK_METHOD(middleware::core::HRESULT,
+                respond,
+                (SkeletonResponseInfo & response, const bool handleResponseFailure));
+{% endif %}
+    MOCK_METHOD(middleware::core::HRESULT, cancel{{ method.name }}Response, (SkeletonResponseInfo & response));
+{% endfor %}
+
+    // METHODS FIRE_AND_FORGET
+{% for method in service.methods_fire_and_forget %}
+{% if method.input_param %}
+    MOCK_METHOD(void, {{ method.variable }}, (const {{ method.input_param.type }}& {{ method.input_param.name }}));
+{% else %}
+    MOCK_METHOD(void, {{ method.variable }}, ());
+{% endif %}
+{% endfor %}
+
+    // ATTRIBUTES
+{% for attribute in service.attributes %}
+{% if attribute.getter %}
+    MOCK_METHOD(void, get_{{ attribute.name }}Attribute, (SkeletonResponseInfo & response));
+    MOCK_METHOD(middleware::core::HRESULT,
+                respond,
+                (SkeletonResponseInfo & response, const {{ attribute.type }}& result, const bool handleResponseFailure));
+    MOCK_METHOD(middleware::core::HRESULT, cancelGet_{{ attribute.name }}AttributeResponse, (SkeletonResponseInfo & response));
+{% endif %}
+{% if attribute.setter %}
+{% if attribute.setAsMethod %}
+    MOCK_METHOD(void,
+                set_{{ attribute.name }}Attribute,
+                (const {{ attribute.type }}& {{ attribute.variable }}, SkeletonResponseInfo& response));
+    MOCK_METHOD(middleware::core::HRESULT, cancelSet_{{ attribute.name }}AttributeResponse, (SkeletonResponseInfo & response));
+{% else %}
+    MOCK_METHOD(void, set_{{ attribute.name }}Attribute, (const {{ attribute.type }}& {{ attribute.variable }}));
+{% endif %}
+{% endif %}
+{% endfor %}
+
+    // ATTRIBUTE / EVENT TRANSPORT (send)
+{% for attribute in service.attributes if attribute.event %}
+    class {{ attribute.name }}AttributeMock
+    {
+      public:
+        MOCK_METHOD(middleware::core::HRESULT, send, (const {{ attribute.type }}& value));
+        MOCK_METHOD(middleware::core::HRESULT, send, ());
+    };
+
+    ::testing::NiceMock<{{ attribute.name }}AttributeMock> {{ attribute.variable }};
+{% endfor %}
+{% for event in service.events if service.events %}
+    class {{ event.name }}EventMock
+    {
+      public:
+{% if event.type and event.type != 'void' %}
+        MOCK_METHOD(middleware::core::HRESULT, send, (const {{ event.type }}& data));
+{% else %}
+        MOCK_METHOD(middleware::core::HRESULT, send, ());
+{% endif %}
+    };
+
+    ::testing::NiceMock<{{ event.name }}EventMock> {{ event.variable }};
+{% endfor %}
+
+};
+
+using {{ service.name }}SkeletonMockFacade = ::testing::NiceMock<{{ service.name }}SkeletonMock>;
+
+}  // namespace {{ service.namespace }}::{{ service.name }}::skeleton

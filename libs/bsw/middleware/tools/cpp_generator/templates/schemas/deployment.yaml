@@ -310,6 +310,7 @@ definitions:
     required:
       - common
       - proxy
+      - skeleton
     properties:
       common:
         type: string
@@ -318,6 +319,8 @@ definitions:
       skeleton:
         type: string
       proxy_mock:
+        type: string
+      skeleton_mock:
         type: string
 
   providers:
@@ -461,23 +464,13 @@ definitions:
             - generation_mode
           properties:
             generation_mode:
-              const: normal
-        then:
-          properties:
-            headers:
-              required:
-                - skeleton
-      - if:
-          required:
-            - generation_mode
-          properties:
-            generation_mode:
               const: mock
         then:
           properties:
             headers:
               required:
                 - proxy_mock
+                - skeleton_mock
 
   connection_endpoint:
     type: object

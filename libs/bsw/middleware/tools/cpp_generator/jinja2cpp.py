@@ -199,6 +199,11 @@ TEMPLATE_CONFIG = {
             "include/generated_code/{}",
         ),
         ("service_skeleton.h.jinja", "{}Skeleton.h", "include/generated_code/{}"),
+        (
+            "mock/service_skeleton_mock.h.jinja",
+            "{}SkeletonMock.h",
+            "include/generated_code/{}",
+        ),
         ("service_common.cpp.jinja", "{}Common.cpp", "src/generated_code/{}"),
         ("service_proxy.cpp.jinja", "{}Proxy.cpp", "src/generated_code/{}"),
         ("service_skeleton.cpp.jinja", "{}Skeleton.cpp", "src/generated_code/{}"),
@@ -215,6 +220,8 @@ MOCK_TEMPLATE_OVERRIDES = {
     "service_common.h.jinja": "service_common.h.jinja",
     "service_proxy.h.jinja": "service_proxy.h.jinja",
     "mock/service_proxy_mock.h.jinja": "mock/service_proxy_mock.h.jinja",
+    "service_skeleton.h.jinja": "service_skeleton.h.jinja",
+    "mock/service_skeleton_mock.h.jinja": "mock/service_skeleton_mock.h.jinja",
     "service_proxy.cpp.jinja": "mock/service_proxy_mock.cpp.jinja",
     "service_skeleton.cpp.jinja": "mock/service_skeleton_mock.cpp.jinja",
 }
@@ -298,9 +305,9 @@ def generate_files(
 
                 # normal: full regular service file set
                 # mock: generate only templates that live under templates/jinja/mock
-                if (
-                    service_mode == "normal"
-                    and template_name == "mock/service_proxy_mock.h.jinja"
+                if service_mode == "normal" and template_name in (
+                    "mock/service_proxy_mock.h.jinja",
+                    "mock/service_skeleton_mock.h.jinja",
                 ):
                     continue
                 if service_mode == "mock":

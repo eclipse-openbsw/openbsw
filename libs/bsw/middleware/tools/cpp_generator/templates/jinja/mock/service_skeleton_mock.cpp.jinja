@@ -1,0 +1,233 @@
+/********************************************************************************
+ * Copyright (c) 2026 BMW AG
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Apache License Version 2.0 which is available at
+ * https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ ********************************************************************************/
+/**
+  *
+  *  __  __ _     _     _ _
+  * |  \/  (_) __| | __| | | _____      ____ _ _ __ ___
+  * | |\/| | |/ _` |/ _` | |/ _ \ \ /\ / / _` | '__/ _ \
+  * | |  | | | (_| | (_| | |  __/\ V  V / (_| | | |  __/
+  * |_|  |_|_|\__,_|\__,_|_|\___| \_/\_/ \__,_|_|  \___|
+  *
+  * WARNING!
+  * This file is generated. Do not edit manually.
+  *
+  */
+#include "{{ service.headers.skeleton }}"
+#include "{{ service.headers.skeleton_mock | default(service.namespace.replace('::', '/') | lower + '/' + (service.filename | default(service.name | lower)) + 'SkeletonMock.h') }}"
+
+#include <middleware/os/TaskIdProvider.h>
+
+#include <middleware/core/Message.h>
+#include <middleware/core/ResponseBufferBase.h>
+#include "middleware/core/types.h"
+
+namespace {{ service.namespace }}::{{ service.name }}::skeleton
+{
+
+{{ service.name }}Skeleton::{{ service.name }}Skeleton()
+    : Base(),
+      // ATTRIBUTES
+{% for attribute in service.attributes if service.attributes %}
+      {{ attribute.variable }}(*this),
+{% endfor %}
+      // EVENTS
+{% for event in service.events if service.events %}
+      {{ event.variable }}(*this),
+{% endfor %}
+      // ATTRIBUTES
+{% for attribute in service.attributes if service.attributes %}
+{% if attribute.getter %}
+      fGet_{{ attribute.name }}AttributeResponseBuffer(*this),
+{% endif %}
+{% if attribute.setAsMethod and attribute.setter %}
+      fSet_{{ attribute.name }}AttributeResponseBuffer(*this),
+{% endif %}
+{% endfor %}
+      // METHODS
+{% for method in service.methods if service.methods %}
+      f{{ method.variable }}ResponseBuffer(*this),
+{% endfor %}
+      fProcessId(middleware::core::INVALID_TASK_ID)
+{
+}
+
+{{ service.name }}Skeleton::~{{ service.name }}Skeleton()
+{
+    deInit();
+}
+
+middleware::core::HRESULT {{ service.name }}Skeleton::init(uint16_t const instanceId)
+{
+    auto* mock = {{ service.name }}SkeletonMock::getMock();
+    return mock->init(instanceId);
+}
+
+void {{ service.name }}Skeleton::deInit()
+{
+    auto* mock = {{ service.name }}SkeletonMock::getMock();
+    mock->deInit();
+}
+
+uint16_t {{ service.name }}Skeleton::getServiceId() const
+{
+    auto* mock = {{ service.name }}SkeletonMock::getMock();
+    return mock->getServiceId();
+}
+
+// METHODS
+{% for method in service.methods if service.methods %}
+{% if method.input_param %}
+void {{ service.name }}Skeleton::{{ method.variable }}(const {{ method.input_param.type }}& {{ method.input_param.name }},
+                                        middleware::core::ResponseBufferBase::SkeletonResponseInfo& response)
+{
+    auto* mock = {{ service.name }}SkeletonMock::getMock();
+    mock->{{ method.variable }}({{ method.input_param.name }}, response);
+}
+{% else %}
+void {{ service.name }}Skeleton::{{ method.variable }}(middleware::core::ResponseBufferBase::SkeletonResponseInfo& response)
+{
+    auto* mock = {{ service.name }}SkeletonMock::getMock();
+    mock->{{ method.variable }}(response);
+}
+{% endif %}
+
+middleware::core::HRESULT {{ service.name }}Skeleton::respond(middleware::core::ResponseBufferBase::SkeletonResponseInfo& response,
+                                               {% if method.output_param %}const {{ method.output_param.type }}& {{ method.output_param.name }}, {% endif %}const bool handleResponseFailure)
+{
+    auto* mock = {{ service.name }}SkeletonMock::getMock();
+    return mock->respond(response, {% if method.output_param %}{{ method.output_param.name }}, {% endif %}handleResponseFailure);
+}
+
+middleware::core::HRESULT {{ service.name }}Skeleton::cancel{{ method.name }}Response(
+    middleware::core::ResponseBufferBase::SkeletonResponseInfo& response)
+{
+    auto* mock = {{ service.name }}SkeletonMock::getMock();
+    return mock->cancel{{ method.name }}Response(response);
+}
+
+{% endfor %}
+
+// METHODS FIRE_AND_FORGET
+{% for method in service.methods_fire_and_forget if service.methods_fire_and_forget %}
+{% if method.input_param %}
+void {{ service.name }}Skeleton::{{ method.variable }}(const {{ method.input_param.type }}& {{ method.input_param.name }})
+{
+    auto* mock = {{ service.name }}SkeletonMock::getMock();
+    mock->{{ method.variable }}({{ method.input_param.name }});
+}
+{% else %}
+void {{ service.name }}Skeleton::{{ method.variable }}()
+{
+    auto* mock = {{ service.name }}SkeletonMock::getMock();
+    mock->{{ method.variable }}();
+}
+{% endif %}
+{% endfor %}
+
+// ATTRIBUTES
+{% for attribute in service.attributes if service.attributes %}
+{% if attribute.getter %}
+middleware::core::HRESULT {{ service.name }}Skeleton::respond(middleware::core::ResponseBufferBase::SkeletonResponseInfo& response,
+                                               const {{ attribute.type }}& result,
+                                               const bool handleResponseFailure)
+{
+    auto* mock = {{ service.name }}SkeletonMock::getMock();
+    return mock->respond(response, result, handleResponseFailure);
+}
+
+void {{ service.name }}Skeleton::get_{{ attribute.name }}Attribute(middleware::core::ResponseBufferBase::SkeletonResponseInfo& response)
+{
+    auto* mock = {{ service.name }}SkeletonMock::getMock();
+    mock->get_{{ attribute.name }}Attribute(response);
+}
+
+middleware::core::HRESULT {{ service.name }}Skeleton::cancelGet_{{ attribute.name }}AttributeResponse(
+    middleware::core::ResponseBufferBase::SkeletonResponseInfo& response)
+{
+    auto* mock = {{ service.name }}SkeletonMock::getMock();
+    return mock->cancelGet_{{ attribute.name }}AttributeResponse(response);
+}
+
+{% endif %}
+{% if attribute.setter %}
+{% if attribute.setAsMethod %}
+void {{ service.name }}Skeleton::set_{{ attribute.name }}Attribute(const {{ attribute.type }}& arg,
+                                             middleware::core::ResponseBufferBase::SkeletonResponseInfo& response)
+{
+    auto* mock = {{ service.name }}SkeletonMock::getMock();
+    mock->set_{{ attribute.name }}Attribute(arg, response);
+}
+
+middleware::core::HRESULT {{ service.name }}Skeleton::cancelSet_{{ attribute.name }}AttributeResponse(
+    middleware::core::ResponseBufferBase::SkeletonResponseInfo& response)
+{
+    auto* mock = {{ service.name }}SkeletonMock::getMock();
+    return mock->cancelSet_{{ attribute.name }}AttributeResponse(response);
+}
+
+{% else %}
+void {{ service.name }}Skeleton::set_{{ attribute.name }}Attribute(const {{ attribute.type }}& arg)
+{
+    auto* mock = {{ service.name }}SkeletonMock::getMock();
+    mock->set_{{ attribute.name }}Attribute(arg);
+}
+
+{% endif %}
+{% endif %}
+{% endfor %}
+
+// ATTRIBUTE / EVENT TRANSPORT (send forwards to the skeleton mock singleton)
+{% for attribute in service.attributes if attribute.event %}
+middleware::core::HRESULT {{ attribute.name }}Attribute::send(const AttributeType& value)
+{
+    auto* mock = {{ service.name }}SkeletonMock::getMock();
+    return mock->{{ attribute.variable }}.send(value);
+}
+
+middleware::core::HRESULT {{ attribute.name }}Attribute::send()
+{
+    auto* mock = {{ service.name }}SkeletonMock::getMock();
+    return mock->{{ attribute.variable }}.send();
+}
+
+{% endfor %}
+{% for event in service.events if service.events %}
+{% if event.type and event.type != 'void' %}
+middleware::core::HRESULT {{ event.name }}Event::send(const EventType& data)
+{
+    auto* mock = {{ service.name }}SkeletonMock::getMock();
+    return mock->{{ event.variable }}.send(data);
+}
+{% else %}
+middleware::core::HRESULT {{ event.name }}Event::send()
+{
+    auto* mock = {{ service.name }}SkeletonMock::getMock();
+    return mock->{{ event.variable }}.send();
+}
+{% endif %}
+
+{% endfor %}
+
+middleware::core::HRESULT {{ service.name }}Skeleton::onNewMessageReceived(middleware::core::Message const&)
+{
+    return middleware::core::HRESULT::Ok;
+}
+
+middleware::core::HRESULT {{ service.name }}Skeleton::sendMessage(middleware::core::Message&) const
+{
+    return middleware::core::HRESULT::NotRegistered;
+}
+
+uint32_t {{ service.name }}Skeleton::getProcessId() const
+{
+    return fProcessId;
+}
+
+}  // namespace {{ service.namespace }}::{{ service.name }}::skeleton

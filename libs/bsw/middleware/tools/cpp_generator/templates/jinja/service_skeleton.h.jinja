@@ -28,11 +28,38 @@ namespace {{ service.namespace }}::{{ service.name }}::skeleton
 
 // ATTRIBUTES
 {% for attribute in service.attributes if service.attributes %}
+/// \brief Concrete skeleton attribute. Local get/set delegate to \ref Impl in both builds;
+///        the transport send() is forwarded to Impl in production and to the generated
+///        skeleton mock singleton in mock builds (link-time selected).
+class {{ attribute.name }}Attribute
+{
+  public:
+    using AttributeType = {{ attribute.type }};
 {% if attribute.event %}
-using {{attribute.name}}Attribute = ::middleware::core::SkeletonAttribute<{{ attribute.type }}, internal::event_{{ attribute.name }}_id, true>;
+    using Impl = ::middleware::core::SkeletonAttribute<AttributeType, internal::event_{{ attribute.name }}_id, true>;
 {% else %}
-using {{attribute.name}}Attribute = ::middleware::core::SkeletonAttribute<{{ attribute.type }}, 0, false>;
+    using Impl = ::middleware::core::SkeletonAttribute<AttributeType, 0, false>;
 {% endif %}
+
+    explicit {{ attribute.name }}Attribute(::middleware::core::SkeletonBase& skeleton) : impl_(skeleton) {}
+
+    {{ attribute.name }}Attribute(const {{ attribute.name }}Attribute&) = delete;
+    {{ attribute.name }}Attribute({{ attribute.name }}Attribute&&) = delete;
+    {{ attribute.name }}Attribute& operator=(const {{ attribute.name }}Attribute&) = delete;
+    {{ attribute.name }}Attribute& operator=({{ attribute.name }}Attribute&&) = delete;
+
+    const AttributeType& get() const { return impl_.get(); }
+    AttributeType& get() { return impl_.get(); }
+    void set(const AttributeType& value) { impl_.set(value); }
+{% if attribute.event %}
+    [[nodiscard]] ::middleware::core::HRESULT send(const AttributeType& value);
+    [[nodiscard]] ::middleware::core::HRESULT send();
+{% endif %}
+
+  private:
+    Impl impl_;
+};
+
 {% if attribute.getter %}
 using {{ attribute.name }}GetterResponsePolicy =
     ::middleware::core::ResponseTraits<{{ attribute.name }}Attribute::AttributeType, internal::get_{{ attribute.name }}_id>;
@@ -46,7 +73,30 @@ using {{ attribute.name }}SetterResponsePolicy =
 
 // EVENTS
 {% for event in service.events if service.events %}
-using {{ event.name }}Event = ::middleware::core::SkeletonEvent<{{ event.type }}, internal::event_{{ event.name }}_id>;
+/// \brief Concrete skeleton event; forwards send() to \ref Impl in production and to the
+///        generated skeleton mock singleton in mock builds (link-time selected).
+class {{ event.name }}Event
+{
+  public:
+    using EventType = {{ event.type }};
+    using Impl = ::middleware::core::SkeletonEvent<EventType, internal::event_{{ event.name }}_id>;
+
+    explicit {{ event.name }}Event(::middleware::core::SkeletonBase& skeleton) : impl_(skeleton) {}
+
+    {{ event.name }}Event(const {{ event.name }}Event&) = delete;
+    {{ event.name }}Event({{ event.name }}Event&&) = delete;
+    {{ event.name }}Event& operator=(const {{ event.name }}Event&) = delete;
+    {{ event.name }}Event& operator=({{ event.name }}Event&&) = delete;
+
+{% if event.type and event.type != 'void' %}
+    [[nodiscard]] ::middleware::core::HRESULT send(const EventType& data);
+{% else %}
+    [[nodiscard]] ::middleware::core::HRESULT send();
+{% endif %}
+
+  private:
+    Impl impl_;
+};
 {% endfor %}
 
 class {{service.name}}Skeleton : public ::middleware::core::SkeletonBase

@@ -108,10 +108,11 @@ service in the deployment YAML), the generator produces only the interface files
 needed for unit-test mocking:
 
 - Global: only `cluster_id.h` and `shm/allocators_definitions.h`
-- Per-service: `*_common.h`, `*_proxy.h`, `*_proxy_mock.h`, and
-  `*_proxy_mock.cpp` (delegating to a GMock singleton via RAII auto-registration)
+- Per-service: `*_common.h`, `*_proxy.h`, `*_proxy_mock.h`, `*_skeleton.h`, and
+  `*_skeleton_mock.h`, plus the generated proxy and skeleton sources delegating
+  to GMock singletons via CRTP registration.
 
-Cluster, connection, skeleton, and COM templates are skipped in this mode.
+Cluster, connection, and COM templates are skipped in this mode.
 
 ## Input structure
 
