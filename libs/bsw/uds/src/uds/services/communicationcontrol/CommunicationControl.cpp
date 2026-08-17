@@ -16,6 +16,7 @@
 #include "uds/session/IDiagSessionManager.h"
 
 #include <etl/unaligned_type.h>
+#include <etl/platform.h>
 
 namespace uds
 {
@@ -37,25 +38,25 @@ CommunicationControl::CommunicationControl(DiagSessionMask const sessionMask)
     enableSuppressPositiveResponse();
 }
 
-ESR_NO_INLINE void
+ETL_NO_INLINE void
 CommunicationControl::addCommunicationStateListener_local(ICommunicationStateListener& listener)
 {
     fListeners.push_back(listener);
 }
 
-ESR_NO_INLINE void
+ETL_NO_INLINE void
 CommunicationControl::removeCommunicationStateListener_local(ICommunicationStateListener& listener)
 {
     fListeners.erase(listener);
 }
 
-ESR_NO_INLINE void CommunicationControl::addCommunicationSubStateListener_local(
+ETL_NO_INLINE void CommunicationControl::addCommunicationSubStateListener_local(
     ICommunicationSubStateListener& listener)
 {
     fSubListeners.push_back(listener);
 }
 
-ESR_NO_INLINE void CommunicationControl::removeCommunicationSubStateListener_local(
+ETL_NO_INLINE void CommunicationControl::removeCommunicationSubStateListener_local(
     ICommunicationSubStateListener& listener)
 {
     fSubListeners.erase(listener);

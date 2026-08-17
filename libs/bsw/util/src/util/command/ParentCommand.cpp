@@ -13,6 +13,8 @@
 #include "util/command/CommandContext.h"
 #include "util/stream/ISharedOutputStream.h"
 
+#include <etl/platform.h>
+
 namespace util
 {
 namespace command
@@ -32,7 +34,7 @@ ParentCommand::getCommands() const
     return _commands;
 }
 
-ESR_NO_INLINE void ParentCommand::addCommand_local(ICommand& cmd)
+ETL_NO_INLINE void ParentCommand::addCommand_local(ICommand& cmd)
 {
     ::etl::intrusive_forward_list<ICommand, ::etl::forward_link<0>>::iterator prevIt;
     ::etl::intrusive_forward_list<ICommand, ::etl::forward_link<0>>::iterator it
