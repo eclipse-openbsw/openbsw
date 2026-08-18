@@ -10,8 +10,6 @@
 
 #include "reset/softwareSystemReset.h"
 
-#include <etl/infinite_loop.h>
-
 extern "C"
 {
 void HardFault_Handler()
@@ -21,9 +19,8 @@ void HardFault_Handler()
     // Refer to hardFaultHandler documentation for details.
 #ifndef UNIT_TEST
     asm volatile("b customHardFaultHandler");
-#else
-    etl::infinite_loop();
 #endif
+    // Under UNIT_TEST the handler is not exercised; nothing to do on host.
 }
 
 void HardFault_Handler_Final() { softwareSystemReset(); }
