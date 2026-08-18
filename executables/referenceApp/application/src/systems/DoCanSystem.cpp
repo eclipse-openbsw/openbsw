@@ -14,11 +14,13 @@
 #include "transport/ITransportSystem.h"
 
 #include <app/appConfig.h>
+#include <can/canframes/CanId.h>
 #include <docan/common/DoCanLogger.h>
 #include <docan/datalink/DoCanFrameCodecConfigPresets.h>
 #include <etl/delegate.h>
 #include <etl/span.h>
 #include <time/TimestampProvider.h>
+#include <transport/TransportConfiguration.h>
 
 namespace
 {
@@ -32,6 +34,16 @@ uint8_t const ALLOCATE_RETRY_COUNT    = 15U;
 uint8_t const FLOW_CONTROL_WAIT_COUNT = 15U;
 uint16_t const MIN_SEPARATION_TIME    = 200U;
 uint8_t const BLOCK_SIZE              = 15U;
+
+// tester address distinguishing Normal Addressing's own connections.
+uint16_t const NORMAL_ADDRESSING_TESTER_ID = 0x0F1U;
+
+// legislative (ISO 15765-4) normal addressing CAN identifiers for the first ECU, plus the
+// legislative OBD functional (broadcast) request identifier, which every OBD-compliant ECU must
+// also receive on (and reply to physically, via NORMAL_ADDRESSING_RESPONSE_CAN_ID above).
+uint32_t const NORMAL_ADDRESSING_REQUEST_CAN_ID    = 0x7E0U;
+uint32_t const NORMAL_ADDRESSING_RESPONSE_CAN_ID   = 0x7E8U;
+uint32_t const NORMAL_ADDRESSING_FUNCTIONAL_CAN_ID = 0x7DFU;
 
 uint32_t systemUs() { return ::bsw::time::TimestampProvider::getTimestampUs32Bit(); }
 
@@ -54,7 +66,24 @@ DoCanSystem::AddressingFilterType::AddressEntryType DoCanSystem::_addresses[]
 #ifdef PLATFORM_SUPPORT_OBD_UDS_ADDRESSING
     = {{0x7E0U, 0x7E8U, 0x7E8U, LOGICAL_ADDRESS, 0, 0}};
 #else
-    = {{0x02AU, 0x0F0U, 0x0F0U, LOGICAL_ADDRESS, 0, 0}};
+    = {{::can::CanId::Base<NORMAL_ADDRESSING_FUNCTIONAL_CAN_ID>::value,
+        // ISO 15765-2 forbids multi-frame requests to a functional (broadcast) target, so this
+        // entry deliberately reports an invalid transmission address rather than the real
+        // response CAN id: DoCanReceiver rejects any multi-frame request whose transmission
+        // address is invalid, while single-frame functional requests remain unaffected, since
+        // the actual response is always addressed independently, using the real physical entry
+        // below.
+        DataLinkLayerType::INVALID_ADDRESS,
+        NORMAL_ADDRESSING_TESTER_ID,
+        ::transport::TransportConfiguration::FUNCTIONAL_ALL_ISO14229,
+        0,
+        0},
+       {::can::CanId::Base<NORMAL_ADDRESSING_REQUEST_CAN_ID>::value,
+        ::can::CanId::Base<NORMAL_ADDRESSING_RESPONSE_CAN_ID>::value,
+        NORMAL_ADDRESSING_TESTER_ID,
+        LOGICAL_ADDRESS,
+        0,
+        0}};
 #endif
 
 DoCanSystem::DoCanSystem(

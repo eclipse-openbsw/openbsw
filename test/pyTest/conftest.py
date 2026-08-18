@@ -99,8 +99,10 @@ class TargetSession:
 
         if uds_transport == "can":
             bus = self.can_bus()
+            # legislative (ISO 15765-4) Normal Addressing CAN identifiers used by
+            # DoCanSystem's Normal Addressing scheme (see DoCanSystem.cpp).
             tp_addr = isotp.Address(
-                isotp.AddressingMode.Normal_11bits, txid=0x002A, rxid=0x00F0
+                isotp.AddressingMode.Normal_11bits, txid=0x7E0, rxid=0x7E8
             )
             isotp_params = {
                 "stmin": 0,

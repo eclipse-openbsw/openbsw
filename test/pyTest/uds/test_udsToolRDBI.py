@@ -14,7 +14,7 @@ from helpers.helper_functions import run_process
 
 def create_uds_tool_command(channel, did):
     config = os.path.join(os.getcwd(), "../../tools/UdsTool/app/canConfig.json")
-    return f"python3 ../../tools/UdsTool/udsTool.py read --can --channel {channel} --txid 0x2A --rxid 0xF0 --did {did} --config {config}"
+    return f"python3 ../../tools/UdsTool/udsTool.py read --can --channel {channel} --txid 0x7E0 --rxid 0x7E8 --did {did} --config {config}"
 
 
 def test_rdbi(target_session, did="CF01"):

@@ -20,7 +20,8 @@ add_executable(
     src/docan/transport/DoCanTransportLayerContainerTest.cpp
     src/docan/transport/DoCanTransportLayerTest.cpp
     src/docan/DoCanIncludeTest.cpp
-    src/docan/integration/DemoTest.cpp)
+    src/docan/integration/DemoTest.cpp
+    src/docan/integration/DoCanReadVinIntegrationTestNA.cpp)
 
 target_include_directories(docanTest PRIVATE include)
 
