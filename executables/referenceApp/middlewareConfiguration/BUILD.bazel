@@ -9,11 +9,58 @@
 # *******************************************************************************
 
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
+load("//libs/bsw/middleware:configurable_middleware.bzl", "middleware_config")
 load(
     "//libs/bsw/middleware/tools/cpp_generator:middleware_codegen.bzl",
     "middleware_codegen",
 )
 load(":generated_outputs.bzl", "GENERATED_OUTPUTS")
+
+package(default_visibility = ["//executables/referenceApp/middlewareConfiguration:__subpackages__"])
+
+# ---------------------------------------------------------------------------
+# ReferenceApp Platform integration targets
+# ---------------------------------------------------------------------------
+
+cc_library(
+    name = "concurrency_impl",
+    hdrs = ["include/platform_integration/middleware/concurrency/lock_types.h"],
+    strip_include_prefix = "include/platform_integration",
+)
+
+cc_library(
+    name = "logger_impl",
+    srcs = ["src/platform_integration/logger/LoggerImpl.cpp"],
+    deps = [
+        "//executables/referenceApp/application:headers",
+        "//libs/3rdparty/etl",
+        "//libs/bsw/logger",
+        "//libs/bsw/middleware/interfaces:logger",
+        "//libs/bsw/util",
+    ],
+)
+
+cc_library(
+    name = "os_impl",
+    srcs = ["src/platform_integration/os/OsDefinitions.cpp"],
+    deps = [
+        "//executables/referenceApp/asyncBinding:async_binding",
+        "//libs/bsw/middleware/interfaces:os",
+    ],
+)
+
+cc_library(
+    name = "time_impl",
+    srcs = ["src/platform_integration/time/SystemTimeProvider.cpp"],
+    deps = [
+        "//libs/bsw/bsp",
+        "//libs/bsw/middleware/interfaces:time",
+    ],
+)
+
+# ---------------------------------------------------------------------------
+# ReferenceApp code generation targets
+# ---------------------------------------------------------------------------
 
 middleware_codegen(
     name = "middleware_configuration_generated",
@@ -23,29 +70,49 @@ middleware_codegen(
     deps = ["//libs/bsw/middleware"],
 )
 
+filegroup(
+    name = "generated_headers",
+    srcs = [":middleware_configuration_generated"],
+    output_group = "generated_headers",
+)
+
+filegroup(
+    name = "generated_sources",
+    srcs = [":middleware_configuration_generated"],
+    output_group = "generated_sources",
+)
+
+# ---------------------------------------------------------------------------
+# ReferenceApp middleware configuration targets
+# ---------------------------------------------------------------------------
+
 cc_library(
-    name = "middleware_configuration",
+    name = "generated_middleware_impl",
+    srcs = [":generated_sources"],
+    hdrs = [":generated_headers"],
+    strip_include_prefix = "generated_files/include/generated_code",
+    deps = ["//libs/bsw/middleware"],
+    alwayslink = True,
+)
+
+cc_library(
+    name = "middleware_impl",
     srcs = [
-        "platform_integration/logger/src/LoggerImpl.cpp",
-        "platform_integration/os/src/OsDefinitions.cpp",
-        "platform_integration/time/src/SystemTimeProvider.cpp",
         "src/MemoryLayout.cpp",
     ],
     hdrs = ["include/MemoryLayout.h"],
-    implementation_deps = [
-        "//executables/referenceApp/application:demo_logger",
-        "//libs/bsw/bsp",
-    ],
     strip_include_prefix = "include",
-    target_compatible_with = ["@platforms//os:linux"],
-    visibility = ["//visibility:public"],
-    deps = [
-        ":middleware_configuration_generated",
-        "//executables/referenceApp/asyncBinding:async_binding",
-        "//libs/bsw/logger",
-        "//libs/bsw/middleware",
-    ],
-    # NOTE: alwayslink is required because LoggerImpl.cpp implements
-    # middleware::logger::logBinary(), a symbol declared inside //libs/bsw/middleware.
-    alwayslink = True,
+    deps = [":generated_middleware_impl"],
+)
+
+middleware_config(
+    name = "middlewareConfiguration",
+    config = {
+        "//libs/3rdparty/etl:etl_profile": "//executables/referenceApp/etl_profile:etl_profile",
+        "//libs/bsw/middleware/interfaces:concurrency_impl": ":concurrency_impl",
+        "//libs/bsw/middleware/interfaces:logger_impl": ":logger_impl",
+        "//libs/bsw/middleware/interfaces:os_impl": ":os_impl",
+        "//libs/bsw/middleware/interfaces:time_impl": ":time_impl",
+    },
+    dep = ":middleware_impl",
 )
