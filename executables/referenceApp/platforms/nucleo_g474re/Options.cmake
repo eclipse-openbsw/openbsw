@@ -32,6 +32,15 @@ set(PLATFORM_SUPPORT_TRANSPORT
 set(PLATFORM_SUPPORT_UDS
     ON
     CACHE BOOL "" FORCE)
+set(PLATFORM_SUPPORT_OBD_UDS_ADDRESSING
+    ON
+    CACHE BOOL "Turn OBD-style UDS addressing (0x7E0/0x7E8) on or off" FORCE)
+set(PLATFORM_SUPPORT_PROGRAMMING_SESSION
+    ON
+    CACHE BOOL "Turn application-level UDS programming session on or off" FORCE)
+set(PLATFORM_SUPPORT_UDS_DEMO_SERVICES
+    ON
+    CACHE BOOL "Turn the demo UDS services on or off" FORCE)
 set(PLATFORM_SUPPORT_WATCHDOG
     OFF
     CACHE BOOL "" FORCE)
