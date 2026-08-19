@@ -40,8 +40,22 @@ uint32_t systemUs() { return ::bsw::time::TimestampProvider::getTimestampUs32Bit
 namespace docan
 {
 
+// PLATFORM_SUPPORT_OBD_UDS_ADDRESSING and PLATFORM_SUPPORT_PROGRAMMING_SESSION
+// are platform options (see the platforms' Options.cmake).
+// PLATFORM_SUPPORT_OBD_UDS_ADDRESSING switches the DoCAN channel to the
+// ISO 15765-4 OBD tester addressing (0x7E0 request / 0x7E8 response, logical
+// address 0x0600 in appConfig.h) so off-the-shelf UDS tester tools talk to the
+// board without a custom channel configuration. Platforms without the option
+// keep the original example addressing. PLATFORM_SUPPORT_PROGRAMMING_SESSION
+// adds an application-level UDS programming session (see
+// udsConfiguration/src/uds/session/DiagSession.cpp) that keeps the UDS
+// dispatcher alive instead of handing over to a bootloader.
 DoCanSystem::AddressingFilterType::AddressEntryType DoCanSystem::_addresses[]
-    = {{0x02A, 0x0F0U, 0x0F0U, LOGICAL_ADDRESS, 0, 0}};
+#ifdef PLATFORM_SUPPORT_OBD_UDS_ADDRESSING
+    = {{0x7E0U, 0x7E8U, 0x7E8U, LOGICAL_ADDRESS, 0, 0}};
+#else
+    = {{0x02AU, 0x0F0U, 0x0F0U, LOGICAL_ADDRESS, 0, 0}};
+#endif
 
 DoCanSystem::DoCanSystem(
     ::transport::ITransportSystem& transportSystem,
