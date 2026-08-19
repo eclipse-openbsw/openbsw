@@ -161,6 +161,7 @@ Eclipse OpenBSW is a trademark of the Eclipse Foundation.
 
     platforms/posix/index
     platforms/s32k148evb/index
+    platforms/stm32/index
 
 .. toctree::
     :maxdepth: 1
@@ -169,6 +170,7 @@ Eclipse OpenBSW is a trademark of the Eclipse Foundation.
 
     features/storage
     features/functional_safety
+    features/diagnostics
 
 .. toctree::
     :maxdepth: 1
