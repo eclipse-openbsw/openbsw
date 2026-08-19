@@ -7,27 +7,15 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
-#include <chrono>
+#include <bsp/timer/SystemTimer.h>
 
 #include <middleware/time/SystemTimerProvider.h>
 
 namespace middleware::time
 {
 
-uint32_t getCurrentTimeInMs()
-{
-    return static_cast<uint32_t>(
-        std::chrono::time_point_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now())
-            .time_since_epoch()
-            .count());
-}
+uint32_t getCurrentTimeInMs() { return getSystemTimeMs32Bit(); }
 
-uint32_t getCurrentTimeInUs()
-{
-    return static_cast<uint32_t>(
-        std::chrono::time_point_cast<std::chrono::microseconds>(std::chrono::steady_clock::now())
-            .time_since_epoch()
-            .count());
-}
+uint32_t getCurrentTimeInUs() { return getSystemTimeUs32Bit(); }
 
 } // namespace middleware::time

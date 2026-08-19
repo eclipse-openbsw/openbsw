@@ -15,7 +15,7 @@ namespace middleware::concurrency::integration
 {
 
 /**
- * No-op scope guard for single-core lock — simulation stub.
+ * No-op scope guard for the single-core referenceApp integration.
  */
 struct ScopedCoreLock
 {
@@ -29,7 +29,7 @@ struct ScopedCoreLock
 };
 
 /**
- * No-op scope guard for ECU-wide lock — simulation stub.
+ * No-op scope guard for the ECU-wide lock in the single-core referenceApp integration.
  */
 struct ScopedECULock
 {
