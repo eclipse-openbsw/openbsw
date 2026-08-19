@@ -1,10 +1,12 @@
 add_library(
     middlewareTestSupport STATIC
-    src/logger/mock/LoggerMock.cpp src/memory/mock/AllocatorMock.cpp
-    src/os/OsDefinitions.cpp src/time/mock/SystemTimerProviderMock.cpp)
+    src/mock/logger/mock/LoggerMock.cpp src/mock/memory/mock/AllocatorMock.cpp
+    src/mock/os/OsDefinitions.cpp
+    src/mock/time/mock/SystemTimerProviderMock.cpp)
 
-target_include_directories(middlewareTestSupport
-                           PUBLIC src ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_include_directories(
+    middlewareTestSupport PUBLIC src src/mock src/mock/concurrency
+                                 ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_link_libraries(middlewareTestSupport
                       PUBLIC middleware middlewareInterfaces etl gmock)
 
@@ -30,7 +32,8 @@ add_middleware_unit_test(
 
 add_middleware_unit_test(
     middlewareRequestResponseTest src/core/ResponseBufferTest.cpp
-    src/rpc/ProxyFireAndForgetMethodTest.cpp src/rpc/ProxyMethodTest.cpp)
+    src/core/rpc/ProxyFireAndForgetMethodTest.cpp
+    src/core/rpc/ProxyMethodTest.cpp)
 
 add_middleware_unit_test(middlewareInstanceDatabaseTest
                          src/core/DbManipulatorTest.cpp)
