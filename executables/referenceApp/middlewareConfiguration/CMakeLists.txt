@@ -74,4 +74,5 @@ target_include_directories(
     middleware
     PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/platform_integration/concurrency/include)
 
-target_link_libraries(middlewareConfiguration PUBLIC middleware logger)
+target_link_libraries(middlewareConfiguration PUBLIC asyncBinding middleware
+                                                     logger)
