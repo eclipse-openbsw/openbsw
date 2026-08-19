@@ -13,7 +13,7 @@
 // ETL uses them for deduction guide
 #include <tuple>
 
-#include "etl/profiles/cpp17_no_stl.h"
+#define ETL_NO_STL
 
 // ETL_COMPILER_* will be autodetected correctly only if
 // ETL_COMPILER_GENERIC (from default profile above) is not defined
@@ -32,5 +32,3 @@
 #define ETL_VERBOSE_ERRORS
 #define ETL_THROW_EXCEPTIONS
 #define ETL_DEBUG
-
-#define HUGE_VALL HUGE_VAL

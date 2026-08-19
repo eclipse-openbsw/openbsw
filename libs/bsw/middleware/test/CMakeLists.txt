@@ -11,21 +11,19 @@ add_executable(
     src/core/ResponseBufferTest.cpp
     src/core/SkeletonAttributeTest.cpp
     src/core/SkeletonBaseTest.cpp
-    src/logger/mock/LoggerMock.cpp
-    src/memory/AllocatorBaseTest.cpp
-    src/memory/mock/AllocatorMock.cpp
+    src/core/rpc/ProxyFireAndForgetMethodTest.cpp
+    src/core/rpc/ProxyMethodTest.cpp
     src/memory/AggregatorTest.cpp
+    src/memory/AllocatorBaseTest.cpp
     src/memory/PoolsTest.cpp
-    src/os/OsDefinitions.cpp
-    src/queue/QueueTest.cpp
-    src/rpc/ProxyFireAndForgetMethodTest.cpp
-    src/rpc/ProxyMethodTest.cpp
-    src/time/mock/SystemTimerProviderMock.cpp)
+    src/mock/logger/mock/LoggerMock.cpp
+    src/mock/memory/mock/AllocatorMock.cpp
+    src/mock/os/OsDefinitions.cpp
+    src/mock/time/mock/SystemTimerProviderMock.cpp
+    src/queue/QueueTest.cpp)
 
-target_include_directories(middlewareTest PUBLIC src)
-
-target_include_directories(middleware
-                           PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_include_directories(middlewareTest PUBLIC src src/mock
+                                                 src/mock/concurrency)
 
 target_link_libraries(middlewareTest PRIVATE middleware gmock gtest_main)
 

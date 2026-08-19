@@ -105,14 +105,15 @@ libs/bsw/middleware/simulation/
 |   |   +-- middleware/             # ClusterCluster0.h / ClusterCluster1.h etc.
 |   |   +-- org/test/foo/           # FooCommon.h / FooSkeleton.h / FooProxy.h
 |   |   +-- shm/                    # Config.h, QueueDefinitions.h
+|   +-- platform_integration/
+|   |   +-- middleware/concurrency/lock_types.h  # No-op lock stubs
 |   +-- Logger.h                    # Thread-safe simulation logger
 |   +-- ShmWrapper.h                # SHM open/mmap wrapper
-+-- platform_integration/
-|   +-- concurrency/include/        # ScopedCoreLock / ScopedECULock no-op stubs
-|   +-- logger/src/LoggerImpl.cpp  # middleware::logger::log() via fprintf
-|   +-- os/src/OsDefinitions.cpp   # middleware::os::getProcessId()
-|   +-- time/src/SystemTimeProvider.cpp
 +-- src/
+|   +-- platform_integration/
+|   |   +-- logger/LoggerImpl.cpp  # middleware::logger::log() via fprintf
+|   |   +-- os/OsDefinitions.cpp   # middleware::os::getProcessId()
+|   |   +-- time/SystemTimeProvider.cpp
 |   +-- generated_code/             # .cpp files produced by jinja2cpp.py
 |   +-- Logger.cpp
 |   +-- MainCluster0.cpp               # Cluster0 entry point (FooSkeleton provider loop)

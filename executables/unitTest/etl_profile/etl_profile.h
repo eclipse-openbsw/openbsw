@@ -33,6 +33,10 @@
 #define ETL_USING_BUILTIN_MEMCHR  0
 
 #define ETL_THROW_EXCEPTIONS
+#define ETL_CHECK_PUSH_POP
+#define ETL_LOG_ERRORS
+#define ETL_VERBOSE_ERRORS
+#define ETL_DEBUG
 
 #define ETL_CHRONO_HIGH_RESOLUTION_CLOCK_DURATION etl::chrono::nanoseconds
 #define ETL_CHRONO_SYSTEM_CLOCK_DURATION          etl::chrono::microseconds

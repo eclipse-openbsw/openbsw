@@ -19,6 +19,8 @@
 namespace middleware::logger
 {
 
+constexpr std::size_t kMaxLogMessageSize = PIPE_BUF;
+
 static char const* get_log_level_name(LogLevel level)
 {
     static char const* level_names[] = {"TRACE", "DEBUG", "INFO", "WARN", "ERROR", "CRITICAL"};
@@ -31,7 +33,7 @@ void log(LogLevel const level, char const* const f, ...)
 {
     std::va_list ap;
     va_start(ap, f);
-    char msg[PIPE_BUF];
+    char msg[kMaxLogMessageSize];
     (void)vsnprintf(msg, sizeof(msg), f, ap);
     va_end(ap);
     // NOLINTEND(cert-dcl50-cpp,cppcoreguidelines-pro-type-vararg,cert-err33-c,clang-analyzer-valist.Uninitialized)
