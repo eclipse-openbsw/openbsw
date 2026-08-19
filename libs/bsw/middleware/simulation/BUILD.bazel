@@ -1,0 +1,146 @@
+# *******************************************************************************
+# Copyright (c) 2026 BMW AG
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+
+load("@rules_cc//cc:cc_binary.bzl", "cc_binary")
+load("@rules_cc//cc:cc_library.bzl", "cc_library")
+load("//libs/bsw/middleware:configurable_middleware.bzl", "middleware_config")
+load("//libs/bsw/middleware/tools:codegen.bzl", "run_codegen")
+load(":generated_outputs.bzl", "GENERATED_OUTPUTS")
+
+package(default_visibility = ["//visibility:public"])
+
+# ---------------------------------------------------------------------------
+# Simulation Platform integration targets
+# ---------------------------------------------------------------------------
+
+cc_library(
+    name = "etl_profile",
+    hdrs = ["include/etl_profile.h"],
+    strip_include_prefix = "include",
+    target_compatible_with = ["@platforms//os:linux"],
+)
+
+cc_library(
+    name = "concurrency_impl",
+    hdrs = ["include/platform_integration/middleware/concurrency/lock_types.h"],
+    strip_include_prefix = "include/platform_integration",
+    target_compatible_with = ["@platforms//os:linux"],
+)
+
+cc_library(
+    name = "logger_impl",
+    srcs = ["src/platform_integration/logger/LoggerImpl.cpp"],
+    target_compatible_with = ["@platforms//os:linux"],
+    deps = [
+        "//libs/3rdparty/etl",
+        "//libs/bsw/middleware/interfaces:logger",
+        "//libs/bsw/middleware/simulation:logger",
+    ],
+)
+
+cc_library(
+    name = "os_impl",
+    srcs = ["src/platform_integration/os/OsDefinitions.cpp"],
+    target_compatible_with = ["@platforms//os:linux"],
+    deps = ["//libs/bsw/middleware/interfaces:os"],
+)
+
+cc_library(
+    name = "time_impl",
+    srcs = ["src/platform_integration/time/SystemTimeProvider.cpp"],
+    target_compatible_with = ["@platforms//os:linux"],
+    deps = ["//libs/bsw/middleware/interfaces:time"],
+)
+
+# ---------------------------------------------------------------------------
+# Simulation code generation targets
+# ---------------------------------------------------------------------------
+
+run_codegen(
+    name = "generate_code",
+    outs = GENERATED_OUTPUTS,
+    deployment = "model/deployment-test.yaml",
+    generated_files_prefix = "generated_files",
+    tool = "//libs/bsw/middleware/tools/cpp_generator:jinja2cpp",
+)
+
+filegroup(
+    name = "generated_headers",
+    srcs = [":generate_code"],
+    output_group = "generated_headers",
+)
+
+filegroup(
+    name = "generated_sources",
+    srcs = [":generate_code"],
+    output_group = "generated_sources",
+)
+
+# ---------------------------------------------------------------------------
+# Simulation middleware configuration targets
+# ---------------------------------------------------------------------------
+
+cc_library(
+    name = "middleware_impl",
+    srcs = [
+        ":generated_sources",
+    ],
+    hdrs = [
+        ":generated_headers",
+    ],
+    strip_include_prefix = "generated_files/include/generated_code",
+    target_compatible_with = ["@platforms//os:linux"],
+    deps = ["//libs/bsw/middleware"],
+    alwayslink = True,
+)
+
+middleware_config(
+    name = "cfg_middleware_lib",
+    config = {
+        "//libs/3rdparty/etl:etl_profile": ":etl_profile",
+        "//libs/bsw/middleware/interfaces:concurrency_impl": ":concurrency_impl",
+        "//libs/bsw/middleware/interfaces:logger_impl": ":logger_impl",
+        "//libs/bsw/middleware/interfaces:os_impl": ":os_impl",
+        "//libs/bsw/middleware/interfaces:time_impl": ":time_impl",
+    },
+    dep = ":middleware_impl",
+    target_compatible_with = ["@platforms//os:linux"],
+)
+
+# ---------------------------------------------------------------------------
+# Simulation sample targets
+# ---------------------------------------------------------------------------
+
+cc_library(
+    name = "logger",
+    srcs = ["src/Logger.cpp"],
+    hdrs = ["include/Logger.h"],
+    strip_include_prefix = "include",
+    target_compatible_with = ["@platforms//os:linux"],
+)
+
+cc_binary(
+    name = "middlewareSimulation",
+    srcs = [
+        "include/foo/FooProxyWrapper.h",
+        "include/foo/FooSkeletonWrapper.h",
+        "src/MainCore0.cpp",
+        "src/MainCore1.cpp",
+        "src/Sample.cpp",
+        "src/ShmWrapper.cpp",
+        "src/ShmWrapper.h",
+    ],
+    includes = ["include"],
+    target_compatible_with = ["@platforms//os:linux"],
+    deps = [
+        ":cfg_middleware_lib",
+        ":logger",
+    ],
+)

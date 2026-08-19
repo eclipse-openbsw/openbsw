@@ -56,9 +56,9 @@ add_custom_command(
 # Platform integration sources (concurrency / logger / OS / time stubs)
 # -----------------------------------------------------------------------
 set(PLATFORM_INTEGRATION_SRCS
-    platform_integration/logger/src/LoggerImpl.cpp
-    platform_integration/os/src/OsDefinitions.cpp
-    platform_integration/time/src/SystemTimeProvider.cpp)
+    src/platform_integration/logger/LoggerImpl.cpp
+    src/platform_integration/os/OsDefinitions.cpp
+    src/platform_integration/time/SystemTimeProvider.cpp)
 
 # -----------------------------------------------------------------------
 # Simulation application
@@ -78,20 +78,13 @@ target_include_directories(
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include
             ${_GEN_DIR}/include/generated_code
             ${CMAKE_CURRENT_SOURCE_DIR}/include/allocator
-            ${CMAKE_CURRENT_SOURCE_DIR}/platform_integration/concurrency/include
-)
+            ${CMAKE_CURRENT_SOURCE_DIR}/include/platform_integration)
 
 target_link_libraries(middlewareSimulation PRIVATE middleware Threads::Threads
                                                    rt)
 
 target_include_directories(
-    middlewareSimulation
-    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/platform_integration/concurrency/include
-)
-
-target_include_directories(
-    middleware
-    PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/platform_integration/concurrency/include)
+    middleware PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/platform_integration)
 
 option(SIMULATION_USE_PROCESSES
        "Run each simulated core in a separate OS process (default: threads)"

@@ -1,0 +1,131 @@
+# *******************************************************************************
+# Copyright (c) 2026 BMW AG
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+
+load("@rules_cc//cc:cc_library.bzl", "cc_library")
+
+package(default_visibility = ["//visibility:public"])
+
+# ---- concurrency -----------------------------------------------------------
+
+alias(
+    name = "concurrency_impl_default",
+    actual = select(
+        {
+            "//bazel/config/executable_config:unit_test": "//libs/bsw/middleware/test:concurrency_mock_impl",
+            "//bazel/config/executable_config:reference_app": "//libs/bsw/middleware/test:concurrency_mock_impl",
+        },
+        no_match_error = "Set executable_config to 'reference_app' or 'unit_test', or override --//libs/bsw/middleware/interfaces:concurrency_impl",
+    ),
+)
+
+label_flag(
+    name = "concurrency_impl",
+    build_setting_default = ":concurrency_impl_default",
+)
+
+cc_library(
+    name = "concurrency",
+    hdrs = ["include/middleware/concurrency/LockStrategies.h"],
+    strip_include_prefix = "include",
+    deps = [":concurrency_impl"],
+)
+
+filegroup(
+    name = "concurrency_code_to_doc",
+    srcs = ["include/middleware/concurrency/LockStrategies.h"],
+)
+
+# ---- logger ----------------------------------------------------------------
+
+alias(
+    name = "logger_impl_default",
+    actual = select(
+        {
+            "//bazel/config/executable_config:unit_test": "//libs/bsw/middleware/test:logger_mock_impl",
+            "//bazel/config/executable_config:reference_app": "//libs/bsw/middleware/test:logger_mock_impl",
+        },
+        no_match_error = "Set executable_config to 'reference_app' or 'unit_test', or override --//libs/bsw/middleware/interfaces:logger_impl",
+    ),
+)
+
+label_flag(
+    name = "logger_impl",
+    build_setting_default = ":logger_impl_default",
+)
+
+cc_library(
+    name = "logger",
+    hdrs = ["include/middleware/logger/Logger.h"],
+    strip_include_prefix = "include",
+    deps = ["//libs/3rdparty/etl"],
+)
+
+filegroup(
+    name = "logger_code_to_doc",
+    srcs = ["include/middleware/logger/Logger.h"],
+)
+
+# ---- os --------------------------------------------------------------------
+
+alias(
+    name = "os_impl_default",
+    actual = select(
+        {
+            "//bazel/config/executable_config:unit_test": "//libs/bsw/middleware/test:os_mock_impl",
+            "//bazel/config/executable_config:reference_app": "//libs/bsw/middleware/test:os_mock_impl",
+        },
+        no_match_error = "Set executable_config to 'reference_app' or 'unit_test', or override --//libs/bsw/middleware/interfaces:os_impl",
+    ),
+)
+
+label_flag(
+    name = "os_impl",
+    build_setting_default = ":os_impl_default",
+)
+
+cc_library(
+    name = "os",
+    hdrs = ["include/middleware/os/TaskIdProvider.h"],
+    strip_include_prefix = "include",
+)
+
+filegroup(
+    name = "os_code_to_doc",
+    srcs = ["include/middleware/os/TaskIdProvider.h"],
+)
+
+# ---- time ------------------------------------------------------------------
+
+alias(
+    name = "time_impl_default",
+    actual = select(
+        {
+            "//bazel/config/executable_config:unit_test": "//libs/bsw/middleware/test:time_mock_impl",
+            "//bazel/config/executable_config:reference_app": "//libs/bsw/middleware/test:time_mock_impl",
+        },
+        no_match_error = "Set executable_config to 'reference_app' or 'unit_test', or override --//libs/bsw/middleware/interfaces:time_impl",
+    ),
+)
+
+label_flag(
+    name = "time_impl",
+    build_setting_default = ":time_impl_default",
+)
+
+cc_library(
+    name = "time",
+    hdrs = ["include/middleware/time/SystemTimerProvider.h"],
+    strip_include_prefix = "include",
+)
+
+filegroup(
+    name = "time_code_to_doc",
+    srcs = ["include/middleware/time/SystemTimerProvider.h"],
+)
