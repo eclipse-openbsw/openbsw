@@ -1,0 +1,48 @@
+' *******************************************************************************
+' Copyright (c) 2026 BMW AG
+'
+' This program and the accompanying materials are made available under the
+' terms of the Apache License Version 2.0 which is available at
+' https://www.apache.org/licenses/LICENSE-2.0
+'
+' SPDX-License-Identifier: Apache-2.0
+' *******************************************************************************
+
+@startuml
+
+note as conceptual_view
+    The labels in this diagram are conceptual architecture units.
+    They group implementation interfaces and platform-specific realizations;
+    they are not intended to name one C++ class each.
+end note
+
+package "Middleware" as middleware_de <<SEooC>> {
+    component "Communication Core" as communication_core_component <<component>> {
+        component "Proxy/Skeleton Base" as proxy_skeleton_base_unit <<unit>>
+        component "Request/Response" as request_response_unit <<unit>>
+    }
+
+    component "Communication Infrastructure" as communication_infrastructure_component <<component>> {
+        component "Instance Database" as instance_database_unit <<unit>>
+        component "Cluster Connection" as cluster_connection_unit <<unit>>
+    }
+
+    component "Data Structures" as data_structures_component <<component>> {
+        component "Message Management" as message_management_unit <<unit>>
+        component "Message Queue" as message_queue_unit <<unit>>
+        component "Memory Pool Management" as memory_pool_management_unit <<unit>>
+    }
+
+    component "Interface" as interface_component <<component>> {
+        component "Logging API" as logging_api_unit <<unit>>
+        component "Platform Abstraction Interface" as platform_abstraction_interface_unit <<unit>>
+    }
+
+    communication_core_component --> communication_infrastructure_component
+    communication_core_component --> interface_component
+    communication_infrastructure_component --> data_structures_component
+    communication_infrastructure_component --> interface_component
+    data_structures_component --> interface_component
+}
+
+@enduml

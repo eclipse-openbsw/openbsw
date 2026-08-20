@@ -189,7 +189,8 @@ class {{ service.name }}Proxy : public middleware::core::ProxyBase, public middl
     middleware::core::HRESULT onNewMessageReceived(::middleware::core::Message const& msg) override;
 
   private:
-    void futureDispatcherDeinitialization();
+    void clearPendingFutures();
+    void unsetNotificationHandlers();
     void updateTimeouts() override;
     void doUpdateTimeouts();
     middleware::core::HRESULT sendMessage(::middleware::core::Message& msg) const final;

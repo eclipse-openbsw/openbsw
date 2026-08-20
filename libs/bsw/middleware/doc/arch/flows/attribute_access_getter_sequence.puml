@@ -1,0 +1,80 @@
+' *******************************************************************************
+' Copyright (c) 2026 BMW AG
+'
+' This program and the accompanying materials are made available under the
+' terms of the Apache License Version 2.0 which is available at
+' https://www.apache.org/licenses/LICENSE-2.0
+'
+' SPDX-License-Identifier: Apache-2.0
+' *******************************************************************************
+
+@startuml
+
+hide footbox
+
+actor "Generated\nProxy" as generated_proxy
+participant "Proxy/Skeleton Base" as proxy_skeleton_base_unit
+participant "Request/Response" as request_response_unit
+participant "Cluster Connection" as cluster_connection_unit
+participant "Message Queue" as message_queue_unit
+actor "Generated\nSkeleton" as generated_skeleton
+
+activate proxy_skeleton_base_unit
+activate request_response_unit
+
+generated_proxy -> proxy_skeleton_base_unit : get(callback)
+proxy_skeleton_base_unit -> request_response_unit : obtainRequestId(callback)
+request_response_unit --> proxy_skeleton_base_unit : uint16_t
+proxy_skeleton_base_unit -> cluster_connection_unit : sendMessage(GET_ATTRIBUTE)
+activate cluster_connection_unit
+cluster_connection_unit -> message_queue_unit : push(msg)
+activate message_queue_unit
+message_queue_unit --> cluster_connection_unit : success
+deactivate message_queue_unit
+cluster_connection_unit --> proxy_skeleton_base_unit : HRESULT::Ok
+deactivate cluster_connection_unit
+
+note over request_response_unit : Request id returned and callback registered.
+
+note over proxy_skeleton_base_unit
+  Skeleton side resolves the getter and prepares the response.
+end note
+
+cluster_connection_unit -> message_queue_unit : pop()
+activate cluster_connection_unit
+activate message_queue_unit
+message_queue_unit --> cluster_connection_unit : msg
+deactivate message_queue_unit
+cluster_connection_unit -> proxy_skeleton_base_unit : dispatchMessage(msg)
+proxy_skeleton_base_unit -> generated_skeleton : get_<attribute>Attribute(response)
+generated_skeleton -> generated_skeleton : read current attribute value
+generated_skeleton --> proxy_skeleton_base_unit : respond(response, attributeValue)
+proxy_skeleton_base_unit -> cluster_connection_unit : sendMessage(GETTER_RESPONSE)
+cluster_connection_unit -> message_queue_unit : push(response_msg)
+activate message_queue_unit
+message_queue_unit --> cluster_connection_unit : success
+deactivate message_queue_unit
+cluster_connection_unit --> proxy_skeleton_base_unit : HRESULT::Ok
+deactivate cluster_connection_unit
+
+note over proxy_skeleton_base_unit
+  Proxy side receives the getter response and completes the pending future.
+end note
+
+cluster_connection_unit -> message_queue_unit : pop()
+activate cluster_connection_unit
+activate message_queue_unit
+message_queue_unit --> cluster_connection_unit : response_msg
+deactivate message_queue_unit
+cluster_connection_unit -> proxy_skeleton_base_unit : onNewMessageReceived(response_msg)
+proxy_skeleton_base_unit -> request_response_unit : answerRequest(msg)
+request_response_unit -> request_response_unit : invoke callback
+request_response_unit -> generated_proxy : callback(attributeValue)
+
+note over request_response_unit : Application is notified via callback.
+
+deactivate cluster_connection_unit
+deactivate request_response_unit
+deactivate proxy_skeleton_base_unit
+
+@enduml

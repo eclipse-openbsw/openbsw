@@ -1,0 +1,158 @@
+# *******************************************************************************
+# Copyright (c) 2026 BMW AG
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+
+# Service-oriented example deployment configuration for middleware documentation
+# This configuration demonstrates service-based communication patterns
+
+clusters:
+  - &core0
+    name: Core0
+    id: 0
+    queue_size: 10
+  - &core1
+    name: Core1
+    id: 1
+    queue_size: 10
+
+allocators:
+  - &default_allocator
+    name: default
+    pools:
+      - elements: 10
+        chunk_sizes: 64
+      - elements: 1
+        chunk_sizes: 8208
+
+services:
+  - &dummy_service
+    namespace: features::communication
+    name: DummyService
+    filename: dummy_service
+    id: 10
+    allocator: *default_allocator
+    enums: []
+    datatypes:
+      - name: Foo
+        type: struct
+        parameters:
+          - name: x
+            type: uint32_t
+          - name: y
+            type: uint32_t
+      - name: Bar
+        type: struct
+        parameters:
+          - name: z
+            type: uint16_t
+          - name: w
+            type: uint16_t
+      - name: Baz
+        type: struct
+        parameters:
+          - name: a
+            type: uint8_t
+          - name: b
+            type: uint8_t
+          - name: c
+            type: uint8_t
+          - name: d
+            type: uint8_t
+      - name: FireAndForgetPayload
+        type: struct
+        parameters:
+          - name: foo
+            type: Foo
+          - name: bar
+            type: Bar
+    typedefs: []
+    attributes:
+      - name: SimpleField
+        variable: simpleField
+        type: uint32_t
+        readonly: false
+        noSubscriptions: false
+        setAsMethod: false
+        event:
+          id: 128
+        getter:
+          id: 1
+          timeout: 300
+        setter:
+          id: 2
+          timeout: 300
+        consumer_request_limit: 1
+        provider_request_limit: 1
+    methods:
+      - name: AsyncMethod
+        variable: asyncMethod
+        id: 3
+        timeout: 1000
+        consumer_request_limit: 1
+        provider_request_limit: 1
+        input_param:
+          name: fooParam
+          type: Foo
+        output_param:
+          name: result
+          type: Baz
+    methods_fire_and_forget:
+      - name: FireAndForgetMethod
+        variable: fireAndForgetMethod
+        id: 4
+        consumer_request_limit: 1
+        provider_request_limit: 1
+        input_param:
+          name: payload
+          type: FireAndForgetPayload
+        output_param:
+    events:
+      - name: SimpleBroadcast
+        variable: simpleBroadcast
+        id: 129
+        type: uint32_t
+    headers:
+      common: features/communication/dummy_serviceCommon.h
+      proxy: features/communication/dummy_serviceProxy.h
+      skeleton: features/communication/dummy_serviceSkeleton.h
+      proxy_mock: features/communication/dummy_serviceProxyMock.h
+      skeleton_mock: features/communication/dummy_serviceSkeletonMock.h
+    deployment:
+      clusters:
+        - cluster: *core0
+          consumers: 0
+          providers:
+            instance_ids: [1]
+        - cluster: *core1
+          consumers: 1
+          providers:
+            instance_ids: []
+      instance_ids: [1]
+
+connections:
+  - source_cluster: *core0
+    target_cluster: *core1
+    proxies: []
+    skeletons:
+      - <<: *dummy_service
+        max_instances: 1
+  - source_cluster: *core1
+    target_cluster: *core0
+    proxies:
+      - <<: *dummy_service
+        max_instances: 1
+    skeletons: []
+
+cores:
+  - name: C0
+    clusters:
+      - *core0
+  - name: C1
+    clusters:
+      - *core1

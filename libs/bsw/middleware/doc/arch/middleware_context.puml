@@ -1,0 +1,27 @@
+' *******************************************************************************
+' Copyright (c) 2026 BMW AG
+'
+' This program and the accompanying materials are made available under the
+' terms of the Apache License Version 2.0 which is available at
+' https://www.apache.org/licenses/LICENSE-2.0
+'
+' SPDX-License-Identifier: Apache-2.0
+' *******************************************************************************
+
+@startuml Middleware Context
+
+component middleware
+(SOME/IP Stack) as someip_stack
+(BSW Integration) as bsw_integration
+(Async / RTOS) as async
+(User Application) as user_app
+(Shared Memory Queue) as shm_queue
+(Deployment model) as deployment_model
+middleware --> bsw_integration
+user_app --> middleware
+middleware --> deployment_model
+someip_stack --> middleware
+middleware --> shm_queue
+async --> middleware : schedule
+
+@enduml

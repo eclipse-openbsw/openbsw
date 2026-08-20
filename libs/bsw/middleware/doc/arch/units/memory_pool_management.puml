@@ -1,0 +1,104 @@
+' *******************************************************************************
+' Copyright (c) 2026 BMW AG
+'
+' This program and the accompanying materials are made available under the
+' terms of the Apache License Version 2.0 which is available at
+' https://www.apache.org/licenses/LICENSE-2.0
+'
+' SPDX-License-Identifier: Apache-2.0
+' *******************************************************************************
+
+@startuml memory_pool_management
+
+title Memory Pool Management - Class Diagram
+
+skinparam classFontSize 14
+skinparam shadowing false
+
+left to right direction
+
+namespace middleware {
+  namespace memory <<domain>> {
+
+    class AllocatorStatistics <<value_object>> {
+        allocations: uint32_t
+        deallocations: uint32_t
+        unknownPtrsError: uint32_t
+    }
+
+    class PoolStats <<value_object>> {
+        chunkSize: uint32_t
+        capacity: uint32_t
+        failedAllocations: uint32_t
+        delegatedAllocations: uint32_t
+        successfulAllocations: uint32_t
+        internalFragmentation: uint32_t
+        maxLoad: uint32_t
+    }
+
+    class AllocatorBase <<CRTP template>> {
+        +allocate(payloadSize: uint32_t): uint8_t*
+        +allocateShared(payloadSize: uint32_t, referenceCounter: uint8_t): uint8_t*
+        +deallocate(ptr: uint8_t*): bool
+        +deallocateShared(ptr: uint8_t*, payloadSize: uint32_t): bool
+        +regionStart(): uint8_t*
+        +isPtrValid(ptr: uint8_t const*): bool
+        +getStats(): AllocatorStatistics const&
+    }
+
+    class PoolBase {
+        +initialize()
+        +allocate(size: size_t): uint8_t*
+        +deallocate(ptr: void*): bool
+        +isEmpty(): bool
+        +isFull(): bool
+        +available(): size_t
+        +size(): size_t
+        +maxSize(): size_t
+        +isValidPointer(ptr: uint8_t const*): bool
+        +getPoolStats(): PoolStats&
+        +resetStats()
+        +getProfile(): tuple<size_t, size_t, double>
+    }
+
+    class allocator_selector <<free functions>> {
+        +getAllocFunction(sid: uint16_t): AllocateFunction
+        +getAllocSharedFunction(sid: uint16_t): AllocateSharedFunction
+        +getDeallocFunction(sid: uint16_t): DeallocateFunction
+        +getDeallocSharedFunction(sid: uint16_t): DeallocateSharedFunction
+        +getRegionStartFunction(sid: uint16_t): RegionStartFunction
+        +getPtrValidationFunction(sid: uint16_t): PointerValidationFunction
+    }
+
+    class message_allocator <<alias>> {
+    }
+
+    class Aggregator <<template>> {
+        +size(): size_t
+        +allocateImpl(payloadSize: uint32_t): uint8_t*
+        +deallocateImpl(ptr: void*)
+        +isPtrValidImpl(ptr: void const*): bool
+        +regionStartImpl(): uint8_t*
+        +getPool(): PoolBase*
+        +collectStats(collector): void
+    }
+
+    class Pool <<template>> {
+        +chunkSize(): size_t
+        +valueSize(): size_t
+        +capacity(): size_t
+    }
+
+  }
+}
+
+AllocatorBase *-- AllocatorStatistics : tracks
+PoolBase *-- PoolStats : tracks
+message_allocator ..> Aggregator : aliases
+Aggregator --|> AllocatorBase : CRTP-derived allocator
+Aggregator --> Pool : routes across
+Pool --|> PoolBase
+allocator_selector ..> message_allocator : dispatches by service id to
+AllocatorBase ..> Aggregator : delegates via CRTP to
+
+@enduml

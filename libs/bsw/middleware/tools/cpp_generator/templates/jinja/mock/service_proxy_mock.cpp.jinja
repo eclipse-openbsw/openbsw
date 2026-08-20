@@ -159,7 +159,7 @@ void {{ service.name }}Proxy::cancel{{ method.name }}Request(uint16_t requestId)
     return ::middleware::core::HRESULT::Ok;
 }
 
-void {{ service.name }}Proxy::futureDispatcherDeinitialization()
+void {{ service.name }}Proxy::clearPendingFutures()
 {
 }
 
@@ -176,7 +176,7 @@ void {{ service.name }}Proxy::doUpdateTimeouts()
 {% for method in service.methods if service.methods %}
 etl::expected<uint16_t, middleware::core::HRESULT> {{ service.name }}Proxy::{{ method.variable }}(
     {% if method.input_param %}const {{ method.input_param.type }}& {{ method.input_param.name }}, {% endif %}
-    const {{ method.name }}Callback& methodCb)
+    const {{ method.name }}Callback methodCb)
 {
     auto* mock = {{ service.name }}ProxyMock::getMock();
 {% if method.input_param %}

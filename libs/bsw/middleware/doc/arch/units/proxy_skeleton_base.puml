@@ -1,0 +1,101 @@
+' *******************************************************************************
+' Copyright (c) 2026 BMW AG
+'
+' This program and the accompanying materials are made available under the
+' terms of the Apache License Version 2.0 which is available at
+' https://www.apache.org/licenses/LICENSE-2.0
+'
+' SPDX-License-Identifier: Apache-2.0
+' *******************************************************************************
+
+@startuml proxy_skeleton_base
+
+title Proxy/Skeleton Base - Class Diagram
+
+skinparam classFontSize 14
+skinparam shadowing false
+
+left to right direction
+
+namespace middleware {
+  namespace core <<domain>> {
+
+    class TransceiverBase <<base>> {
+        +getInstanceId(): uint16_t
+        +getServiceId(): uint16_t
+        +getAddressId(): uint8_t
+        +setAddressId(addressId: uint8_t)
+        +onNewMessageReceived(msg: Message): HRESULT
+        +isInitialized(): bool
+        +sendMessage(msg: Message): HRESULT
+        +getSourceClusterId(): uint8_t
+    }
+
+    class ProxyBase <<client-side>> {
+        +generateMessageHeader(memberId: uint16_t, requestId: uint16_t): Message
+        +sendMessage(msg: Message): HRESULT
+        #unsubscribe(serviceId: uint16_t)
+        #checkCrossThreadError(initId: uint32_t)
+        #initFromInstancesDatabase(instanceId: uint16_t, sourceCluster: uint8_t): HRESULT
+    }
+
+    class SkeletonBase <<server-side>> {
+        +sendMessage(msg: Message): HRESULT
+        +getClusterConnections(): span<IClusterConnection*>
+        #unsubscribe(serviceId: uint16_t)
+        #checkCrossThreadError(initId: uint32_t)
+        #initFromInstancesDatabase(instanceId: uint16_t): HRESULT
+    }
+
+    class EventSender {
+        +send(data: T, memberId: uint16_t): HRESULT
+        +send(memberId: uint16_t): HRESULT
+    }
+
+    class ProxyAttributeBase <<template>> {
+        +get(attrCb: GetterCallback): expected<uint16_t, HRESULT>
+        +freeAll()
+        +updateTimeouts()
+        +cancelGetterRequest(requestId: uint16_t): HRESULT
+        +answerGetterRequest(msg: Message)
+    }
+
+    class ProxyEventBase <<template>> {
+        +setReceiveHandler(callback: OnFieldChangedCallback)
+        +unsetReceiveHandler()
+    }
+
+    class SkeletonEvent <<template>> {
+        +send(data: Type): HRESULT
+    }
+
+    class ProxyMethod <<template>> {
+      +callMethod(...): expected<uint16_t, HRESULT>
+      +answerRequest(msg: Message)
+      +cancelRequest(requestId: uint16_t): HRESULT
+      +freeAll()
+      +updateTimeouts()
+    }
+
+    class ProxyMethodImpl {
+      #obtainFuture(): Future*
+      #futureMatchingRequestId(msg: Message): Future*
+    }
+
+  }
+}
+
+ProxyBase ..|> middleware.core.TransceiverBase
+SkeletonBase ..|> middleware.core.TransceiverBase
+
+EventSender --> SkeletonBase : broadcasts via
+
+ProxyAttributeBase --> ProxyBase : uses
+ProxyAttributeBase --> ProxyMethod : uses for getter requests
+ProxyMethod --|> ProxyMethodImpl
+
+ProxyEventBase --> ProxyBase : registered on
+
+SkeletonEvent --> EventSender : uses
+
+@enduml
