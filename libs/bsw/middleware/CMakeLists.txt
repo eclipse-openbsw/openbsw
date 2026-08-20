@@ -21,3 +21,5 @@ add_library(
 target_include_directories(middleware PUBLIC include)
 target_include_directories(middleware PRIVATE interfaces/include)
 target_link_libraries(middleware PUBLIC etl middlewareInterfaces)
+
+add_subdirectory(doc/examples)

@@ -1,0 +1,27 @@
+' *******************************************************************************
+' Copyright (c) 2026 BMW AG
+'
+' This program and the accompanying materials are made available under the
+' terms of the Apache License Version 2.0 which is available at
+' https://www.apache.org/licenses/LICENSE-2.0
+'
+' SPDX-License-Identifier: Apache-2.0
+' *******************************************************************************
+
+@startuml
+
+left to right direction
+skinparam linetype ortho
+
+component "Proxy/Skeleton Base" as event_broadcasting_proxy_skeleton_base
+component "Cluster Connection" as event_broadcasting_cluster_connection
+component "Message Management" as event_broadcasting_message_management
+component "Message Queue" as event_broadcasting_message_queue
+
+event_broadcasting_proxy_skeleton_base --> event_broadcasting_message_management
+event_broadcasting_proxy_skeleton_base --> event_broadcasting_cluster_connection
+event_broadcasting_cluster_connection --> event_broadcasting_message_queue
+event_broadcasting_cluster_connection --> event_broadcasting_proxy_skeleton_base
+event_broadcasting_message_management --> event_broadcasting_proxy_skeleton_base
+
+@enduml

@@ -72,7 +72,7 @@ uint16_t {{ service.name }}Proxy::getServiceId() const
         fProcessId = ::middleware::os::getProcessId();
         if (::middleware::core::HRESULT::Ok == ret)
         {
-            futureDispatcherDeinitialization();
+            clearPendingFutures();
         }
     }
     return ret;
@@ -81,12 +81,28 @@ uint16_t {{ service.name }}Proxy::getServiceId() const
 void {{ service.name }}Proxy::deInit()
 {
     checkCrossThreadError(fProcessId);
-    futureDispatcherDeinitialization();
+    clearPendingFutures();
+    unsetNotificationHandlers();
     if ({{ service.name }}Proxy::isInitialized())
     {
         static_cast<middleware::core::ITimeoutClusterConnection*>(_connection)->unregisterTimeoutTransceiver(*this);
     }
     Base::unsubscribe(internal::SERVICE_ID);
+}
+
+void {{ service.name }}Proxy::unsetNotificationHandlers()
+{
+        checkCrossThreadError(fProcessId);
+        // ATTRIBUTES
+{% for attribute in service.attributes if service.attributes %}
+    {% if not attribute.noSubscriptions %}
+        {{ attribute.variable }}.unsetReceiveHandler();
+    {% endif %}
+{% endfor %}
+        // EVENTS
+{% for event in service.events if service.events %}
+        {{ event.variable }}.unsetReceiveHandler();
+{% endfor %}
 }
 
 // METHODS
@@ -147,7 +163,7 @@ void {{ service.name }}Proxy::cancel{{ method.name }}Request(uint16_t requestId)
     return ret;
 }
 
-void {{ service.name }}Proxy::futureDispatcherDeinitialization()
+void {{ service.name }}Proxy::clearPendingFutures()
 {
     checkCrossThreadError(fProcessId);
     // ATTRIBUTES

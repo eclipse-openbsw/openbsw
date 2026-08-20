@@ -1,6 +1,6 @@
 ..
    *******************************************************************************
-   Copyright (c) 2024 Accenture
+   Copyright (c) 2026 BMW AG
 
    This program and the accompanying materials are made available under the
    terms of the Apache License Version 2.0 which is available at
@@ -34,7 +34,12 @@ This means that messages can travel between clusters, and as such the ``Message`
 Additionally, there may exist several possible recipients of a message, and as such, each recipient needs to have a unique identifier after system initialization.
 To this end, the header contains the source cluster ID, target cluster ID, and address ID fields.
 
-Finally, the payload contains the actual data being transmitted. This payload can be up to MAX_PAYLOAD_SIZE (currently 20 bytes long) and is stored directly within the ``Message`` object.
-If the payload exceeds this size, the middleware employs its own memory management system and stores an external handle within the ``Message`` object.
-This handle contains information about the location and size of the payload in the middleware's memory region, as well as a flag indicating whether the payload is shared among multiple messages.
-In case of internal errors, the payload can store an error code instead, which is delivered to any recipient waiting for a response.
+Finally, the payload contains the actual data being transmitted. The message
+capacity is defined by ``Message::MAX_PAYLOAD_SIZE`` as
+``Message::MAX_MESSAGE_SIZE - sizeof(Message::Header) - sizeof(uint32_t)``.
+With the current 64-byte message layout, this capacity is 48 bytes.
+Payloads that fit and are trivially copyable are stored in the message's
+internal buffer. Larger or non-trivial payloads are copy-constructed into
+middleware-managed external storage, and the message records an external
+payload offset and the ``hasExternalPayload`` flag. ``Message`` also supports
+an ``ErrorState`` payload for error responses.

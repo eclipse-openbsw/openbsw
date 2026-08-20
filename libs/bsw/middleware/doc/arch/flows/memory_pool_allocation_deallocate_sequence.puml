@@ -1,0 +1,34 @@
+' *******************************************************************************
+' Copyright (c) 2026 BMW AG
+'
+' This program and the accompanying materials are made available under the
+' terms of the Apache License Version 2.0 which is available at
+' https://www.apache.org/licenses/LICENSE-2.0
+'
+' SPDX-License-Identifier: Apache-2.0
+' *******************************************************************************
+
+@startuml
+
+hide footbox
+
+participant "Message Management" as message_management_unit
+participant "Memory Pool Management" as memory_pool_management_unit
+
+activate message_management_unit
+activate memory_pool_management_unit
+
+message_management_unit -> memory_pool_management_unit : deallocate(pointer)
+memory_pool_management_unit -> memory_pool_management_unit : determine pool from pointer address
+memory_pool_management_unit -> memory_pool_management_unit : deallocate(pointer) in Pool<64>
+memory_pool_management_unit -> memory_pool_management_unit : write previous pNext_chunk to freed chunk
+memory_pool_management_unit -> memory_pool_management_unit : update pNext_chunk to point to freed chunk
+memory_pool_management_unit -> memory_pool_management_unit : mark chunk as free
+memory_pool_management_unit --> message_management_unit : HRESULT::Ok
+
+note over memory_pool_management_unit : Chunk freed and added to the free-list.
+
+deactivate message_management_unit
+deactivate memory_pool_management_unit
+
+@enduml

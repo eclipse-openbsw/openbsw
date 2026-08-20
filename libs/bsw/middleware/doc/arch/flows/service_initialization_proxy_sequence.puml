@@ -1,0 +1,53 @@
+' *******************************************************************************
+' Copyright (c) 2026 BMW AG
+'
+' This program and the accompanying materials are made available under the
+' terms of the Apache License Version 2.0 which is available at
+' https://www.apache.org/licenses/LICENSE-2.0
+'
+' SPDX-License-Identifier: Apache-2.0
+' *******************************************************************************
+
+@startuml
+
+hide footbox
+
+actor "Generated\nProxy" as generated_proxy
+participant "Proxy/Skeleton Base" as proxy_skeleton_base_unit
+participant "Instance Database" as instance_database_unit
+participant "Cluster Connection" as cluster_connection_unit
+
+activate proxy_skeleton_base_unit
+activate instance_database_unit
+activate cluster_connection_unit
+
+generated_proxy -> proxy_skeleton_base_unit : initFromInstancesDatabase(instanceId, sourceCluster, dbRange)
+proxy_skeleton_base_unit -> proxy_skeleton_base_unit : unsubscribe previous connection
+proxy_skeleton_base_unit -> proxy_skeleton_base_unit : iterate through dbRange
+proxy_skeleton_base_unit -> instance_database_unit : getInstanceIdsRange()
+instance_database_unit --> proxy_skeleton_base_unit : instanceIds[]
+
+alt instance found in database
+    proxy_skeleton_base_unit -> instance_database_unit : getProxyConnectionsRange()
+    instance_database_unit --> proxy_skeleton_base_unit : connections[]
+    proxy_skeleton_base_unit -> proxy_skeleton_base_unit : find connection matching sourceCluster
+    alt matching connection found
+        proxy_skeleton_base_unit -> cluster_connection_unit : subscribe(proxy, instanceId)
+        cluster_connection_unit -> cluster_connection_unit : register proxy in transceivers
+        cluster_connection_unit --> proxy_skeleton_base_unit : HRESULT::Ok
+        proxy_skeleton_base_unit -> proxy_skeleton_base_unit : store connection reference
+        proxy_skeleton_base_unit --> generated_proxy : HRESULT::Ok
+    else no matching connection
+        proxy_skeleton_base_unit -> proxy_skeleton_base_unit : logError(TransceiverInitializationFailed)
+        proxy_skeleton_base_unit --> generated_proxy : HRESULT::TransceiverInitializationFailed
+    end
+else instance not found
+    proxy_skeleton_base_unit -> proxy_skeleton_base_unit : logError(TransceiverInitializationFailed)
+    proxy_skeleton_base_unit --> generated_proxy : HRESULT::TransceiverInitializationFailed
+end
+
+deactivate proxy_skeleton_base_unit
+deactivate instance_database_unit
+deactivate cluster_connection_unit
+
+@enduml
