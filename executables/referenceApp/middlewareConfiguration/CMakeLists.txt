@@ -52,9 +52,9 @@ add_custom_command(
     VERBATIM)
 
 set(PLATFORM_INTEGRATION_SRCS
-    platform_integration/logger/src/LoggerImpl.cpp
-    platform_integration/os/src/OsDefinitions.cpp
-    platform_integration/time/src/SystemTimeProvider.cpp)
+    src/platform_integration/logger/LoggerImpl.cpp
+    src/platform_integration/os/OsDefinitions.cpp
+    src/platform_integration/time/SystemTimeProvider.cpp)
 
 add_library(middlewareConfiguration
             ${GENERATED_SRCS} ${PLATFORM_INTEGRATION_SRCS} src/MemoryLayout.cpp)
@@ -67,12 +67,11 @@ target_include_directories(
 
 target_include_directories(
     middlewareConfiguration
-    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/platform_integration/concurrency/include
+    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include/platform_integration
             ${CMAKE_CURRENT_SOURCE_DIR}/../application/include)
 
 target_include_directories(
-    middleware
-    PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/platform_integration/concurrency/include)
+    middleware PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/platform_integration)
 
 target_link_libraries(middlewareConfiguration PUBLIC asyncBinding middleware
                                                      logger)
