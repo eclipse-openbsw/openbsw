@@ -10,6 +10,8 @@
 
 #pragma once
 
+#include "ethernet/NetworkInterface.h"
+
 #include <etl/queue_spsc_atomic.h>
 #include <etl/span.h>
 #include <ip/IPAddress.h>
@@ -49,5 +51,5 @@ inline ip_addr_t to_lwipIp(::ip::IPAddress const& ip)
 bool processPbufQueue(
     ::lwiputils::PbufQueue& receiver,
     ::etl::span<netif> lwnetifs,
-    ::etl::span<uint16_t const> vlanIds);
+    ::etl::span<::ethernet::NetifVlanId const> vlanIds);
 } // namespace lwiputils

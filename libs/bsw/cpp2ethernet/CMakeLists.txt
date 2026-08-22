@@ -23,7 +23,8 @@ target_link_libraries(
            bsp
            etl
            util
-           async)
+           async
+           shed)
 
 if (BUILD_EXECUTABLE STREQUAL "unitTest")
     add_library(cpp2ethernetMock INTERFACE)

@@ -14,8 +14,10 @@
 
 #include <etl/array.h>
 #include <etl/delegate.h>
+#include <etl/error_handler.h>
 #include <etl/signal.h>
 #include <etl/span.h>
+#include <shed/ops.h>
 
 namespace ip
 {
@@ -165,8 +167,8 @@ public:
 protected:
     NetworkInterfaceConfigRegistry()                                                 = default;
     ~NetworkInterfaceConfigRegistry()                                                = default;
-    NetworkInterfaceConfigRegistry(NetworkInterfaceConfigRegistry const&)            = delete;
-    NetworkInterfaceConfigRegistry& operator=(NetworkInterfaceConfigRegistry const&) = delete;
+    NetworkInterfaceConfigRegistry(NetworkInterfaceConfigRegistry const&)            = default;
+    NetworkInterfaceConfigRegistry& operator=(NetworkInterfaceConfigRegistry const&) = default;
 };
 
 namespace declare
@@ -175,28 +177,34 @@ namespace declare
  * Concrete NetworkInterfaceConfigRegistry that owns an etl::signal sized for a given
  * number of listener slots.
  */
-template<size_t SlotCapacity>
+template<size_t SlotCapacity, typename Table, typename BusIdColumn = uint8_t>
 class NetworkInterfaceConfigRegistry : public ::ip::NetworkInterfaceConfigRegistry
 {
 public:
     using ConfigChangedSignal
         = ::etl::signal<void(uint8_t, NetworkInterfaceConfig const&), SlotCapacity>;
 
-    NetworkInterfaceConfigRegistry(
-        ::etl::span<uint8_t const> busIds, ::etl::span<NetworkInterfaceConfig const> configs)
-    : busIds(busIds), configs(configs)
-    {}
+    NetworkInterfaceConfigRegistry() = default;
 
-    ::etl::span<uint8_t const> busIds;
-    ::etl::span<NetworkInterfaceConfig const> configs;
+    explicit NetworkInterfaceConfigRegistry(Table& table) : _table(&table) {}
+
+    NetworkInterfaceConfigRegistry(NetworkInterfaceConfigRegistry const&)            = default;
+    NetworkInterfaceConfigRegistry& operator=(NetworkInterfaceConfigRegistry const&) = default;
+
+    Table* _table = nullptr;
 
     ConfigChangedSignal configChangedSignal;
 
     NetworkInterfaceConfig getConfig(uint8_t const busId) const override
     {
+        ETL_ASSERT(
+            _table != nullptr, ETL_ERROR_GENERIC("NetworkInterfaceConfigRegistry not initialised"));
+
+        auto const busIds  = ::shed::get<BusIdColumn>(*_table).data();
+        auto const configs = ::shed::get<NetworkInterfaceConfig>(*_table).data();
         for (size_t i = 0; i < busIds.size(); ++i)
         {
-            if (busIds[i] == busId)
+            if (static_cast<uint8_t>(busIds[i]) == busId)
             {
                 return configs[i];
             }

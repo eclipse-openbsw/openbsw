@@ -318,12 +318,13 @@ void startApp()
         "doipServer",
         doipServerSystem.create(
             *transportSystem,
-            ethernetSystem->netifConfigRegistry,
+            ::shed::get<::systems::NetifConfigRegistry>(ethernetSystem->netifs).value,
             TASK_ETHERNET,
             ::busid::ETH_0,
             LOGICAL_ADDRESS,
             ::ethX::MAC_ADDRESS,
-            ethernetSystem->netifs.networkInterfaceConfigsIp4[0].broadcastAddress()), // ETH0
+            ::shed::get<::ip::NetworkInterfaceConfig>(ethernetSystem->netifs)[0]
+                .broadcastAddress()), // ETH0
         6U);
 #endif
 
