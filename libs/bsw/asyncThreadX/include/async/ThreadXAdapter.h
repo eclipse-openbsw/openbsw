@@ -289,8 +289,67 @@ bool ThreadXAdapter<Binding>::getStackUsage(size_t const taskIdx, StackUsage& st
                 - reinterpret_cast<UCHAR*>(taskHandle.tx_thread_stack_highest_ptr));
         }
 #else
+#ifndef TX_DISABLE_STACK_FILLING
+        // we still have chance to retrieve the stack usage if stack filling is enabled, even stack
+        // checking is disabled
+        ULONG const* const stackStartPtr
+            = reinterpret_cast<ULONG const*>(taskHandle.tx_thread_stack_start);
+        ULONG const* const stackEndPtr
+            = reinterpret_cast<ULONG const*>(taskHandle.tx_thread_stack_end);
+        ULONG const* const stackCurrentPtr
+            = reinterpret_cast<ULONG const*>(taskHandle.tx_thread_stack_ptr);
+        ULONG const* const stackHighestPtr
+            = reinterpret_cast<ULONG const* const>(taskHandle.tx_thread_stack_highest_ptr);
+        ULONG const stackFillWord = static_cast<ULONG>(TX_STACK_FILL);
+
+        // Downward stack growth
+        if (stackEndPtr >= stackStartPtr)
+        {
+            bool const stackHighestPtrValid
+                = (stackHighestPtr >= stackStartPtr && stackHighestPtr <= stackEndPtr);
+            ULONG const* current = stackHighestPtrValid ? stackHighestPtr : stackCurrentPtr;
+
+            while (current > stackStartPtr && *current != stackFillWord)
+            {
+                --current;
+            }
+            // current points to the last filled word(from stackStart)
+            // move it back to the last used word in the stack, which is the next word from the last
+            // filled word
+            ++current;
+            stackUsage._usedSize = static_cast<uint32_t>(
+                                       reinterpret_cast<UCHAR const*>(stackEndPtr)
+                                       - reinterpret_cast<UCHAR const*>(current))
+                                   + 1; // stackEndPtr is the last valid stack address
+
+            // tx_thread_stack_highest_ptr points to the last used stack word
+            taskHandle.tx_thread_stack_highest_ptr
+                = const_cast<VOID*>(reinterpret_cast<VOID const*>(current));
+        }
+        else // Upward stack growth
+        {
+            bool const stackHighestPtrValid
+                = (stackHighestPtr <= stackStartPtr && stackHighestPtr >= stackEndPtr);
+            ULONG const* current = stackHighestPtrValid ? stackHighestPtr : stackCurrentPtr;
+
+            while (current < stackStartPtr && *current != stackFillWord)
+            {
+                ++current;
+            }
+            --current;
+            stackUsage._usedSize = static_cast<uint32_t>(
+                                       reinterpret_cast<UCHAR const*>(stackStartPtr)
+                                       - reinterpret_cast<UCHAR const*>(current))
+                                   + 1; // stackEndPtr is the last valid stack address
+
+            // tx_thread_stack_highest_ptr points to the last used stack word
+            taskHandle.tx_thread_stack_highest_ptr
+                = const_cast<VOID*>(reinterpret_cast<VOID const*>(current));
+        }
+#else
         // no information available
         stackUsage._usedSize = 0;
+#endif // TX_DISABLE_STACK_FILLING
 #endif
         return true;
     }
