@@ -23,7 +23,11 @@ using namespace ::testing;
  */
 TEST(SocketCanTransceiverTest, transceiver_creation)
 {
-    ::can::SocketCanTransceiver::DeviceConfig config{"vcan0", {}};
+    ::can::SocketCanTransceiver::DeviceConfig config{
+        "vcan0",
+        {},
+        false,  /*enableCanFd*/
+        false}; /*enableBitRateSwitch*/
     ::can::SocketCanTransceiver transceiver{config};
     EXPECT_EQ(transceiver.getState(), ::can::ICanTransceiver::State::CLOSED);
 }

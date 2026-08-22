@@ -15,6 +15,11 @@ if (NOT CMAKE_SYSTEM_NAME OR NOT CMAKE_SYSTEM_NAME MATCHES "Darwin")
         ON
         CACHE BOOL "Turn CAN support on or off" FORCE)
 
+    set(PLATFORM_CAN0_USE_FD
+        ON
+        CACHE BOOL "Use CAN FD (64-byte) for CAN_0 instead of classic CAN"
+              FORCE)
+
     set(PLATFORM_SUPPORT_IO
         OFF
         CACHE BOOL "Turn IO support on or off" FORCE)

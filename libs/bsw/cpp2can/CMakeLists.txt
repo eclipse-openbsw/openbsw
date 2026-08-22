@@ -7,6 +7,10 @@ add_library(
     src/can/filter/IntervalFilter.cpp
     src/can/transceiver/AbstractCANTransceiver.cpp)
 
+if (PLATFORM_SUPPORT_CAN AND PLATFORM_CAN0_USE_FD)
+    target_compile_definitions(cpp2can PUBLIC CPP2CAN_USE_64_BYTE_FRAMES)
+endif ()
+
 target_include_directories(cpp2can PUBLIC include)
 
 target_link_libraries(

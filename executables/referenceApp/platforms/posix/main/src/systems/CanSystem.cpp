@@ -19,8 +19,19 @@ static int const MAX_RECEIVED_PER_RUN          = 3;
 namespace
 {
 
-::can::SocketCanTransceiver::DeviceConfig canConfig{"vcan0", ::busid::CAN_0};
-
+// clang-format off
+::can::SocketCanTransceiver::DeviceConfig canConfig
+{
+    "vcan0", ::busid::CAN_0,
+#if defined(CAN0_USE_FD)
+        true, /*enableCanFd*/
+        true  /*enableBitRateSwitch*/
+#else
+        false, /*enableCanFd*/
+        false  /*enableBitRateSwitch*/
+#endif
+};
+// clang-format on
 } // namespace
 
 CanSystem::CanSystem(::async::ContextType context)

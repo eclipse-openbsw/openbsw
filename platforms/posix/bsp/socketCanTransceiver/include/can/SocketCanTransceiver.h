@@ -37,8 +37,10 @@ public:
      */
     struct DeviceConfig
     {
-        char const* name; /// SocketCAN interface name
-        uint8_t busId;    /// currently not used
+        char const* name;         /// SocketCAN interface name
+        uint8_t busId;            /// currently not used
+        bool enableCanFd;         /// open the socket in CAN FD mode and send frames as FD
+        bool enableBitRateSwitch; /// use Bit Rate Switch (data-phase bitrate) on TX FD frames
     };
 
     explicit SocketCanTransceiver(DeviceConfig const& config);
