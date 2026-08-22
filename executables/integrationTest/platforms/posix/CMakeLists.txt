@@ -1,0 +1,12 @@
+add_subdirectory(bspConfiguration)
+add_subdirectory(main)
+
+if (BUILD_TARGET_RTOS STREQUAL "FREERTOS")
+    add_subdirectory(freeRtosCoreConfiguration)
+    add_library(freeRtosPort ALIAS freeRtosPosixPort)
+    add_library(freeRtosPortImpl ALIAS freeRtosPosix)
+elseif (BUILD_TARGET_RTOS STREQUAL "THREADX")
+    add_subdirectory(threadXCoreConfiguration)
+    add_library(threadXPort ALIAS threadXLinuxPort)
+    add_library(threadXPortImpl ALIAS threadXLinux)
+endif ()
