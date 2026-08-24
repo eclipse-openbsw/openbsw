@@ -14,7 +14,7 @@ from docutils import nodes
 
 # General configuration
 project = "Eclipse OpenBSW Documentation"
-copyright = f"{datetime.now().year} Accenture"
+copyright = f"{datetime.now().year} Eclipse OpenBSW Contributors"
 
 extensions = [
     "sphinxcontrib.jquery",
