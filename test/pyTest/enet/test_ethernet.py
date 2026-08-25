@@ -36,6 +36,8 @@ class TestEthernetNetwork:
         udpsocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         TARGET_ADDR = (target_session.target_ip_address(), 49444)
         RECV_BUF_SIZE = 65535
+        RECV_TIMEOUT = 2
+        udpsocket.settimeout(RECV_TIMEOUT)
 
         num_packets = 1000
         num_bytes_send = 50
@@ -43,10 +45,16 @@ class TestEthernetNetwork:
         for i in range(num_packets):
             data_to_send = str.encode(f"{i:04d}" + "#" * (num_bytes_send - 4))
             udpsocket.sendto(data_to_send, TARGET_ADDR)
-            received_data, _ = udpsocket.recvfrom(RECV_BUF_SIZE)
+            try:
+                received_data, _ = udpsocket.recvfrom(RECV_BUF_SIZE)
+            except socket.timeout:
+                raise AssertionError(
+                    f"UDP packet {i}: timed out after {RECV_TIMEOUT}s waiting for "
+                    f"an echo from {TARGET_ADDR}"
+                )
             assert (
                 data_to_send == received_data
-            ), f"Mismatch occurred: sent {data_to_send}, received {received_data}"
+            ), f"Mismatch UDP packet {i}: sent {data_to_send}, received {received_data}"
 
     # Test for TCP - Send n (= num_packets) packets and
     # check if the target demo app echoes back the sent data.
