@@ -107,115 +107,6 @@ private:
 struct ClusterConnectionConfigurationProxyOnlyMock
 : public IClusterConnectionConfigurationProxyOnly
 , ClusterConfigurationMockBase
-{
-    HRESULT subscribe(ProxyBase& proxy, uint16_t const serviceInstanceId) override
-    {
-        return ClusterConfigurationMockBase::subscribe(proxy, serviceInstanceId);
-    }
-
-    void unsubscribe(ProxyBase&, uint16_t const) override {}
-
-    HRESULT dispatchMessage(Message const& msg) const override
-    {
-        return ClusterConfigurationMockBase::dispatchMessage(msg);
-    }
-
-    uint8_t getSourceClusterId() const override
-    {
-        return ClusterConfigurationMockBase::getSourceClusterId();
-    }
-
-    uint8_t getTargetClusterId() const override
-    {
-        return ClusterConfigurationMockBase::getTargetClusterId();
-    }
-
-    bool write(Message const& msg) const override
-    {
-        return ClusterConfigurationMockBase::write(msg);
-    }
-
-    std::size_t registeredTransceiversCount(uint16_t const) const override { return 0; }
-};
-
-struct ClusterConnectionConfigurationSkeletonOnlyMock
-: public IClusterConnectionConfigurationSkeletonOnly
-, ClusterConfigurationMockBase
-{
-    HRESULT subscribe(SkeletonBase& skeleton, uint16_t const serviceInstanceId) override
-    {
-        return ClusterConfigurationMockBase::subscribe(skeleton, serviceInstanceId);
-    }
-
-    void unsubscribe(SkeletonBase&, uint16_t const) override {}
-
-    HRESULT dispatchMessage(Message const& msg) const override
-    {
-        return ClusterConfigurationMockBase::dispatchMessage(msg);
-    }
-
-    uint8_t getSourceClusterId() const override
-    {
-        return ClusterConfigurationMockBase::getSourceClusterId();
-    }
-
-    uint8_t getTargetClusterId() const override
-    {
-        return ClusterConfigurationMockBase::getTargetClusterId();
-    }
-
-    bool write(Message const& msg) const override
-    {
-        return ClusterConfigurationMockBase::write(msg);
-    }
-
-    std::size_t registeredTransceiversCount(uint16_t const) const override { return 0; }
-};
-
-struct ClusterConnectionConfigurationBidirectionalMock
-: public IClusterConnectionConfigurationBidirectional
-, ClusterConfigurationMockBase
-{
-    HRESULT subscribe(ProxyBase& proxy, uint16_t const serviceInstanceId) override
-    {
-        return ClusterConfigurationMockBase::subscribe(proxy, serviceInstanceId);
-    }
-
-    void unsubscribe(ProxyBase&, uint16_t const) override {}
-
-    HRESULT subscribe(SkeletonBase& skeleton, uint16_t const serviceInstanceId) override
-    {
-        return ClusterConfigurationMockBase::subscribe(skeleton, serviceInstanceId);
-    }
-
-    void unsubscribe(SkeletonBase&, uint16_t const) override {}
-
-    HRESULT dispatchMessage(Message const& msg) const override
-    {
-        return ClusterConfigurationMockBase::dispatchMessage(msg);
-    }
-
-    uint8_t getSourceClusterId() const override
-    {
-        return ClusterConfigurationMockBase::getSourceClusterId();
-    }
-
-    uint8_t getTargetClusterId() const override
-    {
-        return ClusterConfigurationMockBase::getTargetClusterId();
-    }
-
-    bool write(Message const& msg) const override
-    {
-        return ClusterConfigurationMockBase::write(msg);
-    }
-
-    std::size_t registeredTransceiversCount(uint16_t const) const override { return 0; }
-};
-
-struct ClusterConnectionConfigurationProxyOnlyTimeoutMock
-: public IClusterConnectionConfigurationProxyOnlyWithTimeout
-, ClusterConfigurationMockBase
 , TimeoutTransceiverCounter
 {
     HRESULT subscribe(ProxyBase& proxy, uint16_t const serviceInstanceId) override
@@ -257,8 +148,8 @@ struct ClusterConnectionConfigurationProxyOnlyTimeoutMock
     void updateTimeouts() override { TimeoutTransceiverCounter::updateTimeouts(); }
 };
 
-struct ClusterConnectionConfigurationSkeletonOnlyTimeoutMock
-: public IClusterConnectionConfigurationSkeletonOnlyWithTimeout
+struct ClusterConnectionConfigurationSkeletonOnlyMock
+: public IClusterConnectionConfigurationSkeletonOnly
 , ClusterConfigurationMockBase
 , TimeoutTransceiverCounter
 {
@@ -304,8 +195,8 @@ struct ClusterConnectionConfigurationSkeletonOnlyTimeoutMock
     void updateTimeouts() override { TimeoutTransceiverCounter::updateTimeouts(); }
 };
 
-struct ClusterConnectionConfigurationBidirectionalTimeoutMock
-: public IClusterConnectionConfigurationBidirectionalWithTimeout
+struct ClusterConnectionConfigurationBidirectionalMock
+: public IClusterConnectionConfigurationBidirectional
 , ClusterConfigurationMockBase
 , TimeoutTransceiverCounter
 {
@@ -379,32 +270,18 @@ TEST_F(ConnectionBaseTest, ConnectionsNotImplemented)
     Skeleton skeletonInstance(1, 2);
 
     ClusterConnectionConfigurationProxyOnlyMock confProxyOnly;
-    ClusterConnectionNoTimeoutProxyOnly connectionProxyOnly(confProxyOnly);
+    ClusterConnectionProxyOnly connectionProxyOnly(confProxyOnly);
     EXPECT_EQ(
         ::middleware::core::HRESULT::NotImplemented,
         connectionProxyOnly.subscribe(skeletonInstance, 123));
     EXPECT_NO_THROW(connectionProxyOnly.unsubscribe(skeletonInstance, 123));
 
     ClusterConnectionConfigurationSkeletonOnlyMock confSkeletonOnly;
-    ClusterConnectionNoTimeoutSkeletonOnly connectionSkeletonOnly(confSkeletonOnly);
+    ClusterConnectionSkeletonOnly connectionSkeletonOnly(confSkeletonOnly);
     EXPECT_EQ(
         ::middleware::core::HRESULT::NotImplemented,
         connectionSkeletonOnly.subscribe(proxyInstance, 123));
     EXPECT_NO_THROW(connectionSkeletonOnly.unsubscribe(proxyInstance, 123));
-
-    ClusterConnectionConfigurationProxyOnlyTimeoutMock confProxyOnlyTimeout;
-    ClusterConnectionProxyOnlyWithTimeout connectionProxyOnlyTimeout(confProxyOnlyTimeout);
-    EXPECT_EQ(
-        ::middleware::core::HRESULT::NotImplemented,
-        connectionProxyOnlyTimeout.subscribe(skeletonInstance, 123));
-    EXPECT_NO_THROW(connectionProxyOnlyTimeout.unsubscribe(skeletonInstance, 123));
-
-    ClusterConnectionConfigurationSkeletonOnlyTimeoutMock confSkeletonOnlyTimeout;
-    ClusterConnectionSkeletonOnlyWithTimeout connectionSkeletonOnlyTimeout(confSkeletonOnlyTimeout);
-    EXPECT_EQ(
-        ::middleware::core::HRESULT::NotImplemented,
-        connectionSkeletonOnlyTimeout.subscribe(proxyInstance, 123));
-    EXPECT_NO_THROW(connectionSkeletonOnlyTimeout.unsubscribe(proxyInstance, 123));
 }
 
 TEST_F(ConnectionBaseTest, SubscribeUnsubscribeProxyOnly)
@@ -412,7 +289,7 @@ TEST_F(ConnectionBaseTest, SubscribeUnsubscribeProxyOnly)
     Proxy proxyInstance(1, 2, 4);
     ClusterConnectionConfigurationProxyOnlyMock confProxyOnly;
 
-    ClusterConnectionNoTimeoutProxyOnly connectionProxyOnly(confProxyOnly);
+    ClusterConnectionProxyOnly connectionProxyOnly(confProxyOnly);
     EXPECT_EQ(::middleware::core::HRESULT::Ok, connectionProxyOnly.subscribe(proxyInstance, 1));
     EXPECT_NO_THROW(connectionProxyOnly.unsubscribe(proxyInstance, 1));
 }
@@ -422,7 +299,7 @@ TEST_F(ConnectionBaseTest, SubscribeUnsubscribeSkeletonOnly)
     Skeleton skeletonInstance(1, 2);
     ClusterConnectionConfigurationSkeletonOnlyMock confSkeletonOnly;
 
-    ClusterConnectionNoTimeoutSkeletonOnly connectionSkeletonOnly(confSkeletonOnly);
+    ClusterConnectionSkeletonOnly connectionSkeletonOnly(confSkeletonOnly);
     EXPECT_EQ(
         ::middleware::core::HRESULT::Ok, connectionSkeletonOnly.subscribe(skeletonInstance, 1));
     EXPECT_NO_THROW(connectionSkeletonOnly.unsubscribe(skeletonInstance, 1));
@@ -434,42 +311,7 @@ TEST_F(ConnectionBaseTest, SubscribeUnsubscribeBidirectional)
     Skeleton skeletonInstance(1, 2);
     ClusterConnectionConfigurationBidirectionalMock confBidirectional;
 
-    ClusterConnectionNoTimeoutBidirectional connectionBidirectional(confBidirectional);
-    EXPECT_EQ(
-        ::middleware::core::HRESULT::Ok, connectionBidirectional.subscribe(skeletonInstance, 1));
-    EXPECT_EQ(::middleware::core::HRESULT::Ok, connectionBidirectional.subscribe(proxyInstance, 1));
-    EXPECT_NO_THROW(connectionBidirectional.unsubscribe(skeletonInstance, 1));
-    EXPECT_NO_THROW(connectionBidirectional.unsubscribe(proxyInstance, 1));
-}
-
-TEST_F(ConnectionBaseTest, SubscribeUnsubscribeProxyOnlyWithTimeout)
-{
-    Proxy proxyInstance(1, 2, 4);
-    ClusterConnectionConfigurationProxyOnlyTimeoutMock confProxyOnlyTimeout;
-
-    ClusterConnectionProxyOnlyWithTimeout connectionProxyOnly(confProxyOnlyTimeout);
-    EXPECT_EQ(::middleware::core::HRESULT::Ok, connectionProxyOnly.subscribe(proxyInstance, 1));
-    EXPECT_NO_THROW(connectionProxyOnly.unsubscribe(proxyInstance, 1));
-}
-
-TEST_F(ConnectionBaseTest, SubscribeUnsubscribeSkeletonOnlyWithTimeout)
-{
-    Skeleton skeletonInstance(1, 2);
-    ClusterConnectionConfigurationSkeletonOnlyTimeoutMock confSkeletonOnlyTimeout;
-
-    ClusterConnectionSkeletonOnlyWithTimeout connectionSkeletonOnly(confSkeletonOnlyTimeout);
-    EXPECT_EQ(
-        ::middleware::core::HRESULT::Ok, connectionSkeletonOnly.subscribe(skeletonInstance, 1));
-    EXPECT_NO_THROW(connectionSkeletonOnly.unsubscribe(skeletonInstance, 1));
-}
-
-TEST_F(ConnectionBaseTest, SubscribeUnsubscribeBidirectionalWithTimeout)
-{
-    Proxy proxyInstance(1, 2, 4);
-    Skeleton skeletonInstance(1, 2);
-    ClusterConnectionConfigurationBidirectionalTimeoutMock confBidirectionalTimeout;
-
-    ClusterConnectionBidirectionalWithTimeout connectionBidirectional(confBidirectionalTimeout);
+    ClusterConnectionBidirectional connectionBidirectional(confBidirectional);
     EXPECT_EQ(
         ::middleware::core::HRESULT::Ok, connectionBidirectional.subscribe(skeletonInstance, 1));
     EXPECT_EQ(::middleware::core::HRESULT::Ok, connectionBidirectional.subscribe(proxyInstance, 1));
@@ -703,10 +545,9 @@ TEST_F(ConnectionBaseTest, processMessageFromReceivingSide)
 TEST_F(ConnectionBaseTest, ProxyRegistersAsTimeoutTransceiver)
 {
     ProxyWithTimeout proxyInstance(1, 2);
-    ClusterConnectionConfigurationSkeletonOnlyTimeoutMock confSkeletonOnly;
+    ClusterConnectionConfigurationSkeletonOnlyMock confSkeletonOnly;
     ::middleware::core::ClusterConnectionTypeSelector<
-        ClusterConnectionConfigurationSkeletonOnlyTimeoutMock>::type
-        actualConnection(confSkeletonOnly);
+        ClusterConnectionConfigurationSkeletonOnlyMock>::type actualConnection(confSkeletonOnly);
 
     EXPECT_NO_THROW(actualConnection.registerTimeoutTransceiver(proxyInstance));
     EXPECT_EQ(1, actualConnection.registeredTransceiversCount(1));

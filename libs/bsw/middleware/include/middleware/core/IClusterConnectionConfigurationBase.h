@@ -159,11 +159,12 @@ protected:
 };
 
 /**
- * Configuration interface for proxy-only cluster connections.
- * Extends the base configuration interface with proxy subscription management.
- * This interface is used by cluster connections that only support proxy communication.
+ * Configuration interface for proxy-only cluster connections with timeout support.
+ * Extends the timeout configuration interface with proxy subscription management.
+ * This interface is used by cluster connections that support proxy communication with timeout
+ * tracking.
  */
-struct IClusterConnectionConfigurationProxyOnly : public IClusterConnectionConfigurationBase
+struct IClusterConnectionConfigurationProxyOnly : public ITimeoutConfiguration
 {
     IClusterConnectionConfigurationProxyOnly(IClusterConnectionConfigurationProxyOnly const&)
         = delete;
@@ -186,41 +187,12 @@ protected:
 };
 
 /**
- * Configuration interface for skeleton-only cluster connections.
- * Extends the base configuration interface with skeleton subscription management.
- * This interface is used by cluster connections that only support skeleton communication.
- */
-struct IClusterConnectionConfigurationSkeletonOnly : public IClusterConnectionConfigurationBase
-{
-    IClusterConnectionConfigurationSkeletonOnly(IClusterConnectionConfigurationSkeletonOnly const&)
-        = delete;
-    IClusterConnectionConfigurationSkeletonOnly&
-    operator=(IClusterConnectionConfigurationSkeletonOnly const&)
-        = delete;
-    IClusterConnectionConfigurationSkeletonOnly(IClusterConnectionConfigurationSkeletonOnly&&)
-        = delete;
-    IClusterConnectionConfigurationSkeletonOnly&
-    operator=(IClusterConnectionConfigurationSkeletonOnly&&)
-        = delete;
-
-    /** Subscribes \p skeleton for \p serviceInstanceId, returns HRESULT. */
-    virtual HRESULT subscribe(SkeletonBase& skeleton, uint16_t const serviceInstanceId) = 0;
-
-    /** Unsubscribes \p skeleton for \p serviceId. */
-    virtual void unsubscribe(SkeletonBase& skeleton, uint16_t const serviceId) = 0;
-
-protected:
-    virtual ~IClusterConnectionConfigurationSkeletonOnly() = default;
-    IClusterConnectionConfigurationSkeletonOnly()          = default;
-};
-
-/**
- * Configuration interface for bidirectional cluster connections.
- * Extends the base configuration interface with both proxy and skeleton subscription
+ * Configuration interface for bidirectional cluster connections with timeout support.
+ * Extends the timeout configuration interface with both proxy and skeleton subscription
  * management. This interface is used by cluster connections that support full bidirectional
- * communication.
+ * communication with timeout tracking.
  */
-struct IClusterConnectionConfigurationBidirectional : public IClusterConnectionConfigurationBase
+struct IClusterConnectionConfigurationBidirectional : public ITimeoutConfiguration
 {
     IClusterConnectionConfigurationBidirectional(
         IClusterConnectionConfigurationBidirectional const&)
@@ -247,78 +219,8 @@ struct IClusterConnectionConfigurationBidirectional : public IClusterConnectionC
     virtual void unsubscribe(SkeletonBase& skeleton, uint16_t const serviceId) = 0;
 
 protected:
-    virtual ~IClusterConnectionConfigurationBidirectional() = default;
     IClusterConnectionConfigurationBidirectional()          = default;
-};
-
-/**
- * Configuration interface for proxy-only cluster connections with timeout support.
- * Extends the timeout configuration interface with proxy subscription management.
- * This interface is used by cluster connections that support proxy communication with timeout
- * tracking.
- */
-struct IClusterConnectionConfigurationProxyOnlyWithTimeout : public ITimeoutConfiguration
-{
-    IClusterConnectionConfigurationProxyOnlyWithTimeout(
-        IClusterConnectionConfigurationProxyOnlyWithTimeout const&)
-        = delete;
-    IClusterConnectionConfigurationProxyOnlyWithTimeout&
-    operator=(IClusterConnectionConfigurationProxyOnlyWithTimeout const&)
-        = delete;
-    IClusterConnectionConfigurationProxyOnlyWithTimeout(
-        IClusterConnectionConfigurationProxyOnlyWithTimeout&&)
-        = delete;
-    IClusterConnectionConfigurationProxyOnlyWithTimeout&
-    operator=(IClusterConnectionConfigurationProxyOnlyWithTimeout&&)
-        = delete;
-
-    /** Subscribes \p proxy for \p serviceInstanceId, returns HRESULT. */
-    virtual HRESULT subscribe(ProxyBase& proxy, uint16_t const serviceInstanceId) = 0;
-
-    /** Unsubscribes \p proxy for \p serviceId. */
-    virtual void unsubscribe(ProxyBase& proxy, uint16_t const serviceId) = 0;
-
-protected:
-    virtual ~IClusterConnectionConfigurationProxyOnlyWithTimeout() = default;
-    IClusterConnectionConfigurationProxyOnlyWithTimeout()          = default;
-};
-
-/**
- * Configuration interface for bidirectional cluster connections with timeout support.
- * Extends the timeout configuration interface with both proxy and skeleton subscription
- * management. This interface is used by cluster connections that support full bidirectional
- * communication with timeout tracking.
- */
-struct IClusterConnectionConfigurationBidirectionalWithTimeout : public ITimeoutConfiguration
-{
-    IClusterConnectionConfigurationBidirectionalWithTimeout(
-        IClusterConnectionConfigurationBidirectionalWithTimeout const&)
-        = delete;
-    IClusterConnectionConfigurationBidirectionalWithTimeout&
-    operator=(IClusterConnectionConfigurationBidirectionalWithTimeout const&)
-        = delete;
-    IClusterConnectionConfigurationBidirectionalWithTimeout(
-        IClusterConnectionConfigurationBidirectionalWithTimeout&&)
-        = delete;
-    IClusterConnectionConfigurationBidirectionalWithTimeout&
-    operator=(IClusterConnectionConfigurationBidirectionalWithTimeout&&)
-        = delete;
-
-    /** Subscribes \p proxy for \p serviceInstanceId, returns HRESULT. */
-    virtual HRESULT subscribe(ProxyBase& proxy, uint16_t const serviceInstanceId) = 0;
-
-    /** Unsubscribes \p proxy for \p serviceId. */
-    virtual void unsubscribe(ProxyBase& proxy, uint16_t const serviceId) = 0;
-
-    /** Subscribes \p skeleton for \p serviceInstanceId, returns HRESULT. */
-    virtual HRESULT subscribe(SkeletonBase& skeleton, uint16_t const serviceInstanceId) = 0;
-
-    /** Unsubscribes \p skeleton for \p serviceId. */
-    virtual void unsubscribe(SkeletonBase& skeleton, uint16_t const serviceId) = 0;
-
-protected:
-    IClusterConnectionConfigurationBidirectionalWithTimeout()          = default;
-    virtual ~IClusterConnectionConfigurationBidirectionalWithTimeout() = default;
+    virtual ~IClusterConnectionConfigurationBidirectional() = default;
 };
 
 /**
@@ -327,19 +229,17 @@ protected:
  * This interface is used by cluster connections that support skeleton communication with timeout
  * tracking.
  */
-struct IClusterConnectionConfigurationSkeletonOnlyWithTimeout : public ITimeoutConfiguration
+struct IClusterConnectionConfigurationSkeletonOnly : public ITimeoutConfiguration
 {
-    IClusterConnectionConfigurationSkeletonOnlyWithTimeout(
-        IClusterConnectionConfigurationSkeletonOnlyWithTimeout const&)
+    IClusterConnectionConfigurationSkeletonOnly(IClusterConnectionConfigurationSkeletonOnly const&)
         = delete;
-    IClusterConnectionConfigurationSkeletonOnlyWithTimeout&
-    operator=(IClusterConnectionConfigurationSkeletonOnlyWithTimeout const&)
+    IClusterConnectionConfigurationSkeletonOnly&
+    operator=(IClusterConnectionConfigurationSkeletonOnly const&)
         = delete;
-    IClusterConnectionConfigurationSkeletonOnlyWithTimeout(
-        IClusterConnectionConfigurationSkeletonOnlyWithTimeout&&)
+    IClusterConnectionConfigurationSkeletonOnly(IClusterConnectionConfigurationSkeletonOnly&&)
         = delete;
-    IClusterConnectionConfigurationSkeletonOnlyWithTimeout&
-    operator=(IClusterConnectionConfigurationSkeletonOnlyWithTimeout&&)
+    IClusterConnectionConfigurationSkeletonOnly&
+    operator=(IClusterConnectionConfigurationSkeletonOnly&&)
         = delete;
 
     /** Subscribes \p skeleton for \p serviceInstanceId, returns HRESULT. */
@@ -349,8 +249,8 @@ struct IClusterConnectionConfigurationSkeletonOnlyWithTimeout : public ITimeoutC
     virtual void unsubscribe(SkeletonBase& skeleton, uint16_t const serviceId) = 0;
 
 protected:
-    virtual ~IClusterConnectionConfigurationSkeletonOnlyWithTimeout() = default;
-    IClusterConnectionConfigurationSkeletonOnlyWithTimeout()          = default;
+    virtual ~IClusterConnectionConfigurationSkeletonOnly() = default;
+    IClusterConnectionConfigurationSkeletonOnly()          = default;
 };
 
 } // namespace middleware::core

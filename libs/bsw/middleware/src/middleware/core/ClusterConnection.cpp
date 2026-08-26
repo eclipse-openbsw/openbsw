@@ -16,147 +16,70 @@
 namespace middleware::core
 {
 
-ClusterConnectionNoTimeoutProxyOnly::ClusterConnectionNoTimeoutProxyOnly(
+ClusterConnectionBidirectional::ClusterConnectionBidirectional(
+    IClusterConnectionConfigurationBidirectional& configuration)
+: Base(configuration)
+{}
+
+HRESULT
+ClusterConnectionBidirectional::subscribe(ProxyBase& proxy, uint16_t const serviceInstanceId)
+{
+    return static_cast<IClusterConnectionConfigurationBidirectional&>(Base::getConfiguration())
+        .subscribe(proxy, serviceInstanceId);
+}
+
+void ClusterConnectionBidirectional::unsubscribe(ProxyBase& proxy, uint16_t const serviceId)
+{
+    static_cast<IClusterConnectionConfigurationBidirectional&>(Base::getConfiguration())
+        .unsubscribe(proxy, serviceId);
+}
+
+HRESULT
+ClusterConnectionBidirectional::subscribe(SkeletonBase& skeleton, uint16_t const serviceInstanceId)
+{
+    return static_cast<IClusterConnectionConfigurationBidirectional&>(Base::getConfiguration())
+        .subscribe(skeleton, serviceInstanceId);
+}
+
+void ClusterConnectionBidirectional::unsubscribe(SkeletonBase& skeleton, uint16_t const serviceId)
+{
+    static_cast<IClusterConnectionConfigurationBidirectional&>(Base::getConfiguration())
+        .unsubscribe(skeleton, serviceId);
+}
+
+ClusterConnectionProxyOnly::ClusterConnectionProxyOnly(
     IClusterConnectionConfigurationProxyOnly& configuration)
 : Base(configuration)
 {}
 
 HRESULT
-ClusterConnectionNoTimeoutProxyOnly::subscribe(ProxyBase& proxy, uint16_t const serviceInstanceId)
+ClusterConnectionProxyOnly::subscribe(ProxyBase& proxy, uint16_t const serviceInstanceId)
 {
     return static_cast<IClusterConnectionConfigurationProxyOnly&>(Base::getConfiguration())
         .subscribe(proxy, serviceInstanceId);
 }
 
-void ClusterConnectionNoTimeoutProxyOnly::unsubscribe(ProxyBase& proxy, uint16_t const serviceId)
+void ClusterConnectionProxyOnly::unsubscribe(ProxyBase& proxy, uint16_t const serviceId)
 {
     static_cast<IClusterConnectionConfigurationProxyOnly&>(Base::getConfiguration())
         .unsubscribe(proxy, serviceId);
 }
 
-ClusterConnectionNoTimeoutSkeletonOnly::ClusterConnectionNoTimeoutSkeletonOnly(
+ClusterConnectionSkeletonOnly::ClusterConnectionSkeletonOnly(
     IClusterConnectionConfigurationSkeletonOnly& configuration)
 : Base(configuration)
 {}
 
-HRESULT ClusterConnectionNoTimeoutSkeletonOnly::subscribe(
-    SkeletonBase& skeleton, uint16_t const serviceInstanceId)
+HRESULT
+ClusterConnectionSkeletonOnly::subscribe(SkeletonBase& skeleton, uint16_t const serviceInstanceId)
 {
     return static_cast<IClusterConnectionConfigurationSkeletonOnly&>(Base::getConfiguration())
         .subscribe(skeleton, serviceInstanceId);
 }
 
-void ClusterConnectionNoTimeoutSkeletonOnly::unsubscribe(
-    SkeletonBase& skeleton, uint16_t const serviceId)
+void ClusterConnectionSkeletonOnly::unsubscribe(SkeletonBase& skeleton, uint16_t const serviceId)
 {
     static_cast<IClusterConnectionConfigurationSkeletonOnly&>(Base::getConfiguration())
-        .unsubscribe(skeleton, serviceId);
-}
-
-ClusterConnectionNoTimeoutBidirectional::ClusterConnectionNoTimeoutBidirectional(
-    IClusterConnectionConfigurationBidirectional& configuration)
-: Base(configuration)
-{}
-
-HRESULT ClusterConnectionNoTimeoutBidirectional::subscribe(
-    ProxyBase& proxy, uint16_t const serviceInstanceId)
-{
-    return static_cast<IClusterConnectionConfigurationBidirectional&>(Base::getConfiguration())
-        .subscribe(proxy, serviceInstanceId);
-}
-
-HRESULT ClusterConnectionNoTimeoutBidirectional::subscribe(
-    SkeletonBase& skeleton, uint16_t const serviceInstanceId)
-{
-    return static_cast<IClusterConnectionConfigurationBidirectional&>(Base::getConfiguration())
-        .subscribe(skeleton, serviceInstanceId);
-}
-
-void ClusterConnectionNoTimeoutBidirectional::unsubscribe(
-    ProxyBase& proxy, uint16_t const serviceId)
-{
-    static_cast<IClusterConnectionConfigurationBidirectional&>(Base::getConfiguration())
-        .unsubscribe(proxy, serviceId);
-}
-
-void ClusterConnectionNoTimeoutBidirectional::unsubscribe(
-    SkeletonBase& skeleton, uint16_t const serviceId)
-{
-    static_cast<IClusterConnectionConfigurationBidirectional&>(Base::getConfiguration())
-        .unsubscribe(skeleton, serviceId);
-}
-
-ClusterConnectionBidirectionalWithTimeout::ClusterConnectionBidirectionalWithTimeout(
-    IClusterConnectionConfigurationBidirectionalWithTimeout& configuration)
-: Base(configuration)
-{}
-
-HRESULT ClusterConnectionBidirectionalWithTimeout::subscribe(
-    ProxyBase& proxy, uint16_t const serviceInstanceId)
-{
-    return static_cast<IClusterConnectionConfigurationBidirectionalWithTimeout&>(
-               Base::getConfiguration())
-        .subscribe(proxy, serviceInstanceId);
-}
-
-void ClusterConnectionBidirectionalWithTimeout::unsubscribe(
-    ProxyBase& proxy, uint16_t const serviceId)
-{
-    static_cast<IClusterConnectionConfigurationBidirectionalWithTimeout&>(Base::getConfiguration())
-        .unsubscribe(proxy, serviceId);
-}
-
-HRESULT ClusterConnectionBidirectionalWithTimeout::subscribe(
-    SkeletonBase& skeleton, uint16_t const serviceInstanceId)
-{
-    return static_cast<IClusterConnectionConfigurationBidirectionalWithTimeout&>(
-               Base::getConfiguration())
-        .subscribe(skeleton, serviceInstanceId);
-}
-
-void ClusterConnectionBidirectionalWithTimeout::unsubscribe(
-    SkeletonBase& skeleton, uint16_t const serviceId)
-{
-    static_cast<IClusterConnectionConfigurationBidirectionalWithTimeout&>(Base::getConfiguration())
-        .unsubscribe(skeleton, serviceId);
-}
-
-ClusterConnectionProxyOnlyWithTimeout::ClusterConnectionProxyOnlyWithTimeout(
-    IClusterConnectionConfigurationProxyOnlyWithTimeout& configuration)
-: Base(configuration)
-{}
-
-HRESULT
-ClusterConnectionProxyOnlyWithTimeout::subscribe(ProxyBase& proxy, uint16_t const serviceInstanceId)
-{
-    return static_cast<IClusterConnectionConfigurationProxyOnlyWithTimeout&>(
-               Base::getConfiguration())
-        .subscribe(proxy, serviceInstanceId);
-}
-
-void ClusterConnectionProxyOnlyWithTimeout::unsubscribe(ProxyBase& proxy, uint16_t const serviceId)
-{
-    static_cast<IClusterConnectionConfigurationProxyOnlyWithTimeout&>(Base::getConfiguration())
-        .unsubscribe(proxy, serviceId);
-}
-
-ClusterConnectionSkeletonOnlyWithTimeout::ClusterConnectionSkeletonOnlyWithTimeout(
-    IClusterConnectionConfigurationSkeletonOnlyWithTimeout& configuration)
-: Base(configuration)
-{}
-
-HRESULT ClusterConnectionSkeletonOnlyWithTimeout::subscribe(
-    SkeletonBase& skeleton, uint16_t const serviceInstanceId)
-{
-    return static_cast<IClusterConnectionConfigurationSkeletonOnlyWithTimeout&>(
-               Base::getConfiguration())
-        .subscribe(skeleton, serviceInstanceId);
-}
-
-void ClusterConnectionSkeletonOnlyWithTimeout::unsubscribe(
-    SkeletonBase& skeleton, uint16_t const serviceId)
-{
-    static_cast<IClusterConnectionConfigurationSkeletonOnlyWithTimeout&>(Base::getConfiguration())
         .unsubscribe(skeleton, serviceId);
 }
 

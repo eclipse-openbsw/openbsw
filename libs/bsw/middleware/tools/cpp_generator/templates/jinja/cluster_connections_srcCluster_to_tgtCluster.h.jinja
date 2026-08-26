@@ -129,7 +129,6 @@ public:
 {% endif %}
     }
 
-{% if connection.has_timeouts %}
     void registerTimeoutTransceiver(core::ITimeoutHandler& transceiver) final
     {
         core::ITimeoutConfiguration::registerTimeoutTransceiver(transceiver, timeoutTransceivers_);
@@ -142,7 +141,6 @@ public:
 
     void updateTimeouts() final { core::ITimeoutConfiguration::updateTimeouts(timeoutTransceivers_); }
 
-{% endif %}
 {% if connection.proxies|length > 0 %}
     [[nodiscard]] core::HRESULT subscribe(core::ProxyBase& proxy, uint16_t serviceInstanceId) final
     {
@@ -180,9 +178,7 @@ public:
     {% for skeleton in connection.skeletons %}
     ::etl::vector<core::TransceiverBase*, {{skeleton.max_instances}}U> {{skeleton.namespace|replace("::", "")}}{{skeleton.name}}SkeletonTransceivers_;
     {% endfor %}
-    {% if connection.has_timeouts %}
-    ::etl::vector<core::ITimeoutHandler*, {{connection.proxies|length}}U> timeoutTransceivers_;
-    {% endif %}
+    ::etl::vector<core::ITimeoutHandler*, {{[connection.proxies|length,1]| max}}U> timeoutTransceivers_;
     {% if connection.proxies|length > 0 %}
     ::etl::array<core::meta::TransceiverContainer, {{connection.proxies|length}}U> proxyTransceivers_;
     {% endif %}
