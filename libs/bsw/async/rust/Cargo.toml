@@ -1,5 +1,5 @@
 # *******************************************************************************
-# Copyright (c) 2024 Accenture
+# Copyright (c) 2026 Accenture
 #
 # This program and the accompanying materials are made available under the
 # terms of the Apache License Version 2.0 which is available at
@@ -9,22 +9,21 @@
 # *******************************************************************************
 
 [package]
-name = "rust_hello_world"
+name = "openbsw_async"
 version.workspace = true
 documentation.workspace = true
 edition = "2024"
 
-[lib]
-crate-type = ["staticlib"]
-
 [dependencies]
-# External crates
-log.workspace = true
-
-# openbsw-internal crates
-openbsw_console_out.workspace = true
-openbsw-logger.workspace = true
-openbsw_panic_handler.workspace = true
-openbsw_async = { workspace = true, features = ["runtimes-2"]}
 embassy-executor.workspace = true
-critical-section = { workspace = true, features = ["restore-state-u32"] }
+critical-section.workspace = true
+
+# Selects `runtime::MAX_RUNTIMES` (the size of the hosted-executor pool).
+# Defaults to 4.
+[features]
+default = ["runtimes-4"]
+runtimes-1 = []
+runtimes-2 = []
+runtimes-4 = []
+runtimes-8 = []
+runtimes-16 = []
