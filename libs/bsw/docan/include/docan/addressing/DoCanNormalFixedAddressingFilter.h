@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2024 Accenture
+ * Copyright (c) 2026 Accenture
  *
  * This program and the accompanying materials are made available under the
  * terms of the Apache License Version 2.0 which is available at
@@ -68,6 +68,7 @@ public:
         typename DataLinkLayerType::FrameIndexType>;
 
     using FunctionalAddressSliceType = ::etl::span<uint8_t const>;
+    using TesterAddressSliceType     = ::etl::span<uint8_t const>;
 
     /**
      * Default constructor. Call init() to later initialize the filter.
@@ -78,18 +79,34 @@ public:
      * Initialize the filter with a list of functional addresses and the (single, shared) codec
      * used for all connections.
      * \param functionalAddresses list of valid addresses used for functional addressing.
+     * \param allowedTesters list of valid addresses used for source addresses.
      * \param codec codec used to encode/decode frames.
      */
     explicit DoCanNormalFixedAddressingFilter(
-        FunctionalAddressSliceType functionalAddresses, FrameCodecType const& codec);
+        FunctionalAddressSliceType functionalAddresses,
+        TesterAddressSliceType allowedTesters,
+        FrameCodecType const& codec);
+
+    /**
+     * Check whether a tester/source address is allowed.
+     * \param testerAddress tester address from received frame.
+     * \return true if the tester address is accepted.
+     */
+    bool isAllowedTester(uint8_t const testerAddress) const;
 
     /**
      * Initialize the filter with a list of functional addresses and the (single, shared) codec
      * used for all connections.
      * \param functionalAddresses list of valid addresses used for functional addressing.
+     * \param allowedTesters list of valid addresses used for source addresses. An empty list is
+     *        a valid configuration meaning "no restriction - accept any tester", not an
+     *        unconfigured/error state.
      * \param codec codec used to encode/decode frames.
      */
-    void init(FunctionalAddressSliceType functionalAddresses, FrameCodecType const& codec);
+    void init(
+        FunctionalAddressSliceType functionalAddresses,
+        TesterAddressSliceType allowedTesters,
+        FrameCodecType const& codec);
 
     FrameCodecType const* getTransmissionParameters(
         DoCanTransportAddressPair const& transportAddressPair,
@@ -110,6 +127,9 @@ private:
     static bool toAddressByte(uint16_t transportId, uint8_t& address);
 
     FunctionalAddressSliceType _functionalAddresses;
+    /// List of allowed tester (source) addresses. Empty means no restriction - all testers
+    /// are accepted (see getReceptionParameters()).
+    TesterAddressSliceType _allowedTesters;
     FrameCodecType const* _codec;
 };
 
@@ -118,22 +138,35 @@ private:
  */
 template<class DataLinkLayer>
 DoCanNormalFixedAddressingFilter<DataLinkLayer>::DoCanNormalFixedAddressingFilter()
-: MaskFilter(), _functionalAddresses(), _codec(nullptr)
+: MaskFilter(), _functionalAddresses(), _allowedTesters(), _codec(nullptr)
 {}
 
 template<class DataLinkLayer>
 DoCanNormalFixedAddressingFilter<DataLinkLayer>::DoCanNormalFixedAddressingFilter(
-    FunctionalAddressSliceType const functionalAddresses, FrameCodecType const& codec)
+    FunctionalAddressSliceType const functionalAddresses,
+    TesterAddressSliceType const allowedTesters,
+    FrameCodecType const& codec)
 : DoCanNormalFixedAddressingFilter()
 {
-    init(functionalAddresses, codec);
+    init(functionalAddresses, allowedTesters, codec);
+}
+
+template<class DataLinkLayer>
+bool DoCanNormalFixedAddressingFilter<DataLinkLayer>::isAllowedTester(
+    uint8_t const testerAddress) const
+{
+    return ::etl::find(_allowedTesters.begin(), _allowedTesters.end(), testerAddress)
+           != _allowedTesters.end();
 }
 
 template<class DataLinkLayer>
 void DoCanNormalFixedAddressingFilter<DataLinkLayer>::init(
-    FunctionalAddressSliceType const functionalAddresses, FrameCodecType const& codec)
+    FunctionalAddressSliceType const functionalAddresses,
+    TesterAddressSliceType const allowedTesters,
+    FrameCodecType const& codec)
 {
     _functionalAddresses = functionalAddresses;
+    _allowedTesters      = allowedTesters;
     _codec               = &codec;
 
     uint32_t const physicalBase
@@ -180,6 +213,17 @@ DoCanNormalFixedAddressingFilter<DataLinkLayer>::getReceptionParameters(
     uint8_t const targetAddress     = AddressingType::targetAddressOf(receptionAddress);
     uint8_t const sourceAddress     = AddressingType::sourceAddressOf(receptionAddress);
     bool isFunctional               = false;
+
+    // Reject requests from testers that are not configured.
+    // Returning nullptr makes the request silently disappear
+    // before UDS processing starts.
+    if (!_allowedTesters.empty())
+    {
+        if (!isAllowedTester(sourceAddress))
+        {
+            return nullptr;
+        }
+    }
 
     if (addressingIdBase == AddressingType::PHYSICAL_ADDRESSING_ID_BASE)
     {

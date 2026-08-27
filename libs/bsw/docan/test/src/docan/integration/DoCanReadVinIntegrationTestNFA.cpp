@@ -134,11 +134,16 @@ TEST(DoCanReadVinIntegrationTestNFA, SingleFrameRequestYieldsSegmentedResponse)
 
     // EXAMPLE_START DoCanNormalFixedAddressingFilter
     // no lookup table is required: source/target address bytes are extracted directly from the
-    // CAN identifier of a received frame. Only the (single, shared) codec and the addresses
-    // valid for functional addressing need to be configured.
+    // CAN identifier of a received frame. Only the (single, shared) codec, the addresses valid
+    // for functional addressing and the testers allowed to reach the ECU need to be configured.
     uint8_t const functionalAddresses[] = {FUNCTIONAL_ADDRESS};
+    // testers allowed to reach the ECU; a request whose source address is not listed here is
+    // dropped silently before UDS processing starts.
+    uint8_t const allowedTesters[]      = {static_cast<uint8_t>(TESTER_ID)};
     DoCanNormalFixedAddressingFilter<DataLinkLayer> addressingFilter{
-        ::etl::span<uint8_t const>(functionalAddresses), codec};
+        ::etl::span<uint8_t const>(functionalAddresses),
+        ::etl::span<uint8_t const>(allowedTesters),
+        codec};
     // EXAMPLE_END DoCanNormalFixedAddressingFilter
 
     uint8_t const busId = 1U;

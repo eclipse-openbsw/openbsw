@@ -38,10 +38,10 @@ uint8_t const BLOCK_SIZE              = 15U;
 // Tester addresses distinguishing the four addressing schemes showcased side by side; see
 // ::can::DoCanMultiAddressingTransportLayer for how these are used to dispatch outbound
 // messages to the correct inner transport layer.
-uint16_t const NORMAL_ADDRESSING_TESTER_ID   = 0x0F1U;
+uint16_t const NORMAL_ADDRESSING_TESTER_ID       = 0x0F1U;
 // uint16_t const RANGE_EXTENDED_ADDRESSING_TESTER_ID = 0x0F2U;
-// uint16_t const NORMAL_FIXED_ADDRESSING_TESTER_ID   = 0x0F3U;
-uint16_t const EXTENDED_ADDRESSING_TESTER_ID = 0x0F4U;
+uint16_t const NORMAL_FIXED_ADDRESSING_TESTER_ID = 0x0F3U;
+uint16_t const EXTENDED_ADDRESSING_TESTER_ID     = 0x0F4U;
 
 // legislative (ISO 15765-4) normal addressing CAN identifiers for the first ECU, plus the
 // legislative OBD functional (broadcast) request identifier, which every OBD-compliant ECU must
@@ -137,6 +137,14 @@ uint16_t const RANGE_EXTENDED_ADDRESSING_FUNCTIONAL_ADDRESSES[]
 // non-owning span over this data - a local/stack variable would dangle after init() returns.
 uint8_t const NORMAL_FIXED_ADDRESSING_FUNCTIONAL_ADDRESSES[]
     = {::can::DoCanMultiAddressingTransportLayer::NORMAL_FIXED_ADDRESSING_FUNCTIONAL_ADDRESS};
+
+// testers allowed to reach the ECU via normal fixed addressing. Stored as a file-local static for
+// the same reason as above. Restricting reception to this list fixes normal fixed addressing
+// binding to unconditionally accept any source address as a valid tester, which allowed
+// unintended response routing between the addressing schemes showcased side by side in this
+// reference application.
+uint8_t const NORMAL_FIXED_ADDRESSING_ALLOWED_TESTERS[]
+    = {static_cast<uint8_t>(NORMAL_FIXED_ADDRESSING_TESTER_ID)};
 
 uint32_t systemUs() { return ::bsw::time::TimestampProvider::getTimestampUs32Bit(); }
 
@@ -280,7 +288,9 @@ void DoCanSystem::init()
         _extendedAddressingClassicCodec);
 
     _normalFixedAddressingFilter.init(
-        ::etl::make_span(NORMAL_FIXED_ADDRESSING_FUNCTIONAL_ADDRESSES), _classicCodec);
+        ::etl::make_span(NORMAL_FIXED_ADDRESSING_FUNCTIONAL_ADDRESSES),
+        ::etl::make_span(NORMAL_FIXED_ADDRESSING_ALLOWED_TESTERS),
+        _classicCodec);
 
     initLayer();
 
