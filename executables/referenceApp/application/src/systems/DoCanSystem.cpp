@@ -9,6 +9,7 @@
  ********************************************************************************/
 
 #include "systems/DoCanSystem.h"
+#include "config/DoCanConfig.h"
 
 #include "systems/ICanSystem.h"
 #include "transport/ITransportSystem.h"
@@ -24,6 +25,7 @@
 
 namespace
 {
+namespace config                      = ::docan::config;
 uint32_t const TIMEOUT_DOCAN_SYSTEM   = 10U;
 size_t const TICK_DELTA_TICKS         = 2U; // Tick delta
 uint16_t const ALLOCATE_TIMEOUT       = 1000U;
@@ -34,38 +36,6 @@ uint8_t const ALLOCATE_RETRY_COUNT    = 15U;
 uint8_t const FLOW_CONTROL_WAIT_COUNT = 15U;
 uint16_t const MIN_SEPARATION_TIME    = 200U;
 uint8_t const BLOCK_SIZE              = 15U;
-
-// Tester addresses distinguishing the four addressing schemes showcased side by side; see
-// ::can::DoCanMultiAddressingTransportLayer for how these are used to dispatch outbound
-// messages to the correct inner transport layer.
-uint16_t const NORMAL_ADDRESSING_TESTER_ID       = 0x0F1U;
-// uint16_t const RANGE_EXTENDED_ADDRESSING_TESTER_ID = 0x0F2U;
-uint16_t const NORMAL_FIXED_ADDRESSING_TESTER_ID = 0x0F3U;
-uint16_t const EXTENDED_ADDRESSING_TESTER_ID     = 0x0F4U;
-
-// legislative (ISO 15765-4) normal addressing CAN identifiers for the first ECU, plus the
-// legislative OBD functional (broadcast) request identifier, which every OBD-compliant ECU must
-// also receive on (and reply to physically, via NORMAL_ADDRESSING_RESPONSE_CAN_ID above).
-uint32_t const NORMAL_ADDRESSING_REQUEST_CAN_ID    = 0x7E0U;
-uint32_t const NORMAL_ADDRESSING_RESPONSE_CAN_ID   = 0x7E8U;
-uint32_t const NORMAL_ADDRESSING_FUNCTIONAL_CAN_ID = 0x7DFU;
-
-// explicit (table-based) ISO 15765-2 extended addressing CAN identifiers, chosen clear of the
-// legislative Normal Addressing identifiers above and the Range Extended Addressing range below.
-// Functional (broadcast) requests are sent on the same EXTENDED_ADDRESSING_REQUEST_CAN_ID, just
-// with the target extension byte set to FUNCTIONAL_ALL_ISO14229 instead of the ECU's own
-// address, since with extended addressing the CAN identifier identifies the sender, not whether
-// a request is physical or functional.
-uint32_t const EXTENDED_ADDRESSING_REQUEST_CAN_ID  = 0x600U;
-uint32_t const EXTENDED_ADDRESSING_RESPONSE_CAN_ID = 0x601U;
-
-// base CAN identifier of the range 0x680-0x77F, arithmetically mapped onto the full 256 transport
-// addresses 0x00-0xFF (see ::docan::DoCanRangeExtendedAddressingFilter). Anchored at 0x680 rather
-// than 0x700 so the range ends at 0x77F, staying clear of the legislative Normal Addressing
-// identifiers 0x7E0/0x7E8/0x7DF above while still supporting the full address space.
-uint32_t const RANGE_EXTENDED_ADDRESSING_BASE_CAN_ID       = 0x680U;
-uint16_t const RANGE_EXTENDED_ADDRESSING_BASE_TRANSPORT_ID = 0x000U;
-uint16_t const RANGE_EXTENDED_ADDRESSING_COUNT             = 0x100U;
 
 using DataLinkLayerType            = ::docan::DoCanSystem::DataLinkLayerType;
 using NormalAddressingFilterType   = ::docan::DoCanNormalAddressingFilter<DataLinkLayerType>;
@@ -87,7 +57,7 @@ NormalAddressingFilterType::AddressEntryType const NORMAL_ADDRESSING_ADDRESSES[]
 #ifdef PLATFORM_SUPPORT_OBD_UDS_ADDRESSING
     = {{0x7E0U, 0x7E8U, 0x7E8U, LOGICAL_ADDRESS, 0, 0}};
 #else
-    = {{::can::CanId::Base<NORMAL_ADDRESSING_FUNCTIONAL_CAN_ID>::value,
+    = {{::can::CanId::Base<config::NORMAL_ADDRESSING_FUNCTIONAL_CAN_ID>::value,
         // ISO 15765-2 forbids multi-frame requests to a functional (broadcast) target, so this
         // entry deliberately reports an invalid transmission address rather than the real
         // response CAN id: DoCanReceiver rejects any multi-frame request whose transmission
@@ -95,13 +65,13 @@ NormalAddressingFilterType::AddressEntryType const NORMAL_ADDRESSING_ADDRESSES[]
         // the actual response is always addressed independently, using the real physical entry
         // below.
         DataLinkLayerType::INVALID_ADDRESS,
-        NORMAL_ADDRESSING_TESTER_ID,
+        config::NORMAL_ADDRESSING_TESTER_ID,
         ::transport::TransportConfiguration::FUNCTIONAL_ALL_ISO14229,
         0,
         0},
-       {::can::CanId::Base<NORMAL_ADDRESSING_REQUEST_CAN_ID>::value,
-        ::can::CanId::Base<NORMAL_ADDRESSING_RESPONSE_CAN_ID>::value,
-        NORMAL_ADDRESSING_TESTER_ID,
+       {::can::CanId::Base<config::NORMAL_ADDRESSING_REQUEST_CAN_ID>::value,
+        ::can::CanId::Base<config::NORMAL_ADDRESSING_RESPONSE_CAN_ID>::value,
+        config::NORMAL_ADDRESSING_TESTER_ID,
         LOGICAL_ADDRESS,
         0,
         0}};
@@ -109,15 +79,17 @@ NormalAddressingFilterType::AddressEntryType const NORMAL_ADDRESSING_ADDRESSES[]
 
 // mapping of each participant's raw CAN identifier to its own transport address, as needed by
 // DoCanExtendedAddressingFilter. Entries must be ordered ascending by CAN identifier (duplicates
-// allowed). The third entry deliberately reuses EXTENDED_ADDRESSING_RESPONSE_CAN_ID - the ECU's
-// own, real response identifier - rather than introducing a separate (and therefore incorrect)
-// one, so that even a (relatively unusual) multi-frame functional request would still cause any
-// Flow Control frame to go out on the right CAN identifier, addressed back to the true sender.
-ExtendedAddressingFilterType::AddressEntryType const EXTENDED_ADDRESSING_ADDRESSES[] = {
-    {::can::CanId::Base<EXTENDED_ADDRESSING_REQUEST_CAN_ID>::value, EXTENDED_ADDRESSING_TESTER_ID},
-    {::can::CanId::Base<EXTENDED_ADDRESSING_RESPONSE_CAN_ID>::value, LOGICAL_ADDRESS},
-    {::can::CanId::Base<EXTENDED_ADDRESSING_RESPONSE_CAN_ID>::value,
-     ::transport::TransportConfiguration::FUNCTIONAL_ALL_ISO14229}};
+// allowed). The third entry deliberately reuses config::EXTENDED_ADDRESSING_RESPONSE_CAN_ID - the
+// ECU's own, real response identifier - rather than introducing a separate (and therefore
+// incorrect) one, so that even a (relatively unusual) multi-frame functional request would still
+// cause any Flow Control frame to go out on the right CAN identifier, addressed back to the true
+// sender.
+ExtendedAddressingFilterType::AddressEntryType const EXTENDED_ADDRESSING_ADDRESSES[]
+    = {{::can::CanId::Base<config::EXTENDED_ADDRESSING_REQUEST_CAN_ID>::value,
+        config::EXTENDED_ADDRESSING_TESTER_ID},
+       {::can::CanId::Base<config::EXTENDED_ADDRESSING_RESPONSE_CAN_ID>::value, LOGICAL_ADDRESS},
+       {::can::CanId::Base<config::EXTENDED_ADDRESSING_RESPONSE_CAN_ID>::value,
+        ::transport::TransportConfiguration::FUNCTIONAL_ALL_ISO14229}};
 
 // functional (broadcast) addresses valid for extended addressing. Stored as a file-local static
 // (rather than a local variable) since DoCanExtendedAddressingFilter::init() only stores a
@@ -135,16 +107,10 @@ uint16_t const RANGE_EXTENDED_ADDRESSING_FUNCTIONAL_ADDRESSES[]
 // functional (group) addresses valid for normal fixed addressing. Stored as a file-local static
 // (rather than a local variable) since DoCanNormalFixedAddressingFilter::init() only stores a
 // non-owning span over this data - a local/stack variable would dangle after init() returns.
-uint8_t const NORMAL_FIXED_ADDRESSING_FUNCTIONAL_ADDRESSES[]
-    = {::can::DoCanMultiAddressingTransportLayer::NORMAL_FIXED_ADDRESSING_FUNCTIONAL_ADDRESS};
+uint8_t const NORMAL_FIXED_FUNCTIONAL_ADDRESS[] = {config::NORMAL_FIXED_FUNCTIONAL_ADDRESS};
 
-// testers allowed to reach the ECU via normal fixed addressing. Stored as a file-local static for
-// the same reason as above. Restricting reception to this list fixes normal fixed addressing
-// binding to unconditionally accept any source address as a valid tester, which allowed
-// unintended response routing between the addressing schemes showcased side by side in this
-// reference application.
-uint8_t const NORMAL_FIXED_ADDRESSING_ALLOWED_TESTERS[]
-    = {static_cast<uint8_t>(NORMAL_FIXED_ADDRESSING_TESTER_ID)};
+// Allowed testers for Normal Fixed
+uint8_t const NORMAL_FIXED_ALLOWED_TESTERS[] = {config::NORMAL_FIXED_ADDRESSING_TESTER_ID};
 
 uint32_t systemUs() { return ::bsw::time::TimestampProvider::getTimestampUs32Bit(); }
 
@@ -281,15 +247,15 @@ void DoCanSystem::init()
         _extendedAddressingClassicCodec);
 
     _rangeExtendedAddressingFilter.init(
-        RANGE_EXTENDED_ADDRESSING_BASE_CAN_ID,
-        RANGE_EXTENDED_ADDRESSING_BASE_TRANSPORT_ID,
-        RANGE_EXTENDED_ADDRESSING_COUNT,
+        config::RANGE_EXTENDED_ADDRESSING_BASE_CAN_ID,
+        config::RANGE_EXTENDED_ADDRESSING_BASE_TRANSPORT_ID,
+        config::RANGE_EXTENDED_ADDRESSING_COUNT,
         ::etl::make_span(RANGE_EXTENDED_ADDRESSING_FUNCTIONAL_ADDRESSES),
         _extendedAddressingClassicCodec);
 
     _normalFixedAddressingFilter.init(
-        ::etl::make_span(NORMAL_FIXED_ADDRESSING_FUNCTIONAL_ADDRESSES),
-        ::etl::make_span(NORMAL_FIXED_ADDRESSING_ALLOWED_TESTERS),
+        ::etl::make_span(NORMAL_FIXED_FUNCTIONAL_ADDRESS),
+        ::etl::make_span(NORMAL_FIXED_ALLOWED_TESTERS),
         _classicCodec);
 
     initLayer();

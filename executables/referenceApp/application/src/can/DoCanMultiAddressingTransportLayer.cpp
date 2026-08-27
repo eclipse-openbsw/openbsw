@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2024 Accenture
+ * Copyright (c) 2026 Accenture
  *
  * This program and the accompanying materials are made available under the
  * terms of the Apache License Version 2.0 which is available at
@@ -9,10 +9,13 @@
  ********************************************************************************/
 
 #include "can/DoCanMultiAddressingTransportLayer.h"
+#include "config/DoCanConfig.h"
 
 #include <etl/error_handler.h>
 #include <transport/TransportConfiguration.h>
 #include <transport/TransportMessage.h>
+
+namespace config = ::docan::config;
 
 namespace can
 {
@@ -65,11 +68,11 @@ DoCanMultiAddressingTransportLayer::getTransportLayerForTesterId(uint16_t const 
 {
     switch (testerId)
     {
-        case NORMAL_ADDRESSING_TESTER_ID:         return _normalAddressingLayer;
-        case EXTENDED_ADDRESSING_TESTER_ID:       return _extendedAddressingLayer;
-        case RANGE_EXTENDED_ADDRESSING_TESTER_ID: return _rangeExtendedAddressingLayer;
-        case NORMAL_FIXED_ADDRESSING_TESTER_ID:   return _normalFixedAddressingLayer;
-        default:                                  return nullptr;
+        case config::NORMAL_ADDRESSING_TESTER_ID:         return _normalAddressingLayer;
+        case config::EXTENDED_ADDRESSING_TESTER_ID:       return _extendedAddressingLayer;
+        case config::RANGE_EXTENDED_ADDRESSING_TESTER_ID: return _rangeExtendedAddressingLayer;
+        case config::NORMAL_FIXED_ADDRESSING_TESTER_ID:   return _normalFixedAddressingLayer;
+        default:                                          return nullptr;
     }
 }
 
@@ -78,6 +81,7 @@ DoCanMultiAddressingTransportLayer::ErrorCode DoCanMultiAddressingTransportLayer
     ::transport::ITransportMessageProcessedListener* const pNotificationListener)
 {
     TransportLayerType* const layer = getTransportLayerForTesterId(transportMessage.getTargetId());
+
     if (layer == nullptr)
     {
         return ErrorCode::TP_SEND_FAIL;
@@ -140,7 +144,7 @@ uint16_t
 DoCanMultiAddressingTransportLayer::NormalFixedFunctionalAddressRemapper::remapTargetAddress(
     uint16_t const targetAddress)
 {
-    return (targetAddress == NORMAL_FIXED_ADDRESSING_FUNCTIONAL_ADDRESS)
+    return (targetAddress == config::NORMAL_FIXED_FUNCTIONAL_ADDRESS)
                ? ::transport::TransportConfiguration::FUNCTIONAL_ALL_ISO14229
                : targetAddress;
 }

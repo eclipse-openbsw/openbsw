@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2024 Accenture
+ * Copyright (c) 2026 Accenture
  *
  * This program and the accompanying materials are made available under the
  * terms of the Apache License Version 2.0 which is available at
@@ -58,22 +58,6 @@ class DoCanMultiAddressingTransportLayer final : public ::transport::AbstractTra
 public:
     using DataLinkLayerType  = ::docan::DoCanNormalAddressing<>::DataLinkLayerType;
     using TransportLayerType = ::docan::DoCanTransportLayer<DataLinkLayerType>;
-
-    /// Tester address used for the Normal Addressing scheme.
-    static uint16_t const NORMAL_ADDRESSING_TESTER_ID         = 0xF1U;
-    /// Tester address used for the Extended Addressing scheme.
-    static uint16_t const EXTENDED_ADDRESSING_TESTER_ID       = 0xF4U;
-    /// Tester address used for the Range Extended Addressing scheme.
-    static uint16_t const RANGE_EXTENDED_ADDRESSING_TESTER_ID = 0xF2U;
-    /// Tester address used for the Normal Fixed Addressing scheme.
-    static uint16_t const NORMAL_FIXED_ADDRESSING_TESTER_ID   = 0xF3U;
-
-    /// Standard OBD/UDS functional (group) address legislated by ISO 15765-4 for Normal Fixed
-    /// Addressing; unlike the other three (table-based) addressing schemes here, this wire-level
-    /// value cannot be freely chosen to already equal
-    /// ::transport::TransportConfiguration::FUNCTIONAL_ALL_ISO14229, so incoming functional
-    /// requests using it need remapping - see _normalFixedFunctionalAddressRemapper below.
-    static uint8_t const NORMAL_FIXED_ADDRESSING_FUNCTIONAL_ADDRESS = 0x33U;
 
     explicit DoCanMultiAddressingTransportLayer(uint8_t busId);
 
