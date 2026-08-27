@@ -33,3 +33,7 @@ interrupt-disabling locks for data access synchronization.
    :maxdepth: 2
 
    user/index
+   user/normaladdressing
+   user/extendedaddressing
+   user/normalfixedaddressing
+   user/rangeextendedaddressing
