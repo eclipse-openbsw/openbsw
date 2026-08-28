@@ -22,7 +22,8 @@ target_link_libraries(
            runtime
            configuration
            cpp2can
-           safeUtils)
+           safeUtils
+           etl)
 
 if (PLATFORM_SUPPORT_IO)
     target_link_libraries(consoleCommands PRIVATE safeIo bspIo)

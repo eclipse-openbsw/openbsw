@@ -11,11 +11,13 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
+#include <etl/infinite_loop.h>
+
 extern "C"
 {
 void vApplicationStackOverflowHook(TaskHandle_t /* xTask */, char* /* pcTaskName */)
 {
-    while (true) {}
+    etl::infinite_loop();
 }
 
 } // extern "C"
