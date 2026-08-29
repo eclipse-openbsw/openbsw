@@ -39,6 +39,4 @@ if (BUILD_EXECUTABLE STREQUAL "unitTest")
     target_include_directories(utilMock PUBLIC mock/gmock/include)
 
     target_link_libraries(utilMock PUBLIC util etl)
-
-    target_compile_definitions(util PUBLIC ESTD_HAS_EXCEPTIONS)
 endif ()
