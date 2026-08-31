@@ -78,15 +78,6 @@ private:
     mutable ::etl::optional<::middleware::core::Message> messageReceived;
 };
 
-struct ProxyWithTimeout
-: public Proxy
-, public ::middleware::core::ITimeoutHandler
-{
-    using Proxy::Proxy;
-
-    void updateTimeouts() override {}
-};
-
 struct TimeoutTransceiverCounter
 {
     void up() { _cnt++; }
@@ -104,99 +95,8 @@ private:
     bool _triggered{false};
 };
 
-struct ClusterConnectionConfigurationProxyOnlyMock
-: public IClusterConnectionConfigurationProxyOnly
-, ClusterConfigurationMockBase
-, TimeoutTransceiverCounter
-{
-    HRESULT subscribe(ProxyBase& proxy, uint16_t const serviceInstanceId) override
-    {
-        return ClusterConfigurationMockBase::subscribe(proxy, serviceInstanceId);
-    }
-
-    void unsubscribe(ProxyBase&, uint16_t const) override {}
-
-    HRESULT dispatchMessage(Message const& msg) const override
-    {
-        return ClusterConfigurationMockBase::dispatchMessage(msg);
-    }
-
-    uint8_t getSourceClusterId() const override
-    {
-        return ClusterConfigurationMockBase::getSourceClusterId();
-    }
-
-    uint8_t getTargetClusterId() const override
-    {
-        return ClusterConfigurationMockBase::getTargetClusterId();
-    }
-
-    bool write(Message const& msg) const override
-    {
-        return ClusterConfigurationMockBase::write(msg);
-    }
-
-    std::size_t registeredTransceiversCount(uint16_t const) const override { return 0; }
-
-    void registerTimeoutTransceiver(ITimeoutHandler&) override { TimeoutTransceiverCounter::up(); }
-
-    void unregisterTimeoutTransceiver(ITimeoutHandler&) override
-    {
-        TimeoutTransceiverCounter::down();
-    }
-
-    void updateTimeouts() override { TimeoutTransceiverCounter::updateTimeouts(); }
-};
-
-struct ClusterConnectionConfigurationSkeletonOnlyMock
-: public IClusterConnectionConfigurationSkeletonOnly
-, ClusterConfigurationMockBase
-, TimeoutTransceiverCounter
-{
-    HRESULT subscribe(SkeletonBase& skeleton, uint16_t const serviceInstanceId) override
-    {
-        return ClusterConfigurationMockBase::subscribe(skeleton, serviceInstanceId);
-    }
-
-    void unsubscribe(SkeletonBase&, uint16_t const) override {}
-
-    HRESULT dispatchMessage(Message const& msg) const override
-    {
-        return ClusterConfigurationMockBase::dispatchMessage(msg);
-    }
-
-    uint8_t getSourceClusterId() const override
-    {
-        return ClusterConfigurationMockBase::getSourceClusterId();
-    }
-
-    uint8_t getTargetClusterId() const override
-    {
-        return ClusterConfigurationMockBase::getTargetClusterId();
-    }
-
-    bool write(Message const& msg) const override
-    {
-        return ClusterConfigurationMockBase::write(msg);
-    }
-
-    std::size_t registeredTransceiversCount(uint16_t const) const override
-    {
-        return TimeoutTransceiverCounter::getValue();
-    }
-
-    void registerTimeoutTransceiver(ITimeoutHandler&) override { TimeoutTransceiverCounter::up(); }
-
-    void unregisterTimeoutTransceiver(ITimeoutHandler&) override
-    {
-        TimeoutTransceiverCounter::down();
-    }
-
-    void updateTimeouts() override { TimeoutTransceiverCounter::updateTimeouts(); }
-};
-
-struct ClusterConnectionConfigurationBidirectionalMock
-: public IClusterConnectionConfigurationBidirectional
+struct ClusterConnectionConfigurationMock
+: public IClusterConnectionConfiguration
 , ClusterConfigurationMockBase
 , TimeoutTransceiverCounter
 {
@@ -259,64 +159,37 @@ public:
     middleware::logger::test::DslLogger _loggerMock{};
 };
 
-/* Testing final method implementations, implemented in the base classes,
- * not meant to be supported on the public interfaces.
- *
- * For instance: subscribing with a skeleton on a Proxy-Only class
- */
-TEST_F(ConnectionBaseTest, ConnectionsNotImplemented)
-{
-    Proxy proxyInstance(1, 2, 4);
-    Skeleton skeletonInstance(1, 2);
-
-    ClusterConnectionConfigurationProxyOnlyMock confProxyOnly;
-    ClusterConnectionProxyOnly connectionProxyOnly(confProxyOnly);
-    EXPECT_EQ(
-        ::middleware::core::HRESULT::NotImplemented,
-        connectionProxyOnly.subscribe(skeletonInstance, 123));
-    EXPECT_NO_THROW(connectionProxyOnly.unsubscribe(skeletonInstance, 123));
-
-    ClusterConnectionConfigurationSkeletonOnlyMock confSkeletonOnly;
-    ClusterConnectionSkeletonOnly connectionSkeletonOnly(confSkeletonOnly);
-    EXPECT_EQ(
-        ::middleware::core::HRESULT::NotImplemented,
-        connectionSkeletonOnly.subscribe(proxyInstance, 123));
-    EXPECT_NO_THROW(connectionSkeletonOnly.unsubscribe(proxyInstance, 123));
-}
-
 TEST_F(ConnectionBaseTest, SubscribeUnsubscribeProxyOnly)
 {
     Proxy proxyInstance(1, 2, 4);
-    ClusterConnectionConfigurationProxyOnlyMock confProxyOnly;
+    ClusterConnectionConfigurationMock configuration;
 
-    ClusterConnectionProxyOnly connectionProxyOnly(confProxyOnly);
-    EXPECT_EQ(::middleware::core::HRESULT::Ok, connectionProxyOnly.subscribe(proxyInstance, 1));
-    EXPECT_NO_THROW(connectionProxyOnly.unsubscribe(proxyInstance, 1));
+    ClusterConnection connection(configuration);
+    EXPECT_EQ(::middleware::core::HRESULT::Ok, connection.subscribe(proxyInstance, 1));
+    EXPECT_NO_THROW(connection.unsubscribe(proxyInstance, 1));
 }
 
 TEST_F(ConnectionBaseTest, SubscribeUnsubscribeSkeletonOnly)
 {
     Skeleton skeletonInstance(1, 2);
-    ClusterConnectionConfigurationSkeletonOnlyMock confSkeletonOnly;
+    ClusterConnectionConfigurationMock configuration;
 
-    ClusterConnectionSkeletonOnly connectionSkeletonOnly(confSkeletonOnly);
-    EXPECT_EQ(
-        ::middleware::core::HRESULT::Ok, connectionSkeletonOnly.subscribe(skeletonInstance, 1));
-    EXPECT_NO_THROW(connectionSkeletonOnly.unsubscribe(skeletonInstance, 1));
+    ClusterConnection connection(configuration);
+    EXPECT_EQ(::middleware::core::HRESULT::Ok, connection.subscribe(skeletonInstance, 1));
+    EXPECT_NO_THROW(connection.unsubscribe(skeletonInstance, 1));
 }
 
 TEST_F(ConnectionBaseTest, SubscribeUnsubscribeBidirectional)
 {
     Proxy proxyInstance(1, 2, 4);
     Skeleton skeletonInstance(1, 2);
-    ClusterConnectionConfigurationBidirectionalMock confBidirectional;
+    ClusterConnectionConfigurationMock configuration;
 
-    ClusterConnectionBidirectional connectionBidirectional(confBidirectional);
-    EXPECT_EQ(
-        ::middleware::core::HRESULT::Ok, connectionBidirectional.subscribe(skeletonInstance, 1));
-    EXPECT_EQ(::middleware::core::HRESULT::Ok, connectionBidirectional.subscribe(proxyInstance, 1));
-    EXPECT_NO_THROW(connectionBidirectional.unsubscribe(skeletonInstance, 1));
-    EXPECT_NO_THROW(connectionBidirectional.unsubscribe(proxyInstance, 1));
+    ClusterConnection connection(configuration);
+    EXPECT_EQ(::middleware::core::HRESULT::Ok, connection.subscribe(skeletonInstance, 1));
+    EXPECT_EQ(::middleware::core::HRESULT::Ok, connection.subscribe(proxyInstance, 1));
+    EXPECT_NO_THROW(connection.unsubscribe(skeletonInstance, 1));
+    EXPECT_NO_THROW(connection.unsubscribe(proxyInstance, 1));
 }
 
 TEST_F(ConnectionBaseTest, SendMessageSameClusterNoError)
@@ -331,9 +204,8 @@ TEST_F(ConnectionBaseTest, SendMessageSameClusterNoError)
         4);
 
     Skeleton skeletonInstance(1, 2);
-    ClusterConnectionConfigurationSkeletonOnlyMock confSkeletonOnly;
-    ::middleware::core::ClusterConnectionTypeSelector<
-        ClusterConnectionConfigurationSkeletonOnlyMock>::type actualConnection(confSkeletonOnly);
+    ClusterConnectionConfigurationMock confSkeletonOnly;
+    ::middleware::core::ClusterConnection actualConnection(confSkeletonOnly);
 
     // ptr to base class trick as observed in {Proxy/Skeleton}Base
     ::middleware::core::IClusterConnection* ptrToBase = &actualConnection;
@@ -354,9 +226,8 @@ TEST_F(ConnectionBaseTest, SendMessageClusterToClusterNoError)
         4);
 
     Skeleton skeletonInstance(1, 2);
-    ClusterConnectionConfigurationSkeletonOnlyMock confSkeletonOnly;
-    ::middleware::core::ClusterConnectionTypeSelector<
-        ClusterConnectionConfigurationSkeletonOnlyMock>::type actualConnection(confSkeletonOnly);
+    ClusterConnectionConfigurationMock confSkeletonOnly;
+    ::middleware::core::ClusterConnection actualConnection(confSkeletonOnly);
 
     // ptr to base class trick as observed in {Proxy/Skeleton}Base
     ::middleware::core::IClusterConnection* ptrToBase = &actualConnection;
@@ -377,9 +248,8 @@ TEST_F(ConnectionBaseTest, SendMessageClusterToClusterFailed)
         4);
 
     Skeleton skeletonInstance(1, 2);
-    ClusterConnectionConfigurationSkeletonOnlyMock confSkeletonOnly;
-    ::middleware::core::ClusterConnectionTypeSelector<
-        ClusterConnectionConfigurationSkeletonOnlyMock>::type actualConnection(confSkeletonOnly);
+    ClusterConnectionConfigurationMock confSkeletonOnly;
+    ::middleware::core::ClusterConnection actualConnection(confSkeletonOnly);
 
     // ptr to base class trick as observed in {Proxy/Skeleton}Base
     ::middleware::core::IClusterConnection* ptrToBase = &actualConnection;
@@ -416,9 +286,8 @@ TEST_F(ConnectionBaseTest, SendMessageSameClusterServiceNotFound)
         4);
 
     Skeleton skeletonInstance(1, 2);
-    ClusterConnectionConfigurationSkeletonOnlyMock confSkeletonOnly;
-    ::middleware::core::ClusterConnectionTypeSelector<
-        ClusterConnectionConfigurationSkeletonOnlyMock>::type actualConnection(confSkeletonOnly);
+    ClusterConnectionConfigurationMock confSkeletonOnly;
+    ::middleware::core::ClusterConnection actualConnection(confSkeletonOnly);
 
     // ptr to base class trick as observed in {Proxy/Skeleton}Base
     ::middleware::core::IClusterConnection* ptrToBase = &actualConnection;
@@ -458,9 +327,8 @@ TEST_F(ConnectionBaseTest, SendMessageSameClusterServiceBusy)
         4);
 
     Skeleton skeletonInstance(1, 2);
-    ClusterConnectionConfigurationSkeletonOnlyMock confSkeletonOnly;
-    ::middleware::core::ClusterConnectionTypeSelector<
-        ClusterConnectionConfigurationSkeletonOnlyMock>::type actualConnection(confSkeletonOnly);
+    ClusterConnectionConfigurationMock confSkeletonOnly;
+    ::middleware::core::ClusterConnection actualConnection(confSkeletonOnly);
 
     // ptr to base class trick as observed in {Proxy/Skeleton}Base
     ::middleware::core::IClusterConnection* ptrToBase = &actualConnection;
@@ -500,9 +368,8 @@ TEST_F(ConnectionBaseTest, SendMessageSameClusterServiceBusyFireAndForget)
         4);
 
     Skeleton skeletonInstance(1, 2);
-    ClusterConnectionConfigurationSkeletonOnlyMock confSkeletonOnly;
-    ::middleware::core::ClusterConnectionTypeSelector<
-        ClusterConnectionConfigurationSkeletonOnlyMock>::type actualConnection(confSkeletonOnly);
+    ClusterConnectionConfigurationMock confSkeletonOnly;
+    ::middleware::core::ClusterConnection actualConnection(confSkeletonOnly);
 
     // ptr to base class trick as observed in {Proxy/Skeleton}Base
     ::middleware::core::IClusterConnection* ptrToBase = &actualConnection;
@@ -528,9 +395,8 @@ TEST_F(ConnectionBaseTest, processMessageFromReceivingSide)
         4);
 
     Skeleton skeletonInstance(1, 2);
-    ClusterConnectionConfigurationSkeletonOnlyMock confSkeletonOnly;
-    ::middleware::core::ClusterConnectionTypeSelector<
-        ClusterConnectionConfigurationSkeletonOnlyMock>::type actualConnection(confSkeletonOnly);
+    ClusterConnectionConfigurationMock confSkeletonOnly;
+    ::middleware::core::ClusterConnection actualConnection(confSkeletonOnly);
 
     // ptr to base class trick as observed in {Proxy/Skeleton}Base
     ::middleware::core::IClusterConnection* ptrToBase = &actualConnection;
@@ -544,10 +410,18 @@ TEST_F(ConnectionBaseTest, processMessageFromReceivingSide)
 
 TEST_F(ConnectionBaseTest, ProxyRegistersAsTimeoutTransceiver)
 {
+    struct ProxyWithTimeout
+    : public Proxy
+    , public ::middleware::core::ITimeoutHandler
+    {
+        using Proxy::Proxy;
+
+        void updateTimeouts() override {}
+    };
+
     ProxyWithTimeout proxyInstance(1, 2);
-    ClusterConnectionConfigurationSkeletonOnlyMock confSkeletonOnly;
-    ::middleware::core::ClusterConnectionTypeSelector<
-        ClusterConnectionConfigurationSkeletonOnlyMock>::type actualConnection(confSkeletonOnly);
+    ClusterConnectionConfigurationMock confSkeletonOnly;
+    ::middleware::core::ClusterConnection actualConnection(confSkeletonOnly);
 
     EXPECT_NO_THROW(actualConnection.registerTimeoutTransceiver(proxyInstance));
     EXPECT_EQ(1, actualConnection.registeredTransceiversCount(1));
@@ -561,9 +435,8 @@ TEST_F(ConnectionBaseTest, ProxyRegistersAsTimeoutTransceiver)
 
 TEST_F(ConnectionBaseTest, SyntheticClusterIdGetter)
 {
-    ClusterConnectionConfigurationSkeletonOnlyMock confSkeletonOnly;
-    ::middleware::core::ClusterConnectionTypeSelector<
-        ClusterConnectionConfigurationSkeletonOnlyMock>::type actualConnection(confSkeletonOnly);
+    ClusterConnectionConfigurationMock confSkeletonOnly;
+    ::middleware::core::ClusterConnection actualConnection(confSkeletonOnly);
 
     // ptr to base class trick as observed in {Proxy/Skeleton}Base
     ::middleware::core::IClusterConnection* ptrToBase = &actualConnection;

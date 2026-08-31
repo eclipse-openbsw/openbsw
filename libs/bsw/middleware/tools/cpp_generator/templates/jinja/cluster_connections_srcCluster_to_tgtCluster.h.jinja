@@ -48,10 +48,10 @@
 namespace middleware::meta
 {
 
-class ClusterConnection{{connection.source_cluster.name}}To{{connection.target_cluster.name}}Meta : public core::IClusterConnectionConfiguration{{connection.connection_type}}
+class ClusterConnection{{connection.source_cluster.name}}To{{connection.target_cluster.name}}Meta : public core::IClusterConnectionConfiguration
 {
 public:
-    using Base = core::IClusterConnectionConfiguration{{connection.connection_type}};
+    using Base = core::IClusterConnectionConfiguration;
 
     ClusterConnection{{connection.source_cluster.name}}To{{connection.target_cluster.name}}Meta()
 {% if (connection.proxies|length > 0) and (connection.skeletons|length > 0) %}
@@ -141,34 +141,52 @@ public:
 
     void updateTimeouts() final { core::ITimeoutConfiguration::updateTimeouts(timeoutTransceivers_); }
 
-{% if connection.proxies|length > 0 %}
     [[nodiscard]] core::HRESULT subscribe(core::ProxyBase& proxy, uint16_t serviceInstanceId) final
     {
+{% if connection.proxies|length > 0 %}
         return core::meta::DbManipulator::subscribe(
             proxyTransceivers_.begin(), proxyTransceivers_.end(), proxy, serviceInstanceId);
+{% else %}
+        static_cast<void>(proxy);
+        static_cast<void>(serviceInstanceId);
+        return core::HRESULT::NotImplemented;
+{% endif %}
     }
 
     void unsubscribe(core::ProxyBase& proxy, uint16_t serviceId) final
     {
+{% if connection.proxies|length > 0 %}
         core::meta::DbManipulator::unsubscribe(
             proxyTransceivers_.begin(), proxyTransceivers_.end(), proxy, serviceId);
+{% else %}
+        static_cast<void>(proxy);
+        static_cast<void>(serviceId);
+{% endif %}
     }
 
-{% endif %}
-{% if connection.skeletons|length > 0 %}
     [[nodiscard]] core::HRESULT subscribe(core::SkeletonBase& skeleton, uint16_t serviceInstanceId) final
     {
+{% if connection.skeletons|length > 0 %}
         return core::meta::DbManipulator::subscribe(
             skeletonTransceivers_.begin(), skeletonTransceivers_.end(), skeleton, serviceInstanceId);
+{% else %}
+        static_cast<void>(skeleton);
+        static_cast<void>(serviceInstanceId);
+        return core::HRESULT::NotImplemented;
+{% endif %}
     }
 
     void unsubscribe(core::SkeletonBase& skeleton, uint16_t serviceId) final
     {
+{% if connection.skeletons|length > 0 %}
         core::meta::DbManipulator::unsubscribe(
             skeletonTransceivers_.begin(), skeletonTransceivers_.end(), skeleton, serviceId);
+{% else %}
+        static_cast<void>(skeleton);
+        static_cast<void>(serviceId);
+{% endif %}
     }
 
-{% endif %}
     ~ClusterConnection{{connection.source_cluster.name}}To{{connection.target_cluster.name}}Meta() = default;
 
   private:
