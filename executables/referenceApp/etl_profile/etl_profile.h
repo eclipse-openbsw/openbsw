@@ -22,17 +22,18 @@
 #include <initializer_list>
 #include <tuple>
 
+// Since at some points we are using std headers, we need to use this
+// to prevent the ETL version from it conflicting with the
+// std::initializer_list
 #define ETL_FORCE_STD_INITIALIZER_LIST
 
+// Don't rely on wchar_t support in the used libc++
 #define ETL_NO_LIBC_WCHAR_H
 
-#define ETL_USING_BUILTIN_MEMCPY  0
-#define ETL_USING_BUILTIN_MEMMOVE 0
-#define ETL_USING_BUILTIN_MEMSET  0
-#define ETL_USING_BUILTIN_MEMCMP  0
-#define ETL_USING_BUILTIN_MEMCHR  0
-
+// Don't include strings for messages
 #define ETL_MINIMAL_ERRORS
+
+// Use self defined assert function on ETL_ASSERT
 #define ETL_USE_ASSERT_FUNCTION
 
 #define ETL_CHRONO_HIGH_RESOLUTION_CLOCK_DURATION etl::chrono::nanoseconds
