@@ -81,14 +81,16 @@ enum class HRESULT : uint8_t
  */
 struct AbsoluteToleranceEqual
 {
+    // __builtin_fabs is used instead of std::fabs because newlib's fabs() is not constexpr,
+    // which trips -Werror=invalid-constexpr on arm-none-eabi-gcc.
     constexpr bool operator()(double const x, double const y) const
     {
-        return std::fabs(x - y) <= ::etl::numeric_limits<double>::min();
+        return __builtin_fabs(x - y) <= ::etl::numeric_limits<double>::min();
     }
 
     constexpr bool operator()(float const x, float const y) const
     {
-        return std::fabs(x - y) <= ::etl::numeric_limits<float>::min();
+        return __builtin_fabsf(x - y) <= ::etl::numeric_limits<float>::min();
     }
 };
 

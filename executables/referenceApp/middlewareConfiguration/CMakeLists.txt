@@ -1,7 +1,3 @@
-if (NOT UNIX)
-    return()
-endif ()
-
 find_package(Python3 REQUIRED COMPONENTS Interpreter)
 
 # -----------------------------------------------------------------------

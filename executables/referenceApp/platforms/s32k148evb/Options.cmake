@@ -40,3 +40,6 @@ set(PLATFORM_SUPPORT_STORAGE
 set(PLATFORM_SUPPORT_ROM_CHECK
     OFF
     CACHE BOOL "Turn ON ROM check support" FORCE)
+set(PLATFORM_SUPPORT_MIDDLEWARE
+    ON
+    CACHE BOOL "Turn middleware service demo support on or off" FORCE)
