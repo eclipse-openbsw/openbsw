@@ -11,6 +11,30 @@
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
 
 cc_library(
+    name = "blob_configuration_headers",
+    hdrs = [
+        "include/blob/ConfigType.h",
+        "include/blob/configuration.h",
+    ],
+    strip_include_prefix = "include",
+    visibility = ["//visibility:public"],
+    # Exported headers include <platform/estdint.h> which is absent from CMake link deps.
+    deps = ["//libs/bsw/platform"],
+)
+
+cc_library(
+    name = "routing_configuration_headers",
+    hdrs = [
+        "include/routing/channelId.h",
+        "include/routing/constants.h",
+    ],
+    strip_include_prefix = "include",
+    visibility = ["//visibility:public"],
+    # Exported headers include <etl/span.h> which is absent from CMake link deps.
+    deps = ["//libs/3rdparty/etl"],
+)
+
+cc_library(
     name = "configuration",
     srcs = [
         "common/src/busid/BusId.cpp",
@@ -24,7 +48,12 @@ cc_library(
     strip_include_prefix = "include",
     visibility = ["//visibility:public"],
     deps = [
+        # appConfig.h guards bus addresses and ETL config under PLATFORM_SUPPORT_TRANSPORT/ETHERNET;
+        # propagating the flags here makes all consumers of appConfig.h integrator-compatible
+        # without requiring each consumer to independently dep feature_defines.
+        "//bazel/config/features:feature_defines",
+        # Circular dependency on the CMake side: configuration -> async -> common -> configuration.
+        # async (CMake PUBLIC) is omitted to break the cycle for Bazel; consumers provide async.
         "//libs/bsw/common:common_headers",
-        # TODO: add //libs/bsw/async once its Bazel target is ready
     ],
 )

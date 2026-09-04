@@ -1,0 +1,530 @@
+# *******************************************************************************
+# Copyright (c) 2026 Accenture
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+
+load("@bazel_skylib//rules:common_settings.bzl", "bool_flag")
+load("@rules_cc//cc:cc_binary.bzl", "cc_binary")
+load("@rules_cc//cc:cc_library.bzl", "cc_library")
+
+# Application-level demo-services toggle (not a PLATFORM_SUPPORT flag).
+# Override via --//executables/referenceApp/application:uds_demo_services=true
+bool_flag(
+    name = "uds_demo_services",
+    build_setting_default = False,
+    visibility = ["//visibility:public"],
+)
+
+config_setting(
+    name = "uds_demo_services_enabled",
+    flag_values = {":uds_demo_services": "true"},
+)
+
+config_setting(
+    name = "uds_demo_services_disabled",
+    flag_values = {":uds_demo_services": "false"},
+)
+
+config_setting(
+    name = "docan_enabled",
+    flag_values = {
+        "//bazel/config/features:can": "true",
+        "//bazel/config/features:transport": "true",
+    },
+)
+
+config_setting(
+    name = "doip_enabled",
+    flag_values = {
+        "//bazel/config/features:ethernet": "true",
+        "//bazel/config/features:transport": "true",
+    },
+)
+
+config_setting(
+    name = "routing_enabled",
+    flag_values = {
+        "//bazel/config/features:can": "true",
+        "//bazel/config/features:ethernet": "true",
+    },
+)
+
+config_setting(
+    name = "uds_com_enabled",
+    flag_values = {
+        "//bazel/config/features:transport": "true",
+        "//bazel/config/features:uds": "true",
+    },
+)
+
+cc_library(name = "none")
+
+_UDS_DEMO_SERVICES_SRCS = [
+    "src/uds/DemoClearDtc.cpp",
+    "src/uds/DemoControlDtcSetting.cpp",
+    "src/uds/DemoDtcManager.cpp",
+    "src/uds/DemoReadDtcInfo.cpp",
+    "src/uds/DemoRoutine.cpp",
+    "src/uds/DemoSecurityAccess.cpp",
+    "src/uds/DemoWriteVin.cpp",
+]
+
+cc_library(
+    name = "can_impl",
+    srcs = ["src/app/CanDemoListener.cpp"],
+    deps = [
+        ":reference_app_headers",
+        "//bazel/config/features:feature_defines",
+        "//libs/bsw/cpp2can",
+    ],
+)
+
+alias(
+    name = "can",
+    actual = select({
+        "//bazel/config/features:can_enabled": ":can_impl",
+        "//conditions:default": ":none",
+    }),
+)
+
+cc_library(
+    name = "docan_impl",
+    srcs = [
+        "src/can/DoCanMultiAddressingTransportLayer.cpp",
+        "src/systems/DoCanSystem.cpp",
+    ],
+    deps = [
+        ":reference_app_headers",
+        "//bazel/config/features:feature_defines",
+        "//executables/referenceApp/configuration",
+        "//executables/referenceApp/transportConfiguration:transport_configuration",
+        "//libs/bsw/docan",
+        "//libs/bsw/lifecycle",
+        "//libs/bsw/time",
+    ],
+)
+
+alias(
+    name = "docan",
+    actual = select({
+        ":docan_enabled": ":docan_impl",
+        "//conditions:default": ":none",
+    }),
+)
+
+cc_library(
+    name = "doip_impl",
+    srcs = ["src/systems/DoIpServerSystem.cpp"],
+    deps = [
+        ":reference_app_headers",
+        "//bazel/config/eth:eth_configuration",
+        "//bazel/config/features:feature_defines",
+        "//executables/referenceApp/configuration",
+        "//executables/referenceApp/transportConfiguration:transport_configuration",
+        "//libs/bsw/cpp2ethernet",
+        "//libs/bsw/doip",
+        "//libs/bsw/lifecycle",
+        "//libs/bsw/lwipSocket:lwip_socket",
+    ],
+)
+
+alias(
+    name = "doip",
+    actual = select({
+        ":doip_enabled": ":doip_impl",
+        "//conditions:default": ":none",
+    }),
+)
+
+cc_library(
+    name = "ethernet_impl",
+    srcs = ["src/systems/EthernetSystem.cpp"],
+    deps = [
+        ":reference_app_headers",
+        "//bazel/config/eth:eth_configuration",
+        "//bazel/config/features:feature_defines",
+        "//executables/referenceApp/lwipConfiguration:lwip_configuration",
+        "//libs/3rdparty/lwip:lwip_core",
+        "//libs/bsw/cpp2ethernet",
+        "//libs/bsw/lifecycle",
+        "//libs/bsw/lwipSocket:lwip_socket",
+        "//libs/bsw/shed",
+    ],
+)
+
+alias(
+    name = "ethernet",
+    actual = select({
+        "//bazel/config/features:ethernet_enabled": ":ethernet_impl",
+        "//conditions:default": ":none",
+    }),
+)
+
+cc_library(
+    name = "someip_impl",
+    srcs = [
+        "src/someip/EventListener.cpp",
+        "src/someip/PeriodicRoutine.cpp",
+        "src/someip/ProvidedServiceData.cpp",
+        "src/someip/ProvidedServiceImpl.cpp",
+        "src/someip/ServiceListener.cpp",
+        "src/someip/TimeServiceReply.cpp",
+        "src/someip/TimeServiceRequest.cpp",
+        "src/systems/SomeIpSystem.cpp",
+    ],
+    deps = [
+        ":reference_app_headers",
+        "//bazel/config/eth:eth_configuration",
+        "//bazel/config/features:feature_defines",
+        "//libs/bsw/cpp2ethernet",
+        "//libs/bsw/cpp2someip",
+        "//libs/bsw/lifecycle",
+    ],
+)
+
+alias(
+    name = "someip",
+    actual = select({
+        "//bazel/config/features:ethernet_enabled": ":someip_impl",
+        "//conditions:default": ":none",
+    }),
+)
+
+cc_library(
+    name = "routing_impl",
+    srcs = ["src/systems/RoutingSystem.cpp"],
+    deps = [
+        ":reference_app_headers",
+        "//bazel/config/eth:eth_configuration",
+        "//bazel/config/features:feature_defines",
+        "//executables/referenceApp/configuration",
+        "//libs/bsw/blob",
+        "//libs/bsw/cpp2can",
+        "//libs/bsw/lifecycle",
+        "//libs/bsw/lwipSocket:lwip_socket",
+        "//libs/bsw/routing",
+    ],
+)
+
+alias(
+    name = "routing",
+    actual = select({
+        ":routing_enabled": ":routing_impl",
+        "//conditions:default": ":none",
+    }),
+)
+
+cc_library(
+    name = "storage_impl",
+    srcs = ["src/systems/StorageSystem.cpp"],
+    deps = [
+        ":reference_app_headers",
+        "//bazel/config/features:feature_defines",
+        "//libs/bsw/asyncConsole:async_console",
+        "//libs/bsw/bsp",
+        "//libs/bsw/lifecycle",
+        "//libs/bsw/storage",
+    ],
+)
+
+alias(
+    name = "storage",
+    actual = select({
+        "//bazel/config/features:storage_enabled": ":storage_impl",
+        "//conditions:default": ":none",
+    }),
+)
+
+cc_library(
+    name = "transport_impl",
+    srcs = ["src/systems/TransportSystem.cpp"],
+    deps = [
+        ":reference_app_headers",
+        "//bazel/config/features:feature_defines",
+        "//executables/referenceApp/transportConfiguration:transport_configuration",
+        "//libs/bsw/lifecycle",
+        "//libs/bsw/transport",
+        "//libs/bsw/transportRouterSimple:transport_router_simple",
+    ],
+)
+
+alias(
+    name = "transport",
+    actual = select({
+        "//bazel/config/features:transport_enabled": ":transport_impl",
+        "//conditions:default": ":none",
+    }),
+)
+
+cc_library(
+    name = "uds_demo_impl",
+    srcs = _UDS_DEMO_SERVICES_SRCS,
+    defines = ["PLATFORM_SUPPORT_UDS_DEMO_SERVICES=1"],
+    deps = [
+        ":reference_app_headers",
+        "//libs/3rdparty/etl",
+        "//libs/bsw/uds",
+    ],
+)
+
+alias(
+    name = "uds_demo",
+    actual = select({
+        ":uds_demo_services_enabled": ":uds_demo_impl",
+        "//conditions:default": ":none",
+    }),
+)
+
+alias(
+    name = "uds_bsp_output_pwm",
+    actual = select({
+        "//bazel/config/features:io_enabled": "//libs/bsp/bspOutputPwm:bsp_output_pwm",
+        "//conditions:default": ":none",
+    }),
+)
+
+cc_library(
+    name = "uds_com_impl",
+    srcs = [
+        "src/systems/UdsSystem.cpp",
+        "src/uds/ReadIdentifierPot.cpp",
+    ],
+    deps = [
+        ":reference_app_headers",
+        ":uds_bsp_output_pwm",
+        ":uds_demo",
+        "//bazel/config/bsp:bsp_configuration",
+        "//bazel/config/features:feature_defines",
+        "//executables/referenceApp/udsConfiguration:uds_configuration_impl",
+        "//libs/bsw/lifecycle",
+        "//libs/bsw/uds",
+    ],
+)
+
+alias(
+    name = "uds_com",
+    actual = select({
+        ":uds_com_enabled": ":uds_com_impl",
+        "//conditions:default": ":none",
+    }),
+)
+
+cc_library(
+    name = "os_rtos_freertos",
+    target_compatible_with = ["//bazel/platform/constraints/soc:s32k148"],
+    deps = ["//libs/3rdparty/freeRtos:freertos"],
+)
+
+cc_library(
+    name = "os_rtos_threadx",
+    target_compatible_with = ["//bazel/platform/constraints/soc:s32k148"],
+    deps = ["//libs/3rdparty/threadx"],
+)
+
+alias(
+    name = "os_rtos",
+    actual = select({
+        "//bazel/config/rtos:support_freertos": ":os_rtos_freertos",
+        "//conditions:default": ":os_rtos_threadx",
+    }),
+)
+
+cc_library(
+    name = "async_rtos_freertos",
+    target_compatible_with = ["//bazel/platform/constraints/soc:s32k148"],
+    deps = ["//libs/bsw/asyncFreeRtos:async_freertos_impl"],
+)
+
+cc_library(
+    name = "async_rtos_threadx",
+    target_compatible_with = ["//bazel/platform/constraints/soc:s32k148"],
+    deps = ["//libs/bsw/asyncThreadX:async_threadx_impl"],
+)
+
+alias(
+    name = "async_rtos",
+    actual = select({
+        "//bazel/config/rtos:support_freertos": ":async_rtos_freertos",
+        "//conditions:default": ":async_rtos_threadx",
+    }),
+)
+
+alias(
+    name = "os_rtos_posix",
+    actual = select({
+        "//bazel/config/rtos:support_freertos": "//libs/3rdparty/freeRtos:freertos",
+        "//bazel/config/rtos:support_threadx": "//libs/3rdparty/threadx",
+    }),
+)
+
+alias(
+    name = "async_rtos_posix",
+    actual = select({
+        "//bazel/config/rtos:support_freertos": "//libs/bsw/asyncFreeRtos:async_freertos_impl",
+        "//bazel/config/rtos:support_threadx": "//libs/bsw/asyncThreadX:async_threadx_impl",
+    }),
+)
+
+alias(
+    name = "middleware",
+    actual = select({
+        "//bazel/config/features:middleware_enabled": "//executables/referenceApp/middlewareConfiguration:middleware_configuration",
+        "//conditions:default": ":none",
+    }),
+)
+
+cc_library(
+    name = "demo_logger",
+    hdrs = ["include/app/DemoLogger.h"],
+    strip_include_prefix = "include",
+    visibility = ["//visibility:public"],
+    deps = ["//libs/bsw/util"],
+)
+
+# cc_binary can't use strip_include_prefix, so the app's own include/ headers are
+# exposed to it via this cc_library.
+cc_library(
+    name = "reference_app_headers",
+    hdrs = glob(
+        ["include/**/*.h"],
+        exclude = ["include/app/DemoLogger.h"],  # already exposed by :demo_logger
+    ),
+    strip_include_prefix = "include",
+    # Only built for the reference_app executable_config. Mark incompatible elsewhere so wildcard and test builds skip it.
+    target_compatible_with = select({
+        "//bazel/config/executable_config:reference_app": [],
+        "//conditions:default": ["@platforms//:incompatible"],
+    }),
+    deps = [
+        # required by systems/EthernetSystem.h (transitive include); resolves per-platform
+        "//bazel/config/eth:eth_configuration",
+        # required by systems/SomeIpSystem.h (transitive include); not in CMake target_link_libraries
+        "//libs/bsw/lwipSocket:lwip_socket",
+    ],
+)
+
+cc_binary(
+    name = "reference_app",
+    srcs = [
+        "src/app/app.cpp",
+        "src/console/console.cpp",
+        "src/logger/logger.cpp",
+        "src/main.cpp",
+        "src/systems/DemoSystem.cpp",
+        "src/systems/RuntimeSystem.cpp",
+        "src/systems/SafetySystem.cpp",
+        "src/systems/SysAdminSystem.cpp",
+    ],
+    additional_linker_inputs = [
+        "//executables/referenceApp/platforms/s32k148evb/main:generate_linkerscript",
+    ],
+    linkopts = [
+        "-T$(location //executables/referenceApp/platforms/s32k148evb/main:generate_linkerscript)",
+    ],
+    target_compatible_with = ["//bazel/platform/constraints/soc:s32k148"],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":async_rtos",
+        ":can",
+        ":demo_logger",
+        ":docan",
+        ":doip",
+        ":ethernet",
+        ":os_rtos",
+        ":reference_app_headers",
+        ":routing",
+        ":someip",
+        ":storage",
+        ":transport",
+        ":uds_com",
+        ":uds_demo",
+        "//bazel/config/features:feature_defines",
+        "//executables/referenceApp/platforms/s32k148evb/bspConfiguration:bsp_configuration",
+        "//executables/referenceApp/asyncBinding:async_binding",
+        "//executables/referenceApp/configuration",
+        "//executables/referenceApp/consoleCommands:console_commands",
+        "//executables/referenceApp/platforms/s32k148evb/main",
+        "//executables/referenceApp/platforms/s32k148evb/safety/safeLifecycle:safe_lifecycle",
+        "//executables/referenceApp/safety/safeWatchdog:safe_watchdog",
+        # Provides watchdog/Watchdog.h, #included under PLATFORM_SUPPORT_WATCHDOG.
+        "//executables/referenceApp/safety/safeWatchdog:watchdog_support",
+        "//libs/3rdparty/etl",
+        "//libs/3rdparty/printf",
+        "//libs/bsw/asyncConsole:async_console",
+        "//libs/bsw/bsp",
+        "//libs/bsw/lifecycle",
+        "//libs/bsw/logger",
+        "//libs/bsw/loggerIntegration:logger_integration",
+        "//libs/bsw/runtime",
+        "//libs/bsw/stdioConsoleInput:stdio_console_input",
+        "//libs/bsw/time",
+        "//libs/bsw/util",
+        "//libs/safety/safeUtils:safe_utils",
+        "//platforms/s32k1xx/bsp:soc_bsp",
+        "//platforms/s32k1xx/bsp/bspMcu:bsp_mcu",
+        "//platforms/s32k1xx/bsp/bspUart:bsp_uart",
+        "//platforms/s32k1xx/etlImpl:etl_impl",
+    ],
+)
+
+cc_binary(
+    name = "reference_app_posix",
+    srcs = [
+        "src/app/app.cpp",
+        "src/console/console.cpp",
+        "src/logger/logger.cpp",
+        "src/main.cpp",
+        "src/systems/DemoSystem.cpp",
+        "src/systems/RuntimeSystem.cpp",
+        "src/systems/SafetySystem.cpp",
+        "src/systems/SysAdminSystem.cpp",
+    ],
+    target_compatible_with = ["@platforms//os:linux"],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":async_rtos_posix",
+        ":can",
+        ":demo_logger",
+        ":docan",
+        ":doip",
+        ":ethernet",
+        ":middleware",
+        ":os_rtos_posix",
+        ":reference_app_headers",
+        ":routing",
+        ":someip",
+        ":storage",
+        ":transport",
+        ":uds_com",
+        ":uds_demo",
+        "//bazel/config/bsp:bsp_configuration",
+        "//bazel/config/features:feature_defines",
+        "//executables/referenceApp/asyncBinding:async_binding",
+        "//executables/referenceApp/configuration",
+        "//executables/referenceApp/consoleCommands:console_commands",
+        "//executables/referenceApp/platforms/posix/main",
+        "//executables/referenceApp/platforms/posix/safety/safeLifecycle:safe_lifecycle",
+        "//executables/referenceApp/safety/safeWatchdog:safe_watchdog",
+        "//libs/3rdparty/etl",
+        "//libs/3rdparty/printf",
+        "//libs/bsw/asyncConsole:async_console",
+        "//libs/bsw/bsp",
+        "//libs/bsw/lifecycle",
+        "//libs/bsw/logger",
+        "//libs/bsw/loggerIntegration:logger_integration",
+        "//libs/bsw/runtime",
+        "//libs/bsw/stdioConsoleInput:stdio_console_input",
+        "//libs/bsw/time",
+        "//libs/bsw/util",
+        "//libs/safety/safeUtils:safe_utils",
+        "//platforms/posix/bsp:soc_bsp",
+        "//platforms/posix/bsp/bspMcu:bsp_mcu",
+        "//platforms/posix/bsp/bspUart:bsp_uart",
+        "//platforms/posix/etlImpl:etl_impl",
+    ],
+)

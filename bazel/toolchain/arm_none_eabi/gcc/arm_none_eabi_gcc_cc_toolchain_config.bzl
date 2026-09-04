@@ -215,6 +215,10 @@ def _impl(ctx):
                                 "-Wl,--gc-sections",
                                 "-specs=nano.specs",
                                 "-specs=nosys.specs",
+                                # newlib-nano does not auto-link libm/libstdc++ (CMake gets these
+                                # via the g++ link driver)
+                                "-lm",
+                                "-lstdc++",
                             ],
                         ),
                     ],
