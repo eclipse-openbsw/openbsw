@@ -475,6 +475,11 @@ TEST_F(QueryManagerTest, offerReceivedTcp)
     EXPECT_EQ(ServiceQuery::SubscriptionState::STATE_WAITING_FOR_ACK, query.subscriptionState);
     EXPECT_CALL(_serviceAnnouncer, unsubscribe(Ref(query.description), sourceAddress)).Times(1);
     _queryManager.unregisterQuery(query);
+
+    // The Return() action of getRpcChannel holds a NetworkChannel referencing 'proxy'.
+    // It is owned by _networkMock (a fixture member) which outlives the local 'proxy',
+    // so the expectations must be released here to avoid a use after free on teardown.
+    Mock::VerifyAndClearExpectations(&_networkMock);
 }
 
 TEST_F(QueryManagerTest, stopOfferReceived)
