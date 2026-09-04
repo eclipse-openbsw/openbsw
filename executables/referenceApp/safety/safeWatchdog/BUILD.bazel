@@ -12,7 +12,6 @@ load("@rules_cc//cc:cc_library.bzl", "cc_library")
 
 cc_library(
     name = "safe_watchdog_watchdog_support",
-    defines = ["PLATFORM_SUPPORT_WATCHDOG=1"],
     target_compatible_with = ["//bazel/platform/constraints/soc:s32k148"],
     deps = [
         "//platforms/s32k1xx/bsp/bspMcu:bsp_mcu",
@@ -42,5 +41,8 @@ cc_library(
     ],
     strip_include_prefix = "include",
     visibility = ["//visibility:public"],
-    deps = ["//libs/bsw/platform"],
+    deps = [
+        "//bazel/config/features:feature_defines",
+        "//libs/bsw/platform",
+    ],
 )

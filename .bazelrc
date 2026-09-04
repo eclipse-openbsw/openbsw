@@ -1,9 +1,8 @@
+# Feature matrix lives in the platform() flags (//bazel/platform), mirroring how
+# CMake Options.cmake ties PLATFORM_SUPPORT_* to OPENBSW_PLATFORM.
 build:s32k148_gcc --platforms=//bazel/platform:s32k148
 # Default to gcc
 build:s32k148 --config=s32k148_gcc
-# Platform feature defines (CMake root add_compile_definitions(PLATFORM_SUPPORT_*=1) from
-# platforms/s32k148evb/Options.cmake). Global to the s32k148 build, like on the CMake side.
-build:s32k148 --copt=-DPLATFORM_SUPPORT_IO=1
 
 # TODO: Temporary config only needed for artifact analysis
 # Make Bazel's build match CMake s32k148-freertos-gcc default config
@@ -13,6 +12,12 @@ build:s32k148_relwithdebinfo --copt=-O2
 build:s32k148_relwithdebinfo --copt=-DNDEBUG
 build:s32k148_threadx --config=s32k148
 build:s32k148_threadx --//bazel/config/rtos=threadx
+
+# POSIX is the DEFAULT platform: a plain `bazel build //...` is the posix host build. The posix
+# PLATFORM_SUPPORT_* matrix lives in //bazel/platform:posix flags. `--config=posix` is kept as an
+# explicit alias.
+build --platforms=//bazel/platform:posix
+build:posix --platforms=//bazel/platform:posix
 
 # Select the ETL profile for builds inside the OpenBSW repo based on executable_config (mirrors
 # CMake BUILD_EXECUTABLE). This ONLY applies when OpenBSW is the root module. Downstream consumers 

@@ -8,6 +8,9 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 
+# Feature matrix travels WITH the platform (mirrors CMake Options.cmake, which ties the
+# PLATFORM_SUPPORT_* CACHE BOOLs to OPENBSW_PLATFORM). Selecting the platform selects the
+# whole PLATFORM_SUPPORT_* set. Consumer selects on //bazel/config/features stay untouched.
 platform(
     name = "s32k148",
     constraint_values = [
@@ -15,4 +18,41 @@ platform(
         "@platforms//os:none",
         "//bazel/platform/constraints/soc:s32k148",
     ],
+    # Mirrors Options.cmake (s32k148evb): every PLATFORM_SUPPORT_* set explicitly.
+    flags = [
+        "--//bazel/config/features:can=true",
+        "--//bazel/config/features:ethernet=true",
+        "--//bazel/config/features:io=true",
+        "--//bazel/config/features:ipv6=false",
+        "--//bazel/config/features:middleware=false",
+        "--//bazel/config/features:mpu=true",
+        "--//bazel/config/features:rom_check=false",
+        "--//bazel/config/features:storage=true",
+        "--//bazel/config/features:transport=true",
+        "--//bazel/config/features:uds=true",
+        "--//bazel/config/features:watchdog=true",
+    ],
+)
+
+# POSIX host build. Inherits the autodetected host constraints/toolchain via `parents`, and
+# carries the posix PLATFORM_SUPPORT_* matrix. This is the DEFAULT platform (see .bazelrc), so a
+# plain `bazel build //...` is the posix build.
+platform(
+    name = "posix",
+    # Mirrors posix/Options.cmake. Options.cmake gates CAN on non-Darwin; this repo targets Linux
+    # so CAN is included.
+    flags = [
+        "--//bazel/config/features:can=true",
+        "--//bazel/config/features:ethernet=true",
+        "--//bazel/config/features:io=false",
+        "--//bazel/config/features:ipv6=false",
+        "--//bazel/config/features:middleware=true",
+        "--//bazel/config/features:mpu=false",
+        "--//bazel/config/features:rom_check=false",
+        "--//bazel/config/features:storage=true",
+        "--//bazel/config/features:transport=true",
+        "--//bazel/config/features:uds=true",
+        "--//bazel/config/features:watchdog=false",
+    ],
+    parents = ["@platforms//host:host"],
 )
