@@ -147,7 +147,7 @@
 #endif
 
 #ifndef MEMP_NUM_UDP_PCB
-#define MEMP_NUM_UDP_PCB 8
+#define MEMP_NUM_UDP_PCB 14
 #endif
 
 #ifndef MEMP_NUM_TCP_PCB

@@ -193,16 +193,19 @@ void SocketCanTransceiver::guardedOpen()
         return;
     }
 
-    int const enable_canfd = 1;
-    error = setsockopt(fd, SOL_CAN_RAW, CAN_RAW_FD_FRAMES, &enable_canfd, sizeof(enable_canfd));
-    if (error < 0)
+    if (_config.enableCanFd)
     {
-        Logger::error(
-            CAN,
-            "[SocketCanTransceiver] Failed to setsockopt socket (node=%s, error=%d)",
-            name,
-            error);
-        return;
+        int const enable_canfd = 1;
+        error = setsockopt(fd, SOL_CAN_RAW, CAN_RAW_FD_FRAMES, &enable_canfd, sizeof(enable_canfd));
+        if (error < 0)
+        {
+            Logger::error(
+                CAN,
+                "[SocketCanTransceiver] Failed to setsockopt socket (node=%s, error=%d)",
+                name,
+                error);
+            return;
+        }
     }
 
     error = fcntl(fd, F_SETFL, O_NONBLOCK);
@@ -257,15 +260,27 @@ void SocketCanTransceiver::guardedRun(int maxSentPerRun, int maxReceivedPerRun)
         ::std::memcpy(
             static_cast<void*>(&listener), memory.data() + sizeof(canFrame), sizeof(void*));
         _txReader.release();
-        can_frame socketCanFrame;
-        ::std::memset(&socketCanFrame, 0, sizeof(socketCanFrame));
-        socketCanFrame.can_id  = canFrame.getId();
-        int length             = canFrame.getPayloadLength();
-        socketCanFrame.can_dlc = length;
-        ::std::memcpy(socketCanFrame.data, canFrame.getPayload(), length);
-        ::std::memset(socketCanFrame.data + length, 0, sizeof(socketCanFrame.data) - length);
-        ssize_t const bytesWritten = ::write(_fileDescriptor, &socketCanFrame, CAN_MTU);
-        if (bytesWritten != CAN_MTU)
+
+        uint8_t const length = static_cast<uint8_t>(canFrame.getPayloadLength());
+        bool const sendAsFd  = _config.enableCanFd;
+
+        // canfd_frame is layout-compatible with can_frame for the fields we set
+        // (can_id, len, data); byte 5 (flags) maps to can_frame::__pad for
+        // classical frames and must remain 0, which memset guarantees.
+        canfd_frame outFrame;
+        ::std::memset(&outFrame, 0, sizeof(outFrame));
+        outFrame.can_id = canFrame.getId();
+        outFrame.len    = length;
+        if (sendAsFd && _config.enableBitRateSwitch)
+        {
+            outFrame.flags |= CANFD_BRS;
+        }
+        ::std::memcpy(outFrame.data, canFrame.getPayload(), length);
+
+        // MTU selects the on-wire frame type: CAN_MTU for classical, CANFD_MTU for FD.
+        size_t const mtu           = sendAsFd ? CANFD_MTU : CAN_MTU;
+        ssize_t const bytesWritten = ::write(_fileDescriptor, &outFrame, mtu);
+        if (bytesWritten != static_cast<ssize_t>(mtu))
         {
             break;
         }
@@ -278,30 +293,29 @@ void SocketCanTransceiver::guardedRun(int maxSentPerRun, int maxReceivedPerRun)
 
     for (int count = 0; count < maxReceivedPerRun; ++count)
     {
-        alignas(can_frame) uint8_t buffer[CANFD_MTU];
-        ssize_t const length = read(_fileDescriptor, buffer, CANFD_MTU);
-        if (length < 0)
+        canfd_frame inFrame;
+        ::std::memset(&inFrame, 0, sizeof(inFrame));
+        ssize_t const bytesRead = ::read(_fileDescriptor, &inFrame, CANFD_MTU);
+        if (bytesRead < 0)
         {
             break;
         }
-        if (length == CAN_MTU)
+        if (bytesRead != CAN_MTU && bytesRead != CANFD_MTU)
         {
-            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-            can_frame const& socketCanFrame = *reinterpret_cast<can_frame const*>(buffer);
             // NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg): Logger API is variadic by design.
-            Logger::debug(
+            Logger::warn(
                 CAN,
-                "[SocketCanTransceiver] received CAN frame, id=0x%X, length=%d",
-                static_cast<int>(::can::CanId::rawId(socketCanFrame.can_id)),
-                static_cast<int>(socketCanFrame.can_dlc));
-            CANFrame canFrame;
-            canFrame.setId(socketCanFrame.can_id);
-            canFrame.setPayload(socketCanFrame.data, socketCanFrame.can_dlc);
-            canFrame.setPayloadLength(socketCanFrame.can_dlc);
-            canFrame.setTimestamp(0);
-
-            notifyListeners(canFrame);
+                "[SocketCanTransceiver] discarded frame with unexpected size=%d",
+                static_cast<int>(bytesRead));
+            continue;
         }
+
+        CANFrame canFrame;
+        canFrame.setId(inFrame.can_id);
+        canFrame.setPayload(inFrame.data, inFrame.len);
+        canFrame.setTimestamp(0);
+
+        notifyListeners(canFrame);
     }
 }
 

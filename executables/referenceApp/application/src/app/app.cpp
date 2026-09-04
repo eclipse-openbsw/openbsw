@@ -38,6 +38,7 @@
 
 #ifdef PLATFORM_SUPPORT_ETHERNET
 #include "systems/EthernetSystem.h"
+#include "systems/SomeIpSystem.h"
 #ifdef PLATFORM_SUPPORT_TRANSPORT
 #include "systems/DoIpServerSystem.h"
 #endif // PLATFORM_SUPPORT_TRANSPORT
@@ -144,6 +145,7 @@ LifecycleManager lifecycleManager{
 ::etl::typed_storage<::systems::SafetySystem> safetySystem;
 #ifdef PLATFORM_SUPPORT_ETHERNET
 ::etl::typed_storage<::systems::EthernetSystem> ethernetSystem;
+::etl::typed_storage<::systems::SomeIpSystem> someIpSystem;
 #endif // PLATFORM_SUPPORT_ETHERNET
 
 #if defined(PLATFORM_SUPPORT_ETHERNET) && defined(PLATFORM_SUPPORT_CAN)
@@ -313,6 +315,10 @@ void startApp()
 #endif
 
     /* runlevel 6 */
+#ifdef PLATFORM_SUPPORT_ETHERNET
+    lifecycleManager.addComponent("someip", someIpSystem.create(TASK_ETHERNET), 6U);
+#endif
+
 #if defined(PLATFORM_SUPPORT_ETHERNET) && defined(PLATFORM_SUPPORT_TRANSPORT)
     lifecycleManager.addComponent(
         "doipServer",

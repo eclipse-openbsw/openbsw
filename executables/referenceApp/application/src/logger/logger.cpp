@@ -30,6 +30,7 @@
 #ifdef PLATFORM_SUPPORT_ETHERNET
 #include <ethernet/EthernetLogger.h>
 #include <lwipSocket/utils/LwipLogger.h>
+#include <someip/defaultlogger.h>
 #include <tcp/TcpLogger.h>
 #include <udp/UdpLogger.h>
 #ifdef PLATFORM_SUPPORT_TRANSPORT
@@ -50,6 +51,7 @@ DEFINE_LOGGER_COMPONENT(UDS);
 DEFINE_LOGGER_COMPONENT(LWIP);
 DEFINE_LOGGER_COMPONENT(RUST);
 DEFINE_LOGGER_COMPONENT(ROUTING);
+DEFINE_LOGGER_COMPONENT(SOMEIP);
 
 #include <async/AsyncBinding.h>
 #include <console/AsyncCommandWrapper.h>
@@ -85,6 +87,7 @@ LOGGER_COMPONENT_MAPPING_INFO(_DEBUG, ETHERNET, ::util::format::Color::MAGENTA)
 LOGGER_COMPONENT_MAPPING_INFO(_DEBUG, TCP, ::util::format::Color::CYAN)
 LOGGER_COMPONENT_MAPPING_INFO(_DEBUG, UDP, ::util::format::Color::LIGHT_GRAY)
 LOGGER_COMPONENT_MAPPING_INFO(_DEBUG, LWIP, ::util::format::Color::LIGHT_YELLOW)
+LOGGER_COMPONENT_MAPPING_INFO(_NOLOGGING, SOMEIP, ::util::format::Color::LIGHT_CYAN)
 #ifdef PLATFORM_SUPPORT_TRANSPORT
 LOGGER_COMPONENT_MAPPING_INFO(_DEBUG, DOIP, ::util::format::Color::LIGHT_GREEN)
 #endif // PLATFORM_SUPPORT_TRANSPORT

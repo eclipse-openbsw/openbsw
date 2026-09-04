@@ -8,6 +8,8 @@
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
 
+#include <etl/infinite_loop.h>
+
 #include <cstdio>
 
 extern "C"
@@ -16,7 +18,7 @@ void FTFC_Fault_IRQHandler()
 {
     printf("FTFC_Fault_IRQHandler\r\n");
     // uncorrectable double bit ECC fault was detected in Flash
-    while (true) {}
+    etl::infinite_loop();
 }
 
 } // extern "C"

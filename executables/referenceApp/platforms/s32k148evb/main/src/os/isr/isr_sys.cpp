@@ -12,6 +12,8 @@
 
 #include <safeMemory/SafeMemory.h>
 
+#include <etl/infinite_loop.h>
+
 #include <cstdio>
 
 extern "C"
@@ -25,7 +27,7 @@ void HardFault_Handler()
 #ifndef UNIT_TEST
     asm volatile("b customHardFaultHandler");
 #else
-    while (true) {}
+    etl::infinite_loop();
 #endif
 }
 
@@ -34,21 +36,21 @@ void HardFault_Handler_Final()
     printf("HardFault_Handler_Final\r\n");
     ::safety::safe_memory::checkEccErrors();
     softwareSystemReset();
-    while (true) {}
+    etl::infinite_loop();
 }
 
 void BusFault_Handler()
 {
     printf("BusFault_Handler\r\n");
     softwareSystemReset();
-    while (true) {}
+    etl::infinite_loop();
 }
 
 void UsageFault_Handler()
 {
     printf("UsageFault_Handler\r\n");
     softwareSystemReset();
-    while (true) {}
+    etl::infinite_loop();
 }
 
 } // extern "C"

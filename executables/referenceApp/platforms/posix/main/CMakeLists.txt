@@ -9,7 +9,7 @@ target_link_libraries(
 
 if (BUILD_TARGET_RTOS STREQUAL "FREERTOS")
     add_library(osHooks src/osHooks/freertos/osHooks.cpp)
-    target_link_libraries(osHooks PRIVATE freeRtos)
+    target_link_libraries(osHooks PRIVATE freeRtos etl)
 elseif (BUILD_TARGET_RTOS STREQUAL "THREADX")
     add_library(osHooks src/osHooks/threadx/osHooks.cpp)
     target_link_libraries(osHooks PRIVATE threadX)

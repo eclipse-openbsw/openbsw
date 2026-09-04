@@ -14,6 +14,8 @@
 #include "async/Hook.h"
 #include "tx_api.h"
 
+#include <etl/infinite_loop.h>
+
 #include <cstdio>
 
 extern "C"
@@ -53,7 +55,6 @@ void tx_low_power_exit() {}
 void vIllegalISR()
 {
     printf("vIllegalISR\r\n");
-    for (;;)
-        ;
+    etl::infinite_loop();
 }
 }

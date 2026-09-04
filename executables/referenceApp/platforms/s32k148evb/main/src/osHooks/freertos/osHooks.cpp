@@ -11,6 +11,8 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
+#include <etl/infinite_loop.h>
+
 #include <cstdio>
 
 extern "C"
@@ -23,7 +25,6 @@ void vApplicationStackOverflowHook(TaskHandle_t /* xTask */, char* /* pcTaskName
 void vIllegalISR()
 {
     printf("vIllegalISR\r\n");
-    for (;;)
-        ;
+    etl::infinite_loop();
 }
 }

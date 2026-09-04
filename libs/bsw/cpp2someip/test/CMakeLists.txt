@@ -1,0 +1,87 @@
+add_executable(
+    cpp2someipTest
+    src/BufferedEventSenderTest.cpp
+    src/ChannelSetupTest.cpp
+    src/ClosureTest.cpp
+    src/CodingValidationTest.cpp
+    src/EnumSerializableTest.cpp
+    src/EtlTypesTest.cpp
+    src/EventTransceiverTest.cpp
+    src/GetSizeTest.cpp
+    src/MessageSizeofTest.cpp
+    src/MockTest.cpp
+    src/NetworkChannelTest.cpp
+    src/NetworkConfigTest.cpp
+    src/NetworkResourceTest.cpp
+    src/NetworkTest.cpp
+    src/PortRange.cpp
+    src/PrimitiveTypesTest.cpp
+    src/QueryManagerTest.cpp
+    src/RebootTrackerTest.cpp
+    src/RpcBaseClientTest.cpp
+    src/RpcChannelTest.cpp
+    src/RpcEventsSizeofTest.cpp
+    src/RpcHandlerTest.cpp
+    src/RpcReceiverTest.cpp
+    src/RpcServiceRegistryTest.cpp
+    src/RpcSizeofTest.cpp
+    src/RpcSomeIpStackTest.cpp
+    src/SdEndpointTest.cpp
+    src/SdMessageBuilderSmallSizeTest.cpp
+    src/SdMessageBuilderTest.cpp
+    src/SdMessageParserTest.cpp
+    src/SdOptionParserTest.cpp
+    src/SdOptionsTest.cpp
+    src/SdReceiverTest.cpp
+    src/SdRemoteSizeofTest.cpp
+    src/SdServiceRegistryTest.cpp
+    src/SdSizeofTest.cpp
+    src/SdSomeIpStackTest.cpp
+    src/SerializationSizeofTest.cpp
+    src/ServiceAnnouncerTaskTest.cpp
+    src/ServiceAnnouncerTest.cpp
+    src/ServiceDescriptionTest.cpp
+    src/ServiceHandlerTest.cpp
+    src/ServiceManagerTest.cpp
+    src/ServiceQueryTest.cpp
+    src/ServiceTrackerTest.cpp
+    src/SessionManagerTest.cpp
+    src/SomeIpLoggerConfig.cpp
+    src/SomeIpMessageTest.cpp
+    src/SomeIpParserTest.cpp
+    src/SomeIpSerializerTest.cpp
+    src/SomeIpStreamerTest.cpp
+    src/StatisticsEvaluatorTest.cpp
+    src/StatisticsTest.cpp
+    src/SubscribedEventGroupTest.cpp
+    src/SubscriptionEndpointTest.cpp
+    src/SubscriptionManagerTest.cpp
+    src/TcpClientChannelValidatorTest.cpp
+    src/TcpConfigTest.cpp
+    src/TcpProxyTest.cpp
+    src/TcpServerTest.cpp
+    src/TpConfigTest.cpp
+    src/TpReceiverTest.cpp
+    src/TpSenderTest.cpp
+    src/TpTransceiverTest.cpp
+    src/UdpConfigTest.cpp
+    src/UdpConfigTestInstantiations.cpp
+    src/UdpProxyConfigTest.cpp
+    src/UdpProxyTest.cpp
+    src/UnionBaseTest.cpp)
+
+target_include_directories(cpp2someipTest PRIVATE ../include ../mock/include
+                                                  ../../util/mock/include)
+
+target_link_libraries(
+    cpp2someipTest
+    PRIVATE cpp2someip
+            bspMock
+            cpp2someipMock
+            cpp2ethernetMock
+            utCommon
+            utilMock
+            asyncMockImpl
+            gtest_main)
+
+gtest_discover_tests(cpp2someipTest PROPERTIES LABELS "cpp2someipTest")

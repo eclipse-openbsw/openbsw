@@ -48,7 +48,7 @@ struct IPAddress
         return ::etl::be_uint32_ext_t(&raw[index * sizeof(uint32_t)]);
     }
 
-    uint8_t raw[MAX_IP_LENGTH];
+    uint8_t raw[MAX_IP_LENGTH] = {};
 };
 
 constexpr IPAddress make_ip4(uint32_t ip4addr);
@@ -387,6 +387,19 @@ inline IPAddress::Family addressFamilyOf([[maybe_unused]] IPAddress const& ipAdd
 inline bool operator==(IPAddress const& ip1, IPAddress const& ip2)
 {
 #ifdef PLATFORM_SUPPORT_IPV6
+    IPAddress::Family const family1 = addressFamilyOf(ip1);
+    IPAddress::Family const family2 = addressFamilyOf(ip2);
+    if (family1 != family2)
+    {
+        return false;
+    }
+
+    if (IPAddress::IPV4 == family1)
+    {
+        // Only the last 32 bits carry the IPv4 payload; the IPv4-mapped prefix was already
+        // verified equal by addressFamilyOf() returning the same family for both operands.
+        return (ip1.be_uint32_at(internal::IP4_IDX) == ip2.be_uint32_at(internal::IP4_IDX));
+    }
     return (
         (ip1.be_uint32_at(3) == ip2.be_uint32_at(3)) && (ip1.be_uint32_at(2) == ip2.be_uint32_at(2))
         && (ip1.be_uint32_at(1) == ip2.be_uint32_at(1))

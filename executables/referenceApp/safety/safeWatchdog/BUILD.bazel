@@ -1,0 +1,46 @@
+# *******************************************************************************
+# Copyright (c) 2026 Accenture
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+
+load("@rules_cc//cc:cc_library.bzl", "cc_library")
+
+cc_library(
+    name = "safe_watchdog_watchdog_support",
+    defines = ["PLATFORM_SUPPORT_WATCHDOG=1"],
+    target_compatible_with = ["//bazel/platform/constraints/soc:s32k148"],
+    deps = [
+        "//platforms/s32k1xx/bsp/bspMcu:bsp_mcu",
+        "//platforms/s32k1xx/safety/safeBspMcuWatchdog:safe_bsp_mcu_watchdog",
+    ],
+)
+
+cc_library(name = "safe_watchdog_watchdog_support_none")
+
+alias(
+    name = "watchdog_support",
+    actual = select({
+        "//bazel/platform/constraints/soc:s32k148": ":safe_watchdog_watchdog_support",
+        "//conditions:default": ":safe_watchdog_watchdog_support_none",
+    }),
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "safe_watchdog",
+    srcs = ["src/safeWatchdog/SafeWatchdog.cpp"],
+    hdrs = ["include/safeWatchdog/SafeWatchdog.h"],
+    implementation_deps = [
+        ":watchdog_support",
+        "//executables/referenceApp/safety/safeSupervisor:safe_supervisor",
+        "//libs/safety/safeUtils:safe_utils",
+    ],
+    strip_include_prefix = "include",
+    visibility = ["//visibility:public"],
+    deps = ["//libs/bsw/platform"],
+)

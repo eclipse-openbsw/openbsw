@@ -80,7 +80,7 @@ void update{{cluster.name}}ClusterTimeouts()
 // ***************************** {{cluster.name}} *****************************
 {% for connection in connections if connection.source_cluster.name == cluster.name %}
 meta::ClusterConnection{{cluster.name}}To{{connection.target_cluster.name}}Meta ClusterConnection{{cluster.name}}To{{connection.target_cluster.name}}Config;
-core::ClusterConnectionTypeSelector<meta::ClusterConnection{{cluster.name}}To{{connection.target_cluster.name}}Meta>::type ClusterConnection{{cluster.name}}To{{connection.target_cluster.name}}(ClusterConnection{{cluster.name}}To{{connection.target_cluster.name}}Config);
+core::ClusterConnection ClusterConnection{{cluster.name}}To{{connection.target_cluster.name}}(ClusterConnection{{cluster.name}}To{{connection.target_cluster.name}}Config);
 {% endfor %}
 
 void initialize{{cluster.name}}ClusterConnection()

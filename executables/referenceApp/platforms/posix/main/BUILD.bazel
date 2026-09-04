@@ -11,11 +11,47 @@
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
 
 cc_library(
+    name = "main",
+    srcs = [
+        "src/lifecycle/StaticBsp.cpp",
+        "src/main.cpp",
+        "src/systems/CanSystem.cpp",
+        "src/systems/TapEthernetSystem.cpp",
+    ],
+    hdrs = [
+        "include/lifecycle/StaticBsp.h",
+        "include/systems/CanSystem.h",
+        "include/systems/TapEthernetSystem.h",
+    ],
+    implementation_deps = [
+        "//executables/referenceApp/asyncBinding:async_binding",
+        "//executables/referenceApp/configuration",
+        "//executables/referenceApp/platforms/posix/ethConfiguration:eth_configuration",
+        "//executables/referenceApp/safety/safeSupervisor:safe_supervisor",
+        "//libs/bsw/lifecycle",
+        "//libs/bsw/lwipSocket:lwip_socket",
+        "//platforms/posix/bsp/bspUart:bsp_uart",
+        "//platforms/posix/bsp/socketCanTransceiver:socket_can_transceiver",
+        "//platforms/posix/bsp/tapEthernetDriver:tap_ethernet_driver",
+    ],
+    local_defines = [
+        "PLATFORM_SUPPORT_CAN=1",
+        "PLATFORM_SUPPORT_ETHERNET=1",
+    ],
+    strip_include_prefix = "include",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//platforms/posix/bsp/bspEepromDriver:bsp_eeprom_driver",
+    ],
+)
+
+cc_library(
     name = "freertos_os_hooks",
     srcs = [
         "src/osHooks/freertos/osHooks.cpp",
     ],
     implementation_deps = [
+        "//libs/3rdparty/etl",
         "//libs/3rdparty/freeRtos:freertos_headers",
     ],
     target_compatible_with = ["@platforms//os:linux"],

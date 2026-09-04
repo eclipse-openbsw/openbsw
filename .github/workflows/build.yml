@@ -18,7 +18,7 @@ jobs:
     strategy:
     #   max-parallel: 1
       matrix:
-        preset: [ "tests-posix-debug", "tests-posix-release", "tests-s32k1xx-debug", "tests-s32k1xx-release", "tests-stm32-debug", "tests-stm32-release", "posix-freertos", "posix-threadx", "posix-freertos-with-tracing", "posix-rust", "s32k148-freertos-gcc", "s32k148-threadx-gcc", "s32k148-freertos-clang", "s32k148-threadx-clang", "s32k148-rust-gcc" ]
+        preset: [ "tests-posix-debug", "tests-posix-release", "tests-s32k1xx-debug", "tests-s32k1xx-release", "tests-stm32-debug", "tests-stm32-release", "posix-freertos", "posix-threadx", "posix-freertos-with-tracing", "posix-freertos-canfd", "posix-rust", "s32k148-freertos-gcc", "s32k148-threadx-gcc", "s32k148-freertos-clang", "s32k148-threadx-clang", "s32k148-rust-gcc" ]
         platform: [ "arm", "linux" ]
         config: [ "Debug", "Release", "RelWithDebInfo" ]
         cxxid: ["gcc", "clang"]
@@ -89,6 +89,11 @@ jobs:
           - preset: "posix-freertos-with-tracing"
             platform: "arm"
           - preset: "posix-freertos-with-tracing"
+            config: "RelWithDebInfo"
+
+          - preset: "posix-freertos-canfd"
+            platform: "arm"
+          - preset: "posix-freertos-canfd"
             config: "RelWithDebInfo"
 
           - preset: "posix-rust"

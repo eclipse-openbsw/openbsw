@@ -601,24 +601,31 @@ def create_temp_file(path, encoding):
     return temp.name
 
 
-def remove_old_header(file_path, encoding, num_of_chars):
+def remove_old_header(file_path, encoding, num_of_chars, offset=0):
     """
-    Removes the first `num_of_chars` characters from a file and updates it in-place.
+    Removes `num_of_chars` characters from a file and updates it in-place.
+
+    The first `offset` characters (e.g. a shebang line) are preserved, and the
+    removal starts right after them, matching how `extract_copyright_info()`
+    measures the old header.
 
     Args:
         file_path (str): Path to the file to be modified.
         encoding (str): Encoding used to read and write the file.
-        num_of_chars (int): Number of characters to remove from the beginning of the file.
+        num_of_chars (int): Number of characters to remove.
+        offset (int): Number of leading characters to keep untouched.
 
     Raises:
         IOError: If there is an issue reading or writing the file.
         ValueError: If `num_of_chars` is negative.
     """
     with open(file_path, "r", encoding=encoding) as file:
-        file.seek(num_of_chars)
+        preserved = file.read(offset) if offset else ""
+        file.read(num_of_chars)
         with tempfile.NamedTemporaryFile(
             "w", delete=False, encoding=encoding
         ) as temp_file:
+            temp_file.write(preserved)
             shutil.copyfileobj(file, temp_file)
     shutil.move(temp_file.name, file_path)
 
@@ -648,20 +655,28 @@ def fix_copyright(path, copyright_text, encoding, offset, config=None,
     temporary_file = create_temp_file(path, encoding)
 
     with open(temporary_file, "r", encoding=encoding) as temp:
-        first_line = temp.readline()
-        byte_array = len(first_line.encode(encoding))
+        # The preserved prefix is the first line plus any empty lines directly
+        # following it, matching what detect_shebang_offset() counts.
+        prefix = temp.readline()
+        prefix_length = len(prefix.encode(encoding))
+        while prefix_length < offset:
+            next_char = temp.read(1)
+            if not next_char or next_char not in ("\n", "\r"):
+                break
+            prefix += next_char
+            prefix_length += len(next_char.encode(encoding))
 
-        if offset > 0 and offset != byte_array:
+        if offset > 0 and offset != prefix_length:
             LOGGER.error(
-                "%s: Invalid offset value: %d, expected: %d", path, offset, byte_array
+                "%s: Invalid offset value: %d, expected: %d", path, offset, prefix_length
             )
             return False
 
         with open(path, "w", encoding=encoding) as handle:
-            temp.seek(0)
             if offset > 0:
-                handle.write(first_line)
-                temp.seek(offset)
+                handle.write(prefix)
+            else:
+                temp.seek(0)
             handle.write(
                 copyright_text.format(
                     year=year if year else datetime.now().year,
@@ -754,7 +769,7 @@ def process_files(
                     ext_author = get_author_from_config(config)
                 actual_remove = remove_offset if remove_offset else old_header_len
                 if actual_remove:
-                    remove_old_header(item, encoding, actual_remove)
+                    remove_old_header(item, encoding, actual_remove, effective_offset)
                 fix_result = fix_copyright(
                     item, templates[key], encoding, effective_offset, config,
                     year=ext_year, author=ext_author

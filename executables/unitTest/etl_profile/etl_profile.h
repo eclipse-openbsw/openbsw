@@ -22,16 +22,15 @@
 #include <initializer_list>
 #include <tuple>
 
+// Since at some points we are using std headers, we need to use this
+// to prevent the ETL version from it conflicting with the
+// std::initializer_list
 #define ETL_FORCE_STD_INITIALIZER_LIST
 
+// Don't rely on wchar_t support in the used libc++
 #define ETL_NO_LIBC_WCHAR_H
 
-#define ETL_USING_BUILTIN_MEMCPY  0
-#define ETL_USING_BUILTIN_MEMMOVE 0
-#define ETL_USING_BUILTIN_MEMSET  0
-#define ETL_USING_BUILTIN_MEMCMP  0
-#define ETL_USING_BUILTIN_MEMCHR  0
-
+// In unit tests, use C++ exceptions to check for ETL_ASSERT branches
 #define ETL_THROW_EXCEPTIONS
 
 #define ETL_CHRONO_HIGH_RESOLUTION_CLOCK_DURATION etl::chrono::nanoseconds

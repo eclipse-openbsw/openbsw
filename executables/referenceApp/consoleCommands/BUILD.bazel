@@ -1,0 +1,73 @@
+# *******************************************************************************
+# Copyright (c) 2026 Accenture
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+
+load("@rules_cc//cc:defs.bzl", "cc_library")
+
+# Circular dependency present in Bazel when modelling the CMake PLATFORM_SUPPORT_IO conditional: console_commands -> io_support -> console_commands.
+# Split off console_commands_headers to break the circular dependency for Bazel.
+cc_library(
+    name = "console_commands_headers",
+    hdrs = [
+        "include/can/console/CanCommand.h",
+        "include/lifecycle/console/LifecycleControlCommand.h",
+        "include/lifecycle/console/StatisticsCommand.h",
+        "include/safety/console/SafetyCommand.h",
+    ],
+    strip_include_prefix = "include",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//executables/referenceApp/asyncBinding:async_binding",
+        "//executables/referenceApp/asyncCoreConfiguration:async_core_configuration",
+        "//executables/referenceApp/configuration",
+        "//libs/bsw/cpp2can",
+        "//libs/bsw/lifecycle",
+        "//libs/bsw/runtime",
+        "//libs/safety/safeUtils:safe_utils",
+    ],
+)
+
+cc_library(
+    name = "console_commands_io_support",
+    srcs = [
+        "src/safety/console/SafetyCommand.cpp",
+    ],
+    target_compatible_with = ["//bazel/platform/constraints/soc:s32k148"],
+    deps = [
+        ":console_commands_headers",
+        "//executables/referenceApp/platforms/s32k148evb/safety/safeIo:safe_io",
+        "//platforms/s32k1xx/bsp/bspIo:bsp_io",
+    ],
+)
+
+cc_library(name = "console_commands_io_support_none")
+
+alias(
+    name = "io_support",
+    actual = select({
+        "//bazel/platform/constraints/soc:s32k148": ":console_commands_io_support",
+        "//conditions:default": ":console_commands_io_support_none",
+    }),
+)
+
+cc_library(
+    name = "console_commands",
+    srcs = [
+        "src/can/console/CanCommand.cpp",
+        "src/lifecycle/console/LifecycleControlCommand.cpp",
+        "src/lifecycle/console/StatisticsCommand.cpp",
+    ],
+    implementation_deps = [
+        ":io_support",
+    ],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":console_commands_headers",
+    ],
+)

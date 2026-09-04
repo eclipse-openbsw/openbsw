@@ -13,6 +13,8 @@
 #include <io/Io.h>
 #include <safeUtils/SafetyLogger.h>
 
+#include <etl/infinite_loop.h>
+
 #include <cstdio>
 
 extern uint32_t __MPU_BSS_START[];
@@ -61,8 +63,7 @@ void SafetyCommand::executeCommand(::util::command::CommandContext&, uint8_t idx
         {
             // Using printf, because a regular logger call would not finish before reset.
             printf("Enter infinite loop to trigger watchdog reset\n");
-            while (true) {}
-            break;
+            etl::infinite_loop();
         }
         case ID_PRT:
         {

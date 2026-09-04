@@ -84,6 +84,13 @@ commands = {
         platforms=["linux"],
         build_dir="build/posix-freertos",
     ),
+    "posix-freertos-canfd": BuildOpTpl(
+        config_cmd="cmake --preset posix-freertos -DPLATFORM_CAN0_USE_FD=ON",
+        build_cmd="cmake --build --preset posix-freertos",
+        configs=["Debug", "Release"],
+        platforms=["linux"],
+        build_dir="build/posix-freertos",
+    ),
     "posix-rust": BuildOpTpl(
         config_cmd="cmake --preset posix-rust",
         build_cmd="cmake --build --preset posix-rust",

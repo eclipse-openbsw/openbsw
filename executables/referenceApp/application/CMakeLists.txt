@@ -29,7 +29,17 @@ if (PLATFORM_SUPPORT_TRANSPORT)
 endif ()
 
 if (PLATFORM_SUPPORT_ETHERNET)
-    target_sources(app.referenceApp PRIVATE src/systems/EthernetSystem.cpp)
+    target_sources(
+        app.referenceApp
+        PRIVATE src/systems/EthernetSystem.cpp
+                src/systems/SomeIpSystem.cpp
+                src/someip/EventListener.cpp
+                src/someip/PeriodicRoutine.cpp
+                src/someip/ProvidedServiceData.cpp
+                src/someip/ProvidedServiceImpl.cpp
+                src/someip/ServiceListener.cpp
+                src/someip/TimeServiceReply.cpp
+                src/someip/TimeServiceRequest.cpp)
     if (PLATFORM_SUPPORT_TRANSPORT)
         target_sources(app.referenceApp
                        PRIVATE src/systems/DoIpServerSystem.cpp)
@@ -117,8 +127,13 @@ if (PLATFORM_SUPPORT_CAN)
 endif ()
 
 if (PLATFORM_SUPPORT_ETHERNET)
-    target_link_libraries(app.referenceApp PRIVATE cpp2ethernet lwipSocket
-                                                   lwipcore ethConfiguration)
+    target_link_libraries(
+        app.referenceApp
+        PRIVATE cpp2ethernet
+                cpp2someip
+                lwipSocket
+                lwipcore
+                ethConfiguration)
     if (PLATFORM_SUPPORT_TRANSPORT)
         target_link_libraries(app.referenceApp PRIVATE doip)
     endif ()

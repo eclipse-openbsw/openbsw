@@ -8,6 +8,8 @@
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
 
+#include <etl/infinite_loop.h>
+
 #include <cstdio>
 
 extern "C"
@@ -16,7 +18,7 @@ void ERM_double_fault_IRQHandler()
 {
     printf("ERM_double_fault_IRQHandler\r\n");
     // uncorrectable double bit ECC fault was detected in SRAM
-    while (true) {}
+    etl::infinite_loop();
 }
 
 } // extern "C"
