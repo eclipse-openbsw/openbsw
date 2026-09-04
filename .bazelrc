@@ -1,9 +1,19 @@
 build:s32k148_gcc --platforms=//bazel/platform:s32k148
 # Default to gcc
 build:s32k148 --config=s32k148_gcc
-# Platform feature defines (CMake root add_compile_definitions(PLATFORM_SUPPORT_*=1) from
-# platforms/s32k148evb/Options.cmake). Global to the s32k148 build, like on the CMake side.
-build:s32k148 --copt=-DPLATFORM_SUPPORT_IO=1
+# All PLATFORM_SUPPORT_* flags (mirrors Options.cmake CACHE BOOL ... FORCE declarations).
+# Every flag is set explicitly so the platform's feature matrix is self-documenting.
+build:s32k148 --//bazel/config/features:can=true
+build:s32k148 --//bazel/config/features:ethernet=true
+build:s32k148 --//bazel/config/features:io=true
+build:s32k148 --//bazel/config/features:ipv6=false
+build:s32k148 --//bazel/config/features:middleware=false
+build:s32k148 --//bazel/config/features:mpu=true
+build:s32k148 --//bazel/config/features:rom_check=false
+build:s32k148 --//bazel/config/features:storage=true
+build:s32k148 --//bazel/config/features:transport=true
+build:s32k148 --//bazel/config/features:uds=true
+build:s32k148 --//bazel/config/features:watchdog=true
 
 # TODO: Temporary config only needed for artifact analysis
 # Make Bazel's build match CMake s32k148-freertos-gcc default config
@@ -13,6 +23,20 @@ build:s32k148_relwithdebinfo --copt=-O2
 build:s32k148_relwithdebinfo --copt=-DNDEBUG
 build:s32k148_threadx --config=s32k148
 build:s32k148_threadx --//bazel/config/rtos=threadx
+
+# All PLATFORM_SUPPORT_* flags for posix (mirrors posix/Options.cmake).
+# Options.cmake gates CAN on non-Darwin; this repo targets Linux so CAN is included.
+build:posix --//bazel/config/features:can=true
+build:posix --//bazel/config/features:ethernet=true
+build:posix --//bazel/config/features:io=false
+build:posix --//bazel/config/features:ipv6=false
+build:posix --//bazel/config/features:middleware=true
+build:posix --//bazel/config/features:mpu=false
+build:posix --//bazel/config/features:rom_check=false
+build:posix --//bazel/config/features:storage=true
+build:posix --//bazel/config/features:transport=true
+build:posix --//bazel/config/features:uds=true
+build:posix --//bazel/config/features:watchdog=false
 
 # Select the ETL profile for builds inside the OpenBSW repo based on executable_config (mirrors
 # CMake BUILD_EXECUTABLE). This ONLY applies when OpenBSW is the root module. Downstream consumers 

@@ -1,0 +1,337 @@
+# *******************************************************************************
+# Copyright (c) 2026 Accenture
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+
+"""
+PLATFORM_SUPPORT_* feature flags (CMake: Options.cmake CACHE BOOL ... FORCE declarations).
+
+Each flag is a self-contained triple: bool_flag + config_settings + defines carrier lib.
+All flags default to False. .bazelrc sets every flag explicitly per platform config.
+Override any flag individually, e.g. --//bazel/config/features:can=false
+
+feature_defines aggregates all carrier libs for the common dep.
+"""
+
+load("@bazel_skylib//rules:common_settings.bzl", "bool_flag")
+load("@rules_cc//cc:cc_library.bzl", "cc_library")
+
+bool_flag(
+    name = "can",
+    build_setting_default = False,
+    visibility = ["//visibility:public"],
+)
+
+config_setting(
+    name = "can_enabled",
+    flag_values = {":can": "true"},
+    visibility = ["//visibility:public"],
+)
+
+config_setting(
+    name = "can_disabled",
+    flag_values = {":can": "false"},
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "can_defines",
+    defines = select({
+        ":can_enabled": ["PLATFORM_SUPPORT_CAN=1"],
+        "//conditions:default": [],
+    }),
+    visibility = ["//visibility:public"],
+)
+
+bool_flag(
+    name = "ethernet",
+    build_setting_default = False,
+    visibility = ["//visibility:public"],
+)
+
+config_setting(
+    name = "ethernet_enabled",
+    flag_values = {":ethernet": "true"},
+    visibility = ["//visibility:public"],
+)
+
+config_setting(
+    name = "ethernet_disabled",
+    flag_values = {":ethernet": "false"},
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "ethernet_defines",
+    defines = select({
+        ":ethernet_enabled": ["PLATFORM_SUPPORT_ETHERNET=1"],
+        "//conditions:default": [],
+    }),
+    visibility = ["//visibility:public"],
+)
+
+bool_flag(
+    name = "io",
+    build_setting_default = False,
+    visibility = ["//visibility:public"],
+)
+
+config_setting(
+    name = "io_enabled",
+    flag_values = {":io": "true"},
+    visibility = ["//visibility:public"],
+)
+
+config_setting(
+    name = "io_disabled",
+    flag_values = {":io": "false"},
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "io_defines",
+    defines = select({
+        ":io_enabled": ["PLATFORM_SUPPORT_IO=1"],
+        "//conditions:default": [],
+    }),
+    visibility = ["//visibility:public"],
+)
+
+bool_flag(
+    name = "ipv6",
+    build_setting_default = False,
+    visibility = ["//visibility:public"],
+)
+
+config_setting(
+    name = "ipv6_enabled",
+    flag_values = {":ipv6": "true"},
+    visibility = ["//visibility:public"],
+)
+
+config_setting(
+    name = "ipv6_disabled",
+    flag_values = {":ipv6": "false"},
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "ipv6_defines",
+    defines = select({
+        ":ipv6_enabled": ["PLATFORM_SUPPORT_IPV6=1"],
+        "//conditions:default": [],
+    }),
+    visibility = ["//visibility:public"],
+)
+
+bool_flag(
+    name = "middleware",
+    build_setting_default = False,
+    visibility = ["//visibility:public"],
+)
+
+config_setting(
+    name = "middleware_enabled",
+    flag_values = {":middleware": "true"},
+    visibility = ["//visibility:public"],
+)
+
+config_setting(
+    name = "middleware_disabled",
+    flag_values = {":middleware": "false"},
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "middleware_defines",
+    defines = select({
+        ":middleware_enabled": ["PLATFORM_SUPPORT_MIDDLEWARE=1"],
+        "//conditions:default": [],
+    }),
+    visibility = ["//visibility:public"],
+)
+
+bool_flag(
+    name = "mpu",
+    build_setting_default = False,
+    visibility = ["//visibility:public"],
+)
+
+config_setting(
+    name = "mpu_enabled",
+    flag_values = {":mpu": "true"},
+    visibility = ["//visibility:public"],
+)
+
+config_setting(
+    name = "mpu_disabled",
+    flag_values = {":mpu": "false"},
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "mpu_defines",
+    defines = select({
+        ":mpu_enabled": ["PLATFORM_SUPPORT_MPU=1"],
+        "//conditions:default": [],
+    }),
+    visibility = ["//visibility:public"],
+)
+
+bool_flag(
+    name = "rom_check",
+    build_setting_default = False,
+    visibility = ["//visibility:public"],
+)
+
+config_setting(
+    name = "rom_check_enabled",
+    flag_values = {":rom_check": "true"},
+    visibility = ["//visibility:public"],
+)
+
+config_setting(
+    name = "rom_check_disabled",
+    flag_values = {":rom_check": "false"},
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "rom_check_defines",
+    defines = select({
+        ":rom_check_enabled": ["PLATFORM_SUPPORT_ROM_CHECK=1"],
+        "//conditions:default": [],
+    }),
+    visibility = ["//visibility:public"],
+)
+
+bool_flag(
+    name = "storage",
+    build_setting_default = False,
+    visibility = ["//visibility:public"],
+)
+
+config_setting(
+    name = "storage_enabled",
+    flag_values = {":storage": "true"},
+    visibility = ["//visibility:public"],
+)
+
+config_setting(
+    name = "storage_disabled",
+    flag_values = {":storage": "false"},
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "storage_defines",
+    defines = select({
+        ":storage_enabled": ["PLATFORM_SUPPORT_STORAGE=1"],
+        "//conditions:default": [],
+    }),
+    visibility = ["//visibility:public"],
+)
+
+bool_flag(
+    name = "transport",
+    build_setting_default = False,
+    visibility = ["//visibility:public"],
+)
+
+config_setting(
+    name = "transport_enabled",
+    flag_values = {":transport": "true"},
+    visibility = ["//visibility:public"],
+)
+
+config_setting(
+    name = "transport_disabled",
+    flag_values = {":transport": "false"},
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "transport_defines",
+    defines = select({
+        ":transport_enabled": ["PLATFORM_SUPPORT_TRANSPORT=1"],
+        "//conditions:default": [],
+    }),
+    visibility = ["//visibility:public"],
+)
+
+bool_flag(
+    name = "uds",
+    build_setting_default = False,
+    visibility = ["//visibility:public"],
+)
+
+config_setting(
+    name = "uds_enabled",
+    flag_values = {":uds": "true"},
+    visibility = ["//visibility:public"],
+)
+
+config_setting(
+    name = "uds_disabled",
+    flag_values = {":uds": "false"},
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "uds_defines",
+    defines = select({
+        ":uds_enabled": ["PLATFORM_SUPPORT_UDS=1"],
+        "//conditions:default": [],
+    }),
+    visibility = ["//visibility:public"],
+)
+
+bool_flag(
+    name = "watchdog",
+    build_setting_default = False,
+    visibility = ["//visibility:public"],
+)
+
+config_setting(
+    name = "watchdog_enabled",
+    flag_values = {":watchdog": "true"},
+    visibility = ["//visibility:public"],
+)
+
+config_setting(
+    name = "watchdog_disabled",
+    flag_values = {":watchdog": "false"},
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "watchdog_defines",
+    defines = select({
+        ":watchdog_enabled": ["PLATFORM_SUPPORT_WATCHDOG=1"],
+        "//conditions:default": [],
+    }),
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "feature_defines",
+    visibility = ["//visibility:public"],
+    deps = [
+        ":can_defines",
+        ":ethernet_defines",
+        ":io_defines",
+        ":ipv6_defines",
+        ":middleware_defines",
+        ":mpu_defines",
+        ":rom_check_defines",
+        ":storage_defines",
+        ":transport_defines",
+        ":uds_defines",
+        ":watchdog_defines",
+    ],
+)
