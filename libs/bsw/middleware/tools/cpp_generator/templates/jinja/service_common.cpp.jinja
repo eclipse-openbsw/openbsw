@@ -33,51 +33,44 @@ namespace {{ service.namespace }}::{{ service.name }}
 
 namespace internal
 {
-{# For simulation mode: Generate only merged InstancesDatabase (individual cluster databases removed) #}
-
-{# Create merged InstancesDatabase for simulation (all cores together) #}
 {% set clusters_with_instances = service.deployment.clusters | selectattr('providers.instance_ids') | list %}
-{# Collect all instance IDs from all provider clusters #}
-{%- set all_instance_ids = [] -%}
-{%- for cluster_deployment in clusters_with_instances -%}
-  {%- for instance_id in cluster_deployment.providers.instance_ids -%}
-    {%- set _ = all_instance_ids.append(instance_id) -%}
-  {%- endfor -%}
-{%- endfor -%}
 
-{# Collect all connections for this service across ALL clusters (simulation mode) #}
-{%- set all_skeleton_connections = [] -%}
-{%- set all_proxy_connections = [] -%}
+{% for cluster_deployment in clusters_with_instances %}
+{%- set cluster_skeleton_connections = [] -%}
+{%- set cluster_proxy_connections = [] -%}
 
-{# Find all skeleton connections (provider connections) #}
+{# Find skeleton connections for this provider cluster #}
 {%- for connection in connections -%}
-  {%- for skeleton in connection.skeletons if connection.skeletons -%}
-    {%- if skeleton.name == service.name -%}
-      {%- set _ = all_skeleton_connections.append(connection) -%}
-    {%- endif -%}
-  {%- endfor -%}
+  {%- if connection.source_cluster.name == cluster_deployment.cluster.name -%}
+    {%- for skeleton in connection.skeletons if connection.skeletons -%}
+      {%- if skeleton.name == service.name -%}
+        {%- set _ = cluster_skeleton_connections.append(connection) -%}
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endif -%}
 {%- endfor -%}
 
-{# Find all proxy connections (consumer connections) #}
+{# Find proxy connections targeting this provider cluster #}
 {%- for connection in connections -%}
-  {%- for proxy in connection.proxies if connection.proxies -%}
-    {%- if proxy.name == service.name -%}
-      {%- set _ = all_proxy_connections.append(connection) -%}
-    {%- endif -%}
-  {%- endfor -%}
+  {%- if connection.target_cluster.name == cluster_deployment.cluster.name -%}
+    {%- for proxy in connection.proxies if connection.proxies -%}
+      {%- if proxy.name == service.name -%}
+        {%- set _ = cluster_proxy_connections.append(connection) -%}
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endif -%}
 {%- endfor -%}
 
-{# Generate merged InstancesDatabase for simulation #}
-class InstancesDatabase_Merged : public ::middleware::core::IInstanceDatabase
+class InstancesDatabase_{{ cluster_deployment.cluster.name }} : public ::middleware::core::IInstanceDatabase
 {
   public:
-    constexpr InstancesDatabase_Merged() = default;
+    constexpr InstancesDatabase_{{ cluster_deployment.cluster.name }}() = default;
     ::etl::span<::middleware::core::IClusterConnection* const> getSkeletonConnectionsRange() const override
     {
-        {% if all_skeleton_connections %}
-        static constexpr ::etl::array<::middleware::core::IClusterConnection* const, {{all_skeleton_connections | length}}U> connections = {
+        {% if cluster_skeleton_connections %}
+        static constexpr ::etl::array<::middleware::core::IClusterConnection* const, {{cluster_skeleton_connections | length}}U> connections = {
             {
-            {%- for connection in all_skeleton_connections %}
+            {%- for connection in cluster_skeleton_connections %}
             &::middleware::ClusterConnection{{ connection.source_cluster.name }}To{{ connection.target_cluster.name }}{{ "," if not loop.last }}
             {%- endfor %}
             }
@@ -90,10 +83,10 @@ class InstancesDatabase_Merged : public ::middleware::core::IInstanceDatabase
 
     ::etl::span<::middleware::core::IClusterConnection* const> getProxyConnectionsRange() const override
     {
-        {% if all_proxy_connections %}
-        static constexpr ::etl::array<::middleware::core::IClusterConnection* const, {{all_proxy_connections | length}}U> connections = {
+        {% if cluster_proxy_connections %}
+        static constexpr ::etl::array<::middleware::core::IClusterConnection* const, {{cluster_proxy_connections | length}}U> connections = {
             {
-            {%- for connection in all_proxy_connections %}
+            {%- for connection in cluster_proxy_connections %}
             &::middleware::ClusterConnection{{ connection.source_cluster.name }}To{{ connection.target_cluster.name }}{{ "," if not loop.last }}
             {%- endfor %}
             }
@@ -110,15 +103,20 @@ class InstancesDatabase_Merged : public ::middleware::core::IInstanceDatabase
     }
 
   private:
-    static constexpr ::etl::array<const uint16_t, {{all_instance_ids | length}}U> fInstanceIds = {% if all_instance_ids -%}{ {{all_instance_ids | join('U, ')}}U }{%- else -%}{  }{%- endif %};
+    static constexpr ::etl::array<const uint16_t, {{ cluster_deployment.providers.instance_ids | length }}U> fInstanceIds = { {{ cluster_deployment.providers.instance_ids | join('U, ') }}U };
 };
 
-constexpr ::etl::array<const uint16_t, {{all_instance_ids | length}}U> InstancesDatabase_Merged::fInstanceIds;
+constexpr ::etl::array<const uint16_t, {{ cluster_deployment.providers.instance_ids | length }}U> InstancesDatabase_{{ cluster_deployment.cluster.name }}::fInstanceIds;
 
-constexpr InstancesDatabase_Merged _InstancesDatabase_Merged;
+constexpr InstancesDatabase_{{ cluster_deployment.cluster.name }} _InstancesDatabase_{{ cluster_deployment.cluster.name }};
+{% endfor %}
 
-constexpr ::etl::array<const ::middleware::core::IInstanceDatabase* const, 1U> instancesDatabase{
-    &_InstancesDatabase_Merged
+constexpr ::etl::array<const ::middleware::core::IInstanceDatabase* const, {{ clusters_with_instances | length }}U> instancesDatabase{
+{% if clusters_with_instances %}
+    {%- for cluster_deployment in clusters_with_instances %}
+    &_InstancesDatabase_{{ cluster_deployment.cluster.name }}{{ "," if not loop.last }}
+    {%- endfor %}
+{% endif %}
 };
 
 ::etl::span<const ::middleware::core::IInstanceDatabase* const> getClusterConnectionsDb()
