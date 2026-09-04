@@ -38,14 +38,20 @@ public:
     DoIpStaticPayloadSendJob(
         uint8_t protocolVersion,
         uint16_t payloadType,
-        ::etl::span<uint8_t const> payload,
+        ::etl::span<uint8_t> payload,
         ReleaseCallbackType releaseCallback);
+
+    /**
+     * Get write access to the payload buffer assigned to this send job.
+     * \return the complete assigned buffer.
+     */
+    ::etl::span<uint8_t> accessPayloadBuffer() const { return _payload; }
 
 protected:
     ::etl::span<uint8_t const> getPayloadBuffer(::etl::span<uint8_t> staticBuffer) const override;
 
 private:
-    ::etl::span<uint8_t const> _payload;
+    ::etl::span<uint8_t> _payload;
 };
 
 namespace declare
@@ -86,12 +92,6 @@ public:
         ::etl::span<uint8_t const> payload,
         ReleaseCallbackType releaseCallback);
 
-    /**
-     * Get write access to the payload buffer allocated with this send job.
-     * \return the complete allocated buffer.
-     */
-    ::etl::span<uint8_t> accessPayloadBuffer();
-
 private:
     ::etl::array<uint8_t, BufferSize> _payloadBuffer;
 };
@@ -112,7 +112,7 @@ DoIpStaticPayloadSendJob<BufferSize>::DoIpStaticPayloadSendJob(
 : ::doip::DoIpStaticPayloadSendJob(
     protocolVersion,
     payloadType,
-    ::etl::span<uint8_t const>(_payloadBuffer).subspan(0U, payloadLength),
+    ::etl::span<uint8_t>(_payloadBuffer).subspan(0U, payloadLength),
     releaseCallback)
 , _payloadBuffer{}
 {}
@@ -130,12 +130,6 @@ DoIpStaticPayloadSendJob<BufferSize>::DoIpStaticPayloadSendJob(
     ETL_ASSERT(
         payload.size() <= BufferSize, ETL_ERROR_GENERIC("buffer not big enough to hold payload"));
     ::etl::mem_copy(payload.begin(), payload.end(), accessPayloadBuffer().begin());
-}
-
-template<size_t BufferSize>
-::etl::span<uint8_t> DoIpStaticPayloadSendJob<BufferSize>::accessPayloadBuffer()
-{
-    return ::etl::span<uint8_t>(_payloadBuffer);
 }
 
 } // namespace declare

@@ -73,8 +73,10 @@ TEST(DoIpServerVehicleIdentificationParametersTest, TestCopyPreservesParameters)
 
 static uint8_t vin[]
     = {'B', 'A', 'U', 'I', 'E', 'E', '4', 'M', 'Z', '1', '5', '0', '1', '2', '9', '0', '8'};
-static uint8_t eid[] = {0x00, 0x1e, 0xae, 0x01, 0x02, 0x42};
-static uint8_t gid[] = {0x01, 0x2f, 0xae, 0x01, 0x02, 0x44};
+static uint8_t eid[]    = {0x00, 0x1e, 0xae, 0x01, 0x02, 0x42};
+static uint8_t gid[]    = {0x01, 0x2f, 0xae, 0x01, 0x02, 0x44};
+constexpr size_t RX_LEN = ::doip::DoIpServerVehicleIdentificationSocketHandler::MIN_RX_BUFFER_SIZE;
+constexpr size_t TX_LEN = ::doip::DoIpServerVehicleIdentificationSocketHandler::MIN_TX_BUFFER_SIZE;
 
 MATCHER_P(IsDatagram, endpoint, "")
 {
@@ -177,14 +179,16 @@ TEST_F(
 {
     ::ip::NetworkInterfaceConfigKey configKey(0U);
     ::ip::IPAddress multicastAddress = ::ip::make_ip4(0x34384U);
-    ::doip::declare::
-        DoIpServerVehicleIdentificationSocketHandler<::udp::AbstractDatagramSocketMock, 3U>
-            cut(DoIpConstants::ProtocolVersion::version02Iso2012,
-                13U,
-                configKey,
-                multicastAddress,
-                fConfig);
-
+    ::doip::declare::DoIpServerVehicleIdentificationSocketHandler<
+        ::udp::AbstractDatagramSocketMock,
+        3U,
+        RX_LEN,
+        TX_LEN>
+        cut(DoIpConstants::ProtocolVersion::version02Iso2012,
+            13U,
+            configKey,
+            multicastAddress,
+            fConfig);
     // expect no unicast addresses to be stored with the instance
     EXPECT_EQ(0U, cut.getUnicastAddresses().size());
 
@@ -250,13 +254,16 @@ TEST_F(DoIpServerVehicleIdentificationSocketHandlerTest, JoinMulticastGroupIfIPv
     uint32_t const local[]     = {0x983423U, 0x34234U, 0x84984U, 0x43894829U};
     ::ip::NetworkInterfaceConfigKey configKey(0U);
     ::ip::IPAddress multicastAddress = ::ip::make_ip6(multicast);
-    ::doip::declare::
-        DoIpServerVehicleIdentificationSocketHandler<::udp::AbstractDatagramSocketMock, 3U>
-            cut(DoIpConstants::ProtocolVersion::version02Iso2012,
-                14U,
-                configKey,
-                multicastAddress,
-                fConfig);
+    ::doip::declare::DoIpServerVehicleIdentificationSocketHandler<
+        ::udp::AbstractDatagramSocketMock,
+        3U,
+        RX_LEN,
+        TX_LEN>
+        cut(DoIpConstants::ProtocolVersion::version02Iso2012,
+            14U,
+            configKey,
+            multicastAddress,
+            fConfig);
     ::ip::NetworkInterfaceConfig config(local);
 
     EXPECT_CALL(fNetworkInterfaceConfigRegistryMock, getConfig(configKey))
@@ -288,13 +295,16 @@ TEST_F(DoIpServerVehicleIdentificationSocketHandlerTest, IgnoreUnknownNetworkCon
 {
     ::ip::NetworkInterfaceConfigKey configKey(0U);
     ::ip::IPAddress multicastAddress = ::ip::make_ip4(0x34384U);
-    ::doip::declare::
-        DoIpServerVehicleIdentificationSocketHandler<::udp::AbstractDatagramSocketMock, 3U>
-            cut(DoIpConstants::ProtocolVersion::version02Iso2012,
-                15U,
-                configKey,
-                multicastAddress,
-                fConfig);
+    ::doip::declare::DoIpServerVehicleIdentificationSocketHandler<
+        ::udp::AbstractDatagramSocketMock,
+        3U,
+        RX_LEN,
+        TX_LEN>
+        cut(DoIpConstants::ProtocolVersion::version02Iso2012,
+            15U,
+            configKey,
+            multicastAddress,
+            fConfig);
 
     ::ip::NetworkInterfaceConfig config(0xc0a80001U, 0xc0a8ffffU, 0x0U);
 
@@ -314,13 +324,16 @@ TEST_F(DoIpServerVehicleIdentificationSocketHandlerTest, VehicleIdentificationRe
 {
     ::ip::NetworkInterfaceConfigKey configKey(0U);
     ::ip::IPAddress multicastAddress = ::ip::make_ip4(0x34384U);
-    ::doip::declare::
-        DoIpServerVehicleIdentificationSocketHandler<::udp::AbstractDatagramSocketMock, 3U>
-            cut(DoIpConstants::ProtocolVersion::version02Iso2012,
-                16U,
-                configKey,
-                multicastAddress,
-                fConfig);
+    ::doip::declare::DoIpServerVehicleIdentificationSocketHandler<
+        ::udp::AbstractDatagramSocketMock,
+        3U,
+        RX_LEN,
+        TX_LEN>
+        cut(DoIpConstants::ProtocolVersion::version02Iso2012,
+            16U,
+            configKey,
+            multicastAddress,
+            fConfig);
     ::ip::NetworkInterfaceConfig config(0xc0a80001U, 0xc0a8ffffU, 0x0U);
     ::ip::IPEndpoint broadcastEndpoint(
         config.broadcastAddress(), DoIpConstants::Ports::UDP_DISCOVERY);
@@ -394,13 +407,16 @@ TEST_F(DoIpServerVehicleIdentificationSocketHandlerTest, VehicleIdentificationRe
 {
     ::ip::NetworkInterfaceConfigKey configKey(0U);
     ::ip::IPAddress multicastAddress = ::ip::make_ip4(0x34384U);
-    ::doip::declare::
-        DoIpServerVehicleIdentificationSocketHandler<::udp::AbstractDatagramSocketMock, 3U>
-            cut(DoIpConstants::ProtocolVersion::version02Iso2012,
-                1U,
-                configKey,
-                multicastAddress,
-                fConfig);
+    ::doip::declare::DoIpServerVehicleIdentificationSocketHandler<
+        ::udp::AbstractDatagramSocketMock,
+        3U,
+        RX_LEN,
+        TX_LEN>
+        cut(DoIpConstants::ProtocolVersion::version02Iso2012,
+            1U,
+            configKey,
+            multicastAddress,
+            fConfig);
     ::ip::NetworkInterfaceConfig config(0xc0a80001U, 0xc0a8ffffU, 0x0U);
     ::ip::IPEndpoint broadcastEndpoint(
         config.broadcastAddress(), DoIpConstants::Ports::UDP_DISCOVERY);
@@ -462,13 +478,16 @@ TEST_F(DoIpServerVehicleIdentificationSocketHandlerTest, VehicleIdentificationRe
 {
     ::ip::NetworkInterfaceConfigKey configKey(0U);
     ::ip::IPAddress multicastAddress = ::ip::make_ip4(0x34384U);
-    ::doip::declare::
-        DoIpServerVehicleIdentificationSocketHandler<::udp::AbstractDatagramSocketMock, 3U>
-            cut(DoIpConstants::ProtocolVersion::version02Iso2012,
-                2U,
-                configKey,
-                multicastAddress,
-                fConfig);
+    ::doip::declare::DoIpServerVehicleIdentificationSocketHandler<
+        ::udp::AbstractDatagramSocketMock,
+        3U,
+        RX_LEN,
+        TX_LEN>
+        cut(DoIpConstants::ProtocolVersion::version02Iso2012,
+            2U,
+            configKey,
+            multicastAddress,
+            fConfig);
     ::ip::NetworkInterfaceConfig config(0xc0a80001U, 0xc0a8ffffU, 0x0U);
     ::ip::IPEndpoint broadcastEndpoint(
         config.broadcastAddress(), DoIpConstants::Ports::UDP_DISCOVERY);
@@ -530,13 +549,16 @@ TEST_F(DoIpServerVehicleIdentificationSocketHandlerTest, EntityStatusRequest)
 {
     ::ip::NetworkInterfaceConfigKey configKey(0U);
     ::ip::IPAddress multicastAddress = ::ip::make_ip4(0x34384U);
-    ::doip::declare::
-        DoIpServerVehicleIdentificationSocketHandler<::udp::AbstractDatagramSocketMock, 3U>
-            cut(DoIpConstants::ProtocolVersion::version02Iso2012,
-                3U,
-                configKey,
-                multicastAddress,
-                fConfig);
+    ::doip::declare::DoIpServerVehicleIdentificationSocketHandler<
+        ::udp::AbstractDatagramSocketMock,
+        3U,
+        RX_LEN,
+        TX_LEN>
+        cut(DoIpConstants::ProtocolVersion::version02Iso2012,
+            3U,
+            configKey,
+            multicastAddress,
+            fConfig);
     ::ip::NetworkInterfaceConfig config(0xc0a80001U, 0xc0a8ffffU, 0x0U);
     ::ip::IPEndpoint broadcastEndpoint(
         config.broadcastAddress(), DoIpConstants::Ports::UDP_DISCOVERY);
@@ -598,13 +620,16 @@ TEST_F(DoIpServerVehicleIdentificationSocketHandlerTest, DiagnosticPowerModeInfo
 {
     ::ip::NetworkInterfaceConfigKey configKey(0U);
     ::ip::IPAddress multicastAddress = ::ip::make_ip4(0x34384U);
-    ::doip::declare::
-        DoIpServerVehicleIdentificationSocketHandler<::udp::AbstractDatagramSocketMock, 3U>
-            cut(DoIpConstants::ProtocolVersion::version02Iso2012,
-                5U,
-                configKey,
-                multicastAddress,
-                fConfig);
+    ::doip::declare::DoIpServerVehicleIdentificationSocketHandler<
+        ::udp::AbstractDatagramSocketMock,
+        3U,
+        RX_LEN,
+        TX_LEN>
+        cut(DoIpConstants::ProtocolVersion::version02Iso2012,
+            5U,
+            configKey,
+            multicastAddress,
+            fConfig);
     ::ip::NetworkInterfaceConfig config(0xc0a80001U, 0xc0a8ffffU, 0x0U);
     ::ip::IPEndpoint broadcastEndpoint(
         config.broadcastAddress(), DoIpConstants::Ports::UDP_DISCOVERY);
@@ -649,13 +674,17 @@ TEST_F(DoIpServerVehicleIdentificationSocketHandlerTest, VehicleAnnouncementMess
 {
     ::ip::NetworkInterfaceConfigKey configKey(0U);
     ::ip::IPAddress multicastAddress = ::ip::make_ip4(0x34384U);
-    ::doip::declare::
-        DoIpServerVehicleIdentificationSocketHandler<::udp::AbstractDatagramSocketMock, 3U>
-            cut(DoIpConstants::ProtocolVersion::version02Iso2012,
-                6U,
-                configKey,
-                multicastAddress,
-                fConfig);
+    ::doip::declare::DoIpServerVehicleIdentificationSocketHandler<
+        ::udp::AbstractDatagramSocketMock,
+        3U,
+        RX_LEN,
+        TX_LEN>
+
+        cut(DoIpConstants::ProtocolVersion::version02Iso2012,
+            6U,
+            configKey,
+            multicastAddress,
+            fConfig);
     ::ip::NetworkInterfaceConfig config(0xc0a80001U, 0xc0a8ffffU, 0x0U);
     ::ip::IPEndpoint broadcastEndpoint(
         config.broadcastAddress(), DoIpConstants::Ports::UDP_DISCOVERY);
@@ -731,13 +760,17 @@ TEST_F(DoIpServerVehicleIdentificationSocketHandlerTest, IgnoreUnknownPayloadTyp
 {
     ::ip::NetworkInterfaceConfigKey configKey(0U);
     ::ip::IPAddress multicastAddress = ::ip::make_ip4(0x34384U);
-    ::doip::declare::
-        DoIpServerVehicleIdentificationSocketHandler<::udp::AbstractDatagramSocketMock, 3U>
-            cut(DoIpConstants::ProtocolVersion::version02Iso2012,
-                7U,
-                configKey,
-                multicastAddress,
-                fConfig);
+    ::doip::declare::DoIpServerVehicleIdentificationSocketHandler<
+        ::udp::AbstractDatagramSocketMock,
+        3U,
+        RX_LEN,
+        TX_LEN>
+
+        cut(DoIpConstants::ProtocolVersion::version02Iso2012,
+            7U,
+            configKey,
+            multicastAddress,
+            fConfig);
     ::ip::NetworkInterfaceConfig config(0xc0a80001U, 0xc0a8ffffU, 0x0U);
     ::ip::IPEndpoint broadcastEndpoint(
         config.broadcastAddress(), DoIpConstants::Ports::UDP_DISCOVERY);
@@ -771,13 +804,17 @@ TEST_F(DoIpServerVehicleIdentificationSocketHandlerTest, SendAnnouncementsToUnic
 {
     ::ip::NetworkInterfaceConfigKey configKey(0U);
     ::ip::IPAddress multicastAddress = ::ip::make_ip4(0x34384U);
-    ::doip::declare::
-        DoIpServerVehicleIdentificationSocketHandler<::udp::AbstractDatagramSocketMock, 3U, 2U>
-            cut(DoIpConstants::ProtocolVersion::version02Iso2012,
-                8U,
-                configKey,
-                multicastAddress,
-                fConfig);
+    ::doip::declare::DoIpServerVehicleIdentificationSocketHandler<
+        ::udp::AbstractDatagramSocketMock,
+        3U,
+        RX_LEN,
+        TX_LEN,
+        2U>
+        cut(DoIpConstants::ProtocolVersion::version02Iso2012,
+            8U,
+            configKey,
+            multicastAddress,
+            fConfig);
     ::ip::NetworkInterfaceConfig config(0xc0a80001U, 0xc0a8ffffU, 0x0U);
     ::ip::IPEndpoint broadcastEndpoint(
         config.broadcastAddress(), DoIpConstants::Ports::UDP_DISCOVERY);
@@ -904,13 +941,17 @@ TEST_F(DoIpServerVehicleIdentificationSocketHandlerTest, HandleTooManyRequestsWi
 {
     ::ip::NetworkInterfaceConfigKey configKey(0U);
     ::ip::IPAddress multicastAddress = ::ip::make_ip4(0x34384U);
-    ::doip::declare::
-        DoIpServerVehicleIdentificationSocketHandler<::udp::AbstractDatagramSocketMock, 3U>
-            cut(DoIpConstants::ProtocolVersion::version02Iso2012,
-                9U,
-                configKey,
-                multicastAddress,
-                fConfig);
+    ::doip::declare::DoIpServerVehicleIdentificationSocketHandler<
+        ::udp::AbstractDatagramSocketMock,
+        3U,
+        RX_LEN,
+        TX_LEN>
+
+        cut(DoIpConstants::ProtocolVersion::version02Iso2012,
+            9U,
+            configKey,
+            multicastAddress,
+            fConfig);
     ::ip::NetworkInterfaceConfig config(0xc0a80001U, 0xc0a8ffffU, 0x0U);
     ::ip::IPEndpoint broadcastEndpoint(
         config.broadcastAddress(), DoIpConstants::Ports::UDP_DISCOVERY);
@@ -988,13 +1029,17 @@ TEST_F(DoIpServerVehicleIdentificationSocketHandlerTest, AnnouncementTimeouts)
 
     ::ip::NetworkInterfaceConfigKey configKey(0U);
     ::ip::IPAddress multicastAddress = ::ip::make_ip4(0x34384U);
-    ::doip::declare::
-        DoIpServerVehicleIdentificationSocketHandler<::udp::AbstractDatagramSocketMock, 3U>
-            cut(DoIpConstants::ProtocolVersion::version02Iso2012,
-                13U,
-                configKey,
-                multicastAddress,
-                fConfig);
+    ::doip::declare::DoIpServerVehicleIdentificationSocketHandler<
+        ::udp::AbstractDatagramSocketMock,
+        3U,
+        RX_LEN,
+        TX_LEN>
+
+        cut(DoIpConstants::ProtocolVersion::version02Iso2012,
+            13U,
+            configKey,
+            multicastAddress,
+            fConfig);
     ::ip::NetworkInterfaceConfig config(0xc0a80001U, 0xc0a8ffffU, 0x0U);
     ::ip::IPEndpoint broadcastEndpoint(
         config.broadcastAddress(), DoIpConstants::Ports::UDP_DISCOVERY);
@@ -1088,13 +1133,17 @@ TEST_F(DoIpServerVehicleIdentificationSocketHandlerTest, TestImpreciseTime)
 {
     ::ip::NetworkInterfaceConfigKey configKey(0U);
     ::ip::IPAddress multicastAddress = ::ip::make_ip4(0x34384U);
-    ::doip::declare::
-        DoIpServerVehicleIdentificationSocketHandler<::udp::AbstractDatagramSocketMock, 3U>
-            cut(DoIpConstants::ProtocolVersion::version02Iso2012,
-                13U,
-                configKey,
-                multicastAddress,
-                fConfig);
+    ::doip::declare::DoIpServerVehicleIdentificationSocketHandler<
+        ::udp::AbstractDatagramSocketMock,
+        3U,
+        RX_LEN,
+        TX_LEN>
+
+        cut(DoIpConstants::ProtocolVersion::version02Iso2012,
+            13U,
+            configKey,
+            multicastAddress,
+            fConfig);
     ::ip::NetworkInterfaceConfig config(0xc0a80001U, 0xc0a8ffffU, 0x0U);
     ::ip::IPEndpoint broadcastEndpoint(
         config.broadcastAddress(), DoIpConstants::Ports::UDP_DISCOVERY);
@@ -1260,13 +1309,16 @@ TEST_F(DoIpServerVehicleIdentificationSocketHandlerTest, SendAnnouncement)
 {
     ::ip::NetworkInterfaceConfigKey configKey(0U);
     ::ip::IPAddress multicastAddress = ::ip::make_ip4(0x34384U);
-    ::doip::declare::
-        DoIpServerVehicleIdentificationSocketHandler<::udp::AbstractDatagramSocketMock, 0U>
-            cut(DoIpConstants::ProtocolVersion::version02Iso2012,
-                16U,
-                configKey,
-                multicastAddress,
-                fConfig);
+    ::doip::declare::DoIpServerVehicleIdentificationSocketHandler<
+        ::udp::AbstractDatagramSocketMock,
+        0U,
+        RX_LEN,
+        TX_LEN>
+        cut(DoIpConstants::ProtocolVersion::version02Iso2012,
+            16U,
+            configKey,
+            multicastAddress,
+            fConfig);
     ::ip::NetworkInterfaceConfig config(0xc0a80001U, 0xc0a8ffffU, 0x0U);
     ::ip::IPEndpoint broadcastEndpoint(
         config.broadcastAddress(), DoIpConstants::Ports::UDP_DISCOVERY);
@@ -1386,13 +1438,16 @@ TEST_F(DoIpServerVehicleIdentificationSocketHandlerTest, TestOemRequests)
 {
     ::ip::NetworkInterfaceConfigKey configKey(0U);
     ::ip::IPAddress multicastAddress = ::ip::make_ip4(0x34384U);
-    ::doip::declare::
-        DoIpServerVehicleIdentificationSocketHandler<::udp::AbstractDatagramSocketMock, 3U>
-            cut(DoIpConstants::ProtocolVersion::version02Iso2012,
-                1U,
-                configKey,
-                multicastAddress,
-                fConfig);
+    ::doip::declare::DoIpServerVehicleIdentificationSocketHandler<
+        ::udp::AbstractDatagramSocketMock,
+        3U,
+        RX_LEN,
+        TX_LEN>
+        cut(DoIpConstants::ProtocolVersion::version02Iso2012,
+            1U,
+            configKey,
+            multicastAddress,
+            fConfig);
     ::ip::NetworkInterfaceConfig config(0xc0a80001U, 0xc0a8ffffU, 0x0U);
     ::ip::IPEndpoint broadcastEndpoint(
         config.broadcastAddress(), DoIpConstants::Ports::UDP_DISCOVERY);
@@ -1442,7 +1497,7 @@ TEST_F(DoIpServerVehicleIdentificationSocketHandlerTest, TestOemRequests)
     EXPECT_CALL(oemMessageHandlerMock, getRequestPayloadType()).WillOnce(Return(0xFEFF));
     receiveRequest(
         config, remoteEndpoint, {{0x02, 0xfd, 0xFE, 0xFF, 0x00, 0x00, 0x00, 0x00}}, timestamp);
-    EXPECT_CALL(oemMessageHandlerMock, getResponsePayloadSize()).WillOnce(Return(3U));
+    EXPECT_CALL(oemMessageHandlerMock, getResponsePayloadSize()).WillRepeatedly(Return(3U));
     EXPECT_CALL(oemMessageHandlerMock, getResponsePayloadType()).WillOnce(Return(0xFEFE));
     uint8_t responsePayload[] = {0x01, 0x02, 0x03};
     EXPECT_CALL(oemMessageHandlerMock, createResponse(_))
@@ -1472,8 +1527,8 @@ TEST_F(DoIpServerVehicleIdentificationSocketHandlerTest, TestOemRequests)
     uint8_t requestWithPayload[] = {0x02, 0xfd, 0xFE, 0xFF, 0x00, 0x00, 0x00, 0x01, 0xFF};
     EXPECT_CALL(*fSocketMock, getLocalPort()).WillOnce(Return(DoIpConstants::Ports::UDP_DISCOVERY));
     // the payload will be discarded
-    EXPECT_CALL(*fSocketMock, read(NotNull(), 8))
-        .WillOnce(Invoke(ReadBytesFrom(::etl::span<uint8_t const>(requestWithPayload).first(8))));
+    EXPECT_CALL(*fSocketMock, read(NotNull(), 8U))
+        .WillOnce(Invoke(ReadBytesFrom(::etl::span<uint8_t const>(requestWithPayload).first(8U))));
     fSocketMock->getDataListener()->dataReceived(
         *fSocketMock,
         remoteEndpoint.getAddress(),
@@ -1558,13 +1613,16 @@ TEST_F(DoIpServerVehicleIdentificationSocketHandlerTest, TestNetifReinit)
 {
     ::ip::NetworkInterfaceConfigKey configKey(0);
     ::ip::IPAddress multicastAddress = ::ip::make_ip4(0x34384U);
-    ::doip::declare::
-        DoIpServerVehicleIdentificationSocketHandler<::udp::AbstractDatagramSocketMock, 3U>
-            cut(DoIpConstants::ProtocolVersion::version02Iso2012,
-                1U,
-                configKey,
-                multicastAddress,
-                fConfig);
+    ::doip::declare::DoIpServerVehicleIdentificationSocketHandler<
+        ::udp::AbstractDatagramSocketMock,
+        3U,
+        RX_LEN,
+        TX_LEN>
+        cut(DoIpConstants::ProtocolVersion::version02Iso2012,
+            1U,
+            configKey,
+            multicastAddress,
+            fConfig);
     ::ip::NetworkInterfaceConfig config(0xc0a80001U, 0xc0a8ffffU, 0x0U);
     ::ip::IPEndpoint broadcastEndpoint(
         config.broadcastAddress(), DoIpConstants::Ports::UDP_DISCOVERY);

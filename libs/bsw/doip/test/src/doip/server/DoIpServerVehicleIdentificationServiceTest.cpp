@@ -64,15 +64,21 @@ void DoIpServerVehicleIdentificationServiceTest::TearDown() {}
 
 TEST_F(DoIpServerVehicleIdentificationServiceTest, TestAddSockets)
 {
-    ::doip::declare::
-        DoIpServerVehicleIdentificationService<::udp::AbstractDatagramSocketMock, 2U, 2U, 1U, 3U>
-            cut(DoIpConstants::ProtocolVersion::version02Iso2012,
-                asyncContext,
-                fVehicleIdentificationCallbackMock,
-                fEntityStatusCallbackMock,
-                fNetworkInterfaceConfigRegistryMock,
-                0x1122U,
-                fParametersMock);
+    ::doip::declare::DoIpServerVehicleIdentificationService<
+        ::udp::AbstractDatagramSocketMock,
+        2U,
+        2U,
+        1U,
+        3U,
+        ::doip::DoIpServerVehicleIdentificationSocketHandler::MIN_RX_BUFFER_SIZE,
+        ::doip::DoIpServerVehicleIdentificationSocketHandler::MIN_TX_BUFFER_SIZE>
+        cut(DoIpConstants::ProtocolVersion::version02Iso2012,
+            asyncContext,
+            fVehicleIdentificationCallbackMock,
+            fEntityStatusCallbackMock,
+            fNetworkInterfaceConfigRegistryMock,
+            0x1122U,
+            fParametersMock);
 
     // add a first socket
     ::ip::NetworkInterfaceConfigKey configKey1(0U);
@@ -118,15 +124,21 @@ TEST_F(DoIpServerVehicleIdentificationServiceTest, TestAddSockets)
 
 TEST_F(DoIpServerVehicleIdentificationServiceTest, ConfigChangeOnOneSocketKeepsOtherSocketsRequests)
 {
-    ::doip::declare::
-        DoIpServerVehicleIdentificationService<::udp::AbstractDatagramSocketMock, 2U, 2U, 1U, 1U>
-            cut(DoIpConstants::ProtocolVersion::version02Iso2012,
-                asyncContext,
-                fVehicleIdentificationCallbackMock,
-                fEntityStatusCallbackMock,
-                fNetworkInterfaceConfigRegistryMock,
-                0x1122U,
-                fParametersMock);
+    ::doip::declare::DoIpServerVehicleIdentificationService<
+        ::udp::AbstractDatagramSocketMock,
+        2U,
+        2U,
+        1U,
+        1U,
+        ::doip::DoIpServerVehicleIdentificationSocketHandler::MIN_RX_BUFFER_SIZE,
+        ::doip::DoIpServerVehicleIdentificationSocketHandler::MIN_TX_BUFFER_SIZE>
+        cut(DoIpConstants::ProtocolVersion::version02Iso2012,
+            asyncContext,
+            fVehicleIdentificationCallbackMock,
+            fEntityStatusCallbackMock,
+            fNetworkInterfaceConfigRegistryMock,
+            0x1122U,
+            fParametersMock);
 
     // add the first socket
     ::ip::NetworkInterfaceConfigKey configKey1(0U);

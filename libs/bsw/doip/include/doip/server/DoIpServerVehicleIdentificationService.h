@@ -34,13 +34,17 @@ namespace declare
  * \tparam NUM_SOCKETS number of sockets needed
  * \tparam NUM_REQUESTS number of requests that can simultaneously be processed
  * \tparam NUM_ANNOUNCEMENTS number of unicast/multicast announcements to be emitted
+ * \tparam RX_LEN length of buffer used for receiving
+ * \tparam TX_LEN length of buffer used for sending
  */
 template<
     class DatagramSocket,
     size_t NUM_UNICAST,
     size_t NUM_SOCKETS,
     size_t NUM_REQUESTS,
-    uint8_t NUM_ANNOUNCEMENTS>
+    uint8_t NUM_ANNOUNCEMENTS,
+    size_t RX_LEN,
+    size_t TX_LEN>
 class DoIpServerVehicleIdentificationService
 {
 public:
@@ -72,7 +76,12 @@ public:
      * \param multicastAddress the multicast address to join to. For a IPv4 socket this argument is
      * ignored \return reference to the socket handler
      */
-    DoIpServerVehicleIdentificationSocketHandler<DatagramSocket, NUM_ANNOUNCEMENTS, NUM_UNICAST>&
+    DoIpServerVehicleIdentificationSocketHandler<
+        DatagramSocket,
+        NUM_ANNOUNCEMENTS,
+        RX_LEN,
+        TX_LEN,
+        NUM_UNICAST>&
     addSocket(
         uint8_t socketGroupId,
         ::ip::NetworkInterfaceConfigKey const& configKey,
@@ -115,6 +124,8 @@ private:
         DoIpServerVehicleIdentificationSocketHandler<
             DatagramSocket,
             NUM_ANNOUNCEMENTS,
+            RX_LEN,
+            TX_LEN,
             NUM_UNICAST>,
         NUM_SOCKETS>;
 
@@ -138,13 +149,17 @@ template<
     size_t NUM_UNICAST,
     size_t NUM_SOCKETS,
     size_t NUM_REQUESTS,
-    uint8_t NUM_ANNOUNCEMENTS>
+    uint8_t NUM_ANNOUNCEMENTS,
+    size_t RX_LEN,
+    size_t TX_LEN>
 DoIpServerVehicleIdentificationService<
     DatagramSocket,
     NUM_UNICAST,
     NUM_SOCKETS,
     NUM_REQUESTS,
-    NUM_ANNOUNCEMENTS>::
+    NUM_ANNOUNCEMENTS,
+    RX_LEN,
+    TX_LEN>::
     DoIpServerVehicleIdentificationService(
         DoIpConstants::ProtocolVersion const protocolVersion,
         ::async::ContextType const context,
@@ -169,14 +184,23 @@ template<
     size_t NUM_UNICAST,
     size_t NUM_SOCKETS,
     size_t NUM_REQUESTS,
-    uint8_t NUM_ANNOUNCEMENTS>
-DoIpServerVehicleIdentificationSocketHandler<DatagramSocket, NUM_ANNOUNCEMENTS, NUM_UNICAST>&
+    uint8_t NUM_ANNOUNCEMENTS,
+    size_t RX_LEN,
+    size_t TX_LEN>
+DoIpServerVehicleIdentificationSocketHandler<
+    DatagramSocket,
+    NUM_ANNOUNCEMENTS,
+    RX_LEN,
+    TX_LEN,
+    NUM_UNICAST>&
 DoIpServerVehicleIdentificationService<
     DatagramSocket,
     NUM_UNICAST,
     NUM_SOCKETS,
     NUM_REQUESTS,
-    NUM_ANNOUNCEMENTS>::
+    NUM_ANNOUNCEMENTS,
+    RX_LEN,
+    TX_LEN>::
     addSocket(
         uint8_t const socketGroupId,
         ::ip::NetworkInterfaceConfigKey const& configKey,
@@ -195,14 +219,18 @@ template<
     size_t NUM_UNICAST,
     size_t NUM_SOCKETS,
     size_t NUM_REQUESTS,
-    uint8_t NUM_ANNOUNCEMENTS>
+    uint8_t NUM_ANNOUNCEMENTS,
+    size_t RX_LEN,
+    size_t TX_LEN>
 void DoIpServerVehicleIdentificationService<
     DatagramSocket,
     NUM_UNICAST,
     NUM_SOCKETS,
     NUM_REQUESTS,
-    NUM_ANNOUNCEMENTS>::setVehicleAnnouncementListener(IDoIpVehicleAnnouncementListener* const
-                                                           vehicleAnnouncementListener)
+    NUM_ANNOUNCEMENTS,
+    RX_LEN,
+    TX_LEN>::setVehicleAnnouncementListener(IDoIpVehicleAnnouncementListener* const
+                                                vehicleAnnouncementListener)
 {
     for (auto& socketHandler : _socketHandlers)
     {
@@ -215,13 +243,17 @@ template<
     size_t NUM_UNICAST,
     size_t NUM_SOCKETS,
     size_t NUM_REQUESTS,
-    uint8_t NUM_ANNOUNCEMENTS>
+    uint8_t NUM_ANNOUNCEMENTS,
+    size_t RX_LEN,
+    size_t TX_LEN>
 void DoIpServerVehicleIdentificationService<
     DatagramSocket,
     NUM_UNICAST,
     NUM_SOCKETS,
     NUM_REQUESTS,
-    NUM_ANNOUNCEMENTS>::
+    NUM_ANNOUNCEMENTS,
+    RX_LEN,
+    TX_LEN>::
     updateUnicastAddresses(
         ::ip::NetworkInterfaceConfigKey const& configKey,
         ::etl::span<ip::IPAddress const> const unicastAddresses)
@@ -237,13 +269,17 @@ template<
     size_t NUM_UNICAST,
     size_t NUM_SOCKETS,
     size_t NUM_REQUESTS,
-    uint8_t NUM_ANNOUNCEMENTS>
+    uint8_t NUM_ANNOUNCEMENTS,
+    size_t RX_LEN,
+    size_t TX_LEN>
 void DoIpServerVehicleIdentificationService<
     DatagramSocket,
     NUM_UNICAST,
     NUM_SOCKETS,
     NUM_REQUESTS,
-    NUM_ANNOUNCEMENTS>::sendAnnouncement()
+    NUM_ANNOUNCEMENTS,
+    RX_LEN,
+    TX_LEN>::sendAnnouncement()
 {
     for (auto& socketHandler : _socketHandlers)
     {
@@ -256,13 +292,17 @@ template<
     size_t NUM_UNICAST,
     size_t NUM_SOCKETS,
     size_t NUM_REQUESTS,
-    uint8_t NUM_ANNOUNCEMENTS>
+    uint8_t NUM_ANNOUNCEMENTS,
+    size_t RX_LEN,
+    size_t TX_LEN>
 void DoIpServerVehicleIdentificationService<
     DatagramSocket,
     NUM_UNICAST,
     NUM_SOCKETS,
     NUM_REQUESTS,
-    NUM_ANNOUNCEMENTS>::start()
+    NUM_ANNOUNCEMENTS,
+    RX_LEN,
+    TX_LEN>::start()
 {
     for (auto& socketHandler : _socketHandlers)
     {
@@ -275,13 +315,17 @@ template<
     size_t NUM_UNICAST,
     size_t NUM_SOCKETS,
     size_t NUM_REQUESTS,
-    uint8_t NUM_ANNOUNCEMENTS>
+    uint8_t NUM_ANNOUNCEMENTS,
+    size_t RX_LEN,
+    size_t TX_LEN>
 void DoIpServerVehicleIdentificationService<
     DatagramSocket,
     NUM_UNICAST,
     NUM_SOCKETS,
     NUM_REQUESTS,
-    NUM_ANNOUNCEMENTS>::shutdown()
+    NUM_ANNOUNCEMENTS,
+    RX_LEN,
+    TX_LEN>::shutdown()
 {
     for (auto& socketHandler : _socketHandlers)
     {

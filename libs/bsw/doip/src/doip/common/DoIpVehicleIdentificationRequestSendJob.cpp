@@ -19,7 +19,7 @@ DoIpVehicleIdentificationRequestSendJob::DoIpVehicleIdentificationRequestSendJob
 : DoIpStaticPayloadSendJob(
     0xffU,
     DoIpConstants::PayloadTypes::VEHICLE_IDENTIFICATION_REQUEST_MESSAGE,
-    ::etl::span<uint8_t const>(),
+    ::etl::span<uint8_t>(),
     releaseCallback)
 {}
 
