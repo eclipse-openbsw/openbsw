@@ -39,22 +39,22 @@ namespace internal
 {%- set cluster_skeleton_connections = [] -%}
 {%- set cluster_proxy_connections = [] -%}
 
-{# Find skeleton connections for this provider cluster #}
+{# Find skeleton connections for this provider cluster (dedupe: a connection may list the same service multiple times) #}
 {%- for connection in connections -%}
   {%- if connection.source_cluster.name == cluster_deployment.cluster.name -%}
     {%- for skeleton in connection.skeletons if connection.skeletons -%}
-      {%- if skeleton.name == service.name -%}
+      {%- if skeleton.name == service.name and connection not in cluster_skeleton_connections -%}
         {%- set _ = cluster_skeleton_connections.append(connection) -%}
       {%- endif -%}
     {%- endfor -%}
   {%- endif -%}
 {%- endfor -%}
 
-{# Find proxy connections targeting this provider cluster #}
+{# Find proxy connections targeting this provider cluster (dedupe: a connection may list the same service multiple times) #}
 {%- for connection in connections -%}
   {%- if connection.target_cluster.name == cluster_deployment.cluster.name -%}
     {%- for proxy in connection.proxies if connection.proxies -%}
-      {%- if proxy.name == service.name -%}
+      {%- if proxy.name == service.name and connection not in cluster_proxy_connections -%}
         {%- set _ = cluster_proxy_connections.append(connection) -%}
       {%- endif -%}
     {%- endfor -%}
@@ -121,7 +121,11 @@ constexpr ::etl::array<const ::middleware::core::IInstanceDatabase* const, {{ cl
 
 ::etl::span<const ::middleware::core::IInstanceDatabase* const> getClusterConnectionsDb()
 {
+    {% if clusters_with_instances %}
     return ::etl::make_span(instancesDatabase);
+    {% else %}
+    return ::etl::span<const ::middleware::core::IInstanceDatabase* const>();
+    {% endif %}
 }
 
 }  // namespace internal
