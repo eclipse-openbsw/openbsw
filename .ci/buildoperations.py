@@ -59,8 +59,8 @@ def get_environment(cxxid: str, platform: str):
 
     if platform == "linux":
         if cxxid == "gcc":
-            env["CC"] = get_full_path("gcc-11")
-            env["CXX"] = get_full_path("g++-11")
+            env["CC"] = get_full_path("gcc-14")
+            env["CXX"] = get_full_path("g++-14")
             return env
         if cxxid == "clang":
             env["CC"] = get_full_path("clang-17")

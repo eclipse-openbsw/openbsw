@@ -84,6 +84,16 @@ add_compile_options(
     "$<$<COMPILE_LANG_AND_ID:CXX,GNU>:-Wno-error=stringop-overflow;-Wno-error=maybe-uninitialized>"
 )
 
+#[[
+    Host Clang builds use libc++ instead of libstdc++. libstdc++'s C++23 headers
+    (e.g. the tuple-like std::tuple constructor) are not compatible with all
+    supported Clang versions. GCC builds keep using libstdc++.
+]]
+if (NOT CMAKE_CROSSCOMPILING AND CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    add_compile_options("$<$<COMPILE_LANGUAGE:CXX>:-stdlib=libc++>")
+    add_link_options(-stdlib=libc++)
+endif ()
+
 # Rust support Note: Only one static Rust library can be linked in the final
 # binary, otherwise the linker will complain about duplicate symbol definitions
 # from the Rust core crate.

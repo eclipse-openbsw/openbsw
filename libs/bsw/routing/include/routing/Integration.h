@@ -285,6 +285,15 @@ public:
 
                         uint8_t const index = channelId - FIRST_PDU_TRANSPORT_CHANNEL_ID;
 
+                        if (index >= MAX_NUM_PDU_TRANSPORT_CHANNELS)
+                        {
+                            logger::Logger::warn(
+                                logger::ROUTING,
+                                "PDU TP channel ID %u out of range",
+                                static_cast<uint32_t>(channelId));
+                            continue;
+                        }
+
                         if ((pduTransportReaders[index] == nullptr)
                             || (pduTransportWriters[index] == nullptr))
                         {
