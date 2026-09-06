@@ -12,11 +12,12 @@ load("@rules_cc//cc:cc_library.bzl", "cc_library")
 
 cc_library(
     name = "lifecycle_examples",
+    testonly = True,
     srcs = ["src/examples.cpp"],
     hdrs = ["include/example.h"],
     implementation_deps = [
+        "//libs/bsw/async:async_mock",
         "//libs/bsw/lifecycle",
-        # TODO: migrate asyncMock unit test to Bazel, then add the dependency here.
     ],
     strip_include_prefix = "include",
 )

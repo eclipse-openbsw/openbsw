@@ -39,3 +39,25 @@ cc_library(
         "//libs/bsw/util",
     ],
 )
+
+cc_library(
+    name = "transport_mock",
+    testonly = True,
+    srcs = [
+        "mock/gmock/src/TransportMessageProvidingListenerMock.cpp",
+    ],
+    hdrs = [
+        "mock/gmock/include/transport/AbstractTransportLayerMock.h",
+        "mock/gmock/include/transport/TransportMessageListenerMock.h",
+        "mock/gmock/include/transport/TransportMessageProcessedListenerMock.h",
+        "mock/gmock/include/transport/TransportMessageProviderMock.h",
+        "mock/gmock/include/transport/TransportMessageProvidingListenerMock.h",
+    ],
+    implementation_deps = [
+        ":transport",
+        "//libs/3rdparty/etl",
+        "//libs/3rdparty/googletest:gtest",
+    ],
+    strip_include_prefix = "mock/gmock/include",
+    visibility = ["//visibility:public"],
+)

@@ -30,3 +30,20 @@ cc_library(
         "//libs/bsw/util",
     ],
 )
+
+cc_library(
+    name = "docan_mock",
+    testonly = True,
+    hdrs = [
+        "mock/gmock/include/docan/addressing/DoCanAddressConverterMock.h",
+        "mock/gmock/include/docan/datalink/DoCanDataFrameTransmitterCallbackMock.h",
+        "mock/gmock/include/docan/datalink/DoCanDataFrameTransmitterMock.h",
+        "mock/gmock/include/docan/datalink/DoCanFlowControlFrameTransmitterMock.h",
+        "mock/gmock/include/docan/datalink/DoCanFrameReceiverMock.h",
+        "mock/gmock/include/docan/datalink/DoCanPhysicalTransceiverMock.h",
+        "mock/gmock/include/docan/transmitter/DoCanTickGeneratorMock.h",
+    ],
+    strip_include_prefix = "mock/gmock/include",
+    visibility = ["//visibility:public"],
+    deps = [":docan"],
+)

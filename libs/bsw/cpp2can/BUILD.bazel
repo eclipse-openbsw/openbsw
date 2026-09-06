@@ -33,3 +33,27 @@ cc_library(
         "//libs/bsw/util",
     ],
 )
+
+cc_library(
+    name = "cpp2can_mock",
+    testonly = True,
+    srcs = [
+        "mock/src/can/transceiver/AbstractCANTransceiverMock.cpp",
+    ],
+    hdrs = [
+        "mock/include/can/canframes/CANFrameSentListenerMock.h",
+        "mock/include/can/filter/FilterMock.h",
+        "mock/include/can/filter/MergerMock.h",
+        "mock/include/can/framemgmt/CANFrameListenerMock.h",
+        "mock/include/can/framemgmt/FilteredCANFrameSentListenerMock.h",
+        "mock/include/can/transceiver/AbstractCANTransceiverMock.h",
+        "mock/include/can/transceiver/ICanTransceiverMock.h",
+    ],
+    implementation_deps = [
+        ":cpp2can",
+        "//libs/3rdparty/googletest:gtest_main",
+        "//libs/bsw/bsp:bsp_mock",
+    ],
+    strip_include_prefix = "mock/include",
+    visibility = ["//visibility:public"],
+)

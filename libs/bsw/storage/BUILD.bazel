@@ -48,3 +48,17 @@ cc_library(
         "//libs/bsw/util",
     ],
 )
+
+cc_library(
+    name = "storage_mock",
+    testonly = True,
+    hdrs = [
+        "mock/include/storage/IStorageMock.h",
+    ],
+    strip_include_prefix = "mock/include",
+    visibility = ["//visibility:public"],
+    deps = [
+        ":storage",
+        "//libs/3rdparty/googletest:gtest_main",
+    ],
+)

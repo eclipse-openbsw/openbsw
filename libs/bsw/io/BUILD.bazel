@@ -33,3 +33,19 @@ cc_library(
         "//libs/bsw/util",
     ],
 )
+
+cc_library(
+    name = "io_mock",
+    testonly = True,
+    hdrs = [
+        "mock/include/io/IReaderMock.h",
+        "mock/include/io/IWriterMock.h",
+    ],
+    strip_include_prefix = "mock/include",
+    visibility = ["//visibility:public"],
+    deps = [
+        ":io",
+        "//libs/3rdparty/etl",
+        "//libs/3rdparty/googletest:gtest_main",
+    ],
+)

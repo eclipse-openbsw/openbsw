@@ -21,3 +21,30 @@ cc_library(
         "//libs/bsw/platform",
     ],
 )
+
+cc_library(
+    name = "bsp_mock",
+    testonly = True,
+    srcs = [
+        "mock/src/bsp/timer/SystemTimerMock.cpp",
+    ],
+    hdrs = [
+        "mock/include/bsp/Uart.h",
+        "mock/include/bsp/can/canTransceiver/CanPhyMock.h",
+        "mock/include/bsp/eeprom/EepromDriverMock.h",
+        "mock/include/bsp/eepromemulation/EepromEmulationDriverMock.h",
+        "mock/include/bsp/flash/FlashDriverMock.h",
+        "mock/include/bsp/flash/FlashMock.h",
+        "mock/include/bsp/power/EcuPowerStateControllerMock.h",
+        "mock/include/bsp/timer/SystemTimerMock.h",
+        "mock/include/inputManager/DigitalInput.h",
+        "mock/include/outputManager/Output.h",
+    ],
+    strip_include_prefix = "mock/include",
+    visibility = ["//visibility:public"],
+    deps = [
+        ":bsp",
+        "//libs/3rdparty/etl",
+        "//libs/3rdparty/googletest:gtest_main",
+    ],
+)
