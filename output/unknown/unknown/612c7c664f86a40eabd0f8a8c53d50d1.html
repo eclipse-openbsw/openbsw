@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../static/css/style.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <title>Symbol - puncover</title>
+    
+</head>
+<body>
+    <div class="container" id="content">
+        <div class="page-header">
+            <nav class="navbar navbar-default" role="navigation">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="../../index.html">
+                    Puncover
+                  </a>
+                </div>
+              </div>
+            </nav>
+          
+        </div>
+        <div id="inner_content">
+        
+    
+    <ol class="breadcrumb folders">
+        
+        <li class="active"><a href="../../unknown.html">&lt;unknown&gt;</a>
+            </li>
+
+        
+        <li class="active">&lt;unknown&gt;
+            </li>
+        
+    </ol>
+
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <th>Function</th>
+                <td colspan="5">
+                    <span class="icon-function">powf</span>
+                </td>
+            </tr>
+
+            <tr>
+                <th rowspan="2"></th>
+                <th>Address</th>
+                <th>Remarks</th>
+                <th>Stack</th>
+                <th>Code</th>
+                <th>Static</th>
+            </tr>
+            <tr>
+                <td>0x00044a48</td>
+                <td>
+    <span class="label label-success">x-module</span>
+    
+</td>
+                <td></td>
+                <td>188</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th>Callers (2)</th>
+                <td colspan="5">
+                
+                    <a href="../../home/runner/work/openbsw/openbsw/libs/3rdparty/etl/include/etl/format.h/136699ea7b8b264c27bb76fd1e5c3ba3.html">void etl::private_format::format_floating_e&lt;etl::private_print::print_iterator, float&gt;(etl::private_print::print_iterator&amp;, float, etl::private_format::format_spec_t const&amp;) (428)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../../home/runner/work/openbsw/openbsw/libs/3rdparty/etl/include/etl/format.h/b89a7042a7545abe33791189b29a6463.html">void etl::private_format::format_floating_e&lt;etl::private_format::counter_iterator, float&gt;(etl::private_format::counter_iterator&amp;, float, etl::private_format::format_spec_t const&amp;) (400)</a>
+                    
+                
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Callees (3,
+                            <span title="sum of used bytes by all callees">
+                            Σ=1752
+                            </span>
+                        )
+                    
+                </th>
+                <td colspan="5">
+                
+                    <a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf (1720)</a>
+                    
+                        ,
+                    
+                
+                    <a href="./60c72afc8d06bd92e22c1d2dd80cbd5f.html">finitef (20)</a>
+                    
+                        ,
+                    
+                
+                    <a href="./0ab70b0573c3c4a685f7d4c19d713396.html">__errno (12)</a>
+                    
+                
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    
+    <pre><a href="./9cf650b49d52cc58be84a799dbf8a53f.html">log10f (96)</a></pre>
+    
+
+    <pre>
+
+    powf():
+
+       44a48:	b508      	push	{r3, lr}
+
+       44a4a:	ed2d 8b04 	vpush	{d8-d9}
+
+       44a4e:	eeb0 8a60 	vmov.f32	s16, s1
+
+       44a52:	eeb0 9a40 	vmov.f32	s18, s0
+
+       44a56:	f001 f9e7 	bl	45e28 <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>>
+
+       44a5a:	eeb4 8a48 	vcmp.f32	s16, s16
+
+       44a5e:	eef1 fa10 	vmrs	APSR_nzcv, fpscr
+
+       44a62:	eef0 8a40 	vmov.f32	s17, s0
+
+       44a66:	d60b      	bvs.n	44a80 <<a href="./612c7c664f86a40eabd0f8a8c53d50d1.html">powf</a>+0x38>
+
+       44a68:	eeb5 9a40 	vcmp.f32	s18, #0.0
+
+       44a6c:	eef1 fa10 	vmrs	APSR_nzcv, fpscr
+
+       44a70:	d117      	bne.n	44aa2 <<a href="./612c7c664f86a40eabd0f8a8c53d50d1.html">powf</a>+0x5a>
+
+       44a72:	eeb5 8a40 	vcmp.f32	s16, #0.0
+
+       44a76:	eef1 fa10 	vmrs	APSR_nzcv, fpscr
+
+       44a7a:	d106      	bne.n	44a8a <<a href="./612c7c664f86a40eabd0f8a8c53d50d1.html">powf</a>+0x42>
+
+       44a7c:	eef7 8a00 	vmov.f32	s17, #112	@ 0x3f800000  1.0
+
+       44a80:	eeb0 0a68 	vmov.f32	s0, s17
+
+       44a84:	ecbd 8b04 	vpop	{d8-d9}
+
+       44a88:	bd08      	pop	{r3, pc}
+
+       44a8a:	eeb0 0a48 	vmov.f32	s0, s16
+
+       44a8e:	f000 f8d5 	bl	44c3c <<a href="./60c72afc8d06bd92e22c1d2dd80cbd5f.html">finitef</a>>
+
+       44a92:	2800      	cmp	r0, #0
+
+       44a94:	d0f4      	beq.n	44a80 <<a href="./612c7c664f86a40eabd0f8a8c53d50d1.html">powf</a>+0x38>
+
+       44a96:	eeb5 8ac0 	vcmpe.f32	s16, #0.0
+
+       44a9a:	eef1 fa10 	vmrs	APSR_nzcv, fpscr
+
+       44a9e:	d5ef      	bpl.n	44a80 <<a href="./612c7c664f86a40eabd0f8a8c53d50d1.html">powf</a>+0x38>
+
+       44aa0:	e025      	b.n	44aee <<a href="./612c7c664f86a40eabd0f8a8c53d50d1.html">powf</a>+0xa6>
+
+       44aa2:	f000 f8cb 	bl	44c3c <<a href="./60c72afc8d06bd92e22c1d2dd80cbd5f.html">finitef</a>>
+
+       44aa6:	b188      	cbz	r0, 44acc <<a href="./612c7c664f86a40eabd0f8a8c53d50d1.html">powf</a>+0x84>
+
+       44aa8:	eef5 8a40 	vcmp.f32	s17, #0.0
+
+       44aac:	eef1 fa10 	vmrs	APSR_nzcv, fpscr
+
+       44ab0:	d1e6      	bne.n	44a80 <<a href="./612c7c664f86a40eabd0f8a8c53d50d1.html">powf</a>+0x38>
+
+       44ab2:	eeb0 0a49 	vmov.f32	s0, s18
+
+       44ab6:	f000 f8c1 	bl	44c3c <<a href="./60c72afc8d06bd92e22c1d2dd80cbd5f.html">finitef</a>>
+
+       44aba:	2800      	cmp	r0, #0
+
+       44abc:	d0e0      	beq.n	44a80 <<a href="./612c7c664f86a40eabd0f8a8c53d50d1.html">powf</a>+0x38>
+
+       44abe:	eeb0 0a48 	vmov.f32	s0, s16
+
+       44ac2:	f000 f8bb 	bl	44c3c <<a href="./60c72afc8d06bd92e22c1d2dd80cbd5f.html">finitef</a>>
+
+       44ac6:	2800      	cmp	r0, #0
+
+       44ac8:	d0da      	beq.n	44a80 <<a href="./612c7c664f86a40eabd0f8a8c53d50d1.html">powf</a>+0x38>
+
+       44aca:	e010      	b.n	44aee <<a href="./612c7c664f86a40eabd0f8a8c53d50d1.html">powf</a>+0xa6>
+
+       44acc:	eeb0 0a49 	vmov.f32	s0, s18
+
+       44ad0:	f000 f8b4 	bl	44c3c <<a href="./60c72afc8d06bd92e22c1d2dd80cbd5f.html">finitef</a>>
+
+       44ad4:	2800      	cmp	r0, #0
+
+       44ad6:	d0e7      	beq.n	44aa8 <<a href="./612c7c664f86a40eabd0f8a8c53d50d1.html">powf</a>+0x60>
+
+       44ad8:	eeb0 0a48 	vmov.f32	s0, s16
+
+       44adc:	f000 f8ae 	bl	44c3c <<a href="./60c72afc8d06bd92e22c1d2dd80cbd5f.html">finitef</a>>
+
+       44ae0:	2800      	cmp	r0, #0
+
+       44ae2:	d0e1      	beq.n	44aa8 <<a href="./612c7c664f86a40eabd0f8a8c53d50d1.html">powf</a>+0x60>
+
+       44ae4:	eef4 8a68 	vcmp.f32	s17, s17
+
+       44ae8:	eef1 fa10 	vmrs	APSR_nzcv, fpscr
+
+       44aec:	d604      	bvs.n	44af8 <<a href="./612c7c664f86a40eabd0f8a8c53d50d1.html">powf</a>+0xb0>
+
+       44aee:	f002 fd15 	bl	4751c <<a href="./0ab70b0573c3c4a685f7d4c19d713396.html">__errno</a>>
+
+       44af2:	2322      	movs	r3, #34	@ 0x22
+
+       44af4:	6003      	str	r3, [r0, #0]
+
+       44af6:	e7c3      	b.n	44a80 <<a href="./612c7c664f86a40eabd0f8a8c53d50d1.html">powf</a>+0x38>
+
+       44af8:	f002 fd10 	bl	4751c <<a href="./0ab70b0573c3c4a685f7d4c19d713396.html">__errno</a>>
+
+       44afc:	2321      	movs	r3, #33	@ 0x21
+
+       44afe:	6003      	str	r3, [r0, #0]
+
+       44b00:	e7be      	b.n	44a80 <<a href="./612c7c664f86a40eabd0f8a8c53d50d1.html">powf</a>+0x38>
+
+       44b02:	bf00      	nop
+
+    </pre>
+
+    
+    <pre><a href="./f08d9f9dd085b62425e34097fc724a5f.html">finite (24)</a></pre>
+    
+
+    
+        <h1>Stack Worst-Case Scenarios</h1>
+        
+            <p>No callees for this function.</p>
+        
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 120</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 1,968</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    1,968
+                    
+                    
+                </td>
+                <td class="col_size">188</td>
+                <td><a href="./612c7c664f86a40eabd0f8a8c53d50d1.html" class="icon-function">powf</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                    
+                    120
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                80 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    1,780
+                    
+                    
+                </td>
+                <td class="col_size">428</td>
+                <td><a href="../../home/runner/work/openbsw/openbsw/libs/3rdparty/etl/include/etl/format.h/136699ea7b8b264c27bb76fd1e5c3ba3.html" class="icon-function">void etl::private_format::format_floating_e&lt;etl::private_print::print_iterator, float&gt;(etl::private_print::print_iterator&amp;, float, etl::private_format::format_spec_t const&amp;)</a></td>
+            </tr>
+        
+            <tr>
+                <th>3</th>
+                <td class="col_size">
+                </td>
+                <td class="col_size">
+            
+                40 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">1,352</td>
+                <td><a href="../../home/runner/work/openbsw/openbsw/libs/3rdparty/etl/include/etl/format.h/4f59be99fc14e6b0549c33e4b93cb113.html" class="icon-function">void etl::private_format::format_floating&lt;etl::private_print::print_iterator, float&gt;(etl::private_print::print_iterator&amp;, float, etl::private_format::format_spec_t const&amp;)</a></td>
+            </tr>
+        
+        </tbody>
+        
+    </table>
+        
+    
+
+
+        </div>
+    <div id="page-footer">
+        <hr>
+        
+            brought to you with 💖
+            by <a href="https://twitter.com/hbehrens">Heiko Behrens</a>
+            <span class="secondary">– MIT license, copyright © 2014-2026</span>
+        
+    </div>
+    </div>
+</body>
+</html>

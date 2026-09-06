@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../../../../../../../../../static/css/style.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <title>Symbol - puncover</title>
+    
+</head>
+<body>
+    <div class="container" id="content">
+        <div class="page-header">
+            <nav class="navbar navbar-default" role="navigation">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="../../../../../../../../../../index.html">
+                    Puncover
+                  </a>
+                </div>
+              </div>
+            </nav>
+          
+        </div>
+        <div id="inner_content">
+        
+    
+    <ol class="breadcrumb folders">
+        
+        <li><a href="../../../../../../../../../../home.html">home</a></li>
+        
+        <li><a href="../../../../../../../../../runner.html">runner</a></li>
+        
+        <li><a href="../../../../../../../../work.html">work</a></li>
+        
+        <li><a href="../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../libs.html">libs</a></li>
+        
+        <li><a href="../../../../bsw.html">bsw</a></li>
+        
+        <li><a href="../../../cpp2someip.html">cpp2someip</a></li>
+        
+        <li ><a href="../../src.html">src</a>
+            </li>
+
+        
+        <li class="active"><a href="../Network.cpp.html">Network.cpp</a>:304
+            </li>
+        
+    </ol>
+
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <th>Function</th>
+                <td colspan="5">
+                    <span class="icon-function">someip::Network::getTcpProxy(unsigned short, ip::IPEndpoint const&amp;) const</span>
+                </td>
+            </tr>
+
+            <tr>
+                <th rowspan="2"></th>
+                <th>Address</th>
+                <th>Remarks</th>
+                <th>Stack</th>
+                <th>Code</th>
+                <th>Static</th>
+            </tr>
+            <tr>
+                <td>0x00021250</td>
+                <td>
+    
+    
+</td>
+                <td>16 (static)</td>
+                <td>60</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th>Callers (1)</th>
+                <td colspan="5">
+                
+                    <a href="./ad2cd9712751a4abfbef839b123ee0a1.html">someip::Network::openTcpChannelWithExternalReassembleBuffer(unsigned short, ip::IPEndpoint const&amp;, etl::span&lt;unsigned char, 4294967295u&gt;) (192)</a>
+                    
+                
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Callees (3,
+                            <span title="sum of used bytes by all callees">
+                            Σ=296
+                            </span>
+                        )
+                    
+                </th>
+                <td colspan="5">
+                
+                    <a href="../TcpConfig.cpp/ea41ed573a78d2d1fdc89281205c09dd.html">someip::TcpProxyConfig::getOpenProxy(unsigned short, ip::IPEndpoint const&amp;) const (168)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../TcpConfig.cpp/7a8795bea5048da2a1c60946c1d99b0c.html">someip::TcpProxyConfig::nextProxy() const (40)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../../../util/include/util/logger/Logger.h/e675253f5bfedd299c26bd0145e28698.html">util::logger::Logger::error(unsigned char, char const*, ...) (88)</a>
+                    
+                
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    
+    <pre><a href="./fa13901338fc750ad9c8b7dc1f318e23.html">someip::Network::Network(someip::NetworkConfig const&amp;) (24)</a></pre>
+    
+
+    <pre>
+
+    someip::Network::getTcpProxy(unsigned short, ip::IPEndpoint const&) const():
+
+       21250:	b538      	push	{r3, r4, r5, lr}
+
+       21252:	6843      	ldr	r3, [r0, #4]
+
+       21254:	68db      	ldr	r3, [r3, #12]
+
+       21256:	4605      	mov	r5, r0
+
+       21258:	6858      	ldr	r0, [r3, #4]
+
+       2125a:	f009 fa2b 	bl	2a6b4 <<a href="../TcpConfig.cpp/ea41ed573a78d2d1fdc89281205c09dd.html">someip::TcpProxyConfig::getOpenProxy(unsigned short, ip::IPEndpoint const&) const</a>>
+
+       2125e:	4604      	mov	r4, r0
+
+       21260:	b108      	cbz	r0, 21266 <<a href="./d9154492d013c9a685bbbeae650cfe5f.html">someip::Network::getTcpProxy(unsigned short, ip::IPEndpoint const&) const</a>+0x16>
+
+       21262:	4620      	mov	r0, r4
+
+       21264:	bd38      	pop	{r3, r4, r5, pc}
+
+       21266:	686b      	ldr	r3, [r5, #4]
+
+       21268:	68db      	ldr	r3, [r3, #12]
+
+       2126a:	6858      	ldr	r0, [r3, #4]
+
+       2126c:	f009 fa0e 	bl	2a68c <<a href="../TcpConfig.cpp/7a8795bea5048da2a1c60946c1d99b0c.html">someip::TcpProxyConfig::nextProxy() const</a>>
+
+       21270:	4604      	mov	r4, r0
+
+       21272:	2800      	cmp	r0, #0
+
+       21274:	d1f5      	bne.n	21262 <<a href="./d9154492d013c9a685bbbeae650cfe5f.html">someip::Network::getTcpProxy(unsigned short, ip::IPEndpoint const&) const</a>+0x12>
+
+       21276:	4b03      	ldr	r3, [pc, #12]	@ (21284 <<a href="./d9154492d013c9a685bbbeae650cfe5f.html">someip::Network::getTcpProxy(unsigned short, ip::IPEndpoint const&) const</a>+0x34>)
+
+       21278:	4903      	ldr	r1, [pc, #12]	@ (21288 <<a href="./d9154492d013c9a685bbbeae650cfe5f.html">someip::Network::getTcpProxy(unsigned short, ip::IPEndpoint const&) const</a>+0x38>)
+
+       2127a:	7818      	ldrb	r0, [r3, #0]
+
+       2127c:	f7e8 f9f8 	bl	9670 <<a href="../../../util/include/util/logger/Logger.h/e675253f5bfedd299c26bd0145e28698.html">util::logger::Logger::error(unsigned char, char const*, ...)</a>>
+
+       21280:	e7ef      	b.n	21262 <<a href="./d9154492d013c9a685bbbeae650cfe5f.html">someip::Network::getTcpProxy(unsigned short, ip::IPEndpoint const&) const</a>+0x12>
+
+       21282:	bf00      	nop
+
+       21284:	20000004 	.word	0x20000004
+
+       21288:	0004a07c 	.word	0x0004a07c
+
+    </pre>
+
+    
+    <pre><a href="./ad2cd9712751a4abfbef839b123ee0a1.html">someip::Network::openTcpChannelWithExternalReassembleBuffer(unsigned short, ip::IPEndpoint const&amp;, etl::span&lt;unsigned char, 4294967295u&gt;) (192)</a></pre>
+    
+
+    
+        <h1>Stack Worst-Case Scenarios</h1>
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 192</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 268</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    192
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                24 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    268
+                    
+                    
+                </td>
+                <td class="col_size">100</td>
+                <td><a href="../TcpProxy.cpp/c03a6ea62a407273a114be8a02cb884c.html" class="icon-function">someip::TcpProxy::getRemoteEndpoint() const</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                    
+                    168
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                56 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">168</td>
+                <td><a href="../TcpConfig.cpp/ea41ed573a78d2d1fdc89281205c09dd.html" class="icon-function">someip::TcpProxyConfig::getOpenProxy(unsigned short, ip::IPEndpoint const&amp;) const</a></td>
+            </tr>
+        
+        </tbody>
+        
+        <tfoot>
+            <tr>
+                <th></th>
+                <th class="col_size">112
+                </th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </tfoot>
+        
+    </table>
+        
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 112</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 324</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    112
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                16 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    324
+                    
+                    
+                </td>
+                <td class="col_size">60</td>
+                <td><a href="./d9154492d013c9a685bbbeae650cfe5f.html" class="icon-function">someip::Network::getTcpProxy(unsigned short, ip::IPEndpoint const&amp;) const</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                    
+                    96
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                56 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    264
+                    
+                    
+                </td>
+                <td class="col_size">192</td>
+                <td><a href="./ad2cd9712751a4abfbef839b123ee0a1.html" class="icon-function">someip::Network::openTcpChannelWithExternalReassembleBuffer(unsigned short, ip::IPEndpoint const&amp;, etl::span&lt;unsigned char, 4294967295u&gt;)</a></td>
+            </tr>
+        
+            <tr>
+                <th>3</th>
+                <td class="col_size">
+                </td>
+                <td class="col_size">
+            
+                40 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">72</td>
+                <td><a href="./3d8155959fb314897a0782449d7569af.html" class="icon-function">someip::Network::openTcpChannel(unsigned short, ip::IPEndpoint const&amp;)</a></td>
+            </tr>
+        
+        </tbody>
+        
+    </table>
+        
+    
+
+
+        </div>
+    <div id="page-footer">
+        <hr>
+        
+            brought to you with 💖
+            by <a href="https://twitter.com/hbehrens">Heiko Behrens</a>
+            <span class="secondary">– MIT license, copyright © 2014-2026</span>
+        
+    </div>
+    </div>
+</body>
+</html>

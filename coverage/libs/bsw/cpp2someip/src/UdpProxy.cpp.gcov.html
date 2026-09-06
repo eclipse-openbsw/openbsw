@@ -1,0 +1,395 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - coverage.info - libs/bsw/cpp2someip/src/UdpProxy.cpp</title>
+  <link rel="stylesheet" type="text/css" href="../../../../gcov.css">
+</head>
+
+<body>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="title">LCOV - code coverage report</td></tr>
+            <tr><td class="ruler"><img src="../../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+            <tr>
+              <td width="100%">
+                <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="10%" class="headerValue"><a href="../../../../index.html">top level</a> - <a href="index.html">libs/bsw/cpp2someip/src</a> - UdpProxy.cpp<span style="font-size: 80%;"> (source / <a href="UdpProxy.cpp.func-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="5%"></td>
+            <td width="5%" class="headerCovTableHead">Coverage</td>
+            <td width="5%" class="headerCovTableHead" title="Covered + Uncovered code">Total</td>
+            <td width="5%" class="headerCovTableHead" title="Exercised code only">Hit</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">coverage.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntryLo">72.3&nbsp;%</td>
+            <td class="headerCovTableEntry">112</td>
+            <td class="headerCovTableEntry">81</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test Date:</td>
+            <td class="headerValue">2026-09-06 09:24:28</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
+            <td class="headerCovTableEntry">15</td>
+            <td class="headerCovTableEntry">15</td>
+          </tr>
+                  <tr><td><img src="../../../../glass.png" width=3 height=3 alt=""></td></tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr><td class="ruler"><img src="../../../../glass.png" width=3 height=3 alt=""></td></tr>
+          </table>
+
+          <table cellpadding=0 cellspacing=0 border=0>
+            <tr>
+              <td><br></td>
+            </tr>
+            <tr>
+              <td>
+<pre class="sourceHeading">            Line data    Source code</pre>
+<pre class="source">
+<span id="L1"><span class="lineNum">       1</span>              : /********************************************************************************</span>
+<span id="L2"><span class="lineNum">       2</span>              :  * Copyright (c) 2026 Accenture</span>
+<span id="L3"><span class="lineNum">       3</span>              :  *</span>
+<span id="L4"><span class="lineNum">       4</span>              :  * This program and the accompanying materials are made available under the</span>
+<span id="L5"><span class="lineNum">       5</span>              :  * terms of the Apache License Version 2.0 which is available at</span>
+<span id="L6"><span class="lineNum">       6</span>              :  * https://www.apache.org/licenses/LICENSE-2.0</span>
+<span id="L7"><span class="lineNum">       7</span>              :  *</span>
+<span id="L8"><span class="lineNum">       8</span>              :  * SPDX-License-Identifier: Apache-2.0</span>
+<span id="L9"><span class="lineNum">       9</span>              :  ********************************************************************************/</span>
+<span id="L10"><span class="lineNum">      10</span>              : </span>
+<span id="L11"><span class="lineNum">      11</span>              : #include &quot;someip/UdpProxy.h&quot;</span>
+<span id="L12"><span class="lineNum">      12</span>              : </span>
+<span id="L13"><span class="lineNum">      13</span>              : #include &quot;someip/INetworkListener.h&quot;</span>
+<span id="L14"><span class="lineNum">      14</span>              : #include &quot;someip/NetworkChannel.h&quot;</span>
+<span id="L15"><span class="lineNum">      15</span>              : #include &quot;someip/SomeIpConstants.h&quot;</span>
+<span id="L16"><span class="lineNum">      16</span>              : #include &quot;someip/logger.h&quot;</span>
+<span id="L17"><span class="lineNum">      17</span>              : </span>
+<span id="L18"><span class="lineNum">      18</span>              : #include &lt;ip/to_str.h&gt;</span>
+<span id="L19"><span class="lineNum">      19</span>              : #include &lt;udp/DatagramPacket.h&gt;</span>
+<span id="L20"><span class="lineNum">      20</span>              : </span>
+<span id="L21"><span class="lineNum">      21</span>              : // Logger API uses printf-style varargs for fixed diagnostic messages in this module.</span>
+<span id="L22"><span class="lineNum">      22</span>              : // NOLINTBEGIN(cppcoreguidelines-pro-type-vararg)</span>
+<span id="L23"><span class="lineNum">      23</span>              : </span>
+<span id="L24"><span class="lineNum">      24</span>              : namespace someip</span>
+<span id="L25"><span class="lineNum">      25</span>              : {</span>
+<span id="L26"><span class="lineNum">      26</span>              : using ::ip::IPAddress;</span>
+<span id="L27"><span class="lineNum">      27</span>              : using ::ip::IPEndpoint;</span>
+<span id="L28"><span class="lineNum">      28</span>              : using ::udp::AbstractDatagramSocket;</span>
+<span id="L29"><span class="lineNum">      29</span>              : using ::udp::DatagramPacket;</span>
+<span id="L30"><span class="lineNum">      30</span>              : using ::util::logger::SOMEIP;</span>
+<span id="L31"><span class="lineNum">      31</span>              : </span>
+<span id="L32"><span class="lineNum">      32</span> <span class="tlaGNC tlaBgGNC">          84 : UdpProxy::UdpProxy() : _pSocket(nullptr) {}</span></span>
+<span id="L33"><span class="lineNum">      33</span>              : </span>
+<span id="L34"><span class="lineNum">      34</span> <span class="tlaGNC">          74 : bool UdpProxy::isInitialized() const</span></span>
+<span id="L35"><span class="lineNum">      35</span>              : {</span>
+<span id="L36"><span class="lineNum">      36</span> <span class="tlaGNC">          74 :     return NetworkResource::isInitialized() &amp;&amp; (_pSocket != nullptr);</span></span>
+<span id="L37"><span class="lineNum">      37</span>              : }</span>
+<span id="L38"><span class="lineNum">      38</span>              : </span>
+<span id="L39"><span class="lineNum">      39</span> <span class="tlaGNC">          86 : void UdpProxy::setSocket(AbstractDatagramSocket&amp; socket)</span></span>
+<span id="L40"><span class="lineNum">      40</span>              : {</span>
+<span id="L41"><span class="lineNum">      41</span> <span class="tlaGNC">          86 :     _pSocket = &amp;socket;</span></span>
+<span id="L42"><span class="lineNum">      42</span> <span class="tlaGNC">          86 :     _pSocket-&gt;setDataListener(this);</span></span>
+<span id="L43"><span class="lineNum">      43</span> <span class="tlaGNC">          86 : }</span></span>
+<span id="L44"><span class="lineNum">      44</span>              : </span>
+<span id="L45"><span class="lineNum">      45</span> <span class="tlaGNC">          24 : AbstractDatagramSocket* UdpProxy::getSocket() const { return _pSocket; }</span></span>
+<span id="L46"><span class="lineNum">      46</span>              : </span>
+<span id="L47"><span class="lineNum">      47</span> <span class="tlaGNC">          41 : bool UdpProxy::isOpen() const { return isInitialized() &amp;&amp; _pSocket-&gt;isBound(); }</span></span>
+<span id="L48"><span class="lineNum">      48</span>              : </span>
+<span id="L49"><span class="lineNum">      49</span> <span class="tlaGNC">           1 : bool UdpProxy::isConnected() const { return false; }</span></span>
+<span id="L50"><span class="lineNum">      50</span>              : </span>
+<span id="L51"><span class="lineNum">      51</span> <span class="tlaGNC">           7 : ::etl::expected&lt;uint16_t, PortError&gt; UdpProxy::getLocalPort() const</span></span>
+<span id="L52"><span class="lineNum">      52</span>              : {</span>
+<span id="L53"><span class="lineNum">      53</span> <span class="tlaGNC">           7 :     if (isInitialized())</span></span>
+<span id="L54"><span class="lineNum">      54</span>              :     {</span>
+<span id="L55"><span class="lineNum">      55</span> <span class="tlaGNC">           7 :         return _pSocket-&gt;getLocalPort();</span></span>
+<span id="L56"><span class="lineNum">      56</span>              :     }</span>
+<span id="L57"><span class="lineNum">      57</span>              : </span>
+<span id="L58"><span class="lineNum">      58</span> <span class="tlaUNC tlaBgUNC">           0 :     return ::etl::unexpected&lt;PortError&gt;(PortError::NOT_INITIALIZED);</span></span>
+<span id="L59"><span class="lineNum">      59</span>              : }</span>
+<span id="L60"><span class="lineNum">      60</span>              : </span>
+<span id="L61"><span class="lineNum">      61</span> <span class="tlaGNC tlaBgGNC">           1 : uint8_t UdpProxy::getProto() const { return proto::SD_L4_PROTO_UDP; }</span></span>
+<span id="L62"><span class="lineNum">      62</span>              : </span>
+<span id="L63"><span class="lineNum">      63</span> <span class="tlaGNC">           7 : bool UdpProxy::open(IPEndpoint const&amp; localEndpoint)</span></span>
+<span id="L64"><span class="lineNum">      64</span>              : {</span>
+<span id="L65"><span class="lineNum">      65</span> <span class="tlaGNC">           7 :     if (!isInitialized())</span></span>
+<span id="L66"><span class="lineNum">      66</span>              :     {</span>
+<span id="L67"><span class="lineNum">      67</span> <span class="tlaGNC">           2 :         ERROR_LOG(SOMEIP, &quot;UdpProxy[%p]::open() not initialized&quot;, this);</span></span>
+<span id="L68"><span class="lineNum">      68</span> <span class="tlaGNC">           2 :         return false;</span></span>
+<span id="L69"><span class="lineNum">      69</span>              :     }</span>
+<span id="L70"><span class="lineNum">      70</span>              : </span>
+<span id="L71"><span class="lineNum">      71</span> <span class="tlaGNC">           5 :     if (isOpen())</span></span>
+<span id="L72"><span class="lineNum">      72</span>              :     {</span>
+<span id="L73"><span class="lineNum">      73</span> <span class="tlaGNC">           1 :         return true;</span></span>
+<span id="L74"><span class="lineNum">      74</span>              :     }</span>
+<span id="L75"><span class="lineNum">      75</span>              : </span>
+<span id="L76"><span class="lineNum">      76</span> <span class="tlaGNC">           4 :     if (!localEndpoint.isSet())</span></span>
+<span id="L77"><span class="lineNum">      77</span>              :     {</span>
+<span id="L78"><span class="lineNum">      78</span> <span class="tlaUNC tlaBgUNC">           0 :         ERROR_LOG(SOMEIP, &quot;UdpProxy[%p]::open() no local address&quot;, this);</span></span>
+<span id="L79"><span class="lineNum">      79</span> <span class="tlaUNC">           0 :         return false;</span></span>
+<span id="L80"><span class="lineNum">      80</span>              :     }</span>
+<span id="L81"><span class="lineNum">      81</span>              : </span>
+<span id="L82"><span class="lineNum">      82</span>              :     char localEndpointStr[::ip::MAX_ENDPOINT_STRING_LENGTH];</span>
+<span id="L83"><span class="lineNum">      83</span> <span class="tlaGNC tlaBgGNC">           4 :     INFO_LOG(</span></span>
+<span id="L84"><span class="lineNum">      84</span>              :         SOMEIP,</span>
+<span id="L85"><span class="lineNum">      85</span>              :         &quot;UdpProxy[%p]::open() at: %s&quot;,</span>
+<span id="L86"><span class="lineNum">      86</span>              :         this,</span>
+<span id="L87"><span class="lineNum">      87</span>              :         ::ip::to_str(localEndpoint, localEndpointStr).data());</span>
+<span id="L88"><span class="lineNum">      88</span>              : </span>
+<span id="L89"><span class="lineNum">      89</span>              :     AbstractDatagramSocket::ErrorCode const result</span>
+<span id="L90"><span class="lineNum">      90</span> <span class="tlaGNC">           4 :         = _pSocket-&gt;bind(&amp;localEndpoint.getAddress(), localEndpoint.getPort());</span></span>
+<span id="L91"><span class="lineNum">      91</span>              : </span>
+<span id="L92"><span class="lineNum">      92</span> <span class="tlaGNC">           4 :     if (AbstractDatagramSocket::ErrorCode::UDP_SOCKET_OK != result)</span></span>
+<span id="L93"><span class="lineNum">      93</span>              :     {</span>
+<span id="L94"><span class="lineNum">      94</span> <span class="tlaUNC tlaBgUNC">           0 :         ERROR_LOG(SOMEIP, &quot;UdpProxy[%p]::open() bind failed: %d&quot;, this, result);</span></span>
+<span id="L95"><span class="lineNum">      95</span> <span class="tlaUNC">           0 :         return false;</span></span>
+<span id="L96"><span class="lineNum">      96</span>              :     }</span>
+<span id="L97"><span class="lineNum">      97</span>              : </span>
+<span id="L98"><span class="lineNum">      98</span> <span class="tlaGNC tlaBgGNC">           4 :     return true;</span></span>
+<span id="L99"><span class="lineNum">      99</span>              : }</span>
+<span id="L100"><span class="lineNum">     100</span>              : </span>
+<span id="L101"><span class="lineNum">     101</span> <span class="tlaGNC">           2 : bool UdpProxy::join(IPAddress const&amp; multicastIp)</span></span>
+<span id="L102"><span class="lineNum">     102</span>              : {</span>
+<span id="L103"><span class="lineNum">     103</span> <span class="tlaGNC">           2 :     if (!isInitialized())</span></span>
+<span id="L104"><span class="lineNum">     104</span>              :     {</span>
+<span id="L105"><span class="lineNum">     105</span> <span class="tlaUNC tlaBgUNC">           0 :         ERROR_LOG(SOMEIP, &quot;UdpProxy[%p]::join() not initialized&quot;, this);</span></span>
+<span id="L106"><span class="lineNum">     106</span> <span class="tlaUNC">           0 :         return false;</span></span>
+<span id="L107"><span class="lineNum">     107</span>              :     }</span>
+<span id="L108"><span class="lineNum">     108</span>              : </span>
+<span id="L109"><span class="lineNum">     109</span> <span class="tlaGNC tlaBgGNC">           2 :     if (!isOpen())</span></span>
+<span id="L110"><span class="lineNum">     110</span>              :     {</span>
+<span id="L111"><span class="lineNum">     111</span> <span class="tlaUNC tlaBgUNC">           0 :         ERROR_LOG(SOMEIP, &quot;UdpProxy[%p]::join() not bound&quot;, this);</span></span>
+<span id="L112"><span class="lineNum">     112</span> <span class="tlaUNC">           0 :         return false;</span></span>
+<span id="L113"><span class="lineNum">     113</span>              :     }</span>
+<span id="L114"><span class="lineNum">     114</span>              : </span>
+<span id="L115"><span class="lineNum">     115</span> <span class="tlaGNC tlaBgGNC">           2 :     if (::ip::isUnspecified(multicastIp))</span></span>
+<span id="L116"><span class="lineNum">     116</span>              :     {</span>
+<span id="L117"><span class="lineNum">     117</span> <span class="tlaUNC tlaBgUNC">           0 :         ERROR_LOG(SOMEIP, &quot;UdpProxy[%p]::join() no multicast address&quot;, this);</span></span>
+<span id="L118"><span class="lineNum">     118</span> <span class="tlaUNC">           0 :         close();</span></span>
+<span id="L119"><span class="lineNum">     119</span> <span class="tlaUNC">           0 :         return false;</span></span>
+<span id="L120"><span class="lineNum">     120</span>              :     }</span>
+<span id="L121"><span class="lineNum">     121</span>              : </span>
+<span id="L122"><span class="lineNum">     122</span>              :     char multicastIpStr[::ip::MAX_IP_STRING_LENGTH];</span>
+<span id="L123"><span class="lineNum">     123</span> <span class="tlaGNC tlaBgGNC">           2 :     INFO_LOG(</span></span>
+<span id="L124"><span class="lineNum">     124</span>              :         SOMEIP,</span>
+<span id="L125"><span class="lineNum">     125</span>              :         &quot;UdpProxy[%p]::join(): joining %s&quot;,</span>
+<span id="L126"><span class="lineNum">     126</span>              :         this,</span>
+<span id="L127"><span class="lineNum">     127</span>              :         ::ip::to_str(multicastIp, multicastIpStr).data());</span>
+<span id="L128"><span class="lineNum">     128</span>              : </span>
+<span id="L129"><span class="lineNum">     129</span> <span class="tlaGNC">           2 :     AbstractDatagramSocket::ErrorCode const result = _pSocket-&gt;join(multicastIp);</span></span>
+<span id="L130"><span class="lineNum">     130</span>              : </span>
+<span id="L131"><span class="lineNum">     131</span> <span class="tlaGNC">           2 :     if (AbstractDatagramSocket::ErrorCode::UDP_SOCKET_OK != result)</span></span>
+<span id="L132"><span class="lineNum">     132</span>              :     {</span>
+<span id="L133"><span class="lineNum">     133</span> <span class="tlaUNC tlaBgUNC">           0 :         ERROR_LOG(SOMEIP, &quot;UdpProxy[%p]::join() failed: %d&quot;, this, result);</span></span>
+<span id="L134"><span class="lineNum">     134</span> <span class="tlaUNC">           0 :         close();</span></span>
+<span id="L135"><span class="lineNum">     135</span> <span class="tlaUNC">           0 :         return false;</span></span>
+<span id="L136"><span class="lineNum">     136</span>              :     }</span>
+<span id="L137"><span class="lineNum">     137</span>              : </span>
+<span id="L138"><span class="lineNum">     138</span> <span class="tlaGNC tlaBgGNC">           2 :     return true;</span></span>
+<span id="L139"><span class="lineNum">     139</span>              : }</span>
+<span id="L140"><span class="lineNum">     140</span>              : </span>
+<span id="L141"><span class="lineNum">     141</span> <span class="tlaGNC">           5 : void UdpProxy::close()</span></span>
+<span id="L142"><span class="lineNum">     142</span>              : {</span>
+<span id="L143"><span class="lineNum">     143</span> <span class="tlaGNC">           5 :     if (!isOpen())</span></span>
+<span id="L144"><span class="lineNum">     144</span>              :     {</span>
+<span id="L145"><span class="lineNum">     145</span> <span class="tlaUNC tlaBgUNC">           0 :         return;</span></span>
+<span id="L146"><span class="lineNum">     146</span>              :     }</span>
+<span id="L147"><span class="lineNum">     147</span>              : </span>
+<span id="L148"><span class="lineNum">     148</span> <span class="tlaGNC tlaBgGNC">           5 :     INFO_LOG(SOMEIP, &quot;UdpProxy[%p]::close()&quot;, this);</span></span>
+<span id="L149"><span class="lineNum">     149</span>              : </span>
+<span id="L150"><span class="lineNum">     150</span> <span class="tlaGNC">           5 :     _pSocket-&gt;close();</span></span>
+<span id="L151"><span class="lineNum">     151</span>              : }</span>
+<span id="L152"><span class="lineNum">     152</span>              : </span>
+<span id="L153"><span class="lineNum">     153</span> <span class="tlaGNC">           2 : bool UdpProxy::send(IPEndpoint const&amp; remoteEndpoint, uint32_t const length)</span></span>
+<span id="L154"><span class="lineNum">     154</span>              : {</span>
+<span id="L155"><span class="lineNum">     155</span> <span class="tlaGNC">           2 :     uint8_t const ip0   = remoteEndpoint.getAddress().raw[0];</span></span>
+<span id="L156"><span class="lineNum">     156</span> <span class="tlaGNC">           2 :     uint8_t const ip1   = remoteEndpoint.getAddress().raw[1];</span></span>
+<span id="L157"><span class="lineNum">     157</span> <span class="tlaGNC">           2 :     uint8_t const ip2   = remoteEndpoint.getAddress().raw[2];</span></span>
+<span id="L158"><span class="lineNum">     158</span> <span class="tlaGNC">           2 :     uint8_t const ip3   = remoteEndpoint.getAddress().raw[3];</span></span>
+<span id="L159"><span class="lineNum">     159</span> <span class="tlaGNC">           2 :     uint16_t const port = remoteEndpoint.getPort();</span></span>
+<span id="L160"><span class="lineNum">     160</span>              : </span>
+<span id="L161"><span class="lineNum">     161</span> <span class="tlaGNC">           2 :     if (!isOpen())</span></span>
+<span id="L162"><span class="lineNum">     162</span>              :     {</span>
+<span id="L163"><span class="lineNum">     163</span> <span class="tlaUNC tlaBgUNC">           0 :         ERROR_LOG(</span></span>
+<span id="L164"><span class="lineNum">     164</span>              :             SOMEIP,</span>
+<span id="L165"><span class="lineNum">     165</span>              :             &quot;UdpProxy[%p]::send() not open. Remote: &quot;</span>
+<span id="L166"><span class="lineNum">     166</span>              :             &quot;(%d,%d,%d,%d), Port: %d.&quot;,</span>
+<span id="L167"><span class="lineNum">     167</span>              :             this,</span>
+<span id="L168"><span class="lineNum">     168</span>              :             ip0,</span>
+<span id="L169"><span class="lineNum">     169</span>              :             ip1,</span>
+<span id="L170"><span class="lineNum">     170</span>              :             ip2,</span>
+<span id="L171"><span class="lineNum">     171</span>              :             ip3,</span>
+<span id="L172"><span class="lineNum">     172</span>              :             port);</span>
+<span id="L173"><span class="lineNum">     173</span> <span class="tlaUNC">           0 :         return false;</span></span>
+<span id="L174"><span class="lineNum">     174</span>              :     }</span>
+<span id="L175"><span class="lineNum">     175</span>              : </span>
+<span id="L176"><span class="lineNum">     176</span> <span class="tlaGNC tlaBgGNC">           2 :     if (length == 0U)</span></span>
+<span id="L177"><span class="lineNum">     177</span>              :     {</span>
+<span id="L178"><span class="lineNum">     178</span> <span class="tlaGNC">           1 :         ERROR_LOG(</span></span>
+<span id="L179"><span class="lineNum">     179</span>              :             SOMEIP,</span>
+<span id="L180"><span class="lineNum">     180</span>              :             &quot;UdpProxy[%p]::send() no data. Remote: &quot;</span>
+<span id="L181"><span class="lineNum">     181</span>              :             &quot;(%d,%d,%d,%d), Port: %d.&quot;,</span>
+<span id="L182"><span class="lineNum">     182</span>              :             this,</span>
+<span id="L183"><span class="lineNum">     183</span>              :             ip0,</span>
+<span id="L184"><span class="lineNum">     184</span>              :             ip1,</span>
+<span id="L185"><span class="lineNum">     185</span>              :             ip2,</span>
+<span id="L186"><span class="lineNum">     186</span>              :             ip3,</span>
+<span id="L187"><span class="lineNum">     187</span>              :             port);</span>
+<span id="L188"><span class="lineNum">     188</span> <span class="tlaGNC">           1 :         return false;</span></span>
+<span id="L189"><span class="lineNum">     189</span>              :     }</span>
+<span id="L190"><span class="lineNum">     190</span>              : </span>
+<span id="L191"><span class="lineNum">     191</span> <span class="tlaGNC">           1 :     if (!remoteEndpoint.isSet())</span></span>
+<span id="L192"><span class="lineNum">     192</span>              :     {</span>
+<span id="L193"><span class="lineNum">     193</span> <span class="tlaUNC tlaBgUNC">           0 :         ERROR_LOG(</span></span>
+<span id="L194"><span class="lineNum">     194</span>              :             SOMEIP,</span>
+<span id="L195"><span class="lineNum">     195</span>              :             &quot;UdpProxy[%p]::send() no remote endpoint. Remote: &quot;</span>
+<span id="L196"><span class="lineNum">     196</span>              :             &quot;(%d,%d,%d,%d), Port: %d.&quot;,</span>
+<span id="L197"><span class="lineNum">     197</span>              :             this,</span>
+<span id="L198"><span class="lineNum">     198</span>              :             ip0,</span>
+<span id="L199"><span class="lineNum">     199</span>              :             ip1,</span>
+<span id="L200"><span class="lineNum">     200</span>              :             ip2,</span>
+<span id="L201"><span class="lineNum">     201</span>              :             ip3,</span>
+<span id="L202"><span class="lineNum">     202</span>              :             port);</span>
+<span id="L203"><span class="lineNum">     203</span> <span class="tlaUNC">           0 :         return false;</span></span>
+<span id="L204"><span class="lineNum">     204</span>              :     }</span>
+<span id="L205"><span class="lineNum">     205</span>              : </span>
+<span id="L206"><span class="lineNum">     206</span> <span class="tlaGNC tlaBgGNC">           1 :     if (length &gt; _pOutputBuffer.size())</span></span>
+<span id="L207"><span class="lineNum">     207</span>              :     {</span>
+<span id="L208"><span class="lineNum">     208</span> <span class="tlaUNC tlaBgUNC">           0 :         ERROR_LOG(</span></span>
+<span id="L209"><span class="lineNum">     209</span>              :             SOMEIP,</span>
+<span id="L210"><span class="lineNum">     210</span>              :             &quot;UdpProxy[%p]::send() too much data (%d bytes). Remote: &quot;</span>
+<span id="L211"><span class="lineNum">     211</span>              :             &quot;(%d,%d,%d,%d), Port: %d.&quot;,</span>
+<span id="L212"><span class="lineNum">     212</span>              :             this,</span>
+<span id="L213"><span class="lineNum">     213</span>              :             length,</span>
+<span id="L214"><span class="lineNum">     214</span>              :             ip0,</span>
+<span id="L215"><span class="lineNum">     215</span>              :             ip1,</span>
+<span id="L216"><span class="lineNum">     216</span>              :             ip2,</span>
+<span id="L217"><span class="lineNum">     217</span>              :             ip3,</span>
+<span id="L218"><span class="lineNum">     218</span>              :             port);</span>
+<span id="L219"><span class="lineNum">     219</span> <span class="tlaUNC">           0 :         return false;</span></span>
+<span id="L220"><span class="lineNum">     220</span>              :     }</span>
+<span id="L221"><span class="lineNum">     221</span>              : </span>
+<span id="L222"><span class="lineNum">     222</span>              :     DatagramPacket const packet(</span>
+<span id="L223"><span class="lineNum">     223</span> <span class="tlaGNC tlaBgGNC">           1 :         _pOutputBuffer.data(),</span></span>
+<span id="L224"><span class="lineNum">     224</span>              :         static_cast&lt;uint16_t&gt;(length),</span>
+<span id="L225"><span class="lineNum">     225</span> <span class="tlaGNC">           1 :         remoteEndpoint.getAddress(),</span></span>
+<span id="L226"><span class="lineNum">     226</span> <span class="tlaGNC">           1 :         remoteEndpoint.getPort());</span></span>
+<span id="L227"><span class="lineNum">     227</span>              : </span>
+<span id="L228"><span class="lineNum">     228</span> <span class="tlaGNC">           1 :     AbstractDatagramSocket::ErrorCode const result = _pSocket-&gt;send(packet);</span></span>
+<span id="L229"><span class="lineNum">     229</span>              : </span>
+<span id="L230"><span class="lineNum">     230</span> <span class="tlaGNC">           1 :     if (AbstractDatagramSocket::ErrorCode::UDP_SOCKET_OK != result)</span></span>
+<span id="L231"><span class="lineNum">     231</span>              :     {</span>
+<span id="L232"><span class="lineNum">     232</span> <span class="tlaGNC">           1 :         ERROR_LOG(</span></span>
+<span id="L233"><span class="lineNum">     233</span>              :             SOMEIP,</span>
+<span id="L234"><span class="lineNum">     234</span>              :             &quot;UdpProxy[%p]::send() failed: %d. Remote: &quot;</span>
+<span id="L235"><span class="lineNum">     235</span>              :             &quot;(%d,%d,%d,%d), Port: %d.&quot;,</span>
+<span id="L236"><span class="lineNum">     236</span>              :             this,</span>
+<span id="L237"><span class="lineNum">     237</span>              :             result,</span>
+<span id="L238"><span class="lineNum">     238</span>              :             ip0,</span>
+<span id="L239"><span class="lineNum">     239</span>              :             ip1,</span>
+<span id="L240"><span class="lineNum">     240</span>              :             ip2,</span>
+<span id="L241"><span class="lineNum">     241</span>              :             ip3,</span>
+<span id="L242"><span class="lineNum">     242</span>              :             port);</span>
+<span id="L243"><span class="lineNum">     243</span>              :     }</span>
+<span id="L244"><span class="lineNum">     244</span>              : </span>
+<span id="L245"><span class="lineNum">     245</span> <span class="tlaGNC">           1 :     return AbstractDatagramSocket::ErrorCode::UDP_SOCKET_OK == result;</span></span>
+<span id="L246"><span class="lineNum">     246</span>              : }</span>
+<span id="L247"><span class="lineNum">     247</span>              : </span>
+<span id="L248"><span class="lineNum">     248</span> <span class="tlaGNC">           1 : bool UdpProxy::send(uint32_t const length) { return NetworkResource::send(length); }</span></span>
+<span id="L249"><span class="lineNum">     249</span>              : </span>
+<span id="L250"><span class="lineNum">     250</span>              : // virtual</span>
+<span id="L251"><span class="lineNum">     251</span> <span class="tlaGNC">           3 : void UdpProxy::dataReceived(</span></span>
+<span id="L252"><span class="lineNum">     252</span>              :     AbstractDatagramSocket&amp; /* socket */,</span>
+<span id="L253"><span class="lineNum">     253</span>              :     IPAddress const sourceAddress,</span>
+<span id="L254"><span class="lineNum">     254</span>              :     uint16_t const sourcePort,</span>
+<span id="L255"><span class="lineNum">     255</span>              :     IPAddress const destinationAddress,</span>
+<span id="L256"><span class="lineNum">     256</span>              :     uint16_t const length)</span>
+<span id="L257"><span class="lineNum">     257</span>              : {</span>
+<span id="L258"><span class="lineNum">     258</span> <span class="tlaGNC">           3 :     if (::ip::isUnspecified(sourceAddress))</span></span>
+<span id="L259"><span class="lineNum">     259</span>              :     {</span>
+<span id="L260"><span class="lineNum">     260</span> <span class="tlaUNC tlaBgUNC">           0 :         ERROR_LOG(SOMEIP, &quot;UdpProxy[%p]::dataReceived() no source address&quot;, this);</span></span>
+<span id="L261"><span class="lineNum">     261</span> <span class="tlaUNC">           0 :         flush(length);</span></span>
+<span id="L262"><span class="lineNum">     262</span> <span class="tlaUNC">           0 :         return;</span></span>
+<span id="L263"><span class="lineNum">     263</span>              :     }</span>
+<span id="L264"><span class="lineNum">     264</span>              : </span>
+<span id="L265"><span class="lineNum">     265</span> <span class="tlaGNC tlaBgGNC">           3 :     if (::ip::isUnspecified(destinationAddress))</span></span>
+<span id="L266"><span class="lineNum">     266</span>              :     {</span>
+<span id="L267"><span class="lineNum">     267</span> <span class="tlaUNC tlaBgUNC">           0 :         ERROR_LOG(SOMEIP, &quot;UdpProxy[%p]::dataReceived() no destination address&quot;, this);</span></span>
+<span id="L268"><span class="lineNum">     268</span> <span class="tlaUNC">           0 :         flush(length);</span></span>
+<span id="L269"><span class="lineNum">     269</span> <span class="tlaUNC">           0 :         return;</span></span>
+<span id="L270"><span class="lineNum">     270</span>              :     }</span>
+<span id="L271"><span class="lineNum">     271</span>              : </span>
+<span id="L272"><span class="lineNum">     272</span> <span class="tlaGNC tlaBgGNC">           3 :     IPEndpoint const remoteEndpoint(sourceAddress, sourcePort);</span></span>
+<span id="L273"><span class="lineNum">     273</span> <span class="tlaGNC">           3 :     bool const isMulticast = ::ip::isMulticastAddress(destinationAddress);</span></span>
+<span id="L274"><span class="lineNum">     274</span>              : </span>
+<span id="L275"><span class="lineNum">     275</span> <span class="tlaGNC">           3 :     if (length == 0U)</span></span>
+<span id="L276"><span class="lineNum">     276</span>              :     {</span>
+<span id="L277"><span class="lineNum">     277</span> <span class="tlaGNC">           1 :         ERROR_LOG(SOMEIP, &quot;UdpProxy[%p]::received() no data&quot;, this);</span></span>
+<span id="L278"><span class="lineNum">     278</span> <span class="tlaGNC">           1 :         return;</span></span>
+<span id="L279"><span class="lineNum">     279</span>              :     }</span>
+<span id="L280"><span class="lineNum">     280</span>              : </span>
+<span id="L281"><span class="lineNum">     281</span> <span class="tlaGNC">           2 :     if (length &gt; _pInputBuffer.size())</span></span>
+<span id="L282"><span class="lineNum">     282</span>              :     {</span>
+<span id="L283"><span class="lineNum">     283</span> <span class="tlaGNC">           1 :         ERROR_LOG(SOMEIP, &quot;UdpProxy[%p]::received() too much data (%d bytes)&quot;, this, length);</span></span>
+<span id="L284"><span class="lineNum">     284</span> <span class="tlaGNC">           1 :         flush(length);</span></span>
+<span id="L285"><span class="lineNum">     285</span> <span class="tlaGNC">           1 :         return;</span></span>
+<span id="L286"><span class="lineNum">     286</span>              :     }</span>
+<span id="L287"><span class="lineNum">     287</span>              : </span>
+<span id="L288"><span class="lineNum">     288</span>              :     uint16_t const read</span>
+<span id="L289"><span class="lineNum">     289</span> <span class="tlaGNC">           1 :         = static_cast&lt;uint16_t&gt;(_pSocket-&gt;read(_pInputBuffer.data(), static_cast&lt;size_t&gt;(length)));</span></span>
+<span id="L290"><span class="lineNum">     290</span>              : </span>
+<span id="L291"><span class="lineNum">     291</span> <span class="tlaGNC">           1 :     if (read != length)</span></span>
+<span id="L292"><span class="lineNum">     292</span>              :     {</span>
+<span id="L293"><span class="lineNum">     293</span> <span class="tlaUNC tlaBgUNC">           0 :         ERROR_LOG(</span></span>
+<span id="L294"><span class="lineNum">     294</span>              :             SOMEIP, &quot;UdpProxy[%p]::received() read failed (%d / %d bytes)&quot;, this, read, length);</span>
+<span id="L295"><span class="lineNum">     295</span> <span class="tlaUNC">           0 :         flush(length - read);</span></span>
+<span id="L296"><span class="lineNum">     296</span> <span class="tlaUNC">           0 :         return;</span></span>
+<span id="L297"><span class="lineNum">     297</span>              :     }</span>
+<span id="L298"><span class="lineNum">     298</span> <span class="tlaGNC tlaBgGNC">           1 :     incRefCounter(); // in case of hanging proxy.</span></span>
+<span id="L299"><span class="lineNum">     299</span>              :     {</span>
+<span id="L300"><span class="lineNum">     300</span> <span class="tlaGNC">           1 :         NetworkChannel channel(*this, remoteEndpoint, isMulticast);</span></span>
+<span id="L301"><span class="lineNum">     301</span> <span class="tlaGNC">           1 :         if (_pListener != nullptr)</span></span>
+<span id="L302"><span class="lineNum">     302</span>              :         {</span>
+<span id="L303"><span class="lineNum">     303</span> <span class="tlaGNC">           1 :             _pListener-&gt;received(channel, length);</span></span>
+<span id="L304"><span class="lineNum">     304</span>              :         }</span>
+<span id="L305"><span class="lineNum">     305</span> <span class="tlaGNC">           1 :     }</span></span>
+<span id="L306"><span class="lineNum">     306</span> <span class="tlaGNC">           1 :     decRefCounter();</span></span>
+<span id="L307"><span class="lineNum">     307</span>              : }</span>
+<span id="L308"><span class="lineNum">     308</span>              : </span>
+<span id="L309"><span class="lineNum">     309</span> <span class="tlaGNC">           1 : void UdpProxy::flush(uint16_t const length)</span></span>
+<span id="L310"><span class="lineNum">     310</span>              : {</span>
+<span id="L311"><span class="lineNum">     311</span> <span class="tlaGNC">           1 :     if (_pSocket != nullptr)</span></span>
+<span id="L312"><span class="lineNum">     312</span>              :     {</span>
+<span id="L313"><span class="lineNum">     313</span> <span class="tlaGNC">           1 :         (void)_pSocket-&gt;read(nullptr, length);</span></span>
+<span id="L314"><span class="lineNum">     314</span>              :     }</span>
+<span id="L315"><span class="lineNum">     315</span> <span class="tlaGNC">           1 : }</span></span>
+<span id="L316"><span class="lineNum">     316</span>              : </span>
+<span id="L317"><span class="lineNum">     317</span>              : } // namespace someip</span>
+<span id="L318"><span class="lineNum">     318</span>              : </span>
+<span id="L319"><span class="lineNum">     319</span>              : // NOLINTEND(cppcoreguidelines-pro-type-vararg)</span>
+        </pre>
+              </td>
+            </tr>
+          </table>
+          <br>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="ruler"><img src="../../../../glass.png" width=3 height=3 alt=""></td></tr>
+            <tr><td class="versionInfo">Generated by: <a href="https://github.com//linux-test-project/lcov" target="_parent">LCOV version 2.0-1</a></td></tr>
+          </table>
+          <br>
+
+</body>
+</html>

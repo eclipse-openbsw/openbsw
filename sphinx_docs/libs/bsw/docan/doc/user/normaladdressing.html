@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="EclipseOpenBSWDocumentation" name="dox_trace_storage" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Normal Addressing &mdash; Eclipse OpenBSW Documentation  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/rtd_theme_overrides.css?v=6fd0d55b" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/graphviz.css?v=eafc0fe6" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/colors.css?v=3cafd8aa" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/colored_table.css?v=34b816d5" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/header.css?v=e632285e" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/dox_util_colors.css?v=dd14b177" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/dox_trace.css?v=60d3f72c" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../../../../../_static/copybutton.js?v=f281be69"></script>
+        <script src="../../../../../_static/dox_trace.js?v=40719b51"></script>
+    <script src="../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" />
+    <link rel="next" title="Extended Addressing" href="extendedaddressing.html" />
+    <link rel="prev" title="User Documentation" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../doc/dev/index.html" class="icon icon-home">
+            Eclipse OpenBSW Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Learning</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/learning/overview.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/learning/SysTest/HW_Testing_Guide.html">Hardware Testing Guide</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guidelines</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/guidelines/conventions/index.html">Coding Conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/guidelines/practices.html">Coding Practices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/guidelines/formatting/index.html">Formatting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/guidelines/unittests.html">Unit Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/guidelines/module.html">Module Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/guidelines/documentation.html">Module Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/guidelines/diagrams.html">Diagrams</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/guidelines/3rdparty.html">Third Party Libraries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/guidelines/commit_message.html">Commit Message</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/guidelines/pull_request.html">Pull Request</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Platforms</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/platforms/posix/index.html">POSIX</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/platforms/s32k148evb/index.html">S32K148 Evaluation Board</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/platforms/stm32/index.html">STM32 Nucleo Boards</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Features</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/features/storage.html">Persistent Storage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/features/functional_safety.html">Functional Safety</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/features/diagnostics.html">Diagnostics (DoCAN / UDS)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Software Modules</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../../doc/dev/modules/common.html">Common</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../../../doc/dev/modules/common.html#bsw">BSW</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../../async/doc/index.html">async - Asynchronous Execution Interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../asyncConsole/doc/index.html">asyncConsole - Asynchronous Console</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../asyncFreeRtos/doc/index.html">asyncFreeRtos</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../asyncImpl/doc/index.html">asyncImpl</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../blob/doc/index.html">blob</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../bsp/doc/index.html">bsp</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../common/doc/index.html">common</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cpp2can/doc/index.html">cpp2can - CAN Abstraction Layer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cpp2ethernet/doc/index.html">cpp2ethernet - Ethernet Abstractions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cpp2someip/doc/index.html">cpp2someip - SOME/IP Abstractions</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../index.html">docan - Diagnostics over CAN</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="index.html">User Documentation</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Normal Addressing</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#address-entry-model">Address Entry Model</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#can-identifier-support">CAN Identifier Support</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#address-representation-and-format">Address Representation and Format</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#initialization">Initialization</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#functional-addressing">Functional Addressing</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#reception-transmission-mapping">Reception / Transmission Mapping</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#filter-and-layer-integration">Filter and Layer Integration</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#implementation-invariants">Implementation Invariants</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="extendedaddressing.html">Extended Addressing</a></li>
+<li class="toctree-l4"><a class="reference internal" href="normalfixedaddressing.html">Normal Fixed Addressing</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rangeextendedaddressing.html">Range-Based Extended Addressing</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../doip/doc/index.html">doip - Diagnostics Over IP</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../io/doc/index.html">io - IO Library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lifecycle/doc/index.html">lifecycle - App Lifecycle Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../logger/doc/index.html">logger - Logger module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../loggerIntegration/doc/index.html">loggerIntegration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lwipSocket/doc/index.html">lwipSocket - LwIP v2 Socket Abstraction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../middleware/doc/index.html">middleware</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../platform/doc/index.html">platform - Platform Library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../routing/doc/index.html">routing - PDU routing across channels</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../runtime/doc/index.html">runtime</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../shed/doc/index.html">shed - Relational Data Structures</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../stdioConsoleInput/doc/index.html">stdioConsoleInput</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../storage/doc/index.html">storage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../timer/doc/index.html">timer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../transport/doc/index.html">transport - Transport Library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../transportRouterSimple/doc/index.html">transportRouterSimple</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../uds/doc/index.html">uds - Unified Diagnostic Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../util/doc/index.html">util</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../doc/dev/modules/common.html#bsp">BSP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../doc/dev/modules/common.html#safety">Safety</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/modules/posix.html">Posix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/modules/s32k1xx.html">S32K1xx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/modules/stm32.html">STM32</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/modules/executables.html">Executables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/modules/mocks.html">Mocks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tools/UdsTool/doc/index.html">UdsTool</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tools/puncover_tool/doc/index.html">Puncover</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../doc/dev/index.html">Eclipse OpenBSW Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../../doc/dev/index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../../../../doc/dev/modules/common.html">Common</a> &raquo;</li>
+        
+          <li><a href="../index.html">docan - Diagnostics over CAN</a> &raquo;</li>
+        
+        <li>Normal Addressing</li>
+    
+
+    
+
+      <li class="wy-breadcrumbs-aside">
+
+        <!-- DOCUMENT STATUS -->
+
+        
+
+        <!-- DATA CLASSIFICATION -->
+
+        
+
+      </li>
+
+    
+  </ul>
+
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="normal-addressing">
+<span id="docan-normal-addressing"></span><h1>Normal Addressing<a class="headerlink" href="#normal-addressing" title="Link to this heading"></a></h1>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<p>Normal Addressing is an ISO 15765-2 addressing format in which the CAN
+identifier alone represents the network address; no addressing information is
+stored in the payload.</p>
+<p>For the definition of the addressing format and its semantics, refer to
+<strong>ISO 15765-2</strong>. This page documents only what is specific to the OpenBSW
+implementation.</p>
+<p>Implementation:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">DoCanNormalAddressing</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DoCanNormalAddressingFilter</span></code></p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Examples use the project configuration (<code class="docutils literal notranslate"><span class="pre">NORMAL_ADDRESSING_ADDRESSES</span></code>): the
+diagnostic pair <code class="docutils literal notranslate"><span class="pre">0x2A</span></code> / <code class="docutils literal notranslate"><span class="pre">0xF0</span></code>, the legislative ISO 15765-4 pair
+<code class="docutils literal notranslate"><span class="pre">0x7E0</span></code> / <code class="docutils literal notranslate"><span class="pre">0x7E8</span></code>, and the legislative OBD functional request id
+<code class="docutils literal notranslate"><span class="pre">0x7DF</span></code>. ECU address <code class="docutils literal notranslate"><span class="pre">0x2A</span></code> (<code class="docutils literal notranslate"><span class="pre">LOGICAL_ADDRESS</span></code>).</p>
+</div>
+</section>
+<section id="address-entry-model">
+<h2>Address Entry Model<a class="headerlink" href="#address-entry-model" title="Link to this heading"></a></h2>
+<p>Each entry defines a bidirectional channel (request and response) and has
+<strong>six</strong> fields:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span><span class="w"> </span><span class="nc">AddressEntry</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">_canReceptionId</span><span class="p">;</span><span class="w">      </span><span class="c1">// CAN id this entry receives on</span>
+<span class="w">    </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">_canTransmissionId</span><span class="p">;</span><span class="w">   </span><span class="c1">// CAN id used for the response</span>
+<span class="w">    </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">_transportSourceId</span><span class="p">;</span><span class="w">   </span><span class="c1">// transport source (sender)</span>
+<span class="w">    </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">_transportTargetId</span><span class="p">;</span><span class="w">   </span><span class="c1">// transport target (this node)</span>
+<span class="w">    </span><span class="kt">uint8_t</span><span class="w">  </span><span class="n">_receptionCodecIdx</span><span class="p">;</span><span class="w">   </span><span class="c1">// index into the codec span (RX)</span>
+<span class="w">    </span><span class="kt">uint8_t</span><span class="w">  </span><span class="n">_transmissionCodecIdx</span><span class="p">;</span><span class="c1">// index into the codec span (TX)</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>There is <strong>no</strong> <code class="docutils literal notranslate"><span class="pre">_singleFrameOnly</span></code> field; multi-frame functional requests are
+rejected via an invalid transmission id (see <a class="reference internal" href="#na-functional"><span class="std std-ref">Functional Addressing</span></a>).</p>
+<p>Example (legislative physical pair): <code class="docutils literal notranslate"><span class="pre">RX</span> <span class="pre">0x7E0</span> <span class="pre">/</span> <span class="pre">TX</span> <span class="pre">0x7E8</span></code>, source
+<code class="docutils literal notranslate"><span class="pre">NORMAL_ADDRESSING_TESTER_ID</span></code>, target <code class="docutils literal notranslate"><span class="pre">0x2A</span></code>. One entry defines both the
+request (<code class="docutils literal notranslate"><span class="pre">0x7E0</span></code>: tester -&gt; <code class="docutils literal notranslate"><span class="pre">0x2A</span></code>) and response (<code class="docutils literal notranslate"><span class="pre">0x7E8</span></code>: <code class="docutils literal notranslate"><span class="pre">0x2A</span></code> -&gt;
+tester) paths.</p>
+</section>
+<section id="can-identifier-support">
+<h2>CAN Identifier Support<a class="headerlink" href="#can-identifier-support" title="Link to this heading"></a></h2>
+<p>Both 11-bit (base) and 29-bit (extended) reception ids are supported and may
+coexist in one table. <code class="docutils literal notranslate"><span class="pre">init()</span></code> separates them:</p>
+<ul class="simple">
+<li><p><strong>Base (11-bit)</strong> ids are registered with <code class="docutils literal notranslate"><span class="pre">BitFieldFilter::add()</span></code>.</p></li>
+<li><p><strong>Extended (29-bit)</strong> ids are collected into <code class="docutils literal notranslate"><span class="pre">_extendedEntries</span></code> and matched
+by lookup rather than the bit field.</p></li>
+</ul>
+<p>The project table is currently all 11-bit, but mixing 29-bit entries is
+supported.</p>
+</section>
+<section id="address-representation-and-format">
+<h2>Address Representation and Format<a class="headerlink" href="#address-representation-and-format" title="Link to this heading"></a></h2>
+<p>The data-link address is the CAN identifier itself: reception decoding returns
+<code class="docutils literal notranslate"><span class="pre">canId</span></code>; transmission encoding writes <code class="docutils literal notranslate"><span class="pre">canId</span> <span class="pre">=</span> <span class="pre">transmissionAddress</span></code>. No
+payload bytes are reserved for addressing (protocol data begins at byte 0).
+Reported format: <code class="docutils literal notranslate"><span class="pre">DoCanAddressFormat::Normal</span></code>. The frame codec is selected per
+direction via the entry’s <code class="docutils literal notranslate"><span class="pre">_receptionCodecIdx</span></code> / <code class="docutils literal notranslate"><span class="pre">_transmissionCodecIdx</span></code>.</p>
+</section>
+<section id="initialization">
+<h2>Initialization<a class="headerlink" href="#initialization" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">init()</span></code> accepts:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">addressEntries</span></code> - the address table (non-owning span).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">codecEntries</span></code> - span of frame codecs indexed by the entry codec indices.</p></li>
+</ul>
+<p>Start-up assertions:</p>
+<ul class="simple">
+<li><p>Address table is non-empty.</p></li>
+<li><p>Reception CAN ids are <strong>strictly increasing</strong> (unique) - required for the
+<code class="docutils literal notranslate"><span class="pre">etl::lower_bound</span></code> reception lookup.</p></li>
+<li><p>Extended (29-bit) reception ids are valid.</p></li>
+</ul>
+</section>
+<section id="functional-addressing">
+<span id="na-functional"></span><h2>Functional Addressing<a class="headerlink" href="#functional-addressing" title="Link to this heading"></a></h2>
+<p>A functional (broadcast) request is an ordinary entry whose <strong>transmission id is
+invalid</strong>. Project configuration:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>RX CAN ID = 0x7DF (OBD functional request)
+TX CAN ID = INVALID_ADDRESS
+Source    = NORMAL_ADDRESSING_TESTER_ID
+Target    = FUNCTIONAL_ALL_ISO14229
+</pre></div>
+</div>
+<p>Per ISO 15765-2 a functional request is single-frame only. Because this entry
+reports <code class="docutils literal notranslate"><span class="pre">INVALID_ADDRESS</span></code> as the transmission id, <code class="docutils literal notranslate"><span class="pre">DoCanReceiver</span></code> rejects a
+multi-frame functional request. Each ECU replies physically via its own entry
+(<code class="docutils literal notranslate"><span class="pre">0x7E8</span></code> for <code class="docutils literal notranslate"><span class="pre">0x2A</span></code>).</p>
+</section>
+<section id="reception-transmission-mapping">
+<h2>Reception / Transmission Mapping<a class="headerlink" href="#reception-transmission-mapping" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">getReceptionParameters()</span></code> looks up the RX CAN id via
+<code class="docutils literal notranslate"><span class="pre">findEntryTypeByReceptionAddress</span></code> (<code class="docutils literal notranslate"><span class="pre">etl::lower_bound</span></code> over base and
+extended entries), then returns the transport pair
+<code class="docutils literal notranslate"><span class="pre">(_transportSourceId,</span> <span class="pre">_transportTargetId)</span></code>, transmission id
+<code class="docutils literal notranslate"><span class="pre">_canTransmissionId</span></code> (possibly <code class="docutils literal notranslate"><span class="pre">INVALID_ADDRESS</span></code>), and reception codec.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">getTransmissionParameters()</span></code> <strong>reverses</strong> the requested transport pair
+(<code class="docutils literal notranslate"><span class="pre">sourceId</span> <span class="pre">=</span> <span class="pre">pair.target</span></code>, <code class="docutils literal notranslate"><span class="pre">targetId</span> <span class="pre">=</span> <span class="pre">pair.source</span></code>), linearly finds the
+matching entry, and builds the data-link pair
+<code class="docutils literal notranslate"><span class="pre">(_canReceptionId,</span> <span class="pre">_canTransmissionId)</span></code> with the transmission codec. Returns
+<code class="docutils literal notranslate"><span class="pre">nullptr</span></code> if no pair matches.</p></li>
+</ul>
+<p>Example: requested pair source <code class="docutils literal notranslate"><span class="pre">0x2A</span></code> / target <code class="docutils literal notranslate"><span class="pre">NORMAL_ADDRESSING_TESTER_ID</span></code>
+reverses to source <code class="docutils literal notranslate"><span class="pre">NORMAL_ADDRESSING_TESTER_ID</span></code> / target <code class="docutils literal notranslate"><span class="pre">0x2A</span></code>, matching
+<code class="docutils literal notranslate"><span class="pre">RX</span> <span class="pre">0x7E0</span> <span class="pre">/</span> <span class="pre">TX</span> <span class="pre">0x7E8</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">TX</span> <span class="pre">CAN</span> <span class="pre">ID</span> <span class="pre">=</span> <span class="pre">0x7E8</span></code>.</p>
+</section>
+<section id="filter-and-layer-integration">
+<h2>Filter and Layer Integration<a class="headerlink" href="#filter-and-layer-integration" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">DoCanNormalAddressingFilter</span></code> implements <code class="docutils literal notranslate"><span class="pre">IDoCanAddressConverter</span></code> and
+<code class="docutils literal notranslate"><span class="pre">can::BitFieldFilter</span></code>. <code class="docutils literal notranslate"><span class="pre">match()</span></code> dispatches by id kind: base (11-bit) ids via
+<code class="docutils literal notranslate"><span class="pre">BitFieldFilter::match()</span></code>, extended (29-bit) ids via
+<code class="docutils literal notranslate"><span class="pre">findEntryTypeByReceptionAddress</span></code> over <code class="docutils literal notranslate"><span class="pre">_extendedEntries</span></code>.</p>
+<p>There is no composite converter. The filter is the <code class="docutils literal notranslate"><span class="pre">IDoCanAddressConverter</span></code> of
+a dedicated Normal transport layer, bound as the <strong>first</strong> of the four layers of
+<code class="docutils literal notranslate"><span class="pre">DoCanMultiAddressingTransportLayer</span></code>:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">_multiAddressingTransportLayer</span><span class="p">.</span><span class="n">bind</span><span class="p">(</span>
+<span class="w">    </span><span class="n">normalAddressingLayer</span><span class="p">,</span><span class="w">        </span><span class="c1">// backed by _normalAddressingFilter</span>
+<span class="w">    </span><span class="n">extendedAddressingLayer</span><span class="p">,</span>
+<span class="w">    </span><span class="n">rangeExtendedAddressingLayer</span><span class="p">,</span>
+<span class="w">    </span><span class="n">normalFixedAddressingLayer</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>On transmission, routing is by tester id: both
+<code class="docutils literal notranslate"><span class="pre">NORMAL_ADDRESSING_TESTER_ID</span></code> and <code class="docutils literal notranslate"><span class="pre">NORMAL_ADDRESSING_DIAG_TESTER_ID</span></code> map to
+the normal layer. <code class="docutils literal notranslate"><span class="pre">formatDataLinkAddress()</span></code> prints the raw CAN id as
+<code class="docutils literal notranslate"><span class="pre">0x%08x</span></code> (e.g. <code class="docutils literal notranslate"><span class="pre">0x000007e0</span></code>).</p>
+</section>
+<section id="implementation-invariants">
+<h2>Implementation Invariants<a class="headerlink" href="#implementation-invariants" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Address table is non-empty; reception CAN ids strictly increasing (unique).</p></li>
+<li><p>Extended (29-bit) reception ids are valid.</p></li>
+<li><p>Data-link address equals the CAN identifier; no payload bytes reserved.</p></li>
+<li><p>Reception and transmission mappings remain reversible; transport pairs unique.</p></li>
+<li><p>A functional entry uses an invalid transmission id (no per-entry single-frame
+flag; entries have exactly six fields).</p></li>
+<li><p>Base ids admitted via <code class="docutils literal notranslate"><span class="pre">BitFieldFilter</span></code>; extended ids via the extended-entry
+lookup.</p></li>
+<li><p>Address format stays <code class="docutils literal notranslate"><span class="pre">DoCanAddressFormat::Normal</span></code>.</p></li>
+<li><p>The filter is bound as the Normal layer of
+<code class="docutils literal notranslate"><span class="pre">DoCanMultiAddressingTransportLayer</span></code>.</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026 Eclipse OpenBSW Contributors.</p>
+  </div>
+
+  <div role="footer_string">
+    <p>Documentation from 2026-09-06 08:59:00, official build.</p>
+
+    
+      <a href="../../../../../_sources/libs/bsw/docan/doc/user/normaladdressing.rst.txt" rel="nofollow"> View page source</a>
+    
+
+  </div>
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(false);
+      });
+  </script> 
+
+</body>
+</html>

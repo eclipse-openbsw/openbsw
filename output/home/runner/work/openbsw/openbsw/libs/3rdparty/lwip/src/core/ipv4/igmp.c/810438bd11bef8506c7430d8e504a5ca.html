@@ -1,0 +1,569 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../../../../../../../../../../../static/css/style.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <title>Symbol - puncover</title>
+    
+</head>
+<body>
+    <div class="container" id="content">
+        <div class="page-header">
+            <nav class="navbar navbar-default" role="navigation">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="../../../../../../../../../../../../index.html">
+                    Puncover
+                  </a>
+                </div>
+              </div>
+            </nav>
+          
+        </div>
+        <div id="inner_content">
+        
+    
+    <ol class="breadcrumb folders">
+        
+        <li><a href="../../../../../../../../../../../../home.html">home</a></li>
+        
+        <li><a href="../../../../../../../../../../../runner.html">runner</a></li>
+        
+        <li><a href="../../../../../../../../../../work.html">work</a></li>
+        
+        <li><a href="../../../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../../libs.html">libs</a></li>
+        
+        <li><a href="../../../../../../3rdparty.html">3rdparty</a></li>
+        
+        <li><a href="../../../../../lwip.html">lwip</a></li>
+        
+        <li><a href="../../../../src.html">src</a></li>
+        
+        <li><a href="../../../core.html">core</a></li>
+        
+        <li ><a href="../../ipv4.html">ipv4</a>
+            </li>
+
+        
+        <li class="active"><a href="../igmp.c.html">igmp.c</a>:485
+            </li>
+        
+    </ol>
+
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <th>Function</th>
+                <td colspan="5">
+                    <span class="icon-function">igmp_joingroup_netif</span>
+                </td>
+            </tr>
+
+            <tr>
+                <th rowspan="2"></th>
+                <th>Address</th>
+                <th>Remarks</th>
+                <th>Stack</th>
+                <th>Code</th>
+                <th>Static</th>
+            </tr>
+            <tr>
+                <td>0x00036a68</td>
+                <td>
+    
+    
+</td>
+                <td>16 (static)</td>
+                <td>188</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th>Callers (1)</th>
+                <td colspan="5">
+                
+                    <a href="./988bdd38b16934d635c2a614242ca070.html">igmp_joingroup (132)</a>
+                    
+                
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Callees (4,
+                            <span title="sum of used bytes by all callees">
+                            Σ=480
+                            </span>
+                        )
+                    
+                </th>
+                <td colspan="5">
+                
+                    <a href="./f78124241dc6ba106fd8ee6f976c7b68.html">igmp_lookup_group (88)</a>
+                    
+                        ,
+                    
+                
+                    <a href="./2e7510c78e5de982c5357675b4e6e873.html">igmp_send (204)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../../../../../../../executables/referenceApp/lwipConfiguration/src/rng.cpp/0b84eb5a3a0972a4e12761990cb8693a.html">lwip_rand (88)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../../../../../../../executables/referenceApp/application/src/logger/logger.cpp/98866fb3d81ee8db78cbfd1e2dfd931d.html">log_lwipInfo (100)</a>
+                    
+                
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    
+    <pre><a href="./39e2b7299eae161a06163446c017081f.html">igmp_input (336)</a></pre>
+    
+
+    <pre>
+
+    igmp_joingroup_netif():
+
+       36a68:	680b      	ldr	r3, [r1, #0]
+
+       36a6a:	f003 02f0 	and.w	r2, r3, #240	@ 0xf0
+
+       36a6e:	2ae0      	cmp	r2, #224	@ 0xe0
+
+       36a70:	b570      	push	{r4, r5, r6, lr}
+
+       36a72:	d140      	bne.n	36af6 <<a href="./810438bd11bef8506c7430d8e504a5ca.html">igmp_joingroup_netif</a>+0x8e>
+
+       36a74:	4a25      	ldr	r2, [pc, #148]	@ (36b0c <<a href="./810438bd11bef8506c7430d8e504a5ca.html">igmp_joingroup_netif</a>+0xa4>)
+
+       36a76:	6812      	ldr	r2, [r2, #0]
+
+       36a78:	4293      	cmp	r3, r2
+
+       36a7a:	d043      	beq.n	36b04 <<a href="./810438bd11bef8506c7430d8e504a5ca.html">igmp_joingroup_netif</a>+0x9c>
+
+       36a7c:	f890 3045 	ldrb.w	r3, [r0, #69]	@ 0x45
+
+       36a80:	069b      	lsls	r3, r3, #26
+
+       36a82:	4605      	mov	r5, r0
+
+       36a84:	d531      	bpl.n	36aea <<a href="./810438bd11bef8506c7430d8e504a5ca.html">igmp_joingroup_netif</a>+0x82>
+
+       36a86:	460e      	mov	r6, r1
+
+       36a88:	f7ff fe36 	bl	366f8 <<a href="./f78124241dc6ba106fd8ee6f976c7b68.html">igmp_lookup_group</a>>
+
+       36a8c:	4604      	mov	r4, r0
+
+       36a8e:	2800      	cmp	r0, #0
+
+       36a90:	d035      	beq.n	36afe <<a href="./810438bd11bef8506c7430d8e504a5ca.html">igmp_joingroup_netif</a>+0x96>
+
+       36a92:	7a43      	ldrb	r3, [r0, #9]
+
+       36a94:	bb23      	cbnz	r3, 36ae0 <<a href="./810438bd11bef8506c7430d8e504a5ca.html">igmp_joingroup_netif</a>+0x78>
+
+       36a96:	7b03      	ldrb	r3, [r0, #12]
+
+       36a98:	b92b      	cbnz	r3, 36aa6 <<a href="./810438bd11bef8506c7430d8e504a5ca.html">igmp_joingroup_netif</a>+0x3e>
+
+       36a9a:	6ceb      	ldr	r3, [r5, #76]	@ 0x4c
+
+       36a9c:	b11b      	cbz	r3, 36aa6 <<a href="./810438bd11bef8506c7430d8e504a5ca.html">igmp_joingroup_netif</a>+0x3e>
+
+       36a9e:	2201      	movs	r2, #1
+
+       36aa0:	4631      	mov	r1, r6
+
+       36aa2:	4628      	mov	r0, r5
+
+       36aa4:	4798      	blx	r3
+
+       36aa6:	491a      	ldr	r1, [pc, #104]	@ (36b10 <<a href="./810438bd11bef8506c7430d8e504a5ca.html">igmp_joingroup_netif</a>+0xa8>)
+
+       36aa8:	f8d1 30ec 	ldr.w	r3, [r1, #236]	@ 0xec
+
+       36aac:	3301      	adds	r3, #1
+
+       36aae:	f8c1 30ec 	str.w	r3, [r1, #236]	@ 0xec
+
+       36ab2:	2216      	movs	r2, #22
+
+       36ab4:	4628      	mov	r0, r5
+
+       36ab6:	4621      	mov	r1, r4
+
+       36ab8:	f7ff fe6a 	bl	36790 <<a href="./2e7510c78e5de982c5357675b4e6e873.html">igmp_send</a>>
+
+    igmp_start_timer():
+
+       36abc:	f00d fc00 	bl	442c0 <<a href="../../../../../../../executables/referenceApp/lwipConfiguration/src/rng.cpp/0b84eb5a3a0972a4e12761990cb8693a.html">lwip_rand</a>>
+
+       36ac0:	4b14      	ldr	r3, [pc, #80]	@ (36b14 <<a href="./810438bd11bef8506c7430d8e504a5ca.html">igmp_joingroup_netif</a>+0xac>)
+
+       36ac2:	fb83 3200 	smull	r3, r2, r3, r0
+
+       36ac6:	17c3      	asrs	r3, r0, #31
+
+       36ac8:	ebc3 0362 	rsb	r3, r3, r2, asr #1
+
+       36acc:	eb03 0383 	add.w	r3, r3, r3, lsl #2
+
+       36ad0:	1ac0      	subs	r0, r0, r3
+
+       36ad2:	b280      	uxth	r0, r0
+
+       36ad4:	2801      	cmp	r0, #1
+
+       36ad6:	bf38      	it	cc
+
+       36ad8:	2001      	movcc	r0, #1
+
+    igmp_joingroup_netif():
+
+       36ada:	2301      	movs	r3, #1
+
+       36adc:	8160      	strh	r0, [r4, #10]
+
+       36ade:	7263      	strb	r3, [r4, #9]
+
+       36ae0:	7b23      	ldrb	r3, [r4, #12]
+
+       36ae2:	3301      	adds	r3, #1
+
+       36ae4:	7323      	strb	r3, [r4, #12]
+
+       36ae6:	2000      	movs	r0, #0
+
+       36ae8:	bd70      	pop	{r4, r5, r6, pc}
+
+       36aea:	480b      	ldr	r0, [pc, #44]	@ (36b18 <<a href="./810438bd11bef8506c7430d8e504a5ca.html">igmp_joingroup_netif</a>+0xb0>)
+
+       36aec:	f7d2 fe1a 	bl	9724 <<a href="../../../../../../../executables/referenceApp/application/src/logger/logger.cpp/98866fb3d81ee8db78cbfd1e2dfd931d.html">log_lwipInfo</a>>
+
+       36af0:	f06f 0005 	mvn.w	r0, #5
+
+       36af4:	bd70      	pop	{r4, r5, r6, pc}
+
+       36af6:	4809      	ldr	r0, [pc, #36]	@ (36b1c <<a href="./810438bd11bef8506c7430d8e504a5ca.html">igmp_joingroup_netif</a>+0xb4>)
+
+       36af8:	f7d2 fe14 	bl	9724 <<a href="../../../../../../../executables/referenceApp/application/src/logger/logger.cpp/98866fb3d81ee8db78cbfd1e2dfd931d.html">log_lwipInfo</a>>
+
+       36afc:	e7f8      	b.n	36af0 <<a href="./810438bd11bef8506c7430d8e504a5ca.html">igmp_joingroup_netif</a>+0x88>
+
+       36afe:	f04f 30ff 	mov.w	r0, #4294967295	@ 0xffffffff
+
+       36b02:	bd70      	pop	{r4, r5, r6, pc}
+
+       36b04:	4806      	ldr	r0, [pc, #24]	@ (36b20 <<a href="./810438bd11bef8506c7430d8e504a5ca.html">igmp_joingroup_netif</a>+0xb8>)
+
+       36b06:	f7d2 fe0d 	bl	9724 <<a href="../../../../../../../executables/referenceApp/application/src/logger/logger.cpp/98866fb3d81ee8db78cbfd1e2dfd931d.html">log_lwipInfo</a>>
+
+       36b0a:	e7f1      	b.n	36af0 <<a href="./810438bd11bef8506c7430d8e504a5ca.html">igmp_joingroup_netif</a>+0x88>
+
+       36b0c:	1ffe5558 	.word	0x1ffe5558
+
+       36b10:	1ffe473c 	.word	0x1ffe473c
+
+       36b14:	66666667 	.word	0x66666667
+
+       36b18:	0004ddc8 	.word	0x0004ddc8
+
+       36b1c:	0004dd50 	.word	0x0004dd50
+
+       36b20:	0004dd8c 	.word	0x0004dd8c
+
+    </pre>
+
+    
+    <pre><a href="./988bdd38b16934d635c2a614242ca070.html">igmp_joingroup (132)</a></pre>
+    
+
+    
+        <h1>Stack Worst-Case Scenarios</h1>
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 240</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 808</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    240
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                48 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    808
+                    
+                    
+                </td>
+                <td class="col_size">68</td>
+                <td><a href="../../../../../../bsw/util/src/util/logger/Logger.cpp/d658d7c78dcca1ca01e61ef198b3eeaa.html" class="icon-function">util::logger::Logger::doLog(unsigned char, util::logger::Level, char const*, std::__va_list)</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                    
+                    192
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                24 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    740
+                    
+                    
+                </td>
+                <td class="col_size">100</td>
+                <td><a href="../../../../../../../executables/referenceApp/application/src/logger/logger.cpp/98866fb3d81ee8db78cbfd1e2dfd931d.html" class="icon-function">log_lwipInfo</a></td>
+            </tr>
+        
+            <tr>
+                <th>3</th>
+                <td class="col_size">
+                    
+                    168
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                16 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    640
+                    
+                    
+                </td>
+                <td class="col_size">60</td>
+                <td><a href="../../memp.c/39d50c52143357af896630c36b8c515f.html" class="icon-function">memp_free</a></td>
+            </tr>
+        
+            <tr>
+                <th>4</th>
+                <td class="col_size">
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    580
+                    
+                    
+                </td>
+                <td class="col_size">112</td>
+                <td><a href="../../pbuf.c/9b6fd2596874539050b4147be9634d35.html" class="icon-function">pbuf_free</a></td>
+            </tr>
+        
+            <tr>
+                <th>5</th>
+                <td class="col_size">
+                    
+                    152
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                32 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    468
+                    
+                    
+                </td>
+                <td class="col_size">264</td>
+                <td><a href="../../pbuf.c/00f9d6c635a80626d607c18477d3504a.html" class="icon-function">pbuf_alloc</a></td>
+            </tr>
+        
+            <tr>
+                <th>6</th>
+                <td class="col_size">
+                    
+                    120
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                56 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">204</td>
+                <td><a href="./2e7510c78e5de982c5357675b4e6e873.html" class="icon-function">igmp_send</a></td>
+            </tr>
+        
+        </tbody>
+        
+        <tfoot>
+            <tr>
+                <th></th>
+                <th class="col_size">64
+                </th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </tfoot>
+        
+    </table>
+        
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 64</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 524</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    64
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                16 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    524
+                    
+                    
+                </td>
+                <td class="col_size">188</td>
+                <td><a href="./810438bd11bef8506c7430d8e504a5ca.html" class="icon-function">igmp_joingroup_netif</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                    
+                    48
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                16 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    336
+                    
+                    
+                </td>
+                <td class="col_size">132</td>
+                <td><a href="./988bdd38b16934d635c2a614242ca070.html" class="icon-function">igmp_joingroup</a></td>
+            </tr>
+        
+            <tr>
+                <th>3</th>
+                <td class="col_size">
+                </td>
+                <td class="col_size">
+            
+                32 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">204</td>
+                <td><a href="../../../../../../bsw/lwipSocket/src/lwipSocket/udp/LwipDatagramSocket.cpp/611adaed9fd18da11aff8c64ccee81c4.html" class="icon-function">udp::LwipDatagramSocket::join(ip::IPAddress const&amp;)</a></td>
+            </tr>
+        
+        </tbody>
+        
+    </table>
+        
+    
+
+
+        </div>
+    <div id="page-footer">
+        <hr>
+        
+            brought to you with 💖
+            by <a href="https://twitter.com/hbehrens">Heiko Behrens</a>
+            <span class="secondary">– MIT license, copyright © 2014-2026</span>
+        
+    </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,1233 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../static/css/style.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <title>Symbol - puncover</title>
+    
+</head>
+<body>
+    <div class="container" id="content">
+        <div class="page-header">
+            <nav class="navbar navbar-default" role="navigation">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="../../index.html">
+                    Puncover
+                  </a>
+                </div>
+              </div>
+            </nav>
+          
+        </div>
+        <div id="inner_content">
+        
+    
+    <ol class="breadcrumb folders">
+        
+        <li class="active"><a href="../../unknown.html">&lt;unknown&gt;</a>
+            </li>
+
+        
+        <li class="active">&lt;unknown&gt;
+            </li>
+        
+    </ol>
+
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <th>Function</th>
+                <td colspan="5">
+                    <span class="icon-function">__ieee754_powf</span>
+                </td>
+            </tr>
+
+            <tr>
+                <th rowspan="2"></th>
+                <th>Address</th>
+                <th>Remarks</th>
+                <th>Stack</th>
+                <th>Code</th>
+                <th>Static</th>
+            </tr>
+            <tr>
+                <td>0x00045e28</td>
+                <td>
+    
+    
+</td>
+                <td></td>
+                <td>1,720</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th>Callers (1)</th>
+                <td colspan="5">
+                
+                    <a href="./612c7c664f86a40eabd0f8a8c53d50d1.html">powf (188)</a>
+                    
+                
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Callees (5,
+                            <span title="sum of used bytes by all callees">
+                            Σ=268
+                            </span>
+                        )
+                    
+                </th>
+                <td colspan="5">
+                
+                    <a href="./353063b3a2d8ca12be830b71835168e0.html">__ieee754_sqrtf (8)</a>
+                    
+                        ,
+                    
+                
+                    <a href="./32f086d3057057946a7135b99a17899c.html">fabsf (16)</a>
+                    
+                        ,
+                    
+                
+                    <a href="./d7cce47af050567172c39930c426d024.html">__math_uflowf (12)</a>
+                    
+                        ,
+                    
+                
+                    <a href="./b30b99c6a7070607c964c3e4344e5f90.html">scalbnf (220)</a>
+                    
+                        ,
+                    
+                
+                    <a href="./b898e5149807647973d4e658441f64b9.html">__math_oflowf (12)</a>
+                    
+                
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    
+    <pre><a href="./d267a9307f362db65277fcacb4af8730.html">__ieee754_log10f (196)</a></pre>
+    
+
+    <pre>
+
+    __ieee754_powf():
+
+       45e28:	e92d 43f0 	stmdb	sp!, {r4, r5, r6, r7, r8, r9, lr}
+
+       45e2c:	ed2d 8b02 	vpush	{d8}
+
+       45e30:	b083      	sub	sp, #12
+
+       45e32:	edcd 0a01 	vstr	s1, [sp, #4]
+
+       45e36:	ed8d 0a00 	vstr	s0, [sp]
+
+       45e3a:	e9dd 4500 	ldrd	r4, r5, [sp]
+
+       45e3e:	f035 4600 	bics.w	r6, r5, #2147483648	@ 0x80000000
+
+       45e42:	d110      	bne.n	45e66 <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x3e>
+
+       45e44:	f484 0480 	eor.w	r4, r4, #4194304	@ 0x400000
+
+       45e48:	0064      	lsls	r4, r4, #1
+
+       45e4a:	f514 0f00 	cmn.w	r4, #8388608	@ 0x800000
+
+       45e4e:	d918      	bls.n	45e82 <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x5a>
+
+       45e50:	eddd 7a00 	vldr	s15, [sp]
+
+       45e54:	ed9d 7a01 	vldr	s14, [sp, #4]
+
+       45e58:	ee37 0a87 	vadd.f32	s0, s15, s14
+
+       45e5c:	b003      	add	sp, #12
+
+       45e5e:	ecbd 8b02 	vpop	{d8}
+
+       45e62:	e8bd 83f0 	ldmia.w	sp!, {r4, r5, r6, r7, r8, r9, pc}
+
+       45e66:	f024 4700 	bic.w	r7, r4, #2147483648	@ 0x80000000
+
+       45e6a:	f1b7 4fff 	cmp.w	r7, #2139095040	@ 0x7f800000
+
+       45e6e:	d90f      	bls.n	45e90 <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x68>
+
+       45e70:	f1b4 5f7e 	cmp.w	r4, #1065353216	@ 0x3f800000
+
+       45e74:	d1ec      	bne.n	45e50 <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x28>
+
+       45e76:	f485 0580 	eor.w	r5, r5, #4194304	@ 0x400000
+
+       45e7a:	006d      	lsls	r5, r5, #1
+
+       45e7c:	f515 0f00 	cmn.w	r5, #8388608	@ 0x800000
+
+       45e80:	d8e6      	bhi.n	45e50 <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x28>
+
+       45e82:	eeb7 0a00 	vmov.f32	s0, #112	@ 0x3f800000  1.0
+
+       45e86:	b003      	add	sp, #12
+
+       45e88:	ecbd 8b02 	vpop	{d8}
+
+       45e8c:	e8bd 83f0 	ldmia.w	sp!, {r4, r5, r6, r7, r8, r9, pc}
+
+       45e90:	f1b6 4fff 	cmp.w	r6, #2139095040	@ 0x7f800000
+
+       45e94:	d8ec      	bhi.n	45e70 <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x48>
+
+       45e96:	2c00      	cmp	r4, #0
+
+       45e98:	46b8      	mov	r8, r7
+
+       45e9a:	db16      	blt.n	45eca <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0xa2>
+
+       45e9c:	f1b6 4fff 	cmp.w	r6, #2139095040	@ 0x7f800000
+
+       45ea0:	f000 80f6 	beq.w	46090 <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x268>
+
+       45ea4:	f1b6 5f7e 	cmp.w	r6, #1065353216	@ 0x3f800000
+
+       45ea8:	f000 811d 	beq.w	460e6 <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x2be>
+
+       45eac:	f1b5 4f80 	cmp.w	r5, #1073741824	@ 0x40000000
+
+       45eb0:	f000 814c 	beq.w	4614c <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x324>
+
+       45eb4:	f1b5 5f7c 	cmp.w	r5, #1056964608	@ 0x3f000000
+
+       45eb8:	f040 8134 	bne.w	46124 <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x2fc>
+
+       45ebc:	b003      	add	sp, #12
+
+       45ebe:	ecbd 8b02 	vpop	{d8}
+
+       45ec2:	e8bd 43f0 	ldmia.w	sp!, {r4, r5, r6, r7, r8, r9, lr}
+
+       45ec6:	f000 bd6b 	b.w	469a0 <<a href="./353063b3a2d8ca12be830b71835168e0.html">__ieee754_sqrtf</a>>
+
+       45eca:	f1b6 4f97 	cmp.w	r6, #1266679808	@ 0x4b800000
+
+       45ece:	f080 80e9 	bcs.w	460a4 <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x27c>
+
+       45ed2:	f1b6 5f7e 	cmp.w	r6, #1065353216	@ 0x3f800000
+
+       45ed6:	f080 8115 	bcs.w	46104 <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x2dc>
+
+       45eda:	f1b5 4f80 	cmp.w	r5, #1073741824	@ 0x40000000
+
+       45ede:	f000 8135 	beq.w	4614c <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x324>
+
+       45ee2:	f1b5 5f7c 	cmp.w	r5, #1056964608	@ 0x3f000000
+
+       45ee6:	f000 8234 	beq.w	46352 <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x52a>
+
+       45eea:	f000 faf9 	bl	464e0 <<a href="./32f086d3057057946a7135b99a17899c.html">fabsf</a>>
+
+       45eee:	f1b7 4fff 	cmp.w	r7, #2139095040	@ 0x7f800000
+
+       45ef2:	f04f 0900 	mov.w	r9, #0
+
+       45ef6:	f000 80e0 	beq.w	460ba <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x292>
+
+       45efa:	2f00      	cmp	r7, #0
+
+       45efc:	f000 811c 	beq.w	46138 <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x310>
+
+       45f00:	f1b7 5f7e 	cmp.w	r7, #1065353216	@ 0x3f800000
+
+       45f04:	f000 8118 	beq.w	46138 <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x310>
+
+       45f08:	0fe2      	lsrs	r2, r4, #31
+
+       45f0a:	3a01      	subs	r2, #1
+
+       45f0c:	ea59 0302 	orrs.w	r3, r9, r2
+
+       45f10:	f000 8121 	beq.w	46156 <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x32e>
+
+       45f14:	f1b6 4f9a 	cmp.w	r6, #1291845632	@ 0x4d000000
+
+       45f18:	f240 8144 	bls.w	461a4 <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x37c>
+
+       45f1c:	4b91      	ldr	r3, [pc, #580]	@ (46164 <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x33c>)
+
+       45f1e:	429f      	cmp	r7, r3
+
+       45f20:	f240 8258 	bls.w	463d4 <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x5ac>
+
+       45f24:	4b90      	ldr	r3, [pc, #576]	@ (46168 <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x340>)
+
+       45f26:	429f      	cmp	r7, r3
+
+       45f28:	f200 8261 	bhi.w	463ee <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x5c6>
+
+       45f2c:	eef7 7a00 	vmov.f32	s15, #112	@ 0x3f800000  1.0
+
+       45f30:	ee30 0a67 	vsub.f32	s0, s0, s15
+
+       45f34:	ed9f 6a8d 	vldr	s12, [pc, #564]	@ 4616c <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x344>
+
+       45f38:	ed9f 7a8d 	vldr	s14, [pc, #564]	@ 46170 <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x348>
+
+       45f3c:	eddf 5a8d 	vldr	s11, [pc, #564]	@ 46174 <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x34c>
+
+       45f40:	eef5 7a00 	vmov.f32	s15, #80	@ 0x3e800000  0.250
+
+       45f44:	eea0 6a67 	vfms.f32	s12, s0, s15
+
+       45f48:	eef6 6a00 	vmov.f32	s13, #96	@ 0x3f000000  0.5
+
+       45f4c:	eee6 6a40 	vfms.f32	s13, s12, s0
+
+       45f50:	ee60 7a00 	vmul.f32	s15, s0, s0
+
+       45f54:	ed9f 6a88 	vldr	s12, [pc, #544]	@ 46178 <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x350>
+
+       45f58:	ee67 7aa6 	vmul.f32	s15, s15, s13
+
+       45f5c:	ee27 7a67 	vnmul.f32	s14, s14, s15
+
+       45f60:	eea0 7a25 	vfma.f32	s14, s0, s11
+
+       45f64:	eef0 6a47 	vmov.f32	s13, s14
+
+       45f68:	eee0 6a06 	vfma.f32	s13, s0, s12
+
+       45f6c:	ee16 3a90 	vmov	r3, s13
+
+       45f70:	f36f 030b 	bfc	r3, #0, #12
+
+       45f74:	ee06 3a90 	vmov	s13, r3
+
+       45f78:	eef0 7a66 	vmov.f32	s15, s13
+
+       45f7c:	eee0 7a46 	vfms.f32	s15, s0, s12
+
+       45f80:	ee37 7a67 	vsub.f32	s14, s14, s15
+
+       45f84:	f36f 050b 	bfc	r5, #0, #12
+
+       45f88:	ee07 5a90 	vmov	s15, r5
+
+       45f8c:	ed9d 6a01 	vldr	s12, [sp, #4]
+
+       45f90:	eddd 5a01 	vldr	s11, [sp, #4]
+
+       45f94:	ee36 6a67 	vsub.f32	s12, s12, s15
+
+       45f98:	ee27 7a25 	vmul.f32	s14, s14, s11
+
+       45f9c:	ee66 7aa7 	vmul.f32	s15, s13, s15
+
+       45fa0:	eea6 7a26 	vfma.f32	s14, s12, s13
+
+       45fa4:	f109 39ff 	add.w	r9, r9, #4294967295	@ 0xffffffff
+
+       45fa8:	ea59 0902 	orrs.w	r9, r9, r2
+
+       45fac:	eebf 8a00 	vmov.f32	s16, #240	@ 0xbf800000 -1.0
+
+       45fb0:	ee77 6a27 	vadd.f32	s13, s14, s15
+
+       45fb4:	eeb7 6a00 	vmov.f32	s12, #112	@ 0x3f800000  1.0
+
+       45fb8:	ee16 3a90 	vmov	r3, s13
+
+       45fbc:	bf18      	it	ne
+
+       45fbe:	eeb0 8a46 	vmovne.f32	s16, s12
+
+       45fc2:	2b00      	cmp	r3, #0
+
+       45fc4:	f023 4200 	bic.w	r2, r3, #2147483648	@ 0x80000000
+
+       45fc8:	f340 81d3 	ble.w	46372 <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x54a>
+
+       45fcc:	f1b2 4f86 	cmp.w	r2, #1124073472	@ 0x43000000
+
+       45fd0:	f200 8252 	bhi.w	46478 <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x650>
+
+       45fd4:	f000 8236 	beq.w	46444 <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x61c>
+
+       45fd8:	f1b2 5f7c 	cmp.w	r2, #1056964608	@ 0x3f000000
+
+       45fdc:	f200 821a 	bhi.w	46414 <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x5ec>
+
+       45fe0:	2200      	movs	r2, #0
+
+       45fe2:	4610      	mov	r0, r2
+
+       45fe4:	f36f 030e 	bfc	r3, #0, #15
+
+       45fe8:	ee06 3a10 	vmov	s12, r3
+
+       45fec:	eddf 6a63 	vldr	s13, [pc, #396]	@ 4617c <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x354>
+
+       45ff0:	eddf 3a63 	vldr	s7, [pc, #396]	@ 46180 <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x358>
+
+       45ff4:	ed9f 4a63 	vldr	s8, [pc, #396]	@ 46184 <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x35c>
+
+       45ff8:	ed9f 2a63 	vldr	s4, [pc, #396]	@ 46188 <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x360>
+
+       45ffc:	eddf 4a63 	vldr	s9, [pc, #396]	@ 4618c <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x364>
+
+       46000:	ed9f 5a63 	vldr	s10, [pc, #396]	@ 46190 <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x368>
+
+       46004:	eddf 5a63 	vldr	s11, [pc, #396]	@ 46194 <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x36c>
+
+       46008:	ee76 7a67 	vsub.f32	s15, s12, s15
+
+       4600c:	eeb0 3a00 	vmov.f32	s6, #0	@ 0x40000000  2.0
+
+       46010:	ee37 7a67 	vsub.f32	s14, s14, s15
+
+       46014:	ee66 7a26 	vmul.f32	s15, s12, s13
+
+       46018:	eddf 6a5f 	vldr	s13, [pc, #380]	@ 46198 <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x370>
+
+       4601c:	eee7 7a26 	vfma.f32	s15, s14, s13
+
+       46020:	eeb7 0a00 	vmov.f32	s0, #112	@ 0x3f800000  1.0
+
+       46024:	eeb0 7a67 	vmov.f32	s14, s15
+
+       46028:	eea6 7a23 	vfma.f32	s14, s12, s7
+
+       4602c:	ee67 6a07 	vmul.f32	s13, s14, s14
+
+       46030:	eef0 2a47 	vmov.f32	s5, s14
+
+       46034:	eee6 2a63 	vfms.f32	s5, s12, s7
+
+       46038:	eeb0 6a44 	vmov.f32	s12, s8
+
+       4603c:	eea6 6a82 	vfma.f32	s12, s13, s4
+
+       46040:	ee77 7ae2 	vsub.f32	s15, s15, s5
+
+       46044:	eee6 4a26 	vfma.f32	s9, s12, s13
+
+       46048:	eeb0 6a45 	vmov.f32	s12, s10
+
+       4604c:	eea4 6aa6 	vfma.f32	s12, s9, s13
+
+       46050:	eee7 7a27 	vfma.f32	s15, s14, s15
+
+       46054:	eee6 5a26 	vfma.f32	s11, s12, s13
+
+       46058:	eeb0 6a47 	vmov.f32	s12, s14
+
+       4605c:	eea5 6ae6 	vfms.f32	s12, s11, s13
+
+       46060:	ee67 5a06 	vmul.f32	s11, s14, s12
+
+       46064:	ee36 6a43 	vsub.f32	s12, s12, s6
+
+       46068:	eec5 6a86 	vdiv.f32	s13, s11, s12
+
+       4606c:	ee76 7ae7 	vsub.f32	s15, s13, s15
+
+       46070:	ee77 7ac7 	vsub.f32	s15, s15, s14
+
+       46074:	ee30 0a67 	vsub.f32	s0, s0, s15
+
+       46078:	ee10 3a10 	vmov	r3, s0
+
+       4607c:	4413      	add	r3, r2
+
+       4607e:	f5b3 0f00 	cmp.w	r3, #8388608	@ 0x800000
+
+       46082:	f2c0 81b1 	blt.w	463e8 <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x5c0>
+
+       46086:	ee00 3a10 	vmov	s0, r3
+
+       4608a:	ee20 0a08 	vmul.f32	s0, s0, s16
+
+       4608e:	e6e5      	b.n	45e5c <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x34>
+
+       46090:	f1b7 5f7e 	cmp.w	r7, #1065353216	@ 0x3f800000
+
+       46094:	f43f aef5 	beq.w	45e82 <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x5a>
+
+       46098:	d92d      	bls.n	460f6 <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x2ce>
+
+       4609a:	2d00      	cmp	r5, #0
+
+       4609c:	db28      	blt.n	460f0 <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x2c8>
+
+       4609e:	ed9d 0a01 	vldr	s0, [sp, #4]
+
+       460a2:	e6db      	b.n	45e5c <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x34>
+
+       460a4:	f1b6 4fff 	cmp.w	r6, #2139095040	@ 0x7f800000
+
+       460a8:	d0f2      	beq.n	46090 <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x268>
+
+       460aa:	f000 fa19 	bl	464e0 <<a href="./32f086d3057057946a7135b99a17899c.html">fabsf</a>>
+
+       460ae:	f1b7 4fff 	cmp.w	r7, #2139095040	@ 0x7f800000
+
+       460b2:	f04f 0902 	mov.w	r9, #2
+
+       460b6:	f47f af20 	bne.w	45efa <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0xd2>
+
+       460ba:	2d00      	cmp	r5, #0
+
+       460bc:	da06      	bge.n	460cc <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x2a4>
+
+       460be:	eef7 7a00 	vmov.f32	s15, #112	@ 0x3f800000  1.0
+
+       460c2:	ee87 0a80 	vdiv.f32	s0, s15, s0
+
+       460c6:	2c00      	cmp	r4, #0
+
+       460c8:	f6bf aec8 	bge.w	45e5c <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x34>
+
+       460cc:	f1a7 577e 	sub.w	r7, r7, #1065353216	@ 0x3f800000
+
+       460d0:	ea57 0709 	orrs.w	r7, r7, r9
+
+       460d4:	f000 8125 	beq.w	46322 <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x4fa>
+
+       460d8:	f1b9 0f01 	cmp.w	r9, #1
+
+       460dc:	f47f aebe 	bne.w	45e5c <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x34>
+
+       460e0:	eeb1 0a40 	vneg.f32	s0, s0
+
+       460e4:	e6ba      	b.n	45e5c <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x34>
+
+       460e6:	2d00      	cmp	r5, #0
+
+       460e8:	db29      	blt.n	4613e <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x316>
+
+       460ea:	ed9d 0a00 	vldr	s0, [sp]
+
+       460ee:	e6b5      	b.n	45e5c <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x34>
+
+       460f0:	ed9f 0a2a 	vldr	s0, [pc, #168]	@ 4619c <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x374>
+
+       460f4:	e6b2      	b.n	45e5c <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x34>
+
+       460f6:	2d00      	cmp	r5, #0
+
+       460f8:	dafa      	bge.n	460f0 <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x2c8>
+
+       460fa:	eddd 7a01 	vldr	s15, [sp, #4]
+
+       460fe:	eeb1 0a67 	vneg.f32	s0, s15
+
+       46102:	e6ab      	b.n	45e5c <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x34>
+
+       46104:	15f3      	asrs	r3, r6, #23
+
+       46106:	f1c3 0396 	rsb	r3, r3, #150	@ 0x96
+
+       4610a:	fa46 f203 	asr.w	r2, r6, r3
+
+       4610e:	fa02 f303 	lsl.w	r3, r2, r3
+
+       46112:	42b3      	cmp	r3, r6
+
+       46114:	f000 810a 	beq.w	4632c <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x504>
+
+       46118:	f1b6 5f7e 	cmp.w	r6, #1065353216	@ 0x3f800000
+
+       4611c:	d0e3      	beq.n	460e6 <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x2be>
+
+       4611e:	f1b5 4f80 	cmp.w	r5, #1073741824	@ 0x40000000
+
+       46122:	d013      	beq.n	4614c <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x324>
+
+       46124:	ed9d 0a00 	vldr	s0, [sp]
+
+       46128:	f000 f9da 	bl	464e0 <<a href="./32f086d3057057946a7135b99a17899c.html">fabsf</a>>
+
+       4612c:	f1b7 4fff 	cmp.w	r7, #2139095040	@ 0x7f800000
+
+       46130:	f04f 0900 	mov.w	r9, #0
+
+       46134:	f47f aee1 	bne.w	45efa <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0xd2>
+
+       46138:	2d00      	cmp	r5, #0
+
+       4613a:	dbc0      	blt.n	460be <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x296>
+
+       4613c:	e7c3      	b.n	460c6 <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x29e>
+
+       4613e:	ed9d 7a00 	vldr	s14, [sp]
+
+       46142:	eef7 7a00 	vmov.f32	s15, #112	@ 0x3f800000  1.0
+
+       46146:	ee87 0a87 	vdiv.f32	s0, s15, s14
+
+       4614a:	e687      	b.n	45e5c <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x34>
+
+       4614c:	eddd 7a00 	vldr	s15, [sp]
+
+       46150:	ee27 0aa7 	vmul.f32	s0, s15, s15
+
+       46154:	e682      	b.n	45e5c <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x34>
+
+       46156:	eddd 7a00 	vldr	s15, [sp]
+
+       4615a:	ee77 7ae7 	vsub.f32	s15, s15, s15
+
+       4615e:	ee87 0aa7 	vdiv.f32	s0, s15, s15
+
+       46162:	e67b      	b.n	45e5c <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x34>
+
+       46164:	3f7ffff3 	.word	0x3f7ffff3
+
+       46168:	3f800007 	.word	0x3f800007
+
+       4616c:	3eaaaaab 	.word	0x3eaaaaab
+
+       46170:	3fb8aa3b 	.word	0x3fb8aa3b
+
+       46174:	36eca570 	.word	0x36eca570
+
+       46178:	3fb8aa00 	.word	0x3fb8aa00
+
+       4617c:	35bfbe8c 	.word	0x35bfbe8c
+
+       46180:	3f317200 	.word	0x3f317200
+
+       46184:	b5ddea0e 	.word	0xb5ddea0e
+
+       46188:	3331bb4c 	.word	0x3331bb4c
+
+       4618c:	388ab355 	.word	0x388ab355
+
+       46190:	bb360b61 	.word	0xbb360b61
+
+       46194:	3e2aaaab 	.word	0x3e2aaaab
+
+       46198:	3f317218 	.word	0x3f317218
+
+       4619c:	00000000 	.word	0x00000000
+
+       461a0:	4b800000 	.word	0x4b800000
+
+       461a4:	f014 4fff 	tst.w	r4, #2139095040	@ 0x7f800000
+
+       461a8:	f040 8112 	bne.w	463d0 <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x5a8>
+
+       461ac:	ed5f 7a04 	vldr	s15, [pc, #-16]	@ 461a0 <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x378>
+
+       461b0:	ee60 7a27 	vmul.f32	s15, s0, s15
+
+       461b4:	f06f 0117 	mvn.w	r1, #23
+
+       461b8:	ee17 8a90 	vmov	r8, s15
+
+       461bc:	48b6      	ldr	r0, [pc, #728]	@ (46498 <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x670>)
+
+       461be:	ea4f 53e8 	mov.w	r3, r8, asr #23
+
+       461c2:	f3c8 0816 	ubfx	r8, r8, #0, #23
+
+       461c6:	3b7f      	subs	r3, #127	@ 0x7f
+
+       461c8:	4580      	cmp	r8, r0
+
+       461ca:	440b      	add	r3, r1
+
+       461cc:	f048 517e 	orr.w	r1, r8, #1065353216	@ 0x3f800000
+
+       461d0:	f340 80f6 	ble.w	463c0 <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x598>
+
+       461d4:	48b1      	ldr	r0, [pc, #708]	@ (4649c <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x674>)
+
+       461d6:	4580      	cmp	r8, r0
+
+       461d8:	f340 8113 	ble.w	46402 <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x5da>
+
+       461dc:	eddf 4ab0 	vldr	s9, [pc, #704]	@ 464a0 <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x678>
+
+       461e0:	3301      	adds	r3, #1
+
+       461e2:	eef0 3a64 	vmov.f32	s7, s9
+
+       461e6:	f5a1 0100 	sub.w	r1, r1, #8388608	@ 0x800000
+
+       461ea:	eef7 5a00 	vmov.f32	s11, #112	@ 0x3f800000  1.0
+
+       461ee:	2000      	movs	r0, #0
+
+       461f0:	ee06 1a90 	vmov	s13, r1
+
+       461f4:	ee76 7aa5 	vadd.f32	s15, s13, s11
+
+       461f8:	eeb7 7a00 	vmov.f32	s14, #112	@ 0x3f800000  1.0
+
+       461fc:	ee87 8a27 	vdiv.f32	s16, s14, s15
+
+       46200:	ee07 3a90 	vmov	s15, r3
+
+       46204:	4ba7      	ldr	r3, [pc, #668]	@ (464a4 <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x67c>)
+
+       46206:	eddf 1aa8 	vldr	s3, [pc, #672]	@ 464a8 <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x680>
+
+       4620a:	ed9f 0aa8 	vldr	s0, [pc, #672]	@ 464ac <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x684>
+
+       4620e:	eddf 0aa8 	vldr	s1, [pc, #672]	@ 464b0 <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x688>
+
+       46212:	ed9f 1aa8 	vldr	s2, [pc, #672]	@ 464b4 <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x68c>
+
+       46216:	ed9f 5aa8 	vldr	s10, [pc, #672]	@ 464b8 <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x690>
+
+       4621a:	ed9f 2aa8 	vldr	s4, [pc, #672]	@ 464bc <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x694>
+
+       4621e:	ea03 0361 	and.w	r3, r3, r1, asr #1
+
+       46222:	f043 5300 	orr.w	r3, r3, #536870912	@ 0x20000000
+
+       46226:	f503 0380 	add.w	r3, r3, #4194304	@ 0x400000
+
+       4622a:	4403      	add	r3, r0
+
+       4622c:	ee36 6ae5 	vsub.f32	s12, s13, s11
+
+       46230:	eeb8 7ae7 	vcvt.f32.s32	s14, s15
+
+       46234:	ee07 3a90 	vmov	s15, r3
+
+       46238:	ee66 2a08 	vmul.f32	s5, s12, s16
+
+       4623c:	ee77 5ae5 	vsub.f32	s11, s15, s11
+
+       46240:	ee12 3a90 	vmov	r3, s5
+
+       46244:	ee36 4ae5 	vsub.f32	s8, s13, s11
+
+       46248:	ee62 6aa2 	vmul.f32	s13, s5, s5
+
+       4624c:	eef0 5a60 	vmov.f32	s11, s1
+
+       46250:	eea6 0aa1 	vfma.f32	s0, s13, s3
+
+       46254:	f36f 030b 	bfc	r3, #0, #12
+
+       46258:	eeb0 3a08 	vmov.f32	s6, #8	@ 0x40400000  3.0
+
+       4625c:	eee0 5a26 	vfma.f32	s11, s0, s13
+
+       46260:	eddf 1a97 	vldr	s3, [pc, #604]	@ 464c0 <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x698>
+
+       46264:	eea5 1aa6 	vfma.f32	s2, s11, s13
+
+       46268:	eef0 5a45 	vmov.f32	s11, s10
+
+       4626c:	eee1 5a26 	vfma.f32	s11, s2, s13
+
+       46270:	eeb0 5a43 	vmov.f32	s10, s6
+
+       46274:	eea5 2aa6 	vfma.f32	s4, s11, s13
+
+       46278:	ee66 5aa6 	vmul.f32	s11, s13, s13
+
+       4627c:	ee06 3a90 	vmov	s13, r3
+
+       46280:	eea6 6ae7 	vfms.f32	s12, s13, s15
+
+       46284:	ee72 7aa6 	vadd.f32	s15, s5, s13
+
+       46288:	eea6 6ac4 	vfms.f32	s12, s13, s8
+
+       4628c:	eea6 5aa6 	vfma.f32	s10, s13, s13
+
+       46290:	ee26 6a08 	vmul.f32	s12, s12, s16
+
+       46294:	ed9f 1a8b 	vldr	s2, [pc, #556]	@ 464c4 <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x69c>
+
+       46298:	ed9f 4a8b 	vldr	s8, [pc, #556]	@ 464c8 <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x6a0>
+
+       4629c:	ee67 7a86 	vmul.f32	s15, s15, s12
+
+       462a0:	eee5 7a82 	vfma.f32	s15, s11, s4
+
+       462a4:	ee75 5a27 	vadd.f32	s11, s10, s15
+
+       462a8:	ee15 3a90 	vmov	r3, s11
+
+       462ac:	f36f 030b 	bfc	r3, #0, #12
+
+       462b0:	ee05 3a90 	vmov	s11, r3
+
+       462b4:	ee35 5ac3 	vsub.f32	s10, s11, s6
+
+       462b8:	eea6 5ae6 	vfms.f32	s10, s13, s13
+
+       462bc:	ee77 7ac5 	vsub.f32	s15, s15, s10
+
+       462c0:	ee67 7aa2 	vmul.f32	s15, s15, s5
+
+       462c4:	eee6 7a25 	vfma.f32	s15, s12, s11
+
+       462c8:	eeb0 6a67 	vmov.f32	s12, s15
+
+       462cc:	eea6 6aa5 	vfma.f32	s12, s13, s11
+
+       462d0:	ee16 3a10 	vmov	r3, s12
+
+       462d4:	f36f 030b 	bfc	r3, #0, #12
+
+       462d8:	ee06 3a10 	vmov	s12, r3
+
+       462dc:	eeb0 5a46 	vmov.f32	s10, s12
+
+       462e0:	eea6 5ae5 	vfms.f32	s10, s13, s11
+
+       462e4:	ee77 7ac5 	vsub.f32	s15, s15, s10
+
+       462e8:	ee67 7aa1 	vmul.f32	s15, s15, s3
+
+       462ec:	eee6 7a01 	vfma.f32	s15, s12, s2
+
+       462f0:	ee77 7aa3 	vadd.f32	s15, s15, s7
+
+       462f4:	eef0 6a67 	vmov.f32	s13, s15
+
+       462f8:	eee6 6a04 	vfma.f32	s13, s12, s8
+
+       462fc:	ee76 6aa4 	vadd.f32	s13, s13, s9
+
+       46300:	ee76 6a87 	vadd.f32	s13, s13, s14
+
+       46304:	ee16 3a90 	vmov	r3, s13
+
+       46308:	f36f 030b 	bfc	r3, #0, #12
+
+       4630c:	ee06 3a90 	vmov	s13, r3
+
+       46310:	ee36 7ac7 	vsub.f32	s14, s13, s14
+
+       46314:	ee37 7a64 	vsub.f32	s14, s14, s9
+
+       46318:	eea6 7a44 	vfms.f32	s14, s12, s8
+
+       4631c:	ee37 7ac7 	vsub.f32	s14, s15, s14
+
+       46320:	e630      	b.n	45f84 <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x15c>
+
+       46322:	ee70 7a40 	vsub.f32	s15, s0, s0
+
+       46326:	ee87 0aa7 	vdiv.f32	s0, s15, s15
+
+       4632a:	e597      	b.n	45e5c <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x34>
+
+       4632c:	f1b6 5f7e 	cmp.w	r6, #1065353216	@ 0x3f800000
+
+       46330:	f43f aed9 	beq.w	460e6 <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x2be>
+
+       46334:	f1b5 4f80 	cmp.w	r5, #1073741824	@ 0x40000000
+
+       46338:	f43f af08 	beq.w	4614c <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x324>
+
+       4633c:	f002 0201 	and.w	r2, r2, #1
+
+       46340:	f1c2 0902 	rsb	r9, r2, #2
+
+       46344:	f000 f8cc 	bl	464e0 <<a href="./32f086d3057057946a7135b99a17899c.html">fabsf</a>>
+
+       46348:	f1b7 4fff 	cmp.w	r7, #2139095040	@ 0x7f800000
+
+       4634c:	f47f add5 	bne.w	45efa <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0xd2>
+
+       46350:	e6b3      	b.n	460ba <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x292>
+
+       46352:	f000 f8c5 	bl	464e0 <<a href="./32f086d3057057946a7135b99a17899c.html">fabsf</a>>
+
+       46356:	f1b7 4fff 	cmp.w	r7, #2139095040	@ 0x7f800000
+
+       4635a:	f43f ad7f 	beq.w	45e5c <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x34>
+
+       4635e:	2f00      	cmp	r7, #0
+
+       46360:	f43f ad7c 	beq.w	45e5c <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x34>
+
+       46364:	f1b7 5f7e 	cmp.w	r7, #1065353216	@ 0x3f800000
+
+       46368:	f47f aef5 	bne.w	46156 <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x32e>
+
+       4636c:	f04f 0900 	mov.w	r9, #0
+
+       46370:	e6ac      	b.n	460cc <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x2a4>
+
+       46372:	4956      	ldr	r1, [pc, #344]	@ (464cc <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x6a4>)
+
+       46374:	428a      	cmp	r2, r1
+
+       46376:	f200 8087 	bhi.w	46488 <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x660>
+
+       4637a:	f47f ae2d 	bne.w	45fd8 <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x1b0>
+
+       4637e:	ee76 6ae7 	vsub.f32	s13, s13, s15
+
+       46382:	eef4 6ac7 	vcmpe.f32	s13, s14
+
+       46386:	eef1 fa10 	vmrs	APSR_nzcv, fpscr
+
+       4638a:	da7d      	bge.n	46488 <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x660>
+
+       4638c:	f503 4300 	add.w	r3, r3, #32768	@ 0x8000
+
+       46390:	4a4f      	ldr	r2, [pc, #316]	@ (464d0 <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x6a8>)
+
+       46392:	f3c3 51c7 	ubfx	r1, r3, #23, #8
+
+       46396:	397f      	subs	r1, #127	@ 0x7f
+
+       46398:	f3c3 0016 	ubfx	r0, r3, #0, #23
+
+       4639c:	410a      	asrs	r2, r1
+
+       4639e:	f440 0000 	orr.w	r0, r0, #8388608	@ 0x800000
+
+       463a2:	f1c1 0117 	rsb	r1, r1, #23
+
+       463a6:	401a      	ands	r2, r3
+
+       463a8:	4108      	asrs	r0, r1
+
+       463aa:	4240      	negs	r0, r0
+
+       463ac:	ee06 2a90 	vmov	s13, r2
+
+       463b0:	ee77 7ae6 	vsub.f32	s15, s15, s13
+
+       463b4:	05c2      	lsls	r2, r0, #23
+
+       463b6:	ee77 6a27 	vadd.f32	s13, s14, s15
+
+       463ba:	ee16 3a90 	vmov	r3, s13
+
+       463be:	e611      	b.n	45fe4 <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x1bc>
+
+       463c0:	eddf 4a37 	vldr	s9, [pc, #220]	@ 464a0 <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x678>
+
+       463c4:	eef7 5a00 	vmov.f32	s11, #112	@ 0x3f800000  1.0
+
+       463c8:	eef0 3a64 	vmov.f32	s7, s9
+
+       463cc:	2000      	movs	r0, #0
+
+       463ce:	e70f      	b.n	461f0 <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x3c8>
+
+       463d0:	2100      	movs	r1, #0
+
+       463d2:	e6f3      	b.n	461bc <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x394>
+
+       463d4:	2d00      	cmp	r5, #0
+
+       463d6:	db0c      	blt.n	463f2 <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x5ca>
+
+       463d8:	2000      	movs	r0, #0
+
+       463da:	b003      	add	sp, #12
+
+       463dc:	ecbd 8b02 	vpop	{d8}
+
+       463e0:	e8bd 43f0 	ldmia.w	sp!, {r4, r5, r6, r7, r8, r9, lr}
+
+       463e4:	f000 b9d8 	b.w	46798 <<a href="./d7cce47af050567172c39930c426d024.html">__math_uflowf</a>>
+
+       463e8:	f000 f94a 	bl	46680 <<a href="./b30b99c6a7070607c964c3e4344e5f90.html">scalbnf</a>>
+
+       463ec:	e64d      	b.n	4608a <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x262>
+
+       463ee:	2d00      	cmp	r5, #0
+
+       463f0:	ddf2      	ble.n	463d8 <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x5b0>
+
+       463f2:	2000      	movs	r0, #0
+
+       463f4:	b003      	add	sp, #12
+
+       463f6:	ecbd 8b02 	vpop	{d8}
+
+       463fa:	e8bd 43f0 	ldmia.w	sp!, {r4, r5, r6, r7, r8, r9, lr}
+
+       463fe:	f000 b9d1 	b.w	467a4 <<a href="./b898e5149807647973d4e658441f64b9.html">__math_oflowf</a>>
+
+       46402:	eddf 4a34 	vldr	s9, [pc, #208]	@ 464d4 <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x6ac>
+
+       46406:	eddf 3a34 	vldr	s7, [pc, #208]	@ 464d8 <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x6b0>
+
+       4640a:	eef7 5a08 	vmov.f32	s11, #120	@ 0x3fc00000  1.5
+
+       4640e:	f44f 1000 	mov.w	r0, #2097152	@ 0x200000
+
+       46412:	e6ed      	b.n	461f0 <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x3c8>
+
+       46414:	15d2      	asrs	r2, r2, #23
+
+       46416:	3a7e      	subs	r2, #126	@ 0x7e
+
+       46418:	f44f 0100 	mov.w	r1, #8388608	@ 0x800000
+
+       4641c:	4111      	asrs	r1, r2
+
+       4641e:	4419      	add	r1, r3
+
+       46420:	4a2b      	ldr	r2, [pc, #172]	@ (464d0 <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x6a8>)
+
+       46422:	f3c1 54c7 	ubfx	r4, r1, #23, #8
+
+       46426:	3c7f      	subs	r4, #127	@ 0x7f
+
+       46428:	f3c1 0016 	ubfx	r0, r1, #0, #23
+
+       4642c:	4122      	asrs	r2, r4
+
+       4642e:	f440 0000 	orr.w	r0, r0, #8388608	@ 0x800000
+
+       46432:	f1c4 0417 	rsb	r4, r4, #23
+
+       46436:	2b00      	cmp	r3, #0
+
+       46438:	fa40 f004 	asr.w	r0, r0, r4
+
+       4643c:	ea02 0201 	and.w	r2, r2, r1
+
+       46440:	dab4      	bge.n	463ac <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x584>
+
+       46442:	e7b2      	b.n	463aa <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x582>
+
+       46444:	ed9f 6a25 	vldr	s12, [pc, #148]	@ 464dc <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x6b4>
+
+       46448:	ee76 6ae7 	vsub.f32	s13, s13, s15
+
+       4644c:	ee37 6a06 	vadd.f32	s12, s14, s12
+
+       46450:	eeb4 6ae6 	vcmpe.f32	s12, s13
+
+       46454:	eef1 fa10 	vmrs	APSR_nzcv, fpscr
+
+       46458:	dc0e      	bgt.n	46478 <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x650>
+
+       4645a:	f503 4300 	add.w	r3, r3, #32768	@ 0x8000
+
+       4645e:	4a1c      	ldr	r2, [pc, #112]	@ (464d0 <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x6a8>)
+
+       46460:	15d9      	asrs	r1, r3, #23
+
+       46462:	397f      	subs	r1, #127	@ 0x7f
+
+       46464:	f3c3 0016 	ubfx	r0, r3, #0, #23
+
+       46468:	410a      	asrs	r2, r1
+
+       4646a:	f440 0000 	orr.w	r0, r0, #8388608	@ 0x800000
+
+       4646e:	f1c1 0117 	rsb	r1, r1, #23
+
+       46472:	401a      	ands	r2, r3
+
+       46474:	4108      	asrs	r0, r1
+
+       46476:	e799      	b.n	463ac <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x584>
+
+       46478:	eeb5 8ac0 	vcmpe.f32	s16, #0.0
+
+       4647c:	eef1 fa10 	vmrs	APSR_nzcv, fpscr
+
+       46480:	bf4c      	ite	mi
+
+       46482:	2001      	movmi	r0, #1
+
+       46484:	2000      	movpl	r0, #0
+
+       46486:	e7b5      	b.n	463f4 <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x5cc>
+
+       46488:	eeb5 8ac0 	vcmpe.f32	s16, #0.0
+
+       4648c:	eef1 fa10 	vmrs	APSR_nzcv, fpscr
+
+       46490:	bf4c      	ite	mi
+
+       46492:	2001      	movmi	r0, #1
+
+       46494:	2000      	movpl	r0, #0
+
+       46496:	e7a0      	b.n	463da <<a href="./f4143f6ac3a3e84deac1ff0709e3628f.html">__ieee754_powf</a>+0x5b2>
+
+       46498:	001cc471 	.word	0x001cc471
+
+       4649c:	005db3d6 	.word	0x005db3d6
+
+       464a0:	00000000 	.word	0x00000000
+
+       464a4:	dffff000 	.word	0xdffff000
+
+       464a8:	3e53f142 	.word	0x3e53f142
+
+       464ac:	3e6c3255 	.word	0x3e6c3255
+
+       464b0:	3e8ba305 	.word	0x3e8ba305
+
+       464b4:	3eaaaaab 	.word	0x3eaaaaab
+
+       464b8:	3edb6db7 	.word	0x3edb6db7
+
+       464bc:	3f19999a 	.word	0x3f19999a
+
+       464c0:	3f76384f 	.word	0x3f76384f
+
+       464c4:	b8f623c6 	.word	0xb8f623c6
+
+       464c8:	3f764000 	.word	0x3f764000
+
+       464cc:	43160000 	.word	0x43160000
+
+       464d0:	ff800000 	.word	0xff800000
+
+       464d4:	3f15c000 	.word	0x3f15c000
+
+       464d8:	35d1cfdc 	.word	0x35d1cfdc
+
+       464dc:	3338aa3c 	.word	0x3338aa3c
+
+    </pre>
+
+    
+    <pre><a href="./32f086d3057057946a7135b99a17899c.html">fabsf (16)</a></pre>
+    
+
+    
+        <h1>Stack Worst-Case Scenarios</h1>
+        
+            <p>No callees for this function.</p>
+        
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 120</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 3,688</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    3,688
+                    
+                    
+                </td>
+                <td class="col_size">1,720</td>
+                <td><a href="./f4143f6ac3a3e84deac1ff0709e3628f.html" class="icon-function">__ieee754_powf</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    1,968
+                    
+                    
+                </td>
+                <td class="col_size">188</td>
+                <td><a href="./612c7c664f86a40eabd0f8a8c53d50d1.html" class="icon-function">powf</a></td>
+            </tr>
+        
+            <tr>
+                <th>3</th>
+                <td class="col_size">
+                    
+                    120
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                80 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    1,780
+                    
+                    
+                </td>
+                <td class="col_size">428</td>
+                <td><a href="../../home/runner/work/openbsw/openbsw/libs/3rdparty/etl/include/etl/format.h/136699ea7b8b264c27bb76fd1e5c3ba3.html" class="icon-function">void etl::private_format::format_floating_e&lt;etl::private_print::print_iterator, float&gt;(etl::private_print::print_iterator&amp;, float, etl::private_format::format_spec_t const&amp;)</a></td>
+            </tr>
+        
+            <tr>
+                <th>4</th>
+                <td class="col_size">
+                </td>
+                <td class="col_size">
+            
+                40 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">1,352</td>
+                <td><a href="../../home/runner/work/openbsw/openbsw/libs/3rdparty/etl/include/etl/format.h/4f59be99fc14e6b0549c33e4b93cb113.html" class="icon-function">void etl::private_format::format_floating&lt;etl::private_print::print_iterator, float&gt;(etl::private_print::print_iterator&amp;, float, etl::private_format::format_spec_t const&amp;)</a></td>
+            </tr>
+        
+        </tbody>
+        
+    </table>
+        
+    
+
+
+        </div>
+    <div id="page-footer">
+        <hr>
+        
+            brought to you with 💖
+            by <a href="https://twitter.com/hbehrens">Heiko Behrens</a>
+            <span class="secondary">– MIT license, copyright © 2014-2026</span>
+        
+    </div>
+    </div>
+</body>
+</html>

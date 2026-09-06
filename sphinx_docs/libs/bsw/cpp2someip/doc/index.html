@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="EclipseOpenBSWDocumentation" name="dox_trace_storage" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>cpp2someip - SOME/IP Abstractions &mdash; Eclipse OpenBSW Documentation  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/rtd_theme_overrides.css?v=6fd0d55b" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=eafc0fe6" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/colors.css?v=3cafd8aa" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/colored_table.css?v=34b816d5" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/header.css?v=e632285e" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/dox_util_colors.css?v=dd14b177" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/dox_trace.css?v=60d3f72c" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../../../../_static/copybutton.js?v=f281be69"></script>
+        <script src="../../../../_static/dox_trace.js?v=40719b51"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="docan - Diagnostics over CAN" href="../../docan/doc/index.html" />
+    <link rel="prev" title="cpp2ethernet - Ethernet Abstractions" href="../../cpp2ethernet/doc/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../doc/dev/index.html" class="icon icon-home">
+            Eclipse OpenBSW Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Learning</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/learning/overview.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/learning/SysTest/HW_Testing_Guide.html">Hardware Testing Guide</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guidelines</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/guidelines/conventions/index.html">Coding Conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/guidelines/practices.html">Coding Practices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/guidelines/formatting/index.html">Formatting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/guidelines/unittests.html">Unit Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/guidelines/module.html">Module Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/guidelines/documentation.html">Module Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/guidelines/diagrams.html">Diagrams</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/guidelines/3rdparty.html">Third Party Libraries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/guidelines/commit_message.html">Commit Message</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/guidelines/pull_request.html">Pull Request</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Platforms</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/platforms/posix/index.html">POSIX</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/platforms/s32k148evb/index.html">S32K148 Evaluation Board</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/platforms/stm32/index.html">STM32 Nucleo Boards</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Features</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/features/storage.html">Persistent Storage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/features/functional_safety.html">Functional Safety</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/features/diagnostics.html">Diagnostics (DoCAN / UDS)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Software Modules</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../doc/dev/modules/common.html">Common</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../../doc/dev/modules/common.html#bsw">BSW</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../async/doc/index.html">async - Asynchronous Execution Interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../asyncConsole/doc/index.html">asyncConsole - Asynchronous Console</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../asyncFreeRtos/doc/index.html">asyncFreeRtos</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../asyncImpl/doc/index.html">asyncImpl</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../blob/doc/index.html">blob</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../bsp/doc/index.html">bsp</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../common/doc/index.html">common</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cpp2can/doc/index.html">cpp2can - CAN Abstraction Layer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cpp2ethernet/doc/index.html">cpp2ethernet - Ethernet Abstractions</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">cpp2someip - SOME/IP Abstractions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#configuration">Configuration</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#stack-configuration">Stack configuration</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#public-api">Public API</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#startup">Startup</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#runtime">Runtime</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#shutdown">Shutdown</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../docan/doc/index.html">docan - Diagnostics over CAN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../doip/doc/index.html">doip - Diagnostics Over IP</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../io/doc/index.html">io - IO Library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lifecycle/doc/index.html">lifecycle - App Lifecycle Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../logger/doc/index.html">logger - Logger module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../loggerIntegration/doc/index.html">loggerIntegration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lwipSocket/doc/index.html">lwipSocket - LwIP v2 Socket Abstraction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../middleware/doc/index.html">middleware</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../platform/doc/index.html">platform - Platform Library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../routing/doc/index.html">routing - PDU routing across channels</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../runtime/doc/index.html">runtime</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../shed/doc/index.html">shed - Relational Data Structures</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../stdioConsoleInput/doc/index.html">stdioConsoleInput</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../storage/doc/index.html">storage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../timer/doc/index.html">timer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../transport/doc/index.html">transport - Transport Library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../transportRouterSimple/doc/index.html">transportRouterSimple</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../uds/doc/index.html">uds - Unified Diagnostic Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../util/doc/index.html">util</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../doc/dev/modules/common.html#bsp">BSP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../doc/dev/modules/common.html#safety">Safety</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/modules/posix.html">Posix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/modules/s32k1xx.html">S32K1xx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/modules/stm32.html">STM32</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/modules/executables.html">Executables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc/dev/modules/mocks.html">Mocks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tools/UdsTool/doc/index.html">UdsTool</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tools/puncover_tool/doc/index.html">Puncover</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../doc/dev/index.html">Eclipse OpenBSW Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../doc/dev/index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../../../doc/dev/modules/common.html">Common</a> &raquo;</li>
+        
+        <li>cpp2someip - SOME/IP Abstractions</li>
+    
+
+    
+
+      <li class="wy-breadcrumbs-aside">
+
+        <!-- DOCUMENT STATUS -->
+
+        
+
+        <!-- DATA CLASSIFICATION -->
+
+        
+
+      </li>
+
+    
+  </ul>
+
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="cpp2someip-some-ip-abstractions">
+<span id="cpp2someip"></span><h1>cpp2someip - SOME/IP Abstractions<a class="headerlink" href="#cpp2someip-some-ip-abstractions" title="Link to this heading"></a></h1>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">cpp2someip</span></code> provides an implementation of the SOME/IP stack.</p>
+<p>It covers the following features:</p>
+<ul class="simple">
+<li><p>SOME/IP RPC messages via UDP and TCP</p></li>
+<li><p>SOME/IP service discovery (SD)</p></li>
+<li><p>SOME/IP TP</p></li>
+<li><p>Serialization and deserialization of SOME/IP messages</p></li>
+</ul>
+<p>This module has the following dependencies:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../async/doc/index.html#async"><span class="std std-ref">async - Asynchronous Execution Interface</span></a></p></li>
+<li><p><a class="reference internal" href="../../cpp2ethernet/doc/index.html#cpp2ethernet"><span class="std std-ref">cpp2ethernet - Ethernet Abstractions</span></a></p></li>
+<li><p>etl</p></li>
+</ul>
+</section>
+<section id="configuration">
+<h2>Configuration<a class="headerlink" href="#configuration" title="Link to this heading"></a></h2>
+<p>This module offers two implementations of the SOME/IP stack: The <code class="docutils literal notranslate"><span class="pre">RpcSomeIpStack</span></code> and
+the <code class="docutils literal notranslate"><span class="pre">SdSomeIpStack</span></code>. The former can be used if no service discovery is required, while
+the latter is used in a more dynamic environment. In the following description the <code class="docutils literal notranslate"><span class="pre">SdSomeIpStack</span></code>
+is used as an example, because it can be seen a superset of the <code class="docutils literal notranslate"><span class="pre">RpcSomeIpStack</span></code>.</p>
+<section id="stack-configuration">
+<h3>Stack configuration<a class="headerlink" href="#stack-configuration" title="Link to this heading"></a></h3>
+<p>Configuration of the stack is done by setting appropriate template parameters. In the
+case of the <code class="docutils literal notranslate"><span class="pre">SdSomeIpStack</span></code> the following template parameters are available:</p>
+<ul class="simple">
+<li><p>UdpSocketType (e.g. <code class="docutils literal notranslate"><span class="pre">LwipDatagramSocket</span></code>)</p></li>
+<li><p>NumUdpRpcSockets (amount of Rpc Sockets needed)</p></li>
+<li><p>TcpServerSocketType (e.g. <code class="docutils literal notranslate"><span class="pre">LwipServerSocket</span></code>)</p></li>
+<li><p>NumTcpServerSockets, (amount of Tcp Server Sockets needed)</p></li>
+<li><p>TcpSocketType (e.g. <code class="docutils literal notranslate"><span class="pre">LwipSocket</span></code>)</p></li>
+<li><p>NumTcpRpcSockets (amount of Tcp Client Sockets needed)</p></li>
+<li><p>BufferSize (size of buffer used by socket to store incoming data)</p></li>
+<li><p>NumTpStreams (amount of streams used for SOME/IP TP)</p></li>
+<li><p>SdEndpointOption (use additional endpoint for service discovery)</p></li>
+<li><p>InternalTcpReassembleBufferSize (size of buffer used to reassemble incoming TCP data)</p></li>
+<li><p>NumRemoteEndpoints (amount of remote endpoints that can be connected to)</p></li>
+<li><p>NumRemoteServices (amount of remote services that can be connected to)</p></li>
+<li><p>NumRemoteSubscriptions (amount of subscriptions from remote endpoints)</p></li>
+<li><p>NumLocalServices (amount of local provided services)</p></li>
+<li><p>NumLocalQueries (amount of local consumed services)</p></li>
+<li><p>NumSubscriptionEndpoints (maximum amount of subscriptions per service)</p></li>
+<li><p>NumEventBuffers (amount of buffers for sending event messages)</p></li>
+<li><p>NumMulticastReceptions (amount of multicast receptions for SOME/IP notifications)</p></li>
+</ul>
+<p>A typical configuration of the stack could look like this:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="o">::</span><span class="n">someip</span><span class="o">::</span><span class="n">declare</span><span class="o">::</span><span class="n">SdSomeIpStack</span><span class="o">&lt;</span>
+<span class="w">    </span><span class="o">::</span><span class="n">udp</span><span class="o">::</span><span class="n">LwipDatagramSocket</span><span class="p">,</span>
+<span class="w">    </span><span class="n">NUM_UDP_SOCKETS</span><span class="p">,</span>
+<span class="w">    </span><span class="o">::</span><span class="n">tcp</span><span class="o">::</span><span class="n">LwipServerSocket</span><span class="p">,</span>
+<span class="w">    </span><span class="n">NUM_TCP_SERVERS</span><span class="p">,</span>
+<span class="w">    </span><span class="o">::</span><span class="n">tcp</span><span class="o">::</span><span class="n">LwipSocket</span><span class="p">,</span>
+<span class="w">    </span><span class="n">NUM_TCP_SOCKETS</span><span class="p">,</span>
+<span class="w">    </span><span class="n">BUFFER_SIZE</span><span class="p">,</span>
+<span class="w">    </span><span class="mi">0U</span><span class="p">,</span>
+<span class="w">    </span><span class="nb">false</span><span class="p">,</span>
+<span class="w">    </span><span class="n">REASSEMBLE_BUFFER_SIZE</span><span class="p">,</span>
+<span class="w">    </span><span class="n">NUM_REMOTE_ENDPOINTS</span><span class="p">,</span>
+<span class="w">    </span><span class="n">NUM_REMOTE_SERVICES</span><span class="p">,</span>
+<span class="w">    </span><span class="n">NUM_REMOTE_SUBSCRIPTIONS</span><span class="p">,</span>
+<span class="w">    </span><span class="n">NUM_LOCAL_SERVICES</span><span class="p">,</span>
+<span class="w">    </span><span class="n">NUM_LOCAL_QUERIES</span><span class="p">,</span>
+<span class="w">    </span><span class="n">NUM_SUBSCRIPTION_ENDPOINTS</span><span class="o">&gt;</span>
+<span class="w">    </span><span class="n">_stack</span><span class="p">;</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="public-api">
+<h2>Public API<a class="headerlink" href="#public-api" title="Link to this heading"></a></h2>
+<section id="startup">
+<h3>Startup<a class="headerlink" href="#startup" title="Link to this heading"></a></h3>
+<p>Before actually calling <code class="docutils literal notranslate"><span class="pre">SdSomeIpStack::start()</span></code> the used ports and the overall stack have to be
+initialized. This is done by calling <code class="docutils literal notranslate"><span class="pre">SomeIpStack::initSdPort</span></code>, <code class="docutils literal notranslate"><span class="pre">SomeIpStack::initUdpPort</span></code> and/or
+<code class="docutils literal notranslate"><span class="pre">SomeIpStack::initTcpPort</span></code> (if necessary) and finally <code class="docutils literal notranslate"><span class="pre">SdSomeIpStack::init()</span></code>. After that, if
+notifications will be received by multicast the respective multicast endpoints can be set by calling
+<code class="docutils literal notranslate"><span class="pre">RpcReceiver::requestMulticastReception</span></code> and finally the stack can be started by calling
+<code class="docutils literal notranslate"><span class="pre">SdSomeIpStack::start()</span></code>.</p>
+</section>
+<section id="runtime">
+<h3>Runtime<a class="headerlink" href="#runtime" title="Link to this heading"></a></h3>
+<p>During runtime provided services and consumed services can be registered at the stack as follows:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">SomeIpStack::registerProvidedService</span></code> (once for the service instance and once for each provided eventgroup)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SomeIpStack::unregisterProvidedService</span></code> (once for the service instance and once for each provided eventgroup)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SomeIpStack::addEventListener</span></code> (once per consumed service)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SomeIpStack::registerServiceQuery</span></code> (once for the service instance and once for each consumed eventgroup)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SomeIpStack::unregisterServiceQuery</span></code> (once for the service instance and once for each consumed eventgroup)</p></li>
+</ul>
+<p>There are several reasons why it might be necessary to stop the stack during runtime. One of those could
+be an ethernet link down. In that case the stack can be stopped by calling <code class="docutils literal notranslate"><span class="pre">SomeIpStack::stop()</span></code>. After the link
+is up again the stack can be restarted by calling <code class="docutils literal notranslate"><span class="pre">SomeIpStack::start()</span></code> again. If multicast notifications
+are used they should also be stopped (<code class="docutils literal notranslate"><span class="pre">RpcReceiver::cancelMulticastReception</span></code>) and re-added after the link is
+up again (<code class="docutils literal notranslate"><span class="pre">RpcReceiver::requestMulticastReception</span></code>) and before the stack is started again to ensure that
+no notifications are missed.</p>
+</section>
+<section id="shutdown">
+<h3>Shutdown<a class="headerlink" href="#shutdown" title="Link to this heading"></a></h3>
+<p>During shutdown a call of <code class="docutils literal notranslate"><span class="pre">SomeIpSystem::shutdown</span></code> will stop the stack and free all resources. This includes
+sending stopOffer and stopsubscribe messages.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026 Eclipse OpenBSW Contributors.</p>
+  </div>
+
+  <div role="footer_string">
+    <p>Documentation from 2026-09-06 08:59:00, official build.</p>
+
+    
+      <a href="../../../../_sources/libs/bsw/cpp2someip/doc/index.rst.txt" rel="nofollow"> View page source</a>
+    
+
+  </div>
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(false);
+      });
+  </script> 
+
+</body>
+</html>

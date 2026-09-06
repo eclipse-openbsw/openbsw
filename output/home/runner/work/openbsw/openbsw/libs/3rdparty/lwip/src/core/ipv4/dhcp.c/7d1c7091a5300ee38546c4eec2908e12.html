@@ -1,0 +1,626 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../../../../../../../../../../../static/css/style.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <title>Symbol - puncover</title>
+    
+</head>
+<body>
+    <div class="container" id="content">
+        <div class="page-header">
+            <nav class="navbar navbar-default" role="navigation">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="../../../../../../../../../../../../index.html">
+                    Puncover
+                  </a>
+                </div>
+              </div>
+            </nav>
+          
+        </div>
+        <div id="inner_content">
+        
+    
+    <ol class="breadcrumb folders">
+        
+        <li><a href="../../../../../../../../../../../../home.html">home</a></li>
+        
+        <li><a href="../../../../../../../../../../../runner.html">runner</a></li>
+        
+        <li><a href="../../../../../../../../../../work.html">work</a></li>
+        
+        <li><a href="../../../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../../libs.html">libs</a></li>
+        
+        <li><a href="../../../../../../3rdparty.html">3rdparty</a></li>
+        
+        <li><a href="../../../../../lwip.html">lwip</a></li>
+        
+        <li><a href="../../../../src.html">src</a></li>
+        
+        <li><a href="../../../core.html">core</a></li>
+        
+        <li ><a href="../../ipv4.html">ipv4</a>
+            </li>
+
+        
+        <li class="active"><a href="../dhcp.c.html">dhcp.c</a>:810
+            </li>
+        
+    </ol>
+
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <th>Function</th>
+                <td colspan="5">
+                    <span class="icon-function">dhcp_start</span>
+                </td>
+            </tr>
+
+            <tr>
+                <th rowspan="2"></th>
+                <th>Address</th>
+                <th>Remarks</th>
+                <th>Stack</th>
+                <th>Code</th>
+                <th>Static</th>
+            </tr>
+            <tr>
+                <td>0x000355c8</td>
+                <td>
+    <span class="label label-success">x-module</span>
+    
+</td>
+                <td>24 (static)</td>
+                <td>188</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th>Callers (3)</th>
+                <td colspan="5">
+                
+                    <a href="./625c8433015a8cb580108e0f733b653d.html">dhcp_coarse_tmr (476)</a>
+                    
+                        ,
+                    
+                
+                    <a href="./6c135f5fdcc1ec1052963f2b2193c8e8.html">dhcp_fine_tmr (160)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../../../../../../bsw/lwipSocket/src/lwipSocket/netif/LwipNetworkInterface.cpp/292d45e6555bbf8b230114a0425ee63e.html">lwipnetif::startNetif(ethernet::NetifState&amp;, netif&amp;, ip::Ip4Config const&amp;) (52)</a>
+                    
+                
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Callees (7,
+                            <span title="sum of used bytes by all callees">
+                            Σ=924
+                            </span>
+                        )
+                    
+                </th>
+                <td colspan="5">
+                
+                    <a href="../../../../../../../../../../../../unknown/unknown/716af30655f8f3d9b32750dca746ddfb.html">memset (28)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../acd.c/9ebc58b0dccc4ce2d4113625c62644dd.html">acd_add (40)</a>
+                    
+                        ,
+                    
+                
+                    <a href="./4f8cd5d844ef9aabe7480c0322fe8b42.html">dhcp_inc_pcb_refcount (88)</a>
+                    
+                        ,
+                    
+                
+                    <a href="./8f67080f65f67dc415c23e160e5b6e3d.html">dhcp_discover (336)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../../udp.c/554cfee26965a2222880ba2ac60608ce.html">udp_remove (60)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../../mem.c/2c3ebe0a20099c600a655032b12a1fd9.html">mem_malloc (272)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../../../../../../../executables/referenceApp/application/src/logger/logger.cpp/98866fb3d81ee8db78cbfd1e2dfd931d.html">log_lwipInfo (100)</a>
+                    
+                
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    
+    <pre><a href="./de60063053ffa3eac5ed40dc737642f1.html">dhcp_conflict_callback (304)</a></pre>
+    
+
+    <pre>
+
+    dhcp_start():
+
+       355c8:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
+
+       355ca:	2800      	cmp	r0, #0
+
+       355cc:	d04c      	beq.n	35668 <<a href="./7d1c7091a5300ee38546c4eec2908e12.html">dhcp_start</a>+0xa0>
+
+       355ce:	f890 3045 	ldrb.w	r3, [r0, #69]	@ 0x45
+
+       355d2:	07da      	lsls	r2, r3, #31
+
+       355d4:	4604      	mov	r4, r0
+
+       355d6:	d541      	bpl.n	3565c <<a href="./7d1c7091a5300ee38546c4eec2908e12.html">dhcp_start</a>+0x94>
+
+       355d8:	8f83      	ldrh	r3, [r0, #60]	@ 0x3c
+
+       355da:	6a85      	ldr	r5, [r0, #40]	@ 0x28
+
+       355dc:	f5b3 7f10 	cmp.w	r3, #576	@ 0x240
+
+       355e0:	d339      	bcc.n	35656 <<a href="./7d1c7091a5300ee38546c4eec2908e12.html">dhcp_start</a>+0x8e>
+
+       355e2:	b38d      	cbz	r5, 35648 <<a href="./7d1c7091a5300ee38546c4eec2908e12.html">dhcp_start</a>+0x80>
+
+       355e4:	792b      	ldrb	r3, [r5, #4]
+
+       355e6:	bb13      	cbnz	r3, 3562e <<a href="./7d1c7091a5300ee38546c4eec2908e12.html">dhcp_start</a>+0x66>
+
+       355e8:	2248      	movs	r2, #72	@ 0x48
+
+       355ea:	2100      	movs	r1, #0
+
+       355ec:	4628      	mov	r0, r5
+
+       355ee:	f7cb f859 	bl	6a4 <<a href="../../../../../../../../../../../../unknown/unknown/716af30655f8f3d9b32750dca746ddfb.html">memset</a>>
+
+       355f2:	4a1f      	ldr	r2, [pc, #124]	@ (35670 <<a href="./7d1c7091a5300ee38546c4eec2908e12.html">dhcp_start</a>+0xa8>)
+
+       355f4:	f105 0134 	add.w	r1, r5, #52	@ 0x34
+
+       355f8:	4620      	mov	r0, r4
+
+       355fa:	f7fe fe91 	bl	34320 <<a href="../acd.c/9ebc58b0dccc4ce2d4113625c62644dd.html">acd_add</a>>
+
+       355fe:	f7ff fa05 	bl	34a0c <<a href="./4f8cd5d844ef9aabe7480c0322fe8b42.html">dhcp_inc_pcb_refcount</a>>
+
+       35602:	4606      	mov	r6, r0
+
+       35604:	bb38      	cbnz	r0, 35656 <<a href="./7d1c7091a5300ee38546c4eec2908e12.html">dhcp_start</a>+0x8e>
+
+       35606:	2301      	movs	r3, #1
+
+       35608:	712b      	strb	r3, [r5, #4]
+
+       3560a:	f894 3045 	ldrb.w	r3, [r4, #69]	@ 0x45
+
+       3560e:	075b      	lsls	r3, r3, #29
+
+       35610:	d408      	bmi.n	35624 <<a href="./7d1c7091a5300ee38546c4eec2908e12.html">dhcp_start</a>+0x5c>
+
+    dhcp_set_state():
+
+       35612:	796b      	ldrb	r3, [r5, #5]
+
+       35614:	2b02      	cmp	r3, #2
+
+       35616:	d003      	beq.n	35620 <<a href="./7d1c7091a5300ee38546c4eec2908e12.html">dhcp_start</a>+0x58>
+
+       35618:	2302      	movs	r3, #2
+
+       3561a:	716b      	strb	r3, [r5, #5]
+
+       3561c:	71a8      	strb	r0, [r5, #6]
+
+       3561e:	8128      	strh	r0, [r5, #8]
+
+    dhcp_start():
+
+       35620:	4630      	mov	r0, r6
+
+       35622:	bdf8      	pop	{r3, r4, r5, r6, r7, pc}
+
+       35624:	4620      	mov	r0, r4
+
+       35626:	f7ff fb29 	bl	34c7c <<a href="./8f67080f65f67dc415c23e160e5b6e3d.html">dhcp_discover</a>.isra.0>
+
+       3562a:	4630      	mov	r0, r6
+
+       3562c:	bdf8      	pop	{r3, r4, r5, r6, r7, pc}
+
+    dhcp_dec_pcb_refcount():
+
+       3562e:	4b11      	ldr	r3, [pc, #68]	@ (35674 <<a href="./7d1c7091a5300ee38546c4eec2908e12.html">dhcp_start</a>+0xac>)
+
+       35630:	781e      	ldrb	r6, [r3, #0]
+
+       35632:	3e01      	subs	r6, #1
+
+       35634:	b2f6      	uxtb	r6, r6
+
+       35636:	701e      	strb	r6, [r3, #0]
+
+       35638:	2e00      	cmp	r6, #0
+
+       3563a:	d1d5      	bne.n	355e8 <<a href="./7d1c7091a5300ee38546c4eec2908e12.html">dhcp_start</a>+0x20>
+
+       3563c:	4f0e      	ldr	r7, [pc, #56]	@ (35678 <<a href="./7d1c7091a5300ee38546c4eec2908e12.html">dhcp_start</a>+0xb0>)
+
+       3563e:	6838      	ldr	r0, [r7, #0]
+
+       35640:	f7fe fe16 	bl	34270 <<a href="../../udp.c/554cfee26965a2222880ba2ac60608ce.html">udp_remove</a>>
+
+       35644:	603e      	str	r6, [r7, #0]
+
+       35646:	e7cf      	b.n	355e8 <<a href="./7d1c7091a5300ee38546c4eec2908e12.html">dhcp_start</a>+0x20>
+
+    dhcp_start():
+
+       35648:	2048      	movs	r0, #72	@ 0x48
+
+       3564a:	f7f9 ffef 	bl	2f62c <<a href="../../mem.c/2c3ebe0a20099c600a655032b12a1fd9.html">mem_malloc</a>>
+
+       3564e:	4605      	mov	r5, r0
+
+       35650:	b108      	cbz	r0, 35656 <<a href="./7d1c7091a5300ee38546c4eec2908e12.html">dhcp_start</a>+0x8e>
+
+       35652:	62a0      	str	r0, [r4, #40]	@ 0x28
+
+       35654:	e7c8      	b.n	355e8 <<a href="./7d1c7091a5300ee38546c4eec2908e12.html">dhcp_start</a>+0x20>
+
+       35656:	f04f 36ff 	mov.w	r6, #4294967295	@ 0xffffffff
+
+       3565a:	e7e1      	b.n	35620 <<a href="./7d1c7091a5300ee38546c4eec2908e12.html">dhcp_start</a>+0x58>
+
+       3565c:	4807      	ldr	r0, [pc, #28]	@ (3567c <<a href="./7d1c7091a5300ee38546c4eec2908e12.html">dhcp_start</a>+0xb4>)
+
+       3565e:	f7d4 f861 	bl	9724 <<a href="../../../../../../../executables/referenceApp/application/src/logger/logger.cpp/98866fb3d81ee8db78cbfd1e2dfd931d.html">log_lwipInfo</a>>
+
+       35662:	f06f 060f 	mvn.w	r6, #15
+
+       35666:	e7db      	b.n	35620 <<a href="./7d1c7091a5300ee38546c4eec2908e12.html">dhcp_start</a>+0x58>
+
+       35668:	4805      	ldr	r0, [pc, #20]	@ (35680 <<a href="./7d1c7091a5300ee38546c4eec2908e12.html">dhcp_start</a>+0xb8>)
+
+       3566a:	f7d4 f85b 	bl	9724 <<a href="../../../../../../../executables/referenceApp/application/src/logger/logger.cpp/98866fb3d81ee8db78cbfd1e2dfd931d.html">log_lwipInfo</a>>
+
+       3566e:	e7f8      	b.n	35662 <<a href="./7d1c7091a5300ee38546c4eec2908e12.html">dhcp_start</a>+0x9a>
+
+       35670:	00035499 	.word	0x00035499
+
+       35674:	1ffe4938 	.word	0x1ffe4938
+
+       35678:	1ffe493c 	.word	0x1ffe493c
+
+       3567c:	0004dc70 	.word	0x0004dc70
+
+       35680:	0004dd40 	.word	0x0004dd40
+
+    </pre>
+
+    
+    <pre><a href="./8af280401fa7f8e7448c8810e631c47f.html">dhcp_network_changed_link_up (40)</a></pre>
+    
+
+    
+        <h1>Stack Worst-Case Scenarios</h1>
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 336</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 1,296</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    336
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                48 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    1,296
+                    
+                    
+                </td>
+                <td class="col_size">68</td>
+                <td><a href="../../../../../../bsw/util/src/util/logger/Logger.cpp/d658d7c78dcca1ca01e61ef198b3eeaa.html" class="icon-function">util::logger::Logger::doLog(unsigned char, util::logger::Level, char const*, std::__va_list)</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                    
+                    288
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                24 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    1,228
+                    
+                    
+                </td>
+                <td class="col_size">100</td>
+                <td><a href="../../../../../../../executables/referenceApp/application/src/logger/logger.cpp/98866fb3d81ee8db78cbfd1e2dfd931d.html" class="icon-function">log_lwipInfo</a></td>
+            </tr>
+        
+            <tr>
+                <th>3</th>
+                <td class="col_size">
+                    
+                    264
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                16 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    1,128
+                    
+                    
+                </td>
+                <td class="col_size">60</td>
+                <td><a href="../../memp.c/39d50c52143357af896630c36b8c515f.html" class="icon-function">memp_free</a></td>
+            </tr>
+        
+            <tr>
+                <th>4</th>
+                <td class="col_size">
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    1,068
+                    
+                    
+                </td>
+                <td class="col_size">112</td>
+                <td><a href="../../pbuf.c/9b6fd2596874539050b4147be9634d35.html" class="icon-function">pbuf_free</a></td>
+            </tr>
+        
+            <tr>
+                <th>5</th>
+                <td class="col_size">
+                    
+                    248
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                32 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    956
+                    
+                    
+                </td>
+                <td class="col_size">264</td>
+                <td><a href="../../pbuf.c/00f9d6c635a80626d607c18477d3504a.html" class="icon-function">pbuf_alloc</a></td>
+            </tr>
+        
+            <tr>
+                <th>6</th>
+                <td class="col_size">
+                    
+                    216
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                56 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    692
+                    
+                    
+                </td>
+                <td class="col_size">356</td>
+                <td><a href="../../udp.c/98b639583090b8420a937b79d3bd3d07.html" class="icon-function">udp_sendto_if_src</a></td>
+            </tr>
+        
+            <tr>
+                <th>7</th>
+                <td class="col_size">
+                    
+                    160
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                56 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">336</td>
+                <td><a href="./8f67080f65f67dc415c23e160e5b6e3d.html" class="icon-function">dhcp_discover</a></td>
+            </tr>
+        
+        </tbody>
+        
+        <tfoot>
+            <tr>
+                <th></th>
+                <th class="col_size">104
+                </th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </tfoot>
+        
+    </table>
+        
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 104</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 628</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    104
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                24 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    628
+                    
+                    
+                </td>
+                <td class="col_size">188</td>
+                <td><a href="./7d1c7091a5300ee38546c4eec2908e12.html" class="icon-function">dhcp_start</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                    
+                    80
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                16 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    440
+                    
+                    
+                </td>
+                <td class="col_size">52</td>
+                <td><a href="../../../../../../bsw/lwipSocket/src/lwipSocket/netif/LwipNetworkInterface.cpp/292d45e6555bbf8b230114a0425ee63e.html" class="icon-function">lwipnetif::startNetif(ethernet::NetifState&amp;, netif&amp;, ip::Ip4Config const&amp;)</a></td>
+            </tr>
+        
+            <tr>
+                <th>3</th>
+                <td class="col_size">
+                </td>
+                <td class="col_size">
+            
+                64 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">388</td>
+                <td><a href="../../../../../../../executables/referenceApp/application/src/systems/EthernetSystem.cpp/5b12771969dc07b02f951af08c34750c.html" class="icon-function">systems::EthernetSystem::run()</a></td>
+            </tr>
+        
+        </tbody>
+        
+    </table>
+        
+    
+
+
+        </div>
+    <div id="page-footer">
+        <hr>
+        
+            brought to you with 💖
+            by <a href="https://twitter.com/hbehrens">Heiko Behrens</a>
+            <span class="secondary">– MIT license, copyright © 2014-2026</span>
+        
+    </div>
+    </div>
+</body>
+</html>
