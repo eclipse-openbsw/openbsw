@@ -120,7 +120,7 @@ and then change it to point to the external code and the image created as descri
 
    .. code-block::
 
-        [absolute_path_to_project_root]/build/s32k148-gcc/executables/referenceApp/application/RelWithDebInfo/app.referenceApp.elf
+        [absolute_path_to_project_root]/build/s32k148-freertos-gcc/executables/referenceApp/application/RelWithDebInfo/app.referenceApp.elf
 
    .. image:: nxpide_debug_config_linux.png
       :width: 80%

@@ -75,8 +75,8 @@ options and build the generated project.
 ### Building with CMake
 ```
 host> DOCKER_UID=$(id -u) DOCKER_GID=$(id -g) docker compose run --build development
-docker> cmake --preset posix
-docker> cmake --build --preset posix
+docker> cmake --preset posix-freertos
+docker> cmake --build --preset posix-freertos
 ```
 
 ### Building with Bazel

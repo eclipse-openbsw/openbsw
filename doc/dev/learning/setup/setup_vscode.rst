@@ -66,37 +66,37 @@ each task will be listed by their ``label`` below and you can select one to exec
             {
                 "type": "shell",
                 "label": "Clean s32k148 build",
-                "command": "rm -rf build/s32k148-gcc",
+                "command": "rm -rf build/s32k148-freertos-gcc",
                 "group": "build"
             },
             {
                 "type": "shell",
                 "label": "Generate build system for s32k148",
-                "command": "cmake --build --preset s32k148-gcc",
+                "command": "cmake --preset s32k148-freertos-gcc",
                 "group": "build"
             },
             {
                 "type": "shell",
                 "label": "Build s32k148 elf file",
-                "command": "cmake --build --preset s32k148-gcc",
+                "command": "cmake --build --preset s32k148-freertos-gcc",
                 "group": "build"
             },
             {
                 "type": "shell",
                 "label": "Clean posix build",
-                "command": "rm -rf build/posix",
+                "command": "rm -rf build/posix-freertos",
                 "group": "build"
             },
             {
                 "type": "shell",
                 "label": "Generate build system for posix",
-                "command": "cmake --preset posix",
+                "command": "cmake --preset posix-freertos",
                 "group": "build"
             },
             {
                 "type": "shell",
                 "label": "Build posix elf file",
-                "command": "cmake --build --preset posix",
+                "command": "cmake --build --preset posix-freertos",
                 "group": "build"
             }
         ]
@@ -129,14 +129,14 @@ the generated ``compile_commands.json`` files.
                 "cStandard": "c99",
                 "cppStandard": "c++17",
                 "intelliSenseMode": "linux-gcc-x64",
-                "compileCommands": "${workspaceFolder}/build/posix/compile_commands.json"
+                "compileCommands": "${workspaceFolder}/build/posix-freertos/compile_commands.json"
             },
             {
                 "name": "s32k148",
                 "cStandard": "c99",
                 "cppStandard": "c++17",
                 "intelliSenseMode": "gcc-arm",
-                "compileCommands": "${workspaceFolder}/build/s32k148-gcc/compile_commands.json"
+                "compileCommands": "${workspaceFolder}/build/s32k148-freertos-gcc/compile_commands.json"
             }
         ],
         "version": 4
@@ -187,7 +187,7 @@ The debugger will launch and stop at the entry point in ``main()``.
                 "name": "Debug posix",
                 "type": "cppdbg",
                 "request": "launch",
-                "program": "${workspaceFolder}/build/posix/executables/referenceApp/application/Debug/app.referenceApp.elf",
+                "program": "${workspaceFolder}/build/posix-freertos/executables/referenceApp/application/Debug/app.referenceApp.elf",
                 "args": [],
                 "stopAtEntry": true,
                 "cwd": "${workspaceFolder}",
@@ -232,7 +232,7 @@ For example, the task below will flash the elf file onto the S32K148EVB Board.
             {
                 "type": "shell",
                 "label": "Flash s32k148 elf file",
-                "command": "arm-none-eabi-gdb -batch -x test/pyTest/flash.gdb build/s32k148/executables/referenceApp/application/Debug/app.referenceApp.elf",
+                "command": "arm-none-eabi-gdb -batch -x test/pyTest/flash.gdb build/s32k148-freertos-gcc/executables/referenceApp/application/RelWithDebInfo/app.referenceApp.elf",
                 "group": "build"
             }
         ]
@@ -267,7 +267,7 @@ Cut & paste the configuration below into your ``.vscode/launch.json``...
                 {
                     "name": "Debug s32k148",
                     "cwd": "${workspaceFolder}",
-                    "executable": "${workspaceFolder}/build/s32k148/executables/referenceApp/application/Debug/app.referenceApp.elf",
+                    "executable": "${workspaceFolder}/build/s32k148-freertos-gcc/executables/referenceApp/application/Debug/app.referenceApp.elf",
                     "request": "launch",
                     "type": "cortex-debug",
                     "runToEntryPoint": "main",

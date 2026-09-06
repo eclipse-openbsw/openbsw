@@ -194,13 +194,13 @@ check the following...
 
    .. code-block:: bash
 
-     build/s32k148-gcc/executables/referenceApp/application/RelWithDebInfo/gapp.referenceApp.elf
+     build/s32k148-freertos-gcc/executables/referenceApp/application/RelWithDebInfo/app.referenceApp.elf
 
 Then, in the root folder you can run the gdb client to start an interactive debug session...
 
   .. code-block:: bash
 
-   arm-none-eabi-gdb -x tools/gdb/pegdbserver.gdb build/s32k148-gcc/executables/referenceApp/application/RelWithDebInfo/gapp.referenceApp.elf
+   arm-none-eabi-gdb -x tools/gdb/pegdbserver.gdb build/s32k148-freertos-gcc/executables/referenceApp/application/RelWithDebInfo/app.referenceApp.elf
 
 Flash the board on command-line
 -------------------------------
@@ -211,7 +211,7 @@ it may be more convenient to flash it in a single command as follows...
 
   .. code-block:: bash
 
-   arm-none-eabi-gdb -batch -x test/pyTest/flash.gdb build/s32k148-gcc/executables/referenceApp/application/RelWithDebInfo/gapp.referenceApp.elf
+   arm-none-eabi-gdb -batch -x test/pyTest/flash.gdb build/s32k148-freertos-gcc/executables/referenceApp/application/RelWithDebInfo/app.referenceApp.elf
 
 Reset the board on command-line
 -------------------------------
@@ -220,4 +220,4 @@ You can reset the board in a single command as follows...
 
   .. code-block:: bash
 
-   arm-none-eabi-gdb -batch -x test/pyTest/reset.gdb build/s32k148-gcc/executables/referenceApp/application/RelWithDebInfo/gapp.referenceApp.elf
+   arm-none-eabi-gdb -batch -x test/pyTest/reset.gdb build/s32k148-freertos-gcc/executables/referenceApp/application/RelWithDebInfo/app.referenceApp.elf

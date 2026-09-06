@@ -51,25 +51,28 @@ In the root directory of the repository, run:
 
 .. code-block:: bash
 
-    cmake --preset posix
-    cmake --build --preset posix --parallel
+    cmake --preset posix-freertos
+    cmake --build --preset posix-freertos --parallel
+
+This builds the reference application on top of FreeRTOS.
+Use the ``posix-threadx`` preset to build on top of ThreadX instead of FreeRTOS.
 
 By default release configuration is used. If you want to build debug configuration, use
 
 .. code-block:: bash
 
-    cmake --build --preset posix --config Debug --parallel
+    cmake --build --preset posix-freertos --config Debug --parallel
 
-The build files should be written to a new subdirectory named ``build/posix``
+The build files should be written to a new subdirectory named ``build/posix-freertos``
 and the built executable should be found at
-``build/posix/executables/referenceApp/application/Release/app.referenceApp.elf``.
+``build/posix-freertos/executables/referenceApp/application/Release/app.referenceApp.elf``.
 If you've built it with `--config Debug`, then the executable can be found at
-``build/posix/executables/referenceApp/application/Debug/app.referenceApp.elf``.
+``build/posix-freertos/executables/referenceApp/application/Debug/app.referenceApp.elf``.
 You should be able to run and see output like this in your shell terminal...
 
 .. code-block:: bash
 
-    $ build/posix/executables/referenceApp/application/Release/app.referenceApp.elf
+    $ build/posix-freertos/executables/referenceApp/application/Release/app.referenceApp.elf
     hello
     106367434: RefApp: LIFECYCLE: INFO: Initialize level 1
     106367434: RefApp: LIFECYCLE: INFO: Initialize runtime
