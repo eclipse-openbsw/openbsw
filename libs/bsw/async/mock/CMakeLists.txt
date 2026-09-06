@@ -2,7 +2,7 @@ add_library(asyncMock INTERFACE)
 
 target_include_directories(asyncMock INTERFACE gmock/include)
 
-target_link_libraries(asyncMock INTERFACE etl platform)
+target_link_libraries(asyncMock INTERFACE etl gmock platform)
 
 add_library(
     asyncMockImpl gmock/src/async/AsyncMock.cpp gmock/src/async/TestContext.cpp

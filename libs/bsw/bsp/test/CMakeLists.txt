@@ -4,6 +4,6 @@ add_executable(
 
 target_include_directories(bspTest PRIVATE)
 
-target_link_libraries(bspTest PRIVATE bsp bspMock util)
+target_link_libraries(bspTest PRIVATE bsp bspMock util gmock_main)
 
 gtest_discover_tests(bspTest PROPERTIES LABELS "bspTest")
