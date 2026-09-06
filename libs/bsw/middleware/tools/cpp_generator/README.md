@@ -46,7 +46,8 @@ python3 jinja2cpp.py \
   --deployment-yaml <path-to-deployment.yaml> \
   [--clang-format-config <path-to-.clang-format>] \
   [--no-clean] \
-  [--generation-mode {normal,mock}]
+  [--generation-mode {normal,mock}] \
+  [--list-outputs]
 ```
 
 ### Arguments
@@ -54,11 +55,36 @@ python3 jinja2cpp.py \
 | Argument | Required | Description |
 |---|---|---|
 | `--input` | Yes | Directory containing the `templates/` subdirectory (jinja, schemas) |
-| `--output` | Yes | Directory where `include/generated_code/` and `src/generated_code/` will be written |
+| `--output` | Conditional | Directory where `include/generated_code/` and `src/generated_code/` will be written. Required for generation; **not** required (and ignored) when `--list-outputs` is given |
 | `--deployment-yaml` | Yes | Path to the deployment YAML file |
 | `--clang-format-config` | No | Path to a `.clang-format` config file; auto-detected from repo root if omitted |
 | `--no-clean` | No | Skip deleting the output directories before generation |
 | `--generation-mode` | No | Default generation mode: `normal` (full generation) or `mock` (interface-only for testing). Default: `normal` |
+| `--list-outputs` | No | Print the relative path of every file a generation run would produce for the given `--deployment-yaml` (one per line, on stdout) and exit **without rendering or writing anything**. Loader diagnostics go to stderr so stdout stays a clean path list. Used to declare the generated output set to build systems (see [Bazel build integration](#bazel-build-integration)) |
+
+## Bazel build integration
+
+The Bazel build wraps this script in the `middleware_codegen` macro
+(`libs/bsw/middleware/tools/cpp_generator/middleware_codegen.bzl`), which replaces
+the CMake `add_custom_command` + `add_library` pair. A `genrule` runs the script
+and a wrapper `cc_library` exposes the generated headers/sources.
+
+Key points:
+
+- **Interpreter:** the genrule invokes `/opt/venv/bin/python3` by absolute path
+  (no `rules_python`, no `pip.parse`). Bazel therefore relies on the development
+  Docker image already having the dependencies installed in `/opt/venv`.
+- **Requirements contract:** `/opt/venv` is populated from
+  `docker/development/files/requirements.lock`, which is `pip-compile`d from the
+  `requirements.txt` files listed under [Prerequisites](#prerequisites) (including
+  this tool's). So a bump to `requirements.txt` only reaches the genrule after the
+  lock is regenerated **and** the image is rebuilt (`docker compose build
+  development`) -- there is no Bazel-level enforcement of this, so rebuild after any
+  dependency change.
+- **Declared outputs:** the genrule must declare each generated file individually
+  (a mixed headers+sources directory artifact cannot be consumed safely by
+  `cc_library`). The output list is derived from `--list-outputs` and checked in,
+  so regenerate it whenever the deployment model changes the set of generated files.
 
 ## Quick test with the bundled test deployment
 

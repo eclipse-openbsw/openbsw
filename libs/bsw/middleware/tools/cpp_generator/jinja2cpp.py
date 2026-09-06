@@ -346,6 +346,76 @@ def generate_files(
             render_template_with_context(template_path, context, output_path)
 
 
+def _resolve_output_paths(input_data) -> list[str]:
+    """Return the output file paths a generation run would produce for *input_data*.
+
+    Paths are relative to the output base directory and use forward slashes
+    (e.g. ``include/generated_code/middleware/ClusterId.h``). Nothing is rendered
+    or written; only the output layout is computed.
+
+    This mirrors the filtering and naming logic of :func:`generate_files` so that
+    build systems can declare the exact set of generated outputs up front.
+    Keep this in sync with :func:`generate_files`.
+    """
+    outputs: list[str] = []
+    has_mock = _has_mock_mode_service(input_data)
+
+    def _emit(template_type: str, item=None) -> None:
+        for template_name, output_pattern, output_dir_pattern in TEMPLATE_CONFIG[
+            template_type
+        ]:
+            if template_type == "global" and has_mock:
+                if template_name not in MOCK_GLOBAL_TEMPLATES:
+                    continue
+
+            if template_type == "per_service":
+                service_mode = _service_generation_mode(item)
+                if service_mode == "normal" and template_name in (
+                    "mock/service_proxy_mock.h.jinja",
+                    "mock/service_skeleton_mock.h.jinja",
+                ):
+                    continue
+                if (
+                    service_mode == "mock"
+                    and template_name not in MOCK_TEMPLATE_OVERRIDES
+                ):
+                    continue
+
+            if template_type == "global":
+                output_filename = output_pattern
+                output_dir = output_dir_pattern
+            elif template_type == "per_cluster":
+                output_filename = output_pattern.format(item.name)
+                output_dir = output_dir_pattern
+            elif template_type == "per_connection":
+                output_filename = output_pattern.format(
+                    item.source_cluster.name, item.target_cluster.name
+                )
+                output_dir = output_dir_pattern
+            elif template_type == "per_service":
+                service_name = getattr(item, "filename", item.name)
+                namespace_path = (
+                    item.namespace.replace("::", "/").lower()
+                    if hasattr(item, "namespace")
+                    else ""
+                )
+                output_filename = output_pattern.format(service_name)
+                output_dir = output_dir_pattern.format(namespace_path)
+
+            outputs.append(f"{output_dir}/{output_filename}")
+
+    _emit("global")
+    if not has_mock:
+        for cluster in getattr(input_data, "clusters", []):
+            _emit("per_cluster", cluster)
+        for connection in getattr(input_data, "connections", []):
+            _emit("per_connection", connection)
+    for service in getattr(input_data, "services", []):
+        _emit("per_service", service)
+
+    return outputs
+
+
 def clean_previous_generated_files(output_base: Path) -> None:
     """Delete previously generated output directories before a new generation run."""
     generated_dirs = [
@@ -426,8 +496,13 @@ def parse_args(argv=None) -> argparse.Namespace:
     parser.add_argument(
         "--output",
         type=Path,
-        required=True,
-        help="Base output directory where include/generated_code/ and src/generated_code/ will be created.",
+        required=False,
+        help="Base output directory where include/generated_code/ and src/generated_code/ will be created. Required unless --list-outputs is given.",
+    )
+    parser.add_argument(
+        "--list-outputs",
+        action="store_true",
+        help="Print the relative paths of all files a generation run would produce for the given deployment YAML (one per line) and exit, without rendering or writing anything. Used to declare the generated output set to build systems.",
     )
     parser.add_argument(
         "--deployment-yaml",
@@ -458,11 +533,37 @@ def main(argv=None) -> int:
     args = parse_args(argv)
 
     input_base = args.input.resolve()
-    output_base = args.output.resolve()
 
     if not input_base.is_dir():
         print(f"error: Input directory not found: {input_base}", file=sys.stderr)
         return 1
+
+    # --list-outputs: resolve the output layout from the deployment model and exit
+    # without rendering. Kept additive so it does not affect the generation path.
+    if args.list_outputs:
+        try:
+            deployment_yaml = args.deployment_yaml.resolve()
+            # Keep stdout clean (path list only); loader diagnostics go to stderr.
+            _saved_stdout = sys.stdout
+            sys.stdout = sys.stderr
+            try:
+                input_data = load_input_data(input_base, deployment_yaml)
+            finally:
+                sys.stdout = _saved_stdout
+        except Exception as e:
+            print(f"error: {e}", file=sys.stderr)
+            return 1
+        for service in getattr(input_data, "services", []):
+            if not hasattr(service, "generation_mode") or not service.generation_mode:
+                service["generation_mode"] = args.generation_mode
+        for path in _resolve_output_paths(input_data):
+            print(path)
+        return 0
+
+    if args.output is None:
+        print("error: --output is required unless --list-outputs is given", file=sys.stderr)
+        return 1
+    output_base = args.output.resolve()
 
     print(f"Input base directory: {input_base}")
     print(f"Output base directory: {output_base}")
