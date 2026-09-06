@@ -5,7 +5,7 @@ if (BUILD_EXECUTABLE STREQUAL "unitTest")
 
     target_include_directories(storageMock INTERFACE mock/include)
 
-    target_link_libraries(storageMock INTERFACE storage gmock_main)
+    target_link_libraries(storageMock INTERFACE storage gmock)
 else ()
     list(APPEND storage.extraSources src/storage/StorageTester.cpp)
 endif ()

@@ -9,5 +9,5 @@ if (BUILD_EXECUTABLE STREQUAL "unitTest")
 
     target_include_directories(ioMock INTERFACE mock/include)
 
-    target_link_libraries(ioMock INTERFACE io etl gmock_main)
+    target_link_libraries(ioMock INTERFACE io etl gmock)
 endif ()

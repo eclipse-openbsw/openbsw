@@ -20,6 +20,6 @@ if (BUILD_EXECUTABLE STREQUAL "unitTest")
 
     target_include_directories(docanMock INTERFACE mock/gmock/include)
 
-    target_link_libraries(docanMock INTERFACE docan)
+    target_link_libraries(docanMock INTERFACE docan gmock)
 
 endif ()

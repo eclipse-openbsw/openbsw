@@ -25,5 +25,8 @@ if (BUILD_EXECUTABLE STREQUAL "unitTest")
 
     target_include_directories(cpp2canMock PUBLIC mock/include)
 
-    target_link_libraries(cpp2canMock PRIVATE bspMock cpp2can gmock_main)
+    target_link_libraries(
+        cpp2canMock
+        PUBLIC cpp2can gmock
+        PRIVATE bspMock)
 endif ()

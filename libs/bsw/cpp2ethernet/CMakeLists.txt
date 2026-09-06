@@ -31,5 +31,5 @@ if (BUILD_EXECUTABLE STREQUAL "unitTest")
 
     target_include_directories(cpp2ethernetMock INTERFACE mock/include)
 
-    target_link_libraries(cpp2ethernetMock INTERFACE cpp2ethernet)
+    target_link_libraries(cpp2ethernetMock INTERFACE cpp2ethernet gmock)
 endif ()

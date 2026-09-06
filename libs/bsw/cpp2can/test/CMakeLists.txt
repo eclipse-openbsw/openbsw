@@ -9,6 +9,7 @@ add_executable(
 
 target_include_directories(cpp2canTest PRIVATE)
 
-target_link_libraries(cpp2canTest PRIVATE bspMock cpp2can cpp2canMock)
+target_link_libraries(cpp2canTest PRIVATE bspMock cpp2can cpp2canMock
+                                          gmock_main)
 
 gtest_discover_tests(cpp2canTest PROPERTIES LABELS "cpp2canTest")

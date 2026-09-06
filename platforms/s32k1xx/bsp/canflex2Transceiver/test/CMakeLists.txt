@@ -9,7 +9,7 @@ target_link_libraries(
             bspIo
             lifecycle
             bspMock
-            gmock)
+            gmock_main)
 
 gtest_discover_tests(CanFlex2TransceiverTest
                      PROPERTIES LABELS "CanFlex2TransceiverTest")
