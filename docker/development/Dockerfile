@@ -54,6 +54,7 @@ RUN apt-get update && apt-get install -y \
         g++-14 \
         gcc-14 \
         git \
+        jq \
         lcov \
         libc++-17-dev \
         libc++abi-17-dev \

@@ -1,0 +1,25 @@
+:$label="S32K148 GCC size delta"
+:#image[:+ws/common/dev-image]
+:$output="none"
+
+inputs = :[
+    :#baseline[
+        :+ws/size-delta/s32k148-gcc-snapshot
+
+        worktree = :[
+            source = :/baseline
+        ]
+    ]
+    :#current[
+        :+ws/size-delta/s32k148-gcc-snapshot
+
+        worktree = :[
+            source = :/current
+        ]
+    ]
+]
+
+worktree = :[
+    :/ws/size-delta::analyze.py=s32k148-gcc.analyze.py
+    :/ws/size-delta::run.sh=s32k148-gcc.run.sh
+]
