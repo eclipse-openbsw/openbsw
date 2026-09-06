@@ -18,12 +18,12 @@
 
 namespace uds
 {
-uint8_t const StartRoutine::sfImplementedRequest[2]
+::etl::array<uint8_t, 2U> const StartRoutine::sfImplementedRequest
     = {ServiceId::ROUTINE_CONTROL,
        static_cast<::etl::underlying_type<RoutineControl::Subfunction>::type>(
            RoutineControl::Subfunction::START_ROUTINE)};
 
-StartRoutine::StartRoutine() : Subfunction(&sfImplementedRequest[0], DiagSession::ALL_SESSIONS())
+StartRoutine::StartRoutine() : Subfunction(sfImplementedRequest.data(), DiagSession::ALL_SESSIONS())
 {
     setDefaultDiagReturnCode(DiagReturnCode::ISO_REQUEST_OUT_OF_RANGE);
 }

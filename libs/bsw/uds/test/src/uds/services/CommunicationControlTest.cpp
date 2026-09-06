@@ -21,7 +21,9 @@
 #include "uds/session/ApplicationExtendedSession.h"
 #include "uds/session/DiagSessionManagerMock.h"
 
+#include <etl/span.h>
 #include <gtest/gtest.h>
+#include <array>
 
 namespace
 {
@@ -34,11 +36,22 @@ class TestCommunicationControl : public CommunicationControl
 {
 public:
     virtual DiagReturnCode::Type
-    process(IncomingDiagConnection& connection, uint8_t const request[], uint16_t requestLength)
+    process(IncomingDiagConnection& connection, uint8_t const* request, uint16_t requestLength)
     {
         return CommunicationControl::process(connection, request, requestLength);
     }
 };
+
+template<size_t N>
+DiagReturnCode::Type processRequest(
+    TestCommunicationControl& service,
+    IncomingDiagConnection& connection,
+    std::array<uint8_t, N> const& request)
+{
+    auto const requestPayload
+        = ::etl::span<uint8_t const>(request.data(), request.size()).subspan(1U);
+    return service.process(connection, requestPayload.data(), requestPayload.size());
+}
 
 class CommunicationControlListener : public uds::ICommunicationStateListener
 {
@@ -114,22 +127,34 @@ TEST_F(CommunicationControlTest, VariableLengthConstructor)
 
 TEST_F(CommunicationControlTest, Returns_ISO_INVALID_FORMAT)
 {
-    uint8_t const request[] = {0x00, 0x00, 0x00}; // invalid requestedSession
+    std::array<uint8_t, 3U> const request = {0x00, 0x00, 0x00}; // invalid requestedSession
 
     EXPECT_CALL(_sessionManager, getActiveSession())
         .WillRepeatedly(ReturnRef(DiagSession::APPLICATION_DEFAULT_SESSION()));
     ASSERT_EQ(
-        DiagReturnCode::ISO_INVALID_FORMAT, _service.process(_conn, request, sizeof(request)));
+        DiagReturnCode::ISO_INVALID_FORMAT,
+        _service.process(_conn, request.data(), request.size()));
+}
+
+TEST_F(CommunicationControlTest, Returns_ISO_INVALID_FORMAT_for_short_request)
+{
+    std::array<uint8_t, 1U> const request = {0x00};
+
+    EXPECT_CALL(_sessionManager, getActiveSession())
+        .WillRepeatedly(ReturnRef(DiagSession::APPLICATION_DEFAULT_SESSION()));
+    ASSERT_EQ(
+        DiagReturnCode::ISO_INVALID_FORMAT,
+        _service.process(_conn, request.data(), request.size()));
 }
 
 TEST_F(CommunicationControlTest, EnableRxAndTx)
 {
     _listener.fState = ICommunicationStateListener::DISABLE_NORMAL_MESSAGE_TRANSMISSION;
 
-    uint8_t request[] = {ServiceId::COMMUNICATION_CONTROL, 0x00, 0x01};
+    std::array<uint8_t, 3U> request = {ServiceId::COMMUNICATION_CONTROL, 0x00, 0x01};
     EXPECT_CALL(_sessionManager, getActiveSession())
         .WillRepeatedly(ReturnRef(DiagSession::APPLICATION_DEFAULT_SESSION()));
-    ASSERT_EQ(DiagReturnCode::OK, _service.process(_conn, &request[1], 2));
+    ASSERT_EQ(DiagReturnCode::OK, processRequest(_service, _conn, request));
     ASSERT_EQ(ICommunicationStateListener::ENABLE_NORMAL_MESSAGE_TRANSMISSION, _listener.fState);
 }
 
@@ -137,10 +162,10 @@ TEST_F(CommunicationControlTest, EnableRxAndTxNNMessage)
 {
     _listener.fState = ICommunicationStateListener::DISABLE_NM_MESSAGE_TRANSMISSION;
 
-    uint8_t request[] = {ServiceId::COMMUNICATION_CONTROL, 0x00, 0x02};
+    std::array<uint8_t, 3U> request = {ServiceId::COMMUNICATION_CONTROL, 0x00, 0x02};
     EXPECT_CALL(_sessionManager, getActiveSession())
         .WillRepeatedly(ReturnRef(DiagSession::APPLICATION_DEFAULT_SESSION()));
-    ASSERT_EQ(DiagReturnCode::OK, _service.process(_conn, &request[1], 2));
+    ASSERT_EQ(DiagReturnCode::OK, processRequest(_service, _conn, request));
 
     ASSERT_EQ(ICommunicationStateListener::ENABLE_NN_MESSAGE_TRANSMISSION, _listener.fState);
 }
@@ -149,10 +174,10 @@ TEST_F(CommunicationControlTest, EnableRxAndTxALLMessage)
 {
     _listener.fState = ICommunicationStateListener::DISABLE_ALL_MESSAGE_TRANSMISSION;
 
-    uint8_t request[] = {ServiceId::COMMUNICATION_CONTROL, 0x00, 0x07};
+    std::array<uint8_t, 3U> request = {ServiceId::COMMUNICATION_CONTROL, 0x00, 0x07};
     EXPECT_CALL(_sessionManager, getActiveSession())
         .WillRepeatedly(ReturnRef(DiagSession::APPLICATION_DEFAULT_SESSION()));
-    ASSERT_EQ(DiagReturnCode::OK, _service.process(_conn, &request[1], 2));
+    ASSERT_EQ(DiagReturnCode::OK, processRequest(_service, _conn, request));
 
     ASSERT_EQ(ICommunicationStateListener::ENABLE_ALL_MESSAGE_TRANSMISSION, _listener.fState);
 }
@@ -163,13 +188,13 @@ TEST_F(CommunicationControlTest, DisableRxAndTx)
     EXPECT_CALL(_sessionManager, getActiveSession())
         .WillRepeatedly(ReturnRef(DiagSession::APPLICATION_DEFAULT_SESSION()));
 
-    uint8_t request_on[] = {ServiceId::COMMUNICATION_CONTROL, 0x00, 0x01};
-    ASSERT_EQ(DiagReturnCode::OK, _service.process(_conn, &request_on[1], 2));
+    std::array<uint8_t, 3U> requestOn = {ServiceId::COMMUNICATION_CONTROL, 0x00, 0x01};
+    ASSERT_EQ(DiagReturnCode::OK, processRequest(_service, _conn, requestOn));
 
     _listener.fState
         = ICommunicationStateListener::ENABLE_REC_DISABLE_NORMAL_MESSAGE_SEND_TRANSMISSION;
-    uint8_t request[] = {ServiceId::COMMUNICATION_CONTROL, 0x03, 0x01};
-    ASSERT_EQ(DiagReturnCode::OK, _service.process(_conn, &request[1], 2));
+    std::array<uint8_t, 3U> request = {ServiceId::COMMUNICATION_CONTROL, 0x03, 0x01};
+    ASSERT_EQ(DiagReturnCode::OK, processRequest(_service, _conn, request));
     ASSERT_EQ(ICommunicationStateListener::DISABLE_NORMAL_MESSAGE_TRANSMISSION, _listener.fState);
 }
 
@@ -179,13 +204,13 @@ TEST_F(CommunicationControlTest, DisableRxAndTxNNMessage)
     EXPECT_CALL(_sessionManager, getActiveSession())
         .WillRepeatedly(ReturnRef(DiagSession::APPLICATION_DEFAULT_SESSION()));
 
-    uint8_t request_on[] = {ServiceId::COMMUNICATION_CONTROL, 0x00, 0x02};
-    ASSERT_EQ(DiagReturnCode::OK, _service.process(_conn, &request_on[1], 2));
+    std::array<uint8_t, 3U> requestOn = {ServiceId::COMMUNICATION_CONTROL, 0x00, 0x02};
+    ASSERT_EQ(DiagReturnCode::OK, processRequest(_service, _conn, requestOn));
 
     _listener.fState = ICommunicationStateListener::DISABLE_NM_MESSAGE_TRANSMISSION;
 
-    uint8_t request[] = {ServiceId::COMMUNICATION_CONTROL, 0x03, 0x02};
-    ASSERT_EQ(DiagReturnCode::OK, _service.process(_conn, &request[1], 2));
+    std::array<uint8_t, 3U> request = {ServiceId::COMMUNICATION_CONTROL, 0x03, 0x02};
+    ASSERT_EQ(DiagReturnCode::OK, processRequest(_service, _conn, request));
 
     ASSERT_EQ(ICommunicationStateListener::DISABLE_NM_MESSAGE_TRANSMISSION, _listener.fState);
 }
@@ -196,12 +221,12 @@ TEST_F(CommunicationControlTest, EnableDisableRxAndTxNNMessage)
     EXPECT_CALL(_sessionManager, getActiveSession())
         .WillRepeatedly(ReturnRef(DiagSession::APPLICATION_DEFAULT_SESSION()));
 
-    uint8_t request_on[] = {ServiceId::COMMUNICATION_CONTROL, 0x03, 0x02};
-    ASSERT_EQ(DiagReturnCode::OK, _service.process(_conn, &request_on[1], 2));
+    std::array<uint8_t, 3U> requestOn = {ServiceId::COMMUNICATION_CONTROL, 0x03, 0x02};
+    ASSERT_EQ(DiagReturnCode::OK, processRequest(_service, _conn, requestOn));
 
-    _listener.fState  = ICommunicationStateListener::ENABLE_REC_DISABLE_NM_SEND_TRANSMISSION;
-    uint8_t request[] = {ServiceId::COMMUNICATION_CONTROL, 0x01, 0x02};
-    ASSERT_EQ(DiagReturnCode::OK, _service.process(_conn, &request[1], 2));
+    _listener.fState = ICommunicationStateListener::ENABLE_REC_DISABLE_NM_SEND_TRANSMISSION;
+    std::array<uint8_t, 3U> request = {ServiceId::COMMUNICATION_CONTROL, 0x01, 0x02};
+    ASSERT_EQ(DiagReturnCode::OK, processRequest(_service, _conn, request));
     ASSERT_EQ(
         ICommunicationStateListener::ENABLE_REC_DISABLE_NM_SEND_TRANSMISSION, _listener.fState);
 }
@@ -212,12 +237,12 @@ TEST_F(CommunicationControlTest, EnableDisableRxAndTxALLMessage)
     EXPECT_CALL(_sessionManager, getActiveSession())
         .WillRepeatedly(ReturnRef(DiagSession::APPLICATION_DEFAULT_SESSION()));
 
-    uint8_t request_on[] = {ServiceId::COMMUNICATION_CONTROL, 0x03, 0x08};
-    ASSERT_EQ(DiagReturnCode::OK, _service.process(_conn, &request_on[1], 2));
+    std::array<uint8_t, 3U> requestOn = {ServiceId::COMMUNICATION_CONTROL, 0x03, 0x08};
+    ASSERT_EQ(DiagReturnCode::OK, processRequest(_service, _conn, requestOn));
 
-    _listener.fState  = ICommunicationStateListener::ENABLE_REC_DISABLE_ALL_SEND_TRANSMISSION;
-    uint8_t request[] = {ServiceId::COMMUNICATION_CONTROL, 0x01, 0x08};
-    ASSERT_EQ(DiagReturnCode::OK, _service.process(_conn, &request[1], 2));
+    _listener.fState = ICommunicationStateListener::ENABLE_REC_DISABLE_ALL_SEND_TRANSMISSION;
+    std::array<uint8_t, 3U> request = {ServiceId::COMMUNICATION_CONTROL, 0x01, 0x08};
+    ASSERT_EQ(DiagReturnCode::OK, processRequest(_service, _conn, request));
     ASSERT_EQ(
         ICommunicationStateListener::ENABLE_REC_DISABLE_ALL_SEND_TRANSMISSION, _listener.fState);
 }
@@ -227,10 +252,10 @@ TEST_F(CommunicationControlTest, DisableTxEnableRx)
     // Currently implemented to do nothing.
     _listener.fState = ICommunicationStateListener::DISABLE_NORMAL_MESSAGE_TRANSMISSION;
 
-    uint8_t request[] = {ServiceId::COMMUNICATION_CONTROL, 0x01, 0x01};
+    std::array<uint8_t, 3U> request = {ServiceId::COMMUNICATION_CONTROL, 0x01, 0x01};
     EXPECT_CALL(_sessionManager, getActiveSession())
         .WillRepeatedly(ReturnRef(DiagSession::APPLICATION_DEFAULT_SESSION()));
-    ASSERT_EQ(DiagReturnCode::OK, _service.process(_conn, &request[1], 2));
+    ASSERT_EQ(DiagReturnCode::OK, processRequest(_service, _conn, request));
     ASSERT_EQ(
         ICommunicationStateListener::ENABLE_REC_DISABLE_NORMAL_MESSAGE_SEND_TRANSMISSION,
         _listener.fState);
@@ -240,10 +265,10 @@ TEST_F(CommunicationControlTest, DisableRxEnableTx)
 {
     _listener.fState = ICommunicationStateListener::DISABLE_NORMAL_MESSAGE_TRANSMISSION;
 
-    uint8_t request[] = {ServiceId::COMMUNICATION_CONTROL, 0x02, 0x01};
+    std::array<uint8_t, 3U> request = {ServiceId::COMMUNICATION_CONTROL, 0x02, 0x01};
     EXPECT_CALL(_sessionManager, getActiveSession())
         .WillRepeatedly(ReturnRef(DiagSession::APPLICATION_DEFAULT_SESSION()));
-    ASSERT_EQ(DiagReturnCode::OK, _service.process(_conn, &request[1], 2));
+    ASSERT_EQ(DiagReturnCode::OK, processRequest(_service, _conn, request));
 
     /* no op */
     ASSERT_EQ(
@@ -255,11 +280,11 @@ TEST_F(CommunicationControlTest, DisableRxEnableTxNMMessage)
 {
     _listener.fState = ICommunicationStateListener::DISABLE_NORMAL_MESSAGE_TRANSMISSION;
 
-    uint8_t request[] = {ServiceId::COMMUNICATION_CONTROL, 0x02, 0x02};
+    std::array<uint8_t, 3U> request = {ServiceId::COMMUNICATION_CONTROL, 0x02, 0x02};
 
     EXPECT_CALL(_sessionManager, getActiveSession())
         .WillRepeatedly(ReturnRef(DiagSession::APPLICATION_DEFAULT_SESSION()));
-    ASSERT_EQ(DiagReturnCode::OK, _service.process(_conn, &request[1], 2));
+    ASSERT_EQ(DiagReturnCode::OK, processRequest(_service, _conn, request));
 
     /* no op */
     ASSERT_EQ(
@@ -270,11 +295,11 @@ TEST_F(CommunicationControlTest, DisableRxEnableTxALLMessage)
 {
     _listener.fState = ICommunicationStateListener::DISABLE_NORMAL_MESSAGE_TRANSMISSION;
 
-    uint8_t request[] = {ServiceId::COMMUNICATION_CONTROL, 0x02, 0x03};
+    std::array<uint8_t, 3U> request = {ServiceId::COMMUNICATION_CONTROL, 0x02, 0x03};
 
     EXPECT_CALL(_sessionManager, getActiveSession())
         .WillRepeatedly(ReturnRef(DiagSession::APPLICATION_DEFAULT_SESSION()));
-    ASSERT_EQ(DiagReturnCode::OK, _service.process(_conn, &request[1], 2));
+    ASSERT_EQ(DiagReturnCode::OK, processRequest(_service, _conn, request));
 
     /* no op */
     ASSERT_EQ(
@@ -283,10 +308,10 @@ TEST_F(CommunicationControlTest, DisableRxEnableTxALLMessage)
 
 TEST_F(CommunicationControlTest, DisableRxEnableTxEnhanced)
 {
-    uint8_t request[] = {ServiceId::COMMUNICATION_CONTROL, 0x04, 0xF1, 0x0, 0x37};
+    std::array<uint8_t, 5U> request = {ServiceId::COMMUNICATION_CONTROL, 0x04, 0xF1, 0x0, 0x37};
     EXPECT_CALL(_sessionManager, getActiveSession())
         .WillRepeatedly(ReturnRef(DiagSession::APPLICATION_EXTENDED_SESSION()));
-    ASSERT_EQ(DiagReturnCode::OK, _service.process(_conn, &request[1], 4));
+    ASSERT_EQ(DiagReturnCode::OK, processRequest(_service, _conn, request));
 
     /* no op */
     ASSERT_EQ(
@@ -302,11 +327,11 @@ TEST_F(CommunicationControlTest, EnableEnhancedFailed)
     _sublistener.fState
         = ICommunicationSubStateListener::ENABLE_REC_DISABLE_ENHANCED_SEND_TRANSMISSION;
 
-    uint8_t request[] = {ServiceId::COMMUNICATION_CONTROL, 0x05, 0xF1, 0x0, 0x37};
+    std::array<uint8_t, 5U> request = {ServiceId::COMMUNICATION_CONTROL, 0x05, 0xF1, 0x0, 0x37};
     EXPECT_CALL(_sessionManager, getActiveSession())
         .WillRepeatedly(ReturnRef(DiagSession::APPLICATION_EXTENDED_SESSION()));
     ASSERT_EQ(
-        DiagReturnCode::ISO_SUBFUNCTION_NOT_SUPPORTED, _service.process(_conn, &request[1], 4));
+        DiagReturnCode::ISO_SUBFUNCTION_NOT_SUPPORTED, processRequest(_service, _conn, request));
 }
 
 /*
@@ -314,25 +339,25 @@ TEST_F(CommunicationControlTest, EnableEnhancedFailed)
  */
 TEST_F(CommunicationControlTest, DisableEnableEnhanced)
 {
-    uint8_t request[]  = {ServiceId::COMMUNICATION_CONTROL, 0x04, 0xF1, 0x0, 0x37},
-            request1[] = {ServiceId::COMMUNICATION_CONTROL, 0x05, 0xF1, 0x0, 0x37},
-            request2[] = {ServiceId::COMMUNICATION_CONTROL, 0x05, 0xF1, 0x0, 0x38};
+    std::array<uint8_t, 5U> request  = {ServiceId::COMMUNICATION_CONTROL, 0x04, 0xF1, 0x0, 0x37};
+    std::array<uint8_t, 5U> request1 = {ServiceId::COMMUNICATION_CONTROL, 0x05, 0xF1, 0x0, 0x37};
+    std::array<uint8_t, 5U> request2 = {ServiceId::COMMUNICATION_CONTROL, 0x05, 0xF1, 0x0, 0x38};
 
     EXPECT_CALL(_sessionManager, getActiveSession())
         .WillRepeatedly(ReturnRef(DiagSession::APPLICATION_EXTENDED_SESSION()));
-    ASSERT_EQ(DiagReturnCode::OK, _service.process(_conn, &request[1], 4));
+    ASSERT_EQ(DiagReturnCode::OK, processRequest(_service, _conn, request));
     ASSERT_EQ(
         ICommunicationSubStateListener::ENABLE_REC_DISABLE_ENHANCED_SEND_TRANSMISSION,
         _sublistener.fState);
 
     EXPECT_CALL(_sessionManager, getActiveSession())
         .WillRepeatedly(ReturnRef(DiagSession::APPLICATION_EXTENDED_SESSION()));
-    ASSERT_EQ(DiagReturnCode::OK, _service.process(_conn, &request1[1], 4));
+    ASSERT_EQ(DiagReturnCode::OK, processRequest(_service, _conn, request1));
     ASSERT_EQ(ICommunicationSubStateListener::ENABLE_ENHANCED_TRANSMISSION, _sublistener.fState);
 
     EXPECT_CALL(_sessionManager, getActiveSession())
         .WillRepeatedly(ReturnRef(DiagSession::APPLICATION_EXTENDED_SESSION()));
-    ASSERT_EQ(DiagReturnCode::OK, _service.process(_conn, &request[1], 4));
+    ASSERT_EQ(DiagReturnCode::OK, processRequest(_service, _conn, request));
     ASSERT_EQ(
         ICommunicationSubStateListener::ENABLE_REC_DISABLE_ENHANCED_SEND_TRANSMISSION,
         _sublistener.fState);
@@ -340,7 +365,7 @@ TEST_F(CommunicationControlTest, DisableEnableEnhanced)
     EXPECT_CALL(_sessionManager, getActiveSession())
         .WillRepeatedly(ReturnRef(DiagSession::APPLICATION_EXTENDED_SESSION()));
     ASSERT_EQ(
-        DiagReturnCode::ISO_SUBFUNCTION_NOT_SUPPORTED, _service.process(_conn, &request2[1], 4));
+        DiagReturnCode::ISO_SUBFUNCTION_NOT_SUPPORTED, processRequest(_service, _conn, request2));
 
     _service.getCommunicationState();
 
@@ -349,7 +374,7 @@ TEST_F(CommunicationControlTest, DisableEnableEnhanced)
     EXPECT_CALL(_sessionManager, getActiveSession())
         .WillRepeatedly(ReturnRef(DiagSession::APPLICATION_EXTENDED_SESSION()));
     ASSERT_EQ(
-        DiagReturnCode::ISO_SUBFUNCTION_NOT_SUPPORTED, _service.process(_conn, &request1[1], 4));
+        DiagReturnCode::ISO_SUBFUNCTION_NOT_SUPPORTED, processRequest(_service, _conn, request1));
 }
 
 /*
@@ -357,49 +382,49 @@ TEST_F(CommunicationControlTest, DisableEnableEnhanced)
  */
 TEST_F(CommunicationControlTest, DisableEnableEnhanced2)
 {
-    uint8_t request[]  = {ServiceId::COMMUNICATION_CONTROL, 0x04, 0xF1, 0x0, 0x37},
-            request1[] = {ServiceId::COMMUNICATION_CONTROL, 0x00, 0xF1};
+    std::array<uint8_t, 5U> request  = {ServiceId::COMMUNICATION_CONTROL, 0x04, 0xF1, 0x0, 0x37};
+    std::array<uint8_t, 3U> request1 = {ServiceId::COMMUNICATION_CONTROL, 0x00, 0xF1};
 
     EXPECT_CALL(_sessionManager, getActiveSession())
         .WillRepeatedly(ReturnRef(DiagSession::APPLICATION_EXTENDED_SESSION()));
-    ASSERT_EQ(DiagReturnCode::OK, _service.process(_conn, &request[1], 4));
+    ASSERT_EQ(DiagReturnCode::OK, processRequest(_service, _conn, request));
     ASSERT_EQ(
         ICommunicationSubStateListener::ENABLE_REC_DISABLE_ENHANCED_SEND_TRANSMISSION,
         _sublistener.fState);
 
     EXPECT_CALL(_sessionManager, getActiveSession())
         .WillRepeatedly(ReturnRef(DiagSession::APPLICATION_EXTENDED_SESSION()));
-    ASSERT_EQ(DiagReturnCode::OK, _service.process(_conn, &request1[1], 2));
+    ASSERT_EQ(DiagReturnCode::OK, processRequest(_service, _conn, request1));
     ASSERT_EQ(ICommunicationSubStateListener::ENABLE_ENHANCED_TRANSMISSION, _sublistener.fState);
 }
 
 TEST_F(CommunicationControlTest, DisableEnableEnhanced4)
 {
-    uint8_t request1[] = {0x00, 0x05, 0xF1, 0x0, 0x37};
+    std::array<uint8_t, 5U> request1 = {0x00, 0x05, 0xF1, 0x0, 0x37};
 
     EXPECT_CALL(_sessionManager, getActiveSession())
         .WillRepeatedly(ReturnRef(DiagSession::APPLICATION_EXTENDED_SESSION()));
 
     ASSERT_EQ(
-        DiagReturnCode::ISO_SUBFUNCTION_NOT_SUPPORTED, _service.process(_conn, &request1[1], 4));
+        DiagReturnCode::ISO_SUBFUNCTION_NOT_SUPPORTED, processRequest(_service, _conn, request1));
 }
 
 TEST_F(CommunicationControlTest, ControlTypeVMS)
 {
     _listener.fState = ICommunicationStateListener::DISABLE_NORMAL_MESSAGE_TRANSMISSION;
 
-    uint8_t request[] = {ServiceId::COMMUNICATION_CONTROL, 0x41, 0x01};
+    std::array<uint8_t, 3U> request = {ServiceId::COMMUNICATION_CONTROL, 0x41, 0x01};
     EXPECT_CALL(_sessionManager, getActiveSession())
         .WillRepeatedly(ReturnRef(DiagSession::APPLICATION_DEFAULT_SESSION()));
-    ASSERT_EQ(DiagReturnCode::NOT_RESPONSIBLE, _service.process(_conn, &request[1], 2));
+    ASSERT_EQ(DiagReturnCode::NOT_RESPONSIBLE, processRequest(_service, _conn, request));
 
     _listener.fState = ICommunicationStateListener::DISABLE_NORMAL_MESSAGE_TRANSMISSION;
 
-    uint8_t request1[] = {0x00, 0x39, 0x17};
+    std::array<uint8_t, 3U> request1 = {0x00, 0x39, 0x17};
     EXPECT_CALL(_sessionManager, getActiveSession())
         .WillRepeatedly(ReturnRef(DiagSession::APPLICATION_DEFAULT_SESSION()));
     ASSERT_EQ(
-        DiagReturnCode::ISO_SUBFUNCTION_NOT_SUPPORTED, _service.process(_conn, &request1[1], 2));
+        DiagReturnCode::ISO_SUBFUNCTION_NOT_SUPPORTED, processRequest(_service, _conn, request1));
 }
 
 } // namespace
