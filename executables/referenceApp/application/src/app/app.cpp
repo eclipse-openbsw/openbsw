@@ -69,6 +69,7 @@
 
 #ifdef BUILD_RUST
 #include "app/DemoLogger.h"
+#include "app/rust/RustRuntimeConfig.h"
 
 #include <BswLogger.h>
 #include <rust_hello_world.h>
@@ -368,6 +369,10 @@ void startApp()
     // clang-format on
 
     lifecycleManager.transitionToLevel(MaxNumLevels);
+
+#ifdef BUILD_RUST
+    ::app::initRustRuntimes();
+#endif
 
     runtimeMonitor.start();
     idleHandler.start();

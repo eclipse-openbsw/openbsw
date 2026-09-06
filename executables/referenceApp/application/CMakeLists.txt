@@ -162,6 +162,9 @@ endif ()
 
 if (BUILD_RUST)
     target_compile_definitions(app.referenceApp PRIVATE BUILD_RUST)
+    target_sources(app.referenceApp PRIVATE src/app/rust/RustRuntime.cpp
+                                            src/app/rust/RustRuntimeConfig.cpp)
+    target_link_libraries(app.referenceApp PRIVATE bspInterrupts)
     # Link against Rust static library(should be only one static library)
     target_link_libraries(app.referenceApp PRIVATE openbsw_logger
                                                    rust_hello_world)
