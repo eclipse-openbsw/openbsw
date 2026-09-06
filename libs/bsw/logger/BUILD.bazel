@@ -23,3 +23,19 @@ cc_library(
         "//libs/bsw/util",
     ],
 )
+
+cc_library(
+    name = "logger_mock",
+    testonly = True,
+    hdrs = [
+        "mock/include/logger/PersistenceManagerMock.h",
+    ],
+    strip_include_prefix = "mock/include",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//libs/3rdparty/googletest:gtest_main",
+        "//libs/bsw/bsp:bsp_mock",
+        "//libs/bsw/logger",
+        "//libs/bsw/util:util_mock",
+    ],
+)

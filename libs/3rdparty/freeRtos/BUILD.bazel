@@ -105,3 +105,24 @@ cc_library(
         "//libs/bsw/platform",
     ],
 )
+
+cc_library(
+    name = "freertos_mock",
+    testonly = True,
+    srcs = ["mock/src/os/FreeRtosMock.cpp"],
+    hdrs = [
+        "mock/include/FreeRTOS.h",
+        "mock/include/event_groups.h",
+        "mock/include/os/FreeRtosMock.h",
+        "mock/include/task.h",
+        "mock/include/timers.h",
+    ],
+    strip_include_prefix = "mock/include",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//libs/3rdparty/etl",
+        "//libs/3rdparty/googletest:gtest",
+        "//libs/bsw/asyncFreeRtos:freertos_configuration",
+        "//libs/bsw/platform",
+    ],
+)

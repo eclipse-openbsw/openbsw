@@ -12,8 +12,16 @@ load("@rules_cc//cc:cc_library.bzl", "cc_library")
 
 cc_library(
     name = "io_examples",
-    #TODO: Complete the deps and srcs here once libs/3rdparty/googletest is migrated to bazel
+    srcs = [
+        "BufferedWriterExample.cpp",
+        "ForwardingReaderExample.cpp",
+        "JoinReaderExample.cpp",
+        "MemoryQueueExample.cpp",
+        "SplitWriterExample.cpp",
+        "VariantQueueExample.cpp",
+    ],
     implementation_deps = [
+        "//libs/3rdparty/googletest:gtest_main",
         "//libs/bsw/io",
     ],
 )

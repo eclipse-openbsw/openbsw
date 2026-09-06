@@ -27,3 +27,18 @@ cc_library(
         "//libs/bsw/platform",
     ],
 )
+
+cc_library(
+    name = "async_impl_mock",
+    testonly = True,
+    hdrs = [
+        "mock/include/async/RunnableMock.h",
+    ],
+    strip_include_prefix = "mock/include",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//libs/3rdparty/googletest:gtest",
+        "//libs/bsw/asyncImpl:async_impl",
+        "//libs/bsw/platform",
+    ],
+)

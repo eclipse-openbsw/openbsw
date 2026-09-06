@@ -30,3 +30,20 @@ cc_library(
         "//libs/bsw/util",
     ],
 )
+
+cc_library(
+    name = "lifecycle_mock",
+    testonly = True,
+    hdrs = [
+        "mock/gmock/include/lifecycle/LifecycleComponentCallbackMock.h",
+        "mock/gmock/include/lifecycle/LifecycleComponentMock.h",
+        "mock/gmock/include/lifecycle/LifecycleListenerMock.h",
+        "mock/gmock/include/lifecycle/LifecycleManagerMock.h",
+    ],
+    strip_include_prefix = "mock/gmock/include",
+    visibility = ["//visibility:public"],
+    deps = [
+        ":lifecycle",
+        "//libs/3rdparty/googletest:gtest",
+    ],
+)

@@ -14,10 +14,43 @@ cc_library(
     name = "util",
     srcs = glob(["src/util/**/*.cpp"]),
     hdrs = glob(["include/**/*.h"]),
+    defines = select(
+        {
+            "//bazel/config/executable_config:unit_test": ["ESTD_HAS_EXCEPTIONS"],
+            "//conditions:default": [],
+        },
+        no_match_error = "executable_config must be 'reference_app' or 'unit_test' to select ESTD_HAS_EXCEPTIONS.",
+    ),
     strip_include_prefix = "include",
     visibility = ["//visibility:public"],
     deps = [
         "//libs/3rdparty/etl",
         "//libs/bsw/platform",
+    ],
+)
+
+cc_library(
+    name = "util_mock",
+    testonly = True,
+    srcs = [
+        "mock/gmock/src/util/StdIoMock.cpp",
+        "mock/gmock/src/util/logger/TestConsoleLogger.cpp",
+    ],
+    hdrs = [
+        "mock/gmock/include/util/StdIoMock.h",
+        "mock/gmock/include/util/estd/function_mock.h",
+        "mock/gmock/include/util/estd/gtest_extensions.h",
+        "mock/gmock/include/util/logger/ComponentMappingMock.h",
+        "mock/gmock/include/util/logger/LoggerOutputMock.h",
+        "mock/gmock/include/util/logger/TestConsoleLogger.h",
+        "mock/gmock/include/util/stream/OutputStreamMock.h",
+        "mock/gmock/include/util/stream/SharedOutputStreamMock.h",
+    ],
+    strip_include_prefix = "mock/gmock/include",
+    visibility = ["//visibility:public"],
+    deps = [
+        ":util",
+        "//libs/3rdparty/etl",
+        "//libs/3rdparty/googletest:gtest",
     ],
 )
