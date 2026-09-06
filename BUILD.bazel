@@ -10,6 +10,12 @@
 
 load("@buildifier_prebuilt//:rules.bzl", "buildifier")
 
+filegroup(
+    name = "clang_format_config",
+    srcs = [".clang-format"],
+    visibility = ["//visibility:public"],
+)
+
 buildifier(
     name = "format_check",
     diff_command = "diff",

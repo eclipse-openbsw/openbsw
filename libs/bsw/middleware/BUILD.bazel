@@ -1,5 +1,6 @@
 # *******************************************************************************
 # Copyright (c) 2026 Accenture
+# Copyright (c) 2026 BMW AG
 #
 # This program and the accompanying materials are made available under the
 # terms of the Apache License Version 2.0 which is available at
@@ -10,60 +11,170 @@
 
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
 
-cc_library(
-    name = "middleware_lock_types_test_stub",
-    hdrs = ["test/include/middleware/concurrency/lock_types.h"],
-    # CMake test/CMakeLists.txt adds test/include PUBLIC, non-SYSTEM -> strip_include_prefix (-I).
-    strip_include_prefix = "test/include",
-)
+package(default_visibility = ["//libs/bsw/middleware:__subpackages__"])
 
-# Default wiring in case it is not overriden via label_flag: middleware_lock_types
-#   unit_test     -> host no-op stub (CMake puts test/include on middleware's include path)
-#   reference_app -> platform integration supplies lock_types.h; stub stands in until one exists
-alias(
-    name = "middleware_lock_types_default",
-    actual = select(
-        {
-            "//bazel/config/executable_config:unit_test": ":middleware_lock_types_test_stub",
-            "//bazel/config/executable_config:reference_app": ":middleware_lock_types_test_stub",
-        },
-        no_match_error = "Set executable_config to 'reference_app' or 'unit_test', or override --//libs/bsw/middleware:middleware_lock_types",
-    ),
-)
+# ===========================================================================
+# Core targets
+# ===========================================================================
 
-# lock_types.h provider. Platform integration supplies the concrete types at build time.
-#   Default:  per executable_config selection above (currently the host stub)
-#   Override: --//libs/bsw/middleware:middleware_lock_types=//<your>:lock_types
-label_flag(
-    name = "middleware_lock_types",
-    build_setting_default = ":middleware_lock_types_default",
-    visibility = ["//visibility:public"],
-)
-
-cc_library(
-    name = "middleware_interfaces",
-    hdrs = [
-        "interfaces/include/middleware/concurrency/LockStrategies.h",
-        "interfaces/include/middleware/logger/Logger.h",
-        "interfaces/include/middleware/os/TaskIdProvider.h",
-        "interfaces/include/middleware/time/SystemTimerProvider.h",
+filegroup(
+    name = "core_headers",
+    srcs = [
+        "include/middleware/core/ClusterConnection.h",
+        "include/middleware/core/ClusterConnectionBase.h",
+        "include/middleware/core/DatabaseManipulator.h",
+        "include/middleware/core/EventSender.h",
+        "include/middleware/core/Future.h",
+        "include/middleware/core/IClusterConnection.h",
+        "include/middleware/core/IClusterConnectionConfigurationBase.h",
+        "include/middleware/core/ITimeoutHandler.h",
+        "include/middleware/core/InstancesDatabase.h",
+        "include/middleware/core/LoggerApi.h",
+        "include/middleware/core/Message.h",
+        "include/middleware/core/MessagePayloadBuilder.h",
+        "include/middleware/core/ProxyAttribute.h",
+        "include/middleware/core/ProxyAttributeBase.h",
+        "include/middleware/core/ProxyBase.h",
+        "include/middleware/core/ProxyEventBase.h",
+        "include/middleware/core/ResponseBuffer.h",
+        "include/middleware/core/ResponseBufferBase.h",
+        "include/middleware/core/SkeletonAttribute.h",
+        "include/middleware/core/SkeletonBase.h",
+        "include/middleware/core/SkeletonEvent.h",
+        "include/middleware/core/TransceiverBase.h",
+        "include/middleware/core/TransceiverContainer.h",
+        "include/middleware/core/types.h",
+        "include/middleware/rpc/ProxyFireAndForgetMethod.h",
+        "include/middleware/rpc/ProxyMethod.h",
+        "include/middleware/rpc/ProxyMethodImpl.h",
     ],
-    strip_include_prefix = "interfaces/include",
-    visibility = ["//visibility:public"],
+)
+
+filegroup(
+    name = "core_srcs",
+    srcs = [
+        "src/middleware/core/ClusterConnection.cpp",
+        "src/middleware/core/ClusterConnectionBase.cpp",
+        "src/middleware/core/DatabaseManipulator.cpp",
+        "src/middleware/core/EventSender.cpp",
+        "src/middleware/core/IClusterConnectionConfigurationBase.cpp",
+        "src/middleware/core/LoggerApi.cpp",
+        "src/middleware/core/MessagePayloadBuilder.cpp",
+        "src/middleware/core/ProxyBase.cpp",
+        "src/middleware/core/ResponseBufferBase.cpp",
+        "src/middleware/core/SkeletonBase.cpp",
+        "src/middleware/rpc/ProxyFireAndForgetMethod.cpp",
+        "src/middleware/rpc/ProxyMethodImpl.cpp",
+    ],
+)
+
+cc_library(
+    name = "core",
+    srcs = [":core_srcs"],
+    hdrs = [":core_headers"],
+    strip_include_prefix = "include",
     deps = [
-        ":middleware_lock_types",
+        ":memory",
         "//libs/3rdparty/etl",
+        "//libs/bsw/middleware/interfaces:logger",
+        "//libs/bsw/middleware/interfaces:os",
+        "//libs/bsw/middleware/interfaces:time",
     ],
 )
+
+filegroup(
+    name = "core_code_to_doc",
+    srcs = [
+        ":core_headers",
+        ":core_srcs",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+# ===========================================================================
+# Memory targets
+# ===========================================================================
+
+filegroup(
+    name = "memory_headers",
+    srcs = [
+        "include/middleware/memory/Aggregator.h",
+        "include/middleware/memory/AllocatorBase.h",
+        "include/middleware/memory/AllocatorSelector.h",
+        "include/middleware/memory/AllocatorTypes.h",
+        "include/middleware/memory/Pool.h",
+        "include/middleware/memory/PoolBase.h",
+        "include/middleware/memory/impl/PoolIndexBySize.h",
+        "include/middleware/memory/impl/TupleSelectionSort.h",
+    ],
+)
+
+filegroup(
+    name = "memory_srcs",
+    srcs = [
+        "src/middleware/memory/PoolBase.cpp",
+    ],
+)
+
+cc_library(
+    name = "memory",
+    srcs = [":memory_srcs"],
+    hdrs = [":memory_headers"],
+    strip_include_prefix = "include",
+    deps = [
+        "//libs/3rdparty/etl",
+        "//libs/bsw/middleware/interfaces:concurrency",
+    ],
+)
+
+filegroup(
+    name = "memory_code_to_doc",
+    srcs = [
+        ":memory_headers",
+        ":memory_srcs",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+# ===========================================================================
+# Queue targets
+# ===========================================================================
+
+filegroup(
+    name = "queue_headers",
+    srcs = [
+        "include/middleware/queue/Queue.h",
+        "include/middleware/queue/QueueBase.h",
+    ],
+)
+
+cc_library(
+    name = "queue",
+    hdrs = [":queue_headers"],
+    strip_include_prefix = "include",
+    deps = ["//libs/3rdparty/etl"],
+)
+
+filegroup(
+    name = "queue_code_to_doc",
+    srcs = [":queue_headers"],
+    visibility = ["//visibility:public"],
+)
+
+# ===========================================================================
+# Middleware lib targets
+# ===========================================================================
 
 cc_library(
     name = "middleware",
-    srcs = glob(["src/**/*.cpp"]),
-    hdrs = glob(["include/**/*.h"]),
-    strip_include_prefix = "include",
     visibility = ["//visibility:public"],
     deps = [
-        ":middleware_interfaces",
-        "//libs/3rdparty/etl",
+        ":core",
+        ":memory",
+        ":queue",
+        "//libs/bsw/middleware/interfaces:concurrency_impl",
+        "//libs/bsw/middleware/interfaces:logger_impl",
+        "//libs/bsw/middleware/interfaces:os_impl",
+        "//libs/bsw/middleware/interfaces:time_impl",
     ],
 )

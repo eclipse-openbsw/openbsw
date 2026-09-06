@@ -420,7 +420,7 @@ def parse_args(argv=None) -> argparse.Namespace:
     parser.add_argument(
         "--input",
         type=Path,
-        required=True,
+        default=_SCRIPT_DIR,
         help="Base input directory containing templates/ subdirectory with properties/, schemas/, and jinja/ folders.",
     )
     parser.add_argument(

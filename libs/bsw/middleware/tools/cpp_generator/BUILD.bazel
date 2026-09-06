@@ -1,0 +1,48 @@
+# *******************************************************************************
+# Copyright (c) 2026 BMW AG
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+
+load("@pip_middleware_tools//:requirements.bzl", "requirement")
+load("@rules_python//python:defs.bzl", "py_binary")
+
+package(default_visibility = ["//visibility:public"])
+
+py_binary(
+    name = "jinja2cpp",
+    srcs = ["jinja2cpp.py"],
+    data = [
+        "templates/jinja/allocator_selector_definitions.cpp.jinja",
+        "templates/jinja/cluster_connections_srcCluster_to_tgtCluster.h.jinja",
+        "templates/jinja/cluster_id.h.jinja",
+        "templates/jinja/cluster_srcCluster.cpp.jinja",
+        "templates/jinja/cluster_srcCluster.h.jinja",
+        "templates/jinja/macros/transmission_mode.jinja",
+        "templates/jinja/mock/service_proxy_mock.cpp.jinja",
+        "templates/jinja/mock/service_proxy_mock.h.jinja",
+        "templates/jinja/service_common.cpp.jinja",
+        "templates/jinja/service_common.h.jinja",
+        "templates/jinja/service_proxy.cpp.jinja",
+        "templates/jinja/service_proxy.h.jinja",
+        "templates/jinja/service_skeleton.cpp.jinja",
+        "templates/jinja/service_skeleton.h.jinja",
+        "templates/jinja/shm/allocators_definitions.h.jinja",
+        "templates/jinja/shm/config.cpp.jinja",
+        "templates/jinja/shm/config.h.jinja",
+        "templates/jinja/shm/queue_definitions.h.jinja",
+        "templates/schemas/deployment.yaml",
+    ],
+    main = "jinja2cpp.py",
+    target_compatible_with = ["@platforms//os:linux"],
+    visibility = ["//visibility:public"],
+    deps = [
+        requirement("jinja2"),
+        requirement("jsonschema"),
+        requirement("pyyaml"),
+    ],
+)
