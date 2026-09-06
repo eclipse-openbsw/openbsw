@@ -7,6 +7,6 @@ add_executable(
     src/io/SplitWriterTest.cpp
     src/io/VariantQueueTest.cpp)
 
-target_link_libraries(ioTest PRIVATE io ioMock)
+target_link_libraries(ioTest PRIVATE io ioMock gmock_main)
 
 gtest_discover_tests(ioTest PROPERTIES LABELS "ioTest")

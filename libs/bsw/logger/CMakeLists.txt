@@ -14,5 +14,5 @@ if (BUILD_EXECUTABLE STREQUAL "unitTest")
 
     target_include_directories(loggerMock INTERFACE mock/include)
 
-    target_link_libraries(loggerMock INTERFACE bspMock utilMock gmock_main)
+    target_link_libraries(loggerMock INTERFACE bspMock utilMock gmock)
 endif ()

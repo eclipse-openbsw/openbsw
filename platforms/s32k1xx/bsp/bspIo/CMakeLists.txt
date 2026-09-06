@@ -15,5 +15,5 @@ if (BUILD_EXECUTABLE STREQUAL "unitTest")
 
     target_include_directories(bspIoMock PUBLIC mock/gmock/include)
 
-    target_link_libraries(bspIoMock PRIVATE gmock_main)
+    target_link_libraries(bspIoMock PUBLIC bspIo etl gmock)
 endif ()

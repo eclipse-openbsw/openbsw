@@ -9,7 +9,7 @@ target_link_libraries(
             bspIo
             lifecycle
             bspMock
-            gmock)
+            gmock_main)
 
 gtest_discover_tests(BxCanTransceiverTest PROPERTIES LABELS
                                                      "BxCanTransceiverTest")
