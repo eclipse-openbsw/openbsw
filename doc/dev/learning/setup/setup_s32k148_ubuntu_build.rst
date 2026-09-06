@@ -60,12 +60,14 @@ Then, in the base directory run:
 
 .. code-block:: bash
 
-    cmake --preset s32k148-gcc
-    cmake --build --preset s32k148-gcc
+    cmake --preset s32k148-freertos-gcc
+    cmake --build --preset s32k148-freertos-gcc
 
-The build files should be written to a new subdirectory named ``build/s32k148-gcc``
-and the built executable should be found at ``build/s32k148-gcc/executables/referenceApp/application/RelWithDebInfo/app.referenceApp.elf``
+The build files should be written to a new subdirectory named ``build/s32k148-freertos-gcc``
+and the built executable should be found at
+``build/s32k148-freertos-gcc/executables/referenceApp/application/RelWithDebInfo/app.referenceApp.elf``
 which you can flash on the S32K148 development board.
+Use the ``s32k148-threadx-gcc`` preset to build on top of ThreadX instead of FreeRTOS.
 
 Using the clang toolchain
 -------------------------
@@ -111,12 +113,14 @@ Then, in the base directory run:
 
 .. code-block:: bash
 
-    cmake --preset s32k148-clang
-    cmake --build --preset s32k148-clang
+    cmake --preset s32k148-freertos-clang
+    cmake --build --preset s32k148-freertos-clang
 
-The build files should be written to a new subdirectory named ``build/s32k148-gcc``
-and the built executable should be found at ``build/s32k148-clang/executables/referenceApp/application/RelWithDebInfo/app.referenceApp.elf``
+The build files should be written to a new subdirectory named ``build/s32k148-freertos-clang``
+and the built executable should be found at
+``build/s32k148-freertos-clang/executables/referenceApp/application/RelWithDebInfo/app.referenceApp.elf``
 which you can flash on the S32K148 development board.
+Use the ``s32k148-threadx-clang`` preset to build on top of ThreadX instead of FreeRTOS.
 
 Optional: Rust Support
 ----------------------

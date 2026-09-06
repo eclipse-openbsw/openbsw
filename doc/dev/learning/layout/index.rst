@@ -22,9 +22,9 @@ You can view this as a map to regularly refer back to as you navigate and become
 .. code-block:: text
 
     ├── build
-    │   ├── posix
-    │   ├── s32k148-clang
-    │   └── s32k148-gcc
+    │   ├── posix-freertos
+    │   ├── s32k148-freertos-clang
+    │   └── s32k148-freertos-gcc
     ├── cmake
     │   ├── modules
     │   ├── presets
@@ -50,7 +50,8 @@ Most libraries also contain their own RST documentation along-side their code an
 when this documentation is built, as can be seen in the index on the left.
 
 ``build/[preset]``: holds build artifacts & executables created by ``cmake`` for different ``[presets]``.
-For example if you build for the ``posix`` platform the directory ``build/posix`` is created.
+For example if you build with the ``posix-freertos`` preset
+the directory ``build/posix-freertos`` is created.
 
 ``executables``: holds application-specific code (not the built executables).
 The ``referenceApp`` subdirectory contains an example application.
