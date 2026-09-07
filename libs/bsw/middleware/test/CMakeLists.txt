@@ -11,6 +11,7 @@ add_executable(
     src/core/ResponseBufferTest.cpp
     src/core/SkeletonAttributeTest.cpp
     src/core/SkeletonBaseTest.cpp
+    src/core/TypesTest.cpp
     src/logger/mock/LoggerMock.cpp
     src/memory/AllocatorBaseTest.cpp
     src/memory/mock/AllocatorMock.cpp

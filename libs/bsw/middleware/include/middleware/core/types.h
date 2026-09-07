@@ -10,6 +10,7 @@
 
 #pragma once
 
+#include <etl/absolute.h>
 #include <etl/limits.h>
 #include <etl/platform.h>
 
@@ -81,16 +82,16 @@ enum class HRESULT : uint8_t
  */
 struct AbsoluteToleranceEqual
 {
-    // __builtin_fabs is used instead of std::fabs because newlib's fabs() is not constexpr,
-    // which trips -Werror=invalid-constexpr on arm-none-eabi-gcc.
+    // ETL's absolute is used instead of std::fabs because newlib's fabs() is not constexpr,
+    // which would prevent these comparison operators from remaining constexpr.
     constexpr bool operator()(double const x, double const y) const
     {
-        return __builtin_fabs(x - y) <= ::etl::numeric_limits<double>::min();
+        return ::etl::absolute(x - y) <= ::etl::numeric_limits<double>::min();
     }
 
     constexpr bool operator()(float const x, float const y) const
     {
-        return __builtin_fabsf(x - y) <= ::etl::numeric_limits<float>::min();
+        return ::etl::absolute(x - y) <= ::etl::numeric_limits<float>::min();
     }
 };
 
