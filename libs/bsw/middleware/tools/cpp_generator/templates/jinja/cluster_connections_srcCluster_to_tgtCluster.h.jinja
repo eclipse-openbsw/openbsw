@@ -56,24 +56,24 @@ public:
     ClusterConnection{{connection.source_cluster.name}}To{{connection.target_cluster.name}}Meta()
 {% if (connection.proxies|length > 0) and (connection.skeletons|length > 0) %}
     : proxyTransceivers_{{'{{'}}
-    {% for proxy in connection.proxies %}
+    {% for proxy in connection.proxies | sort(attribute='id') %}
                 {&{{proxy.namespace|replace("::", "")}}{{proxy.name}}ProxyTransceivers_, {{proxy.namespace}}::{{proxy.name}}::internal::SERVICE_ID, 0U}{{ "," if not loop.last }}
     {% endfor %}
       {{'}}'}},
       skeletonTransceivers_{{'{{'}}
-    {% for skeleton in connection.skeletons %}
+    {% for skeleton in connection.skeletons | sort(attribute='id') %}
                 {&{{skeleton.namespace|replace("::", "")}}{{skeleton.name}}SkeletonTransceivers_, {{skeleton.namespace}}::{{skeleton.name}}::internal::SERVICE_ID, 0U}{{ "," if not loop.last }}
     {% endfor %}
       {{'}}'}}
 {% elif connection.proxies|length > 0 %}
     : proxyTransceivers_{{'{{'}}
-    {% for proxy in connection.proxies %}
+    {% for proxy in connection.proxies | sort(attribute='id') %}
                 {&{{proxy.namespace|replace("::", "")}}{{proxy.name}}ProxyTransceivers_, {{proxy.namespace}}::{{proxy.name}}::internal::SERVICE_ID, 0U}{{ "," if not loop.last }}
     {% endfor %}
       {{'}}'}}
 {% else %}
     : skeletonTransceivers_{{'{{'}}
-    {% for skeleton in connection.skeletons %}
+    {% for skeleton in connection.skeletons | sort(attribute='id') %}
                 {&{{skeleton.namespace|replace("::", "")}}{{skeleton.name}}SkeletonTransceivers_, {{skeleton.namespace}}::{{skeleton.name}}::internal::SERVICE_ID, 0U}{{ "," if not loop.last }}
     {% endfor %}
       {{'}}'}}
