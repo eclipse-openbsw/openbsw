@@ -154,3 +154,13 @@ xEventGroupWaitBits(
     return FreeRtosMock::instance().xEventGroupWaitBits(
         xEventGroup, uxBitsToWaitFor, xClearOnExit, xWaitForAllBits, xTicksToWait);
 }
+
+void vTaskSuspend(TaskHandle_t xTaskToSuspend)
+{
+    FreeRtosMock::instance().vTaskSuspend(xTaskToSuspend);
+}
+
+void vTaskResume(TaskHandle_t xTaskToResume)
+{
+    FreeRtosMock::instance().vTaskResume(xTaskToResume);
+}

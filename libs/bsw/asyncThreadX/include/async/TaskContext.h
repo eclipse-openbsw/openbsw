@@ -62,6 +62,9 @@ public:
         RunnableType& runnable, TimeoutType& timeout, uint32_t period, TimeUnitType unit);
     void cancel(TimeoutType& timeout);
 
+    void suspend();
+    void resume();
+
     void callTaskFunction();
     void dispatch();
     void stopDispatch();
@@ -232,6 +235,24 @@ template<class Binding>
 inline void TaskContext<Binding>::cancel(TimeoutType& timeout)
 {
     _timer.cancel(timeout);
+}
+
+template<class Binding>
+inline void TaskContext<Binding>::suspend()
+{
+    if (_taskHandle != nullptr)
+    {
+        tx_thread_suspend(_taskHandle);
+    }
+}
+
+template<class Binding>
+inline void TaskContext<Binding>::resume()
+{
+    if (_taskHandle != nullptr)
+    {
+        tx_thread_resume(_taskHandle);
+    }
 }
 
 template<class Binding>

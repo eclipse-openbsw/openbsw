@@ -58,6 +58,7 @@
 #define INCLUDE_xTaskGetIdleTaskHandle      (1)
 #define INCLUDE_uxTaskGetStackHighWaterMark (1)
 #define INCLUDE_xTimerPendFunctionCall      (1)
+#define INCLUDE_vTaskSuspend                (1)
 
 #define configINCLUDE_FREERTOS_TASK_C_ADDITIONS_H (1)
 #define FREERTOS_TASKS_C_ADDITIONS_INIT           asyncInitialized

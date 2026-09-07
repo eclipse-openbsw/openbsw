@@ -115,6 +115,16 @@ public:
      */
     void cancel(TimeoutType& timeout);
 
+    /**
+     * Suspends the task such that it is no longer scheduled by FreeRTOS.
+     */
+    void suspend();
+
+    /**
+     * Resumes the task such that it is scheduled by FreeRTOS.
+     */
+    void resume();
+
     /// Calls the task's assigned function.
     void callTaskFunction();
 
@@ -291,6 +301,24 @@ template<class Binding>
 inline void TaskContext<Binding>::cancel(TimeoutType& timeout)
 {
     _timer.cancel(timeout);
+}
+
+template<class Binding>
+inline void TaskContext<Binding>::suspend()
+{
+    if (_taskHandle != nullptr)
+    {
+        vTaskSuspend(_taskHandle);
+    }
+}
+
+template<class Binding>
+inline void TaskContext<Binding>::resume()
+{
+    if (_taskHandle != nullptr)
+    {
+        vTaskResume(_taskHandle);
+    }
 }
 
 template<class Binding>

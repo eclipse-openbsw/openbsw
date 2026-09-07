@@ -39,6 +39,10 @@ void scheduleAtFixedRate(
     AdapterType::scheduleAtFixedRate(context, runnable, timeout, period, unit);
 }
 
+void suspend(ContextType context) { AdapterType::suspend(context); }
+
+void resume(ContextType context) { AdapterType::resume(context); }
+
 } // namespace async
 
 extern "C"

@@ -54,4 +54,14 @@ void scheduleAtFixedRate(
     uint32_t period,
     TimeUnitType unit);
 
+/**
+ * Suspend the given context until explicitly resumed.
+ */
+void suspend(ContextType context);
+
+/**
+ * Resumes the given context previously suspended.
+ */
+void resume(ContextType context);
+
 } // namespace async

@@ -213,4 +213,30 @@ TEST_F(AsyncTest, testHooks)
     }
 }
 
+TEST_F(AsyncTest, testSuspendResume)
+{
+    char const* name    = "test";
+    uint32_t taskHandle = 12;
+    EXPECT_CALL(
+        _freeRtosMock,
+        xTaskCreateStatic(
+            NotNull(), name, 256U / sizeof(StackType_t), NotNull(), 1U, NotNull(), NotNull()))
+        .WillOnce(Return(&taskHandle));
+    EXPECT_CALL(_freeRtosMock, vTaskStartScheduler());
+
+    AdapterType::Task<1U, 256U> task(name);
+    AdapterType::run(
+        AdapterType::StartAppFunctionType::create<AsyncTest, &AsyncTest::startApp>(*this));
+
+    {
+        EXPECT_CALL(_freeRtosMock, vTaskSuspend(&taskHandle));
+        suspend(1U);
+    }
+
+    {
+        EXPECT_CALL(_freeRtosMock, vTaskResume(&taskHandle));
+        resume(1U);
+    }
+}
+
 } // namespace*/

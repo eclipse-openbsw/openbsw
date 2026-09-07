@@ -65,27 +65,23 @@ extern "C"
 
 /* Set the following definitions to 1 to include the API function, or zero
 to exclude the API function. */
-#define INCLUDE_vTaskPrioritySet      1
-#define INCLUDE_uxTaskPriorityGet     1
-#define INCLUDE_vTaskDelete           1
-#define INCLUDE_vTaskCleanUpResources 1
-#define INCLUDE_vTaskSuspend          1
-#define INCLUDE_vResumeFromISR        1
-#define INCLUDE_vTaskDelayUntil       1
-#define INCLUDE_vTaskDelay            1
-#define INCLUDE_eTaskGetState         1
-#undef INCLUDE_uxTaskGetStackHighWaterMark
-#define INCLUDE_uxTaskGetStackHighWaterMark 1
-#define INCLUDE_xTaskGetSchedulerState      1
-#define INCLUDE_xQueueGetMutexHolder        1
-#undef INCLUDE_xTaskGetCurrentTaskHandle
-#define INCLUDE_xTaskGetCurrentTaskHandle 1
-#undef INCLUDE_xTaskGetIdleTaskHandle
-#define INCLUDE_xTaskGetIdleTaskHandle   1
+#define INCLUDE_vTaskPrioritySet         1
+#define INCLUDE_uxTaskPriorityGet        1
+#define INCLUDE_vTaskDelete              1
+#define INCLUDE_vTaskCleanUpResources    1
+// #define INCLUDE_vTaskSuspend          1
+#define INCLUDE_vResumeFromISR           1
+#define INCLUDE_vTaskDelayUntil          1
+#define INCLUDE_vTaskDelay               1
+#define INCLUDE_eTaskGetState            1
+// #define INCLUDE_uxTaskGetStackHighWaterMark 1
+#define INCLUDE_xTaskGetSchedulerState   1
+#define INCLUDE_xQueueGetMutexHolder     1
+// #define INCLUDE_xTaskGetCurrentTaskHandle 1
+// #define INCLUDE_xTaskGetIdleTaskHandle   1
 #define INCLUDE_pcTaskGetTaskName        1
 #define INCLUDE_xEventGroupSetBitFromISR 1
-#undef INCLUDE_xTimerPendFunctionCall
-#define INCLUDE_xTimerPendFunctionCall 1
+// #define INCLUDE_xTimerPendFunctionCall 1
 
 /* Cortex-M specific definitions. */
 #ifdef __NVIC_PRIO_BITS

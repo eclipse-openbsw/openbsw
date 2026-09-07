@@ -40,6 +40,8 @@ namespace os
         MOCK_METHOD2(xEventGroupSetBits, EventBits_t(EventGroupHandle_t xEventGroup, const EventBits_t uxBitsToSet));
         MOCK_METHOD3(xEventGroupSetBitsFromISR, BaseType_t(EventGroupHandle_t xEventGroup, const EventBits_t uxBitsToSet, BaseType_t *pxHigherPriorityTaskWoken));
         MOCK_METHOD5(xEventGroupWaitBits, EventBits_t(EventGroupHandle_t xEventGroup, const EventBits_t uxBitsToWaitFor, const BaseType_t xClearOnExit, const BaseType_t xWaitForAllBits, TickType_t xTicksToWait));
+        MOCK_METHOD1(vTaskSuspend, void(TaskHandle_t));
+        MOCK_METHOD1(vTaskResume, void(TaskHandle_t));
     };
 
 } // namespace os

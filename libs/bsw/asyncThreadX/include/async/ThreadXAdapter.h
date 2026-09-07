@@ -150,6 +150,10 @@ public:
 
     static void cancel(TimeoutType& timeout);
 
+    static void suspend(ContextType context);
+
+    static void resume(ContextType context);
+
     static void callInitFromThreadXKernel();
 
 private:
@@ -336,6 +340,18 @@ inline void ThreadXAdapter<Binding>::cancel(TimeoutType& timeout)
         timeout._context = CONTEXT_INVALID;
         _taskContexts[static_cast<size_t>(context)].cancel(timeout);
     }
+}
+
+template<class Binding>
+inline void ThreadXAdapter<Binding>::suspend(ContextType context)
+{
+    _taskContexts[static_cast<size_t>(context)].suspend();
+}
+
+template<class Binding>
+inline void ThreadXAdapter<Binding>::resume(ContextType context)
+{
+    _taskContexts[static_cast<size_t>(context)].resume();
 }
 
 template<class Binding>

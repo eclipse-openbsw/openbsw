@@ -19,6 +19,8 @@ TaskHandle_t xTaskGetCurrentTaskHandle();
 TaskHandle_t xTaskGetIdleTaskHandle();
 UBaseType_t uxTaskGetTaskNumber(TaskHandle_t xTask);
 BaseType_t uxTaskGetStackHighWaterMark(TaskHandle_t taskHandle);
+void vTaskSuspend(TaskHandle_t xTaskToSuspend);
+void vTaskResume(TaskHandle_t xTaskToResume);
 
 #endif // _TASK_H_
 

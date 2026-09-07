@@ -203,6 +203,16 @@ public:
      */
     static void cancel(TimeoutType& timeout);
 
+    /**
+     * Suspends the task such that it is no longer scheduled by FreeRTOS.
+     */
+    static void suspend(ContextType context);
+
+    /**
+     * Resumes the task such that it is scheduled by FreeRTOS.
+     */
+    static void resume(ContextType context);
+
     /// Notifies the system of an interrupt entry.
     static void enterIsr();
 
@@ -418,6 +428,18 @@ inline void FreeRtosAdapter<Binding>::cancel(TimeoutType& timeout)
         timeout._context = CONTEXT_INVALID;
         _taskContexts[static_cast<size_t>(context)].cancel(timeout);
     }
+}
+
+template<class Binding>
+inline void FreeRtosAdapter<Binding>::suspend(ContextType context)
+{
+    _taskContexts[static_cast<size_t>(context)].suspend();
+}
+
+template<class Binding>
+inline void FreeRtosAdapter<Binding>::resume(ContextType context)
+{
+    _taskContexts[static_cast<size_t>(context)].resume();
 }
 
 template<class Binding>
