@@ -129,4 +129,4 @@ bazel build --config=s32k148 --//libs/3rdparty/etl:etl_profile=//custom/path:my_
 
 ## Toolchain Verification
 
-Basic toolchain verification and build artifact analysis have been performed for the example target `//libs/bsw/util:util` and its dependencies (`//libs/3rdparty/etl:etl`, `//libs/bsw/platform:platform`). The Bazel build (config `s32k148_relwithdebinfo`) output was compared against the CMake reference build (`s32k148-freertos-gcc / RelWithDebInfo` configuration), and the resulting artifacts were found to be functionally equivalent. A more detailed comparison and validation needs to be performed in a separate effort at a later point of time.
+Basic toolchain verification and build artifact analysis have been performed for the example target `//libs/bsw/util:util` and its dependencies (`//libs/3rdparty/etl:etl`). The Bazel build (config `s32k148_relwithdebinfo`) output was compared against the CMake reference build (`s32k148-freertos-gcc / RelWithDebInfo` configuration), and the resulting artifacts were found to be functionally equivalent. A more detailed comparison and validation needs to be performed in a separate effort at a later point of time.
