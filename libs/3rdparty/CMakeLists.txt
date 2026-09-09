@@ -48,8 +48,7 @@ endif ()
 
 set(LWIP_DIR "${CMAKE_CURRENT_SOURCE_DIR}/lwip")
 set(LWIP_INCLUDE_DIRS
-    "${LWIP_DIR}/src/include"
-    "${LWIP_DIR}/contrib"
+    "${LWIP_DIR}/src/include" "${LWIP_DIR}/contrib"
     "${OPENBSW_APP_DIR}/lwipConfiguration/include"
     "${OPENBSW_PLATFORM_DIR}/lwipSysArch/include")
 include(lwip/src/Filelists.cmake)

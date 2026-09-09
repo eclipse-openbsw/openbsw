@@ -15,8 +15,8 @@
 #include "uds/session/ApplicationExtendedSession.h"
 #include "uds/session/IDiagSessionManager.h"
 
-#include <etl/unaligned_type.h>
 #include <etl/platform.h>
+#include <etl/unaligned_type.h>
 
 namespace uds
 {

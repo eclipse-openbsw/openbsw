@@ -15,8 +15,8 @@
  */
 #pragma once
 
-#include <cstdint>
 #include <cstdarg>
+#include <cstdint>
 
 namespace estd
 {

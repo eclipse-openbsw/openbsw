@@ -10,7 +10,6 @@
 
 #pragma once
 
-
 #include <assert.h>
 #include <stdint.h>
 
