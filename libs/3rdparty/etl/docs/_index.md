@@ -39,7 +39,7 @@ type: hextra-home
   </div>
 
   <div>
-    <a href="https://etlcpp.github.io/etl/"><img src="https://github.com/ETLCPP/etl/actions/workflows/coverage.yml/badge.svg" alt="coverage"">
+    <a href="https://etlcpp.github.io/etl/"><img src="https://github.com/ETLCPP/etl/actions/workflows/coverage.yml/badge.svg" alt="coverage"></a>
     <a href="https://www.codacy.com/manual/jwellbelove/etl"><img src="https://api.codacy.com/project/badge/Grade/3c14cd918ccf40008d0bcd7b083d5946" alt="Codacy"></a>
   </div>
 
@@ -50,6 +50,20 @@ type: hextra-home
 
 ## Version
 This documents version **{{< version >}}**.
+
+## Get the ETL
+<div>
+  <div>
+    <a href="https://github.com/ETLCPP/etl" alt="Github" target="_blank">Github</a>
+    <br>
+    <a href="https://github.com/ETLCPP/etl-arduino/archive/master.zip" alt="Arduino" target="_blank">Arduino</a>
+    <br>
+    <a href="https://conan.io/center/recipes/etl" alt="Conan" target="_blank">Conan</a>
+    <br>
+    <a href="https://registry.platformio.org/libraries/etlcpp/Embedded%20Template%20Library" target="_blank">PlatformIO</a>
+  </div>
+</div>
+
 
 ## Motivation
 
