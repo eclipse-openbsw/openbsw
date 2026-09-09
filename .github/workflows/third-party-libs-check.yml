@@ -24,3 +24,22 @@ jobs:
 
       - name: Run the third party libraries check via RIM inside the docker container
         run: DOCKER_UID=$(id -u) DOCKER_GID=$(id -g) DOCKER_HISTORY=/dev/null docker compose run --rm development rim status -w -d --verify-clean
+
+  cargo-vendor:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Docker Environment
+        uses: ./.github/actions/setup-docker-env
+
+      - name: Verify libs/3rdparty/cargo-vendor matches `cargo vendor` output
+        run: |
+          DOCKER_UID=$(id -u) DOCKER_GID=$(id -g) DOCKER_HISTORY=/dev/null docker compose run --rm \
+            -e CARGO_NET_OFFLINE=false \
+            development bash -c '
+              set -euo pipefail
+              cargo vendor /tmp/cargo-vendor-check --locked --manifest-path Cargo.toml
+              diff -rq libs/3rdparty/cargo-vendor /tmp/cargo-vendor-check
+            '
