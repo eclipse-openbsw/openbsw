@@ -17,8 +17,8 @@
 #include "bsp/SystemTime.h"
 #include "mcu/mcu.h"
 
-#include <etl/uncopyable.h>
 #include <etl/platform.h>
+#include <etl/uncopyable.h>
 
 #include <cstdint>
 
@@ -107,13 +107,13 @@ bsp::BspReturnCode Adc<AdcResolution, AdcConfiguration, maxChannels>::init()
     fAdc.CLP2 = 0;
     fAdc.CLP1 = 0;
 
-    fAdc.CLP0                      = 0;
-    fAdc.CLPX                      = 0;
-    fAdc.CLP9                      = 0;
+    fAdc.CLP0                            = 0;
+    fAdc.CLPX                            = 0;
+    fAdc.CLP9                            = 0;
     ETL_MAYBE_UNUSED volatile uint32_t a = fAdc.R[0];
-    fAdc.SC2                       = 0;
+    fAdc.SC2                             = 0;
     // Start calibration, HW average function enabled, 32 samples averaged
-    fAdc.SC3                       = ADC_SC3_CAL_MASK | ADC_SC3_AVGE_MASK | ADC_SC3_AVGS(3);
+    fAdc.SC3                             = ADC_SC3_CAL_MASK | ADC_SC3_AVGE_MASK | ADC_SC3_AVGS(3);
 
     uint32_t timeout = 0;
     do
@@ -245,7 +245,7 @@ bsp::BspReturnCode Adc<AdcResolution, AdcConfiguration, maxChannels>::getValueSy
         && ((fAdc.SC2 & ADC_SC2_DMAEN(1)) == 0)) // DMA disabled
     {
         ETL_MAYBE_UNUSED volatile uint32_t a = fAdc.R[0];
-        fAdc.SC1[0]                    = ADC_SC1A_ADCH(phChannel);
+        fAdc.SC1[0]                          = ADC_SC1A_ADCH(phChannel);
 
         uint32_t timeout = 0;
         do
