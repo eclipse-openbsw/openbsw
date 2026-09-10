@@ -52,11 +52,11 @@ class {{ service.name }}SkeletonMock : public middleware::util::CrtpMock<{{ serv
 {% endif %}
 {% if method.output_param %}
     MOCK_METHOD(middleware::core::HRESULT,
-                respond,
+                respond{{ method.name }},
                 (SkeletonResponseInfo & response, const {{ method.output_param.type }}& result, const bool handleResponseFailure));
 {% else %}
     MOCK_METHOD(middleware::core::HRESULT,
-                respond,
+                respond{{ method.name }},
                 (SkeletonResponseInfo & response, const bool handleResponseFailure));
 {% endif %}
     MOCK_METHOD(middleware::core::HRESULT, cancel{{ method.name }}Response, (SkeletonResponseInfo & response));
@@ -74,20 +74,23 @@ class {{ service.name }}SkeletonMock : public middleware::util::CrtpMock<{{ serv
     // ATTRIBUTES
 {% for attribute in service.attributes %}
 {% if attribute.getter %}
-    MOCK_METHOD(void, get_{{ attribute.name }}Attribute, (SkeletonResponseInfo & response));
+    MOCK_METHOD(void, get{{ attribute.name }}Attribute, (SkeletonResponseInfo & response));
     MOCK_METHOD(middleware::core::HRESULT,
-                respond,
+                respondGet{{ attribute.name }}Attribute,
                 (SkeletonResponseInfo & response, const {{ attribute.type }}& result, const bool handleResponseFailure));
-    MOCK_METHOD(middleware::core::HRESULT, cancelGet_{{ attribute.name }}AttributeResponse, (SkeletonResponseInfo & response));
+    MOCK_METHOD(middleware::core::HRESULT, cancelGet{{ attribute.name }}AttributeResponse, (SkeletonResponseInfo & response));
 {% endif %}
 {% if attribute.setter %}
 {% if attribute.setAsMethod %}
     MOCK_METHOD(void,
-                set_{{ attribute.name }}Attribute,
+                set{{ attribute.name }}Attribute,
                 (const {{ attribute.type }}& {{ attribute.variable }}, SkeletonResponseInfo& response));
-    MOCK_METHOD(middleware::core::HRESULT, cancelSet_{{ attribute.name }}AttributeResponse, (SkeletonResponseInfo & response));
+    MOCK_METHOD(middleware::core::HRESULT,
+                respondSet{{ attribute.name }}Attribute,
+                (SkeletonResponseInfo & response, const bool& result, const bool handleResponseFailure));
+    MOCK_METHOD(middleware::core::HRESULT, cancelSet{{ attribute.name }}AttributeResponse, (SkeletonResponseInfo & response));
 {% else %}
-    MOCK_METHOD(void, set_{{ attribute.name }}Attribute, (const {{ attribute.type }}& {{ attribute.variable }}));
+    MOCK_METHOD(void, set{{ attribute.name }}Attribute, (const {{ attribute.type }}& {{ attribute.variable }}));
 {% endif %}
 {% endif %}
 {% endfor %}
