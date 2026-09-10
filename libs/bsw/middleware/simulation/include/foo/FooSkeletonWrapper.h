@@ -36,13 +36,13 @@ public:
         }
     }
 
-    void get_FooDefaultAttribute(
+    void getFooDefaultAttribute(
         ::middleware::core::ResponseBufferBase::SkeletonResponseInfo& response) override
     {
-        respond(response, data_);
+        respondGetFooDefaultAttribute(response, data_);
     }
 
-    void set_FooDefaultAttribute(org::test::foo::Foo::FooStruct const& value) override
+    void setFooDefaultAttribute(org::test::foo::Foo::FooStruct const& value) override
     {
         data_ = value;
         (void)fooDefault.send(data_);

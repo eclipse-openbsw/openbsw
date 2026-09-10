@@ -98,11 +98,11 @@ void {{ service.name }}Skeleton::{{ method.variable }}(middleware::core::Respons
 }
 {% endif %}
 
-middleware::core::HRESULT {{ service.name }}Skeleton::respond(middleware::core::ResponseBufferBase::SkeletonResponseInfo& response,
+middleware::core::HRESULT {{ service.name }}Skeleton::respond{{ method.name }}(middleware::core::ResponseBufferBase::SkeletonResponseInfo& response,
                                                {% if method.output_param %}const {{ method.output_param.type }}& {{ method.output_param.name }}, {% endif %}const bool handleResponseFailure)
 {
     auto* mock = {{ service.name }}SkeletonMock::getMock();
-    return mock->respond(response, {% if method.output_param %}{{ method.output_param.name }}, {% endif %}handleResponseFailure);
+    return mock->respond{{ method.name }}(response, {% if method.output_param %}{{ method.output_param.name }}, {% endif %}handleResponseFailure);
 }
 
 middleware::core::HRESULT {{ service.name }}Skeleton::cancel{{ method.name }}Response(
@@ -134,49 +134,58 @@ void {{ service.name }}Skeleton::{{ method.variable }}()
 // ATTRIBUTES
 {% for attribute in service.attributes if service.attributes %}
 {% if attribute.getter %}
-middleware::core::HRESULT {{ service.name }}Skeleton::respond(middleware::core::ResponseBufferBase::SkeletonResponseInfo& response,
+middleware::core::HRESULT {{ service.name }}Skeleton::respondGet{{ attribute.name }}Attribute(middleware::core::ResponseBufferBase::SkeletonResponseInfo& response,
                                                const {{ attribute.type }}& result,
                                                const bool handleResponseFailure)
 {
     auto* mock = {{ service.name }}SkeletonMock::getMock();
-    return mock->respond(response, result, handleResponseFailure);
+    return mock->respondGet{{ attribute.name }}Attribute(response, result, handleResponseFailure);
 }
 
-void {{ service.name }}Skeleton::get_{{ attribute.name }}Attribute(middleware::core::ResponseBufferBase::SkeletonResponseInfo& response)
+void {{ service.name }}Skeleton::get{{ attribute.name }}Attribute(middleware::core::ResponseBufferBase::SkeletonResponseInfo& response)
 {
     auto* mock = {{ service.name }}SkeletonMock::getMock();
-    mock->get_{{ attribute.name }}Attribute(response);
+    mock->get{{ attribute.name }}Attribute(response);
 }
 
-middleware::core::HRESULT {{ service.name }}Skeleton::cancelGet_{{ attribute.name }}AttributeResponse(
+middleware::core::HRESULT {{ service.name }}Skeleton::cancelGet{{ attribute.name }}AttributeResponse(
     middleware::core::ResponseBufferBase::SkeletonResponseInfo& response)
 {
     auto* mock = {{ service.name }}SkeletonMock::getMock();
-    return mock->cancelGet_{{ attribute.name }}AttributeResponse(response);
+    return mock->cancelGet{{ attribute.name }}AttributeResponse(response);
 }
 
 {% endif %}
 {% if attribute.setter %}
 {% if attribute.setAsMethod %}
-void {{ service.name }}Skeleton::set_{{ attribute.name }}Attribute(const {{ attribute.type }}& arg,
+void {{ service.name }}Skeleton::set{{ attribute.name }}Attribute(const {{ attribute.type }}& arg,
                                              middleware::core::ResponseBufferBase::SkeletonResponseInfo& response)
 {
     auto* mock = {{ service.name }}SkeletonMock::getMock();
-    mock->set_{{ attribute.name }}Attribute(arg, response);
+    mock->set{{ attribute.name }}Attribute(arg, response);
 }
 
-middleware::core::HRESULT {{ service.name }}Skeleton::cancelSet_{{ attribute.name }}AttributeResponse(
+middleware::core::HRESULT {{ service.name }}Skeleton::respondSet{{ attribute.name }}Attribute(
+    middleware::core::ResponseBufferBase::SkeletonResponseInfo& response,
+    const bool& result,
+    const bool handleResponseFailure)
+{
+    auto* mock = {{ service.name }}SkeletonMock::getMock();
+    return mock->respondSet{{ attribute.name }}Attribute(response, result, handleResponseFailure);
+}
+
+middleware::core::HRESULT {{ service.name }}Skeleton::cancelSet{{ attribute.name }}AttributeResponse(
     middleware::core::ResponseBufferBase::SkeletonResponseInfo& response)
 {
     auto* mock = {{ service.name }}SkeletonMock::getMock();
-    return mock->cancelSet_{{ attribute.name }}AttributeResponse(response);
+    return mock->cancelSet{{ attribute.name }}AttributeResponse(response);
 }
 
 {% else %}
-void {{ service.name }}Skeleton::set_{{ attribute.name }}Attribute(const {{ attribute.type }}& arg)
+void {{ service.name }}Skeleton::set{{ attribute.name }}Attribute(const {{ attribute.type }}& arg)
 {
     auto* mock = {{ service.name }}SkeletonMock::getMock();
-    mock->set_{{ attribute.name }}Attribute(arg);
+    mock->set{{ attribute.name }}Attribute(arg);
 }
 
 {% endif %}
