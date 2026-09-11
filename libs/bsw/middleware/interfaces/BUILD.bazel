@@ -14,15 +14,14 @@ package(default_visibility = ["//visibility:public"])
 
 # ---- concurrency -----------------------------------------------------------
 
-alias(
+# Default is a no-op stub, not a mock: production packages must not depend on
+# test sources, and reference_app/unit_test consumers already supply their own
+# real implementation via middleware_config (see referenceApp/middlewareConfiguration
+# and libs/bsw/middleware/test BUILD.bazel).
+cc_library(
     name = "concurrency_impl_default",
-    actual = select(
-        {
-            "//bazel/config/executable_config:unit_test": "//libs/bsw/middleware/test:concurrency_mock_impl",
-            "//bazel/config/executable_config:reference_app": "//libs/bsw/middleware/test:concurrency_mock_impl",
-        },
-        no_match_error = "Set executable_config to 'reference_app' or 'unit_test', or override --//libs/bsw/middleware/interfaces:concurrency_impl",
-    ),
+    hdrs = ["src/noop/concurrency/middleware/concurrency/lock_types.h"],
+    strip_include_prefix = "src/noop/concurrency",
 )
 
 label_flag(
@@ -44,15 +43,14 @@ filegroup(
 
 # ---- logger ----------------------------------------------------------------
 
-alias(
+# Default is a no-op stub; see the note on concurrency_impl_default above.
+cc_library(
     name = "logger_impl_default",
-    actual = select(
-        {
-            "//bazel/config/executable_config:unit_test": "//libs/bsw/middleware/test:logger_mock_impl",
-            "//bazel/config/executable_config:reference_app": "//libs/bsw/middleware/test:logger_mock_impl",
-        },
-        no_match_error = "Set executable_config to 'reference_app' or 'unit_test', or override --//libs/bsw/middleware/interfaces:logger_impl",
-    ),
+    srcs = ["src/noop/logger/LoggerNoop.cpp"],
+    deps = [
+        ":logger",
+        "//libs/3rdparty/etl",
+    ],
 )
 
 label_flag(
@@ -74,15 +72,11 @@ filegroup(
 
 # ---- os --------------------------------------------------------------------
 
-alias(
+# Default is a no-op stub; see the note on concurrency_impl_default above.
+cc_library(
     name = "os_impl_default",
-    actual = select(
-        {
-            "//bazel/config/executable_config:unit_test": "//libs/bsw/middleware/test:os_mock_impl",
-            "//bazel/config/executable_config:reference_app": "//libs/bsw/middleware/test:os_mock_impl",
-        },
-        no_match_error = "Set executable_config to 'reference_app' or 'unit_test', or override --//libs/bsw/middleware/interfaces:os_impl",
-    ),
+    srcs = ["src/noop/os/OsNoop.cpp"],
+    deps = [":os"],
 )
 
 label_flag(
@@ -103,15 +97,11 @@ filegroup(
 
 # ---- time ------------------------------------------------------------------
 
-alias(
+# Default is a no-op stub; see the note on concurrency_impl_default above.
+cc_library(
     name = "time_impl_default",
-    actual = select(
-        {
-            "//bazel/config/executable_config:unit_test": "//libs/bsw/middleware/test:time_mock_impl",
-            "//bazel/config/executable_config:reference_app": "//libs/bsw/middleware/test:time_mock_impl",
-        },
-        no_match_error = "Set executable_config to 'reference_app' or 'unit_test', or override --//libs/bsw/middleware/interfaces:time_impl",
-    ),
+    srcs = ["src/noop/time/TimeNoop.cpp"],
+    deps = [":time"],
 )
 
 label_flag(
