@@ -51,7 +51,7 @@ middleware::core::HRESULT {{service.name}}Skeleton::{{ method.variable }}OnNewMe
 // ATTRIBUTES
   {% for attribute in service.attributes if service.attributes %}
       {% if attribute.getter %}
-middleware::core::HRESULT {{service.name}}Skeleton::get_{{attribute.name}}AttributeOnNewMessageReceived(
+middleware::core::HRESULT {{service.name}}Skeleton::get{{attribute.name}}AttributeOnNewMessageReceived(
     const middleware::core::Message& msg)
 {
     middleware::core::HRESULT ret = middleware::core::HRESULT::ServiceBusy;
@@ -60,7 +60,7 @@ middleware::core::HRESULT {{service.name}}Skeleton::get_{{attribute.name}}Attrib
         msg.getHeader().addressId, msg.getHeader().srcClusterId, msg.getHeader().requestId);
     if (response != nullptr)
     {
-        get_{{attribute.name}}Attribute(*response);
+        get{{attribute.name}}Attribute(*response);
         ret = middleware::core::HRESULT::Ok;
     }
 
@@ -70,7 +70,7 @@ middleware::core::HRESULT {{service.name}}Skeleton::get_{{attribute.name}}Attrib
       {% if attribute.setter%}
 
         {% if attribute.setAsMethod and attribute.setter%}
-middleware::core::HRESULT {{service.name}}Skeleton::set_{{attribute.name}}AttributeOnNewMessageReceived(
+middleware::core::HRESULT {{service.name}}Skeleton::set{{attribute.name}}AttributeOnNewMessageReceived(
     const middleware::core::Message& msg)
 {
     middleware::core::HRESULT ret = middleware::core::HRESULT::ServiceBusy;
@@ -80,18 +80,18 @@ middleware::core::HRESULT {{service.name}}Skeleton::set_{{attribute.name}}Attrib
     if (response != nullptr)
     {
         const auto& payload = middleware::core::MessagePayloadBuilder::getInstance().readPayload<{{ attribute.type }}>(msg);
-        set_{{attribute.name}}Attribute(payload, *response);
+        set{{attribute.name}}Attribute(payload, *response);
         ret = middleware::core::HRESULT::Ok;
     }
 
     return ret;
 }
         {% else %}
-middleware::core::HRESULT {{service.name}}Skeleton::set_{{attribute.name}}AttributeOnNewMessageReceived(
+middleware::core::HRESULT {{service.name}}Skeleton::set{{attribute.name}}AttributeOnNewMessageReceived(
     const middleware::core::Message& msg)
 {
     const auto& payload = middleware::core::MessagePayloadBuilder::getInstance().readPayload<{{attribute.type}}>(msg);
-    set_{{attribute.name}}Attribute(payload);
+    set{{attribute.name}}Attribute(payload);
 
     return middleware::core::HRESULT::Ok;
 }
@@ -197,13 +197,13 @@ middleware::core::HRESULT {{service.name}}Skeleton::onNewMessageReceived(middlew
   {% for attribute in service.attributes if service.attributes %}
     {% if attribute.getter %}
         case internal::get_{{ attribute.name }}_id: {
-            ret = get_{{ attribute.name }}AttributeOnNewMessageReceived(msg);
+            ret = get{{ attribute.name }}AttributeOnNewMessageReceived(msg);
             break;
         }
     {% endif %}
     {% if attribute.setter %}
         case internal::set_{{ attribute.name }}_id: {
-            ret = set_{{ attribute.name }}AttributeOnNewMessageReceived(msg);
+            ret = set{{ attribute.name }}AttributeOnNewMessageReceived(msg);
             break;
         }
     {% endif %}
@@ -231,13 +231,13 @@ middleware::core::HRESULT {{service.name}}Skeleton::onNewMessageReceived(middlew
 // METHODS
 {% for method in service.methods if service.methods %}
 {% if method.output_param %}
-middleware::core::HRESULT {{service.name}}Skeleton::respond(middleware::core::ResponseBufferBase::SkeletonResponseInfo& response,
+middleware::core::HRESULT {{service.name}}Skeleton::respond{{ method.name }}(middleware::core::ResponseBufferBase::SkeletonResponseInfo& response,
                                                 const {{  method.output_param.type }}& {{  method.output_param.name }}, const bool handleResponseFailure)
 {
     return f{{method.variable}}ResponseBuffer.respond(response, {{ method.output_param.name }}, handleResponseFailure);
 }
 {% else %}
-middleware::core::HRESULT {{service.name}}Skeleton::respond(middleware::core::ResponseBufferBase::SkeletonResponseInfo& response,
+middleware::core::HRESULT {{service.name}}Skeleton::respond{{ method.name }}(middleware::core::ResponseBufferBase::SkeletonResponseInfo& response,
                                                 const bool handleResponseFailure)
 {
     return f{{method.variable}}ResponseBuffer.respond(response, handleResponseFailure);
@@ -248,7 +248,7 @@ middleware::core::HRESULT {{service.name}}Skeleton::respond(middleware::core::Re
 // ATTRIBUTES
   {% for attribute in service.attributes if service.attributes %}
     {% if attribute.getter %}
-middleware::core::HRESULT {{service.name}}Skeleton::respond(middleware::core::ResponseBufferBase::SkeletonResponseInfo& response,
+middleware::core::HRESULT {{service.name}}Skeleton::respondGet{{ attribute.name }}Attribute(middleware::core::ResponseBufferBase::SkeletonResponseInfo& response,
                                                const {{ attribute.type }}& result,
                                                const bool handleResponseFailure)
 {
@@ -257,7 +257,7 @@ middleware::core::HRESULT {{service.name}}Skeleton::respond(middleware::core::Re
     {% endif %}
     {% if attribute.setAsMethod and attribute.setter %}
 
-middleware::core::HRESULT {{service.name}}Skeleton::respond(middleware::core::ResponseBufferBase::SkeletonResponseInfo& response,
+middleware::core::HRESULT {{service.name}}Skeleton::respondSet{{ attribute.name }}Attribute(middleware::core::ResponseBufferBase::SkeletonResponseInfo& response,
                                                const {{ attribute.type }}& result,
                                                const bool handleResponseFailure)
 {
@@ -269,7 +269,7 @@ middleware::core::HRESULT {{service.name}}Skeleton::respond(middleware::core::Re
 
   {% for attribute in service.attributes if service.attributes %}
     {% if attribute.getter %}
-middleware::core::HRESULT {{service.name}}Skeleton::cancelGet_{{ attribute.name }}AttributeResponse(
+middleware::core::HRESULT {{service.name}}Skeleton::cancelGet{{ attribute.name }}AttributeResponse(
     middleware::core::ResponseBufferBase::SkeletonResponseInfo& response)
 {
     return fGet_{{ attribute.name }}AttributeResponseBuffer.cancelResponse(response);
@@ -277,7 +277,7 @@ middleware::core::HRESULT {{service.name}}Skeleton::cancelGet_{{ attribute.name 
    {% endif %}
    {% if attribute.setAsMethod and attribute.setter %}
 
-middleware::core::HRESULT {{service.name}}Skeleton::cancelSet_{{ attribute.name }}AttributeResponse(
+middleware::core::HRESULT {{service.name}}Skeleton::cancelSet{{ attribute.name }}AttributeResponse(
     middleware::core::ResponseBufferBase::SkeletonResponseInfo& response)
 {
     return fSet_{{ attribute.name }}AttributeResponseBuffer.cancelResponse(response);
@@ -299,24 +299,23 @@ middleware::core::HRESULT {{service.name}}Skeleton::cancel{{ method.name }}Respo
 // ATTRIBUTES
   {% for attribute in service.attributes if service.attributes %}
     {% if attribute.getter %}
-void {{service.name}}Skeleton::get_{{ attribute.name }}Attribute(middleware::core::ResponseBufferBase::SkeletonResponseInfo& response)
+void {{service.name}}Skeleton::get{{ attribute.name }}Attribute(middleware::core::ResponseBufferBase::SkeletonResponseInfo& response)
 {
     const auto& val = {{ attribute.variable }}.get();
-    static_cast<void>(respond(response, val));
+    static_cast<void>(respondGet{{ attribute.name }}Attribute(response, val));
 }
     {% endif %}
 
     {% if attribute.setter %}
       {%if attribute.setAsMethod %}
-void {{service.name}}Skeleton::set_{{ attribute.name }}Attribute(const {{ attribute.type }}& arg,
+void {{service.name}}Skeleton::set{{ attribute.name }}Attribute(const {{ attribute.type }}& arg,
                                              middleware::core::ResponseBufferBase::SkeletonResponseInfo& response)
 {
     {{ attribute.variable }}.set(arg);
-    const auto& val = {{ attribute.variable }}.get();
-    static_cast<void>(respond(response, val));
+    static_cast<void>(respondSet{{ attribute.name }}Attribute(response, true));
 }
       {% else %}
-void {{service.name}}Skeleton::set_{{ attribute.name }}Attribute(const {{ attribute.type }}& arg)
+void {{service.name}}Skeleton::set{{ attribute.name }}Attribute(const {{ attribute.type }}& arg)
 {
     {{ attribute.variable }}.set(arg);
 }
