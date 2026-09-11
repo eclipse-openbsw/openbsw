@@ -11,13 +11,34 @@
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
 
 cc_library(
-    name = "cpp2someip",
-    srcs = glob(["src/**/*.cpp"]),
+    name = "cpp2someip_headers",
     hdrs = glob(["include/**/*.h"]),
     strip_include_prefix = "include",
     visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "cpp2someip",
+    srcs = glob(["src/**/*.cpp"]),
+    visibility = ["//visibility:public"],
     deps = [
+        ":cpp2someip_headers",
+        "//libs/3rdparty/etl",
+        "//libs/bsw/async",
         "//libs/bsw/cpp2ethernet",
         "//libs/bsw/util",
     ],
+)
+
+cc_library(
+    name = "cpp2someip_mock",
+    testonly = True,
+    hdrs = glob(["mock/include/**/*.h"]),
+    strip_include_prefix = "mock/include",
+    visibility = ["//visibility:public"],
+    deps =
+        [
+            ":cpp2someip",
+            "//libs/3rdparty/googletest:gtest",
+        ],
 )

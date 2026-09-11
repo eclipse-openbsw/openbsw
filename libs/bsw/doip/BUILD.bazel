@@ -26,3 +26,15 @@ cc_library(
         "//libs/bsw/util",
     ],
 )
+
+cc_library(
+    name = "doip_mock",
+    testonly = True,
+    hdrs = glob(["mock/gmock/include/**/*.h"]),
+    strip_include_prefix = "mock/gmock/include",
+    visibility = ["//visibility:public"],
+    deps = [
+        ":doip",
+        "//libs/3rdparty/googletest:gtest",
+    ],
+)

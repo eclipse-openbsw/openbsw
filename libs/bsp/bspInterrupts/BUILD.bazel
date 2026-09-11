@@ -10,6 +10,11 @@
 
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
 
+#NOTE: CMake aliases bspInterruptsImpl -> bspInterruptsMock so all bspInterrupts
+# consumers get the mock under unit_test. Bazel forbids this (testonly
+# target can't be reached from a non-testonly one), so this select() only
+# picks real per-platform impls. Unit tests needing the mock must depend
+# on :bsp_interrupts_mock directly instead.
 alias(
     name = "bsp_interrupts_impl_default",
     actual = select(
@@ -31,14 +36,66 @@ label_flag(
 )
 
 cc_library(
-    name = "bsp_interrupts",
+    name = "bsp_interrupts_headers",
     hdrs = [
         "include/interrupts/SuspendResumeAllInterruptsLock.h",
         "include/interrupts/SuspendResumeAllInterruptsScopedLock.h",
     ],
     strip_include_prefix = "include",
     visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "bsp_interrupts",
+    visibility = ["//visibility:public"],
     deps = [
+        ":bsp_interrupts_headers",
         ":bsp_interrupts_impl",
+    ],
+)
+
+cc_library(
+    name = "bsp_interrupts_gmock_headers",
+    hdrs = [
+        "mock/gmock/include/interrupts/SuspendResumeAllInterruptsMock.h",
+        "mock/gmock/include/interrupts/disableEnableAllInterruptsMock.h",
+    ],
+    strip_include_prefix = "mock/gmock/include",
+    visibility = ["//visibility:public"],
+    deps = [
+        ":bsp_interrupts_mock_headers",
+        "//libs/3rdparty/etl",
+        "//libs/3rdparty/googletest:gtest",
+    ],
+)
+
+cc_library(
+    name = "bsp_interrupts_mock_headers",
+    hdrs = [
+        "mock/include/interrupts/disableEnableAllInterrupts.h",
+        "mock/include/interrupts/suspendResumeAllInterrupts.h",
+    ],
+    strip_include_prefix = "mock/include",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//libs/bsw/platform",
+    ],
+)
+
+cc_library(
+    name = "bsp_interrupts_mock",
+    testonly = True,
+    srcs = [
+        "mock/gmock/src/SuspendResumeAllInterruptsMock.cpp",
+        "mock/gmock/src/disableEnableAllInterruptsMock.cpp",
+    ],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":bsp_interrupts_gmock_headers",
+        ":bsp_interrupts_headers",
+        ":bsp_interrupts_mock_headers",
+        "//libs/3rdparty/etl",
+        "//libs/3rdparty/googletest:gtest",
+        "//libs/bsw/platform",
     ],
 )

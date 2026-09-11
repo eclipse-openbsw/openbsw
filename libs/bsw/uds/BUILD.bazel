@@ -38,3 +38,29 @@ cc_library(
         "//libs/bsw/common:configuration",
     ],
 )
+
+cc_library(
+    name = "uds_with_mock",
+    testonly = True,
+    visibility = ["//visibility:public"],
+    deps = [
+        ":uds",
+        ":uds_mock",
+    ],
+)
+
+cc_library(
+    name = "uds_mock",
+    testonly = True,
+    srcs = ["mock/gmock/src/uds/session/DiagSessionMock.cpp"],
+    hdrs = glob(["mock/gmock/include/**/*.h"]),
+    implementation_deps = [
+        ":uds_headers",
+    ],
+    strip_include_prefix = "mock/gmock/include",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//executables/referenceApp/udsConfiguration:uds_configuration",
+        "//libs/3rdparty/googletest:gtest",
+    ],
+)

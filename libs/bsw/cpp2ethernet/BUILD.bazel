@@ -25,3 +25,14 @@ cc_library(
         "//libs/bsw/util",
     ],
 )
+
+cc_library(
+    name = "cpp2ethernet_mock",
+    testonly = True,
+    hdrs = glob(["mock/include/**/*.h"]),
+    strip_include_prefix = "mock/include",
+    visibility = ["//visibility:public"],
+    deps = [
+        ":cpp2ethernet",
+    ],
+)
