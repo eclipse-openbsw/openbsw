@@ -27,13 +27,15 @@ cc_library(
     name = "concurrency_impl",
     hdrs = ["include/platform_integration/middleware/concurrency/lock_types.h"],
     strip_include_prefix = "include/platform_integration",
+    target_compatible_with = reference_app_posix_only(),
 )
 
 cc_library(
     name = "logger_impl",
     srcs = ["src/platform_integration/logger/LoggerImpl.cpp"],
+    target_compatible_with = reference_app_posix_only(),
     deps = [
-        "//executables/referenceApp/application:headers",
+        "//executables/referenceApp/application:demo_logger",
         "//libs/3rdparty/etl",
         "//libs/bsw/logger",
         "//libs/bsw/middleware/interfaces:logger",
@@ -44,6 +46,7 @@ cc_library(
 cc_library(
     name = "os_impl",
     srcs = ["src/platform_integration/os/OsDefinitions.cpp"],
+    target_compatible_with = reference_app_posix_only(),
     deps = [
         "//executables/referenceApp/asyncBinding:async_binding",
         "//libs/bsw/middleware/interfaces:os",
@@ -53,6 +56,7 @@ cc_library(
 cc_library(
     name = "time_impl",
     srcs = ["src/platform_integration/time/SystemTimeProvider.cpp"],
+    target_compatible_with = reference_app_posix_only(),
     deps = [
         "//libs/bsw/bsp",
         "//libs/bsw/middleware/interfaces:time",
@@ -67,34 +71,13 @@ middleware_codegen(
     name = "middleware_configuration_generated",
     deployment_yaml = "model/deployment.yaml",
     generated_outputs = GENERATED_OUTPUTS,
-    visibility = ["//visibility:public"],
+    target_compatible_with = reference_app_posix_only(),
     deps = ["//libs/bsw/middleware"],
-)
-
-filegroup(
-    name = "generated_headers",
-    srcs = [":middleware_configuration_generated"],
-    output_group = "generated_headers",
-)
-
-filegroup(
-    name = "generated_sources",
-    srcs = [":middleware_configuration_generated"],
-    output_group = "generated_sources",
 )
 
 # ---------------------------------------------------------------------------
 # ReferenceApp middleware configuration targets
 # ---------------------------------------------------------------------------
-
-cc_library(
-    name = "generated_middleware_impl",
-    srcs = [":generated_sources"],
-    hdrs = [":generated_headers"],
-    strip_include_prefix = "generated_files/include/generated_code",
-    deps = ["//libs/bsw/middleware"],
-    alwayslink = True,
-)
 
 cc_library(
     name = "middleware_impl",
@@ -104,11 +87,11 @@ cc_library(
     hdrs = ["include/MemoryLayout.h"],
     strip_include_prefix = "include",
     target_compatible_with = reference_app_posix_only(),
-    deps = [":generated_middleware_impl"],
+    deps = [":middleware_configuration_generated"],
 )
 
 middleware_config(
-    name = "middlewareConfiguration",
+    name = "middleware_configuration",
     config = {
         "//libs/3rdparty/etl:etl_profile": "//executables/referenceApp/etl_profile:etl_profile",
         "//libs/bsw/middleware/interfaces:concurrency_impl": ":concurrency_impl",
@@ -117,4 +100,6 @@ middleware_config(
         "//libs/bsw/middleware/interfaces:time_impl": ":time_impl",
     },
     dep = ":middleware_impl",
+    target_compatible_with = reference_app_posix_only(),
+    visibility = ["//visibility:public"],
 )
