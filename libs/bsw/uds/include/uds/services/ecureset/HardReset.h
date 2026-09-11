@@ -14,6 +14,8 @@
 #include "uds/base/Subfunction.h"
 #include "uds/lifecycle/IUdsLifecycleConnector.h"
 
+#include <etl/array.h>
+
 namespace uds
 {
 class DiagDispatcher;
@@ -34,7 +36,7 @@ private:
     IUdsLifecycleConnector& fUdsLifecycleConnector;
     DiagDispatcher& fDiagDispatcher;
 
-    static uint8_t const sfImplementedRequest[2];
+    static ::etl::array<uint8_t, 2U> const sfImplementedRequest;
 };
 
 } // namespace uds

@@ -24,6 +24,7 @@
 
 #include <async/Async.h>
 
+#include <etl/algorithm.h>
 #include <etl/error_handler.h>
 #include <etl/span.h>
 
@@ -91,7 +92,27 @@ void IncomingDiagConnection::addIdentifier()
     }
     else if ((nullptr != requestMessage) && (_identifiers.size() < _identifiers.max_size()))
     {
-        _identifiers.push_back(requestMessage->getPayload()[_identifiers.size()]);
+        uint16_t const payloadLength   = requestMessage->getPayloadLength();
+        uint16_t const validBytes      = requestMessage->getValidBytes();
+        uint16_t const availableLength = (payloadLength > validBytes) ? payloadLength : validBytes;
+        size_t const nextIdentifierIdx = _identifiers.size();
+        if ((nextIdentifierIdx == 0U) && (availableLength == 0U))
+        {
+            _identifiers.push_back(serviceId);
+            return;
+        }
+
+        ::etl::span<uint8_t const> const payload(requestMessage->getPayload(), availableLength);
+        if (nextIdentifierIdx >= payload.size())
+        {
+            Logger::error(
+                UDS,
+                "IncomingDiagConnection::addIdentifier(): payload too short, idx=%u len=%u",
+                static_cast<unsigned>(nextIdentifierIdx),
+                static_cast<unsigned>(payload.size()));
+            return;
+        }
+        _identifiers.push_back(payload[nextIdentifierIdx]);
     }
     else
     {
@@ -179,10 +200,9 @@ void IncomingDiagConnection::asyncSendPositiveResponse(
         responseMessage->setTargetAddress(tmpSourceId);
         if (DiagReturnCode::NEGATIVE_RESPONSE_IDENTIFIER == responseMessage->getServiceId())
         { // we did send a negative response before --> restore payload
-            for (uint8_t i = 0U; i < DiagCodes::NEGATIVE_RESPONSE_MESSAGE_LENGTH; ++i)
-            {
-                responseMessage->getPayload()[i] = _negativeResponseTempBuffer[i];
-            }
+            ::etl::span<uint8_t> const payload(
+                responseMessage->getPayload(), DiagCodes::NEGATIVE_RESPONSE_MESSAGE_LENGTH);
+            ::etl::ranges::copy(_negativeResponseTempBuffer, payload.begin());
         }
         responseMessage->resetValidBytes();
         for (auto& identifier : _identifiers)
@@ -193,8 +213,10 @@ void IncomingDiagConnection::asyncSendPositiveResponse(
         (void)responseMessage->increaseValidBytes(length);
         responseMessage->setPayloadLength(_identifiers.size() + length);
         _sender = pSender;
+        ::etl::span<uint8_t> const responsePayload(
+            responseMessage->getPayload(), responseMessage->getPayloadLength());
         diagSessionManager->responseSent(
-            *this, DiagReturnCode::OK, &((*responseMessage)[_identifiers.size()]), length);
+            *this, DiagReturnCode::OK, responsePayload.subspan(_identifiers.size()).data(), length);
     }
     if ((!_suppressPositiveResponse) || _responsePendingSent)
     { // this is not a positive response to a suppressed request --> send
@@ -240,9 +262,8 @@ DiagReturnCode::Type IncomingDiagConnection::startNestedRequest(
     _identifiers.resize(nestedRequest.prefixLength);
     nestedRequest.init(
         sender,
-        ::etl::span<uint8_t>(
-            responseMessage->getBuffer() + _identifiers.size(),
-            responseMessage->getBufferLength() - _identifiers.size()),
+        ::etl::span<uint8_t>(responseMessage->getBuffer(), responseMessage->getBufferLength())
+            .subspan(_identifiers.size()),
         ::etl::span<uint8_t const>(request, static_cast<size_t>(requestLength)));
     _nestedRequest = &nestedRequest;
     triggerNextNestedRequest();
@@ -354,7 +375,7 @@ void IncomingDiagConnection::asyncSendNegativeResponse(
                 {
                     buildResponsePendingTransportMessage(
                         _pendingMessage,
-                        _pendingMessageBuffer,
+                        _pendingMessageBuffer.data(),
                         sourceAddress,
                         responseSourceAddress,
                         serviceId);
@@ -381,10 +402,9 @@ void IncomingDiagConnection::asyncSendNegativeResponse(
     responseMessage->setTargetAddress(sourceAddress);
     if (DiagReturnCode::NEGATIVE_RESPONSE_IDENTIFIER != responseMessage->getServiceId())
     { // make a backup only the first time a negative response is sent!
-        for (uint8_t i = 0U; i < DiagCodes::NEGATIVE_RESPONSE_MESSAGE_LENGTH; ++i)
-        {
-            _negativeResponseTempBuffer[i] = responseMessage->getPayload()[i];
-        }
+        ::etl::span<uint8_t const> const payload(
+            responseMessage->getPayload(), DiagCodes::NEGATIVE_RESPONSE_MESSAGE_LENGTH);
+        ::etl::ranges::copy(payload, _negativeResponseTempBuffer.begin());
     }
     responseMessage->resetValidBytes();
     (void)responseMessage->append(DiagReturnCode::NEGATIVE_RESPONSE_IDENTIFIER);
@@ -393,10 +413,12 @@ void IncomingDiagConnection::asyncSendNegativeResponse(
     _sender = pSender;
     if (responseCode != static_cast<uint8_t>(DiagReturnCode::ISO_RESPONSE_PENDING))
     {
+        ::etl::span<uint8_t> const payload(
+            responseMessage->getPayload(), responseMessage->getPayloadLength());
         diagSessionManager->responseSent(
             *this,
             static_cast<DiagReturnCode::Type>(responseCode),
-            responseMessage->getPayload() + DiagCodes::NEGATIVE_RESPONSE_MESSAGE_LENGTH,
+            payload.subspan(DiagCodes::NEGATIVE_RESPONSE_MESSAGE_LENGTH).data(),
             0U);
     }
     if (!((TransportConfiguration::isFunctionalAddress(targetAddress))
@@ -533,7 +555,7 @@ void IncomingDiagConnection::asyncTransportMessageProcessed(
             {
                 buildResponsePendingTransportMessage(
                     _pendingMessage,
-                    _pendingMessageBuffer,
+                    _pendingMessageBuffer.data(),
                     sourceAddress,
                     responseSourceAddress,
                     serviceId);
@@ -604,7 +626,7 @@ void IncomingDiagConnection::expired(::async::RunnableType const& timeout)
             {
                 buildResponsePendingTransportMessage(
                     _pendingMessage,
-                    _pendingMessageBuffer,
+                    _pendingMessageBuffer.data(),
                     sourceAddress,
                     responseSourceAddress,
                     serviceId);

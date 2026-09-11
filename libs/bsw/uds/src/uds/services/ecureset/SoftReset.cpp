@@ -21,11 +21,11 @@
 
 namespace uds
 {
-uint8_t const SoftReset::sfImplementedRequest[2] = {ServiceId::ECU_RESET, 0x03U};
+::etl::array<uint8_t, 2U> const SoftReset::sfImplementedRequest = {ServiceId::ECU_RESET, 0x03U};
 
 SoftReset::SoftReset(IUdsLifecycleConnector& udsLifecycleConnector, DiagDispatcher& diagDispatcher)
 : Subfunction(
-    &sfImplementedRequest[0],
+    sfImplementedRequest.data(),
     AbstractDiagJob::EMPTY_REQUEST,
     AbstractDiagJob::EMPTY_RESPONSE,
     DiagSessionMask::getInstance()

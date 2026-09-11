@@ -14,7 +14,10 @@
 #include "uds/UdsConstants.h"
 #include "uds/session/DiagSession.h"
 
+#include <etl/algorithm.h>
+#include <etl/array.h>
 #include <etl/error_handler.h>
+#include <etl/span.h>
 #include <etl/uncopyable.h>
 
 #include <platform/estdint.h>
@@ -54,7 +57,8 @@ class DiagJobRoot;
 class AbstractDiagJob : public ::etl::uncopyable
 {
 public:
-    using DiagSessionMask = DiagSession::DiagSessionMask;
+    using DiagSessionMask                                        = DiagSession::DiagSessionMask;
+    static constexpr size_t MAX_OWNED_IMPLEMENTED_REQUEST_LENGTH = 4U;
 
     static uint8_t const EMPTY_REQUEST = 0U;
 
@@ -104,7 +108,9 @@ public:
         uint8_t const requestLength,
         uint8_t const prefixLength,
         DiagSessionMask const sessionMask = DiagSession::ALL_SESSIONS())
-    : fpImplementedRequest(implementedRequest)
+    : fOwnedImplementedRequest()
+    , fOwnsImplementedRequest(false)
+    , fpImplementedRequest(implementedRequest)
     , fpFirstChild(nullptr)
     , fpNextJob(nullptr)
     , fAllowedSessions(sessionMask)
@@ -119,6 +125,35 @@ public:
         {
             ETL_ASSERT(
                 requestLength > prefixLength,
+                ETL_ERROR_GENERIC("requested length must be greater than the prefix length"));
+        }
+    }
+
+    template<size_t N>
+    AbstractDiagJob(
+        ::etl::array<uint8_t, N> const& implementedRequest,
+        uint8_t const prefixLength,
+        DiagSessionMask const sessionMask = DiagSession::ALL_SESSIONS())
+    : fOwnedImplementedRequest(makeOwnedImplementedRequest(implementedRequest))
+    , fOwnsImplementedRequest(true)
+    , fpImplementedRequest(fOwnedImplementedRequest.data())
+    , fpFirstChild(nullptr)
+    , fpNextJob(nullptr)
+    , fAllowedSessions(sessionMask)
+    , fResponseLength(VARIABLE_RESPONSE_LENGTH)
+    , fRequestLength(static_cast<uint8_t>(N))
+    , fPrefixLength(prefixLength)
+    , fRequestPayloadLength(VARIABLE_REQUEST_LENGTH)
+    , fDefaultDiagReturnCode(DiagReturnCode::ISO_GENERAL_REJECT)
+    , fSuppressPositiveResponseBitEnabled(false)
+    {
+        static_assert(
+            N <= MAX_OWNED_IMPLEMENTED_REQUEST_LENGTH,
+            "owned implemented request exceeds supported length");
+        if (N > 0U)
+        {
+            ETL_ASSERT(
+                N > prefixLength,
                 ETL_ERROR_GENERIC("requested length must be greater than the prefix length"));
         }
     }
@@ -147,7 +182,9 @@ public:
         uint8_t const requestPayloadLength,
         uint8_t const responseLength,
         DiagSessionMask const sessionMask = DiagSession::ALL_SESSIONS())
-    : fpImplementedRequest(implementedRequest)
+    : fOwnedImplementedRequest()
+    , fOwnsImplementedRequest(false)
+    , fpImplementedRequest(implementedRequest)
     , fpFirstChild(nullptr)
     , fpNextJob(nullptr)
     , fAllowedSessions(sessionMask)
@@ -162,6 +199,37 @@ public:
         {
             ETL_ASSERT(
                 requestLength > prefixLength,
+                ETL_ERROR_GENERIC("requested length must be greater than the prefix length"));
+        }
+    }
+
+    template<size_t N>
+    AbstractDiagJob(
+        ::etl::array<uint8_t, N> const& implementedRequest,
+        uint8_t const prefixLength,
+        uint8_t const requestPayloadLength,
+        uint8_t const responseLength,
+        DiagSessionMask const sessionMask = DiagSession::ALL_SESSIONS())
+    : fOwnedImplementedRequest(makeOwnedImplementedRequest(implementedRequest))
+    , fOwnsImplementedRequest(true)
+    , fpImplementedRequest(fOwnedImplementedRequest.data())
+    , fpFirstChild(nullptr)
+    , fpNextJob(nullptr)
+    , fAllowedSessions(sessionMask)
+    , fResponseLength(responseLength)
+    , fRequestLength(static_cast<uint8_t>(N))
+    , fPrefixLength(prefixLength)
+    , fRequestPayloadLength(requestPayloadLength)
+    , fDefaultDiagReturnCode(DiagReturnCode::ISO_GENERAL_REJECT)
+    , fSuppressPositiveResponseBitEnabled(false)
+    {
+        static_assert(
+            N <= MAX_OWNED_IMPLEMENTED_REQUEST_LENGTH,
+            "owned implemented request exceeds supported length");
+        if (N > 0U)
+        {
+            ETL_ASSERT(
+                N > prefixLength,
                 ETL_ERROR_GENERIC("requested length must be greater than the prefix length"));
         }
     }
@@ -259,7 +327,10 @@ protected:
      * \see AsyncDiagJob
      */
     explicit AbstractDiagJob(AbstractDiagJob const* const pJob)
-    : fpImplementedRequest(pJob->fpImplementedRequest)
+    : fOwnedImplementedRequest(copyOwnedImplementedRequest(*pJob))
+    , fOwnsImplementedRequest(pJob->fOwnsImplementedRequest)
+    , fpImplementedRequest(
+          fOwnsImplementedRequest ? fOwnedImplementedRequest.data() : pJob->fpImplementedRequest)
     , fpFirstChild(nullptr)
     , fpNextJob(nullptr)
     , fAllowedSessions(pJob->fAllowedSessions)
@@ -368,6 +439,7 @@ protected:
     DiagSession::DiagSessionMask const getAllowedSessions() const;
 
     uint8_t const* getImplementedRequest() const;
+    ::etl::span<uint8_t const> getImplementedRequestView() const;
 
     uint8_t getRequestLength() const;
 
@@ -419,6 +491,30 @@ private:
     void checkSuppressPositiveResponseBit(
         IncomingDiagConnection& connection, uint8_t const request[]) const;
 
+    template<size_t N>
+    static ::etl::array<uint8_t, MAX_OWNED_IMPLEMENTED_REQUEST_LENGTH>
+    makeOwnedImplementedRequest(::etl::array<uint8_t, N> const& implementedRequest)
+    {
+        static_assert(
+            N <= MAX_OWNED_IMPLEMENTED_REQUEST_LENGTH,
+            "owned implemented request exceeds supported length");
+        ::etl::array<uint8_t, MAX_OWNED_IMPLEMENTED_REQUEST_LENGTH> ownedImplementedRequest = {};
+        ::etl::ranges::copy(implementedRequest, ownedImplementedRequest.begin());
+        return ownedImplementedRequest;
+    }
+
+    static ::etl::array<uint8_t, MAX_OWNED_IMPLEMENTED_REQUEST_LENGTH>
+    copyOwnedImplementedRequest(AbstractDiagJob const& job)
+    {
+        return job.fOwnsImplementedRequest
+                   ? job.fOwnedImplementedRequest
+                   : ::etl::array<uint8_t, MAX_OWNED_IMPLEMENTED_REQUEST_LENGTH>{};
+    }
+
+    /** Owned storage for implemented requests constructed from array values. */
+    ::etl::array<uint8_t, MAX_OWNED_IMPLEMENTED_REQUEST_LENGTH> fOwnedImplementedRequest;
+    /** Indicates whether fpImplementedRequest points to fOwnedImplementedRequest. */
+    bool const fOwnsImplementedRequest;
     /** Array containing the request implemented by this job */
     uint8_t const* const fpImplementedRequest;
     /** Pointer to first child. A child has fpImplementedRequest as its prefix */
@@ -474,6 +570,11 @@ inline DiagSession::DiagSessionMask const AbstractDiagJob::getAllowedSessions() 
 inline uint8_t const* AbstractDiagJob::getImplementedRequest() const
 {
     return fpImplementedRequest;
+}
+
+inline ::etl::span<uint8_t const> AbstractDiagJob::getImplementedRequestView() const
+{
+    return ::etl::span<uint8_t const>(fpImplementedRequest, fRequestLength);
 }
 
 inline uint8_t AbstractDiagJob::getRequestLength() const { return fRequestLength; }
