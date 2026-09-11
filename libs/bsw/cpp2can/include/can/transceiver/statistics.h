@@ -12,7 +12,7 @@
 
 #include "can/transceiver/ICanTransceiver.h"
 
-#include <platform/estdint.h>
+#include <cstdint>
 
 namespace can
 {

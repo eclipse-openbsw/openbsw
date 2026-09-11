@@ -15,7 +15,7 @@
 
 #include "async/Queue.h"
 
-#include <platform/config.h>
+#include <etl/platform.h>
 
 namespace async
 {
@@ -78,7 +78,7 @@ template<typename Runnable, typename EventPolicy, typename Lock>
 inline void RunnableExecutor<Runnable, EventPolicy, Lock>::enqueue(Runnable& runnable)
 {
     {
-        ESR_UNUSED const Lock lock;
+        ETL_MAYBE_UNUSED const Lock lock;
         if (!runnable.isEnqueued())
         {
             _queue.enqueue(runnable);
@@ -94,7 +94,7 @@ void RunnableExecutor<Runnable, EventPolicy, Lock>::handleEvent()
     {
         Runnable* runnable;
         {
-            ESR_UNUSED const Lock lock;
+            ETL_MAYBE_UNUSED const Lock lock;
             runnable = _queue.dequeue();
         }
         if (runnable != nullptr)

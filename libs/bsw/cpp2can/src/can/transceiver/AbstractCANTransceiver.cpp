@@ -13,7 +13,7 @@
 #include <bsp/timer/SystemTimer.h>
 #include <interrupts/SuspendResumeAllInterruptsScopedLock.h>
 
-#include <platform/config.h>
+#include <etl/platform.h>
 
 #include <cstring>
 
@@ -35,7 +35,7 @@ AbstractCANTransceiver::AbstractCANTransceiver(uint8_t const busId)
 
 void AbstractCANTransceiver::addCANFrameListener(ICANFrameListener& listener)
 {
-    ESR_UNUSED const SuspendResumeAllInterruptsScopedLock lock;
+    ETL_MAYBE_UNUSED const SuspendResumeAllInterruptsScopedLock lock;
     if (!_listeners.contains_node(listener))
     {
         _listeners.push_back(listener);
@@ -45,7 +45,7 @@ void AbstractCANTransceiver::addCANFrameListener(ICANFrameListener& listener)
 
 void AbstractCANTransceiver::addVIPCANFrameListener(ICANFrameListener& listener)
 {
-    ESR_UNUSED const SuspendResumeAllInterruptsScopedLock lock;
+    ETL_MAYBE_UNUSED const SuspendResumeAllInterruptsScopedLock lock;
     if (!_listeners.contains_node(listener))
     {
         _listeners.push_front(listener);
@@ -55,19 +55,19 @@ void AbstractCANTransceiver::addVIPCANFrameListener(ICANFrameListener& listener)
 
 void AbstractCANTransceiver::removeCANFrameListener(ICANFrameListener& listener)
 {
-    ESR_UNUSED const SuspendResumeAllInterruptsScopedLock lock;
+    ETL_MAYBE_UNUSED const SuspendResumeAllInterruptsScopedLock lock;
     _listeners.erase(listener);
 }
 
 void AbstractCANTransceiver::addCANFrameSentListener(IFilteredCANFrameSentListener& listener)
 {
-    ESR_UNUSED const SuspendResumeAllInterruptsScopedLock lock;
+    ETL_MAYBE_UNUSED const SuspendResumeAllInterruptsScopedLock lock;
     _sentListeners.push_front(listener);
 }
 
 void AbstractCANTransceiver::removeCANFrameSentListener(IFilteredCANFrameSentListener& listener)
 {
-    ESR_UNUSED const SuspendResumeAllInterruptsScopedLock lock;
+    ETL_MAYBE_UNUSED const SuspendResumeAllInterruptsScopedLock lock;
     _sentListeners.erase(listener);
 }
 

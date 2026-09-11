@@ -12,9 +12,10 @@
 
 #include "bsp/Bsp.h"
 #include "mcu/mcu.h"
-#include "platform/estdint.h"
 
 #include <etl/error_handler.h>
+
+#include <cstdint>
 
 namespace bios
 {

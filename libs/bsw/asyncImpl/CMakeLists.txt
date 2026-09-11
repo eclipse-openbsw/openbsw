@@ -2,7 +2,7 @@ add_library(asyncImpl INTERFACE)
 
 target_include_directories(asyncImpl INTERFACE include)
 
-target_link_libraries(asyncImpl INTERFACE etl platform)
+target_link_libraries(asyncImpl INTERFACE etl)
 
 if (BUILD_EXECUTABLE STREQUAL "unitTest")
 
@@ -10,6 +10,6 @@ if (BUILD_EXECUTABLE STREQUAL "unitTest")
 
     target_include_directories(asyncImplMock INTERFACE mock/include)
 
-    target_link_libraries(asyncImplMock INTERFACE gmock platform)
+    target_link_libraries(asyncImplMock INTERFACE gmock)
 
 endif ()

@@ -20,7 +20,7 @@
 
 #include <timer/Timeout.h>
 
-#include <platform/estdint.h>
+#include <cstdint>
 
 namespace async
 {

@@ -12,7 +12,7 @@
 
 #include "tcp/socket/ISocketProvidingConnectionListener.h"
 
-#include <platform/estdint.h>
+#include <cstdint>
 
 /**
  * contains TCP abstraction layer related code

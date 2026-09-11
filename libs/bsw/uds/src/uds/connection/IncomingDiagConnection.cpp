@@ -10,7 +10,6 @@
 
 #include "uds/connection/IncomingDiagConnection.h"
 
-#include "platform/config.h"
 #include "transport/AbstractTransportLayer.h"
 #include "transport/ITransportMessageProvider.h"
 #include "transport/TransportConfiguration.h"

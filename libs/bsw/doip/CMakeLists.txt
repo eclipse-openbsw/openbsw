@@ -28,7 +28,6 @@ target_link_libraries(
            common
            cpp2ethernet
            etl
-           platform
            transport)
 
 add_library(doipMock INTERFACE)

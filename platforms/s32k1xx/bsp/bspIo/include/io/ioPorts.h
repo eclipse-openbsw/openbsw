@@ -11,7 +11,8 @@
 #pragma once
 
 #include "mcu/mcu.h"
-#include "platform/estdint.h"
+
+#include <cstdint>
 
 enum IOPort
 {

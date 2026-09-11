@@ -16,7 +16,7 @@
 #include <etl/unaligned_type.h>
 #include <ip/IPAddress.h>
 
-#include <platform/estdint.h>
+#include <cstdint>
 
 namespace routing
 {

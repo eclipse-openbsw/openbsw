@@ -12,7 +12,7 @@ add_subdirectory(common)
 
 target_link_libraries(
     threadX
-    PUBLIC platform threadXConfiguration threadXPort
+    PUBLIC threadXConfiguration threadXPort
     PRIVATE threadXPortImpl osHooks)
 
 target_compile_options(

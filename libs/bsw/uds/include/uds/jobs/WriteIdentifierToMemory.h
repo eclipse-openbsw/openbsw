@@ -10,7 +10,6 @@
 
 #pragma once
 
-#include "platform/estdint.h"
 #include "uds/jobs/DataIdentifierJob.h"
 
 #include <etl/span.h>

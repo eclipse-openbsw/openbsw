@@ -10,9 +10,8 @@
 
 #pragma once
 
-#include <platform/estdint.h>
-
 #include <assert.h>
+#include <stdint.h>
 
 typedef unsigned char bool_t;
 #ifndef FALSE

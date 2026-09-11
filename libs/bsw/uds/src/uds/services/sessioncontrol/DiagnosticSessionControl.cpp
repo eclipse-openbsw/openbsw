@@ -23,7 +23,7 @@
 
 #include <async/Async.h>
 
-#include <platform/config.h>
+#include <etl/platform.h>
 
 namespace uds
 {
@@ -191,7 +191,7 @@ DiagReturnCode::Type DiagnosticSessionControl::acceptedJob_ext(
     return DiagReturnCode::OK;
 }
 
-ESR_NO_INLINE void DiagnosticSessionControl::responseSent_local(
+ETL_NO_INLINE void DiagnosticSessionControl::responseSent_local(
     IncomingDiagConnection const& /*connection*/,
     DiagReturnCode::Type const result,
     uint8_t const* const /*response*/,
@@ -226,7 +226,7 @@ void DiagnosticSessionControl::responseSent(
     responseSent_local(connection, result, response, responseLength);
 }
 
-ESR_NO_INLINE void
+ETL_NO_INLINE void
 DiagnosticSessionControl::addDiagSessionListener_local(IDiagSessionChangedListener& listener)
 {
     ::async::LockType const lock;
@@ -238,7 +238,7 @@ void DiagnosticSessionControl::addDiagSessionListener(IDiagSessionChangedListene
     addDiagSessionListener_local(listener);
 }
 
-ESR_NO_INLINE void
+ETL_NO_INLINE void
 DiagnosticSessionControl::removeDiagSessionListener_local(IDiagSessionChangedListener& listener)
 {
     ::async::LockType const lock;
@@ -250,7 +250,7 @@ void DiagnosticSessionControl::removeDiagSessionListener(IDiagSessionChangedList
     removeDiagSessionListener_local(listener);
 }
 
-ESR_NO_INLINE void DiagnosticSessionControl::expired_local()
+ETL_NO_INLINE void DiagnosticSessionControl::expired_local()
 {
     Logger::warn(UDS, "Session timeout in session 0x%x", fpCurrentSession->getSessionByte());
 

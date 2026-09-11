@@ -12,8 +12,9 @@
 
 #include "common.h"
 
-#include <platform/config.h>
-#include <platform/estdint.h>
+#include <etl/platform.h>
+
+#include <cstdint>
 
 namespace safeMonitor
 {
@@ -66,7 +67,7 @@ public:
      */
     void kick(Context const& context = DEFAULT_CONTEXT)
     {
-        ESR_UNUSED const ScopedMutex m;
+        ETL_MAYBE_UNUSED const ScopedMutex m;
         _context = context;
         _counter = _timeout;
     }
@@ -88,7 +89,7 @@ public:
      */
     void service()
     {
-        ESR_UNUSED const ScopedMutex m;
+        ETL_MAYBE_UNUSED const ScopedMutex m;
 
         if (_counter > 0U)
         {

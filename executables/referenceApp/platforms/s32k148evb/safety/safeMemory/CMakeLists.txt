@@ -7,8 +7,7 @@ target_include_directories(safeMemory PUBLIC include)
 
 target_link_libraries(
     safeMemory
-    PUBLIC platform
-           bspMcu
+    PUBLIC bspMcu
            bspInterrupts
            safeUtils
            safeSupervisor

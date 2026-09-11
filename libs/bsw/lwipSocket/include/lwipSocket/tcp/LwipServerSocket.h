@@ -13,7 +13,7 @@
 #include <ip/IPAddress.h>
 #include <tcp/socket/AbstractServerSocket.h>
 
-#include <platform/estdint.h>
+#include <cstdint>
 
 extern "C"
 {

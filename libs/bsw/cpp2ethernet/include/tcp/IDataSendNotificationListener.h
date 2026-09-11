@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include <platform/estdint.h>
+#include <cstdint>
 
 namespace tcp
 {

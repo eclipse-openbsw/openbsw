@@ -12,7 +12,7 @@
 
 #include <docan/datalink/DoCanFrameCodecConfig.h>
 
-#include <platform/estdint.h>
+#include <cstdint>
 
 namespace docan
 {

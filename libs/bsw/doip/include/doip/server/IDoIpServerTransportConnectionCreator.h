@@ -16,7 +16,8 @@
 #include "doip/server/DoIpServerTransportConnection.h"
 
 #include <etl/ipool.h>
-#include <platform/estdint.h>
+
+#include <cstdint>
 
 namespace tcp
 {

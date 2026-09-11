@@ -4,7 +4,7 @@ target_include_directories(safeSupervisor PUBLIC include)
 
 target_link_libraries(
     safeSupervisor
-    PUBLIC safeMonitor platform
+    PUBLIC safeMonitor
     PRIVATE safeUtils common bspInterrupts)
 
 if (PLATFORM_SUPPORT_IO)

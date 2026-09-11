@@ -14,7 +14,7 @@
 #include <safeMemory/MemoryProtection.h>
 #include <safeMemory/ProtectedRamScopedUnlock.h>
 
-#include <platform/estdint.h>
+#include <cstdint>
 
 uint32_t counterSafeIsrHook;
 

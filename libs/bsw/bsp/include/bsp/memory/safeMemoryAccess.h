@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include <platform/estdint.h>
+#include <cstdint>
 
 #ifdef __cplusplus
 extern "C"

@@ -27,7 +27,6 @@ This module contains following features:
 
 This module has the following dependencies:
 
-* :ref:`platform`
 * :ref:`util`
 * common
 

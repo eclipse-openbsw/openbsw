@@ -12,7 +12,7 @@
 
 #include "doip/common/DoIpConstants.h"
 
-#include <platform/estdint.h>
+#include <cstdint>
 
 namespace doip
 {

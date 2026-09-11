@@ -17,8 +17,7 @@
 
 #include <etl/array.h>
 #include <etl/delegate.h>
-
-#include <platform/config.h>
+#include <etl/platform.h>
 
 namespace async
 {
@@ -72,14 +71,14 @@ template<size_t EventCount, typename Lock>
 inline void EventDispatcher<EventCount, Lock>::setEventHandler(
     size_t const event, HandlerFunctionType const handlerFunction)
 {
-    ESR_UNUSED const Lock lock;
+    ETL_MAYBE_UNUSED const Lock lock;
     _handlerFunctions[event] = handlerFunction;
 }
 
 template<size_t EventCount, typename Lock>
 inline void EventDispatcher<EventCount, Lock>::removeEventHandler(size_t const event)
 {
-    ESR_UNUSED const Lock lock;
+    ETL_MAYBE_UNUSED const Lock lock;
     _handlerFunctions[event] = HandlerFunctionType();
 }
 

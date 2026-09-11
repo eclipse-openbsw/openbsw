@@ -10,7 +10,8 @@
 
 #include "bsp/Uart.h"
 #include "charInputOutput/charIoSerial.h"
-#include "platform/estdint.h"
+
+#include <cstdint>
 
 extern "C" void putByteToStdout(uint8_t const byte)
 {

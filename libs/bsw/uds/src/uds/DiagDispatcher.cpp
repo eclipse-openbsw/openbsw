@@ -10,7 +10,6 @@
 
 #include "uds/DiagDispatcher.h"
 
-#include "platform/config.h"
 #include "transport/ITransportMessageProvider.h"
 #include "transport/TransportConfiguration.h"
 #include "uds/DiagCodes.h"
@@ -19,6 +18,7 @@
 #include "uds/session/IDiagSessionManager.h"
 
 #include <etl/delegate.h>
+#include <etl/platform.h>
 #include <etl/queue.h>
 
 DECLARE_LOGGER_COMPONENT(GLOBAL)
@@ -296,7 +296,7 @@ DiagDispatcher::DiagDispatcher(
     _busyMessage.setPayloadLength(BUSY_MESSAGE_LENGTH);
 }
 
-ESR_NO_INLINE AbstractTransportLayer::ErrorCode DiagDispatcher::send(
+ETL_NO_INLINE AbstractTransportLayer::ErrorCode DiagDispatcher::send(
     TransportMessage& transportMessage,
     ITransportMessageProcessedListener* const pNotificationListener)
 {
@@ -496,7 +496,7 @@ AbstractTransportLayer::ErrorCode DiagDispatcher::init()
     return AbstractTransportLayer::ErrorCode::TP_OK;
 }
 
-ESR_NO_INLINE bool DiagDispatcher::shutdown(ShutdownDelegate const delegate)
+ETL_NO_INLINE bool DiagDispatcher::shutdown(ShutdownDelegate const delegate)
 {
     Logger::debug(UDS, "DiagDispatcher::shutdown()");
     fEnabled          = false;

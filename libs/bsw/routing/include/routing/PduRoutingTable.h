@@ -13,7 +13,7 @@
 #include <etl/span.h>
 #include <etl/unaligned_type.h>
 
-#include <platform/estdint.h>
+#include <cstdint>
 
 namespace routing
 {

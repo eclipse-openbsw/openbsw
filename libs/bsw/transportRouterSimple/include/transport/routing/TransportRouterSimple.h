@@ -18,7 +18,7 @@
 #include <transport/TransportConfiguration.h>
 #include <transport/TransportMessage.h>
 
-#include <platform/estdint.h>
+#include <cstdint>
 
 namespace transport
 {

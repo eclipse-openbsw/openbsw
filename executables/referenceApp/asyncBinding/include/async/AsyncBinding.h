@@ -15,7 +15,7 @@
 #include <runtime/RuntimeMonitor.h>
 #include <runtime/RuntimeStatistics.h>
 
-#include <platform/estdint.h>
+#include <cstdint>
 
 #if defined(SUPPORT_FREERTOS)
 #include <async/FreeRtosAdapter.h>

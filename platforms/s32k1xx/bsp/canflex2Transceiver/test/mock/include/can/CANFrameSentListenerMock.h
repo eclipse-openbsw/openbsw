@@ -12,7 +12,7 @@
 
 #include "can/canframes/ICANFrameSentListener.h"
 
-#include <platform/estdint.h>
+#include <cstdint>
 
 #include <gmock/gmock.h>
 

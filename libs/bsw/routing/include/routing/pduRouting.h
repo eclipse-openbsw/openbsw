@@ -17,7 +17,7 @@
 #include <io/IReader.h>
 #include <io/IWriter.h>
 
-#include <platform/estdint.h>
+#include <cstdint>
 
 namespace routing
 {

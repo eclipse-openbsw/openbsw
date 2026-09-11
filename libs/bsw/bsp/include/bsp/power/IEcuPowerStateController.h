@@ -12,7 +12,7 @@
 
 #include <etl/delegate.h>
 
-#include <platform/estdint.h>
+#include <cstdint>
 
 namespace bios
 {

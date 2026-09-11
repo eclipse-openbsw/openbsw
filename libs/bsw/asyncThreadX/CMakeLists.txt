@@ -22,9 +22,8 @@ add_library(threadXConfiguration INTERFACE)
 
 target_include_directories(threadXConfiguration INTERFACE threadXConfiguration)
 
-target_link_libraries(
-    threadXConfiguration INTERFACE asyncCoreConfiguration platform
-                                   threadXCoreConfiguration)
+target_link_libraries(threadXConfiguration INTERFACE asyncCoreConfiguration
+                                                     threadXCoreConfiguration)
 
 target_include_directories(asyncThreadXImpl PRIVATE include)
 

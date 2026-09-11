@@ -16,7 +16,7 @@
 #include <etl/span.h>
 #include <io/IWriter.h>
 
-#include <platform/estdint.h>
+#include <cstdint>
 
 namespace routing
 {

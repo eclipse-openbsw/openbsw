@@ -16,9 +16,11 @@
 #include "bsp/Bsp.h"
 #include "bsp/SystemTime.h"
 #include "mcu/mcu.h"
-#include "platform/estdint.h"
 
+#include <etl/platform.h>
 #include <etl/uncopyable.h>
+
+#include <cstdint>
 
 namespace bios
 {
@@ -74,7 +76,7 @@ void Adc<AdcResolution, AdcConfiguration, maxChannels>::enableChannel(
                     break;
                 }
             } while ((fAdc.SC1[0] & ADC_SC1A_COCO_MASK) == 0);
-            ESR_UNUSED uint32_t a = fAdcInResolution(fAdc.R[0]);
+            ETL_MAYBE_UNUSED uint32_t a = fAdcInResolution(fAdc.R[0]);
         }
     }
 }
@@ -105,13 +107,13 @@ bsp::BspReturnCode Adc<AdcResolution, AdcConfiguration, maxChannels>::init()
     fAdc.CLP2 = 0;
     fAdc.CLP1 = 0;
 
-    fAdc.CLP0                      = 0;
-    fAdc.CLPX                      = 0;
-    fAdc.CLP9                      = 0;
-    ESR_UNUSED volatile uint32_t a = fAdc.R[0];
-    fAdc.SC2                       = 0;
+    fAdc.CLP0                            = 0;
+    fAdc.CLPX                            = 0;
+    fAdc.CLP9                            = 0;
+    ETL_MAYBE_UNUSED volatile uint32_t a = fAdc.R[0];
+    fAdc.SC2                             = 0;
     // Start calibration, HW average function enabled, 32 samples averaged
-    fAdc.SC3                       = ADC_SC3_CAL_MASK | ADC_SC3_AVGE_MASK | ADC_SC3_AVGS(3);
+    fAdc.SC3                             = ADC_SC3_CAL_MASK | ADC_SC3_AVGE_MASK | ADC_SC3_AVGS(3);
 
     uint32_t timeout = 0;
     do
@@ -150,7 +152,7 @@ bsp::BspReturnCode Adc<AdcResolution, AdcConfiguration, maxChannels>::initSleep(
 
     fAdc.CLPS_OFS = AdcConfiguration::CLPS_OFS;
 
-    ESR_UNUSED volatile uint32_t a = fAdc.R[0];
+    ETL_MAYBE_UNUSED volatile uint32_t a = fAdc.R[0];
 
     fAdc.UG  = AdcConfiguration::UG;
     fAdc.SC2 = AdcConfiguration::SC2;
@@ -242,8 +244,8 @@ bsp::BspReturnCode Adc<AdcResolution, AdcConfiguration, maxChannels>::getValueSy
     if (((fAdc.SC2 & ADC_SC2_ADTRG(1)) == 0)     // Software trigger selected
         && ((fAdc.SC2 & ADC_SC2_DMAEN(1)) == 0)) // DMA disabled
     {
-        ESR_UNUSED volatile uint32_t a = fAdc.R[0];
-        fAdc.SC1[0]                    = ADC_SC1A_ADCH(phChannel);
+        ETL_MAYBE_UNUSED volatile uint32_t a = fAdc.R[0];
+        fAdc.SC1[0]                          = ADC_SC1A_ADCH(phChannel);
 
         uint32_t timeout = 0;
         do
@@ -271,7 +273,7 @@ bsp::BspReturnCode Adc<AdcResolution, AdcConfiguration, maxChannels>::dma(bool a
     {
         return bsp::BSP_ERROR;
     }
-    ESR_UNUSED volatile uint32_t a = fAdc.R[0];
+    ETL_MAYBE_UNUSED volatile uint32_t a = fAdc.R[0];
     if (true == active)
     {
         fAdc.SC2 = fAdc.SC2 | ADC_SC2_DMAEN(1);

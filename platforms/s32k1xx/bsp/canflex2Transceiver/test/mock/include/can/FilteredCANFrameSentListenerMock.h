@@ -12,7 +12,7 @@
 
 #include <can/framemgmt/IFilteredCANFrameSentListener.h>
 
-#include <platform/estdint.h>
+#include <cstdint>
 
 #include <gmock/gmock.h>
 

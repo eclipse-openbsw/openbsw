@@ -13,7 +13,8 @@
 #include "bsp/Bsp.h"
 #include "io/ioPorts.h"
 #include "mcu/mcu.h"
-#include "platform/estdint.h"
+
+#include <cstdint>
 
 namespace bios
 {

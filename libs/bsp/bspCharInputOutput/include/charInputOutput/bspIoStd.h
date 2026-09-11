@@ -10,10 +10,10 @@
 
 #pragma once
 
-#include "platform/config.h"
-#include "platform/estdint.h"
+#include <etl/platform.h>
 
 #include <cstddef>
+#include <cstdint>
 #include <stdarg.h>
 
 #ifdef __cplusplus
@@ -38,7 +38,7 @@ extern "C"
 #pragma inline do_div_hlp
 // clang-format on
 #endif
-ESR_UNUSED static int do_div_hlp(unsigned long* const n, int const base)
+ETL_MAYBE_UNUSED static int do_div_hlp(unsigned long* const n, int const base)
 {
     int const res = (int)(*n % (unsigned long)base);
 

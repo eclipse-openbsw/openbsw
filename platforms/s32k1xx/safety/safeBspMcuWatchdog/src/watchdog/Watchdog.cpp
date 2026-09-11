@@ -14,6 +14,8 @@
 #include <interrupts/SuspendResumeAllInterruptsScopedLock.h>
 #include <mcu/mcu.h>
 
+#include <etl/platform.h>
+
 namespace safety
 {
 namespace bsp
@@ -23,7 +25,7 @@ uint32_t Watchdog::watchdogServiceCounter = 0;
 void Watchdog::enableWatchdog(
     uint32_t const timeout, bool const interruptActive, uint32_t const clockSpeed)
 {
-    ESR_UNUSED const ::interrupts::SuspendResumeAllInterruptsScopedLock lock;
+    ETL_MAYBE_UNUSED const ::interrupts::SuspendResumeAllInterruptsScopedLock lock;
 
     if (interruptActive)
     {
@@ -56,7 +58,7 @@ void Watchdog::enableWatchdog(
 
 void Watchdog::disableWatchdog()
 {
-    ESR_UNUSED const ::interrupts::SuspendResumeAllInterruptsScopedLock lock;
+    ETL_MAYBE_UNUSED const ::interrupts::SuspendResumeAllInterruptsScopedLock lock;
 
     WDOG->CNT             = FEATURE_WDOG_UNLOCK_VALUE;
     uint32_t const CS_TST = (WDOG->CS & WDOG_CS_TST_MASK);
@@ -66,7 +68,7 @@ void Watchdog::disableWatchdog()
 
 void Watchdog::serviceWatchdog()
 {
-    ESR_UNUSED const ::interrupts::SuspendResumeAllInterruptsScopedLock lock;
+    ETL_MAYBE_UNUSED const ::interrupts::SuspendResumeAllInterruptsScopedLock lock;
 
     watchdogServiceCounter++;
 
@@ -86,7 +88,7 @@ bool Watchdog::checkWatchdogConfiguration(uint32_t const timeout, uint32_t const
 
 void Watchdog::startFastTestLow()
 {
-    ESR_UNUSED const ::interrupts::SuspendResumeAllInterruptsScopedLock lock;
+    ETL_MAYBE_UNUSED const ::interrupts::SuspendResumeAllInterruptsScopedLock lock;
 
     WDOG->CNT = FEATURE_WDOG_UNLOCK_VALUE;
     while ((WDOG->CS & WDOG_CS_ULK_MASK) == 0U)
@@ -108,7 +110,7 @@ void Watchdog::startFastTestLow()
 
 void Watchdog::startFastTestHigh()
 {
-    ESR_UNUSED const interrupts::SuspendResumeAllInterruptsScopedLock lock;
+    ETL_MAYBE_UNUSED const interrupts::SuspendResumeAllInterruptsScopedLock lock;
 
     WDOG->CNT = FEATURE_WDOG_UNLOCK_VALUE;
     while ((WDOG->CS & WDOG_CS_ULK_MASK) == 0U)
@@ -152,7 +154,7 @@ bool Watchdog::executeFastTest(uint32_t const timeout)
 
 void Watchdog::setUserMode()
 {
-    ESR_UNUSED const ::interrupts::SuspendResumeAllInterruptsScopedLock lock;
+    ETL_MAYBE_UNUSED const ::interrupts::SuspendResumeAllInterruptsScopedLock lock;
 
     WDOG->CNT = FEATURE_WDOG_UNLOCK_VALUE;
     while ((WDOG->CS & WDOG_CS_ULK_MASK) == 0U)

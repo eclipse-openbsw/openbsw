@@ -94,7 +94,7 @@ namespace) provides RAII-style interrupt locking:
 .. code-block:: cpp
 
    {
-       const ESR_UNUSED interrupts::SuspendResumeAllInterruptsScopedLock lock;
+       const ETL_MAYBE_UNUSED interrupts::SuspendResumeAllInterruptsScopedLock lock;
        // Critical section -- interrupts disabled
    }
    // Interrupts restored to previous state

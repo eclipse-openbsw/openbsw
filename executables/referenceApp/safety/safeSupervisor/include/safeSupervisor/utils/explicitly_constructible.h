@@ -10,7 +10,8 @@
 
 #pragma once
 
-#include <platform/estdint.h>
+#include <cstddef>
+#include <cstdint>
 
 namespace safety
 {

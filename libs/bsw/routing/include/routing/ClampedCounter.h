@@ -13,7 +13,7 @@
 #include <etl/limits.h>
 #include <etl/type_traits.h>
 
-#include <platform/estdint.h>
+#include <cstdint>
 
 namespace routing
 {

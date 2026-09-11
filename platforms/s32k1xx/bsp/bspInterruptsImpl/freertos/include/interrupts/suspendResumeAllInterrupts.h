@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include "platform/estdint.h"
+#include <cstdint>
 
 // TODO: migrate getMachineStateRegisterValueAndSuspendAllInterrupts to the newer
 // getOldIntEnabledStatusValueAndSuspendAllInterrupts below and remove this define

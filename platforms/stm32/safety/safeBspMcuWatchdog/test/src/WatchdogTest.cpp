@@ -92,12 +92,6 @@ static RCC_TypeDef fakeRcc;
 #define RCC_CSR_IWDGRSTF (1U << 29)
 #define RCC_CSR_RMVF     (1U << 23)
 
-// Provide platform/estdint.h types
-#ifndef PLATFORM_ESTDINT_H
-#define PLATFORM_ESTDINT_H
-#include <cstdint>
-#endif
-
 // Include production code (header + implementation directly)
 #include <watchdog/Watchdog.cpp>
 #include <watchdog/Watchdog.h>

@@ -12,7 +12,7 @@
 
 #include "bsp/Bsp.h"
 
-#include <platform/estdint.h>
+#include <cstdint>
 
 namespace eeprom
 {
