@@ -35,6 +35,12 @@ _GENERATOR_SCRIPT = _GENERATOR_INPUT + "/jinja2cpp.py"
 # docker/development/files/requirements.lock). Absolute path by design.
 _PYTHON = "/opt/venv/bin/python3"
 
+# Dev-container clang-format-17 install (no unversioned `clang-format` symlink
+# exists, so a PATH lookup fails). Absolute path by design, for the same
+# hermeticity reason as _PYTHON: this keeps the genrule's tool resolution
+# independent of the invoking shell's PATH.
+_CLANG_FORMAT = "/usr/bin/clang-format-17"
+
 def middleware_codegen(
         name,
         deployment_yaml,
@@ -62,12 +68,13 @@ def middleware_codegen(
         srcs = [deployment_yaml, _GENERATOR],
         outs = outs,
         cmd = ("{python} {script} --input {input} --output $(RULEDIR)/{gen_root}" +
-               " --deployment-yaml $(execpath {deployment})").format(
+               " --deployment-yaml $(execpath {deployment}) --clang-format-binary {clang_format}").format(
             python = _PYTHON,
             script = _GENERATOR_SCRIPT,
             input = _GENERATOR_INPUT,
             gen_root = gen_root,
             deployment = deployment_yaml,
+            clang_format = _CLANG_FORMAT,
         ),
         message = "Generating middleware C++ code from " + deployment_yaml,
     )
