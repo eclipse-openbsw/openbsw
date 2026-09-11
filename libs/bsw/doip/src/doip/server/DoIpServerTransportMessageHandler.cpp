@@ -110,9 +110,11 @@ bool DoIpServerTransportMessageHandler::headerReceived(DoIpHeader const& header)
     if (header.payloadType == DoIpConstants::PayloadTypes::DIAGNOSTIC_MESSAGE)
     {
         uint32_t const payloadLength = header.payloadLength;
-        if (payloadLength < 4U)
+        if (payloadLength < 5U)
         {
-            _connection->sendNack(DoIpConstants::NackCodes::NACK_INVALID_PAYLOAD_LENGTH, true);
+            _connection->sendNack(
+                DoIpConstants::NackCodes::NACK_INVALID_PAYLOAD_LENGTH,
+                (payloadLength < 4U) ? true : false);
         }
         else if (payloadLength > _config.getParameters().getMaxPayloadLength())
         {

@@ -532,6 +532,17 @@ TEST_F(
         EXPECT_CALL(fServerConnectionMock, endReceiveMessage(_));
         EXPECT_TRUE(cut.headerReceived(as_header(diagnosticMessage)));
     }
+
+    // payload contains only the source and target addresses
+    {
+        uint8_t const diagnosticMessage[] = {0x02, 0xfd, 0x80, 0x01, 0x00, 0x00, 0x00, 0x04};
+        EXPECT_CALL(
+            fServerConnectionMock,
+            sendNack(DoIpConstants::NackCodes::NACK_INVALID_PAYLOAD_LENGTH, false));
+        EXPECT_CALL(fServerConnectionMock, endReceiveMessage(_));
+        EXPECT_CALL(fServerConnectionMock, close()).Times(0);
+        EXPECT_TRUE(cut.headerReceived(as_header(diagnosticMessage)));
+    }
 }
 
 TEST_F(DoIpServerTransportMessageHandlerTest, TestGetTransportMessageErrorsCausesDiagnosticNacks)
