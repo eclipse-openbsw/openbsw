@@ -1,0 +1,31 @@
+:$label="clang-tidy S32K1XX"
+:#image[:+ws/common/dev-image]
+:$output="none"
+
+env = :[
+    :$BUILD_DIRECTORY="build/tests/s32k1xx/Release"
+]
+
+inputs = :[
+    :#clang-tidy-build[
+        :+ws/clang-tidy/build
+        :$label="clang-tidy S32K1XX build"
+
+        worktree = :[
+            source = ::platforms/s32k1xx/
+        ]
+
+        env = :[
+            :$PRESET="tests-s32k1xx-release"
+            :$BUILD_DIRECTORY="build/tests/s32k1xx/Release"
+        ]
+    ]
+]
+
+worktree = :[
+    source = :[
+        :+ws/clang-tidy/source
+        ::platforms/s32k1xx/
+    ]
+    :/ws/clang-tidy::run.sh=run.sh
+]

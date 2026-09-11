@@ -1,0 +1,31 @@
+:$label="clang-tidy POSIX"
+:#image[:+ws/common/dev-image]
+:$output="none"
+
+env = :[
+    :$BUILD_DIRECTORY="build/tests/posix/Release"
+]
+
+inputs = :[
+    :#clang-tidy-build[
+        :+ws/clang-tidy/build
+        :$label="clang-tidy POSIX build"
+
+        worktree = :[
+            source = ::platforms/posix/
+        ]
+
+        env = :[
+            :$PRESET="tests-posix-release"
+            :$BUILD_DIRECTORY="build/tests/posix/Release"
+        ]
+    ]
+]
+
+worktree = :[
+    source = :[
+        :+ws/clang-tidy/source
+        ::platforms/posix/
+    ]
+    :/ws/clang-tidy::run.sh=run.sh
+]
