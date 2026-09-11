@@ -11,7 +11,10 @@
 load("@rules_cc//cc:cc_binary.bzl", "cc_binary")
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
 load("//libs/bsw/middleware:configurable_middleware.bzl", "middleware_config")
-load("//libs/bsw/middleware/tools:codegen.bzl", "run_codegen")
+load(
+    "//libs/bsw/middleware/tools/cpp_generator:middleware_codegen.bzl",
+    "middleware_codegen",
+)
 load(":generated_outputs.bzl", "GENERATED_OUTPUTS")
 
 package(default_visibility = ["//visibility:public"])
@@ -63,43 +66,16 @@ cc_library(
 # Simulation code generation targets
 # ---------------------------------------------------------------------------
 
-run_codegen(
-    name = "generate_code",
-    outs = GENERATED_OUTPUTS,
-    deployment = "model/deployment-test.yaml",
-    generated_files_prefix = "generated_files",
-    tool = "//libs/bsw/middleware/tools/cpp_generator:jinja2cpp",
-)
-
-filegroup(
-    name = "generated_headers",
-    srcs = [":generate_code"],
-    output_group = "generated_headers",
-)
-
-filegroup(
-    name = "generated_sources",
-    srcs = [":generate_code"],
-    output_group = "generated_sources",
+middleware_codegen(
+    name = "middleware_configuration_generated",
+    deployment_yaml = "model/deployment-test.yaml",
+    generated_outputs = GENERATED_OUTPUTS,
+    deps = ["//libs/bsw/middleware"],
 )
 
 # ---------------------------------------------------------------------------
 # Simulation middleware configuration targets
 # ---------------------------------------------------------------------------
-
-cc_library(
-    name = "middleware_impl",
-    srcs = [
-        ":generated_sources",
-    ],
-    hdrs = [
-        ":generated_headers",
-    ],
-    strip_include_prefix = "generated_files/include/generated_code",
-    target_compatible_with = ["@platforms//os:linux"],
-    deps = ["//libs/bsw/middleware"],
-    alwayslink = True,
-)
 
 middleware_config(
     name = "cfg_middleware_lib",
@@ -110,7 +86,7 @@ middleware_config(
         "//libs/bsw/middleware/interfaces:os_impl": ":os_impl",
         "//libs/bsw/middleware/interfaces:time_impl": ":time_impl",
     },
-    dep = ":middleware_impl",
+    dep = ":middleware_configuration_generated",
     target_compatible_with = ["@platforms//os:linux"],
 )
 
