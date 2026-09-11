@@ -1,0 +1,5 @@
+var structshed_1_1internal_1_1type__aliases_3_01T_00_01StateData_00_01_1_1shed_1_1internal_1_1type__list_3_01Types_8_8_8_01_4_01_4 =
+[
+    [ "container", "db/d02/structshed_1_1internal_1_1type__aliases_3_01T_00_01StateData_00_01_1_1shed_1_1internal_1_1type__list_3_01Types_8_8_8_01_4_01_4.html#a05b09f373713c5de1c793b8e9ed0b786", null ],
+    [ "stored", "db/d02/structshed_1_1internal_1_1type__aliases_3_01T_00_01StateData_00_01_1_1shed_1_1internal_1_1type__list_3_01Types_8_8_8_01_4_01_4.html#abf35da7862ac692ed30ed4d704e883ab", null ]
+];
