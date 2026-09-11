@@ -14,24 +14,27 @@
 #include <safeUtils/SafetyLogger.h>
 
 #include <etl/infinite_loop.h>
+#include <etl/print.h>
 
-#include <cstdio>
-
+#ifdef PLATFORM_SUPPORT_MPU
 extern uint32_t __MPU_BSS_START[];
+#endif
 
 namespace
 {
 
 enum Id
 {
+#ifdef PLATFORM_SUPPORT_MPU
     ID_MPU,
+#endif
     ID_WDG,
     ID_PRT,
     ID_DST,
     ID_EST
 };
 
-}
+} // namespace
 
 namespace safety
 {
@@ -40,7 +43,9 @@ using ::util::logger::Logger;
 using ::util::logger::SAFETY;
 
 DEFINE_COMMAND_GROUP_GET_INFO_BEGIN(SafetyCommand, "safety", "Commands to test safety features")
+#ifdef PLATFORM_SUPPORT_MPU
 COMMAND_GROUP_COMMAND(ID_MPU, "mpu", "Write to protected memory (enforce MPU violation)")
+#endif
 COMMAND_GROUP_COMMAND(ID_WDG, "wdg", "Enter infinite loop (enforce watchdog reset)")
 COMMAND_GROUP_COMMAND(ID_PRT, "prt", "Write to protected register (has no effect)")
 COMMAND_GROUP_COMMAND(ID_DST, "dst", "Disable safety test pin (enter safe state)")
@@ -51,18 +56,21 @@ void SafetyCommand::executeCommand(::util::command::CommandContext&, uint8_t idx
 {
     switch (idx)
     {
+#ifdef PLATFORM_SUPPORT_MPU
         case ID_MPU:
         {
-            // Using printf, because a regular logger call would not finish before reset.
-            printf("Write to protected memory to trigger a hard fault due to MPU violation\n");
+            // Using print, because a regular logger call would not finish before reset.
+            ::etl::println(
+                "Write to protected memory to trigger a hard fault due to MPU violation");
             uint32_t* start_bss = reinterpret_cast<uint32_t*>(__MPU_BSS_START);
             *start_bss          = 0x12345678;
             break;
         }
+#endif
         case ID_WDG:
         {
-            // Using printf, because a regular logger call would not finish before reset.
-            printf("Enter infinite loop to trigger watchdog reset\n");
+            // Using print, because a regular logger call would not finish before reset.
+            ::etl::println("Enter infinite loop to trigger watchdog reset");
             etl::infinite_loop();
         }
         case ID_PRT:

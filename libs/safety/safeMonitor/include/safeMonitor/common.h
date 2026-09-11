@@ -25,7 +25,7 @@ struct DefaultContext
  * \brief Placeholder mutex
  * \details This stuct is used by the monitors as a default mutex which doesn't do anything. You
  *      can provide your own mutex to the monitors by passing its type as a template parameter.
- * \note The mutex is exprected to be locked on construction and unlocked on destruction
+ * \note The mutex is expected to be locked on construction and unlocked on destruction
  */
 struct DefaultMutex
 {

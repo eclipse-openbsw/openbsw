@@ -1,0 +1,14 @@
+/********************************************************************************
+ * Copyright (c) 2024 Roland Reichwein
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Apache License Version 2.0 which is available at
+ * https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ ********************************************************************************/
+
+#pragma once
+
+char const* const outputPwmConfigurationStrings[]
+    = {"dummyPwm", "eval_led_red_pwm", "eval_led_green_pwm", "eval_led_blue_pwm"};
