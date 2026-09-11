@@ -19,8 +19,6 @@
 // ETL_COMPILER_GENERIC (from default profile above) is not defined
 #undef ETL_COMPILER_GENERIC
 
-#define ETL_USE_TYPE_TRAITS_BUILTINS
-
 #define ETL_TARGET_DEVICE_GENERIC
 #define ETL_TARGET_OS_NONE
 
