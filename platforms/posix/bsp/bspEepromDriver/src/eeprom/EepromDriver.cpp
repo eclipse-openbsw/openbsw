@@ -23,7 +23,7 @@
 namespace eeprom
 {
 
-EepromDriver::EepromDriver() : eepromFd(-1)
+EepromDriver::EepromDriver(std::string filePath) : eepromFilePath(std::move(filePath)), eepromFd(-1)
 {
     bool fileExisted = false;
 

@@ -12,6 +12,12 @@
 
 #include <gtest/gtest.h>
 
+#include <etl/optional.h>
+
+#include <cstdlib>
+#include <string>
+#include <unistd.h>
+
 namespace
 {
 
@@ -20,7 +26,27 @@ using namespace ::testing;
 class EepromDriverTest : public ::testing::Test
 {
 protected:
-    ::eeprom::EepromDriver _cut;
+    ::etl::optional<::eeprom::EepromDriver> _cut;
+    std::string _eepromFilePath;
+
+    void SetUp() override
+    {
+        ::testing::TestInfo const* testInfo
+            = ::testing::UnitTest::GetInstance()->current_test_info();
+        _eepromFilePath
+            = ::testing::TempDir() + testInfo->test_suite_name() + testInfo->name() + "_XXXXXX";
+        int const fd = ::mkstemp(const_cast<char*>(_eepromFilePath.data()));
+        ASSERT_NE(-1, fd);
+        ::close(fd);
+        ::unlink(_eepromFilePath.c_str());
+        _cut.emplace(_eepromFilePath);
+    }
+
+    void TearDown() override
+    {
+        _cut.reset();
+        (void)::unlink(_eepromFilePath.c_str());
+    }
 
 public:
     static constexpr size_t EEPROM_SIZE = 4096; // 4KB
@@ -28,26 +54,26 @@ public:
 
 TEST_F(EepromDriverTest, testEepromWriteBeyondSizeError)
 {
-    EXPECT_EQ(::bsp::BSP_OK, _cut.init());
+    EXPECT_EQ(::bsp::BSP_OK, _cut->init());
 
     uint8_t dataToWrite[] = {0x01, 0x02, 0x03, 0x04, 0x05};
     uint32_t address      = EEPROM_SIZE + 1; // Start address beyond size
 
-    EXPECT_EQ(::bsp::BSP_ERROR, _cut.write(address, dataToWrite, sizeof(dataToWrite)));
+    EXPECT_EQ(::bsp::BSP_ERROR, _cut->write(address, dataToWrite, sizeof(dataToWrite)));
 }
 
 TEST_F(EepromDriverTest, testEepromWriteRead)
 {
-    EXPECT_EQ(::bsp::BSP_OK, _cut.init());
+    EXPECT_EQ(::bsp::BSP_OK, _cut->init());
 
     uint8_t dataToWrite[] = {0x01, 0x02, 0x03, 0x04, 0x05};
     uint32_t address      = 0x00;
 
-    EXPECT_EQ(::bsp::BSP_OK, _cut.write(address, dataToWrite, sizeof(dataToWrite)));
+    EXPECT_EQ(::bsp::BSP_OK, _cut->write(address, dataToWrite, sizeof(dataToWrite)));
 
     uint8_t readData[sizeof(dataToWrite)] = {0};
 
-    EXPECT_EQ(::bsp::BSP_OK, _cut.read(address, readData, sizeof(readData)));
+    EXPECT_EQ(::bsp::BSP_OK, _cut->read(address, readData, sizeof(readData)));
 
     // Verify data
     for (size_t i = 0; i < sizeof(dataToWrite); i++)
@@ -58,54 +84,54 @@ TEST_F(EepromDriverTest, testEepromWriteRead)
 
 TEST_F(EepromDriverTest, testEepromReadBeyondSizeError)
 {
-    EXPECT_EQ(::bsp::BSP_OK, _cut.init());
+    EXPECT_EQ(::bsp::BSP_OK, _cut->init());
 
     uint8_t readData[10] = {0};
     uint32_t address     = EEPROM_SIZE + 1;
 
-    EXPECT_EQ(::bsp::BSP_ERROR, _cut.read(address, readData, sizeof(readData)));
+    EXPECT_EQ(::bsp::BSP_ERROR, _cut->read(address, readData, sizeof(readData)));
 }
 
 TEST_F(EepromDriverTest, testNullpointerBufferRead)
 {
-    EXPECT_EQ(::bsp::BSP_OK, _cut.init());
+    EXPECT_EQ(::bsp::BSP_OK, _cut->init());
 
-    EXPECT_EQ(::bsp::BSP_ERROR, _cut.read(0x00, nullptr, 10));
+    EXPECT_EQ(::bsp::BSP_ERROR, _cut->read(0x00, nullptr, 10));
 }
 
 TEST_F(EepromDriverTest, testNullpointerBufferWrite)
 {
-    EXPECT_EQ(::bsp::BSP_OK, _cut.init());
+    EXPECT_EQ(::bsp::BSP_OK, _cut->init());
 
-    EXPECT_EQ(::bsp::BSP_ERROR, _cut.write(0x00, nullptr, 10));
+    EXPECT_EQ(::bsp::BSP_ERROR, _cut->write(0x00, nullptr, 10));
 }
 
 TEST_F(EepromDriverTest, testWriteWithoutInit)
 {
     uint8_t dataToWrite[] = {0x01, 0x02, 0x03, 0x04, 0x05};
 
-    EXPECT_EQ(::bsp::BSP_OK, _cut.write(0x00, dataToWrite, sizeof(dataToWrite)));
+    EXPECT_EQ(::bsp::BSP_OK, _cut->write(0x00, dataToWrite, sizeof(dataToWrite)));
 }
 
 TEST_F(EepromDriverTest, testReadWithoutInit)
 {
     uint8_t readData[10] = {0};
 
-    EXPECT_EQ(::bsp::BSP_OK, _cut.read(0x00, readData, sizeof(readData)));
+    EXPECT_EQ(::bsp::BSP_OK, _cut->read(0x00, readData, sizeof(readData)));
 }
 
 TEST_F(EepromDriverTest, testWriteAtLastByte)
 {
-    EXPECT_EQ(::bsp::BSP_OK, _cut.init());
+    EXPECT_EQ(::bsp::BSP_OK, _cut->init());
 
     uint8_t dataToWrite[] = {0xAB};
     uint32_t address      = EEPROM_SIZE - 1;
 
-    EXPECT_EQ(::bsp::BSP_OK, _cut.write(address, dataToWrite, 1));
+    EXPECT_EQ(::bsp::BSP_OK, _cut->write(address, dataToWrite, 1));
 
     uint8_t readData[1] = {0};
 
-    EXPECT_EQ(::bsp::BSP_OK, _cut.read(address, readData, 1));
+    EXPECT_EQ(::bsp::BSP_OK, _cut->read(address, readData, 1));
 
     EXPECT_EQ(dataToWrite[0], readData[0]);
 }

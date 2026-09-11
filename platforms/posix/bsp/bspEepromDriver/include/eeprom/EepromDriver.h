@@ -17,10 +17,10 @@
 
 namespace eeprom
 {
-class EepromDriver : public IEepromDriver
+class EepromDriver final : public IEepromDriver
 {
 public:
-    EepromDriver();
+    explicit EepromDriver(std::string filePath = EEPROM_FILEPATH);
     ~EepromDriver();
 
     EepromDriver(EepromDriver const&)            = delete;
@@ -35,7 +35,7 @@ public:
     bsp::BspReturnCode read(uint32_t address, uint8_t* buffer, uint32_t length) override;
 
 private:
-    std::string const eepromFilePath = EEPROM_FILEPATH;
+    std::string const eepromFilePath;
     int eepromFd;
 };
 } // namespace eeprom
