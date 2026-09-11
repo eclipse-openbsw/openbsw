@@ -1,0 +1,29 @@
+# *******************************************************************************
+# Copyright (c) 2026 Accenture
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+
+[package]
+name = "openbsw_async"
+version.workspace = true
+documentation.workspace = true
+edition = "2024"
+
+[dependencies]
+embassy-executor.workspace = true
+critical-section.workspace = true
+
+# Selects `runtime::MAX_RUNTIMES` (the size of the hosted-executor pool).
+# Defaults to 4.
+[features]
+default = ["runtimes-4"]
+runtimes-1 = []
+runtimes-2 = []
+runtimes-4 = []
+runtimes-8 = []
+runtimes-16 = []

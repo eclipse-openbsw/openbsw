@@ -34,6 +34,9 @@
 extern crate openbsw_console_out;
 extern crate openbsw_panic_handler;
 
+pub mod async_tasks;
+mod runtime_glue;
+
 use core::fmt::Write;
 use openbsw_console_out::Console;
 use openbsw_logger::{bsw_debug, bsw_info, declare_logger_component};
