@@ -28,6 +28,8 @@ Arguments:
                            templates/properties/deployment.yaml
     --clang-format-config   Optional path to clang-format configuration file
                            If not provided, searches for .clang-format in repository root
+    --clang-format-binary   Path to (or name of) the clang-format executable.
+                           Defaults to resolving 'clang-format' from PATH.
 
 Input structure (relative to input base dir):
     templates/properties/    # Property YAML files
@@ -430,7 +432,11 @@ def clean_previous_generated_files(output_base: Path) -> None:
             print(f"  Removed: {generated_dir}")
 
 
-def format_cpp_files(output_base: Path, clang_format_config: Path = None) -> None:
+def format_cpp_files(
+    output_base: Path,
+    clang_format_config: Path = None,
+    clang_format_binary: str = "clang-format",
+) -> None:
     """Run clang-format on all generated C++ files (.h, .hpp, .cpp)."""
     cpp_extensions = {".h", ".hpp", ".cpp"}
     cpp_files = []
@@ -467,7 +473,7 @@ def format_cpp_files(output_base: Path, clang_format_config: Path = None) -> Non
             else:
                 style_arg = "--style=file"  # fallback to default search
 
-        cmd = ["clang-format", "-i", style_arg] + [str(f) for f in cpp_files]
+        cmd = [clang_format_binary, "-i", style_arg] + [str(f) for f in cpp_files]
         result = subprocess.run(cmd, check=True, capture_output=True, text=True)
         print("✓ Successfully formatted all C++ files")
     except subprocess.CalledProcessError as e:
@@ -476,11 +482,11 @@ def format_cpp_files(output_base: Path, clang_format_config: Path = None) -> Non
             print(f"  Error output: {e.stderr.strip()}", file=sys.stderr)
     except FileNotFoundError:
         print(
-            "Warning: clang-format not found in PATH, skipping formatting",
+            f"Warning: '{clang_format_binary}' not found, skipping formatting",
             file=sys.stderr,
         )
         print("  Install with: sudo apt install clang-format", file=sys.stderr)
-        print("  Or ensure clang-format is available in your PATH", file=sys.stderr)
+        print("  Or pass --clang-format-binary with an explicit path", file=sys.stderr)
 
 
 def parse_args(argv=None) -> argparse.Namespace:
@@ -514,6 +520,20 @@ def parse_args(argv=None) -> argparse.Namespace:
         "--clang-format-config",
         type=Path,
         help="Path to clang-format configuration file. If not provided, searches for .clang-format in repository root.",
+    )
+    parser.add_argument(
+        "--clang-format-binary",
+        type=str,
+        default="clang-format",
+        help="Path to (or name of) the clang-format executable. Defaults to resolving 'clang-format' "
+        "from PATH; build systems should pass an explicit, versioned path instead (e.g. "
+        "/usr/bin/clang-format-17) to keep the action hermetic.",
+    )
+    parser.add_argument(
+        "--no-format",
+        action="store_true",
+        help="Skip the clang-format step. clang-format is resolved from PATH, which is not a "
+        "hermetic Bazel action input; build systems that cannot guarantee it should pass this.",
     )
     parser.add_argument(
         "--no-clean",
@@ -561,7 +581,10 @@ def main(argv=None) -> int:
         return 0
 
     if args.output is None:
-        print("error: --output is required unless --list-outputs is given", file=sys.stderr)
+        print(
+            "error: --output is required unless --list-outputs is given",
+            file=sys.stderr,
+        )
         return 1
     output_base = args.output.resolve()
 
@@ -634,7 +657,10 @@ def main(argv=None) -> int:
         )
 
         # Format all generated C++ files with clang-format
-        format_cpp_files(output_base, args.clang_format_config)
+        if not args.no_format:
+            format_cpp_files(
+                output_base, args.clang_format_config, args.clang_format_binary
+            )
 
         print("\nAll file generation completed successfully!")
         return 0
