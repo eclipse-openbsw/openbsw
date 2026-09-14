@@ -1,0 +1,40 @@
+# *******************************************************************************
+# Copyright (c) 2026 BMW AG
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+
+default_install_hook_types:
+  - pre-commit
+  - commit-msg
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: check-added-large-files
+      - id: check-case-conflict
+      - id: check-merge-conflict
+      - id: check-yaml
+  - repo: https://github.com/jorisroovers/gitlint
+    rev: v0.17.0
+    hooks:
+      - id: gitlint
+        stages: [commit-msg]
+  - repo: local
+    hooks:
+      - id: treefmt
+        name: treefmt
+        entry: >-
+          bash -c
+          'command -v treefmt >/dev/null 2>&1
+          || { echo "WARNING: treefmt not found; skipping treefmt hook (run in docker or install treefmt)"; exit 0; };
+          treefmt'
+          --
+        language: system
+        pass_filenames: false
+

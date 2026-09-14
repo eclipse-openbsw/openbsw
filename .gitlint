@@ -1,0 +1,39 @@
+# *******************************************************************************
+# Copyright (c) 2026 BMW AG
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+
+# Gitlint configuration for OpenBSW
+# Matching rules defined in doc/dev/guidelines/commit_message.rst:
+# - Subject max 72 chars
+# - Subject starts with capital letter
+# - Subject has no trailing punctuation / period
+# - Blank line between subject and body
+# - Body lines max 72 chars
+# - Body is optional
+
+[general]
+# Ignore B5 (body-min-length), B6 (body-is-missing), B7 (body-changed-file-mention)
+# as body is optional for straightforward commits
+ignore=B5,B6,B7
+
+# Limit subject line to 72 characters
+[title-max-length]
+line-length=72
+
+# Subject line must start with a capital letter
+[title-match-regex]
+regex=^[A-Z].*
+
+# Limit body lines to 72 characters
+[body-max-line-length]
+line-length=72
+
+# Ignore merge and revert commits
+[ignore-by-title]
+regex=(^Revert |^Merge )
