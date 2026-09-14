@@ -14,16 +14,23 @@
 #include "uds/IDiagDispatcher.h"
 #include "uds/UdsConfig.h"
 
+#if UDS_ENABLE_OUTGOING
+#include "uds/DiagReturnCode.h"
+#include "uds/connection/IOutgoingDiagConnectionProvider.h"
+#include "uds/connection/OutgoingDiagConnectionManager.h"
+
+#include <etl/span.h>
+#endif
+
 #include <async/Async.h>
 #include <async/util/Call.h>
 #include <etl/delegate.h>
+#include <etl/queue.h>
 #include <etl/uncopyable.h>
 #include <transport/AbstractTransportLayer.h>
 #include <transport/ITransportMessageProcessedListener.h>
 #include <transport/ITransportMessageProvidingListener.h>
 #include <transport/TransportMessage.h>
-
-#include <etl/queue.h>
 
 namespace http
 {
@@ -37,6 +44,9 @@ namespace uds
 {
 class IDiagSessionManager;
 class IncomingDiagConnection;
+#if UDS_ENABLE_OUTGOING
+class ManagedOutgoingDiagConnection;
+#endif
 
 struct TransportJob
 {
@@ -51,6 +61,9 @@ struct TransportJob
  */
 class DiagDispatcher
 : public IDiagDispatcher
+#if UDS_ENABLE_OUTGOING
+, public IOutgoingDiagConnectionProvider
+#endif
 , public transport::AbstractTransportLayer
 , public transport::ITransportMessageProcessedListener
 , public ::etl::uncopyable
@@ -71,6 +84,44 @@ public:
         IDiagSessionManager& sessionManager,
         DiagJobRoot& jobRoot);
 
+#if UDS_ENABLE_OUTGOING
+    template<size_t QUEUE_SIZE>
+    DiagDispatcher(
+        ::etl::ipool& incomingDiagConnectionPool,
+        ::etl::iqueue<TransportJob>& sendJobQueue,
+        DiagnosisConfiguration& configuration,
+        IDiagSessionManager& sessionManager,
+        DiagJobRoot& jobRoot,
+        ::etl::span<ManagedOutgoingDiagConnection> outgoingConnections,
+        ::etl::span<::etl::queue<TransportJob, QUEUE_SIZE>> responseQueues)
+    : IDiagDispatcher(sessionManager)
+    , AbstractTransportLayer(configuration.DiagBusId)
+    , _incomingDiagConnectionPool(incomingDiagConnectionPool)
+    , _sendJobQueue(sendJobQueue)
+    , _configuration(configuration)
+    , _busyMessageBuffer()
+    , _asyncProcessQueue(
+          ::async::Function::CallType::create<DiagDispatcher, &DiagDispatcher::processQueue>(*this))
+    , _diagJobRoot(jobRoot)
+    , _outgoingConnectionManager(
+          configuration,
+          *this,
+          fProvidingListenerHelper,
+          *this,
+          outgoingConnections,
+          responseQueues)
+    {
+        _busyMessage.init(
+            &_busyMessageBuffer[0],
+            BUSY_MESSAGE_LENGTH + UdsVmsConstants::BUSY_MESSAGE_EXTRA_BYTES);
+        _busyMessage.resetValidBytes();
+        (void)_busyMessage.append(DiagReturnCode::NEGATIVE_RESPONSE_IDENTIFIER);
+        (void)_busyMessage.append(0x00U);
+        (void)_busyMessage.append(static_cast<uint8_t>(DiagReturnCode::ISO_BUSY_REPEAT_REQUEST));
+        _busyMessage.setPayloadLength(BUSY_MESSAGE_LENGTH);
+    }
+#endif
+
     /**
      * \see     AbstractTransportLayer::init()
      * \post    isEnabled()
@@ -81,6 +132,16 @@ public:
      * \see AbstractTransportLayer::shutdown()
      */
     bool shutdown(ShutdownDelegate delegate) override;
+
+#if UDS_ENABLE_OUTGOING
+    /**
+     * \see IOutgoingDiagConnectionProvider::getOutgoingDiagConnection()
+     */
+    IOutgoingDiagConnectionProvider::ErrorCode getOutgoingDiagConnection(
+        uint16_t targetId,
+        OutgoingDiagConnection*& pConnection,
+        transport::TransportMessage* pRequestMessage) override;
+#endif
 
     /**
      * \see AbstractTransportLayer::send()
@@ -111,6 +172,9 @@ private:
 
     friend class ::http::html::UdsController;
     friend class IncomingDiagConnection;
+#if UDS_ENABLE_OUTGOING
+    friend class OutgoingDiagConnectionManager;
+#endif
 
     void connectionManagerShutdownComplete();
 
@@ -123,6 +187,8 @@ private:
 
     void checkConnectionShutdownProgress();
 
+    void trigger();
+
     ::etl::iqueue<TransportJob>& _sendJobQueue;
     DiagnosisConfiguration& _configuration;
     ::etl::delegate<void()> _connectionShutdownDelegate;
@@ -132,6 +198,9 @@ private:
     uint8_t _busyMessageBuffer[BUSY_MESSAGE_LENGTH + UdsVmsConstants::BUSY_MESSAGE_EXTRA_BYTES];
     ::async::Function _asyncProcessQueue;
     DiagJobRoot& _diagJobRoot;
+#if UDS_ENABLE_OUTGOING
+    OutgoingDiagConnectionManager _outgoingConnectionManager;
+#endif
 };
 
 // FIXME: This should not be public api, it is just exposed here because

@@ -64,6 +64,13 @@
 #include "uds/session/IDiagSessionChangedListener.h"
 #include "uds/session/IDiagSessionManager.h"
 #include "uds/session/ProgrammingSession.h"
+#if UDS_ENABLE_OUTGOING
+#include "uds/application/AbstractDiagApplication.h"
+#include "uds/connection/IOutgoingDiagConnectionProvider.h"
+#include "uds/connection/ManagedOutgoingDiagConnection.h"
+#include "uds/connection/OutgoingDiagConnection.h"
+#include "uds/connection/OutgoingDiagConnectionManager.h"
+#endif
 
 #include <gtest/gtest.h>
 
