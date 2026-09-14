@@ -54,10 +54,12 @@ RUN apt-get update && apt-get install -y \
         g++-14 \
         gcc-14 \
         git \
+        gitlint \
         lcov \
         libc++-17-dev \
         libc++abi-17-dev \
         ninja-build \
+        pre-commit \
         python-is-python3 \
         python3 \
         python3-pip \

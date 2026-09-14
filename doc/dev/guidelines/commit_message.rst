@@ -265,6 +265,22 @@ Good Example for a Commit Message
     #1010: Short description of a related issue
     #1011: Another description
 
+Automatic Validation with Gitlint
+---------------------------------
+
+Gitlint is configured to automatically validate commit messages against these guidelines
+(via ``.gitlint``).
+
+When running ``pre-commit install``, both the pre-commit and commit-msg hooks are installed
+automatically by default.
+
+To run gitlint manually via pre-commit against a prepared commit message:
+
+.. code-block:: bash
+
+    pre-commit run gitlint --hook-stage commit-msg \
+      --commit-msg-filename "$(git rev-parse --git-path COMMIT_EDITMSG)"
+
 References
 ----------
 

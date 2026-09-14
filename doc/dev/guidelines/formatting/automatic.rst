@@ -16,6 +16,34 @@ Automatic Formatting
 
 To format all code, use `Treefmt <https://treefmt.com>`_.
 
+Pre-commit Hooks
+----------------
+
+To automatically run formatting and code checks before creating git commits,
+install `pre-commit <https://pre-commit.com>`_ hooks in your local workspace:
+
+.. code-block:: bash
+
+    pre-commit install
+
+This ensures that common sanity checks run locally on commit, ``treefmt`` runs if installed,
+and ``gitlint`` validates commit messages against :ref:`commit_message` (both pre-commit
+and commit-msg hooks are installed by default). All hooks run offline using local system
+tools and are included in the development container.
+
+To run all pre-commit-stage checks manually across all files:
+
+.. code-block:: bash
+
+    pre-commit run --all-files
+
+To run the gitlint commit-message check manually:
+
+.. code-block:: bash
+
+    pre-commit run gitlint --hook-stage commit-msg \
+      --commit-msg-filename "$(git rev-parse --git-path COMMIT_EDITMSG)"
+
 Usage
 -----
 
