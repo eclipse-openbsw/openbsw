@@ -26,7 +26,6 @@ class IDiagSessionManager;
  *
  *
  *
- * \see     IOutgoingDiagConnectionProvider
  */
 class IDiagDispatcher
 {

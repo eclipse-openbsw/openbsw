@@ -8,13 +8,55 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 
+load("@bazel_skylib//rules:common_settings.bzl", "bool_flag")
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
+
+_OUTGOING_HEADERS = [
+    "include/uds/application/AbstractDiagApplication.h",
+    "include/uds/connection/IOutgoingDiagConnectionProvider.h",
+    "include/uds/connection/ManagedOutgoingDiagConnection.h",
+    "include/uds/connection/OutgoingDiagConnection.h",
+    "include/uds/connection/OutgoingDiagConnectionManager.h",
+]
+
+_OUTGOING_SOURCES = [
+    "src/uds/application/AbstractDiagApplication.cpp",
+    "src/uds/connection/ManagedOutgoingDiagConnection.cpp",
+    "src/uds/connection/OutgoingDiagConnection.cpp",
+    "src/uds/connection/OutgoingDiagConnectionManager.cpp",
+]
+
+bool_flag(
+    name = "uds_enable_outgoing",
+    build_setting_default = False,
+    visibility = ["//visibility:public"],
+)
+
+config_setting(
+    name = "uds_enable_outgoing_enabled",
+    flag_values = {":uds_enable_outgoing": "true"},
+)
+
+config_setting(
+    name = "uds_enable_outgoing_disabled",
+    flag_values = {":uds_enable_outgoing": "false"},
+)
 
 # Circular dependency present on the CMake side: uds -> udsConfiguration -> uds
 # Split off uds_headers to break the circular dependency for Bazel
 cc_library(
     name = "uds_headers",
-    hdrs = glob(["include/**/*.h"]),
+    hdrs = glob(
+        ["include/**/*.h"],
+        exclude = _OUTGOING_HEADERS,
+    ) + select({
+        ":uds_enable_outgoing_enabled": _OUTGOING_HEADERS,
+        ":uds_enable_outgoing_disabled": [],
+    }),
+    defines = select({
+        ":uds_enable_outgoing_enabled": ["UDS_ENABLE_OUTGOING=1"],
+        ":uds_enable_outgoing_disabled": [],
+    }),
     strip_include_prefix = "include",
     visibility = ["//visibility:public"],
     deps = [
@@ -27,7 +69,17 @@ cc_library(
 
 cc_library(
     name = "uds",
-    srcs = glob(["src/**/*.cpp"]),
+    srcs = glob(
+        ["src/**/*.cpp"],
+        exclude = _OUTGOING_SOURCES,
+    ) + select({
+        ":uds_enable_outgoing_enabled": _OUTGOING_SOURCES,
+        ":uds_enable_outgoing_disabled": [],
+    }),
+    defines = select({
+        ":uds_enable_outgoing_enabled": ["UDS_ENABLE_OUTGOING=1"],
+        ":uds_enable_outgoing_disabled": [],
+    }),
     visibility = ["//visibility:public"],
     deps = [
         ":uds_headers",

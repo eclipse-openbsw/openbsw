@@ -286,6 +286,9 @@ DiagDispatcher::DiagDispatcher(
 , _asyncProcessQueue(
       ::async::Function::CallType::create<DiagDispatcher, &DiagDispatcher::processQueue>(*this))
 , _diagJobRoot(jobRoot)
+#if UDS_ENABLE_OUTGOING
+, _outgoingConnectionManager(configuration, *this, fProvidingListenerHelper, *this)
+#endif
 {
     _busyMessage.init(
         &_busyMessageBuffer[0], BUSY_MESSAGE_LENGTH + UdsVmsConstants::BUSY_MESSAGE_EXTRA_BYTES);
@@ -296,10 +299,56 @@ DiagDispatcher::DiagDispatcher(
     _busyMessage.setPayloadLength(BUSY_MESSAGE_LENGTH);
 }
 
+#if UDS_ENABLE_OUTGOING
+IOutgoingDiagConnectionProvider::ErrorCode DiagDispatcher::getOutgoingDiagConnection(
+    uint16_t const targetId,
+    OutgoingDiagConnection*& pConnection,
+    transport::TransportMessage* const pRequestMessage)
+{
+    if (!fEnabled)
+    {
+        return IOutgoingDiagConnectionProvider::NO_CONNECTION_AVAILABLE;
+    }
+    IOutgoingDiagConnectionProvider::ErrorCode const status
+        = _outgoingConnectionManager.requestOutgoingConnection(
+            targetId, pConnection, pRequestMessage);
+    if (pConnection != nullptr)
+    {
+        Logger::debug(UDS, "Opened outgoing diag connection to target 0x%x", targetId);
+    }
+    return status;
+}
+#endif
+
 ETL_NO_INLINE AbstractTransportLayer::ErrorCode DiagDispatcher::send(
     TransportMessage& transportMessage,
     ITransportMessageProcessedListener* const pNotificationListener)
 {
+#if UDS_ENABLE_OUTGOING
+    for (OutgoingDiagConnectionManager::ManagedOutgoingDiagConnectionList::iterator itr
+         = _outgoingConnectionManager.getReleasedConnections().begin();
+         itr != _outgoingConnectionManager.getReleasedConnections().end();
+         ++itr)
+    {
+        // is this is a request sent by one of our outgoing connections?
+        ITransportMessageProcessedListener* const pListener = itr.operator->();
+        if (pListener == pNotificationListener)
+        {
+            ITransportMessageListener::ReceiveResult const status
+                = fProvidingListenerHelper.messageReceived(
+                    _configuration.DiagBusId, transportMessage, pNotificationListener);
+            if (status == ITransportMessageListener::ReceiveResult::RECEIVED_NO_ERROR)
+            {
+                return AbstractTransportLayer::ErrorCode::TP_OK;
+            }
+            else
+            {
+                return AbstractTransportLayer::ErrorCode::TP_SEND_FAIL;
+            }
+        }
+    }
+#endif
+
     // Compare listener identity through the concrete connection type to avoid reinterpret_cast.
     auto connection = etl::find_if(
         _incomingDiagConnectionPool.begin(),
@@ -398,32 +447,51 @@ void DiagDispatcher::processQueue()
         auto& sendJob = _sendJobQueue.front();
         _sendJobQueue.pop();
         lock.unlock();
-        auto const precheckResult
-            = precheckRequest(sendJob, _configuration, fProvidingListenerHelper, this);
 
-        bool sendBusyNegativeResponse = false;
-        if (precheckResult == PrecheckResult::Busy)
+#if UDS_ENABLE_OUTGOING
+        TransportMessage* const pTransportMessage = sendJob.transportMessage;
+        ManagedOutgoingDiagConnection* const pOutgoingConnection
+            = _outgoingConnectionManager.getExpectingConnection(*pTransportMessage);
+        if (pOutgoingConnection != nullptr)
         {
-            sendBusyNegativeResponse = true;
+            pOutgoingConnection->responseReceived(*pTransportMessage, sendJob.processedListener);
         }
-        if ((precheckResult == PrecheckResult::Ready) && (!_connectionShutdownRequested))
+        else
+#endif
         {
-            sendBusyNegativeResponse = dispatchIncomingRequest(
-                sendJob, _configuration, _incomingDiagConnectionPool, *this, _diagJobRoot);
-        }
+            auto const precheckResult
+                = precheckRequest(sendJob, _configuration, fProvidingListenerHelper, this);
 
-        if (sendBusyNegativeResponse)
-        {
-            sendBusyResponse(
-                sendJob.transportMessage, _configuration, fProvidingListenerHelper, _busyMessage);
-            sendJob.processedListener->transportMessageProcessed(
-                *sendJob.transportMessage,
-                ::transport::ITransportMessageProcessedListener::ProcessingResult::
-                    PROCESSED_NO_ERROR);
+            bool sendBusyNegativeResponse = false;
+            if (precheckResult == PrecheckResult::Busy)
+            {
+                sendBusyNegativeResponse = true;
+            }
+            if ((precheckResult == PrecheckResult::Ready) && (!_connectionShutdownRequested))
+            {
+                sendBusyNegativeResponse = dispatchIncomingRequest(
+                    sendJob, _configuration, _incomingDiagConnectionPool, *this, _diagJobRoot);
+            }
+
+            if (sendBusyNegativeResponse)
+            {
+                sendBusyResponse(
+                    sendJob.transportMessage,
+                    _configuration,
+                    fProvidingListenerHelper,
+                    _busyMessage);
+                sendJob.processedListener->transportMessageProcessed(
+                    *sendJob.transportMessage,
+                    ::transport::ITransportMessageProcessedListener::ProcessingResult::
+                        PROCESSED_NO_ERROR);
+            }
         }
 
         lock.lock();
     }
+#if UDS_ENABLE_OUTGOING
+    _outgoingConnectionManager.processPendingResponses();
+#endif
 }
 
 void DiagDispatcher::diagConnectionTerminated(IncomingDiagConnection& diagConnection)
@@ -490,6 +558,9 @@ void DiagDispatcher::checkConnectionShutdownProgress()
 
 AbstractTransportLayer::ErrorCode DiagDispatcher::init()
 {
+#if UDS_ENABLE_OUTGOING
+    _outgoingConnectionManager.init();
+#endif
     _connectionShutdownDelegate  = ::etl::delegate<void()>();
     _connectionShutdownRequested = false;
     fEnabled                     = true;
@@ -499,7 +570,10 @@ AbstractTransportLayer::ErrorCode DiagDispatcher::init()
 ETL_NO_INLINE bool DiagDispatcher::shutdown(ShutdownDelegate const delegate)
 {
     Logger::debug(UDS, "DiagDispatcher::shutdown()");
-    fEnabled          = false;
+    fEnabled = false;
+#if UDS_ENABLE_OUTGOING
+    _outgoingConnectionManager.shutdown();
+#endif
     _shutdownDelegate = delegate;
     shutdownIncomingConnections(
         ::etl::delegate<void()>::
@@ -518,6 +592,8 @@ void DiagDispatcher::transportMessageProcessed(
 {
     fProvidingListenerHelper.releaseTransportMessage(transportMessage);
 }
+
+void DiagDispatcher::trigger() { ::async::execute(_configuration.Context, _asyncProcessQueue); }
 
 // NOLINTEND(cppcoreguidelines-pro-type-vararg)
 } // namespace uds
