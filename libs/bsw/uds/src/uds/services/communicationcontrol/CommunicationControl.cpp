@@ -10,6 +10,8 @@
 
 #include "uds/services/communicationcontrol/CommunicationControl.h"
 
+#include <etl/span.h>
+
 #include "uds/UdsLogger.h"
 #include "uds/connection/IncomingDiagConnection.h"
 #include "uds/session/ApplicationExtendedSession.h"
@@ -117,8 +119,15 @@ DiagReturnCode::Type CommunicationControl::process(
     {
         return ret;
     }
-    uint8_t const controlType         = request[0];
-    uint8_t const communicationTypeLo = request[1] & 0x0FU;
+
+    if (requestLength < EXPECTED_REQUEST_LENGTH)
+    {
+        return DiagReturnCode::ISO_INVALID_FORMAT;
+    }
+
+    ::etl::span<uint8_t const> const requestView(request, requestLength);
+    uint8_t const controlType         = requestView[0U];
+    uint8_t const communicationTypeLo = requestView[1U] & 0x0FU;
     uint16_t rcvNode                  = 0U;
 
     /* if communicationTypeHi is set with value 0xF0 it means :
@@ -127,7 +136,7 @@ DiagReturnCode::Type CommunicationControl::process(
        if between 0x10 .. 0xE0 it could be a NM by number.
     */
 
-    uint8_t const communicationTypeHi = request[1U] & 0xF0U;
+    uint8_t const communicationTypeHi = requestView[1U] & 0xF0U;
 
     if ((((static_cast<uint8_t>(ENABLE_RX_AND_DISABLE_TX_WITH_ENHANCED_ADDRESS_INFORMATION)
            == controlType)
@@ -242,7 +251,7 @@ DiagReturnCode::Type CommunicationControl::process(
         {
             if (static_cast<uint8_t>(NORMAL_COMMUNICATION_MESSAGES) == communicationTypeLo)
             {
-                rcvNode = ::etl::be_uint16_t(&request[2]);
+                rcvNode = ::etl::be_uint16_t(requestView.subspan(2U, 2U).data());
                 if (0U == fSubNodeIdDisabledTx)
                 {
                     if (notifySubListeners(
@@ -278,7 +287,7 @@ DiagReturnCode::Type CommunicationControl::process(
         {
             if (static_cast<uint8_t>(NORMAL_COMMUNICATION_MESSAGES) == communicationTypeLo)
             {
-                rcvNode = ::etl::be_uint16_t(&request[2]);
+                rcvNode = ::etl::be_uint16_t(requestView.subspan(2U, 2U).data());
                 if (rcvNode == fSubNodeIdDisabledTx)
                 {
                     if (notifySubListeners(

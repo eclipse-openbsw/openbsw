@@ -41,7 +41,6 @@ private:
         uint8_t const request[],
         uint16_t requestLength) override;
 
-    uint8_t _implementedRequest[3];
     ::etl::span<uint8_t const> _responseSlice;
 };
 
