@@ -46,11 +46,13 @@ We recommend to read their licenses, as their terms may differ from the terms de
 | ThreadX Kernel            | 6.4.3    | MIT       | ``libs/3rdparty/threadx/LICENSE.md``                                 |
 | ThreadX Cortex M4 Port    | 6.4.3    | MIT       | ``platforms/s32k1xx/3rdparty/threadx/LICENSE.md``                    |
 | ThreadX Cortex M4 Port    | 6.4.3    | MIT       | ``platforms/stm32/3rdparty/threadx/LICENSE.md``                      |
+| ThreadX Cortex M0/M33 Port| 6.4.3    | MIT       | ``platforms/rp2xxx/3rdparty/threadx/LICENSE.md``                     |
 | ThreadX Linux Port        | 6.4.3    | MIT       | ``platforms/posix/3rdparty/threadx/LICENSE.md``                      |
 | CMSIS                     | 6.1.0    | Apache v2 | ``libs/3rdparty/cmsis/LICENSE``                                      |
 | NXP S32K148 Headers       | 1.1a     | BSD-3     | ``platforms/s32k1xx/bsp/bspMcu/include/3rdparty/nxp/*.h``            |
 | ST STM32F4 Device Headers | 2.6.11   | Apache v2 | ``platforms/stm32/bsp/bspMcu/include/3rdparty/st/LICENSE``           |
 | ST STM32G4 Device Headers | 1.2.6    | Apache v2 | ``platforms/stm32/bsp/bspMcu/include/3rdparty/st/LICENSE``           |
+| Pi Pico SDK               | 2.2      | BSD-3     | ``platforms/rp2xxx/3rdparty/pico-sdk``                                |
 | CodeCoverage              | 877bab9d | BSD-3     | ``cmake/modules/CodeCoverage.cmake``                                 |
 
 ## MISRA

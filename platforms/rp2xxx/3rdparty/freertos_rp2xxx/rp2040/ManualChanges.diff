@@ -1,0 +1,22 @@
+diff --git a/platforms/rp2xxx/3rdparty/freertos_rp2xxx/rp2040/src/port.c b/platforms/rp2xxx/3rdparty/freertos_rp2xxx/rp2040/src/port.c
+index ada8d842..26ff684e 100644
+--- a/platforms/rp2xxx/3rdparty/freertos_rp2xxx/rp2040/src/port.c
++++ b/platforms/rp2xxx/3rdparty/freertos_rp2xxx/rp2040/src/port.c
+@@ -475,6 +475,8 @@ void xPortSysTickHandler( void )
+ }
+ /*-----------------------------------------------------------*/
+ 
++void setupApplicationsIsr();
++
+ /*
+  * Setup the systick timer to generate the tick interrupts at the required
+  * frequency.
+@@ -497,6 +499,8 @@ __attribute__( ( weak ) ) void vPortSetupTimerInterrupt( void )
+     /* Configure SysTick to interrupt at the requested rate. */
+     portNVIC_SYSTICK_LOAD_REG = ( clock_get_hz( clk_sys ) / configTICK_RATE_HZ ) - 1UL;
+     portNVIC_SYSTICK_CTRL_REG = portNVIC_SYSTICK_CLK_BIT | portNVIC_SYSTICK_INT_BIT | portNVIC_SYSTICK_ENABLE_BIT;
++
++    setupApplicationsIsr();
+ }
+ /*-----------------------------------------------------------*/
+ 
