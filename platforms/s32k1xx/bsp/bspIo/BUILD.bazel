@@ -11,14 +11,12 @@
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
 
 cc_library(
-    name = "bsp_io",
-    srcs = ["src/io/Io.cpp"],
+    name = "bsp_io_headers",
     hdrs = [
         "include/io/Io.h",
         "include/io/ioPorts.h",
     ],
     strip_include_prefix = "include",
-    target_compatible_with = ["//bazel/platform/constraints/soc:s32k148"],
     visibility = ["//visibility:public"],
     deps = [
         ":bsp_configuration",
@@ -26,8 +24,38 @@ cc_library(
         "//libs/bsw/bsp",
         "//platforms/s32k1xx/bsp/bspAdc:bsp_adc",  # required by AnalogInput.h (transitive include) which is not in CMake target_link_libraries
         "//platforms/s32k1xx/bsp/bspEepromDriver:bsp_eeprom_driver",  # required by EepromConfiguration.h (transitive include) which is not in CMake target_link_libraries
+    ],
+)
+
+cc_library(
+    name = "bsp_io_impl",
+    srcs = ["src/io/Io.cpp"],
+    target_compatible_with = ["//bazel/platform/constraints/soc:s32k148"],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":bsp_io_headers",
+        "//platforms/s32k1xx/bsp/bspAdc:bsp_adc",
+        "//platforms/s32k1xx/bsp/bspEepromDriver:bsp_eeprom_driver",
         "//platforms/s32k1xx/bsp/bspMcu:bsp_mcu",
     ],
+)
+
+alias(
+    name = "bsp_io_default",
+    actual = select(
+        {
+            "//bazel/platform/constraints/soc:s32k148": ":bsp_io_impl",
+            "@platforms//os:linux": "//executables/unitTest/bsp/bspIo:bsp_io",
+        },
+        no_match_error = "No bsp_io for this platform.",
+    ),
+    visibility = ["//visibility:public"],
+)
+
+label_flag(
+    name = "bsp_io",
+    build_setting_default = ":bsp_io_default",
+    visibility = ["//visibility:public"],
 )
 
 alias(
@@ -45,5 +73,21 @@ alias(
 label_flag(
     name = "bsp_configuration",
     build_setting_default = ":bsp_configuration_default",
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "bsp_io_mock",
+    testonly = True,
+    srcs = ["mock/gmock/src/IoMock.cpp"],
+    hdrs = [
+        "mock/gmock/include/io/IoMock.h",
+    ],
+    implementation_deps = [
+        ":bsp_io",
+        "//libs/3rdparty/googletest:gtest_main",
+    ],
+    strip_include_prefix = "mock/gmock/include",
+    target_compatible_with = ["@platforms//:incompatible"],
     visibility = ["//visibility:public"],
 )
