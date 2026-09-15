@@ -58,6 +58,27 @@ target_link_libraries(
            udsConfiguration
            configuration)
 
+option(UDS_ENABLE_OUTGOING "Enable outgoing UDS connections" OFF)
+
+target_compile_definitions(
+    uds PUBLIC UDS_ENABLE_OUTGOING=$<IF:$<BOOL:${UDS_ENABLE_OUTGOING}>,1,0>)
+
+if (UDS_ENABLE_OUTGOING)
+    add_library(
+        udsOutgoing
+        src/uds/application/AbstractDiagApplication.cpp
+        src/uds/connection/ManagedOutgoingDiagConnection.cpp
+        src/uds/connection/OutgoingDiagConnection.cpp
+        src/uds/connection/OutgoingDiagConnectionManager.cpp)
+
+    target_include_directories(udsOutgoing PUBLIC include)
+    target_compile_definitions(udsOutgoing PUBLIC UDS_ENABLE_OUTGOING=1)
+    target_link_libraries(udsOutgoing PUBLIC transport transportConfiguration
+                                             udsConfiguration)
+
+    target_link_libraries(uds PUBLIC udsOutgoing)
+endif ()
+
 if (BUILD_EXECUTABLE STREQUAL "unitTest")
 
     add_subdirectory(mock)
