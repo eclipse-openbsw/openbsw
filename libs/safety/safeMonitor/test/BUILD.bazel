@@ -1,0 +1,29 @@
+# *******************************************************************************
+# Copyright (c) 2026 Accenture
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+
+load("@rules_cc//cc:cc_test.bzl", "cc_test")
+
+cc_test(
+    name = "safe_monitor_test",
+    srcs = [
+        "include/common.h",
+        "src/RegisterTest.cpp",
+        "src/SequenceTest.cpp",
+        "src/TriggerTest.cpp",
+        "src/ValueTest.cpp",
+        "src/WatchdogTest.cpp",
+        "src/common.cpp",
+    ],
+    includes = ["include"],
+    deps = [
+        "//libs/3rdparty/googletest:gtest_main",
+        "//libs/safety/safeMonitor:safe_monitor",
+    ],
+)

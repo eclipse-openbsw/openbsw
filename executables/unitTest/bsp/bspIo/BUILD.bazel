@@ -11,27 +11,18 @@
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
 
 cc_library(
-    name = "freertos_posix_port_headers",
-    hdrs = ["include/portmacro.h"],
+    name = "bsp_io",
+    srcs = ["src/io/Io.cpp"],
+    hdrs = [
+        "include/io/Io.h",
+        "include/io/ioPorts.h",
+    ],
     strip_include_prefix = "include",
     target_compatible_with = ["@platforms//os:linux"],
     visibility = ["//visibility:public"],
-)
-
-cc_library(
-    name = "freertos_posix",
-    srcs = [
-        "src/port.c",
-        "src/utils/wait_for_event.c",
-        "src/utils/wait_for_event.h",
-    ],
-    linkopts = ["-lpthread"],
-    local_defines = ["_POSIX_C_SOURCE=200112L"],
-    target_compatible_with = ["@platforms//os:linux"],
-    visibility = ["//visibility:public"],
     deps = [
-        ":freertos_posix_port_headers",
-        "//libs/3rdparty/freeRtos:freertos_headers",
-        "//libs/bsp/bspInterrupts:bsp_interrupts_headers",
+        "//executables/unitTest/bsp/bspConfiguration:bsp_configuration_headers",
+        "//executables/unitTest/bsp/bspMcu:bsp_mcu",
+        "//libs/bsw/bsp",
     ],
 )
