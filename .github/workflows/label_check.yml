@@ -1,0 +1,17 @@
+name: PR label check
+
+on: [push, pull_request]
+
+jobs:
+  label-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check for required label
+        run: |
+          labels='${{ toJson(github.event.pull_request.labels.*.name) }}'
+          echo "PR labels: $labels"
+
+          if ! echo "$labels" | grep -Eq '"tested_on_hw"|"no_hw_test_required"'; then
+            echo "Missing required label. Add label [tested_on_hw] or [no_hw_test_required]"
+            exit 1
+          fi
