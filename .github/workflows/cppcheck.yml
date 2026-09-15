@@ -1,0 +1,44 @@
+name: Cppcheck Analysis
+
+on: [push, pull_request]
+
+jobs:
+  cppcheck:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Setup cmake
+        uses: jwlawson/actions-setup-cmake@v2
+        with:
+          cmake-version: '3.22.x'
+
+      - name: Install Cppcheck
+        run: sudo apt-get update && sudo apt-get install -y cppcheck
+
+      - name: Generate compiler database
+        run: cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON executables/referenceApp
+      
+      - name: Run Cppcheck excluding 3rdparty
+        run: |
+          mkdir -p cppcheck-reports
+
+          EXCLUDE_DIRS=$(find . -type d -name "3rdparty" -printf "-i%p ")
+          cppcheck --enable=all --project=compile_commands.json --xml $EXCLUDE_DIRS 2> cppcheck-reports/cppcheck-full.xml
+    
+      - name: Check configuration issues
+        run: |
+
+          EXCLUDE_DIRS=$(find . -type d -name "3rdparty" -printf "-i%p ")
+          cppcheck --enable=all --project=compile_commands.json --check-config --suppress=missingIncludeSystem --suppress=missingInclude --xml $EXCLUDE_DIRS 2> cppcheck-reports/cppcheck-config.xml
+
+      - name: Upload Cppcheck logs
+        uses: actions/upload-artifact@v4
+        with:
+          name: cppcheck-reports
+          path: cppcheck-reports
+      
