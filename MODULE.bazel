@@ -13,17 +13,35 @@ module(
     version = "0.0.1",
 )
 
+# Bazel dependencies
 bazel_dep(name = "platforms", version = "1.0.0")
 bazel_dep(name = "rules_cc", version = "0.2.17")
 bazel_dep(name = "bazel_skylib", version = "1.9.0")
+bazel_dep(name = "rules_python", version = "2.3.3")
 
+# Bazel dev dependencies
 bazel_dep(name = "buildifier_prebuilt", version = "8.5.1.1", dev_dependency = True)
 
+# Vendored googletest instance (Non bazel vendor mechanism)
 local_path_override(
     module_name = "googletest",
     path = "libs/3rdparty/googletest",
 )
 
+# CC toolchain
 register_toolchains(
     "//bazel/toolchain:cc_toolchain_arm_none_eabi_gcc",
 )
+
+# Hermetic Python toolchain
+python = use_extension("@rules_python//python/extensions:python.bzl", "python")
+python.toolchain(python_version = "3.12.3")
+
+# Pip packages
+pip = use_extension("@rules_python//python/extensions:pip.bzl", "pip")
+pip.parse(
+    hub_name = "middleware_pip",
+    python_version = "3.12.3",
+    requirements_lock = "//libs/bsw/middleware/tools/cpp_generator:requirements.lock",
+)
+use_repo(pip, "middleware_pip")
