@@ -11,6 +11,23 @@
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
 
 cc_library(
+    name = "bsp_output_pwm_headers",
+    hdrs = [
+        "include/outputPwm/OutputPwm.h",
+        "include/outputPwm/OutputPwmTester.h",
+    ],
+    strip_include_prefix = "include",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//executables/unitTest/bsp/bspConfiguration:bsp_configuration_headers",
+        "//libs/3rdparty/etl",
+        "//libs/bsp/bspDynamicClient:bsp_dynamic_client",
+        "//libs/bsw/bsp",
+        "//libs/bsw/util",
+    ],
+)
+
+cc_library(
     name = "bsp_output_pwm",
     srcs = [
         "src/outputPwm/OutputPwm.cpp",

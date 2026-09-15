@@ -24,11 +24,11 @@ cc_library(
     visibility = ["//visibility:public"],
     deps = [
         ":bsp_configuration",
+        ":bsp_io",
         "//libs/3rdparty/etl",
         "//libs/bsp/bspDynamicClient:bsp_dynamic_client",
         "//libs/bsp/bspInterrupts:bsp_interrupts",
         "//libs/bsw/util",
-        "//platforms/s32k1xx/bsp/bspIo:bsp_io",
     ],
 )
 
@@ -37,6 +37,7 @@ alias(
     actual = select(
         {
             "//bazel/platform/constraints/soc:s32k148": "//executables/referenceApp/platforms/s32k148evb/bspConfiguration:bsp_configuration_headers",
+            "//bazel/config/executable_config:unit_test": "//executables/unitTest/bsp/bspConfiguration:bsp_configuration_headers",
             "@platforms//os:linux": "//executables/referenceApp/platforms/posix/bspConfiguration:bsp_configuration_headers",
         },
         no_match_error = "No bsp_configuration for this platform. Override --//<path>:bsp_configuration with your own implementation.",
@@ -47,5 +48,23 @@ alias(
 label_flag(
     name = "bsp_configuration",
     build_setting_default = ":bsp_configuration_default",
+    visibility = ["//visibility:public"],
+)
+
+alias(
+    name = "bsp_io_default",
+    actual = select(
+        {
+            "//bazel/platform/constraints/soc:s32k148": "//platforms/s32k1xx/bsp/bspIo:bsp_io",
+            "//bazel/config/executable_config:unit_test": "//executables/unitTest/bsp/bspIo:bsp_io",
+        },
+        no_match_error = "No bsp_io for this platform. Override --//<path>:bsp_io with your own implementation.",
+    ),
+    visibility = ["//visibility:public"],
+)
+
+label_flag(
+    name = "bsp_io",
+    build_setting_default = ":bsp_io_default",
     visibility = ["//visibility:public"],
 )
