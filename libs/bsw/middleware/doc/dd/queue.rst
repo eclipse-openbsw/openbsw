@@ -1,6 +1,6 @@
 ..
    *******************************************************************************
-   Copyright (c) 2024 Accenture
+   Copyright (c) 2026 BMW AG
 
    This program and the accompanying materials are made available under the
    terms of the Apache License Version 2.0 which is available at
@@ -18,11 +18,14 @@ The queue must be declared with a ``QueueTraits`` type, which is a templated str
 
 * T - the type that will be contained in the queue
 * LockStrategy - a type that will be used to lock a mutex with a RAII pattern.
-* MutexType - the mutex type, that must be of ``QueueMutex`` type, which can only be instantiated as pointer or integer type.
+* MutexType - the underlying mutex type accepted by ``QueueMutex``; it must be
+   an integral type or a pointer to an integral type.
 * ELEMENT_COUNT - the number of elements that the queue can store.
 
-Before using the queue, it is mandatory to first call the ``init`` method, otherwise it may lead to undefined behaviour.
-Afterwards, to write and read from the queue, two nested classes named ``Sender`` and ``Receiver`` are provided, each receiving a reference to a queue object.
+Queue state is initialized by the queue constructor; there is no separate
+``init`` call. To write and read from the queue, two nested classes named
+``Sender`` and ``Receiver`` are provided, each receiving a reference to a queue
+object.
 To write an element to the queue, simply call the method ``write`` of the ``Sender`` nested class.
 To read an element from the queue, call ``peek``, and then ``advance`` from the ``Receiver`` nested class.
 The call to ``advance`` is needed in order for the queue to advance to the next written element.

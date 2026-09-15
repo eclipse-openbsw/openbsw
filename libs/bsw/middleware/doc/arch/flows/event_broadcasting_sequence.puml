@@ -1,0 +1,86 @@
+' *******************************************************************************
+' Copyright (c) 2026 BMW AG
+'
+' This program and the accompanying materials are made available under the
+' terms of the Apache License Version 2.0 which is available at
+' https://www.apache.org/licenses/LICENSE-2.0
+'
+' SPDX-License-Identifier: Apache-2.0
+' *******************************************************************************
+
+@startuml
+
+hide footbox
+
+actor "Generated\nSkeleton" as generated_skeleton
+participant "Proxy/Skeleton Base" as proxy_skeleton_base_unit
+participant "Message Management" as message_management_unit
+participant "Cluster Connection" as cluster_connection_unit
+participant "Message Queue" as message_queue_unit
+
+activate proxy_skeleton_base_unit
+activate message_management_unit
+
+note over proxy_skeleton_base_unit
+  Skeleton side prepares an event for multiple target clusters.
+end note
+
+generated_skeleton -> proxy_skeleton_base_unit : send(eventData)
+proxy_skeleton_base_unit -> proxy_skeleton_base_unit : createEventMessage(memberId)
+proxy_skeleton_base_unit -> message_management_unit : allocate(data, msg, numClusters=2)
+message_management_unit -> message_management_unit : set ref_count = 2
+message_management_unit --> proxy_skeleton_base_unit : HRESULT::Ok
+
+note over message_management_unit : Payload allocated with ref_count = 2.
+
+loop repeated for each target cluster
+    proxy_skeleton_base_unit -> cluster_connection_unit : sendMessage(msg)
+    activate cluster_connection_unit
+    cluster_connection_unit -> message_queue_unit : push(msg)
+    activate message_queue_unit
+    message_queue_unit --> cluster_connection_unit : success
+    deactivate message_queue_unit
+    cluster_connection_unit --> proxy_skeleton_base_unit : HRESULT::Ok
+    deactivate cluster_connection_unit
+end
+
+proxy_skeleton_base_unit --> generated_skeleton : HRESULT::Ok
+
+note over message_queue_unit : Event is delivered to multiple clusters.
+
+note over proxy_skeleton_base_unit
+  Repeated per subscribing proxy cluster: receive event and decrease refcount.
+end note
+
+cluster_connection_unit -> message_queue_unit : pop(msg)
+activate cluster_connection_unit
+activate message_queue_unit
+message_queue_unit --> cluster_connection_unit : event msg
+deactivate message_queue_unit
+cluster_connection_unit -> proxy_skeleton_base_unit : onNewMessageReceived(msg)
+proxy_skeleton_base_unit -> proxy_skeleton_base_unit : invoke event callback
+proxy_skeleton_base_unit -> message_management_unit : decrementRefCount(msg)
+message_management_unit -> message_management_unit : ref_count = 1
+
+note over message_management_unit : First subscriber keeps one remaining reference.
+
+deactivate cluster_connection_unit
+
+cluster_connection_unit -> message_queue_unit : pop(msg)
+activate cluster_connection_unit
+activate message_queue_unit
+message_queue_unit --> cluster_connection_unit : event msg
+deactivate message_queue_unit
+cluster_connection_unit -> proxy_skeleton_base_unit : onNewMessageReceived(msg)
+proxy_skeleton_base_unit -> proxy_skeleton_base_unit : invoke event callback
+proxy_skeleton_base_unit -> message_management_unit : decrementRefCount(msg)
+message_management_unit -> message_management_unit : ref_count = 0
+message_management_unit -> message_management_unit : deallocate payload
+
+note over message_management_unit : Last reference released; payload is deallocated.
+
+deactivate cluster_connection_unit
+deactivate message_management_unit
+deactivate proxy_skeleton_base_unit
+
+@enduml

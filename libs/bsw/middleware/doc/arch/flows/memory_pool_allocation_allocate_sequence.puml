@@ -1,0 +1,49 @@
+' *******************************************************************************
+' Copyright (c) 2026 BMW AG
+'
+' This program and the accompanying materials are made available under the
+' terms of the Apache License Version 2.0 which is available at
+' https://www.apache.org/licenses/LICENSE-2.0
+'
+' SPDX-License-Identifier: Apache-2.0
+' *******************************************************************************
+
+@startuml
+
+hide footbox
+
+participant "Message Management" as message_management_unit
+participant "Memory Pool Management" as memory_pool_management_unit
+
+activate message_management_unit
+activate memory_pool_management_unit
+
+message_management_unit -> memory_pool_management_unit : allocate(requestedSize=48)
+memory_pool_management_unit -> memory_pool_management_unit : determine best pool (size <= 64)
+memory_pool_management_unit -> memory_pool_management_unit : allocate() from Pool<64>
+
+alt Pool<64> has free block
+    memory_pool_management_unit -> memory_pool_management_unit : get pNext_chunk pointer
+    memory_pool_management_unit -> memory_pool_management_unit : update pNext_chunk from freed chunk's next pointer
+    memory_pool_management_unit -> memory_pool_management_unit : mark chunk as allocated
+    memory_pool_management_unit --> message_management_unit : pointer
+else Pool<64> is full
+    memory_pool_management_unit -> memory_pool_management_unit : allocate() from Pool<256> [fallback]
+    alt Pool<256> has free block
+        memory_pool_management_unit -> memory_pool_management_unit : get pNext_chunk pointer
+        memory_pool_management_unit -> memory_pool_management_unit : update pNext_chunk from freed chunk's next pointer
+        memory_pool_management_unit -> memory_pool_management_unit : mark chunk as allocated
+        memory_pool_management_unit --> message_management_unit : pointer
+    else all pools are full
+        memory_pool_management_unit --> message_management_unit : nullptr
+    end
+end
+
+message_management_unit -> message_management_unit : wrap pointer result as HRESULT
+
+note over message_management_unit : MessagePayloadBuilder reports HRESULT::Ok or CannotAllocatePayload.
+
+deactivate message_management_unit
+deactivate memory_pool_management_unit
+
+@enduml

@@ -1,0 +1,33 @@
+' *******************************************************************************
+' Copyright (c) 2026 BMW AG
+'
+' This program and the accompanying materials are made available under the
+' terms of the Apache License Version 2.0 which is available at
+' https://www.apache.org/licenses/LICENSE-2.0
+'
+' SPDX-License-Identifier: Apache-2.0
+' *******************************************************************************
+
+@startuml
+
+left to right direction
+skinparam linetype ortho
+
+package "Communication Core" as service_initialization_core {
+  component "Proxy/Skeleton Base" as service_initialization_proxy_skeleton_base
+}
+
+package "Communication Infrastructure" as service_initialization_infrastructure {
+  component "Instance Database" as service_initialization_instance_database
+  component "Cluster Connection" as service_initialization_cluster_connection
+}
+
+component "Generated Proxy" as service_initialization_proxy
+component "Generated Skeleton" as service_initialization_skeleton
+
+service_initialization_proxy --> service_initialization_proxy_skeleton_base : initFromDb
+service_initialization_skeleton --> service_initialization_proxy_skeleton_base : init
+service_initialization_proxy_skeleton_base --> service_initialization_instance_database
+service_initialization_proxy_skeleton_base --> service_initialization_cluster_connection
+
+@enduml

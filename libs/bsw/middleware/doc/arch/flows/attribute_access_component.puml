@@ -1,0 +1,29 @@
+' *******************************************************************************
+' Copyright (c) 2026 BMW AG
+'
+' This program and the accompanying materials are made available under the
+' terms of the Apache License Version 2.0 which is available at
+' https://www.apache.org/licenses/LICENSE-2.0
+'
+' SPDX-License-Identifier: Apache-2.0
+' *******************************************************************************
+
+@startuml
+
+left to right direction
+skinparam linetype ortho
+
+package "Proxy Side" as attribute_access_proxy_side {
+  component "Proxy/Skeleton Base" as attribute_access_proxy_skeleton_base
+  component "Request/Response" as attribute_access_request_response
+  component "Cluster Connection" as attribute_access_cluster_connection
+}
+
+component "Message Queue" as attribute_access_message_queue
+
+attribute_access_proxy_skeleton_base --> attribute_access_request_response
+attribute_access_proxy_skeleton_base --> attribute_access_cluster_connection
+attribute_access_cluster_connection --> attribute_access_message_queue
+attribute_access_cluster_connection --> attribute_access_proxy_skeleton_base
+
+@enduml

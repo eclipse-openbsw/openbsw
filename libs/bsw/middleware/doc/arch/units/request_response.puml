@@ -1,0 +1,65 @@
+' *******************************************************************************
+' Copyright (c) 2026 BMW AG
+'
+' This program and the accompanying materials are made available under the
+' terms of the Apache License Version 2.0 which is available at
+' https://www.apache.org/licenses/LICENSE-2.0
+'
+' SPDX-License-Identifier: Apache-2.0
+' *******************************************************************************
+
+@startuml request_response
+
+title Request/Response - Class Diagram
+
+skinparam classFontSize 14
+skinparam shadowing false
+
+left to right direction
+
+namespace middleware {
+  namespace core <<domain>> {
+
+    enum "Future::State" as FutureState {
+        Invalid
+        Pending
+        Ready
+        Timeout
+        UserError
+        ServiceBusy
+        ServiceNotFound
+        SerializationError
+        DeserializationError
+        CouldNotDeliverError
+    }
+
+    class Future <<value_object>> {
+        callerTimestamp: uint32_t
+        requestId: uint16_t
+        state: FutureState
+    }
+
+    class ProxyMethodImpl {
+        #obtainFuture(): Future*
+        #futureMatchingRequestId(msg: Message): Future*
+        #cancelRequest(requestId: uint16_t): HRESULT
+        #freeAll()
+        #updateTimeouts(timeout: uint32_t)
+    }
+
+    class ProxyMethod <<template>> {
+        +callMethod(...): expected<uint16_t, HRESULT>
+        +answerRequest(msg: Message)
+        +cancelRequest(requestId: uint16_t): HRESULT
+        +freeAll()
+        +updateTimeouts()
+    }
+
+  }
+}
+
+ProxyMethodImpl *-- Future : manages pool of
+ProxyMethod --|> ProxyMethodImpl
+Future *-- FutureState
+
+@enduml

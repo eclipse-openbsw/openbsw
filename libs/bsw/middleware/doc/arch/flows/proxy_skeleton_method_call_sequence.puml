@@ -1,0 +1,80 @@
+' *******************************************************************************
+' Copyright (c) 2026 BMW AG
+'
+' This program and the accompanying materials are made available under the
+' terms of the Apache License Version 2.0 which is available at
+' https://www.apache.org/licenses/LICENSE-2.0
+'
+' SPDX-License-Identifier: Apache-2.0
+' *******************************************************************************
+
+@startuml
+
+hide footbox
+
+actor "Generated\nProxy" as generated_proxy
+participant "Proxy/Skeleton Base" as proxy_skeleton_base_unit
+participant "ProxyMethod" as request_response_unit
+participant "Cluster Connection" as cluster_connection_unit
+participant "Message Management" as message_management_unit
+participant "Message Queue" as message_queue_unit
+actor "Generated\nSkeleton" as generated_skeleton
+
+activate proxy_skeleton_base_unit
+activate request_response_unit
+activate cluster_connection_unit
+activate message_management_unit
+activate message_queue_unit
+
+generated_proxy -> proxy_skeleton_base_unit : methodCall(args)
+proxy_skeleton_base_unit -> proxy_skeleton_base_unit : generateMessageHeader(methodId)
+proxy_skeleton_base_unit -> message_management_unit : allocate(payloadSize)
+message_management_unit --> proxy_skeleton_base_unit : payload pointer
+proxy_skeleton_base_unit -> proxy_skeleton_base_unit : write args to payload
+proxy_skeleton_base_unit -> request_response_unit : obtainRequestId(callback)
+request_response_unit --> proxy_skeleton_base_unit : uint16_t
+proxy_skeleton_base_unit -> cluster_connection_unit : sendMessage(msg)
+cluster_connection_unit -> message_queue_unit : push(msg)
+message_queue_unit --> cluster_connection_unit : HRESULT::Ok
+cluster_connection_unit --> proxy_skeleton_base_unit : HRESULT::Ok
+
+note over message_queue_unit : Request is stored in shared memory.
+
+note over proxy_skeleton_base_unit
+  Skeleton side receives the request and dispatches it internally.
+end note
+
+cluster_connection_unit -> message_queue_unit : pop(msg)
+message_queue_unit --> cluster_connection_unit : request msg
+cluster_connection_unit -> proxy_skeleton_base_unit : onNewMessageReceived(msg)
+proxy_skeleton_base_unit -> proxy_skeleton_base_unit : extract methodId
+proxy_skeleton_base_unit -> generated_skeleton : methodHandler(args, response)
+generated_skeleton -> generated_skeleton : execute business logic
+generated_skeleton -> proxy_skeleton_base_unit : respond(response, result)
+proxy_skeleton_base_unit -> message_management_unit : allocate(responseSize)
+message_management_unit --> proxy_skeleton_base_unit : response payload
+proxy_skeleton_base_unit -> proxy_skeleton_base_unit : write result to payload
+proxy_skeleton_base_unit -> cluster_connection_unit : sendMessage(response)
+cluster_connection_unit -> message_queue_unit : push(response)
+message_queue_unit --> cluster_connection_unit : HRESULT::Ok
+
+note over proxy_skeleton_base_unit
+  Proxy side receives the response and completes the callback.
+end note
+
+cluster_connection_unit -> message_queue_unit : pop(msg)
+message_queue_unit --> cluster_connection_unit : response msg
+cluster_connection_unit -> proxy_skeleton_base_unit : onNewMessageReceived(response)
+proxy_skeleton_base_unit -> request_response_unit : answerRequest(msg)
+request_response_unit -> request_response_unit : invoke callback
+request_response_unit -> generated_proxy : callback(uint16_t, response)
+
+note over request_response_unit : Application is notified via callback.
+
+deactivate cluster_connection_unit
+deactivate proxy_skeleton_base_unit
+deactivate request_response_unit
+deactivate message_management_unit
+deactivate message_queue_unit
+
+@enduml

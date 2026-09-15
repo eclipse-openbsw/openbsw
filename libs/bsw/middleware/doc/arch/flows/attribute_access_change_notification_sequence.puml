@@ -1,0 +1,54 @@
+' *******************************************************************************
+' Copyright (c) 2026 BMW AG
+'
+' This program and the accompanying materials are made available under the
+' terms of the Apache License Version 2.0 which is available at
+' https://www.apache.org/licenses/LICENSE-2.0
+'
+' SPDX-License-Identifier: Apache-2.0
+' *******************************************************************************
+
+@startuml
+
+hide footbox
+
+actor "Generated\nSkeleton" as generated_skeleton
+participant "Proxy/Skeleton Base" as proxy_skeleton_base_unit
+participant "Cluster Connection" as cluster_connection_unit
+participant "Message Queue" as message_queue_unit
+actor "Generated\nProxy" as generated_proxy
+
+activate proxy_skeleton_base_unit
+
+generated_skeleton -> proxy_skeleton_base_unit : send(newValue)
+proxy_skeleton_base_unit -> proxy_skeleton_base_unit : set(newValue)
+proxy_skeleton_base_unit -> cluster_connection_unit : sendMessage(FIELD_NOTIFICATION)
+activate cluster_connection_unit
+cluster_connection_unit -> message_queue_unit : push(notification_msg)
+activate message_queue_unit
+message_queue_unit --> cluster_connection_unit : success
+deactivate message_queue_unit
+cluster_connection_unit --> proxy_skeleton_base_unit : HRESULT::Ok
+deactivate cluster_connection_unit
+
+note over proxy_skeleton_base_unit : All subscribed proxies are notified.
+
+note over proxy_skeleton_base_unit
+  Proxy side dispatches the field change to the registered callback.
+end note
+
+cluster_connection_unit -> message_queue_unit : pop()
+activate cluster_connection_unit
+activate message_queue_unit
+message_queue_unit --> cluster_connection_unit : notification_msg
+deactivate message_queue_unit
+cluster_connection_unit -> proxy_skeleton_base_unit : dispatchMessage(notification_msg)
+proxy_skeleton_base_unit -> proxy_skeleton_base_unit : onFieldChanged(newValue)
+proxy_skeleton_base_unit -> generated_proxy : invoke callback(newValue)
+
+note over generated_proxy : Application is notified of the attribute change.
+
+deactivate cluster_connection_unit
+deactivate proxy_skeleton_base_unit
+
+@enduml
