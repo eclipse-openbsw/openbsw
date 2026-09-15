@@ -18,7 +18,7 @@ namespace middleware
 namespace os
 {
 
-uint32_t getProcessId() { return ::async::AsyncBinding::AdapterType::getCurrentTaskContext(); }
+uint32_t getProcessId() { return ::async::AsyncBindingType::AdapterType::getCurrentTaskContext(); }
 
 } // namespace os
 } // namespace middleware
