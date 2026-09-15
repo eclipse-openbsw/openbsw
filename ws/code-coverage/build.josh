@@ -1,0 +1,19 @@
+:#image[:+ws/common/dev-image]
+
+worktree = :[
+    source = :[
+        :+ws/common/openbsw
+        ::executables/unitTest/
+        :<:/libs>[
+            :[::bsw/,::safety/]:[
+                ::*/*/mock/**/*.*
+                ::*/*/test/**/*.*
+                ::*/*/examples/**/*.*
+            ]
+            :<:/3rdparty>[
+                ::googletest/
+            ]
+        ]
+    ]
+    :/ws/code-coverage::run.sh=build.run.sh
+]
