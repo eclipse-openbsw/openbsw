@@ -106,7 +106,10 @@ ENV CARGO_HOME=/opt/cargo
 ENV PATH=/opt/cargo/bin:${PATH}
 # /opt/cargo and /opt/rustup are populated as root during the image build. Make
 # them world-accessible so the runtime UID injected via DOCKER_UID can use them.
-RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain 1.96.0 --profile minimal \
+RUN curl --proto '=https' --tlsv1.2 --retry 5 --retry-all-errors --retry-delay 5 -sSfL \
+        https://sh.rustup.rs -o /tmp/rustup-init.sh \
+    && sh /tmp/rustup-init.sh -y --default-toolchain 1.96.0 --profile minimal \
+    && rm /tmp/rustup-init.sh \
     && rustup component add rustfmt \
     && rustup target add thumbv7em-none-eabihf \
     && cargo install cbindgen --version 0.29.4 --locked \
