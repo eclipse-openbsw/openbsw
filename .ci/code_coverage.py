@@ -100,7 +100,8 @@ def generate_combined_coverage():
     subprocess.run([
         "genhtml", f"{build_dir_name}/coverage.info",
         "--prefix", str(repo_root),
-        "--output-directory", f"{build_dir_name}/coverage"
+        "--output-directory", f"{build_dir_name}/coverage",
+        "--ignore-errors", "mismatch,inconsistent,corrupt",
     ], check=True)
 
 def generate_badges():
