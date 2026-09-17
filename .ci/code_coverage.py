@@ -75,7 +75,7 @@ def generate_combined_coverage():
             "--no-external",
             "--base-directory", ".",
             "--output-file", unfiltered,
-            "--ignore-errors", "mismatch",
+            "--ignore-errors", "mismatch,inconsistent",
             "--rc", "geninfo_unexecuted_blocks=1",
         ], check=True)
 
@@ -84,12 +84,12 @@ def generate_combined_coverage():
             unfiltered,
             *exclude_patterns,
             "--output-file", filtered,
-            "--ignore-errors", "mismatch",
+            "--ignore-errors", "mismatch,inconsistent",
         ], check=True)
 
         tracefiles.append(filtered)
 
-    merge_args = ["lcov", "--ignore-errors", "mismatch"]
+    merge_args = ["lcov", "--ignore-errors", "mismatch,inconsistent"]
     for tf in tracefiles:
         merge_args += ["--add-tracefile", tf]
     merge_args += ["--output-file", f"{build_dir_name}/coverage.info"]
@@ -114,7 +114,7 @@ def generate_badges():
             "lcov",
             "--gcov-tool", f"gcov-{GCC_VERSION}",
             "--summary", f"{build_dir_name}/coverage.info",
-            "--ignore-errors", "mismatch",
+            "--ignore-errors", "mismatch,inconsistent",
         ],
         capture_output=True,
         text=True,
