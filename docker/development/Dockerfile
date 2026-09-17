@@ -1,4 +1,4 @@
-FROM ubuntu:noble-20251001 AS base-image
+FROM ubuntu:resolute-20260912 AS base-image
 
 
 FROM base-image AS amd64-downloads
@@ -60,6 +60,7 @@ RUN apt-get update && apt-get install -y \
         libc++abi-17-dev \
         ninja-build \
         pre-commit \
+        pre-commit-hooks \
         python-is-python3 \
         python3 \
         python3-pip \
