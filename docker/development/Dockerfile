@@ -58,6 +58,7 @@ RUN apt-get update && apt-get install -y \
         lcov \
         libc++-17-dev \
         libc++abi-17-dev \
+        libunwind-17-dev \
         ninja-build \
         pre-commit \
         pre-commit-hooks \
