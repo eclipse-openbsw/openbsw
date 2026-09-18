@@ -1,0 +1,26 @@
+var classsomeip_1_1RpcServiceRegistry =
+[
+    [ "RpcServiceRegistry", "d0/db2/classsomeip_1_1RpcServiceRegistry.html#ac6aba8989bed5e5280be324c2c2d5450", null ],
+    [ "getCurrentNumberOfProvidedServices", "d0/db2/classsomeip_1_1RpcServiceRegistry.html#a61c7fe6c708a823b1e3e1a53924cd990", null ],
+    [ "getCurrentNumberOfRemoteServices", "d0/db2/classsomeip_1_1RpcServiceRegistry.html#a53222c27471953d8efe8dff768408adc", null ],
+    [ "getCurrentNumberOfSubscriptions", "d0/db2/classsomeip_1_1RpcServiceRegistry.html#ae001af1b66322d67e302e3e008c073fa", null ],
+    [ "getInstanceId", "d0/db2/classsomeip_1_1RpcServiceRegistry.html#a078a74c24b99a601f751a7cfc22f4be3", null ],
+    [ "getMaximumNumberOfProvidedServices", "d0/db2/classsomeip_1_1RpcServiceRegistry.html#aa6cc72ca6fbd710a7d888138476a7be8", null ],
+    [ "getMaximumNumberOfRemoteServices", "d0/db2/classsomeip_1_1RpcServiceRegistry.html#ac71a46adb0eae6af1cae6b36e881ed7b", null ],
+    [ "getMaximumNumberOfSubscriptions", "d0/db2/classsomeip_1_1RpcServiceRegistry.html#aa17126a745fe75357f55bc0baa71b52f", null ],
+    [ "getQueryManager", "d0/db2/classsomeip_1_1RpcServiceRegistry.html#ad414bd404f62fea7396e6eaaa70d9bd5", null ],
+    [ "init", "d0/db2/classsomeip_1_1RpcServiceRegistry.html#affbbebc452c20bf5e01797ccff2e743f", null ],
+    [ "interestedInService", "d0/db2/classsomeip_1_1RpcServiceRegistry.html#a32c60aea32a82e74f36df6b83922e442", null ],
+    [ "isEventgroupPort", "d0/db2/classsomeip_1_1RpcServiceRegistry.html#a2b1a3a0d36e0983c5e75aaedcacf14ad", null ],
+    [ "offerReceived", "d0/db2/classsomeip_1_1RpcServiceRegistry.html#a9494171a914f1ff7e6f9eef4fae5532e", null ],
+    [ "rebootDetected", "d0/db2/classsomeip_1_1RpcServiceRegistry.html#a71ffdfab54e5ae096dc631add6dca649", null ],
+    [ "registerProvidedService", "d0/db2/classsomeip_1_1RpcServiceRegistry.html#a37a0371424f79e2d92bfaacd090f117f", null ],
+    [ "registerServiceQuery", "d0/db2/classsomeip_1_1RpcServiceRegistry.html#a85fbe5556ff6bdbff37fb4b9a14c86de", null ],
+    [ "serviceTrackerChanged", "d0/db2/classsomeip_1_1RpcServiceRegistry.html#afefa159fa8bbf505131c4527860f31f3", null ],
+    [ "shutdown", "d0/db2/classsomeip_1_1RpcServiceRegistry.html#a6c04c6fcf2481053f779dcc85bccb64a", null ],
+    [ "subscribeAckReceived", "d0/db2/classsomeip_1_1RpcServiceRegistry.html#a74ed227332603ee318e04c9a0b497d70", null ],
+    [ "subscribeNackReceived", "d0/db2/classsomeip_1_1RpcServiceRegistry.html#aeb4eef1a4fe4522887d3ed243e820fe2", null ],
+    [ "subscribeReceived", "d0/db2/classsomeip_1_1RpcServiceRegistry.html#a9406e6663b7c3a81d1e3015d31915a79", null ],
+    [ "unregisterProvidedService", "d0/db2/classsomeip_1_1RpcServiceRegistry.html#a0103720ae6edd2c8169413f0631813ea", null ],
+    [ "unregisterServiceQuery", "d0/db2/classsomeip_1_1RpcServiceRegistry.html#a5bb243fb2f299d3f65cdb4f8b458240b", null ]
+];

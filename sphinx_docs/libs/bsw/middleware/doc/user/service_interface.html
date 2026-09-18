@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="EclipseOpenBSWDocumentation" name="dox_trace_storage" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Service Interface &mdash; Eclipse OpenBSW Documentation  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/rtd_theme_overrides.css?v=6fd0d55b" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/graphviz.css?v=eafc0fe6" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/colors.css?v=3cafd8aa" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/colored_table.css?v=34b816d5" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/header.css?v=e632285e" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/dox_util_colors.css?v=dd14b177" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/dox_trace.css?v=60d3f72c" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../../../../../_static/copybutton.js?v=f281be69"></script>
+        <script src="../../../../../_static/dox_trace.js?v=40719b51"></script>
+    <script src="../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" />
+    <link rel="next" title="Architecture &amp; Design" href="../arch/index.html" />
+    <link rel="prev" title="User documentation" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../doc/dev/index.html" class="icon icon-home">
+            Eclipse OpenBSW Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Learning</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/learning/overview.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/learning/SysTest/HW_Testing_Guide.html">Hardware Testing Guide</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guidelines</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/guidelines/conventions/index.html">Coding Conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/guidelines/practices.html">Coding Practices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/guidelines/formatting/index.html">Formatting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/guidelines/unittests.html">Unit Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/guidelines/module.html">Module Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/guidelines/documentation.html">Module Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/guidelines/diagrams.html">Diagrams</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/guidelines/3rdparty.html">Third Party Libraries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/guidelines/commit_message.html">Commit Message</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/guidelines/pull_request.html">Pull Request</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Platforms</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/platforms/posix/index.html">POSIX</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/platforms/s32k148evb/index.html">S32K148 Evaluation Board</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/platforms/stm32/index.html">STM32 Nucleo Boards</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Features</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/features/storage.html">Persistent Storage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/features/functional_safety.html">Functional Safety</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/features/diagnostics.html">Diagnostics (DoCAN / UDS)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Software Modules</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../../doc/dev/modules/common.html">Common</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../../../doc/dev/modules/common.html#bsw">BSW</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../../async/doc/index.html">async - Asynchronous Execution Interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../asyncConsole/doc/index.html">asyncConsole - Asynchronous Console</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../asyncFreeRtos/doc/index.html">asyncFreeRtos</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../asyncImpl/doc/index.html">asyncImpl</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../blob/doc/index.html">blob</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../bsp/doc/index.html">bsp</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../common/doc/index.html">common</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cpp2can/doc/index.html">cpp2can - CAN Abstraction Layer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cpp2ethernet/doc/index.html">cpp2ethernet - Ethernet Abstractions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cpp2someip/doc/index.html">cpp2someip - SOME/IP Abstractions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docan/doc/index.html">docan - Diagnostics over CAN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../doip/doc/index.html">doip - Diagnostics Over IP</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../io/doc/index.html">io - IO Library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lifecycle/doc/index.html">lifecycle - App Lifecycle Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../logger/doc/index.html">logger - Logger module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../loggerIntegration/doc/index.html">loggerIntegration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lwipSocket/doc/index.html">lwipSocket - LwIP v2 Socket Abstraction</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../index.html">middleware</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="index.html">User documentation</a><ul class="current">
+<li class="toctree-l5 current"><a class="current reference internal" href="#">Service Interface</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#communication-patterns">Communication Patterns</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#key-terminology">Key Terminology</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#compile-check-and-runnable-integration-strategy">Compile-Check and Runnable Integration Strategy</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#proxy-use-cases-client-application">Proxy Use Cases (Client Application)</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#instantiation-and-initialization">Instantiation and Initialization</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#triggering-and-receiving-method-calls-as-a-proxy">Triggering and Receiving Method Calls as a Proxy</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#subscribing-and-receiving-events-as-a-proxy">Subscribing and Receiving Events as a Proxy</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#reading-and-writing-attributes-as-a-proxy">Reading and Writing Attributes as a Proxy</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#skeleton-use-cases-server-application">Skeleton Use Cases (Server Application)</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#handling-method-requests-as-a-skeleton">Handling Method Requests as a Skeleton</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#publishing-broadcasts-events-as-a-skeleton">Publishing Broadcasts/Events as a Skeleton</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#publishing-and-handling-attributes-events-as-a-skeleton">Publishing and Handling Attributes/Events as a Skeleton</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#error-handling">Error Handling</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../arch/index.html">Architecture &amp; Design</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../integration/index.html">Integration documentation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../changelog/index.html">Middleware Changelog</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../glossary.html">Glossary</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../dd/index.html">Detailed Design</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../routing/doc/index.html">routing - PDU routing across channels</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../runtime/doc/index.html">runtime</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../shed/doc/index.html">shed - Relational Data Structures</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../stdioConsoleInput/doc/index.html">stdioConsoleInput</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../storage/doc/index.html">storage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../timer/doc/index.html">timer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../transport/doc/index.html">transport - Transport Library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../transportRouterSimple/doc/index.html">transportRouterSimple</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../uds/doc/index.html">uds - Unified Diagnostic Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../util/doc/index.html">util</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../doc/dev/modules/common.html#bsp">BSP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../doc/dev/modules/common.html#safety">Safety</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/modules/posix.html">Posix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/modules/s32k1xx.html">S32K1xx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/modules/stm32.html">STM32</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/modules/executables.html">Executables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/modules/mocks.html">Mocks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tools/UdsTool/doc/index.html">UdsTool</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tools/puncover_tool/doc/index.html">Puncover</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../doc/dev/index.html">Eclipse OpenBSW Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../../doc/dev/index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../../../../doc/dev/modules/common.html">Common</a> &raquo;</li>
+        
+          <li><a href="../index.html">middleware</a> &raquo;</li>
+        
+          <li><a href="index.html">User documentation</a> &raquo;</li>
+        
+        <li>Service Interface</li>
+    
+
+    
+
+      <li class="wy-breadcrumbs-aside">
+
+        <!-- DOCUMENT STATUS -->
+
+        
+
+        <!-- DATA CLASSIFICATION -->
+
+        
+
+      </li>
+
+    
+  </ul>
+
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="service-interface">
+<h1>Service Interface<a class="headerlink" href="#service-interface" title="Link to this heading"></a></h1>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">middleware</span></code> framework enables communication between processes running on the same core and  on a different core.
+For service-based communication, generated code provides three integration points:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;ServiceName&gt;Proxy.h</span></code> for clients (service consumers).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;ServiceName&gt;Skeleton.h</span></code> for providers (service servers).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;ServiceName&gt;Common.h</span></code> with shared data types and generated identifiers.</p></li>
+</ul>
+<p>For unit and component tests, generation can additionally provide:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;ServiceName&gt;ProxyMock.h</span></code> with a GoogleMock-based proxy replacement.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;ServiceName&gt;SkeletonMock.h</span></code> with a GoogleMock-based skeleton replacement.</p></li>
+</ul>
+<p>This chapter explains recommended middleware usage for application code that uses proxy and skeleton APIs.</p>
+</section>
+<section id="communication-patterns">
+<h2>Communication Patterns<a class="headerlink" href="#communication-patterns" title="Link to this heading"></a></h2>
+<p>Middleware supports three communication patterns. Their exact API details are generated from the service model.</p>
+<table class="docutils align-center" id="id1">
+<caption><span class="caption-text">Middleware communication patterns</span><a class="headerlink" href="#id1" title="Link to this table"></a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Communication pattern</strong></p></th>
+<th class="head"><p><strong>SOME/IP equivalent</strong></p></th>
+<th class="head"><p><strong>Description</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>methods</strong></p></td>
+<td><p>method</p></td>
+<td><p>The client sends a request and the server returns a response.
+<code class="docutils literal notranslate"><span class="pre">FireAndForget</span></code> methods are one-way requests without a response.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>broadcasts</strong></p></td>
+<td><p>events</p></td>
+<td><p>The server sends an event to all subscribed clients.
+The server does not get any feedback about message reception.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>attributes</strong></p></td>
+<td><p>fields</p></td>
+<td><p>The server stores an attribute value.
+Clients can read and/or write it based on model configuration.
+Attribute updates can also be sent as notifications to subscribed clients.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="key-terminology">
+<h2>Key Terminology<a class="headerlink" href="#key-terminology" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong>Cluster</strong>: middleware routes messages between application instances based on their configured <a class="reference internal" href="../glossary.html#term-Application-Cluster"><span class="xref std std-term">Application Cluster</span></a>.
+Proxies and skeletons are initialized with generated instance identifiers plus cluster context.</p></li>
+<li><p><strong>Connected</strong>: for static service mapping, a proxy or skeleton is considered connected when
+<code class="docutils literal notranslate"><span class="pre">init(...)</span></code> returns a successful registration result (normally
+<code class="docutils literal notranslate"><span class="pre">::middleware::core::HRESULT::Ok</span></code>; an already-registered result is also
+treated as initialized by the generated proxy).
+If <code class="docutils literal notranslate"><span class="pre">init(...)</span></code> fails, do not call communication APIs.</p></li>
+<li><p><strong>Subscribed</strong>: a client subscribes to a broadcast or attribute updates by registering a receive handler on the generated proxy event/attribute object.</p></li>
+<li><p><strong>Method</strong>: request/response RPC from proxy to skeleton.</p></li>
+<li><p><strong>FireAndForget</strong>: one-way method from proxy to skeleton with no response callback.</p></li>
+<li><p><strong>Event (broadcast)</strong>: push-style update from skeleton to all subscribed proxies.</p></li>
+<li><p><strong>Attribute</strong>: stateful value on the skeleton side with generated getter/setter and optional update notifications.</p></li>
+</ul>
+</section>
+<section id="compile-check-and-runnable-integration-strategy">
+<h2>Compile-Check and Runnable Integration Strategy<a class="headerlink" href="#compile-check-and-runnable-integration-strategy" title="Link to this heading"></a></h2>
+<p>This guide uses snippets from compile-checked sources under <code class="docutils literal notranslate"><span class="pre">libs/bsw/middleware/doc/examples</span></code>.
+Code examples demonstrating middleware API usage are available in the examples directory.</p>
+<p>For runtime validation, integrate the same generated API calls in a component runnable and execute them in your target-specific integration tests.</p>
+</section>
+<section id="proxy-use-cases-client-application">
+<h2>Proxy Use Cases (Client Application)<a class="headerlink" href="#proxy-use-cases-client-application" title="Link to this heading"></a></h2>
+</section>
+<section id="instantiation-and-initialization">
+<h2>Instantiation and Initialization<a class="headerlink" href="#instantiation-and-initialization" title="Link to this heading"></a></h2>
+<p>Proxy classes provide two lifecycle methods:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">init</span></code> initializes middleware state and registers handlers.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">deInit</span></code> unregisters the proxy from its cluster connection and clears
+pending method and attribute-getter futures, including their callbacks.
+It also clears registered event and attribute receive handlers through the
+proxy’s internal notification-handler cleanup.</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">init</span></code> returns <code class="docutils literal notranslate"><span class="pre">::middleware::core::HRESULT</span></code>.
+Continue if the return value is a successful registration result, normally
+<code class="docutils literal notranslate"><span class="pre">::middleware::core::HRESULT::Ok</span></code> or
+<code class="docutils literal notranslate"><span class="pre">::middleware::core::HRESULT::InstanceAlreadyRegistered</span></code>.</p>
+<p>Proxy <code class="docutils literal notranslate"><span class="pre">init</span></code> requires:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">InstanceId</span></code>: target server instance.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ClusterId</span></code>: source application cluster of the client.</p></li>
+</ul>
+<section id="code-example-for-client-side">
+<h3>Code Example for Client Side<a class="headerlink" href="#code-example-for-client-side" title="Link to this heading"></a></h3>
+<p>The following example shows proxy startup and shutdown.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">ProxyApp</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">features</span><span class="o">::</span><span class="n">communication</span><span class="o">::</span><span class="n">DummyService</span><span class="o">::</span><span class="n">proxy</span><span class="o">::</span><span class="n">DummyServiceProxy</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="n">Base</span><span class="w">                 </span><span class="o">=</span><span class="w"> </span><span class="n">features</span><span class="o">::</span><span class="n">communication</span><span class="o">::</span><span class="n">DummyService</span><span class="o">::</span><span class="n">proxy</span><span class="o">::</span><span class="n">DummyServiceProxy</span><span class="p">;</span>
+<span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="n">Foo</span><span class="w">                  </span><span class="o">=</span><span class="w"> </span><span class="n">features</span><span class="o">::</span><span class="n">communication</span><span class="o">::</span><span class="n">DummyService</span><span class="o">::</span><span class="n">Foo</span><span class="p">;</span>
+<span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="n">Baz</span><span class="w">                  </span><span class="o">=</span><span class="w"> </span><span class="n">features</span><span class="o">::</span><span class="n">communication</span><span class="o">::</span><span class="n">DummyService</span><span class="o">::</span><span class="n">Baz</span><span class="p">;</span>
+<span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="n">MwInstanceId</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="n">features</span><span class="o">::</span><span class="n">communication</span><span class="o">::</span><span class="n">DummyService</span><span class="o">::</span><span class="n">internal</span><span class="o">::</span><span class="n">InstanceId</span><span class="p">;</span>
+<span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="n">FireAndForgetPayload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">features</span><span class="o">::</span><span class="n">communication</span><span class="o">::</span><span class="n">DummyService</span><span class="o">::</span><span class="n">FireAndForgetPayload</span><span class="p">;</span>
+<span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="n">AttributeType</span>
+<span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="n">features</span><span class="o">::</span><span class="n">communication</span><span class="o">::</span><span class="n">DummyService</span><span class="o">::</span><span class="n">proxy</span><span class="o">::</span><span class="n">SimpleFieldAttribute</span><span class="o">::</span><span class="n">AttributeType</span><span class="p">;</span>
+<span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="n">AsyncMethodResult</span>
+<span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="n">features</span><span class="o">::</span><span class="n">communication</span><span class="o">::</span><span class="n">DummyService</span><span class="o">::</span><span class="n">proxy</span><span class="o">::</span><span class="n">DummyServiceProxy</span><span class="o">::</span><span class="n">AsyncMethodResult</span><span class="p">;</span>
+<span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="n">AsyncMethodCallback</span>
+<span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="n">features</span><span class="o">::</span><span class="n">communication</span><span class="o">::</span><span class="n">DummyService</span><span class="o">::</span><span class="n">proxy</span><span class="o">::</span><span class="n">DummyServiceProxy</span><span class="o">::</span><span class="n">AsyncMethodCallback</span><span class="p">;</span>
+<span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="n">AttributeGetterCallback</span>
+<span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="n">features</span><span class="o">::</span><span class="n">communication</span><span class="o">::</span><span class="n">DummyService</span><span class="o">::</span><span class="n">proxy</span><span class="o">::</span><span class="n">SimpleFieldAttribute</span><span class="o">::</span><span class="n">GetterCallback</span><span class="p">;</span>
+<span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="n">AttributeGetterResult</span>
+<span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="n">features</span><span class="o">::</span><span class="n">communication</span><span class="o">::</span><span class="n">DummyService</span><span class="o">::</span><span class="n">proxy</span><span class="o">::</span><span class="n">SimpleFieldAttribute</span><span class="o">::</span><span class="n">GetterResult</span><span class="p">;</span>
+<span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="n">AttributeReceiveCallback</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">features</span><span class="o">::</span><span class="n">communication</span><span class="o">::</span><span class="n">DummyService</span><span class="o">::</span><span class="n">proxy</span><span class="o">::</span>
+<span class="w">        </span><span class="n">SimpleFieldAttribute</span><span class="o">::</span><span class="n">OnFieldChangedCallback</span><span class="p">;</span>
+<span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="n">EventReceiveCallback</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">features</span><span class="o">::</span><span class="n">communication</span><span class="o">::</span><span class="n">DummyService</span><span class="o">::</span><span class="n">proxy</span><span class="o">::</span>
+<span class="w">        </span><span class="n">SimpleBroadcastEvent</span><span class="o">::</span><span class="n">OnFieldChangedCallback</span><span class="p">;</span>
+<span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="n">MwResult</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">etl</span><span class="o">::</span><span class="n">expected</span><span class="o">&lt;</span><span class="kt">uint16_t</span><span class="p">,</span><span class="w"> </span><span class="o">::</span><span class="n">middleware</span><span class="o">::</span><span class="n">core</span><span class="o">::</span><span class="n">HRESULT</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">startup</span><span class="p">()</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">init</span><span class="p">())</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="n">setEventReceiveHandler</span><span class="p">();</span>
+<span class="w">            </span><span class="n">setAttributeReceiveHandler</span><span class="p">();</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">shutdown</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">Base</span><span class="o">::</span><span class="n">deInit</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// [service-proxy-method-start]</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">runAsyncMethod</span><span class="p">(</span><span class="n">Foo</span><span class="w"> </span><span class="k">const</span><span class="o">&amp;</span><span class="w"> </span><span class="n">input</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">MwResult</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Base</span><span class="o">::</span><span class="n">asyncMethod</span><span class="p">(</span>
+<span class="w">            </span><span class="n">input</span><span class="p">,</span><span class="w"> </span><span class="n">etl</span><span class="o">::</span><span class="n">make_delegate</span><span class="o">&lt;</span><span class="n">ProxyApp</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">ProxyApp</span><span class="o">::</span><span class="n">asyncMethodResponse_</span><span class="o">&gt;</span><span class="p">(</span><span class="o">*</span><span class="k">this</span><span class="p">));</span>
+<span class="w">        </span><span class="n">currentActiveRequestId_</span>
+<span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="n">result</span><span class="p">.</span><span class="n">has_value</span><span class="p">()</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">etl</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="kt">uint16_t</span><span class="o">&gt;</span><span class="p">{</span><span class="n">result</span><span class="p">.</span><span class="n">value</span><span class="p">()}</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">etl</span><span class="o">::</span><span class="n">nullopt</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// [service-proxy-method-end]</span>
+
+<span class="w">    </span><span class="c1">// [service-proxy-fire-and-forget-start]</span>
+<span class="w">    </span><span class="n">MwResult</span><span class="w"> </span><span class="nf">runFireAndForgetMethod</span><span class="p">(</span><span class="n">FireAndForgetPayload</span><span class="w"> </span><span class="k">const</span><span class="o">&amp;</span><span class="w"> </span><span class="n">payload</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">Base</span><span class="o">::</span><span class="n">fireAndForgetMethod</span><span class="p">(</span><span class="n">payload</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// [service-proxy-fire-and-forget-end]</span>
+
+<span class="w">    </span><span class="c1">// [service-proxy-attribute-read-start]</span>
+<span class="w">    </span><span class="n">MwResult</span><span class="w"> </span><span class="nf">runAttributeGet</span><span class="p">()</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">simpleField</span><span class="p">.</span><span class="n">get</span><span class="p">(</span>
+<span class="w">            </span><span class="n">etl</span><span class="o">::</span><span class="n">make_delegate</span><span class="o">&lt;</span><span class="n">ProxyApp</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">ProxyApp</span><span class="o">::</span><span class="n">attributeGetterResponse_</span><span class="o">&gt;</span><span class="p">(</span><span class="o">*</span><span class="k">this</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// [service-proxy-attribute-read-end]</span>
+
+<span class="w">    </span><span class="c1">// [service-proxy-attribute-write-start]</span>
+<span class="w">    </span><span class="n">MwResult</span><span class="w"> </span><span class="nf">runAttributeSet</span><span class="p">(</span><span class="kt">uint32_t</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">value</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">simpleField</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">value</span><span class="p">);</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// [service-proxy-attribute-write-end]</span>
+
+<span class="w">    </span><span class="p">[[</span><span class="n">nodiscard</span><span class="p">]]</span><span class="w"> </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">receivedAttributeValue</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">receivedAttributeValue_</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">    </span><span class="p">[[</span><span class="n">nodiscard</span><span class="p">]]</span><span class="w"> </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">receivedEventValue</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">receivedEventValue_</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">    </span><span class="p">[[</span><span class="n">nodiscard</span><span class="p">]]</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">isRequestIdActive</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">currentActiveRequestId_</span><span class="p">.</span><span class="n">has_value</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">    </span><span class="p">[[</span><span class="n">nodiscard</span><span class="p">]]</span><span class="w"> </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">getRequestIdActive</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">currentActiveRequestId_</span><span class="p">.</span><span class="n">value</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">    </span><span class="p">[[</span><span class="n">nodiscard</span><span class="p">]]</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">isResponseValid</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">latestResult_</span><span class="p">.</span><span class="n">has_value</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">    </span><span class="p">[[</span><span class="n">nodiscard</span><span class="p">]]</span><span class="w"> </span><span class="n">Baz</span><span class="w"> </span><span class="n">getResponseValue</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">latestResult_</span><span class="p">.</span><span class="n">value</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+
+<span class="k">private</span><span class="o">:</span>
+<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">init</span><span class="p">()</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">Base</span><span class="o">::</span><span class="n">init</span><span class="p">(</span><span class="n">MwInstanceId</span><span class="o">::</span><span class="n">InstanceId_1</span><span class="p">,</span><span class="w"> </span><span class="o">::</span><span class="n">middleware</span><span class="o">::</span><span class="n">core</span><span class="o">::</span><span class="n">ClusterId</span><span class="o">::</span><span class="n">Core1</span><span class="p">)</span>
+<span class="w">                   </span><span class="o">==</span><span class="w"> </span><span class="o">::</span><span class="n">middleware</span><span class="o">::</span><span class="n">core</span><span class="o">::</span><span class="n">HRESULT</span><span class="o">::</span><span class="n">Ok</span>
+<span class="w">               </span><span class="o">||</span><span class="w"> </span><span class="n">Base</span><span class="o">::</span><span class="n">isInitialized</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// [service-attribute-subscription-start]</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">setAttributeReceiveHandler</span><span class="p">()</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">simpleField</span><span class="p">.</span><span class="n">setReceiveHandler</span><span class="p">(</span>
+<span class="w">            </span><span class="n">etl</span><span class="o">::</span><span class="n">make_delegate</span><span class="o">&lt;</span><span class="n">ProxyApp</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">ProxyApp</span><span class="o">::</span><span class="n">attributeChanged_</span><span class="o">&gt;</span><span class="p">(</span><span class="o">*</span><span class="k">this</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// [service-attribute-subscription-end]</span>
+
+<span class="w">    </span><span class="c1">// [service-proxy-method-subscription-start]</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">setEventReceiveHandler</span><span class="p">()</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">simpleBroadcast</span><span class="p">.</span><span class="n">setReceiveHandler</span><span class="p">(</span>
+<span class="w">            </span><span class="n">etl</span><span class="o">::</span><span class="n">make_delegate</span><span class="o">&lt;</span><span class="n">ProxyApp</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">ProxyApp</span><span class="o">::</span><span class="n">eventReceived_</span><span class="o">&gt;</span><span class="p">(</span><span class="o">*</span><span class="k">this</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// [service-proxy-method-subscription-end]</span>
+
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">asyncMethodResponse_</span><span class="p">(</span><span class="n">AsyncMethodResult</span><span class="w"> </span><span class="k">const</span><span class="o">&amp;</span><span class="w"> </span><span class="n">result</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">latestResult_</span>
+<span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="n">result</span><span class="p">.</span><span class="n">has_value</span><span class="p">()</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">etl</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="n">Baz</span><span class="o">&gt;</span><span class="p">{</span><span class="n">result</span><span class="p">.</span><span class="n">value</span><span class="p">().</span><span class="n">get</span><span class="p">()}</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">etl</span><span class="o">::</span><span class="n">nullopt</span><span class="p">;</span>
+<span class="w">        </span><span class="n">currentActiveRequestId_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">etl</span><span class="o">::</span><span class="n">nullopt</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">attributeGetterResponse_</span><span class="p">(</span><span class="n">AttributeGetterResult</span><span class="w"> </span><span class="k">const</span><span class="o">&amp;</span><span class="w"> </span><span class="n">result</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">result</span><span class="p">.</span><span class="n">has_value</span><span class="p">())</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="n">receivedAttributeValue_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span><span class="p">.</span><span class="n">value</span><span class="p">().</span><span class="n">get</span><span class="p">();</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// [service-proxy-attribute-subscription-callback-start]</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">attributeChanged_</span><span class="p">(</span><span class="kt">uint32_t</span><span class="w"> </span><span class="k">const</span><span class="o">&amp;</span><span class="w"> </span><span class="n">value</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">receivedAttributeValue_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">value</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// [service-proxy-attribute-subscription-callback-end]</span>
+
+<span class="w">    </span><span class="c1">// [service-proxy-broadcast-callback-start]</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">eventReceived_</span><span class="p">(</span><span class="kt">uint32_t</span><span class="w"> </span><span class="k">const</span><span class="o">&amp;</span><span class="w"> </span><span class="n">value</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">receivedEventValue_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">value</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// [service-proxy-broadcast-callback-end]</span>
+
+<span class="w">    </span><span class="n">etl</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="kt">uint16_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">currentActiveRequestId_</span><span class="p">;</span>
+<span class="w">    </span><span class="n">etl</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="n">Baz</span><span class="o">&gt;</span><span class="w"> </span><span class="n">latestResult_</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">receivedAttributeValue_</span><span class="p">{};</span>
+<span class="w">    </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">receivedEventValue_</span><span class="p">{};</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="triggering-and-receiving-method-calls-as-a-proxy">
+<h2>Triggering and Receiving Method Calls as a Proxy<a class="headerlink" href="#triggering-and-receiving-method-calls-as-a-proxy" title="Link to this heading"></a></h2>
+<p>Relevant proxy-side behavior:</p>
+<ul class="simple">
+<li><p>Generated method calls return <code class="docutils literal notranslate"><span class="pre">::etl::expected&lt;uint16_t,</span> <span class="pre">::middleware::core::HRESULT&gt;</span></code>.
+On success, the value is the request identifier.
+On failure, the error code explains why the request was rejected immediately.</p></li>
+<li><p>Request/response methods require a callback with signature <code class="docutils literal notranslate"><span class="pre">etl::expected&lt;etl::reference_wrapper&lt;MethodOutputType</span> <span class="pre">const&gt;,</span> <span class="pre">::middleware::core::Future::State&gt;</span></code>, also exposed as the generated <code class="docutils literal notranslate"><span class="pre">&lt;MethodName&gt;Result</span></code> alias.
+The callback receives either a const reference to the payload data or an asynchronous failure state.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">FireAndForget</span></code> methods do not have response callbacks.</p></li>
+</ul>
+<p>The example below covers asynchronous and <code class="docutils literal notranslate"><span class="pre">FireAndForget</span></code> method calls:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">runAsyncMethod</span><span class="p">(</span><span class="n">Foo</span><span class="w"> </span><span class="k">const</span><span class="o">&amp;</span><span class="w"> </span><span class="n">input</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">MwResult</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Base</span><span class="o">::</span><span class="n">asyncMethod</span><span class="p">(</span>
+<span class="w">            </span><span class="n">input</span><span class="p">,</span><span class="w"> </span><span class="n">etl</span><span class="o">::</span><span class="n">make_delegate</span><span class="o">&lt;</span><span class="n">ProxyApp</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">ProxyApp</span><span class="o">::</span><span class="n">asyncMethodResponse_</span><span class="o">&gt;</span><span class="p">(</span><span class="o">*</span><span class="k">this</span><span class="p">));</span>
+<span class="w">        </span><span class="n">currentActiveRequestId_</span>
+<span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="n">result</span><span class="p">.</span><span class="n">has_value</span><span class="p">()</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">etl</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="kt">uint16_t</span><span class="o">&gt;</span><span class="p">{</span><span class="n">result</span><span class="p">.</span><span class="n">value</span><span class="p">()}</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">etl</span><span class="o">::</span><span class="n">nullopt</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+</pre></div>
+</div>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="w">    </span><span class="n">MwResult</span><span class="w"> </span><span class="nf">runFireAndForgetMethod</span><span class="p">(</span><span class="n">FireAndForgetPayload</span><span class="w"> </span><span class="k">const</span><span class="o">&amp;</span><span class="w"> </span><span class="n">payload</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">Base</span><span class="o">::</span><span class="n">fireAndForgetMethod</span><span class="p">(</span><span class="n">payload</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+</pre></div>
+</div>
+<section id="testing-method-requests-as-a-proxy">
+<h3>Testing Method Requests as a Proxy<a class="headerlink" href="#testing-method-requests-as-a-proxy" title="Link to this heading"></a></h3>
+<p>Generated proxy mocks let a client test verify the request arguments, immediate
+request identifier, and later response callback without a live transport.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">TEST_F</span><span class="p">(</span><span class="n">ProxyAppTestFixture</span><span class="p">,</span><span class="w"> </span><span class="n">AsyncMethodForwardsToMock</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="c1">// ARRANGE</span>
+<span class="w">    </span><span class="n">AsyncMethodCallback</span><span class="w"> </span><span class="n">asyncMethodCb</span><span class="p">;</span>
+<span class="w">    </span><span class="n">Foo</span><span class="w"> </span><span class="n">input</span><span class="p">{</span><span class="mi">1U</span><span class="p">,</span><span class="w"> </span><span class="mi">2U</span><span class="p">};</span>
+<span class="w">    </span><span class="kt">uint16_t</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">kExpectedRequestId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5U</span><span class="p">;</span>
+<span class="w">    </span><span class="n">EXPECT_CALL</span><span class="p">(</span>
+<span class="w">        </span><span class="n">mock_</span><span class="p">,</span>
+<span class="w">        </span><span class="n">init</span><span class="p">(</span>
+<span class="w">            </span><span class="n">features</span><span class="o">::</span><span class="n">communication</span><span class="o">::</span><span class="n">DummyService</span><span class="o">::</span><span class="n">internal</span><span class="o">::</span><span class="n">InstanceId_1</span><span class="p">,</span>
+<span class="w">            </span><span class="n">middleware</span><span class="o">::</span><span class="n">core</span><span class="o">::</span><span class="n">ClusterId</span><span class="o">::</span><span class="n">Core1</span><span class="p">))</span>
+<span class="w">        </span><span class="p">.</span><span class="n">WillOnce</span><span class="p">(</span><span class="n">testing</span><span class="o">::</span><span class="n">Return</span><span class="p">(</span><span class="n">middleware</span><span class="o">::</span><span class="n">core</span><span class="o">::</span><span class="n">HRESULT</span><span class="o">::</span><span class="n">Ok</span><span class="p">));</span>
+<span class="w">    </span><span class="n">EXPECT_CALL</span><span class="p">(</span><span class="n">mock_</span><span class="p">,</span><span class="w"> </span><span class="n">asyncMethod</span><span class="p">(</span><span class="o">::</span><span class="n">testing</span><span class="o">::</span><span class="n">_</span><span class="p">,</span><span class="w"> </span><span class="o">::</span><span class="n">testing</span><span class="o">::</span><span class="n">_</span><span class="p">))</span>
+<span class="w">        </span><span class="p">.</span><span class="n">WillOnce</span><span class="p">(</span><span class="o">::</span><span class="n">testing</span><span class="o">::</span><span class="n">DoAll</span><span class="p">(</span>
+<span class="w">            </span><span class="o">::</span><span class="n">testing</span><span class="o">::</span><span class="n">SaveArg</span><span class="o">&lt;</span><span class="mi">1</span><span class="o">&gt;</span><span class="p">(</span><span class="o">&amp;</span><span class="n">asyncMethodCb</span><span class="p">),</span>
+<span class="w">            </span><span class="o">::</span><span class="n">testing</span><span class="o">::</span><span class="n">Return</span><span class="p">(</span>
+<span class="w">                </span><span class="n">etl</span><span class="o">::</span><span class="n">expected</span><span class="o">&lt;</span><span class="kt">uint16_t</span><span class="p">,</span><span class="w"> </span><span class="n">middleware</span><span class="o">::</span><span class="n">core</span><span class="o">::</span><span class="n">HRESULT</span><span class="o">&gt;</span><span class="p">{</span><span class="n">kExpectedRequestId</span><span class="p">})));</span>
+
+<span class="w">    </span><span class="c1">// ACT</span>
+<span class="w">    </span><span class="n">app_</span><span class="p">.</span><span class="n">startup</span><span class="p">();</span>
+<span class="w">    </span><span class="n">app_</span><span class="p">.</span><span class="n">runAsyncMethod</span><span class="p">(</span><span class="n">input</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// ASSERT</span>
+<span class="w">    </span><span class="n">EXPECT_TRUE</span><span class="p">(</span><span class="n">app_</span><span class="p">.</span><span class="n">isRequestIdActive</span><span class="p">());</span>
+<span class="w">    </span><span class="n">EXPECT_EQ</span><span class="p">(</span><span class="n">app_</span><span class="p">.</span><span class="n">getRequestIdActive</span><span class="p">(),</span><span class="w"> </span><span class="n">kExpectedRequestId</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// ARRANGE</span>
+<span class="w">    </span><span class="n">Baz</span><span class="w"> </span><span class="n">resultPayload</span><span class="p">{</span><span class="mi">3U</span><span class="p">,</span><span class="w"> </span><span class="mi">4U</span><span class="p">,</span><span class="w"> </span><span class="mi">0U</span><span class="p">,</span><span class="w"> </span><span class="mi">1U</span><span class="p">};</span>
+<span class="w">    </span><span class="n">AsyncMethodResult</span><span class="w"> </span><span class="n">result</span><span class="p">{</span><span class="n">etl</span><span class="o">::</span><span class="n">reference_wrapper</span><span class="o">&lt;</span><span class="n">Baz</span><span class="w"> </span><span class="k">const</span><span class="o">&gt;</span><span class="p">(</span><span class="n">resultPayload</span><span class="p">)};</span>
+
+<span class="w">    </span><span class="c1">// ACT</span>
+<span class="w">    </span><span class="n">asyncMethodCb</span><span class="p">(</span><span class="n">result</span><span class="p">);</span><span class="w"> </span><span class="c1">// We trigger our internal callback here.</span>
+
+<span class="w">    </span><span class="c1">// ASSERT</span>
+<span class="w">    </span><span class="n">EXPECT_TRUE</span><span class="p">(</span><span class="n">app_</span><span class="p">.</span><span class="n">isResponseValid</span><span class="p">());</span>
+<span class="w">    </span><span class="n">EXPECT_EQ</span><span class="p">(</span><span class="n">app_</span><span class="p">.</span><span class="n">getResponseValue</span><span class="p">().</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">resultPayload</span><span class="p">.</span><span class="n">a</span><span class="p">);</span>
+<span class="w">    </span><span class="n">EXPECT_EQ</span><span class="p">(</span><span class="n">app_</span><span class="p">.</span><span class="n">getResponseValue</span><span class="p">().</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">resultPayload</span><span class="p">.</span><span class="n">b</span><span class="p">);</span>
+<span class="w">    </span><span class="n">EXPECT_EQ</span><span class="p">(</span><span class="n">app_</span><span class="p">.</span><span class="n">getResponseValue</span><span class="p">().</span><span class="n">c</span><span class="p">,</span><span class="w"> </span><span class="n">resultPayload</span><span class="p">.</span><span class="n">c</span><span class="p">);</span>
+<span class="w">    </span><span class="n">EXPECT_EQ</span><span class="p">(</span><span class="n">app_</span><span class="p">.</span><span class="n">getResponseValue</span><span class="p">().</span><span class="n">d</span><span class="p">,</span><span class="w"> </span><span class="n">resultPayload</span><span class="p">.</span><span class="n">d</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">TEST_F</span><span class="p">(</span><span class="n">ProxyAppTestFixture</span><span class="p">,</span><span class="w"> </span><span class="n">FireAndForgetMethodForwardsToMock</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="c1">// ARRANGE</span>
+<span class="w">    </span><span class="n">ProxyApp</span><span class="o">::</span><span class="n">FireAndForgetPayload</span><span class="w"> </span><span class="n">payload</span><span class="p">{{</span><span class="mi">1U</span><span class="p">,</span><span class="w"> </span><span class="mi">2U</span><span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="mi">3U</span><span class="p">,</span><span class="w"> </span><span class="mi">4U</span><span class="p">}};</span>
+<span class="w">    </span><span class="kt">uint16_t</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">kExpectedRequestId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5U</span><span class="p">;</span>
+<span class="w">    </span><span class="n">EXPECT_CALL</span><span class="p">(</span>
+<span class="w">        </span><span class="n">mock_</span><span class="p">,</span>
+<span class="w">        </span><span class="n">init</span><span class="p">(</span>
+<span class="w">            </span><span class="n">features</span><span class="o">::</span><span class="n">communication</span><span class="o">::</span><span class="n">DummyService</span><span class="o">::</span><span class="n">internal</span><span class="o">::</span><span class="n">InstanceId_1</span><span class="p">,</span>
+<span class="w">            </span><span class="n">middleware</span><span class="o">::</span><span class="n">core</span><span class="o">::</span><span class="n">ClusterId</span><span class="o">::</span><span class="n">Core1</span><span class="p">))</span>
+<span class="w">        </span><span class="p">.</span><span class="n">WillOnce</span><span class="p">(</span><span class="n">testing</span><span class="o">::</span><span class="n">Return</span><span class="p">(</span><span class="n">middleware</span><span class="o">::</span><span class="n">core</span><span class="o">::</span><span class="n">HRESULT</span><span class="o">::</span><span class="n">Ok</span><span class="p">));</span>
+<span class="w">    </span><span class="n">EXPECT_CALL</span><span class="p">(</span><span class="n">mock_</span><span class="p">,</span><span class="w"> </span><span class="n">fireAndForgetMethod</span><span class="p">(</span><span class="o">::</span><span class="n">testing</span><span class="o">::</span><span class="n">Ref</span><span class="p">(</span><span class="n">payload</span><span class="p">)))</span>
+<span class="w">        </span><span class="p">.</span><span class="n">WillOnce</span><span class="p">(</span><span class="n">testing</span><span class="o">::</span><span class="n">Return</span><span class="p">(</span>
+<span class="w">            </span><span class="n">etl</span><span class="o">::</span><span class="n">expected</span><span class="o">&lt;</span><span class="kt">uint16_t</span><span class="p">,</span><span class="w"> </span><span class="n">middleware</span><span class="o">::</span><span class="n">core</span><span class="o">::</span><span class="n">HRESULT</span><span class="o">&gt;</span><span class="p">{</span><span class="n">kExpectedRequestId</span><span class="p">}));</span>
+
+<span class="w">    </span><span class="c1">// ACT</span>
+<span class="w">    </span><span class="n">app_</span><span class="p">.</span><span class="n">startup</span><span class="p">();</span>
+<span class="w">    </span><span class="n">ProxyApp</span><span class="o">::</span><span class="n">ProxyApp</span><span class="o">::</span><span class="n">MwResult</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">app_</span><span class="p">.</span><span class="n">runFireAndForgetMethod</span><span class="p">(</span><span class="n">payload</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// ASSERT</span>
+<span class="w">    </span><span class="n">ASSERT_TRUE</span><span class="p">(</span><span class="n">result</span><span class="p">.</span><span class="n">has_value</span><span class="p">());</span>
+<span class="w">    </span><span class="n">EXPECT_EQ</span><span class="p">(</span><span class="n">result</span><span class="p">.</span><span class="n">value</span><span class="p">(),</span><span class="w"> </span><span class="n">kExpectedRequestId</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="subscribing-and-receiving-events-as-a-proxy">
+<h2>Subscribing and Receiving Events as a Proxy<a class="headerlink" href="#subscribing-and-receiving-events-as-a-proxy" title="Link to this heading"></a></h2>
+<p>For proxy usage, event subscription means registering a receive handler on the generated event object.
+After registration, each received event triggers the callback.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">setReceiveHandler(...)</span></code> for event notifications.</p></li>
+</ul>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">setEventReceiveHandler</span><span class="p">()</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">simpleBroadcast</span><span class="p">.</span><span class="n">setReceiveHandler</span><span class="p">(</span>
+<span class="w">            </span><span class="n">etl</span><span class="o">::</span><span class="n">make_delegate</span><span class="o">&lt;</span><span class="n">ProxyApp</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">ProxyApp</span><span class="o">::</span><span class="n">eventReceived_</span><span class="o">&gt;</span><span class="p">(</span><span class="o">*</span><span class="k">this</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
+</pre></div>
+</div>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">eventReceived_</span><span class="p">(</span><span class="kt">uint32_t</span><span class="w"> </span><span class="k">const</span><span class="o">&amp;</span><span class="w"> </span><span class="n">value</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">receivedEventValue_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">value</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+</pre></div>
+</div>
+<section id="testing-event-subscriptions-as-a-proxy">
+<h3>Testing Event Subscriptions as a Proxy<a class="headerlink" href="#testing-event-subscriptions-as-a-proxy" title="Link to this heading"></a></h3>
+<p>The proxy mock captures the registered handler so the test can simulate an
+incoming event and verify that the application receives its payload.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">TEST_F</span><span class="p">(</span><span class="n">ProxyAppTestFixture</span><span class="p">,</span><span class="w"> </span><span class="n">EventReceiveForwardsToMock</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="c1">// ARRANGE</span>
+<span class="w">    </span><span class="n">ProxyApp</span><span class="o">::</span><span class="n">EventReceiveCallback</span><span class="w"> </span><span class="n">eventCallback</span><span class="p">;</span>
+<span class="w">    </span><span class="n">EXPECT_CALL</span><span class="p">(</span>
+<span class="w">        </span><span class="n">mock_</span><span class="p">,</span>
+<span class="w">        </span><span class="n">init</span><span class="p">(</span>
+<span class="w">            </span><span class="n">features</span><span class="o">::</span><span class="n">communication</span><span class="o">::</span><span class="n">DummyService</span><span class="o">::</span><span class="n">internal</span><span class="o">::</span><span class="n">InstanceId_1</span><span class="p">,</span>
+<span class="w">            </span><span class="n">middleware</span><span class="o">::</span><span class="n">core</span><span class="o">::</span><span class="n">ClusterId</span><span class="o">::</span><span class="n">Core1</span><span class="p">))</span>
+<span class="w">        </span><span class="p">.</span><span class="n">WillOnce</span><span class="p">(</span><span class="n">testing</span><span class="o">::</span><span class="n">Return</span><span class="p">(</span><span class="n">middleware</span><span class="o">::</span><span class="n">core</span><span class="o">::</span><span class="n">HRESULT</span><span class="o">::</span><span class="n">Ok</span><span class="p">));</span>
+<span class="w">    </span><span class="n">EXPECT_CALL</span><span class="p">(</span><span class="n">mock_</span><span class="p">.</span><span class="n">simpleBroadcast</span><span class="p">,</span><span class="w"> </span><span class="n">setReceiveHandler</span><span class="p">(</span><span class="o">::</span><span class="n">testing</span><span class="o">::</span><span class="n">_</span><span class="p">))</span>
+<span class="w">        </span><span class="p">.</span><span class="n">WillOnce</span><span class="p">(</span><span class="o">::</span><span class="n">testing</span><span class="o">::</span><span class="n">SaveArg</span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;</span><span class="p">(</span><span class="o">&amp;</span><span class="n">eventCallback</span><span class="p">));</span>
+
+<span class="w">    </span><span class="kt">uint32_t</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">eventValue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">99U</span><span class="p">;</span>
+
+<span class="w">    </span><span class="c1">// ACT</span>
+<span class="w">    </span><span class="n">app_</span><span class="p">.</span><span class="n">startup</span><span class="p">();</span>
+<span class="w">    </span><span class="n">eventCallback</span><span class="p">(</span><span class="n">eventValue</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// ASSERT</span>
+<span class="w">    </span><span class="n">EXPECT_EQ</span><span class="p">(</span><span class="n">app_</span><span class="p">.</span><span class="n">receivedEventValue</span><span class="p">(),</span><span class="w"> </span><span class="n">eventValue</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="reading-and-writing-attributes-as-a-proxy">
+<h2>Reading and Writing Attributes as a Proxy<a class="headerlink" href="#reading-and-writing-attributes-as-a-proxy" title="Link to this heading"></a></h2>
+<p>Generated proxy attributes usually provide:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">get(callback)</span></code> for asynchronous reads.</p></li>
+</ul>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="w">    </span><span class="n">MwResult</span><span class="w"> </span><span class="nf">runAttributeGet</span><span class="p">()</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">simpleField</span><span class="p">.</span><span class="n">get</span><span class="p">(</span>
+<span class="w">            </span><span class="n">etl</span><span class="o">::</span><span class="n">make_delegate</span><span class="o">&lt;</span><span class="n">ProxyApp</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">ProxyApp</span><span class="o">::</span><span class="n">attributeGetterResponse_</span><span class="o">&gt;</span><span class="p">(</span><span class="o">*</span><span class="k">this</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">set(value)</span></code> for writes, if the model enables writing.</p></li>
+</ul>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="w">    </span><span class="n">MwResult</span><span class="w"> </span><span class="nf">runAttributeSet</span><span class="p">(</span><span class="kt">uint32_t</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">value</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">simpleField</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">value</span><span class="p">);</span><span class="w"> </span><span class="p">}</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">setReceiveHandler(...)</span></code> for update notifications.
+The application must explicitly send an attribute notification; changing
+the local value alone does not notify subscribers.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">unsetReceiveHandler()</span></code> to remove an event or attribute receive handler.</p></li>
+</ul>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">setAttributeReceiveHandler</span><span class="p">()</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">simpleField</span><span class="p">.</span><span class="n">setReceiveHandler</span><span class="p">(</span>
+<span class="w">            </span><span class="n">etl</span><span class="o">::</span><span class="n">make_delegate</span><span class="o">&lt;</span><span class="n">ProxyApp</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">ProxyApp</span><span class="o">::</span><span class="n">attributeChanged_</span><span class="o">&gt;</span><span class="p">(</span><span class="o">*</span><span class="k">this</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
+</pre></div>
+</div>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">attributeChanged_</span><span class="p">(</span><span class="kt">uint32_t</span><span class="w"> </span><span class="k">const</span><span class="o">&amp;</span><span class="w"> </span><span class="n">value</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">receivedAttributeValue_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">value</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+</pre></div>
+</div>
+<section id="testing-attribute-getters-as-a-proxy">
+<h3>Testing Attribute Getters as a Proxy<a class="headerlink" href="#testing-attribute-getters-as-a-proxy" title="Link to this heading"></a></h3>
+<p>The getter test captures the generated callback, checks the request identifier,
+and then simulates the asynchronous attribute result.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">TEST_F</span><span class="p">(</span><span class="n">ProxyAppTestFixture</span><span class="p">,</span><span class="w"> </span><span class="n">AttributeGetterForwardsToMock</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="c1">// ARRANGE</span>
+<span class="w">    </span><span class="n">ProxyApp</span><span class="o">::</span><span class="n">AttributeGetterCallback</span><span class="w"> </span><span class="n">getterCallback</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">uint32_t</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">attributeValue</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="mi">42U</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">uint16_t</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">kExpectedGetterRequestId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">6U</span><span class="p">;</span>
+<span class="w">    </span><span class="n">EXPECT_CALL</span><span class="p">(</span>
+<span class="w">        </span><span class="n">mock_</span><span class="p">,</span>
+<span class="w">        </span><span class="n">init</span><span class="p">(</span>
+<span class="w">            </span><span class="n">features</span><span class="o">::</span><span class="n">communication</span><span class="o">::</span><span class="n">DummyService</span><span class="o">::</span><span class="n">internal</span><span class="o">::</span><span class="n">InstanceId_1</span><span class="p">,</span>
+<span class="w">            </span><span class="n">middleware</span><span class="o">::</span><span class="n">core</span><span class="o">::</span><span class="n">ClusterId</span><span class="o">::</span><span class="n">Core1</span><span class="p">))</span>
+<span class="w">        </span><span class="p">.</span><span class="n">WillOnce</span><span class="p">(</span><span class="n">testing</span><span class="o">::</span><span class="n">Return</span><span class="p">(</span><span class="n">middleware</span><span class="o">::</span><span class="n">core</span><span class="o">::</span><span class="n">HRESULT</span><span class="o">::</span><span class="n">Ok</span><span class="p">));</span>
+<span class="w">    </span><span class="n">EXPECT_CALL</span><span class="p">(</span><span class="n">mock_</span><span class="p">.</span><span class="n">simpleField</span><span class="p">,</span><span class="w"> </span><span class="n">get</span><span class="p">(</span><span class="o">::</span><span class="n">testing</span><span class="o">::</span><span class="n">_</span><span class="p">))</span>
+<span class="w">        </span><span class="p">.</span><span class="n">WillOnce</span><span class="p">(</span><span class="o">::</span><span class="n">testing</span><span class="o">::</span><span class="n">DoAll</span><span class="p">(</span>
+<span class="w">            </span><span class="o">::</span><span class="n">testing</span><span class="o">::</span><span class="n">SaveArg</span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;</span><span class="p">(</span><span class="o">&amp;</span><span class="n">getterCallback</span><span class="p">),</span>
+<span class="w">            </span><span class="o">::</span><span class="n">testing</span><span class="o">::</span><span class="n">Return</span><span class="p">(</span>
+<span class="w">                </span><span class="n">etl</span><span class="o">::</span><span class="n">expected</span><span class="o">&lt;</span><span class="kt">uint16_t</span><span class="p">,</span><span class="w"> </span><span class="n">middleware</span><span class="o">::</span><span class="n">core</span><span class="o">::</span><span class="n">HRESULT</span><span class="o">&gt;</span><span class="p">{</span><span class="n">kExpectedGetterRequestId</span><span class="p">})));</span>
+
+<span class="w">    </span><span class="c1">// ACT</span>
+<span class="w">    </span><span class="n">app_</span><span class="p">.</span><span class="n">startup</span><span class="p">();</span>
+<span class="w">    </span><span class="n">ProxyApp</span><span class="o">::</span><span class="n">ProxyApp</span><span class="o">::</span><span class="n">MwResult</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">getterResult</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">app_</span><span class="p">.</span><span class="n">runAttributeGet</span><span class="p">();</span>
+
+<span class="w">    </span><span class="c1">// ASSERT</span>
+<span class="w">    </span><span class="n">ASSERT_TRUE</span><span class="p">(</span><span class="n">getterResult</span><span class="p">.</span><span class="n">has_value</span><span class="p">());</span>
+<span class="w">    </span><span class="n">EXPECT_EQ</span><span class="p">(</span><span class="n">getterResult</span><span class="p">.</span><span class="n">value</span><span class="p">(),</span><span class="w"> </span><span class="n">kExpectedGetterRequestId</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// ARRANGE</span>
+<span class="w">    </span><span class="n">ProxyApp</span><span class="o">::</span><span class="n">AttributeGetterResult</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">attributeResult</span><span class="p">{</span>
+<span class="w">        </span><span class="n">etl</span><span class="o">::</span><span class="n">reference_wrapper</span><span class="o">&lt;</span><span class="kt">uint32_t</span><span class="w"> </span><span class="k">const</span><span class="o">&gt;</span><span class="p">(</span><span class="n">attributeValue</span><span class="p">)};</span>
+
+<span class="w">    </span><span class="c1">// ACT</span>
+<span class="w">    </span><span class="n">getterCallback</span><span class="p">(</span><span class="n">attributeResult</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// ASSERT</span>
+<span class="w">    </span><span class="n">ASSERT_TRUE</span><span class="p">(</span><span class="n">attributeResult</span><span class="p">.</span><span class="n">has_value</span><span class="p">());</span>
+<span class="w">    </span><span class="n">EXPECT_EQ</span><span class="p">(</span><span class="n">attributeResult</span><span class="p">.</span><span class="n">value</span><span class="p">().</span><span class="n">get</span><span class="p">(),</span><span class="w"> </span><span class="n">attributeValue</span><span class="p">);</span>
+<span class="w">    </span><span class="n">EXPECT_EQ</span><span class="p">(</span><span class="n">app_</span><span class="p">.</span><span class="n">receivedAttributeValue</span><span class="p">(),</span><span class="w"> </span><span class="n">attributeValue</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="testing-attribute-setters-as-a-proxy">
+<h3>Testing Attribute Setters as a Proxy<a class="headerlink" href="#testing-attribute-setters-as-a-proxy" title="Link to this heading"></a></h3>
+<p>The setter test verifies that the value and immediate request result are
+forwarded through the generated proxy mock.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">TEST_F</span><span class="p">(</span><span class="n">ProxyAppTestFixture</span><span class="p">,</span><span class="w"> </span><span class="n">AttributeSetterForwardsToMock</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="c1">// ARRANGE</span>
+<span class="w">    </span><span class="kt">uint16_t</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">kExpectedSetterRequestId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">7U</span><span class="p">;</span>
+<span class="w">    </span><span class="n">EXPECT_CALL</span><span class="p">(</span>
+<span class="w">        </span><span class="n">mock_</span><span class="p">,</span>
+<span class="w">        </span><span class="n">init</span><span class="p">(</span>
+<span class="w">            </span><span class="n">features</span><span class="o">::</span><span class="n">communication</span><span class="o">::</span><span class="n">DummyService</span><span class="o">::</span><span class="n">internal</span><span class="o">::</span><span class="n">InstanceId_1</span><span class="p">,</span>
+<span class="w">            </span><span class="n">middleware</span><span class="o">::</span><span class="n">core</span><span class="o">::</span><span class="n">ClusterId</span><span class="o">::</span><span class="n">Core1</span><span class="p">))</span>
+<span class="w">        </span><span class="p">.</span><span class="n">WillOnce</span><span class="p">(</span><span class="n">testing</span><span class="o">::</span><span class="n">Return</span><span class="p">(</span><span class="n">middleware</span><span class="o">::</span><span class="n">core</span><span class="o">::</span><span class="n">HRESULT</span><span class="o">::</span><span class="n">Ok</span><span class="p">));</span>
+<span class="w">    </span><span class="n">EXPECT_CALL</span><span class="p">(</span><span class="n">mock_</span><span class="p">.</span><span class="n">simpleField</span><span class="p">,</span><span class="w"> </span><span class="n">set</span><span class="p">(</span><span class="mi">42U</span><span class="p">))</span>
+<span class="w">        </span><span class="p">.</span><span class="n">WillOnce</span><span class="p">(</span><span class="n">testing</span><span class="o">::</span><span class="n">Return</span><span class="p">(</span>
+<span class="w">            </span><span class="n">etl</span><span class="o">::</span><span class="n">expected</span><span class="o">&lt;</span><span class="kt">uint16_t</span><span class="p">,</span><span class="w"> </span><span class="n">middleware</span><span class="o">::</span><span class="n">core</span><span class="o">::</span><span class="n">HRESULT</span><span class="o">&gt;</span><span class="p">{</span><span class="n">kExpectedSetterRequestId</span><span class="p">}));</span>
+
+<span class="w">    </span><span class="c1">// ACT</span>
+<span class="w">    </span><span class="n">app_</span><span class="p">.</span><span class="n">startup</span><span class="p">();</span>
+<span class="w">    </span><span class="n">ProxyApp</span><span class="o">::</span><span class="n">ProxyApp</span><span class="o">::</span><span class="n">MwResult</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">setterResult</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">app_</span><span class="p">.</span><span class="n">runAttributeSet</span><span class="p">(</span><span class="mi">42U</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// ASSERT</span>
+<span class="w">    </span><span class="n">ASSERT_TRUE</span><span class="p">(</span><span class="n">setterResult</span><span class="p">.</span><span class="n">has_value</span><span class="p">());</span>
+<span class="w">    </span><span class="n">EXPECT_EQ</span><span class="p">(</span><span class="n">setterResult</span><span class="p">.</span><span class="n">value</span><span class="p">(),</span><span class="w"> </span><span class="n">kExpectedSetterRequestId</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="testing-attribute-notifications-as-a-proxy">
+<h3>Testing Attribute Notifications as a Proxy<a class="headerlink" href="#testing-attribute-notifications-as-a-proxy" title="Link to this heading"></a></h3>
+<p>The notification test captures the registered handler, triggers it with a
+simulated value, and checks the application state.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">TEST_F</span><span class="p">(</span><span class="n">ProxyAppTestFixture</span><span class="p">,</span><span class="w"> </span><span class="n">AttributeReceiveForwardsToMock</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="c1">// ARRANGE</span>
+<span class="w">    </span><span class="n">ProxyApp</span><span class="o">::</span><span class="n">AttributeReceiveCallback</span><span class="w"> </span><span class="n">attributeCallback</span><span class="p">;</span>
+<span class="w">    </span><span class="n">EXPECT_CALL</span><span class="p">(</span>
+<span class="w">        </span><span class="n">mock_</span><span class="p">,</span>
+<span class="w">        </span><span class="n">init</span><span class="p">(</span>
+<span class="w">            </span><span class="n">features</span><span class="o">::</span><span class="n">communication</span><span class="o">::</span><span class="n">DummyService</span><span class="o">::</span><span class="n">internal</span><span class="o">::</span><span class="n">InstanceId_1</span><span class="p">,</span>
+<span class="w">            </span><span class="n">middleware</span><span class="o">::</span><span class="n">core</span><span class="o">::</span><span class="n">ClusterId</span><span class="o">::</span><span class="n">Core1</span><span class="p">))</span>
+<span class="w">        </span><span class="p">.</span><span class="n">WillOnce</span><span class="p">(</span><span class="n">testing</span><span class="o">::</span><span class="n">Return</span><span class="p">(</span><span class="n">middleware</span><span class="o">::</span><span class="n">core</span><span class="o">::</span><span class="n">HRESULT</span><span class="o">::</span><span class="n">Ok</span><span class="p">));</span>
+<span class="w">    </span><span class="n">EXPECT_CALL</span><span class="p">(</span><span class="n">mock_</span><span class="p">.</span><span class="n">simpleField</span><span class="p">,</span><span class="w"> </span><span class="n">setReceiveHandler</span><span class="p">(</span><span class="o">::</span><span class="n">testing</span><span class="o">::</span><span class="n">_</span><span class="p">))</span>
+<span class="w">        </span><span class="p">.</span><span class="n">WillOnce</span><span class="p">(</span><span class="o">::</span><span class="n">testing</span><span class="o">::</span><span class="n">SaveArg</span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;</span><span class="p">(</span><span class="o">&amp;</span><span class="n">attributeCallback</span><span class="p">));</span>
+
+<span class="w">    </span><span class="kt">uint32_t</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">attributeValue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">42U</span><span class="p">;</span>
+
+<span class="w">    </span><span class="c1">// ACT</span>
+<span class="w">    </span><span class="n">app_</span><span class="p">.</span><span class="n">startup</span><span class="p">();</span>
+<span class="w">    </span><span class="n">attributeCallback</span><span class="p">(</span><span class="n">attributeValue</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// ASSERT</span>
+<span class="w">    </span><span class="n">EXPECT_EQ</span><span class="p">(</span><span class="n">app_</span><span class="p">.</span><span class="n">receivedAttributeValue</span><span class="p">(),</span><span class="w"> </span><span class="n">attributeValue</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="skeleton-use-cases-server-application">
+<h2>Skeleton Use Cases (Server Application)<a class="headerlink" href="#skeleton-use-cases-server-application" title="Link to this heading"></a></h2>
+<section id="code-example-for-server-side">
+<h3>Code Example for Server Side<a class="headerlink" href="#code-example-for-server-side" title="Link to this heading"></a></h3>
+<p>Skeleton classes are server-side adapters.
+The application derives from the skeleton class, implements generated virtual methods, and answers method requests.</p>
+<p>Skeleton <code class="docutils literal notranslate"><span class="pre">init</span></code> receives only <code class="docutils literal notranslate"><span class="pre">InstanceId</span></code> (the server instance provided by this application).</p>
+<p>The following example shows skeleton startup and shutdown.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">SkeletonApp</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">features</span><span class="o">::</span><span class="n">communication</span><span class="o">::</span><span class="n">DummyService</span><span class="o">::</span><span class="n">skeleton</span><span class="o">::</span><span class="n">DummyServiceSkeleton</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="n">Base</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">features</span><span class="o">::</span><span class="n">communication</span><span class="o">::</span><span class="n">DummyService</span><span class="o">::</span><span class="n">skeleton</span><span class="o">::</span><span class="n">DummyServiceSkeleton</span><span class="p">;</span>
+<span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="n">Foo</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">features</span><span class="o">::</span><span class="n">communication</span><span class="o">::</span><span class="n">DummyService</span><span class="o">::</span><span class="n">Foo</span><span class="p">;</span>
+<span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="n">Baz</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">features</span><span class="o">::</span><span class="n">communication</span><span class="o">::</span><span class="n">DummyService</span><span class="o">::</span><span class="n">Baz</span><span class="p">;</span>
+<span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="n">FireAndForgetPayload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">features</span><span class="o">::</span><span class="n">communication</span><span class="o">::</span><span class="n">DummyService</span><span class="o">::</span><span class="n">FireAndForgetPayload</span><span class="p">;</span>
+<span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="n">MwInstanceId</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="n">features</span><span class="o">::</span><span class="n">communication</span><span class="o">::</span><span class="n">DummyService</span><span class="o">::</span><span class="n">internal</span><span class="o">::</span><span class="n">InstanceId</span><span class="p">;</span>
+<span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="n">SkeletonResponseInfo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">::</span><span class="n">middleware</span><span class="o">::</span><span class="n">core</span><span class="o">::</span><span class="n">ResponseBufferBase</span><span class="o">::</span><span class="n">SkeletonResponseInfo</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="nf">init</span><span class="p">()</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">Base</span><span class="o">::</span><span class="n">init</span><span class="p">(</span><span class="n">MwInstanceId</span><span class="o">::</span><span class="n">InstanceId_1</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">::</span><span class="n">middleware</span><span class="o">::</span><span class="n">core</span><span class="o">::</span><span class="n">HRESULT</span><span class="o">::</span><span class="n">Ok</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">shutdown</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">Base</span><span class="o">::</span><span class="n">deInit</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// [service-skeleton-method-start]</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">asyncMethod</span><span class="p">([[</span><span class="n">maybe_unused</span><span class="p">]]</span><span class="w"> </span><span class="n">Foo</span><span class="w"> </span><span class="k">const</span><span class="o">&amp;</span><span class="w"> </span><span class="n">input</span><span class="p">,</span><span class="w"> </span><span class="n">SkeletonResponseInfo</span><span class="o">&amp;</span><span class="w"> </span><span class="n">response</span><span class="p">)</span><span class="w"> </span><span class="k">override</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">Base</span><span class="o">::</span><span class="n">asyncMethod</span><span class="p">(</span><span class="n">input</span><span class="p">,</span><span class="w"> </span><span class="n">response</span><span class="p">);</span>
+<span class="w">        </span><span class="n">pendingAsyncResponse_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&amp;</span><span class="n">response</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// [service-skeleton-method-end]</span>
+
+<span class="w">    </span><span class="c1">// [service-skeleton-fire-and-forget-method-start]</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">fireAndForgetMethod</span><span class="p">(</span><span class="n">FireAndForgetPayload</span><span class="w"> </span><span class="k">const</span><span class="o">&amp;</span><span class="w"> </span><span class="n">payload</span><span class="p">)</span><span class="w"> </span><span class="k">override</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">Base</span><span class="o">::</span><span class="n">fireAndForgetMethod</span><span class="p">(</span><span class="n">payload</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// [service-skeleton-fire-and-forget-method-end]</span>
+
+<span class="w">    </span><span class="c1">// [service-skeleton-execute-start]</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">execute</span><span class="p">()</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">Base</span><span class="o">::</span><span class="n">isInitialized</span><span class="p">()</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">pendingAsyncResponse_</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">)</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="p">[[</span><span class="n">maybe_unused</span><span class="p">]]</span><span class="w"> </span><span class="o">::</span><span class="n">middleware</span><span class="o">::</span><span class="n">core</span><span class="o">::</span><span class="n">HRESULT</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Base</span><span class="o">::</span><span class="n">respond</span><span class="p">(</span>
+<span class="w">                </span><span class="o">*</span><span class="n">pendingAsyncResponse_</span><span class="p">,</span><span class="w"> </span><span class="n">features</span><span class="o">::</span><span class="n">communication</span><span class="o">::</span><span class="n">DummyService</span><span class="o">::</span><span class="n">Baz</span><span class="p">{</span><span class="mi">9U</span><span class="p">,</span><span class="w"> </span><span class="mi">8U</span><span class="p">,</span><span class="w"> </span><span class="mi">7U</span><span class="p">,</span><span class="w"> </span><span class="mi">6U</span><span class="p">});</span>
+<span class="w">            </span><span class="n">pendingAsyncResponse_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// [service-skeleton-execute-end]</span>
+
+<span class="w">    </span><span class="c1">// [service-skeleton-broadcast-start]</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">publishBroadcast</span><span class="p">()</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">Base</span><span class="o">::</span><span class="n">isInitialized</span><span class="p">())</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="p">[[</span><span class="n">maybe_unused</span><span class="p">]]</span><span class="w"> </span><span class="o">::</span><span class="n">middleware</span><span class="o">::</span><span class="n">core</span><span class="o">::</span><span class="n">HRESULT</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">result</span>
+<span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">simpleBroadcast</span><span class="p">.</span><span class="n">send</span><span class="p">(</span><span class="n">BROADCAST_VALUE</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// [service-skeleton-broadcast-end]</span>
+
+<span class="w">    </span><span class="c1">// [service-skeleton-attribute-broadcast-start]</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">publishAttribute</span><span class="p">(</span><span class="kt">uint32_t</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">value</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">Base</span><span class="o">::</span><span class="n">isInitialized</span><span class="p">())</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">simpleField</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">value</span><span class="p">);</span>
+<span class="w">            </span><span class="p">[[</span><span class="n">maybe_unused</span><span class="p">]]</span><span class="w"> </span><span class="o">::</span><span class="n">middleware</span><span class="o">::</span><span class="n">core</span><span class="o">::</span><span class="n">HRESULT</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">simpleField</span><span class="p">.</span><span class="n">send</span><span class="p">();</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// [service-skeleton-attribute-broadcast-end]</span>
+
+<span class="w">    </span><span class="c1">// [service-skeleton-attribute-get-start]</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">get_SimpleFieldAttribute</span><span class="p">(</span><span class="n">SkeletonResponseInfo</span><span class="o">&amp;</span><span class="w"> </span><span class="n">response</span><span class="p">)</span><span class="w"> </span><span class="k">override</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">Base</span><span class="o">::</span><span class="n">get_SimpleFieldAttribute</span><span class="p">(</span><span class="n">response</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// [service-skeleton-attribute-get-end]</span>
+
+<span class="w">    </span><span class="c1">// [service-skeleton-attribute-set-start]</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">set_SimpleFieldAttribute</span><span class="p">(</span><span class="kt">uint32_t</span><span class="w"> </span><span class="k">const</span><span class="o">&amp;</span><span class="w"> </span><span class="n">value</span><span class="p">)</span><span class="w"> </span><span class="k">override</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">Base</span><span class="o">::</span><span class="n">set_SimpleFieldAttribute</span><span class="p">(</span><span class="n">value</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// [service-skeleton-attribute-set-end]</span>
+
+<span class="k">private</span><span class="o">:</span>
+<span class="w">    </span><span class="n">SkeletonResponseInfo</span><span class="o">*</span><span class="w"> </span><span class="n">pendingAsyncResponse_</span><span class="p">{};</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>For skeleton-side methods:</p>
+<ul class="simple">
+<li><p>Each generated method is a virtual function to implement in the derived application class.</p></li>
+<li><p>Request/response methods receive input arguments plus <code class="docutils literal notranslate"><span class="pre">SkeletonResponseInfo</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">respond(...)</span></code> must be called exactly once for request/response methods (immediately or later).</p></li>
+<li><p>For deferred responses, store <code class="docutils literal notranslate"><span class="pre">SkeletonResponseInfo</span></code> and respond in a later cycle.</p></li>
+<li><p>If no response can be sent, call the generated <code class="docutils literal notranslate"><span class="pre">cancel...Response(...)</span></code> API to release the pending request.</p></li>
+</ul>
+</section>
+</section>
+<section id="handling-method-requests-as-a-skeleton">
+<h2>Handling Method Requests as a Skeleton<a class="headerlink" href="#handling-method-requests-as-a-skeleton" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Asynchronous request/response methods.</p></li>
+</ul>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">asyncMethod</span><span class="p">([[</span><span class="n">maybe_unused</span><span class="p">]]</span><span class="w"> </span><span class="n">Foo</span><span class="w"> </span><span class="k">const</span><span class="o">&amp;</span><span class="w"> </span><span class="n">input</span><span class="p">,</span><span class="w"> </span><span class="n">SkeletonResponseInfo</span><span class="o">&amp;</span><span class="w"> </span><span class="n">response</span><span class="p">)</span><span class="w"> </span><span class="k">override</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">Base</span><span class="o">::</span><span class="n">asyncMethod</span><span class="p">(</span><span class="n">input</span><span class="p">,</span><span class="w"> </span><span class="n">response</span><span class="p">);</span>
+<span class="w">        </span><span class="n">pendingAsyncResponse_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&amp;</span><span class="n">response</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+</pre></div>
+</div>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">execute</span><span class="p">()</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">Base</span><span class="o">::</span><span class="n">isInitialized</span><span class="p">()</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">pendingAsyncResponse_</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">)</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="p">[[</span><span class="n">maybe_unused</span><span class="p">]]</span><span class="w"> </span><span class="o">::</span><span class="n">middleware</span><span class="o">::</span><span class="n">core</span><span class="o">::</span><span class="n">HRESULT</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Base</span><span class="o">::</span><span class="n">respond</span><span class="p">(</span>
+<span class="w">                </span><span class="o">*</span><span class="n">pendingAsyncResponse_</span><span class="p">,</span><span class="w"> </span><span class="n">features</span><span class="o">::</span><span class="n">communication</span><span class="o">::</span><span class="n">DummyService</span><span class="o">::</span><span class="n">Baz</span><span class="p">{</span><span class="mi">9U</span><span class="p">,</span><span class="w"> </span><span class="mi">8U</span><span class="p">,</span><span class="w"> </span><span class="mi">7U</span><span class="p">,</span><span class="w"> </span><span class="mi">6U</span><span class="p">});</span>
+<span class="w">            </span><span class="n">pendingAsyncResponse_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Fire-and-Forget methods.</p></li>
+</ul>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">fireAndForgetMethod</span><span class="p">(</span><span class="n">FireAndForgetPayload</span><span class="w"> </span><span class="k">const</span><span class="o">&amp;</span><span class="w"> </span><span class="n">payload</span><span class="p">)</span><span class="w"> </span><span class="k">override</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">Base</span><span class="o">::</span><span class="n">fireAndForgetMethod</span><span class="p">(</span><span class="n">payload</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+</pre></div>
+</div>
+<section id="testing-method-requests-as-a-skeleton">
+<h3>Testing Method Requests as a Skeleton<a class="headerlink" href="#testing-method-requests-as-a-skeleton" title="Link to this heading"></a></h3>
+<p>The skeleton mock verifies initialization and forwarding of request/response
+and fire-and-forget calls from the derived application class.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">TEST_F</span><span class="p">(</span><span class="n">SkeletonAppTestFixture</span><span class="p">,</span><span class="w"> </span><span class="n">SkeletonAsyncMethodForwardsToMock</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="c1">// ARRANGE</span>
+<span class="w">    </span><span class="n">SkeletonResponseInfo</span><span class="w"> </span><span class="n">response</span><span class="p">{};</span>
+<span class="w">    </span><span class="n">Foo</span><span class="w"> </span><span class="n">input</span><span class="p">{</span><span class="mi">1U</span><span class="p">,</span><span class="w"> </span><span class="mi">2U</span><span class="p">};</span>
+<span class="w">    </span><span class="n">EXPECT_CALL</span><span class="p">(</span><span class="n">mock_</span><span class="p">,</span><span class="w"> </span><span class="n">init</span><span class="p">(</span><span class="n">features</span><span class="o">::</span><span class="n">communication</span><span class="o">::</span><span class="n">DummyService</span><span class="o">::</span><span class="n">internal</span><span class="o">::</span><span class="n">InstanceId_1</span><span class="p">))</span>
+<span class="w">        </span><span class="p">.</span><span class="n">WillOnce</span><span class="p">(</span><span class="n">testing</span><span class="o">::</span><span class="n">Return</span><span class="p">(</span><span class="n">middleware</span><span class="o">::</span><span class="n">core</span><span class="o">::</span><span class="n">HRESULT</span><span class="o">::</span><span class="n">Ok</span><span class="p">));</span>
+<span class="w">    </span><span class="n">EXPECT_CALL</span><span class="p">(</span><span class="n">mock_</span><span class="p">,</span><span class="w"> </span><span class="n">asyncMethod</span><span class="p">(</span><span class="o">::</span><span class="n">testing</span><span class="o">::</span><span class="n">Ref</span><span class="p">(</span><span class="n">input</span><span class="p">),</span><span class="w"> </span><span class="o">::</span><span class="n">testing</span><span class="o">::</span><span class="n">Ref</span><span class="p">(</span><span class="n">response</span><span class="p">)));</span>
+<span class="w">    </span><span class="n">EXPECT_CALL</span><span class="p">(</span>
+<span class="w">        </span><span class="n">mock_</span><span class="p">,</span>
+<span class="w">        </span><span class="n">respond</span><span class="p">(</span>
+<span class="w">            </span><span class="o">::</span><span class="n">testing</span><span class="o">::</span><span class="n">Ref</span><span class="p">(</span><span class="n">response</span><span class="p">),</span>
+<span class="w">            </span><span class="o">::</span><span class="n">testing</span><span class="o">::</span><span class="n">Matcher</span><span class="o">&lt;</span><span class="n">SkeletonApp</span><span class="o">::</span><span class="n">Baz</span><span class="w"> </span><span class="k">const</span><span class="o">&amp;&gt;</span><span class="p">(</span><span class="o">::</span><span class="n">testing</span><span class="o">::</span><span class="n">Truly</span><span class="p">(</span>
+<span class="w">                </span><span class="p">[](</span><span class="n">SkeletonApp</span><span class="o">::</span><span class="n">Baz</span><span class="w"> </span><span class="k">const</span><span class="o">&amp;</span><span class="w"> </span><span class="n">result</span><span class="p">)</span>
+<span class="w">                </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">result</span><span class="p">.</span><span class="n">a</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">9U</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">result</span><span class="p">.</span><span class="n">b</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">8U</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">result</span><span class="p">.</span><span class="n">c</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">7U</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">result</span><span class="p">.</span><span class="n">d</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">6U</span><span class="p">;</span><span class="w"> </span><span class="p">})),</span>
+<span class="w">            </span><span class="nb">true</span><span class="p">))</span>
+<span class="w">        </span><span class="p">.</span><span class="n">WillOnce</span><span class="p">(</span><span class="n">testing</span><span class="o">::</span><span class="n">Return</span><span class="p">(</span><span class="n">middleware</span><span class="o">::</span><span class="n">core</span><span class="o">::</span><span class="n">HRESULT</span><span class="o">::</span><span class="n">Ok</span><span class="p">));</span>
+
+<span class="w">    </span><span class="c1">// ACT</span>
+<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">initResult</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">app_</span><span class="p">.</span><span class="n">init</span><span class="p">();</span>
+<span class="w">    </span><span class="n">app_</span><span class="p">.</span><span class="n">asyncMethod</span><span class="p">(</span><span class="n">input</span><span class="p">,</span><span class="w"> </span><span class="n">response</span><span class="p">);</span>
+<span class="w">    </span><span class="n">app_</span><span class="p">.</span><span class="n">execute</span><span class="p">();</span>
+
+<span class="w">    </span><span class="c1">// ASSERT</span>
+<span class="w">    </span><span class="n">EXPECT_TRUE</span><span class="p">(</span><span class="n">initResult</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">TEST_F</span><span class="p">(</span><span class="n">SkeletonAppTestFixture</span><span class="p">,</span><span class="w"> </span><span class="n">SkeletonFireAndForgetMethodForwardsToMock</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="c1">// ARRANGE</span>
+<span class="w">    </span><span class="n">features</span><span class="o">::</span><span class="n">communication</span><span class="o">::</span><span class="n">DummyService</span><span class="o">::</span><span class="n">FireAndForgetPayload</span><span class="w"> </span><span class="n">payload</span><span class="p">{{</span><span class="mi">1U</span><span class="p">,</span><span class="w"> </span><span class="mi">2U</span><span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="mi">3U</span><span class="p">,</span><span class="w"> </span><span class="mi">4U</span><span class="p">}};</span>
+<span class="w">    </span><span class="n">EXPECT_CALL</span><span class="p">(</span><span class="n">mock_</span><span class="p">,</span><span class="w"> </span><span class="n">init</span><span class="p">(</span><span class="n">features</span><span class="o">::</span><span class="n">communication</span><span class="o">::</span><span class="n">DummyService</span><span class="o">::</span><span class="n">internal</span><span class="o">::</span><span class="n">InstanceId_1</span><span class="p">))</span>
+<span class="w">        </span><span class="p">.</span><span class="n">WillOnce</span><span class="p">(</span><span class="n">testing</span><span class="o">::</span><span class="n">Return</span><span class="p">(</span><span class="n">middleware</span><span class="o">::</span><span class="n">core</span><span class="o">::</span><span class="n">HRESULT</span><span class="o">::</span><span class="n">Ok</span><span class="p">));</span>
+<span class="w">    </span><span class="n">EXPECT_CALL</span><span class="p">(</span><span class="n">mock_</span><span class="p">,</span><span class="w"> </span><span class="n">fireAndForgetMethod</span><span class="p">(</span><span class="o">::</span><span class="n">testing</span><span class="o">::</span><span class="n">Ref</span><span class="p">(</span><span class="n">payload</span><span class="p">)));</span>
+
+<span class="w">    </span><span class="c1">// ACT</span>
+<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">initResult</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">app_</span><span class="p">.</span><span class="n">init</span><span class="p">();</span>
+<span class="w">    </span><span class="n">app_</span><span class="p">.</span><span class="n">fireAndForgetMethod</span><span class="p">(</span><span class="n">payload</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// ASSERT</span>
+<span class="w">    </span><span class="n">EXPECT_TRUE</span><span class="p">(</span><span class="n">initResult</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="publishing-broadcasts-events-as-a-skeleton">
+<h2>Publishing Broadcasts/Events as a Skeleton<a class="headerlink" href="#publishing-broadcasts-events-as-a-skeleton" title="Link to this heading"></a></h2>
+<p>Skeleton broadcasts are generated as <code class="docutils literal notranslate"><span class="pre">&lt;broadcastName&gt;</span></code> event objects with <code class="docutils literal notranslate"><span class="pre">send(payload)</span></code>.
+All connected and subscribed proxies receive the event.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">publishBroadcast</span><span class="p">()</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">Base</span><span class="o">::</span><span class="n">isInitialized</span><span class="p">())</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="p">[[</span><span class="n">maybe_unused</span><span class="p">]]</span><span class="w"> </span><span class="o">::</span><span class="n">middleware</span><span class="o">::</span><span class="n">core</span><span class="o">::</span><span class="n">HRESULT</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">result</span>
+<span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">simpleBroadcast</span><span class="p">.</span><span class="n">send</span><span class="p">(</span><span class="n">BROADCAST_VALUE</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+</pre></div>
+</div>
+<section id="testing-event-publishing-as-a-skeleton">
+<h3>Testing Event Publishing as a Skeleton<a class="headerlink" href="#testing-event-publishing-as-a-skeleton" title="Link to this heading"></a></h3>
+<p>The skeleton mock verifies that an application event is sent with the expected
+payload and return status.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">TEST_F</span><span class="p">(</span><span class="n">SkeletonAppTestFixture</span><span class="p">,</span><span class="w"> </span><span class="n">SkeletonEventForwardsToMock</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="c1">// ARRANGE</span>
+<span class="w">    </span><span class="kt">uint32_t</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">broadcastValue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">99U</span><span class="p">;</span>
+<span class="w">    </span><span class="n">EXPECT_CALL</span><span class="p">(</span><span class="n">mock_</span><span class="p">,</span><span class="w"> </span><span class="n">init</span><span class="p">(</span><span class="n">features</span><span class="o">::</span><span class="n">communication</span><span class="o">::</span><span class="n">DummyService</span><span class="o">::</span><span class="n">internal</span><span class="o">::</span><span class="n">InstanceId_1</span><span class="p">))</span>
+<span class="w">        </span><span class="p">.</span><span class="n">WillOnce</span><span class="p">(</span><span class="n">testing</span><span class="o">::</span><span class="n">Return</span><span class="p">(</span><span class="n">middleware</span><span class="o">::</span><span class="n">core</span><span class="o">::</span><span class="n">HRESULT</span><span class="o">::</span><span class="n">Ok</span><span class="p">));</span>
+<span class="w">    </span><span class="n">EXPECT_CALL</span><span class="p">(</span><span class="n">mock_</span><span class="p">.</span><span class="n">simpleBroadcast</span><span class="p">,</span><span class="w"> </span><span class="n">send</span><span class="p">(</span><span class="n">broadcastValue</span><span class="p">))</span>
+<span class="w">        </span><span class="p">.</span><span class="n">WillOnce</span><span class="p">(</span><span class="n">testing</span><span class="o">::</span><span class="n">Return</span><span class="p">(</span><span class="n">middleware</span><span class="o">::</span><span class="n">core</span><span class="o">::</span><span class="n">HRESULT</span><span class="o">::</span><span class="n">Ok</span><span class="p">));</span>
+
+<span class="w">    </span><span class="c1">// ACT</span>
+<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">initResult</span><span class="w">                           </span><span class="o">=</span><span class="w"> </span><span class="n">app_</span><span class="p">.</span><span class="n">init</span><span class="p">();</span>
+<span class="w">    </span><span class="n">middleware</span><span class="o">::</span><span class="n">core</span><span class="o">::</span><span class="n">HRESULT</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">broadcastResult</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">app_</span><span class="p">.</span><span class="n">simpleBroadcast</span><span class="p">.</span><span class="n">send</span><span class="p">(</span><span class="n">broadcastValue</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// ASSERT</span>
+<span class="w">    </span><span class="n">EXPECT_TRUE</span><span class="p">(</span><span class="n">initResult</span><span class="p">);</span>
+<span class="w">    </span><span class="n">EXPECT_EQ</span><span class="p">(</span><span class="n">broadcastResult</span><span class="p">,</span><span class="w"> </span><span class="n">middleware</span><span class="o">::</span><span class="n">core</span><span class="o">::</span><span class="n">HRESULT</span><span class="o">::</span><span class="n">Ok</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="publishing-and-handling-attributes-events-as-a-skeleton">
+<h2>Publishing and Handling Attributes/Events as a Skeleton<a class="headerlink" href="#publishing-and-handling-attributes-events-as-a-skeleton" title="Link to this heading"></a></h2>
+<p>On the skeleton side, generated attributes expose:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">get()</span></code> for local state access. Optionally overrides for generated get request handlers from proxies.</p></li>
+</ul>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">get_SimpleFieldAttribute</span><span class="p">(</span><span class="n">SkeletonResponseInfo</span><span class="o">&amp;</span><span class="w"> </span><span class="n">response</span><span class="p">)</span><span class="w"> </span><span class="k">override</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">Base</span><span class="o">::</span><span class="n">get_SimpleFieldAttribute</span><span class="p">(</span><span class="n">response</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">set(value)</span></code> for local state access. Optionally overrides for generated set request handlers from proxies.</p></li>
+</ul>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">set_SimpleFieldAttribute</span><span class="p">(</span><span class="kt">uint32_t</span><span class="w"> </span><span class="k">const</span><span class="o">&amp;</span><span class="w"> </span><span class="n">value</span><span class="p">)</span><span class="w"> </span><span class="k">override</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">Base</span><span class="o">::</span><span class="n">set_SimpleFieldAttribute</span><span class="p">(</span><span class="n">value</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">send()</span></code> to notify subscribed proxies about the current attribute value.</p></li>
+</ul>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">publishAttribute</span><span class="p">(</span><span class="kt">uint32_t</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">value</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">Base</span><span class="o">::</span><span class="n">isInitialized</span><span class="p">())</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">simpleField</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">value</span><span class="p">);</span>
+<span class="w">            </span><span class="p">[[</span><span class="n">maybe_unused</span><span class="p">]]</span><span class="w"> </span><span class="o">::</span><span class="n">middleware</span><span class="o">::</span><span class="n">core</span><span class="o">::</span><span class="n">HRESULT</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">simpleField</span><span class="p">.</span><span class="n">send</span><span class="p">();</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+</pre></div>
+</div>
+<section id="testing-attribute-getters-and-setters-as-a-skeleton">
+<h3>Testing Attribute Getters and Setters as a Skeleton<a class="headerlink" href="#testing-attribute-getters-and-setters-as-a-skeleton" title="Link to this heading"></a></h3>
+<p>The skeleton mock verifies that generated attribute getter and setter requests
+reach the corresponding application overrides.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">TEST_F</span><span class="p">(</span><span class="n">SkeletonAppTestFixture</span><span class="p">,</span><span class="w"> </span><span class="n">SkeletonAttributeGetterForwardsToMock</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="c1">// ARRANGE</span>
+<span class="w">    </span><span class="n">SkeletonResponseInfo</span><span class="w"> </span><span class="n">response</span><span class="p">{};</span>
+<span class="w">    </span><span class="n">EXPECT_CALL</span><span class="p">(</span><span class="n">mock_</span><span class="p">,</span><span class="w"> </span><span class="n">init</span><span class="p">(</span><span class="n">features</span><span class="o">::</span><span class="n">communication</span><span class="o">::</span><span class="n">DummyService</span><span class="o">::</span><span class="n">internal</span><span class="o">::</span><span class="n">InstanceId_1</span><span class="p">))</span>
+<span class="w">        </span><span class="p">.</span><span class="n">WillOnce</span><span class="p">(</span><span class="n">testing</span><span class="o">::</span><span class="n">Return</span><span class="p">(</span><span class="n">middleware</span><span class="o">::</span><span class="n">core</span><span class="o">::</span><span class="n">HRESULT</span><span class="o">::</span><span class="n">Ok</span><span class="p">));</span>
+<span class="w">    </span><span class="n">EXPECT_CALL</span><span class="p">(</span><span class="n">mock_</span><span class="p">,</span><span class="w"> </span><span class="n">get_SimpleFieldAttribute</span><span class="p">(</span><span class="o">::</span><span class="n">testing</span><span class="o">::</span><span class="n">Ref</span><span class="p">(</span><span class="n">response</span><span class="p">)));</span>
+
+<span class="w">    </span><span class="c1">// ACT</span>
+<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">initResult</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">app_</span><span class="p">.</span><span class="n">init</span><span class="p">();</span>
+<span class="w">    </span><span class="n">app_</span><span class="p">.</span><span class="n">get_SimpleFieldAttribute</span><span class="p">(</span><span class="n">response</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// ASSERT</span>
+<span class="w">    </span><span class="n">EXPECT_TRUE</span><span class="p">(</span><span class="n">initResult</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">TEST_F</span><span class="p">(</span><span class="n">SkeletonAppTestFixture</span><span class="p">,</span><span class="w"> </span><span class="n">SkeletonAttributeSetterForwardsToMock</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="c1">// ARRANGE</span>
+<span class="w">    </span><span class="kt">uint32_t</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">42U</span><span class="p">;</span>
+<span class="w">    </span><span class="n">EXPECT_CALL</span><span class="p">(</span><span class="n">mock_</span><span class="p">,</span><span class="w"> </span><span class="n">init</span><span class="p">(</span><span class="n">features</span><span class="o">::</span><span class="n">communication</span><span class="o">::</span><span class="n">DummyService</span><span class="o">::</span><span class="n">internal</span><span class="o">::</span><span class="n">InstanceId_1</span><span class="p">))</span>
+<span class="w">        </span><span class="p">.</span><span class="n">WillOnce</span><span class="p">(</span><span class="n">testing</span><span class="o">::</span><span class="n">Return</span><span class="p">(</span><span class="n">middleware</span><span class="o">::</span><span class="n">core</span><span class="o">::</span><span class="n">HRESULT</span><span class="o">::</span><span class="n">Ok</span><span class="p">));</span>
+<span class="w">    </span><span class="n">EXPECT_CALL</span><span class="p">(</span><span class="n">mock_</span><span class="p">,</span><span class="w"> </span><span class="n">set_SimpleFieldAttribute</span><span class="p">(</span><span class="o">::</span><span class="n">testing</span><span class="o">::</span><span class="n">Ref</span><span class="p">(</span><span class="n">value</span><span class="p">)));</span>
+
+<span class="w">    </span><span class="c1">// ACT</span>
+<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">initResult</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">app_</span><span class="p">.</span><span class="n">init</span><span class="p">();</span>
+<span class="w">    </span><span class="n">app_</span><span class="p">.</span><span class="n">set_SimpleFieldAttribute</span><span class="p">(</span><span class="n">value</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// ASSERT</span>
+<span class="w">    </span><span class="n">EXPECT_TRUE</span><span class="p">(</span><span class="n">initResult</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="testing-attribute-publishing-as-a-skeleton">
+<h3>Testing Attribute Publishing as a Skeleton<a class="headerlink" href="#testing-attribute-publishing-as-a-skeleton" title="Link to this heading"></a></h3>
+<p>The attribute send test verifies that the application publishes the expected
+attribute value and handles the generated status result.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">TEST_F</span><span class="p">(</span><span class="n">SkeletonAppTestFixture</span><span class="p">,</span><span class="w"> </span><span class="n">SkeletonAttributeEventForwardsToMock</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="c1">// ARRANGE</span>
+<span class="w">    </span><span class="kt">uint32_t</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">attributeValue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">42U</span><span class="p">;</span>
+<span class="w">    </span><span class="n">EXPECT_CALL</span><span class="p">(</span><span class="n">mock_</span><span class="p">,</span><span class="w"> </span><span class="n">init</span><span class="p">(</span><span class="n">features</span><span class="o">::</span><span class="n">communication</span><span class="o">::</span><span class="n">DummyService</span><span class="o">::</span><span class="n">internal</span><span class="o">::</span><span class="n">InstanceId_1</span><span class="p">))</span>
+<span class="w">        </span><span class="p">.</span><span class="n">WillOnce</span><span class="p">(</span><span class="n">testing</span><span class="o">::</span><span class="n">Return</span><span class="p">(</span><span class="n">middleware</span><span class="o">::</span><span class="n">core</span><span class="o">::</span><span class="n">HRESULT</span><span class="o">::</span><span class="n">Ok</span><span class="p">));</span>
+<span class="w">    </span><span class="n">EXPECT_CALL</span><span class="p">(</span><span class="n">mock_</span><span class="p">.</span><span class="n">simpleField</span><span class="p">,</span><span class="w"> </span><span class="n">send</span><span class="p">(</span><span class="n">attributeValue</span><span class="p">))</span>
+<span class="w">        </span><span class="p">.</span><span class="n">WillOnce</span><span class="p">(</span><span class="n">testing</span><span class="o">::</span><span class="n">Return</span><span class="p">(</span><span class="n">middleware</span><span class="o">::</span><span class="n">core</span><span class="o">::</span><span class="n">HRESULT</span><span class="o">::</span><span class="n">Ok</span><span class="p">));</span>
+
+<span class="w">    </span><span class="c1">// ACT</span>
+<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">initResult</span><span class="w">                           </span><span class="o">=</span><span class="w"> </span><span class="n">app_</span><span class="p">.</span><span class="n">init</span><span class="p">();</span>
+<span class="w">    </span><span class="n">middleware</span><span class="o">::</span><span class="n">core</span><span class="o">::</span><span class="n">HRESULT</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">attributeResult</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">app_</span><span class="p">.</span><span class="n">simpleField</span><span class="p">.</span><span class="n">send</span><span class="p">(</span><span class="n">attributeValue</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// ASSERT</span>
+<span class="w">    </span><span class="n">EXPECT_TRUE</span><span class="p">(</span><span class="n">initResult</span><span class="p">);</span>
+<span class="w">    </span><span class="n">EXPECT_EQ</span><span class="p">(</span><span class="n">attributeResult</span><span class="p">,</span><span class="w"> </span><span class="n">middleware</span><span class="o">::</span><span class="n">core</span><span class="o">::</span><span class="n">HRESULT</span><span class="o">::</span><span class="n">Ok</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="error-handling">
+<h2>Error Handling<a class="headerlink" href="#error-handling" title="Link to this heading"></a></h2>
+<p>The generated APIs use two error channels:</p>
+<ul class="simple">
+<li><p><strong>Immediate middleware return codes</strong> via <code class="docutils literal notranslate"><span class="pre">::middleware::core::HRESULT</span></code>.</p></li>
+<li><p><strong>Asynchronous method completion states</strong> via <code class="docutils literal notranslate"><span class="pre">::middleware::core::Future::State</span></code>.</p></li>
+</ul>
+<p>Common <code class="docutils literal notranslate"><span class="pre">HRESULT</span></code> values for service APIs:</p>
+<table class="docutils align-center" id="id2">
+<caption><span class="caption-text">Typical HRESULT values in service APIs</span><a class="headerlink" href="#id2" title="Link to this table"></a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>Code</p></th>
+<th class="head"><p>Meaning</p></th>
+<th class="head"><p>Typical action</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Ok</span></code></p></td>
+<td><p>Operation accepted by middleware</p></td>
+<td><p>Continue normal flow</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ServiceNotFound</span></code></p></td>
+<td><p>Target service instance not available</p></td>
+<td><p>Verify <code class="docutils literal notranslate"><span class="pre">InstanceId</span></code> and startup order</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ServiceBusy</span></code></p></td>
+<td><p>Service temporarily cannot process more requests</p></td>
+<td><p>Retry later or apply backoff</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">QueueFull</span></code></p></td>
+<td><p>Transport queue is full</p></td>
+<td><p>Retry later and review queue sizing/load</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">RequestPoolDepleted</span></code></p></td>
+<td><p>No free request slots for new method calls</p></td>
+<td><p>Reduce outstanding requests or increase configured capacity</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">FutureAlreadyInUse</span></code> / <code class="docutils literal notranslate"><span class="pre">FutureNotFound</span></code></p></td>
+<td><p>Inconsistent request tracking state</p></td>
+<td><p>Check callback/request lifecycle usage</p></td>
+</tr>
+</tbody>
+</table>
+<p>Method callback completion states (<code class="docutils literal notranslate"><span class="pre">Future::State</span></code>):</p>
+<table class="docutils align-center" id="id3">
+<caption><span class="caption-text">Method callback states</span><a class="headerlink" href="#id3" title="Link to this table"></a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>State</p></th>
+<th class="head"><p>Meaning</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Ready</span></code></p></td>
+<td><p>Response payload was received successfully and is available to the callback</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Timeout</span></code></p></td>
+<td><p>No response within configured timeout</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">UserError</span></code></p></td>
+<td><p>Remote application reported an application-level error</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ServiceBusy</span></code></p></td>
+<td><p>Provider could not accept/process request resources</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ServiceNotFound</span></code></p></td>
+<td><p>Target provider not reachable</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">SerializationError</span></code> / <code class="docutils literal notranslate"><span class="pre">DeserializationError</span></code></p></td>
+<td><p>Payload conversion failed</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">CouldNotDeliverError</span></code></p></td>
+<td><p>Transport delivery failed</p></td>
+</tr>
+</tbody>
+</table>
+<p>For asynchronous skeleton methods, ensure every received request is eventually completed by calling either <code class="docutils literal notranslate"><span class="pre">respond(...)</span></code> or the matching <code class="docutils literal notranslate"><span class="pre">cancel...Response(...)</span></code> API.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026 Eclipse OpenBSW Contributors.</p>
+  </div>
+
+  <div role="footer_string">
+    <p>Documentation from 2026-09-18 13:42:15, official build.</p>
+
+    
+      <a href="../../../../../_sources/libs/bsw/middleware/doc/user/service_interface.rst.txt" rel="nofollow"> View page source</a>
+    
+
+  </div>
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(false);
+      });
+  </script> 
+
+</body>
+</html>
