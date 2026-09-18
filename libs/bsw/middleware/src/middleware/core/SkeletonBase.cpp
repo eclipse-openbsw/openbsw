@@ -109,44 +109,38 @@ SkeletonBase::initFromInstancesDatabase(
             auto const instances = dataBase->getInstanceIdsRange();
             auto const* instanceIdIt
                 = ::etl::lower_bound(instances.begin(), instances.end(), instanceId);
-            return ((instanceIdIt != instances.end()) && ((*instanceIdIt) == instanceId));
+            return (
+                (instanceIdIt != instances.end()) && ((*instanceIdIt) == instanceId)
+                && (!dataBase->getSkeletonConnectionsRange().empty()));
         });
     HRESULT ret = HRESULT::TransceiverInitializationFailed;
     if (it != dbRange.end())
     {
-        auto skeletonCc = (*it)->getSkeletonConnectionsRange();
-        if (skeletonCc.empty())
+        auto skeletonCc   = (*it)->getSkeletonConnectionsRange();
+        bool isRegistered = true;
+        for (auto* const clusConn : skeletonCc)
         {
-            _instanceId = INVALID_INSTANCE_ID;
-            ret         = HRESULT::NoClientsAvailable;
+            if (nullptr != clusConn)
+            {
+                ret = clusConn->subscribe(*this, instanceId);
+                if ((ret == HRESULT::Ok) || (ret == HRESULT::InstanceAlreadyRegistered))
+                {
+                    continue;
+                }
+
+                isRegistered = false;
+                break;
+            }
+        }
+        if (isRegistered)
+        {
+            _connections = skeletonCc;
         }
         else
         {
-            bool isRegistered = true;
-            for (auto* const clusConn : skeletonCc)
-            {
-                if (nullptr != clusConn)
-                {
-                    ret = clusConn->subscribe(*this, instanceId);
-                    if ((ret == HRESULT::Ok) || (ret == HRESULT::InstanceAlreadyRegistered))
-                    {
-                        continue;
-                    }
-
-                    isRegistered = false;
-                    break;
-                }
-            }
-            if (isRegistered)
-            {
-                _connections = skeletonCc;
-            }
-            else
-            {
-                unsubscribe(getServiceId());
-                _instanceId = INVALID_INSTANCE_ID;
-                ret         = HRESULT::TransceiverInitializationFailed;
-            }
+            unsubscribe(getServiceId());
+            _instanceId = INVALID_INSTANCE_ID;
+            ret         = HRESULT::TransceiverInitializationFailed;
         }
     }
     else
