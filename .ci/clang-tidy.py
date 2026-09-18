@@ -65,8 +65,8 @@ Examples:
     parser.add_argument(
         "--exclude",
         type=str,
-        default="3rdparty",
-        help="Regular expression pattern to match files to exclude (default: '3rdparty')",
+        default="3rdparty|/test/|/mock/|/doc/examples/",
+        help="Regular expression pattern to match files to exclude (default: '3rdparty|/test/|/mock/|/doc/examples/')",
     )
 
     parser.add_argument(

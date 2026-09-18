@@ -180,6 +180,136 @@ class TestDetermineClangTidyScope(unittest.TestCase):
             self.assertEqual(output_file.read_text(), "")
             self.assertEqual(github_output.read_text(), "mode=changed\nhas_changes=false\n")
 
+    def test_is_full_scope_trigger(self):
+        self.assertTrue(self.module.is_full_scope_trigger("CMakeLists.txt"))
+        self.assertTrue(self.module.is_full_scope_trigger("libs/bsw/middleware/CMakeLists.txt"))
+        self.assertTrue(self.module.is_full_scope_trigger("cmake/modules/FindFoo.cmake"))
+        self.assertTrue(self.module.is_full_scope_trigger("CMakePresets.json"))
+        self.assertTrue(self.module.is_full_scope_trigger(".clang-tidy"))
+        self.assertTrue(self.module.is_full_scope_trigger(".github/workflows/clang-tidy.yml"))
+        self.assertTrue(self.module.is_full_scope_trigger(".ci/clang-tidy.py"))
+        self.assertTrue(self.module.is_full_scope_trigger(".ci/determine-clang-tidy-scope.py"))
+        self.assertTrue(self.module.is_full_scope_trigger(".ci/resolve-clang-tidy-translation-units.py"))
+
+        self.assertFalse(self.module.is_full_scope_trigger("src/main.cpp"))
+        self.assertFalse(self.module.is_full_scope_trigger("include/api.hpp"))
+        self.assertFalse(self.module.is_full_scope_trigger("doc/readme.md"))
+        self.assertFalse(self.module.is_full_scope_trigger("package.json"))
+
+    def test_main_escalates_to_full_scope_on_build_file_changes_in_pr(self):
+        outputs = {
+            ("merge-base", "head", "base"): "merge-base-sha\n",
+            ("diff", "--name-only", "--diff-filter=ACMR", "merge-base-sha...head"):
+                "libs/bsw/middleware/CMakeLists.txt\ndoc/index.rst\n",
+        }
+
+        def fake_run_git_command(args):
+            return outputs[tuple(args)]
+
+        with tempfile.TemporaryDirectory() as tmp:
+            output_file = Path(tmp) / "files.txt"
+            github_output = Path(tmp) / "github-output.txt"
+            event_path = Path(tmp) / "event.json"
+            event_path.write_text('{"pull_request": {"base": {"sha": "base"}}}')
+
+            with mock.patch.object(self.module, "run_git_command", side_effect=fake_run_git_command):
+                ret = self.module.main(
+                    [
+                        "--event-name",
+                        "pull_request",
+                        "--ref-name",
+                        "feature/middleware-docs",
+                        "--sha",
+                        "head",
+                        "--event-path",
+                        str(event_path),
+                        "--output-file",
+                        str(output_file),
+                        "--github-output",
+                        str(github_output),
+                    ]
+                )
+
+            self.assertEqual(ret, 0)
+            self.assertEqual(output_file.read_text(), "")
+            self.assertEqual(github_output.read_text(), "mode=full\nhas_changes=true\n")
+
+    def test_main_pull_request_with_cpp_changes_runs_changed_mode(self):
+        outputs = {
+            ("merge-base", "head", "base"): "merge-base-sha\n",
+            ("diff", "--name-only", "--diff-filter=ACMR", "merge-base-sha...head"):
+                "src/main.cpp\ninclude/api.h\ndoc/readme.md\n",
+        }
+
+        def fake_run_git_command(args):
+            return outputs[tuple(args)]
+
+        with tempfile.TemporaryDirectory() as tmp:
+            output_file = Path(tmp) / "files.txt"
+            github_output = Path(tmp) / "github-output.txt"
+            event_path = Path(tmp) / "event.json"
+            event_path.write_text('{"pull_request": {"base": {"sha": "base"}}}')
+
+            with mock.patch.object(self.module, "run_git_command", side_effect=fake_run_git_command):
+                ret = self.module.main(
+                    [
+                        "--event-name",
+                        "pull_request",
+                        "--ref-name",
+                        "feature/new-api",
+                        "--sha",
+                        "head",
+                        "--event-path",
+                        str(event_path),
+                        "--output-file",
+                        str(output_file),
+                        "--github-output",
+                        str(github_output),
+                    ]
+                )
+
+            self.assertEqual(ret, 0)
+            self.assertEqual(output_file.read_text(), "include/api.h\nsrc/main.cpp\n")
+            self.assertEqual(github_output.read_text(), "mode=changed\nhas_changes=true\n")
+
+    def test_main_pull_request_without_cpp_changes_skips_clang_tidy(self):
+        outputs = {
+            ("merge-base", "head", "base"): "merge-base-sha\n",
+            ("diff", "--name-only", "--diff-filter=ACMR", "merge-base-sha...head"):
+                "doc/readme.md\nREADME.rst\n",
+        }
+
+        def fake_run_git_command(args):
+            return outputs[tuple(args)]
+
+        with tempfile.TemporaryDirectory() as tmp:
+            output_file = Path(tmp) / "files.txt"
+            github_output = Path(tmp) / "github-output.txt"
+            event_path = Path(tmp) / "event.json"
+            event_path.write_text('{"pull_request": {"base": {"sha": "base"}}}')
+
+            with mock.patch.object(self.module, "run_git_command", side_effect=fake_run_git_command):
+                ret = self.module.main(
+                    [
+                        "--event-name",
+                        "pull_request",
+                        "--ref-name",
+                        "feature/docs-only",
+                        "--sha",
+                        "head",
+                        "--event-path",
+                        str(event_path),
+                        "--output-file",
+                        str(output_file),
+                        "--github-output",
+                        str(github_output),
+                    ]
+                )
+
+            self.assertEqual(ret, 0)
+            self.assertEqual(output_file.read_text(), "")
+            self.assertEqual(github_output.read_text(), "mode=changed\nhas_changes=false\n")
+
     def test_main_returns_error_for_invalid_event_payload(self):
         with tempfile.TemporaryDirectory() as tmp:
             output_file = Path(tmp) / "files.txt"
