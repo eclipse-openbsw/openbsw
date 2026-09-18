@@ -24,15 +24,18 @@ repos:
         name: check for case conflicts
         entry: check-case-conflict
         language: system
+        stages: [pre-commit]
       - id: check-merge-conflict
         name: check for merge conflicts
         entry: check-merge-conflict
         language: system
+        stages: [pre-commit]
         types: [text]
       - id: check-yaml
         name: check yaml
         entry: check-yaml
         language: system
+        stages: [pre-commit]
         types: [yaml]
       - id: gitlint
         name: gitlint
@@ -45,9 +48,9 @@ repos:
           bash -c
           'command -v treefmt >/dev/null 2>&1
           || { echo "WARNING: treefmt not found; skipping treefmt hook (run in docker or install treefmt)"; exit 0; };
-          treefmt'
+          treefmt "$@"'
           --
         language: system
-        pass_filenames: false
+        stages: [pre-commit]
 
 
