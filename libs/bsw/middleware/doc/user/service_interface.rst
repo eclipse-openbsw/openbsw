@@ -15,7 +15,7 @@ Service Interface
 Overview
 --------
 
-The ``middleware`` framework enables communication between processes running on the same core and  on a different core.
+The ``middleware`` framework enables communication between processes running on the same core and on a different core.
 For service-based communication, generated code provides three integration points:
 
 * ``<ServiceName>Proxy.h`` for clients (service consumers).
@@ -62,8 +62,8 @@ Key Terminology
   Proxies and skeletons are initialized with generated instance identifiers plus cluster context.
 * **Connected**: for static service mapping, a proxy or skeleton is considered connected when
   ``init(...)`` returns a successful registration result (normally
-  ``::middleware::core::HRESULT::Ok``; an already-registered result is also
-  treated as initialized by the generated proxy).
+  ``::middleware::core::HRESULT::Ok``). An already-registered result is also
+  treated as initialized by the generated proxy.
   If ``init(...)`` fails, do not call communication APIs.
 * **Subscribed**: a client subscribes to a broadcast or attribute updates by registering a receive handler on the generated proxy event/attribute object.
 * **Method**: request/response RPC from proxy to skeleton.
@@ -83,7 +83,7 @@ Proxy Use Cases (Client Application)
 ------------------------------------
 
 Instantiation and Initialization
---------------------------------
+++++++++++++++++++++++++++++++++
 
 Proxy classes provide two lifecycle methods:
 
@@ -114,7 +114,7 @@ The following example shows proxy startup and shutdown.
    :end-before: [service-proxy-wrapper-end]
 
 Triggering and Receiving Method Calls as a Proxy
-------------------------------------------------
+++++++++++++++++++++++++++++++++++++++++++++++++
 
 Relevant proxy-side behavior:
 
@@ -155,7 +155,7 @@ request identifier, and later response callback without a live transport.
   :end-before: [proxy-fire-and-forget-test-end]
 
 Subscribing and Receiving Events as a Proxy
--------------------------------------------
++++++++++++++++++++++++++++++++++++++++++++
 
 For proxy usage, event subscription means registering a receive handler on the generated event object.
 After registration, each received event triggers the callback.
@@ -184,7 +184,7 @@ incoming event and verify that the application receives its payload.
   :end-before: [proxy-event-receive-test-end]
 
 Reading and Writing Attributes as a Proxy
------------------------------------------
++++++++++++++++++++++++++++++++++++++++++
 
 Generated proxy attributes usually provide:
 
@@ -203,7 +203,7 @@ Generated proxy attributes usually provide:
    :end-before: [service-proxy-attribute-write-end]
 
 * ``setReceiveHandler(...)`` for update notifications.
-  The application must explicitly send an attribute notification; changing
+  The application must explicitly send an attribute notification. Changing
   the local value alone does not notify subscribers.
 * ``unsetReceiveHandler()`` to remove an event or attribute receive handler.
 
@@ -278,7 +278,7 @@ For skeleton-side methods:
 
 
 Handling Method Requests as a Skeleton
---------------------------------------
+++++++++++++++++++++++++++++++++++++++
 
 * Asynchronous request/response methods.
 
@@ -316,7 +316,7 @@ and fire-and-forget calls from the derived application class.
   :end-before: [skeleton-fire-and-forget-test-end]
 
 Publishing Broadcasts/Events as a Skeleton
-------------------------------------------
+++++++++++++++++++++++++++++++++++++++++++
 
 Skeleton broadcasts are generated as ``<broadcastName>`` event objects with ``send(payload)``.
 All connected and subscribed proxies receive the event.
@@ -338,7 +338,7 @@ payload and return status.
   :end-before: [skeleton-event-send-test-end]
 
 Publishing and Handling Attributes/Events as a Skeleton
--------------------------------------------------------
++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 On the skeleton side, generated attributes expose:
 

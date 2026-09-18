@@ -21,9 +21,9 @@ BSW Integration
     Provides a mutex API, logging, and timing services.
 
 Deployment model
-    The model provides the definition of application interfaces to be
-    transferred over the middleware, as well as deployment information which
-    allocates service instances to middleware instances.
+    The model defines application interfaces transferred over the middleware.
+    It also provides deployment information that allocates service instances to
+    middleware instances.
 
 Shared Memory Queue
     Middleware instances communicate with each other over shared memory.

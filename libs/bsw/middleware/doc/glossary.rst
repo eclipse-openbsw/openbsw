@@ -18,27 +18,23 @@ Glossary
 
 .. glossary::
 
-   Application Cluster
-     Also known as a :term:`Cluster`; a collection of proxy and skeleton
-     references that share one incoming message queue and execute in the same
-     RTOS task context.
-
    attached core
      A core that does not construct middleware shared runtime objects itself.
      It attaches to already initialized shared memory and binds to the existing
      ``MemoryLayout`` instance.
 
-   cluster connection
-     A cluster connection is the generated middleware object that routes messages
-     from one cluster to another. It dispatches incoming messages to proxies and
-     skeletons and provides the write path to the destination queue.
-
+   Application Cluster
    Cluster
    middleware cluster
      A middleware cluster is a logical grouping of middleware endpoints running
      in one task context. Proxies and skeletons assigned to the same cluster
      share one incoming queue and are processed together by a cluster processing
      entrypoint.
+
+   cluster connection
+     A cluster connection is the generated middleware object that routes messages
+     from one cluster to another. It dispatches incoming messages to proxies and
+     skeletons and provides the write path to the destination queue.
 
    Core
      A CPU execution context inside one ECU instance. In multi-core setups, each
@@ -55,10 +51,14 @@ Glossary
      placement.
 
    integration and initialization
-     The practical setup steps required to make middleware communication work in
-     an ECU: wiring generated code in the build, creating/attaching shared
-     memory, initializing allocators and queues, initializing cluster
-     connections, and running cluster processing cyclically.
+     The practical setup steps required to make middleware communication work
+     in an ECU:
+
+     * Wire generated code into the build.
+     * Create or attach shared memory.
+     * Initialize allocators and queues.
+     * Initialize cluster connections.
+     * Run cluster processing cyclically.
 
    Message
      The middleware transport unit exchanged between clusters through queues.
@@ -127,5 +127,5 @@ Glossary
    RTOS task
      A schedulable execution context provided by the operating system. Middleware
      uses the current task identity to associate application clusters with their
-     execution context; this may be an RTOS task handle, a POSIX thread ID, or a
+     execution context. This may be an RTOS task handle, a POSIX thread ID, or a
      fixed value on a bare-metal single-task system.

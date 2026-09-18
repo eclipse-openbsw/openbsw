@@ -50,14 +50,14 @@ Queue
      The conceptual terms map to the current implementation as follows:
 
      * ``proxy_base`` and ``skeleton_base``: ``ProxyBase`` and ``SkeletonBase``
-         in ``middleware/core``.
+       in ``middleware/core``.
      * ``cluster_connection``: ``IClusterConnection`` and
-         ``ClusterConnectionBase``.
+       ``ClusterConnectionBase``.
      * ``queue`` and message transport: ``Message``,
-         ``ClusterConnectionBase``, and the platform/shared-memory queue
-         configuration.
+       ``ClusterConnectionBase``, and the platform/shared-memory queue
+       configuration.
      * message payload handling: ``MessagePayloadBuilder`` and the memory
-         allocator types documented by the memory-pool unit.
+       allocator types documented by the memory-pool unit.
 
      The units toctree documents the detailed class diagrams currently
      maintained for the proxy/skeleton base, request/response, and memory-pool
