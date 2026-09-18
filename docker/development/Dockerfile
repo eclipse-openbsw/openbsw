@@ -1,4 +1,4 @@
-FROM ubuntu:noble-20251001 AS base-image
+FROM ubuntu:resolute-20260912 AS base-image
 
 
 FROM base-image AS amd64-downloads
@@ -58,8 +58,10 @@ RUN apt-get update && apt-get install -y \
         lcov \
         libc++-17-dev \
         libc++abi-17-dev \
+        libunwind-17-dev \
         ninja-build \
         pre-commit \
+        pre-commit-hooks \
         python-is-python3 \
         python3 \
         python3-pip \
@@ -104,7 +106,10 @@ ENV CARGO_HOME=/opt/cargo
 ENV PATH=/opt/cargo/bin:${PATH}
 # /opt/cargo and /opt/rustup are populated as root during the image build. Make
 # them world-accessible so the runtime UID injected via DOCKER_UID can use them.
-RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain 1.96.0 --profile minimal \
+RUN curl --proto '=https' --tlsv1.2 --retry 5 --retry-all-errors --retry-delay 5 -sSfL \
+        https://sh.rustup.rs -o /tmp/rustup-init.sh \
+    && sh /tmp/rustup-init.sh -y --default-toolchain 1.96.0 --profile minimal \
+    && rm /tmp/rustup-init.sh \
     && rustup component add rustfmt \
     && rustup target add thumbv7em-none-eabihf \
     && cargo install cbindgen --version 0.29.4 --locked \
