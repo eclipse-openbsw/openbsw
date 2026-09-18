@@ -395,9 +395,9 @@ cc_library(
         exclude = ["include/app/DemoLogger.h"],  # already exposed by :demo_logger
     ),
     strip_include_prefix = "include",
-    # Only built for the reference_app executable_config. Mark incompatible elsewhere so wildcard and test builds skip it.
+    # Only built for the reference_app build_variant. Mark incompatible elsewhere so wildcard and test builds skip it.
     target_compatible_with = select({
-        "//bazel/config/executable_config:reference_app": [],
+        "//bazel/config/build_variant:reference_app": [],
         "//conditions:default": ["@platforms//:incompatible"],
     }),
     deps = [

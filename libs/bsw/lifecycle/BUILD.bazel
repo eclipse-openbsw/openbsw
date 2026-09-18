@@ -33,7 +33,6 @@ cc_library(
 
 cc_library(
     name = "lifecycle_mock",
-    testonly = True,
     hdrs = [
         "mock/gmock/include/lifecycle/LifecycleComponentCallbackMock.h",
         "mock/gmock/include/lifecycle/LifecycleComponentMock.h",
@@ -41,6 +40,7 @@ cc_library(
         "mock/gmock/include/lifecycle/LifecycleManagerMock.h",
     ],
     strip_include_prefix = "mock/gmock/include",
+    target_compatible_with = ["//bazel/platform/constraints/build_variant:unit_test"],
     visibility = ["//visibility:public"],
     deps = [
         ":lifecycle",

@@ -8,8 +8,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 
-# Feature matrix travels WITH the platform (mirrors CMake Options.cmake, which ties the
-# PLATFORM_SUPPORT_* CACHE BOOLs to OPENBSW_PLATFORM). Selecting the platform selects the
+# Feature matrix travels with the platform. Selecting the platform selects the
 # whole PLATFORM_SUPPORT_* set. Consumer selects on //bazel/config/features stay untouched.
 platform(
     name = "s32k148",
@@ -18,8 +17,8 @@ platform(
         "@platforms//os:none",
         "//bazel/platform/constraints/soc:s32k148",
     ],
-    # Mirrors Options.cmake (s32k148evb): every PLATFORM_SUPPORT_* set explicitly.
     flags = [
+        # Features
         "--//bazel/config/features:can=true",
         "--//bazel/config/features:ethernet=true",
         "--//bazel/config/features:io=true",
@@ -31,6 +30,27 @@ platform(
         "--//bazel/config/features:transport=true",
         "--//bazel/config/features:uds=true",
         "--//bazel/config/features:watchdog=true",
+
+        # RTOS
+        "--//bazel/config/rtos=freertos",
+
+        # BSP layer
+        "--//libs/bsp/bspInterrupts:bsp_interrupts_impl=//platforms/s32k1xx/bsp/bspInterruptsImpl:bsp_interrupts_impl",
+        "--//bazel/config/bsp:bsp_configuration=//executables/referenceApp/platforms/s32k148evb/bspConfiguration:bsp_configuration_headers",
+        "--//bazel/config/eth:eth_configuration=//executables/referenceApp/platforms/s32k148evb/ethConfiguration:eth_configuration",
+        "--//libs/bsp/bspCharInputOutput:bsp_uart=//platforms/s32k1xx/bsp/bspUart:bsp_uart",
+        "--//libs/bsp/bspOutputManager:bsp_io=//platforms/s32k1xx/bsp/bspIo:bsp_io_impl",
+
+        # FreeRTOS port and hooks
+        "--//libs/3rdparty/freeRtos:freertos_port=//platforms/s32k1xx/3rdparty/freertos_cm4_sysTick:freertos_cm4_sys_tick_port_headers",
+        "--//libs/3rdparty/freeRtos:freertos_port_impl=//platforms/s32k1xx/3rdparty/freertos_cm4_sysTick:freertos_cm4_sys_tick",
+        "--//libs/3rdparty/freeRtos:freertos_os_hooks=//executables/referenceApp/platforms/s32k148evb/main:freertos_os_hooks",
+        "--//libs/3rdparty/freeRtos:freertos_impl=//libs/3rdparty/freeRtos:freertos",
+
+        # Async / configuration
+        "--//libs/bsw/asyncFreeRtos:freertos_core_configuration=//executables/referenceApp/platforms/s32k148evb/freeRtosCoreConfiguration:freertos_core_configuration",
+        "--//libs/bsw/async:async_platform=//libs/bsw/asyncFreeRtos:async_freertos",
+        "--//libs/bsw/async:async_rtos_impl=//libs/bsw/asyncFreeRtos:async_freertos_impl",
     ],
 )
 
@@ -39,9 +59,9 @@ platform(
 # plain `bazel build //...` is the posix build.
 platform(
     name = "posix",
-    # Mirrors posix/Options.cmake. Options.cmake gates CAN on non-Darwin; this repo targets Linux
-    # so CAN is included.
+    constraint_values = ["//bazel/platform/constraints/build_variant:reference_app"],
     flags = [
+        # Features
         "--//bazel/config/features:can=true",
         "--//bazel/config/features:ethernet=true",
         "--//bazel/config/features:io=false",
@@ -53,6 +73,52 @@ platform(
         "--//bazel/config/features:transport=true",
         "--//bazel/config/features:uds=true",
         "--//bazel/config/features:watchdog=false",
+
+        # RTOS
+        "--//bazel/config/rtos=freertos",
+
+        # BSP layer
+        "--//libs/bsp/bspInterrupts:bsp_interrupts_impl=//platforms/posix/bsp/bspInterruptsImpl:bsp_interrupts_impl",
+        "--//bazel/config/bsp:bsp_configuration=//executables/referenceApp/platforms/posix/bspConfiguration:bsp_configuration_headers",
+        "--//bazel/config/eth:eth_configuration=//executables/referenceApp/platforms/posix/ethConfiguration:eth_configuration",
+        "--//libs/bsp/bspCharInputOutput:bsp_uart=//platforms/posix/bsp/bspUart:bsp_uart",
+        # Posix has no bspIo. bsp_output_manager is not linked in posix executables.
+
+        # FreeRTOS port and hooks
+        "--//libs/3rdparty/freeRtos:freertos_port=//platforms/posix/3rdparty/freeRtosPosix:freertos_posix_port_headers",
+        "--//libs/3rdparty/freeRtos:freertos_port_impl=//platforms/posix/3rdparty/freeRtosPosix:freertos_posix",
+        "--//libs/3rdparty/freeRtos:freertos_os_hooks=//executables/referenceApp/platforms/posix/main:freertos_os_hooks",
+        "--//libs/3rdparty/freeRtos:freertos_impl=//libs/3rdparty/freeRtos:freertos",
+
+        # Async / configuration
+        "--//libs/bsw/asyncFreeRtos:freertos_core_configuration=//executables/referenceApp/platforms/posix/freeRtosCoreConfiguration:freertos_core_configuration",
+        "--//libs/bsw/async:async_platform=//libs/bsw/asyncFreeRtos:async_freertos",
+        "--//libs/bsw/async:async_rtos_impl=//libs/bsw/asyncFreeRtos:async_freertos_impl",
     ],
     parents = ["@platforms//host:host"],
+)
+
+# Unit-test build. Inherits posix and gates mock and test targets into scope.
+platform(
+    name = "posix_unit_test",
+    constraint_values = ["//bazel/platform/constraints/build_variant:unit_test"],
+    flags = [
+        "--//bazel/config/build_variant=unit_test",
+
+        # BSP layer
+        "--//libs/bsp/bspInterrupts:bsp_interrupts_impl=//libs/bsp/bspInterrupts:bsp_interrupts_mock",
+        "--//bazel/config/bsp:bsp_configuration=//executables/unitTest/bsp/bspConfiguration:bsp_configuration",
+        "--//libs/bsp/bspOutputManager:bsp_io=//executables/unitTest/bsp/bspIo:bsp_io",
+
+        # FreeRTOS port and hooks
+        "--//libs/3rdparty/freeRtos:freertos_impl=//libs/3rdparty/freeRtos:freertos_mock",
+        "--//libs/bsw/asyncFreeRtos:freertos_core_configuration=//libs/bsw/asyncFreeRtos:freertos_core_configuration_mock",
+
+        # Async / configuration
+        "--//libs/bsw/async:async_platform=//libs/bsw/async:async_mock",
+        "--//libs/bsw/async:async_rtos_impl=//libs/bsw/async:async_mock_impl",
+        "--//libs/bsw/async:async_binding=//libs/bsw/asyncFreeRtos:async_binding_mock",
+        "--//libs/bsw/asyncFreeRtos:async_core_configuration=//libs/bsw/asyncFreeRtos:async_core_configuration_mock",
+    ],
+    parents = [":posix"],
 )

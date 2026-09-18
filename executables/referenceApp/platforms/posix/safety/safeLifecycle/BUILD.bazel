@@ -9,6 +9,7 @@
 # *******************************************************************************
 
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
+load("@rules_cc//cc:cc_test.bzl", "cc_test")
 
 cc_library(
     name = "safe_lifecycle",
@@ -20,4 +21,16 @@ cc_library(
     ],
     strip_include_prefix = "include",
     visibility = ["//visibility:public"],
+)
+
+cc_test(
+    name = "safe_lifecycle_test",
+    srcs = ["test/src/safeLifecycle/include_test.cpp"],
+    # Transitive deps call symbols undefined in the unit-test context without linkstatic.
+    linkstatic = True,
+    target_compatible_with = ["//bazel/platform/constraints/build_variant:unit_test"],
+    deps = [
+        ":safe_lifecycle",
+        "//libs/3rdparty/googletest:gtest_main",
+    ],
 )

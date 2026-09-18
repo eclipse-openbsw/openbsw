@@ -10,43 +10,19 @@
 
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
 
-alias(
-    name = "async_rtos_impl_default",
-    actual = select(
-        {
-            "//bazel/config/rtos:support_freertos": "//libs/bsw/asyncFreeRtos:async_freertos_impl",
-            "//bazel/config/rtos:support_threadx": "//libs/bsw/asyncThreadX:async_threadx_impl",
-        },
-        no_match_error = "async_rtos_impl: build with --//bazel/config/rtos=freertos or --//bazel/config/rtos=threadx, or override --//libs/bsw/async:async_rtos_impl.",
-    ),
-)
-
-# Async compiled RTOS implementation
-#   Default:  select based on //bazel/config/rtos
+# Compiled RTOS implementation. Every platform must declare this via its platform flags.
 #   Override: --//libs/bsw/async:async_rtos_impl=//path/to:your_rtos_impl
 label_flag(
     name = "async_rtos_impl",
-    build_setting_default = ":async_rtos_impl_default",
+    build_setting_default = "//bazel/config:no_implementation",
     visibility = ["//visibility:public"],
 )
 
-alias(
-    name = "async_platform_default",
-    actual = select(
-        {
-            "//bazel/config/rtos:support_freertos": "//libs/bsw/asyncFreeRtos:async_freertos",
-            "//bazel/config/rtos:support_threadx": "//libs/bsw/asyncThreadX:async_threadx",
-        },
-        no_match_error = "async: build with --//bazel/config/rtos=freertos or --//bazel/config/rtos=threadx, or override --//libs/bsw/async:async_platform.",
-    ),
-)
-
-# Async platform implementation (the RTOS adapter the async layer binds to).
-#   Default:  select based on //bazel/config/rtos
+# RTOS adapter. Every platform must declare this via its platform flags.
 #   Override: --//libs/bsw/async:async_platform=//path/to:your_async_platform
 label_flag(
     name = "async_platform",
-    build_setting_default = ":async_platform_default",
+    build_setting_default = "//bazel/config:no_implementation",
     visibility = ["//visibility:public"],
 )
 
@@ -87,7 +63,6 @@ cc_library(
 
 cc_library(
     name = "async_mock",
-    testonly = True,
     hdrs = [
         "mock/gmock/include/async/AsyncMock.h",
         "mock/gmock/include/async/LockMock.h",
@@ -97,6 +72,7 @@ cc_library(
         "mock/gmock/include/async/Types.h",
     ],
     strip_include_prefix = "mock/gmock/include",
+    target_compatible_with = ["//bazel/platform/constraints/build_variant:unit_test"],
     visibility = ["//visibility:public"],
     deps = [
         ":async_headers",
@@ -107,12 +83,12 @@ cc_library(
 
 cc_library(
     name = "async_mock_impl",
-    testonly = True,
     srcs = [
         "mock/gmock/src/async/AsyncMock.cpp",
         "mock/gmock/src/async/TestContext.cpp",
         "mock/gmock/src/async/Types.cpp",
     ],
+    target_compatible_with = ["//bazel/platform/constraints/build_variant:unit_test"],
     visibility = ["//visibility:public"],
     deps = [":async_mock"],
 )

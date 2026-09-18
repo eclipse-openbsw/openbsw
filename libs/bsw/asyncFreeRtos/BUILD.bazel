@@ -10,33 +10,51 @@
 
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
 
-alias(
-    name = "freertos_core_configuration_default",
-    actual = select(
-        {
-            "//bazel/platform/constraints/soc:s32k148": "//executables/referenceApp/platforms/s32k148evb/freeRtosCoreConfiguration:freertos_core_configuration",
-            "@platforms//os:linux": "//executables/referenceApp/platforms/posix/freeRtosCoreConfiguration:freertos_core_configuration",
-        },
-        no_match_error = "No FreeRTOS core configuration for this platform. Override --//libs/bsw/asyncFreeRtos:freertos_core_configuration with your own configuration target.",
-    ),
-)
-
 # FreeRTOS core configuration (FreeRtosPlatformConfig.h and platform wiring).
-#   Default:  select based on the target platform (S32K148, POSIX)
+# Every platform must declare this via its platform flags.
 #   Override: --//libs/bsw/asyncFreeRtos:freertos_core_configuration=//path/to:your_config
 label_flag(
     name = "freertos_core_configuration",
-    build_setting_default = ":freertos_core_configuration_default",
+    build_setting_default = "//bazel/config:no_implementation",
     visibility = ["//visibility:public"],
 )
 
-# Async core configuration (async/Config.h - task counts, stack sizes).
-#   Default:  referenceApp asyncCoreConfiguration
+# Async core configuration (task counts, stack sizes, tick rate).
 #   Override: --//libs/bsw/asyncFreeRtos:async_core_configuration=//path/to:your_config
 label_flag(
     name = "async_core_configuration",
     build_setting_default = "//executables/referenceApp/asyncCoreConfiguration:async_core_configuration",
     visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "freertos_core_configuration_mock",
+    hdrs = ["test/mock/include/os/FreeRtosPlatformConfig.h"],
+    strip_include_prefix = "test/mock/include",
+    target_compatible_with = ["//bazel/platform/constraints/build_variant:unit_test"],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "async_core_configuration_mock",
+    hdrs = ["test/mock/include/async/Config.h"],
+    strip_include_prefix = "test/mock/include",
+    target_compatible_with = ["//bazel/platform/constraints/build_variant:unit_test"],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "async_binding_mock",
+    hdrs = [
+        "test/mock/include/async/AsyncBinding.h",
+        "test/mock/include/async/ContextHookMock.h",
+        "test/mock/include/async/TickHookMock.h",
+        "test/mock/include/async/TimeoutMock.h",
+    ],
+    strip_include_prefix = "test/mock/include",
+    target_compatible_with = ["//bazel/platform/constraints/build_variant:unit_test"],
+    visibility = ["//visibility:public"],
+    deps = [":async_freertos"],
 )
 
 cc_library(
@@ -56,7 +74,7 @@ cc_library(
     strip_include_prefix = "include",
     visibility = ["//visibility:public"],
     deps = [
-        "//libs/3rdparty/freeRtos:freertos",
+        "//libs/3rdparty/freeRtos:freertos_impl",
         "//libs/bsp/bspInterrupts:bsp_interrupts",
         "//libs/bsw/asyncImpl:async_impl",
         "//libs/bsw/bsp",

@@ -8,22 +8,11 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 
-#   Default:  select based on the target platform (s32k148 / posix)
+# BSP configuration headers (board-specific bsp/io/*, bsp/uart/*, etc.).
+# Every platform must declare this via its platform flags.
 #   Override: --//bazel/config/bsp:bsp_configuration=//path/to:your_bsp_configuration
-alias(
-    name = "bsp_configuration_default",
-    actual = select(
-        {
-            "//bazel/platform/constraints/soc:s32k148": "//executables/referenceApp/platforms/s32k148evb/bspConfiguration:bsp_configuration_headers",
-            "@platforms//os:linux": "//executables/referenceApp/platforms/posix/bspConfiguration:bsp_configuration_headers",
-        },
-        no_match_error = "No bsp_configuration for this platform. Override --//bazel/config/bsp:bsp_configuration with your own implementation.",
-    ),
-    visibility = ["//visibility:public"],
-)
-
 label_flag(
     name = "bsp_configuration",
-    build_setting_default = ":bsp_configuration_default",
+    build_setting_default = "//bazel/config:no_implementation",
     visibility = ["//visibility:public"],
 )

@@ -9,19 +9,18 @@
 # *******************************************************************************
 
 """
-Build configuration flag for selecting between application build variants.
-This allows targets to define variable dependencies/headers/sources based on the
-active build variant (reference_app or unit_test).
+Build configuration flag mirroring CMake's BUILD_EXECUTABLE variable.
+Selects between application build variants (reference_app / unit_test).
 
-- Set via --//bazel/config/executable_config=<value>
+- Set via --//bazel/config/build_variant=<value>
 - Defaults to "reference_app"
-- Overridden to "unit_test" for bazel test commands in .bazelrc
+- Set to "unit_test" via the posix_unit_test platform (bazel test) in .bazelrc
 """
 
 load("@bazel_skylib//rules:common_settings.bzl", "string_flag")
 
 string_flag(
-    name = "executable_config",
+    name = "build_variant",
     build_setting_default = "reference_app",
     values = [
         "reference_app",
@@ -32,12 +31,16 @@ string_flag(
 
 config_setting(
     name = "reference_app",
-    flag_values = {":executable_config": "reference_app"},
+    flag_values = {":build_variant": "reference_app"},
     visibility = ["//visibility:public"],
 )
 
 config_setting(
     name = "unit_test",
-    flag_values = {":executable_config": "unit_test"},
+    # Paired with the build_variant platform constraint so this config_setting
+    # is a formal Bazel specialisation of @platforms//os:linux, resolving select()
+    # ambiguity by documented rules rather than implementation behaviour.
+    constraint_values = ["//bazel/platform/constraints/build_variant:unit_test"],
+    flag_values = {":build_variant": "unit_test"},
     visibility = ["//visibility:public"],
 )

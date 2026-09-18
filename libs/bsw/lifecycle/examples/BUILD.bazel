@@ -12,7 +12,6 @@ load("@rules_cc//cc:cc_library.bzl", "cc_library")
 
 cc_library(
     name = "lifecycle_examples",
-    testonly = True,
     srcs = ["src/examples.cpp"],
     hdrs = ["include/example.h"],
     implementation_deps = [
@@ -20,4 +19,5 @@ cc_library(
         "//libs/bsw/lifecycle",
     ],
     strip_include_prefix = "include",
+    target_compatible_with = ["//bazel/platform/constraints/build_variant:unit_test"],
 )

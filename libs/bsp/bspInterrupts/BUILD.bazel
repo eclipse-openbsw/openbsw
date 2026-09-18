@@ -10,28 +10,11 @@
 
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
 
-#NOTE: CMake aliases bspInterruptsImpl -> bspInterruptsMock so all bspInterrupts
-# consumers get the mock under unit_test. Bazel forbids this (testonly
-# target can't be reached from a non-testonly one), so this select() only
-# picks real per-platform impls. Unit tests needing the mock must depend
-# on :bsp_interrupts_mock directly instead.
-alias(
-    name = "bsp_interrupts_impl_default",
-    actual = select(
-        {
-            "//bazel/platform/constraints/soc:s32k148": "//platforms/s32k1xx/bsp/bspInterruptsImpl:bsp_interrupts_impl",
-            "@platforms//os:linux": "//platforms/posix/bsp/bspInterruptsImpl:bsp_interrupts_impl",
-        },
-        no_match_error = "No interrupt-lock implementation for this platform. Override --//libs/bsp/bspInterrupts:bsp_interrupts_impl with your own implementation target.",
-    ),
-)
-
-# Interrupt-lock implementation
-#   Default:  select based on the target platform (S32K148, POSIX)
+# Interrupt-lock implementation. Every platform must declare this via its platform flags.
 #   Override: --//libs/bsp/bspInterrupts:bsp_interrupts_impl=//path/to:your_impl
 label_flag(
     name = "bsp_interrupts_impl",
-    build_setting_default = ":bsp_interrupts_impl_default",
+    build_setting_default = "//bazel/config:no_implementation",
     visibility = ["//visibility:public"],
 )
 
@@ -61,6 +44,7 @@ cc_library(
         "mock/gmock/include/interrupts/disableEnableAllInterruptsMock.h",
     ],
     strip_include_prefix = "mock/gmock/include",
+    target_compatible_with = ["//bazel/platform/constraints/build_variant:unit_test"],
     visibility = ["//visibility:public"],
     deps = [
         ":bsp_interrupts_mock_headers",
@@ -76,16 +60,17 @@ cc_library(
         "mock/include/interrupts/suspendResumeAllInterrupts.h",
     ],
     strip_include_prefix = "mock/include",
+    target_compatible_with = ["//bazel/platform/constraints/build_variant:unit_test"],
     visibility = ["//visibility:public"],
 )
 
 cc_library(
     name = "bsp_interrupts_mock",
-    testonly = True,
     srcs = [
         "mock/gmock/src/SuspendResumeAllInterruptsMock.cpp",
         "mock/gmock/src/disableEnableAllInterruptsMock.cpp",
     ],
+    target_compatible_with = ["//bazel/platform/constraints/build_variant:unit_test"],
     visibility = ["//visibility:public"],
     deps = [
         ":bsp_interrupts_gmock_headers",

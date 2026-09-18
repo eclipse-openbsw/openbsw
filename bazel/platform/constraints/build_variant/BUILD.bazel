@@ -8,22 +8,24 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 
-# SoC family constraint. Sits below @platforms//cpu which captures CPU
-# architecture but is too broad to identify a specific chip family.
-# This dimension captures the OpenBSW-supported SoC families.
+# Separates production firmware builds from unit-test builds. Mock libs and
+# test targets declare incompatibility with reference_app so wildcard builds
+# skip them on production platforms.
+
 constraint_setting(
-    name = "soc",
+    name = "build_variant",
+    default_constraint_value = ":reference_app",
     visibility = ["//visibility:public"],
 )
 
 constraint_value(
-    name = "s32k148",
-    constraint_setting = ":soc",
+    name = "reference_app",
+    constraint_setting = ":build_variant",
     visibility = ["//visibility:public"],
 )
 
-config_setting(
-    name = "is_s32k148",
-    constraint_values = [":s32k148"],
+constraint_value(
+    name = "unit_test",
+    constraint_setting = ":build_variant",
     visibility = ["//visibility:public"],
 )
