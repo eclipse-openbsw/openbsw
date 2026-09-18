@@ -28,6 +28,30 @@ from pathlib import Path
 ZERO_SHA = "0000000000000000000000000000000000000000"
 RELEVANT_SUFFIXES = (".c", ".cc", ".cpp", ".h", ".hh", ".hpp", ".hxx")
 SUPPORTED_EVENTS = {"pull_request", "merge_group", "push"}
+FULL_SCOPE_TRIGGER_FILENAMES = {
+    "CMakeLists.txt",
+    "CMakePresets.json",
+    ".clang-tidy",
+}
+FULL_SCOPE_TRIGGER_EXACT_FILES = {
+    ".github/workflows/clang-tidy.yml",
+    ".ci/clang-tidy.py",
+    ".ci/determine-clang-tidy-scope.py",
+    ".ci/resolve-clang-tidy-translation-units.py",
+}
+FULL_SCOPE_TRIGGER_SUFFIXES = (".cmake",)
+
+
+def is_full_scope_trigger(file_path: str) -> bool:
+    """Return True if changed file should trigger full clang-tidy analysis."""
+    path = Path(file_path)
+    if path.name in FULL_SCOPE_TRIGGER_FILENAMES:
+        return True
+    if path.suffix in FULL_SCOPE_TRIGGER_SUFFIXES:
+        return True
+    if file_path in FULL_SCOPE_TRIGGER_EXACT_FILES:
+        return True
+    return False
 
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
@@ -113,8 +137,8 @@ def run_git_command(args: list[str]) -> str:
     return result.stdout
 
 
-def list_changed_sources(base_sha: str, head_sha: str) -> list[str]:
-    """Return sorted changed C/C++ file paths between base and head revisions."""
+def list_changed_files(base_sha: str, head_sha: str) -> list[str]:
+    """Return sorted changed file paths between base and head revisions."""
     if base_sha and base_sha != ZERO_SHA:
         try:
             merge_base = run_git_command(["merge-base", head_sha, base_sha]).strip()
@@ -140,9 +164,17 @@ def list_changed_sources(base_sha: str, head_sha: str) -> list[str]:
         {
             line.strip()
             for line in diff_output.splitlines()
-            if line.strip().endswith(RELEVANT_SUFFIXES)
+            if line.strip()
         }
     )
+
+
+def list_changed_sources(base_sha: str, head_sha: str) -> list[str]:
+    """Return sorted changed C/C++ file paths between base and head revisions."""
+    return [
+        path for path in list_changed_files(base_sha, head_sha)
+        if path.endswith(RELEVANT_SUFFIXES)
+    ]
 
 
 def write_changed_files(output_file: Path, changed_files: list[str]) -> None:
@@ -181,22 +213,33 @@ def main(argv: list[str] | None = None) -> int:
 
         event = load_event(args.event_path)
         base_sha, head_sha = determine_refs(args.event_name, args.sha, event)
-        changed_files = list_changed_sources(base_sha, head_sha)
+        all_changed_files = list_changed_files(base_sha, head_sha)
+
+        if any(is_full_scope_trigger(f) for f in all_changed_files):
+            print(
+                "Build configuration or clang-tidy configuration changed; "
+                "escalating to full repository scope."
+            )
+            write_github_outputs(args.github_output, "full", True)
+            return 0
+
+        changed_sources = [
+            f for f in all_changed_files if f.endswith(RELEVANT_SUFFIXES)
+        ]
+        write_changed_files(args.output_file, changed_sources)
+        write_github_outputs(args.github_output, "changed", bool(changed_sources))
+
+        if changed_sources:
+            print("Changed files:")
+            for changed_file in changed_sources:
+                print(changed_file)
+        else:
+            print("No modified source/header files found for clang-tidy.")
+
+        return 0
     except RuntimeError as exc:
         print(exc, file=sys.stderr)
         return 1
-
-    write_changed_files(args.output_file, changed_files)
-    write_github_outputs(args.github_output, "changed", bool(changed_files))
-
-    if changed_files:
-        print("Changed files:")
-        for changed_file in changed_files:
-            print(changed_file)
-    else:
-        print("No modified source/header files found for clang-tidy.")
-
-    return 0
 
 
 if __name__ == "__main__":
