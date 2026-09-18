@@ -103,7 +103,7 @@ For this option...
     To run tests using the `s32k148` you must first have built the image for that target
     in its expected default location...
     ```
-    build/s32k148-freertos-gcc/executables/referenceApp/application/RelWithDebInfo/app.referenceApp.elf
+    build/s32k148-freertos/executables/referenceApp/application/RelWithDebInfo/app.referenceApp.elf
     ```
 
 2. Need an [S32K148 development board](https://www.nxp.com/design/design-center/development-boards/automotive-development-platforms/s32k-mcu-platforms/s32k148-q176-evaluation-board-for-automotive-general-purpose:S32K148EVB)
@@ -273,7 +273,7 @@ If present, the following entries are supported.
 eg.
 ```
 [per_run_process]
-command_line = "arm-none-eabi-gdb -batch -x flash.gdb ../../build/s32k148-freertos-gcc/executables/referenceApp/application/RelWithDebInfo/app.referenceApp.elf > /dev/null 2>&1"
+command_line = "arm-none-eabi-gdb -batch -x flash.gdb ../../build/s32k148-freertos/executables/referenceApp/application/RelWithDebInfo/app.referenceApp.elf > /dev/null 2>&1"
 wait_for_exit = true
 ```
 
