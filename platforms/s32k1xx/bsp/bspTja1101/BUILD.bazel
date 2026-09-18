@@ -27,26 +27,8 @@ cc_library(
     target_compatible_with = ["//bazel/platform/constraints/soc:s32k148"],
     visibility = ["//visibility:public"],
     deps = [
-        ":bsp_configuration",
+        "//bazel/config/bsp:bsp_configuration",
         "//libs/bsp/bspOutputManager:bsp_output_manager",
-        "//platforms/s32k1xx/bsp/bspIo:bsp_io",
+        "//platforms/s32k1xx/bsp/bspIo:bsp_io_impl",
     ],
-)
-
-alias(
-    name = "bsp_configuration_default",
-    actual = select(
-        {
-            "//bazel/platform/constraints/soc:s32k148": "//executables/referenceApp/platforms/s32k148evb/bspConfiguration:bsp_configuration_headers",
-            "@platforms//os:linux": "//executables/referenceApp/platforms/posix/bspConfiguration:bsp_configuration_headers",
-        },
-        no_match_error = "No bsp_configuration for this platform. Override --//<path>:bsp_configuration with your own implementation.",
-    ),
-    visibility = ["//visibility:public"],
-)
-
-label_flag(
-    name = "bsp_configuration",
-    build_setting_default = ":bsp_configuration_default",
-    visibility = ["//visibility:public"],
 )

@@ -23,7 +23,7 @@ cc_library(
         "include/tester/AnalogTester.h",
     ],
     implementation_deps = [
-        ":bsp_configuration",
+        "//bazel/config/bsp:bsp_configuration",
         "//libs/bsw/util",
     ],
     strip_include_prefix = "include",
@@ -34,22 +34,4 @@ cc_library(
         "//libs/bsw/bsp",
         "//platforms/s32k1xx/bsp/bspMcu:bsp_mcu",
     ],
-)
-
-alias(
-    name = "bsp_configuration_default",
-    actual = select(
-        {
-            "//bazel/platform/constraints/soc:s32k148": "//executables/referenceApp/platforms/s32k148evb/bspConfiguration:bsp_configuration_headers",
-            "@platforms//os:linux": "//executables/referenceApp/platforms/posix/bspConfiguration:bsp_configuration_headers",
-        },
-        no_match_error = "No bsp_configuration for this platform. Override --//<path>:bsp_configuration with your own implementation.",
-    ),
-    visibility = ["//visibility:public"],
-)
-
-label_flag(
-    name = "bsp_configuration",
-    build_setting_default = ":bsp_configuration_default",
-    visibility = ["//visibility:public"],
 )

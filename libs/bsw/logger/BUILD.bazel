@@ -9,6 +9,7 @@
 # *******************************************************************************
 
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
+load("//bazel/config/build_variant:compatibility.bzl", "unit_test_only")
 
 cc_library(
     name = "logger",
@@ -26,11 +27,11 @@ cc_library(
 
 cc_library(
     name = "logger_mock",
-    testonly = True,
     hdrs = [
         "mock/include/logger/PersistenceManagerMock.h",
     ],
     strip_include_prefix = "mock/include",
+    target_compatible_with = unit_test_only(),
     visibility = ["//visibility:public"],
     deps = [
         "//libs/3rdparty/googletest:gtest_main",

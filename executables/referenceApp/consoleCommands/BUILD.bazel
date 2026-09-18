@@ -9,6 +9,7 @@
 # *******************************************************************************
 
 load("@rules_cc//cc:defs.bzl", "cc_library")
+load("//bazel/config/build_variant:compatibility.bzl", "reference_app_only")
 
 # Circular dependency present in Bazel when modelling the CMake PLATFORM_SUPPORT_IO conditional: console_commands -> io_support -> console_commands.
 # Split off console_commands_headers to break the circular dependency for Bazel.
@@ -43,7 +44,7 @@ cc_library(
     deps = [
         ":console_commands_headers",
         "//executables/referenceApp/platforms/s32k148evb/safety/safeIo:safe_io",
-        "//platforms/s32k1xx/bsp/bspIo:bsp_io",
+        "//platforms/s32k1xx/bsp/bspIo:bsp_io_impl",
     ],
 )
 
@@ -67,6 +68,7 @@ cc_library(
     implementation_deps = [
         ":io_support",
     ],
+    target_compatible_with = reference_app_only(),
     visibility = ["//visibility:public"],
     deps = [
         ":console_commands_headers",

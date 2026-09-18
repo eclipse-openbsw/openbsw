@@ -26,8 +26,8 @@ cc_library(
     strip_include_prefix = "include",
     visibility = ["//visibility:public"],
     deps = [
-        ":bsp_configuration",
         ":bsp_uart",
+        "//bazel/config/bsp:bsp_configuration",
         "//libs/3rdparty/printf",
         "//libs/bsw/bsp",
     ],
@@ -36,38 +36,10 @@ cc_library(
     alwayslink = True,
 )
 
-alias(
-    name = "bsp_configuration_default",
-    actual = select(
-        {
-            "//bazel/platform/constraints/soc:s32k148": "//executables/referenceApp/platforms/s32k148evb/bspConfiguration:bsp_configuration_headers",
-            "@platforms//os:linux": "//executables/referenceApp/platforms/posix/bspConfiguration:bsp_configuration_headers",
-        },
-        no_match_error = "No bsp_configuration for this platform. Override --//<path>:bsp_configuration with your own implementation.",
-    ),
-    visibility = ["//visibility:public"],
-)
-
-label_flag(
-    name = "bsp_configuration",
-    build_setting_default = ":bsp_configuration_default",
-    visibility = ["//visibility:public"],
-)
-
-alias(
-    name = "bsp_uart_default",
-    actual = select(
-        {
-            "//bazel/platform/constraints/soc:s32k148": "//platforms/s32k1xx/bsp/bspUart:bsp_uart",
-            "@platforms//os:linux": "//platforms/posix/bsp/bspUart:bsp_uart",
-        },
-        no_match_error = "No bsp_uart for this platform. Override --//<path>:bsp_uart with your own implementation.",
-    ),
-    visibility = ["//visibility:public"],
-)
-
+# UART implementation. Every platform must declare this via its platform flags.
+#   Override: --//libs/bsp/bspCharInputOutput:bsp_uart=//path/to:your_bsp_uart
 label_flag(
     name = "bsp_uart",
-    build_setting_default = ":bsp_uart_default",
+    build_setting_default = "//bazel/config:no_implementation",
     visibility = ["//visibility:public"],
 )

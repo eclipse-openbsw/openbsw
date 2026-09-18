@@ -9,6 +9,7 @@
 # *******************************************************************************
 
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
+load("//bazel/config/build_variant:compatibility.bzl", "unit_test_only")
 
 cc_library(
     name = "cpp2can",
@@ -37,7 +38,6 @@ cc_library(
 
 cc_library(
     name = "cpp2can_mock",
-    testonly = True,
     srcs = [
         "mock/src/can/transceiver/AbstractCANTransceiverMock.cpp",
     ],
@@ -56,5 +56,6 @@ cc_library(
         "//libs/bsw/bsp:bsp_mock",
     ],
     strip_include_prefix = "mock/include",
+    target_compatible_with = unit_test_only(),
     visibility = ["//visibility:public"],
 )

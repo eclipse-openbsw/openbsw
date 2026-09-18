@@ -9,6 +9,7 @@
 # *******************************************************************************
 
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
+load("//bazel/config/build_variant:compatibility.bzl", "unit_test_only")
 
 cc_library(
     name = "util",
@@ -23,7 +24,6 @@ cc_library(
 
 cc_library(
     name = "util_mock",
-    testonly = True,
     srcs = [
         "mock/gmock/src/util/StdIoMock.cpp",
         "mock/gmock/src/util/logger/TestConsoleLogger.cpp",
@@ -39,6 +39,7 @@ cc_library(
         "mock/gmock/include/util/stream/SharedOutputStreamMock.h",
     ],
     strip_include_prefix = "mock/gmock/include",
+    target_compatible_with = unit_test_only(),
     visibility = ["//visibility:public"],
     deps = [
         ":util",

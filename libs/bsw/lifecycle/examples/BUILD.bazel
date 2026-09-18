@@ -9,10 +9,10 @@
 # *******************************************************************************
 
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
+load("//bazel/config/build_variant:compatibility.bzl", "unit_test_only")
 
 cc_library(
     name = "lifecycle_examples",
-    testonly = True,
     srcs = ["src/examples.cpp"],
     hdrs = ["include/example.h"],
     implementation_deps = [
@@ -20,4 +20,5 @@ cc_library(
         "//libs/bsw/lifecycle",
     ],
     strip_include_prefix = "include",
+    target_compatible_with = unit_test_only(),
 )

@@ -9,6 +9,7 @@
 # *******************************************************************************
 
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
+load("//bazel/config/build_variant:compatibility.bzl", "reference_app_only")
 
 cc_library(
     name = "main",
@@ -35,6 +36,7 @@ cc_library(
         "//platforms/posix/bsp/tapEthernetDriver:tap_ethernet_driver",
     ],
     strip_include_prefix = "include",
+    target_compatible_with = reference_app_only(),
     visibility = ["//visibility:public"],
     deps = [
         "//platforms/posix/bsp/bspEepromDriver:bsp_eeprom_driver",
