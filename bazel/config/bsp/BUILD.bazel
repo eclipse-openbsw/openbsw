@@ -8,22 +8,21 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 
-#   Default:  select based on the target platform (s32k148 / posix)
+# BSP configuration headers (board-specific bsp/io/*, bsp/uart/*, etc.).
+# Every platform must declare this via its platform flags.
 #   Override: --//bazel/config/bsp:bsp_configuration=//path/to:your_bsp_configuration
-alias(
-    name = "bsp_configuration_default",
-    actual = select(
-        {
-            "//bazel/platform/constraints/soc:s32k148": "//executables/referenceApp/platforms/s32k148evb/bspConfiguration:bsp_configuration_headers",
-            "@platforms//os:linux": "//executables/referenceApp/platforms/posix/bspConfiguration:bsp_configuration_headers",
-        },
-        no_match_error = "No bsp_configuration for this platform. Override --//bazel/config/bsp:bsp_configuration with your own implementation.",
-    ),
+label_flag(
+    name = "bsp_configuration",
+    build_setting_default = "//bazel/config:no_implementation",
     visibility = ["//visibility:public"],
 )
 
+# BSP IO implementation (io/Io.h + ioPorts.h, Io::setPin etc.).
+# Every platform that uses BSP IO must declare this via its platform flags.
+# Posix referenceApp has no bspIo: leave as no_implementation.
+#   Override: --//bazel/config/bsp:bsp_io=//path/to:your_bsp_io
 label_flag(
-    name = "bsp_configuration",
-    build_setting_default = ":bsp_configuration_default",
+    name = "bsp_io",
+    build_setting_default = "//bazel/config:no_implementation",
     visibility = ["//visibility:public"],
 )

@@ -74,11 +74,17 @@ jobs:
           docker compose run --rm development
           bazel build --config=s32k148 //...
 
-      # Builds and runs all test targets. Exit code 4 ("no tests found") needs to be treated as
-      # success until at least a single test exists.
+      # Compiles all test targets for the unit-test platform without running them.
+      # A failure here is a compilation error not a failed test.
+      - name: Build all targets (posix_unit_test platform)
+        run: >-
+          DOCKER_UID=$(id -u) DOCKER_GID=$(id -g) DOCKER_HISTORY=/dev/null
+          docker compose run --rm development
+          bazel build --platforms=//bazel/platform:posix_unit_test //...
+
+      # Runs all test targets.
       - name: Run all tests
         run: >-
           DOCKER_UID=$(id -u) DOCKER_GID=$(id -g) DOCKER_HISTORY=/dev/null
           docker compose run --rm development
-          bazel test //... || exit_code=$?;
-          [ "${exit_code:-0}" -eq 0 ] || [ "${exit_code}" -eq 4 ] || exit "${exit_code}"
+          bazel test //...

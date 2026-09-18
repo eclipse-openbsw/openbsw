@@ -12,6 +12,8 @@ build:s32k148_relwithdebinfo --copt=-O2
 build:s32k148_relwithdebinfo --copt=-DNDEBUG
 build:s32k148_threadx --config=s32k148
 build:s32k148_threadx --//bazel/config/rtos=threadx
+build:s32k148_threadx --//libs/bsw/async:async_platform=//libs/bsw/asyncThreadX:async_threadx
+build:s32k148_threadx --//libs/bsw/async:async_rtos_impl=//libs/bsw/asyncThreadX:async_threadx_impl
 
 # POSIX is the DEFAULT platform: a plain `bazel build //...` is the posix host build. The posix
 # PLATFORM_SUPPORT_* matrix lives in //bazel/platform:posix flags. `--config=posix` is kept as an
@@ -19,9 +21,11 @@ build:s32k148_threadx --//bazel/config/rtos=threadx
 build --platforms=//bazel/platform:posix
 build:posix --platforms=//bazel/platform:posix
 
-# Select the ETL profile for builds inside the OpenBSW repo based on executable_config (mirrors
+# Select the ETL profile for builds inside the OpenBSW repo based on build_variant (mirrors
 # CMake BUILD_EXECUTABLE). This ONLY applies when OpenBSW is the root module. Downstream consumers 
 # keep the vendored ETL default (:no_profile) and must set --//libs/3rdparty/etl:etl_profile to 
 # the desired etl_profile instace.
 build --//libs/3rdparty/etl:etl_profile=//bazel/config/etl:etl_profile
-test --//bazel/config/executable_config=unit_test
+# posix_unit_test sets --//bazel/config/build_variant=unit_test via its flags=[]
+# and adds the executable:unit_test constraint that gates cc_test targets.
+test --platforms=//bazel/platform:posix_unit_test

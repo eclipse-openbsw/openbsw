@@ -22,15 +22,15 @@ alias(
     name = "middleware_lock_types_default",
     actual = select(
         {
-            "//bazel/config/executable_config:unit_test": ":middleware_lock_types_test_stub",
-            "//bazel/config/executable_config:reference_app": ":middleware_lock_types_test_stub",
+            "//bazel/config/build_variant:unit_test": ":middleware_lock_types_test_stub",
+            "//bazel/config/build_variant:reference_app": ":middleware_lock_types_test_stub",
         },
-        no_match_error = "Set executable_config to 'reference_app' or 'unit_test', or override --//libs/bsw/middleware:middleware_lock_types",
+        no_match_error = "Set build_variant to 'reference_app' or 'unit_test', or override --//libs/bsw/middleware:middleware_lock_types",
     ),
 )
 
 # lock_types.h provider. Platform integration supplies the concrete types at build time.
-#   Default:  host no-op stub (per executable_config)
+#   Default:  host no-op stub (per build_variant)
 #   Override: --//libs/bsw/middleware:middleware_lock_types=//<your>:lock_types
 label_flag(
     name = "middleware_lock_types",
@@ -68,9 +68,9 @@ cc_library(
 
 cc_library(
     name = "middleware_mock",
-    testonly = True,
     hdrs = ["test/mock/include/util/crtp_mock.h"],
     strip_include_prefix = "test/mock/include",
+    target_compatible_with = ["//bazel/platform/constraints/build_variant:unit_test"],
     visibility = ["//visibility:public"],
     deps = ["//libs/3rdparty/etl"],
 )

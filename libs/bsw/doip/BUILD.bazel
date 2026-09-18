@@ -28,9 +28,9 @@ cc_library(
 
 cc_library(
     name = "doip_mock",
-    testonly = True,
     hdrs = glob(["mock/gmock/include/**/*.h"]),
     strip_include_prefix = "mock/gmock/include",
+    target_compatible_with = ["//bazel/platform/constraints/build_variant:unit_test"],
     visibility = ["//visibility:public"],
     deps = [
         ":doip",

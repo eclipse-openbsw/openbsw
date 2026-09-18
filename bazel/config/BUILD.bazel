@@ -10,21 +10,11 @@
 
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
 
+# Always-incompatible target used as the default for every label_flag that has
+# no universal implementation. A consuming target becomes incompatible with any
+# platform that does not override the flag via platform flags.
 cc_library(
-    name = "safe_io",
-    srcs = [
-        "src/safeIo/SafeIo.cpp",
-        "src/safeIo/SafeState.cpp",
-    ],
-    hdrs = [
-        "include/safeIo/SafeIo.h",
-        "include/safeIo/SafeState.h",
-    ],
-    implementation_deps = [
-        "//executables/referenceApp/safety/safeSupervisor:safe_supervisor_headers",
-        "//platforms/s32k1xx/bsp/bspIo:bsp_io_impl",
-    ],
-    strip_include_prefix = "include",
-    target_compatible_with = ["//bazel/platform/constraints/soc:s32k148"],
+    name = "no_implementation",
+    target_compatible_with = ["@platforms//:incompatible"],
     visibility = ["//visibility:public"],
 )

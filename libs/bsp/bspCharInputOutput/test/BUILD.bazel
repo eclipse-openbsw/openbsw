@@ -8,16 +8,14 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 
-load("@rules_cc//cc:cc_library.bzl", "cc_library")
+load("@rules_cc//cc:cc_test.bzl", "cc_test")
 
-cc_library(
-    name = "lifecycle_examples",
-    srcs = ["src/examples.cpp"],
-    hdrs = ["include/example.h"],
-    implementation_deps = [
-        "//libs/bsw/async:async_mock",
-        "//libs/bsw/lifecycle",
-    ],
-    strip_include_prefix = "include",
+cc_test(
+    name = "bsp_char_input_output_test",
+    srcs = ["src/IncludeTest.cpp"],
     target_compatible_with = ["//bazel/platform/constraints/build_variant:unit_test"],
+    deps = [
+        "//libs/3rdparty/googletest:gtest_main",
+        "//libs/bsp/bspCharInputOutput:bsp_char_input_output",
+    ],
 )

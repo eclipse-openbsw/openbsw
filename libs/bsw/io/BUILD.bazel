@@ -35,12 +35,12 @@ cc_library(
 
 cc_library(
     name = "io_mock",
-    testonly = True,
     hdrs = [
         "mock/include/io/IReaderMock.h",
         "mock/include/io/IWriterMock.h",
     ],
     strip_include_prefix = "mock/include",
+    target_compatible_with = ["//bazel/platform/constraints/build_variant:unit_test"],
     visibility = ["//visibility:public"],
     deps = [
         ":io",

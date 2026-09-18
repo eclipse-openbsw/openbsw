@@ -11,6 +11,24 @@
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
 
 cc_library(
+    name = "bsp_input_manager_headers",
+    hdrs = [
+        "include/inputManager/AlternativeDigitalInput.h",
+        "include/inputManager/DigitalInput.h",
+        "include/inputManager/DigitalInputTester.h",
+    ],
+    strip_include_prefix = "include",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//bazel/config/bsp:bsp_configuration",
+        "//bazel/config/bsp:bsp_io",
+        "//libs/3rdparty/etl",
+        "//libs/bsp/bspDynamicClient:bsp_dynamic_client",
+        "//libs/bsw/util",
+    ],
+)
+
+cc_library(
     name = "bsp_input_manager",
     srcs = [
         "src/inputManager/AlternativeDigitalInput.cpp",
@@ -27,11 +45,11 @@ cc_library(
     visibility = ["//visibility:public"],
     deps = [
         "//bazel/config/bsp:bsp_configuration",
+        "//bazel/config/bsp:bsp_io",
         "//libs/3rdparty/etl",
         "//libs/bsp/bspDynamicClient:bsp_dynamic_client",
         "//libs/bsp/bspInterrupts:bsp_interrupts",
         "//libs/bsw/bsp",
         "//libs/bsw/util",
-        "//platforms/s32k1xx/bsp/bspIo:bsp_io",
     ],
 )

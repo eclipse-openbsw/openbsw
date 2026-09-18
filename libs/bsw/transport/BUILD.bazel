@@ -42,7 +42,6 @@ cc_library(
 
 cc_library(
     name = "transport_mock",
-    testonly = True,
     srcs = [
         "mock/gmock/src/TransportMessageProvidingListenerMock.cpp",
     ],
@@ -59,5 +58,6 @@ cc_library(
         "//libs/3rdparty/googletest:gtest",
     ],
     strip_include_prefix = "mock/gmock/include",
+    target_compatible_with = ["//bazel/platform/constraints/build_variant:unit_test"],
     visibility = ["//visibility:public"],
 )
