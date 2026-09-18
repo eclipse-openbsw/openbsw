@@ -100,9 +100,9 @@ add_executable(
     # Reuse the middleware test platform seams required by the core library.
     test/proxy_mock_unit_test_example.cpp
     test/skeleton_mock_unit_test_example.cpp
-    ${_MIDDLEWARE_ROOT}/test/src/memory/mock/AllocatorMock.cpp
-    ${_MIDDLEWARE_ROOT}/test/src/logger/mock/LoggerMock.cpp
-    ${_MIDDLEWARE_ROOT}/test/src/os/OsDefinitions.cpp
+    ${_MIDDLEWARE_ROOT}/test/src/mock/memory/mock/AllocatorMock.cpp
+    ${_MIDDLEWARE_ROOT}/test/src/mock/logger/mock/LoggerMock.cpp
+    ${_MIDDLEWARE_ROOT}/test/src/mock/os/OsDefinitions.cpp
     ${_TEST_GENERATED_SOURCES})
 target_include_directories(
     middlewareDocExamplesTest
