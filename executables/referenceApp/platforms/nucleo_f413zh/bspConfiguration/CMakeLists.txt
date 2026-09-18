@@ -6,4 +6,4 @@ target_include_directories(bspConfiguration PUBLIC include)
 target_link_libraries(
     bspConfiguration
     PUBLIC bspUart
-    PRIVATE bspMcu platform)
+    PRIVATE bspMcu)

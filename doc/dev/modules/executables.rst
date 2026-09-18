@@ -56,6 +56,42 @@ STM32 Nucleo
 
     ../../../executables/referenceApp/platforms/nucleo_*/**/doc/index
 
+Raspberry Pi Pico
++++++++++++++++++
+
+.. toctree::
+    :maxdepth: 1
+    :glob:
+
+    ../../../executables/referenceApp/platforms/pipico/**/doc/index
+
+Raspberry Pi Pico 2
++++++++++++++++++++
+
+.. toctree::
+    :maxdepth: 1
+    :glob:
+
+    ../../../executables/referenceApp/platforms/pico2/**/doc/index
+
+Waveshare RP2350-ETH Mini
++++++++++++++++++++++++++
+
+.. toctree::
+    :maxdepth: 1
+    :glob:
+
+    ../../../executables/referenceApp/platforms/waveshare_rp2350_eth/**/doc/index
+
+Seeed Studio XIAO RP2350
+++++++++++++++++++++++++
+
+.. toctree::
+    :maxdepth: 1
+    :glob:
+
+    ../../../executables/referenceApp/platforms/xiao_rp2350/**/doc/index
+
 Safety
 ++++++
 
