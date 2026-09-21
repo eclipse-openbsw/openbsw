@@ -46,9 +46,9 @@ activate message_queue_unit
 message_queue_unit --> cluster_connection_unit : msg
 deactivate message_queue_unit
 cluster_connection_unit -> proxy_skeleton_base_unit : dispatchMessage(msg)
-proxy_skeleton_base_unit -> generated_skeleton : get_<attribute>Attribute(response)
+proxy_skeleton_base_unit -> generated_skeleton : get<attribute>Attribute(response)
 generated_skeleton -> generated_skeleton : read current attribute value
-generated_skeleton --> proxy_skeleton_base_unit : respond(response, attributeValue)
+generated_skeleton --> proxy_skeleton_base_unit : respondGet<attribute>Attribute(response, attributeValue)
 proxy_skeleton_base_unit -> cluster_connection_unit : sendMessage(GETTER_RESPONSE)
 cluster_connection_unit -> message_queue_unit : push(response_msg)
 activate message_queue_unit

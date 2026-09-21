@@ -62,7 +62,7 @@ TEST_F(SkeletonAppTestFixture, SkeletonAsyncMethodForwardsToMock)
     EXPECT_CALL(mock_, asyncMethod(::testing::Ref(input), ::testing::Ref(response)));
     EXPECT_CALL(
         mock_,
-        respond(
+        respondAsyncMethod(
             ::testing::Ref(response),
             ::testing::Matcher<SkeletonApp::Baz const&>(::testing::Truly(
                 [](SkeletonApp::Baz const& result)
@@ -107,11 +107,11 @@ TEST_F(SkeletonAppTestFixture, SkeletonAttributeGetterForwardsToMock)
     SkeletonResponseInfo response{};
     EXPECT_CALL(mock_, init(features::communication::DummyService::internal::InstanceId_1))
         .WillOnce(testing::Return(middleware::core::HRESULT::Ok));
-    EXPECT_CALL(mock_, get_SimpleFieldAttribute(::testing::Ref(response)));
+    EXPECT_CALL(mock_, getSimpleFieldAttribute(::testing::Ref(response)));
 
     // ACT
     bool const initResult = app_.init();
-    app_.get_SimpleFieldAttribute(response);
+    app_.getSimpleFieldAttribute(response);
 
     // ASSERT
     EXPECT_TRUE(initResult);
@@ -126,11 +126,11 @@ TEST_F(SkeletonAppTestFixture, SkeletonAttributeSetterForwardsToMock)
     uint32_t const value = 42U;
     EXPECT_CALL(mock_, init(features::communication::DummyService::internal::InstanceId_1))
         .WillOnce(testing::Return(middleware::core::HRESULT::Ok));
-    EXPECT_CALL(mock_, set_SimpleFieldAttribute(::testing::Ref(value)));
+    EXPECT_CALL(mock_, setSimpleFieldAttribute(::testing::Ref(value)));
 
     // ACT
     bool const initResult = app_.init();
-    app_.set_SimpleFieldAttribute(value);
+    app_.setSimpleFieldAttribute(value);
 
     // ASSERT
     EXPECT_TRUE(initResult);

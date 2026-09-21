@@ -272,7 +272,7 @@ For skeleton-side methods:
 
 * Each generated method is a virtual function to implement in the derived application class.
 * Request/response methods receive input arguments plus ``SkeletonResponseInfo``.
-* ``respond(...)`` must be called exactly once for request/response methods (immediately or later).
+* ``respond<MethodName>(...)`` must be called exactly once for request/response methods (immediately or later).
 * For deferred responses, store ``SkeletonResponseInfo`` and respond in a later cycle.
 * If no response can be sent, call the generated ``cancel...Response(...)`` API to release the pending request.
 
@@ -449,4 +449,4 @@ Method callback completion states (``Future::State``):
    * - ``CouldNotDeliverError``
      - Transport delivery failed
 
-For asynchronous skeleton methods, ensure every received request is eventually completed by calling either ``respond(...)`` or the matching ``cancel...Response(...)`` API.
+For asynchronous skeleton methods, ensure every received request is eventually completed by calling either ``respond<MethodName>(...)`` / ``respondGet<AttributeName>Attribute(...)`` / ``respondSet<AttributeName>Attribute(...)`` or the matching ``cancel...Response(...)`` API.
