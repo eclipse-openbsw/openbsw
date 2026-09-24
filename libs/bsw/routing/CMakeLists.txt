@@ -21,6 +21,7 @@ target_link_libraries(
     routing
     PUBLIC blob
            bsp
+           cpp2can
            cpp2ethernet
            etl
            io

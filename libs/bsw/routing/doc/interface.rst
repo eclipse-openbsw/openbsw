@@ -54,6 +54,15 @@ Public API
     :language: cpp
     :dedent: 4
 
+CAN Frame Conversion
+--------------------
+
+The routing library provides ``canFrameToPdu`` and ``pduToCanFrame`` for the
+CAN channel PDU format. The format contains a big-endian message ID and
+payload length followed by the payload. Conversion rejects buffers with an
+incomplete header or payload, and payload lengths larger than the configured
+CAN frame capacity.
+
 RxAdapter
 ---------
 
