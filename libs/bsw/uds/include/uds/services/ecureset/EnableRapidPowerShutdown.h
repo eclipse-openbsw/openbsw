@@ -14,6 +14,8 @@
 #include "uds/base/Subfunction.h"
 #include "uds/lifecycle/IUdsLifecycleConnector.h"
 
+#include <etl/array.h>
+
 namespace uds
 {
 class EnableRapidPowerShutdown : public Subfunction
@@ -22,7 +24,7 @@ public:
     explicit EnableRapidPowerShutdown(IUdsLifecycleConnector& udsLifecycleConnector);
 
 private:
-    static uint8_t const sfImplementedRequest[2];
+    static ::etl::array<uint8_t, 2U> const sfImplementedRequest;
     static uint8_t const RESPONSE_LENGTH = 1U;
 
     virtual DiagReturnCode::Type process(
