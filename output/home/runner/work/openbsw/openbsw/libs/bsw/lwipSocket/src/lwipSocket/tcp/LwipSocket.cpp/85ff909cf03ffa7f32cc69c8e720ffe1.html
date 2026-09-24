@@ -1,0 +1,545 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../../../../../../../../../../../static/css/style.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <title>Symbol - puncover</title>
+    
+</head>
+<body>
+    <div class="container" id="content">
+        <div class="page-header">
+            <nav class="navbar navbar-default" role="navigation">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="../../../../../../../../../../../../index.html">
+                    Puncover
+                  </a>
+                </div>
+              </div>
+            </nav>
+          
+        </div>
+        <div id="inner_content">
+        
+    
+    <ol class="breadcrumb folders">
+        
+        <li><a href="../../../../../../../../../../../../home.html">home</a></li>
+        
+        <li><a href="../../../../../../../../../../../runner.html">runner</a></li>
+        
+        <li><a href="../../../../../../../../../../work.html">work</a></li>
+        
+        <li><a href="../../../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../../libs.html">libs</a></li>
+        
+        <li><a href="../../../../../../bsw.html">bsw</a></li>
+        
+        <li><a href="../../../../../lwipSocket.html">lwipSocket</a></li>
+        
+        <li><a href="../../../../src.html">src</a></li>
+        
+        <li><a href="../../../lwipSocket.html">lwipSocket</a></li>
+        
+        <li ><a href="../../tcp.html">tcp</a>
+            </li>
+
+        
+        <li class="active"><a href="../LwipSocket.cpp.html">LwipSocket.cpp</a>:583
+            </li>
+        
+    </ol>
+
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <th>Function</th>
+                <td colspan="5">
+                    <span class="icon-function">tcp::LwipSocket::errorCallback(signed char)</span>
+                </td>
+            </tr>
+
+            <tr>
+                <th rowspan="2"></th>
+                <th>Address</th>
+                <th>Remarks</th>
+                <th>Stack</th>
+                <th>Code</th>
+                <th>Static</th>
+            </tr>
+            <tr>
+                <td>0x000286d0</td>
+                <td>
+    
+    
+</td>
+                <td>24 (static)</td>
+                <td>200</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th>Callers (1)</th>
+                <td colspan="5">
+                
+                    <a href="./4734220ca54a761f1fd6170bf24c6bb0.html">tcp::LwipSocket::tcpErrorListener(void*, signed char) (28)</a>
+                    
+                
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Callees (4,
+                            <span title="sum of used bytes by all callees">
+                            Σ=180
+                            </span>
+                        )
+                    
+                </th>
+                <td colspan="5">
+                
+                    <a href="./8c13827d17df585c7412757c65b042e1.html">tcp::LwipSocket::resetSocket() (60)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../../../../../util/include/util/logger/Logger.h/36d1ae1365862a45a74fa55e9d725fcd.html">util::logger::Logger::debug(unsigned char, char const*, ...) (56)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../../../../../../3rdparty/lwip/src/core/pbuf.c/9b6fd2596874539050b4147be9634d35.html">pbuf_free (8)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../../../../../util/include/util/logger/Logger.h/fee4073070054ecc160dbd4d6b194f36.html">util::logger::Logger::warn(unsigned char, char const*, ...) (56)</a>
+                    
+                
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    
+    <pre><a href="./54b0a1970aed5ba1c24ff09dde4caf52.html">tcp::LwipSocket::tcpReceiveListener(void*, tcp_pcb*, pbuf*, signed char) (32)</a></pre>
+    
+
+    <pre>
+
+    tcp::LwipSocket::errorCallback(signed char):
+
+       286d0:	b530      	push	{r4, r5, lr}
+
+       286d2:	4604      	mov	r4, r0
+
+       286d4:	b083      	sub	sp, #12
+
+       286d6:	460d      	mov	r5, r1
+
+       286d8:	f7ff ff04 	bl	284e4 <<a href="./8c13827d17df585c7412757c65b042e1.html">tcp::LwipSocket::resetSocket()</a>>
+
+       286dc:	6863      	ldr	r3, [r4, #4]
+
+       286de:	b193      	cbz	r3, 28706 <<a href="./85ff909cf03ffa7f32cc69c8e720ffe1.html">tcp::LwipSocket::errorCallback(signed char)</a>+0x36>
+
+       286e0:	4b26      	ldr	r3, [pc, #152]	@ (2877c <<a href="./85ff909cf03ffa7f32cc69c8e720ffe1.html">tcp::LwipSocket::errorCallback(signed char)</a>+0xac>)
+
+       286e2:	f115 0f0e 	cmn.w	r5, #14
+
+       286e6:	7818      	ldrb	r0, [r3, #0]
+
+       286e8:	d03d      	beq.n	28766 <<a href="./85ff909cf03ffa7f32cc69c8e720ffe1.html">tcp::LwipSocket::errorCallback(signed char)</a>+0x96>
+
+       286ea:	f115 0f0d 	cmn.w	r5, #13
+
+       286ee:	d036      	beq.n	2875e <<a href="./85ff909cf03ffa7f32cc69c8e720ffe1.html">tcp::LwipSocket::errorCallback(signed char)</a>+0x8e>
+
+       286f0:	f115 0f0f 	cmn.w	r5, #15
+
+       286f4:	d12e      	bne.n	28754 <<a href="./85ff909cf03ffa7f32cc69c8e720ffe1.html">tcp::LwipSocket::errorCallback(signed char)</a>+0x84>
+
+       286f6:	4922      	ldr	r1, [pc, #136]	@ (28780 <<a href="./85ff909cf03ffa7f32cc69c8e720ffe1.html">tcp::LwipSocket::errorCallback(signed char)</a>+0xb0>)
+
+       286f8:	f7da fa26 	bl	2b48 <<a href="../../../../../util/include/util/logger/Logger.h/36d1ae1365862a45a74fa55e9d725fcd.html">util::logger::Logger::debug(unsigned char, char const*, ...)</a>>
+
+       286fc:	2103      	movs	r1, #3
+
+       286fe:	6860      	ldr	r0, [r4, #4]
+
+       28700:	6803      	ldr	r3, [r0, #0]
+
+       28702:	685b      	ldr	r3, [r3, #4]
+
+       28704:	4798      	blx	r3
+
+       28706:	f894 3030 	ldrb.w	r3, [r4, #48]	@ 0x30
+
+       2870a:	b953      	cbnz	r3, 28722 <<a href="./85ff909cf03ffa7f32cc69c8e720ffe1.html">tcp::LwipSocket::errorCallback(signed char)</a>+0x52>
+
+       2870c:	6823      	ldr	r3, [r4, #0]
+
+       2870e:	4a1d      	ldr	r2, [pc, #116]	@ (28784 <<a href="./85ff909cf03ffa7f32cc69c8e720ffe1.html">tcp::LwipSocket::errorCallback(signed char)</a>+0xb4>)
+
+       28710:	695b      	ldr	r3, [r3, #20]
+
+       28712:	4293      	cmp	r3, r2
+
+       28714:	d113      	bne.n	2873e <<a href="./85ff909cf03ffa7f32cc69c8e720ffe1.html">tcp::LwipSocket::errorCallback(signed char)</a>+0x6e>
+
+    tcp::LwipSocket::discardData():
+
+       28716:	6920      	ldr	r0, [r4, #16]
+
+       28718:	b108      	cbz	r0, 2871e <<a href="./85ff909cf03ffa7f32cc69c8e720ffe1.html">tcp::LwipSocket::errorCallback(signed char)</a>+0x4e>
+
+       2871a:	7b83      	ldrb	r3, [r0, #14]
+
+       2871c:	b9a3      	cbnz	r3, 28748 <<a href="./85ff909cf03ffa7f32cc69c8e720ffe1.html">tcp::LwipSocket::errorCallback(signed char)</a>+0x78>
+
+    tcp::LwipSocket::errorCallback(signed char):
+
+       2871e:	b003      	add	sp, #12
+
+       28720:	bd30      	pop	{r4, r5, pc}
+
+    _ZNK3etl8delegateIFvN3tcp14AbstractSocket9ErrorCodeEEE8is_validEv():
+
+       28722:	6ae3      	ldr	r3, [r4, #44]	@ 0x2c
+
+    tcp::LwipSocket::errorCallback(signed char):
+
+       28724:	2200      	movs	r2, #0
+
+       28726:	f884 2030 	strb.w	r2, [r4, #48]	@ 0x30
+
+    _ZNK3etl8delegateIFvN3tcp14AbstractSocket9ErrorCodeEEEclES3_():
+
+       2872a:	b30b      	cbz	r3, 28770 <<a href="./85ff909cf03ffa7f32cc69c8e720ffe1.html">tcp::LwipSocket::errorCallback(signed char)</a>+0xa0>
+
+       2872c:	2101      	movs	r1, #1
+
+       2872e:	f104 0028 	add.w	r0, r4, #40	@ 0x28
+
+       28732:	4798      	blx	r3
+
+    tcp::LwipSocket::errorCallback(signed char):
+
+       28734:	6823      	ldr	r3, [r4, #0]
+
+       28736:	4a13      	ldr	r2, [pc, #76]	@ (28784 <<a href="./85ff909cf03ffa7f32cc69c8e720ffe1.html">tcp::LwipSocket::errorCallback(signed char)</a>+0xb4>)
+
+       28738:	695b      	ldr	r3, [r3, #20]
+
+       2873a:	4293      	cmp	r3, r2
+
+       2873c:	d0eb      	beq.n	28716 <<a href="./85ff909cf03ffa7f32cc69c8e720ffe1.html">tcp::LwipSocket::errorCallback(signed char)</a>+0x46>
+
+       2873e:	4620      	mov	r0, r4
+
+       28740:	b003      	add	sp, #12
+
+       28742:	e8bd 4030 	ldmia.w	sp!, {r4, r5, lr}
+
+       28746:	4718      	bx	r3
+
+    tcp::LwipSocket::discardData():
+
+       28748:	f001 fc36 	bl	29fb8 <<a href="../../../../../../3rdparty/lwip/src/core/pbuf.c/9b6fd2596874539050b4147be9634d35.html">pbuf_free</a>>
+
+       2874c:	2300      	movs	r3, #0
+
+       2874e:	6123      	str	r3, [r4, #16]
+
+    tcp::LwipSocket::errorCallback(signed char):
+
+       28750:	b003      	add	sp, #12
+
+       28752:	bd30      	pop	{r4, r5, pc}
+
+       28754:	490c      	ldr	r1, [pc, #48]	@ (28788 <<a href="./85ff909cf03ffa7f32cc69c8e720ffe1.html">tcp::LwipSocket::errorCallback(signed char)</a>+0xb8>)
+
+       28756:	462a      	mov	r2, r5
+
+       28758:	f7de fb9e 	bl	6e98 <<a href="../../../../../util/include/util/logger/Logger.h/fee4073070054ecc160dbd4d6b194f36.html">util::logger::Logger::warn(unsigned char, char const*, ...)</a>>
+
+       2875c:	e7ce      	b.n	286fc <<a href="./85ff909cf03ffa7f32cc69c8e720ffe1.html">tcp::LwipSocket::errorCallback(signed char)</a>+0x2c>
+
+       2875e:	490b      	ldr	r1, [pc, #44]	@ (2878c <<a href="./85ff909cf03ffa7f32cc69c8e720ffe1.html">tcp::LwipSocket::errorCallback(signed char)</a>+0xbc>)
+
+       28760:	f7da f9f2 	bl	2b48 <<a href="../../../../../util/include/util/logger/Logger.h/36d1ae1365862a45a74fa55e9d725fcd.html">util::logger::Logger::debug(unsigned char, char const*, ...)</a>>
+
+       28764:	e7ca      	b.n	286fc <<a href="./85ff909cf03ffa7f32cc69c8e720ffe1.html">tcp::LwipSocket::errorCallback(signed char)</a>+0x2c>
+
+       28766:	490a      	ldr	r1, [pc, #40]	@ (28790 <<a href="./85ff909cf03ffa7f32cc69c8e720ffe1.html">tcp::LwipSocket::errorCallback(signed char)</a>+0xc0>)
+
+       28768:	f7da f9ee 	bl	2b48 <<a href="../../../../../util/include/util/logger/Logger.h/36d1ae1365862a45a74fa55e9d725fcd.html">util::logger::Logger::debug(unsigned char, char const*, ...)</a>>
+
+       2876c:	2101      	movs	r1, #1
+
+       2876e:	e7c6      	b.n	286fe <<a href="./85ff909cf03ffa7f32cc69c8e720ffe1.html">tcp::LwipSocket::errorCallback(signed char)</a>+0x2e>
+
+    _ZNK3etl8delegateIFvN3tcp14AbstractSocket9ErrorCodeEEEclES3_():
+
+       28770:	4b08      	ldr	r3, [pc, #32]	@ (28794 <<a href="./85ff909cf03ffa7f32cc69c8e720ffe1.html">tcp::LwipSocket::errorCallback(signed char)</a>+0xc4>)
+
+       28772:	a801      	add	r0, sp, #4
+
+       28774:	681b      	ldr	r3, [r3, #0]
+
+       28776:	4798      	blx	r3
+
+       28778:	6ae3      	ldr	r3, [r4, #44]	@ 0x2c
+
+       2877a:	e7d7      	b.n	2872c <<a href="./85ff909cf03ffa7f32cc69c8e720ffe1.html">tcp::LwipSocket::errorCallback(signed char)</a>+0x5c>
+
+       2877c:	20000013 	.word	0x20000013
+
+       28780:	00047000 	.word	0x00047000
+
+       28784:	00027fb1 	.word	0x00027fb1
+
+       28788:	00047058 	.word	0x00047058
+
+       2878c:	00046fe0 	.word	0x00046fe0
+
+       28790:	00046fc0 	.word	0x00046fc0
+
+       28794:	20000000 	.word	0x20000000
+
+    </pre>
+
+    
+    <pre><a href="./4734220ca54a761f1fd6170bf24c6bb0.html">tcp::LwipSocket::tcpErrorListener(void*, signed char) (28)</a></pre>
+    
+
+    
+        <h1>Stack Worst-Case Scenarios</h1>
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 120</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 348</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    120
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                48 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    348
+                    
+                    
+                </td>
+                <td class="col_size">68</td>
+                <td><a href="../../../../../util/src/util/logger/Logger.cpp/d658d7c78dcca1ca01e61ef198b3eeaa.html" class="icon-function">util::logger::Logger::doLog(unsigned char, util::logger::Level, char const*, std::__va_list)</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                    
+                    72
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                24 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    280
+                    
+                    
+                </td>
+                <td class="col_size">100</td>
+                <td><a href="../../../../../../../executables/referenceApp/application/src/logger/logger.cpp/98866fb3d81ee8db78cbfd1e2dfd931d.html" class="icon-function">log_lwipInfo</a></td>
+            </tr>
+        
+            <tr>
+                <th>3</th>
+                <td class="col_size">
+                    
+                    48
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                16 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    180
+                    
+                    
+                </td>
+                <td class="col_size">60</td>
+                <td><a href="../../../../../../3rdparty/lwip/src/core/memp.c/39d50c52143357af896630c36b8c515f.html" class="icon-function">memp_free</a></td>
+            </tr>
+        
+            <tr>
+                <th>4</th>
+                <td class="col_size">
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    120
+                    
+                    
+                </td>
+                <td class="col_size">112</td>
+                <td><a href="../../../../../../3rdparty/lwip/src/core/pbuf.c/9b6fd2596874539050b4147be9634d35.html" class="icon-function">pbuf_free</a></td>
+            </tr>
+        
+            <tr>
+                <th>5</th>
+                <td class="col_size">
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">8</td>
+                <td><a href="../../../../../../3rdparty/lwip/src/core/pbuf.c/9b6fd2596874539050b4147be9634d35.html" class="icon-function">pbuf_free</a></td>
+            </tr>
+        
+        </tbody>
+        
+        <tfoot>
+            <tr>
+                <th></th>
+                <th class="col_size">32
+                </th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </tfoot>
+        
+    </table>
+        
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 32</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 228</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    32
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                24 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    228
+                    
+                    
+                </td>
+                <td class="col_size">200</td>
+                <td><a href="./85ff909cf03ffa7f32cc69c8e720ffe1.html" class="icon-function">tcp::LwipSocket::errorCallback(signed char)</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                </td>
+                <td class="col_size">
+            
+                8 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">28</td>
+                <td><a href="./4734220ca54a761f1fd6170bf24c6bb0.html" class="icon-function">tcp::LwipSocket::tcpErrorListener(void*, signed char)</a></td>
+            </tr>
+        
+        </tbody>
+        
+    </table>
+        
+    
+
+
+        </div>
+    <div id="page-footer">
+        <hr>
+        
+            brought to you with 💖
+            by <a href="https://twitter.com/hbehrens">Heiko Behrens</a>
+            <span class="secondary">– MIT license, copyright © 2014-2026</span>
+        
+    </div>
+    </div>
+</body>
+</html>

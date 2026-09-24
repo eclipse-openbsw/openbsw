@@ -1,0 +1,439 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../../../../../../../../../../static/css/style.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <title>Symbol - puncover</title>
+    
+</head>
+<body>
+    <div class="container" id="content">
+        <div class="page-header">
+            <nav class="navbar navbar-default" role="navigation">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="../../../../../../../../../../../index.html">
+                    Puncover
+                  </a>
+                </div>
+              </div>
+            </nav>
+          
+        </div>
+        <div id="inner_content">
+        
+    
+    <ol class="breadcrumb folders">
+        
+        <li><a href="../../../../../../../../../../../home.html">home</a></li>
+        
+        <li><a href="../../../../../../../../../../runner.html">runner</a></li>
+        
+        <li><a href="../../../../../../../../../work.html">work</a></li>
+        
+        <li><a href="../../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../libs.html">libs</a></li>
+        
+        <li><a href="../../../../../3rdparty.html">3rdparty</a></li>
+        
+        <li><a href="../../../../lwip.html">lwip</a></li>
+        
+        <li><a href="../../../src.html">src</a></li>
+        
+        <li ><a href="../../core.html">core</a>
+            </li>
+
+        
+        <li class="active"><a href="../inet_chksum.c.html">inet_chksum.c</a>:310
+            </li>
+        
+    </ol>
+
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <th>Function</th>
+                <td colspan="5">
+                    <span class="icon-function">inet_chksum_pseudo</span>
+                </td>
+            </tr>
+
+            <tr>
+                <th rowspan="2"></th>
+                <th>Address</th>
+                <th>Remarks</th>
+                <th>Stack</th>
+                <th>Code</th>
+                <th>Static</th>
+            </tr>
+            <tr>
+                <td>0x00031484</td>
+                <td>
+    
+    
+</td>
+                <td>32 (static)</td>
+                <td>136</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th>Callers (1)</th>
+                <td colspan="5">
+                
+                    <a href="./3fc28f5e6e6ee9cb8891e0991b814809.html">ip_chksum_pseudo (4)</a>
+                    
+                
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Callees (2,
+                            <span title="sum of used bytes by all callees">
+                            Σ=216
+                            </span>
+                        )
+                    
+                </th>
+                <td colspan="5">
+                
+                    <a href="./96dc3e65158a009fa061911d95942335.html">lwip_standard_chksum (208)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../def.c/e92a30e58780c58f695060997f7dd81e.html">lwip_htons (8)</a>
+                    
+                
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    
+    <pre><a href="./96dc3e65158a009fa061911d95942335.html">lwip_standard_chksum (208)</a></pre>
+    
+
+    <pre>
+
+    inet_chksum_pseudo():
+
+       31484:	e92d 43f8 	stmdb	sp!, {r3, r4, r5, r6, r7, r8, r9, lr}
+
+       31488:	9c08      	ldr	r4, [sp, #32]
+
+       3148a:	681b      	ldr	r3, [r3, #0]
+
+       3148c:	6824      	ldr	r4, [r4, #0]
+
+       3148e:	4617      	mov	r7, r2
+
+       31490:	0c22      	lsrs	r2, r4, #16
+
+       31492:	fa12 f484 	uxtah	r4, r2, r4
+
+       31496:	fa14 f483 	uxtah	r4, r4, r3
+
+       3149a:	eb04 4413 	add.w	r4, r4, r3, lsr #16
+
+       3149e:	b2a3      	uxth	r3, r4
+
+       314a0:	eb03 4314 	add.w	r3, r3, r4, lsr #16
+
+       314a4:	b29c      	uxth	r4, r3
+
+       314a6:	4688      	mov	r8, r1
+
+       314a8:	eb04 4413 	add.w	r4, r4, r3, lsr #16
+
+    inet_cksum_pseudo_base():
+
+       314ac:	b1d8      	cbz	r0, 314e6 <<a href="./7c102cab586ba59328619e8302ae435c.html">inet_chksum_pseudo</a>+0x62>
+
+       314ae:	4605      	mov	r5, r0
+
+       314b0:	f04f 0900 	mov.w	r9, #0
+
+       314b4:	896e      	ldrh	r6, [r5, #10]
+
+       314b6:	6868      	ldr	r0, [r5, #4]
+
+       314b8:	4631      	mov	r1, r6
+
+       314ba:	f7ff ff7b 	bl	313b4 <<a href="./96dc3e65158a009fa061911d95942335.html">lwip_standard_chksum</a>>
+
+       314be:	4420      	add	r0, r4
+
+       314c0:	b284      	uxth	r4, r0
+
+       314c2:	07f3      	lsls	r3, r6, #31
+
+       314c4:	eb04 4410 	add.w	r4, r4, r0, lsr #16
+
+       314c8:	d504      	bpl.n	314d4 <<a href="./7c102cab586ba59328619e8302ae435c.html">inet_chksum_pseudo</a>+0x50>
+
+       314ca:	ba24      	rev	r4, r4
+
+       314cc:	f089 0901 	eor.w	r9, r9, #1
+
+       314d0:	f3c4 440f 	ubfx	r4, r4, #16, #16
+
+       314d4:	682d      	ldr	r5, [r5, #0]
+
+       314d6:	2d00      	cmp	r5, #0
+
+       314d8:	d1ec      	bne.n	314b4 <<a href="./7c102cab586ba59328619e8302ae435c.html">inet_chksum_pseudo</a>+0x30>
+
+       314da:	f1b9 0f00 	cmp.w	r9, #0
+
+       314de:	d002      	beq.n	314e6 <<a href="./7c102cab586ba59328619e8302ae435c.html">inet_chksum_pseudo</a>+0x62>
+
+       314e0:	ba24      	rev	r4, r4
+
+       314e2:	f3c4 440f 	ubfx	r4, r4, #16, #16
+
+       314e6:	4640      	mov	r0, r8
+
+       314e8:	f7ff ff5e 	bl	313a8 <<a href="../def.c/e92a30e58780c58f695060997f7dd81e.html">lwip_htons</a>>
+
+       314ec:	4605      	mov	r5, r0
+
+       314ee:	4638      	mov	r0, r7
+
+       314f0:	f7ff ff5a 	bl	313a8 <<a href="../def.c/e92a30e58780c58f695060997f7dd81e.html">lwip_htons</a>>
+
+       314f4:	182b      	adds	r3, r5, r0
+
+       314f6:	4423      	add	r3, r4
+
+       314f8:	b29a      	uxth	r2, r3
+
+       314fa:	eb02 4313 	add.w	r3, r2, r3, lsr #16
+
+       314fe:	b298      	uxth	r0, r3
+
+       31500:	eb00 4013 	add.w	r0, r0, r3, lsr #16
+
+       31504:	43c0      	mvns	r0, r0
+
+    inet_chksum_pseudo():
+
+       31506:	b280      	uxth	r0, r0
+
+       31508:	e8bd 83f8 	ldmia.w	sp!, {r3, r4, r5, r6, r7, r8, r9, pc}
+
+    </pre>
+
+    
+    <pre><a href="./3fc28f5e6e6ee9cb8891e0991b814809.html">ip_chksum_pseudo (4)</a></pre>
+    
+
+    
+        <h1>Stack Worst-Case Scenarios</h1>
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 184</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 208</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    184
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                24 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">208</td>
+                <td><a href="./96dc3e65158a009fa061911d95942335.html" class="icon-function">lwip_standard_chksum</a></td>
+            </tr>
+        
+        </tbody>
+        
+        <tfoot>
+            <tr>
+                <th></th>
+                <th class="col_size">160
+                </th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </tfoot>
+        
+    </table>
+        
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 160</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 4,260</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    160
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                32 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    4,260
+                    
+                    
+                </td>
+                <td class="col_size">136</td>
+                <td><a href="./7c102cab586ba59328619e8302ae435c.html" class="icon-function">inet_chksum_pseudo</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    4,124
+                    
+                    
+                </td>
+                <td class="col_size">4</td>
+                <td><a href="./3fc28f5e6e6ee9cb8891e0991b814809.html" class="icon-function">ip_chksum_pseudo</a></td>
+            </tr>
+        
+            <tr>
+                <th>3</th>
+                <td class="col_size">
+                    
+                    128
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                64 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    4,120
+                    
+                    
+                </td>
+                <td class="col_size">3,108</td>
+                <td><a href="../tcp_in.c/e3c17e1b95f3b9b4519367e33fff205b.html" class="icon-function">tcp_input</a></td>
+            </tr>
+        
+            <tr>
+                <th>4</th>
+                <td class="col_size">
+                    
+                    64
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                40 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    1,012
+                    
+                    
+                </td>
+                <td class="col_size">788</td>
+                <td><a href="../ipv4/ip4.c/17641b681261fdfd4309a84b5ab2c56e.html" class="icon-function">ip4_input</a></td>
+            </tr>
+        
+            <tr>
+                <th>5</th>
+                <td class="col_size">
+                </td>
+                <td class="col_size">
+            
+                24 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">224</td>
+                <td><a href="../../netif/ethernet.c/e2fa4588adea7f5422e68cfb57168248.html" class="icon-function">ethernet_input</a></td>
+            </tr>
+        
+        </tbody>
+        
+    </table>
+        
+    
+
+
+        </div>
+    <div id="page-footer">
+        <hr>
+        
+            brought to you with 💖
+            by <a href="https://twitter.com/hbehrens">Heiko Behrens</a>
+            <span class="secondary">– MIT license, copyright © 2014-2026</span>
+        
+    </div>
+    </div>
+</body>
+</html>
