@@ -23,8 +23,7 @@ You can view this as a map to regularly refer back to as you navigate and become
 
     ├── build
     │   ├── posix-freertos
-    │   ├── s32k148-freertos-clang
-    │   └── s32k148-freertos-gcc
+    │   └── s32k148-freertos
     ├── cmake
     │   ├── modules
     │   ├── presets
