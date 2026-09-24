@@ -1,0 +1,121 @@
+# *******************************************************************************
+# Copyright (c) 2026 BMW AG
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+
+load("@rules_cc//cc:cc_library.bzl", "cc_library")
+
+package(default_visibility = ["//visibility:public"])
+
+# ---- concurrency -----------------------------------------------------------
+
+# Default is a no-op stub, not a mock: production packages must not depend on
+# test sources, and reference_app/unit_test consumers already supply their own
+# real implementation via middleware_config (see referenceApp/middlewareConfiguration
+# and libs/bsw/middleware/test BUILD.bazel).
+cc_library(
+    name = "concurrency_impl_default",
+    hdrs = ["src/noop/concurrency/middleware/concurrency/lock_types.h"],
+    strip_include_prefix = "src/noop/concurrency",
+)
+
+label_flag(
+    name = "concurrency_impl",
+    build_setting_default = ":concurrency_impl_default",
+)
+
+cc_library(
+    name = "concurrency",
+    hdrs = ["include/middleware/concurrency/LockStrategies.h"],
+    strip_include_prefix = "include",
+    deps = [":concurrency_impl"],
+)
+
+filegroup(
+    name = "concurrency_code_to_doc",
+    srcs = ["include/middleware/concurrency/LockStrategies.h"],
+)
+
+# ---- logger ----------------------------------------------------------------
+
+# Default is a no-op stub; see the note on concurrency_impl_default above.
+cc_library(
+    name = "logger_impl_default",
+    srcs = ["src/noop/logger/LoggerNoop.cpp"],
+    deps = [
+        ":logger",
+        "//libs/3rdparty/etl",
+    ],
+)
+
+label_flag(
+    name = "logger_impl",
+    build_setting_default = ":logger_impl_default",
+)
+
+cc_library(
+    name = "logger",
+    hdrs = ["include/middleware/logger/Logger.h"],
+    strip_include_prefix = "include",
+    deps = ["//libs/3rdparty/etl"],
+)
+
+filegroup(
+    name = "logger_code_to_doc",
+    srcs = ["include/middleware/logger/Logger.h"],
+)
+
+# ---- os --------------------------------------------------------------------
+
+# Default is a no-op stub; see the note on concurrency_impl_default above.
+cc_library(
+    name = "os_impl_default",
+    srcs = ["src/noop/os/OsNoop.cpp"],
+    deps = [":os"],
+)
+
+label_flag(
+    name = "os_impl",
+    build_setting_default = ":os_impl_default",
+)
+
+cc_library(
+    name = "os",
+    hdrs = ["include/middleware/os/TaskIdProvider.h"],
+    strip_include_prefix = "include",
+)
+
+filegroup(
+    name = "os_code_to_doc",
+    srcs = ["include/middleware/os/TaskIdProvider.h"],
+)
+
+# ---- time ------------------------------------------------------------------
+
+# Default is a no-op stub; see the note on concurrency_impl_default above.
+cc_library(
+    name = "time_impl_default",
+    srcs = ["src/noop/time/TimeNoop.cpp"],
+    deps = [":time"],
+)
+
+label_flag(
+    name = "time_impl",
+    build_setting_default = ":time_impl_default",
+)
+
+cc_library(
+    name = "time",
+    hdrs = ["include/middleware/time/SystemTimerProvider.h"],
+    strip_include_prefix = "include",
+)
+
+filegroup(
+    name = "time_code_to_doc",
+    srcs = ["include/middleware/time/SystemTimerProvider.h"],
+)
