@@ -13,8 +13,8 @@
 #include "uds/base/Subfunction.h"
 #include "uds/lifecycle/IUdsLifecycleConnector.h"
 
-#include <cstdint>
 #include <etl/array.h>
+#include <cstdint>
 
 namespace uds
 {

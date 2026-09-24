@@ -13,6 +13,8 @@
 #include "uds/connection/IncomingDiagConnection.h"
 #include "uds/session/DiagSession.h"
 
+#include <etl/span.h>
+
 namespace uds
 {
 ClearDiagnosticInformation::ClearDiagnosticInformation()
@@ -30,9 +32,10 @@ DiagReturnCode::Type ClearDiagnosticInformation::process(
     uint8_t const* const request,
     uint16_t const /* requestLength */)
 {
-    uint32_t const groupOfDTC = (static_cast<uint32_t>(request[0]) << 16)
-                                | (static_cast<uint32_t>(request[1]) << 8)
-                                | static_cast<uint32_t>(request[2]);
+    ::etl::span<uint8_t const> const requestView(request, EXPECTED_REQUEST_LENGTH);
+    uint32_t const groupOfDTC = (static_cast<uint32_t>(requestView[0U]) << 16)
+                                | (static_cast<uint32_t>(requestView[1U]) << 8)
+                                | static_cast<uint32_t>(requestView[2U]);
 
     switch (groupOfDTC)
     {
