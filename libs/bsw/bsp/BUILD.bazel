@@ -9,6 +9,7 @@
 # *******************************************************************************
 
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
+load("@rules_cc//cc:cc_test.bzl", "cc_test")
 load("//bazel/config/build_variant:compatibility.bzl", "unit_test_only")
 
 cc_library(
@@ -46,5 +47,23 @@ cc_library(
         ":bsp",
         "//libs/3rdparty/etl",
         "//libs/3rdparty/googletest:gtest_main",
+    ],
+)
+
+cc_test(
+    name = "bsp_test",
+    srcs = [
+        "test/src/bsp/IncludeTest.cpp",
+        "test/src/bsp/can/canTransceiver/CanPhyTest.cpp",
+        "test/src/bsp/timer/IsEqualAfterTimeoutTest.cpp",
+    ],
+    target_compatible_with = unit_test_only(),
+    visibility = ["//visibility:public"],
+    deps = [
+        "//libs/3rdparty/googletest:gtest_main",
+        "//libs/bsw/bsp",
+        "//libs/bsw/bsp:bsp_mock",
+        "//libs/bsw/util",
+        "//libs/bsw/util:util_mock",  # Provides putByteToStdout() and getByteFromStdin() required by util's stdio streams.
     ],
 )
