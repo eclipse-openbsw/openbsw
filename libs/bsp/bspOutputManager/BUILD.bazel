@@ -9,6 +9,8 @@
 # *******************************************************************************
 
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
+load("@rules_cc//cc:cc_test.bzl", "cc_test")
+load("//bazel/config/build_variant:compatibility.bzl", "unit_test_only")
 
 cc_library(
     name = "bsp_output_manager",
@@ -23,8 +25,8 @@ cc_library(
     strip_include_prefix = "include",
     visibility = ["//visibility:public"],
     deps = [
-        ":bsp_io",
         "//bazel/config/bsp:bsp_configuration",
+        "//bazel/config/bsp:bsp_io",
         "//libs/3rdparty/etl",
         "//libs/bsp/bspDynamicClient:bsp_dynamic_client",
         "//libs/bsp/bspInterrupts:bsp_interrupts",
@@ -32,11 +34,13 @@ cc_library(
     ],
 )
 
-# bspIo implementation. Every platform must declare this via its platform flags.
-# Posix has no bspIo as bsp_output_manager is not linked in posix executables.
-#   Override: --//libs/bsp/bspOutputManager:bsp_io=//path/to:your_bsp_io
-label_flag(
-    name = "bsp_io",
-    build_setting_default = "//bazel/config:no_implementation",
-    visibility = ["//visibility:public"],
+cc_test(
+    name = "bsp_output_manager_test",
+    srcs = ["test/src/IncludeTest.cpp"],
+    target_compatible_with = unit_test_only(),
+    deps = [
+        ":bsp_output_manager",
+        "//libs/3rdparty/googletest:gtest_main",
+        "//libs/bsw/util:util_mock",
+    ],
 )

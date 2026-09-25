@@ -9,6 +9,8 @@
 # *******************************************************************************
 
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
+load("@rules_cc//cc:cc_test.bzl", "cc_test")
+load("//bazel/config/build_variant:compatibility.bzl", "unit_test_only")
 
 cc_library(
     name = "safe_monitor",
@@ -24,5 +26,24 @@ cc_library(
     visibility = ["//visibility:public"],
     deps = [
         "//libs/bsw/common",
+    ],
+)
+
+cc_test(
+    name = "safe_monitor_test",
+    srcs = [
+        "test/include/common.h",
+        "test/src/RegisterTest.cpp",
+        "test/src/SequenceTest.cpp",
+        "test/src/TriggerTest.cpp",
+        "test/src/ValueTest.cpp",
+        "test/src/WatchdogTest.cpp",
+        "test/src/common.cpp",
+    ],
+    includes = ["test/include"],
+    target_compatible_with = unit_test_only(),
+    deps = [
+        ":safe_monitor",
+        "//libs/3rdparty/googletest:gtest_main",
     ],
 )

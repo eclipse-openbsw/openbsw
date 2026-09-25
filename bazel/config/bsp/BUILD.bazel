@@ -8,11 +8,18 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 
-# BSP configuration headers (board-specific bsp/io/*, bsp/uart/*, etc.).
-# Every platform must declare this via its platform flags.
-#   Override: --//bazel/config/bsp:bsp_configuration=//path/to:your_bsp_configuration
+# BSP configuration injection point. Every platform declares this via its platform flags.
+# Override with --//bazel/config/bsp:bsp_configuration=//path/to:your_bsp_configuration.
 label_flag(
     name = "bsp_configuration",
+    build_setting_default = "//bazel/config:no_implementation",
+    visibility = ["//visibility:public"],
+)
+
+# BSP IO injection point. Every platform that uses BSP IO declares this via its platform flags.
+# Override with --//bazel/config/bsp:bsp_io=//path/to:your_bsp_io.
+label_flag(
+    name = "bsp_io",
     build_setting_default = "//bazel/config:no_implementation",
     visibility = ["//visibility:public"],
 )

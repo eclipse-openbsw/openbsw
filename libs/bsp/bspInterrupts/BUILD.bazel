@@ -9,6 +9,7 @@
 # *******************************************************************************
 
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
+load("@rules_cc//cc:cc_test.bzl", "cc_test")
 load("//bazel/config/build_variant:compatibility.bzl", "unit_test_only")
 
 # Interrupt-lock implementation. Every platform must declare this via its platform flags.
@@ -79,5 +80,19 @@ cc_library(
         ":bsp_interrupts_mock_headers",
         "//libs/3rdparty/etl",
         "//libs/3rdparty/googletest:gtest",
+    ],
+)
+
+cc_test(
+    name = "bsp_interrupts_test",
+    srcs = [
+        "test/src/IncludeTest.cpp",
+        "test/src/InterruptTest.cpp",
+    ],
+    target_compatible_with = unit_test_only(),
+    deps = [
+        ":bsp_interrupts_headers",
+        ":bsp_interrupts_mock",
+        "//libs/3rdparty/googletest:gtest_main",
     ],
 )

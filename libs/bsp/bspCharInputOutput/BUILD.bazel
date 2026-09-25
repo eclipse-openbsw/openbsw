@@ -9,6 +9,8 @@
 # *******************************************************************************
 
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
+load("@rules_cc//cc:cc_test.bzl", "cc_test")
+load("//bazel/config/build_variant:compatibility.bzl", "unit_test_only")
 
 cc_library(
     name = "bsp_char_input_output",
@@ -34,6 +36,16 @@ cc_library(
     # Strong printf/sprintf overrides have no prior symbol reference. Force-link ensures they win
     # over defaults resolved later.
     alwayslink = True,
+)
+
+cc_test(
+    name = "bsp_char_input_output_test",
+    srcs = ["test/src/IncludeTest.cpp"],
+    target_compatible_with = unit_test_only(),
+    deps = [
+        ":bsp_char_input_output",
+        "//libs/3rdparty/googletest:gtest_main",
+    ],
 )
 
 # UART implementation. Every platform must declare this via its platform flags.
