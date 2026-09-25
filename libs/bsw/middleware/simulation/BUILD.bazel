@@ -1,0 +1,86 @@
+# *******************************************************************************
+# Copyright (c) 2026 Accenture
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+
+load("@rules_cc//cc:cc_binary.bzl", "cc_binary")
+load("@rules_cc//cc:cc_library.bzl", "cc_library")
+load("//bazel/config/build_variant:compatibility.bzl", "simulation_only")
+load(
+    "//libs/bsw/middleware/tools/cpp_generator:middleware_codegen.bzl",
+    "middleware_codegen",
+)
+load(":generated_outputs.bzl", "GENERATED_OUTPUTS")
+
+cc_library(
+    name = "simulation_etl_profile",
+    hdrs = ["include/etl_profile.h"],
+    strip_include_prefix = "include",
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "simulation_lock_types",
+    hdrs = ["platform_integration/concurrency/include/middleware/concurrency/lock_types.h"],
+    strip_include_prefix = "platform_integration/concurrency/include",
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "simulation_private_headers",
+    hdrs = [
+        "include/Logger.h",
+        "include/foo/FooProxyWrapper.h",
+        "include/foo/FooSkeletonWrapper.h",
+    ],
+    strip_include_prefix = "include",
+)
+
+# POSIX system libraries required by the simulation binary.
+cc_library(
+    name = "simulation_system_libs",
+    linkopts = [
+        "-lpthread",
+        "-lrt",
+    ],
+)
+
+middleware_codegen(
+    name = "middleware_simulation_generated",
+    deployment_yaml = "model/deployment-test.yaml",
+    generated_outputs = GENERATED_OUTPUTS,
+    deps = ["//libs/bsw/middleware"],
+)
+
+# The simulation ETL profile enables type trait compiler builtins that the available
+# compilers do not fully implement, so this binary cannot be compiled in this
+# environment. It must be built explicitly with a compiler that provides those builtins.
+cc_binary(
+    name = "middleware_simulation",
+    srcs = [
+        "platform_integration/logger/src/LoggerImpl.cpp",
+        "platform_integration/os/src/OsDefinitions.cpp",
+        "platform_integration/time/src/SystemTimeProvider.cpp",
+        "src/Logger.cpp",
+        "src/MainCore0.cpp",
+        "src/MainCore1.cpp",
+        "src/Sample.cpp",
+        "src/ShmWrapper.cpp",
+        "src/ShmWrapper.h",
+    ],
+    tags = ["manual"],
+    target_compatible_with = simulation_only(),
+    visibility = ["//visibility:public"],
+    deps = [
+        ":middleware_simulation_generated",
+        ":simulation_lock_types",
+        ":simulation_private_headers",
+        ":simulation_system_libs",
+        "//libs/bsw/middleware",
+    ],
+)

@@ -10,6 +10,8 @@
 
 load("@bazel_skylib//rules:common_settings.bzl", "bool_flag")
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
+load("@rules_cc//cc:cc_test.bzl", "cc_test")
+load("//bazel/config/build_variant:compatibility.bzl", "unit_test_only")
 
 # Tracing toggle. --//libs/bsw/runtime:tracing=true to enable.
 bool_flag(
@@ -47,5 +49,32 @@ cc_library(
         "//libs/bsw/asyncFreeRtos:freertos_configuration",
         "//libs/bsw/bsp",
         "//libs/bsw/util",
+    ],
+)
+
+cc_test(
+    name = "runtime_test",
+    srcs = [
+        "test/src/FunctionExecutionMonitorTest.cpp",
+        "test/src/FunctionRuntimeStatisticsTest.cpp",
+        "test/src/NestedRuntimeEntryTest.cpp",
+        "test/src/RuntimeMonitorTest.cpp",
+        "test/src/RuntimeStackEntryTest.cpp",
+        "test/src/RuntimeStackTest.cpp",
+        "test/src/RuntimeStatisticsTest.cpp",
+        "test/src/SharedStatisticsContainerTest.cpp",
+        "test/src/SimpleRuntimeEntryTest.cpp",
+        "test/src/StatisticsContainerTest.cpp",
+        "test/src/StatisticsIteratorTest.cpp",
+        "test/src/StatisticsWriterTest.cpp",
+    ],
+    target_compatible_with = unit_test_only(),
+    deps = [
+        ":runtime",
+        "//libs/3rdparty/googletest:gtest_main",
+        "//libs/bsw/async:async_mock",
+        "//libs/bsw/async:async_mock_impl",
+        "//libs/bsw/bsp:bsp_mock",
+        "//libs/bsw/util:util_mock",
     ],
 )

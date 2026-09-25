@@ -97,6 +97,18 @@ platform(
     parents = ["@platforms//host:host"],
 )
 
+# Middleware simulation build. Inherits posix and activates the simulation ETL
+# profile and concurrency lock types.
+platform(
+    name = "simulation",
+    flags = [
+        "--//bazel/config/build_variant=middleware_simulation",
+        "--//libs/3rdparty/etl:etl_profile=//libs/bsw/middleware/simulation:simulation_etl_profile",
+        "--//libs/bsw/middleware:middleware_lock_types=//libs/bsw/middleware/simulation:simulation_lock_types",
+    ],
+    parents = [":posix"],
+)
+
 # Unit-test build. Inherits posix and gates mock and test targets into scope.
 platform(
     name = "posix_unit_test",
@@ -117,6 +129,16 @@ platform(
         "--//libs/bsw/async:async_rtos_impl=//libs/bsw/async:async_mock_impl",
         "--//libs/bsw/async:async_binding=//libs/bsw/asyncFreeRtos:async_binding_mock",
         "--//libs/bsw/asyncFreeRtos:async_core_configuration=//libs/bsw/asyncFreeRtos:async_core_configuration_mock",
+
+        # lwip stack configuration
+        "--//libs/3rdparty/lwip:lwip_configuration=//executables/unitTest/lwipConfiguration:lwip_configuration",
+
+        # transport configuration
+        "--//libs/bsw/transportRouterSimple:transport_configuration=//executables/unitTest/transportConfiguration:transport_configuration",
+
+        # routing test configuration
+        "--//libs/bsw/routing:routing_configuration=//libs/bsw/routing:routing_test_configuration",
+        "--//libs/bsw/blob:blob_configuration=//libs/bsw/routing:routing_test_blob_configuration",
     ],
     parents = [":posix"],
 )

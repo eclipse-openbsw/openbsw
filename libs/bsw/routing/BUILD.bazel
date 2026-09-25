@@ -9,6 +9,8 @@
 # *******************************************************************************
 
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
+load("@rules_cc//cc:cc_test.bzl", "cc_test")
+load("//bazel/config/build_variant:compatibility.bzl", "unit_test_only")
 
 label_flag(
     name = "routing_configuration",
@@ -31,5 +33,43 @@ cc_library(
         "//libs/bsw/io",
         "//libs/bsw/lwipSocket:lwip_socket",
         "//libs/bsw/util",
+    ],
+)
+
+cc_library(
+    name = "routing_test_configuration",
+    hdrs = [
+        "test/include/routing/channelId.h",
+        "test/include/routing/constants.h",
+        "test/include/routing/definition.h",
+    ],
+    strip_include_prefix = "test/include",
+    target_compatible_with = unit_test_only(),
+    visibility = ["//visibility:public"],
+    deps = ["//libs/3rdparty/etl"],
+)
+
+cc_library(
+    name = "routing_test_blob_configuration",
+    hdrs = [
+        "test/include/blob/ConfigType.h",
+        "test/include/blob/configuration.h",
+    ],
+    strip_include_prefix = "test/include",
+    target_compatible_with = unit_test_only(),
+    visibility = ["//visibility:public"],
+)
+
+cc_test(
+    name = "routing_test",
+    srcs = glob(["test/src/**/*.cpp"]),
+    linkstatic = True,
+    target_compatible_with = unit_test_only(),
+    deps = [
+        ":routing",
+        "//libs/3rdparty/googletest:gtest_main",
+        "//libs/bsw/bsp:bsp_mock",
+        "//libs/bsw/cpp2ethernet:cpp2ethernet_mock",
+        "//libs/bsw/io:io_mock",
     ],
 )

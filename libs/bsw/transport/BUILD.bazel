@@ -9,6 +9,7 @@
 # *******************************************************************************
 
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
+load("@rules_cc//cc:cc_test.bzl", "cc_test")
 load("//bazel/config/build_variant:compatibility.bzl", "unit_test_only")
 
 cc_library(
@@ -61,4 +62,26 @@ cc_library(
     strip_include_prefix = "mock/gmock/include",
     target_compatible_with = unit_test_only(),
     visibility = ["//visibility:public"],
+)
+
+cc_test(
+    name = "transport_test",
+    srcs = [
+        "test/src/AbstractTransportLayerTest.cpp",
+        "test/src/IncludeTest.cpp",
+        "test/src/Logger.cpp",
+        "test/src/TesterAddressTest.cpp",
+        "test/src/TransportMessageTest.cpp",
+    ],
+    target_compatible_with = unit_test_only(),
+    visibility = ["//visibility:public"],
+    deps = [
+        "//executables/unitTest/transportConfiguration:transport_configuration",
+        "//libs/3rdparty/etl",
+        "//libs/3rdparty/googletest:gtest_main",
+        "//libs/bsw/async:async_mock_impl",
+        "//libs/bsw/transport",
+        "//libs/bsw/transport:transport_mock",
+        "//libs/bsw/util:util_mock",
+    ],
 )

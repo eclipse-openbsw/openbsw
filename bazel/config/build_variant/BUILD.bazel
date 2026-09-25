@@ -23,9 +23,16 @@ string_flag(
     name = "build_variant",
     build_setting_default = "reference_app",
     values = [
+        "middleware_simulation",
         "reference_app",
         "unit_test",
     ],
+    visibility = ["//visibility:public"],
+)
+
+config_setting(
+    name = "middleware_simulation",
+    flag_values = {":build_variant": "middleware_simulation"},
     visibility = ["//visibility:public"],
 )
 

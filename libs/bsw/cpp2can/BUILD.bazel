@@ -9,6 +9,7 @@
 # *******************************************************************************
 
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
+load("@rules_cc//cc:cc_test.bzl", "cc_test")
 load("//bazel/config/build_variant:compatibility.bzl", "unit_test_only")
 
 cc_library(
@@ -30,6 +31,7 @@ cc_library(
     strip_include_prefix = "include",
     visibility = ["//visibility:public"],
     deps = [
+        "//bazel/config/features:can0_use_fd_defines",
         "//libs/3rdparty/etl",
         "//libs/bsw/common",
         "//libs/bsw/util",
@@ -51,11 +53,34 @@ cc_library(
         "mock/include/can/transceiver/ICanTransceiverMock.h",
     ],
     implementation_deps = [
-        ":cpp2can",
-        "//libs/3rdparty/googletest:gtest_main",
         "//libs/bsw/bsp:bsp_mock",
     ],
     strip_include_prefix = "mock/include",
     target_compatible_with = unit_test_only(),
     visibility = ["//visibility:public"],
+    deps = [
+        ":cpp2can",
+        "//libs/3rdparty/googletest:gtest",
+    ],
+)
+
+cc_test(
+    name = "cpp2can_test",
+    srcs = [
+        "test/src/can/canframes/CANFrameTest.cpp",
+        "test/src/can/canframes/CanIdTest.cpp",
+        "test/src/can/filter/BitFieldFilterTest.cpp",
+        "test/src/can/filter/IntervalFilterTest.cpp",
+        "test/src/can/filter/MaskFilterTest.cpp",
+        "test/src/can/transceiver/AbstractCANTransceiverTest.cpp",
+    ],
+    target_compatible_with = unit_test_only(),
+    visibility = ["//visibility:public"],
+    deps = [
+        "//libs/3rdparty/googletest:gtest_main",
+        "//libs/bsw/bsp:bsp_mock",
+        "//libs/bsw/cpp2can",
+        "//libs/bsw/cpp2can:cpp2can_mock",
+        "//libs/bsw/util:util_mock",  # Provides putByteToStdout() and getByteFromStdin() required by util's stdio streams.
+    ],
 )
