@@ -36,6 +36,20 @@
             }
         },
         {
+            "name": "tests-posix-asan-ubsan-debug",
+            "displayName": "Configure for testing POSIX and generic modules (ASan+UBSan, debug)",
+            "description": "Configure for testing POSIX and generic modules with AddressSanitizer + UndefinedBehaviorSanitizer instrumentation (debug)",
+            "inherits": "_config-base",
+            "binaryDir": "${sourceDir}/build/tests/posix/AsanUbsanDebug",
+            "cacheVariables": {
+                "CMAKE_DEFAULT_BUILD_TYPE": "Debug",
+                "CMAKE_CONFIGURATION_TYPES": "Debug",
+                "BUILD_EXECUTABLE": "unitTest",
+                "OPENBSW_PLATFORM": "posix",
+                "OPENBSW_ENABLE_ASAN_UBSAN": "ON"
+            }
+        },
+        {
             "name": "tests-s32k1xx-debug",
             "displayName": "Configure for testing S32K1XX modules (debug)",
             "description": "Configure for testing S32K1XX modules (debug)",
@@ -279,6 +293,13 @@
             "configuration": "Release"
         },
         {
+            "name": "tests-posix-asan-ubsan-debug",
+            "displayName": "Build tests of POSIX and generic modules (ASan+UBSan, debug)",
+            "description": "Build tests of POSIX and generic modules with AddressSanitizer + UndefinedBehaviorSanitizer instrumentation (debug)",
+            "configurePreset": "tests-posix-asan-ubsan-debug",
+            "configuration": "Debug"
+        },
+        {
             "name": "tests-s32k1xx-debug",
             "displayName": "Build tests of S32K1XX modules (debug)",
             "description": "Build tests of S32K1XX modules (debug)",
@@ -381,6 +402,20 @@
             "description": "Run tests of POSIX and generic modules (release)",
             "configuration": "Release",
             "configurePreset": "tests-posix-release"
+        },
+        {
+            "name": "tests-posix-asan-ubsan-debug",
+            "displayName": "Run tests of POSIX and generic modules (ASan+UBSan, debug)",
+            "description": "Run tests of POSIX and generic modules with AddressSanitizer + UndefinedBehaviorSanitizer instrumentation (debug)",
+            "configuration": "Debug",
+            "configurePreset": "tests-posix-asan-ubsan-debug",
+            "environment": {
+                "ASAN_OPTIONS": "halt_on_error=1:print_stacktrace=1:detect_leaks=1",
+                "UBSAN_OPTIONS": "halt_on_error=1:print_stacktrace=1"
+            },
+            "output": {
+                "outputOnFailure": true
+            }
         },
         {
             "name": "tests-s32k1xx-debug",
