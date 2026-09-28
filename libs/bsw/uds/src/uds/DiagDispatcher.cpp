@@ -513,16 +513,18 @@ void DiagDispatcher::diagConnectionTerminated(IncomingDiagConnection& diagConnec
         fProvidingListenerHelper.releaseTransportMessage(*responseMessage);
     }
 
-    {
-        ::async::LockType const lock;
-        _incomingDiagConnectionPool.destroy(&diagConnection);
-    }
-
+    // reset fields before destroy(): the pool destructs diagConnection in place, so writing to
+    // its members afterwards would access an object whose lifetime has already ended
     diagConnection.requestMessage              = nullptr;
     diagConnection.responseMessage             = nullptr;
     diagConnection.diagDispatcher              = nullptr;
     diagConnection.messageSender               = nullptr;
     diagConnection.requestNotificationListener = nullptr;
+
+    {
+        ::async::LockType const lock;
+        _incomingDiagConnectionPool.destroy(&diagConnection);
+    }
 
     checkConnectionShutdownProgress();
 }
