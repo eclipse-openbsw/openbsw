@@ -136,8 +136,12 @@ StorageJob::ResultType EepStorage::write(
             // trying to store too much data
             return StorageJob::Result::Error();
         }
-        (void)::etl::mem_copy(
-            writeBuf.data(), sizeToCopy, (eepBuf.data() + headerSize + progressInBlock));
+        if (sizeToCopy != 0U)
+        {
+            // avoid passing a null source pointer (e.g. an empty span) to mem_copy
+            (void)::etl::mem_copy(
+                writeBuf.data(), sizeToCopy, (eepBuf.data() + headerSize + progressInBlock));
+        }
         progressForUser += sizeToCopy;
         progressInBlock += sizeToCopy;
     }
@@ -216,8 +220,12 @@ StorageJob::ResultType EepStorage::read(
             // checked in the beginning of the loop), otherwise sizeToCopy might overflow
             sizeToCopy = usedDataSize - progressInBlock;
         }
-        (void)::etl::mem_copy(
-            (eepBuf.data() + headerSize + progressInBlock), sizeToCopy, readBuf.data());
+        if (sizeToCopy != 0U)
+        {
+            // avoid passing a null destination pointer (e.g. an empty span) to mem_copy
+            (void)::etl::mem_copy(
+                (eepBuf.data() + headerSize + progressInBlock), sizeToCopy, readBuf.data());
+        }
         progressForUser += sizeToCopy;
         progressInBlock += sizeToCopy;
     }
