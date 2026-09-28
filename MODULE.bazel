@@ -36,6 +36,7 @@ register_toolchains(
 # Hermetic Python toolchain
 python = use_extension("@rules_python//python/extensions:python.bzl", "python")
 python.toolchain(python_version = "3.12.3")
+use_repo(python, "python_3_12")
 
 # Pip packages
 pip = use_extension("@rules_python//python/extensions:pip.bzl", "pip")
@@ -45,3 +46,10 @@ pip.parse(
     requirements_lock = "//libs/bsw/middleware/tools/cpp_generator:requirements.lock",
 )
 use_repo(pip, "middleware_pip")
+
+pip.parse(
+    hub_name = "blob_pip",
+    python_version = "3.12.3",
+    requirements_lock = "//tools/blob:requirements.lock",
+)
+use_repo(pip, "blob_pip")
