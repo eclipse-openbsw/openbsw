@@ -55,6 +55,10 @@ struct RpcReceiverTest : public ::testing::Test
         Statistics::reset();
     }
 
+    // _resource must be declared (and thus destroyed later) before any member that may hold a
+    // NetworkChannel referencing it, otherwise NetworkChannel::close() calls virtual methods on
+    // an already-destroyed NetworkResource during teardown.
+    StrictMock<NetworkResourceMock> _resource;
     ::etl::flat_set<
         ::etl::optional<::someip::NetworkChannel>,
         2U,
@@ -71,7 +75,6 @@ struct RpcReceiverTest : public ::testing::Test
     someip::declare::ServiceTracker<1U> _serviceTracker;
 
     StrictMock<DiagnosticListenerMock> _diagnosticListener;
-    StrictMock<NetworkResourceMock> _resource;
     NetworkChannel _channel{_resource, IPEndpoint(make_ip4(192U, 0U, 2U, 0U), 10U)};
 };
 
