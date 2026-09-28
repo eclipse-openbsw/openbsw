@@ -94,6 +94,22 @@ if (NOT CMAKE_CROSSCOMPILING AND CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     add_link_options(-stdlib=libc++)
 endif ()
 
+option(
+    OPENBSW_ENABLE_ASAN_UBSAN
+    "Instrument the unitTest executable with AddressSanitizer + UndefinedBehaviorSanitizer"
+    OFF)
+if (OPENBSW_ENABLE_ASAN_UBSAN)
+    if (NOT BUILD_EXECUTABLE STREQUAL "unitTest")
+        message(
+            FATAL_ERROR
+                "OPENBSW_ENABLE_ASAN_UBSAN is only supported for BUILD_EXECUTABLE=unitTest"
+        )
+    endif ()
+    add_compile_options(-fsanitize=address,undefined -fno-sanitize-recover=all
+                        -fno-omit-frame-pointer -g)
+    add_link_options(-fsanitize=address,undefined)
+endif ()
+
 # Rust support Note: Only one static Rust library can be linked in the final
 # binary, otherwise the linker will complain about duplicate symbol definitions
 # from the Rust core crate.
