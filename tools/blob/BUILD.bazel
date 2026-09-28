@@ -22,13 +22,16 @@ py_library(
     name = "blob_python",
     srcs = glob(["**/*.py"]),
     imports = [".."],
+    target_compatible_with = ["@platforms//os:linux"],
     deps = [requirement("crc")],
 )
 
 py_binary(
     name = "generate_routing",
     srcs = ["generate_routing.py"],
+    legacy_create_init = 0,
     main = "generate_routing.py",
-    python_version = "3.12",
+    python_version = "3.12.3",
+    target_compatible_with = ["@platforms//os:linux"],
     deps = [":blob_python"],
 )
