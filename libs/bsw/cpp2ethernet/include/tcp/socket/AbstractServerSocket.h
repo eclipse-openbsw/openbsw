@@ -93,6 +93,14 @@ public:
         return *_socketProvidingConnectionListener;
     }
 
+    /**
+     * \return  true if a ISocketProvidingConnectionListener has been set
+     */
+    bool hasSocketProvidingConnectionListener() const
+    {
+        return _socketProvidingConnectionListener != nullptr;
+    }
+
 protected:
     ~AbstractServerSocket() = default;
 
