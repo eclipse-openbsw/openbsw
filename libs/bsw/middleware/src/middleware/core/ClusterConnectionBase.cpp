@@ -18,9 +18,6 @@
 #include "middleware/core/types.h"
 #include "middleware/logger/Logger.h"
 
-#include <cstddef>
-#include <cstdio>
-
 namespace middleware::core
 {
 

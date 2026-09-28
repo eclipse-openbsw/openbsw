@@ -19,9 +19,9 @@
 #include "middleware/os/TaskIdProvider.h"
 
 #include <etl/algorithm.h>
+#include <etl/error_handler.h>
 #include <etl/span.h>
 
-#include <cstddef>
 #include <cstdint>
 
 namespace middleware::core
@@ -61,14 +61,14 @@ uint8_t SkeletonBase::getSourceClusterId() const
     auto clusterId = static_cast<uint8_t>(INVALID_CLUSTER_ID);
     if (!_connections.empty())
     {
-        auto const* it = ::etl::find_if(
+        auto const* connectionIterator = ::etl::find_if(
             _connections.begin(),
             _connections.end(),
             [](IClusterConnection const* const clusConn) { return (clusConn != nullptr); });
 
-        if (it != _connections.end())
+        if (connectionIterator != _connections.end())
         {
-            clusterId = (*it)->getSourceClusterId();
+            clusterId = (*connectionIterator)->getSourceClusterId();
         }
     }
     return clusterId;
@@ -101,7 +101,7 @@ SkeletonBase::initFromInstancesDatabase(
     uint16_t const instanceId, ::etl::span<IInstanceDatabase const* const> const& dbRange)
 {
     unsubscribe(getServiceId());
-    auto const* it = ::etl::find_if(
+    auto const* databaseEntry = ::etl::find_if(
         dbRange.begin(),
         dbRange.end(),
         [instanceId](IInstanceDatabase const* const dataBase) -> bool
@@ -114,9 +114,9 @@ SkeletonBase::initFromInstancesDatabase(
                 && (!dataBase->getSkeletonConnectionsRange().empty()));
         });
     HRESULT ret = HRESULT::TransceiverInitializationFailed;
-    if (it != dbRange.end())
+    if (databaseEntry != dbRange.end())
     {
-        auto skeletonCc   = (*it)->getSkeletonConnectionsRange();
+        auto skeletonCc   = (*databaseEntry)->getSkeletonConnectionsRange();
         bool isRegistered = true;
         for (auto* const clusConn : skeletonCc)
         {

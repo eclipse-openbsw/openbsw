@@ -38,12 +38,12 @@ DbManipulator::subscribe(
     auto* containerIt    = getTransceiversByServiceId(start, end, serviceId);
     if (containerIt != end)
     {
-        auto& container = *containerIt->_container;
-        auto* it        = DbManipulator::findTransceiver(&proxy, container);
-        if (it != container.end())
+        auto& container           = *containerIt->_container;
+        auto* transceiverIterator = DbManipulator::findTransceiver(&proxy, container);
+        if (transceiverIterator != container.end())
         {
             // order is important - vector must be reordered with new instance id!
-            container.erase(it);
+            container.erase(transceiverIterator);
             // update instance id
             proxy.setInstanceId(instanceId);
             static_cast<void>(container.emplace_back(&proxy));
@@ -64,12 +64,12 @@ DbManipulator::subscribe(
                 bool addressNotFound = true;
                 while (addressNotFound)
                 {
-                    auto const* it = ::etl::find_if(
+                    auto const* matchingTransceiver = ::etl::find_if(
                         range.first,
                         range.second,
                         [&containerIt](TransceiverBase const* const itrx)
                         { return (itrx->getAddressId() == containerIt->_actualAddress); });
-                    if (it == range.second)
+                    if (matchingTransceiver == range.second)
                     {
                         addressNotFound = false;
                         proxy.setAddressId(containerIt->_actualAddress);
@@ -112,14 +112,14 @@ void DbManipulator::unsubscribe(
             container.cend(),
             &transceiver,
             TransceiverContainer::TransceiverComparator());
-        auto const* it = ::etl::find_if(
+        auto const* matchingTransceiver = ::etl::find_if(
             range.first,
             range.second,
             [&transceiver](TransceiverBase const* const itrx)
             { return (itrx->getAddressId() == transceiver.getAddressId()); });
-        if (it != container.cend())
+        if (matchingTransceiver != container.cend())
         {
-            static_cast<void>(container.erase(it));
+            static_cast<void>(container.erase(matchingTransceiver));
             transceiver.setAddressId(INVALID_ADDRESS_ID);
         }
     }
@@ -137,12 +137,12 @@ DbManipulator::subscribe(
     auto* containerIt    = getTransceiversByServiceId(start, end, serviceId);
     if (containerIt != end)
     {
-        auto& container = *containerIt->_container;
-        auto* it        = DbManipulator::findTransceiver(&skeleton, container);
-        if (it != container.end())
+        auto& container           = *containerIt->_container;
+        auto* transceiverIterator = DbManipulator::findTransceiver(&skeleton, container);
+        if (transceiverIterator != container.end())
         {
             // order is important - vector must be reordered with new instance id!
-            container.erase(it);
+            container.erase(transceiverIterator);
             // update instance id
             skeleton.setInstanceId(instanceId);
             static_cast<void>(container.emplace_back(&skeleton));
@@ -201,15 +201,15 @@ TransceiverContainer const* DbManipulator::getTransceiversByServiceId(
     middleware::core::meta::TransceiverContainer const* const end,
     uint16_t const serviceId)
 {
-    auto const* it = ::etl::lower_bound(
+    auto const* containerIterator = ::etl::lower_bound(
         start,
         end,
         TransceiverContainer{nullptr, serviceId, 0U},
         [](TransceiverContainer const& lhs, TransceiverContainer const& rhs) -> bool
         { return lhs._serviceId < rhs._serviceId; });
-    if ((it != end) && (it->_serviceId == serviceId))
+    if ((containerIterator != end) && (containerIterator->_serviceId == serviceId))
     {
-        return it;
+        return containerIterator;
     }
 
     return end;
@@ -265,16 +265,17 @@ TransceiverBase* DbManipulator::getSkeletonByServiceIdAndServiceInstanceId(
 ::etl::ivector<TransceiverBase*>::iterator DbManipulator::findTransceiver(
     TransceiverBase* const& transceiver, ::etl::ivector<TransceiverBase*>& container)
 {
-    auto* it = ::etl::lower_bound(
+    auto* transceiverIterator = ::etl::lower_bound(
         container.begin(),
         container.end(),
         transceiver,
         TransceiverContainer::TransceiverComparator());
 
-    if ((it != container.cend()) && (*it)->getInstanceId() == transceiver->getInstanceId()
-        && (*it)->getAddressId() == transceiver->getAddressId())
+    if ((transceiverIterator != container.cend())
+        && (*transceiverIterator)->getInstanceId() == transceiver->getInstanceId()
+        && (*transceiverIterator)->getAddressId() == transceiver->getAddressId())
     {
-        return it;
+        return transceiverIterator;
     }
 
     return container.end();
@@ -303,15 +304,15 @@ TransceiverBase* DbManipulator::getTransceiver(
     if (containerIt != end)
     {
         internal::DummyTransceiver const dummy(instanceId, addressId);
-        auto const* it = ::etl::lower_bound(
+        auto const* transceiverIterator = ::etl::lower_bound(
             containerIt->_container->cbegin(),
             containerIt->_container->cend(),
             &dummy,
             TransceiverContainer::TransceiverComparator());
-        if ((it != containerIt->_container->cend())
-            && (!TransceiverContainer::TransceiverComparator()(&dummy, *it)))
+        if ((transceiverIterator != containerIt->_container->cend())
+            && (!TransceiverContainer::TransceiverComparator()(&dummy, *transceiverIterator)))
         {
-            return *it;
+            return *transceiverIterator;
         }
     }
     return nullptr;

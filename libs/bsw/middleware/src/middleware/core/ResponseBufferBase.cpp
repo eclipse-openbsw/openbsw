@@ -17,6 +17,7 @@
 
 #include <etl/algorithm.h>
 #include <etl/vector.h>
+#include <cstdint>
 
 namespace middleware::core
 {

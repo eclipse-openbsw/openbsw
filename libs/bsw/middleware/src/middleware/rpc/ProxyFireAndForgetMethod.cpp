@@ -10,11 +10,19 @@
 
 #include "middleware/rpc/ProxyFireAndForgetMethod.h"
 
+#include "middleware/core/Message.h"
 #include "middleware/core/MessagePayloadBuilder.h"
+#include "middleware/core/ProxyBase.h"
+#include "middleware/core/types.h"
+#include <etl/expected.h>
+#include <etl/utility.h>
+#include <cstdint>
 
 namespace middleware::rpc
 {
 
+// NOLINTNEXTLINE(readability-convert-member-functions-to-static) justification: uniform RPC
+// member interface for codegen
 etl::expected<uint16_t, core::HRESULT>
 ProxyFireAndForgetMethod::callMethod(core::ProxyBase const& proxy, uint16_t const methodId)
 {
@@ -27,6 +35,7 @@ ProxyFireAndForgetMethod::callMethod(core::ProxyBase const& proxy, uint16_t cons
     return callMethodImpl(proxy, msg, core::HRESULT::Ok);
 }
 
+// NOLINTNEXTLINE(readability-convert-member-functions-to-static)
 etl::expected<uint16_t, core::HRESULT> ProxyFireAndForgetMethod::callMethodImpl(
     core::ProxyBase const& proxy, core::Message& msg, core::HRESULT allocationResult)
 {

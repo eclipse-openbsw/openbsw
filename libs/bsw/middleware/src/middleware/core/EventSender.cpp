@@ -15,6 +15,7 @@
 #include "middleware/core/MessagePayloadBuilder.h"
 #include "middleware/core/SkeletonBase.h"
 #include "middleware/core/types.h"
+#include <cstdint>
 
 namespace middleware::core
 {
