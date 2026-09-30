@@ -33,6 +33,7 @@ GENERATED_OUTPUTS = [
     "include/generated_code/org/test/foo/FooProxy.h",
     "include/generated_code/org/test/foo/FooSkeleton.h",
     "include/generated_code/shm/AllocatorsDefinitions.h",
+    "include/generated_code/shm/PduDefinitions.h",
     "include/generated_code/shm/QueueDefinitions.h",
     "src/generated_code/AllocatorSelectorDefinitions.cpp",
     "src/generated_code/ClusterCluster0.cpp",
