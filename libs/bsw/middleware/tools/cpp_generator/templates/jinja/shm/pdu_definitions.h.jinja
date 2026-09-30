@@ -19,45 +19,16 @@
   * This file is generated. Do not edit manually.
   *
   */
-#include <cstdint>
-
+#pragma once
 
 #include "middleware/core/Pdu.h"
-#include "middleware/shm/Config.h"
-#include "shm/AllocatorsDefinitions.h"
-#include "shm/PduDefinitions.h"
-#include "shm/QueueDefinitions.h"
 
 namespace middleware::shm
 {
 
-{% for allocator in allocators %}
-{{ allocator.name | capitalize }}Allocator& get{{ allocator.name | capitalize }}Allocator()
-{
-    MemoryLayout& layout = getMemoryLayout();
-    return layout.{{ allocator.name }}Allocator;
-}
-
-volatile uint8_t* get{{ allocator.name | capitalize }}AllocatorMutex()
-{
-    MemoryLayout& layout = getMemoryLayout();
-    return &layout.{{ allocator.name }}AllocatorMutex;
-}
-
-{% endfor %}
-{% for cluster in clusters %}
-MiddlewareQueue<QUEUE_TO_{{ cluster.name | upper }}_SIZE>* getQueueTo{{ cluster.name }}()
-{
-    return &getMemoryLayout().queueTo{{ cluster.name }};
-}
-
-{% endfor %}
-
 {% for pdu in pdus %}
-::middleware::core::Pdu<{{ pdu.size }}U>* get{{ pdu.name | capitalize }}()
-{
-    return &getMemoryLayout().{{ pdu.name }};
-}
+::middleware::core::Pdu<{{ pdu.size }}U>* get{{ pdu.name | capitalize }}();
 
 {% endfor %}
+
 }  // namespace middleware::shm

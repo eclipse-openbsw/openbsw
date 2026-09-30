@@ -13,6 +13,7 @@
 #include "Logger.h"
 #include "foo/FooProxyWrapper.h"
 #include "middleware/ClusterCluster1.h"
+#include "shm/PduDefinitions.h"
 #include "shm/QueueDefinitions.h"
 
 void run_main_core1()
@@ -34,6 +35,12 @@ void run_main_core1()
         {
             // Request current FooDefault value every 6 seconds.
             foo_consumer.requestGet();
+
+            simulation::Logger::log(
+                static_cast<uint8_t>(::middleware::core::ClusterId::Cluster1),
+                "Sample PDU first byte: ",
+                static_cast<int>(middleware::shm::getSamplepdu8()->data[0]) // Unsafe access
+            );
         }
 
         if (counter % 150 == 0)
