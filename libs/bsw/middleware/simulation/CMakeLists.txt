@@ -43,7 +43,11 @@ set(_GENERATED_HEADERS
     ${_GEN_INC}/shm/PduDefinitions.h
     ${_GEN_INC}/org/test/foo/FooCommon.h
     ${_GEN_INC}/org/test/foo/FooProxy.h
-    ${_GEN_INC}/org/test/foo/FooSkeleton.h)
+    ${_GEN_INC}/org/test/foo/FooSkeleton.h
+    ${_GEN_INC}/org/test/signal/samplePduWithCrcCommon.h
+    ${_GEN_INC}/org/test/signal/samplePduWithCrcReader.h
+    ${_GEN_INC}/org/test/signal/samplePduWithDatatypesCommon.h
+    ${_GEN_INC}/org/test/signal/samplePduWithDatatypesReader.h)
 
 set(GENERATED_SRCS
     ${_GEN_SRC}/AllocatorSelectorDefinitions.cpp
@@ -52,7 +56,9 @@ set(GENERATED_SRCS
     ${_GEN_SRC}/shm/Config.cpp
     ${_GEN_SRC}/org/test/foo/FooCommon.cpp
     ${_GEN_SRC}/org/test/foo/FooProxy.cpp
-    ${_GEN_SRC}/org/test/foo/FooSkeleton.cpp)
+    ${_GEN_SRC}/org/test/foo/FooSkeleton.cpp
+    ${_GEN_SRC}/org/test/signal/samplePduWithCrcReader.cpp
+    ${_GEN_SRC}/org/test/signal/samplePduWithDatatypesReader.cpp)
 
 add_custom_command(
     OUTPUT ${_GENERATED_HEADERS} ${GENERATED_SRCS}
@@ -66,8 +72,10 @@ add_custom_command(
 # -----------------------------------------------------------------------
 # Platform integration sources (concurrency / logger / OS / time stubs)
 # -----------------------------------------------------------------------
-set(PLATFORM_INTEGRATION_SRCS platform_integration/logger/src/LoggerImpl.cpp
-                              platform_integration/os/src/OsDefinitions.cpp)
+set(PLATFORM_INTEGRATION_SRCS
+    platform_integration/logger/src/LoggerImpl.cpp
+    platform_integration/os/src/OsDefinitions.cpp
+    platform_integration/concurrency/src/ConcurrencyImpl.cpp)
 
 # -----------------------------------------------------------------------
 # Simulation application
@@ -107,7 +115,8 @@ target_include_directories(
 
 target_include_directories(
     middleware
-    PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/platform_integration/concurrency/include)
+    PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/platform_integration/concurrency/include
+           ${CMAKE_CURRENT_SOURCE_DIR}/platform_integration/qualifier/include)
 
 if (BUILD_EXECUTABLE STREQUAL "unitTest")
     # Keep both profile directories in the system search path so the unit-test

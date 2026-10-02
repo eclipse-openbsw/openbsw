@@ -18,6 +18,17 @@ target_include_directories(middlewareTestSupport
 target_link_libraries(middlewareTestSupport
                       PUBLIC middleware middlewareInterfaces etl gmock)
 
+# Defines the platform concurrency hooks; link only into tests that need them.
+add_library(middlewareConcurrencyMock STATIC
+            src/concurrency/mock/ConcurrencyMock.cpp)
+target_include_directories(middlewareConcurrencyMock PUBLIC src)
+target_link_libraries(middlewareConcurrencyMock PUBLIC middlewareInterfaces
+                                                       gmock)
+
+# The middleware sources include lock_types.h (via LockStrategies.h).
+target_include_directories(middleware
+                           PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+
 set(MIDDLEWARE_TEST_TARGETS)
 
 function (add_middleware_unit_test TARGET_NAME)
@@ -52,6 +63,9 @@ add_middleware_unit_test(
 add_middleware_unit_test(
     middlewareMessageManagementTest src/core/MessagePayloadBuilderTest.cpp
     src/core/MessageTest.cpp)
+
+add_middleware_unit_test(middlewarePduTest src/core/MiddlewarePduTest.cpp)
+target_link_libraries(middlewarePduTest PRIVATE middlewareConcurrencyMock)
 
 add_middleware_unit_test(middlewareQueueTest src/queue/QueueTest.cpp)
 

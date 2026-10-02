@@ -21,14 +21,17 @@
   */
 #pragma once
 
-#include "middleware/core/Pdu.h"
+#include "middleware/core/MiddlewarePdu.h"
 
 namespace middleware::shm
 {
 
 {% for pdu in pdus %}
-::middleware::core::Pdu<{{ pdu.size }}U>* get{{ pdu.name | capitalize }}();
+using {{ pdu.name | capitalize }}Pdu = ::middleware::core::MiddlewarePdu<{{ pdu.size }}U>;
+{% endfor %}
 
+{% for pdu in pdus %}
+{{ pdu.name | capitalize }}Pdu* get{{ pdu.name | capitalize }}();
 {% endfor %}
 
 }  // namespace middleware::shm

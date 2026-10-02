@@ -10,18 +10,11 @@
 
 #pragma once
 
-#include <etl/array.h>
-#include <etl/atomic.h>
-#include <cstdint>
-
-namespace middleware::core
+namespace middleware::concurrency
 {
 
-template<size_t SIZE>
-struct Pdu
-{
-    etl::atomic<size_t> seqCounter{};
-    etl::array<uint8_t, SIZE> data{};
-};
+// Since spin lock optimization are hardware dependent, platform integration shall provide
+// spinLockOptimization() definition. Otherwise, a link-error is thrown.
+void spinLockOptimization();
 
-} // namespace middleware::core
+} // namespace middleware::concurrency

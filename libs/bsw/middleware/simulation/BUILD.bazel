@@ -42,6 +42,18 @@ cc_library(
     strip_include_prefix = "include",
 )
 
+cc_library(
+    name = "simulation_qualifiers",
+    hdrs = [
+        "platform_integration/qualifier/include/middleware/signal/qualifier.h",
+    ],
+    strip_include_prefix = "platform_integration/qualifier/include",
+    deps = [
+        "//libs/3rdparty/etl",
+        "//libs/bsw/middleware",
+    ],
+)
+
 # POSIX system libraries required by the simulation binary.
 cc_library(
     name = "simulation_system_libs",
@@ -55,12 +67,16 @@ middleware_codegen(
     name = "middleware_simulation_generated",
     deployment_yaml = "model/deployment-test.yaml",
     generated_outputs = GENERATED_OUTPUTS,
-    deps = ["//libs/bsw/middleware"],
+    deps = [
+        ":simulation_qualifiers",
+        "//libs/bsw/middleware",
+    ],
 )
 
 cc_test(
     name = "middleware_simulation_foo_method_test",
     srcs = [
+        "platform_integration/concurrency/src/ConcurrencyImpl.cpp",
         "platform_integration/logger/src/LoggerImpl.cpp",
         "platform_integration/os/src/OsDefinitions.cpp",
         "src/Logger.cpp",
@@ -82,6 +98,7 @@ cc_test(
 cc_binary(
     name = "middleware_simulation",
     srcs = [
+        "platform_integration/concurrency/src/ConcurrencyImpl.cpp",
         "platform_integration/logger/src/LoggerImpl.cpp",
         "platform_integration/os/src/OsDefinitions.cpp",
         "platform_integration/time/src/SystemTimeProvider.cpp",
@@ -99,6 +116,7 @@ cc_binary(
         ":middleware_simulation_generated",
         ":simulation_lock_types",
         ":simulation_private_headers",
+        ":simulation_qualifiers",
         ":simulation_system_libs",
         "//libs/bsw/middleware",
     ],

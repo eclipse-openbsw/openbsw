@@ -27,10 +27,78 @@ allocators:
         chunk_sizes: 64
 
 pdus:
-  - name: samplePdu8
+  - name: samplePduWithCrc
     size: 8
-  - name: samplePdu64
-    size: 64
+    namespace: org::test::signal
+    headers:
+      common: org/test/signal/samplePduWithCrcCommon.h
+      reader: org/test/signal/samplePduWithCrcReader.h
+    signals:
+      - name: crc
+        type: uint8_t
+        bit_length: 8
+      - name: sampleSignal
+        type: uint8_t
+        bit_length: 4
+      - name: AnotherSampleSignal
+        type: uint8_t
+        bit_length: 4
+      - name: SomeOtherSignal
+        type: uint16_t
+        bit_length: 16
+      - name: finalSampleSignal
+        type: uint32_t
+        bit_length: 32
+  - name: samplePduWithDatatypes
+    size: 12
+    namespace: org::test::signal
+    headers:
+      common: org/test/signal/samplePduWithDatatypesCommon.h
+      reader: org/test/signal/samplePduWithDatatypesReader.h
+    enums:
+      - name: ExampleEnum
+        type: uint8_t
+        parameters:
+          - name: Value0
+            value: 0
+          - name: Value1
+            value: 1
+          - name: ErrorValue
+            value: 127
+    bitsets:
+      - name: ExampleBitset
+        type: uint8_t
+        bits:
+          - name: enabled
+            position: 0
+          - name: fault
+            position: 1
+          - name: active
+            position: 2
+          - name: locked
+            position: 3
+          - name: overheated
+            position: 4
+    signals:
+      - name: firstSignal
+        type: uint8_t
+        bit_length: 5
+      - name: secondSignal
+        type: uint64_t
+        bit_length: 60
+      - name: arraySignal
+        type: array
+        element_type: uint8_t
+        bit_length: 16
+      - name: enumSignal
+        type: ExampleEnum
+        bit_length: 7
+      - name: bitsetSignal
+        type: ExampleBitset
+        bit_length: 5
+      - name: boolSignal
+        type: bool
+        bit_length: 1
 
 services:
   - &foo

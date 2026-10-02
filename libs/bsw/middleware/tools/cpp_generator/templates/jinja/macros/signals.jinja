@@ -1,0 +1,59 @@
+{#-
+/********************************************************************************
+ * Copyright (c) 2026 BMW AG
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Apache License Version 2.0 which is available at
+ * https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ ********************************************************************************/
+
+  Resolves C++ types and bit_stream_reader read expressions for PDU signals,
+  covering plain integrals as well as the 'array' / 'bitset' / enum signal kinds.
+-#}
+{%- set _INTEGRAL_BITS = {
+    "bool": 1,
+    "uint8_t": 8,
+    "uint16_t": 16,
+    "uint32_t": 32,
+    "uint64_t": 64,
+} -%}
+
+{#- Underlying integral type of signal.type when it names a PDU-local enum, else empty. -#}
+{%- macro _enum_underlying_type(signal, pdu) -%}
+{%- for enum_type in (pdu.enums if pdu.enums else []) -%}
+{%- if enum_type.name == signal.type -%}{{ enum_type.type }}{%- endif -%}
+{%- endfor -%}
+{%- endmacro -%}
+
+{#- Underlying integral type of signal.type when it names a PDU-local bitset, else empty. -#}
+{%- macro _bitset_underlying_type(signal, pdu) -%}
+{%- for bitset in (pdu.bitsets if pdu.bitsets else []) -%}
+{%- if bitset.name == signal.type -%}{{ bitset.type }}{%- endif -%}
+{%- endfor -%}
+{%- endmacro -%}
+
+{%- macro signal_cpp_type(signal) -%}
+{%- if signal.type == "array" -%}
+etl::array<{{ signal.element_type }}, {{ signal.bit_length // _INTEGRAL_BITS[signal.element_type] }}U>
+{%- else -%}
+{{ signal.type }}
+{%- endif -%}
+{%- endmacro -%}
+
+{%- macro signal_read_expr(signal, pdu) -%}
+{%- if signal.type == "array" -%}
+{%- set element_bits = _INTEGRAL_BITS[signal.element_type] -%}
+{%- set count = signal.bit_length // element_bits -%}
+{{ signal_cpp_type(signal) }}{ {% for _ in range(count) %}reader.read_unchecked<{{ signal.element_type }}>({{ element_bits }}U){{ "," if not loop.last }}{% endfor %} }
+{%- elif _bitset_underlying_type(signal, pdu) -%}
+{{ signal.type }}(reader.read_unchecked<{{ _bitset_underlying_type(signal, pdu) }}>({{ signal.bit_length }}U))
+{%- elif _enum_underlying_type(signal, pdu) -%}
+static_cast<{{ signal.type }}>(reader.read_unchecked<{{ _enum_underlying_type(signal, pdu) }}>({{ signal.bit_length }}U))
+{%- elif signal.type == "bool" -%}
+reader.read_unchecked<bool>()
+{%- else -%}
+reader.read_unchecked<{{ signal.type }}>({{ signal.bit_length }}U)
+{%- endif -%}
+{%- endmacro -%}

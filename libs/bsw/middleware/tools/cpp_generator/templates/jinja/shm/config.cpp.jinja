@@ -22,7 +22,7 @@
 #include <cstdint>
 
 
-#include "middleware/core/Pdu.h"
+#include "middleware/core/MiddlewarePdu.h"
 #include "middleware/shm/Config.h"
 #include "shm/AllocatorsDefinitions.h"
 #include "shm/PduDefinitions.h"
@@ -54,7 +54,7 @@ MiddlewareQueue<QUEUE_TO_{{ cluster.name | upper }}_SIZE>* getQueueTo{{ cluster.
 {% endfor %}
 
 {% for pdu in pdus %}
-::middleware::core::Pdu<{{ pdu.size }}U>* get{{ pdu.name | capitalize }}()
+{{ pdu.name | capitalize }}Pdu* get{{ pdu.name | capitalize }}()
 {
     return &getMemoryLayout().{{ pdu.name }};
 }

@@ -1,0 +1,38 @@
+/********************************************************************************
+ * Copyright (c) 2026 BMW AG
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Apache License Version 2.0 which is available at
+ * https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ ********************************************************************************/
+{% from "macros/common.jinja" import file_header %}{{ file_header() }}
+#pragma once
+
+#include <gmock/gmock.h>
+
+#include "{{ pdu.headers.reader }}"
+#include "util/crtp_mock.h"
+
+namespace {{ pdu.namespace }}
+{
+
+class {{ pdu.name }}ReaderMock
+    : public middleware::util::CrtpMock<{{ pdu.name }}ReaderMock>
+{
+public:
+    MOCK_METHOD({{ pdu.name }}, read, ());
+
+    void EXPECT_READ(::testing::Cardinality const& ntimes = ::testing::Exactly(1))
+    {
+        EXPECT_CALL(*this, read()).Times(ntimes);
+    }
+
+    void ON_CALL_READ_RETURNS({{ pdu.name }} const& value)
+    {
+        ON_CALL(*this, read()).WillByDefault(::testing::Return(value));
+    }
+};
+
+}  // namespace {{ pdu.namespace }}

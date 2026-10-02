@@ -31,10 +31,26 @@ allocators:
         chunk_sizes: 8208
 
 pdus:
-  - name: samplePdu8
+  - name: samplePduWithCrc
     size: 8
-  - name: samplePdu64
-    size: 64
+    namespace: features::communication
+    headers:
+      common: features/communication/samplePduWithCrcCommon.h
+      reader: features/communication/samplePduWithCrcReader.h
+      reader_mock: features/communication/samplePduWithCrcReaderMock.h
+    signals:
+      - name: crc
+        type: uint8_t
+        bit_length: 8
+      - name: firstSignal
+        type: uint8_t
+        bit_length: 8
+      - name: secondSignal
+        type: uint16_t
+        bit_length: 16
+      - name: thirdSignal
+        type: uint32_t
+        bit_length: 32
 
 services:
   - &dummy_service
