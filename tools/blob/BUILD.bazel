@@ -9,21 +9,54 @@
 # *******************************************************************************
 
 load("@blob_pip//:requirements.bzl", "requirement")
-load("@rules_python//python:defs.bzl", "py_binary", "py_library")
+load("@rules_python//python:defs.bzl", "py_library")
+load("@rules_python//python:py_binary.bzl", "py_binary")
 
 package(default_visibility = ["//visibility:public"])
 
-exports_files([
-    "regenerate.sh",
-    "routing.bzl",
-])
+py_library(
+    name = "blob_model",
+    srcs = [
+        "__init__.py",
+    ],
+    imports = [".."],
+)
 
 py_library(
-    name = "blob_python",
-    srcs = glob(["**/*.py"]),
+    name = "blob_utils",
+    srcs = ["utils.py"],
     imports = [".."],
     target_compatible_with = ["@platforms//os:linux"],
-    deps = [requirement("crc")],
+    deps = [
+        ":blob_model",
+        requirement("crc"),
+    ],
+)
+
+py_library(
+    name = "blob_core",
+    srcs = ["__main__.py"],
+    imports = [".."],
+    deps = [
+        ":blob_model",
+        ":blob_utils",
+    ],
+)
+
+py_library(
+    name = "routing",
+    srcs = [
+        "routing/__init__.py",
+        "routing/__main__.py",
+        "routing/channel.py",
+        "routing/table.py",
+        "routing/utils.py",
+    ],
+    imports = [".."],
+    deps = [
+        ":blob_model",
+        ":blob_utils",
+    ],
 )
 
 py_binary(
@@ -33,5 +66,8 @@ py_binary(
     main = "generate_routing.py",
     python_version = "3.12.3",
     target_compatible_with = ["@platforms//os:linux"],
-    deps = [":blob_python"],
+    deps = [
+        ":blob_core",
+        ":routing",
+    ],
 )
