@@ -55,7 +55,7 @@ private:
     uint8_t _levels[IndexUpperBound];
     uint8_t _globalIndex;
     uint8_t _globalLevel;
-    ::util::logger::LevelInfo::PlainInfo const* _levelInfos;
+    ::util::logger::LevelInfo::TableType _levelInfos;
     PlainLoggerMappingInfo const* _componentMappingInfos;
 };
 
@@ -109,8 +109,9 @@ template<uint8_t IndexUpperBound>
 ComponentMapping<IndexUpperBound>::getLevelInfo(::util::logger::Level const level) const
 {
     return ::util::logger::LevelInfo(
-        (static_cast<uint8_t>(level) < ::util::logger::LEVEL_COUNT)
-            ? (_levelInfos + static_cast<uint32_t>(level))
+        (static_cast<size_t>(level) < _levelInfos.size())
+                && (static_cast<uint8_t>(level) < ::util::logger::LEVEL_COUNT)
+            ? &_levelInfos[static_cast<uint32_t>(level)]
             : nullptr);
 }
 
@@ -177,7 +178,7 @@ template<uint8_t IndexUpperBound>
                 ::util::string::ConstString(_levelInfos[idx]._nameInfo._string))
             == 0)
         {
-            return ::util::logger::LevelInfo(_levelInfos + idx);
+            return ::util::logger::LevelInfo(&_levelInfos[idx]);
         }
     }
     return ::util::logger::LevelInfo();

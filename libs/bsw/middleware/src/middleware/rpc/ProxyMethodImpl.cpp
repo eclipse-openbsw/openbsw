@@ -14,11 +14,15 @@
 #include "middleware/core/LoggerApi.h"
 #include "middleware/core/Message.h"
 #include "middleware/core/MessagePayloadBuilder.h"
+#include "middleware/core/ProxyBase.h"
 #include "middleware/core/types.h"
 #include "middleware/logger/Logger.h"
 #include "middleware/time/SystemTimerProvider.h"
 
 #include <etl/algorithm.h>
+#include <etl/delegate.h>
+#include <etl/expected.h>
+#include <etl/utility.h>
 
 #include <cstdint>
 

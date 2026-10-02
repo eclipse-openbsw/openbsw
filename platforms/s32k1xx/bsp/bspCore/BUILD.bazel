@@ -9,6 +9,8 @@
 # *******************************************************************************
 
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
+load("@rules_cc//cc:cc_test.bzl", "cc_test")
+load("//bazel/config/build_variant:compatibility.bzl", "unit_test_only")
 
 cc_library(
     name = "bsp_core",
@@ -18,4 +20,15 @@ cc_library(
     strip_include_prefix = "include",
     target_compatible_with = ["//bazel/platform/constraints/soc:s32k148"],
     visibility = ["//visibility:public"],
+)
+
+cc_test(
+    name = "bsp_core_test",
+    srcs = [
+        "include/cache/cache.h",
+        "test/src/IncludeTest.cpp",
+    ],
+    includes = ["include"],
+    target_compatible_with = unit_test_only(),
+    deps = ["//libs/3rdparty/googletest:gtest_main"],
 )

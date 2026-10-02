@@ -67,7 +67,7 @@ Level TestConsoleLogger::getLevel(uint8_t componentIndex) const
 
 LevelInfo TestConsoleLogger::getLevelInfo(Level level) const
 {
-    return LevelInfo(LevelInfo::getDefaultTable() + level);
+    return LevelInfo(&LevelInfo::getDefaultTable()[level]);
 }
 
 ComponentInfo TestConsoleLogger::getComponentInfo(uint8_t componentIndex) const

@@ -197,7 +197,9 @@ inline bool Logger::isEnabled(uint8_t const componentIndex, Level const level)
 }
 
 // Logger API is intentionally variadic; type-safe alternatives are tracked as a future issue.
-// NOLINTBEGIN(cppcoreguidelines-pro-type-vararg)
+// Passing a va_list on to another function decays the underlying C array on some ABIs, which
+// cannot be avoided when forwarding printf-style arguments.
+// NOLINTBEGIN(cppcoreguidelines-pro-type-vararg,cppcoreguidelines-pro-bounds-array-to-pointer-decay)
 inline void Logger::info(uint8_t const componentIndex, char const* const str, ...)
 {
     LOGGER_DOLOG(LEVEL_INFO)
@@ -237,7 +239,7 @@ Logger::log(uint8_t const componentIndex, Level const level, char const* const s
     }
 }
 
-// NOLINTEND(cppcoreguidelines-pro-type-vararg)
+// NOLINTEND(cppcoreguidelines-pro-type-vararg,cppcoreguidelines-pro-bounds-array-to-pointer-decay)
 
 } // namespace logger
 } // namespace util

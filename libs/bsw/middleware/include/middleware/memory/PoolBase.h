@@ -51,8 +51,7 @@ class PoolBase
 {
 public:
     /**
-     * Constructor that initialises only constant member attributes.
-     * Non-constant members are initialised by initialize().
+     * Constructor that stores the backing buffers and initializes pool state to safe defaults.
      */
     PoolBase(
         uint8_t* buff,
@@ -121,8 +120,8 @@ private:
     size_t const _elementAlignedSize;
     size_t const _elementCount;
     uint8_t* const _flags;
-    uint8_t* _nextChunk;
-    size_t _available;
+    uint8_t* _nextChunk{};
+    size_t _available{};
     PoolStats _stats;
 };
 

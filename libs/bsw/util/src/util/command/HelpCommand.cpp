@@ -13,6 +13,7 @@
 #include "util/format/SharedStringWriter.h"
 #include "util/string/ConstString.h"
 #include <etl/algorithm.h>
+#include <etl/string_view.h>
 
 namespace util
 {
@@ -116,24 +117,31 @@ void HelpCommand::CallbackHelper::endCommand() { --_depth; }
 
 void HelpCommand::CallbackHelper::printDescription(char const* const description)
 {
-    char const* start   = description;
-    char const* current = start;
+    if (description == nullptr)
+    {
+        return;
+    }
+    ::etl::string_view const text(description);
+    size_t start   = 0U;
+    size_t current = 0U;
     while (true)
     {
-        if ((*current == 0) || isCrLf(*current))
+        char const c = (current < text.size()) ? text[current] : '\0';
+        if ((c == 0) || isCrLf(c))
         {
-            (void)_writer->write(ConstString(start, static_cast<size_t>(current - start)));
+            (void)_writer->write(
+                ConstString(text.substr(start, current - start).data(), current - start));
             static_cast<void>(_writer->write('\n'));
-            while (isCrLf(*current))
+            while ((current < text.size()) && isCrLf(text[current]))
             {
                 ++current;
             }
-            while (isWhitespace(*current))
+            while ((current < text.size()) && isWhitespace(text[current]))
             {
                 ++current;
             }
 
-            if (*current == 0)
+            if (current >= text.size())
             {
                 break;
             }

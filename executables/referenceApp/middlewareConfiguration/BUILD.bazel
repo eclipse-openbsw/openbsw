@@ -9,6 +9,7 @@
 # *******************************************************************************
 
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
+load("//bazel/config/build_variant:compatibility.bzl", "reference_app_posix_only")
 load(
     "//libs/bsw/middleware/tools/cpp_generator:middleware_codegen.bzl",
     "middleware_codegen",
@@ -37,7 +38,7 @@ cc_library(
         "//libs/bsw/bsp",
     ],
     strip_include_prefix = "include",
-    target_compatible_with = ["@platforms//os:linux"],
+    target_compatible_with = reference_app_posix_only(),
     visibility = ["//visibility:public"],
     deps = [
         ":middleware_configuration_generated",

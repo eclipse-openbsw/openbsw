@@ -53,10 +53,12 @@ public:
      * \param methodId The member ID identifying this method on the wire
      * \return INVALID_REQUEST_ID on success, or an HRESULT error
      */
+    // NOLINTNEXTLINE(readability-convert-member-functions-to-static)
     etl::expected<uint16_t, core::HRESULT>
     callMethod(core::ProxyBase const& proxy, uint16_t const methodId);
 
 private:
+    // NOLINTNEXTLINE(readability-convert-member-functions-to-static)
     etl::expected<uint16_t, core::HRESULT> callMethodImpl(
         core::ProxyBase const& proxy, core::Message& msg, core::HRESULT allocationResult);
 };

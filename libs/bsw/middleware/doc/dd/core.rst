@@ -17,7 +17,7 @@ The core software unit of the middleware provides the key algorithms needed for 
 Middleware Message
 ------------------
 
-Middleware is a service-oriented message passing system, and as such the ``Message`` class is the fundamental unit of communication.
+Middleware is a service-oriented message passing system. The ``Message`` class is its fundamental unit of communication.
 This class consists of a header and a payload.
 The header has the following information:
 
@@ -30,8 +30,8 @@ The header has the following information:
 * Address ID - identifies the recipient of the message within the destination cluster.
 
 The middleware services' nodes will be scattered across different clusters in the ECU.
-This means that messages can travel between clusters, and as such the ``Message`` needs to have information about its origin and destination.
-Additionally, there may exist several possible recipients of a message, and as such, each recipient needs to have a unique identifier after system initialization.
+This means that messages can travel between clusters. Each ``Message`` must carry information about its origin and destination.
+Additionally, a message may have several possible recipients. Each recipient needs a unique identifier after system initialization.
 To this end, the header contains the source cluster ID, target cluster ID, and address ID fields.
 
 Finally, the payload contains the actual data being transmitted. The message

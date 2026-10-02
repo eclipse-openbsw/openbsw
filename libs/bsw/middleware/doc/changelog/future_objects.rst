@@ -12,6 +12,19 @@
 Future Objects Changelog
 ========================
 
+Version 26KW39
+--------------
+
+Rename generated skeleton respond and attribute accessor methods
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+- **Duplicate definitions fixed**: generated ``SkeletonBase`` subclasses previously reused a single ``respond(...)`` overload set for every method and attribute, which could collide when a service had multiple operations with matching signatures.
+- **Method responses**: ``respond(...)`` is now generated per method as ``respond<MethodName>(...)``.
+- **Attribute responses**: attribute getter/setter responses are now ``respondGet<AttributeName>Attribute(...)`` and ``respondSet<AttributeName>Attribute(...)``.
+- **Attribute accessors renamed**: ``get_<AttributeName>Attribute(...)`` and ``set_<AttributeName>Attribute(...)`` are now ``get<AttributeName>Attribute(...)`` and ``set<AttributeName>Attribute(...)`` (underscore removed).
+- **Cancel APIs renamed**: ``cancelGet_<AttributeName>AttributeResponse(...)`` and ``cancelSet_<AttributeName>AttributeResponse(...)`` are now ``cancelGet<AttributeName>AttributeResponse(...)`` and ``cancelSet<AttributeName>AttributeResponse(...)``.
+- **New setter response signature**: for ``setAsMethod`` attributes, ``respondSet<AttributeName>Attribute(response, bool result, handleResponseFailure = true)`` now responds with a success flag instead of echoing back the attribute value.
+
 Version 26KW26
 --------------
 

@@ -12,6 +12,7 @@
 
 #include "util/stream/IOutputStream.h"
 
+#include <etl/array.h>
 #include <etl/span.h>
 
 namespace util
@@ -57,11 +58,11 @@ class StringBufferOutputStream : public ::util::stream::StringBufferOutputStream
 public:
     explicit StringBufferOutputStream(
         char const* const endOfString = nullptr, char const* const ellipsis = nullptr)
-    : ::util::stream::StringBufferOutputStream(_buffer, endOfString, ellipsis)
+    : ::util::stream::StringBufferOutputStream(::etl::span<char>(_buffer), endOfString, ellipsis)
     {}
 
 private:
-    char _buffer[N];
+    ::etl::array<char, N> _buffer{};
 };
 
 } // namespace declare

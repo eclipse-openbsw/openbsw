@@ -64,7 +64,7 @@ inline ClzllType BuddyMemoryManager::fastLog2<>(ClzllType const value)
 #endif
 
 BuddyMemoryManager::BuddyMemoryManager(::etl::span<uint8_t> const nodeTree)
-: _nodeTree(nodeTree.data())
+: _nodeTree(nodeTree)
 , _nodeTreeDepth(fastLog2<size_t>(nodeTree.size() + 1U))
 , _numBuckets(static_cast<size_t>(1U) << (_nodeTreeDepth - 1U))
 , _nodeTreeSize(nodeTree.size())
@@ -264,7 +264,7 @@ void BuddyMemoryManager::splitNodeUntilLevelReached(
 
 void BuddyMemoryManager::clearNodeTree()
 {
-    ::etl::mem_set(_nodeTree, _nodeTreeSize, TAG_NODE_LINK);
+    ::etl::mem_set(_nodeTree.data(), _nodeTreeSize, TAG_NODE_LINK);
 
     _nodeTree[0U] = TAG_NODE_FREE;
 }

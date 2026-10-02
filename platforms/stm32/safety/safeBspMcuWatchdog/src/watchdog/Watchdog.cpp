@@ -12,6 +12,8 @@
 
 #include <mcu/mcu.h>
 
+#include <cstdio>
+
 namespace safety
 {
 namespace bsp

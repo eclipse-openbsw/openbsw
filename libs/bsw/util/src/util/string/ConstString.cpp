@@ -12,6 +12,7 @@
 
 #include <etl/char_traits.h>
 #include <etl/memory.h>
+#include <etl/string_view.h>
 
 namespace util
 {
@@ -32,13 +33,14 @@ int32_t ConstString::compare(ConstString const& other) const
 int32_t ConstString::compareIgnoreCase(ConstString const& other) const
 {
     size_t const compareLength = (_length < other._length) ? _length : other._length;
-    int32_t result             = 0;
-    size_t i                   = 0U;
+    ::etl::string_view const self(_data, _length);
+    ::etl::string_view const rhs(other._data, other._length);
+    int32_t result = 0;
+    size_t i       = 0U;
 
     while ((result == 0) && (i < compareLength))
     {
-        result = toLower(static_cast<int32_t>(_data[i]))
-                 - toLower(static_cast<int32_t>(other._data[i]));
+        result = toLower(static_cast<int32_t>(self[i])) - toLower(static_cast<int32_t>(rhs[i]));
         ++i;
     }
     if (result == 0)
@@ -51,21 +53,14 @@ int32_t ConstString::compareIgnoreCase(ConstString const& other) const
 int32_t ConstString::find(ConstString const& str, uint32_t const offset) const
 {
     int32_t const NOT_FOUND = -1;
-    ConstString const substring(_data + offset);
-    if (substring._length < str._length)
+    if (static_cast<size_t>(offset) > _length)
     {
         return NOT_FOUND;
     }
-    size_t idx = 0U;
-    while ((idx + str._length) <= substring._length)
-    {
-        if (::etl::strncmp(substring._data + idx, str._data, str._length) == ConstString::IS_EQUAL)
-        {
-            return static_cast<int32_t>(idx) + static_cast<int32_t>(offset);
-        }
-        ++idx;
-    }
-    return NOT_FOUND;
+    ::etl::string_view const haystack(_data, _length);
+    ::etl::string_view const needle(str._data, str._length);
+    size_t const pos = haystack.find(needle, static_cast<size_t>(offset));
+    return (pos == ::etl::string_view::npos) ? NOT_FOUND : static_cast<int32_t>(pos);
 }
 
 bool ConstString::contains(ConstString const& str) const { return find(str) >= 0; }

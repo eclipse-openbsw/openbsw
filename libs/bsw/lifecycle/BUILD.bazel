@@ -9,6 +9,8 @@
 # *******************************************************************************
 
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
+load("@rules_cc//cc:cc_test.bzl", "cc_test")
+load("//bazel/config/build_variant:compatibility.bzl", "unit_test_only")
 
 cc_library(
     name = "lifecycle",
@@ -26,14 +28,14 @@ cc_library(
     visibility = ["//visibility:public"],
     deps = [
         "//libs/3rdparty/etl",
-        "//libs/bsw/async",
+        "//libs/bsw/async:async_headers",
+        "//libs/bsw/async:async_platform",
         "//libs/bsw/util",
     ],
 )
 
 cc_library(
     name = "lifecycle_mock",
-    testonly = True,
     hdrs = [
         "mock/gmock/include/lifecycle/LifecycleComponentCallbackMock.h",
         "mock/gmock/include/lifecycle/LifecycleComponentMock.h",
@@ -41,9 +43,32 @@ cc_library(
         "mock/gmock/include/lifecycle/LifecycleManagerMock.h",
     ],
     strip_include_prefix = "mock/gmock/include",
+    target_compatible_with = unit_test_only(),
     visibility = ["//visibility:public"],
     deps = [
         ":lifecycle",
         "//libs/3rdparty/googletest:gtest",
+    ],
+)
+
+cc_test(
+    name = "lifecycle_test",
+    srcs = [
+        "test/src/lifecycle/AsyncLifecycleComponentTest.cpp",
+        "test/src/lifecycle/LifecycleComponentTest.cpp",
+        "test/src/lifecycle/LifecycleManagerForwarderTest.cpp",
+        "test/src/lifecycle/LifecycleManagerInitializerTest.cpp",
+        "test/src/lifecycle/LifecycleManagerTest.cpp",
+        "test/src/lifecycle/SimpleLifecycleComponentTest.cpp",
+        "test/src/lifecycle/SingleContextLifecycleComponentTest.cpp",
+    ],
+    target_compatible_with = unit_test_only(),
+    deps = [
+        ":lifecycle",
+        ":lifecycle_mock",
+        "//libs/3rdparty/googletest:gtest_esr_extensions",
+        "//libs/3rdparty/googletest:gtest_main",
+        "//libs/bsw/async:async_mock_impl",
+        "//libs/bsw/util:util_mock",
     ],
 )

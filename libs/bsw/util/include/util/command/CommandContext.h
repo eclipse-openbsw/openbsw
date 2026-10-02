@@ -16,6 +16,7 @@
 #include "util/string/ConstString.h"
 
 #include <etl/span.h>
+#include <etl/string_view.h>
 
 #include <cstdint>
 
@@ -75,13 +76,23 @@ private:
     static bool isIdentifierChar(char c, bool firstChar);
     static int32_t getDigit(char c, uint32_t base);
 
+    inline char currentChar() const
+    {
+        return (_currentPosition < _line.size()) ? _line[_currentPosition] : '\0';
+    }
+
+    inline ::util::string::ConstString subString(size_t start, size_t end) const
+    {
+        ::etl::string_view const view = _line.substr(start, end - start);
+        return ::util::string::ConstString(view.data(), view.size());
+    }
+
     ::util::stream::NullOutputStream _nullStream;
     ::util::stream::ISharedOutputStream* _sharedOutputStream;
     ::util::stream::IOutputStream* _activeStream;
-    char const* _start;
-    char const* _currentPosition;
-    char const* _end;
-    char const* _tokenStart;
+    ::etl::string_view _line;
+    size_t _currentPosition;
+    size_t _tokenStart;
     ICommand::Result _result;
 };
 
@@ -97,29 +108,31 @@ CommandContext::IdentifierChecker<T> CommandContext::scanEnumToken()
 template<class T>
 T CommandContext::scanIntToken()
 {
-    T result          = static_cast<T>(0);
-    bool negative     = false;
-    char const* start = _currentPosition;
+    T result         = static_cast<T>(0);
+    bool negative    = false;
+    size_t start     = _currentPosition;
+    size_t const end = _line.size();
     if (isValid())
     {
         _tokenStart   = _currentPosition;
         uint32_t base = 10U;
-        switch (*_currentPosition)
+        switch (currentChar())
         {
             case '+':
             case '-':
             {
-                negative = *_currentPosition == '-';
+                negative = currentChar() == '-';
                 ++_currentPosition;
                 break;
             }
             case '0':
             {
-                if (((_currentPosition + 1) < _end)
-                    && ((_currentPosition[1] == 'x') || (_currentPosition[1] == 'X')))
+                if (((_currentPosition + 1U) < end)
+                    && ((_line[_currentPosition + 1U] == 'x')
+                        || (_line[_currentPosition + 1U] == 'X')))
                 {
                     base = 16U;
-                    _currentPosition += 2;
+                    _currentPosition += 2U;
                 }
                 else
                 {
@@ -133,9 +146,9 @@ T CommandContext::scanIntToken()
             }
         }
         start = _currentPosition;
-        while (_currentPosition != _end)
+        while (_currentPosition != end)
         {
-            int32_t const digit = getDigit(*_currentPosition, base);
+            int32_t const digit = getDigit(currentChar(), base);
             if (digit < 0)
             {
                 break;

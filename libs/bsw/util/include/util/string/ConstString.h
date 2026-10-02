@@ -10,6 +10,8 @@
 
 #pragma once
 
+#include <etl/string_view.h>
+
 #include <cstdint>
 #include <cstring>
 
@@ -281,7 +283,7 @@ inline char ConstString::operator[](size_t const n) const
 #ifndef ESR_NO_BUFFER_ASSERT
     ETL_ASSERT(n < _length, ETL_ERROR_GENERIC("index must not be out of range"));
 #endif
-    return _data[n];
+    return ::etl::string_view(_data, _length)[n];
 }
 
 inline int32_t ConstString::compare(ConstString const& other, bool const ignoreCase) const

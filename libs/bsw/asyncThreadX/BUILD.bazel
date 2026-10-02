@@ -12,13 +12,11 @@ load("@rules_cc//cc:cc_library.bzl", "cc_library")
 
 alias(
     name = "threadx_core_configuration_default",
-    actual = select(
-        {
-            "//bazel/platform/constraints/soc:s32k148": "//executables/referenceApp/platforms/s32k148evb/threadXCoreConfiguration:threadx_core_configuration",
-            "@platforms//os:linux": "//executables/referenceApp/platforms/posix/threadXCoreConfiguration:threadx_core_configuration",
-        },
-        no_match_error = "No ThreadX core configuration for this platform. Override --//libs/bsw/asyncThreadX:threadx_core_configuration with your own configuration target.",
-    ),
+    actual = select({
+        "//bazel/platform/constraints/soc:s32k148": "//executables/referenceApp/platforms/s32k148evb/threadXCoreConfiguration:threadx_core_configuration",
+        "@platforms//os:linux": "//executables/referenceApp/platforms/posix/threadXCoreConfiguration:threadx_core_configuration",
+        "//conditions:default": "//bazel/config:no_implementation",
+    }),
 )
 
 # ThreadX core configuration (Hook.h, ThreadCConfig.h and platform wiring).

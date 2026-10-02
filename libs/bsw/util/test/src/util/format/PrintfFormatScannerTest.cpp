@@ -20,16 +20,14 @@ void checkEndToken(PrintfFormatScanner const& scanner)
 {
     ASSERT_FALSE(scanner.hasToken());
     ASSERT_EQ(TokenType::END, scanner.getTokenType());
-    ASSERT_EQ(0, *scanner.getTokenStart());
-    ASSERT_EQ(scanner.getTokenEnd(), scanner.getTokenStart());
+    ASSERT_TRUE(scanner.getToken().empty());
 }
 
 void checkStringToken(PrintfFormatScanner const& scanner, char const* pExpectedString)
 {
     ASSERT_TRUE(scanner.hasToken());
     ASSERT_EQ(TokenType::STRING, scanner.getTokenType());
-    ASSERT_EQ(0, strncmp(pExpectedString, scanner.getTokenStart(), strlen(pExpectedString)));
-    ASSERT_EQ(scanner.getTokenEnd(), scanner.getTokenStart() + strlen(pExpectedString));
+    ASSERT_EQ(::etl::string_view(pExpectedString), scanner.getToken());
 }
 
 void checkParamToken(
@@ -44,8 +42,7 @@ void checkParamToken(
 {
     ASSERT_TRUE(scanner.hasToken());
     ASSERT_EQ(TokenType::PARAM, scanner.getTokenType());
-    ASSERT_EQ(0, strncmp(pExpectedString, scanner.getTokenStart(), strlen(pExpectedString)));
-    ASSERT_EQ(scanner.getTokenEnd(), scanner.getTokenStart() + strlen(pExpectedString));
+    ASSERT_EQ(::etl::string_view(pExpectedString), scanner.getToken());
     ASSERT_EQ(flags, scanner.getParamInfo()._flags);
     ASSERT_EQ(base, scanner.getParamInfo()._base);
     ASSERT_EQ(width, scanner.getParamInfo()._width);

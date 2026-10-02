@@ -57,5 +57,5 @@ Notes:
   message's internal buffer or into an external allocation.
 * Fire-and-forget methods follow the same flow but omit the response path: no
   ``Future`` is used, no response message is sent, and the skeleton does not
-  call ``respond()``. The method is marked with
+  call ``respond<MethodName>(...)``. The method is marked with
   ``call_semantic: FIRE_AND_FORGET`` in the service interface description.

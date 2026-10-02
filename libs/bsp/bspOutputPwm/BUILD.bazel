@@ -9,6 +9,26 @@
 # *******************************************************************************
 
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
+load("@rules_cc//cc:cc_test.bzl", "cc_test")
+load("//bazel/config/build_variant:compatibility.bzl", "unit_test_only")
+
+# Headers-only split for posix unit tests.
+cc_library(
+    name = "bsp_output_pwm_headers",
+    hdrs = [
+        "include/outputPwm/OutputPwm.h",
+        "include/outputPwm/OutputPwmTester.h",
+    ],
+    strip_include_prefix = "include",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//bazel/config/bsp:bsp_configuration",
+        "//libs/3rdparty/etl",
+        "//libs/bsp/bspDynamicClient:bsp_dynamic_client",
+        "//libs/bsw/bsp",
+        "//libs/bsw/util",
+    ],
+)
 
 cc_library(
     name = "bsp_output_pwm",
@@ -23,10 +43,21 @@ cc_library(
     strip_include_prefix = "include",
     visibility = ["//visibility:public"],
     deps = [
+        "//bazel/config/bsp:bsp_io",
         "//libs/3rdparty/etl",
         "//libs/bsp/bspDynamicClient:bsp_dynamic_client",
         "//libs/bsp/bspInterrupts:bsp_interrupts",
         "//libs/bsw/util",
-        "//platforms/s32k1xx/bsp/bspIo:bsp_io",
+    ],
+)
+
+cc_test(
+    name = "bsp_output_pwm_test",
+    srcs = ["test/src/IncludeTest.cpp"],
+    target_compatible_with = unit_test_only(),
+    deps = [
+        ":bsp_output_pwm_headers",
+        "//libs/3rdparty/googletest:gtest_main",
+        "//libs/bsw/util:util_mock",
     ],
 )

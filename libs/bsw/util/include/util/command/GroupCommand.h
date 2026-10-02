@@ -12,6 +12,8 @@
 #include "util/command/CommandContext.h"
 #include "util/command/ICommand.h"
 
+#include <etl/span.h>
+
 #include <cstdint>
 
 namespace util
@@ -37,7 +39,9 @@ protected:
         uint8_t _idx;
     };
 
-    virtual PlainCommandInfo const* getInfo() const                   = 0;
+    using CommandInfoTable = ::etl::span<PlainCommandInfo const>;
+
+    virtual CommandInfoTable getInfo() const                          = 0;
     virtual void executeCommand(CommandContext& context, uint8_t idx) = 0;
 
 private:
@@ -48,18 +52,18 @@ private:
 } /* namespace command */
 } /* namespace util */
 
-#define DECLARE_COMMAND_GROUP_GET_INFO PlainCommandInfo const* getInfo() const override;
+#define DECLARE_COMMAND_GROUP_GET_INFO CommandInfoTable getInfo() const override;
 
-#define DEFINE_COMMAND_GROUP_GET_INFO_BEGIN(_class, _id, _desc)                    \
-    const ::util::command::GroupCommand::PlainCommandInfo* _class::getInfo() const \
-    {                                                                              \
+#define DEFINE_COMMAND_GROUP_GET_INFO_BEGIN(_class, _id, _desc)             \
+    ::util::command::GroupCommand::CommandInfoTable _class::getInfo() const \
+    {                                                                       \
         static const PlainCommandInfo _info[] = { {(_id), (_desc), 0U},
 #define COMMAND_GROUP_COMMAND(_idx, _id, _desc) {(_id), (_desc), (_idx)},
-#define DEFINE_COMMAND_GROUP_GET_INFO_END \
-    {                                     \
-        nullptr, nullptr, 0U              \
-    }                                     \
-    }                                     \
-    ;                                     \
-    return _info;                         \
+#define DEFINE_COMMAND_GROUP_GET_INFO_END                          \
+    {                                                              \
+        nullptr, nullptr, 0U                                       \
+    }                                                              \
+    }                                                              \
+    ;                                                              \
+    return ::util::command::GroupCommand::CommandInfoTable(_info); \
     }

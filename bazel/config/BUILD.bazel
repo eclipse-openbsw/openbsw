@@ -9,25 +9,12 @@
 # *******************************************************************************
 
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
-load("@rules_cc//cc:cc_test.bzl", "cc_test")
-load("//bazel/config/build_variant:compatibility.bzl", "unit_test_only")
 
+# Always-incompatible target used as the default for every label_flag that has
+# no universal implementation. A consuming target becomes incompatible with any
+# platform that does not override the flag via platform flags.
 cc_library(
-    name = "bsp_dynamic_client",
-    hdrs = ["include/io/DynamicClientCfg.h"],
-    strip_include_prefix = "include",
+    name = "no_implementation",
+    target_compatible_with = ["@platforms//:incompatible"],
     visibility = ["//visibility:public"],
-    deps = [
-        "//libs/bsw/bsp",
-    ],
-)
-
-cc_test(
-    name = "bsp_dynamic_client_test",
-    srcs = ["test/src/DynamicClientTest.cpp"],
-    target_compatible_with = unit_test_only(),
-    deps = [
-        ":bsp_dynamic_client",
-        "//libs/3rdparty/googletest:gtest_main",
-    ],
 )

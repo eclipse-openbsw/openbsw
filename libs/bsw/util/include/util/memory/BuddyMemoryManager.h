@@ -10,6 +10,7 @@
 
 #pragma once
 
+#include <etl/array.h>
 #include <etl/span.h>
 #include <etl/uncopyable.h>
 
@@ -256,7 +257,7 @@ private:
      */
     void clearNodeTree();
 
-    uint8_t* const _nodeTree;
+    ::etl::span<uint8_t> const _nodeTree;
     size_t const _nodeTreeDepth;
     size_t const _numBuckets;
     size_t const _nodeTreeSize;
@@ -299,7 +300,10 @@ struct RoundToNextPowerOf2
 class BuddyMemoryManagerStatsHelper
 {
 public:
-    static uint8_t* getNodeTree(BuddyMemoryManager const& manager) { return manager._nodeTree; }
+    static uint8_t* getNodeTree(BuddyMemoryManager const& manager)
+    {
+        return manager._nodeTree.data();
+    }
 
     static size_t getNodeTreeDepth(BuddyMemoryManager const& manager)
     {
@@ -336,7 +340,7 @@ private:
     static size_t const NODE_TREE_ARRAY_SIZE = NUM_BUCKETS * 2U - 1U;
 
     // node tree array is first for cache locality
-    uint8_t _nodeTreeArray[NODE_TREE_ARRAY_SIZE] = {};
+    ::etl::array<uint8_t, NODE_TREE_ARRAY_SIZE> _nodeTreeArray{};
 };
 
 template<size_t MIN_NUM_BUCKETS>

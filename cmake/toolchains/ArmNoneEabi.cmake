@@ -71,6 +71,7 @@ set(_EXE_LINKER_FLAGS
     ${_EXE_LINKER_FLAGS} \
     -static \
     -Wl,--gc-sections \
+    -Wl,--print-memory-usage \
     -Wl,-Map,application.map,--cref")
 
 set(_ASM_FLAGS "-g -mcpu=cortex-m4")

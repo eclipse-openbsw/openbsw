@@ -309,6 +309,33 @@ config_setting(
     visibility = ["//visibility:public"],
 )
 
+bool_flag(
+    name = "can0_use_fd",
+    build_setting_default = False,
+    visibility = ["//visibility:public"],
+)
+
+config_setting(
+    name = "can0_use_fd_enabled",
+    flag_values = {":can0_use_fd": "true"},
+    visibility = ["//visibility:public"],
+)
+
+config_setting(
+    name = "can0_use_fd_disabled",
+    flag_values = {":can0_use_fd": "false"},
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "can0_use_fd_defines",
+    defines = select({
+        ":can0_use_fd_enabled": ["CPP2CAN_USE_64_BYTE_FRAMES=1"],
+        "//conditions:default": [],
+    }),
+    visibility = ["//visibility:public"],
+)
+
 cc_library(
     name = "watchdog_defines",
     defines = select({
@@ -322,6 +349,7 @@ cc_library(
     name = "feature_defines",
     visibility = ["//visibility:public"],
     deps = [
+        ":can0_use_fd_defines",
         ":can_defines",
         ":ethernet_defines",
         ":io_defines",

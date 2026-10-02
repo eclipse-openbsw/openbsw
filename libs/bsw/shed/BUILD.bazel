@@ -9,14 +9,40 @@
 # *******************************************************************************
 
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
+load("@rules_cc//cc:cc_test.bzl", "cc_test")
+load("//bazel/config/build_variant:compatibility.bzl", "unit_test_only")
 
 cc_library(
     name = "shed",
-    srcs = glob(["src/**/*.cpp"]),
-    hdrs = glob(["include/**/*.h"]),
+    srcs = [
+        "src/multi_list.cpp",
+        "src/ops_internal.cpp",
+    ],
+    hdrs = [
+        "include/shed/id.h",
+        "include/shed/move_op.h",
+        "include/shed/multi_list.h",
+        "include/shed/ops.h",
+        "include/shed/ops_internal.h",
+        "include/shed/table.h",
+        "include/shed/table_internal.h",
+    ],
     strip_include_prefix = "include",
     visibility = ["//visibility:public"],
     deps = [
         "//libs/3rdparty/etl",
+    ],
+)
+
+cc_test(
+    name = "shed_test",
+    srcs = [
+        "test/multi_list_test.cpp",
+        "test/table_test.cpp",
+    ],
+    target_compatible_with = unit_test_only(),
+    deps = [
+        ":shed",
+        "//libs/3rdparty/googletest:gtest_main",
     ],
 )

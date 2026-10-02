@@ -10,6 +10,8 @@
 
 #include "util/stream/NormalizeLfOutputStream.h"
 
+#include <etl/string_view.h>
+
 namespace util
 {
 namespace stream
@@ -24,11 +26,10 @@ void NormalizeLfOutputStream::write(uint8_t const data)
 {
     if (data == static_cast<uint8_t>('\n'))
     {
-        char const* current = _crlf;
-        while (*current != '\0')
+        ::etl::string_view const crlf(_crlf);
+        for (size_t idx = 0U; idx < crlf.size(); ++idx)
         {
-            _stream.write(static_cast<uint8_t>(*current));
-            ++current;
+            _stream.write(static_cast<uint8_t>(crlf[idx]));
         }
     }
     else

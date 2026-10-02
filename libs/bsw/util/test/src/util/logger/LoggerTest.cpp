@@ -156,7 +156,7 @@ TEST_F(LoggerTest, testLogging)
 
     _enabled       = true;
     _componentInfo = componentInfo;
-    _levelInfo     = LevelInfo(LevelInfo::getDefaultTable() + LEVEL_DEBUG);
+    _levelInfo     = LevelInfo(&LevelInfo::getDefaultTable()[LEVEL_DEBUG]);
 
     Logger::log(1, LEVEL_INFO, "abc: %d %s", 12, "log");
     ASSERT_TRUE(checkAndResetLog(1, LEVEL_INFO, 12, LEVEL_DEBUG, "abc: 12 log"));

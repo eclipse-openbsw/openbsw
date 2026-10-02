@@ -15,8 +15,9 @@ namespace util
 namespace format
 {
 PrintfFormatScanner::PrintfFormatScanner(char const* const formatString)
-: _start(nullptr)
-, _currentPosition((formatString != nullptr) ? formatString : "")
+: _formatString((formatString != nullptr) ? ::etl::string_view(formatString) : ::etl::string_view())
+, _start(0U)
+, _currentPosition(0U)
 , _tokenType(TokenType::END)
 , _paramInfo()
 {
@@ -25,7 +26,7 @@ PrintfFormatScanner::PrintfFormatScanner(char const* const formatString)
 
 void PrintfFormatScanner::nextToken()
 {
-    if (*_currentPosition == '%')
+    if (currentChar() == '%')
     {
         scanParam();
     }
@@ -38,11 +39,11 @@ void PrintfFormatScanner::nextToken()
 void PrintfFormatScanner::scanString(uint32_t const offset)
 {
     _start = _currentPosition;
-    if (*_currentPosition != '\0')
+    if (currentChar() != '\0')
     {
         _tokenType = TokenType::STRING;
         _currentPosition += offset;
-        while ((*_currentPosition != '\0') && (*_currentPosition != '%'))
+        while ((currentChar() != '\0') && (currentChar() != '%'))
         {
             ++_currentPosition;
         }
@@ -61,7 +62,7 @@ void PrintfFormatScanner::scanParam()
     ++_currentPosition;
     scanParamFlags();
     _paramInfo._width = scanWidthOrPrecision();
-    if (*_currentPosition == '.')
+    if (currentChar() == '.')
     {
         ++_currentPosition;
         _paramInfo._precision = scanWidthOrPrecision();
@@ -77,16 +78,16 @@ void PrintfFormatScanner::scanParam()
 int32_t PrintfFormatScanner::scanWidthOrPrecision()
 {
     int32_t result;
-    if (isDigit(*_currentPosition))
+    if (isDigit(currentChar()))
     {
         result = 0;
         do
         {
-            result = (10 * result) + static_cast<int32_t>((*_currentPosition - '0'));
+            result = (10 * result) + static_cast<int32_t>((currentChar() - '0'));
             ++_currentPosition;
-        } while (isDigit(*_currentPosition));
+        } while (isDigit(currentChar()));
     }
-    else if (*_currentPosition == '*')
+    else if (currentChar() == '*')
     {
         ++_currentPosition;
         result = ParamWidthOrPrecision::PARAM;
@@ -102,7 +103,7 @@ void PrintfFormatScanner::scanParamFlags()
 {
     while (true)
     {
-        switch (*_currentPosition)
+        switch (currentChar())
         {
             case '-':
             {
@@ -140,7 +141,7 @@ void PrintfFormatScanner::scanParamFlags()
 
 uint8_t PrintfFormatScanner::scanParamLength()
 {
-    switch (*_currentPosition)
+    switch (currentChar())
     {
         case 'h':
         {
@@ -150,7 +151,7 @@ uint8_t PrintfFormatScanner::scanParamLength()
         case 'l':
         {
             ++_currentPosition;
-            if (*_currentPosition == 'l')
+            if (currentChar() == 'l')
             {
                 ++_currentPosition;
             }
@@ -170,7 +171,7 @@ uint8_t PrintfFormatScanner::scanParamLength()
 
 void PrintfFormatScanner::scanParamFormatSpecifier(uint8_t const intPower)
 {
-    char const specifier = *_currentPosition;
+    char const specifier = currentChar();
     ++_currentPosition;
     switch (specifier)
     {

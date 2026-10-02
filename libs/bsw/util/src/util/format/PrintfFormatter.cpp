@@ -13,6 +13,8 @@
 #include "util/format/PrintfArgumentReader.h"
 #include "util/format/PrintfFormatScanner.h"
 
+#include <etl/array.h>
+
 namespace util
 {
 namespace format
@@ -26,11 +28,13 @@ PrintfFormatter::PrintfFormatter(IOutputStream& strm, bool const writeParam)
 // NOLINTNEXTLINE(cert-dcl50-cpp): va_list usage only for printing functionalities.
 void PrintfFormatter::format(char const* const formatString, ...)
 {
-    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg): required adapter for printf-style API
+    // va_list is a C array on some ABIs, so va_start/va_end/passing it on inevitably decays it.
+    // NOLINTBEGIN(cppcoreguidelines-pro-type-vararg,cppcoreguidelines-pro-bounds-array-to-pointer-decay)
     va_list ap;
     va_start(ap, formatString);
     format(formatString, ap);
     va_end(ap);
+    // NOLINTEND(cppcoreguidelines-pro-type-vararg,cppcoreguidelines-pro-bounds-array-to-pointer-decay)
 }
 
 void PrintfFormatter::format(char const* const formatString, va_list ap)
@@ -45,9 +49,8 @@ void PrintfFormatter::format(char const* const formatString, IPrintfArgumentRead
     {
         if (scanner.getTokenType() == TokenType::STRING)
         {
-            formatText(
-                scanner.getTokenStart(),
-                static_cast<size_t>(scanner.getTokenEnd() - scanner.getTokenStart()));
+            ::etl::string_view const token = scanner.getToken();
+            formatText(token.data(), token.size());
         }
         else
         {
@@ -162,15 +165,14 @@ void PrintfFormatter::formatStringParam(
 
 void PrintfFormatter::formatIntParam(ParamInfo const& paramInfo, ParamVariant const& value)
 {
-    char buf[22];
-    char* const pBufferEnd         = &buf[sizeof(buf)];
-    int8_t sign                    = 0;
-    char const* const pBufferStart = formatIntDatatype(pBufferEnd, paramInfo, value, sign);
-    char const* const pSign        = getIntSign(paramInfo, sign);
-    size_t const signLength        = strlen(pSign);
-    char const* const pPrefix      = getIntPrefix(paramInfo, sign);
-    size_t const prefixLength      = strlen(pPrefix);
-    ptrdiff_t digitCount           = pBufferEnd - pBufferStart;
+    ::etl::array<char, 22> buf{};
+    int8_t sign               = 0;
+    size_t const bufferStart  = formatIntDatatype(::etl::span<char>(buf), paramInfo, value, sign);
+    char const* const pSign   = getIntSign(paramInfo, sign);
+    size_t const signLength   = strlen(pSign);
+    char const* const pPrefix = getIntPrefix(paramInfo, sign);
+    size_t const prefixLength = strlen(pPrefix);
+    ptrdiff_t digitCount      = static_cast<ptrdiff_t>(buf.size() - bufferStart);
     ptrdiff_t totalCount
         = digitCount + static_cast<ptrdiff_t>(signLength) + static_cast<ptrdiff_t>(prefixLength);
     ptrdiff_t precision;
@@ -201,20 +203,23 @@ void PrintfFormatter::formatIntParam(ParamInfo const& paramInfo, ParamVariant co
     putString(pSign, signLength);
     putString(pPrefix, prefixLength);
     putChar('0', static_cast<uint32_t>(precision));
-    putString(pBufferStart, static_cast<size_t>(digitCount));
+    putString(&buf[bufferStart], static_cast<size_t>(digitCount));
     fillWidth(paramInfo, static_cast<int32_t>(totalCount), false);
 }
 
 // static
-char* PrintfFormatter::formatIntDatatype(
-    char* const pBufferEnd, ParamInfo const& paramInfo, ParamVariant const& value, int8_t& sign)
+size_t PrintfFormatter::formatIntDatatype(
+    ::etl::span<char> const buffer,
+    ParamInfo const& paramInfo,
+    ParamVariant const& value,
+    int8_t& sign)
 {
     // NOLINTBEGIN(cppcoreguidelines-pro-type-union-access): active member selected by ParamDatatype
-    char const* const pDigits = ((paramInfo._flags & ParamFlags::FLAG_UPPER) > 0U)
-                                    ? "0123456789ABCDEF"
-                                    : "0123456789abcdef";
+    ::etl::string_view const pDigits = ((paramInfo._flags & ParamFlags::FLAG_UPPER) > 0U)
+                                           ? ::etl::string_view("0123456789ABCDEF")
+                                           : ::etl::string_view("0123456789abcdef");
 
-    char* ret;
+    size_t ret;
 
     switch (paramInfo._datatype)
     {
@@ -222,42 +227,42 @@ char* PrintfFormatter::formatIntDatatype(
         {
             uint32_t const castValue = static_cast<uint32_t>(value._sint16Value);
             uint32_t const baseValue = static_cast<uint32_t>(paramInfo._base);
-            ret = formatIntDigits<uint32_t>(pBufferEnd, pDigits, castValue, true, baseValue, sign);
+            ret = formatIntDigits<uint32_t>(buffer, pDigits, castValue, true, baseValue, sign);
             break;
         }
         case ParamDatatype::SINT32:
         {
             uint32_t const castValue = static_cast<uint32_t>(value._sint32Value);
             uint32_t const baseValue = static_cast<uint32_t>(paramInfo._base);
-            ret = formatIntDigits<uint32_t>(pBufferEnd, pDigits, castValue, true, baseValue, sign);
+            ret = formatIntDigits<uint32_t>(buffer, pDigits, castValue, true, baseValue, sign);
             break;
         }
         case ParamDatatype::SINT64:
         {
             uint64_t const castValue = static_cast<uint64_t>(value._sint64Value);
             uint64_t const baseValue = static_cast<uint64_t>(paramInfo._base);
-            ret = formatIntDigits<uint64_t>(pBufferEnd, pDigits, castValue, true, baseValue, sign);
+            ret = formatIntDigits<uint64_t>(buffer, pDigits, castValue, true, baseValue, sign);
             break;
         }
         case ParamDatatype::UINT16:
         {
             uint32_t const castValue = static_cast<uint32_t>(value._uint16Value);
             uint32_t const baseValue = static_cast<uint32_t>(paramInfo._base);
-            ret = formatIntDigits<uint32_t>(pBufferEnd, pDigits, castValue, false, baseValue, sign);
+            ret = formatIntDigits<uint32_t>(buffer, pDigits, castValue, false, baseValue, sign);
             break;
         }
         case ParamDatatype::UINT32:
         {
             uint32_t const baseValue = static_cast<uint32_t>(paramInfo._base);
             ret                      = formatIntDigits<uint32_t>(
-                pBufferEnd, pDigits, value._uint32Value, false, baseValue, sign);
+                buffer, pDigits, value._uint32Value, false, baseValue, sign);
             break;
         }
         case ParamDatatype::UINT64:
         {
             uint64_t const baseValue = static_cast<uint64_t>(paramInfo._base);
             ret                      = formatIntDigits<uint64_t>(
-                pBufferEnd, pDigits, value._uint64Value, false, baseValue, sign);
+                buffer, pDigits, value._uint64Value, false, baseValue, sign);
             break;
         }
         case ParamDatatype::VOIDPTR:
@@ -268,29 +273,19 @@ char* PrintfFormatter::formatIntDatatype(
             {
                 uint32_t const baseValue = static_cast<uint32_t>(paramInfo._base);
                 ret                      = formatIntDigits<uint32_t>(
-                    pBufferEnd,
-                    pDigits,
-                    static_cast<uint32_t>(pointerValue),
-                    false,
-                    baseValue,
-                    sign);
+                    buffer, pDigits, static_cast<uint32_t>(pointerValue), false, baseValue, sign);
             }
             else
             {
                 uint64_t const baseValue = static_cast<uint64_t>(paramInfo._base);
                 ret                      = formatIntDigits<uint64_t>(
-                    pBufferEnd,
-                    pDigits,
-                    static_cast<uint64_t>(pointerValue),
-                    false,
-                    baseValue,
-                    sign);
+                    buffer, pDigits, static_cast<uint64_t>(pointerValue), false, baseValue, sign);
             }
             break;
         }
         default:
         {
-            ret = pBufferEnd;
+            ret = buffer.size();
             break;
         }
     }

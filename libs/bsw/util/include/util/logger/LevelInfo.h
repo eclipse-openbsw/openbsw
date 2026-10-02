@@ -16,7 +16,9 @@
 
 #include "util/format/AttributedString.h"
 
+#include <etl/array.h>
 #include <etl/error_handler.h>
+#include <etl/span.h>
 
 // Currently we still define the enum value _DEBUG to make the levels compliant to the former Logger
 // levels. Unfortunately on Visual Studio this is a predefined macro which we will undefine here
@@ -67,7 +69,7 @@ public:
         Level _level;
     };
 
-    using TableType = PlainInfo const (&)[6];
+    using TableType = ::etl::span<PlainInfo const>;
 
     /**
      * Static function that returns a default severity info table.
@@ -122,7 +124,7 @@ public:
 
 private:
     PlainInfo const* _plainInfo;
-    static PlainInfo const _defaultConstLevelInfos[LEVEL_COUNT];
+    static ::etl::array<PlainInfo, LEVEL_COUNT> const _defaultConstLevelInfos;
 };
 
 } // namespace logger

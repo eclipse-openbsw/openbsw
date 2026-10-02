@@ -14,6 +14,8 @@
 #include "util/format/Printf.h"
 #include "util/stream/IOutputStream.h"
 
+#include <etl/span.h>
+#include <etl/string_view.h>
 #include <etl/type_traits.h>
 
 #include <cstdarg>
@@ -230,12 +232,15 @@ private:
     void formatStringParam(ParamInfo const& paramInfo, char const* str);
     void formatStringParam(ParamInfo const& paramInfo, char const* str, size_t length);
     void formatIntParam(ParamInfo const& paramInfo, ParamVariant const& value);
-    static char* formatIntDatatype(
-        char* pBufferEnd, ParamInfo const& paramInfo, ParamVariant const& value, int8_t& sign);
+    static size_t formatIntDatatype(
+        ::etl::span<char> buffer,
+        ParamInfo const& paramInfo,
+        ParamVariant const& value,
+        int8_t& sign);
     template<class T>
-    static inline char* formatIntDigits(
-        char* bufferEnd,
-        char const* digits,
+    static inline size_t formatIntDigits(
+        ::etl::span<char> buffer,
+        ::etl::string_view digits,
         T value,
         bool signedType,
         typename ::etl::make_unsigned<T>::type base,
@@ -257,14 +262,15 @@ private:
  * Implementation
  */
 template<class T>
-inline char* PrintfFormatter::formatIntDigits(
-    char* bufferEnd,
-    char const* const digits,
+inline size_t PrintfFormatter::formatIntDigits(
+    ::etl::span<char> const buffer,
+    ::etl::string_view const digits,
     T value,
     bool const signedType,
     typename ::etl::make_unsigned<T>::type const base,
     int8_t& sign)
 {
+    size_t index = buffer.size();
     if (value != 0U)
     {
         if (signedType)
@@ -286,18 +292,18 @@ inline char* PrintfFormatter::formatIntDigits(
 
         while (value > 0U)
         {
-            --bufferEnd;
-            *bufferEnd = digits[value % base];
+            --index;
+            buffer[index] = digits[value % base];
             value /= base;
         }
     }
     else
     {
         sign = 0;
-        --bufferEnd;
-        *bufferEnd = '0';
+        --index;
+        buffer[index] = '0';
     }
-    return bufferEnd;
+    return index;
 }
 
 // static

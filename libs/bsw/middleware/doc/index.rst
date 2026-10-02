@@ -12,7 +12,7 @@
 middleware
 ==========
 
-The middleware is an inter-core, message-passing framework that uses queue objects instantiated in shared memory to allow communication between applications that live either in different or the same OS tasks, and applications that live in different cores.
+The middleware is an inter-core, message-passing framework. It uses queue objects instantiated in shared memory. These queues let applications communicate across OS tasks and across cores.
 
 This documentation provides architecture, detailed design, integration guidance, and user-facing documentation for the middleware framework.
 

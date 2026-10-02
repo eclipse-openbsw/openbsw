@@ -12,6 +12,8 @@
 
 #include "util/format/Printf.h"
 
+#include <etl/string_view.h>
+
 namespace util
 {
 namespace format
@@ -67,9 +69,7 @@ public:
      *
      * \return
      * - STRING to indicate one or more ordinary characters within the format string that can
-     *          simply be put out. The position of the first character can be retrieved with
-     *          getTokenStart(), the position of the first character which is not part of the
-     *          string with getTokenEnd().
+     *          simply be put out. The characters can be retrieved with getToken().
      * - PARAM to indicate that there is a conversion (starting with %) on one or more
      *         arguments. All information about the conversion is translated into the fields
      *         of the ParamInfo structure that can be referenced with a call to
@@ -81,18 +81,11 @@ public:
      */
     inline TokenType getTokenType() const;
     /**
-     * Returns the position of the first character of the token.
+     * Returns the characters of the format string that make up the current token.
      *
-     * \return pointer to first character
+     * \return view onto the current token. For END tokens the view is empty.
      */
-    inline char const* getTokenStart() const;
-    /**
-     * Returns the position of the first character which is not part of the token.
-     *
-     * \return pointer to first character behind the token. The length of the token can easily be
-     *         calculated with getTokenEnd() - getTokenStart()
-     */
-    inline char const* getTokenEnd() const;
+    inline ::etl::string_view getToken() const;
 
     /**
      * Returns all information about a single parameter conversion.
@@ -149,8 +142,11 @@ private:
 
     static inline bool isDigit(char c);
 
-    char const* _start;
-    char const* _currentPosition;
+    inline char currentChar() const;
+
+    ::etl::string_view _formatString;
+    size_t _start;
+    size_t _currentPosition;
     TokenType _tokenType;
     ParamInfo _paramInfo;
 };
@@ -160,9 +156,15 @@ inline bool PrintfFormatScanner::hasToken() const { return _tokenType != TokenTy
 
 inline TokenType PrintfFormatScanner::getTokenType() const { return _tokenType; }
 
-inline char const* PrintfFormatScanner::getTokenStart() const { return _start; }
+inline ::etl::string_view PrintfFormatScanner::getToken() const
+{
+    return _formatString.substr(_start, _currentPosition - _start);
+}
 
-inline char const* PrintfFormatScanner::getTokenEnd() const { return _currentPosition; }
+inline char PrintfFormatScanner::currentChar() const
+{
+    return (_currentPosition < _formatString.size()) ? _formatString[_currentPosition] : '\0';
+}
 
 inline ParamInfo const& PrintfFormatScanner::getParamInfo() const { return _paramInfo; }
 

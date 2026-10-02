@@ -20,15 +20,14 @@
 #include <etl/memory.h>
 #include <etl/span.h>
 
+#include <cstddef>
 #include <cstdint>
 
 namespace middleware::core
 {
 
-MessagePayloadBuilder MessagePayloadBuilder::_instance{};
-
 HRESULT MessagePayloadBuilder::allocAndCopyBytesToExternalPayload(
-    ::etl::span<uint8_t const> const src, Message& msg, uint8_t const numberOfReferences)
+    ::etl::span<uint8_t const> const& src, Message& msg, uint8_t const numberOfReferences)
 {
     uint16_t const sid  = msg.getHeader().serviceId;
     uint8_t* const dest = msg.isEvent()
@@ -64,7 +63,7 @@ uint8_t* MessagePayloadBuilder::getAllocatorPointerFromMessage(Message const& ms
 }
 
 HRESULT MessagePayloadBuilder::allocate(
-    ::etl::span<uint8_t const> const src, Message& msg, uint8_t const numberOfReferences)
+    ::etl::span<uint8_t const> const& src, Message& msg, uint8_t const numberOfReferences)
 {
     if (src.size_bytes() <= Message::MAX_PAYLOAD_SIZE)
     {

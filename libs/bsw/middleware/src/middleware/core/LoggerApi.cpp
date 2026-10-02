@@ -16,14 +16,16 @@
 
 #include <etl/array.h>
 #include <etl/byte_stream.h>
+#include <etl/endianness.h>
 
-#include <cstddef>
 #include <cstdint>
 
 namespace middleware::logger
 {
 namespace
 {
+
+constexpr uint32_t MESSAGE_SERIALIZED_SIZE = 10U;
 
 void serialize(::etl::byte_stream_writer& writer, uint8_t const value)
 {
@@ -42,9 +44,9 @@ void serialize(::etl::byte_stream_writer& writer, uint32_t const value)
 
 void serialize(::etl::byte_stream_writer& writer, core::Message const& value)
 {
-    // NOLINTNEXTLINE(cppcoreguidelines-avoid-magic-numbers)
     static_assert(
-        CountBytes<core::Message>::VALUE == 10U, "Message log size in bytes exceeds the payload");
+        CountBytes<core::Message>::VALUE == MESSAGE_SERIALIZED_SIZE,
+        "Message log size in bytes exceeds the payload");
 
     writer.write_unchecked(value.getHeader().srcClusterId);
     writer.write_unchecked(value.getHeader().tgtClusterId);
@@ -209,8 +211,8 @@ void logFrameFailure(LogLevel const level, Error const error, uint32_t const fra
 
 void logPduFailure(LogLevel const level, Error const error, uint32_t const pduId)
 {
-    static constexpr char kdecimalFormat[] = "e:%d ID:%u";
-    static constexpr char khexFormat[]     = "e:%d ID:0x%x";
+    static constexpr char const* kdecimalFormat = "e:%d ID:%u";
+    static constexpr char const* khexFormat     = "e:%d ID:0x%x";
     char const* const kformat
         = (error == Error::PduRouteUnknown || error == Error::PduPayloadAllocation) ? kdecimalFormat
                                                                                     : khexFormat;

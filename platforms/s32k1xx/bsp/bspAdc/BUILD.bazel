@@ -10,9 +10,11 @@
 
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
 
+# The adc headers are split from the compiled target so header consumers avoid a cycle.
+# The full bsp_adc target depends back on bsp_configuration, so only the headers are safe
+# to share with it.
 cc_library(
-    name = "bsp_adc",
-    srcs = ["src/tester/AnalogTester.cpp"],
+    name = "bsp_adc_headers",
     hdrs = [
         "include/adc/Adc.h",
         "include/adc/AnalogInputScaleImplementation.h",
@@ -20,11 +22,6 @@ cc_library(
         "include/adc/adcPhysicalName.h",
         "include/adc/adcResolution.h",
         "include/adc/adcScale.h",
-        "include/tester/AnalogTester.h",
-    ],
-    implementation_deps = [
-        ":bsp_configuration",
-        "//libs/bsw/util",
     ],
     strip_include_prefix = "include",
     target_compatible_with = ["//bazel/platform/constraints/soc:s32k148"],
@@ -36,20 +33,16 @@ cc_library(
     ],
 )
 
-alias(
-    name = "bsp_configuration_default",
-    actual = select(
-        {
-            "//bazel/platform/constraints/soc:s32k148": "//executables/referenceApp/platforms/s32k148evb/bspConfiguration:bsp_configuration_headers",
-            "@platforms//os:linux": "//executables/referenceApp/platforms/posix/bspConfiguration:bsp_configuration_headers",
-        },
-        no_match_error = "No bsp_configuration for this platform. Override --//<path>:bsp_configuration with your own implementation.",
-    ),
+cc_library(
+    name = "bsp_adc",
+    srcs = ["src/tester/AnalogTester.cpp"],
+    hdrs = ["include/tester/AnalogTester.h"],
+    implementation_deps = [
+        "//bazel/config/bsp:bsp_configuration",
+        "//libs/bsw/util",
+    ],
+    strip_include_prefix = "include",
+    target_compatible_with = ["//bazel/platform/constraints/soc:s32k148"],
     visibility = ["//visibility:public"],
-)
-
-label_flag(
-    name = "bsp_configuration",
-    build_setting_default = ":bsp_configuration_default",
-    visibility = ["//visibility:public"],
+    deps = [":bsp_adc_headers"],
 )

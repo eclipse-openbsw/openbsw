@@ -9,6 +9,8 @@
 # *******************************************************************************
 
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
+load("@rules_cc//cc:cc_test.bzl", "cc_test")
+load("//bazel/config/build_variant:compatibility.bzl", "unit_test_only")
 
 cc_library(
     name = "safe_utils",
@@ -17,5 +19,16 @@ cc_library(
     visibility = ["//visibility:public"],
     deps = [
         "//libs/bsw/util",
+    ],
+)
+
+cc_test(
+    name = "safe_utils_test",
+    srcs = ["test/src/safeUtils/include_test.cpp"],
+    target_compatible_with = unit_test_only(),
+    deps = [
+        ":safe_utils",
+        "//libs/3rdparty/googletest:gtest_main",
+        "//libs/bsw/util:util_mock",
     ],
 )

@@ -36,6 +36,9 @@ private:
     T* _v;
 };
 
+// On several ABIs (e.g. SysV x86-64) va_list is defined as a one-element C array. Handling that
+// representation therefore requires C array types, so the diagnostic cannot be avoided here.
+// NOLINTBEGIN(cppcoreguidelines-avoid-c-arrays)
 template<class T, size_t N>
 class _va_list_ref<T[N]>
 {
@@ -49,6 +52,8 @@ public:
 private:
     T* _v;
 };
+
+// NOLINTEND(cppcoreguidelines-avoid-c-arrays)
 
 } // namespace internal
 

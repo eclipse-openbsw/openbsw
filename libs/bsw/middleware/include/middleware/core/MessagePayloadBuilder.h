@@ -78,7 +78,7 @@ public:
      * \return HRESULT indicating success or failure
      */
     [[nodiscard]] static HRESULT
-    allocate(::etl::span<uint8_t const> src, Message& msg, uint8_t numberOfReferences = 1U);
+    allocate(::etl::span<uint8_t const> const& src, Message& msg, uint8_t numberOfReferences = 1U);
 
     /**
      * Reads an object of type T from the content of \p msg.
@@ -143,7 +143,11 @@ public:
      *
      * \return MessagePayloadBuilder& The singleton instance
      */
-    static MessagePayloadBuilder& getInstance() { return _instance; }
+    static MessagePayloadBuilder& getInstance()
+    {
+        static MessagePayloadBuilder instance{};
+        return instance;
+    }
 
 private:
     /**
@@ -155,7 +159,7 @@ private:
      * \return HRESULT
      */
     static HRESULT allocAndCopyBytesToExternalPayload(
-        ::etl::span<uint8_t const> src, Message& msg, uint8_t numberOfReferences);
+        ::etl::span<uint8_t const> const& src, Message& msg, uint8_t numberOfReferences);
 
     static uint8_t* getAllocatorPointerFromMessage(Message const& msg);
 
@@ -203,8 +207,6 @@ private:
     }
 
     MessagePayloadBuilder() = default;
-
-    static MessagePayloadBuilder _instance;
 };
 
 } // namespace middleware::core

@@ -14,10 +14,10 @@ alias(
     name = "etl_profile",
     actual = select(
         {
-            "//bazel/config/executable_config:reference_app": "//executables/referenceApp/etl_profile",
-            "//bazel/config/executable_config:unit_test": "//executables/unitTest/etl_profile",
+            "//bazel/config/build_variant:reference_app": "//executables/referenceApp/etl_profile",
+            "//bazel/config/build_variant:unit_test": "//executables/unitTest/etl_profile",
         },
-        no_match_error = "executable_config must be 'reference_app' or 'unit_test' to select an ETL profile.",
+        no_match_error = "build_variant must be 'reference_app' or 'unit_test' to select an ETL profile.",
     ),
     visibility = ["//visibility:public"],
 )

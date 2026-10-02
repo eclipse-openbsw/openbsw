@@ -9,6 +9,7 @@
 # *******************************************************************************
 
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
+load("//bazel/config/build_variant:compatibility.bzl", "unit_test_only")
 
 cc_library(
     name = "doip",
@@ -28,9 +29,9 @@ cc_library(
 
 cc_library(
     name = "doip_mock",
-    testonly = True,
     hdrs = glob(["mock/gmock/include/**/*.h"]),
     strip_include_prefix = "mock/gmock/include",
+    target_compatible_with = unit_test_only(),
     visibility = ["//visibility:public"],
     deps = [
         ":doip",

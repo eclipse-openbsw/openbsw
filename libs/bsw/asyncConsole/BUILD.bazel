@@ -9,6 +9,8 @@
 # *******************************************************************************
 
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
+load("@rules_cc//cc:cc_test.bzl", "cc_test")
+load("//bazel/config/build_variant:compatibility.bzl", "unit_test_only")
 
 cc_library(
     name = "async_console",
@@ -24,10 +26,32 @@ cc_library(
         "include/console/SyncCommandWrapper.h",
         "include/logger/ConsoleLogger.h",
     ],
+    implementation_deps = [
+        "//libs/bsw/async:async_platform",
+    ],
     strip_include_prefix = "include",
     visibility = ["//visibility:public"],
     deps = [
-        "//libs/bsw/async",
+        "//libs/bsw/async:async_headers",
         "//libs/bsw/util",
+    ],
+)
+
+cc_test(
+    name = "async_console_test",
+    srcs = [
+        "test/include/demo/DemoCommand.h",
+        "test/src/console/DemoTest.cpp",
+        "test/src/console/IncludeTest.cpp",
+        "test/src/demo/DemoCommand.cpp",
+    ],
+    includes = ["test/include"],
+    target_compatible_with = unit_test_only(),
+    deps = [
+        ":async_console",
+        "//libs/3rdparty/googletest:gtest_main",
+        "//libs/bsw/async:async_mock_impl",
+        "//libs/bsw/asyncFreeRtos:async_binding_mock",
+        "//libs/bsw/util:util_mock",
     ],
 )

@@ -9,6 +9,8 @@
 # *******************************************************************************
 
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
+load("@rules_cc//cc:cc_test.bzl", "cc_test")
+load("//bazel/config/build_variant:compatibility.bzl", "unit_test_only")
 
 cc_library(
     name = "bsp_eeprom_driver",
@@ -24,5 +26,21 @@ cc_library(
         "//libs/bsw/util",
         "//platforms/s32k1xx/bsp/bspCore:bsp_core",
         "//platforms/s32k1xx/bsp/bspMcu:bsp_mcu",
+    ],
+)
+
+cc_test(
+    name = "bsp_eeprom_driver_test_s32k1",
+    srcs = [
+        "include/eeprom/EepromDriver.h",
+        "test/src/IncludeTest.cpp",
+    ],
+    includes = ["include"],
+    target_compatible_with = unit_test_only(),
+    deps = [
+        "//executables/unitTest/bsp/bspIo:bsp_io",
+        "//executables/unitTest/bsp/bspMcu:ut_bsp_mcu",
+        "//libs/3rdparty/googletest:gtest_main",
+        "//libs/bsw/util:util_mock",
     ],
 )

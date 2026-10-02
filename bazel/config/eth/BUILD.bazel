@@ -8,22 +8,10 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 
-#   Default:  select based on the target platform (s32k148 / posix)
+# Ethernet configuration. Every platform must declare this via its platform flags.
 #   Override: --//bazel/config/eth:eth_configuration=//path/to:your_eth_configuration
-alias(
-    name = "eth_configuration_default",
-    actual = select(
-        {
-            "//bazel/platform/constraints/soc:s32k148": "//executables/referenceApp/platforms/s32k148evb/ethConfiguration:eth_configuration",
-            "@platforms//os:linux": "//executables/referenceApp/platforms/posix/ethConfiguration:eth_configuration",
-        },
-        no_match_error = "No eth_configuration for this platform. Override --//bazel/config/eth:eth_configuration with your own implementation.",
-    ),
-    visibility = ["//visibility:public"],
-)
-
 label_flag(
     name = "eth_configuration",
-    build_setting_default = ":eth_configuration_default",
+    build_setting_default = "//bazel/config:no_implementation",
     visibility = ["//visibility:public"],
 )

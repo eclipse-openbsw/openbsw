@@ -9,6 +9,8 @@
 # *******************************************************************************
 
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
+load("@rules_cc//cc:cc_test.bzl", "cc_test")
+load("//bazel/config/build_variant:compatibility.bzl", "unit_test_only")
 
 cc_library(
     name = "bsp_eeprom_driver",
@@ -24,5 +26,15 @@ cc_library(
     deps = [
         "//bazel/config/bsp:bsp_configuration",
         "//libs/bsw/bsp",
+    ],
+)
+
+cc_test(
+    name = "bsp_eeprom_driver_test",
+    srcs = ["test/src/eeprom/EepromDriverTest.cpp"],
+    target_compatible_with = unit_test_only(),
+    deps = [
+        ":bsp_eeprom_driver",
+        "//libs/3rdparty/googletest:gtest_main",
     ],
 )

@@ -19,9 +19,9 @@
 #include "middleware/os/TaskIdProvider.h"
 
 #include <etl/algorithm.h>
+#include <etl/error_handler.h>
 #include <etl/span.h>
 
-#include <cstddef>
 #include <cstdint>
 
 namespace middleware::core
@@ -61,14 +61,14 @@ uint8_t SkeletonBase::getSourceClusterId() const
     auto clusterId = static_cast<uint8_t>(INVALID_CLUSTER_ID);
     if (!_connections.empty())
     {
-        auto const* it = ::etl::find_if(
+        auto const* connectionIterator = ::etl::find_if(
             _connections.begin(),
             _connections.end(),
             [](IClusterConnection const* const clusConn) { return (clusConn != nullptr); });
 
-        if (it != _connections.end())
+        if (connectionIterator != _connections.end())
         {
-            clusterId = (*it)->getSourceClusterId();
+            clusterId = (*connectionIterator)->getSourceClusterId();
         }
     }
     return clusterId;
@@ -101,7 +101,7 @@ SkeletonBase::initFromInstancesDatabase(
     uint16_t const instanceId, ::etl::span<IInstanceDatabase const* const> const& dbRange)
 {
     unsubscribe(getServiceId());
-    auto const* it = ::etl::find_if(
+    auto const* databaseEntry = ::etl::find_if(
         dbRange.begin(),
         dbRange.end(),
         [instanceId](IInstanceDatabase const* const dataBase) -> bool
@@ -109,44 +109,38 @@ SkeletonBase::initFromInstancesDatabase(
             auto const instances = dataBase->getInstanceIdsRange();
             auto const* instanceIdIt
                 = ::etl::lower_bound(instances.begin(), instances.end(), instanceId);
-            return ((instanceIdIt != instances.end()) && ((*instanceIdIt) == instanceId));
+            return (
+                (instanceIdIt != instances.end()) && ((*instanceIdIt) == instanceId)
+                && (!dataBase->getSkeletonConnectionsRange().empty()));
         });
     HRESULT ret = HRESULT::TransceiverInitializationFailed;
-    if (it != dbRange.end())
+    if (databaseEntry != dbRange.end())
     {
-        auto skeletonCc = (*it)->getSkeletonConnectionsRange();
-        if (skeletonCc.empty())
+        auto skeletonCc   = (*databaseEntry)->getSkeletonConnectionsRange();
+        bool isRegistered = true;
+        for (auto* const clusConn : skeletonCc)
         {
-            _instanceId = INVALID_INSTANCE_ID;
-            ret         = HRESULT::NoClientsAvailable;
+            if (nullptr != clusConn)
+            {
+                ret = clusConn->subscribe(*this, instanceId);
+                if ((ret == HRESULT::Ok) || (ret == HRESULT::InstanceAlreadyRegistered))
+                {
+                    continue;
+                }
+
+                isRegistered = false;
+                break;
+            }
+        }
+        if (isRegistered)
+        {
+            _connections = skeletonCc;
         }
         else
         {
-            bool isRegistered = true;
-            for (auto* const clusConn : skeletonCc)
-            {
-                if (nullptr != clusConn)
-                {
-                    ret = clusConn->subscribe(*this, instanceId);
-                    if ((ret == HRESULT::Ok) || (ret == HRESULT::InstanceAlreadyRegistered))
-                    {
-                        continue;
-                    }
-
-                    isRegistered = false;
-                    break;
-                }
-            }
-            if (isRegistered)
-            {
-                _connections = skeletonCc;
-            }
-            else
-            {
-                unsubscribe(getServiceId());
-                _instanceId = INVALID_INSTANCE_ID;
-                ret         = HRESULT::TransceiverInitializationFailed;
-            }
+            unsubscribe(getServiceId());
+            _instanceId = INVALID_INSTANCE_ID;
+            ret         = HRESULT::TransceiverInitializationFailed;
         }
     }
     else

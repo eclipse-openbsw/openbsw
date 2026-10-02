@@ -50,7 +50,7 @@ cluster_connection_unit -> proxy_skeleton_base_unit : onNewMessageReceived(msg)
 proxy_skeleton_base_unit -> proxy_skeleton_base_unit : extract methodId
 proxy_skeleton_base_unit -> generated_skeleton : methodHandler(args, response)
 generated_skeleton -> generated_skeleton : execute business logic
-generated_skeleton -> proxy_skeleton_base_unit : respond(response, result)
+generated_skeleton -> proxy_skeleton_base_unit : respond<method>(response, result)
 proxy_skeleton_base_unit -> message_management_unit : allocate(responseSize)
 message_management_unit --> proxy_skeleton_base_unit : response payload
 proxy_skeleton_base_unit -> proxy_skeleton_base_unit : write result to payload

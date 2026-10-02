@@ -56,12 +56,14 @@ StringWriter& StringWriter::write(ConstString const& str)
 // NOLINTNEXTLINE(cert-dcl50-cpp): va_list usage only for printing functionalities.
 StringWriter& StringWriter::printf(char const* const formatString, ...)
 {
-    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg): required adapter for printf-style API
+    // va_list is a C array on some ABIs, so va_start/va_end/passing it on inevitably decays it.
+    // NOLINTBEGIN(cppcoreguidelines-pro-type-vararg,cppcoreguidelines-pro-bounds-array-to-pointer-decay)
     va_list ap;
     va_start(ap, formatString);
     PrintfArgumentReader argReader(ap);
     static_cast<void>(vprintf(formatString, argReader));
     va_end(ap);
+    // NOLINTEND(cppcoreguidelines-pro-type-vararg,cppcoreguidelines-pro-bounds-array-to-pointer-decay)
     return *this;
 }
 

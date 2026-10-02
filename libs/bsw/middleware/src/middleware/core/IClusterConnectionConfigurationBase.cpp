@@ -26,9 +26,9 @@ namespace middleware::core
 void ITimeoutConfiguration::registerTimeoutTransceiver(
     ITimeoutHandler& transceiver, ::etl::ivector<ITimeoutHandler*>& timeoutTransceivers)
 {
-    auto const* it
+    auto const* timeoutIterator
         = ::etl::find(timeoutTransceivers.cbegin(), timeoutTransceivers.cend(), &transceiver);
-    if (it == timeoutTransceivers.cend())
+    if (timeoutIterator == timeoutTransceivers.cend())
     {
         if (!timeoutTransceivers.full())
         {
@@ -40,10 +40,11 @@ void ITimeoutConfiguration::registerTimeoutTransceiver(
 void ITimeoutConfiguration::unregisterTimeoutTransceiver(
     ITimeoutHandler& transceiver, ::etl::ivector<ITimeoutHandler*>& timeoutTransceivers)
 {
-    auto* it = ::etl::find(timeoutTransceivers.begin(), timeoutTransceivers.end(), &transceiver);
-    if (it != timeoutTransceivers.end())
+    auto* timeoutIterator
+        = ::etl::find(timeoutTransceivers.begin(), timeoutTransceivers.end(), &transceiver);
+    if (timeoutIterator != timeoutTransceivers.end())
     {
-        *it = timeoutTransceivers.back();
+        *timeoutIterator = timeoutTransceivers.back();
         timeoutTransceivers.pop_back();
     }
 }

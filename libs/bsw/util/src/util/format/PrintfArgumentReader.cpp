@@ -20,6 +20,8 @@ ParamVariant const* PrintfArgumentReader::readArgument(ParamDatatype const datat
 {
     // NOLINTBEGIN(cppcoreguidelines-pro-type-union-access): intentional tagged-by-ParamDatatype
     // union access
+    // NOLINTBEGIN(cppcoreguidelines-pro-bounds-array-to-pointer-decay): va_list is a C array on
+    // some ABIs, va_arg therefore inevitably decays it
 
     switch (datatype)
     {
@@ -76,6 +78,7 @@ ParamVariant const* PrintfArgumentReader::readArgument(ParamDatatype const datat
             break;
         }
     }
+    // NOLINTEND(cppcoreguidelines-pro-bounds-array-to-pointer-decay)
     // NOLINTEND(cppcoreguidelines-pro-type-union-access)
     return &_variant;
 }

@@ -12,6 +12,7 @@
 
 #include "middleware/core/IClusterConnectionConfigurationBase.h"
 #include "middleware/core/types.h"
+#include <cstdint>
 
 namespace middleware::core
 {

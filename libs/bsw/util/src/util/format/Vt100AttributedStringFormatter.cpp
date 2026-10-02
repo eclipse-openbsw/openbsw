@@ -10,16 +10,18 @@
 
 #include "util/format/Vt100AttributedStringFormatter.h"
 
+#include <etl/array.h>
+
 namespace util
 {
 namespace format
 {
 uint8_t const Vt100AttributedStringFormatter::_resetFormatCode = 0U;
-static uint8_t const foregroundColorCodes[]
+static ::etl::array<uint8_t, 17U> const foregroundColorCodes
     = {39U, 30U, 31U, 32U, 33U, 34U, 35U, 36U, 37U, 90U, 91U, 92U, 93U, 94U, 95U, 96U, 97U};
-static uint8_t const backgroundColorCodes[]
+static ::etl::array<uint8_t, 17U> const backgroundColorCodes
     = {49U, 40U, 41U, 42U, 43U, 44U, 45U, 46U, 47U, 100U, 101U, 102U, 103U, 104U, 105U, 106U, 107U};
-static uint8_t const formattingCodes[] = {1U, 2U, 4U, 5U, 7U, 8U};
+static ::etl::array<uint8_t, NUMBER_OF_FORMATS> const formattingCodes = {1U, 2U, 4U, 5U, 7U, 8U};
 
 Vt100AttributedStringFormatter::ApplyAttributes Vt100AttributedStringFormatter::reset()
 {
@@ -61,20 +63,20 @@ Vt100AttributedStringFormatter::WriteAttributedString Vt100AttributedStringForma
 }
 
 uint8_t Vt100AttributedStringFormatter::getFormatCodes(
-    StringAttributes const& attributes, uint8_t* const formatCodeBuffer)
+    StringAttributes const& attributes, ::etl::span<uint8_t> const formatCodeBuffer)
 {
-    uint8_t* currentFormatCode = formatCodeBuffer;
+    size_t count = 0U;
     if (attributes.getForegroundColor() != Color::DEFAULT_COLOR)
     {
-        *currentFormatCode
+        formatCodeBuffer[count]
             = foregroundColorCodes[static_cast<uint8_t>(attributes.getForegroundColor())];
-        currentFormatCode++;
+        ++count;
     }
     if (attributes.getBackgroundColor() != Color::DEFAULT_COLOR)
     {
-        *currentFormatCode
+        formatCodeBuffer[count]
             = backgroundColorCodes[static_cast<uint8_t>(attributes.getBackgroundColor())];
-        currentFormatCode++;
+        ++count;
     }
     if (attributes.getFormat() != 0U)
     {
@@ -82,12 +84,12 @@ uint8_t Vt100AttributedStringFormatter::getFormatCodes(
         {
             if ((attributes.getFormat() & (static_cast<uint8_t>(1U << checkFormat))) > 0U)
             {
-                *currentFormatCode = formattingCodes[checkFormat];
-                currentFormatCode++;
+                formatCodeBuffer[count] = formattingCodes[checkFormat];
+                ++count;
             }
         }
     }
-    return static_cast<uint8_t>(currentFormatCode - formatCodeBuffer);
+    return static_cast<uint8_t>(count);
 }
 
 } // namespace format

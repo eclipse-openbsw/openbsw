@@ -142,7 +142,7 @@ TEST_F(SkeletonBaseTest, TestInitWithEmptyDatabase)
     _loggerMock.EXPECT_EVENT_LOG(
         logger::LogLevel::Critical,
         logger::Error::SkeletonInitialization,
-        HRESULT::NoClientsAvailable,
+        HRESULT::InstanceNotFound,
         core::INVALID_CLUSTER_ID,
         skeleton.getServiceId(),
         kValidinstanceid);
@@ -150,7 +150,7 @@ TEST_F(SkeletonBaseTest, TestInitWithEmptyDatabase)
     // ACT & ASSERT
     const HRESULT res = skeleton.initEmptyDatabase(kValidinstanceid);
 
-    EXPECT_EQ(res, HRESULT::NoClientsAvailable);
+    EXPECT_EQ(res, HRESULT::InstanceNotFound);
     EXPECT_FALSE(skeleton.isInitialized());
 }
 

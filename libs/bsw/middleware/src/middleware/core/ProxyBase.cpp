@@ -19,6 +19,7 @@
 #include "middleware/os/TaskIdProvider.h"
 
 #include <etl/algorithm.h>
+#include <etl/error_handler.h>
 #include <etl/span.h>
 
 #include <cstdint>
@@ -56,7 +57,7 @@ ProxyBase::initFromInstancesDatabase(
 {
     HRESULT ret = HRESULT::TransceiverInitializationFailed;
     unsubscribe(getServiceId());
-    auto const* it = ::etl::find_if(
+    auto const* databaseEntry = ::etl::find_if(
         dbRange.begin(),
         dbRange.end(),
         [instanceId](IInstanceDatabase const* const dataBase) -> bool
@@ -64,11 +65,13 @@ ProxyBase::initFromInstancesDatabase(
             auto const instances = dataBase->getInstanceIdsRange();
             auto const* instanceIdIt
                 = ::etl::lower_bound(instances.begin(), instances.end(), instanceId);
-            return ((instanceIdIt != instances.end()) && ((*instanceIdIt) == instanceId));
+            return (
+                (instanceIdIt != instances.end()) && ((*instanceIdIt) == instanceId)
+                && (!dataBase->getProxyConnectionsRange().empty()));
         });
-    if (it != dbRange.end())
+    if (databaseEntry != dbRange.end())
     {
-        auto const proxyCc = (*it)->getProxyConnectionsRange();
+        auto const proxyCc = (*databaseEntry)->getProxyConnectionsRange();
         auto const* ccIt   = ::etl::find_if(
             proxyCc.begin(),
             proxyCc.end(),
@@ -89,8 +92,12 @@ ProxyBase::initFromInstancesDatabase(
             }
         }
     }
+    else
+    {
+        ret = HRESULT::InstanceNotFound;
+    }
     // only print error when configuration allows for it
-    if ((HRESULT::Ok != ret) && (!dbRange.empty()))
+    if ((HRESULT::Ok != ret))
     {
         logger::logInitFailure(
             logger::LogLevel::Critical,

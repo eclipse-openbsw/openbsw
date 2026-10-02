@@ -19,9 +19,9 @@ namespace command
 using ::util::stream::ISharedOutputStream;
 using ::util::string::ConstString;
 
-char const* GroupCommand::getDescription() const { return getInfo()->_description; }
+char const* GroupCommand::getDescription() const { return getInfo()[0]._description; }
 
-char const* GroupCommand::getId() const { return getInfo()->_id; }
+char const* GroupCommand::getId() const { return getInfo()[0]._id; }
 
 ICommand::ExecuteResult
 GroupCommand::execute(ConstString const& arguments, ISharedOutputStream* const sharedOutputStream)
@@ -46,20 +46,22 @@ GroupCommand::execute(ConstString const& arguments, ISharedOutputStream* const s
 void GroupCommand::getHelp(IHelpCallback& callback) const
 {
     callback.startCommand(getId(), getDescription(), false);
-    for (GroupCommand::PlainCommandInfo const* info = getInfo() + 1; info->_id != nullptr; ++info)
+    CommandInfoTable const infos = getInfo();
+    for (size_t idx = 1U; (idx < infos.size()) && (infos[idx]._id != nullptr); ++idx)
     {
-        callback.startCommand(info->_id, info->_description, true);
+        callback.startCommand(infos[idx]._id, infos[idx]._description, true);
     }
     callback.endCommand();
 }
 
 GroupCommand::PlainCommandInfo const* GroupCommand::lookupCommand(ConstString const& id) const
 {
-    for (GroupCommand::PlainCommandInfo const* info = getInfo() + 1; info->_id != nullptr; ++info)
+    CommandInfoTable const infos = getInfo();
+    for (size_t idx = 1U; (idx < infos.size()) && (infos[idx]._id != nullptr); ++idx)
     {
-        if (ConstString(info->_id).compareIgnoreCase(id) == 0)
+        if (ConstString(infos[idx]._id).compareIgnoreCase(id) == 0)
         {
-            return info;
+            return &infos[idx];
         }
     }
     return nullptr;

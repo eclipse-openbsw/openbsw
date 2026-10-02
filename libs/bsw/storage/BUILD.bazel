@@ -9,6 +9,7 @@
 # *******************************************************************************
 
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
+load("//bazel/config/build_variant:compatibility.bzl", "reference_app_only", "unit_test_only")
 
 alias(
     name = "storage_rtos_impl",
@@ -27,7 +28,6 @@ cc_library(
         "src/storage/EepStorage.cpp",
         "src/storage/MappingStorage.cpp",
         "src/storage/QueuingStorage.cpp",
-        "src/storage/StorageTester.cpp",
     ],
     hdrs = [
         "include/storage/EepStorage.h",
@@ -50,12 +50,23 @@ cc_library(
 )
 
 cc_library(
+    name = "storage_tester",
+    srcs = ["src/storage/StorageTester.cpp"],
+    target_compatible_with = reference_app_only(),
+    visibility = ["//visibility:public"],
+    deps = [
+        ":storage",
+        "//libs/bsw/async:async_platform",
+    ],
+)
+
+cc_library(
     name = "storage_mock",
-    testonly = True,
     hdrs = [
         "mock/include/storage/IStorageMock.h",
     ],
     strip_include_prefix = "mock/include",
+    target_compatible_with = unit_test_only(),
     visibility = ["//visibility:public"],
     deps = [
         ":storage",

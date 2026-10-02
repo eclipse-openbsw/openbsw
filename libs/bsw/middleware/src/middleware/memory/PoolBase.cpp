@@ -11,7 +11,6 @@
 #include "middleware/memory/PoolBase.h"
 
 #include <etl/algorithm.h>
-#include <etl/bit.h>
 #include <etl/iterator.h>
 #include <etl/memory.h>
 #include <etl/tuple.h>
@@ -56,9 +55,9 @@ void PoolBase::initialize()
         tempBuff = tempNext;
     }
     // Last chunk: next pointer is nullptr
-    uint8_t* const null_ptr = nullptr;
+    uint8_t* const nullPtr = nullptr;
     ::etl::mem_copy(
-        reinterpret_cast<uint8_t const*>(&null_ptr), sizeof(uint8_t*), tempBuff); // NOLINT
+        reinterpret_cast<uint8_t const*>(&nullPtr), sizeof(uint8_t*), tempBuff); // NOLINT
     _nextChunk = _buffer;
     _available = _elementCount;
 }
@@ -158,7 +157,7 @@ void PoolBase::updatePtrFlag(size_t const position, bool const ptrBusy)
     {
         // Keep the mask at uint8_t width: 1U << indexRemainder is at most 128 (indexRemainder
         // is in [0, CHAR_BIT-1]), so the cast is lossless on any platform.
-        uint8_t const mask = static_cast<uint8_t>(~(1U << indexRemainder));
+        auto const mask = static_cast<uint8_t>(~(1U << indexRemainder));
         *(offsetAddress(_flags, index)) &= mask;
     }
 }

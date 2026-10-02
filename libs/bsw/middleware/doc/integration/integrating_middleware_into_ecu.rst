@@ -73,7 +73,7 @@ Integration requirements:
 * ``getCurrentTimeInUs()`` must be monotonic and provide a
   microsecond-resolution timestamp for consumers that require finer
   granularity.
-* Both functions are 32-bit and may wrap around; implementations must preserve
+* Both functions are 32-bit and may wrap around. Implementations must preserve
   deterministic wrap behavior.
 
 A typical bare-metal implementation reads the platform timer service:
@@ -414,12 +414,12 @@ this pattern:
 Key points:
 
 * ``add_custom_command`` regenerates code whenever the deployment YAML,
-  templates, or generator script change; list all of them as ``DEPENDS``.
+  templates, or generator script change. List all of them as ``DEPENDS``.
 * Platform binding sources (time, logger, OS, concurrency) are compiled into
   this same configuration library, not into ``middleware`` itself. The
-  concrete implementation is simply an additional source file.
-* Link the resulting configuration library into the final ECU executable;
-  linking ``middleware`` alone is not sufficient because it only provides the
+  concrete implementation is an additional source file.
+* Link the resulting configuration library into the final ECU executable.
+  Linking ``middleware`` alone is not sufficient because it only provides the
   generic core, not the generated service code or platform bindings.
 
 Instantiate shared-memory runtime objects from the queue and allocator configuration
@@ -687,7 +687,7 @@ Memory API:
 * Read allocator totals with ``allocator.getStats()``
 * Read a specific pool via ``pool.getPoolStats()``
 * Collect all pools via ``Aggregator::collectStats(collector)``
-* Reset queue statistics explicitly with ``queue->resetStats()``; pool
+* Reset queue statistics explicitly with ``queue->resetStats()``. Pool
   statistics should be reset explicitly by the integration if a new pool
   measurement window is required.
 

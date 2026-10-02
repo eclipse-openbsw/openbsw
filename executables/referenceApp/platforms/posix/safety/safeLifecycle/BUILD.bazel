@@ -9,6 +9,8 @@
 # *******************************************************************************
 
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
+load("@rules_cc//cc:cc_test.bzl", "cc_test")
+load("//bazel/config/build_variant:compatibility.bzl", "unit_test_only")
 
 cc_library(
     name = "safe_lifecycle",
@@ -20,4 +22,17 @@ cc_library(
     ],
     strip_include_prefix = "include",
     visibility = ["//visibility:public"],
+)
+
+cc_test(
+    name = "safe_lifecycle_test",
+    srcs = ["test/src/safeLifecycle/include_test.cpp"],
+    # linkstatic lets the include test link only the objects it references, so transitive
+    # symbols that have no unit-test provider never need resolution.
+    linkstatic = True,
+    target_compatible_with = unit_test_only(),
+    deps = [
+        ":safe_lifecycle",
+        "//libs/3rdparty/googletest:gtest_main",
+    ],
 )

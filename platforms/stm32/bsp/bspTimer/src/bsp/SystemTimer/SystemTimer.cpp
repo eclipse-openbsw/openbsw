@@ -34,7 +34,7 @@ struct
 
 uint64_t updateTicks()
 {
-    const ETL_MAYBE_UNUSED interrupts::SuspendResumeAllInterruptsScopedLock lock;
+    ETL_MAYBE_UNUSED const interrupts::SuspendResumeAllInterruptsScopedLock lock;
     uint32_t const curDwt    = DWT->CYCCNT;
     uint32_t const elapsedUs = (curDwt - state.lastDwt) / DWT_FREQ_MHZ;
     state.ticks += elapsedUs;
@@ -52,7 +52,7 @@ extern "C"
 {
 void initSystemTimer()
 {
-    const ETL_MAYBE_UNUSED interrupts::SuspendResumeAllInterruptsScopedLock lock;
+    ETL_MAYBE_UNUSED const interrupts::SuspendResumeAllInterruptsScopedLock lock;
 
     CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;
     DWT->CYCCNT = 0U;

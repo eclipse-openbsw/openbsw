@@ -9,6 +9,7 @@
 # *******************************************************************************
 
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
+load("//bazel/config/build_variant:compatibility.bzl", "unit_test_only")
 
 cc_library(
     name = "docan",
@@ -32,7 +33,6 @@ cc_library(
 
 cc_library(
     name = "docan_mock",
-    testonly = True,
     hdrs = [
         "mock/gmock/include/docan/addressing/DoCanAddressConverterMock.h",
         "mock/gmock/include/docan/datalink/DoCanDataFrameTransmitterCallbackMock.h",
@@ -43,6 +43,7 @@ cc_library(
         "mock/gmock/include/docan/transmitter/DoCanTickGeneratorMock.h",
     ],
     strip_include_prefix = "mock/gmock/include",
+    target_compatible_with = unit_test_only(),
     visibility = ["//visibility:public"],
     deps = [":docan"],
 )
