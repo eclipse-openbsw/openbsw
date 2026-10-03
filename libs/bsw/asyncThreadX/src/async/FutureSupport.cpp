@@ -33,16 +33,14 @@ void FutureSupport::wait()
                                           : AsyncBinding::WAIT_EVENTS_TICK_COUNT;
     while (true)
     {
-        ULONG events;
-
         tx_event_flags_get(
             &_eventObject,
             FUTURE_SUPPORT_BITS_TO_WAIT,
             TX_AND_CLEAR, // wait for all bits, clear if successful
-            &events,
+            &_eventFlagsResult,
             waitEventsTickCount);
 
-        if (events == FUTURE_SUPPORT_BITS_TO_WAIT)
+        if (_eventFlagsResult == FUTURE_SUPPORT_BITS_TO_WAIT)
         {
             return;
         }

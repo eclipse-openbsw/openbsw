@@ -35,6 +35,8 @@ private:
     ContextType _context;
     TX_EVENT_FLAGS_GROUP _eventObject;
     ::etl::string<10> _eventName;
+    // Must not be a stack local, see libs/bsw/asyncThreadX/doc/index.rst
+    ULONG _eventFlagsResult;
 };
 
 } // namespace async
