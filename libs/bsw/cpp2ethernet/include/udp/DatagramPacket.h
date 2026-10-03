@@ -30,8 +30,8 @@ public:
      * \param  address  target IPAddress
      * \param  port     target port
      */
-    DatagramPacket(uint8_t const data[], uint16_t length, ::ip::IPAddress address, uint16_t port);
-    DatagramPacket(uint8_t const data[], uint16_t length, ::ip::IPEndpoint const& endpoint);
+    DatagramPacket(uint8_t const* data, uint16_t length, ::ip::IPAddress address, uint16_t port);
+    DatagramPacket(uint8_t const* data, uint16_t length, ::ip::IPEndpoint const& endpoint);
     DatagramPacket(DatagramPacket const&)            = delete;
     DatagramPacket& operator=(DatagramPacket const&) = delete;
 

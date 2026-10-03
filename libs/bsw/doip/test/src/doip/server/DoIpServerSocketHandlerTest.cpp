@@ -14,6 +14,7 @@
 #include "doip/server/DoIpServerSocketHandlerListenerMock.h"
 
 #include <async/AsyncMock.h>
+#include <etl/array.h>
 #include <ip/IPAddress.h>
 #include <ip/NetworkInterfaceConfigRegistryMock.h>
 #include <tcp/socket/AbstractServerSocketMock.h>
@@ -44,7 +45,7 @@ struct DoIpServerSocketHandlerTest : TestWithParam<TestParams>
     DoIpServerSocketHandlerListenerMock fSocketHandlerListenerMock;
 };
 
-uint32_t const ip6Address2[] = {0x1234244U, 0x437773U, 0x87337U, 0xffdd243U};
+::etl::array<uint32_t, 4U> const ip6Address2 = {0x1234244U, 0x437773U, 0x87337U, 0xffdd243U};
 } // namespace
 
 INSTANTIATE_TEST_SUITE_P(

@@ -20,9 +20,9 @@ protected:
     IDataSentListener() = default;
 
 public:
-    IDataSentListener(IDataSentListener const&)                  = delete;
-    IDataSentListener& operator=(IDataSentListener const&)       = delete;
-    virtual void dataSent(uint8_t const data[], uint16_t length) = 0;
+    IDataSentListener(IDataSentListener const&)                 = delete;
+    IDataSentListener& operator=(IDataSentListener const&)      = delete;
+    virtual void dataSent(uint8_t const* data, uint16_t length) = 0;
 };
 
 } // namespace udp

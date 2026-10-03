@@ -15,12 +15,15 @@
 namespace udp
 {
 DatagramPacket::DatagramPacket(
-    uint8_t const data[], uint16_t const length, ::ip::IPAddress const address, uint16_t const port)
+    uint8_t const* const data,
+    uint16_t const length,
+    ::ip::IPAddress const address,
+    uint16_t const port)
 : _endpoint(::ip::IPEndpoint(address, port)), _data(data), _length(length)
 {}
 
 DatagramPacket::DatagramPacket(
-    uint8_t const data[], uint16_t const length, ::ip::IPEndpoint const& endpoint)
+    uint8_t const* const data, uint16_t const length, ::ip::IPEndpoint const& endpoint)
 : _endpoint(endpoint), _data(data), _length(length)
 {}
 

@@ -30,7 +30,7 @@ NetworkInterfaceConfig::NetworkInterfaceConfig(
     _config[freeIndex]            = 0U;
 }
 
-NetworkInterfaceConfig::NetworkInterfaceConfig(Ip6AddressType const& ip6Address)
+NetworkInterfaceConfig::NetworkInterfaceConfig(Ip6AddressType const ip6Address)
 : _family(IPAddress::IPV6)
 {
     _config[0U] = ip6Address[0];
@@ -48,7 +48,7 @@ IPAddress NetworkInterfaceConfig::ipAddress() const
 #ifdef PLATFORM_SUPPORT_IPV6
     if (_family == IPAddress::IPV6)
     {
-        return make_ip6(&_config[0U]);
+        return make_ip6(_config);
     }
 #endif
 
