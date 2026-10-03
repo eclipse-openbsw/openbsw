@@ -55,6 +55,116 @@ platform(
     ],
 )
 
+# STM32G474RE platform. ARM Cortex-M4, FreeRTOS, FDCAN CAN controller.
+platform(
+    name = "stm32g4",
+    constraint_values = [
+        "@platforms//cpu:armv7e-m",
+        "@platforms//os:none",
+        "//bazel/platform/constraints/soc:stm32g4",
+    ],
+    flags = [
+        # Features
+        "--//bazel/config/features:can=true",
+        "--//bazel/config/features:ethernet=false",
+        "--//bazel/config/features:io=false",
+        "--//bazel/config/features:ipv6=false",
+        "--//bazel/config/features:middleware=false",
+        "--//bazel/config/features:mpu=false",
+        "--//bazel/config/features:rom_check=false",
+        "--//bazel/config/features:storage=false",
+        "--//bazel/config/features:transport=true",
+        "--//bazel/config/features:uds=true",
+        "--//bazel/config/features:watchdog=false",
+
+        # RTOS
+        "--//bazel/config/rtos=freertos",
+
+        # BSP layer
+        "--//executables/referenceApp/safety/safeSupervisor:bsp_mcu=//platforms/stm32/bsp/bspMcu:bsp_mcu",
+        "--//libs/bsp/bspInterrupts:bsp_interrupts_impl=//platforms/stm32/bsp/bspInterruptsImpl:bsp_interrupts_impl",
+        "--//platforms/stm32/bsp/bspCan:bsp_can_impl=//platforms/stm32/bsp/bspCan:bsp_can_fdcan",
+        "--//platforms/stm32/bsp/bspMcu:bsp_mcu_chip_headers_impl=//platforms/stm32/bsp/bspMcu:bsp_mcu_chip_headers_g4",
+        "--//platforms/stm32/bsp/bspMcu:bsp_mcu_chip_defines_impl=//platforms/stm32/bsp/bspMcu:bsp_mcu_chip_defines_g4",
+        "--//platforms/stm32/bsp/bspMcu:bsp_mcu_startup_impl=//platforms/stm32/bsp/bspMcu:bsp_mcu_startup_g4",
+
+        # FreeRTOS port and hooks
+        "--//libs/3rdparty/freeRtos:freertos_port=//platforms/stm32/3rdparty/freertos_cm4_sysTick:freertos_cm4_sys_tick_port_headers",
+        "--//libs/3rdparty/freeRtos:freertos_port_impl=//platforms/stm32/3rdparty/freertos_cm4_sysTick:freertos_cm4_sys_tick",
+        "--//libs/3rdparty/freeRtos:freertos_os_hooks=//executables/referenceApp/platforms/nucleo_g474re/main:freertos_os_hooks",
+        "--//libs/3rdparty/freeRtos:freertos_impl=//libs/3rdparty/freeRtos:freertos",
+
+        # Async / configuration
+        "--//libs/bsw/asyncFreeRtos:freertos_core_configuration=//executables/referenceApp/platforms/nucleo_g474re/freeRtosCoreConfiguration:freertos_core_configuration",
+        "--//libs/bsw/async:async_platform=//libs/bsw/asyncFreeRtos:async_freertos",
+        "--//libs/bsw/async:async_rtos_impl=//libs/bsw/asyncFreeRtos:async_freertos_impl",
+    ],
+)
+
+# STM32F413ZH platform. ARM Cortex-M4, FreeRTOS, BxCAN CAN controller.
+platform(
+    name = "stm32f4",
+    constraint_values = [
+        "@platforms//cpu:armv7e-m",
+        "@platforms//os:none",
+        "//bazel/platform/constraints/soc:stm32f4",
+    ],
+    flags = [
+        # Features
+        "--//bazel/config/features:can=true",
+        "--//bazel/config/features:ethernet=false",
+        "--//bazel/config/features:io=false",
+        "--//bazel/config/features:ipv6=false",
+        "--//bazel/config/features:middleware=false",
+        "--//bazel/config/features:mpu=false",
+        "--//bazel/config/features:rom_check=false",
+        "--//bazel/config/features:storage=false",
+        "--//bazel/config/features:transport=true",
+        "--//bazel/config/features:uds=true",
+        "--//bazel/config/features:watchdog=false",
+
+        # RTOS
+        "--//bazel/config/rtos=freertos",
+
+        # BSP layer
+        "--//executables/referenceApp/safety/safeSupervisor:bsp_mcu=//platforms/stm32/bsp/bspMcu:bsp_mcu",
+        "--//libs/bsp/bspInterrupts:bsp_interrupts_impl=//platforms/stm32/bsp/bspInterruptsImpl:bsp_interrupts_impl",
+        "--//platforms/stm32/bsp/bspCan:bsp_can_impl=//platforms/stm32/bsp/bspCan:bsp_can_bxcan",
+        "--//platforms/stm32/bsp/bspMcu:bsp_mcu_chip_headers_impl=//platforms/stm32/bsp/bspMcu:bsp_mcu_chip_headers_f4",
+        "--//platforms/stm32/bsp/bspMcu:bsp_mcu_chip_defines_impl=//platforms/stm32/bsp/bspMcu:bsp_mcu_chip_defines_f4",
+        "--//platforms/stm32/bsp/bspMcu:bsp_mcu_startup_impl=//platforms/stm32/bsp/bspMcu:bsp_mcu_startup_f4",
+
+        # FreeRTOS port and hooks
+        "--//libs/3rdparty/freeRtos:freertos_port=//platforms/stm32/3rdparty/freertos_cm4_sysTick:freertos_cm4_sys_tick_port_headers",
+        "--//libs/3rdparty/freeRtos:freertos_port_impl=//platforms/stm32/3rdparty/freertos_cm4_sysTick:freertos_cm4_sys_tick",
+        "--//libs/3rdparty/freeRtos:freertos_os_hooks=//executables/referenceApp/platforms/nucleo_f413zh/main:freertos_os_hooks",
+        "--//libs/3rdparty/freeRtos:freertos_impl=//libs/3rdparty/freeRtos:freertos",
+
+        # Async / configuration
+        "--//libs/bsw/asyncFreeRtos:freertos_core_configuration=//executables/referenceApp/platforms/nucleo_f413zh/freeRtosCoreConfiguration:freertos_core_configuration",
+        "--//libs/bsw/async:async_platform=//libs/bsw/asyncFreeRtos:async_freertos",
+        "--//libs/bsw/async:async_rtos_impl=//libs/bsw/asyncFreeRtos:async_freertos_impl",
+    ],
+)
+
+# STM32G474RE unit-test platform. Runs on the host OS so test binaries execute
+# natively, but carries the stm32g4 SoC constraint so chip-family implementations
+# resolve correctly. Hardware-only BSP modules are replaced by mocks.
+platform(
+    name = "stm32g4_unit_test",
+    constraint_values = ["//bazel/platform/constraints/soc:stm32g4"],
+    parents = [":posix_unit_test"],
+)
+
+# STM32F413ZH unit-test platform. Runs on the host OS so test binaries execute
+# natively, but carries the stm32f4 SoC constraint so chip-family implementations
+# resolve correctly. Hardware-only BSP modules are replaced by mocks.
+platform(
+    name = "stm32f4_unit_test",
+    constraint_values = ["//bazel/platform/constraints/soc:stm32f4"],
+    parents = [":posix_unit_test"],
+)
+
 # POSIX host build. Inherits the autodetected host constraints/toolchain via `parents`, and
 # carries the posix PLATFORM_SUPPORT_* matrix. This is the DEFAULT platform (see .bazelrc), so a
 # plain `bazel build //...` is the posix build.

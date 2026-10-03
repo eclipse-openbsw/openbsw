@@ -9,28 +9,13 @@
 # *******************************************************************************
 
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
-load("@rules_cc//cc:cc_test.bzl", "cc_test")
-load("//bazel/config/build_variant:compatibility.bzl", "unit_test_only")
 
 cc_library(
-    name = "timer",
-    hdrs = [
-        "include/timer/Timeout.h",
-        "include/timer/Timer.h",
-    ],
+    name = "bsp_io",
+    srcs = ["src/io/Gpio.cpp"],
+    hdrs = ["include/io/Gpio.h"],
     strip_include_prefix = "include",
+    target_compatible_with = ["@platforms//os:none"],
     visibility = ["//visibility:public"],
-    deps = [
-        "//libs/3rdparty/etl",
-    ],
-)
-
-cc_test(
-    name = "timer_test",
-    srcs = ["test/src/TimerTest.cpp"],
-    target_compatible_with = unit_test_only(),
-    deps = [
-        ":timer",
-        "//libs/3rdparty/googletest:gtest_main",
-    ],
+    deps = ["//platforms/stm32/bsp/bspMcu:bsp_mcu"],
 )
