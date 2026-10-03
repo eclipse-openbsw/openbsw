@@ -1,0 +1,23 @@
+/********************************************************************************
+ * Copyright (c) 2024 Roland Reichwein
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Apache License Version 2.0 which is available at
+ * https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ ********************************************************************************/
+
+#pragma once
+
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
+[[noreturn]] extern void softwareSystemReset(void);
+extern void softwareDestructiveReset(void);
+
+#ifdef __cplusplus
+} // extern "C"
+#endif
