@@ -1,0 +1,56 @@
+# *******************************************************************************
+# Copyright (c) 2026 Accenture
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+
+load("@rules_cc//cc:cc_library.bzl", "cc_library")
+
+# CAN device implementations, one per controller type. Each is built only for
+# the SoC family whose CAN controller it drives.
+cc_library(
+    name = "bsp_can_fdcan",
+    srcs = ["src/can/FdCanDevice.cpp"],
+    hdrs = [
+        "include/can/BxCanDevice.h",
+        "include/can/FdCanDevice.h",
+    ],
+    strip_include_prefix = "include",
+    target_compatible_with = ["//bazel/platform/constraints/soc:stm32g4"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//libs/3rdparty/etl",
+        "//libs/bsw/cpp2can",
+        "//platforms/stm32/bsp/bspMcu:bsp_mcu",
+    ],
+)
+
+cc_library(
+    name = "bsp_can_bxcan",
+    srcs = ["src/can/BxCanDevice.cpp"],
+    hdrs = [
+        "include/can/BxCanDevice.h",
+        "include/can/FdCanDevice.h",
+    ],
+    strip_include_prefix = "include",
+    target_compatible_with = ["//bazel/platform/constraints/soc:stm32f4"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//libs/3rdparty/etl",
+        "//libs/bsw/cpp2can",
+        "//platforms/stm32/bsp/bspMcu:bsp_mcu",
+    ],
+)
+
+# Active CAN device implementation. Set by the platform via its flags.
+# Non-STM32 and unit-test platforms resolve to no_implementation and skip this module.
+#   Override: --//platforms/stm32/bsp/bspCan:bsp_can=//path/to:your_impl
+label_flag(
+    name = "bsp_can",
+    build_setting_default = "//bazel/config:no_implementation",
+    visibility = ["//visibility:public"],
+)

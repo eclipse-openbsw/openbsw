@@ -1,0 +1,138 @@
+# *******************************************************************************
+# Copyright (c) 2026 Accenture
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+
+load("@rules_cc//cc:cc_library.bzl", "cc_library")
+
+# Chip-family ST header libraries. Each strips its subdirectory prefix so
+# consumers include device headers directly by name.
+cc_library(
+    name = "bsp_mcu_chip_headers_g4",
+    hdrs = [
+        "include/3rdparty/st/stm32g4/stm32g474xx.h",
+        "include/3rdparty/st/stm32g4/stm32g4xx.h",
+        "include/3rdparty/st/stm32g4/system_stm32g4xx.h",
+    ],
+    strip_include_prefix = "include/3rdparty/st/stm32g4",
+    target_compatible_with = ["//bazel/platform/constraints/soc:stm32g4"],
+)
+
+cc_library(
+    name = "bsp_mcu_chip_headers_f4",
+    hdrs = [
+        "include/3rdparty/st/stm32f4/stm32f413xx.h",
+        "include/3rdparty/st/stm32f4/stm32f4xx.h",
+        "include/3rdparty/st/stm32f4/system_stm32f4xx.h",
+    ],
+    strip_include_prefix = "include/3rdparty/st/stm32f4",
+    target_compatible_with = ["//bazel/platform/constraints/soc:stm32f4"],
+)
+
+# Chip-family ST headers. Set by the platform via its flags.
+#   Override: --//platforms/stm32/bsp/bspMcu:bsp_mcu_chip_headers_impl=//path/to:your_headers
+label_flag(
+    name = "bsp_mcu_chip_headers_impl",
+    build_setting_default = "//bazel/config:no_implementation",
+)
+
+alias(
+    name = "bsp_mcu_chip_headers",
+    actual = ":bsp_mcu_chip_headers_impl",
+)
+
+# Chip-family compile definitions. Each set is tied to one chip family.
+cc_library(
+    name = "bsp_mcu_chip_defines_g4",
+    defines = [
+        "STM32G474xx",
+        "STM32_FAMILY_G4",
+        "CAN_TYPE_FDCAN",
+    ],
+    target_compatible_with = ["//bazel/platform/constraints/soc:stm32g4"],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "bsp_mcu_chip_defines_f4",
+    defines = [
+        "STM32F413xx",
+        "STM32_FAMILY_F4",
+        "CAN_TYPE_BXCAN",
+    ],
+    target_compatible_with = ["//bazel/platform/constraints/soc:stm32f4"],
+    visibility = ["//visibility:public"],
+)
+
+# Chip-family compile definitions. Set by the platform via its flags.
+#   Override: --//platforms/stm32/bsp/bspMcu:bsp_mcu_chip_defines_impl=//path/to:your_defines
+label_flag(
+    name = "bsp_mcu_chip_defines_impl",
+    build_setting_default = "//bazel/config:no_implementation",
+    visibility = ["//visibility:public"],
+)
+
+alias(
+    name = "bsp_mcu_chip_defines",
+    actual = ":bsp_mcu_chip_defines_impl",
+    visibility = ["//visibility:public"],
+)
+
+# Chip-family startup assembly. Each file contains the reset vector table and
+# low-level init for its device.
+cc_library(
+    name = "bsp_mcu_startup_g4",
+    srcs = ["startup/startup_stm32g474xx.s"],
+    # Bare-metal only. The host assembler cannot process ARM pseudo-ops so this
+    # target must not build on unit test platforms.
+    target_compatible_with = [
+        "//bazel/platform/constraints/soc:stm32g4",
+        "@platforms//os:none",
+    ],
+)
+
+cc_library(
+    name = "bsp_mcu_startup_f4",
+    srcs = ["startup/startup_stm32f413xx.s"],
+    # Bare-metal only. The host assembler cannot process ARM pseudo-ops so this
+    # target must not build on unit test platforms.
+    target_compatible_with = [
+        "//bazel/platform/constraints/soc:stm32f4",
+        "@platforms//os:none",
+    ],
+)
+
+# Chip-family startup assembly. Set by the platform via its flags.
+#   Override: --//platforms/stm32/bsp/bspMcu:bsp_mcu_startup_impl=//path/to:your_startup
+label_flag(
+    name = "bsp_mcu_startup_impl",
+    build_setting_default = "//bazel/config:no_implementation",
+)
+
+alias(
+    name = "bsp_mcu_startup",
+    actual = ":bsp_mcu_startup_impl",
+)
+
+cc_library(
+    name = "bsp_mcu",
+    srcs = ["src/reset/softwareSystemReset.cpp"],
+    hdrs = [
+        "include/mcu/mcu.h",
+        "include/reset/softwareSystemReset.h",
+    ],
+    strip_include_prefix = "include",
+    target_compatible_with = ["@platforms//os:none"],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":bsp_mcu_chip_defines",
+        ":bsp_mcu_chip_headers",
+        ":bsp_mcu_startup",
+        "//libs/3rdparty/cmsis",
+    ],
+)

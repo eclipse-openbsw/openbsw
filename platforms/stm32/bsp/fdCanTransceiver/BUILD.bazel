@@ -1,0 +1,55 @@
+# *******************************************************************************
+# Copyright (c) 2026 Accenture
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+
+load("@rules_cc//cc:cc_library.bzl", "cc_library")
+load("//bazel/config/build_variant:compatibility.bzl", "unit_test_only")
+
+cc_library(
+    name = "fd_can_transceiver",
+    srcs = ["src/can/transceiver/fdcan/FdCanTransceiver.cpp"],
+    hdrs = ["include/can/transceiver/fdcan/FdCanTransceiver.h"],
+    strip_include_prefix = "include",
+    target_compatible_with = ["//bazel/platform/constraints/soc:stm32g4"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//libs/bsw/async",
+        "//libs/bsw/cpp2can",
+        "//libs/bsw/lifecycle",
+        "//platforms/stm32/bsp/bspCan:bsp_can",
+    ],
+)
+
+# Mock CAN device header for unit-test builds. The bspIo dep is omitted because
+# bspIo is bare-metal-only and cannot build on a posix unit-test platform.
+cc_library(
+    name = "fd_can_device_mock",
+    hdrs = ["test/mock/include/can/FdCanDevice.h"],
+    strip_include_prefix = "test/mock/include",
+    target_compatible_with = unit_test_only(),
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "fd_can_transceiver_mock_lib",
+    srcs = ["src/can/transceiver/fdcan/FdCanTransceiver.cpp"],
+    hdrs = ["include/can/transceiver/fdcan/FdCanTransceiver.h"],
+    strip_include_prefix = "include",
+    target_compatible_with = unit_test_only(),
+    visibility = ["//visibility:public"],
+    deps = [
+        ":fd_can_device_mock",
+        "//libs/3rdparty/etl",
+        "//libs/3rdparty/googletest:gtest",
+        "//libs/bsw/async:async_mock_impl",
+        "//libs/bsw/bsp",
+        "//libs/bsw/cpp2can",
+        "//libs/bsw/lifecycle",
+    ],
+)

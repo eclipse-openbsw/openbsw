@@ -1,0 +1,50 @@
+# *******************************************************************************
+# Copyright (c) 2026 Accenture
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+
+load("@rules_cc//cc:cc_library.bzl", "cc_library")
+
+# Two public header roots with different include prefixes require two separate libraries.
+# The RTOS-specific suspend/resume header is re-exported through the main impl target.
+cc_library(
+    name = "bsp_interrupts_impl_freertos_hdrs",
+    hdrs = ["freertos/include/interrupts/suspendResumeAllInterrupts.h"],
+    strip_include_prefix = "freertos/include",
+    target_compatible_with = ["@platforms//os:none"],
+)
+
+cc_library(
+    name = "bsp_interrupts_impl_threadx_hdrs",
+    hdrs = ["threadx/include/interrupts/suspendResumeAllInterrupts.h"],
+    strip_include_prefix = "threadx/include",
+    target_compatible_with = ["@platforms//os:none"],
+    deps = ["//libs/3rdparty/threadx:threadx_headers"],
+)
+
+alias(
+    name = "bsp_interrupts_impl_rtos_hdrs",
+    actual = select(
+        {
+            "//bazel/config/rtos:support_freertos": ":bsp_interrupts_impl_freertos_hdrs",
+            "//bazel/config/rtos:support_threadx": ":bsp_interrupts_impl_threadx_hdrs",
+        },
+        no_match_error = "stm32 bsp_interrupts_impl supports only --//bazel/config/rtos=freertos or --//bazel/config/rtos=threadx.",
+    ),
+)
+
+cc_library(
+    name = "bsp_interrupts_impl",
+    srcs = ["src/interrupt_manager.c"],
+    hdrs = ["include/interrupts/disableEnableAllInterrupts.h"],
+    implementation_deps = ["//platforms/stm32/bsp/bspMcu:bsp_mcu"],
+    strip_include_prefix = "include",
+    target_compatible_with = ["@platforms//os:none"],
+    visibility = ["//visibility:public"],
+    deps = [":bsp_interrupts_impl_rtos_hdrs"],
+)
