@@ -33,6 +33,7 @@ GENERATED_OUTPUTS = [
     "include/generated_code/shm/AllocatorsDefinitions.h",
     "include/generated_code/middleware/shm/Config.h",
     "src/generated_code/shm/Config.cpp",
+    "include/generated_code/shm/PduDefinitions.h",
     "include/generated_code/shm/QueueDefinitions.h",
     "include/generated_code/middleware/ClusterCluster0.h",
     "src/generated_code/ClusterCluster0.cpp",
