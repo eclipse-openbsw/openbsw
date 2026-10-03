@@ -10,6 +10,7 @@
 
 load("@bazel_skylib//rules:common_settings.bzl", "bool_flag")
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
+load("@rules_cc//cc:cc_test.bzl", "cc_test")
 load("//bazel/config/build_variant:compatibility.bzl", "unit_test_only")
 
 _OUTGOING_HEADERS = [
@@ -43,6 +44,22 @@ config_setting(
     flag_values = {":uds_enable_outgoing": "false"},
 )
 
+cc_library(
+    name = "uds_outgoing_defines",
+    defines = select({
+        ":uds_enable_outgoing_enabled": ["UDS_ENABLE_OUTGOING=1"],
+        ":uds_enable_outgoing_disabled": [],
+    }),
+)
+
+cc_library(
+    name = "uds_unit_test_defines",
+    defines = select({
+        "//bazel/config/build_variant:unit_test": ["UNIT_TEST=1"],
+        "//conditions:default": [],
+    }),
+)
+
 # Circular dependency present on the CMake side: uds -> udsConfiguration -> uds
 # Split off uds_headers to break the circular dependency for Bazel
 cc_library(
@@ -54,13 +71,11 @@ cc_library(
         ":uds_enable_outgoing_enabled": _OUTGOING_HEADERS,
         ":uds_enable_outgoing_disabled": [],
     }),
-    defines = select({
-        ":uds_enable_outgoing_enabled": ["UDS_ENABLE_OUTGOING=1"],
-        ":uds_enable_outgoing_disabled": [],
-    }),
     strip_include_prefix = "include",
     visibility = ["//visibility:public"],
     deps = [
+        ":uds_outgoing_defines",
+        ":uds_unit_test_defines",
         "//libs/3rdparty/etl",
         "//libs/bsw/async:async_headers",
         "//libs/bsw/transport",
@@ -77,13 +92,10 @@ cc_library(
         ":uds_enable_outgoing_enabled": _OUTGOING_SOURCES,
         ":uds_enable_outgoing_disabled": [],
     }),
-    defines = select({
-        ":uds_enable_outgoing_enabled": ["UDS_ENABLE_OUTGOING=1"],
-        ":uds_enable_outgoing_disabled": [],
-    }),
     visibility = ["//visibility:public"],
     deps = [
         ":uds_headers",
+        ":uds_outgoing_defines",
         "//executables/referenceApp/transportConfiguration:transport_configuration",
         "//executables/referenceApp/udsConfiguration:uds_configuration",
         "//libs/bsw/async",
@@ -115,5 +127,26 @@ cc_library(
     deps = [
         "//executables/referenceApp/udsConfiguration:uds_configuration",
         "//libs/3rdparty/googletest:gtest",
+    ],
+)
+
+cc_test(
+    name = "uds_test",
+    srcs = glob([
+        "test/src/**/*.cpp",
+        "test/mock/src/**/*.cpp",
+        "test/mock/include/**/*.h",
+    ]),
+    includes = ["test/mock/include"],
+    target_compatible_with = unit_test_only(),
+    deps = [
+        ":uds",
+        ":uds_mock",
+        "//executables/unitTest/common:ut_common",
+        "//libs/3rdparty/googletest:gtest_esr_extensions",
+        "//libs/3rdparty/googletest:gtest_main",
+        "//libs/bsw/async:async_mock_impl",
+        "//libs/bsw/transport:transport_mock",
+        "//libs/bsw/util:util_mock",
     ],
 )
