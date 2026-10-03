@@ -18,11 +18,11 @@
 
 namespace uds
 {
-uint8_t const HardReset::sfImplementedRequest[] = {ServiceId::ECU_RESET, 0x01U};
+::etl::array<uint8_t, 2U> const HardReset::sfImplementedRequest = {ServiceId::ECU_RESET, 0x01U};
 
 HardReset::HardReset(IUdsLifecycleConnector& udsLifecycleConnector, DiagDispatcher& diagDispatcher)
 : Subfunction(
-    &sfImplementedRequest[0],
+    sfImplementedRequest.data(),
     AbstractDiagJob::EMPTY_REQUEST,
     AbstractDiagJob::EMPTY_RESPONSE,
     DiagSession::ALL_SESSIONS())

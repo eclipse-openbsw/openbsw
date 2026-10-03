@@ -50,6 +50,7 @@ void AbstractDiagJob::setDefaultDiagSessionManager(IDiagSessionManager& sessionM
 DiagReturnCode::Type AbstractDiagJob::execute(
     IncomingDiagConnection& connection, uint8_t const* const request, uint16_t const requestLength)
 {
+    ::etl::span<uint8_t const> const requestView(request, requestLength);
     DiagReturnCode::Type status = verify(request, requestLength);
     DiagJobRoot* jobRoot        = getDiagJobRoot();
     if (status == DiagReturnCode::OK)
@@ -66,8 +67,12 @@ DiagReturnCode::Type AbstractDiagJob::execute(
         }
         if (jobRoot != nullptr)
         {
-            DiagReturnCode::Type const vsistat = jobRoot->verifySupplierIndication(
-                request - fPrefixLength, requestLength + fPrefixLength);
+            // AbstractDiagJob dispatch passes child requests as prefix-trimmed views;
+            // supplier indication needs the full request view.
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+            uint8_t const* const fullRequest = request - fPrefixLength;
+            DiagReturnCode::Type const vsistat
+                = jobRoot->verifySupplierIndication(fullRequest, requestLength + fPrefixLength);
             if (vsistat != DiagReturnCode::OK)
             {
                 acceptJob(connection, request, requestLength);
@@ -96,15 +101,16 @@ DiagReturnCode::Type AbstractDiagJob::execute(
                 return DiagReturnCode::ISO_RESPONSE_TOO_LONG;
             }
         }
-        checkSuppressPositiveResponseBit(connection, request + (fRequestLength - fPrefixLength));
+        checkSuppressPositiveResponseBit(
+            connection, requestView.subspan(fRequestLength - fPrefixLength).data());
         acceptJob(
             connection,
-            request + (fRequestLength - fPrefixLength),
+            requestView.subspan(fRequestLength - fPrefixLength).data(),
             requestLength - (static_cast<uint16_t>(fRequestLength) - fPrefixLength));
         Logger::debug(UDS, "Process diag job 0x%X", getRequestId());
         return process(
             connection,
-            request + (fRequestLength - fPrefixLength),
+            requestView.subspan(fRequestLength - fPrefixLength).data(),
             requestLength - (static_cast<uint16_t>(fRequestLength) - fPrefixLength));
     }
 
@@ -114,8 +120,12 @@ DiagReturnCode::Type AbstractDiagJob::execute(
             && (status != DiagReturnCode::ISO_SERVICE_NOT_SUPPORTED_IN_ACTIVE_SESSION)
             && (status != DiagReturnCode::ISO_SECURITY_ACCESS_DENIED))
         {
-            DiagReturnCode::Type const vsistat = jobRoot->verifySupplierIndication(
-                request - fPrefixLength, requestLength + fPrefixLength);
+            // AbstractDiagJob dispatch passes child requests as prefix-trimmed views;
+            // supplier indication needs the full request view.
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+            uint8_t const* const fullRequest = request - fPrefixLength;
+            DiagReturnCode::Type const vsistat
+                = jobRoot->verifySupplierIndication(fullRequest, requestLength + fPrefixLength);
             if (vsistat != DiagReturnCode::OK)
             {
                 status = vsistat;
@@ -135,7 +145,7 @@ uint32_t AbstractDiagJob::getRequestId() const
         for (uint8_t i = 0; (i < 4) && (i < fRequestLength); ++i)
         {
             res <<= 8U;
-            res += fpImplementedRequest[i];
+            res += getImplementedRequestView()[i];
         }
     }
     return res;
@@ -364,10 +374,11 @@ void AbstractDiagJob::checkSuppressPositiveResponseBit(
 {
     if (fSuppressPositiveResponseBitEnabled)
     {
-        if ((request[0] & SUPPRESS_POSITIVE_RESPONSE_MASK) > 0U)
+        ::etl::span<uint8_t> const requestView(const_cast<uint8_t*>(request), 1U);
+        if ((requestView[0U] & SUPPRESS_POSITIVE_RESPONSE_MASK) > 0U)
         {
             // remove suppressPositiveResponse bit
-            const_cast<uint8_t*>(request)[0] &= 0x7FU;
+            requestView[0U] &= 0x7FU;
             connection.suppressPositiveResponse();
         }
     }

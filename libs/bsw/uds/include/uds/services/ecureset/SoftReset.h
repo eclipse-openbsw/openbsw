@@ -13,6 +13,7 @@
 #include "uds/base/Subfunction.h"
 #include "uds/lifecycle/IUdsLifecycleConnector.h"
 
+#include <etl/array.h>
 #include <cstdint>
 
 namespace uds
@@ -27,7 +28,7 @@ public:
     void responseSent(IncomingDiagConnection& connection, ResponseSendResult result) override;
 
 private:
-    static uint8_t const sfImplementedRequest[2];
+    static ::etl::array<uint8_t, 2U> const sfImplementedRequest;
 
     DiagReturnCode::Type process(
         IncomingDiagConnection& connection,

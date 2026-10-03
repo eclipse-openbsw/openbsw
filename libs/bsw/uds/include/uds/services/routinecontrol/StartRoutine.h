@@ -12,6 +12,8 @@
 
 #include "uds/base/Subfunction.h"
 
+#include <etl/array.h>
+
 namespace uds
 {
 /**
@@ -24,7 +26,7 @@ public:
     StartRoutine();
 
 private:
-    static uint8_t const sfImplementedRequest[2];
+    static ::etl::array<uint8_t, 2U> const sfImplementedRequest;
 };
 
 } // namespace uds
