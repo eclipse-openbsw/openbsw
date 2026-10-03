@@ -1,0 +1,3 @@
+add_library(bspConfiguration INTERFACE)
+
+target_include_directories(bspConfiguration INTERFACE include)
