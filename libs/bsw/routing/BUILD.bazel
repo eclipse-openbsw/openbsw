@@ -9,7 +9,6 @@
 # *******************************************************************************
 
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
-load("@rules_cc//cc:cc_test.bzl", "cc_test")
 load("//bazel/config/build_variant:compatibility.bzl", "unit_test_only")
 
 label_flag(
@@ -18,22 +17,16 @@ label_flag(
     visibility = ["//visibility:public"],
 )
 
-cc_library(
-    name = "routing",
-    srcs = glob(["src/routing/*.cpp"]),
-    hdrs = glob(["include/**/*.h"]),
-    strip_include_prefix = "include",
+label_flag(
+    name = "routing_blob_configuration",
+    build_setting_default = "//libs/bsw/routing:routing_test_blob_configuration",
     visibility = ["//visibility:public"],
-    deps = [
-        ":routing_configuration",
-        "//libs/3rdparty/etl",
-        "//libs/bsw/blob",
-        "//libs/bsw/bsp",
-        "//libs/bsw/cpp2ethernet",
-        "//libs/bsw/io",
-        "//libs/bsw/lwipSocket:lwip_socket",
-        "//libs/bsw/util",
-    ],
+)
+
+alias(
+    name = "routing",
+    actual = "//libs/bsw/routing/core:routing",
+    visibility = ["//visibility:public"],
 )
 
 cc_library(
@@ -46,37 +39,15 @@ cc_library(
     strip_include_prefix = "test/include",
     target_compatible_with = unit_test_only(),
     visibility = ["//visibility:public"],
-    deps = ["//libs/3rdparty/etl"],
 )
 
-# Provides only the routing-specific CONFIGURATION_BLOB data. ConfigType.h
-# is intentionally omitted here because it arrives transitively through
-# the blob library dep.
 cc_library(
     name = "routing_test_blob_configuration",
-    hdrs = ["test/include/blob/configuration.h"],
+    hdrs = [
+        "test/include/blob/ConfigType.h",
+        "test/include/blob/configuration.h",
+    ],
     strip_include_prefix = "test/include",
     target_compatible_with = unit_test_only(),
     visibility = ["//visibility:public"],
-)
-
-label_flag(
-    name = "routing_blob_configuration",
-    build_setting_default = "//libs/bsw/routing:routing_test_blob_configuration",
-    visibility = ["//visibility:public"],
-)
-
-cc_test(
-    name = "routing_test",
-    srcs = glob(["test/src/**/*.cpp"]),
-    linkstatic = True,
-    target_compatible_with = unit_test_only(),
-    deps = [
-        ":routing",
-        ":routing_blob_configuration",
-        "//libs/3rdparty/googletest:gtest_main",
-        "//libs/bsw/bsp:bsp_mock",
-        "//libs/bsw/cpp2ethernet:cpp2ethernet_mock",
-        "//libs/bsw/io:io_mock",
-    ],
 )
