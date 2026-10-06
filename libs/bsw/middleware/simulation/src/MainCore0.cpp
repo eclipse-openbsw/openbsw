@@ -13,7 +13,6 @@
 #include "Logger.h"
 #include "foo/FooSkeletonWrapper.h"
 #include "middleware/ClusterCluster0.h"
-#include "shm/PduDefinitions.h"
 #include "shm/QueueDefinitions.h"
 
 void run_main_core0()
@@ -35,10 +34,6 @@ void run_main_core0()
         {
             // Broadcast a new FooDefault value every 5 seconds.
             foo_provider.sendBroadcast();
-
-            // unsafe access
-            // Increment the first byte of the sample PDU to simulate data change.
-            ++(middleware::shm::getSamplepdu8()->data[0]);
         }
 
         if (counter % 150 == 0)

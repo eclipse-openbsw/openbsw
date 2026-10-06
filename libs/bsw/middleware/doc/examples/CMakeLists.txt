@@ -24,7 +24,6 @@ set(_RELEASE_GENERATED_HEADERS
     ${_RELEASE_GEN_INC}/middleware/shm/Config.h
     ${_RELEASE_GEN_INC}/shm/AllocatorsDefinitions.h
     ${_RELEASE_GEN_INC}/shm/QueueDefinitions.h
-    ${_RELEASE_GEN_INC}/shm/PduDefinitions.h
     ${_RELEASE_GEN_INC}/features/communication/dummy_serviceCommon.h
     ${_RELEASE_GEN_INC}/features/communication/dummy_serviceProxy.h
     ${_RELEASE_GEN_INC}/features/communication/dummy_serviceSkeleton.h)

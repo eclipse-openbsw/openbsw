@@ -52,12 +52,6 @@ properties:
     items:
       $ref: "#/definitions/core"
 
-  pdus:
-    type: array
-    description: "List of Protocol Data Units (PDUs) for shared memory buffers"
-    items:
-      $ref: "#/definitions/pdu"
-
 definitions:
   cluster:
     type: object
@@ -603,20 +597,4 @@ definitions:
         minimum: 1
       elements:
         type: integer
-        minimum: 1
-
-  pdu:
-    type: object
-    additionalProperties: false
-    required:
-      - name
-      - size
-    properties:
-      name:
-        type: string
-        description: "PDU buffer name"
-        pattern: "^[A-Za-z][A-Za-z0-9_]*$"
-      size:
-        type: integer
-        description: "PDU payload size in bytes"
         minimum: 1

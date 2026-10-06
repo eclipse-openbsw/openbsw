@@ -107,7 +107,6 @@ include/generated_code/
   shm/
     allocators_definitions.h
     queue_definitions.h
-    pdu_definitions.h
   <namespace-path>/
     <service>_common.h        # one set per service
     <service>_proxy.h

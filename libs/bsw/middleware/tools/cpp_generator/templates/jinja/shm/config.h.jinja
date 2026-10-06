@@ -23,7 +23,6 @@
 
 #include <cstdint>
 
-#include "middleware/core/Pdu.h"
 #include "shm/AllocatorsDefinitions.h"
 #include "shm/QueueDefinitions.h"
 
@@ -46,9 +45,6 @@ struct MemoryLayout
 {% endfor %}
 {% for allocator in allocators %}
     {{ allocator.name | capitalize }}Allocator {{ allocator.name }}Allocator{&{{ allocator.name }}AllocatorMutex};
-{% endfor %}
-{% for pdu in pdus %}
-    ::middleware::core::Pdu<{{ pdu.size }}U> {{ pdu.name }};
 {% endfor %}
 };
 
