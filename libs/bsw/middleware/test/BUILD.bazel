@@ -1,0 +1,225 @@
+# *******************************************************************************
+# Copyright (c) 2026 BMW AG
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+
+load("@rules_cc//cc:cc_library.bzl", "cc_library")
+load("@rules_cc//cc:cc_test.bzl", "cc_test")
+load("//libs/bsw/middleware:configurable_middleware.bzl", "middleware_config")
+
+package(default_visibility = ["//libs/bsw/middleware/test:__subpackages__"])
+
+# ---------------------------------------------------------------------------
+# Test support targets for libs/bsw/middleware.
+# ---------------------------------------------------------------------------
+
+# ---- concurrency -----------------------------------------------------------
+
+cc_library(
+    name = "concurrency_mock_impl",
+    hdrs = ["src/mock/concurrency/middleware/concurrency/lock_types.h"],
+    strip_include_prefix = "src/mock/concurrency",
+    visibility = ["//visibility:public"],
+)
+
+# ---- logger ----------------------------------------------------------------
+
+cc_library(
+    name = "logger_mock_impl",
+    srcs = ["src/mock/logger/mock/LoggerMock.cpp"],
+    hdrs = [
+        "src/mock/logger/DslLogger.h",
+        "src/mock/logger/mock/LoggerMock.h",
+    ],
+    strip_include_prefix = "src/mock",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//libs/3rdparty/googletest:gtest",
+        "//libs/bsw/middleware/interfaces:logger",
+    ],
+)
+
+# ---- os --------------------------------------------------------------------
+
+cc_library(
+    name = "os_mock_impl",
+    srcs = ["src/mock/os/OsDefinitions.cpp"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//libs/bsw/middleware/interfaces:os",
+    ],
+)
+
+# ---- time ------------------------------------------------------------------
+
+cc_library(
+    name = "time_mock_impl",
+    srcs = ["src/mock/time/mock/SystemTimerProviderMock.cpp"],
+    hdrs = ["src/mock/time/mock/SystemTimerProviderMock.h"],
+    strip_include_prefix = "src/mock",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//libs/3rdparty/etl",
+        "//libs/3rdparty/googletest:gtest",
+        "//libs/bsw/middleware/interfaces:time",
+    ],
+)
+
+# ---- memory ----------------------------------------------------------------
+
+cc_library(
+    name = "memory_mock_impl",
+    srcs = ["src/mock/memory/mock/AllocatorMock.cpp"],
+    hdrs = ["src/mock/memory/mock/AllocatorMock.h"],
+    strip_include_prefix = "src/mock",
+    visibility = ["//visibility:public"],
+    deps = [
+        ":memory_test_impl",
+        "//libs/3rdparty/googletest:gtest",
+    ],
+)
+
+# ---- test source filegroups ------------------------------------------------
+
+filegroup(
+    name = "core_test_code_to_doc",
+    srcs = [
+        "src/core/ClusterConfigurationTest.cpp",
+        "src/core/ConnectionTest.cpp",
+        "src/core/DbManipulatorTest.cpp",
+        "src/core/LoggerApi.cpp",
+        "src/core/MessagePayloadBuilderTest.cpp",
+        "src/core/MessageTest.cpp",
+        "src/core/ProxyAttributesTest.cpp",
+        "src/core/ProxyBaseTest.cpp",
+        "src/core/ResponseBufferTest.cpp",
+        "src/core/SkeletonAttributeTest.cpp",
+        "src/core/SkeletonBaseTest.cpp",
+        "src/core/rpc/ProxyFireAndForgetMethodTest.cpp",
+        "src/core/rpc/ProxyMethodTest.cpp",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+filegroup(
+    name = "memory_test_code_to_doc",
+    srcs = [
+        "src/memory/AggregatorTest.cpp",
+        "src/memory/AllocatorBaseTest.cpp",
+        "src/memory/PoolsTest.cpp",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+filegroup(
+    name = "queue_test_code_to_doc",
+    srcs = ["src/queue/QueueTest.cpp"],
+    visibility = ["//visibility:public"],
+)
+
+# ===========================================================================
+# middleware test configuration targets
+# ===========================================================================
+
+middleware_config(
+    name = "core_test_impl",
+    config = {
+        "//libs/3rdparty/etl:etl_profile": "//executables/unitTest/etl_profile:etl_profile",
+        "//libs/bsw/middleware/interfaces:concurrency_impl": ":concurrency_mock_impl",
+        "//libs/bsw/middleware/interfaces:logger_impl": ":logger_mock_impl",
+        "//libs/bsw/middleware/interfaces:os_impl": ":os_mock_impl",
+        "//libs/bsw/middleware/interfaces:time_impl": ":time_mock_impl",
+    },
+    dep = "//libs/bsw/middleware:core",
+)
+
+middleware_config(
+    name = "memory_test_impl",
+    config = {
+        "//libs/3rdparty/etl:etl_profile": "//executables/unitTest/etl_profile:etl_profile",
+        "//libs/bsw/middleware/interfaces:concurrency_impl": ":concurrency_mock_impl",
+        "//libs/bsw/middleware/interfaces:logger_impl": ":logger_mock_impl",
+        "//libs/bsw/middleware/interfaces:os_impl": ":os_mock_impl",
+        "//libs/bsw/middleware/interfaces:time_impl": ":time_mock_impl",
+    },
+    dep = "//libs/bsw/middleware:memory",
+)
+
+middleware_config(
+    name = "queue_test_impl",
+    config = {
+        "//libs/3rdparty/etl:etl_profile": "//executables/unitTest/etl_profile:etl_profile",
+    },
+    dep = "//libs/bsw/middleware:queue",
+)
+
+# ===========================================================================
+# cc_test targets
+# ===========================================================================
+
+cc_test(
+    name = "core_test",
+    size = "small",
+    srcs = [
+        "src/core/ClusterConfigurationTest.cpp",
+        "src/core/ConnectionTest.cpp",
+        "src/core/DbManipulatorTest.cpp",
+        "src/core/InstancesDatabase.h",
+        "src/core/LoggerApi.cpp",
+        "src/core/MessagePayloadBuilderTest.cpp",
+        "src/core/MessageTest.cpp",
+        "src/core/Proxy.h",
+        "src/core/ProxyAttributesTest.cpp",
+        "src/core/ProxyAttributesUnderTest.h",
+        "src/core/ProxyBaseTest.cpp",
+        "src/core/ReferenceApp.h",
+        "src/core/ResponseBufferTest.cpp",
+        "src/core/Skeleton.h",
+        "src/core/SkeletonAttributeTest.cpp",
+        "src/core/SkeletonBaseTest.cpp",
+        "src/core/mock/ClusterConnectionMock.h",
+        "src/core/mock/ProxyMock.h",
+        "src/core/rpc/ProxyFireAndForgetMethodTest.cpp",
+        "src/core/rpc/ProxyMethodTest.cpp",
+    ],
+    includes = [
+        "src",
+    ],
+    deps = [
+        ":core_test_impl",
+        ":logger_mock_impl",
+        ":memory_mock_impl",
+        ":os_mock_impl",
+        ":time_mock_impl",
+        "//libs/3rdparty/googletest:gtest_main",
+    ],
+)
+
+cc_test(
+    name = "memory_test",
+    size = "small",
+    srcs = [
+        "src/memory/AggregatorTest.cpp",
+        "src/memory/AllocatorBaseTest.cpp",
+        "src/memory/PoolsTest.cpp",
+    ],
+    deps = [
+        ":memory_test_impl",
+        "//libs/3rdparty/googletest:gtest_main",
+    ],
+)
+
+cc_test(
+    name = "queue_test",
+    size = "small",
+    srcs = ["src/queue/QueueTest.cpp"],
+    deps = [
+        ":queue_test_impl",
+        "//libs/3rdparty/googletest:gtest_main",
+    ],
+)
