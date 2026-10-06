@@ -1,0 +1,19 @@
+# Sanitizers common options (host POSIX unit tests only; never combine with an ARM
+# cross-compilation config such as --config=s32k148).
+build:sanitizers --copt=-fno-omit-frame-pointer
+build:sanitizers --copt=-g
+build:sanitizers --linkopt=-g
+build:sanitizers --strip=never
+
+# UBSan — undefined-behaviour sanitizer
+build:ubsan --config=sanitizers
+build:ubsan --copt=-fsanitize=undefined
+build:ubsan --copt=-fno-sanitize-recover=all
+build:ubsan --linkopt=-fsanitize=undefined
+build:ubsan --test_env=UBSAN_OPTIONS=halt_on_error=1:print_stacktrace=1
+
+# ASan — address sanitizer
+build:asan --config=sanitizers
+build:asan --copt=-fsanitize=address
+build:asan --linkopt=-fsanitize=address
+build:asan --test_env=ASAN_OPTIONS=halt_on_error=1:print_stacktrace=1:detect_leaks=1
