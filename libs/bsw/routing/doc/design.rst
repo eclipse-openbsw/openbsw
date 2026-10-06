@@ -25,7 +25,7 @@ it defines a length and an offset in bytes, i.e., the position of the PDU in the
 
 .. _rxAdapterTable:
 
-.. literalinclude:: ../include/routing/RxAdapterTable.h
+.. literalinclude:: ../core/include/routing/RxAdapterTable.h
    :start-after: RX_ADAPTER_TABLE_BEGIN
    :end-before: RX_ADAPTER_TABLE_END
    :language: cpp
@@ -36,7 +36,7 @@ forwarded as well as the outgoing message ID.
 
 .. _pduRoutingTable:
 
-.. literalinclude:: ../include/routing/PduRoutingTable.h
+.. literalinclude:: ../core/include/routing/PduRoutingTable.h
    :start-after: PDU_ROUTING_TABLE_BEGIN
    :end-before: PDU_ROUTING_TABLE_END
    :language: c++
@@ -48,7 +48,7 @@ determines the payload length and the PDU offset within it.
 
 .. _txAdapterTable:
 
-.. literalinclude:: ../include/routing/TxAdapterTable.h
+.. literalinclude:: ../core/include/routing/TxAdapterTable.h
    :start-after: TX_ADAPTER_TABLE_BEGIN
    :end-before: TX_ADAPTER_TABLE_END
    :language: cpp
@@ -114,7 +114,7 @@ dropped and reported, but never corrupts the pipeline or blocks other PDUs. Erro
 through the integrator-supplied ``ErrorHandler`` callback rather than through exceptions or return
 codes on the hot path. The reported status codes are:
 
-.. literalinclude:: ../include/routing/ErrorHandler.h
+.. literalinclude:: ../../util/routing/include/routing/ErrorHandler.h
    :start-after: STATUS_CODES_BEGIN
    :end-before: STATUS_CODES_END
    :language: cpp
