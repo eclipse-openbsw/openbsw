@@ -87,7 +87,7 @@ class {{ service.name }}SkeletonMock : public middleware::util::CrtpMock<{{ serv
                 (const {{ attribute.type }}& {{ attribute.variable }}, SkeletonResponseInfo& response));
     MOCK_METHOD(middleware::core::HRESULT,
                 respondSet{{ attribute.name }}Attribute,
-                (SkeletonResponseInfo & response, const bool& result, const bool handleResponseFailure));
+                (SkeletonResponseInfo & response, const {{ attribute.type }}& result, const bool handleResponseFailure));
     MOCK_METHOD(middleware::core::HRESULT, cancelSet{{ attribute.name }}AttributeResponse, (SkeletonResponseInfo & response));
 {% else %}
     MOCK_METHOD(void, set{{ attribute.name }}Attribute, (const {{ attribute.type }}& {{ attribute.variable }}));

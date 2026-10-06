@@ -312,7 +312,9 @@ void {{service.name}}Skeleton::set{{ attribute.name }}Attribute(const {{ attribu
                                              middleware::core::ResponseBufferBase::SkeletonResponseInfo& response)
 {
     {{ attribute.variable }}.set(arg);
-    static_cast<void>(respondSet{{ attribute.name }}Attribute(response, true));
+    // A setter answers with the value now held, as the proxy's SetterTraits expect.
+    const auto& val = {{ attribute.variable }}.get();
+    static_cast<void>(respondSet{{ attribute.name }}Attribute(response, val));
 }
       {% else %}
 void {{service.name}}Skeleton::set{{ attribute.name }}Attribute(const {{ attribute.type }}& arg)

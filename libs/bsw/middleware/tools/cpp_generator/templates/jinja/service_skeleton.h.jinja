@@ -106,7 +106,7 @@ class {{service.name}}Skeleton : public ::middleware::core::SkeletonBase
     // METHODS
     {% for method in service.methods %}
     using {{ method.variable }}Response =
-      ::middleware::core::ResponseBuffer<::middleware::core::ResponseTraits<{{ method.output_param.type | default('void') }}, internal::{{ method.variable }}_id>, {{ method.provider_request_limit }}U>;
+      ::middleware::core::ResponseBuffer<::middleware::core::ResponseTraits<{{ method.output_param.type if method.output_param else 'void' }}, internal::{{ method.variable }}_id>, {{ method.provider_request_limit }}U>;
     {% endfor %}
 
     {{service.name}}Skeleton();
@@ -159,7 +159,7 @@ class {{service.name}}Skeleton : public ::middleware::core::SkeletonBase
     virtual void set{{ attribute.name }}Attribute(const {{ attribute.type }}& {{ attribute.variable }},
                                              ::middleware::core::ResponseBufferBase::SkeletonResponseInfo& response);
     ::middleware::core::HRESULT respondSet{{ attribute.name }}Attribute(::middleware::core::ResponseBufferBase::SkeletonResponseInfo& response,
-            const bool& result,
+            const {{ attribute.type }}& result,
             const bool handleResponseFailure = true);
     ::middleware::core::HRESULT cancelSet{{ attribute.name }}AttributeResponse(
         ::middleware::core::ResponseBufferBase::SkeletonResponseInfo& response);
