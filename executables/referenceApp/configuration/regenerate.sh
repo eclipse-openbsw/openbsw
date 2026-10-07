@@ -9,30 +9,16 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 #
-# Wrapper script to regenerate blob headers for the referenceApp.
+# Regenerate the reference application's checked-in blob and routing headers.
 #
-# This script locates the project root and the tools/blob/regenerate.sh script,
-# then calls it with the correct paths for the referenceApp configuration.
+# Usage, from any working directory:
+#   executables/referenceApp/configuration/regenerate.sh [PYTHON]
 #
-# Usage:
-#   regenerate.sh [PYTHON]
-#
-#   PYTHON  (optional) Python interpreter to use. If not provided, defaults to
-#           the PYTHON environment variable or python3.
-#
-# Examples:
-#   # From executables/referenceApp/configuration/
-#   ./regenerate.sh
-#
-#   # From project root
-#   executables/referenceApp/configuration/regenerate.sh
-#
-#   # With a custom Python interpreter
-#   PYTHON=/custom/python3 ./regenerate.sh
+# PYTHON may also be set in the environment. The shared script provisions its
+# locked Python dependency when needed; see tools/blob/regenerate.sh.
 
 set -euo pipefail
 
-# Find the project root by locating tools/blob/regenerate.sh
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="${SCRIPT_DIR}"
 while [[ "${PROJECT_ROOT}" != "/" ]]; do
@@ -47,13 +33,9 @@ if [[ ! -f "${PROJECT_ROOT}/tools/blob/regenerate.sh" ]]; then
     exit 1
 fi
 
-# Set paths relative to the project root
-JSONL="${PROJECT_ROOT}/executables/referenceApp/configuration/routing.jsonl"
-OUT_BLOB="${PROJECT_ROOT}/executables/referenceApp/configuration/include/blob"
-OUT_ROUTING="${PROJECT_ROOT}/executables/referenceApp/configuration/include/routing"
-
-# Pass through PYTHON environment variable if set
 export PYTHON="${PYTHON:-${1:-python3}}"
 
-# Call the main regenerate script
-exec "${PROJECT_ROOT}/tools/blob/regenerate.sh" "${JSONL}" "${OUT_BLOB}" "${OUT_ROUTING}"
+exec "${PROJECT_ROOT}/tools/blob/regenerate.sh" \
+    "${PROJECT_ROOT}/executables/referenceApp/configuration/routing.jsonl" \
+    "${PROJECT_ROOT}/executables/referenceApp/configuration/include/blob" \
+    "${PROJECT_ROOT}/executables/referenceApp/configuration/include/routing"

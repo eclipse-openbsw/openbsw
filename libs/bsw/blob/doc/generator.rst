@@ -107,67 +107,53 @@ The ``blob.routing`` subpackage provides an auxiliary CLI for working with routi
 It can sort routings by channel ID, pretty-print them, render a Graphviz ``.dot`` visualization of
 the routing graph, and generate a C++ header containing the routing channel IDs.
 
-Regenerating generated headers
+Using the Bazel generator rule
 ------------------------------
 
-The script ``tools/blob/regenerate.sh`` regenerates all three generated headers.
-It accepts positional arguments so it can be reused by any project that vendors
-this repository:
+Routing headers can be generated in either of two ways:
+
+* Bazel builds can use the rule in ``tools/blob/routing.bzl``. This makes code
+    generation hermetic and tracks generated files through the Bazel build graph.
+* CMake and other non-Bazel workflows can use the build-system-independent
+    scripts. The project-specific ``regenerate.sh`` wrappers regenerate the
+    checked-in headers for the reference application and tests. The shared
+    ``tools/blob/regenerate.sh`` script accepts an input file and output
+    directories for other integrations.
+
+The standalone scripts require Python 3 with venv support. They install the
+locked dependency from ``tools/blob/requirements.lock`` into a user cache when
+it is not already available. The generated files are not post-processed, so the
+standalone scripts and Bazel rule produce identical output.
+
+For example, regenerate the reference application headers from the repository
+root:
 
 .. code-block:: console
 
-    tools/blob/regenerate.sh JSONL_FILE OUT_BLOB_DIR OUT_ROUTING_DIR
+        executables/referenceApp/configuration/regenerate.sh
 
-Run it from the **project root** with paths for the integrating project:
-
-.. code-block:: console
-
-    tools/blob/regenerate.sh \
-        path/to/routing.jsonl \
-        path/to/generated/blob/include \
-        path/to/generated/routing/include
+The generic script can also be called directly:
 
 .. code-block:: console
 
-    # On a host machine — set up a venv first (once):
-    python3 -m venv tools/.venv
-    tools/.venv/bin/pip install -r tools/blob/requirements.txt
+        tools/blob/regenerate.sh INPUT.jsonl OUTPUT_BLOB_DIR OUTPUT_ROUTING_DIR
 
-    # Then run, pointing PYTHON at the venv interpreter:
-    PYTHON=tools/.venv/bin/python3 tools/blob/regenerate.sh \
-        path/to/routing.jsonl \
-        path/to/generated/blob/include \
-        path/to/generated/routing/include
+.. code-block:: python
 
-The script resolves all paths to absolute before changing directory internally,
-so relative paths work as long as they are valid from the directory where you
-invoke the script. It writes:
+    load("//tools/blob:routing.bzl", "generate_routing")
 
-* ``OUT_BLOB_DIR/configuration.h`` — binary blob as a ``uint8_t`` array
-* ``OUT_BLOB_DIR/ConfigType.h`` — ``ConfigType`` enum
-* ``OUT_ROUTING_DIR/channelId.h`` — per-channel ID constants
+    generate_routing(
+        name = "routing_configuration",
+        jsonl = "routing.jsonl",
+    )
 
-After regeneration, review the hand-maintained ``constants.h`` alongside
-``channelId.h`` if any channel IDs changed.
+This rule emits the same generated headers as the old script:
 
-Manual equivalent
-+++++++++++++++++
+* ``blob/configuration.h`` — binary blob as a ``uint8_t`` array
+* ``blob/ConfigType.h`` — ``ConfigType`` enum
+* ``routing/channelId.h`` — per-channel ID constants
+* ``routing/constants.h`` — generated channel-count constants
 
-The script runs these three commands (from the ``tools`` directory, with the venv
-active or the container's ``/opt/venv`` on ``PATH``):
-
-.. code-block:: console
-
-    cd tools
-    JSONL=../path/to/routing.jsonl
-    OUT=../path/to/generated/include
-
-    python3 -m blob binary -i "${JSONL}" -c blob.routing.table \
-        | python3 -m blob header data -n CONFIGURATION_BLOB \
-            -o "${OUT}/blob/configuration.h"
-
-    python3 -m blob header config-type \
-        -o "${OUT}/blob/ConfigType.h"
-
-    python3 -m blob.routing header "${JSONL}" \
-        -o "${OUT}/routing/channelId.h"
+The Bazel rule emits the same generated headers as the standalone script. Both
+paths invoke the same Python generator, so generation logic is shared rather
+than duplicated.

@@ -51,6 +51,13 @@ jobs:
           docker compose run --rm development
           bazel run //:format_check
 
+      # Fails if checked-in routing headers differ from the shared generator output.
+      - name: Check generated routing headers
+        run: >-
+          DOCKER_UID=$(id -u) DOCKER_GID=$(id -g) DOCKER_HISTORY=/dev/null
+          docker compose run --rm development
+          bash tools/blob/check_generated.sh
+
       # Parses all BUILD files and resolves the dependency graph without compiling.
       # Catches syntax errors, invalid labels, missing targets, and dependency cycles.
       - name: Query all targets
