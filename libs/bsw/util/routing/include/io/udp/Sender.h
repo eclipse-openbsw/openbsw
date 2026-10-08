@@ -11,7 +11,7 @@
 #pragma once
 
 #include <io/IReader.h>
-#include <routing/util.h>
+#include <routing/ClampedCounter.h>
 #include <udp/socket/AbstractDatagramSocket.h>
 
 #include <cstdint>
@@ -20,6 +20,8 @@ namespace io
 {
 namespace udp
 {
+using StatCounter = ::routing::ClampedCounter<uint32_t>;
+
 class Sender
 {
 public:
@@ -29,7 +31,7 @@ public:
 
     void run(size_t const maxNumFrames) { send(maxNumFrames); }
 
-    ::routing::StatCounter::Type socketErrorPdus() const { return _socketErrorPdus; }
+    StatCounter::Type socketErrorPdus() const { return _socketErrorPdus; }
 
 private:
     void send(size_t const maxNumFrames)
@@ -51,7 +53,7 @@ private:
     ::io::IReader& _input;
     ::udp::AbstractDatagramSocket& _socket;
 
-    mutable ::routing::StatCounter _socketErrorPdus;
+    mutable StatCounter _socketErrorPdus;
 };
 
 } // namespace udp

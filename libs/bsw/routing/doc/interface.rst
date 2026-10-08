@@ -40,7 +40,7 @@ For example, for 10 known PDUs and 3 channels, the memory usage will be in the r
 Template Parameters
 +++++++++++++++++++
 
-.. literalinclude:: ../include/routing/Router.h
+.. literalinclude:: ../core/include/routing/Router.h
     :start-after: TPARAMS_BEGIN
     :end-before: TPARAMS_END
     :language: none
@@ -48,11 +48,20 @@ Template Parameters
 Public API
 ++++++++++
 
-.. literalinclude:: ../include/routing/Router.h
+.. literalinclude:: ../core/include/routing/Router.h
     :start-after: PUBLIC_API_BEGIN
     :end-before: PUBLIC_API_END
     :language: cpp
     :dedent: 4
+
+CAN Frame Conversion
+--------------------
+
+The routing library provides ``canFrameToPdu`` and ``pduToCanFrame`` for the
+CAN channel PDU format. The format contains a big-endian message ID and
+payload length followed by the payload. Conversion rejects buffers with an
+incomplete header or payload, and payload lengths larger than the configured
+CAN frame capacity.
 
 RxAdapter
 ---------
@@ -80,12 +89,12 @@ the memory usage will be 152 bytes.
 Template Parameters
 +++++++++++++++++++
 
-.. literalinclude:: ../include/routing/PduTransportRxAdapter.h
+.. literalinclude:: ../core/include/routing/PduTransportRxAdapter.h
     :start-after: TPARAMS_BEGIN
     :end-before: TPARAMS_END
     :language: none
 
-.. literalinclude:: ../include/routing/LegacyRxAdapter.h
+.. literalinclude:: ../core/include/routing/LegacyRxAdapter.h
     :start-after: TPARAMS_BEGIN
     :end-before: TPARAMS_END
     :language: none
@@ -93,19 +102,19 @@ Template Parameters
 Public API
 ++++++++++
 
-.. literalinclude:: ../include/routing/RxAdapter.h
+.. literalinclude:: ../core/include/routing/RxAdapter.h
     :start-after: PUBLIC_API_BEGIN
     :end-before: PUBLIC_API_END
     :language: cpp
     :dedent: 4
 
-.. literalinclude:: ../include/routing/PduTransportRxAdapter.h
+.. literalinclude:: ../core/include/routing/PduTransportRxAdapter.h
     :start-after: PUBLIC_API_BEGIN
     :end-before: PUBLIC_API_END
     :language: cpp
     :dedent: 4
 
-.. literalinclude:: ../include/routing/LegacyRxAdapter.h
+.. literalinclude:: ../core/include/routing/LegacyRxAdapter.h
     :start-after: PUBLIC_API_BEGIN
     :end-before: PUBLIC_API_END
     :language: cpp
@@ -120,7 +129,7 @@ It collects statistics about the size and number of PDUs forwarded.
 
 Public API
 ++++++++++
-.. literalinclude:: ../include/routing/PduTransportTxAdapter.h
+.. literalinclude:: ../core/include/routing/PduTransportTxAdapter.h
     :start-after: PUBLIC_API_BEGIN
     :end-before: PUBLIC_API_END
     :language: cpp
@@ -137,7 +146,7 @@ Its configuration is achieved using an appropriate :ref:`table<txAdapterTable>`.
 
 Public API
 ++++++++++
-.. literalinclude:: ../include/routing/LegacyTxAdapter.h
+.. literalinclude:: ../core/include/routing/LegacyTxAdapter.h
     :start-after: PUBLIC_API_BEGIN
     :end-before: PUBLIC_API_END
     :language: cpp

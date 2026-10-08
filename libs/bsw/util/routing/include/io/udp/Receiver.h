@@ -13,9 +13,8 @@
 #include <etl/memory.h>
 #include <io/IWriter.h>
 #include <ip/IPAddress.h>
+#include <routing/ClampedCounter.h>
 #include <routing/ErrorHandler.h>
-#include <routing/Logger.h>
-#include <routing/util.h>
 #include <udp/socket/AbstractDatagramSocket.h>
 
 #include <cstdint>
@@ -24,7 +23,7 @@ namespace io
 {
 namespace udp
 {
-namespace logger = ::util::logger;
+using StatCounter = ::routing::ClampedCounter<uint32_t>;
 
 class Receiver : private ::udp::IDataListener
 {
@@ -47,9 +46,9 @@ public:
 
     virtual ~Receiver() {}
 
-    ::routing::StatCounter::Type invalidIpAddressPdus() const { return _invalidIpAddressPdus; }
+    StatCounter::Type invalidIpAddressPdus() const { return _invalidIpAddressPdus; }
 
-    ::routing::StatCounter::Type failedMemAllocPdus() const { return _failedMemAllocPdus; }
+    StatCounter::Type failedMemAllocPdus() const { return _failedMemAllocPdus; }
 
 private:
     void dataReceived(
@@ -118,8 +117,8 @@ private:
     ::etl::span<uint8_t const> const _remoteIpAddresses;
     bool _lastAllocationFailed;
 
-    mutable ::routing::StatCounter _invalidIpAddressPdus;
-    mutable ::routing::StatCounter _failedMemAllocPdus;
+    mutable StatCounter _invalidIpAddressPdus;
+    mutable StatCounter _failedMemAllocPdus;
 };
 
 } // namespace udp
