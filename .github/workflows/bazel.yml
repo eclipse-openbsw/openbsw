@@ -51,7 +51,7 @@ jobs:
           docker compose run --rm development
           bazel run //:format_check
 
-      # Fails if checked-in routing headers differ from the shared generator output.
+      # Fails if checked-in or Bazel-generated routing headers differ from the shared generator output.
       - name: Check generated routing headers
         run: >-
           DOCKER_UID=$(id -u) DOCKER_GID=$(id -g) DOCKER_HISTORY=/dev/null

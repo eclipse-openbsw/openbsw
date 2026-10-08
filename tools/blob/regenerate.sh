@@ -37,7 +37,6 @@ fi
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TOOLS_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
-PROJECT_ROOT="$(cd "${TOOLS_DIR}/.." && pwd)"
 PYTHON="${PYTHON:-python3}"
 
 if ! "${PYTHON}" -c "import crc" >/dev/null 2>&1; then
@@ -53,34 +52,3 @@ fi
 export PYTHONPATH="${TOOLS_DIR}${PYTHONPATH:+:$PYTHONPATH}"
 
 "${PYTHON}" "${SCRIPT_DIR}/generate_routing.py" "$@"
-
-if [[ -f "${PROJECT_ROOT}/.ci/format.py" ]]; then
-    OUT_BLOB="$(realpath -m "$2")"
-    OUT_ROUTING="$(realpath -m "$3")"
-    FORMAT_PATHS=()
-
-    for header in \
-        "${OUT_BLOB}/configuration.h" \
-        "${OUT_BLOB}/ConfigType.h" \
-        "${OUT_ROUTING}/channelId.h" \
-        "${OUT_ROUTING}/constants.h"; do
-        if [[ "${header}" == "${PROJECT_ROOT}/"* ]]; then
-            FORMAT_PATHS+=("${header#"${PROJECT_ROOT}/"}")
-        fi
-    done
-
-    if ((${#FORMAT_PATHS[@]} > 0)); then
-        if command -v docker >/dev/null 2>&1 && docker compose version >/dev/null 2>&1; then
-            (
-                cd "${PROJECT_ROOT}"
-                DOCKER_UID="$(id -u)" DOCKER_GID="$(id -g)" DOCKER_HISTORY=/dev/null \
-                    docker compose run --rm development treefmt --no-cache "${FORMAT_PATHS[@]}"
-            )
-        elif command -v treefmt >/dev/null 2>&1; then
-            (
-                cd "${PROJECT_ROOT}"
-                treefmt --no-cache "${FORMAT_PATHS[@]}"
-            )
-        fi
-    fi
-fi

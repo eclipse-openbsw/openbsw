@@ -130,13 +130,18 @@ root:
 
 .. code-block:: console
 
-        executables/referenceApp/configuration/regenerate.sh
+    executables/referenceApp/configuration/regenerate.sh
 
-The generic script can also be called directly:
+This command invokes the reference application's standalone wrapper. For other
+configurations, invoke the shared standalone script with the input and output
+directories:
 
 .. code-block:: console
 
-        tools/blob/regenerate.sh INPUT.jsonl OUTPUT_BLOB_DIR OUTPUT_ROUTING_DIR
+    tools/blob/regenerate.sh INPUT.jsonl OUTPUT_BLOB_DIR OUTPUT_ROUTING_DIR
+
+The following ``BUILD.bazel`` example creates a target that exposes generated
+headers to Bazel C++ consumers:
 
 .. code-block:: python
 
@@ -147,13 +152,12 @@ The generic script can also be called directly:
         jsonl = "routing.jsonl",
     )
 
-This rule emits the same generated headers as the old script:
+The rule provides these generated headers:
 
 * ``blob/configuration.h`` — binary blob as a ``uint8_t`` array
 * ``blob/ConfigType.h`` — ``ConfigType`` enum
 * ``routing/channelId.h`` — per-channel ID constants
 * ``routing/constants.h`` — generated channel-count constants
 
-The Bazel rule emits the same generated headers as the standalone script. Both
-paths invoke the same Python generator, so generation logic is shared rather
-than duplicated.
+Both the Bazel rule and standalone script invoke the same deterministic Python
+generator, so generation logic is shared rather than duplicated.

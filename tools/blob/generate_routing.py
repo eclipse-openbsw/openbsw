@@ -21,31 +21,40 @@ from blob.__main__ import Cli as BlobCli
 from blob.routing.__main__ import Cli as RoutingCli
 
 
-def _generate_headers(jsonl_path: Path, out_blob: Path, out_routing: Path) -> None:
-    namespace = argparse.Namespace
-
+def _read_objects(jsonl_path: Path) -> list[dict[str, object]]:
     with jsonl_path.open("r", encoding="utf-8") as routing_file:
-        blob = BlobCli.create_blob(
-            namespace(input=routing_file, config=["blob.routing.table"])
+        return [json.loads(line) for line in routing_file if line.strip()]
+
+
+def _generate_headers(jsonl_path: Path, out_blob: Path, out_routing: Path) -> None:
+    objects = _read_objects(jsonl_path)
+    blob = BlobCli.create_blob(
+        argparse.Namespace(
+            input=io.StringIO("\n".join(json.dumps(obj) for obj in objects)),
+            config=["blob.routing.table"],
         )
+    )
 
     with io.BytesIO(bytes(blob)) as blob_input, (out_blob / "configuration.h").open(
         "w", encoding="utf-8"
     ) as output:
         BlobCli.data_header(
-            namespace(input=blob_input, name="CONFIGURATION_BLOB", output=output)
+            argparse.Namespace(
+                input=blob_input,
+                name="CONFIGURATION_BLOB",
+                output=output,
+            )
         )
 
     with (out_blob / "ConfigType.h").open("w", encoding="utf-8") as output:
-        BlobCli.config_type_header(namespace(name="ConfigType", output=output))
+        BlobCli.config_type_header(
+            argparse.Namespace(name="ConfigType", output=output)
+        )
 
-    with jsonl_path.open("r", encoding="utf-8") as routing_file, (
-        out_routing / "channelId.h"
-    ).open("w", encoding="utf-8") as output:
-        RoutingCli.header(namespace(input=routing_file, output=output))
+    (out_routing / "channelId.h").write_text(
+        RoutingCli.header_text(objects), encoding="utf-8"
+    )
 
-    with jsonl_path.open("r", encoding="utf-8") as routing_file:
-        objects = [json.loads(line) for line in routing_file if line.strip()]
     pdu_transport_channels = sum(
         1
         for obj in objects
@@ -74,13 +83,14 @@ def _generate_headers(jsonl_path: Path, out_blob: Path, out_routing: Path) -> No
 namespace routing
 {{
 static constexpr uint8_t NUM_PDU_TRANSPORT_CHANNELS = {pdu_transport_channels}U;
-static constexpr uint8_t NUM_CAN_CHANNELS =
-    static_cast<uint8_t>(sizeof(::routing::canChannelIds) / sizeof(::routing::canChannelIds[0]));
-static constexpr uint8_t NUM_FLEXRAY_CHANNELS =
-    static_cast<uint8_t>(sizeof(::routing::frChannelIds) / sizeof(::routing::frChannelIds[0]));
-static constexpr uint8_t NUM_CHANNELS = NUM_CAN_CHANNELS + NUM_FLEXRAY_CHANNELS + NUM_PDU_TRANSPORT_CHANNELS;
+static constexpr uint8_t NUM_CAN_CHANNELS
+    = static_cast<uint8_t>(sizeof(::routing::canChannelIds) / sizeof(::routing::canChannelIds[0]));
+static constexpr uint8_t NUM_FLEXRAY_CHANNELS
+    = static_cast<uint8_t>(sizeof(::routing::frChannelIds) / sizeof(::routing::frChannelIds[0]));
+static constexpr uint8_t NUM_CHANNELS
+    = NUM_CAN_CHANNELS + NUM_FLEXRAY_CHANNELS + NUM_PDU_TRANSPORT_CHANNELS;
 
-}}  // namespace routing
+}} // namespace routing
 """.format(pdu_transport_channels=pdu_transport_channels),
         encoding="utf-8",
     )
