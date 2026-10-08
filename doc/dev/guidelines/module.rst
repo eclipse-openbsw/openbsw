@@ -44,7 +44,6 @@ In the following folder tree, replace ``<module>`` by the name of the library.
     ├── tools
     │   ├── <tool1>
     │   └── <tool2>
-    ├── module.spec
     └── CMakeLists.txt
 
 include/src
@@ -74,53 +73,6 @@ tools
 -----
 
 Optional folder for tools or scripts related to this module.
-
-.. _module_spec:
-
-module.spec
------------
-
-Every module requires a ``module.spec`` file which includes the basic settings of a module.
-``module.spec`` is a yaml-file which will be read by our build tools.
-
-.. code-block:: yaml
-
-    # VALUE + EXAMPLE           DESCRIPTION                       POSSIBLE VALUES                DEFAULT
-    # ---------------           -----------                       ---------------                -------
-
-    std_c: c                    # Minimum required c standard.    [c, c99]                       c
-
-    std_cxx: c++17              # Minimum required c++ standard.  [c++17, c++20, c++23]   c++17
-
-    architectures:              # Compatible architectures.       [16bit, 32bit, 64bit]          [32bit, 64bit]
-        - 32bit
-        - 64bit
-
-    unsupported_compilers:      # Module must not be used for     [gcc, diab, tasking, iar,      all compilers are
-        - diab                  # these compilers.                clang, msvc]                   supported
-        - msvc
-
-    endianness: [little, big]   # Compatible                      [little, big]                  module runs with
-                                # endianness.                                                    both endianness
-
-    safety: true                # Module is ASIL-D capable.       [true, false]                  false
-                                # Additional safety tests are
-                                # executed on this module.
-
-    security: true              # Module is security capable.     [true, false]                  false
-                                # Additional security tests are
-                                # executed on this module.
-
-    unit_test: false            # Module must have a unit test    [true, false]                  true
-
-
-.. note::
-    - Only properties differing from their respective default values should be stated in the
-      ``module.spec`` file.
-    - **If all values match the standard, you still have to create an empty file, as this marks a
-      module as such.**
-    - A module is considered to be compatible with all default values unless explicitly stated
-      otherwise in the ``module.spec`` file.
 
 .. _cmakelists:
 
