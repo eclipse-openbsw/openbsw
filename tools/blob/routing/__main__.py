@@ -17,8 +17,9 @@ from blob import ExitCode
 from blob.routing.utils import routing2pretty, input_table
 from blob.routing.channel import channel_ids
 from collections import defaultdict
-from datetime import datetime as dt
-import sys
+
+
+COPYRIGHT_YEAR = 2026
 
 
 class Cli:
@@ -194,10 +195,7 @@ class Cli:
         return ExitCode.SUCCESS
 
     @staticmethod
-    def header(args):
-        with args.input as input:
-            objects = [json.loads(line) for line in input]
-
+    def header_text(objects):
         routing_channels = [o["value"] for o in objects if o["type"] == "channel"]
         routing_channel_ids = channel_ids(routing_channels)
 
@@ -211,7 +209,7 @@ class Cli:
             if c["type"] == "flexray"
         }
 
-        file = (
+        return (
             inspect.cleandoc(
             """
                /********************************************************************************
@@ -240,7 +238,7 @@ class Cli:
                }} // namespace routing
             """
             ).format(
-                year=dt.now().year,
+                year=COPYRIGHT_YEAR,
                 channel_ids="\n".join(
                     [
                         f"static constexpr uint8_t {name} = {value};"
@@ -252,6 +250,13 @@ class Cli:
             )
             + "\n"
         )
+
+    @staticmethod
+    def header(args):
+        with args.input as input:
+            objects = [json.loads(line) for line in input if line.strip()]
+
+        file = Cli.header_text(objects)
         with args.output as output:
             output.write(file)
         return ExitCode.SUCCESS

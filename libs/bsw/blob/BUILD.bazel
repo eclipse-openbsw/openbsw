@@ -10,6 +10,7 @@
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
 load("@rules_cc//cc:cc_test.bzl", "cc_test")
 load("//bazel/config/build_variant:compatibility.bzl", "unit_test_only")
+load("//tools/blob:routing.bzl", "generate_routing")
 
 label_flag(
     name = "blob_configuration",
@@ -74,4 +75,9 @@ cc_test(
         "//libs/bsw/blob",
         "//libs/bsw/util:util_mock",
     ],
+)
+
+generate_routing(
+    name = "generated_routing_headers",
+    jsonl = "test/routing.jsonl",
 )
