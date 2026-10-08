@@ -1,0 +1,178 @@
+/********************************************************************************
+ * Copyright (c) 2024 Roland Reichwein
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Apache License Version 2.0 which is available at
+ * https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ ********************************************************************************/
+
+#pragma once
+
+#include "bsp/Bsp.h"
+#include "mcu/mcu.h"
+#include <cstdint>
+
+#include <etl/error_handler.h>
+
+namespace bios
+{
+struct tFtmChannelConfiguration
+{
+    uint32_t volatile sc;
+    uint32_t volatile v;
+};
+
+struct FTM_Type
+{};
+
+template<uint8_t maxChannels = 8>
+class Ftm
+{
+public:
+    Ftm(FTM_Type& ftm) : _ftm(ftm) {}
+
+    static uint8_t const CAPTUREMODE_RisignedEdge  = 0x01U;
+    static uint8_t const CAPTUREMODE_FallingEdge   = 0x02U;
+    static uint8_t const CAPTUREMODE_BothEdge      = 0x03U;
+    static uint8_t const COMPARE_Toggle            = 0x05U;
+    static uint8_t const COMPARE_Set0              = 0x06U;
+    static uint8_t const COMPARE_Set1              = 0x07U;
+    static uint8_t const PWM_EdgeAlignedetSet1     = 0x09U;
+    static uint8_t const PWM_EdgeAlignedetSet0     = 0x0AU;
+    static uint8_t const PWM_centrAlignedetSet1    = 0x11U;
+    static uint8_t const PWM_centrAlignedetSet0    = 0x12U;
+    static uint8_t const PWM_CombineSet1           = 0x21U;
+    static uint8_t const PWM_CombineSet0           = 0x22U;
+    static uint8_t const PWM_ModiCombineSet1       = 0x61U;
+    static uint8_t const PWM_ModiCombineSet0       = 0x62U;
+    static uint8_t const CAPTUREMODE_OneShot       = 0x80U;
+    static uint8_t const CAPTUREMODE_ContinuouMode = 0x84U;
+
+    static uint8_t const CTRL_DECAPEN_MASK  = 0x80U;
+    static uint8_t const CTRL_MCOMBINE_MASK = 0x40U;
+    static uint8_t const CTRL_COMBINE_MASK  = 0x20U;
+    static uint8_t const CTRL_CPWMS_MASK    = 0x10U;
+    static uint8_t const CTRL_MSx_MASK      = 0x0cU;
+    static uint8_t const CTRL_ELSx_MASK     = 0x03U;
+
+    static uint8_t const COMBINE_COMB     = 0x01U;
+    static uint8_t const COMBINE_COMP     = 0x02U;
+    static uint8_t const COMBINE_DECAPEN  = 0x04U;
+    static uint8_t const COMBINE_DECAP    = 0x08U;
+    static uint8_t const COMBINE_DETEN    = 0x10U;
+    static uint8_t const COMBINE_SYNCEN   = 0x20U;
+    static uint8_t const COMBINE_FAULTEN  = 0x40U;
+    static uint8_t const COMBINE_MCOMBINE = 0x80U;
+
+    struct tFtmConfiguration
+    {
+        uint32_t sc;            /**< Status And Control, offset: 0x0 */
+        uint32_t mod;           /**< Modulo, offset: 0x8 */
+        uint32_t cntin;         /**< Counter Initial Value, offset: 0x4C */
+        uint32_t mode;          /**< Features Mode Selection, offset: 0x54 */
+        uint32_t sync;          /**< Synchronization, offset: 0x58 */
+        uint32_t outinit;       /**< Initial State For Channels Output, offset: 0x5C */
+        uint32_t outmask;       /**< Output Mask, offset: 0x60 */
+        uint32_t combine;       /**< Function For Linked Channels, offset: 0x64 */
+        uint32_t deadtime;      /**< Deadtime Configuration, offset: 0x68 */
+        uint32_t exttrig;       /**< FTM External Trigger, offset: 0x6C */
+        uint32_t pol;           /**< Channels Polarity, offset: 0x70 */
+        uint32_t filter;        /**< Input Capture Filter Control, offset: 0x78 */
+        uint32_t fltctrl;       /**< Fault Control, offset: 0x7C */
+        uint32_t qdctrl;        /**< Quadrature Decoder Control And Status, offset: 0x80 */
+        uint32_t conf;          /**< Configuration, offset: 0x84 */
+        uint32_t fltpol;        /**< FTM Fault Input Polarity, offset: 0x88 */
+        uint32_t synconf;       /**< Synchronization Configuration, offset: 0x8C */
+        uint32_t invctrl;       /**< FTM Inverting Control, offset: 0x90 */
+        uint32_t swoctrl;       /**< FTM Software Output Control, offset: 0x94 */
+        uint32_t pwmload;       /**< FTM PWM Load, offset: 0x98 */
+        uint32_t hcr;           /**< Half Cycle Register, offset: 0x9C */
+        uint32_t pair0deadtime; /**< Pair 0 Deadtime Configuration, offset: 0xA0 */
+        uint32_t pair1deadtime; /**< Pair 1 Deadtime Configuration, offset: 0xA8 */
+        uint32_t pair2deadtime; /**< Pair 2 Deadtime Configuration, offset: 0xB0 */
+        uint32_t pair3deadtime; /**< Pair 3 Deadtime Configuration, offset: 0xB8 */
+    };
+
+    void init(tFtmConfiguration const* cfg, bool const setup = true) {}
+
+    inline void stop() {}
+
+    inline void start() {}
+
+    inline uint16_t CurrentCounter() { return {}; }
+
+    inline uint16_t CurrentPeriod() { return {}; }
+
+    inline void setupChannel(uint8_t const channel, tFtmChannelConfiguration const& config) {}
+
+    inline uint32_t getCurrent_Ic_Oc() { return {}; }
+
+    inline uint32_t getFaultStatus() { return {}; }
+
+    inline void trgSwTrigger() {}
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstrict-aliasing"
+
+    inline tFtmChannelConfiguration& getChannel(uint8_t const channel)
+    {
+        ETL_ASSERT(
+            channel < maxChannels, ETL_ERROR_GENERIC("channel index must not be out of range"));
+
+        // Warning: dereferencing type-punned pointer will break strict-aliasing rules
+        // [-Wstrict-aliasing]
+        // return reinterpret_cast<tFtmChannelConfiguration&>(_ftm.CONTROLS[channel]);
+        return reinterpret_cast<tFtmChannelConfiguration&>(*(tFtmChannelConfiguration*)nullptr);
+    }
+
+#pragma GCC diagnostic pop
+
+    inline void writeProtectionDisable(bool const v) {}
+
+    inline uint32_t getCombine() { return {}; }
+
+    inline void
+    setCombine(uint8_t channel, bool const combine, bool const mcombine, bool const decapen)
+    {}
+
+    inline void setCombine(uint8_t channel, uint8_t const d) {}
+
+    inline void setCPWMS(bool const v) {}
+
+    inline void setPWMen(uint8_t const channel, bool const v) {}
+
+    inline bool getOverflowEvent() { return {}; }
+
+    inline void clrOverflowEvent() {}
+
+    inline bool getReloadEvent() { return {}; }
+
+    inline void clrReloadEvent() {}
+
+    inline uint16_t getMOD() { return {}; }
+
+    inline void setMOD(uint16_t const t) {}
+
+    inline uint16_t getCNTIN() { return {}; }
+
+    inline uint16_t forceReload() { return {}; }
+
+    inline uint16_t forceGlobalReload() { return {}; }
+
+    inline FTM_Type& getFtm() { return _ftm; }
+
+private:
+    enum
+    {
+        MAXCHANNELS = maxChannels
+    };
+
+    FTM_Type& _ftm;
+    tFtmConfiguration const* _cfg = nullptr;
+};
+
+using tFtm = Ftm<8>;
+
+} // namespace bios

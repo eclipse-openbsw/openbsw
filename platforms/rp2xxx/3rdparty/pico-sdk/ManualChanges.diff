@@ -1,0 +1,61 @@
+diff --git a/platforms/rp2xxx/3rdparty/pico-sdk/src/runtime_init.cpp b/platforms/rp2xxx/3rdparty/pico-sdk/src/runtime_init.cpp
+--- a/platforms/rp2xxx/3rdparty/pico-sdk/src/runtime_init.cpp
++++ b/platforms/rp2xxx/3rdparty/pico-sdk/src/runtime_init.cpp
+@@ -17,7 +17,7 @@
+ #include "pico/bootrom.h"
+ void __weak runtime_init_bootrom_reset(void) {
+     // todo can we tell if we came in thru the bootrom where this is not necessary (this is necessary for debugger)
+-    rom_bootrom_state_reset_fn state_reset = rom_func_lookup(ROM_FUNC_BOOTROM_STATE_RESET);
++    rom_bootrom_state_reset_fn state_reset = (rom_bootrom_state_reset_fn)rom_func_lookup(ROM_FUNC_BOOTROM_STATE_RESET);
+     state_reset(BOOTROM_STATE_RESET_GLOBAL_STATE);
+ }
+ #endif
+@@ -33,7 +33,7 @@
+ #include "pico/bootrom.h"
+ void __weak runtime_init_per_core_bootrom_reset(void) {
+     // todo can we tell if we came in thru the bootrom where this is not necessary (this is necessary for debugger)
+-    rom_bootrom_state_reset_fn state_reset = rom_func_lookup(ROM_FUNC_BOOTROM_STATE_RESET);
++    rom_bootrom_state_reset_fn state_reset = (rom_bootrom_state_reset_fn)rom_func_lookup(ROM_FUNC_BOOTROM_STATE_RESET);
+     state_reset(BOOTROM_STATE_RESET_CURRENT_CORE);
+ }
+ #endif
+diff --git a/platforms/rp2xxx/3rdparty/pico-sdk/rp2040/include/pico/config_autogen.h b/platforms/rp2xxx/3rdparty/pico-sdk/rp2040/include/pico/config_autogen.h
+index c81ce5517e..59694e52d2 100644
+--- a/platforms/rp2xxx/3rdparty/pico-sdk/rp2040/include/pico/config_autogen.h
++++ b/platforms/rp2xxx/3rdparty/pico-sdk/rp2040/include/pico/config_autogen.h
+@@ -4,7 +4,14 @@
+ 
+ // based on PICO_CONFIG_HEADER_FILES:
+ 
+-#include "boards/pico.h"
++// Manual change: upstream hardcodes the board header of the single board this
++// file was generated for. PICO_BOARD_HEADER is provided by the RP2040 part of
++// the vendored SDK, derived from the RP2XXX_BOARD board option.
++#ifndef PICO_BOARD_HEADER
++#define PICO_BOARD_HEADER "boards/pico.h"
++#endif
++
++#include PICO_BOARD_HEADER
+ #include "cmsis/rename_exceptions.h"
+ 
+ // based on PICO_RP2040_CONFIG_HEADER_FILES:
+diff --git a/platforms/rp2xxx/3rdparty/pico-sdk/rp2350/include/pico/config_autogen.h b/platforms/rp2xxx/3rdparty/pico-sdk/rp2350/include/pico/config_autogen.h
+index a8ebbf0413..bfc2391f2c 100644
+--- a/platforms/rp2xxx/3rdparty/pico-sdk/rp2350/include/pico/config_autogen.h
++++ b/platforms/rp2xxx/3rdparty/pico-sdk/rp2350/include/pico/config_autogen.h
+@@ -4,7 +4,14 @@
+ 
+ // based on PICO_CONFIG_HEADER_FILES:
+ 
+-#include "boards/pico2.h"
++// Manual change: upstream hardcodes the board header of the single board this
++// file was generated for. PICO_BOARD_HEADER is provided by the RP2350 part of
++// the vendored SDK, derived from the RP2XXX_BOARD board option.
++#ifndef PICO_BOARD_HEADER
++#define PICO_BOARD_HEADER "boards/pico2.h"
++#endif
++
++#include PICO_BOARD_HEADER
+ #include "cmsis/rename_exceptions.h"
+ 
+ // based on PICO_RP2350_CONFIG_HEADER_FILES:
