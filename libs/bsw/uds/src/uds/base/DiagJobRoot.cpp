@@ -41,6 +41,7 @@ DiagReturnCode::Type DiagJobRoot::verify(uint8_t const* const request, uint16_t 
 DiagReturnCode::Type DiagJobRoot::execute(
     IncomingDiagConnection& connection, uint8_t const* const request, uint16_t const requestLength)
 {
+    ::etl::span<uint8_t const> const requestView(request, requestLength);
     if (connection.serviceId == 0x7FU) // no response to incoming NRC
     {
         connection.terminate();
@@ -51,7 +52,7 @@ DiagReturnCode::Type DiagJobRoot::execute(
         if (connection.serviceId == uds::ServiceId::TESTER_PRESENT)
         {
             if ((!getDiagSessionManager().isSessionTimeoutActive()) && (requestLength > 1U)
-                && (((request[1] & SUPPRESS_POSITIVE_RESPONSE_MASK)) > 0U))
+                && (((requestView[1U] & SUPPRESS_POSITIVE_RESPONSE_MASK)) > 0U))
             {
                 connection.terminate();
                 return DiagReturnCode::OK;

@@ -19,11 +19,12 @@
 
 namespace uds
 {
-uint8_t const EnableRapidPowerShutdown::sfImplementedRequest[2] = {ServiceId::ECU_RESET, 0x04U};
+::etl::array<uint8_t, 2U> const EnableRapidPowerShutdown::sfImplementedRequest
+    = {ServiceId::ECU_RESET, 0x04U};
 
 EnableRapidPowerShutdown::EnableRapidPowerShutdown(IUdsLifecycleConnector& udsLifecycleConnector)
 : Subfunction(
-    &sfImplementedRequest[0],
+    sfImplementedRequest.data(),
     AbstractDiagJob::EMPTY_REQUEST,
     RESPONSE_LENGTH,
     DiagSessionMask::getInstance() << DiagSession::APPLICATION_DEFAULT_SESSION()

@@ -12,6 +12,8 @@
 
 #include "uds/base/AbstractDiagJob.h"
 
+#include <etl/array.h>
+
 namespace uds
 {
 /**
@@ -34,11 +36,25 @@ public:
     {}
 
     DataIdentifierJob(
+        ::etl::array<uint8_t, 3U> const& implementedRequest,
+        DiagSessionMask const sessionMask = DiagSession::ALL_SESSIONS())
+    : AbstractDiagJob(implementedRequest, 1U, sessionMask)
+    {}
+
+    DataIdentifierJob(
         uint8_t const* const implementedRequest,
         uint8_t const requestPayloadLength,
         uint8_t const responseLength,
         DiagSessionMask const sessionMask = DiagSession::ALL_SESSIONS())
     : AbstractDiagJob(implementedRequest, 3U, 1U, requestPayloadLength, responseLength, sessionMask)
+    {}
+
+    DataIdentifierJob(
+        ::etl::array<uint8_t, 3U> const& implementedRequest,
+        uint8_t const requestPayloadLength,
+        uint8_t const responseLength,
+        DiagSessionMask const sessionMask = DiagSession::ALL_SESSIONS())
+    : AbstractDiagJob(implementedRequest, 1U, requestPayloadLength, responseLength, sessionMask)
     {}
 
     DiagReturnCode::Type verify(uint8_t const request[], uint16_t requestLength) override;

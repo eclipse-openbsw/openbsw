@@ -14,6 +14,17 @@
 
 namespace uds
 {
+namespace
+{
+::etl::array<uint8_t, 3U> makeImplementedRequest(uint16_t const identifier)
+{
+    return {
+        {0x22U,
+         static_cast<uint8_t>((identifier >> 8U) & 0xFFU),
+         static_cast<uint8_t>(identifier & 0xFFU)}};
+}
+} // namespace
+
 ReadIdentifierFromMemory::ReadIdentifierFromMemory(
     uint16_t const identifier,
     uint8_t const* const responseData,
@@ -27,12 +38,8 @@ ReadIdentifierFromMemory::ReadIdentifierFromMemory(
     uint16_t const identifier,
     ::etl::span<uint8_t const> const& responseData,
     DiagSessionMask const sessionMask)
-: DataIdentifierJob(_implementedRequest, sessionMask), _responseSlice(responseData)
-{
-    _implementedRequest[0] = 0x22U;
-    _implementedRequest[1] = (identifier >> 8) & 0xFFU;
-    _implementedRequest[2] = identifier & 0xFFU;
-}
+: DataIdentifierJob(makeImplementedRequest(identifier), sessionMask), _responseSlice(responseData)
+{}
 
 DiagReturnCode::Type ReadIdentifierFromMemory::process(
     IncomingDiagConnection& connection,
