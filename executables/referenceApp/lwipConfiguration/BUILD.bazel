@@ -9,6 +9,7 @@
 # *******************************************************************************
 
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
+load("//bazel/config/build_variant:compatibility.bzl", "reference_app_only")
 
 alias(
     name = "lwip_sys_arch_default",
@@ -28,6 +29,7 @@ cc_library(
         "include/rng.h",
     ],
     strip_include_prefix = "include",
+    target_compatible_with = reference_app_only(),
     visibility = ["//visibility:public"],
     deps = [
         ":lwip_sys_arch_default",

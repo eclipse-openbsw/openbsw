@@ -28,6 +28,22 @@ _OUTGOING_SOURCES = [
     "src/uds/connection/OutgoingDiagConnectionManager.cpp",
 ]
 
+#   Default:  //executables/referenceApp/udsConfiguration:uds_configuration
+#   Override: --//libs/bsw/uds:uds_configuration=//path/to:your_uds_config
+label_flag(
+    name = "uds_configuration",
+    build_setting_default = "//executables/referenceApp/udsConfiguration:uds_configuration",
+    visibility = ["//visibility:public"],
+)
+
+#   Default:  //executables/referenceApp/transportConfiguration:transport_configuration
+#   Override: --//libs/bsw/uds:transport_configuration=//path/to:your_transport_config
+label_flag(
+    name = "transport_configuration",
+    build_setting_default = "//executables/referenceApp/transportConfiguration:transport_configuration",
+    visibility = ["//visibility:public"],
+)
+
 bool_flag(
     name = "uds_enable_outgoing",
     build_setting_default = False,
@@ -94,10 +110,10 @@ cc_library(
     }),
     visibility = ["//visibility:public"],
     deps = [
+        ":transport_configuration",
+        ":uds_configuration",
         ":uds_headers",
         ":uds_outgoing_defines",
-        "//executables/referenceApp/transportConfiguration:transport_configuration",
-        "//executables/referenceApp/udsConfiguration:uds_configuration",
         "//libs/bsw/async",
         "//libs/bsw/bsp",
         "//libs/bsw/common:configuration",
@@ -125,7 +141,7 @@ cc_library(
     target_compatible_with = unit_test_only(),
     visibility = ["//visibility:public"],
     deps = [
-        "//executables/referenceApp/udsConfiguration:uds_configuration",
+        ":uds_configuration",
         "//libs/3rdparty/googletest:gtest",
     ],
 )

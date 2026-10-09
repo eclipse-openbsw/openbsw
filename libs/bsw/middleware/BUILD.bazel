@@ -18,25 +18,12 @@ cc_library(
     strip_include_prefix = "test/include",
 )
 
-#   unit_test     -> host no-op stub
-#   reference_app -> platform integration stub (replace with a concrete lock_types target)
-alias(
-    name = "middleware_lock_types_default",
-    actual = select(
-        {
-            "//bazel/config/build_variant:unit_test": ":middleware_lock_types_test_stub",
-            "//bazel/config/build_variant:reference_app": ":middleware_lock_types_test_stub",
-        },
-        no_match_error = "Set build_variant to 'reference_app' or 'unit_test', or override --//libs/bsw/middleware:middleware_lock_types",
-    ),
-)
-
 # lock_types.h provider. Platform integration supplies the concrete types at build time.
-#   Default:  host no-op stub (per build_variant)
+#   Default:  host no-op stub
 #   Override: --//libs/bsw/middleware:middleware_lock_types=//<your>:lock_types
 label_flag(
     name = "middleware_lock_types",
-    build_setting_default = ":middleware_lock_types_default",
+    build_setting_default = ":middleware_lock_types_test_stub",
     visibility = ["//visibility:public"],
 )
 

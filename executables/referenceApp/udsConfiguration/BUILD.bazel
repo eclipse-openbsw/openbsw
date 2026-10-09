@@ -9,6 +9,7 @@
 # *******************************************************************************
 
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
+load("//bazel/config/build_variant:compatibility.bzl", "reference_app_only")
 
 cc_library(
     name = "uds_configuration",
@@ -19,6 +20,7 @@ cc_library(
         "include/uds/session/DiagSession.h",
     ],
     strip_include_prefix = "include",
+    target_compatible_with = reference_app_only(),
     visibility = ["//visibility:public"],
     deps = [
         "//libs/bsw/common:common_headers",
@@ -30,6 +32,7 @@ cc_library(
     name = "uds_configuration_impl",
     srcs = ["src/uds/session/DiagSession.cpp"],
     implementation_deps = ["//libs/bsw/uds"],
+    target_compatible_with = reference_app_only(),
     visibility = ["//visibility:public"],
     deps = [":uds_configuration"],
 )

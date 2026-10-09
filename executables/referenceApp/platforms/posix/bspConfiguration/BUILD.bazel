@@ -9,6 +9,7 @@
 # *******************************************************************************
 
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
+load("//bazel/config/build_variant:compatibility.bzl", "reference_app_posix_only")
 
 cc_library(
     name = "bsp_configuration_headers",
@@ -17,5 +18,6 @@ cc_library(
         "include/bsp/uart/UartConfig.h",
     ],
     strip_include_prefix = "include",
+    target_compatible_with = reference_app_posix_only(),
     visibility = ["//visibility:public"],
 )
