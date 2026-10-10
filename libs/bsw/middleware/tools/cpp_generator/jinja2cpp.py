@@ -122,7 +122,8 @@ def load_input_data(input_base: Path, deployment_yaml: Path | None = None) -> di
             f"✓ Loaded deployment data: {_safe_len(getattr(data, 'services', []))} services, "
             f"{_safe_len(getattr(data, 'clusters', []))} clusters, "
             f"{_safe_len(getattr(data, 'connections', []))} connections, "
-            f"{_safe_len(getattr(data, 'allocators', []))} allocators"
+            f"{_safe_len(getattr(data, 'allocators', []))} allocators, "
+            f"{_safe_len(getattr(data, 'pdus', []))} pdus"
         )
         return data
     except Exception as e:
@@ -172,6 +173,11 @@ TEMPLATE_CONFIG = {
         (
             "shm/queue_definitions.h.jinja",
             "QueueDefinitions.h",
+            "include/generated_code/shm",
+        ),
+        (
+            "shm/pdu_definitions.h.jinja",
+            "PduDefinitions.h",
             "include/generated_code/shm",
         ),
     ],
@@ -263,6 +269,7 @@ def build_context(input_data: dict, **additional) -> dict:
         "connections": input_data.connections,
         "cores": getattr(input_data, "cores", []),
         "allocators": getattr(input_data, "allocators", []),
+        "pdus": getattr(input_data, "pdus", []),
     }
     context.update(additional)
     return context
@@ -561,7 +568,10 @@ def main(argv=None) -> int:
         return 0
 
     if args.output is None:
-        print("error: --output is required unless --list-outputs is given", file=sys.stderr)
+        print(
+            "error: --output is required unless --list-outputs is given",
+            file=sys.stderr,
+        )
         return 1
     output_base = args.output.resolve()
 

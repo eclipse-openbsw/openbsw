@@ -1,0 +1,36 @@
+# *******************************************************************************
+# Copyright (c) 2026 Accenture
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+
+load("@rules_cc//cc:cc_library.bzl", "cc_library")
+
+cc_library(
+    name = "freertos_cm4_sys_tick_port_headers",
+    hdrs = ["portmacro.h"],
+    strip_include_prefix = ".",
+    target_compatible_with = ["@platforms//os:none"],
+    visibility = ["//visibility:public"],
+)
+
+# Circular dependency present on the CMake side: freeRtos -> freeRtosCm4SysTick -> freeRtos
+# Split off freertos_headers to break the circular dependency for Bazel
+cc_library(
+    name = "freertos_cm4_sys_tick",
+    srcs = ["port.c"],
+    copts = ["-Wno-unused-but-set-variable"],
+    implementation_deps = [
+        "//libs/bsp/bspInterrupts:bsp_interrupts",
+    ],
+    target_compatible_with = ["@platforms//os:none"],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":freertos_cm4_sys_tick_port_headers",
+        "//libs/3rdparty/freeRtos:freertos_headers",
+    ],
+)

@@ -18,59 +18,69 @@ jobs:
     strategy:
     #   max-parallel: 1
       matrix:
-        preset: [ "tests-posix-debug", "tests-posix-release", "tests-s32k1xx-debug", "tests-s32k1xx-release", "tests-stm32-debug", "tests-stm32-release", "posix-freertos", "posix-threadx", "posix-freertos-with-tracing", "posix-freertos-canfd", "posix-rust", "s32k148-freertos-gcc", "s32k148-threadx-gcc", "s32k148-freertos-clang", "s32k148-threadx-clang", "s32k148-rust-gcc" ]
-        platform: [ "arm", "linux" ]
-        config: [ "Debug", "Release", "RelWithDebInfo" ]
+        preset: [ "tests-posix-debug", "tests-posix-release", "tests-s32k1xx-debug", "tests-s32k1xx-release", "tests-stm32-debug", "tests-stm32-release", "posix-freertos", "posix-threadx", "posix-freertos-with-tracing", "posix-freertos-canfd", "posix-rust", "s32k148-freertos", "s32k148-threadx", "s32k148-rust" ]
         cxxid: ["gcc", "clang"]
         cxxstd: [ 17, 20, 23 ]
+        # `platform` and `config` are fully determined by `preset`:
+        # - platform: s32k148-* -> arm, everything else -> linux
+        # - config: presets with "debug"/"release" in the name use that config;
+        #   the remaining presets (posix-*, s32k148-*) are multi-config and are
+        #   built as RelWithDebInfo here.
+        # Deriving both via `include` avoids a separate cross-product axis (and
+        # the excludes that would otherwise be needed for it).
+        include:
+          - preset: "tests-posix-debug"
+            platform: "linux"
+            config: "Debug"
+          - preset: "tests-posix-release"
+            platform: "linux"
+            config: "Release"
+          - preset: "tests-s32k1xx-debug"
+            platform: "linux"
+            config: "Debug"
+          - preset: "tests-s32k1xx-release"
+            platform: "linux"
+            config: "Release"
+          - preset: "tests-stm32-debug"
+            platform: "linux"
+            config: "Debug"
+          - preset: "tests-stm32-release"
+            platform: "linux"
+            config: "Release"
+          - preset: "posix-freertos"
+            platform: "linux"
+            config: "RelWithDebInfo"
+          - preset: "posix-threadx"
+            platform: "linux"
+            config: "RelWithDebInfo"
+          - preset: "posix-freertos-with-tracing"
+            platform: "linux"
+            config: "RelWithDebInfo"
+          - preset: "posix-freertos-canfd"
+            platform: "linux"
+            config: "RelWithDebInfo"
+          - preset: "posix-rust"
+            platform: "linux"
+            config: "RelWithDebInfo"
+          - preset: "s32k148-freertos"
+            platform: "arm"
+            config: "RelWithDebInfo"
+          - preset: "s32k148-threadx"
+            platform: "arm"
+            config: "RelWithDebInfo"
+          - preset: "s32k148-rust"
+            platform: "arm"
+            config: "RelWithDebInfo"
         exclude:
-          - preset: "tests-posix-debug"
-            platform: "arm"
-          - preset: "tests-posix-debug"
-            config: "Release"
-          - preset: "tests-posix-debug"
-            config: "RelWithDebInfo"
-          - preset: "tests-posix-release"
-            platform: "arm"
-          - preset: "tests-posix-release"
-            config: "Debug"
-          - preset: "tests-posix-release"
-            config: "RelWithDebInfo"
-
-          - preset: "tests-s32k1xx-debug"
-            platform: "arm"
-          - preset: "tests-s32k1xx-debug"
-            config: "Release"
-          - preset: "tests-s32k1xx-debug"
-            config: "RelWithDebInfo"
-          - preset: "tests-s32k1xx-release"
-            platform: "arm"
-          - preset: "tests-s32k1xx-release"
-            config: "Debug"
-          - preset: "tests-s32k1xx-release"
-            config: "RelWithDebInfo"
-
           # STM32 unit-test builds: minimal initial set (linux, gcc, C++17) -
           # one Debug and one Release variant. Follow-up: extend to clang and
           # C++20/23 to match the grid run by the posix and s32k1xx presets.
           - preset: "tests-stm32-debug"
-            platform: "arm"
-          - preset: "tests-stm32-debug"
-            config: "Release"
-          - preset: "tests-stm32-debug"
-            config: "RelWithDebInfo"
-          - preset: "tests-stm32-debug"
             cxxid: "clang"
           - preset: "tests-stm32-debug"
             cxxstd: 20
           - preset: "tests-stm32-debug"
             cxxstd: 23
-          - preset: "tests-stm32-release"
-            platform: "arm"
-          - preset: "tests-stm32-release"
-            config: "Debug"
-          - preset: "tests-stm32-release"
-            config: "RelWithDebInfo"
           - preset: "tests-stm32-release"
             cxxid: "clang"
           - preset: "tests-stm32-release"
@@ -78,50 +88,8 @@ jobs:
           - preset: "tests-stm32-release"
             cxxstd: 23
 
-          - preset: "posix-freertos"
-            platform: "arm"
-          - preset: "posix-threadx"
-            platform: "arm"
-          - preset: "posix-freertos"
-            config: "RelWithDebInfo"
-          - preset: "posix-threadx"
-            config: "RelWithDebInfo"
-          - preset: "posix-freertos-with-tracing"
-            platform: "arm"
-          - preset: "posix-freertos-with-tracing"
-            config: "RelWithDebInfo"
-
-          - preset: "posix-freertos-canfd"
-            platform: "arm"
-          - preset: "posix-freertos-canfd"
-            config: "RelWithDebInfo"
-
-          - preset: "posix-rust"
-            platform: "arm"
-          - preset: "posix-rust"
-            config: "RelWithDebInfo"
-
-          - preset: "s32k148-freertos-gcc"
-            platform: "linux"
-          - preset: "s32k148-threadx-gcc"
-            platform: "linux"
-          - preset: "s32k148-rust-gcc"
-            platform: "linux"
-          - preset: "s32k148-freertos-gcc"
+          - preset: "s32k148-rust"
             cxxid: "clang"
-          - preset: "s32k148-threadx-gcc"
-            cxxid: "clang"
-          - preset: "s32k148-rust-gcc"
-            cxxid: "clang"
-
-          - preset: "s32k148-freertos-clang"
-            platform: "linux"
-          - preset: "s32k148-threadx-clang"
-            platform: "linux"
-          - preset: "s32k148-freertos-clang"
-            cxxid: "gcc"
-          - preset: "s32k148-threadx-clang"
-            cxxid: "gcc"
 
     steps:
       - name: Checkout repository
@@ -140,7 +108,7 @@ jobs:
         run: >-
           DOCKER_UID=$(id -u) DOCKER_GID=$(id -g) DOCKER_HISTORY=/dev/null docker compose run --rm development
           bash -c "
-          CC=/opt/arm-gnu-toolchain/bin/arm-none-eabi-gcc cmake --preset ${{ matrix.preset }} -DCMAKE_CXX_FLAGS="-gdwarf-4" -DCMAKE_C_FLAGS="-gdwarf-4" -B elf-analyzer-artifacts/${{ matrix.preset }} &&
+          CC=/opt/arm-gnu-toolchain/bin/arm-none-eabi-gcc CXX=/opt/arm-gnu-toolchain/bin/arm-none-eabi-g++ cmake --preset ${{ matrix.preset }} -DCMAKE_CXX_FLAGS="-gdwarf-4" -DCMAKE_C_FLAGS="-gdwarf-4" -B elf-analyzer-artifacts/${{ matrix.preset }} &&
           cmake --build elf-analyzer-artifacts/${{ matrix.preset }} -t app.referenceApp --config ${{ matrix.config }}
           "
 

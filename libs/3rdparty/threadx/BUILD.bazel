@@ -12,13 +12,11 @@ load("@rules_cc//cc:cc_library.bzl", "cc_library")
 
 alias(
     name = "threadx_port_default",
-    actual = select(
-        {
-            "//bazel/platform/constraints/soc:s32k148": "//platforms/s32k1xx/3rdparty/threadx:threadx_cortex_m4_port_headers",
-            "@platforms//os:linux": "//platforms/posix/3rdparty/threadx:threadx_linux_port_headers",
-        },
-        no_match_error = "No ThreadX port for this platform. Override --//libs/3rdparty/threadx:threadx_port_headers with your own port target.",
-    ),
+    actual = select({
+        "//bazel/platform/constraints/soc:s32k148": "//platforms/s32k1xx/3rdparty/threadx:threadx_cortex_m4_port_headers",
+        "@platforms//os:linux": "//platforms/posix/3rdparty/threadx:threadx_linux_port_headers",
+        "//conditions:default": "//bazel/config:no_implementation",
+    }),
 )
 
 # ThreadX port (tx_port.h).
@@ -32,13 +30,11 @@ label_flag(
 
 alias(
     name = "threadx_port_impl_default",
-    actual = select(
-        {
-            "//bazel/platform/constraints/soc:s32k148": "//platforms/s32k1xx/3rdparty/threadx:threadx_cortex_m4",
-            "@platforms//os:linux": "//platforms/posix/3rdparty/threadx:threadx_linux",
-        },
-        no_match_error = "No ThreadX port implementation for this platform. Override --//libs/3rdparty/threadx:threadx_port_impl with your own port target.",
-    ),
+    actual = select({
+        "//bazel/platform/constraints/soc:s32k148": "//platforms/s32k1xx/3rdparty/threadx:threadx_cortex_m4",
+        "@platforms//os:linux": "//platforms/posix/3rdparty/threadx:threadx_linux",
+        "//conditions:default": "//bazel/config:no_implementation",
+    }),
 )
 
 # ThreadX port implementation
@@ -52,13 +48,11 @@ label_flag(
 
 alias(
     name = "threadx_os_hooks_default",
-    actual = select(
-        {
-            "//bazel/platform/constraints/soc:s32k148": "//executables/referenceApp/platforms/s32k148evb/main:threadx_os_hooks",
-            "@platforms//os:linux": "//executables/referenceApp/platforms/posix/main:threadx_os_hooks",
-        },
-        no_match_error = "No ThreadX OS hooks for this platform. Override --//libs/3rdparty/threadx:threadx_os_hooks with your own hooks target.",
-    ),
+    actual = select({
+        "//bazel/platform/constraints/soc:s32k148": "//executables/referenceApp/platforms/s32k148evb/main:threadx_os_hooks",
+        "@platforms//os:linux": "//executables/referenceApp/platforms/posix/main:threadx_os_hooks",
+        "//conditions:default": "//bazel/config:no_implementation",
+    }),
 )
 
 # ThreadX OS hooks

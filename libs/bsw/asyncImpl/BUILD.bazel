@@ -9,6 +9,7 @@
 # *******************************************************************************
 
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
+load("@rules_cc//cc:cc_test.bzl", "cc_test")
 load("//bazel/config/build_variant:compatibility.bzl", "unit_test_only")
 
 cc_library(
@@ -39,5 +40,26 @@ cc_library(
     deps = [
         "//libs/3rdparty/googletest:gtest",
         "//libs/bsw/asyncImpl:async_impl",
+    ],
+)
+
+cc_test(
+    name = "async_impl_test",
+    srcs = [
+        "test/include/async/Async.h",
+        "test/include/async/Types.h",
+        "test/src/async/EventDispatcherTest.cpp",
+        "test/src/async/EventPolicyTest.cpp",
+        "test/src/async/QueueNodeTest.cpp",
+        "test/src/async/QueueTest.cpp",
+        "test/src/async/RunnableExecutorTest.cpp",
+    ],
+    includes = ["test/include"],
+    target_compatible_with = unit_test_only(),
+    deps = [
+        ":async_impl",
+        ":async_impl_mock",
+        "//libs/3rdparty/etl",
+        "//libs/3rdparty/googletest:gtest_main",
     ],
 )

@@ -10,6 +10,8 @@
 
 #include "ip/IPAddress.h"
 
+#include <etl/array.h>
+
 #include <gmock/gmock.h>
 
 using namespace ::testing;
@@ -35,8 +37,8 @@ TEST(IPAddressTest, zero_ip_address_ip4)
 #ifdef PLATFORM_SUPPORT_IPV6
 TEST(IPAddressTest, zero_ip_address_ip6)
 {
-    constexpr uint32_t addr[] = {0U, 0U, 0U, 0U};
-    constexpr IPAddress ip    = make_ip6(addr);
+    constexpr ::etl::array<uint32_t, 4U> addr = {0U, 0U, 0U, 0U};
+    constexpr IPAddress ip                    = make_ip6(addr);
 
     EXPECT_EQ(IPAddress::IPV6, addressFamilyOf(ip));
     EXPECT_THAT(ip.raw, Each(Eq(0U)));
@@ -45,8 +47,8 @@ TEST(IPAddressTest, zero_ip_address_ip6)
 
 TEST(IPAddressTest, non_zero_ip_address_ip6)
 {
-    constexpr uint32_t addr[] = {0U, 0U, 0U, 1U};
-    constexpr IPAddress ip    = make_ip6(addr);
+    constexpr ::etl::array<uint32_t, 4U> addr = {0U, 0U, 0U, 1U};
+    constexpr IPAddress ip                    = make_ip6(addr);
 
     EXPECT_EQ(IPAddress::IPV6, addressFamilyOf(ip));
     EXPECT_FALSE(isUnspecified(ip));
@@ -72,21 +74,21 @@ TEST(IPAddressTest, factory_make_ip4_bytes)
 
 TEST(IPAddressTest, factory_make_ip4_slice)
 {
-    uint8_t const bytes[] = {0xAB, 0xCD, 0xEF, 0x01};
-    IPAddress ip          = make_ip4(bytes);
+    ::etl::array<uint8_t const, 4U> const bytes = {0xAB, 0xCD, 0xEF, 0x01};
+    IPAddress ip                                = make_ip4(bytes);
 
     EXPECT_EQ(IPAddress::IPV4, addressFamilyOf(ip));
     EXPECT_EQ(0xABCDEF01, ip4_to_u32(ip));
 
-    uint8_t const bytes_wrong_length[] = {0xAB, 0xCD, 0xEF, 0x01, 0x02};
+    ::etl::array<uint8_t const, 5U> const bytes_wrong_length = {0xAB, 0xCD, 0xEF, 0x01, 0x02};
     EXPECT_THROW({ make_ip4(bytes_wrong_length); }, ::etl::exception);
 }
 
 #ifdef PLATFORM_SUPPORT_IPV6
 TEST(IPAddressTest, factory_make_ip6_array)
 {
-    constexpr uint32_t addr[] = {0x11223344, 0x55667788, 0x99AABBCC, 0xDDEEFF00};
-    constexpr IPAddress ip    = make_ip6(addr);
+    constexpr ::etl::array<uint32_t, 4U> addr = {0x11223344, 0x55667788, 0x99AABBCC, 0xDDEEFF00};
+    constexpr IPAddress ip                    = make_ip6(addr);
 
     EXPECT_EQ(IPAddress::IPV6, addressFamilyOf(ip));
     EXPECT_EQ(0x11223344U, ip.be_uint32_at(0U));
@@ -113,7 +115,7 @@ TEST(IPAddressTest, factory_make_ip6_integers)
 TEST(IPAddressTest, factory_make_ip6_slice)
 {
     // clang-format off
-    const uint8_t addr[] = {
+    ::etl::array<uint8_t, 16U> const addr = {
         0x00, 0x01, 0x02, 0x03,
         0x10, 0x11, 0x12, 0x13,
         0x20, 0x21, 0x22, 0x23,
@@ -129,7 +131,7 @@ TEST(IPAddressTest, factory_make_ip6_slice)
     EXPECT_EQ(0x30313233U, ip.be_uint32_at(3U));
 
     // clang-format off
-    const uint8_t addr_wrong_length[] = {
+    ::etl::array<uint8_t, 17U> const addr_wrong_length = {
         0x00, 0x01, 0x02, 0x03,
         0x10, 0x11, 0x12, 0x13,
         0x20, 0x21, 0x22, 0x23,
@@ -157,7 +159,7 @@ TEST(IPAddressTest, ip4_as_bytes)
 #ifdef PLATFORM_SUPPORT_IPV6
 TEST(IPAddressTest, ip6_as_bytes)
 {
-    uint32_t const addr[] = {0x11223344, 0x55667788, 0x99AABBCC, 0xDDEEFF00};
+    ::etl::array<uint32_t, 4U> const addr = {0x11223344, 0x55667788, 0x99AABBCC, 0xDDEEFF00};
 
     IPAddress ip = make_ip6(addr);
 
@@ -198,7 +200,7 @@ TEST(IPAddressTest, ip4_packed)
 #ifdef PLATFORM_SUPPORT_IPV6
 TEST(IPAddressTest, ip6_packed)
 {
-    uint32_t const addr[] = {0x11223344, 0x55667788, 0x99AABBCC, 0xDDEEFF00};
+    ::etl::array<uint32_t, 4U> const addr = {0x11223344, 0x55667788, 0x99AABBCC, 0xDDEEFF00};
 
     IPAddress ip = make_ip6(addr);
 
@@ -226,10 +228,10 @@ TEST(IPAddressTest, ip6_packed)
 #ifdef PLATFORM_SUPPORT_IPV6
 TEST(IPAddressTest, ip_address_type)
 {
-    constexpr uint32_t addr4   = 0xABCDEF01;
-    constexpr uint32_t addr6[] = {0x11223344, 0x55667788, 0x99AABBCC, 0xDDEEFF00};
-    constexpr IPAddress ip4    = make_ip4(addr4);
-    constexpr IPAddress ip6    = make_ip6(addr6);
+    constexpr uint32_t addr4                   = 0xABCDEF01;
+    constexpr ::etl::array<uint32_t, 4U> addr6 = {0x11223344, 0x55667788, 0x99AABBCC, 0xDDEEFF00};
+    constexpr IPAddress ip4                    = make_ip4(addr4);
+    constexpr IPAddress ip6                    = make_ip6(addr6);
 
     EXPECT_TRUE(isIp4Address(ip4));
     EXPECT_TRUE(isIp6Address(ip6));
@@ -249,7 +251,7 @@ TEST(IPAddressTest, ip4_to_u32)
 #ifdef PLATFORM_SUPPORT_IPV6
 TEST(IPAddressTest, ip6_to_u32)
 {
-    uint32_t const addr[] = {0x11223344, 0x55667788, 0x99AABBCC, 0xDDEEFF00};
+    ::etl::array<uint32_t, 4U> const addr = {0x11223344, 0x55667788, 0x99AABBCC, 0xDDEEFF00};
 
     IPAddress ip = make_ip6(addr);
 
@@ -280,8 +282,8 @@ TEST(IPAddressTest, equality)
 #ifdef PLATFORM_SUPPORT_IPV6
 TEST(IPAddressTest, inequality_ip4_ip6)
 {
-    uint32_t const ip6_addr[] = {0x11223344, 0x55667788, 0x99AABBCC, 0xDDEEFF00};
-    IPAddress ip6             = make_ip6(ip6_addr);
+    ::etl::array<uint32_t, 4U> const ip6_addr = {0x11223344, 0x55667788, 0x99AABBCC, 0xDDEEFF00};
+    IPAddress ip6                             = make_ip6(ip6_addr);
     EXPECT_EQ(IPAddress::IPV6, addressFamilyOf(ip6));
 
     uint32_t const ip4_addr = 0x11223344;
@@ -304,7 +306,7 @@ TEST(IPAddressTest, isMulticastAddress_ip4)
 #ifdef PLATFORM_SUPPORT_IPV6
 TEST(IPAddressTest, isMulticastAddress_ip6)
 {
-    uint32_t const addr[] = {0x11223344, 0x55667788, 0x99AABBCC, 0xDDEEFF00};
+    ::etl::array<uint32_t, 4U> const addr = {0x11223344, 0x55667788, 0x99AABBCC, 0xDDEEFF00};
 
     IPAddress ip = make_ip6(addr);
     EXPECT_FALSE(isMulticastAddress(ip));
@@ -316,7 +318,7 @@ TEST(IPAddressTest, isMulticastAddress_ip6)
 
 TEST(IPAddressTest, isLinkLocalAddress_ip4)
 {
-    uint8_t addr[] = {1, 2, 3, 4};
+    ::etl::array<uint8_t, 4U> addr = {1, 2, 3, 4};
     EXPECT_FALSE(isLinkLocalAddress(make_ip4(addr)));
     addr[0] = 169;
     EXPECT_FALSE(isLinkLocalAddress(make_ip4(addr)));
@@ -328,7 +330,7 @@ TEST(IPAddressTest, isLinkLocalAddress_ip4)
 TEST(IPAddressTest, isLinkLocalAddress_ip6)
 {
     // clang-format off
-    uint8_t addr[] = {
+    ::etl::array<uint8_t, 16U> addr = {
         0x00, 0x01, 0x02, 0x03,
         0x10, 0x11, 0x12, 0x13,
         0x20, 0x21, 0x22, 0x23,
@@ -409,7 +411,7 @@ TEST(IPAddressTest, isNetworkLocal_ip6)
     IPAddress emptyIp = {};
 
     // clang-format off
-    const uint8_t buffer[] = {
+    ::etl::array<uint8_t, 16U> const buffer = {
         0x01, 0x02, 0x03, 0x04,
         0x11, 0x12, 0x13, 0x14,
         0x21, 0x22, 0x23, 0x24,
@@ -444,7 +446,7 @@ TEST(IPAddressTest, isNetworkLocal_mixed)
 {
     IPAddress ip41 = make_ip4(0x01020304);
     // clang-format off
-    const uint8_t buffer[] = {
+    ::etl::array<uint8_t, 16U> const buffer = {
         0x01, 0x02, 0x03, 0x04,
         0x11, 0x12, 0x13, 0x14,
         0x21, 0x22, 0x23, 0x24,
@@ -475,8 +477,8 @@ TEST(IPAddressDefaultCompareTest, compare_ip6)
 {
     IPAddressCompareLess const compare;
 
-    uint32_t const addr1[] = {1, 2, 3, 4};
-    uint32_t const addr2[] = {4, 3, 2, 1};
+    ::etl::array<uint32_t, 4U> const addr1 = {1, 2, 3, 4};
+    ::etl::array<uint32_t, 4U> const addr2 = {4, 3, 2, 1};
 
     IPAddress ip1 = make_ip6(addr1);
     EXPECT_FALSE(compare(ip1, ip1));
@@ -492,9 +494,9 @@ TEST(IPAddressTest, OrderIPv4IPv6)
 {
     IPAddressCompareLess const compare;
 
-    IPAddress ipv4         = make_ip4(0x22222222);
-    uint32_t const addr2[] = {0, 0, 0, 1};
-    IPAddress ipv6         = make_ip6(addr2);
+    IPAddress ipv4                         = make_ip4(0x22222222);
+    ::etl::array<uint32_t, 4U> const addr2 = {0, 0, 0, 1};
+    IPAddress ipv6                         = make_ip6(addr2);
 
     EXPECT_TRUE(compare(ipv4, ipv6));
     EXPECT_FALSE(compare(ipv6, ipv4));

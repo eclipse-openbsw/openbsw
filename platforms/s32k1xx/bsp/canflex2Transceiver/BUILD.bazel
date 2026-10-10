@@ -9,6 +9,17 @@
 # *******************************************************************************
 
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
+load("@rules_cc//cc:cc_test.bzl", "cc_test")
+load("//bazel/config/build_variant:compatibility.bzl", "unit_test_only")
+
+alias(
+    name = "canflex2_transceiver_impl",
+    actual = select({
+        "//bazel/config/build_variant:unit_test": ":canflex2_transceiver_ut",
+        "//conditions:default": ":canflex2_transceiver",
+    }),
+    visibility = ["//visibility:public"],
+)
 
 cc_library(
     name = "canflex2_transceiver",
@@ -18,8 +29,61 @@ cc_library(
     target_compatible_with = ["//bazel/platform/constraints/soc:s32k148"],
     visibility = ["//visibility:public"],
     deps = [
+        "//executables/referenceApp/configuration",
         "//libs/bsw/async",
         "//libs/bsw/lifecycle",
         "//platforms/s32k1xx/bsp/bspFlexCan:bsp_flex_can",
+    ],
+)
+
+cc_library(
+    name = "canflex2_transceiver_mock",
+    hdrs = [
+        "test/mock/include/can/CANFrameSentListenerMock.h",
+        "test/mock/include/can/CanPhyMock.h",
+        "test/mock/include/can/FilterMock.h",
+        "test/mock/include/can/FilteredCANFrameSentListenerMock.h",
+        "test/mock/include/can/FlexCANDevice.h",
+        "test/mock/include/power/PowerStateControllerMock.h",
+    ],
+    strip_include_prefix = "test/mock/include",
+    target_compatible_with = unit_test_only(),
+    visibility = ["//visibility:public"],
+    deps = [
+        "//libs/3rdparty/etl",
+        "//libs/3rdparty/googletest:gtest",
+        "//libs/bsw/bsp",
+        "//libs/bsw/cpp2can",
+        "//libs/bsw/lifecycle",
+    ],
+)
+
+cc_library(
+    name = "canflex2_transceiver_ut",
+    srcs = ["src/can/transceiver/canflex2/CanFlex2Transceiver.cpp"],
+    hdrs = ["include/can/transceiver/canflex2/CanFlex2Transceiver.h"],
+    strip_include_prefix = "include",
+    target_compatible_with = unit_test_only(),
+    visibility = ["//visibility:public"],
+    deps = [
+        ":canflex2_transceiver_mock",
+        "//executables/unitTest/bsp/bspIo:bsp_io",
+        "//executables/unitTest/configuration",
+        "//libs/3rdparty/etl",
+        "//libs/bsw/async:async_mock_impl",
+        "//libs/bsw/bsp",
+        "//libs/bsw/cpp2can",
+        "//libs/bsw/lifecycle",
+    ],
+)
+
+cc_test(
+    name = "canflex2_transceiver_test",
+    srcs = ["test/src/can/CanFlex2TransceiverTest.cpp"],
+    target_compatible_with = unit_test_only(),
+    deps = [
+        ":canflex2_transceiver_impl",
+        "//libs/bsw/bsp:bsp_mock",
+        "//libs/bsw/util:util_mock",
     ],
 )

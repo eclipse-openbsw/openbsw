@@ -9,6 +9,7 @@
 # *******************************************************************************
 
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
+load("@rules_cc//cc:cc_test.bzl", "cc_test")
 load("//bazel/config/build_variant:compatibility.bzl", "unit_test_only")
 
 cc_library(
@@ -74,4 +75,132 @@ cc_library(
     target_compatible_with = unit_test_only(),
     visibility = ["//visibility:public"],
     deps = ["//libs/3rdparty/etl"],
+)
+
+cc_library(
+    name = "middleware_test_support",
+    srcs = [
+        "test/src/logger/mock/LoggerMock.cpp",
+        "test/src/memory/mock/AllocatorMock.cpp",
+        "test/src/os/OsDefinitions.cpp",
+        "test/src/time/mock/SystemTimerProviderMock.cpp",
+    ],
+    hdrs = glob(["test/src/**/*.h"]),
+    strip_include_prefix = "test/src",
+    target_compatible_with = unit_test_only(),
+    visibility = ["//visibility:public"],
+    deps = [
+        ":middleware",
+        ":middleware_interfaces",
+        "//libs/3rdparty/etl",
+        "//libs/3rdparty/googletest:gtest",
+    ],
+)
+
+cc_test(
+    name = "middleware_proxy_skeleton_base_test",
+    srcs = [
+        "test/src/core/ProxyAttributesTest.cpp",
+        "test/src/core/ProxyBaseTest.cpp",
+        "test/src/core/SkeletonAttributeTest.cpp",
+        "test/src/core/SkeletonBaseTest.cpp",
+        "test/src/core/TypesTest.cpp",
+    ],
+    target_compatible_with = unit_test_only(),
+    deps = [
+        ":middleware",
+        ":middleware_test_support",
+        "//libs/3rdparty/googletest:gtest_main",
+    ],
+)
+
+cc_test(
+    name = "middleware_request_response_test",
+    srcs = [
+        "test/src/core/ResponseBufferTest.cpp",
+        "test/src/rpc/ProxyFireAndForgetMethodTest.cpp",
+        "test/src/rpc/ProxyMethodTest.cpp",
+    ],
+    target_compatible_with = unit_test_only(),
+    deps = [
+        ":middleware",
+        ":middleware_test_support",
+        "//libs/3rdparty/googletest:gtest_main",
+    ],
+)
+
+cc_test(
+    name = "middleware_instance_database_test",
+    srcs = ["test/src/core/DbManipulatorTest.cpp"],
+    target_compatible_with = unit_test_only(),
+    deps = [
+        ":middleware",
+        ":middleware_test_support",
+        "//libs/3rdparty/googletest:gtest_main",
+    ],
+)
+
+cc_test(
+    name = "middleware_cluster_connection_test",
+    srcs = [
+        "test/src/core/ClusterConfigurationTest.cpp",
+        "test/src/core/ConnectionTest.cpp",
+    ],
+    target_compatible_with = unit_test_only(),
+    deps = [
+        ":middleware",
+        ":middleware_test_support",
+        "//libs/3rdparty/googletest:gtest_main",
+    ],
+)
+
+cc_test(
+    name = "middleware_message_management_test",
+    srcs = [
+        "test/src/core/MessagePayloadBuilderTest.cpp",
+        "test/src/core/MessageTest.cpp",
+    ],
+    target_compatible_with = unit_test_only(),
+    deps = [
+        ":middleware",
+        ":middleware_test_support",
+        "//libs/3rdparty/googletest:gtest_main",
+    ],
+)
+
+cc_test(
+    name = "middleware_queue_test",
+    srcs = ["test/src/queue/QueueTest.cpp"],
+    target_compatible_with = unit_test_only(),
+    deps = [
+        ":middleware",
+        ":middleware_test_support",
+        "//libs/3rdparty/googletest:gtest_main",
+    ],
+)
+
+cc_test(
+    name = "middleware_memory_pool_management_test",
+    srcs = [
+        "test/src/memory/AggregatorTest.cpp",
+        "test/src/memory/AllocatorBaseTest.cpp",
+        "test/src/memory/PoolsTest.cpp",
+    ],
+    target_compatible_with = unit_test_only(),
+    deps = [
+        ":middleware",
+        ":middleware_test_support",
+        "//libs/3rdparty/googletest:gtest_main",
+    ],
+)
+
+cc_test(
+    name = "middleware_logging_api_test",
+    srcs = ["test/src/core/LoggerApi.cpp"],
+    target_compatible_with = unit_test_only(),
+    deps = [
+        ":middleware",
+        ":middleware_test_support",
+        "//libs/3rdparty/googletest:gtest_main",
+    ],
 )

@@ -42,13 +42,22 @@ cc_library(
     ],
 )
 
+# Provides only ConfigType.h so the blob library can compile in unit-test
+# builds without leaking CONFIGURATION_BLOB data into consumers.
+cc_library(
+    name = "blob_test_config_type",
+    hdrs = ["test/include/blob/ConfigType.h"],
+    strip_include_prefix = "test/include",
+    target_compatible_with = unit_test_only(),
+    visibility = ["//visibility:public"],
+)
+
+# Provides the CONFIGURATION_BLOB byte array used by blob unit tests.
 cc_library(
     name = "blob_test_configuration",
-    hdrs = [
-        "test/include/blob/ConfigType.h",
-        "test/include/blob/configuration.h",
-    ],
+    hdrs = ["test/include/blob/configuration.h"],
     strip_include_prefix = "test/include",
+    target_compatible_with = unit_test_only(),
     visibility = ["//visibility:public"],
 )
 
@@ -60,6 +69,7 @@ cc_test(
     target_compatible_with = unit_test_only(),
     visibility = ["//visibility:public"],
     deps = [
+        ":blob_test_configuration",
         "//libs/3rdparty/googletest:gtest_main",
         "//libs/bsw/blob",
         "//libs/bsw/util:util_mock",

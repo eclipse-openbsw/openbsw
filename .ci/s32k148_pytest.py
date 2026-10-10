@@ -21,8 +21,8 @@ def main():
     toolchain = "gcc"
     cxxstd = "17"
     matrix = [
-        {"app": "freertos", "preset": "s32k148-freertos-gcc"},
-        {"app": "threadx",  "preset": "s32k148-threadx-gcc"},
+        {"app": "freertos", "preset": "s32k148-freertos"},
+        {"app": "threadx",  "preset": "s32k148-threadx"},
     ]
     for item in matrix:
         preset = item["preset"]

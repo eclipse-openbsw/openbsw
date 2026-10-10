@@ -187,7 +187,7 @@ class LocalHTMLRenderer(HTMLRenderer):
 
 def generate_html_output(gcc_tools_base):
     src_root = os.path.abspath("../source") + os.sep
-    build_dir = os.path.abspath("../../build/s32k148-freertos-gcc") + os.sep
+    build_dir = os.path.abspath("../../build/s32k148-freertos") + os.sep
     elf_file = os.path.join(
         build_dir,
         "executables/referenceApp/application/RelWithDebInfo/app.referenceApp.elf",

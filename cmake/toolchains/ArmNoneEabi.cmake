@@ -8,119 +8,52 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 
+#
+# Single entry-point ARM none-eabi toolchain file. It automatically selects the
+# GCC- or Clang-specific toolchain settings based on the compiler in use, so
+# presets no longer need to encode "-gcc"/"-clang" in their name or point at a
+# different toolchain file. The compiler is chosen the usual CMake way (the
+# CC/CXX environment variables or -DCMAKE_C_COMPILER=/-DCMAKE_CXX_COMPILER=...);
+# this file inspects that choice to decide which set of compiler-specific flags
+# to add, and also sets CMAKE_C_COMPILER/CMAKE_CXX_COMPILER explicitly so that
+# both languages consistently resolve to the same toolchain (GCC defaults to
+# "arm-none-eabi-gcc"/"arm-none-eabi-g++" if nothing is set).
+
 include_guard(GLOBAL)
 
 include("${CMAKE_CURRENT_LIST_DIR}/ArmNoneEabi-header.cmake")
 
-if (NOT DEFINED _ARCH_FLAGS)
-    set(_ARCH_FLAGS "")
-endif ()
+# NOTE: we only check the C compiler, since the C++ compiler is derived from it
+# below (respecting the order in the project call). If neither is set, GCC is
+# used as the default.
 
-set(_ARCH_FLAGS
-    "${_ARCH_FLAGS} \
-    -mcpu=cortex-m4 \
-    -mfloat-abi=hard \
-    -mfpu=fpv4-sp-d16 \
-    -fmessage-length=0")
-
-if (NOT DEFINED _CC_CXX_COMMON)
-    set(_CC_CXX_COMMON "")
-endif ()
-
-add_compile_definitions(REALTIME_OS=1)
-
-set(_CC_CXX_COMMON
-    "${_ARCH_FLAGS} \
-    ${_CC_CXX_COMMON} \
-    -Wno-psabi \
-    -fdata-sections \
-    -ffunction-sections \
-    -fno-asynchronous-unwind-tables \
-    -fno-builtin \
-    -fno-common \
-    -fshort-enums \
-    -fstack-usage \
-    -mno-unaligned-access \
-    -mthumb")
-
-if (NOT DEFINED _C_FLAGS)
-    set(_C_FLAGS "")
-endif ()
-
-set(_C_FLAGS "${_CC_CXX_COMMON} ${_C_FLAGS} -ffreestanding")
-
-if (NOT DEFINED _CXX_FLAGS)
-    set(_CXX_FLAGS "")
-endif ()
-
-set(_CXX_FLAGS
-    "${_CC_CXX_COMMON} \
-    ${_CXX_FLAGS} \
-    -fno-exceptions \
-    -fno-non-call-exceptions \
-    -fno-rtti \
-    -fno-threadsafe-statics \
-    -fno-use-cxa-atexit")
-
-if (NOT DEFINED _EXE_LINKER_FLAGS)
-    set(_EXE_LINKER_FLAGS "")
-endif ()
-
-set(_EXE_LINKER_FLAGS
-    "${_ARCH_FLAGS} \
-    ${_EXE_LINKER_FLAGS} \
-    -static \
-    -Wl,--gc-sections \
-    -Wl,-Map,application.map,--cref")
-
-set(_ASM_FLAGS "-g -mcpu=cortex-m4")
-
-if (DEFINED CMAKE_CXX_FLAGS)
-    # Check if our toolchain flags are already present
-    string(FIND "${CMAKE_CXX_FLAGS}" "-mcpu=cortex-m4" _TOOLCHAIN_FLAGS_FOUND)
-    if (_TOOLCHAIN_FLAGS_FOUND EQUAL -1)
-        set(CMAKE_CXX_FLAGS
-            "${_CXX_FLAGS} ${CMAKE_CXX_FLAGS}"
-            CACHE STRING "C++ flags" FORCE)
-    endif ()
+if (DEFINED CMAKE_C_COMPILER)
+    set(_ARM_C_COMPILER "${CMAKE_C_COMPILER}")
+elseif (DEFINED ENV{CC})
+    set(_ARM_C_COMPILER "$ENV{CC}")
 else ()
-    set(CMAKE_CXX_FLAGS_INIT "${_CXX_FLAGS}")
+    set(_ARM_C_COMPILER "arm-none-eabi-gcc")
 endif ()
 
-if (DEFINED CMAKE_C_FLAGS)
-    # Check if our toolchain flags are already present
-    string(FIND "${CMAKE_C_FLAGS}" "-mcpu=cortex-m4" _TOOLCHAIN_FLAGS_FOUND)
-    if (_TOOLCHAIN_FLAGS_FOUND EQUAL -1)
-        set(CMAKE_C_FLAGS
-            "${_C_FLAGS} ${CMAKE_C_FLAGS}"
-            CACHE STRING "C flags" FORCE)
-    endif ()
+if (_ARM_C_COMPILER MATCHES "clang")
+    set(_ARM_CXX_COMPILER_DEFAULT "arm-none-eabi-clang++")
+    include("${CMAKE_CURRENT_LIST_DIR}/ArmNoneEabi-clang.cmake")
 else ()
-    set(CMAKE_C_FLAGS_INIT "${_C_FLAGS}")
+    set(_ARM_CXX_COMPILER_DEFAULT "arm-none-eabi-g++")
+    include("${CMAKE_CURRENT_LIST_DIR}/ArmNoneEabi-gcc.cmake")
 endif ()
 
-if (DEFINED CMAKE_ASM_FLAGS)
-    if (NOT DEFINED _ASM_MERGED)
-        set(_ASM_MERGED
-            ON
-            CACHE INTERNAL "")
-        set(CMAKE_ASM_FLAGS
-            "${_ASM_FLAGS} ${CMAKE_ASM_FLAGS}"
-            CACHE STRING "C++ flags" FORCE)
-    endif ()
+set(CMAKE_C_COMPILER "${_ARM_C_COMPILER}")
+
+if (DEFINED CMAKE_CXX_COMPILER)
+    # already set explicitly, leave as-is
+elseif (DEFINED ENV{CXX})
+    set(CMAKE_CXX_COMPILER "$ENV{CXX}")
 else ()
-    set(CMAKE_ASM_FLAGS_INIT "${_ASM_FLAGS}")
+    set(CMAKE_CXX_COMPILER "${_ARM_CXX_COMPILER_DEFAULT}")
 endif ()
 
-if (DEFINED CMAKE_EXE_LINKER_FLAGS)
-    # Check if our toolchain flags are already present
-    string(FIND "${CMAKE_EXE_LINKER_FLAGS}" "-specs=nano.specs"
-                _LINKER_FLAGS_FOUND)
-    if (_LINKER_FLAGS_FOUND EQUAL -1)
-        set(CMAKE_EXE_LINKER_FLAGS
-            "${_EXE_LINKER_FLAGS} ${CMAKE_EXE_LINKER_FLAGS}"
-            CACHE STRING "linker flags" FORCE)
-    endif ()
-else ()
-    set(CMAKE_EXE_LINKER_FLAGS_INIT "${_EXE_LINKER_FLAGS}")
-endif ()
+unset(_ARM_CXX_COMPILER_DEFAULT)
+unset(_ARM_C_COMPILER)
+
+include("${CMAKE_CURRENT_LIST_DIR}/ArmNoneEabi-common.cmake")

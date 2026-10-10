@@ -96,6 +96,8 @@ private:
     TaskFunctionType _taskFunction;
     TX_THREAD* _taskHandle;
     TX_EVENT_FLAGS_GROUP _eventObject;
+    // Must not be a stack local, see libs/bsw/asyncThreadX/doc/index.rst
+    EventMaskType _eventFlagsResult;
     char const* _name;
     ContextType _context;
 };
@@ -268,8 +270,8 @@ inline void TaskContext<Binding>::setEvents(EventMaskType const eventMask)
 template<class Binding>
 inline EventMaskType TaskContext<Binding>::waitEvents()
 {
-    EventMaskType eventMask = 0U;
-    uint32_t ticks          = Binding::WAIT_EVENTS_TICK_COUNT;
+    _eventFlagsResult = 0U;
+    uint32_t ticks    = Binding::WAIT_EVENTS_TICK_COUNT;
     uint32_t nextDelta;
     bool const hasDelta = _timer.getNextDelta(getSystemTimeUs32Bit(), nextDelta);
     if (hasDelta)
@@ -280,12 +282,12 @@ inline EventMaskType TaskContext<Binding>::waitEvents()
         &_eventObject,
         WAIT_EVENT_MASK,
         TX_OR_CLEAR, // wait for any event, clear active events
-        &eventMask,
+        &_eventFlagsResult,
         ticks);
 
     if (result == TX_SUCCESS)
     {
-        return eventMask;
+        return _eventFlagsResult;
     }
     else if (hasDelta)
     {

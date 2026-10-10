@@ -133,7 +133,7 @@ class {{ service.name }}Proxy : public middleware::core::ProxyBase, public middl
     // METHODS
 {% for method in service.methods if service.methods %}
     using {{ method.name }}MethodTraits =
-      middleware::rpc::MethodTraits<{{ method.input_param.type | default('void') }}, {{ method.output_param.type | default('void') }}, {{ method.timeout }}U>;
+      middleware::rpc::MethodTraits<{{ method.input_param.type if method.input_param else 'void' }}, {{ method.output_param.type if method.output_param else 'void' }}, {{ method.timeout }}U>;
     using {{ method.name }}Method = middleware::rpc::ProxyMethod<{{ method.name }}MethodTraits, {{ method.consumer_request_limit }}U>;
 {% endfor %}
 

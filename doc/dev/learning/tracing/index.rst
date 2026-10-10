@@ -63,8 +63,8 @@ the tracing buffer size. For example, to build for S32K148EVB:
 
 .. code-block:: bash
 
-    cmake --preset s32k148-freertos-gcc -DBUILD_TRACING=ON -DTRACING_BUFFER_SIZE=65536
-    cmake --build --preset s32k148-freertos-gcc
+    cmake --preset s32k148-freertos -DBUILD_TRACING=ON -DTRACING_BUFFER_SIZE=65536
+    cmake --build --preset s32k148-freertos
 
 The size of tracing buffer in RAM is configurable (TRACING_BUFFER_SIZE).
 If it is not provided in the cmake command, then the default value of 4096 bytes is configured.

@@ -9,6 +9,8 @@
 # *******************************************************************************
 
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
+load("@rules_cc//cc:cc_test.bzl", "cc_test")
+load("//bazel/config/build_variant:compatibility.bzl", "unit_test_only")
 
 cc_library(
     name = "socket_can_transceiver",
@@ -20,5 +22,21 @@ cc_library(
     deps = [
         "//libs/bsw/cpp2can",
         "//libs/bsw/io",
+    ],
+)
+
+cc_test(
+    name = "socket_can_transceiver_test",
+    srcs = [
+        "test/src/can/IncludeTest.cpp",
+        "test/src/can/SocketCanTransceiverTest.cpp",
+    ],
+    target_compatible_with = unit_test_only(),
+    deps = [
+        ":socket_can_transceiver",
+        "//libs/3rdparty/googletest:gtest_main",
+        "//libs/bsw/asyncFreeRtos:async_freertos",
+        "//libs/bsw/bsp:bsp_mock",
+        "//libs/bsw/util:util_mock",
     ],
 )

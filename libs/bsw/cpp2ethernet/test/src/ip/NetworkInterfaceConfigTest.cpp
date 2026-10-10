@@ -10,6 +10,8 @@
 
 #include "ip/NetworkInterfaceConfig.h"
 
+#include <etl/array.h>
+
 #include <gtest/gtest.h>
 
 using namespace ::testing;
@@ -19,41 +21,44 @@ using namespace ip;
 namespace
 {
 #ifdef PLATFORM_SUPPORT_IPV6
-static uint32_t nonConstIp6Address[]   = {2348U, 234U, 232U, 345743U};
-static uint32_t const ip6Address1[]    = {0x123U, 0x1232U, 0x23839U, 0x23492U};
-static uint32_t const ip6Address2[]    = {0x12433U, 0x133232U, 0x2383439U, 0x2492342U};
-static uint32_t const ip6AddressNull[] = {0x0, 0x0, 0x0, 0x0};
+static ::etl::array<uint32_t, 4U> nonConstIp6Address = {2348U, 234U, 232U, 345743U};
+static ::etl::array<uint32_t, 4U> const ip6Address1  = {0x123U, 0x1232U, 0x23839U, 0x23492U};
+static ::etl::array<uint32_t, 4U> const ip6Address2 = {0x12433U, 0x133232U, 0x2383439U, 0x2492342U};
+static ::etl::array<uint32_t, 4U> const ip6AddressNull = {0x0, 0x0, 0x0, 0x0};
 #endif
 
-TEST(NetworkInterfaceConfigTest, ConstructAndAssign){{// empty config
-                                                      NetworkInterfaceConfig cut;
-EXPECT_FALSE(cut.isValid());
-EXPECT_EQ(IPAddress::FAMILY_UNKNOWN, cut.ipFamily());
-EXPECT_EQ(IPAddress(), cut.ipAddress());
-EXPECT_EQ(IPAddress(), cut.networkMask());
-EXPECT_EQ(IPAddress(), cut.defaultGateway());
-EXPECT_EQ(IPAddress(), cut.broadcastAddress());
-// copy
-NetworkInterfaceConfig copy(cut);
-EXPECT_FALSE(copy.isValid());
-EXPECT_EQ(IPAddress::FAMILY_UNKNOWN, copy.ipFamily());
-EXPECT_EQ(IPAddress(), copy.ipAddress());
-EXPECT_EQ(IPAddress(), copy.networkMask());
-EXPECT_EQ(IPAddress(), copy.defaultGateway());
-EXPECT_EQ(IPAddress(), copy.broadcastAddress());
-// assign
-NetworkInterfaceConfig assign;
-assign = cut;
-EXPECT_FALSE(assign.isValid());
-EXPECT_EQ(IPAddress::FAMILY_UNKNOWN, assign.ipFamily());
-EXPECT_EQ(IPAddress(), assign.ipAddress());
-EXPECT_EQ(IPAddress(), assign.networkMask());
-EXPECT_EQ(IPAddress(), assign.defaultGateway());
-EXPECT_EQ(IPAddress(), assign.broadcastAddress());
-// assign twice
-cut = *&cut;
-} // namespace
+TEST(NetworkInterfaceConfigTest, ConstructAndAssignEmpty)
+{
+    // empty config
+    NetworkInterfaceConfig cut;
+    EXPECT_FALSE(cut.isValid());
+    EXPECT_EQ(IPAddress::FAMILY_UNKNOWN, cut.ipFamily());
+    EXPECT_EQ(IPAddress(), cut.ipAddress());
+    EXPECT_EQ(IPAddress(), cut.networkMask());
+    EXPECT_EQ(IPAddress(), cut.defaultGateway());
+    EXPECT_EQ(IPAddress(), cut.broadcastAddress());
+    // copy
+    NetworkInterfaceConfig copy(cut);
+    EXPECT_FALSE(copy.isValid());
+    EXPECT_EQ(IPAddress::FAMILY_UNKNOWN, copy.ipFamily());
+    EXPECT_EQ(IPAddress(), copy.ipAddress());
+    EXPECT_EQ(IPAddress(), copy.networkMask());
+    EXPECT_EQ(IPAddress(), copy.defaultGateway());
+    EXPECT_EQ(IPAddress(), copy.broadcastAddress());
+    // assign
+    NetworkInterfaceConfig assign;
+    assign = cut;
+    EXPECT_FALSE(assign.isValid());
+    EXPECT_EQ(IPAddress::FAMILY_UNKNOWN, assign.ipFamily());
+    EXPECT_EQ(IPAddress(), assign.ipAddress());
+    EXPECT_EQ(IPAddress(), assign.networkMask());
+    EXPECT_EQ(IPAddress(), assign.defaultGateway());
+    EXPECT_EQ(IPAddress(), assign.broadcastAddress());
+    // assign twice
+    cut = *&cut;
+}
 
+TEST(NetworkInterfaceConfigTest, ConstructAndAssign)
 {
     // IPv4 config
     NetworkInterfaceConfig cut(0xc0a8b656U, 0xfff00000, 0x33229U);
@@ -81,7 +86,9 @@ cut = *&cut;
     EXPECT_EQ(make_ip4(0x33229U), assign.defaultGateway());
     EXPECT_EQ(make_ip4(0xc0afffffU), assign.broadcastAddress());
 }
+
 #ifdef PLATFORM_SUPPORT_IPV6
+TEST(NetworkInterfaceConfigTest, ConstructAndAssignIPv6)
 {
     // IPv6 config
     NetworkInterfaceConfig cut(ip6Address1);
@@ -109,6 +116,8 @@ cut = *&cut;
     EXPECT_EQ(IPAddress(), assign.defaultGateway());
     EXPECT_EQ(IPAddress(), assign.broadcastAddress());
 }
+
+TEST(NetworkInterfaceConfigTest, ConstructAndAssignIPv6NonConst)
 {
     // IPv6 config
     NetworkInterfaceConfig cut(nonConstIp6Address);
@@ -120,7 +129,6 @@ cut = *&cut;
     EXPECT_EQ(IPAddress(), cut.broadcastAddress());
 }
 #endif
-}
 
 TEST(NetworkInterfaceConfigTest, Compare)
 {

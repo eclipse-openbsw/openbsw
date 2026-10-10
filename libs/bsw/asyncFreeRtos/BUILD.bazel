@@ -9,6 +9,7 @@
 # *******************************************************************************
 
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
+load("@rules_cc//cc:cc_test.bzl", "cc_test")
 load("//bazel/config/build_variant:compatibility.bzl", "unit_test_only")
 
 # FreeRTOS core configuration (FreeRtosPlatformConfig.h and platform wiring).
@@ -55,7 +56,13 @@ cc_library(
     strip_include_prefix = "test/mock/include",
     target_compatible_with = unit_test_only(),
     visibility = ["//visibility:public"],
-    deps = [":async_freertos"],
+    deps = [
+        ":async_core_configuration_mock",
+        ":async_freertos",
+        "//libs/3rdparty/etl",
+        "//libs/3rdparty/googletest:gtest",
+        "//libs/bsw/async:async_headers",
+    ],
 )
 
 cc_library(
@@ -122,5 +129,48 @@ cc_library(
     deps = [
         ":async_core_configuration",
         ":freertos_core_configuration",
+    ],
+)
+
+cc_test(
+    name = "async_freertos_minimum_stack_test",
+    srcs = ["test/src/async/TaskInitializerMinimumStackTest.cpp"],
+    target_compatible_with = unit_test_only(),
+    deps = [
+        ":async_freertos",
+        "//libs/3rdparty/googletest:gtest_main",
+        "//libs/bsw/util",
+        "//libs/bsw/util:util_mock",
+    ],
+)
+
+cc_test(
+    name = "async_freertos_test",
+    srcs = [
+        "test/mock/src/async/ContextHookMock.cpp",
+        "test/mock/src/async/TickHookMock.cpp",
+        "test/src/async/AsyncTest.cpp",
+        "test/src/async/FreeRtosAdapterTest.cpp",
+        "test/src/async/FutureSupportTest.cpp",
+        "test/src/async/LockTest.cpp",
+        "test/src/async/ModifiableLockTest.cpp",
+        "test/src/async/StaticRunnableTest.cpp",
+        "test/src/async/TaskContextTest.cpp",
+        "test/src/async/TaskInitializerTest.cpp",
+    ],
+    copts = ["-Wno-array-bounds"],
+    target_compatible_with = unit_test_only(),
+    deps = [
+        ":async_binding_mock",
+        ":async_freertos",
+        ":async_freertos_impl",
+        "//libs/3rdparty/freeRtos:freertos_mock",
+        "//libs/3rdparty/googletest:gtest_main",
+        "//libs/bsp/bspInterrupts:bsp_interrupts_mock",
+        "//libs/bsw/async",
+        "//libs/bsw/asyncImpl:async_impl_mock",
+        "//libs/bsw/bsp:bsp_mock",
+        "//libs/bsw/util",
+        "//libs/bsw/util:util_mock",
     ],
 )

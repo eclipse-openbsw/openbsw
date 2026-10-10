@@ -36,7 +36,7 @@ struct Ip4Config
 class NetworkInterfaceConfig
 {
 public:
-    using Ip6AddressType = uint32_t[4];
+    using Ip6AddressType = ::etl::span<uint32_t const, 4>;
 
     /**
      * Constructor. Represents an invalid interface configuration (not configured).
@@ -56,7 +56,7 @@ public:
      * a raw array of four 32 bit values (compare to the IPAddress IPv6 constructor with an array).
      * \param ip6Address raw array holding the IPv6 address
      */
-    explicit NetworkInterfaceConfig(Ip6AddressType const& ip6Address);
+    explicit NetworkInterfaceConfig(Ip6AddressType ip6Address);
 
     /**
      * Checks whether this object represents a physically linked, valid IPv4 or IPv6 configuration.
