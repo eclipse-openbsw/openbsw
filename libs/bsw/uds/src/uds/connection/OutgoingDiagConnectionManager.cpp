@@ -112,8 +112,8 @@ IOutgoingDiagConnectionProvider::ErrorCode OutgoingDiagConnectionManager::reques
             pConnection->_context               = _configuration.Context;
             pRequestMessage->resetValidBytes();
             pConnection->_requestMessage = pRequestMessage;
-            pConnection->_sourceAddress  = _configuration.DiagAddress;
-            pConnection->_targetAddress  = targetAddress;
+            pConnection->setSourceAddress(_configuration.DiagAddress);
+            pConnection->setTargetAddress(targetAddress);
             pConnection->open();
             lock.lock();
             _releasedOutgoingDiagConnections.push_back(*pConnection);
