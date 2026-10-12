@@ -363,7 +363,9 @@ void DoIpTcpConnection::processNextReadChunk(size_t const bytesRead)
             {
                 // handler not responsible, but notify it for the discarded payload
                 _readState = ReadState::DISCARD;
-                setReadBuffer(::etl::span<uint8_t>(_headerBuffer, _readPayloadLength));
+                // The payload may be longer than the header buffer; only the length matters
+                // because discarded data is never written to the buffer.
+                setReadBuffer(::etl::span<uint8_t>(_headerBuffer.data(), _readPayloadLength));
                 _payloadReceivedCallback = PayloadReceivedCallbackType();
                 _payloadDiscardedCallback
                     = ::etl::get<IDoIpConnection::PayloadDiscardedCallbackType>(

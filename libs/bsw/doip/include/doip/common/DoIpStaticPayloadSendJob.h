@@ -15,6 +15,7 @@
 
 #include "doip/common/DoIpSimplePayloadSendJob.h"
 
+#include <etl/array.h>
 #include <etl/error_handler.h>
 #include <etl/memory.h>
 
@@ -94,7 +95,7 @@ public:
     ::etl::span<uint8_t> accessPayloadBuffer();
 
 private:
-    uint8_t _payloadBuffer[BufferSize];
+    ::etl::array<uint8_t, BufferSize> _payloadBuffer;
 };
 
 } // namespace declare

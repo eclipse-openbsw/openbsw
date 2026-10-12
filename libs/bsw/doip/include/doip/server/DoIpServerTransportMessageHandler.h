@@ -22,6 +22,7 @@
 
 #include <common/busid/BusId.h>
 #include <etl/algorithm.h>
+#include <etl/array.h>
 #include <etl/ipool.h>
 #include <etl/span.h>
 
@@ -85,7 +86,7 @@ private:
     {
         uint16_t sourceAddress;
         uint16_t targetAddress;
-        uint8_t payloadPrefixBuffer[PAYLOAD_PREFIX_BUFFER_SIZE];
+        ::etl::array<uint8_t, PAYLOAD_PREFIX_BUFFER_SIZE> payloadPrefixBuffer;
     };
 
     DoIpTransportMessageSendJob* allocateJob(
@@ -127,7 +128,7 @@ private:
     uint16_t _receiveMessagePayloadLength;
     DoIpConstants::ProtocolVersion _protocolVersion;
     bool _isRoutingActive;
-    uint8_t _readBuffer[4];
+    ::etl::array<uint8_t, 4> _readBuffer;
 };
 
 } // namespace doip

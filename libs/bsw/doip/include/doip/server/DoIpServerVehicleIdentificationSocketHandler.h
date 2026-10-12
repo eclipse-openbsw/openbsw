@@ -23,6 +23,7 @@
 #include <etl/intrusive_links.h>
 #include <ip/NetworkInterfaceConfig.h>
 
+#include <etl/array.h>
 #include <etl/bitset.h>
 #include <etl/intrusive_forward_list.h>
 #include <etl/optional.h>
@@ -188,7 +189,7 @@ private:
     ::ip::NetworkInterfaceConfigKey _networkInterfaceConfigKey;
     ::ip::NetworkInterfaceConfig _configChangedNewConfig;
     uint8_t _socketGroupId;
-    uint8_t _readBuffer[19];
+    ::etl::array<uint8_t, 19> _readBuffer;
     ::etl::bitset<MAX_NUM_UNICAST> _newUnicastAddresses;
     uint8_t const _announceCount;
     IDoIpUdpOemMessageHandler const* _currentOemMessageHandler = nullptr;

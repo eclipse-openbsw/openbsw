@@ -19,6 +19,7 @@
 #include <async/Types.h>
 #include <ip/NetworkInterfaceConfig.h>
 
+#include <etl/array.h>
 #include <etl/ipool.h>
 #include <etl/span.h>
 
@@ -127,7 +128,7 @@ private:
     uint16_t _logicalEntityAddress;
     DoIpConstants::ProtocolVersion _protocolVersion;
     ::async::ContextType const _context;
-    uint8_t _writeBuffer[40];
+    ::etl::array<uint8_t, 40> _writeBuffer;
 };
 
 /**
