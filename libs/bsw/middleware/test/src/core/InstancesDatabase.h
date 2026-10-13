@@ -70,6 +70,9 @@ public:
     }
 };
 
+inline ClusterConnection clusterConnection;
+inline BadClusterConnection badClusterConnection;
+
 class InstancesDatabase : public ::IInstanceDatabase
 {
 public:
@@ -92,10 +95,10 @@ public:
 
 private:
     ::etl::array<uint16_t const, 1U> const _instanceIds = {{1}};
-    ClusterConnection _clustConn;
-    ::etl::array<IClusterConnection* const, 2U> const fProxyConnections = {{&_clustConn, nullptr}};
+    ::etl::array<IClusterConnection* const, 2U> const fProxyConnections
+        = {{&clusterConnection, nullptr}};
     ::etl::array<IClusterConnection* const, 2U> const fSkeletonConnections
-        = {{&_clustConn, nullptr}};
+        = {{&clusterConnection, nullptr}};
 };
 
 class BadInstancesDatabase : public ::IInstanceDatabase
@@ -120,10 +123,10 @@ public:
 
 private:
     ::etl::array<uint16_t const, 1U> const _instanceIds = {{1}};
-    BadClusterConnection _clustConn;
-    ::etl::array<IClusterConnection* const, 2U> const fProxyConnections = {{&_clustConn, nullptr}};
+    ::etl::array<IClusterConnection* const, 2U> const fProxyConnections
+        = {{&badClusterConnection, nullptr}};
     ::etl::array<IClusterConnection* const, 2U> const fSkeletonConnections
-        = {{&_clustConn, nullptr}};
+        = {{&badClusterConnection, nullptr}};
 };
 
 class EmptyInstancesDatabase : public ::IInstanceDatabase
@@ -148,17 +151,16 @@ public:
 
 private:
     ::etl::array<uint16_t const, 1U> const _instanceIds = {{1}};
-    ClusterConnection _clustConn;
     ::etl::array<IClusterConnection* const, 0U> const fProxyConnections{};
     ::etl::array<IClusterConnection* const, 0U> const fSkeletonConnections{};
 };
 
-constexpr InstancesDatabase _InstancesDatabase;
-constexpr EmptyInstancesDatabase _EmptyInstancesDatabase;
-constexpr BadInstancesDatabase _BadInstancesDatabase;
+constexpr InstancesDatabase instancesDatabase;
+constexpr EmptyInstancesDatabase emptyInstancesDatabase;
+constexpr BadInstancesDatabase badInstancesDatabase;
 
-constexpr ::etl::array<::IInstanceDatabase const* const, 1U> INSTANCESDATABASE{&_InstancesDatabase};
+constexpr ::etl::array<::IInstanceDatabase const* const, 1U> INSTANCESDATABASE{&instancesDatabase};
 constexpr ::etl::array<::IInstanceDatabase const* const, 1U> EMPTYINSTANCESDATABASE{
-    &_EmptyInstancesDatabase};
+    &emptyInstancesDatabase};
 constexpr ::etl::array<::IInstanceDatabase const* const, 1U> BADINSTANCESDATABASE{
-    &_BadInstancesDatabase};
+    &badInstancesDatabase};

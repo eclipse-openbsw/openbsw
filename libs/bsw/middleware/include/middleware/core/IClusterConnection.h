@@ -12,7 +12,6 @@
 
 #include "middleware/core/ITimeoutHandler.h"
 #include "middleware/core/Message.h"
-#include "middleware/core/TransceiverBase.h"
 #include "middleware/core/types.h"
 
 namespace middleware::core
@@ -29,6 +28,13 @@ class ProxyBase;
 class ITimeoutClusterConnection
 {
 public:
+    ITimeoutClusterConnection()                                            = default;
+    virtual ~ITimeoutClusterConnection()                                   = default;
+    ITimeoutClusterConnection(ITimeoutClusterConnection const&)            = delete;
+    ITimeoutClusterConnection& operator=(ITimeoutClusterConnection const&) = delete;
+    ITimeoutClusterConnection(ITimeoutClusterConnection&&)                 = delete;
+    ITimeoutClusterConnection& operator=(ITimeoutClusterConnection&&)      = delete;
+
     /** Registers \p timeout as a timeout transceiver (no-op by default). */
     virtual void registerTimeoutTransceiver(ITimeoutHandler&) {}
 
@@ -47,6 +53,8 @@ public:
 class IClusterConnection : public ITimeoutClusterConnection
 {
 public:
+    ~IClusterConnection() override = default;
+
     /** Returns the source cluster ID. */
     virtual uint8_t getSourceClusterId() const = 0;
 

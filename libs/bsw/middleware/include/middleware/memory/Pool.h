@@ -16,6 +16,7 @@
 #include <etl/span.h>
 
 #include <climits>
+#include <cstddef>
 #include <cstdint>
 
 namespace middleware::memory
@@ -34,8 +35,9 @@ class Pool : public PoolBase
         ::etl::array<uint8_t, ChunkSize> chunk;
     };
 
-    // Ensure alignment is suitable for storing pointers in freed chunks.
-    struct alignas(alignof(uint8_t*)) AlignedElementType : ElementType
+    // max_align_t makes chunks suitable for placement-new of any payload type with fundamental
+    // alignment and for storing pointers in freed chunks.
+    struct alignas(alignof(std::max_align_t)) AlignedElementType : ElementType
     {};
 
     ::etl::array<AlignedElementType, N> _storage;

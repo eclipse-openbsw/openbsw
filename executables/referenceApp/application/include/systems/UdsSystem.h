@@ -21,9 +21,12 @@
 #include <uds/UdsLifecycleConnector.h>
 #include <uds/async/AsyncDiagHelper.h>
 #include <uds/async/AsyncDiagJob.h>
+#include <uds/diagmgr/DiagMgr.h>
 #include <uds/jobs/ReadIdentifierFromMemory.h>
 #include <uds/jobs/WriteIdentifierToMemory.h>
 #include <uds/services/cleardiagnosticinformation/ClearDiagnosticInformation.h>
+#include <uds/services/controldtcsetting/ControlDTCSetting.h>
+#include <uds/services/readactivesession/ReadActiveSessionDiagnosticInformation.h>
 
 #ifdef PLATFORM_SUPPORT_UDS_DEMO_SERVICES
 #include <uds/DemoClearDtc.h>
@@ -129,6 +132,9 @@ private:
 #endif
     TesterPresent _testerPresent;
     ReadDTCInformation _readDTCInformation;
+    DiagMgr _diagMgr;
+    ControlDTCSetting _controlDtcSettingReal;
+    ReadActiveSessionDiagnosticInformation _read22F186;
 #ifdef PLATFORM_SUPPORT_UDS_DEMO_SERVICES
     ECUReset _ecuReset;
     HardReset _hardReset;

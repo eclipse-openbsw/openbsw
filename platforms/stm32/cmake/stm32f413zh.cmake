@@ -12,4 +12,4 @@ set(STM32_FAMILY "F4")
 set(STM32_DEVICE_UPPER "STM32F413xx")
 set(CAN_TYPE "BXCAN")
 set(STM32_STARTUP_ASM
-    "${CMAKE_CURRENT_LIST_DIR}/../bsp/bspMcu/startup/startup_stm32f413xx.s")
+    "${CMAKE_CURRENT_LIST_DIR}/../bsp/bspMcu/startup/startup_stm32f413xx.S")

@@ -23,8 +23,16 @@ add_library(
     src/uds/jobs/RoutineControlJob.cpp
     src/uds/jobs/WriteIdentifierToMemory.cpp
     src/uds/resume/ResumableResetDriver.cpp
+    src/uds/diagmgr/DiagMgr.cpp
+    src/uds/eventmgr/DebounceCounter.cpp
+    src/uds/eventmgr/DebounceImmediate.cpp
+    src/uds/eventmgr/DebounceTimeBased.cpp
+    src/uds/eventmgr/EventManager.cpp
+    src/uds/faultmgr/FaultManager.cpp
+    src/uds/faultmgr/InhibitionTable.cpp
     src/uds/services/cleardiagnosticinformation/ClearDiagnosticInformation.cpp
     src/uds/services/controldtcsetting/ControlDTCSetting.cpp
+    src/uds/services/readactivesession/ReadActiveSessionDiagnosticInformation.cpp
     src/uds/services/communicationcontrol/CommunicationControl.cpp
     src/uds/services/readdtcinformation/ReadDTCInformation.cpp
     src/uds/services/ecureset/ECUReset.cpp

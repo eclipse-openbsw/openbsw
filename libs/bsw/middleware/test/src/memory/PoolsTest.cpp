@@ -8,6 +8,8 @@
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
 
+#include <cstddef>
+#include <cstdint>
 #include <cstring>
 
 #include <gmock/gmock.h>
@@ -38,6 +40,17 @@ TEST_F(TestPool, WhenPayloadEqualSizeThenAllocateSuccessExpectValidPtr)
     EXPECT_GE(_testPool.size(), 0U);
     EXPECT_GE(_testPool.maxSize(), 0U);
     EXPECT_GE(_testPool.available(), 0U);
+}
+
+TEST_F(TestPool, WhenAllocateThenEveryChunkIsAlignedToMaxAlign)
+{
+    while (!_testPool.isFull())
+    {
+        uint8_t* const ptr = _testPool.allocate(CHUNK_SIZE);
+        ASSERT_NE(nullptr, ptr);
+        EXPECT_EQ(0U, reinterpret_cast<uintptr_t>(ptr) % alignof(std::max_align_t));
+    }
+    EXPECT_EQ(CHUNK_COUNT, _testPool.size());
 }
 
 TEST_F(TestPool, WhenPayloadBiggerSizeThenAllocateFailsExpectInvalidPtr)

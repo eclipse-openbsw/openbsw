@@ -12,4 +12,4 @@ set(STM32_FAMILY "G4")
 set(STM32_DEVICE_UPPER "STM32G474xx")
 set(CAN_TYPE "FDCAN")
 set(STM32_STARTUP_ASM
-    "${CMAKE_CURRENT_LIST_DIR}/../bsp/bspMcu/startup/startup_stm32g474xx.s")
+    "${CMAKE_CURRENT_LIST_DIR}/../bsp/bspMcu/startup/startup_stm32g474xx.S")

@@ -24,10 +24,21 @@ namespace uds
  * - groupOfDTC 0xFFFFFF (all DTCs) returns a positive response
  * - any other group returns NRC 0x31 (requestOutOfRange)
  */
+class DiagMgr;
+
+/**
+ * UDS service ClearDiagnosticInformation (0x14).
+ * When a DiagMgr is wired, delegates to DiagMgr::clearAllDTCs() which
+ * clears RAM table and NVM (DGN-FEL009). Without DiagMgr, the demo
+ * stub behaviour is retained for backwards compatibility.
+ */
 class ClearDiagnosticInformation : public Service
 {
 public:
     explicit ClearDiagnosticInformation();
+
+    /** Wire DiagMgr backend. Call during UdsSystem::init(). */
+    void setDiagMgr(DiagMgr* diagMgr) { _diagMgr = diagMgr; }
 
 private:
     static uint8_t const EXPECTED_REQUEST_LENGTH = 3U;
@@ -38,6 +49,8 @@ private:
         IncomingDiagConnection& connection,
         uint8_t const request[],
         uint16_t requestLength) override;
+
+    DiagMgr* _diagMgr;
 };
 
 } // namespace uds

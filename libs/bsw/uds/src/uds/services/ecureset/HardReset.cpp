@@ -37,7 +37,19 @@ DiagReturnCode::Type HardReset::process(
 {
     if (fUdsLifecycleConnector.isModeChangePossible())
     {
-        fDiagDispatcher.fEnabled = false;
+        // BUG-FIX: Do NOT set fEnabled = false here.
+        //
+        // sendPositiveResponse() posts an async closure that calls
+        // DiagDispatcher::send() on the next task cycle.  DiagDispatcher::send()
+        // checks fEnabled at the top and returns TP_SEND_FAIL if it is false.
+        // Setting fEnabled = false BEFORE the response is sent therefore causes
+        // the 0x51 0x01 positive response to be silently dropped — the tester
+        // never sees an acknowledgement even though the ECU resets successfully.
+        //
+        // fEnabled is cleared in responseSent() instead, which is invoked only
+        // after the transport layer has confirmed the frame is on the wire
+        // (via asyncTransportMessageProcessed callback).  That is the correct
+        // point to block new incoming requests.
         (void)connection.sendPositiveResponse(*this);
         return DiagReturnCode::OK;
     }
@@ -48,10 +60,13 @@ DiagReturnCode::Type HardReset::process(
 void HardReset::responseSent(
     IncomingDiagConnection& connection, ResponseSendResult const /* result */)
 {
+    // Gate the dispatcher against new requests now that the response is confirmed sent.
+    fDiagDispatcher.fEnabled = false;
     connection.terminate();
     if (!fUdsLifecycleConnector.requestShutdown(
             IUdsLifecycleConnector::HARD_RESET, UdsConstants::RESET_TIME_HARD))
     {
+        // requestShutdown returned false — shutdown was rejected; re-enable the dispatcher.
         fDiagDispatcher.fEnabled = true;
     }
 }

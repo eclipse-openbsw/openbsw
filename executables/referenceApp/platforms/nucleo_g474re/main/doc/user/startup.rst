@@ -14,7 +14,7 @@
 Startup Code
 ============
 
-The startup code (``platforms/stm32/bsp/bspMcu/startup/startup_stm32g474xx.s``) provides
+The startup code (``platforms/stm32/bsp/bspMcu/startup/startup_stm32g474xx.S``) provides
 the vector table and the ``Reset_Handler`` for the STM32G474xx.
 
 Vector Table
