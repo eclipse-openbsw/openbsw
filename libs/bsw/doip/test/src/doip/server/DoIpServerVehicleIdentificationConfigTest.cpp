@@ -24,6 +24,16 @@ namespace test
 {
 using namespace ::testing;
 
+class DoIpServerVehicleAnnouncementParameterProvider
+: public IDoIpServerVehicleAnnouncementParameterProvider
+{
+public:
+    uint16_t getAnnounceWait() const override
+    {
+        return doip::DoIpConstants::Timings::DOIP_ANNOUNCE_INTERVAL_MS;
+    }
+};
+
 TEST(DoIpServerVehicleIdentificationConfigTest, TestInitialization)
 {
     DoIpConstants::ProtocolVersion const protocolVersion(
@@ -33,6 +43,7 @@ TEST(DoIpServerVehicleIdentificationConfigTest, TestInitialization)
     StrictMock<DoIpServerVehicleIdentificationCallbackMock> vehicleIdentificationCallbackMock;
     StrictMock<::ip::NetworkInterfaceConfigRegistryMock> networkInterfaceConfigRegistryMock;
     StrictMock<DoIpServerVehicleAnnouncementParameterProviderMock> parametersMock;
+    DoIpServerVehicleAnnouncementParameterProvider defaultParameterProvider;
     ::etl::pool<DoIpServerVehicleIdentificationRequest, 5U> requestPool;
     DoIpServerVehicleIdentificationConfig cut(
         protocolVersion,
@@ -50,6 +61,12 @@ TEST(DoIpServerVehicleIdentificationConfigTest, TestInitialization)
     EXPECT_EQ(&networkInterfaceConfigRegistryMock, &cut.getNetworkInterfaceConfigRegistry());
     EXPECT_EQ(0x2243U, cut.getLogicalEntityAddress());
     EXPECT_EQ(&parametersMock, &cut.getParameters());
+    EXPECT_TRUE(
+        defaultParameterProvider.getAnnounceWait()
+        == doip::DoIpConstants::Timings::DOIP_ANNOUNCE_INTERVAL_MS);
+    EXPECT_TRUE(
+        defaultParameterProvider.getAnnounceInterval()
+        == doip::DoIpConstants::Timings::DOIP_ANNOUNCE_INTERVAL_MS);
     EXPECT_EQ(&requestPool, &cut.getRequestPool());
 }
 

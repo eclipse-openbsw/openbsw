@@ -9,10 +9,12 @@
 # *******************************************************************************
 
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
+load("//bazel/config/build_variant:compatibility.bzl", "reference_app_only")
 
 cc_library(
     name = "async_core_configuration",
     hdrs = ["include/async/Config.h"],
     strip_include_prefix = "include",
+    target_compatible_with = reference_app_only(),
     visibility = ["//visibility:public"],
 )

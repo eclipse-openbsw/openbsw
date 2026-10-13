@@ -1781,3 +1781,9 @@ void DoIpServerConnectionHandlerTest::expectRoutingActivationCheck(uint8_t const
         checkRoutingActivation(_, _, socketGroupId, fLocalEndpoint, fRemoteEndpoint, _, _))
         .WillOnce(Return(IDoIpServerConnectionFilter::RoutingActivationCheckResult()));
 }
+
+TEST(HandledByThisHandlerTagTest, TrivialComparison)
+{
+    IDoIpConnectionHandler::HandledByThisHandler a, b;
+    EXPECT_TRUE(a == b);
+}

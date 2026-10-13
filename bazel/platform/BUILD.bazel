@@ -8,8 +8,118 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 
-# Feature matrix travels with the platform. Selecting the platform selects the
-# whole PLATFORM_SUPPORT_* set. Consumer selects on //bazel/config/features stay untouched.
+# App platforms define the full feature matrix for a board or environment.
+# App platform variants inherit from a base app platform and override one axis.
+
+# POSIX app platform. Builds and runs on the Linux host. This is the default platform.
+platform(
+    name = "posix",
+    flags = [
+        # Features
+        "--//bazel/config/features:can=true",
+        "--//bazel/config/features:ethernet=true",
+        "--//bazel/config/features:io=false",
+        "--//bazel/config/features:ipv6=false",
+        "--//bazel/config/features:middleware=true",
+        "--//bazel/config/features:mpu=false",
+        "--//bazel/config/features:rom_check=false",
+        "--//bazel/config/features:storage=true",
+        "--//bazel/config/features:transport=true",
+        "--//bazel/config/features:uds=true",
+        "--//bazel/config/features:watchdog=false",
+
+        # RTOS
+        "--//bazel/config/rtos=freertos",
+
+        # BSP layer
+        "--//executables/referenceApp/safety/safeSupervisor:bsp_mcu=//platforms/posix/bsp/bspMcu:bsp_mcu",
+        "--//libs/bsp/bspInterrupts:bsp_interrupts_impl=//platforms/posix/bsp/bspInterruptsImpl:bsp_interrupts_impl",
+        "--//bazel/config/bsp:bsp_configuration=//executables/referenceApp/platforms/posix/bspConfiguration:bsp_configuration_headers",
+        "--//bazel/config/eth:eth_configuration=//executables/referenceApp/platforms/posix/ethConfiguration:eth_configuration",
+        "--//libs/bsp/bspCharInputOutput:bsp_uart=//platforms/posix/bsp/bspUart:bsp_uart",
+        # Posix has no hardware IO driver.
+
+        # FreeRTOS port and hooks
+        "--//libs/3rdparty/freeRtos:freertos_port=//platforms/posix/3rdparty/freeRtosPosix:freertos_posix_port_headers",
+        "--//libs/3rdparty/freeRtos:freertos_port_impl=//platforms/posix/3rdparty/freeRtosPosix:freertos_posix",
+        "--//libs/3rdparty/freeRtos:freertos_os_hooks=//executables/referenceApp/platforms/posix/main:freertos_os_hooks",
+        "--//libs/3rdparty/freeRtos:freertos_impl=//libs/3rdparty/freeRtos:freertos",
+
+        # Async / configuration
+        "--//libs/bsw/asyncFreeRtos:freertos_core_configuration=//executables/referenceApp/platforms/posix/freeRtosCoreConfiguration:freertos_core_configuration",
+        "--//libs/bsw/async:async_platform=//libs/bsw/asyncFreeRtos:async_freertos",
+        "--//libs/bsw/async:async_rtos_impl=//libs/bsw/asyncFreeRtos:async_freertos_impl",
+
+        # App configuration
+        "--//libs/bsw/common:configuration=//executables/referenceApp/configuration",
+
+        # ETL profile
+        "--//libs/3rdparty/etl:etl_profile=//executables/referenceApp/etl_profile",
+    ],
+    parents = ["@platforms//host:host"],
+)
+
+# POSIX unit-test app platform variant. Replaces hardware drivers with mocks and enables test targets.
+platform(
+    name = "posix_unit_test",
+    flags = [
+        "--//bazel/config/build_variant=unit_test",
+
+        # BSP layer
+        "--//libs/bsp/bspInterrupts:bsp_interrupts_impl=//libs/bsp/bspInterrupts:bsp_interrupts_mock",
+        "--//bazel/config/bsp:bsp_configuration=//executables/unitTest/bsp/bspConfiguration:bsp_configuration",
+        "--//bazel/config/bsp:bsp_io=//executables/unitTest/bsp/bspIo:bsp_io",
+
+        # FreeRTOS port and hooks
+        "--//libs/3rdparty/freeRtos:freertos_impl=//libs/3rdparty/freeRtos:freertos_mock",
+        "--//libs/bsw/asyncFreeRtos:freertos_core_configuration=//libs/bsw/asyncFreeRtos:freertos_core_configuration_mock",
+
+        # Async / configuration
+        "--//libs/bsw/async:async_platform=//libs/bsw/async:async_mock",
+        "--//libs/bsw/async:async_rtos_impl=//libs/bsw/async:async_mock_impl",
+        "--//libs/bsw/async:async_binding=//libs/bsw/asyncFreeRtos:async_binding_mock",
+        "--//libs/bsw/asyncFreeRtos:async_core_configuration=//libs/bsw/asyncFreeRtos:async_core_configuration_mock",
+
+        # lwip stack configuration
+        "--//libs/3rdparty/lwip:lwip_configuration=//executables/unitTest/lwipConfiguration:lwip_configuration",
+
+        # transport configuration
+        "--//libs/bsw/transportRouterSimple:transport_configuration=//executables/unitTest/transportConfiguration:transport_configuration",
+        "--//libs/bsw/uds:transport_configuration=//executables/unitTest/transportConfiguration:transport_configuration",
+        "--//libs/bsw/uds:uds_configuration=//executables/unitTest/udsConfiguration:uds_configuration",
+
+        # routing test configuration
+        "--//libs/bsw/routing:routing_configuration=//libs/bsw/routing:routing_test_configuration",
+        "--//libs/bsw/routing:routing_blob_configuration=//libs/bsw/routing:routing_test_blob_configuration",
+
+        # blob test configuration
+        "--//libs/bsw/blob:blob_configuration=//libs/bsw/blob:blob_test_config_type",
+
+        # App configuration
+        "--//libs/bsw/common:configuration=//executables/unitTest/configuration",
+
+        # ETL profile
+        "--//libs/3rdparty/etl:etl_profile=//executables/unitTest/etl_profile",
+    ],
+    parents = [":posix"],
+)
+
+# Middleware simulation app platform variant. Configures the posix platform for middleware simulation.
+platform(
+    name = "middleware_simulation",
+    flags = [
+        "--//bazel/config/build_variant=middleware_simulation",
+        "--//libs/3rdparty/etl:etl_profile=//libs/bsw/middleware/simulation:simulation_etl_profile",
+        "--//libs/bsw/middleware:middleware_lock_types=//libs/bsw/middleware/simulation:simulation_lock_types",
+
+        # UDS is not part of the simulation variant.
+        "--//libs/bsw/uds:uds_configuration=//bazel/config:no_implementation",
+        "--//libs/bsw/uds:transport_configuration=//bazel/config:no_implementation",
+    ],
+    parents = [":posix"],
+)
+
+# S32K148 app platform. NXP Cortex-M4 with FreeRTOS, targeting the S32K148EVB.
 platform(
     name = "s32k148",
     constraint_values = [
@@ -52,10 +162,31 @@ platform(
         "--//libs/bsw/asyncFreeRtos:freertos_core_configuration=//executables/referenceApp/platforms/s32k148evb/freeRtosCoreConfiguration:freertos_core_configuration",
         "--//libs/bsw/async:async_platform=//libs/bsw/asyncFreeRtos:async_freertos",
         "--//libs/bsw/async:async_rtos_impl=//libs/bsw/asyncFreeRtos:async_freertos_impl",
+
+        # App configuration
+        "--//libs/bsw/common:configuration=//executables/referenceApp/configuration",
+
+        # ETL profile
+        "--//libs/3rdparty/etl:etl_profile=//executables/referenceApp/etl_profile",
     ],
 )
 
-# STM32G474RE platform. ARM Cortex-M4, FreeRTOS, FDCAN CAN controller.
+# S32K148 ThreadX app platform variant. Replaces FreeRTOS with ThreadX.
+platform(
+    name = "s32k148_threadx",
+    flags = [
+        # RTOS
+        "--//bazel/config/rtos=threadx",
+
+        # Async / configuration
+        "--//libs/bsw/async:async_platform=//libs/bsw/asyncThreadX:async_threadx",
+        "--//libs/bsw/async:async_rtos_impl=//libs/bsw/asyncThreadX:async_threadx_impl",
+    ],
+    parents = [":s32k148"],
+)
+
+# STM32G474RE app platform. ARM Cortex-M4 with FreeRTOS and an FDCAN CAN
+# controller, targeting the Nucleo-G474RE evaluation board.
 platform(
     name = "stm32g4",
     constraint_values = [
@@ -98,10 +229,25 @@ platform(
         "--//libs/bsw/asyncFreeRtos:freertos_core_configuration=//executables/referenceApp/platforms/nucleo_g474re/freeRtosCoreConfiguration:freertos_core_configuration",
         "--//libs/bsw/async:async_platform=//libs/bsw/asyncFreeRtos:async_freertos",
         "--//libs/bsw/async:async_rtos_impl=//libs/bsw/asyncFreeRtos:async_freertos_impl",
+
+        # App configuration
+        "--//libs/bsw/common:configuration=//executables/referenceApp/configuration",
+
+        # ETL profile
+        "--//libs/3rdparty/etl:etl_profile=//executables/referenceApp/etl_profile",
     ],
 )
 
-# STM32F413ZH platform. ARM Cortex-M4, FreeRTOS, BxCAN CAN controller.
+# STM32G474RE unit-test app platform variant. Runs test binaries on the Linux
+# host with the stm32g4 SoC constraint. Hardware-only BSP modules are replaced by mocks.
+platform(
+    name = "stm32g4_unit_test",
+    constraint_values = ["//bazel/platform/constraints/soc:stm32g4"],
+    parents = [":posix_unit_test"],
+)
+
+# STM32F413ZH app platform. ARM Cortex-M4 with FreeRTOS and a BxCAN CAN
+# controller, targeting the Nucleo-F413ZH evaluation board.
 platform(
     name = "stm32f4",
     constraint_values = [
@@ -144,116 +290,19 @@ platform(
         "--//libs/bsw/asyncFreeRtos:freertos_core_configuration=//executables/referenceApp/platforms/nucleo_f413zh/freeRtosCoreConfiguration:freertos_core_configuration",
         "--//libs/bsw/async:async_platform=//libs/bsw/asyncFreeRtos:async_freertos",
         "--//libs/bsw/async:async_rtos_impl=//libs/bsw/asyncFreeRtos:async_freertos_impl",
+
+        # App configuration
+        "--//libs/bsw/common:configuration=//executables/referenceApp/configuration",
+
+        # ETL profile
+        "--//libs/3rdparty/etl:etl_profile=//executables/referenceApp/etl_profile",
     ],
 )
 
-# STM32G474RE unit-test platform. Runs on the host OS so test binaries execute
-# natively, but carries the stm32g4 SoC constraint so chip-family implementations
-# resolve correctly. Hardware-only BSP modules are replaced by mocks.
-platform(
-    name = "stm32g4_unit_test",
-    constraint_values = ["//bazel/platform/constraints/soc:stm32g4"],
-    parents = [":posix_unit_test"],
-)
-
-# STM32F413ZH unit-test platform. Runs on the host OS so test binaries execute
-# natively, but carries the stm32f4 SoC constraint so chip-family implementations
-# resolve correctly. Hardware-only BSP modules are replaced by mocks.
+# STM32F413ZH unit-test app platform variant. Runs test binaries on the Linux
+# host with the stm32f4 SoC constraint. Hardware-only BSP modules are replaced by mocks.
 platform(
     name = "stm32f4_unit_test",
     constraint_values = ["//bazel/platform/constraints/soc:stm32f4"],
     parents = [":posix_unit_test"],
-)
-
-# POSIX host build. Inherits the autodetected host constraints/toolchain via `parents`, and
-# carries the posix PLATFORM_SUPPORT_* matrix. This is the DEFAULT platform (see .bazelrc), so a
-# plain `bazel build //...` is the posix build.
-platform(
-    name = "posix",
-    flags = [
-        # Features
-        "--//bazel/config/features:can=true",
-        "--//bazel/config/features:ethernet=true",
-        "--//bazel/config/features:io=false",
-        "--//bazel/config/features:ipv6=false",
-        "--//bazel/config/features:middleware=true",
-        "--//bazel/config/features:mpu=false",
-        "--//bazel/config/features:rom_check=false",
-        "--//bazel/config/features:storage=true",
-        "--//bazel/config/features:transport=true",
-        "--//bazel/config/features:uds=true",
-        "--//bazel/config/features:watchdog=false",
-
-        # RTOS
-        "--//bazel/config/rtos=freertos",
-
-        # BSP layer
-        "--//executables/referenceApp/safety/safeSupervisor:bsp_mcu=//platforms/posix/bsp/bspMcu:bsp_mcu",
-        "--//libs/bsp/bspInterrupts:bsp_interrupts_impl=//platforms/posix/bsp/bspInterruptsImpl:bsp_interrupts_impl",
-        "--//bazel/config/bsp:bsp_configuration=//executables/referenceApp/platforms/posix/bspConfiguration:bsp_configuration_headers",
-        "--//bazel/config/eth:eth_configuration=//executables/referenceApp/platforms/posix/ethConfiguration:eth_configuration",
-        "--//libs/bsp/bspCharInputOutput:bsp_uart=//platforms/posix/bsp/bspUart:bsp_uart",
-        # Posix has no bspIo. bsp_output_manager is not linked in posix executables.
-
-        # FreeRTOS port and hooks
-        "--//libs/3rdparty/freeRtos:freertos_port=//platforms/posix/3rdparty/freeRtosPosix:freertos_posix_port_headers",
-        "--//libs/3rdparty/freeRtos:freertos_port_impl=//platforms/posix/3rdparty/freeRtosPosix:freertos_posix",
-        "--//libs/3rdparty/freeRtos:freertos_os_hooks=//executables/referenceApp/platforms/posix/main:freertos_os_hooks",
-        "--//libs/3rdparty/freeRtos:freertos_impl=//libs/3rdparty/freeRtos:freertos",
-
-        # Async / configuration
-        "--//libs/bsw/asyncFreeRtos:freertos_core_configuration=//executables/referenceApp/platforms/posix/freeRtosCoreConfiguration:freertos_core_configuration",
-        "--//libs/bsw/async:async_platform=//libs/bsw/asyncFreeRtos:async_freertos",
-        "--//libs/bsw/async:async_rtos_impl=//libs/bsw/asyncFreeRtos:async_freertos_impl",
-    ],
-    parents = ["@platforms//host:host"],
-)
-
-# Middleware simulation build. Inherits posix and activates the simulation ETL
-# profile and concurrency lock types.
-platform(
-    name = "middleware_simulation",
-    flags = [
-        "--//bazel/config/build_variant=middleware_simulation",
-        "--//libs/3rdparty/etl:etl_profile=//libs/bsw/middleware/simulation:simulation_etl_profile",
-        "--//libs/bsw/middleware:middleware_lock_types=//libs/bsw/middleware/simulation:simulation_lock_types",
-    ],
-    parents = [":posix"],
-)
-
-# Unit-test build. Inherits posix and gates mock and test targets into scope.
-platform(
-    name = "posix_unit_test",
-    flags = [
-        "--//bazel/config/build_variant=unit_test",
-
-        # BSP layer
-        "--//libs/bsp/bspInterrupts:bsp_interrupts_impl=//libs/bsp/bspInterrupts:bsp_interrupts_mock",
-        "--//bazel/config/bsp:bsp_configuration=//executables/unitTest/bsp/bspConfiguration:bsp_configuration",
-        "--//bazel/config/bsp:bsp_io=//executables/unitTest/bsp/bspIo:bsp_io",
-
-        # FreeRTOS port and hooks
-        "--//libs/3rdparty/freeRtos:freertos_impl=//libs/3rdparty/freeRtos:freertos_mock",
-        "--//libs/bsw/asyncFreeRtos:freertos_core_configuration=//libs/bsw/asyncFreeRtos:freertos_core_configuration_mock",
-
-        # Async / configuration
-        "--//libs/bsw/async:async_platform=//libs/bsw/async:async_mock",
-        "--//libs/bsw/async:async_rtos_impl=//libs/bsw/async:async_mock_impl",
-        "--//libs/bsw/async:async_binding=//libs/bsw/asyncFreeRtos:async_binding_mock",
-        "--//libs/bsw/asyncFreeRtos:async_core_configuration=//libs/bsw/asyncFreeRtos:async_core_configuration_mock",
-
-        # lwip stack configuration
-        "--//libs/3rdparty/lwip:lwip_configuration=//executables/unitTest/lwipConfiguration:lwip_configuration",
-
-        # transport configuration
-        "--//libs/bsw/transportRouterSimple:transport_configuration=//executables/unitTest/transportConfiguration:transport_configuration",
-
-        # routing test configuration
-        "--//libs/bsw/routing:routing_configuration=//libs/bsw/routing:routing_test_configuration",
-        "--//libs/bsw/routing:routing_blob_configuration=//libs/bsw/routing:routing_test_blob_configuration",
-
-        # blob test configuration (ConfigType.h only, no CONFIGURATION_BLOB data)
-        "--//libs/bsw/blob:blob_configuration=//libs/bsw/blob:blob_test_config_type",
-    ],
-    parents = [":posix"],
 )

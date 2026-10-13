@@ -545,6 +545,34 @@ TEST_F(
     }
 }
 
+TEST_F(DoIpServerTransportMessageHandlerTest, TestDiagnosticAckAndNackReceived)
+{
+    DoIpServerTransportMessageHandler cut(
+        DoIpConstants::ProtocolVersion::version02Iso2012,
+        fDiagnosticSendJobBlockPool,
+        fProtocolSendJobBlockPool,
+        fConfig);
+    // open the connection
+    cut.connectionOpened(fServerConnectionMock);
+    // diagnostic ack & nack should yield no response
+    {
+        uint8_t const diagnosticAckMessage[]
+            = {0x02, 0xfd, 0x80, 0x02, 0x00, 0x00, 0x00, 0x05, 0x06, 0x07};
+        EXPECT_CALL(
+            fServerConnectionMock,
+            endReceiveMessage(IDoIpConnection::PayloadDiscardedCallbackType{}));
+        EXPECT_TRUE(cut.headerReceived(as_header(diagnosticAckMessage)));
+    }
+    {
+        uint8_t const diagnosticNackMessage[]
+            = {0x02, 0xfd, 0x80, 0x03, 0x00, 0x00, 0x00, 0x05, 0x06, 0x07};
+        EXPECT_CALL(
+            fServerConnectionMock,
+            endReceiveMessage(IDoIpConnection::PayloadDiscardedCallbackType{}));
+        EXPECT_TRUE(cut.headerReceived(as_header(diagnosticNackMessage)));
+    }
+}
+
 TEST_F(DoIpServerTransportMessageHandlerTest, TestGetTransportMessageErrorsCausesDiagnosticNacks)
 {
     DoIpServerTransportMessageHandler cut(

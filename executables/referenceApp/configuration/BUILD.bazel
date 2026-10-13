@@ -9,6 +9,7 @@
 # *******************************************************************************
 
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
+load("//bazel/config/build_variant:compatibility.bzl", "reference_app_only")
 
 cc_library(
     name = "blob_configuration_headers",
@@ -17,6 +18,7 @@ cc_library(
         "include/blob/configuration.h",
     ],
     strip_include_prefix = "include",
+    target_compatible_with = reference_app_only(),
     visibility = ["//visibility:public"],
 )
 
@@ -27,6 +29,7 @@ cc_library(
         "include/routing/constants.h",
     ],
     strip_include_prefix = "include",
+    target_compatible_with = reference_app_only(),
     visibility = ["//visibility:public"],
     # Exported headers include <etl/span.h> which is absent from CMake link deps.
     deps = ["//libs/3rdparty/etl"],
@@ -44,6 +47,7 @@ cc_library(
         "include/systems/IEthernetDriverSystem.h",
     ],
     strip_include_prefix = "include",
+    target_compatible_with = reference_app_only(),
     visibility = ["//visibility:public"],
     deps = [
         # appConfig.h guards bus addresses and ETL config under PLATFORM_SUPPORT_TRANSPORT/ETHERNET;

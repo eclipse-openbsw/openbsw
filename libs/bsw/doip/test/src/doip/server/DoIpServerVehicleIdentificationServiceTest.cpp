@@ -28,6 +28,12 @@ namespace
 using namespace ::testing;
 using namespace ::doip;
 
+MATCHER_P(IsDatagram, endpoint, "")
+{
+    ::udp::DatagramPacket const& argDatagram = arg;
+    return (argDatagram.getEndpoint() == endpoint);
+}
+
 class DoIpServerVehicleIdentificationServiceTest : public Test
 {
 public:
@@ -108,6 +114,89 @@ TEST_F(DoIpServerVehicleIdentificationServiceTest, TestAddSockets)
 
     // Shutdown
     cut.shutdown();
+}
+
+TEST_F(DoIpServerVehicleIdentificationServiceTest, ConfigChangeOnOneSocketKeepsOtherSocketsRequests)
+{
+    ::doip::declare::
+        DoIpServerVehicleIdentificationService<::udp::AbstractDatagramSocketMock, 2U, 2U, 1U, 1U>
+            cut(DoIpConstants::ProtocolVersion::version02Iso2012,
+                asyncContext,
+                fVehicleIdentificationCallbackMock,
+                fEntityStatusCallbackMock,
+                fNetworkInterfaceConfigRegistryMock,
+                0x1122U,
+                fParametersMock);
+
+    // add the first socket
+    ::ip::NetworkInterfaceConfigKey configKey1(0U);
+    auto& handler1 = cut.addSocket(12U, configKey1, ::ip::make_ip4(0x1U));
+    ::udp::AbstractDatagramSocketMock& socket1 = handler1.getSocket();
+    ::ip::NetworkInterfaceConfig const config1(0x1U, 0x00a8ffffU, 0x0U);
+
+    // and the second one
+    ::ip::NetworkInterfaceConfigKey configKey2(1U);
+    auto& handler2 = cut.addSocket(15U, configKey2, ::ip::make_ip4(0x2U));
+    ::udp::AbstractDatagramSocketMock& socket2 = handler2.getSocket();
+    ::ip::NetworkInterfaceConfig const config2(0x2U, 0x00a9ffffU, 0x0U);
+
+    // create a broadcast endpoint for the first socket
+    ::ip::IPEndpoint const broadcastEndpoint1(
+        config1.broadcastAddress(), DoIpConstants::Ports::UDP_DISCOVERY);
+
+    // start the service
+    EXPECT_CALL(fNetworkInterfaceConfigRegistryMock, getConfig(configKey1))
+        .WillOnce(Return(config1));
+    EXPECT_CALL(fNetworkInterfaceConfigRegistryMock, getConfig(configKey2))
+        .WillOnce(Return(config2));
+
+    // each socket schedules pending announcement request in the shared request pool
+    EXPECT_CALL(socket1, bind(NotNull(), DoIpConstants::Ports::UDP_DISCOVERY))
+        .WillOnce(Return(::udp::AbstractDatagramSocket::ErrorCode::UDP_SOCKET_OK));
+    EXPECT_CALL(socket2, bind(NotNull(), DoIpConstants::Ports::UDP_DISCOVERY))
+        .WillOnce(Return(::udp::AbstractDatagramSocket::ErrorCode::UDP_SOCKET_OK));
+
+    EXPECT_CALL(fParametersMock, getAnnounceWait()).WillRepeatedly(Return(50U));
+    EXPECT_CALL(fParametersMock, getAnnounceInterval()).WillRepeatedly(Return(500U));
+    EXPECT_CALL(timerMock, getSystemTimeMs32Bit()).WillRepeatedly(Return(0U));
+
+    cut.start();
+    testContext.expireAndExecute();
+    Mock::VerifyAndClearExpectations(&fNetworkInterfaceConfigRegistryMock);
+    Mock::VerifyAndClearExpectations(&socket1);
+    Mock::VerifyAndClearExpectations(&socket2);
+
+    // now change the network config of the second socket socket
+    ::ip::NetworkInterfaceConfig const newConfig2(0xc0a90101U, 0xc0a9ffffU, 0x0U);
+    EXPECT_CALL(socket2, close());
+    EXPECT_CALL(socket2, bind(NotNull(), DoIpConstants::Ports::UDP_DISCOVERY))
+        .WillOnce(Return(::udp::AbstractDatagramSocket::ErrorCode::UDP_SOCKET_OK));
+    fNetworkInterfaceConfigRegistryMock.configChangedSignal(configKey2, newConfig2);
+    testContext.expireAndExecute();
+    Mock::VerifyAndClearExpectations(&socket2);
+
+    EXPECT_CALL(fVehicleIdentificationCallbackMock, getVin(_)).Times(AnyNumber());
+    EXPECT_CALL(fVehicleIdentificationCallbackMock, getEid(_)).Times(AnyNumber());
+    EXPECT_CALL(fVehicleIdentificationCallbackMock, getGid(_)).Times(AnyNumber());
+
+    // the first socket's originally scheduled announcement must still be sent to own endpoint
+    EXPECT_CALL(
+        socket1, send(Matcher<::udp::DatagramPacket const&>(IsDatagram(broadcastEndpoint1))))
+        .WillOnce(Return(::udp::AbstractDatagramSocket::ErrorCode::UDP_SOCKET_OK));
+    EXPECT_CALL(socket2, send(Matcher<::udp::DatagramPacket const&>(_)))
+        .Times(AnyNumber())
+        .WillRepeatedly(Return(::udp::AbstractDatagramSocket::ErrorCode::UDP_SOCKET_OK));
+
+    // fire timeouts to call send()
+    testContext.setNow(50000U);
+    testContext.expireAndExecute();
+    Mock::VerifyAndClearExpectations(&socket1);
+    Mock::VerifyAndClearExpectations(&socket2);
+
+    EXPECT_CALL(socket1, close());
+    EXPECT_CALL(socket2, close());
+    cut.shutdown();
+    testContext.expireAndExecute();
 }
 
 } // namespace

@@ -399,6 +399,8 @@ cc_library(
     strip_include_prefix = "include",
     target_compatible_with = reference_app_only(),
     deps = [
+        # required by app headers including busid/BusId.h, ICanSystem.h, IEthernetDriverSystem.h
+        "//executables/referenceApp/configuration",
         # required by systems/EthernetSystem.h (transitive include); resolves per-platform
         "//bazel/config/eth:eth_configuration",
         # required by systems/SomeIpSystem.h (transitive include); not in CMake target_link_libraries
