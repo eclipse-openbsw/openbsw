@@ -11,14 +11,22 @@
 #pragma once
 
 #include "uds/base/Service.h"
+#include "udsFaultMgr/FaultManagementConfig.h"
 
 namespace uds
 {
 class IncomingDiagConnection;
+class DiagMgr;
 
 /**
  * UDS service ReadDTCInformation (0x19).
  *
+ * Backed by DiagMgr/FaultManager for real DTC data
+ * Supported sub-functions:
+ *   0x02 — ReportDTCByStatusMask
+ *   0x04 — ReportDTCSnapshotRecordByDTCNumber
+ *   0x06 — ReportDTCExtendedDataRecordByDTCNumber
+ *   0x0A — ReportSupportedDTCs
  */
 class ReadDTCInformation : public Service
 {
@@ -33,13 +41,36 @@ public:
 
     explicit ReadDTCInformation();
 
+    /**
+     * Wire the DiagMgr backend. Call during UdsSystem::init() before addDiagJobs().
+     * When set, all sub-functions use real FaultManager data.
+     * Without it, a safe stub response is returned.
+     */
+    void setDiagMgr(DiagMgr* diagMgr) { _diagMgr = diagMgr; }
+
 private:
+    static constexpr uint16_t RESPONSE_BUFFER_SIZE = 256U;
+
     DiagReturnCode::Type verify(uint8_t const request[], uint16_t requestLength) override;
 
     DiagReturnCode::Type process(
         IncomingDiagConnection& connection,
         uint8_t const request[],
         uint16_t requestLength) override;
+
+    DiagReturnCode::Type handleReportByStatusMask(
+        IncomingDiagConnection& connection, uint8_t const request[], uint16_t requestLength);
+
+    DiagReturnCode::Type handleReportSnapshotByDTCNumber(
+        IncomingDiagConnection& connection, uint8_t const request[], uint16_t requestLength);
+
+    DiagReturnCode::Type handleReportExtendedDataByDTCNumber(
+        IncomingDiagConnection& connection, uint8_t const request[], uint16_t requestLength);
+
+    DiagReturnCode::Type handleReportSupportedDTCs(
+        IncomingDiagConnection& connection, uint8_t const request[], uint16_t requestLength);
+
+    DiagMgr* _diagMgr;
 };
 
 } // namespace uds
