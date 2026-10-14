@@ -31,21 +31,20 @@ public:
     static auto* getMock()
     {
         ETL_ASSERT(gInstance != nullptr, ETL_ERROR_GENERIC("CrtpMock instance not set."));
-        return gInstance;
+        return static_cast<T*>(gInstance);
     }
 
-private:
-    static inline T* gInstance;
+protected:
+    CrtpMock() { gInstance = this; }
 
-    CrtpMock() { gInstance = static_cast<T*>(this); }
+private:
+    static inline CrtpMock<T>* gInstance{nullptr};
 
     // Explicitly disable copy/move to satisfy special member function guidelines
     CrtpMock(CrtpMock const&)            = delete;
     CrtpMock& operator=(CrtpMock const&) = delete;
     CrtpMock(CrtpMock&&)                 = delete;
     CrtpMock& operator=(CrtpMock&&)      = delete;
-
-    friend T;
 };
 
 } // namespace middleware::util
