@@ -73,10 +73,10 @@ protected:
 TEST_F(AggregatorTest, SingleByteAllocator)
 {
     // ARRANGE
-    uint32_t const chunkSize = sizeof(int32_t);
+    uint32_t const chunkSize = sizeof(uint8_t);
     auto const collectorFcn  = ::etl::delegate<void(
         uint64_t, memory::PoolStats)>::create<AggregatorTest, &AggregatorTest::collector>(*this);
-    auto* pool = reinterpret_cast<typename SingleByteAllocator::PoolByType<int32_t*>::type*>(
+    auto* pool = reinterpret_cast<typename SingleByteAllocator::PoolByType<uint8_t>::type*>(
         _singleByteAllocator.getPool<chunkSize>());
     EXPECT_TRUE(static_cast<bool>(pool));
     EXPECT_EQ(::etl::get<0>(pool->getProfile()), 1U);
@@ -112,12 +112,12 @@ TEST_F(AggregatorTest, SingleByteAllocator)
 TEST_F(AggregatorTest, SingleByteAllocatorMultipleAllocations)
 {
     // ARRANGE
-    uint32_t const chunkSize = sizeof(int32_t);
+    uint32_t const chunkSize = sizeof(uint8_t);
     uintptr_t tmp            = 0U;
 
     for (unsigned i = 0U; i < 50U; ++i)
     {
-        auto* pool = reinterpret_cast<typename SingleByteAllocator::PoolByType<int32_t*>::type*>(
+        auto* pool = reinterpret_cast<typename SingleByteAllocator::PoolByType<uint8_t>::type*>(
             _singleByteAllocator.getPool<chunkSize>());
         EXPECT_TRUE(static_cast<bool>(pool));
         EXPECT_EQ(::etl::get<0>(pool->getProfile()), 1U);
@@ -153,7 +153,7 @@ TEST_F(AggregatorTest, SimpleAllocator)
 {
     // ARRANGE
     uint32_t const chunkSize = sizeof(int32_t);
-    auto* pool = reinterpret_cast<typename SimpleAllocator::PoolByType<int32_t*>::type*>(
+    auto* pool = reinterpret_cast<typename SimpleAllocator::PoolByType<int32_t>::type*>(
         _simpleAllocator.getPool<chunkSize>());
     EXPECT_TRUE(static_cast<bool>(pool));
     EXPECT_EQ(::etl::get<0>(pool->getProfile()), 2U);
@@ -184,7 +184,7 @@ TEST_F(AggregatorTest, InvalidDeallocations)
 {
     // ARRANGE
     uint32_t const chunkSize = sizeof(int32_t);
-    auto* pool = reinterpret_cast<typename SimpleAllocator::PoolByType<int32_t*>::type*>(
+    auto* pool = reinterpret_cast<typename SimpleAllocator::PoolByType<int32_t>::type*>(
         _simpleAllocator.getPool<chunkSize>());
     EXPECT_TRUE(static_cast<bool>(pool));
     EXPECT_EQ(::etl::get<0>(pool->getProfile()), 2U);
@@ -212,7 +212,7 @@ TEST_F(AggregatorTest, InvalidDeallocations)
     EXPECT_FALSE(_simpleAllocator.isPtrValidImpl(nullptr));
     EXPECT_FALSE(_singleByteAllocator.isPtrValidImpl(nullptr));
     EXPECT_FALSE(_singleByteAllocator.isPtrValidImpl(reinterpret_cast<void*>(intPtr_2)));
-    auto* simplePool = reinterpret_cast<typename SimpleAllocator::PoolByType<void*>::type*>(
+    auto* simplePool = reinterpret_cast<typename SimpleAllocator::PoolByType<int32_t>::type*>(
         _simpleAllocator.getPool<chunkSize>());
     auto* poolBegin = simplePool->allocate(chunkSize);
     EXPECT_FALSE(_singleByteAllocator.isPtrValidImpl(
@@ -316,7 +316,7 @@ TEST_F(AggregatorTest, TwistedDeallocation)
 {
     // ARRANGE
     uint32_t const chunkSize = sizeof(int32_t);
-    auto* pool               = reinterpret_cast<typename SimpleAllocator::PoolByType<void*>::type*>(
+    auto* pool = reinterpret_cast<typename SimpleAllocator::PoolByType<int32_t>::type*>(
         _simpleAllocator.getPool<chunkSize>());
     EXPECT_TRUE(static_cast<bool>(pool));
     EXPECT_EQ(::etl::get<0>(pool->getProfile()), 2U);
