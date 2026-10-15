@@ -21,6 +21,7 @@
 #include "doip/server/IDoIpServerMessageHandler.h"
 
 #include <async/Types.h>
+#include <etl/array.h>
 #include <etl/intrusive_links.h>
 #include <etl/intrusive_list.h>
 #include <etl/pool.h>
@@ -226,7 +227,7 @@ private:
     ::async::ContextType const _context;
     State _state;
     uint8_t _socketGroupId;
-    uint8_t _readBuffer[11];
+    ::etl::array<uint8_t, 11> _readBuffer;
     bool _aliveCheckPending;
     bool _isOrWasRouting;
 };

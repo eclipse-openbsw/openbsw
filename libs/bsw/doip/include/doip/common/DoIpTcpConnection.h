@@ -23,6 +23,7 @@
 #include <tcp/IDataSendNotificationListener.h>
 #include <tcp/socket/AbstractSocket.h>
 
+#include <etl/array.h>
 #include <etl/intrusive_links.h>
 #include <etl/intrusive_list.h>
 #include <etl/span.h>
@@ -142,7 +143,7 @@ private:
     DetachCallbackType _detachCallback;
     SendJobList _pendingSendJobs;
     SendJobList _sentJobs;
-    uint8_t _headerBuffer[DoIpConstants::DOIP_HEADER_LENGTH];
+    ::etl::array<uint8_t, DoIpConstants::DOIP_HEADER_LENGTH> _headerBuffer;
     size_t _readPayloadLength;
     size_t _receivedBufferLength;
     size_t _availableReadDataLength;

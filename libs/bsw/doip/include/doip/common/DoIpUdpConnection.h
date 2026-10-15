@@ -23,6 +23,7 @@
 #include <udp/IDataSentListener.h>
 #include <udp/socket/AbstractDatagramSocket.h>
 
+#include <etl/array.h>
 #include <etl/intrusive_links.h>
 #include <etl/intrusive_list.h>
 
@@ -134,7 +135,7 @@ private:
     uint16_t _availableReadDataLength;
     uint16_t _readPayloadLength;
     ::async::ContextType const _context;
-    uint8_t _headerBuffer[DoIpConstants::DOIP_HEADER_LENGTH];
+    ::etl::array<uint8_t, DoIpConstants::DOIP_HEADER_LENGTH> _headerBuffer;
     ConnectionState _connectionState;
     ReadState _readState;
     uint8_t _suspendCallCounter;
