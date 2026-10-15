@@ -20,6 +20,7 @@
 #include <etl/span.h>
 #include <etl/type_traits.h>
 
+#include <cstddef>
 #include <cstdint>
 
 namespace middleware::core
@@ -177,6 +178,8 @@ private:
     emplaceExternalPayload(T const& obj, Message& msg, uint8_t const numberOfReferences)
     {
         static_assert(::etl::is_copy_constructible<T>::value, "T must have a copy constructor!");
+        static_assert(
+            alignof(T) <= alignof(std::max_align_t), "Over-aligned payloads are not supported");
 
         HRESULT ret = HRESULT::CannotAllocatePayload;
 
