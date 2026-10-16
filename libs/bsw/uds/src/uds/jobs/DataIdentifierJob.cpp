@@ -15,9 +15,15 @@
 namespace uds
 {
 DiagReturnCode::Type
-DataIdentifierJob::verify(uint8_t const* const request, uint16_t const /* requestLength */)
+DataIdentifierJob::verify(uint8_t const* const request, uint16_t const requestLength)
 {
-    if (!compare(request, getImplementedRequest() + 1U, 2U))
+    if (requestLength < 2U)
+    {
+        return DiagReturnCode::ISO_INVALID_FORMAT;
+    }
+
+    auto const implementedRequest = getImplementedRequestView();
+    if (!compare(request, implementedRequest.subspan(1U, 2U).data(), 2U))
     {
         return DiagReturnCode::NOT_RESPONSIBLE;
     }

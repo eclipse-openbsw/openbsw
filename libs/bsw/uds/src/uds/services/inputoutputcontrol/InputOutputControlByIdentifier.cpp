@@ -25,6 +25,7 @@ DiagReturnCode::Type
 InputOutputControlByIdentifier::verify(uint8_t const* const request, uint16_t const requestLength)
 {
     static constexpr uint8_t MIN_REQUEST_LEN = 4U;
+    ::etl::span<uint8_t const> const requestView(request, requestLength);
 
     DiagReturnCode::Type result = Service::verify(request, requestLength);
     if (DiagReturnCode::OK == result)
@@ -41,7 +42,7 @@ InputOutputControlByIdentifier::verify(uint8_t const* const request, uint16_t co
          * */
         uint8_t const controlParamOffset = 3U;
         InputOutputControlByIdentifier::IOControlParameter::ID const controlParameter
-            = static_cast<IOControlParameter::ID>(request[controlParamOffset]);
+            = static_cast<IOControlParameter::ID>(requestView[controlParamOffset]);
 
         if ((controlParameter == IOControlParameter::SHORT_TERM_ADJUSTMENT)
             && (requestLength < static_cast<uint8_t>(MIN_REQUEST_LEN + 1U)))
