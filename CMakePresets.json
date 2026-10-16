@@ -62,6 +62,32 @@
             }
         },
         {
+            "name": "tests-rp2xxx-debug",
+            "displayName": "Configure for testing RP2xxx modules (debug)",
+            "description": "Configure for testing RP2xxx modules (debug)",
+            "inherits": "_config-base",
+            "binaryDir": "${sourceDir}/build/tests/rp2xxx/Debug",
+            "cacheVariables": {
+                "CMAKE_DEFAULT_BUILD_TYPE": "Debug",
+                "CMAKE_CONFIGURATION_TYPES": "Debug",
+                "BUILD_EXECUTABLE": "unitTest",
+                "OPENBSW_PLATFORM": "rp2xxx"
+            }
+        },
+        {
+            "name": "tests-rp2xxx-release",
+            "displayName": "Configure for testing RP2xxx modules (release)",
+            "description": "Configure for testing RP2xxx modules (release)",
+            "inherits": "_config-base",
+            "binaryDir": "${sourceDir}/build/tests/rp2xxx/Release",
+            "cacheVariables": {
+                "CMAKE_DEFAULT_BUILD_TYPE": "Release",
+                "CMAKE_CONFIGURATION_TYPES": "Release",
+                "BUILD_EXECUTABLE": "unitTest",
+                "OPENBSW_PLATFORM": "rp2xxx"
+            }
+        },
+        {
             "name": "tests-stm32-debug",
             "displayName": "Configure for testing STM32 modules (debug)",
             "description": "Configure for testing STM32 modules (debug)",
@@ -225,6 +251,134 @@
             }
         },
         {
+            "name": "pipico-freertos",
+            "generator": "Ninja Multi-Config",
+            "displayName": "Pi Pico (RP2040) FreeRTOS configuration",
+            "description": "Configure for Pi Pico / RP2040 platform. The GCC or Clang ARM toolchain is picked automatically based on the CC/CXX environment variables (or -DCMAKE_C_COMPILER)",
+            "inherits": "_config-base",
+            "toolchainFile": "${sourceDir}/cmake/toolchains/ArmNoneEabi.cmake",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "BUILD_EXECUTABLE": "referenceApp",
+                "BUILD_TARGET_PLATFORM": "PIPICO",
+                "BUILD_TARGET_RTOS": "FREERTOS",
+                "CMAKE_CONFIGURATION_TYPES": "RelWithDebInfo;Debug;Release",
+                "CMAKE_DEFAULT_BUILD_TYPE": "RelWithDebInfo"
+            }
+        },
+        {
+            "name": "pipico-threadx",
+            "generator": "Ninja Multi-Config",
+            "displayName": "Pi Pico (RP2040) ThreadX configuration",
+            "description": "Configure for Pi Pico / RP2040 platform. The GCC or Clang ARM toolchain is picked automatically based on the CC/CXX environment variables (or -DCMAKE_C_COMPILER)",
+            "inherits": "_config-base",
+            "toolchainFile": "${sourceDir}/cmake/toolchains/ArmNoneEabi.cmake",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "BUILD_EXECUTABLE": "referenceApp",
+                "BUILD_TARGET_PLATFORM": "PIPICO",
+                "BUILD_TARGET_RTOS": "THREADX",
+                "CMAKE_CONFIGURATION_TYPES": "RelWithDebInfo;Debug;Release",
+                "CMAKE_DEFAULT_BUILD_TYPE": "RelWithDebInfo"
+            }
+        },
+        {
+            "name": "pico2-freertos",
+            "generator": "Ninja Multi-Config",
+            "displayName": "Pi Pico 2 (RP2350) FreeRTOS configuration",
+            "description": "Configure for Pi Pico 2 / RP2350 platform. The GCC or Clang ARM toolchain is picked automatically based on the CC/CXX environment variables (or -DCMAKE_C_COMPILER)",
+            "inherits": "_config-base",
+            "toolchainFile": "${sourceDir}/cmake/toolchains/ArmNoneEabi.cmake",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "BUILD_EXECUTABLE": "referenceApp",
+                "BUILD_TARGET_PLATFORM": "PICO2",
+                "BUILD_TARGET_RTOS": "FREERTOS",
+                "CMAKE_CONFIGURATION_TYPES": "RelWithDebInfo;Debug;Release",
+                "CMAKE_DEFAULT_BUILD_TYPE": "RelWithDebInfo"
+            }
+        },
+        {
+            "name": "pico2-threadx",
+            "generator": "Ninja Multi-Config",
+            "displayName": "Pi Pico 2 (RP2350) ThreadX configuration",
+            "description": "Configure for Pi Pico 2 / RP2350 platform. The GCC or Clang ARM toolchain is picked automatically based on the CC/CXX environment variables (or -DCMAKE_C_COMPILER)",
+            "inherits": "_config-base",
+            "toolchainFile": "${sourceDir}/cmake/toolchains/ArmNoneEabi.cmake",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "BUILD_EXECUTABLE": "referenceApp",
+                "BUILD_TARGET_PLATFORM": "PICO2",
+                "BUILD_TARGET_RTOS": "THREADX",
+                "CMAKE_CONFIGURATION_TYPES": "RelWithDebInfo;Debug;Release",
+                "CMAKE_DEFAULT_BUILD_TYPE": "RelWithDebInfo"
+            }
+        },
+        {
+            "name": "waveshare-rp2350-eth-freertos",
+            "generator": "Ninja Multi-Config",
+            "displayName": "Waveshare RP2350-ETH Mini FreeRTOS configuration",
+            "description": "Configure for Waveshare RP2350-ETH Mini / RP2350 platform. The GCC or Clang ARM toolchain is picked automatically based on the CC/CXX environment variables (or -DCMAKE_C_COMPILER)",
+            "inherits": "_config-base",
+            "toolchainFile": "${sourceDir}/cmake/toolchains/ArmNoneEabi.cmake",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "BUILD_EXECUTABLE": "referenceApp",
+                "BUILD_TARGET_PLATFORM": "WAVESHARE_RP2350_ETH",
+                "BUILD_TARGET_RTOS": "FREERTOS",
+                "CMAKE_CONFIGURATION_TYPES": "RelWithDebInfo;Debug;Release",
+                "CMAKE_DEFAULT_BUILD_TYPE": "RelWithDebInfo"
+            }
+        },
+        {
+            "name": "waveshare-rp2350-eth-threadx",
+            "generator": "Ninja Multi-Config",
+            "displayName": "Waveshare RP2350-ETH Mini ThreadX configuration",
+            "description": "Configure for Waveshare RP2350-ETH Mini / RP2350 platform. The GCC or Clang ARM toolchain is picked automatically based on the CC/CXX environment variables (or -DCMAKE_C_COMPILER)",
+            "inherits": "_config-base",
+            "toolchainFile": "${sourceDir}/cmake/toolchains/ArmNoneEabi.cmake",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "BUILD_EXECUTABLE": "referenceApp",
+                "BUILD_TARGET_PLATFORM": "WAVESHARE_RP2350_ETH",
+                "BUILD_TARGET_RTOS": "THREADX",
+                "CMAKE_CONFIGURATION_TYPES": "RelWithDebInfo;Debug;Release",
+                "CMAKE_DEFAULT_BUILD_TYPE": "RelWithDebInfo"
+            }
+        },
+        {
+            "name": "xiao-rp2350-freertos",
+            "generator": "Ninja Multi-Config",
+            "displayName": "Seeed Studio XIAO RP2350 FreeRTOS configuration",
+            "description": "Configure for Seeed Studio XIAO RP2350 / RP2350 platform. The GCC or Clang ARM toolchain is picked automatically based on the CC/CXX environment variables (or -DCMAKE_C_COMPILER)",
+            "inherits": "_config-base",
+            "toolchainFile": "${sourceDir}/cmake/toolchains/ArmNoneEabi.cmake",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "BUILD_EXECUTABLE": "referenceApp",
+                "BUILD_TARGET_PLATFORM": "XIAO_RP2350",
+                "BUILD_TARGET_RTOS": "FREERTOS",
+                "CMAKE_CONFIGURATION_TYPES": "RelWithDebInfo;Debug;Release",
+                "CMAKE_DEFAULT_BUILD_TYPE": "RelWithDebInfo"
+            }
+        },
+        {
+            "name": "xiao-rp2350-threadx",
+            "generator": "Ninja Multi-Config",
+            "displayName": "Seeed Studio XIAO RP2350 ThreadX configuration",
+            "description": "Configure for Seeed Studio XIAO RP2350 / RP2350 platform. The GCC or Clang ARM toolchain is picked automatically based on the CC/CXX environment variables (or -DCMAKE_C_COMPILER)",
+            "inherits": "_config-base",
+            "toolchainFile": "${sourceDir}/cmake/toolchains/ArmNoneEabi.cmake",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "BUILD_EXECUTABLE": "referenceApp",
+                "BUILD_TARGET_PLATFORM": "XIAO_RP2350",
+                "BUILD_TARGET_RTOS": "THREADX",
+                "CMAKE_CONFIGURATION_TYPES": "RelWithDebInfo;Debug;Release",
+                "CMAKE_DEFAULT_BUILD_TYPE": "RelWithDebInfo"
+            }
+        },
+        {
             "name": "s32k148-freertos",
             "generator": "Ninja Multi-Config",
             "displayName": "S32K148 FreeRTOS configuration",
@@ -293,6 +447,20 @@
             "configuration": "Release"
         },
         {
+            "name": "tests-rp2xxx-debug",
+            "displayName": "Build tests of RP2xxx modules (debug)",
+            "description": "Build tests of RP2xxx modules (debug)",
+            "configurePreset": "tests-rp2xxx-debug",
+            "configuration": "Debug"
+        },
+        {
+            "name": "tests-rp2xxx-release",
+            "displayName": "Build tests of RP2xxx modules (release)",
+            "description": "Build tests of RP2xxx modules (release)",
+            "configurePreset": "tests-rp2xxx-release",
+            "configuration": "Release"
+        },
+        {
             "name": "tests-stm32-debug",
             "displayName": "Build tests of STM32 modules (debug)",
             "description": "Build tests of STM32 modules (debug)",
@@ -355,6 +523,54 @@
             "configurePreset": "s32k148-rust"
         },
         {
+            "name": "pipico-freertos",
+            "displayName": "Pi Pico (RP2040) FreeRTOS build (GCC)",
+            "description": "Build reference application for the Pi Pico / RP2040 platform with GCC",
+            "configurePreset": "pipico-freertos"
+        },
+        {
+            "name": "pipico-threadx",
+            "displayName": "Pi Pico (RP2040) ThreadX build (GCC)",
+            "description": "Build reference application for the Pi Pico / RP2040 platform with GCC",
+            "configurePreset": "pipico-threadx"
+        },
+        {
+            "name": "pico2-freertos",
+            "displayName": "Pi Pico 2 (RP2350) FreeRTOS build (GCC)",
+            "description": "Build reference application for the Pi Pico 2 / RP2350 platform with GCC",
+            "configurePreset": "pico2-freertos"
+        },
+        {
+            "name": "pico2-threadx",
+            "displayName": "Pi Pico 2 (RP2350) ThreadX build (GCC)",
+            "description": "Build reference application for the Pi Pico 2 / RP2350 platform with GCC",
+            "configurePreset": "pico2-threadx"
+        },
+        {
+            "name": "waveshare-rp2350-eth-freertos",
+            "displayName": "Waveshare RP2350-ETH Mini FreeRTOS build (GCC)",
+            "description": "Build reference application for the Waveshare RP2350-ETH Mini / RP2350 platform with GCC",
+            "configurePreset": "waveshare-rp2350-eth-freertos"
+        },
+        {
+            "name": "waveshare-rp2350-eth-threadx",
+            "displayName": "Waveshare RP2350-ETH Mini ThreadX build (GCC)",
+            "description": "Build reference application for the Waveshare RP2350-ETH Mini / RP2350 platform with GCC",
+            "configurePreset": "waveshare-rp2350-eth-threadx"
+        },
+        {
+            "name": "xiao-rp2350-freertos",
+            "displayName": "Seeed Studio XIAO RP2350 FreeRTOS build (GCC)",
+            "description": "Build reference application for the Seeed Studio XIAO RP2350 / RP2350 platform with GCC",
+            "configurePreset": "xiao-rp2350-freertos"
+        },
+        {
+            "name": "xiao-rp2350-threadx",
+            "displayName": "Seeed Studio XIAO RP2350 ThreadX build (GCC)",
+            "description": "Build reference application for the Seeed Studio XIAO RP2350 / RP2350 platform with GCC",
+            "configurePreset": "xiao-rp2350-threadx"
+        },
+        {
             "name": "s32k148-freertos",
             "displayName": "S32K148 FreeRTOS build",
             "description": "Build reference application for S32K148 platform (Release by default; for Debug use --config Debug)",
@@ -395,6 +611,20 @@
             "description": "Run tests of S32K1XX modules (release)",
             "configuration": "Release",
             "configurePreset": "tests-s32k1xx-release"
+        },
+        {
+            "name": "tests-rp2xxx-debug",
+            "displayName": "Run tests of RP2xxx modules (debug)",
+            "description": "Run tests of RP2xxx modules (debug)",
+            "configuration": "Debug",
+            "configurePreset": "tests-rp2xxx-debug"
+        },
+        {
+            "name": "tests-rp2xxx-release",
+            "displayName": "Run tests of RP2xxx modules (release)",
+            "description": "Run tests of RP2xxx modules (release)",
+            "configuration": "Release",
+            "configurePreset": "tests-rp2xxx-release"
         },
         {
             "name": "tests-stm32-debug",
