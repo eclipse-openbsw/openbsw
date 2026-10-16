@@ -133,6 +133,12 @@ bool DoIpServerTransportMessageHandler::headerReceived(DoIpHeader const& header)
         _connection->endReceiveMessage(IDoIpConnection::PayloadDiscardedCallbackType{});
         return true;
     }
+    if ((header.payloadType == DoIpConstants::PayloadTypes::DIAGNOSTIC_MESSAGE_POSITIVE_ACK)
+        || (header.payloadType == DoIpConstants::PayloadTypes::DIAGNOSTIC_MESSAGE_NEGATIVE_ACK))
+    {
+        _connection->endReceiveMessage(IDoIpConnection::PayloadDiscardedCallbackType{});
+        return true;
+    }
     return false;
 }
 
