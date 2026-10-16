@@ -91,9 +91,6 @@ The committer must take the following points into account before approving the p
 - Are **tests** changed or added?
 - Is the contribution, including code, tests, and documentation, **compliant with the guidelines**?
 
-Some checks might not be applicable, e.g., if unit tests are explicitly excluded in
-:ref:`module_spec`.
-
 In case of findings, the pull request must not be approved or merged.
 Alternatively, e.g., if it is planned to post-deliver the documentation, a GitHub issue must be
 created and linked in the pull request.
