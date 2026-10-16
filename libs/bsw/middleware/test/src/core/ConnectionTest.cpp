@@ -69,7 +69,12 @@ struct ClusterConfigurationMockBase
 private:
     inline ::middleware::core::HRESULT getResultInternal() const
     {
-        return (_mockReturnCounter-- >= 1) ? returnHRESULT : ::middleware::core::HRESULT::Ok;
+        if (_mockReturnCounter > 0U)
+        {
+            --_mockReturnCounter;
+            return returnHRESULT;
+        }
+        return ::middleware::core::HRESULT::Ok;
     }
 
     ::middleware::core::HRESULT returnHRESULT{::middleware::core::HRESULT::Ok};
