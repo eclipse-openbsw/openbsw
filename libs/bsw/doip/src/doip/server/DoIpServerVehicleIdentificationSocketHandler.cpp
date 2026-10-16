@@ -169,8 +169,13 @@ void DoIpServerVehicleIdentificationSocketHandler::enqueueInitialBroadcastsUnica
 
 void DoIpServerVehicleIdentificationSocketHandler::configChangedContinuationAsync()
 {
-    // clear pending requests
-    _pendingRequests.clear();
+    // release only this socket's pending requests as the pool is shared with other sockets
+    while (!_pendingRequests.empty())
+    {
+        DoIpServerVehicleIdentificationRequest& request = _pendingRequests.front();
+        _pendingRequests.pop_front();
+        _config.getRequestPool().destroy(&request);
+    }
     _connection.close();
 
     bool isValid;
