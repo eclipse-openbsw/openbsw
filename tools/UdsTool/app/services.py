@@ -133,3 +133,36 @@ def ecuReset(client, data):
     response = client.send_request(req)
 
     return helper.handleResponse(response)
+
+
+def readDTCInformation(client, payload):
+    import binascii
+    from udsoncan.connections import PythonIsoTpConnection
+    # Build raw request: SID 0x19 + sub-function + params
+    raw_payload = bytes([0x19]) + binascii.unhexlify(payload)
+    client.conn.send(raw_payload)
+    response_bytes = client.conn.wait_frame(timeout=2, exception=True)
+    response_hex = binascii.hexlify(response_bytes).decode("ascii")
+    if response_bytes[0] == 0x59:
+        print(f"PositiveResponse: {response_hex}")
+    else:
+        print(f"NegativeResponse: {response_hex}")
+    return response_hex
+
+
+def clearDTC(client, group_of_dtc):
+    # group_of_dtc is a 6-char hex string e.g. "ffffff"
+    group = int(group_of_dtc, 16)
+    req = uds.ClearDiagnosticInformation.make_request(group)
+    response = client.send_request(req)
+
+    return helper.handleResponse(response)
+
+
+def controlDTCSetting(client, setting_type):
+    # setting_type: "01" = ON, "02" = OFF
+    st = int(setting_type, 16)
+    req = uds.ControlDTCSetting.make_request(st)
+    response = client.send_request(req)
+
+    return helper.handleResponse(response)

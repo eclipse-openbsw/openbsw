@@ -42,7 +42,10 @@ DiagReturnCode::Type SoftReset::process(
 {
     if (fUdsLifecycleConnector.isModeChangePossible())
     {
-        fDiagDispatcher.fEnabled = false;
+        // BUG-FIX: same as HardReset — fEnabled must NOT be cleared before the
+        // response is sent. sendPositiveResponse() is async; DiagDispatcher::send()
+        // checks fEnabled and returns TP_SEND_FAIL if false, dropping the 0x51 0x03
+        // acknowledgement frame.  Moved to responseSent() below.
         (void)connection.sendPositiveResponse(*this);
         return DiagReturnCode::OK;
     }
@@ -52,6 +55,8 @@ DiagReturnCode::Type SoftReset::process(
 void SoftReset::responseSent(
     IncomingDiagConnection& connection, ResponseSendResult const /* result */)
 {
+    // Gate against new requests only after the positive response is confirmed on the wire.
+    fDiagDispatcher.fEnabled = false;
     connection.terminate();
     if (!fUdsLifecycleConnector.requestShutdown(
             IUdsLifecycleConnector::SOFT_RESET, UdsConstants::RESET_TIME_SOFT))

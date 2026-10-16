@@ -11,16 +11,19 @@
 #include "uds/services/cleardiagnosticinformation/ClearDiagnosticInformation.h"
 
 #include "uds/connection/IncomingDiagConnection.h"
+#include "uds/diagmgr/DiagMgr.h"
 #include "uds/session/DiagSession.h"
 
 namespace uds
 {
+
 ClearDiagnosticInformation::ClearDiagnosticInformation()
 : Service(
     ServiceId::CLEAR_DIAGNOSTIC_INFORMATION,
     EXPECTED_REQUEST_LENGTH,
     RESPONSE_LENGTH,
     DiagSession::ALL_SESSIONS())
+, _diagMgr(nullptr)
 {
     setDefaultDiagReturnCode(DiagReturnCode::ISO_REQUEST_OUT_OF_RANGE);
 }
@@ -30,22 +33,25 @@ DiagReturnCode::Type ClearDiagnosticInformation::process(
     uint8_t const* const request,
     uint16_t const /* requestLength */)
 {
-    uint32_t const groupOfDTC = (static_cast<uint32_t>(request[0]) << 16)
-                                | (static_cast<uint32_t>(request[1]) << 8)
+    uint32_t const groupOfDTC = (static_cast<uint32_t>(request[0]) << 16U)
+                                | (static_cast<uint32_t>(request[1]) << 8U)
                                 | static_cast<uint32_t>(request[2]);
 
     switch (groupOfDTC)
     {
         case GROUP_ALL_DTCS:
         {
-            // Demo: clear all DTCs. Real DTC clearing is project-specific and will not be
-            // implemented in this reference file
+            // Delegate to DiagMgr if wired — clears RAM table + NVM (DGN-FEL009)
+            if (_diagMgr != nullptr)
+            {
+                (void)_diagMgr->clearAllDTCs();
+            }
             PositiveResponse& response = connection.releaseRequestGetResponse();
             (void)connection.sendPositiveResponseInternal(response.getLength(), *this);
             return DiagReturnCode::OK;
         }
-        // Additional groupOfDTC values (e.g. powertrain, chassis, body, network)
-        // are reserved for project-specific DEM implementation.
+        // Additional groupOfDTC values (powertrain, chassis, body, network) are
+        // reserved for project-specific DEM/DiagMgr extension.
         default:
         {
             return DiagReturnCode::ISO_REQUEST_OUT_OF_RANGE;

@@ -11,6 +11,7 @@
 #include "uds/services/readdtcinformation/ReadDTCInformation.h"
 
 #include "uds/connection/IncomingDiagConnectionMock.h"
+#include "uds/diagmgr/DiagMgr.h"
 #include "uds/session/ApplicationDefaultSession.h"
 #include "uds/session/DiagSessionManagerMock.h"
 
@@ -31,12 +32,20 @@ public:
     : fReadDTCInformation(), fIncomingDiagConnection(::async::CONTEXT_INVALID), fSessionManager()
     {}
 
-    virtual void SetUp() { fReadDTCInformation.setDefaultDiagSessionManager(fSessionManager); }
+    virtual void SetUp()
+    {
+        fReadDTCInformation.setDefaultDiagSessionManager(fSessionManager);
+        // Wire a real DiagMgr (RAM-only, no NVM backend) so tests exercise the
+        // production code path instead of the "no DiagMgr wired" stub path.
+        fDiagMgr.init();
+        fReadDTCInformation.setDiagMgr(&fDiagMgr);
+    }
 
 protected:
     ReadDTCInformation fReadDTCInformation;
     StrictMock<IncomingDiagConnectionMock> fIncomingDiagConnection;
     StrictMock<DiagSessionManagerMock> fSessionManager;
+    DiagMgr fDiagMgr;
 };
 
 TEST_F(ReadDTCInformationTest, execute_with_subfunction_0x02_and_valid_status_mask_should_return_OK)
@@ -88,12 +97,17 @@ TEST_F(
 
 TEST_F(
     ReadDTCInformationTest,
-    execute_with_subfunction_0x04_should_return_ISO_SUBFUNCTION_NOT_SUPPORTED)
+    execute_with_subfunction_0x04_and_unknown_DTC_should_return_ISO_REQUEST_OUT_OF_RANGE)
 {
-    uint8_t request[]
-        = {0x19U, // ReadDTCInformation SID
-           0x04U, // reportDTCSnapshotRecordByDTCNumber
-           0xFFU};
+    // Full request: [SID | subFunc | DTC_Hi | DTC_Mid | DTC_Lo | recordNumber]
+    uint8_t request[] = {
+        0x19U, // ReadDTCInformation SID
+        0x04U, // reportDTCSnapshotRecordByDTCNumber
+        0x12U, // DTC high byte
+        0x34U, // DTC middle byte
+        0x56U, // DTC low byte
+        0xFFU  // record number (all records)
+    };
 
     TransportMessageWithBuffer pRequest(0xF1U, 0x10U, request, 0U);
 
@@ -105,19 +119,25 @@ TEST_F(
     EXPECT_CALL(fSessionManager, acceptedJob(_, _, _, _))
         .WillRepeatedly(Return(uds::DiagReturnCode::OK));
 
+    // DiagMgr is wired but has no fault records - DTC 0x123456 is unknown.
     EXPECT_EQ(
-        DiagReturnCode::ISO_SUBFUNCTION_NOT_SUPPORTED,
+        DiagReturnCode::ISO_REQUEST_OUT_OF_RANGE,
         fReadDTCInformation.execute(fIncomingDiagConnection, request, sizeof(request)));
 }
 
 TEST_F(
     ReadDTCInformationTest,
-    execute_with_subfunction_0x06_should_return_ISO_SUBFUNCTION_NOT_SUPPORTED)
+    execute_with_subfunction_0x06_and_unknown_DTC_should_return_ISO_REQUEST_OUT_OF_RANGE)
 {
-    uint8_t request[]
-        = {0x19U, // ReadDTCInformation SID
-           0x06U, // reportDTCExtendedDataRecordByDTCNumber
-           0xFFU};
+    // Full request: [SID | subFunc | DTC_Hi | DTC_Mid | DTC_Lo | recordNumber]
+    uint8_t request[] = {
+        0x19U, // ReadDTCInformation SID
+        0x06U, // reportDTCExtendedDataRecordByDTCNumber
+        0x12U, // DTC high byte
+        0x34U, // DTC middle byte
+        0x56U, // DTC low byte
+        0xFFU  // record number (all records)
+    };
 
     TransportMessageWithBuffer pRequest(0xF1U, 0x10U, request, 0U);
 
@@ -129,19 +149,18 @@ TEST_F(
     EXPECT_CALL(fSessionManager, acceptedJob(_, _, _, _))
         .WillRepeatedly(Return(uds::DiagReturnCode::OK));
 
+    // DiagMgr is wired but has no fault records - DTC 0x123456 is unknown.
     EXPECT_EQ(
-        DiagReturnCode::ISO_SUBFUNCTION_NOT_SUPPORTED,
+        DiagReturnCode::ISO_REQUEST_OUT_OF_RANGE,
         fReadDTCInformation.execute(fIncomingDiagConnection, request, sizeof(request)));
 }
 
-TEST_F(
-    ReadDTCInformationTest,
-    execute_with_subfunction_0x0A_should_return_ISO_SUBFUNCTION_NOT_SUPPORTED)
+TEST_F(ReadDTCInformationTest, execute_with_subfunction_0x0A_should_return_OK)
 {
-    uint8_t request[]
-        = {0x19U, // ReadDTCInformation SID
-           0x0AU, // reportSupportedDTCs
-           0xFFU};
+    uint8_t request[] = {
+        0x19U, // ReadDTCInformation SID
+        0x0AU  // reportSupportedDTCs
+    };
 
     TransportMessageWithBuffer pRequest(0xF1U, 0x10U, request, 0U);
 
@@ -154,7 +173,7 @@ TEST_F(
         .WillRepeatedly(Return(uds::DiagReturnCode::OK));
 
     EXPECT_EQ(
-        DiagReturnCode::ISO_SUBFUNCTION_NOT_SUPPORTED,
+        DiagReturnCode::OK,
         fReadDTCInformation.execute(fIncomingDiagConnection, request, sizeof(request)));
 }
 
