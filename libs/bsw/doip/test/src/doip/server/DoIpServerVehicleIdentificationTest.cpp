@@ -12,6 +12,7 @@
 
 #include "doip/common/DoIpConstants.h"
 #include "doip/server/DoIpServerVehicleIdentificationCallbackMock.h"
+#include "doip/server/DoIpUdpOemMessageHandlerMock.h"
 
 #include <etl/array.h>
 
@@ -34,7 +35,11 @@ struct DoIpServerVehicleIdentificationTest : Test
             .WillByDefault(Return(DoIpConstants::DiagnosticPowerMode::READY));
     }
 
+    void SetUp() override { oemMessageHandlers[0xFEFEU] = &messageHandlerMock; }
+
     doip::DoIpServerVehicleIdentificationCallbackMock fVehicleIdentificationCallbackMock;
+    StrictMock<DoIpUdpOemMessageHandlerMock> messageHandlerMock;
+    ::etl::map<uint16_t, doip::IDoIpUdpOemMessageHandler*, 1U> oemMessageHandlers;
 };
 
 TEST_F(DoIpServerVehicleIdentificationTest, CallsFunctions)
@@ -91,6 +96,39 @@ TEST_F(DoIpServerVehicleIdentificationTest, CallsFunctions)
         EXPECT_CALL(fVehicleIdentificationCallbackMock, onVirReceived());
         cut.onVirReceived();
         Mock::VerifyAndClearExpectations(&fVehicleIdentificationCallbackMock);
+    }
+    {
+        EXPECT_EQ(cut.getOemMessageHandler(0xFFU), nullptr);
+    }
+}
+
+TEST_F(DoIpServerVehicleIdentificationTest, RetrieveOemMessageHandler)
+{
+    {
+        DoIpServerVehicleIdentification cut(
+            DoIpServerVehicleIdentification::GetVinCallback::create<
+                DoIpServerVehicleIdentificationCallbackMock,
+                &DoIpServerVehicleIdentificationCallbackMock::getVin>(
+                fVehicleIdentificationCallbackMock),
+            DoIpServerVehicleIdentification::GetGidCallback::create<
+                DoIpServerVehicleIdentificationCallbackMock,
+                &DoIpServerVehicleIdentificationCallbackMock::getGid>(
+                fVehicleIdentificationCallbackMock),
+            DoIpServerVehicleIdentification::GetEidCallback::create<
+                DoIpServerVehicleIdentificationCallbackMock,
+                &DoIpServerVehicleIdentificationCallbackMock::getEid>(
+                fVehicleIdentificationCallbackMock),
+            DoIpServerVehicleIdentification::GetPowerModeCallback::create<
+                DoIpServerVehicleIdentificationCallbackMock,
+                &DoIpServerVehicleIdentificationCallbackMock::getPowerMode>(
+                fVehicleIdentificationCallbackMock),
+            DoIpServerVehicleIdentification::OnVirReceivedCallback::create<
+                DoIpServerVehicleIdentificationCallbackMock,
+                &DoIpServerVehicleIdentificationCallbackMock::onVirReceived>(
+                fVehicleIdentificationCallbackMock),
+            &oemMessageHandlers);
+        EXPECT_EQ(cut.getOemMessageHandler(0xFFFFU), nullptr);
+        EXPECT_EQ(cut.getOemMessageHandler(0xFEFEU), &messageHandlerMock);
     }
 }
 
