@@ -11,7 +11,6 @@
 #include "routing/util.h"
 
 #include <blob/Blob.h>
-#include <etl/span.h>
 
 namespace routing
 {

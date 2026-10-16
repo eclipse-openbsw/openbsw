@@ -26,6 +26,7 @@ add_executable(
     src/routing/HeaderTest.cpp
     src/routing/RouterTest.cpp
     src/routing/LegacyTxAdapterTest.cpp
+    src/routing/CanFramePduConversionTest.cpp
     src/routing/PduTransportTxAdapterTest.cpp)
 
 target_include_directories(routingTest PUBLIC include)
@@ -33,6 +34,7 @@ target_include_directories(routingTest PUBLIC include)
 target_link_libraries(
     routingTest
     PRIVATE routing
+            routingPduConversion
             ioMock
             cpp2ethernetMock
             bspMock
