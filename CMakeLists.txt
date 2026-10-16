@@ -190,6 +190,7 @@ if (BUILD_EXECUTABLE STREQUAL "unitTest")
         add_subdirectory(libs/bsw/timer/test)
         add_subdirectory(libs/bsw/transport/test)
         add_subdirectory(libs/bsw/transportRouterSimple/test)
+        add_subdirectory(libs/bsw/transportRouter/test)
         add_subdirectory(libs/bsw/uds/test)
         add_subdirectory(libs/bsw/util/test)
 

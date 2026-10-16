@@ -1,0 +1,65 @@
+# *******************************************************************************
+# Copyright (c) 2026 Jefferson Nascimento
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+
+# AI disclosure: this file was largely generated with an AI assistant and was
+# reviewed and tested by the contributor. Assisted-by: Anthropic Claude Opus 5.5
+
+load("@rules_cc//cc:cc_library.bzl", "cc_library")
+load("@rules_cc//cc:cc_test.bzl", "cc_test")
+load("//bazel/config/build_variant:compatibility.bzl", "unit_test_only")
+
+cc_library(
+    name = "transport_router",
+    srcs = [
+        "src/transport/TpGatewayLogger.cpp",
+        "src/transport/routing/TransportRouter.cpp",
+        "src/transport/routing/TransportRouterStatistics.cpp",
+    ],
+    hdrs = [
+        "include/transport/TpGatewayLogger.h",
+        "include/transport/routing/DiagnosticRoute.h",
+        "include/transport/routing/IRouteObserver.h",
+        "include/transport/routing/TransportRouter.h",
+        "include/transport/routing/TransportRouterStatistics.h",
+    ],
+    strip_include_prefix = "include",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//libs/3rdparty/etl",
+        "//libs/bsw/transport",
+    ],
+)
+
+cc_library(
+    name = "transport_router_mock",
+    hdrs = glob(["mock/gmock/include/**/*.h"]),
+    strip_include_prefix = "mock/gmock/include",
+    target_compatible_with = unit_test_only(),
+    visibility = ["//visibility:public"],
+    deps = [
+        ":transport_router",
+        "//libs/3rdparty/googletest:gtest",
+    ],
+)
+
+cc_test(
+    name = "transport_router_test",
+    srcs = ["test/src/TransportRouterTest.cpp"],
+    target_compatible_with = unit_test_only(),
+    deps = [
+        ":transport_router",
+        ":transport_router_mock",
+        "//libs/3rdparty/etl",
+        "//libs/3rdparty/googletest:gtest_main",
+        "//libs/bsw/async:async_mock_impl",
+        "//libs/bsw/transport:transport_mock",
+        "//libs/bsw/util:util_mock",
+    ],
+)
