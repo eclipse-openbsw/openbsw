@@ -19,6 +19,8 @@
 #include "interrupts/suspendResumeAllInterrupts.h"
 #include "tx_api.h"
 
+#include <cstdint>
+
 #include <etl/array.h>
 #include <etl/error_handler.h>
 
@@ -278,23 +280,65 @@ bool ThreadXAdapter<Binding>::getStackUsage(size_t const taskIdx, StackUsage& st
         TX_THREAD& taskHandle = _taskContexts[taskIdx].getTaskHandle();
         stackUsage._stackSize = static_cast<uint32_t>(taskHandle.tx_thread_stack_size);
 
-#ifdef TX_ENABLE_STACK_CHECKING
-        // Downward stack growth
-        if (taskHandle.tx_thread_stack_end >= taskHandle.tx_thread_stack_start)
+        uintptr_t const stackStartAddress
+            = reinterpret_cast<uintptr_t>(taskHandle.tx_thread_stack_start);
+        size_t const stackSizeBytes       = taskHandle.tx_thread_stack_size;
+        uintptr_t const stackLimitAddress = stackStartAddress + stackSizeBytes;
+        size_t const wordSize             = sizeof(ULONG);
+
+        if (stackStartAddress == 0U || stackLimitAddress < stackStartAddress
+            || stackSizeBytes < wordSize)
         {
-            stackUsage._usedSize = static_cast<ULONG>(
-                reinterpret_cast<UCHAR*>(taskHandle.tx_thread_stack_end)
-                - reinterpret_cast<UCHAR*>(taskHandle.tx_thread_stack_highest_ptr));
+            stackUsage._usedSize = stackUsage._stackSize;
+            return true;
+        }
+
+        auto const isValidStackWord
+            = [stackStartAddress, stackLimitAddress](uintptr_t const address)
+        { return address >= stackStartAddress && address <= stackLimitAddress - wordSize; };
+
+#ifdef TX_ENABLE_STACK_CHECKING
+        uintptr_t const highestUsedAddress
+            = reinterpret_cast<uintptr_t>(taskHandle.tx_thread_stack_highest_ptr);
+        if (isValidStackWord(highestUsedAddress))
+        {
+            stackUsage._usedSize = static_cast<uint32_t>(stackLimitAddress - highestUsedAddress);
         }
         else
         {
-            stackUsage._usedSize = static_cast<ULONG>(
-                reinterpret_cast<UCHAR*>(taskHandle.tx_thread_stack_start)
-                - reinterpret_cast<UCHAR*>(taskHandle.tx_thread_stack_highest_ptr));
+            stackUsage._usedSize = stackUsage._stackSize;
+        }
+#else
+#ifndef TX_DISABLE_STACK_FILLING
+        constexpr UCHAR stackFillByte = static_cast<UCHAR>(TX_STACK_FILL);
+        constexpr ULONG stackFillWord
+            = static_cast<ULONG>(stackFillByte) * (~static_cast<ULONG>(0U) / 0xFFU);
+
+        uintptr_t currentAddress = stackStartAddress;
+        bool foundUsedWord = false;
+        while (isValidStackWord(currentAddress))
+        {
+            ULONG const* const currentWord = reinterpret_cast<ULONG const*>(currentAddress);
+            if (*currentWord != stackFillWord)
+            {
+                foundUsedWord = true;
+                break;
+            }
+            currentAddress += wordSize;
+        }
+
+        if (foundUsedWord)
+        {
+            stackUsage._usedSize = static_cast<uint32_t>(stackLimitAddress - currentAddress);
+        }
+        else
+        {
+            stackUsage._usedSize = 0U;
         }
 #else
         // no information available
         stackUsage._usedSize = 0;
+#endif
 #endif
         return true;
     }
