@@ -194,12 +194,6 @@ void {{ service.name }}Skeleton::set{{ attribute.name }}Attribute(const {{ attri
 
 // ATTRIBUTE / EVENT TRANSPORT (send forwards to the skeleton mock singleton)
 {% for attribute in service.attributes if attribute.event %}
-middleware::core::HRESULT {{ attribute.name }}Attribute::send(const AttributeType& value)
-{
-    auto* mock = {{ service.name }}SkeletonMock::getMock();
-    return mock->{{ attribute.variable }}.send(value);
-}
-
 middleware::core::HRESULT {{ attribute.name }}Attribute::send()
 {
     auto* mock = {{ service.name }}SkeletonMock::getMock();

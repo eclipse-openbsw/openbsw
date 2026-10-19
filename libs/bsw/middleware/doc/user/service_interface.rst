@@ -357,6 +357,9 @@ On the skeleton side, generated attributes expose:
    :end-before: [service-skeleton-attribute-set-end]
 
 * ``send()`` to notify subscribed proxies about the current attribute value.
+  It only broadcasts the stored value without changing it. When publishing a
+  new value, call ``set(value)`` separately before ``send()``. The local update
+  remains in effect even if sending fails.
 
 .. literalinclude:: ../examples/release/skeleton_app.h
    :language: cpp
@@ -382,8 +385,8 @@ reach the corresponding application overrides.
 Testing Attribute Publishing as a Skeleton
 ++++++++++++++++++++++++++++++++++++++++++
 
-The attribute send test verifies that the application publishes the expected
-attribute value and handles the generated status result.
+The attribute send test verifies that the application sends a notification and
+handles the generated status result.
 
 .. literalinclude:: ../examples/test/skeleton_mock_unit_test_example.cpp
   :language: cpp

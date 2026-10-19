@@ -23,7 +23,8 @@ public:
     void sendBroadcast()
     {
         data_.fooValue++;
-        auto const result = fooDefault.send(data_);
+        fooDefault.set(data_);
+        auto const result = fooDefault.send();
         if (result == ::middleware::core::HRESULT::Ok)
         {
             ::util::logger::Logger::info(
@@ -42,7 +43,8 @@ public:
     void setFooDefaultAttribute(org::test::foo::Foo::FooStruct const& value) override
     {
         data_ = value;
-        (void)fooDefault.send(data_);
+        fooDefault.set(data_);
+        (void)fooDefault.send();
         ::util::logger::Logger::info(
             ::util::logger::DEMO, "[Middleware] Foo set received, fooValue=%u", data_.fooValue);
     }
