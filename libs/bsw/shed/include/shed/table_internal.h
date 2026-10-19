@@ -13,14 +13,14 @@
 #include "shed/id.h"
 #include "shed/multi_list.h"
 
+#include <etl/algorithm.h>
 #include <etl/span.h>
 #include <etl/type_list.h>
+#include <etl/type_traits.h>
+#include <etl/utility.h>
 
 #include <cstddef>
 #include <cstdint>
-#include <cstring>
-#include <type_traits>
-#include <utility>
 
 namespace shed
 {
@@ -48,7 +48,8 @@ template<typename... Types>
 struct flat_tuple : Types...
 {
     template<typename... Args>
-    explicit flat_tuple(Args&&... args) : std::remove_reference_t<Args>(std::forward<Args>(args))...
+    explicit flat_tuple(Args&&... args)
+    : ::etl::remove_reference_t<Args>(::etl::forward<Args>(args))...
     {}
 
     flat_tuple(flat_tuple const&) = default;
@@ -83,20 +84,20 @@ void do_nothing(Types const...)
 template<typename F, typename T>
 void* ignore_return(F&& f, T&& t)
 {
-    std::forward<F>(f)(std::forward<T>(t));
+    ::etl::forward<F>(f)(::etl::forward<T>(t));
     return nullptr;
 }
 
 template<typename F, typename... Types>
 void ft_for_each(flat_tuple<Types...>& args, F&& f)
 {
-    do_nothing(ignore_return(std::forward<F>(f), *static_cast<Types*>(&args))...);
+    do_nothing(ignore_return(::etl::forward<F>(f), *static_cast<Types*>(&args))...);
 }
 
 template<typename F, typename... Types>
 void ft_for_each(flat_tuple<Types...> const& args, F&& f)
 {
-    do_nothing(ignore_return(std::forward<F>(f), *static_cast<Types*>(&args))...);
+    do_nothing(ignore_return(::etl::forward<F>(f), *static_cast<Types*>(&args))...);
 }
 
 struct FREE
@@ -141,7 +142,7 @@ struct state_data
         ml          = multi_list::make(n, types::size, ml_mem);
         generations = ml_mem.reinterpret_as<decltype(id::generation)>().first(n);
         ml_mem.advance(n * sizeof(decltype(id::generation)));
-        ::std::memset(generations.data(), 0, n * sizeof(decltype(id::generation)));
+        ::etl::fill_n(generations.data(), n, static_cast<decltype(id::generation)>(0));
     }
 
     multi_list* ml = nullptr;

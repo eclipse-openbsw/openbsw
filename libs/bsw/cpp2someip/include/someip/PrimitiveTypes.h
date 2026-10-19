@@ -12,12 +12,14 @@
 
 #include "someip/StringEncoding.h"
 
+#include <etl/memory.h>
 #include <etl/type_list.h>
 #include <util/meta/Bitmask.h>
 
 #include <cmath>
 #include <cstdint>
-#include <cstring>
+// etl::numeric_limits hardcodes is_iec559 == false, so <limits> is kept here: the
+// IEEE754 pack/unpack dispatch below relies on the real is_iec559 of the platform.
 #include <limits>
 
 namespace someip
@@ -59,9 +61,12 @@ static RT conversion(T const value)
 
     // in C it is possible to use unions to convert from one type to another (type-punning)
     // in C++ this behavior is compiler dependent and can therefore be undefined behavior
-    // as a solution memcpy can be used to convert from one type into another type
+    // as a solution a byte-wise copy can be used to convert from one type into another type
     RT dest{};
-    std::memcpy(&dest, &value, sizeof(value));
+    ::etl::mem_copy(
+        reinterpret_cast<unsigned char const*>(&value),
+        sizeof(value),
+        reinterpret_cast<unsigned char*>(&dest));
     return dest;
 }
 

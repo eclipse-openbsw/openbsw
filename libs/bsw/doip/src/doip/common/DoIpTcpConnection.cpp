@@ -20,6 +20,7 @@
 #include <etl/intrusive_links.h>
 #include <etl/intrusive_list.h>
 #include <etl/span.h>
+#include <etl/utility.h>
 #include <etl/variant.h>
 
 namespace doip
@@ -349,7 +350,7 @@ void DoIpTcpConnection::processNextReadChunk(size_t const bytesRead)
     {
         // The current read buffer has been completely processed (i. e. read or discarded)
         ::etl::span<uint8_t> currentReadBuffer;
-        ::std::swap(_currentReadBuffer, currentReadBuffer);
+        ::etl::swap(_currentReadBuffer, currentReadBuffer);
         _recurseRead = true;
         if (_readState == ReadState::HEADER)
         {

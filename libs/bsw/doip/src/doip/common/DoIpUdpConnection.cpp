@@ -20,6 +20,7 @@
 #include <etl/intrusive_list.h>
 #include <etl/memory.h>
 #include <etl/span.h>
+#include <etl/utility.h>
 #include <etl/variant.h>
 #include <udp/DatagramPacket.h>
 
@@ -203,7 +204,7 @@ void DoIpUdpConnection::tryReceive()
             break;
         }
         etl::span<uint8_t> currentReadBuffer;
-        ::std::swap(_currentReadBuffer, currentReadBuffer);
+        ::etl::swap(_currentReadBuffer, currentReadBuffer);
         if (_readState == ReadState::HEADER)
         {
             auto headerBuffer        = currentReadBuffer.reinterpret_as<DoIpHeader>();

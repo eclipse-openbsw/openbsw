@@ -12,6 +12,8 @@
 
 #include "shed/table_internal.h" // IWYU pragma: export
 
+#include <etl/utility.h>
+
 #include <cstddef>
 #include <cstdint>
 
@@ -51,7 +53,7 @@ struct table
     }
 
     template<typename... Args>
-    explicit table(Args&&... args) : columns(state_data(), std::forward<Args>(args)...), n(0)
+    explicit table(Args&&... args) : columns(state_data(), ::etl::forward<Args>(args)...), n(0)
     {}
 
     table(table const&)            = delete;
@@ -73,7 +75,7 @@ struct shared
     T value;
 
     template<typename... Args>
-    explicit shared(Args&&... args) : value(std::forward<Args>(args)...)
+    explicit shared(Args&&... args) : value(::etl::forward<Args>(args)...)
     {}
 
     T& operator[](size_t const) { return value; }
