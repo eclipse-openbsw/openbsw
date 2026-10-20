@@ -57,6 +57,10 @@ link it into the ECU build:
   links ``middleware``/``middlewareInterfaces`` (see
   ``executables/referenceApp/middlewareConfiguration/platform_integration/time/src/SystemTimeProvider.cpp``
   for the reference implementation).
+* **Bazel**: provide a ``cc_library`` defining the functions and bind it with the
+  ``--//libs/bsw/middleware:middleware_time=<label>`` flag in your platform
+  definition. The library must depend on ``//libs/bsw/middleware:middleware_interfaces``
+  rather than ``//libs/bsw/middleware``, and should set ``alwayslink = True``.
 
 The interface consists of two functions:
 
@@ -110,6 +114,9 @@ linked into the ECU build:
   links ``middleware``/``middlewareInterfaces`` (see
   ``executables/referenceApp/middlewareConfiguration/platform_integration/logger/src/LoggerImpl.cpp``
   for the reference implementation).
+* **Bazel**: provide a ``cc_library`` defining the functions and bind it with the
+  ``--//libs/bsw/middleware:middleware_logger=<label>`` flag in your platform
+  definition, with the same dependency rules as for the time interface.
 
 All logger functions below must be defined. Missing definitions will produce
 linker errors for unresolved logger symbols.
@@ -220,6 +227,9 @@ build:
   links ``middleware``/``middlewareInterfaces`` (see
   ``executables/referenceApp/middlewareConfiguration/platform_integration/os/src/OsDefinitions.cpp``
   for the reference implementation).
+* **Bazel**: provide a ``cc_library`` defining the function and bind it with the
+  ``--//libs/bsw/middleware:middleware_os=<label>`` flag in your platform
+  definition, with the same dependency rules as for the time interface.
 
 The platform integrator must provide the following function:
 
@@ -276,10 +286,11 @@ integrator:
   (see ``executables/referenceApp/middlewareConfiguration/include/platform_integration/middleware/concurrency/lock_types.h``
   for the reference implementation).
 * **Bazel**: expose the header through a ``cc_library`` and bind it with the
-  ``--//libs/bsw/middleware:middleware_lock_types=<label>`` flag in your
-  platform definition. The flag has no default, so platforms that do not bind it
-  cannot build ``//libs/bsw/middleware`` (see ``//bazel/platform`` for the
-  bindings used by the reference app, unit tests and simulation).
+  ``--//libs/bsw/middleware:middleware_concurrency=<label>`` flag in your
+  platform definition. Each of the four interface flags defaults to
+  ``//bazel/config:no_implementation``, which is incompatible, so platforms that
+  do not bind them cannot build ``//libs/bsw/middleware`` (see ``//bazel/platform``
+  for the bindings used by the reference app, unit tests and simulation).
 
 The platform integrator must provide both lock types in
 ``middleware/concurrency/lock_types.h`` under this namespace:

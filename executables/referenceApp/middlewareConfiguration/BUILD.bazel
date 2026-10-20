@@ -1,5 +1,6 @@
 # *******************************************************************************
 # Copyright (c) 2026 Accenture
+# Copyright (c) 2026 BMW AG
 #
 # This program and the accompanying materials are made available under the
 # terms of the Apache License Version 2.0 which is available at
@@ -16,11 +17,51 @@ load(
 )
 load(":generated_outputs.bzl", "GENERATED_OUTPUTS")
 
+# Bound by the posix platform to the middleware platform integration flags.
 cc_library(
-    name = "middleware_lock_types",
+    name = "middleware_concurrency",
     hdrs = ["platform_integration/concurrency/include/middleware/concurrency/lock_types.h"],
     strip_include_prefix = "platform_integration/concurrency/include",
     visibility = ["//libs/bsw/middleware:__pkg__"],
+)
+
+cc_library(
+    name = "middleware_logger",
+    srcs = ["platform_integration/logger/src/LoggerImpl.cpp"],
+    target_compatible_with = reference_app_posix_only(),
+    visibility = ["//libs/bsw/middleware:__pkg__"],
+    deps = [
+        "//executables/referenceApp/application:demo_logger",
+        "//libs/3rdparty/etl",
+        "//libs/bsw/middleware:middleware_interfaces",
+        "//libs/bsw/util",
+    ],
+    # Defines symbols that //libs/bsw/middleware references but the app does not.
+    alwayslink = True,
+)
+
+cc_library(
+    name = "middleware_os",
+    srcs = ["platform_integration/os/src/OsDefinitions.cpp"],
+    target_compatible_with = reference_app_posix_only(),
+    visibility = ["//libs/bsw/middleware:__pkg__"],
+    deps = [
+        "//executables/referenceApp/asyncBinding:async_binding",
+        "//libs/bsw/middleware:middleware_interfaces",
+    ],
+    alwayslink = True,
+)
+
+cc_library(
+    name = "middleware_time",
+    srcs = ["platform_integration/time/src/SystemTimeProvider.cpp"],
+    target_compatible_with = reference_app_posix_only(),
+    visibility = ["//libs/bsw/middleware:__pkg__"],
+    deps = [
+        "//libs/bsw/bsp",
+        "//libs/bsw/middleware:middleware_interfaces",
+    ],
+    alwayslink = True,
 )
 
 middleware_codegen(
@@ -33,27 +74,15 @@ middleware_codegen(
 
 cc_library(
     name = "middleware_configuration",
-    srcs = [
-        "platform_integration/logger/src/LoggerImpl.cpp",
-        "platform_integration/os/src/OsDefinitions.cpp",
-        "platform_integration/time/src/SystemTimeProvider.cpp",
-        "src/MemoryLayout.cpp",
-    ],
+    srcs = ["src/MemoryLayout.cpp"],
     hdrs = ["include/MemoryLayout.h"],
-    implementation_deps = [
-        "//executables/referenceApp/application:demo_logger",
-        "//libs/bsw/bsp",
-    ],
     strip_include_prefix = "include",
     target_compatible_with = reference_app_posix_only(),
     visibility = ["//visibility:public"],
     deps = [
         ":middleware_configuration_generated",
-        "//executables/referenceApp/asyncBinding:async_binding",
-        "//libs/bsw/logger",
         "//libs/bsw/middleware",
     ],
-    # NOTE: alwayslink is required because LoggerImpl.cpp implements
-    # middleware::logger::logBinary(), a symbol declared inside //libs/bsw/middleware.
+    # The generated code references MemoryLayout symbols but is linked after this library.
     alwayslink = True,
 )

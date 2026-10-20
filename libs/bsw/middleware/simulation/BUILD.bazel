@@ -28,10 +28,15 @@ cc_library(
 )
 
 cc_library(
-    name = "simulation_lock_types",
+    name = "simulation_concurrency",
+    srcs = ["platform_integration/concurrency/src/ConcurrencyImpl.cpp"],
     hdrs = ["platform_integration/concurrency/include/middleware/concurrency/lock_types.h"],
     strip_include_prefix = "platform_integration/concurrency/include",
+    target_compatible_with = middleware_simulation_only(),
     visibility = ["//libs/bsw/middleware:__pkg__"],
+    deps = ["//libs/bsw/middleware:middleware_concurrency_interfaces"],
+    # Defines symbols that //libs/bsw/middleware references but the binary does not.
+    alwayslink = True,
 )
 
 cc_library(
@@ -56,6 +61,38 @@ cc_library(
     ],
 )
 
+cc_library(
+    name = "simulation_logger",
+    srcs = ["platform_integration/logger/src/LoggerImpl.cpp"],
+    target_compatible_with = middleware_simulation_only(),
+    visibility = ["//libs/bsw/middleware:__pkg__"],
+    deps = [
+        ":simulation_private_headers",
+        "//libs/3rdparty/etl",
+        "//libs/bsw/middleware:middleware_interfaces",
+    ],
+    # Defines symbols that //libs/bsw/middleware references but the binary does not.
+    alwayslink = True,
+)
+
+cc_library(
+    name = "simulation_os",
+    srcs = ["platform_integration/os/src/OsDefinitions.cpp"],
+    target_compatible_with = middleware_simulation_only(),
+    visibility = ["//libs/bsw/middleware:__pkg__"],
+    deps = ["//libs/bsw/middleware:middleware_interfaces"],
+    alwayslink = True,
+)
+
+cc_library(
+    name = "simulation_time",
+    srcs = ["platform_integration/time/src/SystemTimeProvider.cpp"],
+    target_compatible_with = middleware_simulation_only(),
+    visibility = ["//libs/bsw/middleware:__pkg__"],
+    deps = ["//libs/bsw/middleware:middleware_interfaces"],
+    alwayslink = True,
+)
+
 middleware_codegen(
     name = "middleware_simulation_generated",
     deployment_yaml = "model/deployment-test.yaml",
@@ -69,7 +106,6 @@ middleware_codegen(
 cc_test(
     name = "middleware_simulation_foo_method_test",
     srcs = [
-        "platform_integration/concurrency/src/ConcurrencyImpl.cpp",
         "platform_integration/logger/src/LoggerImpl.cpp",
         "platform_integration/os/src/OsDefinitions.cpp",
         "src/Logger.cpp",
@@ -94,10 +130,6 @@ cc_test(
 cc_binary(
     name = "middleware_simulation",
     srcs = [
-        "platform_integration/concurrency/src/ConcurrencyImpl.cpp",
-        "platform_integration/logger/src/LoggerImpl.cpp",
-        "platform_integration/os/src/OsDefinitions.cpp",
-        "platform_integration/time/src/SystemTimeProvider.cpp",
         "src/Logger.cpp",
         "src/MainCore0.cpp",
         "src/MainCore1.cpp",
