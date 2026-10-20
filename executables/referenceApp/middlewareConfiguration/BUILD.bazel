@@ -16,6 +16,13 @@ load(
 )
 load(":generated_outputs.bzl", "GENERATED_OUTPUTS")
 
+cc_library(
+    name = "middleware_lock_types",
+    hdrs = ["platform_integration/concurrency/include/middleware/concurrency/lock_types.h"],
+    strip_include_prefix = "platform_integration/concurrency/include",
+    visibility = ["//libs/bsw/middleware:__pkg__"],
+)
+
 middleware_codegen(
     name = "middleware_configuration_generated",
     deployment_yaml = "model/deployment.yaml",

@@ -275,6 +275,11 @@ integrator:
   include path of any library that links ``middleware``/``middlewareInterfaces``
   (see ``executables/referenceApp/middlewareConfiguration/include/platform_integration/middleware/concurrency/lock_types.h``
   for the reference implementation).
+* **Bazel**: expose the header through a ``cc_library`` and bind it with the
+  ``--//libs/bsw/middleware:middleware_lock_types=<label>`` flag in your
+  platform definition. The flag has no default, so platforms that do not bind it
+  cannot build ``//libs/bsw/middleware`` (see ``//bazel/platform`` for the
+  bindings used by the reference app, unit tests and simulation).
 
 The platform integrator must provide both lock types in
 ``middleware/concurrency/lock_types.h`` under this namespace:

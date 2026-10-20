@@ -1,5 +1,6 @@
 # *******************************************************************************
 # Copyright (c) 2026 Accenture
+# Copyright (c) 2026 BMW AG
 #
 # This program and the accompanying materials are made available under the
 # terms of the Apache License Version 2.0 which is available at
@@ -18,6 +19,7 @@ load(
 )
 load(":generated_outputs.bzl", "GENERATED_OUTPUTS")
 
+# Bound by the middleware_simulation platform.
 cc_library(
     name = "simulation_etl_profile",
     hdrs = ["include/etl_profile.h"],
@@ -29,7 +31,7 @@ cc_library(
     name = "simulation_lock_types",
     hdrs = ["platform_integration/concurrency/include/middleware/concurrency/lock_types.h"],
     strip_include_prefix = "platform_integration/concurrency/include",
-    visibility = ["//visibility:public"],
+    visibility = ["//libs/bsw/middleware:__pkg__"],
 )
 
 cc_library(
@@ -54,15 +56,6 @@ cc_library(
     ],
 )
 
-# POSIX system libraries required by the simulation binary.
-cc_library(
-    name = "simulation_system_libs",
-    linkopts = [
-        "-lpthread",
-        "-lrt",
-    ],
-)
-
 middleware_codegen(
     name = "middleware_simulation_generated",
     deployment_yaml = "model/deployment-test.yaml",
@@ -82,11 +75,14 @@ cc_test(
         "src/Logger.cpp",
         "test/FooMethodTest.cpp",
     ],
+    linkopts = [
+        "-lpthread",
+        "-lrt",
+    ],
     target_compatible_with = unit_test_only(),
     deps = [
         ":middleware_simulation_generated",
         ":simulation_private_headers",
-        ":simulation_system_libs",
         "//libs/3rdparty/googletest:gtest_main",
         "//libs/bsw/middleware",
     ],
@@ -109,15 +105,16 @@ cc_binary(
         "src/ShmWrapper.cpp",
         "src/ShmWrapper.h",
     ],
+    linkopts = [
+        "-lpthread",
+        "-lrt",
+    ],
     tags = ["manual"],
     target_compatible_with = middleware_simulation_only(),
-    visibility = ["//visibility:public"],
     deps = [
         ":middleware_simulation_generated",
-        ":simulation_lock_types",
         ":simulation_private_headers",
         ":simulation_qualifiers",
-        ":simulation_system_libs",
         "//libs/bsw/middleware",
     ],
 )

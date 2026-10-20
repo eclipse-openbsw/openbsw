@@ -1,5 +1,6 @@
 # *******************************************************************************
 # Copyright (c) 2026 Accenture
+# Copyright (c) 2026 BMW AG
 #
 # This program and the accompanying materials are made available under the
 # terms of the Apache License Version 2.0 which is available at
@@ -12,19 +13,20 @@ load("@rules_cc//cc:cc_library.bzl", "cc_library")
 load("@rules_cc//cc:cc_test.bzl", "cc_test")
 load("//bazel/config/build_variant:compatibility.bzl", "unit_test_only")
 
-cc_library(
-    name = "middleware_lock_types_test_stub",
-    hdrs = ["test/include/middleware/concurrency/lock_types.h"],
-    strip_include_prefix = "test/include",
-)
-
-# lock_types.h provider. Platform integration supplies the concrete types at build time.
-#   Default:  host no-op stub
-#   Override: --//libs/bsw/middleware:middleware_lock_types=//<your>:lock_types
+# Provider of middleware/concurrency/lock_types.h. Every platform must declare this via its platform flags.
+#   Override: --//libs/bsw/middleware:middleware_lock_types=//path/to:your_lock_types
 label_flag(
     name = "middleware_lock_types",
-    build_setting_default = ":middleware_lock_types_test_stub",
-    visibility = ["//visibility:public"],
+    build_setting_default = "//bazel/config:no_implementation",
+)
+
+# No-op locks for host unit tests. Bound by the posix_unit_test platform.
+cc_library(
+    name = "middleware_lock_types_unit_test",
+    hdrs = ["test/include/middleware/concurrency/lock_types.h"],
+    strip_include_prefix = "test/include",
+    target_compatible_with = unit_test_only(),
+    visibility = ["//visibility:private"],
 )
 
 cc_library(
@@ -38,17 +40,75 @@ cc_library(
         "interfaces/include/middleware/time/SystemTimerProvider.h",
     ],
     strip_include_prefix = "interfaces/include",
-    visibility = ["//visibility:public"],
     deps = [
         ":middleware_lock_types",
         "//libs/3rdparty/etl",
     ],
 )
 
+# Platform integration must additionally provide the symbols declared in the
+# middleware/{logger,os,time} interface headers.
 cc_library(
     name = "middleware",
-    srcs = glob(["src/**/*.cpp"]),
-    hdrs = glob(["include/**/*.h"]),
+    srcs = [
+        "src/middleware/core/ClusterConnection.cpp",
+        "src/middleware/core/ClusterConnectionBase.cpp",
+        "src/middleware/core/DatabaseManipulator.cpp",
+        "src/middleware/core/EventSender.cpp",
+        "src/middleware/core/IClusterConnectionConfigurationBase.cpp",
+        "src/middleware/core/LoggerApi.cpp",
+        "src/middleware/core/MessagePayloadBuilder.cpp",
+        "src/middleware/core/MiddlewarePduBase.cpp",
+        "src/middleware/core/ProxyBase.cpp",
+        "src/middleware/core/ResponseBufferBase.cpp",
+        "src/middleware/core/SkeletonBase.cpp",
+        "src/middleware/memory/PoolBase.cpp",
+        "src/middleware/rpc/ProxyFireAndForgetMethod.cpp",
+        "src/middleware/rpc/ProxyMethodImpl.cpp",
+    ],
+    hdrs = [
+        "include/middleware/core/ClusterConnection.h",
+        "include/middleware/core/ClusterConnectionBase.h",
+        "include/middleware/core/DatabaseManipulator.h",
+        "include/middleware/core/EventSender.h",
+        "include/middleware/core/Future.h",
+        "include/middleware/core/IClusterConnection.h",
+        "include/middleware/core/IClusterConnectionConfigurationBase.h",
+        "include/middleware/core/IQualifier.h",
+        "include/middleware/core/ITimeoutHandler.h",
+        "include/middleware/core/InstancesDatabase.h",
+        "include/middleware/core/LoggerApi.h",
+        "include/middleware/core/Message.h",
+        "include/middleware/core/MessagePayloadBuilder.h",
+        "include/middleware/core/MiddlewarePdu.h",
+        "include/middleware/core/MiddlewarePduBase.h",
+        "include/middleware/core/ProxyAttribute.h",
+        "include/middleware/core/ProxyAttributeBase.h",
+        "include/middleware/core/ProxyBase.h",
+        "include/middleware/core/ProxyEventBase.h",
+        "include/middleware/core/ResponseBuffer.h",
+        "include/middleware/core/ResponseBufferBase.h",
+        "include/middleware/core/SkeletonAttribute.h",
+        "include/middleware/core/SkeletonBase.h",
+        "include/middleware/core/SkeletonEvent.h",
+        "include/middleware/core/TransceiverBase.h",
+        "include/middleware/core/TransceiverContainer.h",
+        "include/middleware/core/types.h",
+        "include/middleware/memory/Aggregator.h",
+        "include/middleware/memory/AllocatorBase.h",
+        "include/middleware/memory/AllocatorSelector.h",
+        "include/middleware/memory/AllocatorTypes.h",
+        "include/middleware/memory/Pool.h",
+        "include/middleware/memory/PoolBase.h",
+        "include/middleware/memory/impl/PoolIndexBySize.h",
+        "include/middleware/memory/impl/TupleSelectionSort.h",
+        "include/middleware/queue/Queue.h",
+        "include/middleware/queue/QueueBase.h",
+        "include/middleware/rpc/ProxyFireAndForgetMethod.h",
+        "include/middleware/rpc/ProxyMethod.h",
+        "include/middleware/rpc/ProxyMethodImpl.h",
+        "include/middleware/shm/Initialization.h",
+    ],
     strip_include_prefix = "include",
     visibility = ["//visibility:public"],
     deps = [
@@ -57,6 +117,7 @@ cc_library(
     ],
 )
 
+# Base for the mocks emitted by the middleware code generator.
 cc_library(
     name = "middleware_mock",
     hdrs = ["test/mock/include/util/crtp_mock.h"],
@@ -68,26 +129,36 @@ cc_library(
 
 cc_library(
     name = "middleware_test_support",
+    testonly = True,
     srcs = [
         "test/src/logger/mock/LoggerMock.cpp",
         "test/src/memory/mock/AllocatorMock.cpp",
         "test/src/os/OsDefinitions.cpp",
         "test/src/time/mock/SystemTimerProviderMock.cpp",
     ],
-    hdrs = glob(
-        ["test/src/**/*.h"],
-        exclude = ["test/src/concurrency/**"],
-    ),
+    hdrs = [
+        "test/src/core/InstancesDatabase.h",
+        "test/src/core/Proxy.h",
+        "test/src/core/ProxyAttributesUnderTest.h",
+        "test/src/core/ReferenceApp.h",
+        "test/src/core/Skeleton.h",
+        "test/src/core/mock/ClusterConnectionMock.h",
+        "test/src/core/mock/ProxyMock.h",
+        "test/src/logger/DslLogger.h",
+        "test/src/logger/mock/LoggerMock.h",
+        "test/src/memory/mock/AllocatorMock.h",
+        "test/src/time/mock/SystemTimerProviderMock.h",
+    ],
     strip_include_prefix = "test/src",
     target_compatible_with = unit_test_only(),
-    visibility = ["//visibility:public"],
     deps = [
         ":middleware",
         ":middleware_concurrency_mock",
-        ":middleware_interfaces",
         "//libs/3rdparty/etl",
         "//libs/3rdparty/googletest:gtest",
     ],
+    # The mocks define symbols that :middleware references but the tests do not.
+    alwayslink = True,
 )
 
 # libmiddleware.so references the platform hooks, so every test binary needs a definition.
@@ -97,7 +168,6 @@ cc_library(
     hdrs = ["test/src/concurrency/mock/ConcurrencyMock.h"],
     strip_include_prefix = "test/src",
     target_compatible_with = unit_test_only(),
-    visibility = ["//visibility:public"],
     deps = [
         ":middleware_interfaces",
         "//libs/3rdparty/googletest:gtest",
@@ -116,7 +186,6 @@ cc_test(
     ],
     target_compatible_with = unit_test_only(),
     deps = [
-        ":middleware",
         ":middleware_test_support",
         "//libs/3rdparty/googletest:gtest_main",
     ],
@@ -131,7 +200,6 @@ cc_test(
     ],
     target_compatible_with = unit_test_only(),
     deps = [
-        ":middleware",
         ":middleware_test_support",
         "//libs/3rdparty/googletest:gtest_main",
     ],
@@ -142,7 +210,6 @@ cc_test(
     srcs = ["test/src/core/DbManipulatorTest.cpp"],
     target_compatible_with = unit_test_only(),
     deps = [
-        ":middleware",
         ":middleware_test_support",
         "//libs/3rdparty/googletest:gtest_main",
     ],
@@ -156,7 +223,6 @@ cc_test(
     ],
     target_compatible_with = unit_test_only(),
     deps = [
-        ":middleware",
         ":middleware_test_support",
         "//libs/3rdparty/googletest:gtest_main",
     ],
@@ -170,7 +236,6 @@ cc_test(
     ],
     target_compatible_with = unit_test_only(),
     deps = [
-        ":middleware",
         ":middleware_test_support",
         "//libs/3rdparty/googletest:gtest_main",
     ],
@@ -193,7 +258,6 @@ cc_test(
     srcs = ["test/src/queue/QueueTest.cpp"],
     target_compatible_with = unit_test_only(),
     deps = [
-        ":middleware",
         ":middleware_test_support",
         "//libs/3rdparty/googletest:gtest_main",
     ],
@@ -208,7 +272,6 @@ cc_test(
     ],
     target_compatible_with = unit_test_only(),
     deps = [
-        ":middleware",
         ":middleware_test_support",
         "//libs/3rdparty/googletest:gtest_main",
     ],
@@ -219,7 +282,6 @@ cc_test(
     srcs = ["test/src/core/LoggerApi.cpp"],
     target_compatible_with = unit_test_only(),
     deps = [
-        ":middleware",
         ":middleware_test_support",
         "//libs/3rdparty/googletest:gtest_main",
     ],
