@@ -1,3 +1,13 @@
+# *******************************************************************************
+# Copyright (c) 2026 BMW AG
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+
 if (NOT UNIX)
     return()
 endif ()
@@ -56,37 +66,42 @@ add_custom_command(
 # -----------------------------------------------------------------------
 # Platform integration sources (concurrency / logger / OS / time stubs)
 # -----------------------------------------------------------------------
-set(PLATFORM_INTEGRATION_SRCS
-    platform_integration/logger/src/LoggerImpl.cpp
-    platform_integration/os/src/OsDefinitions.cpp
-    platform_integration/time/src/SystemTimeProvider.cpp)
+set(PLATFORM_INTEGRATION_SRCS platform_integration/logger/src/LoggerImpl.cpp
+                              platform_integration/os/src/OsDefinitions.cpp)
 
 # -----------------------------------------------------------------------
 # Simulation application
 # -----------------------------------------------------------------------
+if (BUILD_EXECUTABLE STREQUAL "unitTest")
+    set(_SIMULATION_TARGET middlewareSimulationFooMethodTest)
+    set(_APPLICATION_SRCS test/FooMethodTest.cpp)
+else ()
+    set(_SIMULATION_TARGET middlewareSimulation)
+    set(_APPLICATION_SRCS
+        platform_integration/time/src/SystemTimeProvider.cpp
+        src/ShmWrapper.cpp
+        src/MainCore0.cpp
+        src/MainCore1.cpp
+        src/Sample.cpp)
+endif ()
+
 add_executable(
-    middlewareSimulation
-    ${PLATFORM_INTEGRATION_SRCS}
-    ${GENERATED_SRCS}
-    src/Logger.cpp
-    src/ShmWrapper.cpp
-    src/MainCore0.cpp
-    src/MainCore1.cpp
-    src/Sample.cpp)
+    ${_SIMULATION_TARGET} ${PLATFORM_INTEGRATION_SRCS} ${GENERATED_SRCS}
+                          src/Logger.cpp ${_APPLICATION_SRCS})
 
 target_include_directories(
-    middlewareSimulation
+    ${_SIMULATION_TARGET}
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include
             ${_GEN_DIR}/include/generated_code
             ${CMAKE_CURRENT_SOURCE_DIR}/include/allocator
             ${CMAKE_CURRENT_SOURCE_DIR}/platform_integration/concurrency/include
 )
 
-target_link_libraries(middlewareSimulation PRIVATE middleware Threads::Threads
-                                                   rt)
+target_link_libraries(${_SIMULATION_TARGET} PRIVATE middleware Threads::Threads
+                                                    rt)
 
 target_include_directories(
-    middlewareSimulation
+    ${_SIMULATION_TARGET}
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/platform_integration/concurrency/include
 )
 
@@ -94,10 +109,23 @@ target_include_directories(
     middleware
     PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/platform_integration/concurrency/include)
 
-option(SIMULATION_USE_PROCESSES
-       "Run each simulated core in a separate OS process (default: threads)"
-       OFF)
-if (SIMULATION_USE_PROCESSES)
-    target_compile_definitions(middlewareSimulation
-                               PRIVATE SIMULATION_USE_PROCESSES)
+if (BUILD_EXECUTABLE STREQUAL "unitTest")
+    # Keep both profile directories in the system search path so the unit-test
+    # ETL profile takes precedence over the simulation profile.
+    target_include_directories(${_SIMULATION_TARGET} SYSTEM
+                               PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+    target_include_directories(
+        ${_SIMULATION_TARGET} BEFORE
+        PRIVATE ${CMAKE_SOURCE_DIR}/executables/unitTest/etl_profile)
+    target_link_libraries(${_SIMULATION_TARGET} PRIVATE gtest_main)
+    gtest_discover_tests(${_SIMULATION_TARGET} PROPERTIES LABELS
+                                                          "middlewareTest")
+else ()
+    option(SIMULATION_USE_PROCESSES
+           "Run each simulated core in a separate OS process (default: threads)"
+           OFF)
+    if (SIMULATION_USE_PROCESSES)
+        target_compile_definitions(middlewareSimulation
+                                   PRIVATE SIMULATION_USE_PROCESSES)
+    endif ()
 endif ()

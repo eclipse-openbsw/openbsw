@@ -37,6 +37,9 @@ services:
     namespace: org::test::foo
     name: Foo
     id: 1
+    typedefs:
+      - name: FooMethodResult
+        type: "::etl::array<uint32_t, 4>"
     datatypes:
       - name: FooStruct
         type: struct
@@ -61,6 +64,20 @@ services:
           timeout: 0
         consumer_request_limit: 1
         provider_request_limit: 1
+
+    methods:
+      - name: FooMethod
+        variable: fooMethod
+        id: 3
+        timeout: 5000
+        consumer_request_limit: 1
+        provider_request_limit: 1
+        input_param:
+          name: startValue
+          type: uint32_t
+        output_param:
+          name: result
+          type: "::org::test::foo::Foo::FooMethodResult"
 
     headers:
       common: org/test/foo/FooCommon.h

@@ -23,7 +23,8 @@ void run_main_core1()
     FooProxyWrapper<middleware::core::ClusterId::Cluster1> foo_consumer{};
     foo_consumer.init();
 
-    size_t counter = 0U;
+    size_t counter               = 0U;
+    uint32_t fooMethodStartValue = 0U;
     for (;;)
     {
         if (counter > 0 && counter % 600 == 0)
@@ -35,6 +36,11 @@ void run_main_core1()
         {
             // Request current FooDefault value every 6 seconds.
             foo_consumer.requestGet();
+            auto const fooMethodRequest = foo_consumer.requestFooMethod(fooMethodStartValue);
+            if (fooMethodRequest == middleware::core::HRESULT::Ok)
+            {
+                ++fooMethodStartValue;
+            }
 
             simulation::Logger::log(
                 static_cast<uint8_t>(::middleware::core::ClusterId::Cluster1),
@@ -58,6 +64,32 @@ void run_main_core1()
         counter++;
 
         middleware::processCluster1Cluster(10);
+        auto const fooMethodResult = foo_consumer.pollFooMethod();
+        using FooMethodState       = middleware::core::Future::State;
+        if (fooMethodResult.state == FooMethodState::Ready)
+        {
+            auto const& values = fooMethodResult.value;
+            simulation::Logger::log(
+                static_cast<uint8_t>(::middleware::core::ClusterId::Cluster1),
+                "FooMethod result, values=[",
+                values[0],
+                ", ",
+                values[1],
+                ", ",
+                values[2],
+                ", ",
+                values[3],
+                "]");
+        }
+        else if (
+            fooMethodResult.state != FooMethodState::Invalid
+            && fooMethodResult.state != FooMethodState::Pending)
+        {
+            simulation::Logger::log(
+                static_cast<uint8_t>(::middleware::core::ClusterId::Cluster1),
+                "FooMethod result failed, error=",
+                static_cast<unsigned>(fooMethodResult.state));
+        }
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
 

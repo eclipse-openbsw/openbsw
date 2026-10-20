@@ -10,7 +10,8 @@
 
 load("@rules_cc//cc:cc_binary.bzl", "cc_binary")
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
-load("//bazel/config/build_variant:compatibility.bzl", "middleware_simulation_only")
+load("@rules_cc//cc:cc_test.bzl", "cc_test")
+load("//bazel/config/build_variant:compatibility.bzl", "middleware_simulation_only", "unit_test_only")
 load(
     "//libs/bsw/middleware/tools/cpp_generator:middleware_codegen.bzl",
     "middleware_codegen",
@@ -55,6 +56,24 @@ middleware_codegen(
     deployment_yaml = "model/deployment-test.yaml",
     generated_outputs = GENERATED_OUTPUTS,
     deps = ["//libs/bsw/middleware"],
+)
+
+cc_test(
+    name = "middleware_simulation_foo_method_test",
+    srcs = [
+        "platform_integration/logger/src/LoggerImpl.cpp",
+        "platform_integration/os/src/OsDefinitions.cpp",
+        "src/Logger.cpp",
+        "test/FooMethodTest.cpp",
+    ],
+    target_compatible_with = unit_test_only(),
+    deps = [
+        ":middleware_simulation_generated",
+        ":simulation_private_headers",
+        ":simulation_system_libs",
+        "//libs/3rdparty/googletest:gtest_main",
+        "//libs/bsw/middleware",
+    ],
 )
 
 # The simulation ETL profile enables type trait compiler builtins that the available

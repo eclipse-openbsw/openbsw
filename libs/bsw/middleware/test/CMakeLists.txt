@@ -1,3 +1,13 @@
+# *******************************************************************************
+# Copyright (c) 2026 BMW AG
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+
 add_library(
     middlewareTestSupport STATIC
     src/logger/mock/LoggerMock.cpp src/memory/mock/AllocatorMock.cpp
@@ -52,3 +62,8 @@ add_middleware_unit_test(
 add_middleware_unit_test(middlewareLoggingApiTest src/core/LoggerApi.cpp)
 
 add_custom_target(middlewareTest DEPENDS ${MIDDLEWARE_TEST_TARGETS})
+
+if (UNIX)
+    add_subdirectory(../simulation ${CMAKE_CURRENT_BINARY_DIR}/simulation)
+    add_dependencies(middlewareTest middlewareSimulationFooMethodTest)
+endif ()
