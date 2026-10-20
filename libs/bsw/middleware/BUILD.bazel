@@ -119,25 +119,10 @@ cc_library(
     ],
 )
 
-cc_library(
-    name = "middleware",
+# File lists shared by :middleware and the *_code_to_doc filegroups.
+filegroup(
+    name = "middleware_core_hdrs",
     srcs = [
-        "src/middleware/core/ClusterConnection.cpp",
-        "src/middleware/core/ClusterConnectionBase.cpp",
-        "src/middleware/core/DatabaseManipulator.cpp",
-        "src/middleware/core/EventSender.cpp",
-        "src/middleware/core/IClusterConnectionConfigurationBase.cpp",
-        "src/middleware/core/LoggerApi.cpp",
-        "src/middleware/core/MessagePayloadBuilder.cpp",
-        "src/middleware/core/MiddlewarePduBase.cpp",
-        "src/middleware/core/ProxyBase.cpp",
-        "src/middleware/core/ResponseBufferBase.cpp",
-        "src/middleware/core/SkeletonBase.cpp",
-        "src/middleware/memory/PoolBase.cpp",
-        "src/middleware/rpc/ProxyFireAndForgetMethod.cpp",
-        "src/middleware/rpc/ProxyMethodImpl.cpp",
-    ],
-    hdrs = [
         "include/middleware/core/ClusterConnection.h",
         "include/middleware/core/ClusterConnectionBase.h",
         "include/middleware/core/DatabaseManipulator.h",
@@ -165,6 +150,34 @@ cc_library(
         "include/middleware/core/TransceiverBase.h",
         "include/middleware/core/TransceiverContainer.h",
         "include/middleware/core/types.h",
+        "include/middleware/rpc/ProxyFireAndForgetMethod.h",
+        "include/middleware/rpc/ProxyMethod.h",
+        "include/middleware/rpc/ProxyMethodImpl.h",
+    ],
+)
+
+filegroup(
+    name = "middleware_core_srcs",
+    srcs = [
+        "src/middleware/core/ClusterConnection.cpp",
+        "src/middleware/core/ClusterConnectionBase.cpp",
+        "src/middleware/core/DatabaseManipulator.cpp",
+        "src/middleware/core/EventSender.cpp",
+        "src/middleware/core/IClusterConnectionConfigurationBase.cpp",
+        "src/middleware/core/LoggerApi.cpp",
+        "src/middleware/core/MessagePayloadBuilder.cpp",
+        "src/middleware/core/MiddlewarePduBase.cpp",
+        "src/middleware/core/ProxyBase.cpp",
+        "src/middleware/core/ResponseBufferBase.cpp",
+        "src/middleware/core/SkeletonBase.cpp",
+        "src/middleware/rpc/ProxyFireAndForgetMethod.cpp",
+        "src/middleware/rpc/ProxyMethodImpl.cpp",
+    ],
+)
+
+filegroup(
+    name = "middleware_memory_hdrs",
+    srcs = [
         "include/middleware/memory/Aggregator.h",
         "include/middleware/memory/AllocatorBase.h",
         "include/middleware/memory/AllocatorSelector.h",
@@ -173,12 +186,33 @@ cc_library(
         "include/middleware/memory/PoolBase.h",
         "include/middleware/memory/impl/PoolIndexBySize.h",
         "include/middleware/memory/impl/TupleSelectionSort.h",
+    ],
+)
+
+filegroup(
+    name = "middleware_memory_srcs",
+    srcs = ["src/middleware/memory/PoolBase.cpp"],
+)
+
+filegroup(
+    name = "middleware_queue_hdrs",
+    srcs = [
         "include/middleware/queue/Queue.h",
         "include/middleware/queue/QueueBase.h",
-        "include/middleware/rpc/ProxyFireAndForgetMethod.h",
-        "include/middleware/rpc/ProxyMethod.h",
-        "include/middleware/rpc/ProxyMethodImpl.h",
+    ],
+)
+
+cc_library(
+    name = "middleware",
+    srcs = [
+        ":middleware_core_srcs",
+        ":middleware_memory_srcs",
+    ],
+    hdrs = [
         "include/middleware/shm/Initialization.h",
+        ":middleware_core_hdrs",
+        ":middleware_memory_hdrs",
+        ":middleware_queue_hdrs",
     ],
     strip_include_prefix = "include",
     visibility = ["//visibility:public"],
@@ -189,6 +223,91 @@ cc_library(
         ":middleware_time",
         "//libs/3rdparty/etl",
     ],
+)
+
+# Sources of each middleware module, for the documentation tooling to trace code to docs.
+filegroup(
+    name = "middleware_interface_concurrency_code_to_doc",
+    srcs = ["interfaces/include/middleware/concurrency/LockStrategies.h"],
+    visibility = ["//visibility:public"],
+)
+
+filegroup(
+    name = "middleware_interface_logger_code_to_doc",
+    srcs = ["interfaces/include/middleware/logger/Logger.h"],
+    visibility = ["//visibility:public"],
+)
+
+filegroup(
+    name = "middleware_interface_os_code_to_doc",
+    srcs = ["interfaces/include/middleware/os/TaskIdProvider.h"],
+    visibility = ["//visibility:public"],
+)
+
+filegroup(
+    name = "middleware_interface_time_code_to_doc",
+    srcs = ["interfaces/include/middleware/time/SystemTimerProvider.h"],
+    visibility = ["//visibility:public"],
+)
+
+filegroup(
+    name = "middleware_core_code_to_doc",
+    srcs = [
+        ":middleware_core_hdrs",
+        ":middleware_core_srcs",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+filegroup(
+    name = "middleware_core_test_code_to_doc",
+    srcs = [
+        "test/src/core/ClusterConfigurationTest.cpp",
+        "test/src/core/ConnectionTest.cpp",
+        "test/src/core/DbManipulatorTest.cpp",
+        "test/src/core/LoggerApi.cpp",
+        "test/src/core/MessagePayloadBuilderTest.cpp",
+        "test/src/core/MessageTest.cpp",
+        "test/src/core/ProxyAttributesTest.cpp",
+        "test/src/core/ProxyBaseTest.cpp",
+        "test/src/core/ResponseBufferTest.cpp",
+        "test/src/core/SkeletonAttributeTest.cpp",
+        "test/src/core/SkeletonBaseTest.cpp",
+        "test/src/rpc/ProxyFireAndForgetMethodTest.cpp",
+        "test/src/rpc/ProxyMethodTest.cpp",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+filegroup(
+    name = "middleware_memory_code_to_doc",
+    srcs = [
+        ":middleware_memory_hdrs",
+        ":middleware_memory_srcs",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+filegroup(
+    name = "middleware_memory_test_code_to_doc",
+    srcs = [
+        "test/src/memory/AggregatorTest.cpp",
+        "test/src/memory/AllocatorBaseTest.cpp",
+        "test/src/memory/PoolsTest.cpp",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+filegroup(
+    name = "middleware_queue_code_to_doc",
+    srcs = [":middleware_queue_hdrs"],
+    visibility = ["//visibility:public"],
+)
+
+filegroup(
+    name = "middleware_queue_test_code_to_doc",
+    srcs = ["test/src/queue/QueueTest.cpp"],
+    visibility = ["//visibility:public"],
 )
 
 # Base for the mocks emitted by the middleware code generator.
