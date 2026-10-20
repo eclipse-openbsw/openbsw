@@ -13,8 +13,9 @@
 #include "middleware/ClusterCluster0.h"
 #include "middleware/ClusterCluster1.h"
 #include "middleware/shm/Config.h"
-#include "middleware/time/SystemTimerProvider.h"
+#include "time/mock/SystemTimerProviderMock.h"
 
+#include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
 #include <limits>
@@ -25,13 +26,6 @@ namespace
 {
 uint32_t currentTimeMs{};
 }
-
-namespace middleware::time
-{
-uint32_t getCurrentTimeInMs() { return currentTimeMs; }
-
-uint32_t getCurrentTimeInUs() { return currentTimeMs * 1000U; }
-} // namespace middleware::time
 
 namespace middleware::shm
 {
@@ -59,6 +53,10 @@ protected:
         layout.~MemoryLayout();
         new (&layout) middleware::shm::MemoryLayout();
         currentTimeMs = 0U;
+        ON_CALL(timerMock, getCurrentTimeInMs()).WillByDefault([]() { return currentTimeMs; });
+        ON_CALL(timerMock, getCurrentTimeInUs())
+            .WillByDefault([]() { return currentTimeMs * 1000U; });
+        middleware::time::test::setSystemTimerProviderMock(&timerMock);
         middleware::initializeCluster0ClusterConnection();
         middleware::initializeCluster1ClusterConnection();
         provider.init();
@@ -69,6 +67,7 @@ protected:
     {
         consumer.deInit();
         provider.deInit();
+        middleware::time::test::unsetSystemTimerProviderMock();
     }
 
     void roundTrip()
@@ -85,6 +84,7 @@ protected:
         EXPECT_EQ(consumer.pollFooMethod().state, State::Invalid);
     }
 
+    ::testing::NiceMock<middleware::time::test::SystemTimerProviderMock> timerMock;
     FooSkeletonWrapper provider;
     Consumer consumer;
 };

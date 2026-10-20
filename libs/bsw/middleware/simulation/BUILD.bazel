@@ -106,8 +106,6 @@ middleware_codegen(
 cc_test(
     name = "middleware_simulation_foo_method_test",
     srcs = [
-        "platform_integration/logger/src/LoggerImpl.cpp",
-        "platform_integration/os/src/OsDefinitions.cpp",
         "src/Logger.cpp",
         "test/FooMethodTest.cpp",
     ],
@@ -124,9 +122,6 @@ cc_test(
     ],
 )
 
-# The simulation ETL profile enables type trait compiler builtins that the available
-# compilers do not fully implement, so this binary cannot be compiled in this
-# environment. It must be built explicitly with a compiler that provides those builtins.
 cc_binary(
     name = "middleware_simulation",
     srcs = [
