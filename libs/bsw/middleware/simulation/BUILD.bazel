@@ -19,7 +19,12 @@ load(
 )
 load(":generated_outputs.bzl", "GENERATED_OUTPUTS")
 
-# Bound by the middleware_simulation platform.
+# ------------------------------------------------------------------------------
+# Platform integration
+#
+# Bound by the middleware_simulation platform via its platform flags.
+# ------------------------------------------------------------------------------
+
 cc_library(
     name = "simulation_etl_profile",
     hdrs = ["include/etl_profile.h"],
@@ -34,31 +39,9 @@ cc_library(
     strip_include_prefix = "platform_integration/concurrency/include",
     target_compatible_with = middleware_simulation_only(),
     visibility = ["//libs/bsw/middleware:__pkg__"],
-    deps = ["//libs/bsw/middleware:middleware_concurrency_interfaces"],
+    deps = ["//libs/bsw/middleware:middleware_interfaces"],
     # Defines symbols that //libs/bsw/middleware references but the binary does not.
     alwayslink = True,
-)
-
-cc_library(
-    name = "simulation_private_headers",
-    hdrs = [
-        "include/Logger.h",
-        "include/foo/FooProxyWrapper.h",
-        "include/foo/FooSkeletonWrapper.h",
-    ],
-    strip_include_prefix = "include",
-)
-
-cc_library(
-    name = "simulation_qualifiers",
-    hdrs = [
-        "platform_integration/qualifier/include/middleware/signal/qualifier.h",
-    ],
-    strip_include_prefix = "platform_integration/qualifier/include",
-    deps = [
-        "//libs/3rdparty/etl",
-        "//libs/bsw/middleware",
-    ],
 )
 
 cc_library(
@@ -93,6 +76,22 @@ cc_library(
     alwayslink = True,
 )
 
+cc_library(
+    name = "simulation_qualifiers",
+    hdrs = [
+        "platform_integration/qualifier/include/middleware/signal/qualifier.h",
+    ],
+    strip_include_prefix = "platform_integration/qualifier/include",
+    deps = [
+        "//libs/3rdparty/etl",
+        "//libs/bsw/middleware:middleware_hdrs",
+    ],
+)
+
+# ------------------------------------------------------------------------------
+# Generated code
+# ------------------------------------------------------------------------------
+
 middleware_codegen(
     name = "middleware_simulation_generated",
     deployment_yaml = "model/deployment-test.yaml",
@@ -102,6 +101,20 @@ middleware_codegen(
         "//libs/bsw/middleware",
     ],
 )
+
+cc_library(
+    name = "simulation_private_headers",
+    hdrs = [
+        "include/Logger.h",
+        "include/foo/FooProxyWrapper.h",
+        "include/foo/FooSkeletonWrapper.h",
+    ],
+    strip_include_prefix = "include",
+)
+
+# ------------------------------------------------------------------------------
+# Simulation and tests
+# ------------------------------------------------------------------------------
 
 cc_test(
     name = "middleware_simulation_foo_method_test",

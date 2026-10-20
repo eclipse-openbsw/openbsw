@@ -13,110 +13,60 @@ load("@rules_cc//cc:cc_library.bzl", "cc_library")
 load("@rules_cc//cc:cc_test.bzl", "cc_test")
 load("//bazel/config/build_variant:compatibility.bzl", "unit_test_only")
 
-# Platform integration points. Every platform must bind each flag via its platform flags.
+# ------------------------------------------------------------------------------
+# Platform integration flags
+#
+# Every platform must bind each flag via its platform flags.
 #   Override: --//libs/bsw/middleware:<flag>=//path/to:your_implementation
+# ------------------------------------------------------------------------------
 
 # Provides middleware/concurrency/lock_types.h.
 label_flag(
     name = "middleware_concurrency",
     build_setting_default = "//bazel/config:no_implementation",
+    visibility = ["//visibility:public"],
 )
 
 # Defines the functions declared in middleware/logger/Logger.h.
 label_flag(
     name = "middleware_logger",
     build_setting_default = "//bazel/config:no_implementation",
+    visibility = ["//visibility:public"],
 )
 
 # Defines the functions declared in middleware/os/TaskIdProvider.h.
 label_flag(
     name = "middleware_os",
     build_setting_default = "//bazel/config:no_implementation",
+    visibility = ["//visibility:public"],
 )
 
 # Defines the functions declared in middleware/time/SystemTimerProvider.h.
 label_flag(
     name = "middleware_time",
     build_setting_default = "//bazel/config:no_implementation",
-)
-
-# Unit test bindings, selected by the posix_unit_test platform.
-cc_library(
-    name = "middleware_concurrency_unit_test",
-    hdrs = ["test/include/middleware/concurrency/lock_types.h"],
-    strip_include_prefix = "test/include",
-    target_compatible_with = unit_test_only(),
-    deps = [":middleware_concurrency_mock"],
-)
-
-cc_library(
-    name = "middleware_logger_unit_test",
-    srcs = ["test/src/logger/mock/LoggerMock.cpp"],
-    hdrs = [
-        "test/src/logger/DslLogger.h",
-        "test/src/logger/mock/LoggerMock.h",
-    ],
-    strip_include_prefix = "test/src",
-    target_compatible_with = unit_test_only(),
-    deps = [
-        ":middleware_interfaces",
-        "//libs/3rdparty/etl",
-        "//libs/3rdparty/googletest:gtest",
-    ],
-    # The mock defines symbols that :middleware references but the tests do not.
-    alwayslink = True,
-)
-
-cc_library(
-    name = "middleware_os_unit_test",
-    srcs = ["test/src/os/OsDefinitions.cpp"],
-    target_compatible_with = unit_test_only(),
-    deps = [":middleware_interfaces"],
-    alwayslink = True,
-)
-
-cc_library(
-    name = "middleware_time_unit_test",
-    srcs = ["test/src/time/mock/SystemTimerProviderMock.cpp"],
-    hdrs = ["test/src/time/mock/SystemTimerProviderMock.h"],
-    strip_include_prefix = "test/src",
-    target_compatible_with = unit_test_only(),
-    deps = [
-        ":middleware_interfaces",
-        "//libs/3rdparty/etl",
-        "//libs/3rdparty/googletest:gtest",
-    ],
-    alwayslink = True,
-)
-
-# Public so platform integrations can implement the interfaces without depending on
-# :middleware, which would create a cycle through the flags above.
-# The hook headers are split out because the concurrency binding defines them.
-cc_library(
-    name = "middleware_concurrency_interfaces",
-    hdrs = [
-        "interfaces/include/middleware/concurrency/MemoryFences.h",
-        "interfaces/include/middleware/concurrency/SpinLock.h",
-    ],
-    strip_include_prefix = "interfaces/include",
     visibility = ["//visibility:public"],
 )
 
+# ------------------------------------------------------------------------------
+# Library
+# ------------------------------------------------------------------------------
+
+# Public so platform integrations can implement the interfaces without depending on
+# :middleware, which would create a cycle through the flags above.
 cc_library(
     name = "middleware_interfaces",
     hdrs = [
         "interfaces/include/middleware/concurrency/LockStrategies.h",
+        "interfaces/include/middleware/concurrency/MemoryFences.h",
+        "interfaces/include/middleware/concurrency/SpinLock.h",
         "interfaces/include/middleware/logger/Logger.h",
         "interfaces/include/middleware/os/TaskIdProvider.h",
         "interfaces/include/middleware/time/SystemTimerProvider.h",
     ],
     strip_include_prefix = "interfaces/include",
     visibility = ["//visibility:public"],
-    deps = [
-        ":middleware_concurrency",
-        ":middleware_concurrency_interfaces",
-        "//libs/3rdparty/etl",
-    ],
+    deps = ["//libs/3rdparty/etl"],
 )
 
 # File lists shared by :middleware and the *_code_to_doc filegroups.
@@ -202,12 +152,10 @@ filegroup(
     ],
 )
 
+# Headers only and free of platform flags; targets that include them must also depend on
+# :middleware, which supplies middleware/concurrency/lock_types.h.
 cc_library(
-    name = "middleware",
-    srcs = [
-        ":middleware_core_srcs",
-        ":middleware_memory_srcs",
-    ],
+    name = "middleware_hdrs",
     hdrs = [
         ":middleware_core_hdrs",
         ":middleware_memory_hdrs",
@@ -217,6 +165,21 @@ cc_library(
     visibility = ["//visibility:public"],
     deps = [
         ":middleware_interfaces",
+        "//libs/3rdparty/etl",
+    ],
+)
+
+cc_library(
+    name = "middleware",
+    srcs = [
+        ":middleware_core_srcs",
+        ":middleware_memory_srcs",
+    ],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":middleware_concurrency",
+        ":middleware_hdrs",
+        ":middleware_interfaces",
         ":middleware_logger",
         ":middleware_os",
         ":middleware_time",
@@ -224,7 +187,12 @@ cc_library(
     ],
 )
 
+# ------------------------------------------------------------------------------
+# Documentation
+#
 # Sources of each middleware module, for the documentation tooling to trace code to docs.
+# ------------------------------------------------------------------------------
+
 filegroup(
     name = "middleware_interface_concurrency_code_to_doc",
     srcs = ["interfaces/include/middleware/concurrency/LockStrategies.h"],
@@ -309,6 +277,10 @@ filegroup(
     visibility = ["//visibility:public"],
 )
 
+# ------------------------------------------------------------------------------
+# Mocks and unit test support
+# ------------------------------------------------------------------------------
+
 # Base for the mocks emitted by the middleware code generator.
 cc_library(
     name = "middleware_mock",
@@ -317,6 +289,59 @@ cc_library(
     target_compatible_with = unit_test_only(),
     visibility = ["//visibility:public"],
     deps = ["//libs/3rdparty/etl"],
+)
+
+# Unit test bindings for the platform flags, selected by the posix_unit_test platform.
+cc_library(
+    name = "middleware_concurrency_unit_test",
+    hdrs = ["test/include/middleware/concurrency/lock_types.h"],
+    strip_include_prefix = "test/include",
+    target_compatible_with = unit_test_only(),
+    visibility = ["//visibility:public"],
+    deps = [":middleware_concurrency_mock"],
+)
+
+cc_library(
+    name = "middleware_logger_unit_test",
+    srcs = ["test/src/logger/mock/LoggerMock.cpp"],
+    hdrs = [
+        "test/src/logger/DslLogger.h",
+        "test/src/logger/mock/LoggerMock.h",
+    ],
+    strip_include_prefix = "test/src",
+    target_compatible_with = unit_test_only(),
+    visibility = ["//visibility:public"],
+    deps = [
+        ":middleware_interfaces",
+        "//libs/3rdparty/etl",
+        "//libs/3rdparty/googletest:gtest",
+    ],
+    # The mock defines symbols that :middleware references but the tests do not.
+    alwayslink = True,
+)
+
+cc_library(
+    name = "middleware_os_unit_test",
+    srcs = ["test/src/os/OsDefinitions.cpp"],
+    target_compatible_with = unit_test_only(),
+    visibility = ["//visibility:public"],
+    deps = [":middleware_interfaces"],
+    alwayslink = True,
+)
+
+cc_library(
+    name = "middleware_time_unit_test",
+    srcs = ["test/src/time/mock/SystemTimerProviderMock.cpp"],
+    hdrs = ["test/src/time/mock/SystemTimerProviderMock.h"],
+    strip_include_prefix = "test/src",
+    target_compatible_with = unit_test_only(),
+    visibility = ["//visibility:public"],
+    deps = [
+        ":middleware_interfaces",
+        "//libs/3rdparty/etl",
+        "//libs/3rdparty/googletest:gtest",
+    ],
+    alwayslink = True,
 )
 
 cc_library(
@@ -354,11 +379,15 @@ cc_library(
     strip_include_prefix = "test/src",
     target_compatible_with = unit_test_only(),
     deps = [
-        ":middleware_concurrency_interfaces",
+        ":middleware_interfaces",
         "//libs/3rdparty/googletest:gtest",
     ],
     alwayslink = True,
 )
+
+# ------------------------------------------------------------------------------
+# Unit tests
+# ------------------------------------------------------------------------------
 
 cc_test(
     name = "middleware_proxy_skeleton_base_test",
