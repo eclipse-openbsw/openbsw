@@ -13,10 +13,11 @@ User documentation
 ==================
 
 The ``middleware`` framework provides a way to communicate with different processes that may be located either in the same core or another core.
-This user guide covers service-oriented communication patterns.
+This user guide covers service-oriented and PDU-based signal communication patterns.
 
 .. toctree::
    :maxdepth: 2
    :caption: Contents
 
    service_interface
+   pdu_signal_interface

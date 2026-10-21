@@ -1,0 +1,37 @@
+/********************************************************************************
+ * Copyright (c) 2026 BMW AG
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Apache License Version 2.0 which is available at
+ * https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ ********************************************************************************/
+{% from "macros/common.jinja" import file_header %}{{ file_header() }}
+#pragma once
+
+#include <middleware/core/IQualifier.h>
+#include "{{ pdu.headers.common }}"
+
+namespace {{ pdu.namespace }}
+{
+using middleware::core::IQualifier;
+
+class {{ pdu.name }}Reader final
+{
+
+public:
+    explicit {{ pdu.name }}Reader (IQualifier* const qualifier);
+
+    /**
+     * \brief Takes one PDU snapshot, qualifies it, and returns all decoded signals.
+     *
+     * \return A copy of the PDU signals, deserialized.
+     */
+    [[nodiscard]] {{ pdu.name }} read();
+
+private:
+    IQualifier* qualifier_{nullptr};
+};
+
+}  // namespace {{ pdu.namespace }}

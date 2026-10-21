@@ -11,6 +11,7 @@ add_library(
     src/middleware/core/IClusterConnectionConfigurationBase.cpp
     src/middleware/core/LoggerApi.cpp
     src/middleware/core/MessagePayloadBuilder.cpp
+    src/middleware/core/MiddlewarePduBase.cpp
     src/middleware/core/ProxyBase.cpp
     src/middleware/core/ResponseBufferBase.cpp
     src/middleware/core/SkeletonBase.cpp
@@ -21,7 +22,3 @@ add_library(
 target_include_directories(middleware PUBLIC include)
 target_include_directories(middleware PRIVATE interfaces/include)
 target_link_libraries(middleware PUBLIC etl middlewareInterfaces)
-
-if (OPENBSW_IS_UNIT_TEST)
-    add_subdirectory(doc/examples)
-endif ()

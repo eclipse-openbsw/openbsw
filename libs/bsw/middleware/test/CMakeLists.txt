@@ -1,3 +1,13 @@
+# *******************************************************************************
+# Copyright (c) 2026 BMW AG
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+
 add_library(
     middlewareTestSupport STATIC
     src/logger/mock/LoggerMock.cpp src/memory/mock/AllocatorMock.cpp
@@ -7,6 +17,17 @@ target_include_directories(middlewareTestSupport
                            PUBLIC src ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_link_libraries(middlewareTestSupport
                       PUBLIC middleware middlewareInterfaces etl gmock)
+
+# Defines the platform concurrency hooks; link only into tests that need them.
+add_library(middlewareConcurrencyMock STATIC
+            src/concurrency/mock/ConcurrencyMock.cpp)
+target_include_directories(middlewareConcurrencyMock PUBLIC src)
+target_link_libraries(middlewareConcurrencyMock PUBLIC middlewareInterfaces
+                                                       gmock)
+
+# The middleware sources include lock_types.h (via LockStrategies.h).
+target_include_directories(middleware
+                           PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 set(MIDDLEWARE_TEST_TARGETS)
 
@@ -43,6 +64,9 @@ add_middleware_unit_test(
     middlewareMessageManagementTest src/core/MessagePayloadBuilderTest.cpp
     src/core/MessageTest.cpp)
 
+add_middleware_unit_test(middlewarePduTest src/core/MiddlewarePduTest.cpp)
+target_link_libraries(middlewarePduTest PRIVATE middlewareConcurrencyMock)
+
 add_middleware_unit_test(middlewareQueueTest src/queue/QueueTest.cpp)
 
 add_middleware_unit_test(
@@ -52,3 +76,8 @@ add_middleware_unit_test(
 add_middleware_unit_test(middlewareLoggingApiTest src/core/LoggerApi.cpp)
 
 add_custom_target(middlewareTest DEPENDS ${MIDDLEWARE_TEST_TARGETS})
+
+if (UNIX)
+    add_subdirectory(../simulation ${CMAKE_CURRENT_BINARY_DIR}/simulation)
+    add_dependencies(middlewareTest middlewareSimulationFooMethodTest)
+endif ()

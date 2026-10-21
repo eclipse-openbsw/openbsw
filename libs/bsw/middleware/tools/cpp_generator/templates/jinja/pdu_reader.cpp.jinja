@@ -1,0 +1,49 @@
+/********************************************************************************
+ * Copyright (c) 2026 BMW AG
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Apache License Version 2.0 which is available at
+ * https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ ********************************************************************************/
+{% from "macros/common.jinja" import file_header %}{{ file_header() }}
+{% from "macros/signals.jinja" import signal_read_expr -%}
+#include "{{ pdu.headers.reader }}"
+#include "{{ pdu.headers.common }}"
+
+#include <etl/array.h>
+#include <etl/bit_stream.h>
+#include <cstdint>
+
+#include "shm/PduDefinitions.h"
+
+namespace {{ pdu.namespace }}
+{
+using middleware::core::IQualifier;
+
+{{ pdu.name }}Reader::{{ pdu.name }}Reader(IQualifier* const qualifier)
+: qualifier_(qualifier)
+{}
+
+{{ pdu.name }} {{ pdu.name }}Reader::read()
+{
+    etl::array<uint8_t, {{ pdu.size }}> pduData{};
+    uintptr_t const seqNumber = middleware::shm::get{{ pdu.name | capitalize }}()->load(pduData);
+    if (qualifier_ != nullptr)
+    {
+        qualifier_->qualify(seqNumber, pduData);
+    }
+
+    // LittleEndian byte order and LSB bit order is not supported for unaligned signals.
+    etl::bit_stream_reader reader(
+        etl::make_span(pduData), etl::bit_order::msb_first, etl::endian::big);
+
+    return {
+{% for signal in pdu.signals %}
+        {{ signal_read_expr(signal, pdu) }}{{ "," if not loop.last }}
+{% endfor -%}
+    };
+}
+
+}  // namespace {{ pdu.namespace }}

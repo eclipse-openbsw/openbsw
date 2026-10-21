@@ -1,0 +1,84 @@
+/********************************************************************************
+ * Copyright (c) 2026 BMW AG
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Apache License Version 2.0 which is available at
+ * https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ ********************************************************************************/
+{% from "macros/common.jinja" import file_header %}{{ file_header() }}
+{% from "macros/signals.jinja" import signal_cpp_type -%}
+#pragma once
+
+#include <cstdint>
+#include <etl/array.h>
+#include <etl/bitset.h>
+
+namespace {{ pdu.namespace }}
+{
+
+using {{ pdu.name }}Buffer = etl::array<uint8_t, {{ pdu.size }}U>;
+
+{% for enum_type in pdu.enums if pdu.enums %}
+enum class {{ enum_type.name }} : {{ enum_type.type }}
+{
+    {% for value in enum_type.parameters %}
+    {{ value.name }} = {{ value.value }},
+    {% endfor %}
+};
+{% endfor %}
+
+{% for bitset in pdu.bitsets if pdu.bitsets %}
+class {{ bitset.name }}
+{
+public:
+    explicit {{ bitset.name }}({{ bitset.type }} const rawValue) : bits_(rawValue)
+    {}
+
+    {% for bit in bitset.bits %}
+    [[nodiscard]] inline bool test{{ bit.name[0] | upper }}{{ bit.name[1:] }}() const;
+    {% endfor %}
+
+private:
+    {#- Bitset is defined by passing the number of bits in the template. It knows the width from that -#}
+    etl::bitset<{{ bitset.bits | length }}U> bits_;
+};
+{% endfor %}
+
+struct {{ pdu.name }}
+{
+{% for signal in pdu.signals %}
+    {{ signal_cpp_type(signal) }} {{ signal.name }};
+{% endfor %}
+
+{% for signal in pdu.signals %}
+{% if signal.phy_translation %}
+    [[nodiscard]] double {{ signal.name }}ToPhysical() const;
+{% endif %}
+{% endfor %}
+};
+
+{% for bitset in pdu.bitsets if pdu.bitsets %}
+{% for bit in bitset.bits %}
+{#- Testing using the templated function allows for static assertions on the bit position -#}
+inline bool {{ bitset.name }}::test{{ bit.name[0] | upper }}{{ bit.name[1:] }}() const
+{
+    return bits_.test<{{ bit.position }}U>();
+}
+
+{% endfor %}
+{% endfor %}
+{% for signal in pdu.signals %}
+{% if signal.phy_translation %}
+inline double {{ pdu.name }}::{{ signal.name }}ToPhysical() const
+{
+    constexpr double offset = {{ signal.phy_translation.offset }};
+    constexpr double scaling_factor = {{ signal.phy_translation.scaling_factor }};
+
+    return (static_cast<double>({{ signal.name }}) * scaling_factor) + offset;
+}
+{% endif %}
+{% endfor %}
+
+}  // namespace {{ pdu.namespace }}

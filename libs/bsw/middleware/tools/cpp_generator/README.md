@@ -128,13 +128,16 @@ src/generated_code/
 ## Mock generation mode
 
 When `--generation-mode mock` is passed (or `generation_mode: mock` is set on a
-service in the deployment YAML), the generator produces only the interface files
-needed for unit-test mocking:
+service or PDU in the deployment YAML), the generator produces the interface
+files needed for unit-test mocking:
 
 - Global: only `cluster_id.h` and `shm/allocators_definitions.h`
 - Per-service: `*_common.h`, `*_proxy.h`, `*_proxy_mock.h`, `*_skeleton.h`, and
   `*_skeleton_mock.h`, plus the generated proxy and skeleton sources delegating
   to GMock singletons via CRTP registration.
+- Per-PDU readers with `generation_mode: mock`: the regular PDU data and reader
+  interfaces, a `*_reader_mock.h` GMock interface, and a reader source that
+  forwards calls to the CRTP-registered mock singleton.
 
 Cluster, connection, and COM templates are skipped in this mode.
 

@@ -32,6 +32,10 @@ GENERATED_OUTPUTS = [
     "include/generated_code/org/test/foo/FooCommon.h",
     "include/generated_code/org/test/foo/FooProxy.h",
     "include/generated_code/org/test/foo/FooSkeleton.h",
+    "include/generated_code/org/test/signal/samplePduWithDatatypesCommon.h",
+    "include/generated_code/org/test/signal/samplePduWithDatatypesReader.h",
+    "include/generated_code/org/test/signal/samplePduWithCrcCommon.h",
+    "include/generated_code/org/test/signal/samplePduWithCrcReader.h",
     "include/generated_code/shm/AllocatorsDefinitions.h",
     "include/generated_code/shm/PduDefinitions.h",
     "include/generated_code/shm/QueueDefinitions.h",
@@ -41,5 +45,7 @@ GENERATED_OUTPUTS = [
     "src/generated_code/org/test/foo/FooCommon.cpp",
     "src/generated_code/org/test/foo/FooProxy.cpp",
     "src/generated_code/org/test/foo/FooSkeleton.cpp",
+    "src/generated_code/org/test/signal/samplePduWithDatatypesReader.cpp",
+    "src/generated_code/org/test/signal/samplePduWithCrcReader.cpp",
     "src/generated_code/shm/Config.cpp",
 ]

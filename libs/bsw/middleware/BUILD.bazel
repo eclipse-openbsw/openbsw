@@ -31,6 +31,8 @@ cc_library(
     name = "middleware_interfaces",
     hdrs = [
         "interfaces/include/middleware/concurrency/LockStrategies.h",
+        "interfaces/include/middleware/concurrency/MemoryFences.h",
+        "interfaces/include/middleware/concurrency/SpinLock.h",
         "interfaces/include/middleware/logger/Logger.h",
         "interfaces/include/middleware/os/TaskIdProvider.h",
         "interfaces/include/middleware/time/SystemTimerProvider.h",
@@ -72,16 +74,35 @@ cc_library(
         "test/src/os/OsDefinitions.cpp",
         "test/src/time/mock/SystemTimerProviderMock.cpp",
     ],
-    hdrs = glob(["test/src/**/*.h"]),
+    hdrs = glob(
+        ["test/src/**/*.h"],
+        exclude = ["test/src/concurrency/**"],
+    ),
     strip_include_prefix = "test/src",
     target_compatible_with = unit_test_only(),
     visibility = ["//visibility:public"],
     deps = [
         ":middleware",
+        ":middleware_concurrency_mock",
         ":middleware_interfaces",
         "//libs/3rdparty/etl",
         "//libs/3rdparty/googletest:gtest",
     ],
+)
+
+# libmiddleware.so references the platform hooks, so every test binary needs a definition.
+cc_library(
+    name = "middleware_concurrency_mock",
+    srcs = ["test/src/concurrency/mock/ConcurrencyMock.cpp"],
+    hdrs = ["test/src/concurrency/mock/ConcurrencyMock.h"],
+    strip_include_prefix = "test/src",
+    target_compatible_with = unit_test_only(),
+    visibility = ["//visibility:public"],
+    deps = [
+        ":middleware_interfaces",
+        "//libs/3rdparty/googletest:gtest",
+    ],
+    alwayslink = True,
 )
 
 cc_test(
@@ -150,6 +171,18 @@ cc_test(
     target_compatible_with = unit_test_only(),
     deps = [
         ":middleware",
+        ":middleware_test_support",
+        "//libs/3rdparty/googletest:gtest_main",
+    ],
+)
+
+cc_test(
+    name = "middleware_pdu_test",
+    srcs = ["test/src/core/MiddlewarePduTest.cpp"],
+    target_compatible_with = unit_test_only(),
+    deps = [
+        ":middleware",
+        ":middleware_concurrency_mock",
         ":middleware_test_support",
         "//libs/3rdparty/googletest:gtest_main",
     ],
