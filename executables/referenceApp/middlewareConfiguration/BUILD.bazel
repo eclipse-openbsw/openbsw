@@ -22,6 +22,7 @@ cc_library(
     name = "middleware_concurrency",
     hdrs = ["platform_integration/concurrency/include/middleware/concurrency/lock_types.h"],
     strip_include_prefix = "platform_integration/concurrency/include",
+    target_compatible_with = reference_app_posix_only(),
     visibility = ["//libs/bsw/middleware:__pkg__"],
 )
 
@@ -36,8 +37,6 @@ cc_library(
         "//libs/bsw/middleware:middleware_interfaces",
         "//libs/bsw/util",
     ],
-    # Defines symbols that //libs/bsw/middleware references but the app does not.
-    alwayslink = True,
 )
 
 cc_library(
@@ -49,7 +48,6 @@ cc_library(
         "//executables/referenceApp/asyncBinding:async_binding",
         "//libs/bsw/middleware:middleware_interfaces",
     ],
-    alwayslink = True,
 )
 
 cc_library(
@@ -61,7 +59,6 @@ cc_library(
         "//libs/bsw/bsp",
         "//libs/bsw/middleware:middleware_interfaces",
     ],
-    alwayslink = True,
 )
 
 middleware_codegen(
@@ -83,6 +80,4 @@ cc_library(
         ":middleware_configuration_generated",
         "//libs/bsw/middleware",
     ],
-    # The generated code references MemoryLayout symbols but is linked after this library.
-    alwayslink = True,
 )
