@@ -53,6 +53,12 @@ platform(
         # App configuration
         "--//libs/bsw/common:configuration=//executables/referenceApp/configuration",
 
+        # Middleware
+        "--//libs/bsw/middleware:middleware_concurrency=//executables/referenceApp/middlewareConfiguration:middleware_concurrency",
+        "--//libs/bsw/middleware:middleware_logger=//executables/referenceApp/middlewareConfiguration:middleware_logger",
+        "--//libs/bsw/middleware:middleware_os=//executables/referenceApp/middlewareConfiguration:middleware_os",
+        "--//libs/bsw/middleware:middleware_time=//executables/referenceApp/middlewareConfiguration:middleware_time",
+
         # ETL profile
         "--//libs/3rdparty/etl:etl_profile=//executables/referenceApp/etl_profile",
     ],
@@ -98,6 +104,12 @@ platform(
         # App configuration
         "--//libs/bsw/common:configuration=//executables/unitTest/configuration",
 
+        # Middleware
+        "--//libs/bsw/middleware:middleware_concurrency=//libs/bsw/middleware:middleware_concurrency_unit_test",
+        "--//libs/bsw/middleware:middleware_logger=//libs/bsw/middleware:middleware_logger_unit_test",
+        "--//libs/bsw/middleware:middleware_os=//libs/bsw/middleware:middleware_os_unit_test",
+        "--//libs/bsw/middleware:middleware_time=//libs/bsw/middleware:middleware_time_unit_test",
+
         # ETL profile
         "--//libs/3rdparty/etl:etl_profile=//executables/unitTest/etl_profile",
     ],
@@ -110,7 +122,10 @@ platform(
     flags = [
         "--//bazel/config/build_variant=middleware_simulation",
         "--//libs/3rdparty/etl:etl_profile=//libs/bsw/middleware/simulation:simulation_etl_profile",
-        "--//libs/bsw/middleware:middleware_lock_types=//libs/bsw/middleware/simulation:simulation_lock_types",
+        "--//libs/bsw/middleware:middleware_concurrency=//libs/bsw/middleware/simulation:simulation_concurrency",
+        "--//libs/bsw/middleware:middleware_logger=//libs/bsw/middleware/simulation:simulation_logger",
+        "--//libs/bsw/middleware:middleware_os=//libs/bsw/middleware/simulation:simulation_os",
+        "--//libs/bsw/middleware:middleware_time=//libs/bsw/middleware/simulation:simulation_time",
 
         # UDS is not part of the simulation variant.
         "--//libs/bsw/uds:uds_configuration=//bazel/config:no_implementation",

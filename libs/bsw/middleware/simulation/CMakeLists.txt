@@ -126,7 +126,15 @@ if (BUILD_EXECUTABLE STREQUAL "unitTest")
     target_include_directories(
         ${_SIMULATION_TARGET} BEFORE
         PRIVATE ${CMAKE_SOURCE_DIR}/executables/unitTest/etl_profile)
-    target_link_libraries(${_SIMULATION_TARGET} PRIVATE gtest_main)
+    target_sources(
+        ${_SIMULATION_TARGET}
+        PRIVATE
+            ${CMAKE_SOURCE_DIR}/libs/bsw/middleware/test/src/time/mock/SystemTimerProviderMock.cpp
+    )
+    target_include_directories(
+        ${_SIMULATION_TARGET}
+        PRIVATE ${CMAKE_SOURCE_DIR}/libs/bsw/middleware/test/src)
+    target_link_libraries(${_SIMULATION_TARGET} PRIVATE gtest_main gmock)
     gtest_discover_tests(${_SIMULATION_TARGET} PROPERTIES LABELS
                                                           "middlewareTest")
 else ()
