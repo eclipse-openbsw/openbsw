@@ -28,8 +28,12 @@ class LoggerComponent;
 class ILoggerOutput
 {
 public:
+    virtual ~ILoggerOutput() = default;
+
     ILoggerOutput(ILoggerOutput const&)            = delete;
     ILoggerOutput& operator=(ILoggerOutput const&) = delete;
+    ILoggerOutput(ILoggerOutput&&)                 = delete;
+    ILoggerOutput& operator=(ILoggerOutput&&)      = delete;
 
     /**
      * Called for each filtered log message.

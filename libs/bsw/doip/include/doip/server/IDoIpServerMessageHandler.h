@@ -23,6 +23,7 @@ class IDoIpServerConnection;
 /**
  * Interface for a DoIP message handler. A DoIP message handler can receive
  * and send DoIP messages over a already managed connection.
+ * Intrusive-list links belong to one handler; copying or moving would duplicate those links.
  */
 class IDoIpServerMessageHandler : public ::etl::bidirectional_link<0>
 {
@@ -55,7 +56,12 @@ public:
     virtual void connectionClosed() = 0;
 
 protected:
-    ~IDoIpServerMessageHandler() = default;
+    IDoIpServerMessageHandler()                                            = default;
+    IDoIpServerMessageHandler(IDoIpServerMessageHandler const&)            = delete;
+    IDoIpServerMessageHandler(IDoIpServerMessageHandler&&)                 = delete;
+    IDoIpServerMessageHandler& operator=(IDoIpServerMessageHandler const&) = delete;
+    IDoIpServerMessageHandler& operator=(IDoIpServerMessageHandler&&)      = delete;
+    ~IDoIpServerMessageHandler()                                           = default;
 };
 
 } // namespace doip

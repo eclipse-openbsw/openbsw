@@ -12,9 +12,10 @@ load("@rules_cc//cc:cc_library.bzl", "cc_library")
 load("@rules_cc//cc:cc_test.bzl", "cc_test")
 load("//bazel/config/build_variant:compatibility.bzl", "unit_test_only")
 
+# Override via --//libs/bsw/transportRouterSimple:transport_configuration=<your_transport_config_target>
 label_flag(
     name = "transport_configuration",
-    build_setting_default = "//executables/referenceApp/transportConfiguration:transport_configuration",
+    build_setting_default = "//bazel/config:no_implementation",
     visibility = ["//visibility:public"],
 )
 

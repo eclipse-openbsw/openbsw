@@ -13,10 +13,10 @@
 #include "Logger.h"
 #include "foo/FooProxyWrapper.h"
 #include "middleware/ClusterCluster1.h"
+#include "middleware/shm/QueueDefinitions.h"
 #include "middleware/signal/qualifier.h"
 #include "org/test/signal/samplePduWithCrcReader.h"
 #include "org/test/signal/samplePduWithDatatypesReader.h"
-#include "shm/QueueDefinitions.h"
 
 void readsamplePduWithCrc()
 {

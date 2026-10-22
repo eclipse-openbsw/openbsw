@@ -28,6 +28,8 @@ public:
 
     IPrintfArgumentReader(IPrintfArgumentReader const&)            = delete;
     IPrintfArgumentReader& operator=(IPrintfArgumentReader const&) = delete;
+    IPrintfArgumentReader(IPrintfArgumentReader&&)                 = delete;
+    IPrintfArgumentReader& operator=(IPrintfArgumentReader&&)      = delete;
 
     /**
      * Get the next argument value. The expected datatype is provided.

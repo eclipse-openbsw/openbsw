@@ -164,7 +164,9 @@ TEST_F(
         ::testing::ElementsAreArray(expectedDiagnosticAck + 8U, 8U));
     // Release the send job and close the connection
     cut.connectionClosed();
+    EXPECT_FALSE(fProtocolSendJobBlockPool.empty());
     sendJob->release(false);
+    EXPECT_TRUE(fProtocolSendJobBlockPool.empty());
 }
 
 TEST_F(
@@ -892,13 +894,16 @@ TEST_F(DoIpServerTransportMessageHandlerTest, TestSendDiagnosticNackWithoutSendJ
     EXPECT_CALL(fServerConnectionMock, endReceiveMessage(_)).Times(6);
     // force first send message to fail
     forceDiagnosticNack(cut, true, false);
+    EXPECT_TRUE(fProtocolSendJobBlockPool.empty());
     // now four times until pool is empty
     forceDiagnosticNack(cut, true, true);
     forceDiagnosticNack(cut, true, true);
     forceDiagnosticNack(cut, true, true);
     forceDiagnosticNack(cut, true, true);
     // the last should fail
+    EXPECT_TRUE(fProtocolSendJobBlockPool.full());
     forceDiagnosticNack(cut, false, false);
+    EXPECT_TRUE(fProtocolSendJobBlockPool.full());
 }
 
 TEST_F(DoIpServerTransportMessageHandlerTest, TestNoMessageReceivedIfProtocolSendJobPoolDepleted)

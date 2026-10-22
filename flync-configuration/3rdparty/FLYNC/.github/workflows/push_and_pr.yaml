@@ -1,0 +1,587 @@
+name: Workflow Push and Pull Request
+
+on:
+  push:
+    branches:
+    - main
+    - release-*
+  pull_request:
+    branches:
+    - main
+    - release-*
+
+permissions:
+  contents: read
+
+jobs:
+  format-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Run black
+        uses: psf/black@26.5.1
+        with:
+          options: "--check --verbose --line-length 149 --diff"
+          src: "./src"
+
+  isort:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v10.1.0
+        with:
+          enable-cache: true
+
+      - name: Prepare
+        run: uv sync --frozen --no-install-project --only-group static-analysis
+
+      - name: Run isort
+        run: |
+          mkdir format-reports
+          uv run isort --check --diff --color --line-length 149 src > format-reports/isort-report.diff
+
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: isort-artifacts
+          path: format-reports
+          retention-days: 28
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v10.1.0
+        with:
+          enable-cache: true
+
+      - name: Prepare
+        run: uv sync --frozen --no-install-project --only-group static-analysis
+
+      - name: Run flake8
+        run: |
+          uv run flake8 --max-line-length 149 src
+          uv run flake8 --max-line-length 149 src --format=html --htmldir=flake8-report
+
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: lint-artifacts
+          path: flake8-report
+          retention-days: 28
+
+  pre-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v10.1.0
+        with:
+          enable-cache: true
+
+      - name: Prepare
+        run: uv sync --frozen --no-install-project --only-group dev
+
+      - name: Run pre-commit
+        run: |
+          set -o pipefail
+          uv run pre-commit run --all-files
+
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: lint-artifacts
+          path: flake8-report
+          retention-days: 28
+
+  type-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v10.1.0
+        with:
+          enable-cache: true
+
+      - name: Prepare
+        run: |
+          uv sync --frozen --group static-analysis --extra gui --extra tui
+          mkdir type-check-reports
+
+      - name: Run mypy
+        run: |
+          set -o pipefail
+          uv run mypy src --show-error-codes --pretty --install-types --non-interactive | tee type-check-reports/mypy-report.txt
+
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: type-check-artifacts
+          path: type-check-reports
+          retention-days: 28
+
+  error-catalog-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v10.1.0
+        with:
+          enable-cache: true
+
+      - name: Prepare
+        run: |
+          uv sync --frozen
+          mkdir error-catalog-check
+
+      - name: Run generate & validate-catalog
+        run: |
+          set -o pipefail
+          uv run python src/flync_cli/main.py errors generate-catalog
+          uv run python src/flync_cli/main.py errors validate-catalog | tee error-catalog-check/error-catalog-check.txt
+
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: error-catalog-artifacts
+          path: error-catalog-check
+          retention-days: 28
+
+  model-docstring-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v10.1.0
+        with:
+          enable-cache: true
+
+      - name: Prepare
+        run: |
+          uv sync --frozen
+          mkdir model-docstring-check
+
+      # Reports warnings and succeeds: the existing docstrings are not clean yet. Add --strict to turn it into a gate.
+      - name: Check model docstrings against their fields
+        run: |
+          set -o pipefail
+          uv run python scripts/ci/check_model_docstrings.py | tee model-docstring-check/model-docstring-check.txt
+
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: model-docstring-artifacts
+          path: model-docstring-check
+          retention-days: 28
+
+  unit-tests:
+    runs-on: ubuntu-latest
+    needs: [format-check, lint, type-check, isort]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v10.1.0
+        with:
+          enable-cache: true
+
+      # No Qt/PySide6 needed
+      - name: Prepare
+        run: uv sync --frozen --group test
+
+      - name: Run unit tests
+        run: |
+          COVERAGE_FILE=.coverage.unit uv run pytest tests/unit_test/ \
+            -m "not performance" \
+            --cov=flync --cov=flync_cli --cov=flync_converter \
+            --cov-report= \
+            --junitxml=report_unit.xml \
+            --durations=10
+
+      - name: Upload artifacts
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: unit-coverage
+          path: |
+            .coverage.unit
+            report_unit.xml
+            tests/unit_test/sdk/fuzzed
+            tests/unit_test/sdk/generated
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 28
+
+  system-tests:
+    runs-on: ubuntu-latest
+    needs: [format-check, lint, type-check, isort]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v10.1.0
+        with:
+          enable-cache: true
+
+      # No Qt/PySide6 needed
+      - name: Prepare
+        run: uv sync --frozen --group test
+
+      - name: Run system / integration tests
+        run: |
+          COVERAGE_FILE=.coverage.system uv run pytest tests/system_test/ \
+            -m "not performance" \
+            --cov=flync --cov=flync_cli --cov=flync_converter \
+            --cov-report= \
+            --junitxml=report_system.xml \
+            --durations=10
+
+      - name: Upload artifacts
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: system-coverage
+          path: |
+            .coverage.system
+            report_system.xml
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 28
+
+  cli-tests:
+    runs-on: ubuntu-latest
+    needs: [format-check, lint, type-check, isort]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v10.1.0
+        with:
+          enable-cache: true
+
+      # No Qt/PySide6 needed
+      - name: Prepare
+        run: uv sync --frozen --group test
+
+      - name: Run CLI tests
+        run: |
+          COVERAGE_FILE=.coverage.cli uv run pytest tests/cli_tests/ \
+            -m "not performance" \
+            --cov=flync --cov=flync_cli --cov=flync_converter \
+            --cov-report= \
+            --junitxml=report_cli.xml \
+            --durations=10
+
+      - name: Upload artifacts
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: cli-coverage
+          path: |
+            .coverage.cli
+            report_cli.xml
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 28
+
+  converter-tests:
+    runs-on: ubuntu-latest
+    needs: [format-check, lint, type-check, isort]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      # Qt/PySide6 system libs required only by this job (test_gui.py etc.)
+      - name: Install system dependencies
+        run: |
+          sudo apt update && sudo apt install -y \
+            libglib2.0-0 libgl1 libegl1 libdbus-1-3 \
+            libfontconfig1 libxcb1 libxkbcommon0
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v10.1.0
+        with:
+          enable-cache: true
+
+      - name: Prepare
+        run: uv sync --frozen --group test --group qt --extra gui --extra tui
+
+      - name: Run converter tests
+        run: |
+          COVERAGE_FILE=.coverage.converter uv run pytest tests/converter_tests/ \
+            -m "not performance" \
+            --cov=flync --cov=flync_cli --cov=flync_converter \
+            --cov-report= \
+            --junitxml=report_converter.xml \
+            --durations=10
+
+      - name: Upload artifacts
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: converter-coverage
+          path: |
+            .coverage.converter
+            report_converter.xml
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 28
+
+  performance-tests:
+    # Non-blocking: benchmark thresholds can be flaky on shared runners
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    needs: [format-check, lint, type-check, isort]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Install system dependencies
+        run: |
+          sudo apt update && sudo apt install -y \
+            libglib2.0-0 libgl1 libegl1 libdbus-1-3 \
+            libfontconfig1 libxcb1 libxkbcommon0
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v10.1.0
+        with:
+          enable-cache: true
+
+      - name: Prepare
+        run: uv sync --frozen --group test --group qt --extra gui --extra tui
+
+      - name: Run performance tests
+        run: |
+          # -n 0 overrides the `-n auto` in addopts: pytest-benchmark disables itself
+          # whenever xdist distributes, which makes benchmark.stats unavailable and
+          # fails these tests. Benchmarks must run in a single, unparallelised process.
+          # --no-cov disables the coverage hook from addopts so instrumentation overhead
+          # does not skew the benchmark timing.
+          uv run pytest \
+            -n 0 \
+            -m performance \
+            --no-cov \
+            --junitxml=report_performance.xml \
+            --durations=0
+
+      - name: Upload artifacts
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: performance-coverage
+          path: |
+            .coverage.performance
+            report_performance.xml
+          include-hidden-files: true
+          if-no-files-found: warn
+          retention-days: 28
+
+  tests-summary:
+    runs-on: ubuntu-latest
+    needs: [unit-tests, system-tests, cli-tests, converter-tests, performance-tests]
+    # Run even when a test job failed: the test jobs upload their artifacts with
+    # `if: always()`, so a red split still has coverage worth merging and commenting on.
+    # The merge step below fails hard if *no* artifacts arrived at all.
+    if: always()
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      # Every download is best-effort: a job that died before its upload step
+      # leaves no artifact, and that must not block the partial summary.
+      - name: Download unit-tests artifacts
+        uses: actions/download-artifact@v8
+        continue-on-error: true
+        with:
+          name: unit-coverage
+          path: .
+
+      - name: Download system-tests artifacts
+        uses: actions/download-artifact@v8
+        continue-on-error: true
+        with:
+          name: system-coverage
+          path: .
+
+      - name: Download cli-tests artifacts
+        uses: actions/download-artifact@v8
+        continue-on-error: true
+        with:
+          name: cli-coverage
+          path: .
+
+      - name: Download converter-tests artifacts
+        uses: actions/download-artifact@v8
+        continue-on-error: true
+        with:
+          name: converter-coverage
+          path: .
+
+      - name: Download performance-tests artifacts
+        uses: actions/download-artifact@v8
+        continue-on-error: true
+        with:
+          name: performance-coverage
+          path: .
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v10.1.0
+        with:
+          enable-cache: true
+
+      # coverage combine only needs the test group, no Qt extras
+      - name: Prepare
+        run: uv sync --frozen --group test
+
+      - name: Merge coverage and JUnit reports
+        run: |
+          # Collect whichever coverage files actually exist
+          coverage_files=$(ls \
+            .coverage.unit \
+            .coverage.system \
+            .coverage.cli \
+            .coverage.converter \
+            .coverage.performance \
+            2>/dev/null || true)
+
+          junit_files=$(ls \
+            report_unit.xml \
+            report_system.xml \
+            report_cli.xml \
+            report_converter.xml \
+            report_performance.xml \
+            2>/dev/null || true)
+
+          if [ -z "$coverage_files" ] || [ -z "$junit_files" ]; then
+            echo "::error::No test artifacts found - all test jobs failed to produce reports"
+            exit 1
+          fi
+
+          # Any split may be absent (job failed before uploading, or performance-tests
+          # produced nothing). Warn per split so the gap is visible in the summary.
+          for split in unit system cli converter performance; do
+            [ -f ".coverage.$split" ] || echo "::warning::.coverage.$split missing - ${split}-tests produced no coverage"
+            [ -f "report_$split.xml" ] || echo "::warning::report_$split.xml missing - ${split}-tests produced no JUnit report"
+          done
+
+          # --keep: coverage combine deletes its inputs by default, which would empty
+          # the per-split files out of the archived artifact below.
+          uv run coverage combine --keep $coverage_files
+          uv run coverage xml
+          uv run coverage report
+          uv run python -m junitparser merge $junit_files report.xml
+
+      - name: Coverage comment
+        id: coverage_comment
+        uses: py-cov-action/python-coverage-comment-action@v4.3
+        with:
+          GITHUB_TOKEN: ${{ github.token }}
+
+      - name: Store Pull Request comment to be posted
+        uses: actions/upload-artifact@v7
+        if: steps.coverage_comment.outputs.comment_file_written == 'true'
+        with:
+          name: python-coverage-comment-action
+          path: python-coverage-comment-action.txt
+
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: pytest-artifacts
+          path: |
+            .coverage
+            .coverage.unit
+            .coverage.system
+            .coverage.cli
+            .coverage.converter
+            .coverage.performance
+            report.xml
+            coverage.xml
+            report_unit.xml
+            report_system.xml
+            report_cli.xml
+            report_converter.xml
+            report_performance.xml
+            tests/unit_test/sdk/fuzzed
+            tests/unit_test/sdk/generated
+          include-hidden-files: true
+          retention-days: 28
+
+  example-validation:
+    runs-on: ubuntu-latest
+    needs: [format-check, lint, type-check, isort]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v10.1.0
+        with:
+          enable-cache: true
+
+      - name: Prepare
+        run: uv sync --frozen
+
+      - name: Run validate_examples.py
+        run: |
+          uv run python scripts/ci/validate_examples.py
+
+      - name: Check flync_example_experimental is a superset of flync_example
+        run: |
+          uv run python scripts/ci/check_example_superset.py
+
+  build-documentation:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v10.1.0
+        with:
+          enable-cache: true
+
+      - name: Prepare
+        run: |
+          cd docs
+          pwd
+          uv sync --frozen --group docs
+
+      - name: Generate Error Catalog
+        run: |
+          uv run python src/flync_cli/main.py errors generate-catalog
+
+      - name: Run make html
+        run: |
+          cd docs
+          pwd
+          make html
+
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: documentation-artifacts
+          path: docs/build/
+          retention-days: 7

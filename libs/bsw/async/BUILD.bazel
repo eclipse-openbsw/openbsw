@@ -28,12 +28,10 @@ label_flag(
     visibility = ["//visibility:public"],
 )
 
-# Async binding (provides the RTOS-support define and runtime binding for the async layer).
-#   Default:  referenceApp binding
-#   Override: --//libs/bsw/async:async_binding=//path/to:your_binding
+# Override via --//libs/bsw/async:async_binding=<your_async_binding_target>
 label_flag(
     name = "async_binding",
-    build_setting_default = "//executables/referenceApp/asyncBinding:async_binding",
+    build_setting_default = "//bazel/config:no_implementation",
     visibility = ["//visibility:public"],
 )
 

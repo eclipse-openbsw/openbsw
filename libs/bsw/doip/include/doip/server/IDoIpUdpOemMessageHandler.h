@@ -17,6 +17,9 @@ namespace doip
 class IDoIpUdpOemMessageHandler
 {
 public:
+    IDoIpUdpOemMessageHandler()                                      = default;
+    IDoIpUdpOemMessageHandler(IDoIpUdpOemMessageHandler const&)      = default;
+    IDoIpUdpOemMessageHandler(IDoIpUdpOemMessageHandler&&)           = default;
     virtual ~IDoIpUdpOemMessageHandler()                             = default;
     virtual void createResponse(::etl::span<uint8_t> response) const = 0;
     virtual uint16_t getRequestPayloadType() const                   = 0;
@@ -27,6 +30,7 @@ public:
 
 private:
     IDoIpUdpOemMessageHandler& operator=(IDoIpUdpOemMessageHandler const&) = default;
+    IDoIpUdpOemMessageHandler& operator=(IDoIpUdpOemMessageHandler&&)      = default;
 };
 
 template<

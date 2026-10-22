@@ -13,7 +13,7 @@
 #include <can/transceiver/AbstractCANTransceiver.h>
 #include <io/MemoryQueue.h>
 
-#include <atomic>
+#include <etl/atomic.h>
 
 namespace can
 {
@@ -96,7 +96,7 @@ private:
 
     int _fileDescriptor;
 
-    ::std::atomic_bool _writable;
+    ::etl::atomic_bool _writable;
 };
 
 } // namespace can

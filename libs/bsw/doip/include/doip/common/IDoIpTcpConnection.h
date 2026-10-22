@@ -48,7 +48,12 @@ public:
     virtual void detach(DetachCallbackType detachCallback) = 0;
 
 protected:
-    ~IDoIpTcpConnection() = default;
+    IDoIpTcpConnection()                                     = default;
+    IDoIpTcpConnection(IDoIpTcpConnection const&)            = default;
+    IDoIpTcpConnection(IDoIpTcpConnection&&)                 = default;
+    IDoIpTcpConnection& operator=(IDoIpTcpConnection const&) = delete;
+    IDoIpTcpConnection& operator=(IDoIpTcpConnection&&)      = delete;
+    ~IDoIpTcpConnection()                                    = default;
 };
 
 } // namespace doip

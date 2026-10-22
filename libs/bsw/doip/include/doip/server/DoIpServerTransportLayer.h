@@ -114,7 +114,7 @@ protected:
         DoIpServerConnectionHandler* _routingActivationHandler;
         uint8_t _socketGroupId;
         uint8_t _negativeResponseCode;
-        uint8_t _pendingAliveCheckCount;
+        uint8_t _pendingAliveCheckCount{1U};
     };
 
     using AliveCheckHelperList
@@ -133,7 +133,12 @@ protected:
         DoIpServerTransportLayerParameters const& parameters,
         AliveCheckHelperPool& aliveCheckHelperPool);
 
-    ~DoIpServerTransportLayer() = default;
+    // The connection configuration and provider retain callbacks to this instance.
+    ~DoIpServerTransportLayer()                                          = default;
+    DoIpServerTransportLayer(DoIpServerTransportLayer const&)            = delete;
+    DoIpServerTransportLayer(DoIpServerTransportLayer&&)                 = delete;
+    DoIpServerTransportLayer& operator=(DoIpServerTransportLayer const&) = delete;
+    DoIpServerTransportLayer& operator=(DoIpServerTransportLayer&&)      = delete;
 
 private:
     using ConnectionList
@@ -147,6 +152,11 @@ private:
     public:
         explicit RemoveGuard(DoIpServerTransportLayer& layer);
         ~RemoveGuard();
+        // Each acquired remove lock must be released exactly once.
+        RemoveGuard(RemoveGuard const&)            = delete;
+        RemoveGuard(RemoveGuard&&)                 = delete;
+        RemoveGuard& operator=(RemoveGuard const&) = delete;
+        RemoveGuard& operator=(RemoveGuard&&)      = delete;
 
     private:
         DoIpServerTransportLayer& _layer;
@@ -205,10 +215,10 @@ private:
     ConnectionList _connections;
     ConnectionList _connectionsToRelease;
     ::async::Function _functionEventClose;
-    IDoIpServerTransportLayerCallback* _callback;
+    IDoIpServerTransportLayerCallback* _callback{nullptr};
     AliveCheckHelperPool& _aliveCheckHelperPool;
     AliveCheckHelperList _aliveCheckHelpers;
-    uint8_t _removeLockCount;
+    uint8_t _removeLockCount{0U};
 };
 
 namespace declare
@@ -253,7 +263,6 @@ inline DoIpServerTransportLayer::AliveCheckHelper::AliveCheckHelper(
 : _routingActivationHandler(&routingActivationHandler)
 , _socketGroupId(routingActivationHandler.getSocketGroupId())
 , _negativeResponseCode(negativeResponseCode)
-, _pendingAliveCheckCount(1U)
 {}
 
 inline uint8_t DoIpServerTransportLayer::AliveCheckHelper::getSocketGroupId() const

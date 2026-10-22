@@ -120,14 +120,14 @@ private:
     void releaseDiagnosticSendJob(DoIpTransportMessageSendJob& sendJob);
 
     PayloadPrefixContext _payloadPeekContext;
-    IDoIpServerConnection* _connection;
+    IDoIpServerConnection* _connection{nullptr};
     ::etl::ipool& _diagnosticSendJobPool;
     ::etl::ipool& _protocolSendJobPool;
-    ::transport::TransportMessage* _transportMessage;
+    ::transport::TransportMessage* _transportMessage{nullptr};
     DoIpServerTransportConnectionConfig const& _config;
-    uint16_t _receiveMessagePayloadLength;
+    uint16_t _receiveMessagePayloadLength{0U};
     DoIpConstants::ProtocolVersion _protocolVersion;
-    bool _isRoutingActive;
+    bool _isRoutingActive{false};
     ::etl::array<uint8_t, 4> _readBuffer;
 };
 

@@ -34,7 +34,7 @@ using MiddlewareQueue =
     queue::Queue<queue::QueueTraits<core::Message, Size, concurrency::ScopedECULock, uint8_t*>>;
 
 {% for cluster in clusters %}
-inline constexpr size_t QUEUE_TO_{{ cluster.name | upper }}_SIZE = {{ cluster.queue_size }}U;
+inline constexpr size_t QUEUE_TO_{{ cluster.name | upper }}_SIZE = {{ cluster.queueSize }}U;
 {% endfor %}
 
 /** Returns a pointer to the queue in shared memory. Queues are fully initialized by MemoryLayout::MemoryLayout(). */

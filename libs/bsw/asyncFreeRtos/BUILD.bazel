@@ -21,11 +21,10 @@ label_flag(
     visibility = ["//visibility:public"],
 )
 
-# Async core configuration (task counts, stack sizes, tick rate).
-#   Override: --//libs/bsw/asyncFreeRtos:async_core_configuration=//path/to:your_config
+# Override via --//libs/bsw/asyncFreeRtos:async_core_configuration=<your_config_target>
 label_flag(
     name = "async_core_configuration",
-    build_setting_default = "//executables/referenceApp/asyncCoreConfiguration:async_core_configuration",
+    build_setting_default = "//bazel/config:no_implementation",
     visibility = ["//visibility:public"],
 )
 

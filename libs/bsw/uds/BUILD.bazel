@@ -28,19 +28,17 @@ _OUTGOING_SOURCES = [
     "src/uds/connection/OutgoingDiagConnectionManager.cpp",
 ]
 
-#   Default:  //executables/referenceApp/udsConfiguration:uds_configuration
-#   Override: --//libs/bsw/uds:uds_configuration=//path/to:your_uds_config
+# Override via --//libs/bsw/uds:uds_configuration=<your_uds_config_target>
 label_flag(
     name = "uds_configuration",
-    build_setting_default = "//executables/referenceApp/udsConfiguration:uds_configuration",
+    build_setting_default = "//bazel/config:no_implementation",
     visibility = ["//visibility:public"],
 )
 
-#   Default:  //executables/referenceApp/transportConfiguration:transport_configuration
-#   Override: --//libs/bsw/uds:transport_configuration=//path/to:your_transport_config
+# Override via --//libs/bsw/uds:transport_configuration=<your_transport_config_target>
 label_flag(
     name = "transport_configuration",
-    build_setting_default = "//executables/referenceApp/transportConfiguration:transport_configuration",
+    build_setting_default = "//bazel/config:no_implementation",
     visibility = ["//visibility:public"],
 )
 

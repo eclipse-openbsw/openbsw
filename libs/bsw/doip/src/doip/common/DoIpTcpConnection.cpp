@@ -20,6 +20,7 @@
 #include <etl/intrusive_links.h>
 #include <etl/intrusive_list.h>
 #include <etl/span.h>
+#include <etl/utility.h>
 #include <etl/variant.h>
 
 namespace doip
@@ -38,28 +39,14 @@ DoIpTcpConnection::DoIpTcpConnection(
 , _socket(socket)
 , _currentReadBuffer()
 , _writeBuffer(writeBuffer)
-, _handler(nullptr)
 , _payloadReceivedCallback()
 , _payloadDiscardedCallback()
 , _detachCallback()
 , _pendingSendJobs()
 , _sentJobs()
 , _headerBuffer()
-, _readPayloadLength(0U)
-, _receivedBufferLength(0U)
-, _availableReadDataLength(0U)
-, _sentDataLength(0U)
-, _pendingSendDataLength(0U)
-, _sentJobTotalLength(0U)
 , _sendTimeout()
 , _context(context)
-, _connectionState(ConnectionState::INIT)
-, _readState(ReadState::HEADER)
-, _closeMode(CloseMode::CLOSE)
-, _sendBufferIndex(0U)
-, _suspendCallCounter(0U)
-, _recurseRead(false)
-, _recurseWrite(false)
 {}
 
 void DoIpTcpConnection::init(IDoIpConnectionHandler& handler)
@@ -349,7 +336,7 @@ void DoIpTcpConnection::processNextReadChunk(size_t const bytesRead)
     {
         // The current read buffer has been completely processed (i. e. read or discarded)
         ::etl::span<uint8_t> currentReadBuffer;
-        ::std::swap(_currentReadBuffer, currentReadBuffer);
+        ::etl::swap(_currentReadBuffer, currentReadBuffer);
         _recurseRead = true;
         if (_readState == ReadState::HEADER)
         {

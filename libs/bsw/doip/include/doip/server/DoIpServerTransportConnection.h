@@ -89,8 +89,8 @@ public:
 private:
     DoIpTcpConnection _connection;
     DoIpServerTransportMessageHandler _transportMessageHandler;
-    ::etl::array<uint8_t, DoIpConstants::DOIP_HEADER_LENGTH> _writeBuffer;
-    bool _isMarkedForClose;
+    ::etl::array<uint8_t, DoIpConstants::DOIP_HEADER_LENGTH> _writeBuffer{};
+    bool _isMarkedForClose{false};
     DoIpTcpConnection::ConnectionType _type;
 };
 

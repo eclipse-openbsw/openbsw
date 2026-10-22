@@ -8,33 +8,59 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 
+load("@bazel_skylib//rules:common_settings.bzl", "bool_flag")
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
 
-alias(
-    name = "lwip_configuration_default",
-    actual = "//executables/referenceApp/lwipConfiguration:lwip_configuration",
+# Override via --//libs/3rdparty/lwip:lwip_configuration=<your_lwip_config_target>
+label_flag(
+    name = "lwip_configuration",
+    build_setting_default = "//bazel/config:no_implementation",
     visibility = ["//visibility:public"],
 )
 
-#   Default:  //executables/referenceApp/lwipConfiguration:lwip_configuration
-#   Override: --//libs/3rdparty/lwip:lwip_configuration=//path/to:your_lwip_config
+# Override via --//libs/3rdparty/lwip:lwip_sys_arch=<your_lwip_sys_arch_target>
 label_flag(
-    name = "lwip_configuration",
-    build_setting_default = ":lwip_configuration_default",
+    name = "lwip_sys_arch",
+    build_setting_default = "//bazel/config:no_implementation",
     visibility = ["//visibility:public"],
+)
+
+# Controls whether the SLIP interface is compiled into lwIP.
+# The interface is excluded by default because no platform enables it.
+# Set --//libs/3rdparty/lwip:exclude_slipif=false to include it.
+bool_flag(
+    name = "exclude_slipif",
+    build_setting_default = True,
+    visibility = ["//visibility:public"],
+)
+
+config_setting(
+    name = "slipif_excluded",
+    flag_values = {":exclude_slipif": "true"},
+)
+
+config_setting(
+    name = "slipif_included",
+    flag_values = {":exclude_slipif": "false"},
 )
 
 cc_library(
     name = "lwip_core",
-    srcs = glob([
-        "src/core/*.c",
-        "src/core/ipv4/*.c",
-        "src/core/ipv6/*.c",
-        "src/api/*.c",
-        "src/netif/*.c",
-        "src/netif/ppp/*.c",
-        "src/netif/ppp/polarssl/*.c",
-    ]),
+    srcs = glob(
+        [
+            "src/core/*.c",
+            "src/core/ipv4/*.c",
+            "src/core/ipv6/*.c",
+            "src/api/*.c",
+            "src/netif/*.c",
+            "src/netif/ppp/*.c",
+            "src/netif/ppp/polarssl/*.c",
+        ],
+        exclude = ["src/netif/slipif.c"],
+    ) + select({
+        ":slipif_excluded": [],
+        ":slipif_included": ["src/netif/slipif.c"],
+    }),
     hdrs = glob(["src/include/**/*.h"]),
     strip_include_prefix = "src/include",
     visibility = ["//visibility:public"],

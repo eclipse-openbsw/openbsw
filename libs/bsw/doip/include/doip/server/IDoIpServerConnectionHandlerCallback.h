@@ -55,6 +55,13 @@ public:
     virtual void connectionClosed(DoIpServerConnectionHandler& handler) = 0;
 
 protected:
+    IDoIpServerConnectionHandlerCallback()                                            = default;
+    IDoIpServerConnectionHandlerCallback(IDoIpServerConnectionHandlerCallback const&) = default;
+    IDoIpServerConnectionHandlerCallback(IDoIpServerConnectionHandlerCallback&&)      = default;
+    IDoIpServerConnectionHandlerCallback& operator=(IDoIpServerConnectionHandlerCallback const&)
+        = delete;
+    IDoIpServerConnectionHandlerCallback& operator=(IDoIpServerConnectionHandlerCallback&&)
+        = delete;
     ~IDoIpServerConnectionHandlerCallback() = default;
 };
 

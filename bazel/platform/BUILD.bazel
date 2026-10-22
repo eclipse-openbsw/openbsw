@@ -61,6 +61,32 @@ platform(
 
         # ETL profile
         "--//libs/3rdparty/etl:etl_profile=//executables/referenceApp/etl_profile",
+
+        # lwIP
+        "--//libs/3rdparty/lwip:exclude_slipif=true",
+        "--//libs/3rdparty/lwip:lwip_configuration=//executables/referenceApp/lwipConfiguration:lwip_configuration",
+        "--//libs/3rdparty/lwip:lwip_sys_arch=//platforms/posix/lwipSysArch:lwip_sys_arch",
+
+        # ETL implementation
+        "--//libs/bsw/loggerIntegration:etl_impl=//platforms/posix/etlImpl:etl_impl",
+
+        # ThreadX port and hooks
+        "--//libs/3rdparty/threadx:threadx_port_headers=//platforms/posix/3rdparty/threadx:threadx_linux_port_headers",
+        "--//libs/3rdparty/threadx:threadx_port_impl=//platforms/posix/3rdparty/threadx:threadx_linux",
+        "--//libs/3rdparty/threadx:threadx_os_hooks=//executables/referenceApp/platforms/posix/main:threadx_os_hooks",
+        "--//libs/bsw/asyncThreadX:threadx_core_configuration=//executables/referenceApp/platforms/posix/threadXCoreConfiguration:threadx_core_configuration",
+
+        # Async seams
+        "--//libs/bsw/async:async_binding=//executables/referenceApp/asyncBinding:async_binding",
+        "--//libs/bsw/asyncFreeRtos:async_core_configuration=//executables/referenceApp/asyncCoreConfiguration:async_core_configuration",
+        "--//libs/bsw/asyncThreadX:async_core_configuration=//executables/referenceApp/asyncCoreConfiguration:async_core_configuration",
+
+        # App configuration seams
+        "--//libs/bsw/blob:blob_configuration=//executables/referenceApp/configuration:blob_configuration_headers",
+        "--//libs/bsw/routing:routing_configuration=//executables/referenceApp/configuration:routing_configuration_headers",
+        "--//libs/bsw/uds:uds_configuration=//executables/referenceApp/udsConfiguration:uds_configuration",
+        "--//libs/bsw/uds:transport_configuration=//executables/referenceApp/transportConfiguration:transport_configuration",
+        "--//libs/bsw/transportRouterSimple:transport_configuration=//executables/referenceApp/transportConfiguration:transport_configuration",
     ],
     parents = ["@platforms//host:host"],
 )
@@ -88,6 +114,7 @@ platform(
 
         # lwip stack configuration
         "--//libs/3rdparty/lwip:lwip_configuration=//executables/unitTest/lwipConfiguration:lwip_configuration",
+        "--//libs/3rdparty/lwip:exclude_slipif=true",
 
         # transport configuration
         "--//libs/bsw/transportRouterSimple:transport_configuration=//executables/unitTest/transportConfiguration:transport_configuration",
@@ -183,6 +210,32 @@ platform(
 
         # ETL profile
         "--//libs/3rdparty/etl:etl_profile=//executables/referenceApp/etl_profile",
+
+        # lwIP
+        "--//libs/3rdparty/lwip:exclude_slipif=true",
+        "--//libs/3rdparty/lwip:lwip_configuration=//executables/referenceApp/lwipConfiguration:lwip_configuration",
+        "--//libs/3rdparty/lwip:lwip_sys_arch=//platforms/s32k1xx/lwipSysArch:lwip_sys_arch",
+
+        # ETL implementation
+        "--//libs/bsw/loggerIntegration:etl_impl=//platforms/s32k1xx/etlImpl:etl_impl",
+
+        # ThreadX port and hooks
+        "--//libs/3rdparty/threadx:threadx_port_headers=//platforms/s32k1xx/3rdparty/threadx:threadx_cortex_m4_port_headers",
+        "--//libs/3rdparty/threadx:threadx_port_impl=//platforms/s32k1xx/3rdparty/threadx:threadx_cortex_m4",
+        "--//libs/3rdparty/threadx:threadx_os_hooks=//executables/referenceApp/platforms/s32k148evb/main:threadx_os_hooks",
+        "--//libs/bsw/asyncThreadX:threadx_core_configuration=//executables/referenceApp/platforms/s32k148evb/threadXCoreConfiguration:threadx_core_configuration",
+
+        # Async seams
+        "--//libs/bsw/async:async_binding=//executables/referenceApp/asyncBinding:async_binding",
+        "--//libs/bsw/asyncFreeRtos:async_core_configuration=//executables/referenceApp/asyncCoreConfiguration:async_core_configuration",
+        "--//libs/bsw/asyncThreadX:async_core_configuration=//executables/referenceApp/asyncCoreConfiguration:async_core_configuration",
+
+        # App configuration seams
+        "--//libs/bsw/blob:blob_configuration=//executables/referenceApp/configuration:blob_configuration_headers",
+        "--//libs/bsw/routing:routing_configuration=//executables/referenceApp/configuration:routing_configuration_headers",
+        "--//libs/bsw/uds:uds_configuration=//executables/referenceApp/udsConfiguration:uds_configuration",
+        "--//libs/bsw/uds:transport_configuration=//executables/referenceApp/transportConfiguration:transport_configuration",
+        "--//libs/bsw/transportRouterSimple:transport_configuration=//executables/referenceApp/transportConfiguration:transport_configuration",
     ],
 )
 
@@ -250,6 +303,25 @@ platform(
 
         # ETL profile
         "--//libs/3rdparty/etl:etl_profile=//executables/referenceApp/etl_profile",
+
+        # lwIP
+        "--//libs/3rdparty/lwip:exclude_slipif=true",
+        "--//libs/3rdparty/lwip:lwip_configuration=//executables/referenceApp/lwipConfiguration:lwip_configuration",
+
+        # Async seams
+        "--//libs/bsw/async:async_binding=//executables/referenceApp/asyncBinding:async_binding",
+        "--//libs/bsw/asyncFreeRtos:async_core_configuration=//executables/referenceApp/asyncCoreConfiguration:async_core_configuration",
+        "--//libs/bsw/asyncThreadX:async_core_configuration=//executables/referenceApp/asyncCoreConfiguration:async_core_configuration",
+
+        # App configuration seams
+        "--//libs/bsw/blob:blob_configuration=//executables/referenceApp/configuration:blob_configuration_headers",
+        "--//libs/bsw/routing:routing_configuration=//executables/referenceApp/configuration:routing_configuration_headers",
+        "--//libs/bsw/uds:uds_configuration=//executables/referenceApp/udsConfiguration:uds_configuration",
+        "--//libs/bsw/uds:transport_configuration=//executables/referenceApp/transportConfiguration:transport_configuration",
+        "--//libs/bsw/transportRouterSimple:transport_configuration=//executables/referenceApp/transportConfiguration:transport_configuration",
+
+        # Application
+        "--//executables/referenceApp/application:uds_demo_services=true",
     ],
 )
 
@@ -311,6 +383,25 @@ platform(
 
         # ETL profile
         "--//libs/3rdparty/etl:etl_profile=//executables/referenceApp/etl_profile",
+
+        # lwIP
+        "--//libs/3rdparty/lwip:exclude_slipif=true",
+        "--//libs/3rdparty/lwip:lwip_configuration=//executables/referenceApp/lwipConfiguration:lwip_configuration",
+
+        # Async seams
+        "--//libs/bsw/async:async_binding=//executables/referenceApp/asyncBinding:async_binding",
+        "--//libs/bsw/asyncFreeRtos:async_core_configuration=//executables/referenceApp/asyncCoreConfiguration:async_core_configuration",
+        "--//libs/bsw/asyncThreadX:async_core_configuration=//executables/referenceApp/asyncCoreConfiguration:async_core_configuration",
+
+        # App configuration seams
+        "--//libs/bsw/blob:blob_configuration=//executables/referenceApp/configuration:blob_configuration_headers",
+        "--//libs/bsw/routing:routing_configuration=//executables/referenceApp/configuration:routing_configuration_headers",
+        "--//libs/bsw/uds:uds_configuration=//executables/referenceApp/udsConfiguration:uds_configuration",
+        "--//libs/bsw/uds:transport_configuration=//executables/referenceApp/transportConfiguration:transport_configuration",
+        "--//libs/bsw/transportRouterSimple:transport_configuration=//executables/referenceApp/transportConfiguration:transport_configuration",
+
+        # Application
+        "--//executables/referenceApp/application:uds_demo_services=true",
     ],
 )
 

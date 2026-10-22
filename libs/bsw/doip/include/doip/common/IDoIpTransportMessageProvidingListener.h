@@ -80,6 +80,11 @@ public:
         = 0;
 
 protected:
+    IDoIpTransportMessageProvidingListener()                                              = default;
+    IDoIpTransportMessageProvidingListener(IDoIpTransportMessageProvidingListener const&) = default;
+    IDoIpTransportMessageProvidingListener(IDoIpTransportMessageProvidingListener&&)      = default;
+    IDoIpTransportMessageProvidingListener& operator=(IDoIpTransportMessageProvidingListener&&)
+        = delete;
     ~IDoIpTransportMessageProvidingListener() = default;
     IDoIpTransportMessageProvidingListener& operator=(IDoIpTransportMessageProvidingListener const&)
         = delete;

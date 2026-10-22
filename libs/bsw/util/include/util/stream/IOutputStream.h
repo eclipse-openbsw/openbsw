@@ -22,10 +22,13 @@ namespace stream
 class IOutputStream
 {
 public:
-    IOutputStream() = default;
+    IOutputStream()          = default;
+    virtual ~IOutputStream() = default;
 
     IOutputStream(IOutputStream const&)            = delete;
     IOutputStream& operator=(IOutputStream const&) = delete;
+    IOutputStream(IOutputStream&&)                 = delete;
+    IOutputStream& operator=(IOutputStream&&)      = delete;
 
     /**
      * Indicates whether or not the stream ends i.e. bytes can be written.

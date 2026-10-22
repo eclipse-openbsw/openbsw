@@ -47,6 +47,9 @@ SomeIpSystem::SomeIpSystem(::async::ContextType const context)
 , _rpcChannel(_stack.getNetwork(), _stack.getRpcHandler())
 , _serviceListener(_rpcChannel)
 , _routine(_rpcChannel)
+#ifdef PLATFORM_SUPPORT_SOMEIP_BRIDGE_SAMPLE
+, _sample(_stack, _stack.getEventSender(), _stack.getNetwork(), _stack.getRpcHandler())
+#endif
 {}
 
 void SomeIpSystem::init()
@@ -137,6 +140,10 @@ void SomeIpSystem::init()
      * }} register the client
      */
 
+#ifdef PLATFORM_SUPPORT_SOMEIP_BRIDGE_SAMPLE
+    _sample.init();
+#endif
+
     _stack.start();
     transitionDone();
 }
@@ -145,12 +152,18 @@ void SomeIpSystem::run()
 {
     ::async::scheduleAtFixedRate(
         _context, _routine, _timeout, 100, ::async::TimeUnit::MILLISECONDS);
+#ifdef PLATFORM_SUPPORT_SOMEIP_BRIDGE_SAMPLE
+    _sample.run(_context);
+#endif
 
     transitionDone();
 }
 
 void SomeIpSystem::shutdown()
 {
+#ifdef PLATFORM_SUPPORT_SOMEIP_BRIDGE_SAMPLE
+    _sample.shutdown();
+#endif
     _stack.shutdown();
     transitionDone();
 }

@@ -42,8 +42,6 @@ StringBufferOutputStream::StringBufferOutputStream(
 , _buffer(buf)
 , _endOfString((endOfString != nullptr) ? endOfString : "")
 , _ellipsis((ellipsis != nullptr) ? ellipsis : "")
-, _currentIndex(0U)
-, _overflow(false)
 {}
 
 StringBufferOutputStream::~StringBufferOutputStream() noexcept { finalizeBuffer(); }

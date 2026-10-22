@@ -13,11 +13,12 @@
 #include "shed/move_op.h"
 
 #include <etl/delegate.h>
+#include <etl/limits.h>
 #include <etl/span.h>
+#include <etl/utility.h>
 
 #include <cstddef>
 #include <cstdint>
-#include <limits>
 
 // multi_list is a data structure to maintain membership information for N elements in M sets.
 // The items are always the numbers 0..N-1, intended to be used as indices into another data
@@ -57,7 +58,7 @@ struct multi_list
 
     static constexpr bool is_size_valid(size_t const n, size_t const buckets)
     {
-        return (n + buckets) <= std::numeric_limits<idx_type>::max();
+        return (n + buckets) <= ::etl::numeric_limits<idx_type>::max();
     }
 
     static constexpr size_t memory_for(size_t const n, size_t const buckets)
@@ -120,7 +121,7 @@ struct multi_list
                     pos = items[pos];
                 }
 
-            } while ((i < n + 1) && std::forward<F>(f)(n - i));
+            } while ((i < n + 1) && ::etl::forward<F>(f)(n - i));
         }
     };
 
@@ -156,7 +157,7 @@ struct multi_list
         while (items()[src] < _n)
         {
             auto const s = items()[src];
-            auto const r = std::forward<F>(f)(s);
+            auto const r = ::etl::forward<F>(f)(s);
             if ((r == move_op::MOVE) || (r == move_op::MOVE_DONE))
             {
                 dst = move_node(s, dst);

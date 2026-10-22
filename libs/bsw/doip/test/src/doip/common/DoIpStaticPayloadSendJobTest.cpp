@@ -16,6 +16,7 @@
 #include <etl/array.h>
 #include <etl/memory.h>
 #include <etl/span.h>
+#include <type_traits>
 
 #include <gmock/gmock.h>
 
@@ -24,6 +25,13 @@ namespace doip
 namespace test
 {
 using namespace ::testing;
+
+static_assert(!std::is_copy_constructible<DoIpStaticPayloadSendJob>::value);
+static_assert(!std::is_move_constructible<DoIpStaticPayloadSendJob>::value);
+static_assert(!std::is_copy_assignable<DoIpStaticPayloadSendJob>::value);
+static_assert(!std::is_move_assignable<DoIpStaticPayloadSendJob>::value);
+static_assert(!std::is_copy_constructible<declare::DoIpStaticPayloadSendJob<15U>>::value);
+static_assert(!std::is_move_constructible<declare::DoIpStaticPayloadSendJob<15U>>::value);
 
 class DoIpStaticPayloadSendJobTest : public Test
 {

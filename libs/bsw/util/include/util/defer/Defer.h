@@ -44,7 +44,7 @@ public:
     Defer& operator=(Defer const&) = delete;
     Defer& operator=(Defer&&)      = delete;
 
-    explicit Defer(F f) : _f{::etl::move(f)}, _invoke{true} {}
+    explicit Defer(F f) : _f{::etl::move(f)} {}
 
     Defer(Defer&& other)
     : _f{::etl::move(other._f)}, _invoke{internal::exchange(other._invoke, false)}
@@ -60,7 +60,7 @@ public:
 
 private:
     F _f;
-    bool _invoke;
+    bool _invoke{true};
 };
 
 /**

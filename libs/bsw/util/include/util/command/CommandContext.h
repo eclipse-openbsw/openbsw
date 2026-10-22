@@ -39,7 +39,7 @@ public:
     private:
         CommandContext& _context;
         ::util::string::ConstString _identifier;
-        bool _match;
+        bool _match{false};
         T _value;
     };
 
@@ -173,7 +173,7 @@ T CommandContext::scanIntToken()
 template<class T>
 CommandContext::IdentifierChecker<T>::IdentifierChecker(
     CommandContext& context, ::util::string::ConstString const& identifier)
-: _context(context), _identifier(identifier), _match(false), _value()
+: _context(context), _identifier(identifier), _value()
 {}
 
 template<class T>

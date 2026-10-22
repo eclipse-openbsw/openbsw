@@ -38,9 +38,9 @@ set(_GENERATED_HEADERS
     ${_GEN_INC}/middleware/ClusterConnectionsCluster0Cluster1.h
     ${_GEN_INC}/middleware/ClusterConnectionsCluster1Cluster0.h
     ${_GEN_INC}/middleware/shm/Config.h
-    ${_GEN_INC}/shm/AllocatorsDefinitions.h
-    ${_GEN_INC}/shm/QueueDefinitions.h
-    ${_GEN_INC}/shm/PduDefinitions.h
+    ${_GEN_INC}/middleware/shm/AllocatorsDefinitions.h
+    ${_GEN_INC}/middleware/shm/QueueDefinitions.h
+    ${_GEN_INC}/middleware/shm/PduDefinitions.h
     ${_GEN_INC}/org/test/foo/FooCommon.h
     ${_GEN_INC}/org/test/foo/FooProxy.h
     ${_GEN_INC}/org/test/foo/FooSkeleton.h

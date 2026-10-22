@@ -50,6 +50,15 @@ public:
     virtual void connectionAccepted(DoIpServerTransportConnection& connection) = 0;
 
 protected:
+    IDoIpServerTransportConnectionProviderCallback() = default;
+    IDoIpServerTransportConnectionProviderCallback(
+        IDoIpServerTransportConnectionProviderCallback const&)
+        = default;
+    IDoIpServerTransportConnectionProviderCallback(IDoIpServerTransportConnectionProviderCallback&&)
+        = default;
+    IDoIpServerTransportConnectionProviderCallback&
+    operator=(IDoIpServerTransportConnectionProviderCallback&&)
+        = default;
     ~IDoIpServerTransportConnectionProviderCallback() = default;
     IDoIpServerTransportConnectionProviderCallback&
     operator=(IDoIpServerTransportConnectionProviderCallback const&)

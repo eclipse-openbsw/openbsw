@@ -79,7 +79,7 @@ public:
 private:
     ::async::ContextType const _context;
     ::async::TimeoutType _timeout;
-    std::size_t _executeCounter;
+    size_t _executeCounter;
     ::etl::array<uint8_t, Netifs::memory_for(::ethX::NUM_NETIFS)> _netifsMem;
 };
 

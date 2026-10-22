@@ -28,14 +28,18 @@ namespace string
  */
 struct PlainSizedString
 {
+    PlainSizedString(char const* data = nullptr, size_t len = 0U) noexcept
+    : _data(data), _length(len)
+    {}
+
     /**
      * Pointer to the start of the data block wrapped by this ConstString object.
      */
-    char const* _data;
+    char const* _data{nullptr};
     /**
      * Number of valid characters.
      */
-    size_t _length;
+    size_t _length{0U};
 };
 
 /**
@@ -45,10 +49,13 @@ struct PlainSizedString
 class ConstString : private PlainSizedString
 {
 public:
-    /**
-     * Creates an invalid buffer with the size 0.
-     */
-    ConstString();
+    ConstString() noexcept  = default;
+    ~ConstString() noexcept = default;
+
+    ConstString(ConstString const& other) noexcept            = default;
+    ConstString& operator=(ConstString const& other) noexcept = default;
+    ConstString(ConstString&&) noexcept                       = default;
+    ConstString& operator=(ConstString&&) noexcept            = default;
 
     /**
      * Creates a new ConstByteBuffer for the provided data and the length.
@@ -56,7 +63,7 @@ public:
      * \param data pointer to the data block which shall be wrapped by this Buffer object.
      * \param length number of characters.
      */
-    ConstString(char const* str, size_t len);
+    ConstString(char const* str, size_t len) noexcept;
 
     /**
      * Creates a new ConstByteBuffer for the provided C string (terminating with zero).
@@ -64,7 +71,7 @@ public:
      *
      * \param string pointer to the zero terminated C string.
      */
-    explicit ConstString(char const* str);
+    explicit ConstString(char const* str) noexcept;
 
     /**
      * Creates a shallow copy of the provided character buffer.
@@ -74,14 +81,7 @@ public:
      * \attention creates a shallow copy, the created object also will be a wrapper around
      *            the same data block.
      */
-    ConstString(ConstString const& other);
-
-    /**
-     * Assignment operator.
-     *
-     * \param other whose data block and size will be assigned to this buffer.
-     */
-    ConstString& operator=(ConstString const& other);
+    // intentionally defaulted copy constructor declared above; keep docs here if needed
 
     /**
      * Check for emptiness.
@@ -252,27 +252,13 @@ bool operator<=(ConstString const& lhs, ConstString const& rhs);
 bool operator>=(ConstString const& lhs, ConstString const& rhs);
 
 /* Implementation  */
-inline ConstString::ConstString()
-{
-    _data   = nullptr;
-    _length = 0U;
-}
+inline ConstString::ConstString(char const* const str, size_t const len) noexcept
+: PlainSizedString{str, (str != nullptr) ? len : 0U}
+{}
 
-inline ConstString::ConstString(char const* const str, size_t const len)
-{
-    _data   = str;
-    _length = (str != nullptr) ? len : 0U;
-}
-
-inline ConstString::ConstString(char const* const str)
-{
-    _data   = str;
-    _length = (str != nullptr) ? strlen(str) : 0U;
-}
-
-inline ConstString::ConstString(ConstString const& other) = default;
-
-inline ConstString& ConstString::operator=(ConstString const& other) = default;
+inline ConstString::ConstString(char const* const str) noexcept
+: PlainSizedString{str, (str != nullptr) ? strlen(str) : 0U}
+{}
 
 inline bool ConstString::isEmpty() const { return _length == 0U; }
 

@@ -18,9 +18,9 @@
 #include "Logger.h"
 #include "foo/FooSkeletonWrapper.h"
 #include "middleware/ClusterCluster0.h"
+#include "middleware/shm/PduDefinitions.h"
+#include "middleware/shm/QueueDefinitions.h"
 #include "org/test/signal/samplePduWithDatatypesCommon.h"
-#include "shm/PduDefinitions.h"
-#include "shm/QueueDefinitions.h"
 
 void write_sample_pdu_with_crc()
 {

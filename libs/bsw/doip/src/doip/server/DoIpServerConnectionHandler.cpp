@@ -39,7 +39,6 @@ DoIpServerConnectionHandler::DoIpServerConnectionHandler(
     uint16_t const logicalEntityAddress,
     DoIpServerTransportLayerParameters const& parameters)
 : IDoIpConnectionHandler()
-, _callback(nullptr)
 , _connection(connection)
 , _parameters(parameters)
 , _timerTimeout()
@@ -48,11 +47,8 @@ DoIpServerConnectionHandler::DoIpServerConnectionHandler(
 , _internalSourceAddress(::transport::TransportMessage::INVALID_ADDRESS)
 , _protocolVersion(protocolVersion)
 , _context(context)
-, _state(State::INACTIVE)
 , _socketGroupId(socketGroupId)
 , _readBuffer()
-, _aliveCheckPending(false)
-, _isOrWasRouting(false)
 {}
 
 void DoIpServerConnectionHandler::addMessageHandler(IDoIpServerMessageHandler& messageHandler)

@@ -44,7 +44,6 @@ DoIpServerVehicleIdentificationSocketHandler::DoIpServerVehicleIdentificationSoc
 , _connection(config.getContext(), socket, config.getWriteBuffer())
 , _multicastAddress(multicastAddress)
 , _config(config)
-, _vehicleAnnouncementListener(nullptr)
 , _enqueueInitialBroadcastsUnicastAsync(
       ::async::Function::CallType::create<
           DoIpServerVehicleIdentificationSocketHandler,
@@ -178,7 +177,7 @@ void DoIpServerVehicleIdentificationSocketHandler::configChangedContinuationAsyn
     }
     _connection.close();
 
-    bool isValid;
+    bool isValid = false;
     ::ip::IPAddress bindAddress;
     ::ip::IPAddress broadcastAddress;
     {
@@ -436,7 +435,7 @@ bool DoIpServerVehicleIdentificationSocketHandler::handleRequest(DoIpHeader cons
 void DoIpServerVehicleIdentificationSocketHandler::vehicleIdentificationEidRequestReceived(
     ::etl::span<uint8_t const> const payload)
 {
-    ::etl::array<uint8_t, EID_LENGTH> eid;
+    ::etl::array<uint8_t, EID_LENGTH> eid{};
     _config.getVehicleIdentificationCallback().getEid(::etl::span<uint8_t, EID_LENGTH>(eid));
     if ((payload.size() == eid.size())
         && (::etl::mem_compare(payload.begin(), payload.end(), eid.begin()) == 0))
@@ -449,7 +448,7 @@ void DoIpServerVehicleIdentificationSocketHandler::vehicleIdentificationEidReque
 void DoIpServerVehicleIdentificationSocketHandler::vehicleIdentificationVinRequestReceived(
     ::etl::span<uint8_t const> const payload)
 {
-    ::etl::array<uint8_t, VIN_LENGTH> vin;
+    ::etl::array<uint8_t, VIN_LENGTH> vin{};
     _config.getVehicleIdentificationCallback().getVin(
         ::etl::span<uint8_t, VIN_LENGTH>(vin).reinterpret_as<char>());
     if ((payload.size() == vin.size())
