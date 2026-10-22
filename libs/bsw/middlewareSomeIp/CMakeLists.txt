@@ -1,0 +1,5 @@
+add_library(middlewareSomeIp INTERFACE)
+
+target_include_directories(middlewareSomeIp INTERFACE include)
+
+target_link_libraries(middlewareSomeIp INTERFACE cpp2someip middleware)

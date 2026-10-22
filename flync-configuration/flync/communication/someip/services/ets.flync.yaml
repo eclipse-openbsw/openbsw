@@ -1,0 +1,810 @@
+# *******************************************************************************
+# Copyright (c) 2026 KPIT Group
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+
+meta:
+  author: "Dev"
+  compatible_flync_version:
+    version_schema: semver
+    version: 0.11.0
+
+name: Enhanced Testability Services
+id: 0x0101
+major_version: 1
+minor_version: 1
+fields:
+- &field_0x8005
+  name: InterfaceVersion
+  someip_timing: field_default
+  parameters:
+  - name: MajorVersion
+    datatype:
+      type: uint8
+  - name: MinorVersion
+    datatype:
+      type: uint32
+  notifier_id: 0x8005
+  getter_id: 0x25
+- &field_0x8006
+  name: TestFieldUINT8
+  notifier_id: 0x8006
+  getter_id: 0x26
+  setter_id: 0x27
+  parameters:
+  - name: uint8_value
+    datatype:
+      type: uint8
+- &field_0x8007
+  name: TestFieldUINT8Array
+  notifier_id: 0x8007
+  getter_id: 0x28
+  setter_id: 0x29
+  parameters:
+  - name: uint8_array_value
+    datatype:
+      type: array
+      dimensions:
+      - kind: dynamic
+        length_of_length_field: 32
+        lower_limit: 0
+        upper_limit: 5
+      element_type:
+        type: uint8
+- &field_0x8008
+  name: TestFieldUINT8Reliable
+  notifier_id: 0x8008
+  getter_id: 0x2A
+  setter_id: 0x2B
+  reliable: true
+  parameters:
+  - name: uint8_value
+    datatype:
+      type: uint8
+events:
+- &event_0x8001
+  name: TestEventUINT8
+  id: 0x8001
+  e2e:
+    profile: AUTOSAR_Profile_4
+    data_id: 0x12345670
+  someip_timing: event_default
+  parameters:
+  - name: uint8_value
+    datatype:
+      type: uint8
+- &event_0x8002
+  name: TestEventUINT8Array
+  id: 0x8002
+  e2e:
+    profile: AUTOSAR_Profile_4
+    data_id: 0x12345678
+  parameters:
+  - name: uint8_array_value
+    datatype:
+      type: array
+      dimensions:
+      - kind: dynamic
+        length_of_length_field: 32
+        lower_limit: 0
+        upper_limit: 5
+      element_type:
+        type: uint8
+- &event_0x8004
+  name: TestEventUINT8E2E
+  id: 0x8004
+  e2e:
+    profile: AUTOSAR_Profile_7
+    data_id: 0x12345679
+  parameters:
+  - name: length
+    datatype:
+      type: uint16
+  - name: counter
+    datatype:
+      type: uint16
+  - name: dataID
+    datatype:
+      type: uint32
+  - name: crc
+    datatype:
+      type: uint32
+  - name: uint8_value
+    datatype:
+      type: uint8
+- &event_0x8003
+  name: TestEventUINT8Reliable
+  id: 0x8003
+  reliable: true
+  e2e:
+    profile: AUTOSAR_Profile_4
+    data_id: 0x12345671
+  parameters:
+  - name: uint8_value
+    datatype:
+      type: uint8
+- &event_0x800b
+  name: TestEventUINT8Multicast
+  id: 0x800b
+  parameters:
+  - name: uint8_value
+    datatype:
+      type: uint8
+eventgroups:
+- name: eg2_all
+  id: 2
+  events:
+  - *event_0x8001
+  - *event_0x8002
+  - *event_0x8003
+  - *event_0x8004
+  - *field_0x8005
+  - *field_0x8006
+  - *field_0x8007
+  - *field_0x8008
+  - *event_0x800b
+- name: eg5_events_and_fields_unreliable
+  id: 5
+  events:
+  - *event_0x8001
+  - *event_0x8002
+  - *event_0x8004
+  - *event_0x800b
+  - *field_0x8005
+  - *field_0x8006
+  - *field_0x8007
+- name: eg6_events_multicast
+  id: 6
+  events:
+  - *event_0x800b
+methods:
+- name: checkByteOrder
+  type: request_response
+  id: 0x1F
+  someip_timing: method_default
+  input_parameters:
+  - name: arg1
+    datatype:
+      type: uint8
+  - name: arg2
+    datatype:
+      type: uint16
+  output_parameters:
+  - name: sum
+    datatype:
+      type: uint32
+    description: "Sum of arg1 and arg2."
+- name: clientServiceActivate
+  type: fire_and_forget
+  id: 0x2F
+  input_parameters:
+  - name: delay
+    datatype:
+      type: uint8
+    description: "Delay in s before Client Service is activated."
+- name: clientServiceDeactivate
+  type: fire_and_forget
+  id: 0x30
+  input_parameters:
+  - name: delay
+    datatype:
+      type: uint8
+    description: "Delay in s before Client Service is deactivated."
+- name: clientServiceSubscribeEventgroup
+  type: fire_and_forget
+  id: 0x32
+  input_parameters:
+  - name: delay
+    datatype:
+      type: uint32
+    description: "Delay in s before Eventgroup shall be subscribed."
+  - name: duration
+    datatype:
+      type: uint32
+    description: "Duration in s for sending Subscribe Eventgroups."
+- name: echoCommonDatatypes
+  type: request_response
+  id: 0x23
+  input_parameters:
+  - name: boolean_in
+    datatype:
+      type: boolean
+  - name: uint8_in
+    datatype:
+      type: uint8
+  - name: uint16_in
+    datatype:
+      type: uint16
+  - name: uint32_in
+    datatype:
+      type: uint32
+  - name: int8_in
+    datatype:
+      type: int8
+  - name: int16_in
+    datatype:
+      type: int16
+  - name: int32_in
+    datatype:
+      type: int32
+  - name: float32_in
+    datatype:
+      type: float32
+  - name: float64_in
+    datatype:
+      type: float64
+  output_parameters:
+  - name: float64_out
+    datatype:
+      type: float64
+  - name: float32_out
+    datatype:
+      type: float32
+  - name: int32_out
+    datatype:
+      type: int32
+  - name: int16_out
+    datatype:
+      type: int16
+  - name: int8_out
+    datatype:
+      type: int8
+  - name: uint32_out
+    datatype:
+      type: uint32
+  - name: uint16_out
+    datatype:
+      type: uint16
+  - name: uint8_out
+    datatype:
+      type: uint8
+  - name: boolean_out
+    datatype:
+      type: boolean
+- name: echoENUM
+  type: request_response
+  id: 0x17
+  input_parameters:
+  - name: enum_value_in
+    datatype:
+      type: enum
+      base_type:
+        type: uint8
+      entries:
+      - value: 0
+        name: enum_zero
+      - value: 1
+        name: enum_one
+      - value: 2
+        name: enum_two
+      - value: 3
+        name: enum_three
+  output_parameters:
+  - name: enum_value_out
+    datatype:
+      type: enum
+      base_type:
+        type: uint8
+      entries:
+      - value: 0
+        name: enum_zero
+      - value: 1
+        name: enum_one
+      - value: 2
+        name: enum_two
+      - value: 3
+        name: enum_three
+- name: echoFLOAT64
+  type: request_response
+  id: 0x12
+  input_parameters:
+  - name: float64_in
+    datatype:
+      type: float64
+  output_parameters:
+  - name: float64_out
+    datatype:
+      type: float64
+- name: echoINT64
+  type: request_response
+  id: 0x34
+  input_parameters:
+  - name: int64_in
+    datatype:
+      type: int64
+  output_parameters:
+  - name: int64_out
+    datatype:
+      type: int64
+- name: echoINT8
+  type: request_response
+  id: 0x0E
+  input_parameters:
+  - name: int8_in
+    datatype:
+      type: int8
+  output_parameters:
+  - name: int8_out
+    datatype:
+      type: int8
+- name: echoStaticUINT8Array
+  type: request_response
+  id: 0x36
+  input_parameters:
+  - name: uint8array_in
+    datatype:
+      type: array
+      dimensions:
+      - kind: fixed
+        length: 5
+      element_type:
+        type: uint8
+  output_parameters:
+  - name: uint8array_out
+    datatype:
+      type: array
+      dimensions:
+      - kind: fixed
+        length: 5
+      element_type:
+        type: uint8
+- name: echoUINT8
+  type: request_response
+  id: 0x08
+  input_parameters:
+  - name: uint8_in
+    datatype:
+      type: uint8
+  output_parameters:
+  - name: uint8_out
+    datatype:
+      type: uint8
+- name: echoUINT8Array
+  type: request_response
+  id: 0x09
+  input_parameters:
+  - name: uint8array_in
+    datatype:
+      type: array
+      dimensions:
+      - kind: dynamic
+        length_of_length_field: 32
+      element_type:
+        type: uint8
+    description: array
+  output_parameters:
+  - name: uint8array_out
+    datatype:
+      type: array
+      dimensions:
+      - kind: dynamic
+        length_of_length_field: 32
+      element_type:
+        type: uint8
+    description: array
+- name: echoUINT8Array8BitLength
+  type: request_response
+  id: 0x3E
+  input_parameters:
+  - name: uint8array_in
+    datatype:
+      type: array
+      dimensions:
+      - kind: dynamic
+        length_of_length_field: 8
+      element_type:
+        type: uint8
+    description: array
+  output_parameters:
+  - name: uint8array_out
+    datatype:
+      type: array
+      element_type:
+        type: uint8
+      dimensions:
+      - kind: dynamic
+        length_of_length_field: 8
+    description: array
+- name: echoUINT8Array16BitLength
+  type: request_response
+  id: 0x3F
+  input_parameters:
+  - name: uint8array_in
+    datatype:
+      type: array
+      dimensions:
+      - kind: dynamic
+        length_of_length_field: 16
+      element_type:
+        type: uint8
+    description: array
+  output_parameters:
+  - name: uint8array_out
+    datatype:
+      type: array
+      dimensions:
+      - kind: dynamic
+        length_of_length_field: 16
+      element_type:
+        type: uint8
+    description: array
+- name: echoUINT8Array2Dim
+  type: request_response
+  id: 0x35
+  input_parameters:
+  - name: uint8array_in
+    datatype:
+      type: array
+      dimensions:
+      - kind: dynamic
+        length_of_length_field: 32
+      - kind: dynamic
+        length_of_length_field: 32
+      element_type:
+        type: uint8
+    description: array
+  output_parameters:
+  - name: uint8array_out
+    datatype:
+      type: array
+      dimensions:
+      - kind: dynamic
+        length_of_length_field: 32
+      - kind: dynamic
+        length_of_length_field: 32
+      element_type:
+        type: uint8
+    description: array
+- name: echoUINT8ArrayMinSize
+  type: request_response
+  id: 0x37
+  input_parameters:
+  - name: uint8array_in
+    datatype:
+      type: array
+      dimensions:
+      - kind: dynamic
+        length_of_length_field: 32
+        lower_limit: 3
+        upper_limit: 5
+      element_type:
+        type: uint8
+    description: array
+  output_parameters:
+  - name: uint8array_out
+    datatype:
+      type: array
+      dimensions:
+      - kind: dynamic
+        length_of_length_field: 32
+        lower_limit: 3
+        upper_limit: 5
+      element_type:
+        type: uint8
+    description: array
+- name: echoUINT8E2E
+  type: request_response
+  id: 0x0B
+  input_parameters:
+  - name: length
+    datatype:
+      type: uint16
+  - name: counter
+    datatype:
+      type: uint16
+  - name: dataID
+    datatype:
+      type: uint32
+  - name: crc
+    datatype:
+      type: uint32
+  - name: uint8_value
+    datatype:
+      type: uint8
+  output_parameters:
+  - name: length
+    datatype:
+      type: uint16
+  - name: counter
+    datatype:
+      type: uint16
+  - name: dataID
+    datatype:
+      type: uint32
+  - name: crc
+    datatype:
+      type: uint32
+  - name: uint8_value
+    datatype:
+      type: uint8
+- name: echoUINT8RELIABLE
+  type: request_response
+  id: 0x0A
+  input_parameters:
+  - name: uint8_value
+    datatype:
+      type: uint8
+  output_parameters:
+  - name: uint8_value
+    datatype:
+      type: uint8
+- name: echoUNION
+  type: request_response
+  id: 0x19
+  input_parameters:
+  - name: union_in
+    datatype:
+      type: union
+      members:
+      - type: boolean
+        index: 1
+        name: boolean
+      - type: uint8
+        index: 2
+        name: uint8
+      - type: uint16
+        index: 3
+        name: uint16
+      - type: uint32
+        index: 4
+        name: uint32
+      - type: int8
+        index: 5
+        name: int8
+      - type: int16
+        index: 6
+        name: int16
+      - type: int32
+        index: 7
+        name: int32
+      - type: float32
+        index: 8
+        name: Float32
+  output_parameters:
+  - name: echoUNION_ResArg3
+    datatype:
+      type: union
+      members:
+      - type: boolean
+        index: 1
+        name: Boolean
+      - type: uint8
+        index: 2
+        name: uint8
+      - type: uint16
+        index: 3
+        name: uint16
+      - type: uint32
+        index: 4
+        name: uint32
+      - type: int8
+        index: 5
+        name: int8
+      - type: int16
+        index: 6
+        name: int16
+      - type: int32
+        index: 7
+        name: int32
+      - type: float32
+        index: 8
+        name: float32
+    description: value
+- name: echoUTF16DYNAMIC
+  type: request_response
+  id: 0x16
+  input_parameters:
+  - name: utf16_in
+    datatype:
+      type: dynamic_length_string
+      encoding: UTF-16BE
+      length_of_length_field: 32
+    description: string
+  output_parameters:
+  - name: utf16_out
+    datatype:
+      type: dynamic_length_string
+      encoding: UTF-16BE
+      length_of_length_field: 32
+    description: string
+- name: echoUTF16FIXED
+  type: request_response
+  id: 0x14
+  input_parameters:
+  - name: echoUTF16FIXED_ReqArg1
+    datatype:
+      type: fixed_length_string
+      encoding: UTF-16BE
+      length: 64
+    description: string
+  output_parameters:
+  - name: echoUTF16FIXED_ResArg1
+    datatype:
+      type: fixed_length_string
+      encoding: UTF-16BE
+      length: 64
+    description: string
+- name: echoUTF8DYNAMIC
+  type: request_response
+  id: 0x15
+  input_parameters:
+  - name: echoUTF8DYNAMIC_ReqArg1
+    datatype:
+      type: dynamic_length_string
+      encoding: UTF-8
+      length_of_length_field: 32
+    description: string
+  output_parameters:
+  - name: echoUTF8DYNAMIC_ResArg1
+    datatype:
+      type: dynamic_length_string
+      encoding: UTF-8
+      length_of_length_field: 32
+    description: string
+- name: echoUTF8FIXED
+  type: request_response
+  id: 0x13
+  input_parameters:
+  - name: echoUTF8FIXED_ReqArg1
+    datatype:
+      type: fixed_length_string
+      encoding: UTF-8
+      length: 64
+    description: string
+  output_parameters:
+  - name: echoUTF8FIXED_ResArg1
+    datatype:
+      type: fixed_length_string
+      encoding: UTF-8
+      length: 64
+    description: string
+- name: resetInterface
+  type: fire_and_forget
+  id: 0x01
+- name: suspendInterface
+  type: fire_and_forget
+  id: 0x02
+  input_parameters:
+  - name: delay
+    datatype:
+      type: uint32
+    description: "Time in seconds to wait until interface is being suspended."
+  - name: duration
+    datatype:
+      type: uint32
+    description: "Time in seconds for how long the interface is suspended."
+- name: triggerEventUINT8
+  type: fire_and_forget
+  id: 0x03
+  input_parameters:
+  - name: delay
+    datatype:
+      type: uint32
+    description: "Time in seconds to wait until sending TestEventUINT8."
+  - name: duration
+    datatype:
+      type: uint32
+    description: "Duration in seconds for sending TestEventUINT8."
+  - name: debounceTime
+    datatype:
+      type: uint32
+    description: "Debounce Time in seconds for sending TestEventUINT8."
+- name: triggerEventUINT8Array
+  type: fire_and_forget
+  id: 0x04
+  input_parameters:
+  - name: delay
+    datatype:
+      type: uint32
+    description: "Time in seconds to wait until sending TestEventUINT8Array."
+  - name: duration
+    datatype:
+      type: uint32
+    description: "Duration in seconds for sending TestEventUINT8Array."
+  - name: debounceTime
+    datatype:
+      type: uint32
+    description: "Debounce Time in seconds for sending TestEventUINT8Array."
+- name: triggerEventUINT8E2E
+  type: fire_and_forget
+  id: 0x06
+  input_parameters:
+  - name: delay
+    datatype:
+      type: uint32
+    description: "Time in seconds to wait until sending TestEventUINT8E2E."
+  - name: duration
+    datatype:
+      type: uint32
+    description: "Duration in seconds for sending TestEventUINT8E2E."
+  - name: debounceTime
+    datatype:
+      type: uint32
+    description: "Debounce Time in seconds for sending TestEventUINT8E2E."
+- name: triggerEventUINT8Reliable
+  type: fire_and_forget
+  id: 0x05
+  input_parameters:
+  - name: delay
+    datatype:
+      type: uint32
+    description: "Time in seconds to wait until sending TestEventUINT8Reliable."
+  - name: duration
+    datatype:
+      type: uint32
+    description: "Duration in seconds for sending TestEventUINT8Reliable."
+  - name: debounceTime
+    datatype:
+      type: uint32
+    description: "Debounce Time in seconds for sending TestEventUINT8Reliable."
+- name: triggerEventUINT8Multicast
+  type: fire_and_forget
+  id: 0x3a
+  input_parameters:
+  - name: delay
+    datatype:
+      type: uint32
+    description: "Time in seconds to wait until sending TestEventUINT8Multicast."
+  - name: duration
+    datatype:
+      type: uint32
+    description: "Duration in seconds for sending TestEventUINT8Multicast."
+  - name: debounceTime
+    datatype:
+      type: uint32
+    description: "Debounce Time in seconds for sending TestEventUINT8Multicast."
+- name: clientServiceGetLastValueOfEventTCP
+  type: request_response
+  id: 0x3B
+  output_parameters:
+  - name: uint8_out
+    datatype:
+      type: uint8
+- name: clientServiceGetLastValueOfEventUDPUnicast
+  type: request_response
+  id: 0x3C
+  output_parameters:
+  - name: uint8_out
+    datatype:
+      type: uint8
+- name: clientServiceGetLastValueOfEventUDPMulticast
+  type: request_response
+  id: 0x3D
+  output_parameters:
+  - name: uint8_out
+    datatype:
+      type: uint8
+- name: echoBitfields
+  type: request_response
+  id: 0x41
+  input_parameters:
+  - name: bitfield8_in
+    datatype:
+      type: bitfield
+      length: 8
+  - name: bitfield16_in
+    datatype:
+      type: bitfield
+      length: 16
+  - name: bitfield32_in
+    datatype:
+      type: bitfield
+      length: 32
+  output_parameters:
+  - name: bitfield8_out
+    datatype:
+      type: bitfield
+      length: 8
+  - name: bitfield16_out
+    datatype:
+      type: bitfield
+      length: 16
+  - name: bitfield32_out
+    datatype:
+      type: bitfield
+      length: 32

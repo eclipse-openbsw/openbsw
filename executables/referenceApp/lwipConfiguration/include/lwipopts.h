@@ -147,7 +147,13 @@
 #endif
 
 #ifndef MEMP_NUM_UDP_PCB
+#ifdef PLATFORM_SUPPORT_SOMEIP_BRIDGE_SAMPLE
+// Two more for the SOME/IP bridge sample: its service port, and the group membership
+// of its multicast reception.
+#define MEMP_NUM_UDP_PCB 16
+#else
 #define MEMP_NUM_UDP_PCB 14
+#endif
 #endif
 
 #ifndef MEMP_NUM_TCP_PCB
