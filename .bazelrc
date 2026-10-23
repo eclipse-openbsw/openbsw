@@ -1,41 +1,28 @@
-# Each named config selects an app platform or app platform variant.
-# All definitions live in //bazel/platform/BUILD.bazel.
+# Each named config selects a target platform. All platform definitions
+# live in //bazel/platform/BUILD.bazel.
+# Compilation mode may be selected via the command line: -c dbg, -c opt,
+# or the default fastbuild, which maps to RelWithDebInfo for ARM targets.
 
-# S32K148 NXP Cortex-M4 with FreeRTOS. The _gcc suffix selects the GCC
-# toolchain explicitly, and the unprefixed config defaults to gcc to leave
-# room for alternative toolchain configs without breaking existing usage.
-build:s32k148_gcc --platforms=//bazel/platform:s32k148
-build:s32k148 --config=s32k148_gcc
+# Default platform: plain bazel build //... targets the Linux host.
+build --platforms=//bazel/platform:posix
 
-# S32K148 with ThreadX RTOS instead of FreeRTOS.
-build:s32k148_threadx_gcc --platforms=//bazel/platform:s32k148_threadx
-build:s32k148_threadx --config=s32k148_threadx_gcc
+# ARM embedded S32K148 Cortex-M4. Each config pairs the hardware with an RTOS.
+# FreeRTOS is the default. ThreadX is an alternative.
+build:s32k148         --platforms=//bazel/platform:s32k148
+build:s32k148_threadx --platforms=//bazel/platform:s32k148_threadx
 
-# S32K148 optimised build with debug symbols. Matches the CMake RelWithDebInfo
-# build type. Used for binary size and symbol comparison against CMake.
-build:s32k148_relwithdebinfo --config=s32k148
-build:s32k148_relwithdebinfo --copt=-g3
-build:s32k148_relwithdebinfo --copt=-O2
-build:s32k148_relwithdebinfo --copt=-DNDEBUG
-
-# STM32 ARM Cortex-M4 platforms with FreeRTOS. stm32g4 is STM32G474RE with
-# FDCAN, stm32f4 is STM32F413ZH with BxCAN, and stm32 defaults to stm32g4.
+# ARM embedded STM32 Cortex-M4.
 build:stm32g4 --platforms=//bazel/platform:stm32g4
 build:stm32f4 --platforms=//bazel/platform:stm32f4
-build:stm32 --config=stm32g4
 
-# Chip-specific unit-test app platform variants. Binaries run on the Linux
-# host and carry the SoC constraint so chip-family BSP implementations resolve.
+# These configs compile and run on the Linux host. The chip-constrained
+# variants carry a SoC constraint so that chip-family BSP implementations
+# resolve during test builds.
+build:posix             --platforms=//bazel/platform:posix
+build:posix_unit_test   --platforms=//bazel/platform:posix_unit_test
 build:stm32g4_unit_test --platforms=//bazel/platform:stm32g4_unit_test
 build:stm32f4_unit_test --platforms=//bazel/platform:stm32f4_unit_test
 
-# POSIX is the default app platform. A plain `bazel build //...` builds for
-# the Linux host. Use `--config=posix` to make the choice explicit, or
-# `--config=posix_unit_test` to build with hardware drivers replaced by mocks.
-build --platforms=//bazel/platform:posix
-build:posix --platforms=//bazel/platform:posix
-build:posix_unit_test --platforms=//bazel/platform:posix_unit_test
-
-# `bazel test //...` runs unit tests on the Linux host. Hardware drivers are
-# replaced by mocks and test targets become visible for execution.
+# bazel test //... runs unit tests on the Linux host. Hardware drivers
+# are replaced by mocks and test targets become available for execution.
 test --platforms=//bazel/platform:posix_unit_test
