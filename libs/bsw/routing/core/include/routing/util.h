@@ -14,7 +14,6 @@
 #include "routing/Header.h"
 
 #include <blob/Config.h>
-#include <etl/span.h>
 
 #include <cstdint>
 
