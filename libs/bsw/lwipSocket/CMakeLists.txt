@@ -1,5 +1,7 @@
 add_library(
     lwipSocket
+    src/lwipSocket/netif/NetworkInterface.cpp
+    src/lwipSocket/netif/NetworkInterfaceCollection.cpp
     src/lwipSocket/netif/LwipNetworkInterface.cpp
     src/lwipSocket/tcp/LwipServerSocket.cpp
     src/lwipSocket/tcp/LwipSocket.cpp
