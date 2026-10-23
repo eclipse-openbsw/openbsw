@@ -33,6 +33,8 @@
 #include <gtest/esr_extensions.h>
 #include <gtest/gtest.h>
 
+#include <vector>
+
 namespace
 {
 using namespace ::testing;
@@ -55,7 +57,8 @@ MATCHER_P2(IsDatagram, endpoint, buffer, "")
     ::udp::DatagramPacket const& argDatagram = arg;
     return (argDatagram.getEndpoint() == endpoint)
            && (::doip::test::is_equal(
-               ::etl::span<uint8_t const>(argDatagram.getData(), argDatagram.getLength()), buffer));
+               ::etl::span<uint8_t const>(argDatagram.getData(), argDatagram.getLength()),
+               ::etl::span<uint8_t const>(buffer)));
 }
 
 ACTION_P(CopySpan, src)
@@ -1265,10 +1268,12 @@ void DoIpServerVehicleIdentificationSocketHandlerTest::expectDiagnosticPowerMode
 {
     EXPECT_CALL(fVehicleIdentificationCallbackMock, getPowerMode())
         .WillOnce(Return(DoIpConstants::DiagnosticPowerMode::READY));
+    // copy the bytes now: response may reference a temporary that goes out of scope before
+    // send() is actually invoked and this matcher is evaluated
     EXPECT_CALL(
         *fSocketMock,
-        send(Matcher<::udp::DatagramPacket const&>(
-            IsDatagram(destinationEndpoint, ::etl::span<uint8_t const>(response)))))
+        send(Matcher<::udp::DatagramPacket const&>(IsDatagram(
+            destinationEndpoint, ::std::vector<uint8_t>(response.begin(), response.end())))))
         .WillOnce(Return(::udp::AbstractDatagramSocket::ErrorCode::UDP_SOCKET_OK));
 }
 
@@ -1280,10 +1285,12 @@ void DoIpServerVehicleIdentificationSocketHandlerTest::expectEntityStatusRespons
     EXPECT_CALL(fEntityStatusCallbackMock, getEntityStatus(socketGroupId))
         .WillOnce(
             Return(IDoIpServerEntityStatusCallback::EntityStatus(0x13U, 0x04U, 0x03U, 0x1234U)));
+    // copy the bytes now: response may reference a temporary that goes out of scope before
+    // send() is actually invoked and this matcher is evaluated
     EXPECT_CALL(
         *fSocketMock,
-        send(Matcher<::udp::DatagramPacket const&>(
-            IsDatagram(destinationEndpoint, ::etl::span<uint8_t const>(response)))))
+        send(Matcher<::udp::DatagramPacket const&>(IsDatagram(
+            destinationEndpoint, ::std::vector<uint8_t>(response.begin(), response.end())))))
         .WillOnce(Return(::udp::AbstractDatagramSocket::ErrorCode::UDP_SOCKET_OK));
 }
 
