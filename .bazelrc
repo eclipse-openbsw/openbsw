@@ -3,23 +3,22 @@
 # Compilation mode may be selected via the command line: -c dbg, -c opt,
 # or the default fastbuild, which maps to RelWithDebInfo for ARM targets.
 
-# Default platform: plain bazel build //... targets the Linux host.
+# Default: plain bazel build //... targets the Linux host.
 build --platforms=//bazel/platform:posix
 
-# ARM embedded S32K148 Cortex-M4. Each config pairs the hardware with an RTOS.
-# FreeRTOS is the default. ThreadX is an alternative.
-build:s32k148         --platforms=//bazel/platform:s32k148
-build:s32k148_threadx --platforms=//bazel/platform:s32k148_threadx
+# Linux host. FreeRTOS is the default. ThreadX is an alternative.
+build:posix           --platforms=//bazel/platform:posix
+build:posix_threadx   --platforms=//bazel/platform:posix_threadx
+build:posix_unit_test --platforms=//bazel/platform:posix_unit_test
+
+# ARM embedded S32K148 Cortex-M4. FreeRTOS is the default. ThreadX is an alternative.
+build:s32k148           --platforms=//bazel/platform:s32k148
+build:s32k148_threadx   --platforms=//bazel/platform:s32k148_threadx
+build:s32k148_unit_test --platforms=//bazel/platform:s32k148_unit_test
 
 # ARM embedded STM32 Cortex-M4.
-build:stm32g4 --platforms=//bazel/platform:stm32g4
-build:stm32f4 --platforms=//bazel/platform:stm32f4
-
-# These configs compile and run on the Linux host. The chip-constrained
-# variants carry a SoC constraint so that chip-family BSP implementations
-# resolve during test builds.
-build:posix             --platforms=//bazel/platform:posix
-build:posix_unit_test   --platforms=//bazel/platform:posix_unit_test
+build:stm32g4           --platforms=//bazel/platform:stm32g4
+build:stm32f4           --platforms=//bazel/platform:stm32f4
 build:stm32g4_unit_test --platforms=//bazel/platform:stm32g4_unit_test
 build:stm32f4_unit_test --platforms=//bazel/platform:stm32f4_unit_test
 
