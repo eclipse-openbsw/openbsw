@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="EclipseOpenBSWDocumentation" name="dox_trace_storage" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PDU Signal Interface &mdash; Eclipse OpenBSW Documentation  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/rtd_theme_overrides.css?v=6fd0d55b" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/graphviz.css?v=eafc0fe6" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/colors.css?v=3cafd8aa" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/colored_table.css?v=34b816d5" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/header.css?v=e632285e" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/dox_util_colors.css?v=dd14b177" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/dox_trace.css?v=60d3f72c" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../../../../../_static/copybutton.js?v=f281be69"></script>
+        <script src="../../../../../_static/dox_trace.js?v=40719b51"></script>
+    <script src="../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" />
+    <link rel="next" title="Architecture &amp; Design" href="../arch/index.html" />
+    <link rel="prev" title="Service Interface" href="service_interface.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../doc/dev/index.html" class="icon icon-home">
+            Eclipse OpenBSW Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Learning</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/learning/overview.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/learning/SysTest/HW_Testing_Guide.html">Hardware Testing Guide</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guidelines</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/guidelines/conventions/index.html">Coding Conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/guidelines/practices.html">Coding Practices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/guidelines/formatting/index.html">Formatting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/guidelines/unittests.html">Unit Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/guidelines/module.html">Module Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/guidelines/documentation.html">Module Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/guidelines/diagrams.html">Diagrams</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/guidelines/3rdparty.html">Third Party Libraries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/guidelines/commit_message.html">Commit Message</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/guidelines/pull_request.html">Pull Request</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Platforms</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/platforms/posix/index.html">POSIX</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/platforms/s32k148evb/index.html">S32K148 Evaluation Board</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/platforms/stm32/index.html">STM32 Nucleo Boards</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Features</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/features/storage.html">Persistent Storage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/features/functional_safety.html">Functional Safety</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/features/diagnostics.html">Diagnostics (DoCAN / UDS)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Software Modules</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../../doc/dev/modules/common.html">Common</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../../../doc/dev/modules/common.html#bsw">BSW</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../../async/doc/index.html">async - Asynchronous Execution Interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../asyncConsole/doc/index.html">asyncConsole - Asynchronous Console</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../asyncFreeRtos/doc/index.html">asyncFreeRtos</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../asyncImpl/doc/index.html">asyncImpl</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../asyncThreadX/doc/index.html">asyncThreadX</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../blob/doc/index.html">blob</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../bsp/doc/index.html">bsp</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../common/doc/index.html">common</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cpp2can/doc/index.html">cpp2can - CAN Abstraction Layer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cpp2ethernet/doc/index.html">cpp2ethernet - Ethernet Abstractions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cpp2someip/doc/index.html">cpp2someip - SOME/IP Abstractions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docan/doc/index.html">docan - Diagnostics over CAN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../doip/doc/index.html">doip - Diagnostics Over IP</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../io/doc/index.html">io - IO Library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lifecycle/doc/index.html">lifecycle - App Lifecycle Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../logger/doc/index.html">logger - Logger module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../loggerIntegration/doc/index.html">loggerIntegration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lwipSocket/doc/index.html">lwipSocket - LwIP v2 Socket Abstraction</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../index.html">middleware</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="index.html">User documentation</a><ul class="current">
+<li class="toctree-l5"><a class="reference internal" href="service_interface.html">Service Interface</a></li>
+<li class="toctree-l5 current"><a class="current reference internal" href="#">PDU Signal Interface</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#pdu-configuration">PDU Configuration</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#supported-datatypes">Supported datatypes</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#phy-translation-of-signals">Phy translation of signals</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#signal-bit-mapping">Signal Bit Mapping</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#generated-reader-and-qualification">Generated Reader and Qualification</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#unit-testing-with-the-reader-mock">Unit testing with the reader mock</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../arch/index.html">Architecture &amp; Design</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../integration/index.html">Integration documentation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../glossary.html">Glossary</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../dd/index.html">Detailed Design</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../routing/doc/index.html">routing - PDU routing across channels</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../runtime/doc/index.html">runtime</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../shed/doc/index.html">shed - Relational Data Structures</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../stdioConsoleInput/doc/index.html">stdioConsoleInput</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../storage/doc/index.html">storage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../timer/doc/index.html">timer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../transport/doc/index.html">transport - Transport Library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../transportRouterSimple/doc/index.html">transportRouterSimple</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../uds/doc/index.html">uds - Unified Diagnostic Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../util/doc/index.html">util</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../doc/dev/modules/common.html#bsp">BSP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../doc/dev/modules/common.html#safety">Safety</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/modules/posix.html">Posix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/modules/s32k1xx.html">S32K1xx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/modules/stm32.html">STM32</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/modules/executables.html">Executables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc/dev/modules/mocks.html">Mocks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tools/UdsTool/doc/index.html">UdsTool</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tools/puncover_tool/doc/index.html">Puncover</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../doc/dev/index.html">Eclipse OpenBSW Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../../doc/dev/index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../../../../doc/dev/modules/common.html">Common</a> &raquo;</li>
+        
+          <li><a href="../index.html">middleware</a> &raquo;</li>
+        
+          <li><a href="index.html">User documentation</a> &raquo;</li>
+        
+        <li>PDU Signal Interface</li>
+    
+
+    
+
+      <li class="wy-breadcrumbs-aside">
+
+        <!-- DOCUMENT STATUS -->
+
+        
+
+        <!-- DATA CLASSIFICATION -->
+
+        
+
+      </li>
+
+    
+  </ul>
+
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="pdu-signal-interface">
+<h1>PDU Signal Interface<a class="headerlink" href="#pdu-signal-interface" title="Link to this heading"></a></h1>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<p>The middleware PDU signal interface maps typed signals to and from a PDU byte
+payload. A deployment defines each PDU’s payload size and signal
+bit layout.</p>
+<p>The code generator also creates a typed reader that snapshots the
+shared-memory PDU, runs the configured qualifier on the snapshot,
+and returns all decoded signals together.</p>
+</section>
+<section id="pdu-configuration">
+<h2>PDU Configuration<a class="headerlink" href="#pdu-configuration" title="Link to this heading"></a></h2>
+<p>Each configured signal specifies its C++ type and bit
+length. Only <code class="docutils literal notranslate"><span class="pre">BigEndian</span></code> byte order and <code class="docutils literal notranslate"><span class="pre">MSB-first</span></code> bit ordering
+is supported at the moment.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">pdus</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SamplePdu</span>
+<span class="w">    </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+<span class="w">    </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">example::signal</span>
+<span class="w">    </span><span class="nt">headers</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">common</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">example/signal/SamplePduCommon.h</span>
+<span class="w">      </span><span class="nt">reader</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">example/signal/SamplePduReader.h</span>
+<span class="w">    </span><span class="nt">signals</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">checksum</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">uint8_t</span>
+<span class="w">        </span><span class="nt">bit_length</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">uint8_t</span>
+<span class="w">        </span><span class="nt">bit_length</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8</span>
+</pre></div>
+</div>
+</section>
+<section id="supported-datatypes">
+<h2>Supported datatypes<a class="headerlink" href="#supported-datatypes" title="Link to this heading"></a></h2>
+<p>The following signal kinds are supported:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 18.0%" />
+<col style="width: 32.0%" />
+<col style="width: 50.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Kind</p></th>
+<th class="head"><p><code class="docutils literal notranslate"><span class="pre">type</span></code></p></th>
+<th class="head"><p>Generated member</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Unsigned integer</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">uint8_t</span></code>, <code class="docutils literal notranslate"><span class="pre">uint16_t</span></code>, <code class="docutils literal notranslate"><span class="pre">uint32_t</span></code>, <code class="docutils literal notranslate"><span class="pre">uint64_t</span></code></p></td>
+<td><p>A member of that type. <code class="docutils literal notranslate"><span class="pre">bit_length</span></code> must not exceed the width of the
+type.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Boolean</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">bool</span></code></p></td>
+<td><p>A single-bit flag (<code class="docutils literal notranslate"><span class="pre">bit_length:</span> <span class="pre">1</span></code>).</p></td>
+</tr>
+<tr class="row-even"><td><p>Byte/word array</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">array</span></code> plus <code class="docutils literal notranslate"><span class="pre">element_type</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">etl::array&lt;element_type,</span> <span class="pre">bit_length</span> <span class="pre">/</span> <span class="pre">element</span> <span class="pre">width&gt;</span></code>. The element order of the PDU
+is preserved; elements are not byte-swapped.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Enum</p></td>
+<td><p>Name of an entry in the PDU’s <code class="docutils literal notranslate"><span class="pre">enums</span></code></p></td>
+<td><p>A scoped <code class="docutils literal notranslate"><span class="pre">enum</span> <span class="pre">class</span></code> with the configured underlying type.</p></td>
+</tr>
+<tr class="row-even"><td><p>Bitset</p></td>
+<td><p>Name of an entry in the PDU’s <code class="docutils literal notranslate"><span class="pre">bitsets</span></code></p></td>
+<td><p>A generated class with one <code class="docutils literal notranslate"><span class="pre">test&lt;Name&gt;()</span></code> accessor per named bit.</p></td>
+</tr>
+</tbody>
+</table>
+<p>Signed integers and floating-point types are not supported.</p>
+<p>Enum signals are converted with a plain <code class="docutils literal notranslate"><span class="pre">static_cast</span></code>. The raw value is not
+checked against the declared enumerators, so a received value that is not
+listed still yields an <code class="docutils literal notranslate"><span class="pre">enum</span> <span class="pre">class</span></code> object holding that number.</p>
+</section>
+<section id="phy-translation-of-signals">
+<h2>Phy translation of signals<a class="headerlink" href="#phy-translation-of-signals" title="Link to this heading"></a></h2>
+<p>An unsigned integer signal can carry an optional <code class="docutils literal notranslate"><span class="pre">phy_translation</span></code> that maps
+the raw value to a physical value:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">physical</span> <span class="o">=</span> <span class="n">raw</span> <span class="o">*</span> <span class="n">scaling_factor</span> <span class="o">+</span> <span class="n">offset</span>
+</pre></div>
+</div>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">signals</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">temperature</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">uint16_t</span>
+<span class="w">    </span><span class="nt">bit_length</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">12</span>
+<span class="w">    </span><span class="nt">phy_translation</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">offset</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-40.0</span>
+<span class="w">      </span><span class="nt">scaling_factor</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.1</span>
+</pre></div>
+</div>
+<p>For every such signal the generated PDU struct gets a method
+<code class="docutils literal notranslate"><span class="pre">&lt;signalName&gt;ToPhysical()</span></code> that returns a <code class="docutils literal notranslate"><span class="pre">double</span></code>:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">auto</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">sample</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">reader</span><span class="p">.</span><span class="n">read</span><span class="p">();</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">qualifier</span><span class="p">.</span><span class="n">getQualification</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">Qualifier</span><span class="o">::</span><span class="n">Qualification</span><span class="o">::</span><span class="n">Ok</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">celsius</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sample</span><span class="p">.</span><span class="n">temperatureToPhysical</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The signal member itself always keeps the raw value. The conversion is computed
+on demand and applies no range check, so qualify the PDU before converting.
+<code class="docutils literal notranslate"><span class="pre">phy_translation</span></code> is only available for unsigned integer signals, not for
+arrays, enums or bitsets.</p>
+</section>
+<section id="signal-bit-mapping">
+<h2>Signal Bit Mapping<a class="headerlink" href="#signal-bit-mapping" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">bit_length</span></code> is the number of bits in the signal.
+Lengths are compile-time inputs to the generated read and write operations.</p>
+<p>In a big-endian pdu, the most significant byte comes first as well as the
+signal bits inside each byte, i.e., bits go from the most-significant to the
+least-significant bit within each byte, then continue at the next byte.</p>
+<p>For example, a 16-bit signal reads bytes <code class="docutils literal notranslate"><span class="pre">AD</span> <span class="pre">BE</span></code> as <code class="docutils literal notranslate"><span class="pre">0xADBE</span></code>
+in big-endian mode. A byte-array signal preserves the PDU’s byte sequence;
+it is not converted to an integer or byte-swapped.</p>
+</section>
+<section id="generated-reader-and-qualification">
+<h2>Generated Reader and Qualification<a class="headerlink" href="#generated-reader-and-qualification" title="Link to this heading"></a></h2>
+<p>Each PDU has a generated reader named <code class="docutils literal notranslate"><span class="pre">&lt;PduName&gt;Reader</span></code>. Its constructor
+takes the application’s <code class="docutils literal notranslate"><span class="pre">middleware::core::IQualifier*</span></code>. Its <code class="docutils literal notranslate"><span class="pre">read()</span></code>
+method returns a snapshot of all decoded signals. Check the qualification
+before using any returned signal value:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">Qualifier</span><span class="w"> </span><span class="n">qualifier</span><span class="p">;</span>
+<span class="n">SamplePduReader</span><span class="w"> </span><span class="n">reader</span><span class="p">{</span><span class="o">&amp;</span><span class="n">qualifier</span><span class="p">};</span>
+
+<span class="k">auto</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">reader</span><span class="p">.</span><span class="n">read</span><span class="p">();</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">qualifier</span><span class="p">.</span><span class="n">getQualification</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">Qualifier</span><span class="o">::</span><span class="n">Qualification</span><span class="o">::</span><span class="n">Ok</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="n">use</span><span class="p">(</span><span class="n">result</span><span class="p">.</span><span class="n">value</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="unit-testing-with-the-reader-mock">
+<h2>Unit testing with the reader mock<a class="headerlink" href="#unit-testing-with-the-reader-mock" title="Link to this heading"></a></h2>
+<p>When a PDU is generated with <code class="docutils literal notranslate"><span class="pre">generation_mode:</span> <span class="pre">mock</span></code> (or the generator runs
+with <code class="docutils literal notranslate"><span class="pre">--generation-mode</span> <span class="pre">mock</span></code>), <code class="docutils literal notranslate"><span class="pre">&lt;PduName&gt;Reader</span></code> forwards <code class="docutils literal notranslate"><span class="pre">read()</span></code> to a
+GMock-based <code class="docutils literal notranslate"><span class="pre">&lt;PduName&gt;ReaderMock</span></code>. The mock lives in the same namespace as
+the reader and registers itself as the active mock on construction:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">NiceMock</span><span class="o">&lt;</span><span class="n">SamplePduReaderMock</span><span class="o">&gt;</span><span class="w"> </span><span class="n">readerMock</span><span class="p">{};</span>
+<span class="n">SamplePduReader</span><span class="w"> </span><span class="n">reader</span><span class="p">{</span><span class="o">&amp;</span><span class="n">qualifier</span><span class="p">};</span>
+
+<span class="n">readerMock</span><span class="p">.</span><span class="n">ON_CALL_READ_RETURNS</span><span class="p">(</span><span class="n">SamplePduReaderMock</span><span class="o">::</span><span class="n">ReadResult</span><span class="p">{</span><span class="n">expected</span><span class="p">});</span>
+<span class="n">readerMock</span><span class="p">.</span><span class="n">EXPECT_READ</span><span class="p">();</span>
+
+<span class="k">auto</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">reader</span><span class="p">.</span><span class="n">read</span><span class="p">();</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026 Eclipse OpenBSW Contributors.</p>
+  </div>
+
+  <div role="footer_string">
+    <p>Documentation from 2026-10-23 12:40:55, official build.</p>
+
+    
+      <a href="../../../../../_sources/libs/bsw/middleware/doc/user/pdu_signal_interface.rst.txt" rel="nofollow"> View page source</a>
+    
+
+  </div>
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(false);
+      });
+  </script> 
+
+</body>
+</html>

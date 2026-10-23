@@ -1,0 +1,4 @@
+var structshed_1_1internal_1_1column__data__type_3_01StateData_00_01_1_1shed_1_1internal_1_1type__list_3_01Types_8_8_8_01_4_01_4 =
+[
+    [ "type", "d0/d5b/structshed_1_1internal_1_1column__data__type_3_01StateData_00_01_1_1shed_1_1internal_1_1type__list_3_01Types_8_8_8_01_4_01_4.html#a09818a8b5c72de4a282e4fff0b6cb1d1", null ]
+];
