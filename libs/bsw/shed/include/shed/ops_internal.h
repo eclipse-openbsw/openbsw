@@ -17,10 +17,10 @@
 
 #include <etl/delegate.h>
 #include <etl/type_list.h>
+#include <etl/type_traits.h>
 
 #include <cstddef>
 #include <new>
-#include <type_traits>
 
 namespace shed
 {
@@ -104,7 +104,7 @@ template<typename T, typename StateData, typename... Types>
 struct type_aliases<T, StateData, ::shed::internal::type_list<Types...>>
 {
     using container = typename internal::
-        find_container<StateData, typename std::remove_reference<T>::type, Types...>::type;
+        find_container<StateData, typename ::etl::remove_reference<T>::type, Types...>::type;
     using stored = typename container::value_type;
 };
 
@@ -197,11 +197,12 @@ struct ParamConvert<ParamT*&>
 };
 
 template<typename Table>
-using raw_table_t = typename std::remove_const<typename std::remove_reference<Table>::type>::type;
+using raw_table_t =
+    typename ::etl::remove_const<typename ::etl::remove_reference<Table>::type>::type;
 
 template<typename Arg, typename Table>
-using selected_column_t = typename std::conditional<
-    std::is_const<typename std::remove_reference<Table>::type>::value,
+using selected_column_t = typename ::etl::conditional<
+    ::etl::is_const<typename ::etl::remove_reference<Table>::type>::value,
     internal::column<Arg, raw_table_t<Table>> const,
     internal::column<Arg, raw_table_t<Table>>>::type;
 
@@ -275,7 +276,9 @@ struct system_func
         return true;
     }
 
-    template<typename T = Table, typename std::enable_if<!std::is_const<T>::value, int>::type = 0>
+    template<
+        typename T                                                       = Table,
+        typename ::etl::enable_if<!::etl::is_const<T>::value, int>::type = 0>
     static bool call(F& f, Table const& table, size_t const i)
     {
         if (all_args_set(ParamConvert<Args>::is_set(select_column<Args>(table)[i])...))
@@ -306,7 +309,9 @@ struct system_func<void, F, Table, Args...>
         return true;
     }
 
-    template<typename T = Table, typename std::enable_if<!std::is_const<T>::value, int>::type = 0>
+    template<
+        typename T                                                       = Table,
+        typename ::etl::enable_if<!::etl::is_const<T>::value, int>::type = 0>
     static bool call(F& f, Table const& table, size_t const i)
     {
         if (all_args_set(ParamConvert<Args>::is_set(select_column<Args>(table)[i])...))
@@ -413,7 +418,7 @@ struct SelectColumns
         using OrdCol = typename ordering_for<Cmp>::type;
 
         static_assert(
-            ::std::is_base_of<OrdCol, typename Table::column_data>::value,
+            ::etl::is_base_of<OrdCol, typename Table::column_data>::value,
             "ordered operation requires the schema to declare a matching "
             "shed::ordering<Cmp...> column, listing the comparators in the same order as the "
             "ordered<Cmp...> operation");

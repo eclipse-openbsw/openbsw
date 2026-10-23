@@ -10,9 +10,8 @@
 
 #include "shed/ops_internal.h" // IWYU pragma: export
 
+#include <etl/algorithm.h>
 #include <etl/error_handler.h>
-
-#include <algorithm>
 
 namespace shed
 {
@@ -32,13 +31,13 @@ void move_while_impl(
         return;
     }
     ETL_ASSERT(begin != nullptr, ETL_ERROR_GENERIC("shed: invalid range"));
-    std::make_heap(begin, end, pred);
+    ::etl::make_heap(begin, end, pred);
 
     ETL_ASSERT(ml != nullptr, ETL_ERROR_GENERIC("shed: null multi_list"));
 
     while (begin != end)
     {
-        std::pop_heap(begin, end, pred);
+        ::etl::pop_heap(begin, end, pred);
         --end;
 
         auto const r = csfr(*end);

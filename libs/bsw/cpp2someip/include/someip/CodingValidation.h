@@ -13,12 +13,13 @@
 #include <etl/array.h>
 
 #include <cmath>
+#include <cstddef>
 
 namespace someip
 {
 namespace types
 {
-template<class CODING_, class T, std::size_t N>
+template<class CODING_, class T, size_t N>
 bool validateSimpleCoding(::etl::array<T, N> const& data)
 {
     using simple_array_iterator = typename ::etl::array<T, N>::const_iterator;
@@ -36,7 +37,7 @@ bool validateSimpleCoding(::etl::array<T, N> const& data)
     return true;
 }
 
-template<class T, std::size_t N>
+template<class T, size_t N>
 bool validateComplexCoding(::etl::array<T, N> const& data)
 {
     using complex_array_iterator         = typename ::etl::array<T, N>::const_iterator;
