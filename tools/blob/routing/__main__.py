@@ -17,8 +17,9 @@ from blob import ExitCode
 from blob.routing.utils import routing2pretty, input_table
 from blob.routing.channel import channel_ids
 from collections import defaultdict
-from datetime import datetime as dt
-import sys
+
+
+COPYRIGHT_YEAR = 2026
 
 
 class Cli:
@@ -194,10 +195,7 @@ class Cli:
         return ExitCode.SUCCESS
 
     @staticmethod
-    def header(args):
-        with args.input as input:
-            objects = [json.loads(line) for line in input]
-
+    def header_text(objects):
         routing_channels = [o["value"] for o in objects if o["type"] == "channel"]
         routing_channel_ids = channel_ids(routing_channels)
 
@@ -211,7 +209,7 @@ class Cli:
             if c["type"] == "flexray"
         }
 
-        file = (
+        return (
             inspect.cleandoc(
             """
                /********************************************************************************
@@ -240,7 +238,7 @@ class Cli:
                }} // namespace routing
             """
             ).format(
-                year=dt.now().year,
+                year=COPYRIGHT_YEAR,
                 channel_ids="\n".join(
                     [
                         f"static constexpr uint8_t {name} = {value};"
@@ -252,6 +250,54 @@ class Cli:
             )
             + "\n"
         )
+
+    @staticmethod
+    def constants_header_text(objects):
+        pdu_transport_channels = sum(
+            1
+            for obj in objects
+            if obj.get("type") == "channel"
+            and obj.get("value", {}).get("type") == "pdu_transport"
+        )
+
+        return (
+            """/*******************************************************************************
+ * Copyright (c) {year} BMW AG
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Apache License Version 2.0 which is available at
+ * https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *******************************************************************************/
+// This is a generated file. Please do not edit it.
+
+#pragma once
+
+#include <cstdint>
+
+#include "routing/channelId.h"
+
+namespace routing
+{{
+static constexpr uint8_t NUM_PDU_TRANSPORT_CHANNELS = {pdu_transport_channels}U;
+static constexpr uint8_t NUM_CAN_CHANNELS
+    = static_cast<uint8_t>(sizeof(::routing::canChannelIds) / sizeof(::routing::canChannelIds[0]));
+static constexpr uint8_t NUM_FLEXRAY_CHANNELS
+    = static_cast<uint8_t>(sizeof(::routing::frChannelIds) / sizeof(::routing::frChannelIds[0]));
+static constexpr uint8_t NUM_CHANNELS
+    = NUM_CAN_CHANNELS + NUM_FLEXRAY_CHANNELS + NUM_PDU_TRANSPORT_CHANNELS;
+
+}} // namespace routing
+""".format(year=COPYRIGHT_YEAR, pdu_transport_channels=pdu_transport_channels)
+        )
+
+    @staticmethod
+    def header(args):
+        with args.input as input:
+            objects = [json.loads(line) for line in input if line.strip()]
+
+        file = Cli.header_text(objects)
         with args.output as output:
             output.write(file)
         return ExitCode.SUCCESS
