@@ -1,0 +1,3 @@
+add_library(ethConfiguration INTERFACE)
+
+target_include_directories(ethConfiguration INTERFACE include)
