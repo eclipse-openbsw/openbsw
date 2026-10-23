@@ -14,16 +14,18 @@
 #include "uds/connection/IncomingDiagConnection.h"
 #include "uds/session/DiagSession.h"
 
+#include <etl/array.h>
 #include <etl/memory.h>
 #include <transport/TransportMessage.h>
 
 namespace uds
 {
 
-uint8_t const thisimplementedRequest[] = {ServiceId::READ_DATA_BY_IDENTIFIER};
+static ::etl::array<uint8_t, 1U> const thisimplementedRequest
+    = {ServiceId::READ_DATA_BY_IDENTIFIER};
 
 MultipleReadDataByIdentifier::MultipleReadDataByIdentifier(IAsyncDiagHelper& asyncHelper)
-: AbstractDiagJob(&thisimplementedRequest[0], 1U, 0U, DiagSession::ALL_SESSIONS())
+: AbstractDiagJob(thisimplementedRequest.data(), 1U, 0U, DiagSession::ALL_SESSIONS())
 , NestedDiagRequest(1U)
 , fAsyncJobHelper(asyncHelper, *this)
 , fFirstJob(*this)
@@ -39,7 +41,7 @@ MultipleReadDataByIdentifier::MultipleReadDataByIdentifier(IAsyncDiagHelper& asy
 
 MultipleReadDataByIdentifier::MultipleReadDataByIdentifier(
     IAsyncDiagHelper& asyncHelper, AbstractDiagJob& firstJob)
-: AbstractDiagJob(&thisimplementedRequest[0], 1U, 0U, DiagSession::ALL_SESSIONS())
+: AbstractDiagJob(thisimplementedRequest.data(), 1U, 0U, DiagSession::ALL_SESSIONS())
 , NestedDiagRequest(1U)
 , fAsyncJobHelper(asyncHelper, *this)
 , fFirstJob(firstJob)
@@ -75,7 +77,13 @@ void MultipleReadDataByIdentifier::setCheckResponse(CheckResponseType const chec
 DiagReturnCode::Type
 MultipleReadDataByIdentifier::verify(uint8_t const* const request, uint16_t const requestLength)
 {
-    if (request[0] == ServiceId::READ_DATA_BY_IDENTIFIER)
+    if ((request == nullptr) || (requestLength < 1U))
+    {
+        return DiagReturnCode::ISO_INVALID_FORMAT;
+    }
+
+    ::etl::span<uint8_t const> const requestView(request, requestLength);
+    if (requestView[0U] == ServiceId::READ_DATA_BY_IDENTIFIER)
     {
         if ((requestLength >= 3U) && (((requestLength - 1U) % 2U) == 0U))
         {
