@@ -14,13 +14,42 @@ load("//bazel/config/build_variant:compatibility.bzl", "unit_test_only")
 
 cc_library(
     name = "util",
-    srcs = glob(["src/util/**/*.cpp"]),
-    hdrs = glob(["include/**/*.h"]),
+    srcs = glob(
+        ["src/util/**/*.cpp"],
+        exclude = [
+            "src/util/stream/StdinStream.cpp",
+            "src/util/stream/StdoutStream.cpp",
+        ],
+    ),
+    hdrs = glob(
+        ["include/**/*.h"],
+        exclude = [
+            "include/util/stream/StdinStream.h",
+            "include/util/stream/StdoutStream.h",
+        ],
+    ),
     strip_include_prefix = "include",
     visibility = ["//visibility:public"],
     deps = [
         "//libs/3rdparty/etl",
     ],
+)
+
+# Kept apart from the rest of util because they call stdio functions that
+# only the platform or a mock provides.
+cc_library(
+    name = "util_stdio_streams",
+    srcs = [
+        "src/util/stream/StdinStream.cpp",
+        "src/util/stream/StdoutStream.cpp",
+    ],
+    hdrs = [
+        "include/util/stream/StdinStream.h",
+        "include/util/stream/StdoutStream.h",
+    ],
+    strip_include_prefix = "include",
+    visibility = ["//visibility:public"],
+    deps = [":util"],
 )
 
 cc_library(
@@ -58,6 +87,8 @@ cc_test(
     deps = [
         ":util",
         ":util_mock",
+        # required by StdoutStream.h (transitive include); not in CMake target_link_libraries
+        ":util_stdio_streams",
         "//libs/3rdparty/etl",
         "//libs/3rdparty/googletest:gtest_main",
     ],

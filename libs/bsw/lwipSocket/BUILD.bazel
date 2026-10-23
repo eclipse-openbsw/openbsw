@@ -46,11 +46,12 @@ cc_library(
 cc_test(
     name = "lwip_socket_test",
     srcs = ["test/src/lwipSocket/LwipSocketTest.cpp"],
-    linkstatic = True,
     target_compatible_with = unit_test_only(),
     deps = [
         ":lwip_socket",
         "//libs/3rdparty/googletest:gtest_main",
         "//libs/3rdparty/lwip:lwip_core",
+        # required by LwipSocket.h (transitive include); not in CMake target_link_libraries
+        "//libs/bsw/bsp:bsp_mock",
     ],
 )
