@@ -80,9 +80,7 @@ public:
     void setSessionManager(IDiagSessionManager const& sessionManager);
 
 private:
-    /// DID high byte
     static uint8_t const DID_HIGH = 0xF1U;
-    /// DID low byte
     static uint8_t const DID_LOW  = 0x86U;
 
     /**

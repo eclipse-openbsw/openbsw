@@ -15,9 +15,7 @@ namespace uds
 
 class FaultManager;
 
-/// Maximum DTCs that can inhibit a single function
 static constexpr uint8_t MAX_INHIBITING_DTCS_PER_FUNCTION = 4U;
-/// Maximum functions that can be registered in the inhibition table
 static constexpr uint8_t MAX_INHIBITION_ENTRIES           = 32U;
 
 /**

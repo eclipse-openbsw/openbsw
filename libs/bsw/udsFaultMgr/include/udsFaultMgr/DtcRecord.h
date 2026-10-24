@@ -18,14 +18,14 @@ namespace uds
  */
 struct DtcStatusBits
 {
-    static constexpr uint8_t TEST_FAILED                         = 0x01U; ///< bit 0
-    static constexpr uint8_t TEST_FAILED_THIS_OP_CYCLE           = 0x02U; ///< bit 1
-    static constexpr uint8_t PENDING_DTC                         = 0x04U; ///< bit 2
-    static constexpr uint8_t CONFIRMED_DTC                       = 0x08U; ///< bit 3
-    static constexpr uint8_t TEST_NOT_COMPLETED_SINCE_LAST_CLEAR = 0x10U; ///< bit 4
-    static constexpr uint8_t TEST_FAILED_SINCE_LAST_CLEAR        = 0x20U; ///< bit 5
-    static constexpr uint8_t TEST_NOT_COMPLETED_THIS_OP_CYCLE    = 0x40U; ///< bit 6
-    static constexpr uint8_t WARNING_INDICATOR_REQUESTED         = 0x80U; ///< bit 7
+    static constexpr uint8_t TEST_FAILED                         = 0x01U;
+    static constexpr uint8_t TEST_FAILED_THIS_OP_CYCLE           = 0x02U;
+    static constexpr uint8_t PENDING_DTC                         = 0x04U;
+    static constexpr uint8_t CONFIRMED_DTC                       = 0x08U;
+    static constexpr uint8_t TEST_NOT_COMPLETED_SINCE_LAST_CLEAR = 0x10U;
+    static constexpr uint8_t TEST_FAILED_SINCE_LAST_CLEAR        = 0x20U;
+    static constexpr uint8_t TEST_NOT_COMPLETED_THIS_OP_CYCLE    = 0x40U;
+    static constexpr uint8_t WARNING_INDICATOR_REQUESTED         = 0x80U;
 };
 
 /**
@@ -50,11 +50,9 @@ struct DtcRecord
     bool isValid() const { return dtcId != 0U; }
 };
 
-/// Maximum DID count in one freeze frame snapshot
-static constexpr uint8_t FREEZE_FRAME_MAX_DIDS = 8U;
-/// Maximum snapshot data bytes per freeze frame
-static constexpr uint16_t FREEZE_FRAME_SNAPSHOT_SIZE
-    = 32U; // kept in sync with FaultManagementConfig
+static constexpr uint8_t FREEZE_FRAME_MAX_DIDS       = 8U;
+// Kept in sync with FaultManagementConfig::FREEZE_FRAME_SNAPSHOT_SIZE.
+static constexpr uint16_t FREEZE_FRAME_SNAPSHOT_SIZE = 32U;
 
 /**
  * Freeze Frame record — environmental snapshot at DTC confirmation

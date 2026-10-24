@@ -36,9 +36,6 @@ namespace uds
 class DiagMgr
 {
 public:
-    // -------------------------------------------------------------------------
-    // Fault notification callback type
-    // -------------------------------------------------------------------------
     using FaultNotificationCallback = void (*)(uint32_t eventId, uint8_t newStatus);
 
     static constexpr uint8_t MAX_NOTIFICATION_CALLBACKS = 4U;

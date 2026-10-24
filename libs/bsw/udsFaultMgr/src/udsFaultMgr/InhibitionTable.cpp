@@ -53,7 +53,7 @@ bool InhibitionTable::isAllowed(uint16_t functionId) const
                 uint8_t const status = _faultManager->getDtcStatus(e.inhibitingDtcIds[j]);
                 if ((status & DtcStatusBits::CONFIRMED_DTC) != 0U)
                 {
-                    return false; // Inhibited by active confirmed DTC
+                    return false;
                 }
             }
             return true; // Entry found; no inhibiting DTC is confirmed

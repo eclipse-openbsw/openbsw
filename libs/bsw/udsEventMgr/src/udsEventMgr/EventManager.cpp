@@ -71,7 +71,7 @@ void EventManager::setEventStatus(uint32_t eventId, bool isFailed)
     }
     if (entry->suppressed)
     {
-        return; // suppressed event ignored
+        return;
     }
 
     EventStatus const prev = entry->status;

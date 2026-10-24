@@ -16,7 +16,7 @@ DebounceImmediate::DebounceImmediate() : _currentStatus(EventStatus::PREPASSED) 
 
 EventStatus DebounceImmediate::update(bool isFailed, uint16_t elapsedMs)
 {
-    (void)elapsedMs; // Not used
+    (void)elapsedMs;
 
     _currentStatus = isFailed ? EventStatus::FAILED : EventStatus::PASSED;
     return _currentStatus;
