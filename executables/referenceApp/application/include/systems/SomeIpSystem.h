@@ -13,6 +13,7 @@
 #include "async/Types.h"
 #include "lifecycle/AsyncLifecycleComponent.h"
 #include "lwipSocket/udp/LwipDatagramSocket.h"
+#include "middleware/SomeIpSampleSizes.h"
 #include "someip/EventListener.h"
 #include "someip/PeriodicRoutine.h"
 #include "someip/ProvidedService.h"
@@ -23,6 +24,10 @@
 #include "someip/ServiceListener.h"
 #include "someip/ServiceQuery.h"
 #include "someip/SocketDummies.h"
+
+#ifdef PLATFORM_SUPPORT_SOMEIP_BRIDGE_SAMPLE
+#include "middleware/SampleSomeIp.h"
+#endif
 
 namespace systems
 {
@@ -67,10 +72,13 @@ private:
     ::async::TimeoutType _timeout;
     ::async::ContextType _context;
 
+    // What the middleware SOME/IP bridge sample adds; all zero when it is off.
+    using Sample = ::middlewaresample::SomeIpSampleSizes;
+
     // actual generic part
     ::someip::declare::SdSomeIpStack<
         udp::LwipDatagramSocket,
-        NUM_UDP_SOCKETS,
+        NUM_UDP_SOCKETS + Sample::UDP_SOCKETS,
         ServerSocketDummy,
         NUM_TCP_SERVERS,
         SocketDummy,
@@ -79,12 +87,14 @@ private:
         0U,
         false,
         0U,
-        NUM_REMOTE_ENDPOINTS,
+        NUM_REMOTE_ENDPOINTS + Sample::REMOTE_ENDPOINTS,
         NUM_REMOTE_SERVICES,
-        NUM_REMOTE_SUBSCRIPTIONS,
-        NUM_LOCAL_SERVICES,
-        NUM_LOCAL_QUERIES,
-        NUM_SUBSCRIPTION_ENDPOINTS>
+        NUM_REMOTE_SUBSCRIPTIONS + Sample::REMOTE_SUBSCRIPTIONS,
+        NUM_LOCAL_SERVICES + Sample::LOCAL_SERVICES,
+        NUM_LOCAL_QUERIES + Sample::LOCAL_QUERIES,
+        NUM_SUBSCRIPTION_ENDPOINTS + Sample::SUBSCRIPTION_ENDPOINTS,
+        NUM_EVENT_BUFFERS,
+        Sample::MULTICAST_RECEPTIONS>
         _stack;
 
     /*
@@ -107,6 +117,10 @@ private:
     ServiceListener _serviceListener;
     PeriodicRoutine _routine;
     // }} client-related members
+
+#ifdef PLATFORM_SUPPORT_SOMEIP_BRIDGE_SAMPLE
+    ::middlewaresample::SampleSomeIp _sample;
+#endif
 };
 
 } // namespace systems

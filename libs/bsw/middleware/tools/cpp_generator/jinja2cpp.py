@@ -12,7 +12,8 @@
 """Generate C++ files from YAML properties using predefined template mappings.
 
 Usage:
-    python jinja2cpp.py --input <base_dir> --output <base_dir> [--deployment-yaml <yaml_file>] [--clang-format-config <config_file>]
+    python jinja2cpp.py --input <base_dir> --output <base_dir> --deployment-yaml <yaml_file> [--clang-format-config <config_file>]
+    python jinja2cpp.py --input <base_dir> --output <base_dir> --flync [<model_root>] [--flync-validation warn|strict|off] [--codec-include <header>] [--emit-deployment <yaml_file>]
 
 The script will generate all configured file types:
 - Queue definitions (queue_definitions.h/cpp)
@@ -21,12 +22,21 @@ The script will generate all configured file types:
 - Cluster connections (cluster_*.h/cpp)
 - Services (service_*.h/cpp)
 - PDU data types and configured readers (pdu_*.h/cpp)
+- With --flync, SOME/IP codecs per service (<Service>Codecs.h)
 
 Arguments:
     --input                 Base input directory containing templates/ subdirectory
     --output                Base output directory where generated code will be written
-    --deployment-yaml       Optional path to a deployment YAML file overriding
-                           templates/properties/deployment.yaml
+    --deployment-yaml       Path to a deployment YAML file. Exclusive with --flync.
+    --flync                 Root of a FLYNC model to derive the deployment from,
+                           instead of reading one (see flync2middleware/). Without a
+                           path, the repository's flync-configuration/flync. Exclusive
+                           with --deployment-yaml.
+    --flync-validation      With --flync, how the FLYNC SDK's validation of the
+                           model is used: warn (default), strict or off
+    --codec-include         With --flync, the include path of the SOME/IP codec
+                           framework the generated codec headers include
+    --emit-deployment       With --flync, also write the derived deployment to this path
     --clang-format-config   Optional path to clang-format configuration file
                            If not provided, searches for .clang-format in repository root
 
@@ -53,6 +63,16 @@ from jinja2 import Environment, FileSystemLoader
 from jsonschema import validate, ValidationError
 
 _SCRIPT_DIR = Path(os.path.dirname(os.path.abspath(__file__)))
+
+
+def _default_flync_model() -> Path:
+    """The repository's flync-configuration/flync, which --flync uses without a path."""
+    for directory in _SCRIPT_DIR.parents:
+        candidate = directory / "flync-configuration" / "flync"
+        if candidate.is_dir():
+            return candidate
+    # Not found: the loader reports this path as missing.
+    return _SCRIPT_DIR.parents[4] / "flync-configuration" / "flync"
 
 
 class _DotDict(dict):
@@ -129,6 +149,136 @@ def load_input_data(input_base: Path, deployment_yaml: Path | None = None) -> di
         return data
     except Exception as e:
         raise RuntimeError(f"Error loading deployment.yaml: {e}")
+
+
+#: SOME/IP wire encodings derived alongside a flync deployment, one entry per
+#: service. Empty when the deployment was read from a YAML file, which states
+#: no wire rules.
+CODEC_SERVICES: list = []
+
+
+def _import_flync2middleware():
+    """The flync2middleware package, which sits next to this script."""
+    # Put it on the path explicitly so it imports however the script was invoked.
+    if str(_SCRIPT_DIR) not in sys.path:
+        sys.path.insert(0, str(_SCRIPT_DIR))
+    import flync2middleware
+
+    return flync2middleware
+
+
+def validate_flync_model(flync_root: Path, mode: str) -> None:
+    """Check the model with the FLYNC SDK, when it is installed.
+
+    warn reports what the SDK finds and carries on. strict fails on an error in
+    a file the generator reads, and when the SDK is missing or cannot run.
+    Errors elsewhere in the model are reported but never fail: they cannot
+    change what is generated.
+    """
+    if mode == "off":
+        return
+    flync2middleware = _import_flync2middleware()
+
+    # The SDK is maintained separately, so any failure of its own is reported
+    # rather than allowed to stop a warn-mode run.
+    try:
+        state, findings = flync2middleware.sdk_validate(flync_root)
+    except flync2middleware.SdkUnavailable as e:
+        if mode == "strict":
+            raise RuntimeError(f"--flync-validation strict needs the FLYNC SDK: {e}")
+        print("  FLYNC SDK not installed: model not validated")
+        return
+    except Exception as e:
+        if mode == "strict":
+            raise RuntimeError(f"FLYNC SDK validation could not run: {e}")
+        print(f"  Warning: FLYNC SDK validation could not run: {e}")
+        return
+
+    read_errors = [f for f in findings if f["read"] and not f["warning"]]
+    other_errors = [f for f in findings if not f["read"] and not f["warning"]]
+    warnings = [f for f in findings if f["warning"]]
+    mark = "✓" if not read_errors and not other_errors else "!"
+    print(
+        f"{mark} FLYNC SDK validation: {state}; {len(read_errors)} error(s) in files the "
+        f"generator reads, {len(other_errors)} elsewhere in the model, {len(warnings)} warning(s)"
+    )
+    for finding in read_errors:
+        location = f" {finding['location']}:" if finding["location"] else ""
+        print(f"    {finding['file']}:{location} {finding['message']} ({finding['kind']})")
+    if other_errors:
+        print(f"    run `flync validate {flync_root}` for the {len(other_errors)} other error(s)")
+
+    if read_errors and mode == "strict":
+        raise RuntimeError("FLYNC SDK validation failed for files the generator reads")
+
+
+def load_flync_data(
+    flync_root: Path,
+    emit_to: Path | None = None,
+    codec_include: str | None = None,
+    validation: str = "warn",
+) -> dict:
+    """Derive the deployment from a FLYNC model instead of reading one.
+
+    The result goes through the same schema validation and the same templates
+    as a hand-written file, so a model that translates cleanly but produces an
+    invalid deployment still fails at the same place it always did.
+    """
+    validate_flync_model(flync_root, validation)
+    flync2middleware = _import_flync2middleware()
+
+    deployment, codec_services = flync2middleware.build_deployment_and_codecs(
+        flync_root, codec_include
+    )
+    CODEC_SERVICES.extend(codec_services)
+
+    def _count(section: str) -> int:
+        return len(deployment.get(section) or [])
+
+    print(
+        f"✓ Derived deployment from flync model at {flync_root}: "
+        f"{_count('services')} services, {_count('clusters')} clusters, "
+        f"{_count('connections')} connections, {_count('allocators')} allocators"
+    )
+
+    if emit_to is not None:
+        emit_to.parent.mkdir(parents=True, exist_ok=True)
+        with open(emit_to, "w") as handle:
+            yaml.safe_dump(deployment, handle, sort_keys=False, default_flow_style=False)
+        print(f"  Wrote derived deployment: {emit_to}")
+
+    return _to_dot_dict(deployment)
+
+
+def load_deployment(args: argparse.Namespace, input_base: Path, validation: str | None = None) -> dict:
+    """The deployment, read from --deployment-yaml or derived from --flync."""
+    if args.flync is not None:
+        return load_flync_data(
+            args.flync.resolve(),
+            args.emit_deployment,
+            args.codec_include,
+            validation or args.flync_validation,
+        )
+    return load_input_data(input_base, args.deployment_yaml.resolve())
+
+
+def _codec_output_path(service: dict) -> str:
+    """Where a service's codec header goes: beside its generated types."""
+    namespace_path = service["namespace"].replace("::", "/").lower()
+    return f"include/generated_code/{namespace_path}/{service['name']}Codecs.h"
+
+
+def generate_codec_headers(template_base: Path, output_base: Path) -> None:
+    """One `<Service>Codecs.h` per service derived from a flync model."""
+    for service in CODEC_SERVICES:
+        render_template_with_context(
+            template_base,
+            "service_codecs.h.jinja",
+            {"service": service},
+            output_base / _codec_output_path(service),
+        )
+    if CODEC_SERVICES:
+        print(f"✓ Generated {len(CODEC_SERVICES)} codec header(s)")
 
 
 def render_template_with_context(
@@ -580,11 +730,41 @@ def parse_args(argv=None) -> argparse.Namespace:
         action="store_true",
         help="Print the relative paths of all files a generation run would produce for the given deployment YAML (one per line) and exit, without rendering or writing anything. Used to declare the generated output set to build systems.",
     )
-    parser.add_argument(
+    source = parser.add_mutually_exclusive_group(required=True)
+    source.add_argument(
         "--deployment-yaml",
         type=Path,
-        required=True,
         help="Deployment YAML file",
+    )
+    source.add_argument(
+        "--flync",
+        type=Path,
+        nargs="?",
+        const=_default_flync_model(),
+        metavar="MODEL_ROOT",
+        help="Root of a FLYNC model. The deployment is derived from it rather "
+        "than read, using communication/someip/services, apps, the controllers' "
+        "app_bindings and communication/middleware. Without a path, the repository's "
+        "flync-configuration/flync.",
+    )
+    parser.add_argument(
+        "--flync-validation",
+        choices=["warn", "strict", "off"],
+        default="warn",
+        help="With --flync, how the FLYNC SDK's validation of the model is used, when "
+        "the SDK is installed: warn reports its findings and generates anyway; strict fails "
+        "on an error in a file the generator reads, or when the SDK is missing; off skips it "
+        "(default: warn).",
+    )
+    parser.add_argument(
+        "--codec-include",
+        help="With --flync, the include path of the SOME/IP codec framework the "
+        "generated codec headers include (default: middleware/someip/SomeIpCodec.h).",
+    )
+    parser.add_argument(
+        "--emit-deployment",
+        type=Path,
+        help="With --flync, also write the derived deployment to this path.",
     )
     parser.add_argument(
         "--clang-format-config",
@@ -618,12 +798,12 @@ def main(argv=None) -> int:
     # without rendering. Kept additive so it does not affect the generation path.
     if args.list_outputs:
         try:
-            deployment_yaml = args.deployment_yaml.resolve()
             # Keep stdout clean (path list only); loader diagnostics go to stderr.
             _saved_stdout = sys.stdout
             sys.stdout = sys.stderr
             try:
-                input_data = load_input_data(input_base, deployment_yaml)
+                # Only the output layout is wanted, which validation cannot change.
+                input_data = load_deployment(args, input_base, validation="off")
             finally:
                 sys.stdout = _saved_stdout
         except Exception as e:
@@ -635,7 +815,8 @@ def main(argv=None) -> int:
         for pdu in getattr(input_data, "pdus", []):
             if not hasattr(pdu, "generation_mode") or not pdu.generation_mode:
                 pdu["generation_mode"] = args.generation_mode
-        for path in sorted(_resolve_output_paths(input_data)):
+        codec_paths = [_codec_output_path(service) for service in CODEC_SERVICES]
+        for path in sorted(_resolve_output_paths(input_data) + codec_paths):
             print(path)
         return 0
 
@@ -651,10 +832,9 @@ def main(argv=None) -> int:
     print(f"Output base directory: {output_base}")
     print()
 
-    # Load deployment.yaml as the single source of truth
+    # Load the deployment as the single source of truth: read, or derived from flync
     try:
-        deployment_yaml = args.deployment_yaml.resolve()
-        input_data = load_input_data(input_base, deployment_yaml)
+        input_data = load_deployment(args, input_base)
     except Exception as e:
         print(f"error: {e}", file=sys.stderr)
         return 1
@@ -725,6 +905,7 @@ def main(argv=None) -> int:
             items=getattr(input_data, "pdus", []),
             item_key="pdu",
         )
+        generate_codec_headers(input_base / "templates/jinja", output_base)
 
         # Format all generated C++ files with clang-format
         format_cpp_files(output_base, args.clang_format_config)
