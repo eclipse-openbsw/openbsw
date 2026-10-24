@@ -1,0 +1,25 @@
+# *******************************************************************************
+# Copyright (c) 2026 KPIT Technologies Ltd
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+
+load("@rules_cc//cc:cc_library.bzl", "cc_library")
+
+cc_library(
+    name = "udsDiagMgr",
+    srcs = [
+        "src/udsDiagMgr/DiagMgr.cpp",
+    ],
+    hdrs = glob(["include/**/*.h"]),
+    strip_include_prefix = "include",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//libs/bsw/udsEventMgr",
+        "//libs/bsw/udsFaultMgr",
+    ],
+)
