@@ -211,12 +211,12 @@ TEST_F(
 /**
  * \desc
  * When the abstract class "RoutineControlJob" calls the stop function the DiagReturnCode
- * ISO_CONDITIONS_NOT_CORRECT is expected.
+ * ISO_SUBFUNCTION_NOT_SUPPORTED is expected.
  */
-TEST_F(RoutineControlJobTest, stop_should_returns_ISO_CONDITIONS_NOT_CORRECT)
+TEST_F(RoutineControlJobTest, stop_should_returns_ISO_SUBFUNCTION_NOT_SUPPORTED)
 {
     EXPECT_EQ(
-        DiagReturnCode::ISO_CONDITIONS_NOT_CORRECT,
+        DiagReturnCode::ISO_SUBFUNCTION_NOT_SUPPORTED,
         fRoutineControlJob.stop(
             fIncomingDiagConnection,
             TestableRoutineControlJob::DEFAULT_START_ROUTINE_REQUEST,
@@ -226,13 +226,13 @@ TEST_F(RoutineControlJobTest, stop_should_returns_ISO_CONDITIONS_NOT_CORRECT)
 /**
  * \desc
  * When the abstract class "RoutineControlJob" calls the requestResults function the DiagReturnCode
- * ISO_CONDITIONS_NOT_CORRECT is expected.
+ * ISO_SUBFUNCTION_NOT_SUPPORTED is expected.
  */
-TEST_F(RoutineControlJobTest, requestResults_should_return_ISO_CONDITIONS_NOT_CORRECT)
+TEST_F(RoutineControlJobTest, requestResults_should_return_ISO_SUBFUNCTION_NOT_SUPPORTED)
 {
     EXPECT_EQ(
-        DiagReturnCode::ISO_CONDITIONS_NOT_CORRECT,
-        fRoutineControlJob.stop(
+        DiagReturnCode::ISO_SUBFUNCTION_NOT_SUPPORTED,
+        fRoutineControlJob.requestResults(
             fIncomingDiagConnection,
             TestableRoutineControlJob::DEFAULT_START_ROUTINE_REQUEST,
             sizeof(TestableRoutineControlJob::DEFAULT_START_ROUTINE_REQUEST)));
@@ -358,12 +358,12 @@ TEST_F(
 /**
  * \desc
  * If process get an incoming connection, where the identifier was set to 0x02 (stop routine),
- * process should return the DiagReturnCode ISO_CONDITIONS_NOT_CORRECT, if fSequenceCheckEnabled
+ * process should return the DiagReturnCode ISO_SUBFUNCTION_NOT_SUPPORTED, if fSequenceCheckEnabled
  * was set to false.
  */
 TEST_F(
     RoutineControlJobTest,
-    process_should_return_ISO_CONDITIONS_NOT_CORRECT_if_identifier_is_stop_routine_sequenceCheck_disabled)
+    process_should_return_ISO_SUBFUNCTION_NOT_SUPPORTED_if_identifier_is_stop_routine_sequenceCheck_disabled)
 {
     fRequestBuffer[1] = 0x02U; // stop routine
 
@@ -377,7 +377,7 @@ TEST_F(
     EXPECT_FALSE(fRoutineControlJobExtended.disableSequenceCheck());
 
     EXPECT_EQ(
-        DiagReturnCode::ISO_CONDITIONS_NOT_CORRECT,
+        DiagReturnCode::ISO_SUBFUNCTION_NOT_SUPPORTED,
         fRoutineControlJobExtended.execute(
             fIncomingDiagConnection,
             TestableRoutineControlJob::ROUTINE_IDENTIFIER,
@@ -387,12 +387,12 @@ TEST_F(
 /**
  * \desc
  * If process get an incoming connection, where the identifier was set to 0x02 (stop routine),
- * process should return the DiagReturnCode ISO_CONDITIONS_NOT_CORRECT, if fStarted
+ * process should return the DiagReturnCode ISO_SUBFUNCTION_NOT_SUPPORTED, if fStarted
  * was set to true and if calling stop wasn't successful.
  */
 TEST_F(
     RoutineControlJobTest,
-    process_should_return_ISO_CONDITIONS_NOT_CORRECT_if_identifier_is_stop_routine_and_stop_failed)
+    process_should_return_ISO_SUBFUNCTION_NOT_SUPPORTED_if_identifier_is_stop_routine_and_stop_failed)
 {
     fRequestBuffer[1] = 0x02U; // stop routine
 
@@ -406,7 +406,7 @@ TEST_F(
     EXPECT_TRUE(fRoutineControlJobExtended.setStarted());
 
     EXPECT_EQ(
-        DiagReturnCode::ISO_CONDITIONS_NOT_CORRECT,
+        DiagReturnCode::ISO_SUBFUNCTION_NOT_SUPPORTED,
         fRoutineControlJobExtended.execute(
             fIncomingDiagConnection,
             TestableRoutineControlJob::ROUTINE_IDENTIFIER,
@@ -460,7 +460,7 @@ TEST_F(RoutineControlJobTest, process_request_routine_results_sequenceCheck_was_
     EXPECT_FALSE(fRoutineControlJobExtended.disableSequenceCheck());
 
     EXPECT_EQ(
-        DiagReturnCode::ISO_CONDITIONS_NOT_CORRECT,
+        DiagReturnCode::ISO_SUBFUNCTION_NOT_SUPPORTED,
         fRoutineControlJobExtended.execute(
             fIncomingDiagConnection,
             TestableRoutineControlJob::ROUTINE_IDENTIFIER,
@@ -487,7 +487,7 @@ TEST_F(RoutineControlJobTest, process_request_routine_results_fStarted_was_set_t
     EXPECT_TRUE(fRoutineControlJobExtended.setStarted());
 
     EXPECT_EQ(
-        DiagReturnCode::ISO_CONDITIONS_NOT_CORRECT,
+        DiagReturnCode::ISO_SUBFUNCTION_NOT_SUPPORTED,
         fRoutineControlJobExtended.execute(
             fIncomingDiagConnection,
             TestableRoutineControlJob::ROUTINE_IDENTIFIER,
@@ -518,7 +518,7 @@ TEST_F(RoutineControlJobTest, process_subfunction_not_supported)
 
 TEST_F(
     RoutineControlJobTest,
-    process_should_return_ISO_CONDITIONS_NOT_CORRECT_if_identifier_is_stop_routine)
+    process_should_return_ISO_SUBFUNCTION_NOT_SUPPORTED_if_identifier_is_stop_routine)
 {
     fRequestBuffer[1] = 0x02U; // stop routine
 
@@ -536,7 +536,7 @@ TEST_F(
     EXPECT_TRUE(fRoutineControlJobExtended.setStarted());
 
     EXPECT_EQ(
-        DiagReturnCode::ISO_CONDITIONS_NOT_CORRECT,
+        DiagReturnCode::ISO_SUBFUNCTION_NOT_SUPPORTED,
         fRoutineControlJobExtended.getStopRoutine().execute(
             fIncomingDiagConnection,
             TestableRoutineControlJob::ROUTINE_IDENTIFIER,

@@ -145,12 +145,18 @@ TEST_F(SkeletonAppTestFixture, SkeletonAttributeEventForwardsToMock)
     uint32_t const attributeValue = 42U;
     EXPECT_CALL(mock_, init(features::communication::DummyService::internal::InstanceId_1))
         .WillOnce(testing::Return(middleware::core::HRESULT::Ok));
-    EXPECT_CALL(mock_.simpleField, send(attributeValue))
-        .WillOnce(testing::Return(middleware::core::HRESULT::Ok));
+    EXPECT_CALL(mock_.simpleField, send())
+        .WillOnce(
+            [&]()
+            {
+                EXPECT_EQ(app_.simpleField.get(), attributeValue);
+                return middleware::core::HRESULT::Ok;
+            });
 
     // ACT
-    bool const initResult                           = app_.init();
-    middleware::core::HRESULT const attributeResult = app_.simpleField.send(attributeValue);
+    bool const initResult = app_.init();
+    app_.simpleField.set(attributeValue);
+    middleware::core::HRESULT const attributeResult = app_.simpleField.send();
 
     // ASSERT
     EXPECT_TRUE(initResult);

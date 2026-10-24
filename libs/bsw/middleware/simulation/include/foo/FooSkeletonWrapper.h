@@ -26,7 +26,8 @@ public:
     void sendBroadcast()
     {
         data_.fooValue++;
-        auto const result = fooDefault.send(data_);
+        fooDefault.set(data_);
+        auto const result = fooDefault.send();
         if (result == ::middleware::core::HRESULT::Ok)
         {
             simulation::Logger::log(
@@ -67,7 +68,8 @@ public:
     void setFooDefaultAttribute(org::test::foo::Foo::FooStruct const& value) override
     {
         data_ = value;
-        (void)fooDefault.send(data_);
+        fooDefault.set(data_);
+        (void)fooDefault.send();
         simulation::Logger::log(
             static_cast<uint8_t>(::middleware::core::ClusterId::Cluster0),
             "Foo set received, fooValue=",

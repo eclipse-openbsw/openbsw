@@ -187,7 +187,8 @@ mechanism delivers it to the change-notification callback registered via
 `fooDefault.setReceiveHandler(...)` on the proxy side.
 
 ```
-Cluster0 FooSkeleton::fooDefault.send(data)
+Cluster0 FooSkeleton::fooDefault.set(data)
+Cluster0 FooSkeleton::fooDefault.send()
          |
          v   SHM queue (Cluster0 -> Cluster1)
 Cluster1 FooProxy::onFooDefaultChanged(val)  <- setReceiveHandler callback
