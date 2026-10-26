@@ -18,6 +18,7 @@
 #include "doip/server/DoIpServerVehicleAnnouncementParameterProviderMock.h"
 #include "doip/server/DoIpServerVehicleIdentificationCallbackMock.h"
 #include "doip/server/DoIpServerVehicleIdentificationConfig.h"
+#include "doip/server/DoIpServerVehicleIdentificationParameters.h"
 #include "doip/server/DoIpUdpOemMessageHandlerMock.h"
 
 #include <async/AsyncMock.h>
@@ -29,6 +30,7 @@
 #include <etl/span.h>
 #include <ip/NetworkInterfaceConfigRegistryMock.h>
 #include <udp/socket/AbstractDatagramSocketMock.h>
+#include <type_traits>
 
 #include <gtest/esr_extensions.h>
 #include <gtest/gtest.h>
@@ -38,6 +40,36 @@ namespace
 using namespace ::testing;
 using namespace ::doip;
 using namespace ::ethernet::test;
+
+using OemMessageHandler = DoIpConcreteOemMessageHandler<0xf000U, 1U, 0xf001U, 1U>;
+static_assert(std::is_default_constructible<OemMessageHandler>::value);
+static_assert(std::is_copy_constructible<OemMessageHandler>::value);
+static_assert(std::is_move_constructible<OemMessageHandler>::value);
+static_assert(!std::is_copy_assignable<OemMessageHandler>::value);
+static_assert(!std::is_move_assignable<OemMessageHandler>::value);
+static_assert(std::is_copy_constructible<DoIpServerVehicleIdentificationParameters>::value);
+static_assert(std::is_move_constructible<DoIpServerVehicleIdentificationParameters>::value);
+static_assert(std::is_copy_assignable<DoIpServerVehicleIdentificationParameters>::value);
+static_assert(std::is_move_assignable<DoIpServerVehicleIdentificationParameters>::value);
+
+TEST(DoIpUdpOemMessageHandlerTest, TestCopyPreservesPayloadMetadata)
+{
+    OemMessageHandler const handler;
+    auto const copy = handler;
+    EXPECT_EQ(0xf000U, copy.getRequestPayloadType());
+    EXPECT_EQ(1U, copy.getRequestPayloadSize());
+    EXPECT_EQ(0xf001U, copy.getResponsePayloadType());
+    EXPECT_EQ(1U, copy.getResponsePayloadSize());
+}
+
+TEST(DoIpServerVehicleIdentificationParametersTest, TestCopyPreservesParameters)
+{
+    DoIpServerVehicleIdentificationParameters const parameters(123U, 456U, 3U);
+    auto const copy = parameters;
+    EXPECT_EQ(123U, copy.getAnnounceWait());
+    EXPECT_EQ(456U, copy.getAnnounceInterval());
+    EXPECT_EQ(3U, copy.getAnnounceCount());
+}
 
 static uint8_t vin[]
     = {'B', 'A', 'U', 'I', 'E', 'E', '4', 'M', 'Z', '1', '5', '0', '1', '2', '9', '0', '8'};

@@ -11,6 +11,7 @@
 #include "doip/common/DoIpResult.h"
 
 #include <gtest/gtest.h>
+#include <type_traits>
 
 namespace
 {
@@ -18,6 +19,11 @@ using namespace ::testing;
 using namespace ::doip;
 
 using TestDoIpResult = DoIpResult<uint16_t>;
+
+static_assert(std::is_copy_constructible<TestDoIpResult>::value);
+static_assert(std::is_move_constructible<TestDoIpResult>::value);
+static_assert(std::is_copy_assignable<TestDoIpResult>::value);
+static_assert(std::is_move_assignable<TestDoIpResult>::value);
 
 TEST(DoIpResult, TestInitialization)
 {

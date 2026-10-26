@@ -50,7 +50,11 @@ public:
         = 0;
 
 protected:
-    ~IDoIpServerSocketHandler() = default;
+    IDoIpServerSocketHandler()                                      = default;
+    IDoIpServerSocketHandler(IDoIpServerSocketHandler const&)       = default;
+    IDoIpServerSocketHandler(IDoIpServerSocketHandler&&)            = default;
+    IDoIpServerSocketHandler& operator=(IDoIpServerSocketHandler&&) = default;
+    ~IDoIpServerSocketHandler()                                     = default;
 
     IDoIpServerSocketHandler& operator=(IDoIpServerSocketHandler const&) = default;
 };

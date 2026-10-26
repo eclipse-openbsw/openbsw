@@ -43,6 +43,16 @@ public:
     }
 
 protected:
+    IDoIpServerVehicleAnnouncementParameterProvider() = default;
+    IDoIpServerVehicleAnnouncementParameterProvider(
+        IDoIpServerVehicleAnnouncementParameterProvider const&)
+        = default;
+    IDoIpServerVehicleAnnouncementParameterProvider(
+        IDoIpServerVehicleAnnouncementParameterProvider&&)
+        = default;
+    IDoIpServerVehicleAnnouncementParameterProvider&
+    operator=(IDoIpServerVehicleAnnouncementParameterProvider&&)
+        = default;
     ~IDoIpServerVehicleAnnouncementParameterProvider() = default;
     IDoIpServerVehicleAnnouncementParameterProvider&
     operator=(IDoIpServerVehicleAnnouncementParameterProvider const&)

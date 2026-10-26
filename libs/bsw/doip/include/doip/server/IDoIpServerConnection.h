@@ -44,7 +44,12 @@ public:
     virtual void sendNack(uint8_t nackCode, bool closeAfterSend) = 0;
 
 protected:
-    ~IDoIpServerConnection() = default;
+    IDoIpServerConnection()                                        = default;
+    IDoIpServerConnection(IDoIpServerConnection const&)            = default;
+    IDoIpServerConnection(IDoIpServerConnection&&)                 = default;
+    IDoIpServerConnection& operator=(IDoIpServerConnection const&) = delete;
+    IDoIpServerConnection& operator=(IDoIpServerConnection&&)      = delete;
+    ~IDoIpServerConnection()                                       = default;
 };
 
 } // namespace doip

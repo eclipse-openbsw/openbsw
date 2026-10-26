@@ -127,6 +127,10 @@ public:
         = 0;
 
 protected:
+    IDoIpServerConnectionFilter()                                              = default;
+    IDoIpServerConnectionFilter(IDoIpServerConnectionFilter const&)            = default;
+    IDoIpServerConnectionFilter(IDoIpServerConnectionFilter&&)                 = default;
+    IDoIpServerConnectionFilter& operator=(IDoIpServerConnectionFilter&&)      = delete;
     ~IDoIpServerConnectionFilter()                                             = default;
     IDoIpServerConnectionFilter& operator=(IDoIpServerConnectionFilter const&) = delete;
 };

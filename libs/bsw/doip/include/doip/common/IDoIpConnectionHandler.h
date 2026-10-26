@@ -68,6 +68,8 @@ public:
     virtual ~IDoIpConnectionHandler()                                = default;
     IDoIpConnectionHandler& operator=(IDoIpConnectionHandler const&) = delete;
     IDoIpConnectionHandler(IDoIpConnectionHandler const&)            = delete;
+    IDoIpConnectionHandler(IDoIpConnectionHandler&&)                 = delete;
+    IDoIpConnectionHandler& operator=(IDoIpConnectionHandler&&)      = delete;
 };
 
 } // namespace doip

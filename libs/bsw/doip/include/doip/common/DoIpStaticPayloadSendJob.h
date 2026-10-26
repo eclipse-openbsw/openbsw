@@ -41,8 +41,6 @@ public:
         ::etl::span<uint8_t const> payload,
         ReleaseCallbackType releaseCallback);
 
-    ~DoIpStaticPayloadSendJob() override {}
-
 protected:
     ::etl::span<uint8_t const> getPayloadBuffer(::etl::span<uint8_t> staticBuffer) const override;
 

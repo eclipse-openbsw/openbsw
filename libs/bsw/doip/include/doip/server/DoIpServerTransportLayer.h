@@ -133,7 +133,12 @@ protected:
         DoIpServerTransportLayerParameters const& parameters,
         AliveCheckHelperPool& aliveCheckHelperPool);
 
-    ~DoIpServerTransportLayer() = default;
+    // The connection configuration and provider retain callbacks to this instance.
+    ~DoIpServerTransportLayer()                                          = default;
+    DoIpServerTransportLayer(DoIpServerTransportLayer const&)            = delete;
+    DoIpServerTransportLayer(DoIpServerTransportLayer&&)                 = delete;
+    DoIpServerTransportLayer& operator=(DoIpServerTransportLayer const&) = delete;
+    DoIpServerTransportLayer& operator=(DoIpServerTransportLayer&&)      = delete;
 
 private:
     using ConnectionList
@@ -147,6 +152,11 @@ private:
     public:
         explicit RemoveGuard(DoIpServerTransportLayer& layer);
         ~RemoveGuard();
+        // Each acquired remove lock must be released exactly once.
+        RemoveGuard(RemoveGuard const&)            = delete;
+        RemoveGuard(RemoveGuard&&)                 = delete;
+        RemoveGuard& operator=(RemoveGuard const&) = delete;
+        RemoveGuard& operator=(RemoveGuard&&)      = delete;
 
     private:
         DoIpServerTransportLayer& _layer;
