@@ -167,19 +167,19 @@ TEMPLATE_CONFIG = {
         (
             "shm/allocators_definitions.h.jinja",
             "AllocatorsDefinitions.h",
-            "include/generated_code/shm",
+            "include/generated_code/middleware/shm",
         ),
         ("shm/config.h.jinja", "Config.h", "include/generated_code/middleware/shm"),
         ("shm/config.cpp.jinja", "Config.cpp", "src/generated_code/shm"),
         (
             "shm/queue_definitions.h.jinja",
             "QueueDefinitions.h",
-            "include/generated_code/shm",
+            "include/generated_code/middleware/shm",
         ),
         (
             "shm/pdu_definitions.h.jinja",
             "PduDefinitions.h",
-            "include/generated_code/shm",
+            "include/generated_code/middleware/shm",
         ),
     ],
     "per_cluster": [

@@ -22,9 +22,9 @@ set(_RELEASE_GENERATED_HEADERS
     ${_RELEASE_GEN_INC}/middleware/ClusterConnectionsCore0Core1.h
     ${_RELEASE_GEN_INC}/middleware/ClusterConnectionsCore1Core0.h
     ${_RELEASE_GEN_INC}/middleware/shm/Config.h
-    ${_RELEASE_GEN_INC}/shm/AllocatorsDefinitions.h
-    ${_RELEASE_GEN_INC}/shm/QueueDefinitions.h
-    ${_RELEASE_GEN_INC}/shm/PduDefinitions.h
+    ${_RELEASE_GEN_INC}/middleware/shm/AllocatorsDefinitions.h
+    ${_RELEASE_GEN_INC}/middleware/shm/QueueDefinitions.h
+    ${_RELEASE_GEN_INC}/middleware/shm/PduDefinitions.h
     ${_RELEASE_GEN_INC}/features/communication/dummy_serviceCommon.h
     ${_RELEASE_GEN_INC}/features/communication/dummy_serviceProxy.h
     ${_RELEASE_GEN_INC}/features/communication/dummy_serviceSkeleton.h
@@ -72,7 +72,7 @@ set(_TEST_GEN_INC ${_TEST_GEN_DIR}/include/generated_code)
 set(_TEST_GEN_SRC ${_TEST_GEN_DIR}/src/generated_code)
 set(_TEST_GENERATED_HEADERS
     ${_TEST_GEN_INC}/middleware/ClusterId.h
-    ${_TEST_GEN_INC}/shm/AllocatorsDefinitions.h
+    ${_TEST_GEN_INC}/middleware/shm/AllocatorsDefinitions.h
     ${_TEST_GEN_INC}/features/communication/dummy_serviceCommon.h
     ${_TEST_GEN_INC}/features/communication/dummy_serviceProxy.h
     ${_TEST_GEN_INC}/features/communication/dummy_serviceProxyMock.h

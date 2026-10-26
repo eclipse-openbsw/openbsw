@@ -104,10 +104,9 @@ include/generated_code/
     cluster_connections_<src>_<tgt>.h   # one per connection
     shm/
       config.h
-  shm/
-    allocators_definitions.h
-    queue_definitions.h
-    pdu_definitions.h
+      allocators_definitions.h
+      queue_definitions.h
+      pdu_definitions.h
   <namespace-path>/
     <service>_common.h        # one set per service
     <service>_proxy.h
