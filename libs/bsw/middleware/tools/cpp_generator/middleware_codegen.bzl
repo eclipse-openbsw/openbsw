@@ -29,11 +29,11 @@ _GENERATOR_TEMPLATES = "//libs/bsw/middleware/tools/cpp_generator:generator_temp
 
 # Package path of the generator, passed to --input so jinja2cpp.py can
 # locate templates/jinja/ and templates/schemas/ relative to it.
-_GENERATOR_INPUT = Label(_GENERATOR_TOOL).package
+_GENERATOR_INPUT = "/".join([p for p in [Label(_GENERATOR_TOOL).workspace_root, Label(_GENERATOR_TOOL).package] if p])
 
 def _codegen_srcs_impl(ctx):
     outs = ctx.outputs.outs
-    output_dir = "/".join([ctx.bin_dir.path, ctx.label.package, ctx.attr.gen_root])
+    output_dir = "/".join([p for p in [ctx.bin_dir.path, ctx.label.workspace_root, ctx.label.package, ctx.attr.gen_root] if p])
 
     args = ctx.actions.args()
     args.add("--input", _GENERATOR_INPUT)
