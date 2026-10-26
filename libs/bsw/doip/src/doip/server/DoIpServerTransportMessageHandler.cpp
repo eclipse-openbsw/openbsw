@@ -52,14 +52,10 @@ DoIpServerTransportMessageHandler::DoIpServerTransportMessageHandler(
     DoIpServerTransportConnectionConfig const& config)
 : IDoIpServerMessageHandler()
 , _payloadPeekContext()
-, _connection(nullptr)
 , _diagnosticSendJobPool(diagnosticSendJobBlockPool)
 , _protocolSendJobPool(protocolSendJobBlockPool)
-, _transportMessage(nullptr)
 , _config(config)
-, _receiveMessagePayloadLength(0U)
 , _protocolVersion(protocolVersion)
-, _isRoutingActive(false)
 , _readBuffer()
 {}
 

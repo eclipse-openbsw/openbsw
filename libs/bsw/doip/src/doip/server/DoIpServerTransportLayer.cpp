@@ -47,9 +47,7 @@ DoIpServerTransportLayer::DoIpServerTransportLayer(
 , _functionEventClose(
       ::async::Function::CallType::
           create<DoIpServerTransportLayer, &DoIpServerTransportLayer::executeEventClose>(*this))
-, _callback(nullptr)
 , _aliveCheckHelperPool(aliveCheckHelperPool)
-, _removeLockCount(0U)
 {}
 
 AbstractTransportLayer::ErrorCode DoIpServerTransportLayer::init()

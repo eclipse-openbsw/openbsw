@@ -114,7 +114,7 @@ protected:
         DoIpServerConnectionHandler* _routingActivationHandler;
         uint8_t _socketGroupId;
         uint8_t _negativeResponseCode;
-        uint8_t _pendingAliveCheckCount;
+        uint8_t _pendingAliveCheckCount{1U};
     };
 
     using AliveCheckHelperList
@@ -215,10 +215,10 @@ private:
     ConnectionList _connections;
     ConnectionList _connectionsToRelease;
     ::async::Function _functionEventClose;
-    IDoIpServerTransportLayerCallback* _callback;
+    IDoIpServerTransportLayerCallback* _callback{nullptr};
     AliveCheckHelperPool& _aliveCheckHelperPool;
     AliveCheckHelperList _aliveCheckHelpers;
-    uint8_t _removeLockCount;
+    uint8_t _removeLockCount{0U};
 };
 
 namespace declare
@@ -263,7 +263,6 @@ inline DoIpServerTransportLayer::AliveCheckHelper::AliveCheckHelper(
 : _routingActivationHandler(&routingActivationHandler)
 , _socketGroupId(routingActivationHandler.getSocketGroupId())
 , _negativeResponseCode(negativeResponseCode)
-, _pendingAliveCheckCount(1U)
 {}
 
 inline uint8_t DoIpServerTransportLayer::AliveCheckHelper::getSocketGroupId() const

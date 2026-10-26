@@ -129,7 +129,7 @@ public:
 
 private:
     ::transport::ITransportMessageProvidingListener& _fallbackTransportMessageProvidingListener;
-    IDoIpTransportMessageProvidingListener* _transportMessageProvidingListener;
+    IDoIpTransportMessageProvidingListener* _transportMessageProvidingListener{nullptr};
 };
 
 /**
@@ -138,7 +138,6 @@ private:
 inline DoIpTransportMessageProvidingListenerHelper::DoIpTransportMessageProvidingListenerHelper(
     ::transport::ITransportMessageProvidingListener& fallbackTransportMessageProvidingListener)
 : _fallbackTransportMessageProvidingListener(fallbackTransportMessageProvidingListener)
-, _transportMessageProvidingListener(nullptr)
 {}
 
 inline void DoIpTransportMessageProvidingListenerHelper::setTransportMessageProvidingListener(

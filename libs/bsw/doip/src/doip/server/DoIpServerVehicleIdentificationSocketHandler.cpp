@@ -44,7 +44,6 @@ DoIpServerVehicleIdentificationSocketHandler::DoIpServerVehicleIdentificationSoc
 , _connection(config.getContext(), socket, config.getWriteBuffer())
 , _multicastAddress(multicastAddress)
 , _config(config)
-, _vehicleAnnouncementListener(nullptr)
 , _enqueueInitialBroadcastsUnicastAsync(
       ::async::Function::CallType::create<
           DoIpServerVehicleIdentificationSocketHandler,

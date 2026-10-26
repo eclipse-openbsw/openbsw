@@ -39,18 +39,11 @@ DoIpUdpConnection::DoIpUdpConnection(
 , _socket(socket)
 , _currentReadBuffer()
 , _writeBuffer(writeBuffer)
-, _handler(nullptr)
 , _localEndpoint()
 , _remoteEndpoint()
 , _payloadReceivedCallback()
 , _pendingSendJobs()
-, _availableReadDataLength(0U)
-, _readPayloadLength(0U)
 , _context(context)
-, _headerBuffer{}
-, _connectionState(ConnectionState::INIT)
-, _readState(ReadState::HEADER)
-, _suspendCallCounter(0U)
 {}
 
 void DoIpUdpConnection::init(IDoIpConnectionHandler& handler)

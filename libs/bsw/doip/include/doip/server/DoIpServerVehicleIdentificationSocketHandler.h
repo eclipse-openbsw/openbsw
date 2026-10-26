@@ -176,7 +176,7 @@ private:
     ::ip::IPAddress _multicastAddress;
     ::ip::IPEndpoint _destinationEndpoint;
     DoIpServerVehicleIdentificationConfig& _config;
-    IDoIpVehicleAnnouncementListener* _vehicleAnnouncementListener;
+    IDoIpVehicleAnnouncementListener* _vehicleAnnouncementListener{nullptr};
     ::async::Function _enqueueInitialBroadcastsUnicastAsync;
     ::async::Function _configChangedContinuationAsync;
     ::ip::ConfigChangedSlotType _configChangedSlot;

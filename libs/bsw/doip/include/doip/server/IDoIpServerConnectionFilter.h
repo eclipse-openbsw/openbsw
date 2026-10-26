@@ -99,7 +99,7 @@ public:
 
     private:
         uint16_t _internalSourceAddress;
-        Action _action;
+        Action _action{Action::CONTINUE};
         uint8_t _responseCode;
     };
 
@@ -140,7 +140,6 @@ protected:
  */
 inline IDoIpServerConnectionFilter::RoutingActivationCheckResult::RoutingActivationCheckResult()
 : _internalSourceAddress(::transport::TransportMessage::INVALID_ADDRESS)
-, _action(Action::CONTINUE)
 , _responseCode(DoIpConstants::RoutingResponseCodes::ROUTING_SUCCESS)
 {}
 
