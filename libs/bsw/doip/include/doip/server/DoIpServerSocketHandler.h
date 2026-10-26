@@ -96,7 +96,7 @@ private:
         void connectionAccepted(::tcp::AbstractSocket& socket) override;
 
     private:
-        ServerSocket _serverSocket;
+        ServerSocket _serverSocket{};
         ::ip::NetworkInterfaceConfigKey _networkInterfaceConfigKey;
         DoIpServerSocketHandler& _parent;
         uint8_t _serverSocketId;
@@ -112,7 +112,7 @@ private:
     ::etl::pool<Socket, NUM_PLAIN_SOCKETS> _sockets;
     ::ip::ConfigChangedSlotType _configChangedSlot;
     ::ip::NetworkInterfaceConfigRegistry& _networkInterfaceConfigRegistry;
-    ::doip::IDoIpServerSocketHandlerListener* _listener;
+    ::doip::IDoIpServerSocketHandlerListener* _listener{nullptr};
 };
 
 /**
@@ -136,7 +136,6 @@ DoIpServerSocketHandler<
       ::ip::ConfigChangedSlotType::
           create<DoIpServerSocketHandler, &DoIpServerSocketHandler::configChanged>(*this))
 , _networkInterfaceConfigRegistry(networkInterfaceConfigRegistry)
-, _listener(nullptr)
 {}
 
 template<
@@ -288,7 +287,6 @@ DoIpServerSocketHandler<
         ::ip::NetworkInterfaceConfigKey const& networkInterfaceConfigKey,
         DoIpTcpConnection::ConnectionType const type)
 : ::tcp::ISocketProvidingConnectionListener()
-, _serverSocket{}
 , _networkInterfaceConfigKey(networkInterfaceConfigKey)
 , _parent(parent)
 , _serverSocketId(serverSocketId)
