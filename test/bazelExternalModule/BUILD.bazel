@@ -1,0 +1,20 @@
+# *******************************************************************************
+# Copyright (c) 2026 Coretura
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+
+load("@rules_shell//shell:sh_test.bzl", "sh_test")
+
+# Passes when the reference app completes its boot. The app also builds
+# @openbsw//executables/referenceApp/middlewareConfiguration:middleware_configuration_generated.
+sh_test(
+    name = "reference_app_test",
+    srcs = ["reference_app_test.sh"],
+    args = ["$(rootpath @openbsw//executables/referenceApp/application:reference_app_posix)"],
+    data = ["@openbsw//executables/referenceApp/application:reference_app_posix"],
+)
