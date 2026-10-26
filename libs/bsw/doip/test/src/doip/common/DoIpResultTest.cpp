@@ -31,6 +31,16 @@ TEST(DoIpResult, TestInitialization)
         EXPECT_EQ(0x1234U, cut.getResult());
         EXPECT_EQ(0x45U, cut.getNackCode());
     }
+    {
+        enum class Result : uint8_t
+        {
+            SUCCESS,
+            ERROR
+        };
+        DoIpResult<Result> cut;
+        EXPECT_EQ(Result::SUCCESS, cut.getResult());
+        EXPECT_EQ(0U, cut.getNackCode());
+    }
 }
 
 TEST(DoIpResult, TestComparison)
