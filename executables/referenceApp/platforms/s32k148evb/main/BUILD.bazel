@@ -31,32 +31,45 @@ cc_library(
     srcs = [
         "src/bsp/bootHeader.S",
         "src/bsp/startUp.S",
-    ] + select({
-        "//bazel/config/rtos:support_threadx": [
-            "src/bsp/threadx/tx_initialize_low_level.S",
-        ],
-        "//conditions:default": [],
-    }),
-    implementation_deps = select({
-        "//bazel/config/rtos:support_threadx": [
-            "//executables/referenceApp/asyncCoreConfiguration:async_core_configuration",
-        ],
-        "//conditions:default": [],
-    }),
-    target_compatible_with = ["//bazel/platform/constraints/soc:s32k148"],
+    ],
+    implementation_deps = [":start_up_asm_threadx_impl"],
+    target_compatible_with = [
+        "//bazel/platform/constraints/soc:s32k148",
+        "@platforms//os:none",
+    ],
     visibility = ["//visibility:public"],
     # Force-link needed because boot header and vectors are referenced by address, not symbol.
     alwayslink = True,
 )
 
 cc_library(
+    name = "start_up_asm_threadx_srcs",
+    srcs = ["src/bsp/threadx/tx_initialize_low_level.S"],
+    implementation_deps = [
+        "//executables/referenceApp/asyncCoreConfiguration:async_core_configuration",
+    ],
+    target_compatible_with = [
+        "//bazel/platform/constraints/soc:s32k148",
+        "@platforms//os:none",
+    ],
+)
+
+cc_library(name = "start_up_asm_threadx_srcs_none")
+
+alias(
+    name = "start_up_asm_threadx_impl",
+    actual = select({
+        "//bazel/config/rtos:support_threadx": ":start_up_asm_threadx_srcs",
+        "//conditions:default": ":start_up_asm_threadx_srcs_none",
+    }),
+)
+
+cc_library(
     name = "start_up_threadx_srcs",
     srcs = ["src/bsp/threadx/tx_execution_initialize.c"],
     target_compatible_with = ["//bazel/platform/constraints/soc:s32k148"],
-    # CMake declares mutual static-library dependencies between threadX core and its port
-    # resolved by archive repetition. Bazel links each archive once, so force-linking
-    # ensures _tx_execution_initialize is available when threadX core's force-linked objects create
-    # the dependency at link time.
+    # CMake declares mutual static-library dependencies between threadX core and its port, resolved by archive repetition on the CMake side.
+    # Bazel links each archive once. Force-linking ensures profiling hooks are available when threadX core archives are processed.
     alwayslink = True,
 )
 
@@ -111,10 +124,8 @@ cc_library(
 cc_library(
     name = "threadx_os_hooks",
     srcs = [
-        "src/osHooks/threadx/osHooks.cpp",
-    ],
-    hdrs = [
         "include/osHooks/threadx/osHooks.h",
+        "src/osHooks/threadx/osHooks.cpp",
     ],
     implementation_deps = [
         "//libs/3rdparty/etl",
@@ -123,12 +134,11 @@ cc_library(
         "//libs/bsw/common",
         "//platforms/s32k1xx/3rdparty/threadx:threadx_cortex_m4",
     ],
-    strip_include_prefix = "include/osHooks/threadx",
+    includes = ["include/osHooks/threadx"],
     target_compatible_with = ["//bazel/platform/constraints/soc:s32k148"],
     visibility = ["//libs/3rdparty/threadx:__pkg__"],
-    # CMake declares mutual static-library dependencies between threadX and its OS hooks resolved
-    # by archive repetition. Bazel links each archive once instead. Force-linking ensures
-    # vIllegalISR and execution-profile symbols are available.
+    # CMake declares mutual static-library dependencies between threadX and its OS hooks, resolved by archive repetition on the CMake side.
+    # Bazel links each archive once. Force-linking ensures OS hook symbols are available when threadX archives are processed.
     alwayslink = True,
 )
 

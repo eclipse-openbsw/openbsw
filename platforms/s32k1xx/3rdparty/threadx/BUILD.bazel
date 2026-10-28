@@ -22,6 +22,10 @@ cc_library(
         "ports/cortex_m4/gnu/src/tx_timer_interrupt.S",
     ],
     local_defines = ["TX_INCLUDE_USER_DEFINE_FILE"],
+    target_compatible_with = [
+        "//bazel/platform/constraints/soc:s32k148",
+        "@platforms//os:none",
+    ],
     visibility = ["//visibility:public"],
     deps = [
         "//libs/3rdparty/threadx:threadx_headers",
