@@ -8,17 +8,23 @@
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
 #include "udsDiagMgr/DiagMgr.h"
+#include "udsEventMgr/EventManager.h"
+#include "udsFaultMgr/IFaultStorage.h"
+#include "udsFaultMgr/ITimeProvider.h"
+#include "udsFaultMgr/InhibitionTable.h"
 
+#include <etl/array.h>
 #include <cstddef>
+#include <cstdint>
 
 namespace uds
 {
 
-DiagMgr::DiagMgr() : _callbackCount(0U)
+DiagMgr::DiagMgr() : _callbacks(), _callbackCount(0U)
 {
-    for (size_t i = 0U; i < MAX_NOTIFICATION_CALLBACKS; ++i)
+    for (FaultNotificationCallback& callback : _callbacks)
     {
-        _callbacks[i] = nullptr;
+        callback = nullptr;
     }
 }
 
@@ -54,10 +60,11 @@ uint32_t DiagMgr::getFaultCount() const
 {
     // Count records with confirmedDTC bit set
     static constexpr uint16_t QUERY_BUFFER_SIZE = 4U; // 1 entry probe
-    uint8_t probe[QUERY_BUFFER_SIZE]            = {};
-    uint16_t len                                = 0U;
-    return static_cast<uint32_t>(
-        _faultManager.getDTCList(0x08U /* confirmedDTC */, probe, sizeof(probe), len));
+    static constexpr uint8_t CONFIRMED_DTC_MASK = 0x08U;
+    etl::array<uint8_t, QUERY_BUFFER_SIZE> probe{};
+    uint16_t len = 0U;
+    return static_cast<uint32_t>(_faultManager.getDTCList(
+        CONFIRMED_DTC_MASK, probe.data(), static_cast<uint16_t>(probe.size()), len));
 }
 
 bool DiagMgr::registerEvent(EventConfig const& config)

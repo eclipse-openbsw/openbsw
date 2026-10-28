@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
 #pragma once
+#include <etl/array.h>
 #include <cstdint>
 
 namespace uds
@@ -24,9 +25,9 @@ static constexpr uint8_t MAX_INHIBITION_ENTRIES           = 32U;
  */
 struct InhibitionEntry
 {
-    uint16_t functionId;                                         ///< Software function ID
-    uint32_t inhibitingDtcIds[MAX_INHIBITING_DTCS_PER_FUNCTION]; ///< Inhibiting DTC IDs
-    uint8_t inhibitingDtcCount;                                  ///< Valid entries in array
+    uint16_t functionId; ///< Software function ID
+    etl::array<uint32_t, MAX_INHIBITING_DTCS_PER_FUNCTION> inhibitingDtcIds; ///< Inhibiting DTC IDs
+    uint8_t inhibitingDtcCount; ///< Valid entries in array
 };
 
 /**
@@ -55,7 +56,7 @@ public:
     bool isAllowed(uint16_t functionId) const;
 
 private:
-    InhibitionEntry _entries[MAX_INHIBITION_ENTRIES];
+    etl::array<InhibitionEntry, MAX_INHIBITION_ENTRIES> _entries;
     uint8_t _entryCount;
     FaultManager* _faultManager;
 };

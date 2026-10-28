@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
 #pragma once
+#include <etl/array.h>
 #include <cstdint>
 
 namespace uds
@@ -61,13 +62,13 @@ static constexpr uint16_t FREEZE_FRAME_SNAPSHOT_SIZE = 32U;
  */
 struct FreezeFrameRecord
 {
-    uint32_t dtcId;                                   ///< Parent DTC ID
-    uint8_t recordNumber;                             ///< Freeze frame record number
-    uint64_t timestampNs;                             ///< Global synchronized time
-    uint16_t dataIdentifiers[FREEZE_FRAME_MAX_DIDS];  ///< Captured DID list
-    uint8_t snapshotData[FREEZE_FRAME_SNAPSHOT_SIZE]; ///< Raw DID data at confirmation
-    uint8_t snapshotLength;                           ///< Actual bytes used in snapshotData
-    uint32_t crc32;                                   ///< CRC over all fields above
+    uint32_t dtcId;                                               ///< Parent DTC ID
+    uint8_t recordNumber;                                         ///< Freeze frame record number
+    uint64_t timestampNs;                                         ///< Global synchronized time
+    etl::array<uint16_t, FREEZE_FRAME_MAX_DIDS> dataIdentifiers;  ///< Captured DID list
+    etl::array<uint8_t, FREEZE_FRAME_SNAPSHOT_SIZE> snapshotData; ///< Raw DID data at confirmation
+    uint8_t snapshotLength; ///< Actual bytes used in snapshotData
+    uint32_t crc32;         ///< CRC over all fields above
 };
 
 } // namespace uds

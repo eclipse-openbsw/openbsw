@@ -8,6 +8,8 @@
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
 #include "udsEventMgr/DebounceTimeBased.h"
+#include "udsEventMgr/IDebounceAlgorithm.h"
+#include <cstdint>
 
 namespace uds
 {

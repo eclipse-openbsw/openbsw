@@ -12,11 +12,12 @@
 #include "udsFaultMgr/FaultManager.h"
 
 #include <cstddef>
+#include <cstdint>
 
 namespace uds
 {
 
-InhibitionTable::InhibitionTable() : _entryCount(0U), _faultManager(nullptr) {}
+InhibitionTable::InhibitionTable() : _entries(), _entryCount(0U), _faultManager(nullptr) {}
 
 void InhibitionTable::init(FaultManager& faultManager) { _faultManager = &faultManager; }
 
@@ -49,10 +50,10 @@ bool InhibitionTable::isAllowed(uint16_t functionId) const
     {
         if (_entries[i].functionId == functionId)
         {
-            InhibitionEntry const& e = _entries[i];
-            for (size_t j = 0U; j < e.inhibitingDtcCount; ++j)
+            InhibitionEntry const& entry = _entries[i];
+            for (size_t j = 0U; j < entry.inhibitingDtcCount; ++j)
             {
-                uint8_t const status = _faultManager->getDtcStatus(e.inhibitingDtcIds[j]);
+                uint8_t const status = _faultManager->getDtcStatus(entry.inhibitingDtcIds[j]);
                 if ((status & DtcStatusBits::CONFIRMED_DTC) != 0U)
                 {
                     return false;

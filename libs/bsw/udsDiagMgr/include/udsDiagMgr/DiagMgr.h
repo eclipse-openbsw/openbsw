@@ -14,6 +14,7 @@
 #include "udsFaultMgr/FaultManager.h"
 #include "udsFaultMgr/IFaultStorage.h"
 #include "udsFaultMgr/ITimeProvider.h"
+#include <etl/array.h>
 #include <cstdint>
 
 namespace uds
@@ -240,7 +241,7 @@ private:
     EventManager _eventManager;
     FaultManager _faultManager;
 
-    FaultNotificationCallback _callbacks[MAX_NOTIFICATION_CALLBACKS];
+    etl::array<FaultNotificationCallback, MAX_NOTIFICATION_CALLBACKS> _callbacks;
     uint8_t _callbackCount;
 };
 

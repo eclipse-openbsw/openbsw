@@ -13,6 +13,8 @@
 #include "udsFaultMgr/IFaultStorage.h"
 #include "udsFaultMgr/ITimeProvider.h"
 #include "udsFaultMgr/InhibitionTable.h"
+#include <etl/array.h>
+#include <etl/span.h>
 #include <cstdint>
 
 namespace uds
@@ -131,8 +133,8 @@ public:
 private:
     static constexpr uint8_t MAX_DTC_RECORDS = FaultManagementConfig::MAX_DTC_RECORDS;
 
-    DtcRecord _dtcRecords[MAX_DTC_RECORDS];
-    FreezeFrameRecord _freezeFrames[MAX_DTC_RECORDS];
+    etl::array<DtcRecord, MAX_DTC_RECORDS> _dtcRecords;
+    etl::array<FreezeFrameRecord, MAX_DTC_RECORDS> _freezeFrames;
     uint8_t _recordCount;
     bool _dtcSettingEnabled;
 
@@ -152,11 +154,11 @@ private:
     void captureFreezeFrame(uint32_t dtcId, uint8_t index);
     void persistRecord(uint8_t index);
 
-    uint32_t computeCrc32(uint8_t const* data, uint16_t length) const;
-    bool validateRecordCrc(DtcRecord const& record) const;
-    bool validateFreezeFrameCrc(FreezeFrameRecord const& record) const;
-    void updateRecordCrc(DtcRecord& record);
-    void updateFreezeFrameCrc(FreezeFrameRecord& record);
+    static uint32_t computeCrc32(etl::span<uint8_t const> const& data);
+    static bool validateRecordCrc(DtcRecord const& record);
+    static bool validateFreezeFrameCrc(FreezeFrameRecord const& record);
+    static void updateRecordCrc(DtcRecord& record);
+    static void updateFreezeFrameCrc(FreezeFrameRecord& record);
     uint64_t getNowNs() const;
 };
 

@@ -14,6 +14,7 @@
 #include "udsEventMgr/DebounceTimeBased.h"
 #include "udsEventMgr/IDebounceAlgorithm.h"
 #include "udsFaultMgr/FaultManagementConfig.h"
+#include <etl/array.h>
 #include <cstddef>
 #include <cstdint>
 
@@ -103,13 +104,13 @@ private:
         DebounceTimeBased algoTimeBased;
     };
 
-    EventEntry _events[MAX_EVENTS];
+    etl::array<EventEntry, MAX_EVENTS> _events;
     size_t _eventCount;
     FaultManager* _faultManager;
 
     EventEntry* findEvent(uint32_t eventId);
     EventEntry const* findEvent(uint32_t eventId) const;
-    IDebounceAlgorithm& getAlgorithm(EventEntry& entry);
+    static IDebounceAlgorithm& getAlgorithm(EventEntry& entry);
 };
 
 } // namespace uds
