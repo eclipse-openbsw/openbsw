@@ -30,6 +30,11 @@ class IEntrySerializerCallback : private ::etl::uncopyable
 public:
     IEntrySerializerCallback();
 
+    IEntrySerializerCallback(IEntrySerializerCallback const&)            = delete;
+    IEntrySerializerCallback& operator=(IEntrySerializerCallback const&) = delete;
+    IEntrySerializerCallback(IEntrySerializerCallback&&)                 = delete;
+    IEntrySerializerCallback& operator=(IEntrySerializerCallback&&)      = delete;
+
     virtual void onEntry(
         Timestamp timestamp,
         uint8_t componentIndex,

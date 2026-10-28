@@ -20,6 +20,11 @@ namespace logger
 class IPersistenceManager : public ::etl::uncopyable
 {
 public:
+    IPersistenceManager(IPersistenceManager const&)            = delete;
+    IPersistenceManager& operator=(IPersistenceManager const&) = delete;
+    IPersistenceManager(IPersistenceManager&&)                 = delete;
+    IPersistenceManager& operator=(IPersistenceManager&&)      = delete;
+
     virtual bool writeMapping(::etl::span<uint8_t const> const& src) const          = 0;
     virtual ::etl::span<uint8_t const> readMapping(::etl::span<uint8_t> dest) const = 0;
 

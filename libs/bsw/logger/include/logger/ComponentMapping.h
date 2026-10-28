@@ -52,7 +52,7 @@ public:
     getComponentInfoByName(::util::string::ConstString const& componentName) const;
 
 private:
-    uint8_t _levels[IndexUpperBound];
+    uint8_t _levels[IndexUpperBound]{};
     uint8_t _globalIndex;
     uint8_t _globalLevel;
     ::util::logger::LevelInfo::TableType _levelInfos;

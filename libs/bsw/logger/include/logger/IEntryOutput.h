@@ -36,6 +36,11 @@ class IEntryOutput : private ::etl::uncopyable
 public:
     IEntryOutput();
 
+    IEntryOutput(IEntryOutput const&)            = delete;
+    IEntryOutput& operator=(IEntryOutput const&) = delete;
+    IEntryOutput(IEntryOutput&&)                 = delete;
+    IEntryOutput& operator=(IEntryOutput&&)      = delete;
+
     virtual void outputEntry(
         E entryIndex,
         Timestamp timestamp,
