@@ -8,12 +8,17 @@
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
 
+#include "doip/common/DoIpTransportMessageProvidingListenerAdapter.h"
+#include "doip/common/DoIpTransportMessageProvidingListenerHelper.h"
 #include "doip/common/IDoIpSendJobCallback.h"
 #include "doip/common/IDoIpTcpConnection.h"
 #include "doip/common/IDoIpTransportMessageProvidingListener.h"
 #include "doip/common/IDoIpVehicleAnnouncementListener.h"
+#include "doip/server/DoIpServerTransportLayer.h"
+#include "doip/server/DoIpServerVehicleIdentificationParameters.h"
 #include "doip/server/IDoIpServerConnection.h"
 #include "doip/server/IDoIpServerConnectionHandlerCallback.h"
+#include "doip/server/IDoIpServerConnectionStateCallback.h"
 #include "doip/server/IDoIpServerEntityStatusCallback.h"
 #include "doip/server/IDoIpServerMessageHandler.h"
 #include "doip/server/IDoIpServerSocketHandler.h"
@@ -26,8 +31,8 @@
 
 #include <gtest/gtest.h>
 
-#include <type_traits>
-#include <utility>
+#include <etl/type_traits.h>
+#include <etl/utility.h>
 
 namespace doip
 {
@@ -165,6 +170,13 @@ struct EntityStatusCallback : IDoIpServerEntityStatusCallback
     EntityStatus getEntityStatus(uint8_t) const override { return EntityStatus(0U, 0U, 0U, 0U); }
 };
 
+struct ConnectionStateCallback : IDoIpServerConnectionStateCallback
+{
+    void connectionRoutingActive(uint16_t, DoIpTcpConnection::ConnectionType) override {}
+
+    void connectionClosed(uint16_t) override {}
+};
+
 struct SocketHandler : IDoIpServerSocketHandler
 {
     void start(IDoIpServerSocketHandlerListener&) override {}
@@ -256,10 +268,10 @@ struct MessageHandler : IDoIpServerMessageHandler
     void connectionClosed() override {}
 };
 
-static_assert(!std::is_copy_constructible<MessageHandler>::value);
-static_assert(!std::is_move_constructible<MessageHandler>::value);
-static_assert(!std::is_copy_assignable<MessageHandler>::value);
-static_assert(!std::is_move_assignable<MessageHandler>::value);
+static_assert(!etl::is_copy_constructible<MessageHandler>::value);
+static_assert(!etl::is_move_constructible<MessageHandler>::value);
+static_assert(!etl::is_copy_assignable<MessageHandler>::value);
+static_assert(!etl::is_move_assignable<MessageHandler>::value);
 
 template<class Interface>
 struct InterfaceWithState : Interface
@@ -288,17 +300,17 @@ TYPED_TEST_SUITE(DoIpInterfaceCopyTest, CopyOnlyInterfaces);
 TYPED_TEST(DoIpInterfaceCopyTest, PreservesCopyConstructionWithoutEnablingAssignment)
 {
     using Implementation = InterfaceWithState<TypeParam>;
-    static_assert(std::is_copy_constructible<Implementation>::value);
-    static_assert(std::is_move_constructible<Implementation>::value);
-    static_assert(!std::is_copy_assignable<Implementation>::value);
-    static_assert(!std::is_move_assignable<Implementation>::value);
+    static_assert(etl::is_copy_constructible<Implementation>::value);
+    static_assert(etl::is_move_constructible<Implementation>::value);
+    static_assert(!etl::is_copy_assignable<Implementation>::value);
+    static_assert(!etl::is_move_assignable<Implementation>::value);
 
     Implementation const original;
     auto copy = original;
     EXPECT_EQ(123U, copy.value);
     copy.value = 456U;
     EXPECT_EQ(123U, original.value);
-    auto const moved = std::move(copy);
+    auto const moved = etl::move(copy);
     EXPECT_EQ(456U, moved.value);
 }
 
@@ -308,6 +320,7 @@ class DoIpInterfaceAssignmentTest : public ::testing::Test
 
 using AssignableInterfaces = ::testing::Types<
     EntityStatusCallback,
+    ConnectionStateCallback,
     SocketHandler,
     SocketHandlerListener,
     ConnectionCreator,
@@ -320,10 +333,10 @@ TYPED_TEST_SUITE(DoIpInterfaceAssignmentTest, AssignableInterfaces);
 TYPED_TEST(DoIpInterfaceAssignmentTest, PreservesCopyConstructionAndAssignment)
 {
     using Implementation = InterfaceWithState<TypeParam>;
-    static_assert(std::is_copy_constructible<Implementation>::value);
-    static_assert(std::is_move_constructible<Implementation>::value);
-    static_assert(std::is_copy_assignable<Implementation>::value);
-    static_assert(std::is_move_assignable<Implementation>::value);
+    static_assert(etl::is_copy_constructible<Implementation>::value);
+    static_assert(etl::is_move_constructible<Implementation>::value);
+    static_assert(etl::is_copy_assignable<Implementation>::value);
+    static_assert(etl::is_move_assignable<Implementation>::value);
 
     Implementation const original;
     auto copy = original;
@@ -333,10 +346,52 @@ TYPED_TEST(DoIpInterfaceAssignmentTest, PreservesCopyConstructionAndAssignment)
     Implementation assigned;
     assigned = copy;
     EXPECT_EQ(456U, assigned.value);
-    auto moved = std::move(copy);
+    auto moved = ::etl::move(copy);
     EXPECT_EQ(456U, moved.value);
-    assigned = std::move(moved);
+    assigned = etl::move(moved);
     EXPECT_EQ(456U, assigned.value);
+}
+
+/**
+ * Verify concrete adapters remain nonvirtual, copy-constructible and nonassignable,
+ * while announcement parameter values remain copyable and assignable.
+ */
+TEST(DoIpInterfaceLifetimeTest, PreservesAdapterConstructionAndParameterAssignment)
+{
+    using Adapter = DoIpTransportMessageProvidingListenerAdapter;
+    using Helper  = DoIpTransportMessageProvidingListenerHelper;
+    static_assert(!::etl::has_virtual_destructor<Adapter>::value);
+    static_assert(!::etl::has_virtual_destructor<Helper>::value);
+    static_assert(::etl::is_destructible<Adapter>::value);
+    static_assert(::etl::is_destructible<Helper>::value);
+    static_assert(::etl::is_copy_constructible<Adapter>::value);
+    static_assert(::etl::is_move_constructible<Adapter>::value);
+    static_assert(!::etl::is_copy_assignable<Adapter>::value);
+    static_assert(!::etl::is_move_assignable<Adapter>::value);
+    static_assert(::etl::is_copy_constructible<Helper>::value);
+    static_assert(::etl::is_move_constructible<Helper>::value);
+    static_assert(!::etl::is_copy_assignable<Helper>::value);
+    static_assert(!::etl::is_move_assignable<Helper>::value);
+    static_assert(!::etl::has_virtual_destructor<DoIpServerVehicleIdentificationParameters>::value);
+
+    DoIpServerVehicleIdentificationParameters original(123U, 456U, 7U);
+    auto copy  = original;
+    auto moved = etl::move(copy);
+    DoIpServerVehicleIdentificationParameters assigned(1U, 2U, 3U);
+    assigned = moved;
+    assigned = ::etl::move(moved);
+    EXPECT_EQ(123U, assigned.getAnnounceWait());
+    EXPECT_EQ(456U, assigned.getAnnounceInterval());
+    EXPECT_EQ(7U, assigned.getAnnounceCount());
+}
+
+/**
+ * Verify the transport layer retains protected destruction despite an inherited virtual destructor.
+ */
+TEST(DoIpInterfaceLifetimeTest, PreservesProtectedTransportLayerDestruction)
+{
+    static_assert(::etl::has_virtual_destructor<DoIpServerTransportLayer>::value);
+    static_assert(!::etl::is_destructible<DoIpServerTransportLayer>::value);
 }
 } // namespace
 } // namespace test

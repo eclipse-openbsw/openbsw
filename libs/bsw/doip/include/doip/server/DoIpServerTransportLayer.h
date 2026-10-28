@@ -38,6 +38,8 @@ class IDoIpServerTransportLayerCallback;
  * Class implementing a transport layer on a given bus.
  */
 // multiple inheritance of interfaces is OK
+// Destruction is already virtual through a base; keep protected access for retained callbacks.
+// NOLINTNEXTLINE(cppcoreguidelines-virtual-class-destructor)
 class DoIpServerTransportLayer
 : public ::transport::AbstractTransportLayer
 , private IDoIpServerTransportConnectionProviderCallback
@@ -134,7 +136,7 @@ protected:
         AliveCheckHelperPool& aliveCheckHelperPool);
 
     // The connection configuration and provider retain callbacks to this instance.
-    ~DoIpServerTransportLayer()                                          = default;
+    ~DoIpServerTransportLayer() override                                 = default;
     DoIpServerTransportLayer(DoIpServerTransportLayer const&)            = delete;
     DoIpServerTransportLayer(DoIpServerTransportLayer&&)                 = delete;
     DoIpServerTransportLayer& operator=(DoIpServerTransportLayer const&) = delete;

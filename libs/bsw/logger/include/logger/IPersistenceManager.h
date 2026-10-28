@@ -24,6 +24,8 @@ public:
     virtual ::etl::span<uint8_t const> readMapping(::etl::span<uint8_t> dest) const = 0;
 
 protected:
+    ~IPersistenceManager() = default;
+
     IPersistenceManager() {}
 };
 

@@ -35,6 +35,9 @@ public:
         = 0;
     virtual void readLevels()  = 0;
     virtual void writeLevels() = 0;
+
+protected:
+    ~IComponentConfig() = default;
 };
 
 inline IComponentConfig::IComponentConfig() : ::etl::uncopyable() {}

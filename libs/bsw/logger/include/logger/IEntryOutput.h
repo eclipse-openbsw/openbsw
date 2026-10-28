@@ -44,6 +44,9 @@ public:
         char const* str,
         ::util::format::IPrintfArgumentReader& argReader)
         = 0;
+
+protected:
+    ~IEntryOutput() = default;
 };
 
 template<class E, class Timestamp>

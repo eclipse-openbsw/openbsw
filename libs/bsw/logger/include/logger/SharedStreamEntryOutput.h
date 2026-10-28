@@ -18,7 +18,7 @@
 namespace logger
 {
 template<class E = uint32_t, class Timestamp = uint32_t>
-class SharedStreamEntryOutput : public IEntryOutput<E, Timestamp>
+class SharedStreamEntryOutput final : public IEntryOutput<E, Timestamp>
 {
 public:
     explicit SharedStreamEntryOutput(

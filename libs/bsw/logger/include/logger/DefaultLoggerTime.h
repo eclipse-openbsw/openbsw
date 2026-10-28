@@ -21,7 +21,7 @@ template<
     class Timepoint = ::etl::chrono::time_point<
         ::etl::chrono::high_resolution_clock,
         ::etl::chrono::duration<uint32_t, ::etl::milli>>>
-class DefaultLoggerTime : public ILoggerTime<typename Timepoint::duration::rep>
+class DefaultLoggerTime final : public ILoggerTime<typename Timepoint::duration::rep>
 {
 public:
     using TimestampType = typename Timepoint::duration::rep;
@@ -55,6 +55,7 @@ void DefaultLoggerTime<Timepoint>::formatTimestamp(
     ::util::stream::IOutputStream& outputStream, TimestampType const& timestamp) const
 {
     ::util::format::StringWriter writer(outputStream);
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg): preserve the public printf-format API
     (void)writer.printf(_timeFormat, timestamp);
 }
 

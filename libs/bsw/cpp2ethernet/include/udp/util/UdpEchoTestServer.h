@@ -22,7 +22,7 @@ namespace udp
  * A simple class that listens on a given IP address and port and will echo received data back to
  * the sender.
  */
-class UdpEchoTestServer : public ::udp::IDataListener
+class UdpEchoTestServer final : public ::udp::IDataListener
 {
 public:
     /**

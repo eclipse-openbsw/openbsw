@@ -23,6 +23,9 @@ public:
     ILoggerListener();
 
     virtual void logAvailable() = 0;
+
+protected:
+    ~ILoggerListener() = default;
 };
 
 inline ILoggerListener::ILoggerListener() : ::etl::bidirectional_link<0>(), ::etl::uncopyable() {}

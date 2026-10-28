@@ -92,6 +92,8 @@ public:
     }
 
 protected:
+    ~AbstractServerSocket() = default;
+
     /** AbstractServerSockets port */
     uint16_t _port;
     /** reference to ISocketProvidingConnectionListener */

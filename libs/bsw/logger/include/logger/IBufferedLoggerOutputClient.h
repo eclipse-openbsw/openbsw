@@ -27,6 +27,9 @@ public:
     virtual void addListener(ILoggerListener& listener)          = 0;
     virtual void removeListener(ILoggerListener& listener)       = 0;
     virtual bool outputEntry(IEntryOutput<E, Timestamp>& output) = 0;
+
+protected:
+    ~IBufferedLoggerOutputClient() = default;
 };
 
 template<class E, class Timestamp>

@@ -191,6 +191,7 @@ private:
             (void)writer.write("\x1b[");
             for (uint8_t i = 0U; i < length; ++i)
             {
+                // NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg): Writer exposes a printf API
                 (void)writer.write((i != 0U) ? ";" : nullptr).printf("%d", formatCodes[i]);
             }
             (void)writer.write("m");

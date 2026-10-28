@@ -24,7 +24,7 @@ namespace doip
 /**
  * Callback based implementation for accessing vehicle identification data.
  */
-class DoIpServerVehicleIdentification : public IDoIpServerVehicleIdentificationCallback
+class DoIpServerVehicleIdentification final : public IDoIpServerVehicleIdentificationCallback
 {
 public:
     /** Fills a given span with the vehicle's VIN. */
@@ -60,6 +60,12 @@ public:
         GetPowerModeCallback getPowerModeCallback,
         OnVirReceivedCallback onVirReceivedCallback,
         ::etl::imap<uint16_t, IDoIpUdpOemMessageHandler*> const* const oemMessageHandlers);
+
+    ~DoIpServerVehicleIdentification()                                                 = default;
+    DoIpServerVehicleIdentification(DoIpServerVehicleIdentification const&)            = default;
+    DoIpServerVehicleIdentification(DoIpServerVehicleIdentification&&)                 = default;
+    DoIpServerVehicleIdentification& operator=(DoIpServerVehicleIdentification const&) = delete;
+    DoIpServerVehicleIdentification& operator=(DoIpServerVehicleIdentification&&)      = delete;
 
     void getVin(VinType vin) override;
     void getGid(GidType gid) override;

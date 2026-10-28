@@ -33,7 +33,7 @@ class DoIpServerTransportConnectionConfig;
 /**
  * Class that handles transport message sending and reception.
  */
-class DoIpServerTransportMessageHandler
+class DoIpServerTransportMessageHandler final
 : public IDoIpServerMessageHandler
 , private IDoIpSendJobCallback<DoIpTransportMessageSendJob>
 {
@@ -50,6 +50,12 @@ public:
         ::etl::ipool& diagnosticSendJobBlockPool,
         ::etl::ipool& protocolSendJobBlockPool,
         DoIpServerTransportConnectionConfig const& config);
+
+    ~DoIpServerTransportMessageHandler()                                        = default;
+    DoIpServerTransportMessageHandler(DoIpServerTransportMessageHandler const&) = delete;
+    DoIpServerTransportMessageHandler(DoIpServerTransportMessageHandler&&)      = delete;
+    DoIpServerTransportMessageHandler& operator=(DoIpServerTransportMessageHandler const&) = delete;
+    DoIpServerTransportMessageHandler& operator=(DoIpServerTransportMessageHandler&&)      = delete;
 
     /**
      * Initiate sending of a transport message.

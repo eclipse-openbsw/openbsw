@@ -29,6 +29,9 @@ public:
     virtual void
     formatTimestamp(::util::stream::IOutputStream& outputStream, T const& timestamp) const
         = 0;
+
+protected:
+    ~ILoggerTime() = default;
 };
 
 template<class T>

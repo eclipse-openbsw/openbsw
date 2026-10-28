@@ -25,7 +25,8 @@ namespace doip
  * specialized interface is not available this helper forwards the calls to the mandatory generic
  * fall-back interface and maps the return values to reasonable DoIP NACK codes.
  */
-class DoIpTransportMessageProvidingListenerHelper : public IDoIpTransportMessageProvidingListener
+class DoIpTransportMessageProvidingListenerHelper final
+: public IDoIpTransportMessageProvidingListener
 {
 public:
     /**
@@ -36,6 +37,18 @@ public:
      */
     explicit DoIpTransportMessageProvidingListenerHelper(
         ::transport::ITransportMessageProvidingListener& fallbackTransportMessageProvidingListener);
+
+    ~DoIpTransportMessageProvidingListenerHelper() = default;
+    DoIpTransportMessageProvidingListenerHelper(DoIpTransportMessageProvidingListenerHelper const&)
+        = default;
+    DoIpTransportMessageProvidingListenerHelper(DoIpTransportMessageProvidingListenerHelper&&)
+        = default;
+    DoIpTransportMessageProvidingListenerHelper&
+    operator=(DoIpTransportMessageProvidingListenerHelper const&)
+        = delete;
+    DoIpTransportMessageProvidingListenerHelper&
+    operator=(DoIpTransportMessageProvidingListenerHelper&&)
+        = delete;
 
     /**
      * Set the interface to wrap.

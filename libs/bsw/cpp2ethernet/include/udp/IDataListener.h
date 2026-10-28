@@ -27,6 +27,7 @@ class IDataListener
 {
 protected:
     IDataListener();
+    ~IDataListener() = default;
 
 public:
     IDataListener(IDataListener const&)            = delete;

@@ -55,6 +55,9 @@ public:
      * the data has been received by the remote system.
      */
     virtual void dataSent(uint16_t length, SendResult result) = 0;
+
+protected:
+    ~IDataSendNotificationListener() = default;
 };
 
 } // namespace tcp
