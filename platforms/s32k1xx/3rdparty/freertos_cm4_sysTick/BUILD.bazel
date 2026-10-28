@@ -23,11 +23,15 @@ cc_library(
 cc_library(
     name = "freertos_cm4_sys_tick",
     srcs = ["src/port.c"],
+    # Third-party port uses an unused-but-set variable intentionally.
     copts = ["-Wno-unused-but-set-variable"],
     implementation_deps = [
         "//libs/bsp/bspInterrupts:bsp_interrupts",
     ],
-    target_compatible_with = ["//bazel/platform/constraints/soc:s32k148"],
+    target_compatible_with = [
+        "//bazel/platform/constraints/soc:s32k148",
+        "@platforms//os:none",
+    ],
     visibility = ["//visibility:public"],
     deps = [
         ":freertos_cm4_sys_tick_port_headers",
