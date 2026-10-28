@@ -44,6 +44,9 @@ public:
 
     StringWriter(StringWriter const&)            = delete;
     StringWriter& operator=(StringWriter const&) = delete;
+    StringWriter(StringWriter&&)                 = delete;
+    StringWriter& operator=(StringWriter&&)      = delete;
+    ~StringWriter()                              = default;
 
     /**
      * Writes a end-of-line character (\\n) to the stream.

@@ -26,7 +26,13 @@ namespace command
 class ICommand : public ::etl::forward_link<0>
 {
 public:
+    ICommand()          = default;
+    virtual ~ICommand() = default;
+
+    ICommand(ICommand const&)            = delete;
     ICommand& operator=(ICommand const&) = delete;
+    ICommand(ICommand&&)                 = delete;
+    ICommand& operator=(ICommand&&)      = delete;
 
     /**
      * enumeration defining results of command execution.
@@ -47,9 +53,13 @@ public:
     class IHelpCallback
     {
     public:
-        IHelpCallback() = default;
+        IHelpCallback()          = default;
+        virtual ~IHelpCallback() = default;
 
+        IHelpCallback(IHelpCallback const&)            = delete;
         IHelpCallback& operator=(IHelpCallback const&) = delete;
+        IHelpCallback(IHelpCallback&&)                 = delete;
+        IHelpCallback& operator=(IHelpCallback&&)      = delete;
 
         /**
          * Called to indicate that the help information about a command will begin.
@@ -73,9 +83,9 @@ public:
     class ExecuteResult
     {
     public:
-        explicit ExecuteResult(Result const result = ICommand::Result::OK)
-        : ExecuteResult(result, {}, nullptr)
-        {}
+        ExecuteResult() : ExecuteResult(ICommand::Result::OK) {}
+
+        explicit ExecuteResult(Result const result) : ExecuteResult(result, {}, nullptr) {}
 
         ExecuteResult(
             Result const result, ::util::string::ConstString const& suffix, ICommand* const cmd)
@@ -83,6 +93,10 @@ public:
         {}
 
         ExecuteResult(ExecuteResult const& src) = default;
+        ExecuteResult(ExecuteResult&&) noexcept = default;
+        ~ExecuteResult()                        = default;
+
+        ExecuteResult& operator=(ExecuteResult&&) noexcept = default;
 
         bool isValid() const { return _result == Result::OK; }
 

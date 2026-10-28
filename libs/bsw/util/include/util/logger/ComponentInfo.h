@@ -50,8 +50,11 @@ public:
     {}
 
     ComponentInfo(ComponentInfo const& src) = default;
+    ComponentInfo(ComponentInfo&&) noexcept = default;
+    ~ComponentInfo()                        = default;
 
     ComponentInfo& operator=(ComponentInfo const& src);
+    ComponentInfo& operator=(ComponentInfo&&) noexcept = default;
 
     /**
      * Check for validity of info structure.

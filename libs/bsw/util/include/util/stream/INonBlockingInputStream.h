@@ -24,10 +24,13 @@ namespace stream
 class INonBlockingInputStream
 {
 public:
-    INonBlockingInputStream() = default;
+    INonBlockingInputStream()          = default;
+    virtual ~INonBlockingInputStream() = default;
 
     INonBlockingInputStream(INonBlockingInputStream const&)            = delete;
     INonBlockingInputStream& operator=(INonBlockingInputStream const&) = delete;
+    INonBlockingInputStream(INonBlockingInputStream&&)                 = delete;
+    INonBlockingInputStream& operator=(INonBlockingInputStream&&)      = delete;
 
     /**
      * Indicates whether or not the stream ends i.e. reading makes sense.

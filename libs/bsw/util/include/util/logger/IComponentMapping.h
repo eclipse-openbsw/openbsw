@@ -24,8 +24,12 @@ namespace logger
 class IComponentMapping
 {
 public:
+    virtual ~IComponentMapping() = default;
+
     IComponentMapping(IComponentMapping const&)            = delete;
     IComponentMapping& operator=(IComponentMapping const&) = delete;
+    IComponentMapping(IComponentMapping&&)                 = delete;
+    IComponentMapping& operator=(IComponentMapping&&)      = delete;
 
     /**
      * Filter function for logging. Checks whether a log message for a certain component, defined

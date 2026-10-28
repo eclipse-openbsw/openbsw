@@ -175,7 +175,7 @@ void PrintfFormatter::formatIntParam(ParamInfo const& paramInfo, ParamVariant co
     ptrdiff_t digitCount      = static_cast<ptrdiff_t>(buf.size() - bufferStart);
     ptrdiff_t totalCount
         = digitCount + static_cast<ptrdiff_t>(signLength) + static_cast<ptrdiff_t>(prefixLength);
-    ptrdiff_t precision;
+    ptrdiff_t precision = 0;
     if (paramInfo._precision >= 0)
     {
         if ((paramInfo._precision == 0) && (sign == 0))
@@ -219,7 +219,7 @@ size_t PrintfFormatter::formatIntDatatype(
                                            ? ::etl::string_view("0123456789ABCDEF")
                                            : ::etl::string_view("0123456789abcdef");
 
-    size_t ret;
+    size_t ret = 0U;
 
     switch (paramInfo._datatype)
     {

@@ -35,6 +35,12 @@ public:
 
     Enum(Enum const& e);
 
+    Enum(Enum&& e) : Enum(static_cast<Enum const&>(e)) {}
+
+    ~Enum() = default;
+
+    Enum& operator=(Enum&& e) { return operator=(static_cast<Enum const&>(e)); }
+
     Enum& operator=(Enum const& e)
     {
         if (this != &e)

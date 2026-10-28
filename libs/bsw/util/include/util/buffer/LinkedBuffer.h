@@ -66,6 +66,9 @@ public:
 
     LinkedBuffer(LinkedBuffer const&)            = delete;
     LinkedBuffer& operator=(LinkedBuffer const&) = delete;
+    LinkedBuffer(LinkedBuffer&&)                 = delete;
+    LinkedBuffer& operator=(LinkedBuffer&&)      = delete;
+    ~LinkedBuffer()                              = default;
 
     ::etl::span<T>& getBuffer() { return _buffer; }
 
