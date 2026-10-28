@@ -8,19 +8,24 @@
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
 #include "udsEventMgr/EventManager.h"
+#include "udsEventMgr/DebounceCounter.h"
+#include "udsEventMgr/DebounceTimeBased.h"
+#include "udsEventMgr/IDebounceAlgorithm.h"
 #include "udsFaultMgr/FaultManager.h"
+#include <cstddef>
+#include <cstdint>
 
 namespace uds
 {
 
-EventManager::EventManager() : _eventCount(0U), _faultManager(nullptr)
+EventManager::EventManager() : _events(), _eventCount(0U), _faultManager(nullptr)
 {
-    for (size_t i = 0U; i < MAX_EVENTS; ++i)
+    for (EventEntry& entry : _events)
     {
-        _events[i].active         = false;
-        _events[i].suppressed     = false;
-        _events[i].status         = EventStatus::PREPASSED;
-        _events[i].activeAlgoType = DebounceAlgorithmType::IMMEDIATE;
+        entry.active         = false;
+        entry.suppressed     = false;
+        entry.status         = EventStatus::PREPASSED;
+        entry.activeAlgoType = DebounceAlgorithmType::IMMEDIATE;
     }
 }
 
