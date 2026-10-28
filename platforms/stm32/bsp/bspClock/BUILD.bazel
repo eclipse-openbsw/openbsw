@@ -1,0 +1,41 @@
+# *******************************************************************************
+# Copyright (c) 2026 Accenture
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+
+load("@rules_cc//cc:cc_library.bzl", "cc_library")
+
+cc_library(
+    name = "bsp_clock_f4",
+    srcs = ["src/clockConfig_f4.cpp"],
+    hdrs = ["include/clock/clockConfig.h"],
+    implementation_deps = ["//platforms/stm32/bsp/bspMcu:bsp_mcu"],
+    strip_include_prefix = "include",
+    target_compatible_with = ["//bazel/platform/constraints/soc:stm32f4"],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "bsp_clock_g4",
+    srcs = ["src/clockConfig_g4.cpp"],
+    hdrs = ["include/clock/clockConfig.h"],
+    implementation_deps = ["//platforms/stm32/bsp/bspMcu:bsp_mcu"],
+    strip_include_prefix = "include",
+    target_compatible_with = ["//bazel/platform/constraints/soc:stm32g4"],
+    visibility = ["//visibility:public"],
+)
+
+alias(
+    name = "bsp_clock",
+    actual = select({
+        "//bazel/platform/constraints/soc:is_stm32f4": ":bsp_clock_f4",
+        "//bazel/platform/constraints/soc:is_stm32g4": ":bsp_clock_g4",
+        "//conditions:default": "//bazel/config:no_implementation",
+    }),
+    visibility = ["//visibility:public"],
+)

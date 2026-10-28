@@ -177,6 +177,20 @@ platform(
     parents = [":posix"],
 )
 
+# POSIX CAN FD app platform variant. Enables the 64-byte CAN FD frame code path.
+platform(
+    name = "posix_canfd",
+    flags = ["--//bazel/config/features:can0_use_fd=true"],
+    parents = [":posix"],
+)
+
+# POSIX tracing app platform variant. Enables the runtime tracer.
+platform(
+    name = "posix_tracing",
+    flags = ["--//libs/bsw/runtime:tracing=true"],
+    parents = [":posix"],
+)
+
 # S32K148 app platform. NXP Cortex-M4 with FreeRTOS, targeting the S32K148EVB.
 platform(
     name = "s32k148",
@@ -312,10 +326,7 @@ platform(
         # BSP layer
         "--//executables/referenceApp/safety/safeSupervisor:bsp_mcu=//platforms/stm32/bsp/bspMcu:bsp_mcu",
         "--//libs/bsp/bspInterrupts:bsp_interrupts_impl=//platforms/stm32/bsp/bspInterruptsImpl:bsp_interrupts_impl",
-        "--//platforms/stm32/bsp/bspCan:bsp_can=//platforms/stm32/bsp/bspCan:bsp_can_fdcan",
-        "--//platforms/stm32/bsp/bspMcu:bsp_mcu_chip_headers_impl=//platforms/stm32/bsp/bspMcu:bsp_mcu_chip_headers_g4",
-        "--//platforms/stm32/bsp/bspMcu:bsp_mcu_chip_defines_impl=//platforms/stm32/bsp/bspMcu:bsp_mcu_chip_defines_g4",
-        "--//platforms/stm32/bsp/bspMcu:bsp_mcu_startup_impl=//platforms/stm32/bsp/bspMcu:bsp_mcu_startup_g4",
+        "--//bazel/config/bsp:bsp_configuration=//executables/referenceApp/platforms/nucleo_g474re/bspConfiguration:bsp_configuration_headers",
 
         # FreeRTOS port and hooks
         "--//libs/3rdparty/freeRtos:freertos_port=//platforms/stm32/3rdparty/freertos_cm4_sysTick:freertos_cm4_sys_tick_port_headers",
@@ -323,6 +334,11 @@ platform(
         "--//libs/3rdparty/freeRtos:freertos_os_hooks=//executables/referenceApp/platforms/nucleo_g474re/main:freertos_os_hooks",
         "--//libs/3rdparty/freeRtos:freertos_impl=//libs/3rdparty/freeRtos:freertos",
 
+        # ThreadX port and hooks
+        "--//libs/3rdparty/threadx:threadx_port_headers=//platforms/stm32/3rdparty/threadx:threadx_cortex_m4_port_headers",
+        "--//libs/3rdparty/threadx:threadx_port_impl=//platforms/stm32/3rdparty/threadx:threadx_cortex_m4",
+        "--//libs/3rdparty/threadx:threadx_os_hooks=//executables/referenceApp/platforms/nucleo_g474re/main:threadx_os_hooks",
+        "--//libs/bsw/asyncThreadX:threadx_core_configuration=//executables/referenceApp/platforms/nucleo_g474re/threadXCoreConfiguration:threadx_core_configuration",
         # Async / configuration
         "--//libs/bsw/asyncFreeRtos:freertos_core_configuration=//executables/referenceApp/platforms/nucleo_g474re/freeRtosCoreConfiguration:freertos_core_configuration",
         "--//libs/bsw/async:async_platform=//libs/bsw/asyncFreeRtos:async_freertos",
@@ -417,10 +433,7 @@ platform(
         # BSP layer
         "--//executables/referenceApp/safety/safeSupervisor:bsp_mcu=//platforms/stm32/bsp/bspMcu:bsp_mcu",
         "--//libs/bsp/bspInterrupts:bsp_interrupts_impl=//platforms/stm32/bsp/bspInterruptsImpl:bsp_interrupts_impl",
-        "--//platforms/stm32/bsp/bspCan:bsp_can=//platforms/stm32/bsp/bspCan:bsp_can_bxcan",
-        "--//platforms/stm32/bsp/bspMcu:bsp_mcu_chip_headers_impl=//platforms/stm32/bsp/bspMcu:bsp_mcu_chip_headers_f4",
-        "--//platforms/stm32/bsp/bspMcu:bsp_mcu_chip_defines_impl=//platforms/stm32/bsp/bspMcu:bsp_mcu_chip_defines_f4",
-        "--//platforms/stm32/bsp/bspMcu:bsp_mcu_startup_impl=//platforms/stm32/bsp/bspMcu:bsp_mcu_startup_f4",
+        "--//bazel/config/bsp:bsp_configuration=//executables/referenceApp/platforms/nucleo_f413zh/bspConfiguration:bsp_configuration_headers",
 
         # FreeRTOS port and hooks
         "--//libs/3rdparty/freeRtos:freertos_port=//platforms/stm32/3rdparty/freertos_cm4_sysTick:freertos_cm4_sys_tick_port_headers",
@@ -428,6 +441,11 @@ platform(
         "--//libs/3rdparty/freeRtos:freertos_os_hooks=//executables/referenceApp/platforms/nucleo_f413zh/main:freertos_os_hooks",
         "--//libs/3rdparty/freeRtos:freertos_impl=//libs/3rdparty/freeRtos:freertos",
 
+        # ThreadX port and hooks
+        "--//libs/3rdparty/threadx:threadx_port_headers=//platforms/stm32/3rdparty/threadx:threadx_cortex_m4_port_headers",
+        "--//libs/3rdparty/threadx:threadx_port_impl=//platforms/stm32/3rdparty/threadx:threadx_cortex_m4",
+        "--//libs/3rdparty/threadx:threadx_os_hooks=//executables/referenceApp/platforms/nucleo_f413zh/main:threadx_os_hooks",
+        "--//libs/bsw/asyncThreadX:threadx_core_configuration=//executables/referenceApp/platforms/nucleo_f413zh/threadXCoreConfiguration:threadx_core_configuration",
         # Async / configuration
         "--//libs/bsw/asyncFreeRtos:freertos_core_configuration=//executables/referenceApp/platforms/nucleo_f413zh/freeRtosCoreConfiguration:freertos_core_configuration",
         "--//libs/bsw/async:async_platform=//libs/bsw/asyncFreeRtos:async_freertos",

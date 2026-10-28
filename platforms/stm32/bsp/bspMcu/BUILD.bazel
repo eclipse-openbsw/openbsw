@@ -32,16 +32,14 @@ cc_library(
     target_compatible_with = ["//bazel/platform/constraints/soc:stm32f4"],
 )
 
-# Chip-family ST headers. Set by the platform via its flags.
-#   Override: --//platforms/stm32/bsp/bspMcu:bsp_mcu_chip_headers_impl=//path/to:your_headers
-label_flag(
-    name = "bsp_mcu_chip_headers_impl",
-    build_setting_default = "//bazel/config:no_implementation",
-)
-
 alias(
     name = "bsp_mcu_chip_headers",
-    actual = ":bsp_mcu_chip_headers_impl",
+    actual = select({
+        "//bazel/platform/constraints/soc:is_stm32g4": ":bsp_mcu_chip_headers_g4",
+        "//bazel/platform/constraints/soc:is_stm32f4": ":bsp_mcu_chip_headers_f4",
+        "//conditions:default": "//bazel/config:no_implementation",
+    }),
+    visibility = ["//visibility:public"],
 )
 
 cc_library(
@@ -66,17 +64,13 @@ cc_library(
     visibility = ["//visibility:public"],
 )
 
-# Chip-family compile definitions. Set by the platform via its flags.
-#   Override: --//platforms/stm32/bsp/bspMcu:bsp_mcu_chip_defines_impl=//path/to:your_defines
-label_flag(
-    name = "bsp_mcu_chip_defines_impl",
-    build_setting_default = "//bazel/config:no_implementation",
-    visibility = ["//visibility:public"],
-)
-
 alias(
     name = "bsp_mcu_chip_defines",
-    actual = ":bsp_mcu_chip_defines_impl",
+    actual = select({
+        "//bazel/platform/constraints/soc:is_stm32g4": ":bsp_mcu_chip_defines_g4",
+        "//bazel/platform/constraints/soc:is_stm32f4": ":bsp_mcu_chip_defines_f4",
+        "//conditions:default": "//bazel/config:no_implementation",
+    }),
     visibility = ["//visibility:public"],
 )
 
@@ -98,16 +92,14 @@ cc_library(
     ],
 )
 
-# Chip-family startup assembly. Set by the platform via its flags.
-#   Override: --//platforms/stm32/bsp/bspMcu:bsp_mcu_startup_impl=//path/to:your_startup
-label_flag(
-    name = "bsp_mcu_startup_impl",
-    build_setting_default = "//bazel/config:no_implementation",
-)
-
 alias(
     name = "bsp_mcu_startup",
-    actual = ":bsp_mcu_startup_impl",
+    actual = select({
+        "//bazel/platform/constraints/soc:is_stm32g4": ":bsp_mcu_startup_g4",
+        "//bazel/platform/constraints/soc:is_stm32f4": ":bsp_mcu_startup_f4",
+        "//conditions:default": "//bazel/config:no_implementation",
+    }),
+    visibility = ["//visibility:public"],
 )
 
 cc_library(
