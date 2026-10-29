@@ -17,7 +17,6 @@
 #include "someip/logger.h"
 
 #include <etl/algorithm.h>
-#include <algorithm>
 
 // Logger API uses printf-style varargs for fixed diagnostic messages in this module.
 // NOLINTBEGIN(cppcoreguidelines-pro-type-vararg)
