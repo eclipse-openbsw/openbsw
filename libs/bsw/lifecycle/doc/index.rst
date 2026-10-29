@@ -70,6 +70,34 @@ Lifecycle Logger
 ----------------
 The logging component ``::util::logger::LIFECYCLE`` can be used to perform lifecycle transition logging.
 
+At INFO, the manager logs completion of every INIT, RUN, or SHUTDOWN transition
+level, including levels with no components. Level starts and component starts
+and completions use DEBUG.
+
+Completion records have the following form:
+
+.. code-block:: text
+
+    Run level 7 done current=7 target=7
+    Shutdown level 1 done current=0 target=0
+
+The transition name is ``Initialize``, ``Run``, or ``Shutdown``. The level after
+the name is the completed transition level; ``current`` is the resulting current
+level. In particular, shutting down level 1 results in current level 0. An
+``Initialize`` completion does not mean that the application has reached RUN.
+The ``target`` field is the manager's target when the record is emitted, not a
+snapshot of the original request; a new request can change it during a transition.
+
+A level completion is logged only after every pending component in that level
+has completed. The record is emitted before lifecycle listeners are notified, so
+a listener performing a final logger drain can include it. INIT completion does
+not notify lifecycle listeners.
+
+These summaries reduce routine lifecycle log volume and expose completion at
+INFO; they do not guarantee lossless logging. The application's logger formatter
+supplies any producing-core identity. Queue throughput, transport delivery, and
+ownership of the final logger drain remain application integration concerns.
+
 Lifecycle Listener
 ------------------
 In the LifecycleManager there are methods ``addLifecycleListener()`` and ``removeLifecycleListener()`` to add and remove listeners implementing `ILifecycleListener` from :source:`include/lifecycle/ILifecycleListener.h`. Each listener will be notified when a transition has happened.

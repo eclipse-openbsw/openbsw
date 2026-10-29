@@ -68,22 +68,24 @@ and the built executable should be found at
 ``build/posix-freertos/executables/referenceApp/application/Release/app.referenceApp.elf``.
 If you've built it with `--config Debug`, then the executable can be found at
 ``build/posix-freertos/executables/referenceApp/application/Debug/app.referenceApp.elf``.
-You should be able to run and see output like this in your shell terminal...
+You should be able to run and see output like this in your shell terminal.
+This excerpt illustrates startup targeting level 9 with LIFECYCLE DEBUG logging
+enabled; at INFO only the level completion summaries are shown.
 
 .. code-block:: bash
 
     $ build/posix-freertos/executables/referenceApp/application/Release/app.referenceApp.elf
     hello
-    106367434: RefApp: LIFECYCLE: INFO: Initialize level 1
-    106367434: RefApp: LIFECYCLE: INFO: Initialize runtime
+    106367434: RefApp: LIFECYCLE: DEBUG: Initialize level 1
+    106367434: RefApp: LIFECYCLE: DEBUG: Initialize runtime
     106367434: RefApp: LIFECYCLE: DEBUG: Initialize runtime done
-    106367434: RefApp: LIFECYCLE: DEBUG: Initialize level 1 done
-    106367434: RefApp: LIFECYCLE: INFO: Run level 1
-    106367434: RefApp: LIFECYCLE: INFO: Run runtime
+    106367434: RefApp: LIFECYCLE: INFO: Initialize level 1 done current=0 target=9
+    106367434: RefApp: LIFECYCLE: DEBUG: Run level 1
+    106367434: RefApp: LIFECYCLE: DEBUG: Run runtime
     106367434: RefApp: LIFECYCLE: DEBUG: Run runtime done
-    106367434: RefApp: LIFECYCLE: DEBUG: Run level 1 done
-    106367434: RefApp: LIFECYCLE: INFO: Initialize level 2
-    106367434: RefApp: LIFECYCLE: INFO: Initialize can
+    106367434: RefApp: LIFECYCLE: INFO: Run level 1 done current=1 target=9
+    106367434: RefApp: LIFECYCLE: DEBUG: Initialize level 2
+    106367434: RefApp: LIFECYCLE: DEBUG: Initialize can
     ...
 
 Press ``CTRL-C`` should exit the running application.

@@ -4,13 +4,19 @@ add_executable(
     src/lifecycle/LifecycleComponentTest.cpp
     src/lifecycle/LifecycleManagerForwarderTest.cpp
     src/lifecycle/LifecycleManagerInitializerTest.cpp
+    src/lifecycle/LifecycleManagerLoggingTest.cpp
     src/lifecycle/LifecycleManagerTest.cpp
     src/lifecycle/SimpleLifecycleComponentTest.cpp
     src/lifecycle/SingleContextLifecycleComponentTest.cpp)
 
 target_include_directories(lifecycle PUBLIC ../mock/gmock/include)
 
-target_link_libraries(lifecycleTest PUBLIC lifecycle lifecycleMock
-                                           asyncMockImpl gtest_main)
+target_link_libraries(
+    lifecycleTest
+    PUBLIC lifecycle
+           lifecycleMock
+           asyncMockImpl
+           utilMock
+           gtest_main)
 
 gtest_discover_tests(lifecycleTest PROPERTIES LABELS "lifecycleTest")

@@ -197,12 +197,15 @@ Assuming the serial port is assigned to the device ``/dev/ttyACM0`` then you can
 If the target board is powered and the software you built and flashed on the board is running then you should see output from it printed to the console,
 and if you type ``help`` you should see the commands available printed out, like this:
 
+The lifecycle detail lines below require LIFECYCLE DEBUG logging; the level
+completion summary remains visible at INFO.
+
    .. code-block:: bash
 
-      14: RefApp: LIFECYCLE: INFO: Run level 8
-      14: RefApp: LIFECYCLE: INFO: Run sysadmin
+      14: RefApp: LIFECYCLE: DEBUG: Run level 8
+      14: RefApp: LIFECYCLE: DEBUG: Run sysadmin
       14: RefApp: LIFECYCLE: DEBUG: Run sysadmin done
-      15: RefApp: LIFECYCLE: DEBUG: Run level 8 done
+      15: RefApp: LIFECYCLE: INFO: Run level 8 done current=8 target=9
       1022: RefApp: DEMO: DEBUG: Sending frame 0
       2022: RefApp: DEMO: DEBUG: Sending frame 1
       3022: RefApp: DEMO: DEBUG: Sending frame 2

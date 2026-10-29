@@ -32,7 +32,8 @@ The level command is used to switch to a specific level.
 
 Stop DemoSystem lifecycle using command **lc level 7**
 
-Below is the example usage:
+Below is the example usage with LIFECYCLE DEBUG logging enabled. At INFO only
+the lifecycle level completion summary is shown.
 
 .. code-block:: bash
 
@@ -40,9 +41,9 @@ Below is the example usage:
     ok
     10133: RefApp: CONSOLE: INFO: Received console command "lc level 7"
     10134: RefApp: CONSOLE: INFO: console command Succeeded
-    10135: RefApp: LIFECYCLE: INFO: Shutdown level 8
-    10135: RefApp: LIFECYCLE: INFO: Shutdown demo
+    10135: RefApp: LIFECYCLE: DEBUG: Shutdown level 8
+    10135: RefApp: LIFECYCLE: DEBUG: Shutdown demo
     10136: RefApp: LIFECYCLE: DEBUG: Shutdown demo done
-    10136: RefApp: LIFECYCLE: DEBUG: Shutdown level 8 done
+    10136: RefApp: LIFECYCLE: INFO: Shutdown level 8 done current=7 target=7
 
 Next: :ref:`learning_lifecycle`
