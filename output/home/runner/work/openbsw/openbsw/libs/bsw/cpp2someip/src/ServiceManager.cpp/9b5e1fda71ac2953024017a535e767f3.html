@@ -1,0 +1,437 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../../../../../../../../../static/css/style.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <title>Symbol - puncover</title>
+    
+</head>
+<body>
+    <div class="container" id="content">
+        <div class="page-header">
+            <nav class="navbar navbar-default" role="navigation">
+              <div class="container-fluid">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="../../../../../../../../../../index.html">
+                    Puncover
+                  </a>
+                </div>
+              </div>
+            </nav>
+          
+        </div>
+        <div id="inner_content">
+        
+    
+    <ol class="breadcrumb folders">
+        
+        <li><a href="../../../../../../../../../../home.html">home</a></li>
+        
+        <li><a href="../../../../../../../../../runner.html">runner</a></li>
+        
+        <li><a href="../../../../../../../../work.html">work</a></li>
+        
+        <li><a href="../../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../../openbsw.html">openbsw</a></li>
+        
+        <li><a href="../../../../../libs.html">libs</a></li>
+        
+        <li><a href="../../../../bsw.html">bsw</a></li>
+        
+        <li><a href="../../../cpp2someip.html">cpp2someip</a></li>
+        
+        <li ><a href="../../src.html">src</a>
+            </li>
+
+        
+        <li class="active"><a href="../ServiceManager.cpp.html">ServiceManager.cpp</a>:375
+            </li>
+        
+    </ol>
+
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <th>Function</th>
+                <td colspan="5">
+                    <span class="icon-function">someip::ServiceManager::getEventGroup(someip::ServiceDescription const&amp;) const</span>
+                </td>
+            </tr>
+
+            <tr>
+                <th rowspan="2"></th>
+                <th>Address</th>
+                <th>Remarks</th>
+                <th>Stack</th>
+                <th>Code</th>
+                <th>Static</th>
+            </tr>
+            <tr>
+                <td>0x00021734</td>
+                <td>
+    <span class="label label-success">x-module</span>
+    
+</td>
+                <td>32 (static)</td>
+                <td>156</td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th>Callers (2)</th>
+                <td colspan="5">
+                
+                    <a href="../SdServiceRegistry.cpp/3533b4f68a988ac63ac00fb36b7a7be4.html">someip::SdServiceRegistry::subscribeReceived(unsigned short, unsigned short, unsigned char, unsigned short, unsigned long, ip::IPAddress const&amp;, unsigned short, unsigned char) (580)</a>
+                    
+                        ,
+                    
+                
+                    <a href="../ServiceAnnouncer.cpp/cfae280575c0dd8b56cd5c3c60a6a4aa.html">someip::ServiceAnnouncer::respondToSubscribe(unsigned short, unsigned short, unsigned char, unsigned short, unsigned short, unsigned long, ip::IPAddress const&amp;, ip::IPAddress const&amp;, unsigned short, unsigned char) (212)</a>
+                    
+                
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Callees (1,
+                            <span title="sum of used bytes by all callees">
+                            Σ=56
+                            </span>
+                        )
+                    
+                </th>
+                <td colspan="5">
+                
+                    <a href="../../../util/include/util/logger/Logger.h/fee4073070054ecc160dbd4d6b194f36.html">util::logger::Logger::warn(unsigned char, char const*, ...) (56)</a>
+                    
+                
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    
+    <pre><a href="./59696b884495d08db9c6984f99850319.html">someip::ServiceManager::getService(someip::ServiceDescription const&amp;) const (136)</a></pre>
+    
+
+    <pre>
+
+    someip::ServiceManager::getEventGroup(someip::ServiceDescription const&) const():
+
+       21734:	e92d 47f0 	stmdb	sp!, {r4, r5, r6, r7, r8, r9, sl, lr}
+
+       21738:	890c      	ldrh	r4, [r1, #8]
+
+       2173a:	f64f 73ff 	movw	r3, #65535	@ 0xffff
+
+       2173e:	429c      	cmp	r4, r3
+
+       21740:	d036      	beq.n	217b0 <<a href="./9b5e1fda71ac2953024017a535e767f3.html">someip::ServiceManager::getEventGroup(someip::ServiceDescription const&) const</a>+0x7c>
+
+       21742:	894a      	ldrh	r2, [r1, #10]
+
+       21744:	429a      	cmp	r2, r3
+
+       21746:	d033      	beq.n	217b0 <<a href="./9b5e1fda71ac2953024017a535e767f3.html">someip::ServiceManager::getEventGroup(someip::ServiceDescription const&) const</a>+0x7c>
+
+       21748:	f891 9015 	ldrb.w	r9, [r1, #21]
+
+       2174c:	f1b9 0fff 	cmp.w	r9, #255	@ 0xff
+
+       21750:	d02e      	beq.n	217b0 <<a href="./9b5e1fda71ac2953024017a535e767f3.html">someip::ServiceManager::getEventGroup(someip::ServiceDescription const&) const</a>+0x7c>
+
+       21752:	f8b1 a00c 	ldrh.w	sl, [r1, #12]
+
+       21756:	459a      	cmp	sl, r3
+
+       21758:	d02a      	beq.n	217b0 <<a href="./9b5e1fda71ac2953024017a535e767f3.html">someip::ServiceManager::getEventGroup(someip::ServiceDescription const&) const</a>+0x7c>
+
+    _ZNK3etl19ireference_flat_setIPN6someip15ProvidedServiceENS1_14ServiceManager18LessThanComparatorEE6cbeginEv():
+
+       2175a:	6803      	ldr	r3, [r0, #0]
+
+       2175c:	681a      	ldr	r2, [r3, #0]
+
+    _ZNK3etl11pvoidvector6cbeginEv():
+
+       2175e:	6853      	ldr	r3, [r2, #4]
+
+    _ZNK3etl11pvoidvector4cendEv():
+
+       21760:	6895      	ldr	r5, [r2, #8]
+
+    someip::ServiceManager::getEventGroup(someip::ServiceDescription const&) const():
+
+       21762:	429d      	cmp	r5, r3
+
+    find_if<etl::ireference_flat_set<someip::ProvidedService*, someip::ServiceManager::LessThanComparator>::const_iterator, someip::ServiceManager::getEventGroup(const someip::ServiceDescription&) const::<lambda(const someip::ProvidedService*)> >():
+
+       21764:	d029      	beq.n	217ba <<a href="./9b5e1fda71ac2953024017a535e767f3.html">someip::ServiceManager::getEventGroup(someip::ServiceDescription const&) const</a>+0x86>
+
+       21766:	681a      	ldr	r2, [r3, #0]
+
+       21768:	6810      	ldr	r0, [r2, #0]
+
+    someip::ServiceManager::getEventGroup(someip::ServiceDescription const&) const():
+
+       2176a:	b348      	cbz	r0, 217c0 <<a href="./9b5e1fda71ac2953024017a535e767f3.html">someip::ServiceManager::getEventGroup(someip::ServiceDescription const&) const</a>+0x8c>
+
+    operator()():
+
+       2176c:	8902      	ldrh	r2, [r0, #8]
+
+       2176e:	4294      	cmp	r4, r2
+
+       21770:	d826      	bhi.n	217c0 <<a href="./9b5e1fda71ac2953024017a535e767f3.html">someip::ServiceManager::getEventGroup(someip::ServiceDescription const&) const</a>+0x8c>
+
+    someip::ServiceManager::getEventGroup(someip::ServiceDescription const&) const():
+
+       21772:	429d      	cmp	r5, r3
+
+       21774:	d021      	beq.n	217ba <<a href="./9b5e1fda71ac2953024017a535e767f3.html">someip::ServiceManager::getEventGroup(someip::ServiceDescription const&) const</a>+0x86>
+
+       21776:	3304      	adds	r3, #4
+
+       21778:	f64f 7eff 	movw	lr, #65535	@ 0xffff
+
+       2177c:	e006      	b.n	2178c <<a href="./9b5e1fda71ac2953024017a535e767f3.html">someip::ServiceManager::getEventGroup(someip::ServiceDescription const&) const</a>+0x58>
+
+       2177e:	42ab      	cmp	r3, r5
+
+       21780:	d01b      	beq.n	217ba <<a href="./9b5e1fda71ac2953024017a535e767f3.html">someip::ServiceManager::getEventGroup(someip::ServiceDescription const&) const</a>+0x86>
+
+       21782:	f8dc 2000 	ldr.w	r2, [ip]
+
+       21786:	6810      	ldr	r0, [r2, #0]
+
+       21788:	8902      	ldrh	r2, [r0, #8]
+
+       2178a:	3304      	adds	r3, #4
+
+       2178c:	4294      	cmp	r4, r2
+
+       2178e:	469c      	mov	ip, r3
+
+       21790:	d113      	bne.n	217ba <<a href="./9b5e1fda71ac2953024017a535e767f3.html">someip::ServiceManager::getEventGroup(someip::ServiceDescription const&) const</a>+0x86>
+
+       21792:	8982      	ldrh	r2, [r0, #12]
+
+       21794:	4572      	cmp	r2, lr
+
+       21796:	d0f2      	beq.n	2177e <<a href="./9b5e1fda71ac2953024017a535e767f3.html">someip::ServiceManager::getEventGroup(someip::ServiceDescription const&) const</a>+0x4a>
+
+       21798:	688f      	ldr	r7, [r1, #8]
+
+       2179a:	6886      	ldr	r6, [r0, #8]
+
+       2179c:	42b7      	cmp	r7, r6
+
+       2179e:	d1ee      	bne.n	2177e <<a href="./9b5e1fda71ac2953024017a535e767f3.html">someip::ServiceManager::getEventGroup(someip::ServiceDescription const&) const</a>+0x4a>
+
+       217a0:	f890 8015 	ldrb.w	r8, [r0, #21]
+
+       217a4:	45c8      	cmp	r8, r9
+
+       217a6:	d1ea      	bne.n	2177e <<a href="./9b5e1fda71ac2953024017a535e767f3.html">someip::ServiceManager::getEventGroup(someip::ServiceDescription const&) const</a>+0x4a>
+
+       217a8:	4592      	cmp	sl, r2
+
+       217aa:	d1e8      	bne.n	2177e <<a href="./9b5e1fda71ac2953024017a535e767f3.html">someip::ServiceManager::getEventGroup(someip::ServiceDescription const&) const</a>+0x4a>
+
+       217ac:	e8bd 87f0 	ldmia.w	sp!, {r4, r5, r6, r7, r8, r9, sl, pc}
+
+       217b0:	4b05      	ldr	r3, [pc, #20]	@ (217c8 <<a href="./9b5e1fda71ac2953024017a535e767f3.html">someip::ServiceManager::getEventGroup(someip::ServiceDescription const&) const</a>+0x94>)
+
+       217b2:	4906      	ldr	r1, [pc, #24]	@ (217cc <<a href="./9b5e1fda71ac2953024017a535e767f3.html">someip::ServiceManager::getEventGroup(someip::ServiceDescription const&) const</a>+0x98>)
+
+       217b4:	7818      	ldrb	r0, [r3, #0]
+
+       217b6:	f7e5 fbcf 	bl	6f58 <<a href="../../../util/include/util/logger/Logger.h/fee4073070054ecc160dbd4d6b194f36.html">util::logger::Logger::warn(unsigned char, char const*, ...)</a>>
+
+       217ba:	2000      	movs	r0, #0
+
+       217bc:	e8bd 87f0 	ldmia.w	sp!, {r4, r5, r6, r7, r8, r9, sl, pc}
+
+       217c0:	3304      	adds	r3, #4
+
+    find_if<etl::ireference_flat_set<someip::ProvidedService*, someip::ServiceManager::LessThanComparator>::const_iterator, someip::ServiceManager::getEventGroup(const someip::ServiceDescription&) const::<lambda(const someip::ProvidedService*)> >():
+
+       217c2:	429d      	cmp	r5, r3
+
+       217c4:	d1cf      	bne.n	21766 <<a href="./9b5e1fda71ac2953024017a535e767f3.html">someip::ServiceManager::getEventGroup(someip::ServiceDescription const&) const</a>+0x32>
+
+       217c6:	e7f8      	b.n	217ba <<a href="./9b5e1fda71ac2953024017a535e767f3.html">someip::ServiceManager::getEventGroup(someip::ServiceDescription const&) const</a>+0x86>
+
+       217c8:	20000004 	.word	0x20000004
+
+       217cc:	00047164 	.word	0x00047164
+
+    </pre>
+
+    
+    <pre><a href="./27521aab461967d6d0a96cea5a5f1e42.html">someip::ServiceManager::getHandler(someip::ServiceDescription const&amp;, someip::ServiceManager::FindServiceResult&amp;) const (164)</a></pre>
+    
+
+    
+        <h1>Stack Worst-Case Scenarios</h1>
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 212</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 124</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    212
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                48 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    124
+                    
+                    
+                </td>
+                <td class="col_size">68</td>
+                <td><a href="../../../util/src/util/logger/Logger.cpp/d658d7c78dcca1ca01e61ef198b3eeaa.html" class="icon-function">util::logger::Logger::doLog(unsigned char, util::logger::Level, char const*, std::__va_list)</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                    
+                    164
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                20 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">56</td>
+                <td><a href="../../../util/include/util/logger/Logger.h/fee4073070054ecc160dbd4d6b194f36.html" class="icon-function">util::logger::Logger::warn(unsigned char, char const*, ...)</a></td>
+            </tr>
+        
+        </tbody>
+        
+        <tfoot>
+            <tr>
+                <th></th>
+                <th class="col_size">144
+                </th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </tfoot>
+        
+    </table>
+        
+        
+        <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th rowspan="2">#</th>
+                <th colspan="2" style="text-align: center">Stack</th>
+                <th colspan="2" style="text-align: center">Code</th>
+                <th rowspan="2" width="100%">Name</th>
+            </tr>
+            <tr>
+                <th class="col_size">&sum; = 144</th>
+                <th class="col_size"></th>
+                <th class="col_size">&sum;= 736</th>
+                <th class="col_size"></th>
+            </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <th>1</th>
+                <td class="col_size">
+                    
+                    144
+                    
+                    
+                </td>
+                <td class="col_size">
+            
+                32 
+            
+                </td>
+                <td class="col_size">
+                    
+                    
+                    736
+                    
+                    
+                </td>
+                <td class="col_size">156</td>
+                <td><a href="./9b5e1fda71ac2953024017a535e767f3.html" class="icon-function">someip::ServiceManager::getEventGroup(someip::ServiceDescription const&amp;) const</a></td>
+            </tr>
+        
+            <tr>
+                <th>2</th>
+                <td class="col_size">
+                </td>
+                <td class="col_size">
+            
+                112 
+            
+                </td>
+                <td class="col_size">
+                    
+                </td>
+                <td class="col_size">580</td>
+                <td><a href="../SdServiceRegistry.cpp/3533b4f68a988ac63ac00fb36b7a7be4.html" class="icon-function">someip::SdServiceRegistry::subscribeReceived(unsigned short, unsigned short, unsigned char, unsigned short, unsigned long, ip::IPAddress const&amp;, unsigned short, unsigned char)</a></td>
+            </tr>
+        
+        </tbody>
+        
+    </table>
+        
+    
+
+
+        </div>
+    <div id="page-footer">
+        <hr>
+        
+            brought to you with 💖
+            by <a href="https://twitter.com/hbehrens">Heiko Behrens</a>
+            <span class="secondary">– MIT license, copyright © 2014-2026</span>
+        
+    </div>
+    </div>
+</body>
+</html>
