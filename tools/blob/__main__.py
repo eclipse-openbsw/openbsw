@@ -29,8 +29,10 @@ from blob.utils import (
     config,
 )
 from collections import OrderedDict
-from datetime import datetime as dt
 from itertools import accumulate, chain
+
+
+COPYRIGHT_YEAR = 2026
 
 
 class Blob:
@@ -245,7 +247,7 @@ class Cli:
                     }} // namespace {name_space}
                 """
             ).format(
-                year=dt.now().year,
+                year=COPYRIGHT_YEAR,
                 content=content,
                 name_space="blob",
                 name=args.name,
@@ -291,7 +293,7 @@ class Cli:
                    }} // namespace blob
                 """
             ).format(
-                year=dt.now().year,
+                year=COPYRIGHT_YEAR,
                 name=args.name,
                 entries=entries,
             )
@@ -341,7 +343,7 @@ class Cli:
                    }} // namespace blob
                 """
             ).format(
-                year=dt.now().year,
+                year=COPYRIGHT_YEAR,
                 name=args.name,
                 entries=",\n".join([f"    {k} = {v}" for k, v in metadata_enum.items()]),
             )

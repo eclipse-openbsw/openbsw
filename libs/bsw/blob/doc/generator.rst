@@ -23,11 +23,11 @@ create a venv:
 .. code-block:: console
 
     python3 -m venv tools/.venv
-    tools/.venv/bin/pip install -r tools/blob/requirements.txt
+    tools/.venv/bin/pip install -r tools/blob/requirements.lock
     # Activate before running any blob command:
     source tools/.venv/bin/activate
 
-The currently required package is ``crc==7.1.0`` (see ``tools/blob/requirements.txt``).
+The currently required package is ``crc==7.1.0`` (see ``tools/blob/requirements.lock``).
 
 Input format
 ------------
@@ -110,64 +110,58 @@ the routing graph, and generate a C++ header containing the routing channel IDs.
 Regenerating generated headers
 ------------------------------
 
-The script ``tools/blob/regenerate.sh`` regenerates all three generated headers.
-It accepts positional arguments so it can be reused by any project that vendors
-this repository:
+Routing headers can be generated in either of two ways:
+
+* Bazel uses the ``generate_routing`` rule in ``tools/blob/routing.bzl`` for hermetic, graph-tracked generation.
+* CMake and other non-Bazel builds use the standalone regeneration scripts.
+* Project wrappers regenerate checked-in headers for the reference application and tests.
+* Other integrations can invoke ``tools/blob/regenerate.sh`` with an input file and output directories.
+
+The standalone scripts require Python 3 with venv support. They install the
+locked dependency from ``tools/blob/requirements.lock`` into a user cache when
+it is not already available. The generated files are not post-processed, so the
+standalone scripts and Bazel rule produce identical output.
+
+For example, regenerate the reference application headers from the repository
+root:
 
 .. code-block:: console
 
-    tools/blob/regenerate.sh JSONL_FILE OUT_BLOB_DIR OUT_ROUTING_DIR
+    executables/referenceApp/configuration/regenerate.sh
 
-Run it from the **project root** with paths for the integrating project:
-
-.. code-block:: console
-
-    tools/blob/regenerate.sh \
-        path/to/routing.jsonl \
-        path/to/generated/blob/include \
-        path/to/generated/routing/include
+This command invokes the reference application's standalone wrapper. For other
+configurations, invoke the shared standalone script with the input and output
+directories:
 
 .. code-block:: console
 
-    # On a host machine — set up a venv first (once):
-    python3 -m venv tools/.venv
-    tools/.venv/bin/pip install -r tools/blob/requirements.txt
+    tools/blob/regenerate.sh INPUT.jsonl OUTPUT_BLOB_DIR OUTPUT_ROUTING_DIR
 
-    # Then run, pointing PYTHON at the venv interpreter:
-    PYTHON=tools/.venv/bin/python3 tools/blob/regenerate.sh \
-        path/to/routing.jsonl \
-        path/to/generated/blob/include \
-        path/to/generated/routing/include
+The following ``BUILD.bazel`` example creates a target that exposes generated
+headers to Bazel C++ consumers:
 
-The script resolves all paths to absolute before changing directory internally,
-so relative paths work as long as they are valid from the directory where you
-invoke the script. It writes:
+.. code-block:: python
 
-* ``OUT_BLOB_DIR/configuration.h`` — binary blob as a ``uint8_t`` array
-* ``OUT_BLOB_DIR/ConfigType.h`` — ``ConfigType`` enum
-* ``OUT_ROUTING_DIR/channelId.h`` — per-channel ID constants
+    load("//tools/blob:routing.bzl", "generate_routing")
 
-After regeneration, review the hand-maintained ``constants.h`` alongside
-``channelId.h`` if any channel IDs changed.
+    generate_routing(
+        name = "routing_configuration",
+        jsonl = "routing.jsonl",
+    )
 
-Manual equivalent
-+++++++++++++++++
+The rule provides these generated headers:
 
-The script runs these three commands (from the ``tools`` directory, with the venv
-active or the container's ``/opt/venv`` on ``PATH``):
+* ``blob/configuration.h`` — binary blob as a ``uint8_t`` array
+* ``blob/ConfigType.h`` — ``ConfigType`` enum
+* ``routing/channelId.h`` — per-channel ID constants
+* ``routing/constants.h`` — generated channel-count constants
+
+Both the Bazel rule and standalone script invoke the same deterministic Python
+generator, so generation logic is shared rather than duplicated.
+
+The standalone drift check does not require Bazel. To also verify Bazel output
+parity and the exported C++ include path, run this from the repository root:
 
 .. code-block:: console
 
-    cd tools
-    JSONL=../path/to/routing.jsonl
-    OUT=../path/to/generated/include
-
-    python3 -m blob binary -i "${JSONL}" -c blob.routing.table \
-        | python3 -m blob header data -n CONFIGURATION_BLOB \
-            -o "${OUT}/blob/configuration.h"
-
-    python3 -m blob header config-type \
-        -o "${OUT}/blob/ConfigType.h"
-
-    python3 -m blob.routing header "${JSONL}" \
-        -o "${OUT}/routing/channelId.h"
+    tools/blob/check_generated.sh --check-bazel

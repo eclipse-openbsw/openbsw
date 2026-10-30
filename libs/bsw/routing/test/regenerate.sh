@@ -9,30 +9,16 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 #
-# Wrapper script to regenerate blob headers for the routing test.
+# Regenerate the routing test's checked-in blob and routing headers.
 #
-# This script locates the project root and the tools/blob/regenerate.sh script,
-# then calls it with the correct paths for the routing test configuration.
+# Usage, from any working directory:
+#   libs/bsw/routing/test/regenerate.sh [PYTHON]
 #
-# Usage:
-#   regenerate.sh [PYTHON]
-#
-#   PYTHON  (optional) Python interpreter to use. If not provided, defaults to
-#           the PYTHON environment variable or python3.
-#
-# Examples:
-#   # From libs/bsw/routing/test/
-#   ./regenerate.sh
-#
-#   # From project root
-#   libs/bsw/routing/test/regenerate.sh
-#
-#   # With a custom Python interpreter
-#   PYTHON=/custom/python3 ./regenerate.sh
+# PYTHON may also be set in the environment. The shared script provisions its
+# locked Python dependency when needed; see tools/blob/regenerate.sh.
 
 set -euo pipefail
 
-# Find the project root by locating tools/blob/regenerate.sh
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="${SCRIPT_DIR}"
 while [[ "${PROJECT_ROOT}" != "/" ]]; do
@@ -47,13 +33,9 @@ if [[ ! -f "${PROJECT_ROOT}/tools/blob/regenerate.sh" ]]; then
     exit 1
 fi
 
-# Set paths relative to the project root
-JSONL="${PROJECT_ROOT}/libs/bsw/routing/test/routing.jsonl"
-OUT_BLOB="${PROJECT_ROOT}/libs/bsw/routing/test/include/blob"
-OUT_ROUTING="${PROJECT_ROOT}/libs/bsw/routing/test/include/routing"
-
-# Pass through PYTHON environment variable if set
 export PYTHON="${PYTHON:-${1:-python3}}"
 
-# Call the main regenerate script
-exec "${PROJECT_ROOT}/tools/blob/regenerate.sh" "${JSONL}" "${OUT_BLOB}" "${OUT_ROUTING}"
+exec "${PROJECT_ROOT}/tools/blob/regenerate.sh" \
+    "${PROJECT_ROOT}/libs/bsw/routing/test/routing.jsonl" \
+    "${PROJECT_ROOT}/libs/bsw/routing/test/include/blob" \
+    "${PROJECT_ROOT}/libs/bsw/routing/test/include/routing"
