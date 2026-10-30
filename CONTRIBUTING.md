@@ -55,6 +55,18 @@ To contribute your work you need to:
 4. Push to the Branch (`git push origin newBranchName`)
 5. Open a Pull Request
 
+### Use of AI
+
+AI tools are accepted as a tool for contributions, like any other development tool.
+
+* You do not mark or disclose AI assistance in commits, pull requests or issues.
+* You remain fully responsible for everything you contribute:
+  review, understand and test it before submitting.
+* All normal rules still apply, including the guidelines, the review process,
+  the automated builds and tests, and the Eclipse Contributor Agreement.
+
+Project-specific guidance for AI coding assistants is kept in [AGENTS.md](AGENTS.md).
+
 ## Eclipse Contributor Agreement
 
 Before your contribution can be accepted by the project team contributors must
