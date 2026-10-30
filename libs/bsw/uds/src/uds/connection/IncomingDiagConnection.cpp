@@ -266,7 +266,10 @@ DiagReturnCode::Type IncomingDiagConnection::startNestedRequest(
     {
         AbstractDiagJob* const pSender = _sender;
         _sender                        = nullptr;
+        // responseSent() implementations call connection.terminate() first, which may
+        // destroy this connection; must not touch `this` afterward
         pSender->responseSent(*this, AbstractDiagJob::RESPONSE_SEND_FAILED);
+        return ::uds::ErrorCode::SEND_FAILED;
     }
     if (_connectionTerminationIsPending && (0U == _numPendingMessageProcessedCallbacks))
     {
@@ -508,16 +511,18 @@ void IncomingDiagConnection::asyncTransportMessageProcessed(
         {
             AbstractDiagJob* const pSender = _sender;
             _sender                        = nullptr;
+            // responseSent() implementations call connection.terminate() first, which may
+            // destroy this connection (returned to the pool); this must be the last access
+            // to `this` on this path
             pSender->responseSent(
                 *this,
                 (status == ProcessingResult::PROCESSED_NO_ERROR)
                     ? AbstractDiagJob::RESPONSE_SENT
                     : AbstractDiagJob::RESPONSE_SEND_FAILED);
+            return;
         }
-        else
-        { // a response is pending and responsePending has been sent
-            (void)sendResponse();
-        }
+        // a response is pending and responsePending has been sent
+        (void)sendResponse();
     }
     if (_numPendingMessageProcessedCallbacks == 0U)
     { // all responses have been sent
