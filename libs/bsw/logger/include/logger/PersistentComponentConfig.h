@@ -90,8 +90,9 @@ uint8_t PersistentComponentConfig<IndexUpperBound, Crc8>::getComponentCrc(
     {
         ::util::logger::ComponentInfo const componentInfo = this->getComponentInfo(idx);
         ::util::string::ConstString const name(componentInfo.getName().getString());
-        uint8_t const* const bytes = reinterpret_cast<uint8_t const*>(name.data());
-        crc.add(bytes, bytes + name.length());
+        auto const bytes
+            = ::etl::span<char const>(name.data(), name.length()).reinterpret_as<uint8_t const>();
+        crc.add(bytes.begin(), bytes.end());
     }
     return crc.value();
 }

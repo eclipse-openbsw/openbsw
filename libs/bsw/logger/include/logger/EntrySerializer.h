@@ -30,6 +30,11 @@ class IEntrySerializerCallback : private ::etl::uncopyable
 public:
     IEntrySerializerCallback();
 
+    IEntrySerializerCallback(IEntrySerializerCallback const&)            = delete;
+    IEntrySerializerCallback& operator=(IEntrySerializerCallback const&) = delete;
+    IEntrySerializerCallback(IEntrySerializerCallback&&)                 = delete;
+    IEntrySerializerCallback& operator=(IEntrySerializerCallback&&)      = delete;
+
     virtual void onEntry(
         Timestamp timestamp,
         uint8_t componentIndex,
@@ -37,6 +42,9 @@ public:
         char const* str,
         ::util::format::IPrintfArgumentReader& argReader)
         = 0;
+
+protected:
+    ~IEntrySerializerCallback() = default;
 };
 
 template<class T = uint16_t, class Timestamp = uint32_t, class ReadOnlyPredicate = SectionPredicate>
@@ -179,6 +187,8 @@ T EntrySerializer<T, Timestamp, ReadOnlyPredicate>::serialize(
 }
 
 template<class T, class Timestamp, class ReadOnlyPredicate>
+// The printf API returns an ABI-stable union tagged by ParamDatatype.
+// NOLINTBEGIN(cppcoreguidelines-pro-type-union-access)
 void EntrySerializer<T, Timestamp, ReadOnlyPredicate>::deserialize(
     ::etl::span<uint8_t const> const& srcBuffer, IEntrySerializerCallback<Timestamp>& callback)
 {
@@ -201,6 +211,8 @@ void EntrySerializer<T, Timestamp, ReadOnlyPredicate>::deserialize(
             reader);
     }
 }
+
+// NOLINTEND(cppcoreguidelines-pro-type-union-access)
 
 template<class T, class Timestamp, class ReadOnlyPredicate>
 EntrySerializer<T, Timestamp, ReadOnlyPredicate>::EntryWriter::EntryWriter(
@@ -227,6 +239,8 @@ void EntrySerializer<T, Timestamp, ReadOnlyPredicate>::EntryWriter::copyParamVar
 }
 
 template<class T, class Timestamp, class ReadOnlyPredicate>
+// Serialize only the member selected by the printf API's ParamDatatype tag.
+// NOLINTBEGIN(cppcoreguidelines-pro-type-union-access)
 void EntrySerializer<T, Timestamp, ReadOnlyPredicate>::EntryWriter::writeParamVariant(
     ::util::format::ParamDatatype const datatype, ::util::format::ParamVariant const& variant)
 {
@@ -295,6 +309,8 @@ void EntrySerializer<T, Timestamp, ReadOnlyPredicate>::EntryWriter::writeParamVa
         }
     }
 }
+
+// NOLINTEND(cppcoreguidelines-pro-type-union-access)
 
 template<class T, class Timestamp, class ReadOnlyPredicate>
 void EntrySerializer<T, Timestamp, ReadOnlyPredicate>::EntryWriter::writeString(
@@ -403,6 +419,8 @@ void EntrySerializer<T, Timestamp, ReadOnlyPredicate>::EntryReader::readBytes(
 }
 
 template<class T, class Timestamp, class ReadOnlyPredicate>
+// Reconstruct the ABI-stable printf union using the serialized datatype tag.
+// NOLINTBEGIN(cppcoreguidelines-pro-type-union-access)
 void EntrySerializer<T, Timestamp, ReadOnlyPredicate>::EntryReader::readParamVariant()
 {
     uint8_t datatype = static_cast<uint8_t>(DATATYPE_NONE);
@@ -453,7 +471,10 @@ void EntrySerializer<T, Timestamp, ReadOnlyPredicate>::EntryReader::readParamVar
             _variant._sizedCharPtrValue = &_plainSizedString;
             _plainSizedString._data     = readCharArray();
             size_t const limit          = static_cast<size_t>(
-                _bufferEnd - reinterpret_cast<uint8_t const*>(_plainSizedString._data));
+                _bufferEnd
+                - ::etl::span<char const>(_plainSizedString._data, 0U)
+                      .template reinterpret_as<uint8_t const>()
+                      .data());
             _plainSizedString._length = ::etl::strlen(_plainSizedString._data, limit);
             break;
         }
@@ -465,12 +486,15 @@ void EntrySerializer<T, Timestamp, ReadOnlyPredicate>::EntryReader::readParamVar
     }
 }
 
+// NOLINTEND(cppcoreguidelines-pro-type-union-access)
+
 template<class T, class Timestamp, class ReadOnlyPredicate>
 char const* EntrySerializer<T, Timestamp, ReadOnlyPredicate>::EntryReader::readCharArray()
 {
     T length = 0U;
     readBytes(&length, static_cast<T>(sizeof(length)));
-    char const* const string = reinterpret_cast<char const*>(_read);
+    char const* const string
+        = ::etl::span<uint8_t const>(_read, length).template reinterpret_as<char const>().data();
     _read += length;
     return string;
 }

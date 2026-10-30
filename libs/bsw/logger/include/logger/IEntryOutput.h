@@ -36,6 +36,11 @@ class IEntryOutput : private ::etl::uncopyable
 public:
     IEntryOutput();
 
+    IEntryOutput(IEntryOutput const&)            = delete;
+    IEntryOutput& operator=(IEntryOutput const&) = delete;
+    IEntryOutput(IEntryOutput&&)                 = delete;
+    IEntryOutput& operator=(IEntryOutput&&)      = delete;
+
     virtual void outputEntry(
         E entryIndex,
         Timestamp timestamp,
@@ -44,6 +49,9 @@ public:
         char const* str,
         ::util::format::IPrintfArgumentReader& argReader)
         = 0;
+
+protected:
+    ~IEntryOutput() = default;
 };
 
 template<class E, class Timestamp>

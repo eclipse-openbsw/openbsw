@@ -63,9 +63,7 @@ public:
      */
     inline void write_string_view(::etl::string_view const& view)
     {
-        ::etl::span<uint8_t const> buffer{
-            reinterpret_cast<uint8_t const*>(view.begin()), view.size()};
-        write(buffer);
+        write(::etl::span<char const>(view.data(), view.size()).reinterpret_as<uint8_t const>());
     }
 };
 

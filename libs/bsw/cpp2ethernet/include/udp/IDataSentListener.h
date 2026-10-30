@@ -17,7 +17,8 @@ namespace udp
 class IDataSentListener
 {
 protected:
-    IDataSentListener() = default;
+    IDataSentListener()  = default;
+    ~IDataSentListener() = default;
 
 public:
     IDataSentListener(IDataSentListener const&)                 = delete;
