@@ -24,10 +24,12 @@ build:stm32g4 --platforms=//bazel/platform:stm32g4
 build:stm32f4 --platforms=//bazel/platform:stm32f4
 build:stm32 --config=stm32g4
 
+
 # Chip-specific unit-test app platform variants. Binaries run on the Linux
 # host and carry the SoC constraint so chip-family BSP implementations resolve.
 build:stm32g4_unit_test --platforms=//bazel/platform:stm32g4_unit_test
 build:stm32f4_unit_test --platforms=//bazel/platform:stm32f4_unit_test
+build:s32k148_unit_test --platforms=//bazel/platform:s32k148_unit_test
 
 # POSIX is the default app platform. A plain `bazel build //...` builds for
 # the Linux host. Use `--config=posix` to make the choice explicit, or
@@ -35,6 +37,7 @@ build:stm32f4_unit_test --platforms=//bazel/platform:stm32f4_unit_test
 build --platforms=//bazel/platform:posix
 build:posix --platforms=//bazel/platform:posix
 build:posix_unit_test --platforms=//bazel/platform:posix_unit_test
+build:posix_threadx --platforms=//bazel/platform:posix_threadx
 
 # `bazel test //...` runs unit tests on the Linux host. Hardware drivers are
 # replaced by mocks and test targets become visible for execution.
