@@ -16,23 +16,31 @@
 
 namespace uds
 {
+namespace
+{
+::etl::array<uint8_t, 3U> makeImplementedRequest(uint16_t const identifier)
+{
+    return {
+        {0x2EU,
+         static_cast<uint8_t>((identifier >> 8U) & 0xFFU),
+         static_cast<uint8_t>(identifier & 0xFFU)}};
+}
+} // namespace
+
 WriteIdentifierToMemory::WriteIdentifierToMemory(
     uint16_t const identifier,
     ::etl::span<uint8_t> const& memory,
     DiagSessionMask const sessionMask)
-: DataIdentifierJob(_implementedRequest, sessionMask), _memory(memory)
-{
-    _implementedRequest[0] = 0x2EU;
-    _implementedRequest[1] = static_cast<uint8_t>((identifier >> 8U) & 0xFFU);
-    _implementedRequest[2] = static_cast<uint8_t>(identifier & 0xFFU);
-}
+: DataIdentifierJob(makeImplementedRequest(identifier), sessionMask), _memory(memory)
+{}
 
 DiagReturnCode::Type
 WriteIdentifierToMemory::verify(uint8_t const* const request, uint16_t const requestLength)
 {
-    if (!compare(request, getImplementedRequest() + 1U, 2U))
+    DiagReturnCode::Type const result = DataIdentifierJob::verify(request, requestLength);
+    if (result != DiagReturnCode::OK)
     {
-        return DiagReturnCode::NOT_RESPONSIBLE;
+        return result;
     }
 
     if (requestLength != (_memory.size() + 2))
