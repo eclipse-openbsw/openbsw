@@ -10,8 +10,6 @@
 
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
 
-# Chip-family ST header libraries. Each strips its subdirectory prefix so
-# consumers include device headers directly by name.
 cc_library(
     name = "bsp_mcu_chip_headers_g4",
     hdrs = [
@@ -46,7 +44,6 @@ alias(
     actual = ":bsp_mcu_chip_headers_impl",
 )
 
-# Chip-family compile definitions. Each set is tied to one chip family.
 cc_library(
     name = "bsp_mcu_chip_defines_g4",
     defines = [
@@ -83,13 +80,9 @@ alias(
     visibility = ["//visibility:public"],
 )
 
-# Chip-family startup assembly. Each file contains the reset vector table and
-# low-level init for its device.
 cc_library(
     name = "bsp_mcu_startup_g4",
     srcs = ["startup/startup_stm32g474xx.S"],
-    # Bare-metal only. The host assembler cannot process ARM pseudo-ops so this
-    # target must not build on unit test platforms.
     target_compatible_with = [
         "//bazel/platform/constraints/soc:stm32g4",
         "@platforms//os:none",
@@ -99,8 +92,6 @@ cc_library(
 cc_library(
     name = "bsp_mcu_startup_f4",
     srcs = ["startup/startup_stm32f413xx.S"],
-    # Bare-metal only. The host assembler cannot process ARM pseudo-ops so this
-    # target must not build on unit test platforms.
     target_compatible_with = [
         "//bazel/platform/constraints/soc:stm32f4",
         "@platforms//os:none",
