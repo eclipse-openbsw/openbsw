@@ -10,12 +10,32 @@
 
 #include "middleware/bindings/someip/ConsumerEndpoint.h"
 
+#include "ip/IPEndpoint.h"
+#include "middleware/bindings/someip/ISomeIpConnection.h"
+#include "middleware/bindings/someip/MemberBinding.h"
+#include "middleware/bindings/someip/MemberTable.h"
+#include "middleware/bindings/someip/PayloadSlot.h"
 #include "middleware/bindings/someip/PayloadTransfer.h"
+#include "middleware/bindings/someip/SomeIpBridgeConfig.h"
+#include "middleware/core/types.h"
+#include "someip/INetwork.h"
+#include "someip/IRpcSender.h"
+#include "someip/IServiceListener.h"
+#include "someip/ISomeIpSerializable.h"
+#include "someip/ISomeIpStack.h"
+#include "someip/RpcChannel.h"
+#include "someip/RpcClosure.h"
+#include "someip/ServiceDescription.h"
+#include "someip/ServiceInfo.h"
+#include "someip/ServiceQuery.h"
+#include "someip/SomeIpConstants.h"
+#include "someip/SomeIpParser.h"
 
-namespace middleware::bindings::someip
-{
+#include <etl/vector.h>
 
-namespace internal
+#include <cstdint>
+
+namespace middleware::bindings::someip::internal
 {
 
 using ::middleware::core::ErrorState;
@@ -213,7 +233,7 @@ void ConsumerEndpoint::serviceStatusChanged(
 }
 
 void ConsumerEndpoint::updateEventgroupDescription(
-    ::someip::ServiceDescription&, ServiceStatus const)
+    ::someip::ServiceDescription& /*service*/, ServiceStatus const /*status*/)
 {}
 
 ::someip::MethodDetail const* ConsumerEndpoint::getMethodDetail(uint16_t const methodId) const
@@ -227,13 +247,16 @@ void ConsumerEndpoint::updateEventgroupDescription(
     return &binding->methodDetail;
 }
 
-::someip::EventDetail const* ConsumerEndpoint::getEventDetail(uint16_t) const { return nullptr; }
+::someip::EventDetail const* ConsumerEndpoint::getEventDetail(uint16_t /*eventId*/) const
+{
+    return nullptr;
+}
 
 void ConsumerEndpoint::eventReceived(
     ::someip::service_id::type const serviceId,
     uint16_t const eventId,
     ::someip::instance_id::type const instanceId,
-    ::someip::major_version::type const,
+    ::someip::major_version::type const /*majorVersion*/,
     ::someip::SomeIpParser& parser)
 {
     if ((serviceId != _serviceId) || (instanceId != _config.consumedInstanceId))
@@ -321,7 +344,7 @@ ErrorState ConsumerEndpoint::errorStateFor(::someip::ServiceResultCode const res
 
 void ConsumerEndpoint::advanceSession(::someip::RpcChannel& channel)
 {
-    uint16_t const next = static_cast<uint16_t>(channel.getSessionId() + 1U);
+    auto const next = static_cast<uint16_t>(channel.getSessionId() + 1U);
     channel.setSessionId((next == 0U) ? 1U : next);
 }
 
@@ -409,6 +432,4 @@ void ConsumerEndpoint::restartQueryPhase(::someip::ServiceQuery& query)
     query.repetitionCount = 0U;
 }
 
-} // namespace internal
-
-} // namespace middleware::bindings::someip
+} // namespace middleware::bindings::someip::internal

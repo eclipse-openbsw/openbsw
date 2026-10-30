@@ -10,15 +10,31 @@
 
 #include "middleware/bindings/someip/ProviderEndpoint.h"
 
+#include "ip/IPAddress.h"
 #include "ip/IPEndpoint.h"
+#include "middleware/bindings/someip/ISomeIpConnection.h"
+#include "middleware/bindings/someip/MemberBinding.h"
+#include "middleware/bindings/someip/MemberTable.h"
+#include "middleware/bindings/someip/PayloadSlot.h"
 #include "middleware/bindings/someip/PayloadTransfer.h"
+#include "middleware/bindings/someip/SomeIpBridgeConfig.h"
 #include "middleware/core/MessagePayloadBuilder.h"
 #include "middleware/core/types.h"
+#include "someip/IEventSender.h"
+#include "someip/ISomeIpSerializable.h"
+#include "someip/ISomeIpStack.h"
+#include "someip/RpcClosure.h"
+#include "someip/ServiceDescription.h"
+#include "someip/ServiceHandler.h"
+#include "someip/ServiceInfo.h"
+#include "someip/SomeIpConstants.h"
 
-namespace middleware::bindings::someip
-{
+#include <etl/span.h>
 
-namespace internal
+#include <cstddef>
+#include <cstdint>
+
+namespace middleware::bindings::someip::internal
 {
 
 using ::middleware::core::HRESULT;
@@ -31,7 +47,7 @@ ProviderEndpoint::ProviderEndpoint(
     SomeIpBridgeConfig const& config,
     MemberTable& members,
     RpcCallbackPool& callbackPool,
-    ::etl::span<::someip::CallDoneClosure*> const pendingRequests)
+    ::etl::span<::someip::CallDoneClosure*> const& pendingRequests)
 : ::someip::ServiceHandler(callbackPool)
 , _connection(connection)
 , _stack(stack)
@@ -45,7 +61,7 @@ ProviderEndpoint::ProviderEndpoint(
 void ProviderEndpoint::bindEvent(
     uint16_t const memberId,
     IPayloadSlot& payloadSlot,
-    ::etl::span<uint16_t const> const eventGroupIds,
+    ::etl::span<uint16_t const> const& eventGroupIds,
     bool const isMulticast)
 {
     MemberBinding binding;
@@ -169,21 +185,21 @@ bool ProviderEndpoint::sendResponse(Message const& msg, MemberBinding const& bin
 }
 
 bool ProviderEndpoint::notifyInitialEvents(
-    ::someip::service_id::type,
-    ::someip::instance_id::type,
-    ::someip::major_version::type,
-    ::someip::eventgroup_id::type,
-    ::ip::IPAddress const&,
-    ::someip::port::type,
-    ::someip::proto::type)
+    ::someip::service_id::type /*serviceId*/,
+    ::someip::instance_id::type /*instanceId*/,
+    ::someip::major_version::type /*majorVersion*/,
+    ::someip::eventgroup_id::type /*eventGroupId*/,
+    ::ip::IPAddress const& /*address*/,
+    ::someip::port::type /*port*/,
+    ::someip::proto::type /*proto*/)
 {
     return true;
 }
 
 void ProviderEndpoint::callMethod(
     uint16_t const methodId,
-    ::someip::ISomeIpSerializable const*,
-    ::someip::ISomeIpSerializable* const,
+    ::someip::ISomeIpSerializable const* /*pRequest*/,
+    ::someip::ISomeIpSerializable* const /*pResponse*/,
     ::someip::CallDoneClosure& done)
 {
     MemberBinding const* const binding = _members.find(_config.instanceId, methodId);
@@ -297,6 +313,4 @@ void ProviderEndpoint::releasePendingRequest(uint16_t const requestId)
     return desc;
 }
 
-} // namespace internal
-
-} // namespace middleware::bindings::someip
+} // namespace middleware::bindings::someip::internal

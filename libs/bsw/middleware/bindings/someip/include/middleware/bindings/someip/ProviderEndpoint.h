@@ -58,7 +58,7 @@ public:
         SomeIpBridgeConfig const& config,
         MemberTable& members,
         RpcCallbackPool& callbackPool,
-        ::etl::span<::someip::CallDoneClosure*> pendingRequests);
+        ::etl::span<::someip::CallDoneClosure*> const& pendingRequests);
 
     ProviderEndpoint(ProviderEndpoint const&)            = delete;
     ProviderEndpoint& operator=(ProviderEndpoint const&) = delete;
@@ -67,7 +67,7 @@ public:
     void bindEvent(
         uint16_t memberId,
         IPayloadSlot& payloadSlot,
-        ::etl::span<uint16_t const> eventGroupIds,
+        ::etl::span<uint16_t const> const& eventGroupIds,
         bool isMulticast);
 
     /** \see SomeIpServiceEndpoint::bindMethod() */

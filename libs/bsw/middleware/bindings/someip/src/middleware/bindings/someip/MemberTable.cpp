@@ -10,15 +10,17 @@
 
 #include "middleware/bindings/someip/MemberTable.h"
 
+#include "middleware/bindings/someip/MemberBinding.h"
+#include "someip/ServiceInfo.h"
 #include "someip/SomeIpConstants.h"
 
 #include <etl/algorithm.h>
 #include <etl/error_handler.h>
+#include <etl/vector.h>
 
-namespace middleware::bindings::someip
-{
+#include <cstdint>
 
-namespace internal
+namespace middleware::bindings::someip::internal
 {
 
 MemberTable::MemberTable(::etl::ivector<MemberBinding>& bindings) : _bindings(bindings) {}
@@ -31,7 +33,7 @@ void MemberTable::add(MemberBinding const& binding)
             ETL_ERROR_GENERIC("SomeIpServiceEndpoint: binding table full, raise MaxMembers"));
         return;
     }
-    auto const position = ::etl::upper_bound(
+    auto* const position = ::etl::upper_bound(
         _bindings.begin(),
         _bindings.end(),
         keyOf(binding),
@@ -41,13 +43,13 @@ void MemberTable::add(MemberBinding const& binding)
 
 MemberBinding const* MemberTable::find(uint16_t const instanceId, uint16_t const memberId) const
 {
-    uint32_t const key = keyOf(instanceId, memberId);
-    auto const it      = ::etl::lower_bound(
+    uint32_t const key   = keyOf(instanceId, memberId);
+    auto* const position = ::etl::lower_bound(
         _bindings.begin(),
         _bindings.end(),
         key,
-        [](MemberBinding const& entry, uint32_t const k) { return keyOf(entry) < k; });
-    return ((it != _bindings.end()) && (keyOf(*it) == key)) ? &(*it) : nullptr;
+        [](MemberBinding const& entry, uint32_t const target) { return keyOf(entry) < target; });
+    return ((position != _bindings.end()) && (keyOf(*position) == key)) ? position : nullptr;
 }
 
 ::someip::MethodDetail
@@ -81,7 +83,9 @@ MemberTable::methodDetailFor(uint16_t const methodId, MemberBinding::Kind const 
 
 uint32_t MemberTable::keyOf(uint16_t const instanceId, uint16_t const memberId)
 {
-    return (static_cast<uint32_t>(instanceId) << 16U) | static_cast<uint32_t>(memberId);
+    constexpr uint32_t INSTANCE_ID_SHIFT = 16U;
+    return (static_cast<uint32_t>(instanceId) << INSTANCE_ID_SHIFT)
+           | static_cast<uint32_t>(memberId);
 }
 
 uint32_t MemberTable::keyOf(MemberBinding const& binding)
@@ -89,6 +93,4 @@ uint32_t MemberTable::keyOf(MemberBinding const& binding)
     return keyOf(binding.instanceId, binding.memberId);
 }
 
-} // namespace internal
-
-} // namespace middleware::bindings::someip
+} // namespace middleware::bindings::someip::internal

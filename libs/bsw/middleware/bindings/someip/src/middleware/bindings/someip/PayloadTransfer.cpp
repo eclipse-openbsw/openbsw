@@ -10,13 +10,13 @@
 
 #include "middleware/bindings/someip/PayloadTransfer.h"
 
+#include "middleware/bindings/someip/ISomeIpConnection.h"
+#include "middleware/bindings/someip/PayloadSlot.h"
+#include "middleware/core/Message.h"
 #include "middleware/core/MessagePayloadBuilder.h"
 #include "middleware/core/types.h"
 
-namespace middleware::bindings::someip
-{
-
-namespace internal
+namespace middleware::bindings::someip::internal
 {
 
 using ::middleware::core::Message;
@@ -53,6 +53,4 @@ void allocateAndDispatch(
     dispatchAndRelease(connection, msg, /*hasPayload=*/true);
 }
 
-} // namespace internal
-
-} // namespace middleware::bindings::someip
+} // namespace middleware::bindings::someip::internal
