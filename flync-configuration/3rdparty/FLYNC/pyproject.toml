@@ -1,0 +1,157 @@
+[project]
+name = "flync"
+dynamic = ["version"]
+description = "FLYNC language is a declarative, modular format for describing the configuration of automotive networks and applications. It captures key elements of the vehicle's E/E architecture—such as ECUs, SOME/IP interfaces, and system topology—in a structured and human-readable way."
+authors = [
+    {name = "Iago Alvarez", email = "iago.alvarez@technica-engineering.de"},
+    {name = "Dr. Lars Völker", email = "lars.voelker@technica-engineering.de"}
+]
+readme = "README.md"
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+keywords = ["automotive", "network", "someip", "topology", "flync"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent"
+]
+requires-python = ">=3.12,<3.15"
+dependencies = [
+    "click==8.5.0",
+    "rich",
+    "typer",
+    "pydantic==2.13.5",
+    "pyyaml==6.0.3",
+    "ruamel.yaml>=0.18,<0.19",
+    "pydantic-extra-types>=2.11.0,!=2.11.2,<3.0.0",
+    "cantools>=43.0.0,<43.1.0",
+    "semver>=3.0,<4.0",
+    "platformdirs (>=4.9.4,<5.0.0)",
+    "polyfactory==3.3.0",
+    "filelock>=3.13,<4.0",
+    "pluggy>=1.6.0,<2.0.0",
+]
+
+[project.optional-dependencies]
+tui = ["textual>=0.80.0"]
+gui = ["PySide6>=6.6.0"]
+all = ["flync[tui,gui]"]
+
+[project.scripts]
+flync = "flync_cli:app"
+puml-to-html = "flync_cli.convert_puml:main"
+flync-converter = "flync_converter.cli:main"
+flync-converter-interactive = "flync_converter.cli:main_interactive"
+flync-converter-gui = "flync_converter.cli:main_gui"
+
+[project.urls]
+Homepage = "https://flync-language.com"
+Repository = "https://github.com/Technica-Engineering/FLYNC"
+Documentation = "https://github.com/Technica-Engineering/FLYNC"
+
+[dependency-groups]
+dev = [
+    "pre-commit>=4.4.0,<5.0.0",
+    {include-group = "test"},
+    {include-group = "static-analysis"},
+]
+test = [
+    "pytest",
+    "pytest-cov",
+    "coverage",
+    "iniconfig",
+    "python-dotenv",
+    "pydantic-yaml==1.7.0",
+    "black>=26.1.0,<27.0.0",
+    "mypy>=2.0.0,<3.0.0",
+    "pytest-xdist>=3.8.0,<4.0.0",
+    "pytest-timeout>=2.3.1,<3.0.0",
+    "approvaltests>=19.0.0,<20.0.0",
+    "pytest-benchmark>=5.2.3,<6.0.0",
+    "junitparser>=5.0.1,<6.0.0",
+]
+# pytest-qt aborts collection outright when no Qt binding is importable, so it
+# must not be part of `test` — a core-only `uv sync && uv run pytest` has to work.
+# Install it only together with the `gui` extra.
+qt = [
+    "pytest-qt>=4.0,<5.0",
+]
+static-analysis = [
+    "black>=26.1.0,<27.0.0",
+    "colorama>=0.4.6,<0.5.0",
+    "flake8>=7.3.0,<8.0.0",
+    "flake8-html>=0.4.3,<0.5.0",
+    "isort>=9.0.1,<9.1.0",
+    "mypy>=2.0.0,<3.0.0",
+    "types-pyyaml>=6.0.12.20250915,<7.0.0",
+]
+docs = [
+    "furo>=2024.0.0",
+    "sphinx>=7.0",
+    "roman-numerals==4.1.0",
+    "sphinx-needs==8.3.1",
+    "sphinx-autobuild==2025.8.25",
+    "sphinx-autodoc-typehints",
+    "pydantic-2-mermaid",
+    "sphinxcontrib-plantuml==0.31",
+    "sphinx-copybutton==0.5.2",
+    "sphinx-design>=0.7.0,<0.8.0",
+    "sphinxcontrib-mermaid>=2.0.0,<3.0.0",
+    "myst-parser>=5.0.0,<6.0.0",
+]
+deploy = [
+    "twine>=7.0.0,<8.0.0",
+]
+
+[tool.uv]
+default-groups = ["dev"]
+
+[tool.uv.sources]
+pydantic-2-mermaid = { git = "https://github.com/LarsVoelker/pydantic-2-mermaid.git", rev = "f704b8a2eb3d483ec23ab6b3a7e248511bd23321" }
+
+[tool.pytest.ini_options]
+addopts = "-n auto --cov=flync --cov=flync_cli --cov=flync_converter --cov-report=term --cov-report=xml --junitxml=report.xml"
+testpaths = ["tests"]
+# Per-test runaway backstop: fail a test whose body runs longer than 5 minutes.
+# This is a loose guard against pathological (e.g. O(n^2)) regressions, NOT a
+# tight performance budget -- it is set well above any healthy test so slow/
+# shared CI runners do not flake. ``timeout_func_only`` measures only the test
+# body, so variable fixture setup (e.g. workspace loading) does not count against
+# the limit. The thread method works on Windows and under pytest-xdist.
+timeout = 300
+timeout_func_only = true
+timeout_method = "thread"
+markers = [
+    "performance: mark test as performance",
+    "critical_api: mark test as critical API",
+    "no_xdist: prevent running with xdist",
+]
+
+[tool.hatch.version]
+source = "uv-dynamic-versioning"
+
+[tool.uv-dynamic-versioning]
+vcs = "git"
+style = "semver"
+pattern = '(?P<base>\d+\.\d+\.\d+)'
+pattern-prefix = "release-"
+fallback-version = "0.0.0"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/flync", "src/flync_cli", "src/flync_converter"]
+
+[tool.hatch.build.targets.sdist]
+include = ["src", "README.md", "LICENSE", "pyproject.toml"]
+
+[tool.black]
+line-length = 149
+
+[tool.flake8]
+max-line-length = 149
+
+[tool.isort]
+profile = "black"
+line_length = 149
+
+[build-system]
+requires = ["hatchling>=1.27", "uv-dynamic-versioning>=0.7"]
+build-backend = "hatchling.build"

@@ -52,3 +52,6 @@ set(PLATFORM_SUPPORT_UDS
 set(PLATFORM_SUPPORT_MIDDLEWARE
     ON
     CACHE BOOL "Turn middleware service demo support on or off" FORCE)
+set(PLATFORM_SUPPORT_SOMEIP_BRIDGE_SAMPLE
+    ON
+    CACHE BOOL "Turn the middleware SOME/IP bridge sample on or off" FORCE)

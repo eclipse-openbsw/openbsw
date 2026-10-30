@@ -24,6 +24,10 @@
 #include "someip/ServiceQuery.h"
 #include "someip/SocketDummies.h"
 
+#ifdef PLATFORM_SUPPORT_SOMEIP_BRIDGE_SAMPLE
+#include "middleware/SampleSomeIp.h"
+#endif
+
 namespace systems
 {
 
@@ -43,21 +47,20 @@ public:
     void shutdown() override;
 
 private:
+    // Sized for the demo service and client, and the middleware SOME/IP bridge sample.
     enum : uint32_t
     {
-        ENDPOINT_NUM             = 1U,
-        NUM_UDP_SOCKETS          = 2U,
-        NUM_TCP_SERVERS          = 0U,
-        NUM_TCP_SOCKETS          = 0U,
-        BUFFER_SIZE              = 1500U,
-        NUM_REMOTE_ENDPOINTS     = 1U,
-        NUM_REMOTE_SERVICES      = 0U,
-        NUM_REMOTE_SUBSCRIPTIONS = static_cast<uint32_t>(ENDPOINT_NUM),
-        NUM_LOCAL_SERVICES
-        = static_cast<uint32_t>(ENDPOINT_NUM * 2), // number of registerProvidedService calls
-        NUM_LOCAL_QUERIES          = 2U,
+        NUM_UDP_SOCKETS            = 2U,
+        NUM_TCP_SERVERS            = 0U,
+        NUM_TCP_SOCKETS            = 0U,
+        BUFFER_SIZE                = 1500U,
+        NUM_REMOTE_ENDPOINTS       = 2U,
+        NUM_REMOTE_SERVICES        = 0U,
+        NUM_REMOTE_SUBSCRIPTIONS   = 2U,
+        NUM_LOCAL_SERVICES         = 5U,
+        NUM_LOCAL_QUERIES          = 4U,
         NUM_EVENT_BUFFERS          = 0U,
-        NUM_MULTICAST_RECEPTIONS   = 2U,
+        NUM_MULTICAST_RECEPTIONS   = 1U,
         NUM_SUBSCRIPTION_ENDPOINTS = 2U,
         SD_PORT                    = 30490U,
         SERVICE_PORT               = 30501U,
@@ -84,7 +87,9 @@ private:
         NUM_REMOTE_SUBSCRIPTIONS,
         NUM_LOCAL_SERVICES,
         NUM_LOCAL_QUERIES,
-        NUM_SUBSCRIPTION_ENDPOINTS>
+        NUM_SUBSCRIPTION_ENDPOINTS,
+        NUM_EVENT_BUFFERS,
+        NUM_MULTICAST_RECEPTIONS>
         _stack;
 
     /*
@@ -107,6 +112,10 @@ private:
     ServiceListener _serviceListener;
     PeriodicRoutine _routine;
     // }} client-related members
+
+#ifdef PLATFORM_SUPPORT_SOMEIP_BRIDGE_SAMPLE
+    ::middlewaresample::SampleSomeIp _sample;
+#endif
 };
 
 } // namespace systems

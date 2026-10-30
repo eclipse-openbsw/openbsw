@@ -22,7 +22,7 @@ namespace middleware::core
 {
 
 ClusterConnectionBase::ClusterConnectionBase(IClusterConnectionConfigurationBase& configuration)
-: _configuration(configuration)
+: _configuration(&configuration)
 {}
 
 void ClusterConnectionBase::processMessage(Message const& msg) const
@@ -60,7 +60,7 @@ HRESULT ClusterConnectionBase::sendMessage(Message const& msg) const
     }
     else
     {
-        if (_configuration.write(msg))
+        if (_configuration->write(msg))
         {
             res = HRESULT::Ok;
         }
@@ -76,7 +76,7 @@ HRESULT ClusterConnectionBase::sendMessage(Message const& msg) const
 
 HRESULT ClusterConnectionBase::dispatchMessage(Message const& msg) const
 {
-    auto const res = _configuration.dispatchMessage(msg);
+    auto const res = _configuration->dispatchMessage(msg);
     if (HRESULT::Ok != res)
     {
         if (HRESULT::ServiceBusy == res)

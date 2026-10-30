@@ -52,6 +52,7 @@ We recommend to read their licenses, as their terms may differ from the terms de
 | ST STM32F4 Device Headers | 2.6.11   | Apache v2                 | ``platforms/stm32/bsp/bspMcu/include/3rdparty/st/LICENSE``        |
 | ST STM32G4 Device Headers | 1.2.6    | Apache v2                 | ``platforms/stm32/bsp/bspMcu/include/3rdparty/st/LICENSE``        |
 | CodeCoverage              | 877bab9d | BSD-3                     | ``cmake/modules/CodeCoverage.cmake``                              |
+| FLYNC                     | 0.14.0   | Apache v2                 | ``flync-configuration/3rdparty/FLYNC/LICENSE``                    |
 | critical-section          | 1.2.0    | MIT/Apache v2             | ``libs/3rdparty/cargo-vendor/critical-section/LICENSE-MIT``       |
 | darling                   | 0.20.11  | MIT                       | ``libs/3rdparty/cargo-vendor/darling/LICENSE``                    |
 | darling_core              | 0.20.11  | MIT                       | ``libs/3rdparty/cargo-vendor/darling_core/LICENSE``               |

@@ -34,6 +34,12 @@ public:
     /** Constructs from \p configuration. */
     explicit ClusterConnection(IClusterConnectionConfiguration& configuration);
 
+    /**
+     * Replaces the configuration with \p configuration. Call it before any proxy or
+     * skeleton subscribes, since the configuration holds their subscriptions.
+     */
+    void setConfiguration(IClusterConnectionConfiguration& configuration);
+
     /** \see IClusterConnection::subscribe() */
     HRESULT subscribe(ProxyBase& proxy, uint16_t const serviceInstanceId) final;
 

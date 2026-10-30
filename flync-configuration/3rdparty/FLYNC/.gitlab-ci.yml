@@ -1,0 +1,279 @@
+.base:
+  image: python:3.12
+  tags:
+    - docker-linux
+  before_script:
+    - pip install --upgrade pip
+    - pip install uv
+
+stages:
+  - static-analysis
+  - tests
+  - sonar
+  - code_review
+  - docs
+  - deploy
+
+# lint, format, isort and type_check are one concern, so they run as a single
+# parallel:matrix job and collapse into one node in the pipeline graph. Children
+# still run in parallel, so this costs no wall-clock time.
+quality:
+  extends: .base
+  stage: static-analysis
+  allow_failure: false
+  parallel:
+    matrix:
+      - CHECK: ["lint", "format", "isort", "pre_commit_check", "type_check"]
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_PIPELINE_SOURCE != "web"'
+    - if: '$CI_COMMIT_REF_PROTECTED == "true" && $CI_PIPELINE_SOURCE != "web"'
+  script:
+    - |
+      set -eo pipefail
+      mkdir -p quality-reports
+      case "$CHECK" in
+        lint)
+          uv sync --frozen --no-install-project --only-group static-analysis
+          uv run flake8 --max-line-length 149 src
+          uv run flake8 --max-line-length 149 src --format=html --htmldir=quality-reports/flake8
+          ;;
+        format)
+          uv sync --frozen --no-install-project --only-group static-analysis
+          uv run black --target-version py312 --check --diff --color src > quality-reports/black-src.diff
+          uv run black --target-version py312 --check --diff --color tests > quality-reports/black-tests.diff
+          ;;
+        isort)
+          uv sync --frozen --no-install-project --only-group static-analysis
+          uv run isort --check --diff --color --line-length 149 src > quality-reports/isort-src.diff
+          uv run isort --check --diff --color --line-length 149 tests > quality-reports/isort-tests.diff
+          ;;
+        pre_commit_check)
+          uv sync --frozen --no-install-project --only-group dev
+          uv run pre-commit run --all-files
+          ;;
+        type_check)
+          uv sync --frozen --group static-analysis --extra gui --extra tui
+          uv run mypy src --show-error-codes --pretty --install-types --non-interactive | tee quality-reports/mypy.txt
+          ;;
+      esac
+  artifacts:
+    expire_in: 2 days
+    when: on_failure
+    paths:
+      - quality-reports
+
+# A matrix of one: adding the next integrity check is one entry plus one case
+# branch, with no renaming and no rewiring of what depends on this job.
+integrity:
+  extends: .base
+  stage: static-analysis
+  parallel:
+    matrix:
+      - CHECK: ["error-catalog", "model-docstrings"]
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_PIPELINE_SOURCE != "web"'
+    - if: '$CI_COMMIT_REF_PROTECTED == "true" && $CI_PIPELINE_SOURCE != "web"'
+  script:
+    - |
+      set -eo pipefail
+      case "$CHECK" in
+        error-catalog)
+          uv sync --frozen
+          uv run python src/flync_cli/main.py errors generate-catalog
+          uv run python src/flync_cli/main.py errors validate-catalog
+          ;;
+        # Reports warnings and succeeds: the existing docstrings are not clean yet. Add --strict to turn it into a gate.
+        model-docstrings)
+          uv sync --frozen
+          uv run python scripts/ci/check_model_docstrings.py --strict
+          ;;
+      esac
+
+examples_validation:
+  extends: .base
+  stage: tests
+  allow_failure: false
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_PIPELINE_SOURCE != "web"'
+    - if: '$CI_COMMIT_REF_PROTECTED == "true" && $CI_PIPELINE_SOURCE != "web"'
+  script:
+    - uv sync --frozen
+    - uv run python scripts/ci/validate_examples.py
+    - uv run python scripts/ci/check_example_superset.py
+
+performance_tests:
+  extends: .base
+  tags:
+    - k8s-pilot-cluster-linux-runner
+  allow_failure: true
+  stage: tests
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_PIPELINE_SOURCE != "web"'
+    - if: '$CI_COMMIT_REF_PROTECTED == "true" && $CI_PIPELINE_SOURCE != "web"'
+    - if: '$CI_COMMIT_TAG'
+  script:
+    - apt-get update && apt-get install -y libglib2.0-0 libgl1 libegl1 libdbus-1-3 libfontconfig1 libxcb1 libxkbcommon0
+    - uv sync --frozen --group test --group qt --extra gui --extra tui
+    - uv pip install -e tests/converter_tests/test_plugin/ --no-deps
+    # -n 0 overrides the `-n auto` in addopts: pytest-benchmark disables itself under xdist.
+    # --no-cov disables the coverage hook from addopts so instrumentation does not skew timing.
+    - uv run pytest -n 0 -m performance --no-cov --junitxml=report_performance.xml --durations=0
+  artifacts:
+    when: always
+    expire_in: "30 days"
+    paths:
+      - .coverage.performance
+      - report_performance.xml
+
+unit_tests:
+  extends: .base
+  allow_failure: false
+  stage: tests
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_PIPELINE_SOURCE != "web"'
+    - if: '$CI_COMMIT_REF_PROTECTED == "true" && $CI_PIPELINE_SOURCE != "web"'
+    - if: '$CI_COMMIT_TAG'
+  script:
+    - apt-get update && apt-get install -y libglib2.0-0 libgl1 libegl1 libdbus-1-3 libfontconfig1 libxcb1 libxkbcommon0
+    - uv sync --frozen --group test --group qt --extra gui --extra tui
+    - uv pip install -e tests/converter_tests/test_plugin/ --no-deps
+    - COVERAGE_FILE=.coverage.unit uv run pytest -m "not performance" --cov=flync --cov=flync_cli --cov=flync_converter --cov-report= --junitxml=report_not_performance.xml --durations=0
+  artifacts:
+    when: always
+    expire_in: "30 days"
+    paths:
+      - .coverage.unit
+      - report_not_performance.xml
+
+test-summary:
+  extends: .base
+  stage: tests
+  needs:
+    - job: performance_tests
+      artifacts: true
+    - job: unit_tests
+      artifacts: true
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_PIPELINE_SOURCE != "web"'
+    - if: '$CI_COMMIT_REF_PROTECTED == "true" && $CI_PIPELINE_SOURCE != "web"'
+    - if: '$CI_COMMIT_TAG'
+  script:
+    - apt-get update && apt-get install -y libglib2.0-0 libgl1 libegl1 libdbus-1-3 libfontconfig1 libxcb1 libxkbcommon0
+    - uv sync --frozen --group test --group qt --extra gui --extra tui
+    - uv pip install -e tests/converter_tests/test_plugin/ --no-deps
+    # performance_tests is allow_failure, so its artifacts may be absent.
+    # Combine and merge whatever actually arrived rather than hard-failing.
+    - |
+      coverage_files=$(ls .coverage.unit .coverage.performance 2>/dev/null || true)
+      junit_files=$(ls report_not_performance.xml report_performance.xml 2>/dev/null || true)
+      if [ -z "$coverage_files" ] || [ -z "$junit_files" ]; then
+        echo "No test artifacts found - both test jobs failed to produce reports" >&2
+        exit 1
+      fi
+      for f in .coverage.performance report_performance.xml; do
+        [ -f "$f" ] || echo "WARNING: $f missing - performance_tests produced no artifacts" >&2
+      done
+      uv run coverage combine $coverage_files
+      uv run coverage xml
+      uv run coverage report
+      uv run python -m junitparser merge $junit_files report.xml
+  coverage: '/(?i)total.*? (100(?:\.0+)?\%|[1-9]?\d(?:\.\d+)?\%)$/'
+  artifacts:
+    when: always
+    expire_in: "30 days"
+    paths:
+      - report.xml
+      - coverage.xml
+      - tests/unit_test/sdk/approved_files/*
+      - tests/unit_test/sdk/fuzzed/*
+      - tests/unit_test/sdk/generated/*
+    reports:
+      junit: report.xml
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage.xml
+
+sonar:scan:
+  stage: sonar
+  image:
+    name: sonarsource/sonar-scanner-cli:latest
+    entrypoint: [""]
+  variables:
+    SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"
+    GIT_DEPTH: "0"
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_PIPELINE_SOURCE != "web"
+    - if: '$CI_COMMIT_REF_PROTECTED == "true" && $CI_PIPELINE_SOURCE != "web"'
+  needs:
+    - job: test-summary
+      artifacts: true
+  script:
+    - sonar-scanner
+  allow_failure: false
+  interruptible: true
+  tags:
+    - docker-linux
+
+docs-build:
+  extends: .base
+  allow_failure: true
+  needs:
+    - job: test-summary
+    - job: integrity
+  stage: docs
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_PIPELINE_SOURCE != "web"'
+    - if: '$CI_COMMIT_REF_PROTECTED == "true" && $CI_PIPELINE_SOURCE != "web"'
+  script:
+    - uv sync --frozen --group docs
+    - echo "--- GENERATING ERROR CATALOG ---"
+    - uv run python src/flync_cli/main.py errors generate-catalog
+    - echo "--- BUILDING DOCS ---"
+    - cd ./docs
+    - make SPHINXOPTS='--fail-on-warning' html
+    - cd ..
+  artifacts:
+    expire_in: 1 day
+    when: always
+    paths:
+      - docs/build
+
+pages:
+  extends: .base
+  stage: deploy
+  needs:
+    - job: docs-build
+      artifacts: true
+  script:
+    - mv ./docs/build/html public
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_PIPELINE_SOURCE != "web"
+  artifacts:
+    paths:
+      - public
+
+build:
+  extends: .base
+  stage: deploy
+  needs: [test-summary]
+  variables:
+    GIT_DEPTH: "0"
+  script:
+    - uv build
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_PIPELINE_SOURCE != "web"'
+    - if: '$CI_COMMIT_REF_PROTECTED == "true" && $CI_PIPELINE_SOURCE != "web"'
+    - if: '$CI_COMMIT_TAG'
+  artifacts:
+    expire_in: 30 days
+    paths:
+      - dist

@@ -1,0 +1,47 @@
+# *******************************************************************************
+# Copyright (c) 2026 KPIT Technologies Ltd.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+
+load("@rules_cc//cc:cc_library.bzl", "cc_library")
+load("@rules_cc//cc:cc_test.bzl", "cc_test")
+load("//bazel/config/build_variant:compatibility.bzl", "unit_test_only")
+
+cc_library(
+    name = "middleware_someip",
+    srcs = glob(["src/**/*.cpp"]),
+    hdrs = glob(["include/**/*.h"]),
+    strip_include_prefix = "include",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//libs/3rdparty/etl",
+        "//libs/bsw/cpp2someip",
+        "//libs/bsw/middleware",
+    ],
+)
+
+cc_test(
+    name = "middleware_someip_test",
+    srcs = [
+        "test/src/AllocatorSelector.cpp",
+        "test/src/PortRange.cpp",
+        "test/src/middleware/bindings/someip/SomeIpBridgeTest.cpp",
+        "test/src/middleware/bindings/someip/SomeIpCodecTest.cpp",
+    ],
+    target_compatible_with = unit_test_only(),
+    deps = [
+        ":middleware_someip",
+        "//executables/unitTest/common:ut_common",
+        "//libs/3rdparty/googletest:gtest_main",
+        "//libs/bsw/async:async_mock_impl",
+        "//libs/bsw/bsp:bsp_mock",
+        "//libs/bsw/cpp2ethernet:cpp2ethernet_mock",
+        "//libs/bsw/cpp2someip:cpp2someip_mock",
+        "//libs/bsw/util:util_mock",
+    ],
+)

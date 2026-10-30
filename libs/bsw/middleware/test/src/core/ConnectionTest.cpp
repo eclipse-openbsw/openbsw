@@ -451,4 +451,49 @@ TEST_F(ConnectionBaseTest, SyntheticClusterIdGetter)
     EXPECT_EQ(ptrToBase->getTargetClusterId(), confSkeletonOnly.getTargetClusterId());
 }
 
+TEST_F(ConnectionBaseTest, SetConfigurationReplacesTheConfiguration)
+{
+    struct ProxyWithTimeout
+    : public Proxy
+    , public ::middleware::core::ITimeoutHandler
+    {
+        using Proxy::Proxy;
+
+        void updateTimeouts() override {}
+    };
+
+    Message msg = Message::createRequest(
+        1,
+        123,
+        321,
+        2,
+        ClusterConfigurationMockBase::sourceClusterId,
+        ClusterConfigurationMockBase::sourceClusterId,
+        4);
+
+    Skeleton skeletonInstance(1, 2);
+    ProxyWithTimeout proxyInstance(1, 2);
+    ClusterConnectionConfigurationMock initialConfiguration;
+    ClusterConnectionConfigurationMock newConfiguration;
+    ::middleware::core::ClusterConnection actualConnection(initialConfiguration);
+
+    // ptr to base class trick as observed in {Proxy/Skeleton}Base
+    ::middleware::core::IClusterConnection* ptrToBase = &actualConnection;
+
+    actualConnection.setConfiguration(newConfiguration);
+
+    // the initial configuration would refuse it, so Ok can only come from the new one
+    initialConfiguration.setNextHRESULT(::middleware::core::HRESULT::ServiceNotFound, 1);
+    EXPECT_EQ(::middleware::core::HRESULT::Ok, actualConnection.subscribe(skeletonInstance, 1));
+
+    EXPECT_NO_THROW(actualConnection.registerTimeoutTransceiver(proxyInstance));
+    EXPECT_EQ(1U, actualConnection.registeredTransceiversCount(1));
+    EXPECT_EQ(1U, newConfiguration.registeredTransceiversCount(1));
+    EXPECT_EQ(0U, initialConfiguration.registeredTransceiversCount(1));
+
+    EXPECT_NO_THROW(ptrToBase->processMessage(msg));
+    EXPECT_TRUE(newConfiguration.getLastReceivedMessage().has_value());
+    EXPECT_FALSE(initialConfiguration.getLastReceivedMessage().has_value());
+}
+
 } // namespace middleware::core::test
