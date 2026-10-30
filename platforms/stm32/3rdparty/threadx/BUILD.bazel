@@ -1,0 +1,47 @@
+# *******************************************************************************
+# Copyright (c) 2026 Accenture
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+
+load("@rules_cc//cc:cc_library.bzl", "cc_library")
+
+cc_library(
+    name = "threadx_cortex_m4_port_headers",
+    hdrs = [
+        "ports/cortex_m4/gnu/inc/tx_port.h",
+    ],
+    defines = ["TX_INCLUDE_USER_DEFINE_FILE"],
+    strip_include_prefix = "ports/cortex_m4/gnu/inc",
+    target_compatible_with = ["@platforms//os:none"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//libs/bsw/asyncThreadX:threadx_core_configuration",
+    ],
+)
+
+cc_library(
+    name = "threadx_cortex_m4",
+    srcs = [
+        "ports/cortex_m4/gnu/src/tx_thread_context_restore.S",
+        "ports/cortex_m4/gnu/src/tx_thread_context_save.S",
+        "ports/cortex_m4/gnu/src/tx_thread_interrupt_control.S",
+        "ports/cortex_m4/gnu/src/tx_thread_schedule.S",
+        "ports/cortex_m4/gnu/src/tx_thread_stack_build.S",
+        "ports/cortex_m4/gnu/src/tx_thread_system_return.S",
+        "ports/cortex_m4/gnu/src/tx_timer_interrupt.S",
+    ],
+    local_defines = ["TX_INCLUDE_USER_DEFINE_FILE"],
+    target_compatible_with = ["@platforms//os:none"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//libs/3rdparty/threadx:threadx_headers",
+        "//libs/bsp/bspInterrupts:bsp_interrupts",
+        "//libs/bsw/asyncThreadX:threadx_core_configuration",
+        "//platforms/stm32/bsp/bspMcu:bsp_mcu",
+    ],
+)

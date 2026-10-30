@@ -82,6 +82,21 @@ jobs:
           docker compose run --rm development
           bazel build --config=s32k148_threadx //...
 
+      # Cross-compiles all targets for the STM32G474RE platform with ThreadX RTOS.
+      # Matches the CMake nucleo-g474re-threadx preset.
+      - name: Build all targets (stm32g4 ThreadX platform)
+        run: >-
+          DOCKER_UID=$(id -u) DOCKER_GID=$(id -g) DOCKER_HISTORY=/dev/null
+          docker compose run --rm development
+          bazel build --config=stm32g4_threadx //...
+
+      # Cross-compiles all targets for the STM32F413ZH platform with ThreadX RTOS.
+      # Matches the CMake nucleo-f413zh-threadx preset.
+      - name: Build all targets (stm32f4 ThreadX platform)
+        run: >-
+          DOCKER_UID=$(id -u) DOCKER_GID=$(id -g) DOCKER_HISTORY=/dev/null
+          docker compose run --rm development
+          bazel build --config=stm32f4_threadx //...
       # Cross-compiles all targets for the STM32G474RE platform (FDCAN) using arm-none-eabi-gcc.
       # Matches the CMake tests-stm32-* and posix-freertos-canfd presets.
       - name: Build all targets (stm32g4 platform)
@@ -96,6 +111,30 @@ jobs:
           DOCKER_UID=$(id -u) DOCKER_GID=$(id -g) DOCKER_HISTORY=/dev/null
           docker compose run --rm development
           bazel build --config=stm32f4 //...
+
+      # Compiles all targets for the POSIX platform with ThreadX RTOS on the Linux host.
+      # Matches the CMake posix-threadx preset.
+      - name: Build all targets (posix_threadx platform)
+        run: >-
+          DOCKER_UID=$(id -u) DOCKER_GID=$(id -g) DOCKER_HISTORY=/dev/null
+          docker compose run --rm development
+          bazel build --config=posix_threadx //...
+
+      # Compiles all targets for the POSIX platform with CAN FD enabled.
+      # Matches the CMake posix-freertos-canfd preset.
+      - name: Build all targets (posix_canfd platform)
+        run: >-
+          DOCKER_UID=$(id -u) DOCKER_GID=$(id -g) DOCKER_HISTORY=/dev/null
+          docker compose run --rm development
+          bazel build --config=posix_canfd //...
+
+      # Compiles all targets for the POSIX platform with runtime tracing enabled.
+      # Matches the CMake posix-freertos-with-tracing preset.
+      - name: Build all targets (posix_tracing platform)
+        run: >-
+          DOCKER_UID=$(id -u) DOCKER_GID=$(id -g) DOCKER_HISTORY=/dev/null
+          docker compose run --rm development
+          bazel build --config=posix_tracing //...
 
       # Compiles all test targets for the posix unit-test platform without running them.
       # A failure here is a compilation error not a failed test.
@@ -129,4 +168,11 @@ jobs:
           docker compose run --rm development
           bash -c 'bazel test --config=stm32f4_unit_test //... || ec=$?; [ "${ec:-0}" -eq 0 ] || [ "$ec" -eq 4 ] || exit "$ec"'
 
+      # Runs all tests on the S32K148 unit-test platform (adds s32k148 SoC constraint).
+      # Exit code 4 (no tests found) is treated as success.
+      - name: Run all tests (s32k148_unit_test platform)
+        run: >-
+          DOCKER_UID=$(id -u) DOCKER_GID=$(id -g) DOCKER_HISTORY=/dev/null
+          docker compose run --rm development
+          bash -c 'bazel test --config=s32k148_unit_test //... || ec=$?; [ "${ec:-0}" -eq 0 ] || [ "$ec" -eq 4 ] || exit "$ec"'
 

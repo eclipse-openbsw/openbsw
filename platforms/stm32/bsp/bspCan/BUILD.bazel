@@ -12,8 +12,6 @@ load("@rules_cc//cc:cc_library.bzl", "cc_library")
 load("@rules_cc//cc:cc_test.bzl", "cc_test")
 load("//bazel/config/build_variant:compatibility.bzl", "unit_test_only")
 
-# CAN device implementations, one per controller type. Each is built only for
-# the SoC family whose CAN controller it drives.
 cc_library(
     name = "bsp_can_fdcan",
     srcs = ["src/can/FdCanDevice.cpp"],
@@ -112,11 +110,12 @@ cc_test(
     ],
 )
 
-# Active CAN device implementation. Set by the platform via its flags.
-# Non-STM32 and unit-test platforms resolve to no_implementation and skip this module.
-#   Override: --//platforms/stm32/bsp/bspCan:bsp_can=//path/to:your_impl
-label_flag(
+alias(
     name = "bsp_can",
-    build_setting_default = "//bazel/config:no_implementation",
+    actual = select({
+        "//bazel/platform/constraints/soc:is_stm32g4": ":bsp_can_fdcan",
+        "//bazel/platform/constraints/soc:is_stm32f4": ":bsp_can_bxcan",
+        "//conditions:default": "//bazel/config:no_implementation",
+    }),
     visibility = ["//visibility:public"],
 )
