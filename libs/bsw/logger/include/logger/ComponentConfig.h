@@ -23,6 +23,12 @@ class ComponentConfig : public IComponentConfig
 public:
     explicit ComponentConfig(ComponentMapping<IndexUpperBound>& componentMapping);
 
+    virtual ~ComponentConfig()                         = default;
+    ComponentConfig(ComponentConfig const&)            = delete;
+    ComponentConfig& operator=(ComponentConfig const&) = delete;
+    ComponentConfig(ComponentConfig&&)                 = delete;
+    ComponentConfig& operator=(ComponentConfig&&)      = delete;
+
     void start(::util::logger::ILoggerOutput& output);
     void shutdown();
 

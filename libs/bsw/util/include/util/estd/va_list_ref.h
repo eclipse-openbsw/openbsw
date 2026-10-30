@@ -47,6 +47,8 @@ public:
 
     _va_list_ref(T v[N]) : _v(v) {}
 
+    // The C va_list ABI passes this one-element array as a pointer.
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
     RefType get() const { return reinterpret_cast<RefType>(*_v); }
 
 private:

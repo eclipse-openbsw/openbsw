@@ -28,7 +28,7 @@ template<
     size_t NUM_CONNECTIONS,
     size_t NUM_DIAGNOSTICSENDJOBS,
     size_t NUM_PROTOCOLSENDJOBS>
-class DoIpServerTransportConnectionPool : public IDoIpServerTransportConnectionPool
+class DoIpServerTransportConnectionPool final : public IDoIpServerTransportConnectionPool
 {
 public:
     /**
@@ -41,6 +41,12 @@ public:
      * \param creator reference to connection creator interface
      */
     explicit DoIpServerTransportConnectionPool(IDoIpServerTransportConnectionCreator<T>& creator);
+
+    ~DoIpServerTransportConnectionPool()                                        = default;
+    DoIpServerTransportConnectionPool(DoIpServerTransportConnectionPool const&) = delete;
+    DoIpServerTransportConnectionPool(DoIpServerTransportConnectionPool&&)      = delete;
+    DoIpServerTransportConnectionPool& operator=(DoIpServerTransportConnectionPool const&) = delete;
+    DoIpServerTransportConnectionPool& operator=(DoIpServerTransportConnectionPool&&)      = delete;
 
     DoIpServerTransportConnection* createConnection(
         uint8_t socketGroupId,

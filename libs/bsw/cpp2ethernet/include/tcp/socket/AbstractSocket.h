@@ -209,6 +209,8 @@ public:
     // [AbstractSocket]
 
 protected:
+    ~AbstractSocket() = default;
+
     IDataListener* _dataListener;
     IDataSendNotificationListener* _sendNotificationListener;
 };

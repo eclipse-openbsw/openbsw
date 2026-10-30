@@ -19,7 +19,7 @@
 namespace logger
 {
 template<class E = uint32_t, class Timestamp = uint32_t>
-class ConsoleEntryOutput : public IEntryOutput<E, Timestamp>
+class ConsoleEntryOutput final : public IEntryOutput<E, Timestamp>
 {
 public:
     explicit ConsoleEntryOutput(IEntryFormatter<E, Timestamp>& formatter);

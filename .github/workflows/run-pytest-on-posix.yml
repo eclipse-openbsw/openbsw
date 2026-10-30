@@ -14,13 +14,8 @@ on: [push, pull_request]
 
 jobs:
   run-pytest-on-posix:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     steps:
-      - name: Install missing kernel module file for vcan
-        run: |
-          sudo apt update
-          sudo apt install linux-modules-extra-$(uname -r)
-
       - name: Install can kernel modules
         run: |
           sudo modprobe can

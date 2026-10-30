@@ -64,6 +64,9 @@ public:
      * \param   status  ErrorCode indication why connection was closed
      */
     virtual void connectionClosed(ErrorCode status) = 0;
+
+protected:
+    ~IDataListener() = default;
 };
 
 } // namespace tcp

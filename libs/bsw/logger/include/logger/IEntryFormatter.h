@@ -45,6 +45,11 @@ public:
 
     IEntryFormatter();
 
+    IEntryFormatter(IEntryFormatter const&)            = delete;
+    IEntryFormatter& operator=(IEntryFormatter const&) = delete;
+    IEntryFormatter(IEntryFormatter&&)                 = delete;
+    IEntryFormatter& operator=(IEntryFormatter&&)      = delete;
+
     virtual void formatEntry(
         ::util::stream::IOutputStream& outputStream,
         E entryIndex,
@@ -54,6 +59,9 @@ public:
         char const* str,
         ::util::format::IPrintfArgumentReader& argReader) const
         = 0;
+
+protected:
+    ~IEntryFormatter() = default;
 };
 
 template<class E, class Timestamp>

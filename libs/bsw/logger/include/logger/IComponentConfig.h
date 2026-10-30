@@ -22,6 +22,11 @@ class IComponentConfig : private ::etl::uncopyable
 public:
     IComponentConfig();
 
+    IComponentConfig(IComponentConfig const&)            = delete;
+    IComponentConfig& operator=(IComponentConfig const&) = delete;
+    IComponentConfig(IComponentConfig&&)                 = delete;
+    IComponentConfig& operator=(IComponentConfig&&)      = delete;
+
     virtual uint8_t getMappingSize() const                                            = 0;
     virtual ::util::logger::Level getLevel(uint8_t componentIndex) const              = 0;
     virtual void setLevel(uint8_t componentIndex, ::util::logger::Level level)        = 0;
@@ -35,6 +40,9 @@ public:
         = 0;
     virtual void readLevels()  = 0;
     virtual void writeLevels() = 0;
+
+protected:
+    ~IComponentConfig() = default;
 };
 
 inline IComponentConfig::IComponentConfig() : ::etl::uncopyable() {}

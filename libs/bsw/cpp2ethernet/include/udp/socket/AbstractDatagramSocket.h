@@ -161,6 +161,8 @@ public:
 
     // [AbstractDatagramSocket]
 protected:
+    ~AbstractDatagramSocket() = default;
+
     IDataListener* _dataListener;
     IDataSentListener* _dataSentListener;
 };

@@ -26,6 +26,18 @@ To ensure a stable main branch, we verify PRs (Pull Requests) once they are crea
 4. Don't rely on a different job running afterwards.
 5. Each job should have a unique name.
 
+## Ubuntu runner version
+
+All jobs use `ubuntu-26.04` explicitly so that upgrades to a new Ubuntu release
+are deliberate rather than inherited from `ubuntu-latest`. This pins the OS
+release, not the runner image revision or kernel version.
+
+The POSIX pytest job loads `can`, `can-raw`, and `vcan` directly before creating
+`vcan0`. The Ubuntu 26.04 runner's Azure kernel includes these modules in
+`linux-modules`, installed with the kernel; the separate `linux-modules-extra`
+package is no longer published for that kernel. Module loading must succeed
+before the tests run; missing CAN support must not be silently skipped.
+
 
 ## PR Verification Process
 
