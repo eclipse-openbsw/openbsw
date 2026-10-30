@@ -1,0 +1,5 @@
+add_library(hardFaultHandler src/hardFaultHandler.s)
+
+set_target_properties(hardFaultHandler PROPERTIES COMPILE_WARNING_AS_ERROR OFF)
+
+target_link_libraries(hardFaultHandler PRIVATE)
