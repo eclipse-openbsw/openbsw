@@ -32,7 +32,7 @@ cc_library(
         "src/bsp/bootHeader.S",
         "src/bsp/startUp.S",
     ],
-    implementation_deps = [":start_up_asm_threadx_impl"],
+    implementation_deps = [":start_up_asm_impl"],
     target_compatible_with = [
         "//bazel/platform/constraints/soc:s32k148",
         "@platforms//os:none",
@@ -43,7 +43,7 @@ cc_library(
 )
 
 cc_library(
-    name = "start_up_asm_threadx_srcs",
+    name = "start_up_asm_impl_threadx",
     srcs = ["src/bsp/threadx/tx_initialize_low_level.S"],
     implementation_deps = [
         "//executables/referenceApp/asyncCoreConfiguration:async_core_configuration",
@@ -54,18 +54,19 @@ cc_library(
     ],
 )
 
-cc_library(name = "start_up_asm_threadx_srcs_none")
+cc_library(name = "start_up_asm_impl_freertos")
 
 alias(
-    name = "start_up_asm_threadx_impl",
+    name = "start_up_asm_impl",
     actual = select({
-        "//bazel/config/rtos:support_threadx": ":start_up_asm_threadx_srcs",
-        "//conditions:default": ":start_up_asm_threadx_srcs_none",
+        "//bazel/config/rtos:support_freertos": ":start_up_asm_impl_freertos",
+        "//bazel/config/rtos:support_threadx": ":start_up_asm_impl_threadx",
+        "//conditions:default": "@platforms//:incompatible",
     }),
 )
 
 cc_library(
-    name = "start_up_threadx_srcs",
+    name = "start_up_impl_threadx",
     srcs = ["src/bsp/threadx/tx_execution_initialize.c"],
     target_compatible_with = ["//bazel/platform/constraints/soc:s32k148"],
     # CMake declares mutual static-library dependencies between threadX core and its port, resolved by archive repetition on the CMake side.
@@ -73,13 +74,14 @@ cc_library(
     alwayslink = True,
 )
 
-cc_library(name = "start_up_threadx_srcs_none")
+cc_library(name = "start_up_impl_freertos")
 
 alias(
-    name = "start_up_threadx_impl",
+    name = "start_up_impl",
     actual = select({
-        "//bazel/config/rtos:support_threadx": ":start_up_threadx_srcs",
-        "//conditions:default": ":start_up_threadx_srcs_none",
+        "//bazel/config/rtos:support_freertos": ":start_up_impl_freertos",
+        "//bazel/config/rtos:support_threadx": ":start_up_impl_threadx",
+        "//conditions:default": "@platforms//:incompatible",
     }),
 )
 
@@ -95,7 +97,7 @@ cc_library(
     ],
     implementation_deps = [
         ":start_up_asm",
-        ":start_up_threadx_impl",
+        ":start_up_impl",
         "//executables/referenceApp/platforms/s32k148evb/safety/safeMemory:safe_memory",
         "//libs/bsw/common",
         "//platforms/s32k1xx/bsp/bspMcu:bsp_mcu",
@@ -158,7 +160,8 @@ alias(
     name = "main_rtos_impl",
     actual = select({
         "//bazel/config/rtos:support_freertos": ":main_rtos_impl_freertos",
-        "//conditions:default": ":main_rtos_impl_threadx",
+        "//bazel/config/rtos:support_threadx": ":main_rtos_impl_threadx",
+        "//conditions:default": "@platforms//:incompatible",
     }),
 )
 
