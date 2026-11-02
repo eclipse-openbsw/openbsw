@@ -42,8 +42,9 @@ cc_library(
         "-pedantic",
         "-Wall",
         "-Wextra",
-        "-I$(GENDIR)/libs/3rdparty/printf/include",
     ],
+    # The generated printf_config.h is under include/ in whichever repo OpenBSW is in.
+    includes = ["include"],
     local_defines = ["PRINTF_INCLUDE_CONFIG_H"],
     strip_include_prefix = "src",
     visibility = ["//visibility:public"],
