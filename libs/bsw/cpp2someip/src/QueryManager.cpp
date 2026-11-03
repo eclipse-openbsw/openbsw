@@ -18,7 +18,6 @@
 #include <etl/algorithm.h>
 #include <etl/intrusive_forward_list.h>
 #include <etl/intrusive_links.h>
-#include <algorithm>
 
 // Logger API uses printf-style varargs for fixed diagnostic messages in this module.
 // NOLINTBEGIN(cppcoreguidelines-pro-type-vararg)

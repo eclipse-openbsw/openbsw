@@ -65,9 +65,9 @@ void LifecycleManager::addComponent(
 
 void LifecycleManager::transitionToLevel(uint8_t const level)
 {
-    _nextLevel = (static_cast<size_t>(level) < _levelIndices.size())
-                     ? level
-                     : static_cast<uint8_t>(_levelIndices.size() - 1U);
+    _targetLevel = (static_cast<size_t>(level) < _levelIndices.size())
+                       ? level
+                       : static_cast<uint8_t>(_levelIndices.size() - 1U);
     ::async::execute(_transitionContext, *this);
 }
 
@@ -110,17 +110,17 @@ void LifecycleManager::transitionDone(ILifecycleComponent& component)
 void LifecycleManager::execute()
 {
     if ((!checkLevelTransitionDone())
-        || ((_currentLevel == _nextLevel) && (_initLevelCount >= _nextLevel)))
+        || ((_currentLevel == _targetLevel) && (_initLevelCount >= _targetLevel)))
     {
         return;
     }
-    if (_nextLevel < _currentLevel)
+    if (_targetLevel < _currentLevel)
     {
         _transitionLevel = _currentLevel;
         --_currentLevel;
         _transition = ILifecycleComponent::Transition::Type::SHUTDOWN;
     }
-    else if ((_initLevelCount < _nextLevel) && (_initLevelCount == _currentLevel))
+    else if ((_initLevelCount < _targetLevel) && (_initLevelCount == _currentLevel))
     {
         ++_initLevelCount;
         _transitionLevel = _initLevelCount;
@@ -135,7 +135,7 @@ void LifecycleManager::execute()
     _isTransitionPending      = true;
     _transitionStartTimestamp = _getTimestamp();
     // NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg): Logger API is variadic by design.
-    Logger::info(LIFECYCLE, "%s level %d", getTransitionString(_transition), _transitionLevel);
+    Logger::debug(LIFECYCLE, "%s level %d", getTransitionString(_transition), _transitionLevel);
     for (uint8_t componentIndex = _levelIndices[static_cast<size_t>(_transitionLevel) - 1U];
          componentIndex < _levelIndices[static_cast<size_t>(_transitionLevel)];
          ++componentIndex)
@@ -153,7 +153,7 @@ void LifecycleManager::execute()
             transitionContext = _transitionContext;
         }
         // NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg): Logger API is variadic by design.
-        Logger::info(LIFECYCLE, "%s %s", getTransitionString(_transition), componentInfo._name);
+        Logger::debug(LIFECYCLE, "%s %s", getTransitionString(_transition), componentInfo._name);
         ::async::execute(transitionContext, transitionExecutor);
     }
     if (_componentTransitionExecutors.empty())
@@ -178,8 +178,13 @@ bool LifecycleManager::checkLevelTransitionDone()
     }
     _isTransitionPending = false;
     // NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg): Logger API is variadic by design.
-    Logger::debug(
-        LIFECYCLE, "%s level %d done", getTransitionString(_transition), _transitionLevel);
+    Logger::info(
+        LIFECYCLE,
+        "%s level %u done current=%u target=%u",
+        getTransitionString(_transition),
+        static_cast<unsigned>(_transitionLevel),
+        static_cast<unsigned>(_currentLevel),
+        static_cast<unsigned>(_targetLevel));
     _componentTransitionExecutors.clear();
     if (_transition != ILifecycleComponent::Transition::Type::INIT)
     {

@@ -14,6 +14,7 @@ load("@bazel_tools//tools/build_defs/cc:action_names.bzl", "ACTION_NAMES")
 load(
     "@bazel_tools//tools/cpp:cc_toolchain_config_lib.bzl",
     "feature",
+    "feature_set",
     "flag_group",
     "flag_set",
     "tool_path",
@@ -123,6 +124,10 @@ def _impl(ctx):
                                 "-fstack-usage",
                                 "-mno-unaligned-access",
                                 "-mthumb",
+                                # GCC canonicalises paths by default, resolving symlinks to
+                                # their real location. Bazel header tracking relies on paths
+                                # staying in their symlinked form.
+                                "-fno-canonical-system-headers",
                             ],
                         ),
                     ],
@@ -130,7 +135,7 @@ def _impl(ctx):
             ],
         ),
         feature(
-            name = "c_flags",
+            name = "c_compile_flags",
             enabled = True,
             flag_sets = [
                 flag_set(
@@ -147,7 +152,7 @@ def _impl(ctx):
             ],
         ),
         feature(
-            name = "cxx_flags",
+            name = "cxx_compile_flags",
             enabled = True,
             flag_sets = [
                 flag_set(
@@ -186,6 +191,83 @@ def _impl(ctx):
             ],
         ),
         feature(
+            name = "warning_flags",
+            enabled = True,
+            flag_sets = [
+                flag_set(
+                    # GAS ignores GCC warning flags.
+                    actions = [ACTION_NAMES.c_compile],
+                    flag_groups = [flag_group(flags = ["-Wall", "-Wextra"])],
+                ),
+                flag_set(
+                    actions = _ALL_CXX_COMPILE_ACTIONS,
+                    flag_groups = [flag_group(flags = [
+                        "-Wall",
+                        "-Wextra",
+                        "-Wvla",
+                        "-Wno-deprecated-volatile",
+                    ])],
+                ),
+            ],
+        ),
+        feature(
+            name = "treat_warnings_as_errors",
+            enabled = True,
+            requires = [feature_set(features = ["warning_flags"])],
+            flag_sets = [
+                flag_set(
+                    # Applied to C and C++ compilation only, excluding assembly.
+                    actions = [ACTION_NAMES.c_compile] + _ALL_CXX_COMPILE_ACTIONS,
+                    flag_groups = [flag_group(flags = ["-Werror"])],
+                ),
+            ],
+        ),
+        # Mode stubs for Bazel's built-in compilation modes. Bazel activates
+        # one of these based on --compilation_mode. Declaring them here lets
+        # mode-specific compile flag features gate on them.
+        feature(name = "fastbuild"),
+        feature(name = "dbg"),
+        feature(name = "opt"),
+        feature(
+            name = "fastbuild_compile_flags",
+            enabled = True,
+            requires = [feature_set(features = ["fastbuild"])],
+            flag_sets = [
+                flag_set(
+                    # Bare-metal targets require some optimisation to run correctly, so fastbuild is not unoptimised.
+                    actions = [ACTION_NAMES.c_compile] + _ALL_CXX_COMPILE_ACTIONS,
+                    flag_groups = [flag_group(flags = ["-g3", "-O2", "-DNDEBUG"])],
+                ),
+                flag_set(
+                    # Assembly carries debug info only. The assembler does not accept optimisation flags.
+                    actions = _ALL_ASSEMBLE_ACTIONS,
+                    flag_groups = [flag_group(flags = ["-g3"])],
+                ),
+            ],
+        ),
+        feature(
+            name = "dbg_compile_flags",
+            enabled = True,
+            requires = [feature_set(features = ["dbg"])],
+            flag_sets = [
+                flag_set(
+                    actions = [ACTION_NAMES.c_compile] + _ALL_CXX_COMPILE_ACTIONS,
+                    flag_groups = [flag_group(flags = ["-g3"])],
+                ),
+            ],
+        ),
+        feature(
+            name = "opt_compile_flags",
+            enabled = True,
+            requires = [feature_set(features = ["opt"])],
+            flag_sets = [
+                flag_set(
+                    actions = [ACTION_NAMES.c_compile] + _ALL_CXX_COMPILE_ACTIONS,
+                    flag_groups = [flag_group(flags = ["-O2", "-DNDEBUG"])],
+                ),
+            ],
+        ),
+        feature(
             name = "realtime_os_define",
             enabled = True,
             flag_sets = [
@@ -215,8 +297,8 @@ def _impl(ctx):
                                 "-Wl,--gc-sections",
                                 "-specs=nano.specs",
                                 "-specs=nosys.specs",
-                                # newlib-nano does not auto-link libm/libstdc++ (CMake gets these
-                                # via the g++ link driver)
+                                # Newlib-nano requires explicit standard library flags. The link driver
+                                # is gcc, not g++, so the C++ standard library is not added automatically.
                                 "-lm",
                                 "-lstdc++",
                             ],
@@ -225,8 +307,6 @@ def _impl(ctx):
                 ),
             ],
         ),
-
-        # TODO: Verify if assumption is correct: bare-metal targets do not use PIC or dynamic linking
         feature(name = "supports_pic", enabled = False),
         feature(name = "supports_dynamic_linker", enabled = False),
     ]
