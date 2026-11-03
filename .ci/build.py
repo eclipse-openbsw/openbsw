@@ -119,7 +119,35 @@ commands = {
         configs=["Debug", "Release", "RelWithDebInfo"],
         platforms=["arm"],
         build_dir="build/s32k148-threadx",
-    )
+    ),
+    "nucleo-g474re-freertos": BuildOpTpl(
+        config_cmd="cmake --preset nucleo-g474re-freertos",
+        build_cmd="cmake --build --preset nucleo-g474re-freertos",
+        configs=["Debug", "Release", "RelWithDebInfo"],
+        platforms=["arm"],
+        build_dir="build/nucleo-g474re-freertos",
+    ),
+    "nucleo-g474re-threadx": BuildOpTpl(
+        config_cmd="cmake --preset nucleo-g474re-threadx",
+        build_cmd="cmake --build --preset nucleo-g474re-threadx",
+        configs=["Debug", "Release", "RelWithDebInfo"],
+        platforms=["arm"],
+        build_dir="build/nucleo-g474re-threadx",
+    ),
+    "nucleo-f413zh-freertos": BuildOpTpl(
+        config_cmd="cmake --preset nucleo-f413zh-freertos",
+        build_cmd="cmake --build --preset nucleo-f413zh-freertos",
+        configs=["Debug", "Release", "RelWithDebInfo"],
+        platforms=["arm"],
+        build_dir="build/nucleo-f413zh-freertos",
+    ),
+    "nucleo-f413zh-threadx": BuildOpTpl(
+        config_cmd="cmake --preset nucleo-f413zh-threadx",
+        build_cmd="cmake --build --preset nucleo-f413zh-threadx",
+        configs=["Debug", "Release", "RelWithDebInfo"],
+        platforms=["arm"],
+        build_dir="build/nucleo-f413zh-threadx",
+    ),
 }
 
 
