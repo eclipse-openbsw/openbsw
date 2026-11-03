@@ -16,6 +16,7 @@ of output paths as printed by `jinja2cpp.py --list-outputs`, which is checked in
 and verified against actual generator output at build time.
 """
 
+load("@bazel_skylib//lib:paths.bzl", "paths")
 load("@bazel_skylib//lib:shell.bzl", "shell")
 load("@bazel_skylib//rules:diff_test.bzl", "diff_test")
 load("@bazel_skylib//rules:write_file.bzl", "write_file")
@@ -27,13 +28,15 @@ _GENERATOR_TOOL = "//libs/bsw/middleware/tools/cpp_generator:jinja2cpp"
 # at their source-tree paths inside the sandbox.
 _GENERATOR_TEMPLATES = "//libs/bsw/middleware/tools/cpp_generator:generator_templates"
 
-# Package path of the generator, passed to --input so jinja2cpp.py can
-# locate templates/jinja/ and templates/schemas/ relative to it.
-_GENERATOR_INPUT = Label(_GENERATOR_TOOL).package
+# Execroot-relative path to the generator package, passed as --input so
+# jinja2cpp.py can locate its templates and schemas. workspace_root is "" for
+# the main module and "external/<name>" when used as a Bzlmod dependency.
+_generator_tool_label = Label(_GENERATOR_TOOL)
+_GENERATOR_INPUT = paths.join(_generator_tool_label.workspace_root, _generator_tool_label.package)
 
 def _codegen_srcs_impl(ctx):
     outs = ctx.outputs.outs
-    output_dir = "/".join([ctx.bin_dir.path, ctx.label.package, ctx.attr.gen_root])
+    output_dir = paths.join(ctx.bin_dir.path, ctx.label.workspace_root, ctx.label.package, ctx.attr.gen_root)
 
     args = ctx.actions.args()
     args.add("--input", _GENERATOR_INPUT)
