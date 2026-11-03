@@ -391,30 +391,28 @@ void ServiceAnnouncer::checkPendingTasks(uint64_t const now)
     {
         if (itr->getTimestamp() <= now)
         {
-            initializeUnicastMessage(itr->getDestinationAddress());
-            ::ip::IPAddress const currentDestination = itr->getDestinationAddress();
-            processTaskBrowseResults(*itr);
-            releaseTask(*itr);
+            auto& task = *itr;
+            initializeUnicastMessage(task.getDestinationAddress());
+            ::ip::IPAddress const currentDestination = task.getDestinationAddress();
+            processTaskBrowseResults(task);
             itr = _pendingBrowseRequests.erase_after(prev);
+            releaseTask(task);
 
-            tPendingTaskList::iterator followUpItr     = itr;
-            tPendingTaskList::iterator prevFollowUpItr = prev;
-            while ((followUpItr != _pendingBrowseRequests.end())
-                   && (followUpItr->getDestinationAddress() == currentDestination))
+            while ((itr != _pendingBrowseRequests.end())
+                   && (itr->getDestinationAddress() == currentDestination))
             {
-                if (followUpItr->getTimestamp() <= now)
+                if (itr->getTimestamp() <= now)
                 {
-                    processTaskBrowseResults(*followUpItr);
-                    releaseTask(*followUpItr);
-                    followUpItr = _pendingBrowseRequests.erase_after(prevFollowUpItr);
+                    auto& followUpTask = *itr;
+                    processTaskBrowseResults(followUpTask);
+                    itr = _pendingBrowseRequests.erase_after(prev);
+                    releaseTask(followUpTask);
                 }
                 else
                 {
-                    prevFollowUpItr = followUpItr;
-                    ++followUpItr;
+                    prev = itr;
+                    ++itr;
                 }
-                prev = prevFollowUpItr;
-                itr  = followUpItr;
             }
             finalizeMessage();
         }

@@ -18,13 +18,13 @@ jobs:
     strategy:
     #   max-parallel: 1
       matrix:
-        preset: [ "tests-posix-debug", "tests-posix-release", "tests-s32k1xx-debug", "tests-s32k1xx-release", "tests-stm32-debug", "tests-stm32-release", "posix-freertos", "posix-threadx", "posix-freertos-with-tracing", "posix-freertos-canfd", "posix-rust", "s32k148-freertos", "s32k148-threadx", "s32k148-rust" ]
+        preset: [ "tests-posix-debug", "tests-posix-release", "tests-s32k1xx-debug", "tests-s32k1xx-release", "tests-stm32-debug", "tests-stm32-release", "posix-freertos", "posix-threadx", "posix-freertos-with-tracing", "posix-freertos-canfd", "posix-rust", "s32k148-freertos", "s32k148-threadx", "s32k148-rust", "nucleo-g474re-freertos", "nucleo-g474re-threadx", "nucleo-f413zh-freertos", "nucleo-f413zh-threadx" ]
         cxxid: ["gcc", "clang"]
         cxxstd: [ 17, 20, 23 ]
         # `platform` and `config` are fully determined by `preset`:
-        # - platform: s32k148-* -> arm, everything else -> linux
+        # - platform: s32k148-*/nucleo-* -> arm, everything else -> linux
         # - config: presets with "debug"/"release" in the name use that config;
-        #   the remaining presets (posix-*, s32k148-*) are multi-config and are
+        #   the remaining presets (posix-*, s32k148-*, nucleo-*) are multi-config and are
         #   built as RelWithDebInfo here.
         # Deriving both via `include` avoids a separate cross-product axis (and
         # the excludes that would otherwise be needed for it).
@@ -69,6 +69,18 @@ jobs:
             platform: "arm"
             config: "RelWithDebInfo"
           - preset: "s32k148-rust"
+            platform: "arm"
+            config: "RelWithDebInfo"
+          - preset: "nucleo-g474re-freertos"
+            platform: "arm"
+            config: "RelWithDebInfo"
+          - preset: "nucleo-g474re-threadx"
+            platform: "arm"
+            config: "RelWithDebInfo"
+          - preset: "nucleo-f413zh-freertos"
+            platform: "arm"
+            config: "RelWithDebInfo"
+          - preset: "nucleo-f413zh-threadx"
             platform: "arm"
             config: "RelWithDebInfo"
         exclude:

@@ -96,7 +96,10 @@ extern "C" void configurePll()
 
     // Wait >= 1 us for voltage regulator to settle at new frequency
     // At 170/2 = 85 MHz, 100 cycles > 1 us
-    for (uint32_t volatile i = 0U; i < 100U; i++) {}
+    for (uint32_t i = 0U; i < 100U; i++)
+    {
+        __asm volatile("nop");
+    }
 
     // Restore AHB prescaler to /1
     RCC->CFGR = (RCC->CFGR & ~RCC_CFGR_HPRE_Msk) | RCC_CFGR_HPRE_DIV1;
