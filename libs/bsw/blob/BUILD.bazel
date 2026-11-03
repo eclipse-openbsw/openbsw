@@ -10,6 +10,17 @@
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
 load("@rules_cc//cc:cc_test.bzl", "cc_test")
 load("//bazel/config/build_variant:compatibility.bzl", "unit_test_only")
+load("//tools/blob:routing.bzl", "generate_routing")
+
+generate_routing(
+    name = "generated_routing_headers",
+    jsonl = "test/routing.jsonl",
+    visibility = ["//visibility:public"],
+)
+
+exports_files([
+    "test/routing.jsonl",
+])
 
 # Override via --//libs/bsw/blob:blob_configuration=<your_blob_config_target>
 label_flag(
@@ -43,23 +54,20 @@ cc_library(
     ],
 )
 
-# Provides only ConfigType.h so the blob library can compile in unit-test
-# builds without leaking CONFIGURATION_BLOB data into consumers.
+# Provides generated blob/routing headers for blob unit-test build settings.
 cc_library(
     name = "blob_test_config_type",
-    hdrs = ["test/include/blob/ConfigType.h"],
-    strip_include_prefix = "test/include",
     target_compatible_with = unit_test_only(),
     visibility = ["//visibility:public"],
+    deps = [":generated_routing_headers"],
 )
 
-# Provides the CONFIGURATION_BLOB byte array used by blob unit tests.
+# Provides generated CONFIGURATION_BLOB data used by blob unit tests.
 cc_library(
     name = "blob_test_configuration",
-    hdrs = ["test/include/blob/configuration.h"],
-    strip_include_prefix = "test/include",
     target_compatible_with = unit_test_only(),
     visibility = ["//visibility:public"],
+    deps = [":generated_routing_headers"],
 )
 
 cc_test(
