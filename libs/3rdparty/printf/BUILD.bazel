@@ -29,10 +29,15 @@ expand_template(
 )
 
 cc_library(
+    name = "printf_config",
+    hdrs = [":printf_config_h"],
+    strip_include_prefix = "include",
+)
+
+cc_library(
     name = "printf",
     srcs = [
         "src/printf/printf.c",
-        ":printf_config_h",
     ],
     hdrs = [
         "src/printf/printf.h",
@@ -42,8 +47,8 @@ cc_library(
         "-pedantic",
         "-Wall",
         "-Wextra",
-        "-I$(GENDIR)/libs/3rdparty/printf/include",
     ],
+    implementation_deps = [":printf_config"],
     local_defines = ["PRINTF_INCLUDE_CONFIG_H"],
     strip_include_prefix = "src",
     visibility = ["//visibility:public"],
