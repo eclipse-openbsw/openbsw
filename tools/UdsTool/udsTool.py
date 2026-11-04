@@ -328,6 +328,25 @@ def control_dtc_setting(
         services.controlDtcSetting(client, setting_type, data)
 
 
+# UDS service ECU Reset (0x11)
+@start.command(help="UDS service ECU Reset (0x11)")
+@conn_params
+@click.option("--reset-type", required=True, help="Reset type [hex]")
+def reset(
+    host, ecu, source, reset_type, can, canif, eth, channel, txid, rxid, config, doip
+):
+    if can:
+        # Handle CAN connection
+        client = connection.createCanConnection(
+            canif, channel, int(txid, 16), int(rxid, 16), config
+        )
+        services.ecuReset(client, reset_type)
+    elif eth:
+        # Handle Ethernet connection
+        client = connection.createEthConnection(host, ecu, source, doip)
+        services.ecuReset(client, reset_type)
+
+
 # Enter raw command to send
 @start.command(help="Enter raw command to send")
 @conn_params

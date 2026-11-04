@@ -127,8 +127,8 @@ def transferExit(client):
     return helper.handleResponse(response)
 
 
-def ecuReset(client, data):
-    data = int(data)
+def ecuReset(client, reset_type):
+    data = int(reset_type, 16)
     req = uds.ECUReset.make_request(data)
     response = client.send_request(req)
 
