@@ -1,4 +1,4 @@
-/********************************************************************************
+﻿/********************************************************************************
  * Copyright (c) 2024 Accenture
  *
  * This program and the accompanying materials are made available under the
@@ -13,6 +13,7 @@
 #include <can/CanLogger.h>
 #include <can/canframes/ICANFrameSentListener.h>
 #include <linux/can.h>
+#include <linux/can/error.h>
 #include <linux/can/raw.h>
 #include <net/if.h>
 #include <sys/ioctl.h>
@@ -175,6 +176,15 @@ void SocketCanTransceiver::run(int maxSentPerRun, int maxReceivedPerRun)
                   { guardedRun(maxSentPerRun, maxReceivedPerRun); });
 }
 
+void SocketCanTransceiver::manualBusOffRecovery()
+{
+    signalGuarded([this]
+    {
+        guardedClose();
+        guardedOpen();
+    });
+}
+
 void SocketCanTransceiver::guardedOpen()
 {
     // NOLINTBEGIN(cppcoreguidelines-pro-type-vararg): Logger API is variadic by design.
@@ -213,6 +223,20 @@ void SocketCanTransceiver::guardedOpen()
         }
     }
 
+    // Enable CAN error frames for bus-off and controller-state transitions so
+    // handleErrorFrame() can translate them into ICANTransceiverStateListener callbacks.
+    can_err_mask_t const errMask = CAN_ERR_BUSOFF | CAN_ERR_CRTL;
+    error = setsockopt(fd, SOL_CAN_RAW, CAN_RAW_ERR_FILTER, &errMask, sizeof(errMask));
+    if (error < 0)
+    {
+        Logger::error(
+            CAN,
+            "[SocketCanTransceiver] Failed to enable CAN error frames (node=%s, error=%d)",
+            name,
+            error);
+        // Non-fatal: continue without bus-off/error-state visibility rather than failing open().
+    }
+
     error = fcntl(fd, F_SETFL, O_NONBLOCK);
     if (error < 0)
     {
@@ -246,6 +270,45 @@ void SocketCanTransceiver::guardedClose()
 {
     ::close(_fileDescriptor);
     _fileDescriptor = -1;
+}
+
+void SocketCanTransceiver::handleErrorFrame(
+    uint32_t const canId, uint8_t const* const data, uint8_t const length)
+{
+    // NOLINTBEGIN(cppcoreguidelines-pro-type-vararg): Logger API is variadic by design.
+    if (length < CAN_ERR_DLC)
+    {
+        return;
+    }
+
+    // Each error frame is a discrete event and must be forwarded to the listener individually.
+    // CanBusOffPolicy is the single place that debounces this stream (saturating occurrence
+    // counter for bus-off, continuous-ACTIVE timer for recovery).
+    if ((canId & CAN_ERR_BUSOFF) != 0U)
+    {
+        Logger::error(CAN, "[SocketCanTransceiver] bus-off error frame received");
+        _transceiverState = ICANTransceiverStateListener::CANTransceiverState::BUS_OFF;
+        if (_stateListener != nullptr)
+        {
+            _stateListener->canTransceiverStateChanged(*this, _transceiverState);
+        }
+        return;
+    }
+
+    if ((canId & CAN_ERR_CRTL) != 0U)
+    {
+        uint8_t const ctrlStatus = data[1];
+        if ((ctrlStatus & CAN_ERR_CRTL_ACTIVE) != 0U)
+        {
+            Logger::debug(CAN, "[SocketCanTransceiver] controller recovered to error-active");
+            _transceiverState = ICANTransceiverStateListener::CANTransceiverState::ACTIVE;
+            if (_stateListener != nullptr)
+            {
+                _stateListener->canTransceiverStateChanged(*this, _transceiverState);
+            }
+        }
+    }
+    // NOLINTEND(cppcoreguidelines-pro-type-vararg)
 }
 
 void SocketCanTransceiver::guardedRun(int maxSentPerRun, int maxReceivedPerRun)
@@ -323,6 +386,13 @@ void SocketCanTransceiver::guardedRun(int maxSentPerRun, int maxReceivedPerRun)
                 CAN,
                 "[SocketCanTransceiver] discarded frame with unexpected size=%d",
                 static_cast<int>(bytesRead));
+            continue;
+        }
+
+        // Check for SocketCAN error frame (CAN_ERR_FLAG in can_id).
+        if ((inFrame.can_id & CAN_ERR_FLAG) != 0U)
+        {
+            handleErrorFrame(inFrame.can_id, inFrame.data, inFrame.len);
             continue;
         }
 

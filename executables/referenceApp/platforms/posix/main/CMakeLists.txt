@@ -1,4 +1,4 @@
-add_library(main src/main.cpp src/lifecycle/StaticBsp.cpp)
+﻿add_library(main src/main.cpp src/lifecycle/StaticBsp.cpp)
 
 target_include_directories(main PUBLIC include)
 
@@ -18,7 +18,7 @@ endif ()
 if (PLATFORM_SUPPORT_CAN)
     target_sources(main PRIVATE src/systems/CanSystem.cpp)
 
-    target_link_libraries(main PRIVATE configuration socketCanTransceiver)
+    target_link_libraries(main PRIVATE configuration socketCanTransceiver canBusOff)
 endif ()
 
 if (PLATFORM_SUPPORT_ETHERNET)
@@ -27,3 +27,4 @@ if (PLATFORM_SUPPORT_ETHERNET)
                                        ethConfiguration configuration)
 
 endif ()
+

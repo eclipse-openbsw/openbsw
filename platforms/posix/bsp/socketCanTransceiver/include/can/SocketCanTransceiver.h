@@ -1,4 +1,4 @@
-/********************************************************************************
+﻿/********************************************************************************
  * Copyright (c) 2024 Accenture
  *
  * This program and the accompanying materials are made available under the
@@ -14,6 +14,7 @@
 #include <io/MemoryQueue.h>
 
 #include <etl/atomic.h>
+#include <can/transceiver/ICANTransceiverStateListener.h>
 
 namespace can
 {
@@ -23,8 +24,7 @@ namespace can
  *
  * The class assumes that all its methods except write(), the constructor, and the destructor are
  * run in the same task context. The deviation from this can result in unobvious UBs.
- * The transceiver state change detection is currently not implemented,
- * the corresponding callback is never called.
+ * Transceiver state change detection is implemented via CAN error frames: the socket is opened with CAN_RAW_ERR_FILTER for CAN_ERR_BUSOFF | CAN_ERR_CRTL so bus-off and recovery events are delivered as SocketCAN error frames and translated into ICANTransceiverStateListener callbacks.
  */
 class SocketCanTransceiver final : public AbstractCANTransceiver
 {
@@ -69,6 +69,21 @@ public:
      */
     void run(int maxSentPerRun, int maxReceivedPerRun);
 
+    /**
+     * Models bus-off recovery by closing and reopening the SocketCAN socket,
+     * draining any queued error frames from the kernel RX buffer.
+     * Call this once CanBusOffPolicy signals a recovery edge.
+     */
+    void manualBusOffRecovery();
+
+    /**
+     * Register (or unregister with nullptr) a state-change listener.
+     * The listener receives BUS_OFF and ACTIVE notifications translated
+     * from SocketCAN error frames during run().
+     */
+    void setStateListener(ICANTransceiverStateListener& listener) { _stateListener = &listener; }
+    void removeStateListener() { _stateListener = nullptr; }
+
 private:
     static constexpr size_t TX_NUM_ELEMENTS       = 16U;
     static constexpr size_t TX_ELEMENT_SIZE_BYTES = sizeof(CANFrame) + sizeof(void*);
@@ -87,6 +102,7 @@ private:
     void guardedOpen();
     void guardedClose();
     void guardedRun(int maxSentPerRun, int maxReceivedPerRun);
+    void handleErrorFrame(uint32_t canId, uint8_t const* data, uint8_t length);
 
     TxQueue _txQueue;
     ::io::MemoryQueueReader<TxQueue> _txReader;
@@ -97,6 +113,11 @@ private:
     int _fileDescriptor;
 
     ::etl::atomic_bool _writable;
+
+    ICANTransceiverStateListener* _stateListener{nullptr};
+    ICANTransceiverStateListener::CANTransceiverState _transceiverState{
+        ICANTransceiverStateListener::CANTransceiverState::ACTIVE};
 };
 
 } // namespace can
+

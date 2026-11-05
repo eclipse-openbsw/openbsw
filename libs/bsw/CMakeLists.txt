@@ -1,4 +1,4 @@
-add_subdirectory(async)
+﻿add_subdirectory(async)
 add_subdirectory(asyncConsole)
 add_subdirectory(asyncFreeRtos)
 add_subdirectory(asyncImpl)
@@ -24,6 +24,7 @@ endif ()
 
 add_subdirectory(bsp)
 add_subdirectory(common)
+add_subdirectory(canBusOff)
 add_subdirectory(cpp2can)
 add_subdirectory(io)
 add_subdirectory(lifecycle)
@@ -50,3 +51,4 @@ if (OPENBSW_CONFIGURE_GENERIC_BSW)
     add_subdirectory(transportRouterSimple)
     add_subdirectory(uds)
 endif ()
+
