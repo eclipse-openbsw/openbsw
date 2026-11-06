@@ -127,6 +127,8 @@ struct RoutineControlJobTest : ::testing::Test
         fRequestBuffer[1] = DUMMY_VALUE; // default value which have to be set in the tests
         fRequestBuffer[2] = TestableRoutineControlJob::ROUTINE_IDENTIFIER[0];
         fRequestBuffer[3] = TestableRoutineControlJob::ROUTINE_IDENTIFIER[1];
+        fMessage.setPayloadLength(4U);
+        (void)fMessage.increaseValidBytes(4U);
 
         fRoutineControlJobExtended.setDefaultDiagSessionManager(fDiagSessionManager);
         fIncomingDiagConnection.requestMessage = &fMessage;
