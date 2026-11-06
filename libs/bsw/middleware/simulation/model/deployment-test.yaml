@@ -20,8 +20,8 @@ clusters:
 
 # Infrastructure allocators for memory management
 allocators:
-  - &default_allocator
-    name: default
+  - name: Main
+    default: true
     pools:
       - NumberOfElements: 10
         ChunkSize: 64
@@ -147,10 +147,9 @@ services:
           name: result
           type: "::org::test::foo::Foo::FooMethodResult"
 
-    headers:
-      common: org/test/foo/FooCommon.h
-      proxy: org/test/foo/FooProxy.h
-      skeleton: org/test/foo/FooSkeleton.h
+    commonInclude: org/test/foo/FooCommon.h
+    proxyInclude: org/test/foo/FooProxy.h
+    skeletonInclude: org/test/foo/FooSkeleton.h
 
     deployment:
       instance_ids: [1]

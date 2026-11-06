@@ -10,8 +10,8 @@
 
 #include "foo/FooProxyWrapper.h"
 #include "foo/FooSkeletonWrapper.h"
-#include "middleware/ClusterCluster0.h"
-#include "middleware/ClusterCluster1.h"
+#include "middleware/Cluster0Cluster.h"
+#include "middleware/Cluster1Cluster.h"
 #include "middleware/shm/Config.h"
 #include "time/mock/SystemTimerProviderMock.h"
 

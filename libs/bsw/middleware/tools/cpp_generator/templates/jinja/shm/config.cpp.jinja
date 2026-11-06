@@ -36,13 +36,13 @@ namespace middleware::shm
 {{ allocator.name | capitalize }}Allocator& get{{ allocator.name | capitalize }}Allocator()
 {
     MemoryLayout& layout = getMemoryLayout();
-    return layout.{{ allocator.name }}Allocator;
+    return layout.{{ allocator.name | lower }}Allocator;
 }
 
 volatile uint8_t* get{{ allocator.name | capitalize }}AllocatorMutex()
 {
     MemoryLayout& layout = getMemoryLayout();
-    return &layout.{{ allocator.name }}AllocatorMutex;
+    return &layout.{{ allocator.name | lower }}AllocatorMutex;
 }
 
 {% endfor %}

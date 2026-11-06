@@ -17,7 +17,7 @@
 
 #include "Logger.h"
 #include "foo/FooSkeletonWrapper.h"
-#include "middleware/ClusterCluster0.h"
+#include "middleware/Cluster0Cluster.h"
 #include "middleware/shm/PduDefinitions.h"
 #include "middleware/shm/QueueDefinitions.h"
 #include "org/test/signal/samplePduWithDatatypesCommon.h"

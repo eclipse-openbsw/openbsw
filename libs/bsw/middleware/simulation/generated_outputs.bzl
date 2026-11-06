@@ -23,10 +23,8 @@ A dedicated test target catches drift between this file and the generator automa
 """
 
 GENERATED_OUTPUTS = [
-    "include/generated_code/middleware/ClusterCluster0.h",
-    "include/generated_code/middleware/ClusterCluster1.h",
-    "include/generated_code/middleware/ClusterConnectionsCluster0Cluster1.h",
-    "include/generated_code/middleware/ClusterConnectionsCluster1Cluster0.h",
+    "include/generated_code/middleware/Cluster0Cluster.h",
+    "include/generated_code/middleware/Cluster1Cluster.h",
     "include/generated_code/middleware/ClusterId.h",
     "include/generated_code/middleware/shm/Config.h",
     "include/generated_code/org/test/foo/FooCommon.h",
@@ -40,8 +38,8 @@ GENERATED_OUTPUTS = [
     "include/generated_code/middleware/shm/PduDefinitions.h",
     "include/generated_code/middleware/shm/QueueDefinitions.h",
     "src/generated_code/AllocatorSelectorDefinitions.cpp",
-    "src/generated_code/ClusterCluster0.cpp",
-    "src/generated_code/ClusterCluster1.cpp",
+    "src/generated_code/Cluster0Cluster.cpp",
+    "src/generated_code/Cluster1Cluster.cpp",
     "src/generated_code/org/test/foo/FooCommon.cpp",
     "src/generated_code/org/test/foo/FooProxy.cpp",
     "src/generated_code/org/test/foo/FooSkeleton.cpp",

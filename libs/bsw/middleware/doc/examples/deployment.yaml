@@ -22,8 +22,8 @@ clusters:
     queueSize: 10
 
 allocators:
-  - &default_allocator
-    name: default
+  - name: Main
+    default: true
     pools:
       - NumberOfElements: 10
         ChunkSize: 64
@@ -58,7 +58,6 @@ services:
     name: DummyService
     filename: dummy_service
     id: 10
-    allocator: *default_allocator
     enums: []
     datatypes:
       - name: Foo
@@ -139,12 +138,11 @@ services:
         variable: simpleBroadcast
         id: 129
         type: uint32_t
-    headers:
-      common: features/communication/dummy_serviceCommon.h
-      proxy: features/communication/dummy_serviceProxy.h
-      skeleton: features/communication/dummy_serviceSkeleton.h
-      proxy_mock: features/communication/dummy_serviceProxyMock.h
-      skeleton_mock: features/communication/dummy_serviceSkeletonMock.h
+    commonInclude: features/communication/dummy_serviceCommon.h
+    proxyInclude: features/communication/dummy_serviceProxy.h
+    skeletonInclude: features/communication/dummy_serviceSkeleton.h
+    proxyMockInclude: features/communication/dummy_serviceProxyMock.h
+    skeletonMockInclude: features/communication/dummy_serviceSkeletonMock.h
     deployment:
       clusters:
         - cluster: *core0

@@ -30,7 +30,11 @@ properties:
 
   allocators:
     type: array
-    description: "List of memory allocators for middleware infrastructure"
+    description: >-
+      Memory allocators for middleware infrastructure. Exactly one allocator
+      must set default; it serves every service that does not select another
+      one.
+    minItems: 1
     items:
       $ref: "#/definitions/allocator"
 
@@ -92,9 +96,14 @@ definitions:
         type: string
         description: "Allocator name (e.g., default, custom)"
         pattern: "^[A-Za-z][A-Za-z0-9]*$"
+      default:
+        type: boolean
+        description: "Marks the allocator used by services without an explicit one"
+        default: false
       pools:
         type: array
         description: "List of memory pools for the allocator"
+        minItems: 1
         items:
           $ref: "#/definitions/pool"
 
@@ -407,25 +416,6 @@ definitions:
       type:
         type: string
 
-  headers:
-    type: object
-    additionalProperties: false
-    required:
-      - common
-      - proxy
-      - skeleton
-    properties:
-      common:
-        type: string
-      proxy:
-        type: string
-      skeleton:
-        type: string
-      proxy_mock:
-        type: string
-      skeleton_mock:
-        type: string
-
   providers:
     type: object
     additionalProperties: false
@@ -474,6 +464,12 @@ definitions:
         items:
           type: integer
           minimum: 1
+      MemoryAllocator:
+        type: string
+        description: >-
+          Name of the allocator serving this service (the name of an entry of
+          'allocators'). Omit to use the default allocator.
+        pattern: "^[A-Za-z][A-Za-z0-9]*$"
 
   service:
     type: object
@@ -482,7 +478,9 @@ definitions:
       - namespace
       - name
       - id
-      - headers
+      - commonInclude
+      - proxyInclude
+      - skeletonInclude
       - deployment
     properties:
       namespace:
@@ -506,11 +504,6 @@ definitions:
         type: integer
         description: "Unique service identifier"
         minimum: 0
-      allocator:
-        $ref: "#/definitions/allocator"
-      allocator_func:
-        type: string
-        description: "Custom allocator function name (deprecated, use allocator)"
       enums:
         type: array
         description: "Enum type definitions"
@@ -557,8 +550,21 @@ definitions:
         type: array
         items:
           $ref: "#/definitions/event_definition"
-      headers:
-        $ref: "#/definitions/headers"
+      commonInclude:
+        type: string
+        description: "Header of the generated common (data types) file"
+      proxyInclude:
+        type: string
+        description: "Header of the generated proxy"
+      skeletonInclude:
+        type: string
+        description: "Header of the generated skeleton"
+      proxyMockInclude:
+        type: string
+        description: "Header of the proxy mock (mock generation mode)"
+      skeletonMockInclude:
+        type: string
+        description: "Header of the skeleton mock (mock generation mode)"
       deployment:
         $ref: "#/definitions/deployment"
     allOf:
@@ -569,11 +575,9 @@ definitions:
             generation_mode:
               const: mock
         then:
-          properties:
-            headers:
-              required:
-                - proxy_mock
-                - skeleton_mock
+          required:
+            - proxyMockInclude
+            - skeletonMockInclude
 
   connection_endpoint:
     type: object
@@ -592,10 +596,6 @@ definitions:
       id:
         type: integer
         minimum: 0
-      allocator:
-        $ref: "#/definitions/allocator"
-      allocator_func:
-        type: string
       enums:
         type: array
         items:
@@ -638,8 +638,16 @@ definitions:
         type: array
         items:
           $ref: "#/definitions/event_definition"
-      headers:
-        $ref: "#/definitions/headers"
+      commonInclude:
+        type: string
+      proxyInclude:
+        type: string
+      skeletonInclude:
+        type: string
+      proxyMockInclude:
+        type: string
+      skeletonMockInclude:
+        type: string
       deployment:
         $ref: "#/definitions/deployment"
       max_instances:
