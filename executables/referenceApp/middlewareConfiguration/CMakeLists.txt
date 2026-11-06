@@ -18,10 +18,8 @@ set(_GEN_SRC ${_GEN_DIR}/src/generated_code)
 
 set(_GENERATED_HEADERS
     ${_GEN_INC}/middleware/ClusterId.h
-    ${_GEN_INC}/middleware/ClusterCluster0.h
-    ${_GEN_INC}/middleware/ClusterCluster1.h
-    ${_GEN_INC}/middleware/ClusterConnectionsCluster0Cluster1.h
-    ${_GEN_INC}/middleware/ClusterConnectionsCluster1Cluster0.h
+    ${_GEN_INC}/middleware/Cluster0Cluster.h
+    ${_GEN_INC}/middleware/Cluster1Cluster.h
     ${_GEN_INC}/middleware/shm/Config.h
     ${_GEN_INC}/middleware/shm/AllocatorsDefinitions.h
     ${_GEN_INC}/middleware/shm/QueueDefinitions.h
@@ -31,8 +29,8 @@ set(_GENERATED_HEADERS
 
 set(GENERATED_SRCS
     ${_GEN_SRC}/AllocatorSelectorDefinitions.cpp
-    ${_GEN_SRC}/ClusterCluster0.cpp
-    ${_GEN_SRC}/ClusterCluster1.cpp
+    ${_GEN_SRC}/Cluster0Cluster.cpp
+    ${_GEN_SRC}/Cluster1Cluster.cpp
     ${_GEN_SRC}/shm/Config.cpp
     ${_GEN_SRC}/org/test/foo/FooCommon.cpp
     ${_GEN_SRC}/org/test/foo/FooProxy.cpp
