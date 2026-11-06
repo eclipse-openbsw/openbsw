@@ -1,0 +1,57 @@
+@import "css/theme.css";
+
+/* increase width of left menu bar and right content view larger than in RTD theme */
+
+@media screen and (min-width: 768px) {
+    .wy-nav-content {
+        max-width: 1000px !important;
+    }
+    .wy-side-scroll {
+        width: 350px !important;
+        -ms-overflow-style: none;  /* IE, Edge */
+        scrollbar-width: none;  /* Firefox */
+    }
+    .wy-side-scroll::-webkit-scrollbar { display: none; } /* Chrome, Safari, Opera */
+    .wy-side-nav-search  { width: 350px !important; }
+    .wy-nav-side         { width: 350px !important; }
+    .wy-menu-vertical    { width: 350px !important; }
+    .wy-nav-content-wrap { margin-left: 350px !important; }
+}
+
+/* wrap text in tables */
+
+.wy-table-responsive table td, .wy-table-responsive table th {
+    white-space: normal;
+}
+
+/* "Last updated" text in footer starts in a new line */
+
+.lastupdated {
+    white-space: pre-line;
+    display: block;
+}
+
+/* when setting size to 100% in rst files to make images "clickable", the height will be incorrect
+   without the following configuration */
+
+img {
+    height: auto !important;
+}
+
+/* centered images and figures should have a margin at the bottom */
+
+.rst-content img.align-center:not(table)    { margin-bottom: 24px; }
+.rst-content figure.align-center:not(table) { margin-bottom: 24px; }
+
+/* overwrite the red default color of literals which looks like an error. */
+
+.rst-content code.literal              { color:black }
+
+/* overwrite the colors for "file" */
+
+.literal.file                          { background: #FFFFFF; color:mediumpurple !important }
+
+/* overwrite the style for "download" role */
+
+.rst-content code.download span:first-child:before { content: none !important; }
+.rst-content code.download { color: unset !important; }
