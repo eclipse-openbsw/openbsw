@@ -20,11 +20,15 @@ clusters:
 
 # Infrastructure allocators for memory management
 allocators:
-  - &default_allocator
-    name: default
+  - name: Main
+    default: true
     pools:
       - NumberOfElements: 10
         ChunkSize: 64
+  - name: Custom
+    pools:
+      - NumberOfElements: 4
+        ChunkSize: 128
 
 services:
   - &foo
@@ -56,12 +60,12 @@ services:
         consumer_request_limit: 1
         provider_request_limit: 1
 
-    headers:
-      common: org/test/foo/FooCommon.h
-      proxy: org/test/foo/FooProxy.h
-      skeleton: org/test/foo/FooSkeleton.h
+    commonInclude: org/test/foo/FooCommon.h
+    proxyInclude: org/test/foo/FooProxy.h
+    skeletonInclude: org/test/foo/FooSkeleton.h
 
     deployment:
+      MemoryAllocator: Custom
       instance_ids: [1]
       clusters:
         - cluster: *cluster0

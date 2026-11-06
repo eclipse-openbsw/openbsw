@@ -123,7 +123,7 @@ def load_input_data(input_base: Path, deployment_yaml: Path | None = None) -> di
             f"✓ Loaded deployment data: {_safe_len(getattr(data, 'services', []))} services, "
             f"{_safe_len(getattr(data, 'clusters', []))} clusters, "
             f"{_safe_len(getattr(data, 'connections', []))} connections, "
-            f"{_safe_len(getattr(data, 'allocators', []))} allocators, "
+            f"{_safe_len(getattr(data, 'allocators', None))} allocators, "
             f"{_safe_len(getattr(data, 'pdus', []))} pdus"
         )
         return data
@@ -185,17 +185,10 @@ TEMPLATE_CONFIG = {
     "per_cluster": [
         (
             "service/cluster_srcCluster.h.jinja",
-            "Cluster{}.h",
+            "{}Cluster.h",
             "include/generated_code/middleware",
         ),
-        ("service/cluster_srcCluster.cpp.jinja", "Cluster{}.cpp", "src/generated_code"),
-    ],
-    "per_connection": [
-        (
-            "cluster_connections_srcCluster_to_tgtCluster.h.jinja",
-            "ClusterConnections{}{}.h",
-            "include/generated_code/middleware",
-        ),
+        ("service/cluster_srcCluster.cpp.jinja", "{}Cluster.cpp", "src/generated_code"),
     ],
     "per_service": [
         ("service/common.h.jinja", "{}Common.h", "include/generated_code/{}"),
@@ -285,6 +278,33 @@ def _has_mock_mode_service(input_data) -> bool:
         _service_generation_mode(service) == "mock"
         for service in getattr(input_data, "services", [])
     )
+
+
+def _check_allocators(data) -> list[str]:
+    """Check allocator names, the single default and the services' allocator references."""
+    allocators = getattr(data, "allocators", [])
+    errors: list[str] = []
+    names = [a.name for a in allocators]
+    if len({n.lower() for n in names}) != len(names):
+        errors.append("allocators: names must be unique (case-insensitive)")
+    defaults = [a.name for a in allocators if a.get("default")]
+    if len(defaults) != 1:
+        errors.append(
+            f"allocators: exactly one allocator must set default: true, found {len(defaults)}"
+        )
+    for service in getattr(data, "services", []):
+        ref = service.deployment.get("MemoryAllocator")
+        if ref is not None and ref not in names:
+            errors.append(f"service {service.name}: unknown MemoryAllocator '{ref}'")
+    return errors
+
+
+def _resolve_memory_allocators(data) -> None:
+    """Turn each service's MemoryAllocator name into an object with a ``name`` attribute."""
+    for service in getattr(data, "services", []):
+        ref = service.deployment.get("MemoryAllocator")
+        if ref is not None:
+            service.deployment["MemoryAllocator"] = _DotDict(name=ref)
 
 
 def build_context(input_data: dict, **additional) -> dict:
@@ -482,8 +502,6 @@ def _resolve_output_paths(input_data) -> list[str]:
     if not has_mock:
         for cluster in getattr(input_data, "clusters", []):
             _emit("per_cluster", cluster)
-        for connection in getattr(input_data, "connections", []):
-            _emit("per_connection", connection)
     for service in getattr(input_data, "services", []):
         _emit("per_service", service)
     for pdu in getattr(input_data, "pdus", []):
@@ -614,12 +632,32 @@ def main(argv=None) -> int:
         print(f"error: Input directory not found: {input_base}", file=sys.stderr)
         return 1
 
+    def _validate_input_data(input_data) -> bool:
+        """Validate loaded deployment data against schema and allocator constraints."""
+        schema_path = input_base / "templates/schemas/deployment.yaml"
+        if schema_path.exists():
+            validation_errors = validate_data(input_data, schema_path)
+            if validation_errors:
+                print("\nValidation errors:", file=sys.stderr)
+                for error in validation_errors:
+                    print(f"  - {error}", file=sys.stderr)
+                return False
+        else:
+            print(f"Warning: Schema not found at {schema_path}, skipping validation")
+
+        allocator_errors = _check_allocators(input_data)
+        if allocator_errors:
+            print("\nValidation errors:", file=sys.stderr)
+            for error in allocator_errors:
+                print(f"  - {error}", file=sys.stderr)
+            return False
+        return True
+
     # --list-outputs: resolve the output layout from the deployment model and exit
-    # without rendering. Kept additive so it does not affect the generation path.
+    # without rendering. Keep stdout clean (path list only): diagnostics go to stderr.
     if args.list_outputs:
         try:
             deployment_yaml = args.deployment_yaml.resolve()
-            # Keep stdout clean (path list only); loader diagnostics go to stderr.
             _saved_stdout = sys.stdout
             sys.stdout = sys.stderr
             try:
@@ -635,6 +673,15 @@ def main(argv=None) -> int:
         for pdu in getattr(input_data, "pdus", []):
             if not hasattr(pdu, "generation_mode") or not pdu.generation_mode:
                 pdu["generation_mode"] = args.generation_mode
+
+        _saved_stdout = sys.stdout
+        sys.stdout = sys.stderr
+        try:
+            if not _validate_input_data(input_data):
+                return 1
+        finally:
+            sys.stdout = _saved_stdout
+
         for path in sorted(_resolve_output_paths(input_data)):
             print(path)
         return 0
@@ -667,17 +714,9 @@ def main(argv=None) -> int:
         if not hasattr(pdu, "generation_mode") or not pdu.generation_mode:
             pdu["generation_mode"] = args.generation_mode
 
-    # Validate the input data against schema
-    schema_path = input_base / "templates/schemas/deployment.yaml"
-    if schema_path.exists():
-        validation_errors = validate_data(input_data, schema_path)
-        if validation_errors:
-            print("\nValidation errors:", file=sys.stderr)
-            for error in validation_errors:
-                print(f"  - {error}", file=sys.stderr)
-            return 1
-    else:
-        print(f"Warning: Schema not found at {schema_path}, skipping validation")
+    if not _validate_input_data(input_data):
+        return 1
+    _resolve_memory_allocators(input_data)
 
     # Generate all file types using the unified clusters.yaml data
     try:
@@ -700,14 +739,6 @@ def main(argv=None) -> int:
                 output_base,
                 items=input_data.clusters,
                 item_key="cluster",
-            )
-            generate_files(
-                "per_connection",
-                input_data,
-                input_base,
-                output_base,
-                items=input_data.connections,
-                item_key="connection",
             )
         generate_files(
             "per_service",
