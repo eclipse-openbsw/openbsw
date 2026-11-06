@@ -12,7 +12,7 @@
 
 #include "Logger.h"
 #include "foo/FooProxyWrapper.h"
-#include "middleware/ClusterCluster1.h"
+#include "middleware/Cluster1Cluster.h"
 #include "middleware/shm/QueueDefinitions.h"
 #include "middleware/signal/qualifier.h"
 #include "org/test/signal/samplePduWithCrcReader.h"

@@ -53,7 +53,7 @@ python3 jinja2cpp.py \
 ### Arguments
 
 | Argument | Required | Description |
-|---|---|---|
+| --- | --- | --- |
 | `--input` | Yes | Directory containing the `templates/` subdirectory (jinja, schemas) |
 | `--output` | Conditional | Directory where `include/generated_code/` and `src/generated_code/` will be written. Required for generation; **not** required (and ignored) when `--list-outputs` is given |
 | `--deployment-yaml` | Yes | Path to the deployment YAML file |
@@ -71,12 +71,12 @@ and a wrapper `cc_library` exposes the generated headers/sources.
 
 Key points:
 
-- **Interpreter:** the genrule invokes `/opt/venv/bin/python3` by absolute path . Bazel therefore 
+- **Interpreter:** the genrule invokes `/opt/venv/bin/python3` by absolute path . Bazel therefore
   relies on the development Docker image already having the dependencies installed in `/opt/venv`.
-- **Requirements contract:** `/opt/venv` is populated from 
-  `docker/development/files/requirements.lock`, which is `pip-compile`d from the 
-  `requirements.txt` files listed under [Prerequisites](#prerequisites). A bump to 
-  `requirements.txt` only reaches the genrule after the lock is regenerated **and** the image is 
+- **Requirements contract:** `/opt/venv` is populated from
+  `docker/development/files/requirements.lock`, which is `pip-compile`d from the
+  `requirements.txt` files listed under [Prerequisites](#prerequisites). A bump to
+  `requirements.txt` only reaches the genrule after the lock is regenerated **and** the image is
   rebuilt. There is no Bazel-level enforcement of this, so rebuild after any dependency change.
 - **Declared outputs:** the genrule must declare each generated file individually
   (a mixed headers+sources directory artifact cannot be consumed safely by
@@ -100,8 +100,7 @@ python3 libs/bsw/middleware/tools/cpp_generator/jinja2cpp.py \
 include/generated_code/
   middleware/
     cluster_id.h
-    cluster_<name>.h          # one per cluster
-    cluster_connections_<src>_<tgt>.h   # one per connection
+    <ClusterName>Cluster.h     # one per cluster
     shm/
       config.h
       allocators_definitions.h
@@ -115,7 +114,7 @@ include/generated_code/
 
 src/generated_code/
   allocator_selector_definitions.cpp
-  cluster_<name>.cpp          # one per cluster
+  <ClusterName>Cluster.cpp   # one per cluster
   shm/
     config.cpp
   <namespace-path>/
@@ -138,7 +137,7 @@ files needed for unit-test mocking:
   interfaces, a `*_reader_mock.h` GMock interface, and a reader source that
   forwards calls to the CRTP-registered mock singleton.
 
-Cluster, connection, and COM templates are skipped in this mode.
+Cluster and COM templates are skipped in this mode.
 
 ## Input structure
 
@@ -158,9 +157,42 @@ The deployment YAML is validated against `templates/schemas/deployment.yaml` bef
 The top-level keys are:
 
 | Key | Required | Description |
-|---|---|---|
+| --- | --- | --- |
 | `clusters` | Yes | List of compute clusters |
 | `services` | Yes | List of middleware services |
 | `connections` | Yes | Inter-cluster connections |
-| `allocators` | Yes | Memory allocators |
+| `allocators` | Yes | List of memory allocators, exactly one with `default: true` |
 | `cores` | No | Optional core groupings |
+
+### Allocators
+
+`allocators` is a list of allocator objects. Each has a unique `name`, a list of `pools`
+(each with a `ChunkSize` and a `NumberOfElements`) and an optional boolean `default`. Exactly
+one allocator must set `default: true`; it serves every service that does not select another
+one. A service selects an allocator by name in `deployment.MemoryAllocator`.
+
+```yaml
+allocators:
+  - name: default
+    default: true
+    pools:
+      - ChunkSize: 64
+        NumberOfElements: 10
+  - name: fast
+    pools:
+      - ChunkSize: 128
+        NumberOfElements: 4
+
+services:
+  - namespace: org::test::foo
+    name: Foo
+    deployment:
+      MemoryAllocator: fast
+      # ...
+```
+
+### Service headers
+
+The headers of a service are properties of the service itself: `commonInclude`,
+`proxyInclude` and `skeletonInclude` are required; `proxyMockInclude` and
+`skeletonMockInclude` are required when `generation_mode` is `mock`.

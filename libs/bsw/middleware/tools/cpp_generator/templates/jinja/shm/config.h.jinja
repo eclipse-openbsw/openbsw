@@ -40,13 +40,13 @@ struct MemoryLayout
     uint8_t queueTo{{ cluster.name }}Mutex{0U};
 {% endfor %}
 {% for allocator in allocators %}
-    uint8_t {{ allocator.name }}AllocatorMutex{0U};
+    uint8_t {{ allocator.name | lower }}AllocatorMutex{0U};
 {% endfor %}
 {% for cluster in clusters %}
     MiddlewareQueue<QUEUE_TO_{{ cluster.name | upper }}_SIZE> queueTo{{ cluster.name }}{&queueTo{{ cluster.name }}Mutex};
 {% endfor %}
 {% for allocator in allocators %}
-    {{ allocator.name | capitalize }}Allocator {{ allocator.name }}Allocator{&{{ allocator.name }}AllocatorMutex};
+    {{ allocator.name | capitalize }}Allocator {{ allocator.name | lower }}Allocator{&{{ allocator.name | lower }}AllocatorMutex};
 {% endfor %}
 {% for pdu in pdus %}
     {{ pdu.name | capitalize }}Pdu {{ pdu.name }};
