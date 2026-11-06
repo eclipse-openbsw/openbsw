@@ -120,7 +120,7 @@ TEST_P(DoIpServerSocketHandlerTest, SimpleServerLifecycle)
         serverSocketBound(
             47U, ::ip::IPEndpoint(config2.ipAddress(), GetParam().port), GetParam().type));
     cut.start(fSocketHandlerListenerMock);
-    EXPECT_THAT(&serverSocketMock1.getSocketProvidingConnectionListener(), IsNull());
+    EXPECT_THAT(serverSocketMock1.hasSocketProvidingConnectionListener(), IsFalse());
     EXPECT_THAT(&serverSocketMock2.getSocketProvidingConnectionListener(), NotNull());
     Mock::VerifyAndClearExpectations(&fNetworkInterfaceConfigRegistryMock);
     Mock::VerifyAndClearExpectations(&serverSocketMock1);

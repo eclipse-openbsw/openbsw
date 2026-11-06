@@ -43,7 +43,11 @@ CANFrame::CANFrame(uint32_t const id, uint8_t const* const payload, uint8_t cons
         length <= MAX_FRAME_LENGTH,
         ETL_ERROR_GENERIC("CAN frame length must be smaller than maximum length"));
 
-    (void)memcpy(_payload, payload, static_cast<size_t>(length));
+    // memcpy with a null source is UB even for length 0
+    if (length != 0U)
+    {
+        (void)memcpy(_payload, payload, static_cast<size_t>(length));
+    }
 }
 
 CANFrame::CANFrame(
@@ -61,7 +65,11 @@ CANFrame::CANFrame(
         length <= MAX_FRAME_LENGTH,
         ETL_ERROR_GENERIC("CAN frame length must be smaller than maximum length"));
 
-    (void)memcpy(_payload, payload, static_cast<size_t>(length));
+    // memcpy with a null source is UB even for length 0
+    if (length != 0U)
+    {
+        (void)memcpy(_payload, payload, static_cast<size_t>(length));
+    }
 }
 
 void CANFrame::setPayloadLength(uint8_t const length)
