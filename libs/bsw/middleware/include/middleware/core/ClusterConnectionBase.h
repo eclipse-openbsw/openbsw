@@ -48,21 +48,27 @@ public:
     /** \see IClusterConnection::registeredTransceiversCount() */
     size_t registeredTransceiversCount(uint16_t const serviceId) const override
     {
-        return _configuration.registeredTransceiversCount(serviceId);
+        return _configuration->registeredTransceiversCount(serviceId);
     }
 
 protected:
     /** Returns the configuration object. */
-    IClusterConnectionConfigurationBase& getConfiguration() const { return _configuration; }
+    IClusterConnectionConfigurationBase& getConfiguration() const { return *_configuration; }
 
     /** Constructs from \p configuration. */
     explicit ClusterConnectionBase(IClusterConnectionConfigurationBase& configuration);
 
+    /** Replaces the configuration with \p configuration. */
+    void setConfiguration(IClusterConnectionConfigurationBase& configuration)
+    {
+        _configuration = &configuration;
+    }
+
     /** \see IClusterConnection::getSourceClusterId() */
-    uint8_t getSourceClusterId() const override { return _configuration.getSourceClusterId(); }
+    uint8_t getSourceClusterId() const override { return _configuration->getSourceClusterId(); }
 
     /** \see IClusterConnection::getTargetClusterId() */
-    uint8_t getTargetClusterId() const override { return _configuration.getTargetClusterId(); }
+    uint8_t getTargetClusterId() const override { return _configuration->getTargetClusterId(); }
 
     /** \see IClusterConnection::sendMessage() */
     HRESULT sendMessage(Message const& msg) const override;
@@ -81,8 +87,8 @@ private:
      */
     void respondWithError(ErrorState const error, Message const& msg) const;
 
-    /** Reference to the cluster connection configuration. */
-    IClusterConnectionConfigurationBase& _configuration;
+    /** The cluster connection configuration, never null. */
+    IClusterConnectionConfigurationBase* _configuration;
 };
 
 /**

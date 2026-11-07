@@ -160,6 +160,16 @@ if (PLATFORM_SUPPORT_MIDDLEWARE)
                                  -Wl,--no-whole-archive)
 endif ()
 
+if (PLATFORM_SUPPORT_SOMEIP_BRIDGE_SAMPLE)
+    target_sources(app.referenceApp PRIVATE src/middleware/SampleSomeIp.cpp)
+    target_link_libraries(app.referenceApp PRIVATE middlewareSomeIp)
+    if (BUILD_TARGET_PLATFORM STREQUAL "S32K148EVB")
+        # zonal_platform1 in the FLYNC model; POSIX is high_performance_compute.
+        target_compile_definitions(app.referenceApp
+                                   PRIVATE SOMEIP_SAMPLE_ZONAL_PLATFORM1)
+    endif ()
+endif ()
+
 if (BUILD_RUST)
     target_compile_definitions(app.referenceApp PRIVATE BUILD_RUST)
     target_sources(app.referenceApp PRIVATE src/app/rust/RustRuntime.cpp
