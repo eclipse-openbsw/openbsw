@@ -10,8 +10,6 @@
 
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
 
-# Chip-family ST header libraries. Each strips its subdirectory prefix so
-# consumers include device headers directly by name.
 cc_library(
     name = "bsp_mcu_chip_headers_g4",
     hdrs = [
@@ -34,19 +32,16 @@ cc_library(
     target_compatible_with = ["//bazel/platform/constraints/soc:stm32f4"],
 )
 
-# Chip-family ST headers. Set by the platform via its flags.
-#   Override: --//platforms/stm32/bsp/bspMcu:bsp_mcu_chip_headers_impl=//path/to:your_headers
-label_flag(
-    name = "bsp_mcu_chip_headers_impl",
-    build_setting_default = "//bazel/config:no_implementation",
-)
-
 alias(
     name = "bsp_mcu_chip_headers",
-    actual = ":bsp_mcu_chip_headers_impl",
+    actual = select({
+        "//bazel/platform/constraints/soc:is_stm32g4": ":bsp_mcu_chip_headers_g4",
+        "//bazel/platform/constraints/soc:is_stm32f4": ":bsp_mcu_chip_headers_f4",
+        "//conditions:default": "//bazel/config:no_implementation",
+    }),
+    visibility = ["//visibility:public"],
 )
 
-# Chip-family compile definitions. Each set is tied to one chip family.
 cc_library(
     name = "bsp_mcu_chip_defines_g4",
     defines = [
@@ -69,27 +64,19 @@ cc_library(
     visibility = ["//visibility:public"],
 )
 
-# Chip-family compile definitions. Set by the platform via its flags.
-#   Override: --//platforms/stm32/bsp/bspMcu:bsp_mcu_chip_defines_impl=//path/to:your_defines
-label_flag(
-    name = "bsp_mcu_chip_defines_impl",
-    build_setting_default = "//bazel/config:no_implementation",
-    visibility = ["//visibility:public"],
-)
-
 alias(
     name = "bsp_mcu_chip_defines",
-    actual = ":bsp_mcu_chip_defines_impl",
+    actual = select({
+        "//bazel/platform/constraints/soc:is_stm32g4": ":bsp_mcu_chip_defines_g4",
+        "//bazel/platform/constraints/soc:is_stm32f4": ":bsp_mcu_chip_defines_f4",
+        "//conditions:default": "//bazel/config:no_implementation",
+    }),
     visibility = ["//visibility:public"],
 )
 
-# Chip-family startup assembly. Each file contains the reset vector table and
-# low-level init for its device.
 cc_library(
     name = "bsp_mcu_startup_g4",
     srcs = ["startup/startup_stm32g474xx.S"],
-    # Bare-metal only. The host assembler cannot process ARM pseudo-ops so this
-    # target must not build on unit test platforms.
     target_compatible_with = [
         "//bazel/platform/constraints/soc:stm32g4",
         "@platforms//os:none",
@@ -99,24 +86,20 @@ cc_library(
 cc_library(
     name = "bsp_mcu_startup_f4",
     srcs = ["startup/startup_stm32f413xx.S"],
-    # Bare-metal only. The host assembler cannot process ARM pseudo-ops so this
-    # target must not build on unit test platforms.
     target_compatible_with = [
         "//bazel/platform/constraints/soc:stm32f4",
         "@platforms//os:none",
     ],
 )
 
-# Chip-family startup assembly. Set by the platform via its flags.
-#   Override: --//platforms/stm32/bsp/bspMcu:bsp_mcu_startup_impl=//path/to:your_startup
-label_flag(
-    name = "bsp_mcu_startup_impl",
-    build_setting_default = "//bazel/config:no_implementation",
-)
-
 alias(
     name = "bsp_mcu_startup",
-    actual = ":bsp_mcu_startup_impl",
+    actual = select({
+        "//bazel/platform/constraints/soc:is_stm32g4": ":bsp_mcu_startup_g4",
+        "//bazel/platform/constraints/soc:is_stm32f4": ":bsp_mcu_startup_f4",
+        "//conditions:default": "//bazel/config:no_implementation",
+    }),
+    visibility = ["//visibility:public"],
 )
 
 cc_library(
