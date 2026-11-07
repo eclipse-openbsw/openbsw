@@ -159,7 +159,7 @@ def render_template_with_context(
 TEMPLATE_CONFIG = {
     "global": [
         (
-            "allocator_selector_definitions.cpp.jinja",
+            "shm/allocator_selector_definitions.cpp.jinja",
             "AllocatorSelectorDefinitions.cpp",
             "src/generated_code",
         ),
@@ -184,11 +184,11 @@ TEMPLATE_CONFIG = {
     ],
     "per_cluster": [
         (
-            "cluster_srcCluster.h.jinja",
+            "service/cluster_srcCluster.h.jinja",
             "Cluster{}.h",
             "include/generated_code/middleware",
         ),
-        ("cluster_srcCluster.cpp.jinja", "Cluster{}.cpp", "src/generated_code"),
+        ("service/cluster_srcCluster.cpp.jinja", "Cluster{}.cpp", "src/generated_code"),
     ],
     "per_connection": [
         (
@@ -198,57 +198,57 @@ TEMPLATE_CONFIG = {
         ),
     ],
     "per_service": [
-        ("service_common.h.jinja", "{}Common.h", "include/generated_code/{}"),
-        ("service_proxy.h.jinja", "{}Proxy.h", "include/generated_code/{}"),
+        ("service/common.h.jinja", "{}Common.h", "include/generated_code/{}"),
+        ("service/proxy.h.jinja", "{}Proxy.h", "include/generated_code/{}"),
         (
-            "mock/service_proxy_mock.h.jinja",
+            "mock/service/proxy_mock.h.jinja",
             "{}ProxyMock.h",
             "include/generated_code/{}",
         ),
-        ("service_skeleton.h.jinja", "{}Skeleton.h", "include/generated_code/{}"),
+        ("service/skeleton.h.jinja", "{}Skeleton.h", "include/generated_code/{}"),
         (
-            "mock/service_skeleton_mock.h.jinja",
+            "mock/service/skeleton_mock.h.jinja",
             "{}SkeletonMock.h",
             "include/generated_code/{}",
         ),
-        ("service_common.cpp.jinja", "{}Common.cpp", "src/generated_code/{}"),
-        ("service_proxy.cpp.jinja", "{}Proxy.cpp", "src/generated_code/{}"),
-        ("service_skeleton.cpp.jinja", "{}Skeleton.cpp", "src/generated_code/{}"),
+        ("service/common.cpp.jinja", "{}Common.cpp", "src/generated_code/{}"),
+        ("service/proxy.cpp.jinja", "{}Proxy.cpp", "src/generated_code/{}"),
+        ("service/skeleton.cpp.jinja", "{}Skeleton.cpp", "src/generated_code/{}"),
     ],
     "per_pdu": [
-        ("pdu_common.h.jinja", "{}Common.h", "include/generated_code/{}"),
-        ("pdu_reader.h.jinja", "{}Reader.h", "include/generated_code/{}"),
+        ("signal/pdu_common.h.jinja", "{}Common.h", "include/generated_code/{}"),
+        ("signal/pdu_reader.h.jinja", "{}Reader.h", "include/generated_code/{}"),
         (
-            "mock/pdu_reader_mock.h.jinja",
+            "mock/signal/pdu_reader_mock.h.jinja",
             "{}ReaderMock.h",
             "include/generated_code/{}",
         ),
-        ("pdu_reader.cpp.jinja", "{}Reader.cpp", "src/generated_code/{}"),
+        ("signal/pdu_reader.cpp.jinja", "{}Reader.cpp", "src/generated_code/{}"),
     ],
 }
 
 PDU_MOCK_TEMPLATE_OVERRIDES = {
-    "pdu_common.h.jinja": "pdu_common.h.jinja",
-    "pdu_reader.h.jinja": "pdu_reader.h.jinja",
-    "mock/pdu_reader_mock.h.jinja": "mock/pdu_reader_mock.h.jinja",
-    "pdu_reader.cpp.jinja": "mock/pdu_reader_mock.cpp.jinja",
+    "signal/pdu_common.h.jinja": "signal/pdu_common.h.jinja",
+    "signal/pdu_reader.h.jinja": "signal/pdu_reader.h.jinja",
+    "mock/signal/pdu_reader_mock.h.jinja": "mock/signal/pdu_reader_mock.h.jinja",
+    "signal/pdu_reader.cpp.jinja": "mock/signal/pdu_reader_mock.cpp.jinja",
 }
-PDU_MOCK_HEADER_TEMPLATE = "mock/pdu_reader_mock.h.jinja"
+PDU_MOCK_HEADER_TEMPLATE = "mock/signal/pdu_reader_mock.h.jinja"
 
 
 # In mock generation mode a normal per-service template is replaced by its
-# `mock/<name>_mock` variant while keeping the same output filename. The variant
-# delegates the generated implementation to the mock singleton (the *.cpp
+# `mock/service/<name>_mock` variant while keeping the same output filename. The
+# variant delegates the generated implementation to the mock singleton (the *.cpp
 # entries). Proxy attributes/events are concrete classes whose method bodies are
 # swapped at link time, so no header swap is required.
 MOCK_TEMPLATE_OVERRIDES = {
-    "service_common.h.jinja": "service_common.h.jinja",
-    "service_proxy.h.jinja": "service_proxy.h.jinja",
-    "mock/service_proxy_mock.h.jinja": "mock/service_proxy_mock.h.jinja",
-    "service_skeleton.h.jinja": "service_skeleton.h.jinja",
-    "mock/service_skeleton_mock.h.jinja": "mock/service_skeleton_mock.h.jinja",
-    "service_proxy.cpp.jinja": "mock/service_proxy_mock.cpp.jinja",
-    "service_skeleton.cpp.jinja": "mock/service_skeleton_mock.cpp.jinja",
+    "service/common.h.jinja": "service/common.h.jinja",
+    "service/proxy.h.jinja": "service/proxy.h.jinja",
+    "mock/service/proxy_mock.h.jinja": "mock/service/proxy_mock.h.jinja",
+    "service/skeleton.h.jinja": "service/skeleton.h.jinja",
+    "mock/service/skeleton_mock.h.jinja": "mock/service/skeleton_mock.h.jinja",
+    "service/proxy.cpp.jinja": "mock/service/proxy_mock.cpp.jinja",
+    "service/skeleton.cpp.jinja": "mock/service/skeleton_mock.cpp.jinja",
 }
 
 # Global templates that are also generated in mock mode.
@@ -339,8 +339,8 @@ def generate_files(
                 # normal: full regular service file set
                 # mock: generate only templates that live under templates/jinja/mock
                 if service_mode == "normal" and template_name in (
-                    "mock/service_proxy_mock.h.jinja",
-                    "mock/service_skeleton_mock.h.jinja",
+                    "mock/service/proxy_mock.h.jinja",
+                    "mock/service/skeleton_mock.h.jinja",
                 ):
                     continue
                 if service_mode == "mock":
@@ -427,8 +427,8 @@ def _resolve_output_paths(input_data) -> list[str]:
             if template_type == "per_service":
                 service_mode = _service_generation_mode(item)
                 if service_mode == "normal" and template_name in (
-                    "mock/service_proxy_mock.h.jinja",
-                    "mock/service_skeleton_mock.h.jinja",
+                    "mock/service/proxy_mock.h.jinja",
+                    "mock/service/skeleton_mock.h.jinja",
                 ):
                     continue
                 if (
