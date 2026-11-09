@@ -1,0 +1,156 @@
+/********************************************************************************
+ * Copyright (c) 2026 KPIT Technologies Ltd.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Apache License Version 2.0 which is available at
+ * https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ ********************************************************************************/
+/**
+ * WARNING!
+ * This file is generated from the flync model. Do not edit manually.
+ *
+ * One Tag per datatype this service puts on the wire, and its SOME/IP
+ * encoding. The Tag, not the C++ type, decides the encoding: two members of
+ * the same C++ type may be written differently, and a scalar carrying a wire
+ * rule needs a Tag where a plain one does not.
+ *
+ * Each encoding is one of the framework's codec:: templates; this header only
+ * states the model's parameters for it.
+ */
+#pragma once
+
+#include "{{ service.header }}"
+#include "{{ service.codec_framework }}"
+#include "someip/SomeIpParser.h"
+#include "someip/SomeIpSerializer.h"
+{% set ns = '::' ~ service.namespace %}
+
+namespace {{ service.namespace }}
+{
+{% for tag in service.tags %}
+
+struct {{ tag.tag }}
+{
+    using Value = {{ tag.type if tag.kind == 'enum' else service.name ~ '::' ~ tag.type }};
+{% if tag.kind == 'union' %}
+
+    /** True when type is a declared member and length is its width. */
+    static bool isMember(uint32_t const type, uint32_t const length)
+    {
+        switch (type)
+        {
+{% for member in tag.members %}
+            case {{ member.index }}U: return length == {{ member.width }}U;
+{% endfor %}
+            default: return false;
+        }
+    }
+
+    /** The declared member of that width, or 0 when there is none. */
+    static uint32_t correct(uint32_t const length)
+    {
+        switch (length)
+        {
+{% for width in tag.widths %}
+            case {{ width.width }}U: return {{ width.index }}U;
+{% endfor %}
+            default: return 0U;
+        }
+    }
+{% endif %}
+};
+{% endfor %}
+
+} // namespace {{ service.namespace }}
+
+// A specialization must live in the namespace of the template it specializes.
+namespace middleware::bindings::someip
+{
+{% for tag in service.tags %}
+{% set qtag = ns ~ '::' ~ tag.tag %}
+{% set value = tag.type if tag.kind == 'enum' else ns ~ '::' ~ service.name ~ '::' ~ tag.type %}
+
+template<>
+{% if tag.kind == 'array_fixed' %}
+struct SomeIpCodec<{{ qtag }}> : codec::FixedArray<{{ value }}, {{ tag.element }}, {{ tag.length }}U>
+{
+};
+{% elif tag.kind == 'array_dynamic' %}
+struct SomeIpCodec<{{ qtag }}> : codec::DynamicArray<{{ value }}, {{ tag.element }}, {{ tag.prefix }}, {{ tag.min }}U>
+{
+};
+{% elif tag.kind == 'array2d' %}
+struct SomeIpCodec<{{ qtag }}>
+: codec::DynamicArray2d<{{ value }}, {{ tag.element }}, {{ tag.outer_prefix }}, {{ tag.inner_prefix }}, {{ tag.inner_min }}U>
+{
+};
+{% elif tag.kind == 'string_fixed' %}
+struct SomeIpCodec<{{ qtag }}> : codec::FixedString<{{ value }}, {{ tag.length }}U, codec::Encoding::{{ tag.encoding }}>
+{
+};
+{% elif tag.kind == 'string_dynamic' %}
+struct SomeIpCodec<{{ qtag }}> : codec::DynamicString<{{ value }}, {{ tag.prefix }}, codec::Encoding::{{ tag.encoding }}>
+{
+};
+{% elif tag.kind == 'union' %}
+struct SomeIpCodec<{{ qtag }}> : codec::Union<{{ value }}, {{ qtag }}>
+{
+};
+{% elif tag.kind == 'enum' %}
+struct SomeIpCodec<{{ qtag }}> : codec::BoundedScalar<{{ value }}, {{ tag.max }}U>
+{
+};
+{% elif tag.kind == 'struct' %}
+/**
+ * Several parameters are one struct on the wire: members in declaration
+ * order, no length prefix of its own.
+ */
+struct SomeIpCodec<{{ qtag }}>
+{
+    static void serialize({{ value }} const& v, ::someip::SomeIpSerializer& out)
+    {
+        out.bigEndian();
+{% for field in tag.fields %}
+{% if field.tag %}
+        SomeIpCodec<{{ ns }}::{{ field.tag }}>::serialize(v.{{ field.name }}, out);
+{% else %}
+        out << v.{{ field.name }};
+{% endif %}
+{% endfor %}
+    }
+
+    static void parse({{ value }}& v, ::someip::SomeIpParser& in)
+    {
+        in.bigEndian();
+{% for field in tag.fields %}
+{% if field.tag %}
+        SomeIpCodec<{{ ns }}::{{ field.tag }}>::parse(v.{{ field.name }}, in);
+{% else %}
+        in >> v.{{ field.name }};
+{% endif %}
+{% endfor %}
+    }
+
+    static uint32_t size({{ value }} const& v)
+    {
+{% if tag.fields | selectattr('tag') | list %}
+        uint32_t total = 0U;
+{% for field in tag.fields %}
+{% if field.tag %}
+        total += SomeIpCodec<{{ ns }}::{{ field.tag }}>::size(v.{{ field.name }});
+{% else %}
+        total += static_cast<uint32_t>(sizeof(v.{{ field.name }}));
+{% endif %}
+{% endfor %}
+        return total;
+{% else %}
+        return static_cast<uint32_t>({% for field in tag.fields %}sizeof(v.{{ field.name }}){% if not loop.last %} + {% endif %}{% endfor %});
+{% endif %}
+    }
+};
+{% endif %}
+{% endfor %}
+
+} // namespace middleware::bindings::someip

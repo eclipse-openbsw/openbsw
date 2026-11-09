@@ -38,14 +38,73 @@ set(GENERATED_SRCS
     ${_GEN_SRC}/org/test/foo/FooProxy.cpp
     ${_GEN_SRC}/org/test/foo/FooSkeleton.cpp)
 
-add_custom_command(
-    OUTPUT ${_GENERATED_HEADERS} ${GENERATED_SRCS}
-    COMMAND ${Python3_EXECUTABLE} ${_GEN_SCRIPT} --input ${_GEN_INPUT} --output
-            ${_GEN_DIR} --deployment-yaml ${_DEPLOYMENT_YAML}
-    DEPENDS ${_GEN_SCRIPT} ${_DEPLOYMENT_YAML} ${_SCHEMA_YAML}
-            ${_JINJA_TEMPLATES}
-    COMMENT "Generating middleware C++ code from deployment.yaml"
-    VERBATIM)
+if (PLATFORM_SUPPORT_SOMEIP_BRIDGE_SAMPLE)
+    # The SOME/IP bridge sample's service comes from the FLYNC model. Its
+    # deployment is merged into deployment.yaml, so Foo and the sample share one
+    # memory layout and one set of cluster connections.
+    set(_FLYNC_MODEL ${CMAKE_SOURCE_DIR}/flync-configuration/flync)
+    set(_FLYNC_DIR ${_GEN_DIR}/flync)
+    set(_MERGE_SCRIPT ${_GEN_INPUT}/merge_deployment.py)
+    file(GLOB_RECURSE _FLYNC_MODEL_FILES CONFIGURE_DEPENDS
+         ${_FLYNC_MODEL}/*.flync.yaml)
+    file(GLOB _FLYNC_GENERATOR CONFIGURE_DEPENDS
+         ${_GEN_INPUT}/flync2middleware/*.py)
+
+    list(
+        APPEND
+        _GENERATED_HEADERS
+        ${_GEN_INC}/middleware/ClusterCluster2.h
+        ${_GEN_INC}/middleware/ClusterCluster3.h
+        ${_GEN_INC}/middleware/ClusterConnectionsCluster2Cluster3.h
+        ${_GEN_INC}/middleware/ClusterConnectionsCluster3Cluster2.h
+        ${_GEN_INC}/ets/EtsCodecs.h
+        ${_GEN_INC}/ets/EtsCommon.h
+        ${_GEN_INC}/ets/EtsProxy.h
+        ${_GEN_INC}/ets/EtsSkeleton.h)
+
+    list(
+        APPEND
+        GENERATED_SRCS
+        ${_GEN_SRC}/ClusterCluster2.cpp
+        ${_GEN_SRC}/ClusterCluster3.cpp
+        ${_GEN_SRC}/ets/EtsCommon.cpp
+        ${_GEN_SRC}/ets/EtsProxy.cpp
+        ${_GEN_SRC}/ets/EtsSkeleton.cpp)
+
+    add_custom_command(
+        OUTPUT ${_GENERATED_HEADERS} ${GENERATED_SRCS}
+        COMMAND
+            ${Python3_EXECUTABLE} ${_GEN_SCRIPT} --input ${_GEN_INPUT} --output
+            ${_FLYNC_DIR} --flync ${_FLYNC_MODEL} --emit-deployment
+            ${_FLYNC_DIR}/deployment.yaml
+        COMMAND ${Python3_EXECUTABLE} ${_MERGE_SCRIPT} ${_DEPLOYMENT_YAML}
+                ${_FLYNC_DIR}/deployment.yaml ${_GEN_DIR}/deployment.merged.yaml
+        COMMAND
+            ${Python3_EXECUTABLE} ${_GEN_SCRIPT} --input ${_GEN_INPUT} --output
+            ${_GEN_DIR} --deployment-yaml ${_GEN_DIR}/deployment.merged.yaml
+        COMMAND
+            ${CMAKE_COMMAND} -E copy
+            ${_FLYNC_DIR}/include/generated_code/ets/EtsCodecs.h ${_GEN_INC}/ets
+        DEPENDS ${_GEN_SCRIPT}
+                ${_MERGE_SCRIPT}
+                ${_FLYNC_GENERATOR}
+                ${_FLYNC_MODEL_FILES}
+                ${_DEPLOYMENT_YAML}
+                ${_SCHEMA_YAML}
+                ${_JINJA_TEMPLATES}
+        COMMENT
+            "Generating middleware C++ code from deployment.yaml and the FLYNC model"
+        VERBATIM)
+else ()
+    add_custom_command(
+        OUTPUT ${_GENERATED_HEADERS} ${GENERATED_SRCS}
+        COMMAND ${Python3_EXECUTABLE} ${_GEN_SCRIPT} --input ${_GEN_INPUT}
+                --output ${_GEN_DIR} --deployment-yaml ${_DEPLOYMENT_YAML}
+        DEPENDS ${_GEN_SCRIPT} ${_DEPLOYMENT_YAML} ${_SCHEMA_YAML}
+                ${_JINJA_TEMPLATES}
+        COMMENT "Generating middleware C++ code from deployment.yaml"
+        VERBATIM)
+endif ()
 
 set(PLATFORM_INTEGRATION_SRCS
     platform_integration/logger/src/LoggerImpl.cpp

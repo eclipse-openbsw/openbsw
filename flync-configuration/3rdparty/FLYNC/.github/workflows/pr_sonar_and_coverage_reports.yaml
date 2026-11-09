@@ -1,0 +1,107 @@
+name: PR SonarQube and Coverage reports
+
+on:
+  workflow_run:
+    workflows: ["Workflow Push and Pull Request"]
+    types: [completed]
+
+jobs:
+  sonarqube-check-pr:
+    permissions:
+      contents: read
+      pull-requests: write
+      checks: write
+      statuses: write
+      actions: read
+    if: github.event.workflow_run.event == 'pull_request' && github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.workflow_run.head_sha }}
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v8
+        with:
+          name: pytest-artifacts
+          repository: ${{ github.repository }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ github.event.workflow_run.id }}
+
+      - name: Setup Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Resolve PR info
+        id: pr
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          SHA: ${{ github.event.workflow_run.head_sha }}
+        run: python3 scripts/ci/fetch_pr_data.py
+
+      - name: Fetch PRs base branch
+        run: |
+          git fetch --no-tags --prune origin \
+            ${{ steps.pr.outputs.base_ref }}:refs/remotes/origin/${{ steps.pr.outputs.base_ref }}
+
+      - name: Run SonarQube analysis
+        uses: SonarSource/sonarqube-scan-action@v8
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          args: >
+            -Dsonar.pullrequest.key=${{ steps.pr.outputs.number }}
+            -Dsonar.pullrequest.branch=${{ steps.pr.outputs.head_ref }}
+            -Dsonar.pullrequest.base=${{ steps.pr.outputs.base_ref }}
+            -Dsonar.python.coverage.reportPaths=coverage.xml
+
+  sonarqube-check-main:
+    permissions:
+      contents: read
+      checks: write
+      statuses: write
+      actions: read
+    if: github.event.workflow_run.event == 'push' && github.event.workflow_run.head_branch == 'main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.workflow_run.head_sha }}
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v8
+        continue-on-error: true
+        with:
+          name: pytest-artifacts
+          repository: ${{ github.repository }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ github.event.workflow_run.id }}
+
+      - name: Run SonarQube analysis
+        uses: SonarSource/sonarqube-scan-action@v8
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          args: >
+            -Dsonar.branch.name=main
+            -Dsonar.python.coverage.reportPaths=coverage.xml
+
+  publish-coverage-comment:
+    permissions:
+      contents: read
+      pull-requests: write
+      actions: read
+    runs-on: ubuntu-latest
+    if: github.event.workflow_run.event == 'pull_request' && github.event.workflow_run.conclusion == 'success'
+    steps:
+      - name: Post comment
+        uses: py-cov-action/python-coverage-comment-action@v4.3
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_PR_RUN_ID: ${{ github.event.workflow_run.id }}

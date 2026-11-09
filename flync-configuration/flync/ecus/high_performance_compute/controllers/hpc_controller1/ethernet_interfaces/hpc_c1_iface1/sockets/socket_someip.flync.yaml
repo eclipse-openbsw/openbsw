@@ -1,0 +1,72 @@
+# *******************************************************************************
+# Copyright (c) 2026 KPIT Group
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+
+vlan_id: null
+sockets:
+- name: sd_multicast_socket
+  endpoint_address: 192.168.0.201
+  endpoint_type: multicast
+  port_no: 30490
+  protocol: udp
+  multicast_tx:
+  - 225.0.0.1
+  deployments:
+  - deployment_type: someip_sd
+    multicast:
+      ip_address: 225.0.0.1
+      port: 30490
+      ip_ttl: 1
+- name: someip_socket_udp
+  endpoint_address: 192.168.0.201
+  endpoint_type: unicast
+  port_no: 30501
+  protocol: udp
+  deployments:
+  - deployment_type: someip_provider
+    service: 0x0101
+    instance_id: 1
+    major_version: 1
+    minor_version: 1
+    someip_sd_timings_profile: server_default
+  - deployment_type: someip_consumer
+    service: 0x0101
+    instance_id: 2
+    major_version: 1
+    consumed_eventgroups:
+    - eg2_all
+    someip_sd_timings_profile: client_default
+- name: someip_multicast_socket_udp
+  endpoint_address: 192.168.0.201
+  endpoint_type: multicast
+  port_no: 30501
+  protocol: udp
+  multicast_tx:
+  - 239.2.41.16
+  deployments:
+  - deployment_type: someip_provider
+    service: 0x0101
+    instance_id: 1
+    major_version: 1
+    minor_version: 1
+    someip_sd_timings_profile: server_default
+    multicast_config:
+    - ip_address: 239.2.41.16
+      port: 30501
+      threshold: 1
+      eventgroups:
+      - eg2_all
+      - eg6_events_multicast
+  - deployment_type: someip_consumer
+    service: 0x0101
+    instance_id: 2
+    major_version: 1
+    consumed_eventgroups:
+    - eg2_all
+    someip_sd_timings_profile: client_default
