@@ -8,9 +8,40 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 
+load("@bazel_skylib//rules:common_settings.bzl", "bool_flag")
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
 load("@rules_cc//cc:cc_test.bzl", "cc_test")
 load("//bazel/config/build_variant:compatibility.bzl", "unit_test_only")
+
+bool_flag(
+    name = "can0_use_fd",
+    build_setting_default = False,
+    visibility = ["//visibility:public"],
+)
+
+config_setting(
+    name = "can0_use_fd_enabled",
+    flag_values = {
+        ":can0_use_fd": "true",
+        "//bazel/config/features:can": "true",
+    },
+    visibility = ["//visibility:public"],
+)
+
+config_setting(
+    name = "can0_use_fd_disabled",
+    flag_values = {":can0_use_fd": "false"},
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "can0_use_fd_defines",
+    defines = select({
+        ":can0_use_fd_enabled": ["CPP2CAN_USE_64_BYTE_FRAMES=1"],
+        "//conditions:default": [],
+    }),
+    visibility = ["//visibility:public"],
+)
 
 cc_library(
     name = "cpp2can",
@@ -31,7 +62,7 @@ cc_library(
     strip_include_prefix = "include",
     visibility = ["//visibility:public"],
     deps = [
-        "//bazel/config/features:can0_use_fd_defines",
+        ":can0_use_fd_defines",
         "//libs/3rdparty/etl",
         "//libs/bsw/common",
         "//libs/bsw/util",
