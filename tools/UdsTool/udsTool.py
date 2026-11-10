@@ -150,19 +150,20 @@ def security(
 @conn_params
 @click.option("--type", help="Service subfunction")
 @click.option("--id", help="Subroutine identifier")
+@click.option("--data", help="Routine option record as hexadecimal bytes")
 def routine(
-    host, ecu, source, type, id, can, canif, eth, channel, txid, rxid, config, doip
+    host, ecu, source, type, id, data, can, canif, eth, channel, txid, rxid, config, doip
 ):
     if can:
         # Handle CAN connection
         client = connection.createCanConnection(
             canif, channel, int(txid, 16), int(rxid, 16), config
         )
-        services.routine(client, id, type)
+        services.routine(client, id, type, data=data)
     elif eth:
         # Handle Ethernet connection
         client = connection.createEthConnection(host, ecu, source, doip)
-        services.routine(client, id, type)
+        services.routine(client, id, type, data=data)
 
 
 # UDS service Clear Diagnostic Information (0x14)

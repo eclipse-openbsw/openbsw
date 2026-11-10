@@ -73,10 +73,6 @@ def routine(client, id, type, data=None):
     req = uds.RoutineControl.make_request(id, type, data)
     response = client.send_request(req)
 
-    if response.get_payload()[4] != 0:
-        payload = binascii.hexlify(response.get_payload()).decode("ascii")
-        raise helper.RoutineFailedException(f"Routine {hex(id)} failed: {payload}")
-
     return helper.handleResponse(response)
 
 
