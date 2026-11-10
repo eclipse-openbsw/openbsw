@@ -17,10 +17,8 @@ set(_RELEASE_GEN_INC ${_RELEASE_GEN_DIR}/include/generated_code)
 set(_RELEASE_GEN_SRC ${_RELEASE_GEN_DIR}/src/generated_code)
 set(_RELEASE_GENERATED_HEADERS
     ${_RELEASE_GEN_INC}/middleware/ClusterId.h
-    ${_RELEASE_GEN_INC}/middleware/ClusterCore0.h
-    ${_RELEASE_GEN_INC}/middleware/ClusterCore1.h
-    ${_RELEASE_GEN_INC}/middleware/ClusterConnectionsCore0Core1.h
-    ${_RELEASE_GEN_INC}/middleware/ClusterConnectionsCore1Core0.h
+    ${_RELEASE_GEN_INC}/middleware/Core0Cluster.h
+    ${_RELEASE_GEN_INC}/middleware/Core1Cluster.h
     ${_RELEASE_GEN_INC}/middleware/shm/Config.h
     ${_RELEASE_GEN_INC}/middleware/shm/AllocatorsDefinitions.h
     ${_RELEASE_GEN_INC}/middleware/shm/QueueDefinitions.h
@@ -32,8 +30,8 @@ set(_RELEASE_GENERATED_HEADERS
     ${_RELEASE_GEN_INC}/features/communication/samplePduWithCrcReader.h)
 set(_RELEASE_GENERATED_SOURCES
     ${_RELEASE_GEN_SRC}/AllocatorSelectorDefinitions.cpp
-    ${_RELEASE_GEN_SRC}/ClusterCore0.cpp
-    ${_RELEASE_GEN_SRC}/ClusterCore1.cpp
+    ${_RELEASE_GEN_SRC}/Core0Cluster.cpp
+    ${_RELEASE_GEN_SRC}/Core1Cluster.cpp
     ${_RELEASE_GEN_SRC}/features/communication/dummy_serviceCommon.cpp
     ${_RELEASE_GEN_SRC}/features/communication/dummy_serviceProxy.cpp
     ${_RELEASE_GEN_SRC}/features/communication/dummy_serviceSkeleton.cpp
