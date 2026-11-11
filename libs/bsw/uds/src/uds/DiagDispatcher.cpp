@@ -170,7 +170,9 @@ void sendBusyResponse(
 
     busyMessage.setSourceAddress(configuration.DiagAddress);
     busyMessage.setTargetAddress(message->getSourceId());
-    busyMessage.getPayload()[1] = message->getServiceId();
+    ::etl::span<uint8_t> const payloadView(
+        busyMessage.getPayload(), DiagCodes::NEGATIVE_RESPONSE_MESSAGE_LENGTH);
+    payloadView[1U] = message->getServiceId();
 
     ITransportMessageListener::ReceiveResult const status
         = providingListenerHelper.messageReceived(configuration.DiagBusId, busyMessage, nullptr);
