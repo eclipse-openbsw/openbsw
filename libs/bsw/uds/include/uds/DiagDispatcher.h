@@ -24,6 +24,7 @@
 
 #include <async/Async.h>
 #include <async/util/Call.h>
+#include <etl/array.h>
 #include <etl/delegate.h>
 #include <etl/queue.h>
 #include <etl/uncopyable.h>
@@ -111,9 +112,7 @@ public:
           outgoingConnections,
           responseQueues)
     {
-        _busyMessage.init(
-            &_busyMessageBuffer[0],
-            BUSY_MESSAGE_LENGTH + UdsVmsConstants::BUSY_MESSAGE_EXTRA_BYTES);
+        _busyMessage.init(_busyMessageBuffer.data(), _busyMessageBuffer.size());
         _busyMessage.resetValidBytes();
         (void)_busyMessage.append(DiagReturnCode::NEGATIVE_RESPONSE_IDENTIFIER);
         (void)_busyMessage.append(0x00U);
@@ -195,7 +194,8 @@ private:
     ShutdownDelegate _shutdownDelegate;
     ::transport::DefaultTransportMessageProcessedListener _defaultTransportMessageProcessedListener;
     transport::TransportMessage _busyMessage;
-    uint8_t _busyMessageBuffer[BUSY_MESSAGE_LENGTH + UdsVmsConstants::BUSY_MESSAGE_EXTRA_BYTES];
+    ::etl::array<uint8_t, BUSY_MESSAGE_LENGTH + UdsVmsConstants::BUSY_MESSAGE_EXTRA_BYTES>
+        _busyMessageBuffer;
     ::async::Function _asyncProcessQueue;
     DiagJobRoot& _diagJobRoot;
 #if UDS_ENABLE_OUTGOING

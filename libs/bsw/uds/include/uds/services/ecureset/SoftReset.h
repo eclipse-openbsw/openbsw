@@ -33,7 +33,7 @@ private:
 
     DiagReturnCode::Type process(
         IncomingDiagConnection& connection,
-        uint8_t const request[],
+        uint8_t const* request,
         uint16_t requestLength) override;
 
     IUdsLifecycleConnector& fUdsLifecycleConnector;

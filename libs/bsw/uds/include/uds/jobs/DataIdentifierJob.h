@@ -57,7 +57,7 @@ public:
     : AbstractDiagJob(implementedRequest, 1U, requestPayloadLength, responseLength, sessionMask)
     {}
 
-    DiagReturnCode::Type verify(uint8_t const request[], uint16_t requestLength) override;
+    DiagReturnCode::Type verify(uint8_t const* request, uint16_t requestLength) override;
 };
 
 } // namespace uds

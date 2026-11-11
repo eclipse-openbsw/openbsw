@@ -22,7 +22,7 @@ public:
     explicit DiagJobWithAuthenticationAndSessionControl(
         IDiagAuthenticator const& authenticator,
         IDiagSessionManager& sessionManager,
-        uint8_t const implementedRequest[],
+        uint8_t const* implementedRequest,
         uint8_t const requestLength,
         uint8_t const prefixLength,
         DiagSessionMask const sessionMask = DiagSession::ALL_SESSIONS());
@@ -30,7 +30,7 @@ public:
     explicit DiagJobWithAuthenticationAndSessionControl(
         IDiagAuthenticator const& authenticator,
         IDiagSessionManager& sessionManager,
-        uint8_t const implementedRequest[],
+        uint8_t const* implementedRequest,
         uint8_t const requestLength,
         uint8_t const prefixLength,
         uint8_t const requestPayloadLength,

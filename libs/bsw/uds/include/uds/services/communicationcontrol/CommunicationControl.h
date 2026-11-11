@@ -88,7 +88,7 @@ protected:
 
     DiagReturnCode::Type process(
         IncomingDiagConnection& connection,
-        uint8_t const request[],
+        uint8_t const* request,
         uint16_t requestLength) override;
 
     virtual DiagReturnCode::Type sessionAccepted() const { return DiagReturnCode::OK; }

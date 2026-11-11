@@ -31,11 +31,11 @@ public:
         DiagSessionMask const sessionMask = DiagSession::ALL_SESSIONS());
 
 private:
-    DiagReturnCode::Type verify(uint8_t const request[], uint16_t requestLength) override;
+    DiagReturnCode::Type verify(uint8_t const* request, uint16_t requestLength) override;
 
     DiagReturnCode::Type process(
         IncomingDiagConnection& connection,
-        uint8_t const request[],
+        uint8_t const* request,
         uint16_t requestLength) override;
 
     ::etl::span<uint8_t> const _memory;
