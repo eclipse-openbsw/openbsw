@@ -7,124 +7,112 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
-/**
-  *
-  *  __  __ _     _     _ _
-  * |  \/  (_) __| | __| | | _____      ____ _ _ __ ___
-  * | |\/| | |/ _` |/ _` | |/ _ \ \ /\ / / _` | '__/ _ \
-  * | |  | | | (_| | (_| | |  __/\ V  V / (_| | | |  __/
-  * |_|  |_|_|\__,_|\__,_|_|\___| \_/\_/ \__,_|_|  \___|
-  *
-  * WARNING!
-  * This file is generated. Do not edit manually.
-  *
-  */
+{% from "macros/common.jinja" import file_header %}{{ file_header() }}
 #include "{{ service.proxyInclude }}"
-#include "{{ service.proxyMockInclude | default(service.namespace.replace('::', '/') | lower + '/' + (service.filename | default(service.name | lower)) + '_proxy_mock.h') }}"
+#include "{{ service.proxyMockInclude }}"
 
-#include <middleware/core/Message.h>
-#include <middleware/core/types.h>
-#include <middleware/os/TaskIdProvider.h>
+#include "middleware/core/Message.h"
+#include "middleware/core/types.h"
+#include "middleware/os/TaskIdProvider.h"
 
-namespace {{ service.namespace }}::{{ service.name }}::proxy
+namespace {{ service.namespace | lower }}::{{ service.name }}::proxy
 {
 
 // EVENTS
-{% for event in service.events if service.events %}
-{{ event.name }}Event::{{ event.name }}Event(::middleware::core::ProxyBase& proxy) : impl_(proxy)
+{% for broadcast in service.broadcasts %}
+{%- set namePascalCase = broadcast.name | pascalCase %}
+{{ namePascalCase }}Event::{{ namePascalCase }}Event(::middleware::core::ProxyBase& proxy) : impl_(proxy)
 {
 }
 
-void {{ event.name }}Event::setReceiveHandler(const OnFieldChangedCallback callback)
+void {{ namePascalCase }}Event::setReceiveHandler(const OnFieldChangedCallback callback)
 {
     auto* mock = {{ service.name }}ProxyMock::getMock();
-    mock->{{ event.variable }}.setReceiveHandler(callback);
+    mock->{{ broadcast.name | camelCase }}.setReceiveHandler(callback);
 }
 
-void {{ event.name }}Event::unsetReceiveHandler()
+void {{ namePascalCase }}Event::unsetReceiveHandler()
 {
     auto* mock = {{ service.name }}ProxyMock::getMock();
-    mock->{{ event.variable }}.unsetReceiveHandler();
+    mock->{{ broadcast.name | camelCase }}.unsetReceiveHandler();
 }
 {% endfor %}
 
 // ATTRIBUTES
-{% for attribute in service.attributes if service.attributes %}
-{%- set has_subscription = not attribute.noSubscriptions %}
-{%- set has_setter = not attribute.readonly %}
-{%- set set_as_method = attribute.setAsMethod and not attribute.readonly %}
-{{ attribute.name }}Attribute::{{ attribute.name }}Attribute(::middleware::core::ProxyBase& proxy) : impl_(proxy)
+{% for attribute in service.attributes %}
+{%- set namePascalCase = attribute.name | pascalCase %}
+{%- set _has_subscription = attribute.hasNotifier %}
+{%- set _has_setter = attribute.hasSetter %}
+{%- set _set_as_method = attribute.deployment.SetterWithResponse and attribute.hasSetter %}
+{{ namePascalCase }}Attribute::{{ namePascalCase }}Attribute(::middleware::core::ProxyBase& proxy) : impl_(proxy)
 {
 }
 
-etl::expected<uint16_t, ::middleware::core::HRESULT> {{ attribute.name }}Attribute::get(const GetterCallback attrCb)
-{
-    auto* mock = {{ service.name }}ProxyMock::getMock();
-    return mock->{{ attribute.variable }}.get(attrCb);
-}
-
-::middleware::core::HRESULT {{ attribute.name }}Attribute::cancelGetterRequest(uint16_t requestId)
+etl::expected<uint16_t, ::middleware::core::HRESULT> {{ namePascalCase }}Attribute::get(const GetterCallback attrCb)
 {
     auto* mock = {{ service.name }}ProxyMock::getMock();
-    return mock->{{ attribute.variable }}.cancelGetterRequest(requestId);
+    return mock->{{ attribute.name | camelCase }}.get(attrCb);
 }
-{%- if set_as_method %}
 
-etl::expected<uint16_t, ::middleware::core::HRESULT> {{ attribute.name }}Attribute::set(const AttributeType& payload,
+::middleware::core::HRESULT {{ namePascalCase }}Attribute::cancelGetterRequest(uint16_t requestId)
+{
+    auto* mock = {{ service.name }}ProxyMock::getMock();
+    return mock->{{ attribute.name | camelCase }}.cancelGetterRequest(requestId);
+}
+{%- if _set_as_method %}
+
+etl::expected<uint16_t, ::middleware::core::HRESULT> {{ namePascalCase }}Attribute::set(const AttributeType& payload,
                                                                                        const SetterCallback cbk)
 {
     auto* mock = {{ service.name }}ProxyMock::getMock();
-    return mock->{{ attribute.variable }}.set(payload, cbk);
+    return mock->{{ attribute.name | camelCase }}.set(payload, cbk);
 }
 
-::middleware::core::HRESULT {{ attribute.name }}Attribute::cancelSetterRequest(uint16_t requestId)
+::middleware::core::HRESULT {{ namePascalCase }}Attribute::cancelSetterRequest(uint16_t requestId)
 {
     auto* mock = {{ service.name }}ProxyMock::getMock();
-    return mock->{{ attribute.variable }}.cancelSetterRequest(requestId);
+    return mock->{{ attribute.name | camelCase }}.cancelSetterRequest(requestId);
 }
-{%- elif has_setter %}
+{%- elif _has_setter %}
 
-etl::expected<uint16_t, ::middleware::core::HRESULT> {{ attribute.name }}Attribute::set(const AttributeType& payload)
+etl::expected<uint16_t, ::middleware::core::HRESULT> {{ namePascalCase }}Attribute::set(const AttributeType& payload)
 {
     auto* mock = {{ service.name }}ProxyMock::getMock();
-    return mock->{{ attribute.variable }}.set(payload);
+    return mock->{{ attribute.name | camelCase }}.set(payload);
 }
 {%- endif %}
-{%- if has_subscription %}
+{%- if _has_subscription %}
 
-void {{ attribute.name }}Attribute::setReceiveHandler(const OnFieldChangedCallback callback)
+void {{ namePascalCase }}Attribute::setReceiveHandler(const OnFieldChangedCallback callback)
 {
     auto* mock = {{ service.name }}ProxyMock::getMock();
-    mock->{{ attribute.variable }}.setReceiveHandler(callback);
+    mock->{{ attribute.name | camelCase }}.setReceiveHandler(callback);
 }
 
-void {{ attribute.name }}Attribute::unsetReceiveHandler()
+void {{ namePascalCase }}Attribute::unsetReceiveHandler()
 {
     auto* mock = {{ service.name }}ProxyMock::getMock();
-    mock->{{ attribute.variable }}.unsetReceiveHandler();
+    mock->{{ attribute.name | camelCase }}.unsetReceiveHandler();
 }
+{%- endif %}
 
-{% endif %}
 {% endfor %}
 
 {{ service.name }}Proxy::{{ service.name }}Proxy()
     : Base(),
       // ATTRIBUTES
-{% for attribute in service.attributes if service.attributes %}
-      {{ attribute.variable }}(*this),
+{% for attribute in service.attributes %}
+      {{ attribute.name | camelCase }}(*this),
 {% endfor %}
       // EVENTS
-{% for event in service.events if service.events %}
-      {{ event.variable }}(*this),
+{% for broadcast in service.broadcasts %}
+      {{ broadcast.name | camelCase }}(*this),
 {% endfor %}
       fProcessId(::middleware::core::INVALID_TASK_ID)
 {
 }
 
-{{ service.name }}Proxy::~{{ service.name }}Proxy()
-{
-    deInit();
-}
+{{ service.name }}Proxy::~{{ service.name }}Proxy() = default;
 
 middleware::core::HRESULT {{ service.name }}Proxy::init(const internal::InstanceId instanceId,
                                                         ::middleware::core::ClusterId const sourceCluster)
@@ -139,6 +127,12 @@ void {{ service.name }}Proxy::deInit()
     mock->deInit();
 }
 
+bool {{ service.name }}Proxy::isInitialized() const
+{
+    auto* mock = {{ service.name }}ProxyMock::getMock();
+    return mock->isInitialized();
+}
+
 uint16_t {{ service.name }}Proxy::getServiceId() const
 {
     auto* mock = {{ service.name }}ProxyMock::getMock();
@@ -146,12 +140,14 @@ uint16_t {{ service.name }}Proxy::getServiceId() const
 }
 
 // METHODS
-{% for method in service.methods if service.methods %}
+{% for method in service.methods %}
+{% if not method.fireAndForget %}
 void {{ service.name }}Proxy::cancel{{ method.name }}Request(uint16_t requestId)
 {
     auto* mock = {{ service.name }}ProxyMock::getMock();
     mock->cancel{{ method.name }}Request(requestId);
 }
+{% endif %}
 {% endfor %}
 
 ::middleware::core::HRESULT {{ service.name }}Proxy::onNewMessageReceived(::middleware::core::Message const&)
@@ -159,7 +155,7 @@ void {{ service.name }}Proxy::cancel{{ method.name }}Request(uint16_t requestId)
     return ::middleware::core::HRESULT::Ok;
 }
 
-void {{ service.name }}Proxy::clearPendingFutures()
+void {{ service.name }}Proxy::futureDispatcherDeinitialization()
 {
 }
 
@@ -173,33 +169,37 @@ void {{ service.name }}Proxy::doUpdateTimeouts()
 }
 
 // METHODS
-{% for method in service.methods if service.methods %}
-etl::expected<uint16_t, middleware::core::HRESULT> {{ service.name }}Proxy::{{ method.variable }}(
-    {% if method.input_param %}const {{ method.input_param.type }}& {{ method.input_param.name }}, {% endif %}
+{% for method in service.methods %}
+{% if not method.fireAndForget %}
+etl::expected<uint16_t, middleware::core::HRESULT> {{ service.name }}Proxy::{{ method.name | camelCase }}(
+    {% if method.inArgs %}const {{ method.inType | cppType(service.namespace) }}& {{ method.name | camelCase }}Input, {% endif %}
     const {{ method.name }}Callback methodCb)
 {
     auto* mock = {{ service.name }}ProxyMock::getMock();
-{% if method.input_param %}
-    return mock->{{ method.variable }}({{ method.input_param.name }}, methodCb);
+{% if method.inArgs %}
+    return mock->{{ method.name | camelCase }}({{ method.name | camelCase }}Input, methodCb);
 {% else %}
-    return mock->{{ method.variable }}(methodCb);
+    return mock->{{ method.name | camelCase }}(methodCb);
 {% endif %}
 }
 
+{% endif %}
 {% endfor %}
 
 // METHODS FIRE_AND_FORGET
-{% for method in service.methods_fire_and_forget if service.methods_fire_and_forget %}
-etl::expected<uint16_t, middleware::core::HRESULT> {{ service.name }}Proxy::{{ method.variable }}({% if method.input_param %}const {{ method.input_param.type }}& {{ method.input_param.name }}{% endif %})
+{% for method in service.methods %}
+{% if method.fireAndForget %}
+etl::expected<uint16_t, middleware::core::HRESULT> {{ service.name }}Proxy::{{ method.name | camelCase }}({% if method.inArgs %}const {{ method.inType | cppType(service.namespace) }}& {{ method.name | camelCase }}Input{% endif %})
 {
     auto* mock = {{ service.name }}ProxyMock::getMock();
-{% if method.input_param %}
-    return mock->{{ method.variable }}({{ method.input_param.name }});
+{% if method.inArgs %}
+    return mock->{{ method.name | camelCase }}({{ method.name | camelCase }}Input);
 {% else %}
-    return mock->{{ method.variable }}();
+    return mock->{{ method.name | camelCase }}();
 {% endif %}
 }
 
+{% endif %}
 {% endfor %}
 
 ::middleware::core::HRESULT {{ service.name }}Proxy::sendMessage(::middleware::core::Message&) const
@@ -207,4 +207,4 @@ etl::expected<uint16_t, middleware::core::HRESULT> {{ service.name }}Proxy::{{ m
     return ::middleware::core::HRESULT::NotRegistered;
 }
 
-}  // namespace {{ service.namespace }}::{{ service.name }}::proxy
+}  // namespace {{ service.namespace | lower }}::{{ service.name }}::proxy

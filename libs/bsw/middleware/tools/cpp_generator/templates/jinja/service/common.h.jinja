@@ -7,23 +7,10 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
-/**
-  *
-  *  __  __ _     _     _ _
-  * |  \/  (_) __| | __| | | _____      ____ _ _ __ ___
-  * | |\/| | |/ _` |/ _` | |/ _ \ \ /\ / / _` | '__/ _ \
-  * | |  | | | (_| | (_| | |  __/\ V  V / (_| | | |  __/
-  * |_|  |_|_|\__,_|\__,_|_|\___| \_/\_/ \__,_|_|  \___|
-  *
-  * WARNING!
-  * This file is generated. Do not edit manually.
-  *
-  */
+{% from "macros/common.jinja" import file_header %}{{ file_header() }}
 #pragma once
 
-#include <etl/array.h>
 #include <etl/span.h>
-#include <etl/vector.h>
 
 #include "middleware/ClusterId.h"
 #include "middleware/core/ITimeoutHandler.h"
@@ -35,67 +22,50 @@
 #include "middleware/core/SkeletonBase.h"
 #include "middleware/core/SkeletonEvent.h"
 #include "middleware/shm/AllocatorsDefinitions.h"
+{% for header in service.typeIncludes %}
+#include "{{ header }}"
+{% endfor %}
 
-namespace {{ service.namespace }}::{{ service.name }}
+namespace {{ service.namespace | lower }}::{{ service.name }}::internal
 {
 
-{% for alias in service.typedefs if service.typedefs %}
-using {{alias.name}} = {{alias.type}};
-{% endfor -%}
+constexpr uint16_t SERVICE_ID = {{ service.deployment.ServiceID }}U;
+{% for method in service.methods %}
+constexpr uint16_t {{ method.name | camelCase }}_id = {{ method.deployment.MethodID }}U;
+{% endfor %}
+{% for attribute in service.attributes %}
+{% set namePascalCase = attribute.name | pascalCase %}
+{% if attribute.hasGetter %}
+constexpr uint16_t get_{{ namePascalCase }}_id = {{ attribute.deployment.GetterID }}U;
+{% endif %}
+{% if attribute.hasSetter %}
+constexpr uint16_t set_{{ namePascalCase }}_id = {{ attribute.deployment.SetterID }}U;
+{% endif %}
+{% if attribute.hasNotifier %}
+constexpr uint16_t event_{{ namePascalCase }}_id = {{ attribute.deployment.NotificationID }}U;
+{% endif %}
+{% endfor %}
+{% for broadcast in service.broadcasts %}
+constexpr uint16_t event_{{ broadcast.name | pascalCase }}_id = {{ broadcast.deployment.NotificationID }}U;
+{% endfor %}
 
-{% for enum_type in service.enums if service.enums %}
-enum class {{ enum_type.name }} : {{ enum_type.type }}
-{
-    {% for value in enum_type.parameters %}
-    {{ value.name }} = {{ value.value }},
+{% set ns = namespace (instanceNames = []) %}
+{% for cluster in clusters %}
+    {% for componentInstance in cluster.componentInstances %}
+        {% for providedPort in componentInstance.component.providedPorts %}
+            {% if providedPort.interfaceName == service.name and providedPort.interfaceNamespace == service.namespace %}
+                {% set _ = ns.instanceNames.append((cluster.name | pascalCase) ~ (componentInstance.instanceName | pascalCase) ~ (providedPort.name | pascalCase)) %}
+            {% endif %}
+        {% endfor %}
     {% endfor %}
-};
 {% endfor %}
-
-{% for data_type in service.datatypes if service.datatypes %}
-{{ data_type.type }} {{ data_type.name }}
+enum InstanceId : uint16_t
 {
-    {% for value in data_type.parameters %}
-    {{ value.type }} {{ value.name }};
-    {% endfor %}
-};
-{% endfor %}
-
-namespace internal
-{
-constexpr uint16_t SERVICE_ID = {{ service.id }}U;
-
-{% for method in service.methods_fire_and_forget if service.methods_fire_and_forget %}
-constexpr uint16_t {{method.variable}}_id = {{ method.id }}U;
-{% endfor %}
-
-{% for attribute in service.attributes if service.attributes %}
-{% if attribute.getter %}constexpr uint16_t get_{{ attribute.name }}_id = {{ attribute.getter.id }}U;
-{% endif %}
-{% if attribute.setter %}constexpr uint16_t set_{{ attribute.name }}_id = {{ attribute.setter.id }}U;
-{% endif %}
-{% if attribute.event %}constexpr uint16_t event_{{ attribute.name }}_id = {{ attribute.event.id }}U;
-{% endif %}
-{% endfor %}
-
-{% for event in service.events if service.events %}
-constexpr uint16_t event_{{event.name}}_id = {{ event.id }}U;
-{% endfor %}
-
-{% for method in service.methods if service.methods %}
-constexpr uint16_t {{method.variable}}_id = {{ method.id }}U;
-{% endfor %}
-
-enum InstanceId : uint8_t
-{
-{% for cluster_deployment in service.deployment.clusters %}
-  {% for instance_id in cluster_deployment.providers.instance_ids %}
-    InstanceId_{{ instance_id }} = {{ instance_id }}U,
-  {% endfor %}
+{% for instance in ns.instanceNames | sort %}
+    {{ instance | pascalCase }}{{ "," if not loop.last }}
 {% endfor %}
 };
 
 ::etl::span<const middleware::core::IInstanceDatabase* const> getClusterConnectionsDb();
-}  // namespace internal
 
-}  // namespace {{ service.namespace }}::{{ service.name }}
+}  // namespace {{ service.namespace | lower }}::{{ service.name }}::internal

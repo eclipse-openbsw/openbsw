@@ -21,7 +21,10 @@
 class FooSkeletonWrapper : public org::test::foo::Foo::skeleton::FooSkeleton
 {
 public:
-    void init() { FooSkeleton::init(org::test::foo::Foo::internal::InstanceId::InstanceId_1); }
+    void init()
+    {
+        FooSkeleton::init(org::test::foo::Foo::internal::InstanceId::Cluster0ProviderFoo);
+    }
 
     void sendBroadcast()
     {

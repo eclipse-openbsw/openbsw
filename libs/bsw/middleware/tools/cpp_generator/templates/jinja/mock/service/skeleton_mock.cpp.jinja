@@ -7,53 +7,30 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
-/**
-  *
-  *  __  __ _     _     _ _
-  * |  \/  (_) __| | __| | | _____      ____ _ _ __ ___
-  * | |\/| | |/ _` |/ _` | |/ _ \ \ /\ / / _` | '__/ _ \
-  * | |  | | | (_| | (_| | |  __/\ V  V / (_| | | |  __/
-  * |_|  |_|_|\__,_|\__,_|_|\___| \_/\_/ \__,_|_|  \___|
-  *
-  * WARNING!
-  * This file is generated. Do not edit manually.
-  *
-  */
+{% from "macros/common.jinja" import file_header %}{{ file_header() }}
 #include "{{ service.skeletonInclude }}"
-#include "{{ service.skeletonMockInclude | default(service.namespace.replace('::', '/') | lower + '/' + (service.filename | default(service.name | lower)) + 'SkeletonMock.h') }}"
+#include "{{ service.skeletonMockInclude }}"
 
-#include <middleware/os/TaskIdProvider.h>
-
-#include <middleware/core/Message.h>
-#include <middleware/core/ResponseBufferBase.h>
+#include "middleware/core/Message.h"
+#include "middleware/core/ResponseBufferBase.h"
 #include "middleware/core/types.h"
+#include "middleware/os/TaskIdProvider.h"
 
-namespace {{ service.namespace }}::{{ service.name }}::skeleton
+namespace {{ service.namespace | lower }}::{{ service.name }}::skeleton
 {
 
 {{ service.name }}Skeleton::{{ service.name }}Skeleton()
     : Base(),
       // ATTRIBUTES
-{% for attribute in service.attributes if service.attributes %}
-      {{ attribute.variable }}(*this),
+{% for attribute in service.attributes %}
+      {{ attribute.name | camelCase }}(*this),
 {% endfor %}
       // EVENTS
-{% for event in service.events if service.events %}
-      {{ event.variable }}(*this),
+{% for broadcast in service.broadcasts %}
+      {{ broadcast.name | camelCase }}(*this),
 {% endfor %}
-      // ATTRIBUTES
-{% for attribute in service.attributes if service.attributes %}
-{% if attribute.getter %}
-      fGet_{{ attribute.name }}AttributeResponseBuffer(*this),
-{% endif %}
-{% if attribute.setAsMethod and attribute.setter %}
-      fSet_{{ attribute.name }}AttributeResponseBuffer(*this),
-{% endif %}
-{% endfor %}
-      // METHODS
-{% for method in service.methods if service.methods %}
-      f{{ method.variable }}ResponseBuffer(*this),
-{% endfor %}
+      // Response buffers are omitted in mock mode: never touched by the mock-delegating methods
+      // below, and constructing them would pull in the real ResponseBufferBase/allocator machinery.
       fProcessId(middleware::core::INVALID_TASK_ID)
 {
 }
@@ -75,6 +52,12 @@ void {{ service.name }}Skeleton::deInit()
     mock->deInit();
 }
 
+bool {{ service.name }}Skeleton::isInitialized() const
+{
+    auto* mock = {{ service.name }}SkeletonMock::getMock();
+    return mock->isInitialized();
+}
+
 uint16_t {{ service.name }}Skeleton::getServiceId() const
 {
     auto* mock = {{ service.name }}SkeletonMock::getMock();
@@ -82,140 +65,151 @@ uint16_t {{ service.name }}Skeleton::getServiceId() const
 }
 
 // METHODS
-{% for method in service.methods if service.methods %}
-{% if method.input_param %}
-void {{ service.name }}Skeleton::{{ method.variable }}(const {{ method.input_param.type }}& {{ method.input_param.name }},
-                                        middleware::core::ResponseBufferBase::SkeletonResponseInfo& response)
-{
-    auto* mock = {{ service.name }}SkeletonMock::getMock();
-    mock->{{ method.variable }}({{ method.input_param.name }}, response);
-}
-{% else %}
-void {{ service.name }}Skeleton::{{ method.variable }}(middleware::core::ResponseBufferBase::SkeletonResponseInfo& response)
-{
-    auto* mock = {{ service.name }}SkeletonMock::getMock();
-    mock->{{ method.variable }}(response);
-}
-{% endif %}
-
-middleware::core::HRESULT {{ service.name }}Skeleton::respond{{ method.name }}(middleware::core::ResponseBufferBase::SkeletonResponseInfo& response,
-                                               {% if method.output_param %}const {{ method.output_param.type }}& {{ method.output_param.name }}, {% endif %}const bool handleResponseFailure)
-{
-    auto* mock = {{ service.name }}SkeletonMock::getMock();
-    return mock->respond{{ method.name }}(response, {% if method.output_param %}{{ method.output_param.name }}, {% endif %}handleResponseFailure);
-}
-
-middleware::core::HRESULT {{ service.name }}Skeleton::cancel{{ method.name }}Response(
+{% for method in service.methods %}
+{% if not method.fireAndForget %}
+{% if method.inArgs %}
+void {{ service.name }}Skeleton::{{ method.name | camelCase }}(
+    const {{ method.inType | cppType(service.namespace) }}& {{ method.name | camelCase }}Input,
     middleware::core::ResponseBufferBase::SkeletonResponseInfo& response)
 {
     auto* mock = {{ service.name }}SkeletonMock::getMock();
-    return mock->cancel{{ method.name }}Response(response);
+    mock->{{ method.name | camelCase }}({{ method.name | camelCase }}Input, response);
+}
+{% else %}
+void {{ service.name }}Skeleton::{{ method.name | camelCase }}(middleware::core::ResponseBufferBase::SkeletonResponseInfo& response)
+{
+    auto* mock = {{ service.name }}SkeletonMock::getMock();
+    mock->{{ method.name | camelCase }}(response);
+}
+{% endif %}
+
+middleware::core::HRESULT {{ service.name }}Skeleton::respond{{ method.name | pascalCase }}(middleware::core::ResponseBufferBase::SkeletonResponseInfo& response,
+                                               {% if method.outArgs %}const {{ method.outType | cppType(service.namespace) }}& {{ method.name | camelCase }}Output, {% endif %}const bool handleResponseFailure)
+{
+    auto* mock = {{ service.name }}SkeletonMock::getMock();
+    return mock->respond{{ method.name | pascalCase }}(response, {% if method.outArgs %}{{ method.name | camelCase }}Output, {% endif %}handleResponseFailure);
 }
 
+middleware::core::HRESULT {{ service.name }}Skeleton::cancel{{ method.name | pascalCase }}Response(
+    middleware::core::ResponseBufferBase::SkeletonResponseInfo& response)
+{
+    auto* mock = {{ service.name }}SkeletonMock::getMock();
+    return mock->cancel{{ method.name | pascalCase }}Response(response);
+}
+
+{% endif %}
 {% endfor %}
 
 // METHODS FIRE_AND_FORGET
-{% for method in service.methods_fire_and_forget if service.methods_fire_and_forget %}
-{% if method.input_param %}
-void {{ service.name }}Skeleton::{{ method.variable }}(const {{ method.input_param.type }}& {{ method.input_param.name }})
+{% for method in service.methods %}
+{% if method.fireAndForget %}
+{% if method.inArgs %}
+void {{ service.name }}Skeleton::{{ method.name | camelCase }}(
+    const {{ method.inType | cppType(service.namespace) }}& {{ method.name | camelCase }}Input)
 {
     auto* mock = {{ service.name }}SkeletonMock::getMock();
-    mock->{{ method.variable }}({{ method.input_param.name }});
+    mock->{{ method.name | camelCase }}({{ method.name | camelCase }}Input);
 }
 {% else %}
-void {{ service.name }}Skeleton::{{ method.variable }}()
+void {{ service.name }}Skeleton::{{ method.name | camelCase }}()
 {
     auto* mock = {{ service.name }}SkeletonMock::getMock();
-    mock->{{ method.variable }}();
+    mock->{{ method.name | camelCase }}();
 }
+{% endif %}
 {% endif %}
 {% endfor %}
 
 // ATTRIBUTES
-{% for attribute in service.attributes if service.attributes %}
-{% if attribute.getter %}
-middleware::core::HRESULT {{ service.name }}Skeleton::respondGet{{ attribute.name }}Attribute(middleware::core::ResponseBufferBase::SkeletonResponseInfo& response,
-                                               const {{ attribute.type }}& result,
-                                               const bool handleResponseFailure)
+{% for attribute in service.attributes %}
+{% set namePascalCase = attribute.name | pascalCase %}
+{% if attribute.hasGetter %}
+middleware::core::HRESULT {{ service.name }}Skeleton::respondGet{{ namePascalCase }}Attribute(ResponseInfo& response, const {{ attribute.type | cppType(service.namespace) }}& result, const bool handleResponseFailure)
 {
     auto* mock = {{ service.name }}SkeletonMock::getMock();
-    return mock->respondGet{{ attribute.name }}Attribute(response, result, handleResponseFailure);
+    return mock->respondGet{{ namePascalCase }}Attribute(response, result, handleResponseFailure);
 }
 
-void {{ service.name }}Skeleton::get{{ attribute.name }}Attribute(middleware::core::ResponseBufferBase::SkeletonResponseInfo& response)
+void {{ service.name }}Skeleton::get{{ namePascalCase }}Attribute(ResponseInfo& response)
 {
     auto* mock = {{ service.name }}SkeletonMock::getMock();
-    mock->get{{ attribute.name }}Attribute(response);
+    mock->get{{ namePascalCase }}Attribute(response);
 }
 
-middleware::core::HRESULT {{ service.name }}Skeleton::cancelGet{{ attribute.name }}AttributeResponse(
-    middleware::core::ResponseBufferBase::SkeletonResponseInfo& response)
+middleware::core::HRESULT {{ service.name }}Skeleton::cancelGet{{ namePascalCase }}AttributeResponse(ResponseInfo& response)
 {
     auto* mock = {{ service.name }}SkeletonMock::getMock();
-    return mock->cancelGet{{ attribute.name }}AttributeResponse(response);
-}
-
-{% endif %}
-{% if attribute.setter %}
-{% if attribute.setAsMethod %}
-void {{ service.name }}Skeleton::set{{ attribute.name }}Attribute(const {{ attribute.type }}& arg,
-                                             middleware::core::ResponseBufferBase::SkeletonResponseInfo& response)
-{
-    auto* mock = {{ service.name }}SkeletonMock::getMock();
-    mock->set{{ attribute.name }}Attribute(arg, response);
-}
-
-middleware::core::HRESULT {{ service.name }}Skeleton::respondSet{{ attribute.name }}Attribute(
-    middleware::core::ResponseBufferBase::SkeletonResponseInfo& response,
-    const {{ attribute.type }}& result,
-    const bool handleResponseFailure)
-{
-    auto* mock = {{ service.name }}SkeletonMock::getMock();
-    return mock->respondSet{{ attribute.name }}Attribute(response, result, handleResponseFailure);
-}
-
-middleware::core::HRESULT {{ service.name }}Skeleton::cancelSet{{ attribute.name }}AttributeResponse(
-    middleware::core::ResponseBufferBase::SkeletonResponseInfo& response)
-{
-    auto* mock = {{ service.name }}SkeletonMock::getMock();
-    return mock->cancelSet{{ attribute.name }}AttributeResponse(response);
-}
-
-{% else %}
-void {{ service.name }}Skeleton::set{{ attribute.name }}Attribute(const {{ attribute.type }}& arg)
-{
-    auto* mock = {{ service.name }}SkeletonMock::getMock();
-    mock->set{{ attribute.name }}Attribute(arg);
+    return mock->cancelGet{{ namePascalCase }}AttributeResponse(response);
 }
 
 {% endif %}
+{% if attribute.hasSetter %}
+    {% if attribute.deployment.SetterWithResponse %}
+void {{ service.name }}Skeleton::set{{ namePascalCase }}Attribute(const {{ attribute.type | cppType(service.namespace) }}& arg, ResponseInfo& response)
+{
+    auto* mock = {{ service.name }}SkeletonMock::getMock();
+    mock->set{{ namePascalCase }}Attribute(arg, response);
+}
+
+middleware::core::HRESULT {{ service.name }}Skeleton::respondSet{{ namePascalCase }}Attribute(ResponseInfo& response, const {{ attribute.type | cppType(service.namespace) }}& result, const bool handleResponseFailure)
+{
+    auto* mock = {{ service.name }}SkeletonMock::getMock();
+    return mock->respondSet{{ namePascalCase }}Attribute(response, result, handleResponseFailure);
+}
+
+middleware::core::HRESULT {{ service.name }}Skeleton::cancelSet{{ namePascalCase }}AttributeResponse(ResponseInfo& response)
+{
+    auto* mock = {{ service.name }}SkeletonMock::getMock();
+    return mock->cancelSet{{ namePascalCase }}AttributeResponse(response);
+}
+    {% else %}
+void {{ service.name }}Skeleton::set{{ namePascalCase }}Attribute(const {{ attribute.type | cppType(service.namespace) }}& arg)
+{
+    auto* mock = {{ service.name }}SkeletonMock::getMock();
+    mock->set{{ namePascalCase }}Attribute(arg);
+}
+    {% endif %}
+{% endif %}
+
+// Local get/set delegate to the real attribute implementation, as in production.
+const {{ namePascalCase }}Attribute::AttributeType& {{ namePascalCase }}Attribute::get() const
+{
+    return impl_.get();
+}
+
+{{ namePascalCase }}Attribute::AttributeType& {{ namePascalCase }}Attribute::get()
+{
+    return impl_.get();
+}
+
+void {{ namePascalCase }}Attribute::set(const {{ namePascalCase }}Attribute::AttributeType& value)
+{
+    impl_.set(value);
+}
+
+{% if attribute.hasNotifier %}
+middleware::core::HRESULT {{ namePascalCase }}Attribute::send()
+{
+    auto* mock = {{ service.name }}SkeletonMock::getMock();
+    return mock->{{ attribute.name | camelCase }}.send();
+}
 {% endif %}
 {% endfor %}
 
-// ATTRIBUTE / EVENT TRANSPORT (send forwards to the skeleton mock singleton)
-{% for attribute in service.attributes if attribute.event %}
-middleware::core::HRESULT {{ attribute.name }}Attribute::send()
+{% for broadcast in service.broadcasts %}
+{% if broadcast.type.name != 'void' %}
+middleware::core::HRESULT {{ broadcast.name | pascalCase }}Event::send(const EventType& data)
 {
     auto* mock = {{ service.name }}SkeletonMock::getMock();
-    return mock->{{ attribute.variable }}.send();
-}
-
-{% endfor %}
-{% for event in service.events if service.events %}
-{% if event.type and event.type != 'void' %}
-middleware::core::HRESULT {{ event.name }}Event::send(const EventType& data)
-{
-    auto* mock = {{ service.name }}SkeletonMock::getMock();
-    return mock->{{ event.variable }}.send(data);
+    return mock->{{ broadcast.name | camelCase }}.send(data);
 }
 {% else %}
-middleware::core::HRESULT {{ event.name }}Event::send()
+middleware::core::HRESULT {{ broadcast.name | pascalCase }}Event::send()
 {
     auto* mock = {{ service.name }}SkeletonMock::getMock();
-    return mock->{{ event.variable }}.send();
+    return mock->{{ broadcast.name | camelCase }}.send();
 }
 {% endif %}
-
 {% endfor %}
 
 middleware::core::HRESULT {{ service.name }}Skeleton::onNewMessageReceived(middleware::core::Message const&)
@@ -233,4 +227,4 @@ uint32_t {{ service.name }}Skeleton::getProcessId() const
     return fProcessId;
 }
 
-}  // namespace {{ service.namespace }}::{{ service.name }}::skeleton
+}  // namespace {{ service.namespace | lower }}::{{ service.name }}::skeleton

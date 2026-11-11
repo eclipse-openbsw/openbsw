@@ -52,6 +52,10 @@ import yaml
 from jinja2 import Environment, FileSystemLoader
 from jsonschema import validate, ValidationError
 
+from filters import register_filters
+from loaders import check_type_modules
+from model_enricher import enrich_model
+
 _SCRIPT_DIR = Path(os.path.dirname(os.path.abspath(__file__)))
 
 
@@ -67,13 +71,28 @@ class _DotDict(dict):
     def __setattr__(self, name, value):
         self[name] = value
 
+    # Identity hash so Jinja's `unique` filter can de-duplicate model objects.
+    def __hash__(self):
+        return id(self)
 
-def _to_dot_dict(obj):
-    """Recursively convert dicts to _DotDict so Jinja dot-notation works."""
+
+def _to_dot_dict(obj, _memo=None):
+    """Recursively convert dicts to _DotDict so Jinja dot-notation works.
+
+    YAML anchors/aliases stay shared objects, so a cluster referenced from
+    several places is one object.
+    """
+    memo = {} if _memo is None else _memo
+    if id(obj) in memo:
+        return memo[id(obj)]
     if isinstance(obj, dict):
-        return _DotDict({k: _to_dot_dict(v) for k, v in obj.items()})
+        result = memo[id(obj)] = _DotDict()
+        result.update({k: _to_dot_dict(v, memo) for k, v in obj.items()})
+        return result
     if isinstance(obj, list):
-        return [_to_dot_dict(item) for item in obj]
+        result = memo[id(obj)] = []
+        result.extend(_to_dot_dict(item, memo) for item in obj)
+        return result
     return obj
 
 
@@ -141,6 +160,7 @@ def render_template_with_context(
         lstrip_blocks=True,
         keep_trailing_newline=True,
     )
+    register_filters(env)
 
     # Set the context as globals
     for key, value in context.items():
@@ -207,6 +227,9 @@ TEMPLATE_CONFIG = {
         ("service/common.cpp.jinja", "{}Common.cpp", "src/generated_code/{}"),
         ("service/proxy.cpp.jinja", "{}Proxy.cpp", "src/generated_code/{}"),
         ("service/skeleton.cpp.jinja", "{}Skeleton.cpp", "src/generated_code/{}"),
+    ],
+    "per_type_module": [
+        ("datatypes.h.jinja", "{}", "include/generated_code"),
     ],
     "per_pdu": [
         ("signal/pdu_common.h.jinja", "{}Common.h", "include/generated_code/{}"),
@@ -316,6 +339,7 @@ def build_context(input_data: dict, **additional) -> dict:
         "cores": getattr(input_data, "cores", []),
         "allocators": getattr(input_data, "allocators", []),
         "pdus": getattr(input_data, "pdus", []),
+        "typeModules": getattr(input_data, "typeModules", None) or [],
     }
     context.update(additional)
     return context
@@ -345,6 +369,10 @@ def generate_files(
             context[item_key] = item
             if hasattr(item, "name"):
                 print(f"  Processing {item_key}: {item.name}")
+        if template_type == "per_service":
+            context["mock"] = _service_generation_mode(item) == "mock"
+        if template_type == "per_type_module":
+            context["typeIncludes"] = item.get("includes") or []
 
         for template_name, output_pattern, output_dir_pattern in mappings:
             resolved_template_name = template_name
@@ -407,6 +435,9 @@ def generate_files(
                 )
                 output_filename = output_pattern.format(service_name)
                 output_dir = output_base / output_dir_pattern.format(namespace_path)
+            elif template_type == "per_type_module":
+                output_filename = output_pattern.format(item.header)
+                output_dir = output_base / output_dir_pattern
             elif template_type == "per_pdu":
                 namespace_path = (
                     item.namespace.replace("::", "/").lower()
@@ -491,6 +522,9 @@ def _resolve_output_paths(input_data) -> list[str]:
                 )
                 output_filename = output_pattern.format(service_name)
                 output_dir = output_dir_pattern.format(namespace_path)
+            elif template_type == "per_type_module":
+                output_filename = output_pattern.format(item.header)
+                output_dir = output_dir_pattern
             elif template_type == "per_pdu":
                 namespace_path = item.namespace.replace("::", "/").lower()
                 output_filename = output_pattern.format(item.name)
@@ -502,6 +536,8 @@ def _resolve_output_paths(input_data) -> list[str]:
     if not has_mock:
         for cluster in getattr(input_data, "clusters", []):
             _emit("per_cluster", cluster)
+    for module in getattr(input_data, "typeModules", None) or []:
+        _emit("per_type_module", module)
     for service in getattr(input_data, "services", []):
         _emit("per_service", service)
     for pdu in getattr(input_data, "pdus", []):
@@ -645,7 +681,9 @@ def main(argv=None) -> int:
         else:
             print(f"Warning: Schema not found at {schema_path}, skipping validation")
 
-        allocator_errors = _check_allocators(input_data)
+        allocator_errors = _check_allocators(input_data) + check_type_modules(
+            input_data
+        )
         if allocator_errors:
             print("\nValidation errors:", file=sys.stderr)
             for error in allocator_errors:
@@ -718,6 +756,8 @@ def main(argv=None) -> int:
         return 1
     _resolve_memory_allocators(input_data)
 
+    enrich_model(input_data)
+
     # Generate all file types using the unified clusters.yaml data
     try:
         has_mock_mode_service = _has_mock_mode_service(input_data)
@@ -740,6 +780,14 @@ def main(argv=None) -> int:
                 items=input_data.clusters,
                 item_key="cluster",
             )
+        generate_files(
+            "per_type_module",
+            input_data,
+            input_base,
+            output_base,
+            items=getattr(input_data, "typeModules", None) or [],
+            item_key="typeModule",
+        )
         generate_files(
             "per_service",
             input_data,

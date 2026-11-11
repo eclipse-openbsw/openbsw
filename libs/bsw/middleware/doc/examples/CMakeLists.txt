@@ -9,6 +9,13 @@ set(_SCHEMA_YAML ${_GEN_INPUT}/templates/schemas/deployment.yaml)
 
 file(GLOB_RECURSE _JINJA_TEMPLATES CONFIGURE_DEPENDS
      ${_GEN_INPUT}/templates/jinja/*.jinja)
+file(
+    GLOB
+    _GEN_PY_MODULES
+    CONFIGURE_DEPENDS
+    ${_GEN_INPUT}/*.py
+    ${_GEN_INPUT}/filters/*.py
+    ${_GEN_INPUT}/loaders/*.py)
 
 # Release example: generate the complete middleware interface and transport
 # code.
@@ -26,6 +33,7 @@ set(_RELEASE_GENERATED_HEADERS
     ${_RELEASE_GEN_INC}/features/communication/dummy_serviceCommon.h
     ${_RELEASE_GEN_INC}/features/communication/dummy_serviceProxy.h
     ${_RELEASE_GEN_INC}/features/communication/dummy_serviceSkeleton.h
+    ${_RELEASE_GEN_INC}/features/communication/dummy_serviceTypes.h
     ${_RELEASE_GEN_INC}/features/communication/samplePduWithCrcCommon.h
     ${_RELEASE_GEN_INC}/features/communication/samplePduWithCrcReader.h)
 set(_RELEASE_GENERATED_SOURCES
@@ -45,7 +53,10 @@ add_custom_command(
     COMMAND ${Python3_EXECUTABLE} ${_GEN_SCRIPT} --input ${_GEN_INPUT} --output
             ${_RELEASE_GEN_DIR} --deployment-yaml ${_DEPLOYMENT_YAML}
     COMMAND ${CMAKE_COMMAND} -E touch ${_RELEASE_GEN_DIR}/.generated
-    DEPENDS ${_GEN_SCRIPT} ${_DEPLOYMENT_YAML} ${_SCHEMA_YAML}
+    DEPENDS ${_GEN_SCRIPT}
+            ${_GEN_PY_MODULES}
+            ${_DEPLOYMENT_YAML}
+            ${_SCHEMA_YAML}
             ${_JINJA_TEMPLATES}
     COMMENT "Generating release middleware documentation example code"
     VERBATIM)
@@ -76,6 +87,7 @@ set(_TEST_GENERATED_HEADERS
     ${_TEST_GEN_INC}/features/communication/dummy_serviceProxyMock.h
     ${_TEST_GEN_INC}/features/communication/dummy_serviceSkeleton.h
     ${_TEST_GEN_INC}/features/communication/dummy_serviceSkeletonMock.h
+    ${_TEST_GEN_INC}/features/communication/dummy_serviceTypes.h
     ${_TEST_GEN_INC}/features/communication/samplePduWithCrcCommon.h
     ${_TEST_GEN_INC}/features/communication/samplePduWithCrcReader.h
     ${_TEST_GEN_INC}/features/communication/samplePduWithCrcReaderMock.h)
@@ -91,7 +103,10 @@ add_custom_command(
         ${_TEST_GEN_DIR} --deployment-yaml ${_DEPLOYMENT_YAML} --generation-mode
         mock
     COMMAND ${CMAKE_COMMAND} -E touch ${_TEST_GEN_DIR}/.generated
-    DEPENDS ${_GEN_SCRIPT} ${_DEPLOYMENT_YAML} ${_SCHEMA_YAML}
+    DEPENDS ${_GEN_SCRIPT}
+            ${_GEN_PY_MODULES}
+            ${_DEPLOYMENT_YAML}
+            ${_SCHEMA_YAML}
             ${_JINJA_TEMPLATES}
     COMMENT "Generating mock middleware documentation example code"
     VERBATIM)

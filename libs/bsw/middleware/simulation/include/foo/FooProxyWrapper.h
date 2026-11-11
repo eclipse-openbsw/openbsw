@@ -42,7 +42,7 @@ public:
     {
         using namespace org::test::foo::Foo;
 
-        proxy_.init(internal::InstanceId::InstanceId_1, CLUSTER_ID);
+        proxy_.init(internal::InstanceId::Cluster0ProviderFoo, CLUSTER_ID);
 
         proxy_.fooDefault.setReceiveHandler(
             ::etl::delegate<void(FooStruct const&)>::

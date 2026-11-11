@@ -11,15 +11,35 @@
 # Service-oriented example deployment configuration for middleware documentation
 # This configuration demonstrates service-based communication patterns
 
+components:
+  - &dummy_provider
+    name: DummyProvider
+    providedPorts:
+      - name: dummy
+        interfaceName: DummyService
+        interfaceNamespace: features::communication
+  - &dummy_consumer
+    name: DummyConsumer
+    requiredPorts:
+      - name: dummy
+        interfaceName: DummyService
+        interfaceNamespace: features::communication
+
 clusters:
   - &core0
     name: Core0
     id: 0
     queueSize: 10
+    componentInstances:
+      - instanceName: provider
+        component: *dummy_provider
   - &core1
     name: Core1
     id: 1
     queueSize: 10
+    componentInstances:
+      - instanceName: consumer
+        component: *dummy_consumer
 
 allocators:
   - name: Main
@@ -52,31 +72,27 @@ pdus:
         type: uint32_t
         bit_length: 32
 
-services:
-  - &dummy_service
-    namespace: features::communication
-    name: DummyService
-    filename: dummy_service
-    id: 10
-    enums: []
-    datatypes:
-      - name: Foo
-        type: struct
-        parameters:
+typeModules:
+  - namespace: features::communication::DummyService
+    header: features/communication/dummy_serviceTypes.h
+    types:
+      - typeName: StructTypeDef
+        name: Foo
+        elements:
           - name: x
             type: uint32_t
           - name: y
             type: uint32_t
-      - name: Bar
-        type: struct
-        parameters:
+      - typeName: StructTypeDef
+        name: Bar
+        elements:
           - name: z
             type: uint16_t
           - name: w
             type: uint16_t
-      - name: Baz
-        type: struct
-        parameters:
+      - typeName: StructTypeDef
+        name: Baz
+        elements:
           - name: a
             type: uint8_t
           - name: b
@@ -85,75 +101,70 @@ services:
             type: uint8_t
           - name: d
             type: uint8_t
-      - name: FireAndForgetPayload
-        type: struct
-        parameters:
+      - typeName: StructTypeDef
+        name: FireAndForgetPayload
+        elements:
           - name: foo
             type: Foo
           - name: bar
             type: Bar
-    typedefs: []
+
+services:
+  - &dummy_service
+    namespace: features::communication
+    name: DummyService
+    filename: dummy_service
+    deployment:
+      ServiceID: 10
+    typeIncludes:
+      - features/communication/dummy_serviceTypes.h
     attributes:
       - name: SimpleField
-        variable: simpleField
         type: uint32_t
-        readonly: false
-        noSubscriptions: false
-        setAsMethod: false
-        event:
-          id: 128
-        getter:
-          id: 1
-          timeout: 300
-        setter:
-          id: 2
-          timeout: 300
-        consumer_request_limit: 1
-        provider_request_limit: 1
+        hasGetter: true
+        hasSetter: true
+        hasNotifier: true
+        deployment:
+          GetterID: 1
+          SetterID: 2
+          NotificationID: 128
+          Timeout: 300
+          SetterWithResponse: false
+          MaxProxyRequests: 1
+          MaxSkeletonRequests: 1
     methods:
       - name: AsyncMethod
-        variable: asyncMethod
-        id: 3
-        timeout: 1000
-        consumer_request_limit: 1
-        provider_request_limit: 1
-        input_param:
-          name: fooParam
-          type: Foo
-        output_param:
-          name: result
-          type: Baz
-    methods_fire_and_forget:
+        deployment:
+          MethodID: 3
+          Timeout: 1000
+          MaxProxyRequests: 1
+          MaxSkeletonRequests: 1
+        inArgs:
+          - name: fooParam
+            type: features::communication::DummyService::Foo
+        outArgs:
+          - name: result
+            type: features::communication::DummyService::Baz
       - name: FireAndForgetMethod
-        variable: fireAndForgetMethod
-        id: 4
-        consumer_request_limit: 1
-        provider_request_limit: 1
-        input_param:
-          name: payload
-          type: FireAndForgetPayload
-        output_param:
-    events:
+        fireAndForget: true
+        deployment:
+          MethodID: 4
+          Timeout: 300
+          MaxProxyRequests: 1
+          MaxSkeletonRequests: 1
+        inArgs:
+          - name: payload
+            type: features::communication::DummyService::FireAndForgetPayload
+    broadcasts:
       - name: SimpleBroadcast
-        variable: simpleBroadcast
-        id: 129
         type: uint32_t
+        deployment:
+          NotificationID: 129
     commonInclude: features/communication/dummy_serviceCommon.h
     proxyInclude: features/communication/dummy_serviceProxy.h
     skeletonInclude: features/communication/dummy_serviceSkeleton.h
     proxyMockInclude: features/communication/dummy_serviceProxyMock.h
     skeletonMockInclude: features/communication/dummy_serviceSkeletonMock.h
-    deployment:
-      clusters:
-        - cluster: *core0
-          consumers: 0
-          providers:
-            instance_ids: [1]
-        - cluster: *core1
-          consumers: 1
-          providers:
-            instance_ids: []
-      instance_ids: [1]
 
 connections:
   - source_cluster: *core0

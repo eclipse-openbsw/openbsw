@@ -7,18 +7,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
-/**
-  *
-  *  __  __ _     _     _ _
-  * |  \/  (_) __| | __| | | _____      ____ _ _ __ ___
-  * | |\/| | |/ _` |/ _` | |/ _ \ \ /\ / / _` | '__/ _ \
-  * | |  | | | (_| | (_| | |  __/\ V  V / (_| | | |  __/
-  * |_|  |_|_|\__,_|\__,_|_|\___| \_/\_/ \__,_|_|  \___|
-  *
-  * WARNING!
-  * This file is generated. Do not edit manually.
-  *
-  */
+{% from "macros/common.jinja" import file_header %}{{ file_header() }}
 #pragma once
 
 #include <etl/delegate.h>
@@ -27,29 +16,30 @@
 #include "{{ service.commonInclude }}"
 #include "middleware/rpc/ProxyMethod.h"
 
-namespace {{ service.namespace }}::{{ service.name }}::proxy
+namespace {{ service.namespace | lower }}::{{ service.name }}::proxy
 {
 
 class {{ service.name }}Proxy;
 
 // EVENTS
-{% for event in service.events if service.events %}
-class {{ event.name }}Event
+{% for broadcast in service.broadcasts %}
+{% set namePascalCase = broadcast.name | pascalCase %}
+class {{ namePascalCase }}Event
 {
-    using Impl = ::middleware::core::ProxyEventBase<{{ service.name }}Proxy, {{ event.type }}>;
+    using Impl = ::middleware::core::ProxyEventBase<{{ service.name }}Proxy, {{ broadcast.type | cppType(service.namespace) }}>;
 
   public:
-    using EventType = {{ event.type }};
-    using OnFieldChangedCallback = typename Impl::OnFieldChangedCallback;
+    using EventType = {{ broadcast.type | cppType(service.namespace) }};
+    using OnFieldChangedCallback = Impl::OnFieldChangedCallback;
 
-    explicit {{ event.name }}Event(::middleware::core::ProxyBase& proxy);
-    ~{{ event.name }}Event() = default;
-    {{ event.name }}Event(const {{ event.name }}Event&) = delete;
-    {{ event.name }}Event({{ event.name }}Event&&) = delete;
-    {{ event.name }}Event& operator=(const {{ event.name }}Event&) = delete;
-    {{ event.name }}Event& operator=({{ event.name }}Event&&) = delete;
+    explicit {{ namePascalCase }}Event(::middleware::core::ProxyBase& proxy);
+    ~{{ namePascalCase }}Event() = default;
+    {{ namePascalCase }}Event(const {{ namePascalCase }}Event&) = delete;
+    {{ namePascalCase }}Event({{ namePascalCase }}Event&&) = delete;
+    {{ namePascalCase }}Event& operator=(const {{ namePascalCase }}Event&) = delete;
+    {{ namePascalCase }}Event& operator=({{ namePascalCase }}Event&&) = delete;
 
-    void setReceiveHandler(OnFieldChangedCallback callback);
+    void setReceiveHandler(const OnFieldChangedCallback callback);
     void unsetReceiveHandler();
 
   private:
@@ -60,63 +50,69 @@ class {{ event.name }}Event
 {% endfor %}
 
 // ATTRIBUTES
-{% for attribute in service.attributes if service.attributes %}
-{%- set has_subscription = not attribute.noSubscriptions %}
-{%- set has_setter = not attribute.readonly %}
-{%- set set_as_method = attribute.setAsMethod and not attribute.readonly %}
-{%- if attribute.readonly and attribute.noSubscriptions %}{% set attribute_type = "ReadOnly_NoSubscription" %}
-{%- elif attribute.readonly %}{% set attribute_type = "ReadOnly" %}
-{%- elif attribute.noSubscriptions and attribute.setAsMethod %}{% set attribute_type = "NoSubscriptions_SetAsMethod" %}
-{%- elif attribute.noSubscriptions %}{% set attribute_type = "NoSubscriptions" %}
-{%- elif attribute.setAsMethod %}{% set attribute_type = "FullyFeatured_SetAsMethod" %}
-{%- else %}{% set attribute_type = "FullyFeatured" %}
+{% for attribute in service.attributes %}
+{% set namePascalCase = attribute.name | pascalCase %}
+{%- set _has_subscription = attribute.hasNotifier %}
+{%- set _has_setter = attribute.hasSetter %}
+{%- set _set_as_method = attribute.deployment.SetterWithResponse and attribute.hasSetter %}
+{%- set _attribute_type = "FullyFeatured" %}
+{%- if not attribute.hasSetter and not attribute.hasNotifier %}
+    {%- set _attribute_type = "ReadOnly_NoSubscription" %}
+{%- elif not attribute.hasSetter %}
+    {%- set _attribute_type = "ReadOnly" %}
+{%- elif not attribute.hasNotifier and attribute.deployment.SetterWithResponse %}
+    {%- set _attribute_type = "NoSubscriptions_SetAsMethod" %}
+{%- elif not attribute.hasNotifier %}
+    {%- set _attribute_type = "NoSubscriptions" %}
+{%- elif attribute.deployment.SetterWithResponse %}
+    {%- set _attribute_type = "FullyFeatured_SetAsMethod" %}
 {%- endif %}
 
-class {{ attribute.name }}Attribute
+class {{ namePascalCase }}Attribute
 {
     using GetterTraits =
-        middleware::rpc::MethodTraits<void, {{ attribute.type }}, {{ attribute.getter.timeout }}U>;
-{% if attribute.setter %}
+        middleware::rpc::MethodTraits<void, {{ attribute.type | cppType(service.namespace) }}, {{ attribute.deployment.Timeout }}U>;
+{% if attribute.deployment.SetterWithResponse and attribute.deployment.SetterID is not none %}
     using SetterTraits =
-        middleware::rpc::MethodTraits<{{ attribute.type }}, {{ attribute.type }}, {{ attribute.setter.timeout }}U>;
+        middleware::rpc::MethodTraits<{{ attribute.type | cppType(service.namespace) }}, {{ attribute.type | cppType(service.namespace) }}, {{ attribute.deployment.Timeout }}U>;
 {% else %}
     using SetterTraits = void;
 {% endif %}
     using Impl = ::middleware::core::ProxyAttribute<{{ service.name }}Proxy,
                                                     GetterTraits,
                                                     SetterTraits,
-                                                    ::middleware::core::AttributeType::{{ attribute_type }},
-                                                    {{ attribute.type }}>;
-
+                                                    ::middleware::core::AttributeType::{{ _attribute_type }},
+                                                    {{ attribute.type | cppType(service.namespace) }}>;
   public:
-    using AttributeType = {{ attribute.type }};
+    using AttributeType = {{ attribute.type | cppType(service.namespace) }};
+
     using GetterResult = typename Impl::GetterResult;
     using GetterCallback = typename Impl::GetterCallback;
-{%- if has_subscription %}
+{%- if _has_subscription %}
     using OnFieldChangedCallback = typename Impl::OnFieldChangedCallback;
 {%- endif %}
-{%- if set_as_method %}
+{%- if _set_as_method %}
     using SetterResult = typename Impl::SetterResult;
     using SetterCallback = typename Impl::SetterCallback;
 {%- endif %}
 
-    explicit {{ attribute.name }}Attribute(::middleware::core::ProxyBase& proxy);
-    ~{{ attribute.name }}Attribute() = default;
-    {{ attribute.name }}Attribute(const {{ attribute.name }}Attribute&) = delete;
-    {{ attribute.name }}Attribute({{ attribute.name }}Attribute&&) = delete;
-    {{ attribute.name }}Attribute& operator=(const {{ attribute.name }}Attribute&) = delete;
-    {{ attribute.name }}Attribute& operator=({{ attribute.name }}Attribute&&) = delete;
+    explicit {{ namePascalCase }}Attribute(::middleware::core::ProxyBase& proxy);
+    ~{{ namePascalCase }}Attribute() = default;
+    {{ namePascalCase }}Attribute(const {{ namePascalCase }}Attribute&) = delete;
+    {{ namePascalCase }}Attribute({{ namePascalCase }}Attribute&&) = delete;
+    {{ namePascalCase }}Attribute& operator=(const {{ namePascalCase }}Attribute&) = delete;
+    {{ namePascalCase }}Attribute& operator=({{ namePascalCase }}Attribute&&) = delete;
 
     ::etl::expected<uint16_t, ::middleware::core::HRESULT> get(const GetterCallback attrCb);
     ::middleware::core::HRESULT cancelGetterRequest(uint16_t requestId);
-{%- if set_as_method %}
-    ::etl::expected<uint16_t, ::middleware::core::HRESULT> set(AttributeType const& payload, const SetterCallback cbk);
+{%- if _set_as_method %}
+    ::etl::expected<uint16_t, ::middleware::core::HRESULT> set(AttributeType const& payload, SetterCallback const cbk);
     ::middleware::core::HRESULT cancelSetterRequest(uint16_t requestId);
-{%- elif has_setter %}
+{%- elif _has_setter %}
     ::etl::expected<uint16_t, ::middleware::core::HRESULT> set(AttributeType const& payload);
 {%- endif %}
-{%- if has_subscription %}
-    void setReceiveHandler(OnFieldChangedCallback callback);
+{%- if _has_subscription %}
+    void setReceiveHandler(const OnFieldChangedCallback callback);
     void unsetReceiveHandler();
 {%- endif %}
 
@@ -131,19 +127,27 @@ class {{ attribute.name }}Attribute
 class {{ service.name }}Proxy : public middleware::core::ProxyBase, public middleware::core::ITimeoutHandler
 {
     // METHODS
-{% for method in service.methods if service.methods %}
-    using {{ method.name }}MethodTraits =
-      middleware::rpc::MethodTraits<{{ method.input_param.type if method.input_param else 'void' }}, {{ method.output_param.type if method.output_param else 'void' }}, {{ method.timeout }}U>;
-    using {{ method.name }}Method = middleware::rpc::ProxyMethod<{{ method.name }}MethodTraits, {{ method.consumer_request_limit }}U>;
+{% for method in service.methods %}
+{% if not method.fireAndForget %}
+using {{ method.name }}MethodTraits =
+{% if method.outArgs %}
+    middleware::rpc::MethodTraits<{{ method.inType | cppType(service.namespace) }}, {{ method.outType | cppType(service.namespace) }}, {{ method.deployment.Timeout }}U>;
+{% else %}
+    middleware::rpc::MethodTraits<{{ method.inType | cppType(service.namespace) }}, void, {{ method.deployment.Timeout }}U>;
+{% endif %}
+    using {{ method.name }}Method = middleware::rpc::ProxyMethod<{{ method.name }}MethodTraits, {{ method.deployment.MaxProxyRequests }}U>;
+{% endif %}
 {% endfor %}
 
   public:
     using Base = middleware::core::ProxyBase;
 
     // METHODS
-{% for method in service.methods if service.methods %}
+{% for method in service.methods %}
+{% if not method.fireAndForget %}
     using {{ method.name }}Result   = {{ method.name }}Method::Result;
     using {{ method.name }}Callback = {{ method.name }}Method::Callback;
+{% endif %}
 {% endfor %}
 
     {{ service.name }}Proxy();
@@ -158,47 +162,60 @@ class {{ service.name }}Proxy : public middleware::core::ProxyBase, public middl
     middleware::core::HRESULT init(const internal::InstanceId instanceId,
                                    ::middleware::core::ClusterId const sourceCluster);
     void deInit();
+    bool isInitialized() const override;
     uint16_t getServiceId() const override;
 
     // METHODS FIRE_AND_FORGET
-{% for method in service.methods_fire_and_forget if service.methods_fire_and_forget %}
-    ::etl::expected<uint16_t, middleware::core::HRESULT> {{ method.variable }}({% if method.input_param %}const {{ method.input_param.type }}& {{ method.input_param.name }}{% endif %});
+{% for method in service.methods %}
+{% if method.fireAndForget %}
+{% if method.inArgs %}
+    etl::expected<uint16_t, middleware::core::HRESULT> {{ method.name | camelCase }}(const {{ method.inType | cppType(service.namespace) }}&);
+{% else %}
+    etl::expected<uint16_t, middleware::core::HRESULT> {{ method.name | camelCase }}();
+{% endif %}
+{% endif %}
 {% endfor %}
 
     // METHODS
-{% for method in service.methods if service.methods %}
-    ::etl::expected<uint16_t, middleware::core::HRESULT> {{ method.variable }}(
-    {% if method.input_param %}const {{ method.input_param.type }}& {{ method.input_param.name }}, {% endif %}
-        const {{ method.name }}Callback methodCb);
-
+{% for method in service.methods %}
+{% if not method.fireAndForget %}
+{% if method.inArgs %}
+    etl::expected<uint16_t, middleware::core::HRESULT> {{ method.name | camelCase }}(const {{ method.inType | cppType(service.namespace) }}&, const {{ method.name }}Callback);
+{% else %}
+    etl::expected<uint16_t, middleware::core::HRESULT> {{ method.name | camelCase }}(const {{ method.name }}Callback);
+{% endif %}
     void cancel{{ method.name }}Request(uint16_t requestId);
+{% endif %}
+
 {% endfor %}
 
     // ATTRIBUTES
-{% for attribute in service.attributes if service.attributes %}
-    {{ attribute.name }}Attribute {{ attribute.variable }};
+{% for attribute in service.attributes %}
+    {{ attribute.name | pascalCase }}Attribute {{ attribute.name | camelCase }};
 {% endfor %}
 
     // EVENTS
-    {% for event in service.events if service.events %}
-    {{ event.name }}Event {{ event.variable }};
-    {% endfor %}
+{% for broadcast in service.broadcasts %}
+    {{ broadcast.name | pascalCase }}Event {{ broadcast.name | camelCase }};
+{% endfor %}
 
   protected:
     uint32_t fProcessId;
     middleware::core::HRESULT onNewMessageReceived(::middleware::core::Message const& msg) override;
 
   private:
-    void clearPendingFutures();
+    void futureDispatcherDeinitialization();
     void unsetNotificationHandlers();
     void updateTimeouts() override;
     void doUpdateTimeouts();
     middleware::core::HRESULT sendMessage(::middleware::core::Message& msg) const final;
 
     // METHODS
-{% for method in service.methods if service.methods %}
-    {{ method.name }}Method {{ method.variable}}Method_;
+{% for method in service.methods %}
+{% if not method.fireAndForget %}
+    {{ method.name }}Method {{ method.name | camelCase }}Method_;
+{% endif %}
 {% endfor %}
 };
 
-}  // namespace {{ service.namespace }}::{{ service.name }}::proxy
+}  // namespace {{ service.namespace | lower }}::{{ service.name }}::proxy

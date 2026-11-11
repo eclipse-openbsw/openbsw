@@ -42,12 +42,13 @@ Notes:
 * ``SkeletonAttribute<T>`` stores the attribute value.
 * Getter responses use the Future mechanism (like method calls).
 * Change notifications use the event broadcast mechanism.
-* Attributes can have decorators based on the interface definition:
+* Attributes have the following capabilities, selected by the interface definition:
 
-  * Default (no decorators) — setter, getter and event subscriptions allowed
-  * ``readonly`` — getter and event subscriptions allowed
-  * ``noSubscriptions`` — setter and getter allowed
-  * ``readonly`` / ``noSubscriptions`` — getter allowed
+  * Setter, getter and event subscriptions (``hasSetter``, ``hasGetter`` and
+    ``hasNotifier`` set)
+  * Getter and event subscriptions (``hasSetter`` not set)
+  * Setter and getter (``hasNotifier`` not set)
+  * Getter only (neither ``hasSetter`` nor ``hasNotifier`` set)
 
 Dynamic View
 ------------
