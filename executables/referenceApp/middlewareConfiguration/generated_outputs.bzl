@@ -42,6 +42,7 @@ GENERATED_OUTPUTS = [
     "include/generated_code/org/test/foo/FooCommon.h",
     "include/generated_code/org/test/foo/FooProxy.h",
     "include/generated_code/org/test/foo/FooSkeleton.h",
+    "include/generated_code/org/test/foo/FooTypes.h",
     "src/generated_code/org/test/foo/FooCommon.cpp",
     "src/generated_code/org/test/foo/FooProxy.cpp",
     "src/generated_code/org/test/foo/FooSkeleton.cpp",

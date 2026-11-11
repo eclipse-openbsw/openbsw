@@ -118,7 +118,7 @@ public:
 private:
     bool init()
     {
-        return Base::init(MwInstanceId::InstanceId_1, ::middleware::core::ClusterId::Core1)
+        return Base::init(MwInstanceId::Core0ProviderDummy, ::middleware::core::ClusterId::Core1)
                    == ::middleware::core::HRESULT::Ok
                || Base::isInitialized();
     }

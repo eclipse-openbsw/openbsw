@@ -20,7 +20,9 @@ For service-based communication, generated code provides three integration point
 
 * ``<ServiceName>Proxy.h`` for clients (service consumers).
 * ``<ServiceName>Skeleton.h`` for providers (service servers).
-* ``<ServiceName>Common.h`` with shared data types and generated identifiers.
+* ``<ServiceName>Common.h`` with generated identifiers.
+* A types header per ``typeModules`` entry of the deployment model with the
+  structs, enums, aliases, strings and arrays used by the service.
 
 For unit and component tests, generation can additionally provide:
 

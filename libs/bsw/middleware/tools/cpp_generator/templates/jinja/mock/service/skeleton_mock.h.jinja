@@ -7,120 +7,102 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
-/**
-  *
-  *  __  __ _     _     _ _
-  * |  \/  (_) __| | __| | | _____      ____ _ _ __ ___
-  * | |\/| | |/ _` |/ _` | |/ _ \ \ /\ / / _` | '__/ _ \
-  * | |  | | | (_| | (_| | |  __/\ V  V / (_| | | |  __/
-  * |_|  |_|_|\__,_|\__,_|_|\___| \_/\_/ \__,_|_|  \___|
-  *
-  * WARNING!
-  * This file is generated. Do not edit manually.
-  *
-  */
+{% from "macros/common.jinja" import file_header %}{{ file_header() }}
 #pragma once
 
 #include <gmock/gmock.h>
 
 #include "{{ service.commonInclude }}"
-#include <middleware/core/ResponseBufferBase.h>
+#include "{{ service.skeletonInclude }}"
 #include "middleware/core/types.h"
 #include "util/crtp_mock.h"
 
-namespace {{ service.namespace }}::{{ service.name }}::skeleton
+namespace {{ service.namespace | lower }}::{{ service.name }}::skeleton
 {
 
 class {{ service.name }}SkeletonMock : public middleware::util::CrtpMock<{{ service.name }}SkeletonMock>
 {
   public:
-    using SkeletonResponseInfo = ::middleware::core::ResponseBufferBase::SkeletonResponseInfo;
+    using ResponseInfo = {{ service.name }}Skeleton::ResponseInfo;
 
     {{ service.name }}SkeletonMock() = default;
     virtual ~{{ service.name }}SkeletonMock() = default;
 
     MOCK_METHOD(middleware::core::HRESULT, init, (uint16_t instanceId));
     MOCK_METHOD(void, deInit, ());
+    MOCK_METHOD(bool, isInitialized, (), (const));
     MOCK_METHOD(uint16_t, getServiceId, (), (const));
 
     // METHODS
 {% for method in service.methods %}
-{% if method.input_param %}
-    MOCK_METHOD(void, {{ method.variable }}, (const {{ method.input_param.type }}& {{ method.input_param.name }}, SkeletonResponseInfo& response));
+{% set nameCamelCase = method.name | camelCase %}
+{% set namePascalCase = method.name | pascalCase %}
+{% if not method.fireAndForget %}
+    {% if method.inArgs %}
+    MOCK_METHOD(void, {{ nameCamelCase }}, (const {{ method.inType | cppType(service.namespace) }}& {{ nameCamelCase }}Input, ResponseInfo& response));
+    {% else %}
+    MOCK_METHOD(void, {{ nameCamelCase }}, (ResponseInfo & response));
+    {% endif %}
+    {% if method.outArgs %}
+    MOCK_METHOD(middleware::core::HRESULT, respond{{ namePascalCase }}, (ResponseInfo & response, const {{ method.outType | cppType(service.namespace) }}& result, const bool handleResponseFailure));
+    {% else %}
+    MOCK_METHOD(middleware::core::HRESULT, respond{{ namePascalCase }}, (ResponseInfo & response, const bool handleResponseFailure));
+    {% endif %}
+    MOCK_METHOD(middleware::core::HRESULT, cancel{{ namePascalCase }}Response, (ResponseInfo & response));
 {% else %}
-    MOCK_METHOD(void, {{ method.variable }}, (SkeletonResponseInfo & response));
-{% endif %}
-{% if method.output_param %}
-    MOCK_METHOD(middleware::core::HRESULT,
-                respond{{ method.name }},
-                (SkeletonResponseInfo & response, const {{ method.output_param.type }}& result, const bool handleResponseFailure));
-{% else %}
-    MOCK_METHOD(middleware::core::HRESULT,
-                respond{{ method.name }},
-                (SkeletonResponseInfo & response, const bool handleResponseFailure));
-{% endif %}
-    MOCK_METHOD(middleware::core::HRESULT, cancel{{ method.name }}Response, (SkeletonResponseInfo & response));
-{% endfor %}
-
-    // METHODS FIRE_AND_FORGET
-{% for method in service.methods_fire_and_forget %}
-{% if method.input_param %}
-    MOCK_METHOD(void, {{ method.variable }}, (const {{ method.input_param.type }}& {{ method.input_param.name }}));
-{% else %}
-    MOCK_METHOD(void, {{ method.variable }}, ());
+    {% if method.inArgs %}
+    MOCK_METHOD(void, {{ nameCamelCase }}, (const {{ method.inType | cppType(service.namespace) }}& {{ nameCamelCase }}Input));
+    {% else %}
+    MOCK_METHOD(void, {{ nameCamelCase }}, ());
+    {% endif %}
 {% endif %}
 {% endfor %}
 
     // ATTRIBUTES
 {% for attribute in service.attributes %}
-{% if attribute.getter %}
-    MOCK_METHOD(void, get{{ attribute.name }}Attribute, (SkeletonResponseInfo & response));
-    MOCK_METHOD(middleware::core::HRESULT,
-                respondGet{{ attribute.name }}Attribute,
-                (SkeletonResponseInfo & response, const {{ attribute.type }}& result, const bool handleResponseFailure));
-    MOCK_METHOD(middleware::core::HRESULT, cancelGet{{ attribute.name }}AttributeResponse, (SkeletonResponseInfo & response));
+{% set nameCamelCase = attribute.name | camelCase %}
+{% set namePascalCase = attribute.name | pascalCase %}
+{% if attribute.hasGetter %}
+    MOCK_METHOD(void, get{{ namePascalCase }}Attribute, (ResponseInfo & response));
+    MOCK_METHOD(middleware::core::HRESULT, respondGet{{ namePascalCase }}Attribute, (ResponseInfo & response, const {{ attribute.type | cppType(service.namespace) }}& result, const bool handleResponseFailure));
+    MOCK_METHOD(middleware::core::HRESULT, cancelGet{{ namePascalCase }}AttributeResponse, (ResponseInfo & response));
 {% endif %}
-{% if attribute.setter %}
-{% if attribute.setAsMethod %}
-    MOCK_METHOD(void,
-                set{{ attribute.name }}Attribute,
-                (const {{ attribute.type }}& {{ attribute.variable }}, SkeletonResponseInfo& response));
-    MOCK_METHOD(middleware::core::HRESULT,
-                respondSet{{ attribute.name }}Attribute,
-                (SkeletonResponseInfo & response, const {{ attribute.type }}& result, const bool handleResponseFailure));
-    MOCK_METHOD(middleware::core::HRESULT, cancelSet{{ attribute.name }}AttributeResponse, (SkeletonResponseInfo & response));
-{% else %}
-    MOCK_METHOD(void, set{{ attribute.name }}Attribute, (const {{ attribute.type }}& {{ attribute.variable }}));
+{% if attribute.hasSetter %}
+    {% if attribute.deployment.SetterWithResponse %}
+    MOCK_METHOD(void, set{{ namePascalCase }}Attribute, (const {{ attribute.type | cppType(service.namespace) }}& {{ nameCamelCase }}, ResponseInfo& response));
+    MOCK_METHOD(middleware::core::HRESULT, respondSet{{ namePascalCase }}Attribute, (ResponseInfo & response, const {{ attribute.type | cppType(service.namespace) }}& result, const bool handleResponseFailure));
+    MOCK_METHOD(middleware::core::HRESULT, cancelSet{{ namePascalCase }}AttributeResponse, (ResponseInfo & response));
+    {% else %}
+    MOCK_METHOD(void, set{{ namePascalCase }}Attribute, (const {{ attribute.type | cppType(service.namespace) }}& {{ nameCamelCase }}));
+    {% endif %}
 {% endif %}
-{% endif %}
-{% endfor %}
-
-    // ATTRIBUTE / EVENT TRANSPORT (send)
-{% for attribute in service.attributes if attribute.event %}
-    class {{ attribute.name }}AttributeMock
+{% if attribute.hasNotifier %}
+    class {{ namePascalCase }}AttributeMock
     {
       public:
         MOCK_METHOD(middleware::core::HRESULT, send, ());
     };
 
-    ::testing::NiceMock<{{ attribute.name }}AttributeMock> {{ attribute.variable }};
+    ::testing::NiceMock<{{ namePascalCase }}AttributeMock> {{ nameCamelCase }};
+{% endif %}
 {% endfor %}
-{% for event in service.events if service.events %}
-    class {{ event.name }}EventMock
+
+{% for broadcast in service.broadcasts %}
+    class {{ broadcast.name | pascalCase }}EventMock
     {
       public:
-{% if event.type and event.type != 'void' %}
-        MOCK_METHOD(middleware::core::HRESULT, send, (const {{ event.type }}& data));
+{% if broadcast.type.name != 'void' %}
+        MOCK_METHOD(middleware::core::HRESULT, send, (const {{ broadcast.type | cppType(service.namespace) }}& data));
 {% else %}
         MOCK_METHOD(middleware::core::HRESULT, send, ());
 {% endif %}
     };
 
-    ::testing::NiceMock<{{ event.name }}EventMock> {{ event.variable }};
+    ::testing::NiceMock<{{ broadcast.name | pascalCase }}EventMock> {{ broadcast.name | camelCase }};
 {% endfor %}
 
 };
 
 using {{ service.name }}SkeletonMockFacade = ::testing::NiceMock<{{ service.name }}SkeletonMock>;
 
-}  // namespace {{ service.namespace }}::{{ service.name }}::skeleton
+}  // namespace {{ service.namespace | lower }}::{{ service.name }}::skeleton

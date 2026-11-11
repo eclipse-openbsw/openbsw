@@ -7,157 +7,104 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
-/**
-  *
-  *  __  __ _     _     _ _
-  * |  \/  (_) __| | __| | | _____      ____ _ _ __ ___
-  * | |\/| | |/ _` |/ _` | |/ _ \ \ /\ / / _` | '__/ _ \
-  * | |  | | | (_| | (_| | |  __/\ V  V / (_| | | |  __/
-  * |_|  |_|_|\__,_|\__,_|_|\___| \_/\_/ \__,_|_|  \___|
-  *
-  * WARNING!
-  * This file is generated. Do not edit manually.
-  *
-  */
+{% from "macros/common.jinja" import file_header %}{{ file_header() }}
 #include "{{ service.skeletonInclude }}"
 
-#include <middleware/logger/Logger.h>
-#include <middleware/os/TaskIdProvider.h>
-#include <middleware/core/LoggerApi.h>
-#include <middleware/core/Message.h>
-#include <middleware/core/MessagePayloadBuilder.h>
-#include <middleware/core/ResponseBufferBase.h>
-#include <middleware/core/types.h>
+#include "middleware/core/LoggerApi.h"
+#include "middleware/core/Message.h"
+#include "middleware/core/MessagePayloadBuilder.h"
+#include "middleware/core/ResponseBufferBase.h"
+#include "middleware/core/types.h"
+#include "middleware/logger/Logger.h"
+#include "middleware/os/TaskIdProvider.h"
 
-namespace {{ service.namespace }}::{{ service.name }}::skeleton
+namespace {{ service.namespace | lower }}::{{ service.name }}::skeleton
 {
-
-// METHODS FIRE_AND_FORGET
-  {% for method in service.methods_fire_and_forget if service.methods_fire_and_forget %}
-middleware::core::HRESULT {{service.name}}Skeleton::{{ method.variable }}OnNewMessageReceived(const middleware::core::Message& msg)
-{
-    {% if method.input_param %}
-    const auto& payload = middleware::core::MessagePayloadBuilder::getInstance().readPayload<{{ method.input_param.type }}>(msg);
-    {{ method.variable }}(payload);
-    {% else %}
-    static_cast<void>(msg);
-    {{ method.variable }}();
-    {% endif %}
-
-    return middleware::core::HRESULT::Ok;
-}
-  {% endfor %}
 
 // ATTRIBUTES
-  {% for attribute in service.attributes if service.attributes %}
-      {% if attribute.getter %}
-middleware::core::HRESULT {{service.name}}Skeleton::get{{attribute.name}}AttributeOnNewMessageReceived(
-    const middleware::core::Message& msg)
+{% for attribute in service.attributes %}
+{% set namePascalCase = attribute.name | pascalCase %}
+{% if attribute.hasGetter %}
+middleware::core::HRESULT {{ service.name }}Skeleton::get{{ namePascalCase }}AttributeOnNewMessageReceived(const middleware::core::Message& msg)
 {
     middleware::core::HRESULT ret = middleware::core::HRESULT::ServiceBusy;
 
-    const auto response = fGet_{{attribute.name}}AttributeResponseBuffer.getAvailableResponse(
+    const auto response = fGet_{{ namePascalCase }}AttributeResponseBuffer.getAvailableResponse(
         msg.getHeader().addressId, msg.getHeader().srcClusterId, msg.getHeader().requestId);
     if (response != nullptr)
     {
-        get{{attribute.name}}Attribute(*response);
+        get{{ namePascalCase }}Attribute(*response);
         ret = middleware::core::HRESULT::Ok;
     }
 
     return ret;
 }
-      {% endif %}
-      {% if attribute.setter%}
-
-        {% if attribute.setAsMethod and attribute.setter%}
-middleware::core::HRESULT {{service.name}}Skeleton::set{{attribute.name}}AttributeOnNewMessageReceived(
-    const middleware::core::Message& msg)
+{% endif %}
+{% if attribute.hasSetter %}
+    {% if attribute.deployment.SetterWithResponse %}
+middleware::core::HRESULT {{ service.name }}Skeleton::set{{ namePascalCase }}AttributeOnNewMessageReceived(const middleware::core::Message& msg)
 {
     middleware::core::HRESULT ret = middleware::core::HRESULT::ServiceBusy;
 
-    const auto response = fSet_{{attribute.name}}AttributeResponseBuffer.getAvailableResponse(
+    const auto response = fSet_{{ namePascalCase }}AttributeResponseBuffer.getAvailableResponse(
         msg.getHeader().addressId, msg.getHeader().srcClusterId, msg.getHeader().requestId);
     if (response != nullptr)
     {
-        const auto& payload = middleware::core::MessagePayloadBuilder::getInstance().readPayload<{{ attribute.type }}>(msg);
-        set{{attribute.name}}Attribute(payload, *response);
+        const auto payload = middleware::core::MessagePayloadBuilder::getInstance().readPayload<{{ attribute.type | cppType(service.namespace) }}>(msg);
+        set{{ namePascalCase }}Attribute(payload, *response);
         ret = middleware::core::HRESULT::Ok;
     }
 
     return ret;
 }
-        {% else %}
-middleware::core::HRESULT {{service.name}}Skeleton::set{{attribute.name}}AttributeOnNewMessageReceived(
-    const middleware::core::Message& msg)
+    {% else %}
+middleware::core::HRESULT {{ service.name }}Skeleton::set{{ namePascalCase }}AttributeOnNewMessageReceived(const middleware::core::Message& msg)
 {
-    const auto& payload = middleware::core::MessagePayloadBuilder::getInstance().readPayload<{{attribute.type}}>(msg);
-    set{{attribute.name}}Attribute(payload);
+    const auto payload = middleware::core::MessagePayloadBuilder::getInstance().readPayload<{{ attribute.type | cppType(service.namespace) }}>(msg);
+    set{{ namePascalCase }}Attribute(payload);
 
     return middleware::core::HRESULT::Ok;
 }
-        {% endif %}
-      {% endif %}
+    {% endif %}
+{% endif %}
+{% endfor %}
 
-    {% endfor %}
-
-// METHODS
-  {% for method in service.methods if service.methods %}
-middleware::core::HRESULT {{service.name}}Skeleton::{{ method.variable }}OnNewMessageReceived(const middleware::core::Message& msg)
-{
-    middleware::core::HRESULT ret = middleware::core::HRESULT::ServiceBusy;
-
-    middleware::core::ResponseBufferBase::SkeletonResponseInfo* response =
-        f{{ method.variable }}ResponseBuffer.getAvailableResponse(
-            msg.getHeader().addressId, msg.getHeader().srcClusterId, msg.getHeader().requestId);
-
-    if (response != nullptr)
-    {
-        {% if method.input_param %}
-        const auto& payload = middleware::core::MessagePayloadBuilder::getInstance().readPayload<{{ method.input_param.type }}>(msg);
-        {{ method.variable }}(payload, *response);
-        {% else %}
-        {{ method.variable }}(*response);
-        {% endif %}
-        ret = middleware::core::HRESULT::Ok;
-    }
-
-    return ret;
-}
-  {% endfor %}
-
-{{service.name}}Skeleton::{{service.name}}Skeleton()
+{{ service.name }}Skeleton::{{ service.name }}Skeleton()
     : Base(),
       // ATTRIBUTES
-  {% for attribute in service.attributes  if service.attributes%}
-      {{ attribute.variable }}(*this),
-  {% endfor %}
+{% for attribute in service.attributes %}
+      {{ attribute.name | camelCase }}(*this),
+{% endfor %}
       // EVENTS
-  {% for event in service.events if service.events %}
-      {{ event.variable }}(*this),
-  {% endfor %}
+{% for broadcast in service.broadcasts %}
+      {{ broadcast.name | camelCase }}(*this),
+{% endfor %}
       // ATTRIBUTES
-  {% for attribute in service.attributes if service.attributes %}
-      {% if attribute.getter %}
-      fGet_{{ attribute.name }}AttributeResponseBuffer(*this),
-      {% endif %}
-      {% if attribute.setAsMethod and attribute.setter%}
-      fSet_{{ attribute.name }}AttributeResponseBuffer(*this),
-      {% endif %}
-  {% endfor %}
+{% for attribute in service.attributes %}
+{% set namePascalCase = attribute.name | pascalCase %}
+{% if attribute.hasGetter %}
+    fGet_{{ namePascalCase }}AttributeResponseBuffer(*this),
+{% endif %}
+{% if attribute.hasSetter and attribute.deployment.SetterWithResponse %}
+      fSet_{{ namePascalCase }}AttributeResponseBuffer(*this),
+{% endif %}
+{% endfor %}
       // METHODS
-  {% for method in service.methods if service.methods %}
-      f{{ method.variable }}ResponseBuffer(*this),
-  {% endfor %}
+{% for method in service.methods %}
+{% if not method.fireAndForget %}
+      f{{ method.name | camelCase }}ResponseBuffer(*this),
+{% endif %}
+{% endfor %}
       fProcessId(middleware::core::INVALID_TASK_ID)
 {
 }
 
-{{service.name}}Skeleton::~{{service.name}}Skeleton()
+{{ service.name }}Skeleton::~{{ service.name }}Skeleton()
 {
     deInit();
 }
 
-middleware::core::HRESULT {{service.name}}Skeleton::init(uint16_t const instanceId)
+middleware::core::HRESULT {{ service.name }}Skeleton::init(uint16_t const instanceId)
 {
     auto const db = internal::getClusterConnectionsDb();
     const auto ret = Base::initFromInstancesDatabase(static_cast<uint16_t>(instanceId), db);
@@ -169,52 +116,62 @@ middleware::core::HRESULT {{service.name}}Skeleton::init(uint16_t const instance
     return ret;
 }
 
-void {{service.name}}Skeleton::deInit()
+void {{ service.name }}Skeleton::deInit()
 {
     Base::checkCrossThreadError(fProcessId);
     Base::unsubscribe(internal::SERVICE_ID);
 }
 
-uint16_t {{service.name}}Skeleton::getServiceId() const
+bool {{ service.name }}Skeleton::isInitialized() const
+{
+    return Base::isInitialized();
+}
+
+uint16_t {{ service.name }}Skeleton::getServiceId() const
 {
     return internal::SERVICE_ID;
 }
 
-middleware::core::HRESULT {{service.name}}Skeleton::onNewMessageReceived(middleware::core::Message const& msg)
+middleware::core::HRESULT {{ service.name }}Skeleton::onNewMessageReceived(middleware::core::Message const& msg)
 {
     middleware::core::HRESULT ret = middleware::core::HRESULT::ServiceMemberIdNotFound;
     Base::checkCrossThreadError(fProcessId);
     switch (msg.getHeader().memberId)
     {
         // METHODS FIRE_AND_FORGET
-  {% for method in service.methods_fire_and_forget if service.methods_fire_and_forget %}
-        case internal::{{ method.variable }}_id: {
-            ret = {{ method.variable }}OnNewMessageReceived(msg);
+{% for method in service.methods %}
+{% if method.fireAndForget %}
+        case internal::{{ method.name | camelCase }}_id: {
+            ret = {{ method.name | camelCase }}OnNewMessageReceived(msg);
             break;
         }
-  {% endfor %}
+{% endif %}
+{% endfor %}
         // ATTRIBUTES
-  {% for attribute in service.attributes if service.attributes %}
-    {% if attribute.getter %}
-        case internal::get_{{ attribute.name }}_id: {
-            ret = get{{ attribute.name }}AttributeOnNewMessageReceived(msg);
+{% for attribute in service.attributes %}
+{% set namePascalCase = attribute.name | pascalCase %}
+{% if attribute.hasGetter %}
+        case internal::get_{{ namePascalCase }}_id: {
+            ret = get{{ namePascalCase }}AttributeOnNewMessageReceived(msg);
             break;
         }
-    {% endif %}
-    {% if attribute.setter %}
-        case internal::set_{{ attribute.name }}_id: {
-            ret = set{{ attribute.name }}AttributeOnNewMessageReceived(msg);
+{% endif %}
+{% if attribute.hasSetter %}
+        case internal::set_{{ namePascalCase }}_id: {
+            ret = set{{ namePascalCase }}AttributeOnNewMessageReceived(msg);
             break;
         }
-    {% endif %}
-  {% endfor %}
+{% endif %}
+{% endfor %}
         // METHODS
-  {% for method in service.methods if service.methods %}
-        case internal::{{ method.variable }}_id: {
-            ret = {{ method.variable }}OnNewMessageReceived(msg);
+{% for method in service.methods %}
+{% if not method.fireAndForget %}
+        case internal::{{ method.name | camelCase }}_id: {
+            ret = {{ method.name | camelCase }}OnNewMessageReceived(msg);
             break;
         }
-  {% endfor %}
+{% endif %}
+{% endfor %}
         default: {
             if (msg.isError() && msg.isEvent())
             {
@@ -229,135 +186,154 @@ middleware::core::HRESULT {{service.name}}Skeleton::onNewMessageReceived(middlew
 }
 
 // METHODS
-{% for method in service.methods if service.methods %}
-{% if method.output_param %}
-middleware::core::HRESULT {{service.name}}Skeleton::respond{{ method.name }}(middleware::core::ResponseBufferBase::SkeletonResponseInfo& response,
-                                                const {{  method.output_param.type }}& {{  method.output_param.name }}, const bool handleResponseFailure)
+{% for method in service.methods %}
+middleware::core::HRESULT {{ service.name }}Skeleton::{{ method.name | camelCase }}OnNewMessageReceived(const middleware::core::Message& msg)
 {
-    return f{{method.variable}}ResponseBuffer.respond(response, {{ method.output_param.name }}, handleResponseFailure);
+{% if method.fireAndForget %}
+    {% if method.inArgs %}
+    const auto payload = middleware::core::MessagePayloadBuilder::getInstance().readPayload<{{ method.inType | cppType(service.namespace) }}>(msg);
+    {{ method.name | camelCase }}(payload);
+    {% else %}
+    static_cast<void>(msg);
+    {{ method.name | camelCase }}();
+    {% endif %}
+{% else %}
+    ResponseInfo* response =
+        f{{ method.name | camelCase }}ResponseBuffer.getAvailableResponse(
+            msg.getHeader().addressId, msg.getHeader().srcClusterId, msg.getHeader().requestId);
+
+    if (response == nullptr)
+    {
+        return middleware::core::HRESULT::ServiceBusy;
+    }
+    {% if method.inArgs %}
+    const auto payload = middleware::core::MessagePayloadBuilder::getInstance().readPayload<{{ method.inType | cppType(service.namespace) }}>(msg);
+    {{ method.name | camelCase }}(payload, *response);
+    {% else %}
+    {{ method.name | camelCase }}(*response);
+    {% endif %}
+{% endif %}
+
+    return middleware::core::HRESULT::Ok;
+}
+
+{% if not method.fireAndForget %}
+
+{% if method.outArgs %}
+middleware::core::HRESULT {{ service.name }}Skeleton::respond{{ method.name | pascalCase }}(ResponseInfo& response, const {{ method.outType | cppType(service.namespace) }}& {{ method.name | camelCase }}Output, const bool handleResponseFailure)
+{
+    return f{{ method.name | camelCase }}ResponseBuffer.respond(response, {{ method.name | camelCase }}Output, handleResponseFailure);
 }
 {% else %}
-middleware::core::HRESULT {{service.name}}Skeleton::respond{{ method.name }}(middleware::core::ResponseBufferBase::SkeletonResponseInfo& response,
-                                                const bool handleResponseFailure)
+middleware::core::HRESULT {{ service.name }}Skeleton::respond{{ method.name | pascalCase }}(ResponseInfo& response, const bool handleResponseFailure)
 {
-    return f{{method.variable}}ResponseBuffer.respond(response, handleResponseFailure);
+    return f{{ method.name | camelCase }}ResponseBuffer.respond(response, handleResponseFailure);
 }
+{% endif %}
+
+middleware::core::HRESULT {{ service.name }}Skeleton::cancel{{ method.name | pascalCase }}Response(ResponseInfo& response)
+{
+    return f{{ method.name | camelCase }}ResponseBuffer.cancelResponse(response);
+}
+
 {% endif %}
 {% endfor %}
 
 // ATTRIBUTES
-  {% for attribute in service.attributes if service.attributes %}
-    {% if attribute.getter %}
-middleware::core::HRESULT {{service.name}}Skeleton::respondGet{{ attribute.name }}Attribute(middleware::core::ResponseBufferBase::SkeletonResponseInfo& response,
-                                               const {{ attribute.type }}& result,
-                                               const bool handleResponseFailure)
+{% for attribute in service.attributes %}
+{% set nameCamelCase = attribute.name | camelCase %}
+{% set namePascalCase = attribute.name | pascalCase %}
+{% if attribute.hasGetter %}
+void {{ service.name }}Skeleton::get{{ namePascalCase }}Attribute(ResponseInfo& response)
 {
-    return fGet_{{ attribute.name }}AttributeResponseBuffer.respond(response, result, handleResponseFailure);
+    const auto& val = {{ nameCamelCase }}.get();
+    static_cast<void>(respondGet{{ namePascalCase }}Attribute(response, val));
+}
+
+middleware::core::HRESULT {{ service.name }}Skeleton::respondGet{{ namePascalCase }}Attribute(ResponseInfo& response, const {{ attribute.type | cppType(service.namespace) }}& result, const bool handleResponseFailure)
+{
+    return fGet_{{ namePascalCase }}AttributeResponseBuffer.respond(response, result, handleResponseFailure);
+}
+
+middleware::core::HRESULT {{ service.name }}Skeleton::cancelGet{{ namePascalCase }}AttributeResponse(ResponseInfo& response)
+{
+    return fGet_{{ namePascalCase }}AttributeResponseBuffer.cancelResponse(response);
+}
+{% endif %}
+
+{% if attribute.hasSetter %}
+    {% if attribute.deployment.SetterWithResponse %}
+void {{ service.name }}Skeleton::set{{ namePascalCase }}Attribute(const {{ attribute.type | cppType(service.namespace) }}& arg, ResponseInfo& response)
+{
+    {{ nameCamelCase }}.set(arg);
+    const auto& val = {{ nameCamelCase }}.get();
+    static_cast<void>(respondSet{{ namePascalCase }}Attribute(response, val));
+}
+
+middleware::core::HRESULT {{ service.name }}Skeleton::respondSet{{ namePascalCase }}Attribute(ResponseInfo& response, const {{ attribute.type | cppType(service.namespace) }}& result, const bool handleResponseFailure)
+{
+    return fSet_{{ namePascalCase }}AttributeResponseBuffer.respond(response, result, handleResponseFailure);
+}
+
+middleware::core::HRESULT {{ service.name }}Skeleton::cancelSet{{ namePascalCase }}AttributeResponse(ResponseInfo& response)
+{
+    return fSet_{{ namePascalCase }}AttributeResponseBuffer.cancelResponse(response);
+}
+    {% else %}
+void {{ service.name }}Skeleton::set{{ namePascalCase }}Attribute(const {{ attribute.type | cppType(service.namespace) }}& arg)
+{
+    {{ nameCamelCase }}.set(arg);
 }
     {% endif %}
-    {% if attribute.setAsMethod and attribute.setter %}
+{% endif %}
 
-middleware::core::HRESULT {{service.name}}Skeleton::respondSet{{ attribute.name }}Attribute(middleware::core::ResponseBufferBase::SkeletonResponseInfo& response,
-                                               const {{ attribute.type }}& result,
-                                               const bool handleResponseFailure)
+const {{ namePascalCase }}Attribute::AttributeType& {{ namePascalCase }}Attribute::get() const
 {
-    return fSet_{{ attribute.name }}AttributeResponseBuffer.respond(response, result, handleResponseFailure);
-}
-    {% endif %}
-
-  {% endfor %}
-
-  {% for attribute in service.attributes if service.attributes %}
-    {% if attribute.getter %}
-middleware::core::HRESULT {{service.name}}Skeleton::cancelGet{{ attribute.name }}AttributeResponse(
-    middleware::core::ResponseBufferBase::SkeletonResponseInfo& response)
-{
-    return fGet_{{ attribute.name }}AttributeResponseBuffer.cancelResponse(response);
-}
-   {% endif %}
-   {% if attribute.setAsMethod and attribute.setter %}
-
-middleware::core::HRESULT {{service.name}}Skeleton::cancelSet{{ attribute.name }}AttributeResponse(
-    middleware::core::ResponseBufferBase::SkeletonResponseInfo& response)
-{
-    return fSet_{{ attribute.name }}AttributeResponseBuffer.cancelResponse(response);
-}
-   {% endif %}
-
-  {% endfor %}
-
-// METHODS
-  {% for method in service.methods if service.methods %}
-middleware::core::HRESULT {{service.name}}Skeleton::cancel{{ method.name }}Response(
-    middleware::core::ResponseBufferBase::SkeletonResponseInfo& response)
-{
-    return f{{ method.variable }}ResponseBuffer.cancelResponse(response);
+    return impl_.get();
 }
 
-  {% endfor %}
-
-// ATTRIBUTES
-  {% for attribute in service.attributes if service.attributes %}
-    {% if attribute.getter %}
-void {{service.name}}Skeleton::get{{ attribute.name }}Attribute(middleware::core::ResponseBufferBase::SkeletonResponseInfo& response)
+{{ namePascalCase }}Attribute::AttributeType& {{ namePascalCase }}Attribute::get()
 {
-    const auto& val = {{ attribute.variable }}.get();
-    static_cast<void>(respondGet{{ attribute.name }}Attribute(response, val));
+    return impl_.get();
 }
-    {% endif %}
 
-    {% if attribute.setter %}
-      {%if attribute.setAsMethod %}
-void {{service.name}}Skeleton::set{{ attribute.name }}Attribute(const {{ attribute.type }}& arg,
-                                             middleware::core::ResponseBufferBase::SkeletonResponseInfo& response)
+void {{ namePascalCase }}Attribute::set(const {{ namePascalCase }}Attribute::AttributeType& value)
 {
-    {{ attribute.variable }}.set(arg);
-    // A setter answers with the value now held, as the proxy's SetterTraits expect.
-    const auto& val = {{ attribute.variable }}.get();
-    static_cast<void>(respondSet{{ attribute.name }}Attribute(response, val));
+    impl_.set(value);
 }
-      {% else %}
-void {{service.name}}Skeleton::set{{ attribute.name }}Attribute(const {{ attribute.type }}& arg)
-{
-    {{ attribute.variable }}.set(arg);
-}
-      {% endif %}
-    {% endif %}
 
-  {% endfor %}
-
-// ATTRIBUTE / EVENT TRANSPORT (send forwards to Impl)
-{% for attribute in service.attributes if attribute.event %}
-middleware::core::HRESULT {{ attribute.name }}Attribute::send()
+{% if attribute.hasNotifier %}
+middleware::core::HRESULT {{ namePascalCase }}Attribute::send()
 {
     return impl_.send();
 }
-
+{% endif %}
 {% endfor %}
-{% for event in service.events if service.events %}
-{% if event.type and event.type != 'void' %}
-middleware::core::HRESULT {{ event.name }}Event::send(const EventType& data)
+
+{% for broadcast in service.broadcasts %}
+{% set namePascalCase = broadcast.name | pascalCase %}
+{% if broadcast.type.name != 'void' %}
+middleware::core::HRESULT {{ namePascalCase }}Event::send(const EventType& data)
 {
     return impl_.send(data);
 }
 {% else %}
-middleware::core::HRESULT {{ event.name }}Event::send()
+middleware::core::HRESULT {{ namePascalCase }}Event::send()
 {
     return impl_.send();
 }
 {% endif %}
-
 {% endfor %}
 
-middleware::core::HRESULT {{service.name}}Skeleton::sendMessage(middleware::core::Message& msg) const
+middleware::core::HRESULT {{ service.name }}Skeleton::sendMessage(middleware::core::Message& msg) const
 {
     Base::checkCrossThreadError(fProcessId);
     return Base::sendMessage(msg);
 }
 
-uint32_t {{service.name}}Skeleton::getProcessId() const
+uint32_t {{ service.name }}Skeleton::getProcessId() const
 {
     return fProcessId;
 }
 
-}  // namespace {{ service.namespace }}::{{ service.name }}::skeleton
+}  // namespace {{ service.namespace | lower }}::{{ service.name }}::skeleton

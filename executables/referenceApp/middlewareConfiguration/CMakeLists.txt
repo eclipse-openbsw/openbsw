@@ -11,6 +11,13 @@ set(_SCHEMA_YAML ${_GEN_INPUT}/templates/schemas/deployment.yaml)
 
 file(GLOB_RECURSE _JINJA_TEMPLATES CONFIGURE_DEPENDS
      ${_GEN_INPUT}/templates/jinja/*.jinja)
+file(
+    GLOB
+    _GEN_PY_MODULES
+    CONFIGURE_DEPENDS
+    ${_GEN_INPUT}/*.py
+    ${_GEN_INPUT}/filters/*.py
+    ${_GEN_INPUT}/loaders/*.py)
 
 set(_GEN_DIR ${CMAKE_CURRENT_BINARY_DIR})
 set(_GEN_INC ${_GEN_DIR}/include/generated_code)
@@ -25,7 +32,8 @@ set(_GENERATED_HEADERS
     ${_GEN_INC}/middleware/shm/QueueDefinitions.h
     ${_GEN_INC}/org/test/foo/FooCommon.h
     ${_GEN_INC}/org/test/foo/FooProxy.h
-    ${_GEN_INC}/org/test/foo/FooSkeleton.h)
+    ${_GEN_INC}/org/test/foo/FooSkeleton.h
+    ${_GEN_INC}/org/test/foo/FooTypes.h)
 
 set(GENERATED_SRCS
     ${_GEN_SRC}/AllocatorSelectorDefinitions.cpp
@@ -40,7 +48,10 @@ add_custom_command(
     OUTPUT ${_GENERATED_HEADERS} ${GENERATED_SRCS}
     COMMAND ${Python3_EXECUTABLE} ${_GEN_SCRIPT} --input ${_GEN_INPUT} --output
             ${_GEN_DIR} --deployment-yaml ${_DEPLOYMENT_YAML}
-    DEPENDS ${_GEN_SCRIPT} ${_DEPLOYMENT_YAML} ${_SCHEMA_YAML}
+    DEPENDS ${_GEN_SCRIPT}
+            ${_GEN_PY_MODULES}
+            ${_DEPLOYMENT_YAML}
+            ${_SCHEMA_YAML}
             ${_JINJA_TEMPLATES}
     COMMENT "Generating middleware C++ code from deployment.yaml"
     VERBATIM)

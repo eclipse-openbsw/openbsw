@@ -1,0 +1,75 @@
+{%- from "macros/common.jinja" import file_header -%}
+{{ file_header() }}
+#pragma once
+
+#include <cstdint>
+
+#include <etl/array.h>
+#include <etl/span.h>
+#include <etl/string.h>
+#include <etl/vector.h>
+
+{% for inc in typeIncludes %}
+#include "{{ inc }}"
+{% endfor %}
+
+namespace {{ typeModule.namespace }}
+{
+
+{% for type in typeModule.types %}
+{% if type.typeName == 'AliasTypeDef' %}
+using {{ type.name }} = {{ type.targetType | cppType(typeModule.namespace) }};
+{% endif %}
+{% endfor %}
+
+{% for type in typeModule.types %}
+{% if type.typeName == 'EnumTypeDef' %}
+enum class {{ type.name }} : {{ type.underlyingType | default("uint32_t") }}
+{
+    {% for e in type.enumerators %}
+    {{ e.name }}{% if e.value is not none %} = {{ e.value }}U{% endif %},
+    {% endfor %}
+};
+
+{% endif %}
+{% endfor %}
+
+{%- for type in typeModule.types %}
+{% if type.typeName == 'StringTypeDef' %}
+using {{ type.name }} = etl::string<{{ type.maxSize - 1 }}>;
+{% endif %}
+{% endfor %}
+
+{%- for type in typeModule.types %}
+{% if type.typeName == 'StructTypeDef' %}
+struct {{ type.name }}
+{
+    {% for elem in type.elements %}
+    {% if elem.array %}
+    {% if elem.minSize == elem.maxSize %}
+    etl::array<{{ elem.type | cppType(typeModule.namespace) }}, {{ elem.maxSize }}> {{ elem.name }};
+    {% else %}
+    etl::vector<{{ elem.type | cppType(typeModule.namespace) }}, {{ elem.maxSize }}> {{ elem.name }};
+    {% endif %}
+    {% else %}
+    {{ elem.type | cppType(typeModule.namespace) }} {{ elem.name }};
+    {% endif %}
+    {% endfor %}
+};
+
+{% endif %}
+{% endfor %}
+
+{%- for type in typeModule.types %}
+{% if type.typeName == 'ArrayTypeDef' %}
+{% if type.maxSize is none %}
+using {{ type.name }} = etl::span<{{ type.elementType | cppType(typeModule.namespace) }}>;
+{% elif type.minSize == type.maxSize %}
+using {{ type.name }} = etl::array<{{ type.elementType | cppType(typeModule.namespace) }}, {{ type.maxSize }}>;
+{% else %}
+using {{ type.name }} = etl::vector<{{ type.elementType | cppType(typeModule.namespace) }}, {{ type.maxSize }}>;
+{% endif %}
+{% endif %}
+{% endfor %}
+
+}  // namespace {{ typeModule.namespace }}
