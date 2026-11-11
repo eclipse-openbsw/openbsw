@@ -2,13 +2,13 @@
 
 {%- macro render_transmission_mode(strategies) -%}
     {%- if strategies|length == 0 -%}
-        ::middleware::com::NoTransmission
+        ::middleware::core::NoTransmission
     {%- else -%}
         {%- for strategy in strategies -%}
-            {%- if strategy.cyclic -%}
-                ::middleware::com::CyclicTransmission<{{ strategy.cyclic.ms }}U>
-            {%- elif strategy.event -%}
-                ::middleware::com::EventTransmission<{{ strategy.event.debounce_ms }}U, {{ strategy.event.repetition_cycle }}U, {{ strategy.event.repetitions }}U>
+            {%- if strategy.cyclic is defined -%}
+                ::middleware::core::CyclicTransmission<{{ strategy.cyclic.ms }}U>
+            {%- elif strategy.event is defined -%}
+                ::middleware::core::EventTransmission<{{ strategy.event.debounce_ms }}U, {{ strategy.event.repetition_cycle }}U, {{ strategy.event.repetitions }}U>
             {%- endif -%}
             {{- ", " if not loop.last -}}
         {%- endfor -%}

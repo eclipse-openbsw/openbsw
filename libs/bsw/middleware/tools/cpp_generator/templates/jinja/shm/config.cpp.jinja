@@ -54,6 +54,13 @@ MiddlewareQueue<QUEUE_TO_{{ cluster.name | upper }}_SIZE>* getQueueTo{{ cluster.
 
 {% endfor %}
 
+{% if has_pdu_ids %}
+OutboundPduQueue* getOutboundPduQueue()
+{
+    return &getMemoryLayout().outboundPduQueue;
+}
+
+{% endif %}
 {% for pdu in pdus %}
 {{ pdu.name | capitalize }}Pdu* get{{ pdu.name | capitalize }}()
 {

@@ -25,6 +25,9 @@
 #include <etl/alignment.h>
 #include <etl/type_traits.h>
 
+#include <etl/error_handler.h>
+
+
 #include <middleware/core/LoggerApi.h>
 
 #include "middleware/ClusterId.h"
@@ -32,6 +35,32 @@
 
 namespace middleware
 {
+{% for pdu in pdus if pdu.writer_cluster is defined and pdu.writer_cluster == cluster.name %}
+namespace
+{
+/// \brief Provides lifetime-stable callback storage independent of global initialization order.
+etl::delegate<void()>& {{ pdu.name }}WriterCallback()
+{
+    static etl::delegate<void()> callback{};
+    return callback;
+}
+}
+
+void register{{ pdu.name }}Writer(etl::delegate<void()> callback)
+{
+    ETL_ASSERT(!{{ pdu.name }}WriterCallback().is_valid(),
+               ETL_ERROR_GENERIC("PDU writer already registered"));
+    {{ pdu.name }}WriterCallback() = callback;
+}
+
+void unregister{{ pdu.name }}Writer(etl::delegate<void()> callback)
+{
+    ETL_ASSERT({{ pdu.name }}WriterCallback() == callback,
+               ETL_ERROR_GENERIC("PDU writer registration mismatch"));
+    {{ pdu.name }}WriterCallback().clear();
+}
+{% endfor %}
+
 void process{{cluster.name}}Cluster(size_t messages, const bool updateTimeouts)
 {
     auto* queue = shm::getQueueTo{{cluster.name}}();
@@ -74,6 +103,9 @@ void update{{cluster.name}}ClusterTimeouts()
 {
 {% for connection in connections if connection.source_cluster.name == cluster.name %}
     ClusterConnection{{cluster.name}}To{{connection.target_cluster.name}}.updateTimeouts();
+{% endfor %}
+{% for pdu in pdus if pdu.writer_cluster is defined and pdu.writer_cluster == cluster.name %}
+    static_cast<void>({{ pdu.name }}WriterCallback().call_if());
 {% endfor %}
 }
 

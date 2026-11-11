@@ -20,7 +20,7 @@ The script will generate all configured file types:
 - Cluster ID (cluster_id.h)
 - Cluster connections (cluster_*.h/cpp)
 - Services (service_*.h/cpp)
-- PDU data types and configured readers (pdu_*.h/cpp)
+- PDU data types and configured readers and writers (pdu_*.h/cpp)
 
 Arguments:
     --input                 Base input directory containing templates/ subdirectory
@@ -240,6 +240,8 @@ TEMPLATE_CONFIG = {
             "include/generated_code/{}",
         ),
         ("signal/pdu_reader.cpp.jinja", "{}Reader.cpp", "src/generated_code/{}"),
+        ("signal/pdu_writer.h.jinja", "{}Writer.h", "include/generated_code/{}"),
+        ("signal/pdu_writer.cpp.jinja", "{}Writer.cpp", "src/generated_code/{}"),
     ],
 }
 
@@ -332,13 +334,16 @@ def _resolve_memory_allocators(data) -> None:
 
 def build_context(input_data: dict, **additional) -> dict:
     """Build the standard template context with optional additional variables."""
+    pdus = getattr(input_data, "pdus", [])
     context = {
         "clusters": input_data.clusters,
         "services": input_data.services,
         "connections": input_data.connections,
         "cores": getattr(input_data, "cores", []),
         "allocators": getattr(input_data, "allocators", []),
-        "pdus": getattr(input_data, "pdus", []),
+        "pdus": pdus,
+        "has_pdu_ids": any("pdu_id" in pdu for pdu in pdus),
+        "outbound_pdu_queue_size": getattr(input_data, "outbound_pdu_queue_size", None),
         "typeModules": getattr(input_data, "typeModules", None) or [],
     }
     context.update(additional)
@@ -406,6 +411,10 @@ def generate_files(
             if template_type == "per_pdu" and (
                 not getattr(item, "namespace", None)
                 or not getattr(getattr(item, "headers", None), "common", None)
+                or (
+                    template_name.startswith("signal/pdu_writer.")
+                    and not getattr(getattr(item, "headers", None), "writer", None)
+                )
             ):
                 continue
             template_path = template_base / resolved_template_name
@@ -499,6 +508,10 @@ def _resolve_output_paths(input_data) -> list[str]:
             if template_type == "per_pdu" and (
                 not getattr(item, "namespace", None)
                 or not getattr(getattr(item, "headers", None), "common", None)
+                or (
+                    template_name.startswith("signal/pdu_writer.")
+                    and not getattr(getattr(item, "headers", None), "writer", None)
+                )
             ):
                 continue
 

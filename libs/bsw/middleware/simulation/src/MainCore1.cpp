@@ -13,10 +13,47 @@
 #include "Logger.h"
 #include "foo/FooProxyWrapper.h"
 #include "middleware/Cluster1Cluster.h"
+#include "middleware/shm/PduDefinitions.h"
 #include "middleware/shm/QueueDefinitions.h"
 #include "middleware/signal/qualifier.h"
 #include "org/test/signal/samplePduWithCrcReader.h"
 #include "org/test/signal/samplePduWithDatatypesReader.h"
+
+namespace
+{
+
+char const* pduName(uint32_t const id)
+{
+    if (id == middleware::shm::PDU_ID_SAMPLEPDUWITHCRC)
+    {
+        return "samplePduWithCrc";
+    }
+    if (id == middleware::shm::PDU_ID_SAMPLEPDUWITHDATATYPES)
+    {
+        return "samplePduWithDatatypes";
+    }
+    return "unknown";
+}
+
+} // namespace
+
+// Stand-in for the PDU broker: reads the ids in the order the writers committed them.
+void drainOutboundPduQueue()
+{
+    middleware::shm::OutboundPduQueue::Receiver receiver{*middleware::shm::getOutboundPduQueue()};
+    while (!receiver.isEmpty())
+    {
+        uint32_t const id = receiver.peek();
+        simulation::Logger::log(
+            static_cast<uint8_t>(::middleware::core::ClusterId::Cluster1),
+            "Outbound PDU queue: received id ",
+            id,
+            " (",
+            pduName(id),
+            ")");
+        receiver.advance();
+    }
+}
 
 void readsamplePduWithCrc()
 {
@@ -139,10 +176,20 @@ void run_main_core1()
                 ", Lost: ",
                 stats.lostMessages,
                 " ]");
+
+            auto const outboundPduStats = middleware::shm::getOutboundPduQueue()->getStats();
+            simulation::Logger::logStats(
+                static_cast<uint8_t>(::middleware::core::ClusterId::Cluster1),
+                "Outbound PDUs [ Received:",
+                outboundPduStats.processedMessages,
+                ", Lost: ",
+                outboundPduStats.lostMessages,
+                " ]");
         }
 
         counter++;
 
+        drainOutboundPduQueue();
         middleware::processCluster1Cluster(10);
         auto const fooMethodResult = foo_consumer.pollFooMethod();
         using FooMethodState       = middleware::core::Future::State;

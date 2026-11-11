@@ -9,7 +9,7 @@
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
 
-  Resolves C++ types and bit_stream_reader read expressions for PDU signals,
+  Resolves C++ types and bit-stream read/write expressions for PDU signals,
   covering plain integrals as well as the 'array' / 'bitset' / enum signal kinds.
 -#}
 {%- set _INTEGRAL_BITS = {
@@ -42,18 +42,40 @@ etl::array<{{ signal.element_type }}, {{ signal.bit_length // _INTEGRAL_BITS[sig
 {%- endif -%}
 {%- endmacro -%}
 
-{%- macro signal_read_expr(signal, pdu) -%}
-{%- if signal.type == "array" -%}
-{%- set element_bits = _INTEGRAL_BITS[signal.element_type] -%}
-{%- set count = signal.bit_length // element_bits -%}
-{{ signal_cpp_type(signal) }}{ {% for _ in range(count) %}reader.read_unchecked<{{ signal.element_type }}>({{ element_bits }}U){{ "," if not loop.last }}{% endfor %} }
-{%- elif _bitset_underlying_type(signal, pdu) -%}
-{{ signal.type }}(reader.read_unchecked<{{ _bitset_underlying_type(signal, pdu) }}>({{ signal.bit_length }}U))
-{%- elif _enum_underlying_type(signal, pdu) -%}
-static_cast<{{ signal.type }}>(reader.read_unchecked<{{ _enum_underlying_type(signal, pdu) }}>({{ signal.bit_length }}U))
-{%- elif signal.type == "bool" -%}
-reader.read_unchecked<bool>()
+{#- Parameter declaration of a signal setter; arrays and bitsets are passed by reference. -#}
+{%- macro signal_param(signal, pdu) -%}
+{%- set is_bitset = (pdu.bitsets if pdu.bitsets else []) | selectattr("name", "equalto", signal.type) | list | length > 0 -%}
+const {{ signal_cpp_type(signal) }}{{ "&" if signal.type == "array" or is_bitset }} value
+{%- endmacro -%}
+
+{#- One statement appending 'source' to the bit_stream_writer named 'stream'. -#}
+{%- macro signal_write_stmt(signal, pdu, source) -%}
+::middleware::core::codec::writeSignal<{{ signal.bit_length }}U>(stream, {{ source }});
+{%- endmacro -%}
+
+{%- macro _unsigned_all_ones_expr(signal, underlying_type) -%}
+{%- if signal.bit_length == _INTEGRAL_BITS[underlying_type] -%}
+etl::numeric_limits<{{ underlying_type }}>::max()
 {%- else -%}
-reader.read_unchecked<{{ signal.type }}>({{ signal.bit_length }}U)
+static_cast<{{ underlying_type }}>(etl::numeric_limits<{{ underlying_type }}>::max() >> {{ _INTEGRAL_BITS[underlying_type] - signal.bit_length }}U)
 {%- endif -%}
+{%- endmacro -%}
+
+{#- Default writer value of a signal: all bits within its wire width are set. -#}
+{%- macro signal_all_ones_expr(signal, pdu) -%}
+{%- if signal.type == "array" -%}
+{{ signal_cpp_type(signal) }}{ {% for _ in range(signal.bit_length // _INTEGRAL_BITS[signal.element_type]) %}etl::numeric_limits<{{ signal.element_type }}>::max(){{ "," if not loop.last }}{% endfor %} }
+{%- elif _bitset_underlying_type(signal, pdu) -%}
+{{ signal.type }}({{ _unsigned_all_ones_expr(signal, _bitset_underlying_type(signal, pdu)) }})
+{%- elif _enum_underlying_type(signal, pdu) -%}
+static_cast<{{ signal.type }}>({{ _unsigned_all_ones_expr(signal, _enum_underlying_type(signal, pdu)) }})
+{%- elif signal.type == "bool" -%}
+true
+{%- else -%}
+{{ _unsigned_all_ones_expr(signal, signal.type) }}
+{%- endif -%}
+{%- endmacro -%}
+
+{%- macro signal_read_expr(signal, pdu) -%}
+::middleware::core::codec::readSignal<{{ signal_cpp_type(signal) }}, {{ signal.bit_length }}U>(reader)
 {%- endmacro -%}

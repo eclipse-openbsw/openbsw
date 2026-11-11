@@ -19,6 +19,8 @@ load(
 )
 load(":generated_outputs.bzl", "GENERATED_OUTPUTS")
 
+exports_files(["model/deployment-test.yaml"])
+
 # ------------------------------------------------------------------------------
 # Platform integration
 #
@@ -155,6 +157,25 @@ cc_binary(
         ":middleware_simulation_generated",
         ":simulation_private_headers",
         ":simulation_qualifiers",
+        "//libs/bsw/middleware",
+    ],
+)
+
+cc_test(
+    name = "pdu_writer_scheduling_test",
+    srcs = [
+        "src/Logger.cpp",
+        "test/PduWriterSchedulingTest.cpp",
+    ],
+    linkopts = [
+        "-lpthread",
+        "-lrt",
+    ],
+    target_compatible_with = unit_test_only(),
+    deps = [
+        ":middleware_simulation_generated",
+        ":simulation_private_headers",
+        "//libs/3rdparty/googletest:gtest_main",
         "//libs/bsw/middleware",
     ],
 )

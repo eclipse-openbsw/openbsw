@@ -60,8 +60,16 @@ extern core::ClusterConnection ClusterConnection{{connection.source_cluster.name
 {% endfor %}
 
 void initialize{{cluster.name}}ClusterConnection();
+/// \brief Processes messages; disable timeout updates for polls between scheduled 1 ms ticks.
 void process{{cluster.name}}Cluster(::size_t messages = 0U, bool updateTimeouts = true);
+/// \brief Updates connection timeouts and services owned PDU writers; call once per ms.
 void update{{cluster.name}}ClusterTimeouts();
 
+{% for pdu in pdus if pdu.writer_cluster is defined and pdu.writer_cluster == cluster.name %}
+/// \brief Registers the unique {{ pdu.name }} writer in this cluster's execution context.
+void register{{ pdu.name }}Writer(etl::delegate<void()> callback);
+/// \brief Removes the writer callback before its lifetime ends.
+void unregister{{ pdu.name }}Writer(etl::delegate<void()> callback);
+{% endfor %}
 
 }  // namespace middleware

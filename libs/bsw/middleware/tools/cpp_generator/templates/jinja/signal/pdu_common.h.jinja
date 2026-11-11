@@ -40,9 +40,14 @@ public:
     [[nodiscard]] inline bool test{{ bit.name[0] | upper }}{{ bit.name[1:] }}() const;
     {% endfor %}
 
+    [[nodiscard]] {{ bitset.type }} value() const { return bits_.value<{{ bitset.type }}>(); }
+
+    [[nodiscard]] bool operator==({{ bitset.name }} const& other) const { return bits_ == other.bits_; }
+
+    [[nodiscard]] bool operator!=({{ bitset.name }} const& other) const { return !(*this == other); }
+
 private:
-    {#- Bitset is defined by passing the number of bits in the template. It knows the width from that -#}
-    etl::bitset<{{ bitset.bits | length }}U> bits_;
+    etl::bitset<{{ (bitset.bits | map(attribute='position') | max) + 1 }}U> bits_;
 };
 {% endfor %}
 

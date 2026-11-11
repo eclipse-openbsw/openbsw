@@ -25,6 +25,7 @@
 #include <middleware/queue/Queue.h>
 
 #include "middleware/core/Message.h"
+#include "middleware/shm/PduDefinitions.h"
 
 namespace middleware::shm
 {
@@ -36,10 +37,21 @@ using MiddlewareQueue =
 {% for cluster in clusters %}
 inline constexpr size_t QUEUE_TO_{{ cluster.name | upper }}_SIZE = {{ cluster.queueSize }}U;
 {% endfor %}
+{% if has_pdu_ids %}
+
+inline constexpr size_t OUTBOUND_PDU_QUEUE_SIZE = {{ outbound_pdu_queue_size }}U;
+
+using OutboundPduQueue =
+  queue::Queue<queue::QueueTraits<uint32_t, OUTBOUND_PDU_QUEUE_SIZE, concurrency::ScopedECULock, uint8_t*>>;
+{% endif %}
 
 /** Returns a pointer to the queue in shared memory. Queues are fully initialized by MemoryLayout::MemoryLayout(). */
 {% for cluster in clusters %}
 MiddlewareQueue<QUEUE_TO_{{ cluster.name | upper }}_SIZE>* getQueueTo{{ cluster.name }}();
 {% endfor %}
+{% if has_pdu_ids %}
+
+OutboundPduQueue* getOutboundPduQueue();
+{% endif %}
 
 }  // namespace middleware::shm
