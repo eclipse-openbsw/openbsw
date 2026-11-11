@@ -46,13 +46,25 @@ allocators:
       - NumberOfElements: 10
         ChunkSize: 64
 
+outbound_pdu_queue_size: 10
+
 pdus:
   - name: samplePduWithCrc
+    pdu_id: 256
     size: 8
+    writer_cluster: Cluster0
+    transmission:
+      modeFalse:
+        strategies:
+          - cyclic: {ms: 5000}
+          - event: {debounce_ms: 100, repetitions: 2, repetition_cycle: 1000}
+      modeTrue:
+        strategies: []
     namespace: org::test::signal
     headers:
       common: org/test/signal/samplePduWithCrcCommon.h
       reader: org/test/signal/samplePduWithCrcReader.h
+      writer: org/test/signal/samplePduWithCrcWriter.h
     signals:
       - name: crc
         type: uint8_t
@@ -70,11 +82,20 @@ pdus:
         type: uint32_t
         bit_length: 32
   - name: samplePduWithDatatypes
+    pdu_id: 257
     size: 12
+    writer_cluster: Cluster0
+    transmission:
+      modeFalse:
+        strategies:
+          - event: {debounce_ms: 100, repetitions: 0, repetition_cycle: 0}
+      modeTrue:
+        strategies: []
     namespace: org::test::signal
     headers:
       common: org/test/signal/samplePduWithDatatypesCommon.h
       reader: org/test/signal/samplePduWithDatatypesReader.h
+      writer: org/test/signal/samplePduWithDatatypesWriter.h
     enums:
       - name: ExampleEnum
         type: uint8_t
@@ -103,6 +124,10 @@ pdus:
       - name: firstSignal
         type: uint8_t
         bit_length: 5
+        phy_translation:
+          offset: 0.0
+          scaling_factor: 0.5
+        trigger_on_change: true
       - name: secondSignal
         type: uint64_t
         bit_length: 60
@@ -113,9 +138,11 @@ pdus:
       - name: enumSignal
         type: ExampleEnum
         bit_length: 7
+        trigger_on_change: true
       - name: bitsetSignal
         type: ExampleBitset
         bit_length: 5
+        trigger_on_change: true
       - name: boolSignal
         type: bool
         bit_length: 1

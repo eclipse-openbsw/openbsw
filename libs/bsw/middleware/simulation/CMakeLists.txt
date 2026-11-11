@@ -52,8 +52,10 @@ set(_GENERATED_HEADERS
     ${_GEN_INC}/org/test/foo/FooTypes.h
     ${_GEN_INC}/org/test/signal/samplePduWithCrcCommon.h
     ${_GEN_INC}/org/test/signal/samplePduWithCrcReader.h
+    ${_GEN_INC}/org/test/signal/samplePduWithCrcWriter.h
     ${_GEN_INC}/org/test/signal/samplePduWithDatatypesCommon.h
-    ${_GEN_INC}/org/test/signal/samplePduWithDatatypesReader.h)
+    ${_GEN_INC}/org/test/signal/samplePduWithDatatypesReader.h
+    ${_GEN_INC}/org/test/signal/samplePduWithDatatypesWriter.h)
 
 set(GENERATED_SRCS
     ${_GEN_SRC}/AllocatorSelectorDefinitions.cpp
@@ -64,7 +66,9 @@ set(GENERATED_SRCS
     ${_GEN_SRC}/org/test/foo/FooProxy.cpp
     ${_GEN_SRC}/org/test/foo/FooSkeleton.cpp
     ${_GEN_SRC}/org/test/signal/samplePduWithCrcReader.cpp
-    ${_GEN_SRC}/org/test/signal/samplePduWithDatatypesReader.cpp)
+    ${_GEN_SRC}/org/test/signal/samplePduWithCrcWriter.cpp
+    ${_GEN_SRC}/org/test/signal/samplePduWithDatatypesReader.cpp
+    ${_GEN_SRC}/org/test/signal/samplePduWithDatatypesWriter.cpp)
 
 add_custom_command(
     OUTPUT ${_GENERATED_HEADERS} ${GENERATED_SRCS}
@@ -146,6 +150,36 @@ if (BUILD_EXECUTABLE STREQUAL "unitTest")
     target_link_libraries(${_SIMULATION_TARGET} PRIVATE gtest_main gmock)
     gtest_discover_tests(${_SIMULATION_TARGET} PROPERTIES LABELS
                                                           "middlewareTest")
+
+    add_executable(
+        middlewarePduWriterSchedulingTest
+        ${PLATFORM_INTEGRATION_SRCS}
+        ${GENERATED_SRCS}
+        src/Logger.cpp
+        test/PduWriterSchedulingTest.cpp
+        ${CMAKE_SOURCE_DIR}/libs/bsw/middleware/test/src/time/mock/SystemTimerProviderMock.cpp
+    )
+    target_include_directories(
+        middlewarePduWriterSchedulingTest
+        PRIVATE
+            ${_GEN_DIR}/include/generated_code
+            ${CMAKE_CURRENT_SOURCE_DIR}/include/allocator
+            ${CMAKE_CURRENT_SOURCE_DIR}/platform_integration/concurrency/include
+            ${CMAKE_SOURCE_DIR}/libs/bsw/middleware/test/src)
+    target_include_directories(middlewarePduWriterSchedulingTest SYSTEM
+                               PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+    target_include_directories(
+        middlewarePduWriterSchedulingTest BEFORE
+        PRIVATE ${CMAKE_SOURCE_DIR}/executables/unitTest/etl_profile)
+    target_link_libraries(
+        middlewarePduWriterSchedulingTest
+        PRIVATE middleware
+                Threads::Threads
+                rt
+                gtest_main
+                gmock)
+    gtest_discover_tests(middlewarePduWriterSchedulingTest
+                         PROPERTIES LABELS "middlewareTest")
 else ()
     option(SIMULATION_USE_PROCESSES
            "Run each simulated core in a separate OS process (default: threads)"

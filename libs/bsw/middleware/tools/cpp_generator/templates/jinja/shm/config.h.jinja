@@ -23,14 +23,21 @@
 
 #include <cstdint>
 
+{% if not mock_mode %}
 #include "middleware/core/MiddlewarePdu.h"
+{% endif %}
 #include "middleware/shm/AllocatorsDefinitions.h"
+{% if not mock_mode %}
 #include "middleware/shm/QueueDefinitions.h"
 #include "middleware/shm/PduDefinitions.h"
+{% endif %}
 
 namespace middleware::shm
 {
 
+{% if mock_mode %}
+struct MemoryLayout;
+{% else %}
 // The declaration-order of the members here is intentional:
 // mutexes first so their addresses are stable when used as default member initializer arguments
 // for queues and allocators declared after them.
@@ -42,16 +49,23 @@ struct MemoryLayout
 {% for allocator in allocators %}
     uint8_t {{ allocator.name | lower }}AllocatorMutex{0U};
 {% endfor %}
+{% if has_pdu_ids %}
+    uint8_t outboundPduQueueMutex{0U};
+{% endif %}
 {% for cluster in clusters %}
     MiddlewareQueue<QUEUE_TO_{{ cluster.name | upper }}_SIZE> queueTo{{ cluster.name }}{&queueTo{{ cluster.name }}Mutex};
 {% endfor %}
 {% for allocator in allocators %}
     {{ allocator.name | capitalize }}Allocator {{ allocator.name | lower }}Allocator{&{{ allocator.name | lower }}AllocatorMutex};
 {% endfor %}
+{% if has_pdu_ids %}
+    OutboundPduQueue outboundPduQueue{&outboundPduQueueMutex};
+{% endif %}
 {% for pdu in pdus %}
     {{ pdu.name | capitalize }}Pdu {{ pdu.name }};
 {% endfor %}
 };
+{% endif %}
 
 MemoryLayout& getMemoryLayout();
 

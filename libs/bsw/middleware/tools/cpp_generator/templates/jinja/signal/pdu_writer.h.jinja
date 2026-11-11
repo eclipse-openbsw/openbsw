@@ -1,0 +1,118 @@
+/********************************************************************************
+ * Copyright (c) 2026 BMW AG
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Apache License Version 2.0 which is available at
+ * https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ ********************************************************************************/
+{% from "macros/common.jinja" import file_header %}{{ file_header() }}
+{% from "macros/signals.jinja" import signal_param -%}
+{% from "macros/transmission_mode.jinja" import render_transmission_mode -%}
+#pragma once
+
+#include "{{ pdu.headers.common }}"
+{% if pdu.transmission is defined %}
+#include "middleware/core/Transmission.h"
+#include "middleware/core/TransmissionMode.h"
+#include "middleware/core/TransmissionModeManager.h"
+{% endif %}
+
+namespace {{ pdu.namespace }}
+{
+
+class {{ pdu.name }}Writer final
+{
+public:
+    /**
+    * \brief Stages every signal with all bits set, matching the shared PDU reset value.
+    *
+    * Shared memory is unchanged until commit() is called.
+    */
+    {{ pdu.name }}Writer();
+
+    /**
+     * \brief Creates a writer that stages the given signal values.
+     *
+    * Shared memory is unchanged until commit() is called.
+{% if pdu.transmission is defined %}
+    * Commit initial values before the first cluster tick to make them available
+    * for the initially due cyclic notification. Scheduling does not commit them.
+{% endif %}
+    *
+    * \param initialValue Signal values staged until commit() serializes them.
+     */
+    explicit {{ pdu.name }}Writer(const {{ pdu.name }}& initialValue);
+{% if pdu.transmission is defined %}
+
+    /// \brief Unregisters automatic scheduling in the owning cluster context.
+    ~{{ pdu.name }}Writer();
+    {{ pdu.name }}Writer({{ pdu.name }}Writer const&) = delete;
+    {{ pdu.name }}Writer& operator=({{ pdu.name }}Writer const&) = delete;
+    {{ pdu.name }}Writer({{ pdu.name }}Writer&&) = delete;
+    {{ pdu.name }}Writer& operator=({{ pdu.name }}Writer&&) = delete;
+
+    /// \brief Records an event request; the cluster queues its id on a later cyclic tick.
+    void triggerPduEvent();
+    /// \brief Advances the transmission timers by one 1 ms tick; normally called by the owning cluster.
+    void cyclic();
+    /// \brief Selects modeTrue or modeFalse and restarts the selected cyclic timers.
+    void setActiveCondition(bool active);
+{% endif %}
+
+    /**
+     * \brief Replaces all staged signal values; shared memory is untouched until commit().
+     *
+     * \param value Typed signal values to stage.
+     */
+    void write(const {{ pdu.name }}& value);
+
+{% for signal in pdu.signals %}
+    /**
+     * \brief Stages one signal and leaves all other staged signals unchanged.
+     *
+     * \param value New signal value.
+     */
+    void write{{ signal.name[0:1] | upper }}{{ signal.name[1:] }}({{ signal_param(signal, pdu) }});
+{% if signal.phy_translation %}
+    /**
+     * \brief Converts a physical value to the raw signal representation and stages it.
+     *
+    * Saturates to the signal's wire range and truncates fractional raw values.
+    * NaN leaves the staged value unchanged. Does not commit automatically.
+    *
+     * \param value Physical signal value.
+     */
+    void write{{ signal.name[0:1] | upper }}{{ signal.name[1:] }}FromPhysical(double value);
+{% endif %}
+
+{% endfor %}
+    /**
+     * \brief Serializes the staged signals and stores them in shared memory in one store.
+     *
+     * Does not announce the PDU to the broker; sending is up to the configured transmission.
+     * Only one writer may exist per PDU.
+     */
+    void commit();
+
+private:
+{% if pdu.transmission is defined %}
+    /// \brief Enqueues only the PDU id after the transmission manager requests a send.
+    void queuePduId();
+
+{% endif %}
+    {{ pdu.name }} pdu_;
+{% if pdu.transmission is defined %}
+    ::middleware::core::TransmissionModeManager<
+        ::middleware::core::TransmissionMode<
+            {{- render_transmission_mode(pdu.transmission.modeFalse.strategies) -}}
+        >,
+        ::middleware::core::TransmissionMode<
+            {{- render_transmission_mode(pdu.transmission.modeTrue.strategies) -}}
+        >>
+        transmissionManager_{};
+{% endif %}
+};
+
+}  // namespace {{ pdu.namespace }}

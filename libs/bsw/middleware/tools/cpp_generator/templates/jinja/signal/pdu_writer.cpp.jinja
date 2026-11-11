@@ -1,0 +1,141 @@
+/********************************************************************************
+ * Copyright (c) 2026 BMW AG
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Apache License Version 2.0 which is available at
+ * https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ ********************************************************************************/
+{% from "macros/common.jinja" import file_header %}{{ file_header() }}
+{% from "macros/signals.jinja" import signal_param, signal_write_stmt, signal_all_ones_expr -%}
+#include "{{ pdu.headers.writer }}"
+
+#include <etl/bit_stream.h>
+#include <etl/limits.h>
+#include <etl/span.h>
+#include <cstdint>
+
+#include "middleware/core/PhysicalSignalConversion.h"
+#include "middleware/core/SignalCodec.h"
+#include "middleware/shm/PduDefinitions.h"
+{% if pdu.transmission is defined %}
+#include "middleware/{{ pdu.writer_cluster }}Cluster.h"
+#include "middleware/shm/QueueDefinitions.h"
+{% endif %}
+
+namespace {{ pdu.namespace }}
+{
+
+static_assert(
+    ({{ pdu.signals | sum(attribute='bit_length') }}U <= ({{ pdu.size }}U * 8U)),
+    "Configured PDU signals exceed the shared PDU buffer size.");
+
+{{ pdu.name }}Writer::{{ pdu.name }}Writer()
+: {{ pdu.name }}Writer({{ pdu.name }}{
+{% for signal in pdu.signals %}
+      {{ signal_all_ones_expr(signal, pdu) }}{{ "," if not loop.last }}
+{% endfor %}
+  })
+{}
+
+{{ pdu.name }}Writer::{{ pdu.name }}Writer(const {{ pdu.name }}& initialValue)
+: pdu_(initialValue)
+{
+{% if pdu.transmission is defined %}
+    middleware::register{{ pdu.name }}Writer(
+        etl::delegate<void()>::create<{{ pdu.name }}Writer, &{{ pdu.name }}Writer::cyclic>(*this));
+{% endif %}
+}
+{% if pdu.transmission is defined %}
+
+{{ pdu.name }}Writer::~{{ pdu.name }}Writer()
+{
+    middleware::unregister{{ pdu.name }}Writer(
+        etl::delegate<void()>::create<{{ pdu.name }}Writer, &{{ pdu.name }}Writer::cyclic>(*this));
+}
+
+void {{ pdu.name }}Writer::triggerPduEvent()
+{
+    static_cast<void>(transmissionManager_.triggerEvent());
+}
+
+void {{ pdu.name }}Writer::cyclic()
+{
+    if (transmissionManager_.cyclic())
+    {
+        queuePduId();
+    }
+}
+
+void {{ pdu.name }}Writer::setActiveCondition(bool const active)
+{
+    static_cast<void>(transmissionManager_.setActiveCondition(active));
+}
+
+void {{ pdu.name }}Writer::queuePduId()
+{
+    middleware::shm::OutboundPduQueue::Sender sender{*middleware::shm::getOutboundPduQueue()};
+    static_cast<void>(sender.write(middleware::shm::PDU_ID_{{ pdu.name | upper }}));
+}
+{% endif %}
+
+void {{ pdu.name }}Writer::write(const {{ pdu.name }}& value)
+{
+{% set trigger_signals = pdu.signals | selectattr("trigger_on_change", "defined") | selectattr("trigger_on_change") | list %}
+{% if pdu.transmission is defined and trigger_signals %}
+    bool changed = false;
+{% for signal in trigger_signals %}
+    changed = changed || pdu_.{{ signal.name }} != value.{{ signal.name }};
+{% endfor %}
+{% endif %}
+    pdu_ = value;
+{% if pdu.transmission is defined and trigger_signals %}
+    if (changed)
+    {
+        triggerPduEvent();
+    }
+{% endif %}
+}
+
+{% for signal in pdu.signals %}
+void {{ pdu.name }}Writer::write{{ signal.name[0:1] | upper }}{{ signal.name[1:] }}({{ signal_param(signal, pdu) }})
+{
+{% if pdu.transmission is defined and signal.trigger_on_change %}
+    bool const changed = pdu_.{{ signal.name }} != value;
+{% endif %}
+    pdu_.{{ signal.name }} = value;
+{% if pdu.transmission is defined and signal.trigger_on_change %}
+    if (changed)
+    {
+        triggerPduEvent();
+    }
+{% endif %}
+}
+{% if signal.phy_translation %}
+
+void {{ pdu.name }}Writer::write{{ signal.name[0:1] | upper }}{{ signal.name[1:] }}FromPhysical(double const value)
+{
+    auto const raw = ::middleware::core::physicalToRaw(
+        value, {{ signal.phy_translation.scaling_factor }}, {{ signal.phy_translation.offset }}, {{ signal.bit_length }}U);
+    if (raw)
+    {
+        write{{ signal.name[0:1] | upper }}{{ signal.name[1:] }}(static_cast<{{ signal.type }}>(*raw));
+    }
+}
+{% endif %}
+
+{% endfor %}
+void {{ pdu.name }}Writer::commit()
+{
+    // Serialize in declaration order to match the reader's bit stream.
+    {{ pdu.name }}Buffer encodedData{};
+    etl::bit_stream_writer stream{
+        etl::make_span(encodedData), etl::bit_order::msb_first, {}, etl::endian::big};
+{% for signal in pdu.signals %}
+    {{ signal_write_stmt(signal, pdu, "pdu_." ~ signal.name) | indent(4) }}
+{% endfor %}
+    middleware::shm::get{{ pdu.name | capitalize }}()->store(encodedData);
+}
+
+}  // namespace {{ pdu.namespace }}

@@ -67,7 +67,19 @@ add_middleware_unit_test(
 add_middleware_unit_test(middlewarePduTest src/core/MiddlewarePduTest.cpp)
 target_link_libraries(middlewarePduTest PRIVATE middlewareConcurrencyMock)
 
+add_middleware_unit_test(middlewarePhysicalSignalConversionTest
+                         src/core/PhysicalSignalConversionTest.cpp)
+
+add_middleware_unit_test(middlewareSignalCodecTest src/core/SignalCodecTest.cpp)
+
 add_middleware_unit_test(middlewareQueueTest src/queue/QueueTest.cpp)
+
+add_middleware_unit_test(
+    middlewareTransmissionTest
+    src/core/TimerTest.cpp
+    src/core/TransmissionModeManagerTest.cpp
+    src/core/TransmissionModeTest.cpp
+    src/core/TransmissionTest.cpp)
 
 add_middleware_unit_test(
     middlewareMemoryPoolManagementTest src/memory/AggregatorTest.cpp
@@ -79,5 +91,6 @@ add_custom_target(middlewareTest DEPENDS ${MIDDLEWARE_TEST_TARGETS})
 
 if (UNIX)
     add_subdirectory(../simulation ${CMAKE_CURRENT_BINARY_DIR}/simulation)
-    add_dependencies(middlewareTest middlewareSimulationFooMethodTest)
+    add_dependencies(middlewareTest middlewareSimulationFooMethodTest
+                     middlewarePduWriterSchedulingTest)
 endif ()

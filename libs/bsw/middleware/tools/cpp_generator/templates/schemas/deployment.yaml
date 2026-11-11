@@ -76,6 +76,25 @@ properties:
     items:
       $ref: "#/definitions/pdu"
 
+  outbound_pdu_queue_size:
+    type: integer
+    description: "Capacity of the shared queue used to notify the PDU broker about committed PDUs"
+    minimum: 1
+    maximum: 255
+
+allOf:
+  - if:
+      required:
+        - pdus
+      properties:
+        pdus:
+          contains:
+            required:
+              - pdu_id
+    then:
+      required:
+        - outbound_pdu_queue_size
+
 definitions:
   cluster:
     type: object
@@ -877,6 +896,59 @@ definitions:
         type: number
       scaling_factor:
         type: number
+        not: {const: 0}
+
+  transmission_strategy:
+    oneOf:
+      - type: object
+        additionalProperties: false
+        required: [cyclic]
+        properties:
+          cyclic:
+            type: object
+            additionalProperties: false
+            required: [ms]
+            properties:
+              ms: {type: integer, minimum: 1, maximum: 65535}
+      - type: object
+        additionalProperties: false
+        required: [event]
+        properties:
+          event:
+            type: object
+            additionalProperties: false
+            required: [debounce_ms, repetitions, repetition_cycle]
+            properties:
+              debounce_ms: {type: integer, minimum: 0, maximum: 65535}
+              repetitions: {type: integer, minimum: 0, maximum: 255}
+              repetition_cycle: {type: integer, minimum: 0, maximum: 65535}
+            oneOf:
+              - properties:
+                  repetitions: {const: 0}
+                  repetition_cycle: {const: 0}
+              - properties:
+                  repetitions: {minimum: 1}
+                  repetition_cycle: {minimum: 1}
+
+  transmission_mode:
+    type: object
+    additionalProperties: false
+    required: [strategies]
+    properties:
+      strategies:
+        type: array
+        items:
+          $ref: "#/definitions/transmission_strategy"
+
+  transmission:
+    type: object
+    additionalProperties: false
+    required: [modeFalse, modeTrue]
+    properties:
+      modeFalse:
+        $ref: "#/definitions/transmission_mode"
+      modeTrue:
+        $ref: "#/definitions/transmission_mode"
 
   unsigned_integer_signal:
     type: object
@@ -895,6 +967,8 @@ definitions:
         $ref: "#/definitions/signal_bit_length"
       phy_translation:
         $ref: "#/definitions/phy_translation"
+      trigger_on_change:
+        type: boolean
     allOf:
       - if:
           properties:
@@ -955,6 +1029,8 @@ definitions:
         $ref: "#/definitions/unsigned_integer_type"
       bit_length:
         $ref: "#/definitions/signal_bit_length"
+      trigger_on_change:
+        type: boolean
 
   enum_or_bitset_signal:
     type: object
@@ -978,6 +1054,8 @@ definitions:
             - const: array
       bit_length:
         $ref: "#/definitions/signal_bit_length"
+      trigger_on_change:
+        type: boolean
 
   pdu_signal:
     description: "Signal of a PDU: unsigned integer, array, enum or bitset"
@@ -989,6 +1067,29 @@ definitions:
   pdu:
     type: object
     additionalProperties: false
+    dependencies:
+      transmission: [writer_cluster]
+      writer_cluster: [transmission]
+    allOf:
+      - if:
+          properties:
+            generation_mode: {const: mock}
+          required: [generation_mode]
+        then:
+          properties:
+            headers:
+              required: [reader_mock]
+      - if:
+          required: [transmission]
+        then:
+          required: [pdu_id]
+          properties:
+            headers:
+              required: [writer]
+              properties:
+                writer: {type: string, minLength: 1}
+            generation_mode:
+              const: normal
     required:
       - name
       - namespace
@@ -1000,6 +1101,13 @@ definitions:
         type: string
         description: "PDU buffer name"
         pattern: "^[A-Za-z][A-Za-z0-9_]*$"
+      pdu_id:
+        type: integer
+        description: >-
+          Deployment-defined id under which the PDU is announced to the PDU broker.
+          PDUs without an id are not transmitted and cannot have a transmission.
+        minimum: 0
+        maximum: 4294967295
       size:
         type: integer
         description: "PDU payload size in bytes"
@@ -1015,18 +1123,31 @@ definitions:
         type: string
         description: "C++ namespace for the generated PDU data types"
         pattern: "^[A-Za-z_][A-Za-z0-9_]*(::[A-Za-z_][A-Za-z0-9_]*)*$"
+      writer_cluster:
+        type: string
+        description: "Cluster that owns and schedules the generated writer"
+        pattern: "^[A-Za-z][A-Za-z0-9]*$"
+      transmission:
+        $ref: "#/definitions/transmission"
       headers:
         type: object
         additionalProperties: false
         required:
           - common
+          - reader
         properties:
           common:
             type: string
+            minLength: 1
           reader:
             type: string
+            minLength: 1
           reader_mock:
             type: string
+            minLength: 1
+          writer:
+            type: string
+            minLength: 1
       enums:
         type: array
         description: "Enum type definitions scoped to this PDU"
