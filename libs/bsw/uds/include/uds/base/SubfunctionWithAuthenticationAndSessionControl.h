@@ -26,13 +26,13 @@ public:
     SubfunctionWithAuthenticationAndSessionControl(
         IDiagAuthenticator const& authenticator,
         IDiagSessionManager& sessionManager,
-        uint8_t const implementedRequest[],
+        uint8_t const* implementedRequest,
         DiagSession::DiagSessionMask sessionMask);
 
     SubfunctionWithAuthenticationAndSessionControl(
         IDiagAuthenticator const& authenticator,
         IDiagSessionManager& sessionManager,
-        uint8_t const implementedRequest[],
+        uint8_t const* implementedRequest,
         uint8_t const requestPayloadLength,
         uint8_t const responseLength,
         DiagSession::DiagSessionMask sessionMask);

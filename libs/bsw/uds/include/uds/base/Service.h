@@ -40,7 +40,7 @@ protected:
     /**
      * \see AbstractDiagJob::verify()
      */
-    DiagReturnCode::Type verify(uint8_t const request[], uint16_t requestLength) override;
+    DiagReturnCode::Type verify(uint8_t const* request, uint16_t requestLength) override;
 
 private:
     void init();

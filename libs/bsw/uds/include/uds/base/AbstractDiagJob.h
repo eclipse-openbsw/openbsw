@@ -264,7 +264,7 @@ public:
      * \see     process()
      */
     DiagReturnCode::Type
-    execute(IncomingDiagConnection& connection, uint8_t const request[], uint16_t requestLength);
+    execute(IncomingDiagConnection& connection, uint8_t const* request, uint16_t requestLength);
 
     /**
      * Adds an AbstractDiagJob as child node
@@ -313,9 +313,9 @@ protected:
      *          - true: This job is a child of pPrefix
      *          - false: This job is not a child of pPrefix
      */
-    bool isChild(uint8_t const prefix[], uint16_t length) const;
+    bool isChild(uint8_t const* prefix, uint16_t length) const;
 
-    bool isFamily(uint8_t const prefix[], uint16_t length) const;
+    bool isFamily(uint8_t const* prefix, uint16_t length) const;
 
     /**
      * Constructor that creates a copy of an given AbstractDiagJob
@@ -361,7 +361,7 @@ protected:
      * \see     process()
      * \see     IncomingDiagConnection::addIdentifier()
      */
-    virtual DiagReturnCode::Type verify(uint8_t const request[], uint16_t requestLength) = 0;
+    virtual DiagReturnCode::Type verify(uint8_t const* request, uint16_t requestLength) = 0;
 
     /**
      * Processes a given request after it has been successfully verified.
@@ -397,7 +397,7 @@ protected:
      *
      * It is assumed that both data1 and data2 have at least length bytes.
      */
-    static bool compare(uint8_t const data1[], uint8_t const data2[], uint16_t length);
+    static bool compare(uint8_t const* data1, uint8_t const* data2, uint16_t length);
 
     /**
      * \return  Pointer to next job
@@ -484,12 +484,12 @@ private:
     static DiagJobRoot* sfpDiagJobRoot;
 
     void acceptJob(
-        IncomingDiagConnection& connection, uint8_t const request[], uint16_t const requestLength);
+        IncomingDiagConnection& connection, uint8_t const* request, uint16_t const requestLength);
     /**
      * Does suppress positive response bit handling
      */
     void checkSuppressPositiveResponseBit(
-        IncomingDiagConnection& connection, uint8_t const request[]) const;
+        IncomingDiagConnection& connection, uint8_t const* request) const;
 
     template<size_t N>
     static ::etl::array<uint8_t, MAX_OWNED_IMPLEMENTED_REQUEST_LENGTH>

@@ -25,12 +25,12 @@ class SubfunctionWithAuthentication : public Subfunction
 public:
     SubfunctionWithAuthentication(
         IDiagAuthenticator const& authenticator,
-        uint8_t const implementedRequest[],
+        uint8_t const* implementedRequest,
         DiagSession::DiagSessionMask sessionMask);
 
     SubfunctionWithAuthentication(
         IDiagAuthenticator const& authenticator,
-        uint8_t const implementedRequest[],
+        uint8_t const* implementedRequest,
         uint8_t const requestPayloadLength,
         uint8_t const responseLength,
         DiagSession::DiagSessionMask sessionMask);

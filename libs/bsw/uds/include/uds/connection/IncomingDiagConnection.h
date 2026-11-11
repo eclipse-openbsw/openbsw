@@ -194,7 +194,7 @@ public:
     DiagReturnCode::Type startNestedRequest(
         AbstractDiagJob& sender,
         NestedDiagRequest& nestedRequest,
-        uint8_t const request[],
+        uint8_t const* request,
         uint16_t requestLength);
 
     uint16_t sourceAddress         = static_cast<uint16_t>(0xFFU);

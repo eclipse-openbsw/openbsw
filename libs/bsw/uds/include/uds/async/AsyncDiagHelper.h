@@ -40,7 +40,7 @@ public:
     void processAndReleaseRequest(AbstractDiagJob& job, StoredRequest& request) override;
 
 protected:
-    DiagReturnCode::Type verify(uint8_t const request[], uint16_t requestLength) override;
+    DiagReturnCode::Type verify(uint8_t const* request, uint16_t requestLength) override;
 
 private:
     StoredRequestPool& fStoredRequestPool;

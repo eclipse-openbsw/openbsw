@@ -21,14 +21,14 @@ class DiagJobWithAuthentication : public AbstractDiagJob
 public:
     explicit DiagJobWithAuthentication(
         IDiagAuthenticator const& authenticator,
-        uint8_t const implementedRequest[],
+        uint8_t const* implementedRequest,
         uint8_t const requestLength,
         uint8_t const prefixLength,
         DiagSessionMask const sessionMask = DiagSession::ALL_SESSIONS());
 
     explicit DiagJobWithAuthentication(
         IDiagAuthenticator const& authenticator,
-        uint8_t const implementedRequest[],
+        uint8_t const* implementedRequest,
         uint8_t const requestLength,
         uint8_t const prefixLength,
         uint8_t const requestPayloadLength,
