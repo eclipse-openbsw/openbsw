@@ -25,6 +25,7 @@ add_library(
     src/uds/resume/ResumableResetDriver.cpp
     src/uds/services/cleardiagnosticinformation/ClearDiagnosticInformation.cpp
     src/uds/services/controldtcsetting/ControlDTCSetting.cpp
+    src/uds/services/readactivesession/ReadActiveSessionDiagnosticInformation.cpp
     src/uds/services/communicationcontrol/CommunicationControl.cpp
     src/uds/services/readdtcinformation/ReadDTCInformation.cpp
     src/uds/services/ecureset/ECUReset.cpp
@@ -56,7 +57,8 @@ target_link_libraries(
            transport
            transportConfiguration
            udsConfiguration
-           configuration)
+           configuration
+           udsDiagMgr)
 
 option(UDS_ENABLE_OUTGOING "Enable outgoing UDS connections" OFF)
 
