@@ -81,10 +81,12 @@ public:
      * \post    fpDataListener == 0L
      * \post    fpSendNotificationListener == 0L
      */
-    AbstractSocket();
+    AbstractSocket() = default;
 
     AbstractSocket(AbstractSocket const&)            = delete;
     AbstractSocket& operator=(AbstractSocket const&) = delete;
+    AbstractSocket(AbstractSocket&&)                 = delete;
+    AbstractSocket& operator=(AbstractSocket&&)      = delete;
 
     /**
      * binds to a local address and port
@@ -211,8 +213,8 @@ public:
 protected:
     ~AbstractSocket() = default;
 
-    IDataListener* _dataListener;
-    IDataSendNotificationListener* _sendNotificationListener;
+    IDataListener* _dataListener{nullptr};
+    IDataSendNotificationListener* _sendNotificationListener{nullptr};
 };
 
 /*
