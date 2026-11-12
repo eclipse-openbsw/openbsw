@@ -34,6 +34,9 @@ public:
     DatagramPacket(uint8_t const* data, uint16_t length, ::ip::IPEndpoint const& endpoint);
     DatagramPacket(DatagramPacket const&)            = delete;
     DatagramPacket& operator=(DatagramPacket const&) = delete;
+    DatagramPacket(DatagramPacket&&)                 = delete;
+    DatagramPacket& operator=(DatagramPacket&&)      = delete;
+    ~DatagramPacket()                                = default;
 
     uint8_t const* getData() const { return _data; }
 
