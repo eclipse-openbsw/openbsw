@@ -28,6 +28,8 @@ public:
     {}
 
     IPEndpoint(IPEndpoint const& other) = default;
+    IPEndpoint(IPEndpoint&& other)      = default;
+    ~IPEndpoint()                       = default;
 
     bool isSet() const
     {
@@ -55,6 +57,7 @@ public:
     }
 
     IPEndpoint& operator=(IPEndpoint const& other) = default;
+    IPEndpoint& operator=(IPEndpoint&& other)      = default;
 
     friend bool operator==(IPEndpoint const& lhs, IPEndpoint const& rhs);
     friend bool operator!=(IPEndpoint const& lhs, IPEndpoint const& rhs);

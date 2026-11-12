@@ -12,10 +12,29 @@
 
 #include <gtest/gtest.h>
 
+#include <utility>
+
 namespace
 {
 using namespace ::ip;
 using namespace ::testing;
+
+/**
+ * Rvalue construction and assignment preserve endpoint values in both objects.
+ */
+TEST(IPEndpointTest, RvalueOperationsPreserveEndpointValues)
+{
+    IPEndpoint source{make_ip4(0x12345678U), 20U};
+    IPEndpoint moved{::std::move(source)};
+    EXPECT_EQ(20U, source.getPort());
+    EXPECT_EQ(make_ip4(0x12345678U), source.getAddress());
+    EXPECT_EQ(source, moved);
+
+    IPEndpoint assigned;
+    assigned = ::std::move(source);
+    EXPECT_EQ(source, assigned);
+    EXPECT_EQ(20U, source.getPort());
+}
 
 TEST(IPEndpointTest, ConstructorTests)
 {

@@ -169,6 +169,8 @@ protected:
     ~NetworkInterfaceConfigRegistry()                                                = default;
     NetworkInterfaceConfigRegistry(NetworkInterfaceConfigRegistry const&)            = default;
     NetworkInterfaceConfigRegistry& operator=(NetworkInterfaceConfigRegistry const&) = default;
+    NetworkInterfaceConfigRegistry(NetworkInterfaceConfigRegistry&&)                 = default;
+    NetworkInterfaceConfigRegistry& operator=(NetworkInterfaceConfigRegistry&&)      = default;
 };
 
 namespace declare
@@ -190,6 +192,20 @@ public:
 
     NetworkInterfaceConfigRegistry(NetworkInterfaceConfigRegistry const&)            = default;
     NetworkInterfaceConfigRegistry& operator=(NetworkInterfaceConfigRegistry const&) = default;
+
+    // Rvalues previously used copying, which leaves the source signal connected.
+    NetworkInterfaceConfigRegistry(NetworkInterfaceConfigRegistry&& other) noexcept(noexcept(
+        NetworkInterfaceConfigRegistry(static_cast<NetworkInterfaceConfigRegistry const&>(other))))
+    : NetworkInterfaceConfigRegistry(static_cast<NetworkInterfaceConfigRegistry const&>(other))
+    {}
+
+    NetworkInterfaceConfigRegistry& operator=(NetworkInterfaceConfigRegistry&& other) noexcept(
+        noexcept(operator=(static_cast<NetworkInterfaceConfigRegistry const&>(other))))
+    {
+        return operator=(static_cast<NetworkInterfaceConfigRegistry const&>(other));
+    }
+
+    ~NetworkInterfaceConfigRegistry() = default;
 
     Table* _table = nullptr;
 
