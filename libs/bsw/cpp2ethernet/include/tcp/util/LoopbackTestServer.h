@@ -38,11 +38,13 @@ private:
     void sendByte(uint8_t byte);
     void sendData(::etl::span<uint8_t> data);
 
+    // NOLINTNEXTLINE(cppcoreguidelines-use-default-member-init): OpenBSW constructor rule.
     bool _locked;
     AbstractSocket& _socket;
     // uint32_t _acknowledged;
     // uint32_t _counter;
     static constexpr size_t TCP_RECV_SIZE{1460U};
+    // NOLINTNEXTLINE(cppcoreguidelines-use-default-member-init): OpenBSW constructor rule.
     ::etl::array<uint8_t, TCP_RECV_SIZE> _receiveData;
 };
 

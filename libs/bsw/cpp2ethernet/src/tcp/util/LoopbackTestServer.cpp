@@ -22,7 +22,9 @@ namespace tcp
 using ::util::logger::Logger;
 using ::util::logger::TCP;
 
-LoopbackTestServer::LoopbackTestServer(AbstractSocket& socket) : _locked(false), _socket(socket) {}
+LoopbackTestServer::LoopbackTestServer(AbstractSocket& socket)
+: _locked(false), _socket(socket), _receiveData{}
+{}
 
 AbstractSocket* LoopbackTestServer::getSocket(ip::IPAddress const&, uint16_t)
 {
@@ -42,8 +44,7 @@ void LoopbackTestServer::connectionAccepted(AbstractSocket& socket)
 
 void LoopbackTestServer::sendByte(uint8_t byte)
 {
-    AbstractSocket::ErrorCode result;
-    result = _socket.send(::etl::span<uint8_t>(&byte, 1));
+    AbstractSocket::ErrorCode const result{_socket.send(::etl::span<uint8_t>(&byte, 1))};
 
     switch (result)
     {
@@ -74,8 +75,7 @@ void LoopbackTestServer::sendByte(uint8_t byte)
 
 void LoopbackTestServer::sendData(::etl::span<uint8_t> data)
 {
-    AbstractSocket::ErrorCode result;
-    result = _socket.send(data);
+    AbstractSocket::ErrorCode const result{_socket.send(data)};
 
     switch (result)
     {

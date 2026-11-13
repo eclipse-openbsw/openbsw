@@ -39,6 +39,8 @@ public:
     AbstractServerSocket();
     AbstractServerSocket(AbstractServerSocket const&)            = delete;
     AbstractServerSocket& operator=(AbstractServerSocket const&) = delete;
+    AbstractServerSocket(AbstractServerSocket&&)                 = delete;
+    AbstractServerSocket& operator=(AbstractServerSocket&&)      = delete;
 
     // [AbstractServerSocket]
     /**
