@@ -1,5 +1,4 @@
-/*******************************************************************************
-*
+/********************************************************************************
  * Copyright (c) 2026 BMW AG
  *
  * This program and the accompanying materials are made available under the
@@ -7,13 +6,9 @@
  * https://www.apache.org/licenses/LICENSE-2.0
  *
  * SPDX-License-Identifier: Apache-2.0
- *******************************************************************************
-*/
-{% from "macros/common.jinja" import file_header %}
+ ********************************************************************************/
+{% from "macros/common.jinja" import file_header %}{{ file_header() }}
 {% from "macros/cluster_connections.jinja" import cluster_connection_meta %}
-
-{{ file_header() }}
-
 #pragma once
 
 #include "middleware/ClusterId.h"
@@ -24,14 +19,16 @@
 #include "middleware/core/TransceiverContainer.h"
 #include "middleware/core/types.h"
 #include "middleware/shm/QueueDefinitions.h"
-{% for connection in connections if connection.source_cluster.name == cluster.name %}
-{% for proxy in connection.proxies %}
-#include "{{proxy.commonInclude}}"
+{% for connection in connections %}
+{% if connection.sourceCluster.name == cluster.name %}
+{% for consumer in connection.consumers %}
+#include "{{ consumer.commonInclude }}"
 {% endfor %}
-{% if connection.source_cluster.name != connection.target_cluster.name %}
-{% for skeleton in connection.skeletons %}
-#include "{{skeleton.commonInclude}}"
+{% if connection.sourceCluster.name != connection.targetCluster.name %}
+{% for provider in connection.providers %}
+#include "{{ provider.commonInclude }}"
 {% endfor %}
+{% endif %}
 {% endif %}
 {% endfor %}
 
@@ -45,31 +42,30 @@
 
 namespace middleware::meta
 {
-
-{% for connection in connections if connection.source_cluster.name == cluster.name %}
+{% for connection in connections %}
+{% if connection.sourceCluster.name == cluster.name %}
 {{ cluster_connection_meta(connection) }}
+{% endif %}
 {% endfor %}
-
 }  // namespace middleware::meta
 
 namespace middleware
 {
 
-{% for connection in connections if connection.source_cluster.name == cluster.name %}
-extern core::ClusterConnection ClusterConnection{{connection.source_cluster.name}}To{{connection.target_cluster.name}};
+{% for connection in connections %}
+{% if connection.sourceCluster.name == cluster.name %}
+extern core::ClusterConnection ClusterConnection{{ connection.sourceCluster.name }}To{{ connection.targetCluster.name }};
+{% endif %}
 {% endfor %}
 
-void initialize{{cluster.name}}ClusterConnection();
-/// \brief Processes messages; disable timeout updates for polls between scheduled 1 ms ticks.
-void process{{cluster.name}}Cluster(::size_t messages = 0U, bool updateTimeouts = true);
-/// \brief Updates connection timeouts and services owned PDU writers; call once per ms.
-void update{{cluster.name}}ClusterTimeouts();
-
-{% for pdu in pdus if pdu.writer_cluster is defined and pdu.writer_cluster == cluster.name %}
-/// \brief Registers the unique {{ pdu.name }} writer in this cluster's execution context.
+void initialize{{ cluster.name }}ClusterConnection();
+void process{{ cluster.name }}Cluster(::size_t messages = 0U, bool updateTimeouts = true);
+void update{{ cluster.name }}ClusterTimeouts();
+{% for pdu in pdus %}
+{% if pdu.writer_cluster is defined and pdu.writer_cluster == cluster.name %}
 void register{{ pdu.name }}Writer(etl::delegate<void()> callback);
-/// \brief Removes the writer callback before its lifetime ends.
 void unregister{{ pdu.name }}Writer(etl::delegate<void()> callback);
+{% endif %}
 {% endfor %}
 
 }  // namespace middleware

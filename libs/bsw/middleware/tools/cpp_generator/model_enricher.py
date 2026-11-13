@@ -10,11 +10,12 @@
 
 """Derives what the templates need beyond what the deployment YAML states.
 
-Runs after schema validation: type references, the ports of a cluster, and
-defaults for optional deployment values.
+Runs after schema validation: type references, the ports of a cluster, the
+service data of the consumers and providers of a connection, and defaults for
+optional deployment values.
 """
 
-from loaders import TypeRegistry, load_type_modules, make_type_ref
+from loaders import TypeRegistry, load_connections, load_type_modules, make_type_ref
 
 
 def _arg_type(args: list | None, registry: TypeRegistry, scope: str):
@@ -85,9 +86,6 @@ def enrich_model(data: dict) -> None:
     for service in data["services"]:
         _enrich_service(service, registry)
     for connection in data["connections"]:
-        _enrich_cluster(connection["source_cluster"])
-        _enrich_cluster(connection["target_cluster"])
-        connection["sourceCluster"] = connection["source_cluster"]
-        connection["targetCluster"] = connection["target_cluster"]
-        connection["providers"] = connection["skeletons"]
-        connection["consumers"] = connection["proxies"]
+        _enrich_cluster(connection["sourceCluster"])
+        _enrich_cluster(connection["targetCluster"])
+    load_connections(data)

@@ -223,6 +223,33 @@ The generated `internal::InstanceId` enumerator of a provided port is
 `<Cluster><InstanceName><PortName>` in PascalCase (here `Cluster0ProviderFoo`); values are
 assigned in alphabetical order.
 
+### Connections
+
+A connection is unidirectional, from `sourceCluster` to `targetCluster`; two clusters that
+communicate in both directions need one connection per direction. `consumers` lists the
+services the source cluster requires from the target cluster (proxies) and `providers` the
+services it provides to it (skeletons). Both are always present, and may be empty. Each entry
+names a service of the `services` list and states `maxInstances`, the number of distinct
+endpoints of that service on this side of the connection. At most one of the two lists may be
+empty.
+
+```yaml
+connections:
+  - sourceCluster: *cluster0
+    targetCluster: *cluster1
+    consumers: []
+    providers:
+      - namespace: org::test::foo
+        name: Foo
+        maxInstances: 1
+```
+
+The templates read `commonInclude` and `deployment` of a consumer or provider from the named
+service. The connections are loaded and checked by `loaders/connections_loader.py`, which
+rejects a cluster that is not declared, a service that is not declared, a service listed
+twice on one side, a connection without consumers and providers, and a pair of clusters
+connected twice in the same direction.
+
 ### Type modules
 
 Datatypes are declared in `typeModules`; each entry is generated into its own

@@ -10,6 +10,7 @@
 
 """Loaders that check and prepare parts of the deployment model."""
 
+from .connections_loader import check_connections, load_connections
 from .datatypes_loader import (
     TypeRef,
     TypeRegistry,
@@ -21,7 +22,9 @@ from .datatypes_loader import (
 __all__ = [
     "TypeRef",
     "TypeRegistry",
+    "check_connections",
     "check_type_modules",
+    "load_connections",
     "load_type_modules",
     "make_type_ref",
 ]

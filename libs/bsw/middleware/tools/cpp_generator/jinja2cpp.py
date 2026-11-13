@@ -53,7 +53,7 @@ from jinja2 import Environment, FileSystemLoader
 from jsonschema import validate, ValidationError
 
 from filters import register_filters
-from loaders import check_type_modules
+from loaders import check_connections, check_type_modules
 from model_enricher import enrich_model
 
 _SCRIPT_DIR = Path(os.path.dirname(os.path.abspath(__file__)))
@@ -431,8 +431,8 @@ def generate_files(
                 output_filename = output_pattern.format(item.name)
                 output_dir = output_base / output_dir_pattern
             elif template_type == "per_connection":
-                src_name = item.source_cluster.name
-                tgt_name = item.target_cluster.name
+                src_name = item.sourceCluster.name
+                tgt_name = item.targetCluster.name
                 output_filename = output_pattern.format(src_name, tgt_name)
                 output_dir = output_base / output_dir_pattern
             elif template_type == "per_service":
@@ -523,7 +523,7 @@ def _resolve_output_paths(input_data) -> list[str]:
                 output_dir = output_dir_pattern
             elif template_type == "per_connection":
                 output_filename = output_pattern.format(
-                    item.source_cluster.name, item.target_cluster.name
+                    item.sourceCluster.name, item.targetCluster.name
                 )
                 output_dir = output_dir_pattern
             elif template_type == "per_service":
@@ -694,8 +694,10 @@ def main(argv=None) -> int:
         else:
             print(f"Warning: Schema not found at {schema_path}, skipping validation")
 
-        allocator_errors = _check_allocators(input_data) + check_type_modules(
-            input_data
+        allocator_errors = (
+            _check_allocators(input_data)
+            + check_type_modules(input_data)
+            + check_connections(input_data)
         )
         if allocator_errors:
             print("\nValidation errors:", file=sys.stderr)
