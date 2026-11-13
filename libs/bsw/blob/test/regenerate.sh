@@ -9,30 +9,16 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 #
-# Wrapper script to regenerate blob headers for the blob test.
+# Regenerate the blob test's checked-in blob headers.
 #
-# This script locates the project root and the tools/blob/regenerate.sh script,
-# then calls it with the correct paths for the blob test configuration.
+# Usage, from any working directory:
+#   libs/bsw/blob/test/regenerate.sh [PYTHON]
 #
-# Usage:
-#   regenerate.sh [PYTHON]
-#
-#   PYTHON  (optional) Python interpreter to use. If not provided, defaults to
-#           the PYTHON environment variable or python3.
-#
-# Examples:
-#   # From libs/bsw/blob/test/
-#   ./regenerate.sh
-#
-#   # From project root
-#   libs/bsw/blob/test/regenerate.sh
-#
-#   # With a custom Python interpreter
-#   PYTHON=/custom/python3 ./regenerate.sh
+# PYTHON may also be set in the environment. Routing headers are generated in
+# a temporary directory because the blob tests do not consume them.
 
 set -euo pipefail
 
-# Find the project root by locating tools/blob/regenerate.sh
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="${SCRIPT_DIR}"
 while [[ "${PROJECT_ROOT}" != "/" ]]; do
@@ -47,16 +33,11 @@ if [[ ! -f "${PROJECT_ROOT}/tools/blob/regenerate.sh" ]]; then
     exit 1
 fi
 
-# Set paths relative to the project root
-JSONL="${PROJECT_ROOT}/libs/bsw/blob/test/routing.jsonl"
-OUT_BLOB="${PROJECT_ROOT}/libs/bsw/blob/test/include/blob"
-# For blob tests, we only need the blob files (configuration.h, ConfigType.h).
-# Channel IDs (routing/channelId.h) are not needed for blob tests, so we discard them.
-OUT_ROUTING=$(mktemp -d)
-trap "rm -rf '${OUT_ROUTING}'" EXIT
-
-# Pass through PYTHON environment variable if set
 export PYTHON="${PYTHON:-${1:-python3}}"
+OUT_ROUTING="$(mktemp -d)"
+trap 'rm -rf "${OUT_ROUTING}"' EXIT
 
-# Call the main regenerate script
-exec "${PROJECT_ROOT}/tools/blob/regenerate.sh" "${JSONL}" "${OUT_BLOB}" "${OUT_ROUTING}"
+"${PROJECT_ROOT}/tools/blob/regenerate.sh" \
+    "${PROJECT_ROOT}/libs/bsw/blob/test/routing.jsonl" \
+    "${PROJECT_ROOT}/libs/bsw/blob/test/include/blob" \
+    "${OUT_ROUTING}"
