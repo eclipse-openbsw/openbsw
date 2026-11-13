@@ -29,7 +29,6 @@ from blob.utils import (
     config,
 )
 from collections import OrderedDict
-from datetime import datetime as dt
 from itertools import accumulate, chain
 
 
@@ -222,16 +221,6 @@ class Cli:
         header_file = (
             inspect.cleandoc(
                 """
-                    /********************************************************************************
-                     * Copyright (c) {year} BMW AG
-                     *
-                     * This program and the accompanying materials are made available under the
-                     * terms of the Apache License Version 2.0 which is available at
-                     * https://www.apache.org/licenses/LICENSE-2.0
-                     *
-                     * SPDX-License-Identifier: Apache-2.0
-                     ********************************************************************************/
-
                     // This is a generated file. Please do not edit it.
 
                     #pragma once
@@ -245,7 +234,6 @@ class Cli:
                     }} // namespace {name_space}
                 """
             ).format(
-                year=dt.now().year,
                 content=content,
                 name_space="blob",
                 name=args.name,
@@ -266,16 +254,6 @@ class Cli:
         header_file = (
             inspect.cleandoc(
                 """
-                   /********************************************************************************
-                    * Copyright (c) {year} BMW AG
-                    *
-                    * This program and the accompanying materials are made available under the
-                    * terms of the Apache License Version 2.0 which is available at
-                    * https://www.apache.org/licenses/LICENSE-2.0
-                    *
-                    * SPDX-License-Identifier: Apache-2.0
-                    ********************************************************************************/
-
                    // This is a generated file. Please do not edit it.
 
                    #pragma once
@@ -291,7 +269,6 @@ class Cli:
                    }} // namespace blob
                 """
             ).format(
-                year=dt.now().year,
                 name=args.name,
                 entries=entries,
             )
@@ -313,16 +290,6 @@ class Cli:
         header_file = (
             inspect.cleandoc(
                 """
-                   /********************************************************************************
-                    * Copyright (c) {year} BMW AG
-                    *
-                    * This program and the accompanying materials are made available under the
-                    * terms of the Apache License Version 2.0 which is available at
-                    * https://www.apache.org/licenses/LICENSE-2.0
-                    *
-                    * SPDX-License-Identifier: Apache-2.0
-                    ********************************************************************************/
-
                    // This is a generated file. Please do not edit it.
 
                    #pragma once
@@ -341,7 +308,6 @@ class Cli:
                    }} // namespace blob
                 """
             ).format(
-                year=dt.now().year,
                 name=args.name,
                 entries=",\n".join([f"    {k} = {v}" for k, v in metadata_enum.items()]),
             )
