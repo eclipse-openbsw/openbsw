@@ -774,76 +774,58 @@ definitions:
             - proxyMockInclude
             - skeletonMockInclude
 
-  connection_endpoint:
+  service_usage:
     type: object
     additionalProperties: false
+    description: >-
+      A service used on one side of a connection. It names a service of the
+      `services` list; the generator takes its includes and deployment from
+      there.
     required:
+      - namespace
       - name
-      - max_instances
+      - maxInstances
     properties:
       namespace:
         type: string
+        description: "Namespace of the service"
       name:
         type: string
+        description: "Name of the service"
         pattern: "^[A-Za-z][A-Za-z0-9]*$"
-      filename:
-        type: string
-      attributes:
-        type: array
-        items:
-          $ref: "#/definitions/attribute"
-      methods:
-        type: array
-        items:
-          $ref: "#/definitions/method"
-      broadcasts:
-        type: array
-        items:
-          $ref: "#/definitions/broadcast"
-      typeIncludes:
-        type: array
-        items:
-          type: string
-      commonInclude:
-        type: string
-      proxyInclude:
-        type: string
-      skeletonInclude:
-        type: string
-      proxyMockInclude:
-        type: string
-      skeletonMockInclude:
-        type: string
-      deployment:
-        $ref: "#/definitions/service_deployment"
-      max_instances:
+      maxInstances:
         type: integer
+        description: >-
+          Number of distinct endpoints (proxies or skeletons) of the service on
+          this side of the connection
         minimum: 1
-        default: 1
 
   connection:
     type: object
     additionalProperties: false
+    description: >-
+      Unidirectional connection from `sourceCluster` to `targetCluster`. A
+      connection in the opposite direction is declared separately.
     required:
-      - source_cluster
-      - target_cluster
-      - proxies
-      - skeletons
+      - sourceCluster
+      - targetCluster
+      - consumers
+      - providers
     properties:
-      source_cluster:
+      sourceCluster:
         $ref: "#/definitions/cluster"
-      target_cluster:
+      targetCluster:
         $ref: "#/definitions/cluster"
-      proxies:
+      consumers:
         type: array
-        description: "Services consumed over this connection"
+        description: "Services `sourceCluster` requires and consumes from `targetCluster` (via a proxy)"
         items:
-          $ref: "#/definitions/connection_endpoint"
-      skeletons:
+          $ref: "#/definitions/service_usage"
+      providers:
         type: array
-        description: "Services provided over this connection"
+        description: "Services `sourceCluster` provides to `targetCluster` (via a skeleton)"
         items:
-          $ref: "#/definitions/connection_endpoint"
+          $ref: "#/definitions/service_usage"
 
   core:
     type: object

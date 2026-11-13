@@ -61,8 +61,7 @@ typeModules:
             type: uint32_t
 
 services:
-  - &foo
-    namespace: org::test::foo
+  - namespace: org::test::foo
     name: Foo
     deployment:
       ServiceID: 1
@@ -91,19 +90,21 @@ services:
 
 connections:
   - &cluster0_cluster1
-    source_cluster: *cluster0
-    target_cluster: *cluster1
-    proxies: []
-    skeletons:
-      - <<: *foo
-        max_instances: 1
+    sourceCluster: *cluster0
+    targetCluster: *cluster1
+    consumers: []
+    providers:
+      - namespace: org::test::foo
+        name: Foo
+        maxInstances: 1
   - &cluster1_cluster0
-    source_cluster: *cluster1
-    target_cluster: *cluster0
-    proxies:
-      - <<: *foo
-        max_instances: 1
-    skeletons: []
+    sourceCluster: *cluster1
+    targetCluster: *cluster0
+    consumers:
+      - namespace: org::test::foo
+        name: Foo
+        maxInstances: 1
+    providers: []
 
 cores:
   - &c0

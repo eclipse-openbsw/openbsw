@@ -110,8 +110,7 @@ typeModules:
             type: Bar
 
 services:
-  - &dummy_service
-    namespace: features::communication
+  - namespace: features::communication
     name: DummyService
     filename: dummy_service
     deployment:
@@ -167,18 +166,20 @@ services:
     skeletonMockInclude: features/communication/dummy_serviceSkeletonMock.h
 
 connections:
-  - source_cluster: *core0
-    target_cluster: *core1
-    proxies: []
-    skeletons:
-      - <<: *dummy_service
-        max_instances: 1
-  - source_cluster: *core1
-    target_cluster: *core0
-    proxies:
-      - <<: *dummy_service
-        max_instances: 1
-    skeletons: []
+  - sourceCluster: *core0
+    targetCluster: *core1
+    consumers: []
+    providers:
+      - namespace: features::communication
+        name: DummyService
+        maxInstances: 1
+  - sourceCluster: *core1
+    targetCluster: *core0
+    consumers:
+      - namespace: features::communication
+        name: DummyService
+        maxInstances: 1
+    providers: []
 
 cores:
   - name: C0

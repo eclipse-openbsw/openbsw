@@ -7,38 +7,25 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
-/**
-  *
-  *  __  __ _     _     _ _
-  * |  \/  (_) __| | __| | | _____      ____ _ _ __ ___
-  * | |\/| | |/ _` |/ _` | |/ _ \ \ /\ / / _` | '__/ _ \
-  * | |  | | | (_| | (_| | |  __/\ V  V / (_| | | |  __/
-  * |_|  |_|_|\__,_|\__,_|_|\___| \_/\_/ \__,_|_|  \___|
-  *
-  * WARNING!
-  * This file is generated. Do not edit manually.
-  *
-  */
-#include "middleware/{{cluster.name}}Cluster.h"
+{% from "macros/common.jinja" import file_header %}{{ file_header() }}
+
+#include "middleware/{{ cluster.name }}Cluster.h"
+
+#include "middleware/ClusterId.h"
+#include "middleware/core/LoggerApi.h"
+#include "middleware/shm/QueueDefinitions.h"
 
 #include <etl/algorithm.h>
 #include <etl/alignment.h>
-#include <etl/type_traits.h>
-
 #include <etl/error_handler.h>
-
-
-#include <middleware/core/LoggerApi.h>
-
-#include "middleware/ClusterId.h"
-#include "middleware/shm/QueueDefinitions.h"
+#include <etl/type_traits.h>
 
 namespace middleware
 {
-{% for pdu in pdus if pdu.writer_cluster is defined and pdu.writer_cluster == cluster.name %}
+{% for pdu in pdus %}
+{% if pdu.writer_cluster is defined and pdu.writer_cluster == cluster.name %}
 namespace
 {
-/// \brief Provides lifetime-stable callback storage independent of global initialization order.
 etl::delegate<void()>& {{ pdu.name }}WriterCallback()
 {
     static etl::delegate<void()> callback{};
@@ -48,41 +35,42 @@ etl::delegate<void()>& {{ pdu.name }}WriterCallback()
 
 void register{{ pdu.name }}Writer(etl::delegate<void()> callback)
 {
-    ETL_ASSERT(!{{ pdu.name }}WriterCallback().is_valid(),
-               ETL_ERROR_GENERIC("PDU writer already registered"));
+    ETL_ASSERT(!{{ pdu.name }}WriterCallback().is_valid(), ETL_ERROR_GENERIC("PDU writer already registered"));
     {{ pdu.name }}WriterCallback() = callback;
 }
 
 void unregister{{ pdu.name }}Writer(etl::delegate<void()> callback)
 {
-    ETL_ASSERT({{ pdu.name }}WriterCallback() == callback,
-               ETL_ERROR_GENERIC("PDU writer registration mismatch"));
+    ETL_ASSERT({{ pdu.name }}WriterCallback() == callback, ETL_ERROR_GENERIC("PDU writer registration mismatch"));
     {{ pdu.name }}WriterCallback().clear();
 }
+{% endif %}
 {% endfor %}
 
 void process{{cluster.name}}Cluster(size_t messages, const bool updateTimeouts)
 {
-    auto* queue = shm::getQueueTo{{cluster.name}}();
-    auto {{cluster.name|lower}}Receiver =
-        ::etl::remove_pointer<decltype(queue)>::type::Receiver(*queue);
+    auto* queue = shm::getQueueTo{{ cluster.name }}();
+    auto {{ cluster.name | lower }}Receiver =
+        etl::remove_pointer<decltype(queue)>::type::Receiver(*queue);
     queue->takeSnapshot();
     if (messages == 0U)
     {
-        messages = {{cluster.name|lower}}Receiver.size();
+        messages = {{ cluster.name | lower }}Receiver.size();
     }
 
-    for (size_t i = 0U; (i < messages) && (!{{cluster.name|lower}}Receiver.isEmpty()); ++i)
+    for (size_t i = 0U; (i < messages) && (!{{ cluster.name | lower }}Receiver.isEmpty()); ++i)
     {
-        const core::Message& msg = {{cluster.name|lower}}Receiver.peek();
+        const core::Message& msg = {{ cluster.name | lower }}Receiver.peek();
         const auto sourceClusterId = static_cast<core::ClusterId>(msg.getHeader().srcClusterId);
         switch (sourceClusterId)
         {
-{% for connection in connections if connection.source_cluster.name == cluster.name %}
-            case core::ClusterId::{{connection.target_cluster.name}}: {
-                ClusterConnection{{cluster.name}}To{{connection.target_cluster.name}}.processMessage(msg);
+{% for connection in connections %}
+{% if connection.sourceCluster.name == cluster.name %}
+            case core::ClusterId::{{ connection.targetCluster.name }}: {
+                ClusterConnection{{ cluster.name }}To{{ connection.targetCluster.name }}.processMessage(msg);
                 break;
             }
+{% endif %}
 {% endfor %}
             default: {
                 logger::logMessageSendingFailure(
@@ -90,40 +78,49 @@ void process{{cluster.name}}Cluster(size_t messages, const bool updateTimeouts)
                 break;
             }
         }
-        {{cluster.name|lower}}Receiver.advance();
+        {{ cluster.name | lower }}Receiver.advance();
     }
 
     if (updateTimeouts)
     {
-        update{{cluster.name}}ClusterTimeouts();
+        update{{ cluster.name }}ClusterTimeouts();
     }
 }
 
-void update{{cluster.name}}ClusterTimeouts()
+void update{{ cluster.name }}ClusterTimeouts()
 {
-{% for connection in connections if connection.source_cluster.name == cluster.name %}
-    ClusterConnection{{cluster.name}}To{{connection.target_cluster.name}}.updateTimeouts();
+{% for connection in connections %}
+{% if connection.sourceCluster.name == cluster.name %}
+    ClusterConnection{{ cluster.name }}To{{ connection.targetCluster.name }}.updateTimeouts();
+{% endif %}
 {% endfor %}
-{% for pdu in pdus if pdu.writer_cluster is defined and pdu.writer_cluster == cluster.name %}
+{% for pdu in pdus %}
+{% if pdu.writer_cluster is defined and pdu.writer_cluster == cluster.name %}
     static_cast<void>({{ pdu.name }}WriterCallback().call_if());
+{% endif %}
 {% endfor %}
 }
 
-// ***************************** {{cluster.name}} *****************************
-{% for connection in connections if connection.source_cluster.name == cluster.name %}
-meta::ClusterConnection{{cluster.name}}To{{connection.target_cluster.name}}Meta ClusterConnection{{cluster.name}}To{{connection.target_cluster.name}}Config;
-core::ClusterConnection ClusterConnection{{cluster.name}}To{{connection.target_cluster.name}}(ClusterConnection{{cluster.name}}To{{connection.target_cluster.name}}Config);
+// ***************************** {{ cluster.name }} *****************************
+{% for connection in connections %}
+{% if connection.sourceCluster.name == cluster.name %}
+meta::ClusterConnection{{ cluster.name }}To{{ connection.targetCluster.name }}Meta ClusterConnection{{ cluster.name }}To{{ connection.targetCluster.name }}Config;
+core::ClusterConnection ClusterConnection{{ cluster.name }}To{{ connection.targetCluster.name }}(ClusterConnection{{ cluster.name }}To{{ connection.targetCluster.name }}Config);
+{% endif %}
 {% endfor %}
 
-void initialize{{cluster.name}}ClusterConnection()
+void initialize{{ cluster.name }}ClusterConnection()
 {
-{% for connection in connections if connection.source_cluster.name == cluster.name %}
-    ClusterConnection{{cluster.name}}To{{connection.target_cluster.name}}Config
-        .~ClusterConnection{{cluster.name}}To{{connection.target_cluster.name}}Meta();
-    ::new (&ClusterConnection{{cluster.name}}To{{connection.target_cluster.name}}Config)
-        meta::ClusterConnection{{cluster.name}}To{{connection.target_cluster.name}}Meta{};
+    // Reset Config only: explicitly destroy and reconstruct to clear registered
+    // transceivers. Connection's reference stays valid (same address).
+{% for connection in connections %}
+{% if connection.sourceCluster.name == cluster.name %}
+    ClusterConnection{{ cluster.name }}To{{ connection.targetCluster.name }}Config
+        .~ClusterConnection{{ cluster.name }}To{{ connection.targetCluster.name }}Meta();
+    ::new (&ClusterConnection{{ cluster.name }}To{{ connection.targetCluster.name }}Config)
+        meta::ClusterConnection{{ cluster.name }}To{{ connection.targetCluster.name }}Meta{};
+{% endif %}
 {% endfor %}
 }
-
 
 }  // namespace middleware
