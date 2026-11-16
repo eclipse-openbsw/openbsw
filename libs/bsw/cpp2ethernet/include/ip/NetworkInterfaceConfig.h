@@ -193,7 +193,7 @@ public:
     NetworkInterfaceConfigRegistry(NetworkInterfaceConfigRegistry const&)            = default;
     NetworkInterfaceConfigRegistry& operator=(NetworkInterfaceConfigRegistry const&) = default;
 
-    // Rvalues previously used copying, which leaves the source signal connected.
+    // Copy on move to keep the source signal's listeners connected.
     NetworkInterfaceConfigRegistry(NetworkInterfaceConfigRegistry&& other) noexcept(noexcept(
         NetworkInterfaceConfigRegistry(static_cast<NetworkInterfaceConfigRegistry const&>(other))))
     : NetworkInterfaceConfigRegistry(static_cast<NetworkInterfaceConfigRegistry const&>(other))
