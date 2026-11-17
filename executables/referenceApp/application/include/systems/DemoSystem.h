@@ -47,6 +47,7 @@
 #include "middleware/Cluster1Cluster.h"
 #include "middleware/FooProxyWrapper.h"
 #include "middleware/FooSkeletonWrapper.h"
+#include "middleware/PduDemoWrapper.h"
 #endif
 
 namespace systems
@@ -136,6 +137,7 @@ private:
 #ifdef PLATFORM_SUPPORT_MIDDLEWARE
     FooSkeletonWrapper _fooSkeletonWrapper;
     FooProxyWrapper _fooProxyWrapper;
+    PduDemoWrapper _pduDemoWrapper;
     uint32_t _middlewareCycleCount{0U};
 #endif
 };

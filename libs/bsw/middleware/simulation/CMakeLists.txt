@@ -42,6 +42,7 @@ set(_GENERATED_HEADERS
     ${_GEN_INC}/middleware/ClusterId.h
     ${_GEN_INC}/middleware/Cluster0Cluster.h
     ${_GEN_INC}/middleware/Cluster1Cluster.h
+    ${_GEN_INC}/middleware/Cluster2Cluster.h
     ${_GEN_INC}/middleware/shm/Config.h
     ${_GEN_INC}/middleware/shm/AllocatorsDefinitions.h
     ${_GEN_INC}/middleware/shm/QueueDefinitions.h
@@ -50,6 +51,10 @@ set(_GENERATED_HEADERS
     ${_GEN_INC}/org/test/foo/FooProxy.h
     ${_GEN_INC}/org/test/foo/FooSkeleton.h
     ${_GEN_INC}/org/test/foo/FooTypes.h
+    ${_GEN_INC}/org/test/bus/samplePduWithCrcFromBusCommon.h
+    ${_GEN_INC}/org/test/bus/samplePduWithCrcFromBusReader.h
+    ${_GEN_INC}/org/test/bus/samplePduWithDatatypesFromBusCommon.h
+    ${_GEN_INC}/org/test/bus/samplePduWithDatatypesFromBusReader.h
     ${_GEN_INC}/org/test/signal/samplePduWithCrcCommon.h
     ${_GEN_INC}/org/test/signal/samplePduWithCrcReader.h
     ${_GEN_INC}/org/test/signal/samplePduWithCrcWriter.h
@@ -61,10 +66,13 @@ set(GENERATED_SRCS
     ${_GEN_SRC}/AllocatorSelectorDefinitions.cpp
     ${_GEN_SRC}/Cluster0Cluster.cpp
     ${_GEN_SRC}/Cluster1Cluster.cpp
+    ${_GEN_SRC}/Cluster2Cluster.cpp
     ${_GEN_SRC}/shm/Config.cpp
     ${_GEN_SRC}/org/test/foo/FooCommon.cpp
     ${_GEN_SRC}/org/test/foo/FooProxy.cpp
     ${_GEN_SRC}/org/test/foo/FooSkeleton.cpp
+    ${_GEN_SRC}/org/test/bus/samplePduWithCrcFromBusReader.cpp
+    ${_GEN_SRC}/org/test/bus/samplePduWithDatatypesFromBusReader.cpp
     ${_GEN_SRC}/org/test/signal/samplePduWithCrcReader.cpp
     ${_GEN_SRC}/org/test/signal/samplePduWithCrcWriter.cpp
     ${_GEN_SRC}/org/test/signal/samplePduWithDatatypesReader.cpp
@@ -95,7 +103,8 @@ set(PLATFORM_INTEGRATION_SRCS
 # -----------------------------------------------------------------------
 if (BUILD_EXECUTABLE STREQUAL "unitTest")
     set(_SIMULATION_TARGET middlewareSimulationFooMethodTest)
-    set(_APPLICATION_SRCS test/FooMethodTest.cpp)
+    set(_APPLICATION_SRCS test/FooMethodTest.cpp test/PduAccessTest.cpp
+                          test/MemoryLayout.cpp)
 else ()
     set(_SIMULATION_TARGET middlewareSimulation)
     set(_APPLICATION_SRCS
@@ -103,6 +112,7 @@ else ()
         src/ShmWrapper.cpp
         src/MainCore0.cpp
         src/MainCore1.cpp
+        src/MainCore2.cpp
         src/Sample.cpp)
 endif ()
 
@@ -156,6 +166,7 @@ if (BUILD_EXECUTABLE STREQUAL "unitTest")
         ${PLATFORM_INTEGRATION_SRCS}
         ${GENERATED_SRCS}
         src/Logger.cpp
+        test/MemoryLayout.cpp
         test/PduWriterSchedulingTest.cpp
         ${CMAKE_SOURCE_DIR}/libs/bsw/middleware/test/src/time/mock/SystemTimerProviderMock.cpp
     )

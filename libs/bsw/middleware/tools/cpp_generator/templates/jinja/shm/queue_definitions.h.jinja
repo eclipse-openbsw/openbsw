@@ -25,6 +25,7 @@
 #include <middleware/queue/Queue.h>
 
 #include "middleware/core/Message.h"
+#include "middleware/core/PduBrokerConnection.h"
 #include "middleware/shm/PduDefinitions.h"
 
 namespace middleware::shm
@@ -43,6 +44,9 @@ inline constexpr size_t OUTBOUND_PDU_QUEUE_SIZE = {{ outbound_pdu_queue_size }}U
 
 using OutboundPduQueue =
   queue::Queue<queue::QueueTraits<uint32_t, OUTBOUND_PDU_QUEUE_SIZE, concurrency::ScopedECULock, uint8_t*>>;
+
+/** PDU broker for this deployment. Its scratch buffer fits the largest PDU, which load() relies on. */
+using PduBrokerConnection  = core::PduBrokerConnection<OutboundPduQueue, MAX_PDU_SIZE>;
 {% endif %}
 
 /** Returns a pointer to the queue in shared memory. Queues are fully initialized by MemoryLayout::MemoryLayout(). */

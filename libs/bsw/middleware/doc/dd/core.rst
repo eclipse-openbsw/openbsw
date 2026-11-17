@@ -105,3 +105,44 @@ The sequence lock relies on two platform-provided functions in
 
 The qualifier interface used by the generated PDU reader is described in
 :doc:`../integration/integrating_middleware_into_ecu`.
+
+PDU Broker
+----------
+
+The PDU broker connects the PDUs in shared memory to a bus. It is implemented by
+``PduBrokerConnection`` and has two directions.
+
+* **Transmit:** a PDU writer stores its PDU with ``commit()``, and its
+  transmission strategies push the PDU ID to a FIFO queue in shared memory.
+  ``processTransmissions()`` drains this queue in the order the IDs were queued,
+  so the broker never has to search shared memory for pending PDUs. For
+  each ID, the broker copies a consistent snapshot of the PDU into a local buffer
+  and passes it to ``IPduTxSink::submit()``.
+* **Receive:** the bus driver calls ``onReceive()`` with the ID and payload of a
+  received PDU. The broker stores the payload in shared memory, which increments
+  the sequence counter of the PDU.
+
+The broker hands the PDUs over in commit order and removes each ID from the
+queue as soon as the PDU is handed over. IDs that are not PDU IDs are
+discarded. The sink owns everything after the hand-off: its backlog, retries,
+acknowledgements and what it drops, and it makes drops observable.
+``IPduTxSink::submit()`` returns nothing: the broker continues with the next
+PDU, so a slow or failing destination never blocks the PDUs behind it, and the
+shared queue holds no pending transmissions. A sink that serves
+independent destinations, such as CAN transmit buffers selected by ID, keeps a
+backlog per destination.
+
+The broker reaches the PDUs through a table of function pointers generated from
+the deployment (``getPduAccessTable()``). PDU IDs are defined in the deployment,
+are unique and need not be sequential, so the generator sorts the table by ID
+and the broker finds a PDU with a binary search. This keeps
+``PduBrokerConnection`` independent of the number and size of the PDUs. The table
+holds no shared-memory addresses, so it is valid in every process.
+
+Thread Safety
++++++++++++++
+
+The broker is the single consumer of the PDU ID queue. ``onReceive()`` and
+``processTransmissions()`` must be called from the same context. A PDU that
+the broker receives from the bus must not have a writer, because there must be
+exactly one writer per PDU (see `Middleware PDU`_).

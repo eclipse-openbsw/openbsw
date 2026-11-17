@@ -18,6 +18,7 @@
 
 void run_main_core0();
 void run_main_core1();
+void run_main_core2();
 
 int main()
 {
@@ -50,23 +51,29 @@ int main()
 
     pid_t pid0 = fork_child(&run_main_core0);
     pid_t pid1 = fork_child(&run_main_core1);
+    pid_t pid2 = fork_child(&run_main_core2);
 
     int status0 = 0;
     int status1 = 0;
+    int status2 = 0;
     waitpid(pid0, &status0, 0);
     waitpid(pid1, &status1, 0);
+    waitpid(pid2, &status2, 0);
 
     int const rc0 = (WIFEXITED(status0) != 0) ? WEXITSTATUS(status0) : 1;
     int const rc1 = (WIFEXITED(status1) != 0) ? WEXITSTATUS(status1) : 1;
-    rc            = rc0 | rc1;
+    int const rc2 = (WIFEXITED(status2) != 0) ? WEXITSTATUS(status2) : 1;
+    rc            = rc0 | rc1 | rc2;
 
 #else
     // Thread-based execution (default): cores share the same process address space.
     std::thread thread0{&run_main_core0};
     std::thread thread1{&run_main_core1};
+    std::thread thread2{&run_main_core2};
 
     thread0.join();
     thread1.join();
+    thread2.join();
 #endif
 
     simulation::Logger::log("Simulation done.");

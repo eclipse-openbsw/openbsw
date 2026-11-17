@@ -21,6 +21,7 @@
   */
 #include <cstdint>
 
+#include <etl/array.h>
 
 #include "middleware/core/MiddlewarePdu.h"
 #include "middleware/shm/Config.h"
@@ -68,4 +69,20 @@ OutboundPduQueue* getOutboundPduQueue()
 }
 
 {% endfor %}
+{% set brokerPdus = pdus | selectattr('pdu_id', 'defined') | sort(attribute='pdu_id') | list %}
+::etl::span<core::PduAccess const> getPduAccessTable()
+{
+{% if brokerPdus %}
+    // Sorted by PDU ID, as the broker searches it. The generator guarantees unique IDs.
+    static constexpr ::etl::array<core::PduAccess, {{ brokerPdus | length }}U> TABLE = { {
+{% for pdu in brokerPdus %}
+        core::makePduAccess<{{ pdu.size }}U, &get{{ pdu.name | capitalize }}>({{ pdu.pdu_id }}U),
+{% endfor %}
+    } };
+    return ::etl::span<core::PduAccess const>(TABLE);
+{% else %}
+    return {};
+{% endif %}
+}
+
 }  // namespace middleware::shm

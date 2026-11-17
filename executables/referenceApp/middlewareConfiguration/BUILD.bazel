@@ -20,10 +20,12 @@ load(":generated_outputs.bzl", "GENERATED_OUTPUTS")
 # Bound by the posix platform to the middleware platform integration flags.
 cc_library(
     name = "middleware_concurrency",
+    srcs = ["platform_integration/concurrency/src/ConcurrencyImpl.cpp"],
     hdrs = ["platform_integration/concurrency/include/middleware/concurrency/lock_types.h"],
     strip_include_prefix = "platform_integration/concurrency/include",
     target_compatible_with = reference_app_posix_only(),
     visibility = ["//libs/bsw/middleware:__pkg__"],
+    deps = ["//libs/bsw/middleware:middleware_interfaces"],
 )
 
 cc_library(

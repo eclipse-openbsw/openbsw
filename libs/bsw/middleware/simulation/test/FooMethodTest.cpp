@@ -27,15 +27,6 @@ namespace
 uint32_t currentTimeMs{};
 }
 
-namespace middleware::shm
-{
-MemoryLayout& getMemoryLayout()
-{
-    static MemoryLayout layout;
-    return layout;
-}
-} // namespace middleware::shm
-
 namespace
 {
 using Consumer = FooProxyWrapper<middleware::core::ClusterId::Cluster1>;
