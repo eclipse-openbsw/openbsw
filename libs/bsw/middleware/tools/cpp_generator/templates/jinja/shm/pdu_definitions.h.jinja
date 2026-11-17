@@ -21,11 +21,19 @@
   */
 #pragma once
 
+#include <cstdint>
+
 #include "middleware/core/MiddlewarePdu.h"
 
 namespace middleware::shm
 {
 
+{% if has_pdu_ids %}
+{% for pdu in pdus if pdu.pdu_id is defined %}
+inline constexpr uint32_t PDU_ID_{{ pdu.name | upper }} = {{ pdu.pdu_id }}U;
+{% endfor %}
+
+{% endif %}
 {% for pdu in pdus %}
 using {{ pdu.name | capitalize }}Pdu = ::middleware::core::MiddlewarePdu<{{ pdu.size }}U>;
 {% endfor %}

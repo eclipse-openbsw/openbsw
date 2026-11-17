@@ -32,6 +32,8 @@ protected:
 public:
     IDataListener(IDataListener const&)            = delete;
     IDataListener& operator=(IDataListener const&) = delete;
+    IDataListener(IDataListener&&)                 = delete;
+    IDataListener& operator=(IDataListener&&)      = delete;
     // [IDataListener]
     /**
      * callback that gets called when data has been received

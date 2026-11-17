@@ -138,7 +138,7 @@ protected:
      * \result Result of processing
      */
     virtual DiagReturnCode::Type processNestedRequest(
-        IncomingDiagConnection& connection, uint8_t const request[], uint16_t requestLength)
+        IncomingDiagConnection& connection, uint8_t const* request, uint16_t requestLength)
         = 0;
     /**
      * Adjust response code of nested request

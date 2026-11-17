@@ -63,7 +63,7 @@ TEST_F(ProxyAppTestFixture, AsyncMethodForwardsToMock)
     EXPECT_CALL(
         mock_,
         init(
-            features::communication::DummyService::internal::InstanceId_1,
+            features::communication::DummyService::internal::Core0ProviderDummy,
             middleware::core::ClusterId::Core1))
         .WillOnce(testing::Return(middleware::core::HRESULT::Ok));
     EXPECT_CALL(mock_, asyncMethod(::testing::_, ::testing::_))
@@ -106,7 +106,7 @@ TEST_F(ProxyAppTestFixture, FireAndForgetMethodForwardsToMock)
     EXPECT_CALL(
         mock_,
         init(
-            features::communication::DummyService::internal::InstanceId_1,
+            features::communication::DummyService::internal::Core0ProviderDummy,
             middleware::core::ClusterId::Core1))
         .WillOnce(testing::Return(middleware::core::HRESULT::Ok));
     EXPECT_CALL(mock_, fireAndForgetMethod(::testing::Ref(payload)))
@@ -134,7 +134,7 @@ TEST_F(ProxyAppTestFixture, AttributeGetterForwardsToMock)
     EXPECT_CALL(
         mock_,
         init(
-            features::communication::DummyService::internal::InstanceId_1,
+            features::communication::DummyService::internal::Core0ProviderDummy,
             middleware::core::ClusterId::Core1))
         .WillOnce(testing::Return(middleware::core::HRESULT::Ok));
     EXPECT_CALL(mock_.simpleField, get(::testing::_))
@@ -174,7 +174,7 @@ TEST_F(ProxyAppTestFixture, AttributeSetterForwardsToMock)
     EXPECT_CALL(
         mock_,
         init(
-            features::communication::DummyService::internal::InstanceId_1,
+            features::communication::DummyService::internal::Core0ProviderDummy,
             middleware::core::ClusterId::Core1))
         .WillOnce(testing::Return(middleware::core::HRESULT::Ok));
     EXPECT_CALL(mock_.simpleField, set(42U))
@@ -200,7 +200,7 @@ TEST_F(ProxyAppTestFixture, AttributeReceiveForwardsToMock)
     EXPECT_CALL(
         mock_,
         init(
-            features::communication::DummyService::internal::InstanceId_1,
+            features::communication::DummyService::internal::Core0ProviderDummy,
             middleware::core::ClusterId::Core1))
         .WillOnce(testing::Return(middleware::core::HRESULT::Ok));
     EXPECT_CALL(mock_.simpleField, setReceiveHandler(::testing::_))
@@ -226,7 +226,7 @@ TEST_F(ProxyAppTestFixture, EventReceiveForwardsToMock)
     EXPECT_CALL(
         mock_,
         init(
-            features::communication::DummyService::internal::InstanceId_1,
+            features::communication::DummyService::internal::Core0ProviderDummy,
             middleware::core::ClusterId::Core1))
         .WillOnce(testing::Return(middleware::core::HRESULT::Ok));
     EXPECT_CALL(mock_.simpleBroadcast, setReceiveHandler(::testing::_))

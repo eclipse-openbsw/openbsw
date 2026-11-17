@@ -21,10 +21,10 @@ namespace uds
 class Subfunction : public AbstractDiagJob
 {
 public:
-    Subfunction(uint8_t const implementedRequest[], DiagSession::DiagSessionMask sessionMask);
+    Subfunction(uint8_t const* implementedRequest, DiagSession::DiagSessionMask sessionMask);
 
     Subfunction(
-        uint8_t const implementedRequest[],
+        uint8_t const* implementedRequest,
         uint8_t const requestPayloadLength,
         uint8_t const responseLength,
         DiagSession::DiagSessionMask sessionMask);

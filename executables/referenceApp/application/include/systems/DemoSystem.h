@@ -43,8 +43,8 @@
 #endif
 
 #ifdef PLATFORM_SUPPORT_MIDDLEWARE
-#include "middleware/ClusterCluster0.h"
-#include "middleware/ClusterCluster1.h"
+#include "middleware/Cluster0Cluster.h"
+#include "middleware/Cluster1Cluster.h"
 #include "middleware/FooProxyWrapper.h"
 #include "middleware/FooSkeletonWrapper.h"
 #endif

@@ -103,8 +103,9 @@ DiagReturnCode::Type DiagnosticSessionControl::process(
     {
         return DiagReturnCode::ISO_INVALID_FORMAT;
     }
+    ::etl::span<uint8_t const> const requestView(request, requestLength);
     DiagSession::SessionType const requestedSession
-        = static_cast<DiagSession::SessionType>(request[0]);
+        = static_cast<DiagSession::SessionType>(requestView[0U]);
     Logger::debug(UDS, "%d -> %d", fpCurrentSession->getType(), requestedSession);
 
     if (fpCurrentSession == nullptr)

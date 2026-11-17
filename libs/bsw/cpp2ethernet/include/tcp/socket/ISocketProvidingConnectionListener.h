@@ -28,6 +28,8 @@ public:
     ISocketProvidingConnectionListener(ISocketProvidingConnectionListener const&) = delete;
     ISocketProvidingConnectionListener& operator=(ISocketProvidingConnectionListener const&)
         = delete;
+    ISocketProvidingConnectionListener(ISocketProvidingConnectionListener&&)            = delete;
+    ISocketProvidingConnectionListener& operator=(ISocketProvidingConnectionListener&&) = delete;
 
     // [ISocketProvidingConnectionListener]
     /**

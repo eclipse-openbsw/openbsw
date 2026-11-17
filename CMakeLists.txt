@@ -114,6 +114,11 @@ if (BUILD_RUST)
 
 endif ()
 
+if (BUILD_EXECUTABLE STREQUAL "middlewareSimulation")
+    include(CTest)
+    enable_testing()
+endif ()
+
 if (BUILD_EXECUTABLE STREQUAL "unitTest")
     include(GoogleTest)
     include(CTest)

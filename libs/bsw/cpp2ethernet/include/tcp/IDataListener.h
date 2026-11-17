@@ -24,6 +24,8 @@ class IDataListener
 public:
     IDataListener(IDataListener const&)            = delete;
     IDataListener& operator=(IDataListener const&) = delete;
+    IDataListener(IDataListener&&)                 = delete;
+    IDataListener& operator=(IDataListener&&)      = delete;
 
     /**
      * ErrorCodes used by IDataListener

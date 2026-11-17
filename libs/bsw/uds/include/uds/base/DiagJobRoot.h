@@ -38,12 +38,12 @@ public:
      * \see AbstractDiagJob::execute()
      */
     virtual DiagReturnCode::Type
-    execute(IncomingDiagConnection& connection, uint8_t const request[], uint16_t requestLength);
+    execute(IncomingDiagConnection& connection, uint8_t const* request, uint16_t requestLength);
 
     /**
      * \see AbstractDiagJob::verify()
      */
-    DiagReturnCode::Type verify(uint8_t const request[], uint16_t requestLength) override;
+    DiagReturnCode::Type verify(uint8_t const* request, uint16_t requestLength) override;
 
     /**
      * Implements part of UDS 14229-1 general server response supplier specifics

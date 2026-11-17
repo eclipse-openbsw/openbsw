@@ -142,7 +142,7 @@ main()
 1. `middleware::initializeCluster0ClusterConnection()` — wires the Cluster0-side
    cluster to its SHM queues.
 2. `FooSkeletonWrapper::init()` — registers the `Foo` service on Cluster0 with
-   `InstanceId_1`.
+   `Cluster0ProviderFoo`.
 3. Main loop: calls `sendBroadcast()` every 5 s, processes incoming messages,
    logs stats every 15 s, exits after 60 s.
 
@@ -166,7 +166,7 @@ main()
 |----------------|-------|
 | Namespace      | `org::test::foo` |
 | Service id     | 1 |
-| Instance id    | `InstanceId_1` = 1 |
+| Instance id    | `Cluster0ProviderFoo` = 0 |
 | Attribute      | `FooDefault` -- `FooStruct { uint32_t fooValue }` |
 | Access         | read / write / subscribe |
 | Method         | `FooMethod`, member id 3, timeout 5000 ms, one request per consumer/provider |

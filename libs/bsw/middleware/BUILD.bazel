@@ -88,17 +88,23 @@ filegroup(
         "include/middleware/core/MessagePayloadBuilder.h",
         "include/middleware/core/MiddlewarePdu.h",
         "include/middleware/core/MiddlewarePduBase.h",
+        "include/middleware/core/PhysicalSignalConversion.h",
         "include/middleware/core/ProxyAttribute.h",
         "include/middleware/core/ProxyAttributeBase.h",
         "include/middleware/core/ProxyBase.h",
         "include/middleware/core/ProxyEventBase.h",
         "include/middleware/core/ResponseBuffer.h",
         "include/middleware/core/ResponseBufferBase.h",
+        "include/middleware/core/SignalCodec.h",
         "include/middleware/core/SkeletonAttribute.h",
         "include/middleware/core/SkeletonBase.h",
         "include/middleware/core/SkeletonEvent.h",
+        "include/middleware/core/Timer.h",
         "include/middleware/core/TransceiverBase.h",
         "include/middleware/core/TransceiverContainer.h",
+        "include/middleware/core/Transmission.h",
+        "include/middleware/core/TransmissionMode.h",
+        "include/middleware/core/TransmissionModeManager.h",
         "include/middleware/core/types.h",
         "include/middleware/rpc/ProxyFireAndForgetMethod.h",
         "include/middleware/rpc/ProxyMethod.h",
@@ -117,6 +123,7 @@ filegroup(
         "src/middleware/core/LoggerApi.cpp",
         "src/middleware/core/MessagePayloadBuilder.cpp",
         "src/middleware/core/MiddlewarePduBase.cpp",
+        "src/middleware/core/PhysicalSignalConversion.cpp",
         "src/middleware/core/ProxyBase.cpp",
         "src/middleware/core/ResponseBufferBase.cpp",
         "src/middleware/core/SkeletonBase.cpp",
@@ -355,6 +362,7 @@ cc_library(
         "test/src/core/ReferenceApp.h",
         "test/src/core/Skeleton.h",
         "test/src/core/mock/ClusterConnectionMock.h",
+        "test/src/core/mock/ModeMock.h",
         "test/src/core/mock/ProxyMock.h",
         "test/src/memory/mock/AllocatorMock.h",
     ],
@@ -388,6 +396,44 @@ cc_library(
 # ------------------------------------------------------------------------------
 # Unit tests
 # ------------------------------------------------------------------------------
+
+cc_test(
+    name = "middleware_signal_codec_test",
+    srcs = ["test/src/core/SignalCodecTest.cpp"],
+    target_compatible_with = unit_test_only(),
+    deps = [
+        ":middleware",
+        ":middleware_test_support",
+        "//libs/3rdparty/googletest:gtest_main",
+    ],
+)
+
+cc_test(
+    name = "middleware_physical_signal_conversion_test",
+    srcs = ["test/src/core/PhysicalSignalConversionTest.cpp"],
+    target_compatible_with = unit_test_only(),
+    deps = [
+        ":middleware",
+        ":middleware_test_support",
+        "//libs/3rdparty/googletest:gtest_main",
+    ],
+)
+
+cc_test(
+    name = "middleware_transmission_test",
+    srcs = [
+        "test/src/core/TimerTest.cpp",
+        "test/src/core/TransmissionModeManagerTest.cpp",
+        "test/src/core/TransmissionModeTest.cpp",
+        "test/src/core/TransmissionTest.cpp",
+    ],
+    target_compatible_with = unit_test_only(),
+    deps = [
+        ":middleware",
+        ":middleware_test_support",
+        "//libs/3rdparty/googletest:gtest_main",
+    ],
+)
 
 cc_test(
     name = "middleware_proxy_skeleton_base_test",

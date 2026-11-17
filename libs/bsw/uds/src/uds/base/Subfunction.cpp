@@ -40,7 +40,8 @@ DiagReturnCode::Type Subfunction::verify(uint8_t const* const request, uint16_t 
     {
         return DiagReturnCode::ISO_INVALID_FORMAT;
     }
-    if (request[0] != getImplementedRequest()[1])
+    ::etl::span<uint8_t const> const requestView(request, requestLength);
+    if (requestView[0U] != getImplementedRequestView()[1U])
     {
         return DiagReturnCode::NOT_RESPONSIBLE;
     }

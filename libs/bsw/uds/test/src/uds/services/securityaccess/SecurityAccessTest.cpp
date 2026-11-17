@@ -31,6 +31,9 @@ public:
     void setCurrentEcuId(uint16_t ecuId) { SecurityAccess::fCurrentEcuId = ecuId; }
 
     void setAuthenticatedEcu(uint16_t ecuId) { SecurityAccess::fAuthenticatedEcu = ecuId; }
+
+    using SecurityAccess::fSeed;
+    using SecurityAccess::fTesterId;
 };
 
 class SecurityAccessTest : public ::testing::Test
@@ -56,6 +59,17 @@ TEST_F(SecurityAccessTest, constructor)
     EXPECT_EQ(
         transport::TransportConfiguration::INVALID_DIAG_ADDRESS, fSecurityAccess.getCurrentEcuId());
     EXPECT_EQ(0, fSecurityAccess.getSecurityAccessType());
+}
+
+/**
+ * The fixed-size seed and tester ID buffers retain their sizes and zero initialization.
+ */
+TEST_F(SecurityAccessTest, SeedAndTesterIdBuffersAreZeroInitialized)
+{
+    EXPECT_EQ(8U, fSecurityAccess.fSeed.size());
+    EXPECT_EQ(4U, fSecurityAccess.fTesterId.size());
+    EXPECT_EQ((::etl::array<uint8_t, 8U>{}), fSecurityAccess.fSeed);
+    EXPECT_EQ((::etl::array<uint8_t, 4U>{}), fSecurityAccess.fTesterId);
 }
 
 /**

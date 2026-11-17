@@ -21,7 +21,7 @@ The script will generate all configured file types:
 - Cluster ID (cluster_id.h)
 - Cluster connections (cluster_*.h/cpp)
 - Services (service_*.h/cpp)
-- PDU data types and configured readers (pdu_*.h/cpp)
+- PDU data types and configured readers and writers (pdu_*.h/cpp)
 - With --flync, SOME/IP codecs per service (<Service>Codecs.h)
 
 Arguments:
@@ -62,6 +62,10 @@ import yaml
 from jinja2 import Environment, FileSystemLoader
 from jsonschema import validate, ValidationError
 
+from filters import register_filters
+from loaders import check_connections, check_type_modules
+from model_enricher import enrich_model
+
 _SCRIPT_DIR = Path(os.path.dirname(os.path.abspath(__file__)))
 
 
@@ -87,13 +91,28 @@ class _DotDict(dict):
     def __setattr__(self, name, value):
         self[name] = value
 
+    # Identity hash so Jinja's `unique` filter can de-duplicate model objects.
+    def __hash__(self):
+        return id(self)
 
-def _to_dot_dict(obj):
-    """Recursively convert dicts to _DotDict so Jinja dot-notation works."""
+
+def _to_dot_dict(obj, _memo=None):
+    """Recursively convert dicts to _DotDict so Jinja dot-notation works.
+
+    YAML anchors/aliases stay shared objects, so a cluster referenced from
+    several places is one object.
+    """
+    memo = {} if _memo is None else _memo
+    if id(obj) in memo:
+        return memo[id(obj)]
     if isinstance(obj, dict):
-        return _DotDict({k: _to_dot_dict(v) for k, v in obj.items()})
+        result = memo[id(obj)] = _DotDict()
+        result.update({k: _to_dot_dict(v, memo) for k, v in obj.items()})
+        return result
     if isinstance(obj, list):
-        return [_to_dot_dict(item) for item in obj]
+        result = memo[id(obj)] = []
+        result.extend(_to_dot_dict(item, memo) for item in obj)
+        return result
     return obj
 
 
@@ -143,7 +162,7 @@ def load_input_data(input_base: Path, deployment_yaml: Path | None = None) -> di
             f"✓ Loaded deployment data: {_safe_len(getattr(data, 'services', []))} services, "
             f"{_safe_len(getattr(data, 'clusters', []))} clusters, "
             f"{_safe_len(getattr(data, 'connections', []))} connections, "
-            f"{_safe_len(getattr(data, 'allocators', []))} allocators, "
+            f"{_safe_len(getattr(data, 'allocators', None))} allocators, "
             f"{_safe_len(getattr(data, 'pdus', []))} pdus"
         )
         return data
@@ -291,6 +310,7 @@ def render_template_with_context(
         lstrip_blocks=True,
         keep_trailing_newline=True,
     )
+    register_filters(env)
 
     # Set the context as globals
     for key, value in context.items():
@@ -335,17 +355,10 @@ TEMPLATE_CONFIG = {
     "per_cluster": [
         (
             "service/cluster_srcCluster.h.jinja",
-            "Cluster{}.h",
+            "{}Cluster.h",
             "include/generated_code/middleware",
         ),
-        ("service/cluster_srcCluster.cpp.jinja", "Cluster{}.cpp", "src/generated_code"),
-    ],
-    "per_connection": [
-        (
-            "cluster_connections_srcCluster_to_tgtCluster.h.jinja",
-            "ClusterConnections{}{}.h",
-            "include/generated_code/middleware",
-        ),
+        ("service/cluster_srcCluster.cpp.jinja", "{}Cluster.cpp", "src/generated_code"),
     ],
     "per_service": [
         ("service/common.h.jinja", "{}Common.h", "include/generated_code/{}"),
@@ -365,6 +378,9 @@ TEMPLATE_CONFIG = {
         ("service/proxy.cpp.jinja", "{}Proxy.cpp", "src/generated_code/{}"),
         ("service/skeleton.cpp.jinja", "{}Skeleton.cpp", "src/generated_code/{}"),
     ],
+    "per_type_module": [
+        ("datatypes.h.jinja", "{}", "include/generated_code"),
+    ],
     "per_pdu": [
         ("signal/pdu_common.h.jinja", "{}Common.h", "include/generated_code/{}"),
         ("signal/pdu_reader.h.jinja", "{}Reader.h", "include/generated_code/{}"),
@@ -374,6 +390,8 @@ TEMPLATE_CONFIG = {
             "include/generated_code/{}",
         ),
         ("signal/pdu_reader.cpp.jinja", "{}Reader.cpp", "src/generated_code/{}"),
+        ("signal/pdu_writer.h.jinja", "{}Writer.h", "include/generated_code/{}"),
+        ("signal/pdu_writer.cpp.jinja", "{}Writer.cpp", "src/generated_code/{}"),
     ],
 }
 
@@ -437,15 +455,46 @@ def _has_mock_mode_service(input_data) -> bool:
     )
 
 
+def _check_allocators(data) -> list[str]:
+    """Check allocator names, the single default and the services' allocator references."""
+    allocators = getattr(data, "allocators", [])
+    errors: list[str] = []
+    names = [a.name for a in allocators]
+    if len({n.lower() for n in names}) != len(names):
+        errors.append("allocators: names must be unique (case-insensitive)")
+    defaults = [a.name for a in allocators if a.get("default")]
+    if len(defaults) != 1:
+        errors.append(
+            f"allocators: exactly one allocator must set default: true, found {len(defaults)}"
+        )
+    for service in getattr(data, "services", []):
+        ref = service.deployment.get("MemoryAllocator")
+        if ref is not None and ref not in names:
+            errors.append(f"service {service.name}: unknown MemoryAllocator '{ref}'")
+    return errors
+
+
+def _resolve_memory_allocators(data) -> None:
+    """Turn each service's MemoryAllocator name into an object with a ``name`` attribute."""
+    for service in getattr(data, "services", []):
+        ref = service.deployment.get("MemoryAllocator")
+        if ref is not None:
+            service.deployment["MemoryAllocator"] = _DotDict(name=ref)
+
+
 def build_context(input_data: dict, **additional) -> dict:
     """Build the standard template context with optional additional variables."""
+    pdus = getattr(input_data, "pdus", [])
     context = {
         "clusters": input_data.clusters,
         "services": input_data.services,
         "connections": input_data.connections,
         "cores": getattr(input_data, "cores", []),
         "allocators": getattr(input_data, "allocators", []),
-        "pdus": getattr(input_data, "pdus", []),
+        "pdus": pdus,
+        "has_pdu_ids": any("pdu_id" in pdu for pdu in pdus),
+        "outbound_pdu_queue_size": getattr(input_data, "outbound_pdu_queue_size", None),
+        "typeModules": getattr(input_data, "typeModules", None) or [],
     }
     context.update(additional)
     return context
@@ -475,6 +524,10 @@ def generate_files(
             context[item_key] = item
             if hasattr(item, "name"):
                 print(f"  Processing {item_key}: {item.name}")
+        if template_type == "per_service":
+            context["mock"] = _service_generation_mode(item) == "mock"
+        if template_type == "per_type_module":
+            context["typeIncludes"] = item.get("includes") or []
 
         for template_name, output_pattern, output_dir_pattern in mappings:
             resolved_template_name = template_name
@@ -508,6 +561,10 @@ def generate_files(
             if template_type == "per_pdu" and (
                 not getattr(item, "namespace", None)
                 or not getattr(getattr(item, "headers", None), "common", None)
+                or (
+                    template_name.startswith("signal/pdu_writer.")
+                    and not getattr(getattr(item, "headers", None), "writer", None)
+                )
             ):
                 continue
             template_path = template_base / resolved_template_name
@@ -524,8 +581,8 @@ def generate_files(
                 output_filename = output_pattern.format(item.name)
                 output_dir = output_base / output_dir_pattern
             elif template_type == "per_connection":
-                src_name = item.source_cluster.name
-                tgt_name = item.target_cluster.name
+                src_name = item.sourceCluster.name
+                tgt_name = item.targetCluster.name
                 output_filename = output_pattern.format(src_name, tgt_name)
                 output_dir = output_base / output_dir_pattern
             elif template_type == "per_service":
@@ -537,6 +594,9 @@ def generate_files(
                 )
                 output_filename = output_pattern.format(service_name)
                 output_dir = output_base / output_dir_pattern.format(namespace_path)
+            elif template_type == "per_type_module":
+                output_filename = output_pattern.format(item.header)
+                output_dir = output_base / output_dir_pattern
             elif template_type == "per_pdu":
                 namespace_path = (
                     item.namespace.replace("::", "/").lower()
@@ -598,6 +658,10 @@ def _resolve_output_paths(input_data) -> list[str]:
             if template_type == "per_pdu" and (
                 not getattr(item, "namespace", None)
                 or not getattr(getattr(item, "headers", None), "common", None)
+                or (
+                    template_name.startswith("signal/pdu_writer.")
+                    and not getattr(getattr(item, "headers", None), "writer", None)
+                )
             ):
                 continue
 
@@ -609,7 +673,7 @@ def _resolve_output_paths(input_data) -> list[str]:
                 output_dir = output_dir_pattern
             elif template_type == "per_connection":
                 output_filename = output_pattern.format(
-                    item.source_cluster.name, item.target_cluster.name
+                    item.sourceCluster.name, item.targetCluster.name
                 )
                 output_dir = output_dir_pattern
             elif template_type == "per_service":
@@ -621,6 +685,9 @@ def _resolve_output_paths(input_data) -> list[str]:
                 )
                 output_filename = output_pattern.format(service_name)
                 output_dir = output_dir_pattern.format(namespace_path)
+            elif template_type == "per_type_module":
+                output_filename = output_pattern.format(item.header)
+                output_dir = output_dir_pattern
             elif template_type == "per_pdu":
                 namespace_path = item.namespace.replace("::", "/").lower()
                 output_filename = output_pattern.format(item.name)
@@ -632,8 +699,8 @@ def _resolve_output_paths(input_data) -> list[str]:
     if not has_mock:
         for cluster in getattr(input_data, "clusters", []):
             _emit("per_cluster", cluster)
-        for connection in getattr(input_data, "connections", []):
-            _emit("per_connection", connection)
+    for module in getattr(input_data, "typeModules", None) or []:
+        _emit("per_type_module", module)
     for service in getattr(input_data, "services", []):
         _emit("per_service", service)
     for pdu in getattr(input_data, "pdus", []):
@@ -794,11 +861,37 @@ def main(argv=None) -> int:
         print(f"error: Input directory not found: {input_base}", file=sys.stderr)
         return 1
 
+    def _validate_input_data(input_data) -> bool:
+        """Validate loaded deployment data against schema and allocator constraints."""
+        schema_path = input_base / "templates/schemas/deployment.yaml"
+        if schema_path.exists():
+            validation_errors = validate_data(input_data, schema_path)
+            if validation_errors:
+                print("\nValidation errors:", file=sys.stderr)
+                for error in validation_errors:
+                    print(f"  - {error}", file=sys.stderr)
+                return False
+        else:
+            print(f"Warning: Schema not found at {schema_path}, skipping validation")
+
+        allocator_errors = (
+            _check_allocators(input_data)
+            + check_type_modules(input_data)
+            + check_connections(input_data)
+        )
+        if allocator_errors:
+            print("\nValidation errors:", file=sys.stderr)
+            for error in allocator_errors:
+                print(f"  - {error}", file=sys.stderr)
+            return False
+        return True
+
     # --list-outputs: resolve the output layout from the deployment model and exit
-    # without rendering. Kept additive so it does not affect the generation path.
+    # without rendering. Keep stdout clean (path list only): diagnostics go to stderr.
     if args.list_outputs:
         try:
             # Keep stdout clean (path list only); loader diagnostics go to stderr.
+            deployment_yaml = args.deployment_yaml.resolve()
             _saved_stdout = sys.stdout
             sys.stdout = sys.stderr
             try:
@@ -815,8 +908,16 @@ def main(argv=None) -> int:
         for pdu in getattr(input_data, "pdus", []):
             if not hasattr(pdu, "generation_mode") or not pdu.generation_mode:
                 pdu["generation_mode"] = args.generation_mode
-        codec_paths = [_codec_output_path(service) for service in CODEC_SERVICES]
-        for path in sorted(_resolve_output_paths(input_data) + codec_paths):
+
+        _saved_stdout = sys.stdout
+        sys.stdout = sys.stderr
+        try:
+            if not _validate_input_data(input_data):
+                return 1
+        finally:
+            sys.stdout = _saved_stdout
+
+        for path in sorted(_resolve_output_paths(input_data)):
             print(path)
         return 0
 
@@ -847,17 +948,11 @@ def main(argv=None) -> int:
         if not hasattr(pdu, "generation_mode") or not pdu.generation_mode:
             pdu["generation_mode"] = args.generation_mode
 
-    # Validate the input data against schema
-    schema_path = input_base / "templates/schemas/deployment.yaml"
-    if schema_path.exists():
-        validation_errors = validate_data(input_data, schema_path)
-        if validation_errors:
-            print("\nValidation errors:", file=sys.stderr)
-            for error in validation_errors:
-                print(f"  - {error}", file=sys.stderr)
-            return 1
-    else:
-        print(f"Warning: Schema not found at {schema_path}, skipping validation")
+    if not _validate_input_data(input_data):
+        return 1
+    _resolve_memory_allocators(input_data)
+
+    enrich_model(input_data)
 
     # Generate all file types using the unified clusters.yaml data
     try:
@@ -881,14 +976,14 @@ def main(argv=None) -> int:
                 items=input_data.clusters,
                 item_key="cluster",
             )
-            generate_files(
-                "per_connection",
-                input_data,
-                input_base,
-                output_base,
-                items=input_data.connections,
-                item_key="connection",
-            )
+        generate_files(
+            "per_type_module",
+            input_data,
+            input_base,
+            output_base,
+            items=getattr(input_data, "typeModules", None) or [],
+            item_key="typeModule",
+        )
         generate_files(
             "per_service",
             input_data,

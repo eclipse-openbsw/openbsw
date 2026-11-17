@@ -33,6 +33,7 @@ public:
     void connectionClosed(ErrorCode status) override;
 
 private:
+    // NOLINTNEXTLINE(cppcoreguidelines-use-default-member-init): OpenBSW constructor rule.
     bool _locked;
     AbstractSocket& _socket;
 };

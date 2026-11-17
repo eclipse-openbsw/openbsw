@@ -17,8 +17,9 @@ load("@rules_python//python:py_binary.bzl", "py_binary")
 filegroup(
     name = "generator_templates",
     srcs = [
-        "templates/jinja/cluster_connections_srcCluster_to_tgtCluster.h.jinja",
         "templates/jinja/cluster_id.h.jinja",
+        "templates/jinja/datatypes.h.jinja",
+        "templates/jinja/macros/cluster_connections.jinja",
         "templates/jinja/macros/common.jinja",
         "templates/jinja/macros/signals.jinja",
         "templates/jinja/macros/transmission_mode.jinja",
@@ -45,6 +46,8 @@ filegroup(
         "templates/jinja/signal/pdu_common.h.jinja",
         "templates/jinja/signal/pdu_reader.cpp.jinja",
         "templates/jinja/signal/pdu_reader.h.jinja",
+        "templates/jinja/signal/pdu_writer.cpp.jinja",
+        "templates/jinja/signal/pdu_writer.h.jinja",
         "templates/schemas/deployment.yaml",
     ],
     visibility = ["//visibility:public"],
@@ -52,7 +55,18 @@ filegroup(
 
 py_binary(
     name = "jinja2cpp",
-    srcs = ["jinja2cpp.py"] + glob(["flync2middleware/*.py"]),
+    srcs = [
+        "filters/__init__.py",
+        "filters/camel_case.py",
+        "filters/cpp_type.py",
+        "filters/pascal_case.py",
+        "jinja2cpp.py",
+        "loaders/__init__.py",
+        "loaders/connections_loader.py",
+        "loaders/datatypes_loader.py",
+        "model_enricher.py",
+    ]+ glob(["flync2middleware/*.py"]),
+    imports = ["."],
     legacy_create_init = 0,
     python_version = "3.12.3",
     target_compatible_with = ["@platforms//os:linux"],

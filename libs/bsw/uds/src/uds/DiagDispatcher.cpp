@@ -170,7 +170,9 @@ void sendBusyResponse(
 
     busyMessage.setSourceAddress(configuration.DiagAddress);
     busyMessage.setTargetAddress(message->getSourceId());
-    busyMessage.getPayload()[1] = message->getServiceId();
+    ::etl::span<uint8_t> const payloadView(
+        busyMessage.getPayload(), DiagCodes::NEGATIVE_RESPONSE_MESSAGE_LENGTH);
+    payloadView[1U] = message->getServiceId();
 
     ITransportMessageListener::ReceiveResult const status
         = providingListenerHelper.messageReceived(configuration.DiagBusId, busyMessage, nullptr);
@@ -290,8 +292,7 @@ DiagDispatcher::DiagDispatcher(
 , _outgoingConnectionManager(configuration, *this, fProvidingListenerHelper, *this)
 #endif
 {
-    _busyMessage.init(
-        &_busyMessageBuffer[0], BUSY_MESSAGE_LENGTH + UdsVmsConstants::BUSY_MESSAGE_EXTRA_BYTES);
+    _busyMessage.init(_busyMessageBuffer.data(), _busyMessageBuffer.size());
     _busyMessage.resetValidBytes();
     (void)_busyMessage.append(DiagReturnCode::NEGATIVE_RESPONSE_IDENTIFIER);
     (void)_busyMessage.append(0x00U);

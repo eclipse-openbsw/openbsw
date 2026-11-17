@@ -23,6 +23,8 @@ class IDataSendNotificationListener
 public:
     IDataSendNotificationListener(IDataSendNotificationListener const&)            = delete;
     IDataSendNotificationListener& operator=(IDataSendNotificationListener const&) = delete;
+    IDataSendNotificationListener(IDataSendNotificationListener&&)                 = delete;
+    IDataSendNotificationListener& operator=(IDataSendNotificationListener&&)      = delete;
 
     /**
      * Results that dataSent may return

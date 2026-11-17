@@ -38,7 +38,7 @@ public:
 
     bool init()
     {
-        return Base::init(MwInstanceId::InstanceId_1) == ::middleware::core::HRESULT::Ok;
+        return Base::init(MwInstanceId::Core0ProviderDummy) == ::middleware::core::HRESULT::Ok;
     }
 
     void shutdown() { Base::deInit(); }
