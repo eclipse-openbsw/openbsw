@@ -115,3 +115,42 @@ cores:
     name: C1
     clusters:
       - *cluster1
+
+# Capacity of the queue that notifies the PDU broker about committed PDUs.
+outbound_pdu_queue_size: 4
+
+pdus:
+  # Written by the application. A change of the counter queues the PDU for the PDU broker, which
+  # hands it to the (loopback) bus.
+  - name: demoTxPdu
+    pdu_id: 16
+    size: 4
+    writer_cluster: Cluster0
+    transmission:
+      modeFalse:
+        strategies:
+          - event: {debounce_ms: 0, repetitions: 0, repetition_cycle: 0}
+      modeTrue:
+        strategies: []
+    namespace: org::test::pdu
+    headers:
+      common: org/test/pdu/demoTxPduCommon.h
+      reader: org/test/pdu/demoTxPduReader.h
+      writer: org/test/pdu/demoTxPduWriter.h
+    signals:
+      - name: counter
+        type: uint32_t
+        bit_length: 32
+        trigger_on_change: true
+  # No writer: filled by the PDU broker with the PDUs received from the bus.
+  - name: demoRxPdu
+    pdu_id: 67
+    size: 4
+    namespace: org::test::pdu
+    headers:
+      common: org/test/pdu/demoRxPduCommon.h
+      reader: org/test/pdu/demoRxPduReader.h
+    signals:
+      - name: counter
+        type: uint32_t
+        bit_length: 32

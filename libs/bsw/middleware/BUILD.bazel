@@ -80,6 +80,7 @@ filegroup(
         "include/middleware/core/Future.h",
         "include/middleware/core/IClusterConnection.h",
         "include/middleware/core/IClusterConnectionConfigurationBase.h",
+        "include/middleware/core/IPduTxSink.h",
         "include/middleware/core/IQualifier.h",
         "include/middleware/core/ITimeoutHandler.h",
         "include/middleware/core/InstancesDatabase.h",
@@ -88,6 +89,9 @@ filegroup(
         "include/middleware/core/MessagePayloadBuilder.h",
         "include/middleware/core/MiddlewarePdu.h",
         "include/middleware/core/MiddlewarePduBase.h",
+        "include/middleware/core/PduAccess.h",
+        "include/middleware/core/PduBrokerConnection.h",
+        "include/middleware/core/PduBrokerConnectionBase.h",
         "include/middleware/core/PhysicalSignalConversion.h",
         "include/middleware/core/ProxyAttribute.h",
         "include/middleware/core/ProxyAttributeBase.h",
@@ -123,6 +127,7 @@ filegroup(
         "src/middleware/core/LoggerApi.cpp",
         "src/middleware/core/MessagePayloadBuilder.cpp",
         "src/middleware/core/MiddlewarePduBase.cpp",
+        "src/middleware/core/PduBrokerConnectionBase.cpp",
         "src/middleware/core/PhysicalSignalConversion.cpp",
         "src/middleware/core/ProxyBase.cpp",
         "src/middleware/core/ResponseBufferBase.cpp",
@@ -363,6 +368,9 @@ cc_library(
         "test/src/core/Skeleton.h",
         "test/src/core/mock/ClusterConnectionMock.h",
         "test/src/core/mock/ModeMock.h",
+        "test/src/core/mock/PduIdQueueMock.h",
+        "test/src/core/mock/PduStorageMock.h",
+        "test/src/core/mock/PduTxSinkMock.h",
         "test/src/core/mock/ProxyMock.h",
         "test/src/memory/mock/AllocatorMock.h",
     ],
@@ -518,6 +526,21 @@ cc_test(
     srcs = ["test/src/queue/QueueTest.cpp"],
     target_compatible_with = unit_test_only(),
     deps = [
+        ":middleware_test_support",
+        "//libs/3rdparty/googletest:gtest_main",
+    ],
+)
+
+cc_test(
+    name = "middleware_pdu_broker_test",
+    srcs = [
+        "test/src/core/PduBrokerTest.cpp",
+        "test/src/core/PduSlotAccessTest.cpp",
+    ],
+    target_compatible_with = unit_test_only(),
+    deps = [
+        ":middleware",
+        ":middleware_concurrency_mock",
         ":middleware_test_support",
         "//libs/3rdparty/googletest:gtest_main",
     ],

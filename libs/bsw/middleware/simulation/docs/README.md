@@ -22,6 +22,7 @@
   - [Attribute Broadcasts](#attribute-broadcasts)
   - [Attribute Get](#attribute-get)
   - [FooMethod and Application Polling](#foomethod-and-application-polling)
+  - [PDU Writers and Readers](#pdu-writers-and-readers)
 - [Building](#building)
 
 ---
@@ -33,15 +34,16 @@ between software components on different cores. It uses POSIX shared memory
 (SHM) to implement the inter-core queues so that the simulation can run on any
 Linux host without real embedded hardware.
 
-Two logical cores are simulated:
+Three clusters are simulated on three cores. Cluster2 runs the PDU broker:
 
 | Core  | Role                | Service Role |
 |-------|---------------------|-------------|
-| Cluster0 | Provider / Server   | `FooSkeleton` — provides the `Foo` service |
-| Cluster1 | Consumer / Client   | `FooProxy`   — consumes the `Foo` service  |
+| Cluster0 | Provider / Server   | `FooSkeleton` — provides the `Foo` service; writes PDUs |
+| Cluster1 | Consumer / Client   | `FooProxy`   — consumes the `Foo` service; reads PDUs |
+| Cluster2 | PDU broker          | `PduBrokerConnection` — transmits the PDUs the writers committed to a simulated bus and stores PDUs received from it |
 
 At startup a shared memory segment is created and the `MemoryLayout` (queues and
-allocator pools) is constructed in it via placement new. Both cores are then
+allocator pools) is constructed in it via placement new. All cores are then
 started either as **threads** (default) or as **OS processes** (compile-time
 option).
 
@@ -68,26 +70,41 @@ graph LR
     subgraph ECU
         subgraph Cluster0[Cluster0 - Provider]
             FooSkeleton
+            PduWriter
         end
 
         subgraph Cluster1[Cluster1 - Consumer]
             FooProxy
+            PduReader
+        end
+
+        subgraph Cluster2[Cluster2 - PDU broker]
+            PduBrokerConnection
         end
 
         Cluster0 -- SHM queue --> Cluster1
         Cluster1 -- SHM queue --> Cluster0
+        PduWriter -- "PDU in SHM + PDU ID queue" --> PduBrokerConnection
+        PduBrokerConnection -- "PDU in SHM (from bus)" --> PduReader
     end
+
+    PduBrokerConnection <--> Bus["simulated bus"]
 ```
 
 The deployment model (`model/deployment-test.yaml`) describes:
 
-- **Two clusters**: `Cluster0` (id 0) and `Cluster1` (id 1).
+- **Three clusters**: `Cluster0` (id 0), `Cluster1` (id 1) and `Cluster2` (id 2). Cluster2
+  has no service connections; it only runs the PDU broker.
 - **One service**: `Foo` (namespace `org::test::foo`, id 1) with a
   read/write attribute `FooDefault` of type `FooStruct { uint32_t fooValue }`
   and method `FooMethod(uint32_t)` returning `FooMethodResult`, an `etl::array<uint32_t, 4>`.
 - **Two connections**:
   - `Cluster0 -> Cluster1` skeleton-only: Cluster0 provides `FooSkeleton`.
   - `Cluster1 -> Cluster0` proxy-only: Cluster1 consumes `FooProxy`.
+- **Four PDUs** with unique, non-sequential IDs: `samplePduWithCrc` (40) and
+  `samplePduWithDatatypes` (10) are written by Cluster0; `samplePduWithCrcFromBus`
+  (30) and `samplePduWithDatatypesFromBus` (20) have no writer and are stored by
+  the broker on Cluster2. `outbound_pdu_queue_size` is 10.
 
 ---
 
@@ -113,6 +130,7 @@ libs/bsw/middleware/simulation/
 |   +-- Logger.cpp
 |   +-- MainCore0.cpp               # Cluster0 entry point (FooSkeleton provider loop)
 |   +-- MainCore1.cpp               # Cluster1 entry point (FooProxy consumer loop)
+|   +-- MainCore2.cpp               # PDU broker entry point (simulated bus driver)
 |   +-- Sample.cpp                  # main(): creates SHM, spawns cores
 |   +-- ShmWrapper.cpp              # SHM open/mmap wrapper
 |   +-- ShmWrapper.h
@@ -120,6 +138,8 @@ libs/bsw/middleware/simulation/
 |   +-- README.md                   # This file
 +-- test/
 |   +-- FooMethodTest.cpp           # FooMethod integration tests (real generated code)
+|   +-- PduAccessTest.cpp           # Tests of the generated PDU table, load/store and PduBroker
+|   +-- MemoryLayout.cpp            # In-process getMemoryLayout() shared by the tests
 +-- BUILD.bazel
 +-- CMakeLists.txt
 +-- generated_outputs.bzl           # Expected generated file lists (Bazel)
@@ -133,11 +153,12 @@ libs/bsw/middleware/simulation/
 main()
   +- ShmWrapper::init()          -- opens / creates the POSIX SHM segment
   +- createMemoryLayout()        -- placement-new of queues + pools in SHM
-  +- [thread|fork] Cluster0         -- run_main_cluster0()
-  +- [thread|fork] Cluster1         -- run_main_cluster1()
+  +- [thread|fork] Cluster0         -- run_main_core0()
+  +- [thread|fork] Cluster1         -- run_main_core1()
+  +- [thread|fork] Cluster2         -- run_main_core2()
 ```
 
-**Cluster0 startup** (`run_main_cluster0`):
+**Cluster0 startup** (`run_main_core0`):
 
 1. `middleware::initializeCluster0ClusterConnection()` — wires the Cluster0-side
    cluster to its SHM queues.
@@ -146,7 +167,7 @@ main()
 3. Main loop: calls `sendBroadcast()` every 5 s, processes incoming messages,
    logs stats every 15 s, exits after 60 s.
 
-**Cluster1 startup** (`run_main_cluster1`):
+**Cluster1 startup** (`run_main_core1`):
 
 1. `middleware::initializeCluster1ClusterConnection()` — wires Cluster1 to its SHM
    queues.
@@ -155,6 +176,18 @@ main()
 3. Main loop: calls `requestGet()` and `requestFooMethod()` every 6 s, processes
    incoming messages, calls `pollFooMethod()` after each processing step, logs stats
    every 15 s, exits after 60 s.
+
+**Cluster2 startup** (`run_main_core2`):
+
+1. `middleware::initializeCluster2ClusterConnection()` — wires Cluster2 to its SHM
+   queue.
+2. A `PduBrokerConnection` is created from the generated PDU access table and
+   the PDU id queue, with `SimPduTxSink` standing in for the bus driver.
+3. Main loop: processes incoming messages; every 5 s it stores two PDUs received from the bus
+   (`samplePduWithCrcFromBus` and `samplePduWithDatatypesFromBus`, which have no
+   writer and the signals of the PDUs that Cluster0 writes), transmits the PDUs
+   the writers committed in commit order, logs the PDU id queue stats and the number of discarded unknown IDs every 15 s
+   and exits after 60 s. Cluster1 reads all PDUs, including the two from the bus.
 
 ---
 
@@ -230,7 +263,7 @@ adapter in this simulation. All wrapper operations and middleware dispatch run
 on the consumer's thread/process.
 
 | Poll state | Meaning |
-|------------|---------|
+| ------------ | --------- |
 | `Invalid` | Idle: no outstanding call or unconsumed result. |
 | `Pending` | Request is outstanding; polling does not consume it. |
 | `Ready` | `value` contains the four result elements; this poll consumes them. |
@@ -257,6 +290,38 @@ The consumer sends a new start value every 6 seconds and logs every element:
 The input (4 bytes) and output (16 bytes) fit in the existing inline message
 payload. No allocator or queue-size increase is necessary.
 
+### PDU Writers and Readers
+
+**Writer** (Cluster0, `samplePduWithCrcWriter`, `samplePduWithDatatypesWriter`):
+`writeX(...)` stages a single signal and `write(...)` stages all of them. Nothing
+reaches shared memory before `commit()`. `commit()` only stores the PDU; the
+`transmission` strategies of the writer put its ID in the PDU id queue on a
+Cluster0 tick. A PDU can only have one writer.
+
+**Broker** (Cluster2): `processTransmissions()` drains the PDU id queue in commit
+order, takes a snapshot of each PDU and hands it to the bus. Each ID leaves the
+queue as soon as its PDU is handed over. In the other direction,
+`onReceive(id, payload)` stores a PDU received from the bus. It returns `false`
+for an unknown ID or a payload of the wrong size.
+
+**Reader** (Cluster1): `read()` takes a consistent snapshot and returns the
+decoded signals. The reader of `samplePduWithCrc` is given a `Qualifier`, whose
+`qualify()` is called for every snapshot before the signals are decoded. The
+application checks the result and logs `CRC invalid` if it is not `Ok`. The
+datatypes reader passes `nullptr`, as that PDU has no CRC.
+
+```
+Cluster0 writer.write...(), writer.commit()
+         |
+         v   PDU in SHM + ID in the PDU id queue
+Cluster2 PduBroker::processTransmissions()  -> bus Tx
+
+Cluster2 PduBroker::onReceive(id, payload)  <- bus Rx
+         |
+         v   PDU in SHM
+Cluster1 reader.read()  -> qualify() -> signals
+```
+
 ---
 
 ## Building
@@ -282,7 +347,7 @@ cmake --build build/middleware-sim --target middlewareSimulation
 
 ### Process-based execution
 
-By default the two cores run as **threads** inside a single process.  To run
+By default the three cores run as **threads** inside a single process.  To run
 each core in its own OS **process** (true process isolation via `fork`):
 
 ```bash
@@ -322,13 +387,18 @@ values and overflow, polling states, busy handling, response storage lifetime,
 send failures, response errors, timeout/late responses and deinitialization.
 They do not require a running referenceApp or real-time sleeps.
 
+The PduAccess tests run the PDU code generated from the same deployment: the
+table is sorted by ID, `store` rejects payloads of the wrong size, `load` and
+`store` round-trip, the broker rejects unknown IDs and transmits committed PDUs
+in commit order through the real PDU id queue.
+
 ```bash
 cmake --preset tests-posix-debug -B build/middleware-tests
 cmake --build build/middleware-tests \
   --target middlewareSimulationFooMethodTest middlewareRequestResponseTest \
            middlewareClusterConnectionTest
 ctest --test-dir build/middleware-tests/libs/bsw/middleware/test -C Debug \
-  -R 'FooMethodTest|ProxyMethod|ProxyFireAndForget|ResponseBuffer|ConfigurationBaseTest|ConnectionBaseTest' \
+  -R 'FooMethodTest|PduAccessTest|ProxyMethod|ProxyFireAndForget|ResponseBuffer|ConfigurationBaseTest|ConnectionBaseTest' \
   --output-on-failure
 ```
 

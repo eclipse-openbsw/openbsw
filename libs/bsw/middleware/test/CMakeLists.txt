@@ -80,6 +80,9 @@ add_middleware_unit_test(
     src/core/TransmissionModeManagerTest.cpp
     src/core/TransmissionModeTest.cpp
     src/core/TransmissionTest.cpp)
+add_middleware_unit_test(middlewarePduBrokerTest src/core/PduBrokerTest.cpp
+                         src/core/PduSlotAccessTest.cpp)
+target_link_libraries(middlewarePduBrokerTest PRIVATE middlewareConcurrencyMock)
 
 add_middleware_unit_test(
     middlewareMemoryPoolManagementTest src/memory/AggregatorTest.cpp

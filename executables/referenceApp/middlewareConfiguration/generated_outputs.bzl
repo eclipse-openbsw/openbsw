@@ -46,4 +46,12 @@ GENERATED_OUTPUTS = [
     "src/generated_code/org/test/foo/FooCommon.cpp",
     "src/generated_code/org/test/foo/FooProxy.cpp",
     "src/generated_code/org/test/foo/FooSkeleton.cpp",
+    "include/generated_code/org/test/pdu/demoRxPduCommon.h",
+    "include/generated_code/org/test/pdu/demoRxPduReader.h",
+    "include/generated_code/org/test/pdu/demoTxPduCommon.h",
+    "include/generated_code/org/test/pdu/demoTxPduReader.h",
+    "include/generated_code/org/test/pdu/demoTxPduWriter.h",
+    "src/generated_code/org/test/pdu/demoRxPduReader.cpp",
+    "src/generated_code/org/test/pdu/demoTxPduReader.cpp",
+    "src/generated_code/org/test/pdu/demoTxPduWriter.cpp",
 ]
