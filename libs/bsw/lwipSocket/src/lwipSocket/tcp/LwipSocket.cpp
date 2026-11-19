@@ -171,6 +171,12 @@ err_t LwipSocket::sendPendingData(tcp_pcb* const pcb)
     err_t result = tcp_write(pcb, fPendingTcpData.data(), static_cast<uint16_t>(bytesToWrite), 1);
     if (result == ERR_OK)
     {
+        // Flush immediately: tcp_write() only queues data in lwIP's send buffer.
+        // Without tcp_output(), the data stays queued until the next TCP timer event,
+        // which can be hundreds of milliseconds later — causing DoIP routing activation
+        // responses (and all other TCP replies) to never reach the client in time.
+        (void)tcp_output(pcb);
+        
         if (sendAll)
         {
             fPendingTcpData = {};
