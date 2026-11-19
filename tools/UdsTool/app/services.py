@@ -73,10 +73,6 @@ def routine(client, id, type, data=None):
     req = uds.RoutineControl.make_request(id, type, data)
     response = client.send_request(req)
 
-    if response.get_payload()[4] != 0:
-        payload = binascii.hexlify(response.get_payload()).decode("ascii")
-        raise helper.RoutineFailedException(f"Routine {hex(id)} failed: {payload}")
-
     return helper.handleResponse(response)
 
 
@@ -127,9 +123,77 @@ def transferExit(client):
     return helper.handleResponse(response)
 
 
-def ecuReset(client, data):
-    data = int(data)
+def ecuReset(client, reset_type):
+    data = int(reset_type, 16)
     req = uds.ECUReset.make_request(data)
+    response = client.send_request(req)
+
+    return helper.handleResponse(response)
+
+
+def clearDiagnosticInformation(client, group_of_dtc='ffffff'):
+    group_of_dtc = int(group_of_dtc, 16)
+    req = uds.ClearDiagnosticInformation.make_request(group_of_dtc)
+    response = client.send_request(req)
+
+    return helper.handleResponse(response)
+
+
+def readDtcInformation(
+    client, subfunction, status_mask=None, severity_mask=None, dtc=None,
+    snapshot_record_number=None
+):
+    subfunction = int(subfunction, 16)
+    if status_mask is not None:
+        status_mask = int(status_mask, 16)
+    if severity_mask is not None:
+        severity_mask = int(severity_mask, 16)
+    if dtc is not None:
+        dtc = int(dtc, 16)
+    if snapshot_record_number is not None:
+        snapshot_record_number = int(snapshot_record_number, 16)
+
+    req = uds.ReadDTCInformation.make_request(
+        subfunction, status_mask=status_mask, severity_mask=severity_mask,
+        dtc=dtc, snapshot_record_number=snapshot_record_number
+    )
+    response = client.send_request(req)
+
+    return helper.handleResponse(response)
+
+
+def communicationControl(client, control_type, communication_type, node_id=None):
+    control_type = int(control_type, 16)
+    communication_type = int(communication_type, 16)
+    if node_id is not None:
+        node_id = int(node_id, 16)
+
+    req = uds.CommunicationControl.make_request(control_type, communication_type, node_id)
+    response = client.send_request(req)
+
+    return helper.handleResponse(response)
+
+
+def testerPresent(client, subfunction="00"):
+    subfunction = int(subfunction, 16)
+    if not 0 <= subfunction <= 0xFF:
+        raise ValueError("TesterPresent subfunction must be a single byte")
+
+    req = uds.TesterPresent.make_request()
+    req.subfunction = subfunction & 0x7F
+    req.suppress_positive_response = bool(subfunction & 0x80)
+    response = client.send_request(req)
+
+    if response is not None:
+        return helper.handleResponse(response)
+
+
+def controlDtcSetting(client, setting_type, data=None):
+    setting_type = int(setting_type, 16)
+    if data is not None:
+        data = binascii.unhexlify(data)
+
+    req = uds.ControlDTCSetting.make_request(setting_type, data)
     response = client.send_request(req)
 
     return helper.handleResponse(response)

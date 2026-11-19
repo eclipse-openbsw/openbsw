@@ -56,6 +56,16 @@ Services Supported
       - ``0x36``
     * - Transfer Exit
       - ``0x37``
+    * - Clear Diagnostic Information
+      - ``0x14``
+    * - Read DTC Information
+      - ``0x19``
+    * - Communication Control
+      - ``0x28``
+    * - Tester Present
+      - ``0x3E``
+    * - Control DTC Setting
+      - ``0x85``
 
 All these services can be requested using the ``raw`` command. For example :
   ``udstool raw --eth --host [Host IP] --ecu [ECU logical address] --source [Client logical address] --data [UDS payload ex:22cf01]``

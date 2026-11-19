@@ -29,6 +29,7 @@ def createEthConnection(host, ecu, source, doip):
 
         # Create a DoIPClientUDSConnector instance
         udsConnector = DoIPClientUDSConnector(doipClient)
+        udsConnector.open()
 
         # Create a Client instance
         client = Client(udsConnector)
