@@ -228,3 +228,96 @@ TEST_F(ManagedIncomingDiagConnectionTest, sendPositiveResponse)
     fpIncomingDiagConnection->sendPositiveResponse(sender);
     fContext.execute();
 }
+
+namespace
+{
+// Job whose responseSent() deliberately does not terminate the connection (multi-response use
+// case).
+struct NonTerminatingJob : public DiagJobMock
+{
+    using DiagJobMock::DiagJobMock;
+
+    MOCK_METHOD(
+        void,
+        responseSent,
+        (IncomingDiagConnection&, AbstractDiagJob::ResponseSendResult),
+        (override));
+};
+
+uint8_t const NON_TERMINATING_JOB_REQUEST[] = {SERVICE_ID};
+} // namespace
+
+/**
+ * @test
+ * A termination requested while a response is in flight must not be executed behind the back of
+ * a responseSent() implementation that keeps the connection open: the sender is the last to
+ * touch the connection on that path.
+ */
+TEST_F(ManagedIncomingDiagConnectionTest, responseSentWithoutTerminateKeepsConnectionOpen)
+{
+    TransportMessageWithBuffer pRequest(1024);
+    TransportMessageWithBuffer pResponse(1024);
+    fpIncomingDiagConnection->sourceAddress         = TESTER_ID;
+    fpIncomingDiagConnection->targetAddress         = DIAGNOSIS_ID;
+    fpIncomingDiagConnection->responseSourceAddress = DIAGNOSIS_ID;
+    fpIncomingDiagConnection->serviceId             = SERVICE_ID;
+    fpIncomingDiagConnection->requestMessage        = pRequest.get();
+    fpIncomingDiagConnection->open(false);
+    fpIncomingDiagConnection->addIdentifier();
+    fpIncomingDiagConnection->releaseRequestGetResponse().appendUint8(1);
+    fpIncomingDiagConnection->responseMessage = pResponse.get();
+
+    NonTerminatingJob sender(NON_TERMINATING_JOB_REQUEST, sizeof(NON_TERMINATING_JOB_REQUEST), 0);
+    EXPECT_CALL(*fpSessionProvider, responseSent(_, _, _, _)).Times(1);
+    EXPECT_CALL(*fpTpLayerMock, send(_, Eq(fpIncomingDiagConnection)))
+        .WillOnce(Return(AbstractTransportLayer::ErrorCode::TP_OK));
+    ASSERT_EQ(ErrorCode::OK, fpIncomingDiagConnection->sendPositiveResponse(sender));
+    fContext.execute();
+
+    // response is in flight: termination can only be deferred
+    fpIncomingDiagConnection->terminate();
+    EXPECT_TRUE(fpIncomingDiagConnection->isOpen);
+
+    EXPECT_CALL(
+        sender, responseSent(Ref(*fpIncomingDiagConnection), AbstractDiagJob::RESPONSE_SENT))
+        .Times(1);
+    fpIncomingDiagConnection->transportMessageProcessed(
+        *pResponse.get(), ITransportMessageProcessedListener::ProcessingResult::PROCESSED_NO_ERROR);
+    fContext.execute();
+
+    EXPECT_TRUE(fpIncomingDiagConnection->isOpen);
+}
+
+/**
+ * @test
+ * Same as above, but for a response that fails to be sent: responseSent(RESPONSE_SEND_FAILED)
+ * is the last access to the connection.
+ */
+TEST_F(ManagedIncomingDiagConnectionTest, sendFailureWithoutTerminateKeepsConnectionOpen)
+{
+    TransportMessageWithBuffer pRequest(1024);
+    TransportMessageWithBuffer pResponse(1024);
+    fpIncomingDiagConnection->sourceAddress         = TESTER_ID;
+    fpIncomingDiagConnection->targetAddress         = DIAGNOSIS_ID;
+    fpIncomingDiagConnection->responseSourceAddress = DIAGNOSIS_ID;
+    fpIncomingDiagConnection->serviceId             = SERVICE_ID;
+    fpIncomingDiagConnection->requestMessage        = pRequest.get();
+    fpIncomingDiagConnection->open(false);
+    fpIncomingDiagConnection->addIdentifier();
+    fpIncomingDiagConnection->releaseRequestGetResponse().appendUint8(1);
+    fpIncomingDiagConnection->responseMessage = pResponse.get();
+
+    NonTerminatingJob sender(NON_TERMINATING_JOB_REQUEST, sizeof(NON_TERMINATING_JOB_REQUEST), 0);
+    EXPECT_CALL(*fpSessionProvider, responseSent(_, _, _, _)).Times(1);
+    EXPECT_CALL(*fpTpLayerMock, send(_, Eq(fpIncomingDiagConnection)))
+        .WillOnce(Return(AbstractTransportLayer::ErrorCode::TP_GENERAL_ERROR));
+    EXPECT_CALL(
+        sender, responseSent(Ref(*fpIncomingDiagConnection), AbstractDiagJob::RESPONSE_SEND_FAILED))
+        .Times(1);
+    ASSERT_EQ(ErrorCode::OK, fpIncomingDiagConnection->sendPositiveResponse(sender));
+    // termination is requested before the send is attempted
+    fpIncomingDiagConnection->terminate();
+    fContext.execute();
+
+    EXPECT_TRUE(fpIncomingDiagConnection->isOpen);
+}
