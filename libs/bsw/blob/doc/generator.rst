@@ -23,11 +23,11 @@ create a venv:
 .. code-block:: console
 
     python3 -m venv tools/.venv
-    tools/.venv/bin/pip install -r tools/blob/requirements.txt
+    tools/.venv/bin/pip install -r tools/blob/requirements.lock
     # Activate before running any blob command:
     source tools/.venv/bin/activate
 
-The currently required package is ``crc==7.1.0`` (see ``tools/blob/requirements.txt``).
+The currently required package is ``crc==7.1.0`` (see ``tools/blob/requirements.lock``).
 
 Input format
 ------------
@@ -110,64 +110,85 @@ the routing graph, and generate a C++ header containing the routing channel IDs.
 Regenerating generated headers
 ------------------------------
 
-The script ``tools/blob/regenerate.sh`` regenerates all three generated headers.
-It accepts positional arguments so it can be reused by any project that vendors
-this repository:
+Routing headers can be generated in the following ways:
+
+* Bazel provides the ``generate_routing`` rule in ``tools/blob/routing.bzl``
+    for hermetic, graph-tracked generation.
+* The reference application's CMake build generates headers automatically in its build directory.
+* CMake and Bazel unit-test builds generate headers from their test JSONL
+    inputs.
+
+To generate headers with Bazel, build the target that owns the ``.jsonl`` input.
+From the repository root:
 
 .. code-block:: console
 
-    tools/blob/regenerate.sh JSONL_FILE OUT_BLOB_DIR OUT_ROUTING_DIR
+    # Reference app headers
+    bazel build --platforms=//bazel/platform:posix \
+        //executables/referenceApp/configuration:routing_configuration_generated
 
-Run it from the **project root** with paths for the integrating project:
+    # Unit-test headers
+    bazel build --platforms=//bazel/platform:posix_unit_test \
+        //libs/bsw/blob:generated_routing_headers \
+        //libs/bsw/routing:generated_routing_headers
 
-.. code-block:: console
-
-    tools/blob/regenerate.sh \
-        path/to/routing.jsonl \
-        path/to/generated/blob/include \
-        path/to/generated/routing/include
-
-.. code-block:: console
-
-    # On a host machine — set up a venv first (once):
-    python3 -m venv tools/.venv
-    tools/.venv/bin/pip install -r tools/blob/requirements.txt
-
-    # Then run, pointing PYTHON at the venv interpreter:
-    PYTHON=tools/.venv/bin/python3 tools/blob/regenerate.sh \
-        path/to/routing.jsonl \
-        path/to/generated/blob/include \
-        path/to/generated/routing/include
-
-The script resolves all paths to absolute before changing directory internally,
-so relative paths work as long as they are valid from the directory where you
-invoke the script. It writes:
-
-* ``OUT_BLOB_DIR/configuration.h`` — binary blob as a ``uint8_t`` array
-* ``OUT_BLOB_DIR/ConfigType.h`` — ``ConfigType`` enum
-* ``OUT_ROUTING_DIR/channelId.h`` — per-channel ID constants
-
-After regeneration, review the hand-maintained ``constants.h`` alongside
-``channelId.h`` if any channel IDs changed.
-
-Manual equivalent
-+++++++++++++++++
-
-The script runs these three commands (from the ``tools`` directory, with the venv
-active or the container's ``/opt/venv`` on ``PATH``):
+Example of trigger header generation from CMake without building the whole application,
+configure and build this target from the repository root:
 
 .. code-block:: console
 
-    cd tools
-    JSONL=../path/to/routing.jsonl
-    OUT=../path/to/generated/include
+    cmake --preset posix-threadx
+    cmake --build build/posix-threadx --config Release --target routingConfigurationGenerated
 
-    python3 -m blob binary -i "${JSONL}" -c blob.routing.table \
-        | python3 -m blob header data -n CONFIGURATION_BLOB \
-            -o "${OUT}/blob/configuration.h"
+The CMake target runs the configured ``Python3_EXECUTABLE`` directly and does
+not bootstrap dependencies. Ensure this interpreter can import ``crc``.
+If needed, point CMake to a venv interpreter where ``tools/blob/requirements.lock``
+has been installed:
 
-    python3 -m blob header config-type \
-        -o "${OUT}/blob/ConfigType.h"
+.. code-block:: console
 
-    python3 -m blob.routing header "${JSONL}" \
-        -o "${OUT}/routing/channelId.h"
+    cmake --preset posix-threadx -DPython3_EXECUTABLE=tools/.venv/bin/python3
+
+The generated headers are written under
+``build/posix-threadx/executables/referenceApp/configuration/generated`` and
+are used by the CMake reference application build.
+
+For Bazel unit tests, generated headers are consumed directly from:
+
+* ``//libs/bsw/blob:generated_routing_headers``
+* ``//libs/bsw/routing:generated_routing_headers``
+
+For CMake unit tests, configure and build the blob and routing test targets:
+
+.. code-block:: console
+
+    cmake --preset tests-posix-debug
+    cmake --build build/tests/posix/Debug --target blobTest routingTest
+
+These targets generate their fixture headers under their respective build
+directories. The CMake reference application writes generated headers under
+``build/posix-threadx/executables/referenceApp/configuration/generated``; these
+headers are used by the reference application build.
+
+The following ``BUILD.bazel`` example creates a target that exposes generated
+headers to Bazel C++ consumers:
+
+.. code-block:: python
+
+    load("//tools/blob:routing.bzl", "generate_routing")
+
+    generate_routing(
+        name = "routing_configuration",
+        jsonl = "routing.jsonl",
+    )
+
+The rule provides these generated headers:
+
+* ``blob/configuration.h`` — binary blob as a ``uint8_t`` array
+* ``blob/ConfigType.h`` — ``ConfigType`` enum
+* ``routing/channelId.h`` — per-channel ID constants
+* ``routing/constants.h`` — generated channel-count constants
+
+The Bazel ``generate_routing`` rule and CMake targets invoke the same
+deterministic Python generator, so generation logic is shared rather than
+duplicated.

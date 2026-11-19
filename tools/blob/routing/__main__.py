@@ -17,17 +17,18 @@ from blob import ExitCode
 from blob.routing.utils import routing2pretty, input_table
 from blob.routing.channel import channel_ids
 from collections import defaultdict
-from datetime import datetime as dt
-import sys
-
 
 class Cli:
     to_int = functools.partial(int, base=0)
 
     @staticmethod
     def _create_parser():
-        parser = argparse.ArgumentParser(argument_default=argparse.ArgumentDefaultsHelpFormatter, prog="routing")
-        subparsers = parser.add_subparsers(dest="subcommand", description="(Required)", required=True)
+        parser = argparse.ArgumentParser(
+            argument_default=argparse.ArgumentDefaultsHelpFormatter, prog="routing"
+        )
+        subparsers = parser.add_subparsers(
+            dest="subcommand", description="(Required)", required=True
+        )
 
         s = subparsers.add_parser(
             "sort",
@@ -64,9 +65,15 @@ class Cli:
             formatter_class=argparse.ArgumentDefaultsHelpFormatter,
         )
         v.add_argument("--channel", default="", help="channel id of the input message")
-        v.add_argument("--id", type=Cli.to_int, default=0, help="id of the input message")
-        v.add_argument("--offset", type=Cli.to_int, default=0, help="offset of the input pdu")
-        v.add_argument("--pdu-length", type=Cli.to_int, default=8, help="length of the input pdu")
+        v.add_argument(
+            "--id", type=Cli.to_int, default=0, help="id of the input message"
+        )
+        v.add_argument(
+            "--offset", type=Cli.to_int, default=0, help="offset of the input pdu"
+        )
+        v.add_argument(
+            "--pdu-length", type=Cli.to_int, default=8, help="length of the input pdu"
+        )
         v.add_argument(
             "input",
             type=argparse.FileType("r"),
@@ -104,9 +111,12 @@ class Cli:
         with args.input as input:
             objects = [json.loads(line) for line in input]
         channels = [o["value"] for o in objects if o["type"] == "channel"]
-        static_channel_ids = {c["name"]: c["id"] for c in channels if c["type"] != "pdu_transport"}
+        static_channel_ids = {
+            c["name"]: c["id"] for c in channels if c["type"] != "pdu_transport"
+        }
         pdu_transport_channel_ids = {
-            c["name"]: i + len(static_channel_ids) for i, c in enumerate(c for c in channels if c["type"] == "pdu_transport")
+            c["name"]: i + len(static_channel_ids)
+            for i, c in enumerate(c for c in channels if c["type"] == "pdu_transport")
         }
         channel_ids = {**static_channel_ids, **pdu_transport_channel_ids}
         routings = [o["value"] for o in objects if o["type"] == "routing"]
@@ -128,7 +138,9 @@ class Cli:
             for routing in pproutings:
                 input = routing["input"]
                 outputs = routing["outputs"]
-                print(f'--> [input]  {input["channel"]:<10} id: 0x{input["message-id"]:04X} ({input["message-id"]:})')
+                print(
+                    f'--> [input]  {input["channel"]:<10} id: 0x{input["message-id"]:04X} ({input["message-id"]:})'
+                )
                 for output in outputs:
                     print(
                         f'<-- [output] {output["channel"]:<10} id: 0x{output["message-id"]:04X} ({output["message-id"]:})'
@@ -149,9 +161,12 @@ class Cli:
         with args.input as input:
             objects = [json.loads(line) for line in input]
         channels = [o["value"] for o in objects if o["type"] == "channel"]
-        static_channel_ids = {c["name"]: c["id"] for c in channels if c["type"] != "pdu_transport"}
+        static_channel_ids = {
+            c["name"]: c["id"] for c in channels if c["type"] != "pdu_transport"
+        }
         pdu_transport_channel_ids = {
-            c["name"]: i + len(static_channel_ids) for i, c in enumerate(c for c in channels if c["type"] == "pdu_transport")
+            c["name"]: i + len(static_channel_ids)
+            for i, c in enumerate(c for c in channels if c["type"] == "pdu_transport")
         }
         channel_ids = {**static_channel_ids, **pdu_transport_channel_ids}
         channel_names = list(channel_ids.keys())
@@ -160,10 +175,15 @@ class Cli:
         for input_channel_id, v in input_table(routings, channel_ids).items():
             table.setdefault(input_channel_id, {})
             for (input_msg_id, _, input_pdu_offset, input_pdu_length), r in v.items():
-                table[input_channel_id][(input_msg_id, input_pdu_offset, input_pdu_length)] = r
+                table[input_channel_id][
+                    (input_msg_id, input_pdu_offset, input_pdu_length)
+                ] = r
         channel_id = channel_ids[args.channel]
         id = args.id
-        if not (channel_id in table and (args.id, args.offset, args.pdu_length) in table[channel_id]):
+        if not (
+            channel_id in table
+            and (args.id, args.offset, args.pdu_length) in table[channel_id]
+        ):
             print(table[channel_id])
             print(
                 f"Could not find any routing for input, details: Input[channel({channel_id}), id({id})]",
@@ -186,7 +206,9 @@ class Cli:
                         continue
                     items.extend(
                         (channel_id, id)
-                        for (channel_id, id, _, _) in table[channel_id][(id, args.offset, args.pdu_length)]
+                        for (channel_id, id, _, _) in table[channel_id][
+                            (id, args.offset, args.pdu_length)
+                        ]
                     )
                     cycle_detection[channel_id][id] += 1
         nodes.strip()
@@ -194,16 +216,18 @@ class Cli:
         return ExitCode.SUCCESS
 
     @staticmethod
-    def header(args):
-        with args.input as input:
-            objects = [json.loads(line) for line in input]
-
+    def header_text(objects):
         routing_channels = [o["value"] for o in objects if o["type"] == "channel"]
         routing_channel_ids = channel_ids(routing_channels)
 
-        static_channels = sorted([c for c in routing_channels if c["type"] != "pdu_transport"], key=lambda x: x["id"])
+        static_channels = sorted(
+            [c for c in routing_channels if c["type"] != "pdu_transport"],
+            key=lambda x: x["id"],
+        )
         can_constants = {
-            c["name"].replace("-", "_"): routing_channel_ids[c["name"]] for c in static_channels if c["type"] == "can"
+            c["name"].replace("-", "_"): routing_channel_ids[c["name"]]
+            for c in static_channels
+            if c["type"] == "can"
         }
         fr_constants = {
             c["name"].replace("-", "_"): routing_channel_ids[c["name"]]
@@ -211,19 +235,8 @@ class Cli:
             if c["type"] == "flexray"
         }
 
-        file = (
-            inspect.cleandoc(
-            """
-               /********************************************************************************
-                * Copyright (c) {year} BMW AG
-                *
-                * This program and the accompanying materials are made available under the
-                * terms of the Apache License Version 2.0 which is available at
-                * https://www.apache.org/licenses/LICENSE-2.0
-                *
-                * SPDX-License-Identifier: Apache-2.0
-                ********************************************************************************/
-
+        return (
+            inspect.cleandoc("""
                // This is a generated file. Please do not edit it.
 
                #pragma once
@@ -238,13 +251,14 @@ class Cli:
                {fr_channels_ids}
                // clang-format on
                }} // namespace routing
-            """
-            ).format(
-                year=dt.now().year,
+            """).format(
                 channel_ids="\n".join(
                     [
                         f"static constexpr uint8_t {name} = {value};"
-                        for name, value in sorted({**can_constants, **fr_constants}.items(), key=lambda x: x[1])
+                        for name, value in sorted(
+                            {**can_constants, **fr_constants}.items(),
+                            key=lambda x: x[1],
+                        )
                     ]
                 ),
                 can_channels_ids=f"static constexpr uint8_t canChannelIds[] = {{{', '.join(can_constants)}}};",
@@ -252,6 +266,43 @@ class Cli:
             )
             + "\n"
         )
+
+    @staticmethod
+    def constants_header_text(objects):
+        pdu_transport_channels = sum(
+            1
+            for obj in objects
+            if obj.get("type") == "channel"
+            and obj.get("value", {}).get("type") == "pdu_transport"
+        )
+
+        return """// This is a generated file. Please do not edit it.
+
+#pragma once
+
+#include <cstdint>
+
+#include "routing/channelId.h"
+
+namespace routing
+{{
+static constexpr uint8_t NUM_PDU_TRANSPORT_CHANNELS = {pdu_transport_channels}U;
+static constexpr uint8_t NUM_CAN_CHANNELS
+    = static_cast<uint8_t>(sizeof(::routing::canChannelIds) / sizeof(::routing::canChannelIds[0]));
+static constexpr uint8_t NUM_FLEXRAY_CHANNELS
+    = static_cast<uint8_t>(sizeof(::routing::frChannelIds) / sizeof(::routing::frChannelIds[0]));
+static constexpr uint8_t NUM_CHANNELS
+    = NUM_CAN_CHANNELS + NUM_FLEXRAY_CHANNELS + NUM_PDU_TRANSPORT_CHANNELS;
+
+}} // namespace routing
+""".format(pdu_transport_channels=pdu_transport_channels)
+
+    @staticmethod
+    def header(args):
+        with args.input as input:
+            objects = [json.loads(line) for line in input if line.strip()]
+
+        file = Cli.header_text(objects)
         with args.output as output:
             output.write(file)
         return ExitCode.SUCCESS
