@@ -1,0 +1,71 @@
+/********************************************************************************
+ * Copyright (c) 2026 BMW AG
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Apache License Version 2.0 which is available at
+ * https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ ********************************************************************************/
+{% from "macros/common.jinja" import file_header %}{{ file_header() }}
+{% from "macros/cluster_connections.jinja" import cluster_connection_meta %}
+#pragma once
+
+#include "middleware/ClusterId.h"
+#include "middleware/svc/core/ClusterConnection.h"
+#include "middleware/svc/core/DatabaseManipulator.h"
+#include "middleware/svc/core/IClusterConnectionConfigurationBase.h"
+#include "middleware/svc/core/Message.h"
+#include "middleware/svc/core/TransceiverContainer.h"
+#include "middleware/svc/core/types.h"
+#include "middleware/shm/QueueDefinitions.h"
+{% for connection in connections %}
+{% if connection.sourceCluster.name == cluster.name %}
+{% for consumer in connection.consumers %}
+#include "{{ consumer.commonInclude }}"
+{% endfor %}
+{% if connection.sourceCluster.name != connection.targetCluster.name %}
+{% for provider in connection.providers %}
+#include "{{ provider.commonInclude }}"
+{% endfor %}
+{% endif %}
+{% endif %}
+{% endfor %}
+
+#include <etl/alignment.h>
+#include <etl/array.h>
+#include <etl/delegate.h>
+#include <etl/iterator.h>
+#include <etl/type_traits.h>
+#include <etl/utility.h>
+#include <etl/vector.h>
+
+namespace middleware::meta
+{
+{% for connection in connections %}
+{% if connection.sourceCluster.name == cluster.name %}
+{{ cluster_connection_meta(connection) }}
+{% endif %}
+{% endfor %}
+}  // namespace middleware::meta
+
+namespace middleware
+{
+
+{% for connection in connections %}
+{% if connection.sourceCluster.name == cluster.name %}
+extern svc::core::ClusterConnection ClusterConnection{{ connection.sourceCluster.name }}To{{ connection.targetCluster.name }};
+{% endif %}
+{% endfor %}
+
+void initialize{{ cluster.name }}ClusterConnection();
+void process{{ cluster.name }}Cluster(::size_t messages = 0U, bool updateTimeouts = true);
+void update{{ cluster.name }}ClusterTimeouts();
+{% for pdu in pdus %}
+{% if pdu.writer_cluster is defined and pdu.writer_cluster == cluster.name %}
+void register{{ pdu.name }}Writer(etl::delegate<void()> callback);
+void unregister{{ pdu.name }}Writer(etl::delegate<void()> callback);
+{% endif %}
+{% endfor %}
+
+}  // namespace middleware

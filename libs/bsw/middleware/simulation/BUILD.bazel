@@ -81,12 +81,12 @@ cc_library(
 cc_library(
     name = "simulation_qualifiers",
     hdrs = [
-        "platform_integration/qualifier/include/middleware/signal/qualifier.h",
+        "platform_integration/qualifier/include/middleware/sig/qualifier.h",
     ],
     strip_include_prefix = "platform_integration/qualifier/include",
     deps = [
         "//libs/3rdparty/etl",
-        "//libs/bsw/middleware:middleware_hdrs",
+        "//libs/bsw/middleware:middleware_sig_hdrs",
     ],
 )
 
@@ -100,7 +100,8 @@ middleware_codegen(
     generated_outputs = GENERATED_OUTPUTS,
     deps = [
         ":simulation_qualifiers",
-        "//libs/bsw/middleware",
+        "//libs/bsw/middleware:middleware_sig",
+        "//libs/bsw/middleware:middleware_svc",
     ],
 )
 
@@ -135,7 +136,8 @@ cc_test(
         ":middleware_simulation_generated",
         ":simulation_private_headers",
         "//libs/3rdparty/googletest:gtest_main",
-        "//libs/bsw/middleware",
+        "//libs/bsw/middleware:middleware_sig",
+        "//libs/bsw/middleware:middleware_svc",
     ],
 )
 
@@ -160,7 +162,8 @@ cc_binary(
         ":middleware_simulation_generated",
         ":simulation_private_headers",
         ":simulation_qualifiers",
-        "//libs/bsw/middleware",
+        "//libs/bsw/middleware:middleware_sig",
+        "//libs/bsw/middleware:middleware_svc",
     ],
 )
 
@@ -180,6 +183,7 @@ cc_test(
         ":middleware_simulation_generated",
         ":simulation_private_headers",
         "//libs/3rdparty/googletest:gtest_main",
-        "//libs/bsw/middleware",
+        "//libs/bsw/middleware:middleware_sig",
+        "//libs/bsw/middleware:middleware_svc",
     ],
 )

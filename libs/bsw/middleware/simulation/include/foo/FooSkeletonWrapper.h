@@ -31,24 +31,24 @@ public:
         data_.fooValue++;
         fooDefault.set(data_);
         auto const result = fooDefault.send();
-        if (result == ::middleware::core::HRESULT::Ok)
+        if (result == ::middleware::svc::core::HRESULT::Ok)
         {
             simulation::Logger::log(
-                static_cast<uint8_t>(::middleware::core::ClusterId::Cluster0),
+                static_cast<uint8_t>(::middleware::svc::core::ClusterId::Cluster0),
                 "Foo broadcast sent, fooValue=",
                 data_.fooValue);
         }
     }
 
     void getFooDefaultAttribute(
-        ::middleware::core::ResponseBufferBase::SkeletonResponseInfo& response) override
+        ::middleware::svc::core::ResponseBufferBase::SkeletonResponseInfo& response) override
     {
         respondGetFooDefaultAttribute(response, data_);
     }
 
     void fooMethod(
         uint32_t const& startValue,
-        ::middleware::core::ResponseBufferBase::SkeletonResponseInfo& response) override
+        ::middleware::svc::core::ResponseBufferBase::SkeletonResponseInfo& response) override
     {
         org::test::foo::Foo::FooMethodResult values{};
         uint32_t value = startValue;
@@ -59,10 +59,10 @@ public:
         }
 
         auto const result = respondFooMethod(response, values);
-        if (result != ::middleware::core::HRESULT::Ok)
+        if (result != ::middleware::svc::core::HRESULT::Ok)
         {
             simulation::Logger::log(
-                static_cast<uint8_t>(::middleware::core::ClusterId::Cluster0),
+                static_cast<uint8_t>(::middleware::svc::core::ClusterId::Cluster0),
                 "FooMethod response failed, error=",
                 static_cast<unsigned>(result));
         }
@@ -74,7 +74,7 @@ public:
         fooDefault.set(data_);
         (void)fooDefault.send();
         simulation::Logger::log(
-            static_cast<uint8_t>(::middleware::core::ClusterId::Cluster0),
+            static_cast<uint8_t>(::middleware::svc::core::ClusterId::Cluster0),
             "Foo set received, fooValue=",
             data_.fooValue);
     }

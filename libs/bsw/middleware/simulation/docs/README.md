@@ -395,8 +395,8 @@ in commit order through the real PDU id queue.
 ```bash
 cmake --preset tests-posix-debug -B build/middleware-tests
 cmake --build build/middleware-tests \
-  --target middlewareSimulationFooMethodTest middlewareRequestResponseTest \
-           middlewareClusterConnectionTest
+  --target middlewareSimulationFooMethodTest middlewareSvcRequestResponseTest \
+           middlewareSvcClusterConnectionTest
 ctest --test-dir build/middleware-tests/libs/bsw/middleware/test -C Debug \
   -R 'FooMethodTest|PduAccessTest|ProxyMethod|ProxyFireAndForget|ResponseBuffer|ConfigurationBaseTest|ConnectionBaseTest' \
   --output-on-failure

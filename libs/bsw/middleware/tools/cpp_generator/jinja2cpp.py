@@ -204,69 +204,69 @@ TEMPLATE_CONFIG = {
     ],
     "per_cluster": [
         (
-            "service/cluster_srcCluster.h.jinja",
+            "svc/cluster_srcCluster.h.jinja",
             "{}Cluster.h",
             "include/generated_code/middleware",
         ),
-        ("service/cluster_srcCluster.cpp.jinja", "{}Cluster.cpp", "src/generated_code"),
+        ("svc/cluster_srcCluster.cpp.jinja", "{}Cluster.cpp", "src/generated_code"),
     ],
     "per_service": [
-        ("service/common.h.jinja", "{}Common.h", "include/generated_code/{}"),
-        ("service/proxy.h.jinja", "{}Proxy.h", "include/generated_code/{}"),
+        ("svc/common.h.jinja", "{}Common.h", "include/generated_code/{}"),
+        ("svc/proxy.h.jinja", "{}Proxy.h", "include/generated_code/{}"),
         (
-            "mock/service/proxy_mock.h.jinja",
+            "mock/svc/proxy_mock.h.jinja",
             "{}ProxyMock.h",
             "include/generated_code/{}",
         ),
-        ("service/skeleton.h.jinja", "{}Skeleton.h", "include/generated_code/{}"),
+        ("svc/skeleton.h.jinja", "{}Skeleton.h", "include/generated_code/{}"),
         (
-            "mock/service/skeleton_mock.h.jinja",
+            "mock/svc/skeleton_mock.h.jinja",
             "{}SkeletonMock.h",
             "include/generated_code/{}",
         ),
-        ("service/common.cpp.jinja", "{}Common.cpp", "src/generated_code/{}"),
-        ("service/proxy.cpp.jinja", "{}Proxy.cpp", "src/generated_code/{}"),
-        ("service/skeleton.cpp.jinja", "{}Skeleton.cpp", "src/generated_code/{}"),
+        ("svc/common.cpp.jinja", "{}Common.cpp", "src/generated_code/{}"),
+        ("svc/proxy.cpp.jinja", "{}Proxy.cpp", "src/generated_code/{}"),
+        ("svc/skeleton.cpp.jinja", "{}Skeleton.cpp", "src/generated_code/{}"),
     ],
     "per_type_module": [
         ("datatypes.h.jinja", "{}", "include/generated_code"),
     ],
     "per_pdu": [
-        ("signal/pdu_common.h.jinja", "{}Common.h", "include/generated_code/{}"),
-        ("signal/pdu_reader.h.jinja", "{}Reader.h", "include/generated_code/{}"),
+        ("sig/pdu_common.h.jinja", "{}Common.h", "include/generated_code/{}"),
+        ("sig/pdu_reader.h.jinja", "{}Reader.h", "include/generated_code/{}"),
         (
-            "mock/signal/pdu_reader_mock.h.jinja",
+            "mock/sig/pdu_reader_mock.h.jinja",
             "{}ReaderMock.h",
             "include/generated_code/{}",
         ),
-        ("signal/pdu_reader.cpp.jinja", "{}Reader.cpp", "src/generated_code/{}"),
-        ("signal/pdu_writer.h.jinja", "{}Writer.h", "include/generated_code/{}"),
-        ("signal/pdu_writer.cpp.jinja", "{}Writer.cpp", "src/generated_code/{}"),
+        ("sig/pdu_reader.cpp.jinja", "{}Reader.cpp", "src/generated_code/{}"),
+        ("sig/pdu_writer.h.jinja", "{}Writer.h", "include/generated_code/{}"),
+        ("sig/pdu_writer.cpp.jinja", "{}Writer.cpp", "src/generated_code/{}"),
     ],
 }
 
 PDU_MOCK_TEMPLATE_OVERRIDES = {
-    "signal/pdu_common.h.jinja": "signal/pdu_common.h.jinja",
-    "signal/pdu_reader.h.jinja": "signal/pdu_reader.h.jinja",
-    "mock/signal/pdu_reader_mock.h.jinja": "mock/signal/pdu_reader_mock.h.jinja",
-    "signal/pdu_reader.cpp.jinja": "mock/signal/pdu_reader_mock.cpp.jinja",
+    "sig/pdu_common.h.jinja": "sig/pdu_common.h.jinja",
+    "sig/pdu_reader.h.jinja": "sig/pdu_reader.h.jinja",
+    "mock/sig/pdu_reader_mock.h.jinja": "mock/sig/pdu_reader_mock.h.jinja",
+    "sig/pdu_reader.cpp.jinja": "mock/sig/pdu_reader_mock.cpp.jinja",
 }
-PDU_MOCK_HEADER_TEMPLATE = "mock/signal/pdu_reader_mock.h.jinja"
+PDU_MOCK_HEADER_TEMPLATE = "mock/sig/pdu_reader_mock.h.jinja"
 
 
 # In mock generation mode a normal per-service template is replaced by its
-# `mock/service/<name>_mock` variant while keeping the same output filename. The
+# `mock/svc/<name>_mock` variant while keeping the same output filename. The
 # variant delegates the generated implementation to the mock singleton (the *.cpp
 # entries). Proxy attributes/events are concrete classes whose method bodies are
 # swapped at link time, so no header swap is required.
 MOCK_TEMPLATE_OVERRIDES = {
-    "service/common.h.jinja": "service/common.h.jinja",
-    "service/proxy.h.jinja": "service/proxy.h.jinja",
-    "mock/service/proxy_mock.h.jinja": "mock/service/proxy_mock.h.jinja",
-    "service/skeleton.h.jinja": "service/skeleton.h.jinja",
-    "mock/service/skeleton_mock.h.jinja": "mock/service/skeleton_mock.h.jinja",
-    "service/proxy.cpp.jinja": "mock/service/proxy_mock.cpp.jinja",
-    "service/skeleton.cpp.jinja": "mock/service/skeleton_mock.cpp.jinja",
+    "svc/common.h.jinja": "svc/common.h.jinja",
+    "svc/proxy.h.jinja": "svc/proxy.h.jinja",
+    "mock/svc/proxy_mock.h.jinja": "mock/svc/proxy_mock.h.jinja",
+    "svc/skeleton.h.jinja": "svc/skeleton.h.jinja",
+    "mock/svc/skeleton_mock.h.jinja": "mock/svc/skeleton_mock.h.jinja",
+    "svc/proxy.cpp.jinja": "mock/svc/proxy_mock.cpp.jinja",
+    "svc/skeleton.cpp.jinja": "mock/svc/skeleton_mock.cpp.jinja",
 }
 
 # Global templates that are also generated in mock mode.
@@ -392,8 +392,8 @@ def generate_files(
                 # normal: full regular service file set
                 # mock: generate only templates that live under templates/jinja/mock
                 if service_mode == "normal" and template_name in (
-                    "mock/service/proxy_mock.h.jinja",
-                    "mock/service/skeleton_mock.h.jinja",
+                    "mock/svc/proxy_mock.h.jinja",
+                    "mock/svc/skeleton_mock.h.jinja",
                 ):
                     continue
                 if service_mode == "mock":
@@ -412,7 +412,7 @@ def generate_files(
                 not getattr(item, "namespace", None)
                 or not getattr(getattr(item, "headers", None), "common", None)
                 or (
-                    template_name.startswith("signal/pdu_writer.")
+                    template_name.startswith("sig/pdu_writer.")
                     and not getattr(getattr(item, "headers", None), "writer", None)
                 )
             ):
@@ -487,8 +487,8 @@ def _resolve_output_paths(input_data) -> list[str]:
             if template_type == "per_service":
                 service_mode = _service_generation_mode(item)
                 if service_mode == "normal" and template_name in (
-                    "mock/service/proxy_mock.h.jinja",
-                    "mock/service/skeleton_mock.h.jinja",
+                    "mock/svc/proxy_mock.h.jinja",
+                    "mock/svc/skeleton_mock.h.jinja",
                 ):
                     continue
                 if (
@@ -509,7 +509,7 @@ def _resolve_output_paths(input_data) -> list[str]:
                 not getattr(item, "namespace", None)
                 or not getattr(getattr(item, "headers", None), "common", None)
                 or (
-                    template_name.startswith("signal/pdu_writer.")
+                    template_name.startswith("sig/pdu_writer.")
                     and not getattr(getattr(item, "headers", None), "writer", None)
                 )
             ):

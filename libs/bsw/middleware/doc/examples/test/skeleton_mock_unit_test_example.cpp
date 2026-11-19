@@ -15,8 +15,8 @@
 #include "gmock/gmock.h"
 #include "logger/mock/LoggerMock.h"
 #include "memory/mock/AllocatorMock.h"
-#include "middleware/core/ResponseBufferBase.h"
-#include "middleware/core/types.h"
+#include "middleware/svc/core/ResponseBufferBase.h"
+#include "middleware/svc/core/types.h"
 #include "skeleton_app.h"
 
 namespace application
@@ -28,7 +28,7 @@ class SkeletonAppTestFixture : public ::testing::Test
 {
 public:
     using MockType = features::communication::DummyService::skeleton::DummyServiceSkeletonMock;
-    using SkeletonResponseInfo = middleware::core::ResponseBufferBase::SkeletonResponseInfo;
+    using SkeletonResponseInfo = middleware::svc::core::ResponseBufferBase::SkeletonResponseInfo;
     using Foo                  = SkeletonApp::Foo;
 
     SkeletonAppTestFixture()                                         = default;
@@ -58,7 +58,7 @@ TEST_F(SkeletonAppTestFixture, SkeletonAsyncMethodForwardsToMock)
     SkeletonResponseInfo response{};
     Foo input{1U, 2U};
     EXPECT_CALL(mock_, init(features::communication::DummyService::internal::Core0ProviderDummy))
-        .WillOnce(testing::Return(middleware::core::HRESULT::Ok));
+        .WillOnce(testing::Return(middleware::svc::core::HRESULT::Ok));
     EXPECT_CALL(mock_, asyncMethod(::testing::Ref(input), ::testing::Ref(response)));
     EXPECT_CALL(
         mock_,
@@ -68,7 +68,7 @@ TEST_F(SkeletonAppTestFixture, SkeletonAsyncMethodForwardsToMock)
                 [](SkeletonApp::Baz const& result)
                 { return result.a == 9U && result.b == 8U && result.c == 7U && result.d == 6U; })),
             true))
-        .WillOnce(testing::Return(middleware::core::HRESULT::Ok));
+        .WillOnce(testing::Return(middleware::svc::core::HRESULT::Ok));
 
     // ACT
     bool const initResult = app_.init();
@@ -87,7 +87,7 @@ TEST_F(SkeletonAppTestFixture, SkeletonFireAndForgetMethodForwardsToMock)
     // ARRANGE
     features::communication::DummyService::FireAndForgetPayload payload{{1U, 2U}, {3U, 4U}};
     EXPECT_CALL(mock_, init(features::communication::DummyService::internal::Core0ProviderDummy))
-        .WillOnce(testing::Return(middleware::core::HRESULT::Ok));
+        .WillOnce(testing::Return(middleware::svc::core::HRESULT::Ok));
     EXPECT_CALL(mock_, fireAndForgetMethod(::testing::Ref(payload)));
 
     // ACT
@@ -106,7 +106,7 @@ TEST_F(SkeletonAppTestFixture, SkeletonAttributeGetterForwardsToMock)
     // ARRANGE
     SkeletonResponseInfo response{};
     EXPECT_CALL(mock_, init(features::communication::DummyService::internal::Core0ProviderDummy))
-        .WillOnce(testing::Return(middleware::core::HRESULT::Ok));
+        .WillOnce(testing::Return(middleware::svc::core::HRESULT::Ok));
     EXPECT_CALL(mock_, getSimpleFieldAttribute(::testing::Ref(response)));
 
     // ACT
@@ -125,7 +125,7 @@ TEST_F(SkeletonAppTestFixture, SkeletonAttributeSetterForwardsToMock)
     // ARRANGE
     uint32_t const value = 42U;
     EXPECT_CALL(mock_, init(features::communication::DummyService::internal::Core0ProviderDummy))
-        .WillOnce(testing::Return(middleware::core::HRESULT::Ok));
+        .WillOnce(testing::Return(middleware::svc::core::HRESULT::Ok));
     EXPECT_CALL(mock_, setSimpleFieldAttribute(::testing::Ref(value)));
 
     // ACT
@@ -144,23 +144,23 @@ TEST_F(SkeletonAppTestFixture, SkeletonAttributeEventForwardsToMock)
     // ARRANGE
     uint32_t const attributeValue = 42U;
     EXPECT_CALL(mock_, init(features::communication::DummyService::internal::Core0ProviderDummy))
-        .WillOnce(testing::Return(middleware::core::HRESULT::Ok));
+        .WillOnce(testing::Return(middleware::svc::core::HRESULT::Ok));
     EXPECT_CALL(mock_.simpleField, send())
         .WillOnce(
             [&]()
             {
                 EXPECT_EQ(app_.simpleField.get(), attributeValue);
-                return middleware::core::HRESULT::Ok;
+                return middleware::svc::core::HRESULT::Ok;
             });
 
     // ACT
     bool const initResult = app_.init();
     app_.simpleField.set(attributeValue);
-    middleware::core::HRESULT const attributeResult = app_.simpleField.send();
+    middleware::svc::core::HRESULT const attributeResult = app_.simpleField.send();
 
     // ASSERT
     EXPECT_TRUE(initResult);
-    EXPECT_EQ(attributeResult, middleware::core::HRESULT::Ok);
+    EXPECT_EQ(attributeResult, middleware::svc::core::HRESULT::Ok);
 }
 
 // [skeleton-attribute-send-test-end]
@@ -171,17 +171,18 @@ TEST_F(SkeletonAppTestFixture, SkeletonEventForwardsToMock)
     // ARRANGE
     uint32_t const broadcastValue = 99U;
     EXPECT_CALL(mock_, init(features::communication::DummyService::internal::Core0ProviderDummy))
-        .WillOnce(testing::Return(middleware::core::HRESULT::Ok));
+        .WillOnce(testing::Return(middleware::svc::core::HRESULT::Ok));
     EXPECT_CALL(mock_.simpleBroadcast, send(broadcastValue))
-        .WillOnce(testing::Return(middleware::core::HRESULT::Ok));
+        .WillOnce(testing::Return(middleware::svc::core::HRESULT::Ok));
 
     // ACT
-    bool const initResult                           = app_.init();
-    middleware::core::HRESULT const broadcastResult = app_.simpleBroadcast.send(broadcastValue);
+    bool const initResult = app_.init();
+    middleware::svc::core::HRESULT const broadcastResult
+        = app_.simpleBroadcast.send(broadcastValue);
 
     // ASSERT
     EXPECT_TRUE(initResult);
-    EXPECT_EQ(broadcastResult, middleware::core::HRESULT::Ok);
+    EXPECT_EQ(broadcastResult, middleware::svc::core::HRESULT::Ok);
 }
 
 // [skeleton-event-send-test-end]

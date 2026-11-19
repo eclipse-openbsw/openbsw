@@ -1,0 +1,298 @@
+/********************************************************************************
+ * Copyright (c) 2026 BMW AG
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Apache License Version 2.0 which is available at
+ * https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ ********************************************************************************/
+{% from "macros/common.jinja" import file_header %}{{ file_header() }}
+#include "{{ service.proxyInclude }}"
+
+#include <etl/delegate.h>
+#include <etl/expected.h>
+#include <etl/utility.h>
+
+#include "middleware/svc/core/Message.h"
+#include "middleware/svc/core/types.h"
+#include "middleware/os/TaskIdProvider.h"
+#include "middleware/svc/rpc/ProxyFireAndForgetMethod.h"
+
+namespace {{ service.namespace | lower }}::{{ service.name }}::proxy
+{
+
+{{ service.name }}Proxy::{{ service.name }}Proxy()
+    : Base(),
+      // ATTRIBUTES
+{% for attribute in service.attributes %}
+      {{ attribute.name | camelCase }}(*this),
+{% endfor %}
+      // EVENTS
+{% for broadcast in service.broadcasts %}
+      {{ broadcast.name | camelCase }}(*this),
+{% endfor %}
+      fProcessId(::middleware::svc::core::INVALID_TASK_ID)
+{
+}
+
+{{ service.name }}Proxy::~{{ service.name }}Proxy()
+{
+    deInit();
+}
+
+bool {{ service.name }}Proxy::isInitialized() const
+{
+    return Base::isInitialized();
+}
+
+uint16_t {{ service.name }}Proxy::getServiceId() const
+{
+    return internal::SERVICE_ID;
+}
+
+::middleware::svc::core::HRESULT {{ service.name }}Proxy::init(const internal::InstanceId instanceId,
+                                           ::middleware::svc::core::ClusterId const sourceCluster)
+{
+    auto const database = internal::getClusterConnectionsDb();
+    auto const ret = Base::initFromInstancesDatabase(
+        static_cast<uint16_t>(instanceId), etl::to_underlying(sourceCluster), database);
+    if ((::middleware::svc::core::HRESULT::Ok == ret) || (::middleware::svc::core::HRESULT::InstanceAlreadyRegistered == ret))
+    {
+        static_cast<middleware::svc::core::ITimeoutClusterConnection*>(_connection)->registerTimeoutTransceiver(*this);
+    }
+    if ({{ service.name }}Proxy::isInitialized())
+    {
+        fProcessId = ::middleware::os::getProcessId();
+        if (::middleware::svc::core::HRESULT::Ok == ret)
+        {
+            futureDispatcherDeinitialization();
+        }
+    }
+    return ret;
+}
+
+void {{ service.name }}Proxy::deInit()
+{
+    checkCrossThreadError(fProcessId);
+    futureDispatcherDeinitialization();
+    unsetNotificationHandlers();
+    if ({{ service.name }}Proxy::isInitialized())
+    {
+        static_cast<middleware::svc::core::ITimeoutClusterConnection*>(_connection)->unregisterTimeoutTransceiver(*this);
+    }
+    Base::unsubscribe(internal::SERVICE_ID);
+}
+
+void {{ service.name }}Proxy::unsetNotificationHandlers()
+{
+    checkCrossThreadError(fProcessId);
+    // ATTRIBUTES
+{% for attribute in service.attributes %}
+{% if attribute.hasNotifier %}
+    {{ attribute.name | camelCase }}.unsetReceiveHandler();
+{% endif %}
+{% endfor %}
+    // EVENTS
+{% for broadcast in service.broadcasts %}
+    {{ broadcast.name | camelCase }}.unsetReceiveHandler();
+{% endfor %}
+}
+
+// METHODS
+{% for method in service.methods %}
+{% if not method.fireAndForget %}
+void {{ service.name }}Proxy::cancel{{ method.name }}Request(uint16_t requestId)
+{
+    checkCrossThreadError(fProcessId);
+    static_cast<void>({{ method.name | camelCase }}Method_.cancelRequest(requestId));
+}
+{% endif %}
+{% endfor %}
+
+::middleware::svc::core::HRESULT {{ service.name }}Proxy::onNewMessageReceived(::middleware::svc::core::Message const& msg)
+{
+    ::middleware::svc::core::HRESULT ret = ::middleware::svc::core::HRESULT::Ok;
+    checkCrossThreadError(fProcessId);
+    switch (msg.getHeader().memberId)
+    {
+        // ATTRIBUTES
+{% for attribute in service.attributes %}
+{% set nameCamelCase = attribute.name | camelCase %}
+{% set namePascalCase = attribute.name | pascalCase %}
+  {% if attribute.hasGetter %}
+        case internal::get_{{ namePascalCase }}_id: {
+            {{ nameCamelCase }}.impl_.answerGetterRequest(msg);
+            break;
+        }
+  {% endif %}
+  {% if attribute.hasSetter and attribute.deployment.SetterWithResponse %}
+        case internal::set_{{ namePascalCase }}_id: {
+            {{ nameCamelCase }}.impl_.answerSetterRequest(msg);
+            break;
+        }
+  {% endif %}
+  {% if attribute.hasNotifier %}
+        case internal::event_{{ namePascalCase }}_id: {
+            {{ nameCamelCase }}.impl_.setEvent_(msg);
+            break;
+        }
+  {% endif %}
+{% endfor %}
+        // EVENTS
+{% for broadcast in service.broadcasts %}
+        case internal::event_{{ broadcast.name | pascalCase }}_id: {
+            {{ broadcast.name | camelCase }}.impl_.setEvent_(msg);
+            break;
+        }
+{% endfor %}
+        // METHODS
+{% for method in service.methods %}
+{% if not method.fireAndForget %}
+        case internal::{{ method.name | camelCase }}_id: {
+            {{ method.name | camelCase }}Method_.answerRequest(msg);
+            break;
+        }
+{% endif %}
+{% endfor %}
+        default: {
+            ret = ::middleware::svc::core::HRESULT::ServiceMemberIdNotFound;
+            break;
+        }
+    }
+    return ret;
+}
+
+void {{ service.name }}Proxy::futureDispatcherDeinitialization()
+{
+    checkCrossThreadError(fProcessId);
+    // ATTRIBUTES
+{% for attribute in service.attributes %}
+    {{ attribute.name | camelCase }}.impl_.freeAll();
+{% endfor %}
+    // METHODS
+{% for method in service.methods %}
+{% if not method.fireAndForget %}
+    {{ method.name | camelCase }}Method_.freeAll();
+{% endif %}
+{% endfor %}
+}
+
+void {{ service.name }}Proxy::updateTimeouts()
+{
+    doUpdateTimeouts();
+}
+
+void {{ service.name }}Proxy::doUpdateTimeouts()
+{
+    checkCrossThreadError(fProcessId);
+    // ATTRIBUTES
+{% for attribute in service.attributes %}
+{% if attribute.deployment.Timeout > 0 and ((attribute.deployment.GetterID is not none) or (attribute.deployment.SetterID is not none)) %}
+    {{ attribute.name | camelCase }}.impl_.updateTimeouts();
+  {% endif %}
+{% endfor %}
+    // METHODS
+{% for method in service.methods %}
+{% if not method.fireAndForget %}
+    {{ method.name | camelCase }}Method_.updateTimeouts();
+{% endif %}
+{% endfor %}
+}
+
+// METHODS
+{% for method in service.methods %}
+{% if method.fireAndForget %}
+etl::expected<uint16_t, middleware::svc::core::HRESULT> {{ service.name }}Proxy::{{ method.name | camelCase }}(
+    {% if method.inArgs %}const {{ method.inType | cppType(service.namespace) }}& {{ method.name | camelCase }}Input{% endif %})
+{
+    return middleware::svc::rpc::ProxyFireAndForgetMethod().callMethod(*this{% if method.inArgs %}, {{ method.name | camelCase }}Input{% endif %}, internal::{{ method.name | camelCase }}_id);
+}
+{% else %}
+etl::expected<uint16_t, middleware::svc::core::HRESULT> {{ service.name }}Proxy::{{ method.name | camelCase }}(
+    {% if method.inArgs %}const {{ method.inType | cppType(service.namespace) }}& {{ method.name | camelCase }}Input, {% endif %}
+    const {{ method.name }}Callback methodCb)
+{
+    checkCrossThreadError(fProcessId);
+    return {{ method.name | camelCase }}Method_.callMethod(*this{% if method.inArgs %}, {{ method.name | camelCase }}Input{% endif %}, internal::{{ method.name | camelCase }}_id, methodCb);
+}
+{% endif %}
+{% endfor %}
+
+::middleware::svc::core::HRESULT {{ service.name }}Proxy::sendMessage(::middleware::svc::core::Message& msg) const
+{
+    checkCrossThreadError(fProcessId);
+    return Base::sendMessage(msg);
+}
+
+// ATTRIBUTES
+{% for attribute in service.attributes %}
+{% set namePascalCase = attribute.name | pascalCase %}
+{{ namePascalCase }}Attribute::{{ namePascalCase }}Attribute(::middleware::svc::core::ProxyBase& proxy) : impl_(proxy)
+{
+}
+
+{% if attribute.hasGetter %}
+etl::expected<uint16_t, ::middleware::svc::core::HRESULT> {{ namePascalCase }}Attribute::get(const GetterCallback attrCb)
+{
+    return impl_.get(internal::get_{{ namePascalCase }}_id, attrCb);
+}
+
+::middleware::svc::core::HRESULT {{ namePascalCase }}Attribute::cancelGetterRequest(uint16_t requestId)
+{
+    return impl_.cancelGetterRequest(requestId);
+}
+{% endif %}
+
+{% if attribute.hasSetter %}
+    {% if attribute.deployment.SetterWithResponse %}
+etl::expected<uint16_t, ::middleware::svc::core::HRESULT> {{ namePascalCase }}Attribute::set(const AttributeType& payload, const SetterCallback cbk)
+{
+    return impl_.set(payload, internal::set_{{ namePascalCase }}_id, cbk);
+}
+
+::middleware::svc::core::HRESULT {{ namePascalCase }}Attribute::cancelSetterRequest(uint16_t requestId)
+{
+    return impl_.cancelSetterRequest(requestId);
+}
+    {% else %}
+etl::expected<uint16_t, ::middleware::svc::core::HRESULT> {{ namePascalCase }}Attribute::set(const AttributeType& payload)
+{
+    return impl_.set(payload, internal::set_{{ namePascalCase }}_id);
+}
+    {% endif %}
+{% endif %}
+
+{% if attribute.hasNotifier %}
+void {{ namePascalCase }}Attribute::setReceiveHandler(const OnFieldChangedCallback callback)
+{
+    impl_.setReceiveHandler(callback);
+}
+
+void {{ namePascalCase }}Attribute::unsetReceiveHandler()
+{
+    impl_.unsetReceiveHandler();
+}
+{% endif %}
+
+{% endfor %}
+
+// EVENTS
+{% for broadcast in service.broadcasts %}
+{% set namePascalCase = broadcast.name | pascalCase %}
+{{ namePascalCase }}Event::{{ namePascalCase }}Event(::middleware::svc::core::ProxyBase& proxy) : impl_(proxy)
+{
+}
+
+void {{ namePascalCase }}Event::setReceiveHandler(const OnFieldChangedCallback callback)
+{
+    impl_.setReceiveHandler(callback);
+}
+
+void {{ namePascalCase }}Event::unsetReceiveHandler()
+{
+    impl_.unsetReceiveHandler();
+}
+{% endfor %}
+
+}  // namespace {{ service.namespace | lower }}::{{ service.name }}::proxy

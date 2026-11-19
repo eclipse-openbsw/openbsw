@@ -15,9 +15,9 @@
 
 #include "Logger.h"
 #include "middleware/Cluster2Cluster.h"
-#include "middleware/core/PduBrokerConnection.h"
 #include "middleware/shm/PduDefinitions.h"
 #include "middleware/shm/QueueDefinitions.h"
+#include "middleware/sig/core/PduBrokerConnection.h"
 
 namespace
 {
@@ -50,7 +50,7 @@ char const* pduName(uint32_t const id)
 }
 
 // Stands in for the bus driver.
-class SimPduTxSink final : public middleware::core::IPduTxSink
+class SimPduTxSink final : public middleware::sig::core::IPduTxSink
 {
 public:
     void submit(uint32_t const id, etl::span<uint8_t const> const payload) override
@@ -62,7 +62,7 @@ public:
 
 template<size_t Size>
 void receive(
-    middleware::core::PduBrokerConnectionBase& broker,
+    middleware::sig::core::PduBrokerConnectionBase& broker,
     uint32_t const id,
     etl::array<uint8_t, Size> const& payload)
 {

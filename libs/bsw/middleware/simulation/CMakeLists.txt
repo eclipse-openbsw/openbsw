@@ -128,8 +128,8 @@ target_include_directories(
             ${CMAKE_CURRENT_SOURCE_DIR}/platform_integration/concurrency/include
 )
 
-target_link_libraries(${_SIMULATION_TARGET} PRIVATE middleware Threads::Threads
-                                                    rt)
+target_link_libraries(${_SIMULATION_TARGET} PRIVATE middlewareSig middlewareSvc
+                                                    Threads::Threads rt)
 
 target_include_directories(
     ${_SIMULATION_TARGET}
@@ -184,7 +184,8 @@ if (BUILD_EXECUTABLE STREQUAL "unitTest")
         PRIVATE ${CMAKE_SOURCE_DIR}/executables/unitTest/etl_profile)
     target_link_libraries(
         middlewarePduWriterSchedulingTest
-        PRIVATE middleware
+        PRIVATE middlewareSig
+                middlewareSvc
                 Threads::Threads
                 rt
                 gtest_main

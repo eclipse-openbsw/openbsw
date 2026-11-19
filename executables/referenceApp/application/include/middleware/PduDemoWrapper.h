@@ -12,7 +12,7 @@
 #include <etl/algorithm.h>
 #include <etl/array.h>
 #include <etl/span.h>
-#include <middleware/core/IPduTxSink.h>
+#include <middleware/sig/core/IPduTxSink.h>
 #include <util/logger/Logger.h>
 
 #include "middleware/shm/PduDefinitions.h"
@@ -53,7 +53,7 @@ public:
 
 private:
     // Keeps the transmitted PDU, so that loopBack() can receive it as the Rx PDU.
-    class LoopbackBus final : public ::middleware::core::IPduTxSink
+    class LoopbackBus final : public ::middleware::sig::core::IPduTxSink
     {
     public:
         void submit(uint32_t const id, ::etl::span<uint8_t const> const payload) override
@@ -71,7 +71,7 @@ private:
         }
 
         /** \return true if a PDU was received. */
-        bool loopBack(::middleware::core::PduBrokerConnectionBase& broker)
+        bool loopBack(::middleware::sig::core::PduBrokerConnectionBase& broker)
         {
             if (!_pending)
             {

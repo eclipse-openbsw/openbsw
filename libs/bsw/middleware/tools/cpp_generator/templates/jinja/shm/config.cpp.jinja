@@ -23,7 +23,7 @@
 
 #include <etl/array.h>
 
-#include "middleware/core/MiddlewarePdu.h"
+#include "middleware/sig/core/MiddlewarePdu.h"
 #include "middleware/shm/Config.h"
 
 #include "middleware/shm/AllocatorsDefinitions.h"
@@ -70,16 +70,16 @@ OutboundPduQueue* getOutboundPduQueue()
 
 {% endfor %}
 {% set brokerPdus = pdus | selectattr('pdu_id', 'defined') | sort(attribute='pdu_id') | list %}
-::etl::span<core::PduAccess const> getPduAccessTable()
+::etl::span<sig::core::PduAccess const> getPduAccessTable()
 {
 {% if brokerPdus %}
     // Sorted by PDU ID, as the broker searches it. The generator guarantees unique IDs.
-    static constexpr ::etl::array<core::PduAccess, {{ brokerPdus | length }}U> TABLE = { {
+    static constexpr ::etl::array<sig::core::PduAccess, {{ brokerPdus | length }}U> TABLE = { {
 {% for pdu in brokerPdus %}
-        core::makePduAccess<{{ pdu.size }}U, &get{{ pdu.name | capitalize }}>({{ pdu.pdu_id }}U),
+        sig::core::makePduAccess<{{ pdu.size }}U, &get{{ pdu.name | capitalize }}>({{ pdu.pdu_id }}U),
 {% endfor %}
     } };
-    return ::etl::span<core::PduAccess const>(TABLE);
+    return ::etl::span<sig::core::PduAccess const>(TABLE);
 {% else %}
     return {};
 {% endif %}

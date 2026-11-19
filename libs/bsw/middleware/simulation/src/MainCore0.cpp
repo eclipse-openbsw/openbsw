@@ -89,7 +89,7 @@ void run_main_core0()
         {
             auto const stats = middleware::shm::getQueueToCluster0()->getStats();
             simulation::Logger::logStats(
-                static_cast<uint8_t>(::middleware::core::ClusterId::Cluster0),
+                static_cast<uint8_t>(::middleware::svc::core::ClusterId::Cluster0),
                 "Messages [ Written:",
                 stats.processedMessages,
                 ", Lost: ",

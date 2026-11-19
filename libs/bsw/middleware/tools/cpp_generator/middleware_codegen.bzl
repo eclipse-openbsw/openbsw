@@ -115,7 +115,7 @@ def middleware_codegen(
         base (as emitted by `jinja2cpp.py --list-outputs`). `.h` entries become
         `hdrs`, `.cpp` entries become `srcs`.
       deps: Extra `cc_library` deps the generated code needs to compile
-        (e.g. `//libs/bsw/middleware`).
+        (e.g. `//libs/bsw/middleware:middleware_sig` and `:middleware_svc`).
       visibility: Visibility of the generated `cc_library`.
     """
     gen_root = name + "_generated"

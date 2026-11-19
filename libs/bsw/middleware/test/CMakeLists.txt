@@ -27,68 +27,86 @@ target_link_libraries(middlewareConcurrencyMock PUBLIC middlewareInterfaces
 
 # The middleware sources include lock_types.h (via LockStrategies.h).
 target_include_directories(middleware
-                           PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+                           PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 set(MIDDLEWARE_TEST_TARGETS)
 
-function (add_middleware_unit_test TARGET_NAME)
+function (add_middleware_unit_test TARGET_NAME LIBRARY)
     add_executable(${TARGET_NAME} ${ARGN})
     target_link_libraries(${TARGET_NAME}
-                          PRIVATE middleware middlewareTestSupport gtest_main)
+                          PRIVATE ${LIBRARY} middlewareTestSupport gtest_main)
     gtest_discover_tests(${TARGET_NAME} PROPERTIES LABELS "middlewareTest")
     set(MIDDLEWARE_TEST_TARGETS
         ${MIDDLEWARE_TEST_TARGETS} ${TARGET_NAME}
         PARENT_SCOPE)
 endfunction ()
 
-add_middleware_unit_test(
-    middlewareProxySkeletonBaseTest
-    src/core/ProxyAttributesTest.cpp
-    src/core/ProxyBaseTest.cpp
-    src/core/SkeletonAttributeTest.cpp
-    src/core/SkeletonBaseTest.cpp
-    src/core/TypesTest.cpp)
+# Signal-based communication
+add_middleware_unit_test(middlewareSigPduTest middlewareSig
+                         src/sig/core/MiddlewarePduTest.cpp)
+target_link_libraries(middlewareSigPduTest PRIVATE middlewareConcurrencyMock)
 
 add_middleware_unit_test(
-    middlewareRequestResponseTest src/core/ResponseBufferTest.cpp
-    src/rpc/ProxyFireAndForgetMethodTest.cpp src/rpc/ProxyMethodTest.cpp)
+    middlewareSigPhysicalSignalConversionTest middlewareSig
+    src/sig/core/PhysicalSignalConversionTest.cpp)
 
-add_middleware_unit_test(middlewareInstanceDatabaseTest
-                         src/core/DbManipulatorTest.cpp)
-
-add_middleware_unit_test(
-    middlewareClusterConnectionTest src/core/ClusterConfigurationTest.cpp
-    src/core/ConnectionTest.cpp)
+add_middleware_unit_test(middlewareSigSignalCodecTest middlewareSig
+                         src/sig/core/SignalCodecTest.cpp)
 
 add_middleware_unit_test(
-    middlewareMessageManagementTest src/core/MessagePayloadBuilderTest.cpp
-    src/core/MessageTest.cpp)
-
-add_middleware_unit_test(middlewarePduTest src/core/MiddlewarePduTest.cpp)
-target_link_libraries(middlewarePduTest PRIVATE middlewareConcurrencyMock)
-
-add_middleware_unit_test(middlewarePhysicalSignalConversionTest
-                         src/core/PhysicalSignalConversionTest.cpp)
-
-add_middleware_unit_test(middlewareSignalCodecTest src/core/SignalCodecTest.cpp)
-
-add_middleware_unit_test(middlewareQueueTest src/queue/QueueTest.cpp)
+    middlewareSigTransmissionTest
+    middlewareSig
+    src/sig/core/TimerTest.cpp
+    src/sig/core/TransmissionModeManagerTest.cpp
+    src/sig/core/TransmissionModeTest.cpp
+    src/sig/core/TransmissionTest.cpp)
 
 add_middleware_unit_test(
-    middlewareTransmissionTest
-    src/core/TimerTest.cpp
-    src/core/TransmissionModeManagerTest.cpp
-    src/core/TransmissionModeTest.cpp
-    src/core/TransmissionTest.cpp)
-add_middleware_unit_test(middlewarePduBrokerTest src/core/PduBrokerTest.cpp
-                         src/core/PduSlotAccessTest.cpp)
-target_link_libraries(middlewarePduBrokerTest PRIVATE middlewareConcurrencyMock)
+    middlewareSigPduBrokerTest middlewareSig src/sig/core/PduBrokerTest.cpp
+    src/sig/core/PduSlotAccessTest.cpp)
+target_link_libraries(middlewareSigPduBrokerTest
+                      PRIVATE middlewareConcurrencyMock)
+
+# Service-based communication
+add_middleware_unit_test(
+    middlewareSvcProxySkeletonBaseTest
+    middlewareSvc
+    src/svc/core/ProxyAttributesTest.cpp
+    src/svc/core/ProxyBaseTest.cpp
+    src/svc/core/SkeletonAttributeTest.cpp
+    src/svc/core/SkeletonBaseTest.cpp
+    src/svc/core/TypesTest.cpp)
 
 add_middleware_unit_test(
-    middlewareMemoryPoolManagementTest src/memory/AggregatorTest.cpp
-    src/memory/AllocatorBaseTest.cpp src/memory/PoolsTest.cpp)
+    middlewareSvcRequestResponseTest
+    middlewareSvc
+    src/svc/core/ResponseBufferTest.cpp
+    src/svc/rpc/ProxyFireAndForgetMethodTest.cpp
+    src/svc/rpc/ProxyMethodTest.cpp)
 
-add_middleware_unit_test(middlewareLoggingApiTest src/core/LoggerApi.cpp)
+add_middleware_unit_test(middlewareSvcInstanceDatabaseTest middlewareSvc
+                         src/svc/core/DbManipulatorTest.cpp)
+
+add_middleware_unit_test(
+    middlewareSvcClusterConnectionTest middlewareSvc
+    src/svc/core/ClusterConfigurationTest.cpp src/svc/core/ConnectionTest.cpp)
+
+add_middleware_unit_test(
+    middlewareSvcMessageManagementTest middlewareSvc
+    src/svc/core/MessagePayloadBuilderTest.cpp src/svc/core/MessageTest.cpp)
+
+add_middleware_unit_test(middlewareSvcLoggingApiTest middlewareSvc
+                         src/svc/core/LoggerApi.cpp)
+
+# Shared base
+add_middleware_unit_test(middlewareQueueTest middleware src/queue/QueueTest.cpp)
+
+add_middleware_unit_test(
+    middlewareMemoryPoolManagementTest
+    middleware
+    src/memory/AggregatorTest.cpp
+    src/memory/AllocatorBaseTest.cpp
+    src/memory/PoolsTest.cpp)
 
 add_custom_target(middlewareTest DEPENDS ${MIDDLEWARE_TEST_TARGETS})
 
