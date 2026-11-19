@@ -101,6 +101,7 @@ target_link_libraries(
             main
             stdioConsoleInput
             osRtos
+            ${APPLICATION_LINK_ADD}
             asyncRtosImpl
             util
             time
