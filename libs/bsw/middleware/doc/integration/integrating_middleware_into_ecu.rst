@@ -289,7 +289,7 @@ integrator:
   ``--//libs/bsw/middleware:middleware_concurrency=<label>`` flag in your
   platform definition. Each of the four interface flags defaults to
   ``//bazel/config:no_implementation``, which is incompatible, so platforms that
-  do not bind them cannot build ``//libs/bsw/middleware`` (see ``//bazel/platform``
+  do not bind them cannot build the middleware libraries (see ``//bazel/platform``
   for the bindings used by the reference app, unit tests and simulation).
 
 The platform integrator must provide both lock types in
@@ -413,14 +413,14 @@ library that links ``middleware``/``middlewareInterfaces``.
 PDU signal qualifier
 --------------------
 
-Every generated PDU reader takes an optional ``middleware::core::IQualifier*``
+Every generated PDU reader takes an optional ``middleware::sig::core::IQualifier*``
 in its constructor and calls ``qualify()`` on it for each snapshot. The
 application implements and owns the qualifier, so it controls the lifetime and
 the result API. Passing ``nullptr`` disables qualification.
 
 .. code-block:: cpp
 
-   class Qualifier final : public middleware::core::IQualifier
+   class Qualifier final : public middleware::sig::core::IQualifier
    {
    public:
        enum class Qualification : uint8_t
@@ -442,7 +442,7 @@ the result API. Passing ``nullptr`` disables qualification.
 * ``qualify()`` is called by ``read()`` with the sequence number and raw bytes
   of the snapshot, before the signals are decoded.
 * A simulation reference implementation is available at
-  ``//libs/bsw/middleware/simulation/platform_integration/qualifier/include/middleware/signal/qualifier.h``.
+  ``//libs/bsw/middleware/simulation/platform_integration/qualifier/include/middleware/sig/qualifier.h``.
 
 Add the generated middleware code to the ECU build
 --------------------------------------------------
@@ -497,7 +497,7 @@ this pattern:
        PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include
               ${_GEN_DIR}/include/generated_code)
 
-   target_link_libraries(middlewareConfiguration PUBLIC asyncBinding middleware logger)
+   target_link_libraries(middlewareConfiguration PUBLIC asyncBinding middlewareSig middlewareSvc logger)
 
 Key points:
 
@@ -506,9 +506,14 @@ Key points:
 * Platform binding sources (time, logger, OS, concurrency) are compiled into
   this same configuration library, not into ``middleware`` itself. The
   concrete implementation is an additional source file.
+* Link ``middlewareSig`` (signal-based PDU communication) and/or ``middlewareSvc``
+  (service-based communication) depending on what the deployment uses; both build
+  on the shared ``middleware`` base library (memory pools and queues). The Bazel
+  equivalents are ``//libs/bsw/middleware:middleware_sig`` and
+  ``//libs/bsw/middleware:middleware_svc``.
 * Link the resulting configuration library into the final ECU executable.
-  Linking ``middleware`` alone is not sufficient because it only provides the
-  generic core, not the generated service code or platform bindings.
+  Linking the middleware libraries alone is not sufficient because they only
+  provide the generic core, not the generated code or platform bindings.
 
 Instantiate shared-memory runtime objects from the queue and allocator configuration
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -737,7 +742,7 @@ generated PDU access table and the PDU ID queue:
 
 .. code-block:: cpp
 
-   class BusDriver final : public middleware::core::IPduTxSink
+   class BusDriver final : public middleware::sig::core::IPduTxSink
    {
    public:
        void submit(uint32_t id, etl::span<uint8_t const> payload) override;

@@ -9,7 +9,7 @@
  ********************************************************************************/
 #pragma once
 
-#include <middleware/core/ResponseBufferBase.h>
+#include <middleware/svc/core/ResponseBufferBase.h>
 #include <util/logger/Logger.h>
 
 #include "org/test/foo/FooSkeleton.h"
@@ -28,7 +28,7 @@ public:
         data_.fooValue++;
         fooDefault.set(data_);
         auto const result = fooDefault.send();
-        if (result == ::middleware::core::HRESULT::Ok)
+        if (result == ::middleware::svc::core::HRESULT::Ok)
         {
             ::util::logger::Logger::info(
                 ::util::logger::DEMO,
@@ -38,7 +38,7 @@ public:
     }
 
     void getFooDefaultAttribute(
-        ::middleware::core::ResponseBufferBase::SkeletonResponseInfo& response) override
+        ::middleware::svc::core::ResponseBufferBase::SkeletonResponseInfo& response) override
     {
         respondGetFooDefaultAttribute(response, data_);
     }

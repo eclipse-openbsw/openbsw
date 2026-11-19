@@ -13,7 +13,7 @@
 #include <features/communication/dummy_serviceCommon.h>
 #include <features/communication/dummy_serviceSkeleton.h>
 
-#include <middleware/core/ResponseBufferBase.h>
+#include <middleware/svc/core/ResponseBufferBase.h>
 
 #include <cstdint>
 
@@ -34,11 +34,11 @@ public:
     using Baz  = features::communication::DummyService::Baz;
     using FireAndForgetPayload = features::communication::DummyService::FireAndForgetPayload;
     using MwInstanceId         = features::communication::DummyService::internal::InstanceId;
-    using SkeletonResponseInfo = ::middleware::core::ResponseBufferBase::SkeletonResponseInfo;
+    using SkeletonResponseInfo = ::middleware::svc::core::ResponseBufferBase::SkeletonResponseInfo;
 
     bool init()
     {
-        return Base::init(MwInstanceId::Core0ProviderDummy) == ::middleware::core::HRESULT::Ok;
+        return Base::init(MwInstanceId::Core0ProviderDummy) == ::middleware::svc::core::HRESULT::Ok;
     }
 
     void shutdown() { Base::deInit(); }
@@ -66,8 +66,10 @@ public:
         /* Disabled for the mock unit test: init() is mocked, so isInitialized() stays false. */
         if (/* Base::isInitialized() && */ pendingAsyncResponse_ != nullptr)
         {
-            [[maybe_unused]] ::middleware::core::HRESULT const result = Base::respondAsyncMethod(
-                *pendingAsyncResponse_, features::communication::DummyService::Baz{9U, 8U, 7U, 6U});
+            [[maybe_unused]] ::middleware::svc::core::HRESULT const result
+                = Base::respondAsyncMethod(
+                    *pendingAsyncResponse_,
+                    features::communication::DummyService::Baz{9U, 8U, 7U, 6U});
             pendingAsyncResponse_ = nullptr;
         }
     }
@@ -79,7 +81,7 @@ public:
     {
         if (Base::isInitialized())
         {
-            [[maybe_unused]] ::middleware::core::HRESULT const result
+            [[maybe_unused]] ::middleware::svc::core::HRESULT const result
                 = this->simpleBroadcast.send(BROADCAST_VALUE);
         }
     }
@@ -92,7 +94,8 @@ public:
         if (Base::isInitialized())
         {
             this->simpleField.set(value);
-            [[maybe_unused]] ::middleware::core::HRESULT const result = this->simpleField.send();
+            [[maybe_unused]] ::middleware::svc::core::HRESULT const result
+                = this->simpleField.send();
         }
     }
 

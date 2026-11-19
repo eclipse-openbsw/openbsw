@@ -10,10 +10,10 @@
  ********************************************************************************/
 -#}
 {% macro cluster_connection_meta(connection) %}
-class ClusterConnection{{ connection.sourceCluster.name }}To{{ connection.targetCluster.name }}Meta : public core::IClusterConnectionConfiguration
+class ClusterConnection{{ connection.sourceCluster.name }}To{{ connection.targetCluster.name }}Meta : public svc::core::IClusterConnectionConfiguration
 {
 public:
-    using Base = core::IClusterConnectionConfiguration;
+    using Base = svc::core::IClusterConnectionConfiguration;
 
     ClusterConnection{{ connection.sourceCluster.name }}To{{ connection.targetCluster.name }}Meta()
 {% if (connection.consumers | length > 0) and (connection.providers | length > 0) %}
@@ -48,11 +48,11 @@ public:
     ClusterConnection{{ connection.sourceCluster.name }}To{{ connection.targetCluster.name }}Meta& operator=(ClusterConnection{{ connection.sourceCluster.name }}To{{ connection.targetCluster.name }}Meta&&) = delete;
     ClusterConnection{{ connection.sourceCluster.name }}To{{ connection.targetCluster.name }}Meta(ClusterConnection{{ connection.sourceCluster.name }}To{{ connection.targetCluster.name }}Meta&&) = delete;
 
-    [[nodiscard]] uint8_t getSourceClusterId() const final { return etl::to_underlying(core::ClusterId::{{ connection.sourceCluster.name }}); }
+    [[nodiscard]] uint8_t getSourceClusterId() const final { return etl::to_underlying(svc::core::ClusterId::{{ connection.sourceCluster.name }}); }
 
-    [[nodiscard]] uint8_t getTargetClusterId() const final { return etl::to_underlying(core::ClusterId::{{ connection.targetCluster.name }}); }
+    [[nodiscard]] uint8_t getTargetClusterId() const final { return etl::to_underlying(svc::core::ClusterId::{{ connection.targetCluster.name }}); }
 
-    [[nodiscard]] bool write(const core::Message& msg) const final
+    [[nodiscard]] bool write(const svc::core::Message& msg) const final
     {
         etl::remove_pointer<decltype(::middleware::shm::getQueueTo{{ connection.targetCluster.name }}())>::type::Sender sender(*::middleware::shm::getQueueTo{{ connection.targetCluster.name }}());
         return sender.write(msg);
@@ -61,20 +61,20 @@ public:
     [[nodiscard]] size_t registeredTransceiversCount(uint16_t serviceId) const final
     {
 {% if (connection.consumers | length > 0) and (connection.providers | length > 0) %}
-        return core::meta::DbManipulator::registeredTransceiversCount(
+        return svc::core::meta::DbManipulator::registeredTransceiversCount(
                    proxyTransceivers_.begin(), proxyTransceivers_.end(), serviceId) +
-               core::meta::DbManipulator::registeredTransceiversCount(
+               svc::core::meta::DbManipulator::registeredTransceiversCount(
                    skeletonTransceivers_.begin(), skeletonTransceivers_.end(), serviceId);
 {% elif connection.consumers | length > 0 %}
-        return core::meta::DbManipulator::registeredTransceiversCount(
+        return svc::core::meta::DbManipulator::registeredTransceiversCount(
             proxyTransceivers_.begin(), proxyTransceivers_.end(), serviceId);
 {% else %}
-        return core::meta::DbManipulator::registeredTransceiversCount(
+        return svc::core::meta::DbManipulator::registeredTransceiversCount(
             skeletonTransceivers_.begin(), skeletonTransceivers_.end(), serviceId);
 {% endif %}
     }
 
-    [[nodiscard]] core::HRESULT dispatchMessage(const core::Message& msg) const final
+    [[nodiscard]] svc::core::HRESULT dispatchMessage(const svc::core::Message& msg) const final
     {
 {% if (connection.consumers | length > 0) and (connection.providers | length > 0) %}
     return IClusterConnectionConfigurationBase::dispatchMessage(proxyTransceivers_.begin(),
@@ -92,23 +92,23 @@ public:
     }
 
 {% if connection.consumers | length > 0 %}
-    void registerTimeoutTransceiver(core::ITimeoutHandler& transceiver) final
+    void registerTimeoutTransceiver(svc::core::ITimeoutHandler& transceiver) final
     {
-        core::ITimeoutConfiguration::registerTimeoutTransceiver(transceiver, timeoutTransceivers_);
+        svc::core::ITimeoutConfiguration::registerTimeoutTransceiver(transceiver, timeoutTransceivers_);
     }
 {% else %}
-    void registerTimeoutTransceiver(core::ITimeoutHandler&) final
+    void registerTimeoutTransceiver(svc::core::ITimeoutHandler&) final
     {
     }
 {% endif %}
 
 {% if connection.consumers | length > 0 %}
-    void unregisterTimeoutTransceiver(core::ITimeoutHandler& transceiver) final
+    void unregisterTimeoutTransceiver(svc::core::ITimeoutHandler& transceiver) final
     {
-        core::ITimeoutConfiguration::unregisterTimeoutTransceiver(transceiver, timeoutTransceivers_);
+        svc::core::ITimeoutConfiguration::unregisterTimeoutTransceiver(transceiver, timeoutTransceivers_);
     }
 {% else %}
-    void unregisterTimeoutTransceiver(core::ITimeoutHandler&) final
+    void unregisterTimeoutTransceiver(svc::core::ITimeoutHandler&) final
     {
     }
 {% endif %}
@@ -116,26 +116,26 @@ public:
     void updateTimeouts() final
     {
 {% if connection.consumers | length > 0 %}
-        core::ITimeoutConfiguration::updateTimeouts(timeoutTransceivers_);
+        svc::core::ITimeoutConfiguration::updateTimeouts(timeoutTransceivers_);
 {% endif %}
     }
 
-    [[nodiscard]] core::HRESULT subscribe(core::ProxyBase& proxy, uint16_t serviceInstanceId) final
+    [[nodiscard]] svc::core::HRESULT subscribe(svc::core::ProxyBase& proxy, uint16_t serviceInstanceId) final
     {
 {% if connection.consumers | length > 0 %}
-        return core::meta::DbManipulator::subscribe(
+        return svc::core::meta::DbManipulator::subscribe(
             proxyTransceivers_.begin(), proxyTransceivers_.end(), proxy, serviceInstanceId);
 {% else %}
         static_cast<void>(proxy);
         static_cast<void>(serviceInstanceId);
-        return core::HRESULT::NotImplemented;
+        return svc::core::HRESULT::NotImplemented;
 {% endif %}
     }
 
-    void unsubscribe(core::ProxyBase& proxy, uint16_t serviceId) final
+    void unsubscribe(svc::core::ProxyBase& proxy, uint16_t serviceId) final
     {
 {% if connection.consumers | length > 0 %}
-        core::meta::DbManipulator::unsubscribe(
+        svc::core::meta::DbManipulator::unsubscribe(
             proxyTransceivers_.begin(), proxyTransceivers_.end(), proxy, serviceId);
 {% else %}
         static_cast<void>(proxy);
@@ -143,22 +143,22 @@ public:
 {% endif %}
     }
 
-    [[nodiscard]] core::HRESULT subscribe(core::SkeletonBase& skeleton, uint16_t serviceInstanceId) final
+    [[nodiscard]] svc::core::HRESULT subscribe(svc::core::SkeletonBase& skeleton, uint16_t serviceInstanceId) final
     {
 {% if connection.providers | length > 0 %}
-        return core::meta::DbManipulator::subscribe(
+        return svc::core::meta::DbManipulator::subscribe(
             skeletonTransceivers_.begin(), skeletonTransceivers_.end(), skeleton, serviceInstanceId);
 {% else %}
         static_cast<void>(skeleton);
         static_cast<void>(serviceInstanceId);
-        return core::HRESULT::NotImplemented;
+        return svc::core::HRESULT::NotImplemented;
 {% endif %}
     }
 
-    void unsubscribe(core::SkeletonBase& skeleton, uint16_t serviceId) final
+    void unsubscribe(svc::core::SkeletonBase& skeleton, uint16_t serviceId) final
     {
 {% if connection.providers | length > 0 %}
-        core::meta::DbManipulator::unsubscribe(
+        svc::core::meta::DbManipulator::unsubscribe(
             skeletonTransceivers_.begin(), skeletonTransceivers_.end(), skeleton, serviceId);
 {% else %}
         static_cast<void>(skeleton);
@@ -170,19 +170,19 @@ public:
 
   private:
     {% for consumer in connection.consumers %}
-    etl::vector<core::TransceiverBase*, {{ consumer.maxInstances }}U> {{ consumer.namespace | replace("::", "") | lower }}{{ consumer.name }}ProxyTransceivers_;
+    etl::vector<svc::core::TransceiverBase*, {{ consumer.maxInstances }}U> {{ consumer.namespace | replace("::", "") | lower }}{{ consumer.name }}ProxyTransceivers_;
     {% endfor %}
     {% for provider in connection.providers %}
-    etl::vector<core::TransceiverBase*, {{ provider.maxInstances }}U> {{ provider.namespace | replace("::", "") | lower }}{{ provider.name }}SkeletonTransceivers_;
+    etl::vector<svc::core::TransceiverBase*, {{ provider.maxInstances }}U> {{ provider.namespace | replace("::", "") | lower }}{{ provider.name }}SkeletonTransceivers_;
     {% endfor %}
     {% if connection.consumers | length > 0 %}
-    etl::vector<core::ITimeoutHandler*, {{ connection.consumers | sum(attribute='maxInstances') }}U> timeoutTransceivers_;
+    etl::vector<svc::core::ITimeoutHandler*, {{ connection.consumers | sum(attribute='maxInstances') }}U> timeoutTransceivers_;
     {% endif %}
     {% if connection.consumers | length > 0 %}
-    etl::array<core::meta::TransceiverContainer, {{ connection.consumers | length }}U> proxyTransceivers_;
+    etl::array<svc::core::meta::TransceiverContainer, {{ connection.consumers | length }}U> proxyTransceivers_;
     {% endif %}
     {% if connection.providers | length > 0 %}
-    etl::array<core::meta::TransceiverContainer, {{ connection.providers | length }}U> skeletonTransceivers_;
+    etl::array<svc::core::meta::TransceiverContainer, {{ connection.providers | length }}U> skeletonTransceivers_;
     {% endif %}
 };
 {% endmacro %}

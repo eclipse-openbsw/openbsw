@@ -64,7 +64,7 @@ Key Terminology
   Proxies and skeletons are initialized with generated instance identifiers plus cluster context.
 * **Connected**: for static service mapping, a proxy or skeleton is considered connected when
   ``init(...)`` returns a successful registration result (normally
-  ``::middleware::core::HRESULT::Ok``). An already-registered result is also
+  ``::middleware::svc::core::HRESULT::Ok``). An already-registered result is also
   treated as initialized by the generated proxy.
   If ``init(...)`` fails, do not call communication APIs.
 * **Subscribed**: a client subscribes to a broadcast or attribute updates by registering a receive handler on the generated proxy event/attribute object.
@@ -95,10 +95,10 @@ Proxy classes provide two lifecycle methods:
   It also clears registered event and attribute receive handlers through the
   proxy's internal notification-handler cleanup.
 
-``init`` returns ``::middleware::core::HRESULT``.
+``init`` returns ``::middleware::svc::core::HRESULT``.
 Continue if the return value is a successful registration result, normally
-``::middleware::core::HRESULT::Ok`` or
-``::middleware::core::HRESULT::InstanceAlreadyRegistered``.
+``::middleware::svc::core::HRESULT::Ok`` or
+``::middleware::svc::core::HRESULT::InstanceAlreadyRegistered``.
 
 Proxy ``init`` requires:
 
@@ -120,10 +120,10 @@ Triggering and Receiving Method Calls as a Proxy
 
 Relevant proxy-side behavior:
 
-* Generated method calls return ``::etl::expected<uint16_t, ::middleware::core::HRESULT>``.
+* Generated method calls return ``::etl::expected<uint16_t, ::middleware::svc::core::HRESULT>``.
   On success, the value is the request identifier.
   On failure, the error code explains why the request was rejected immediately.
-* Request/response methods require a callback with signature ``etl::expected<etl::reference_wrapper<MethodOutputType const>, ::middleware::core::Future::State>``, also exposed as the generated ``<MethodName>Result`` alias.
+* Request/response methods require a callback with signature ``etl::expected<etl::reference_wrapper<MethodOutputType const>, ::middleware::svc::core::Future::State>``, also exposed as the generated ``<MethodName>Result`` alias.
   The callback receives either a const reference to the payload data or an asynchronous failure state.
 * ``FireAndForget`` methods do not have response callbacks.
 
@@ -400,8 +400,8 @@ Error Handling
 
 The generated APIs use two error channels:
 
-* **Immediate middleware return codes** via ``::middleware::core::HRESULT``.
-* **Asynchronous method completion states** via ``::middleware::core::Future::State``.
+* **Immediate middleware return codes** via ``::middleware::svc::core::HRESULT``.
+* **Asynchronous method completion states** via ``::middleware::svc::core::Future::State``.
 
 Common ``HRESULT`` values for service APIs:
 

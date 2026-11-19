@@ -1,0 +1,116 @@
+/********************************************************************************
+ * Copyright (c) 2025 BMW AG
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Apache License Version 2.0 which is available at
+ * https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ ********************************************************************************/
+
+#pragma once
+
+#include "middleware/svc/core/Message.h"
+#include "middleware/svc/core/MessagePayloadBuilder.h"
+#include "middleware/svc/core/ResponseBufferBase.h"
+#include "middleware/svc/core/types.h"
+
+#include <etl/optional.h>
+#include <etl/type_traits.h>
+#include <etl/vector.h>
+
+#include <cstdint>
+
+namespace middleware::svc::core
+{
+
+/**
+ * Compile-time traits describing a response's type and member ID.
+ *
+ * \tparam T The response payload type
+ * \tparam MemberIdValue The member ID for this response
+ */
+template<typename T, uint16_t MemberIdValue>
+struct ResponseTraits
+{
+    using ResponseType                         = T;
+    static constexpr uint16_t METHOD_MEMBER_ID = MemberIdValue;
+};
+
+/// Out-of-class definition required for ODR-use in C++14.
+template<typename T, uint16_t MemberIdValue>
+constexpr uint16_t ResponseTraits<T, MemberIdValue>::METHOD_MEMBER_ID;
+
+/**
+ * Templated response buffer for skeleton responses.
+ * Manages a fixed-capacity pool of response slots and handles payload allocation
+ * and sending.
+ *
+ * \tparam Traits ResponseTraits describing the response type and member ID
+ * \tparam RESPONSE_LIMIT Maximum number of concurrent pending responses
+ */
+template<typename Traits, uint16_t RESPONSE_LIMIT>
+class ResponseBuffer : public ResponseBufferBase
+{
+public:
+    using Base               = ResponseBufferBase;
+    using ResponseTraitsType = Traits;
+    using ResponseType       = typename Traits::ResponseType;
+    using ResponseContainer  = ::etl::vector<Base::SkeletonResponseInfo, RESPONSE_LIMIT>;
+
+    ResponseBuffer(SkeletonBase const& skeleton) : Base(skeleton, _responses) {}
+
+    /**
+     * Sends a response for a previously allocated response slot.
+     *
+     * \param response Response slot info
+     * \param result Response payload to send
+     * \param handleResponseFailure True to cancel the response on send failure
+     * \return HRESULT Result code
+     */
+    template<typename T = ResponseType>
+    ::etl::enable_if_t<!::etl::is_void<T>::value, HRESULT> respond(
+        SkeletonResponseInfo& response, T const& result, bool const handleResponseFailure = true)
+    {
+        auto ret = HRESULT::ResponseBufferFutureNotFound;
+
+        if (Base::isResponseIteratorValid(&response))
+        {
+            Message msg = Base::generateResponseMessageHeader(response, Traits::METHOD_MEMBER_ID);
+            ret         = MessagePayloadBuilder::getInstance().allocate(result, msg);
+            if (ret == HRESULT::Ok)
+            {
+                ret = Base::sendResponse(msg, response, handleResponseFailure);
+            }
+        }
+
+        return ret;
+    }
+
+    /**
+     * Sends a void response (header only) for a previously allocated response slot.
+     *
+     * \param response Response slot info
+     * \param handleResponseFailure True to cancel the response on send failure
+     * \return HRESULT Result code
+     */
+    template<typename T = ResponseType>
+    ::etl::enable_if_t<::etl::is_void<T>::value, HRESULT>
+    respond(SkeletonResponseInfo& response, bool const handleResponseFailure = true)
+    {
+        auto ret = HRESULT::ResponseBufferFutureNotFound;
+
+        if (Base::isResponseIteratorValid(&response))
+        {
+            Message msg = Base::generateResponseMessageHeader(response, Traits::METHOD_MEMBER_ID);
+            ret         = Base::sendResponse(msg, response, handleResponseFailure);
+        }
+
+        return ret;
+    }
+
+private:
+    ResponseContainer _responses;
+};
+
+} // namespace middleware::svc::core

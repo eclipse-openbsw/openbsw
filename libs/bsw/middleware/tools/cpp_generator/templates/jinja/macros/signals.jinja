@@ -50,7 +50,7 @@ const {{ signal_cpp_type(signal) }}{{ "&" if signal.type == "array" or is_bitset
 
 {#- One statement appending 'source' to the bit_stream_writer named 'stream'. -#}
 {%- macro signal_write_stmt(signal, pdu, source) -%}
-::middleware::core::codec::writeSignal<{{ signal.bit_length }}U>(stream, {{ source }});
+::middleware::sig::core::codec::writeSignal<{{ signal.bit_length }}U>(stream, {{ source }});
 {%- endmacro -%}
 
 {%- macro _unsigned_all_ones_expr(signal, underlying_type) -%}
@@ -77,5 +77,5 @@ true
 {%- endmacro -%}
 
 {%- macro signal_read_expr(signal, pdu) -%}
-::middleware::core::codec::readSignal<{{ signal_cpp_type(signal) }}, {{ signal.bit_length }}U>(reader)
+::middleware::sig::core::codec::readSignal<{{ signal_cpp_type(signal) }}, {{ signal.bit_length }}U>(reader)
 {%- endmacro -%}

@@ -17,7 +17,7 @@
 #include "gmock/gmock.h"
 #include "logger/mock/LoggerMock.h"
 #include "memory/mock/AllocatorMock.h"
-#include "middleware/core/types.h"
+#include "middleware/svc/core/types.h"
 #include "proxy_app.h"
 
 namespace application
@@ -64,13 +64,13 @@ TEST_F(ProxyAppTestFixture, AsyncMethodForwardsToMock)
         mock_,
         init(
             features::communication::DummyService::internal::Core0ProviderDummy,
-            middleware::core::ClusterId::Core1))
-        .WillOnce(testing::Return(middleware::core::HRESULT::Ok));
+            middleware::svc::core::ClusterId::Core1))
+        .WillOnce(testing::Return(middleware::svc::core::HRESULT::Ok));
     EXPECT_CALL(mock_, asyncMethod(::testing::_, ::testing::_))
         .WillOnce(::testing::DoAll(
             ::testing::SaveArg<1>(&asyncMethodCb),
             ::testing::Return(
-                etl::expected<uint16_t, middleware::core::HRESULT>{kExpectedRequestId})));
+                etl::expected<uint16_t, middleware::svc::core::HRESULT>{kExpectedRequestId})));
 
     // ACT
     app_.startup();
@@ -107,11 +107,11 @@ TEST_F(ProxyAppTestFixture, FireAndForgetMethodForwardsToMock)
         mock_,
         init(
             features::communication::DummyService::internal::Core0ProviderDummy,
-            middleware::core::ClusterId::Core1))
-        .WillOnce(testing::Return(middleware::core::HRESULT::Ok));
+            middleware::svc::core::ClusterId::Core1))
+        .WillOnce(testing::Return(middleware::svc::core::HRESULT::Ok));
     EXPECT_CALL(mock_, fireAndForgetMethod(::testing::Ref(payload)))
         .WillOnce(testing::Return(
-            etl::expected<uint16_t, middleware::core::HRESULT>{kExpectedRequestId}));
+            etl::expected<uint16_t, middleware::svc::core::HRESULT>{kExpectedRequestId}));
 
     // ACT
     app_.startup();
@@ -135,13 +135,13 @@ TEST_F(ProxyAppTestFixture, AttributeGetterForwardsToMock)
         mock_,
         init(
             features::communication::DummyService::internal::Core0ProviderDummy,
-            middleware::core::ClusterId::Core1))
-        .WillOnce(testing::Return(middleware::core::HRESULT::Ok));
+            middleware::svc::core::ClusterId::Core1))
+        .WillOnce(testing::Return(middleware::svc::core::HRESULT::Ok));
     EXPECT_CALL(mock_.simpleField, get(::testing::_))
         .WillOnce(::testing::DoAll(
             ::testing::SaveArg<0>(&getterCallback),
-            ::testing::Return(
-                etl::expected<uint16_t, middleware::core::HRESULT>{kExpectedGetterRequestId})));
+            ::testing::Return(etl::expected<uint16_t, middleware::svc::core::HRESULT>{
+                kExpectedGetterRequestId})));
 
     // ACT
     app_.startup();
@@ -175,11 +175,11 @@ TEST_F(ProxyAppTestFixture, AttributeSetterForwardsToMock)
         mock_,
         init(
             features::communication::DummyService::internal::Core0ProviderDummy,
-            middleware::core::ClusterId::Core1))
-        .WillOnce(testing::Return(middleware::core::HRESULT::Ok));
+            middleware::svc::core::ClusterId::Core1))
+        .WillOnce(testing::Return(middleware::svc::core::HRESULT::Ok));
     EXPECT_CALL(mock_.simpleField, set(42U))
         .WillOnce(testing::Return(
-            etl::expected<uint16_t, middleware::core::HRESULT>{kExpectedSetterRequestId}));
+            etl::expected<uint16_t, middleware::svc::core::HRESULT>{kExpectedSetterRequestId}));
 
     // ACT
     app_.startup();
@@ -201,8 +201,8 @@ TEST_F(ProxyAppTestFixture, AttributeReceiveForwardsToMock)
         mock_,
         init(
             features::communication::DummyService::internal::Core0ProviderDummy,
-            middleware::core::ClusterId::Core1))
-        .WillOnce(testing::Return(middleware::core::HRESULT::Ok));
+            middleware::svc::core::ClusterId::Core1))
+        .WillOnce(testing::Return(middleware::svc::core::HRESULT::Ok));
     EXPECT_CALL(mock_.simpleField, setReceiveHandler(::testing::_))
         .WillOnce(::testing::SaveArg<0>(&attributeCallback));
 
@@ -227,8 +227,8 @@ TEST_F(ProxyAppTestFixture, EventReceiveForwardsToMock)
         mock_,
         init(
             features::communication::DummyService::internal::Core0ProviderDummy,
-            middleware::core::ClusterId::Core1))
-        .WillOnce(testing::Return(middleware::core::HRESULT::Ok));
+            middleware::svc::core::ClusterId::Core1))
+        .WillOnce(testing::Return(middleware::svc::core::HRESULT::Ok));
     EXPECT_CALL(mock_.simpleBroadcast, setReceiveHandler(::testing::_))
         .WillOnce(::testing::SaveArg<0>(&eventCallback));
 

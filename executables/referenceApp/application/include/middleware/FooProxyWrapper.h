@@ -12,7 +12,7 @@
 #include <etl/delegate.h>
 #include <etl/expected.h>
 
-#include <middleware/core/Future.h>
+#include <middleware/svc/core/Future.h>
 #include <util/logger/Logger.h>
 
 #include "org/test/foo/FooProxy.h"
@@ -26,7 +26,8 @@ public:
         using namespace org::test::foo::Foo;
 
         proxy_.init(
-            internal::InstanceId::Cluster0ProviderFoo, ::middleware::core::ClusterId::Cluster1);
+            internal::InstanceId::Cluster0ProviderFoo,
+            ::middleware::svc::core::ClusterId::Cluster1);
 
         proxy_.fooDefault.setReceiveHandler(
             ::etl::delegate<void(FooStruct const&)>::
@@ -41,7 +42,7 @@ public:
 
         using GetterCb = ::etl::delegate<void(::etl::expected<
                                               ::etl::reference_wrapper<FooStruct const>,
-                                              ::middleware::core::Future::State> const&)>;
+                                              ::middleware::svc::core::Future::State> const&)>;
 
         auto const cb = GetterCb::create<FooProxyWrapper, &FooProxyWrapper::onGetResponse>(*this);
 
@@ -59,7 +60,7 @@ private:
 
     void onGetResponse(::etl::expected<
                        ::etl::reference_wrapper<org::test::foo::Foo::FooStruct const>,
-                       ::middleware::core::Future::State> const& result)
+                       ::middleware::svc::core::Future::State> const& result)
     {
         if (result.has_value())
         {

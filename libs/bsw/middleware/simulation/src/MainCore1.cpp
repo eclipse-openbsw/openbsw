@@ -15,7 +15,7 @@
 #include "middleware/Cluster1Cluster.h"
 #include "middleware/shm/PduDefinitions.h"
 #include "middleware/shm/QueueDefinitions.h"
-#include "middleware/signal/qualifier.h"
+#include "middleware/sig/qualifier.h"
 #include "org/test/bus/samplePduWithCrcFromBusReader.h"
 #include "org/test/bus/samplePduWithDatatypesFromBusReader.h"
 #include "org/test/signal/samplePduWithCrcReader.h"
@@ -26,14 +26,13 @@
 template<typename Reader>
 void readSamplePduWithCrc(char const* const label)
 {
-    middleware::signal::integration::Qualifier qualifier{};
+    middleware::sig::integration::Qualifier qualifier{};
     Reader reader{&qualifier};
     auto const samplePdu = reader.read();
-    if (qualifier.getQualification()
-        == middleware::signal::integration::Qualifier::Qualification::Ok)
+    if (qualifier.getQualification() == middleware::sig::integration::Qualifier::Qualification::Ok)
     {
         simulation::Logger::log(
-            static_cast<uint8_t>(::middleware::core::ClusterId::Cluster1),
+            static_cast<uint8_t>(::middleware::svc::core::ClusterId::Cluster1),
             label,
             " [CRC: ",
             "0x",
@@ -59,7 +58,9 @@ void readSamplePduWithCrc(char const* const label)
     else
     {
         simulation::Logger::log(
-            static_cast<uint8_t>(::middleware::core::ClusterId::Cluster1), label, " CRC invalid");
+            static_cast<uint8_t>(::middleware::svc::core::ClusterId::Cluster1),
+            label,
+            " CRC invalid");
     }
 }
 
@@ -73,7 +74,7 @@ void readSamplePduWithDatatypes(char const* const label)
     // Simulation purpose only to check data types
 
     simulation::Logger::log(
-        static_cast<uint8_t>(::middleware::core::ClusterId::Cluster1),
+        static_cast<uint8_t>(::middleware::svc::core::ClusterId::Cluster1),
         label,
         " read: ",
         "0x",
@@ -112,7 +113,7 @@ void run_main_core1()
 {
     middleware::initializeCluster1ClusterConnection();
 
-    FooProxyWrapper<middleware::core::ClusterId::Cluster1> foo_consumer{};
+    FooProxyWrapper<middleware::svc::core::ClusterId::Cluster1> foo_consumer{};
     foo_consumer.init();
 
     size_t counter               = 0U;
@@ -129,7 +130,7 @@ void run_main_core1()
             // Request current FooDefault value every 6 seconds.
             foo_consumer.requestGet();
             auto const fooMethodRequest = foo_consumer.requestFooMethod(fooMethodStartValue);
-            if (fooMethodRequest == middleware::core::HRESULT::Ok)
+            if (fooMethodRequest == middleware::svc::core::HRESULT::Ok)
             {
                 ++fooMethodStartValue;
             }
@@ -145,7 +146,7 @@ void run_main_core1()
         {
             auto const stats = middleware::shm::getQueueToCluster1()->getStats();
             simulation::Logger::logStats(
-                static_cast<uint8_t>(::middleware::core::ClusterId::Cluster1),
+                static_cast<uint8_t>(::middleware::svc::core::ClusterId::Cluster1),
                 "Messages [ Written:",
                 stats.processedMessages,
                 ", Lost: ",
@@ -157,12 +158,12 @@ void run_main_core1()
 
         middleware::processCluster1Cluster(10);
         auto const fooMethodResult = foo_consumer.pollFooMethod();
-        using FooMethodState       = middleware::core::Future::State;
+        using FooMethodState       = middleware::svc::core::Future::State;
         if (fooMethodResult.state == FooMethodState::Ready)
         {
             auto const& values = fooMethodResult.value;
             simulation::Logger::log(
-                static_cast<uint8_t>(::middleware::core::ClusterId::Cluster1),
+                static_cast<uint8_t>(::middleware::svc::core::ClusterId::Cluster1),
                 "FooMethod result, values=[",
                 values[0],
                 ", ",
@@ -178,7 +179,7 @@ void run_main_core1()
             && fooMethodResult.state != FooMethodState::Pending)
         {
             simulation::Logger::log(
-                static_cast<uint8_t>(::middleware::core::ClusterId::Cluster1),
+                static_cast<uint8_t>(::middleware::svc::core::ClusterId::Cluster1),
                 "FooMethod result failed, error=",
                 static_cast<unsigned>(fooMethodResult.state));
         }

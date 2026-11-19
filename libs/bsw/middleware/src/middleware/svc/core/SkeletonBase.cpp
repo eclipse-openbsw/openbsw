@@ -1,0 +1,187 @@
+/********************************************************************************
+ * Copyright (c) 2025 BMW AG
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Apache License Version 2.0 which is available at
+ * https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ ********************************************************************************/
+
+#include "middleware/svc/core/SkeletonBase.h"
+
+#include "middleware/logger/Logger.h"
+#include "middleware/os/TaskIdProvider.h"
+#include "middleware/svc/core/IClusterConnection.h"
+#include "middleware/svc/core/InstancesDatabase.h"
+#include "middleware/svc/core/LoggerApi.h"
+#include "middleware/svc/core/Message.h"
+#include "middleware/svc/core/types.h"
+
+#include <etl/algorithm.h>
+#include <etl/error_handler.h>
+#include <etl/span.h>
+
+#include <cstdint>
+
+namespace middleware::svc::core
+{
+
+HRESULT
+SkeletonBase::sendMessage(Message& msg) const
+{
+    HRESULT res        = HRESULT::ClusterIdNotFoundOrTransceiverNotRegistered;
+    auto const* sender = ::etl::find_if(
+        _connections.begin(),
+        _connections.end(),
+        [&msg](IClusterConnection const* const clusConn)
+        {
+            if (clusConn != nullptr)
+            {
+                return (clusConn->getTargetClusterId() == msg.getHeader().tgtClusterId);
+            }
+            return false;
+        });
+
+    if (sender != _connections.end())
+    {
+        res = (*sender)->sendMessage(msg);
+    }
+    else
+    {
+        logger::logMessageSendingFailure(
+            logger::LogLevel::Error, logger::Error::SendMessage, res, msg);
+    }
+
+    return res;
+}
+
+uint8_t SkeletonBase::getSourceClusterId() const
+{
+    auto clusterId = static_cast<uint8_t>(INVALID_CLUSTER_ID);
+    if (!_connections.empty())
+    {
+        auto const* connectionIterator = ::etl::find_if(
+            _connections.begin(),
+            _connections.end(),
+            [](IClusterConnection const* const clusConn) { return (clusConn != nullptr); });
+
+        if (connectionIterator != _connections.end())
+        {
+            clusterId = (*connectionIterator)->getSourceClusterId();
+        }
+    }
+    return clusterId;
+}
+
+void SkeletonBase::unsubscribe(uint16_t const serviceId)
+{
+    if (nullptr != _connections.data())
+    {
+        for (auto* const connection : _connections)
+        {
+            if (connection != nullptr)
+            {
+                connection->unsubscribe(*this, serviceId);
+            }
+        }
+    }
+    _connections = ::etl::span<IClusterConnection*>();
+}
+
+::etl::span<IClusterConnection* const> const& SkeletonBase::getClusterConnections() const
+{
+    return _connections;
+}
+
+bool SkeletonBase::isInitialized() const { return (!_connections.empty()); }
+
+HRESULT
+SkeletonBase::initFromInstancesDatabase(
+    uint16_t const instanceId, ::etl::span<IInstanceDatabase const* const> const& dbRange)
+{
+    unsubscribe(getServiceId());
+    auto const* databaseEntry = ::etl::find_if(
+        dbRange.begin(),
+        dbRange.end(),
+        [instanceId](IInstanceDatabase const* const dataBase) -> bool
+        {
+            auto const instances = dataBase->getInstanceIdsRange();
+            auto const* instanceIdIt
+                = ::etl::lower_bound(instances.begin(), instances.end(), instanceId);
+            return (
+                (instanceIdIt != instances.end()) && ((*instanceIdIt) == instanceId)
+                && (!dataBase->getSkeletonConnectionsRange().empty()));
+        });
+    HRESULT ret = HRESULT::TransceiverInitializationFailed;
+    if (databaseEntry != dbRange.end())
+    {
+        auto skeletonCc   = (*databaseEntry)->getSkeletonConnectionsRange();
+        bool isRegistered = true;
+        for (auto* const clusConn : skeletonCc)
+        {
+            if (nullptr != clusConn)
+            {
+                ret = clusConn->subscribe(*this, instanceId);
+                if ((ret == HRESULT::Ok) || (ret == HRESULT::InstanceAlreadyRegistered))
+                {
+                    continue;
+                }
+
+                isRegistered = false;
+                break;
+            }
+        }
+        if (isRegistered)
+        {
+            _connections = skeletonCc;
+        }
+        else
+        {
+            unsubscribe(getServiceId());
+            _instanceId = INVALID_INSTANCE_ID;
+            ret         = HRESULT::TransceiverInitializationFailed;
+        }
+    }
+    else
+    {
+        ret = HRESULT::InstanceNotFound;
+    }
+
+    if (HRESULT::Ok != ret)
+    {
+        logger::logInitFailure(
+            logger::LogLevel::Critical,
+            logger::Error::SkeletonInitialization,
+            ret,
+            getServiceId(),
+            instanceId,
+            INVALID_CLUSTER_ID);
+    }
+    return ret;
+}
+
+SkeletonBase::~SkeletonBase() = default;
+
+void SkeletonBase::checkCrossThreadError(uint32_t const initId) const
+{
+    if (SkeletonBase::isInitialized())
+    {
+        auto const currentTaskId = ::middleware::os::getProcessId();
+        if (initId != currentTaskId)
+        {
+            logger::logCrossThreadViolation(
+                logger::LogLevel::Critical,
+                logger::Error::SkeletonCrossThreadViolation,
+                getSourceClusterId(),
+                getServiceId(),
+                getInstanceId(),
+                initId,
+                currentTaskId);
+
+            ETL_ASSERT_FAIL(ETL_ERROR_GENERIC("Skeleton cross thread violation detected."));
+        }
+    }
+}
+
+} // namespace middleware::svc::core

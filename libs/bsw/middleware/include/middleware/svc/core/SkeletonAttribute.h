@@ -1,0 +1,75 @@
+/********************************************************************************
+ * Copyright (c) 2025 BMW AG
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Apache License Version 2.0 which is available at
+ * https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ ********************************************************************************/
+
+#pragma once
+
+#include "middleware/svc/core/EventSender.h"
+#include "middleware/svc/core/SkeletonBase.h"
+#include "middleware/svc/core/types.h"
+
+#include <etl/type_traits.h>
+
+#include <cstdint>
+
+namespace middleware::svc::core
+{
+
+/**
+ * Skeleton-side attribute that stores a value and optionally broadcasts changes to proxies.
+ *
+ * \tparam T The attribute value type
+ * \tparam MEMBER_ID The member ID associated with this attribute
+ * \tparam AllowsSubscriptions Whether sending change notifications is enabled
+ */
+template<typename T, uint16_t MEMBER_ID, bool AllowsSubscriptions>
+class SkeletonAttribute
+{
+public:
+    using AttributeType = T;
+
+    SkeletonAttribute(SkeletonBase& skeleton) : _eventSender(skeleton) {}
+
+    /** Returns a const reference to the current attribute value. */
+    AttributeType const& get() const { return _attributeValue; }
+
+    /** Returns a mutable reference to the current attribute value. */
+    AttributeType& get() { return _attributeValue; }
+
+    /**
+     * \brief Updates the stored attribute value without broadcasting to clients.
+     *
+     * \param value New attribute value
+     */
+    void set(AttributeType const& value)
+    {
+        if (&value != &_attributeValue)
+        {
+            _attributeValue = value;
+        }
+    }
+
+    /**
+     * \brief Broadcasts the current attribute value without changing it.
+     * Only enabled when AllowsSubscriptions is true.
+     *
+     * \return HRESULT Result code
+     */
+    template<bool B = AllowsSubscriptions, typename = ::etl::enable_if_t<B>>
+    [[nodiscard]] HRESULT send() const
+    {
+        return _eventSender.send(get(), MEMBER_ID);
+    }
+
+private:
+    EventSender _eventSender;
+    AttributeType _attributeValue{};
+};
+
+} // namespace middleware::svc::core

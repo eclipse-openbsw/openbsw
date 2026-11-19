@@ -24,8 +24,8 @@
 #include <middleware/concurrency/LockStrategies.h>
 #include <middleware/queue/Queue.h>
 
-#include "middleware/core/Message.h"
-#include "middleware/core/PduBrokerConnection.h"
+#include "middleware/svc/core/Message.h"
+#include "middleware/sig/core/PduBrokerConnection.h"
 #include "middleware/shm/PduDefinitions.h"
 
 namespace middleware::shm
@@ -33,7 +33,7 @@ namespace middleware::shm
 
 template <size_t Size>
 using MiddlewareQueue =
-    queue::Queue<queue::QueueTraits<core::Message, Size, concurrency::ScopedECULock, uint8_t*>>;
+    queue::Queue<queue::QueueTraits<svc::core::Message, Size, concurrency::ScopedECULock, uint8_t*>>;
 
 {% for cluster in clusters %}
 inline constexpr size_t QUEUE_TO_{{ cluster.name | upper }}_SIZE = {{ cluster.queueSize }}U;
@@ -46,7 +46,7 @@ using OutboundPduQueue =
   queue::Queue<queue::QueueTraits<uint32_t, OUTBOUND_PDU_QUEUE_SIZE, concurrency::ScopedECULock, uint8_t*>>;
 
 /** PDU broker for this deployment. Its scratch buffer fits the largest PDU, which load() relies on. */
-using PduBrokerConnection  = core::PduBrokerConnection<OutboundPduQueue, MAX_PDU_SIZE>;
+using PduBrokerConnection  = sig::core::PduBrokerConnection<OutboundPduQueue, MAX_PDU_SIZE>;
 {% endif %}
 
 /** Returns a pointer to the queue in shared memory. Queues are fully initialized by MemoryLayout::MemoryLayout(). */

@@ -71,7 +71,8 @@ target_include_directories(
     middlewareDocExamplesRelease
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/release ${_RELEASE_GEN_INC}
             ${_MIDDLEWARE_ROOT}/test/include)
-target_link_libraries(middlewareDocExamplesRelease PRIVATE middleware)
+target_link_libraries(middlewareDocExamplesRelease PRIVATE middlewareSig
+                                                           middlewareSvc)
 add_dependencies(middlewareDocExamplesRelease
                  middlewareDocExamplesReleaseCodegen)
 
@@ -135,7 +136,8 @@ target_include_directories(
             ${_MIDDLEWARE_ROOT}/test/include
             ${_MIDDLEWARE_ROOT}/test/mock/include
             ${CMAKE_CURRENT_SOURCE_DIR}/release)
-target_link_libraries(middlewareDocExamplesTest PRIVATE middleware gmock_main)
+target_link_libraries(middlewareDocExamplesTest
+                      PRIVATE middlewareSig middlewareSvc gmock_main)
 add_dependencies(middlewareDocExamplesTest middlewareDocExamplesTestCodegen)
 gtest_discover_tests(middlewareDocExamplesTest
                      PROPERTIES LABELS "middlewareDocExamples")

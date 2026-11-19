@@ -1,0 +1,152 @@
+/********************************************************************************
+ * Copyright (c) 2025-2026 BMW AG
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Apache License Version 2.0 which is available at
+ * https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ ********************************************************************************/
+
+#include "middleware/svc/core/IClusterConnectionConfigurationBase.h"
+
+#include "middleware/svc/core/DatabaseManipulator.h"
+#include "middleware/svc/core/ITimeoutHandler.h"
+#include "middleware/svc/core/Message.h"
+#include "middleware/svc/core/TransceiverBase.h"
+#include "middleware/svc/core/types.h"
+
+#include <etl/algorithm.h>
+#include <etl/iterator.h>
+#include <etl/vector.h>
+
+namespace middleware::svc::core
+{
+
+void ITimeoutConfiguration::registerTimeoutTransceiver(
+    ITimeoutHandler& transceiver, ::etl::ivector<ITimeoutHandler*>& timeoutTransceivers)
+{
+    auto const* timeoutIterator
+        = ::etl::find(timeoutTransceivers.cbegin(), timeoutTransceivers.cend(), &transceiver);
+    if (timeoutIterator == timeoutTransceivers.cend())
+    {
+        if (!timeoutTransceivers.full())
+        {
+            timeoutTransceivers.push_back(&transceiver);
+        }
+    }
+}
+
+void ITimeoutConfiguration::unregisterTimeoutTransceiver(
+    ITimeoutHandler& transceiver, ::etl::ivector<ITimeoutHandler*>& timeoutTransceivers)
+{
+    auto* timeoutIterator
+        = ::etl::find(timeoutTransceivers.begin(), timeoutTransceivers.end(), &transceiver);
+    if (timeoutIterator != timeoutTransceivers.end())
+    {
+        *timeoutIterator = timeoutTransceivers.back();
+        timeoutTransceivers.pop_back();
+    }
+}
+
+void ITimeoutConfiguration::updateTimeouts(
+    ::etl::ivector<ITimeoutHandler*> const& timeoutTransceivers)
+{
+    for (auto* const transceiver : timeoutTransceivers)
+    {
+        transceiver->updateTimeouts();
+    }
+}
+
+HRESULT
+IClusterConnectionConfigurationBase::dispatchMessageToProxy(
+    meta::TransceiverContainer const* const proxiesStart,
+    meta::TransceiverContainer const* const proxiesEnd,
+    Message const& msg)
+{
+    HRESULT result = HRESULT::Ok;
+
+    if (msg.isEvent())
+    {
+        auto const range = meta::DbManipulator::getTransceiversByServiceIdAndServiceInstanceId(
+            proxiesStart, proxiesEnd, msg.getHeader().serviceId, msg.getHeader().serviceInstanceId);
+        for (auto const* it = range.first; it != range.second; it = ::etl::next(it))
+        {
+            static_cast<void>((*it)->onNewMessageReceived(msg));
+        }
+    }
+    else if (msg.isResponse() || msg.isError())
+    {
+        Message::Header const& header      = msg.getHeader();
+        TransceiverBase* const transceiver = meta::DbManipulator::getTransceiver(
+            proxiesStart, proxiesEnd, header.serviceId, header.serviceInstanceId, header.addressId);
+        if (transceiver != nullptr)
+        {
+            result = transceiver->onNewMessageReceived(msg);
+        }
+        else
+        {
+            result = HRESULT::RoutingError;
+        }
+    }
+    else
+    {
+        result = HRESULT::RoutingError;
+    }
+
+    return result;
+}
+
+HRESULT
+IClusterConnectionConfigurationBase::dispatchMessageToSkeleton(
+    meta::TransceiverContainer const* const skeletonsStart,
+    meta::TransceiverContainer const* const skeletonsEnd,
+    Message const& msg)
+{
+    HRESULT result = HRESULT::Ok;
+
+    if (msg.isRequest() || msg.isFireAndForgetRequest())
+    {
+        // message comes from proxy
+        // dispatch to specific transceiver, identified by serviceInstanceId
+        Message::Header const& header = msg.getHeader();
+        auto* skeleton = meta::DbManipulator::getSkeletonByServiceIdAndServiceInstanceId(
+            skeletonsStart, skeletonsEnd, header.serviceId, header.serviceInstanceId);
+        if (skeleton != nullptr)
+        {
+            result = skeleton->onNewMessageReceived(msg);
+        }
+        else
+        {
+            result = HRESULT::ServiceNotFound;
+        }
+    }
+    else
+    {
+        result = HRESULT::RoutingError;
+    }
+
+    return result;
+}
+
+HRESULT IClusterConnectionConfigurationBase::dispatchMessage(
+    meta::TransceiverContainer const* const proxiesStart,
+    meta::TransceiverContainer const* const proxiesEnd,
+    meta::TransceiverContainer const* const skeletonsStart,
+    meta::TransceiverContainer const* const skeletonsEnd,
+    Message const& msg)
+{
+    HRESULT result = HRESULT::Ok;
+    if (msg.isEvent() || msg.isResponse() || msg.isError())
+    {
+        result = dispatchMessageToProxy(proxiesStart, proxiesEnd, msg);
+    }
+    else
+    {
+        result = dispatchMessageToSkeleton(skeletonsStart, skeletonsEnd, msg);
+    }
+
+    return result;
+}
+
+} // namespace middleware::svc::core

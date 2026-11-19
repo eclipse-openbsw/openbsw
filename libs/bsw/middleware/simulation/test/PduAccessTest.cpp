@@ -10,10 +10,10 @@
  *******************************************************************************
  */
 
-#include "middleware/core/IPduTxSink.h"
 #include "middleware/shm/Config.h"
 #include "middleware/shm/PduDefinitions.h"
 #include "middleware/shm/QueueDefinitions.h"
+#include "middleware/sig/core/IPduTxSink.h"
 
 #include <etl/array.h>
 #include <etl/span.h>
@@ -29,7 +29,7 @@
 namespace
 {
 using namespace middleware::shm;
-using middleware::core::PduAccess;
+using middleware::sig::core::PduAccess;
 
 struct Transmission
 {
@@ -37,7 +37,7 @@ struct Transmission
     std::vector<uint8_t> payload;
 };
 
-class FakeBus : public middleware::core::IPduTxSink
+class FakeBus : public middleware::sig::core::IPduTxSink
 {
 public:
     void submit(uint32_t const id, ::etl::span<uint8_t const> const payload) override

@@ -57,7 +57,7 @@ public:
         SimpleFieldAttribute::OnFieldChangedCallback;
     using EventReceiveCallback = features::communication::DummyService::proxy::
         SimpleBroadcastEvent::OnFieldChangedCallback;
-    using MwResult = etl::expected<uint16_t, ::middleware::core::HRESULT>;
+    using MwResult = etl::expected<uint16_t, ::middleware::svc::core::HRESULT>;
 
     void startup()
     {
@@ -118,8 +118,9 @@ public:
 private:
     bool init()
     {
-        return Base::init(MwInstanceId::Core0ProviderDummy, ::middleware::core::ClusterId::Core1)
-                   == ::middleware::core::HRESULT::Ok
+        return Base::init(
+                   MwInstanceId::Core0ProviderDummy, ::middleware::svc::core::ClusterId::Core1)
+                   == ::middleware::svc::core::HRESULT::Ok
                || Base::isInitialized();
     }
 

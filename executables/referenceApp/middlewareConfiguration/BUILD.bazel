@@ -68,7 +68,10 @@ middleware_codegen(
     deployment_yaml = "model/deployment.yaml",
     generated_outputs = GENERATED_OUTPUTS,
     visibility = ["//visibility:public"],
-    deps = ["//libs/bsw/middleware"],
+    deps = [
+        "//libs/bsw/middleware:middleware_sig",
+        "//libs/bsw/middleware:middleware_svc",
+    ],
 )
 
 cc_library(
@@ -80,6 +83,7 @@ cc_library(
     visibility = ["//visibility:public"],
     deps = [
         ":middleware_configuration_generated",
-        "//libs/bsw/middleware",
+        "//libs/bsw/middleware:middleware_sig",
+        "//libs/bsw/middleware:middleware_svc",
     ],
 )

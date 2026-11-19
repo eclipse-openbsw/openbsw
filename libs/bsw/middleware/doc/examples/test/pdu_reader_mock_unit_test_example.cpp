@@ -14,13 +14,13 @@
 #include "features/communication/samplePduWithCrcCommon.h"
 #include "features/communication/samplePduWithCrcReader.h"
 #include "features/communication/samplePduWithCrcReaderMock.h"
-#include "middleware/signal/qualifier.h"
+#include "middleware/sig/qualifier.h"
 
 namespace features::communication::test
 {
 
 using ::testing::NiceMock;
-using Qualifier = middleware::signal::integration::Qualifier;
+using Qualifier = middleware::sig::integration::Qualifier;
 
 TEST(PduReaderMockTest, ReaderCallsForwardToGMockInterface)
 {

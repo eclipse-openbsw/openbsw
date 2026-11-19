@@ -1,0 +1,71 @@
+/********************************************************************************
+ * Copyright (c) 2026 BMW AG
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Apache License Version 2.0 which is available at
+ * https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ ********************************************************************************/
+{% from "macros/common.jinja" import file_header %}{{ file_header() }}
+#pragma once
+
+#include <etl/span.h>
+
+#include "middleware/ClusterId.h"
+#include "middleware/svc/core/ITimeoutHandler.h"
+#include "middleware/svc/core/ProxyAttribute.h"
+#include "middleware/svc/core/ProxyBase.h"
+#include "middleware/svc/core/ProxyEventBase.h"
+#include "middleware/svc/core/ResponseBuffer.h"
+#include "middleware/svc/core/SkeletonAttribute.h"
+#include "middleware/svc/core/SkeletonBase.h"
+#include "middleware/svc/core/SkeletonEvent.h"
+#include "middleware/shm/AllocatorsDefinitions.h"
+{% for header in service.typeIncludes %}
+#include "{{ header }}"
+{% endfor %}
+
+namespace {{ service.namespace | lower }}::{{ service.name }}::internal
+{
+
+constexpr uint16_t SERVICE_ID = {{ service.deployment.ServiceID }}U;
+{% for method in service.methods %}
+constexpr uint16_t {{ method.name | camelCase }}_id = {{ method.deployment.MethodID }}U;
+{% endfor %}
+{% for attribute in service.attributes %}
+{% set namePascalCase = attribute.name | pascalCase %}
+{% if attribute.hasGetter %}
+constexpr uint16_t get_{{ namePascalCase }}_id = {{ attribute.deployment.GetterID }}U;
+{% endif %}
+{% if attribute.hasSetter %}
+constexpr uint16_t set_{{ namePascalCase }}_id = {{ attribute.deployment.SetterID }}U;
+{% endif %}
+{% if attribute.hasNotifier %}
+constexpr uint16_t event_{{ namePascalCase }}_id = {{ attribute.deployment.NotificationID }}U;
+{% endif %}
+{% endfor %}
+{% for broadcast in service.broadcasts %}
+constexpr uint16_t event_{{ broadcast.name | pascalCase }}_id = {{ broadcast.deployment.NotificationID }}U;
+{% endfor %}
+
+{% set ns = namespace (instanceNames = []) %}
+{% for cluster in clusters %}
+    {% for componentInstance in cluster.componentInstances %}
+        {% for providedPort in componentInstance.component.providedPorts %}
+            {% if providedPort.interfaceName == service.name and providedPort.interfaceNamespace == service.namespace %}
+                {% set _ = ns.instanceNames.append((cluster.name | pascalCase) ~ (componentInstance.instanceName | pascalCase) ~ (providedPort.name | pascalCase)) %}
+            {% endif %}
+        {% endfor %}
+    {% endfor %}
+{% endfor %}
+enum InstanceId : uint16_t
+{
+{% for instance in ns.instanceNames | sort %}
+    {{ instance | pascalCase }}{{ "," if not loop.last }}
+{% endfor %}
+};
+
+::etl::span<const middleware::svc::core::IInstanceDatabase* const> getClusterConnectionsDb();
+
+}  // namespace {{ service.namespace | lower }}::{{ service.name }}::internal

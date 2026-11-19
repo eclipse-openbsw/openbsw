@@ -13,7 +13,7 @@
 #include <etl/expected.h>
 
 #include "Logger.h"
-#include "middleware/core/Future.h"
+#include "middleware/svc/core/Future.h"
 #include "org/test/foo/FooProxy.h"
 
 /**
@@ -25,12 +25,12 @@
  *
  * \tparam CLUSTER_ID The ClusterId of the cluster this proxy lives on.
  */
-template<::middleware::core::ClusterId CLUSTER_ID>
+template<::middleware::svc::core::ClusterId CLUSTER_ID>
 class FooProxyWrapper
 {
 public:
     using FooMethodResult = org::test::foo::Foo::FooMethodResult;
-    using FooMethodState  = ::middleware::core::Future::State;
+    using FooMethodState  = ::middleware::svc::core::Future::State;
 
     struct FooMethodPollResult
     {
@@ -56,9 +56,9 @@ public:
         fooMethodValue_ = {};
     }
 
-    [[nodiscard]] ::middleware::core::HRESULT requestFooMethod(uint32_t const startValue)
+    [[nodiscard]] ::middleware::svc::core::HRESULT requestFooMethod(uint32_t const startValue)
     {
-        using ::middleware::core::HRESULT;
+        using ::middleware::svc::core::HRESULT;
         if (fooMethodState_ != FooMethodState::Invalid)
         {
             simulation::Logger::log(
@@ -105,7 +105,7 @@ public:
 
         using GetterCb = ::etl::delegate<void(::etl::expected<
                                               ::etl::reference_wrapper<FooStruct const>,
-                                              ::middleware::core::Future::State> const&)>;
+                                              ::middleware::svc::core::Future::State> const&)>;
 
         auto const cb = GetterCb::create<FooProxyWrapper, &FooProxyWrapper::onGetResponse>(*this);
 
@@ -135,7 +135,7 @@ private:
 
     void onGetResponse(::etl::expected<
                        ::etl::reference_wrapper<org::test::foo::Foo::FooStruct const>,
-                       ::middleware::core::Future::State> const& result)
+                       ::middleware::svc::core::Future::State> const& result)
     {
         if (result.has_value())
         {

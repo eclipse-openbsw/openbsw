@@ -168,7 +168,7 @@ Generated Reader and Qualification
 ----------------------------------
 
 Each PDU has a generated reader named ``<PduName>Reader``. Its constructor
-takes the application's ``middleware::core::IQualifier*``. Its ``read()``
+takes the application's ``middleware::sig::core::IQualifier*``. Its ``read()``
 method returns a snapshot of all decoded signals. Check the qualification
 before using any returned signal value:
 

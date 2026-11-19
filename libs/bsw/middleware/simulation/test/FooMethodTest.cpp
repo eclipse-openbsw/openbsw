@@ -29,9 +29,9 @@ uint32_t currentTimeMs{};
 
 namespace
 {
-using Consumer = FooProxyWrapper<middleware::core::ClusterId::Cluster1>;
+using Consumer = FooProxyWrapper<middleware::svc::core::ClusterId::Cluster1>;
 using State    = Consumer::FooMethodState;
-using middleware::core::HRESULT;
+using middleware::svc::core::HRESULT;
 
 static_assert(std::is_same_v<Consumer::FooMethodResult, etl::array<uint32_t, 4>>);
 
@@ -201,7 +201,7 @@ TEST_F(FooMethodTest, ResponseErrorIsPolledOnceAndAllowsRecovery)
     auto const header = receiver.peek().getHeader();
     receiver.advance();
 
-    auto const error = middleware::core::Message::createErrorResponse(
+    auto const error = middleware::svc::core::Message::createErrorResponse(
         header.serviceId,
         header.memberId,
         header.requestId,
@@ -209,7 +209,7 @@ TEST_F(FooMethodTest, ResponseErrorIsPolledOnceAndAllowsRecovery)
         header.tgtClusterId,
         header.srcClusterId,
         header.addressId,
-        middleware::core::ErrorState::UserDefinedError);
+        middleware::svc::core::ErrorState::UserDefinedError);
     auto& responseQueue = *middleware::shm::getQueueToCluster1();
     using ResponseQueue = etl::remove_reference_t<decltype(responseQueue)>;
     ResponseQueue::Sender sender(responseQueue);
