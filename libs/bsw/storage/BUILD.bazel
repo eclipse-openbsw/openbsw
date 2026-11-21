@@ -37,7 +37,6 @@ cc_library(
         "include/storage/MappingStorage.h",
         "include/storage/QueuingStorage.h",
         "include/storage/StorageJob.h",
-        "include/storage/StorageTester.h",
     ],
     strip_include_prefix = "include",
     visibility = ["//visibility:public"],
@@ -53,6 +52,8 @@ cc_library(
 cc_library(
     name = "storage_tester",
     srcs = ["src/storage/StorageTester.cpp"],
+    hdrs = ["include/storage/StorageTester.h"],
+    strip_include_prefix = "include",
     target_compatible_with = reference_app_only(),
     visibility = ["//visibility:public"],
     deps = [

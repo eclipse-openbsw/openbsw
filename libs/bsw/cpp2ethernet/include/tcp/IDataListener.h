@@ -24,6 +24,8 @@ class IDataListener
 public:
     IDataListener(IDataListener const&)            = delete;
     IDataListener& operator=(IDataListener const&) = delete;
+    IDataListener(IDataListener&&)                 = delete;
+    IDataListener& operator=(IDataListener&&)      = delete;
 
     /**
      * ErrorCodes used by IDataListener
@@ -64,6 +66,9 @@ public:
      * \param   status  ErrorCode indication why connection was closed
      */
     virtual void connectionClosed(ErrorCode status) = 0;
+
+protected:
+    ~IDataListener() = default;
 };
 
 } // namespace tcp

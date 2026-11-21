@@ -24,11 +24,17 @@ namespace doip
  * Interface for DoIP send jobs. A send job represents a single DoIP message
  * to be sent. There is no assumption about the content of a DoIP message. A send job
  * consists of a number of buffers that will be sent out one after another.
+ * Jobs carry intrusive queue links; copying or moving would duplicate those links.
  */
 class IDoIpSendJob : public ::etl::bidirectional_link<0>
 {
 public:
-    virtual ~IDoIpSendJob() = default;
+    IDoIpSendJob()                               = default;
+    IDoIpSendJob(IDoIpSendJob const&)            = delete;
+    IDoIpSendJob(IDoIpSendJob&&)                 = delete;
+    IDoIpSendJob& operator=(IDoIpSendJob const&) = delete;
+    IDoIpSendJob& operator=(IDoIpSendJob&&)      = delete;
+    virtual ~IDoIpSendJob()                      = default;
 
     /**
      * Get the number of buffers to send out for this send job (including header data).

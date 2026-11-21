@@ -28,7 +28,7 @@ namespace doip
  * This adapter implements such a generic transport message provider by mapping all calls
  * to the more specific DoIP transport message provider.
  */
-class DoIpTransportMessageProvidingListenerAdapter
+class DoIpTransportMessageProvidingListenerAdapter final
 : public ::transport::ITransportMessageProvidingListener
 {
 public:
@@ -39,6 +39,19 @@ public:
      */
     explicit DoIpTransportMessageProvidingListenerAdapter(
         IDoIpTransportMessageProvidingListener& transportMessageProvidingListener);
+
+    ~DoIpTransportMessageProvidingListenerAdapter() = default;
+    DoIpTransportMessageProvidingListenerAdapter(
+        DoIpTransportMessageProvidingListenerAdapter const&)
+        = default;
+    DoIpTransportMessageProvidingListenerAdapter(DoIpTransportMessageProvidingListenerAdapter&&)
+        = default;
+    DoIpTransportMessageProvidingListenerAdapter&
+    operator=(DoIpTransportMessageProvidingListenerAdapter const&)
+        = delete;
+    DoIpTransportMessageProvidingListenerAdapter&
+    operator=(DoIpTransportMessageProvidingListenerAdapter&&)
+        = delete;
 
     /**
      * \see ITransportMessageProvidingListener::getTransportMessage()

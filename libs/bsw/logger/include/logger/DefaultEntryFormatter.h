@@ -22,7 +22,7 @@
 namespace logger
 {
 template<class E = uint32_t, class Timestamp = uint32_t>
-class DefaultEntryFormatter : public IEntryFormatter<E, Timestamp>
+class DefaultEntryFormatter final : public IEntryFormatter<E, Timestamp>
 {
 public:
     explicit DefaultEntryFormatter(ILoggerTime<Timestamp>& loggerTime);

@@ -176,7 +176,7 @@ private:
     ::ip::IPAddress _multicastAddress;
     ::ip::IPEndpoint _destinationEndpoint;
     DoIpServerVehicleIdentificationConfig& _config;
-    IDoIpVehicleAnnouncementListener* _vehicleAnnouncementListener;
+    IDoIpVehicleAnnouncementListener* _vehicleAnnouncementListener{nullptr};
     ::async::Function _enqueueInitialBroadcastsUnicastAsync;
     ::async::Function _configChangedContinuationAsync;
     ::ip::ConfigChangedSlotType _configChangedSlot;
@@ -189,7 +189,7 @@ private:
     ::ip::NetworkInterfaceConfigKey _networkInterfaceConfigKey;
     ::ip::NetworkInterfaceConfig _configChangedNewConfig;
     uint8_t _socketGroupId;
-    ::etl::array<uint8_t, 19> _readBuffer;
+    ::etl::array<uint8_t, 19> _readBuffer{};
     ::etl::bitset<MAX_NUM_UNICAST> _newUnicastAddresses;
     uint8_t const _announceCount;
     IDoIpUdpOemMessageHandler const* _currentOemMessageHandler = nullptr;

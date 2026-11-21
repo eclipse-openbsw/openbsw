@@ -10,6 +10,8 @@
 
 #pragma once
 
+#include "doip/common/DoIpTcpConnection.h"
+
 namespace doip
 {
 /**
@@ -30,6 +32,15 @@ public:
      * \param sourceAddress source address of the external tester
      */
     virtual void connectionClosed(uint16_t sourceAddress) = 0;
+
+protected:
+    IDoIpServerConnectionStateCallback()                                          = default;
+    ~IDoIpServerConnectionStateCallback()                                         = default;
+    IDoIpServerConnectionStateCallback(IDoIpServerConnectionStateCallback const&) = default;
+    IDoIpServerConnectionStateCallback(IDoIpServerConnectionStateCallback&&)      = default;
+    IDoIpServerConnectionStateCallback& operator=(IDoIpServerConnectionStateCallback const&)
+        = default;
+    IDoIpServerConnectionStateCallback& operator=(IDoIpServerConnectionStateCallback&&) = default;
 };
 
 } // namespace doip

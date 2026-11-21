@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2025 BMW AG
+ * Copyright (c) 2025-2026 BMW AG
  *
  * This program and the accompanying materials are made available under the
  * terms of the Apache License Version 2.0 which is available at
@@ -75,7 +75,7 @@ IClusterConnectionConfigurationBase::dispatchMessageToProxy(
             static_cast<void>((*it)->onNewMessageReceived(msg));
         }
     }
-    else if (msg.isResponse())
+    else if (msg.isResponse() || msg.isError())
     {
         Message::Header const& header      = msg.getHeader();
         TransceiverBase* const transceiver = meta::DbManipulator::getTransceiver(
@@ -137,7 +137,7 @@ HRESULT IClusterConnectionConfigurationBase::dispatchMessage(
     Message const& msg)
 {
     HRESULT result = HRESULT::Ok;
-    if (msg.isEvent() || msg.isResponse())
+    if (msg.isEvent() || msg.isResponse() || msg.isError())
     {
         result = dispatchMessageToProxy(proxiesStart, proxiesEnd, msg);
     }

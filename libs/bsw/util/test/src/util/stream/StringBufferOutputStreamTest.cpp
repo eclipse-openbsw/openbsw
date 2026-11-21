@@ -12,7 +12,45 @@
 
 #include <gtest/gtest.h>
 
+#include <etl/type_traits.h>
+#include <memory>
+
 namespace stream = ::util::stream;
+
+namespace
+{
+/**
+ * Verify the existing output-stream interface destroys concrete streams and flushes their buffer.
+ */
+TEST(StringBufferOutputStreamTest, PublicInterfaceDestruction)
+{
+    static_assert(::etl::has_virtual_destructor<stream::IOutputStream>::value);
+    static_assert(!::etl::is_copy_constructible<stream::StringBufferOutputStream>::value);
+    static_assert(!::etl::is_move_constructible<stream::StringBufferOutputStream>::value);
+
+    char buffer[10]{};
+    {
+        std::unique_ptr<stream::IOutputStream> output
+            = std::make_unique<stream::StringBufferOutputStream>(::etl::span<char>(buffer));
+        output->write_string_view(::etl::string_view("abc"));
+    }
+    EXPECT_STREQ("abc", buffer);
+}
+
+/**
+ * Verify string views preserve embedded nulls and high bytes, including an empty follow-up write.
+ */
+TEST(StringBufferOutputStreamTest, StringViewPreservesEmbeddedNullAndHighBytes)
+{
+    char const input[]{'a', '\0', static_cast<char>(0xffU), 'z'};
+    char buffer[10]{};
+    stream::StringBufferOutputStream output{::etl::span<char>(buffer)};
+    output.write_string_view(::etl::string_view(input, sizeof(input)));
+    EXPECT_EQ(0, memcmp(input, buffer, sizeof(input)));
+    output.write_string_view(::etl::string_view());
+    EXPECT_EQ(0, memcmp(input, buffer, sizeof(input)));
+}
+} // namespace
 
 TEST(StringBufferOutputStream, testAppendIsSafe)
 {

@@ -11,6 +11,7 @@
 #include "doip/common/DoIpResult.h"
 
 #include <gtest/gtest.h>
+#include <type_traits>
 
 namespace
 {
@@ -18,6 +19,11 @@ using namespace ::testing;
 using namespace ::doip;
 
 using TestDoIpResult = DoIpResult<uint16_t>;
+
+static_assert(std::is_copy_constructible<TestDoIpResult>::value);
+static_assert(std::is_move_constructible<TestDoIpResult>::value);
+static_assert(std::is_copy_assignable<TestDoIpResult>::value);
+static_assert(std::is_move_assignable<TestDoIpResult>::value);
 
 TEST(DoIpResult, TestInitialization)
 {
@@ -30,6 +36,16 @@ TEST(DoIpResult, TestInitialization)
         TestDoIpResult cut(0x1234U, 0x45U);
         EXPECT_EQ(0x1234U, cut.getResult());
         EXPECT_EQ(0x45U, cut.getNackCode());
+    }
+    {
+        enum class Result : uint8_t
+        {
+            SUCCESS,
+            ERROR
+        };
+        DoIpResult<Result> cut;
+        EXPECT_EQ(Result::SUCCESS, cut.getResult());
+        EXPECT_EQ(0U, cut.getNackCode());
     }
 }
 

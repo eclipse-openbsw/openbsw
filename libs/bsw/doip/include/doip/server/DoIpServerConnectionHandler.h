@@ -214,7 +214,7 @@ private:
     void releaseSendJobAndClose(DoIpStaticPayloadSendJob& job, bool success);
     void releaseSendJob(DoIpStaticPayloadSendJob& job, bool success);
 
-    IDoIpServerConnectionHandlerCallback* _callback;
+    IDoIpServerConnectionHandlerCallback* _callback{nullptr};
     IDoIpTcpConnection& _connection;
     DoIpServerTransportLayerParameters const& _parameters;
     ::async::TimeoutType _timerTimeout;
@@ -225,11 +225,11 @@ private:
     uint16_t _internalSourceAddress;
     DoIpConstants::ProtocolVersion _protocolVersion;
     ::async::ContextType const _context;
-    State _state;
+    State _state{State::INACTIVE};
     uint8_t _socketGroupId;
     ::etl::array<uint8_t, 11> _readBuffer;
-    bool _aliveCheckPending;
-    bool _isOrWasRouting;
+    bool _aliveCheckPending{false};
+    bool _isOrWasRouting{false};
 };
 
 /**

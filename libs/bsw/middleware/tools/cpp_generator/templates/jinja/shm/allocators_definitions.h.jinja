@@ -29,7 +29,7 @@ namespace middleware::shm
 
 
 {% for allocator in allocators %}
-using {{ allocator.name | capitalize }}Allocator = memory::Aggregator<{% for pool in allocator.pools %}memory::Pool<{{ pool.elements }}, {{ pool.chunk_sizes }}>{% if not loop.last %}, {% endif %}{% endfor %}>;
+using {{ allocator.name | capitalize }}Allocator = memory::Aggregator<{% for pool in allocator.pools %}memory::Pool<{{ pool.NumberOfElements }}, {{ pool.ChunkSize }}>{% if not loop.last %}, {% endif %}{% endfor %}>;
 
 {{ allocator.name | capitalize }}Allocator& get{{ allocator.name | capitalize }}Allocator();
 volatile uint8_t* get{{ allocator.name | capitalize }}AllocatorMutex();

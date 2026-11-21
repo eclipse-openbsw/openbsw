@@ -47,7 +47,11 @@ public:
     virtual void releaseConnection(DoIpServerTransportConnection& connection) = 0;
 
 protected:
-    ~IDoIpServerTransportConnectionPool() = default;
+    IDoIpServerTransportConnectionPool()                                                = default;
+    IDoIpServerTransportConnectionPool(IDoIpServerTransportConnectionPool const&)       = default;
+    IDoIpServerTransportConnectionPool(IDoIpServerTransportConnectionPool&&)            = default;
+    IDoIpServerTransportConnectionPool& operator=(IDoIpServerTransportConnectionPool&&) = default;
+    ~IDoIpServerTransportConnectionPool()                                               = default;
     IDoIpServerTransportConnectionPool& operator=(IDoIpServerTransportConnectionPool const&)
         = default;
 };

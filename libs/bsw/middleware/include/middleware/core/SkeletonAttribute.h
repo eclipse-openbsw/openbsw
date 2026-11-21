@@ -43,7 +43,7 @@ public:
     AttributeType& get() { return _attributeValue; }
 
     /**
-     * Updates the stored attribute value without broadcasting to clients.
+     * \brief Updates the stored attribute value without broadcasting to clients.
      *
      * \param value New attribute value
      */
@@ -56,21 +56,7 @@ public:
     }
 
     /**
-     * Updates the attribute value and broadcasts it to all subscribed client proxies.
-     * Only enabled when AllowsSubscriptions is true.
-     *
-     * \param attribute New attribute value to store and broadcast
-     * \return HRESULT Result code
-     */
-    template<bool B = AllowsSubscriptions, typename = ::etl::enable_if_t<B>>
-    [[nodiscard]] HRESULT send(AttributeType const& attribute)
-    {
-        set(attribute);
-        return _eventSender.send(attribute, MEMBER_ID);
-    }
-
-    /**
-     * Broadcasts the current attribute value to all subscribed client proxies.
+     * \brief Broadcasts the current attribute value without changing it.
      * Only enabled when AllowsSubscriptions is true.
      *
      * \return HRESULT Result code

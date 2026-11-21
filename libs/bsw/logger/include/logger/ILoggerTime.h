@@ -25,10 +25,18 @@ public:
 
     ILoggerTime();
 
+    ILoggerTime(ILoggerTime const&)            = delete;
+    ILoggerTime& operator=(ILoggerTime const&) = delete;
+    ILoggerTime(ILoggerTime&&)                 = delete;
+    ILoggerTime& operator=(ILoggerTime&&)      = delete;
+
     virtual T getTimestamp() const = 0;
     virtual void
     formatTimestamp(::util::stream::IOutputStream& outputStream, T const& timestamp) const
         = 0;
+
+protected:
+    ~ILoggerTime() = default;
 };
 
 template<class T>

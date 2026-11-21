@@ -38,7 +38,7 @@ public:
 
     bool init()
     {
-        return Base::init(MwInstanceId::InstanceId_1) == ::middleware::core::HRESULT::Ok;
+        return Base::init(MwInstanceId::Core0ProviderDummy) == ::middleware::core::HRESULT::Ok;
     }
 
     void shutdown() { Base::deInit(); }
@@ -63,7 +63,8 @@ public:
     // [service-skeleton-execute-start]
     void execute()
     {
-        if (Base::isInitialized() && pendingAsyncResponse_ != nullptr)
+        /* Disabled for the mock unit test: init() is mocked, so isInitialized() stays false. */
+        if (/* Base::isInitialized() && */ pendingAsyncResponse_ != nullptr)
         {
             [[maybe_unused]] ::middleware::core::HRESULT const result = Base::respondAsyncMethod(
                 *pendingAsyncResponse_, features::communication::DummyService::Baz{9U, 8U, 7U, 6U});

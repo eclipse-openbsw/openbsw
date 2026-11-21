@@ -9,10 +9,12 @@
 # *******************************************************************************
 
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
+load("//bazel/config/build_variant:compatibility.bzl", "reference_app_only")
 
 cc_library(
     name = "etl_profile",
     hdrs = ["etl_profile.h"],
     strip_include_prefix = ".",
+    target_compatible_with = reference_app_only(),
     visibility = ["//visibility:public"],
 )

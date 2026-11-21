@@ -28,9 +28,6 @@ public:
         : _idx(idx), _readPos(readPos)
         {}
 
-        EntryRef(EntryRef const& src)            = default;
-        EntryRef& operator=(EntryRef const& src) = default;
-
         E getIndex() const { return _idx; }
 
         uint8_t const* getReadPointer() const { return _readPos; }

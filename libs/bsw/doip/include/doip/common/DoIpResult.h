@@ -28,7 +28,7 @@ public:
     /**
      * Default constructor.
      */
-    DoIpResult();
+    DoIpResult() = default;
     /**
      * Constructor with transport result code and corresponding DoIP nack code
      * \param result generic transport result code
@@ -61,17 +61,13 @@ public:
     bool operator!=(DoIpResult<T> const& other) const;
 
 private:
-    T _result;
-    uint8_t _nackCode;
+    T _result{};
+    uint8_t _nackCode{};
 };
 
 /**
  * Inline implementations.
  */
-template<class T>
-inline DoIpResult<T>::DoIpResult() : DoIpResult({}, {})
-{}
-
 template<class T>
 inline DoIpResult<T>::DoIpResult(T const result, uint8_t const nackCode)
 : _result(result), _nackCode(nackCode)

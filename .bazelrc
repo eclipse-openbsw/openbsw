@@ -1,39 +1,37 @@
-# Feature matrix lives in the platform() flags (//bazel/platform), mirroring how
-# CMake Options.cmake ties PLATFORM_SUPPORT_* to OPENBSW_PLATFORM.
-build:s32k148_gcc --platforms=//bazel/platform:s32k148
-# Default to gcc
-build:s32k148 --config=s32k148_gcc
+# Each named config selects a target platform. All platform definitions
+# live in //bazel/platform/BUILD.bazel.
+# Compilation mode may be selected via the command line: -c dbg, -c opt,
+# or the default fastbuild, which maps to RelWithDebInfo for ARM targets.
 
-build:stm32g4 --platforms=//bazel/platform:stm32g4
-build:stm32f4 --platforms=//bazel/platform:stm32f4
-# Default stm32 config targets STM32G474RE (G4 family, FDCAN controller)
-build:stm32 --config=stm32g4
-build:stm32g4_unit_test --platforms=//bazel/platform:stm32g4_unit_test
-build:stm32f4_unit_test --platforms=//bazel/platform:stm32f4_unit_test
+# Default: plain bazel build //... targets the Linux host.
+build --platforms=//bazel/platform:posix
 
-# TODO: Temporary config only needed for artifact analysis
-# Make Bazel's build match CMake s32k148-freertos default config
+# Linux host. FreeRTOS is the default. ThreadX is an alternative.
+build:posix           --platforms=//bazel/platform:posix
+build:posix_threadx   --platforms=//bazel/platform:posix_threadx
+build:posix_unit_test --platforms=//bazel/platform:posix_unit_test
+build:posix_canfd     --platforms=//bazel/platform:posix_canfd
+build:posix_tracing   --platforms=//bazel/platform:posix_tracing
+
+# ARM embedded S32K148 Cortex-M4. FreeRTOS is the default. ThreadX is an alternative.
+build:s32k148                --platforms=//bazel/platform:s32k148
+build:s32k148_threadx        --platforms=//bazel/platform:s32k148_threadx
+build:s32k148_unit_test      --platforms=//bazel/platform:s32k148_unit_test
 build:s32k148_relwithdebinfo --config=s32k148
 build:s32k148_relwithdebinfo --copt=-g3
 build:s32k148_relwithdebinfo --copt=-O2
 build:s32k148_relwithdebinfo --copt=-DNDEBUG
-build:s32k148_threadx --config=s32k148
-build:s32k148_threadx --//bazel/config/rtos=threadx
-build:s32k148_threadx --//libs/bsw/async:async_platform=//libs/bsw/asyncThreadX:async_threadx
-build:s32k148_threadx --//libs/bsw/async:async_rtos_impl=//libs/bsw/asyncThreadX:async_threadx_impl
 
-# POSIX is the DEFAULT platform: a plain `bazel build //...` is the posix host build. The posix
-# PLATFORM_SUPPORT_* matrix lives in //bazel/platform:posix flags. `--config=posix` is kept as an
-# explicit alias.
-build --platforms=//bazel/platform:posix
-build:posix --platforms=//bazel/platform:posix
+# ARM embedded STM32 Cortex-M4. stm32g4 is STM32G474RE with FDCAN,
+# stm32f4 is STM32F413ZH with BxCAN, and stm32 defaults to stm32g4.
+build:stm32g4           --platforms=//bazel/platform:stm32g4
+build:stm32f4           --platforms=//bazel/platform:stm32f4
+build:stm32             --config=stm32g4
+build:stm32g4_threadx   --platforms=//bazel/platform:stm32g4_threadx
+build:stm32f4_threadx   --platforms=//bazel/platform:stm32f4_threadx
+build:stm32g4_unit_test --platforms=//bazel/platform:stm32g4_unit_test
+build:stm32f4_unit_test --platforms=//bazel/platform:stm32f4_unit_test
 
-# Select the ETL profile for builds inside the OpenBSW repo based on build_variant (mirrors
-# CMake BUILD_EXECUTABLE). This ONLY applies when OpenBSW is the root module. Downstream consumers 
-# keep the vendored ETL default (:no_profile) and must set --//libs/3rdparty/etl:etl_profile to 
-# the desired etl_profile instace.
-build --//libs/3rdparty/etl:etl_profile=//bazel/config/etl:etl_profile
-# posix_unit_test sets --//bazel/config/build_variant=unit_test via its flags=[]
-# and adds the executable:unit_test constraint that gates cc_test targets.
+# bazel test //... runs unit tests on the Linux host. Hardware drivers
+# are replaced by mocks and test targets become available for execution.
 test --platforms=//bazel/platform:posix_unit_test
-

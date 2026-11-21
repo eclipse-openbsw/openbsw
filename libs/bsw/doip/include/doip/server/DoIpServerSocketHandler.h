@@ -42,7 +42,7 @@ template<
     size_t NUM_SERVER_SOCKETS,
     size_t NUM_PLAIN_SOCKETS,
     size_t NUM_TLS_SOCKETS = 0U>
-class DoIpServerSocketHandler : public IDoIpServerSocketHandler
+class DoIpServerSocketHandler final : public IDoIpServerSocketHandler
 {
     static_assert(
         NUM_PLAIN_SOCKETS >= NUM_TLS_SOCKETS,
@@ -55,6 +55,12 @@ public:
      */
     explicit DoIpServerSocketHandler(
         ::ip::NetworkInterfaceConfigRegistry& networkInterfaceConfigRegistry);
+
+    ~DoIpServerSocketHandler()                                         = default;
+    DoIpServerSocketHandler(DoIpServerSocketHandler const&)            = delete;
+    DoIpServerSocketHandler(DoIpServerSocketHandler&&)                 = delete;
+    DoIpServerSocketHandler& operator=(DoIpServerSocketHandler const&) = delete;
+    DoIpServerSocketHandler& operator=(DoIpServerSocketHandler&&)      = delete;
 
     /**
      * Add a server socket that will automatically be bound when configured.
@@ -96,7 +102,7 @@ private:
         void connectionAccepted(::tcp::AbstractSocket& socket) override;
 
     private:
-        ServerSocket _serverSocket;
+        ServerSocket _serverSocket{};
         ::ip::NetworkInterfaceConfigKey _networkInterfaceConfigKey;
         DoIpServerSocketHandler& _parent;
         uint8_t _serverSocketId;
@@ -112,7 +118,7 @@ private:
     ::etl::pool<Socket, NUM_PLAIN_SOCKETS> _sockets;
     ::ip::ConfigChangedSlotType _configChangedSlot;
     ::ip::NetworkInterfaceConfigRegistry& _networkInterfaceConfigRegistry;
-    ::doip::IDoIpServerSocketHandlerListener* _listener;
+    ::doip::IDoIpServerSocketHandlerListener* _listener{nullptr};
 };
 
 /**
@@ -136,7 +142,6 @@ DoIpServerSocketHandler<
       ::ip::ConfigChangedSlotType::
           create<DoIpServerSocketHandler, &DoIpServerSocketHandler::configChanged>(*this))
 , _networkInterfaceConfigRegistry(networkInterfaceConfigRegistry)
-, _listener(nullptr)
 {}
 
 template<
@@ -288,7 +293,6 @@ DoIpServerSocketHandler<
         ::ip::NetworkInterfaceConfigKey const& networkInterfaceConfigKey,
         DoIpTcpConnection::ConnectionType const type)
 : ::tcp::ISocketProvidingConnectionListener()
-, _serverSocket{}
 , _networkInterfaceConfigKey(networkInterfaceConfigKey)
 , _parent(parent)
 , _serverSocketId(serverSocketId)
@@ -378,6 +382,8 @@ void DoIpServerSocketHandler<
     NUM_SERVER_SOCKETS,
     NUM_PLAIN_SOCKETS,
     NUM_TLS_SOCKETS>::SocketHandler::updateSocket(::ip::NetworkInterfaceConfig const& config)
+// Preserve the existing Logger printf API and its diagnostic text.
+// NOLINTBEGIN(cppcoreguidelines-pro-type-vararg)
 {
     if (!_serverSocket.isClosed())
     {
@@ -405,6 +411,7 @@ void DoIpServerSocketHandler<
             _serverSocketId, ::ip::IPEndpoint(config.ipAddress(), port), _type);
     }
 }
+// NOLINTEND(cppcoreguidelines-pro-type-vararg)
 
 } // namespace declare
 } // namespace doip

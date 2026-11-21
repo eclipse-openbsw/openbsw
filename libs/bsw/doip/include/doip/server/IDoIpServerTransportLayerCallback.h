@@ -81,6 +81,11 @@ public:
     virtual void connectionClosed(uint16_t sourceAddress) = 0;
 
 protected:
+    IDoIpServerTransportLayerCallback()                                         = default;
+    IDoIpServerTransportLayerCallback(IDoIpServerTransportLayerCallback const&) = default;
+    IDoIpServerTransportLayerCallback(IDoIpServerTransportLayerCallback&&)      = default;
+    IDoIpServerTransportLayerCallback& operator=(IDoIpServerTransportLayerCallback const&) = delete;
+    IDoIpServerTransportLayerCallback& operator=(IDoIpServerTransportLayerCallback&&)      = delete;
     ~IDoIpServerTransportLayerCallback() = default;
 };
 

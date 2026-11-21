@@ -38,6 +38,11 @@ public:
      */
     ~SharedStringWriter();
 
+    SharedStringWriter(SharedStringWriter const&)            = delete;
+    SharedStringWriter& operator=(SharedStringWriter const&) = delete;
+    SharedStringWriter(SharedStringWriter&&)                 = delete;
+    SharedStringWriter& operator=(SharedStringWriter&&)      = delete;
+
 private:
     ::util::stream::ISharedOutputStream& _stream;
 };

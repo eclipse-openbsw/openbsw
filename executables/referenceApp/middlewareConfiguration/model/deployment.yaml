@@ -8,86 +8,103 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 
+components:
+  - &foo_provider
+    name: FooProvider
+    providedPorts:
+      - name: foo
+        interfaceName: Foo
+        interfaceNamespace: org::test::foo
+  - &foo_consumer
+    name: FooConsumer
+    requiredPorts:
+      - name: foo
+        interfaceName: Foo
+        interfaceNamespace: org::test::foo
+
 clusters:
   - &cluster0
     name: Cluster0
     id: 0
-    queue_size: 10
+    queueSize: 10
+    componentInstances:
+      - instanceName: provider
+        component: *foo_provider
   - &cluster1
     name: Cluster1
     id: 1
-    queue_size: 10
+    queueSize: 10
+    componentInstances:
+      - instanceName: consumer
+        component: *foo_consumer
 
 # Infrastructure allocators for memory management
 allocators:
-  - &default_allocator
-    name: default
+  - name: Main
+    default: true
     pools:
-      - elements: 10
-        chunk_sizes: 64
+      - NumberOfElements: 10
+        ChunkSize: 64
+  - name: Custom
+    pools:
+      - NumberOfElements: 4
+        ChunkSize: 128
 
-services:
-  - &foo
-    namespace: org::test::foo
-    name: Foo
-    id: 1
-    datatypes:
-      - name: FooStruct
-        type: struct
-        parameters:
+typeModules:
+  - namespace: org::test::foo::Foo
+    header: org/test/foo/FooTypes.h
+    types:
+      - typeName: StructTypeDef
+        name: FooStruct
+        elements:
           - name: fooValue
             type: uint32_t
+
+services:
+  - namespace: org::test::foo
+    name: Foo
+    deployment:
+      ServiceID: 1
+      MemoryAllocator: Custom
+    typeIncludes:
+      - org/test/foo/FooTypes.h
     attributes:
       # Default behavior: setter + getter + subscriptions allowed
       - name: FooDefault
-        variable: fooDefault
-        type: FooStruct
-        readonly: false
-        noSubscriptions: false
-        setAsMethod: false
-        event:
-          id: 128
-        getter:
-          id: 1
-          timeout: 5000
-        setter:
-          id: 2
-          timeout: 0
-        consumer_request_limit: 1
-        provider_request_limit: 1
+        type: org::test::foo::Foo::FooStruct
+        hasGetter: true
+        hasSetter: true
+        hasNotifier: true
+        deployment:
+          GetterID: 1
+          SetterID: 2
+          NotificationID: 128
+          Timeout: 5000
+          SetterWithResponse: false
+          MaxProxyRequests: 1
+          MaxSkeletonRequests: 1
 
-    headers:
-      common: org/test/foo/FooCommon.h
-      proxy: org/test/foo/FooProxy.h
-      skeleton: org/test/foo/FooSkeleton.h
-
-    deployment:
-      instance_ids: [1]
-      clusters:
-        - cluster: *cluster0
-          consumers: 0
-          providers:
-            instance_ids: [1]
-        - cluster: *cluster1
-          consumers: 1
-          providers:
-            instance_ids: []
+    commonInclude: org/test/foo/FooCommon.h
+    proxyInclude: org/test/foo/FooProxy.h
+    skeletonInclude: org/test/foo/FooSkeleton.h
 
 connections:
   - &cluster0_cluster1
-    source_cluster: *cluster0
-    target_cluster: *cluster1
-    proxies: []
-    skeletons:
-      - <<: *foo
-        max_instances: 1
+    sourceCluster: *cluster0
+    targetCluster: *cluster1
+    consumers: []
+    providers:
+      - namespace: org::test::foo
+        name: Foo
+        maxInstances: 1
   - &cluster1_cluster0
-    source_cluster: *cluster1
-    target_cluster: *cluster0
-    proxies:
-      - <<: *foo
-        max_instances: 1
-    skeletons: []
+    sourceCluster: *cluster1
+    targetCluster: *cluster0
+    consumers:
+      - namespace: org::test::foo
+        name: Foo
+        maxInstances: 1
+    providers: []
 
 cores:
   - &c0
@@ -98,3 +115,42 @@ cores:
     name: C1
     clusters:
       - *cluster1
+
+# Capacity of the queue that notifies the PDU broker about committed PDUs.
+outbound_pdu_queue_size: 4
+
+pdus:
+  # Written by the application. A change of the counter queues the PDU for the PDU broker, which
+  # hands it to the (loopback) bus.
+  - name: demoTxPdu
+    pdu_id: 16
+    size: 4
+    writer_cluster: Cluster0
+    transmission:
+      modeFalse:
+        strategies:
+          - event: {debounce_ms: 0, repetitions: 0, repetition_cycle: 0}
+      modeTrue:
+        strategies: []
+    namespace: org::test::pdu
+    headers:
+      common: org/test/pdu/demoTxPduCommon.h
+      reader: org/test/pdu/demoTxPduReader.h
+      writer: org/test/pdu/demoTxPduWriter.h
+    signals:
+      - name: counter
+        type: uint32_t
+        bit_length: 32
+        trigger_on_change: true
+  # No writer: filled by the PDU broker with the PDUs received from the bus.
+  - name: demoRxPdu
+    pdu_id: 67
+    size: 4
+    namespace: org::test::pdu
+    headers:
+      common: org/test/pdu/demoRxPduCommon.h
+      reader: org/test/pdu/demoRxPduReader.h
+    signals:
+      - name: counter
+        type: uint32_t
+        bit_length: 32

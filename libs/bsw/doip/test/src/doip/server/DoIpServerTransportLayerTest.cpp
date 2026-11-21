@@ -17,6 +17,7 @@
 #include "doip/server/DoIpServerTransportConnectionPoolMock.h"
 #include "doip/server/DoIpServerTransportLayerCallbackMock.h"
 #include "doip/server/DoIpServerTransportLayerParameters.h"
+#include "doip/server/IDoIpServerConnectionStateCallback.h"
 
 #include <async/AsyncMock.h>
 #include <async/TestContext.h>
@@ -29,6 +30,7 @@
 #include <tcp/socket/AbstractSocketMock.h>
 #include <transport/BufferedTransportMessage.h>
 #include <transport/TransportMessageProcessedListenerMock.h>
+#include <type_traits>
 
 #include <gmock/gmock.h>
 #include <gtest/esr_extensions.h>
@@ -41,6 +43,13 @@ using namespace ::testing;
 using namespace ::transport;
 using namespace ::tcp::test;
 using ConnectionType = ::doip::DoIpTcpConnection::ConnectionType;
+
+static_assert(!std::is_copy_constructible<declare::DoIpServerTransportLayer<1>>::value);
+static_assert(!std::is_move_constructible<declare::DoIpServerTransportLayer<1>>::value);
+static_assert(!std::is_copy_assignable<declare::DoIpServerTransportLayer<1>>::value);
+static_assert(!std::is_move_assignable<declare::DoIpServerTransportLayer<1>>::value);
+static_assert(!std::is_copy_constructible<DoIpServerTransportConnection>::value);
+static_assert(!std::is_move_constructible<DoIpServerTransportConnection>::value);
 
 MATCHER_P2(Span, dataMatcher, sizeMatcher, "")
 {

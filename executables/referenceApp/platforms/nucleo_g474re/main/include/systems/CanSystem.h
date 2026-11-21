@@ -65,12 +65,9 @@ private:
     class CanTxRunnable : public ::async::RunnableType
     {
     public:
-        explicit CanTxRunnable(CanSystem& parent) : _parent(parent) {}
+        explicit CanTxRunnable(CanSystem& /* parent */) {}
 
         void execute() override;
-
-    private:
-        CanSystem& _parent;
     };
 
     ::async::ContextType _context;

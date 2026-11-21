@@ -21,12 +21,14 @@
   */
 #include <cstdint>
 
+#include <etl/array.h>
 
-#include "middleware/core/Pdu.h"
+#include "middleware/core/MiddlewarePdu.h"
 #include "middleware/shm/Config.h"
-#include "shm/AllocatorsDefinitions.h"
-#include "shm/PduDefinitions.h"
-#include "shm/QueueDefinitions.h"
+
+#include "middleware/shm/AllocatorsDefinitions.h"
+#include "middleware/shm/PduDefinitions.h"
+#include "middleware/shm/QueueDefinitions.h"
 
 namespace middleware::shm
 {
@@ -35,13 +37,13 @@ namespace middleware::shm
 {{ allocator.name | capitalize }}Allocator& get{{ allocator.name | capitalize }}Allocator()
 {
     MemoryLayout& layout = getMemoryLayout();
-    return layout.{{ allocator.name }}Allocator;
+    return layout.{{ allocator.name | lower }}Allocator;
 }
 
 volatile uint8_t* get{{ allocator.name | capitalize }}AllocatorMutex()
 {
     MemoryLayout& layout = getMemoryLayout();
-    return &layout.{{ allocator.name }}AllocatorMutex;
+    return &layout.{{ allocator.name | lower }}AllocatorMutex;
 }
 
 {% endfor %}
@@ -53,11 +55,34 @@ MiddlewareQueue<QUEUE_TO_{{ cluster.name | upper }}_SIZE>* getQueueTo{{ cluster.
 
 {% endfor %}
 
+{% if has_pdu_ids %}
+OutboundPduQueue* getOutboundPduQueue()
+{
+    return &getMemoryLayout().outboundPduQueue;
+}
+
+{% endif %}
 {% for pdu in pdus %}
-::middleware::core::Pdu<{{ pdu.size }}U>* get{{ pdu.name | capitalize }}()
+{{ pdu.name | capitalize }}Pdu* get{{ pdu.name | capitalize }}()
 {
     return &getMemoryLayout().{{ pdu.name }};
 }
 
 {% endfor %}
+{% set brokerPdus = pdus | selectattr('pdu_id', 'defined') | sort(attribute='pdu_id') | list %}
+::etl::span<core::PduAccess const> getPduAccessTable()
+{
+{% if brokerPdus %}
+    // Sorted by PDU ID, as the broker searches it. The generator guarantees unique IDs.
+    static constexpr ::etl::array<core::PduAccess, {{ brokerPdus | length }}U> TABLE = { {
+{% for pdu in brokerPdus %}
+        core::makePduAccess<{{ pdu.size }}U, &get{{ pdu.name | capitalize }}>({{ pdu.pdu_id }}U),
+{% endfor %}
+    } };
+    return ::etl::span<core::PduAccess const>(TABLE);
+{% else %}
+    return {};
+{% endif %}
+}
+
 }  // namespace middleware::shm

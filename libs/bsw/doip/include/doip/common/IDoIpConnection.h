@@ -101,7 +101,10 @@ public:
 
 protected:
     ~IDoIpConnection()                                 = default;
+    IDoIpConnection(IDoIpConnection const&)            = default;
+    IDoIpConnection(IDoIpConnection&&)                 = default;
     IDoIpConnection& operator=(IDoIpConnection const&) = delete;
+    IDoIpConnection& operator=(IDoIpConnection&&)      = delete;
 };
 
 /**

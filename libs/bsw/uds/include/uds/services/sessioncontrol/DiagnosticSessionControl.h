@@ -86,13 +86,13 @@ public:
     DiagReturnCode::Type acceptedJob(
         IncomingDiagConnection& connection,
         AbstractDiagJob const& job,
-        uint8_t const request[],
+        uint8_t const* request,
         uint16_t requestLength) override;
 
     void responseSent(
         IncomingDiagConnection& connection,
         DiagReturnCode::Type result,
-        uint8_t const response[],
+        uint8_t const* response,
         uint16_t responseLength) override;
 
     void addDiagSessionListener(IDiagSessionChangedListener&) override;
@@ -113,7 +113,7 @@ protected:
     void responseSent_local(
         IncomingDiagConnection const& connection,
         DiagReturnCode::Type result,
-        uint8_t const response[],
+        uint8_t const* response,
         uint16_t responseLength);
     void addDiagSessionListener_local(IDiagSessionChangedListener&);
     void removeDiagSessionListener_local(IDiagSessionChangedListener&);
@@ -121,7 +121,7 @@ protected:
 
     DiagReturnCode::Type process(
         IncomingDiagConnection& connection,
-        uint8_t const request[],
+        uint8_t const* request,
         uint16_t requestLength) override;
 
     void setTimeout(uint32_t timeout);
@@ -133,7 +133,7 @@ protected:
     DiagReturnCode::Type acceptedJob_ext(
         IncomingDiagConnection const& connection,
         AbstractDiagJob const& job,
-        uint8_t const request[],
+        uint8_t const* request,
         uint16_t requestLength);
 
     virtual void switchSession(DiagSession& newSession);

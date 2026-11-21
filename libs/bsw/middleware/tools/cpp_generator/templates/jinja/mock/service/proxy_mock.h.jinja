@@ -1,0 +1,127 @@
+/********************************************************************************
+ * Copyright (c) 2026 BMW AG
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Apache License Version 2.0 which is available at
+ * https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ ********************************************************************************/
+{% from "macros/common.jinja" import file_header %}{{ file_header() }}
+#pragma once
+
+#include <etl/expected.h>
+#include <etl/functional.h>
+
+#include <gmock/gmock.h>
+
+#include "{{ service.commonInclude }}"
+#include "{{ service.proxyInclude }}"
+#include "util/crtp_mock.h"
+
+namespace {{ service.namespace | lower }}::{{ service.name }}::proxy
+{
+
+    // EVENTS / BROADCASTS
+{% for broadcast in service.broadcasts %}
+{%- set namePascalCase = broadcast.name | pascalCase %}
+class {{ namePascalCase }}EventMock
+{
+  public:
+    using EventType = {{ namePascalCase }}Event::EventType;
+    using OnFieldChangedCallback = {{ namePascalCase }}Event::OnFieldChangedCallback;
+
+    MOCK_METHOD(void, setReceiveHandler, (const OnFieldChangedCallback callback));
+    MOCK_METHOD(void, unsetReceiveHandler, ());
+};
+{% endfor %}
+
+// ATTRIBUTES
+{% for attribute in service.attributes %}
+{%- set namePascalCase = attribute.name | pascalCase %}
+{%- set _has_subscription = attribute.hasNotifier %}
+{%- set _has_setter = attribute.hasSetter %}
+{%- set _set_as_method = attribute.deployment.SetterWithResponse and attribute.hasSetter %}
+class {{ namePascalCase }}AttributeMock
+{
+  public:
+    using AttributeType = {{ namePascalCase }}Attribute::AttributeType;
+    using GetterCallback = {{ namePascalCase }}Attribute::GetterCallback;
+{%- if _set_as_method %}
+    using SetterCallback = {{ namePascalCase }}Attribute::SetterCallback;
+{%- endif %}
+{%- if _has_subscription %}
+    using OnFieldChangedCallback = {{ namePascalCase }}Attribute::OnFieldChangedCallback;
+{%- endif %}
+
+    MOCK_METHOD((etl::expected<uint16_t, middleware::core::HRESULT>), get, (const GetterCallback attrCb));
+    MOCK_METHOD(middleware::core::HRESULT, cancelGetterRequest, (uint16_t requestId));
+{%- if _set_as_method %}
+    MOCK_METHOD((etl::expected<uint16_t, middleware::core::HRESULT>),
+                set,
+                (const AttributeType& payload, const SetterCallback cbk));
+    MOCK_METHOD(middleware::core::HRESULT, cancelSetterRequest, (uint16_t requestId));
+{%- elif _has_setter %}
+    MOCK_METHOD((etl::expected<uint16_t, middleware::core::HRESULT>), set, (const AttributeType& payload));
+{%- endif %}
+{%- if _has_subscription %}
+
+    MOCK_METHOD(void, setReceiveHandler, (const OnFieldChangedCallback callback));
+    MOCK_METHOD(void, unsetReceiveHandler, ());
+{%- endif %}
+};
+{% endfor %}
+
+class {{ service.name }}ProxyMock : public middleware::util::CrtpMock<{{ service.name }}ProxyMock>
+{
+  public:
+    {{ service.name }}ProxyMock() = default;
+    virtual ~{{ service.name }}ProxyMock() = default;
+
+    MOCK_METHOD(middleware::core::HRESULT,
+                init,
+                (const internal::InstanceId instanceId, const middleware::core::ClusterId sourceCluster));
+    MOCK_METHOD(void, deInit, ());
+    MOCK_METHOD(uint16_t, getServiceId, (), (const));
+    MOCK_METHOD(bool, isInitialized, (), (const));
+
+    // METHODS
+{% for method in service.methods %}
+{% if not method.fireAndForget %}
+{% if method.inArgs %}
+    MOCK_METHOD((etl::expected<uint16_t, middleware::core::HRESULT>),
+                {{ method.name | camelCase }},
+                (const {{ method.inType | cppType(service.namespace) }}&,
+                 const {{ service.name }}Proxy::{{ method.name }}Callback&));
+{% else %}
+    MOCK_METHOD((etl::expected<uint16_t, middleware::core::HRESULT>),
+                {{ method.name | camelCase }},
+                (const {{ service.name }}Proxy::{{ method.name }}Callback&));
+{% endif %}
+    MOCK_METHOD(void, cancel{{ method.name }}Request, (uint16_t requestId));
+{% endif %}
+{% endfor %}
+
+    // METHODS FIRE_AND_FORGET
+{% for method in service.methods %}
+{% if method.fireAndForget %}
+{% if method.inArgs %}
+    MOCK_METHOD((etl::expected<uint16_t, middleware::core::HRESULT>),
+                {{ method.name | camelCase }},
+                (const {{ method.inType | cppType(service.namespace) }}&));
+{% else %}
+    MOCK_METHOD((etl::expected<uint16_t, middleware::core::HRESULT>), {{ method.name | camelCase }}, ());
+{% endif %}
+{% endif %}
+{% endfor %}
+
+{% for broadcast in service.broadcasts %}
+    ::testing::NiceMock<{{ broadcast.name | pascalCase }}EventMock> {{ broadcast.name | camelCase }};
+{% endfor %}
+
+{% for attribute in service.attributes %}
+    ::testing::NiceMock<{{ attribute.name | pascalCase }}AttributeMock> {{ attribute.name | camelCase }};
+{% endfor %}
+};
+
+}  // namespace {{ service.namespace | lower }}::{{ service.name }}::proxy

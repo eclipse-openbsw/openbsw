@@ -21,3 +21,116 @@ cc_library(
     target_compatible_with = ["//bazel/platform/constraints/soc:stm32f4"],
     visibility = ["//visibility:public"],
 )
+
+cc_library(
+    name = "threadx_os_hooks",
+    srcs = ["src/osHooks/threadx/osHooks.cpp"],
+    implementation_deps = [
+        "//libs/3rdparty/etl",
+        "//libs/bsw/asyncThreadX:threadx_configuration",
+        "//libs/bsw/common",
+        "//platforms/stm32/3rdparty/threadx:threadx_cortex_m4",
+        "//platforms/stm32/safety/safeBspMcuWatchdog:safe_bsp_mcu_watchdog",
+    ],
+    target_compatible_with = ["//bazel/platform/constraints/soc:stm32f4"],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "start_up_threadx_srcs",
+    srcs = [
+        "src/bsp/threadx/tx_execution_initialize.c",
+        "src/bsp/threadx/tx_initialize_low_level.S",
+    ],
+    implementation_deps = [
+        "//executables/referenceApp/asyncCoreConfiguration:async_core_configuration",
+    ],
+    target_compatible_with = [
+        "//bazel/platform/constraints/soc:stm32f4",
+        "@platforms//os:none",
+    ],
+)
+
+cc_library(name = "start_up_threadx_srcs_none")
+
+alias(
+    name = "start_up_threadx_impl",
+    actual = select({
+        "//bazel/config/rtos:support_threadx": ":start_up_threadx_srcs",
+        "//conditions:default": ":start_up_threadx_srcs_none",
+    }),
+    visibility = ["//visibility:public"],
+)
+
+# The linker script must be applied at the cc_binary link step, not here.
+cc_library(
+    name = "start_up",
+    target_compatible_with = ["//bazel/platform/constraints/soc:stm32f4"],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":start_up_threadx_impl",
+        "//libs/bsw/common",
+        "//platforms/stm32/bsp/bspMcu:bsp_mcu",
+        "//platforms/stm32/hardFaultHandler:hard_fault_handler",
+    ],
+)
+
+cc_library(
+    name = "main_rtos_impl_freertos",
+    target_compatible_with = ["//bazel/platform/constraints/soc:stm32f4"],
+    deps = ["//platforms/stm32/3rdparty/freertos_cm4_sysTick:freertos_cm4_sys_tick"],
+)
+
+cc_library(
+    name = "main_rtos_impl_threadx",
+    target_compatible_with = ["//bazel/platform/constraints/soc:stm32f4"],
+    deps = ["//platforms/stm32/3rdparty/threadx:threadx_cortex_m4"],
+)
+
+alias(
+    name = "main_rtos_impl",
+    actual = select({
+        "//bazel/config/rtos:support_freertos": ":main_rtos_impl_freertos",
+        "//conditions:default": ":main_rtos_impl_threadx",
+    }),
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "main",
+    srcs = [
+        "src/lifecycle/StaticBsp.cpp",
+        "src/main.cpp",
+        "src/os/isr/isr_can.cpp",
+        "src/os/isr/isr_sys.cpp",
+        "src/os/isr/isr_uart.cpp",
+        "src/systems/CanSystem.cpp",
+    ],
+    hdrs = [
+        "include/lifecycle/StaticBsp.h",
+        "include/systems/CanSystem.h",
+    ],
+    implementation_deps = [
+        ":main_rtos_impl",
+        ":start_up",
+        "//executables/referenceApp/configuration",
+        "//executables/referenceApp/safety/safeSupervisor:safe_supervisor",
+        "//libs/3rdparty/etl",
+        "//libs/bsw/lifecycle",
+        "//platforms/stm32/bsp/bspClock:bsp_clock",
+        "//platforms/stm32/bsp/bspTimer:bsp_timer",
+        "//platforms/stm32/bsp/bspUart:bsp_uart",
+        "//platforms/stm32/bsp/bxCanTransceiver:bx_can_transceiver",
+        "//platforms/stm32/safety/safeBspMcuWatchdog:safe_bsp_mcu_watchdog",
+    ],
+    strip_include_prefix = "include",
+    target_compatible_with = ["//bazel/platform/constraints/soc:stm32f4"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//executables/referenceApp/platforms/nucleo_f413zh/bspConfiguration:bsp_configuration",
+    ],
+    # ISR implementations are referenced only by address from the vector table.
+    # Without alwayslink, single-pass linking drops them and the weak default
+    # handlers remain, silently discarding interrupts.
+    alwayslink = True,
+)

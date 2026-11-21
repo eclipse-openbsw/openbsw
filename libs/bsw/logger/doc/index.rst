@@ -20,6 +20,19 @@ Overview
 The module `logger` provides an implementation of the interfaces declared in
 :ref:`util_logger`.
 
+Lifetime and copying
+--------------------
+
+Logger callback, output, formatter, configuration, listener, time and persistence
+interfaces are noncopyable and nonmovable. Their implementations retain this
+policy; in particular, intrusive listeners must not be relocated while linked.
+Their protected nonvirtual destructors prohibit destruction through interface
+pointers. Destroy objects through their concrete implementation types.
+The concrete ``ComponentConfig`` base remains publicly destructible and has a
+virtual destructor to support its ``PersistentComponentConfig`` subclass.
+``EntryBuffer::EntryRef`` is a non-owning cursor value: copying or moving it
+preserves its index and read pointer without transferring buffer ownership.
+
 Rust API
 --------
 

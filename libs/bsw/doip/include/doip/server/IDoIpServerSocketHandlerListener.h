@@ -57,7 +57,11 @@ public:
         = 0;
 
 protected:
-    ~IDoIpServerSocketHandlerListener() = default;
+    IDoIpServerSocketHandlerListener()                                              = default;
+    IDoIpServerSocketHandlerListener(IDoIpServerSocketHandlerListener const&)       = default;
+    IDoIpServerSocketHandlerListener(IDoIpServerSocketHandlerListener&&)            = default;
+    IDoIpServerSocketHandlerListener& operator=(IDoIpServerSocketHandlerListener&&) = default;
+    ~IDoIpServerSocketHandlerListener()                                             = default;
 
     IDoIpServerSocketHandlerListener& operator=(IDoIpServerSocketHandlerListener const&) = default;
 };

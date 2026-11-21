@@ -34,7 +34,12 @@ public:
         char const* prefix,
         char const* suffix,
         bool continuous = false);
-    ~TaggedSharedOutputStream();
+    ~TaggedSharedOutputStream() override;
+
+    TaggedSharedOutputStream(TaggedSharedOutputStream const&)            = delete;
+    TaggedSharedOutputStream& operator=(TaggedSharedOutputStream const&) = delete;
+    TaggedSharedOutputStream(TaggedSharedOutputStream&&)                 = delete;
+    TaggedSharedOutputStream& operator=(TaggedSharedOutputStream&&)      = delete;
 
     void release();
 
@@ -51,9 +56,9 @@ private:
     void endContinuousOutput(IOutputStream& stream) override;
 
     ISharedOutputStream& _sharedStream;
-    IOutputStream* _stream;
-    ISharedOutputStream::IContinuousUser* _user;
-    bool _continuous;
+    IOutputStream* _stream{nullptr};
+    ISharedOutputStream::IContinuousUser* _user{nullptr};
+    bool _continuous{false};
 };
 
 } // namespace stream

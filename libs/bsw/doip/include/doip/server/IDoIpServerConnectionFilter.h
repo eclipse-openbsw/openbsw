@@ -99,7 +99,7 @@ public:
 
     private:
         uint16_t _internalSourceAddress;
-        Action _action;
+        Action _action{Action::CONTINUE};
         uint8_t _responseCode;
     };
 
@@ -127,6 +127,10 @@ public:
         = 0;
 
 protected:
+    IDoIpServerConnectionFilter()                                              = default;
+    IDoIpServerConnectionFilter(IDoIpServerConnectionFilter const&)            = default;
+    IDoIpServerConnectionFilter(IDoIpServerConnectionFilter&&)                 = default;
+    IDoIpServerConnectionFilter& operator=(IDoIpServerConnectionFilter&&)      = delete;
     ~IDoIpServerConnectionFilter()                                             = default;
     IDoIpServerConnectionFilter& operator=(IDoIpServerConnectionFilter const&) = delete;
 };
@@ -136,7 +140,6 @@ protected:
  */
 inline IDoIpServerConnectionFilter::RoutingActivationCheckResult::RoutingActivationCheckResult()
 : _internalSourceAddress(::transport::TransportMessage::INVALID_ADDRESS)
-, _action(Action::CONTINUE)
 , _responseCode(DoIpConstants::RoutingResponseCodes::ROUTING_SUCCESS)
 {}
 

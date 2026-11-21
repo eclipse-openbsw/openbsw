@@ -53,7 +53,7 @@ cc_library(name = "console_commands_io_support_none")
 alias(
     name = "io_support",
     actual = select({
-        "//bazel/platform/constraints/soc:s32k148": ":console_commands_io_support",
+        "//bazel/config/features:io_enabled": ":console_commands_io_support",
         "//conditions:default": ":console_commands_io_support_none",
     }),
 )

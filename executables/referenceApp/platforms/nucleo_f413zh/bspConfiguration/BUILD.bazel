@@ -1,0 +1,36 @@
+# *******************************************************************************
+# Copyright (c) 2026 Accenture
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+
+load("@rules_cc//cc:cc_library.bzl", "cc_library")
+
+# Headers-only target wired as //bazel/config/bsp:bsp_configuration to
+# break the mutual dependency between bsp_configuration and bsp_uart.
+cc_library(
+    name = "bsp_configuration_headers",
+    hdrs = ["include/bsp/uart/UartConfig.h"],
+    strip_include_prefix = "include",
+    target_compatible_with = ["//bazel/platform/constraints/soc:stm32f4"],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "bsp_configuration",
+    srcs = [
+        "src/bsp/stdIo/stdIo.cpp",
+        "src/bsp/uart/UartConfig.cpp",
+    ],
+    implementation_deps = ["//platforms/stm32/bsp/bspMcu:bsp_mcu"],
+    target_compatible_with = ["//bazel/platform/constraints/soc:stm32f4"],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":bsp_configuration_headers",
+        "//platforms/stm32/bsp/bspUart:bsp_uart",
+    ],
+)

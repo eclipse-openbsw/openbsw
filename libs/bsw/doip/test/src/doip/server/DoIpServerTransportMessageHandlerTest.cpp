@@ -164,7 +164,9 @@ TEST_F(
         ::testing::ElementsAreArray(expectedDiagnosticAck + 8U, 8U));
     // Release the send job and close the connection
     cut.connectionClosed();
+    EXPECT_FALSE(fProtocolSendJobBlockPool.empty());
     sendJob->release(false);
+    EXPECT_TRUE(fProtocolSendJobBlockPool.empty());
 }
 
 TEST_F(
@@ -545,6 +547,34 @@ TEST_F(
     }
 }
 
+TEST_F(DoIpServerTransportMessageHandlerTest, TestDiagnosticAckAndNackReceived)
+{
+    DoIpServerTransportMessageHandler cut(
+        DoIpConstants::ProtocolVersion::version02Iso2012,
+        fDiagnosticSendJobBlockPool,
+        fProtocolSendJobBlockPool,
+        fConfig);
+    // open the connection
+    cut.connectionOpened(fServerConnectionMock);
+    // diagnostic ack & nack should yield no response
+    {
+        uint8_t const diagnosticAckMessage[]
+            = {0x02, 0xfd, 0x80, 0x02, 0x00, 0x00, 0x00, 0x05, 0x06, 0x07};
+        EXPECT_CALL(
+            fServerConnectionMock,
+            endReceiveMessage(IDoIpConnection::PayloadDiscardedCallbackType{}));
+        EXPECT_TRUE(cut.headerReceived(as_header(diagnosticAckMessage)));
+    }
+    {
+        uint8_t const diagnosticNackMessage[]
+            = {0x02, 0xfd, 0x80, 0x03, 0x00, 0x00, 0x00, 0x05, 0x06, 0x07};
+        EXPECT_CALL(
+            fServerConnectionMock,
+            endReceiveMessage(IDoIpConnection::PayloadDiscardedCallbackType{}));
+        EXPECT_TRUE(cut.headerReceived(as_header(diagnosticNackMessage)));
+    }
+}
+
 TEST_F(DoIpServerTransportMessageHandlerTest, TestGetTransportMessageErrorsCausesDiagnosticNacks)
 {
     DoIpServerTransportMessageHandler cut(
@@ -864,13 +894,16 @@ TEST_F(DoIpServerTransportMessageHandlerTest, TestSendDiagnosticNackWithoutSendJ
     EXPECT_CALL(fServerConnectionMock, endReceiveMessage(_)).Times(6);
     // force first send message to fail
     forceDiagnosticNack(cut, true, false);
+    EXPECT_TRUE(fProtocolSendJobBlockPool.empty());
     // now four times until pool is empty
     forceDiagnosticNack(cut, true, true);
     forceDiagnosticNack(cut, true, true);
     forceDiagnosticNack(cut, true, true);
     forceDiagnosticNack(cut, true, true);
     // the last should fail
+    EXPECT_TRUE(fProtocolSendJobBlockPool.full());
     forceDiagnosticNack(cut, false, false);
+    EXPECT_TRUE(fProtocolSendJobBlockPool.full());
 }
 
 TEST_F(DoIpServerTransportMessageHandlerTest, TestNoMessageReceivedIfProtocolSendJobPoolDepleted)

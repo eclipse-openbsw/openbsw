@@ -13,7 +13,7 @@
 #include "shed/ops_internal.h"   // IWYU pragma: export
 #include "shed/table_internal.h" // IWYU pragma: export
 
-#include <type_traits>
+#include <etl/type_traits.h>
 
 namespace shed
 {
@@ -317,7 +317,7 @@ id id_of(Table const& table, T const* ptr)
 {
     using column_type = internal::column<T const, Table>;
     static_assert(
-        std::is_same<column_type, ::shed::column<typename column_type::value_type>>::value,
+        ::etl::is_same<column_type, ::shed::column<typename column_type::value_type>>::value,
         "shed::id_of only supports values stored in shed::column");
 
     if (ptr == nullptr)

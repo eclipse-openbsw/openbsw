@@ -33,8 +33,6 @@ DoIpServerTransportConnection::DoIpServerTransportConnection(
 , _connection(config.getContext(), socket, _writeBuffer)
 , _transportMessageHandler(
       protocolVersion, diagnosticSendJobBlockPool, protocolSendJobBlockPool, config)
-, _writeBuffer{}
-, _isMarkedForClose(false)
 , _type(type)
 {
     addMessageHandler(_transportMessageHandler);

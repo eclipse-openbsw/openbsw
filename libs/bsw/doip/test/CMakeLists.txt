@@ -2,6 +2,7 @@ add_executable(
     doipTest
     src/doip/common/DoIpCyclicTaskGeneratorTest.cpp
     src/doip/common/DoIpHeaderTest.cpp
+    src/doip/common/DoIpInterfaceCopyTest.cpp
     src/doip/common/DoIpResultTest.cpp
     src/doip/common/DoIpSendJobHelperTest.cpp
     src/doip/common/DoIpSimplePayloadSendJobTest.cpp

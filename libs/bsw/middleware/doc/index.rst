@@ -22,6 +22,5 @@ This documentation provides architecture, detailed design, integration guidance,
    user/index
    arch/index
    integration/index
-   changelog/index
    glossary
    dd/index

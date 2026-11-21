@@ -24,9 +24,17 @@ class IBufferedLoggerOutputClient : private ::etl::uncopyable
 public:
     IBufferedLoggerOutputClient();
 
+    IBufferedLoggerOutputClient(IBufferedLoggerOutputClient const&)            = delete;
+    IBufferedLoggerOutputClient& operator=(IBufferedLoggerOutputClient const&) = delete;
+    IBufferedLoggerOutputClient(IBufferedLoggerOutputClient&&)                 = delete;
+    IBufferedLoggerOutputClient& operator=(IBufferedLoggerOutputClient&&)      = delete;
+
     virtual void addListener(ILoggerListener& listener)          = 0;
     virtual void removeListener(ILoggerListener& listener)       = 0;
     virtual bool outputEntry(IEntryOutput<E, Timestamp>& output) = 0;
+
+protected:
+    ~IBufferedLoggerOutputClient() = default;
 };
 
 template<class E, class Timestamp>

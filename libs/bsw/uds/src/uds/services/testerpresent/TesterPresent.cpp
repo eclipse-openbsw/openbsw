@@ -38,7 +38,8 @@ DiagReturnCode::Type TesterPresent::process(
     uint8_t const* const request,
     uint16_t const /* requestLength */)
 {
-    if (request[0] == TESTER_PRESENT_ANSWER)
+    ::etl::span<uint8_t const> const requestView(request, 1U);
+    if (requestView[0U] == TESTER_PRESENT_ANSWER)
     {
         PositiveResponse& response = connection.releaseRequestGetResponse();
         (void)response.appendUint8(TESTER_PRESENT_ANSWER);

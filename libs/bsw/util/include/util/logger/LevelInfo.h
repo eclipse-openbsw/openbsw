@@ -84,8 +84,11 @@ public:
     explicit LevelInfo(PlainInfo const* const plainInfo = nullptr) : _plainInfo(plainInfo) {}
 
     LevelInfo(LevelInfo const& src) = default;
+    LevelInfo(LevelInfo&&) noexcept = default;
+    ~LevelInfo()                    = default;
 
     LevelInfo& operator=(LevelInfo const& src);
+    LevelInfo& operator=(LevelInfo&&) noexcept = default;
 
     /**
      * Check for validity of info structure.

@@ -13,6 +13,8 @@
 #include "uds/base/Subfunction.h"
 #include "uds/lifecycle/IUdsLifecycleConnector.h"
 
+#include <etl/array.h>
+
 #include <cstdint>
 
 namespace uds
@@ -29,13 +31,13 @@ public:
 private:
     DiagReturnCode::Type process(
         IncomingDiagConnection& connection,
-        uint8_t const request[],
+        uint8_t const* request,
         uint16_t requestLength) override;
 
     IUdsLifecycleConnector& fUdsLifecycleConnector;
     DiagDispatcher& fDiagDispatcher;
 
-    static uint8_t const sfImplementedRequest[2];
+    static ::etl::array<uint8_t, 2U> const sfImplementedRequest;
 };
 
 } // namespace uds

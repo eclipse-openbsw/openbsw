@@ -20,6 +20,20 @@ Unified Diagnostic Services (UDS) is a protocol that allows diagnostic systems
 to communicate with Electronic Control Units (ECUs) in vehicles. It is used to
 diagnose errors, debug and reprogram ECUs.
 
+Bounds checks
+-------------
+
+The clang-tidy fragments in ``include/`` and ``src/`` inherit the repository
+configuration and enable ``cppcoreguidelines-avoid-c-arrays``,
+``cppcoreguidelines-pro-bounds-array-to-pointer-decay`` and
+``cppcoreguidelines-pro-bounds-pointer-arithmetic`` for production code.
+These fragments do not enable the checks for tests or mocks.
+
+Buffer parameters retain their pointer-and-length interfaces. Fixed-size storage
+uses ``::etl::array``; implementations extending ``SecurityAccess`` can use
+``fSeed.data()`` and ``fTesterId.data()`` when passing those buffers to pointer-based
+interfaces.
+
 .. toctree::
     :maxdepth: 1
     :glob:

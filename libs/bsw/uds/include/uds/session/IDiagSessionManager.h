@@ -79,14 +79,14 @@ public:
     virtual DiagReturnCode::Type acceptedJob(
         IncomingDiagConnection& connection,
         AbstractDiagJob const& job,
-        uint8_t const request[],
+        uint8_t const* request,
         uint16_t requestLength)
         = 0;
 
     virtual void responseSent(
         IncomingDiagConnection& connection,
         DiagReturnCode::Type result,
-        uint8_t const response[],
+        uint8_t const* response,
         uint16_t responseLength)
         = 0;
 

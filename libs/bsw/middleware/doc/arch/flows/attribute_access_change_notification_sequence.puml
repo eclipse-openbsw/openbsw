@@ -20,8 +20,8 @@ actor "Generated\nProxy" as generated_proxy
 
 activate proxy_skeleton_base_unit
 
-generated_skeleton -> proxy_skeleton_base_unit : send(newValue)
-proxy_skeleton_base_unit -> proxy_skeleton_base_unit : set(newValue)
+generated_skeleton -> generated_skeleton : set(newValue)
+generated_skeleton -> proxy_skeleton_base_unit : send()
 proxy_skeleton_base_unit -> cluster_connection_unit : sendMessage(FIELD_NOTIFICATION)
 activate cluster_connection_unit
 cluster_connection_unit -> message_queue_unit : push(notification_msg)

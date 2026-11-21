@@ -14,6 +14,8 @@
 #include "uds/authentication/IDiagAuthenticator.h"
 #include "uds/base/Service.h"
 
+#include <etl/array.h>
+
 namespace uds
 {
 class SecurityAccess
@@ -42,8 +44,8 @@ public:
 protected:
     static uint8_t const RANDOM_LENGTH    = 8U;
     static uint8_t const TESTER_ID_LENGTH = 4U;
-    uint8_t fSeed[RANDOM_LENGTH];
-    uint8_t fTesterId[TESTER_ID_LENGTH];
+    ::etl::array<uint8_t, RANDOM_LENGTH> fSeed;
+    ::etl::array<uint8_t, TESTER_ID_LENGTH> fTesterId;
     uint16_t fCurrentEcuId;
     uint16_t fAuthenticatedEcu;
     uint8_t fSecurityAccessType;

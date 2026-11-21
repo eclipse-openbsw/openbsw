@@ -9,12 +9,14 @@
 # *******************************************************************************
 
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
+load("//bazel/config/build_variant:compatibility.bzl", "reference_app_only")
 
 cc_library(
     name = "transport_configuration",
     srcs = ["src/transport/TransportConfiguration.cpp"],
     hdrs = ["include/transport/TransportConfiguration.h"],
     strip_include_prefix = "include",
+    target_compatible_with = reference_app_only(),
     visibility = ["//visibility:public"],
     deps = [
         "//executables/referenceApp/configuration",

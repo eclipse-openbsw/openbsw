@@ -17,11 +17,14 @@ namespace udp
 class IDataSentListener
 {
 protected:
-    IDataSentListener() = default;
+    IDataSentListener()  = default;
+    ~IDataSentListener() = default;
 
 public:
     IDataSentListener(IDataSentListener const&)                 = delete;
     IDataSentListener& operator=(IDataSentListener const&)      = delete;
+    IDataSentListener(IDataSentListener&&)                      = delete;
+    IDataSentListener& operator=(IDataSentListener&&)           = delete;
     virtual void dataSent(uint8_t const* data, uint16_t length) = 0;
 };
 

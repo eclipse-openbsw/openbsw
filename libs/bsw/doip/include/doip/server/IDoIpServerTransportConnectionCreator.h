@@ -56,6 +56,11 @@ public:
         = 0;
 
 protected:
+    IDoIpServerTransportConnectionCreator()                                             = default;
+    IDoIpServerTransportConnectionCreator(IDoIpServerTransportConnectionCreator const&) = default;
+    IDoIpServerTransportConnectionCreator(IDoIpServerTransportConnectionCreator&&)      = default;
+    IDoIpServerTransportConnectionCreator& operator=(IDoIpServerTransportConnectionCreator&&)
+        = default;
     ~IDoIpServerTransportConnectionCreator() = default;
     IDoIpServerTransportConnectionCreator& operator=(IDoIpServerTransportConnectionCreator const&)
         = default;

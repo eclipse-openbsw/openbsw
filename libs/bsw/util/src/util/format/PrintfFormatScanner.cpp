@@ -77,7 +77,7 @@ void PrintfFormatScanner::scanParam()
 
 int32_t PrintfFormatScanner::scanWidthOrPrecision()
 {
-    int32_t result;
+    int32_t result = 0;
     if (isDigit(currentChar()))
     {
         result = 0;

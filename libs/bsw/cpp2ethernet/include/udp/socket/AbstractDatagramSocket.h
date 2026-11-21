@@ -47,9 +47,11 @@ public:
         UDP_SOCKET_NO_DATA_LISTENER
     };
 
-    AbstractDatagramSocket();
+    AbstractDatagramSocket()                                         = default;
     AbstractDatagramSocket(AbstractDatagramSocket const&)            = delete;
     AbstractDatagramSocket& operator=(AbstractDatagramSocket const&) = delete;
+    AbstractDatagramSocket(AbstractDatagramSocket&&)                 = delete;
+    AbstractDatagramSocket& operator=(AbstractDatagramSocket&&)      = delete;
 
     /**
      * Binds this UDPSocket to a specific port & local address
@@ -161,8 +163,10 @@ public:
 
     // [AbstractDatagramSocket]
 protected:
-    IDataListener* _dataListener;
-    IDataSentListener* _dataSentListener;
+    ~AbstractDatagramSocket() = default;
+
+    IDataListener* _dataListener{nullptr};
+    IDataSentListener* _dataSentListener{nullptr};
 };
 
 /*

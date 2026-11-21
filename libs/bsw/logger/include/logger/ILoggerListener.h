@@ -22,7 +22,15 @@ class ILoggerListener
 public:
     ILoggerListener();
 
+    ILoggerListener(ILoggerListener const&)            = delete;
+    ILoggerListener& operator=(ILoggerListener const&) = delete;
+    ILoggerListener(ILoggerListener&&)                 = delete;
+    ILoggerListener& operator=(ILoggerListener&&)      = delete;
+
     virtual void logAvailable() = 0;
+
+protected:
+    ~ILoggerListener() = default;
 };
 
 inline ILoggerListener::ILoggerListener() : ::etl::bidirectional_link<0>(), ::etl::uncopyable() {}

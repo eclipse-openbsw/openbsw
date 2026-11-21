@@ -33,6 +33,10 @@ public:
     virtual void releaseSendJob(T& sendJob, bool success) = 0;
 
 protected:
+    IDoIpSendJobCallback()                                       = default;
+    IDoIpSendJobCallback(IDoIpSendJobCallback const&)            = default;
+    IDoIpSendJobCallback(IDoIpSendJobCallback&&)                 = default;
+    IDoIpSendJobCallback& operator=(IDoIpSendJobCallback&&)      = delete;
     ~IDoIpSendJobCallback()                                      = default;
     IDoIpSendJobCallback& operator=(IDoIpSendJobCallback const&) = delete;
 };

@@ -9,36 +9,72 @@
 # *******************************************************************************
 
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
-load("//bazel/config/build_variant:compatibility.bzl", "reference_app_only")
+load("//bazel/config/build_variant:compatibility.bzl", "reference_app_posix_only")
+
+cc_library(name = "none")
+
+cc_library(
+    name = "can_impl",
+    srcs = ["src/systems/CanSystem.cpp"],
+    hdrs = ["include/systems/CanSystem.h"],
+    strip_include_prefix = "include",
+    deps = [
+        "//executables/referenceApp/configuration",
+        "//libs/bsw/lifecycle",
+        "//platforms/posix/bsp/socketCanTransceiver:socket_can_transceiver",
+    ],
+)
+
+alias(
+    name = "can",
+    actual = select({
+        "//bazel/config/features:can_enabled": ":can_impl",
+        "//conditions:default": ":none",
+    }),
+)
+
+cc_library(
+    name = "ethernet_impl",
+    srcs = ["src/systems/TapEthernetSystem.cpp"],
+    hdrs = ["include/systems/TapEthernetSystem.h"],
+    strip_include_prefix = "include",
+    deps = [
+        "//executables/referenceApp/configuration",
+        "//executables/referenceApp/platforms/posix/ethConfiguration:eth_configuration",
+        "//libs/bsw/lifecycle",
+        "//libs/bsw/lwipSocket:lwip_socket",
+        "//platforms/posix/bsp/tapEthernetDriver:tap_ethernet_driver",
+    ],
+)
+
+alias(
+    name = "ethernet",
+    actual = select({
+        "//bazel/config/features:ethernet_enabled": ":ethernet_impl",
+        "//conditions:default": ":none",
+    }),
+)
 
 cc_library(
     name = "main",
     srcs = [
         "src/lifecycle/StaticBsp.cpp",
         "src/main.cpp",
-        "src/systems/CanSystem.cpp",
-        "src/systems/TapEthernetSystem.cpp",
     ],
-    hdrs = [
-        "include/lifecycle/StaticBsp.h",
-        "include/systems/CanSystem.h",
-        "include/systems/TapEthernetSystem.h",
-    ],
+    hdrs = ["include/lifecycle/StaticBsp.h"],
     implementation_deps = [
         "//executables/referenceApp/asyncBinding:async_binding",
         "//executables/referenceApp/configuration",
-        "//executables/referenceApp/platforms/posix/ethConfiguration:eth_configuration",
         "//executables/referenceApp/safety/safeSupervisor:safe_supervisor",
         "//libs/bsw/lifecycle",
-        "//libs/bsw/lwipSocket:lwip_socket",
         "//platforms/posix/bsp/bspUart:bsp_uart",
-        "//platforms/posix/bsp/socketCanTransceiver:socket_can_transceiver",
-        "//platforms/posix/bsp/tapEthernetDriver:tap_ethernet_driver",
     ],
     strip_include_prefix = "include",
-    target_compatible_with = reference_app_only(),
+    target_compatible_with = reference_app_posix_only(),
     visibility = ["//visibility:public"],
     deps = [
+        ":can",
+        ":ethernet",
         "//platforms/posix/bsp/bspEepromDriver:bsp_eeprom_driver",
     ],
 )

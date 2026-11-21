@@ -33,8 +33,6 @@ class DoIpSimplePayloadSendJob : public IDoIpSendJob
 public:
     using ReleaseCallbackType = ::etl::delegate<void(T& sendJob, bool success)>;
 
-    ~DoIpSimplePayloadSendJob() override {}
-
     /**
      * Attaches an optional destination endpoint (needed for UDP datagrams) to this send job.
      * \param destinationEndpoint pointer to destination endpoint attached to this job
@@ -87,7 +85,7 @@ private:
     };
 
     ReleaseCallbackType _releaseCallback;
-    ::ip::IPEndpoint const* _destinationEndpoint;
+    ::ip::IPEndpoint const* _destinationEndpoint{nullptr};
     uint16_t _payloadLength;
     uint16_t _payloadType;
     uint8_t _protocolVersion;
@@ -100,7 +98,6 @@ DoIpSimplePayloadSendJob<T>::DoIpSimplePayloadSendJob(
     uint16_t const payloadLength,
     ReleaseCallbackType const releaseCallback)
 : _releaseCallback(releaseCallback)
-, _destinationEndpoint(nullptr)
 , _payloadLength(payloadLength)
 , _payloadType(payloadType)
 , _protocolVersion(protocolVersion)

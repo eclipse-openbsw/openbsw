@@ -9,6 +9,13 @@ set(_SCHEMA_YAML ${_GEN_INPUT}/templates/schemas/deployment.yaml)
 
 file(GLOB_RECURSE _JINJA_TEMPLATES CONFIGURE_DEPENDS
      ${_GEN_INPUT}/templates/jinja/*.jinja)
+file(
+    GLOB
+    _GEN_PY_MODULES
+    CONFIGURE_DEPENDS
+    ${_GEN_INPUT}/*.py
+    ${_GEN_INPUT}/filters/*.py
+    ${_GEN_INPUT}/loaders/*.py)
 
 # Release example: generate the complete middleware interface and transport
 # code.
@@ -17,24 +24,26 @@ set(_RELEASE_GEN_INC ${_RELEASE_GEN_DIR}/include/generated_code)
 set(_RELEASE_GEN_SRC ${_RELEASE_GEN_DIR}/src/generated_code)
 set(_RELEASE_GENERATED_HEADERS
     ${_RELEASE_GEN_INC}/middleware/ClusterId.h
-    ${_RELEASE_GEN_INC}/middleware/ClusterCore0.h
-    ${_RELEASE_GEN_INC}/middleware/ClusterCore1.h
-    ${_RELEASE_GEN_INC}/middleware/ClusterConnectionsCore0Core1.h
-    ${_RELEASE_GEN_INC}/middleware/ClusterConnectionsCore1Core0.h
+    ${_RELEASE_GEN_INC}/middleware/Core0Cluster.h
+    ${_RELEASE_GEN_INC}/middleware/Core1Cluster.h
     ${_RELEASE_GEN_INC}/middleware/shm/Config.h
-    ${_RELEASE_GEN_INC}/shm/AllocatorsDefinitions.h
-    ${_RELEASE_GEN_INC}/shm/QueueDefinitions.h
-    ${_RELEASE_GEN_INC}/shm/PduDefinitions.h
+    ${_RELEASE_GEN_INC}/middleware/shm/AllocatorsDefinitions.h
+    ${_RELEASE_GEN_INC}/middleware/shm/QueueDefinitions.h
+    ${_RELEASE_GEN_INC}/middleware/shm/PduDefinitions.h
     ${_RELEASE_GEN_INC}/features/communication/dummy_serviceCommon.h
     ${_RELEASE_GEN_INC}/features/communication/dummy_serviceProxy.h
-    ${_RELEASE_GEN_INC}/features/communication/dummy_serviceSkeleton.h)
+    ${_RELEASE_GEN_INC}/features/communication/dummy_serviceSkeleton.h
+    ${_RELEASE_GEN_INC}/features/communication/dummy_serviceTypes.h
+    ${_RELEASE_GEN_INC}/features/communication/samplePduWithCrcCommon.h
+    ${_RELEASE_GEN_INC}/features/communication/samplePduWithCrcReader.h)
 set(_RELEASE_GENERATED_SOURCES
     ${_RELEASE_GEN_SRC}/AllocatorSelectorDefinitions.cpp
-    ${_RELEASE_GEN_SRC}/ClusterCore0.cpp
-    ${_RELEASE_GEN_SRC}/ClusterCore1.cpp
+    ${_RELEASE_GEN_SRC}/Core0Cluster.cpp
+    ${_RELEASE_GEN_SRC}/Core1Cluster.cpp
     ${_RELEASE_GEN_SRC}/features/communication/dummy_serviceCommon.cpp
     ${_RELEASE_GEN_SRC}/features/communication/dummy_serviceProxy.cpp
     ${_RELEASE_GEN_SRC}/features/communication/dummy_serviceSkeleton.cpp
+    ${_RELEASE_GEN_SRC}/features/communication/samplePduWithCrcReader.cpp
     ${_RELEASE_GEN_SRC}/shm/Config.cpp)
 
 add_custom_command(
@@ -44,7 +53,10 @@ add_custom_command(
     COMMAND ${Python3_EXECUTABLE} ${_GEN_SCRIPT} --input ${_GEN_INPUT} --output
             ${_RELEASE_GEN_DIR} --deployment-yaml ${_DEPLOYMENT_YAML}
     COMMAND ${CMAKE_COMMAND} -E touch ${_RELEASE_GEN_DIR}/.generated
-    DEPENDS ${_GEN_SCRIPT} ${_DEPLOYMENT_YAML} ${_SCHEMA_YAML}
+    DEPENDS ${_GEN_SCRIPT}
+            ${_GEN_PY_MODULES}
+            ${_DEPLOYMENT_YAML}
+            ${_SCHEMA_YAML}
             ${_JINJA_TEMPLATES}
     COMMENT "Generating release middleware documentation example code"
     VERBATIM)
@@ -63,21 +75,26 @@ target_link_libraries(middlewareDocExamplesRelease PRIVATE middleware)
 add_dependencies(middlewareDocExamplesRelease
                  middlewareDocExamplesReleaseCodegen)
 
-# Test example: generate only the service interfaces and mock-backed sources.
+# Test example: generate service interfaces and PDU readers backed by GMock.
 set(_TEST_GEN_DIR ${CMAKE_CURRENT_BINARY_DIR}/test)
 set(_TEST_GEN_INC ${_TEST_GEN_DIR}/include/generated_code)
 set(_TEST_GEN_SRC ${_TEST_GEN_DIR}/src/generated_code)
 set(_TEST_GENERATED_HEADERS
     ${_TEST_GEN_INC}/middleware/ClusterId.h
-    ${_TEST_GEN_INC}/shm/AllocatorsDefinitions.h
+    ${_TEST_GEN_INC}/middleware/shm/AllocatorsDefinitions.h
     ${_TEST_GEN_INC}/features/communication/dummy_serviceCommon.h
     ${_TEST_GEN_INC}/features/communication/dummy_serviceProxy.h
     ${_TEST_GEN_INC}/features/communication/dummy_serviceProxyMock.h
     ${_TEST_GEN_INC}/features/communication/dummy_serviceSkeleton.h
-    ${_TEST_GEN_INC}/features/communication/dummy_serviceSkeletonMock.h)
+    ${_TEST_GEN_INC}/features/communication/dummy_serviceSkeletonMock.h
+    ${_TEST_GEN_INC}/features/communication/dummy_serviceTypes.h
+    ${_TEST_GEN_INC}/features/communication/samplePduWithCrcCommon.h
+    ${_TEST_GEN_INC}/features/communication/samplePduWithCrcReader.h
+    ${_TEST_GEN_INC}/features/communication/samplePduWithCrcReaderMock.h)
 set(_TEST_GENERATED_SOURCES
     ${_TEST_GEN_SRC}/features/communication/dummy_serviceProxy.cpp
-    ${_TEST_GEN_SRC}/features/communication/dummy_serviceSkeleton.cpp)
+    ${_TEST_GEN_SRC}/features/communication/dummy_serviceSkeleton.cpp
+    ${_TEST_GEN_SRC}/features/communication/samplePduWithCrcReader.cpp)
 
 add_custom_command(
     OUTPUT ${_TEST_GEN_DIR}/.generated
@@ -86,7 +103,10 @@ add_custom_command(
         ${_TEST_GEN_DIR} --deployment-yaml ${_DEPLOYMENT_YAML} --generation-mode
         mock
     COMMAND ${CMAKE_COMMAND} -E touch ${_TEST_GEN_DIR}/.generated
-    DEPENDS ${_GEN_SCRIPT} ${_DEPLOYMENT_YAML} ${_SCHEMA_YAML}
+    DEPENDS ${_GEN_SCRIPT}
+            ${_GEN_PY_MODULES}
+            ${_DEPLOYMENT_YAML}
+            ${_SCHEMA_YAML}
             ${_JINJA_TEMPLATES}
     COMMENT "Generating mock middleware documentation example code"
     VERBATIM)
@@ -101,12 +121,15 @@ add_executable(
     # Reuse the middleware test platform seams required by the core library.
     test/proxy_mock_unit_test_example.cpp
     test/skeleton_mock_unit_test_example.cpp
+    test/pdu_reader_mock_unit_test_example.cpp
     ${_MIDDLEWARE_ROOT}/test/src/memory/mock/AllocatorMock.cpp
     ${_MIDDLEWARE_ROOT}/test/src/logger/mock/LoggerMock.cpp
     ${_MIDDLEWARE_ROOT}/test/src/os/OsDefinitions.cpp
     ${_TEST_GENERATED_SOURCES})
 target_include_directories(
     middlewareDocExamplesTest
+    # test/include must precede release/ so its mock Qualifier shadows the
+    # example one.
     PRIVATE ${_TEST_GEN_INC}
             ${_MIDDLEWARE_ROOT}/test/src
             ${_MIDDLEWARE_ROOT}/test/include
@@ -114,3 +137,5 @@ target_include_directories(
             ${CMAKE_CURRENT_SOURCE_DIR}/release)
 target_link_libraries(middlewareDocExamplesTest PRIVATE middleware gmock_main)
 add_dependencies(middlewareDocExamplesTest middlewareDocExamplesTestCodegen)
+gtest_discover_tests(middlewareDocExamplesTest
+                     PROPERTIES LABELS "middlewareDocExamples")

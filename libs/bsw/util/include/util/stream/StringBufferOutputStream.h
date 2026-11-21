@@ -29,7 +29,12 @@ class StringBufferOutputStream : public IOutputStream
 public:
     explicit StringBufferOutputStream(
         ::etl::span<char> buf, char const* endOfString = nullptr, char const* ellipsis = nullptr);
-    ~StringBufferOutputStream() noexcept;
+    ~StringBufferOutputStream() noexcept override;
+
+    StringBufferOutputStream(StringBufferOutputStream const&)            = delete;
+    StringBufferOutputStream& operator=(StringBufferOutputStream const&) = delete;
+    StringBufferOutputStream(StringBufferOutputStream&&)                 = delete;
+    StringBufferOutputStream& operator=(StringBufferOutputStream&&)      = delete;
 
     bool isEof() const override;
     void write(uint8_t data) override;
@@ -46,8 +51,8 @@ private:
     ::etl::span<char> _buffer;
     char const* _endOfString;
     char const* _ellipsis;
-    size_t _currentIndex;
-    bool _overflow;
+    size_t _currentIndex{0U};
+    bool _overflow{false};
 };
 
 namespace declare

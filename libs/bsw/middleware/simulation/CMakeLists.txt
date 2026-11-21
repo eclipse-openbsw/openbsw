@@ -1,3 +1,13 @@
+# *******************************************************************************
+# Copyright (c) 2026 BMW AG
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+
 if (NOT UNIX)
     return()
 endif ()
@@ -16,6 +26,13 @@ set(_SCHEMA_YAML ${_GEN_INPUT}/templates/schemas/deployment.yaml)
 
 file(GLOB_RECURSE _JINJA_TEMPLATES CONFIGURE_DEPENDS
      ${_GEN_INPUT}/templates/jinja/*.jinja)
+file(
+    GLOB
+    _GEN_PY_MODULES
+    CONFIGURE_DEPENDS
+    ${_GEN_INPUT}/*.py
+    ${_GEN_INPUT}/filters/*.py
+    ${_GEN_INPUT}/loaders/*.py)
 
 set(_GEN_DIR ${CMAKE_CURRENT_BINARY_DIR})
 set(_GEN_INC ${_GEN_DIR}/include/generated_code)
@@ -23,32 +40,52 @@ set(_GEN_SRC ${_GEN_DIR}/src/generated_code)
 
 set(_GENERATED_HEADERS
     ${_GEN_INC}/middleware/ClusterId.h
-    ${_GEN_INC}/middleware/ClusterCluster0.h
-    ${_GEN_INC}/middleware/ClusterCluster1.h
-    ${_GEN_INC}/middleware/ClusterConnectionsCluster0Cluster1.h
-    ${_GEN_INC}/middleware/ClusterConnectionsCluster1Cluster0.h
+    ${_GEN_INC}/middleware/Cluster0Cluster.h
+    ${_GEN_INC}/middleware/Cluster1Cluster.h
+    ${_GEN_INC}/middleware/Cluster2Cluster.h
     ${_GEN_INC}/middleware/shm/Config.h
-    ${_GEN_INC}/shm/AllocatorsDefinitions.h
-    ${_GEN_INC}/shm/QueueDefinitions.h
-    ${_GEN_INC}/shm/PduDefinitions.h
+    ${_GEN_INC}/middleware/shm/AllocatorsDefinitions.h
+    ${_GEN_INC}/middleware/shm/QueueDefinitions.h
+    ${_GEN_INC}/middleware/shm/PduDefinitions.h
     ${_GEN_INC}/org/test/foo/FooCommon.h
     ${_GEN_INC}/org/test/foo/FooProxy.h
-    ${_GEN_INC}/org/test/foo/FooSkeleton.h)
+    ${_GEN_INC}/org/test/foo/FooSkeleton.h
+    ${_GEN_INC}/org/test/foo/FooTypes.h
+    ${_GEN_INC}/org/test/bus/samplePduWithCrcFromBusCommon.h
+    ${_GEN_INC}/org/test/bus/samplePduWithCrcFromBusReader.h
+    ${_GEN_INC}/org/test/bus/samplePduWithDatatypesFromBusCommon.h
+    ${_GEN_INC}/org/test/bus/samplePduWithDatatypesFromBusReader.h
+    ${_GEN_INC}/org/test/signal/samplePduWithCrcCommon.h
+    ${_GEN_INC}/org/test/signal/samplePduWithCrcReader.h
+    ${_GEN_INC}/org/test/signal/samplePduWithCrcWriter.h
+    ${_GEN_INC}/org/test/signal/samplePduWithDatatypesCommon.h
+    ${_GEN_INC}/org/test/signal/samplePduWithDatatypesReader.h
+    ${_GEN_INC}/org/test/signal/samplePduWithDatatypesWriter.h)
 
 set(GENERATED_SRCS
     ${_GEN_SRC}/AllocatorSelectorDefinitions.cpp
-    ${_GEN_SRC}/ClusterCluster0.cpp
-    ${_GEN_SRC}/ClusterCluster1.cpp
+    ${_GEN_SRC}/Cluster0Cluster.cpp
+    ${_GEN_SRC}/Cluster1Cluster.cpp
+    ${_GEN_SRC}/Cluster2Cluster.cpp
     ${_GEN_SRC}/shm/Config.cpp
     ${_GEN_SRC}/org/test/foo/FooCommon.cpp
     ${_GEN_SRC}/org/test/foo/FooProxy.cpp
-    ${_GEN_SRC}/org/test/foo/FooSkeleton.cpp)
+    ${_GEN_SRC}/org/test/foo/FooSkeleton.cpp
+    ${_GEN_SRC}/org/test/bus/samplePduWithCrcFromBusReader.cpp
+    ${_GEN_SRC}/org/test/bus/samplePduWithDatatypesFromBusReader.cpp
+    ${_GEN_SRC}/org/test/signal/samplePduWithCrcReader.cpp
+    ${_GEN_SRC}/org/test/signal/samplePduWithCrcWriter.cpp
+    ${_GEN_SRC}/org/test/signal/samplePduWithDatatypesReader.cpp
+    ${_GEN_SRC}/org/test/signal/samplePduWithDatatypesWriter.cpp)
 
 add_custom_command(
     OUTPUT ${_GENERATED_HEADERS} ${GENERATED_SRCS}
     COMMAND ${Python3_EXECUTABLE} ${_GEN_SCRIPT} --input ${_GEN_INPUT} --output
             ${_GEN_DIR} --deployment-yaml ${_DEPLOYMENT_YAML}
-    DEPENDS ${_GEN_SCRIPT} ${_DEPLOYMENT_YAML} ${_SCHEMA_YAML}
+    DEPENDS ${_GEN_SCRIPT}
+            ${_GEN_PY_MODULES}
+            ${_DEPLOYMENT_YAML}
+            ${_SCHEMA_YAML}
             ${_JINJA_TEMPLATES}
     COMMENT "Generating middleware C++ code from deployment-test.yaml"
     VERBATIM)
@@ -59,45 +96,107 @@ add_custom_command(
 set(PLATFORM_INTEGRATION_SRCS
     platform_integration/logger/src/LoggerImpl.cpp
     platform_integration/os/src/OsDefinitions.cpp
-    platform_integration/time/src/SystemTimeProvider.cpp)
+    platform_integration/concurrency/src/ConcurrencyImpl.cpp)
 
 # -----------------------------------------------------------------------
 # Simulation application
 # -----------------------------------------------------------------------
+if (BUILD_EXECUTABLE STREQUAL "unitTest")
+    set(_SIMULATION_TARGET middlewareSimulationFooMethodTest)
+    set(_APPLICATION_SRCS test/FooMethodTest.cpp test/PduAccessTest.cpp
+                          test/MemoryLayout.cpp)
+else ()
+    set(_SIMULATION_TARGET middlewareSimulation)
+    set(_APPLICATION_SRCS
+        platform_integration/time/src/SystemTimeProvider.cpp
+        src/ShmWrapper.cpp
+        src/MainCore0.cpp
+        src/MainCore1.cpp
+        src/MainCore2.cpp
+        src/Sample.cpp)
+endif ()
+
 add_executable(
-    middlewareSimulation
-    ${PLATFORM_INTEGRATION_SRCS}
-    ${GENERATED_SRCS}
-    src/Logger.cpp
-    src/ShmWrapper.cpp
-    src/MainCore0.cpp
-    src/MainCore1.cpp
-    src/Sample.cpp)
+    ${_SIMULATION_TARGET} ${PLATFORM_INTEGRATION_SRCS} ${GENERATED_SRCS}
+                          src/Logger.cpp ${_APPLICATION_SRCS})
 
 target_include_directories(
-    middlewareSimulation
+    ${_SIMULATION_TARGET}
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include
             ${_GEN_DIR}/include/generated_code
             ${CMAKE_CURRENT_SOURCE_DIR}/include/allocator
             ${CMAKE_CURRENT_SOURCE_DIR}/platform_integration/concurrency/include
 )
 
-target_link_libraries(middlewareSimulation PRIVATE middleware Threads::Threads
-                                                   rt)
+target_link_libraries(${_SIMULATION_TARGET} PRIVATE middleware Threads::Threads
+                                                    rt)
 
 target_include_directories(
-    middlewareSimulation
+    ${_SIMULATION_TARGET}
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/platform_integration/concurrency/include
 )
 
 target_include_directories(
     middleware
-    PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/platform_integration/concurrency/include)
+    PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/platform_integration/concurrency/include
+           ${CMAKE_CURRENT_SOURCE_DIR}/platform_integration/qualifier/include)
 
-option(SIMULATION_USE_PROCESSES
-       "Run each simulated core in a separate OS process (default: threads)"
-       OFF)
-if (SIMULATION_USE_PROCESSES)
-    target_compile_definitions(middlewareSimulation
-                               PRIVATE SIMULATION_USE_PROCESSES)
+if (BUILD_EXECUTABLE STREQUAL "unitTest")
+    # Keep both profile directories in the system search path so the unit-test
+    # ETL profile takes precedence over the simulation profile.
+    target_include_directories(${_SIMULATION_TARGET} SYSTEM
+                               PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+    target_include_directories(
+        ${_SIMULATION_TARGET} BEFORE
+        PRIVATE ${CMAKE_SOURCE_DIR}/executables/unitTest/etl_profile)
+    target_sources(
+        ${_SIMULATION_TARGET}
+        PRIVATE
+            ${CMAKE_SOURCE_DIR}/libs/bsw/middleware/test/src/time/mock/SystemTimerProviderMock.cpp
+    )
+    target_include_directories(
+        ${_SIMULATION_TARGET}
+        PRIVATE ${CMAKE_SOURCE_DIR}/libs/bsw/middleware/test/src)
+    target_link_libraries(${_SIMULATION_TARGET} PRIVATE gtest_main gmock)
+    gtest_discover_tests(${_SIMULATION_TARGET} PROPERTIES LABELS
+                                                          "middlewareTest")
+
+    add_executable(
+        middlewarePduWriterSchedulingTest
+        ${PLATFORM_INTEGRATION_SRCS}
+        ${GENERATED_SRCS}
+        src/Logger.cpp
+        test/MemoryLayout.cpp
+        test/PduWriterSchedulingTest.cpp
+        ${CMAKE_SOURCE_DIR}/libs/bsw/middleware/test/src/time/mock/SystemTimerProviderMock.cpp
+    )
+    target_include_directories(
+        middlewarePduWriterSchedulingTest
+        PRIVATE
+            ${_GEN_DIR}/include/generated_code
+            ${CMAKE_CURRENT_SOURCE_DIR}/include/allocator
+            ${CMAKE_CURRENT_SOURCE_DIR}/platform_integration/concurrency/include
+            ${CMAKE_SOURCE_DIR}/libs/bsw/middleware/test/src)
+    target_include_directories(middlewarePduWriterSchedulingTest SYSTEM
+                               PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+    target_include_directories(
+        middlewarePduWriterSchedulingTest BEFORE
+        PRIVATE ${CMAKE_SOURCE_DIR}/executables/unitTest/etl_profile)
+    target_link_libraries(
+        middlewarePduWriterSchedulingTest
+        PRIVATE middleware
+                Threads::Threads
+                rt
+                gtest_main
+                gmock)
+    gtest_discover_tests(middlewarePduWriterSchedulingTest
+                         PROPERTIES LABELS "middlewareTest")
+else ()
+    option(SIMULATION_USE_PROCESSES
+           "Run each simulated core in a separate OS process (default: threads)"
+           OFF)
+    if (SIMULATION_USE_PROCESSES)
+        target_compile_definitions(middlewareSimulation
+                                   PRIVATE SIMULATION_USE_PROCESSES)
+    endif ()
 endif ()

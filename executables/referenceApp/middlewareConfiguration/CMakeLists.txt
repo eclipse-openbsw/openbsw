@@ -11,6 +11,13 @@ set(_SCHEMA_YAML ${_GEN_INPUT}/templates/schemas/deployment.yaml)
 
 file(GLOB_RECURSE _JINJA_TEMPLATES CONFIGURE_DEPENDS
      ${_GEN_INPUT}/templates/jinja/*.jinja)
+file(
+    GLOB
+    _GEN_PY_MODULES
+    CONFIGURE_DEPENDS
+    ${_GEN_INPUT}/*.py
+    ${_GEN_INPUT}/filters/*.py
+    ${_GEN_INPUT}/loaders/*.py)
 
 set(_GEN_DIR ${CMAKE_CURRENT_BINARY_DIR})
 set(_GEN_INC ${_GEN_DIR}/include/generated_code)
@@ -18,36 +25,48 @@ set(_GEN_SRC ${_GEN_DIR}/src/generated_code)
 
 set(_GENERATED_HEADERS
     ${_GEN_INC}/middleware/ClusterId.h
-    ${_GEN_INC}/middleware/ClusterCluster0.h
-    ${_GEN_INC}/middleware/ClusterCluster1.h
-    ${_GEN_INC}/middleware/ClusterConnectionsCluster0Cluster1.h
-    ${_GEN_INC}/middleware/ClusterConnectionsCluster1Cluster0.h
+    ${_GEN_INC}/middleware/Cluster0Cluster.h
+    ${_GEN_INC}/middleware/Cluster1Cluster.h
     ${_GEN_INC}/middleware/shm/Config.h
-    ${_GEN_INC}/shm/AllocatorsDefinitions.h
-    ${_GEN_INC}/shm/QueueDefinitions.h
+    ${_GEN_INC}/middleware/shm/AllocatorsDefinitions.h
+    ${_GEN_INC}/middleware/shm/QueueDefinitions.h
+    ${_GEN_INC}/middleware/shm/PduDefinitions.h
     ${_GEN_INC}/org/test/foo/FooCommon.h
     ${_GEN_INC}/org/test/foo/FooProxy.h
-    ${_GEN_INC}/org/test/foo/FooSkeleton.h)
+    ${_GEN_INC}/org/test/foo/FooSkeleton.h
+    ${_GEN_INC}/org/test/foo/FooTypes.h
+    ${_GEN_INC}/org/test/pdu/demoRxPduCommon.h
+    ${_GEN_INC}/org/test/pdu/demoRxPduReader.h
+    ${_GEN_INC}/org/test/pdu/demoTxPduCommon.h
+    ${_GEN_INC}/org/test/pdu/demoTxPduReader.h
+    ${_GEN_INC}/org/test/pdu/demoTxPduWriter.h)
 
 set(GENERATED_SRCS
     ${_GEN_SRC}/AllocatorSelectorDefinitions.cpp
-    ${_GEN_SRC}/ClusterCluster0.cpp
-    ${_GEN_SRC}/ClusterCluster1.cpp
+    ${_GEN_SRC}/Cluster0Cluster.cpp
+    ${_GEN_SRC}/Cluster1Cluster.cpp
     ${_GEN_SRC}/shm/Config.cpp
     ${_GEN_SRC}/org/test/foo/FooCommon.cpp
     ${_GEN_SRC}/org/test/foo/FooProxy.cpp
-    ${_GEN_SRC}/org/test/foo/FooSkeleton.cpp)
+    ${_GEN_SRC}/org/test/foo/FooSkeleton.cpp
+    ${_GEN_SRC}/org/test/pdu/demoRxPduReader.cpp
+    ${_GEN_SRC}/org/test/pdu/demoTxPduReader.cpp
+    ${_GEN_SRC}/org/test/pdu/demoTxPduWriter.cpp)
 
 add_custom_command(
     OUTPUT ${_GENERATED_HEADERS} ${GENERATED_SRCS}
     COMMAND ${Python3_EXECUTABLE} ${_GEN_SCRIPT} --input ${_GEN_INPUT} --output
             ${_GEN_DIR} --deployment-yaml ${_DEPLOYMENT_YAML}
-    DEPENDS ${_GEN_SCRIPT} ${_DEPLOYMENT_YAML} ${_SCHEMA_YAML}
+    DEPENDS ${_GEN_SCRIPT}
+            ${_GEN_PY_MODULES}
+            ${_DEPLOYMENT_YAML}
+            ${_SCHEMA_YAML}
             ${_JINJA_TEMPLATES}
     COMMENT "Generating middleware C++ code from deployment.yaml"
     VERBATIM)
 
 set(PLATFORM_INTEGRATION_SRCS
+    platform_integration/concurrency/src/ConcurrencyImpl.cpp
     platform_integration/logger/src/LoggerImpl.cpp
     platform_integration/os/src/OsDefinitions.cpp
     platform_integration/time/src/SystemTimeProvider.cpp)

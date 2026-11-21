@@ -28,7 +28,12 @@ class TaggedOutputStream
 public:
     TaggedOutputStream(IOutputStream& strm, char const* prefix, char const* suffix);
 
-    ~TaggedOutputStream();
+    ~TaggedOutputStream() override;
+
+    TaggedOutputStream(TaggedOutputStream const&)            = delete;
+    TaggedOutputStream& operator=(TaggedOutputStream const&) = delete;
+    TaggedOutputStream(TaggedOutputStream&&)                 = delete;
+    TaggedOutputStream& operator=(TaggedOutputStream&&)      = delete;
 
     bool isEof() const override;
 

@@ -15,6 +15,8 @@
 
 #include <gtest/gtest.h>
 
+#include <etl/limits.h>
+
 using namespace ::logger;
 
 using namespace ::util::logger;
@@ -217,5 +219,42 @@ TEST_F(EntrySerializerTest, testPrintfDatatypes)
     ASSERT_EQ("124:2:3:", serializeAndDeserialize(300, 124, 2, 3, "%n", 0));
     ASSERT_EQ("124:2:3:    0017", serializeAndDeserialize(300, 124, 2, 3, "%*.*d", 8, 4, 17));
 }
+
+namespace
+{
+/**
+ * Verify signed integer minimum values survive serialization without changing their bit patterns.
+ */
+TEST_F(EntrySerializerTest, SignedArgumentBitPatterns)
+{
+    EXPECT_EQ(
+        "124:2:3:-32768 -2147483648 -9223372036854775808",
+        serializeAndDeserialize(
+            300,
+            124,
+            2,
+            3,
+            "%hd %d %ld",
+            ::etl::numeric_limits<int16_t>::min(),
+            ::etl::numeric_limits<int32_t>::min(),
+            ::etl::numeric_limits<int64_t>::min()));
+}
+
+/**
+ * Verify an unsigned argument retains its datatype tag and native byte representation.
+ */
+TEST_F(EntrySerializerTest, UnsignedArgumentWireRepresentation)
+{
+    uint16_t const value{::etl::numeric_limits<uint16_t>::max()};
+    EXPECT_EQ("124:2:3:65535", serializeAndDeserialize(300, 124, 2, 3, "%hu", value));
+
+    size_t const argumentOffset{
+        sizeof(uint32_t) + 3U * sizeof(uint8_t) + sizeof(uint16_t) + sizeof("%hu")};
+    EXPECT_EQ(
+        static_cast<uint8_t>(::util::format::ParamDatatype::UINT16), _buffer[1U + argumentOffset]);
+    EXPECT_EQ(0, memcmp(&_buffer[1U + argumentOffset + sizeof(uint8_t)], &value, sizeof(value)));
+    EXPECT_EQ(argumentOffset + sizeof(uint8_t) + sizeof(value), _usedBufferSize);
+}
+} // namespace
 
 // NOLINTEND(cppcoreguidelines-pro-type-vararg)

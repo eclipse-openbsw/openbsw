@@ -9,16 +9,7 @@
 # *******************************************************************************
 
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
-
-alias(
-    name = "lwip_sys_arch_default",
-    actual = select({
-        "//bazel/platform/constraints/soc:s32k148": "//platforms/s32k1xx/lwipSysArch:lwip_sys_arch",
-        "@platforms//os:linux": "//platforms/posix/lwipSysArch:lwip_sys_arch",
-        "//conditions:default": "//bazel/config:no_implementation",
-    }),
-    visibility = ["//visibility:public"],
-)
+load("//bazel/config/build_variant:compatibility.bzl", "reference_app_only")
 
 cc_library(
     name = "lwip_configuration",
@@ -28,9 +19,10 @@ cc_library(
         "include/rng.h",
     ],
     strip_include_prefix = "include",
+    target_compatible_with = reference_app_only(),
     visibility = ["//visibility:public"],
     deps = [
-        ":lwip_sys_arch_default",
         "//libs/3rdparty/etl",
+        "//libs/3rdparty/lwip:lwip_sys_arch",
     ],
 )

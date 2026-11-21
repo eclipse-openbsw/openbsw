@@ -70,6 +70,12 @@ public:
     virtual IDoIpUdpOemMessageHandler* getOemMessageHandler(uint16_t payloadType) const = 0;
 
 protected:
+    IDoIpServerVehicleIdentificationCallback() = default;
+    IDoIpServerVehicleIdentificationCallback(IDoIpServerVehicleIdentificationCallback const&)
+        = default;
+    IDoIpServerVehicleIdentificationCallback(IDoIpServerVehicleIdentificationCallback&&) = default;
+    IDoIpServerVehicleIdentificationCallback& operator=(IDoIpServerVehicleIdentificationCallback&&)
+        = default;
     ~IDoIpServerVehicleIdentificationCallback() = default;
     IDoIpServerVehicleIdentificationCallback&
     operator=(IDoIpServerVehicleIdentificationCallback const&)

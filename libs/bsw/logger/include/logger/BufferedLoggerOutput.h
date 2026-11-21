@@ -59,7 +59,7 @@ public:
         va_list ap) override;
 
 private:
-    class EntryOutputAdapter : public IEntrySerializerCallback<Timestamp>
+    class EntryOutputAdapter final : public IEntrySerializerCallback<Timestamp>
     {
     public:
         EntryOutputAdapter(
@@ -225,7 +225,7 @@ bool BufferedLoggerOutput<Lock, MaxEntrySize, T, E, Timestamp, ReadOnlyPredicate
     IEntryOutput<E, Timestamp>& output, EntryRefType& entryRef) const
 {
     uint8_t entryBuffer[MaxEntrySize];
-    uint32_t size;
+    uint32_t size{0U};
     {
         Lock const lock;
         size = _entryBuffer.getNextEntry(entryBuffer, entryRef);

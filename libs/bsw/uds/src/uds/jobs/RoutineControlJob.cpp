@@ -35,8 +35,11 @@ AbstractDiagJob& RoutineControlJob::getRequestRoutineResults()
 DiagReturnCode::Type
 RoutineControlJob::verify(uint8_t const* const request, uint16_t const /* requestLength */)
 {
+    auto const implementedRequest = getImplementedRequestView();
     if (!compare(
-            request, getImplementedRequest() + 2U, static_cast<uint16_t>(getRequestLength()) - 2U))
+            request,
+            implementedRequest.subspan(2U).data(),
+            static_cast<uint16_t>(implementedRequest.size() - 2U)))
     {
         return DiagReturnCode::NOT_RESPONSIBLE;
     }

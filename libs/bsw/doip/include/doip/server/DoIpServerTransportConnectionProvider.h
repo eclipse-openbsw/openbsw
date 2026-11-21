@@ -31,7 +31,7 @@ class IDoIpServerTransportConnectionProviderCallback;
  * Base class for providing server transport connections.
  * It is responsible for base connection handling with routing activation and .
  */
-class DoIpServerTransportConnectionProvider : private IDoIpServerSocketHandlerListener
+class DoIpServerTransportConnectionProvider final : private IDoIpServerSocketHandlerListener
 {
 public:
     /**
@@ -51,6 +51,14 @@ public:
         IDoIpServerSocketHandler& socketHandler,
         IDoIpServerTransportConnectionPool& connectionPool,
         DoIpServerTransportConnectionConfig const& config);
+
+    ~DoIpServerTransportConnectionProvider()                                            = default;
+    DoIpServerTransportConnectionProvider(DoIpServerTransportConnectionProvider const&) = default;
+    DoIpServerTransportConnectionProvider(DoIpServerTransportConnectionProvider&&)      = default;
+    DoIpServerTransportConnectionProvider& operator=(DoIpServerTransportConnectionProvider const&)
+        = delete;
+    DoIpServerTransportConnectionProvider& operator=(DoIpServerTransportConnectionProvider&&)
+        = delete;
 
     /**
      * Start the provider.

@@ -9,11 +9,13 @@
 # *******************************************************************************
 
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
+load("//bazel/config/build_variant:compatibility.bzl", "reference_app_only")
 
 cc_library(
     name = "async_binding_headers",
     hdrs = ["include/async/AsyncBinding.h"],
     strip_include_prefix = "include",
+    target_compatible_with = reference_app_only(),
     visibility = ["//visibility:public"],
     deps = [
         "//libs/bsw/async:async_headers",
@@ -25,6 +27,7 @@ cc_library(
 cc_library(
     name = "async_binding_freertos",
     defines = ["SUPPORT_FREERTOS"],
+    target_compatible_with = reference_app_only(),
     visibility = ["//visibility:public"],
     deps = [":async_binding_headers"],
 )
@@ -32,6 +35,7 @@ cc_library(
 cc_library(
     name = "async_binding_threadx",
     defines = ["SUPPORT_THREADX"],
+    target_compatible_with = reference_app_only(),
     visibility = ["//visibility:public"],
     deps = [":async_binding_headers"],
 )

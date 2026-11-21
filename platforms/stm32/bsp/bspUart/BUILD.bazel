@@ -1,0 +1,31 @@
+# *******************************************************************************
+# Copyright (c) 2026 Accenture
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+
+load("@rules_cc//cc:cc_library.bzl", "cc_library")
+
+# bsp_configuration is an implementation dep to avoid a cycle. Each board's
+# bsp_configuration depends on bsp_uart, so bsp_uart cannot carry
+# bsp_configuration as a regular dep.
+cc_library(
+    name = "bsp_uart",
+    srcs = ["src/Uart.cpp"],
+    hdrs = [
+        "include/bsp/Uart.h",
+        "include/bsp/UartParams.h",
+    ],
+    implementation_deps = ["//bazel/config/bsp:bsp_configuration"],
+    strip_include_prefix = "include",
+    target_compatible_with = ["@platforms//os:none"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//libs/bsw/bsp",
+        "//platforms/stm32/bsp/bspMcu:bsp_mcu",
+    ],
+)

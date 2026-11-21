@@ -52,14 +52,10 @@ DoIpServerTransportMessageHandler::DoIpServerTransportMessageHandler(
     DoIpServerTransportConnectionConfig const& config)
 : IDoIpServerMessageHandler()
 , _payloadPeekContext()
-, _connection(nullptr)
 , _diagnosticSendJobPool(diagnosticSendJobBlockPool)
 , _protocolSendJobPool(protocolSendJobBlockPool)
-, _transportMessage(nullptr)
 , _config(config)
-, _receiveMessagePayloadLength(0U)
 , _protocolVersion(protocolVersion)
-, _isRoutingActive(false)
 , _readBuffer()
 {}
 
@@ -130,6 +126,12 @@ bool DoIpServerTransportMessageHandler::headerReceived(DoIpHeader const& header)
                     &DoIpServerTransportMessageHandler::
                         diagnosticMessageLogicalAddressInfoReceived>(*this));
         }
+        _connection->endReceiveMessage(IDoIpConnection::PayloadDiscardedCallbackType{});
+        return true;
+    }
+    if ((header.payloadType == DoIpConstants::PayloadTypes::DIAGNOSTIC_MESSAGE_POSITIVE_ACK)
+        || (header.payloadType == DoIpConstants::PayloadTypes::DIAGNOSTIC_MESSAGE_NEGATIVE_ACK))
+    {
         _connection->endReceiveMessage(IDoIpConnection::PayloadDiscardedCallbackType{});
         return true;
     }
@@ -390,17 +392,16 @@ DoIpServerTransportMessageHandler::queueDiagnosticAck(
         {
             receivedMessageDataPrefix = receivedMessageData.subspan(
                 0U, ::etl::min(receivedMessageData.size(), static_cast<size_t>(ACK_PAYLOAD_SIZE)));
-            job = new (_protocolSendJobPool.allocate<StaticPayloadSendJobType>())
-                StaticPayloadSendJobType(
-                    static_cast<uint8_t>(_protocolVersion),
-                    payloadType,
-                    5U + receivedMessageDataPrefix.size(),
-                    closeAfterSend ? StaticPayloadSendJobType::ReleaseCallbackType::create<
-                        DoIpServerTransportMessageHandler,
-                        &DoIpServerTransportMessageHandler::releaseSendJobAndClose>(*this)
-                                   : StaticPayloadSendJobType::ReleaseCallbackType::create<
-                                       DoIpServerTransportMessageHandler,
-                                       &DoIpServerTransportMessageHandler::releaseSendJob>(*this));
+            job = _protocolSendJobPool.create<StaticPayloadSendJobType>(
+                static_cast<uint8_t>(_protocolVersion),
+                payloadType,
+                5U + receivedMessageDataPrefix.size(),
+                closeAfterSend ? StaticPayloadSendJobType::ReleaseCallbackType::create<
+                    DoIpServerTransportMessageHandler,
+                    &DoIpServerTransportMessageHandler::releaseSendJobAndClose>(*this)
+                               : StaticPayloadSendJobType::ReleaseCallbackType::create<
+                                   DoIpServerTransportMessageHandler,
+                                   &DoIpServerTransportMessageHandler::releaseSendJob>(*this));
         }
     }
     if (job != nullptr)

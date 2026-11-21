@@ -10,6 +10,7 @@ add_executable(
     src/logger/DefaultLoggerTimeTest.cpp
     src/logger/EntryBufferTest.cpp
     src/logger/EntrySerializerTest.cpp
+    src/logger/LoggerInterfaceLifetimeTest.cpp
     src/logger/PersistentComponentConfigTest.cpp
     src/logger/SharedStreamEntryOutputTest.cpp)
 

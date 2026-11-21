@@ -63,7 +63,7 @@ public:
         uint8_t const* const /* request */,
         uint16_t const /* requestLength */)
     {
-        return DiagReturnCode::ISO_CONDITIONS_NOT_CORRECT;
+        return DiagReturnCode::ISO_SUBFUNCTION_NOT_SUPPORTED;
     }
 
     virtual DiagReturnCode::Type requestResults(
@@ -71,7 +71,7 @@ public:
         uint8_t const* const /* request */,
         uint16_t const /* requestLength */)
     {
-        return DiagReturnCode::ISO_CONDITIONS_NOT_CORRECT;
+        return DiagReturnCode::ISO_SUBFUNCTION_NOT_SUPPORTED;
     }
 
     AbstractDiagJob& getStartRoutine();

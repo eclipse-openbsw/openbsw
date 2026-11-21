@@ -10,20 +10,16 @@
 
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
 
-alias(
+#   Default:  //bazel/config:no_implementation
+#   Override: --//libs/bsw/common:configuration=//executables/<app>/configuration
+label_flag(
     name = "configuration",
-    actual = select(
-        {
-            "//bazel/config/build_variant:reference_app": "//executables/referenceApp/configuration",
-            "//bazel/config/build_variant:unit_test": "//executables/unitTest/configuration",
-        },
-        no_match_error = "Please set build_variant to either 'reference_app' or 'unit_test'",
-    ),
+    build_setting_default = "//bazel/config:no_implementation",
     visibility = ["//visibility:public"],
 )
 
-# Circular dependency present on the CMake side: common -> configuration -> common
-# Split off common_headers to break the circular dependency for Bazel
+# common_headers is split out so that the configuration target can depend on it
+# without a dependency cycle.
 cc_library(
     name = "common_headers",
     hdrs = [
@@ -42,8 +38,5 @@ cc_library(
 cc_library(
     name = "common",
     visibility = ["//visibility:public"],
-    deps = [
-        ":common_headers",
-        ":configuration",
-    ],
+    deps = [":common_headers"],
 )

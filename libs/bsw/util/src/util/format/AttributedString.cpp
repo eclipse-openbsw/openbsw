@@ -25,11 +25,8 @@ AttributedString::AttributedString(char const* const string, StringAttributes co
 // explicit
 StringAttributes::StringAttributes(
     Color const foregroundColor, uint8_t const fmt, Color const backgroundColor)
-{
-    _attributes._foregroundColor = foregroundColor;
-    _attributes._format          = fmt;
-    _attributes._backgroundColor = backgroundColor;
-}
+: _attributes(foregroundColor, fmt, backgroundColor)
+{}
 
 StringAttributes::StringAttributes(PlainStringAttributes const& attributes)
 : _attributes(attributes)

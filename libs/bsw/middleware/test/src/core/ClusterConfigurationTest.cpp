@@ -314,6 +314,22 @@ public:
         return msg;
     }
 
+    static Message createErrorMessage(
+        uint16_t const memberId,
+        uint16_t const requestId,
+        uint8_t const addressId = ClusterConfigurationNoTimeout::addressId)
+    {
+        return Message::createErrorResponse(
+            ClusterConfigurationNoTimeout::serviceId,
+            memberId,
+            requestId,
+            ClusterConfigurationNoTimeout::instanceId,
+            ClusterConfigurationNoTimeout::sourceClusterId,
+            ClusterConfigurationNoTimeout::targetClusterId,
+            addressId,
+            ErrorState::UserDefinedError);
+    }
+
 protected:
     ClusterConfigurationNoTimeout _clusterConf;
     ClusterConfigurationTimeout _clusterTimeoutConf;
@@ -340,6 +356,45 @@ TEST_F(ConfigurationBaseTest, ProxyTargetRoutedFailed)
     Message prxyTrgtMsg = createInvalidResponseMessage(123, 321);
 
     EXPECT_EQ(::middleware::core::HRESULT::RoutingError, _clusterConf.dispatchMessage(prxyTrgtMsg));
+}
+
+TEST_F(ConfigurationBaseTest, ProxyTargetRoutedError)
+{
+    auto const msg = createErrorMessage(123, 321);
+
+    EXPECT_EQ(HRESULT::Ok, _clusterConf.dispatchMessage(msg));
+    EXPECT_TRUE(_clusterConf.getProxy().checkMsgHeader(msg));
+}
+
+TEST_F(ConfigurationBaseTest, ProxyDirectError)
+{
+    auto const msg = createErrorMessage(123, 321);
+
+    EXPECT_EQ(HRESULT::Ok, _clusterConf.dispatchMessageToProxy(msg));
+    EXPECT_TRUE(_clusterConf.getProxy().checkMsgHeader(msg));
+}
+
+TEST_F(ConfigurationBaseTest, ProxyErrorUnknownAddress)
+{
+    auto const msg = createErrorMessage(123, 321, ClusterConfigurationNoTimeout::addressId + 1);
+
+    EXPECT_EQ(HRESULT::RoutingError, _clusterConf.dispatchMessage(msg));
+}
+
+TEST_F(ConfigurationBaseTest, ProxyErrorPropagatesReceiverReturnCode)
+{
+    auto const msg = createErrorMessage(123, 321);
+    _clusterConf.getProxy().setReturnCode(HRESULT::NotImplemented);
+
+    EXPECT_EQ(HRESULT::NotImplemented, _clusterConf.dispatchMessage(msg));
+    EXPECT_TRUE(_clusterConf.getProxy().checkMsgHeader(msg));
+}
+
+TEST_F(ConfigurationBaseTest, SkeletonRejectsErrorResponse)
+{
+    auto const msg = createErrorMessage(123, 321);
+
+    EXPECT_EQ(HRESULT::RoutingError, _clusterConf.dispatchMessageToSkeleton(msg));
 }
 
 TEST_F(ConfigurationBaseTest, ProxySkeletonWrongEndpoint)

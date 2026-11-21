@@ -174,6 +174,9 @@ public:
     explicit PrintfFormatter(::util::stream::IOutputStream& strm, bool writeParam = true);
     PrintfFormatter(PrintfFormatter const&)            = delete;
     PrintfFormatter& operator=(PrintfFormatter const&) = delete;
+    PrintfFormatter(PrintfFormatter&&)                 = delete;
+    PrintfFormatter& operator=(PrintfFormatter&&)      = delete;
+    ~PrintfFormatter()                                 = default;
 
     /**
      * Writes the C string pointed by format to the encapsulated stream. If format includes format

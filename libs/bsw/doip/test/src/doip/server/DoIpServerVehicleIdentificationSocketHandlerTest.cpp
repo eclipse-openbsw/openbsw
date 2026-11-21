@@ -18,6 +18,7 @@
 #include "doip/server/DoIpServerVehicleAnnouncementParameterProviderMock.h"
 #include "doip/server/DoIpServerVehicleIdentificationCallbackMock.h"
 #include "doip/server/DoIpServerVehicleIdentificationConfig.h"
+#include "doip/server/DoIpServerVehicleIdentificationParameters.h"
 #include "doip/server/DoIpUdpOemMessageHandlerMock.h"
 
 #include <async/AsyncMock.h>
@@ -29,6 +30,7 @@
 #include <etl/span.h>
 #include <ip/NetworkInterfaceConfigRegistryMock.h>
 #include <udp/socket/AbstractDatagramSocketMock.h>
+#include <type_traits>
 
 #include <gtest/esr_extensions.h>
 #include <gtest/gtest.h>
@@ -38,6 +40,36 @@ namespace
 using namespace ::testing;
 using namespace ::doip;
 using namespace ::ethernet::test;
+
+using OemMessageHandler = DoIpConcreteOemMessageHandler<0xf000U, 1U, 0xf001U, 1U>;
+static_assert(std::is_default_constructible<OemMessageHandler>::value);
+static_assert(std::is_copy_constructible<OemMessageHandler>::value);
+static_assert(std::is_move_constructible<OemMessageHandler>::value);
+static_assert(!std::is_copy_assignable<OemMessageHandler>::value);
+static_assert(!std::is_move_assignable<OemMessageHandler>::value);
+static_assert(std::is_copy_constructible<DoIpServerVehicleIdentificationParameters>::value);
+static_assert(std::is_move_constructible<DoIpServerVehicleIdentificationParameters>::value);
+static_assert(std::is_copy_assignable<DoIpServerVehicleIdentificationParameters>::value);
+static_assert(std::is_move_assignable<DoIpServerVehicleIdentificationParameters>::value);
+
+TEST(DoIpUdpOemMessageHandlerTest, TestCopyPreservesPayloadMetadata)
+{
+    OemMessageHandler const handler;
+    auto const copy = handler;
+    EXPECT_EQ(0xf000U, copy.getRequestPayloadType());
+    EXPECT_EQ(1U, copy.getRequestPayloadSize());
+    EXPECT_EQ(0xf001U, copy.getResponsePayloadType());
+    EXPECT_EQ(1U, copy.getResponsePayloadSize());
+}
+
+TEST(DoIpServerVehicleIdentificationParametersTest, TestCopyPreservesParameters)
+{
+    DoIpServerVehicleIdentificationParameters const parameters(123U, 456U, 3U);
+    auto const copy = parameters;
+    EXPECT_EQ(123U, copy.getAnnounceWait());
+    EXPECT_EQ(456U, copy.getAnnounceInterval());
+    EXPECT_EQ(3U, copy.getAnnounceCount());
+}
 
 static uint8_t vin[]
     = {'B', 'A', 'U', 'I', 'E', 'E', '4', 'M', 'Z', '1', '5', '0', '1', '2', '9', '0', '8'};
@@ -1516,6 +1548,82 @@ TEST_F(DoIpServerVehicleIdentificationSocketHandlerTest, TestOemRequests)
     timestamp = fParametersMock.getAnnounceWait();
     expectAnnouncement(broadcastEndpoint, timestamp);
     tick(timestamp);
+
+    EXPECT_CALL(*fSocketMock, close());
+    cut.shutdown();
+    testContext.expireAndExecute();
+}
+
+TEST_F(DoIpServerVehicleIdentificationSocketHandlerTest, TestNetifReinit)
+{
+    ::ip::NetworkInterfaceConfigKey configKey(0);
+    ::ip::IPAddress multicastAddress = ::ip::make_ip4(0x34384U);
+    ::doip::declare::
+        DoIpServerVehicleIdentificationSocketHandler<::udp::AbstractDatagramSocketMock, 3U>
+            cut(DoIpConstants::ProtocolVersion::version02Iso2012,
+                1U,
+                configKey,
+                multicastAddress,
+                fConfig);
+    ::ip::NetworkInterfaceConfig config(0xc0a80001U, 0xc0a8ffffU, 0x0U);
+    ::ip::IPEndpoint broadcastEndpoint(
+        config.broadcastAddress(), DoIpConstants::Ports::UDP_DISCOVERY);
+    EXPECT_CALL(fNetworkInterfaceConfigRegistryMock, getConfig(configKey)).WillOnce(Return(config));
+    fSocketMock = &cut.getSocket();
+    EXPECT_CALL(*fSocketMock, bind(NotNull(), DoIpConstants::Ports::UDP_DISCOVERY))
+        .WillOnce(Return(::udp::AbstractDatagramSocket::ErrorCode::UDP_SOCKET_OK));
+    EXPECT_CALL(timerMock, getSystemTimeMs32Bit()).WillRepeatedly(Return(0U));
+    uint32_t timestamp = 0;
+    cut.start();
+    testContext.expireAndExecute();
+    Mock::VerifyAndClearExpectations(&timerMock);
+    ::ip::IPEndpoint remoteEndpoint(::ip::make_ip4(0x4834U), 123U);
+
+    // 3 initial announcements
+    EXPECT_EQ(fRequestPool.size(), 3U);
+    // wait up to end of wait time and expect first announcement
+    timestamp = fParametersMock.getAnnounceWait();
+    expectAnnouncement(broadcastEndpoint, timestamp);
+    tick(timestamp);
+
+    // 2 left
+    EXPECT_EQ(fRequestPool.size(), 2U);
+    timestamp += fParametersMock.getAnnounceInterval();
+    expectAnnouncement(broadcastEndpoint, timestamp);
+    tick(timestamp);
+
+    // 1 left
+    EXPECT_EQ(fRequestPool.size(), 1U);
+
+    // VIR received, uses one object from pool
+    uint8_t const request[] = {0x02, 0xfd, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00};
+    EXPECT_CALL(fParametersMock, getAnnounceWait()).WillOnce(Return(250U));
+    receiveRequest(config, remoteEndpoint, request, timestamp);
+    EXPECT_EQ(fRequestPool.size(), 2U);
+
+    timestamp += 250U;
+    expectAnnouncement(remoteEndpoint, timestamp);
+    tick(timestamp);
+    EXPECT_EQ(fRequestPool.size(), 1U);
+    timestamp += 250U;
+
+    // netif changes
+    fNetworkInterfaceConfigRegistryMock.configChangedSignal(configKey, config);
+    EXPECT_CALL(*fSocketMock, close());
+    EXPECT_CALL(*fSocketMock, bind(NotNull(), DoIpConstants::Ports::UDP_DISCOVERY))
+        .WillOnce(Return(::udp::AbstractDatagramSocket::ErrorCode::UDP_SOCKET_OK));
+    EXPECT_CALL(timerMock, getSystemTimeMs32Bit()).WillRepeatedly(Return(timestamp));
+    EXPECT_CALL(fParametersMock, getAnnounceWait()).WillOnce(Return(0x150U));
+    testContext.expireAndExecute();
+
+    // back to three initial announcements
+    EXPECT_EQ(fRequestPool.size(), 3U);
+
+    // wait up to end of wait time and expect first announcement
+    timestamp += 0x150U;
+    expectAnnouncement(broadcastEndpoint, timestamp);
+    tick(timestamp);
+    EXPECT_EQ(fRequestPool.size(), 2U);
 
     EXPECT_CALL(*fSocketMock, close());
     cut.shutdown();

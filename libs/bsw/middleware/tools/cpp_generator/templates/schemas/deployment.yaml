@@ -28,11 +28,29 @@ properties:
     items:
       $ref: "#/definitions/cluster"
 
+  components:
+    type: array
+    description: >-
+      Component definitions. Clusters instantiate them via their
+      `componentInstances` list (typically through YAML anchors).
+    items:
+      $ref: "#/definitions/component"
+
   allocators:
     type: array
-    description: "List of memory allocators for middleware infrastructure"
+    description: >-
+      Memory allocators for middleware infrastructure. Exactly one allocator
+      must set default; it serves every service that does not select another
+      one.
+    minItems: 1
     items:
       $ref: "#/definitions/allocator"
+
+  typeModules:
+    type: array
+    description: "Datatype definitions, each generated into its own header"
+    items:
+      $ref: "#/definitions/type_module"
 
   services:
     type: array
@@ -58,6 +76,25 @@ properties:
     items:
       $ref: "#/definitions/pdu"
 
+  outbound_pdu_queue_size:
+    type: integer
+    description: "Capacity of the shared queue used to notify the PDU broker about committed PDUs"
+    minimum: 1
+    maximum: 255
+
+allOf:
+  - if:
+      required:
+        - pdus
+      properties:
+        pdus:
+          contains:
+            required:
+              - pdu_id
+    then:
+      required:
+        - outbound_pdu_queue_size
+
 definitions:
   cluster:
     type: object
@@ -65,7 +102,7 @@ definitions:
     required:
       - name
       - id
-      - queue_size
+      - queueSize
     properties:
       name:
         type: string
@@ -76,10 +113,66 @@ definitions:
         description: "Unique cluster identifier (uint8_t range; 255 is reserved for InvalidId)"
         minimum: 0
         maximum: 254
-      queue_size:
+      queueSize:
         type: integer
         description: "Queue capacity for inter-cluster communication"
         minimum: 1
+      componentInstances:
+        type: array
+        description: "Component instances hosted by this cluster"
+        items:
+          $ref: "#/definitions/component_instance"
+
+  port:
+    type: object
+    additionalProperties: false
+    required:
+      - name
+      - interfaceName
+      - interfaceNamespace
+    properties:
+      name:
+        type: string
+        description: "Port name, unique within its component"
+        pattern: "^[A-Za-z][A-Za-z0-9]*$"
+      interfaceName:
+        type: string
+        description: "Name of the service the port provides or requires"
+      interfaceNamespace:
+        type: string
+        description: "Namespace of the service the port provides or requires"
+
+  component:
+    type: object
+    additionalProperties: false
+    required:
+      - name
+    properties:
+      name:
+        type: string
+        pattern: "^[A-Za-z][A-Za-z0-9]*$"
+      providedPorts:
+        type: array
+        items:
+          $ref: "#/definitions/port"
+      requiredPorts:
+        type: array
+        items:
+          $ref: "#/definitions/port"
+
+  component_instance:
+    type: object
+    additionalProperties: false
+    required:
+      - instanceName
+      - component
+    properties:
+      instanceName:
+        type: string
+        description: "Instance name, unique within its cluster"
+        pattern: "^[A-Za-z][A-Za-z0-9]*$"
+      component:
+        $ref: "#/definitions/component"
 
   allocator:
     type: object
@@ -92,9 +185,14 @@ definitions:
         type: string
         description: "Allocator name (e.g., default, custom)"
         pattern: "^[A-Za-z][A-Za-z0-9]*$"
+      default:
+        type: boolean
+        description: "Marks the allocator used by services without an explicit one"
+        default: false
       pools:
         type: array
         description: "List of memory pools for the allocator"
+        minItems: 1
         items:
           $ref: "#/definitions/pool"
 
@@ -128,110 +226,375 @@ definitions:
         items:
           $ref: "#/definitions/enum_parameter"
 
-  typed_parameter:
+  unsigned_integer_type:
+    type: string
+    description: "Unsigned integral C++ type"
+    enum:
+      - uint8_t
+      - uint16_t
+      - uint32_t
+      - uint64_t
+
+  bitset_bit:
     type: object
     additionalProperties: false
     required:
       - name
-      - type
+      - position
     properties:
       name:
         type: string
-      type:
-        type: string
+        pattern: "^[A-Za-z][A-Za-z0-9_]*$"
+      position:
+        type: integer
+        description: "Bit index within the value (0 = least significant bit)"
+        minimum: 0
 
-  typedef_definition:
+  bitset_definition:
     type: object
     additionalProperties: false
     required:
       - name
       - type
+      - bits
     properties:
       name:
         type: string
         pattern: "^[A-Za-z][A-Za-z0-9]*$"
       type:
+        $ref: "#/definitions/unsigned_integer_type"
+      bits:
+        type: array
+        minItems: 1
+        maxItems: 64
+        items:
+          $ref: "#/definitions/bitset_bit"
+    allOf:
+      - if:
+          properties:
+            type:
+              const: uint8_t
+          required:
+            - type
+        then:
+          properties:
+            bits:
+              items:
+                properties:
+                  position:
+                    maximum: 7
+      - if:
+          properties:
+            type:
+              const: uint16_t
+          required:
+            - type
+        then:
+          properties:
+            bits:
+              items:
+                properties:
+                  position:
+                    maximum: 15
+      - if:
+          properties:
+            type:
+              const: uint32_t
+          required:
+            - type
+        then:
+          properties:
+            bits:
+              items:
+                properties:
+                  position:
+                    maximum: 31
+      - if:
+          properties:
+            type:
+              const: uint64_t
+          required:
+            - type
+        then:
+          properties:
+            bits:
+              items:
+                properties:
+                  position:
+                    maximum: 63
+
+  type_identifier:
+    type: string
+    pattern: "^[A-Za-z][A-Za-z0-9]*$"
+
+  type_expression:
+    type: string
+    description: >-
+      Platform-neutral builtin (e.g. UInt32), C++ type, or the name of a type
+      declared in a type module.
+    minLength: 1
+
+  alias_type:
+    type: object
+    additionalProperties: false
+    required:
+      - typeName
+      - name
+      - targetType
+    properties:
+      typeName:
+        const: AliasTypeDef
+      name:
+        $ref: "#/definitions/type_identifier"
+      targetType:
+        $ref: "#/definitions/type_expression"
+
+  enum_type:
+    type: object
+    additionalProperties: false
+    required:
+      - typeName
+      - name
+      - enumerators
+    properties:
+      typeName:
+        const: EnumTypeDef
+      name:
+        $ref: "#/definitions/type_identifier"
+      underlyingType:
+        $ref: "#/definitions/unsigned_integer_type"
+      enumerators:
+        type: array
+        minItems: 1
+        items:
+          type: object
+          additionalProperties: false
+          required:
+            - name
+          properties:
+            name:
+              type: string
+              pattern: "^[A-Za-z][A-Za-z0-9_]*$"
+            value:
+              type: integer
+              minimum: 0
+
+  string_type:
+    type: object
+    additionalProperties: false
+    required:
+      - typeName
+      - name
+      - maxSize
+    properties:
+      typeName:
+        const: StringTypeDef
+      name:
+        $ref: "#/definitions/type_identifier"
+      maxSize:
+        type: integer
+        minimum: 1
+
+  struct_element:
+    type: object
+    additionalProperties: false
+    required:
+      - name
+      - type
+    properties:
+      name:
         type: string
+        pattern: "^[A-Za-z_][A-Za-z0-9_]*$"
+      type:
+        $ref: "#/definitions/type_expression"
+      array:
+        type: boolean
+        default: false
+      minSize:
+        type: integer
+        minimum: 0
+        description: "Minimum element count; defaults to maxSize (fixed size)"
+      maxSize:
+        type: integer
+        minimum: 1
+    if:
+      required:
+        - array
+      properties:
+        array:
+          const: true
+    then:
+      required:
+        - maxSize
 
-  event_descriptor:
+  struct_type:
     type: object
     additionalProperties: false
     required:
-      - id
+      - typeName
+      - name
+      - elements
     properties:
-      id:
-        type: integer
-        minimum: 0
+      typeName:
+        const: StructTypeDef
+      name:
+        $ref: "#/definitions/type_identifier"
+      elements:
+        type: array
+        minItems: 1
+        items:
+          $ref: "#/definitions/struct_element"
 
-  getter_descriptor:
+  array_type:
     type: object
     additionalProperties: false
     required:
-      - id
-      - timeout
+      - typeName
+      - name
+      - elementType
     properties:
-      id:
+      typeName:
+        const: ArrayTypeDef
+      name:
+        $ref: "#/definitions/type_identifier"
+      elementType:
+        $ref: "#/definitions/type_expression"
+      minSize:
         type: integer
         minimum: 0
-      timeout:
+        description: "Minimum element count; defaults to maxSize (fixed size)"
+      maxSize:
         type: integer
-        minimum: 0
+        minimum: 1
+        description: "Maximum element count; omit for an unbounded etl::span"
 
-  setter_descriptor:
+  type_module:
+    type: object
+    description: >-
+      Datatypes generated into one header. Services pull the header in via
+      `typeIncludes`.
+    additionalProperties: false
+    required:
+      - namespace
+      - header
+      - types
+    properties:
+      namespace:
+        type: string
+        description: >-
+          C++ namespace of the types. Types are referenced by
+          `<namespace>::<name>`.
+        pattern: "^[A-Za-z_][A-Za-z0-9_]*(::[A-Za-z_][A-Za-z0-9_]*)*$"
+      header:
+        type: string
+        description: "Include path of the generated header"
+      includes:
+        type: array
+        description: "Headers the types depend on, e.g. other type modules"
+        items:
+          type: string
+      types:
+        type: array
+        minItems: 1
+        items:
+          oneOf:
+            - $ref: "#/definitions/alias_type"
+            - $ref: "#/definitions/enum_type"
+            - $ref: "#/definitions/string_type"
+            - $ref: "#/definitions/struct_type"
+            - $ref: "#/definitions/array_type"
+
+  attribute_deployment:
     type: object
     additionalProperties: false
     required:
-      - id
-      - timeout
+      - Timeout
     properties:
-      id:
+      GetterID:
         type: integer
         minimum: 0
-      timeout:
+      SetterID:
         type: integer
         minimum: 0
+      NotificationID:
+        type: integer
+        minimum: 0
+      Timeout:
+        type: integer
+        description: "Request timeout in ms; 0 disables the timeout"
+        minimum: 0
+      SetterWithResponse:
+        type: boolean
+        description: "The setter is answered with a response (set as method)"
+        default: false
+      MaxProxyRequests:
+        type: integer
+        minimum: 1
+        default: 1
+      MaxSkeletonRequests:
+        type: integer
+        minimum: 1
+        default: 1
 
   attribute:
     type: object
     additionalProperties: false
     required:
       - name
-      - variable
       - type
+      - deployment
     properties:
       name:
         type: string
-      variable:
-        type: string
       type:
         type: string
-      mode:
-        type: string
-      readonly:
+      hasGetter:
         type: boolean
         default: false
-      noSubscriptions:
+      hasSetter:
         type: boolean
         default: false
-      setAsMethod:
+      hasNotifier:
         type: boolean
         default: false
-      event:
-        $ref: "#/definitions/event_descriptor"
-      getter:
-        $ref: "#/definitions/getter_descriptor"
-      setter:
-        $ref: "#/definitions/setter_descriptor"
-      consumer_request_limit:
-        type: integer
-        minimum: 1
-        default: 1
-      provider_request_limit:
-        type: integer
-        minimum: 1
-        default: 1
+      deployment:
+        $ref: "#/definitions/attribute_deployment"
+    allOf:
+      - if:
+          properties:
+            hasGetter:
+              const: true
+          required:
+            - hasGetter
+        then:
+          properties:
+            deployment:
+              required:
+                - GetterID
+      - if:
+          properties:
+            hasSetter:
+              const: true
+          required:
+            - hasSetter
+        then:
+          properties:
+            deployment:
+              required:
+                - SetterID
+      - if:
+          properties:
+            hasNotifier:
+              const: true
+          required:
+            - hasNotifier
+        then:
+          properties:
+            deployment:
+              required:
+                - NotificationID
 
-  input_output_param:
+  argument:
     type: object
     additionalProperties: false
     required:
@@ -243,140 +606,94 @@ definitions:
       type:
         type: string
 
-  nullable_input_output_param:
-    type:
-      - object
-      - "null"
+  method_deployment:
+    type: object
     additionalProperties: false
     required:
-      - name
-      - type
+      - MethodID
+      - Timeout
     properties:
-      name:
-        type: string
-      type:
-        type: string
+      MethodID:
+        type: integer
+        minimum: 0
+      Timeout:
+        type: integer
+        description: "Request timeout in ms; 0 disables the timeout"
+        minimum: 0
+      MaxProxyRequests:
+        type: integer
+        minimum: 1
+        default: 1
+      MaxSkeletonRequests:
+        type: integer
+        minimum: 1
+        default: 1
 
   method:
     type: object
     additionalProperties: false
     required:
       - name
-      - variable
-      - id
-      - consumer_request_limit
-      - provider_request_limit
+      - deployment
     properties:
       name:
         type: string
-      variable:
-        type: string
-      id:
-        type: integer
-        minimum: 0
-      timeout:
-        type: integer
-        minimum: 0
-      consumer_request_limit:
-        type: integer
-        minimum: 1
-      provider_request_limit:
-        type: integer
-        minimum: 1
-      input_param:
-        $ref: "#/definitions/input_output_param"
-      output_param:
-        $ref: "#/definitions/nullable_input_output_param"
-      fire_and_forget:
+      fireAndForget:
         type: boolean
         default: false
+      inArgs:
+        type: array
+        description: "Input argument; at most one is supported"
+        maxItems: 1
+        items:
+          $ref: "#/definitions/argument"
+      outArgs:
+        type: array
+        description: "Output argument; at most one is supported"
+        maxItems: 1
+        items:
+          $ref: "#/definitions/argument"
+      deployment:
+        $ref: "#/definitions/method_deployment"
 
-  event_definition:
+  broadcast:
     type: object
     additionalProperties: false
     required:
       - name
-      - variable
-      - id
-      - type
+      - deployment
     properties:
       name:
         type: string
-      variable:
-        type: string
-      id:
-        type: integer
-        minimum: 0
       type:
         type: string
+        description: "Payload type; omitted for a broadcast without payload"
+      deployment:
+        type: object
+        additionalProperties: false
+        required:
+          - NotificationID
+        properties:
+          NotificationID:
+            type: integer
+            minimum: 0
 
-  headers:
+  service_deployment:
     type: object
     additionalProperties: false
     required:
-      - common
-      - proxy
-      - skeleton
+      - ServiceID
     properties:
-      common:
-        type: string
-      proxy:
-        type: string
-      skeleton:
-        type: string
-      proxy_mock:
-        type: string
-      skeleton_mock:
-        type: string
-
-  providers:
-    type: object
-    additionalProperties: false
-    required:
-      - instance_ids
-    properties:
-      instance_ids:
-        type: array
-        description: "List of provider instance IDs"
-        items:
-          type: integer
-          minimum: 1
-
-  deployment_cluster:
-    type: object
-    additionalProperties: false
-    required:
-      - cluster
-      - consumers
-      - providers
-    properties:
-      cluster:
-        $ref: "#/definitions/cluster"
-      consumers:
+      ServiceID:
         type: integer
-        description: "Number of service consumers on this cluster"
+        description: "Unique service identifier"
         minimum: 0
-        default: 0
-      providers:
-        $ref: "#/definitions/providers"
-
-  deployment:
-    type: object
-    additionalProperties: false
-    required:
-      - clusters
-      - instance_ids
-    properties:
-      clusters:
-        type: array
-        description: "Service deployment per cluster"
-        items:
-          $ref: "#/definitions/deployment_cluster"
-      instance_ids:
-        type: array
-        items:
-          type: integer
-          minimum: 1
+      MemoryAllocator:
+        type: string
+        description: >-
+          Name of the allocator serving this service (the name of an entry of
+          'allocators'). Omit to use the default allocator.
+        pattern: "^[A-Za-z][A-Za-z0-9]*$"
 
   service:
     type: object
@@ -384,8 +701,9 @@ definitions:
     required:
       - namespace
       - name
-      - id
-      - headers
+      - commonInclude
+      - proxyInclude
+      - skeletonInclude
       - deployment
     properties:
       namespace:
@@ -405,43 +723,6 @@ definitions:
           - normal
           - mock
         default: normal
-      id:
-        type: integer
-        description: "Unique service identifier"
-        minimum: 0
-      allocator:
-        $ref: "#/definitions/allocator"
-      allocator_func:
-        type: string
-        description: "Custom allocator function name (deprecated, use allocator)"
-      enums:
-        type: array
-        description: "Enum type definitions"
-        items:
-          $ref: "#/definitions/enum_definition"
-      datatypes:
-        type: array
-        description: "Struct/datatype definitions"
-        items:
-          type: object
-          additionalProperties: false
-          required:
-            - name
-            - parameters
-          properties:
-            name:
-              type: string
-              pattern: "^[A-Za-z][A-Za-z0-9]*$"
-            type:
-              type: string
-            parameters:
-              type: array
-              items:
-                $ref: "#/definitions/typed_parameter"
-      typedefs:
-        type: array
-        items:
-          $ref: "#/definitions/typedef_definition"
       attributes:
         type: array
         description: "Service attributes"
@@ -452,18 +733,35 @@ definitions:
         description: "Service methods"
         items:
           $ref: "#/definitions/method"
-      methods_fire_and_forget:
+      broadcasts:
         type: array
+        description: "Service broadcasts (events)"
         items:
-          $ref: "#/definitions/method"
-      events:
+          $ref: "#/definitions/broadcast"
+      typeIncludes:
         type: array
+        description: >-
+          Headers declaring the service's datatypes, typically the `header` of
+          a type module (see 'typeModules').
         items:
-          $ref: "#/definitions/event_definition"
-      headers:
-        $ref: "#/definitions/headers"
+          type: string
+      commonInclude:
+        type: string
+        description: "Include path of the generated common header"
+      proxyInclude:
+        type: string
+        description: "Include path of the generated proxy header"
+      skeletonInclude:
+        type: string
+        description: "Include path of the generated skeleton header"
+      proxyMockInclude:
+        type: string
+        description: "Include path of the generated proxy mock header (mock mode)"
+      skeletonMockInclude:
+        type: string
+        description: "Include path of the generated skeleton mock header (mock mode)"
       deployment:
-        $ref: "#/definitions/deployment"
+        $ref: "#/definitions/service_deployment"
     allOf:
       - if:
           required:
@@ -472,107 +770,62 @@ definitions:
             generation_mode:
               const: mock
         then:
-          properties:
-            headers:
-              required:
-                - proxy_mock
-                - skeleton_mock
+          required:
+            - proxyMockInclude
+            - skeletonMockInclude
 
-  connection_endpoint:
+  service_usage:
     type: object
     additionalProperties: false
+    description: >-
+      A service used on one side of a connection. It names a service of the
+      `services` list; the generator takes its includes and deployment from
+      there.
     required:
+      - namespace
       - name
-      - max_instances
+      - maxInstances
     properties:
       namespace:
         type: string
+        description: "Namespace of the service"
       name:
         type: string
+        description: "Name of the service"
         pattern: "^[A-Za-z][A-Za-z0-9]*$"
-      filename:
-        type: string
-      id:
+      maxInstances:
         type: integer
-        minimum: 0
-      allocator:
-        $ref: "#/definitions/allocator"
-      allocator_func:
-        type: string
-      enums:
-        type: array
-        items:
-          $ref: "#/definitions/enum_definition"
-      datatypes:
-        type: array
-        items:
-          type: object
-          additionalProperties: false
-          required:
-            - name
-            - parameters
-          properties:
-            name:
-              type: string
-              pattern: "^[A-Za-z][A-Za-z0-9]*$"
-            type:
-              type: string
-            parameters:
-              type: array
-              items:
-                $ref: "#/definitions/typed_parameter"
-      typedefs:
-        type: array
-        items:
-          $ref: "#/definitions/typedef_definition"
-      attributes:
-        type: array
-        items:
-          $ref: "#/definitions/attribute"
-      methods:
-        type: array
-        items:
-          $ref: "#/definitions/method"
-      methods_fire_and_forget:
-        type: array
-        items:
-          $ref: "#/definitions/method"
-      events:
-        type: array
-        items:
-          $ref: "#/definitions/event_definition"
-      headers:
-        $ref: "#/definitions/headers"
-      deployment:
-        $ref: "#/definitions/deployment"
-      max_instances:
-        type: integer
+        description: >-
+          Number of distinct endpoints (proxies or skeletons) of the service on
+          this side of the connection
         minimum: 1
-        default: 1
 
   connection:
     type: object
     additionalProperties: false
+    description: >-
+      Unidirectional connection from `sourceCluster` to `targetCluster`. A
+      connection in the opposite direction is declared separately.
     required:
-      - source_cluster
-      - target_cluster
-      - proxies
-      - skeletons
+      - sourceCluster
+      - targetCluster
+      - consumers
+      - providers
     properties:
-      source_cluster:
+      sourceCluster:
         $ref: "#/definitions/cluster"
-      target_cluster:
+      targetCluster:
         $ref: "#/definitions/cluster"
-      proxies:
+      consumers:
         type: array
-        description: "Services consumed over this connection"
+        description: "Services `sourceCluster` requires and consumes from `targetCluster` (via a proxy)"
         items:
-          $ref: "#/definitions/connection_endpoint"
-      skeletons:
+          $ref: "#/definitions/service_usage"
+      providers:
         type: array
-        description: "Services provided over this connection"
+        description: "Services `sourceCluster` provides to `targetCluster` (via a skeleton)"
         items:
-          $ref: "#/definitions/connection_endpoint"
+          $ref: "#/definitions/service_usage"
 
   core:
     type: object
@@ -595,28 +848,299 @@ definitions:
     type: object
     additionalProperties: false
     required:
-      - chunk_sizes
-      - elements
+      - ChunkSize
+      - NumberOfElements
     properties:
-      chunk_sizes:
+      ChunkSize:
         type: integer
         minimum: 1
-      elements:
+      NumberOfElements:
         type: integer
         minimum: 1
+
+  signal_name:
+    type: string
+    pattern: "^[A-Za-z_][A-Za-z0-9_]*$"
+
+  signal_bit_length:
+    type: integer
+    description: "Signal width in bits"
+    minimum: 1
+
+  phy_translation:
+    type: object
+    additionalProperties: false
+    required:
+      - offset
+      - scaling_factor
+    properties:
+      offset:
+        type: number
+      scaling_factor:
+        type: number
+        not: {const: 0}
+
+  transmission_strategy:
+    oneOf:
+      - type: object
+        additionalProperties: false
+        required: [cyclic]
+        properties:
+          cyclic:
+            type: object
+            additionalProperties: false
+            required: [ms]
+            properties:
+              ms: {type: integer, minimum: 1, maximum: 65535}
+      - type: object
+        additionalProperties: false
+        required: [event]
+        properties:
+          event:
+            type: object
+            additionalProperties: false
+            required: [debounce_ms, repetitions, repetition_cycle]
+            properties:
+              debounce_ms: {type: integer, minimum: 0, maximum: 65535}
+              repetitions: {type: integer, minimum: 0, maximum: 255}
+              repetition_cycle: {type: integer, minimum: 0, maximum: 65535}
+            oneOf:
+              - properties:
+                  repetitions: {const: 0}
+                  repetition_cycle: {const: 0}
+              - properties:
+                  repetitions: {minimum: 1}
+                  repetition_cycle: {minimum: 1}
+
+  transmission_mode:
+    type: object
+    additionalProperties: false
+    required: [strategies]
+    properties:
+      strategies:
+        type: array
+        items:
+          $ref: "#/definitions/transmission_strategy"
+
+  transmission:
+    type: object
+    additionalProperties: false
+    required: [modeFalse, modeTrue]
+    properties:
+      modeFalse:
+        $ref: "#/definitions/transmission_mode"
+      modeTrue:
+        $ref: "#/definitions/transmission_mode"
+
+  unsigned_integer_signal:
+    type: object
+    description: "Signal read as a plain unsigned integer"
+    additionalProperties: false
+    required:
+      - name
+      - type
+      - bit_length
+    properties:
+      name:
+        $ref: "#/definitions/signal_name"
+      type:
+        $ref: "#/definitions/unsigned_integer_type"
+      bit_length:
+        $ref: "#/definitions/signal_bit_length"
+      phy_translation:
+        $ref: "#/definitions/phy_translation"
+      trigger_on_change:
+        type: boolean
+    allOf:
+      - if:
+          properties:
+            type:
+              const: uint8_t
+          required:
+            - type
+        then:
+          properties:
+            bit_length:
+              maximum: 8
+      - if:
+          properties:
+            type:
+              const: uint16_t
+          required:
+            - type
+        then:
+          properties:
+            bit_length:
+              maximum: 16
+      - if:
+          properties:
+            type:
+              const: uint32_t
+          required:
+            - type
+        then:
+          properties:
+            bit_length:
+              maximum: 32
+      - if:
+          properties:
+            type:
+              const: uint64_t
+          required:
+            - type
+        then:
+          properties:
+            bit_length:
+              maximum: 64
+
+  array_signal:
+    type: object
+    description: "Signal read as a fixed-size array of unsigned integers"
+    additionalProperties: false
+    required:
+      - name
+      - type
+      - element_type
+      - bit_length
+    properties:
+      name:
+        $ref: "#/definitions/signal_name"
+      type:
+        const: array
+      element_type:
+        $ref: "#/definitions/unsigned_integer_type"
+      bit_length:
+        $ref: "#/definitions/signal_bit_length"
+      trigger_on_change:
+        type: boolean
+
+  enum_or_bitset_signal:
+    type: object
+    description: >-
+      Signal whose type names an enum or bitset declared in the same PDU
+      (see 'enums' and 'bitsets').
+    additionalProperties: false
+    required:
+      - name
+      - type
+      - bit_length
+    properties:
+      name:
+        $ref: "#/definitions/signal_name"
+      type:
+        type: string
+        pattern: "^[A-Za-z][A-Za-z0-9]*$"
+        not:
+          anyOf:
+            - $ref: "#/definitions/unsigned_integer_type"
+            - const: array
+      bit_length:
+        $ref: "#/definitions/signal_bit_length"
+      trigger_on_change:
+        type: boolean
+
+  pdu_signal:
+    description: "Signal of a PDU: unsigned integer, array, enum or bitset"
+    oneOf:
+      - $ref: "#/definitions/unsigned_integer_signal"
+      - $ref: "#/definitions/array_signal"
+      - $ref: "#/definitions/enum_or_bitset_signal"
 
   pdu:
     type: object
     additionalProperties: false
+    dependencies:
+      transmission: [writer_cluster]
+      writer_cluster: [transmission]
+    allOf:
+      - if:
+          properties:
+            generation_mode: {const: mock}
+          required: [generation_mode]
+        then:
+          properties:
+            headers:
+              required: [reader_mock]
+      - if:
+          required: [transmission]
+        then:
+          required: [pdu_id]
+          properties:
+            headers:
+              required: [writer]
+              properties:
+                writer: {type: string, minLength: 1}
+            generation_mode:
+              const: normal
     required:
       - name
+      - namespace
       - size
+      - signals
+      - headers
     properties:
       name:
         type: string
         description: "PDU buffer name"
         pattern: "^[A-Za-z][A-Za-z0-9_]*$"
+      pdu_id:
+        type: integer
+        description: >-
+          Deployment-defined id under which the PDU is announced to the PDU broker.
+          PDUs without an id are not transmitted and cannot have a transmission.
+        minimum: 0
+        maximum: 4294967295
       size:
         type: integer
         description: "PDU payload size in bytes"
         minimum: 1
+      generation_mode:
+        type: string
+        description: "PDU reader generation mode"
+        enum:
+          - normal
+          - mock
+        default: normal
+      namespace:
+        type: string
+        description: "C++ namespace for the generated PDU data types"
+        pattern: "^[A-Za-z_][A-Za-z0-9_]*(::[A-Za-z_][A-Za-z0-9_]*)*$"
+      writer_cluster:
+        type: string
+        description: "Cluster that owns and schedules the generated writer"
+        pattern: "^[A-Za-z][A-Za-z0-9]*$"
+      transmission:
+        $ref: "#/definitions/transmission"
+      headers:
+        type: object
+        additionalProperties: false
+        required:
+          - common
+          - reader
+        properties:
+          common:
+            type: string
+            minLength: 1
+          reader:
+            type: string
+            minLength: 1
+          reader_mock:
+            type: string
+            minLength: 1
+          writer:
+            type: string
+            minLength: 1
+      enums:
+        type: array
+        description: "Enum type definitions scoped to this PDU"
+        items:
+          $ref: "#/definitions/enum_definition"
+      bitsets:
+        type: array
+        description: "Bitfield type definitions scoped to this PDU"
+        items:
+          $ref: "#/definitions/bitset_definition"
+      signals:
+        type: array
+        items:
+          $ref: "#/definitions/pdu_signal"

@@ -19,10 +19,13 @@ namespace command
 class IParentCommand
 {
 public:
-    IParentCommand() = default;
+    IParentCommand()          = default;
+    virtual ~IParentCommand() = default;
 
     IParentCommand(IParentCommand const&)            = delete;
     IParentCommand& operator=(IParentCommand const&) = delete;
+    IParentCommand(IParentCommand&&)                 = delete;
+    IParentCommand& operator=(IParentCommand&&)      = delete;
 
     virtual void addCommand(ICommand& command) = 0;
     virtual void clearCommands()               = 0;

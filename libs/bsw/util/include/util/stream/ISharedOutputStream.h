@@ -19,14 +19,23 @@ namespace stream
 class ISharedOutputStream
 {
 public:
+    virtual ~ISharedOutputStream() = default;
+
     ISharedOutputStream(ISharedOutputStream const&)            = delete;
     ISharedOutputStream& operator=(ISharedOutputStream const&) = delete;
+    ISharedOutputStream(ISharedOutputStream&&)                 = delete;
+    ISharedOutputStream& operator=(ISharedOutputStream&&)      = delete;
 
     class IContinuousUser
     {
     public:
         IContinuousUser();
+        virtual ~IContinuousUser() = default;
+
+        IContinuousUser(IContinuousUser const&)            = delete;
         IContinuousUser& operator=(IContinuousUser const&) = delete;
+        IContinuousUser(IContinuousUser&&)                 = delete;
+        IContinuousUser& operator=(IContinuousUser&&)      = delete;
 
         /**
          * Called by the shared output stream in case the user

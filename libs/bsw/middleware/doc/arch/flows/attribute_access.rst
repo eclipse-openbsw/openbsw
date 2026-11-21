@@ -42,12 +42,13 @@ Notes:
 * ``SkeletonAttribute<T>`` stores the attribute value.
 * Getter responses use the Future mechanism (like method calls).
 * Change notifications use the event broadcast mechanism.
-* Attributes can have decorators based on the interface definition:
+* Attributes have the following capabilities, selected by the interface definition:
 
-  * Default (no decorators) — setter, getter and event subscriptions allowed
-  * ``readonly`` — getter and event subscriptions allowed
-  * ``noSubscriptions`` — setter and getter allowed
-  * ``readonly`` / ``noSubscriptions`` — getter allowed
+  * Setter, getter and event subscriptions (``hasSetter``, ``hasGetter`` and
+    ``hasNotifier`` set)
+  * Getter and event subscriptions (``hasSetter`` not set)
+  * Setter and getter (``hasNotifier`` not set)
+  * Getter only (neither ``hasSetter`` nor ``hasNotifier`` set)
 
 Dynamic View
 ------------
@@ -69,11 +70,11 @@ Change Notification
 
 Notes:
 
-* The skeleton can update attribute values at any time using
-  ``attribute.set(newValue)``.
+* The skeleton updates its stored value using ``attribute.set(newValue)``.
 * The application explicitly sends attribute notifications through the
-  generated attribute ``send()`` operation. Updating the local value alone
-  does not notify subscribed proxies.
+  generated attribute ``send()`` operation. ``send()`` broadcasts the current
+  stored value and does not change it; call ``set()`` first to publish a new
+  value. A failed send does not undo the local update.
 * Proxies must call ``attribute.setReceiveHandler(callback)`` to receive
   attribute notifications.
 * The proxy callback is invoked when the notification message is processed.

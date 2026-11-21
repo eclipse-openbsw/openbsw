@@ -29,7 +29,7 @@ public:
 private:
     ISharedOutputStream& _stream;
     Lock& _lock;
-    IContinuousUser* _user;
+    IContinuousUser* _user{nullptr};
 };
 
 /**
@@ -37,7 +37,7 @@ private:
  */
 template<class Lock>
 SharedOutputStreamResource<Lock>::SharedOutputStreamResource(ISharedOutputStream& strm, Lock& lock)
-: _stream(strm), _lock(lock), _user(nullptr)
+: _stream(strm), _lock(lock)
 {}
 
 template<class Lock>

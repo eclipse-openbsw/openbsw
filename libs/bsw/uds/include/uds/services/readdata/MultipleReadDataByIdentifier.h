@@ -76,14 +76,14 @@ protected:
     /**
      * \see AbstractDiagJob::verify();
      */
-    DiagReturnCode::Type verify(uint8_t const request[], uint16_t requestLength) override;
+    DiagReturnCode::Type verify(uint8_t const* request, uint16_t requestLength) override;
 
     /**
      * \see AbstractDiagJob::process();
      */
     DiagReturnCode::Type process(
         IncomingDiagConnection& connection,
-        uint8_t const request[],
+        uint8_t const* request,
         uint16_t requestLength) override;
 
     /**
@@ -102,7 +102,7 @@ private:
      */
     DiagReturnCode::Type processNestedRequest(
         IncomingDiagConnection& connection,
-        uint8_t const request[],
+        uint8_t const* request,
         uint16_t requestLength) override;
     /**
      * \see NestedDiagRequest::handleNestedResponseCode()

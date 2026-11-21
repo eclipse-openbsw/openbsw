@@ -11,8 +11,11 @@
 #include "ip/NetworkInterfaceConfig.h"
 
 #include <etl/array.h>
+#include <shed/table.h>
 
 #include <gtest/gtest.h>
+
+#include <utility>
 
 using namespace ::testing;
 
@@ -20,6 +23,43 @@ using namespace ip;
 
 namespace
 {
+struct RegistrySchema
+{
+    using states = ::shed::states<>;
+    using columns
+        = ::shed::columns<::shed::column<uint8_t>, ::shed::column<::ip::NetworkInterfaceConfig>>;
+};
+
+using RegistryTable = ::shed::table<RegistrySchema>;
+using Registry      = ::ip::declare::NetworkInterfaceConfigRegistry<1U, RegistryTable>;
+
+void onConfigChanged(uint8_t, ::ip::NetworkInterfaceConfig const&) {}
+
+/**
+ * Rvalue construction and assignment preserve the source registry's listeners.
+ */
+TEST(NetworkInterfaceConfigRegistryTest, RvalueOperationsPreserveSourceListeners)
+{
+    RegistryTable table;
+    Registry source{table};
+    auto const slot = ::ip::ConfigChangedSlotType::create<&onConfigChanged>();
+    ASSERT_TRUE(source.connect(slot));
+
+    Registry copy{source};
+    Registry moved{::std::move(source)};
+    EXPECT_EQ(&table, copy._table);
+    EXPECT_EQ(&table, moved._table);
+    EXPECT_EQ(1U, source.configChangedSignal.size());
+    EXPECT_EQ(1U, copy.configChangedSignal.size());
+    EXPECT_EQ(1U, moved.configChangedSignal.size());
+
+    Registry assigned;
+    assigned = ::std::move(source);
+    EXPECT_EQ(&table, assigned._table);
+    EXPECT_EQ(1U, source.configChangedSignal.size());
+    EXPECT_EQ(1U, assigned.configChangedSignal.size());
+}
+
 #ifdef PLATFORM_SUPPORT_IPV6
 static ::etl::array<uint32_t, 4U> nonConstIp6Address = {2348U, 234U, 232U, 345743U};
 static ::etl::array<uint32_t, 4U> const ip6Address1  = {0x123U, 0x1232U, 0x23839U, 0x23492U};

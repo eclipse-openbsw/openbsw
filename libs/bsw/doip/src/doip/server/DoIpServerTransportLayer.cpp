@@ -47,9 +47,7 @@ DoIpServerTransportLayer::DoIpServerTransportLayer(
 , _functionEventClose(
       ::async::Function::CallType::
           create<DoIpServerTransportLayer, &DoIpServerTransportLayer::executeEventClose>(*this))
-, _callback(nullptr)
 , _aliveCheckHelperPool(aliveCheckHelperPool)
-, _removeLockCount(0U)
 {}
 
 AbstractTransportLayer::ErrorCode DoIpServerTransportLayer::init()
@@ -120,7 +118,7 @@ void DoIpServerTransportLayer::closeConnection(
         "DoIpServerTransportLayer::closeConnection(0x%04x, %d)",
         internalSourceAddress,
         closeMode);
-    DoIpServerTransportConnection* connection;
+    DoIpServerTransportConnection* connection = nullptr;
     {
         // RAII mutex
         DoIpLock const lock;
@@ -572,7 +570,7 @@ void DoIpServerTransportLayer::setRemoveLock()
 
 void DoIpServerTransportLayer::releaseRemoveLock()
 {
-    bool fireMessage;
+    bool fireMessage = false;
     {
         // RAII mutex
         DoIpLock const lock;

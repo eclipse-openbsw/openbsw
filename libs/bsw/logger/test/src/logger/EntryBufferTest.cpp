@@ -14,6 +14,8 @@
 
 #include <gtest/gtest.h>
 
+#include <etl/type_traits.h>
+#include <etl/utility.h>
 #include <vector>
 
 using namespace ::logger;
@@ -109,6 +111,37 @@ TEST_F(EntryBufferTest, testInitiallyNoNextEntry)
     EntryBuffer<>::EntryRef entryRef;
     checkNextEntry(cut, entryRef);
 }
+
+namespace
+{
+/**
+ * Verify copying and moving a trivial entry cursor preserve its index and read pointer.
+ */
+TEST_F(EntryBufferTest, EntryRefPreservesTrivialCopyAndMove)
+{
+    using Ref = EntryBuffer<>::EntryRef;
+    static_assert(::etl::is_trivially_copyable<Ref>::value);
+    static_assert(::etl::is_trivially_copy_constructible<Ref>::value);
+    static_assert(::etl::is_trivially_copy_assignable<Ref>::value);
+    static_assert(::etl::is_trivially_move_constructible<Ref>::value);
+    static_assert(::etl::is_trivially_move_assignable<Ref>::value);
+    static_assert(::etl::is_trivially_destructible<Ref>::value);
+
+    uint8_t const data[]{1U, 2U};
+    Ref original(42U, data);
+    Ref copy(original);
+    Ref moved(::etl::move(copy));
+    Ref assigned;
+    assigned = original;
+    Ref moveAssigned;
+    moveAssigned = ::etl::move(assigned);
+    for (auto const* ref : {&original, &copy, &moved, &assigned, &moveAssigned})
+    {
+        EXPECT_EQ(42U, ref->getIndex());
+        EXPECT_EQ(data, ref->getReadPointer());
+    }
+}
+} // namespace
 
 TEST_F(EntryBufferTest, testFirstEntryIsReportedToTwoReferences)
 {

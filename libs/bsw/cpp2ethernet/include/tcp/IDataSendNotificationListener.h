@@ -23,6 +23,8 @@ class IDataSendNotificationListener
 public:
     IDataSendNotificationListener(IDataSendNotificationListener const&)            = delete;
     IDataSendNotificationListener& operator=(IDataSendNotificationListener const&) = delete;
+    IDataSendNotificationListener(IDataSendNotificationListener&&)                 = delete;
+    IDataSendNotificationListener& operator=(IDataSendNotificationListener&&)      = delete;
 
     /**
      * Results that dataSent may return
@@ -55,6 +57,9 @@ public:
      * the data has been received by the remote system.
      */
     virtual void dataSent(uint16_t length, SendResult result) = 0;
+
+protected:
+    ~IDataSendNotificationListener() = default;
 };
 
 } // namespace tcp

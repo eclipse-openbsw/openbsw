@@ -21,11 +21,7 @@ TaggedSharedOutputStream::TaggedSharedOutputStream(
     char const* const prefix,
     char const* const suffix,
     bool const continuous)
-: TaggedOutputHelper(prefix, suffix)
-, _sharedStream(sharedStream)
-, _stream(nullptr)
-, _user(nullptr)
-, _continuous(continuous)
+: TaggedOutputHelper(prefix, suffix), _sharedStream(sharedStream), _continuous(continuous)
 {}
 
 TaggedSharedOutputStream::~TaggedSharedOutputStream() { release(); }

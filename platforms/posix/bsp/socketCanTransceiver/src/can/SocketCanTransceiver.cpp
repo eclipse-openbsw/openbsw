@@ -20,17 +20,19 @@
 
 #include <fcntl.h>
 #include <signal.h>
-#include <type_traits>
 #include <unistd.h>
 
 #include <etl/char_traits.h>
 #include <etl/error_handler.h>
+#include <etl/memory.h>
 #include <etl/span.h>
+#include <etl/type_traits.h>
+#include <etl/utility.h>
 #include <sys/types.h>
 
 static_assert(
-    std::is_standard_layout<::can::CANFrame>::value
-        && std::is_trivially_destructible<::can::CANFrame>::value,
+    ::etl::is_standard_layout<::can::CANFrame>::value
+        && ::etl::is_trivially_destructible<::can::CANFrame>::value,
     "check for UB while passing through TxQueue");
 
 namespace can
@@ -48,7 +50,7 @@ void signalGuarded(F&& function)
     sigset_t set, oldSet;
     sigfillset(&set);
     pthread_sigmask(SIG_SETMASK, &set, &oldSet);
-    ::std::forward<F>(function)();
+    ::etl::forward<F>(function)();
     pthread_sigmask(SIG_SETMASK, &oldSet, nullptr);
 }
 
@@ -123,7 +125,7 @@ SocketCanTransceiver::write(CANFrame const& frame, ICANFrameSentListener& listen
 ICanTransceiver::ErrorCode
 SocketCanTransceiver::writeImpl(CANFrame const& frame, ICANFrameSentListener* listener)
 {
-    if (!_writable.load(std::memory_order_relaxed))
+    if (!_writable.load(::etl::memory_order_relaxed))
     {
         return ErrorCode::CAN_ERR_ILLEGAL_STATE;
     }
@@ -132,8 +134,11 @@ SocketCanTransceiver::writeImpl(CANFrame const& frame, ICANFrameSentListener* li
     {
         return ErrorCode::CAN_ERR_TX_HW_QUEUE_FULL;
     }
-    ::std::memcpy(memory.data(), &frame, sizeof(frame));
-    ::std::memcpy(memory.data() + sizeof(frame), static_cast<void*>(&listener), sizeof(void*));
+    // NOLINTBEGIN(cppcoreguidelines-pro-type-reinterpret-cast): byte-wise copy into the TxQueue
+    ::etl::mem_copy(reinterpret_cast<uint8_t const*>(&frame), sizeof(frame), memory.data());
+    ::etl::mem_copy(
+        reinterpret_cast<uint8_t const*>(&listener), sizeof(void*), memory.data() + sizeof(frame));
+    // NOLINTEND(cppcoreguidelines-pro-type-reinterpret-cast)
     _txWriter.commit();
     return ErrorCode::CAN_ERR_OK;
 }
@@ -220,7 +225,8 @@ void SocketCanTransceiver::guardedOpen()
     }
 
     struct sockaddr_can addr;
-    ::std::memset(&addr, 0, sizeof(addr));
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast): byte-wise zero-fill
+    ::etl::mem_set(reinterpret_cast<uint8_t*>(&addr), sizeof(addr), static_cast<uint8_t>(0));
     addr.can_family  = AF_CAN;
     addr.can_ifindex = ifr.ifr_ifindex;
     // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast): POSIX bind() requires sockaddr*
@@ -255,10 +261,12 @@ void SocketCanTransceiver::guardedRun(int maxSentPerRun, int maxReceivedPerRun)
             break;
         }
         CANFrame canFrame;
-        ::std::memcpy(static_cast<void*>(&canFrame), memory.data(), sizeof(canFrame));
+        // NOLINTBEGIN(cppcoreguidelines-pro-type-reinterpret-cast): byte-wise copy from the TxQueue
+        ::etl::mem_copy(memory.data(), sizeof(canFrame), reinterpret_cast<uint8_t*>(&canFrame));
         ICANFrameSentListener* listener = nullptr;
-        ::std::memcpy(
-            static_cast<void*>(&listener), memory.data() + sizeof(canFrame), sizeof(void*));
+        ::etl::mem_copy(
+            memory.data() + sizeof(canFrame), sizeof(void*), reinterpret_cast<uint8_t*>(&listener));
+        // NOLINTEND(cppcoreguidelines-pro-type-reinterpret-cast)
         _txReader.release();
 
         uint8_t const length = static_cast<uint8_t>(canFrame.getPayloadLength());
@@ -266,16 +274,20 @@ void SocketCanTransceiver::guardedRun(int maxSentPerRun, int maxReceivedPerRun)
 
         // canfd_frame is layout-compatible with can_frame for the fields we set
         // (can_id, len, data); byte 5 (flags) maps to can_frame::__pad for
-        // classical frames and must remain 0, which memset guarantees.
+        // classical frames and must remain 0, which the zero-fill guarantees.
         canfd_frame outFrame;
-        ::std::memset(&outFrame, 0, sizeof(outFrame));
+        ::etl::mem_set(
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast): byte-wise zero-fill
+            reinterpret_cast<uint8_t*>(&outFrame),
+            sizeof(outFrame),
+            static_cast<uint8_t>(0));
         outFrame.can_id = canFrame.getId();
         outFrame.len    = length;
         if (sendAsFd && _config.enableBitRateSwitch)
         {
             outFrame.flags |= CANFD_BRS;
         }
-        ::std::memcpy(outFrame.data, canFrame.getPayload(), length);
+        ::etl::mem_copy(canFrame.getPayload(), length, outFrame.data);
 
         // MTU selects the on-wire frame type: CAN_MTU for classical, CANFD_MTU for FD.
         size_t const mtu           = sendAsFd ? CANFD_MTU : CAN_MTU;
@@ -294,7 +306,11 @@ void SocketCanTransceiver::guardedRun(int maxSentPerRun, int maxReceivedPerRun)
     for (int count = 0; count < maxReceivedPerRun; ++count)
     {
         canfd_frame inFrame;
-        ::std::memset(&inFrame, 0, sizeof(inFrame));
+        ::etl::mem_set(
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast): byte-wise zero-fill
+            reinterpret_cast<uint8_t*>(&inFrame),
+            sizeof(inFrame),
+            static_cast<uint8_t>(0));
         ssize_t const bytesRead = ::read(_fileDescriptor, &inFrame, CANFD_MTU);
         if (bytesRead < 0)
         {

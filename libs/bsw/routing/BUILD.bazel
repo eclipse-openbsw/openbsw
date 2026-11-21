@@ -12,9 +12,10 @@ load("@rules_cc//cc:cc_library.bzl", "cc_library")
 load("@rules_cc//cc:cc_test.bzl", "cc_test")
 load("//bazel/config/build_variant:compatibility.bzl", "unit_test_only")
 
+# Override via --//libs/bsw/routing:routing_configuration=<your_routing_config_target>
 label_flag(
     name = "routing_configuration",
-    build_setting_default = "//executables/referenceApp/configuration:routing_configuration_headers",
+    build_setting_default = "//bazel/config:no_implementation",
     visibility = ["//visibility:public"],
 )
 
@@ -62,14 +63,13 @@ cc_library(
 
 label_flag(
     name = "routing_blob_configuration",
-    build_setting_default = "//libs/bsw/routing:routing_test_blob_configuration",
+    build_setting_default = "//bazel/config:no_implementation",
     visibility = ["//visibility:public"],
 )
 
 cc_test(
     name = "routing_test",
     srcs = glob(["test/src/**/*.cpp"]),
-    linkstatic = True,
     target_compatible_with = unit_test_only(),
     deps = [
         ":routing",

@@ -1,0 +1,83 @@
+/*******************************************************************************
+*
+ * Copyright (c) 2026 BMW AG
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Apache License Version 2.0 which is available at
+ * https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *******************************************************************************
+*/
+{% from "macros/common.jinja" import file_header %}
+
+{{ file_header() }}
+
+#include "middleware/core/types.h"
+#include "middleware/memory/AllocatorSelector.h"
+#include "middleware/shm/AllocatorsDefinitions.h"
+{% for service in services %}
+{% if service.deployment.MemoryAllocator %}
+#include "{{ service.commonInclude }}"
+{% endif %}
+{% endfor %}
+
+#include <etl/type_traits.h>
+
+{% set ns = namespace (defaultAllocator = "") %}
+{% for allocator in allocators %}
+{% if allocator.default %}
+{% set ns.defaultAllocator = allocator.name | capitalize %}
+{% endif %}
+{% endfor %}
+
+{% macro allocator_switch(function_type, method_name) %}
+    switch (sid)
+    {
+{% for service in services if service.deployment.MemoryAllocator %}
+        case ::{{ service.namespace | lower }}::{{ service.name }}::internal::SERVICE_ID: {
+            using Base = etl::remove_reference_t<decltype(shm::get{{ service.deployment.MemoryAllocator.name | capitalize }}Allocator())>::Base;
+            return {{ function_type }}::create<Base, &Base::{{ method_name }}>(shm::get{{ service.deployment.MemoryAllocator.name | capitalize }}Allocator());
+        }
+{% endfor %}
+        default: {
+            using Base = etl::remove_reference_t<decltype(shm::get{{ ns.defaultAllocator }}Allocator())>::Base;
+            return {{ function_type }}::create<Base, &Base::{{ method_name }}>(shm::get{{ ns.defaultAllocator }}Allocator());
+        }
+    }
+{%- endmacro -%}
+
+namespace middleware::memory
+{
+
+AllocateFunction getAllocFunction(uint16_t sid)
+{
+{{ allocator_switch("AllocateFunction", "allocate") }}
+}
+
+AllocateSharedFunction getAllocSharedFunction(uint16_t sid)
+{
+{{ allocator_switch("AllocateSharedFunction", "allocateShared") }}
+}
+
+DeallocateFunction getDeallocFunction(uint16_t sid)
+{
+{{ allocator_switch("DeallocateFunction", "deallocate") }}
+}
+
+DeallocateSharedFunction getDeallocSharedFunction(uint16_t sid)
+{
+{{ allocator_switch("DeallocateSharedFunction", "deallocateShared") }}
+}
+
+RegionStartFunction getRegionStartFunction(uint16_t sid)
+{
+{{ allocator_switch("RegionStartFunction", "regionStart") }}
+}
+
+PointerValidationFunction getPtrValidationFunction(uint16_t sid)
+{
+{{ allocator_switch("PointerValidationFunction", "isPtrValid") }}
+}
+
+}  // namespace middleware::memory

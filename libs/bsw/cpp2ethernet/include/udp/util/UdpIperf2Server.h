@@ -22,7 +22,7 @@ namespace udp
  * A simple class that listens on a given IP address and port and will respond back to
  * iperf2 client.
  */
-class UdpIperf2Server : public ::udp::IDataListener
+class UdpIperf2Server final : public ::udp::IDataListener
 {
 public:
     /**

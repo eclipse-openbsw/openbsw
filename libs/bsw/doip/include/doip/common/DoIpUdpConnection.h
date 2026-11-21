@@ -127,18 +127,18 @@ private:
     ::udp::AbstractDatagramSocket& _socket;
     ::etl::span<uint8_t> _currentReadBuffer;
     ::etl::span<uint8_t> _writeBuffer;
-    IDoIpConnectionHandler* _handler;
+    IDoIpConnectionHandler* _handler{nullptr};
     ::ip::IPEndpoint _localEndpoint;
     ::ip::IPEndpoint _remoteEndpoint;
     PayloadReceivedCallbackType _payloadReceivedCallback;
     SendJobList _pendingSendJobs;
-    uint16_t _availableReadDataLength;
-    uint16_t _readPayloadLength;
+    uint16_t _availableReadDataLength{0U};
+    uint16_t _readPayloadLength{0U};
     ::async::ContextType const _context;
-    ::etl::array<uint8_t, DoIpConstants::DOIP_HEADER_LENGTH> _headerBuffer;
-    ConnectionState _connectionState;
-    ReadState _readState;
-    uint8_t _suspendCallCounter;
+    ::etl::array<uint8_t, DoIpConstants::DOIP_HEADER_LENGTH> _headerBuffer{};
+    ConnectionState _connectionState{ConnectionState::INIT};
+    ReadState _readState{ReadState::HEADER};
+    uint8_t _suspendCallCounter{0U};
 };
 
 /**

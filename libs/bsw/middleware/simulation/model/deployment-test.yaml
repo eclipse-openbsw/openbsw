@@ -8,92 +8,300 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 
+components:
+  - &foo_provider
+    name: FooProvider
+    providedPorts:
+      - name: foo
+        interfaceName: Foo
+        interfaceNamespace: org::test::foo
+  - &foo_consumer
+    name: FooConsumer
+    requiredPorts:
+      - name: foo
+        interfaceName: Foo
+        interfaceNamespace: org::test::foo
+
 clusters:
   - &cluster0
     name: Cluster0
     id: 0
-    queue_size: 10
+    queueSize: 10
+    componentInstances:
+      - instanceName: provider
+        component: *foo_provider
   - &cluster1
     name: Cluster1
     id: 1
-    queue_size: 10
+    queueSize: 10
+    componentInstances:
+      - instanceName: consumer
+        component: *foo_consumer
+  - &cluster2
+    name: Cluster2
+    id: 2
+    queueSize: 1 # Cluster2 has no queue for now
 
 # Infrastructure allocators for memory management
 allocators:
-  - &default_allocator
-    name: default
+  - name: Main
+    default: true
     pools:
-      - elements: 10
-        chunk_sizes: 64
+      - NumberOfElements: 10
+        ChunkSize: 64
+
+outbound_pdu_queue_size: 10
 
 pdus:
-  - name: samplePdu8
+  - name: samplePduWithCrc
+    pdu_id: 40
     size: 8
-  - name: samplePdu64
-    size: 64
-
-services:
-  - &foo
-    namespace: org::test::foo
-    name: Foo
-    id: 1
-    datatypes:
-      - name: FooStruct
-        type: struct
+    writer_cluster: Cluster0
+    transmission:
+      modeFalse:
+        strategies:
+          - cyclic: {ms: 5000}
+          - event: {debounce_ms: 100, repetitions: 2, repetition_cycle: 1000}
+      modeTrue:
+        strategies: []
+    namespace: org::test::signal
+    headers:
+      common: org/test/signal/samplePduWithCrcCommon.h
+      reader: org/test/signal/samplePduWithCrcReader.h
+      writer: org/test/signal/samplePduWithCrcWriter.h
+    signals:
+      - name: crc
+        type: uint8_t
+        bit_length: 8
+      - name: sampleSignal
+        type: uint8_t
+        bit_length: 4
+      - name: AnotherSampleSignal
+        type: uint8_t
+        bit_length: 4
+      - name: SomeOtherSignal
+        type: uint16_t
+        bit_length: 16
+      - name: finalSampleSignal
+        type: uint32_t
+        bit_length: 32
+  - name: samplePduWithDatatypes
+    pdu_id: 10
+    size: 20
+    writer_cluster: Cluster0
+    transmission:
+      modeFalse:
+        strategies:
+          - event: {debounce_ms: 100, repetitions: 0, repetition_cycle: 0}
+      modeTrue:
+        strategies: []
+    namespace: org::test::signal
+    headers:
+      common: org/test/signal/samplePduWithDatatypesCommon.h
+      reader: org/test/signal/samplePduWithDatatypesReader.h
+      writer: org/test/signal/samplePduWithDatatypesWriter.h
+    enums:
+      - name: ExampleEnum
+        type: uint8_t
         parameters:
+          - name: Value0
+            value: 0
+          - name: Value1
+            value: 1
+          - name: ErrorValue
+            value: 127
+    bitsets:
+      - name: ExampleBitset
+        type: uint8_t
+        bits:
+          - name: enabled
+            position: 0
+          - name: fault
+            position: 1
+          - name: active
+            position: 2
+          - name: locked
+            position: 3
+          - name: overheated
+            position: 4
+    signals:
+      - name: firstSignal
+        type: uint8_t
+        bit_length: 5
+        phy_translation:
+          offset: 0.0
+          scaling_factor: 0.5
+        trigger_on_change: true
+      - name: secondSignal
+        type: uint64_t
+        bit_length: 60
+      - name: arraySignal
+        type: array
+        element_type: uint8_t
+        bit_length: 16
+      - name: enumSignal
+        type: ExampleEnum
+        bit_length: 7
+        trigger_on_change: true
+      - name: bitsetSignal
+        type: ExampleBitset
+        bit_length: 5
+        trigger_on_change: true
+      - name: boolSignal
+        type: bool
+        bit_length: 1
+  # No writer: the PDUs below have the same signals as the PDUs written by Core0, but are
+  # filled by the PDU broker with PDUs received from the bus.
+  - name: samplePduWithCrcFromBus
+    pdu_id: 30
+    size: 8
+    namespace: org::test::bus
+    headers:
+      common: org/test/bus/samplePduWithCrcFromBusCommon.h
+      reader: org/test/bus/samplePduWithCrcFromBusReader.h
+    signals:
+      - name: crc
+        type: uint8_t
+        bit_length: 8
+      - name: sampleSignal
+        type: uint8_t
+        bit_length: 4
+      - name: AnotherSampleSignal
+        type: uint8_t
+        bit_length: 4
+      - name: SomeOtherSignal
+        type: uint16_t
+        bit_length: 16
+      - name: finalSampleSignal
+        type: uint32_t
+        bit_length: 32
+  - name: samplePduWithDatatypesFromBus
+    pdu_id: 20
+    size: 20
+    namespace: org::test::bus
+    headers:
+      common: org/test/bus/samplePduWithDatatypesFromBusCommon.h
+      reader: org/test/bus/samplePduWithDatatypesFromBusReader.h
+    enums:
+      - name: ExampleEnum
+        type: uint8_t
+        parameters:
+          - name: Value0
+            value: 0
+          - name: Value1
+            value: 1
+          - name: ErrorValue
+            value: 127
+    bitsets:
+      - name: ExampleBitset
+        type: uint64_t
+        bits:
+          - name: enabled
+            position: 0
+          - name: fault
+            position: 1
+          - name: active
+            position: 2
+          - name: locked
+            position: 3
+          - name: overheated
+            position: 4
+          - name: upperWord
+            position: 32
+          - name: highest
+            position: 63
+    signals:
+      - name: firstSignal
+        type: uint8_t
+        bit_length: 5
+      - name: secondSignal
+        type: uint64_t
+        bit_length: 60
+      - name: arraySignal
+        type: array
+        element_type: uint8_t
+        bit_length: 16
+      - name: enumSignal
+        type: ExampleEnum
+        bit_length: 7
+      - name: bitsetSignal
+        type: ExampleBitset
+        bit_length: 64
+      - name: boolSignal
+        type: bool
+        bit_length: 1
+
+typeModules:
+  - namespace: org::test::foo::Foo
+    header: org/test/foo/FooTypes.h
+    types:
+      - typeName: AliasTypeDef
+        name: FooMethodResult
+        targetType: "::etl::array<uint32_t, 4>"
+      - typeName: StructTypeDef
+        name: FooStruct
+        elements:
           - name: fooValue
             type: uint32_t
+
+services:
+  - namespace: org::test::foo
+    name: Foo
+    deployment:
+      ServiceID: 1
+    typeIncludes:
+      - org/test/foo/FooTypes.h
     attributes:
       # Default behavior: setter + getter + subscriptions allowed
       - name: FooDefault
-        variable: fooDefault
-        type: FooStruct
-        readonly: false
-        noSubscriptions: false
-        setAsMethod: false
-        event:
-          id: 128
-        getter:
-          id: 1
-          timeout: 5000
-        setter:
-          id: 2
-          timeout: 0
-        consumer_request_limit: 1
-        provider_request_limit: 1
+        type: org::test::foo::Foo::FooStruct
+        hasGetter: true
+        hasSetter: true
+        hasNotifier: true
+        deployment:
+          GetterID: 1
+          SetterID: 2
+          NotificationID: 128
+          Timeout: 5000
+          SetterWithResponse: false
+          MaxProxyRequests: 1
+          MaxSkeletonRequests: 1
 
-    headers:
-      common: org/test/foo/FooCommon.h
-      proxy: org/test/foo/FooProxy.h
-      skeleton: org/test/foo/FooSkeleton.h
+    methods:
+      - name: FooMethod
+        deployment:
+          MethodID: 3
+          Timeout: 5000
+          MaxProxyRequests: 1
+          MaxSkeletonRequests: 1
+        inArgs:
+          - name: startValue
+            type: uint32_t
+        outArgs:
+          - name: result
+            type: "org::test::foo::Foo::FooMethodResult"
 
-    deployment:
-      instance_ids: [1]
-      clusters:
-        - cluster: *cluster0
-          consumers: 0
-          providers:
-            instance_ids: [1]
-        - cluster: *cluster1
-          consumers: 1
-          providers:
-            instance_ids: []
+    commonInclude: org/test/foo/FooCommon.h
+    proxyInclude: org/test/foo/FooProxy.h
+    skeletonInclude: org/test/foo/FooSkeleton.h
 
 connections:
   - &cluster0_cluster1
-    source_cluster: *cluster0
-    target_cluster: *cluster1
-    proxies: []
-    skeletons:
-      - <<: *foo
-        max_instances: 1
+    sourceCluster: *cluster0
+    targetCluster: *cluster1
+    consumers: []
+    providers:
+      - namespace: org::test::foo
+        name: Foo
+        maxInstances: 1
   - &cluster1_cluster0
-    source_cluster: *cluster1
-    target_cluster: *cluster0
-    proxies:
-      - <<: *foo
-        max_instances: 1
-    skeletons: []
+    sourceCluster: *cluster1
+    targetCluster: *cluster0
+    consumers:
+      - namespace: org::test::foo
+        name: Foo
+        maxInstances: 1
+    providers: []
 
 cores:
   - &c0

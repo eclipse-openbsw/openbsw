@@ -20,8 +20,9 @@ middleware artifacts have been generated (for example generated proxies,
 skeletons, :term:`cluster connection` code and message types).
 
 The remaining work in this guide is integration code, not generator output:
-platform bindings (time provider, logger, OS task ID and concurrency lock
-types), runtime object wiring, startup ordering and cyclic processing setup.
+platform bindings (time provider, logger, OS task ID, concurrency lock
+types, and PDU concurrency hooks and qualifier), runtime object wiring, startup
+ordering and cyclic processing setup.
 
 At a high level, middleware integration has six parts:
 
@@ -56,6 +57,10 @@ link it into the ECU build:
   links ``middleware``/``middlewareInterfaces`` (see
   ``executables/referenceApp/middlewareConfiguration/platform_integration/time/src/SystemTimeProvider.cpp``
   for the reference implementation).
+* **Bazel**: provide a ``cc_library`` defining the functions and bind it with the
+  ``--//libs/bsw/middleware:middleware_time=<label>`` flag in your platform
+  definition. The library must depend on ``//libs/bsw/middleware:middleware_interfaces``
+  rather than ``//libs/bsw/middleware``, and should set ``alwayslink = True``.
 
 The interface consists of two functions:
 
@@ -109,6 +114,9 @@ linked into the ECU build:
   links ``middleware``/``middlewareInterfaces`` (see
   ``executables/referenceApp/middlewareConfiguration/platform_integration/logger/src/LoggerImpl.cpp``
   for the reference implementation).
+* **Bazel**: provide a ``cc_library`` defining the functions and bind it with the
+  ``--//libs/bsw/middleware:middleware_logger=<label>`` flag in your platform
+  definition, with the same dependency rules as for the time interface.
 
 All logger functions below must be defined. Missing definitions will produce
 linker errors for unresolved logger symbols.
@@ -219,6 +227,9 @@ build:
   links ``middleware``/``middlewareInterfaces`` (see
   ``executables/referenceApp/middlewareConfiguration/platform_integration/os/src/OsDefinitions.cpp``
   for the reference implementation).
+* **Bazel**: provide a ``cc_library`` defining the function and bind it with the
+  ``--//libs/bsw/middleware:middleware_os=<label>`` flag in your platform
+  definition, with the same dependency rules as for the time interface.
 
 The platform integrator must provide the following function:
 
@@ -274,6 +285,12 @@ integrator:
   include path of any library that links ``middleware``/``middlewareInterfaces``
   (see ``executables/referenceApp/middlewareConfiguration/include/platform_integration/middleware/concurrency/lock_types.h``
   for the reference implementation).
+* **Bazel**: expose the header through a ``cc_library`` and bind it with the
+  ``--//libs/bsw/middleware:middleware_concurrency=<label>`` flag in your
+  platform definition. Each of the four interface flags defaults to
+  ``//bazel/config:no_implementation``, which is incompatible, so platforms that
+  do not bind them cannot build ``//libs/bsw/middleware`` (see ``//bazel/platform``
+  for the bindings used by the reference app, unit tests and simulation).
 
 The platform integrator must provide both lock types in
 ``middleware/concurrency/lock_types.h`` under this namespace:
@@ -356,6 +373,77 @@ long as they preserve the same API and RAII behavior.
   The interface aliases are defined in
   ``libs/bsw/middleware/interfaces/include/middleware/concurrency/LockStrategies.h``.
 
+PDU concurrency hooks
+---------------------
+
+Shared-memory PDUs use a sequence lock (see :doc:`../dd/core`). It needs two
+functions from the platform integrator, declared in
+``middleware/concurrency/MemoryFences.h`` and
+``middleware/concurrency/SpinLock.h``:
+
+.. code-block:: cpp
+
+   namespace middleware::concurrency
+   {
+   void atomicThreadFence();
+   void spinLockOptimization();
+   }  // namespace middleware::concurrency
+
+* ``atomicThreadFence()`` shall provide acquire/release ordering of the
+  payload accesses against the sequence counter, as seen by all cores that
+  access the PDU. It behaves like
+  ``std::atomic_thread_fence(std::memory_order_acq_rel)``. On hardware that
+  reorders loads or stores between cores (e.g. ARM, TriCore) this requires a
+  hardware barrier. A compiler barrier is sufficient only where the hardware
+  already guarantees this order (single core, x86). Otherwise a compiler-only
+  implementation links and runs, but can let a reader on another core accept
+  a torn PDU.
+* ``spinLockOptimization()`` is called on every retry while a write is in
+  progress. Insert a CPU hint such as ``yield`` (ARM) or ``pause`` (x86), or
+  leave it empty.
+
+If either symbol is not defined, linking fails with an unresolved
+``middleware::concurrency`` symbol. Add the source file defining them to any
+library that links ``middleware``/``middlewareInterfaces``.
+
+.. note::
+  A simulation reference implementation is available at
+  ``//libs/bsw/middleware/simulation/platform_integration/concurrency/src/ConcurrencyImpl.cpp``.
+
+PDU signal qualifier
+--------------------
+
+Every generated PDU reader takes an optional ``middleware::core::IQualifier*``
+in its constructor and calls ``qualify()`` on it for each snapshot. The
+application implements and owns the qualifier, so it controls the lifetime and
+the result API. Passing ``nullptr`` disables qualification.
+
+.. code-block:: cpp
+
+   class Qualifier final : public middleware::core::IQualifier
+   {
+   public:
+       enum class Qualification : uint8_t
+       {
+           Ok,
+           Error
+       };
+
+       void qualify(uintptr_t const seqNumber, etl::span<uint8_t const> rawData) override;
+
+       // Results are not part of the interface; expose whatever the
+       // application needs.
+       [[nodiscard]] Qualification getQualification() const;
+   };
+
+   Qualifier qualifier;
+   SamplePduReader reader{&qualifier};
+
+* ``qualify()`` is called by ``read()`` with the sequence number and raw bytes
+  of the snapshot, before the signals are decoded.
+* A simulation reference implementation is available at
+  ``//libs/bsw/middleware/simulation/platform_integration/qualifier/include/middleware/signal/qualifier.h``.
+
 Add the generated middleware code to the ECU build
 --------------------------------------------------
 
@@ -433,11 +521,16 @@ objects are placed in a :term:`shared memory region`:
 * Queue instances.
 * Allocator mutexes.
 * Allocator instances.
+* PDU instances.
 
 The generated shared-memory configuration provides a ``MemoryLayout`` type that
 owns these runtime objects. Its constructor performs the required queue and
 allocator setup (allocator mutex binding). This constructor-based pattern
 replaces separate queue/allocator initialize functions.
+
+.. warning::
+  Shared-Memory should be placed in non-cacheable memory regions to ensure
+  proper synchronization across cores.
 
 Exactly one :term:`owner core` must construct ``MemoryLayout`` once in the
 :term:`shared memory region`. All :term:`attached core` instances must only bind to the same
@@ -456,6 +549,8 @@ allocators:
      MiddlewareQueue<QUEUE_TO_FOO_SIZE> queueToFoo{&queueToFooMutex};
      MiddlewareQueue<QUEUE_TO_BAR_SIZE> queueToBar{&queueToBarMutex};
      message_allocator defaultAllocator{&defaultAllocatorMutex};
+     FooPdu pduFoo{};
+     BarPdu pduBar{};
    };
    extern ETL_CONSTINIT etl::typed_storage<middleware::shm::MemoryLayout> middlewareData;
    extern middleware::shm::MemoryLayout& middleware::shm::getMemoryLayout();
@@ -632,6 +727,41 @@ That generated function performs the middleware work for the local cluster:
 
 If this cluster processing entrypoint is not called, requests, responses,
 attribute updates and timeout handling will not progress.
+
+Run the PDU broker
+------------------
+
+PDUs reach the bus only through the PDU broker. Implement ``IPduTxSink`` on top
+of the bus driver of the platform and create a ``PduBrokerConnection`` from the
+generated PDU access table and the PDU ID queue:
+
+.. code-block:: cpp
+
+   class BusDriver final : public middleware::core::IPduTxSink
+   {
+   public:
+       void submit(uint32_t id, etl::span<uint8_t const> payload) override;
+   };
+
+   BusDriver busDriver;
+   middleware::shm::PduBrokerConnection broker{
+       busDriver,
+       middleware::shm::getPduAccessTable(),
+       *middleware::shm::getOutboundPduQueue()};
+
+* ``middleware::shm::PduBrokerConnection`` is generated for the deployment. Always use it,
+  because it sizes the broker's buffer for the largest PDU.
+* Call ``broker.processTransmissions()`` periodically from the context that
+  drives the bus. If it is not called, committed PDUs are not transmitted and the
+  PDU ID queue fills up.
+* Call ``broker.onReceive()`` for every PDU received from the bus. The receiving
+  PDU must not have a writer.
+* ``IPduTxSink::submit()`` takes over the PDU: copy the payload before
+  returning and queue it if the bus is busy. The broker never retries and never
+  holds a PDU back, so retries, the backlog size, the drop policy and making
+  drops observable belong to the sink.
+* Only one context may use the broker, as it is the single consumer of the
+  queue.
 
 Example mapping: reference ECU flow
 -----------------------------------

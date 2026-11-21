@@ -18,8 +18,6 @@
 #include <etl/array.h>
 #include <etl/span.h>
 
-#include <array>
-
 #include <cstdint>
 
 namespace transport
@@ -33,8 +31,8 @@ public:
     static constexpr size_t NUMBER_OF_CAN_TESTERS      = 2;
     static constexpr size_t NUMBER_OF_ADDRESS_LISTS    = 2;
 
-    using EthernetTesters           = std::array<LogicalAddress, NUMBER_OF_ETHERNET_TESTERS>;
-    using CanTesters                = std::array<LogicalAddress, NUMBER_OF_CAN_TESTERS>;
+    using EthernetTesters           = ::etl::array<LogicalAddress, NUMBER_OF_ETHERNET_TESTERS>;
+    using CanTesters                = ::etl::array<LogicalAddress, NUMBER_OF_CAN_TESTERS>;
     using LogicalAddressConverterUT = LogicalAddressConverter<NUMBER_OF_ADDRESS_LISTS>;
 
     static constexpr EthernetTesters TESTER_ADDRESS_RANGE_ETHERNET

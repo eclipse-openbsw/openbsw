@@ -31,7 +31,7 @@ public:
     virtual ~PositiveResponse(){};
 #endif
 
-    void init(uint8_t buffer[], size_t maximumLength);
+    void init(uint8_t* buffer, size_t maximumLength);
 
     /**
      * Resets the response, i.e. the offset be set to zero.
@@ -63,7 +63,7 @@ public:
      *
      * \return    Number of bytes appended
      */
-    size_t appendData(uint8_t const data[], size_t length);
+    size_t appendData(uint8_t const* data, size_t length);
 
     /**
      * Returns the size of the buffer passed to the init() function.

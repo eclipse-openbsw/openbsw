@@ -1,0 +1,126 @@
+/********************************************************************************
+ * Copyright (c) 2026 BMW AG
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Apache License Version 2.0 which is available at
+ * https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ ********************************************************************************/
+{% from "macros/common.jinja" import file_header %}{{ file_header() }}
+
+#include "middleware/{{ cluster.name }}Cluster.h"
+
+#include "middleware/ClusterId.h"
+#include "middleware/core/LoggerApi.h"
+#include "middleware/shm/QueueDefinitions.h"
+
+#include <etl/algorithm.h>
+#include <etl/alignment.h>
+#include <etl/error_handler.h>
+#include <etl/type_traits.h>
+
+namespace middleware
+{
+{% for pdu in pdus %}
+{% if pdu.writer_cluster is defined and pdu.writer_cluster == cluster.name %}
+namespace
+{
+etl::delegate<void()>& {{ pdu.name }}WriterCallback()
+{
+    static etl::delegate<void()> callback{};
+    return callback;
+}
+}
+
+void register{{ pdu.name }}Writer(etl::delegate<void()> callback)
+{
+    ETL_ASSERT(!{{ pdu.name }}WriterCallback().is_valid(), ETL_ERROR_GENERIC("PDU writer already registered"));
+    {{ pdu.name }}WriterCallback() = callback;
+}
+
+void unregister{{ pdu.name }}Writer(etl::delegate<void()> callback)
+{
+    ETL_ASSERT({{ pdu.name }}WriterCallback() == callback, ETL_ERROR_GENERIC("PDU writer registration mismatch"));
+    {{ pdu.name }}WriterCallback().clear();
+}
+{% endif %}
+{% endfor %}
+
+void process{{cluster.name}}Cluster(size_t messages, const bool updateTimeouts)
+{
+    auto* queue = shm::getQueueTo{{ cluster.name }}();
+    auto {{ cluster.name | lower }}Receiver =
+        etl::remove_pointer<decltype(queue)>::type::Receiver(*queue);
+    queue->takeSnapshot();
+    if (messages == 0U)
+    {
+        messages = {{ cluster.name | lower }}Receiver.size();
+    }
+
+    for (size_t i = 0U; (i < messages) && (!{{ cluster.name | lower }}Receiver.isEmpty()); ++i)
+    {
+        const core::Message& msg = {{ cluster.name | lower }}Receiver.peek();
+        const auto sourceClusterId = static_cast<core::ClusterId>(msg.getHeader().srcClusterId);
+        switch (sourceClusterId)
+        {
+{% for connection in connections %}
+{% if connection.sourceCluster.name == cluster.name %}
+            case core::ClusterId::{{ connection.targetCluster.name }}: {
+                ClusterConnection{{ cluster.name }}To{{ connection.targetCluster.name }}.processMessage(msg);
+                break;
+            }
+{% endif %}
+{% endfor %}
+            default: {
+                logger::logMessageSendingFailure(
+                    logger::LogLevel::Error, logger::Error::DispatchMessage, core::HRESULT::RoutingError, msg);
+                break;
+            }
+        }
+        {{ cluster.name | lower }}Receiver.advance();
+    }
+
+    if (updateTimeouts)
+    {
+        update{{ cluster.name }}ClusterTimeouts();
+    }
+}
+
+void update{{ cluster.name }}ClusterTimeouts()
+{
+{% for connection in connections %}
+{% if connection.sourceCluster.name == cluster.name %}
+    ClusterConnection{{ cluster.name }}To{{ connection.targetCluster.name }}.updateTimeouts();
+{% endif %}
+{% endfor %}
+{% for pdu in pdus %}
+{% if pdu.writer_cluster is defined and pdu.writer_cluster == cluster.name %}
+    static_cast<void>({{ pdu.name }}WriterCallback().call_if());
+{% endif %}
+{% endfor %}
+}
+
+// ***************************** {{ cluster.name }} *****************************
+{% for connection in connections %}
+{% if connection.sourceCluster.name == cluster.name %}
+meta::ClusterConnection{{ cluster.name }}To{{ connection.targetCluster.name }}Meta ClusterConnection{{ cluster.name }}To{{ connection.targetCluster.name }}Config;
+core::ClusterConnection ClusterConnection{{ cluster.name }}To{{ connection.targetCluster.name }}(ClusterConnection{{ cluster.name }}To{{ connection.targetCluster.name }}Config);
+{% endif %}
+{% endfor %}
+
+void initialize{{ cluster.name }}ClusterConnection()
+{
+    // Reset Config only: explicitly destroy and reconstruct to clear registered
+    // transceivers. Connection's reference stays valid (same address).
+{% for connection in connections %}
+{% if connection.sourceCluster.name == cluster.name %}
+    ClusterConnection{{ cluster.name }}To{{ connection.targetCluster.name }}Config
+        .~ClusterConnection{{ cluster.name }}To{{ connection.targetCluster.name }}Meta();
+    ::new (&ClusterConnection{{ cluster.name }}To{{ connection.targetCluster.name }}Config)
+        meta::ClusterConnection{{ cluster.name }}To{{ connection.targetCluster.name }}Meta{};
+{% endif %}
+{% endfor %}
+}
+
+}  // namespace middleware

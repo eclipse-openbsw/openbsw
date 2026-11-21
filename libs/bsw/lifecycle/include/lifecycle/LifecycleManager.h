@@ -157,7 +157,7 @@ private:
     uint8_t _levelCount                               = 0;
     uint8_t _initLevelCount                           = 0;
     uint8_t _currentLevel                             = 0;
-    uint8_t _nextLevel                                = 0;
+    uint8_t _targetLevel                              = 0;
 };
 
 namespace declare

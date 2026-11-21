@@ -18,7 +18,7 @@
 namespace logger
 {
 template<class T>
-class BufferedLoggerOutputClient
+class BufferedLoggerOutputClient final
 : public IBufferedLoggerOutputClient<typename T::EntryIndexType, typename T::TimestampType>
 {
 public:

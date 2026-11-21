@@ -49,7 +49,11 @@ public:
     virtual EntityStatus getEntityStatus(uint8_t socketGroupId) const = 0;
 
 protected:
-    ~IDoIpServerEntityStatusCallback() = default;
+    IDoIpServerEntityStatusCallback()                                             = default;
+    IDoIpServerEntityStatusCallback(IDoIpServerEntityStatusCallback const&)       = default;
+    IDoIpServerEntityStatusCallback(IDoIpServerEntityStatusCallback&&)            = default;
+    IDoIpServerEntityStatusCallback& operator=(IDoIpServerEntityStatusCallback&&) = default;
+    ~IDoIpServerEntityStatusCallback()                                            = default;
 
     IDoIpServerEntityStatusCallback& operator=(IDoIpServerEntityStatusCallback const&) = default;
 };
