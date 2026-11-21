@@ -1,0 +1,51 @@
+name: Workflow Build and Deploy docs to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+    tags: ["*"]
+  pull_request:
+
+jobs:
+  build-and-deploy-documentation:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v10.1.0
+        with:
+          enable-cache: true
+
+      - name: Prepare
+        run: uv sync --frozen --group docs
+
+      - name: Generate Error Catalog
+        run: |
+          uv run python src/flync_cli/main.py errors generate-catalog
+
+      - name: Build the docs
+        run: |
+          cd docs
+          pwd
+          make html
+
+      - name: Upload artifacts for Pages
+        if: |
+          github.event_name == 'push' &&
+          (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/'))
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: docs/build/html
+          retention-days: 7
+
+      - name: Deploy to GitHub Pages
+        if: |
+          github.event_name == 'push' &&
+          (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/'))
+        uses: actions/deploy-pages@v5
