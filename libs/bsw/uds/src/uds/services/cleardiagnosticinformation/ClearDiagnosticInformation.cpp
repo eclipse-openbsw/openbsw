@@ -16,6 +16,8 @@
 
 #include <etl/span.h>
 
+#include <etl/span.h>
+
 namespace uds
 {
 
