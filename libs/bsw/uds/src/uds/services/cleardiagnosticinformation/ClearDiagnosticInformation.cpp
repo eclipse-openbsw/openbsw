@@ -12,17 +12,22 @@
 
 #include "uds/connection/IncomingDiagConnection.h"
 #include "uds/session/DiagSession.h"
+#include "udsDiagMgr/DiagMgr.h"
+
+#include <etl/span.h>
 
 #include <etl/span.h>
 
 namespace uds
 {
+
 ClearDiagnosticInformation::ClearDiagnosticInformation()
 : Service(
     ServiceId::CLEAR_DIAGNOSTIC_INFORMATION,
     EXPECTED_REQUEST_LENGTH,
     RESPONSE_LENGTH,
     DiagSession::ALL_SESSIONS())
+, _diagMgr(nullptr)
 {
     setDefaultDiagReturnCode(DiagReturnCode::ISO_REQUEST_OUT_OF_RANGE);
 }
@@ -39,14 +44,17 @@ DiagReturnCode::Type ClearDiagnosticInformation::process(
     {
         case GROUP_ALL_DTCS:
         {
-            // Demo: clear all DTCs. Real DTC clearing is project-specific and will not be
-            // implemented in this reference file
+            // Delegate to DiagMgr if wired — clears RAM table + storage
+            if (_diagMgr != nullptr)
+            {
+                (void)_diagMgr->clearAllDTCs();
+            }
             PositiveResponse& response = connection.releaseRequestGetResponse();
             (void)connection.sendPositiveResponseInternal(response.getLength(), *this);
             return DiagReturnCode::OK;
         }
-        // Additional groupOfDTC values (e.g. powertrain, chassis, body, network)
-        // are reserved for project-specific DEM implementation.
+        // Additional groupOfDTC values (powertrain, chassis, body, network) are
+        // reserved for project-specific DiagMgr extension.
         default:
         {
             return DiagReturnCode::ISO_REQUEST_OUT_OF_RANGE;
