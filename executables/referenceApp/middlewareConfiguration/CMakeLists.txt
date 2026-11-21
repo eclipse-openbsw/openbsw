@@ -30,10 +30,16 @@ set(_GENERATED_HEADERS
     ${_GEN_INC}/middleware/shm/Config.h
     ${_GEN_INC}/middleware/shm/AllocatorsDefinitions.h
     ${_GEN_INC}/middleware/shm/QueueDefinitions.h
+    ${_GEN_INC}/middleware/shm/PduDefinitions.h
     ${_GEN_INC}/org/test/foo/FooCommon.h
     ${_GEN_INC}/org/test/foo/FooProxy.h
     ${_GEN_INC}/org/test/foo/FooSkeleton.h
-    ${_GEN_INC}/org/test/foo/FooTypes.h)
+    ${_GEN_INC}/org/test/foo/FooTypes.h
+    ${_GEN_INC}/org/test/pdu/demoRxPduCommon.h
+    ${_GEN_INC}/org/test/pdu/demoRxPduReader.h
+    ${_GEN_INC}/org/test/pdu/demoTxPduCommon.h
+    ${_GEN_INC}/org/test/pdu/demoTxPduReader.h
+    ${_GEN_INC}/org/test/pdu/demoTxPduWriter.h)
 
 set(GENERATED_SRCS
     ${_GEN_SRC}/AllocatorSelectorDefinitions.cpp
@@ -42,7 +48,10 @@ set(GENERATED_SRCS
     ${_GEN_SRC}/shm/Config.cpp
     ${_GEN_SRC}/org/test/foo/FooCommon.cpp
     ${_GEN_SRC}/org/test/foo/FooProxy.cpp
-    ${_GEN_SRC}/org/test/foo/FooSkeleton.cpp)
+    ${_GEN_SRC}/org/test/foo/FooSkeleton.cpp
+    ${_GEN_SRC}/org/test/pdu/demoRxPduReader.cpp
+    ${_GEN_SRC}/org/test/pdu/demoTxPduReader.cpp
+    ${_GEN_SRC}/org/test/pdu/demoTxPduWriter.cpp)
 
 if (PLATFORM_SUPPORT_SOMEIP_BRIDGE_SAMPLE)
     # The SOME/IP bridge sample's service comes from the FLYNC model. Its
@@ -124,6 +133,7 @@ add_custom_command(
     VERBATIM)
 
 set(PLATFORM_INTEGRATION_SRCS
+    platform_integration/concurrency/src/ConcurrencyImpl.cpp
     platform_integration/logger/src/LoggerImpl.cpp
     platform_integration/os/src/OsDefinitions.cpp
     platform_integration/time/src/SystemTimeProvider.cpp)

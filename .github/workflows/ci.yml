@@ -1,0 +1,93 @@
+# *******************************************************************************
+# Copyright (c) 2026 BMW AG
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+
+# Entry point for pull request and merge queue verification.
+# All verification workflows are called from here, and the `ci-gate` job
+# aggregates their results into a single status check. `ci-gate` is the
+# required status check configured for the `main` branch ruleset.
+
+name: CI
+
+on:
+  merge_group:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  bazel:
+    uses: ./.github/workflows/bazel.yml
+
+  build:
+    uses: ./.github/workflows/build.yml
+
+  cbindgen:
+    uses: ./.github/workflows/cbindgen.yml
+
+  clang-tidy:
+    uses: ./.github/workflows/clang-tidy.yml
+
+  code-coverage:
+    uses: ./.github/workflows/code-coverage.yml
+
+  copyright:
+    uses: ./.github/workflows/copyright.yml
+
+  doxygen:
+    uses: ./.github/workflows/doxygen-build.yml
+
+  format:
+    uses: ./.github/workflows/format.yml
+
+  puncover:
+    uses: ./.github/workflows/puncover_tool.yml
+
+  python-unit-tests:
+    uses: ./.github/workflows/python-unit-tests.yml
+
+  pytest-posix:
+    uses: ./.github/workflows/run-pytest-on-posix.yml
+
+  sphinx:
+    uses: ./.github/workflows/sphinx-doc-build.yml
+
+  third-party-libs:
+    uses: ./.github/workflows/third-party-libs-check.yml
+
+  ci-gate:
+    if: ${{ always() }}
+    needs:
+      - bazel
+      - build
+      - cbindgen
+      - clang-tidy
+      - code-coverage
+      - copyright
+      - doxygen
+      - format
+      - puncover
+      - python-unit-tests
+      - pytest-posix
+      - sphinx
+      - third-party-libs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check results of all verification workflows
+        env:
+          NEEDS: ${{ toJSON(needs) }}
+        run: |
+          failed=$(jq -r 'to_entries[] | select(.value.result != "success") | "\(.key): \(.value.result)"' <<< "${NEEDS}")
+          if [[ -n "${failed}" ]]; then
+            echo "The following verification workflows did not succeed:"
+            echo "${failed}"
+            exit 1
+          fi
+          echo "All verification workflows succeeded."

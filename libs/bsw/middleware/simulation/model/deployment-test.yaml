@@ -37,6 +37,10 @@ clusters:
     componentInstances:
       - instanceName: consumer
         component: *foo_consumer
+  - &cluster2
+    name: Cluster2
+    id: 2
+    queueSize: 1 # Cluster2 has no queue for now
 
 # Infrastructure allocators for memory management
 allocators:
@@ -50,7 +54,7 @@ outbound_pdu_queue_size: 10
 
 pdus:
   - name: samplePduWithCrc
-    pdu_id: 256
+    pdu_id: 40
     size: 8
     writer_cluster: Cluster0
     transmission:
@@ -82,8 +86,8 @@ pdus:
         type: uint32_t
         bit_length: 32
   - name: samplePduWithDatatypes
-    pdu_id: 257
-    size: 12
+    pdu_id: 10
+    size: 20
     writer_cluster: Cluster0
     transmission:
       modeFalse:
@@ -143,6 +147,86 @@ pdus:
         type: ExampleBitset
         bit_length: 5
         trigger_on_change: true
+      - name: boolSignal
+        type: bool
+        bit_length: 1
+  # No writer: the PDUs below have the same signals as the PDUs written by Core0, but are
+  # filled by the PDU broker with PDUs received from the bus.
+  - name: samplePduWithCrcFromBus
+    pdu_id: 30
+    size: 8
+    namespace: org::test::bus
+    headers:
+      common: org/test/bus/samplePduWithCrcFromBusCommon.h
+      reader: org/test/bus/samplePduWithCrcFromBusReader.h
+    signals:
+      - name: crc
+        type: uint8_t
+        bit_length: 8
+      - name: sampleSignal
+        type: uint8_t
+        bit_length: 4
+      - name: AnotherSampleSignal
+        type: uint8_t
+        bit_length: 4
+      - name: SomeOtherSignal
+        type: uint16_t
+        bit_length: 16
+      - name: finalSampleSignal
+        type: uint32_t
+        bit_length: 32
+  - name: samplePduWithDatatypesFromBus
+    pdu_id: 20
+    size: 20
+    namespace: org::test::bus
+    headers:
+      common: org/test/bus/samplePduWithDatatypesFromBusCommon.h
+      reader: org/test/bus/samplePduWithDatatypesFromBusReader.h
+    enums:
+      - name: ExampleEnum
+        type: uint8_t
+        parameters:
+          - name: Value0
+            value: 0
+          - name: Value1
+            value: 1
+          - name: ErrorValue
+            value: 127
+    bitsets:
+      - name: ExampleBitset
+        type: uint64_t
+        bits:
+          - name: enabled
+            position: 0
+          - name: fault
+            position: 1
+          - name: active
+            position: 2
+          - name: locked
+            position: 3
+          - name: overheated
+            position: 4
+          - name: upperWord
+            position: 32
+          - name: highest
+            position: 63
+    signals:
+      - name: firstSignal
+        type: uint8_t
+        bit_length: 5
+      - name: secondSignal
+        type: uint64_t
+        bit_length: 60
+      - name: arraySignal
+        type: array
+        element_type: uint8_t
+        bit_length: 16
+      - name: enumSignal
+        type: ExampleEnum
+        bit_length: 7
+      - name: bitsetSignal
+        type: ExampleBitset
+        bit_length: 64
       - name: boolSignal
         type: bool
         bit_length: 1

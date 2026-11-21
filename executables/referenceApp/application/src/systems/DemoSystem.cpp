@@ -207,6 +207,7 @@ void DemoSystem::cyclic()
     if (_middlewareCycleCount % 100U == 0U)
     {
         _fooSkeletonWrapper.sendBroadcast();
+        _pduDemoWrapper.sendPdu();
     }
     // Issue a getter request every 2 s (200 cycles)
     if (_middlewareCycleCount % 200U == 0U)
@@ -215,6 +216,7 @@ void DemoSystem::cyclic()
     }
     ::middleware::processCluster0Cluster();
     ::middleware::processCluster1Cluster();
+    _pduDemoWrapper.process();
 #endif
 
 #ifdef PLATFORM_SUPPORT_STORAGE

@@ -24,15 +24,6 @@
 #include <new>
 #include <type_traits>
 
-namespace middleware::shm
-{
-MemoryLayout& getMemoryLayout()
-{
-    static MemoryLayout layout;
-    return layout;
-}
-} // namespace middleware::shm
-
 namespace
 {
 using namespace org::test::signal;

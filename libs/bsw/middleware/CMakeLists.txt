@@ -4,6 +4,7 @@ target_link_libraries(middlewareInterfaces INTERFACE etl)
 
 add_library(
     middleware
+    src/middleware/core/PduBrokerConnectionBase.cpp
     src/middleware/core/ClusterConnection.cpp
     src/middleware/core/ClusterConnectionBase.cpp
     src/middleware/core/DatabaseManipulator.cpp

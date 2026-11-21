@@ -308,6 +308,8 @@ The top-level keys are:
 | `connections` | Yes | Inter-cluster connections |
 | `allocators` | Yes | List of memory allocators, exactly one with `default: true` |
 | `cores` | No | Optional core groupings |
+| `pdus` | No | List of PDUs in shared memory |
+| `outbound_pdu_queue_size` | If a PDU has a `pdu_id` | Capacity (1 to 255) of the queue that notifies the PDU broker about committed PDUs |
 
 ### Allocators
 
@@ -486,3 +488,23 @@ services:
 `hasGetter`, `hasSetter` or `hasNotifier` flag must be given. Other optional deployment
 values default to one request per consumer and provider. A method has at most one input
 and one output argument.
+
+### PDUs
+
+Each entry of `pdus` has these keys:
+
+| Key | Required | Description |
+|---|---|---|
+| `name` | Yes | PDU name, used for the generated types and functions |
+| `pdu_id` | No | PDU ID (0 to 4294967295) under which the PDU is announced to the PDU broker. It is required for PDUs with a `transmission` and for PDUs received from the bus. It must be unique across all PDUs, but need not be sequential. The generator reports a duplicate ID as an error. |
+| `size` | Yes | Payload size in bytes |
+| `namespace` | Yes | C++ namespace of the generated PDU types |
+| `headers` | Yes | Paths of the generated headers: `common` is required, `reader`, `reader_mock` and `writer` are optional. A PDU without `writer` is meant to be filled by the PDU broker with PDUs received from the bus. |
+| `signals` | Yes | Signals with `name`, `type` and `bit_length` |
+| `enums`, `bitsets` | No | Types scoped to the PDU |
+| `generation_mode` | No | `normal` (default) or `mock` |
+
+The generated `shm/PduDefinitions.h` defines `MAX_PDU_SIZE`, a `PDU_ID_<NAME>`
+constant per PDU with a `pdu_id` and `getPduAccessTable()`, which returns those PDUs sorted by ID.
+`shm/QueueDefinitions.h` defines the PDU ID queue and `middleware::shm::PduBrokerConnection`,
+whose buffer fits the largest PDU.

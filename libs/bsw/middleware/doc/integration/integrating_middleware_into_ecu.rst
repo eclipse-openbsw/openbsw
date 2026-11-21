@@ -728,6 +728,41 @@ That generated function performs the middleware work for the local cluster:
 If this cluster processing entrypoint is not called, requests, responses,
 attribute updates and timeout handling will not progress.
 
+Run the PDU broker
+------------------
+
+PDUs reach the bus only through the PDU broker. Implement ``IPduTxSink`` on top
+of the bus driver of the platform and create a ``PduBrokerConnection`` from the
+generated PDU access table and the PDU ID queue:
+
+.. code-block:: cpp
+
+   class BusDriver final : public middleware::core::IPduTxSink
+   {
+   public:
+       void submit(uint32_t id, etl::span<uint8_t const> payload) override;
+   };
+
+   BusDriver busDriver;
+   middleware::shm::PduBrokerConnection broker{
+       busDriver,
+       middleware::shm::getPduAccessTable(),
+       *middleware::shm::getOutboundPduQueue()};
+
+* ``middleware::shm::PduBrokerConnection`` is generated for the deployment. Always use it,
+  because it sizes the broker's buffer for the largest PDU.
+* Call ``broker.processTransmissions()`` periodically from the context that
+  drives the bus. If it is not called, committed PDUs are not transmitted and the
+  PDU ID queue fills up.
+* Call ``broker.onReceive()`` for every PDU received from the bus. The receiving
+  PDU must not have a writer.
+* ``IPduTxSink::submit()`` takes over the PDU: copy the payload before
+  returning and queue it if the bus is busy. The broker never retries and never
+  holds a PDU back, so retries, the backlog size, the drop policy and making
+  drops observable belong to the sink.
+* Only one context may use the broker, as it is the single consumer of the
+  queue.
+
 Example mapping: reference ECU flow
 -----------------------------------
 

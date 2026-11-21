@@ -16,56 +16,26 @@
 #include "middleware/shm/PduDefinitions.h"
 #include "middleware/shm/QueueDefinitions.h"
 #include "middleware/signal/qualifier.h"
+#include "org/test/bus/samplePduWithCrcFromBusReader.h"
+#include "org/test/bus/samplePduWithDatatypesFromBusReader.h"
 #include "org/test/signal/samplePduWithCrcReader.h"
 #include "org/test/signal/samplePduWithDatatypesReader.h"
 
-namespace
-{
-
-char const* pduName(uint32_t const id)
-{
-    if (id == middleware::shm::PDU_ID_SAMPLEPDUWITHCRC)
-    {
-        return "samplePduWithCrc";
-    }
-    if (id == middleware::shm::PDU_ID_SAMPLEPDUWITHDATATYPES)
-    {
-        return "samplePduWithDatatypes";
-    }
-    return "unknown";
-}
-
-} // namespace
-
-// Stand-in for the PDU broker: reads the ids in the order the writers committed them.
-void drainOutboundPduQueue()
-{
-    middleware::shm::OutboundPduQueue::Receiver receiver{*middleware::shm::getOutboundPduQueue()};
-    while (!receiver.isEmpty())
-    {
-        uint32_t const id = receiver.peek();
-        simulation::Logger::log(
-            static_cast<uint8_t>(::middleware::core::ClusterId::Cluster1),
-            "Outbound PDU queue: received id ",
-            id,
-            " (",
-            pduName(id),
-            ")");
-        receiver.advance();
-    }
-}
-
-void readsamplePduWithCrc()
+// The PDUs written by Core0 and the PDUs received from the bus have the same signals, so one
+// function per layout serves both readers.
+template<typename Reader>
+void readSamplePduWithCrc(char const* const label)
 {
     middleware::signal::integration::Qualifier qualifier{};
-    org::test::signal::samplePduWithCrcReader samplePduWithCrcReader{&qualifier};
-    auto const samplePdu = samplePduWithCrcReader.read();
+    Reader reader{&qualifier};
+    auto const samplePdu = reader.read();
     if (qualifier.getQualification()
         == middleware::signal::integration::Qualifier::Qualification::Ok)
     {
         simulation::Logger::log(
             static_cast<uint8_t>(::middleware::core::ClusterId::Cluster1),
-            "Sample PDU [CRC: ",
+            label,
+            " [CRC: ",
             "0x",
             std::hex,
             std::uppercase,
@@ -89,22 +59,23 @@ void readsamplePduWithCrc()
     else
     {
         simulation::Logger::log(
-            static_cast<uint8_t>(::middleware::core::ClusterId::Cluster1),
-            "Sample PDU CRC invalid");
+            static_cast<uint8_t>(::middleware::core::ClusterId::Cluster1), label, " CRC invalid");
     }
 }
 
-void readsamplePduWithDatatypes()
+template<typename Reader>
+void readSamplePduWithDatatypes(char const* const label)
 {
-    org::test::signal::samplePduWithDatatypesReader samplePduWithDatatypesReader{nullptr};
-    auto const samplePdu = samplePduWithDatatypesReader.read();
+    Reader reader{nullptr};
+    auto const samplePdu = reader.read();
 
     // No need to check qualifier here, since this PDU does not have CRC attached.
     // Simulation purpose only to check data types
 
     simulation::Logger::log(
         static_cast<uint8_t>(::middleware::core::ClusterId::Cluster1),
-        "PDU With Datatypes read: ",
+        label,
+        " read: ",
         "0x",
         std::hex,
         std::uppercase,
@@ -162,8 +133,12 @@ void run_main_core1()
             {
                 ++fooMethodStartValue;
             }
-            readsamplePduWithCrc();
-            readsamplePduWithDatatypes();
+            readSamplePduWithCrc<org::test::signal::samplePduWithCrcReader>("Sample PDU");
+            readSamplePduWithDatatypes<org::test::signal::samplePduWithDatatypesReader>(
+                "PDU With Datatypes");
+            readSamplePduWithCrc<org::test::bus::samplePduWithCrcFromBusReader>("Bus sample PDU");
+            readSamplePduWithDatatypes<org::test::bus::samplePduWithDatatypesFromBusReader>(
+                "Bus PDU With Datatypes");
         }
 
         if (counter % 150 == 0)
@@ -176,20 +151,10 @@ void run_main_core1()
                 ", Lost: ",
                 stats.lostMessages,
                 " ]");
-
-            auto const outboundPduStats = middleware::shm::getOutboundPduQueue()->getStats();
-            simulation::Logger::logStats(
-                static_cast<uint8_t>(::middleware::core::ClusterId::Cluster1),
-                "Outbound PDUs [ Received:",
-                outboundPduStats.processedMessages,
-                ", Lost: ",
-                outboundPduStats.lostMessages,
-                " ]");
         }
 
         counter++;
 
-        drainOutboundPduQueue();
         middleware::processCluster1Cluster(10);
         auto const fooMethodResult = foo_consumer.pollFooMethod();
         using FooMethodState       = middleware::core::Future::State;

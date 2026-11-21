@@ -21,12 +21,19 @@
   */
 #pragma once
 
+#include <cstddef>
 #include <cstdint>
 
+#include <etl/span.h>
+
+#include "middleware/core/PduAccess.h"
 #include "middleware/core/MiddlewarePdu.h"
 
 namespace middleware::shm
 {
+
+/** Size in bytes of the largest PDU, 0 if there is none. */
+inline constexpr size_t MAX_PDU_SIZE = {{ (pdus | map(attribute='size') | max) or 0 }}U;
 
 {% if has_pdu_ids %}
 {% for pdu in pdus if pdu.pdu_id is defined %}
@@ -41,5 +48,8 @@ using {{ pdu.name | capitalize }}Pdu = ::middleware::core::MiddlewarePdu<{{ pdu.
 {% for pdu in pdus %}
 {{ pdu.name | capitalize }}Pdu* get{{ pdu.name | capitalize }}();
 {% endfor %}
+
+/** Returns the access to every PDU, sorted by ascending PDU ID. */
+::etl::span<core::PduAccess const> getPduAccessTable();
 
 }  // namespace middleware::shm
