@@ -147,4 +147,4 @@ For more details see [CONTRIBUTING](CONTRIBUTING.md).
 
 Distributed under the [Apache 2.0 License](LICENSE).
 
-Also see [NOTICE](NOTICE.md).
+Also see [NOTICE](NOTICE.md)..

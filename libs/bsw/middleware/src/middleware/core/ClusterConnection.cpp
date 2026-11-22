@@ -21,6 +21,11 @@ ClusterConnection::ClusterConnection(IClusterConnectionConfiguration& configurat
 : Base(configuration)
 {}
 
+void ClusterConnection::setConfiguration(IClusterConnectionConfiguration& configuration)
+{
+    Base::setConfiguration(configuration);
+}
+
 HRESULT ClusterConnection::subscribe(ProxyBase& proxy, uint16_t const serviceInstanceId)
 {
     return static_cast<IClusterConnectionConfiguration&>(Base::getConfiguration())
