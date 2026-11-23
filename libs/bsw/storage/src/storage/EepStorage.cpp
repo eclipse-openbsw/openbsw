@@ -11,6 +11,7 @@
 #include <bsp/eeprom/IEepromDriver.h>
 #include <etl/algorithm.h>
 #include <etl/crc16_aug_ccitt.h>
+#include <etl/error_handler.h>
 #include <etl/memory.h>
 #include <etl/unaligned_type.h>
 #include <storage/EepStorage.h>
@@ -138,7 +139,7 @@ StorageJob::ResultType EepStorage::write(
         }
         if (sizeToCopy != 0U)
         {
-            // avoid passing a null source pointer (e.g. an empty span) to mem_copy
+            ETL_ASSERT(writeBuf.data() != nullptr, ETL_ERROR_GENERIC("write buffer must be valid"));
             (void)::etl::mem_copy(
                 writeBuf.data(), sizeToCopy, (eepBuf.data() + headerSize + progressInBlock));
         }
@@ -222,7 +223,7 @@ StorageJob::ResultType EepStorage::read(
         }
         if (sizeToCopy != 0U)
         {
-            // avoid passing a null destination pointer (e.g. an empty span) to mem_copy
+            ETL_ASSERT(readBuf.data() != nullptr, ETL_ERROR_GENERIC("read buffer must be valid"));
             (void)::etl::mem_copy(
                 (eepBuf.data() + headerSize + progressInBlock), sizeToCopy, readBuf.data());
         }
