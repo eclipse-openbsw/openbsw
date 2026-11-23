@@ -361,6 +361,40 @@ TEST(DoCanMessageTransmitProtocolHandlerTest, testStateWaitIfFlowControlWaitBefo
     EXPECT_EQ(TransmitTimeout::FLOW_CONTROL, cut.getTimeout());
 }
 
+TEST(DoCanMessageTransmitProtocolHandlerTest, testFlowControlCtsAfterEarlyWaitIsAccepted)
+{
+    TransmitProtocolHandler cut(3U);
+    EXPECT_EQ(TransmitResult(true), cut.start());
+    EXPECT_EQ(TransmitResult(true), cut.frameSending());
+    // FC.WAIT arrives before the transmit callback of the first frame
+    EXPECT_EQ(TransmitResult(false), cut.handleFlowControl(FlowStatus::WAIT, 1, true, 2));
+    EXPECT_EQ(TransmitResult(true), cut.framesSent(1U));
+    EXPECT_EQ(TransmitState::WAIT, cut.getState());
+    EXPECT_EQ(TransmitTimeout::FLOW_CONTROL, cut.getTimeout());
+    EXPECT_EQ(
+        TransmitResult(true).setActionSet(storeSeparationTime),
+        cut.handleFlowControl(FlowStatus::CTS, 0, false, 2));
+    EXPECT_EQ(TransmitState::SEND, cut.getState());
+    EXPECT_EQ(TransmitTimeout::TX_CALLBACK, cut.getTimeout());
+}
+
+TEST(DoCanMessageTransmitProtocolHandlerTest, testFlowControlWaitAfterEarlyWaitIsCounted)
+{
+    TransmitProtocolHandler cut(3U);
+    EXPECT_EQ(TransmitResult(true), cut.start());
+    EXPECT_EQ(TransmitResult(true), cut.frameSending());
+    // FC.WAIT arrives before the transmit callback of the first frame
+    EXPECT_EQ(TransmitResult(false), cut.handleFlowControl(FlowStatus::WAIT, 1, true, 2));
+    EXPECT_EQ(TransmitResult(true), cut.framesSent(1U));
+    EXPECT_EQ(TransmitResult(true), cut.handleFlowControl(FlowStatus::WAIT, 1, true, 2));
+    EXPECT_EQ(TransmitState::WAIT, cut.getState());
+    EXPECT_EQ(TransmitTimeout::FLOW_CONTROL, cut.getTimeout());
+    EXPECT_EQ(
+        TransmitResult(true).setMessage(TransmitMessage::FLOW_CONTROL_WAIT_COUNT_EXCEEDED),
+        cut.handleFlowControl(FlowStatus::WAIT, 1, true, 2));
+    EXPECT_EQ(TransmitState::FAIL, cut.getState());
+}
+
 TEST(DoCanMessageTransmitProtocolHandlerTest, testStateSendForConsecutiveFrames)
 {
     TransmitProtocolHandler cut(3U);

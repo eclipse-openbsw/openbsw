@@ -363,7 +363,8 @@ DoCanMessageTransmitProtocolHandler<FrameIndexType>::framesSent(FrameIndexType c
         case FlowControl::RECEIVED_WAIT:
         case FlowControl::EXPECTED:
         {
-            return setState(TransmitState::WAIT, _flowControl, TransmitTimeout::FLOW_CONTROL);
+            return setState(
+                TransmitState::WAIT, FlowControl::EXPECTED, TransmitTimeout::FLOW_CONTROL);
         }
         default:
         {
