@@ -285,11 +285,18 @@ DiagReturnCode::Type IncomingDiagConnection::startNestedRequest(
     --_numPendingMessageProcessedCallbacks;
     if (_sender != nullptr)
     {
-        AbstractDiagJob* const pSender = _sender;
-        _sender                        = nullptr;
+        AbstractDiagJob* const pSender       = _sender;
+        _sender                              = nullptr;
         // responseSent() implementations call connection.terminate() first, which may
         // destroy this connection; must not touch `this` afterward
+        _senderResponseSentCallbackIsRunning = true;
         pSender->responseSent(*this, AbstractDiagJob::RESPONSE_SEND_FAILED);
+        _senderResponseSentCallbackIsRunning = false;
+        if (_connectionTerminationIsPending && (_numPendingMessageProcessedCallbacks == 0U)
+            && isOpen)
+        {
+            terminate();
+        }
         return ::uds::ErrorCode::SEND_FAILED;
     }
     if (_connectionTerminationIsPending && (0U == _numPendingMessageProcessedCallbacks))
@@ -531,16 +538,23 @@ void IncomingDiagConnection::asyncTransportMessageProcessed(
     {
         if (pTransportMessage != &_pendingMessage)
         {
-            AbstractDiagJob* const pSender = _sender;
-            _sender                        = nullptr;
+            AbstractDiagJob* const pSender       = _sender;
+            _sender                              = nullptr;
             // responseSent() implementations call connection.terminate() first, which may
             // destroy this connection (returned to the pool); this must be the last access
             // to `this` on this path
+            _senderResponseSentCallbackIsRunning = true;
             pSender->responseSent(
                 *this,
                 (status == ProcessingResult::PROCESSED_NO_ERROR)
                     ? AbstractDiagJob::RESPONSE_SENT
                     : AbstractDiagJob::RESPONSE_SEND_FAILED);
+            _senderResponseSentCallbackIsRunning = false;
+            if (_connectionTerminationIsPending && (_numPendingMessageProcessedCallbacks == 0U)
+                && isOpen)
+            {
+                terminate();
+            }
             return;
         }
         // a response is pending and responsePending has been sent
@@ -701,6 +715,11 @@ void IncomingDiagConnection::open(bool const activatePending)
 
 void IncomingDiagConnection::terminate()
 {
+    if (_senderResponseSentCallbackIsRunning)
+    {
+        _connectionTerminationIsPending = true;
+        return;
+    }
     if (!terminateNestedRequest())
     {
         return;

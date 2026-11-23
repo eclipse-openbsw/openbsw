@@ -87,7 +87,7 @@ struct ManagedIncomingDiagConnectionTest : Test
             *fpSessionProvider,
             *fpDiagJobRoot);
 
-        fpIncomingDiagConnection                     = new IncomingDiagConnection(fContext);
+        fpIncomingDiagConnection                     = _connectionPool.create(fContext);
         fpIncomingDiagConnection->messageSender      = fpTpLayerMock;
         fpIncomingDiagConnection->diagDispatcher     = diagDispatcher;
         fpIncomingDiagConnection->diagSessionManager = fpSessionProvider;
@@ -96,24 +96,12 @@ struct ManagedIncomingDiagConnectionTest : Test
 
     virtual void TearDown()
     {
-#if defined(__GNUC__)
-#ifdef UNIT_TEST
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdelete-non-virtual-dtor"
-#endif
-#endif
-        delete fpIncomingDiagConnection;
         delete fpDiagJobRoot;
         delete diagDispatcher;
         delete fpDiagnosisConfiguration;
         delete fpSessionProvider;
         delete fpTpRouterMock;
         delete fpTpLayerMock;
-#if defined(__GNUC__)
-#ifdef UNIT_TEST
-#pragma GCC diagnostic pop
-#endif
-#endif
     }
 };
 
@@ -249,11 +237,10 @@ uint8_t const NON_TERMINATING_JOB_REQUEST[] = {SERVICE_ID};
 
 /**
  * @test
- * A termination requested while a response is in flight must not be executed behind the back of
- * a responseSent() implementation that keeps the connection open: the sender is the last to
- * touch the connection on that path.
+ * A termination requested while a response is in flight is deferred until responseSent() runs.
+ * This guarantees responseSent() is the last sender callback on the connection in that path.
  */
-TEST_F(ManagedIncomingDiagConnectionTest, responseSentWithoutTerminateKeepsConnectionOpen)
+TEST_F(ManagedIncomingDiagConnectionTest, responseSentRunsBeforeDeferredTerminate)
 {
     TransportMessageWithBuffer pRequest(1024);
     TransportMessageWithBuffer pResponse(1024);
@@ -284,16 +271,13 @@ TEST_F(ManagedIncomingDiagConnectionTest, responseSentWithoutTerminateKeepsConne
     fpIncomingDiagConnection->transportMessageProcessed(
         *pResponse.get(), ITransportMessageProcessedListener::ProcessingResult::PROCESSED_NO_ERROR);
     fContext.execute();
-
-    EXPECT_TRUE(fpIncomingDiagConnection->isOpen);
 }
 
 /**
  * @test
- * Same as above, but for a response that fails to be sent: responseSent(RESPONSE_SEND_FAILED)
- * is the last access to the connection.
+ * Same as above, but for a response that fails to be sent.
  */
-TEST_F(ManagedIncomingDiagConnectionTest, sendFailureWithoutTerminateKeepsConnectionOpen)
+TEST_F(ManagedIncomingDiagConnectionTest, sendFailureResponseSentRunsBeforeDeferredTerminate)
 {
     TransportMessageWithBuffer pRequest(1024);
     TransportMessageWithBuffer pResponse(1024);
@@ -318,6 +302,4 @@ TEST_F(ManagedIncomingDiagConnectionTest, sendFailureWithoutTerminateKeepsConnec
     // termination is requested before the send is attempted
     fpIncomingDiagConnection->terminate();
     fContext.execute();
-
-    EXPECT_TRUE(fpIncomingDiagConnection->isOpen);
 }

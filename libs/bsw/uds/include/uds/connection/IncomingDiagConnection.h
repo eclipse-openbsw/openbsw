@@ -275,6 +275,7 @@ private:
     AbstractDiagJob* _sender                     = nullptr;
     uint8_t _numPendingMessageProcessedCallbacks = 0U;
     bool _connectionTerminationIsPending         = false;
+    bool _senderResponseSentCallbackIsRunning    = false;
     bool _suppressPositiveResponse               = false;
     bool _pendingActivated                       = true;
     bool _responsePendingIsPending               = false;
