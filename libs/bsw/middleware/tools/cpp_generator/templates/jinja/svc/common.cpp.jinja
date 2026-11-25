@@ -11,7 +11,9 @@
 #include "{{ service.commonInclude }}"
 
 #include <etl/array.h>
+#include <etl/type_traits.h>
 
+#include "middleware/ClusterId.h"
 #include "middleware/svc/core/InstancesDatabase.h"
 
 {% set deploymentClusters = [] %}
@@ -37,23 +39,6 @@
 #include "middleware/{{ cluster.name }}Cluster.h"
 {% endfor %}
 
-{# ProxyBase::initFromInstancesDatabase() picks the first database entry whose instance ids match,
-   regardless of which cluster is calling init(). For services with multiple consumer clusters sharing
-   the same provided instance, every per-cluster database below must therefore expose the combined set
-   of proxy connections from all consumer clusters, so the caller's own connection can still be found. #}
-{% set allProxyConnections = [] %}
-{% for cluster in deploymentClusters %}
-  {% for connection in connections %}
-    {% if connection.sourceCluster.name == cluster.name %}
-      {% for consumer in connection.consumers %}
-        {% if consumer.name == service.name and consumer.namespace == service.namespace and connection not in allProxyConnections %}
-          {% set _ = allProxyConnections.append(connection) %}
-        {% endif %}
-      {% endfor %}
-    {% endif %}
-  {% endfor %}
-{% endfor %}
-
 namespace {{ service.namespace | lower }}::{{ service.name }}::internal
 {
 
@@ -66,20 +51,10 @@ namespace {{ service.namespace | lower }}::{{ service.name }}::internal
           {% endif %}
       {% endfor %}
   {% endfor %}
-  {% for connection in connections %}
-    {% if connection.sourceCluster.name == cluster.name %}
-      {% for componentInstance in connection.targetCluster.componentInstances %}
-        {% for providedPort in componentInstance.component.providedPorts %}
-          {% if providedPort.interfaceName == service.name and providedPort.interfaceNamespace == service.namespace %}
-            {% set _ = ns.instanceNames.append((connection.targetCluster.name | pascalCase) ~ (componentInstance.instanceName | pascalCase ) ~ (providedPort.name | pascalCase)) %}
-          {% endif %}
-        {% endfor %}
-      {% endfor %}
-    {% endif %}
-  {% endfor %}
   {% set ns.instanceNames = ns.instanceNames | unique | sort %}
 
-  {# Find skeleton connections for this provider cluster (dedupe: a connection may list the same service multiple times) #}
+  {# Skeletons of this cluster serve every cluster this cluster provides the service to.
+     Dedupe: a connection may list the same service multiple times. #}
   {% set skeletonConnections = [] %}
   {% for connection in connections %}
     {% if connection.sourceCluster.name == cluster.name %}
@@ -91,11 +66,29 @@ namespace {{ service.namespace | lower }}::{{ service.name }}::internal
     {% endif %}
   {% endfor %}
 
+  {# Proxies of this cluster reach the providers hosted by the target cluster of each connection. #}
+  {% set proxyConnections = [] %}
+  {% for connection in connections %}
+    {% if connection.sourceCluster.name == cluster.name %}
+      {% for consumer in connection.consumers %}
+        {% if consumer.name == service.name and consumer.namespace == service.namespace and connection not in proxyConnections %}
+          {% set _ = proxyConnections.append(connection) %}
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+  {% endfor %}
+
 class InstancesDatabase{{ cluster.name }} : public ::middleware::svc::core::IInstanceDatabase
 {
   public:
     constexpr InstancesDatabase{{ cluster.name }}() = default;
-    ::etl::span<::middleware::svc::core::IClusterConnection* const> getSkeletonConnectionsRange() const override
+
+    uint8_t getClusterId() const final
+    {
+        return etl::to_underlying(::middleware::svc::core::ClusterId::{{ cluster.name }});
+    }
+
+    ::etl::span<::middleware::svc::core::IClusterConnection* const> getSkeletonConnectionsRange() const final
     {
   {% if skeletonConnections %}
         static constexpr ::etl::array<::middleware::svc::core::IClusterConnection* const, {{ skeletonConnections | length }}U> connections = {
@@ -109,21 +102,41 @@ class InstancesDatabase{{ cluster.name }} : public ::middleware::svc::core::IIns
   {% endif %}
     }
 
-    ::etl::span<::middleware::svc::core::IClusterConnection* const> getProxyConnectionsRange() const override
+    /** Resolves the connection towards the cluster that hosts \p instanceId. */
+    ::middleware::svc::core::IClusterConnection* getProxyConnection(
+  {% if proxyConnections %}
+        uint16_t const instanceId) const final
     {
-  {% if allProxyConnections %}
-        static constexpr ::etl::array<::middleware::svc::core::IClusterConnection* const, {{ allProxyConnections | length }}U> connections = {
-      {% for connection in allProxyConnections %}
-            &::middleware::ClusterConnection{{ connection.sourceCluster.name }}To{{ connection.targetCluster.name }}{{ "," if not loop.last }}
+        switch (instanceId)
+        {
+      {% for connection in proxyConnections %}
+        {% set targetInstances = [] %}
+        {% for componentInstance in connection.targetCluster.componentInstances %}
+          {% for providedPort in componentInstance.component.providedPorts %}
+            {% if providedPort.interfaceName == service.name and providedPort.interfaceNamespace == service.namespace %}
+              {% set _ = targetInstances.append((connection.targetCluster.name | pascalCase) ~ (componentInstance.instanceName | pascalCase) ~ (providedPort.name | pascalCase)) %}
+            {% endif %}
+          {% endfor %}
+        {% endfor %}
+        {% for instanceName in targetInstances | unique | sort %}
+            case InstanceId::{{ instanceName | pascalCase }}:
+        {% endfor %}
+        {% if targetInstances %}
+                return &::middleware::ClusterConnection{{ connection.sourceCluster.name }}To{{ connection.targetCluster.name }};
+        {% endif %}
       {% endfor %}
-        };
-        return ::etl::make_span(connections);
-  {% else %}
-        return ::etl::span<::middleware::svc::core::IClusterConnection* const>();
-  {% endif %}
+            default:
+                return nullptr;
+        }
     }
+  {% else %}
+        uint16_t const) const final
+    {
+        return nullptr;
+    }
+  {% endif %}
 
-    ::etl::span<const uint16_t> getInstanceIdsRange() const override
+    ::etl::span<const uint16_t> getOwnInstanceIdsRange() const final
     {
         return ::etl::make_span(fInstanceIds);
     }

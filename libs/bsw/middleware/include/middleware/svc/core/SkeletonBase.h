@@ -78,8 +78,8 @@ protected:
 
     /**
      * Initialize the skeleton from the instances database.
-     * Looks up the cluster connections for the specified instance ID in the given
-     * database range and initializes the skeleton accordingly.
+     * Selects the database that owns \p instanceId and subscribes to all cluster connections
+     * that database holds for skeletons.
      *
      * \param instanceId the service instance ID to initialize for
      * \param dbRange span of instance database pointers to search

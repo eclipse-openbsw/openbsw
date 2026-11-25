@@ -279,4 +279,94 @@ TEST_F(ProxyBaseDeathTest, TestCheckCrossThreadErrorAbort)
     });
 }
 
+/**
+ * @brief Services deployed in several clusters
+ *        Test cases:
+ *        - The database of the requested source cluster is selected
+ *        - The connection towards the cluster hosting the instance is selected
+ */
+TEST(ProxyBaseMultiClusterTest, TestInitSelectsConnectionOfSourceClusterTowardsInstance)
+{
+    // ARRANGE
+    struct MultiClusterProxy : Proxy
+    {
+        HRESULT initFrom(
+            uint16_t const instanceId,
+            uint8_t const sourceCluster,
+            ::etl::span<IInstanceDatabase const* const> const& databases)
+        {
+            return initFromInstancesDatabase(instanceId, sourceCluster, databases);
+        }
+
+        IClusterConnection* connection() const { return _connection; }
+    };
+
+    constexpr uint16_t instanceInCluster0 = 10U;
+    constexpr uint16_t instanceInCluster1 = 20U;
+    RoutedClusterConnection connection0To0{0U, 0U};
+    RoutedClusterConnection connection0To1{0U, 1U};
+    RoutedClusterConnection connection1To0{1U, 0U};
+    RoutedClusterConnection connection1To1{1U, 1U};
+    ::etl::array<ProxyRoute, 2U> const routes0{
+        {{instanceInCluster0, &connection0To0}, {instanceInCluster1, &connection0To1}}};
+    ::etl::array<ProxyRoute, 2U> const routes1{
+        {{instanceInCluster0, &connection1To0}, {instanceInCluster1, &connection1To1}}};
+    ClusterInstancesDatabase const database0{0U, {}, {}, routes0};
+    ClusterInstancesDatabase const database1{1U, {}, {}, routes1};
+    ::etl::array<IInstanceDatabase const*, 2U> const databases{{&database0, &database1}};
+    ::etl::span<IInstanceDatabase const* const> const span(databases);
+    MultiClusterProxy proxy;
+
+    // ACT & ASSERT
+    EXPECT_EQ(proxy.initFrom(instanceInCluster0, 0U, span), HRESULT::Ok);
+    EXPECT_EQ(proxy.connection(), &connection0To0);
+    EXPECT_EQ(proxy.initFrom(instanceInCluster1, 0U, span), HRESULT::Ok);
+    EXPECT_EQ(proxy.connection(), &connection0To1);
+    EXPECT_EQ(proxy.initFrom(instanceInCluster0, 1U, span), HRESULT::Ok);
+    EXPECT_EQ(proxy.connection(), &connection1To0);
+    EXPECT_EQ(proxy.initFrom(instanceInCluster1, 1U, span), HRESULT::Ok);
+    EXPECT_EQ(proxy.connection(), &connection1To1);
+}
+
+/**
+ * @brief Instance deployed in a cluster that the source cluster has no route to
+ *        Test cases:
+ *        - HRESULT::InstanceNotFound is returned and the proxy stays uninitialized
+ */
+TEST_F(ProxyBaseTest, TestInitWithInstanceUnreachableFromSourceCluster)
+{
+    // ARRANGE
+    struct MultiClusterProxy : Proxy
+    {
+        HRESULT initFrom(
+            uint16_t const instanceId,
+            uint8_t const sourceCluster,
+            ::etl::span<IInstanceDatabase const* const> const& databases)
+        {
+            return initFromInstancesDatabase(instanceId, sourceCluster, databases);
+        }
+    };
+
+    constexpr uint16_t unreachableInstance = 20U;
+    RoutedClusterConnection connection1To1{1U, 1U};
+    ::etl::array<ProxyRoute, 1U> const routes1{{{unreachableInstance, &connection1To1}}};
+    ClusterInstancesDatabase const database0{0U, {}, {}, {}};
+    ClusterInstancesDatabase const database1{1U, {}, {}, routes1};
+    ::etl::array<IInstanceDatabase const*, 2U> const databases{{&database0, &database1}};
+    ::etl::span<IInstanceDatabase const* const> const span(databases);
+    MultiClusterProxy proxy;
+
+    _loggerMock.EXPECT_EVENT_LOG(
+        logger::LogLevel::Critical,
+        logger::Error::ProxyInitialization,
+        HRESULT::InstanceNotFound,
+        static_cast<uint8_t>(0U),
+        proxy.getServiceId(),
+        unreachableInstance);
+
+    // ACT & ASSERT
+    EXPECT_EQ(proxy.initFrom(unreachableInstance, 0U, span), HRESULT::InstanceNotFound);
+    EXPECT_FALSE(proxy.isInitialized());
+}
+
 } // namespace middleware::svc::core::test

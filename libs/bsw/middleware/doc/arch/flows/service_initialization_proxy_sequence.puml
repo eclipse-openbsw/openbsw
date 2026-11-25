@@ -23,25 +23,23 @@ activate cluster_connection_unit
 
 generated_proxy -> proxy_skeleton_base_unit : initFromInstancesDatabase(instanceId, sourceCluster, dbRange)
 proxy_skeleton_base_unit -> proxy_skeleton_base_unit : unsubscribe previous connection
-proxy_skeleton_base_unit -> proxy_skeleton_base_unit : iterate through dbRange
-proxy_skeleton_base_unit -> instance_database_unit : getInstanceIdsRange()
-instance_database_unit --> proxy_skeleton_base_unit : instanceIds[]
+proxy_skeleton_base_unit -> instance_database_unit : getClusterId() for each database in dbRange
+instance_database_unit --> proxy_skeleton_base_unit : clusterId
 
-alt instance found in database
-    proxy_skeleton_base_unit -> instance_database_unit : getProxyConnectionsRange()
-    instance_database_unit --> proxy_skeleton_base_unit : connections[]
-    proxy_skeleton_base_unit -> proxy_skeleton_base_unit : find connection matching sourceCluster
-    alt matching connection found
+alt database of sourceCluster found
+    proxy_skeleton_base_unit -> instance_database_unit : getProxyConnection(instanceId)
+    instance_database_unit --> proxy_skeleton_base_unit : connection towards the cluster hosting instanceId
+    alt connection found
         proxy_skeleton_base_unit -> cluster_connection_unit : subscribe(proxy, instanceId)
         cluster_connection_unit -> cluster_connection_unit : register proxy in transceivers
         cluster_connection_unit --> proxy_skeleton_base_unit : HRESULT::Ok
         proxy_skeleton_base_unit -> proxy_skeleton_base_unit : store connection reference
         proxy_skeleton_base_unit --> generated_proxy : HRESULT::Ok
-    else no matching connection
-        proxy_skeleton_base_unit -> proxy_skeleton_base_unit : logError(TransceiverInitializationFailed)
-        proxy_skeleton_base_unit --> generated_proxy : HRESULT::TransceiverInitializationFailed
+    else instance not reachable from sourceCluster
+        proxy_skeleton_base_unit -> proxy_skeleton_base_unit : logError(InstanceNotFound)
+        proxy_skeleton_base_unit --> generated_proxy : HRESULT::InstanceNotFound
     end
-else instance not found
+else database of sourceCluster not found
     proxy_skeleton_base_unit -> proxy_skeleton_base_unit : logError(TransceiverInitializationFailed)
     proxy_skeleton_base_unit --> generated_proxy : HRESULT::TransceiverInitializationFailed
 end

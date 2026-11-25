@@ -60,41 +60,23 @@ ProxyBase::initFromInstancesDatabase(
     auto const* databaseEntry = ::etl::find_if(
         dbRange.begin(),
         dbRange.end(),
-        [instanceId](IInstanceDatabase const* const dataBase) -> bool
-        {
-            auto const instances = dataBase->getInstanceIdsRange();
-            auto const* instanceIdIt
-                = ::etl::lower_bound(instances.begin(), instances.end(), instanceId);
-            return (
-                (instanceIdIt != instances.end()) && ((*instanceIdIt) == instanceId)
-                && (!dataBase->getProxyConnectionsRange().empty()));
-        });
+        [sourceCluster](IInstanceDatabase const* const dataBase) -> bool
+        { return dataBase->getClusterId() == sourceCluster; });
     if (databaseEntry != dbRange.end())
     {
-        auto const proxyCc = (*databaseEntry)->getProxyConnectionsRange();
-        auto const* ccIt   = ::etl::find_if(
-            proxyCc.begin(),
-            proxyCc.end(),
-            [sourceCluster](IClusterConnection const* const clusConn)
-            {
-                if (clusConn != nullptr)
-                {
-                    return (clusConn->getSourceClusterId() == sourceCluster);
-                }
-                return false;
-            });
-        if (ccIt != proxyCc.end())
+        auto* const connection = (*databaseEntry)->getProxyConnection(instanceId);
+        if (connection != nullptr)
         {
-            ret = (*ccIt)->subscribe(*this, instanceId);
+            ret = connection->subscribe(*this, instanceId);
             if ((HRESULT::Ok == ret) || (HRESULT::InstanceAlreadyRegistered == ret))
             {
-                _connection = (*ccIt);
+                _connection = connection;
             }
         }
-    }
-    else
-    {
-        ret = HRESULT::InstanceNotFound;
+        else
+        {
+            ret = HRESULT::InstanceNotFound;
+        }
     }
     // only print error when configuration allows for it
     if ((HRESULT::Ok != ret))
