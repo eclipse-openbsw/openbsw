@@ -96,8 +96,8 @@ protected:
 
     /**
      * Initialize the proxy from the instances database.
-     * Looks up the cluster connection for the specified instance ID and source cluster
-     * in the given database range and initializes the proxy accordingly.
+     * Selects the database of \p sourceCluster and subscribes to the connection that database
+     * holds towards the cluster hosting \p instanceId.
      *
      * \param instanceId the service instance ID to initialize for
      * \param sourceCluster the source cluster ID

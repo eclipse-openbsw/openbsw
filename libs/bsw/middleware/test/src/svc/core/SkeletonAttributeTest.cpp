@@ -73,14 +73,16 @@ class InstanceDatabase : public IInstanceDatabase
 public:
     explicit InstanceDatabase(IClusterConnection& connection) : _connections{{&connection}} {}
 
+    uint8_t getClusterId() const override { return 1U; }
+
     ::etl::span<IClusterConnection* const> getSkeletonConnectionsRange() const override
     {
         return _connections;
     }
 
-    ::etl::span<IClusterConnection* const> getProxyConnectionsRange() const override { return {}; }
+    IClusterConnection* getProxyConnection(uint16_t) const override { return nullptr; }
 
-    ::etl::span<uint16_t const> getInstanceIdsRange() const override { return _instanceIds; }
+    ::etl::span<uint16_t const> getOwnInstanceIdsRange() const override { return _instanceIds; }
 
 private:
     ::etl::array<IClusterConnection*, 1U> const _connections;

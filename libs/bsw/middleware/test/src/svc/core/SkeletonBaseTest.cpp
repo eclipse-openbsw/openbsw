@@ -363,4 +363,47 @@ TEST_F(SkeletonBaseTest, TestGetClusterConnectionsFromNotInitSkeleton)
     EXPECT_TRUE(skeleton.getClusterConnections().empty());
 }
 
+/**
+ * @brief A skeleton binds to the database owning its instance, not to one that only reaches it
+ */
+TEST(SkeletonBaseMultiClusterTest, TestInitUsesConnectionsOfDatabaseOwningInstance)
+{
+    // ARRANGE
+    struct MultiClusterSkeleton : Skeleton
+    {
+        HRESULT initFrom(
+            uint16_t const instanceId,
+            ::etl::span<middleware::svc::core::IInstanceDatabase const* const> const& databases)
+        {
+            return initFromInstancesDatabase(instanceId, databases);
+        }
+    };
+
+    constexpr uint16_t instanceInCluster0 = 10U;
+    constexpr uint16_t instanceInCluster1 = 20U;
+    RoutedClusterConnection connection0To0{0U, 0U};
+    RoutedClusterConnection connection0To1{0U, 1U};
+    RoutedClusterConnection connection1To0{1U, 0U};
+    ::etl::array<uint16_t, 1U> const ids0{{instanceInCluster0}};
+    ::etl::array<uint16_t, 1U> const ids1{{instanceInCluster1}};
+    ::etl::array<IClusterConnection*, 2U> const skeletonConnections0{
+        {&connection0To0, &connection0To1}};
+    ::etl::array<IClusterConnection*, 1U> const skeletonConnections1{{&connection1To0}};
+    ClusterInstancesDatabase const database0{0U, ids0, skeletonConnections0, {}};
+    ClusterInstancesDatabase const database1{1U, ids1, skeletonConnections1, {}};
+    ::etl::array<IInstanceDatabase const*, 2U> const databases{{&database0, &database1}};
+    ::etl::span<IInstanceDatabase const* const> const span(databases);
+    MultiClusterSkeleton skeleton0;
+    MultiClusterSkeleton skeleton1;
+
+    // ACT & ASSERT
+    EXPECT_EQ(skeleton0.initFrom(instanceInCluster0, span), HRESULT::Ok);
+    ASSERT_EQ(skeleton0.getClusterConnections().size(), 2U);
+    EXPECT_EQ(skeleton0.getClusterConnections()[0], &connection0To0);
+    EXPECT_EQ(skeleton0.getClusterConnections()[1], &connection0To1);
+    EXPECT_EQ(skeleton1.initFrom(instanceInCluster1, span), HRESULT::Ok);
+    ASSERT_EQ(skeleton1.getClusterConnections().size(), 1U);
+    EXPECT_EQ(skeleton1.getClusterConnections()[0], &connection1To0);
+}
+
 } // namespace middleware::svc::core::test

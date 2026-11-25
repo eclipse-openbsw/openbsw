@@ -15,8 +15,16 @@ components:
       - name: foo
         interfaceName: Foo
         interfaceNamespace: org::test::foo
+    requiredPorts:
+      - name: bar
+        interfaceName: Foo
+        interfaceNamespace: org::test::foo
   - &foo_consumer
     name: FooConsumer
+    providedPorts:
+      - name: foo
+        interfaceName: Foo
+        interfaceNamespace: org::test::foo
     requiredPorts:
       - name: foo
         interfaceName: Foo
@@ -289,19 +297,25 @@ connections:
   - &cluster0_cluster1
     sourceCluster: *cluster0
     targetCluster: *cluster1
-    consumers: []
     providers:
+      - namespace: org::test::foo
+        name: Foo
+        maxInstances: 1
+    consumers:
       - namespace: org::test::foo
         name: Foo
         maxInstances: 1
   - &cluster1_cluster0
     sourceCluster: *cluster1
     targetCluster: *cluster0
+    providers:
+      - namespace: org::test::foo
+        name: Foo
+        maxInstances: 1
     consumers:
       - namespace: org::test::foo
         name: Foo
         maxInstances: 1
-    providers: []
 
 cores:
   - &c0

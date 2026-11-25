@@ -106,7 +106,7 @@ SkeletonBase::initFromInstancesDatabase(
         dbRange.end(),
         [instanceId](IInstanceDatabase const* const dataBase) -> bool
         {
-            auto const instances = dataBase->getInstanceIdsRange();
+            auto const instances = dataBase->getOwnInstanceIdsRange();
             auto const* instanceIdIt
                 = ::etl::lower_bound(instances.begin(), instances.end(), instanceId);
             return (
