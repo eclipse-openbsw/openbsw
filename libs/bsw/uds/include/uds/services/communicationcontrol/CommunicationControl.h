@@ -55,9 +55,13 @@ public:
         REC_NODE_COMMUNICATION_MESSAGES    = 0xF0
     };
 
+    /**
+     * \param supportedControlTypesMask Bit N enables standard control type N (0x00 to 0x05).
+     *        Defaults to all standard control types; vendor-specific dispatch is unchanged.
+     */
     explicit CommunicationControl(
-        DiagSession::DiagSessionMask sessionMask
-        = DiagSession::APPLICATION_EXTENDED_SESSION_MASK());
+        DiagSession::DiagSessionMask sessionMask = DiagSession::APPLICATION_EXTENDED_SESSION_MASK(),
+        uint8_t supportedControlTypesMask        = 0x3FU);
 
     // interface ICommunicationStateManager
     void addCommunicationStateListener(ICommunicationStateListener& listener) override;
@@ -108,6 +112,9 @@ protected:
     using SubListenerList
         = ::etl::intrusive_list<ICommunicationSubStateListener, ::etl::bidirectional_link<0>>;
     SubListenerList fSubListeners;
+
+private:
+    uint8_t const fSupportedControlTypesMask;
 };
 
 } // namespace uds
