@@ -25,7 +25,8 @@ namespace uds
 using ::util::logger::Logger;
 using ::util::logger::UDS;
 
-CommunicationControl::CommunicationControl(DiagSessionMask const sessionMask)
+CommunicationControl::CommunicationControl(
+    DiagSessionMask const sessionMask, uint8_t const supportedControlTypesMask)
 : Service(
     ServiceId::COMMUNICATION_CONTROL,
     AbstractDiagJob::VARIABLE_REQUEST_LENGTH,
@@ -36,6 +37,7 @@ CommunicationControl::CommunicationControl(DiagSessionMask const sessionMask)
 , fNeverNotified(true)
 , fListeners()
 , fSubListeners()
+, fSupportedControlTypesMask(supportedControlTypesMask)
 {
     enableSuppressPositiveResponse();
 }
@@ -136,6 +138,12 @@ DiagReturnCode::Type CommunicationControl::process(
     */
 
     uint8_t const communicationTypeHi = requestView[1U] & 0xF0U;
+
+    if ((controlType <= static_cast<uint8_t>(ENABLE_RX_AND_TX_WITH_ENHANCED_ADDRESS_INFORMATION))
+        && ((fSupportedControlTypesMask & (1U << controlType)) == 0U))
+    {
+        return DiagReturnCode::ISO_SUBFUNCTION_NOT_SUPPORTED;
+    }
 
     if ((((static_cast<uint8_t>(ENABLE_RX_AND_DISABLE_TX_WITH_ENHANCED_ADDRESS_INFORMATION)
            == controlType)

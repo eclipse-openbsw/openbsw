@@ -35,6 +35,8 @@ using namespace ::transport::test;
 class TestCommunicationControl : public CommunicationControl
 {
 public:
+    using CommunicationControl::CommunicationControl;
+
     virtual DiagReturnCode::Type
     process(IncomingDiagConnection& connection, uint8_t const* request, uint16_t requestLength)
     {
@@ -123,6 +125,73 @@ CommunicationControlTest::CommunicationControlTest()
 TEST_F(CommunicationControlTest, VariableLengthConstructor)
 {
     EXPECT_EQ(0x28U, _service.getRequestId());
+}
+
+TEST_F(CommunicationControlTest, ConfiguredControlTypesAcceptEnabledAndRejectDisabled)
+{
+    TestCommunicationControl service(DiagSession::APPLICATION_EXTENDED_SESSION_MASK(), 0x09U);
+    CommunicationControlListener listener(service);
+    std::array<uint8_t, 3U> const enableRxAndTxRequest
+        = {ServiceId::COMMUNICATION_CONTROL, 0x00, 0x01};
+    std::array<uint8_t, 3U> const enableRxAndDisableTxRequest
+        = {ServiceId::COMMUNICATION_CONTROL, 0x01, 0x01};
+    std::array<uint8_t, 3U> const disableRxAndTxRequest
+        = {ServiceId::COMMUNICATION_CONTROL, 0x03, 0x01};
+
+    ASSERT_EQ(DiagReturnCode::OK, processRequest(service, _conn, enableRxAndTxRequest));
+    ASSERT_EQ(ICommunicationStateListener::ENABLE_NORMAL_MESSAGE_TRANSMISSION, listener.fState);
+
+    ASSERT_EQ(
+        DiagReturnCode::ISO_SUBFUNCTION_NOT_SUPPORTED,
+        processRequest(service, _conn, enableRxAndDisableTxRequest));
+    ASSERT_EQ(ICommunicationStateListener::ENABLE_NORMAL_MESSAGE_TRANSMISSION, listener.fState);
+
+    ASSERT_EQ(DiagReturnCode::OK, processRequest(service, _conn, disableRxAndTxRequest));
+    ASSERT_EQ(ICommunicationStateListener::DISABLE_NORMAL_MESSAGE_TRANSMISSION, listener.fState);
+
+    service.removeCommunicationStateListener(listener);
+}
+
+TEST_F(CommunicationControlTest, EachStandardControlTypeCanBeDisabled)
+{
+    for (uint8_t controlType = 0U; controlType <= 5U; ++controlType)
+    {
+        SCOPED_TRACE(controlType);
+        uint8_t const mask = static_cast<uint8_t>(0x3FU & ~(1U << controlType));
+        TestCommunicationControl service(DiagSession::APPLICATION_EXTENDED_SESSION_MASK(), mask);
+        std::array<uint8_t, 4U> const request = {controlType, 0x01, 0x00, 0x01};
+        uint16_t const length                 = controlType < 4U ? 2U : 4U;
+
+        EXPECT_EQ(
+            DiagReturnCode::ISO_SUBFUNCTION_NOT_SUPPORTED,
+            service.process(_conn, request.data(), length));
+        EXPECT_EQ(
+            ICommunicationStateListener::DISABLE_NORMAL_MESSAGE_TRANSMISSION,
+            service.getCommunicationState());
+    }
+}
+
+TEST_F(CommunicationControlTest, EmptyMaskPreservesVendorDispatch)
+{
+    TestCommunicationControl service(DiagSession::APPLICATION_EXTENDED_SESSION_MASK(), 0U);
+    std::array<uint8_t, 2U> request = {0x00, 0x01};
+
+    for (uint8_t controlType : {0x40U, 0x5FU})
+    {
+        SCOPED_TRACE(controlType);
+        request[0] = controlType;
+        EXPECT_EQ(
+            DiagReturnCode::NOT_RESPONSIBLE,
+            service.process(_conn, request.data(), request.size()));
+    }
+    for (uint8_t controlType : {0x06U, 0x3FU, 0x60U, 0xFFU})
+    {
+        SCOPED_TRACE(controlType);
+        request[0] = controlType;
+        EXPECT_EQ(
+            DiagReturnCode::ISO_SUBFUNCTION_NOT_SUPPORTED,
+            service.process(_conn, request.data(), request.size()));
+    }
 }
 
 TEST_F(CommunicationControlTest, Returns_ISO_INVALID_FORMAT)
