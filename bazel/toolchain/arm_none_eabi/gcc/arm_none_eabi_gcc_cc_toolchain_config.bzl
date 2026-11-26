@@ -20,6 +20,7 @@ load(
     "tool_path",
 )
 load("@rules_cc//cc/common:cc_common.bzl", "cc_common")
+load("@rules_cc//cc/toolchains:cc_toolchain_config_info.bzl", "CcToolchainConfigInfo")
 
 _ALL_C_COMPILE_ACTIONS = [
     ACTION_NAMES.c_compile,
