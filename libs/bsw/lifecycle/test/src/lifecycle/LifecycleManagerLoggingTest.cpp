@@ -203,9 +203,9 @@ TEST_F(LifecycleManagerLoggingTest, ShutdownCompletionWaitsForEveryComponent)
 }
 
 /**
- * Empty intermediate level completions use INFO in either direction.
+ * Empty intermediate level completions are omitted at INFO in either direction.
  */
-TEST_F(LifecycleManagerLoggingTest, InfoIncludesEmptyIntermediateLevels)
+TEST_F(LifecycleManagerLoggingTest, InfoSkipsEmptyIntermediateLevels)
 {
     addComponent("first", _first, 1U);
     addComponent("second", _second, 3U);
@@ -218,19 +218,16 @@ TEST_F(LifecycleManagerLoggingTest, InfoIncludesEmptyIntermediateLevels)
         ElementsAre(
             Record(LEVEL_INFO, "Initialize level 1 done current=0 target=3"),
             Record(LEVEL_INFO, "Run level 1 done current=1 target=3"),
-            Record(LEVEL_INFO, "Initialize level 2 done current=1 target=3"),
-            Record(LEVEL_INFO, "Run level 2 done current=2 target=3"),
             Record(LEVEL_INFO, "Initialize level 3 done current=2 target=3"),
             Record(LEVEL_INFO, "Run level 3 done current=3 target=3"),
             Record(LEVEL_INFO, "Shutdown level 3 done current=2 target=0"),
-            Record(LEVEL_INFO, "Shutdown level 2 done current=1 target=0"),
             Record(LEVEL_INFO, "Shutdown level 1 done current=0 target=0")));
 }
 
 /**
- * Empty level starts use DEBUG while all completions remain INFO.
+ * Empty level starts and intermediate completions use DEBUG.
  */
-TEST_F(LifecycleManagerLoggingTest, DebugIncludesEmptyLevelStartsAndInfoCompletions)
+TEST_F(LifecycleManagerLoggingTest, DebugIncludesEmptyLevelStartsAndCompletions)
 {
     _threshold = LEVEL_DEBUG;
 
@@ -241,21 +238,21 @@ TEST_F(LifecycleManagerLoggingTest, DebugIncludesEmptyLevelStartsAndInfoCompleti
         _records,
         ElementsAre(
             Record(LEVEL_DEBUG, "Initialize level 1"),
-            Record(LEVEL_INFO, "Initialize level 1 done current=0 target=3"),
+            Record(LEVEL_DEBUG, "Initialize level 1 done current=0 target=3"),
             Record(LEVEL_DEBUG, "Run level 1"),
-            Record(LEVEL_INFO, "Run level 1 done current=1 target=3"),
+            Record(LEVEL_DEBUG, "Run level 1 done current=1 target=3"),
             Record(LEVEL_DEBUG, "Initialize level 2"),
-            Record(LEVEL_INFO, "Initialize level 2 done current=1 target=3"),
+            Record(LEVEL_DEBUG, "Initialize level 2 done current=1 target=3"),
             Record(LEVEL_DEBUG, "Run level 2"),
-            Record(LEVEL_INFO, "Run level 2 done current=2 target=3"),
+            Record(LEVEL_DEBUG, "Run level 2 done current=2 target=3"),
             Record(LEVEL_DEBUG, "Initialize level 3"),
-            Record(LEVEL_INFO, "Initialize level 3 done current=2 target=3"),
+            Record(LEVEL_DEBUG, "Initialize level 3 done current=2 target=3"),
             Record(LEVEL_DEBUG, "Run level 3"),
             Record(LEVEL_INFO, "Run level 3 done current=3 target=3"),
             Record(LEVEL_DEBUG, "Shutdown level 3"),
-            Record(LEVEL_INFO, "Shutdown level 3 done current=2 target=0"),
+            Record(LEVEL_DEBUG, "Shutdown level 3 done current=2 target=0"),
             Record(LEVEL_DEBUG, "Shutdown level 2"),
-            Record(LEVEL_INFO, "Shutdown level 2 done current=1 target=0"),
+            Record(LEVEL_DEBUG, "Shutdown level 2 done current=1 target=0"),
             Record(LEVEL_DEBUG, "Shutdown level 1"),
             Record(LEVEL_INFO, "Shutdown level 1 done current=0 target=0")));
 }
@@ -271,14 +268,7 @@ TEST_F(LifecycleManagerLoggingTest, InfoIncludesEmptyFinalTargets)
     EXPECT_THAT(
         _records,
         ElementsAre(
-            Record(LEVEL_INFO, "Initialize level 1 done current=0 target=3"),
-            Record(LEVEL_INFO, "Run level 1 done current=1 target=3"),
-            Record(LEVEL_INFO, "Initialize level 2 done current=1 target=3"),
-            Record(LEVEL_INFO, "Run level 2 done current=2 target=3"),
-            Record(LEVEL_INFO, "Initialize level 3 done current=2 target=3"),
             Record(LEVEL_INFO, "Run level 3 done current=3 target=3"),
-            Record(LEVEL_INFO, "Shutdown level 3 done current=2 target=0"),
-            Record(LEVEL_INFO, "Shutdown level 2 done current=1 target=0"),
             Record(LEVEL_INFO, "Shutdown level 1 done current=0 target=0")));
 }
 
@@ -296,9 +286,6 @@ TEST_F(LifecycleManagerLoggingTest, InfoIncludesEmptyRunTargetAfterComponentProg
         ElementsAre(
             Record(LEVEL_INFO, "Initialize level 1 done current=0 target=3"),
             Record(LEVEL_INFO, "Run level 1 done current=1 target=3"),
-            Record(LEVEL_INFO, "Initialize level 2 done current=1 target=3"),
-            Record(LEVEL_INFO, "Run level 2 done current=2 target=3"),
-            Record(LEVEL_INFO, "Initialize level 3 done current=2 target=3"),
             Record(LEVEL_INFO, "Run level 3 done current=3 target=3")));
 }
 
@@ -389,9 +376,6 @@ TEST_F(LifecycleManagerLoggingTest, CompletionReportsRetargetedLevel)
         _records,
         ElementsAre(
             Record(LEVEL_INFO, "Run level 1 done current=1 target=3"),
-            Record(LEVEL_INFO, "Initialize level 2 done current=1 target=3"),
-            Record(LEVEL_INFO, "Run level 2 done current=2 target=3"),
-            Record(LEVEL_INFO, "Initialize level 3 done current=2 target=3"),
             Record(LEVEL_INFO, "Run level 3 done current=3 target=3")));
 }
 
@@ -411,9 +395,7 @@ TEST_F(LifecycleManagerLoggingTest, ListenerRetargetingPreservesProgression)
     EXPECT_THAT(
         _records,
         ElementsAre(
-            Record(LEVEL_INFO, "Initialize level 1 done current=0 target=1"),
             Record(LEVEL_INFO, "Run level 1 done current=1 target=1"),
-            Record(LEVEL_INFO, "Initialize level 2 done current=1 target=2"),
             Record(LEVEL_INFO, "Run level 2 done current=2 target=2")));
 }
 

@@ -176,10 +176,16 @@ bool LifecycleManager::checkLevelTransitionDone()
             return false;
         }
     }
-    _isTransitionPending = false;
+    _isTransitionPending         = false;
+    auto const isFinalTransition = (_transition != ILifecycleComponent::Transition::Type::INIT)
+                                   && (_currentLevel == _targetLevel);
+    auto const logLevel = (_componentTransitionExecutors.empty() && !isFinalTransition)
+                              ? ::util::logger::LEVEL_DEBUG
+                              : ::util::logger::LEVEL_INFO;
     // NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg): Logger API is variadic by design.
-    Logger::info(
+    Logger::log(
         LIFECYCLE,
+        logLevel,
         "%s level %u done current=%u target=%u",
         getTransitionString(_transition),
         static_cast<unsigned>(_transitionLevel),

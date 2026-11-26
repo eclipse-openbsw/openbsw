@@ -70,9 +70,10 @@ Lifecycle Logger
 ----------------
 The logging component ``::util::logger::LIFECYCLE`` can be used to perform lifecycle transition logging.
 
-At INFO, the manager logs completion of every INIT, RUN, or SHUTDOWN transition
-level, including levels with no components. Level starts and component starts
-and completions use DEBUG.
+At INFO, the manager logs completion of transitions for levels with components.
+It also logs final RUN and SHUTDOWN completions at INFO, even for empty levels.
+Other empty-level completions, level starts, and component starts and completions
+use DEBUG.
 
 Completion records have the following form:
 
@@ -90,8 +91,8 @@ snapshot of the original request; a new request can change it during a transitio
 
 A level completion is logged only after every pending component in that level
 has completed. The record is emitted before lifecycle listeners are notified, so
-a listener performing a final logger drain can include it. INIT completion does
-not notify lifecycle listeners.
+a listener performing a final logger drain can include it if the log level is enabled.
+INIT completion does not notify lifecycle listeners.
 
 These summaries reduce routine lifecycle log volume and expose completion at
 INFO; they do not guarantee lossless logging. The application's logger formatter
