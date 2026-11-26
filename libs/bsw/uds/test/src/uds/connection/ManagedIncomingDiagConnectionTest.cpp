@@ -87,7 +87,7 @@ struct ManagedIncomingDiagConnectionTest : Test
             *fpSessionProvider,
             *fpDiagJobRoot);
 
-        fpIncomingDiagConnection                     = new IncomingDiagConnection(fContext);
+        fpIncomingDiagConnection                     = _connectionPool.create(fContext);
         fpIncomingDiagConnection->messageSender      = fpTpLayerMock;
         fpIncomingDiagConnection->diagDispatcher     = diagDispatcher;
         fpIncomingDiagConnection->diagSessionManager = fpSessionProvider;
@@ -96,24 +96,12 @@ struct ManagedIncomingDiagConnectionTest : Test
 
     virtual void TearDown()
     {
-#if defined(__GNUC__)
-#ifdef UNIT_TEST
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdelete-non-virtual-dtor"
-#endif
-#endif
-        delete fpIncomingDiagConnection;
         delete fpDiagJobRoot;
         delete diagDispatcher;
         delete fpDiagnosisConfiguration;
         delete fpSessionProvider;
         delete fpTpRouterMock;
         delete fpTpLayerMock;
-#if defined(__GNUC__)
-#ifdef UNIT_TEST
-#pragma GCC diagnostic pop
-#endif
-#endif
     }
 };
 
@@ -226,5 +214,92 @@ TEST_F(ManagedIncomingDiagConnectionTest, sendPositiveResponse)
         .WillOnce(Return(AbstractTransportLayer::ErrorCode::TP_OK));
     fpIncomingDiagConnection->responseMessage = pExpectedResponse.get();
     fpIncomingDiagConnection->sendPositiveResponse(sender);
+    fContext.execute();
+}
+
+namespace
+{
+// Job whose responseSent() deliberately does not terminate the connection (multi-response use
+// case).
+struct NonTerminatingJob : public DiagJobMock
+{
+    using DiagJobMock::DiagJobMock;
+
+    MOCK_METHOD(
+        void,
+        responseSent,
+        (IncomingDiagConnection&, AbstractDiagJob::ResponseSendResult),
+        (override));
+};
+
+uint8_t const NON_TERMINATING_JOB_REQUEST[] = {SERVICE_ID};
+} // namespace
+
+/**
+ * @test
+ * A termination requested while a response is in flight is deferred until responseSent() runs.
+ * This guarantees responseSent() is the last sender callback on the connection in that path.
+ */
+TEST_F(ManagedIncomingDiagConnectionTest, responseSentRunsBeforeDeferredTerminate)
+{
+    TransportMessageWithBuffer pRequest(1024);
+    TransportMessageWithBuffer pResponse(1024);
+    fpIncomingDiagConnection->sourceAddress         = TESTER_ID;
+    fpIncomingDiagConnection->targetAddress         = DIAGNOSIS_ID;
+    fpIncomingDiagConnection->responseSourceAddress = DIAGNOSIS_ID;
+    fpIncomingDiagConnection->serviceId             = SERVICE_ID;
+    fpIncomingDiagConnection->requestMessage        = pRequest.get();
+    fpIncomingDiagConnection->open(false);
+    fpIncomingDiagConnection->addIdentifier();
+    fpIncomingDiagConnection->releaseRequestGetResponse().appendUint8(1);
+    fpIncomingDiagConnection->responseMessage = pResponse.get();
+
+    NonTerminatingJob sender(NON_TERMINATING_JOB_REQUEST, sizeof(NON_TERMINATING_JOB_REQUEST), 0);
+    EXPECT_CALL(*fpSessionProvider, responseSent(_, _, _, _)).Times(1);
+    EXPECT_CALL(*fpTpLayerMock, send(_, Eq(fpIncomingDiagConnection)))
+        .WillOnce(Return(AbstractTransportLayer::ErrorCode::TP_OK));
+    ASSERT_EQ(ErrorCode::OK, fpIncomingDiagConnection->sendPositiveResponse(sender));
+    fContext.execute();
+
+    // response is in flight: termination can only be deferred
+    fpIncomingDiagConnection->terminate();
+    EXPECT_TRUE(fpIncomingDiagConnection->isOpen);
+
+    EXPECT_CALL(
+        sender, responseSent(Ref(*fpIncomingDiagConnection), AbstractDiagJob::RESPONSE_SENT))
+        .Times(1);
+    fpIncomingDiagConnection->transportMessageProcessed(
+        *pResponse.get(), ITransportMessageProcessedListener::ProcessingResult::PROCESSED_NO_ERROR);
+    fContext.execute();
+}
+
+/**
+ * @test
+ * Same as above, but for a response that fails to be sent.
+ */
+TEST_F(ManagedIncomingDiagConnectionTest, sendFailureResponseSentRunsBeforeDeferredTerminate)
+{
+    TransportMessageWithBuffer pRequest(1024);
+    TransportMessageWithBuffer pResponse(1024);
+    fpIncomingDiagConnection->sourceAddress         = TESTER_ID;
+    fpIncomingDiagConnection->targetAddress         = DIAGNOSIS_ID;
+    fpIncomingDiagConnection->responseSourceAddress = DIAGNOSIS_ID;
+    fpIncomingDiagConnection->serviceId             = SERVICE_ID;
+    fpIncomingDiagConnection->requestMessage        = pRequest.get();
+    fpIncomingDiagConnection->open(false);
+    fpIncomingDiagConnection->addIdentifier();
+    fpIncomingDiagConnection->releaseRequestGetResponse().appendUint8(1);
+    fpIncomingDiagConnection->responseMessage = pResponse.get();
+
+    NonTerminatingJob sender(NON_TERMINATING_JOB_REQUEST, sizeof(NON_TERMINATING_JOB_REQUEST), 0);
+    EXPECT_CALL(*fpSessionProvider, responseSent(_, _, _, _)).Times(1);
+    EXPECT_CALL(*fpTpLayerMock, send(_, Eq(fpIncomingDiagConnection)))
+        .WillOnce(Return(AbstractTransportLayer::ErrorCode::TP_GENERAL_ERROR));
+    EXPECT_CALL(
+        sender, responseSent(Ref(*fpIncomingDiagConnection), AbstractDiagJob::RESPONSE_SEND_FAILED))
+        .Times(1);
+    ASSERT_EQ(ErrorCode::OK, fpIncomingDiagConnection->sendPositiveResponse(sender));
+    // termination is requested before the send is attempted
+    fpIncomingDiagConnection->terminate();
     fContext.execute();
 }

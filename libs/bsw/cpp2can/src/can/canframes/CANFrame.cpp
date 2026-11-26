@@ -13,6 +13,7 @@
 #include "can/canframes/CanId.h"
 
 #include <etl/error_handler.h>
+#include <etl/memory.h>
 
 namespace can
 {
@@ -43,7 +44,13 @@ CANFrame::CANFrame(uint32_t const id, uint8_t const* const payload, uint8_t cons
         length <= MAX_FRAME_LENGTH,
         ETL_ERROR_GENERIC("CAN frame length must be smaller than maximum length"));
 
-    (void)memcpy(_payload, payload, static_cast<size_t>(length));
+    // For non-empty payloads, source must be valid.
+    if (length != 0U)
+    {
+        ETL_ASSERT(payload != nullptr, ETL_ERROR_GENERIC("payload must not be null"));
+        // mem_move is overlap-safe.
+        (void)::etl::mem_move(payload, static_cast<size_t>(length), _payload);
+    }
 }
 
 CANFrame::CANFrame(
@@ -61,7 +68,13 @@ CANFrame::CANFrame(
         length <= MAX_FRAME_LENGTH,
         ETL_ERROR_GENERIC("CAN frame length must be smaller than maximum length"));
 
-    (void)memcpy(_payload, payload, static_cast<size_t>(length));
+    // For non-empty payloads, source must be valid.
+    if (length != 0U)
+    {
+        ETL_ASSERT(payload != nullptr, ETL_ERROR_GENERIC("payload must not be null"));
+        // mem_move is overlap-safe.
+        (void)::etl::mem_move(payload, static_cast<size_t>(length), _payload);
+    }
 }
 
 void CANFrame::setPayloadLength(uint8_t const length)
