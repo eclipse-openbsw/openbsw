@@ -118,6 +118,14 @@ void UdsSystem::init()
     AbstractDiagJob::setDefaultDiagSessionManager(_diagnosticSessionControl);
     _diagnosticSessionControl.setDiagDispatcher(&_udsDispatcher);
     _transportSystem.addTransportLayer(_udsDispatcher);
+
+    // Wire DiagMgr into services (RAM-only, no NVM backend)
+    _diagMgr.init();
+    _clearDiagnosticInformation.setDiagMgr(&_diagMgr);
+    _readDTCInformation.setDiagMgr(&_diagMgr);
+    _controlDtcSettingReal.setDiagMgr(&_diagMgr);
+    _read22F186.setSessionManager(_diagnosticSessionControl);
+
     addDiagJobs();
 
     transitionDone();
@@ -189,6 +197,8 @@ void UdsSystem::addDiagJobs()
     (void)_jobRoot.addAbstractDiagJob(_communicationControl);
 #ifndef PLATFORM_SUPPORT_UDS_DEMO_SERVICES
     (void)_jobRoot.addAbstractDiagJob(_readDTCInformation);
+    (void)_jobRoot.addAbstractDiagJob(_controlDtcSettingReal);
+    (void)_jobRoot.addAbstractDiagJob(_read22F186);
 #endif
 
 #ifdef PLATFORM_SUPPORT_UDS_DEMO_SERVICES
@@ -260,6 +270,8 @@ void UdsSystem::removeDiagJobs()
     _jobRoot.removeAbstractDiagJob(_communicationControl);
 #ifndef PLATFORM_SUPPORT_UDS_DEMO_SERVICES
     _jobRoot.removeAbstractDiagJob(_readDTCInformation);
+    _jobRoot.removeAbstractDiagJob(_controlDtcSettingReal);
+    _jobRoot.removeAbstractDiagJob(_read22F186);
 #endif
 
 #ifdef PLATFORM_SUPPORT_UDS_DEMO_SERVICES
@@ -288,6 +300,6 @@ void UdsSystem::removeDiagJobs()
 #endif
 }
 
-void UdsSystem::execute() {}
+void UdsSystem::execute() { _diagMgr.mainFunction(); }
 
 } // namespace uds

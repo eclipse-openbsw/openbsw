@@ -26,6 +26,9 @@ class Service(Enum):
     REQUEST_DOWNLOAD = "34"
     TRANSFER_DATA = "36"
     TRANSFER_EXIT = "37"
+    CLEAR_DTC = "14"
+    CONTROL_DTC_SETTING = "85"
+    READ_DTC_INFORMATION = "19"
 
 
 def raw(client, payload, path=None):
@@ -66,6 +69,15 @@ def raw(client, payload, path=None):
 
         elif service_id == Service.ECU_RESET.value:
             return services.ecuReset(client, (payload[2:]))
+
+        elif service_id == Service.CLEAR_DTC.value:
+            return services.clearDTC(client, payload[2:])
+
+        elif service_id == Service.CONTROL_DTC_SETTING.value:
+            return services.controlDTCSetting(client, payload[2:])
+
+        elif service_id == Service.READ_DTC_INFORMATION.value:
+            return services.readDTCInformation(client, payload[2:])
 
         else:
             raise CustomError
