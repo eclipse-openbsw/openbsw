@@ -1,0 +1,131 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - coverage.info - libs/bsw/middleware/include/middleware/sig/core/IPduTxSink.h</title>
+  <link rel="stylesheet" type="text/css" href="../../../../../../../gcov.css">
+</head>
+
+<body>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="title">LCOV - code coverage report</td></tr>
+            <tr><td class="ruler"><img src="../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+            <tr>
+              <td width="100%">
+                <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="10%" class="headerValue"><a href="../../../../../../../index.html" title="Click to go to top-level">top level</a> - <a href="index.html" title="Click to go to directory libs/bsw/middleware/include/middleware/sig/core">libs/bsw/middleware/include/middleware/sig/core</a> - IPduTxSink.h<span style="font-size: 80%;"> (source / <a href="IPduTxSink.h.func-c.html" title="Click to go to function table">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="5%"></td>
+            <td width="5%" class="headerCovTableHead">Coverage</td>
+            <td width="5%" class="headerCovTableHead" title="Covered + Uncovered code">Total</td>
+            <td width="5%" class="headerCovTableHead" title="Exercised code only">Hit</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">coverage.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
+            <td class="headerCovTableEntry">2</td>
+            <td class="headerCovTableEntry">2</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test Date:</td>
+            <td class="headerValue">2026-11-26 10:52:55</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntryLo">66.7&nbsp;%</td>
+            <td class="headerCovTableEntry">3</td>
+            <td class="headerCovTableEntry">2</td>
+          </tr>
+                  <tr><td><img src="../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr><td class="ruler"><img src="../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+          </table>
+
+          <table cellpadding=0 cellspacing=0 border=0>
+            <tr>
+              <td><br></td>
+            </tr>
+            <tr>
+              <td>
+<pre class="sourceHeading">            Line data    Source code</pre>
+<pre class="source">
+<span id="L1"><span class="lineNum">       1</span>              : /********************************************************************************</span>
+<span id="L2"><span class="lineNum">       2</span>              :  * Copyright (c) 2026 BMW AG</span>
+<span id="L3"><span class="lineNum">       3</span>              :  *</span>
+<span id="L4"><span class="lineNum">       4</span>              :  * This program and the accompanying materials are made available under the</span>
+<span id="L5"><span class="lineNum">       5</span>              :  * terms of the Apache License Version 2.0 which is available at</span>
+<span id="L6"><span class="lineNum">       6</span>              :  * https://www.apache.org/licenses/LICENSE-2.0</span>
+<span id="L7"><span class="lineNum">       7</span>              :  *</span>
+<span id="L8"><span class="lineNum">       8</span>              :  * SPDX-License-Identifier: Apache-2.0</span>
+<span id="L9"><span class="lineNum">       9</span>              :  ********************************************************************************/</span>
+<span id="L10"><span class="lineNum">      10</span>              : </span>
+<span id="L11"><span class="lineNum">      11</span>              : #pragma once</span>
+<span id="L12"><span class="lineNum">      12</span>              : </span>
+<span id="L13"><span class="lineNum">      13</span>              : #include &quot;middleware/sig/core/PduAccess.h&quot;</span>
+<span id="L14"><span class="lineNum">      14</span>              : </span>
+<span id="L15"><span class="lineNum">      15</span>              : #include &lt;etl/span.h&gt;</span>
+<span id="L16"><span class="lineNum">      16</span>              : </span>
+<span id="L17"><span class="lineNum">      17</span>              : namespace middleware::sig::core</span>
+<span id="L18"><span class="lineNum">      18</span>              : {</span>
+<span id="L19"><span class="lineNum">      19</span>              : </span>
+<span id="L20"><span class="lineNum">      20</span>              : /**</span>
+<span id="L21"><span class="lineNum">      21</span>              :  * \brief Platform-provided sink that accepts the outbound PDUs of the PDU broker connection.</span>
+<span id="L22"><span class="lineNum">      22</span>              :  *</span>
+<span id="L23"><span class="lineNum">      23</span>              :  * Only the transmit direction goes through this interface; PDUs received from the bus are handed</span>
+<span id="L24"><span class="lineNum">      24</span>              :  * to the connection with onReceive(). PDUs are handed over in commit order. Runtime dispatch is</span>
+<span id="L25"><span class="lineNum">      25</span>              :  * used because the concrete bus driver is only known at integration time; calls happen at the bus</span>
+<span id="L26"><span class="lineNum">      26</span>              :  * frame rate, not on a hot path.</span>
+<span id="L27"><span class="lineNum">      27</span>              :  */</span>
+<span id="L28"><span class="lineNum">      28</span>              : class IPduTxSink</span>
+<span id="L29"><span class="lineNum">      29</span>              : {</span>
+<span id="L30"><span class="lineNum">      30</span>              : public:</span>
+<span id="L31"><span class="lineNum">      31</span>              :     IPduTxSink(IPduTxSink const&amp;)            = delete;</span>
+<span id="L32"><span class="lineNum">      32</span>              :     IPduTxSink&amp; operator=(IPduTxSink const&amp;) = delete;</span>
+<span id="L33"><span class="lineNum">      33</span>              :     IPduTxSink(IPduTxSink&amp;&amp;)                 = delete;</span>
+<span id="L34"><span class="lineNum">      34</span>              :     IPduTxSink&amp; operator=(IPduTxSink&amp;&amp;)      = delete;</span>
+<span id="L35"><span class="lineNum">      35</span> <span class="tlaGNC">          16 :     virtual ~IPduTxSink()                    = default;</span></span>
+<span id="L36"><span class="lineNum">      36</span>              : </span>
+<span id="L37"><span class="lineNum">      37</span>              :     /**</span>
+<span id="L38"><span class="lineNum">      38</span>              :      * \brief Hands a PDU over to the sink.</span>
+<span id="L39"><span class="lineNum">      39</span>              :      *</span>
+<span id="L40"><span class="lineNum">      40</span>              :      * The sink takes over the PDU. It owns the pending transmission, its backlog and what happens</span>
+<span id="L41"><span class="lineNum">      41</span>              :      * when the PDU cannot be sent right away (queueing, retry, acknowledgement, drop policy), and</span>
+<span id="L42"><span class="lineNum">      42</span>              :      * it is responsible for making drops observable. The connection never retries and never holds</span>
+<span id="L43"><span class="lineNum">      43</span>              :      * a PDU back, so a slow or failing destination cannot block the PDUs behind it.</span>
+<span id="L44"><span class="lineNum">      44</span>              :      *</span>
+<span id="L45"><span class="lineNum">      45</span>              :      * \param id PDU ID.</span>
+<span id="L46"><span class="lineNum">      46</span>              :      * \param payload snapshot of the PDU, backed by the connection's reusable scratch buffer. It is</span>
+<span id="L47"><span class="lineNum">      47</span>              :      * only valid during the call, so the sink must consume or copy it before returning.</span>
+<span id="L48"><span class="lineNum">      48</span>              :      */</span>
+<span id="L49"><span class="lineNum">      49</span>              :     virtual void submit(uint32_t id, ::etl::span&lt;uint8_t const&gt; payload) = 0;</span>
+<span id="L50"><span class="lineNum">      50</span>              : </span>
+<span id="L51"><span class="lineNum">      51</span>              : protected:</span>
+<span id="L52"><span class="lineNum">      52</span> <span class="tlaGNC">          16 :     IPduTxSink() = default;</span></span>
+<span id="L53"><span class="lineNum">      53</span>              : };</span>
+<span id="L54"><span class="lineNum">      54</span>              : </span>
+<span id="L55"><span class="lineNum">      55</span>              : } // namespace middleware::sig::core</span>
+        </pre>
+              </td>
+            </tr>
+          </table>
+          <br>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="ruler"><img src="../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+            <tr><td class="versionInfo">Generated by: <a href="https://github.com//linux-test-project/lcov" target="_parent">LCOV version 2.0-1</a></td></tr>
+          </table>
+          <br>
+
+</body>
+</html>

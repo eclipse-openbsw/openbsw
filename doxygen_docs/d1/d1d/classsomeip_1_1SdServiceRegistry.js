@@ -1,0 +1,27 @@
+var classsomeip_1_1SdServiceRegistry =
+[
+    [ "SdServiceRegistry", "d1/d1d/classsomeip_1_1SdServiceRegistry.html#aa603d32dc13c03cfbff6895e9cf216ee", null ],
+    [ "cyclic", "d1/d1d/classsomeip_1_1SdServiceRegistry.html#a2df5319e2d13396306d672ba7c54ea33", null ],
+    [ "getCurrentNumberOfProvidedServices", "d1/d1d/classsomeip_1_1SdServiceRegistry.html#a69fa2db45443891cf0a093740de6a65a", null ],
+    [ "getCurrentNumberOfRemoteServices", "d1/d1d/classsomeip_1_1SdServiceRegistry.html#ab6603c52526b500051d2c9c30fcb6f09", null ],
+    [ "getCurrentNumberOfSubscriptions", "d1/d1d/classsomeip_1_1SdServiceRegistry.html#aeaf52f28b81259815390ea9dabc14b65", null ],
+    [ "getInstanceId", "d1/d1d/classsomeip_1_1SdServiceRegistry.html#a5a09b328008d45f4a6187b3aef86b808", null ],
+    [ "getMaximumNumberOfProvidedServices", "d1/d1d/classsomeip_1_1SdServiceRegistry.html#a33afeb7146fee1552b4528ec83d56e6d", null ],
+    [ "getMaximumNumberOfRemoteServices", "d1/d1d/classsomeip_1_1SdServiceRegistry.html#a32d2f5a7c3bb54d356447a3b16335a48", null ],
+    [ "getMaximumNumberOfSubscriptions", "d1/d1d/classsomeip_1_1SdServiceRegistry.html#aa51ceab50c7bf8278892923f45154023", null ],
+    [ "getQueryManager", "d1/d1d/classsomeip_1_1SdServiceRegistry.html#a4f1b2b806f482167afffb908383e0d75", null ],
+    [ "init", "d1/d1d/classsomeip_1_1SdServiceRegistry.html#aed15c8b4465382ccac267977e279285f", null ],
+    [ "interestedInService", "d1/d1d/classsomeip_1_1SdServiceRegistry.html#a53e67d540fc876d01f2c0636cbe79cf2", null ],
+    [ "isEventgroupPort", "d1/d1d/classsomeip_1_1SdServiceRegistry.html#a876cfe5feb84527456f33e88898c66fc", null ],
+    [ "offerReceived", "d1/d1d/classsomeip_1_1SdServiceRegistry.html#ad7630982a566924a28351b1f48437ffb", null ],
+    [ "rebootDetected", "d1/d1d/classsomeip_1_1SdServiceRegistry.html#a21f2ffffa710bc317b2ff10657b94402", null ],
+    [ "registerProvidedService", "d1/d1d/classsomeip_1_1SdServiceRegistry.html#aa99f676de1cf6cf45d0232b3b94cca31", null ],
+    [ "registerServiceQuery", "d1/d1d/classsomeip_1_1SdServiceRegistry.html#abb7bb6d24fb3f7063793cd8a113ced05", null ],
+    [ "serviceTrackerChanged", "d1/d1d/classsomeip_1_1SdServiceRegistry.html#ab40b93c2358db5d83511be2c80a38070", null ],
+    [ "shutdown", "d1/d1d/classsomeip_1_1SdServiceRegistry.html#a93429ca40eaa925945dcabeb089ed9b1", null ],
+    [ "subscribeAckReceived", "d1/d1d/classsomeip_1_1SdServiceRegistry.html#a00019991ca21755fb3f0a0becb07a961", null ],
+    [ "subscribeNackReceived", "d1/d1d/classsomeip_1_1SdServiceRegistry.html#a46cc0dd8689d7b201b02012e85db1df5", null ],
+    [ "subscribeReceived", "d1/d1d/classsomeip_1_1SdServiceRegistry.html#a349565161de5cc238496a151b8531872", null ],
+    [ "unregisterProvidedService", "d1/d1d/classsomeip_1_1SdServiceRegistry.html#a9b47a053daacb4ecbe9d0bfcf93ea61f", null ],
+    [ "unregisterServiceQuery", "d1/d1d/classsomeip_1_1SdServiceRegistry.html#a628930da203c3f79a6c3e7277f4a9dd0", null ]
+];
