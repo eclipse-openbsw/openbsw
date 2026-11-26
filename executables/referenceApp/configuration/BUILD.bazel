@@ -10,29 +10,25 @@
 
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
 load("//bazel/config/build_variant:compatibility.bzl", "reference_app_only")
+load("//tools/blob:routing.bzl", "generate_routing")
 
-cc_library(
-    name = "blob_configuration_headers",
-    hdrs = [
-        "include/blob/ConfigType.h",
-        "include/blob/configuration.h",
-    ],
-    strip_include_prefix = "include",
+generate_routing(
+    name = "routing_configuration_generated",
+    jsonl = "routing.jsonl",
     target_compatible_with = reference_app_only(),
+    visibility = ["//visibility:private"],
+)
+
+alias(
+    name = "blob_configuration_headers",
+    actual = ":routing_configuration_generated",
     visibility = ["//visibility:public"],
 )
 
-cc_library(
+alias(
     name = "routing_configuration_headers",
-    hdrs = [
-        "include/routing/channelId.h",
-        "include/routing/constants.h",
-    ],
-    strip_include_prefix = "include",
-    target_compatible_with = reference_app_only(),
+    actual = ":routing_configuration_generated",
     visibility = ["//visibility:public"],
-    # Exported headers include <etl/span.h> which is absent from CMake link deps.
-    deps = ["//libs/3rdparty/etl"],
 )
 
 cc_library(

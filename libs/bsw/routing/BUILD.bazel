@@ -11,6 +11,17 @@
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
 load("@rules_cc//cc:cc_test.bzl", "cc_test")
 load("//bazel/config/build_variant:compatibility.bzl", "unit_test_only")
+load("//tools/blob:routing.bzl", "generate_routing")
+
+generate_routing(
+    name = "generated_routing_headers",
+    jsonl = "test/routing.jsonl",
+    visibility = ["//visibility:public"],
+)
+
+exports_files([
+    "test/routing.jsonl",
+])
 
 # Override via --//libs/bsw/routing:routing_configuration=<your_routing_config_target>
 label_flag(
@@ -40,25 +51,24 @@ cc_library(
 cc_library(
     name = "routing_test_configuration",
     hdrs = [
-        "test/include/routing/channelId.h",
-        "test/include/routing/constants.h",
         "test/include/routing/definition.h",
     ],
     strip_include_prefix = "test/include",
     target_compatible_with = unit_test_only(),
     visibility = ["//visibility:public"],
-    deps = ["//libs/3rdparty/etl"],
+    deps = [
+        ":generated_routing_headers",
+        "//libs/3rdparty/etl",
+    ],
 )
 
-# Provides only the routing-specific CONFIGURATION_BLOB data. ConfigType.h
-# is intentionally omitted here because it arrives transitively through
-# the blob library dep.
+# Provides generated blob/routing headers used by routing tests via the
+# routing_blob_configuration flag.
 cc_library(
     name = "routing_test_blob_configuration",
-    hdrs = ["test/include/blob/configuration.h"],
-    strip_include_prefix = "test/include",
     target_compatible_with = unit_test_only(),
     visibility = ["//visibility:public"],
+    deps = [":generated_routing_headers"],
 )
 
 label_flag(

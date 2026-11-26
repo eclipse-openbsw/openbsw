@@ -1,0 +1,76 @@
+# *******************************************************************************
+# Copyright (c) 2026 BMW AG
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+# *******************************************************************************
+
+load("@blob_pip//:requirements.bzl", "requirement")
+load("@rules_python//python:defs.bzl", "py_library")
+load("@rules_python//python:py_binary.bzl", "py_binary")
+
+package(default_visibility = ["//visibility:public"])
+
+py_library(
+    name = "blob_model",
+    srcs = [
+        "__init__.py",
+    ],
+    imports = [".."],
+    target_compatible_with = ["@platforms//os:linux"],
+)
+
+py_library(
+    name = "blob_utils",
+    srcs = ["utils.py"],
+    imports = [".."],
+    target_compatible_with = ["@platforms//os:linux"],
+    deps = [
+        ":blob_model",
+        requirement("crc"),
+    ],
+)
+
+py_library(
+    name = "blob_core",
+    srcs = ["__main__.py"],
+    imports = [".."],
+    target_compatible_with = ["@platforms//os:linux"],
+    deps = [
+        ":blob_model",
+        ":blob_utils",
+    ],
+)
+
+py_library(
+    name = "routing",
+    srcs = [
+        "routing/__init__.py",
+        "routing/__main__.py",
+        "routing/channel.py",
+        "routing/table.py",
+        "routing/utils.py",
+    ],
+    imports = [".."],
+    target_compatible_with = ["@platforms//os:linux"],
+    deps = [
+        ":blob_model",
+        ":blob_utils",
+    ],
+)
+
+py_binary(
+    name = "generate_routing",
+    srcs = ["generate_routing.py"],
+    legacy_create_init = 0,
+    main = "generate_routing.py",
+    python_version = "3.12.3",
+    target_compatible_with = ["@platforms//os:linux"],
+    deps = [
+        ":blob_core",
+        ":routing",
+    ],
+)
