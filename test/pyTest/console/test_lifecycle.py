@@ -77,13 +77,13 @@ def test_lc_reboot(target_session):
         b"INFO: Shutdown level 6 done",
         b"INFO: Shutdown level 5 done",
         b"INFO: Shutdown level 4 done",
-        b"INFO: Shutdown level 3 done",
+        b"DEBUG: Shutdown level 3 done",
         b"INFO: Shutdown level 2 done",
         b"INFO: Shutdown level 1 done",
         b"hello",
         b"INFO: Run level 1 done",
         b"INFO: Run level 2 done",
-        b"INFO: Run level 3 done",
+        b"DEBUG: Run level 3 done",
         b"INFO: Run level 4 done",
         b"INFO: Run level 5 done",
         b"INFO: Run level 6 done",
@@ -92,5 +92,9 @@ def test_lc_reboot(target_session):
         b"INFO: Run level 9 done",
     ]
     capserial.write(b"lc reboot\n")
-    (success, lines, _) = capserial.read_until(expected, timeout=3)
-    assert success
+    (success, lines, found) = capserial.read_until(expected, timeout=3)
+    assert success, [message for message, index in found.items() if index is None]
+    assert not any(
+        b"INFO: Shutdown level 3 done" in line or b"INFO: Run level 3 done" in line
+        for line in lines
+    )
