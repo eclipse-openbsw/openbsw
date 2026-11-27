@@ -39,7 +39,9 @@ DoIpServerVehicleIdentificationSocketHandler::DoIpServerVehicleIdentificationSoc
     ::ip::IPAddress const& multicastAddress,
     ::etl::ivector<::ip::IPAddress>& unicastAddresses,
     DoIpServerVehicleIdentificationConfig& config,
-    uint8_t const announceCount)
+    uint8_t const announceCount,
+    ::etl::span<uint8_t> const& recvBuffer,
+    ::etl::span<uint8_t> const& sendBuffer)
 : IDoIpConnectionHandler()
 , _connection(config.getContext(), socket, config.getWriteBuffer())
 , _multicastAddress(multicastAddress)
@@ -63,6 +65,8 @@ DoIpServerVehicleIdentificationSocketHandler::DoIpServerVehicleIdentificationSoc
 , _configChangedNewConfig{}
 , _socketGroupId(socketGroupId)
 , _announceCount(announceCount)
+, _rxBuffer(recvBuffer)
+, _txBuffer(sendBuffer)
 {}
 
 void DoIpServerVehicleIdentificationSocketHandler::updateUnicastAddresses(
@@ -280,7 +284,7 @@ bool DoIpServerVehicleIdentificationSocketHandler::handleVehicleIdentificationRe
     if (header.payloadLength == EID_LENGTH)
     {
         return _connection.receivePayload(
-            ::etl::span<uint8_t>(_readBuffer).subspan(0U, EID_LENGTH),
+            _rxBuffer.subspan(0U, EID_LENGTH),
             IDoIpConnection::PayloadReceivedCallbackType::create<
                 DoIpServerVehicleIdentificationSocketHandler,
                 &DoIpServerVehicleIdentificationSocketHandler::
@@ -296,7 +300,7 @@ bool DoIpServerVehicleIdentificationSocketHandler::handleVehicleIdentificationRe
     if (header.payloadLength == VIN_LENGTH)
     {
         return _connection.receivePayload(
-            ::etl::span<uint8_t>(_readBuffer).subspan(0U, VIN_LENGTH),
+            _rxBuffer.subspan(0U, VIN_LENGTH),
             IDoIpConnection::PayloadReceivedCallbackType::create<
                 DoIpServerVehicleIdentificationSocketHandler,
                 &DoIpServerVehicleIdentificationSocketHandler::
@@ -341,7 +345,7 @@ bool DoIpServerVehicleIdentificationSocketHandler::handleVehicleAnnouncementMess
     if ((header.payloadLength >= 32U) && (header.payloadLength <= 33U))
     {
         return _connection.receivePayload(
-            ::etl::span<uint8_t>(_readBuffer).subspan(0U, 19U),
+            _rxBuffer.subspan(0U, 19U),
             IDoIpConnection::PayloadReceivedCallbackType::create<
                 DoIpServerVehicleIdentificationSocketHandler,
                 &DoIpServerVehicleIdentificationSocketHandler::vehicleAnnouncementPayloadReceived>(
@@ -377,7 +381,7 @@ bool DoIpServerVehicleIdentificationSocketHandler::handleOemRequest(DoIpHeader c
             _currentOemMessageHandler = oemMessageHandler;
             // receive payload
             return _connection.receivePayload(
-                ::etl::span<uint8_t>(_readBuffer).subspan(0U, header.payloadLength),
+                _rxBuffer.subspan(0U, header.payloadLength),
                 IDoIpConnection::PayloadReceivedCallbackType::create<
                     DoIpServerVehicleIdentificationSocketHandler,
                     &DoIpServerVehicleIdentificationSocketHandler::oemMessagePayloadReceived>(
@@ -590,7 +594,7 @@ void DoIpServerVehicleIdentificationSocketHandler::trySendResponse()
     }
 }
 
-DoIpServerVehicleIdentificationSocketHandler::StaticPayloadSendJobType&
+DoIpStaticPayloadSendJob&
 DoIpServerVehicleIdentificationSocketHandler::createResponseIdentification()
 {
     auto& sendJob = allocateSendJob(DoIpConstants::PayloadTypes::VEHICLE_ANNOUNCEMENT_MESSAGE, 32U);
@@ -611,8 +615,7 @@ DoIpServerVehicleIdentificationSocketHandler::createResponseIdentification()
     return sendJob;
 }
 
-DoIpServerVehicleIdentificationSocketHandler::StaticPayloadSendJobType&
-DoIpServerVehicleIdentificationSocketHandler::createResponseEntityStatus()
+DoIpStaticPayloadSendJob& DoIpServerVehicleIdentificationSocketHandler::createResponseEntityStatus()
 {
     auto& sendJob = allocateSendJob(DoIpConstants::PayloadTypes::ENTITY_STATUS_RESPONSE, 7U);
     IDoIpServerEntityStatusCallback::EntityStatus const entityStatus
@@ -626,7 +629,7 @@ DoIpServerVehicleIdentificationSocketHandler::createResponseEntityStatus()
     return sendJob;
 }
 
-DoIpServerVehicleIdentificationSocketHandler::StaticPayloadSendJobType&
+DoIpStaticPayloadSendJob&
 DoIpServerVehicleIdentificationSocketHandler::createResponseDiagnosticPowerModeInfo()
 {
     auto& sendJob = allocateSendJob(
@@ -637,8 +640,7 @@ DoIpServerVehicleIdentificationSocketHandler::createResponseDiagnosticPowerModeI
 }
 
 // pointer checked beforehand
-DoIpServerVehicleIdentificationSocketHandler::StaticPayloadSendJobType&
-DoIpServerVehicleIdentificationSocketHandler::createResponseOemMessage(
+DoIpStaticPayloadSendJob& DoIpServerVehicleIdentificationSocketHandler::createResponseOemMessage(
     IDoIpUdpOemMessageHandler const* const oemMessageHandler)
 {
     uint16_t const responsePayloadType = oemMessageHandler->getResponsePayloadType();
@@ -648,7 +650,7 @@ DoIpServerVehicleIdentificationSocketHandler::createResponseOemMessage(
     return sendJob;
 }
 
-DoIpServerVehicleIdentificationSocketHandler::StaticPayloadSendJobType&
+DoIpStaticPayloadSendJob&
 DoIpServerVehicleIdentificationSocketHandler::createResponseHeaderNack(uint8_t const nackCode)
 {
     auto& sendJob = allocateSendJob(DoIpConstants::PayloadTypes::NEGATIVE_ACK, 1U);
@@ -656,8 +658,7 @@ DoIpServerVehicleIdentificationSocketHandler::createResponseHeaderNack(uint8_t c
     return sendJob;
 }
 
-DoIpServerVehicleIdentificationSocketHandler::StaticPayloadSendJobType&
-DoIpServerVehicleIdentificationSocketHandler::createResponse(
+DoIpStaticPayloadSendJob& DoIpServerVehicleIdentificationSocketHandler::createResponse(
     DoIpServerVehicleIdentificationRequest::Type const& type, uint8_t const nackCode)
 {
     if (::etl::holds_alternative<DoIpServerVehicleIdentificationRequest::ISOType>(type))
@@ -711,8 +712,7 @@ void DoIpServerVehicleIdentificationSocketHandler::sendResponse(
     }
 }
 
-DoIpServerVehicleIdentificationSocketHandler::StaticPayloadSendJobType&
-DoIpServerVehicleIdentificationSocketHandler::allocateSendJob(
+DoIpStaticPayloadSendJob& DoIpServerVehicleIdentificationSocketHandler::allocateSendJob(
     uint16_t const payloadType, uint8_t const payloadLength)
 {
     // SAFETY: _sendJob is guaranteed to be empty here. All callers go through
@@ -721,8 +721,8 @@ DoIpServerVehicleIdentificationSocketHandler::allocateSendJob(
     return _sendJob.emplace(
         static_cast<uint8_t>(_protocolVersion),
         payloadType,
-        payloadLength,
-        StaticPayloadSendJobType::ReleaseCallbackType::create<
+        _txBuffer.subspan(0U, payloadLength),
+        DoIpStaticPayloadSendJob::ReleaseCallbackType::create<
             DoIpServerVehicleIdentificationSocketHandler,
             &DoIpServerVehicleIdentificationSocketHandler::releaseSendJobAndSendNext>(*this));
 }

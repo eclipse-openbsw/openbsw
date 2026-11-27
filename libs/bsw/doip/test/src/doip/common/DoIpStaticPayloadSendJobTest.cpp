@@ -41,7 +41,7 @@ public:
 
 TEST_F(DoIpStaticPayloadSendJobTest, TestAll)
 {
-    uint8_t const payloadBuffer[] = {0x11, 0x22, 0x33, 0x44};
+    uint8_t payloadBuffer[] = {0x11, 0x22, 0x33, 0x44};
     DoIpStaticPayloadSendJob cut(
         0x01,
         0x3321,

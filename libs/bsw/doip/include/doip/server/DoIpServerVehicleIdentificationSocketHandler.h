@@ -44,27 +44,12 @@ class DoIpServerVehicleIdentificationSocketHandler
 , private ::async::RunnableType
 {
 public:
-    /**
-     * Constructor.
-     * \param protocolVersion doip protocol version used for all communication
-     * \param socket reference to datagram socket for receiving/sending datagrams
-     * \param socketGroupId corresponding socket group identifier
-     * \param networkInterfaceConfigKey key that statically identifies the network address to
-     * bind to \param multicastAddress multicast address to use for IPv6, or if IPv4 broadcast
-     * address 255.255.255.255 then this will be used and not the directed subnet broadcast
-     * \param unicastAddressArray array for storing unicast addresses along with the socket
-     * \param config config to use
-     * \param announceCount number of announcements (ISO13400: A_DoIP_Announce_Num)
-     */
-    DoIpServerVehicleIdentificationSocketHandler(
-        DoIpConstants::ProtocolVersion protocolVersion,
-        ::udp::AbstractDatagramSocket& socket,
-        uint8_t socketGroupId,
-        ::ip::NetworkInterfaceConfigKey const& networkInterfaceConfigKey,
-        ::ip::IPAddress const& multicastAddress,
-        ::etl::ivector<::ip::IPAddress>& unicastAddresses,
-        DoIpServerVehicleIdentificationConfig& config,
-        uint8_t announceCount);
+    // accommodate at least the largest amount of data we must receive: Vehicle Announcement (17
+    // bytes vin + 2 bytes address)
+    static constexpr size_t MIN_RX_BUFFER_SIZE = 19U;
+    // accommodate at least the largest amount of data we must send: Vehicle Announcement (17 bytes
+    // vin + 2 bytes address + EID + GID + Further Action)
+    static constexpr size_t MIN_TX_BUFFER_SIZE = 32U;
 
     /**
      * Set optional vehicle announcement listener.
@@ -104,10 +89,40 @@ public:
      */
     void shutdown();
 
+protected:
+    /**
+     * Constructor.
+     * Protected to make sure that only the memory-owning declare:: derivation can
+     * instatiate it
+     * \param protocolVersion doip protocol version used for all communication
+     * \param socket reference to datagram socket for receiving/sending datagrams
+     * \param socketGroupId corresponding socket group identifier
+     * \param networkInterfaceConfigKey key that statically identifies the network address to bind
+     * to
+     * \param multicastAddress multicast address to use for IPv6, or if IPv4 broadcast address
+     * 255.255.255.255 then this will be used and not the directed subnet broadcast
+     * \param unicastAddresses array for storing unicast addresses along with the socket
+     * \param config config to use
+     * \param announceCount number of announcements (ISO13400: A_DoIP_Announce_Num)
+     * \param recvBuffer buffer used for receiving data
+     * \param sendBuffer buffer used for sending data
+     */
+    DoIpServerVehicleIdentificationSocketHandler(
+        DoIpConstants::ProtocolVersion protocolVersion,
+        ::udp::AbstractDatagramSocket& socket,
+        uint8_t socketGroupId,
+        ::ip::NetworkInterfaceConfigKey const& networkInterfaceConfigKey,
+        ::ip::IPAddress const& multicastAddress,
+        ::etl::ivector<::ip::IPAddress>& unicastAddresses,
+        DoIpServerVehicleIdentificationConfig& config,
+        uint8_t announceCount,
+        ::etl::span<uint8_t> const& recvBuffer,
+        ::etl::span<uint8_t> const& sendBuffer);
+
+    ~DoIpServerVehicleIdentificationSocketHandler() = default;
+
 private:
     static constexpr size_t MAX_NUM_UNICAST = 8U;
-
-    using StaticPayloadSendJobType = declare::DoIpStaticPayloadSendJob<32>;
 
     // static uint16_t const EVENT_UNICAST = 0U;
     // static uint16_t const EVENT_TIMEOUT = 1U;
@@ -155,20 +170,16 @@ private:
         ::ip::IPEndpoint const& destinationEndpoint,
         DoIpServerVehicleIdentificationRequest::Type const& type,
         uint8_t nackCode);
-    DoIpServerVehicleIdentificationSocketHandler::StaticPayloadSendJobType&
-    createResponseIdentification();
-    DoIpServerVehicleIdentificationSocketHandler::StaticPayloadSendJobType&
-    createResponseEntityStatus();
-    DoIpServerVehicleIdentificationSocketHandler::StaticPayloadSendJobType&
-    createResponseDiagnosticPowerModeInfo();
-    DoIpServerVehicleIdentificationSocketHandler::StaticPayloadSendJobType&
+    DoIpStaticPayloadSendJob& createResponseIdentification();
+    DoIpStaticPayloadSendJob& createResponseEntityStatus();
+    DoIpStaticPayloadSendJob& createResponseDiagnosticPowerModeInfo();
+    DoIpStaticPayloadSendJob&
     createResponseOemMessage(IDoIpUdpOemMessageHandler const* const oemMessageHandler);
-    DoIpServerVehicleIdentificationSocketHandler::StaticPayloadSendJobType&
-    createResponseHeaderNack(uint8_t nackCode);
-    StaticPayloadSendJobType&
+    DoIpStaticPayloadSendJob& createResponseHeaderNack(uint8_t nackCode);
+    DoIpStaticPayloadSendJob&
     createResponse(DoIpServerVehicleIdentificationRequest::Type const& type, uint8_t nackCode);
 
-    StaticPayloadSendJobType& allocateSendJob(uint16_t payloadType, uint8_t payloadLength);
+    DoIpStaticPayloadSendJob& allocateSendJob(uint16_t payloadType, uint8_t payloadLength);
     void releaseSendJob();
     void releaseSendJobAndSendNext(DoIpStaticPayloadSendJob& sendJob, bool success);
 
@@ -184,15 +195,16 @@ private:
     ::etl::intrusive_forward_list<DoIpServerVehicleIdentificationRequest, ::etl::forward_link<0>>
         _pendingRequests;
     ::etl::ivector<ip::IPAddress>& _unicastAddresses;
-    ::etl::optional<StaticPayloadSendJobType> _sendJob;
+    ::etl::optional<DoIpStaticPayloadSendJob> _sendJob;
     DoIpConstants::ProtocolVersion _protocolVersion;
     ::ip::NetworkInterfaceConfigKey _networkInterfaceConfigKey;
     ::ip::NetworkInterfaceConfig _configChangedNewConfig;
     uint8_t _socketGroupId;
-    ::etl::array<uint8_t, 19> _readBuffer{};
     ::etl::bitset<MAX_NUM_UNICAST> _newUnicastAddresses;
     uint8_t const _announceCount;
     IDoIpUdpOemMessageHandler const* _currentOemMessageHandler = nullptr;
+    ::etl::span<uint8_t> const _rxBuffer;
+    ::etl::span<uint8_t> const _txBuffer;
 };
 
 namespace declare
@@ -201,12 +213,28 @@ namespace declare
  * This class instantiates a socket handler with all needed buffers.
  * \tparam DatagramSocket UDP datagram socket type
  * \tparam NUM_ANNOUNCEMENTS number of announcements (ISO13400: A_DoIP_Announce_Num)
+ * \tparam RX_LEN size of buffer used for reading
+ * \tparam TX_LEN size of buffer used for sending
  * \tparam NUM_UNICAST number of unicast addresses to store with the socket handler
  */
-template<class DatagramSocket, uint8_t NUM_ANNOUNCEMENTS, size_t NUM_UNICAST = 1U>
-class DoIpServerVehicleIdentificationSocketHandler
+template<
+    class DatagramSocket,
+    uint8_t NUM_ANNOUNCEMENTS,
+    size_t RX_LEN,
+    size_t TX_LEN,
+    size_t NUM_UNICAST = 1U>
+class DoIpServerVehicleIdentificationSocketHandler final
 : public ::doip::DoIpServerVehicleIdentificationSocketHandler
 {
+    ETL_STATIC_ASSERT(
+        RX_LEN >= MIN_RX_BUFFER_SIZE,
+        "DoIpServerVehicleIdentificationSocketHandlerConfig must allow reception of Vehicle "
+        "Announcement");
+    ETL_STATIC_ASSERT(
+        TX_LEN >= MIN_TX_BUFFER_SIZE,
+        "DoIpServerVehicleIdentificationSocketHandlerConfig must allow sending of Vehicle "
+        "Announcement");
+
 public:
     DoIpServerVehicleIdentificationSocketHandler(
         DoIpConstants::ProtocolVersion const protocolVersion,
@@ -220,6 +248,8 @@ public:
 private:
     DatagramSocket _socket;
     ::etl::vector<::ip::IPAddress, NUM_UNICAST> _unicastAddresses;
+    ::etl::array<uint8_t, RX_LEN> _rxBuffer;
+    ::etl::array<uint8_t, TX_LEN> _txBuffer;
 };
 
 } // namespace declare
@@ -235,8 +265,18 @@ inline void DoIpServerVehicleIdentificationSocketHandler::setVehicleAnnouncement
 
 namespace declare
 {
-template<class DatagramSocket, uint8_t NUM_ANNOUNCEMENTS, size_t NUM_UNICAST>
-DoIpServerVehicleIdentificationSocketHandler<DatagramSocket, NUM_ANNOUNCEMENTS, NUM_UNICAST>::
+template<
+    class DatagramSocket,
+    uint8_t NUM_ANNOUNCEMENTS,
+    size_t RX_LEN,
+    size_t TX_LEN,
+    size_t NUM_UNICAST>
+DoIpServerVehicleIdentificationSocketHandler<
+    DatagramSocket,
+    NUM_ANNOUNCEMENTS,
+    RX_LEN,
+    TX_LEN,
+    NUM_UNICAST>::
     DoIpServerVehicleIdentificationSocketHandler(
         DoIpConstants::ProtocolVersion const protocolVersion,
         uint8_t const socketGroupId,
@@ -251,14 +291,24 @@ DoIpServerVehicleIdentificationSocketHandler<DatagramSocket, NUM_ANNOUNCEMENTS, 
     multicastAddress,
     _unicastAddresses,
     config,
-    NUM_ANNOUNCEMENTS)
+    NUM_ANNOUNCEMENTS,
+    _rxBuffer,
+    _txBuffer)
 {}
 
 // sockets are managed from the outside
-template<class DatagramSocket, uint8_t NUM_ANNOUNCEMENTS, size_t NUM_UNICAST>
-DatagramSocket&
-DoIpServerVehicleIdentificationSocketHandler<DatagramSocket, NUM_ANNOUNCEMENTS, NUM_UNICAST>::
-    getSocket()
+template<
+    class DatagramSocket,
+    uint8_t NUM_ANNOUNCEMENTS,
+    size_t RX_LEN,
+    size_t TX_LEN,
+    size_t NUM_UNICAST>
+DatagramSocket& DoIpServerVehicleIdentificationSocketHandler<
+    DatagramSocket,
+    NUM_ANNOUNCEMENTS,
+    RX_LEN,
+    TX_LEN,
+    NUM_UNICAST>::getSocket()
 {
     return _socket;
 }

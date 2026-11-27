@@ -144,7 +144,9 @@ private:
         NUM_UNICAST,
         NUM_SOCKETS,
         NUM_REQUESTS,
-        NUM_ANNOUNCEMENTS>;
+        NUM_ANNOUNCEMENTS,
+        ::doip::DoIpServerVehicleIdentificationSocketHandler::MIN_RX_BUFFER_SIZE,
+        ::doip::DoIpServerVehicleIdentificationSocketHandler::MIN_TX_BUFFER_SIZE>;
 
     ::async::ContextType _asyncContext;
     DoIpServerSocketHandlerType _socketHandler;
