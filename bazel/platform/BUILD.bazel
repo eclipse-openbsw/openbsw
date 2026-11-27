@@ -15,7 +15,8 @@
 platform(
     name = "posix",
     flags = [
-        # Features
+        # Platform support
+        "--//bazel/config/build_variant=reference_app",
         "--//bazel/config/features:can=true",
         "--//bazel/config/features:ethernet=true",
         "--//bazel/config/features:io=false",
@@ -87,8 +88,13 @@ platform(
         "--//libs/bsw/uds:transport_configuration=//executables/referenceApp/transportConfiguration:transport_configuration",
         "--//libs/bsw/transportRouterSimple:transport_configuration=//executables/referenceApp/transportConfiguration:transport_configuration",
 
-        # Disabled features (intentionally absent — explicit for auditability)
+        # Explicitly disabled
         "--//bazel/config/bsp:bsp_io=//bazel/config:no_implementation",
+        "--//libs/bsw/cpp2can:can0_use_fd=false",
+        "--//libs/bsw/runtime:tracing=false",
+        "--//executables/referenceApp/application:uds_demo_services=false",
+        "--//libs/bsw/uds:uds_enable_outgoing=false",
+        "--//libs/bsw/routing:routing_blob_configuration=//bazel/config:no_implementation",
     ],
     parents = ["@platforms//host:host"],
 )
@@ -111,23 +117,21 @@ platform(
         # Async / configuration
         "--//libs/bsw/async:async_platform=//libs/bsw/async:async_mock",
         "--//libs/bsw/async:async_rtos_impl=//libs/bsw/async:async_mock_impl",
+
+        # Async seams
         "--//libs/bsw/async:async_binding=//libs/bsw/asyncFreeRtos:async_binding_mock",
         "--//libs/bsw/asyncFreeRtos:async_core_configuration=//libs/bsw/asyncFreeRtos:async_core_configuration_mock",
 
-        # lwip stack configuration
+        # lwIP
         "--//libs/3rdparty/lwip:lwip_configuration=//executables/unitTest/lwipConfiguration:lwip_configuration",
         "--//libs/3rdparty/lwip:exclude_slipif=true",
 
-        # transport configuration
+        # App configuration seams
         "--//libs/bsw/transportRouterSimple:transport_configuration=//executables/unitTest/transportConfiguration:transport_configuration",
         "--//libs/bsw/uds:transport_configuration=//executables/unitTest/transportConfiguration:transport_configuration",
         "--//libs/bsw/uds:uds_configuration=//executables/unitTest/udsConfiguration:uds_configuration",
-
-        # routing test configuration
         "--//libs/bsw/routing:routing_configuration=//libs/bsw/routing:routing_test_configuration",
         "--//libs/bsw/routing:routing_blob_configuration=//libs/bsw/routing:routing_test_blob_configuration",
-
-        # blob test configuration
         "--//libs/bsw/blob:blob_configuration=//libs/bsw/blob:blob_test_config_type",
 
         # App configuration
@@ -150,13 +154,17 @@ platform(
     name = "middleware_simulation",
     flags = [
         "--//bazel/config/build_variant=middleware_simulation",
+
+        # ETL profile
         "--//libs/3rdparty/etl:etl_profile=//libs/bsw/middleware/simulation:simulation_etl_profile",
+
+        # Middleware
         "--//libs/bsw/middleware:middleware_concurrency=//libs/bsw/middleware/simulation:simulation_concurrency",
         "--//libs/bsw/middleware:middleware_logger=//libs/bsw/middleware/simulation:simulation_logger",
         "--//libs/bsw/middleware:middleware_os=//libs/bsw/middleware/simulation:simulation_os",
         "--//libs/bsw/middleware:middleware_time=//libs/bsw/middleware/simulation:simulation_time",
 
-        # UDS is not part of the simulation variant.
+        # Explicitly disabled
         "--//libs/bsw/uds:uds_configuration=//bazel/config:no_implementation",
         "--//libs/bsw/uds:transport_configuration=//bazel/config:no_implementation",
     ],
@@ -167,27 +175,12 @@ platform(
 platform(
     name = "posix_threadx",
     flags = [
-        # RTOS
         "--//bazel/config/rtos=threadx",
 
         # Async / configuration
         "--//libs/bsw/async:async_platform=//libs/bsw/asyncThreadX:async_threadx",
         "--//libs/bsw/async:async_rtos_impl=//libs/bsw/asyncThreadX:async_threadx_impl",
     ],
-    parents = [":posix"],
-)
-
-# POSIX CAN FD app platform variant. Enables the 64-byte CAN FD frame code path.
-platform(
-    name = "posix_canfd",
-    flags = ["--//bazel/config/features:can0_use_fd=true"],
-    parents = [":posix"],
-)
-
-# POSIX tracing app platform variant. Enables the runtime tracer.
-platform(
-    name = "posix_tracing",
-    flags = ["--//libs/bsw/runtime:tracing=true"],
     parents = [":posix"],
 )
 
@@ -200,7 +193,8 @@ platform(
         "//bazel/platform/constraints/soc:s32k148",
     ],
     flags = [
-        # Features
+        # Platform support
+        "--//bazel/config/build_variant=reference_app",
         "--//bazel/config/features:can=true",
         "--//bazel/config/features:ethernet=true",
         "--//bazel/config/features:io=true",
@@ -267,11 +261,16 @@ platform(
         "--//libs/bsw/uds:transport_configuration=//executables/referenceApp/transportConfiguration:transport_configuration",
         "--//libs/bsw/transportRouterSimple:transport_configuration=//executables/referenceApp/transportConfiguration:transport_configuration",
 
-        # Disabled features (intentionally absent — explicit for auditability)
+        # Explicitly disabled
         "--//libs/bsw/middleware:middleware_concurrency=//bazel/config:no_implementation",
         "--//libs/bsw/middleware:middleware_logger=//bazel/config:no_implementation",
         "--//libs/bsw/middleware:middleware_os=//bazel/config:no_implementation",
         "--//libs/bsw/middleware:middleware_time=//bazel/config:no_implementation",
+        "--//libs/bsw/cpp2can:can0_use_fd=false",
+        "--//libs/bsw/runtime:tracing=false",
+        "--//executables/referenceApp/application:uds_demo_services=false",
+        "--//libs/bsw/uds:uds_enable_outgoing=false",
+        "--//libs/bsw/routing:routing_blob_configuration=//bazel/config:no_implementation",
     ],
 )
 
@@ -279,7 +278,6 @@ platform(
 platform(
     name = "s32k148_threadx",
     flags = [
-        # RTOS
         "--//bazel/config/rtos=threadx",
 
         # Async / configuration
@@ -307,7 +305,8 @@ platform(
         "//bazel/platform/constraints/soc:stm32g4",
     ],
     flags = [
-        # Features
+        # Platform support
+        "--//bazel/config/build_variant=reference_app",
         "--//bazel/config/features:can=true",
         "--//bazel/config/features:ethernet=false",
         "--//bazel/config/features:io=false",
@@ -319,6 +318,7 @@ platform(
         "--//bazel/config/features:transport=true",
         "--//bazel/config/features:uds=true",
         "--//bazel/config/features:watchdog=false",
+        "--//executables/referenceApp/application:uds_demo_services=true",
 
         # RTOS
         "--//bazel/config/rtos=freertos",
@@ -366,10 +366,7 @@ platform(
         "--//libs/bsw/uds:transport_configuration=//executables/referenceApp/transportConfiguration:transport_configuration",
         "--//libs/bsw/transportRouterSimple:transport_configuration=//executables/referenceApp/transportConfiguration:transport_configuration",
 
-        # Application
-        "--//executables/referenceApp/application:uds_demo_services=true",
-
-        # Disabled features (intentionally absent — explicit for auditability)
+        # Explicitly disabled
         "--//bazel/config/bsp:bsp_io=//bazel/config:no_implementation",
         "--//bazel/config/eth:eth_configuration=//bazel/config:no_implementation",
         "--//libs/3rdparty/lwip:lwip_sys_arch=//bazel/config:no_implementation",
@@ -379,6 +376,10 @@ platform(
         "--//libs/bsw/middleware:middleware_logger=//bazel/config:no_implementation",
         "--//libs/bsw/middleware:middleware_os=//bazel/config:no_implementation",
         "--//libs/bsw/middleware:middleware_time=//bazel/config:no_implementation",
+        "--//libs/bsw/cpp2can:can0_use_fd=false",
+        "--//libs/bsw/runtime:tracing=false",
+        "--//libs/bsw/uds:uds_enable_outgoing=false",
+        "--//libs/bsw/routing:routing_blob_configuration=//bazel/config:no_implementation",
     ],
 )
 
@@ -394,7 +395,6 @@ platform(
 platform(
     name = "stm32g4_threadx",
     flags = [
-        # RTOS
         "--//bazel/config/rtos=threadx",
 
         # Async / configuration
@@ -414,7 +414,8 @@ platform(
         "//bazel/platform/constraints/soc:stm32f4",
     ],
     flags = [
-        # Features
+        # Platform support
+        "--//bazel/config/build_variant=reference_app",
         "--//bazel/config/features:can=true",
         "--//bazel/config/features:ethernet=false",
         "--//bazel/config/features:io=false",
@@ -426,6 +427,7 @@ platform(
         "--//bazel/config/features:transport=true",
         "--//bazel/config/features:uds=true",
         "--//bazel/config/features:watchdog=false",
+        "--//executables/referenceApp/application:uds_demo_services=true",
 
         # RTOS
         "--//bazel/config/rtos=freertos",
@@ -473,10 +475,7 @@ platform(
         "--//libs/bsw/uds:transport_configuration=//executables/referenceApp/transportConfiguration:transport_configuration",
         "--//libs/bsw/transportRouterSimple:transport_configuration=//executables/referenceApp/transportConfiguration:transport_configuration",
 
-        # Application
-        "--//executables/referenceApp/application:uds_demo_services=true",
-
-        # Disabled features (intentionally absent — explicit for auditability)
+        # Explicitly disabled
         "--//bazel/config/bsp:bsp_io=//bazel/config:no_implementation",
         "--//bazel/config/eth:eth_configuration=//bazel/config:no_implementation",
         "--//libs/3rdparty/lwip:lwip_sys_arch=//bazel/config:no_implementation",
@@ -486,6 +485,10 @@ platform(
         "--//libs/bsw/middleware:middleware_logger=//bazel/config:no_implementation",
         "--//libs/bsw/middleware:middleware_os=//bazel/config:no_implementation",
         "--//libs/bsw/middleware:middleware_time=//bazel/config:no_implementation",
+        "--//libs/bsw/cpp2can:can0_use_fd=false",
+        "--//libs/bsw/runtime:tracing=false",
+        "--//libs/bsw/uds:uds_enable_outgoing=false",
+        "--//libs/bsw/routing:routing_blob_configuration=//bazel/config:no_implementation",
     ],
 )
 
@@ -501,7 +504,6 @@ platform(
 platform(
     name = "stm32f4_threadx",
     flags = [
-        # RTOS
         "--//bazel/config/rtos=threadx",
 
         # Async / configuration
